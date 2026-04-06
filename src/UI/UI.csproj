@@ -75,6 +75,7 @@
 		<None Remove="Assets\Languages\Italian.json" />
 		<None Remove="Assets\Languages\Portuguese.json" />
 		<None Remove="Assets\Languages\Romanian.json" />
+		<None Remove="Assets\Languages\Spanish.json" />
 		<None Remove="Assets\Languages\Turkish.json" />
 		<None Remove="Assets\NetflixGlyphs.zip" />
 		<None Remove="Assets\SevenZip\7z-linux64.zip" />
@@ -103,6 +104,7 @@
 		<AvaloniaResource Include="Assets\Languages\Italian.json" />
 		<AvaloniaResource Include="Assets\Languages\Portuguese.json" />
 		<AvaloniaResource Include="Assets\Languages\Romanian.json" />
+		<AvaloniaResource Include="Assets\Languages\Spanish.json" />
 		<AvaloniaResource Include="Assets\Languages\Turkish.json" />
 		<AvaloniaResource Include="Assets\Layout\Layout01.png" />
 		<AvaloniaResource Include="Assets\Layout\Layout02.png" />
