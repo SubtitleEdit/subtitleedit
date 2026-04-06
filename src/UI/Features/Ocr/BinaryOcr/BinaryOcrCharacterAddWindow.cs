@@ -4,6 +4,7 @@ using Avalonia.Data;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
 
@@ -68,6 +69,8 @@ public class BinaryOcrCharacterAddWindow : Window
         vm.TextBoxNew.KeyDown += vm.TextBoxNewOnKeyDown;
         vm.TextBoxNew.KeyUp += vm.TextBoxNewOnKeyUp;
         vm.TextBoxNew.PointerReleased += vm.TextBoxMacPointerReleased;
+        vm.TextBoxNew.Bind(TextBox.FontStyleProperty, new Binding(nameof(vm.IsNewTextItalic)) { Converter = new BoolToFontStyleConverter() });
+
         var menuFlyout = new MenuFlyout();
         CharactersFlyoutMenuHelper.MakeFlyoutLetters(menuFlyout, vm.InsertSpecialCharacterCommand); 
         vm.TextBoxNew.ContextFlyout = menuFlyout;
