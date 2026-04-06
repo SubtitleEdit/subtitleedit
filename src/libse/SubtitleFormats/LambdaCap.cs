@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return time.ToHHMMSSFF().RemoveChar(':'); // HHMMSSFF without seperators, like 00031522
+            return time.ToHHMMSSFF().RemoveChar(':'); // HHMMSSFF without separators, like 00031522
         }
 
         private static string EncodeStyle(string text)
