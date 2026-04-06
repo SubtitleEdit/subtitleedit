@@ -310,6 +310,7 @@
     "NewDotDotDot": "Ny...",
     "NewProfile": "Ny profil",
     "NewSubtitleStartKeyDownSetEndKeyUp": "Indsæt undertekst: Start på tast ned, sæt ende på tast op",
+    "SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext": "Indstil start ved videoposition sæt ende på tasten op, og gå til næste",
     "No": "Ingen",
     "NoFilesToConvert": "Ingen filer at konvertere",
     "NoLanguageCode": "Ingen sprogkode",
@@ -643,7 +644,17 @@
     "CopyToClipboard": "Kopiér til udklipsholder",
     "PlayCurrent": "Spil aktuel",
     "LeftMargin": "Venstre margin",
-    "RightMargin": "Højre margin"
+    "RightMargin": "Højre margin",
+    "Installed": "Installeret",
+    "AdvancedDotDotDot": "Avanceret...",
+    "ChooseAlignment": "Vælg justering",
+    "MaxWidthPixels": "Maks. bredde (pixels)",
+    "SampleText": "Eksempel tekst",
+    "BoxWidthPixels": "Boksbredde (pixels)",
+    "FadeInOut": "Fade ind/ud",
+    "Alpha": "Alfa",
+    "PickResolution": "Vælg opløsning",
+    "ManualSync": "Manuel synkronisering"
   },
   "Main": {
     "AudioTrackIsNowX": "Lydsporet er nu \"{0}",
@@ -843,6 +854,7 @@
       "HelpTitle": "Hjælp",
       "Help": "Hjælp...",
       "About": "Om...",
+      "CheckForUpdates": "_Check opdateringer...",
       "FixRightToLeftViaUnicodeControlCharacters": "Ret RTL via Unicode-kontroltegn (udvalgte linjer)",
       "RemoveUnicodeControlCharacters": "Fjern Unicode-kontroltegn (udvalgte linjer)",
       "ReverseRightToLeftStartEnd": "Omvendt RTL start/slut (udvalgte linjer)",
@@ -1138,6 +1150,8 @@
       "LengthLessThan": "Længde <",
       "LengthGreaterThan": "Længde >",
       "PixelLengthGreaterThan": "Pixellængde >",
+      "GapLessThan": "Gab i ms <",
+      "GapGreaterThan": "Gab i ms >",
       "ExactlyOneLine": "Præcis én linje",
       "ExactlyTwoLines": "Præcis to linjer",
       "MoreThanTwoLines": "Mere end to linjer",
@@ -1159,7 +1173,11 @@
       "ExportReplaceRules": "Eksportregler",
       "AppliedRules": "Anvendte regler",
       "FindRule": "Find regel",
-      "XLinesAffected": "{0:#,##0} linjer påvirket"
+      "XLinesAffected": "{0:#,##0} linjer påvirket",
+      "DeleteCategoryConfirm": "Vil du slette kategorien '{0}'?",
+      "DeleteRuleConfirm": "Vil du slette reglen '{0}'?",
+      "FindWhat": "Find hvad",
+      "DescriptionOptional": "Beskrivelse (valgfrit)"
     },
     "Find": {
       "SearchTextWatermark": "Søg tekst...",
@@ -1304,7 +1322,9 @@
       "BackToFixList": "Tilbage til rettelseslisten",
       "ApplyFixesAndClose": "Anvend rettelser og luk",
       "FixCommonOcrErrorsStep2": "Ret almindelige fejl, trin 2 (anvend rettelser)",
-      "FixCommonOcrErrorsStep2FixesFoundX": "Ret almindelige fejl, trin 2 - Rettelser fundet: {0}"
+      "FixCommonOcrErrorsStep2FixesFoundX": "Ret almindelige fejl, trin 2 - Rettelser fundet: {0}",
+      "Action": "Handling",
+      "ApplySelectedFixes": "Anvend valgte rettelser"
     },
     "AdjustDurations": {
       "Title": "Adjust durations",
@@ -1391,7 +1411,14 @@
       "EditStyles": "Rediger stilarter",
       "EditProperties": "Rediger egenskaber",
       "EditAttachments": "Rediger vedhæftede filer",
-      "ErrorsExportedX": "Fejl eksporteret: {0}"
+      "ErrorsExportedX": "Fejl eksporteret: {0}",
+      "SlowFontSizeChange": "Langsom ændring af skriftstørrelse",
+      "IncreaseFontKerning": "Forøg skrifttype-kernening",
+      "ScrollUp": "Rul op",
+      "ScrollDown": "Rul ned",
+      "RotateIn": "Roter ind",
+      "TiltBounce": "Tilt bounce",
+      "FontSizeBounceIn": "Skriftstørrelse hopper ind"
     },
     "ChangeCasing": {
       "Title": "Change casing",
@@ -1441,7 +1468,9 @@
     },
     "MergeShortLines": {
       "Title": "Flet korte linjer",
-      "HighlightParts": "Fremhæv dele (karaoke)"
+      "HighlightParts": "Fremhæv dele (karaoke)",
+      "MergedLineInfo": "Flettede linje {0} til {1} ​​- {2}",
+      "LinesMergedX": "Linjer flettet: {0}"
     },
     "MergeLinesWithSameText": {
       "Title": "Flet linjer med samme tekst",
@@ -1459,7 +1488,23 @@
       "NothingToReport": "Ingen problemer fundet.",
       "SaveNetflixQualityReport": "Gem Netflix kvalitetsrapport",
       "NetflixReportSaved": "Netflix kvalitetsrapport gemt",
-      "NetFlixQualityReportSavedToX": "Netflix kvalitetsrapport gemt til:\r\n\r\n{0}"
+      "NetFlixQualityReportSavedToX": "Netflix kvalitetsrapport gemt til:\r\n\r\n{0}",
+      "DialogHyphenSpace": "Dialog bindestreg mellemrum",
+      "EllipsesNotThreeDots": "Brug elipser (ikke tre prikker)",
+      "OnlyAllowedGlyphs": "Kun tilladte glyffer",
+      "Italics": "Kursiv",
+      "MaxCharsSec": "Max tegn/sek",
+      "MaxDuration": "Max varighed",
+      "MaxLineLength": "Max linjelængde",
+      "MinDuration": "Min varighed",
+      "MaxNumberOfLines": "Max antal linjer",
+      "OneToTenSpellOut": "En til ti staves ud",
+      "ShotChanges": "Skudskifter",
+      "StartNumberSpellOut": "Startnummer udskrives",
+      "TextforHiUseBrackets": "Tekst til HI, brug parenteser",
+      "FrameRate": "Billedhastighed",
+      "TwoFrameGrap": "Mellemrum i to rammer",
+      "WhiteSpace": "Hvidt rum"
     },
     "ImageBasedEdit": {
       "EditImagedBaseSubtitle": "Rediger billedbaseret undertekst",
@@ -1484,6 +1529,24 @@
       "ResizeImages": "Ændre størrelse på billeder",
       "Percentage": "Procent",
       "ResizeImagesInfo": "Indtast procentdelen for at ændre størrelse på billeder.\r\n\r\nForhåndsvisning af opdateringer automatisk."
+    },
+    "RemoveTextForHearingImpaired": {
+      "Title": "Fjern tekst for hørehæmmede",
+      "Interjections": "Interjektioner",
+      "SkipIfStartWith": "Spring over hvis start med",
+      "RemoveTextBetween": "Fjern tekst mellem",
+      "Brackets": "Firkant",
+      "CurlyBrackets": "Krøllede ",
+      "Parentheses": "Parenteser",
+      "And": "og",
+      "OnlySeparateLines": "Kun separate linjer",
+      "RemoveTextBeforeColon": "Fjern tekst før kolon",
+      "OnlyIfTextIsUppercase": "Kun hvis teksten er med store bogstaver",
+      "OnlyOnSeparateLine": "Kun på separat linje",
+      "IfLineIsUppercase": "Hvis stregen er stor",
+      "IfLineContains": "Hvis linje indeholder",
+      "IfLineOnlyContainsMusicSymbols": "Hvis linje kun indeholder musiksymboler",
+      "RemoveInterjections": "Fjern interjektioner"
     }
   },
   "SpellCheck": {
@@ -1537,6 +1600,8 @@
     "AddCurrentSubtitle": "Tilføj aktuel undertekst",
     "TitleOrLanguage": "Titel/sprog",
     "ViewMatroskaTrackX": "Se Matroska-spor - {0}",
+    "ResolutionSeparator": "x",
+    "OpenFromUrlTitle": "Åbn videofil fra URL",
     "BurnIn": {
       "Title": "Generer video med indbrændte undertekster",
       "InfoAssaOff": "Bemærk: Avanceret SubStation Alpha-styling understøttes.",
@@ -1579,7 +1644,8 @@
       "OutputProperties": "Outputegenskaber...",
       "VideoFileSize": "Video filstørrelse",
       "OneBox": "Én kasse",
-      "BoxPerLine": "Æske pr linje"
+      "BoxPerLine": "Æske pr linje",
+      "LogoInfo": "Vælg et PNG-billede, og træk det for at placere det på videoen."
     },
     "VideoTransparent": {
       "Title": "Generate transparent video with subtitles",
@@ -1604,7 +1670,15 @@
       "SelectModel": "Vælg model",
       "ViewWhisperLogFile": "Se Whisper-logfil",
       "ReDownloadX": "Gendownload {0}",
-      "DownloadingSpeechToTextModel": "Downloader tale-til-tekst-model"
+      "DownloadingSpeechToTextModel": "Downloader tale-til-tekst-model",
+      "WhisperPostProcessingTitle": "Whisper efterbehandling",
+      "AdjustTimings": "Juster tider",
+      "MergeShortLines": "Flet korte linjer",
+      "BreakSplitLongLines": "Bryd/split lange linjer",
+      "FixShortDuration": "Fix kort varighed",
+      "FixCasing": "Reparer store/små bogstaver",
+      "AddPeriods": "Tilføj perioder",
+      "ChangeUnderlineToColor": "Skift understregning til farve"
     },
     "TextToSpeech": {
       "Title": "Tekst til tale",
@@ -1628,7 +1702,32 @@
       "RegenerateAudio": "Gendan lyd",
       "AutoContinuePlaying": "Fortsæt automatisk med at spille",
       "AddingAudioToVideoFileDotDotDot": "Tilføjer lyd til videofil...",
-      "PreparingMergeDotDotDot": "Forbereder fletning..."
+      "PreparingMergeDotDotDot": "Forbereder fletning...",
+      "ImportVoiceDotDotDot": "Importer stemme...",
+      "VoiceImportSuccessTitle": "Stemme importeret",
+      "VoiceXImported": "Stemmen '{0}' blev importeret",
+      "AdvancedTtsSettings": "Avancerede TTS-indstillinger",
+      "ProAudioPostProcessing": "Pro lyd efterbehandling",
+      "ProAudioPostProcessingDescription": "Anvender EQ-varme, noise gate, kompression, loudness-normalisering (-16 LUFS) og fade ind/ud til hvert segment.",
+      "AudioDucking": "Audio ducking",
+      "AudioDuckingDescription": "Reducerer den originale videolydstyrke og blander den med TTS-lyden, så det originale lydspor stadig er svagt hørbart.",
+      "OriginalVolumePercent": "Original volumen %",
+      "VadSilenceCompression": "VAD silence komprimering",
+      "VadSilenceCompressionDescription": "Forkorter pauser mellem ord, før du skifter tempo.\r\nBruger Voice Activity Detection til kun at komprimere tavshedshuller, mens talen holdes urørt.\r\nDette er det foretrukne første trin - det reducerer varigheden uden kvalitetstab.",
+      "MaxSilenceMs": "Maksimal stilhed (ms)",
+      "HighQualityTimeStretch": "Tidsstrækning af høj kvalitet (WSOLA/gummibånd)",
+      "HighQualityTimeStretchDescription": "Bruger gummibåndsalgoritmen (WSOLA) i stedet for standard atempo-filteret til tonehøjdebevarende hastighedsændringer.\r\nProducerer mere naturligt lydende tale, især ved højere hastighedsfaktorer.\r\nKræver librubberband i din FFmpeg-build — falder automatisk tilbage til atempo, hvis den ikke er tilgængelig.",
+      "SilencePaddingMs": "Silence polstring (ms)",
+      "SilencePaddingMsDescription": "Tilføjer en kort stilhed i slutningen af ​​hvert segment.\r\nNyttig til at puste plads mellem sætninger.",
+      "OutputSampleRate": "Output sample rate (0 = standard)",
+      "OutputSampleRateDescription": "Gensampler alle segmenter til den angivne samplingsfrekvens (f.eks. 44100, 48000).\r\nIndstil til 0 for at beholde den oprindelige hastighed.",
+      "EdgeTtsRate": "Edge-TTS rate",
+      "EdgeTtsRateDescription": "Talehastighed for Edge-TTS, f.eks.\r\n\"+50%\", \"-30%\" eller \"+0%\" som standard.",
+      "EdgeTtsPitch": "Edge-TTS tonehøjde",
+      "EdgeTtsPitchDescription": "Pitch justering for Edge-TTS, f.eks.\r\n\"+10Hz\", \"-5Hz\" eller \"+0Hz\" som standard.",
+      "EdgeTtsVolume": "Edge-TTS volumen",
+      "EdgeTtsVolumeDescription": "Lydstyrkejustering til Edge-TTS, f.eks.\r\n\"+20%\", \"-10%\" eller \"+0%\" som standard.",
+      "DownloadPiperPrompt": "\"Tekst til tale\" kræver Piper.\r\n\r\nVil du downloade og bruge Piper?"
     },
     "ShotChanges": {
       "TitleGenerateOrImport": "Generer/importér skudændringer",
@@ -1715,7 +1814,12 @@
     "ReCopyTextToClipboard": "Kopier tekst til udklipsholder igen (til oversætter/AI)",
     "BlockXOfY": "Bloker {0} af {1}",
     "NoTextInClipboard": "Ingen tekst i udklipsholderen",
-    "TextInClipboardIsSameAsSourceText": "Teksten i udklipsholderen er den samme som kildeteksten, prøv venligst igen."
+    "TextInClipboardIsSameAsSourceText": "Teksten i udklipsholderen er den samme som kildeteksten, prøv venligst igen.",
+    "LineMerge": "Linjefletning",
+    "DelayInSecondsBetweenRequests": "Forsinkelse i sekunder mellem anmodninger",
+    "MaxBytesPerRequest": "Maks. bytes pr. anmodning",
+    "PromptText": "Spørg tekst",
+    "TranslateEachLineSeparately": "Oversæt hver linje separat"
   },
   "Options": {
     "Settings": {
@@ -1808,7 +1912,7 @@
       "MaxLines": "Max antal linjer",
       "UnbreakSubtitlesShortThan": "Split undertekster kortere end",
       "NewEmptyDefaultMs": "Standard ny undertekstvarighed (ms)",
-      "PromptDeleteLines": "Spørg om sletning af linjer",
+      "PromptBeforeDelete": "Spørg før sletning",
       "RememberPositionAndSize": "Husk vinduets placering og størrelse",
       "AutoBackupOn": "Auto-backup",
       "AutoBackupIntervalMinutes": "Interval for automatisk backup (minutter)",
@@ -1973,7 +2077,9 @@
       "AllSettings": "Alle indstillinger",
       "UiScale": "UI-skaler (%)",
       "WaveformToolbarItems": "Waveform værktøjslinjeelementer",
-      "MatchIconColorToDarkTheme": "Match ikonfarve til mørk temaforgrundsfarve"
+      "MatchIconColorToDarkTheme": "Match ikonfarve til mørk temaforgrundsfarve",
+      "SubtitlePreviewProperties": "Egenskaber til forhåndsvisning af undertekster",
+      "PixelWidthInfo": "Grønne linjer = maks. breddegrænse |  \r\nRødt område = tekst overskrider grænsen"
     },
     "Shortcuts": {
       "Title": "Shortcuts",
@@ -2244,7 +2350,13 @@
     }
   },
   "Help": {
-    "AboutSubtitleEdit": "Om Subtitle Edit"
+    "AboutSubtitleEdit": "Om Subtitle Edit",
+    "CheckForUpdates": "Se efter opdateringer",
+    "CheckForUpdatesChecking": "Søger efter opdateringer...",
+    "CheckForUpdatesUpToDate": "Du kører den seneste version.",
+    "CheckForUpdatesNewVersionAvailable": "Ny version tilgængelig: {0}",
+    "CheckForUpdatesUnableToCheck": "Kan ikke søge efter opdateringer.",
+    "CheckForUpdatesDownloadNewVersion": "Download ny version"
   },
   "Ocr": {
     "LinesToDraw": "Linjer at tegne",
