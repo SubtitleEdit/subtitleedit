@@ -277,6 +277,8 @@ public class LanguageSettings
     public string MatchIconColorToDarkTheme { get; set; }
     public string SubtitlePreviewProperties { get; set; }
     public string PixelWidthInfo { get; set; }
+    public string SpellCheckEngineHunSpelll { get; set; }
+    public string SpellCheckEngineMsWord { get; set; }
 
     public LanguageSettings()
     {
@@ -550,6 +552,8 @@ public class LanguageSettings
         MatchIconColorToDarkTheme = "Match icon color to dark theme foreground color";
         SubtitlePreviewProperties = "Subtitle preview properties";
         PixelWidthInfo = "Green lines = max-width limit   |   Red area = text exceeds limit";
+        SpellCheckEngineHunSpelll = "Hunspell";
+        SpellCheckEngineMsWord = "MS Word";
     }
 
     public string GetContinuationStyleName(ContinuationStyle continuationStyle)

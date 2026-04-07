@@ -19,6 +19,7 @@ using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformToolbarItems;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
+using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -116,6 +117,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _speechToTextSelectedLinesPromptFistTimeOnly;
     [ObservableProperty] private bool _multipleReplaceShowDotDotDotButtons;
     [ObservableProperty] private bool _gridFocusTextboxAfterInsertNew;
+    [ObservableProperty] private ObservableCollection<string> _spellCheckEngines;
+    [ObservableProperty] private string _selectedSpellCheckEngine;
 
     [ObservableProperty] private bool _showUpDownStartTime;
     [ObservableProperty] private bool _showUpDownEndTime;
@@ -447,6 +450,12 @@ public partial class SettingsViewModel : ObservableObject
             Se.Language.Options.Settings.SplitOddLineActionWeightBottom,
         ];
         SelectedSplitOddNumberOfLinesAction = SplitOddNumberOfLinesActions[0];
+
+        SpellCheckEngines =         [
+            Se.Language.Options.Settings.SpellCheckEngineHunSpelll,
+            Se.Language.Options.Settings.SpellCheckEngineMsWord,            
+        ];
+        SelectedSpellCheckEngine = SpellCheckEngines[0];
 
         WaveformSpaceInfo = string.Empty;
         IsMpvChosen = true;
