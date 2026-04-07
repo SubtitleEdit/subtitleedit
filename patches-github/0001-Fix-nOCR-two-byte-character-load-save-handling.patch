@@ -1,0 +1,40 @@
+From cf2d41ec49863362fc0e876f1cf20a26a3b1a20e Mon Sep 17 00:00:00 2001
+From: "Hellgringer.Online" <Hellbringer.Online@gmail.com>
+Date: Mon, 6 Apr 2026 21:43:29 +0400
+Subject: [PATCH] Fix nOCR two-byte character load/save handling
+
+---
+ src/UI/Logic/Ocr/NOcrChar.cs | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/src/UI/Logic/Ocr/NOcrChar.cs b/src/UI/Logic/Ocr/NOcrChar.cs
+index d53a2a070..30fb539bb 100644
+--- a/src/UI/Logic/Ocr/NOcrChar.cs
++++ b/src/UI/Logic/Ocr/NOcrChar.cs
+@@ -87,6 +87,7 @@ public class NOcrChar
+             }
+             else
+             {
++                position++;
+                 ExpandCount = file[position++];
+                 Width = file[position++] << 8 | file[position++];
+                 Height = file[position++] << 8 | file[position++];
+@@ -179,7 +180,7 @@ public class NOcrChar
+     {
+         return Width <= byte.MaxValue && Height <= byte.MaxValue && ExpandCount < 16 &&
+                LinesBackground.Count <= byte.MaxValue && LinesForeground.Count <= byte.MaxValue &&
+-               IsAllPointByteValues(LinesForeground) && IsAllPointByteValues(LinesForeground);
++               IsAllPointByteValues(LinesForeground) && IsAllPointByteValues(LinesBackground);
+     }
+ 
+     private static bool IsAllPointByteValues(List<NOcrLine> lines)
+@@ -632,4 +633,4 @@ public class NOcrChar
+             lines.RemoveAt(i);
+         }
+     }
+-}
+\ No newline at end of file
++}
+-- 
+2.53.0.windows.2
+
