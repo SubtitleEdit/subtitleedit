@@ -87,6 +87,7 @@ public class NOcrChar
             }
             else
             {
+                position++; // skip flags byte (already read for isShort and Italic)
                 ExpandCount = file[position++];
                 Width = file[position++] << 8 | file[position++];
                 Height = file[position++] << 8 | file[position++];
@@ -177,9 +178,9 @@ public class NOcrChar
 
     private bool IsAllByteValues()
     {
-        return Width <= byte.MaxValue && Height <= byte.MaxValue && ExpandCount < 16 &&
+        return Width <= byte.MaxValue && Height <= byte.MaxValue && MarginTop <= byte.MaxValue && ExpandCount < 16 &&
                LinesBackground.Count <= byte.MaxValue && LinesForeground.Count <= byte.MaxValue &&
-               IsAllPointByteValues(LinesForeground) && IsAllPointByteValues(LinesForeground);
+               IsAllPointByteValues(LinesForeground) && IsAllPointByteValues(LinesBackground);
     }
 
     private static bool IsAllPointByteValues(List<NOcrLine> lines)
