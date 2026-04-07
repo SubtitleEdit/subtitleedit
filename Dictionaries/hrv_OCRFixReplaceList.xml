@@ -88,6 +88,7 @@
     <Word from="bezveze" to="bez veze" />
     <Word from="bežeći" to="bježeći" />
     <Word from="Biceš" to="Bit ćeš" />
+    <Word from="biit" to="biti" />
     <Word from="bie" to="bile" />
     <Word from="bije" to="tuče" />
     <Word from="biješ" to="tučeš" />
@@ -1220,6 +1221,7 @@
     <Word from="moež" to="može" />
     <Word from="možemp" to="možemo" />
     <Word from="moč" to="moć" />
+    <Word from="motivacioni" to="motivacijski" />
     <Word from="motiviši" to="motiviraj" />
     <Word from="Motiviši" to="Motiviraj" />
     <Word from="moea" to="mora" />
@@ -1502,6 +1504,7 @@
     <Word from="odličana" to="odlična" />
     <Word from="odljepio" to="odlijepio" />
     <Word from="odma" to="odmah" />
+    <Word from="odmere" to="odmjere" />
     <Word from="odmerila" to="odmjerila" />
     <Word from="odna" to="onda" />
     <Word from="onfa" to="onda" />
@@ -1645,6 +1648,7 @@
     <Word from="ovsena" to="zobena" />
     <Word from="ovsenu" to="zobenu" />
     <Word from="ozljeđen" to="ozlijeđen" />
+    <Word from="Ožedneo" to="Ožednio" />
     <Word from="ožedneo" to="ožednio" />
     <!-- p -->
     <Word from="pakuj" to="pakiraj" />
@@ -2168,6 +2172,7 @@
     <Word from="razdeliti" to="razdijeliti" />
     <Word from="razdeviče" to="razdjeviče" />
     <Word from="razgovrati" to="razgovarati" />
+    <Word from="Razmišljaće" to="Razmišljat će" />
     <Word from="razreši" to="razriješi" />
     <Word from="razume" to="razumije" />
     <Word from="razumeju" to="razumiju" />
@@ -2182,6 +2187,7 @@
     <Word from="recitujte" to="recitirajte" />
     <Word from="reč" to="riječ" />
     <Word from="reči" to="riječi" />
+    <Word from="rečit" to="rječit" />
     <Word from="rečima" to="riječima" />
     <Word from="Reč" to="Riječ" />
     <Word from="Reči" to="Riječi" />
@@ -2287,7 +2293,11 @@
     <Word from="secka" to="sjecka" />
     <Word from="seckam" to="sjeckam" />
     <Word from="sećanjima" to="sjećanjima" />
+    <Word from="Sećat" to="Sjećat" />
+    <Word from="sećat" to="sjećat" />
     <Word from="seče" to="siječe" />
+    <Word from="sečem" to="siječem" />
+    <Word from="Sečem" to="Siječem" />
     <Word from="sečeno" to="rezano" />
     <Word from="sečenjem" to="rezanjem" />
     <Word from="sečivo" to="sječivo" />
@@ -2386,6 +2396,7 @@
     <Word from="seo" to="sjeo" />
     <Word from="Seo" to="Sjeo" />
     <Word from="sem" to="osim" />
+    <Word from="seva" to="sijeva" />
     <Word from="sjefi" to="sjedi" />
     <Word from="sm" to="sam" />
     <Word from="sma" to="sam" />
@@ -2440,6 +2451,7 @@
     <Word from="smešak" to="smješak" />
     <Word from="smeši" to="smiješi" />
     <Word from="Smeši" to="Smiješi" />
+    <Word from="smešim" to="smiješim" />
     <Word from="smešio" to="smiješio" />
     <Word from="smešiš" to="smiješiš" />
     <Word from="smeškao" to="smješkao" />
@@ -2488,6 +2500,7 @@
     <Word from="sovg" to="svog" />
     <Word from="sovga" to="svoga" />
     <Word from="Sovga" to="Svoga" />
+    <Word from="sovju" to="svoju" />
     <Word from="Spakuj" to="Spakiraj" />
     <Word from="spakuje" to="spakira" />
     <Word from="spakujem" to="spakiram" />
@@ -2698,6 +2711,7 @@
     <Word from="štoje" to="što je" />
     <Word from="šurak" to="šurjak" />
     <Word from="Šutjeće" to="Šutjet će" />
+    <Word from="Šutjeću" to="Šutjet ću" />
     <Word from="šutjenja" to="šutnje" />
     <!-- t -->
     <Word from="tablu" to="ploču" />
@@ -2720,6 +2734,7 @@
     <Word from="tečnost" to="tekućina" />
     <Word from="tečnosti" to="tekućine" />
     <Word from="tečnošću" to="tekućinom" />
+    <Word from="tejra" to="tjera" />
     <Word from="tekšo" to="teško" />
     <Word from="Tekšo" to="Teško" />
     <Word from="telom" to="tijelom" />
@@ -3156,6 +3171,7 @@
     <Word from="zaplenu" to="zapljenu" />
     <Word from="Zaposliću" to="Zaposlit ću" />
     <Word from="zapovjeda" to="zapovijeda" />
+    <Word from="zapreti" to="zaprijeti" />
     <Word from="zasenio" to="zasjenio" />
     <Word from="zaslepljen" to="zaslijepljen" />
     <Word from="zaspem" to="zaspim" />
@@ -4346,6 +4362,7 @@
     <LinePart from="ući unutra" to="ući" />
     <LinePart from="Umeš da budeš" to="Znaš biti" />
     <LinePart from="umeju da budu" to="znaju biti" />
+    <LinePart from="Umeš li da" to="Znaš li" />
     <LinePart from="vas je lagao" to="vam je lagao" />
     <LinePart from="voli da bude" to="volim biti" />
     <LinePart from="volim da budem" to="volim biti" />
@@ -5612,6 +5629,7 @@
     <RegEx find="([Mm])sl" replaceWith="$1isl" />
     <RegEx find="msm" replaceWith="mam" />
     <RegEx find="mtić" replaceWith="mtit ć" />
+    <RegEx find="mtrv" replaceWith="mrtv" />
     <RegEx find="mzn" replaceWith="mun" />
     <RegEx find="mqm" replaceWith="mam" />
     <RegEx find="mwn" replaceWith="men" />
