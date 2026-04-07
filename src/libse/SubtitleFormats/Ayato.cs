@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Ayato : SubtitleFormat
+    public class Ayato : SubtitleFormat, IBinaryPersistableSubtitle
     {
         public override string Extension => ".aya";
 
@@ -35,135 +36,146 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             throw new NotImplementedException();
         }
 
+        public bool Save(string fileName, Stream stream, Subtitle subtitle, bool batchMode)
+        {
+            WriteToStream(stream, subtitle);
+            return true;
+        }
+
         public void Save(string fileName, string videoFileName, Subtitle subtitle)
         {
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
-                // header
-                var header = new byte[2713];
-                header[00] = 0x05;
-                header[01] = 0x30;
-                header[02] = 0x32;
-                header[03] = 0x2E;
-                header[04] = 0x30;
-                header[05] = 0x33;
-                header[06] = 0x05;
-                header[07] = 0x41;
-                header[08] = 0x79;
-                header[09] = 0x61;
-                header[10] = 0x74;
-                header[11] = 0x6F;
-                header[12] = 0x02;
-                header[77] = 0x01;
-                header[81] = 0x01;
-                header[608] = 0x3b;
-                header[609] = 0x32;
-                header[613] = 0x58;
-                header[614] = 0x02;
-                header[615] = 0xE8;
-                header[616] = 0x03;
-                header[617] = 0xE8;
-                header[618] = 0x03;
-                header[619] = 0xE8;
-                header[620] = 0x03;
-                header[621] = 0xE8;
-                header[622] = 0x03;
-                header[639] = 0x02;
+                WriteToStream(fs, subtitle);
+            }
+        }
 
-                header[682] = (byte)(subtitle.Paragraphs.Count & 0xff);
-                header[683] = (byte)((subtitle.Paragraphs.Count >> 8) & 0xff);
+        private static void WriteToStream(Stream fs, Subtitle subtitle)
+        {
+            // header
+            var header = new byte[2713];
+            header[00] = 0x05;
+            header[01] = 0x30;
+            header[02] = 0x32;
+            header[03] = 0x2E;
+            header[04] = 0x30;
+            header[05] = 0x33;
+            header[06] = 0x05;
+            header[07] = 0x41;
+            header[08] = 0x79;
+            header[09] = 0x61;
+            header[10] = 0x74;
+            header[11] = 0x6F;
+            header[12] = 0x02;
+            header[77] = 0x01;
+            header[81] = 0x01;
+            header[608] = 0x3b;
+            header[609] = 0x32;
+            header[613] = 0x58;
+            header[614] = 0x02;
+            header[615] = 0xE8;
+            header[616] = 0x03;
+            header[617] = 0xE8;
+            header[618] = 0x03;
+            header[619] = 0xE8;
+            header[620] = 0x03;
+            header[621] = 0xE8;
+            header[622] = 0x03;
+            header[639] = 0x02;
 
-                header[686] = 0x09;
-                header[687] = 0x04;
+            header[682] = (byte)(subtitle.Paragraphs.Count & 0xff);
+            header[683] = (byte)((subtitle.Paragraphs.Count >> 8) & 0xff);
 
-                header[751] = 0x08;
+            header[686] = 0x09;
+            header[687] = 0x04;
 
-                header[760] = 0x01;
-                header[761] = 0x0a;
+            header[751] = 0x08;
 
-                header[830] = 0x58;
-                header[831] = 0x48;
+            header[760] = 0x01;
+            header[761] = 0x0a;
 
-                header[2048] = 0x99;
-                header[2049] = 0x02;
+            header[830] = 0x58;
+            header[831] = 0x48;
 
-                header[2050] = (byte)(subtitle.Paragraphs.Count & 0xff);
-                header[2051] = (byte)((subtitle.Paragraphs.Count >> 8) & 0xff);
+            header[2048] = 0x99;
+            header[2049] = 0x02;
 
-                header[2069] = 0x17;
-                header[2071] = 0x17;
-                header[2073] = 0x02;
-                header[2075] = 0x27;
-                header[2077] = 0x0c;
-                header[2079] = 0x04;
+            header[2050] = (byte)(subtitle.Paragraphs.Count & 0xff);
+            header[2051] = (byte)((subtitle.Paragraphs.Count >> 8) & 0xff);
 
-                header[2082] = 0x01;
-                header[2085] = 0x01;
+            header[2069] = 0x17;
+            header[2071] = 0x17;
+            header[2073] = 0x02;
+            header[2075] = 0x27;
+            header[2077] = 0x0c;
+            header[2079] = 0x04;
 
-                // Microsoft Sans Serif
-                header[2088] = 0x4d;
-                header[2089] = 0x69;
-                header[2090] = 0x63;
-                header[2091] = 0x72;
-                header[2092] = 0x6f;
-                header[2093] = 0x73;
-                header[2094] = 0x6f;
-                header[2095] = 0x66;
-                header[2096] = 0x74;
-                header[2097] = 0x20;
-                header[2098] = 0x53;
-                header[2099] = 0x61;
-                header[2100] = 0x6e;
-                header[2101] = 0x73;
-                header[2102] = 0x20;
-                header[2103] = 0x53;
-                header[2104] = 0x65;
-                header[2105] = 0x72;
-                header[2106] = 0x69;
-                header[2107] = 0x66;
+            header[2082] = 0x01;
+            header[2085] = 0x01;
 
-                header[2120] = 0x1f;
-                header[2123] = 0x01;
-                header[2124] = 0x02;
+            // Microsoft Sans Serif
+            header[2088] = 0x4d;
+            header[2089] = 0x69;
+            header[2090] = 0x63;
+            header[2091] = 0x72;
+            header[2092] = 0x6f;
+            header[2093] = 0x73;
+            header[2094] = 0x6f;
+            header[2095] = 0x66;
+            header[2096] = 0x74;
+            header[2097] = 0x20;
+            header[2098] = 0x53;
+            header[2099] = 0x61;
+            header[2100] = 0x6e;
+            header[2101] = 0x73;
+            header[2102] = 0x20;
+            header[2103] = 0x53;
+            header[2104] = 0x65;
+            header[2105] = 0x72;
+            header[2106] = 0x69;
+            header[2107] = 0x66;
 
-                header[2128] = 0xff;
-                header[2136] = 0x02;
-                header[2176] = 0x01;
-                header[2193] = 0x02;
-                header[2194] = 0x02;
+            header[2120] = 0x1f;
+            header[2123] = 0x01;
+            header[2124] = 0x02;
 
-                header[2197] = 0x0C;
-                header[2198] = 0x14;
-                header[2199] = 0x0C;
-                header[2200] = 0x01;
-                header[2201] = 0xe8;
-                header[2202] = 0x03;
-                header[2203] = 0xe8;
-                header[2204] = 0x03;
-                header[2205] = 0xe8;
-                header[2206] = 0x03;
-                header[2207] = 0xe8;
-                header[2208] = 0x03;
+            header[2128] = 0xff;
+            header[2136] = 0x02;
+            header[2176] = 0x01;
+            header[2193] = 0x02;
+            header[2194] = 0x02;
 
-                header[2225] = 0x13;
-                header[2226] = 0x08;
-                header[2227] = 0xdf;
-                header[2228] = 0x07;
-                header[2229] = 0x13;
-                header[2230] = 0x08;
-                header[2231] = 0xdf;
-                header[2232] = 0x07;
+            header[2197] = 0x0C;
+            header[2198] = 0x14;
+            header[2199] = 0x0C;
+            header[2200] = 0x01;
+            header[2201] = 0xe8;
+            header[2202] = 0x03;
+            header[2203] = 0xe8;
+            header[2204] = 0x03;
+            header[2205] = 0xe8;
+            header[2206] = 0x03;
+            header[2207] = 0xe8;
+            header[2208] = 0x03;
 
-                fs.Write(header, 0, header.Length);
+            header[2225] = 0x13;
+            header[2226] = 0x08;
+            header[2227] = 0xdf;
+            header[2228] = 0x07;
+            header[2229] = 0x13;
+            header[2230] = 0x08;
+            header[2231] = 0xdf;
+            header[2232] = 0x07;
 
-                // paragraphs
-                var sub = new Subtitle(subtitle);
-                int number = 1;
-                foreach (Paragraph p in sub.Paragraphs)
-                {
-                    WriteParagraph(fs, p, number);
-                    number++;
-                }
+            fs.Write(header, 0, header.Length);
+
+            // paragraphs
+            var sub = new Subtitle(subtitle);
+            int number = 1;
+            foreach (Paragraph p in sub.Paragraphs)
+            {
+                WriteParagraph(fs, p, number);
+                number++;
             }
         }
 
