@@ -29,12 +29,7 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
     /// When true, ignore explicit active-word markup and auto-sequence whole words
     /// (one subtitle per word, timing = duration / wordCount).
     /// </summary>
-    public bool AutoDetectActiveWord { get; set; } = true;
-
-    /// <summary>
-    /// Alpha value used for inactive words (ASS \alpha uses hex).
-    /// </summary>
-    public int InactiveAlpha { get; set; } = 200;
+    public bool AutoDetectActiveWord { get; set; } = false;
 
     /// <summary>
     /// Glow color used for the active word's 3c (ASS BGR).
@@ -50,7 +45,7 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
     /// Color used for inactive words' primary color (\1c). Default dim gray.
     /// This ensures color is explicitly reset after the active word so subsequent words are not colored.
     /// </summary>
-    public Color InactiveWordColor { get; set; } = Color.FromRgb(0x80, 0x80, 0x80);
+    public Color InactiveWordColor { get; set; } = Color.FromArgb(0xEE, 0xEE, 0xEE, 0xEE);
 
     /// <summary>
     /// When true, apply the glow (3c, blur, scale transform) to the active word.
@@ -88,7 +83,7 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
             if (!string.IsNullOrEmpty(posTags)) sb.Append(posTags);
 
             // Inactive tags now explicitly set \1c to InactiveWordColor so color resets after active word.
-            string inactiveTags = $"{{\\alpha&H{(255 -InactiveAlpha):X2}&\\1c{ToAssColor(InactiveWordColor)}\\bord0\\shad0\\blur0\\fscx100\\fscy100}}";
+            string inactiveTags = $"{{\\alpha&H{(255 -InactiveWordColor.A):X2}&\\1c{ToAssColor(InactiveWordColor)}\\bord0\\shad0\\blur0\\fscx100\\fscy100}}";
 
             if (parsed == null || string.IsNullOrEmpty(parsed.Value.Active))
             {
@@ -157,7 +152,7 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
 
         string posTags = ExtractPositionalTags(sub.Text);
         // Inactive tags explicitly include InactiveWordColor so color is reset for non-active words and spaces.
-        string inactiveTags = $"{{\\alpha&H{InactiveAlpha:X2}&\\1c{ToAssColor(InactiveWordColor)}\\bord0\\shad0\\blur0\\fscx100\\fscy100}}";
+        string inactiveTags = $"{{\\alpha&H{255 - InactiveWordColor.A:X2}&\\1c{ToAssColor(InactiveWordColor)}\\bord0\\shad0\\blur0\\fscx100\\fscy100}}";
 
         // Build active tag depending on ApplyGlow
         string activeTags;

@@ -98,16 +98,11 @@ public class AssaApplyAdvancedEffectWindow : Window
                     inactiveColorRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeInactiveColor, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
                     inactiveColorRow.Children.Add(UiUtil.MakeColorPicker(fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.InactiveWordColor)));
 
-                    var opacityRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
-                    opacityRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeInactiveOpacity, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
-                    opacityRow.Children.Add(UiUtil.MakeNumericUpDownInt(0, 255, 0x90, 130, fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.InactiveAlpha)));
-
                     var settingsStack = new StackPanel { Spacing = 2 };
                     settingsStack.Children.Add(autoDetectActiveWordRow);
                     settingsStack.Children.Add(activeGlowRow);
                     settingsStack.Children.Add(activeColorRow);
                     settingsStack.Children.Add(inactiveColorRow);
-                    settingsStack.Children.Add(opacityRow);
                     panel.Children.Add(settingsStack);
                 }
                 else if (item is AdvancedEffectWordSpacing wordSpacingItem)
