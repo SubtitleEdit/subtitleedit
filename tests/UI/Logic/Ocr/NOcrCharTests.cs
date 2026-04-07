@@ -50,7 +50,7 @@ public class NOcrCharTests
         Assert.Equal(original.MarginTop, loaded.MarginTop);
         Assert.Equal(original.Italic, loaded.Italic);
         Assert.Equal(2, loaded.LinesForeground.Count);
-        Assert.Equal(1, loaded.LinesBackground.Count);
+        Assert.Single(loaded.LinesBackground);
         Assert.Equal(original.LinesForeground[0].Start.X, loaded.LinesForeground[0].Start.X);
         Assert.Equal(original.LinesForeground[0].Start.Y, loaded.LinesForeground[0].Start.Y);
         Assert.Equal(original.LinesForeground[0].End.X, loaded.LinesForeground[0].End.X);
@@ -82,7 +82,7 @@ public class NOcrCharTests
         Assert.Equal(original.Height, loaded.Height);
         Assert.Equal(original.MarginTop, loaded.MarginTop);
         Assert.Equal(260, loaded.LinesForeground.Count);
-        Assert.Equal(1, loaded.LinesBackground.Count);
+        Assert.Single(loaded.LinesBackground);
         Assert.Equal(original.LinesForeground[0].Start.X, loaded.LinesForeground[0].Start.X);
         Assert.Equal(original.LinesForeground[0].Start.Y, loaded.LinesForeground[0].Start.Y);
         Assert.Equal(original.LinesForeground[259].End.X, loaded.LinesForeground[259].End.X);
@@ -109,8 +109,8 @@ public class NOcrCharTests
         Assert.Equal(original.Width, loaded.Width);
         Assert.Equal(original.Height, loaded.Height);
         Assert.Equal(300, loaded.MarginTop);
-        Assert.Equal(1, loaded.LinesForeground.Count);
-        Assert.Equal(1, loaded.LinesBackground.Count);
+        Assert.Single(loaded.LinesForeground);
+        Assert.Single(loaded.LinesBackground);
         Assert.Equal(original.LinesForeground[0].Start.X, loaded.LinesForeground[0].Start.X);
         Assert.Equal(original.LinesForeground[0].End.Y, loaded.LinesForeground[0].End.Y);
     }
