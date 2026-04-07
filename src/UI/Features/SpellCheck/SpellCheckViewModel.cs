@@ -54,6 +54,11 @@ public partial class SpellCheckViewModel : ObservableObject
     public SpellCheckViewModel(ISpellCheckManager spellCheckManager, IWindowService windowService)
     {
         _spellCheckManager = spellCheckManager;
+        if (Se.Settings.SpellCheck.SpellCheckProvider == SeSpellCheck.SpellCheckMsWord && WordSpellCheck.IsWordInstalled())
+        { 
+            _spellCheckManager.WordSpellChecker = new WordSpellCheck();
+        }
+        
         _spellCheckManager.OnWordChanged += (sender, e) =>
         {
             UpdateChangedWordInUi(e.FromWord, e.ToWord, e.WordIndex, e.Paragraph);

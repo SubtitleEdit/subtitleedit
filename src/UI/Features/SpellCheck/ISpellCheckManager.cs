@@ -20,4 +20,5 @@ public interface ISpellCheckManager
     void AdToUserDictionary(string currentWord);
     List<SpellCheckDictionaryDisplay> GetDictionaryLanguages(string dictionaryFolder);
     List<string> GetSuggestions(string word);
+    WordSpellCheck? WordSpellChecker { get; set; }
 }

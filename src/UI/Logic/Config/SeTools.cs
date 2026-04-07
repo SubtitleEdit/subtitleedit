@@ -6,9 +6,6 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 
 public class SeTools
 {
-    public const string SpellCheckHunspell = "hunspell";
-    public const string SpellCheckMsWord = "msword";
-
     public SeAudioToText AudioToText { get; set; } = new();
     public SeConvertActors ConvertActors { get; set; } = new();
     public SeFixCommonErrors FixCommonErrors { get; set; } = new();
@@ -86,7 +83,6 @@ public class SeTools
     public bool MultipleReplaceShowDotDotDotButtons { get; set; }
     public bool GridFocusTextboxAfterInsertNew { get; set; }
     public List<string> FindHistory { get; set; } = new List<string>();
-    public string SpellCheckProvider { get; set; }
 
     public SeTools()
     {
@@ -140,7 +136,6 @@ public class SeTools
         SpeechToTextSelectedLinesPromptFistTimeOnly = true;
         MultipleReplaceShowDotDotDotButtons = true;
         GridFocusTextboxAfterInsertNew = true;
-        SpellCheckProvider = SpellCheckHunspell;
 
         LastColorPickerColor = Colors.Yellow.FromColorToHex();
         LastColorPickerColor1 = Colors.Red.FromColorToHex();

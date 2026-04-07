@@ -279,6 +279,7 @@ public class LanguageSettings
     public string PixelWidthInfo { get; set; }
     public string SpellCheckEngineHunSpelll { get; set; }
     public string SpellCheckEngineMsWord { get; set; }
+    public string SpellCheckEngine { get; set; }
 
     public LanguageSettings()
     {
@@ -554,6 +555,7 @@ public class LanguageSettings
         PixelWidthInfo = "Green lines = max-width limit   |   Red area = text exceeds limit";
         SpellCheckEngineHunSpelll = "Hunspell";
         SpellCheckEngineMsWord = "MS Word";
+        SpellCheckEngine = "Spell check engine";
     }
 
     public string GetContinuationStyleName(ContinuationStyle continuationStyle)
