@@ -75,10 +75,9 @@ public class MainView : ViewBase
         InitMenu.Make(_vm);
         root.Children.Add(_vm.Menu.Dock(Dock.Top));
 
-        if (Se.Settings.Appearance.ShowHorizontalLineAboveToolbar)
-        {
-            root.Children.Add(UiUtil.MakeHorizontalSeparator(0.5, 0.5, new Thickness(0, 0, 0, 0)).Dock(Dock.Top));
-        }
+        _vm.ToolbarTopSeparator = UiUtil.MakeHorizontalSeparator(0.5, 0.5, new Thickness(0, 0, 0, 0));
+        _vm.ToolbarTopSeparator.IsVisible = Se.Settings.Appearance.ShowHorizontalLineAboveToolbar;
+        root.Children.Add(_vm.ToolbarTopSeparator.Dock(Dock.Top));
 
         // Toolbar
         _vm.Toolbar = InitToolbar.Make(_vm);
