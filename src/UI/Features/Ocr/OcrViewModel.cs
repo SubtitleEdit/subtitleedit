@@ -1858,8 +1858,7 @@ public partial class OcrViewModel : ObservableObject
 
                             if (result.OkPressed)
                             {
-                                var letterBitmap = letters[letterIndex].NikseBitmap;
-                                _nOcrAddHistoryManager.Add(result.NOcrChar, letterBitmap,
+                                _nOcrAddHistoryManager.Add(result.NOcrChar, result.PreviewBitmap,
                                     OcrSubtitleItems.IndexOf(item));
                                 IsInspectAdditionsVisible = true;
                                 _nOcrDb.Add(result.NOcrChar);

@@ -61,6 +61,8 @@ public partial class NOcrInspectViewModel : ObservableObject
     private NOcrDb _nOcrDb;
     private int _maxWrongPixels;
     private NikseBitmap2 _nBmp;
+    private NikseBitmap2? _displayBitmap;
+    private SKRect _displayRect;
     private OcrSubtitleItem? _ocrSubtitleItem;
     private NOcrAddHistoryManager _nOcrAddHistoryManager;
     private bool _isControlDown = false;
@@ -131,9 +133,9 @@ public partial class NOcrInspectViewModel : ObservableObject
     private void InitSentenceBitmap()
     {
         var skBitmap = _sentenceBitmapOriginal.Copy();
-        if (_splitItem.NikseBitmap != null)
+        if (_displayBitmap != null)
         {
-            var rect = new SKRect(_splitItem.X, _splitItem.Y, _splitItem.X + _splitItem.NikseBitmap.Width, _splitItem.Y + _splitItem.NikseBitmap.Height);
+            var rect = _displayRect;
             using (var canvas = new SKCanvas(skBitmap))
             {
                 using (var paint = new SKPaint
@@ -189,10 +191,10 @@ public partial class NOcrInspectViewModel : ObservableObject
         item.Italic = IsNewTextItalic;
 
         // Sync canvas lines back to NOcrChar (canvas stores bitmap-space coords, NOcrChar stores its own coord space)
-        if (_splitItem.NikseBitmap != null)
+        if (_displayBitmap != null)
         {
-            var bitmapWidth = _splitItem.NikseBitmap.Width;
-            var bitmapHeight = _splitItem.NikseBitmap.Height;
+            var bitmapWidth = _displayBitmap.Width;
+            var bitmapHeight = _displayBitmap.Height;
 
             item.LinesForeground.Clear();
             foreach (var line in NOcrDrawingCanvas.HitPaths)
@@ -289,8 +291,7 @@ public partial class NOcrInspectViewModel : ObservableObject
 
         if (addVm.OkPressed)
         {
-            var letterBitmap = _letters[LetterIndex].NikseBitmap;
-            _nOcrAddHistoryManager.Add(addVm.NOcrChar, letterBitmap, 0);
+            _nOcrAddHistoryManager.Add(addVm.NOcrChar, addVm.PreviewBitmap, 0);
             _nOcrDb.Add(addVm.NOcrChar);
             _ = Task.Run(_nOcrDb.Save);
             ReloadMatches();
@@ -332,7 +333,7 @@ public partial class NOcrInspectViewModel : ObservableObject
     {
         NOcrChar.LinesForeground.Clear();
         NOcrChar.LinesBackground.Clear();
-        NOcrChar.GenerateLineSegments(SelectedNoOfLinesToAutoDraw, false, NOcrChar, _splitItem.NikseBitmap!);
+        NOcrChar.GenerateLineSegments(SelectedNoOfLinesToAutoDraw, false, NOcrChar, _displayBitmap!);
         ShowOcrPoints();
     }
 
@@ -392,10 +393,10 @@ public partial class NOcrInspectViewModel : ObservableObject
         NOcrDrawingCanvas.MissPaths.Clear();
         NOcrDrawingCanvas.HitPaths.Clear();
 
-        if (_splitItem.NikseBitmap != null)
+        if (_displayBitmap != null)
         {
-            var bitmapWidth = _splitItem.NikseBitmap.Width;
-            var bitmapHeight = _splitItem.NikseBitmap.Height;
+            var bitmapWidth = _displayBitmap.Width;
+            var bitmapHeight = _displayBitmap.Height;
 
             foreach (var line in NOcrChar.LinesForeground)
             {
@@ -512,9 +513,22 @@ public partial class NOcrInspectViewModel : ObservableObject
 
             NewText = match?.Text ?? string.Empty;
             IsNewTextItalic = match is { Italic: true };
-            ResolutionAndTopMargin = string.Format(Se.Language.Ocr.ResolutionXYAndTopmarginZ, _splitItem.NikseBitmap.Width, _splitItem.NikseBitmap.Height, _splitItem.Top);
 
-            CurrentBitmap = _splitItem.NikseBitmap!.GetBitmap().ToAvaloniaBitmap();
+            _displayBitmap = _splitItem.NikseBitmap;
+            _displayRect = new SKRect(_splitItem.X, _splitItem.Y, _splitItem.X + _splitItem.NikseBitmap.Width, _splitItem.Y + _splitItem.NikseBitmap.Height);
+            if (match is { ExpandCount: > 1 })
+            {
+                var expandedGroup = ExpandedOcrGroup.Create(_nBmp, _letters, index, match.ExpandCount);
+                if (expandedGroup != null)
+                {
+                    _displayBitmap = expandedGroup.PreviewBitmap;
+                    _displayRect = new SKRect(expandedGroup.Bounds.Left, expandedGroup.Bounds.Top, expandedGroup.Bounds.Right, expandedGroup.Bounds.Bottom);
+                }
+            }
+
+            ResolutionAndTopMargin = string.Format(Se.Language.Ocr.ResolutionXYAndTopmarginZ, _displayBitmap.Width, _displayBitmap.Height, _splitItem.Top);
+
+            CurrentBitmap = _displayBitmap!.GetBitmap().ToAvaloniaBitmap();
             NOcrDrawingCanvas.BackgroundImage = CurrentBitmap;
 
             if (match == null)
@@ -525,8 +539,8 @@ public partial class NOcrInspectViewModel : ObservableObject
             }
             else
             {
-                var bitmapWidth = _splitItem.NikseBitmap.Width;
-                var bitmapHeight = _splitItem.NikseBitmap.Height;
+                var bitmapWidth = _displayBitmap.Width;
+                var bitmapHeight = _displayBitmap.Height;
 
                 NOcrDrawingCanvas.HitPaths.Clear();
                 foreach (var line in match.LinesForeground)

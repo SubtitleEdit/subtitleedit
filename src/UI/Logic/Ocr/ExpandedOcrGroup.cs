@@ -40,8 +40,8 @@ public sealed class ExpandedOcrGroup
         var minTop = int.MaxValue;
         var minX = int.MaxValue;
         var minY = int.MaxValue;
-        var maxX = 0;
-        var maxY = 0;
+        var maxX = int.MinValue;
+        var maxY = int.MinValue;
 
         for (var i = startIndex; i < startIndex + count; i++)
         {
