@@ -12,14 +12,14 @@ public class BinaryOcrAddHistoryManager
         Items = new List<BinaryOcrAddHistoryItem>();
     }
 
-    public void Add(BinaryOcrBitmap binaryOcrBitmap, NikseBitmap2? letterBitmap, int lineIndex)
+    public void Add(BinaryOcrBitmap binaryOcrBitmap, NikseBitmap2? previewBitmap, int previewTopMargin, int lineIndex)
     {
         if (binaryOcrBitmap == null)
         {
             return;
         }
 
-        var item = new BinaryOcrAddHistoryItem(binaryOcrBitmap, letterBitmap, lineIndex);
+        var item = new BinaryOcrAddHistoryItem(binaryOcrBitmap, previewBitmap, previewTopMargin, lineIndex);
         Items.Add(item);
     }
 

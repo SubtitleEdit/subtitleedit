@@ -214,16 +214,23 @@ public partial class BinaryOcrCharacterHistoryViewModel : ObservableObject
             return;
         }
 
-        if (selectedItem.Bitmap != null)
+        if (selectedItem.PreviewBitmap != null)
         {
-            CurrentBitmap = selectedItem.Bitmap.GetBitmap().ToAvaloniaBitmap();
+            CurrentBitmap = selectedItem.PreviewBitmap.GetBitmap().ToAvaloniaBitmap();
         }
 
         BinaryOcrBitmap = selectedItem.BinaryOcrBitmap;
         IsNewTextItalic = BinaryOcrBitmap.Italic;
         NewText = BinaryOcrBitmap.Text ?? string.Empty;
         LineIndex = string.Format(Se.Language.Ocr.LineIndexX, selectedItem.LineIndex + 1);
-        ResolutionAndTopMargin = string.Format(Se.Language.Ocr.ResolutionXYAndTopmarginZ, BinaryOcrBitmap.Width, BinaryOcrBitmap.Height, BinaryOcrBitmap.Y);
+        if (BinaryOcrBitmap.ExpandCount > 1 && selectedItem.PreviewBitmap != null)
+        {
+            ResolutionAndTopMargin = string.Format(Se.Language.Ocr.ResolutionXYAndTopmarginZ, selectedItem.PreviewBitmap.Width, selectedItem.PreviewBitmap.Height, selectedItem.PreviewTopMargin);
+        }
+        else
+        {
+            ResolutionAndTopMargin = string.Format(Se.Language.Ocr.ResolutionXYAndTopmarginZ, BinaryOcrBitmap.Width, BinaryOcrBitmap.Height, BinaryOcrBitmap.Y);
+        }
     }
 
     internal void PointerWheelChanged(object? sender, PointerWheelEventArgs e)

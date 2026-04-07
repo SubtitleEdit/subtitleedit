@@ -266,8 +266,8 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
 
         if (addVm.OkPressed && addVm.BinaryOcrBitmap != null)
         {
-            var letterBitmap = _letters[LetterIndex].NikseBitmap;
-            _binaryOcrAddHistoryManager.Add(addVm.BinaryOcrBitmap, letterBitmap, 0);
+            var previewBitmap = addVm.PreviewBitmap ?? _letters[LetterIndex].NikseBitmap;
+            _binaryOcrAddHistoryManager.Add(addVm.BinaryOcrBitmap, previewBitmap, addVm.PreviewTopMargin, 0);
             _db.Add(addVm.BinaryOcrBitmap);
             _ = Task.Run(_db.Save);
             ReloadMatches();
