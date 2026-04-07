@@ -1756,6 +1756,21 @@ public partial class MainViewModel :
         await _folderHelper.OpenFolderWithFileSelected(Window!, _subtitleFileName);
         _shortcutManager.ClearKeys();
     }
+    
+    [RelayCommand]
+    private void ToggleCurrentSubtitleWhilePlaying()
+    {
+        SelectCurrentSubtitleWhilePlaying = !SelectCurrentSubtitleWhilePlaying;
+        
+        if (SelectCurrentSubtitleWhilePlaying)
+        {
+            ShowStatus(Se.Language.Main.SelectCurrentSubtitleWhilePlayingOn);
+        }
+        else
+        {
+            ShowStatus(Se.Language.Main.SelectCurrentSubtitleWhilePlayingOff);
+        }
+    }
 
     [RelayCommand]
     private async Task CopySubtitlePathToClipboard()

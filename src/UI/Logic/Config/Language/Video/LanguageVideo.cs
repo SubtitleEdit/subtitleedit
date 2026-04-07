@@ -37,6 +37,7 @@ public class LanguageVideo
     public string ViewMatroskaTrackX { get; set; }
     public string ResolutionSeparator { get; set; }
     public string OpenFromUrlTitle { get; set; }
+    public string ToggleCurrentSubtitleWhilePlaying { get; set; }
 
     public LanguageVideo()
     {
@@ -71,5 +72,6 @@ public class LanguageVideo
         ViewMatroskaTrackX = "View Matroska track - {0}";
         ResolutionSeparator = "x";
         OpenFromUrlTitle = "Open video file from URL";
+        ToggleCurrentSubtitleWhilePlaying = "Toggle current subtitle while playing";
     }
 }

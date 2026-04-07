@@ -102,6 +102,8 @@ public class LanguageMain
     public string LiveSpellCheckLanguageXLoaded { get; set; }
     public string DownloadFfmpegTitle { get; set; }
     public string DownloadFfmpegQuestion { get; set; }
+    public string SelectCurrentSubtitleWhilePlayingOn  { get; set; }
+    public string SelectCurrentSubtitleWhilePlayingOff  { get; set; }
 
     public LanguageMain()
     {
@@ -201,5 +203,7 @@ public class LanguageMain
         LiveSpellCheckLanguageXLoaded = "Live spell check language {0} loaded";
         DownloadFfmpegTitle = "Download FFmpeg?";
         DownloadFfmpegQuestion = "FFmpeg is required for playing online videos and for some video editing features.\n\nDownload FFmpeg now?";
+        SelectCurrentSubtitleWhilePlayingOn = "Select current subtitle while playing: ON";
+        SelectCurrentSubtitleWhilePlayingOff = "Select current subtitle while playing: OFF";
     }
 }

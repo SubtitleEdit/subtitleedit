@@ -125,6 +125,8 @@ public class LanguageMainMenu
     public string SortSubtitles { get; set; }
     public string SetLayer { get; set; }
     public string FilterLayersForDisplayDotDotDot { get; set; }
+    public string ToggleSelectSubtitleWhilePlayingCurrentlyOn { get; set; }
+    public string ToggleSelectSubtitleWhilePlayingCurrentlyOff { get; set; }
 
     public LanguageMainMenu()
     {
@@ -212,6 +214,8 @@ public class LanguageMainMenu
         ListShotChanges = "List s_hot changes...";
         GenerateImportShotChanges = "Generate/import s_hot changes...";
         DockVideoControls = "_Dock video controls";
+        ToggleSelectSubtitleWhilePlayingCurrentlyOff = "Toggle select subtitle while playing (currently: off)";
+        ToggleSelectSubtitleWhilePlayingCurrentlyOn = "Toggle select subtitle while playing (currently: on)";
         SetVideoOffset = "Set video offset...";
         UpdateVideoOffsetX = "Update video offset from {0}...";
         SmpteTiming = "SMPTE timing (non-integer frame rate)";
