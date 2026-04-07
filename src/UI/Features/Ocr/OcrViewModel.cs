@@ -34,7 +34,6 @@ using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr.GoogleLens;
@@ -409,6 +408,11 @@ public partial class OcrViewModel : ObservableObject
     private void UnknownWordsRemoveCurrent()
     {
         var word = SelectedUnknownWord?.Word.Word ?? string.Empty;
+        RemoveUnknownWordsFromCurrentState(word);
+    }
+
+    private void RemoveUnknownWordsFromCurrentState(string word)
+    {
         if (string.IsNullOrEmpty(word))
         {
             return;
@@ -420,7 +424,28 @@ public partial class OcrViewModel : ObservableObject
             UnknownWords.Remove(item);
         }
 
+        if (SelectedUnknownWord?.Word.Word.Equals(word, StringComparison.Ordinal) == true)
+        {
+            SelectedUnknownWord = null;
+        }
+
         IsUnknownWordSelected = false;
+    }
+
+    private static void RemovePendingUnknownWords(List<UnknownWordItem> unknownWords, int startIndex, string word)
+    {
+        if (string.IsNullOrEmpty(word))
+        {
+            return;
+        }
+
+        for (var i = unknownWords.Count - 1; i >= startIndex; i--)
+        {
+            if (unknownWords[i].Word.Word.Equals(word, StringComparison.Ordinal))
+            {
+                unknownWords.RemoveAt(i);
+            }
+        }
     }
 
     [RelayCommand]
@@ -472,8 +497,15 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        var word = selectedWord.Word.Word;
         var result = await _windowService.ShowDialogAsync<AddToUserDictionaryWindow, AddToUserDictionaryViewModel>(Window!,
-            vm => { vm.Initialize(selectedWord.Word.Word, Dictionaries.ToList(), SelectedDictionary); });
+            vm => { vm.Initialize(word, Dictionaries.ToList(), SelectedDictionary); });
+        if (result.OkPressed)
+        {
+            _ = _ocrFixEngine.AddUserWord(word);
+            RemoveUnknownWordsFromCurrentState(word);
+        }
+
         _isCtrlDown = false;
     }
 
@@ -1945,8 +1977,9 @@ public partial class OcrViewModel : ObservableObject
                 var tcs = new TaskCompletionSource<bool>();
                 Dispatcher.UIThread.Post(async () =>
                 {
-                    foreach (var unknownWord in ocrFixResultTemp.UnknownWords)
+                    for (var unknownWordIndex = 0; unknownWordIndex < ocrFixResultTemp.UnknownWords.Count; unknownWordIndex++)
                     {
+                        var unknownWord = ocrFixResultTemp.UnknownWords[unknownWordIndex];
                         var suggestions = _ocrFixEngine.GetSpellCheckSuggestions(unknownWord.Word.FixedWord);
                         var result = await _windowService.ShowDialogAsync<PromptUnknownWordWindow, PromptUnknownWordViewModel>(Window!,
                             vm => { vm.Initialize(item.GetBitmap(), item.Text, unknownWord, suggestions); });
@@ -1980,9 +2013,11 @@ public partial class OcrViewModel : ObservableObject
                         }
                         else if (result.AddToUserDictionaryPressed)
                         {
-                            if (SelectedDictionary != null)
+                            if (_ocrFixEngine.AddUserWord(unknownWord.Word.Word))
                             {
-                                UserWordsHelper.AddToUserDictionary(unknownWord.Word.Word, SelectedDictionary.GetFiveLetterLanguageName() ?? "en_US");
+                                RemoveUnknownWordsFromCurrentState(unknownWord.Word.Word);
+                                RemovePendingUnknownWords(ocrFixResultTemp.UnknownWords, unknownWordIndex, unknownWord.Word.Word);
+                                unknownWordIndex--;
                             }
                         }
                         else
@@ -2306,8 +2341,9 @@ public partial class OcrViewModel : ObservableObject
                 var tcs = new TaskCompletionSource<bool>();
                 Dispatcher.UIThread.Post(async () =>
                 {
-                    foreach (var unknownWord in unknownWords)
+                    for (var unknownWordIndex = 0; unknownWordIndex < unknownWords.Count; unknownWordIndex++)
                     {
+                        var unknownWord = unknownWords[unknownWordIndex];
                         var suggestions = _ocrFixEngine.GetSpellCheckSuggestions(unknownWord.Word.FixedWord);
                         var result = await _windowService.ShowDialogAsync<PromptUnknownWordWindow, PromptUnknownWordViewModel>(Window!,
                             vm => { vm.Initialize(item.GetBitmap(), item.Text, unknownWord, suggestions); });
@@ -2339,9 +2375,11 @@ public partial class OcrViewModel : ObservableObject
                         }
                         else if (result.AddToUserDictionaryPressed)
                         {
-                            if (SelectedDictionary != null)
+                            if (_ocrFixEngine.AddUserWord(unknownWord.Word.Word))
                             {
-                                UserWordsHelper.AddToUserDictionary(unknownWord.Word.Word, SelectedDictionary.GetFiveLetterLanguageName() ?? "en_US");
+                                RemoveUnknownWordsFromCurrentState(unknownWord.Word.Word);
+                                RemovePendingUnknownWords(unknownWords, unknownWordIndex, unknownWord.Word.Word);
+                                unknownWordIndex--;
                             }
                         }
                         else

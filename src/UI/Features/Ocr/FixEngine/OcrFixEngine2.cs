@@ -20,6 +20,7 @@ public interface IOcrFixEngine2
     void ChangeAll(string from, string to);
     void SkipAll(string word);
     void AddName(string name);
+    bool AddUserWord(string word);
 }
 
 public partial class OcrFixEngine2 : IOcrFixEngine2, IDoSpell
@@ -501,6 +502,16 @@ public partial class OcrFixEngine2 : IOcrFixEngine2, IDoSpell
         }
 
         _spellCheckWordLists.AddName(name);
+    }
+
+    public bool AddUserWord(string word)
+    {
+        if (string.IsNullOrWhiteSpace(word) || !_isLoaded)
+        {
+            return false;
+        }
+
+        return _spellCheckWordLists.AddUserWord(word);
     }
 }
 
