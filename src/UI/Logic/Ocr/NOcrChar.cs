@@ -87,7 +87,7 @@ public class NOcrChar
             }
             else
             {
-                position++; // skip flags byte (already read for isShort and Italic)
+                position++;
                 ExpandCount = file[position++];
                 Width = file[position++] << 8 | file[position++];
                 Height = file[position++] << 8 | file[position++];
