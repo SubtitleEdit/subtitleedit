@@ -286,12 +286,26 @@ public class AdjustDurationWindow : Window
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Center,
             RowSpacing = 10,
             Margin = new Thickness(10, 25, 0, 0),
         };
+
+        var checkBoxExtendOnly = new CheckBox
+        {
+            Content = Se.Language.Tools.AdjustDurations.ExtendOnly,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(10, 0, 0, 0),
+        };
+        checkBoxExtendOnly.Bind(CheckBox.IsCheckedProperty, new Binding
+        {
+            Path = nameof(vm.ExtendOnly),
+            Mode = BindingMode.TwoWay,
+            Source = vm,
+        });
 
         grid.Children.Add(textBlockMax);
         Grid.SetColumn(textBlockMax, 0);
@@ -306,6 +320,8 @@ public class AdjustDurationWindow : Window
         grid.Children.Add(numericUpDownOptimal);
         Grid.SetColumn(numericUpDownOptimal, 1);
         Grid.SetRow(numericUpDownOptimal, 1);
+
+        grid.Add(checkBoxExtendOnly, 2, 1);
 
         grid.Bind(Grid.IsVisibleProperty, new Binding
         {

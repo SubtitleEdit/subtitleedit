@@ -23,6 +23,7 @@ public partial class AdjustDurationViewModel : ObservableObject
     [ObservableProperty] private double _adjustFixed;
     [ObservableProperty] private double _adjustRecalculateMaxCharacterPerSecond;
     [ObservableProperty] private double _adjustRecalculateOptimalCharacterPerSecond;
+    [ObservableProperty] private bool _extendOnly;
 
     public Window? Window { get; set; }
 
@@ -51,7 +52,7 @@ public partial class AdjustDurationViewModel : ObservableObject
         }
         else if (SelectedAdjustType.Type == AdjustDurationType.Recalculate)
         {
-            DoAdjustViaRecalculate(subtitles);
+            DoAdjustViaRecalculate(subtitles, ExtendOnly);
         }
     }
 
@@ -119,7 +120,7 @@ public partial class AdjustDurationViewModel : ObservableObject
         }
     }
 
-    private void DoAdjustViaRecalculate(ObservableCollection<SubtitleLineViewModel> subtitles)
+    private void DoAdjustViaRecalculate(ObservableCollection<SubtitleLineViewModel> subtitles, bool extendOnly)
     {
         for (int i = 0; i < subtitles.Count; i++)
         {
@@ -135,8 +136,10 @@ public partial class AdjustDurationViewModel : ObservableObject
             var proposedEndTime = subtitle.StartTime + optimalDuration;
             var fallbackEndTime = subtitle.StartTime + maxDuration;
 
+            var oldEndTime = subtitle.EndTime;
+
             if (proposedEndTime <= maxEndTime)
-            {
+            {                
                 subtitle.EndTime = proposedEndTime;
             }
             else if (fallbackEndTime <= maxEndTime)
@@ -146,6 +149,11 @@ public partial class AdjustDurationViewModel : ObservableObject
             else
             {
                 subtitle.EndTime = maxEndTime;
+            }
+
+            if (extendOnly && subtitle.EndTime < oldEndTime)
+            {
+                subtitle.EndTime = oldEndTime;
             }
         }
     }
@@ -157,6 +165,7 @@ public partial class AdjustDurationViewModel : ObservableObject
         AdjustFixed = Se.Settings.Tools.AdjustDurations.AdjustDurationFixed;
         AdjustRecalculateMaxCharacterPerSecond = Se.Settings.Tools.AdjustDurations.AdjustDurationMaximumCps;
         AdjustRecalculateOptimalCharacterPerSecond = Se.Settings.Tools.AdjustDurations.AdjustDurationOptimalCps;
+        ExtendOnly = Se.Settings.Tools.AdjustDurations.AdjustDurationExtendOnly;
 
         SelectedAdjustType = AdjustTypes.FirstOrDefault(p =>
                                  p.Type.ToString() == Se.Settings.Tools.AdjustDurations.AdjustDurationLast)
@@ -171,6 +180,7 @@ public partial class AdjustDurationViewModel : ObservableObject
         Se.Settings.Tools.AdjustDurations.AdjustDurationFixed = AdjustFixed;
         Se.Settings.Tools.AdjustDurations.AdjustDurationMaximumCps = AdjustRecalculateMaxCharacterPerSecond;
         Se.Settings.Tools.AdjustDurations.AdjustDurationOptimalCps = AdjustRecalculateOptimalCharacterPerSecond;
+        Se.Settings.Tools.AdjustDurations.AdjustDurationExtendOnly = ExtendOnly;
 
         Se.Settings.Tools.AdjustDurations.AdjustDurationLast = SelectedAdjustType.Type.ToString();
 
