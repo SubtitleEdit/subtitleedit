@@ -21,6 +21,7 @@ public interface IOcrFixEngine
     void SkipAll(string word);
     void AddName(string name);
     void Reload();
+    bool AddUserWord(string word);
 }
 
 public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
@@ -507,6 +508,16 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         var names = _spellCheckWordLists.GetAllNames();
         _wordSplitList = StringWithoutSpaceSplitToWords.LoadWordSplitList(Se.DictionariesFolder, _threeLetterIsoLanguageName, names);
         _spellCheckWordLists = new SpellCheckWordLists(_fiveLetterName, this);
+    }
+
+    public bool AddUserWord(string word)
+    {
+        if (string.IsNullOrWhiteSpace(word) || !_isLoaded)
+        {
+            return false;
+        }
+
+        return _spellCheckWordLists.AddUserWord(word);
     }
 }
 
