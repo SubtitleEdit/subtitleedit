@@ -55,6 +55,9 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
     private BinaryOcrDb _db;
     private double _maxErrorPercent;
     private NikseBitmap2 _nBmp;
+    private NikseBitmap2? _displayBitmap;
+    private SKRectI _displayBounds;
+    private int _displayTopMargin;
     private OcrSubtitleItem? _ocrSubtitleItem;
     private int _maxWrongPixels;
     private BinaryOcrAddHistoryManager _binaryOcrAddHistoryManager;
@@ -129,9 +132,9 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
     private void InitSentenceBitmap()
     {
         var skBitmap = _sentenceBitmapOriginal.Copy();
-        if (_splitItem.NikseBitmap != null)
+        if (_displayBitmap != null)
         {
-            var rect = new SKRect(_splitItem.X, _splitItem.Y, _splitItem.X + _splitItem.NikseBitmap.Width, _splitItem.Y + _splitItem.NikseBitmap.Height);
+            var rect = new SKRect(_displayBounds.Left, _displayBounds.Top, _displayBounds.Right, _displayBounds.Bottom);
             using (var canvas = new SKCanvas(skBitmap))
             {
                 using (var paint = new SKPaint
@@ -386,22 +389,38 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
     {
         LetterIndex = index;
         _splitItem = _letters[index];
+        _displayBitmap = null;
+        _displayBounds = default;
+        _displayTopMargin = 0;
+        var expandedGroup = match is { ExpandCount: > 1 }
+            ? ExpandedOcrGroup.Create(_nBmp, _letters, index, match.ExpandCount)
+            : null;
 
         IsEditControlsEnabled = match != null;
 
         CanAddBetterMatch = match != null && match.ImageSplitterItem?.NikseBitmap != null;
         if (_splitItem.NikseBitmap != null)
         {
-            var x = new BinaryOcrBitmap(_splitItem.NikseBitmap)
+            BinaryOcrBitmap x;
+            if (expandedGroup != null)
             {
-                X = _splitItem.X,
-                Y = _splitItem.Top,
-                Text = match?.Text ?? string.Empty,
-                Italic = match?.Italic ?? false
-            };
-            CanAddBetterMatch = _db.FindExactMatch(x) < 0;
+                x = expandedGroup.CreateBinaryOcrBitmap();
+            }
+            else
+            {
+                x = new BinaryOcrBitmap(_splitItem.NikseBitmap);
+            }
+
+            x.X = _splitItem.X;
+            x.Y = _splitItem.Top;
+            x.Text = match?.Text ?? string.Empty;
+            x.Italic = match?.Italic ?? false;
+            CanAddBetterMatch = match is { ExpandCount: > 1 }
+                ? _db.FindExactMatchExpanded(x) < 0
+                : _db.FindExactMatch(x) < 0;
         }
 
+        var matchResolution = string.Empty;
         if (match != null && _splitItem.NikseBitmap != null)
         {
             // Try to find the actual BinaryOcrBitmap from the database
@@ -415,16 +434,8 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
 
             if (dbBitmap != null)
             {
-                MatchResolutionAndTopMargin = string.Format(Se.Language.Ocr.ResolutionXYAndTopmarginZ, dbBitmap.Width, dbBitmap.Height, dbBitmap.Y);
+                matchResolution = string.Format(Se.Language.Ocr.ResolutionXYAndTopmarginZ, dbBitmap.Width, dbBitmap.Height, dbBitmap.Y);
             }
-            else
-            {
-                MatchResolutionAndTopMargin = string.Empty;
-            }
-        }
-        else
-        {
-            MatchResolutionAndTopMargin = string.Empty;
         }
 
         if (_splitItem.NikseBitmap != null)
@@ -439,9 +450,30 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
 
             NewText = match?.Text ?? string.Empty;
             IsNewTextItalic = match is { Italic: true };
-            ResolutionAndTopMargin = string.Format(Se.Language.Ocr.ResolutionXYAndTopmarginZ, _splitItem.NikseBitmap.Width, _splitItem.NikseBitmap.Height, _splitItem.Top);
+            _displayBitmap = _splitItem.NikseBitmap;
+            _displayBounds = new SKRectI(_splitItem.X, _splitItem.Y, _splitItem.X + _splitItem.NikseBitmap.Width, _splitItem.Y + _splitItem.NikseBitmap.Height);
+            _displayTopMargin = _splitItem.Top;
 
-            CurrentBitmap = _splitItem.NikseBitmap!.GetBitmap().ToAvaloniaBitmap();
+            if (expandedGroup != null)
+            {
+                _displayBitmap = expandedGroup.PreviewBitmap;
+                _displayBounds = expandedGroup.Bounds;
+                _displayTopMargin = expandedGroup.PreviewTopMargin;
+                BinaryOcrBitmap = expandedGroup.CreateBinaryOcrBitmap();
+                BinaryOcrBitmap.Text = match?.Text ?? string.Empty;
+                BinaryOcrBitmap.Italic = match?.Italic ?? false;
+            }
+
+            ResolutionAndTopMargin = string.Format(Se.Language.Ocr.ResolutionXYAndTopmarginZ, _displayBitmap.Width, _displayBitmap.Height, _displayTopMargin);
+            MatchResolutionAndTopMargin = expandedGroup != null
+                ? ResolutionAndTopMargin
+                : matchResolution;
+
+            CurrentBitmap = _displayBitmap.GetBitmap().ToAvaloniaBitmap();
+        }
+        else
+        {
+            MatchResolutionAndTopMargin = matchResolution;
         }
 
         InitSentenceBitmap();

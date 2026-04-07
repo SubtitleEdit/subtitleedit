@@ -1904,7 +1904,13 @@ public partial class OcrViewModel : ObservableObject
                     }
                     else
                     {
-                        matches.Add(new NOcrChar { Text = _nOcrCaseFixer.FixUppercaseLowercaseIssues(splitterItem, match), Italic = match.Italic, ImageSplitterItem = splitterItem });
+                        var inspectMatch = new NOcrChar(match)
+                        {
+                            Text = _nOcrCaseFixer.FixUppercaseLowercaseIssues(splitterItem, match),
+                            ExpandCount = match.ExpandCount,
+                            ImageSplitterItem = splitterItem,
+                        };
+                        matches.Add(inspectMatch);
                     }
                 }
 
