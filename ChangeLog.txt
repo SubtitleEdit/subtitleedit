@@ -12,7 +12,9 @@ v5.0.0-beta14 (xth April 2026)
 * Fix italic in text box for edit image ocr db
 * Fix for mpv refresh for full screeen player
 * Fix: Allow large text files in batch-convert - thx phannhanhn201
-
+* Add toggle select sub while playing to video menu (+shortcut) - thx vsemozhetbyt
+* Add "Extend only" to adjust durations - thx Dravic
+* Fix for nOCR load - thx HellbringerOnline
 
 -----------------------------------------------------------------------------------------------------
 
