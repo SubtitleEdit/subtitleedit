@@ -1,6 +1,6 @@
 ﻿{
   "Title": "SubtitleEdit",
-  "TranslatedBy": "v. 03.04.2026 di bovirus",
+  "TranslatedBy": "v. 07.04.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -647,7 +647,14 @@
     "RightMargin": "Margine destro",
     "Installed": "Installato",
     "AdvancedDotDotDot": "Avanzate...",
-    "ChooseAlignment": "Scegli allineamento"
+    "ChooseAlignment": "Scegli allineamento",
+    "MaxWidthPixels": "Larghezza massima (pixel)",
+    "SampleText": "Esempio testo",
+    "BoxWidthPixels": "Larghezza riquadro (pixel)",
+    "FadeInOut": "Dissolvenza in entrata/uscita",
+    "Alpha": "Alfa",
+    "PickResolution": "Scegli risoluzione",
+    "ManualSync": "Sincronizzazione manuale"
   },
   "Main": {
     "AudioTrackIsNowX": "La traccia audio ora è \"{0}",
@@ -1404,7 +1411,14 @@
       "EditStyles": "Modifica stili",
       "EditProperties": "Modifica proprietà",
       "EditAttachments": "Modifica allegati",
-      "ErrorsExportedX": "Errori esportati: {0}"
+      "ErrorsExportedX": "Errori esportati: {0}",
+      "SlowFontSizeChange": "Modifica lenta dimensione font",
+      "IncreaseFontKerning": "Aumenta kerning font",
+      "ScrollUp": "Scorri verso l'alto",
+      "ScrollDown": "Scorrere verso il basso",
+      "RotateIn": "Ruota in",
+      "TiltBounce": "Rimbalzo inclinazione",
+      "FontSizeBounceIn": "Rimbalzo dimensione font in"
     },
     "ChangeCasing": {
       "Title": "Modifica maiuscolo/minuscolo",
@@ -1454,7 +1468,9 @@
     },
     "MergeShortLines": {
       "Title": "Unisci righe brevi",
-      "HighlightParts": "Evidenzia parti (karaoke)"
+      "HighlightParts": "Evidenzia parti (karaoke)",
+      "MergedLineInfo": "Riga {0} unita in {1} - {2}",
+      "LinesMergedX": "Righe unite: {0}"
     },
     "MergeLinesWithSameText": {
       "Title": "Unisci righe con lo stesso testo",
@@ -1472,7 +1488,23 @@
       "NothingToReport": "Nessun problema rilevato.",
       "SaveNetflixQualityReport": "Salva rapporto qualità Netflix",
       "NetflixReportSaved": "Rapporto qualità Netflix salvato",
-      "NetFlixQualityReportSavedToX": "Rapporto qualità Netflix salvato in:\r\n\r\n{0}"
+      "NetFlixQualityReportSavedToX": "Rapporto qualità Netflix salvato in:\r\n\r\n{0}",
+      "DialogHyphenSpace": "Spazio trattino di dialogo",
+      "EllipsesNotThreeDots": "Usa ellissi (non tre punti)",
+      "OnlyAllowedGlyphs": "Sono consentiti solo glifi",
+      "Italics": "Corsivo",
+      "MaxCharsSec": "Caratteri massimi/sec",
+      "MaxDuration": "Durata massima",
+      "MaxLineLength": "Lunghezza massima riga",
+      "MinDuration": "Durata minima",
+      "MaxNumberOfLines": "Numero massimo di righe",
+      "OneToTenSpellOut": "Indica da uno a dieci",
+      "ShotChanges": "Cambi di scena",
+      "StartNumberSpellOut": "Indica il numero di partenza",
+      "TextforHiUseBrackets": "Testo per HI, usa parentesi",
+      "FrameRate": "Frequenza fotogrammi",
+      "TwoFrameGrap": "Gap tra due fotogrammi",
+      "WhiteSpace": "Spazio bianco"
     },
     "ImageBasedEdit": {
       "EditImagedBaseSubtitle": "Modifica sottotitoli basati su immagini",
@@ -1612,7 +1644,8 @@
       "OutputProperties": "Proprietà output...",
       "VideoFileSize": "Dimensioni file video",
       "OneBox": "Un box",
-      "BoxPerLine": "CasellBox per riga"
+      "BoxPerLine": "CasellBox per riga",
+      "LogoInfo": "Scegli un'immagine PNG e trascinala per posizionarla sul video."
     },
     "VideoTransparent": {
       "Title": "Genera video trasparenti con sottotitoli",
@@ -1693,7 +1726,8 @@
       "EdgeTtsPitch": "Tono Edge-TTS",
       "EdgeTtsPitchDescription": "Regolazione tono Edge-TTS, ad es.\r\n\"+10Hz\", \"-5Hz\" o \"+0Hz\" per impostazione predefinita.",
       "EdgeTtsVolume": "Volume Edge-TTS",
-      "EdgeTtsVolumeDescription": "Regolazione volume Edge-TTS, ad es.\r\n\"+20%\", \"-10%\" o \"+0%\" per impostazione predefinita."
+      "EdgeTtsVolumeDescription": "Regolazione volume Edge-TTS, ad es.\r\n\"+20%\", \"-10%\" o \"+0%\" per impostazione predefinita.",
+      "DownloadPiperPrompt": "La \"sintesi vocale\" richiede Piper.\r\n\r\nVuoi scaricare e usare Piper?"
     },
     "ShotChanges": {
       "TitleGenerateOrImport": "Genera/importa cambi inquadrature",
@@ -1784,7 +1818,8 @@
     "LineMerge": "Unione riga",
     "DelayInSecondsBetweenRequests": "Ritardo tra le richieste (secondi)",
     "MaxBytesPerRequest": "Numero massimo byte per richiesta",
-    "PromptText": "Testo suggerito"
+    "PromptText": "Testo suggerito",
+    "TranslateEachLineSeparately": "Traduci ogni riga separatamente"
   },
   "Options": {
     "Settings": {
@@ -2043,7 +2078,8 @@
       "UiScale": "Scala interfaccia utente (%)",
       "WaveformToolbarItems": "Elementi barra strumenti forma d'onda",
       "MatchIconColorToDarkTheme": "Abbina colore icona al colore di primo piano del tema scuro",
-      "SubtitlePreviewProperties": "Proprietà anteprima sottotitoli"
+      "SubtitlePreviewProperties": "Proprietà anteprima sottotitoli",
+      "PixelWidthInfo": "Linee verdi = limite larghezza massima |  Area rossa = il testo supera il limite"
     },
     "Shortcuts": {
       "Title": "Tasti rapidi",
