@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Features.Tools.AdjustDuration;
@@ -29,7 +30,7 @@ public class AdjustDurationDisplay
         [
             new AdjustDurationDisplay
             {
-                Name = "Seconds",
+                Name = Se.Language.General.Seconds,
                 Type = AdjustDurationType.Seconds,
                 IsSecondsVisible = true,
                 IsPercentVisible = false,
@@ -38,7 +39,7 @@ public class AdjustDurationDisplay
             },
             new AdjustDurationDisplay
             {
-                Name = "Percent",
+                Name = Se.Language.General.Percent,
                 Type = AdjustDurationType.Percent,
                 IsSecondsVisible = false,
                 IsPercentVisible = true,
@@ -47,7 +48,7 @@ public class AdjustDurationDisplay
             },
             new AdjustDurationDisplay
             {
-                Name = "Fixed",
+                Name = Se.Language.Tools.AdjustDurations.Fixed,
                 Type = AdjustDurationType.Fixed,
                 IsSecondsVisible = false,
                 IsPercentVisible = false,
@@ -56,7 +57,7 @@ public class AdjustDurationDisplay
             },
             new AdjustDurationDisplay
             {
-                Name = "Recalculate",
+                Name = Se.Language.Tools.AdjustDurations.Recalculate,
                 Type = AdjustDurationType.Recalculate,
                 IsSecondsVisible = false,
                 IsPercentVisible = false,

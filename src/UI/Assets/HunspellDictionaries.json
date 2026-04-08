@@ -242,8 +242,8 @@
   {
     "EnglishName": "Polish",
     "NativeName": "polski",
-    "DownloadLink": "https://github.com/SubtitleEdit/support-files/raw/master/hunspell/pl_PL.zip",
-    "Description": "Polish by https://sjp.pl - 2020-07-18"
+    "DownloadLink": "https://github.com/SubtitleEdit/support-files/releases/download/hunspell/pl_PL_2026-04-01.zip",
+    "Description": "Polish by https://sjp.pl - 2026-04-01"
   },
   {
     "EnglishName": "Portuguese (Brazilian) - Libreoffice",

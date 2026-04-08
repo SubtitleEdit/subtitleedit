@@ -767,7 +767,9 @@
       "pointSyncViaOther": "Point sync via _other subtitle...",
       "sortSubtitles": "_Sort subtitles...",
       "setLayer": "Set layer...",
-      "filterLayersForDisplayDotDotDot": "Filter layers for display..."
+      "filterLayersForDisplayDotDotDot": "Filter layers for display...",
+      "toggleSelectSubtitleWhilePlayingCurrentlyOn": "Toggle select subtitle while playing (currently: on)",
+      "toggleSelectSubtitleWhilePlayingCurrentlyOff": "Toggle select subtitle while playing (currently: off)"
     },
     "toolbar": {
       "newHint": "Start a new subtitle file {0}",
@@ -902,7 +904,9 @@
     "nothingToSaveOriginal": "Nothing to save (original)",
     "liveSpellCheckLanguageXLoaded": "Live spell check language {0} loaded",
     "downloadFfmpegTitle": "Download FFmpeg?",
-    "downloadFfmpegQuestion": "FFmpeg is required for playing online videos and for some video editing features.\n\nDownload FFmpeg now?"
+    "downloadFfmpegQuestion": "FFmpeg is required for playing online videos and for some video editing features.\n\nDownload FFmpeg now?",
+    "selectCurrentSubtitleWhilePlayingOn": "Select current subtitle while playing: ON",
+    "selectCurrentSubtitleWhilePlayingOff": "Select current subtitle while playing: OFF"
   },
   "file": {
     "ebuSaveOptions": {
@@ -1742,7 +1746,8 @@
     "titleOrLanguage": "Title/language",
     "viewMatroskaTrackX": "View Matroska track - {0}",
     "resolutionSeparator": "x",
-    "openFromUrlTitle": "Open video file from URL"
+    "openFromUrlTitle": "Open video file from URL",
+    "toggleCurrentSubtitleWhilePlaying": "Toggle current subtitle while playing"
   },
   "waveform": {
     "guessTimeCodes": "Guess time codes",
@@ -2080,7 +2085,10 @@
       "waveformToolbarItems": "Waveform toolbar items",
       "matchIconColorToDarkTheme": "Match icon color to dark theme foreground color",
       "subtitlePreviewProperties": "Subtitle preview properties",
-      "pixelWidthInfo": "Green lines = max-width limit   |   Red area = text exceeds limit"
+      "pixelWidthInfo": "Green lines = max-width limit   |   Red area = text exceeds limit",
+      "spellCheckEngineHunSpelll": "Hunspell",
+      "spellCheckEngineMsWord": "MS Word",
+      "spellCheckEngine": "Spell check engine"
     },
     "shortcuts": {
       "title": "Shortcuts",
