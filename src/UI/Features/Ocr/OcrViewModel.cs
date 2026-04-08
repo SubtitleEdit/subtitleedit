@@ -489,7 +489,6 @@ public partial class OcrViewModel : ObservableObject
         {
             _ocrFixEngine.Reload();
         }
-
         _isCtrlDown = false;
     }
 
@@ -510,7 +509,6 @@ public partial class OcrViewModel : ObservableObject
             _ = _ocrFixEngine.AddUserWord(word);
             RemoveUnknownWordsFromCurrentState(selectedWord.Word.Word);
         }
-
         _isCtrlDown = false;
     }
 
