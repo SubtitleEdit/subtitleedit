@@ -484,7 +484,7 @@ public partial class OcrViewModel : ObservableObject
         }
 
         var result = await _windowService.ShowDialogAsync<AddToNamesListWindow, AddToNamesListViewModel>(Window,
-            vm => { vm.Initialize(selectedWord.Word.Word, Dictionaries.ToList(), SelectedDictionary); });
+            vm => { vm.Initialize(selectedWord.DisplayWord, Dictionaries.ToList(), SelectedDictionary); });
         _isCtrlDown = false;
     }
 
@@ -497,15 +497,14 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
-        var word = selectedWord.Word.Word;
         var result = await _windowService.ShowDialogAsync<AddToUserDictionaryWindow, AddToUserDictionaryViewModel>(Window!,
-            vm => { vm.Initialize(word, Dictionaries.ToList(), SelectedDictionary); });
+            vm => { vm.Initialize(selectedWord.DisplayWord, Dictionaries.ToList(), SelectedDictionary); });
         if (result.OkPressed)
         {
+            var word = selectedWord.ResolveSubmittedWord(result.Word);
             _ = _ocrFixEngine.AddUserWord(word);
-            RemoveUnknownWordsFromCurrentState(word);
+            RemoveUnknownWordsFromCurrentState(selectedWord.Word.Word);
         }
-
         _isCtrlDown = false;
     }
 
@@ -2009,11 +2008,11 @@ public partial class OcrViewModel : ObservableObject
                         }
                         else if (result.AddToNamesListPressed)
                         {
-                            _ocrFixEngine.AddName(unknownWord.Word.Word);
+                            _ocrFixEngine.AddName(unknownWord.ResolveSubmittedWord(result.Word));
                         }
                         else if (result.AddToUserDictionaryPressed)
                         {
-                            if (_ocrFixEngine.AddUserWord(unknownWord.Word.Word))
+                            if (_ocrFixEngine.AddUserWord(unknownWord.ResolveSubmittedWord(result.Word)))
                             {
                                 RemoveUnknownWordsFromCurrentState(unknownWord.Word.Word);
                                 RemovePendingUnknownWords(ocrFixResultTemp.UnknownWords, unknownWordIndex, unknownWord.Word.Word);
@@ -2371,11 +2370,11 @@ public partial class OcrViewModel : ObservableObject
                         }
                         else if (result.AddToNamesListPressed)
                         {
-                            _ocrFixEngine.AddName(unknownWord.Word.Word);
+                            _ocrFixEngine.AddName(unknownWord.ResolveSubmittedWord(result.Word));
                         }
                         else if (result.AddToUserDictionaryPressed)
                         {
-                            if (_ocrFixEngine.AddUserWord(unknownWord.Word.Word))
+                            if (_ocrFixEngine.AddUserWord(unknownWord.ResolveSubmittedWord(result.Word)))
                             {
                                 RemoveUnknownWordsFromCurrentState(unknownWord.Word.Word);
                                 RemovePendingUnknownWords(unknownWords, unknownWordIndex, unknownWord.Word.Word);
