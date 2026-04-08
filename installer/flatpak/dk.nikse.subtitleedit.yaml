@@ -13,7 +13,6 @@ build-options:
   no-debuginfo: true
   env:
     PKG_CONFIG_PATH: /app/lib/pkgconfig:/app/share/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig:/usr/lib/sdk/dotnet10/lib/pkgconfig
-    MAKEFLAGS: -j
 
 finish-args:
   # Display
