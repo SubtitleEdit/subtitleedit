@@ -76,11 +76,7 @@ public class AudioVisualizer : Control
     public double StartPositionSeconds
     {
         get => GetValue(StartPositionSecondsProperty);
-        set
-        {
-            var clampedValue = Math.Max(0, Math.Min(value, MaxStartPositionSeconds));
-            SetValue(StartPositionSecondsProperty, clampedValue);
-        }
+        set => SetValue(StartPositionSecondsProperty, Math.Clamp(value, 0, MaxStartPositionSeconds));
     }
 
     public double ZoomFactor
@@ -629,7 +625,7 @@ public class AudioVisualizer : Control
             newStart = 0;
         }
 
-        _audioVisualizerLastScroll = Environment.TickCount64; // Update the last scroll time
+        _audioVisualizerLastScroll = _lastMouseWheelScroll; // Update the last scroll time
         StartPositionSeconds = newStart;
         OnHorizontalScroll?.Invoke(this, new PositionEventArgs { PositionInSeconds = newStart });
 
