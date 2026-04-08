@@ -49,7 +49,6 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using static Nikse.SubtitleEdit.Logic.Ocr.BinaryOcrMatcher;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 
@@ -1571,7 +1570,6 @@ public partial class OcrViewModel : ObservableObject
                 maxShownProgress = Math.Max(maxShownProgress, currentItemNumber);
                 UpdateOcrProgress(maxShownProgress, numberOfImages);
 
-                var scrollToIndex = number;
                 var item = p.Item;
                 if (item == null)
                 {
@@ -1650,7 +1648,6 @@ public partial class OcrViewModel : ObservableObject
                 maxShownProgress = Math.Max(maxShownProgress, currentItemNumber);
                 UpdateOcrProgress(maxShownProgress, numberOfImages);
 
-                var scrollToIndex = number;
                 var item = p.Item;
                 if (item == null)
                 {
@@ -1719,7 +1716,6 @@ public partial class OcrViewModel : ObservableObject
                 maxShownProgress = Math.Max(maxShownProgress, currentItemNumber);
                 UpdateOcrProgress(maxShownProgress, numberOfImages);
 
-                var scrollToIndex = number;
                 var item = p.Item;
                 if (item == null)
                 {
@@ -2404,7 +2400,7 @@ public partial class OcrViewModel : ObservableObject
             }
             else
             {
-                Se.LogError($"OCR-repalce: Could not find word '{unknownWord.Word.FixedWord}' in text '{item.Text}' to replace with '{word}' at index {unknownWord.Word.WordIndex}");
+                Se.LogError($"OCR-replace: Could not find word '{unknownWord.Word.FixedWord}' in text '{item.Text}' to replace with '{word}' at index {unknownWord.Word.WordIndex}");
             }
         }
     }

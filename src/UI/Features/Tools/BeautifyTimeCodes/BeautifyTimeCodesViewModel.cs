@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes;
 
@@ -18,13 +19,15 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
 
     private readonly System.Timers.Timer _timerUpdatePreview;
     private Avalonia.Threading.DispatcherTimer? _positionTimer;
-    private bool _dirty;
+    private volatile bool _dirty;
+    private volatile bool _updateInProgress;
+    private readonly Lock _timerLock = new Lock();
     private readonly List<SubtitleLineViewModel> _allSubtitles;
     private readonly List<SubtitleLineViewModel> _originalSubtitles;
     private readonly List<SubtitleLineViewModel> _beautifiedSubtitles;
     private List<double> _shotChanges;
     private double _frameRate = 25.0;
-    private bool _disposed;
+    private volatile bool _disposed;
 
     [ObservableProperty]
     private BeautifySettings _settings;
@@ -44,15 +47,28 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         _shotChanges = new List<double>();
 
         _timerUpdatePreview = new System.Timers.Timer(500);
+        _timerUpdatePreview.AutoReset = false;
         _timerUpdatePreview.Elapsed += (s, e) =>
         {
-            _timerUpdatePreview.Stop();
-            if (_dirty)
+            if (!_dirty || _updateInProgress)
             {
-                _dirty = false;
-                UpdatePreview();
+                _timerUpdatePreview.Start();
+                return;
             }
-            _timerUpdatePreview.Start();
+
+            lock (_timerLock)
+            {
+                if (!_dirty || _updateInProgress)
+                {
+                    _timerUpdatePreview.Start();
+                    return;
+                }
+
+                _dirty = false;
+                _updateInProgress = true;
+            }
+
+            UpdatePreview();
         };
 
         // Listen to settings changes
@@ -63,6 +79,11 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     {
         if (AudioVisualizerBeautified == null || _allSubtitles.Count == 0)
         {
+            _updateInProgress = false;
+            if (!_disposed)
+            {
+                _timerUpdatePreview.Start();
+            }
             return;
         }
 
@@ -73,27 +94,31 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
 
         Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {
-            if (_disposed || AudioVisualizerBeautified == null)
+            if (!_disposed && AudioVisualizerBeautified != null)
             {
-                return;
-            }
-
-            // Reuse existing ViewModels and just update their properties
-            _beautifiedSubtitles.Clear();
-            var subRipFormat = new Core.SubtitleFormats.SubRip();
-            for (int i = 0; i < beautifiedParagraphs.Count; i++)
-            {
-                var p = beautifiedParagraphs[i];
-                var vm = new SubtitleLineViewModel(p, subRipFormat)
+                // Reuse existing ViewModels and just update their properties
+                _beautifiedSubtitles.Clear();
+                var subRipFormat = new Core.SubtitleFormats.SubRip();
+                for (int i = 0; i < beautifiedParagraphs.Count; i++)
                 {
-                    Number = i + 1
-                };
-                _beautifiedSubtitles.Add(vm);
+                    var p = beautifiedParagraphs[i];
+                    var vm = new SubtitleLineViewModel(p, subRipFormat)
+                    {
+                        Number = i + 1
+                    };
+                    _beautifiedSubtitles.Add(vm);
+                }
+
+                // Update the beautified visualizer's paragraphs
+                AudioVisualizerBeautified.AllSelectedParagraphs = new List<SubtitleLineViewModel>(_beautifiedSubtitles);
+                AudioVisualizerBeautified.InvalidateVisual();
             }
 
-            // Update the beautified visualizer's paragraphs
-            AudioVisualizerBeautified.AllSelectedParagraphs = new List<SubtitleLineViewModel>(_beautifiedSubtitles);
-            AudioVisualizerBeautified.InvalidateVisual();
+            _updateInProgress = false;
+            if (!_disposed)
+            {
+                _timerUpdatePreview.Start();
+            }
         });
     }
 
@@ -196,6 +221,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     private void Ok()
     {
         StopPositionTimer();
+        _timerUpdatePreview.Stop();
 
         // Apply final beautification
         var paragraphs = _allSubtitles.Select(p => p.Paragraph!).OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
@@ -217,6 +243,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     private void Cancel()
     {
         StopPositionTimer();
+        _timerUpdatePreview.Stop();
         Window?.Close();
     }
 
@@ -230,7 +257,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
-            Window?.Close();
+            Cancel();
         }
         else if (UiUtil.IsHelp(e))
         {
@@ -251,10 +278,10 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
             return;
         }
 
-        StopPositionTimer();
-        _timerUpdatePreview?.Stop();
-        _timerUpdatePreview?.Dispose();
-
         _disposed = true;
+
+        StopPositionTimer();
+        _timerUpdatePreview.Stop();
+        _timerUpdatePreview.Dispose();
     }
 }
