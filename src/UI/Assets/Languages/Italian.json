@@ -1,6 +1,6 @@
 ﻿{
   "Title": "SubtitleEdit",
-  "TranslatedBy": "v. 07.04.2026 di bovirus",
+  "TranslatedBy": "v. 08.04.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -753,6 +753,8 @@
     "LiveSpellCheckLanguageXLoaded": "Lingua controllo ortografico {0} in tempo reale caricata",
     "DownloadFfmpegTitle": "Vuoi scaricare FFmpeg?",
     "DownloadFfmpegQuestion": "FFmpeg è richiesto per riprodurre video online e per alcune funzionalità di editing video.\r\n\r\nVuoi scaricare FFmpeg?",
+    "SelectCurrentSubtitleWhilePlayingOn": "Durante la riproduzione seleziona il sottotitolo attuale : ON",
+    "SelectCurrentSubtitleWhilePlayingOff": "Durante la riproduzione seleziona il sottotitolo attuale: OFF",
     "Menu": {
       "File": "_File",
       "New": "_Nuovo",
@@ -862,7 +864,9 @@
       "PointSyncViaOther": "Sincronizzazi_one punti tramite altri sottotitoli...",
       "SortSubtitles": "Ordina _sottotitoli...",
       "SetLayer": "Imposta livello...",
-      "FilterLayersForDisplayDotDotDot": "Filtra livelli per la visualizzazione..."
+      "FilterLayersForDisplayDotDotDot": "Filtra livelli per la visualizzazione...",
+      "ToggleSelectSubtitleWhilePlayingCurrentlyOn": "Attiva/disattiva selezione sottotitoli durante la riproduzione (attualmente: attiva)",
+      "ToggleSelectSubtitleWhilePlayingCurrentlyOff": "Attiva/disattiva selezione sottotitoli durante la riproduzione (attualmente: non attiva)"
     },
     "Toolbar": {
       "NewHint": "Crea nuovo file sottotitoli {0}",
@@ -1602,6 +1606,7 @@
     "ViewMatroskaTrackX": "Visualizza traccia Matroska - {0}",
     "ResolutionSeparator": "x",
     "OpenFromUrlTitle": "Apri file video dall'URL",
+    "ToggleCurrentSubtitleWhilePlaying": "Attiva/disattiva sottotitoli attuali durante la riproduzione",
     "BurnIn": {
       "Title": "Genera video con sottotitoli incorporati",
       "InfoAssaOff": "Nota: è supportato lo stile Advanced SubStation Alpha.",
@@ -2079,7 +2084,10 @@
       "WaveformToolbarItems": "Elementi barra strumenti forma d'onda",
       "MatchIconColorToDarkTheme": "Abbina colore icona al colore di primo piano del tema scuro",
       "SubtitlePreviewProperties": "Proprietà anteprima sottotitoli",
-      "PixelWidthInfo": "Linee verdi = limite larghezza massima |  Area rossa = il testo supera il limite"
+      "PixelWidthInfo": "Linee verdi = limite larghezza massima |  Area rossa = il testo supera il limite",
+      "SpellCheckEngineHunSpelll": "Hunspell",
+      "SpellCheckEngineMsWord": "MS Word",
+      "SpellCheckEngine": "Motore controllo ortografico"
     },
     "Shortcuts": {
       "Title": "Tasti rapidi",
