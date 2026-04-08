@@ -214,6 +214,11 @@ public class ColorPickerWindow : Window
             Source = vm,
             Path = nameof(vm.AlphaGradientEnd),
         });
+        alphaSlider.Bind(ColorChannelSlider.IsVisibleProperty, new Binding
+        {
+            Source = vm,
+            Path = nameof(vm.ShowAlpha),
+        });
 
         // Hex input
         var hexLabel = new TextBlock

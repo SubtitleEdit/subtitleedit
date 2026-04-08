@@ -1588,7 +1588,7 @@ public static class UiUtil
         };
     }
 
-    internal static Button MakeColorPickerButton(object source, string colorPropertyPath)
+    internal static Button MakeColorPickerButton(object source, string colorPropertyPath, bool showAlpha)
     {
         var propInfo = source.GetType().GetProperty(colorPropertyPath, BindingFlags.Public | BindingFlags.Instance);
         var initialColor = propInfo?.GetValue(source) is Color c ? c : Colors.White;
@@ -1621,6 +1621,7 @@ public static class UiUtil
             var currentColor = propInfo?.GetValue(source) is Color cc ? cc : Colors.White;
             var vm = new ColorPickerViewModel();
             vm.Initialize(currentColor);
+            vm.ShowAlpha = showAlpha;
             var pickerWindow = new ColorPickerWindow(vm);
             await pickerWindow.ShowDialog(window);
 
