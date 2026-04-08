@@ -33,12 +33,31 @@ Subtitle Edit is a free, open-source editor for video subtitles. It allows you t
 
 ## Getting Started
 
-1. Download and install Subtitle Edit
-2. Open a video file via **Video → Open video file...**
-3. Open or create a subtitle file via **File → Open** or **File → New**
-4. Edit subtitles in the text editor and subtitle grid
-5. Use the waveform to visually adjust timing
-6. Save your work via **File → Save**
+Follow these simple steps to begin working with subtitles in Subtitle Edit:
+
+1. **Install Subtitle Edit**  
+   Download and install the latest version from the official website.
+
+2. **Open a video file**  
+   Go to **Video → Open video file...** and select your video.  
+   This allows you to preview and sync subtitles accurately.
+
+3. **Open, create, or generate a subtitle file**  
+   - Open an existing file via **File → Open**  
+   - Create a new one via **File → New**  
+   - Or generate subtitles automatically using **speech-to-text** (**Video → Speech to text**)
+
+4. **Edit your subtitles**  
+   Use the subtitle grid and text editor to:
+   - Adjust text  
+   - Split or merge lines  
+   - Fine-tune timing  
+
+5. **Adjust timing visually**  
+   Use the waveform display to precisely sync subtitles with audio.
+
+6. **Save your work**  
+   Go to **File → Save** (or press **Ctrl+S**) to save your subtitle file.
 
 <!-- Screenshot: Main window overview -->
 ![Main Window](screenshots/main-window.png)
