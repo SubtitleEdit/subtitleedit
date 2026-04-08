@@ -544,36 +544,36 @@ jobs:
           name: linux-tar-package
           path: ./SubtitleEdit-Linux-x64.tar.gz
 
-  build-linux-flatpak:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-24.08
-      options: --privileged
+  # build-linux-flatpak:
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-24.08
+  #     options: --privileged
 
-    steps:
-      - uses: actions/checkout@v5
+  #   steps:
+  #     - uses: actions/checkout@v5
 
-      - name: Update metainfo version/date from Se.cs
-        run: bash installer/flatpak/update-metainfo-version.sh
+  #     - name: Update metainfo version/date from Se.cs
+  #       run: bash installer/flatpak/update-metainfo-version.sh
 
-      - name: Build flatpak bundle
-        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
-        with:
-          bundle: SubtitleEdit-linux-x64.flatpak
-          manifest-path: installer/flatpak/dk.nikse.subtitleedit.yaml
-          cache-key: flatpak-builder-${{ hashFiles('installer/flatpak/dk.nikse.subtitleedit.yaml', 'installer/flatpak/nuget-sources.json') }}
-          arch: x86_64
+  #     - name: Build flatpak bundle
+  #       uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+  #       with:
+  #         bundle: SubtitleEdit-linux-x64.flatpak
+  #         manifest-path: installer/flatpak/dk.nikse.subtitleedit.yaml
+  #         cache-key: flatpak-builder-${{ hashFiles('installer/flatpak/dk.nikse.subtitleedit.yaml', 'installer/flatpak/nuget-sources.json') }}
+  #         arch: x86_64
 
-      - name: Upload flatpak bundle artifact
-        uses: actions/upload-artifact@v5
-        with:
-          name: flatpak-bundle
-          path: SubtitleEdit-linux-x64.flatpak
-          overwrite: true
+  #     - name: Upload flatpak bundle artifact
+  #       uses: actions/upload-artifact@v5
+  #       with:
+  #         name: flatpak-bundle
+  #         path: SubtitleEdit-linux-x64.flatpak
+  #         overwrite: true
 
   create-release:
     if: ${{ inputs.create_release }}
-    needs: [build-windows, build-macos, build-linux, build-linux-flatpak]
+    needs: [build-windows, build-macos, build-linux]
     runs-on: ubuntu-latest
     permissions:
       contents: write
