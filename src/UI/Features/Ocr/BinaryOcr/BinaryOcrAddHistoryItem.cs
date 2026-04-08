@@ -6,14 +6,16 @@ namespace Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
 public class BinaryOcrAddHistoryItem
 {
     public BinaryOcrBitmap BinaryOcrBitmap { get; set; }
-    public NikseBitmap2? Bitmap { get; set; }
+    public NikseBitmap2? PreviewBitmap { get; set; }
+    public int PreviewTopMargin { get; set; }
     public int LineIndex { get; set; }
     public DateTime DateTime { get; set; }
 
-    public BinaryOcrAddHistoryItem(BinaryOcrBitmap binaryOcrBitmap, NikseBitmap2? bitmap, int lineIndex)
+    public BinaryOcrAddHistoryItem(BinaryOcrBitmap binaryOcrBitmap, NikseBitmap2? previewBitmap, int previewTopMargin, int lineIndex)
     {
         BinaryOcrBitmap = binaryOcrBitmap;
-        Bitmap = bitmap;
+        PreviewBitmap = previewBitmap == null ? null : new NikseBitmap2(previewBitmap);
+        PreviewTopMargin = previewTopMargin;
         DateTime = DateTime.Now;
         LineIndex = lineIndex;
     }

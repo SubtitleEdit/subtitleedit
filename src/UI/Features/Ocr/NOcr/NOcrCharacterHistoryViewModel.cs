@@ -231,9 +231,9 @@ public partial class NOcrCharacterHistoryViewModel : ObservableObject
             return;
         }
 
-        if (selectedItem.Bitmap != null)
+        if (selectedItem.PreviewBitmap != null)
         {
-            CurrentBitmap = selectedItem.Bitmap.GetBitmap().ToAvaloniaBitmap();
+            CurrentBitmap = selectedItem.PreviewBitmap.GetBitmap().ToAvaloniaBitmap();
         }
 
         NOcrChar = selectedItem.NOcrChar;

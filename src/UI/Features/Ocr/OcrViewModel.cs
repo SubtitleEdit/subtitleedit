@@ -1858,7 +1858,8 @@ public partial class OcrViewModel : ObservableObject
 
                             if (result.OkPressed)
                             {
-                                _nOcrAddHistoryManager.Add(result.NOcrChar, result.PreviewBitmap,
+                                var previewBitmap = result.PreviewBitmap ?? letters[letterIndex].NikseBitmap;
+                                _nOcrAddHistoryManager.Add(result.NOcrChar, previewBitmap,
                                     OcrSubtitleItems.IndexOf(item));
                                 IsInspectAdditionsVisible = true;
                                 _nOcrDb.Add(result.NOcrChar);
@@ -1904,7 +1905,13 @@ public partial class OcrViewModel : ObservableObject
                     }
                     else
                     {
-                        matches.Add(new NOcrChar { Text = _nOcrCaseFixer.FixUppercaseLowercaseIssues(splitterItem, match), Italic = match.Italic, ImageSplitterItem = splitterItem });
+                        var inspectMatch = new NOcrChar(match)
+                        {
+                            Text = _nOcrCaseFixer.FixUppercaseLowercaseIssues(splitterItem, match),
+                            ExpandCount = match.ExpandCount,
+                            ImageSplitterItem = splitterItem,
+                        };
+                        matches.Add(inspectMatch);
                     }
                 }
 
@@ -2241,8 +2248,8 @@ public partial class OcrViewModel : ObservableObject
                             {
                                 if (result.BinaryOcrBitmap != null)
                                 {
-                                    var letterBitmap = letters[letterIndex].NikseBitmap;
-                                    _binaryOcrAddHistoryManager.Add(result.BinaryOcrBitmap, letterBitmap,
+                                    var previewBitmap = result.PreviewBitmap ?? letters[letterIndex].NikseBitmap;
+                                    _binaryOcrAddHistoryManager.Add(result.BinaryOcrBitmap, previewBitmap, result.PreviewTopMargin,
                                         OcrSubtitleItems.IndexOf(item));
                                     IsInspectAdditionsVisible = true;
 

@@ -12,14 +12,14 @@ public class NOcrAddHistoryManager
         Items = new List<NOcrAddHistoryItem>();
     }
 
-    public void Add(NOcrChar nOcrChar, NikseBitmap2? letterBitmap, int lineIndex)
+    public void Add(NOcrChar nOcrChar, NikseBitmap2? previewBitmap, int lineIndex)
     {
         if (nOcrChar == null)
         {
             return;
         }
 
-        var item = new NOcrAddHistoryItem(nOcrChar, letterBitmap, lineIndex);
+        var item = new NOcrAddHistoryItem(nOcrChar, previewBitmap, lineIndex);
         Items.Add(item);
     }
 
