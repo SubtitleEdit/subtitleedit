@@ -48,7 +48,7 @@ public class IsSelectedHelper
         }
     }
 
-    private struct SelectionRange
+    private readonly struct SelectionRange
     {
         public readonly int Start;
         public readonly int End;
