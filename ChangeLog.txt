@@ -2,7 +2,7 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-beta14 (xth April 2026)
+v5.0.0-beta14 (8th April 2026)
 
 * Add Romanian translation - thx zildan
 * Update Italian translation - thx bovirus

@@ -10,8 +10,10 @@ command: SubtitleEdit
 build-options:
   append-path: /usr/lib/sdk/dotnet10/bin
   append-ld-library-path: /usr/lib/sdk/dotnet10/lib
+  no-debuginfo: true
   env:
     PKG_CONFIG_PATH: /app/lib/pkgconfig:/app/share/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig:/usr/lib/sdk/dotnet10/lib/pkgconfig
+    MAKEFLAGS: -j
 
 finish-args:
   # Display
@@ -264,6 +266,8 @@ modules:
           --self-contained true \
           -p:PublishSingleFile=true \
           -p:RestoreLockedMode=false \
+          -p:DebugSymbols=false \
+          -p:DebugType=none \
           --source /run/build/subtitleedit/nuget-sources \
           -o /app/bin
 
