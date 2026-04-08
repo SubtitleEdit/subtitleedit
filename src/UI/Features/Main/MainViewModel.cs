@@ -787,7 +787,7 @@ public partial class MainViewModel :
     private void RefreshSubtitlePreview()
     {
         _mpvReloader.Reset();
-        _vlcReloader.Reset();   
+        _vlcReloader.Reset();
         _mpvPreviewDirty = true;
     }
 
@@ -911,7 +911,20 @@ public partial class MainViewModel :
         {
             ApplyAssaStyles(result);
             _subtitle.Footer = result.ResultSubtitle.Footer;
-           RefreshSubtitlePreview();
+
+            var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+            foreach (var s in Subtitles)
+            {
+                if (!styles.Contains(s.Style))
+                {
+                    if (!styles.Contains(s.Style))
+                    {
+                        s.Style = styles.FirstOrDefault() ?? "Default";
+                    }
+                }
+            }
+
+            RefreshSubtitlePreview();
         }
     }
 
@@ -963,7 +976,7 @@ public partial class MainViewModel :
             RefreshSubtitlePreview();
         }
     }
-    
+
     [RelayCommand]
     private async Task ShowAssaAttachments()
     {
@@ -1757,12 +1770,12 @@ public partial class MainViewModel :
         await _folderHelper.OpenFolderWithFileSelected(Window!, _subtitleFileName);
         _shortcutManager.ClearKeys();
     }
-    
+
     [RelayCommand]
     private void ToggleCurrentSubtitleWhilePlaying()
     {
         SelectCurrentSubtitleWhilePlaying = !SelectCurrentSubtitleWhilePlaying;
-        
+
         if (SelectCurrentSubtitleWhilePlaying)
         {
             ShowStatus(Se.Language.Main.SelectCurrentSubtitleWhilePlayingOn);
@@ -8228,7 +8241,7 @@ public partial class MainViewModel :
                 _vlcReloader.RefreshVlc(vlc, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
             }
         }
-        
+
         RefreshSubtitlePreview();
     }
 
@@ -12712,7 +12725,7 @@ public partial class MainViewModel :
             {
                 var p = Subtitles[i];
 
-                hash = hash * 23 + p.Number; 
+                hash = hash * 23 + p.Number;
                 hash = hash * 23 + p.StartTime.TotalMilliseconds.GetHashCode();
                 hash = hash * 23 + p.EndTime.TotalMilliseconds.GetHashCode();
 
@@ -12748,7 +12761,7 @@ public partial class MainViewModel :
             {
                 var p = Subtitles[i];
 
-                hash = hash * 23 + p.Number; 
+                hash = hash * 23 + p.Number;
                 hash = hash * 23 + p.StartTime.TotalMilliseconds.GetHashCode();
                 hash = hash * 23 + p.EndTime.TotalMilliseconds.GetHashCode();
 
