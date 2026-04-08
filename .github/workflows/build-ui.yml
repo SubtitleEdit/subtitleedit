@@ -585,7 +585,7 @@ jobs:
         id: tag
         run: |
           if [ -n "${{ inputs.release_tag }}" ]; then
-            echo "tag=${{ inputs.release_tag }}" >> $GITHUB_OUTPUT
+            echo "tag=$(echo '${{ inputs.release_tag }}' | xargs)" >> $GITHUB_OUTPUT
           else
             timestamp=$(date +"%Y%m%d-%H%M%S")
             echo "tag=pre-release-${timestamp}" >> $GITHUB_OUTPUT
