@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Projektanker.Icons.Avalonia;
 using System;
+using System.ComponentModel;
 using Avalonia.Input;
 using MenuItem = Avalonia.Controls.MenuItem;
 
@@ -68,7 +69,7 @@ public class OcrWindow : Window
         var savedHeight = (double)editViewHeight;
 
         // Collapse row when OCR is running, restore when stopped
-        vm.PropertyChanged += (s, e) =>
+        PropertyChangedEventHandler ocrRunningHandler = (s, e) =>
         {
             if (e.PropertyName == nameof(vm.IsOcrRunning))
             {
@@ -88,6 +89,7 @@ public class OcrWindow : Window
                             {
                                 savedHeight = editViewRow.Height.Value;
                             }
+
                             // Use Auto to collapse (content is hidden via binding)
                             editViewRow.Height = new GridLength(1, GridUnitType.Auto);
                             editViewRow.MinHeight = 0;
@@ -107,11 +109,8 @@ public class OcrWindow : Window
                 });
             }
         };
-
-
-
-
-
+        vm.PropertyChanged += ocrRunningHandler;
+        Closed += (_, _) => vm.PropertyChanged -= ocrRunningHandler;
 
         // Set initial state if OCR is already running when window opens
         if (vm.IsOcrRunning)

@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 
@@ -28,6 +29,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     private List<double> _shotChanges;
     private double _frameRate = 25.0;
     private volatile bool _disposed;
+    private readonly PropertyChangedEventHandler _settingsChangedHandler;
 
     [ObservableProperty]
     private BeautifySettings _settings;
@@ -72,7 +74,8 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         };
 
         // Listen to settings changes
-        Settings.PropertyChanged += (s, e) => { _dirty = true; };
+        _settingsChangedHandler = (s, e) => { _dirty = true; };
+        Settings.PropertyChanged += _settingsChangedHandler;
     }
 
     private void UpdatePreview()
@@ -280,6 +283,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
 
         _disposed = true;
 
+        Settings.PropertyChanged -= _settingsChangedHandler;
         StopPositionTimer();
         _timerUpdatePreview.Stop();
         _timerUpdatePreview.Dispose();
