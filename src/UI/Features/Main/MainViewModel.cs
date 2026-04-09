@@ -582,16 +582,13 @@ public partial class MainViewModel :
                 var languageCode = File.ReadAllText(setupLanguageFile).Trim();
                 var language = Iso639Dash2LanguageCode.List
                     .FirstOrDefault(p => languageCode.StartsWith(p.ThreeLetterCode, StringComparison.OrdinalIgnoreCase) ||
-                                        languageCode.StartsWith(p.TwoLetterCode, StringComparison.OrdinalIgnoreCase));
+                                         languageCode.StartsWith(p.TwoLetterCode, StringComparison.OrdinalIgnoreCase));
                 if (language != null)
                 {
                     var translationFiles = Directory.GetFiles(Se.TranslationFolder, language.EnglishName + ".json");
                     if (translationFiles?.Length > 0)
                     {
-                        Dispatcher.UIThread.Post(async void () =>
-                        {
-                            await LoadLanguage(translationFiles[0]);
-                        });
+                        Dispatcher.UIThread.Post(async void () => { await LoadLanguage(translationFiles[0]); });
                     }
                 }
             }
@@ -917,10 +914,7 @@ public partial class MainViewModel :
             {
                 if (!styles.Contains(s.Style))
                 {
-                    if (!styles.Contains(s.Style))
-                    {
-                        s.Style = styles.FirstOrDefault() ?? "Default";
-                    }
+                    s.Style = styles.FirstOrDefault() ?? "Default";
                 }
             }
 
@@ -1054,6 +1048,7 @@ public partial class MainViewModel :
                 {
                     insertIndex = Subtitles.Count;
                 }
+
                 Subtitles.Insert(insertIndex, newP);
                 lastParagraph = newP;
             }
@@ -2810,6 +2805,7 @@ public partial class MainViewModel :
             {
                 sb.Append(' ');
             }
+
             sb.Append(c);
         }
 
@@ -3220,6 +3216,7 @@ public partial class MainViewModel :
         {
             selectedItem.Text = selectedItem.OriginalText;
         }
+
         _undoRedoManager.StartChangeDetection();
 
         _updateAudioVisualizer = true;
@@ -5501,10 +5498,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await ShowDialogAsync<ChangeFrameRateWindow, ChangeFrameRateViewModel>(vm =>
-        {
-            vm.Initialize(_videoFileName, _mediaInfo);
-        });
+        var result = await ShowDialogAsync<ChangeFrameRateWindow, ChangeFrameRateViewModel>(vm => { vm.Initialize(_videoFileName, _mediaInfo); });
         if (result.OkPressed)
         {
             ChangeFrameRateViewModel.ChangeFrameRate(Subtitles, result.SelectedFromFrameRate, result.SelectedToFrameRate);
@@ -6702,6 +6696,7 @@ public partial class MainViewModel :
             Renumber();
             SelectAndScrollToRow(lastIndex + 1);
         }
+
         _updateAudioVisualizer = true;
         _undoRedoManager.StartChangeDetection();
 
@@ -13850,6 +13845,7 @@ public partial class MainViewModel :
                 SubtitleGrid.SelectedItems.Add(Subtitles[i]);
             }
         }
+
         _subtitleGridSelectionChangedSkip = false;
 
         SubtitleGridSelectionChanged();
@@ -14170,6 +14166,7 @@ public partial class MainViewModel :
                         {
                             SelectAndScrollToRow(idx + 1);
                         }
+
                         _setEndAtKeyUpLine = null;
                         _setEndAtKeyUpLineGoToNext = false;
                     }
