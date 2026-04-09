@@ -77,8 +77,6 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
     private Subtitle _subtitle;
     private RemoveTextForHI? _removeTextForHiLib;
     private readonly Timer _timer;
-    private readonly List<Paragraph> _edited;
-
     private readonly IWindowService _windowService;
 
     public RemoveTextForHearingImpairedViewModel(IWindowService windowService)
@@ -91,7 +89,6 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
         Languages = new ObservableCollection<LanguageItem>(LanguageItem.GetAll());
         Fixes = new ObservableCollection<RemoveItem>();
         FixText = string.Empty;
-        _edited = new List<Paragraph>();
         _timer = new Timer(500);
         _timer.Elapsed += TimerElapsed;
         FixedSubtitle = new Subtitle();
@@ -232,45 +229,22 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
         var skipList = interjections?.SkipStartList ?? new List<string>();
         _removeTextForHiLib.ReloadInterjection(list, skipList);
 
-        var count = 0;
         var newFixes = new List<RemoveItem>();
+        var twoLetterIsoLanguageName = SelectedLanguage == null ? "en" : SelectedLanguage.Code;
         for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
         {
             var p = _subtitle.Paragraphs[index];
             _removeTextForHiLib.WarningIndex = index - 1;
-            if (_edited.Contains(p))
+            var newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text, _subtitle, index, twoLetterIsoLanguageName);
+            if (p.Text.RemoveChar(' ') != newText.RemoveChar(' '))
             {
-                var editedParagraph = _edited.First(x => x.Id == p.Id);
-                var newText = editedParagraph.Text;
-
                 var apply = true;
                 var oldItem = Fixes.FirstOrDefault(f => f.Index == index);
                 if (oldItem != null)
                 {
                     apply = oldItem.Apply;
                 }
-
-                var item = new RemoveItem(apply, index, p.Text, newText, p);
-                newFixes.Add(item);
-                count++;
-            }
-            else
-            {
-                var newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text, _subtitle, index,
-                    SelectedLanguage == null ? "en" : SelectedLanguage.Code);
-                if (p.Text.RemoveChar(' ') != newText.RemoveChar(' '))
-                {
-                    var apply = true;
-                    var oldItem = Fixes.FirstOrDefault(f => f.Index == index);
-                    if (oldItem != null)
-                    {
-                        apply = oldItem.Apply;
-                    }
-
-                    var item = new RemoveItem(apply, index, p.Text, newText, p);
-                    newFixes.Add(item);
-                    count++;
-                }
+                newFixes.Add(new RemoveItem(apply, index, p.Text, newText, p));
             }
         }
 
