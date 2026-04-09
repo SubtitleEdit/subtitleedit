@@ -1996,6 +1996,7 @@ public partial class OcrViewModel : ObservableObject
                         }
                     }
 
+                    RefreshSpellCheckColoring(i, item);
                     tcs.SetResult(true);
                 });
                 await tcs.Task;
@@ -2355,6 +2356,7 @@ public partial class OcrViewModel : ObservableObject
                         }
                     }
 
+                    RefreshSpellCheckColoring(i, item);
                     tcs.SetResult(true);
                 });
                 await tcs.Task;
@@ -2366,6 +2368,17 @@ public partial class OcrViewModel : ObservableObject
         }
 
         IsOcrRunning = false;
+    }
+
+    private void RefreshSpellCheckColoring(int lineIndex, OcrSubtitleItem item)
+    {
+        if (!_ocrFixEngine.IsLoaded() || SelectedDictionary == null || SelectedDictionary.Name == GetDictionaryNameNone())
+        {
+            return;
+        }
+
+        var updatedResult = _ocrFixEngine.FixOcrErrors(lineIndex, item, DoTryToGuessUnknownWords);
+        item.FixResult = updatedResult;
     }
 
     private static void ChangeWord(OcrSubtitleItem item, UnknownWordItem unknownWord, string word)
@@ -2641,7 +2654,69 @@ public partial class OcrViewModel : ObservableObject
                 var text = await tesseractOcr.Ocr(bitmap, language, cancellationToken);
                 item.Text = text;
 
-                OcrFixLineAndSetText(i, item);
+                var unknownWords = OcrFixLineAndSetText(i, item);
+
+                if (DoPromptForUnknownWords && unknownWords.Count > 0)
+                {
+                    var tcs = new TaskCompletionSource<bool>();
+                    Dispatcher.UIThread.Post(async () =>
+                    {
+                        foreach (var unknownWord in unknownWords)
+                        {
+                            var suggestions = _ocrFixEngine.GetSpellCheckSuggestions(unknownWord.Word.FixedWord);
+                            var result = await _windowService.ShowDialogAsync<PromptUnknownWordWindow, PromptUnknownWordViewModel>(Window!,
+                                vm => { vm.Initialize(item.GetBitmap(), item.Text, unknownWord, suggestions); });
+
+                            if (result.ChangeWholeTextPressed)
+                            {
+                                item.Text = result.WholeText;
+                                break;
+                            }
+                            else if (result.ChangeOncePressed)
+                            {
+                                ChangeWord(item, unknownWord, result.Word);
+                            }
+                            else if (result.ChangeAllPressed)
+                            {
+                                ChangeWord(item, unknownWord, result.Word);
+                                _ocrFixEngine.ChangeAll(unknownWord.Word.Word, result.Word);
+                            }
+                            else if (result.SkipOncePressed)
+                            {
+                                // do nothing
+                            }
+                            else if (result.SkipAllPressed)
+                            {
+                                _ocrFixEngine.SkipAll(unknownWord.Word.Word);
+                            }
+                            else if (result.AddToNamesListPressed)
+                            {
+                                _ocrFixEngine.AddName(unknownWord.Word.Word);
+                            }
+                            else if (result.AddToUserDictionaryPressed)
+                            {
+                                if (SelectedDictionary != null)
+                                {
+                                    UserWordsHelper.AddToUserDictionary(unknownWord.Word.Word, SelectedDictionary.GetFiveLetterLanguageName() ?? "en_US");
+                                }
+                            }
+                            else
+                            {
+                                _cancellationTokenSource.Cancel();
+                                IsOcrRunning = false;
+                                break;
+                            }
+                        }
+
+                        RefreshSpellCheckColoring(i, item);
+                        tcs.SetResult(true);
+                    });
+                    await tcs.Task;
+                    if (!IsOcrRunning)
+                    {
+                        return;
+                    }
+                }
             }
 
             PauseOcr();
