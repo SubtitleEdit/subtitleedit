@@ -11,11 +11,20 @@ namespace Nikse.SubtitleEdit.Logic;
 public class ShortcutManager : IShortcutManager
 {
     private readonly HashSet<Key> _activeKeys = [];
+    private readonly HashSet<string> _activeEffectiveNames = [];
     private readonly List<ShortCut> _shortcuts = [];
     private FrozenDictionary<string, ShortCut>? _lookupTable;
     private bool _isDirty = true;
     private bool _isControlPressed = false;
     private bool _isShiftPressed = false;
+
+    // When NumLock is off, numpad navigation keys (e.g. NumPad7) produce the same logical Key as
+    // their non-numpad counterparts (Key.Home). Use the PhysicalKey name to keep them distinct.
+    public static string GetEffectiveKeyName(Key logicalKey, PhysicalKey physicalKey)
+    {
+        var physicalName = physicalKey.ToString();
+        return physicalName.StartsWith("NumPad", StringComparison.Ordinal) ? physicalName : logicalKey.ToString();
+    }
 
     public static string GetKeyDisplayName(string key)
     {
@@ -51,6 +60,7 @@ public class ShortcutManager : IShortcutManager
             Key.LWin or Key.RWin))
         {
             _activeKeys.Add(e.Key);
+            _activeEffectiveNames.Add(GetEffectiveKeyName(e.Key, e.PhysicalKey));
         }
 
         _isControlPressed = e.KeyModifiers.HasFlag(KeyModifiers.Control);
@@ -63,10 +73,12 @@ public class ShortcutManager : IShortcutManager
             Key.ImeAccept or Key.ImeModeChange or Key.DeadCharProcessed or Key.None)
         {
             _activeKeys.Clear();
+            _activeEffectiveNames.Clear();
         }
         else
         {
             _activeKeys.Remove(e.Key);
+            _activeEffectiveNames.Remove(GetEffectiveKeyName(e.Key, e.PhysicalKey));
         }
 
         _isControlPressed = e.KeyModifiers.HasFlag(KeyModifiers.Control);
@@ -76,6 +88,7 @@ public class ShortcutManager : IShortcutManager
     public void ClearKeys()
     {
         _activeKeys.Clear();
+        _activeEffectiveNames.Clear();
         _isControlPressed = false;
         _isShiftPressed = false;
     }
@@ -125,11 +138,11 @@ public class ShortcutManager : IShortcutManager
         }
 
         // Build the current state key list with initial capacity
-        var currentInputKeys = new List<string>(_activeKeys.Count + 2);
+        var currentInputKeys = new List<string>(_activeEffectiveNames.Count + 2);
 
-        foreach (var key in _activeKeys)
+        foreach (var name in _activeEffectiveNames)
         {
-            currentInputKeys.Add(key.ToString());
+            currentInputKeys.Add(name);
         }
 
         // Add normalized modifiers based on the event state

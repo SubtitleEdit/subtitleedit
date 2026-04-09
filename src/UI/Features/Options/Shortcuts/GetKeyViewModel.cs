@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Options.Shortcuts;
@@ -82,8 +83,9 @@ public partial class GetKeyViewModel : ObservableObject
         var shiftLabel = isMac ? Se.Language.Options.Shortcuts.ShiftMac : Se.Language.Options.Shortcuts.Shift;
         var winLabel = isMac ? Se.Language.Options.Shortcuts.WinMac : Se.Language.Options.Shortcuts.Win;
 
-        PressedKey = e.Key.ToString();
-        PressedKeyOnly = PressedKey;
+        var effectiveKey = ShortcutManager.GetEffectiveKeyName(e.Key, e.PhysicalKey);
+        PressedKey = effectiveKey;
+        PressedKeyOnly = effectiveKey;
         IsControlPressed = e.KeyModifiers.HasFlag(KeyModifiers.Control);
         IsAltPressed = e.KeyModifiers.HasFlag(KeyModifiers.Alt);
         IsShiftPressed = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
@@ -119,8 +121,8 @@ public partial class GetKeyViewModel : ObservableObject
             infoText += winLabel + " + ";       
         }
         
-        PressedKey += e.Key;
-        infoText += e.Key;    
+        PressedKey += effectiveKey;
+        infoText += effectiveKey;
 
         InfoText = string.Format(Se.Language.Options.Shortcuts.PressedKeyX, infoText);
     }
