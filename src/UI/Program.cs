@@ -100,54 +100,41 @@ namespace Nikse.SubtitleEdit
                 RegionColor = UiUtil.GetDarkThemeBackgroundColor(),
             });
 
-            if (b.Instance != null)
+            if (b.Instance == null)
             {
-                b.Instance.Styles.Add(UiTheme.FluentTheme);
+                return;
             }
+
+            b.Instance.Styles.Add(UiTheme.FluentTheme);
 
             // Add DataGrid styles
-            if (b.Instance != null)
+            b.Instance.Styles.Add(new StyleInclude(new Uri("avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml", UriKind.Absolute))
             {
-                b.Instance.Styles.Add(new StyleInclude(new Uri("avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml", UriKind.Absolute))
-                {
-                    Source = new Uri("avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml")
-                });
-            }
+                Source = new Uri("avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml")
+            });
 
-            if (b.Instance != null)
+            b.Instance.Styles.Add(new StyleInclude(new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml", UriKind.Absolute))
             {
-                b.Instance.Styles.Add(new StyleInclude(new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml", UriKind.Absolute))
-                {
-                    Source = new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml")
-                });
-            }
+                Source = new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml")
+            });
 
             // Add ColorPicker styles
-            if (b.Instance != null)
+            b.Instance.Styles.Add(new StyleInclude(new Uri("avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml", UriKind.Absolute))
             {
-                b.Instance.Styles.Add(new StyleInclude(new Uri("avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml", UriKind.Absolute))
-                {
-                    Source = new Uri("avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml", UriKind.Absolute)
-                });
-            }
+                Source = new Uri("avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml", UriKind.Absolute)
+            });
 
             // Set custom font
-            if (Application.Current != null && !string.IsNullOrEmpty(Se.Settings.Appearance.FontName))
+            if (!string.IsNullOrEmpty(Se.Settings.Appearance.FontName))
             {
                 UiUtil.SetFontName(Se.Settings.Appearance.FontName);
             }
 
             // Set application name
-            if (b.Instance != null)
-            {
-                b.Instance.Name = AppName;
-            }
+            b.Instance.Name = AppName;
 
             // Setup native menu
-            if (b.Instance != null)
-            {
-                SetupNativeMenu(b.Instance, lifetime);
-            }
+            SetupNativeMenu(b.Instance, lifetime);
         }
 
         private static void SetupNativeMenu(Application app, ClassicDesktopStyleApplicationLifetime lifetime)
