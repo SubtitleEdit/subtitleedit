@@ -139,7 +139,7 @@ public partial class OcrViewModel : ObservableObject
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
     private readonly ISpellCheckManager _spellCheckManager;
-    private readonly IOcrFixEngine2 _ocrFixEngine;
+    private readonly IOcrFixEngine _ocrFixEngine;
     private readonly IBinaryOcrMatcher _binaryOcrMatcher;
     private PreProcessingSettings? _preProcessingSettings;
     private bool _isCtrlDown;
@@ -157,7 +157,7 @@ public partial class OcrViewModel : ObservableObject
         IWindowService windowService,
         IFileHelper fileHelper,
         ISpellCheckManager spellCheckManager,
-        IOcrFixEngine2 ocrFixEngine,
+        IOcrFixEngine ocrFixEngine,
         IBinaryOcrMatcher binaryOcrMatcher)
     {
         _nOcrCaseFixer = nOcrCaseFixer;
@@ -457,8 +457,15 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        var word = selectedWord.Word.Word;
         var result = await _windowService.ShowDialogAsync<AddToNamesListWindow, AddToNamesListViewModel>(Window,
-            vm => { vm.Initialize(selectedWord.Word.Word, Dictionaries.ToList(), SelectedDictionary); });
+            vm => { vm.Initialize(word, Dictionaries.ToList(), SelectedDictionary); });
+
+        if (result.OkPressed)
+        {
+            _ocrFixEngine.Reload();
+        }
+
         _isCtrlDown = false;
     }
 
@@ -473,6 +480,12 @@ public partial class OcrViewModel : ObservableObject
 
         var result = await _windowService.ShowDialogAsync<AddToUserDictionaryWindow, AddToUserDictionaryViewModel>(Window!,
             vm => { vm.Initialize(selectedWord.Word.Word, Dictionaries.ToList(), SelectedDictionary); });
+
+        if (result.OkPressed)
+        {
+            _ocrFixEngine.Reload();
+        }
+
         _isCtrlDown = false;
     }
 
@@ -487,6 +500,12 @@ public partial class OcrViewModel : ObservableObject
 
         var result = await _windowService.ShowDialogAsync<AddToOcrReplaceListWindow, AddToOcrReplaceListViewModel>(Window!,
             vm => { vm.Initialize(selectedWord.Word.Word, Dictionaries.ToList(), SelectedDictionary); });
+
+        if (result.OkPressed)
+        {
+            _ocrFixEngine.Reload();
+        }
+
         _isCtrlDown = false;
     }
 
@@ -1954,7 +1973,6 @@ public partial class OcrViewModel : ObservableObject
                         var result = await _windowService.ShowDialogAsync<PromptUnknownWordWindow, PromptUnknownWordViewModel>(Window!,
                             vm => { vm.Initialize(item.GetBitmap(), item.Text, unknownWord, suggestions); });
 
-
                         if (result.ChangeWholeTextPressed)
                         {
                             item.Text = result.WholeText;
@@ -1975,17 +1993,17 @@ public partial class OcrViewModel : ObservableObject
                         }
                         else if (result.SkipAllPressed)
                         {
-                            _ocrFixEngine.SkipAll(unknownWord.Word.Word);
+                            _ocrFixEngine.SkipAll(result.Word);
                         }
                         else if (result.AddToNamesListPressed)
                         {
-                            _ocrFixEngine.AddName(unknownWord.Word.Word);
+                            _ocrFixEngine.AddName(result.Word);
                         }
                         else if (result.AddToUserDictionaryPressed)
                         {
                             if (SelectedDictionary != null)
                             {
-                                UserWordsHelper.AddToUserDictionary(unknownWord.Word.Word, SelectedDictionary.GetFiveLetterLanguageName() ?? "en_US");
+                                UserWordsHelper.AddToUserDictionary(result.Word, SelectedDictionary.GetFiveLetterLanguageName() ?? "en_US");
                             }
                         }
                         else

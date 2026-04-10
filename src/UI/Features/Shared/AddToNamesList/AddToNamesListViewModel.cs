@@ -5,11 +5,9 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.Dictionaries;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Shared.AddToNamesList;
 

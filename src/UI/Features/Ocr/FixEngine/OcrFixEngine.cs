@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.FixEngine;
 
-public interface IOcrFixEngine2
+public interface IOcrFixEngine
 {
     void Initialize(List<OcrSubtitleItem> subtitles, string threeLetterIsoLanguageName, SpellCheckDictionaryDisplay spellCheckDictionary);
     OcrFixLineResult FixOcrErrors(int index, OcrSubtitleItem item, bool doTryToGuessUnknownWords);
@@ -20,15 +20,17 @@ public interface IOcrFixEngine2
     void ChangeAll(string from, string to);
     void SkipAll(string word);
     void AddName(string name);
+    void Reload();
 }
 
-public partial class OcrFixEngine2 : IOcrFixEngine2, IDoSpell
+public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
 {
     private bool _isLoaded;
     private OcrFixReplaceList2 _ocrFixReplaceList;
+    private string _fiveLetterName;
     private readonly HashSet<string> _wordSpellOkList = new HashSet<string>();
     private string[] _wordSplitList;
-    private SpellCheckWordLists2 _spellCheckWordLists;
+    private SpellCheckWordLists _spellCheckWordLists;
     private string _threeLetterIsoLanguageName;
     private Subtitle _subtitle;
     private List<OcrSubtitleItem> _subtitles;
@@ -37,7 +39,7 @@ public partial class OcrFixEngine2 : IOcrFixEngine2, IDoSpell
 
     private readonly ISpellCheckManager _spellCheckManager;
 
-    public OcrFixEngine2(ISpellCheckManager spellCheckManager)
+    public OcrFixEngine(ISpellCheckManager spellCheckManager)
     {
         _spellCheckManager = spellCheckManager;
         _wordSkipList = new HashSet<string>();
@@ -47,26 +49,22 @@ public partial class OcrFixEngine2 : IOcrFixEngine2, IDoSpell
         _threeLetterIsoLanguageName = string.Empty;
         _isLoaded = false;
         _ocrFixReplaceList = new OcrFixReplaceList2(string.Empty);
-        _spellCheckWordLists = new SpellCheckWordLists2(string.Empty, this);
+        _spellCheckWordLists = new SpellCheckWordLists(string.Empty, this);
         _wordSplitList = Array.Empty<string>();
+        _fiveLetterName = string.Empty;
     }
 
-    void IOcrFixEngine2.Initialize(List<OcrSubtitleItem> subtitles, string threeLetterIsoLanguageName, SpellCheckDictionaryDisplay spellCheckDictionary)
+    void IOcrFixEngine.Initialize(List<OcrSubtitleItem> subtitles, string threeLetterIsoLanguageName, SpellCheckDictionaryDisplay spellCheckDictionary)
     {
         _isLoaded = true;
         var twoLetterIsoLanguageName = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(threeLetterIsoLanguageName);
         _spellCheckManager.Initialize(spellCheckDictionary.DictionaryFileName, twoLetterIsoLanguageName);
-        _ocrFixReplaceList = OcrFixReplaceList2.FromLanguageId(threeLetterIsoLanguageName);
 
-        var fiveLetterName = Path.GetFileNameWithoutExtension(spellCheckDictionary.DictionaryFileName);
-        _spellCheckWordLists = new SpellCheckWordLists2(fiveLetterName, this);
+        _fiveLetterName = Path.GetFileNameWithoutExtension(spellCheckDictionary.DictionaryFileName);
 
         _subtitles = subtitles;
         _threeLetterIsoLanguageName = threeLetterIsoLanguageName;
         _subtitle = GetSubtitle(subtitles);
-
-        var names = _spellCheckWordLists.GetAllNames();
-        _wordSplitList = StringWithoutSpaceSplitToWords.LoadWordSplitList(Se.DictionariesFolder, threeLetterIsoLanguageName, names);
     }
 
     public OcrFixLineResult FixOcrErrors(int index, OcrSubtitleItem item, bool doTryToGuessUnknownWords)
@@ -298,7 +296,7 @@ public partial class OcrFixEngine2 : IOcrFixEngine2, IDoSpell
             {
                 isWordCorrect = true;
             }
-            
+
             var w = result.Trim('-');
             if (!isWordCorrect && w != result &&
                 (_wordSkipList.Contains(w) ||
@@ -487,7 +485,7 @@ public partial class OcrFixEngine2 : IOcrFixEngine2, IDoSpell
 
     public void SkipAll(string word)
     {
-        if (!_wordSkipList.Contains(word))
+        if (!_wordSkipList.Contains(word) && !string.IsNullOrWhiteSpace(word))
         {
             _wordSkipList.Add(word);
         }
@@ -495,12 +493,20 @@ public partial class OcrFixEngine2 : IOcrFixEngine2, IDoSpell
 
     public void AddName(string name)
     {
-        if (string.IsNullOrWhiteSpace(name) || !_isLoaded)
+        if (string.IsNullOrWhiteSpace(name) || !_isLoaded || string.IsNullOrEmpty(name))
         {
             return;
         }
 
-        _spellCheckWordLists.AddName(name);
+        _spellCheckWordLists.AddName(name.Trim());
+    }
+
+    public void Reload()
+    {
+        _ocrFixReplaceList = OcrFixReplaceList2.FromLanguageId(_threeLetterIsoLanguageName);
+        var names = _spellCheckWordLists.GetAllNames();
+        _wordSplitList = StringWithoutSpaceSplitToWords.LoadWordSplitList(Se.DictionariesFolder, _threeLetterIsoLanguageName, names);
+        _spellCheckWordLists = new SpellCheckWordLists(_fiveLetterName, this);
     }
 }
 

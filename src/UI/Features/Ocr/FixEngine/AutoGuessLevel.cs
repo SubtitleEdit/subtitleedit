@@ -1,5 +1,5 @@
 ﻿namespace Nikse.SubtitleEdit.Features.Ocr.FixEngine;
-    public partial class OcrFixEngine2
+    public partial class OcrFixEngine
 {
     public enum AutoGuessLevel
         {

@@ -5,6 +5,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
@@ -13,7 +14,6 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Projektanker.Icons.Avalonia;
 using System;
 using System.ComponentModel;
-using Avalonia.Input;
 using MenuItem = Avalonia.Controls.MenuItem;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
@@ -627,7 +627,7 @@ public class OcrWindow : Window
         };
 
         var tabControl = new TabControl
-        {            
+        {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
             Items =

@@ -29,7 +29,7 @@ public class SpellCheckManager : ISpellCheckManager, IDoSpell
 
     private WordList? _hunspellWeCantSpell;
     private SpellCheckResult? _currentResult;
-    private SpellCheckWordLists2? _spellCheckWordLists;
+    private SpellCheckWordLists? _spellCheckWordLists;
     private readonly List<string> _skipAllList;
     private readonly Dictionary<string, string> _changeAllDictionary;
 
@@ -95,7 +95,7 @@ public class SpellCheckManager : ISpellCheckManager, IDoSpell
         {
             var name = Path.GetFileNameWithoutExtension(dictionaryFile);
             var fiveLetterCode = SpellCheckDictionaryDisplay.GetFiveLetterLanguageName(name);
-            _spellCheckWordLists = new SpellCheckWordLists2(fiveLetterCode ?? "en_US", this);
+            _spellCheckWordLists = new SpellCheckWordLists(fiveLetterCode ?? "en_US", this);
         }
 
         return true;
@@ -115,7 +115,7 @@ public class SpellCheckManager : ISpellCheckManager, IDoSpell
         for (var lineIndex = startLineIndex; lineIndex < subtitles.Count; lineIndex++)
         {
             var p = subtitles[lineIndex];
-            var words = SpellCheckWordLists2.Split(p.Text);
+            var words = SpellCheckWordLists.Split(p.Text);
 
             for (var wordIndex = startWordIndex; wordIndex < words.Count; wordIndex++)
             {

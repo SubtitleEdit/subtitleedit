@@ -345,7 +345,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 }
 
                 var runText = run.Text;
-                var words = SpellCheckWordLists2.Split(runText);
+                var words = SpellCheckWordLists.Split(runText);
 
                 if (words.Count == 0)
                 {

@@ -4,6 +4,7 @@ using System.IO;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.Dictionaries;
+
 public static class UserWordsHelper
 {
     public static string LoadUserWordList(List<string> userWordList, string languageName)
@@ -48,6 +49,13 @@ public static class UserWordsHelper
 
     public static bool AddToUserDictionary(string word, string languageName)
     {
+        if (string.IsNullOrEmpty(word))
+        {
+            return false;
+        }
+
+        word = word.Trim();
+
         var words = new List<string>();
         var userWordFileName = LoadUserWordList(words, languageName);
         if (words.Contains(word))

@@ -69,11 +69,11 @@ public partial class PromptUnknownWordViewModel : ObservableObject
     {
         var textBlock = new TextBlock();
         var idx = word.Word.WordIndex;
-        var paragraph = word.Result.GetText();   
+        var paragraph = word.Result.GetText();
         var w = word.Word.FixedWord;
 
         if (!paragraph.Substring(idx).StartsWith(w))
-        { 
+        {
             idx = paragraph.IndexOf(w, StringComparison.Ordinal);
             if (idx < 0)
             {

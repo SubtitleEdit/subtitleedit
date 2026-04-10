@@ -62,9 +62,9 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     private SubtitleFormat _subtitleFormat;
     private readonly INamesList _namesList;
     private readonly IWindowService _windowService;
-    private readonly IOcrFixEngine2 _ocrFixEngine;
+    private readonly IOcrFixEngine _ocrFixEngine;
 
-    public FixCommonErrorsViewModel(INamesList namesList, IWindowService windowService, IOcrFixEngine2 ocrFixEngine)
+    public FixCommonErrorsViewModel(INamesList namesList, IWindowService windowService, IOcrFixEngine ocrFixEngine)
     {
         _namesList = namesList;
         _windowService = windowService;

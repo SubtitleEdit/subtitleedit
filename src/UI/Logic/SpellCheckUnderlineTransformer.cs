@@ -74,7 +74,7 @@ public class SpellCheckUnderlineTransformer : DocumentColorizingTransformer
                 return;
             }
 
-            var words = SpellCheckWordLists2.Split(lineText);
+            var words = SpellCheckWordLists.Split(lineText);
             foreach (var word in words)
             {
                 if (string.IsNullOrWhiteSpace(word.Text) || word.Length < 2)

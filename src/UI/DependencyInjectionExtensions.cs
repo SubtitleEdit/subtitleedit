@@ -187,7 +187,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<IMpvReloader, MpvReloader>();
         collection.AddTransient<INOcrCaseFixer, NOcrCaseFixer>();
         collection.AddTransient<INamesList, SeNamesList>();
-        collection.AddTransient<IOcrFixEngine2, OcrFixEngine2>();
+        collection.AddTransient<IOcrFixEngine, OcrFixEngine>();
         collection.AddTransient<IOcrInitializer, OcrInitializer>();
         collection.AddTransient<IPasteFromClipboardHelper, PasteFromClipboardHelper>();
         collection.AddTransient<IShortcutManager, ShortcutManager>();

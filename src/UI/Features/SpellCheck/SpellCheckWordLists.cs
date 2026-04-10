@@ -11,7 +11,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck;
 
-public class SpellCheckWordLists2
+public class SpellCheckWordLists
 {
 
     public static readonly HashSet<char> SplitChars = new HashSet<char>
@@ -37,7 +37,7 @@ public class SpellCheckWordLists2
     private readonly string _languageName;
     private readonly IDoSpell _doSpell;
 
-    public SpellCheckWordLists2(string fiveLetterName, IDoSpell doSpell)
+    public SpellCheckWordLists(string fiveLetterName, IDoSpell doSpell)
     {
         _dictionaryFolder = Se.DictionariesFolder;
         _languageName = fiveLetterName ?? throw new NullReferenceException(nameof(fiveLetterName));

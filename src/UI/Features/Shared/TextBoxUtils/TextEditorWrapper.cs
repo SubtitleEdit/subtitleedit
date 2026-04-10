@@ -243,7 +243,7 @@ public class TextEditorWrapper : ITextBoxWrapper
             return null;
         }
 
-        var words = SpellCheckWordLists2.Split(Text);
+        var words = SpellCheckWordLists.Split(Text);
         return words.FirstOrDefault(w => offset >= w.Index && offset < w.Index + w.Length);
     }
 

@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixCommonOcrErrors : IFixCommonError
     {
-        public static IOcrFixEngine2? OcrFixEngine { get; internal set; }
+        public static IOcrFixEngine? OcrFixEngine { get; internal set; }
 
         public static class Language
         {
@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             var spellCheckManager = new SpellCheckManager();
             var spellCheckers = spellCheckManager.GetDictionaryLanguages(Se.DictionariesFolder);
-            var spellChecker = spellCheckers.FirstOrDefault(x => x.GetThreeLetterCode() == threeLetterCode);  
+            var spellChecker = spellCheckers.FirstOrDefault(x => x.GetThreeLetterCode() == threeLetterCode);
             if (spellChecker == null)
             {
                 return;
