@@ -503,6 +503,11 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             Dispatcher.UIThread.Invoke<Task>(async () =>
             {
                 LogToConsole($"Speech to text ({settings.WhisperChoice}) done in {_sw.Elapsed}{Environment.NewLine}");
+                if (_unknownArgument && !string.IsNullOrEmpty(settings.WhisperCustomCommandLineArguments))
+                {
+                    await MessageBox.Show(Window!, $"Unknown argument: {settings.WhisperCustomCommandLineArguments}",
+                        "Unknown argument. Please check the advanced settings.");
+                }
                 LogToConsole($"Speech to text: Could not find output JSON file{Environment.NewLine}");
                 ProgressValue = 100;
                 IsTranscribeEnabled = true;
@@ -1944,7 +1949,15 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             var exe = qwen3Asr.GetExecutable();
             var alignerModel = qwen3Asr.ForcedAlignerModel;
             _qwen3AsrOutputJsonPath = Path.Combine(Path.GetTempPath(), $"qwen3_asr_{Guid.NewGuid():N}.json");
-            var qwen3Params = $"-m \"{qwen3Asr.GetModelForCmdLine(model)}\" --aligner-model \"{qwen3Asr.GetModelForCmdLine(alignerModel.Name)}\" -f \"{waveFileName}\" --transcribe-align -o \"{_qwen3AsrOutputJsonPath}\"";
+            var qwen3ExtraArgs = Se.Settings.Tools.AudioToText.WhisperCustomCommandLineArguments.Trim();
+            if (qwen3ExtraArgs == "--standard")
+            {
+                qwen3ExtraArgs = string.Empty;
+            }
+
+            var qwen3Params = string.IsNullOrWhiteSpace(qwen3ExtraArgs)
+                ? $"-m \"{qwen3Asr.GetModelForCmdLine(model)}\" --aligner-model \"{qwen3Asr.GetModelForCmdLine(alignerModel.Name)}\" -f \"{waveFileName}\" --transcribe-align -o \"{_qwen3AsrOutputJsonPath}\""
+                : $"{qwen3ExtraArgs} -m \"{qwen3Asr.GetModelForCmdLine(model)}\" --aligner-model \"{qwen3Asr.GetModelForCmdLine(alignerModel.Name)}\" -f \"{waveFileName}\" --transcribe-align -o \"{_qwen3AsrOutputJsonPath}\"";
 
             var p = new Process
             {
