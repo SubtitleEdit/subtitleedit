@@ -20,6 +20,8 @@ namespace Nikse.SubtitleEdit
 {
     internal class Program
     {
+        private const string AppName = "Subtitle Edit";
+
         public static string? PendingFileToOpen { get; set; }
         public static bool FileOpenedViaActivation { get; set; }
 
@@ -138,7 +140,7 @@ namespace Nikse.SubtitleEdit
             // Set application name
             if (b.Instance != null)
             {
-                b.Instance.Name = "Subtitle Edit";
+                b.Instance.Name = AppName;
             }
 
             // Setup native menu
@@ -216,7 +218,7 @@ namespace Nikse.SubtitleEdit
         {
             lifetime.MainWindow = new Window
             {
-                Title = "Subtitle Edit",
+                Title = AppName,
                 Name = "MainWindow",
                 Icon = UiUtil.GetSeIcon(),
                 MinWidth = 800,
