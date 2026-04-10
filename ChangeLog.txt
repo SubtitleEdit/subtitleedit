@@ -10,6 +10,8 @@ v5.0.0-beta15 (xth April 2026)
 * Fix prompting for unknown words in Tesseract OCR - thx Ryu481
 * Fix ASSA style issue - thx esprit-mi
 * Fix langauge tags + update Polish spell check directory - thx potplayer-fanpack
+* Add more Qwen3 ASR model options - thx Ironship
+* Fix issue with undo - thx Dravic
 
 -----------------------------------------------------------------------------------------------------
 v5.0.0-beta14 (8th April 2026)

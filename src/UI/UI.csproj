@@ -92,10 +92,10 @@
 		<None Remove="Assets\TextToSpeech\MurfVoices.json" />
 		<None Remove="Assets\TextToSpeech\PiperVoices.json" />
 		<None Remove="Assets\Themes.zip" />
-		<None Remove="Assets\Whisper\PurfviewFasterWhisper.txt" />
-		<None Remove="Assets\Whisper\PurfviewFasterWhisperXXL.txt" />
-		<None Remove="Assets\Whisper\WhisperCPP.txt" />
-		<None Remove="Assets\Whisper\WhisperOpenAI.txt" />
+		<None Remove="Assets\SpeechToText\PurfviewFasterWhisper.txt" />
+		<None Remove="Assets\SpeechToText\PurfviewFasterWhisperXXL.txt" />
+		<None Remove="Assets\SpeechToText\WhisperCPP.txt" />
+		<None Remove="Assets\SpeechToText\WhisperOpenAI.txt" />
 		<None Remove="Styles.xaml" />
 		<AvaloniaResource Include="Assets\Dictionaries.zip" />
 		<AvaloniaResource Include="Assets\Languages\Danish.json" />
@@ -127,30 +127,33 @@
 		<AvaloniaResource Include="Assets\NetflixGlyphs.zip" />
 		<AvaloniaResource Include="Assets\SevenZip\7zaWindows64.zip" />
 		<AvaloniaResource Include="Assets\SevenZip\7zrLinux64.zip" />
+		<AvaloniaResource Include="Assets\SpeechToText\CrispASRParakeet.txt">
+		  <CopyToOutputDirectory></CopyToOutputDirectory>
+		</AvaloniaResource>
 		<AvaloniaResource Include="Assets\Themes.zip" />
-		<AvaloniaResource Include="Assets\Whisper\PurfviewFasterWhisper.txt">
+		<AvaloniaResource Include="Assets\SpeechToText\PurfviewFasterWhisper.txt">
 			<CopyToOutputDirectory></CopyToOutputDirectory>
 		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\Whisper\PurfviewFasterWhisperXXL.txt">
+		<AvaloniaResource Include="Assets\SpeechToText\PurfviewFasterWhisperXXL.txt">
 			<CopyToOutputDirectory></CopyToOutputDirectory>
 		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\Whisper\Qwen3ASRCPP.txt" />
-		<AvaloniaResource Include="Assets\Whisper\WhisperConst-me.txt">
+		<AvaloniaResource Include="Assets\SpeechToText\Qwen3ASRCPP.txt" />
+		<AvaloniaResource Include="Assets\SpeechToText\WhisperConst-me.txt">
 			<CopyToOutputDirectory></CopyToOutputDirectory>
 		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\Whisper\WhisperCPPcuBLAS.txt">
+		<AvaloniaResource Include="Assets\SpeechToText\WhisperCPPcuBLAS.txt">
 		  <CopyToOutputDirectory></CopyToOutputDirectory>
 		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\Whisper\WhisperCPPVulkan.txt">
+		<AvaloniaResource Include="Assets\SpeechToText\WhisperCPPVulkan.txt">
 		  <CopyToOutputDirectory></CopyToOutputDirectory>
 		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\Whisper\WhisperCPP.txt">
+		<AvaloniaResource Include="Assets\SpeechToText\WhisperCPP.txt">
 			<CopyToOutputDirectory></CopyToOutputDirectory>
 		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\Whisper\ChatLLM.cpp.txt">
+		<AvaloniaResource Include="Assets\SpeechToText\ChatLLM.cpp.txt">
 		  <CopyToOutputDirectory></CopyToOutputDirectory>
 		</AvaloniaResource>
-		<AvaloniaResource Include="Assets\Whisper\WhisperOpenAI.txt">
+		<AvaloniaResource Include="Assets\SpeechToText\WhisperOpenAI.txt">
 			<CopyToOutputDirectory></CopyToOutputDirectory>
 		</AvaloniaResource>
 		<Content Include="SE.ico" />
@@ -158,8 +161,8 @@
 		<AvaloniaResource Include="Assets\Ocr.zip" />
 		<None Remove="Assets\about.png" />
 		<AvaloniaResource Include="Assets\about.png" />
-		<None Remove="Assets\Whisper\WhisperCTranslate2.txt" />
-		<AvaloniaResource Include="Assets\Whisper\WhisperCTranslate2.txt" />
+		<None Remove="Assets\SpeechToText\WhisperCTranslate2.txt" />
+		<AvaloniaResource Include="Assets\SpeechToText\WhisperCTranslate2.txt" />
 	</ItemGroup>
 
 	<ItemGroup>

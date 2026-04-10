@@ -176,6 +176,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<ICasingToggler, CasingToggler>();
         collection.AddTransient<IChatLlmDownloadService, ChatLlmDownloadService>();
         collection.AddTransient<IColorService, ColorService>();
+        collection.AddHttpClient<ICrispAsrDownloadService, CrispAsrDownloadService>();
         collection.AddTransient<IDictionaryInitializer, DictionaryInitializer>();
         collection.AddTransient<IFindService, FindService>();
         collection.AddTransient<IFontNameService, FontNameService>();

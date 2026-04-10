@@ -37,6 +37,7 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
     private readonly IWhisperDownloadService _whisperDownloadService;
     private readonly IChatLlmDownloadService _chatLlmDownloadService;
     private readonly IQwen3AsrCppDownloadService _qwen3AsrCppDownloadService;
+    private readonly ICrispAsrDownloadService _crispAsrDownloadService;
     private Task? _downloadTask;
     private readonly Timer _timer;
     private readonly CancellationTokenSource _cancellationTokenSource;
@@ -50,12 +51,14 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
         IWhisperDownloadService whisperDownloadService, 
         IZipUnpacker zipUnpacker, 
         IChatLlmDownloadService chatLlmDownloadService,
-        IQwen3AsrCppDownloadService qwen3AsrCppDownloadService)
+        IQwen3AsrCppDownloadService qwen3AsrCppDownloadService,
+        ICrispAsrDownloadService crispAsrDownloadService)
     {
         _whisperDownloadService = whisperDownloadService;
         _zipUnpacker = zipUnpacker;
         _chatLlmDownloadService = chatLlmDownloadService;
         _qwen3AsrCppDownloadService = qwen3AsrCppDownloadService;
+        _crispAsrDownloadService = crispAsrDownloadService;
 
         _cancellationTokenSource = new CancellationTokenSource();
 
@@ -246,6 +249,15 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                     MacHelper.MakeExecutable(path);
                 }
             }
+
+            if (Engine is CrispAsrParakeet)
+            {
+                path = Path.Combine(folder, CrispAsrParakeet.GetExecutableFileName());
+                if (File.Exists(path))
+                {
+                    MacHelper.MakeExecutable(path);
+                }
+            }
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
@@ -276,6 +288,15 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
             if (Engine is Qwen3AsrCppEngine qwen3AsrCppEngineLinux)
             {
                 path = Path.Combine(folder, qwen3AsrCppEngineLinux.GetExecutableFileName());
+                if (File.Exists(path))
+                {
+                    LinuxHelper.MakeExecutable(path);
+                }
+            }
+
+            if (Engine is CrispAsrParakeet)
+            {
+                path = Path.Combine(folder, CrispAsrParakeet.GetExecutableFileName());
                 if (File.Exists(path))
                 {
                     LinuxHelper.MakeExecutable(path);
@@ -362,6 +383,10 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
         {
             var dir = Engine.GetAndCreateWhisperFolder();
             _downloadTask = _qwen3AsrCppDownloadService.DownloadEngine(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
+        }
+        else if (Engine is CrispAsrParakeet)
+        {
+            _downloadTask = _crispAsrDownloadService.DownloadEngine(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
         }
     }
 

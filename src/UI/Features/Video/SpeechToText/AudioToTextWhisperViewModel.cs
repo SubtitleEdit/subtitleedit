@@ -154,9 +154,9 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             Engines.Add(new Qwen3AsrCppEngine());
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
         {
-            //Engines.Add(new ParakeetCppEngine());
+            Engines.Add(new CrispAsrParakeet());
         }
 
         SelectedEngine = Engines[0];
@@ -171,7 +171,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         ResultAudioClips = new List<AudioClip>();
 
         IsTranscribeEnabled = true;
-        IsTranslateVisible = SelectedEngine is not ChatLlmCppEngine and not Qwen3AsrCppEngine;
+        IsTranslateVisible = SelectedEngine is not ChatLlmCppEngine and not Qwen3AsrCppEngine and not CrispAsrParakeet;
         Parameters = string.Empty;
         ConsoleLog = string.Empty;
         ProgressText = string.Empty;
@@ -1993,6 +1993,56 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             return p;
         }
 
+        if (engine is CrispAsrParakeet crispAsrParakeet)
+        {
+            var exe = crispAsrParakeet.GetExecutable();
+            var crispArgs = Se.Settings.Tools.AudioToText.WhisperCustomCommandLineArguments.Trim();
+            if (crispArgs == "--standard")
+            {
+                crispArgs = string.Empty;
+            }
+
+            var crispModel = crispAsrParakeet.GetModelForCmdLine(model);
+            var crispParams = string.IsNullOrWhiteSpace(crispArgs)
+                ? $"--language {language} --model \"{crispModel}\" --output-srt \"{waveFileName}\""
+                : $"--language {language} --model \"{crispModel}\" --output-srt {crispArgs} \"{waveFileName}\"";
+
+            SeLogger.WhisperInfo($"{exe} {crispParams}");
+
+            var p = new Process
+            {
+                StartInfo = new ProcessStartInfo(exe, crispParams)
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    WorkingDirectory = Path.GetDirectoryName(exe),
+                }
+            };
+
+            if (dataReceivedHandler != null)
+            {
+                p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.RedirectStandardError = true;
+                p.OutputDataReceived += dataReceivedHandler;
+                p.ErrorDataReceived += dataReceivedHandler;
+            }
+
+#pragma warning disable CA1416
+            p.Start();
+#pragma warning restore CA1416
+
+            if (dataReceivedHandler != null)
+            {
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+            }
+
+            return p;
+        }
+
         var settings = Se.Settings.Tools.AudioToText;
         var args = settings.WhisperCustomCommandLineArguments.Trim();
         if (args == "--standard" &&
@@ -2477,7 +2527,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             Parameters = "--standard";
         }
 
-        IsTranslateVisible = !(engine is ChatLlmCppEngine or Qwen3AsrCppEngine);
+        IsTranslateVisible = !(engine is ChatLlmCppEngine or Qwen3AsrCppEngine or CrispAsrParakeet);
 
         SaveSettings();
     }
