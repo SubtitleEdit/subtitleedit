@@ -58,6 +58,8 @@ public class AutoBackupService : IAutoBackupService
     public void StopAutobackup()
     {
         _timerAutoBackup?.Stop();
+        _timerAutoBackup?.Dispose();
+        _timerAutoBackup = null;
     }
 
     private static void SaveAutoBackup(Subtitle subtitle, SubtitleFormat saveFormat)
