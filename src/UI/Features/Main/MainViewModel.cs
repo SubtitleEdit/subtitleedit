@@ -21,7 +21,6 @@ using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Features.Assa;
-using Nikse.SubtitleEdit.Features.Help;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect;
 using Nikse.SubtitleEdit.Features.Assa.AssaApplyCustomOverrideTags;
 using Nikse.SubtitleEdit.Features.Assa.AssaDraw;
@@ -3621,8 +3620,24 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
-            result.AdjustDuration(Subtitles);
+            RunWithoutChangeDetection(() =>
+            {
+                result.AdjustDuration(Subtitles);
+            });
             _updateAudioVisualizer = true;
+        }
+    }
+
+    public void RunWithoutChangeDetection(Action action)
+    {
+        _undoRedoManager.StopChangeDetection();
+        try
+        {
+            action();
+        }
+        finally
+        {
+            _undoRedoManager.StartChangeDetection();
         }
     }
 
@@ -3648,11 +3663,14 @@ public partial class MainViewModel :
 
         if (result.OkPressed && result.AllSubtitlesFixed.Count > 0)
         {
-            var idx = SelectedSubtitleIndex;
-            Subtitles.Clear();
-            Subtitles.AddRange(result.AllSubtitlesFixed);
-            SelectAndScrollToRow(idx ?? 0);
-            _updateAudioVisualizer = true;
+            RunWithoutChangeDetection(() =>
+            {
+                var idx = SelectedSubtitleIndex;
+                Subtitles.Clear();
+                Subtitles.AddRange(result.AllSubtitlesFixed);
+                SelectAndScrollToRow(idx ?? 0);
+                _updateAudioVisualizer = true;
+            });
         }
     }
 
@@ -6656,9 +6674,10 @@ public partial class MainViewModel :
     [RelayCommand]
     private void InsertLineBefore()
     {
-        _undoRedoManager.StopChangeDetection();
-        InsertBeforeSelectedItem();
-        _undoRedoManager.StartChangeDetection();
+        RunWithoutChangeDetection(() =>
+        {
+            InsertBeforeSelectedItem();
+        });
 
         if (Se.Settings.Tools.GridFocusTextboxAfterInsertNew)
         {
@@ -6669,9 +6688,10 @@ public partial class MainViewModel :
     [RelayCommand]
     private void InsertLineAfter()
     {
-        _undoRedoManager.StopChangeDetection();
-        InsertAfterSelectedItem();
-        _undoRedoManager.StartChangeDetection();
+        RunWithoutChangeDetection(() =>
+        {
+            InsertAfterSelectedItem();
+        });
 
         if (Se.Settings.Tools.GridFocusTextboxAfterInsertNew)
         {
@@ -6682,23 +6702,24 @@ public partial class MainViewModel :
     [RelayCommand]
     private void InsertLineAtEnd()
     {
-        _undoRedoManager.StopChangeDetection();
-        if (Subtitles.Count == 0)
+        RunWithoutChangeDetection(() =>
         {
-            _insertService.InsertBefore(SelectedSubtitleFormat, _subtitle, Subtitles, 0, string.Empty);
-            Renumber();
-            SelectAndScrollToRow(0);
-        }
-        else
-        {
-            var lastIndex = Subtitles.Count - 1;
-            _insertService.InsertAfter(SelectedSubtitleFormat, _subtitle, Subtitles, lastIndex, string.Empty);
-            Renumber();
-            SelectAndScrollToRow(lastIndex + 1);
-        }
+            if (Subtitles.Count == 0)
+            {
+                _insertService.InsertBefore(SelectedSubtitleFormat, _subtitle, Subtitles, 0, string.Empty);
+                Renumber();
+                SelectAndScrollToRow(0);
+            }
+            else
+            {
+                var lastIndex = Subtitles.Count - 1;
+                _insertService.InsertAfter(SelectedSubtitleFormat, _subtitle, Subtitles, lastIndex, string.Empty);
+                Renumber();
+                SelectAndScrollToRow(lastIndex + 1);
+            }
 
-        _updateAudioVisualizer = true;
-        _undoRedoManager.StartChangeDetection();
+            _updateAudioVisualizer = true;
+        });
 
         if (Se.Settings.Tools.GridFocusTextboxAfterInsertNew)
         {
@@ -6709,33 +6730,37 @@ public partial class MainViewModel :
     [RelayCommand]
     private void MergeWithLineBefore()
     {
-        _undoRedoManager.StopChangeDetection();
-        MergeLineBefore();
-        _undoRedoManager.StartChangeDetection();
+        RunWithoutChangeDetection(() =>
+        {
+            MergeLineBefore();
+        });
     }
 
     [RelayCommand]
     private void MergeWithLineAfter()
     {
-        _undoRedoManager.StopChangeDetection();
-        MergeLineAfter();
-        _undoRedoManager.StartChangeDetection();
+        RunWithoutChangeDetection(() =>
+        {
+            MergeLineAfter();
+        });
     }
 
     [RelayCommand]
     private void MergeWithLineBeforeKeepBreaks()
     {
-        _undoRedoManager.StopChangeDetection();
-        MergeLineBeforeKeepBreaks();
-        _undoRedoManager.StartChangeDetection();
+        RunWithoutChangeDetection(() =>
+        {
+            MergeLineBeforeKeepBreaks();
+        });
     }
 
     [RelayCommand]
     private void MergeWithLineAfterKeepBreaks()
     {
-        _undoRedoManager.StopChangeDetection();
-        MergeLineAfterKeepBreaks();
-        _undoRedoManager.StartChangeDetection();
+        RunWithoutChangeDetection(() =>
+        {
+            MergeLineAfterKeepBreaks();
+        });
     }
 
     [RelayCommand]
@@ -8685,19 +8710,20 @@ public partial class MainViewModel :
         var endMs = startMs + Se.Settings.General.NewEmptyDefaultMs;
         var newParagraph =
             new SubtitleLineViewModel(new Paragraph(string.Empty, startMs, endMs), SelectedSubtitleFormat);
-        _undoRedoManager.StopChangeDetection();
-        var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
-        var next = Subtitles.GetOrNull(idx + 1);
-        if (next != null)
-        {
-            if (next.StartTime.TotalMilliseconds < endMs && next.StartTime.TotalMilliseconds > newParagraph.StartTime.TotalMilliseconds + 200)
-            {
-                newParagraph.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds -
-                                                                 Se.Settings.General.MinimumMillisecondsBetweenLines);
-            }
-        }
 
-        _undoRedoManager.StartChangeDetection();
+        RunWithoutChangeDetection(() =>
+        {
+            var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+            var next = Subtitles.GetOrNull(idx + 1);
+            if (next != null)
+            {
+                if (next.StartTime.TotalMilliseconds < endMs && next.StartTime.TotalMilliseconds > newParagraph.StartTime.TotalMilliseconds + 200)
+                {
+                    newParagraph.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds -
+                                                                     Se.Settings.General.MinimumMillisecondsBetweenLines);
+                }
+            }
+        });
 
         AudioVisualizer.NewSelectionParagraph = null;
         SelectAndScrollToSubtitle(newParagraph);
@@ -8724,19 +8750,21 @@ public partial class MainViewModel :
         var endMs = startMs + Se.Settings.General.NewEmptyDefaultMs;
         var newParagraph =
             new SubtitleLineViewModel(new Paragraph(string.Empty, startMs, endMs), SelectedSubtitleFormat);
-        _undoRedoManager.StopChangeDetection();
-        var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
-        var next = Subtitles.GetOrNull(idx + 1);
-        if (next != null)
-        {
-            if (next.StartTime.TotalMilliseconds < endMs && next.StartTime.TotalMilliseconds > newParagraph.StartTime.TotalMilliseconds + 200)
-            {
-                newParagraph.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds -
-                                                                 Se.Settings.General.MinimumMillisecondsBetweenLines);
-            }
-        }
 
-        _undoRedoManager.StartChangeDetection();
+        RunWithoutChangeDetection(() =>
+        {
+            var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+            var next = Subtitles.GetOrNull(idx + 1);
+            if (next != null)
+            {
+                if (next.StartTime.TotalMilliseconds < endMs && next.StartTime.TotalMilliseconds > newParagraph.StartTime.TotalMilliseconds + 200)
+                {
+                    newParagraph.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds -
+                                                                     Se.Settings.General.MinimumMillisecondsBetweenLines);
+                }
+            }
+
+        });
 
         AudioVisualizer.NewSelectionParagraph = null;
         SelectAndScrollToSubtitle(newParagraph);
@@ -8789,15 +8817,16 @@ public partial class MainViewModel :
         var subtitleStartTime = s.StartTime;
         var difference = videoStartTime - subtitleStartTime;
 
-        _undoRedoManager.StopChangeDetection();
-        for (var i = index; i < Subtitles.Count; i++)
+        RunWithoutChangeDetection(() =>
         {
-            var subtitle = Subtitles[i];
-            subtitle.StartTime += difference;
-        }
+            for (var i = index; i < Subtitles.Count; i++)
+            {
+                var subtitle = Subtitles[i];
+                subtitle.StartTime += difference;
+            }
 
-        _updateAudioVisualizer = true;
-        _undoRedoManager.StartChangeDetection();
+            _updateAudioVisualizer = true;
+        });
     }
 
     [RelayCommand]
@@ -8827,15 +8856,16 @@ public partial class MainViewModel :
 
         var difference = videoTime - subtitleEndTime;
 
-        _undoRedoManager.StopChangeDetection();
-        for (var i = index; i < Subtitles.Count; i++)
+        RunWithoutChangeDetection(() =>
         {
-            var subtitle = Subtitles[i];
-            subtitle.StartTime += difference;
-        }
+            for (var i = index; i < Subtitles.Count; i++)
+            {
+                var subtitle = Subtitles[i];
+                subtitle.StartTime += difference;
+            }
 
-        _updateAudioVisualizer = true;
-        _undoRedoManager.StartChangeDetection();
+            _updateAudioVisualizer = true;
+        });
     }
 
     [RelayCommand]
@@ -9842,16 +9872,30 @@ public partial class MainViewModel :
     private void PerformUndo()
     {
         if (!_undoRedoManager.CanUndo)
-        {
             return;
-        }
 
-        _undoRedoManager.CheckForChanges(null);
-        _undoRedoManager.StopChangeDetection();
-        var undoRedoObject = _undoRedoManager.Undo()!;
-        RestoreUndoRedoState(undoRedoObject);
-        ShowUndoStatus();
-        _undoRedoManager.StartChangeDetection();
+        Debug.WriteLine($"=== UNDO PRESSED ===");
+        Debug.WriteLine($"Before - UndoStack ({_undoRedoManager.UndoCount}):");
+        foreach (var item in _undoRedoManager.UndoList)
+            Debug.WriteLine($"  [{item.Hash}] {item.Description}");
+        Debug.WriteLine($"Before - RedoStack ({_undoRedoManager.RedoCount}):");
+        foreach (var item in _undoRedoManager.RedoList)
+            Debug.WriteLine($"  [{item.Hash}] {item.Description}");
+        Debug.WriteLine($"Live hash: {_undoRedoManager /* or however you can get GetFastHash() here */}");
+
+        RunWithoutChangeDetection(() =>
+        {
+            var undoRedoObject = _undoRedoManager.Undo()!;
+            if (undoRedoObject?.Subtitles == null)
+                return;
+
+            RestoreUndoRedoState(undoRedoObject);
+            ShowUndoStatus();
+        });
+
+        Debug.WriteLine($"After - UndoStack ({_undoRedoManager.UndoCount}):");
+        foreach (var item in _undoRedoManager.UndoList)
+            Debug.WriteLine($"  [{item.Hash}] {item.Description}");
     }
 
     private void ShowUndoStatus()
@@ -9880,17 +9924,38 @@ public partial class MainViewModel :
 
     private void PerformRedo()
     {
-        _undoRedoManager.CheckForChanges(null);
         if (!_undoRedoManager.CanRedo)
         {
             return;
         }
 
-        _undoRedoManager.StopChangeDetection();
-        var undoRedoObject = _undoRedoManager.Redo()!;
-        RestoreUndoRedoState(undoRedoObject);
-        ShowRedoStatus();
-        _undoRedoManager.StartChangeDetection();
+        Debug.WriteLine($"=== REDO PRESSED ===");
+        Debug.WriteLine($"Before - UndoStack ({_undoRedoManager.UndoCount}):");
+        foreach (var item in _undoRedoManager.UndoList)
+            Debug.WriteLine($"  [{item.Hash}] {item.Description}");
+        Debug.WriteLine($"Before - RedoStack ({_undoRedoManager.RedoCount}):");
+        foreach (var item in _undoRedoManager.RedoList)
+            Debug.WriteLine($"  [{item.Hash}] {item.Description}");
+
+        RunWithoutChangeDetection(() =>
+        {
+            var undoRedoObject = _undoRedoManager.Redo();
+            if (undoRedoObject?.Subtitles == null)
+            {
+                Debug.WriteLine("Redo returned null or null subtitles — aborting");
+                return;
+            }
+
+            RestoreUndoRedoState(undoRedoObject);
+            ShowRedoStatus();
+        });
+
+        Debug.WriteLine($"After - UndoStack ({_undoRedoManager.UndoCount}):");
+        foreach (var item in _undoRedoManager.UndoList)
+            Debug.WriteLine($"  [{item.Hash}] {item.Description}");
+        Debug.WriteLine($"After - RedoStack ({_undoRedoManager.RedoCount}):");
+        foreach (var item in _undoRedoManager.RedoList)
+            Debug.WriteLine($"  [{item.Hash}] {item.Description}");
     }
 
     public UndoRedoItem MakeUndoRedoObject(string description)
@@ -9902,7 +9967,11 @@ public partial class MainViewModel :
             _subtitleFileName,
             [SelectedSubtitleIndex ?? 0],
             1,
-            1);
+            1)
+        {
+            SubtitleHeader = _subtitle.Header,
+            SubtitleFooter = _subtitle.Footer,
+        };
     }
 
     private void RestoreUndoRedoState(UndoRedoItem undoRedoObject)
@@ -9914,6 +9983,8 @@ public partial class MainViewModel :
         }
 
         _subtitleFileName = undoRedoObject.SubtitleFileName;
+        _subtitle.Header = undoRedoObject.SubtitleHeader;
+        _subtitle.Footer = undoRedoObject.SubtitleFooter;
         SelectAndScrollToRow(undoRedoObject.SelectedLines.First());
     }
 
@@ -15469,14 +15540,15 @@ public partial class MainViewModel :
         var subtitleStartTime = s.StartTime;
         var difference = videoStartTime - subtitleStartTime;
 
-        _undoRedoManager.StopChangeDetection();
-        for (var i = index; i < Subtitles.Count; i++)
+        RunWithoutChangeDetection(() =>
         {
-            var subtitle = Subtitles[i];
-            subtitle.StartTime += difference;
-        }
+            for (var i = index; i < Subtitles.Count; i++)
+            {
+                var subtitle = Subtitles[i];
+                subtitle.StartTime += difference;
+            }
 
-        _updateAudioVisualizer = true;
-        _undoRedoManager.StartChangeDetection();
+            _updateAudioVisualizer = true;
+        });
     }
 }

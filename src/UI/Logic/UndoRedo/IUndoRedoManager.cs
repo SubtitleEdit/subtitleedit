@@ -5,8 +5,8 @@ namespace Nikse.SubtitleEdit.Logic.UndoRedo;
 
 public interface IUndoRedoManager : IDisposable
 {
-    List<UndoRedoItem> UndoList { get; }
-    List<UndoRedoItem> RedoList { get; }
+    IReadOnlyList<UndoRedoItem> UndoList { get; }
+    IReadOnlyList<UndoRedoItem> RedoList { get; }
 
     void Do(UndoRedoItem action);
     UndoRedoItem? Undo();
