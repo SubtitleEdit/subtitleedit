@@ -108,20 +108,20 @@ namespace Nikse.SubtitleEdit
             b.Instance.Styles.Add(UiTheme.FluentTheme);
 
             // Add DataGrid styles
-            b.Instance.Styles.Add(new StyleInclude(new Uri("avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml", UriKind.Absolute))
+            b.Instance.Styles.Add(new StyleInclude((Uri?)null)
             {
                 Source = new Uri("avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml")
             });
 
-            b.Instance.Styles.Add(new StyleInclude(new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml", UriKind.Absolute))
+            b.Instance.Styles.Add(new StyleInclude((Uri?)null)
             {
                 Source = new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml")
             });
 
             // Add ColorPicker styles
-            b.Instance.Styles.Add(new StyleInclude(new Uri("avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml", UriKind.Absolute))
+            b.Instance.Styles.Add(new StyleInclude((Uri?)null)
             {
-                Source = new Uri("avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml", UriKind.Absolute)
+                Source = new Uri("avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml")
             });
 
             // Set custom font
