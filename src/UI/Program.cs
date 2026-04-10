@@ -31,10 +31,16 @@ namespace Nikse.SubtitleEdit
             try
             {
                 // Global exception handling
-                AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+                AppDomain.CurrentDomain.UnhandledException += (_, e) =>
                 {
-                    var exception = e.ExceptionObject as Exception;
-                    Se.LogError(exception ?? new Exception(), "Unhandled AppDomain Exception");
+                    if (e.ExceptionObject is Exception exception)
+                    {
+                        Se.LogError(exception, "Unhandled AppDomain Exception");
+                    }
+                    else
+                    {
+                        Se.LogError(new Exception(e.ExceptionObject?.ToString() ?? "Unknown error"), "Unhandled AppDomain Exception");
+                    }
                 };
 
                 // Setup application lifetime
