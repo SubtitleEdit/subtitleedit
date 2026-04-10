@@ -266,7 +266,7 @@ public partial class SourceViewViewModel : ObservableObject
             return;
         }
 
-        var text = Text.Trim();
+        var text = Text.Trim().TrimStart('\uFEFF').Trim();
         if (string.IsNullOrEmpty(text))
         {
             OkPressed = false;

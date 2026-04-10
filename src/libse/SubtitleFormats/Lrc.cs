@@ -141,8 +141,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var offsetInMilliseconds = 0.0d;
             var header = new StringBuilder();
             char[] splitChars = { ':', '.' };
-            foreach (var line in lines)
+            foreach (var rawLine in lines)
             {
+                var line = rawLine.TrimStart('\uFEFF');
                 if (line.StartsWith('[') && RegexTimeCodes.Match(line).Success)
                 {
                     var s = line.Substring(1, 8);
