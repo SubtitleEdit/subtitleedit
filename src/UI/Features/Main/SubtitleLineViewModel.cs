@@ -90,8 +90,8 @@ public partial class SubtitleLineViewModel : ObservableObject
     {
         Text = p.Text;
         OriginalText = p.OriginalText;
-        StartTime = TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds);
-        EndTime = TimeSpan.FromMilliseconds(p.EndTime.TotalMilliseconds);
+        StartTime = p.StartTime;
+        EndTime = p.EndTime;
         UpdateDuration();
         Language = p.Language;
         Region = p.Region;

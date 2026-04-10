@@ -9872,16 +9872,9 @@ public partial class MainViewModel :
     private void PerformUndo()
     {
         if (!_undoRedoManager.CanUndo)
+        {
             return;
-
-        Debug.WriteLine($"=== UNDO PRESSED ===");
-        Debug.WriteLine($"Before - UndoStack ({_undoRedoManager.UndoCount}):");
-        foreach (var item in _undoRedoManager.UndoList)
-            Debug.WriteLine($"  [{item.Hash}] {item.Description}");
-        Debug.WriteLine($"Before - RedoStack ({_undoRedoManager.RedoCount}):");
-        foreach (var item in _undoRedoManager.RedoList)
-            Debug.WriteLine($"  [{item.Hash}] {item.Description}");
-        Debug.WriteLine($"Live hash: {_undoRedoManager /* or however you can get GetFastHash() here */}");
+        }
 
         RunWithoutChangeDetection(() =>
         {
@@ -9892,10 +9885,6 @@ public partial class MainViewModel :
             RestoreUndoRedoState(undoRedoObject);
             ShowUndoStatus();
         });
-
-        Debug.WriteLine($"After - UndoStack ({_undoRedoManager.UndoCount}):");
-        foreach (var item in _undoRedoManager.UndoList)
-            Debug.WriteLine($"  [{item.Hash}] {item.Description}");
     }
 
     private void ShowUndoStatus()
@@ -9929,33 +9918,17 @@ public partial class MainViewModel :
             return;
         }
 
-        Debug.WriteLine($"=== REDO PRESSED ===");
-        Debug.WriteLine($"Before - UndoStack ({_undoRedoManager.UndoCount}):");
-        foreach (var item in _undoRedoManager.UndoList)
-            Debug.WriteLine($"  [{item.Hash}] {item.Description}");
-        Debug.WriteLine($"Before - RedoStack ({_undoRedoManager.RedoCount}):");
-        foreach (var item in _undoRedoManager.RedoList)
-            Debug.WriteLine($"  [{item.Hash}] {item.Description}");
-
         RunWithoutChangeDetection(() =>
         {
             var undoRedoObject = _undoRedoManager.Redo();
             if (undoRedoObject?.Subtitles == null)
             {
-                Debug.WriteLine("Redo returned null or null subtitles — aborting");
                 return;
             }
 
             RestoreUndoRedoState(undoRedoObject);
             ShowRedoStatus();
         });
-
-        Debug.WriteLine($"After - UndoStack ({_undoRedoManager.UndoCount}):");
-        foreach (var item in _undoRedoManager.UndoList)
-            Debug.WriteLine($"  [{item.Hash}] {item.Description}");
-        Debug.WriteLine($"After - RedoStack ({_undoRedoManager.RedoCount}):");
-        foreach (var item in _undoRedoManager.RedoList)
-            Debug.WriteLine($"  [{item.Hash}] {item.Description}");
     }
 
     public UndoRedoItem MakeUndoRedoObject(string description)
@@ -9969,6 +9942,7 @@ public partial class MainViewModel :
             1,
             1)
         {
+            SelectedEncodingDisplayName = SelectedEncoding.DisplayName,
             SubtitleHeader = _subtitle.Header,
             SubtitleFooter = _subtitle.Footer,
         };
@@ -9983,6 +9957,15 @@ public partial class MainViewModel :
         }
 
         _subtitleFileName = undoRedoObject.SubtitleFileName;
+        if (!string.IsNullOrEmpty(undoRedoObject.SelectedEncodingDisplayName))
+        {
+            var restoredEncoding = Encodings.FirstOrDefault(p => p.DisplayName == undoRedoObject.SelectedEncodingDisplayName);
+            if (restoredEncoding != null)
+            {
+                SelectedEncoding = restoredEncoding;
+            }
+        }
+
         _subtitle.Header = undoRedoObject.SubtitleHeader;
         _subtitle.Footer = undoRedoObject.SubtitleFooter;
         SelectAndScrollToRow(undoRedoObject.SelectedLines.First());

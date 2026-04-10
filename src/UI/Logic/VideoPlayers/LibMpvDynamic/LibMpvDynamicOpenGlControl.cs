@@ -106,9 +106,6 @@ public class LibMpvDynamicOpenGlControl : OpenGlControlBase
             return;
         }
 
-        System.Diagnostics.Debug.WriteLine($"Render: Rendering file {_mpvPlayer.FileName}");
-
-
         var scaling = VisualRoot?.RenderScaling ?? 1.0;
         var size = Bounds.Size * scaling;
         var width = (int)size.Width;

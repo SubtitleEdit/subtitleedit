@@ -9,6 +9,7 @@ public class UndoRedoItem
     public string Description { get; set; }
     public SubtitleLineViewModel[] Subtitles { get; set; }
     public string SubtitleFileName { get; set; }
+    public string? SelectedEncodingDisplayName { get; set; }
     public string? SubtitleHeader { get; set; }
     public string? SubtitleFooter { get; set; }
     public int[] SelectedLines { get; set; }
@@ -52,6 +53,7 @@ public class UndoRedoItem
             item.CaretIndex,
             item.SelectionLength)
         {
+            SelectedEncodingDisplayName = item.SelectedEncodingDisplayName,
             SubtitleHeader = item.SubtitleHeader,
             SubtitleFooter = item.SubtitleFooter,
         };

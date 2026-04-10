@@ -289,6 +289,65 @@ public class UndoRedoManagerTests
         Assert.Equal(undoCountBeforeUndo, manager.UndoCount);
     }
 
+    [Fact]
+    public void UndoRedoItemClone_PreservesExactTimeSpanTicks()
+    {
+        var line = new SubtitleLineViewModel
+        {
+            Number = 1,
+            Text = "tick-precision",
+            StartTime = TimeSpan.FromTicks(TimeSpan.TicksPerMillisecond * 1000 + 1234),
+            EndTime = TimeSpan.FromTicks(TimeSpan.TicksPerMillisecond * 2000 + 5678)
+        };
+
+        var item = MakeItem("state", 1, [line]);
+        var cloned = UndoRedoItem.Clone(item);
+
+        Assert.NotNull(cloned);
+        Assert.Single(cloned.Subtitles);
+        Assert.Equal(line.StartTime.Ticks, cloned.Subtitles[0].StartTime.Ticks);
+        Assert.Equal(line.EndTime.Ticks, cloned.Subtitles[0].EndTime.Ticks);
+    }
+
+    [Fact]
+    public void UndoRedoUndo_KeepsExpectedStateBetweenActions()
+    {
+        var client = new FakeClient { Hash = 2 };
+        var manager = new UndoRedoManager();
+        manager.SetupChangeDetection(client);
+        manager.Do(MakeItem("state-a", 1));
+        manager.Do(MakeItem("state-b", 2));
+
+        Assert.Equal(2, manager.UndoCount);
+        Assert.Equal(0, manager.RedoCount);
+
+        var undo1 = manager.Undo();
+
+        Assert.NotNull(undo1);
+        Assert.Equal(1, undo1.Hash);
+        Assert.Equal(1, manager.UndoCount);
+        Assert.Equal(2, manager.RedoCount);
+        Assert.True(manager.CanRedo);
+
+        client.Hash = undo1.Hash; // simulate caller restoring state-a
+        var redo = manager.Redo();
+
+        Assert.NotNull(redo);
+        Assert.Equal(2, redo.Hash);
+        Assert.Equal(2, manager.UndoCount);
+        Assert.Equal(0, manager.RedoCount);
+        Assert.False(manager.CanRedo);
+
+        client.Hash = redo.Hash; // simulate caller restoring state-b
+        var undo2 = manager.Undo();
+
+        Assert.NotNull(undo2);
+        Assert.Equal(1, undo2.Hash);
+        Assert.Equal(1, manager.UndoCount);
+        Assert.Equal(2, manager.RedoCount);
+        Assert.True(manager.CanRedo);
+    }
+
     // -----------------------------------------------------------------------
     // CheckForChanges()
     // -----------------------------------------------------------------------
