@@ -91,6 +91,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine($"[ve: {Utilities.AssemblyVersion}]");
             }
 
+            sb.AppendLine();
+
             const string timeCodeFormat = "[{0:00}:{1:00}.{2:00}]{3}";
             for (var index = 0; index < subtitle.Paragraphs.Count; index++)
             {

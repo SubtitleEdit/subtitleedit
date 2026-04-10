@@ -2,6 +2,16 @@
 Subtitle Edit Changelog
 
 
+v5.0.0-beta15 (xth April 2026)
+
+* Update Italian translation - thx bovirus
+* Fix for import source-view text with BOM - thx MG240
+* Fix OCR user dictionary add-actions - thx Hellbringer
+* Fix prompting for unknown words in Tesseract OCR - thx Ryu481
+* Fix ASSA style issue - thx esprit-mi
+* Fix langauge tags + update Polish spell check directory - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
 v5.0.0-beta14 (8th April 2026)
 
 * Add Romanian translation - thx zildan

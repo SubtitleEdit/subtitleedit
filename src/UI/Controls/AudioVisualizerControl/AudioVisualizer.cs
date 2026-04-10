@@ -296,6 +296,7 @@ public class AudioVisualizer : Control
     private readonly Pen _paintShotChangeThinPen = new Pen(Brushes.AntiqueWhite, 1);
     private readonly Pen _paintShotChangeParagraphStartPen = new Pen(new SolidColorBrush(Color.FromArgb(175, 0, 100, 0)), 2, dashStyle: DashStyle.Dash);
     private readonly Pen _paintShotChangeParagraphEndPen = new Pen(new SolidColorBrush(Color.FromArgb(175, 110, 10, 10)), 2, dashStyle: DashStyle.Dash);
+    private readonly Pen _centerLinePen = new Pen(Brushes.DarkGray, 0.5);
     private readonly HashSet<int> _paragraphStartPositions = new();
     private readonly HashSet<int> _paragraphEndPositions = new();
     private double _fontSize = Se.Settings.Waveform.WaveformTextFontSize;
@@ -1708,8 +1709,7 @@ public class AudioVisualizer : Control
         var highestPeak = renderCtx.HighestPeak;
 
         // Draw center line first
-        var centerLinePen = new Pen(Brushes.DarkGray, 0.5);
-        context.DrawLine(centerLinePen, new Point(0, halfWaveformHeight), new Point(renderCtx.Width, halfWaveformHeight));
+        context.DrawLine(_centerLinePen, new Point(0, halfWaveformHeight), new Point(renderCtx.Width, halfWaveformHeight));
 
         // Calculate the threshold for color transitions (as a fraction of the highest peak)
         var lowThreshold = highestPeak * 0.3;

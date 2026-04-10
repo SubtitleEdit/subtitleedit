@@ -18,10 +18,17 @@ public class LibVlcDynamicNativeControl : NativeControlHost
     private IntPtr _nativeHandle;
     private IntPtr _ownedChildHandle;
 
+    // Window Styles
     private const uint WS_CHILD = 0x40000000;
     private const uint WS_VISIBLE = 0x10000000;
     private const uint WS_CLIPSIBLINGS = 0x04000000;
     private const uint WS_CLIPCHILDREN = 0x02000000;
+
+    // Static Control Styles
+    private const uint SS_BLACKRECT = 0x00000004;
+
+    // Extended Window Styles
+    private const uint WS_EX_TRANSPARENT = 0x00000020;
 
     private static bool ShouldUseOwnedChildHandle => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
@@ -85,11 +92,22 @@ public class LibVlcDynamicNativeControl : NativeControlHost
             return parentHandle;
         }
 
+        // --- CONFIGURATION ---
+        // To make it BLACK: Use SS_BLACKRECT and exStyle = 0
+        // To make it TRANSPARENT: Remove SS_BLACKRECT and use WS_EX_TRANSPARENT
+
+        uint style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | SS_BLACKRECT;
+        uint exStyle = 0;
+
+        // Uncomment these two lines for Transparency instead of Black:
+        // style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
+        // exStyle = WS_EX_TRANSPARENT;
+
         _ownedChildHandle = CreateWindowExW(
-            0,
+            exStyle,
             "STATIC",
             string.Empty,
-            WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
+            style,
             0,
             0,
             1,
