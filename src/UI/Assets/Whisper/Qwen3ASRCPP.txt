@@ -10,10 +10,5 @@ Advanced settings are prepended before the required model/audio/output arguments
 
 Useful optional arguments:
 -t 8          Set number of CPU threads
---progress    Print progress during transcription
---no-timing   Disable timing output
-
-GPU note:
-qwen3-asr.cpp uses ggml backends and can use GPU automatically when a compatible ggml backend plugin is available next to the executable (or via GGML_BACKEND_PATH). The bundled support-files package currently ships the basic engine binaries only, so GPU backends may need to be added separately.
 
 Project repository: https://github.com/woct0rdho/qwen3-asr.cpp
