@@ -266,7 +266,7 @@ public partial class SourceViewViewModel : ObservableObject
             return;
         }
 
-        var text = Text.Trim().TrimStart('\uFEFF').Trim();
+        var text = TrimJunk(Text);
         if (string.IsNullOrEmpty(text))
         {
             OkPressed = false;
@@ -297,6 +297,43 @@ public partial class SourceViewViewModel : ObservableObject
         }
 
         await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.NoSubtitlesFound, MessageBoxButtons.OK, MessageBoxIcon.Error);
+    }
+
+    private static string TrimJunk(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return string.Empty;
+        }
+
+        ReadOnlySpan<char> junk =
+        [
+            '\uFEFF', // UTF-8 BOM / Zero Width No-Break Space
+            '\u200B', // Zero Width Space
+            '\u200C', // Zero Width Non-Joiner
+            '\u200D', // Zero Width Joiner
+            '\u200E', // Left-to-Right Mark
+            '\u200F', // Right-to-Left Mark
+            '\u00AD', // Soft Hyphen
+            '\u2060', // Word Joiner
+            '\uFFFD', // Replacement Character
+            '\u0000', // Null
+        ];
+
+        int start = 0;
+        int end = text.Length - 1;
+
+        while (start <= end && (char.IsWhiteSpace(text[start]) || junk.Contains(text[start])))
+        {
+            start++;
+        }
+
+        while (end >= start && (char.IsWhiteSpace(text[end]) || junk.Contains(text[end])))
+        {
+            end--;
+        }
+
+        return text[start..(end + 1)].Trim();
     }
 
     [RelayCommand]
