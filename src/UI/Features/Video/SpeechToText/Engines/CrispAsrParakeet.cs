@@ -108,7 +108,14 @@ public class CrispAsrParakeet : ISpeechToTextEngine
 
     public string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel)
     {
-        return new WhisperEnginePurfviewFasterWhisperXxl().GetAndCreateWhisperModelFolder(whisperModel);
+        var folder = GetAndCreateWhisperFolder();
+        var modelsFolder = Path.Combine(folder, "models");
+        if (!Directory.Exists(modelsFolder))
+        {
+            Directory.CreateDirectory(modelsFolder);
+        }
+
+        return modelsFolder;
     }
 
     public string GetExecutable()
@@ -130,8 +137,8 @@ public class CrispAsrParakeet : ISpeechToTextEngine
 
     public string GetModelForCmdLine(string modelName)
     {
-        var modelFolder = Path.Combine(GetAndCreateWhisperModelFolder(null), "faster-whisper-" + modelName);
-        return Path.Combine(modelFolder, modelName);
+        var modelFileName = Path.Combine(GetAndCreateWhisperModelFolder(null), modelName);
+        return modelFileName;
     }
 
     public async Task<string> GetHelpText()

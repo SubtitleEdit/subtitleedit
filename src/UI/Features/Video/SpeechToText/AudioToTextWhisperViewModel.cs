@@ -2004,8 +2004,8 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
 
             var crispModel = crispAsrParakeet.GetModelForCmdLine(model);
             var crispParams = string.IsNullOrWhiteSpace(crispArgs)
-                ? $"--language {language} --model \"{crispModel}\" --output-srt \"{waveFileName}\""
-                : $"--language {language} --model \"{crispModel}\" --output-srt {crispArgs} \"{waveFileName}\"";
+                ? $"-m \"{crispModel}\" -f \"{waveFileName}\" --output-srt"
+                : $"-m \"{crispModel}\" -f \"{waveFileName}\" --output-srt {crispArgs}";
 
             SeLogger.WhisperInfo($"{exe} {crispParams}");
 

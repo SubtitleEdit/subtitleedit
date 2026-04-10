@@ -1,1 +1,16 @@
-﻿https://github.com/CrispStrobe/CrispASR
+﻿  Parameters
+  ----------------------------------------------------------------------------------------
+  -t   N                   threads (default: 4)
+  -ot, --output-txt        write transcript to <audio>.txt
+  -osrt, --output-srt      write .srt subtitle file
+  -ovtt, --output-vtt      write .vtt subtitle file
+  -ml N                    max chars per output segment (0 = unlimited, 1 = per-word)
+  -ck N                    long-audio chunk size in seconds when no VAD (default: 30)
+  -vad-model FNAME         Silero VAD model (recommended for long audio)
+  -vad-thold F             VAD threshold (default: 0.5)
+  --flash                  enable flash attention in encoder
+  -v,  --verbose           dump per-word and per-token timestamps
+  -np, --no-prints         suppress all informational output
+
+
+https://github.com/CrispStrobe/CrispASR
