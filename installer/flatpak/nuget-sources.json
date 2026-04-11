@@ -232,10 +232,10 @@
     },
     {
         "type": "file",
-        "url": "https://api.nuget.org/v3-flatcontainer/google.cloud.texttospeech.v1/3.17.0/google.cloud.texttospeech.v1.3.17.0.nupkg",
-        "sha512": "66790b46ebba1a2e5436f13a0498f81077656182333d1195fd937e807e9b5dd2a03f8d65992e748b0e329e8c1f5bcbd32431a31587f38c3ac15ebaec516f6da3",
+        "url": "https://api.nuget.org/v3-flatcontainer/google.cloud.texttospeech.v1/3.18.0/google.cloud.texttospeech.v1.3.18.0.nupkg",
+        "sha512": "636677ed6dbffb2e29f32a0e50dd30b2b08b472fa51461079dbff2c94760dec05b1130bdaa719df7a6f01c7022e542a26c8f772764f7a41218c27e71a93c0948",
         "dest": "nuget-sources",
-        "dest-filename": "google.cloud.texttospeech.v1.3.17.0.nupkg"
+        "dest-filename": "google.cloud.texttospeech.v1.3.18.0.nupkg"
     },
     {
         "type": "file",
@@ -827,10 +827,10 @@
     },
     {
         "type": "file",
-        "url": "https://api.nuget.org/v3-flatcontainer/sharpcompress/0.47.3/sharpcompress.0.47.3.nupkg",
-        "sha512": "f03a567da961c6c92ad7da5c6d9a58339ec9739bf19c63a9fd44b629053911382571ffd63106365ddcde01db12a1e76921c81871bf8c410026ca41e37a6afca2",
+        "url": "https://api.nuget.org/v3-flatcontainer/sharpcompress/0.47.4/sharpcompress.0.47.4.nupkg",
+        "sha512": "3ada5b9b2882baf2afb7df90671b80a331820f9518ac3ab6123193badbcb8c749a4e8191799a8aec6abbeffcf4a64bba8960ea24a2c507dacfd4eae7b5c1e363",
         "dest": "nuget-sources",
-        "dest-filename": "sharpcompress.0.47.3.nupkg"
+        "dest-filename": "sharpcompress.0.47.4.nupkg"
     },
     {
         "type": "file",
