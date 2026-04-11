@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform;
@@ -2416,5 +2417,18 @@ public static class UiUtil
         }
 
         return false;
+    }
+
+    internal static void SetupWindowsSystemMenu(Window? window)
+    { 
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || window == null)
+        {
+            return;
+        }
+
+        window.AddHandler(InputElement.KeyDownEvent, (sender, e) =>
+        {
+            TryHandleWindowSystemMenu(e, window);
+        }, RoutingStrategies.Tunnel | RoutingStrategies.Bubble);
     }
 }

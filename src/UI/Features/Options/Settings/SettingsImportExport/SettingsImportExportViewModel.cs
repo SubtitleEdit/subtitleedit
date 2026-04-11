@@ -372,10 +372,8 @@ public partial class SettingsImportExportViewModel : ObservableObject
 
     public async void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        if (Window != null)
-        {
-            UiUtil.RestoreWindowPosition(Window);
-        }
+        UiUtil.RestoreWindowPosition(Window);
+        UiUtil.SetupWindowsSystemMenu(Window);
 
         if (!_isExport)
         {

@@ -1533,6 +1533,7 @@ public partial class BinaryEditViewModel : ObservableObject
     public void Loaded()
     {
         UiUtil.RestoreWindowPosition(Window);
+        UiUtil.SetupWindowsSystemMenu(Window);
 
         RegisterVideoShortcuts();
 

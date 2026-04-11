@@ -55,11 +55,6 @@ public partial class AudioVisualizerUndockedViewModel : ObservableObject
     {
         var videoPlayer = MainViewModel?.GetVideoPlayerControl();
 
-        if (UiUtil.TryHandleWindowSystemMenu(e, Window))
-        {
-            return;
-        };
-
         MainViewModel?.OnKeyDownHandler(sender, e);
         if (e.Handled)
         {
@@ -110,5 +105,6 @@ public partial class AudioVisualizerUndockedViewModel : ObservableObject
     {
         Window!.Content = AudioVisualizer;
         UiUtil.RestoreWindowPosition(Window);
+        UiUtil.SetupWindowsSystemMenu(Window);
     }
 }

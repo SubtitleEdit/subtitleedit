@@ -75,6 +75,7 @@ public partial class AssaDrawViewModel : ObservableObject
     public void Initialize()
     {
         UiUtil.RestoreWindowPosition(Window);
+        UiUtil.SetupWindowsSystemMenu(Window);
         ZoomToFitCurrentVideoResolution();
         RefreshTreeView();
         Canvas?.InvalidateVisual();

@@ -81,11 +81,6 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
 
     internal void OnKeyDown(object? sender, KeyEventArgs e)
     {
-        if (UiUtil.TryHandleWindowSystemMenu(e, Window))
-        {
-            return;
-        }
-
         if (e.Key == Key.Enter && e.KeyModifiers.HasFlag(KeyModifiers.Alt) || e.Key == Key.F11)
         {
             e.Handled = true;
@@ -164,6 +159,7 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
         }   
 
         UiUtil.RestoreWindowPosition(Window);
+        UiUtil.SetupWindowsSystemMenu(Window);
 
         VideoPlayer = InitVideoPlayer.MakeLayoutVideoPlayer(MainViewModel, out var videoPlayerControl);
         Window!.Content = VideoPlayer;

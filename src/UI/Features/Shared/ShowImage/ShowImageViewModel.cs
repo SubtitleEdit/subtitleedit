@@ -105,6 +105,7 @@ public partial class ShowImageViewModel : ObservableObject
     internal void Loaded()
     {
         UiUtil.RestoreWindowPosition(Window);
+        UiUtil.SetupWindowsSystemMenu(Window);
     }
 
     internal void Closing(WindowClosingEventArgs e)

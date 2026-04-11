@@ -3377,6 +3377,7 @@ public partial class OcrViewModel : ObservableObject
     internal void OnLoaded()
     {
         UiUtil.RestoreWindowPosition(Window);
+        UiUtil.SetupWindowsSystemMenu(Window);
         DictionaryChanged();
         Dispatcher.UIThread.Post(() =>
         {

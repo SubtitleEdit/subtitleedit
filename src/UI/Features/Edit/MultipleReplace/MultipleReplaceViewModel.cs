@@ -1253,6 +1253,7 @@ public partial class MultipleReplaceViewModel : ObservableObject
     internal void OnLoaded()
     {
         UiUtil.RestoreWindowPosition(Window);
+        UiUtil.SetupWindowsSystemMenu(Window);
     }
 
     internal void TreeViewDoubleTapped(TappedEventArgs e)
