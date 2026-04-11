@@ -7,8 +7,6 @@ using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
-using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Sync.AdjustAllTimes;
@@ -21,12 +19,9 @@ public partial class AdjustAllTimesViewModel : ObservableObject
     [ObservableProperty] private bool _adjustSelectedLinesAndForward;
     [ObservableProperty] private string _statusText;
 
-    private CancellationToken _cancellationToken;
-    private CancellationTokenSource _cancellationTokenSource;
     private IAdjustCallback? _adjustCallback;
-    private readonly List<StatusMessage> _statusMessages = new();
-    private readonly object _statusLock = new();
-    private bool isNegativeAdjustment = false;
+    private bool _isNegativeAdjustment = false;
+    private TimeSpan _totalAdjustment;
 
     public Window? Window { get; set; }
 
@@ -35,9 +30,7 @@ public partial class AdjustAllTimesViewModel : ObservableObject
     public AdjustAllTimesViewModel()
     {
         LoadSettings();
-        _cancellationTokenSource = new CancellationTokenSource();
-        _cancellationToken = _cancellationTokenSource.Token;
-        StatusText = string.Empty;  
+        StatusText = string.Empty;
     }
 
     public void Initialize(IAdjustCallback adjustCallback, int selectedLinesCount)
@@ -92,8 +85,9 @@ public partial class AdjustAllTimesViewModel : ObservableObject
     [RelayCommand]
     private void ShowEarlier()
     {
-        ShowStatus(string.Format(Se.Language.Sync.AdjustmentX, "-" + new TimeCode(Adjustment).ToShortDisplayString()));
-        isNegativeAdjustment = true;
+        _totalAdjustment -= Adjustment;
+        ShowStatus(string.Format(Se.Language.Sync.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
+        _isNegativeAdjustment = true;
         Apply();
     }
 
@@ -101,16 +95,18 @@ public partial class AdjustAllTimesViewModel : ObservableObject
     private void ShowEarlierTimeSpan(TimeSpan ts)
     {
         Adjustment = ts;
-        ShowStatus(string.Format(Se.Language.Sync.AdjustmentX, "-" + new TimeCode(Adjustment).ToShortDisplayString()));
-        isNegativeAdjustment = true;
+        _totalAdjustment -= Adjustment;
+        ShowStatus(string.Format(Se.Language.Sync.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
+        _isNegativeAdjustment = true;
         Apply();
     }
 
     [RelayCommand]
     private void ShowLater()
     {
-        ShowStatus(string.Format(Se.Language.Sync.AdjustmentX, new TimeCode(Adjustment).ToShortDisplayString()));
-        isNegativeAdjustment = false;
+        _totalAdjustment += Adjustment;
+        ShowStatus(string.Format(Se.Language.Sync.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
+        _isNegativeAdjustment = false;
         Apply();
     }
 
@@ -118,8 +114,9 @@ public partial class AdjustAllTimesViewModel : ObservableObject
     private void ShowLaterTimeSpan(TimeSpan ts)
     {
         Adjustment = ts;
-        ShowStatus(string.Format(Se.Language.Sync.AdjustmentX, new TimeCode(Adjustment).ToShortDisplayString()));
-        isNegativeAdjustment = false;
+        _totalAdjustment += Adjustment;
+        ShowStatus(string.Format(Se.Language.Sync.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
+        _isNegativeAdjustment = false;
         Apply();
     }
 
@@ -132,11 +129,11 @@ public partial class AdjustAllTimesViewModel : ObservableObject
         }
 
         await MessageBox.Show(
-               Window,
-               Se.Language.General.Information,
-               Se.Language.Sync.AdjustAllShortcuts,
-               MessageBoxButtons.OK,
-               MessageBoxIcon.Information);
+            Window,
+            Se.Language.General.Information,
+            Se.Language.Sync.AdjustAllShortcuts,
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information);
     }
 
     private void Apply()
@@ -170,67 +167,12 @@ public partial class AdjustAllTimesViewModel : ObservableObject
 
     private void ShowStatus(string statusText)
     {
-        var statusMessage = new StatusMessage
-        {
-            Text = statusText,
-            Timestamp = DateTime.Now
-        };
-
-        lock (_statusLock)
-        {
-            if (_statusMessages.Count >= 4)
-            {
-                _statusMessages.RemoveAt(0);
-            }
-            _statusMessages.Add(statusMessage);
-            UpdateStatusDisplay();
-        }
-
-        _ = Task.Run(async () =>
-        {
-            await Task.Delay(1000, _cancellationToken);
-            
-            lock (_statusLock)
-            {
-                _statusMessages.Remove(statusMessage);
-                UpdateStatusDisplay();
-            }
-        });
-    }
-
-    private void UpdateStatusDisplay()
-    {
-        if (_statusMessages.Count == 0)
-        {
-            StatusText = string.Empty;
-            return;
-        }
-
-        if (_statusMessages.Count == 1)
-        {
-            StatusText = _statusMessages[0].Text;
-            return;
-        }
-
-        // Stack messages with line breaks
-        var stackedMessages = new List<string>();
-        foreach (var msg in _statusMessages)
-        {
-            stackedMessages.Add(msg.Text);
-        }
-
-        StatusText = string.Join(Environment.NewLine, stackedMessages);
-    }
-
-    private class StatusMessage
-    {
-        public string Text { get; set; } = string.Empty;
-        public DateTime Timestamp { get; set; }
+        StatusText = statusText;
     }
 
     private void InvokeAdjustCallback()
     {
-        var ts = isNegativeAdjustment ? -Adjustment : Adjustment;
+        var ts = _isNegativeAdjustment ? -Adjustment : Adjustment;
 
         _adjustCallback?.Adjust(
             ts,
@@ -279,6 +221,5 @@ public partial class AdjustAllTimesViewModel : ObservableObject
 
     internal void OnClosing(WindowClosingEventArgs e)
     {
-        _cancellationTokenSource.Cancel();
     }
 }

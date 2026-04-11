@@ -30,6 +30,7 @@ public class LanguageSync
     public string PointSync { get; set; }
     public string PointSyncViaOther { get; set; }
     public string AdjustmentX { get; set; }
+    public string TotalAdjustmentX { get; set; }
     public string AdjustAllShortcuts { get; set; }
     public string OffsetInSeconds { get; set; }
     public string SpeedFactor { get; set; }
@@ -62,6 +63,7 @@ public class LanguageSync
         PointSync = "Point sync";
         PointSyncViaOther = "Point sync via other subtitle";
         AdjustmentX = "Adjustment: {0}";
+        TotalAdjustmentX = "Total adjustment: {0}";
         AdjustAllShortcuts = "Keyboard shortcuts:\r\n\r\n• Shift + Left/Right: Move 10 ms\r\n• Ctrl + Left/Right: Move 100 ms\r\n• Alt + Left/Right: Move 500 ms";
         OffsetInSeconds = "Offset in seconds";
         SpeedFactor = "Speed factor";
