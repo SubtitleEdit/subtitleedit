@@ -56,8 +56,8 @@ public partial class VisualSyncViewModel : ObservableObject
         VideoInfo = string.Empty;
         AdjustInfo = string.Empty;
         _videoFileName = string.Empty;
-        VideoPlayerControlLeft = new VideoPlayerControl(new NoopVideoPlayer());
-        VideoPlayerControlRight = new VideoPlayerControl(new NoopVideoPlayer());
+        VideoPlayerControlLeft = new VideoPlayerControl(new EmptyVideoPlayer());
+        VideoPlayerControlRight = new VideoPlayerControl(new EmptyVideoPlayer());
         AudioVisualizerLeft = new AudioVisualizer();
         AudioVisualizerRight = new AudioVisualizer();
         ComboBoxLeft = new ComboBox();

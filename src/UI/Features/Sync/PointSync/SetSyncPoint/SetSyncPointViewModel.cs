@@ -48,7 +48,7 @@ public partial class SetSyncPointViewModel : ObservableObject
         Title = string.Empty;
         VideoInfo = string.Empty;
         _videoFileName = string.Empty;
-        VideoPlayerControl = new VideoPlayerControl(new NoopVideoPlayer());
+        VideoPlayerControl = new VideoPlayerControl(new EmptyVideoPlayer());
         AudioVisualizer = new AudioVisualizer();
         ComboBoxSubtitle = new ComboBox();
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>();

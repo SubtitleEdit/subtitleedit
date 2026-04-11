@@ -59,7 +59,7 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
 
         OverrideTags = new ObservableCollection<OverrideTagDisplay>(OverrideTagDisplay.List());
         _videoFileName = string.Empty;
-        VideoPlayerControl = new VideoPlayerControl(new NoopVideoPlayer());
+        VideoPlayerControl = new VideoPlayerControl(new EmptyVideoPlayer());
         ComboBoxLeft = new ComboBox();
         ComboBoxRight = new ComboBox();
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>();

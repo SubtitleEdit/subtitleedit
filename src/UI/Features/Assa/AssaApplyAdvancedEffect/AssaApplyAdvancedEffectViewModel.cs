@@ -59,7 +59,7 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
     {
         OverrideTags = new ObservableCollection<IAdvancedEffectDisplay>(AdvancedEffectDisplayFactory.List());
         _videoFileName = string.Empty;
-        VideoPlayerControl = new VideoPlayerControl(new NoopVideoPlayer());
+        VideoPlayerControl = new VideoPlayerControl(new EmptyVideoPlayer());
         ComboBoxLeft = new ComboBox();
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>();
         _assaFormat = new AdvancedSubStationAlpha();

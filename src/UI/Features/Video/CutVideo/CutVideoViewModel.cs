@@ -114,7 +114,7 @@ public partial class CutVideoViewModel : ObservableObject
         SelectedCutType = CutTypes[0];
 
         JobItems = new ObservableCollection<BurnInJobItem>();
-        VideoPlayer = new VideoPlayerControl(new NoopVideoPlayer());
+        VideoPlayer = new VideoPlayerControl(new EmptyVideoPlayer());
         AudioVisualizer = new AudioVisualizer();
         SegmentGrid = new DataGrid();
         Segments = new ObservableCollection<SubtitleLineViewModel>();

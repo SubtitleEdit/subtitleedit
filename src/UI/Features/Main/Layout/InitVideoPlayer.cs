@@ -125,11 +125,11 @@ public static class InitVideoPlayer
                 }
             }
 
-            return MakeVideoPlayerControl(new NoopVideoPlayer(), new Label());
+            return MakeVideoPlayerControl(new EmptyVideoPlayer(), new Label());
         }
         catch
         {
-            return MakeVideoPlayerControl(new NoopVideoPlayer(), new Label());
+            return MakeVideoPlayerControl(new EmptyVideoPlayer(), new Label());
         }
 
         throw new InvalidOperationException("Failed to create video player control.");

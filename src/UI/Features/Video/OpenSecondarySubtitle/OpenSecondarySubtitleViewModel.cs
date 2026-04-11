@@ -76,7 +76,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         _tempSubtitleFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".ass");
         _oldSubtitleText = string.Empty;
 
-        VideoPlayerControl = new VideoPlayerControl(new NoopVideoPlayer());
+        VideoPlayerControl = new VideoPlayerControl(new EmptyVideoPlayer());
         ComboBoxParagraphs = new ComboBox();
         VideoPlayerControl.SurfacePointerPressed += (_, _) => VideoPlayerControl.TogglePlayPause();
     }
