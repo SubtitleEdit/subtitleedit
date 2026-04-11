@@ -384,7 +384,7 @@ public class LanguageSettings
         AutoBackupOn = "Auto-backup";
         AutoBackupIntervalMinutes = "Auto-backup interval (minutes)";
         AutoBackupDeleteAfterDays = "Auto-backup retention (days)";
-        AutoConvertToUtf8 = "Auto-convert to UTF-8 on open";
+        AutoConvertToUtf8 = "Auto-convert encoding to UTF-8 on open";
         AutoTrimWhiteSpace = "Auto-trim white-space";
         DefaultEncoding = "Default encoding";
         ColorDurationTooShort = "Color duration if too short";
