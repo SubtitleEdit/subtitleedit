@@ -55,8 +55,20 @@ public partial class SpellCheckViewModel : ObservableObject
     {
         _spellCheckManager = spellCheckManager;
         if (Se.Settings.SpellCheck.SpellCheckProvider == SeSpellCheck.SpellCheckMsWord && WordSpellCheck.IsWordInstalled())
-        { 
+        {
             _spellCheckManager.WordSpellChecker = new WordSpellCheck();
+            _spellCheckManager.WordSpellChecker.Initialize();
+            var languages = _spellCheckManager.WordSpellChecker.GetInstalledLanguages();
+            if (languages.Count > 0)
+            {
+                var defaultLanguage = languages.FirstOrDefault(l => l.Name.Contains("English", StringComparison.OrdinalIgnoreCase));
+                if (defaultLanguage == null)
+                {
+                    defaultLanguage = languages[0];
+                }
+
+                _spellCheckManager.WordSpellChecker.CurrentLanguage = defaultLanguage;
+            }
         }
         
         _spellCheckManager.OnWordChanged += (sender, e) =>
@@ -94,6 +106,25 @@ public partial class SpellCheckViewModel : ObservableObject
 
     private void LoadDictionaries()
     {
+        if (_spellCheckManager.WordSpellChecker != null)
+        {
+            var languages = _spellCheckManager.WordSpellChecker.GetInstalledLanguages();
+            foreach (var language in languages)
+            {
+                Dictionaries.Add(new SpellCheckDictionaryDisplay
+                {
+                    Name = language.Name,
+                });
+            }
+
+            if (Dictionaries.Count > 0)
+            {
+                SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name.Contains("English", StringComparison.OrdinalIgnoreCase)) ?? Dictionaries[0];
+            }
+            
+            return;
+        }
+
         var spellCheckLanguages = _spellCheckManager.GetDictionaryLanguages(Se.DictionariesFolder);
         Dictionaries.Clear();
         Dictionaries.AddRange(spellCheckLanguages);

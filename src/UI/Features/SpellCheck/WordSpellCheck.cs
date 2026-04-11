@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Features.SpellCheck;
 
 public record WordSpellCheckLanguage(string Name, int LanguageId);
 
-public class WordSpellCheck : IDoSpell, IDisposable
+public sealed class WordSpellCheck : IDoSpell, IDisposable
 {
     private dynamic? _wordApp;
     private dynamic? _managedDocument;
@@ -174,7 +174,7 @@ public class WordSpellCheck : IDoSpell, IDisposable
         _managedDocument = _wordApp!.Documents.Add();
     }
 
-    protected virtual void Dispose(bool disposing)
+    private void Dispose(bool disposing)
     {
         if (_disposed)
         {
