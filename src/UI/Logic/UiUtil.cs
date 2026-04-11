@@ -10,6 +10,7 @@ using Avalonia.Styling;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Platform.Windows;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Projektanker.Icons.Avalonia;
 using SkiaSharp;
@@ -19,6 +20,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic;
 
@@ -2397,5 +2399,22 @@ public static class UiUtil
     internal static bool IsHelp(KeyEventArgs e)
     {
         return e.Key == Key.F1;
+    }
+
+    internal static bool TryHandleWindowSystemMenu(KeyEventArgs e, Window? window)
+    {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || window == null)
+        {
+            return false;
+        }
+
+        if (e.Key == Key.Space && e.KeyModifiers == KeyModifiers.Alt)
+        {
+            SystemMenu.Show(window);
+            e.Handled = true;
+            return true;
+        }
+
+        return false;
     }
 }

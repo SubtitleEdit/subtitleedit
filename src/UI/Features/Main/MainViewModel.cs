@@ -13491,25 +13491,7 @@ public partial class MainViewModel :
         }
 
         return false;
-    }
-
-    private bool TryHandleWindowSystemMenu(KeyEventArgs keyEventArgs)
-    {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || Window == null)
-        {
-            return false;
-        }
-
-        if (keyEventArgs.Key == Key.Space && keyEventArgs.KeyModifiers == KeyModifiers.Alt)
-        {
-            SystemMenu.Show(Window);
-            keyEventArgs.Handled = true;
-            _shortcutManager.ClearKeys();
-            return true;
-        }
-
-        return false;
-    }
+    }    
 
     private bool TryHandleMacOptionBackspace(KeyEventArgs keyEventArgs)
     {
@@ -13683,7 +13665,7 @@ public partial class MainViewModel :
 
             _lastKeyPressedMs = ms;
 
-            if (TryHandleWindowSystemMenu(keyEventArgs))
+            if (UiUtil.TryHandleWindowSystemMenu(keyEventArgs, Window))
             {
                 return;
             }
