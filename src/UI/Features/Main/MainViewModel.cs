@@ -12582,6 +12582,10 @@ public partial class MainViewModel :
             if (process.ExitCode != 0)
             {
                 ShowStatus(Se.Language.Main.FailedToExtractWaveInfo);
+                Dispatcher.UIThread.Post(async() =>
+                {
+                    await AddEmptyWaveform();
+                });
                 return;
             }
 

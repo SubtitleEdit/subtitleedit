@@ -12,6 +12,7 @@ v5.0.0-beta15 (xth April 2026)
 * Fix langauge tags + update Polish spell check directory - thx potplayer-fanpack
 * Add more Qwen3 ASR model options - thx Ironship
 * Fix issue with undo - thx Dravic
+* Add empty waveform when video has no audio
 
 -----------------------------------------------------------------------------------------------------
 v5.0.0-beta14 (8th April 2026)
