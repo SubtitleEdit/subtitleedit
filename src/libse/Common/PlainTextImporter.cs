@@ -141,9 +141,9 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private bool NextWordInDoNotBreakList(string text, int index)
         {
-            for (var i = index + 1; i < text.Length || i > 50; i++)
+            for (var i = index + 1; i < text.Length && i - index < 50; i++)
             {
-                var ch = text[index];
+                var ch = text[i];
                 if (ch == '\0')
                 {
                     return false;
