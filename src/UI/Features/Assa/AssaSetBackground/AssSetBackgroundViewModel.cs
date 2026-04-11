@@ -88,7 +88,7 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         BoxStyles.Add(Se.Language.Assa.BackgroundBoxStarburst);
         BoxStyles.Add(Se.Language.Assa.BackgroundBoxScroll);
 
-        VideoPlayerControl = new VideoPlayerControl(new VideoPlayerInstanceNone());
+        VideoPlayerControl = new VideoPlayerControl(new NoopVideoPlayer());
 
         _assaFormat = new AdvancedSubStationAlpha();
         _tempSubtitleFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".ass");
@@ -725,7 +725,7 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         await VideoPlayerControl.WaitForPlayersReadyAsync();
         VideoPlayerControl.HideVideoControls();
         VideoPlayerControl.Position = _previewParagraph.StartTime.TotalSeconds + (_previewParagraph.Duration.TotalSeconds / 2.0);
-        _mpvPlayer = VideoPlayerControl.VideoPlayerInstance as LibMpvDynamicPlayer;
+        _mpvPlayer = VideoPlayerControl.VideoPlayer as LibMpvDynamicPlayer;
         StartPreviewTimer();
     }
 
@@ -733,7 +733,7 @@ public partial class AssSetBackgroundViewModel : ObservableObject
     {
         _positionTimer.Stop();
         _cancellationTokenSource.Cancel();
-        VideoPlayerControl.VideoPlayerInstance.CloseFile();
+        VideoPlayerControl.VideoPlayer.CloseFile();
         try
         {
             File.Delete(_tempSubtitleFileName);

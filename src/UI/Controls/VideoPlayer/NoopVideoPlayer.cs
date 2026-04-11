@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Controls.VideoPlayer;
 
-public class VideoPlayerInstanceNone : IVideoPlayerInstance
+public class NoopVideoPlayer : IVideoPlayer
 {
     public string Name => string.Empty;
 

@@ -797,7 +797,7 @@ public partial class MainViewModel :
             return;
         }
 
-        vp.VideoPlayerInstance.Play();
+        vp.VideoPlayer.Play();
     }
 
     [RelayCommand]
@@ -817,7 +817,7 @@ public partial class MainViewModel :
 
         vp.Position = next.StartTime.TotalSeconds;
         SelectAndScrollToSubtitle(next);
-        vp.VideoPlayerInstance.Play();
+        vp.VideoPlayer.Play();
     }
 
     [RelayCommand]
@@ -829,7 +829,7 @@ public partial class MainViewModel :
             return;
         }
 
-        vp.VideoPlayerInstance.Pause();
+        vp.VideoPlayer.Pause();
     }
 
     [RelayCommand]
@@ -1534,12 +1534,12 @@ public partial class MainViewModel :
         var vp = GetVideoPlayerControl();
         if (vp != null)
         {
-            if (vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+            if (vp.VideoPlayer is LibMpvDynamicPlayer mpv)
             {
                 _mpvReloader.Reset();
                 _ = _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
             }
-            else if (vp.VideoPlayerInstance is LibVlcDynamicPlayer vlc)
+            else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
             {
                 _vlcReloader.Reset();
                 _ = _vlcReloader.RefreshVlc(vlc, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
@@ -1625,7 +1625,7 @@ public partial class MainViewModel :
 
         var vp = GetVideoPlayerControl();
 
-        if (vp != null && vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+        if (vp != null && vp.VideoPlayer is LibMpvDynamicPlayer mpv)
         {
             var audioTracks = mpv.GetAudioTracks();
             var desiredTrack = audioTracks.FirstOrDefault(p => p.Id == recentFile.AudioTrack);
@@ -4324,7 +4324,7 @@ public partial class MainViewModel :
             return;
         }
 
-        if (vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv && parameter is AudioTrackInfo audioTrack)
+        if (vp.VideoPlayer is LibMpvDynamicPlayer mpv && parameter is AudioTrackInfo audioTrack)
         {
             mpv.SetAudioTrack(audioTrack.Id);
             _audioTrack = audioTrack;
@@ -4418,7 +4418,7 @@ public partial class MainViewModel :
 
             var position = vp.Position;
             var volume = vp.Volume;
-            var videoFileName = vp.VideoPlayerInstance.FileName;
+            var videoFileName = vp.VideoPlayer.FileName;
             VideoPlayerControl?.Close();
             VideoPlayerControl = null;
 
@@ -4794,11 +4794,11 @@ public partial class MainViewModel :
             return false;
         }
 
-        vp.VideoPlayerInstance.Pause();
+        vp.VideoPlayer.Pause();
         var p = selectedItems.First();
         vp.Position = p.StartTime.TotalSeconds;
         _playSelectionItem = new PlaySelectionItem(selectedItems, p.EndTime, loop);
-        vp.VideoPlayerInstance.Play();
+        vp.VideoPlayer.Play();
 
         return true;
     }
@@ -6103,12 +6103,12 @@ public partial class MainViewModel :
         var vp = GetVideoPlayerControl();
         if (vp != null)
         {
-            if (vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+            if (vp.VideoPlayer is LibMpvDynamicPlayer mpv)
             {
                 _mpvReloader.Reset();
                 _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
             }
-            else if (vp.VideoPlayerInstance is LibVlcDynamicPlayer vlc)
+            else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
             {
                 _vlcReloader.Reset();
                 _vlcReloader.RefreshVlc(vlc, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
@@ -7887,7 +7887,7 @@ public partial class MainViewModel :
             return;
         }
 
-        vp.VideoPlayerInstance.Pause();
+        vp.VideoPlayer.Pause();
         var currentIndex = Subtitles.IndexOf(selectedItems.First());
         if (currentIndex <= 0)
         {
@@ -7898,7 +7898,7 @@ public partial class MainViewModel :
         SubtitleGrid.SelectedItem = p;
         vp.Position = p.StartTime.TotalSeconds;
         _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { p }, p.EndTime, true);
-        vp.VideoPlayerInstance.Play();
+        vp.VideoPlayer.Play();
     }
 
     [RelayCommand]
@@ -7911,7 +7911,7 @@ public partial class MainViewModel :
             return;
         }
 
-        vp.VideoPlayerInstance.Pause();
+        vp.VideoPlayer.Pause();
         var currentIndex = Subtitles.IndexOf(selectedItems.First());
         if (currentIndex >= Subtitles.Count - 1)
         {
@@ -7922,7 +7922,7 @@ public partial class MainViewModel :
         SubtitleGrid.SelectedItem = p;
         vp.Position = p.StartTime.TotalSeconds;
         _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { p }, p.EndTime, true);
-        vp.VideoPlayerInstance.Play();
+        vp.VideoPlayer.Play();
     }
 
     [RelayCommand]
@@ -8130,8 +8130,8 @@ public partial class MainViewModel :
             return;
         }
 
-        vp.VideoPlayerInstance.Stop();
-        vp.VideoPlayerInstance.Play();
+        vp.VideoPlayer.Stop();
+        vp.VideoPlayer.Play();
         _updateAudioVisualizer = true;
     }
 
@@ -8168,7 +8168,7 @@ public partial class MainViewModel :
         }
 
         var vp = GetVideoPlayerControl();
-        if (vp == null || !vp.VideoPlayerInstance.IsPlaying)
+        if (vp == null || !vp.VideoPlayer.IsPlaying)
         {
             return;
         }
@@ -8211,7 +8211,7 @@ public partial class MainViewModel :
 
         var vp = GetVideoPlayerControl();
         var idx = Subtitles.IndexOf(selectedSubtitle);
-        if (vp == null || !vp.VideoPlayerInstance.IsPlaying || idx < 0)
+        if (vp == null || !vp.VideoPlayer.IsPlaying || idx < 0)
         {
             return;
         }
@@ -8232,7 +8232,7 @@ public partial class MainViewModel :
             return;
         }
 
-        control.VideoPlayerInstance.Pause();
+        control.VideoPlayer.Pause();
         var position = control.Position;
         var volume = control.Volume;
         var parent = (Control)control.Parent!;
@@ -8251,12 +8251,12 @@ public partial class MainViewModel :
         var vp = GetVideoPlayerControl();
         if (vp != null)
         {
-            if (vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+            if (vp.VideoPlayer is LibMpvDynamicPlayer mpv)
             {
                 _mpvReloader.Reset();
                 _mpvReloader.RefreshMpv(mpv, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
             }
-            else if (vp.VideoPlayerInstance is LibVlcDynamicPlayer vlc)
+            else if (vp.VideoPlayer is LibVlcDynamicPlayer vlc)
             {
                 _vlcReloader.Reset();
                 _vlcReloader.RefreshVlc(vlc, GetUpdateSubtitle(), _subtitleSecondary, SelectedSubtitleFormat);
@@ -9419,7 +9419,7 @@ public partial class MainViewModel :
     private void VideoOneFrameBack()
     {
         var vp = GetVideoPlayerControl();
-        if (vp != null && vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+        if (vp != null && vp.VideoPlayer is LibMpvDynamicPlayer mpv)
         {
             mpv.StepOneFrameBack();
             return;
@@ -9439,7 +9439,7 @@ public partial class MainViewModel :
     private void VideoOneFrameForward()
     {
         var vp = GetVideoPlayerControl();
-        if (vp != null && vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+        if (vp != null && vp.VideoPlayer is LibMpvDynamicPlayer mpv)
         {
             mpv.StepOneFrameForward();
             return;
@@ -9739,7 +9739,7 @@ public partial class MainViewModel :
         where TWindow : Window
         where TViewModel : class
     {
-        GetVideoPlayerControl()?.VideoPlayerInstance.Pause();
+        GetVideoPlayerControl()?.VideoPlayer.Pause();
         var result = await _windowService.ShowDialogAsync<TWindow, TViewModel>(Window!, configureViewModel, configureWindow);
         _shortcutManager.ClearKeys();
         return result;
@@ -12036,7 +12036,7 @@ public partial class MainViewModel :
             _audioVisualizerUndockedViewModel.Window?.Close();
         }
 
-        GetVideoPlayerControl()?.VideoPlayerInstance.CloseFile();
+        GetVideoPlayerControl()?.VideoPlayer.CloseFile();
 
         _ = Task.Run(() =>
         {
@@ -12446,7 +12446,7 @@ public partial class MainViewModel :
         try
         {
             var vp = GetVideoPlayerControl();
-            if (vp?.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+            if (vp?.VideoPlayer is LibMpvDynamicPlayer mpv)
             {
                 var audioTracks = mpv.GetAudioTracks();
                 if (audioTracks.Count == 0)
@@ -12551,12 +12551,12 @@ public partial class MainViewModel :
         }
 
         await vp.WaitForPlayersReadyAsync(10_000);
-        if (vp.VideoPlayerInstance.Duration > 0)
+        if (vp.VideoPlayer.Duration > 0)
         {
             var peakWaveFileName = WavePeakGenerator2.GetPeakWaveFileName(_videoFileName ?? string.Empty, _audioTrack?.FfIndex ?? -1);
             AudioVisualizer.ZoomFactor = 1.0;
             AudioVisualizer.VerticalZoomFactor = 1.0;
-            AudioVisualizer.WavePeaks = WavePeakGenerator2.GenerateEmptyPeaks(peakWaveFileName, (int)vp.VideoPlayerInstance.Duration);
+            AudioVisualizer.WavePeaks = WavePeakGenerator2.GenerateEmptyPeaks(peakWaveFileName, (int)vp.VideoPlayer.Duration);
         }
     }
 
@@ -14222,7 +14222,7 @@ public partial class MainViewModel :
 
                 if (_setEndAtKeyUpLine != null)
                 {
-                    _setEndAtKeyUpLine.EndTime = TimeSpan.FromSeconds(vp.VideoPlayerInstance.Position);
+                    _setEndAtKeyUpLine.EndTime = TimeSpan.FromSeconds(vp.VideoPlayer.Position);
                     if (_setEndAtKeyUpLineGoToNext)
                     {
                         var idx = Subtitles.IndexOf(_setEndAtKeyUpLine);
@@ -14298,7 +14298,7 @@ public partial class MainViewModel :
                         var p = _playSelectionItem.GetNextSubtitle(mediaPlayerSeconds);
                         if (p == null)
                         {
-                            vp.VideoPlayerInstance.Pause();
+                            vp.VideoPlayer.Pause();
                             vp.Position = _playSelectionItem.EndSeconds;
                             ResetPlaySelection();
                         }
@@ -14365,7 +14365,7 @@ public partial class MainViewModel :
             UpdateTitleStatus();
             UpdateGaps();
             var vp = GetVideoPlayerControl();
-            if (_mpvPreviewDirty && vp?.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+            if (_mpvPreviewDirty && vp?.VideoPlayer is LibMpvDynamicPlayer mpv)
             {
                 var subtitle = GetUpdateSubtitle();
                 _mpvPreviewDirty = false; // clear only after subtitle snapshot is successfully obtained
@@ -14379,7 +14379,7 @@ public partial class MainViewModel :
 
                 _mpvReloader.RefreshMpv(mpv, subtitle, _subtitleSecondary, SelectedSubtitleFormat).ConfigureAwait(false);
             }
-            else if (_mpvPreviewDirty && vp?.VideoPlayerInstance is LibVlcDynamicPlayer vlc)
+            else if (_mpvPreviewDirty && vp?.VideoPlayer is LibVlcDynamicPlayer vlc)
             {
                 var subtitle = GetUpdateSubtitle();
                 _mpvPreviewDirty = false; // clear only after subtitle snapshot is successfully obtained
@@ -14567,14 +14567,14 @@ public partial class MainViewModel :
             if (Se.Settings.General.SubtitleDoubleClickAction == SubtitleDoubleClickActionType.GoToSubtitleAndPlay.ToString())
             {
                 vp.Position = seconds;
-                vp.VideoPlayerInstance.Play();
+                vp.VideoPlayer.Play();
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 return;
             }
 
             if (Se.Settings.General.SubtitleDoubleClickAction == SubtitleDoubleClickActionType.GoToSubtitleAndPauseAndFocusTextBox.ToString())
             {
-                vp.VideoPlayerInstance.Pause();
+                vp.VideoPlayer.Pause();
                 vp.Position = seconds;
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 FocusEditTextBox();
@@ -14582,7 +14582,7 @@ public partial class MainViewModel :
             }
 
             // SubtitleDoubleClickActionType.GoToSubtitleAndPause
-            vp.VideoPlayerInstance.Pause();
+            vp.VideoPlayer.Pause();
             vp.Position = seconds;
             AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
         }
@@ -14663,7 +14663,7 @@ public partial class MainViewModel :
 
             if (Se.Settings.General.SubtitleSingleClickAction == SubtitleSingleClickActionType.GoToSubtitleAndPause.ToString())
             {
-                vp.VideoPlayerInstance.Pause();
+                vp.VideoPlayer.Pause();
                 vp.Position = seconds;
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 return;
@@ -14679,14 +14679,14 @@ public partial class MainViewModel :
             if (Se.Settings.General.SubtitleSingleClickAction == SubtitleSingleClickActionType.GoToSubtitleAndPlay.ToString())
             {
                 vp.Position = seconds;
-                vp.VideoPlayerInstance.Play();
+                vp.VideoPlayer.Play();
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 return;
             }
 
             if (Se.Settings.General.SubtitleSingleClickAction == SubtitleSingleClickActionType.GoToSubtitleAndPauseAndFocusTextBox.ToString())
             {
-                vp.VideoPlayerInstance.Pause();
+                vp.VideoPlayer.Pause();
                 vp.Position = seconds;
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 FocusEditTextBox();
@@ -15116,7 +15116,7 @@ public partial class MainViewModel :
                 {
                     if (oldFormat is WebVTT || oldFormat is WebVTTFileWithLineNumber)
                     {
-                        //                        _subtitle = WebVttToAssa.Convert(_subtitle, new SsaStyle(), VideoPlayerControl?.VideoPlayerInstance?.Width ?? 0, VideoPlayerControl?.VideoPlayerInstance?.Height ?? 0);
+                        //                        _subtitle = WebVttToAssa.Convert(_subtitle, new SsaStyle(), VideoPlayerControl?.VideoPlayer?.Width ?? 0, VideoPlayerControl?.VideoPlayer?.Height ?? 0);
                     }
 
                     foreach (var p in _subtitle.Paragraphs)
@@ -15424,7 +15424,7 @@ public partial class MainViewModel :
             switch (action)
             {
                 case WaveformSingleClickActionType.SetVideoPositionAndPauseAndSelectSubtitle:
-                    vp.VideoPlayerInstance.Pause();
+                    vp.VideoPlayer.Pause();
                     vp.Position = e.Seconds;
                     if (e.Paragraph != null)
                     {
@@ -15437,7 +15437,7 @@ public partial class MainViewModel :
 
                     break;
                 case WaveformSingleClickActionType.SetVideopositionAndPauseAndSelectSubtitleAndCenter:
-                    vp.VideoPlayerInstance.Pause();
+                    vp.VideoPlayer.Pause();
                     vp.Position = e.Seconds;
                     if (e.Paragraph != null)
                     {
@@ -15451,11 +15451,11 @@ public partial class MainViewModel :
 
                     break;
                 case WaveformSingleClickActionType.SetVideoPositionAndPause:
-                    vp.VideoPlayerInstance.Pause();
+                    vp.VideoPlayer.Pause();
                     vp.Position = e.Seconds;
                     break;
                 case WaveformSingleClickActionType.SetVideopositionAndPauseAndCenter:
-                    vp.VideoPlayerInstance.Pause();
+                    vp.VideoPlayer.Pause();
                     vp.Position = e.Seconds;
                     if (e.Paragraph != null)
                     {
@@ -15503,10 +15503,10 @@ public partial class MainViewModel :
 
                     break;
                 case WaveformDoubleClickActionType.Pause:
-                    vp.VideoPlayerInstance.Pause();
+                    vp.VideoPlayer.Pause();
                     break;
                 case WaveformDoubleClickActionType.Play:
-                    vp.VideoPlayerInstance.Play();
+                    vp.VideoPlayer.Play();
                     break;
             }
 

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 
-public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayerInstance
+public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 {
     /// <summary>
     /// Set this path (directory only) to override the default search paths.

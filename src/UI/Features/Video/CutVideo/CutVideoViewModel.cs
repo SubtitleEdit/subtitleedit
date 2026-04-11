@@ -114,7 +114,7 @@ public partial class CutVideoViewModel : ObservableObject
         SelectedCutType = CutTypes[0];
 
         JobItems = new ObservableCollection<BurnInJobItem>();
-        VideoPlayer = new VideoPlayerControl(new VideoPlayerInstanceNone());
+        VideoPlayer = new VideoPlayerControl(new NoopVideoPlayer());
         AudioVisualizer = new AudioVisualizer();
         SegmentGrid = new DataGrid();
         Segments = new ObservableCollection<SubtitleLineViewModel>();
@@ -193,7 +193,7 @@ public partial class CutVideoViewModel : ObservableObject
         _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
         _positionTimer.Tick += (s, e) =>
         {
-            UpdateAudioVisualizer(VideoPlayer.VideoPlayerInstance, AudioVisualizer, SelectedSegmentIndex);
+            UpdateAudioVisualizer(VideoPlayer.VideoPlayer, AudioVisualizer, SelectedSegmentIndex);
 
             if (_updateAudioVisualizer)
             {
@@ -206,7 +206,7 @@ public partial class CutVideoViewModel : ObservableObject
     }
 
     private void UpdateAudioVisualizer(
-        IVideoPlayerInstance vp,
+        IVideoPlayer vp,
         AudioVisualizer av,
         int selectedParagraphIndex)
     {
@@ -848,7 +848,7 @@ public partial class CutVideoViewModel : ObservableObject
     internal void OnClosing()
     {
         _positionTimer.Stop();
-        VideoPlayer.VideoPlayerInstance.CloseFile();
+        VideoPlayer.VideoPlayer.CloseFile();
 
         if (_ffmpegListKeyFramesProcess != null && !_ffmpegListKeyFramesProcess.HasExited)
         {
@@ -950,7 +950,7 @@ public partial class CutVideoViewModel : ObservableObject
             switch (action)
             {
                 case WaveformSingleClickActionType.SetVideoPositionAndPauseAndSelectSubtitle:
-                    vp.VideoPlayerInstance.Pause();
+                    vp.VideoPlayer.Pause();
                     vp.Position = e.Seconds;
                     AudioVisualizerCenterOnPositionIfNeeded(e.Seconds);
                     if (e.Paragraph != null)
@@ -964,7 +964,7 @@ public partial class CutVideoViewModel : ObservableObject
 
                     break;
                 case WaveformSingleClickActionType.SetVideopositionAndPauseAndSelectSubtitleAndCenter:
-                    vp.VideoPlayerInstance.Pause();
+                    vp.VideoPlayer.Pause();
                     vp.Position = e.Seconds;
                     AudioVisualizerCenterOnPositionIfNeeded(e.Seconds);
                     if (e.Paragraph != null)
@@ -979,12 +979,12 @@ public partial class CutVideoViewModel : ObservableObject
 
                     break;
                 case WaveformSingleClickActionType.SetVideoPositionAndPause:
-                    vp.VideoPlayerInstance.Pause();
+                    vp.VideoPlayer.Pause();
                     vp.Position = e.Seconds;
                     AudioVisualizerCenterOnPositionIfNeeded(e.Seconds);
                     break;
                 case WaveformSingleClickActionType.SetVideopositionAndPauseAndCenter:
-                    vp.VideoPlayerInstance.Pause();
+                    vp.VideoPlayer.Pause();
                     vp.Position = e.Seconds;
                     if (e.Paragraph != null)
                     {
@@ -1033,10 +1033,10 @@ public partial class CutVideoViewModel : ObservableObject
 
                     break;
                 case WaveformDoubleClickActionType.Pause:
-                    vp.VideoPlayerInstance.Pause();
+                    vp.VideoPlayer.Pause();
                     break;
                 case WaveformDoubleClickActionType.Play:
-                    vp.VideoPlayerInstance.Play();
+                    vp.VideoPlayer.Play();
                     break;
             }
 
@@ -1215,13 +1215,13 @@ public partial class CutVideoViewModel : ObservableObject
     [RelayCommand]
     private void Play()
     {
-        VideoPlayer.VideoPlayerInstance.Play();
+        VideoPlayer.VideoPlayer.Play();
     }
 
     [RelayCommand]
     private void Pause()
     {
-        VideoPlayer.VideoPlayerInstance.Pause();
+        VideoPlayer.VideoPlayer.Pause();
     }
 
     [RelayCommand]
@@ -1250,7 +1250,7 @@ public partial class CutVideoViewModel : ObservableObject
         AudioVisualizerCenterOnPositionIfNeeded(nextSegment.StartTime.TotalSeconds);
         SelectAndScrollToRow(idx);
         _updateAudioVisualizer = true;
-        vp.VideoPlayerInstance.Play();
+        vp.VideoPlayer.Play();
     }
 
     [RelayCommand]

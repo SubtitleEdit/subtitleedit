@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 /// Cross-platform LibVLC video player wrapper that dynamically loads the VLC library at runtime.
 /// Provides video playback functionality including play/pause control, seeking, volume adjustment,
 /// playback speed control, and audio track switching. Supports Windows, Linux, and macOS platforms.
-/// Implements the <see cref="IVideoPlayerInstance"/> interface for use in Subtitle Edit.
+/// Implements the <see cref="IVideoPlayer"/> interface for use in Subtitle Edit.
 /// </summary>
 /// <remarks>
 /// This player uses P/Invoke to dynamically load LibVLC functions, allowing it to work without
@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 /// via the <see cref="LibVlcPath"/> property. Supports volume boost up to 130% when enabled.
 /// VLC states: Playing=3, Paused=4, Ended=6.
 /// </remarks>
-public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayerInstance
+public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
 {
     /// <summary>
     /// Set this path (directory only) to override the default search paths.

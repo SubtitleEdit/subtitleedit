@@ -288,7 +288,7 @@ public partial class BinaryEditViewModel : ObservableObject
     private void VideoOneFrameBack()
     {
         var vp = GetVideoPlayerControl();
-        if (vp != null && vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+        if (vp != null && vp.VideoPlayer is LibMpvDynamicPlayer mpv)
         {
             mpv.StepOneFrameBack();
             return;
@@ -308,7 +308,7 @@ public partial class BinaryEditViewModel : ObservableObject
     private void VideoOneFrameForward()
     {
         var vp = GetVideoPlayerControl();
-        if (vp != null && vp.VideoPlayerInstance is LibMpvDynamicPlayer mpv)
+        if (vp != null && vp.VideoPlayer is LibMpvDynamicPlayer mpv)
         {
             mpv.StepOneFrameForward();
             return;
@@ -357,7 +357,7 @@ public partial class BinaryEditViewModel : ObservableObject
     private void MoveVideoPositionMs(int ms)
     {
         var vp = GetVideoPlayerControl();
-        if (vp == null || string.IsNullOrEmpty(vp.VideoPlayerInstance.FileName))
+        if (vp == null || string.IsNullOrEmpty(vp.VideoPlayer.FileName))
         {
             return;
         }
@@ -1220,9 +1220,9 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        if (!string.IsNullOrEmpty(VideoPlayerControl.VideoPlayerInstance.FileName))
+        if (!string.IsNullOrEmpty(VideoPlayerControl.VideoPlayer.FileName))
         {
-            VideoPlayerControl.VideoPlayerInstance.CloseFile();
+            VideoPlayerControl.VideoPlayer.CloseFile();
         }
 
         var videoFileName = await _fileHelper.PickOpenVideoFile(Window, Se.Language.General.OpenVideoFileTitle);
@@ -1521,12 +1521,12 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(VideoPlayerControl.VideoPlayerInstance.FileName))
+        if (string.IsNullOrWhiteSpace(VideoPlayerControl.VideoPlayer.FileName))
         {
             return;
         }
 
-        VideoPlayerControl.VideoPlayerInstance.CloseFile();
+        VideoPlayerControl.VideoPlayer.CloseFile();
         UiUtil.SaveWindowPosition(Window);
     }
 

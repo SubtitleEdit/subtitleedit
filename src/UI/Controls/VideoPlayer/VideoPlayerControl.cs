@@ -160,7 +160,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         public bool IsPlaying => _videoPlayerInstance.IsPlaying;
 
-        public IVideoPlayerInstance VideoPlayerInstance => _videoPlayerInstance;
+        public IVideoPlayer VideoPlayer => _videoPlayerInstance;
         public bool VideoPlayerDisplayTimeLeft { get; set; }
 
         double _positionIgnore = -1;
@@ -171,7 +171,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         private readonly Icon _iconVolume;
         private DispatcherTimer? _positionTimer;
         private int _slowPollCounter;
-        private IVideoPlayerInstance _videoPlayerInstance;
+        private IVideoPlayer _videoPlayerInstance;
         private string _videoFileName;
         private readonly Grid _gridProgress; // Reference to the controls grid
         private DispatcherTimer? _autoHideTimer;
@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         public int ContentWidth => _contentPresenter?.Bounds.Width > 0 ? (int)_contentPresenter.Bounds.Width : 0;
         public int ContentHeight => _contentPresenter?.Bounds.Height > 0 ? (int)_contentPresenter.Bounds.Height : 0;
 
-        public VideoPlayerControl(IVideoPlayerInstance videoPlayerInstance)
+        public VideoPlayerControl(IVideoPlayer videoPlayerInstance)
         {
             _videoPlayerInstance = videoPlayerInstance;
             _videoFileName = string.Empty;
@@ -557,7 +557,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             while (DateTime.UtcNow < end)
             {
                 // Consider player ready when Duration is known (> 0)
-                var ready = VideoPlayerInstance.Duration > 0.001;
+                var ready = VideoPlayer.Duration > 0.001;
 
                 if (ready)
                 {
