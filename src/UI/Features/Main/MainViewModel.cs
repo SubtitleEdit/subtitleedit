@@ -134,6 +134,7 @@ using Nikse.SubtitleEdit.Logic.Config.Language;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Initializers;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.Logic.Platform.Windows;
 using Nikse.SubtitleEdit.Logic.UndoRedo;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
@@ -13492,6 +13493,24 @@ public partial class MainViewModel :
         return false;
     }
 
+    private bool TryHandleWindowSystemMenu(KeyEventArgs keyEventArgs)
+    {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || Window == null)
+        {
+            return false;
+        }
+
+        if (keyEventArgs.Key == Key.Space && keyEventArgs.KeyModifiers == KeyModifiers.Alt)
+        {
+            SystemMenu.Show(Window);
+            keyEventArgs.Handled = true;
+            _shortcutManager.ClearKeys();
+            return true;
+        }
+
+        return false;
+    }
+
     private bool TryHandleMacOptionBackspace(KeyEventArgs keyEventArgs)
     {
         return TryHandleMacTextDelete(
@@ -13499,7 +13518,7 @@ public partial class MainViewModel :
             static keyEvent => keyEvent.Key == Key.Back && keyEvent.KeyModifiers == KeyModifiers.Alt,
             DeletePreviousWord);
     }
-
+    
     private bool TryHandleMacCommandDelete(KeyEventArgs keyEventArgs)
     {
         return TryHandleMacTextDelete(
@@ -13663,6 +13682,11 @@ public partial class MainViewModel :
             }
 
             _lastKeyPressedMs = ms;
+
+            if (TryHandleWindowSystemMenu(keyEventArgs))
+            {
+                return;
+            }
 
             // This allows command+delete on mac to delete to line start.
             if (TryHandleMacCommandDelete(keyEventArgs))
