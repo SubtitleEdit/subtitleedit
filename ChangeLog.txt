@@ -14,6 +14,8 @@ v5.0.0-beta15 (xth April 2026)
 * Fix issue with undo - thx Dravic
 * Add empty waveform when video has no audio
 * Add Windows-system-menu to many windows (alt+space)
+* Add total adjustment text in Sync - Adjust all times - thx kvalle22
+* Try to add Word spell check - thx moob158
 
 -----------------------------------------------------------------------------------------------------
 v5.0.0-beta14 (8th April 2026)
