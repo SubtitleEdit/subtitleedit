@@ -14216,9 +14216,9 @@ public partial class MainViewModel :
             // update audio visualizer position if available
             var av = AudioVisualizer;
             var vp = GetVideoPlayerControl();
-            if (av != null && vp != null && !string.IsNullOrEmpty(_videoFileName))
+            if (vp != null && !string.IsNullOrEmpty(_videoFileName))
             {
-                var isAvScrolloing = av.IsScrolling;
+                var isAvScrolloing = av?.IsScrolling ?? false;
 
                 if (_setEndAtKeyUpLine != null)
                 {
@@ -14250,7 +14250,11 @@ public partial class MainViewModel :
                     startPos = 0;
                 }
 
-                av.CurrentVideoPositionSeconds = vp.Position;
+                if (av != null)
+                {
+                    av.CurrentVideoPositionSeconds = vp.Position;
+                }
+
                 var isPlaying = vp.IsPlaying;
                 var firstSelectedIndex = -1;
 
@@ -14261,7 +14265,7 @@ public partial class MainViewModel :
                     av.SetPosition(Math.Max(0, mediaPlayerSeconds - waveformHalfSeconds), subtitle, mediaPlayerSeconds,
                         firstSelectedIndex, _selectedSubtitles ?? []);
                 }
-                else if (isPlaying && _avLastScrolling && !isAvScrolloing)
+                else if (av != null && isPlaying && _avLastScrolling && !isAvScrolloing)
                 {
                     if (vp.Position < av.StartPositionSeconds) // scrolling forward
                     {
@@ -14272,18 +14276,18 @@ public partial class MainViewModel :
                         vp.Position = av.StartPositionSeconds + ((av.EndPositionSeconds - av.StartPositionSeconds) / 2.0);
                     }
                 }
-                else if ((isPlaying) &&
+                else if (av != null && isPlaying &&
                          (mediaPlayerSeconds > av.EndPositionSeconds || mediaPlayerSeconds < av.StartPositionSeconds))
                 {
                     av.SetPosition(startPos, subtitle, mediaPlayerSeconds, 0, _selectedSubtitles ?? []);
                 }
-                else
+                else if (av != null)
                 {
                     av.SetPosition(av.StartPositionSeconds, subtitle, mediaPlayerSeconds, firstSelectedIndex,
                         _selectedSubtitles ?? []);
                 }
 
-                if (_updateAudioVisualizer)
+                if (_updateAudioVisualizer && av != null)
                 {
                     av.InvalidateVisual();
                     _updateAudioVisualizer = false;
