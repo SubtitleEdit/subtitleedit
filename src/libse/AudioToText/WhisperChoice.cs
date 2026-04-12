@@ -17,5 +17,6 @@
         public const string ParakeetCpp = "Parakeet.cpp";
         public const string CrispAsrParakeet = "Crisp ASR Parakeet";
         public const string CrispAsrCanary = "Crisp ASR Canary";
+        public const string CrispAsrCohere = "Crisp ASR Cohere";
     }
 }

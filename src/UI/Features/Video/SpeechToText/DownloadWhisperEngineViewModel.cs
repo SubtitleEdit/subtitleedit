@@ -267,6 +267,15 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                     MacHelper.MakeExecutable(path);
                 }
             }
+
+            if (Engine is CrispAsrCohere)
+            {
+                path = Path.Combine(folder, CrispAsrCohere.GetExecutableFileName());
+                if (File.Exists(path))
+                {
+                    MacHelper.MakeExecutable(path);
+                }
+            }
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
@@ -315,6 +324,15 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
             if (Engine is CrispAsrCanary)
             {
                 path = Path.Combine(folder, CrispAsrCanary.GetExecutableFileName());
+                if (File.Exists(path))
+                {
+                    LinuxHelper.MakeExecutable(path);
+                }
+            }
+
+            if (Engine is CrispAsrCohere)
+            {
+                path = Path.Combine(folder, CrispAsrCohere.GetExecutableFileName());
                 if (File.Exists(path))
                 {
                     LinuxHelper.MakeExecutable(path);
