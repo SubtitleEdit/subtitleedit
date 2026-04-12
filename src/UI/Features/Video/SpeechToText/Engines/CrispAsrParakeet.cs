@@ -165,10 +165,10 @@ public class CrispAsrParakeet : ISpeechToTextEngine
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            return "parakeet-main.exe";
+            return "crispasr.exe";
         }
 
-        return "parakeet-main";
+        return "crispasr";
     }
 
     public bool CanBeDownloaded()

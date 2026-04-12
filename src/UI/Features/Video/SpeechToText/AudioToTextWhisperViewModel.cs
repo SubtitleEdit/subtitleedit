@@ -154,10 +154,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             Engines.Add(new Qwen3AsrCppEngine());
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
-        {
-            Engines.Add(new CrispAsrParakeet());
-        }
+        Engines.Add(new CrispAsrParakeet());
 
         SelectedEngine = Engines[0];
 
@@ -2004,8 +2001,8 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
 
             var crispModel = crispAsrParakeet.GetModelForCmdLine(model);
             var crispParams = string.IsNullOrWhiteSpace(crispArgs)
-                ? $"-m \"{crispModel}\" -f \"{waveFileName}\" --output-srt"
-                : $"-m \"{crispModel}\" -f \"{waveFileName}\" --output-srt {crispArgs}";
+                ? $"--backend parakeet -m \"{crispModel}\" -f \"{waveFileName}\" --output-srt"
+                : $"--backend parakeet -m \"{crispModel}\" -f \"{waveFileName}\" --output-srt {crispArgs}";
 
             SeLogger.WhisperInfo($"{exe} {crispParams}");
 
