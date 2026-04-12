@@ -53,8 +53,8 @@ internal static class SplitHelper
         var avg = text.Length / (double)lineCount;
         var best = results
             .Where(p => p.Lines.Count == lineCount)
-            .MinBy(p => p.DiffFromAverage(avg)) 
-                   ?? results.Where(p => p.Lines.Count == lineCount).MinBy(p => p.DiffFromAverage(avg));
+            .MinBy(p => p.DiffFromAverage(avg))
+                   ?? results.MinBy(p => p.DiffFromAverage(avg));
 
         return best == null ? new List<string> { text } : best.Lines;
     }

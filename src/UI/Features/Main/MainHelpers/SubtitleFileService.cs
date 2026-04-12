@@ -27,6 +27,12 @@ public class SubtitleFileService : ISubtitleFileService
             Return = true,
         };
 
+        if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
+        {
+            result.ErrorMessage = "File not found";
+            return result;
+        }
+
         var ext = Path.GetExtension(fileName);
         var fileSize = (long)0;
         try
@@ -42,12 +48,6 @@ public class SubtitleFileService : ISubtitleFileService
         if (fileSize < 10)
         {
             result.ErrorMessage = fileSize == 0 ? "File size is zero!" : $"File size too small - only {fileSize} bytes";
-            return result;
-        }
-
-        if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
-        {
-            result.ErrorMessage = "File not found";
             return result;
         }
 

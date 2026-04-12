@@ -101,6 +101,7 @@ public partial class BridgeGapsViewModel : ObservableObject
                             info = $"{SubtitleFormat.MillisecondsToFrames(gap)}";
                         }
                     }
+                    cur.InfoText = info;
                 }
 
             }

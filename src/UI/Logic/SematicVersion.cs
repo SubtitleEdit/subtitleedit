@@ -90,6 +90,6 @@ public class SemanticVersion
 
     public override string ToString()
     {
-        return $"v{Major}.{Minor}.{Patch}{(PreRelease != null ? $"-{PreRelease}{(PreReleaseNumber > 0 ? PreReleaseNumber.ToString() : string.Empty)}" : string.Empty)}";
+        return $"v{Major}.{Minor}.{Patch}{(!string.IsNullOrEmpty(PreRelease) ? $"-{PreRelease}{(PreReleaseNumber > 0 ? PreReleaseNumber.ToString() : string.Empty)}" : string.Empty)}";
     }
 }
