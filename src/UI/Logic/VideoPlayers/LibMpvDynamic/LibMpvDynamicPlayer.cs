@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
@@ -588,6 +589,14 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     public async Task LoadFile(string path)
     {
         EnsureNotDisposed();
+
+        // For audio-only files there is no video track, so mpv never fires the render
+        // callback and subtitles are never drawn.  Inject a virtual black video stream
+        // via lavfi so mpv has something to render subtitles on top of.
+        var ext = Path.GetExtension(path);
+        var isAudioOnly = Array.Exists(Utilities.AudioFileExtensions,
+            e => e.Equals(ext, StringComparison.OrdinalIgnoreCase));
+        SetOptionString("lavfi-complex", isAudioOnly ? "color=black:size=1280x720:rate=25[vo]" : "");
 
         var err = await Task.Run(() => DoMpvCommand("loadfile", path));
         if (err < 0)
