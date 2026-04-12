@@ -155,6 +155,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         }
 
         Engines.Add(new CrispAsrParakeet());
+        Engines.Add(new CrispAsrCanary());
 
         SelectedEngine = Engines[0];
 
@@ -2003,6 +2004,57 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             var crispParams = string.IsNullOrWhiteSpace(crispArgs)
                 ? $"--backend parakeet -m \"{crispModel}\" -f \"{waveFileName}\" --output-srt"
                 : $"--backend parakeet -m \"{crispModel}\" -f \"{waveFileName}\" --output-srt {crispArgs}";
+
+            SeLogger.WhisperInfo($"{exe} {crispParams}");
+
+            var p = new Process
+            {
+                StartInfo = new ProcessStartInfo(exe, crispParams)
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    WorkingDirectory = Path.GetDirectoryName(exe),
+                }
+            };
+
+            if (dataReceivedHandler != null)
+            {
+                p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.RedirectStandardError = true;
+                p.OutputDataReceived += dataReceivedHandler;
+                p.ErrorDataReceived += dataReceivedHandler;
+            }
+
+#pragma warning disable CA1416
+            p.Start();
+#pragma warning restore CA1416
+
+            if (dataReceivedHandler != null)
+            {
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+            }
+
+            return p;
+        }
+
+
+        if (engine is CrispAsrCanary crispAsrCanary)
+        {
+            var exe = crispAsrCanary.GetExecutable();
+            var crispArgs = Se.Settings.Tools.AudioToText.WhisperCustomCommandLineArguments.Trim();
+            if (crispArgs == "--standard")
+            {
+                crispArgs = string.Empty;
+            }
+
+            var crispModel = crispAsrCanary.GetModelForCmdLine(model);
+            var crispParams = string.IsNullOrWhiteSpace(crispArgs)
+                ? $"--backend canary -m \"{crispModel}\" -f \"{waveFileName}\" --output-srt"
+                : $"--backend canary -m \"{crispModel}\" -f \"{waveFileName}\" --output-srt {crispArgs}";
 
             SeLogger.WhisperInfo($"{exe} {crispParams}");
 
