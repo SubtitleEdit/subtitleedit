@@ -58,19 +58,8 @@ public partial class SpellCheckViewModel : ObservableObject
         {
             _spellCheckManager.WordSpellChecker = new WordSpellCheck();
             _spellCheckManager.WordSpellChecker.Initialize();
-            var languages = _spellCheckManager.WordSpellChecker.GetInstalledLanguages();
-            if (languages.Count > 0)
-            {
-                var defaultLanguage = languages.FirstOrDefault(l => l.Name.Contains("English", StringComparison.OrdinalIgnoreCase));
-                if (defaultLanguage == null)
-                {
-                    defaultLanguage = languages[0];
-                }
-
-                _spellCheckManager.WordSpellChecker.CurrentLanguage = defaultLanguage;
-            }
         }
-        
+
         _spellCheckManager.OnWordChanged += (sender, e) =>
         {
             UpdateChangedWordInUi(e.FromWord, e.ToWord, e.WordIndex, e.Paragraph);
@@ -104,6 +93,22 @@ public partial class SpellCheckViewModel : ObservableObject
         }
     }
 
+    internal void OnDictionaryChanged()
+    {
+        if (_spellCheckManager.WordSpellChecker != null)
+        {
+            if (Dictionaries.Count > 0)
+            {
+                var languages = _spellCheckManager.WordSpellChecker.GetInstalledLanguages();
+                var selectedLanguage = languages.FirstOrDefault(l => l.Name == SelectedDictionary?.Name);
+                if (selectedLanguage != null)
+                {
+                    _spellCheckManager.WordSpellChecker.CurrentLanguage = selectedLanguage;
+                }
+            }
+        }
+    }
+
     private void LoadDictionaries()
     {
         if (_spellCheckManager.WordSpellChecker != null)
@@ -120,8 +125,9 @@ public partial class SpellCheckViewModel : ObservableObject
             if (Dictionaries.Count > 0)
             {
                 SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name.Contains("English", StringComparison.OrdinalIgnoreCase)) ?? Dictionaries[0];
+                _spellCheckManager.WordSpellChecker.CurrentLanguage = languages.FirstOrDefault(l => l.Name == SelectedDictionary.Name);
             }
-            
+
             return;
         }
 
@@ -233,7 +239,7 @@ public partial class SpellCheckViewModel : ObservableObject
     [RelayCommand]
     private void ChangeWord()
     {
-        if (string.IsNullOrWhiteSpace(CurrentWord) || WordNotFoundOriginal == CurrentWord)
+        if (string.IsNullOrWhiteSpace(CurrentWord) || WordNotFoundOriginal == CurrentWord || SelectedParagraph == null)
         {
             Dispatcher.UIThread.Invoke(() => { TextBoxWordNotFound.Focus(); });
             return;
@@ -403,7 +409,12 @@ public partial class SpellCheckViewModel : ObservableObject
             SelectedParagraph = results[0].Paragraph;
 
             var suggestions = _spellCheckManager.GetSuggestions(results[0].Word.Text);
-            Suggestions = new ObservableCollection<string>(suggestions);
+            Suggestions.Clear();
+            foreach (var suggestion in suggestions)
+            {
+                Suggestions.Add(suggestion);
+            }
+
             AreSuggestionsAvailable = true;
             if (suggestions.Count > 0)
             {
