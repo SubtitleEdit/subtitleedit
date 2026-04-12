@@ -1,4 +1,10 @@
-﻿  -h,        --help                 [default] show this help message and exit
+﻿
+🧩 Cohere
+
+Type: Conformer + Transformer
+Focus: 🎯 Lowest WER (accuracy), especially English
+
+  -h,        --help                 [default] show this help message and exit
   -t N,      --threads N            [4      ] number of threads to use during computation
   -p N,      --processors N         [1      ] number of processors to use during computation
   -ot N,     --offset-t N           [0      ] time offset in milliseconds
