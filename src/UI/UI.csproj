@@ -130,6 +130,9 @@
 		<AvaloniaResource Include="Assets\SpeechToText\CrispASRCanary.txt">
 		  <CopyToOutputDirectory></CopyToOutputDirectory>
 		</AvaloniaResource>
+		<AvaloniaResource Include="Assets\SpeechToText\CrispASRQwen3.txt">
+		  <CopyToOutputDirectory></CopyToOutputDirectory>
+		</AvaloniaResource>
 		<AvaloniaResource Include="Assets\SpeechToText\CrispASRCohere.txt">
 		  <CopyToOutputDirectory></CopyToOutputDirectory>
 		</AvaloniaResource>

@@ -276,6 +276,15 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                     MacHelper.MakeExecutable(path);
                 }
             }
+
+            if (Engine is CrispAsrQwen3)
+            {
+                path = Path.Combine(folder, CrispAsrQwen3.GetExecutableFileName());
+                if (File.Exists(path))
+                {
+                    MacHelper.MakeExecutable(path);
+                }
+            }
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
@@ -312,6 +321,15 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                 }
             }
 
+            if (Engine is WhisperEngineCTranslate2)
+            {
+                path = Path.Combine(folder, WhisperEngineCTranslate2.GetExecutableFileName());
+                if (File.Exists(path))
+                {
+                    LinuxHelper.MakeExecutable(path);
+                }
+            }
+
             if (Engine is CrispAsrParakeet)
             {
                 path = Path.Combine(folder, CrispAsrParakeet.GetExecutableFileName());
@@ -339,9 +357,9 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                 }
             }
 
-            if (Engine is WhisperEngineCTranslate2)
+            if (Engine is CrispAsrQwen3)
             {
-                path = Path.Combine(folder, WhisperEngineCTranslate2.GetExecutableFileName());
+                path = Path.Combine(folder, CrispAsrQwen3.GetExecutableFileName());
                 if (File.Exists(path))
                 {
                     LinuxHelper.MakeExecutable(path);

@@ -13,6 +13,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -114,6 +115,7 @@ public partial class SpellCheckViewModel : ObservableObject
         if (_spellCheckManager.WordSpellChecker != null)
         {
             var languages = _spellCheckManager.WordSpellChecker.GetInstalledLanguages();
+            Dictionaries.Clear();
             foreach (var language in languages)
             {
                 Dictionaries.Add(new SpellCheckDictionaryDisplay
@@ -124,7 +126,16 @@ public partial class SpellCheckViewModel : ObservableObject
 
             if (Dictionaries.Count > 0)
             {
-                SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name.Contains("English", StringComparison.OrdinalIgnoreCase)) ?? Dictionaries[0];
+                if (!string.IsNullOrEmpty(Se.Settings.SpellCheck.LastLanguageDictionaryName))
+                {
+                    SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name == Se.Settings.SpellCheck.LastLanguageDictionaryName);
+                }
+
+                if (SelectedDictionary == null)
+                {
+                    SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name.Contains("English", StringComparison.OrdinalIgnoreCase)) ?? Dictionaries[0];
+                }
+
                 _spellCheckManager.WordSpellChecker.CurrentLanguage = languages.FirstOrDefault(l => l.Name == SelectedDictionary.Name);
             }
 
@@ -141,7 +152,11 @@ public partial class SpellCheckViewModel : ObservableObject
                 SelectedDictionary = Dictionaries.FirstOrDefault(l => l.DictionaryFileName == Se.Settings.SpellCheck.LastLanguageDictionaryFile);
             }
 
-            SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name.Contains("English", StringComparison.OrdinalIgnoreCase));
+            if (SelectedDictionary == null)
+            {
+                SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name.Contains("English", StringComparison.OrdinalIgnoreCase));
+            }
+
             if (SelectedDictionary == null)
             {
                 SelectedDictionary = Dictionaries[0];
@@ -178,6 +193,45 @@ public partial class SpellCheckViewModel : ObservableObject
         if (languageCode == null)
         {
             languageCode = "en";
+        }
+
+        if (_spellCheckManager.WordSpellChecker != null)
+        {
+            try
+            {
+                var languages = _spellCheckManager.WordSpellChecker.GetInstalledLanguages();
+                var culture = new CultureInfo(languageCode);
+                var text = culture.NativeName; // "Português (Portugal)"
+                if (text.Contains('(') && text.Contains(')'))
+                {
+                    var start = text.IndexOf('(');
+                    var end = text.IndexOf(')');
+                    var languageName = text.Substring(start + 1, end - start - 1);
+                    if (!string.IsNullOrWhiteSpace(Se.Settings.SpellCheck.LastLanguageDictionaryName) && Se.Settings.SpellCheck.LastLanguageDictionaryName.Contains(languageName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        var selectedLan = languages.FirstOrDefault(l => l.Name.Contains(Se.Settings.SpellCheck.LastLanguageDictionaryName, StringComparison.OrdinalIgnoreCase));
+                        if (selectedLan != null)
+                        {
+                            _spellCheckManager.WordSpellChecker.CurrentLanguage = selectedLan;
+                            SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name.Equals(selectedLan.Name, StringComparison.OrdinalIgnoreCase));
+                            return;
+                        }
+                    }
+
+                    var selectedLanguage = languages.FirstOrDefault(l => l.Name.Contains(languageName, StringComparison.OrdinalIgnoreCase));
+                    if (selectedLanguage != null)
+                    {
+                        _spellCheckManager.WordSpellChecker.CurrentLanguage = selectedLanguage;
+                        SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name.Equals(selectedLanguage.Name, StringComparison.OrdinalIgnoreCase));
+                        return;
+                    }
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+            return;
         }
 
         var threeLetterCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(languageCode);
@@ -362,6 +416,8 @@ public partial class SpellCheckViewModel : ObservableObject
         TotalChangedWords = _spellCheckManager.NoOfChangedWords;
         TotalSkippedWords = _spellCheckManager.NoOfSkippedWords;
         OkPressed = true;
+        Se.Settings.SpellCheck.LastLanguageDictionaryName = SelectedDictionary?.Name;
+        Se.Settings.SpellCheck.LastLanguageDictionaryFile = SelectedDictionary?.DictionaryFileName;
         Dispatcher.UIThread.Invoke(() => { Window?.Close(); });
     }
 
