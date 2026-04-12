@@ -1807,6 +1807,7 @@
     "pointSync": "Point sync",
     "pointSyncViaOther": "Point sync via other subtitle",
     "adjustmentX": "Adjustment: {0}",
+    "totalAdjustmentX": "Total adjustment: {0}",
     "adjustAllShortcuts": "Keyboard shortcuts:\r\n\r\n• Shift + Left/Right: Move 10 ms\r\n• Ctrl + Left/Right: Move 100 ms\r\n• Alt + Left/Right: Move 500 ms",
     "offsetInSeconds": "Offset in seconds",
     "speedFactor": "Speed factor"
@@ -1923,7 +1924,7 @@
       "autoBackupOn": "Auto-backup",
       "autoBackupIntervalMinutes": "Auto-backup interval (minutes)",
       "autoBackupDeleteAfterDays": "Auto-backup retention (days)",
-      "autoConvertToUtf8": "Auto-convert to UTF-8 on open",
+      "autoConvertToUtf8": "Auto-convert encoding to UTF-8 on open",
       "autoTrimWhiteSpace": "Auto-trim white-space",
       "defaultEncoding": "Default encoding",
       "colorDurationTooShort": "Color duration if too short",
