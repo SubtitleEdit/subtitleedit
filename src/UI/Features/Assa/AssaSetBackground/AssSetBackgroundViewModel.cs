@@ -88,7 +88,7 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         BoxStyles.Add(Se.Language.Assa.BackgroundBoxStarburst);
         BoxStyles.Add(Se.Language.Assa.BackgroundBoxScroll);
 
-        VideoPlayerControl = new VideoPlayerControl(new VideoPlayerInstanceNone());
+        VideoPlayerControl = new VideoPlayerControl(new EmptyVideoPlayer());
 
         _assaFormat = new AdvancedSubStationAlpha();
         _tempSubtitleFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".ass");
@@ -422,12 +422,12 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         var curY = (double)top;
         sb.Append($"m {left} {top} ");
 
-        // Top edge: bell-curved bump heights — taller in the middle, shorter at the ends
+        // Top edge: bell-curved bump heights ï¿½ taller in the middle, shorter at the ends
         for (var i = 0; i < hCount; i++)
         {
             var t = hCount > 1 ? (double)i / (hCount - 1) : 0.5;
             var bell = 1.0 - 4.0 * (t - 0.5) * (t - 0.5); // 1 at centre, 0 at edges
-            var bumpH = hR * (0.6 + 0.9 * bell);            // 0.6×hR at edges ? 1.5×hR at centre
+            var bumpH = hR * (0.6 + 0.9 * bell);            // 0.6ï¿½hR at edges ? 1.5ï¿½hR at centre
             sb.Append($"b {(int)curX} {(int)(top - bumpH * k)} {(int)(curX + hR * (1 - k))} {(int)(top - bumpH)} {(int)(curX + hR)} {(int)(top - bumpH)} ");
             sb.Append($"b {(int)(curX + hR * (1 + k))} {(int)(top - bumpH)} {(int)(curX + 2 * hR)} {(int)(top - bumpH * k)} {(int)(curX + 2 * hR)} {top} ");
             curX += 2 * hR;
@@ -562,7 +562,7 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         var baseSpikeOut = Math.Clamp(Math.Min(a, b) * 0.55, 8.0, 28.0);
         var rng = new Random((left * 397) ^ (top * 613) ^ right);
 
-        // Random spike count per subtitle: 9–20 spikes
+        // Random spike count per subtitle: 9ï¿½20 spikes
         var numSpikes = rng.Next(9, 21);
         var numPoints = numSpikes * 2;
 
@@ -725,7 +725,7 @@ public partial class AssSetBackgroundViewModel : ObservableObject
         await VideoPlayerControl.WaitForPlayersReadyAsync();
         VideoPlayerControl.HideVideoControls();
         VideoPlayerControl.Position = _previewParagraph.StartTime.TotalSeconds + (_previewParagraph.Duration.TotalSeconds / 2.0);
-        _mpvPlayer = VideoPlayerControl.VideoPlayerInstance as LibMpvDynamicPlayer;
+        _mpvPlayer = VideoPlayerControl.VideoPlayer as LibMpvDynamicPlayer;
         StartPreviewTimer();
     }
 
@@ -733,7 +733,7 @@ public partial class AssSetBackgroundViewModel : ObservableObject
     {
         _positionTimer.Stop();
         _cancellationTokenSource.Cancel();
-        VideoPlayerControl.VideoPlayerInstance.CloseFile();
+        VideoPlayerControl.VideoPlayer.CloseFile();
         try
         {
             File.Delete(_tempSubtitleFileName);

@@ -123,7 +123,7 @@ public class FullScreenVideoWindow : Window
             _mouseMoveDetectionTimer?.Stop();
             _mouseMoveDetectionTimer = null;
             videoPlayer.FullscreenCollapseRequested -= Close;
-            videoPlayer.VideoPlayerInstance.CloseFile();
+            videoPlayer.VideoPlayer.CloseFile();
         };
 
         Activated += delegate { Focus(); }; // hack to make OnKeyDown work
@@ -137,8 +137,8 @@ public class FullScreenVideoWindow : Window
 
             await videoPlayer.Open(videoFileName);
             await videoPlayer.WaitForPlayersReadyAsync();
-            videoPlayer.VideoPlayerInstance.Pause();
-            videoPlayer.VideoPlayerInstance.Position = position;
+            videoPlayer.VideoPlayer.Pause();
+            videoPlayer.VideoPlayer.Position = position;
             videoPlayer.Position = position;
             videoPlayer.Volume = volume;
         };

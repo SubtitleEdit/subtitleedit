@@ -48,7 +48,7 @@ public partial class SetSyncPointViewModel : ObservableObject
         Title = string.Empty;
         VideoInfo = string.Empty;
         _videoFileName = string.Empty;
-        VideoPlayerControl = new VideoPlayerControl(new VideoPlayerInstanceNone());
+        VideoPlayerControl = new VideoPlayerControl(new EmptyVideoPlayer());
         AudioVisualizer = new AudioVisualizer();
         ComboBoxSubtitle = new ComboBox();
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>();
@@ -127,7 +127,7 @@ public partial class SetSyncPointViewModel : ObservableObject
         _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
         _positionTimer.Tick += (s, e) =>
         {
-            UpdateAudioVisualizer(VideoPlayerControl.VideoPlayerInstance, AudioVisualizer, SelectedParagraphIndex);
+            UpdateAudioVisualizer(VideoPlayerControl.VideoPlayer, AudioVisualizer, SelectedParagraphIndex);
 
             if (_updateAudioVisualizer)
             {
@@ -139,7 +139,7 @@ public partial class SetSyncPointViewModel : ObservableObject
     }
 
     private void UpdateAudioVisualizer(
-        IVideoPlayerInstance vp,
+        IVideoPlayer vp,
         AudioVisualizer av,
         int selectedParagraphIndex)
     {
@@ -266,9 +266,9 @@ public partial class SetSyncPointViewModel : ObservableObject
     private async Task PlayAndBack(VideoPlayerControl videoPlayer, int milliseconds)
     {
         var originalPosition = videoPlayer.Position;
-        videoPlayer.VideoPlayerInstance.Play();
+        videoPlayer.VideoPlayer.Play();
         await Task.Delay(milliseconds);
-        videoPlayer.VideoPlayerInstance.Pause();
+        videoPlayer.VideoPlayer.Pause();
         videoPlayer.Position = originalPosition;
     }
 
@@ -288,7 +288,7 @@ public partial class SetSyncPointViewModel : ObservableObject
     internal void OnClosing()
     {
         _positionTimer.Stop();
-        VideoPlayerControl.VideoPlayerInstance.CloseFile();
+        VideoPlayerControl.VideoPlayer.CloseFile();
     }
 
     [RelayCommand]

@@ -277,7 +277,7 @@ public partial class BurnInLogoViewModel : ObservableObject
                 VideoPlayerControl.Position = 1.0; // Show frame at 1 second
             }
 
-            VideoPlayerControl.VideoPlayerInstance.Pause();
+            VideoPlayerControl.VideoPlayer.Pause();
 
             // Wait for the video player to render and have valid bounds
             // Try multiple times with increasing delays to ensure accurate border calculation

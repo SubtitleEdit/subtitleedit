@@ -59,7 +59,7 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
     {
         OverrideTags = new ObservableCollection<IAdvancedEffectDisplay>(AdvancedEffectDisplayFactory.List());
         _videoFileName = string.Empty;
-        VideoPlayerControl = new VideoPlayerControl(new VideoPlayerInstanceNone());
+        VideoPlayerControl = new VideoPlayerControl(new EmptyVideoPlayer());
         ComboBoxLeft = new ComboBox();
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>();
         _assaFormat = new AdvancedSubStationAlpha();
@@ -275,16 +275,16 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
     private async Task PlayAndBack(VideoPlayerControl videoPlayer, int milliseconds)
     {
         var originalPosition = videoPlayer.Position;
-        videoPlayer.VideoPlayerInstance.Play();
+        videoPlayer.VideoPlayer.Play();
         await Task.Delay(milliseconds);
-        videoPlayer.VideoPlayerInstance.Pause();
+        videoPlayer.VideoPlayer.Pause();
         videoPlayer.Position = originalPosition;
     }
 
     internal void OnClosing()
     {
         _positionTimer.Stop();
-        VideoPlayerControl.VideoPlayerInstance.CloseFile();
+        VideoPlayerControl.VideoPlayer.CloseFile();
         try
         {
             if (File.Exists(_tempSubtitleFileName))
@@ -315,7 +315,7 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
 
         Dispatcher.UIThread.Post(() =>
         {
-            _mpvPlayer = VideoPlayerControl.VideoPlayerInstance as LibMpvDynamicPlayer;
+            _mpvPlayer = VideoPlayerControl.VideoPlayer as LibMpvDynamicPlayer;
 
             if (Paragraphs.Count == 0)
             {
