@@ -1,6 +1,6 @@
 ﻿{
   "Title": "SubtitleEdit",
-  "TranslatedBy": "v. 08.04.2026 di bovirus",
+  "TranslatedBy": "v. 12.04.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -1806,6 +1806,7 @@
     "PointSync": "Sincronizza punti",
     "PointSyncViaOther": "Sincronizzazione punti tramite altri sottotitoli",
     "AdjustmentX": "Regolazione: {0}",
+    "TotalAdjustmentX": "Regolazione totale: {0}",
     "AdjustAllShortcuts": "Scorciatoie da tastiera:\r\n\r\n• Maiuscolo + sinistra/destra: sposta 10 ms\r\n• Ctrl + sinistra/destra: sposta di 100 ms\r\n• Alt + sinistra/destra: sposta di 500 ms",
     "OffsetInSeconds": "Offset in secondi",
     "SpeedFactor": "Fattore velocità"
