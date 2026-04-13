@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 
 namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
@@ -21,7 +22,7 @@ public class NetflixCheckMaxCps : INetflixQualityChecker
     {
         ICalcLength calc = CalcFactory.MakeCalculator(nameof(CalcAll));
         var charactersPerSecond = controller.CharactersPerSecond;
-        var comment = "Maximum " + charactersPerSecond + " characters per second";
+        var comment = string.Format(Se.Language.Tools.NetflixCheckAndFix.MaximumXCharactersPerSecond, charactersPerSecond);
         foreach (var p in subtitle.Paragraphs)
         {
             var jp = new Paragraph(p);

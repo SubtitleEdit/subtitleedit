@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
 
@@ -35,11 +36,11 @@ public class NetflixCheckTwoFramesGap : INetflixQualityChecker
 
                 if (p.EndTime.TotalMilliseconds > next.StartTime.TotalMilliseconds)
                 {
-                    comment = "Minimum two frames gap (Overlapping)";
+                    comment = Se.Language.Tools.NetflixCheckAndFix.MinimumTwoFramesGapOverlapping;
                 }
                 else
                 {
-                    comment = "Minimum two frames gap";
+                    comment = Se.Language.Tools.NetflixCheckAndFix.MinimumTwoFramesGap;
                 }
 
                 controller.AddRecord(p, fixedParagraph, comment, string.Empty, true);
