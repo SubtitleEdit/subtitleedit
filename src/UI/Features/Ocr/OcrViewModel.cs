@@ -2708,8 +2708,9 @@ public partial class OcrViewModel : ObservableObject
                     var tcs = new TaskCompletionSource<bool>();
                     Dispatcher.UIThread.Post(async () =>
                     {
-                        foreach (var unknownWord in unknownWords)
+                        for (var unknownWordIndex = 0; unknownWordIndex < unknownWords.Count; unknownWordIndex++)
                         {
+                            var unknownWord = unknownWords[unknownWordIndex];
                             var suggestions = _ocrFixEngine.GetSpellCheckSuggestions(unknownWord.Word.FixedWord);
                             var result = await _windowService.ShowDialogAsync<PromptUnknownWordWindow, PromptUnknownWordViewModel>(Window!,
                                 vm => { vm.Initialize(item.GetBitmap(), item.Text, unknownWord, suggestions); });
@@ -2738,13 +2739,15 @@ public partial class OcrViewModel : ObservableObject
                             }
                             else if (result.AddToNamesListPressed)
                             {
-                                _ocrFixEngine.AddName(unknownWord.Word.Word);
+                                _ocrFixEngine.AddName(unknownWord.ResolveSubmittedWord(result.Word));
                             }
                             else if (result.AddToUserDictionaryPressed)
                             {
-                                if (SelectedDictionary != null)
+                                if (_ocrFixEngine.AddUserWord(unknownWord.ResolveSubmittedWord(result.Word)))
                                 {
-                                    UserWordsHelper.AddToUserDictionary(unknownWord.Word.Word, SelectedDictionary.GetFiveLetterLanguageName() ?? "en_US");
+                                    RemoveUnknownWordsFromCurrentState(unknownWord.Word.Word);
+                                    RemovePendingUnknownWords(unknownWords, unknownWordIndex, unknownWord.Word.Word);
+                                    unknownWordIndex--;
                                 }
                             }
                             else

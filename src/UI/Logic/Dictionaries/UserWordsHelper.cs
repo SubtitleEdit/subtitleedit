@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Core.Common;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -34,8 +35,8 @@ public static class UserWordsHelper
                 {
                     foreach (XmlNode node in nodes)
                     {
-                        string s = node.InnerText.ToLowerInvariant();
-                        if (!userWordList.Contains(s))
+                        string s = Utilities.NormalizeUserDictionaryWord(node.InnerText);
+                        if (s.Length > 0 && !userWordList.Contains(s))
                         {
                             userWordList.Add(s);
                         }
@@ -54,7 +55,11 @@ public static class UserWordsHelper
             return false;
         }
 
-        word = word.Trim();
+        word = Utilities.NormalizeUserDictionaryWord(word);
+        if (word.Length == 0)
+        {
+            return false;
+        }
 
         var words = new List<string>();
         var userWordFileName = LoadUserWordList(words, languageName);
@@ -76,6 +81,12 @@ public static class UserWordsHelper
 
     public static bool RemoveWord(string word, string languageName)
     {
+        word = Utilities.NormalizeUserDictionaryWord(word);
+        if (word.Length == 0)
+        {
+            return false;
+        }
+
         var words = new List<string>();
         var userWordFileName = LoadUserWordList(words, languageName);
         if (!words.Contains(word))

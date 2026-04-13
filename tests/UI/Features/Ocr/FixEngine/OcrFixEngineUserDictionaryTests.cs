@@ -7,18 +7,22 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
 using System;
 using System.IO;
+using System.Text;
 
 namespace UITests.Features.Ocr.FixEngine;
 
 public class OcrFixEngineUserDictionaryTests : IDisposable
 {
     private const string LanguageName = "en_US";
+    private const string HangulWord = "매트릭스의";
     private readonly string _testWord = $"zzzxqvnonceword{Guid.NewGuid():N}".ToLowerInvariant();
 
     public OcrFixEngineUserDictionaryTests()
     {
         Directory.CreateDirectory(Se.DictionariesFolder);
         UserWordsHelper.RemoveWord(_testWord, LanguageName);
+        UserWordsHelper.RemoveWord(HangulWord.Normalize(NormalizationForm.FormC), LanguageName);
+        UserWordsHelper.RemoveWord(HangulWord.Normalize(NormalizationForm.FormD), LanguageName);
     }
 
     [Fact]
@@ -32,7 +36,7 @@ public class OcrFixEngineUserDictionaryTests : IDisposable
         items[0].Text = _testWord;
 
         var spellCheckManager = new SpellCheckManager();
-        IOcrFixEngine2 ocrFixEngine = new OcrFixEngine2(spellCheckManager);
+        IOcrFixEngine ocrFixEngine = new OcrFixEngine(spellCheckManager);
         ocrFixEngine.Initialize(items, "eng", new SpellCheckDictionaryDisplay
         {
             Name = "English [en_US]",
@@ -50,9 +54,43 @@ public class OcrFixEngineUserDictionaryTests : IDisposable
         Assert.True(afterAddWord.IsSpellCheckedOk);
     }
 
+    [Fact]
+    public void AddUserWord_ShouldMatchVisuallyIdenticalHangulAcrossNormalizationForms()
+    {
+        var nfcWord = HangulWord.Normalize(NormalizationForm.FormC);
+        var nfdWord = HangulWord.Normalize(NormalizationForm.FormD);
+
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph(new TimeCode(0), new TimeCode(1000), nfcWord));
+
+        var ocrSubtitle = new OcrSubtitleDummy(subtitle);
+        var items = ocrSubtitle.MakeOcrSubtitleItems();
+        items[0].Text = nfcWord;
+
+        var spellCheckManager = new SpellCheckManager();
+        IOcrFixEngine ocrFixEngine = new OcrFixEngine(spellCheckManager);
+        ocrFixEngine.Initialize(items, "eng", new SpellCheckDictionaryDisplay
+        {
+            Name = "English [en_US]",
+            DictionaryFileName = GetEnglishDictionaryFileName(),
+        });
+
+        var beforeAddResult = ocrFixEngine.FixOcrErrors(0, items[0], doTryToGuessUnknownWords: false);
+        var beforeAddWord = Assert.Single(beforeAddResult.Words, w => w.LinePartType == OcrFixLinePartType.Word);
+        Assert.False(beforeAddWord.IsSpellCheckedOk);
+
+        Assert.True(ocrFixEngine.AddUserWord(nfdWord));
+
+        var afterAddResult = ocrFixEngine.FixOcrErrors(0, items[0], doTryToGuessUnknownWords: false);
+        var afterAddWord = Assert.Single(afterAddResult.Words, w => w.LinePartType == OcrFixLinePartType.Word);
+        Assert.True(afterAddWord.IsSpellCheckedOk);
+    }
+
     public void Dispose()
     {
         UserWordsHelper.RemoveWord(_testWord, LanguageName);
+        UserWordsHelper.RemoveWord(HangulWord.Normalize(NormalizationForm.FormC), LanguageName);
+        UserWordsHelper.RemoveWord(HangulWord.Normalize(NormalizationForm.FormD), LanguageName);
     }
 
     private static string GetEnglishDictionaryFileName()
