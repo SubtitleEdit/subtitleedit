@@ -381,7 +381,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowStopButton, nameof(_vm.ShowStopButton)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowFullscreenButton, nameof(_vm.ShowFullscreenButton)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoOpenVideoFile, nameof(_vm.AutoOpenVideoFile)),
-            new SettingsItem(Se.Language.Options.Settings.DownloadMpv, () => new StackPanel
+            new SettingsItem(!_vm.IsLibMpvDownloadVisible, Se.Language.Options.Settings.DownloadMpv, () => new StackPanel
             {
                 Children =
                 {
@@ -412,10 +412,9 @@ public class SettingsPage : UserControl
                         FontSize = 10,
                     }
                 },
-                [!StackPanel.IsVisibleProperty] = new Binding(nameof(_vm.IsLibMpvDownloadVisible)) { Source = _vm }
             }),
             new SettingsItem(Se.Language.Options.Settings.SubtitlePreviewProperties, () => MakeMpvPreviewSettings(_vm)),
-            new SettingsItem(Se.Language.Options.Settings.DownloadVlc, () => new StackPanel
+            new SettingsItem(!_vm.IsLibVlcDownloadVisible, Se.Language.Options.Settings.DownloadVlc, () => new StackPanel
             {
                 Children =
                 {
@@ -437,7 +436,6 @@ public class SettingsPage : UserControl
                         }
                     },
                 },
-                [!StackPanel.IsVisibleProperty] = new Binding(nameof(_vm.IsLibVlcDownloadVisible)) { Source = _vm }
             }),
 
         ]));
