@@ -776,9 +776,24 @@ public partial class MainViewModel :
     private void SetLayout(int layoutNumber)
     {
         var idx = SubtitleGrid.SelectedIndex;
+        var savedAudioTrack = _audioTrack;
         Se.Settings.General.LayoutNumber = InitLayout.MakeLayout(MainView!, this, layoutNumber);
         SelectAndScrollToRow(Math.Max(0, idx));
         RefreshSubtitlePreview();
+
+        if (savedAudioTrack != null && !string.IsNullOrEmpty(_videoFileName))
+        {
+            Dispatcher.UIThread.Post(async () =>
+            {
+                var vp = GetVideoPlayerControl();
+                if (vp?.VideoPlayer is LibMpvDynamicPlayer mpv)
+                {
+                    await vp.WaitForPlayersReadyAsync();
+                    mpv.SetAudioTrack(savedAudioTrack.Id);
+                    var _ = Task.Run(LoadAudioTrackMenuItems);
+                }
+            });
+        }
     }
 
     private void RefreshSubtitlePreview()
