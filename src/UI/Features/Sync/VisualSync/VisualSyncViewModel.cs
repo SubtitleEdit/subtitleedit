@@ -56,8 +56,8 @@ public partial class VisualSyncViewModel : ObservableObject
         VideoInfo = string.Empty;
         AdjustInfo = string.Empty;
         _videoFileName = string.Empty;
-        VideoPlayerControlLeft = new VideoPlayerControl(new VideoPlayerInstanceNone());
-        VideoPlayerControlRight = new VideoPlayerControl(new VideoPlayerInstanceNone());
+        VideoPlayerControlLeft = new VideoPlayerControl(new EmptyVideoPlayer());
+        VideoPlayerControlRight = new VideoPlayerControl(new EmptyVideoPlayer());
         AudioVisualizerLeft = new AudioVisualizer();
         AudioVisualizerRight = new AudioVisualizer();
         ComboBoxLeft = new ComboBox();
@@ -140,8 +140,8 @@ public partial class VisualSyncViewModel : ObservableObject
         _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
         _positionTimer.Tick += (s, e) =>
         {
-            UpdateAudioVisualizer(VideoPlayerControlLeft.VideoPlayerInstance, AudioVisualizerLeft, SelectedParagraphLeftIndex);
-            UpdateAudioVisualizer(VideoPlayerControlRight.VideoPlayerInstance, AudioVisualizerRight, SelectedParagraphRightIndex);
+            UpdateAudioVisualizer(VideoPlayerControlLeft.VideoPlayer, AudioVisualizerLeft, SelectedParagraphLeftIndex);
+            UpdateAudioVisualizer(VideoPlayerControlRight.VideoPlayer, AudioVisualizerRight, SelectedParagraphRightIndex);
 
             if (_updateAudioVisualizer)
             {
@@ -154,7 +154,7 @@ public partial class VisualSyncViewModel : ObservableObject
     }
 
     private void UpdateAudioVisualizer(
-        IVideoPlayerInstance vp,
+        IVideoPlayer vp,
         AudioVisualizer av,
         int selectedParagraphIndex)
     {
@@ -443,9 +443,9 @@ public partial class VisualSyncViewModel : ObservableObject
     private async Task PlayAndBack(VideoPlayerControl videoPlayer, int milliseconds)
     {
         var originalPosition = videoPlayer.Position;
-        videoPlayer.VideoPlayerInstance.Play();
+        videoPlayer.VideoPlayer.Play();
         await Task.Delay(milliseconds);
-        videoPlayer.VideoPlayerInstance.Pause();
+        videoPlayer.VideoPlayer.Pause();
         videoPlayer.Position = originalPosition;
     }
 
@@ -477,8 +477,8 @@ public partial class VisualSyncViewModel : ObservableObject
     internal void OnClosing()
     {
         _positionTimer.Stop();
-        VideoPlayerControlLeft.VideoPlayerInstance.CloseFile();
-        VideoPlayerControlRight.VideoPlayerInstance.CloseFile();
+        VideoPlayerControlLeft.VideoPlayer.CloseFile();
+        VideoPlayerControlRight.VideoPlayer.CloseFile();
     }
 
     [RelayCommand]

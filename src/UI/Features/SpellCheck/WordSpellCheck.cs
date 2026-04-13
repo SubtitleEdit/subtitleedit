@@ -30,7 +30,10 @@ public sealed class WordSpellCheck : IDoSpell, IDisposable
             try
             {
                 EnsureDocumentOpen();
-                _managedDocument!.Content.LanguageID = value.LanguageId;
+                if (value != null)
+                {
+                    _managedDocument!.Content.LanguageID = value.LanguageId;
+                }
             }
             catch
             {

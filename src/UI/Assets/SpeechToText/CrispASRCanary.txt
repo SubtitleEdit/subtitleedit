@@ -1,9 +1,9 @@
 ﻿
-🐦 Parakeet
+🐤 Canary
 
-Type: FastConformer + TDT (transducer-style)
-Focus: ⚡ Speed + efficiency
-Strengths: Very fast
+Type: FastConformer + Transformer decoder
+Focus: 🧠 Accuracy + multilingual + translation
+Strengths: Text quality (punctuation, casing)
 
   -h,        --help                 [default] show this help message and exit
   -t N,      --threads N            [4      ] number of threads to use during computation

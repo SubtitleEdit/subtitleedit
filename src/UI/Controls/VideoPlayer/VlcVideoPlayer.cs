@@ -7,7 +7,7 @@
 
 //namespace Nikse.SubtitleEdit.Controls.VideoPlayer;
 
-//public class VideoPlayerInstanceVlc : IVideoPlayerInstance
+//public class VlcVideoPlayer : IVideoPlayer
 //{
 //    public string Name => "vlc";
 
@@ -67,7 +67,7 @@
 //    public MediaPlayer? MediaPlayerVlc { get; set; }
 //    public LibVLC LibVLC { get; internal set; }
 
-//    public VideoPlayerInstanceVlc()
+//    public VlcVideoPlayer()
 //    {
 //        MediaPlayerVlc?.Dispose();
 //        LibVLC?.Dispose();

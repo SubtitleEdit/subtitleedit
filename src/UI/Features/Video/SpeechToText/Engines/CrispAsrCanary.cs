@@ -9,29 +9,41 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
-public class CrispAsrParakeet : ISpeechToTextEngine
+public class CrispAsrCanary : ISpeechToTextEngine
 {
-    public static string StaticName => "Crisp ASR Parakeet";
+    public static string StaticName => "Crisp ASR Canary";
     public string Name => StaticName;
-    public string Choice => WhisperChoice.CrispAsrParakeet;
+    public string Choice => WhisperChoice.CrispAsrCanary;
     public string Url => "https://github.com/CrispStrobe/CrispASR";
 
     public List<WhisperLanguage> Languages =>
        new()
        {
+            new WhisperLanguage("bg", "bulgarian"),
+            new WhisperLanguage("hr", "croatian"),
+            new WhisperLanguage("cs", "czech"),
+            new WhisperLanguage("da", "danish"),
+            new WhisperLanguage("nl", "dutch"),
             new WhisperLanguage("en", "english"),
-            new WhisperLanguage("es", "spanish"),
+            new WhisperLanguage("et", "estonian"),
+            new WhisperLanguage("fi", "finnish"),
             new WhisperLanguage("fr", "french"),
             new WhisperLanguage("de", "german"),
+            new WhisperLanguage("el", "greek"),
+            new WhisperLanguage("hu", "hungarian"),
             new WhisperLanguage("it", "italian"),
-            new WhisperLanguage("pt", "portuguese"),
-            new WhisperLanguage("zh", "chinese"),
-            new WhisperLanguage("ja", "japanese"),
-            new WhisperLanguage("ko", "korean"),
-            new WhisperLanguage("ru", "russian"),
+            new WhisperLanguage("lv", "latvian"),
+            new WhisperLanguage("lt", "lithuanian"),
+            new WhisperLanguage("mt", "maltese"),
             new WhisperLanguage("pl", "polish"),
-            new WhisperLanguage("tr", "turkish"),
-            new WhisperLanguage("nl", "dutch"),
+            new WhisperLanguage("pt", "portuguese"),
+            new WhisperLanguage("ro", "romanian"),
+            new WhisperLanguage("sk", "slovak"),
+            new WhisperLanguage("sl", "slovenian"),
+            new WhisperLanguage("es", "spanish"),
+            new WhisperLanguage("sv", "swedish"),
+            new WhisperLanguage("ru", "russian"),
+            new WhisperLanguage("uk", "ukrainian"),
        };
 
     public List<WhisperModel> Models =>
@@ -39,38 +51,38 @@ public class CrispAsrParakeet : ISpeechToTextEngine
        {
             new WhisperModel
             {
-                Name = "parakeet-tdt-0.6b-v3-q4_k.gguf",
-                Size = "489 MB",
+                Name = "canary-1b-v2-q4_k.gguf",
+                Size = "705 MB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/parakeet-tdt-0.6b-v3-GGUF/resolve/main/parakeet-tdt-0.6b-v3-q4_k.gguf",
+                    "https://huggingface.co/cstr/canary-1b-v2-GGUF/resolve/main/canary-1b-v2-q4_k.gguf",
                 ],
             },
             new WhisperModel
             {
-                Name = "parakeet-tdt-0.6b-v3-q5_0.gguf",
-                Size = "541 MB",
+                Name = "canary-1b-v2-q5_0.gguf",
+                Size = "815 MB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/parakeet-tdt-0.6b-v3-GGUF/resolve/main/parakeet-tdt-0.6b-v3-q5_0.gguf",
+                    "https://huggingface.co/cstr/canary-1b-v2-GGUF/resolve/main/canary-1b-v2-q5_0.gguf",
                 ],
             },
             new WhisperModel
             {
-                Name = "parakeet-tdt-0.6b-v3-q8_0.gguf",
-                Size = "745 MB",
+                Name = "canary-1b-v2-q8_0.gguf",
+                Size = "1.14 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/parakeet-tdt-0.6b-v3-GGUF/resolve/main/parakeet-tdt-0.6b-v3-q8_0.gguf",
+                    "https://huggingface.co/cstr/canary-1b-v2-GGUF/resolve/main/canary-1b-v2-q8_0.gguf",
                 ],
             },
             new WhisperModel
             {
-                Name = "parakeet-tdt-0.6b-v3.gguf",
-                Size = "1.26 GB",
+                Name = "canary-1b-v2.gguf",
+                Size = "1.97 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/parakeet-tdt-0.6b-v3-GGUF/resolve/main/parakeet-tdt-0.6b-v3.gguf",
+                    "https://huggingface.co/cstr/canary-1b-v2-GGUF/resolve/main/canary-1b-v2.gguf",
                 ],
             },
        };

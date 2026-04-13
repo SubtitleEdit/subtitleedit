@@ -9,29 +9,46 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
-public class CrispAsrParakeet : ISpeechToTextEngine
+public class CrispAsrQwen3 : ISpeechToTextEngine
 {
-    public static string StaticName => "Crisp ASR Parakeet";
+    public static string StaticName => "Crisp ASR Qwen3";
     public string Name => StaticName;
-    public string Choice => WhisperChoice.CrispAsrParakeet;
+    public string Choice => WhisperChoice.CrispAsrQwen3;
     public string Url => "https://github.com/CrispStrobe/CrispASR";
 
     public List<WhisperLanguage> Languages =>
        new()
        {
-            new WhisperLanguage("en", "english"),
-            new WhisperLanguage("es", "spanish"),
-            new WhisperLanguage("fr", "french"),
-            new WhisperLanguage("de", "german"),
-            new WhisperLanguage("it", "italian"),
-            new WhisperLanguage("pt", "portuguese"),
             new WhisperLanguage("zh", "chinese"),
-            new WhisperLanguage("ja", "japanese"),
+            new WhisperLanguage("en", "english"),
+            new WhisperLanguage("yue", "cantonese"),
+            new WhisperLanguage("ar", "arabic"),
+            new WhisperLanguage("de", "german"),
+            new WhisperLanguage("fr", "french"),
+            new WhisperLanguage("es", "spanish"),
+            new WhisperLanguage("pt", "portuguese"),
+            new WhisperLanguage("id", "indonesian"),
+            new WhisperLanguage("it", "italian"),
             new WhisperLanguage("ko", "korean"),
             new WhisperLanguage("ru", "russian"),
-            new WhisperLanguage("pl", "polish"),
+            new WhisperLanguage("th", "thai"),
+            new WhisperLanguage("vi", "vietnamese"),
+            new WhisperLanguage("ja", "japanese"),
             new WhisperLanguage("tr", "turkish"),
+            new WhisperLanguage("hi", "hindi"),
+            new WhisperLanguage("ms", "malay"),
             new WhisperLanguage("nl", "dutch"),
+            new WhisperLanguage("sv", "swedish"),
+            new WhisperLanguage("da", "danish"),
+            new WhisperLanguage("fi", "finnish"),
+            new WhisperLanguage("pl", "polish"),
+            new WhisperLanguage("cs", "czech"),
+            new WhisperLanguage("fil", "filipino"),
+            new WhisperLanguage("fa", "persian"),
+            new WhisperLanguage("el", "greek"),
+            new WhisperLanguage("hu", "hungarian"),
+            new WhisperLanguage("mk", "macedonian"),
+            new WhisperLanguage("ro", "romanian"),
        };
 
     public List<WhisperModel> Models =>
@@ -39,38 +56,32 @@ public class CrispAsrParakeet : ISpeechToTextEngine
        {
             new WhisperModel
             {
-                Name = "parakeet-tdt-0.6b-v3-q4_k.gguf",
-                Size = "489 MB",
+                Name = "qwen3-asr-1.7b-q4_k.gguf",
+                Size = "2.3 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/parakeet-tdt-0.6b-v3-GGUF/resolve/main/parakeet-tdt-0.6b-v3-q4_k.gguf",
+                    "https://huggingface.co/cstr/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-q4_k.gguf",
+                    "https://huggingface.co/cstr/qwen3-forced-aligner-0.6b-GGUF/resolve/main/qwen3-forced-aligner-0.6b-q8_0.gguf"
                 ],
             },
             new WhisperModel
             {
-                Name = "parakeet-tdt-0.6b-v3-q5_0.gguf",
-                Size = "541 MB",
+                Name = "qwen3-asr-1.7b-q8_0.gguf",
+                Size = "3.5 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/parakeet-tdt-0.6b-v3-GGUF/resolve/main/parakeet-tdt-0.6b-v3-q5_0.gguf",
+                    "https://huggingface.co/cstr/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-q8_0.gguf",
+                    "https://huggingface.co/cstr/qwen3-forced-aligner-0.6b-GGUF/resolve/main/qwen3-forced-aligner-0.6b-q8_0.gguf"
                 ],
             },
             new WhisperModel
             {
-                Name = "parakeet-tdt-0.6b-v3-q8_0.gguf",
-                Size = "745 MB",
+                Name = "qwen3-asr-1.7b-q8_0.gguf",
+                Size = "5.7 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/parakeet-tdt-0.6b-v3-GGUF/resolve/main/parakeet-tdt-0.6b-v3-q8_0.gguf",
-                ],
-            },
-            new WhisperModel
-            {
-                Name = "parakeet-tdt-0.6b-v3.gguf",
-                Size = "1.26 GB",
-                Urls =
-                [
-                    "https://huggingface.co/cstr/parakeet-tdt-0.6b-v3-GGUF/resolve/main/parakeet-tdt-0.6b-v3.gguf",
+                    "https://huggingface.co/cstr/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-q8_0.gguf",
+                    "https://huggingface.co/cstr/qwen3-forced-aligner-0.6b-GGUF/resolve/main/qwen3-forced-aligner-0.6b-q8_0.gguf"
                 ],
             },
        };

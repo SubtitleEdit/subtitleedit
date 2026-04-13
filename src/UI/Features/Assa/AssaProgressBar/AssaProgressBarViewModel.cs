@@ -587,7 +587,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         await VideoPlayerControl.WaitForPlayersReadyAsync();
         Dispatcher.UIThread.Post(() =>
         {
-            _mpvPlayer = VideoPlayerControl.VideoPlayerInstance as LibMpvDynamicPlayer;
+            _mpvPlayer = VideoPlayerControl.VideoPlayer as LibMpvDynamicPlayer;
         });
     }
 }

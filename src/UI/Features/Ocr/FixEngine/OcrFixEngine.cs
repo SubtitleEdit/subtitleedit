@@ -395,9 +395,9 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             return true;
         }
 
-        if (s.Contains("-"))
+        if (s.Contains('-'))
         {
-            var parts = s.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            var parts = s.Split('-', StringSplitOptions.RemoveEmptyEntries);
             foreach (var part in parts)
             {
                 if (!_spellCheckManager.IsWordCorrect(part))

@@ -233,6 +233,7 @@ public class SpellCheckWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Width = 200,
         };
+        comboBoxDictionary.SelectionChanged += (_, _) => vm.OnDictionaryChanged();
 
         var buttonDictionaryBrowse = new Button
         {

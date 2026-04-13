@@ -8,12 +8,12 @@ public class SeSpellCheck
     public string SpellCheckProvider { get; set; }
 
     public string? LastLanguageDictionaryFile { get; set; }
+    public string? LastLanguageDictionaryName { get; set; }
     public bool PromptForUnknownOneLetterWords { get; set; } = false;
     public bool TreatInQuoteASIng { get; set; } = true;
 
     public SeSpellCheck()
     {
-        SpellCheckProvider = SpellCheckHunspell;
-        
+        SpellCheckProvider = SpellCheckHunspell;        
     }
 }

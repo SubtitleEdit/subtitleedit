@@ -2,7 +2,7 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-beta15 (xth April 2026)
+v5.0.0-beta15 (12th April 2026)
 
 * Update Italian translation - thx bovirus
 * Fix for import source-view text with BOM - thx MG240

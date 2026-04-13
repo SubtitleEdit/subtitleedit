@@ -76,7 +76,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
         _tempSubtitleFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".ass");
         _oldSubtitleText = string.Empty;
 
-        VideoPlayerControl = new VideoPlayerControl(new VideoPlayerInstanceNone());
+        VideoPlayerControl = new VideoPlayerControl(new EmptyVideoPlayer());
         ComboBoxParagraphs = new ComboBox();
         VideoPlayerControl.SurfacePointerPressed += (_, _) => VideoPlayerControl.TogglePlayPause();
     }
@@ -159,7 +159,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
 
         Dispatcher.UIThread.Post(() =>
         {
-            _mpvPlayer = VideoPlayerControl.VideoPlayerInstance as LibMpvDynamicPlayer;
+            _mpvPlayer = VideoPlayerControl.VideoPlayer as LibMpvDynamicPlayer;
 
             if (Paragraphs.Count > 0)
             {
@@ -174,7 +174,7 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
     internal void OnClosing()
     {
         _positionTimer.Stop();
-        VideoPlayerControl.VideoPlayerInstance.CloseFile();
+        VideoPlayerControl.VideoPlayer.CloseFile();
         try
         {
             if (File.Exists(_tempSubtitleFileName))
@@ -216,9 +216,9 @@ public partial class OpenSecondarySubtitleViewModel : ObservableObject
     private static async Task PlayAndBackVideo(VideoPlayerControl videoPlayer, int milliseconds)
     {
         var originalPosition = videoPlayer.Position;
-        videoPlayer.VideoPlayerInstance.Play();
+        videoPlayer.VideoPlayer.Play();
         await Task.Delay(milliseconds);
-        videoPlayer.VideoPlayerInstance.Pause();
+        videoPlayer.VideoPlayer.Pause();
         videoPlayer.Position = originalPosition;
     }
 

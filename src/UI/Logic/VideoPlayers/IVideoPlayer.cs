@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers;
 
-public interface IVideoPlayerInstance
+public interface IVideoPlayer
 {
     string Name { get; }
     string FileName { get; }

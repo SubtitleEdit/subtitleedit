@@ -26,9 +26,9 @@ public static class InitVideoPlayer
         double position = 0;
         if (vm.VideoPlayerControl != null)
         {
-            mediaFile = vm.VideoPlayerControl.VideoPlayerInstance.FileName;
-            position = vm.VideoPlayerControl.VideoPlayerInstance.Position;
-            vm.VideoPlayerControl.VideoPlayerInstance.CloseFile();
+            mediaFile = vm.VideoPlayerControl.VideoPlayer.FileName;
+            position = vm.VideoPlayerControl.VideoPlayer.Position;
+            vm.VideoPlayerControl.VideoPlayer.CloseFile();
             vm.VideoPlayerControl.Content = null;
             vm.VideoPlayerControl = null;
         }
@@ -125,11 +125,11 @@ public static class InitVideoPlayer
                 }
             }
 
-            return MakeVideoPlayerControl(new VideoPlayerInstanceNone(), new Label());
+            return MakeVideoPlayerControl(new EmptyVideoPlayer(), new Label());
         }
         catch
         {
-            return MakeVideoPlayerControl(new VideoPlayerInstanceNone(), new Label());
+            return MakeVideoPlayerControl(new EmptyVideoPlayer(), new Label());
         }
 
         throw new InvalidOperationException("Failed to create video player control.");
@@ -157,7 +157,7 @@ public static class InitVideoPlayer
         return MakeVideoPlayer();
     }
 
-    private static VideoPlayerControl MakeVideoPlayerControl(IVideoPlayerInstance videoPlayer, Control view)
+    private static VideoPlayerControl MakeVideoPlayerControl(IVideoPlayer videoPlayer, Control view)
     {
         return new VideoPlayerControl(videoPlayer)
         {

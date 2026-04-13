@@ -9,29 +9,32 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
-public class CrispAsrParakeet : ISpeechToTextEngine
+public class CrispAsrCohere : ISpeechToTextEngine
 {
-    public static string StaticName => "Crisp ASR Parakeet";
+    public static string StaticName => "Crisp ASR Cohere";
     public string Name => StaticName;
-    public string Choice => WhisperChoice.CrispAsrParakeet;
+    public string Choice => WhisperChoice.CrispAsrCohere;
     public string Url => "https://github.com/CrispStrobe/CrispASR";
 
     public List<WhisperLanguage> Languages =>
        new()
        {
             new WhisperLanguage("en", "english"),
-            new WhisperLanguage("es", "spanish"),
             new WhisperLanguage("fr", "french"),
             new WhisperLanguage("de", "german"),
             new WhisperLanguage("it", "italian"),
+            new WhisperLanguage("es", "spanish"),
             new WhisperLanguage("pt", "portuguese"),
+            new WhisperLanguage("el", "greek"),
+            new WhisperLanguage("nl", "dutch"),
+            new WhisperLanguage("pl", "polish"),
+
             new WhisperLanguage("zh", "chinese"),
             new WhisperLanguage("ja", "japanese"),
             new WhisperLanguage("ko", "korean"),
-            new WhisperLanguage("ru", "russian"),
-            new WhisperLanguage("pl", "polish"),
-            new WhisperLanguage("tr", "turkish"),
-            new WhisperLanguage("nl", "dutch"),
+            new WhisperLanguage("vi", "vietnamese"),
+
+            new WhisperLanguage("ar", "arabic"),
        };
 
     public List<WhisperModel> Models =>
@@ -39,40 +42,59 @@ public class CrispAsrParakeet : ISpeechToTextEngine
        {
             new WhisperModel
             {
-                Name = "parakeet-tdt-0.6b-v3-q4_k.gguf",
-                Size = "489 MB",
+                Name = "cohere-transcribe-q4_k.gguf",
+                Size = "1.51 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/parakeet-tdt-0.6b-v3-GGUF/resolve/main/parakeet-tdt-0.6b-v3-q4_k.gguf",
+                    "https://huggingface.co/cstr/cohere-transcribe-03-2026-GGUF/resolve/main/cohere-transcribe-q4_k.gguf",
                 ],
             },
             new WhisperModel
             {
-                Name = "parakeet-tdt-0.6b-v3-q5_0.gguf",
-                Size = "541 MB",
+                Name = "cohere-transcribe-q5_0.gguf",
+                Size = "1.74 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/parakeet-tdt-0.6b-v3-GGUF/resolve/main/parakeet-tdt-0.6b-v3-q5_0.gguf",
+                    "https://huggingface.co/cstr/cohere-transcribe-03-2026-GGUF/resolve/main/cohere-transcribe-q5_0.gguf",
                 ],
             },
             new WhisperModel
             {
-                Name = "parakeet-tdt-0.6b-v3-q8_0.gguf",
-                Size = "745 MB",
+                Name = "cohere-transcribe-q5_1.gguf",
+                Size = "1.85 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/parakeet-tdt-0.6b-v3-GGUF/resolve/main/parakeet-tdt-0.6b-v3-q8_0.gguf",
+                    "https://huggingface.co/cstr/cohere-transcribe-03-2026-GGUF/resolve/main/cohere-transcribe-q5_1.gguf",
                 ],
             },
             new WhisperModel
             {
-                Name = "parakeet-tdt-0.6b-v3.gguf",
-                Size = "1.26 GB",
+                Name = "cohere-transcribe-q6_k.gguf",
+                Size = "1.98 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/parakeet-tdt-0.6b-v3-GGUF/resolve/main/parakeet-tdt-0.6b-v3.gguf",
+                    "https://huggingface.co/cstr/cohere-transcribe-03-2026-GGUF/resolve/main/cohere-transcribe-q6_k.gguf",
                 ],
             },
+            new WhisperModel
+            {
+                Name = "cohere-transcribe-q8_0.gguf",
+                Size = "2.42 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/cohere-transcribe-03-2026-GGUF/resolve/main/cohere-transcribe-q8_0.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "cohere-transcribe.gguf",
+                Size = "4.14 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/cohere-transcribe-03-2026-GGUF/resolve/main/cohere-transcribe.gguf",
+                ],
+            },
+
        };
 
     public string Extension => string.Empty;

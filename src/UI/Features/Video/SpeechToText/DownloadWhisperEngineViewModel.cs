@@ -48,8 +48,8 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
     private IndeterminateProgressHelper? _indeterminateProgressHelper;
 
     public DownloadWhisperEngineViewModel(
-        IWhisperDownloadService whisperDownloadService, 
-        IZipUnpacker zipUnpacker, 
+        IWhisperDownloadService whisperDownloadService,
+        IZipUnpacker zipUnpacker,
         IChatLlmDownloadService chatLlmDownloadService,
         IQwen3AsrCppDownloadService qwen3AsrCppDownloadService,
         ICrispAsrDownloadService crispAsrDownloadService)
@@ -146,12 +146,12 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                 else if (Engine.Name == WhisperEngineCTranslate2.StaticName)
                 {
                     var dir = Engine.GetAndCreateWhisperFolder();
-                    
+
                     TitleText = string.Format(Se.Language.General.UnpackingX, Engine.Name);
                     StartIndeterminateProgress();
                     Unpack(dir, string.Empty);
                     StopIndeterminateProgress();
-                   
+
                     if (_cancellationTokenSource.IsCancellationRequested)
                     {
                         Cancel();
@@ -222,7 +222,7 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                     MacHelper.MakeExecutable(path);
                 }
             }
-            
+
             if (Engine is WhisperEngineCTranslate2 cTranslate2)
             {
                 path = Path.Combine(folder, cTranslate2.GetExecutable());
@@ -231,7 +231,7 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                     MacHelper.MakeExecutable(path);
                 }
             }
-            
+
             if (Engine is ChatLlmCppEngine chatLlmCppEngine)
             {
                 path = Path.Combine(folder, chatLlmCppEngine.GetExecutableFileName());
@@ -258,6 +258,33 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                     MacHelper.MakeExecutable(path);
                 }
             }
+
+            if (Engine is CrispAsrCanary)
+            {
+                path = Path.Combine(folder, CrispAsrCanary.GetExecutableFileName());
+                if (File.Exists(path))
+                {
+                    MacHelper.MakeExecutable(path);
+                }
+            }
+
+            if (Engine is CrispAsrCohere)
+            {
+                path = Path.Combine(folder, CrispAsrCohere.GetExecutableFileName());
+                if (File.Exists(path))
+                {
+                    MacHelper.MakeExecutable(path);
+                }
+            }
+
+            if (Engine is CrispAsrQwen3)
+            {
+                path = Path.Combine(folder, CrispAsrQwen3.GetExecutableFileName());
+                if (File.Exists(path))
+                {
+                    MacHelper.MakeExecutable(path);
+                }
+            }
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
@@ -275,7 +302,7 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                     LinuxHelper.MakeExecutable(path);
                 }
             }
-            
+
             if (Engine is ChatLlmCppEngine chatLlmCppEngine)
             {
                 path = Path.Combine(folder, chatLlmCppEngine.GetExecutableFileName());
@@ -294,6 +321,15 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                 }
             }
 
+            if (Engine is WhisperEngineCTranslate2)
+            {
+                path = Path.Combine(folder, WhisperEngineCTranslate2.GetExecutableFileName());
+                if (File.Exists(path))
+                {
+                    LinuxHelper.MakeExecutable(path);
+                }
+            }
+
             if (Engine is CrispAsrParakeet)
             {
                 path = Path.Combine(folder, CrispAsrParakeet.GetExecutableFileName());
@@ -303,9 +339,27 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                 }
             }
 
-            if (Engine is WhisperEngineCTranslate2)
+            if (Engine is CrispAsrCanary)
             {
-                path = Path.Combine(folder, WhisperEngineCTranslate2.GetExecutableFileName());
+                path = Path.Combine(folder, CrispAsrCanary.GetExecutableFileName());
+                if (File.Exists(path))
+                {
+                    LinuxHelper.MakeExecutable(path);
+                }
+            }
+
+            if (Engine is CrispAsrCohere)
+            {
+                path = Path.Combine(folder, CrispAsrCohere.GetExecutableFileName());
+                if (File.Exists(path))
+                {
+                    LinuxHelper.MakeExecutable(path);
+                }
+            }
+
+            if (Engine is CrispAsrQwen3)
+            {
+                path = Path.Combine(folder, CrispAsrQwen3.GetExecutableFileName());
                 if (File.Exists(path))
                 {
                     LinuxHelper.MakeExecutable(path);
@@ -384,7 +438,7 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
             var dir = Engine.GetAndCreateWhisperFolder();
             _downloadTask = _qwen3AsrCppDownloadService.DownloadEngine(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
         }
-        else if (Engine is CrispAsrParakeet)
+        else if (Engine is CrispAsrParakeet or CrispAsrCanary)
         {
             _downloadTask = _crispAsrDownloadService.DownloadEngine(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
         }

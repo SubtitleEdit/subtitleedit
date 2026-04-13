@@ -154,10 +154,10 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             Engines.Add(new Qwen3AsrCppEngine());
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
-        {
-            Engines.Add(new CrispAsrParakeet());
-        }
+        Engines.Add(new CrispAsrParakeet());
+        Engines.Add(new CrispAsrCanary());
+        Engines.Add(new CrispAsrCohere());
+        //Engines.Add(new CrispAsrQwen3());
 
         SelectedEngine = Engines[0];
 
@@ -171,7 +171,12 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         ResultAudioClips = new List<AudioClip>();
 
         IsTranscribeEnabled = true;
-        IsTranslateVisible = SelectedEngine is not ChatLlmCppEngine and not Qwen3AsrCppEngine and not CrispAsrParakeet;
+        IsTranslateVisible = SelectedEngine is 
+            not ChatLlmCppEngine and 
+            not Qwen3AsrCppEngine and 
+            not CrispAsrParakeet and 
+            not CrispAsrCohere and 
+            not CrispAsrQwen3;
         Parameters = string.Empty;
         ConsoleLog = string.Empty;
         ProgressText = string.Empty;
@@ -1869,7 +1874,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         }
         _sw = Stopwatch.StartNew();
         LogToConsole(
-            $"Calling whisper ({settings.WhisperChoice}) with : {_whisperProcess.StartInfo.FileName} {_whisperProcess.StartInfo.Arguments}{Environment.NewLine}");
+            $"Calling speech-to-text ({settings.WhisperChoice}) with : {_whisperProcess.StartInfo.FileName} {_whisperProcess.StartInfo.Arguments}{Environment.NewLine}");
 
         _abort = false;
 
@@ -2004,8 +2009,159 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
 
             var crispModel = crispAsrParakeet.GetModelForCmdLine(model);
             var crispParams = string.IsNullOrWhiteSpace(crispArgs)
-                ? $"-m \"{crispModel}\" -f \"{waveFileName}\" --output-srt"
-                : $"-m \"{crispModel}\" -f \"{waveFileName}\" --output-srt {crispArgs}";
+                ? $"--backend parakeet -m \"{crispModel}\" -f \"{waveFileName}\" --output-srt"
+                : $"--backend parakeet -m \"{crispModel}\" -f \"{waveFileName}\" --output-srt {crispArgs}";
+
+            SeLogger.WhisperInfo($"{exe} {crispParams}");
+
+            var p = new Process
+            {
+                StartInfo = new ProcessStartInfo(exe, crispParams)
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    WorkingDirectory = Path.GetDirectoryName(exe),
+                }
+            };
+
+            if (dataReceivedHandler != null)
+            {
+                p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.RedirectStandardError = true;
+                p.OutputDataReceived += dataReceivedHandler;
+                p.ErrorDataReceived += dataReceivedHandler;
+            }
+
+#pragma warning disable CA1416
+            p.Start();
+#pragma warning restore CA1416
+
+            if (dataReceivedHandler != null)
+            {
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+            }
+
+            return p;
+        }
+
+
+        if (engine is CrispAsrCanary crispAsrCanary)
+        {
+            var exe = crispAsrCanary.GetExecutable();
+            var crispArgs = Se.Settings.Tools.AudioToText.WhisperCustomCommandLineArguments.Trim();
+            if (crispArgs == "--standard")
+            {
+                crispArgs = string.Empty;
+            }
+
+            var crispModel = crispAsrCanary.GetModelForCmdLine(model);
+            var crispParams = string.IsNullOrWhiteSpace(crispArgs)
+                ? $"--backend canary -l {SelectedLanguage?.Code ?? "en"} -m \"{crispModel}\" -f \"{waveFileName}\" --output-srt"
+                : $"--backend canary -l {SelectedLanguage?.Code ?? "en"} -m \"{crispModel}\" -f \"{waveFileName}\" --output-srt {crispArgs}";
+
+            SeLogger.WhisperInfo($"{exe} {crispParams}");
+
+            var p = new Process
+            {
+                StartInfo = new ProcessStartInfo(exe, crispParams)
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    WorkingDirectory = Path.GetDirectoryName(exe),
+                }
+            };
+
+            if (dataReceivedHandler != null)
+            {
+                p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.RedirectStandardError = true;
+                p.OutputDataReceived += dataReceivedHandler;
+                p.ErrorDataReceived += dataReceivedHandler;
+            }
+
+#pragma warning disable CA1416
+            p.Start();
+#pragma warning restore CA1416
+
+            if (dataReceivedHandler != null)
+            {
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+            }
+
+            return p;
+        }
+
+        if (engine is CrispAsrCohere crispAsrCohere)
+        {
+            var exe = crispAsrCohere.GetExecutable();
+            var crispArgs = Se.Settings.Tools.AudioToText.WhisperCustomCommandLineArguments.Trim();
+            if (crispArgs == "--standard")
+            {
+                crispArgs = string.Empty;
+            }
+
+            var crispModel = crispAsrCohere.GetModelForCmdLine(model);
+            var crispParams = string.IsNullOrWhiteSpace(crispArgs)
+                ? $"--backend cohere -l {SelectedLanguage?.Code ?? "en"} -m \"{crispModel}\" -f \"{waveFileName}\" --output-srt"
+                : $"--backend cohere -l {SelectedLanguage?.Code ?? "en"} -m \"{crispModel}\" -f \"{waveFileName}\" --output-srt {crispArgs}";
+
+            SeLogger.WhisperInfo($"{exe} {crispParams}");
+
+            var p = new Process
+            {
+                StartInfo = new ProcessStartInfo(exe, crispParams)
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    WorkingDirectory = Path.GetDirectoryName(exe),
+                }
+            };
+
+            if (dataReceivedHandler != null)
+            {
+                p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.RedirectStandardError = true;
+                p.OutputDataReceived += dataReceivedHandler;
+                p.ErrorDataReceived += dataReceivedHandler;
+            }
+
+#pragma warning disable CA1416
+            p.Start();
+#pragma warning restore CA1416
+
+            if (dataReceivedHandler != null)
+            {
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+            }
+
+            return p;
+        }
+
+        if (engine is CrispAsrQwen3 crispAsrQwen3)
+        {
+            var exe = crispAsrQwen3.GetExecutable();
+            var crispArgs = Se.Settings.Tools.AudioToText.WhisperCustomCommandLineArguments.Trim();
+            if (crispArgs == "--standard")
+            {
+                crispArgs = string.Empty;
+            }
+
+            var crispModel = crispAsrQwen3.GetModelForCmdLine(model);
+            var crispParams = string.IsNullOrWhiteSpace(crispArgs)
+                ? $"--backend cohere -l {SelectedLanguage?.Code ?? "en"} -m \"{crispModel}\" -f \"{waveFileName}\" --output-srt"
+                : $"--backend cohere -l {SelectedLanguage?.Code ?? "en"} -m \"{crispModel}\" -f \"{waveFileName}\" --output-srt {crispArgs}";
 
             SeLogger.WhisperInfo($"{exe} {crispParams}");
 
@@ -2527,7 +2683,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             Parameters = "--standard";
         }
 
-        IsTranslateVisible = !(engine is ChatLlmCppEngine or Qwen3AsrCppEngine or CrispAsrParakeet);
+        IsTranslateVisible = !(engine is ChatLlmCppEngine or Qwen3AsrCppEngine or CrispAsrParakeet or CrispAsrCohere or CrispAsrQwen3);
 
         SaveSettings();
     }

@@ -1,9 +1,8 @@
 ﻿
-🐦 Parakeet
+🧠 Qwen3
 
-Type: FastConformer + TDT (transducer-style)
-Focus: ⚡ Speed + efficiency
-Strengths: Very fast
+Type: Whisper-style encoder + Qwen3 LLM decoder
+Focus: 🌍 Multilingual + robustness + modern “speech LLM”
 
   -h,        --help                 [default] show this help message and exit
   -t N,      --threads N            [4      ] number of threads to use during computation

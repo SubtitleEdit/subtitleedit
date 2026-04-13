@@ -1,10 +1,10 @@
-﻿using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Controls.VideoPlayer;
 
-public class VideoPlayerInstanceNone : IVideoPlayerInstance
+public class EmptyVideoPlayer : IVideoPlayer
 {
     public string Name => string.Empty;
 
@@ -33,7 +33,7 @@ public class VideoPlayerInstanceNone : IVideoPlayerInstance
         }
     }
 
-    public double Speed 
+    public double Speed
     {
         get => 0;
         set
