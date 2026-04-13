@@ -5,6 +5,21 @@ Subtitle Edit Changelog
 v5.0.0-beta15 (12th April 2026)
 
 * Update Italian translation - thx bovirus
+* Add "edit/export" from ocr window - thx donjondejota-art
+* Add new langauge tags - thx potplayer-fanpack
+* Minor improvements for main layout
+* Fix IsSpelledCorrect splitting hyphenated words by space instead of dash - thx ivandrofly
+* Fix Word spell check - thx moob158
+* Fix grid sync when playing without waveform - thx vsemozhetbyt 
+* Fix display preview on video panel for audio files - thx benshgit 
+* Add Crisp ASR Parakeet, Canary, Cohere
+* Fix bugs in NextWordInDoNotBreakList - thx ivandrofly 
+
+-----------------------------------------------------------------------------------------------------
+
+v5.0.0-beta15 (12th April 2026)
+
+* Update Italian translation - thx bovirus
 * Fix for import source-view text with BOM - thx MG240
 * Fix OCR user dictionary add-actions - thx Hellbringer
 * Fix prompting for unknown words in Tesseract OCR - thx Ryu481
@@ -18,6 +33,7 @@ v5.0.0-beta15 (12th April 2026)
 * Try to add Word spell check - thx moob158
 
 -----------------------------------------------------------------------------------------------------
+
 v5.0.0-beta14 (8th April 2026)
 
 * Add Romanian translation - thx zildan
