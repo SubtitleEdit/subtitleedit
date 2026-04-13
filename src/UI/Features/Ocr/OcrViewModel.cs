@@ -535,6 +535,19 @@ public partial class OcrViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task ExportCurrentOcrItems()
+    {
+        if (Window == null || OcrSubtitleItems.Count == 0)
+        {
+            return;
+        }
+
+        var items = OcrSubtitleItems.ToList();
+        await _windowService.ShowDialogAsync<BinaryEditWindow, BinaryEditViewModel>(Window, vm => { vm.Initialize(items); });
+        _isCtrlDown = false;
+    }
+
+    [RelayCommand]
     private async Task InspectLine()
     {
         var item = SelectedOcrSubtitleItem;

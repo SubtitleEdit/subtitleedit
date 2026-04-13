@@ -48,6 +48,7 @@ public class NetflixCheckWhiteSpace : INetflixQualityChecker
                 AddWhiteSpaceWarning(p, controller, Se.Language.Tools.NetflixCheckAndFix.WhiteSpaceBeforePunctuation, m.Index + 1);
             }
 
+
             // 2+ consecutive spaces
             foreach (Match m in TwoPlusConsequentSpaces.Matches(p.Text))
             {
