@@ -5746,6 +5746,7 @@
     <RegEx find="pqn" replaceWith="pon" />
     <RegEx find="prouk" replaceWith="poruk" />
     <RegEx find="provizuje" replaceWith="provizira" />
+    <RegEx find="psm" replaceWith="pam" />
     <RegEx find="ptv" replaceWith="otv" />
     <RegEx find="pwn" replaceWith="pen" />
     <RegEx find="ralijs" replaceWith="rals" />
