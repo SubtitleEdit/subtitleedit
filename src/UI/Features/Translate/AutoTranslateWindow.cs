@@ -45,13 +45,10 @@ public class AutoTranslateWindow : Window
 
         var engineCombo = UiUtil.MakeComboBox(vm.AutoTranslators, vm, nameof(vm.SelectedAutoTranslator));
 
-        engineCombo.OnPropertyChanged(e =>
+        engineCombo.SelectionChanged += (s, e) =>
         {
-            if (e.Property == SelectingItemsControl.SelectedItemProperty)
-            {
-                vm.AutoTranslatorChanged(e.Sender);
-            }
-        });
+            vm.AutoTranslatorChanged(engineCombo);
+        };
 
         var sourceLangCombo = UiUtil.MakeComboBox(vm.SourceLanguages!, vm, nameof(vm.SelectedSourceLanguage));
         var targetLangCombo = UiUtil.MakeComboBox(vm.TargetLanguages!, vm, nameof(vm.SelectedTargetLanguage));

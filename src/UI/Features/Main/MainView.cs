@@ -44,10 +44,10 @@ public class MainView : ViewBase
             }
 
             _vm.Window.Closing += _vm.OnClosing;
-            _vm.Window.OnLoaded(e =>
+            _vm.Window.Loaded += (_, _) =>
             {
                 _vm.OnLoaded();
-            });
+            };
         }
 
         // load language
