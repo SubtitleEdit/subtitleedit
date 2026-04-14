@@ -1549,7 +1549,7 @@ public partial class OcrViewModel : ObservableObject
         }
     }
 
-    private Lock BatchLock = new Lock();
+    private readonly Lock BatchLock = new Lock();
 
     private void RunPaddleOcr(List<int> selectedIndices, OcrEngineType engineType, CancellationToken cancellationToken)
     {
@@ -2341,7 +2341,7 @@ public partial class OcrViewModel : ObservableObject
             if (DoPromptForUnknownWords && unknownWords.Count > 0)
             {
                 var tcs = new TaskCompletionSource<bool>();
-                Dispatcher.UIThread.Post(async () =>
+                Dispatcher.UIThread.Post(async void () =>
                 {
                     foreach (var unknownWord in unknownWords)
                     {
@@ -2368,18 +2368,20 @@ public partial class OcrViewModel : ObservableObject
                         }
                         else if (result.SkipAllPressed)
                         {
-                            _ocrFixEngine.SkipAll(unknownWord.Word.Word);
+                            _ocrFixEngine.SkipAll(result.Word);
                         }
                         else if (result.AddToNamesListPressed)
                         {
-                            _ocrFixEngine.AddName(unknownWord.Word.Word);
+                            _ocrFixEngine.AddName(result.Word);
                         }
                         else if (result.AddToUserDictionaryPressed)
                         {
                             if (SelectedDictionary != null)
                             {
-                                UserWordsHelper.AddToUserDictionary(unknownWord.Word.Word, SelectedDictionary.GetFiveLetterLanguageName() ?? "en_US");
+                                UserWordsHelper.AddToUserDictionary(result.Word, SelectedDictionary.GetFiveLetterLanguageName() ?? "en_US");
                             }
+
+                            _ocrFixEngine.ReloadNames();
                         }
                         else
                         {
@@ -2720,18 +2722,20 @@ public partial class OcrViewModel : ObservableObject
                             }
                             else if (result.SkipAllPressed)
                             {
-                                _ocrFixEngine.SkipAll(unknownWord.Word.Word);
+                                _ocrFixEngine.SkipAll(result.Word);
                             }
                             else if (result.AddToNamesListPressed)
                             {
-                                _ocrFixEngine.AddName(unknownWord.Word.Word);
+                                _ocrFixEngine.AddName(result.Word);
                             }
                             else if (result.AddToUserDictionaryPressed)
                             {
                                 if (SelectedDictionary != null)
                                 {
-                                    UserWordsHelper.AddToUserDictionary(unknownWord.Word.Word, SelectedDictionary.GetFiveLetterLanguageName() ?? "en_US");
+                                    UserWordsHelper.AddToUserDictionary(result.Word, SelectedDictionary.GetFiveLetterLanguageName() ?? "en_US");
                                 }
+
+                                _ocrFixEngine.ReloadNames();
                             }
                             else
                             {
