@@ -463,7 +463,7 @@ public partial class OcrViewModel : ObservableObject
 
         if (result.OkPressed)
         {
-            _ocrFixEngine.Reload();
+            _ocrFixEngine.ReloadNames();
         }
 
         _isCtrlDown = false;
@@ -483,7 +483,7 @@ public partial class OcrViewModel : ObservableObject
 
         if (result.OkPressed)
         {
-            _ocrFixEngine.Reload();
+            _ocrFixEngine.ReloadNames();
         }
 
         _isCtrlDown = false;
@@ -503,7 +503,7 @@ public partial class OcrViewModel : ObservableObject
 
         if (result.OkPressed)
         {
-            _ocrFixEngine.Reload();
+            _ocrFixEngine.ReloadNames();
         }
 
         _isCtrlDown = false;

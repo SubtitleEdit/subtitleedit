@@ -20,7 +20,7 @@ public interface IOcrFixEngine
     void ChangeAll(string from, string to);
     void SkipAll(string word);
     void AddName(string name);
-    void Reload();
+    List<string> ReloadNames();
 }
 
 public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
@@ -65,6 +65,10 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         _subtitles = subtitles;
         _threeLetterIsoLanguageName = threeLetterIsoLanguageName;
         _subtitle = GetSubtitle(subtitles);
+
+        var names = ReloadNames();
+        _wordSplitList = StringWithoutSpaceSplitToWords.LoadWordSplitList(Se.DictionariesFolder, _threeLetterIsoLanguageName, names);
+        _ocrFixReplaceList = OcrFixReplaceList2.FromLanguageId(_threeLetterIsoLanguageName);
     }
 
     public OcrFixLineResult FixOcrErrors(int index, OcrSubtitleItem item, bool doTryToGuessUnknownWords)
@@ -501,12 +505,11 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         _spellCheckWordLists.AddName(name.Trim());
     }
 
-    public void Reload()
+    public List<string> ReloadNames()
     {
-        _ocrFixReplaceList = OcrFixReplaceList2.FromLanguageId(_threeLetterIsoLanguageName);
         var names = _spellCheckWordLists.GetAllNames();
-        _wordSplitList = StringWithoutSpaceSplitToWords.LoadWordSplitList(Se.DictionariesFolder, _threeLetterIsoLanguageName, names);
         _spellCheckWordLists = new SpellCheckWordLists(_fiveLetterName, this);
+        return names;
     }
 }
 
