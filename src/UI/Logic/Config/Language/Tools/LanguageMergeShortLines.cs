@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
-using System;
+﻿using System;
 using static Nikse.SubtitleEdit.Features.Translate.MergeAndSplitHelper;
 
 namespace Nikse.SubtitleEdit.Logic.Config.Language;

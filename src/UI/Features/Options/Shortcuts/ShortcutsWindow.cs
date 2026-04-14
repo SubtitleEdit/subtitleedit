@@ -33,7 +33,7 @@ public class ShortcutsWindow : Window
 
         _searchBox = new TextBox
         {
-            Watermark = language.SearchShortcuts,
+            PlaceholderText = language.SearchShortcuts,
             Margin = new Thickness(10),
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,

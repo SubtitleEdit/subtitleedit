@@ -11,7 +11,7 @@ using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
-using Projektanker.Icons.Avalonia;
+using Optris.Icons.Avalonia;
 using System;
 using System.ComponentModel;
 using MenuItem = Avalonia.Controls.MenuItem;
@@ -512,6 +512,17 @@ public class OcrWindow : Window
         };
         menuItemBold.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
         flyout.Items.Add(menuItemBold);
+
+        flyout.Items.Add(new Separator());
+
+        var menuItemExport = new MenuItem
+        {
+            Header = Se.Language.Ocr.EditExportDotDotDot,
+            DataContext = vm,
+            Command = vm.ExportCurrentOcrItemsCommand,
+        };
+        menuItemExport.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
+        flyout.Items.Add(menuItemExport);
 
         vm.SubtitleGrid.ContextFlyout = flyout;
 

@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic.Config;
 using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
@@ -25,7 +26,7 @@ public class NetflixCheckMinDuration : INetflixQualityChecker
             {
                 if (p.DurationTotalMilliseconds < 500)
                 {
-                    string comment = "Minimum duration: 0.5 second";
+                    string comment = Se.Language.Tools.NetflixCheckAndFix.MinimumDurationJapanese;
                     controller.AddRecord(p, p.StartTime.ToHHMMSSFF(), p.DurationTotalSeconds.ToString(CultureInfo.InvariantCulture), comment);
                 }
                 continue;
@@ -43,7 +44,7 @@ public class NetflixCheckMinDuration : INetflixQualityChecker
                     fixedParagraph.EndTime.TotalMilliseconds = fixedParagraph.StartTime.TotalMilliseconds + 834;
                     canBeFixed = true;
                 }
-                string comment = "Minimum duration: 5/6 second (833 ms)";
+                string comment = Se.Language.Tools.NetflixCheckAndFix.MinimumDuration;
                 controller.AddRecord(p, fixedParagraph, comment, string.Empty, canBeFixed);
             }
         }

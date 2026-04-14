@@ -9,6 +9,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
+using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustAllTimes;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryApplyDurationLimits;
@@ -90,6 +91,28 @@ public partial class BinaryEditViewModel : ObservableObject
             }
             Renumber();
         }
+    }
+
+    public void Initialize(IList<OcrSubtitleItem> ocrSubtitleItems)
+    {
+        if (ocrSubtitleItems == null || ocrSubtitleItems.Count == 0)
+        {
+            return;
+        }
+
+        var screenSize = ocrSubtitleItems[0].GetScreenSize();
+        ScreenWidth = screenSize.Width;
+        ScreenHeight = screenSize.Height;
+
+        foreach (var ocrItem in ocrSubtitleItems)
+        {
+            var newItem = new BinarySubtitleItem(ocrItem, -1);
+            newItem.StartTime = TimeSpan.FromMilliseconds(ocrItem.StartTime.TotalMilliseconds);
+            newItem.EndTime = TimeSpan.FromMilliseconds(ocrItem.EndTime.TotalMilliseconds);
+            Subtitles.Add(newItem);
+        }
+
+        Renumber();
     }
 
     public void RegisterVideoShortcuts()

@@ -104,6 +104,7 @@ public class LanguageSettings
     public string NewEmptyDefaultMs { get; set; }
     public string PromptBeforeDelete { get; set; }
     public string RememberPositionAndSize { get; set; }
+    public string OpenLastFileOnStart { get; set; }
     public string AutoBackupOn { get; set; }
     public string AutoBackupIntervalMinutes { get; set; }
     public string AutoBackupDeleteAfterDays { get; set; }
@@ -381,6 +382,7 @@ public class LanguageSettings
         NewEmptyDefaultMs = "Default new subtitle duration (ms)";
         PromptBeforeDelete = "Prompt before delete";
         RememberPositionAndSize = "Remember window position and size";
+        OpenLastFileOnStart = "Open last file on start";
         AutoBackupOn = "Auto-backup";
         AutoBackupIntervalMinutes = "Auto-backup interval (minutes)";
         AutoBackupDeleteAfterDays = "Auto-backup retention (days)";

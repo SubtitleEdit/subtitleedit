@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Text.RegularExpressions;
 
@@ -88,7 +89,7 @@ public class NetflixCheckNumbersOneToTenSpellOut : INetflixQualityChecker
             if (newText != p.Text)
             {
                 var fixedParagraph = new Paragraph(p, false) { Text = newText };
-                string comment = "From 1 to 10, numbers should be written out: one, two, three, etc";
+                string comment = Se.Language.Tools.NetflixCheckAndFix.NumbersOneToTenSpellOut;
                 controller.AddRecord(p, fixedParagraph, comment, string.Empty, true);
             }
         }

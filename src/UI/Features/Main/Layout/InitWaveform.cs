@@ -10,7 +10,7 @@ using Avalonia.Threading;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Projektanker.Icons.Avalonia;
+using Optris.Icons.Avalonia;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

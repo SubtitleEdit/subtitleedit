@@ -53,6 +53,16 @@ public class LanguageFixCommonErrors
     public string RemoveHyphensSingleLine { get; set; }
     public string FixHyphensInDialogs { get; set; }
     public string AddMissingQuotesExample { get; set; }
+    public string RemovedEmptyLinesUnusedLineBreaksExample { get; set; }
+    public string FixCommasExample { get; set; }
+    public string RemoveLineBreaksExample { get; set; }
+    public string FixDoubleApostrophesExample { get; set; }
+    public string AddPeriodsExample { get; set; }
+    public string StartWithUppercaseLetterAfterParagraphExample { get; set; }
+    public string StartWithUppercaseLetterAfterPeriodInsideParagraphExample { get; set; }
+    public string StartWithUppercaseLetterAfterColonExample { get; set; }
+    public string RemoveHyphensSingleLineExample { get; set; }
+    public string Fix3PlusLinesExample { get; set; }
     public string XMissingQuotesAdded { get; set; }
     public string Fix3PlusLine { get; set; }
     public string Fix3PlusLines { get; set; }
@@ -177,6 +187,16 @@ public class LanguageFixCommonErrors
         RemoveHyphensSingleLine = "Remove dialog dashes in single lines";
         FixHyphensInDialogs = "Fix dash in dialogs via style: {0}";
         AddMissingQuotesExample = "\"How are you? -> \"How are you?\"";
+        RemovedEmptyLinesUnusedLineBreaksExample = "Has only one valid line!</br><i> -> Has only one valid line!";
+        FixCommasExample = ",, -> ,";
+        RemoveLineBreaksExample = "Foo</br>bar! -> Foo bar!";
+        FixDoubleApostrophesExample = "''Has double single quotes'' -> \"Has single double quote\"";
+        AddPeriodsExample = "Hello world -> Hello world.";
+        StartWithUppercaseLetterAfterParagraphExample = "p1: Foobar! || p2: foobar! -> p1: Foobar! || p2: Foobar!";
+        StartWithUppercaseLetterAfterPeriodInsideParagraphExample = "Hello there! how are you?  -> Hello there! How are you?";
+        StartWithUppercaseLetterAfterColonExample = "Speaker: hello world! -> Speaker: Hello world!";
+        RemoveHyphensSingleLineExample = "- Foobar. -> Foobar.";
+        Fix3PlusLinesExample = "Foo</br>bar</br>baz! -> Foo bar baz!";
         XMissingQuotesAdded = "Missing quotes added: {0}";
         Fix3PlusLine = "Fix subtitle with more than two lines";
         Fix3PlusLines = "Fix subtitles with more than two lines";

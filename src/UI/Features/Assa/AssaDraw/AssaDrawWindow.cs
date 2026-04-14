@@ -188,7 +188,7 @@ public class AssaDrawWindow : Window
     {
         var button = new Button
         {
-            Content = new Projektanker.Icons.Avalonia.Icon { Value = icon },
+            Content = new Optris.Icons.Avalonia.Icon { Value = icon },
             Width = 32,
             Height = 32,
             Command = command,

@@ -11,7 +11,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Projektanker.Icons.Avalonia;
+using Optris.Icons.Avalonia;
 using System;
 using System.Collections.Generic;
 
@@ -30,7 +30,7 @@ public class SettingsPage : UserControl
 
         _searchBox = new TextBox
         {
-            Watermark = Se.Language.Options.Settings.SearchSettingsDotDoDot,
+            PlaceholderText = Se.Language.Options.Settings.SearchSettingsDotDoDot,
             Margin = new Thickness(10),
             MaxWidth = 500,
             MinWidth = 360,
@@ -227,6 +227,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.TextBoxLimitNewLines, nameof(_vm.TextBoxLimitNewLines)),
             MakeCheckboxSetting(Se.Language.General.LockTimeCodes, nameof(_vm.LockTimeCodes)),
             MakeCheckboxSetting(Se.Language.Options.Settings.RememberPositionAndSize, nameof(_vm.RememberPositionAndSize)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.OpenLastFileOnStart, nameof(_vm.OpenLastFileOnStart)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoConvertToUtf8, nameof(_vm.AutoConvertToUtf8)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ForceCrLfOnSave, nameof(_vm.ForceCrLfOnSave)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoTrimWhiteSpace, nameof(_vm.AutoTrimWhiteSpace)),
@@ -381,7 +382,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowStopButton, nameof(_vm.ShowStopButton)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowFullscreenButton, nameof(_vm.ShowFullscreenButton)),
             MakeCheckboxSetting(Se.Language.Options.Settings.AutoOpenVideoFile, nameof(_vm.AutoOpenVideoFile)),
-            new SettingsItem(Se.Language.Options.Settings.DownloadMpv, () => new StackPanel
+            new SettingsItem(!_vm.IsLibMpvDownloadVisible, Se.Language.Options.Settings.DownloadMpv, () => new StackPanel
             {
                 Children =
                 {
@@ -412,10 +413,9 @@ public class SettingsPage : UserControl
                         FontSize = 10,
                     }
                 },
-                [!StackPanel.IsVisibleProperty] = new Binding(nameof(_vm.IsLibMpvDownloadVisible)) { Source = _vm }
             }),
             new SettingsItem(Se.Language.Options.Settings.SubtitlePreviewProperties, () => MakeMpvPreviewSettings(_vm)),
-            new SettingsItem(Se.Language.Options.Settings.DownloadVlc, () => new StackPanel
+            new SettingsItem(!_vm.IsLibVlcDownloadVisible, Se.Language.Options.Settings.DownloadVlc, () => new StackPanel
             {
                 Children =
                 {
@@ -437,7 +437,6 @@ public class SettingsPage : UserControl
                         }
                     },
                 },
-                [!StackPanel.IsVisibleProperty] = new Binding(nameof(_vm.IsLibVlcDownloadVisible)) { Source = _vm }
             }),
 
         ]));

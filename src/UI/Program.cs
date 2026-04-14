@@ -10,9 +10,9 @@ using Nikse.SubtitleEdit.Features.Help.About;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Projektanker.Icons.Avalonia;
-using Projektanker.Icons.Avalonia.FontAwesome;
-using Projektanker.Icons.Avalonia.MaterialDesign;
+using Optris.Icons.Avalonia;
+using Optris.Icons.Avalonia.FontAwesome;
+using Optris.Icons.Avalonia.MaterialDesign;
 using System;
 using System.Text;
 
@@ -20,6 +20,8 @@ namespace Nikse.SubtitleEdit
 {
     internal class Program
     {
+        private const string AppName = "Subtitle Edit";
+
         public static string? PendingFileToOpen { get; set; }
         public static bool FileOpenedViaActivation { get; set; }
 
@@ -73,10 +75,7 @@ namespace Nikse.SubtitleEdit
                 SetupMainWindow(lifetime);
 
 #if DEBUG
-                if (lifetime.MainWindow != null)
-                {
-                    lifetime.MainWindow.AttachDevTools();
-                }
+                Application.Current?.AttachDeveloperTools();
 #endif
 
                 // Start the application
@@ -101,50 +100,35 @@ namespace Nikse.SubtitleEdit
             if (b.Instance != null)
             {
                 b.Instance.Styles.Add(UiTheme.FluentTheme);
-            }
 
-            // Add DataGrid styles
-            if (b.Instance != null)
-            {
+                // Add DataGrid styles
                 b.Instance.Styles.Add(new StyleInclude(new Uri("avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml", UriKind.Absolute))
                 {
                     Source = new Uri("avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml")
                 });
-            }
 
-            if (b.Instance != null)
-            {
                 b.Instance.Styles.Add(new StyleInclude(new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml", UriKind.Absolute))
                 {
                     Source = new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml")
                 });
-            }
 
-            // Add ColorPicker styles
-            if (b.Instance != null)
-            {
+                // Add ColorPicker styles
                 b.Instance.Styles.Add(new StyleInclude(new Uri("avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml", UriKind.Absolute))
                 {
                     Source = new Uri("avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml", UriKind.Absolute)
                 });
+
+                // Set application name
+                b.Instance.Name = AppName;
+
+                // Setup native menu
+                SetupNativeMenu(b.Instance, lifetime);
             }
 
             // Set custom font
             if (Application.Current != null && !string.IsNullOrEmpty(Se.Settings.Appearance.FontName))
             {
                 UiUtil.SetFontName(Se.Settings.Appearance.FontName);
-            }
-
-            // Set application name
-            if (b.Instance != null)
-            {
-                b.Instance.Name = "Subtitle Edit";
-            }
-
-            // Setup native menu
-            if (b.Instance != null)
-            {
-                SetupNativeMenu(b.Instance, lifetime);
             }
         }
 
@@ -216,7 +200,7 @@ namespace Nikse.SubtitleEdit
         {
             lifetime.MainWindow = new Window
             {
-                Title = "Subtitle Edit",
+                Title = AppName,
                 Name = "MainWindow",
                 Icon = UiUtil.GetSeIcon(),
                 MinWidth = 800,

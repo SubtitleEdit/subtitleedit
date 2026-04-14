@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 
 namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
@@ -41,7 +42,7 @@ public class NetflixCheckBridgeGaps : INetflixQualityChecker
             if (gapInFrames > 2 && gapInFrames < halfSecGap && !p.StartTime.IsMaxTime)
             {
                 var fixedParagraph = new Paragraph(p, false) { EndTime = { TotalMilliseconds = next.StartTime.TotalMilliseconds - twoFramesGap } };
-                string comment = $"3-{halfSecGap - 1} frames gap => 2 frames gap";
+                string comment = string.Format(Se.Language.Tools.NetflixCheckAndFix.BridgeGapsXToYFrames, halfSecGap - 1);
                 controller.AddRecord(p, fixedParagraph, comment, string.Empty, true);
             }
         }

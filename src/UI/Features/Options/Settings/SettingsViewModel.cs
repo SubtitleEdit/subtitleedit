@@ -72,6 +72,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _promptBeforeDelete;
     [ObservableProperty] private bool _lockTimeCodes;
     [ObservableProperty] private bool _rememberPositionAndSize;
+    [ObservableProperty] private bool _openLastFileOnStart;
     [ObservableProperty] private bool _useFrameMode;
     [ObservableProperty] private bool _textBoxLimitNewLines;
     [ObservableProperty] private bool _autoBackupOn;
@@ -558,6 +559,7 @@ public partial class SettingsViewModel : ObservableObject
         PromptBeforeDelete = general.PromptBeforeDelete;
         LockTimeCodes = general.LockTimeCodes;
         RememberPositionAndSize = general.RememberPositionAndSize;
+        OpenLastFileOnStart = Se.Settings.File.OpenLastFileOnStart;
         AutoBackupOn = general.AutoBackupOn;
         AutoBackupIntervalMinutes = general.AutoBackupIntervalMinutes;
         AutoBackupDeleteAfterDays = general.AutoBackupDeleteAfterDays;
@@ -1159,6 +1161,7 @@ public partial class SettingsViewModel : ObservableObject
         general.PromptBeforeDelete = PromptBeforeDelete;
         general.LockTimeCodes = LockTimeCodes;
         general.RememberPositionAndSize = RememberPositionAndSize;
+        Se.Settings.File.OpenLastFileOnStart = OpenLastFileOnStart;
         general.AutoBackupOn = AutoBackupOn;
         general.AutoBackupIntervalMinutes = AutoBackupIntervalMinutes ?? general.AutoBackupIntervalMinutes;
         general.AutoBackupDeleteAfterDays = AutoBackupDeleteAfterDays ?? general.AutoBackupDeleteAfterDays;

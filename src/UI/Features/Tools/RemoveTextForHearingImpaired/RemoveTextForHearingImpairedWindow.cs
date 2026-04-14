@@ -93,7 +93,7 @@ public class RemoveTextForHearingImpairedWindow : Window
         return panel;
     }
 
-    private Border MakeRemoveBetweenView(RemoveTextForHearingImpairedViewModel vm)
+    private static Border MakeRemoveBetweenView(RemoveTextForHearingImpairedViewModel vm)
     {
         var labelTitle = UiUtil.MakeLabel(Se.Language.Tools.RemoveTextForHearingImpaired.RemoveTextBetween);
 
@@ -101,6 +101,7 @@ public class RemoveTextForHearingImpairedWindow : Window
         var comboBoxCurlyBrackets = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.CurlyBrackets, vm, nameof(vm.IsRemoveCurlyBracketsOn));
         var comboBoxParentheses = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.Parentheses, vm, nameof(vm.IsRemoveParenthesesOn));
 
+        var checkBoxCustom = UiUtil.MakeCheckBox(string.Empty, vm, nameof(vm.IsRemoveCustomOn));
         var textBoxCustomStart = UiUtil.MakeTextBox(30, vm, nameof(vm.CustomStart));
         var labelAnd = UiUtil.MakeLabel(Se.Language.Tools.RemoveTextForHearingImpaired.And);
         var textBoxCustomEnd = UiUtil.MakeTextBox(30, vm, nameof(vm.CustomEnd));
@@ -109,6 +110,7 @@ public class RemoveTextForHearingImpairedWindow : Window
             Orientation = Orientation.Horizontal,
             Children =
             {
+                checkBoxCustom,
                 textBoxCustomStart,
                 labelAnd,
                 textBoxCustomEnd,

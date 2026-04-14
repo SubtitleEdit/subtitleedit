@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Xml;
@@ -47,7 +48,7 @@ public class NetflixCheckTimedTextFrameRate : INetflixQualityChecker
             double fr;
             if (!double.TryParse(frameRateAttr.Value, out fr))
             {
-                controller.AddRecord(null, null, $"Frame rate is invalid: \'{frameRateAttr.Value}\'");
+                controller.AddRecord(null, null, string.Format(Se.Language.Tools.NetflixCheckAndFix.FrameRateIsInvalidX, frameRateAttr.Value));
             }
 
             var frameRateMultiplier = xml.DocumentElement.Attributes["ttp:frameRateMultiplier"];
@@ -92,6 +93,6 @@ public class NetflixCheckTimedTextFrameRate : INetflixQualityChecker
                 return;
             }
         }
-        controller.AddRecord(null, null, "Frame rate is invalid");
+        controller.AddRecord(null, null, Se.Language.Tools.NetflixCheckAndFix.FrameRateIsInvalid);
     }
 }

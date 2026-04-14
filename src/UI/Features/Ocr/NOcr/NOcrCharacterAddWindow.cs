@@ -178,7 +178,7 @@ public class NOcrCharacterAddWindow : Window
         };
 
         var comboBoxLinesToAutoDraw = UiUtil.MakeComboBox(vm.NoOfLinesToAutoDrawList, vm, nameof(vm.SelectedNoOfLinesToAutoDraw));
-        var iconInfo = new Projektanker.Icons.Avalonia.Icon
+        var iconInfo = new Optris.Icons.Avalonia.Icon
         {
             Value = IconNames.Information,
             Margin = new Thickness(5, 0, 0, 0),

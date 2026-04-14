@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,7 +61,7 @@ public class NetflixCheckShotChange : INetflixQualityChecker
                 if (gapToShotChange != 0 && gapToShotChange < halfSecGapInFrames)
                 {
                     fixedParagraph.StartTime.TotalMilliseconds = nearestStartPrevShotChange * 1000;
-                    comment = $"The in-cue is within {halfSecGapInFrames} frames after the shot change, snap the in-cue to the shot-change";
+                    comment = string.Format(Se.Language.Tools.NetflixCheckAndFix.ShotChangeInCueWithinXFramesAfterSnap, halfSecGapInFrames);
                     controller.AddRecord(p, fixedParagraph, comment, string.Empty, true);
                 }
             }
@@ -76,13 +77,13 @@ public class NetflixCheckShotChange : INetflixQualityChecker
                     if (gapToShotChange < threshold)
                     {
                         fixedParagraph.StartTime.TotalMilliseconds = nearestStartNextShotChange * 1000;
-                        comment = $"The in-cue is 1-{threshold - 1} frames before the shot change, snap the in-cue to the shot change";
+                        comment = string.Format(Se.Language.Tools.NetflixCheckAndFix.ShotChangeInCue1ToXFramesBeforeSnap, threshold - 1);
                         canBeFixed = true;
                     }
                     else
                     {
                         fixedParagraph.StartTime.TotalMilliseconds = nearestStartNextShotChange * 1000 - (1000.0 / controller.FrameRate * halfSecGapInFrames);
-                        comment = $"The in-cue is {threshold}-{halfSecGapInFrames - 1} frames before the shot change, pull the in-cue to half a second ({halfSecGapInFrames} frames) before the shot-change";
+                        comment = string.Format(Se.Language.Tools.NetflixCheckAndFix.ShotChangeInCueXToYFramesBeforePull, threshold, halfSecGapInFrames - 1, halfSecGapInFrames);
                     }
 
                     controller.AddRecord(p, fixedParagraph, comment, string.Empty, canBeFixed);
@@ -95,7 +96,7 @@ public class NetflixCheckShotChange : INetflixQualityChecker
                 if (SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds - nearestEndPrevShotChange * 1000) < halfSecGapInFrames)
                 {
                     fixedParagraph.EndTime.TotalMilliseconds = nearestEndPrevShotChange * 1000 - twoFramesGap;
-                    comment = $"The out-cue is within {halfSecGapInFrames} frames after the shot change";
+                    comment = string.Format(Se.Language.Tools.NetflixCheckAndFix.ShotChangeOutCueWithinXFramesAfterChange, halfSecGapInFrames);
                     controller.AddRecord(p, fixedParagraph, comment, string.Empty, true);
                 }
             }
@@ -107,7 +108,7 @@ public class NetflixCheckShotChange : INetflixQualityChecker
                     SubtitleFormat.MillisecondsToFrames(nearestEndNextShotChange * 1000 - p.EndTime.TotalMilliseconds) < 2)
                 {
                     fixedParagraph.EndTime.TotalMilliseconds = nearestEndNextShotChange * 1000 - twoFramesGap;
-                    comment = $"The out-cue is within {halfSecGapInFrames} frames of the shot change";
+                    comment = string.Format(Se.Language.Tools.NetflixCheckAndFix.ShotChangeOutCueWithinXFramesOfChange, halfSecGapInFrames);
                     controller.AddRecord(p, fixedParagraph, comment, string.Empty, true);
                 }
             }
@@ -115,7 +116,7 @@ public class NetflixCheckShotChange : INetflixQualityChecker
             if (onShotChange > 0)
             {
                 fixedParagraph.EndTime.TotalMilliseconds = onShotChange * 1000 - twoFramesGap;
-                comment = "The out-cue is on the shot change, respect the two-frame gap";
+                comment = Se.Language.Tools.NetflixCheckAndFix.ShotChangeOutCueOnShotChange;
                 controller.AddRecord(p, fixedParagraph, comment, string.Empty, true);
             }
         }

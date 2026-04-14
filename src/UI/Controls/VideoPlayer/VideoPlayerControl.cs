@@ -13,7 +13,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
-using Projektanker.Icons.Avalonia;
+using Optris.Icons.Avalonia;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;

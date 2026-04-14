@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
 
@@ -24,18 +25,18 @@ public class NetflixCheckDialogHyphenSpace : INetflixQualityChecker
         }
 
         var dialogHelper = new DialogSplitMerge { DialogStyle = controller.SpeakerStyle };
-        string comment = "Dual Speakers: Use a hyphen without a space";
+        string comment = Se.Language.Tools.NetflixCheckAndFix.DualSpeakersHyphenWithoutSpace;
         if (controller.SpeakerStyle == DialogType.DashBothLinesWithSpace)
         {
-            comment = "Dual Speakers: Use a hyphen with a space";
+            comment = Se.Language.Tools.NetflixCheckAndFix.DualSpeakersHyphenWithSpace;
         }
         else if (controller.SpeakerStyle == DialogType.DashSecondLineWithSpace)
         {
-            comment = "Dual Speakers: Use a hyphen with a space to denote the second speaker only";
+            comment = Se.Language.Tools.NetflixCheckAndFix.DualSpeakersHyphenWithSpaceSecondOnly;
         }
         else if (controller.SpeakerStyle == DialogType.DashSecondLineWithoutSpace)
         {
-            comment = "Dual Speakers: Use a hyphen without a space to denote the second speaker only";
+            comment = Se.Language.Tools.NetflixCheckAndFix.DualSpeakersHyphenWithoutSpaceSecondOnly;
         }
 
         for (int i = 0; i < subtitle.Paragraphs.Count; i++)

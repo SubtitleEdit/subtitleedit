@@ -503,11 +503,11 @@ public static class UiTheme
             },
 
             // Icon
-            new Style(x => x.OfType<Projektanker.Icons.Avalonia.Icon>())
+            new Style(x => x.OfType<Optris.Icons.Avalonia.Icon>())
             {
                 Setters =
                 {
-                    new Setter(Projektanker.Icons.Avalonia.Icon.ForegroundProperty, new SolidColorBrush(foreColor))
+                    new Setter(Optris.Icons.Avalonia.Icon.ForegroundProperty, new SolidColorBrush(foreColor))
                 }
             },
 

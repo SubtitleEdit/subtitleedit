@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 
 namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
@@ -28,7 +29,7 @@ public class NetflixCheckNumberOfLines : INetflixQualityChecker
                 {
                     fixedParagraph = null; // cannot fix text
                 }
-                var comment = "Two lines maximum";
+                var comment = Se.Language.Tools.NetflixCheckAndFix.TwoLinesMaximum;
                 controller.AddRecord(p, fixedParagraph, comment);
             }
             else if (p.Text.SplitToLines().Count == 2 && p.Text.Contains(Environment.NewLine) &&
@@ -37,7 +38,7 @@ public class NetflixCheckNumberOfLines : INetflixQualityChecker
             {
                 var fixedParagraph = new Paragraph(p, false);
                 fixedParagraph.Text = Utilities.AutoBreakLine(fixedParagraph.Text, controller.SingleLineMaxLength, controller.SingleLineMaxLength + 1, controller.Language);
-                var comment = "Text can fit on one line";
+                var comment = Se.Language.Tools.NetflixCheckAndFix.TextCanFitOnOneLine;
                 controller.AddRecord(p, fixedParagraph, comment, string.Empty, true);
             }
         }

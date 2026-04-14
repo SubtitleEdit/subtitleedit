@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
 
@@ -16,7 +17,7 @@ public class NetflixCheckEllipsesNotThreeDots : INetflixQualityChecker
 
     public void Check(Subtitle subtitle, NetflixQualityController controller)
     {
-        string comment = "Use the single smart character (U+2026) as opposed to three dots/periods in a row";
+        string comment = Se.Language.Tools.NetflixCheckAndFix.EllipsesUseSmartCharacter;
 
         foreach (var paragraph in subtitle.Paragraphs)
         {

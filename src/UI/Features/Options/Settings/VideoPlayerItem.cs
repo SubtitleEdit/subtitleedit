@@ -38,6 +38,11 @@ public partial class VideoPlayerItem : ObservableObject
         {
             result.Add(new VideoPlayerItem { Name = Se.Language.Options.Settings.VlcWidRendering, Code = VideoPlayerName.Vlc });
         }
+        
+        if (OperatingSystem.IsMacOS())
+        {
+         //   result.Add(new VideoPlayerItem { Name = "libmpv - Metal", Code = VideoPlayerName.MpvMetal });
+        }
 
         return result;
     }

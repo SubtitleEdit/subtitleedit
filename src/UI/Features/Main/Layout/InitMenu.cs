@@ -317,7 +317,7 @@ public static class InitMenu
                     Header = l.RightToLeftMode,
                     Command = vm.RightToLeftToggleCommand,
                     [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsRightToLeftEnabled)),
-                    Icon = new Projektanker.Icons.Avalonia.Icon
+                    Icon = new Optris.Icons.Avalonia.Icon
                     {
                         Value = IconNames.CheckBold,
                         VerticalAlignment = VerticalAlignment.Center,
@@ -558,7 +558,7 @@ public static class InitMenu
             {
                 Header = l.SmpteTiming,
                 Command = vm.ToggleSmpteTimingCommand,
-                Icon = new Projektanker.Icons.Avalonia.Icon
+                Icon = new Optris.Icons.Avalonia.Icon
                 {
                     Value = IconNames.CheckBold,
                     VerticalAlignment = VerticalAlignment.Center,

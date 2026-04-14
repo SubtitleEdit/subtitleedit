@@ -16,7 +16,7 @@ public class CrispAsrDownloadService : ICrispAsrDownloadService
 {
     private readonly HttpClient _httpClient;
 
-    private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/crisp-asr-2026-04/crisp-asr-win64.zip";
+    private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/crisp-asr-2026-04/crisp-asr-win64-vulkan.zip";
     private const string MacUrl = "https://github.com/SubtitleEdit/support-files/releases/download/crisp-asr-2026-04/crisp-asr-mac.zip";
     private const string LinuxUrl = "https://github.com/SubtitleEdit/support-files/releases/download/crisp-asr-2026-04/crisp-asr-linux64.zip";
 

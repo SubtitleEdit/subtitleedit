@@ -77,7 +77,7 @@ public class NetflixCheckGlyph : INetflixQualityChecker
                 {
                     var timeCode = paragraph.StartTime.ToHHMMSSFF();
                     var context = NetflixQualityController.StringContext(paragraph.Text, pos, 6);
-                    var comment = string.Format(NetflixLanguage.GlyphCheckReport, $"U+{curCodepoint:X}", actualPos);
+                    var comment = string.Format(Se.Language.Tools.NetflixCheckAndFix.GlyphCheckReport, $"U+{curCodepoint:X}", actualPos);
 
                     controller.AddRecord(paragraph, timeCode, context, comment, false);
                 }

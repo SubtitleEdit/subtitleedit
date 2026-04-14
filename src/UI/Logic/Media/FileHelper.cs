@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -171,7 +172,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
         {
             var fileTypes = new List<FilePickerFileType>
             {
-                new FilePickerFileType("Subtitle files")
+                new FilePickerFileType(Se.Language.General.SubtitleFiles)
                 {
                     Patterns = MakeOpenSubtitlePatterns(includeVideoFiles),
                 },

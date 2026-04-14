@@ -2,6 +2,27 @@
 Subtitle Edit Changelog
 
 
+v5.0.0-beta16 (xth April 2026)
+
+* Update to Avalonia UI V12
+* Update Italian translation - thx bovirus
+* Add "edit/export" from ocr window - thx donjondejota-art
+* Add new langauge tags - thx potplayer-fanpack
+* Minor improvements for main layout
+* Fix IsSpelledCorrect splitting hyphenated words by space instead of dash - thx ivandrofly
+* Fix Word spell check - thx moob158
+* Fix grid sync when playing without waveform - thx vsemozhetbyt 
+* Fix display preview on video panel for audio files - thx benshgit 
+* Add Crisp ASR: Parakeet, Canary, Cohere
+* Fix bugs in NextWordInDoNotBreakList - thx ivandrofly 
+* Add check box for custom start/end in remove text for HI - thx aaroncledge
+* Fix crash in OCR change allways - thx Ronaldvr
+* Some dictionary improvements for OCR
+* Add new setting for open-file-on-start - thx shotfirer
+* Allow more single-click-keys in text box - thx darnn
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-beta15 (12th April 2026)
 
 * Update Italian translation - thx bovirus
@@ -18,6 +39,7 @@ v5.0.0-beta15 (12th April 2026)
 * Try to add Word spell check - thx moob158
 
 -----------------------------------------------------------------------------------------------------
+
 v5.0.0-beta14 (8th April 2026)
 
 * Add Romanian translation - thx zildan

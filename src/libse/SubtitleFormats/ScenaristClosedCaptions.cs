@@ -692,6 +692,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (code.Length == 4)
                 {
                     sb.Append(code);
+                    if (code.StartsWith('9') || code.StartsWith('8')) // control codes must be double
+                    {
+                        sb.Append(" " + code);
+                    }
                 }
             }
 
@@ -1077,6 +1081,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     break;
                                 case "2c52":
                                 case "2c94":
+                                    break;
+                                case "91ae": // mid-row code: white italic on
+                                    if (!italicOn)
+                                    {
+                                        sb.Append("<i>");
+                                        italicOn = true;
+                                    }
+                                    break;
+                                case "912f": // mid-row code: white italic+underline on
+                                    if (!italicOn)
+                                    {
+                                        sb.Append("<i>");
+                                        italicOn = true;
+                                    }
+                                    break;
+                                case "9120": // mid-row code: white (reset, italic off)
+                                    if (italicOn)
+                                    {
+                                        sb.Append("</i>");
+                                        italicOn = false;
+                                    }
                                     break;
                                 default:
                                     var result = GetLetterFromCode(part);

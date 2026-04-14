@@ -13,7 +13,7 @@ using Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
-using Projektanker.Icons.Avalonia;
+using Optris.Icons.Avalonia;
 using MenuItem = Avalonia.Controls.MenuItem;
 
 namespace Nikse.SubtitleEdit.Features.Main.Layout;
@@ -959,9 +959,9 @@ public static partial class InitListViewAndEditBox
         {
             Spacing = 0,
             Margin = new Thickness(0, 0, 0, 0),
-            VerticalAlignment = VerticalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Top,
         };
-
+        
         // Start Time controls
         var startTimePanel = new StackPanel
         {
@@ -1083,6 +1083,21 @@ public static partial class InitListViewAndEditBox
         panelLayer.Children.Add(upDownLayer);
         timeControlsPanel.Children.Add(panelLayer);
 
+        if (!Se.Settings.Appearance.ShowUpDownStartTime ||
+            !Se.Settings.Appearance.ShowUpDownEndTime || 
+            !Se.Settings.Appearance.ShowUpDownDuration)
+        {
+            if (Se.Settings.Appearance.ShowUpDownLabels)
+            {
+                timeControlsPanel.Margin = new Thickness(0, 4, 0, 0);
+            }
+            else
+            {
+                //TODO: find better way to top-align with textbox
+                timeControlsPanel.Margin = new Thickness(0, 18, 0, 0);
+            }
+        }
+        
         Grid.SetColumn(timeControlsPanel, 0);
         editGrid.Children.Add(timeControlsPanel);
 
@@ -1376,7 +1391,7 @@ public static partial class InitListViewAndEditBox
         {
             Orientation = Orientation.Vertical,
             Spacing = 3,
-            Margin = new Thickness(3)
+            Margin = new Thickness(6,3,3,3)
         };
 
         if (Se.Settings.Appearance.TextBoxShowButtonAutoBreak)

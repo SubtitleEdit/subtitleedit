@@ -5,7 +5,7 @@ using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Projektanker.Icons.Avalonia;
+using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 
@@ -103,7 +103,7 @@ public class ImageBasedProfileWindow : Window
         // Name textbox
         var nameBox = new TextBox
         {
-            Watermark = Se.Language.General.EnterProfileName,
+            PlaceholderText = Se.Language.General.EnterProfileName,
         };
         nameBox.Bind(TextBox.TextProperty, new Binding($"{nameof(vm.SelectedProfile)}.{nameof(ProfileDisplayItem.Name)}"));
         nameBox.KeyDown += vm.ProfileNameTextBoxOnKeyDown;

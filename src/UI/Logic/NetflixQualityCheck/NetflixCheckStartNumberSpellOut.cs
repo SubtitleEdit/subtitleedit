@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic.Config;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
@@ -52,7 +53,7 @@ public class NetflixCheckStartNumberSpellOut : INetflixQualityChecker
             if (newText != p.Text)
             {
                 var fixedParagraph = new Paragraph(p, false) { Text = newText };
-                var comment = "When a number begins a sentence, it should always be spelled out";
+                var comment = Se.Language.Tools.NetflixCheckAndFix.StartNumberSpellOut;
                 controller.AddRecord(p, fixedParagraph, comment, string.Empty, true);
             }
         }

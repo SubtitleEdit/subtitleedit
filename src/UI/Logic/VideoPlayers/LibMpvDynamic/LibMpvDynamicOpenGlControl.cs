@@ -1,3 +1,4 @@
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.OpenGL;
 using Avalonia.OpenGL.Controls;
@@ -106,7 +107,7 @@ public class LibMpvDynamicOpenGlControl : OpenGlControlBase
             return;
         }
 
-        var scaling = VisualRoot?.RenderScaling ?? 1.0;
+        var scaling = TopLevel.GetTopLevel(this)?.RenderScaling ?? 1.0;
         var size = Bounds.Size * scaling;
         var width = (int)size.Width;
         var height = (int)size.Height;

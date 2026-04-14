@@ -101,7 +101,7 @@ public class BookmarksListWindow : Window
                     DataContext = vm,
                     Margin = new Thickness(2),
                 };
-                Projektanker.Icons.Avalonia.Attached.SetIcon(deleteButton, IconNames.Trash);
+                Optris.Icons.Avalonia.Attached.SetIcon(deleteButton, IconNames.Trash);
                 return deleteButton;
             }),
             Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
