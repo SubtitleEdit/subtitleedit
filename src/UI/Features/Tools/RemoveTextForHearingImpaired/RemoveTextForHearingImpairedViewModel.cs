@@ -141,6 +141,7 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
         settings.CustomEnd = CustomEnd;
         settings.IsOnlySeparateLine = IsOnlySeparateLine;
 
+
         settings.IsRemoveTextBeforeColonOn = IsRemoveTextBeforeColonOn;
         settings.IsRemoveTextBeforeColonUppercaseOn = IsRemoveTextBeforeColonUppercaseOn;
         settings.IsRemoveTextBeforeColonSeparateLineOn = IsRemoveTextBeforeColonSeparateLineOn;

@@ -4,6 +4,7 @@ Subtitle Edit Changelog
 
 v5.0.0-beta16 (xth April 2026)
 
+* Update to Avalonia UI V12
 * Update Italian translation - thx bovirus
 * Add "edit/export" from ocr window - thx donjondejota-art
 * Add new langauge tags - thx potplayer-fanpack
@@ -14,6 +15,9 @@ v5.0.0-beta16 (xth April 2026)
 * Fix display preview on video panel for audio files - thx benshgit 
 * Add Crisp ASR Parakeet, Canary, Cohere
 * Fix bugs in NextWordInDoNotBreakList - thx ivandrofly 
+* Add check box for custom start/end in remove text for HI - thx aaroncledge
+* Fix crash in OCR change allways - thx Ronaldvr
+* Some dictionary improvements for OCR
 
 -----------------------------------------------------------------------------------------------------
 
