@@ -1794,7 +1794,7 @@ public partial class OcrViewModel : ObservableObject
             parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
             var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, SelectedNOcrPixelsAreSpace,
                 false, true, 20, true);
-            int index = 0;
+            var index = 0;
             while (index < letters.Count)
             {
                 var splitterItem = letters[index];
@@ -1833,7 +1833,7 @@ public partial class OcrViewModel : ObservableObject
             var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, SelectedNOcrPixelsAreSpace,
                 false, true, 20, true);
             SelectedOcrSubtitleItem = item;
-            int index = 0;
+            var index = 0;
             var matches = new List<NOcrChar>();
             while (index < letters.Count)
             {
@@ -2018,10 +2018,12 @@ public partial class OcrViewModel : ObservableObject
                             {
                                 UserWordsHelper.AddToUserDictionary(result.Word, SelectedDictionary.GetFiveLetterLanguageName() ?? "en_US");
                             }
+
+                            _ocrFixEngine.ReloadNames();
                         }
                         else
                         {
-                            _cancellationTokenSource.Cancel();
+                            await _cancellationTokenSource.CancelAsync();
                             IsOcrRunning = false;
                             break;
                         }
@@ -2043,10 +2045,10 @@ public partial class OcrViewModel : ObservableObject
         IsOcrRunning = false;
     }
 
-    private List<NOcrChar> RemoveSpacesAfter1(List<NOcrChar> matches, int pixelsAreSpace)
+    private static List<NOcrChar> RemoveSpacesAfter1(List<NOcrChar> matches, int pixelsAreSpace)
     {
         var deleteItems = new List<NOcrChar>();
-        for (int i = 0; i < matches.Count - 1; i++)
+        for (var i = 0; i < matches.Count - 1; i++)
         {
             var match = matches[i];
             if (match.Text.EndsWith("1", StringComparison.Ordinal) && !match.Italic)
@@ -2090,7 +2092,7 @@ public partial class OcrViewModel : ObservableObject
         }
 
         // Check for potential spaces in italic text
-        for (int i = 0; i < matches.Count - 1; i++)
+        for (var i = 0; i < matches.Count - 1; i++)
         {
             var match = matches[i];
             var matchNext = matches[i + 1];
@@ -2101,7 +2103,7 @@ public partial class OcrViewModel : ObservableObject
                 continue;
             }
 
-            int blankVerticalLines = IsVerticalAngledLineTransparent(parentBitmap, match.ImageSplitterItem, matchNext.ImageSplitterItem, unItalicFactor);
+            var blankVerticalLines = IsVerticalAngledLineTransparent(parentBitmap, match.ImageSplitterItem, matchNext.ImageSplitterItem, unItalicFactor);
             if (match.Text == "f" || match.Text == "," || matchNext.Text.StartsWith('y') || matchNext.Text.StartsWith('j'))
             {
                 blankVerticalLines++;
@@ -2114,7 +2116,7 @@ public partial class OcrViewModel : ObservableObject
         }
 
         // Insert spaces where CouldBeSpaceBefore is true and previous match is italic
-        int j = 1;
+        var j = 1;
         while (j < matches.Count)
         {
             var match = matches[j];
@@ -2142,13 +2144,13 @@ public partial class OcrViewModel : ObservableObject
             return 0;
         }
 
-        int blanks = 0;
+        var blanks = 0;
         var min = match.X + match.NikseBitmap.Width;
         var max = next.X + next.NikseBitmap.Width / 2;
-        for (int startX = min; startX < max; startX++)
+        for (var startX = min; startX < max; startX++)
         {
             var lineBlank = true;
-            for (int y = match.Y; y < match.Y + match.NikseBitmap.Height; y++)
+            for (var y = match.Y; y < match.Y + match.NikseBitmap.Height; y++)
             {
                 var x = startX - (y - match.Y) * unItalicFactor;
                 if (x >= 0 && x < parentBitmap.Width && y < parentBitmap.Height)
@@ -2223,7 +2225,7 @@ public partial class OcrViewModel : ObservableObject
             parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
             var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, SelectedBinaryOcrPixelsAreSpace, false, true, 20, true);
             SelectedOcrSubtitleItem = item;
-            int index = 0;
+            var index = 0;
             var matches = new List<BinaryOcrMatcher.CompareMatch>();
             while (index < letters.Count)
             {
@@ -3112,7 +3114,7 @@ public partial class OcrViewModel : ObservableObject
 
     internal void DataGridTracksSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        bool flowControl = TrackChanged();
+        var flowControl = TrackChanged();
         if (!flowControl)
         {
             return;
