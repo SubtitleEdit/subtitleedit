@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.AudioToText;
 
@@ -18,6 +19,7 @@ public interface ISpeechToTextEngine
     string GetAndCreateWhisperFolder();
     string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel);
     string GetExecutable();
+    string GetExecutableFileName() => Path.GetFileName(GetExecutable());
     bool IsModelInstalled(WhisperModel model);
     string GetModelForCmdLine(string modelName);
     Task<string> GetHelpText();

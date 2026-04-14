@@ -112,22 +112,8 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                     {
                         File.Delete(tempFileName);
 
-                        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                        {
-                            var path = Engine.GetExecutable();
-                            if (File.Exists(path))
-                            {
-                                MacHelper.MakeExecutable(path);
-                            }
-                        }
-                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                        {
-                            var path = Engine.GetExecutable();
-                            if (File.Exists(path))
-                            {
-                                LinuxHelper.MakeExecutable(path);
-                            }
-                        }
+                        var path = Engine.GetExecutable();
+                        MakeExecutable(path);
                     }
                     catch
                     {
@@ -200,172 +186,34 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
         }
     }
 
+    private static void MakeExecutable(string path)
+    {
+        if (File.Exists(path))
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                MacHelper.MakeExecutable(path);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                LinuxHelper.MakeExecutable(path);
+            }
+        }
+    }
+
     private void Unpack(string folder, string skipFolderLevel)
     {
         _downloadStream.Position = 0;
         _zipUnpacker.UnpackZipStream(_downloadStream, folder, skipFolderLevel, false, new List<string>(), null);
         _downloadStream.Dispose();
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (Engine == null || (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && !RuntimeInformation.IsOSPlatform(OSPlatform.Linux)))
         {
-            var path = Path.Combine(folder, "whisper-cli");
-            if (File.Exists(path))
-            {
-                MacHelper.MakeExecutable(path);
-            }
-
-            if (Engine is WhisperEnginePurfviewFasterWhisperXxl purfviewEngine)
-            {
-                path = Path.Combine(folder, purfviewEngine.GetExecutableFileName());
-                if (File.Exists(path))
-                {
-                    MacHelper.MakeExecutable(path);
-                }
-            }
-
-            if (Engine is WhisperEngineCTranslate2 cTranslate2)
-            {
-                path = Path.Combine(folder, cTranslate2.GetExecutable());
-                if (File.Exists(path))
-                {
-                    MacHelper.MakeExecutable(path);
-                }
-            }
-
-            if (Engine is ChatLlmCppEngine chatLlmCppEngine)
-            {
-                path = Path.Combine(folder, chatLlmCppEngine.GetExecutableFileName());
-                if (File.Exists(path))
-                {
-                    MacHelper.MakeExecutable(path);
-                }
-            }
-
-            if (Engine is Qwen3AsrCppEngine qwen3AsrCppEngineMac)
-            {
-                path = Path.Combine(folder, qwen3AsrCppEngineMac.GetExecutableFileName());
-                if (File.Exists(path))
-                {
-                    MacHelper.MakeExecutable(path);
-                }
-            }
-
-            if (Engine is CrispAsrParakeet)
-            {
-                path = Path.Combine(folder, CrispAsrParakeet.GetExecutableFileName());
-                if (File.Exists(path))
-                {
-                    MacHelper.MakeExecutable(path);
-                }
-            }
-
-            if (Engine is CrispAsrCanary)
-            {
-                path = Path.Combine(folder, CrispAsrCanary.GetExecutableFileName());
-                if (File.Exists(path))
-                {
-                    MacHelper.MakeExecutable(path);
-                }
-            }
-
-            if (Engine is CrispAsrCohere)
-            {
-                path = Path.Combine(folder, CrispAsrCohere.GetExecutableFileName());
-                if (File.Exists(path))
-                {
-                    MacHelper.MakeExecutable(path);
-                }
-            }
-
-            if (Engine is CrispAsrQwen3)
-            {
-                path = Path.Combine(folder, CrispAsrQwen3.GetExecutableFileName());
-                if (File.Exists(path))
-                {
-                    MacHelper.MakeExecutable(path);
-                }
-            }
+            return;
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            var path = Path.Combine(folder, "whisper-cli");
-            if (File.Exists(path))
-            {
-                LinuxHelper.MakeExecutable(path);
-            }
 
-            if (Engine is WhisperEnginePurfviewFasterWhisperXxl purfviewEngine)
-            {
-                path = Path.Combine(folder, purfviewEngine.GetExecutableFileName());
-                if (File.Exists(path))
-                {
-                    LinuxHelper.MakeExecutable(path);
-                }
-            }
-
-            if (Engine is ChatLlmCppEngine chatLlmCppEngine)
-            {
-                path = Path.Combine(folder, chatLlmCppEngine.GetExecutableFileName());
-                if (File.Exists(path))
-                {
-                    LinuxHelper.MakeExecutable(path);
-                }
-            }
-
-            if (Engine is Qwen3AsrCppEngine qwen3AsrCppEngineLinux)
-            {
-                path = Path.Combine(folder, qwen3AsrCppEngineLinux.GetExecutableFileName());
-                if (File.Exists(path))
-                {
-                    LinuxHelper.MakeExecutable(path);
-                }
-            }
-
-            if (Engine is WhisperEngineCTranslate2)
-            {
-                path = Path.Combine(folder, WhisperEngineCTranslate2.GetExecutableFileName());
-                if (File.Exists(path))
-                {
-                    LinuxHelper.MakeExecutable(path);
-                }
-            }
-
-            if (Engine is CrispAsrParakeet)
-            {
-                path = Path.Combine(folder, CrispAsrParakeet.GetExecutableFileName());
-                if (File.Exists(path))
-                {
-                    LinuxHelper.MakeExecutable(path);
-                }
-            }
-
-            if (Engine is CrispAsrCanary)
-            {
-                path = Path.Combine(folder, CrispAsrCanary.GetExecutableFileName());
-                if (File.Exists(path))
-                {
-                    LinuxHelper.MakeExecutable(path);
-                }
-            }
-
-            if (Engine is CrispAsrCohere)
-            {
-                path = Path.Combine(folder, CrispAsrCohere.GetExecutableFileName());
-                if (File.Exists(path))
-                {
-                    LinuxHelper.MakeExecutable(path);
-                }
-            }
-
-            if (Engine is CrispAsrQwen3)
-            {
-                path = Path.Combine(folder, CrispAsrQwen3.GetExecutableFileName());
-                if (File.Exists(path))
-                {
-                    LinuxHelper.MakeExecutable(path);
-                }
-            }
-        }
+        var path = Path.Combine(folder, Engine.GetExecutableFileName());
+        MakeExecutable(path);
     }
 
     private void Close()
