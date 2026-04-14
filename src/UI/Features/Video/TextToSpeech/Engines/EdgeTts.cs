@@ -21,6 +21,8 @@ public class EdgeTts : ITtsEngine
     public bool HasModel => false;
     public bool HasKeyFile => false;
 
+    private static string? _cachedExecutableFileName;
+
     private static readonly Regex VoiceLineRegex =
         new(@"^(?<name>\S+)\s+(?<gender>Male|Female|Neutral)\s+", RegexOptions.Compiled);
 
@@ -145,9 +147,14 @@ public class EdgeTts : ITtsEngine
 
     private static async Task<(bool Ok, string StdOut, string StdErr)> RunEdgeTtsCommand(string args, CancellationToken cancellationToken)
     {
+        if (string.IsNullOrWhiteSpace(_cachedExecutableFileName))
+        {
+            _cachedExecutableFileName = MakeExecutableFileName();
+        }
+
         var startInfo = new ProcessStartInfo
         {
-            FileName = "edge-tts",
+            FileName = _cachedExecutableFileName ?? "edge-tts",
             Arguments = args,
             UseShellExecute = false,
             RedirectStandardOutput = true,
@@ -174,6 +181,85 @@ public class EdgeTts : ITtsEngine
         var stdOut = await stdOutTask;
         var stdErr = await stdErrTask;
         return (process.ExitCode == 0, stdOut, stdErr);
+    }
+
+    private static string? MakeExecutableFileName()
+    {
+        // Honour any user-configured path first
+        var configuredPath = Se.Settings.Video.TextToSpeech.EdgeTtsPath;
+        if (!string.IsNullOrWhiteSpace(configuredPath) && File.Exists(configuredPath))
+        {
+            return configuredPath;
+        }
+
+        if (OperatingSystem.IsWindows())
+        {
+            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var searchRoots = new[]
+            {
+                Path.Combine(userProfile, @"AppData\Local\Programs\Python"),
+                Path.Combine(userProfile, @"AppData\Roaming\Python"),
+            };
+
+            foreach (var root in searchRoots.Where(Directory.Exists))
+            {
+                try
+                {
+                    var found = Directory.GetFiles(root, "edge-tts.exe", SearchOption.AllDirectories)
+                        .FirstOrDefault();
+                    if (found != null)
+                    {
+                        return found;
+                    }
+                }
+                catch
+                {
+                    // ignore access errors
+                }
+            }
+
+            return "edge-tts";
+        }
+
+        // macOS and Linux: check well-known direct paths first
+        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        var directPaths = new[]
+        {
+            Path.Combine(home, ".local", "bin", "edge-tts"),  // Linux pip install --user
+            "/usr/local/bin/edge-tts",                         // Homebrew / system pip
+            "/opt/homebrew/bin/edge-tts",                      // Homebrew on Apple Silicon
+            "/usr/bin/edge-tts",                               // System package manager
+            "/opt/local/bin/edge-tts",                         // MacPorts
+        };
+
+        foreach (var directPath in directPaths)
+        {
+            if (File.Exists(directPath))
+            {
+                return directPath;
+            }
+        }
+
+        // Walk ~/Library/Python/X.Y/bin/ (macOS pip install --user)
+        var macPythonUserLib = Path.Combine(home, "Library", "Python");
+        if (Directory.Exists(macPythonUserLib))
+        {
+            try
+            {
+                var found = Directory.GetFiles(macPythonUserLib, "edge-tts", SearchOption.AllDirectories)
+                    .FirstOrDefault();
+                if (found != null)
+                {
+                    return found;
+                }
+            }
+            catch
+            {
+                // ignore access errors
+            }
+        }
+
+        return "edge-tts"; // Fallback: rely on PATH
     }
 
     private static async Task<List<EdgeTtsVoice>> GetEdgeVoices(CancellationToken cancellationToken)

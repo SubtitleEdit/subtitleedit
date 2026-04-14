@@ -40,6 +40,9 @@ public class SeVideoTextToSpeech
     public string EdgeTtsPitch { get; set; }
     public string EdgeTtsVolume { get; set; }
 
+    // Optional override for the edge-tts executable path
+    public string EdgeTtsPath { get; set; }
+
     // VAD-based internal silence compression (shorten pauses between words before time-stretching)
     public bool VadSilenceCompressionEnabled { get; set; }
     public double VadMaxSilenceSeconds { get; set; }
@@ -86,6 +89,7 @@ public class SeVideoTextToSpeech
         EdgeTtsRate = string.Empty;
         EdgeTtsPitch = string.Empty;
         EdgeTtsVolume = string.Empty;
+        EdgeTtsPath = string.Empty;
         VadSilenceCompressionEnabled = false;
         VadMaxSilenceSeconds = 0.15;
         HighQualityTimeStretchEnabled = false;
