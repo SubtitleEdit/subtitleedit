@@ -91,7 +91,12 @@ public class SpellCheckWordLists
             {
                 foreach (XmlNode node in xmlNodeList)
                 {
-                    var word = node.InnerText.Trim().ToLowerInvariant();
+                    var word = Utilities.NormalizeUserDictionaryWord(node.InnerText);
+                    if (word.Length == 0)
+                    {
+                        continue;
+                    }
+
                     if (word.Contains(' '))
                     {
                         _userPhraseList.Add(word);
@@ -211,6 +216,7 @@ public class SpellCheckWordLists
 
     public void RemoveUserWord(string word)
     {
+        word = Utilities.NormalizeUserDictionaryWord(word);
         _userWordList.Remove(word);
         _userPhraseList.Remove(word);
         Utilities.RemoveFromUserDictionary(word, _languageName);
@@ -338,17 +344,17 @@ public class SpellCheckWordLists
 
     public bool IsWordInUserPhrases(int index, List<SpellCheckWord> words)
     {
-        string current = words[index].Text;
+        string current = Utilities.NormalizeUserDictionaryWord(words[index].Text);
         string prev = "-";
         if (index > 0)
         {
-            prev = words[index - 1].Text;
+            prev = Utilities.NormalizeUserDictionaryWord(words[index - 1].Text);
         }
 
         string next = "-";
         if (index < words.Count - 1)
         {
-            next = words[index + 1].Text;
+            next = Utilities.NormalizeUserDictionaryWord(words[index + 1].Text);
         }
 
         foreach (string userPhrase in _userPhraseList)
@@ -461,7 +467,7 @@ public class SpellCheckWordLists
             return false;
         }
 
-        word = word.Trim().ToLowerInvariant();
+        word = Utilities.NormalizeUserDictionaryWord(word);
         if (word.Length == 0 || _userWordList.Contains(word))
         {
             return false;
@@ -495,7 +501,7 @@ public class SpellCheckWordLists
 
     public bool HasUserWord(string word)
     {
-        string s = word.ToLowerInvariant();
+        string s = Utilities.NormalizeUserDictionaryWord(word);
         return _userWordList.Contains(s) || (s.StartsWith('\'') || s.EndsWith('\'')) && _userWordList.Contains(s.Trim('\''));
     }
 
