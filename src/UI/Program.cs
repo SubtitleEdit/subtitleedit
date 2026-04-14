@@ -55,10 +55,20 @@ namespace Nikse.SubtitleEdit
                 // Build and configure the app
                 var appBuilder = AppBuilder.Configure<Application>()
                     .UsePlatformDetect()
-                     .With(new X11PlatformOptions
-                     {
-                         RenderingMode = new[] { X11RenderingMode.Glx, X11RenderingMode.Egl }
-                     })
+                    .With(new X11PlatformOptions
+                    {
+                        RenderingMode = new[] { X11RenderingMode.Glx, X11RenderingMode.Egl }
+                    })
+                    .With(new AvaloniaNativePlatformOptions
+                    {
+                        RenderingMode =
+                        [
+                            // put OpenGL first, to have higher priority over Metal
+                            AvaloniaNativeRenderingMode.OpenGl,
+                            AvaloniaNativeRenderingMode.Metal,
+                            AvaloniaNativeRenderingMode.Software
+                        ]
+                    })
                     .AfterSetup(b => ConfigureApplication(b, lifetime))
                     .SetupWithLifetime(lifetime);
 
