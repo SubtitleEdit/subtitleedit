@@ -218,8 +218,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return string.Empty;
             }
 
-            var cea708 = new Smpte291M(bytes);
-            return cea708.GetText(lineIndex, flush, state);
+            try
+            {
+                var cea708 = new Smpte291M(bytes);
+                return cea708.GetText(lineIndex, flush, state);
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
 
         private static string GetHex(string input)
