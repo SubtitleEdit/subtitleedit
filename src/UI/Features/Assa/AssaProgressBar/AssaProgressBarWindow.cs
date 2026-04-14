@@ -344,7 +344,7 @@ public class AssaProgressBarWindow : Window
         {
             Width = 150,
             HorizontalAlignment = HorizontalAlignment.Left,
-            Watermark = "hh:mm:ss.fff",
+            PlaceholderText = "hh:mm:ss.fff",
         };
         timeBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.ChapterStartTime))
         {

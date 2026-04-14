@@ -25,7 +25,7 @@ public class PickFontNameWindow : Window
         var labelSearch = UiUtil.MakeLabel(Se.Language.General.Search);
         var textBoxSearch = new TextBox
         {
-            Watermark = Se.Language.General.SearchFontNames,
+            PlaceholderText = Se.Language.General.SearchFontNames,
             Margin = new Thickness(10),
             Width = 200,
             HorizontalAlignment = HorizontalAlignment.Stretch,

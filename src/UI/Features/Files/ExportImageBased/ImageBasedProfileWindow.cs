@@ -103,7 +103,7 @@ public class ImageBasedProfileWindow : Window
         // Name textbox
         var nameBox = new TextBox
         {
-            Watermark = Se.Language.General.EnterProfileName,
+            PlaceholderText = Se.Language.General.EnterProfileName,
         };
         nameBox.Bind(TextBox.TextProperty, new Binding($"{nameof(vm.SelectedProfile)}.{nameof(ProfileDisplayItem.Name)}"));
         nameBox.KeyDown += vm.ProfileNameTextBoxOnKeyDown;

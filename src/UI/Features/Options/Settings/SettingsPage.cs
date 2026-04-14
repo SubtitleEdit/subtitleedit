@@ -30,7 +30,7 @@ public class SettingsPage : UserControl
 
         _searchBox = new TextBox
         {
-            Watermark = Se.Language.Options.Settings.SearchSettingsDotDoDot,
+            PlaceholderText = Se.Language.Options.Settings.SearchSettingsDotDoDot,
             Margin = new Thickness(10),
             MaxWidth = 500,
             MinWidth = 360,

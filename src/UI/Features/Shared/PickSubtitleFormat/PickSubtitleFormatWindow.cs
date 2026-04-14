@@ -25,7 +25,7 @@ public class PickSubtitleFormatWindow : Window
         var labelSearch = UiUtil.MakeLabel(Se.Language.General.Search);
         var textBoxSearch = new TextBox
         {
-            Watermark = Se.Language.General.SearchSubtitleFormats,
+            PlaceholderText = Se.Language.General.SearchSubtitleFormats,
             Margin = new Thickness(5, 0, 0, 0),
             Width = 250,
         };

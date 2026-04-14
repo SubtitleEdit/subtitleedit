@@ -68,7 +68,7 @@ public class FixNamesWindow : Window
 
         row++;
         var textBoxExtraNames = UiUtil.MakeTextBox(600, vm, nameof(vm.ExtraNames));
-        textBoxExtraNames.Watermark = lang.EnterExtraNamesHint;
+        textBoxExtraNames.PlaceholderText = lang.EnterExtraNamesHint;
         var buttonAddExtraName = UiUtil.MakeButton(Se.Language.General.Refresh, vm.AddExtraNameCommand);
         var stackExtraNames = new StackPanel
         {

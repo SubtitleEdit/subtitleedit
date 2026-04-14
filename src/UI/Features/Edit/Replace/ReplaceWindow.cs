@@ -26,7 +26,7 @@ public class ReplaceWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 200,
             Margin = new Thickness(0, 0, 0, 3),
-            Watermark = Se.Language.Edit.Find.SearchTextWatermark,
+            PlaceholderText = Se.Language.Edit.Find.SearchTextWatermark,
             ItemsSource = vm.SearchHistory,
             [!AutoCompleteBox.TextProperty] = new Binding(nameof(vm.SearchText)),
             MinimumPrefixLength = 0,
@@ -65,7 +65,7 @@ public class ReplaceWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 180,
             Margin = new Thickness(0, 0, 0, 3),
-            Watermark = Se.Language.Edit.Find.ReplaceTextWatermark,
+            PlaceholderText = Se.Language.Edit.Find.ReplaceTextWatermark,
             [!TextBox.TextProperty] = new Binding(nameof(vm.ReplaceText)) { Mode = BindingMode.TwoWay }
         };
 

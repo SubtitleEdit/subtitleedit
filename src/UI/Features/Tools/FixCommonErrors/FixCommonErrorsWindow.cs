@@ -47,7 +47,7 @@ public class FixCommonErrorsWindow : Window
         labelStep2.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
 
         var textBoxSearch = UiUtil.MakeTextBox(250, vm, nameof(vm.SearchText)).WithMarginRight(25);
-        textBoxSearch.Watermark = Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot;
+        textBoxSearch.PlaceholderText = Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot;
         textBoxSearch.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
         textBoxSearch.TextChanged += vm.TextBoxSearch_TextChanged;
         var panelTopRight = new StackPanel

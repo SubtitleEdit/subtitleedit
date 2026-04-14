@@ -25,7 +25,7 @@ public class ManualChosenEncodingWindow : Window
         var labelSearch = UiUtil.MakeLabel(Se.Language.General.Search);
         var searchBox = new TextBox
         {
-            Watermark = Se.Language.File.ManualChosenEncoding.SearchEncodings,
+            PlaceholderText = Se.Language.File.ManualChosenEncoding.SearchEncodings,
             Margin = new Thickness(10),
             Width = 200,
             HorizontalAlignment = HorizontalAlignment.Stretch,

@@ -14276,9 +14276,12 @@ public partial class MainViewModel :
                 if (WaveformCenter && isPlaying)
                 {
                     // calculate the center position based on the waveform width
-                    var waveformHalfSeconds = (av.EndPositionSeconds - av.StartPositionSeconds) / 2.0;
-                    av.SetPosition(Math.Max(0, mediaPlayerSeconds - waveformHalfSeconds), subtitle, mediaPlayerSeconds,
-                        firstSelectedIndex, _selectedSubtitles ?? []);
+                    if (av != null)
+                    {
+                        var waveformHalfSeconds = (av.EndPositionSeconds - av.StartPositionSeconds) / 2.0;
+                        av.SetPosition(Math.Max(0, mediaPlayerSeconds - waveformHalfSeconds), subtitle, mediaPlayerSeconds,
+                            firstSelectedIndex, _selectedSubtitles ?? []);
+                    }
                 }
                 else if (av != null && isPlaying && _avLastScrolling && !isAvScrolloing)
                 {
