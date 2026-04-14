@@ -33,6 +33,22 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         public IntPtr get_proc_address_ctx;
     }
 
+    /// <summary>
+    /// Matches <c>mpv_metal_init_params</c> in render_metal.h.
+    /// Both <see cref="device"/> (required) and <see cref="layer"/> (optional) must
+    /// be Objective-C object pointers.  When <see cref="layer"/> is non-null mpv
+    /// acquires and presents drawables from the layer automatically on every
+    /// <see cref="RenderMetal"/> call.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    private struct MpvMetalInitParams
+    {
+        /// <summary>id&lt;MTLDevice&gt; – required.</summary>
+        public IntPtr device;
+        /// <summary>id&lt;CAMetalLayer&gt; – optional.  When set mpv manages drawables.</summary>
+        public IntPtr layer;
+    }
+
     [StructLayout(LayoutKind.Sequential)]
     private struct MpvRenderParam
     {
@@ -165,6 +181,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     private const string MPV_RENDER_API_TYPE_OPENGL = "opengl";
     private const string MPV_RENDER_API_TYPE_SW = "sw";
+    private const string MPV_RENDER_API_TYPE_METAL = "metal";
+
+    // Metal render param types (see render_metal.h)
+    private const int MPV_RENDER_PARAM_METAL_INIT_PARAMS = 21;
+    private const int MPV_RENDER_PARAM_METAL_DRAWABLE = 22;
 
     private const int MPV_FORMAT_STRING = 1;
     private const int MPV_FORMAT_FLAG = 3;
@@ -481,6 +502,133 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         finally
         {
             Marshal.FreeHGlobal(initParamsPtr);
+        }
+    }
+
+    /// <summary>
+    /// Initialises the mpv Metal render context.
+    /// <para>
+    /// Both <paramref name="mtlDevice"/> and <paramref name="metalLayer"/> must
+    /// be valid Objective-C object pointers (obtained via the macOS Objective-C
+    /// runtime).  Passing the <c>CAMetalLayer</c> lets mpv manage drawable
+    /// acquisition and presentation internally, so callers only need to invoke
+    /// <see cref="RenderMetal"/> when a new frame is ready.
+    /// </para>
+    /// </summary>
+    [System.Runtime.Versioning.SupportedOSPlatform("macos")]
+    public void InitializeWithMetal(IntPtr mtlDevice, IntPtr metalLayer)
+    {
+        LoadLibraryInternal();
+        EnsureNotDisposed();
+
+        if (_mpvInitialize == null || _mpvRenderContextCreate == null || _mpvRenderContextSetUpdateCallback == null)
+        {
+            Se.LogError(new InvalidOperationException("MPV delegates not loaded"), "LibMpvDynamicPlayer InitializeWithMetal");
+            return;
+        }
+
+        // Tell mpv to use the external (libmpv) renderer.
+        SetOptionString("vo", "libmpv");
+        SetOptionString("gpu-api", "metal");
+
+        var err = _mpvInitialize(_mpv);
+        if (err < 0)
+        {
+            Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer InitializeWithMetal mpv_initialize");
+        }
+
+        // Build mpv_metal_init_params: device (required) + layer (optional).
+        // With a layer set, mpv handles nextDrawable / presentDrawable internally.
+        var initParams = new MpvMetalInitParams
+        {
+            device = mtlDevice,
+            layer = metalLayer
+        };
+
+        var initParamsPtr = Marshal.AllocHGlobal(Marshal.SizeOf<MpvMetalInitParams>());
+        Marshal.StructureToPtr(initParams, initParamsPtr, false);
+
+        try
+        {
+            var apiTypeBytes = Encoding.UTF8.GetBytes(MPV_RENDER_API_TYPE_METAL + "\0");
+            var apiTypePtr = Marshal.AllocHGlobal(apiTypeBytes.Length);
+            Marshal.Copy(apiTypeBytes, 0, apiTypePtr, apiTypeBytes.Length);
+
+            var renderParams = new[]
+            {
+                new MpvRenderParam { type = MPV_RENDER_PARAM_API_TYPE, data = apiTypePtr },
+                new MpvRenderParam { type = MPV_RENDER_PARAM_METAL_INIT_PARAMS, data = initParamsPtr },
+                new MpvRenderParam { type = MPV_RENDER_PARAM_INVALID, data = IntPtr.Zero }
+            };
+
+            var renderParamsSize = Marshal.SizeOf<MpvRenderParam>() * renderParams.Length;
+            var renderParamsPtr = Marshal.AllocHGlobal(renderParamsSize);
+
+            for (var i = 0; i < renderParams.Length; i++)
+            {
+                var offset = renderParamsPtr + (i * Marshal.SizeOf<MpvRenderParam>());
+                Marshal.StructureToPtr(renderParams[i], offset, false);
+            }
+
+            err = _mpvRenderContextCreate(out _renderContext, _mpv, renderParamsPtr);
+            if (err < 0)
+            {
+                Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer InitializeWithMetal mpv_render_context_create");
+            }
+
+            // Register the render-update callback so mpv can trigger redraws.
+            _renderUpdateCallback = OnRenderUpdate;
+            var callbackPtr = Marshal.GetFunctionPointerForDelegate(_renderUpdateCallback);
+            _mpvRenderContextSetUpdateCallback(_renderContext, callbackPtr, IntPtr.Zero);
+
+            Marshal.FreeHGlobal(renderParamsPtr);
+            Marshal.FreeHGlobal(apiTypePtr);
+        }
+        finally
+        {
+            Marshal.FreeHGlobal(initParamsPtr);
+        }
+    }
+
+    /// <summary>
+    /// Asks mpv to render the next frame using the Metal backend.
+    /// <para>
+    /// Because a <c>CAMetalLayer</c> was supplied in
+    /// <see cref="InitializeWithMetal"/>, mpv acquires and presents the
+    /// drawable automatically – no drawable pointer needs to be passed here.
+    /// </para>
+    /// </summary>
+    [System.Runtime.Versioning.SupportedOSPlatform("macos")]
+    public void RenderMetal()
+    {
+        if (_renderContext == IntPtr.Zero || _mpvRenderContextRender == null)
+        {
+            return;
+        }
+
+        // The layer was provided in init params; mpv manages drawables
+        // internally.  An empty (terminator-only) params list is sufficient.
+        var renderParams = new[]
+        {
+            new MpvRenderParam { type = MPV_RENDER_PARAM_INVALID, data = IntPtr.Zero }
+        };
+
+        var renderParamsSize = Marshal.SizeOf<MpvRenderParam>() * renderParams.Length;
+        var renderParamsPtr = Marshal.AllocHGlobal(renderParamsSize);
+
+        try
+        {
+            Marshal.StructureToPtr(renderParams[0], renderParamsPtr, false);
+
+            var err = _mpvRenderContextRender(_renderContext, renderParamsPtr);
+            if (err < 0 && err != -2) // -2 = MPV_ERROR_NOTHING_TO_RENDER
+            {
+                Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer RenderMetal mpv_render_context_render");
+            }
+        }
+        finally
+        {
+            Marshal.FreeHGlobal(renderParamsPtr);
         }
     }
 
