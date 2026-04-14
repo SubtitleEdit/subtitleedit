@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -1647,7 +1648,7 @@ public static class UiUtil
         };
     }
 
-    internal static Label MakeLabel(string text, string propertyIsVisiblePath)
+    internal static Label MakeLabel<TViewModel>(string text, Expression<Func<TViewModel, bool>> isVisibleExpression)
     {
         var label = new Label
         {
@@ -1655,11 +1656,13 @@ public static class UiUtil
             VerticalAlignment = VerticalAlignment.Center,
         };
 
-        label.Bind(ComboBox.IsVisibleProperty, new Binding
-        {
-            Path = propertyIsVisiblePath,
-            Mode = BindingMode.TwoWay,
-        });
+        label.Bind(
+            Label.IsVisibleProperty,
+            CompiledBinding.Create(
+                isVisibleExpression,
+                mode: BindingMode.TwoWay
+            )
+        );
 
         return label;
     }
@@ -1891,6 +1894,24 @@ public static class UiUtil
         return control;
     }
 
+    public static Label WithBindText<TViewModel>(
+     this Label control,
+     TViewModel viewModel,
+     Expression<Func<TViewModel, string>> contentExpression)
+    {
+        control.DataContext = viewModel;
+
+        control.Bind(
+            Label.ContentProperty,
+            CompiledBinding.Create<TViewModel, string>(
+                contentExpression,
+                mode: BindingMode.OneWay
+            )
+        );
+
+        return control;
+    }
+
     public static Label WithBindText(this Label control, object viewModel, string contentPropertyPath, IValueConverter valueConverter)
     {
         control.DataContext = viewModel;
@@ -1933,6 +1954,24 @@ public static class UiUtil
             Path = visiblePropertyPath,
             Mode = BindingMode.TwoWay,
         });
+
+        return control;
+    }
+
+    public static Label WithBindVisible<TViewModel>(
+        this Label control,
+        TViewModel viewModel,
+        Expression<Func<TViewModel, bool>> visibleExpression)
+    {
+        control.DataContext = viewModel;
+
+        control.Bind(
+            Label.IsVisibleProperty,
+            CompiledBinding.Create(
+                visibleExpression,
+                mode: BindingMode.OneWay
+            )
+        );
 
         return control;
     }
@@ -2420,7 +2459,7 @@ public static class UiUtil
     }
 
     internal static void SetupWindowsSystemMenu(Window? window)
-    { 
+    {
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || window == null)
         {
             return;

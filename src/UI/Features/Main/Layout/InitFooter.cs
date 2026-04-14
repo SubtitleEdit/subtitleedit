@@ -42,8 +42,8 @@ public static class InitFooter
         grid.Add(waveformBusyIcon, 0);
 
         var labelWaveFormText = UiUtil.MakeLabel()
-            .WithBindText(vm, nameof(vm.WaveformGeneratingText))
-            .WithBindVisible(vm, nameof(vm.IsWaveformGenerating))
+            .WithBindText(vm, vm => vm.WaveformGeneratingText)
+            .WithBindVisible(vm, vm => vm.IsWaveformGenerating)
             .WithMarginRight(15);
         labelWaveFormText.Opacity = 0.5;
         grid.Add(labelWaveFormText, 0, 1);
@@ -137,8 +137,8 @@ public static class InitFooter
                     Margin = new Thickness(0),
                 },
                 UiUtil.MakeLabel()
-                    .WithBindText(vm, nameof(vm.VideoOffsetText))
-                    .WithBindVisible(vm, nameof(vm.IsVideoOffsetVisible)).WithMarginRight(15),
+                    .WithBindText(vm, vm => vm.VideoOffsetText)
+                    .WithBindVisible(vm, vm => vm.IsVideoOffsetVisible).WithMarginRight(15),
 
                 right,
             },

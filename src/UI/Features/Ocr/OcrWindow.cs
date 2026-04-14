@@ -199,7 +199,7 @@ public class OcrWindow : Window
                 comboBoxEngines,
 
                 // NOcr settings
-                UiUtil.MakeLabel(Se.Language.Ocr.Database, nameof(vm.IsNOcrVisible)),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.Database, vm => vm.IsNOcrVisible),
                 UiUtil.MakeComboBox(vm.NOcrDatabases, vm, nameof(vm.SelectedNOcrDatabase), nameof(vm.IsNOcrVisible))
                     .WithMarginRight(0)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
@@ -209,19 +209,19 @@ public class OcrWindow : Window
                     .WithBottomAlignment()
                     .WithBindIsVisible(nameof(vm.IsNOcrVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
-                UiUtil.MakeLabel(Se.Language.Ocr.MaxWrongPixels, nameof(vm.IsNOcrVisible)),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.MaxWrongPixels, vm => vm.IsNOcrVisible),
                 UiUtil.MakeComboBox(vm.NOcrMaxWrongPixelsList, vm, nameof(vm.SelectedNOcrMaxWrongPixels),
                         nameof(vm.IsNOcrVisible))
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
-                UiUtil.MakeLabel(Se.Language.Ocr.NumberOfPixelsIsSpace, nameof(vm.IsNOcrVisible)),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.NumberOfPixelsIsSpace, vm => vm.IsNOcrVisible),
                 UiUtil.MakeComboBox(vm.NOcrPixelsAreSpaceList, vm, nameof(vm.SelectedNOcrPixelsAreSpace),
                         nameof(vm.IsNOcrVisible))
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
 
                 // Image Compare settings
-                UiUtil.MakeLabel(Se.Language.Ocr.Database, nameof(vm.IsBinaryImageCompareVisible)),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.Database, vm => vm.IsBinaryImageCompareVisible),
                 UiUtil.MakeComboBox(vm.ImageCompareDatabases, vm, nameof(vm.SelectedImageCompareDatabase), nameof(vm.IsBinaryImageCompareVisible))
                     .WithMarginRight(0)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
@@ -231,17 +231,17 @@ public class OcrWindow : Window
                     .WithBottomAlignment()
                     .WithBindIsVisible(nameof(vm.IsBinaryImageCompareVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
-                UiUtil.MakeLabel(Se.Language.Ocr.NumberOfPixelsIsSpace, nameof(vm.IsBinaryImageCompareVisible)),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.NumberOfPixelsIsSpace, vm => vm.IsBinaryImageCompareVisible),
                 UiUtil.MakeComboBox(vm.BinaryOcrPixelsAreSpaceList, vm, nameof(vm.SelectedBinaryOcrPixelsAreSpace),
                         nameof(vm.IsBinaryImageCompareVisible))
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
-                UiUtil.MakeLabel(Se.Language.Ocr.MaxErrorPct, nameof(vm.IsBinaryImageCompareVisible)),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.MaxErrorPct, vm => vm.IsBinaryImageCompareVisible),
                 UiUtil.MakeNumericUpDownOneDecimal(0, 50, 120, vm, nameof(vm.BinaryOcrMaxErrorPercent), nameof(vm.IsBinaryImageCompareVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
 
                 // Tesseract settings
-                UiUtil.MakeLabel(Se.Language.General.Language, nameof(vm.IsTesseractVisible)),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsTesseractVisible),
                 UiUtil.MakeComboBox(vm.TesseractDictionaryItems, vm, nameof(vm.SelectedTesseractDictionaryItem),
                         nameof(vm.IsTesseractVisible))
                     .WithWidth(100)
@@ -250,26 +250,26 @@ public class OcrWindow : Window
                     .BindIsEnabled(vm, nameof(vm.IsOcrRunning), new InverseBooleanConverter()),
 
                 // Ollama settings
-                UiUtil.MakeLabel(Se.Language.General.Language, nameof(vm.IsOllamaVisible)),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsOllamaVisible),
                 UiUtil.MakeComboBox(vm.OllamaLanguages, vm, nameof(vm.SelectedOllamaLanguage),
                         nameof(vm.IsOllamaVisible))
                     .WithWidth(100)
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
-                UiUtil.MakeLabel(Se.Language.General.Model, nameof(vm.IsOllamaVisible)),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Model, vm => vm.IsOllamaVisible),
                 UiUtil.MakeTextBox(160, vm, nameof(vm.OllamaModel))
                     .BindIsVisible(vm, nameof(vm.IsOllamaVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
                 UiUtil.MakeBrowseButton(vm.PickOllamaModelCommand)
                     .BindIsVisible(vm, nameof(vm.IsOllamaVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
-                UiUtil.MakeLabel(Se.Language.General.Url, nameof(vm.IsOllamaVisible)),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Url, vm => vm.IsOllamaVisible),
                 UiUtil.MakeTextBox(220, vm, nameof(vm.OllamaUrl))
                     .BindIsVisible(vm, nameof(vm.IsOllamaVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
 
                  // Ollama settings
-                UiUtil.MakeLabel(Se.Language.General.Language, nameof(vm.IsLlamaCppVisible)),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsLlamaCppVisible),
                 UiUtil.MakeComboBox(vm.OllamaLanguages, vm, nameof(vm.SelectedOllamaLanguage),
                         nameof(vm.IsLlamaCppVisible))
                     .WithWidth(100)
@@ -282,25 +282,25 @@ public class OcrWindow : Window
                 //UiUtil.MakeBrowseButton(vm.PickOllamaModelCommand)
                 //    .BindIsVisible(vm, nameof(vm.IsLlamaCppVisible))
                 //    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
-                UiUtil.MakeLabel(Se.Language.General.Url, nameof(vm.IsLlamaCppVisible)),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Url, vm => vm.IsLlamaCppVisible),
                 UiUtil.MakeTextBox(220, vm, nameof(vm.LlamaCppUrl))
                     .BindIsVisible(vm, nameof(vm.IsLlamaCppVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
 
                 // Google vision settings
-                UiUtil.MakeLabel(Se.Language.General.Language, nameof(vm.IsGoogleVisionVisible)),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsGoogleVisionVisible),
                 UiUtil.MakeComboBox(vm.GoogleVisionLanguages, vm, nameof(vm.SelectedGoogleVisionLanguage),
                         nameof(vm.IsGoogleVisionVisible))
                     .WithWidth(100)
                     .WithMarginRight(10)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
-                UiUtil.MakeLabel(Se.Language.General.ApiKey, nameof(vm.IsGoogleVisionVisible)),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.ApiKey, vm => vm.IsGoogleVisionVisible),
                 UiUtil.MakeTextBox(200, vm, nameof(vm.GoogleVisionApiKey))
                     .BindIsVisible(vm, nameof(vm.IsGoogleVisionVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
 
                 // Google Lens settings
-                UiUtil.MakeLabel(Se.Language.General.Language, nameof(vm.IsGoogleLensVisible)),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsGoogleLensVisible),
                 UiUtil.MakeComboBox(vm.GoogleLensLanguages, vm, nameof(vm.SelectedGoogleLensLanguage),
                         nameof(vm.IsGoogleLensVisible))
                     .WithWidth(100)
@@ -308,7 +308,7 @@ public class OcrWindow : Window
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
 
                 // Paddle OCR settings
-                UiUtil.MakeLabel(Se.Language.General.Language, nameof(vm.IsPaddleOcrVisible)),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsPaddleOcrVisible),
                 UiUtil.MakeComboBox(vm.PaddleOcrLanguages, vm, nameof(vm.SelectedPaddleOcrLanguage),
                         nameof(vm.IsPaddleOcrVisible))
                     .WithWidth(100)
@@ -316,7 +316,7 @@ public class OcrWindow : Window
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
 
                 // Mistral OCR settings
-                UiUtil.MakeLabel(Se.Language.General.ApiKey, nameof(vm.IsMistralOcrVisible)),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.ApiKey, vm => vm.IsMistralOcrVisible),
                 UiUtil.MakeTextBox(200, vm, nameof(vm.MistralApiKey))
                     .BindIsVisible(vm, nameof(vm.IsMistralOcrVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
