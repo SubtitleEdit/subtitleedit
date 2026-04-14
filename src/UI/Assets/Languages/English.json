@@ -1966,6 +1966,7 @@
       "newEmptyDefaultMs": "Default new subtitle duration (ms)",
       "promptBeforeDelete": "Prompt before delete",
       "rememberPositionAndSize": "Remember window position and size",
+      "openLastFileOnStart": "Open last recent file on start",
       "autoBackupOn": "Auto-backup",
       "autoBackupIntervalMinutes": "Auto-backup interval (minutes)",
       "autoBackupDeleteAfterDays": "Auto-backup retention (days)",

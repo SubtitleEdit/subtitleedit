@@ -382,7 +382,7 @@ public class LanguageSettings
         NewEmptyDefaultMs = "Default new subtitle duration (ms)";
         PromptBeforeDelete = "Prompt before delete";
         RememberPositionAndSize = "Remember window position and size";
-        OpenLastFileOnStart = "Open last file on start";
+        OpenLastFileOnStart = "Open last recent file on start";
         AutoBackupOn = "Auto-backup";
         AutoBackupIntervalMinutes = "Auto-backup interval (minutes)";
         AutoBackupDeleteAfterDays = "Auto-backup retention (days)";
