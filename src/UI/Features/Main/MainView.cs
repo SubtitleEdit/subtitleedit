@@ -73,18 +73,23 @@ public class MainView : ViewBase
 
         // Menu bar
         InitMenu.Make(_vm);
-        root.Children.Add(_vm.Menu.Dock(Dock.Top));
+        DockPanel.SetDock(_vm.Menu, Dock.Top);
+        root.Children.Add(_vm.Menu);
 
         _vm.ToolbarTopSeparator = UiUtil.MakeHorizontalSeparator(0.5, 0.5, new Thickness(0, 0, 0, 0));
         _vm.ToolbarTopSeparator.IsVisible = Se.Settings.Appearance.ShowHorizontalLineAboveToolbar;
-        root.Children.Add(_vm.ToolbarTopSeparator.Dock(Dock.Top));
+        DockPanel.SetDock(_vm.ToolbarTopSeparator, Dock.Top);
+        root.Children.Add(_vm.ToolbarTopSeparator);
 
         // Toolbar
         _vm.Toolbar = InitToolbar.Make(_vm);
-        root.Children.Add(_vm.Toolbar.Dock(Dock.Top));
+        DockPanel.SetDock(_vm.Toolbar, Dock.Top);
+        root.Children.Add(_vm.Toolbar);
 
         // Footer
-        root.Children.Add(InitFooter.Make(_vm).Dock(Dock.Bottom));
+        var footer = InitFooter.Make(_vm);
+        DockPanel.SetDock(footer, Dock.Bottom);
+        root.Children.Add(footer);
 
         // Main content (fills all remaining space)
         _vm.ContentGrid = ViewContent.Make(_vm);

@@ -13,7 +13,7 @@ using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Platform.Windows;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
-using Projektanker.Icons.Avalonia;
+using Optris.Icons.Avalonia;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;

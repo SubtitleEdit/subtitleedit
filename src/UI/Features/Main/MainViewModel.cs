@@ -12510,7 +12510,7 @@ public partial class MainViewModel :
                         menuItem.CommandParameter = audioTrack;
                         if (audioTrack.FfIndex == (_audioTrack?.FfIndex ?? -1))
                         {
-                            menuItem.Icon = new Projektanker.Icons.Avalonia.Icon
+                            menuItem.Icon = new Optris.Icons.Avalonia.Icon
                             {
                                 Value = IconNames.CheckBold,
                                 VerticalAlignment = VerticalAlignment.Center,
@@ -14310,7 +14310,7 @@ public partial class MainViewModel :
 
                 if (isPlaying)
                 {
-                    Projektanker.Icons.Avalonia.Attached.SetIcon(ButtonWaveformPlay, IconNames.Pause);
+                    Optris.Icons.Avalonia.Attached.SetIcon(ButtonWaveformPlay, IconNames.Pause);
 
                     if (_playSelectionItem != null && mediaPlayerSeconds >= _playSelectionItem.EndSeconds)
                     {
@@ -14369,7 +14369,7 @@ public partial class MainViewModel :
                 }
                 else
                 {
-                    Projektanker.Icons.Avalonia.Attached.SetIcon(ButtonWaveformPlay, IconNames.Play);
+                    Optris.Icons.Avalonia.Attached.SetIcon(ButtonWaveformPlay, IconNames.Play);
                     ResetPlaySelection();
                 }
 

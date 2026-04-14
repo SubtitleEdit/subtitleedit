@@ -23,7 +23,7 @@ public static class ViewOffsetTimeCodes
         };
 
         var timeUpDown = new TimeCodeUpDown() { DataContext = vm };
-        timeUpDown.Bind(TimeCodeUpDown.ValueProperty, new Binding(nameof(vm.OffsetTimeCodesTime), BindingMode.TwoWay));   
+        timeUpDown.Bind(TimeCodeUpDown.ValueProperty, new Binding { Path = nameof(vm.OffsetTimeCodesTime), Mode = BindingMode.TwoWay });
 
         var panelTimeCode = new StackPanel
         {

@@ -6,7 +6,7 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Projektanker.Icons.Avalonia;
+using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 

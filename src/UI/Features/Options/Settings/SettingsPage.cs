@@ -11,7 +11,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Projektanker.Icons.Avalonia;
+using Optris.Icons.Avalonia;
 using System;
 using System.Collections.Generic;
 

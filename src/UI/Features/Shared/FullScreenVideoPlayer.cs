@@ -23,7 +23,8 @@ public class FullScreenVideoWindow : Window
         Action onClose)
     {       
         WindowState = WindowState.FullScreen;
-        SystemDecorations = SystemDecorations.None;
+        WindowDecorations = WindowDecorations.None;
+        
 
         var grid = new Grid
         {

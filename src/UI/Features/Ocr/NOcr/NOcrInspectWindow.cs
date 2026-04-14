@@ -229,7 +229,7 @@ public class NOcrInspectWindow : Window
         var comboBoxLinesToAutoDraw = UiUtil.MakeComboBox(vm.NoOfLinesToAutoDrawList, vm, nameof(vm.SelectedNoOfLinesToAutoDraw))
             .WithBindEnabled(nameof(vm.IsEditControlsEnabled));
 
-        var iconInfo = new Projektanker.Icons.Avalonia.Icon
+        var iconInfo = new Optris.Icons.Avalonia.Icon
         {
             Value = IconNames.Information,
             Margin = new Thickness(5, 0, 0, 0),

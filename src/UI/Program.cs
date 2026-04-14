@@ -10,9 +10,9 @@ using Nikse.SubtitleEdit.Features.Help.About;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Projektanker.Icons.Avalonia;
-using Projektanker.Icons.Avalonia.FontAwesome;
-using Projektanker.Icons.Avalonia.MaterialDesign;
+using Optris.Icons.Avalonia;
+using Optris.Icons.Avalonia.FontAwesome;
+using Optris.Icons.Avalonia.MaterialDesign;
 using System;
 using System.Text;
 
@@ -73,10 +73,7 @@ namespace Nikse.SubtitleEdit
                 SetupMainWindow(lifetime);
 
 #if DEBUG
-                if (lifetime.MainWindow != null)
-                {
-                    lifetime.MainWindow.AttachDevTools();
-                }
+                Application.Current?.AttachDeveloperTools();
 #endif
 
                 // Start the application

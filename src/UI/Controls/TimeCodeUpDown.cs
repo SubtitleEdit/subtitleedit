@@ -225,7 +225,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
 
-        private void OnTextBoxGotFocus(object? sender, GotFocusEventArgs e)
+        private void OnTextBoxGotFocus(object? sender, FocusChangedEventArgs e)
         {
             if (_textBox != null)
             {
