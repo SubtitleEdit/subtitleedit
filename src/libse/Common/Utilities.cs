@@ -1048,63 +1048,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        private static string TrimUserDictionaryWord(string word)
-        {
-            if (word.Length == 0)
-            {
-                return string.Empty;
-            }
-
-            var start = 0;
-            var end = word.Length - 1;
-            while (start <= end && ShouldTrimUserDictionaryCharacter(word[start]))
-            {
-                start++;
-            }
-
-            while (end >= start && ShouldTrimUserDictionaryCharacter(word[end]))
-            {
-                end--;
-            }
-
-            if (start > end)
-            {
-                return string.Empty;
-            }
-
-            return word.Substring(start, end - start + 1);
-        }
-
-        private static bool ShouldTrimUserDictionaryCharacter(char ch)
-        {
-            if (char.IsWhiteSpace(ch))
-            {
-                return true;
-            }
-
-            var category = CharUnicodeInfo.GetUnicodeCategory(ch);
-            return category == UnicodeCategory.Control || category == UnicodeCategory.Format;
-        }
-
-        public static string NormalizeUserDictionaryWord(string? word)
-        {
-            if (string.IsNullOrWhiteSpace(word))
-            {
-                return string.Empty;
-            }
-
-            var trimmed = TrimUserDictionaryWord(word);
-            if (trimmed.Length == 0)
-            {
-                return string.Empty;
-            }
-
-            return trimmed.Normalize(NormalizationForm.FormC).ToLowerInvariant();
-        }
-
         public static void RemoveFromUserDictionary(string word, string languageName)
         {
-            word = NormalizeUserDictionaryWord(word);
+            word = word.Trim();
             if (word.Length > 0)
             {
                 string userWordsXmlFileName = DictionaryFolder + languageName + "_user.xml";
@@ -1124,8 +1070,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     foreach (XmlNode node in nodes)
                     {
-                        string w = NormalizeUserDictionaryWord(node.InnerText);
-                        if (w.Length > 0 && w != word && !words.Contains(w))
+                        string w = node.InnerText.Trim();
+                        if (w.Length > 0 && w != word)
                         {
                             words.Add(w);
                         }
@@ -1151,7 +1097,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static void AddToUserDictionary(string word, string languageName)
         {
-            word = NormalizeUserDictionaryWord(word);
+            word = word.Trim();
             if (word.Length > 0)
             {
                 var userWordsXmlFileName = DictionaryFolder + languageName + "_user.xml";
@@ -1182,8 +1128,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                     {
                         foreach (XmlNode node in nodes)
                         {
-                            string w = NormalizeUserDictionaryWord(node.InnerText);
-                            if (w.Length > 0 && !words.Contains(w))
+                            string w = node.InnerText.Trim();
+                            if (w.Length > 0)
                             {
                                 words.Add(w);
                             }
@@ -1230,8 +1176,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 userWordDictionary.Load(userWordListXmlFileName);
                 foreach (XmlNode node in userWordDictionary.DocumentElement.SelectNodes("word"))
                 {
-                    string s = NormalizeUserDictionaryWord(node.InnerText);
-                    if (s.Length > 0 && !userWordList.Contains(s))
+                    string s = node.InnerText.ToLowerInvariant();
+                    if (!userWordList.Contains(s))
                     {
                         userWordList.Add(s);
                     }

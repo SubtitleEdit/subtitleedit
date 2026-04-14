@@ -507,7 +507,6 @@ public partial class OcrViewModel : ObservableObject
         {
             var word = selectedWord.ResolveSubmittedWord(result.Word);
             _ = _ocrFixEngine.AddUserWord(word);
-            RemoveUnknownWordsFromCurrentState(selectedWord.Word.Word);
         }
         _isCtrlDown = false;
     }
