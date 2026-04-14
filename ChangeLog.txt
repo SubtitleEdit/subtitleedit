@@ -13,11 +13,13 @@ v5.0.0-beta16 (xth April 2026)
 * Fix Word spell check - thx moob158
 * Fix grid sync when playing without waveform - thx vsemozhetbyt 
 * Fix display preview on video panel for audio files - thx benshgit 
-* Add Crisp ASR Parakeet, Canary, Cohere
+* Add Crisp ASR: Parakeet, Canary, Cohere
 * Fix bugs in NextWordInDoNotBreakList - thx ivandrofly 
 * Add check box for custom start/end in remove text for HI - thx aaroncledge
 * Fix crash in OCR change allways - thx Ronaldvr
 * Some dictionary improvements for OCR
+* Add new setting for open-file-on-start - thx shotfirer
+* Allow more single-click-keys in text box - thx darnn
 
 -----------------------------------------------------------------------------------------------------
 

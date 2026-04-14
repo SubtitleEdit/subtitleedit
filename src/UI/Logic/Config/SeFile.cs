@@ -6,7 +6,7 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 
 public class SeFile
 {
-    public bool ShowRecentFiles { get; set; } = true;
+    public bool OpenLastFileOnStart { get; set; } = true;
     public int RecentFilesMaximum { get; set; } = 25;
     public List<RecentFile> RecentFiles { get; set; } = new();
     public List<SeExportCustomFormatItem> ExportCustomFormats { get; set; } = new();

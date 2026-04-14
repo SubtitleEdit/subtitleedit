@@ -12127,7 +12127,7 @@ public partial class MainViewModel :
                 Program.PendingFileToOpen = null;
             });
         }
-        else if (Se.Settings.File.ShowRecentFiles)
+        else if (Se.Settings.File.OpenLastFileOnStart)
         {
             var first = Se.Settings.File.RecentFiles.FirstOrDefault();
             if (first != null && File.Exists(first.SubtitleFileName))
