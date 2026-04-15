@@ -61,6 +61,9 @@ public class AudioVisualizer : Control
     public static readonly StyledProperty<Color> WaveformCursorColorProperty =
         AvaloniaProperty.Register<AudioVisualizer, Color>(nameof(WaveformCursorColor));
 
+    public static readonly StyledProperty<Color> WaveformShotChangeColorProperty =
+       AvaloniaProperty.Register<AudioVisualizer, Color>(nameof(WaveformShotChangeColor));
+
     public static readonly StyledProperty<Color> WaveformParagraphLeftColorProperty =
         AvaloniaProperty.Register<AudioVisualizer, Color>(nameof(WaveformParagraphLeftColor));
 
@@ -158,6 +161,18 @@ public class AudioVisualizer : Control
         {
             _paintPenCursor = new Pen(new SolidColorBrush(value), 1);
             SetValue(WaveformCursorColorProperty, value);
+        }
+    }
+
+    
+         public Color WaveformShotChangeColor
+    {
+        get => GetValue(WaveformShotChangeColorProperty);
+        set
+        {
+            _paintShotChangeThickPen = new Pen(new SolidColorBrush(value), 2);
+            _paintShotChangeThinPen = new Pen(new SolidColorBrush(value), 1);
+            SetValue(WaveformShotChangeColorProperty, value);
         }
     }
 
@@ -276,6 +291,9 @@ public class AudioVisualizer : Control
     private Pen _paintWaveform = new Pen(new SolidColorBrush(Color.FromArgb(150, 144, 238, 144)), 1);
     private Pen _paintPenSelected = new Pen(new SolidColorBrush(Color.FromArgb(210, 254, 10, 10)), 1);
     private Pen _paintPenCursor = new Pen(Brushes.Cyan, 1);
+    private Pen _paintShotChangeThickPen = new Pen(Brushes.AntiqueWhite, 2);
+    private Pen _paintShotChangeThinPen = new Pen(Brushes.AntiqueWhite, 1);
+
     private readonly Pen _paintGridLines = new Pen(Brushes.DarkGray, 0.2);
     private readonly IBrush _mouseOverBrush = new SolidColorBrush(Color.FromArgb(50, 255, 255, 0));
 
@@ -292,8 +310,6 @@ public class AudioVisualizer : Control
     private Pen _paintRight = new Pen(new SolidColorBrush(Color.FromArgb(100, 255, 0, 0)), 2);
     private IBrush _paintText = new SolidColorBrush(Se.Settings.Waveform.WaveformTextColor.FromHexToColor());
     private Typeface _typeface = new Typeface(UiUtil.GetDefaultFontName(), FontStyle.Normal, Se.Settings.Waveform.WaveformTextFontBold ? FontWeight.Bold : FontWeight.Normal);
-    private readonly Pen _paintShotChangeThickPen = new Pen(Brushes.AntiqueWhite, 2);
-    private readonly Pen _paintShotChangeThinPen = new Pen(Brushes.AntiqueWhite, 1);
     private readonly Pen _paintShotChangeParagraphStartPen = new Pen(new SolidColorBrush(Color.FromArgb(175, 0, 100, 0)), 2, dashStyle: DashStyle.Dash);
     private readonly Pen _paintShotChangeParagraphEndPen = new Pen(new SolidColorBrush(Color.FromArgb(175, 110, 10, 10)), 2, dashStyle: DashStyle.Dash);
     private readonly Pen _centerLinePen = new Pen(Brushes.DarkGray, 0.5);

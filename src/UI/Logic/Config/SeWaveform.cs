@@ -21,6 +21,7 @@ public class SeWaveform
     public string WaveformBackgroundColor { get; set; }
     public string WaveformSelectedColor { get; set; }
     public string WaveformCursorColor { get; set; }
+    public string WaveformShotChangeColor { get; set; }
     public string WaveformParagraphLeftColor { get; set; }
     public string WaveformParagraphRightColor { get; set; }
     public string WaveformFancyHighColor { get; set; }
@@ -65,6 +66,7 @@ public class SeWaveform
         WaveformBackgroundColor = Color.FromArgb(255, 0, 0, 0).FromColorToHex();
         WaveformSelectedColor = Color.FromArgb(150, 0, 120, 255).FromColorToHex();
         WaveformCursorColor = Colors.Cyan.FromColorToHex();
+        WaveformShotChangeColor = Colors.AntiqueWhite.FromColorToHex();
         WaveformParagraphLeftColor = Color.FromArgb(90, 0, 255, 0).FromColorToHex();
         WaveformParagraphRightColor = Color.FromArgb(90, 255, 0, 0).FromColorToHex();
         WaveformFancyHighColor = Colors.Orange.FromColorToHex();

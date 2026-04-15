@@ -197,6 +197,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private Color _waveformSelectedColor;
     [ObservableProperty] private Color _waveformParagraphSelectedBackgroundColor;
     [ObservableProperty] private Color _waveformCursorColor;
+    [ObservableProperty] private Color _waveformShotChangeColor;
     [ObservableProperty] private Color _waveformParagraphLeftColor;
     [ObservableProperty] private Color _waveformParagraphRightColor;
     [ObservableProperty] private Color _waveformFancyHighColor;
@@ -723,6 +724,7 @@ public partial class SettingsViewModel : ObservableObject
         WaveformSelectedColor = Se.Settings.Waveform.WaveformSelectedColor.FromHexToColor();
         WaveformParagraphSelectedBackgroundColor = Se.Settings.Waveform.ParagraphSelectedBackground.FromHexToColor();
         WaveformCursorColor = Se.Settings.Waveform.WaveformCursorColor.FromHexToColor();
+        WaveformShotChangeColor = Se.Settings.Waveform.WaveformShotChangeColor.FromHexToColor();
         WaveformParagraphLeftColor = Se.Settings.Waveform.WaveformParagraphLeftColor.FromHexToColor();
         WaveformParagraphRightColor = Se.Settings.Waveform.WaveformParagraphRightColor.FromHexToColor();
         WaveformFancyHighColor = Se.Settings.Waveform.WaveformFancyHighColor.FromHexToColor();
@@ -1299,6 +1301,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.ParagraphSelectedBackground = WaveformParagraphSelectedBackgroundColor.FromColorToHex();
         Se.Settings.Waveform.WaveformSelectedColor = WaveformSelectedColor.FromColorToHex();
         Se.Settings.Waveform.WaveformCursorColor = WaveformCursorColor.FromColorToHex();
+        Se.Settings.Waveform.WaveformShotChangeColor = WaveformShotChangeColor.FromColorToHex();
         Se.Settings.Waveform.WaveformParagraphLeftColor = WaveformParagraphLeftColor.FromColorToHex();
         Se.Settings.Waveform.WaveformParagraphRightColor = WaveformParagraphRightColor.FromColorToHex();
         Se.Settings.Waveform.WaveformFancyHighColor = WaveformFancyHighColor.FromColorToHex();

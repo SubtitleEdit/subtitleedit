@@ -498,6 +498,7 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.WaveformParagraphSelectedBackgroundColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformParagraphSelectedBackgroundColor))),
             new SettingsItem(Se.Language.Options.Settings.WaveformSelectedColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformSelectedColor))),
             new SettingsItem(Se.Language.Options.Settings.WaveformCursorColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformCursorColor))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformShotChangeColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformShotChangeColor))),
             new SettingsItem(Se.Language.Options.Settings.WaveformParagraphLeftColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformParagraphLeftColor))),
             new SettingsItem(Se.Language.Options.Settings.WaveformParagraphRightColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformParagraphRightColor))),
             new SettingsItem(Se.Language.Options.Settings.WaveformFancyHighColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformFancyHighColor))),
