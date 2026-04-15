@@ -96,7 +96,7 @@ public partial class ReviewSpeechHistoryViewModel : ObservableObject
             }
         }
 
-        await _mpvContext.LoadFile(fileName);
+        await _mpvContext.LoadAudio(fileName);
 
         foreach (var row in HistoryItems)
         {

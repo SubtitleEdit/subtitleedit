@@ -761,6 +761,25 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         _fileName = path;
     }
 
+    public async Task LoadAudio(string path)
+    {
+        EnsureNotDisposed();
+
+        var err = await Task.Run(() => DoMpvCommand("loadfile", path));
+        if (err < 0)
+        {
+            Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer LoadFile");
+        }
+
+        SetOptionString("keep-open", "always");
+        SetOptionString("sid", "no");
+
+        SetOptionString("hr-seek", "yes");
+        SetOptionString("rebase-start-time", "no");
+
+        _fileName = path;
+    }
+
     public void PlayOrPause() // toggle play/pause
     {
         _pausedValue = null;

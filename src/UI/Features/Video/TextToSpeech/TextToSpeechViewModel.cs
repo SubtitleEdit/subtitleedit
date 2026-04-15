@@ -584,7 +584,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 throw new InvalidOperationException($"Failed to initialize mpv: {_mpvContext.GetErrorString(err)}");
             }
         }
-        await _mpvContext.LoadFile(fileName);
+        await _mpvContext.LoadAudio(fileName);
     }
 
     private async Task<bool> IsEngineInstalled(ITtsEngine engine)

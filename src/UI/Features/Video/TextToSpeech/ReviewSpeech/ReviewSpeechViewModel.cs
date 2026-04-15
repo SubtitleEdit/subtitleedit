@@ -194,7 +194,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             }
         }
 
-        await _mpvContext.LoadFile(fileName);
+        await _mpvContext.LoadAudio(fileName);
 
         _timer.Start();
     }
