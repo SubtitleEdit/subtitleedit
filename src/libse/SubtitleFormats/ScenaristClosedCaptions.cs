@@ -520,15 +520,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
-                sb.AppendLine($"{ToTimeCode(p.StartTime.TotalMilliseconds)}\t94ae 94ae 9420 9420 {ToSccText(p.Text, language)} 942f 942f");
+                var sccText = ToSccText(p.Text, language);
+                var loadData = $"94ae 94ae 9420 9420 {sccText}";
+                var preRollMilliseconds = CalculatePreRollMilliseconds(loadData);
+                var loadTime = Math.Max(0, p.StartTime.TotalMilliseconds - preRollMilliseconds);
+
+                sb.AppendLine($"{ToTimeCode(loadTime)}\t{loadData}");
+                sb.AppendLine();
+                sb.AppendLine($"{ToTimeCode(p.StartTime.TotalMilliseconds)}\t942f 942f");
                 sb.AppendLine();
 
-                var next = subtitle.GetParagraphOrDefault(i + 1);
-                if (next == null || Math.Abs(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) > 100)
-                {
-                    sb.AppendLine($"{ToTimeCode(p.EndTime.TotalMilliseconds)}\t942c 942c");
-                    sb.AppendLine();
-                }
+                sb.AppendLine($"{ToTimeCode(p.EndTime.TotalMilliseconds)}\t942c 942c");
+                sb.AppendLine();
             }
 
             return sb.ToString();
@@ -824,6 +827,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             Paragraph p = null;
+            string loadedText = null;
             foreach (string line in lines)
             {
                 var s = line.Trim();
@@ -831,19 +835,47 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (match.Success)
                 {
                     var startTime = ParseTimeCode(s.Substring(0, match.Length - 1));
-                    var text = GetSccText(s.Substring(match.Index).ToLowerInvariant(), ref _errorCount);
+                    var payload = s.Substring(match.Length).Trim().ToLowerInvariant();
+                    var parts = payload.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                    var text = GetSccText(payload, ref _errorCount);
 
-                    if (text == "942c 942c" || text == "942c")
+                    if (!string.IsNullOrWhiteSpace(text))
+                    {
+                        loadedText = text;
+                    }
+
+                    var hasDisplay = ContainsSccCommand(parts, "942f");
+                    var hasClear = ContainsSccCommand(parts, "942c");
+                    var hasEraseNonDisplayedMemory = ContainsSccCommand(parts, "94ae");
+
+                    if (hasDisplay)
+                    {
+                        if (p != null && p.EndTime.TotalMilliseconds <= p.StartTime.TotalMilliseconds)
+                        {
+                            p.EndTime.TotalMilliseconds = startTime.TotalMilliseconds;
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(loadedText))
+                        {
+                            p = new Paragraph(startTime, new TimeCode(startTime.TotalMilliseconds), loadedText);
+                            subtitle.Paragraphs.Add(p);
+                        }
+
+                        loadedText = null;
+                    }
+
+                    if (hasClear)
                     {
                         if (p != null)
                         {
                             p.EndTime.TotalMilliseconds = startTime.TotalMilliseconds;
+                            p = null;
                         }
                     }
-                    else
+
+                    if (hasEraseNonDisplayedMemory && !hasDisplay && string.IsNullOrWhiteSpace(text))
                     {
-                        p = new Paragraph(startTime, new TimeCode(startTime.TotalMilliseconds), text);
-                        subtitle.Paragraphs.Add(p);
+                        loadedText = null;
                     }
                 }
             }
@@ -1223,6 +1255,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var arr = start.Split(new[] { ':', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
             return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));
+        }
+
+        private static int CalculatePreRollMilliseconds(string loadData)
+        {
+            var frameDuration = Math.Max(1, FramesToMillisecondsMax999(1));
+            var codeCount = loadData.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).Length;
+            var frameCount = Math.Max(2, codeCount + 2);
+            return frameCount * frameDuration;
+        }
+
+        private static bool ContainsSccCommand(IEnumerable<string> parts, string command)
+        {
+            foreach (var part in parts)
+            {
+                if (part == command)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
