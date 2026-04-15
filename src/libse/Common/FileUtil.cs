@@ -47,6 +47,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     index += n;
                     count -= n;
                 }
+
                 return bytes;
             }
         }
@@ -148,10 +149,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return false;
                 }
 
-                return buffer[0] == 0x50  // P
-                    && buffer[1] == 0x4B  // K
-                    && buffer[2] == 0x03  // (ETX)
-                    && buffer[3] == 0x04; // (EOT)
+                return buffer[0] == 0x50 // P
+                       && buffer[1] == 0x4B // K
+                       && buffer[2] == 0x03 // (ETX)
+                       && buffer[3] == 0x04; // (EOT)
             }
         }
 
@@ -172,9 +173,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 // 1F 8B 08
-                return buffer[0] == 0x1F  // 1F 8B → GZIP signature
-                    && buffer[1] == 0x8B
-                    && buffer[2] == 0x08; // 08 → compression method = DEFLATE
+                return buffer[0] == 0x1F // 1F 8B → GZIP signature
+                       && buffer[1] == 0x8B
+                       && buffer[2] == 0x08; // 08 → compression method = DEFLATE
             }
         }
 
@@ -194,8 +195,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return false;
                 }
 
-                return buffer[0] == 0x37     // 7
-                       && buffer[1] == 0x7a  // z
+                return buffer[0] == 0x37 // 7
+                       && buffer[1] == 0x7a // z
                        && buffer[2] == 0xbc
                        && buffer[3] == 0xaf
                        && buffer[4] == 0x27
@@ -245,12 +246,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                        buffer[1] == 0x49 &&
                        buffer[2] == 0x46 &&
                        buffer[2] == 0x46 &&
-
                        buffer[8] == 0x57 &&
                        buffer[9] == 0x41 &&
                        buffer[10] == 0x56 &&
                        buffer[11] == 0x45 &&
-
                        fileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase);
             }
         }
@@ -271,10 +270,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return false;
                 }
 
-                return buffer[0] == 0x52  // R
-                    && buffer[1] == 0x61  // a
-                    && buffer[2] == 0x72  // r
-                    && buffer[3] == 0x21; // !
+                return buffer[0] == 0x52 // R
+                       && buffer[1] == 0x61 // a
+                       && buffer[2] == 0x72 // r
+                       && buffer[3] == 0x21; // !
             }
         }
 
@@ -295,13 +294,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 return buffer[0] == 137
-                    && buffer[1] == 80
-                    && buffer[2] == 78
-                    && buffer[3] == 71
-                    && buffer[4] == 13
-                    && buffer[5] == 10
-                    && buffer[6] == 26
-                    && buffer[7] == 10;
+                       && buffer[1] == 80
+                       && buffer[2] == 78
+                       && buffer[3] == 71
+                       && buffer[4] == 13
+                       && buffer[5] == 10
+                       && buffer[6] == 26
+                       && buffer[7] == 10;
             }
         }
 
@@ -322,8 +321,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 return buffer[0] == 0x69
-                    && buffer[1] == 0x69
-                    && buffer[2] == 0x69;
+                       && buffer[1] == 0x69
+                       && buffer[2] == 0x69;
             }
         }
 
@@ -345,8 +344,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
 
                 return buffer[0] == 0xFF
-                    && buffer[1] == 0xD8
-                    && buffer[2] == 0xFF;
+                       && buffer[1] == 0xD8
+                       && buffer[2] == 0xFF;
             }
         }
 
@@ -377,8 +376,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 var buffer = new byte[2];
                 fs.Read(buffer, 0, buffer.Length);
-                return buffer[0] == 0x50  // P
-                    && buffer[1] == 0x47; // G
+                return buffer[0] == 0x50 // P
+                       && buffer[1] == 0x47; // G
             }
         }
 
@@ -451,7 +450,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var buffer = new byte[4];
                 fs.Read(buffer, 0, buffer.Length);
                 return VobSubParser.IsMpeg2PackHeader(buffer)
-                    || VobSubParser.IsPrivateStream1(buffer, 0);
+                       || VobSubParser.IsPrivateStream1(buffer, 0);
             }
         }
 
@@ -544,6 +543,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
             }
+
             return false;
         }
 
@@ -612,6 +612,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                 }
             }
+
             return true;
         }
 
@@ -686,6 +687,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     numberCount++;
                 }
             }
+
             if (len < 100)
             {
                 return numberCount < 5 && letterCount > 20;
@@ -743,6 +745,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     info.VideoCodec = videoCodec;
                 }
             }
+
             return info;
         }
 
@@ -980,13 +983,118 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             try
             {
-                using (File.Create(Path.Combine(dirPath, Path.GetRandomFileName()), 1, FileOptions.DeleteOnClose)) { }
+                using (File.Create(Path.Combine(dirPath, Path.GetRandomFileName()), 1, FileOptions.DeleteOnClose))
+                {
+                }
+
                 return true;
             }
             catch
             {
                 return false;
             }
+        }
+
+        public static string? FindPythonModuleExecutableFileName(string fileName, string defaultPath)
+        {
+            if (Configuration.IsRunningOnWindows && !fileName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+            {
+                fileName += ".exe";
+            }
+
+            // Honour any user-configured path first
+            if (!string.IsNullOrWhiteSpace(defaultPath) && File.Exists(defaultPath))
+            {
+                return defaultPath;
+            }
+
+            if (Configuration.IsRunningOnWindows)
+            {
+                var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                var searchRoots = new[]
+                {
+                    Path.Combine(userProfile, @"AppData\Local\Programs\Python"),
+                    Path.Combine(userProfile, @"AppData\Roaming\Python"),
+                };
+
+                foreach (var root in searchRoots.Where(Directory.Exists))
+                {
+                    try
+                    {
+                        var found = Directory.GetFiles(root, fileName, SearchOption.AllDirectories)
+                            .FirstOrDefault();
+                        if (found != null)
+                        {
+                            return found;
+                        }
+                    }
+                    catch
+                    {
+                        // ignore access errors
+                    }
+                }
+
+                return fileName;
+            }
+
+            // macOS and Linux: check well-known direct paths first
+            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var directPaths = new[]
+            {
+                Path.Combine(home, ".local", "bin", fileName), // Linux pip install --user
+                "/usr/local/bin/" + fileName, // Homebrew / system pip
+                "/opt/homebrew/bin/" + fileName, // Homebrew on Apple Silicon
+                "/usr/bin/" + fileName, // System package manager
+                "/opt/local/bin/" + fileName, // MacPorts
+            };
+
+            foreach (var directPath in directPaths)
+            {
+                if (File.Exists(directPath))
+                {
+                    return directPath;
+                }
+            }
+
+            // Walk ~/Library/Python/X.Y/bin/ (macOS pip install --user)
+            var macPythonUserLib = Path.Combine(home, "Library", "Python");
+            if (Directory.Exists(macPythonUserLib))
+            {
+                try
+                {
+                    var found = Directory.GetFiles(macPythonUserLib, fileName, SearchOption.AllDirectories)
+                        .FirstOrDefault();
+                    if (found != null)
+                    {
+                        return found;
+                    }
+                }
+                catch
+                {
+                    // ignore access errors
+                }
+            }
+
+            // Walk /Library/Frameworks/Python.framework/Versions/X.Y/bin/ (macOS Python.org installer)
+            const string pythonFramework = "/Library/Frameworks/Python.framework/Versions";
+            if (Directory.Exists(pythonFramework))
+            {
+                try
+                {
+                    var found = Directory.GetFiles(pythonFramework, fileName, SearchOption.AllDirectories)
+                        .FirstOrDefault();
+                    if (found != null)
+                    {
+                        return found;
+                    }
+                }
+                catch
+                {
+                    // ignore access errors
+                }
+            }
+
+            return fileName;
         }
     }
 }
