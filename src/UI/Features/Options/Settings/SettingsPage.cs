@@ -491,6 +491,7 @@ public class SettingsPage : UserControl
                 _vm, 
                 nameof(_vm.WaveformTextFontSize))),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformTextFontBold, nameof(_vm.WaveformTextFontBold)),
+            new SettingsItem(string.Empty, () => UiUtil.MakeButton(Se.Language.Options.Settings.WaveformColorThemesDotDotDot, _vm.OpenWaveformThemesCommand)),
             new SettingsItem(Se.Language.Options.Settings.WaveformTextColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformTextColor))),
             new SettingsItem(Se.Language.Options.Settings.WaveformColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformColor))),
             new SettingsItem(Se.Language.Options.Settings.WaveformParagraphBackgroundColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformParagraphBackgroundColor))),

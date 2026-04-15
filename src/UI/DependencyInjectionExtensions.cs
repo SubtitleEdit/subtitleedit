@@ -42,6 +42,7 @@ using Nikse.SubtitleEdit.Features.Options.Language;
 using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Features.Options.Settings.SettingsImportExport;
 using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
+using Nikse.SubtitleEdit.Features.Options.Settings.WaveformThemes;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformToolbarItems;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts.PickMilliseconds;
@@ -414,6 +415,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<VoiceSettingsViewModel>();
         collection.AddTransient<WaveformGuessTimeCodesViewModel>();
         collection.AddTransient<WaveformSeekSilenceViewModel>();
+        collection.AddTransient<WaveformThemesViewModel>();
         collection.AddTransient<WaveformToolbarItemsViewModel>();
         collection.AddTransient<WebVttPropertiesViewModel>();
         collection.AddTransient<WhisperAdvancedViewModel>();

@@ -282,6 +282,11 @@ public class LanguageSettings
     public string SpellCheckEngineHunSpelll { get; set; }
     public string SpellCheckEngineMsWord { get; set; }
     public string SpellCheckEngine { get; set; }
+    public string WaveformColorThemesDotDotDot { get; set; }
+    public string WaveformColorTheme { get; set; }
+    public string WaveformSaveAsCustomTheme { get; set; }
+    public string WaveformLoadThemeDotDotDot { get; set; }
+    public string WaveformExportThemeDotDotDot { get; set; }
 
     public LanguageSettings()
     {
@@ -560,6 +565,11 @@ public class LanguageSettings
         SpellCheckEngineHunSpelll = "Hunspell";
         SpellCheckEngineMsWord = "MS Word";
         SpellCheckEngine = "Spell check engine";
+        WaveformColorThemesDotDotDot = "Waveform color themes...";
+        WaveformColorTheme = "Color theme:";
+        WaveformSaveAsCustomTheme = "Save as custom theme...";
+        WaveformLoadThemeDotDotDot = "Load theme...";
+        WaveformExportThemeDotDotDot = "Export theme...";
     }
 
     public string GetContinuationStyleName(ContinuationStyle continuationStyle)

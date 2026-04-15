@@ -16,6 +16,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
+using Nikse.SubtitleEdit.Features.Options.Settings.WaveformThemes;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformToolbarItems;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
@@ -1648,6 +1649,39 @@ public partial class SettingsViewModel : ObservableObject
         if (result.OkPressed)
         {
             _waveformToolbarItems = result.ResultToolbarItems;
+        }
+    }
+
+    [RelayCommand]
+    private async Task OpenWaveformThemes()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<WaveformThemesWindow, WaveformThemesViewModel>(Window, vm =>
+        {
+            vm.Initialize(
+                WaveformTextColor, WaveformColor, WaveformBackgroundColor,
+                WaveformSelectedColor, WaveformCursorColor, WaveformShotChangeColor,
+                WaveformParagraphBackgroundColor, WaveformParagraphSelectedBackgroundColor,
+                WaveformParagraphLeftColor, WaveformParagraphRightColor, WaveformFancyHighColor);
+        });
+
+        if (result.OkPressed)
+        {
+            WaveformTextColor = result.TextColor;
+            WaveformColor = result.WaveformColor;
+            WaveformBackgroundColor = result.BackgroundColor;
+            WaveformSelectedColor = result.SelectedColor;
+            WaveformCursorColor = result.CursorColor;
+            WaveformShotChangeColor = result.ShotChangeColor;
+            WaveformParagraphBackgroundColor = result.ParagraphBackgroundColor;
+            WaveformParagraphSelectedBackgroundColor = result.ParagraphSelectedBackgroundColor;
+            WaveformParagraphLeftColor = result.ParagraphLeftColor;
+            WaveformParagraphRightColor = result.ParagraphRightColor;
+            WaveformFancyHighColor = result.FancyHighColor;
         }
     }
 
