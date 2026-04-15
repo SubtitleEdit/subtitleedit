@@ -2,7 +2,7 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-beta16 (xth April 2026)
+v5.0.0-beta16 (15th April 2026)
 
 * Update to Avalonia UI V12
 * Update Italian translation - thx bovirus
@@ -20,6 +20,8 @@ v5.0.0-beta16 (xth April 2026)
 * Some dictionary improvements for OCR
 * Add new setting for open-file-on-start - thx shotfirer
 * Allow more single-click-keys in text box - thx darnn
+* Fix Adjust-all-times in edit-image-based subs - thx AlexPaynes
+* Fix for EdgeTTS on mac
 
 -----------------------------------------------------------------------------------------------------
 
