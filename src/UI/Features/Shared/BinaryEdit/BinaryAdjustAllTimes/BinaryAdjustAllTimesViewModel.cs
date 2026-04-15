@@ -134,18 +134,8 @@ public partial class BinaryAdjustAllTimesViewModel : ObservableObject
             {
                 newStartTimeMs = 0;
             }
-            item.StartTime = TimeSpan.FromMilliseconds(newStartTimeMs);
 
-            // Adjust end time
-            var newEndTimeMs = item.EndTime.TotalMilliseconds + adjustmentMs;
-            if (newEndTimeMs < 0)
-            {
-                newEndTimeMs = 0;
-            }
-            item.EndTime = TimeSpan.FromMilliseconds(newEndTimeMs);
-
-            // Update duration
-            item.Duration = item.EndTime - item.StartTime;
+            item.StartTime = TimeSpan.FromMilliseconds(newStartTimeMs);            
         }
 
         // Reset total adjustment after applying
