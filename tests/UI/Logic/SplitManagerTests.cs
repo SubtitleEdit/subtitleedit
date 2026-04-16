@@ -1,3 +1,5 @@
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -135,5 +137,44 @@ public class SplitManagerTests
 
         // Assert
         Assert.True(subtitles[1].StartTime >= subtitles[0].EndTime);
+    }
+
+    [Fact]
+    public void Split_TwoLineDialogText_StripsLeadingDashesFromBothParts()
+    {
+        // Arrange – two lines where the second starts with a dash and the first ends
+        // with a sentence-ending period, so IsDialog returns true.
+        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Configuration.Settings.General.DialogStyle = DialogType.DashBothLinesWithSpace;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($"- Hello there.{Environment.NewLine}- Hi back.", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        // Act
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        // Assert – dashes and leading spaces are stripped from both parts
+        Assert.Equal(2, subtitles.Count);
+        Assert.Equal("Hello there.", subtitles[0].Text);
+        Assert.Equal("Hi back.", subtitles[1].Text);
+    }
+
+    [Fact]
+    public void Split_TwoLineNonDialogText_KeepsBothLinesAsIs()
+    {
+        // Arrange – two plain lines with no leading dashes, so IsDialog returns false.
+        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Configuration.Settings.General.DialogStyle = DialogType.DashBothLinesWithSpace;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($"First line{Environment.NewLine}Second line", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        // Act
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        // Assert – lines are kept verbatim (only trimmed)
+        Assert.Equal(2, subtitles.Count);
+        Assert.Equal("First line", subtitles[0].Text);
+        Assert.Equal("Second line", subtitles[1].Text);
     }
 }
