@@ -237,7 +237,7 @@ public class ShotChangesWindow : Window
         var radioButtonFrames = UiUtil.MakeRadioButton(Se.Language.General.Frames, vm, nameof(ShotChangesViewModel.TimeCodeFrames), "TimeCode");
         var radioButtonSeconds = UiUtil.MakeRadioButton(Se.Language.General.Seconds, vm, nameof(ShotChangesViewModel.TimeCodeSeconds), "TimeCode");
         var radioButtonMilliseconds = UiUtil.MakeRadioButton(Se.Language.General.Milliseconds, vm, nameof(ShotChangesViewModel.TimeCodeMilliseconds), "TimeCode");
-        var radioButtonTHhMmSsMs = UiUtil.MakeRadioButton(Se.Language.General.Milliseconds, vm, nameof(ShotChangesViewModel.TimeCodeHhMmSsMs), "TimeCode");
+        var radioButtonTHhMmSsMs = UiUtil.MakeRadioButton(Se.Language.General.HoursMinutesSecondsMilliseconds, vm, nameof(ShotChangesViewModel.TimeCodeHhMmSsMs), "TimeCode");
 
         var panelTimeCodeFormat = new StackPanel
         {

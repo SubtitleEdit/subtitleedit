@@ -995,7 +995,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        public static string? FindPythonModuleExecutableFileName(string fileName, string defaultPath)
+        public static string FindPythonModuleExecutableFileName(string fileName, string defaultPath)
         {
             if (Configuration.IsRunningOnWindows && !fileName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
             {

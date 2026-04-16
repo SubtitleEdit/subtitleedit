@@ -40,10 +40,10 @@ public partial class ToolbarItemDisplay : ObservableObject
             SeWaveformToolbarItemType.VerticalZoom => Format(w.ZoomVerticalHint),
             SeWaveformToolbarItemType.HorizontalZoom => Format(w.ZoomHorizontalHint),
             SeWaveformToolbarItemType.VideoPositionSlider => Format(w.VideoPosition),
-            SeWaveformToolbarItemType.PlaybackSpeed => "Playback speed",
+            SeWaveformToolbarItemType.PlaybackSpeed => Se.Language.General.PlaybackSpeed,
             SeWaveformToolbarItemType.AutoSelectOnPlay => Format(w.SelectCurrentLineWhilePlayingHint),
             SeWaveformToolbarItemType.Center => Format(w.CenterWaveformHint),
-            SeWaveformToolbarItemType.More => "More",
+            SeWaveformToolbarItemType.More => Se.Language.General.More,
             _ => type.ToString(),
         };
     }

@@ -34,7 +34,6 @@ public partial class WaveformThemesViewModel : ObservableObject
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
 
-    private bool _applyingTheme;
     private int _customThemeCount;
 
     public WaveformThemesViewModel()
@@ -75,25 +74,17 @@ public partial class WaveformThemesViewModel : ObservableObject
             FancyHighColor = fancyHighColor,
         });
 
-        _applyingTheme = true;
-        try
-        {
-            TextColor = textColor;
-            WaveformColor = waveformColor;
-            BackgroundColor = backgroundColor;
-            SelectedColor = selectedColor;
-            CursorColor = cursorColor;
-            ShotChangeColor = shotChangeColor;
-            ParagraphBackgroundColor = paragraphBackgroundColor;
-            ParagraphSelectedBackgroundColor = paragraphSelectedBackgroundColor;
-            ParagraphLeftColor = paragraphLeftColor;
-            ParagraphRightColor = paragraphRightColor;
-            FancyHighColor = fancyHighColor;
-        }
-        finally
-        {
-            _applyingTheme = false;
-        }
+        TextColor = textColor;
+        WaveformColor = waveformColor;
+        BackgroundColor = backgroundColor;
+        SelectedColor = selectedColor;
+        CursorColor = cursorColor;
+        ShotChangeColor = shotChangeColor;
+        ParagraphBackgroundColor = paragraphBackgroundColor;
+        ParagraphSelectedBackgroundColor = paragraphSelectedBackgroundColor;
+        ParagraphLeftColor = paragraphLeftColor;
+        ParagraphRightColor = paragraphRightColor;
+        FancyHighColor = fancyHighColor;
 
         SelectedTheme = Themes.Last();
     }
@@ -102,25 +93,17 @@ public partial class WaveformThemesViewModel : ObservableObject
     {
         if (value == null) return;
 
-        _applyingTheme = true;
-        try
-        {
-            TextColor = value.TextColor;
-            WaveformColor = value.WaveformColor;
-            BackgroundColor = value.BackgroundColor;
-            SelectedColor = value.SelectedColor;
-            CursorColor = value.CursorColor;
-            ShotChangeColor = value.ShotChangeColor;
-            ParagraphBackgroundColor = value.ParagraphBackgroundColor;
-            ParagraphSelectedBackgroundColor = value.ParagraphSelectedBackgroundColor;
-            ParagraphLeftColor = value.ParagraphLeftColor;
-            ParagraphRightColor = value.ParagraphRightColor;
-            FancyHighColor = value.FancyHighColor;
-        }
-        finally
-        {
-            _applyingTheme = false;
-        }
+        TextColor = value.TextColor;
+        WaveformColor = value.WaveformColor;
+        BackgroundColor = value.BackgroundColor;
+        SelectedColor = value.SelectedColor;
+        CursorColor = value.CursorColor;
+        ShotChangeColor = value.ShotChangeColor;
+        ParagraphBackgroundColor = value.ParagraphBackgroundColor;
+        ParagraphSelectedBackgroundColor = value.ParagraphSelectedBackgroundColor;
+        ParagraphLeftColor = value.ParagraphLeftColor;
+        ParagraphRightColor = value.ParagraphRightColor;
+        FancyHighColor = value.FancyHighColor;
     }
 
     [RelayCommand]
@@ -455,20 +438,20 @@ internal class WaveformThemeDto
         Color selectedColor, Color cursorColor, Color shotChangeColor,
         Color paragraphBackgroundColor, Color paragraphSelectedBackgroundColor,
         Color paragraphLeftColor, Color paragraphRightColor, Color fancyHighColor) => new()
-    {
-        Name = name,
-        TextColor = textColor.FromColorToHex(),
-        WaveformColor = waveformColor.FromColorToHex(),
-        BackgroundColor = backgroundColor.FromColorToHex(),
-        SelectedColor = selectedColor.FromColorToHex(),
-        CursorColor = cursorColor.FromColorToHex(),
-        ShotChangeColor = shotChangeColor.FromColorToHex(),
-        ParagraphBackgroundColor = paragraphBackgroundColor.FromColorToHex(),
-        ParagraphSelectedBackgroundColor = paragraphSelectedBackgroundColor.FromColorToHex(),
-        ParagraphLeftColor = paragraphLeftColor.FromColorToHex(),
-        ParagraphRightColor = paragraphRightColor.FromColorToHex(),
-        FancyHighColor = fancyHighColor.FromColorToHex(),
-    };
+        {
+            Name = name,
+            TextColor = textColor.FromColorToHex(),
+            WaveformColor = waveformColor.FromColorToHex(),
+            BackgroundColor = backgroundColor.FromColorToHex(),
+            SelectedColor = selectedColor.FromColorToHex(),
+            CursorColor = cursorColor.FromColorToHex(),
+            ShotChangeColor = shotChangeColor.FromColorToHex(),
+            ParagraphBackgroundColor = paragraphBackgroundColor.FromColorToHex(),
+            ParagraphSelectedBackgroundColor = paragraphSelectedBackgroundColor.FromColorToHex(),
+            ParagraphLeftColor = paragraphLeftColor.FromColorToHex(),
+            ParagraphRightColor = paragraphRightColor.FromColorToHex(),
+            FancyHighColor = fancyHighColor.FromColorToHex(),
+        };
 
     public WaveformThemeDisplay ToThemeDisplay(string fallbackName) => new()
     {

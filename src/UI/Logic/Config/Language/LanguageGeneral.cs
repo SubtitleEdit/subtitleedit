@@ -658,6 +658,8 @@ public class LanguageGeneral
     public string PickResolution { get; set; }
     public string ManualSync { get; set; }
     public string UnsupportedVideoFormat { get; set; }
+    public string PlaybackSpeed { get; set; }
+    public string HoursMinutesSecondsMilliseconds { get; set; }
 
     public LanguageGeneral()
     {
@@ -1315,5 +1317,7 @@ public class LanguageGeneral
         PickResolution = "Pick resolution";
         ManualSync = "Manual sync";
         UnsupportedVideoFormat = "Unsupported video format";
+        PlaybackSpeed = "Playback speed";
+        HoursMinutesSecondsMilliseconds = "HH:MM:SS.FFF";
     }
 }
