@@ -657,6 +657,7 @@ public class LanguageGeneral
     public string Alpha { get; set; }
     public string PickResolution { get; set; }
     public string ManualSync { get; set; }
+    public string UnsupportedVideoFormat { get; set; }
 
     public LanguageGeneral()
     {
@@ -1313,5 +1314,6 @@ public class LanguageGeneral
         Alpha = "Alpha";
         PickResolution = "Pick resolution";
         ManualSync = "Manual sync";
+        UnsupportedVideoFormat = "Unsupported video format";
     }
 }

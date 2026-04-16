@@ -112,8 +112,8 @@ public partial class RestoreAutoBackupViewModel : ObservableObject
         }
         var answer = await MessageBox.Show(
             Window,
-            "Restore auto-backup file?",
-            $"Do you want to restore \"{file.FileName}\" from {file.DateAndTime}?",
+            Se.Language.File.RestoreAutoBackup.RestoreAutoBackupFile,
+            string.Format(Se.Language.File.RestoreAutoBackup.RestoreXFromY, file.FileName, file.DateAndTime),
             MessageBoxButtons.YesNoCancel,
             MessageBoxIcon.Question);
 

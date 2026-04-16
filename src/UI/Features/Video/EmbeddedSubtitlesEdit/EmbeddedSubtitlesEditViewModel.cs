@@ -601,8 +601,8 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
                 {
                     _ = await MessageBox.Show(
                         Window!,
-                        "Unsupported video format",
-                        "Only Matroska (.mkv, .webm) files are supported for editing embedded subtitles.",
+                        Se.Language.General.UnsupportedVideoFormat,
+                        Se.Language.Video.OnlyMkvCanSupportEmbeddedSubtitleEditing,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
                     Cancel();

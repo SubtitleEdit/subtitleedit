@@ -83,10 +83,7 @@ public partial class ReEncodeVideoViewModel : ObservableObject
 
         JobItems = new ObservableCollection<BurnInJobItem>();
 
-        InfoText = "Re-encoding can make subtitling smoother:" + Environment.NewLine +
-                    "• Smaller resolution (high resolutions make subtitling slow)" + Environment.NewLine +
-                    "• Re-encode the video to H.264 + yuv420p makes it more compatible" + Environment.NewLine +
-                    "• Optimized for fast seeking";
+        InfoText = Se.Language.Video.ReEncodeInfo;
 
         VideoFileName = string.Empty;
         VideoFileSize = string.Empty;
@@ -171,11 +168,11 @@ public partial class ReEncodeVideoViewModel : ObservableObject
 
             if (JobItems.Count == 1)
             {
-                ProgressText = $"Generating video... {percentage}%     {estimatedLeft}";
+                ProgressText = string.Format(Se.Language.Video.ReEncodeGeneratingVideoX, percentage, estimatedLeft);
             }
             else
             {
-                ProgressText = $"Generating video {_jobItemIndex + 1}/{JobItems.Count}... {percentage}%     {estimatedLeft}";
+                ProgressText = string.Format(Se.Language.Video.ReEncodeGeneratingVideoXofY, _jobItemIndex + 1, JobItems.Count, percentage, estimatedLeft);
             }
 
             return;
@@ -200,9 +197,8 @@ public partial class ReEncodeVideoViewModel : ObservableObject
             Dispatcher.UIThread.Invoke(async () =>
             {
                 await MessageBox.Show(Window!,
-                    "Unable to generate video",
-                    "Output video file not generated: " + jobItem.OutputVideoFileName + Environment.NewLine +
-                    "Parameters: " + _ffmpegProcess.StartInfo.Arguments,
+                    Se.Language.Video.ReEncodeUnableToGenerateVideo,
+                    string.Format(Se.Language.Video.ReEncodeOutputVideoFileNotGenerated, jobItem.OutputVideoFileName, _ffmpegProcess.StartInfo.Arguments),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
@@ -233,7 +229,7 @@ public partial class ReEncodeVideoViewModel : ObservableObject
             }
             else
             {
-                var sb = new StringBuilder($"Generated files ({JobItems.Count}):" + Environment.NewLine +
+                var sb = new StringBuilder(string.Format(Se.Language.Video.ReEncodeGeneratedFilesX, JobItems.Count) + Environment.NewLine +
                                            Environment.NewLine);
                 foreach (var item in JobItems)
                 {
@@ -241,7 +237,7 @@ public partial class ReEncodeVideoViewModel : ObservableObject
                 }
 
                 await MessageBox.Show(Window!,
-                    "Generating done",
+                    Se.Language.Video.ReEncodeGeneratingDone,
                     sb.ToString(),
                     MessageBoxButtons.OK);
             }
@@ -283,7 +279,7 @@ public partial class ReEncodeVideoViewModel : ObservableObject
         {
             var result = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window!, vm =>
             {
-                vm.Initialize("ffmpeg parameters", ffmpegParameters, 1000, 200);
+                vm.Initialize(Se.Language.Video.ReEncodeFfmpegParameters, ffmpegParameters, 1000, 200);
             });
 
             if (!result.OkPressed || string.IsNullOrWhiteSpace(result.Text))
@@ -371,7 +367,7 @@ public partial class ReEncodeVideoViewModel : ObservableObject
 
         if (result.SelectedResolution.ItemType == ResolutionItemType.PickResolution)
         {
-            var videoFileName = await _fileHelper.PickOpenVideoFile(Window!, "Open video file");
+            var videoFileName = await _fileHelper.PickOpenVideoFile(Window!, Se.Language.General.OpenVideoFileTitle);
             if (string.IsNullOrWhiteSpace(videoFileName))
             {
                 return;

@@ -1,4 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Logic.Config.Language.Tools;
+﻿using System;
+
+namespace Nikse.SubtitleEdit.Logic.Config.Language.Tools;
 
 public class LanguageVideo
 {
@@ -38,6 +40,15 @@ public class LanguageVideo
     public string ResolutionSeparator { get; set; }
     public string OpenFromUrlTitle { get; set; }
     public string ToggleCurrentSubtitleWhilePlaying { get; set; }
+    public string OnlyMkvCanSupportEmbeddedSubtitleEditing { get; set; }
+    public string ReEncodeInfo { get; set; }
+    public string ReEncodeGeneratingVideoX { get; set; }
+    public string ReEncodeGeneratingVideoXofY { get; set; }
+    public string ReEncodeUnableToGenerateVideo { get; set; }
+    public string ReEncodeOutputVideoFileNotGenerated { get; set; }
+    public string ReEncodeGeneratingDone { get; set; }
+    public string ReEncodeGeneratedFilesX { get; set; }
+    public string ReEncodeFfmpegParameters { get; set; }
 
     public LanguageVideo()
     {
@@ -73,5 +84,17 @@ public class LanguageVideo
         ResolutionSeparator = "x";
         OpenFromUrlTitle = "Open video file from URL";
         ToggleCurrentSubtitleWhilePlaying = "Toggle current subtitle while playing";
+        OnlyMkvCanSupportEmbeddedSubtitleEditing = "Only Matroska (.mkv, .webm) files are supported for editing embedded subtitles.";
+        ReEncodeInfo = "Re-encoding can make subtitling smoother:" + Environment.NewLine +
+                       "• Smaller resolution (high resolutions make subtitling slow)" + Environment.NewLine +
+                       "• Re-encode the video to H.264 + yuv420p makes it more compatible" + Environment.NewLine +
+                       "• Optimized for fast seeking";
+        ReEncodeGeneratingVideoX = "Generating video... {0}%     {1}";
+        ReEncodeGeneratingVideoXofY = "Generating video {0}/{1}... {2}%     {3}";
+        ReEncodeUnableToGenerateVideo = "Unable to generate video";
+        ReEncodeOutputVideoFileNotGenerated = "Output video file not generated: {0}" + Environment.NewLine + "Parameters: {1}";
+        ReEncodeGeneratingDone = "Generating done";
+        ReEncodeGeneratedFilesX = "Generated files ({0}):";
+        ReEncodeFfmpegParameters = "ffmpeg parameters";
     }
 }
