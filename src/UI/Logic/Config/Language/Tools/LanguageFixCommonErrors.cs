@@ -132,6 +132,10 @@ public class LanguageFixCommonErrors
     public string FixCommonOcrErrorsStep2FixesFoundX { get; set; }
     public string Action { get; set; }
     public string ApplySelectedFixes { get; set; }
+    public string UnbreakShortLine { get; set; }
+    public string FixText { get; set; }
+    public string RemoveSpaceBetweenNumbers { get; set; }
+    public string FixDialogsOnOneLine { get; set; }
 
     public LanguageFixCommonErrors()
     {
@@ -268,5 +272,9 @@ public class LanguageFixCommonErrors
         ApplyFixesAndClose = "Apply fixes & close";
         Action = "Action";
         ApplySelectedFixes = "Apply selected fixes";
+        UnbreakShortLine = "Unbreak short line";
+        FixText = "Fix text";
+        RemoveSpaceBetweenNumbers = "Remove space between numbers";
+        FixDialogsOnOneLine = "Fix dialogs on one line";
     }
 }

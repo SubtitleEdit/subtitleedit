@@ -168,10 +168,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         SaveProfiles();
 
         var result = await _windowService.ShowDialogAsync<FixCommonErrorsProfileWindow, FixCommonErrorsProfileViewModel>(Window!,
-            vm =>
-            {
-                vm.Initialize(_allFixRules, SelectedProfile?.Name);
-            });
+            vm => { vm.Initialize(_allFixRules, SelectedProfile?.Name); });
 
         if (result.OkPressed)
         {
@@ -320,15 +317,15 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
         Paragraphs.Clear();
         Paragraphs.AddRange(FixedSubtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, _subtitleFormat)));
-        
+
         Step2Title = string.Format(Se.Language.Tools.FixCommonErrors.FixCommonOcrErrorsStep2FixesFoundX, Fixes.Count);
     }
 
     private void InitStep1(string languageCode, Subtitle subtitle)
     {
         FixedSubtitle = new Subtitle(subtitle, false);
-        
-        Configuration.Settings.General.ContinuationStyle = 
+
+        Configuration.Settings.General.ContinuationStyle =
             Enum.Parse<ContinuationStyle>(Se.Settings.General.ContinuationStyle);
 
         _allFixRules = MakeDefaultRules();
@@ -337,7 +334,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         {
             _allFixRules.Add(
                 new FixRuleDisplayItem(_language.FixEllipsesStart, _language.FixEllipsesStartExample, 1,
-                true, nameof(FixEllipsesStart)));
+                    true, nameof(FixEllipsesStart)));
         }
 
         if (languageCode == "en")
@@ -367,44 +364,142 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     }
 
     public static List<FixRuleDisplayItem> MakeDefaultRules()
-    {        
+    {
         var language = Se.Language.Tools.FixCommonErrors;
+
+        FixEmptyLines.Language.RemovedEmptyLine = language.RemovedEmptyLine;
+        FixEmptyLines.Language.RemovedEmptyLineAtBottom = language.RemovedEmptyLineAtBottom;
+        FixEmptyLines.Language.RemovedEmptyLineAtTop = language.RemovedEmptyLineAtTop;
+        FixEmptyLines.Language.RemovedEmptyLineInMiddle = language.RemovedEmptyLineInMiddle;
+        FixEmptyLines.Language.RemovedEmptyLinesUnusedLineBreaks = language.RemovedEmptyLinesUnusedLineBreaks;
+
+        FixOverlappingDisplayTimes.Language.UnableToFixTextXY = language.UnableToFixTextXY;
+        FixOverlappingDisplayTimes.Language.FixOverlappingDisplayTime = language.FixOverlappingDisplayTime;
+        FixOverlappingDisplayTimes.Language.FixOverlappingDisplayTimes = language.FixOverlappingDisplayTimes;
+        FixOverlappingDisplayTimes.Language.StartTimeLaterThanEndTime = language.StartTimeLaterThanEndTime;
+        FixOverlappingDisplayTimes.Language.UnableToFixStartTimeLaterThanEndTime = language.UnableToFixStartTimeLaterThanEndTime;
+        FixOverlappingDisplayTimes.Language.XFixedToYZ = language.XFixedToYZ;
+
+        FixShortDisplayTimes.Language.FixShortDisplayTime = language.FixShortDisplayTime;
+        FixShortDisplayTimes.Language.FixShortDisplayTimes = language.FixShortDisplayTimes;
+        FixShortDisplayTimes.Language.UnableToFixTextXY = language.UnableToFixTextXY;
+
+        FixLongDisplayTimes.Language.FixLongDisplayTime = language.FixLongDisplayTime;
+
+        FixShortGaps.Language.FixShortGaps = language.FixShortGaps;
+        FixShortGaps.Language.FixShortGaps = language.FixShortGaps;
+
+        FixInvalidItalicTags.Language.FixInvalidItalicTags = language.FixInvalidItalicTags;
+        FixInvalidItalicTags.Language.FixInvalidItalicTag = language.FixInvalidItalicTag;
+
+        FixUnneededSpaces.Language.RemoveUnneededSpaces = language.RemoveUnneededSpaces;
+        FixUnneededSpaces.Language.UnneededSpace = language.UnneededSpace;
+
+        FixMissingSpaces.Language.FixMissingSpaces = language.FixMissingSpaces;
+        FixMissingSpaces.Language.FixMissingSpace = language.FixMissingSpace;
+
+        FixUnneededPeriods.Language.RemoveUnneededPeriods = language.RemoveUnneededPeriods;
+        FixUnneededPeriods.Language.UnneededPeriod = language.UnneededPeriod;
+
+        FixCommas.Language.FixCommas = language.FixCommas;
+
+        FixLongLines.Language.UnableToFixTextXY = language.UnableToFixTextXY;
+        FixLongLines.Language.BreakLongLine = language.BreakLongLine;
+        FixLongLines.Language.BreakLongLines = language.BreakLongLines;
+
+        FixShortLines.Language.MergeShortLine = language.MergeShortLine;
+
+        FixShortLinesAll.Language.MergeShortLineAll = language.MergeShortLineAll;
+        FixShortLinesAll.Language.RemoveLineBreaks = language.RemoveLineBreaks;
+
+        FixShortLinesPixelWidth.Language.RemoveLineBreaks = language.RemoveLineBreaks;
+        FixShortLinesPixelWidth.Language.UnbreakShortLine = language.UnbreakShortLine;
+
+        FixDoubleApostrophes.Language.FixDoubleApostrophes = language.FixDoubleApostrophes;
+
+        FixMusicNotation.Language.FixMusicNotation = language.FixMusicNotation;
+
+        FixMissingPeriodsAtEndOfLine.Language.AddPeriods = language.AddPeriods;
+        FixMissingPeriodsAtEndOfLine.Language.FixMissingPeriodAtEndOfLine = language.FixMissingPeriodAtEndOfLine;
+
+        FixStartWithUppercaseLetterAfterParagraph.Language.FixFirstLetterToUppercaseAfterParagraph = language.FixFirstLetterToUppercaseAfterParagraph;
+
+        FixStartWithUppercaseLetterAfterPeriodInsideParagraph.Language.StartWithUppercaseLetterAfterPeriodInsideParagraph =
+            language.StartWithUppercaseLetterAfterPeriodInsideParagraph;
+
+        FixStartWithUppercaseLetterAfterColon.Language.StartWithUppercaseLetterAfterColon = language.StartWithUppercaseLetterAfterColon;
+
+        AddMissingQuotes.Language.AddMissingQuote = language.AddMissingQuotes;
+
+        FixDialogsOnOneLine.Language.FixDialogsOnOneLine = language.FixDialogsOnOneLine;
+
+        FixHyphensInDialog.Language.FixHyphensInDialogs = language.FixHyphensInDialogs;
+
+        FixHyphensRemoveDashSingleLine.Language.RemoveHyphensSingleLine = language.RemoveHyphensSingleLine;
+
+        Fix3PlusLines.Language.Fix3PlusLine = language.Fix3PlusLine;
+        Fix3PlusLines.Language.Fix3PlusLines = language.Fix3PlusLines;
+
+        FixDoubleDash.Language.FixDoubleDash = language.FixDoubleDash;
+
+        FixDoubleGreaterThan.Language.FixDoubleGreaterThan = language.FixDoubleGreaterThan;
+
+        FixContinuationStyle.Language.FixUnnecessaryLeadingDots = language.FixUnnecessaryLeadingDots;
+
+        FixMissingOpenBracket.Language.FixMissingOpenBracket = language.FixMissingOpenBracket;
+
+        FixCommonOcrErrors.Language.FixText = language.FixText;
+
+        FixUppercaseIInsideWords.Language.FixUppercaseIInsideLowercaseWord = language.FixUppercaseIInsideLowercaseWord;
+        FixUppercaseIInsideWords.Language.FixUppercaseIInsideLowercaseWords = language.FixUppercaseIInsideLowercaseWords;
+
+        RemoveSpaceBetweenNumbers.Language.RemoveSpaceBetweenNumber = language.RemoveSpaceBetweenNumbers;
+
+        RemoveDialogFirstLineInNonDialogs.Language.RemoveDialogFirstInNonDialogs = language.RemoveDialogFirstInNonDialogs;
+
+        NormalizeStrings.Language.NormalizeStrings = language.NormalizeStrings;
+
         return new List<FixRuleDisplayItem>
         {
-            new (language.RemovedEmptyLinesUnusedLineBreaks, language.RemovedEmptyLinesUnusedLineBreaksExample, 1, true, nameof(FixEmptyLines)),
-            new (language.FixOverlappingDisplayTimes, string.Empty, 1, true, nameof(FixOverlappingDisplayTimes)),
-            new (language.FixShortDisplayTimes, string.Empty, 1, true, nameof(FixShortDisplayTimes)),
-            new (language.FixLongDisplayTimes, string.Empty, 1, true, nameof(FixLongDisplayTimes)),
-            new (language.FixShortGaps, string.Empty, 1, true, nameof(FixShortGaps)),
-            new (language.FixInvalidItalicTags, language.FixInvalidItalicTagsExample, 1, true, nameof(FixInvalidItalicTags)),
-            new (language.RemoveUnneededSpaces, language.RemoveUnneededSpacesExample, 1, true, nameof(FixUnneededSpaces)),
-            new (language.FixMissingSpaces, language.FixMissingSpacesExample, 1, true, nameof(FixMissingSpaces)),
-            new (language.RemoveUnneededPeriods, language.RemoveUnneededPeriodsExample, 1, true, nameof(FixUnneededPeriods)),
-            new (language.FixCommas, language.FixCommasExample, 1, true, nameof(FixCommas)),
-            new (language.BreakLongLines, string.Empty, 1, true, nameof(FixLongLines)),
-            new (language.RemoveLineBreaks, language.RemoveLineBreaksExample, 1, true, nameof(FixShortLines)),
-            new (language.RemoveLineBreaksAll, string.Empty, 1, true, nameof(FixShortLinesAll)),
-            new (language.RemoveLineBreaksPixelWidth, string.Empty, 1, true, nameof(FixShortLinesPixelWidth)),
-            new (language.FixDoubleApostrophes, language.FixDoubleApostrophesExample, 1, true, nameof(FixDoubleApostrophes)),
-            new (language.FixMusicNotation, language.FixMusicNotationExample, 1, true, nameof(FixMusicNotation)),
-            new (language.AddPeriods, language.AddPeriodsExample, 1, true, nameof(FixMissingPeriodsAtEndOfLine)),
-            new (language.StartWithUppercaseLetterAfterParagraph, language.StartWithUppercaseLetterAfterParagraphExample, 1, true, nameof(FixStartWithUppercaseLetterAfterParagraph)),
-            new (language.StartWithUppercaseLetterAfterPeriodInsideParagraph, language.StartWithUppercaseLetterAfterPeriodInsideParagraphExample, 1, true, nameof(FixStartWithUppercaseLetterAfterPeriodInsideParagraph)),
-            new (language.StartWithUppercaseLetterAfterColon, language.StartWithUppercaseLetterAfterColonExample, 1, true, nameof(FixStartWithUppercaseLetterAfterColon)),
-            new (language.AddMissingQuotes, language.AddMissingQuotesExample, 1, true, nameof(AddMissingQuotes)),
-            new (language.BreakDialogsOnOneLine, language.FixDialogsOneLineExample, 1, true, nameof(FixDialogsOnOneLine)),
-            new (string.Format(language.FixHyphensInDialogs, GetDialogStyle(Configuration.Settings.General.DialogStyle)), string.Empty, 1, true, nameof(FixHyphensInDialog)),
-            new (language.RemoveHyphensSingleLine, language.RemoveHyphensSingleLineExample, 1, true, nameof(FixHyphensRemoveDashSingleLine)),
-            new (language.Fix3PlusLines, language.Fix3PlusLinesExample, 1, true, nameof(Fix3PlusLines)),
-            new (language.FixDoubleDash, language.FixDoubleDashExample, 1, true, nameof(FixDoubleDash)),
-            new (language.FixDoubleGreaterThan, language.FixDoubleGreaterThanExample, 1, true, nameof(FixDoubleGreaterThan)),
-            new (string.Format(language.FixContinuationStyleX, Se.Language.Options.Settings.GetContinuationStyleName(Enum.Parse<ContinuationStyle>(Se.Settings.General.ContinuationStyle))), string.Empty, 1, true, nameof(FixContinuationStyle)),
-            new (language.FixMissingOpenBracket, language.FixMissingOpenBracketExample, 1, true, nameof(FixMissingOpenBracket)),
-            new (language.FixCommonOcrErrors, language.FixOcrErrorExample, 1, true, nameof(FixCommonOcrErrors)),
-            new (language.FixUppercaseIInsideLowercaseWords, language.FixUppercaseIInsideLowercaseWordsExample, 1, true, nameof(FixUppercaseIInsideWords)),
-            new (language.RemoveSpaceBetweenNumber, language.FixSpaceBetweenNumbersExample, 1, true, nameof(RemoveSpaceBetweenNumbers)),
-            new (language.RemoveDialogFirstInNonDialogs, language.RemoveDialogFirstInNonDialogsExample, 1, true, nameof(RemoveDialogFirstLineInNonDialogs)),
-            new (language.NormalizeStrings, string.Empty, 1, true, nameof(NormalizeStrings)),
+            new(language.RemovedEmptyLinesUnusedLineBreaks, language.RemovedEmptyLinesUnusedLineBreaksExample, 1, true, nameof(FixEmptyLines)),
+            new(language.FixOverlappingDisplayTimes, string.Empty, 1, true, nameof(FixOverlappingDisplayTimes)),
+            new(language.FixShortDisplayTimes, string.Empty, 1, true, nameof(FixShortDisplayTimes)),
+            new(language.FixLongDisplayTimes, string.Empty, 1, true, nameof(FixLongDisplayTimes)),
+            new(language.FixShortGaps, string.Empty, 1, true, nameof(FixShortGaps)),
+            new(language.FixInvalidItalicTags, language.FixInvalidItalicTagsExample, 1, true, nameof(FixInvalidItalicTags)),
+            new(language.RemoveUnneededSpaces, language.RemoveUnneededSpacesExample, 1, true, nameof(FixUnneededSpaces)),
+            new(language.FixMissingSpaces, language.FixMissingSpacesExample, 1, true, nameof(FixMissingSpaces)),
+            new(language.RemoveUnneededPeriods, language.RemoveUnneededPeriodsExample, 1, true, nameof(FixUnneededPeriods)),
+            new(language.FixCommas, language.FixCommasExample, 1, true, nameof(FixCommas)),
+            new(language.BreakLongLines, string.Empty, 1, true, nameof(FixLongLines)),
+            new(language.RemoveLineBreaks, language.RemoveLineBreaksExample, 1, true, nameof(FixShortLines)),
+            new(language.RemoveLineBreaksAll, string.Empty, 1, true, nameof(FixShortLinesAll)),
+            new(language.RemoveLineBreaksPixelWidth, string.Empty, 1, true, nameof(FixShortLinesPixelWidth)),
+            new(language.FixDoubleApostrophes, language.FixDoubleApostrophesExample, 1, true, nameof(FixDoubleApostrophes)),
+            new(language.FixMusicNotation, language.FixMusicNotationExample, 1, true, nameof(FixMusicNotation)),
+            new(language.AddPeriods, language.AddPeriodsExample, 1, true, nameof(FixMissingPeriodsAtEndOfLine)),
+            new(language.StartWithUppercaseLetterAfterParagraph, language.StartWithUppercaseLetterAfterParagraphExample, 1, true,
+                nameof(FixStartWithUppercaseLetterAfterParagraph)),
+            new(language.StartWithUppercaseLetterAfterPeriodInsideParagraph, language.StartWithUppercaseLetterAfterPeriodInsideParagraphExample, 1, true,
+                nameof(FixStartWithUppercaseLetterAfterPeriodInsideParagraph)),
+            new(language.StartWithUppercaseLetterAfterColon, language.StartWithUppercaseLetterAfterColonExample, 1, true, nameof(FixStartWithUppercaseLetterAfterColon)),
+            new(language.AddMissingQuotes, language.AddMissingQuotesExample, 1, true, nameof(AddMissingQuotes)),
+            new(language.BreakDialogsOnOneLine, language.FixDialogsOneLineExample, 1, true, nameof(FixDialogsOnOneLine)),
+            new(string.Format(language.FixHyphensInDialogs, GetDialogStyle(Configuration.Settings.General.DialogStyle)), string.Empty, 1, true, nameof(FixHyphensInDialog)),
+            new(language.RemoveHyphensSingleLine, language.RemoveHyphensSingleLineExample, 1, true, nameof(FixHyphensRemoveDashSingleLine)),
+            new(language.Fix3PlusLines, language.Fix3PlusLinesExample, 1, true, nameof(Fix3PlusLines)),
+            new(language.FixDoubleDash, language.FixDoubleDashExample, 1, true, nameof(FixDoubleDash)),
+            new(language.FixDoubleGreaterThan, language.FixDoubleGreaterThanExample, 1, true, nameof(FixDoubleGreaterThan)),
+            new(
+                string.Format(language.FixContinuationStyleX,
+                    Se.Language.Options.Settings.GetContinuationStyleName(Enum.Parse<ContinuationStyle>(Se.Settings.General.ContinuationStyle))), string.Empty, 1, true,
+                nameof(FixContinuationStyle)),
+            new(language.FixMissingOpenBracket, language.FixMissingOpenBracketExample, 1, true, nameof(FixMissingOpenBracket)),
+            new(language.FixCommonOcrErrors, language.FixOcrErrorExample, 1, true, nameof(FixCommonOcrErrors)),
+            new(language.FixUppercaseIInsideLowercaseWords, language.FixUppercaseIInsideLowercaseWordsExample, 1, true, nameof(FixUppercaseIInsideWords)),
+            new(language.RemoveSpaceBetweenNumber, language.FixSpaceBetweenNumbersExample, 1, true, nameof(RemoveSpaceBetweenNumbers)),
+            new(language.RemoveDialogFirstInNonDialogs, language.RemoveDialogFirstInNonDialogsExample, 1, true, nameof(RemoveDialogFirstLineInNonDialogs)),
+            new(language.NormalizeStrings, string.Empty, 1, true, nameof(NormalizeStrings)),
         };
     }
 
