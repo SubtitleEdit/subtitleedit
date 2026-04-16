@@ -519,6 +519,7 @@ public class LanguageGeneral
     public string SplitLineAtTextBoxCursorPosition { get; set; }
     public string SplitLineAtVideoAndTextBoxPosition { get; set; }
     public string SplitLineAtVideoPosition { get; set; }
+    public string SplitLineAtWaveformPosition { get; set; }
     public string StartFrom { get; set; }
     public string StartTime { get; set; }
     public string StartingDotDotDot { get; set; }
@@ -1174,6 +1175,7 @@ public class LanguageGeneral
         SplitLineAtTextBoxCursorPosition = "Split line at cursor position";
         SplitLineAtVideoAndTextBoxPosition = "Split line at video and text box position";
         SplitLineAtVideoPosition = "Split line at video position";
+        SplitLineAtWaveformPosition = "Split line at waveform head";
         StartFrom = "Start from";
         StartTime = "Start time";
         StartingDotDotDot = "Starting...";

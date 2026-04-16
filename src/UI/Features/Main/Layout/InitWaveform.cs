@@ -199,7 +199,7 @@ public class InitWaveform
 
             var splitAtPositionMenuItem = new MenuItem
             {
-                Header = Se.Language.General.SplitLine,
+                Header = Se.Language.General.SplitLineAtWaveformPosition,
                 Command = vm.SplitAtPositionInWaveformCommand,
             };
             flyout.Items.Add(splitAtPositionMenuItem);
