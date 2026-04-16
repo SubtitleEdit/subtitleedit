@@ -2,21 +2,22 @@
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Nikse.SubtitleEdit.Logic;
 
 public interface ISplitManager
 {
-    void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle);
-    void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds);
-    void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, int textIndex);
-    void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, int textIndex);
+    void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, string languageCode);
+    void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, string languageCode);
+    void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, int textIndex, string languageCode);
+    void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, int textIndex, string languageCode);
 }
 
 public class SplitManager : ISplitManager
 {
-    public void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, int textIndex)
+    public void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, int textIndex, string languageCode)
     {
         var idx = subtitles.IndexOf(subtitle);
         if (idx < 0 || idx >= subtitles.Count)
@@ -45,8 +46,17 @@ public class SplitManager : ISplitManager
         }
         else if (lines.Count == 2)
         {
-            newSubtitle.Text = lines[1].Trim();
-            subtitle.Text = lines[0].Trim();
+            var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = languageCode };
+            if (dialogHelper.IsDialog(lines))
+            {
+                newSubtitle.Text = lines[1].TrimStart(' ', DialogSplitMerge.GetDashChar(), DialogSplitMerge.GetAlternateDashChar()).Trim();
+                subtitle.Text = lines[0].TrimStart(' ', DialogSplitMerge.GetDashChar(), DialogSplitMerge.GetAlternateDashChar()).Trim();
+            }
+            else
+            {
+                newSubtitle.Text = lines[1].Trim();
+                subtitle.Text = lines[0].Trim();
+            }
         }
         else if (lines.Count > 2)
         {
@@ -90,31 +100,34 @@ public class SplitManager : ISplitManager
         }
         else
         {
-            var middleIndex = text.Length / 2;
-            var splitIndex = middleIndex;
-            while (splitIndex > 0 && !char.IsWhiteSpace(text[splitIndex]) && !char.IsPunctuation(text[splitIndex]))
+            var brokenLines = Utilities.AutoBreakLine(text, Se.Settings.General.SubtitleLineMaximumLength, 0, languageCode).SplitToLines();
+            if (brokenLines.Count == 2)
             {
-                splitIndex--;
+                subtitle.Text = brokenLines[0].Trim();
+                newSubtitle.Text = brokenLines[1].Trim();
             }
-            subtitle.Text = text.Substring(0, splitIndex).Trim();
-            newSubtitle.Text = text.Substring(splitIndex).Trim();
+            else
+            {
+                subtitle.Text = text;
+                newSubtitle.Text = string.Empty;
+            }
         }
 
         subtitles.Insert(idx + 1, newSubtitle);
     }
 
-    public void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle)
+    public void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, string languageCode)
     {
-        Split(subtitles, subtitle, -1, -1);
+        Split(subtitles, subtitle, -1, -1, languageCode);
     }
 
-    public void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds)
+    public void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, double videoPositionSeconds, string languageCode)
     {
-        Split(subtitles, subtitle, videoPositionSeconds, -1);
+        Split(subtitles, subtitle, videoPositionSeconds, -1, languageCode);
     }
 
-    public void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, int textIndex)
+    public void Split(ObservableCollection<SubtitleLineViewModel> subtitles, SubtitleLineViewModel subtitle, int textIndex, string languageCode)
     {
-        Split(subtitles, subtitle, -1, textIndex);
+        Split(subtitles, subtitle, -1, textIndex, languageCode);
     }
 }

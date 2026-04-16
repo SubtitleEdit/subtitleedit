@@ -12,8 +12,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string TwoLetterLanguageCode { get; set; }
         public bool SkipLineEndingCheck { get; set; }
 
-        private static char GetDashChar() => '-';
-        private static char GetAlternateDashChar() => '‐'; // Unicode En Dash (\u2010)
+        public static char GetDashChar() => '-';
+        public static char GetAlternateDashChar() => '‐'; // Unicode En Dash (\u2010)
 
         public string FixDashesAndSpaces(string input)
         {

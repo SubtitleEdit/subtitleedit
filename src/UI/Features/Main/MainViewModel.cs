@@ -9777,21 +9777,22 @@ public partial class MainViewModel :
             return;
         }
 
+        var language = LanguageAutoDetect.AutoDetectGoogleLanguage(GetUpdateSubtitle());
         if (atVideoPosition && atTextBoxPosition && vp != null)
         {
-            _splitManager.Split(Subtitles, s, vp.Position, EditTextBox.SelectionStart);
+            _splitManager.Split(Subtitles, s, vp.Position, EditTextBox.SelectionStart, language);
         }
         else if (atVideoPosition && vp != null)
         {
-            _splitManager.Split(Subtitles, s, vp.Position);
+            _splitManager.Split(Subtitles, s, vp.Position, language);
         }
         else if (atTextBoxPosition)
         {
-            _splitManager.Split(Subtitles, s, EditTextBox.SelectionStart);
+            _splitManager.Split(Subtitles, s, EditTextBox.SelectionStart, language);
         }
         else
         {
-            _splitManager.Split(Subtitles, s);
+            _splitManager.Split(Subtitles, s, language);
         }
     }
 
