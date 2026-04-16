@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.ContainerFormats.Ebml;
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -831,12 +832,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         private float ReadFloat32()
         {
             _stream.Read(_buffer, 0, 4);
-            if (BitConverter.IsLittleEndian)
-            {
-                Span<byte> reversed = stackalloc byte[4] { _buffer[3], _buffer[2], _buffer[1], _buffer[0] };
-                return BitConverter.ToSingle(reversed);
-            }
-            return BitConverter.ToSingle(_buffer.AsSpan(0, 4));
+            int value = BinaryPrimitives.ReadInt32BigEndian(_buffer);
+            return BitConverter.Int32BitsToSingle(value);
         }
 
         /// <summary>
@@ -847,12 +844,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         private double ReadFloat64()
         {
             _stream.Read(_buffer, 0, 8);
-            if (BitConverter.IsLittleEndian)
-            {
-                Span<byte> reversed = stackalloc byte[8] { _buffer[7], _buffer[6], _buffer[5], _buffer[4], _buffer[3], _buffer[2], _buffer[1], _buffer[0] };
-                return BitConverter.ToDouble(reversed);
-            }
-            return BitConverter.ToDouble(_buffer.AsSpan(0, 8));
+            long value = BinaryPrimitives.ReadInt64BigEndian(_buffer);
+            return BitConverter.Int64BitsToDouble(value);
         }
 
         /// <summary>
