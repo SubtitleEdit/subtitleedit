@@ -25,6 +25,8 @@ public class GoogleLensOcrSharp
 
         foreach (var bmpInput in input)
         {
+            if (cancellationToken.IsCancellationRequested) break;
+
             if (bmpInput.Bitmap == null)
             {
                 continue;
