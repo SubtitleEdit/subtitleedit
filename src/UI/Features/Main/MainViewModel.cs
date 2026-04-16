@@ -43,7 +43,10 @@ using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 using Nikse.SubtitleEdit.Features.Files.ExportPac;
 using Nikse.SubtitleEdit.Features.Files.ExportPlainText;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.DCinemaSmpteProperties;
+using Nikse.SubtitleEdit.Features.Files.FormatProperties.ItunesTimedTextProperties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.RosettaProperties;
+using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedText10Properties;
+using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedTextImsc11Properties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.TmpegEncXmlProperties;
 using Nikse.SubtitleEdit.Features.Files.ImportImages;
 using Nikse.SubtitleEdit.Features.Files.ImportPlainText;
@@ -1717,6 +1720,25 @@ public partial class MainViewModel :
         }
 
         var format = SelectedSubtitleFormat;
+
+        if (format is TimedTextImsc11)
+        {
+            var result = await ShowDialogAsync<TimedTextImsc11PropertiesWindow, TimedTextImsc11PropertiesViewModel>(vm => { vm.Initialize(GetUpdateSubtitle()); });
+            SetLibSeSettings();
+        }
+
+        if (format is ItunesTimedText)
+        {
+            var result = await ShowDialogAsync<ItunesTimedTextPropertiesWindow, ItunesTimedTextPropertiesViewModel>(vm => { vm.Initialize(GetUpdateSubtitle()); });
+            SetLibSeSettings();
+        }
+
+        if (format is TimedText10)
+        {
+            var result = await ShowDialogAsync<TimedText10PropertiesWindow, TimedText10PropertiesViewModel>(vm => { vm.Initialize(GetUpdateSubtitle()); });
+            SetLibSeSettings();
+        }
+
         if (format is TimedTextImscRosetta)
         {
             var result = await ShowDialogAsync<RosettaPropertiesWindow, RosettaPropertiesViewModel>(vm => { vm.Initialize(GetUpdateSubtitle()); });
@@ -15222,7 +15244,7 @@ public partial class MainViewModel :
         if (e.AddedItems.Count == 1)
         {
             var format = e.AddedItems[0] as SubtitleFormat;
-            if (format is TimedTextImscRosetta or TmpegEncXml or DCinemaSmpte2007 or DCinemaSmpte2010 or DCinemaSmpte2014)
+            if (format is TimedTextImsc11 or ItunesTimedText or TimedText10 or TimedTextImscRosetta or TmpegEncXml or DCinemaSmpte2007 or DCinemaSmpte2010 or DCinemaSmpte2014)
             {
                 IsFilePropertiesVisible = true;
                 FilePropertiesText = string.Format(Se.Language.Main.XPropertiesDotDotDot, format.Name);
