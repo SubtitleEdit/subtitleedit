@@ -250,8 +250,8 @@ namespace Nikse.SubtitleEdit.Controls
 
             var caret = _textBox.CaretIndex;
 
-            // Skip colons
-            while (caret < _textBuffer.Length && _textBuffer[caret] == ':')
+            // Skip separators (colons, commas, dots)
+            while (caret < _textBuffer.Length && IsSeparator(_textBuffer[caret]))
             {
                 caret++;
             }
@@ -271,7 +271,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             // Move to next editable position
             var nextPos = caret + 1;
-            while (nextPos < _textBuffer.Length && _textBuffer[nextPos] == ':')
+            while (nextPos < _textBuffer.Length && IsSeparator(_textBuffer[nextPos]))
             {
                 nextPos++;
             }
@@ -352,7 +352,7 @@ namespace Nikse.SubtitleEdit.Controls
             else if (e.Key == Key.Left)
             {
                 var newPos = _textBox.CaretIndex - 1;
-                while (newPos >= 0 && _textBuffer[newPos] == ':')
+                while (newPos >= 0 && IsSeparator(_textBuffer[newPos]))
                 {
                     newPos--;
                 }
@@ -367,7 +367,7 @@ namespace Nikse.SubtitleEdit.Controls
             else if (e.Key == Key.Right)
             {
                 var newPos = _textBox.CaretIndex + 1;
-                while (newPos < _textBuffer.Length && _textBuffer[newPos] == ':')
+                while (newPos < _textBuffer.Length && IsSeparator(_textBuffer[newPos]))
                 {
                     newPos++;
                 }
@@ -465,9 +465,11 @@ namespace Nikse.SubtitleEdit.Controls
             return tc.ToString();
         }
 
-        private TimeSpan Clamp(TimeSpan time)
-        {
-            return time.TotalMilliseconds < 0 ? TimeSpan.Zero : time;
-        }
+        private static bool IsSeparator(char c) => c == ':' || c == ',' || c == '.';
+
+                private TimeSpan Clamp(TimeSpan time)
+                {
+                    return time.TotalMilliseconds < 0 ? TimeSpan.Zero : time;
+                }
     }
 }
