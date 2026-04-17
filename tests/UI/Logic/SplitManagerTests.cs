@@ -177,4 +177,138 @@ public class SplitManagerTests
         Assert.Equal("First line", subtitles[0].Text);
         Assert.Equal("Second line", subtitles[1].Text);
     }
+
+    // FixTags tests
+
+    [Fact]
+    public void Split_BoldTagOpenInFirstPart_IsClosedAndReopenedInSecond()
+    {
+        // Arrange – the split happens at the word boundary; <b> in text1 must be closed and re-opened in text2
+        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($"<b>Hello world</b>", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        // Act – split at textIndex so <b> stays in text1
+        manager.Split(subtitles, subtitle, textIndex: 9, languageCode: "en");
+
+        // Assert – text1 should be closed with </b> and text2 should start with <b>
+        Assert.Contains("</b>", subtitles[0].Text, StringComparison.OrdinalIgnoreCase);
+        Assert.StartsWith("<b>", subtitles[1].Text, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void Split_ItalicTagOpenInFirstLine_ClosedAndReopenedInSecondLine()
+    {
+        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($"<i>First line{Environment.NewLine}Second line</i>", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        Assert.Contains("</i>", subtitles[0].Text, StringComparison.OrdinalIgnoreCase);
+        Assert.StartsWith("<i>", subtitles[1].Text, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void Split_UnderlineTagOpenInFirstLine_ClosedAndReopenedInSecondLine()
+    {
+        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($"<u>First line{Environment.NewLine}Second line</u>", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        Assert.Contains("</u>", subtitles[0].Text, StringComparison.OrdinalIgnoreCase);
+        Assert.StartsWith("<u>", subtitles[1].Text, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void Split_AlreadyClosedTagInFirstLine_NotDuplicated()
+    {
+        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($"<b>First</b> line{Environment.NewLine}Second line", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        // text1 already has matching </b>, so no extra closing tag should be added
+        var countClose = subtitles[0].Text.Split(["</b>", "</B>"], StringSplitOptions.None).Length - 1;
+        Assert.Equal(1, countClose);
+        // text2 should NOT start with <b> since the tag was properly closed in text1
+        Assert.DoesNotContain("<b>", subtitles[1].Text, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void Split_FontTagOpenInFirstLine_ClosedAndReopenedInSecondLine()
+    {
+        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($"<font color=\"red\">First line{Environment.NewLine}Second line</font>", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        Assert.Contains("</font>", subtitles[0].Text, StringComparison.OrdinalIgnoreCase);
+        Assert.StartsWith("<font", subtitles[1].Text, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void Split_NoTagsInText_TextUnchanged()
+    {
+        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($"Hello world{Environment.NewLine}How are you", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        Assert.Equal("Hello world", subtitles[0].Text);
+        Assert.Equal("How are you", subtitles[1].Text);
+    }
+
+    [Fact]
+    public void Split_AssaBoldTagActiveInFirstLine_PropagatedToSecondLine()
+    {
+        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($@"{{\b1}}First line{Environment.NewLine}Second line", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        Assert.Contains(@"\b1}", subtitles[1].Text, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Split_AssaBoldTagClosedInFirstLine_NotPropagatedToSecondLine()
+    {
+        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($@"{{\b1}}First{{\b0}} line{Environment.NewLine}Second line", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        Assert.DoesNotContain(@"\b1}", subtitles[1].Text, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Split_MultipleMixedTagsOpenInFirstLine_AllClosedAndReopened()
+    {
+        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($"<b><i>First line{Environment.NewLine}Second line</i></b>", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        Assert.Contains("</b>", subtitles[0].Text, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("</i>", subtitles[0].Text, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("<b>", subtitles[1].Text, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("<i>", subtitles[1].Text, StringComparison.OrdinalIgnoreCase);
+    }
 }
