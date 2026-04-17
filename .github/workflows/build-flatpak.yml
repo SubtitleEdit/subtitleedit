@@ -10,7 +10,42 @@ on:
         type: boolean
 
 jobs:
+  # Regenerate nuget-sources.json from the current UI.csproj so that the
+  # pre-fetched NuGet packages consumed by flatpak-builder always match the
+  # project's (possibly updated) dependency graph. Runs on a plain runner
+  # because the flatpak container image does not ship the .NET SDK.
+  regenerate-nuget-sources:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Regenerate nuget-sources.json
+        run: bash installer/flatpak/generate-nuget-sources.sh
+
+      - name: Verify nuget-sources.json is consistent with UI.csproj
+        run: |
+          if ! git diff --quiet -- installer/flatpak/nuget-sources.json; then
+            echo "::notice::nuget-sources.json was stale and has been regenerated for this build."
+            git --no-pager diff --stat -- installer/flatpak/nuget-sources.json
+          else
+            echo "nuget-sources.json is already up to date."
+          fi
+
+      - name: Upload regenerated nuget-sources.json
+        uses: actions/upload-artifact@v5
+        with:
+          name: nuget-sources
+          path: installer/flatpak/nuget-sources.json
+          if-no-files-found: error
+          overwrite: true
+
   build-flatpak:
+    needs: regenerate-nuget-sources
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-24.08
@@ -18,6 +53,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+
+      - name: Download regenerated nuget-sources.json
+        uses: actions/download-artifact@v5
+        with:
+          name: nuget-sources
+          path: installer/flatpak/
 
       - name: Update metainfo version/date from Se.cs
         run: bash installer/flatpak/update-metainfo-version.sh

@@ -29,7 +29,10 @@ PROJECT_PATH="${1:-src/UI/UI.csproj}"
 OUTPUT="${2:-installer/flatpak/nuget-sources.json}"
 
 GENERATOR="$SCRIPT_DIR/flatpak-dotnet-generator.py"
-GENERATOR_URL="https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/master/dotnet/flatpak-dotnet-generator.py"
+# Pin to a specific commit for reproducibility. Bump manually after reviewing
+# upstream changes at https://github.com/flatpak/flatpak-builder-tools/commits/master/dotnet/flatpak-dotnet-generator.py
+GENERATOR_COMMIT="3fc0620788a1dda1a3a539b8f972edadce8260ab"
+GENERATOR_URL="https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/${GENERATOR_COMMIT}/dotnet/flatpak-dotnet-generator.py"
 
 FREEDESKTOP_VERSION="24.08"
 DOTNET_VERSION="10"
@@ -37,10 +40,13 @@ DOTNET_VERSION="10"
 cd "$REPO_ROOT"
 
 # ---------------------------------------------------------------------------
-# 1. Download flatpak-dotnet-generator.py if not present
+# 1. Download flatpak-dotnet-generator.py if we're going to use it.
+#    The fallback path (system dotnet restore) does not need the generator,
+#    so skip the network fetch entirely in that case.
 # ---------------------------------------------------------------------------
-if [ ! -f "$GENERATOR" ]; then
-    echo "Downloading flatpak-dotnet-generator.py..."
+if [ ! -f "$GENERATOR" ] && command -v flatpak &>/dev/null && \
+   flatpak info "org.freedesktop.Sdk.Extension.dotnet${DOTNET_VERSION}//${FREEDESKTOP_VERSION}" &>/dev/null; then
+    echo "Downloading flatpak-dotnet-generator.py (pinned to ${GENERATOR_COMMIT})..."
     curl -fsSL -o "$GENERATOR" "$GENERATOR_URL"
 fi
 
@@ -111,6 +117,17 @@ for sha_file in pkgs_dir.glob("**/*.nupkg.sha512"):
     version = sha_file.parent.name
     name    = sha_file.parent.parent.name
     filename = f"{name}.{version}.nupkg"
+    # The flatpak build targets linux-x64 / linux-arm64 only, but dotnet restore
+    # on a non-Linux host may drag in host-RID runtime packs (win-*, osx-*, etc.)
+    # Those are wasted bandwidth and bloat the offline cache, so drop them.
+    lower = name.lower()
+    if any(tag in lower for tag in (
+        ".win-", ".win10-", ".windowsdesktop.",
+        ".osx-", ".osx.", ".mac-", ".maccatalyst-",
+        ".android-", ".ios-", ".tvos-",
+        ".freebsd-",
+    )):
+        continue
     url = f"https://api.nuget.org/v3-flatcontainer/{name}/{version}/{filename}"
     sha512_b64 = sha_file.read_text().strip()
     sha512_hex = binascii.hexlify(base64.b64decode(sha512_b64)).decode("ascii")
