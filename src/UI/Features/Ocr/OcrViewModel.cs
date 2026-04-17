@@ -1686,6 +1686,20 @@ public partial class OcrViewModel : ObservableObject
                     item = OcrSubtitleItems[p.Index];
                 }
 
+                var lines = p.Text.Trim().SplitToLines();
+                if (lines.Count > 1 && p.Text.Length < 40)
+                {
+                    var bmp = item.GetSkBitmapClean();
+                    var nbmp = new NikseBitmap2(bmp);
+                    nbmp.MakeOneColor(SKColors.White);
+                    var lineImages = NikseBitmapImageSplitter2.SplitToLinesTransparentOrBlack(nbmp);
+                    var lineImages2 = NikseBitmapImageSplitter2.SplitToLines(nbmp, 20);
+                    if (lineImages.Count == 1 && lineImages2.Count == 1 && bmp.Height > 2)
+                    {
+                        p.Text = Utilities.UnbreakLine(p.Text);
+                    }
+                }
+
                 item.Text = p.Text;
                 OcrFixLineAndSetText(number, item);
             }
@@ -1754,7 +1768,22 @@ public partial class OcrViewModel : ObservableObject
                     item = OcrSubtitleItems[p.Index];
                 }
 
+                var lines = p.Text.Trim().SplitToLines();
+                if (lines.Count > 1 && p.Text.Length < 40)
+                {
+                    var bmp = item.GetSkBitmapClean();
+                    var nbmp = new NikseBitmap2(bmp);
+                    nbmp.MakeOneColor(SKColors.White);
+                    var lineImages = NikseBitmapImageSplitter2.SplitToLinesTransparentOrBlack(nbmp);
+                    var lineImages2 = NikseBitmapImageSplitter2.SplitToLines(nbmp, 20);
+                    if (lineImages.Count == 1 && lineImages2.Count == 1 && bmp.Height > 2)
+                    {
+                        p.Text = Utilities.UnbreakLine(p.Text);
+                    }
+                }
+
                 item.Text = p.Text;
+
                 OcrFixLineAndSetText(number, item);
             }
         });
