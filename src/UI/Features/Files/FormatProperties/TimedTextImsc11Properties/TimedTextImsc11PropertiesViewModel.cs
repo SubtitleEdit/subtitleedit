@@ -331,6 +331,12 @@ public partial class TimedTextImsc11PropertiesViewModel : ObservableObject
     private void Ok()
     {
         WriteValuesToXml();
+        
+        if (!string.IsNullOrEmpty(SelectedFileExtension))
+        {
+            Configuration.Settings.SubtitleSettings.TimedTextImsc11FileExtension = SelectedFileExtension;
+        }
+
         OkPressed = true;
         Window?.Close();
     }
