@@ -33,7 +33,36 @@ public class GoogleLensOcrSharp
             }
 
             var result = await _lens.ScanByBitmap(bmpInput.Bitmap, language);
-            bmpInput.Text = string.Join(Environment.NewLine, result.Segments.Where(s => !string.IsNullOrWhiteSpace(s.Text)).Select(p => p.Text).ToList()).Trim();
+
+            var lines = result.Segments.Select(x => x.Text).ToList();
+
+            //join "-" with next line
+            for (int i = 0; i < lines.Count; i++)
+            {
+                if (lines[i] == "-" && i + 1 < lines.Count)
+                {
+                    lines[i] = $"- {lines[i + 1]}";
+                    lines.RemoveAt(i + 1);
+                }
+            }
+
+            //join "..." with line
+            for (int i = 0; i < lines.Count; i++)
+            {
+                //it has previous line not ending with .
+                if (lines[i] == "..." && i - 1 >= 0 && !lines[i-1].EndsWith("."))
+                {
+                    lines[i-1] = $"{lines[i - 1]} ...";
+                    lines.RemoveAt(i);
+                } 
+                else if (lines[i] == "..." && i + 1 < lines.Count)
+                {
+                    lines[i] = $"... {lines[i + 1]}";
+                    lines.RemoveAt(i + 1);
+                }
+            }
+
+            bmpInput.Text = string.Join(Environment.NewLine, lines).Trim();
             lock (_lockObject)
             {
                 var progressReport = new PaddleOcrBatchProgress
