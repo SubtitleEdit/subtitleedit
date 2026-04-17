@@ -396,6 +396,17 @@ public partial class TimedText10PropertiesViewModel : ObservableObject
     private void Ok()
     {
         WriteValuesToXml();
+        
+        if (!string.IsNullOrEmpty(SelectedFileExtension))
+        {
+            Configuration.Settings.SubtitleSettings.TimedText10FileExtension = SelectedFileExtension;
+        }
+        
+        if (!string.IsNullOrEmpty(SelectedTimeCodeFormat))
+        {
+            Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat = SelectedTimeCodeFormat;
+        }
+        
         OkPressed = true;
         Window?.Close();
     }
