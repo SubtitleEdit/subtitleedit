@@ -14,7 +14,7 @@ public class LanguageRestoreAutoBackup
         Title = "Restore auto-backup";
         OpenAutoBackupFolder = "Open auto-backup folder";
         RestoreAutoBackupFile = "Restore auto-backup file";
-        RestoreXFromY = "Do you want to restore \"{0}\" from {0}?";
+        RestoreXFromY = "Do you want to restore \"{0}\" from {1}?";
         DeleteAllSubtitleBackups = "Do you want to delete all subtitle backup files?";
         DeleteAll = "Delete all";
     }
