@@ -66,9 +66,9 @@
       },
       "Avalonia.Markup.Declarative": {
         "type": "Direct",
-        "requested": "[12.0.1-preview1, )",
-        "resolved": "12.0.1-preview1",
-        "contentHash": "nsG1S5UYyVdbRgNDZCd8WEZ7iqZb6w5jHA80B94vzUK/RrGRWeuD+oT04RgJLLcE/8NgJT5LGP/aahlP7hyh0A==",
+        "requested": "[12.0.1, )",
+        "resolved": "12.0.1",
+        "contentHash": "Cdf0eWIBRz04gBxR6JipflPX7NsNeIoIRPdYpP63cBOfmmrRn/cti00zL71s6CA6DBKaKmOOek/OVTmH2x5FoA==",
         "dependencies": {
           "Avalonia": "12.0.0"
         }
@@ -96,9 +96,9 @@
       },
       "AvaloniaUI.DiagnosticsSupport": {
         "type": "Direct",
-        "requested": "[2.2.0, )",
-        "resolved": "2.2.0",
-        "contentHash": "Jk9TUJ/VF1yT2YDsHg6Ji7B6Xh/uJDJ+zI1fesBsBvhnLd3M9wmoZ8eECZI15mBN57v4h5Rgt23JLD3EQZtBhA==",
+        "requested": "[2.2.1, )",
+        "resolved": "2.2.1",
+        "contentHash": "PXviRj+8t6IT7JdnVhs1EET+VgGB/K1Ju3yL/Q9sXR2YD9NzkIYybyfJG3DPXcTYXpEJZJvxGiCTjH1N8AkLhQ==",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "8.0.0",
           "Microsoft.IO.RecyclableMemoryStream": "3.0.1"
@@ -151,29 +151,29 @@
       },
       "Optris.Icons.Avalonia": {
         "type": "Direct",
-        "requested": "[12.0.4, )",
-        "resolved": "12.0.4",
-        "contentHash": "vniQgDyvOM5tzcbGnLUXlWRTaBJXJGVCcehHUh14deYcA6JsX/sVJ+cwARi6udspm69kBIlNHxnPJkxlKoNJhw==",
+        "requested": "[12.0.5, )",
+        "resolved": "12.0.5",
+        "contentHash": "NOU4sQe4LbmwkmoQp50bNLwynAfqDekucf0G2NcYn1wt9tCFd30yx2zfFBrfGw8eyciG2Y5vMH5ipViYX6K5YA==",
         "dependencies": {
-          "Avalonia": "12.0.0"
+          "Avalonia": "12.0.1"
         }
       },
       "Optris.Icons.Avalonia.FontAwesome": {
         "type": "Direct",
-        "requested": "[12.0.4, )",
-        "resolved": "12.0.4",
-        "contentHash": "xCsr4XLj0lOFvf9ObUL6wAzQ0paypretRYEFrI0HYCGWeH24YYqDKzDDUY5JWnPE2ZZVxrpq1xvvaw7ZT4T0sA==",
+        "requested": "[12.0.5, )",
+        "resolved": "12.0.5",
+        "contentHash": "L5bAOTC1fvOddEyEfV2lDjBoef0hlwHozK4INaR49IO9w6lZzsaCfA2tpmHToXSQq7gBE0GeErkFRKj+fAFxTg==",
         "dependencies": {
-          "Optris.Icons.Avalonia": "12.0.4"
+          "Optris.Icons.Avalonia": "12.0.5"
         }
       },
       "Optris.Icons.Avalonia.MaterialDesign": {
         "type": "Direct",
-        "requested": "[12.0.4, )",
-        "resolved": "12.0.4",
-        "contentHash": "ZNX8K6UwtdwRrrSK9QV3EGUGu+f9Ftq9A/gdX4MS5vY8eniXNA14htx8oPVDigPCsc1QY2EaNmg95m5zRXc6ew==",
+        "requested": "[12.0.5, )",
+        "resolved": "12.0.5",
+        "contentHash": "SB8SfIxm6UVNuskk4xDKrAq/2+cQxEJm/d1xih0jfpQTQULLP9ipEbuQJ8AWK5y3dVjkjUsLt3quPruYWkgvkQ==",
         "dependencies": {
-          "Optris.Icons.Avalonia": "12.0.4"
+          "Optris.Icons.Avalonia": "12.0.5"
         }
       },
       "SharpCompress": {

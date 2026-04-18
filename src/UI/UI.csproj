@@ -28,11 +28,11 @@
 		<PackageReference Include="Avalonia.Controls.ColorPicker" Version="12.0.1" />
 		<PackageReference Include="Avalonia.Controls.DataGrid" Version="12.0.0" />
 		<PackageReference Include="Avalonia.Desktop" Version="12.0.1" />
-		<PackageReference Include="Avalonia.Markup.Declarative" Version="12.0.1-preview1" />
+		<PackageReference Include="Avalonia.Markup.Declarative" Version="12.0.1" />
 		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.1" />
 		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.1" />
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-		<PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.0">
+		<PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.1">
 			<IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
 			<PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
 		</PackageReference>
@@ -42,9 +42,9 @@
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0-preview.2.26159.112" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0-preview.2.26159.112" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="11.0.0-preview.2.26159.112" />
-		<PackageReference Include="Optris.Icons.Avalonia" Version="12.0.4" />
-		<PackageReference Include="Optris.Icons.Avalonia.FontAwesome" Version="12.0.4" />
-		<PackageReference Include="Optris.Icons.Avalonia.MaterialDesign" Version="12.0.4" />
+		<PackageReference Include="Optris.Icons.Avalonia" Version="12.0.5" />
+		<PackageReference Include="Optris.Icons.Avalonia.FontAwesome" Version="12.0.5" />
+		<PackageReference Include="Optris.Icons.Avalonia.MaterialDesign" Version="12.0.5" />
 		<PackageReference Include="SharpCompress" Version="0.47.4" />
 		<PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.3-preview.1.1" />
 		<PackageReference Include="SkiaSharp.HarfBuzz" Version="3.119.1" />
