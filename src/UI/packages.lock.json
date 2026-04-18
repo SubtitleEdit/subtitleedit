@@ -184,12 +184,12 @@
       },
       "SkiaSharp.HarfBuzz": {
         "type": "Direct",
-        "requested": "[3.119.1, )",
-        "resolved": "3.119.1",
-        "contentHash": "+Lu9kCmxgEJVUeIljhEOgrB4dr4iwPP08jgswKk3bGPUwInmqDGUUriMoYD9prFlVa0wOWDLG/hfl3HIHNJHRg==",
+        "requested": "[3.119.3-preview.1.1, )",
+        "resolved": "3.119.3-preview.1.1",
+        "contentHash": "bI7ElvielFepjzGfJN1h1wdo8z8imkwh8qefb5ErmvJIWmHQfQi+hxbmVYMiuFvIIl1zVFuOxEtlfi3wVinw+Q==",
         "dependencies": {
-          "HarfBuzzSharp": "8.3.1.2",
-          "SkiaSharp": "3.119.1"
+          "HarfBuzzSharp": "8.3.1.4-preview.1.1",
+          "SkiaSharp": "3.119.3-preview.1.1"
         }
       },
       "SkiaSharp.NativeAssets.Linux": {
@@ -392,11 +392,11 @@
       },
       "HarfBuzzSharp": {
         "type": "Transitive",
-        "resolved": "8.3.1.3",
-        "contentHash": "NGZ2+ZVNPM+NdHB/asW0/ykWngyHWwcqjrbN2nDeH1B/aptPGlCUl8wkQ2cSJxw5fdWgdmIPmNuTPWpLwNVXWg==",
+        "resolved": "8.3.1.4-preview.1.1",
+        "contentHash": "rdcaUnOAU5q1gHgVMg3+CNAYDAMLM8VKwRcjvnWE3EdgUOC+aVcH7dTe0D1Z21jzhQVQWCPzEUGkunBtfawpVw==",
         "dependencies": {
-          "HarfBuzzSharp.NativeAssets.Win32": "8.3.1.3",
-          "HarfBuzzSharp.NativeAssets.macOS": "8.3.1.3"
+          "HarfBuzzSharp.NativeAssets.Win32": "8.3.1.4-preview.1.1",
+          "HarfBuzzSharp.NativeAssets.macOS": "8.3.1.4-preview.1.1"
         }
       },
       "HarfBuzzSharp.NativeAssets.Linux": {
@@ -406,8 +406,8 @@
       },
       "HarfBuzzSharp.NativeAssets.macOS": {
         "type": "Transitive",
-        "resolved": "8.3.1.3",
-        "contentHash": "KPTq0xnslkI6nAo0jh3ptcQPJvZZr7MWYXa2jUe4SnHc9q+JlHElmNXp0sfFoiTgoCX7WOYpYsurypuH9Gehxw=="
+        "resolved": "8.3.1.4-preview.1.1",
+        "contentHash": "shyaLB44KXS5d43FodXRRFuIyDCt5M2npJNht4MWvMxz1zTrGC73AUKzdETVALsq8yEeW1HZ/YXXd8KB/B10Cg=="
       },
       "HarfBuzzSharp.NativeAssets.WebAssembly": {
         "type": "Transitive",
@@ -416,8 +416,8 @@
       },
       "HarfBuzzSharp.NativeAssets.Win32": {
         "type": "Transitive",
-        "resolved": "8.3.1.3",
-        "contentHash": "bx8CE8Js+XGX8PUxAHCBDEORt5aaBYtMN4Hr9QFs57Xithh6yjUyYqksizH6eRDhJkwsGI+SXWmPmMm8lZC9Pw=="
+        "resolved": "8.3.1.4-preview.1.1",
+        "contentHash": "G8rCBZJq8RWjS4KvdW2SH7HaKPBI8Cp2DwZEbhXWvjToRrGi4khgcd/9/aT8/K+twzdAp/q6vhD8kgYSWC8aFQ=="
       },
       "MicroCom.Runtime": {
         "type": "Transitive",
@@ -606,7 +606,7 @@
       "libse": {
         "type": "Project",
         "dependencies": {
-          "SkiaSharp": "[3.119.1, )",
+          "SkiaSharp": "[3.119.3-preview.1.1, )",
           "UTF.Unknown": "[2.6.0, )"
         }
       }
