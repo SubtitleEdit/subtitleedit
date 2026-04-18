@@ -80,7 +80,7 @@ public partial class DownloadGoogleLensOcrViewModel : ObservableObject
                     return;
                 }
 
-                Unpacker.Extract7Zip(_tempFileName, Se.GoogleLensOcrFolder, "Chrome-Lens-CLI-v3.3.0", _cancellationTokenSource, text => ProgressText = text); 
+                Unpacker.Extract7Zip(_tempFileName, Se.GoogleLensOcrFolder, "Chrome-Lens-OCR-v3.4.0", _cancellationTokenSource, text => ProgressText = text); 
 
                 OkPressed = true;
                 Close();

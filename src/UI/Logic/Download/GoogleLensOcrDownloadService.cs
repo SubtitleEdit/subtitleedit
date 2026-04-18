@@ -15,7 +15,9 @@ public interface IGoogleLensOcrDownloadService
 
 public class GoogleLensOcrDownloadService(HttpClient httpClient) : IGoogleLensOcrDownloadService
 {
-    private const string WindowsUrl = "https://github.com/timminator/chrome-lens-py/releases/download/v3.3.0/Chrome-Lens-CLI-v3.3.0.7z";
+    //private const string WindowsUrl = "https://github.com/timminator/chrome-lens-py/releases/download/v3.3.0/Chrome-Lens-CLI-v3.3.0.7z";
+    private const string WindowsUrl = "https://github.com/timminator/Chrome-Lens-OCR/releases/download/v3.4.0/Chrome-Lens-OCR-v3.4.0.7z";
+    private const string LinuxUrl = "https://github.com/timminator/Chrome-Lens-OCR/releases/download/v3.4.0/Chrome-Lens-OCR-v3.4.0-Linux.7z";
 
     public async Task DownloadGoogleLensOcrStandalone(string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken)
     {
@@ -34,6 +36,11 @@ public class GoogleLensOcrDownloadService(HttpClient httpClient) : IGoogleLensOc
             return WindowsUrl;
         }
 
-        throw new PlatformNotSupportedException("Google Lens OCR download is only supported on Windows.");
+        if (OperatingSystem.IsLinux())
+        {
+            return LinuxUrl;
+        }
+
+        throw new PlatformNotSupportedException("Google Lens OCR does not support this platform");
     }
 }

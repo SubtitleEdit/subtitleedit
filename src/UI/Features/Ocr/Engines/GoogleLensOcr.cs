@@ -20,7 +20,7 @@ public class GoogleLensOcr
     public string Error { get; set; }
     private bool _hasErrors = false;
     private StringBuilder _log = new StringBuilder();
-    public const string ExeFileName = "chrome-lens-cli.exe";
+    public const string ExeFileName = "chrome-lens.exe";
     private IProgress<PaddleOcrBatchProgress>? _batchProgress;
     
     /// Contains the file names of bitmaps that have OCR errors.
