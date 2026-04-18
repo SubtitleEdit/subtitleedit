@@ -333,7 +333,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ColorDurationTooLong, nameof(_vm.ColorDurationTooLong)),
             MakeSeparator(),
             MakeCheckboxSetting(Se.Language.Options.Settings.ColorTextTooLong, nameof(_vm.ColorTextTooLong)),
-            
+
             new SettingsItem(Se.Language.Options.Settings.ColorTextTooWide, () =>
                 UiUtil.MakeHorizontalPanel(
                     new CheckBox
@@ -484,11 +484,11 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformInvertMouseWheel, nameof(_vm.WaveformInvertMouseWheel)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformDrawGridLines, nameof(_vm.WaveformDrawGridLines)),
             new SettingsItem(Se.Language.Options.Settings.WaveformTextFontSize, () => UiUtil.MakeNumericUpDownInt(
-                10 , 
-                100, 
-                12, 
-                120, 
-                _vm, 
+                10 ,
+                100,
+                12,
+                120,
+                _vm,
                 nameof(_vm.WaveformTextFontSize))),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformTextFontBold, nameof(_vm.WaveformTextFontBold)),
             new SettingsItem(string.Empty, () => UiUtil.MakeButton(Se.Language.Options.Settings.WaveformColorThemesDotDotDot, _vm.OpenWaveformThemesCommand)),
@@ -588,11 +588,11 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.IconTheme, () => UiUtil.MakeComboBox(_vm.IconThemes, _vm, nameof(_vm.SelectedIconTheme))),
             MakeCheckboxSetting(Se.Language.Options.Settings.MatchIconColorToDarkTheme, nameof(_vm.MatchIconColorToDarkTheme)),
             new SettingsItem(Se.Language.Options.Settings.UiScale, () => UiUtil.MakeNumericUpDownInt(
-                (int)Math.Round(UiTheme.MinScale * 100.0, MidpointRounding.AwayFromZero) , 
-                (int)Math.Round(UiTheme.MaxScale * 100.0, MidpointRounding.AwayFromZero), 
-                100, 
-                120, 
-                _vm, 
+                (int)Math.Round(UiTheme.MinScale * 100.0, MidpointRounding.AwayFromZero) ,
+                (int)Math.Round(UiTheme.MaxScale * 100.0, MidpointRounding.AwayFromZero),
+                100,
+                120,
+                _vm,
                 nameof(_vm.LayoutScale))),
             new SettingsItem(Se.Language.Options.Settings.DarkThemeForegroundColor, () => new StackPanel
             {
@@ -762,7 +762,7 @@ public class SettingsPage : UserControl
                 new TextBlock { Text = f }, true)
         };
 
-        var buttonAdd = UiUtil.MakeButton(Se.Language.General.Add, vm.AddFavoriteSubtitleFormatCommand).WithMinWidth(100);   
+        var buttonAdd = UiUtil.MakeButton(Se.Language.General.Add, vm.AddFavoriteSubtitleFormatCommand).WithMinWidth(100);
         var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveFavoriteSubtitleFormatCommand).WithMinWidth(100);
         var buttonMoveUp = UiUtil.MakeButton(Se.Language.General.MoveUp, vm.MoveUpFavoriteSubtitleFormatCommand).WithMinWidth(100);
         var buttonMoveDown = UiUtil.MakeButton(Se.Language.General.MoveDown, vm.MoveDownFavoriteSubtitleFormatCommand).WithMinWidth(100);
@@ -792,10 +792,13 @@ public class SettingsPage : UserControl
 
         var checkBoxBold = UiUtil.MakeCheckBox(Se.Language.General.Bold, vm, nameof(vm.MpvPreviewFontBold));
 
+        var labelAlignment = UiUtil.MakeLabel(Se.Language.General.Alignment);
+        var comboBoxAlignment = UiUtil.MakeComboBox(vm.MpvPreviewFontAlignments, vm, nameof(vm.MpvPreviewSelectedFontAlignment));
+
         var labelMargin = UiUtil.MakeLabel(Se.Language.General.Margin);
         var numericUpDownMargin = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.MpvPreviewMargin));
         numericUpDownMargin.Increment = 1;
-        
+
         var labelColorPrimary = UiUtil.MakeLabel(Se.Language.Assa.Primary);
         var colorPickerPrimary = UiUtil.MakeColorPicker(vm, nameof(vm.MpvPreviewColorPrimary));
 
@@ -809,6 +812,7 @@ public class SettingsPage : UserControl
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -836,19 +840,22 @@ public class SettingsPage : UserControl
 
         grid.Add(checkBoxBold, 2, 1);
 
-        grid.Add(labelMargin, 3);
-        grid.Add(numericUpDownMargin, 3, 1);
+        grid.Add(labelAlignment, 3);
+        grid.Add(comboBoxAlignment, 3, 1);
 
-        grid.Add(labelColorPrimary, 4);
-        grid.Add(colorPickerPrimary, 4, 1);
+        grid.Add(labelMargin, 4);
+        grid.Add(numericUpDownMargin, 4, 1);
 
-        grid.Add(labelColorOutline, 5);
-        grid.Add(colorPickerOutline, 5, 1);
+        grid.Add(labelColorPrimary, 5);
+        grid.Add(colorPickerPrimary, 5, 1);
 
-        grid.Add(labelColorShadow, 6);
-        grid.Add(colorPickerShadow, 6, 1);
+        grid.Add(labelColorOutline, 6);
+        grid.Add(colorPickerOutline, 6, 1);
 
-        grid.Add(MakeBorderView(vm), 7, 0, 1, 2);
+        grid.Add(labelColorShadow, 7);
+        grid.Add(colorPickerShadow, 7, 1);
+
+        grid.Add(MakeBorderView(vm), 8, 0, 1, 2);
 
         return UiUtil.MakeBorderForControl(grid);
     }

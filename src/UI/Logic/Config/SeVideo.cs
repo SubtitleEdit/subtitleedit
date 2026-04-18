@@ -31,6 +31,7 @@ public class SeVideo
     public string MpvPreviewColorOutline { get; set; }
     public string MpvPreviewColorShadow { get; set; }
     public decimal MpvPreviewOutlineWidth { get; set; }
+    public string MpvPreviewAlignment { get; set; }
     public decimal MpvPreviewShadowWidth { get; set; }
     public int MpvPreviewBorderType { get; set; }
 
@@ -58,6 +59,7 @@ public class SeVideo
         MpvPreviewFontBold = true;
         MpvPreviewMargin = 10;
         MpvPreviewOutlineWidth = 2;
+        MpvPreviewAlignment = "2"; // Bottom-center
         MpvPreviewShadowWidth = 1;
         MpvPreviewColorPrimary = Color.FromRgb(255, 255, 255).FromColorToHex();
         MpvPreviewColorOutline = Color.FromRgb(0, 0, 0).FromColorToHex();

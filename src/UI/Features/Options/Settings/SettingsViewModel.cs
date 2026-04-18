@@ -21,6 +21,7 @@ using Nikse.SubtitleEdit.Features.Options.Settings.WaveformToolbarItems;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
 using Nikse.SubtitleEdit.Features.SpellCheck;
+using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -60,6 +61,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _mpvPreviewFontName;
     [ObservableProperty] private int _mpvPreviewFontSize;
     [ObservableProperty] private bool _mpvPreviewFontBold;
+    [ObservableProperty] private ObservableCollection<AlignmentItem> __mpvPreviewFontAlignments;
+    [ObservableProperty] private AlignmentItem __mpvPreviewSelectedFontAlignment;
     [ObservableProperty] private int _mpvPreviewMargin;
     [ObservableProperty] private Color _mpvPreviewColorPrimary;
     [ObservableProperty] private Color _mpvPreviewColorOutline;
@@ -310,6 +313,8 @@ public partial class SettingsViewModel : ObservableObject
         CpsLineLengthStrategy = CpsLineLengthStrategies.First();
         Fonts = new ObservableCollection<string>(FontHelper.GetSystemFonts());
         MpvPreviewBorderTypes = new ObservableCollection<BorderStyleItem>(BorderStyleItem.List());
+        MpvPreviewFontAlignments = new ObservableCollection<AlignmentItem>(AlignmentItem.Alignments);
+        MpvPreviewSelectedFontAlignment = MpvPreviewFontAlignments[7];
         LibVlcStatus = string.Empty;
 
         Themes = [Se.Language.General.System, Se.Language.General.Light, Se.Language.General.Dark, Se.Language.General.Classic, "Pastel"];
@@ -781,6 +786,7 @@ public partial class SettingsViewModel : ObservableObject
         MpvPreviewFontSize = video.MpvPreviewFontSize;
         MpvPreviewFontBold = video.MpvPreviewFontBold;
         MpvPreviewMargin = video.MpvPreviewMargin;
+        MpvPreviewSelectedFontAlignment = MpvPreviewFontAlignments.FirstOrDefault(p => p.Code == video.MpvPreviewAlignment) ?? MpvPreviewFontAlignments[7];
         MpvPreviewOutlineWidth = video.MpvPreviewOutlineWidth;
         MpvPreviewShadowWidth = video.MpvPreviewShadowWidth;
         MpvPreviewColorPrimary = video.MpvPreviewColorPrimary.FromHexToColor();
@@ -1353,6 +1359,7 @@ public partial class SettingsViewModel : ObservableObject
         video.MpvPreviewFontBold = MpvPreviewFontBold;
         video.MpvPreviewMargin = MpvPreviewMargin;
         video.MpvPreviewOutlineWidth = MpvPreviewOutlineWidth;
+        video.MpvPreviewAlignment = MpvPreviewSelectedFontAlignment.Code;
         video.MpvPreviewShadowWidth = MpvPreviewShadowWidth;
         video.MpvPreviewColorPrimary = MpvPreviewColorPrimary.FromColorToHex();
         video.MpvPreviewColorOutline = MpvPreviewColorOutline.FromColorToHex();

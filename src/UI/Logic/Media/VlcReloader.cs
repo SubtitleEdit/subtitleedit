@@ -223,7 +223,7 @@ public class VlcReloader : IVlcReloader
             OutlineWidth = gs.MpvPreviewOutlineWidth,
             ShadowWidth = gs.MpvPreviewShadowWidth,
             BorderStyle = gs.MpvPreviewBorderType.ToString(),
-            Alignment = "2",  // bottom center
+            Alignment = gs.MpvPreviewAlignment,
             MarginVertical = gs.MpvPreviewMargin,
             MarginLeft =  gs.MpvPreviewMargin,
             MarginRight =  gs.MpvPreviewMargin,
