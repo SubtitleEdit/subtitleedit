@@ -1,4 +1,5 @@
 using SeConv.Core;
+using Xunit;
 
 namespace SeConvTests.Core;
 
