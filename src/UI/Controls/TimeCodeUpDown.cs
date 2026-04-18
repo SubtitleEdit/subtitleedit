@@ -467,9 +467,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         private static bool IsSeparator(char c) => c == ':' || c == ',' || c == '.';
 
-                private TimeSpan Clamp(TimeSpan time)
-                {
-                    return time.TotalMilliseconds < 0 ? TimeSpan.Zero : time;
-                }
+        private TimeSpan Clamp(TimeSpan time)
+        {
+            return time.TotalMilliseconds < 0 ? TimeSpan.Zero : time;
+        }
     }
 }
