@@ -177,6 +177,7 @@ public class LanguageSettings
     public string AutoOpenVideoFile { get; set; }
     public string DownloadMpv { get; set; }
     public string DownloadVlc { get; set; }
+    public string AllowSingleLetterShortcutsInTextbox { get; set; }
     public string GoToLineNumberSetsVideoPosition { get; set; }
     public string AdjustAllTimesRememberLineSelectionChoice { get; set; }
     public string FilesAndLogs { get; set; }
@@ -458,6 +459,7 @@ public class LanguageSettings
         AutoOpenVideoFile = "Auto-open video file when opening subtitle";
         DownloadMpv = "Download mpv";
         DownloadVlc = "Download VLC";
+        AllowSingleLetterShortcutsInTextbox = "Allow single-letter shortcuts in text box";
         GoToLineNumberSetsVideoPosition = "Go-to-line-number also sets video position";
         AdjustAllTimesRememberLineSelectionChoice = "Adjust all times, remember line selection choice";
         DefaultFormat = "Default format";
