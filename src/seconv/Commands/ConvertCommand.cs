@@ -10,10 +10,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
     public sealed class Settings : CommandSettings
     {
         [CommandArgument(0, "<pattern>")]
-        [Description("One or more file name patterns separated by commas")]
-        public string Pattern { get; init; } = string.Empty;
+        [Description("One or more file name patterns. Use quotes around paths that contain spaces (e.g. \"my file.srt\"). Pass multiple patterns as separate quoted arguments (e.g. \"file1.srt\" \"file2.srt\") or as a single comma-separated value (e.g. \"*.srt,*.ass\").")]
+        public string[] Pattern { get; init; } = [];
 
-        [CommandArgument(1, "<format>")]
+        [CommandOption("--format|-f")]
         [Description("Name of format without spaces")]
         public string Format { get; init; } = string.Empty;
 
@@ -187,7 +187,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             AnsiConsole.WriteLine();
 
             // Validate input
-            if (string.IsNullOrWhiteSpace(settings.Pattern))
+            if (settings.Pattern.Length == 0)
             {
                 AnsiConsole.MarkupLine("[red]Error: Pattern is required[/]");
                 return 1;
@@ -195,7 +195,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
 
             if (string.IsNullOrWhiteSpace(settings.Format))
             {
-                AnsiConsole.MarkupLine("[red]Error: Format is required[/]");
+                AnsiConsole.MarkupLine("[red]Error: Format is required. Use --format <name>[/]");
                 return 1;
             }
 
@@ -221,7 +221,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             // Create conversion options
             var options = new ConversionOptions
             {
-                Pattern = settings.Pattern,
+                Patterns = settings.Pattern,
                 Format = settings.Format,
                 InputFolder = settings.InputFolder,
                 OutputFolder = settings.OutputFolder,
@@ -244,7 +244,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             var table = new Table();
             table.AddColumn("[yellow]Parameter[/]");
             table.AddColumn("[green]Value[/]");
-            table.AddRow("Pattern", settings.Pattern);
+            table.AddRow("Pattern", string.Join(", ", settings.Pattern));
             table.AddRow("Format", formatDisplay);
 
             if (!string.IsNullOrEmpty(settings.InputFolder))

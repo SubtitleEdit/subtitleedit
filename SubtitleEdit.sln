@@ -146,6 +146,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "flatpak", "flatpak", "{6F64
 		installer\flatpak\update-metainfo-version.sh = installer\flatpak\update-metainfo-version.sh
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeConvTests", "tests\seconv\SeConvTests.csproj", "{C8ABD588-56D6-49EF-A85C-187FD9E803F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -216,6 +218,18 @@ Global
 		{EC2871E2-CAC1-4BCC-8A77-90A5CAC829DA}.Release|x64.Build.0 = Release|Any CPU
 		{EC2871E2-CAC1-4BCC-8A77-90A5CAC829DA}.Release|x86.ActiveCfg = Release|Any CPU
 		{EC2871E2-CAC1-4BCC-8A77-90A5CAC829DA}.Release|x86.Build.0 = Release|Any CPU
+		{C8ABD588-56D6-49EF-A85C-187FD9E803F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8ABD588-56D6-49EF-A85C-187FD9E803F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8ABD588-56D6-49EF-A85C-187FD9E803F6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C8ABD588-56D6-49EF-A85C-187FD9E803F6}.Debug|x64.Build.0 = Debug|Any CPU
+		{C8ABD588-56D6-49EF-A85C-187FD9E803F6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C8ABD588-56D6-49EF-A85C-187FD9E803F6}.Debug|x86.Build.0 = Debug|Any CPU
+		{C8ABD588-56D6-49EF-A85C-187FD9E803F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8ABD588-56D6-49EF-A85C-187FD9E803F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8ABD588-56D6-49EF-A85C-187FD9E803F6}.Release|x64.ActiveCfg = Release|Any CPU
+		{C8ABD588-56D6-49EF-A85C-187FD9E803F6}.Release|x64.Build.0 = Release|Any CPU
+		{C8ABD588-56D6-49EF-A85C-187FD9E803F6}.Release|x86.ActiveCfg = Release|Any CPU
+		{C8ABD588-56D6-49EF-A85C-187FD9E803F6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -231,6 +245,7 @@ Global
 		{4F23FA81-26B9-4E5D-A7AC-C5C1CE2654DC} = {2FFE3E54-97BC-4DC1-865D-B9B4ED339E8E}
 		{5925DAD2-308F-4879-9587-E45FE31BC34C} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
 		{6F6414CD-28F6-430C-B855-68B7573ACC4F} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
+		{C8ABD588-56D6-49EF-A85C-187FD9E803F6} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {27E960EC-896F-428C-95A2-C250321C16D5}

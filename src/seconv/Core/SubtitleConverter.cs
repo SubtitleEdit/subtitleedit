@@ -17,7 +17,7 @@ internal class SubtitleConverter
 
             if (inputFiles.Count == 0)
             {
-                result.Errors.Add($"No files found matching pattern: {options.Pattern}");
+                result.Errors.Add($"No files found matching pattern(s): {string.Join(", ", options.Patterns)}");
                 return result;
             }
 
@@ -60,25 +60,33 @@ internal class SubtitleConverter
     private List<string> GetInputFiles(ConversionOptions options)
     {
         var files = new List<string>();
-        var patterns = options.Pattern.Split(',', StringSplitOptions.RemoveEmptyEntries);
 
         var baseFolder = string.IsNullOrEmpty(options.InputFolder)
             ? Directory.GetCurrentDirectory()
             : options.InputFolder;
 
-        foreach (var pattern in patterns)
+        foreach (var entry in options.Patterns)
         {
-            var trimmedPattern = pattern.Trim();
-            var searchPath = Path.IsPathRooted(trimmedPattern)
-                ? trimmedPattern
-                : Path.Combine(baseFolder, trimmedPattern);
+            // Support comma-separated patterns within a single value for backward compatibility,
+            // but only when the entry itself is not a rooted path (to avoid splitting paths that contain commas).
+            var subPatterns = !Path.IsPathRooted(entry) && entry.Contains(',')
+                ? entry.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                : (IEnumerable<string>)[entry];
 
-            var directory = Path.GetDirectoryName(searchPath) ?? baseFolder;
-            var filePattern = Path.GetFileName(searchPath);
-
-            if (Directory.Exists(directory))
+            foreach (var pattern in subPatterns)
             {
-                files.AddRange(Directory.GetFiles(directory, filePattern));
+                var trimmedPattern = pattern.Trim();
+                var searchPath = Path.IsPathRooted(trimmedPattern)
+                    ? trimmedPattern
+                    : Path.Combine(baseFolder, trimmedPattern);
+
+                var directory = Path.GetDirectoryName(searchPath) ?? baseFolder;
+                var filePattern = Path.GetFileName(searchPath);
+
+                if (Directory.Exists(directory))
+                {
+                    files.AddRange(Directory.GetFiles(directory, filePattern));
+                }
             }
         }
 
@@ -173,7 +181,7 @@ internal class SubtitleConverter
 
 internal class ConversionOptions
 {
-    public required string Pattern { get; init; }
+    public required IReadOnlyList<string> Patterns { get; init; }
     public required string Format { get; init; }
     public string? InputFolder { get; init; }
     public string? OutputFolder { get; init; }
