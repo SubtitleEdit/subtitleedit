@@ -19,6 +19,10 @@ v5.0.0-beta17 (xth April 2026)
 * Fix split line issue - thx benji1000
 * Add waveform import/export/theme - thx benji1000
 * Add customizable waveform shot change color - thx benji1000
+* Black background for libmpv id (regression from earlier beta) - thx rRobis
+* Fix ASSA Style not changing in preview after switch style - thx rRobis
+* Fix text box info value reset after making new file - thx rRobis
+* Add some support for reading embedded lyrics from audio files - thx MG240
 
 -----------------------------------------------------------------------------------------------------
 
