@@ -52,7 +52,7 @@ v5.0.0-beta15 (12th April 2026)
 * Fix OCR user dictionary add-actions - thx Hellbringer
 * Fix prompting for unknown words in Tesseract OCR - thx Ryu481
 * Fix ASSA style issue - thx esprit-mi
-* Fix langauge tags + update Polish spell check directory - thx potplayer-fanpack
+* Fix language tags + update Polish spell check directory - thx potplayer-fanpack
 * Add more Qwen3 ASR model options - thx Ironship
 * Fix issue with undo - thx Dravic
 * Add empty waveform when video has no audio
@@ -70,7 +70,7 @@ v5.0.0-beta14 (8th April 2026)
 * Fix click on libmpv-wid to toggle play/pause - thx vsemozhetbyt
 * VLC now shows subtitle
 * Fix italic in text box for edit image ocr db
-* Fix for mpv refresh for full screeen player
+* Fix for mpv refresh for full screen player
 * Fix: Allow large text files in batch-convert - thx phannhanhn201
 * Add toggle select sub while playing to video menu (+shortcut) - thx vsemozhetbyt
 * Add "Extend only" to adjust durations - thx Dravic
@@ -84,7 +84,7 @@ v5.0.0-beta13 (2nd April 2026)
 
 * Add Turkish translation - thx Hayri
 * Update Italian translation - thx bovirus
-* Add Inno Setup Portguese.isl - thx Blackspirits
+* Add Inno Setup Portuguese.isl - thx Blackspirits
 * Update pt_PT_se.xml with new words - thx Blackspirits
 * Fix for binedit not setting correct position - thx KingGainer999 
 * Fix a few binedit issues
