@@ -24,7 +24,7 @@
     "all": "All",
     "allFiles": "All files",
     "alphaAdjustment": "Alpha adjustment",
-    "AlphaThreshold": "Alpha threshold",
+    "alphaThreshold": "Alpha threshold",
     "apiKey": "API key",
     "apiSecret": "Secret",
     "appearance": "Appearance",
@@ -519,6 +519,7 @@
     "splitLineAtTextBoxCursorPosition": "Split line at cursor position",
     "splitLineAtVideoAndTextBoxPosition": "Split line at video and text box position",
     "splitLineAtVideoPosition": "Split line at video position",
+    "splitLineAtWaveformPosition": "Split line at waveform head",
     "startFrom": "Start from",
     "startTime": "Start time",
     "startingDotDotDot": "Starting...",
@@ -655,7 +656,10 @@
     "fadeInOut": "Fade in/out",
     "alpha": "Alpha",
     "pickResolution": "Pick resolution",
-    "manualSync": "Manual sync"
+    "manualSync": "Manual sync",
+    "unsupportedVideoFormat": "Unsupported video format",
+    "playbackSpeed": "Playback speed",
+    "hoursMinutesSecondsMilliseconds": "HH:MM:SS.FFF"
   },
   "main": {
     "menu": {
@@ -1084,6 +1088,7 @@
       "title": "Restore auto-backup",
       "openAutoBackupFolder": "Open auto-backup folder",
       "restoreAutoBackupFile": "Restore auto-backup file",
+      "restoreXFromY": "Do you want to restore \"{0}\" from {1}?",
       "deleteAllSubtitleBackups": "Do you want to delete all subtitle backup files?",
       "deleteAll": "Delete all"
     },
@@ -1329,7 +1334,11 @@
       "fixCommonOcrErrorsStep2": "Fix common errors, step 2 (apply fixes)",
       "fixCommonOcrErrorsStep2FixesFoundX": "Fix common errors, step 2 - Fixes found: {0}",
       "action": "Action",
-      "applySelectedFixes": "Apply selected fixes"
+      "applySelectedFixes": "Apply selected fixes",
+      "unbreakShortLine": "Unbreak short line",
+      "fixText": "Fix text",
+      "removeSpaceBetweenNumbers": "Remove space between numbers",
+      "fixDialogsOnOneLine": "Fix dialogs on one line"
     },
     "adjustDurations": {
       "title": "Adjust durations",
@@ -1792,7 +1801,16 @@
     "viewMatroskaTrackX": "View Matroska track - {0}",
     "resolutionSeparator": "x",
     "openFromUrlTitle": "Open video file from URL",
-    "toggleCurrentSubtitleWhilePlaying": "Toggle current subtitle while playing"
+    "toggleCurrentSubtitleWhilePlaying": "Toggle current subtitle while playing",
+    "onlyMkvCanSupportEmbeddedSubtitleEditing": "Only Matroska (.mkv, .webm) files are supported for editing embedded subtitles.",
+    "reEncodeInfo": "Re-encoding can make subtitling smoother:\r\n• Smaller resolution (high resolutions make subtitling slow)\r\n• Re-encode the video to H.264 + yuv420p makes it more compatible\r\n• Optimized for fast seeking",
+    "reEncodeGeneratingVideoX": "Generating video... {0}%     {1}",
+    "reEncodeGeneratingVideoXofY": "Generating video {0}/{1}... {2}%     {3}",
+    "reEncodeUnableToGenerateVideo": "Unable to generate video",
+    "reEncodeOutputVideoFileNotGenerated": "Output video file not generated: {0}\r\nParameters: {1}",
+    "reEncodeGeneratingDone": "Generating done",
+    "reEncodeGeneratedFilesX": "Generated files ({0}):",
+    "reEncodeFfmpegParameters": "ffmpeg parameters"
   },
   "waveform": {
     "guessTimeCodes": "Guess time codes",
@@ -2033,6 +2051,7 @@
       "autoOpenVideoFile": "Auto-open video file when opening subtitle",
       "downloadMpv": "Download mpv",
       "downloadVlc": "Download VLC",
+      "allowSingleLetterShortcutsInTextbox": "Allow single-letter shortcuts in text box",
       "goToLineNumberSetsVideoPosition": "Go-to-line-number also sets video position",
       "adjustAllTimesRememberLineSelectionChoice": "Adjust all times, remember line selection choice",
       "filesAndLogs": "Files and logs",
@@ -2041,6 +2060,7 @@
       "showSettingsFile": "Show settings file",
       "showAssaLayer": "Show ASSA layer box",
       "waveformCursorColor": "Waveform cursor/head color",
+      "waveformShotChangeColor": "Waveform shot change color",
       "waveformParagraphLeftColor": "Waveform left border color",
       "waveformParagraphRightColor": "Waveform right border color",
       "waveformFancyHighColor": "Waveform fancy high color",
@@ -2135,7 +2155,12 @@
       "pixelWidthInfo": "Green lines = max-width limit   |   Red area = text exceeds limit",
       "spellCheckEngineHunSpelll": "Hunspell",
       "spellCheckEngineMsWord": "MS Word",
-      "spellCheckEngine": "Spell check engine"
+      "spellCheckEngine": "Spell check engine",
+      "waveformColorThemesDotDotDot": "Waveform color themes...",
+      "waveformColorTheme": "Color theme:",
+      "waveformSaveAsCustomTheme": "Save as custom theme...",
+      "waveformLoadThemeDotDotDot": "Load theme...",
+      "waveformExportThemeDotDotDot": "Export theme..."
     },
     "shortcuts": {
       "title": "Shortcuts",
