@@ -107,6 +107,8 @@ public partial class CutVideoViewModel : ObservableObject
             ".mkv",
             ".mp4",
             ".webm",
+            ".mp3",
+            ".wav",
         };
         SelectedVideoExtension = VideoExtensions[0];
 
@@ -186,6 +188,19 @@ public partial class CutVideoViewModel : ObservableObject
         });
 
         LoadShortcuts(mainVm);
+
+        if (videoFileName.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase))
+        {
+            SelectedVideoExtension = ".mp3";
+        }
+        else if (videoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+        {
+            SelectedVideoExtension = ".wav";
+        }
+        else if (SelectedVideoExtension == ".mp3" || SelectedVideoExtension == ".wav")
+        {
+            SelectedVideoExtension = VideoExtensions[0];- 
+        }
     }
 
     private void StartTitleTimer()
@@ -411,13 +426,23 @@ public partial class CutVideoViewModel : ObservableObject
     {
         string arguments;
 
+        var hasVideo = _inputVideoFileName.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || 
+                       _inputVideoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase)
+            ? false
+            : true;
+
+        if (hasVideo && (jobItem.OutputVideoFileName.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || jobItem.OutputVideoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase)))
+        {
+            hasVideo = false;
+        }
+
         if (SelectedCutType.CutType == CutType.MergeSegments)
         {
-            arguments = FfmpegGenerator.GetMergeSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, Segments.ToList());
+            arguments = FfmpegGenerator.GetMergeSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, Segments.ToList(), hasVideo);
         }
         else
         {
-            arguments = FfmpegGenerator.GetRemoveSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, Segments.ToList());
+            arguments = FfmpegGenerator.GetRemoveSegmentsParameters(jobItem.InputVideoFileName, jobItem.OutputVideoFileName, Segments.ToList(), hasVideo);
         }
 
         _ffmpegProcess = FfmpegGenerator.GetProcess(arguments, OutputHandler);

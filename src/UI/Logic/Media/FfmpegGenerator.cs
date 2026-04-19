@@ -941,11 +941,12 @@ public class FfmpegGenerator
     }
 
     public static string GetMergeSegmentsParameters(
-        string inputVideoFileName,
-        string outputVideoFileName,
-        List<SubtitleLineViewModel> segments)
+    string inputFileName,
+    string outputFileName,
+    List<SubtitleLineViewModel> segments,
+    bool hasVideo) 
     {
-        outputVideoFileName = $"\"{outputVideoFileName}\"";
+        outputFileName = $"\"{outputFileName}\"";
 
         var filterParts = new List<string>();
         var concatInputs = new List<string>();
@@ -956,36 +957,71 @@ public class FfmpegGenerator
             var startSeconds = s.StartTime.TotalSeconds.ToString(CultureInfo.InvariantCulture);
             var endSeconds = s.EndTime.TotalSeconds.ToString(CultureInfo.InvariantCulture);
 
-            filterParts.Add(
-                $"[0:v]trim=start={startSeconds}:end={endSeconds},setpts=PTS-STARTPTS[v{i}]; " +
-                $"[0:a]atrim=start={startSeconds}:end={endSeconds},asetpts=PTS-STARTPTS[a{i}]"
-            );
+            if (hasVideo)
+            {
+                filterParts.Add(
+                    $"[0:v]trim=start={startSeconds}:end={endSeconds},setpts=PTS-STARTPTS[v{i}]; " +
+                    $"[0:a]atrim=start={startSeconds}:end={endSeconds},asetpts=PTS-STARTPTS[a{i}]"
+                );
 
-            concatInputs.Add($"[v{i}][a{i}]");
+                concatInputs.Add($"[v{i}][a{i}]");
+            }
+            else
+            {
+                filterParts.Add(
+                    $"[0:a]atrim=start={startSeconds}:end={endSeconds},asetpts=PTS-STARTPTS[a{i}]"
+                );
+
+                concatInputs.Add($"[a{i}]");
+            }
         }
 
-        string filterComplex = string.Join("; ", filterParts) + "; " +
-                               string.Join("", concatInputs) +
-                               $"concat=n={segments.Count}:v=1:a=1[outv][outa]";
+        string filterComplex;
+
+        if (hasVideo)
+        {
+            filterComplex = string.Join("; ", filterParts) + "; " +
+                            string.Join("", concatInputs) +
+                            $"concat=n={segments.Count}:v=1:a=1[outv][outa]";
+        }
+        else
+        {
+            filterComplex = string.Join("; ", filterParts) + "; " +
+                            string.Join("", concatInputs) +
+                            $"concat=n={segments.Count}:v=0:a=1[outa]";
+        }
 
         var arguments =
-            $"-y -i \"{inputVideoFileName}\" " +
-            $"-filter_complex \"{filterComplex}\" " +
-            $"-map \"[outv]\" -map \"[outa]\" " +
-            $"-c:v libx264 -preset veryfast -crf 23 " +
-            $"-c:a aac -b:a 192k " +
-            $"-movflags +faststart -pix_fmt yuv420p " +
-            $"{outputVideoFileName}";
+            $"-y -i \"{inputFileName}\" " +
+            $"-filter_complex \"{filterComplex}\" ";
+
+        if (hasVideo)
+        {
+            arguments +=
+                "-map \"[outv]\" -map \"[outa]\" " +
+                "-c:v libx264 -preset veryfast -crf 23 " +
+                "-c:a aac -b:a 192k " +
+                "-movflags +faststart -pix_fmt yuv420p ";
+        }
+        else
+        {
+            arguments +=
+                "-map \"[outa]\" " +
+                "-c:a libmp3lame -b:a 192k ";
+        }
+
+        arguments += outputFileName;
 
         return arguments.Trim();
     }
 
     public static string GetRemoveSegmentsParameters(
-        string inputVideoFileName,
-        string outputVideoFileName,
-        List<SubtitleLineViewModel> segments)
+    string inputFileName,
+    string outputFileName,
+    List<SubtitleLineViewModel> segments,
+    bool hasVideo)
     {
-        outputVideoFileName = $"\"{outputVideoFileName}\"";
+        outputFileName = $"\"{outputFileName}\"";
 
         var filterParts = new List<string>();
         var concatInputs = new List<string>();
@@ -995,45 +1031,92 @@ public class FfmpegGenerator
 
         foreach (var seg in segments)
         {
-            // "keep" part = from lastEnd until start of this segment
             if (seg.StartTime.TotalSeconds > lastEnd)
             {
                 string start = lastEnd.ToString(CultureInfo.InvariantCulture);
                 string end = seg.StartTime.TotalSeconds.ToString(CultureInfo.InvariantCulture);
 
-                filterParts.Add(
-                    $"[0:v]trim=start={start}:end={end},setpts=PTS-STARTPTS[v{keepIndex}]; " +
-                    $"[0:a]atrim=start={start}:end={end},asetpts=PTS-STARTPTS[a{keepIndex}]"
-                );
+                if (hasVideo)
+                {
+                    filterParts.Add(
+                        $"[0:v]trim=start={start}:end={end},setpts=PTS-STARTPTS[v{keepIndex}]; " +
+                        $"[0:a]atrim=start={start}:end={end},asetpts=PTS-STARTPTS[a{keepIndex}]"
+                    );
 
-                concatInputs.Add($"[v{keepIndex}][a{keepIndex}]");
+                    concatInputs.Add($"[v{keepIndex}][a{keepIndex}]");
+                }
+                else
+                {
+                    filterParts.Add(
+                        $"[0:a]atrim=start={start}:end={end},asetpts=PTS-STARTPTS[a{keepIndex}]"
+                    );
+
+                    concatInputs.Add($"[a{keepIndex}]");
+                }
+
                 keepIndex++;
             }
 
             lastEnd = seg.EndTime.TotalSeconds;
         }
 
-        // Keep the remainder after the last segment
-        string inputDuration = $"$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 \"{inputVideoFileName}\")";
-        filterParts.Add(
-            $"[0:v]trim=start={lastEnd.ToString(CultureInfo.InvariantCulture)},setpts=PTS-STARTPTS[v{keepIndex}]; " +
-            $"[0:a]atrim=start={lastEnd.ToString(CultureInfo.InvariantCulture)},asetpts=PTS-STARTPTS[a{keepIndex}]"
-        );
-        concatInputs.Add($"[v{keepIndex}][a{keepIndex}]");
+        // Keep remainder (from lastEnd → EOF)
+        string lastStart = lastEnd.ToString(CultureInfo.InvariantCulture);
 
-        // Build concat filter
-        string filterComplex = string.Join("; ", filterParts) + "; " +
-                               string.Join("", concatInputs) +
-                               $"concat=n={keepIndex + 1}:v=1:a=1[outv][outa]";
+        if (hasVideo)
+        {
+            filterParts.Add(
+                $"[0:v]trim=start={lastStart},setpts=PTS-STARTPTS[v{keepIndex}]; " +
+                $"[0:a]atrim=start={lastStart},asetpts=PTS-STARTPTS[a{keepIndex}]"
+            );
+
+            concatInputs.Add($"[v{keepIndex}][a{keepIndex}]");
+        }
+        else
+        {
+            filterParts.Add(
+                $"[0:a]atrim=start={lastStart},asetpts=PTS-STARTPTS[a{keepIndex}]"
+            );
+
+            concatInputs.Add($"[a{keepIndex}]");
+        }
+
+        // Build filter_complex
+        string filterComplex;
+
+        if (hasVideo)
+        {
+            filterComplex = string.Join("; ", filterParts) + "; " +
+                            string.Join("", concatInputs) +
+                            $"concat=n={keepIndex + 1}:v=1:a=1[outv][outa]";
+        }
+        else
+        {
+            filterComplex = string.Join("; ", filterParts) + "; " +
+                            string.Join("", concatInputs) +
+                            $"concat=n={keepIndex + 1}:v=0:a=1[outa]";
+        }
 
         var arguments =
-            $"-y -i \"{inputVideoFileName}\" " +
-            $"-filter_complex \"{filterComplex}\" " +
-            $"-map \"[outv]\" -map \"[outa]\" " +
-            $"-c:v libx264 -preset veryfast -crf 23 " +
-            $"-c:a aac -b:a 192k " +
-            $"-movflags +faststart -pix_fmt yuv420p " +
-            $"{outputVideoFileName}";
+            $"-y -i \"{inputFileName}\" " +
+            $"-filter_complex \"{filterComplex}\" ";
+
+        if (hasVideo)
+        {
+            arguments +=
+                "-map \"[outv]\" -map \"[outa]\" " +
+                "-c:v libx264 -preset veryfast -crf 23 " +
+                "-c:a aac -b:a 192k " +
+                "-movflags +faststart -pix_fmt yuv420p ";
+        }
+        else
+        {
+            arguments +=
+                "-map \"[outa]\" " +
+                "-c:a libmp3lame -b:a 192k ";
+        }
+
+        arguments += outputFileName;
 
         return arguments.Trim();
     }
