@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     xmlStructure = xmlStructure.Replace("ttp:timeBase=\"media\"", $"ttp:timeBase=\"{attr.Value}\"");
                 }
             }
-            catch 
+            catch
             {
                 // ignore
             }

@@ -416,8 +416,19 @@ public partial class ItunesTimedTextPropertiesViewModel : ObservableObject
     private void Ok()
     {
         WriteValuesToXml();
+        SaveSettings();
         OkPressed = true;
         Window?.Close();
+    }
+
+    private void SaveSettings()
+    {
+        Configuration.Settings.SubtitleSettings.TimedTextItunesTopOrigin = TopOrigin;
+        Configuration.Settings.SubtitleSettings.TimedTextItunesTopExtent = TopExtent;
+        Configuration.Settings.SubtitleSettings.TimedTextItunesBottomOrigin = BottomOrigin;
+        Configuration.Settings.SubtitleSettings.TimedTextItunesBottomExtent = BottomExtent;
+        Configuration.Settings.SubtitleSettings.TimedTextItunesTimeCodeFormat = SelectedTimeCodeFormat;
+        Configuration.Settings.SubtitleSettings.TimedTextItunesStyleAttribute = SelectedStyleAttribute;
     }
 
     [RelayCommand]
