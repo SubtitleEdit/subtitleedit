@@ -353,6 +353,10 @@ public class LibMpvDynamicNativeControl : NativeControlHost
         }
         if (msg == WM_ERASEBKGND)
         {
+            if (!string.IsNullOrEmpty(_mpvPlayer?.FileName))
+            {
+                return CallWindowProc(_originalWndProc, hWnd, msg, wParam, lParam);
+            }
             // Paint the background black so the window is never white when mpv hasn't rendered yet.
             var hdc = wParam;
             var rc = new RECT();
@@ -364,6 +368,10 @@ public class LibMpvDynamicNativeControl : NativeControlHost
         }
         if (msg == WM_PAINT)
         {
+            if (!string.IsNullOrEmpty(_mpvPlayer?.FileName))
+            {
+                return CallWindowProc(_originalWndProc, hWnd, msg, wParam, lParam);
+            }
             // The STATIC default WM_PAINT handler paints the class background (white)
             // on top of anything WM_ERASEBKGND drew. Handle WM_PAINT ourselves:
             // validate the region and fill black so mpv starts on a black canvas.
