@@ -24,7 +24,7 @@ public class LanguageGeneral
     public string All { get; set; }
     public string AllFiles { get; set; }
     public string AlphaAdjustment { get; set; }
-    public string AphaThreshold { get; set; }
+    public string AlphaThreshold { get; set; }
     public string ApiKey { get; set; }
     public string ApiSecret { get; set; }
     public string Appearance { get; set; }
@@ -683,7 +683,7 @@ public class LanguageGeneral
         All = "All";
         AllFiles = "All files";
         AlphaAdjustment = "Alpha adjustment";
-        AphaThreshold = "Alpha threshold";
+        AlphaThreshold = "Alpha threshold";
         ApiKey = "API key";
         ApiSecret = "Secret";
         Appearance = "Appearance";

@@ -173,6 +173,8 @@
 		<AvaloniaResource Include="Assets\about.png" />
 		<None Remove="Assets\SpeechToText\WhisperCTranslate2.txt" />
 		<AvaloniaResource Include="Assets\SpeechToText\WhisperCTranslate2.txt" />
+		<None Remove="Assets\Languages\Korean.json" />
+		<AvaloniaResource Include="Assets\Languages\Korean.json" />
 	</ItemGroup>
 
 	<ItemGroup>

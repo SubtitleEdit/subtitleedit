@@ -106,7 +106,7 @@ public class BinaryAdjustAlphaWindow : Window
         // Threshold slider
         var thresholdLabel = new TextBlock
         {
-            Text = Se.Language.General.AphaThreshold,
+            Text = Se.Language.General.AlphaThreshold,
             FontWeight = Avalonia.Media.FontWeight.Bold,
             Margin = new Thickness(0, 20, 0, 5),
         };
