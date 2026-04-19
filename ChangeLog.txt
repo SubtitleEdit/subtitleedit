@@ -2,12 +2,32 @@
 Subtitle Edit Changelog
 
 
+v5.0.0-beta17 (xth April 2026)
+
+* Add Korean translation - thx  Hackjjang
+* Add Japanese translation - thx hisui3393
+* Update Italian translation - thx bovirus
+* Add new language tags - thx potplayer-fanpack
+* Add setting for single-letter shortcuts in text box - thx rRobis/darnn
+* Fix subtitle file delimiter problem for seconv - thx rRobis
+* Update Chrome-lens-standalone to v3.4.0 - thx timminator
+* Add "alignment" as preview video sub setting - thx Mimikaki
+* Dialog fix for GoogleLensSharp - thx ArturAlekseev
+* Improve onn-line detection for GoogleLens OCR - thx darnn
+* Fix possibly wrong data in time code control - thx JDJD777 
+* Add TT family properties menu - thx ryzen88
+* Fix split line issue - thx benji1000
+* Add waveform import/export/theme - thx benji1000
+* Add customizable waveform shot change color - thx benji1000
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-beta16 (15th April 2026)
 
 * Update to Avalonia UI V12
 * Update Italian translation - thx bovirus
 * Add "edit/export" from ocr window - thx donjondejota-art
-* Add new langauge tags - thx potplayer-fanpack
+* Add new language tags - thx potplayer-fanpack
 * Minor improvements for main layout
 * Fix IsSpelledCorrect splitting hyphenated words by space instead of dash - thx ivandrofly
 * Fix Word spell check - thx moob158
