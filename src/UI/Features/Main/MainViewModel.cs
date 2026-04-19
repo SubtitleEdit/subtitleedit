@@ -177,14 +177,12 @@ public partial class MainViewModel :
     [ObservableProperty] private IBrush _editTextCharactersPerSecondBackground;
     [ObservableProperty] private string _editTextTotalLength;
     [ObservableProperty] private IBrush _editTextTotalLengthBackground;
-    [ObservableProperty] private string _editTextLineLengths;
 
     [ObservableProperty] private string _editTextOriginal;
     [ObservableProperty] private string _editTextCharactersPerSecondOriginal;
     [ObservableProperty] private IBrush _editTextCharactersPerSecondBackgroundOriginal;
     [ObservableProperty] private string _editTextTotalLengthOriginal;
     [ObservableProperty] private IBrush _editTextTotalLengthBackgroundOriginal;
-    [ObservableProperty] private string _editTextLineLengthsOriginal;
 
     [ObservableProperty] private ObservableCollection<SubtitleFormat> _subtitleFormats;
     [ObservableProperty] private SubtitleFormat _selectedSubtitleFormat;
@@ -420,7 +418,6 @@ public partial class MainViewModel :
         EditTextCharactersPerSecondBackground = Brushes.Transparent;
         EditTextTotalLength = string.Empty;
         EditTextTotalLengthBackground = Brushes.Transparent;
-        EditTextLineLengths = string.Empty;
         StatusTextLeftLabel = new TextBlock();
         SubtitleGrid = new DataGrid();
         EditTextBox = new TextBoxWrapper(new TextBox());
@@ -507,7 +504,6 @@ public partial class MainViewModel :
         EditTextCharactersPerSecondBackgroundOriginal = Brushes.Transparent;
         EditTextTotalLengthOriginal = string.Empty;
         EditTextTotalLengthBackgroundOriginal = Brushes.Transparent;
-        EditTextLineLengthsOriginal = string.Empty;
         EditTextOriginal = string.Empty;
         PanelSingleLineLengthsOriginal = new StackPanel();
         IsWaveformToolbarVisible = Se.Settings.Waveform.ShowToolbar;
@@ -1366,7 +1362,7 @@ public partial class MainViewModel :
         ShowLayerFilterIcon = false;
 
         AutoFitColumns();
-
+        SubtitleGridSelectionChanged();
         RefreshSubtitlePreview();
 
         if (_findViewModel != null)
@@ -14097,7 +14093,7 @@ public partial class MainViewModel :
         EditTextBoxOriginal.ClearSelection();
         ResetPlaySelection();
 
-        if (selectedItems == null)
+        if (selectedItems == null || selectedItems.Count == 0)
         {
             SelectedSubtitle = null;
             SelectedSubtitleIndex = null;
@@ -14107,14 +14103,13 @@ public partial class MainViewModel :
             EditTextCharactersPerSecondBackground = Brushes.Transparent;
             EditTextTotalLength = string.Empty;
             EditTextTotalLengthBackground = Brushes.Transparent;
-            EditTextLineLengths = string.Empty;
+            PanelSingleLineLengths.Children.Clear();
 
             EditTextCharactersPerSecondOriginal = string.Empty;
             EditTextCharactersPerSecondBackgroundOriginal = Brushes.Transparent;
             EditTextTotalLengthOriginal = string.Empty;
             EditTextTotalLengthBackgroundOriginal = Brushes.Transparent;
-            EditTextLineLengthsOriginal = string.Empty;
-
+            PanelSingleLineLengthsOriginal.Children.Clear();
             return;
         }
 
@@ -14126,14 +14121,14 @@ public partial class MainViewModel :
             EditTextCharactersPerSecondBackground = Brushes.Transparent;
             EditTextTotalLengthBackground = Brushes.Transparent;
             EditTextTotalLength = string.Empty;
-            EditTextLineLengths = string.Empty;
+            PanelSingleLineLengths.Children.Clear();
 
             EditTextCharactersPerSecondOriginal = string.Empty;
             EditTextCharactersPerSecondBackgroundOriginal = Brushes.Transparent;
             EditTextTotalLengthOriginal = string.Empty;
             EditTextTotalLengthBackgroundOriginal = Brushes.Transparent;
             EditTextTotalLengthOriginal = string.Empty;
-            EditTextLineLengthsOriginal = string.Empty;
+            PanelSingleLineLengthsOriginal.Children.Clear();
 
             return;
         }
