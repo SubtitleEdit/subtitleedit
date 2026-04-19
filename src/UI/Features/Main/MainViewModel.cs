@@ -9739,6 +9739,8 @@ public partial class MainViewModel :
             {
                 p.Style = styleName;
             }
+
+            RefreshSubtitlePreview();
         });
     }
 
