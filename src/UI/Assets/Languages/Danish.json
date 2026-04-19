@@ -1965,6 +1965,7 @@
       "NewEmptyDefaultMs": "Standard ny undertekstvarighed (ms)",
       "PromptBeforeDelete": "Spørg før sletning",
       "RememberPositionAndSize": "Husk vinduets placering og størrelse",
+      "OpenLastFileOnStart": "Åbn sidste seneste fil ved start",
       "AutoBackupOn": "Auto-backup",
       "AutoBackupIntervalMinutes": "Interval for automatisk backup (minutter)",
       "AutoBackupDeleteAfterDays": "Opbevaring af automatisk backup (dage)",
