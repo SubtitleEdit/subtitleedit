@@ -173,6 +173,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (subtitleFormat.IsMine(lines, string.Empty))
                 {
                     subtitleFormat.LoadSubtitle(subtitle, lines, fileName);
+                    subtitle.OriginalFormat = subtitleFormat;
                     return subtitle;
                 }
             }

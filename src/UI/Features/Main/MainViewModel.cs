@@ -10274,7 +10274,10 @@ public partial class MainViewModel :
         if (fileSize < 10)
         {
             var message = fileSize == 0 ? "File size is zero!" : $"File size too small - only {fileSize} bytes";
-            await MessageBox.Show(Window!, Se.Language.General.Error, message, MessageBoxButtons.OK,
+            await MessageBox.Show(Window!,
+                Se.Language.General.Error,
+                message,
+                MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return;
         }
@@ -10316,8 +10319,11 @@ public partial class MainViewModel :
             {
                 if (!new IsmtDfxp().IsMine(null, fileName))
                 {
-                    await ImportSubtitleFromMp4(fileName);
-                    return;
+                    var ok = await ImportSubtitleFromMp4(fileName);
+                    if (ok)
+                    {
+                        return;
+                    }
                 }
             }
 
@@ -10446,6 +10452,21 @@ public partial class MainViewModel :
                         f.LoadSubtitle(subtitle, null, fileName);
                         subtitle.OriginalFormat = f;
                         break; // format found, exit the loop
+                    }
+                }
+
+                // check for lyrics in their metadata tags (e.g., LYRICS, UNSYNCED LYRICS) in audio files: mp3, m4a, opus, flac
+                if (subtitle == null && fileSize > 100 && (ext == ".mp3" || ext == ".m4a" || ext == ".opus" || ext == ".flac"))
+                {
+                    var lyrics = GetLyricsFromAudioFile(fileName);
+                    if (!string.IsNullOrEmpty(lyrics))
+                    {
+                        var lyricsSubtitle = Subtitle.Parse(lyrics.SplitToLines(), ".lrc");
+                        if (lyricsSubtitle != null && lyricsSubtitle.Paragraphs.Count > 0)
+                        {
+                            subtitle = lyricsSubtitle;
+                            _converted = true;
+                        }
                     }
                 }
 
@@ -10606,6 +10627,54 @@ public partial class MainViewModel :
 
             SetupLiveSpellCheck();
         }
+    }
+
+    private string? GetLyricsFromAudioFile(string fileName)
+    {
+        try
+        {
+            using var file = TagLib.File.Create(fileName);
+
+            // 1. Standard place (USLT frame)
+            if (!string.IsNullOrWhiteSpace(file.Tag.Lyrics))
+            {
+                return file.Tag.Lyrics;
+            }
+
+            // 2. Fallback: look for ID3v2 lyrics frames manually
+            if (file.GetTag(TagLib.TagTypes.Id3v2) is TagLib.Id3v2.Tag id3v2Tag)
+            {
+                // Unsynchronized lyrics (USLT)
+                var uslt = id3v2Tag.GetFrames<TagLib.Id3v2.UnsynchronisedLyricsFrame>()
+                                  .FirstOrDefault();
+                if (uslt != null && !string.IsNullOrWhiteSpace(uslt.Text))
+                {
+                    return uslt.Text;
+                }
+
+                // Synchronized lyrics (SYLT) – rare, but possible
+                var sylt = id3v2Tag.GetFrames<TagLib.Id3v2.SynchronisedLyricsFrame>()
+                                  .FirstOrDefault();
+                if (sylt != null && sylt.Text != null && sylt.Text.Length > 0)
+                {
+                    // Convert SYLT to LRC-like format
+                    var lines = sylt.Text
+                        .Select(t =>
+                        {
+                            var ts = TimeSpan.FromMilliseconds(t.Time);
+                            return $"[{ts:mm\\:ss\\.ff}]{t.Text}";
+                        });
+
+                    return string.Join(Environment.NewLine, lines);
+                }
+            }
+        }
+        catch
+        {
+            // Ignore errors (file not found, invalid format, etc.)
+        }
+
+        return null;
     }
 
     private void SetupLiveSpellCheck()
@@ -10919,7 +10988,7 @@ public partial class MainViewModel :
         _lastProgressPercent = percent;
     }
 
-    private async Task ImportSubtitleFromMp4(string fileName)
+    private async Task<bool> ImportSubtitleFromMp4(string fileName)
     {
         var mp4Parser = new MP4Parser(fileName);
         var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
@@ -10945,7 +11014,7 @@ public partial class MainViewModel :
                     await VideoOpenFile(fileName);
                 }
 
-                return;
+                return true;
             }
 
             if (mp4Parser.TrunCea608Subtitle?.Paragraphs.Count > 0)
@@ -10966,11 +11035,8 @@ public partial class MainViewModel :
                     await VideoOpenFile(fileName);
                 }
 
-                return;
+                return true;
             }
-
-            await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.General.NoSubtitlesFound,
-                MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         else if (mp4SubtitleTracks.Count == 1)
         {
@@ -10980,6 +11046,8 @@ public partial class MainViewModel :
             {
                 await VideoOpenFile(fileName);
             }
+
+            return true;
         }
         else
         {
@@ -10989,8 +11057,11 @@ public partial class MainViewModel :
             if (result.OkPressed && result.SelectedTrack != null && result.SelectedTrack.Track != null)
             {
                 LoadMp4Subtitle(fileName, result.SelectedTrack.Track);
+                return true;
             }
         }
+
+        return false;
     }
 
     private void LoadMp4Subtitle(string fileName, Trak mp4SubtitleTrack)
@@ -12628,7 +12699,7 @@ public partial class MainViewModel :
             if (process.ExitCode != 0)
             {
                 ShowStatus(Se.Language.Main.FailedToExtractWaveInfo);
-                Dispatcher.UIThread.Post(async() =>
+                Dispatcher.UIThread.Post(async () =>
                 {
                     await AddEmptyWaveform();
                 });
@@ -13536,7 +13607,7 @@ public partial class MainViewModel :
         }
 
         return false;
-    }    
+    }
 
     private bool TryHandleMacOptionBackspace(KeyEventArgs keyEventArgs)
     {
@@ -13545,7 +13616,7 @@ public partial class MainViewModel :
             static keyEvent => keyEvent.Key == Key.Back && keyEvent.KeyModifiers == KeyModifiers.Alt,
             DeletePreviousWord);
     }
-    
+
     private bool TryHandleMacCommandDelete(KeyEventArgs keyEventArgs)
     {
         return TryHandleMacTextDelete(
