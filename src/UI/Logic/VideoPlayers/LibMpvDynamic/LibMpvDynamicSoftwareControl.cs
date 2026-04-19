@@ -61,6 +61,7 @@ public class LibMpvDynamicSoftwareControl : Control
 
         if (!_isInitialized || _mpvPlayer == null || VisualRoot == null)
         {
+            context.FillRectangle(Brushes.Black, new Rect(0, 0, Bounds.Width, Bounds.Height));
             return;
         }
 

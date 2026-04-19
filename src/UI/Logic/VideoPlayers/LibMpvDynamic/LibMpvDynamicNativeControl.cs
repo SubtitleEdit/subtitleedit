@@ -22,10 +22,13 @@ public class LibMpvDynamicNativeControl : NativeControlHost
     private const uint WS_VISIBLE = 0x10000000;
     private const uint WS_CLIPSIBLINGS = 0x04000000;
     private const uint WS_CLIPCHILDREN = 0x02000000;
+    private const uint WM_ERASEBKGND = 0x0014;
+    private const uint WM_PAINT = 0x000F;
     private const uint WM_LBUTTONDOWN = 0x0201;
     private const uint WM_NCHITTEST = 0x0084;
     private const int GWLP_WNDPROC = -4;
     private const int HTCLIENT = 1;
+    private const int COLOR_BACKGROUND = 1;
 
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
     private delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
@@ -179,7 +182,7 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             0,
             "STATIC",
             string.Empty,
-            WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
+            WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
             0,
             0,
             1,
@@ -198,6 +201,10 @@ public class LibMpvDynamicNativeControl : NativeControlHost
 
         _customWndProc = CustomWndProc;
         _originalWndProc = SetWindowLongPtr(_ownedChildHandle, GWLP_WNDPROC, Marshal.GetFunctionPointerForDelegate(_customWndProc));
+
+        // Show the window only after the WndProc is installed so the very first
+        // WM_ERASEBKGND is caught by our handler and paints black (not white).
+        ShowWindow(_ownedChildHandle, 5); // SW_SHOW
 
         return _ownedChildHandle;
     }
@@ -231,12 +238,12 @@ public class LibMpvDynamicNativeControl : NativeControlHost
 
         _mpvPlayer.SetOptionString("sid", "no");
         _mpvPlayer.SetOptionString("keep-open", "always");
+        _mpvPlayer.SetOptionString("background-color", "#000000");
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             _mpvPlayer.SetOptionString("idle", "yes");
             _mpvPlayer.SetOptionString("force-window", "yes");
-            _mpvPlayer.SetOptionString("background-color", "#000000");
         }
 
         err = _mpvPlayer.Initialize();
@@ -270,6 +277,9 @@ public class LibMpvDynamicNativeControl : NativeControlHost
         return handle.ToString();
     }
 
+    [DllImport("user32.dll")]
+    private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
     [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
     private static extern IntPtr CreateWindowExW(
         uint dwExStyle,
@@ -295,6 +305,42 @@ public class LibMpvDynamicNativeControl : NativeControlHost
     [DllImport("user32.dll")]
     private static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
+    [DllImport("user32.dll")]
+    private static extern bool GetClientRect(IntPtr hWnd, ref RECT lpRect);
+
+    [DllImport("user32.dll")]
+    private static extern int FillRect(IntPtr hDC, ref RECT lprc, IntPtr hbr);
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr BeginPaint(IntPtr hWnd, ref PAINTSTRUCT lpPaint);
+
+    [DllImport("user32.dll")]
+    private static extern bool EndPaint(IntPtr hWnd, ref PAINTSTRUCT lpPaint);
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct PAINTSTRUCT
+    {
+        public IntPtr hdc;
+        public bool fErase;
+        public RECT rcPaint;
+        public bool fRestore;
+        public bool fIncUpdate;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        public byte[] rgbReserved;
+    }
+
+    [DllImport("gdi32.dll")]
+    private static extern IntPtr CreateSolidBrush(uint crColor);
+
+    [DllImport("gdi32.dll")]
+    private static extern bool DeleteObject(IntPtr hObject);
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct RECT
+    {
+        public int Left, Top, Right, Bottom;
+    }
+
     private IntPtr CustomWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
     {
         if (msg == WM_NCHITTEST)
@@ -304,6 +350,35 @@ public class LibMpvDynamicNativeControl : NativeControlHost
             // Returning HTCLIENT makes the window opaque to mouse input so that
             // WM_LBUTTONDOWN is actually delivered here.
             return new IntPtr(HTCLIENT);
+        }
+        if (msg == WM_ERASEBKGND)
+        {
+            // Paint the background black so the window is never white when mpv hasn't rendered yet.
+            var hdc = wParam;
+            var rc = new RECT();
+            GetClientRect(hWnd, ref rc);
+            var brush = CreateSolidBrush(0x00000000); // black
+            FillRect(hdc, ref rc, brush);
+            DeleteObject(brush);
+            return new IntPtr(1); // non-zero = we handled it
+        }
+        if (msg == WM_PAINT)
+        {
+            // The STATIC default WM_PAINT handler paints the class background (white)
+            // on top of anything WM_ERASEBKGND drew. Handle WM_PAINT ourselves:
+            // validate the region and fill black so mpv starts on a black canvas.
+            PAINTSTRUCT ps = default;
+            var hdc = BeginPaint(hWnd, ref ps);
+            if (hdc != IntPtr.Zero)
+            {
+                var rc = new RECT();
+                GetClientRect(hWnd, ref rc);
+                var brush = CreateSolidBrush(0x00000000);
+                FillRect(hdc, ref rc, brush);
+                DeleteObject(brush);
+                EndPaint(hWnd, ref ps);
+            }
+            return IntPtr.Zero;
         }
         if (msg == WM_LBUTTONDOWN)
         {
