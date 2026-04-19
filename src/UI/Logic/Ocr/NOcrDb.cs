@@ -15,6 +15,56 @@ public class NOcrDb
     public List<NOcrChar> OcrCharacters = new();
     public List<NOcrChar> OcrCharactersExpanded = new();
 
+    private enum ExpandedMatchPhase
+    {
+        Exact,
+        Relaxed,
+    }
+
+    private sealed class ExpandedMatchCandidate
+    {
+        public NOcrChar Template { get; }
+        public int DbIndex { get; }
+        public ExpandedMatchPhase Phase { get; }
+        public int ActualWidth { get; }
+        public int ActualHeight { get; }
+        public double ActualWidthPercent { get; }
+        public int WidthDelta { get; }
+        public int HeightDelta { get; }
+        public double WidthPercentDelta { get; }
+        public bool ForegroundMatched { get; }
+        public bool BackgroundMatched { get; }
+        public bool SizeMatched { get; }
+
+        public ExpandedMatchCandidate(
+            NOcrChar template,
+            int dbIndex,
+            ExpandedMatchPhase phase,
+            int actualWidth,
+            int actualHeight,
+            double actualWidthPercent,
+            int widthDelta,
+            int heightDelta,
+            double widthPercentDelta,
+            bool foregroundMatched,
+            bool backgroundMatched,
+            bool sizeMatched)
+        {
+            Template = template;
+            DbIndex = dbIndex;
+            Phase = phase;
+            ActualWidth = actualWidth;
+            ActualHeight = actualHeight;
+            ActualWidthPercent = actualWidthPercent;
+            WidthDelta = widthDelta;
+            HeightDelta = heightDelta;
+            WidthPercentDelta = widthPercentDelta;
+            ForegroundMatched = foregroundMatched;
+            BackgroundMatched = backgroundMatched;
+            SizeMatched = sizeMatched;
+        }
+    }
+
     public int TotalCharacterCount => OcrCharacters.Count + OcrCharactersExpanded.Count;
 
     private const string Version = "V2";
@@ -141,148 +191,119 @@ public class NOcrDb
             return null;
         }
 
-        var w = targetItem.NikseBitmap.Width;
-        for (var i = 0; i < OcrCharactersExpanded.Count; i++)
+        var exactCandidates = GetExpandedMatchCandidates(nikseBitmap, targetItem, listIndex, list, ExpandedMatchPhase.Exact);
+        if (exactCandidates.Count > 0)
         {
-            var oc = OcrCharactersExpanded[i];
-            if (oc.ExpandCount > 1 && oc.Width > w && targetItem.X + oc.Width < nikseBitmap.Width)
-            {
-                var ok = true;
-                var index = 0;
-                while (index < oc.LinesForeground.Count && ok)
-                {
-                    var op = oc.LinesForeground[index];
-                    foreach (var point in op.GetPoints())
-                    {
-                        var p = new OcrPoint(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
-                        if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
-                        {
-                            var a = nikseBitmap.GetAlpha(p.X, p.Y);
-                            if (a <= 150)
-                            {
-                                ok = false;
-                                break;
-                            }
-                        }
-                        else if (p.X >= 0 && p.Y >= 0)
-                        {
-                            ok = false;
-                            break;
-                        }
-                    }
-
-                    index++;
-                }
-
-                index = 0;
-                while (index < oc.LinesBackground.Count && ok)
-                {
-                    var op = oc.LinesBackground[index];
-                    foreach (var point in op.GetPoints())
-                    {
-                        var p = new OcrPoint(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
-                        if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
-                        {
-                            var a = nikseBitmap.GetAlpha(p.X, p.Y);
-                            if (a > 150)
-                            {
-                                ok = false;
-                                break;
-                            }
-                        }
-                        else if (p.X >= 0 && p.Y >= 0)
-                        {
-                            ok = false;
-                            break;
-                        }
-                    }
-
-                    index++;
-                }
-
-                if (ok)
-                {
-                    var size = GetTotalSize(listIndex, list, oc.ExpandCount);
-                    if (Math.Abs(size.X - oc.Width) < 3 && Math.Abs(size.Y - oc.Height) < 3)
-                    {
-                        return oc;
-                    }
-                }
-            }
+            return exactCandidates[0].Template;
         }
 
-        for (var i = 0; i < OcrCharactersExpanded.Count; i++)
+        var relaxedCandidates = GetExpandedMatchCandidates(nikseBitmap, targetItem, listIndex, list, ExpandedMatchPhase.Relaxed);
+        if (relaxedCandidates.Count > 0)
         {
-            var oc = OcrCharactersExpanded[i];
-            if (oc.ExpandCount > 1 && oc.Width > w && targetItem.X + oc.Width < nikseBitmap.Width)
-            {
-                var ok = true;
-                var index = 0;
-                while (index < oc.LinesForeground.Count && ok)
-                {
-                    var op = oc.LinesForeground[index];
-                    foreach (var point in op.ScaledGetPoints(oc, oc.Width, oc.Height - 1))
-                    {
-                        var p = new OcrPoint(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
-                        if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
-                        {
-                            var a = nikseBitmap.GetAlpha(p.X, p.Y);
-                            if (a <= 150)
-                            {
-                                ok = false;
-                                break;
-                            }
-                        }
-                        else if (p.X >= 0 && p.Y >= 0)
-                        {
-                            ok = false;
-                            break;
-                        }
-                    }
-
-                    index++;
-                }
-
-                index = 0;
-                while (index < oc.LinesBackground.Count && ok)
-                {
-                    var op = oc.LinesBackground[index];
-                    foreach (var point in op.ScaledGetPoints(oc, oc.Width, oc.Height - 1))
-                    {
-                        var p = new OcrPoint(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
-                        if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
-                        {
-                            var a = nikseBitmap.GetAlpha(p.X, p.Y);
-                            if (a > 150)
-                            {
-                                ok = false;
-                                break;
-                            }
-                        }
-                        else if (p.X >= 0 && p.Y >= 0)
-                        {
-                            ok = false;
-                            break;
-                        }
-                    }
-
-                    index++;
-                }
-
-                if (ok)
-                {
-                    var size = GetTotalSize(listIndex, list, oc.ExpandCount);
-                    var widthPercent = size.Y * 100.0 / size.X;
-                    if (Math.Abs(widthPercent - oc.WidthPercent) < 15 &&
-                        Math.Abs(size.X - oc.Width) < 25 && Math.Abs(size.Y - oc.Height) < 20)
-                    {
-                        return oc;
-                    }
-                }
-            }
+            return relaxedCandidates[0].Template;
         }
 
         return null;
+    }
+
+    private List<ExpandedMatchCandidate> GetExpandedMatchCandidates(NikseBitmap2 nikseBitmap, ImageSplitterItem2 targetItem, int listIndex, List<ImageSplitterItem2> list, ExpandedMatchPhase phase)
+    {
+        var candidates = new List<ExpandedMatchCandidate>();
+        var targetWidth = targetItem.NikseBitmap?.Width ?? 0;
+
+        for (var i = 0; i < OcrCharactersExpanded.Count; i++)
+        {
+            var oc = OcrCharactersExpanded[i];
+            if (oc.ExpandCount <= 1 || oc.Width <= targetWidth || targetItem.X + oc.Width >= nikseBitmap.Width)
+            {
+                continue;
+            }
+
+            var candidate = TryCreateExpandedCandidate(nikseBitmap, targetItem, listIndex, list, phase, i, oc);
+            if (candidate != null)
+            {
+                candidates.Add(candidate);
+            }
+        }
+
+        return candidates;
+    }
+
+    private ExpandedMatchCandidate? TryCreateExpandedCandidate(NikseBitmap2 nikseBitmap, ImageSplitterItem2 targetItem, int listIndex, List<ImageSplitterItem2> list, ExpandedMatchPhase phase, int dbIndex, NOcrChar oc)
+    {
+        var foregroundMatched = TryMatchExpandedLineSet(nikseBitmap, targetItem, oc, oc.LinesForeground, phase, true);
+        if (!foregroundMatched)
+        {
+            return null;
+        }
+
+        var backgroundMatched = TryMatchExpandedLineSet(nikseBitmap, targetItem, oc, oc.LinesBackground, phase, false);
+        if (!backgroundMatched)
+        {
+            return null;
+        }
+
+        var size = GetTotalSize(listIndex, list, oc.ExpandCount);
+        var actualWidthPercent = GetWidthPercent(size.X, size.Y);
+        var widthDelta = Math.Abs(size.X - oc.Width);
+        var heightDelta = Math.Abs(size.Y - oc.Height);
+        var widthPercentDelta = Math.Abs(actualWidthPercent - oc.WidthPercent);
+        var sizeMatched = phase == ExpandedMatchPhase.Exact
+            ? widthDelta < 3 && heightDelta < 3
+            : widthPercentDelta < 15 && widthDelta < 25 && heightDelta < 20;
+
+        if (!sizeMatched)
+        {
+            return null;
+        }
+
+        return new ExpandedMatchCandidate(
+            oc,
+            dbIndex,
+            phase,
+            size.X,
+            size.Y,
+            actualWidthPercent,
+            widthDelta,
+            heightDelta,
+            widthPercentDelta,
+            foregroundMatched,
+            backgroundMatched,
+            sizeMatched);
+    }
+
+    private static bool TryMatchExpandedLineSet(NikseBitmap2 nikseBitmap, ImageSplitterItem2 targetItem, NOcrChar oc, List<NOcrLine> lines, ExpandedMatchPhase phase, bool isForeground)
+    {
+        foreach (var op in lines)
+        {
+            IEnumerable<OcrPoint> points = phase == ExpandedMatchPhase.Exact
+                ? op.GetPoints()
+                : op.ScaledGetPoints(oc, oc.Width, oc.Height - 1);
+
+            foreach (var point in points)
+            {
+                var p = new OcrPoint(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
+                if (p.X >= 0 && p.Y >= 0 && p.X < nikseBitmap.Width && p.Y < nikseBitmap.Height)
+                {
+                    var a = nikseBitmap.GetAlpha(p.X, p.Y);
+                    if (isForeground ? a <= 150 : a > 150)
+                    {
+                        return false;
+                    }
+                }
+                else if (p.X >= 0 && p.Y >= 0)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private static double GetWidthPercent(int width, int height)
+    {
+        return width == 0 ? double.PositiveInfinity : height * 100.0 / width;
     }
 
     private static OcrPoint GetTotalSize(int listIndex, List<ImageSplitterItem2> items, int count)
