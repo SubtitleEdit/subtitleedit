@@ -199,7 +199,7 @@ public partial class CutVideoViewModel : ObservableObject
         }
         else if (SelectedVideoExtension == ".mp3" || SelectedVideoExtension == ".wav")
         {
-            SelectedVideoExtension = VideoExtensions[0];- 
+            SelectedVideoExtension = VideoExtensions[0];
         }
     }
 

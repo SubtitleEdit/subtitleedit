@@ -62,7 +62,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private int _mpvPreviewFontSize;
     [ObservableProperty] private bool _mpvPreviewFontBold;
     [ObservableProperty] private ObservableCollection<AlignmentItem> __mpvPreviewFontAlignments;
-    [ObservableProperty] private AlignmentItem __mpvPreviewSelectedFontAlignment;
+    [ObservableProperty] private AlignmentItem _mpvPreviewSelectedFontAlignment;
     [ObservableProperty] private int _mpvPreviewMargin;
     [ObservableProperty] private Color _mpvPreviewColorPrimary;
     [ObservableProperty] private Color _mpvPreviewColorOutline;
