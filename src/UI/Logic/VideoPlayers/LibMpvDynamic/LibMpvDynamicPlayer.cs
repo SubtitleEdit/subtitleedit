@@ -752,6 +752,57 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer LoadFile");
         }
 
+        if (OperatingSystem.IsMacOS())
+        {
+            // add yt-dlp to the process PATH on macOS so mpv can find it for youtube URLs
+            var macYtDlpPaths = new[]
+            {
+                "/opt/local/bin/yt-dlp",       // MacPorts
+                "/usr/local/bin/yt-dlp",        // Homebrew (Intel)
+                "/opt/homebrew/bin/yt-dlp",     // Homebrew (Apple Silicon)
+                "/usr/bin/yt-dlp",
+                Path.Combine(Se.DataFolder, "yt-dlp_macos"),
+            };
+            foreach (var ytDlpPath in macYtDlpPaths)
+            {
+                if (File.Exists(ytDlpPath))
+                {
+                    var dir = Path.GetDirectoryName(ytDlpPath)!;
+                    var currentPath = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+                    if (!currentPath.Split(Path.PathSeparator).Contains(dir))
+                    {
+                        Environment.SetEnvironmentVariable("PATH", currentPath + Path.PathSeparator + dir);
+                    }
+                    break;
+                }
+            }
+        }
+        else if (OperatingSystem.IsLinux())
+        {
+            // add yt-dlp to the process PATH on Linux so mpv can find it for youtube URLs
+            var linuxYtDlpPaths = new[]
+            {
+                "/usr/local/bin/yt-dlp",
+                "/usr/bin/yt-dlp",
+                "/opt/yt-dlp/yt-dlp",
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local/bin/yt-dlp"),
+                Path.Combine(Se.DataFolder, "yt-dlp_linux"),
+            };
+            foreach (var ytDlpPath in linuxYtDlpPaths)
+            {
+                if (File.Exists(ytDlpPath))
+                {
+                    var dir = Path.GetDirectoryName(ytDlpPath)!;
+                    var currentPath = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+                    if (!currentPath.Split(Path.PathSeparator).Contains(dir))
+                    {
+                        Environment.SetEnvironmentVariable("PATH", currentPath + Path.PathSeparator + dir);
+                    }
+                    break;
+                }
+            }
+        }
+
         SetOptionString("keep-open", "always");
         SetOptionString("sid", "no");
 
