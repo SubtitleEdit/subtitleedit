@@ -138,6 +138,15 @@
 		<AvaloniaResource Include="Assets\SpeechToText\CrispASRCohere.txt">
 		  <CopyToOutputDirectory></CopyToOutputDirectory>
 		</AvaloniaResource>
+		<AvaloniaResource Include="Assets\SpeechToText\CrispASRFireRed.txt">
+		  <CopyToOutputDirectory></CopyToOutputDirectory>
+		</AvaloniaResource>
+		<AvaloniaResource Include="Assets\SpeechToText\CrispASRGLM.txt">
+		  <CopyToOutputDirectory></CopyToOutputDirectory>
+		</AvaloniaResource>
+		<AvaloniaResource Include="Assets\SpeechToText\CrispASRGranite.txt">
+		  <CopyToOutputDirectory></CopyToOutputDirectory>
+		</AvaloniaResource>
 		<AvaloniaResource Include="Assets\SpeechToText\CrispASRParakeet.txt">
 		  <CopyToOutputDirectory></CopyToOutputDirectory>
 		</AvaloniaResource>
