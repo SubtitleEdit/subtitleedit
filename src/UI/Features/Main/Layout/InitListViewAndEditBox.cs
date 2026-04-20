@@ -1506,6 +1506,7 @@ public static partial class InitListViewAndEditBox
 
             textBox.TextChanged += vm.SubtitleTextChanged;
             textBox.GotFocus += (_, _) => vm.SubtitleTextBoxGotFocus();
+            textBox.AddHandler(InputElement.PointerPressedEvent, (_, e) => vm.StoreTextEditorPointerArgs(e), RoutingStrategies.Tunnel);
 
             vm.EditTextBox = new TextBoxWrapper(textBox);
             return textBox;
@@ -1542,6 +1543,8 @@ public static partial class InitListViewAndEditBox
         var helper = new TextEditorBindingHelper(vm, textEditor, wrapper, textEditorBorder, defaultBorderBrush, focusedBorderBrush, isOriginal: false);
         helper.Initialize();
         vm.EditTextBoxHelper = helper;
+
+        textEditor.TextArea.AddHandler(InputElement.PointerPressedEvent, (_, e) => vm.StoreTextEditorPointerArgs(e), RoutingStrategies.Tunnel);
 
         return textEditorBorder;
     }
