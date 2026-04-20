@@ -1,6 +1,6 @@
 ﻿{
   "Title": "SubtitleEdit",
-  "TranslatedBy": "v. 15.04.2026 di bovirus",
+  "TranslatedBy": "v. 20.04.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -518,6 +518,7 @@
     "SplitLineAtTextBoxCursorPosition": "Dividi riga alla posizione del cursore",
     "SplitLineAtVideoAndTextBoxPosition": "Dividi riga alla posizione della casella di testo e video",
     "SplitLineAtVideoPosition": "Dividi riga alla posizione video",
+    "SplitLineAtWaveformPosition": "Linea divisione nell'intestazione della forma d'onda",
     "StartFrom": "Inizia da",
     "StartTime": "Tempo iniziale",
     "StartingDotDotDot": "Avvio...",
@@ -654,7 +655,10 @@
     "FadeInOut": "Dissolvenza in entrata/uscita",
     "Alpha": "Alfa",
     "PickResolution": "Scegli risoluzione",
-    "ManualSync": "Sincronizzazione manuale"
+    "ManualSync": "Sincronizzazione manuale",
+    "UnsupportedVideoFormat": "Formato video non supportato",
+    "PlaybackSpeed": "Velocità riproduzione",
+    "HoursMinutesSecondsMilliseconds": "OO:MM:SS.FFF"
   },
   "Main": {
     "AudioTrackIsNowX": "La traccia audio ora è \"{0}",
@@ -1104,6 +1108,7 @@
       "Title": "Ripristino da backup automatico",
       "OpenAutoBackupFolder": "Apri cartella backup automatico",
       "RestoreAutoBackupFile": "Ripristina file backup automatico",
+      "RestoreXFromY": "Vuoi ripristinare \"{0}\" da {1}?",
       "DeleteAllSubtitleBackups": "Vuoi eliminare tutti i file backup sottotitoli?",
       "DeleteAll": "Elimina tutto"
     },
@@ -1338,7 +1343,11 @@
       "FixCommonOcrErrorsStep2": "Correggi errori comuni, passaggio 2 (applica correzioni)",
       "FixCommonOcrErrorsStep2FixesFoundX": "Correggi errori comuni, passaggio 2 - correzioni trovate: {0}",
       "Action": "Azione",
-      "ApplySelectedFixes": "Applica correzioni selezionate"
+      "ApplySelectedFixes": "Applica correzioni selezionate",
+      "UnbreakShortLine": "Interrompi linea breve",
+      "FixText": "Correggi testo",
+      "RemoveSpaceBetweenNumbers": "Rimuovi spazio tra i numeri",
+      "FixDialogsOnOneLine": "Correggi finestre di dialogo su una riga"
     },
     "AdjustDurations": {
       "Title": "Modifica durate",
@@ -1652,6 +1661,15 @@
     "ResolutionSeparator": "x",
     "OpenFromUrlTitle": "Apri file video dall'URL",
     "ToggleCurrentSubtitleWhilePlaying": "Attiva/disattiva sottotitoli attuali durante la riproduzione",
+    "OnlyMkvCanSupportEmbeddedSubtitleEditing": "Per la modifica dei sottotitoli incorporati sono supportati solo i file Matroska (.mkv, .webm).",
+    "ReEncodeInfo": "La ricodifica può rendere i sottotitoli più fluidi:\r\n• Risoluzione più piccola (le risoluzioni elevate rallentano i sottotitoli)\r\n• Ricodificare il video in H.264 + yuv420p lo rende più compatibile\r\n• Ottimizzato per la ricerca rapida",
+    "ReEncodeGeneratingVideoX": "Generazione video... {0}% {1}",
+    "ReEncodeGeneratingVideoXofY": "Generazione video {0}/{1}... {2}% {3}",
+    "ReEncodeUnableToGenerateVideo": "Impossibile generare video",
+    "ReEncodeOutputVideoFileNotGenerated": "Impossibile creare il file video destinazione: {0}\r\nParametri: {1}",
+    "ReEncodeGeneratingDone": "Generazione completata",
+    "ReEncodeGeneratedFilesX": "File generati ({0}):",
+    "ReEncodeFfmpegParameters": "parametri ffmpeg",
     "BurnIn": {
       "Title": "Genera video con sottotitoli incorporati",
       "InfoAssaOff": "Nota: è supportato lo stile Advanced SubStation Alpha.",
@@ -2032,6 +2050,7 @@
       "AutoOpenVideoFile": "All'apertura dei sottotitoli apri automaticamente file video",
       "DownloadMpv": "Download mpv",
       "DownloadVlc": "Download VLC",
+      "AllowSingleLetterShortcutsInTextbox": "Consenti nella casella di testo scorciatoie con una sola lettera",
       "GoToLineNumberSetsVideoPosition": "Vai alla riga numero imposta anche posizione video",
       "AdjustAllTimesRememberLineSelectionChoice": "Regola tutti i tempi, ricorda la scelta selezione riga",
       "FilesAndLogs": "File e registri",
@@ -2040,6 +2059,7 @@
       "ShowSettingsFile": "Visualizza file impostazioni",
       "ShowAssaLayer": "Visualizza casella livello ASSA",
       "WaveformCursorColor": "Colore cursore/intestazione forma d'onda",
+      "WaveformShotChangeColor": "Cambio colore modifica scena forma d'onda",
       "WaveformParagraphLeftColor": "Colore bordo sinistro forma d'onda",
       "WaveformParagraphRightColor": "Colore bordo destro forma d'onda",
       "WaveformFancyHighColor": "Colore fantasia evidenziazione forma d'onda",
@@ -2134,7 +2154,12 @@
       "PixelWidthInfo": "Linee verdi = limite larghezza massima |  Area rossa = il testo supera il limite",
       "SpellCheckEngineHunSpelll": "Hunspell",
       "SpellCheckEngineMsWord": "MS Word",
-      "SpellCheckEngine": "Motore controllo ortografico"
+      "SpellCheckEngine": "Motore controllo ortografico",
+      "WaveformColorThemesDotDotDot": "Temi colore della forma d'onda...",
+      "WaveformColorTheme": "Tema colore:",
+      "WaveformSaveAsCustomTheme": "Salva come tema personalizzato...",
+      "WaveformLoadThemeDotDotDot": "Carica tema...",
+      "WaveformExportThemeDotDotDot": "Salva tema..."
     },
     "Shortcuts": {
       "Title": "Tasti rapidi",
