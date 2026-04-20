@@ -336,7 +336,7 @@ public class FfmpegGenerator
         first.StartTime.TotalMilliseconds = 0;
 
         var advancedSubStationAlphaContent = previewSubtitle.ToText(new AdvancedSubStationAlpha());
-        
+
         var tempAssFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.ass");
         File.WriteAllText(tempAssFileName, advancedSubStationAlphaContent);
 
@@ -944,7 +944,7 @@ public class FfmpegGenerator
     string inputFileName,
     string outputFileName,
     List<SubtitleLineViewModel> segments,
-    bool hasVideo) 
+    bool hasVideo)
     {
         outputFileName = $"\"{outputFileName}\"";
 
@@ -1260,5 +1260,5 @@ public class FfmpegGenerator
         args.Add($"\"{outputFileName}\"");
 
         return string.Join(" ", args);
-    }    
+    }
 }

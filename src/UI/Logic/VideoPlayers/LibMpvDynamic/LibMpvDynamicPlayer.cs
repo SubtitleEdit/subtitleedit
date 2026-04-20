@@ -23,7 +23,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private IntPtr _library = IntPtr.Zero;
     private IntPtr _mpv = IntPtr.Zero;
     private IntPtr _renderContext = IntPtr.Zero;
-    private bool _disposed;
+    private volatile bool _disposed;
     private string _fileName = string.Empty;
 
     [StructLayout(LayoutKind.Sequential)]
@@ -369,7 +369,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     public int SetOptionString(string name, string value)
     {
-        if (_mpvSetOptionString == null)
+        if (_mpvSetOptionString == null || _mpv == IntPtr.Zero)
         {
             return -1;
         }
@@ -747,6 +747,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         SetOptionString("lavfi-complex", isAudioOnly ? "color=black:size=1280x720:rate=25[vo]" : "");
 
         var err = await Task.Run(() => DoMpvCommand("loadfile", path));
+        if (_disposed)
+        {
+            return;
+        }
+
         if (err < 0)
         {
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer LoadFile");
@@ -817,6 +822,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         EnsureNotDisposed();
 
         var err = await Task.Run(() => DoMpvCommand("loadfile", path));
+        if (_disposed)
+        {
+            return;
+        }
+
         if (err < 0)
         {
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer LoadFile");
@@ -831,7 +841,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         _fileName = path;
     }
 
-    public void PlayOrPause() // toggle play/pause
+    public void PlayOrPause()
     {
         _pausedValue = null;
         EnsureNotDisposed();
