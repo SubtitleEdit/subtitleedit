@@ -139,6 +139,7 @@ public static class ShortcutsMain
         // Spell check
         { nameof(MainViewModel.ShowSpellCheckCommand), Se.Language.Options.Shortcuts.SpellCheck },
         { nameof(MainViewModel.ShowSpellCheckDictionariesCommand), Se.Language.Options.Shortcuts.SpellCheckGetDictionary },
+        { nameof(MainViewModel.CommandPickLiveSpellCheckDictionaryCommand), Se.Language.SpellCheck.PickLiveSpellCheckDictionary },
 
         // Video
         { nameof(MainViewModel.CommandVideoOpenCommand), Se.Language.Options.Shortcuts.OpenVideo },
@@ -470,6 +471,7 @@ public static class ShortcutsMain
         // Spell check
         AddShortcut(shortcuts, vm.ShowSpellCheckCommand, nameof(vm.ShowSpellCheckCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowSpellCheckDictionariesCommand, nameof(vm.ShowSpellCheckDictionariesCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.CommandPickLiveSpellCheckDictionaryCommand, nameof(vm.CommandPickLiveSpellCheckDictionaryCommand), ShortcutCategory.General);
 
         // Video
         AddShortcut(shortcuts, vm.CommandVideoOpenCommand, nameof(vm.CommandVideoOpenCommand), ShortcutCategory.General);

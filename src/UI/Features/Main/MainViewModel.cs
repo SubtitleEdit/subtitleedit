@@ -15046,6 +15046,15 @@ public partial class MainViewModel :
         }
     }
 
+    [RelayCommand]
+    private void CommandPickLiveSpellCheckDictionary()
+    {
+        if (EditTextBox is TextEditorWrapper wrapper)
+        {
+            PickLiveSpellCheckDictionary(wrapper);
+        }
+    }
+
     private void PickLiveSpellCheckDictionary(TextEditorWrapper wrapper)
     {
         Dispatcher.UIThread.Post(async () =>

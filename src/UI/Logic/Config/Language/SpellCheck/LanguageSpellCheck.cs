@@ -24,6 +24,7 @@ public class LanguageSpellCheck
     public string IgnoreAllX { get; set; }
     public string PickSpellCheckDictionaryDotDotDot { get; set; }
     public string ChooseSpellCheckDictionary { get; set; }
+    public string PickLiveSpellCheckDictionary { get; set; }
 
     public LanguageSpellCheck()
     {
@@ -47,5 +48,6 @@ public class LanguageSpellCheck
         IgnoreAllX = "Ignore all '{0}'";
         PickSpellCheckDictionaryDotDotDot = "Choose spell check dictionary...";
         ChooseSpellCheckDictionary = "Choose spell check dictionary";
+        PickLiveSpellCheckDictionary = "Pick live spell check dictionary";
     }
 }
