@@ -13,7 +13,7 @@ v5.0.0-beta17 (xth April 2026)
 * Update Chrome-lens-standalone to v3.4.0 - thx timminator
 * Add "alignment" as preview video sub setting - thx Mimikaki
 * Dialog fix for GoogleLensSharp - thx ArturAlekseev
-* Improve onn-line detection for GoogleLens OCR - thx darnn
+* Improve one-line detection for GoogleLens OCR - thx darnn
 * Fix possibly wrong data in time code control - thx JDJD777 
 * Add TT family properties menu - thx ryzen88
 * Fix split line issue - thx benji1000
@@ -23,6 +23,8 @@ v5.0.0-beta17 (xth April 2026)
 * Fix ASSA Style not changing in preview after switch style - thx rRobis
 * Fix text box info value reset after making new file - thx rRobis
 * Add some support for reading embedded lyrics from audio files - thx MG240
+* Allow video - Cut, from/to mp3/wav
+* Fix video not playing when Loaded from URL (Mac) - thx Keysz
 
 -----------------------------------------------------------------------------------------------------
 
