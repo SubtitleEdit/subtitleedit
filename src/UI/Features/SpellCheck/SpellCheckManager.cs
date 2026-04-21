@@ -249,8 +249,23 @@ public class SpellCheckManager : ISpellCheckManager, IDoSpell
         _spellCheckWordLists?.AddUserWord(word);
     }
 
+    private static readonly HashSet<string> _allowedTokens = new HashSet<string>
+    {
+        "&", "—", "–", "…"
+    };
+
     public bool IsWordCorrect(string word)
     {
+        if (string.IsNullOrWhiteSpace(word))
+        {
+            return true;
+        }
+
+        if (_allowedTokens.Contains(word))
+        {
+            return true;
+        }
+
         if (WordSpellChecker != null)
         {
             return WordSpellChecker.DoSpell(word);
@@ -295,8 +310,7 @@ public class SpellCheckManager : ISpellCheckManager, IDoSpell
             return true;
         }
 
-        var isCorrect = DoSpell(word);
-
+        var isCorrect = IsWordCorrect(word);
         return isCorrect;
     }
 
