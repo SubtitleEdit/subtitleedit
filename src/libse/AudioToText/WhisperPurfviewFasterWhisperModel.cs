@@ -72,7 +72,14 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 }
 
                 // Must contain model.bin to be considered a valid model
-                if (!File.Exists(Path.Combine(dir, "model.bin")))
+                var modelBin = Path.Combine(dir, "model.bin");
+                if (!File.Exists(modelBin))
+                {
+                    continue;
+                }
+
+                var fileInfo = new FileInfo(modelBin);
+                if (fileInfo.Length < 10_000_000)
                 {
                     continue;
                 }
