@@ -9,11 +9,14 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
-public class CrispAsrFireRed : ISpeechToTextEngine
+public class CrispAsrFireRed : ICrispAsrEngine
 {
-    public static string StaticName => "Crisp ASR FireRed";
+    public static string StaticName => "Crisp ASR Fire Red";
     public string Name => StaticName;
     public string Choice => WhisperChoice.CrispAsrFireRed;
+    public string BackendName => "firered";
+    public string DefaultLanguage => "zh";
+    public bool IncludeLanguage => true;
     public string Url => "https://github.com/CrispStrobe/CrispASR";
 
   public List<WhisperLanguage> Languages =>

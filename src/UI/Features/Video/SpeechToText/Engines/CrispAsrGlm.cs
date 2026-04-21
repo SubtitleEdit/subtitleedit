@@ -9,12 +9,15 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
-public class CrispAsrGlm : ISpeechToTextEngine
+public class CrispAsrGlm : ICrispAsrEngine
 {
     public static string StaticName => "Crisp ASR GLM";
     public string Name => StaticName;
     public string Choice => WhisperChoice.CrispAsrGlm;
     public string Url => "https://github.com/CrispStrobe/CrispASR";
+    public string BackendName => "glm";
+    public string DefaultLanguage => "zh";
+    public bool IncludeLanguage => true;
 
     public List<WhisperLanguage> Languages =>
         new()

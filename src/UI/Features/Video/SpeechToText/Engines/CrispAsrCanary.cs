@@ -9,12 +9,15 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
-public class CrispAsrCanary : ISpeechToTextEngine
+public class CrispAsrCanary : ICrispAsrEngine
 {
     public static string StaticName => "Crisp ASR Canary";
     public string Name => StaticName;
     public string Choice => WhisperChoice.CrispAsrCanary;
     public string Url => "https://github.com/CrispStrobe/CrispASR";
+    public string BackendName => "canary";
+    public string DefaultLanguage => "en";
+    public bool IncludeLanguage => true;
 
     public List<WhisperLanguage> Languages =>
        new()

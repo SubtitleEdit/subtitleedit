@@ -9,12 +9,15 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
-public class CrispAsrParakeet : ISpeechToTextEngine
+public class CrispAsrParakeet : ICrispAsrEngine
 {
     public static string StaticName => "Crisp ASR Parakeet";
     public string Name => StaticName;
     public string Choice => WhisperChoice.CrispAsrParakeet;
     public string Url => "https://github.com/CrispStrobe/CrispASR";
+    public string BackendName => "parakeet";
+    public string DefaultLanguage => "en";
+    public bool IncludeLanguage => false;
 
     public List<WhisperLanguage> Languages =>
        new()

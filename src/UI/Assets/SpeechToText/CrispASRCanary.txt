@@ -5,13 +5,14 @@ Type: FastConformer + Transformer decoder
 Focus: 🧠 Accuracy + multilingual + translation
 Strengths: Text quality (punctuation, casing)
 
-  -h,        --help                 [default] show this help message and exit
+Options:
   -t N,      --threads N            [4      ] number of threads to use during computation
   -p N,      --processors N         [1      ] number of processors to use during computation
   -ot N,     --offset-t N           [0      ] time offset in milliseconds
   -on N,     --offset-n N           [0      ] segment index offset
   -d  N,     --duration N           [0      ] duration of audio to process in milliseconds
   -mc N,     --max-context N        [-1     ] maximum number of text context tokens to store
+  -sp,       --split-on-punct       [false  ] split subtitle lines at sentence-ending punctuation
   -ml N,     --max-len N            [0      ] maximum segment length in characters
   -sow,      --split-on-word        [false  ] split on word rather than on token
   -bo N,     --best-of N            [5      ] number of best candidates to keep
@@ -39,16 +40,17 @@ Strengths: Text quality (punctuation, casing)
   -ojf,      --output-json-full     [false  ] include more information in the JSON file
   -of FNAME, --output-file FNAME    [       ] output file path (without file extension)
   -np,       --no-prints            [false  ] do not print anything other than the results
+  -v,        --verbose              [false  ] verbose debug: model/cache paths, device pick, per-stage timings
   -ps,       --print-special        [false  ] print special tokens
   -pc,       --print-colors         [false  ] print colors
              --print-confidence     [false  ] print confidence
   -pp,       --print-progress       [false  ] print progress
   -nt,       --no-timestamps        [false  ] do not print timestamps
-  -l LANG,   --language LANG        [en     ] spoken language ('auto' for auto-detect)
+  -l LANG,   --language LANG        [auto   ] spoken language ('auto' for auto-detect)
   -dl,       --detect-language      [false  ] exit after automatically detecting language
              --prompt PROMPT        [       ] initial prompt (max n_text_ctx/2 tokens)
              --carry-initial-prompt [false  ] always prepend initial prompt
-  -m FNAME,  --model FNAME          [models/ggml-base.en.bin] model path
+  -m FNAME,  --model FNAME          [auto   ] model path
   -f FNAME,  --file FNAME           [       ] input audio file path
   -oved D,   --ov-e-device DNAME    [CPU    ] the OpenVINO device used for encode inference
   -dtw MODEL --dtw MODEL            [       ] compute token-level timestamps
@@ -71,7 +73,7 @@ crispasr backend options (select a non-whisper model):
   -tl LANG,  --target-lang LANG     [       ] target language (canary AST)
              --no-punctuation       [false  ] disable punctuation (canary, cohere)
   -am FNAME, --aligner-model FNAME  [       ] CTC aligner GGUF (LLM backends word timestamps)
-  --lid-backend NAME                [       ] language-detect backend: whisper|silero (for non-native backends)
+  --lid-backend NAME                [       ] language-detect backend: whisper|silero|firered (for non-native backends)
   --lid-model FNAME                 [       ] optional LID model path (default ggml-tiny.bin)
   --diarize-method NAME             [       ] diarize method: energy|xcorr|vad-turns|sherpa|pyannote|ecapa
                                              (sherpa/pyannote/ecapa all use the sherpa-onnx subprocess)
@@ -79,6 +81,20 @@ crispasr backend options (select a non-whisper model):
   --sherpa-segment-model PATH       [       ] sherpa pyannote segmentation ONNX
   --sherpa-embedding-model PATH     [       ] sherpa speaker embedding ONNX
   --sherpa-num-clusters N           [0      ] sherpa cluster count (0 = auto)
+  --cache-dir DIR                   [default] override auto-download cache directory
+  --auto-download                   [false  ] auto-download missing models without prompting
+  --alt                             [false  ] show alternative token candidates with probabilities
+  --alt-n N                         [3      ] number of alternatives per token
+  --stream                          [false  ] streaming mode: read raw s16le PCM from stdin
+  --mic                             [false  ] capture from default microphone (implies --stream)
+  --live                            [false  ] continuous live transcription (implies --mic --stream)
+  --monitor                         [false  ] show unicode progress symbols during streaming
+  --server                          [false  ] run as HTTP server (persistent model, POST /inference)
+  --host HOST                       [127.0.0.1] server bind address
+  --port PORT                       [8080   ] server port
+  --stream-step N                   [3000   ] chunk size in ms for streaming
+  --stream-length N                 [10000  ] context window in ms for streaming
+  --stream-keep N                   [200    ] overlap to keep between chunks in ms
   -n N,      --max-new-tokens N     [512    ] max new tokens for LLM backends
   -ck N,     --chunk-seconds N      [30     ] fallback chunk size when VAD is disabled
              -m auto                        download a default model for the chosen backend
