@@ -1,5 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.AudioToText
 {
@@ -41,7 +44,60 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         private const string DownloadUrlPrefix = "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/";
 
-        public WhisperModel[] Models => new[]
+        public WhisperModel[] Models
+        {
+            get
+            {
+                var predefined = GetPredefinedModels();
+                var custom = GetCustomModels(predefined);
+                var all = new List<WhisperModel>(predefined);
+                all.AddRange(custom);
+                return all.ToArray();
+            }
+        }
+
+        private List<WhisperModel> GetCustomModels(WhisperModel[] predefined)
+        {
+            var custom = new List<WhisperModel>();
+            if (!Directory.Exists(ModelFolder))
+            {
+                return custom;
+            }
+
+            // Predefined models are looked up as "<name>.bin" or "<name>" in the Models folder
+            var predefinedNames = new HashSet<string>(
+                predefined.Select(m => m.Name),
+                StringComparer.OrdinalIgnoreCase);
+
+            foreach (var file in Directory.GetFiles(ModelFolder, "*.bin"))
+            {
+                var nameWithExt = Path.GetFileName(file);
+                var nameWithoutExt = Path.GetFileNameWithoutExtension(file);
+
+                // Skip if already covered by a predefined model (match with or without .bin)
+                if (predefinedNames.Contains(nameWithoutExt) || predefinedNames.Contains(nameWithExt))
+                {
+                    continue;
+                }
+
+                var fileInfo = new FileInfo(file);
+                if (fileInfo.Length < 10_000_000)
+                {
+                    continue;
+                }
+
+                custom.Add(new WhisperModel
+                {
+                    Name = nameWithoutExt,
+                    Size = "custom",
+                    Urls = System.Array.Empty<string>(),
+                });
+            }
+
+            return custom;
+        }
+
+        private WhisperModel[] GetPredefinedModels() => new[]
         {
             new WhisperModel
             {

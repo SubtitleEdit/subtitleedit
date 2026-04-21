@@ -87,14 +87,35 @@ public class WhisperEnginePurfviewFasterWhisperXxl : ISpeechToTextEngine
         folder = Path.Combine(folder, "faster-whisper-" + model.Name);
         if (!Directory.Exists(folder))
         {
-            return false;
+            // Also check with the model's own Folder name (custom models)
+            if (!string.IsNullOrEmpty(model.Folder))
+            {
+                folder = Path.Combine(baseFolder, "_models", model.Folder);
+            }
+
+            if (!Directory.Exists(folder))
+            {
+                return false;
+            }
         }
 
-        var binFileName = Path.GetFileName(model.Urls.First(p => p.EndsWith(".bin")));
-        binFileName = Path.Combine(folder, binFileName);
+        var binFileName = Path.Combine(folder, "model.bin");
         if (!File.Exists(binFileName))
         {
-            return false;
+            // Fallback: try URL-based filename for predefined models
+            if (model.Urls != null && model.Urls.Length > 0)
+            {
+                var urlBin = model.Urls.FirstOrDefault(p => p.EndsWith(".bin"));
+                if (urlBin != null)
+                {
+                    binFileName = Path.Combine(folder, Path.GetFileName(urlBin));
+                }
+            }
+
+            if (!File.Exists(binFileName))
+            {
+                return false;
+            }
         }
 
         var fileInfo = new FileInfo(binFileName);

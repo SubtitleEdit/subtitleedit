@@ -1,6 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.AudioToText
 {
@@ -37,7 +39,64 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         }
 
         // See https://github.com/jordimas/whisper-ctranslate2/blob/main/src/whisper_ctranslate2/models.py
-        public WhisperModel[] Models => new[]
+        public WhisperModel[] Models
+        {
+            get
+            {
+                var predefined = GetPredefinedModels();
+                var custom = GetCustomModels(predefined);
+                var all = new List<WhisperModel>(predefined);
+                all.AddRange(custom);
+                return all.ToArray();
+            }
+        }
+
+        private List<WhisperModel> GetCustomModels(WhisperModel[] predefined)
+        {
+            var custom = new List<WhisperModel>();
+            if (!Directory.Exists(ModelFolder))
+            {
+                return custom;
+            }
+
+            var predefinedFolders = new HashSet<string>(
+                predefined.Select(m => m.Folder ?? string.Empty),
+                StringComparer.OrdinalIgnoreCase);
+
+            foreach (var dir in Directory.GetDirectories(ModelFolder))
+            {
+                var folderName = Path.GetFileName(dir);
+                if (predefinedFolders.Contains(folderName))
+                {
+                    continue;
+                }
+
+                // Must contain model.bin to be considered a valid model
+                if (!File.Exists(Path.Combine(dir, "model.bin")))
+                {
+                    continue;
+                }
+
+                // Derive a display name: strip leading "faster-whisper-" prefix if present
+                var displayName = folderName;
+                if (displayName.StartsWith("faster-whisper-", StringComparison.OrdinalIgnoreCase))
+                {
+                    displayName = displayName.Substring("faster-whisper-".Length);
+                }
+
+                custom.Add(new WhisperModel
+                {
+                    Name = displayName,
+                    Size = "custom",
+                    Urls = System.Array.Empty<string>(),
+                    Folder = folderName,
+                });
+            }
+
+            return custom;
+        }
+
+        private WhisperModel[] GetPredefinedModels() => new[]
         {
             new WhisperModel
             {
