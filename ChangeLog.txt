@@ -2,7 +2,7 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-beta17 (xth April 2026)
+v5.0.0-beta17 (21st April 2026)
 
 * Add Korean translation - thx  Hackjjang
 * Add Japanese translation - thx hisui3393
