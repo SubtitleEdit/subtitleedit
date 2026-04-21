@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Platform;
 using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
@@ -102,5 +103,11 @@ public class WhisperEngineOpenAi : ISpeechToTextEngine
     public bool CanBeDownloaded()
     {
         return false;
+    }
+
+    public string CommandLineParameter
+    {
+        get => Se.Settings.Tools.AudioToText.CommandLineParameterOpenAi;
+        set => Se.Settings.Tools.AudioToText.CommandLineParameterOpenAi = value;
     }
 }

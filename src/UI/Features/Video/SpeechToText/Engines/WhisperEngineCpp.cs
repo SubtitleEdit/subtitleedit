@@ -159,4 +159,10 @@ public class WhisperEngineCpp : ISpeechToTextEngine
     {
         return true;
     }
+
+    public string CommandLineParameter
+    {
+        get => Se.Settings.Tools.AudioToText.CommandLineParameterCpp;
+        set => Se.Settings.Tools.AudioToText.CommandLineParameterCpp = value;
+    }
 }

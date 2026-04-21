@@ -168,4 +168,10 @@ public class WhisperEngineCppCuBlas : ISpeechToTextEngine
     {
         return true;
     }
+
+    public string CommandLineParameter
+    {
+        get => Se.Settings.Tools.AudioToText.CommandLineParameterCppCuBlas;
+        set => Se.Settings.Tools.AudioToText.CommandLineParameterCppCuBlas = value;
+    }
 }

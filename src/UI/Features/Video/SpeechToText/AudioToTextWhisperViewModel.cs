@@ -209,13 +209,14 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         DoTranslateToEnglish = false;
         DoAdjustTimings = Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings;
         DoPostProcessing = Se.Settings.Tools.AudioToText.PostProcessing;
-        Parameters = Se.Settings.Tools.AudioToText.WhisperCustomCommandLineArguments;
 
         var selectedEngine = Enumerable.FirstOrDefault<ISpeechToTextEngine>((IEnumerable<ISpeechToTextEngine>)Engines, p => p.Choice == Se.Settings.Tools.AudioToText.WhisperChoice);
         if (selectedEngine != null)
         {
             SelectedEngine = selectedEngine;
         }
+
+        Parameters = SelectedEngine.CommandLineParameter;
 
         EngineChanged();
     }
@@ -224,12 +225,10 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
     {
         Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings = DoAdjustTimings;
         Se.Settings.Tools.AudioToText.PostProcessing = DoPostProcessing;
-        Se.Settings.Tools.AudioToText.WhisperCustomCommandLineArguments = Parameters;
-        Se.Settings.Tools.AudioToText.WhisperCustomCommandLineArgumentsPurfviewBlank = Parameters == "--standard";
+        SelectedEngine.CommandLineParameter = Parameters;
         Se.Settings.Tools.AudioToText.WhisperChoice = SelectedEngine.Choice;
         Se.Settings.Tools.AudioToText.WhisperModel = SelectedModel?.Model.Name ?? string.Empty;
         Se.Settings.Tools.AudioToText.WhisperLanguageCode = SelectedLanguage?.Code ?? string.Empty;
-        Se.Settings.Tools.AudioToText.WhisperCustomCommandLineArguments = Parameters;
 
         Se.SaveSettings();
     }
@@ -1459,14 +1458,13 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         var vm = await _windowService.ShowDialogAsync<WhisperAdvancedWindow, WhisperAdvancedViewModel>(Window!,
             viewModal =>
             {
-                viewModal.Parameters = Parameters;
                 viewModal.Engines = Enumerable.ToList<ISpeechToTextEngine>((IEnumerable<ISpeechToTextEngine>)Engines);
                 viewModal.EngineClickedCommand.Execute((ISpeechToTextEngine)SelectedEngine);
             });
 
         if (vm.OkPressed)
         {
-            Parameters = vm.Parameters;
+            Parameters = SelectedEngine.CommandLineParameter;
         }
     }
 
@@ -2832,14 +2830,10 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         }
 
         var isPurfview = engine.Name == WhisperEnginePurfviewFasterWhisperXxl.StaticName;
-        if (isPurfview &&
-            string.IsNullOrWhiteSpace(Parameters) &&
-            !Se.Settings.Tools.AudioToText.WhisperCustomCommandLineArgumentsPurfviewBlank)
-        {
-            Parameters = "--standard";
-        }
 
         IsTranslateVisible = !(engine is ChatLlmCppEngine or Qwen3AsrCppEngine or CrispAsrParakeet or CrispAsrCohere or CrispAsrQwen3 or CrispAsrFireRed or CrispAsrGlm or CrispAsrGranite);
+
+        Parameters = engine.CommandLineParameter;
 
         SaveSettings();
     }

@@ -128,4 +128,10 @@ public class WhisperEngineCTranslate2 : ISpeechToTextEngine
     {
         return true;
     }
+
+    public string CommandLineParameter
+    {
+        get => Se.Settings.Tools.AudioToText.CommandLineParameterCTranslate2;
+        set => Se.Settings.Tools.AudioToText.CommandLineParameterCTranslate2 = value;
+    }
 }

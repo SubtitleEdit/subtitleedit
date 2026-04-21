@@ -24,4 +24,5 @@ public interface ISpeechToTextEngine
     string GetModelForCmdLine(string modelName);
     Task<string> GetHelpText();
     string GetWhisperModelDownloadFileName(WhisperModel whisperModel, string url);
+    string CommandLineParameter { get; set; }
 }

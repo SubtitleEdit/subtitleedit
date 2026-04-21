@@ -186,4 +186,10 @@ public class CrispAsrQwen3 : ISpeechToTextEngine
     {
         return true;
     }
+
+    public string CommandLineParameter
+    {
+        get => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrQwen3;
+        set => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrQwen3 = value;
+    }
 }

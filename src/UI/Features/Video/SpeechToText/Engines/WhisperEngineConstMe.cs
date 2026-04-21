@@ -139,4 +139,10 @@ public class WhisperEngineConstMe : ISpeechToTextEngine
     {
         return true;
     }
+
+    public string CommandLineParameter
+    {
+        get => Se.Settings.Tools.AudioToText.CommandLineParameterConstMe;
+        set => Se.Settings.Tools.AudioToText.CommandLineParameterConstMe = value;
+    }
 }

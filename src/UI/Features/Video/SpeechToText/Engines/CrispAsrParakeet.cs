@@ -175,4 +175,10 @@ public class CrispAsrParakeet : ISpeechToTextEngine
     {
         return true;
     }
+
+    public string CommandLineParameter
+    {
+        get => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrParakeet;
+        set => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrParakeet = value;
+    }
 }

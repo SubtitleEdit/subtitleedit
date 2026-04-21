@@ -159,4 +159,10 @@ public class CrispAsrGranite : ISpeechToTextEngine
     {
         return true;
     }
+
+    public string CommandLineParameter
+    {
+        get => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrGranite;
+        set => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrGranite = value;
+    }
 }

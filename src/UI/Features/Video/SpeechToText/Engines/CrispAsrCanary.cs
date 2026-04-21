@@ -187,4 +187,10 @@ public class CrispAsrCanary : ISpeechToTextEngine
     {
         return true;
     }
+
+    public string CommandLineParameter
+    {
+        get => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrCanary;
+        set => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrCanary = value;
+    }
 }

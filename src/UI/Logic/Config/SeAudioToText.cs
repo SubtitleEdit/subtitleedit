@@ -33,6 +33,24 @@ public class SeAudioToText
     public string WhisperCustomCommandLineArguments { get; set; } = string.Empty;
     public bool WhisperCustomCommandLineArgumentsPurfviewBlank { get; set; }
 
+    public string CommandLineParameterCpp { get; set; } = string.Empty;
+    public string CommandLineParameterCppCuBlas { get; set; } = string.Empty;
+    public string CommandLineParameterCppVulkan { get; set; } = string.Empty;
+    public string CommandLineParameterConstMe { get; set; } = string.Empty;
+    public string CommandLineParameterCTranslate2 { get; set; } = string.Empty;
+    public string CommandLineParameterPurfviewFasterWhisperXxl { get; set; } = "--standard";
+    public string CommandLineParameterOpenAi { get; set; } = string.Empty;
+    public string CommandLineParameterQwen3AsrCpp { get; set; } = string.Empty;
+    public string CommandLineParameterParakeetCpp { get; set; } = string.Empty;
+    public string CommandLineParameterChatLlm { get; set; } = string.Empty;
+    public string CommandLineParameterCrispAsrCanary { get; set; } = string.Empty;
+    public string CommandLineParameterCrispAsrCohere { get; set; } = string.Empty;
+    public string CommandLineParameterCrispAsrFireRed { get; set; } = string.Empty;
+    public string CommandLineParameterCrispAsrGlm { get; set; } = string.Empty;
+    public string CommandLineParameterCrispAsrGranite { get; set; } = string.Empty;
+    public string CommandLineParameterCrispAsrParakeet { get; set; } = string.Empty;
+    public string CommandLineParameterCrispAsrQwen3 { get; set; } = string.Empty;
+
     public string WhisperExtraSettingsHistory { get; set; } = string.Empty;
 
     public bool WhisperAutoAdjustTimings { get; set; } = true;

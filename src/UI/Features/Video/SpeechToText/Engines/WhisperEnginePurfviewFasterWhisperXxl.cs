@@ -145,4 +145,10 @@ public class WhisperEnginePurfviewFasterWhisperXxl : ISpeechToTextEngine
     {
         return true;
     }
+
+    public string CommandLineParameter
+    {
+        get => Se.Settings.Tools.AudioToText.CommandLineParameterPurfviewFasterWhisperXxl;
+        set => Se.Settings.Tools.AudioToText.CommandLineParameterPurfviewFasterWhisperXxl = value;
+    }
 }

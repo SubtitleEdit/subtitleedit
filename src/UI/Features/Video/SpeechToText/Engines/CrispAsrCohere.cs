@@ -197,4 +197,10 @@ public class CrispAsrCohere : ISpeechToTextEngine
     {
         return true;
     }
+
+    public string CommandLineParameter
+    {
+        get => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrCohere;
+        set => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrCohere = value;
+    }
 }

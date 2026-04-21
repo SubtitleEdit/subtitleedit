@@ -208,4 +208,10 @@ public class CrispAsrFireRed : ISpeechToTextEngine
     {
         return true;
     }
+
+    public string CommandLineParameter
+    {
+        get => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrFireRed;
+        set => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrFireRed = value;
+    }
 }

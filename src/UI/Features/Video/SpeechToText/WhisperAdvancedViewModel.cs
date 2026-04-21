@@ -48,6 +48,7 @@ public partial class WhisperAdvancedViewModel : ObservableObject
         HelpText = engine.Name + Environment.NewLine + Environment.NewLine + helpText;
         RefreshVadCpp(engine);
         SelectedEngine = Engines.FirstOrDefault(p => p.Name == engine.Name);
+        Parameters = engine.CommandLineParameter;
     }
 
     [RelayCommand]
@@ -138,6 +139,12 @@ public partial class WhisperAdvancedViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
+        if (SelectedEngine != null)
+        {
+            SelectedEngine.CommandLineParameter = Parameters;
+            Se.SaveSettings();
+        }
+
         OkPressed = true;
         Window?.Close();
     }

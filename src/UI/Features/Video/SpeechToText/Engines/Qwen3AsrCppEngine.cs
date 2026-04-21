@@ -214,4 +214,10 @@ public class Qwen3AsrCppEngine : ISpeechToTextEngine
     {
         return true;
     }
+
+    public string CommandLineParameter
+    {
+        get => Se.Settings.Tools.AudioToText.CommandLineParameterQwen3AsrCpp;
+        set => Se.Settings.Tools.AudioToText.CommandLineParameterQwen3AsrCpp = value;
+    }
 }

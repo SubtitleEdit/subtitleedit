@@ -167,4 +167,10 @@ public class ParakeetCppEngine : ISpeechToTextEngine
         using var reader = new StreamReader(stream);
         return await reader.ReadToEndAsync();
     }
+
+    public string CommandLineParameter
+    {
+        get => Se.Settings.Tools.AudioToText.CommandLineParameterParakeetCpp;
+        set => Se.Settings.Tools.AudioToText.CommandLineParameterParakeetCpp = value;
+    }
 }

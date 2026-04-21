@@ -171,4 +171,10 @@ public class CrispAsrGlm : ISpeechToTextEngine
     {
         return true;
     }
+
+    public string CommandLineParameter
+    {
+        get => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrGlm;
+        set => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrGlm = value;
+    }
 }

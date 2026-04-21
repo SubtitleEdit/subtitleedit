@@ -168,4 +168,10 @@ public class WhisperEngineCppVulkan : ISpeechToTextEngine
     {
         return true;
     }
+
+    public string CommandLineParameter
+    {
+        get => Se.Settings.Tools.AudioToText.CommandLineParameterCppVulkan;
+        set => Se.Settings.Tools.AudioToText.CommandLineParameterCppVulkan = value;
+    }
 }
