@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Markup.Declarative;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -591,8 +592,21 @@ public partial class AutoTranslateViewModel : ObservableObject
     private async Task<bool> DoTranslate()
     {
         var translator = SelectedAutoTranslator;
-        if (translator == null)
+        if (translator == null || Window == null)
         {
+            return false;
+        }
+
+        if (SelectedTargetLanguage == null)
+        {
+            // show message about selecting target language
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                Se.Language.Translate.PleaseSelectATargetLanguage,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+
             return false;
         }
 
@@ -611,7 +625,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (ApiKeyIsVisible && string.IsNullOrWhiteSpace(ApiKeyText) && engineType != typeof(LibreTranslate))
         {
             await MessageBox.Show(
-                Window!,
+                Window,
                 Se.Language.General.Error,
                 string.Format(Se.Language.General.XRequiresAnApiKey, translator.Name),
                 MessageBoxButtons.OK,
@@ -622,7 +636,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (ApiUrlIsVisible && string.IsNullOrWhiteSpace(ApiUrlText))
         {
             await MessageBox.Show(
-                Window!,
+                Window,
                 Se.Language.General.Error,
                 string.Format(Se.Language.General.XRequiresAnApiKey, translator.Name),
                 MessageBoxButtons.OK,
@@ -641,10 +655,10 @@ public partial class AutoTranslateViewModel : ObservableObject
         translator.Initialize();
 
         var sourceLanguage = translator.GetSupportedSourceLanguages()
-            .FirstOrDefault(p => p.Name.Equals(SelectedSourceLanguage!.ToString(), StringComparison.InvariantCultureIgnoreCase));
+            .FirstOrDefault(p => p.Name.Equals(SelectedSourceLanguage?.ToString() ?? string.Empty, StringComparison.InvariantCultureIgnoreCase));
 
         var targetLanguage = translator.GetSupportedTargetLanguages()
-            .FirstOrDefault(p => p.Name.Equals(SelectedTargetLanguage!.ToString(), StringComparison.InvariantCultureIgnoreCase));
+            .FirstOrDefault(p => p.Name.Equals(SelectedTargetLanguage?.ToString() ?? string.Empty, StringComparison.InvariantCultureIgnoreCase));
 
         if (sourceLanguage == null || targetLanguage == null)
         {
@@ -779,20 +793,22 @@ public partial class AutoTranslateViewModel : ObservableObject
         {
             _ = Dispatcher.UIThread.Invoke(async () =>
             {
-                var error = string.Empty;
+                var details = new System.Text.StringBuilder();
 
                 try
                 {
                     var json = translator.Error;
                     var seParser = new SeJsonParser();
-                    error = seParser.GetFirstObject(json, "error");
-                    if (!string.IsNullOrEmpty(error))
+                    var apiError = seParser.GetFirstObject(json, "error");
+                    if (!string.IsNullOrEmpty(apiError))
                     {
-                        error = "Error: " + Json.DecodeJsonText(error) + Environment.NewLine + Environment.NewLine;
+                        details.AppendLine("API error: " + Json.DecodeJsonText(apiError));
+                        details.AppendLine();
                     }
                     else if (!string.IsNullOrEmpty(json))
                     {
-                        error = "Error: " + json + Environment.NewLine + Environment.NewLine;
+                        details.AppendLine("API response: " + json);
+                        details.AppendLine();
                     }
                 }
                 catch
@@ -800,7 +816,17 @@ public partial class AutoTranslateViewModel : ObservableObject
                     // ignore
                 }
 
-                await MessageBox.Show(Window!, ex.Message, error + (ex.StackTrace ?? "An error occurred"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                details.AppendLine(ex.Message);
+                if (!string.IsNullOrEmpty(ex.StackTrace))
+                {
+                    details.AppendLine();
+                    details.AppendLine(ex.StackTrace);
+                }
+
+                await _windowService.ShowDialogAsync<TranslationErrorWindow, TranslationErrorViewModel>(Window!, vm =>
+                {
+                    vm.Initialize(translator.Name, details.ToString().TrimEnd());
+                });
             });
         }
         finally

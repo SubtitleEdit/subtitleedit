@@ -414,6 +414,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<TimedTextImsc11PropertiesViewModel>();
         collection.AddTransient<TmpegEncXmlPropertiesViewModel>();
         collection.AddTransient<TranslateSettingsViewModel>();
+        collection.AddTransient<TranslationErrorViewModel>();
         collection.AddTransient<TransparentSettingsViewModel>();
         collection.AddTransient<TransparentSubtitlesViewModel>();
         collection.AddTransient<VideoPlayerUndockedViewModel>();
