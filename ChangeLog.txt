@@ -27,6 +27,8 @@ v5.0.0-beta17 (xth April 2026)
 * Fix video not playing when Loaded from URL (Mac) - thx Keysz
 * Update Crisp ASR to the latest version + add more models - thx Oplay66
 * Improve live spell check - thx benji1000
+* Try to Add custom model loading for Whisper - thx Adelio860
+* Add separate parameter settings foreach speech-to-text engine
 
 -----------------------------------------------------------------------------------------------------
 
