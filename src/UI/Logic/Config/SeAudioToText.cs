@@ -43,13 +43,13 @@ public class SeAudioToText
     public string CommandLineParameterQwen3AsrCpp { get; set; } = string.Empty;
     public string CommandLineParameterParakeetCpp { get; set; } = string.Empty;
     public string CommandLineParameterChatLlm { get; set; } = string.Empty;
-    public string CommandLineParameterCrispAsrCanary { get; set; } = "--max-len 50 --split-on-punct true";
-    public string CommandLineParameterCrispAsrCohere { get; set; } = "--max-len 50 --split-on-punct true";
-    public string CommandLineParameterCrispAsrFireRed { get; set; } = "--max-len 50 --split-on-punct true";
-    public string CommandLineParameterCrispAsrGlm { get; set; } = "--max-len 50 --split-on-punct true";
-    public string CommandLineParameterCrispAsrGranite { get; set; } = "--max-len 50 --split-on-punct true";
-    public string CommandLineParameterCrispAsrParakeet { get; set; } = "--max-len 50 --split-on-punct true";
-    public string CommandLineParameterCrispAsrQwen3 { get; set; } = "--max-len 50 --split-on-punct true";
+    public string CommandLineParameterCrispAsrCanary { get; set; } = "--max-len 50 --split-on-punct";
+    public string CommandLineParameterCrispAsrCohere { get; set; } = "--max-len 50 --split-on-punct";
+    public string CommandLineParameterCrispAsrFireRed { get; set; } = "--max-len 50 --split-on-punct";
+    public string CommandLineParameterCrispAsrGlm { get; set; } = "--max-len 50 --split-on-punct";
+    public string CommandLineParameterCrispAsrGranite { get; set; } = "--max-len 50 --split-on-punct";
+    public string CommandLineParameterCrispAsrParakeet { get; set; } = "--max-len 50 --split-on-punct";
+    public string CommandLineParameterCrispAsrQwen3 { get; set; } = "--max-len 50 --split-on-punct";
 
     public string WhisperExtraSettingsHistory { get; set; } = string.Empty;
 
