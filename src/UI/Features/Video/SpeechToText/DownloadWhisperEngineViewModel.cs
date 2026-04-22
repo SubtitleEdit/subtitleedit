@@ -126,6 +126,8 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                         return;
                     }
 
+                    DownloadAndUnpackSileroVad(dir);
+
                     OkPressed = true;
                     Close();
                 }
@@ -144,6 +146,8 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                         return;
                     }
 
+                    DownloadAndUnpackSileroVad(dir);
+
                     OkPressed = true;
                     Close();
                 }
@@ -158,6 +162,12 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
 
                     var folder = Engine.GetAndCreateWhisperFolder();
                     Unpack(folder, Engine.UnpackSkipFolder);
+
+                    if (Engine is not (ChatLlmCppEngine or Qwen3AsrCppEngine or CrispAsrParakeet or CrispAsrCanary))
+                    {
+                        DownloadAndUnpackSileroVad(folder);
+                    }
+
                     OkPressed = true;
                     Close();
                 }
@@ -214,6 +224,43 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
 
         var path = Path.Combine(folder, Engine.GetExecutableFileName());
         MakeExecutable(path);
+    }
+
+    private void DownloadAndUnpackSileroVad(string folder)
+    {
+        if (_cancellationTokenSource.IsCancellationRequested)
+        {
+            return;
+        }
+
+        var sileroFileName = "ggml-silero-vad.bin";
+        if (File.Exists(Path.Combine(folder, sileroFileName)))
+        {
+            return;
+        }
+
+        TitleText = string.Format(Se.Language.General.DownloadingX, "Silero VAD");
+        ProgressValue = 0;
+
+        var downloadProgress = new Progress<float>(number =>
+        {
+            var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+            ProgressValue = percentage;
+            ProgressText = string.Format(Se.Language.General.DownloadingXPercent, percentage.ToString(CultureInfo.InvariantCulture));
+        });
+
+        using var sileroStream = new MemoryStream();
+        _whisperDownloadService.DownloadSileroVad(sileroStream, downloadProgress, _cancellationTokenSource.Token)
+            .GetAwaiter().GetResult();
+
+        if (_cancellationTokenSource.IsCancellationRequested || sileroStream.Length == 0)
+        {
+            return;
+        }
+
+        TitleText = string.Format(Se.Language.General.UnpackingX, "Silero VAD");
+        sileroStream.Position = 0;
+        _zipUnpacker.UnpackZipStream(sileroStream, folder, string.Empty, false, new List<string>(), null);
     }
 
     private void Close()

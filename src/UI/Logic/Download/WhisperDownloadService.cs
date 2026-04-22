@@ -16,6 +16,7 @@ public interface IWhisperDownloadService
     Task DownloadWhisperPurfviewFasterWhisperXxl(string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken);
     Task DownloadWhisperCppVulkan(Stream stream, Progress<float> progress, CancellationToken cancellationToken);
     Task DownloadWhisperCTranslate2(Stream stream, Progress<float> progress, CancellationToken cancellationToken);
+    Task DownloadSileroVad(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
 }
 
 public class WhisperDownloadService : IWhisperDownloadService
@@ -31,6 +32,7 @@ public class WhisperDownloadService : IWhisperDownloadService
     private const string LinuxUrlCuBlass = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-184/whisper-cuda-linux64.zip";
     
     private const string DownloadUrlConstMe = "https://github.com/Const-me/Whisper/releases/download/1.12.0/cli.zip";
+    private const string SileroVadUrl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-184/ggml-silero-v6.2.0.zip";
 
     // smaller file for testing download: private const string DownloadUrlPurfviewFasterWhisperXxl = "https://github.com/SubtitleEdit/support-files/releases/download/whispercpp-182/whisper-cublas-11.8.0-bin-x64.7z";
     private const string DownloadUrlPurfviewFasterWhisperXxl = "https://github.com/Purfview/whisper-standalone-win/releases/download/Faster-Whisper-XXL/Faster-Whisper-XXL_r245.4_windows.7z";
@@ -93,6 +95,11 @@ public class WhisperDownloadService : IWhisperDownloadService
     public async Task DownloadWhisperCTranslate2(Stream stream,  Progress<float> progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(_httpClient, GetUrlTranslate2(), stream, progress, cancellationToken);
+    }
+
+    public async Task DownloadSileroVad(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
+    {
+        await DownloadHelper.DownloadFileAsync(_httpClient, SileroVadUrl, stream, progress, cancellationToken);
     }
 
     private static string GetUrlTranslate2()
