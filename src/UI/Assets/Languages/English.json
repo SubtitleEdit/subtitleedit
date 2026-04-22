@@ -1628,7 +1628,8 @@
     "addXToUserDictionary": "Add '{0}' to user dictionary",
     "ignoreAllX": "Ignore all '{0}'",
     "pickSpellCheckDictionaryDotDotDot": "Choose spell check dictionary...",
-    "chooseSpellCheckDictionary": "Choose spell check dictionary"
+    "chooseSpellCheckDictionary": "Choose spell check dictionary",
+    "pickLiveSpellCheckDictionary": "Pick live spell check dictionary"
   },
   "video": {
     "burnIn": {
@@ -1889,7 +1890,14 @@
     "delayInSecondsBetweenRequests": "Delay in seconds between requests",
     "maxBytesPerRequest": "Max bytes per request",
     "promptText": "Prompt text",
-    "translateEachLineSeparately": "Translate each line separately"
+    "translateEachLineSeparately": "Translate each line separately",
+    "translationError": "Translation error",
+    "translationFailedMessage": "{0} translation failed.",
+    "translationFailedHint": "This may be due to a network issue, an invalid API key, or API usage limits.\nPlease check your connection and API settings, then try again.",
+    "showTechnicalDetails": "Show technical details",
+    "hideTechnicalDetails": "Hide technical details",
+    "technicalDetails": "Technical details",
+    "pleaseSelectATargetLanguage": "Please select a target language"
   },
   "options": {
     "settings": {
