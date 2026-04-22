@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,6 +38,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private Task? _downloadTaskVoiceModel;
     private Task? _downloadTaskVoiceConfig;
     private Task? _downloadTaskQwen3TtsCpp;
+    private Task? _downloadTaskQwen3TtsCppVoices;
     private Task? _downloadTaskQwen3TtsModels;
     private readonly Timer _timer = new();
 
@@ -47,6 +49,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private readonly MemoryStream _downloadStreamModel;
     private readonly MemoryStream _downloadStreamConfig;
     private readonly MemoryStream _downloadStreamQwen3TtsCpp;
+    private readonly MemoryStream _downloadStreamQwen3TtsCppVoices;
     private readonly IZipUnpacker _zipUnpacker;
     private readonly object _lock = new();
     private string _modelFileName;
@@ -64,6 +67,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         _downloadStreamModel = new MemoryStream();
         _downloadStreamConfig = new MemoryStream();
         _downloadStreamQwen3TtsCpp = new MemoryStream();
+        _downloadStreamQwen3TtsCppVoices = new MemoryStream();
 
         _modelFileName = string.Empty;
         _configFileName = string.Empty;
@@ -251,8 +255,32 @@ public partial class DownloadTtsViewModel : ObservableObject
                     }
                 }
 
-                OkPressed = true;
-                Close();
+                _downloadTaskQwen3TtsCpp = null;
+
+                // Chain the voices download, unless the user already has voices installed.
+                var voicesFolder = Qwen3TtsCpp.GetSetVoicesFolder();
+                var voicesAlreadyInstalled = Directory.Exists(voicesFolder) &&
+                                             Directory.EnumerateFiles(voicesFolder, "*.wav").Any();
+                if (voicesAlreadyInstalled)
+                {
+                    OkPressed = true;
+                    Close();
+                    return;
+                }
+
+                TitleText = "Downloading Qwen3 TTS voices";
+                ProgressValue = 0;
+                ProgressText = Se.Language.General.StartingDotDotDot;
+                var voicesProgress = new Progress<float>(number =>
+                {
+                    var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+                    var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+                    ProgressValue = percentage;
+                    ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+                });
+                _downloadTaskQwen3TtsCppVoices = _qwen3TtsCppDownloadService.DownloadVoices(
+                    _downloadStreamQwen3TtsCppVoices, voicesProgress, _cancellationTokenSource.Token);
+                _timer.Start();
             }
             else if (_downloadTaskQwen3TtsCpp is { IsFaulted: true })
             {
@@ -268,6 +296,49 @@ public partial class DownloadTtsViewModel : ObservableObject
                     ProgressText = "Download failed";
                     Error = ex?.Message ?? "Unknown error";
                 }
+            }
+
+            if (_downloadTaskQwen3TtsCppVoices is { IsCompleted: true })
+            {
+                _timer.Stop();
+
+                if (_downloadStreamQwen3TtsCppVoices.Length > 0)
+                {
+                    var voicesFolder = Qwen3TtsCpp.GetSetVoicesFolder();
+                    try
+                    {
+                        _downloadStreamQwen3TtsCppVoices.Position = 0;
+                        _zipUnpacker.UnpackZipStream(_downloadStreamQwen3TtsCppVoices, voicesFolder, string.Empty, false, new List<string>(), null);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Voices are optional; log and continue so the engine is still usable.
+                        Se.LogError(ex);
+                    }
+                    _downloadStreamQwen3TtsCppVoices.Dispose();
+                }
+
+                OkPressed = true;
+                Close();
+            }
+            else if (_downloadTaskQwen3TtsCppVoices is { IsFaulted: true })
+            {
+                _timer.Stop();
+                var ex = _downloadTaskQwen3TtsCppVoices.Exception?.InnerException ?? _downloadTaskQwen3TtsCppVoices.Exception;
+                if (ex is OperationCanceledException)
+                {
+                    ProgressText = "Download canceled";
+                    Close();
+                    return;
+                }
+
+                // Voices are optional — the engine is already installed. Log and close with success.
+                if (ex != null)
+                {
+                    Se.LogError(ex);
+                }
+                OkPressed = true;
+                Close();
             }
 
             if (_downloadTaskQwen3TtsModels is { IsCompleted: true })

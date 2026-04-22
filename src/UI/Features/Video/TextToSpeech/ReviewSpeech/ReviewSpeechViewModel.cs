@@ -495,8 +495,6 @@ public partial class ReviewSpeechViewModel : ObservableObject
         }
 
         IsRegenerateEnabled = false;
-        _cancellationTokenSource = new CancellationTokenSource();
-        _cancellationToken = _cancellationTokenSource.Token;
         if (!engine.IsVoiceInstalled(voice) && voice.EngineVoice is PiperVoice piperVoice)
         {
             var modelFileName = Path.Combine(Piper.GetSetPiperFolder(), piperVoice.ModelShort);
@@ -519,10 +517,33 @@ public partial class ReviewSpeechViewModel : ObservableObject
             Se.Settings.Video.TextToSpeech.MurfStyle = SelectedStyle;
         }
 
+        var generatingAudioVm = _windowService.ShowWindow<GeneratingAudioWindow, GeneratingAudioViewModel>(Window!);
+        _cancellationTokenSource = generatingAudioVm.CancellationTokenSource;
+        _cancellationToken = _cancellationTokenSource.Token;
+
         TtsResult speakResult;
         try
         {
             speakResult = await engine.Speak(line.Text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, _cancellationToken);
+
+            line.StepResult.CurrentFileName = speakResult.FileName;
+            line.StepResult.Voice = voice;
+
+            var adjustSpeedStepResult = await TrimAndAdjustSpeed(line);
+            var postProcessedFileName = await TtsPostProcessor.ApplyPostProcessing(adjustSpeedStepResult.CurrentFileName, _waveFolder, _cancellationToken);
+
+            if (_cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
+            adjustSpeedStepResult.CurrentFileName = postProcessedFileName;
+            line.Speed = Math.Round(adjustSpeedStepResult.SpeedFactor, 2).ToString(CultureInfo.CurrentCulture);
+            line.Cps = Math.Round(adjustSpeedStepResult.Paragraph.GetCharactersPerSecond(), 2).ToString(CultureInfo.CurrentCulture);
+            line.StepResult = adjustSpeedStepResult;
+            line.Voice = voice.ToString();
+
+            line.AddHistory(voice, line.StepResult.CurrentFileName);
         }
         catch (HttpRequestException ex)
         {
@@ -540,31 +561,13 @@ public partial class ReviewSpeechViewModel : ObservableObject
         }
         finally
         {
+            generatingAudioVm.Close();
             IsRegenerateEnabled = true;
             if (engine is Murf && oldStyle != null)
             {
                 Se.Settings.Video.TextToSpeech.MurfStyle = oldStyle;
             }
         }
-
-        line.StepResult.CurrentFileName = speakResult.FileName;
-        line.StepResult.Voice = voice;
-
-        var adjustSpeedStepResult = await TrimAndAdjustSpeed(line);
-        var postProcessedFileName = await TtsPostProcessor.ApplyPostProcessing(adjustSpeedStepResult.CurrentFileName, _waveFolder, _cancellationToken);
-
-        if (_cancellationToken.IsCancellationRequested)
-        {
-            return;
-        }
-
-        adjustSpeedStepResult.CurrentFileName = postProcessedFileName;
-        line.Speed = Math.Round(adjustSpeedStepResult.SpeedFactor, 2).ToString(CultureInfo.CurrentCulture);
-        line.Cps = Math.Round(adjustSpeedStepResult.Paragraph.GetCharactersPerSecond(), 2).ToString(CultureInfo.CurrentCulture);
-        line.StepResult = adjustSpeedStepResult;
-        line.Voice = voice.ToString();
-
-        line.AddHistory(voice, line.StepResult.CurrentFileName);
 
         _skipAutoContinue = true;
         await PlayAudio(line.StepResult.CurrentFileName);

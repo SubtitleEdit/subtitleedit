@@ -6,6 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Sockets;
+using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,9 +27,19 @@ public class Qwen3TtsCpp : ITtsEngine
     public bool HasModel => false;
     public bool HasKeyFile => false;
 
-    public const string TtsModelFileName = "Qwen3-TTS-12Hz-1.7B-Base-q8_0.gguf";
+    public const string TtsModelFileName = "qwen3-tts-0.6b-q8_0.gguf";
     public const string TokenizerModelFileName = "qwen3-tts-tokenizer-q8_0.gguf";
-    public const string WavTokenizerModelFileName = "WavTokenizer-Large-75-Q4_0.gguf";
+
+    private static readonly HttpClient HttpClient = new()
+    {
+        Timeout = TimeSpan.FromMinutes(5),
+    };
+    private static readonly SemaphoreSlim ServerLock = new(1, 1);
+    private static Process? _serverProcess;
+    private static int _serverPort;
+    private static bool _processExitHooked;
+
+    private static string ServerBaseUrl => $"http://127.0.0.1:{_serverPort}";
 
     public Task<bool> IsInstalled(string? region)
     {
@@ -34,8 +50,7 @@ public class Qwen3TtsCpp : ITtsEngine
     {
         var modelsFolder = GetSetModelsFolder();
         return File.Exists(Path.Combine(modelsFolder, TtsModelFileName)) &&
-               File.Exists(Path.Combine(modelsFolder, TokenizerModelFileName)) &&
-               File.Exists(Path.Combine(modelsFolder, WavTokenizerModelFileName));
+               File.Exists(Path.Combine(modelsFolder, TokenizerModelFileName));
     }
 
     public override string ToString() => Name;
@@ -80,7 +95,7 @@ public class Qwen3TtsCpp : ITtsEngine
 
     public static string GetExecutableFileName()
     {
-        return Path.Combine(GetSetFolder(), OperatingSystem.IsWindows() ? "qwen3-tts-cli.exe" : "qwen3-tts-cli");
+        return Path.Combine(GetSetFolder(), OperatingSystem.IsWindows() ? "qwen3-tts-server.exe" : "qwen3-tts-server");
     }
 
     public Task<Voice[]> GetVoices(string language)
@@ -139,66 +154,232 @@ public class Qwen3TtsCpp : ITtsEngine
             throw new ArgumentException("Voice is not a Qwen3TtsVoice");
         }
 
-        var outputFileNameOnly = Guid.NewGuid() + ".wav";
-        var outputFileName = Path.Combine(GetSetFolder(), outputFileNameOnly);
+        await EnsureServerRunningAsync(cancellationToken);
 
-        var process = StartProcess(qwen3Voice, text, outputFileNameOnly);
-        var stderrTask = process.StandardError.ReadToEndAsync(cancellationToken);
-        await process.WaitForExitAsync(cancellationToken);
-        var stderrOutput = await stderrTask;
+        var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
+        var inputText = Utilities.UnbreakLine(text);
 
-        if (process.ExitCode != 0)
+        using HttpResponseMessage response = string.IsNullOrEmpty(qwen3Voice.FilePath)
+            ? await SynthesizeAsync(inputText, cancellationToken)
+            : await SynthesizeWithVoiceAsync(inputText, qwen3Voice.FilePath, cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
         {
-            Se.LogError($"Qwen3 TTS process exited with code {process.ExitCode} - "
-                + $"Voice: {qwen3Voice}, "
-                + $"Text: {text}, "
-                + $"FileName: {process.StartInfo.FileName}"
-                + (string.IsNullOrWhiteSpace(stderrOutput) ? string.Empty : $", StdErr: {stderrOutput.Trim()}"));
+            var errorBody = await SafeReadErrorAsync(response, cancellationToken);
+            Se.LogError($"Qwen3 TTS server error {(int)response.StatusCode} {response.StatusCode} - "
+                + $"Voice: {qwen3Voice}, Text: {text}, Body: {errorBody}");
+            throw new InvalidOperationException(
+                $"Qwen3 TTS synthesis failed ({(int)response.StatusCode}): {errorBody}");
+        }
+
+        await using (var fileStream = File.Create(outputFileName))
+        await using (var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken))
+        {
+            await contentStream.CopyToAsync(fileStream, cancellationToken);
         }
 
         return new TtsResult(outputFileName, text);
     }
 
-    private static Process StartProcess(Qwen3TtsVoice voice, string inputText, string outputFileNameOnly)
+    private static async Task<HttpResponseMessage> SynthesizeAsync(string text, CancellationToken ct)
     {
-        var processInfo = new ProcessStartInfo
-        {
-            WorkingDirectory = GetSetFolder(),
-            FileName = GetExecutableFileName(),
-            UseShellExecute = false,
-            CreateNoWindow = true,
-            RedirectStandardError = true,
-        };
+        var body = JsonSerializer.Serialize(new { text });
+        using var content = new StringContent(body, Encoding.UTF8, "application/json");
+        return await HttpClient.PostAsync($"{ServerBaseUrl}/v1/synthesize", content, ct);
+    }
 
-        processInfo.ArgumentList.Add("-m");
-        processInfo.ArgumentList.Add("models");
-        processInfo.ArgumentList.Add("--tts-model");
-        processInfo.ArgumentList.Add(TtsModelFileName);
-        processInfo.ArgumentList.Add("--tokenizer-model");
-        processInfo.ArgumentList.Add(TokenizerModelFileName);
-        processInfo.ArgumentList.Add("-t");
-        processInfo.ArgumentList.Add(Utilities.UnbreakLine(inputText));
-        processInfo.ArgumentList.Add("-o");
-        processInfo.ArgumentList.Add(outputFileNameOnly);
+    private static async Task<HttpResponseMessage> SynthesizeWithVoiceAsync(string text, string referenceWav, CancellationToken ct)
+    {
+        using var form = new MultipartFormDataContent();
+        form.Add(new StringContent(text, Encoding.UTF8), "text");
+        var refBytes = await File.ReadAllBytesAsync(referenceWav, ct);
+        var fileContent = new ByteArrayContent(refBytes);
+        fileContent.Headers.ContentType = new MediaTypeHeaderValue("audio/wav");
+        form.Add(fileContent, "reference_audio", Path.GetFileName(referenceWav));
+        return await HttpClient.PostAsync($"{ServerBaseUrl}/v1/synthesize_with_voice", form, ct);
+    }
 
-        if (!string.IsNullOrEmpty(voice.FilePath))
+    private static async Task<string> SafeReadErrorAsync(HttpResponseMessage response, CancellationToken ct)
+    {
+        try
         {
-            processInfo.ArgumentList.Add("-r");
-            processInfo.ArgumentList.Add(voice.FilePath);
+            return await response.Content.ReadAsStringAsync(ct);
+        }
+        catch (Exception ex)
+        {
+            return $"<failed to read error body: {ex.Message}>";
+        }
+    }
+
+    private static async Task EnsureServerRunningAsync(CancellationToken ct)
+    {
+        if (_serverProcess is { HasExited: false } && _serverPort != 0)
+        {
+            return;
         }
 
-        var process = new Process { StartInfo = processInfo };
-
-        if (OperatingSystem.IsWindows() || OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
+        await ServerLock.WaitAsync(ct);
+        try
         {
-            _ = process.Start();
-        }
-        else
-        {
-            throw new PlatformNotSupportedException("Process.Start() is not supported on this platform.");
-        }
+            if (_serverProcess is { HasExited: false } && _serverPort != 0)
+            {
+                return;
+            }
 
-        return process;
+            var exe = GetExecutableFileName();
+            if (!File.Exists(exe))
+            {
+                throw new FileNotFoundException("Qwen3 TTS server executable not found.", exe);
+            }
+
+            var port = FindFreeLoopbackPort();
+            var psi = new ProcessStartInfo
+            {
+                WorkingDirectory = GetSetFolder(),
+                FileName = exe,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+            };
+            psi.ArgumentList.Add("-m");
+            psi.ArgumentList.Add(GetSetModelsFolder());
+            psi.ArgumentList.Add("--model-name");
+            psi.ArgumentList.Add(TtsModelFileName);
+            psi.ArgumentList.Add("--host");
+            psi.ArgumentList.Add("127.0.0.1");
+            psi.ArgumentList.Add("--port");
+            psi.ArgumentList.Add(port.ToString());
+
+            var process = Process.Start(psi)
+                ?? throw new InvalidOperationException("Failed to start qwen3-tts-server");
+
+            var stderrBuffer = new StringBuilder();
+            process.ErrorDataReceived += (_, e) =>
+            {
+                if (e.Data != null) lock (stderrBuffer) stderrBuffer.AppendLine(e.Data);
+            };
+            process.OutputDataReceived += (_, e) =>
+            {
+                if (e.Data != null) lock (stderrBuffer) stderrBuffer.AppendLine(e.Data);
+            };
+            process.BeginErrorReadLine();
+            process.BeginOutputReadLine();
+
+            _serverProcess = process;
+            _serverPort = port;
+            HookProcessExitOnce();
+
+            var deadline = DateTime.UtcNow.AddSeconds(120);
+            while (DateTime.UtcNow < deadline)
+            {
+                ct.ThrowIfCancellationRequested();
+                if (process.HasExited)
+                {
+                    var tail = SnapshotStderr(stderrBuffer);
+                    _serverProcess = null;
+                    _serverPort = 0;
+                    throw new InvalidOperationException(
+                        $"qwen3-tts-server exited during startup (code {process.ExitCode}). Output: {tail}");
+                }
+                if (await ProbeHealthAsync(port, TimeSpan.FromSeconds(1), ct))
+                {
+                    return;
+                }
+                await Task.Delay(TimeSpan.FromMilliseconds(500), ct);
+            }
+
+            var lastOutput = SnapshotStderr(stderrBuffer);
+            StopServerInternal();
+            throw new TimeoutException(
+                $"qwen3-tts-server did not report healthy within 120s. Last output: {lastOutput}");
+        }
+        finally
+        {
+            ServerLock.Release();
+        }
+    }
+
+    private static string SnapshotStderr(StringBuilder buffer)
+    {
+        lock (buffer)
+        {
+            var s = buffer.ToString().TrimEnd();
+            return s.Length > 2000 ? s[^2000..] : s;
+        }
+    }
+
+    private static async Task<bool> ProbeHealthAsync(int port, TimeSpan timeout, CancellationToken ct)
+    {
+        try
+        {
+            using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+            cts.CancelAfter(timeout);
+            using var resp = await HttpClient.GetAsync($"http://127.0.0.1:{port}/health", cts.Token);
+            return resp.IsSuccessStatusCode;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static int FindFreeLoopbackPort()
+    {
+        var listener = new TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+        try
+        {
+            return ((IPEndPoint)listener.LocalEndpoint).Port;
+        }
+        finally
+        {
+            listener.Stop();
+        }
+    }
+
+    private static void HookProcessExitOnce()
+    {
+        if (_processExitHooked) return;
+        _processExitHooked = true;
+        AppDomain.CurrentDomain.ProcessExit += (_, _) => StopServerInternal();
+    }
+
+    public static void StopServer()
+    {
+        ServerLock.Wait();
+        try
+        {
+            StopServerInternal();
+        }
+        finally
+        {
+            ServerLock.Release();
+        }
+    }
+
+    private static void StopServerInternal()
+    {
+        var p = _serverProcess;
+        _serverProcess = null;
+        _serverPort = 0;
+        if (p == null) return;
+        try
+        {
+            if (!p.HasExited)
+            {
+                p.Kill(entireProcessTree: true);
+                p.WaitForExit(2000);
+            }
+        }
+        catch
+        {
+            // best effort
+        }
+        finally
+        {
+            p.Dispose();
+        }
     }
 
     private static string GetUniqueDestinationFileName(string folder, string baseName)

@@ -132,6 +132,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.EncodingSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceSettings;
 using Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
 using Nikse.SubtitleEdit.Logic;
@@ -386,6 +387,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<RenumberViewModel>();
         collection.AddTransient<ReplaceViewModel>();
         collection.AddTransient<RestoreAutoBackupViewModel>();
+        collection.AddTransient<GeneratingAudioViewModel>();
         collection.AddTransient<ReviewSpeechHistoryViewModel>();
         collection.AddTransient<ReviewSpeechViewModel>();
         collection.AddTransient<RosettaPropertiesViewModel>();

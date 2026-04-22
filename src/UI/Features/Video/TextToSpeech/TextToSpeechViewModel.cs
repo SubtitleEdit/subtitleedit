@@ -394,23 +394,34 @@ public partial class TextToSpeechViewModel : ObservableObject
             text = "This is a test";
         }
 
-        _cancellationTokenSource = new CancellationTokenSource();
+        var generatingAudioVm = _windowService.ShowWindow<GeneratingAudioWindow, GeneratingAudioViewModel>(Window!);
+        _cancellationTokenSource = generatingAudioVm.CancellationTokenSource;
         _cancellationToken = _cancellationTokenSource.Token;
-        var result = await engine.Speak(text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, _cancellationToken);
-        if (!File.Exists(result.FileName))
+        try
         {
-            await MessageBox.Show(
-                Window,
-                "Test voice error",
-                $"Output audio file was not generated: {result.FileName}",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
+            var result = await engine.Speak(text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, _cancellationToken);
+            if (!_cancellationToken.IsCancellationRequested)
+            {
+                if (!File.Exists(result.FileName))
+                {
+                    await MessageBox.Show(
+                        Window,
+                        "Test voice error",
+                        $"Output audio file was not generated: {result.FileName}",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
 
-            return;
+                    return;
+                }
+
+                IsVoiceTestEnabled = false;
+                await PlayAudio(result.FileName);
+            }
         }
-
-        IsVoiceTestEnabled = false;
-        await PlayAudio(result.FileName);
+        finally
+        {
+            generatingAudioVm.Close();
+        }
     }
 
 
@@ -627,7 +638,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 var answer = await MessageBox.Show(
                     Window,
                     "Download Qwen3 TTS models?",
-                    $"{Environment.NewLine}\"Qwen3 TTS\" requires models (~2.8 GB).{Environment.NewLine}{Environment.NewLine}Download models?",
+                    $"{Environment.NewLine}\"Qwen3 TTS\" requires models (~1.6 GB).{Environment.NewLine}{Environment.NewLine}Download models?",
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
