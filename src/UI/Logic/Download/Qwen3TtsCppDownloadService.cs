@@ -18,11 +18,11 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
 {
     private readonly HttpClient _httpClient;
 
-    private const string WindowsUrl = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.3.0/qwen3-tts-server-v0.3.0-windows-vulkan-x64.zip";
+    private const string WindowsUrl = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.0/qwen3-tts-server-v0.4.0-windows-vulkan-x64.zip";
     // Linux / macOS server builds are not yet published. The engine (Qwen3TtsCpp.cs)
     // expects the qwen3-tts-server binary; the old CLI zips below will no longer work.
-    private const string MacUrl = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.3.0/qwen3-tts-server-v0.3.0-macos-metal-arm64.zip";
-    private const string LinuxUrl = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.3.0/qwen3-tts-server-v0.3.0-linux-vulkan-x64.zip";
+    private const string MacUrl = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.0/qwen3-tts-server-v0.4.0-macos-metal-arm64.zip";
+    private const string LinuxUrl = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.0/qwen3-tts-server-v0.4.0-linux-vulkan-x64.zip";
 
     private const string TtsModelUrl = "https://huggingface.co/koboldcpp/tts/resolve/main/qwen3-tts-0.6b-q8_0.gguf";
     private const string TokenizerModelUrl = "https://huggingface.co/koboldcpp/tts/resolve/main/qwen3-tts-tokenizer-q8_0.gguf";
