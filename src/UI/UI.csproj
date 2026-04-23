@@ -155,6 +155,9 @@
 		<AvaloniaResource Include="Assets\SpeechToText\CrispASRParakeet.txt">
 		  <CopyToOutputDirectory></CopyToOutputDirectory>
 		</AvaloniaResource>
+		<AvaloniaResource Include="Assets\SpeechToText\CrispASROmni.txt">
+		  <CopyToOutputDirectory></CopyToOutputDirectory>
+		</AvaloniaResource>
 		<AvaloniaResource Include="Assets\Themes.zip" />
 		<AvaloniaResource Include="Assets\SpeechToText\PurfviewFasterWhisper.txt">
 			<CopyToOutputDirectory></CopyToOutputDirectory>

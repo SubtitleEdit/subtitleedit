@@ -1,0 +1,6 @@
+
+🌐 OmniASR
+
+Type: wav2vec2 encoder + LLaMA-style LLM decoder (Meta Omnilingual ASR)
+Focus: 🌍 1600+ languages (NLLB-style language codes like eng_Latn)
+

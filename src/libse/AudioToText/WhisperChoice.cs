@@ -22,5 +22,6 @@
         public const string CrispAsrGlm = "Crisp ASR GLM";
         public const string CrispAsrFireRed = "Crisp ASR Fire Red";
         public const string CrispAsrGranite = "Crisp ASR Granite";
+        public const string CrispAsrOmni = "Crisp ASR Omni";
     }
 }

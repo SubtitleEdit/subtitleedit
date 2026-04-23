@@ -161,11 +161,12 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         Engines.Add(new CrispAsrGlm());
         Engines.Add(new CrispAsrGranite());
         Engines.Add(new CrispAsrQwen3());
+        Engines.Add(new CrispAsrOmni());
 
         SelectedEngine = Engines[0];
 
         Languages = new ObservableCollection<WhisperLanguage>(SelectedEngine.Languages);
-        SelectedLanguage = Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => p.Name == "English");
+        SelectedLanguage = PickDefaultLanguage(Languages);
 
         Models = new ObservableCollection<WhisperModelDisplay>();
 
@@ -174,15 +175,16 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         ResultAudioClips = new List<AudioClip>();
 
         IsTranscribeEnabled = true;
-        IsTranslateVisible = SelectedEngine is 
-            not ChatLlmCppEngine and 
-            not Qwen3AsrCppEngine and 
-            not CrispAsrParakeet and 
-            not CrispAsrCohere and 
+        IsTranslateVisible = SelectedEngine is
+            not ChatLlmCppEngine and
+            not Qwen3AsrCppEngine and
+            not CrispAsrParakeet and
+            not CrispAsrCohere and
             not CrispAsrQwen3 and
             not CrispAsrFireRed and
             not CrispAsrGlm and
-            not CrispAsrGranite;
+            not CrispAsrGranite and
+            not CrispAsrOmni;
         Parameters = string.Empty;
         ConsoleLog = string.Empty;
         ProgressText = string.Empty;
@@ -2530,18 +2532,19 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             Languages.Add(language);
         }
 
-        if (!string.IsNullOrEmpty(Se.Settings.Tools.AudioToText.WhisperLanguageCode))
+        var savedCode = Se.Settings.Tools.AudioToText.WhisperLanguageCode;
+        WhisperLanguage? language = null;
+        if (!string.IsNullOrEmpty(savedCode))
         {
-            var language = Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => p.Code == Se.Settings.Tools.AudioToText.WhisperLanguageCode);
-            if (language != null)
-            {
-                SelectedLanguage = language;
-            }
+            language = Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => p.Code == savedCode);
         }
-        else
+
+        if (language == null && SelectedLanguage != null)
         {
-            SelectedLanguage = Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => p.Name == "English");
+            language = Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => string.Equals(p.Name, SelectedLanguage.Name, StringComparison.OrdinalIgnoreCase));
         }
+
+        SelectedLanguage = language ?? PickDefaultLanguage(Languages);
 
         Models.Clear();
         foreach (var model in engine.Models)
@@ -2568,11 +2571,19 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
 
         var isPurfview = engine.Name == WhisperEnginePurfviewFasterWhisperXxl.StaticName;
 
-        IsTranslateVisible = !(engine is ChatLlmCppEngine or Qwen3AsrCppEngine or CrispAsrParakeet or CrispAsrCohere or CrispAsrQwen3 or CrispAsrFireRed or CrispAsrGlm or CrispAsrGranite);
+        IsTranslateVisible = !(engine is ChatLlmCppEngine or Qwen3AsrCppEngine or CrispAsrParakeet or CrispAsrCohere or CrispAsrQwen3 or CrispAsrFireRed or CrispAsrGlm or CrispAsrGranite or CrispAsrOmni);
 
         Parameters = engine.CommandLineParameter;
 
         SaveSettings();
+    }
+
+    private static WhisperLanguage? PickDefaultLanguage(IEnumerable<WhisperLanguage> languages)
+    {
+        var list = languages as IList<WhisperLanguage> ?? languages.ToList();
+        return Enumerable.FirstOrDefault<WhisperLanguage>(list, p => string.Equals(p.Name, "English", StringComparison.OrdinalIgnoreCase))
+            ?? Enumerable.FirstOrDefault<WhisperLanguage>(list, p => p.Code == "en" || p.Code == "eng_Latn")
+            ?? Enumerable.FirstOrDefault<WhisperLanguage>(list);
     }
 
     internal void Initialize(string? videoFileName, int audioTrackNumber)
