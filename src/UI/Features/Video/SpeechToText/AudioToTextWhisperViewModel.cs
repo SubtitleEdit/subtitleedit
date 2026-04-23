@@ -1688,6 +1688,47 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             }
         }
 
+        if (engine is CrispAsrQwen3 crispQwen3Engine)
+        {
+            var modelAligner = crispQwen3Engine.ForcedAlignerModel;
+            var displayModelAligner = new WhisperModelDisplay
+            {
+                Model = modelAligner,
+                Display = modelAligner.Name + " (forced aligner for timestamps)",
+                Engine = engine,
+            };
+            if (!engine.IsModelInstalled(modelAligner))
+            {
+                var answer = await MessageBox.Show(
+                                Window!,
+                                $"Download {modelAligner}?",
+                                $"'Crisp ASR Qwen3' requires a forced aligner to create timestamps.\nDownload and use {modelAligner.Name}?",
+                                MessageBoxButtons.YesNoCancel,
+                                MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return;
+                }
+
+                var models = new ObservableCollection<WhisperModelDisplay>
+                {
+                    displayModelAligner
+                };
+                var vm = await _windowService.ShowDialogAsync<DownloadWhisperModelsWindow, DownloadWhisperModelsViewModel>(
+                    Window!, viewModel =>
+                    {
+                        viewModel.SetModels(models, SelectedEngine, displayModelAligner);
+                        viewModel.StartDownload();
+                    });
+
+                if (!vm.OkPressed)
+                {
+                    return;
+                }
+            }
+        }
+
         if (language.Code != "en" && IsModelEnglishOnly(model.Model))
         {
             var answer = await MessageBox.Show(
@@ -2006,9 +2047,18 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             var langPart = crispAsrEngine.IncludeLanguage
                 ? $"-l {SelectedLanguage?.Code ?? crispAsrEngine.DefaultLanguage} "
                 : string.Empty;
+            var alignerPart = string.Empty;
+            if (crispAsrEngine is CrispAsrQwen3 crispQwen3)
+            {
+                var alignerPath = crispQwen3.GetModelForCmdLine(crispQwen3.ForcedAlignerModel.Name);
+                if (File.Exists(alignerPath))
+                {
+                    alignerPart = $" -am \"{alignerPath}\"";
+                }
+            }
             var crispParams = string.IsNullOrWhiteSpace(crispArgs)
-                ? $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\" -f \"{waveFileName}\" --output-srt"
-                : $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\" -f \"{waveFileName}\" --output-srt {crispArgs}";
+                ? $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart} -f \"{waveFileName}\" --output-srt"
+                : $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart} -f \"{waveFileName}\" --output-srt {crispArgs}";
 
             SeLogger.WhisperInfo($"{exe} {crispParams}");
 

@@ -11,7 +11,7 @@ public class CrispAsrQwen3 : CrispAsrEngineBase
     public static string StaticName => "Crisp ASR Qwen3";
     public override string Name => StaticName;
     public override string Choice => WhisperChoice.CrispAsrQwen3;
-    public override string BackendName => "cohere";
+    public override string BackendName => "qwen3";
     public override string DefaultLanguage => "en";
     public override bool IncludeLanguage => true;
     public override string Url => "https://github.com/CrispStrobe/CrispASR";
@@ -57,7 +57,7 @@ public class CrispAsrQwen3 : CrispAsrEngineBase
             new WhisperModel
             {
                 Name = "qwen3-asr-1.7b-q4_k.gguf",
-                Size = "2.3 GB",
+                Size = "1.33 GB",
                 Urls =
                 [
                     "https://huggingface.co/cstr/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-q4_k.gguf",
@@ -67,7 +67,7 @@ public class CrispAsrQwen3 : CrispAsrEngineBase
             new WhisperModel
             {
                 Name = "qwen3-asr-1.7b-q8_0.gguf",
-                Size = "3.5 GB",
+                Size = "2.51 GB",
                 Urls =
                 [
                     "https://huggingface.co/cstr/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-q8_0.gguf",
@@ -76,15 +76,22 @@ public class CrispAsrQwen3 : CrispAsrEngineBase
             },
             new WhisperModel
             {
-                Name = "qwen3-asr-1.7b-q8_0.gguf",
-                Size = "5.7 GB",
+                Name = "qwen3-asr-1.7b-f16.gguf",
+                Size = "4.7 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-q8_0.gguf",
+                    "https://huggingface.co/cstr/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-f16.gguf",
                     "https://huggingface.co/cstr/qwen3-forced-aligner-0.6b-GGUF/resolve/main/qwen3-forced-aligner-0.6b-q8_0.gguf"
                 ],
             },
        };
+
+    public WhisperModel ForcedAlignerModel => new WhisperModel
+    {
+        Name = "qwen3-forced-aligner-0.6b-q8_0.gguf",
+        Size = "986 MB",
+        Urls = ["https://huggingface.co/cstr/qwen3-forced-aligner-0.6b-GGUF/resolve/main/qwen3-forced-aligner-0.6b-q8_0.gguf"],
+    };
 
     public override string Extension => string.Empty;
     public override string UnpackSkipFolder => string.Empty;

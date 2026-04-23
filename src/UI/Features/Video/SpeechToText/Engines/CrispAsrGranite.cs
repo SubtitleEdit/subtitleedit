@@ -32,29 +32,38 @@ public class CrispAsrGranite : CrispAsrEngineBase
        {
             new WhisperModel
             {
-                Name = "granite-embedding-278m-multilingual-q4_k.gguf",
-                Size = "259 MB",
+                Name = "granite-speech-4.0-1b-q4_k.gguf",
+                Size = "2.94 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/granite-embedding-278m-multilingual-GGUF/resolve/main/granite-embedding-278m-multilingual-q4_k.gguf"
+                    "https://huggingface.co/cstr/granite-speech-4.0-1b-GGUF/resolve/main/granite-speech-4.0-1b-q4_k.gguf"
                 ],
             },
             new WhisperModel
             {
-                Name = "granite-embedding-278m-multilingual-q8_0.gguf",
-                Size = "301 MB",
+                Name = "granite-speech-4.0-1b-q5_0.gguf",
+                Size = "3.17 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/granite-embedding-278m-multilingual-GGUF/resolve/main/granite-embedding-278m-multilingual-q8_0.gguf"
+                    "https://huggingface.co/cstr/granite-speech-4.0-1b-GGUF/resolve/main/granite-speech-4.0-1b-q5_0.gguf"
                 ],
             },
             new WhisperModel
             {
-                Name = "granite-embedding-278m-multilingual.gguf",
-                Size = "1.1 GB",
+                Name = "granite-speech-4.0-1b-q8_0.gguf",
+                Size = "3.86 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/granite-embedding-278m-multilingual-GGUF/resolve/main/granite-embedding-278m-multilingual.gguf"
+                    "https://huggingface.co/cstr/granite-speech-4.0-1b-GGUF/resolve/main/granite-speech-4.0-1b-q8_0.gguf"
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "granite-speech-4.0-1b-f16.gguf",
+                Size = "5.58 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/granite-speech-4.0-1b-GGUF/resolve/main/granite-speech-4.0-1b-f16.gguf"
                 ],
             },
        };
