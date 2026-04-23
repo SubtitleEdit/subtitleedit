@@ -1,7 +1,7 @@
 ﻿{
   "title": "Subtitle Edit",
   "version": null,
-  "translatedBy": "v19.04.2026 by Adam Malich",
+  "translatedBy": "v23.04.2026 by Adam Malich",
   "cultureName": "pl-PL",
   "general": {
     "abort": "Przerwij",
@@ -1628,7 +1628,8 @@
     "addXToUserDictionary": "Dodaj '{0}' do słownika użytkownika",
     "ignoreAllX": "Ignoruj wszystko '{0}'",
     "pickSpellCheckDictionaryDotDotDot": "Wybierz słownik sprawdzania pisowni...",
-    "chooseSpellCheckDictionary": "Wybierz słownik sprawdzania pisowni"
+    "chooseSpellCheckDictionary": "Wybierz słownik sprawdzania pisowni",
+    "pickLiveSpellCheckDictionary": "Wybierz słownik z funkcją sprawdzania pisowni w czasie rzeczywistym"
   },
   "video": {
     "burnIn": {
@@ -1889,7 +1890,14 @@
     "delayInSecondsBetweenRequests": "Opóźnienie w sek. między żądaniami",
     "maxBytesPerRequest": "Maks. liczba bajtów na żądanie",
     "promptText": "Tekst podpowiedzi",
-    "translateEachLineSeparately": "Przetłumacz każdą linię osobno"
+    "translateEachLineSeparately": "Przetłumacz każdą linię osobno",
+    "translationError": "Błąd tłumaczenia",
+    "translationFailedMessage": "{0} tłumaczenie nie powiodło się.",
+    "translationFailedHint": "Może to wynikać z problemu z siecią, nieprawidłowego klucza API lub limitów korzystania z API.\nSprawdź połączenie i ustawienia API, a następnie spróbuj ponownie.",
+    "showTechnicalDetails": "Pokaż szczegóły techniczne",
+    "hideTechnicalDetails": "Ukryj szczegóły techniczne",
+    "technicalDetails": "Szczegóły techniczne",
+    "pleaseSelectATargetLanguage": "Proszę wybrać język docelowy"
   },
   "options": {
     "settings": {
