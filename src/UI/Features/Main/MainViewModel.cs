@@ -6105,6 +6105,15 @@ public partial class MainViewModel :
                         AudioVisualizer?.SetDisplayMode(WaveformDisplayMode.WaveformAndSpectrogram);
                     }
                 }
+                else if (_oldGenerateSpectrogram && !Se.Settings.Waveform.GenerateSpectrogram)
+                {
+                    Se.Settings.Waveform.LastDisplayMode = WaveformDisplayMode.OnlyWaveform.ToString();
+                    AudioVisualizer?.SetSpectrogram(null);
+                    AudioVisualizer?.SetDisplayMode(WaveformDisplayMode.OnlyWaveform);
+                }
+
+                _oldGenerateSpectrogram = Se.Settings.Waveform.GenerateSpectrogram;
+                _oldSpectrogramStyle = Se.Settings.Waveform.SpectrogramStyle;
             }
         }
 
