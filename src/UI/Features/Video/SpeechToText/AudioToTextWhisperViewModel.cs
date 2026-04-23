@@ -2058,9 +2058,26 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
                     alignerPart = $" -am \"{alignerPath}\"";
                 }
             }
+
+            var vadPart = string.Empty;
+            if (crispAsrEngine is CrispAsrCohere
+                && !Regex.IsMatch(crispArgs ?? string.Empty, @"(^|\s)(--vad|-vm|--vad-model)\b"))
+            {
+                var crispFolder = crispAsrEngine.GetAndCreateWhisperFolder();
+                var vadFiles = Directory.Exists(crispFolder)
+                    ? Directory.GetFiles(crispFolder, "ggml-silero-v*.bin", SearchOption.TopDirectoryOnly)
+                    : Array.Empty<string>();
+                var vadPath = vadFiles.OrderByDescending(p => p).FirstOrDefault()
+                              ?? Path.Combine(crispFolder, "ggml-silero-vad.bin");
+                if (File.Exists(vadPath))
+                {
+                    vadPart = $" --vad --vad-model \"{vadPath}\"";
+                }
+            }
+
             var crispParams = string.IsNullOrWhiteSpace(crispArgs)
-                ? $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart} -f \"{waveFileName}\" --output-srt"
-                : $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart} -f \"{waveFileName}\" --output-srt {crispArgs}";
+                ? $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt"
+                : $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt {crispArgs}";
 
             SeLogger.WhisperInfo($"{exe} {crispParams}");
 
@@ -2527,9 +2544,9 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         var engine = SelectedEngine;
 
         Languages.Clear();
-        foreach (var language in engine.Languages)
+        foreach (var l in engine.Languages)
         {
-            Languages.Add(language);
+            Languages.Add(l);
         }
 
         var savedCode = Se.Settings.Tools.AudioToText.WhisperLanguageCode;
@@ -2539,9 +2556,9 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             language = Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => p.Code == savedCode);
         }
 
-        if (language == null && SelectedLanguage != null)
+        if (language == null && SelectedLanguage is { } prev)
         {
-            language = Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => string.Equals(p.Name, SelectedLanguage.Name, StringComparison.OrdinalIgnoreCase));
+            language = Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => string.Equals(p.Name, prev.Name, StringComparison.OrdinalIgnoreCase));
         }
 
         SelectedLanguage = language ?? PickDefaultLanguage(Languages);

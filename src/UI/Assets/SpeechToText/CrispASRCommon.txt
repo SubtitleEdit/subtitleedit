@@ -1,4 +1,4 @@
-Options:
+options:
   -t N,      --threads N            [4      ] number of threads to use during computation
   -p N,      --processors N         [1      ] number of processors to use during computation
   -ot N,     --offset-t N           [0      ] time offset in milliseconds
@@ -85,6 +85,7 @@ crispasr backend options (select a non-whisper model):
   --server                          [false  ] run as HTTP server (persistent model, POST /inference)
   --host HOST                       [127.0.0.1] server bind address
   --port PORT                       [8080   ] server port
+  --api-keys K1,K2                  [       ] comma-separated server API keys
   --stream-step N                   [3000   ] chunk size in ms for streaming
   --stream-length N                 [10000  ] context window in ms for streaming
   --stream-keep N                   [200    ] overlap to keep between chunks in ms
@@ -101,5 +102,3 @@ Voice Activity Detection (VAD) options:
   -vmsd N,   --vad-max-speech-duration-s   N [FLT_MAX] VAD max speech duration (auto-split longer)
   -vp N,     --vad-speech-pad-ms           N [30     ] VAD speech padding (extend segments)
   -vo N,     --vad-samples-overlap         N [0.10   ] VAD samples overlap (seconds between segments)
-
-Read more at: https://github.com/CrispStrobe/CrispASR

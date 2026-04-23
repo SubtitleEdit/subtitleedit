@@ -163,7 +163,7 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                     var folder = Engine.GetAndCreateWhisperFolder();
                     Unpack(folder, Engine.UnpackSkipFolder);
 
-                    if (Engine is not (ChatLlmCppEngine or Qwen3AsrCppEngine or CrispAsrParakeet or CrispAsrCanary))
+                    if (Engine is not (ChatLlmCppEngine or Qwen3AsrCppEngine))
                     {
                         DownloadAndUnpackSileroVad(folder);
                     }
