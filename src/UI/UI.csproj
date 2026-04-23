@@ -131,6 +131,9 @@
 		<AvaloniaResource Include="Assets\NetflixGlyphs.zip" />
 		<AvaloniaResource Include="Assets\SevenZip\7zaWindows64.zip" />
 		<AvaloniaResource Include="Assets\SevenZip\7zrLinux64.zip" />
+		<AvaloniaResource Include="Assets\SpeechToText\CrispASRCommon.txt">
+		  <CopyToOutputDirectory></CopyToOutputDirectory>
+		</AvaloniaResource>
 		<AvaloniaResource Include="Assets\SpeechToText\CrispASRCanary.txt">
 		  <CopyToOutputDirectory></CopyToOutputDirectory>
 		</AvaloniaResource>

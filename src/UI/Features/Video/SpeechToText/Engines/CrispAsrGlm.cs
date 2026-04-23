@@ -1,25 +1,22 @@
-﻿using Avalonia.Platform;
-using Nikse.SubtitleEdit.Core.AudioToText;
+﻿using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Logic.Config;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
-public class CrispAsrGlm : ICrispAsrEngine
+public class CrispAsrGlm : CrispAsrEngineBase
 {
     public static string StaticName => "Crisp ASR GLM";
-    public string Name => StaticName;
-    public string Choice => WhisperChoice.CrispAsrGlm;
-    public string Url => "https://github.com/CrispStrobe/CrispASR";
-    public string BackendName => "glm";
-    public string DefaultLanguage => "zh";
-    public bool IncludeLanguage => true;
+    public override string Name => StaticName;
+    public override string Choice => WhisperChoice.CrispAsrGlm;
+    public override string Url => "https://github.com/CrispStrobe/CrispASR";
+    public override string BackendName => "glm";
+    public override string DefaultLanguage => "zh";
+    public override bool IncludeLanguage => true;
 
-    public List<WhisperLanguage> Languages =>
+    public override List<WhisperLanguage> Languages =>
         new()
         {
             new WhisperLanguage("zh", "chinese"),
@@ -42,7 +39,7 @@ public class CrispAsrGlm : ICrispAsrEngine
         };
 
 
-    public List<WhisperModel> Models =>
+    public override List<WhisperModel> Models =>
        new()
        {
             new WhisperModel
@@ -74,10 +71,10 @@ public class CrispAsrGlm : ICrispAsrEngine
             },
        };
 
-    public string Extension => string.Empty;
-    public string UnpackSkipFolder => string.Empty;
+    public override string Extension => string.Empty;
+    public override string UnpackSkipFolder => string.Empty;
 
-    public bool IsEngineInstalled()
+    public override bool IsEngineInstalled()
     {
         var executableFile = GetExecutable();
         return File.Exists(executableFile);
@@ -88,7 +85,7 @@ public class CrispAsrGlm : ICrispAsrEngine
         return Name;
     }
 
-    public string GetAndCreateWhisperFolder()
+    public override string GetAndCreateWhisperFolder()
     {
         var baseFolder = Se.WhisperFolder;
         if (!Directory.Exists(baseFolder))
@@ -105,7 +102,7 @@ public class CrispAsrGlm : ICrispAsrEngine
         return folder;
     }
 
-    public string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel)
+    public override string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel)
     {
         var folder = GetAndCreateWhisperFolder();
         var modelsFolder = Path.Combine(folder, "models");
@@ -117,13 +114,13 @@ public class CrispAsrGlm : ICrispAsrEngine
         return modelsFolder;
     }
 
-    public string GetExecutable()
+    public override string GetExecutable()
     {
         string fullPath = Path.Combine(GetAndCreateWhisperFolder(), GetExecutableFileName());
         return fullPath;
     }
 
-    public bool IsModelInstalled(WhisperModel model)
+    public override bool IsModelInstalled(WhisperModel model)
     {
         var modelFile = GetModelForCmdLine(model.Name);
         if (!File.Exists(modelFile))
@@ -134,25 +131,14 @@ public class CrispAsrGlm : ICrispAsrEngine
         return new FileInfo(modelFile).Length > 10_000_000;
     }
 
-    public string GetModelForCmdLine(string modelName)
+    public override string GetModelForCmdLine(string modelName)
     {
         var modelFileName = Path.Combine(GetAndCreateWhisperModelFolder(null), modelName);
         return modelFileName;
     }
 
-    public async Task<string> GetHelpText()
-    {
-        var assetName = $"{StaticName.Replace(" ", string.Empty)}.txt";
-        var uri = new Uri($"avares://SubtitleEdit/Assets/SpeechToText/{assetName}");
 
-        await using var stream = AssetLoader.Open(uri);
-        using var reader = new StreamReader(stream);
-
-        var contents = await reader.ReadToEndAsync();
-        return contents;
-    }
-
-    public string GetWhisperModelDownloadFileName(WhisperModel whisperModel, string url)
+    public override string GetWhisperModelDownloadFileName(WhisperModel whisperModel, string url)
     {
         var folder = GetAndCreateWhisperModelFolder(whisperModel);
         var fileNameOnly = Path.GetFileName(url);
@@ -170,12 +156,12 @@ public class CrispAsrGlm : ICrispAsrEngine
         return "crispasr";
     }
 
-    public bool CanBeDownloaded()
+    public override bool CanBeDownloaded()
     {
         return true;
     }
 
-    public string CommandLineParameter
+    public override string CommandLineParameter
     {
         get => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrGlm;
         set => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrGlm = value;
