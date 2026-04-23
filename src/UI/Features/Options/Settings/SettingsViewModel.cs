@@ -1525,11 +1525,26 @@ public partial class SettingsViewModel : ObservableObject
         if (!string.IsNullOrEmpty(LibMpvPath) && File.Exists(LibMpvPath))
         {
             LibMpvStatus = Se.Language.General.Installed;
+            return;
         }
-        else
+
+        // Stale or empty path - fall back to checking known local locations
+        var localCandidates = new[]
         {
-            LibMpvStatus = Se.Language.General.NotInstalled;
+            DownloadLibMpvViewModel.GetLibMpvFileName(),
+            Path.Combine(AppContext.BaseDirectory, "libmpv-2.dll"),
+        };
+        foreach (var candidate in localCandidates)
+        {
+            if (File.Exists(candidate))
+            {
+                LibMpvPath = candidate;
+                LibMpvStatus = Se.Language.General.Installed;
+                return;
+            }
         }
+
+        LibMpvStatus = Se.Language.General.NotInstalled;
     }
 
     private void SetLibVlcStatus()

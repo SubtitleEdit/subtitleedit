@@ -678,7 +678,7 @@ public partial class MainViewModel :
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             var newFileName = DownloadLibMpvViewModel.GetFallbackLibMpvFileName(false);
-            if (string.IsNullOrEmpty(Se.Settings.General.LibMpvPath) || File.Exists(newFileName))
+            if (string.IsNullOrEmpty(Se.Settings.General.LibMpvPath) || !File.Exists(Se.Settings.General.LibMpvPath) || File.Exists(newFileName))
             {
                 var libMpvFileName = DownloadLibMpvViewModel.GetLibMpvFileName();
                 if (File.Exists(newFileName))
