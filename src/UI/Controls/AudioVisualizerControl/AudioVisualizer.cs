@@ -2286,7 +2286,7 @@ public class AudioVisualizer : Control
         return -1;
     }
 
-    internal void SetSpectrogram(SpectrogramData2 spectrogram)
+    internal void SetSpectrogram(SpectrogramData2? spectrogram)
     {
         if (_spectrogram != null)
         {
