@@ -668,7 +668,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         var styles = GetStyles(match.Value);
                         var hasItalic = italicStyles.Any(st => styles.Contains(st));
                         var hasBold = boldStyles.Any(st => styles.Contains(st));
-                        var colorTag = FindBestColorTagOrDefault(styles.ToList());
+                        var colorTag = FindBestColorTagOrDefault(styles.ToList(), cueStyles);
                         if (hasItalic)
                         {
                             text = text.Insert(match.Index, "<i>");
@@ -784,14 +784,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var end = header.IndexOf('}', match.Index + match.Length);
                 if (end > 0)
                 {
-                    var content = header.Substring(match.Index + match.Length, end - (match.Index + match.Length));
+                    var content = header.Substring(match.Index + match.Length, end - (match.Index + match.Length))
+                        .Trim()
+                        .Replace(" ", string.Empty);
+
+                    // Ensure the last property is terminated with ';' so contains-matches like
+                    // "font-style:italic;" / "font-weight:bold;" hit when the source CSS omits
+                    // the trailing ';' (common in Apple TV WebVTT).
+                    if (content.Length > 0 && !content.EndsWith(';'))
+                    {
+                        content += ";";
+                    }
 
                     if (dic.ContainsKey(cueName))
                     {
                         dic.Remove(cueName);
                     }
 
-                    dic.Add(cueName, content.Trim().Replace(" ", string.Empty));
+                    dic.Add(cueName, content);
                 }
             }
 
@@ -803,7 +813,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return cTag.Replace("<c.", string.Empty).TrimEnd('>').Split('.');
         }
 
-        private static string FindBestColorTagOrDefault(List<string> tags)
+        private static string FindBestColorTagOrDefault(List<string> tags, Dictionary<string, string> cueStyles)
         {
             tags.Reverse();
             foreach (var s in tags)
@@ -818,6 +828,54 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     return "#" + l.Remove(0, 5);
                 }
+
+                // Fallback: read `color:` from the CSS body of the matching STYLE block,
+                // e.g. `::cue(.styledotAB9216) { color:#AB9216;font-weight:bold }`.
+                if (cueStyles != null && cueStyles.TryGetValue(s, out var css))
+                {
+                    var color = ExtractColorFromCueCss(css);
+                    if (color != null)
+                    {
+                        return color;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private static string ExtractColorFromCueCss(string css)
+        {
+            if (string.IsNullOrEmpty(css))
+            {
+                return null;
+            }
+
+            const string colorKey = "color:";
+            var idx = 0;
+            while ((idx = css.IndexOf(colorKey, idx, StringComparison.OrdinalIgnoreCase)) >= 0)
+            {
+                // Skip `background-color:` etc.
+                if (idx > 0 && (char.IsLetter(css[idx - 1]) || css[idx - 1] == '-'))
+                {
+                    idx += colorKey.Length;
+                    continue;
+                }
+
+                var start = idx + colorKey.Length;
+                var end = css.IndexOf(';', start);
+                if (end < 0)
+                {
+                    end = css.Length;
+                }
+
+                var value = css.Substring(start, end - start).Trim();
+                if (value.Length > 0)
+                {
+                    return value;
+                }
+
+                idx = end;
             }
 
             return null;
