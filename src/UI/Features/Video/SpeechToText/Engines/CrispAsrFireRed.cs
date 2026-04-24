@@ -11,7 +11,7 @@ public class CrispAsrFireRed : CrispAsrEngineBase
     public static string StaticName => "Crisp ASR Fire Red";
     public override string Name => StaticName;
     public override string Choice => WhisperChoice.CrispAsrFireRed;
-    public override string BackendName => "firered";
+    public override string BackendName => "firered-asr";
     public override string DefaultLanguage => "zh";
     public override bool IncludeLanguage => true;
     public override string Url => "https://github.com/CrispStrobe/CrispASR";

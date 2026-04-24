@@ -166,7 +166,18 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                     }
 
                     var folder = Engine.GetAndCreateWhisperFolder();
-                    Unpack(folder, Engine.UnpackSkipFolder);
+                    var skipFolder = Engine is ICrispAsrEngine
+                        ? RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                            ? "crispasr-linux-x86_64"
+                            : CrispAsrWindowsVariant switch
+                            {
+                                "cuda"   => "crispasr-windows-x86_64-cuda",
+                                "cpu"    => "crispasr-windows-x86_64-cpu",
+                                "vulkan" => "crispasr-windows-x86_64-vulkan",
+                                _        => Engine.UnpackSkipFolder,
+                            }
+                        : Engine.UnpackSkipFolder;
+                    Unpack(folder, skipFolder);
 
                     if (Engine is not (ChatLlmCppEngine or Qwen3AsrCppEngine))
                     {

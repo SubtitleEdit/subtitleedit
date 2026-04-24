@@ -12,7 +12,7 @@ public class CrispAsrGlm : CrispAsrEngineBase
     public override string Name => StaticName;
     public override string Choice => WhisperChoice.CrispAsrGlm;
     public override string Url => "https://github.com/CrispStrobe/CrispASR";
-    public override string BackendName => "glm";
+    public override string BackendName => "glm-asr";
     public override string DefaultLanguage => "zh";
     public override bool IncludeLanguage => true;
 
