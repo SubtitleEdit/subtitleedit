@@ -16,11 +16,19 @@ public class UserDictionaryNormalizationTests : IDisposable
     private readonly string _nfcWord = HangulWord.Normalize(NormalizationForm.FormC);
     private readonly string _nfdWord = HangulWord.Normalize(NormalizationForm.FormD);
 
+    private readonly string _originalDictionariesFolder;
+    private readonly string _tempDictionariesFolder;
+
     public UserDictionaryNormalizationTests()
     {
-        Directory.CreateDirectory(Se.DictionariesFolder);
-        UserWordsHelper.RemoveWord(_nfcWord, LanguageName);
-        UserWordsHelper.RemoveWord(_nfdWord, LanguageName);
+        // Redirect the dictionaries folder to an isolated temp dir so the real
+        // user dictionary is not touched and pre-existing words don't leak in.
+        _originalDictionariesFolder = Se.DictionariesFolder;
+        _tempDictionariesFolder = Path.Combine(
+            Path.GetTempPath(),
+            "SeUserDictTest_" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(_tempDictionariesFolder);
+        Se.DictionariesFolder = _tempDictionariesFolder;
     }
 
     [Fact]
@@ -42,8 +50,15 @@ public class UserDictionaryNormalizationTests : IDisposable
 
     public void Dispose()
     {
-        UserWordsHelper.RemoveWord(_nfcWord, LanguageName);
-        UserWordsHelper.RemoveWord(_nfdWord, LanguageName);
+        Se.DictionariesFolder = _originalDictionariesFolder;
+        try
+        {
+            Directory.Delete(_tempDictionariesFolder, recursive: true);
+        }
+        catch
+        {
+            // Best-effort cleanup; leaving a temp dir behind is harmless.
+        }
     }
 
     private sealed class AlwaysMissSpellChecker : IDoSpell

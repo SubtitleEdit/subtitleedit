@@ -25,4 +25,10 @@
     <ProjectReference Include="..\..\src\seconv\SeConv.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\xunit.runner.json" Link="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

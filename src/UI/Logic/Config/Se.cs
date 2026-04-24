@@ -90,7 +90,12 @@ public class Se
         NetflixQualityCheck.NetflixCheckShotChange.ShotChangeDirectory = Se.ShotChangesFolder;
     }
 
-    public static string DictionariesFolder => Path.Combine(DataFolder, "Dictionaries");
+    private static string? _dictionariesFolder;
+    public static string DictionariesFolder
+    {
+        get => _dictionariesFolder ?? Path.Combine(DataFolder, "Dictionaries");
+        set => _dictionariesFolder = value;
+    }
     public static string ThemesFolder => Path.Combine(DataFolder, "Themes");
     public static string AutoBackupFolder => Path.Combine(DataFolder, "AutoBackup");
     public static string TtsFolder => Path.Combine(DataFolder, "TTS");
