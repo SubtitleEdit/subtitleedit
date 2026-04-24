@@ -1305,6 +1305,41 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
                model.Name == "distil-large-v3";
     }
 
+    private static bool IsVulkanInstalled()
+    {
+        const string vulkanDll = "vulkan-1.dll";
+
+        var systemRoot = Environment.GetFolderPath(Environment.SpecialFolder.System);
+        if (File.Exists(Path.Combine(systemRoot, vulkanDll)))
+        {
+            return true;
+        }
+
+        var sysWow64 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "SysWOW64");
+        if (File.Exists(Path.Combine(sysWow64, vulkanDll)))
+        {
+            return true;
+        }
+
+        var pathVariable = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+        foreach (var folder in pathVariable.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries))
+        {
+            try
+            {
+                if (File.Exists(Path.Combine(folder, vulkanDll)))
+                {
+                    return true;
+                }
+            }
+            catch
+            {
+                // ignore invalid/inaccessible path entries
+            }
+        }
+
+        return false;
+    }
+
 
     [RelayCommand]
     private void ShowWebLink()
@@ -1559,28 +1594,89 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
 
         if (!engine.IsEngineInstalled())
         {
-            var answer = await MessageBox.Show(
-                Window!,
-                $"Download {engine.Name}?",
-                $"Download and use {engine.Name}?",
-                MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Question);
-
-            if (answer != MessageBoxResult.Yes)
+            if (engine is ICrispAsrEngine && Configuration.IsRunningOnWindows)
             {
-                return;
-            }
+                var answer = await MessageBox.Show(
+                    Window!,
+                    $"Download {engine.Name}?",
+                    $"{Environment.NewLine}\"{engine.Name}\" requires downloading the CrispASR engine.{Environment.NewLine}{Environment.NewLine}Select a version to download:",
+                    MessageBoxButtons.Cancel,
+                    MessageBoxIcon.Question,
+                    "CPU",
+                    "Vulkan",
+                    "CUDA");
 
-            var vm = await _windowService.ShowDialogAsync<DownloadWhisperEngineWindow, DownloadWhisperEngineViewModel>(
-                Window!, viewModel =>
+                if (answer == MessageBoxResult.None || answer == MessageBoxResult.Cancel)
                 {
-                    viewModel.Engine = engine;
-                    viewModel.StartDownload();
-                });
+                    return;
+                }
 
-            if (!vm.OkPressed)
+                var crispVariant = answer switch
+                {
+                    MessageBoxResult.Custom1 => "cpu",
+                    MessageBoxResult.Custom3 => "cuda",
+                    _ => "vulkan",
+                };
+
+                if (crispVariant == "vulkan" && !IsVulkanInstalled())
+                {
+                    var vulkanAnswer = await MessageBox.Show(
+                        Window!,
+                        "Vulkan SDK may be required",
+                        $"The Vulkan version requires the Vulkan SDK to be installed.{Environment.NewLine}{Environment.NewLine}You can download it from:{Environment.NewLine}https://vulkan.lunarg.com/sdk/home{Environment.NewLine}{Environment.NewLine}Continue with Vulkan download?",
+                        MessageBoxButtons.YesNoCancel,
+                        MessageBoxIcon.Question);
+
+                    if (vulkanAnswer == MessageBoxResult.No)
+                    {
+                        UiUtil.OpenUrl("https://vulkan.lunarg.com/sdk/home");
+                        return;
+                    }
+
+                    if (vulkanAnswer != MessageBoxResult.Yes)
+                    {
+                        return;
+                    }
+                }
+
+                var crispVm = await _windowService.ShowDialogAsync<DownloadWhisperEngineWindow, DownloadWhisperEngineViewModel>(
+                    Window!, viewModel =>
+                    {
+                        viewModel.Engine = engine;
+                        viewModel.CrispAsrWindowsVariant = crispVariant;
+                        viewModel.StartDownload();
+                    });
+
+                if (!crispVm.OkPressed)
+                {
+                    return;
+                }
+            }
+            else
             {
-                return;
+                var answer = await MessageBox.Show(
+                    Window!,
+                    $"Download {engine.Name}?",
+                    $"Download and use {engine.Name}?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return;
+                }
+
+                var vm = await _windowService.ShowDialogAsync<DownloadWhisperEngineWindow, DownloadWhisperEngineViewModel>(
+                    Window!, viewModel =>
+                    {
+                        viewModel.Engine = engine;
+                        viewModel.StartDownload();
+                    });
+
+                if (!vm.OkPressed)
+                {
+                    return;
+                }
             }
         }
 

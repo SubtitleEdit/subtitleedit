@@ -243,7 +243,7 @@ public class MessageBox : Window
         string? custom2 = null,
         string? custom3 = null)
     {
-        var msgBox = new MessageBox(title, message, buttons, icon, custom1, custom2);
+        var msgBox = new MessageBox(title, message, buttons, icon, custom1, custom2, custom3);
         return await msgBox.ShowDialog<MessageBoxResult>(owner);
     }
 

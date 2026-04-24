@@ -10,13 +10,18 @@ namespace Nikse.SubtitleEdit.Logic.Download;
 public interface ICrispAsrDownloadService
 {
     Task DownloadEngine(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
+    Task DownloadEngineWindowsCuda(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
+    Task DownloadEngineWindowsVulkan(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
+    Task DownloadEngineWindowsCpu(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
 }
 
 public class CrispAsrDownloadService : ICrispAsrDownloadService
 {
     private readonly HttpClient _httpClient;
 
-    private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/crisp-asr-2026-04/crisp-asr-win64-vulkan.zip";
+    private const string WindowsCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.4.20/crispasr-windows-x86_64-cuda.zip";
+    private const string WindowsVulkanUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.4.20/crispasr-windows-x86_64-vulkan.zip";
+    private const string WindowsCpuUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.4.20/crispasr-windows-x86_64-cpu-legacy.zip";
     private const string MacUrl = "https://github.com/SubtitleEdit/support-files/releases/download/crisp-asr-2026-04/crisp-asr-mac.zip";
     private const string LinuxUrl = "https://github.com/SubtitleEdit/support-files/releases/download/crisp-asr-2026-04/crisp-asr-linux64.zip";
 
@@ -30,11 +35,26 @@ public class CrispAsrDownloadService : ICrispAsrDownloadService
         await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(), stream, progress, cancellationToken);
     }
 
+    public async Task DownloadEngineWindowsCuda(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
+    {
+        await DownloadHelper.DownloadFileAsync(_httpClient, WindowsCudaUrl, stream, progress, cancellationToken);
+    }
+
+    public async Task DownloadEngineWindowsVulkan(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
+    {
+        await DownloadHelper.DownloadFileAsync(_httpClient, WindowsVulkanUrl, stream, progress, cancellationToken);
+    }
+
+    public async Task DownloadEngineWindowsCpu(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
+    {
+        await DownloadHelper.DownloadFileAsync(_httpClient, WindowsCpuUrl, stream, progress, cancellationToken);
+    }
+
     private static string GetUrl()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            return WindowsUrl;
+            return WindowsVulkanUrl;
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))

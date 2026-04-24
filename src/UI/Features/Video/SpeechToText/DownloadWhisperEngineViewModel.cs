@@ -34,6 +34,11 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
     public bool OkPressed { get; internal set; }
     public ISpeechToTextEngine? Engine { get; internal set; }
 
+    /// <summary>
+    /// Windows-only CrispASR download variant: "cpu", "vulkan", or "cuda". Defaults to "vulkan".
+    /// </summary>
+    public string CrispAsrWindowsVariant { get; set; } = "vulkan";
+
     private readonly IWhisperDownloadService _whisperDownloadService;
     private readonly IChatLlmDownloadService _chatLlmDownloadService;
     private readonly IQwen3AsrCppDownloadService _qwen3AsrCppDownloadService;
@@ -333,9 +338,21 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
             var dir = Engine.GetAndCreateWhisperFolder();
             _downloadTask = _qwen3AsrCppDownloadService.DownloadEngine(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
         }
-        else if (Engine is CrispAsrParakeet or CrispAsrCanary)
+        else if (Engine is ICrispAsrEngine)
         {
-            _downloadTask = _crispAsrDownloadService.DownloadEngine(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                _downloadTask = CrispAsrWindowsVariant switch
+                {
+                    "cuda" => _crispAsrDownloadService.DownloadEngineWindowsCuda(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
+                    "cpu"  => _crispAsrDownloadService.DownloadEngineWindowsCpu(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
+                    _      => _crispAsrDownloadService.DownloadEngineWindowsVulkan(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
+                };
+            }
+            else
+            {
+                _downloadTask = _crispAsrDownloadService.DownloadEngine(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
+            }
         }
     }
 
