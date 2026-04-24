@@ -167,6 +167,7 @@ public class ImportImagesWindow : Window
         var flyout = new MenuFlyout();
         flyout.Opening += vm.ImagesContextMenuOpening;
         dropHost.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(dropHost);
 
         var menuItemDelete = new MenuItem
         {

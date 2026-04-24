@@ -145,6 +145,7 @@ public class FixNamesWindow : Window
         flyout.Items.Add(new MenuItem { Header = Se.Language.General.SelectAll, Command = vm.NamesSelectAllCommand });
         flyout.Items.Add(new MenuItem { Header = Se.Language.General.InvertSelection, Command = vm.NamesInvertSelectionCommand });
         dataGrid.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
         var border = UiUtil.MakeBorderForControlNoPadding(dataGrid);
         return border;
@@ -208,6 +209,7 @@ public class FixNamesWindow : Window
         flyout.Items.Add(new MenuItem { Header = Se.Language.General.SelectAll, Command = vm.HitsSelectAllCommand });
         flyout.Items.Add(new MenuItem { Header = Se.Language.General.InvertSelection, Command = vm.HitsInvertSelectionCommand });
         dataGrid.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
         var border = UiUtil.MakeBorderForControlNoPadding(dataGrid);
         return border;

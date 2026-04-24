@@ -15523,7 +15523,13 @@ public partial class MainViewModel :
 
     internal void ComboBoxSubtitleFormatPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (e.GetCurrentPoint(null).Properties.IsRightButtonPressed)
+        var props = e.GetCurrentPoint(null).Properties;
+        var isMacCtrlLeftClick = OperatingSystem.IsMacOS()
+                                 && props.IsLeftButtonPressed
+                                 && e.KeyModifiers.HasFlag(KeyModifiers.Control)
+                                 && !e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+
+        if (props.IsRightButtonPressed || isMacCtrlLeftClick)
         {
             Dispatcher.UIThread.Post(async () => { await ShowSubtitleFormatPicker(); });
             e.Handled = true;

@@ -32,6 +32,7 @@ public class ShowImageWindow : Window
 
         var flyout = new MenuFlyout();
         image.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(image);
 
         var menuItemDelete = new MenuItem
         {

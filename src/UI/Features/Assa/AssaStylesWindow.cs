@@ -159,6 +159,7 @@ public class AssaStylesWindow : Window
         var flyout = new MenuFlyout();
         flyout.Opening += vm.FilesContextMenuOpening;
         dataGrid.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
         var menuItemCopyToStorageStyles = new MenuItem
         {
@@ -290,6 +291,7 @@ public class AssaStylesWindow : Window
         var flyout = new MenuFlyout();
         flyout.Opening += vm.StoreContextMenuOpening;
         dataGrid.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
         var menuItemCopyToFileStyles = new MenuItem
         {

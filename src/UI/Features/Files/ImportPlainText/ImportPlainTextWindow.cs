@@ -165,6 +165,7 @@ public class ImportPlainTextWindow : Window
 
         var flyout = new MenuFlyout();
         dropHost.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(dropHost);
         var menuItemImport = new MenuItem
         {
             Header = Se.Language.General.ImportDotDotDot,

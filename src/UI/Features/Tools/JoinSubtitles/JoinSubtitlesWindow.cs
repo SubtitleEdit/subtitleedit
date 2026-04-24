@@ -130,6 +130,7 @@ public class JoinSubtitlesWindow : Window
         var flyout = new MenuFlyout();
         flyout.Opening += vm.ItemsContextMenuOpening;
         dataGrid.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
         var menuItemDelete = new MenuItem
         {

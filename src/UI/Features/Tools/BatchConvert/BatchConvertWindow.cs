@@ -291,6 +291,7 @@ public class BatchConvertWindow : Window
         dropHost.AddHandler(DragDrop.DragOverEvent, vm.FileGridOnDragOver, RoutingStrategies.Bubble);
         dropHost.AddHandler(DragDrop.DropEvent, vm.FileGridOnDrop, RoutingStrategies.Bubble);
         dropHost.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(dropHost);
 
         grid.Add(dropHost, 0, 0);
         grid.Add(panelFileControls, 1, 0);
@@ -390,6 +391,7 @@ public class BatchConvertWindow : Window
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedBatchFunction)) { Source = vm });
         dataGrid.SelectionChanged += (_, _) => vm.SelectedFunctionChanged();
+        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
         return UiUtil.MakeBorderForControl(dataGrid);
     }

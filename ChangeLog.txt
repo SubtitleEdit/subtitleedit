@@ -18,6 +18,7 @@ v5.0.0-beta18 (24th April 2026)
 * More work on Crisp ASR
 * Pick Crisp ASR cpu/vulkan/cuda engine for Windows
 * Fix WebVTT STYLE italic/bold/color loss on conversion (Apple TV) - thx OtaStrom
+* Fix for context menu on mac in several windows 
 
 -----------------------------------------------------------------------------------------------------
 

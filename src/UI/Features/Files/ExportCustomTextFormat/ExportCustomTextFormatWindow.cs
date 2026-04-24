@@ -135,6 +135,7 @@ public class ExportCustomTextFormatWindow : Window
         };
         flyout.Items.Add(deleteMenuItem);
         dataGrid.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
 

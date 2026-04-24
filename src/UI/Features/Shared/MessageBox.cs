@@ -227,6 +227,7 @@ public class MessageBox : Window
             }
         };
         grid.ContextFlyout = contextMenu;
+        UiUtil.AttachMacContextFlyoutHandler(this, grid);
 
         Activated += delegate { buttonPanel.Children[0].Focus(); }; // hack to make OnKeyDown work
 

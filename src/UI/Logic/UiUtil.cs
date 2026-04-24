@@ -2470,4 +2470,57 @@ public static class UiUtil
             TryHandleWindowSystemMenu(e, window);
         }, RoutingStrategies.Tunnel | RoutingStrategies.Bubble);
     }
+
+    /// <summary>
+    /// On macOS, Ctrl+Click does not trigger <c>ContextFlyout</c> reliably. Attach this
+    /// handler on the control that owns the flyout — tunnel phase + handledEventsToo so
+    /// descendants cannot swallow the event first — and force the flyout open via
+    /// <c>MenuFlyout.ShowAt</c>. Use for control-scoped flyouts (DataGrid, ListBox,
+    /// TextBox, Image, Border, etc. — anything with a hit-test surface).
+    /// </summary>
+    public static void AttachMacContextFlyoutHandler(Control flyoutOwner)
+    {
+        if (!OperatingSystem.IsMacOS() || flyoutOwner == null)
+        {
+            return;
+        }
+
+        flyoutOwner.AddHandler(InputElement.PointerReleasedEvent, (_, e) =>
+        {
+            if (e.KeyModifiers.HasFlag(KeyModifiers.Control) &&
+                !e.KeyModifiers.HasFlag(KeyModifiers.Shift) &&
+                (e.InitialPressMouseButton == MouseButton.Left || e.InitialPressMouseButton == MouseButton.Right) &&
+                flyoutOwner.ContextFlyout is MenuFlyout menuFlyout)
+            {
+                menuFlyout.ShowAt(flyoutOwner, showAtPointer: true);
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel, handledEventsToo: true);
+    }
+
+    /// <summary>
+    /// Window-scoped variant for when the flyout owner is a layout container (Grid/Panel)
+    /// with no Background — the container itself may not receive pointer events on empty
+    /// areas, so attach on the window root instead. Ctrl+Click anywhere in the window
+    /// opens the flyout at <paramref name="flyoutOwner"/>.
+    /// </summary>
+    public static void AttachMacContextFlyoutHandler(Window window, Control flyoutOwner)
+    {
+        if (!OperatingSystem.IsMacOS() || window == null || flyoutOwner == null)
+        {
+            return;
+        }
+
+        window.AddHandler(InputElement.PointerReleasedEvent, (_, e) =>
+        {
+            if (e.KeyModifiers.HasFlag(KeyModifiers.Control) &&
+                !e.KeyModifiers.HasFlag(KeyModifiers.Shift) &&
+                (e.InitialPressMouseButton == MouseButton.Left || e.InitialPressMouseButton == MouseButton.Right) &&
+                flyoutOwner.ContextFlyout is MenuFlyout menuFlyout)
+            {
+                menuFlyout.ShowAt(flyoutOwner, showAtPointer: true);
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel, handledEventsToo: true);
+    }
 }

@@ -111,6 +111,7 @@ public class ShotChangeListWindow : Window
         };
         flyout.Items.Add(deleteMenuItem);
         dataGrid.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
         return UiUtil.MakeBorderForControl(dataGrid);
     }

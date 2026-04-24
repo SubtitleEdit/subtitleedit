@@ -129,6 +129,7 @@ public class BookmarksListWindow : Window
         };
         flyout.Items.Add(deleteMenuItem);
         dataGrid.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);
     }

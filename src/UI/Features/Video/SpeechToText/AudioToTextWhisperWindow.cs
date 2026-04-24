@@ -305,7 +305,10 @@ public class AudioToTextWhisperWindow : Window
 
         var flyout = new MenuFlyout();
         flyout.Opening += vm.WindowContextMenuOpening;
-        ContextFlyout = flyout;
+        // Attach the flyout to the root Grid rather than the Window itself — on macOS
+        // right-clicks on bare window chrome don't reach `Window.ContextFlyout`.
+        grid.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(this, grid);
 
         var menuItemViewWhisperLog = new MenuItem
         {

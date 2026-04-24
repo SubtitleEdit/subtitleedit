@@ -133,6 +133,7 @@ public class AssaAttachmentsWindow : Window
         var flyout = new MenuFlyout();
         flyout.Opening += vm.AttachmentsContextMenuOpening;
         dataGrid.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
         var menuItemDelete = new MenuItem
         {

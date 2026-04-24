@@ -329,6 +329,7 @@ public class BinaryEditWindow : Window
 
         var flyout = new MenuFlyout();
         dataGrid.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
         flyout.Opening += (_, _) => vm.OnContextMenuOpening();
 
         var menuItemDelete = new MenuItem

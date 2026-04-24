@@ -227,6 +227,7 @@ public class ExportImageBasedWindow : Window
 
         // Set the ContextFlyout property
         vm.SubtitleGrid.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(vm.SubtitleGrid);
         //vm.SubtitleGrid.AddHandler(InputElement.PointerPressedEvent, vm.SubtitleGrid_PointerPressed,
         //    RoutingStrategies.Tunnel);
         //vm.SubtitleGrid.AddHandler(InputElement.PointerReleasedEvent, vm.SubtitleGrid_PointerReleased,

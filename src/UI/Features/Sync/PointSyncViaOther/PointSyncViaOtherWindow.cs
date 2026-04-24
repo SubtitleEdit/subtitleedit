@@ -105,6 +105,7 @@ public class PointSyncViaOtherWindow : Window
         var flyout = new MenuFlyout();
         flyout.Opening += vm.PointSyncContextMenuOpening;
         dataGrid.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
         var menuItemDelete = new MenuItem
         {
             Header = Se.Language.General.Delete,

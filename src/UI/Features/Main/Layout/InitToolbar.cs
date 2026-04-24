@@ -2,6 +2,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -310,7 +312,12 @@ public static class InitToolbar
         };
         comboBoxSubtitleFormat.SelectionChanged += vm.ComboBoxSubtitleFormatChanged;
         comboBoxSubtitleFormat.KeyDown += vm.ComboBoxSubtitleFormatKeyDown;
-        comboBoxSubtitleFormat.PointerPressed += vm.ComboBoxSubtitleFormatPointerPressed;
+        // Tunnel phase so we see the event before ComboBox consumes a left-click to open
+        // its dropdown (matters for Mac Ctrl+Click, which Avalonia delivers as left+Ctrl).
+        comboBoxSubtitleFormat.AddHandler(InputElement.PointerPressedEvent,
+            vm.ComboBoxSubtitleFormatPointerPressed,
+            RoutingStrategies.Tunnel,
+            handledEventsToo: true);
         stackPanelRight.Children.Add(comboBoxSubtitleFormat);
         isLastSeparator = false;
 

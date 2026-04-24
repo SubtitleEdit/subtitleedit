@@ -159,6 +159,7 @@ public class EditCustomTextFormatWindow : Window
 
         var flyoutHeader = new MenuFlyout();
         textBoxHeader.ContextFlyout = flyoutHeader;
+        UiUtil.AttachMacContextFlyoutHandler(textBoxHeader);
         foreach (var item in vm.HeaderFooterTags)
         {
             var menuItem = new MenuItem
@@ -173,6 +174,7 @@ public class EditCustomTextFormatWindow : Window
 
         var flyoutParagraph = new MenuFlyout();
         textBoxParagraph.ContextFlyout = flyoutParagraph;
+        UiUtil.AttachMacContextFlyoutHandler(textBoxParagraph);
         foreach (var item in vm.ParagraphTags)
         {
             var menuItem = new MenuItem
@@ -187,6 +189,7 @@ public class EditCustomTextFormatWindow : Window
 
         var flyoutFooter = new MenuFlyout();
         textBoxFooter.ContextFlyout = flyoutFooter;
+        UiUtil.AttachMacContextFlyoutHandler(textBoxFooter);
         foreach (var item in vm.HeaderFooterTags)
         {
             var menuItem = new MenuItem
