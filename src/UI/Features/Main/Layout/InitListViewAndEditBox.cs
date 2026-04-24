@@ -7,6 +7,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Styling;
 using AvaloniaEdit;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
@@ -1227,7 +1228,21 @@ public static partial class InitListViewAndEditBox
         Grid.SetRow(panelSingleLineLengths, 2);
 
         // Create a Flyout for the TextEditor
-        var flyoutTextBox = new MenuFlyout();
+        // The TextBox may have TextAlignment=Center; that inherited property would otherwise flow
+        // into the flyout's menu items. Override it at the presenter level so items are always left-aligned.
+        var flyoutTextBoxPresenterTheme = new ControlTheme(typeof(MenuFlyoutPresenter))
+        {
+            BasedOn = Application.Current?.FindResource(typeof(MenuFlyoutPresenter)) as ControlTheme,
+            Setters =
+            {
+                new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Left),
+            }
+        };
+        var flyoutTextBox = new MenuFlyout
+        {
+            Placement = PlacementMode.Pointer,
+            FlyoutPresenterTheme = flyoutTextBoxPresenterTheme,
+        };
         textEditor.ContextFlyout = flyoutTextBox;
         flyoutTextBox.Opening += vm.TextBoxContextOpening;
 
@@ -1508,6 +1523,8 @@ public static partial class InitListViewAndEditBox
             textBox.GotFocus += (_, _) => vm.SubtitleTextBoxGotFocus();
             textBox.AddHandler(InputElement.PointerPressedEvent, (_, e) => vm.StoreTextEditorPointerArgs(e), RoutingStrategies.Tunnel);
 
+            SetupMacContextMenuForTextBox(textBox, vm);
+
             vm.EditTextBox = new TextBoxWrapper(textBox);
             return textBox;
         }
@@ -1608,6 +1625,8 @@ public static partial class InitListViewAndEditBox
                 textBox.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
             }
 
+            SetupMacContextMenuForTextBox(textBox, vm);
+
             vm.EditTextBoxOriginal = new TextBoxWrapper(textBox);
             return textBox;
         }
@@ -1645,6 +1664,48 @@ public static partial class InitListViewAndEditBox
         vm.EditTextBoxOriginalHelper = helper;
 
         return textEditorBorder;
+    }
+
+    /// <summary>
+    /// On macOS, Ctrl+Click is the right-click / context menu gesture.
+    /// Avalonia's TextBox may treat Ctrl+Click as a text-selection modifier, preventing the
+    /// ContextFlyout from opening. We intercept in the tunnel phase (before the TextBox) to
+    /// mark the event as handled, and then open the context menu on pointer release.
+    /// </summary>
+    private static void SetupMacContextMenuForTextBox(TextBox textBox, MainViewModel vm)
+    {
+        if (!OperatingSystem.IsMacOS())
+        {
+            return;
+        }
+
+        // Tunnel phase fires before TextBox's built-in pointer handling.
+        textBox.AddHandler(
+            InputElement.PointerPressedEvent,
+            (_, e) =>
+            {
+                var point = e.GetCurrentPoint(textBox);
+                if (point.Properties.IsLeftButtonPressed && e.KeyModifiers.HasFlag(KeyModifiers.Control))
+                {
+                    // Block TextBox from treating this as a selection modifier.
+                    e.Handled = true;
+                }
+            },
+            RoutingStrategies.Tunnel);
+
+        // Show the context menu on release.
+        textBox.AddHandler(
+            InputElement.PointerReleasedEvent,
+            (_, e) =>
+            {
+                if (e.InitialPressMouseButton == MouseButton.Left &&
+                    e.KeyModifiers.HasFlag(KeyModifiers.Control) &&
+                    !e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+                {
+                    vm.ControlMacPointerReleased(textBox, e);
+                }
+            },
+            RoutingStrategies.Tunnel);
     }
 
     /// <summary>
