@@ -2,6 +2,25 @@
 Subtitle Edit Changelog
 
 
+v5.0.0-beta18 (24th April 2026)
+
+* Improve auto-translate error messages - thx hisui3393
+* Add a few ignore words for spell check
+* Fix renumber after splitting subtitle - thx rRobis
+* Improve Qwen3 TTS
+* Add Polish translation - thx potplayer-fanpack
+* Update Korean translation
+* Download silero vad for most speech-to-text engines
+* Check libmpv/libvlc at load - thx Aesthermortis
+* Fix spectrogram remains visible after disabling "Generate spectrogram" - thx Aesthermortis
+* Fix Crisp ASR Qwen3 + Granite
+* Add Crisp ASR Omni
+* More work on Crisp ASR
+* Pick Crisp ASR cpu/vulkan/cuda engine for Windows
+* Fix WebVTT STYLE italic/bold/color loss on conversion (Apple TV) - thx OtaStrom
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-beta17 (21st April 2026)
 
 * Add Korean translation - thx  Hackjjang

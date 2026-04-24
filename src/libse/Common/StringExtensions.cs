@@ -57,12 +57,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var newLineIdx = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-            if (newLineIdx < 0 || text.Length < newLineIdx + 5)
+            if (newLineIdx < 0 || text.Length < newLineIdx + Environment.NewLine.Length + 3)
             {
                 return false;
             }
 
-            text = text.Substring(newLineIdx + 2);
+            text = text.Substring(newLineIdx + Environment.NewLine.Length);
             return StartsWithHtmlTag(text, threeLengthTag, includeFont);
         }
 
