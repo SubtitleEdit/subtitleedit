@@ -119,7 +119,7 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<GuessUsedItem> _allGuesses;
     [ObservableProperty] private GuessUsedItem? _selectedAllGuess;
     [ObservableProperty] private bool _hasPreProcessingSettings;
-    [ObservableProperty] private bool _hasCaptureTopAlign;
+    [ObservableProperty] private bool _hasCaptureTopAlign; // Repurposed for ASSA position capture
     [ObservableProperty] private double _imageMaxHeight = 100;
     [ObservableProperty] private double _imageMaxWidth = 200;
     [ObservableProperty] private FontFamily _textBoxFontFamily;
@@ -133,6 +133,18 @@ public partial class OcrViewModel : ObservableObject
     public bool OkPressed { get; private set; }
 
     public readonly List<SubtitleLineViewModel> OcredSubtitle;
+
+    /// <summary>
+    /// Indicates whether ASSA format should be used for the output when capture position is enabled
+    /// </summary>
+    public bool ShouldUseAssaFormat => HasCaptureTopAlign; // Now represents ASSA position capture
+
+    partial void OnHasCaptureTopAlignChanged(bool value)
+    {
+        // Notify that the format requirement has changed
+        OnPropertyChanged(nameof(ShouldUseAssaFormat));
+    }
+
 
     private IOcrSubtitle? _ocrSubtitle;
     private readonly INOcrCaseFixer _nOcrCaseFixer;
@@ -261,7 +273,7 @@ public partial class OcrViewModel : ObservableObject
             DoPromptForUnknownWords = ocr.DoPromptForUnknownWords;
             DoTryToGuessUnknownWords = ocr.DoTryToGuessUnknownWords;
             DoAutoBreak = ocr.DoAutoBreak;
-            HasCaptureTopAlign = ocr.CaptureTopAlign;
+            HasCaptureTopAlign = ocr.CaptureAssaPosition; // Repurposed for ASSA position capture
         });
     }
 
@@ -286,7 +298,8 @@ public partial class OcrViewModel : ObservableObject
         ocr.DoPromptForUnknownWords = DoPromptForUnknownWords;
         ocr.DoTryToGuessUnknownWords = DoTryToGuessUnknownWords;
         ocr.DoAutoBreak = DoAutoBreak;
-        ocr.CaptureTopAlign = HasCaptureTopAlign;
+        ocr.CaptureTopAlign = false; // Old functionality disabled
+        ocr.CaptureAssaPosition = HasCaptureTopAlign; // Repurposed property
         ocr.TextBoxFontSize = TextBoxFontSize;
         ocr.TextBoxFontBold = TextBoxFontWeight == FontWeight.Bold;
         ocr.TextBoxFontName = TextBoxFontFamily.Name;
@@ -2547,19 +2560,37 @@ public partial class OcrViewModel : ObservableObject
             SelectedDictionary.Name != GetDictionaryNameNone() &&
             _ocrFixEngine.IsLoaded() && DoFixOcrErrors)
         {
+            var alignment = GetAlignment(item);
+            item.Text = resultTemp.ResultText; // Set text before processing
+            var processedText = ProcessMultiLineText(item);
+
+            // For ASSA position capture, use processed text which includes alignment
+            // For non-ASSA, use original result text
+            var finalText = HasCaptureTopAlign ?
+                (processedText.Contains('\n') ? processedText : alignment + resultTemp.ResultText) :
+                resultTemp.ResultText;
+
             Dispatcher.UIThread.Post(() =>
             {
-                CurrentText = resultTemp.ResultText;
-                item.Text = resultTemp.ResultText;
+                CurrentText = finalText;
+                item.Text = finalText;
                 item.FixResult = resultTemp.OcrFixLineResult;
             });
         }
         else
         {
             var alignment = GetAlignment(item);
+            var processedText = ProcessMultiLineText(item);
+
+            // For ASSA position capture, use processed text which includes alignment
+            // For non-ASSA, use the old behavior of adding alignment prefix
+            var finalText = HasCaptureTopAlign ?
+                (processedText.Contains('\n') ? processedText : alignment + item.Text) :
+                alignment + item.Text;
+
             Dispatcher.UIThread.Post(() =>
             {
-                item.Text = alignment + item.Text;
+                item.Text = finalText;
                 CurrentText = item.Text;
                 item.FixResult = new OcrFixLineResult
                 {
@@ -2657,22 +2688,6 @@ public partial class OcrViewModel : ObservableObject
         return unknownWords;
     }
 
-    private string GetAlignment(OcrSubtitleItem item)
-    {
-        if (HasCaptureTopAlign)
-        {
-            var bitmap = item.GetSkBitmap();
-            var height = bitmap.Height;
-            var top = item.GetPosition().Y + height / 2;
-            var screenHeight = item.GetScreenSize().Height;
-            if (top < screenHeight * 0.4)
-            {
-                return "{\\an8}";
-            }
-        }
-
-        return string.Empty;
-    }
 
     private bool InitNOcrDb()
     {
@@ -3602,5 +3617,195 @@ public partial class OcrViewModel : ObservableObject
             menuFlyout.ShowAt(ctrl, true);
             e.Handled = true;
         }
+    }
+
+    private string GetAlignment(OcrSubtitleItem item)
+    {
+        if (!HasCaptureTopAlign) // Repurposed for ASSA position capture
+        {
+            return string.Empty;
+        }
+
+        try
+        {
+            // Get image position and screen dimensions
+            var position = item.GetPosition();
+            var screenSize = item.GetScreenSize();
+            var bitmap = item.GetSkBitmapClean();
+
+            if (bitmap == null || screenSize.Width == 0 || screenSize.Height == 0)
+            {
+                return string.Empty;
+            }
+
+            // Calculate center point of the image on screen
+            var centerX = position.X + bitmap.Width / 2.0;
+            var centerY = position.Y + bitmap.Height / 2.0;
+
+            // Convert to relative position (0.0 = left/top, 1.0 = right/bottom)
+            var relativeX = centerX / screenSize.Width;
+            var relativeY = centerY / screenSize.Height;
+
+            // Map to ASSA alignment positions (An1-An9)
+            var assaPosition = GetAssaPositionFromScreen(relativeX, relativeY);
+            return $"{{\\{assaPosition}}}";
+        }
+        catch
+        {
+            return string.Empty;
+        }
+    }
+
+    private string GetAssaPositionFromScreen(double relativeX, double relativeY)
+    {
+        // Map screen coordinates to 3x3 grid for ASSA positions
+        // relativeX: 0.0 = left, 1.0 = right
+        // relativeY: 0.0 = top, 1.0 = bottom
+
+        string horizontal;
+        if (relativeX < 0.33)
+        {
+            horizontal = "left";   // An1, An4, An7
+        }
+        else if (relativeX > 0.67)
+        {
+            horizontal = "right";  // An3, An6, An9
+        }
+        else
+        {
+            horizontal = "center"; // An2, An5, An8
+        }
+
+        string vertical;
+        if (relativeY < 0.33)
+        {
+            vertical = "bottom";   // An7, An8, An9 (in ASSA, these are at top)
+        }
+        else if (relativeY > 0.67)
+        {
+            vertical = "top";      // An1, An2, An3 (in ASSA, these are at bottom)
+        }
+        else
+        {
+            vertical = "middle";   // An4, An5, An6
+        }
+
+        // Map to ASSA position numbers
+        // Note: ASSA coordinate system has origin at bottom-left
+        return (vertical, horizontal) switch
+        {
+            ("top", "left") => "an1",     // bottom-left
+            ("top", "center") => "an2",   // bottom-center
+            ("top", "right") => "an3",    // bottom-right
+            ("middle", "left") => "an4",  // middle-left
+            ("middle", "center") => "an5", // middle-center
+            ("middle", "right") => "an6", // middle-right
+            ("bottom", "left") => "an7",  // top-left
+            ("bottom", "center") => "an8", // top-center
+            ("bottom", "right") => "an9", // top-right
+            _ => "an5" // default to center
+        };
+    }
+
+    private List<OcrSubtitleItem> SplitImageToLines(OcrSubtitleItem item)
+    {
+        if (!HasCaptureTopAlign || item.GetSkBitmapClean() == null)
+        {
+            return new List<OcrSubtitleItem> { item };
+        }
+
+        try
+        {
+            var bitmap = item.GetSkBitmapClean();
+            var lines = new List<OcrSubtitleItem>();
+
+            // Simple line detection: split image horizontally based on text regions
+            // This is a basic implementation - could be enhanced with more sophisticated line detection
+
+            var height = bitmap.Height;
+            var width = bitmap.Width;
+            var lineHeight = height / 3; // Assume max 3 lines for now
+
+            for (int i = 0; i < 3; i++)
+            {
+                var startY = i * lineHeight;
+                var endY = Math.Min(startY + lineHeight, height);
+
+                if (startY >= height) break;
+
+                // Check if this region has text content (simplified detection)
+                if (HasTextInRegion(bitmap, 0, startY, width, endY - startY))
+                {
+                    // For now, just return the original item since creating new items
+                    // requires complex constructor parameters. The multi-line logic
+                    // should be handled in ProcessMultiLineText instead.
+                    lines.Add(item);
+                    break; // Just detect if there are multiple regions, return original for now
+                }
+            }
+
+            return lines.Count > 0 ? lines : new List<OcrSubtitleItem> { item };
+        }
+        catch
+        {
+            return new List<OcrSubtitleItem> { item };
+        }
+    }
+
+    private bool HasTextInRegion(SKBitmap bitmap, int x, int y, int width, int height)
+    {
+        // Simple heuristic: check for non-white pixels that might indicate text
+        // This is a basic implementation
+        var samplePoints = 10;
+        var nonWhitePixels = 0;
+
+        for (int i = 0; i < samplePoints; i++)
+        {
+            for (int j = 0; j < samplePoints; j++)
+            {
+                var sampleX = x + (i * width / samplePoints);
+                var sampleY = y + (j * height / samplePoints);
+
+                if (sampleX < bitmap.Width && sampleY < bitmap.Height)
+                {
+                    var pixel = bitmap.GetPixel(sampleX, sampleY);
+                    if (pixel.Red < 200 || pixel.Green < 200 || pixel.Blue < 200) // Not white-ish
+                    {
+                        nonWhitePixels++;
+                    }
+                }
+            }
+        }
+
+        // If we find enough non-white pixels, assume there's text
+        return nonWhitePixels > (samplePoints * samplePoints * 0.1); // 10% threshold
+    }
+
+    public string ProcessMultiLineText(OcrSubtitleItem item)
+    {
+        if (!HasCaptureTopAlign)
+        {
+            return item.Text ?? string.Empty;
+        }
+
+        var lines = SplitImageToLines(item);
+        var result = new List<string>();
+
+        foreach (var line in lines)
+        {
+            var alignment = GetAlignment(line);
+            var text = line.Text ?? string.Empty;
+
+            if (!string.IsNullOrEmpty(alignment) && !string.IsNullOrEmpty(text))
+            {
+                result.Add($"{alignment}{text}");
+            }
+            else if (!string.IsNullOrEmpty(text))
+            {
+                result.Add(text);
+            }
+        }
+
+        return string.Join("\\N", result); // Use \N for line breaks in ASSA format
     }
 }

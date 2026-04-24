@@ -133,7 +133,7 @@ public class LanguageOcr
         RemoveBorders = "Remove borders";
         Binarize = "Binarize";
         BorderSize = "Border size";
-        CaptureTopAlign = "Capture top align";
+        CaptureTopAlign = "Auto-detect ASSA alignment";
         OcrImage = "OCR image";
         OneColor = "One color (white)";
         DarknessThreshold = "Darkness threshold";

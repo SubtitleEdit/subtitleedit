@@ -163,6 +163,8 @@ public class OcrWindow : Window
         ToolTip.SetTip(toggleButtonCaptureTopAlign, Se.Language.Ocr.CaptureTopAlign);
         toggleButtonCaptureTopAlign.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.HasCaptureTopAlign)));
 
+        // No ComboBox needed - position will be automatically detected from image location
+
         var toggleButtonPreProcessing = new ToggleButton
         {
             Command = vm.ShowPreProcessingCommand,
