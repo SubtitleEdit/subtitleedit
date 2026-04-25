@@ -35,8 +35,8 @@ Subtitle Edit stores these components in its **Data Folder**.
 | **MPV** | `libmpv-2.dll` | `[Data Folder]` (root) |
 | **yt-dlp** | `yt-dlp.exe` | `[Data Folder]` (root) |
 | **Tesseract** | `tesseract.exe`, `tessdata/` folder | `[Data Folder]/Tesseract550` |
-| **Whisper CPP** | `whisper-cli.exe`, `Models/` folder | `[Data Folder]/Whisper/Cpp` |
-| **Purfview Faster-Whisper XXL** | `faster-whisper-xxl.exe`, `_models/` folder | `[Data Folder]/Whisper/Purfview-Faster-Whisper-XXL` |
+| **Whisper CPP** | `whisper-cli.exe`, `Models/` folder | `[Data Folder]/SpeechToText/Cpp` |
+| **Purfview Faster-Whisper XXL** | `faster-whisper-xxl.exe`, `_models/` folder | `[Data Folder]/SpeechToText/Purfview-Faster-Whisper-XXL` |
 
 ---
 
@@ -85,9 +85,9 @@ Used for converting image-based subtitles (Sup/VobSub) to text.
 Used for AI-based speech recognition.
 
 *   **Download:** [ggerganov/whisper.cpp releases](https://github.com/ggerganov/whisper.cpp/releases)
-*   **Destination:** `[Data Folder]/Whisper/Cpp`
+*   **Destination:** `[Data Folder]/SpeechToText/Cpp`
 *   **Files:** Download the Windows zip and extract to the destination folder. The download already includes `whisper-cli.exe`.
-*   **Models:** Models (`.bin` files) go into a `Models` subfolder: `[Data Folder]/Whisper/Cpp/Models`.
+*   **Models:** Models (`.bin` files) go into a `Models` subfolder: `[Data Folder]/SpeechToText/Cpp/Models`.
 
 > **Note:** It is generally recommended to use the internal downloader for Whisper due to the complexity of model and library dependencies.
 
@@ -95,7 +95,7 @@ Used for AI-based speech recognition.
 Used for GPU-accelerated AI-based speech recognition.
 
 *   **Download:** [Purfview/whisper-standalone-win releases](https://github.com/Purfview/whisper-standalone-win/releases)
-*   **Destination:** `[Data Folder]/Whisper/Purfview-Faster-Whisper-XXL`
+*   **Destination:** `[Data Folder]/SpeechToText/Purfview-Faster-Whisper-XXL`
 *   **Files:** Download the Standalone Archive, extract contents so `faster-whisper-xxl.exe` is in the folder root.
 *   **Models:** Place model directories (e.g., `faster-whisper-medium`) inside the `_models` folder.
 
@@ -140,15 +140,15 @@ Used for converting image-based subtitles (Sup/VobSub) to text.
 Used for AI-based speech recognition.
 
 *   **Download:** [ggerganov/whisper.cpp releases](https://github.com/ggerganov/whisper.cpp/releases) or build from source.
-*   **Destination:** `[Data Folder]/Whisper/Cpp`
+*   **Destination:** `[Data Folder]/SpeechToText/Cpp`
 *   **Files:** Download or build the binary and ensure it is named `whisper-cli`.
-*   **Models:** Models (`.bin` files) go into a `Models` subfolder: `[Data Folder]/Whisper/Cpp/Models`.
+*   **Models:** Models (`.bin` files) go into a `Models` subfolder: `[Data Folder]/SpeechToText/Cpp/Models`.
 
 ### Purfview Faster-Whisper (GPU Speech-to-Text)
 Used for GPU-accelerated AI-based speech recognition.
 
 *   **Download:** [Purfview/whisper-standalone-win releases](https://github.com/Purfview/whisper-standalone-win/releases)
-*   **Destination:** `[Data Folder]/Whisper/Purfview-Faster-Whisper-XXL`
+*   **Destination:** `[Data Folder]/SpeechToText/Purfview-Faster-Whisper-XXL`
 *   **Files:** Download the Linux Archive, extract so `faster-whisper-xxl` binary is present.
 *   **Models:** Place model directories (e.g., `faster-whisper-medium`) inside the `_models` folder.
 
@@ -193,6 +193,6 @@ Used for converting image-based subtitles (Sup/VobSub) to text.
 Used for AI-based speech recognition.
 
 *   **Download:** [ggerganov/whisper.cpp releases](https://github.com/ggerganov/whisper.cpp/releases) or build from source.
-*   **Destination:** `[Data Folder]/Whisper/Cpp`
+*   **Destination:** `[Data Folder]/SpeechToText/Cpp`
 *   **Files:** Download or build the binary and ensure it is named `whisper-cli`.
-*   **Models:** Models (`.bin` files) go into a `Models` subfolder: `[Data Folder]/Whisper/Cpp/Models`.
+*   **Models:** Models (`.bin` files) go into a `Models` subfolder: `[Data Folder]/SpeechToText/Cpp/Models`.
