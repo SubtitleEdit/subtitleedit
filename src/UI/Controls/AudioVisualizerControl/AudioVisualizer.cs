@@ -2145,7 +2145,7 @@ public class AudioVisualizer : Control
         return (double)index / WavePeaks.SampleRate;
     }
 
-    public void SetPosition(double startPositionSeconds, ObservableCollection<SubtitleLineViewModel> subtitle, double currentVideoPositionSeconds, int subtitleIndex,
+    public void SetPosition(double startPositionSeconds, IReadOnlyList<SubtitleLineViewModel> subtitle, double currentVideoPositionSeconds, int subtitleIndex,
         List<SubtitleLineViewModel> selectedIndexes)
     {
         if (TimeSpan.FromMilliseconds(Environment.TickCount64 - _lastMouseWheelScroll).TotalSeconds > 0.25)
@@ -2158,7 +2158,7 @@ public class AudioVisualizer : Control
         LoadParagraphs(subtitle, subtitleIndex, selectedIndexes);
     }
 
-    private void LoadParagraphs(ObservableCollection<SubtitleLineViewModel> subtitle, int primarySelectedIndex, List<SubtitleLineViewModel> selectedIndexes)
+    private void LoadParagraphs(IReadOnlyList<SubtitleLineViewModel> subtitle, int primarySelectedIndex, List<SubtitleLineViewModel> selectedIndexes)
     {
         lock (_lock)
         {
@@ -2238,7 +2238,7 @@ public class AudioVisualizer : Control
     }
 
     // Helper for Binary Search
-    private static int FindFirstIndexAfterTime(ObservableCollection<SubtitleLineViewModel> subtitle, double timeMs)
+    private static int FindFirstIndexAfterTime(IReadOnlyList<SubtitleLineViewModel> subtitle, double timeMs)
     {
         int low = 0, high = subtitle.Count - 1;
         var result = 0;

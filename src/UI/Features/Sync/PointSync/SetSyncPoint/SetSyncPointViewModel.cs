@@ -147,14 +147,8 @@ public partial class SetSyncPointViewModel : ObservableObject
             ? null
             : Paragraphs[selectedParagraphIndex];
 
-        var subtitle = new ObservableCollection<SubtitleLineViewModel>();
-        var orderedList = _subtitleLines.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
+        var subtitle = _subtitleLines.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
         var firstSelectedIndex = -1;
-        for (var i = 0; i < orderedList.Count; i++)
-        {
-            var dp = orderedList[i];
-            subtitle.Add(dp);
-        }
 
         var mediaPlayerSeconds = vp.Position;
         var startPos = mediaPlayerSeconds - 0.01;

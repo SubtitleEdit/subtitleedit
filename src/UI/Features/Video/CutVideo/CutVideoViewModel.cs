@@ -229,14 +229,8 @@ public partial class CutVideoViewModel : ObservableObject
             ? null
             : (Segments.Count == 0 ? null : Segments[selectedParagraphIndex]);
 
-        var subtitle = new ObservableCollection<SubtitleLineViewModel>();
-        var orderedList = Segments.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
+        var subtitle = Segments.OrderBy(p => p.StartTime.TotalMilliseconds).ToList();
         var firstSelectedIndex = -1;
-        for (var i = 0; i < orderedList.Count; i++)
-        {
-            var dp = orderedList[i];
-            subtitle.Add(dp);
-        }
 
         var mediaPlayerSeconds = vp.Position;
         var startPos = mediaPlayerSeconds - 0.01;

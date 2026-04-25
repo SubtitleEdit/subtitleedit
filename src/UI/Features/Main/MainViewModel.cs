@@ -14364,11 +14364,10 @@ public partial class MainViewModel :
                 }
 
                 var noLayers = _visibleLayers == null || !Se.Settings.Assa.HideLayersFromWaveform || _visibleLayers.Count == 0;
-                var subtitle = new ObservableCollection<SubtitleLineViewModel>(
-                    Subtitles
-                        .OrderBy(p => p.StartTime.TotalMilliseconds)
-                        .Where(p => noLayers || _visibleLayers!.Contains(p.Layer))
-                );
+                var subtitle = Subtitles
+                    .Where(p => noLayers || _visibleLayers!.Contains(p.Layer))
+                    .OrderBy(p => p.StartTime.TotalMilliseconds)
+                    .ToList();
 
                 var mediaPlayerSeconds = vp.Position;
                 var startPos = mediaPlayerSeconds - 0.01;
