@@ -97,6 +97,7 @@ public class LanguageMain
     public string FileExportedInFormatXToFileY { get; set; }
     public string FixedXLines { get; set; }
     public string TranscriptionCompletedWithXLines { get; set; }
+    public string OpenSubtitleFileX { get; set; }
     public string ReplacedXOccurrences { get; set; }
     public string FfmpegDownloadedAndInstalledToX { get; set; }
     public string NothingToSave { get; set; }
@@ -200,6 +201,7 @@ public class LanguageMain
         FileExportedInFormatXToFileY = "File exported in format \"{0}\" to file \"{1}\"";
         FixedXLines = "Fixed {0} lines";
         TranscriptionCompletedWithXLines = "Transcription completed with {0} lines";
+        OpenSubtitleFileX = "Open subtitle file \"{0}\"?";
         ReplacedXOccurrences = "Replaced {0} occurrences";
         FfmpegDownloadedAndInstalledToX = "ffmpeg downloaded and installed to {0}";
         NothingToSave = "Nothing to save";

@@ -4693,6 +4693,27 @@ public partial class MainViewModel :
             SelectAndScrollToRow(0);
             ShowStatus(string.Format(Se.Language.Main.TranscriptionCompletedWithXLines, result.TranscribedSubtitle.Paragraphs.Count));
         }
+        else if (result.OkPressed && result.IsBatchMode && result.BatchItems.Count == 1)
+        {
+            var batchVideoFileName = result.BatchItems[0].InputVideoFileName;
+            var batchSubtitleFileName = result.LastBatchSubtitleFileName;
+
+            if (!string.IsNullOrEmpty(batchSubtitleFileName) && File.Exists(batchSubtitleFileName))
+            {
+                var answer = await MessageBox.Show(
+                    Window!,
+                    Se.Language.Video.AudioToText.Title,
+                    string.Format(Se.Language.Main.OpenSubtitleFileX, Path.GetFileName(batchSubtitleFileName)),
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer == MessageBoxResult.Yes)
+                {
+                    await VideoOpenFile(batchVideoFileName);
+                    await SubtitleOpen(batchSubtitleFileName, batchVideoFileName);
+                }
+            }
+        }
     }
 
     [RelayCommand]

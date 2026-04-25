@@ -74,6 +74,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     public bool OkPressed { get; private set; }
     public Subtitle TranscribedSubtitle { get; private set; }
     public List<AudioClip> ResultAudioClips { get; private set; }
+    public string? LastBatchSubtitleFileName { get; private set; }
     public TextBox TextBoxConsoleLog { get; internal set; }
     public DataGrid BatchGrid { get; internal set; }
 
@@ -726,6 +727,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             var format = new SubRip();
             var text = format.ToText(transcribedSubtitle, string.Empty);
             File.WriteAllText(subtitleFileName, text);
+            LastBatchSubtitleFileName = subtitleFileName;
         }
 
         _batchIndex++;
