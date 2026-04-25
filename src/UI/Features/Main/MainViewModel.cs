@@ -357,6 +357,7 @@ public partial class MainViewModel :
     public MenuItem MenuItemAudioVisualizerMergeWithPrevious { get; set; }
     public MenuItem MenuItemAudioVisualizerMergeWithNext { get; set; }
     public MenuItem MenuItemAudioVisualizerSpeechToTextSelectedLines { get; set; }
+    public MenuItem MenuItemAudioVisualizerSpeechToTextNewSelection { get; set; }
     public ITextBoxWrapper EditTextBoxOriginal { get; set; }
     public ITextBoxWrapper EditTextBox { get; set; }
     public TextEditorBindingHelper? EditTextBoxHelper { get; set; }
@@ -444,6 +445,7 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerMergeWithPrevious = new MenuItem();
         MenuItemAudioVisualizerMergeWithNext = new MenuItem();
         MenuItemAudioVisualizerSpeechToTextSelectedLines = new MenuItem();
+        MenuItemAudioVisualizerSpeechToTextNewSelection = new MenuItem();
         MenuItemStyles = new MenuItem();
         MenuItemActors = new MenuItem();
         AudioTraksMenuItem = new MenuItem();
@@ -8696,6 +8698,27 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private async Task WaveformSpeechToTextNewSelection()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null ||
+            AudioVisualizer == null ||
+            AudioVisualizer.NewSelectionParagraph == null)
+        {
+            return;
+        }
+
+        var newParagraph = AudioVisualizer.NewSelectionParagraph;
+        _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        AudioVisualizer.NewSelectionParagraph = null;
+        SubtitleGrid.SelectedItem = newParagraph;
+        SubtitleGrid.ScrollIntoView(newParagraph, null);
+        _updateAudioVisualizer = true;
+
+        await SpeechToTextSelectedLines();
+    }
+
+    [RelayCommand]
     private async Task WaveformNewSelectionPasteFromClipboard()
     {
         var vp = GetVideoPlayerControl();
@@ -15186,11 +15209,13 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerMergeWithPrevious.IsVisible = false;
         MenuItemAudioVisualizerMergeWithNext.IsVisible = false;
         MenuItemAudioVisualizerSpeechToTextSelectedLines.IsVisible = false;
+        MenuItemAudioVisualizerSpeechToTextNewSelection.IsVisible = false;
 
         if (e.NewParagraph != null)
         {
             MenuItemAudioVisualizerInsertNewSelection.IsVisible = true;
             MenuItemAudioVisualizerPasteNewSelection.IsVisible = true;
+            MenuItemAudioVisualizerSpeechToTextNewSelection.IsVisible = !string.IsNullOrEmpty(_videoFileName);
             return;
         }
 

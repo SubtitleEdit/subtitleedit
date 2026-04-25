@@ -128,6 +128,14 @@ public class InitWaveform
             flyout.Items.Add(pasteSelectionMenuItem);
             vm.MenuItemAudioVisualizerPasteNewSelection = pasteSelectionMenuItem;
 
+            var speechToTextNewSelectionMenuItem = new MenuItem
+            {
+                Header = Se.Language.Waveform.SpeechToTextNewSelectionDotDotDot,
+                Command = vm.WaveformSpeechToTextNewSelectionCommand,
+            };
+            flyout.Items.Add(speechToTextNewSelectionMenuItem);
+            vm.MenuItemAudioVisualizerSpeechToTextNewSelection = speechToTextNewSelectionMenuItem;
+
             var insertNewMenuItem = new MenuItem
             {
                 Header = Se.Language.General.InsertAtPositionAndFocusTextBox,
