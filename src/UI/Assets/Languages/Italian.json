@@ -1,6 +1,6 @@
 ﻿{
   "Title": "SubtitleEdit",
-  "TranslatedBy": "v. 20.04.2026 di bovirus",
+  "TranslatedBy": "v. 24.04.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -1627,7 +1627,8 @@
     "AddXToUserDictionary": "Aggiungi '{0}' al dizionario utente",
     "IgnoreAllX": "Ignora tutti i '{0}'",
     "PickSpellCheckDictionaryDotDotDot": "Scegli il dizionario per il controllo ortografico...",
-    "ChooseSpellCheckDictionary": "Scegli il dizionario per il controllo ortografico"
+    "ChooseSpellCheckDictionary": "Scegli il dizionario per il controllo ortografico",
+    "PickLiveSpellCheckDictionary": "Scegli dizionario controllo ortografico in tempo reale"
   },
   "Video": {
     "GoToVideoPosition": "Vai alla posizione video",
@@ -1888,7 +1889,14 @@
     "DelayInSecondsBetweenRequests": "Ritardo tra le richieste (secondi)",
     "MaxBytesPerRequest": "Numero massimo byte per richiesta",
     "PromptText": "Testo suggerito",
-    "TranslateEachLineSeparately": "Traduci ogni riga separatamente"
+    "TranslateEachLineSeparately": "Traduci ogni riga separatamente",
+    "TranslationError": "Errore traduzione",
+    "TranslationFailedMessage": "Traduzione {0} non riuscita.",
+    "TranslationFailedHint": "Ciò potrebbe essere dovuto a un problema di rete, a una chiave API non valida o a limiti di uso dell'API.\r\n\r\nControlla la connessione e le impostazioni API, quindi riprova.",
+    "ShowTechnicalDetails": "Visualizza dettagli tecnici",
+    "HideTechnicalDetails": "Nascondi dettagli tecnici",
+    "TechnicalDetails": "Dettagli tecnici",
+    "PleaseSelectATargetLanguage": "Seleziona una lingua destinazione"
   },
   "Options": {
     "Settings": {
