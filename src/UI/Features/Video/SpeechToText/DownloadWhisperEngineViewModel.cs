@@ -69,7 +69,7 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
 
         _downloadStream = new MemoryStream();
 
-        TitleText = Se.Language.Video.AudioToText.DownloadingWhisperEngine;
+        TitleText = Se.Language.Video.AudioToText.DownloadingSpeechToTextEngine;
         ProgressText = Se.Language.General.StartingDotDotDot;
         ProgressOpacity = 1.0;
         Error = string.Empty;

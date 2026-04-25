@@ -15,7 +15,7 @@ public class DownloadWhisperEngineWindow : Window
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = Se.Language.Video.AudioToText.DownloadingWhisperEngine;
+        Title = Se.Language.Video.AudioToText.DownloadingSpeechToTextEngine;
         Width = 500;
         Height = 190;
         CanResize = false;
@@ -24,7 +24,7 @@ public class DownloadWhisperEngineWindow : Window
 
         var titleText = new TextBlock
         {
-            Text = Se.Language.Video.AudioToText.DownloadingWhisperEngine,
+            Text = Se.Language.Video.AudioToText.DownloadingSpeechToTextEngine,
             FontSize = 20,
             FontWeight = FontWeight.Bold,
         };

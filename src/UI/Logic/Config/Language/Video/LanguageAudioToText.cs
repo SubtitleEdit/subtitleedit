@@ -9,7 +9,7 @@ public class LanguageAudioToText
     public string TranscribingXOfY { get; set; }
     public string InputLanguage { get; set; }
     public string AdvancedWhisperSettings { get; set; }
-    public string DownloadingWhisperEngine { get; set; }
+    public string DownloadingSpeechToTextEngine { get; set; }
     public string EnableVad { get; set; }
     public string WhisperXxlStandard { get; set; }
     public string WhisperXxlStandardAsia { get; set; }
@@ -38,7 +38,7 @@ public class LanguageAudioToText
         TranscribingXOfY = "Transcribing {0} of {1}...";
         InputLanguage = "Input language";
         AdvancedWhisperSettings = "Advanced Whisper settings";
-        DownloadingWhisperEngine = "Downloading Whisper engine";
+        DownloadingSpeechToTextEngine = "Downloading speech-to-toxt engine";
         EnableVad = "Enable VAD";
         WhisperXxlStandard = "Standard";
         WhisperXxlStandardAsia = "Standard Asia";
