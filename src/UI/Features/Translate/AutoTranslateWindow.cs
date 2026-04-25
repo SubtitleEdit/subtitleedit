@@ -5,7 +5,6 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
-using Avalonia.Markup.Declarative;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -233,6 +232,7 @@ public class AutoTranslateWindow : Window
         Content = grid;
         
         Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Loaded += (s, e) => UiUtil.RestoreWindowPosition(this);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
@@ -255,5 +255,7 @@ public class AutoTranslateWindow : Window
         {
             vm.SaveSettings();
         }
+
+        UiUtil.SaveWindowPosition(this);
     }
 }
