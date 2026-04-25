@@ -92,7 +92,13 @@ public class Se
     }
     public static string ThemesFolder => Path.Combine(DataFolder, "Themes");
     public static string AutoBackupFolder => Path.Combine(DataFolder, "AutoBackup");
-    public static string TtsFolder => Path.Combine(DataFolder, "TTS");
+    public static string FfmpegFolder => Path.Combine(DataFolder, "ffmpeg");
+    public static string TextToSpeechFolder => Path.Combine(DataFolder, "TTS");
+    public static string SpeechToTextFolder => Path.Combine(DataFolder, "SpeechToText");
+    public static string WaveformsFolder => Path.Combine(DataFolder, "Waveforms");
+    public static string SpectrogramsFolder => Path.Combine(DataFolder, "Spectrograms");
+    public static string ShotChangesFolder => Path.Combine(DataFolder, "ShotChanges");
+
     public static string OcrFolder => Path.Combine(DataFolder, "OCR");
     public static string TranslationFolder => Path.Combine(DataFolder, "Languages");
     public static string PaddleOcrFolder => Path.Combine(OcrFolder, "PaddleOCR3-1");
@@ -177,12 +183,6 @@ public class Se
 
         return Path.Combine(TesseractFolder, "tessdata");
     }
-
-    public static string FfmpegFolder => Path.Combine(DataFolder, "ffmpeg");
-    public static string SpeechToTextFolder => Path.Combine(DataFolder, "SpeechToText");
-    public static string WaveformsFolder => Path.Combine(DataFolder, "Waveforms");
-    public static string SpectrogramsFolder => Path.Combine(DataFolder, "Spectrograms");
-    public static string ShotChangesFolder => Path.Combine(DataFolder, "ShotChanges");
 
     public static string Version { get; set; } = "v5.0.0-beta18";
 

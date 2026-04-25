@@ -92,12 +92,12 @@ public class AzureSpeech : ITtsEngine
 
     public static string GetSetAzureFolder()
     {
-        if (!Directory.Exists(Se.TtsFolder))
+        if (!Directory.Exists(Se.TextToSpeechFolder))
         {
-            Directory.CreateDirectory(Se.TtsFolder);
+            Directory.CreateDirectory(Se.TextToSpeechFolder);
         }
 
-        var azureFolder = Path.Combine(Se.TtsFolder, "Azure");
+        var azureFolder = Path.Combine(Se.TextToSpeechFolder, "Azure");
         if (!Directory.Exists(azureFolder))
         {
             Directory.CreateDirectory(azureFolder);

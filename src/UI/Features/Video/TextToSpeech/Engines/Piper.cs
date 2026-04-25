@@ -97,12 +97,12 @@ public class Piper : ITtsEngine
 
     public static string GetSetPiperFolder()
     {
-        if (!Directory.Exists(Se.TtsFolder))
+        if (!Directory.Exists(Se.TextToSpeechFolder))
         {
-            Directory.CreateDirectory(Se.TtsFolder);
+            Directory.CreateDirectory(Se.TextToSpeechFolder);
         }
 
-        var piperFolder = Path.Combine(Se.TtsFolder, "Piper");
+        var piperFolder = Path.Combine(Se.TextToSpeechFolder, "Piper");
         if (!Directory.Exists(piperFolder))
         {
             Directory.CreateDirectory(piperFolder);

@@ -83,12 +83,12 @@ public class ElevenLabs : ITtsEngine
 
     private static string GetSetElevenLabsFolder()
     {
-        if (!Directory.Exists(Se.TtsFolder))
+        if (!Directory.Exists(Se.TextToSpeechFolder))
         {
-            Directory.CreateDirectory(Se.TtsFolder);
+            Directory.CreateDirectory(Se.TextToSpeechFolder);
         }
 
-        var elevenLabsFolder = Path.Combine(Se.TtsFolder, "ElevenLabs");
+        var elevenLabsFolder = Path.Combine(Se.TextToSpeechFolder, "ElevenLabs");
         if (!Directory.Exists(elevenLabsFolder))
         {
             Directory.CreateDirectory(elevenLabsFolder);

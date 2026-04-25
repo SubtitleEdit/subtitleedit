@@ -102,12 +102,12 @@ public class GoogleSpeech : ITtsEngine
 
     public static string GetSetGoogleFolder()
     {
-        if (!Directory.Exists(Se.TtsFolder))
+        if (!Directory.Exists(Se.TextToSpeechFolder))
         {
-            Directory.CreateDirectory(Se.TtsFolder);
+            Directory.CreateDirectory(Se.TextToSpeechFolder);
         }
 
-        var googleFolder = Path.Combine(Se.TtsFolder, "Google");
+        var googleFolder = Path.Combine(Se.TextToSpeechFolder, "Google");
         if (!Directory.Exists(googleFolder))
         {
             Directory.CreateDirectory(googleFolder);

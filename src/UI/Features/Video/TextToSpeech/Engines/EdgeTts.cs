@@ -132,12 +132,12 @@ public class EdgeTts : ITtsEngine
 
     public static string GetSetEdgeTtsFolder()
     {
-        if (!Directory.Exists(Se.TtsFolder))
+        if (!Directory.Exists(Se.TextToSpeechFolder))
         {
-            Directory.CreateDirectory(Se.TtsFolder);
+            Directory.CreateDirectory(Se.TextToSpeechFolder);
         }
 
-        var edgeFolder = Path.Combine(Se.TtsFolder, "EdgeTts");
+        var edgeFolder = Path.Combine(Se.TextToSpeechFolder, "EdgeTts");
         if (!Directory.Exists(edgeFolder))
         {
             Directory.CreateDirectory(edgeFolder);

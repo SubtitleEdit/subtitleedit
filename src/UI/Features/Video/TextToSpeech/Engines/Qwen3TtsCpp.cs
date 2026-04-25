@@ -57,12 +57,12 @@ public class Qwen3TtsCpp : ITtsEngine
 
     public static string GetSetFolder()
     {
-        if (!Directory.Exists(Se.TtsFolder))
+        if (!Directory.Exists(Se.TextToSpeechFolder))
         {
-            Directory.CreateDirectory(Se.TtsFolder);
+            Directory.CreateDirectory(Se.TextToSpeechFolder);
         }
 
-        var folder = Path.Combine(Se.TtsFolder, "Qwen3TtsCpp");
+        var folder = Path.Combine(Se.TextToSpeechFolder, "Qwen3TtsCpp");
         if (!Directory.Exists(folder))
         {
             Directory.CreateDirectory(folder);

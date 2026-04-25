@@ -90,12 +90,12 @@ public class MistralSpeech : ITtsEngine
 
     public static string GetSetMistralFolder()
     {
-        if (!Directory.Exists(Se.TtsFolder))
+        if (!Directory.Exists(Se.TextToSpeechFolder))
         {
-            Directory.CreateDirectory(Se.TtsFolder);
+            Directory.CreateDirectory(Se.TextToSpeechFolder);
         }
 
-        var mistralFolder = Path.Combine(Se.TtsFolder, "Mistral");
+        var mistralFolder = Path.Combine(Se.TextToSpeechFolder, "Mistral");
         if (!Directory.Exists(mistralFolder))
         {
             Directory.CreateDirectory(mistralFolder);

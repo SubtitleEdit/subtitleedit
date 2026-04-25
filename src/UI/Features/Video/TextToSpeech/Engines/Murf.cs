@@ -96,12 +96,12 @@ public class Murf : ITtsEngine
 
     public static string GetSetMurfFolder()
     {
-        if (!Directory.Exists(Se.TtsFolder))
+        if (!Directory.Exists(Se.TextToSpeechFolder))
         {
-            Directory.CreateDirectory(Se.TtsFolder);
+            Directory.CreateDirectory(Se.TextToSpeechFolder);
         }
 
-        var murfFolder = Path.Combine(Se.TtsFolder, "Murf");
+        var murfFolder = Path.Combine(Se.TextToSpeechFolder, "Murf");
         if (!Directory.Exists(murfFolder))
         {
             Directory.CreateDirectory(murfFolder);

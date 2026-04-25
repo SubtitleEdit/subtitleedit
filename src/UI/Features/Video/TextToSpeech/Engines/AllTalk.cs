@@ -94,12 +94,12 @@ public class AllTalk : ITtsEngine
 
     public static string GetSetAllTalkFolder()
     {
-        if (!Directory.Exists(Se.TtsFolder))
+        if (!Directory.Exists(Se.TextToSpeechFolder))
         {
-            Directory.CreateDirectory(Se.TtsFolder);
+            Directory.CreateDirectory(Se.TextToSpeechFolder);
         }
 
-        var allTalkFolder = Path.Combine(Se.TtsFolder, "AllTalk");
+        var allTalkFolder = Path.Combine(Se.TextToSpeechFolder, "AllTalk");
         if (!Directory.Exists(allTalkFolder))
         {
             Directory.CreateDirectory(allTalkFolder);
