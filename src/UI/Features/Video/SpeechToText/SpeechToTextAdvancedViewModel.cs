@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
-public partial class WhisperAdvancedViewModel : ObservableObject
+public partial class SpeechToTextAdvancedViewModel : ObservableObject
 {
     [ObservableProperty] private string _parameters;
     [ObservableProperty] private string _helpText;
@@ -28,7 +28,7 @@ public partial class WhisperAdvancedViewModel : ObservableObject
 
     public bool OkPressed { get; private set; }
 
-    public WhisperAdvancedViewModel()
+    public SpeechToTextAdvancedViewModel()
     {
         Parameters = string.Empty;
         HelpText = string.Empty;

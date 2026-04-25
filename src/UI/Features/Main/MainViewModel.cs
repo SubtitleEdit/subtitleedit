@@ -4671,7 +4671,7 @@ public partial class MainViewModel :
         }
 
         var result =
-            await ShowDialogAsync<AudioToTextWhisperWindow, AudioToTextWhisperViewModel>(vm => { vm.Initialize(_videoFileName, _audioTrack?.FfIndex ?? -1); });
+            await ShowDialogAsync<SpeechToTextWindow, SpeechToTextViewModel>(vm => { vm.Initialize(_videoFileName, _audioTrack?.FfIndex ?? -1); });
 
         if (result.OkPressed && !result.IsBatchMode)
         {
@@ -4743,7 +4743,7 @@ public partial class MainViewModel :
             return false;
         }
 
-        var resultSpeechToText = await ShowDialogAsync<AudioToTextWhisperWindow, AudioToTextWhisperViewModel>(vm =>
+        var resultSpeechToText = await ShowDialogAsync<SpeechToTextWindow, SpeechToTextViewModel>(vm =>
         {
             vm.InitializeBatch(resultGetAudioClips.AudioClips, _audioTrack?.FfIndex ?? -1, !promptEngineAndLanguage);
         });

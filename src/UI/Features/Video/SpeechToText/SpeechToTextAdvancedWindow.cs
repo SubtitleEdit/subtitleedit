@@ -9,9 +9,9 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
-public class WhisperAdvancedWindow : Window
+public class SpeechToTextAdvancedWindow : Window
 {
-    public WhisperAdvancedWindow(SpeechToText.WhisperAdvancedViewModel vm)
+    public SpeechToTextAdvancedWindow(SpeechToText.SpeechToTextAdvancedViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Video.AudioToText.AdvancedWhisperSettings;

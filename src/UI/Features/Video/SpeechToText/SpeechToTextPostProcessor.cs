@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Nikse.SubtitleEdit.Core.AudioToText
 {
-    public class AudioToTextPostProcessor
+    public class SpeechToTextPostProcessor
     {
         public enum Engine
         {
@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
         public string TwoLetterLanguageCode { get; }
 
-        public AudioToTextPostProcessor(string twoLetterLanguageCode)
+        public SpeechToTextPostProcessor(string twoLetterLanguageCode)
         {
             TwoLetterLanguageCode = twoLetterLanguageCode == "no" ? "nb" : twoLetterLanguageCode;
 

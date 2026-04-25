@@ -4,7 +4,7 @@ using System;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
-public static class WhisperTimingFixer
+public static class SpeechToTextTimingFixer
 {
     private static int SecondsToSampleIndex(double seconds, int sampleRate)
     {

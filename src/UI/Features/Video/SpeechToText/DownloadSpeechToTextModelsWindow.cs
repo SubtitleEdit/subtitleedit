@@ -10,9 +10,9 @@ using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
-public class DownloadWhisperModelsWindow : Window
+public class DownloadSpeechToTextModelsWindow : Window
 {
-    public DownloadWhisperModelsWindow(DownloadWhisperModelsViewModel vm)
+    public DownloadSpeechToTextModelsWindow(DownloadSpeechToTextModelsViewModel vm)
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);

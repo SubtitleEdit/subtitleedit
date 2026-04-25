@@ -13,9 +13,9 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
-public class AudioToTextWhisperWindow : Window
+public class SpeechToTextWindow : Window
 {
-    public AudioToTextWhisperWindow(AudioToTextWhisperViewModel vm)
+    public SpeechToTextWindow(SpeechToTextViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Video.AudioToText.Title;
@@ -377,7 +377,7 @@ public class AudioToTextWhisperWindow : Window
         KeyDown += (s, e) => vm.OnKeyDown(e);
     }
 
-    private static Grid MakeConsoleLogAndBatchView(AudioToTextWhisperViewModel vm)
+    private static Grid MakeConsoleLogAndBatchView(SpeechToTextViewModel vm)
     {
         var textBoxConsoleLog = new TextBox()
         {
@@ -416,21 +416,21 @@ public class AudioToTextWhisperWindow : Window
                 {
                     Header = Se.Language.General.FileName,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(WhisperJobItem.InputVideoFileNameShort)),
+                    Binding = new Binding(nameof(SpeechToTextJobItem.InputVideoFileNameShort)),
                     IsReadOnly = true,
                 },
                 new DataGridTextColumn
                 {
                     Header = Se.Language.General.Size,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(WhisperJobItem.SizeDisplay)),
+                    Binding = new Binding(nameof(SpeechToTextJobItem.SizeDisplay)),
                     IsReadOnly = true,
                 },
                 new DataGridTextColumn
                 {
                     Header = Se.Language.General.Status,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(WhisperJobItem.Status)),
+                    Binding = new Binding(nameof(SpeechToTextJobItem.Status)),
                     IsReadOnly = true,
                 },
             },
@@ -507,7 +507,7 @@ public class AudioToTextWhisperWindow : Window
         return grid;
     }
 
-    private static TextBox MakeConsoleLogOnlyView(AudioToTextWhisperViewModel vm)
+    private static TextBox MakeConsoleLogOnlyView(SpeechToTextViewModel vm)
     {
         var textBoxConsoleLog = new TextBox()
         {

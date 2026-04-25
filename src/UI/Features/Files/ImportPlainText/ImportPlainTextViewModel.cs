@@ -275,7 +275,7 @@ public partial class ImportPlainTextViewModel : ObservableObject
             _videoFileName = picked;
         }
 
-        var whisperVm = await _windowService.ShowDialogAsync<AudioToTextWhisperWindow, AudioToTextWhisperViewModel>(
+        var whisperVm = await _windowService.ShowDialogAsync<SpeechToTextWindow, SpeechToTextViewModel>(
             Window,
             viewModel => { viewModel.Initialize(_videoFileName, -1); });
 

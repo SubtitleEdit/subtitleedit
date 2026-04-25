@@ -3,7 +3,7 @@ using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
-public class WhisperModelDisplay
+public class SpeechToTextModelDisplay
 {
     public WhisperModel Model { get; set; } = new WhisperModel();
     public string? Display { get; set; }

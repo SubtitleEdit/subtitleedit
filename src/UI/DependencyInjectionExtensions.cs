@@ -145,14 +145,14 @@ using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr.GoogleLens;
 using Nikse.SubtitleEdit.Logic.UndoRedo;
 using AssaApplyCustomOverrideTagsViewModel = Nikse.SubtitleEdit.Features.Assa.AssaApplyCustomOverrideTags.AssaApplyCustomOverrideTagsViewModel;
-using AudioToTextWhisperViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.AudioToTextWhisperViewModel;
+using SpeechToTextViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextViewModel;
 using AudioVisualizerUndockedViewModel = Nikse.SubtitleEdit.Features.Shared.Undocked.AudioVisualizerUndockedViewModel;
 using BatchConvertFixCommonErrorsSettingsViewModel = Nikse.SubtitleEdit.Features.Tools.BatchConvert.BatchConvertFixCommonErrorsSettingsViewModel;
 using BatchConvertSettingsViewModel = Nikse.SubtitleEdit.Features.Tools.BatchConvert.BatchConvertSettingsViewModel;
 using BinaryEditViewModel = Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryEditViewModel;
 using CategoryExportViewModel = Nikse.SubtitleEdit.Features.Edit.MultipleReplace.CategoryExportViewModel;
-using DownloadWhisperEngineViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.DownloadWhisperEngineViewModel;
-using DownloadWhisperModelsViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.DownloadWhisperModelsViewModel;
+using DownloadSpeechToTextEngineViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.DownloadSpeechToTextEngineViewModel;
+using DownloadSpeechToTextModelsViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.DownloadSpeechToTextModelsViewModel;
 using GetAudioClipsViewModel = Nikse.SubtitleEdit.Features.Shared.GetAudioClips.GetAudioClipsViewModel;
 using MediaInfoViewViewModel = Nikse.SubtitleEdit.Features.Shared.MediaInfoView.MediaInfoViewViewModel;
 using NOcrCharacterAddViewModel = Nikse.SubtitleEdit.Features.Ocr.NOcr.NOcrCharacterAddViewModel;
@@ -161,8 +161,8 @@ using RosettaPropertiesViewModel = Nikse.SubtitleEdit.Features.Files.FormatPrope
 using SetVideoOffsetViewModel = Nikse.SubtitleEdit.Features.Shared.SetVideoOffset.SetVideoOffsetViewModel;
 using TmpegEncXmlPropertiesViewModel = Nikse.SubtitleEdit.Features.Files.FormatProperties.TmpegEncXmlProperties.TmpegEncXmlPropertiesViewModel;
 using VideoPlayerUndockedViewModel = Nikse.SubtitleEdit.Features.Shared.Undocked.VideoPlayerUndockedViewModel;
-using WhisperAdvancedViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.WhisperAdvancedViewModel;
-using WhisperPostProcessingViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.WhisperPostProcessingViewModel;
+using SpeechToTextAdvancedViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextAdvancedViewModel;
+using SpeechToTextPostProcessingViewModel = Nikse.SubtitleEdit.Features.Video.SpeechToText.SpeechToTextPostProcessingViewModel;
 
 namespace Nikse.SubtitleEdit;
 
@@ -245,7 +245,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<AssaStylePickerViewModel>();
         collection.AddTransient<AssaStylesViewModel>();
         collection.AddTransient<AssaTagHistoryViewModel>();
-        collection.AddTransient<AudioToTextWhisperViewModel>();
+        collection.AddTransient<SpeechToTextViewModel>();
         collection.AddTransient<AudioVisualizerUndockedViewModel>();
         collection.AddTransient<AutoTranslateViewModel>();
         collection.AddTransient<BatchConvertAssaViewModel>();
@@ -300,8 +300,8 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<DownloadTesseractModelViewModel>();
         collection.AddTransient<DownloadTesseractViewModel>();
         collection.AddTransient<DownloadTtsViewModel>();
-        collection.AddTransient<DownloadWhisperEngineViewModel>();
-        collection.AddTransient<DownloadWhisperModelsViewModel>();
+        collection.AddTransient<DownloadSpeechToTextEngineViewModel>();
+        collection.AddTransient<DownloadSpeechToTextModelsViewModel>();
         collection.AddTransient<DownloadYtDlpViewModel>();
         collection.AddTransient<EditCategoryViewModel>();
         collection.AddTransient<EditCustomTextFormatViewModel>();
@@ -427,8 +427,8 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<WaveformThemesViewModel>();
         collection.AddTransient<WaveformToolbarItemsViewModel>();
         collection.AddTransient<WebVttPropertiesViewModel>();
-        collection.AddTransient<WhisperAdvancedViewModel>();
-        collection.AddTransient<WhisperPostProcessingViewModel>();
+        collection.AddTransient<SpeechToTextAdvancedViewModel>();
+        collection.AddTransient<SpeechToTextPostProcessingViewModel>();
         collection.AddTransient<WordListsViewModel>();
     }
 }

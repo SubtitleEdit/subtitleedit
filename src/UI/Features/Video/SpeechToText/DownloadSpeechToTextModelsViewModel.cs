@@ -23,11 +23,11 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
-public partial class DownloadWhisperModelsViewModel : ObservableObject
+public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
 {
 
-    [ObservableProperty] private ObservableCollection<WhisperModelDisplay> _models;
-    [ObservableProperty] private WhisperModelDisplay? _selectedModel;
+    [ObservableProperty] private ObservableCollection<SpeechToTextModelDisplay> _models;
+    [ObservableProperty] private SpeechToTextModelDisplay? _selectedModel;
 
     [ObservableProperty] private double _progressOpacity;
     [ObservableProperty] private double _progressValue;
@@ -53,13 +53,13 @@ public partial class DownloadWhisperModelsViewModel : ObservableObject
     private readonly Timer _timer;
     private readonly CancellationTokenSource _cancellationTokenSource;
 
-    public DownloadWhisperModelsViewModel(IWhisperDownloadService whisperDownloadService, IFolderHelper folderHelper)
+    public DownloadSpeechToTextModelsViewModel(IWhisperDownloadService whisperDownloadService, IFolderHelper folderHelper)
     {
         _folderHelper = folderHelper;
         _whisperDownloadService = whisperDownloadService;
 
-        Models = new ObservableCollection<WhisperModelDisplay>();
-        SelectedModel = Enumerable.FirstOrDefault<WhisperModelDisplay>(Models);
+        Models = new ObservableCollection<SpeechToTextModelDisplay>();
+        SelectedModel = Enumerable.FirstOrDefault<SpeechToTextModelDisplay>((IEnumerable<SpeechToTextModelDisplay>)Models);
 
         _cancellationTokenSource = new CancellationTokenSource();
 
@@ -73,7 +73,7 @@ public partial class DownloadWhisperModelsViewModel : ObservableObject
         _timer.Start();
     }
 
-    public void SetModels(ObservableCollection<WhisperModelDisplay> models, ISpeechToTextEngine whisperEngine, WhisperModelDisplay? whisperModel)
+    public void SetModels(ObservableCollection<SpeechToTextModelDisplay> models, ISpeechToTextEngine whisperEngine, SpeechToTextModelDisplay? whisperModel)
     {
         _whisperEngine = whisperEngine;
 

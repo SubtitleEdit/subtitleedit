@@ -9,9 +9,9 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
-public class DownloadWhisperEngineWindow : Window
+public class DownloadSpeechToTextEngineWindow : Window
 {
-    public DownloadWhisperEngineWindow(DownloadWhisperEngineViewModel vm)
+    public DownloadSpeechToTextEngineWindow(DownloadSpeechToTextEngineViewModel vm)
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);

@@ -22,7 +22,7 @@ using Timer = System.Timers.Timer;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
-public partial class DownloadWhisperEngineViewModel : ObservableObject
+public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
 {
     [ObservableProperty] private string _titleText;
     [ObservableProperty] private double _progressOpacity;
@@ -52,7 +52,7 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
 
     private IndeterminateProgressHelper? _indeterminateProgressHelper;
 
-    public DownloadWhisperEngineViewModel(
+    public DownloadSpeechToTextEngineViewModel(
         IWhisperDownloadService whisperDownloadService,
         IZipUnpacker zipUnpacker,
         IChatLlmDownloadService chatLlmDownloadService,

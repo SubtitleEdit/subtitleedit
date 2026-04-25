@@ -7,7 +7,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
-public partial class WhisperPostProcessingViewModel : ObservableObject
+public partial class SpeechToTextPostProcessingViewModel : ObservableObject
 {
     [ObservableProperty] private bool _adjustTimings;
     [ObservableProperty] private bool _mergeShortLines;
@@ -22,7 +22,7 @@ public partial class WhisperPostProcessingViewModel : ObservableObject
 
     public bool OkPressed { get; private set; }
 
-    public WhisperPostProcessingViewModel(IWindowService windowService)
+    public SpeechToTextPostProcessingViewModel(IWindowService windowService)
     {
     }
 

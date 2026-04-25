@@ -31,7 +31,7 @@ using System.Timers;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
-public partial class AudioToTextWhisperViewModel : ObservableObject
+public partial class SpeechToTextViewModel : ObservableObject
 {
     [ObservableProperty] private ObservableCollection<ISpeechToTextEngine> _engines;
     [ObservableProperty] private ISpeechToTextEngine _selectedEngine;
@@ -39,11 +39,11 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<WhisperLanguage> _languages;
     [ObservableProperty] private WhisperLanguage? _selectedLanguage;
 
-    [ObservableProperty] private ObservableCollection<WhisperModelDisplay> _models;
-    [ObservableProperty] private WhisperModelDisplay? _selectedModel;
+    [ObservableProperty] private ObservableCollection<SpeechToTextModelDisplay> _models;
+    [ObservableProperty] private SpeechToTextModelDisplay? _selectedModel;
 
-    [ObservableProperty] private ObservableCollection<WhisperJobItem> _batchItems;
-    [ObservableProperty] private WhisperJobItem? _selectedBatchItem;
+    [ObservableProperty] private ObservableCollection<SpeechToTextJobItem> _batchItems;
+    [ObservableProperty] private SpeechToTextJobItem? _selectedBatchItem;
 
     [ObservableProperty] private bool _doTranslateToEnglish;
     [ObservableProperty] private bool _doAdjustTimings;
@@ -120,7 +120,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
 
-    public AudioToTextWhisperViewModel(IWindowService windowService, IFileHelper fileHelper)
+    public SpeechToTextViewModel(IWindowService windowService, IFileHelper fileHelper)
     {
         _windowService = windowService;
         _fileHelper = fileHelper;
@@ -168,9 +168,9 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         Languages = new ObservableCollection<WhisperLanguage>(SelectedEngine.Languages);
         SelectedLanguage = PickDefaultLanguage(Languages);
 
-        Models = new ObservableCollection<WhisperModelDisplay>();
+        Models = new ObservableCollection<SpeechToTextModelDisplay>();
 
-        BatchItems = new ObservableCollection<WhisperJobItem>();
+        BatchItems = new ObservableCollection<SpeechToTextJobItem>();
 
         ResultAudioClips = new List<AudioClip>();
 
@@ -768,8 +768,8 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             return;
         }
 
-        var convertedJobs = Enumerable.Count<WhisperJobItem>(BatchItems, p => p.Status == Se.Language.General.Converted);
-        var failed = Enumerable.Count<WhisperJobItem>(BatchItems, p => p.Status != Se.Language.General.Converted);
+        var convertedJobs = Enumerable.Count<SpeechToTextJobItem>(BatchItems, p => p.Status == Se.Language.General.Converted);
+        var failed = Enumerable.Count<SpeechToTextJobItem>(BatchItems, p => p.Status != Se.Language.General.Converted);
 
         Dispatcher.UIThread.Invoke<Task>(async () =>
         {
@@ -837,7 +837,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             ProgressText = "Post-processing...";
         }
 
-        var postProcessor = new AudioToTextPostProcessor(DoTranslateToEnglish ? "en" : language.Code)
+        var postProcessor = new SpeechToTextPostProcessor(DoTranslateToEnglish ? "en" : language.Code)
         {
             ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
         };
@@ -850,13 +850,13 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
 
         if (DoAdjustTimings && wavePeaks != null)
         {
-            transcript = WhisperTimingFixer.ShortenLongDuration(transcript);
-            transcript = WhisperTimingFixer.ShortenViaWavePeaks(transcript, wavePeaks);
+            transcript = SpeechToTextTimingFixer.ShortenLongDuration(transcript);
+            transcript = SpeechToTextTimingFixer.ShortenViaWavePeaks(transcript, wavePeaks);
         }
 
         var settings = Se.Settings.Tools.AudioToText;
         transcript = postProcessor.Fix(
-            AudioToTextPostProcessor.Engine.Whisper,
+            SpeechToTextPostProcessor.Engine.Whisper,
             transcript,
             DoPostProcessing,
             settings.WhisperPostProcessingAddPeriods,
@@ -1372,7 +1372,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             return;
         }
 
-        var vm = await _windowService.ShowDialogAsync<DownloadWhisperEngineWindow, DownloadWhisperEngineViewModel>(
+        var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
             Window, viewModel =>
             {
                 viewModel.Engine = engine;
@@ -1389,7 +1389,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             return;
         }
 
-        var vm = await _windowService.ShowDialogAsync<DownloadWhisperEngineWindow, DownloadWhisperEngineViewModel>(
+        var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
             Window, viewModel =>
             {
                 viewModel.Engine = engine;
@@ -1448,7 +1448,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         try
         {
             // Process files on background thread
-            await Task.Run(async () =>
+            await Task.Run((Func<Task?>)(async () =>
             {
                 foreach (var fileName in fileNames)
                 {
@@ -1459,11 +1459,11 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
                     }
                     else
                     {
-                        var batchItem = new WhisperJobItem(fileName, string.Empty, mediaInfo);
-                        await Dispatcher.UIThread.InvokeAsync(() => BatchItems.Add(batchItem));
+                        var batchItem = new SpeechToTextJobItem(fileName, string.Empty, mediaInfo);
+                        await Dispatcher.UIThread.InvokeAsync((Action)(() => BatchItems.Add(batchItem)));
                     }
                 }
-            });
+            }));
         }
         finally
         {
@@ -1492,7 +1492,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
     [RelayCommand]
     private async Task ShowAdvancedSettings()
     {
-        var vm = await _windowService.ShowDialogAsync<WhisperAdvancedWindow, WhisperAdvancedViewModel>(Window!,
+        var vm = await _windowService.ShowDialogAsync<SpeechToTextAdvancedWindow, SpeechToTextAdvancedViewModel>(Window!,
             viewModal =>
             {
                 viewModal.Engines = Enumerable.ToList<ISpeechToTextEngine>((IEnumerable<ISpeechToTextEngine>)Engines);
@@ -1508,7 +1508,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
     [RelayCommand]
     private async Task ShowPostProcessingSettings()
     {
-        var vm = await _windowService.ShowDialogAsync<WhisperPostProcessingWindow, WhisperPostProcessingViewModel>(
+        var vm = await _windowService.ShowDialogAsync<SpeechToTextPostProcessingWindow, SpeechToTextPostProcessingViewModel>(
             Window!, viewModal =>
             {
                 viewModal.AdjustTimings = Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings;
@@ -1538,7 +1538,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
     [RelayCommand]
     private async Task DownloadModel()
     {
-        var vm = await _windowService.ShowDialogAsync<DownloadWhisperModelsWindow, DownloadWhisperModelsViewModel>(
+        var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
             Window!, viewModel => { viewModel.SetModels(Models, SelectedEngine, SelectedModel); });
 
         if (vm.OkPressed)
@@ -1570,7 +1570,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             return;
         }
 
-        if (SelectedModel is not WhisperModelDisplay model)
+        if (SelectedModel is not SpeechToTextModelDisplay model)
         {
             return;
         }
@@ -1639,7 +1639,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
                     }
                 }
 
-                var crispVm = await _windowService.ShowDialogAsync<DownloadWhisperEngineWindow, DownloadWhisperEngineViewModel>(
+                var crispVm = await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
                     Window!, viewModel =>
                     {
                         viewModel.Engine = engine;
@@ -1666,7 +1666,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
                     return;
                 }
 
-                var vm = await _windowService.ShowDialogAsync<DownloadWhisperEngineWindow, DownloadWhisperEngineViewModel>(
+                var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
                     Window!, viewModel =>
                     {
                         viewModel.Engine = engine;
@@ -1694,7 +1694,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
                 return;
             }
 
-            var vm = await _windowService.ShowDialogAsync<DownloadWhisperModelsWindow, DownloadWhisperModelsViewModel>(
+            var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
                 Window!, viewModel =>
                 {
                     viewModel.SetModels(Models, SelectedEngine, SelectedModel);
@@ -1707,7 +1707,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         if (engine is ChatLlmCppEngine chatLlm)
         {
             var modelAligner = chatLlm.ForcedAlignerModel;
-            var displayModelAligner = new WhisperModelDisplay
+            var displayModelAligner = new SpeechToTextModelDisplay
             {
                 Model = modelAligner,
                 Display = modelAligner.Name + " (forced aligner for timestamps)",
@@ -1727,11 +1727,11 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
                     return;
                 }
 
-                var models = new ObservableCollection<WhisperModelDisplay>
+                var models = new ObservableCollection<SpeechToTextModelDisplay>
                 {
                     displayModelAligner
                 };
-                var vm = await _windowService.ShowDialogAsync<DownloadWhisperModelsWindow, DownloadWhisperModelsViewModel>(
+                var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
                     Window!, viewModel =>
                     {
                         viewModel.SetModels(models, SelectedEngine, displayModelAligner);
@@ -1748,7 +1748,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         if (engine is Qwen3AsrCppEngine qwen3Asr)
         {
             var modelAligner = qwen3Asr.ForcedAlignerModel;
-            var displayModelAligner = new WhisperModelDisplay
+            var displayModelAligner = new SpeechToTextModelDisplay
             {
                 Model = modelAligner,
                 Display = modelAligner.Name + " (forced aligner for timestamps)",
@@ -1768,11 +1768,11 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
                     return;
                 }
 
-                var models = new ObservableCollection<WhisperModelDisplay>
+                var models = new ObservableCollection<SpeechToTextModelDisplay>
                 {
                     displayModelAligner
                 };
-                var vm = await _windowService.ShowDialogAsync<DownloadWhisperModelsWindow, DownloadWhisperModelsViewModel>(
+                var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
                     Window!, viewModel =>
                     {
                         viewModel.SetModels(models, SelectedEngine, displayModelAligner);
@@ -1789,7 +1789,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         if (engine is CrispAsrQwen3 crispQwen3Engine)
         {
             var modelAligner = crispQwen3Engine.ForcedAlignerModel;
-            var displayModelAligner = new WhisperModelDisplay
+            var displayModelAligner = new SpeechToTextModelDisplay
             {
                 Model = modelAligner,
                 Display = modelAligner.Name + " (forced aligner for timestamps)",
@@ -1809,11 +1809,11 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
                     return;
                 }
 
-                var models = new ObservableCollection<WhisperModelDisplay>
+                var models = new ObservableCollection<SpeechToTextModelDisplay>
                 {
                     displayModelAligner
                 };
-                var vm = await _windowService.ShowDialogAsync<DownloadWhisperModelsWindow, DownloadWhisperModelsViewModel>(
+                var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
                     Window!, viewModel =>
                     {
                         viewModel.SetModels(models, SelectedEngine, displayModelAligner);
@@ -1861,7 +1861,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
                 return;
             }
 
-            BatchItems.Add(new WhisperJobItem(_videoFileName, string.Empty, mediaInfo));
+            BatchItems.Add(new SpeechToTextJobItem(_videoFileName, string.Empty, mediaInfo));
         }
         _batchIndex = 0;
 
@@ -1936,7 +1936,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             return false;
         }
 
-        if (SelectedModel is not WhisperModelDisplay model)
+        if (SelectedModel is not SpeechToTextModelDisplay model)
         {
             return false;
         }
@@ -2605,7 +2605,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             return;
         }
 
-        if (SelectedModel is not WhisperModelDisplay oldModel)
+        if (SelectedModel is not SpeechToTextModelDisplay oldModel)
         {
             return;
         }
@@ -2613,7 +2613,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         Models.Clear();
         foreach (var model in engine.Models)
         {
-            Models.Add(new WhisperModelDisplay
+            Models.Add(new SpeechToTextModelDisplay
             {
                 Model = model,
                 Engine = engine,
@@ -2622,11 +2622,11 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
 
         if (result != null)
         {
-            SelectedModel = Enumerable.FirstOrDefault<WhisperModelDisplay>(Models, m => m.Model.Name == result.Name);
+            SelectedModel = Enumerable.FirstOrDefault<SpeechToTextModelDisplay>((IEnumerable<SpeechToTextModelDisplay>)Models, m => m.Model.Name == result.Name);
         }
         else
         {
-            SelectedModel = Enumerable.FirstOrDefault<WhisperModelDisplay>(Models, m => m.Model.Name == oldModel.Model.Name);
+            SelectedModel = Enumerable.FirstOrDefault<SpeechToTextModelDisplay>((IEnumerable<SpeechToTextModelDisplay>)Models, m => m.Model.Name == oldModel.Model.Name);
         }
     }
 
@@ -2662,7 +2662,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
         Models.Clear();
         foreach (var model in engine.Models)
         {
-            Models.Add(new WhisperModelDisplay
+            Models.Add(new SpeechToTextModelDisplay
             {
                 Model = model,
                 Engine = engine,
@@ -2671,14 +2671,14 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
 
         if (Models.Count > 0)
         {
-            var model = Enumerable.FirstOrDefault<WhisperModelDisplay>(Models, p => p.Model.Name == Se.Settings.Tools.AudioToText.WhisperModel);
+            var model = Enumerable.FirstOrDefault<SpeechToTextModelDisplay>((IEnumerable<SpeechToTextModelDisplay>)Models, p => p.Model.Name == Se.Settings.Tools.AudioToText.WhisperModel);
             if (model != null)
             {
                 SelectedModel = model;
             }
             else
             {
-                SelectedModel = Enumerable.FirstOrDefault<WhisperModelDisplay>(Models);
+                SelectedModel = Enumerable.FirstOrDefault<SpeechToTextModelDisplay>((IEnumerable<SpeechToTextModelDisplay>)Models);
             }
         }
 

@@ -7,11 +7,11 @@ using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
-public class WhisperPostProcessingWindow : Window
+public class SpeechToTextPostProcessingWindow : Window
 {
-    private readonly WhisperPostProcessingViewModel _vm;
+    private readonly SpeechToTextPostProcessingViewModel _vm;
 
-    public WhisperPostProcessingWindow(WhisperPostProcessingViewModel vm)
+    public SpeechToTextPostProcessingWindow(SpeechToTextPostProcessingViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Video.AudioToText.WhisperPostProcessingTitle;
@@ -24,25 +24,25 @@ public class WhisperPostProcessingWindow : Window
         DataContext = vm;
 
         var labelAdjustTimings = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.AdjustTimings);
-        var checkAdjustTimings = UiUtil.MakeCheckBox(vm, nameof(WhisperPostProcessingViewModel.AdjustTimings));
+        var checkAdjustTimings = UiUtil.MakeCheckBox(vm, nameof(SpeechToTextPostProcessingViewModel.AdjustTimings));
 
         var labelMergeShortLines = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.MergeShortLines);
-        var checkMergeShortLines = UiUtil.MakeCheckBox(vm, nameof(WhisperPostProcessingViewModel.MergeShortLines));
+        var checkMergeShortLines = UiUtil.MakeCheckBox(vm, nameof(SpeechToTextPostProcessingViewModel.MergeShortLines));
 
         var labelBreakSplitLongLines = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.BreakSplitLongLines);
-        var checkBreakSplitLongLines = UiUtil.MakeCheckBox(vm, nameof(WhisperPostProcessingViewModel.BreakSplitLongLines));
+        var checkBreakSplitLongLines = UiUtil.MakeCheckBox(vm, nameof(SpeechToTextPostProcessingViewModel.BreakSplitLongLines));
 
         var labelFixShortDuration = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.FixShortDuration);
-        var checkFixShortDuration = UiUtil.MakeCheckBox(vm, nameof(WhisperPostProcessingViewModel.FixShortDuration));
+        var checkFixShortDuration = UiUtil.MakeCheckBox(vm, nameof(SpeechToTextPostProcessingViewModel.FixShortDuration));
 
         var labelFixCasing = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.FixCasing);
-        var checkFixCasing = UiUtil.MakeCheckBox(vm, nameof(WhisperPostProcessingViewModel.FixCasing));
+        var checkFixCasing = UiUtil.MakeCheckBox(vm, nameof(SpeechToTextPostProcessingViewModel.FixCasing));
 
         var labelAddPeriods = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.AddPeriods);
-        var checkAddPeriods = UiUtil.MakeCheckBox(vm, nameof(WhisperPostProcessingViewModel.AddPeriods));
+        var checkAddPeriods = UiUtil.MakeCheckBox(vm, nameof(SpeechToTextPostProcessingViewModel.AddPeriods));
 
         var labelChangeUnderlineToColor = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.ChangeUnderlineToColor);
-        var checkChangeUnderlineToColor = UiUtil.MakeCheckBox(vm, nameof(WhisperPostProcessingViewModel.ChangeUnderlineToColor));
+        var checkChangeUnderlineToColor = UiUtil.MakeCheckBox(vm, nameof(SpeechToTextPostProcessingViewModel.ChangeUnderlineToColor));
         var colorPickerUnderlineToColor = new ColorPicker()
         {
             Width = 200,

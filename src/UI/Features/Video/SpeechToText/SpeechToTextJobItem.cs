@@ -4,7 +4,7 @@ using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
 
-public partial class WhisperJobItem : ObservableObject
+public partial class SpeechToTextJobItem : ObservableObject
 {
     [ObservableProperty] private string _inputVideoFileName;
     [ObservableProperty] private string _inputVideoFileNameShort;
@@ -14,7 +14,7 @@ public partial class WhisperJobItem : ObservableObject
 
     public FfmpegMediaInfo MediaInfo { get; set; }
 
-    public WhisperJobItem(string inputVideoFileName, string status, FfmpegMediaInfo mediaInfo)
+    public SpeechToTextJobItem(string inputVideoFileName, string status, FfmpegMediaInfo mediaInfo)
     {
         InputVideoFileName = inputVideoFileName;
         if (inputVideoFileName.Length > 75)
