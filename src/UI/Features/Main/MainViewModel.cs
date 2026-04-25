@@ -10456,6 +10456,29 @@ public partial class MainViewModel :
 
             if (subtitle == null)
             {
+                // check for large file size (> 2 GB) - cannot be a subtitle file
+                if (fileSize > 2_000_000_000)
+                {
+                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadLargeFile, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    // check if file is a video file - prompt to open as video
+                    if (Utilities.VideoFileExtensions.Contains(ext.ToLowerInvariant()))
+                    {
+                        var answer = await MessageBox.Show(
+                            Window!,
+                            Se.Language.General.Error,
+                            Se.Language.Main.ErrorLoadVideoFilePrompt,
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Question);
+                        if (answer == MessageBoxResult.Yes)
+                        {
+                            await VideoOpenFile(fileName);
+                        }
+                    }
+
+                    return;
+                }
+
                 foreach (var f in SubtitleFormat.GetBinaryFormats(false))
                 {
                     if (f.IsMine(null, fileName))

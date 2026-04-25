@@ -19,6 +19,8 @@ public class LanguageMain
     public string ErrorLoad7Zip { get; set; }
     public string ErrorLoadBinaryZeroes { get; set; }
     public string ErrorLoadGZip { get; set; }
+    public string ErrorLoadLargeFile { get; set; }
+    public string ErrorLoadVideoFilePrompt { get; set; }
     public string ErrorLoadJpg { get; set; }
     public string ErrorLoadPng { get; set; }
     public string ErrorLoadRar { get; set; }
@@ -120,6 +122,8 @@ public class LanguageMain
         ErrorLoad7Zip = "This file seems to be a compressed 7-Zip file.\n\nSubtitle Edit cannot open compressed files.";
         ErrorLoadBinaryZeroes = "Sorry, this file contains only binary zeroes!\n\nIf you have edited this file with Subtitle Edit you might be able to find a backup via the menu item File -&gt; Restore auto-backup...";
         ErrorLoadGZip = "This file seems to be a compressed GZip file.\n\nSubtitle Edit cannot open compressed files.";
+        ErrorLoadLargeFile = "This file is too large to open as a subtitle file.";
+        ErrorLoadVideoFilePrompt = "This file seems to be a video file.\n\nDo you want to open it as a video file?";
         ErrorLoadJpg = "This file seems to be a JPG image file.\n\nSubtitle Edit cannot open image files.";
         ErrorLoadPng = "This file seems to be a PNG image file.\n\nSubtitle Edit cannot open image files.";
         ErrorLoadRar = "This file seems to be a compressed 7-Zip file.\n\nSubtitle Edit cannot open compressed files.";
