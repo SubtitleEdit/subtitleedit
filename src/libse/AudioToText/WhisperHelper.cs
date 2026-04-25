@@ -108,13 +108,13 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
         {
             if (Configuration.IsRunningOnLinux && whisperChoice == WhisperChoice.Cpp)
             {
-                var path = Path.Combine(Configuration.DataDirectory, "Whisper", "Cpp");
+                var path = Path.Combine(Configuration.DataDirectory, "SpeechToText", "Cpp");
                 return Directory.Exists(path) ? path : null;
             }
 
             if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
             {
-                var path = Path.Combine(Configuration.DataDirectory, "Whisper", WhisperChoice.CppCuBlas);
+                var path = Path.Combine(Configuration.DataDirectory, "SpeechToText", WhisperChoice.CppCuBlas);
                 return Directory.Exists(path) ? path : null;
             }
 
@@ -175,19 +175,19 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                         }
                     }
 
-                    location = Path.Combine(Configuration.DataDirectory, "Whisper", "Purfview-Faster-Whisper-XXL");
+                    location = Path.Combine(Configuration.DataDirectory, "SpeechToText", "Purfview-Faster-Whisper-XXL");
                     return Directory.Exists(location) ? location : null;
                 }
 
                 if (whisperChoice == WhisperChoice.Cpp)
                 {
-                    var path = Path.Combine(Configuration.DataDirectory, "Whisper", "Cpp");
+                    var path = Path.Combine(Configuration.DataDirectory, "SpeechToText", "Cpp");
                     return Directory.Exists(path) ? path : null;
                 }
 
                 if (Configuration.Settings.Tools.WhisperChoice == WhisperChoice.CppCuBlas)
                 {
-                    var path = Path.Combine(Configuration.DataDirectory, "Whisper", WhisperChoice.CppCuBlas);
+                    var path = Path.Combine(Configuration.DataDirectory, "SpeechToText", WhisperChoice.CppCuBlas);
                     return Directory.Exists(path) ? path : null;
                 }
 
@@ -230,7 +230,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
                 if (whisperChoice == WhisperChoice.ConstMe)
                 {
-                    var path = Path.Combine(Configuration.DataDirectory, "Whisper", "Const-me");
+                    var path = Path.Combine(Configuration.DataDirectory, "SpeechToText", "Const-me");
                     return Directory.Exists(path) ? path : null;
                 }
 

@@ -18,13 +18,13 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                     return Configuration.Settings.Tools.WhisperCppModelLocation;
                 }
 
-                return Path.Combine(Configuration.DataDirectory, "Whisper", "Cpp", "Models");
+                return Path.Combine(Configuration.DataDirectory, "SpeechToText", "Cpp", "Models");
             }
         }
 
         public void CreateModelFolder()
         {
-            var whisperFolder = Path.Combine(Configuration.DataDirectory, "Whisper");
+            var whisperFolder = Path.Combine(Configuration.DataDirectory, "SpeechToText");
             if (!Directory.Exists(whisperFolder))
             {
                 Directory.CreateDirectory(whisperFolder);
