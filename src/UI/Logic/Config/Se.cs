@@ -9,7 +9,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -205,19 +204,20 @@ public class Se
 
     public static void SaveSettings(string settingsFileName)
     {
-        var settings = Settings;
-        var json = JsonSerializer.Serialize(settings);
-
         var directory = Path.GetDirectoryName(settingsFileName);
         if (!string.IsNullOrEmpty(directory))
         {
             Directory.CreateDirectory(directory);
         }
 
-        // Atomic write: write to a temp file in the same directory and replace,
-        // so a process kill mid-write can't leave a truncated/corrupt settings file.
+        // Atomic write: serialize directly to a temp file (UTF-8, no string round-trip)
+        // and replace, so a process kill mid-write can't leave a truncated settings file.
         var tempFileName = settingsFileName + ".tmp";
-        System.IO.File.WriteAllText(tempFileName, json);
+        using (var stream = System.IO.File.Create(tempFileName))
+        {
+            JsonSerializer.Serialize(stream, Settings, SeJsonContext.Default.Se);
+        }
+
         System.IO.File.Move(tempFileName, settingsFileName, overwrite: true);
 
         UpdateLibSeSettings();
@@ -236,32 +236,27 @@ public class Se
 
     public static void LoadSettings(string settingsFileName)
     {
-        if (System.IO.File.Exists(settingsFileName))
+        if (!System.IO.File.Exists(settingsFileName))
         {
-            var json = System.IO.File.ReadAllText(settingsFileName);
-
-            try
-            {
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true,
-                    ReadCommentHandling = JsonCommentHandling.Skip,
-                    AllowTrailingCommas = true,
-                    UnmappedMemberHandling = JsonUnmappedMemberHandling.Skip,
-                };
-
-                Settings = JsonSerializer.Deserialize<Se>(json, options)!;
-            }
-            catch (Exception exception)
-            {
-                Se.LogError(exception);
-                Settings = new Se();
-            }
-
-            SetDefaultValues();
-
-            UpdateLibSeSettings();
+            return;
         }
+
+        try
+        {
+            // Stream + source-generated metadata: no UTF-16 string round-trip and no
+            // runtime reflection over the settings type graph.
+            using var stream = System.IO.File.OpenRead(settingsFileName);
+            Settings = JsonSerializer.Deserialize(stream, SeJsonContext.Default.Se)!;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception);
+            Settings = new Se();
+        }
+
+        SetDefaultValues();
+
+        UpdateLibSeSettings();
     }
 
     private static void SetDefaultValues()
