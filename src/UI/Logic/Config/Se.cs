@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
@@ -17,7 +16,7 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 public class Se
 {
     public SeGeneral General { get; set; } = new();
-    public List<SeShortCut> Shortcuts { get; set; }
+    public List<SeShortCut> Shortcuts { get; set; } = new();
     public string Color1 { get; set; } = "#ffff00ff";
     public string Color2 { get; set; } = "#ff0000ff";
     public string Color3 { get; set; } = "#00ff00ff";
@@ -65,22 +64,17 @@ public class Se
 
         IsPortable = !IsInstalledInProgramFiles;
 
-        LogError("Info: Subtitle Edit started. IsPortable: " + IsPortable + ", ExePath: " + ExePath);
-
         DataFolder = IsPortable
             ? ExePath
             : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
 
-        if (!Directory.Exists(DataFolder))
+        try
         {
-            try
-            {
-                Directory.CreateDirectory(DataFolder);
-            }
-            catch
-            {
-                SeLogger.Error("Error creating data folder: " + DataFolder);
-            }
+            Directory.CreateDirectory(DataFolder);
+        }
+        catch
+        {
+            SeLogger.Error("Error creating data folder: " + DataFolder);
         }
 
         // Sync libse Configuration so it uses the same data folder as Se.
@@ -107,82 +101,82 @@ public class Se
     public static string GoogleLensOcrFolder => Path.Combine(OcrFolder, "Google-Lens");
     public static string VlcFolder => Path.Combine(DataFolder, "VLC");
     public static string SevenZipFolder => Path.Combine(DataFolder, "7Zip");
-    public static string TesseractFolder
+    private static readonly Lazy<string> _tesseractFolder = new(ResolveTesseractFolder);
+    public static string TesseractFolder => _tesseractFolder.Value;
+
+    private static string ResolveTesseractFolder()
     {
-        get
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                return Path.Combine(DataFolder, "Tesseract550");
-            }
-
-            var folders = new List<string>();
-            if (Directory.Exists("/opt/homebrew/Cellar/tesseract"))
-            {
-                foreach (var folder in Directory.EnumerateDirectories("/opt/homebrew/Cellar/tesseract"))
-                {
-                    folders.Add(Path.Combine(folder, "bin"));
-                }
-            }
-
-            folders.Add("/usr/local/bin");
-            folders.Add("/usr/bin");
-            folders.Add("/opt/homebrew/bin");
-            folders.Add("/opt/local/bin");
-
-            foreach (var folder in folders.OrderByDescending(p => p))
-            {
-                var path = Path.Combine(folder, "tesseract");
-                if (System.IO.File.Exists(path))
-                {
-                    return folder;
-                }
-            }
-
             return Path.Combine(DataFolder, "Tesseract550");
         }
+
+        var folders = new List<string>();
+        if (Directory.Exists("/opt/homebrew/Cellar/tesseract"))
+        {
+            foreach (var folder in Directory.EnumerateDirectories("/opt/homebrew/Cellar/tesseract"))
+            {
+                folders.Add(Path.Combine(folder, "bin"));
+            }
+        }
+
+        folders.Add("/usr/local/bin");
+        folders.Add("/usr/bin");
+        folders.Add("/opt/homebrew/bin");
+        folders.Add("/opt/local/bin");
+
+        foreach (var folder in folders)
+        {
+            var path = Path.Combine(folder, "tesseract");
+            if (System.IO.File.Exists(path))
+            {
+                return folder;
+            }
+        }
+
+        return Path.Combine(DataFolder, "Tesseract550");
     }
 
-    public static string TesseractModelFolder
+    private static readonly Lazy<string> _tesseractModelFolder = new(ResolveTesseractModelFolder);
+    public static string TesseractModelFolder => _tesseractModelFolder.Value;
+
+    private static string ResolveTesseractModelFolder()
     {
-        get
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                return Path.Combine(TesseractFolder, "tessdata");
-            }
-
-            var folders = new List<string>();
-
-            if (Directory.Exists("/opt/homebrew/Cellar/tesseract-lang"))
-            {
-                foreach (var folder in Directory.EnumerateDirectories("/opt/homebrew/Cellar/tesseract-lang"))
-                {
-                    folders.Add(Path.Combine(folder, "share/tessdata"));
-                }
-            }
-
-            if (Directory.Exists("/usr/share/tesseract-ocr"))
-            {
-                foreach (var folder in Directory.EnumerateDirectories("/usr/share/tesseract-ocr"))
-                {
-                    folders.Add(Path.Combine(folder, "tessdata"));
-                }
-            }
-
-            folders.Add(Path.Combine("/usr/share/tessdata"));
-            folders.Add(Path.Combine("/opt/homebrew/share/tessdata/"));
-
-            foreach (var folder in folders.OrderByDescending(p => p))
-            {
-                if (Directory.Exists(folder))
-                {
-                    return folder;
-                }
-            }
-
             return Path.Combine(TesseractFolder, "tessdata");
         }
+
+        var folders = new List<string>();
+
+        if (Directory.Exists("/opt/homebrew/Cellar/tesseract-lang"))
+        {
+            foreach (var folder in Directory.EnumerateDirectories("/opt/homebrew/Cellar/tesseract-lang"))
+            {
+                folders.Add(Path.Combine(folder, "share/tessdata"));
+            }
+        }
+
+        if (Directory.Exists("/usr/share/tesseract-ocr"))
+        {
+            foreach (var folder in Directory.EnumerateDirectories("/usr/share/tesseract-ocr"))
+            {
+                folders.Add(Path.Combine(folder, "tessdata"));
+            }
+        }
+
+        folders.Add("/usr/share/tessdata");
+        folders.Add("/opt/homebrew/share/tessdata/");
+
+        foreach (var folder in folders)
+        {
+            if (Directory.Exists(folder))
+            {
+                return folder;
+            }
+        }
+
+        return Path.Combine(TesseractFolder, "tessdata");
     }
 
     public static string FfmpegFolder => Path.Combine(DataFolder, "ffmpeg");
@@ -192,11 +186,6 @@ public class Se
     public static string ShotChangesFolder => Path.Combine(DataFolder, "ShotChanges");
 
     public static string Version { get; set; } = "v5.0.0-beta18";
-
-    public Se()
-    {
-        Shortcuts = new List<SeShortCut>();
-    }
 
     public void InitializeMainShortcuts(MainViewModel vm)
     {
@@ -218,7 +207,18 @@ public class Se
     {
         var settings = Settings;
         var json = JsonSerializer.Serialize(settings);
-        System.IO.File.WriteAllText(settingsFileName, json);
+
+        var directory = Path.GetDirectoryName(settingsFileName);
+        if (!string.IsNullOrEmpty(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        // Atomic write: write to a temp file in the same directory and replace,
+        // so a process kill mid-write can't leave a truncated/corrupt settings file.
+        var tempFileName = settingsFileName + ".tmp";
+        System.IO.File.WriteAllText(tempFileName, json);
+        System.IO.File.Move(tempFileName, settingsFileName, overwrite: true);
 
         UpdateLibSeSettings();
     }
@@ -229,7 +229,7 @@ public class Se
         LoadSettings(settingsFileName);
     }
 
-    internal static string GetSettingsFilePath()
+    public static string GetSettingsFilePath()
     {
         return Path.Combine(DataFolder, "Settings.json");
     }
@@ -279,6 +279,16 @@ public class Se
         if (Settings.File == null)
         {
             Settings.File = new();
+        }
+
+        if (Settings.Edit == null)
+        {
+            Settings.Edit = new();
+        }
+
+        if (Settings.Options == null)
+        {
+            Settings.Options = new();
         }
 
         if (Settings.General == null)
