@@ -172,7 +172,7 @@ public partial class DownloadWhisperEngineViewModel : ObservableObject
                             : CrispAsrWindowsVariant switch
                             {
                                 "cuda"   => "crispasr-windows-x86_64-cuda",
-                                "cpu"    => "crispasr-windows-x86_64-cpu",
+                                "cpu"    => "crispasr-windows-x86_64-cpu-legacy",
                                 "vulkan" => "crispasr-windows-x86_64-vulkan",
                                 _        => Engine.UnpackSkipFolder,
                             }
