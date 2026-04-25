@@ -572,8 +572,6 @@ public partial class PaddleOcr
             return;
         }
 
-        Se.WriteWhisperLog(outLine.Data);
-
         if (!outLine.Data.Contains("ppocr INFO:"))
         {
             return;

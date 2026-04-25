@@ -10,6 +10,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -116,7 +117,7 @@ public class Se
             }
 
             var folders = new List<string>();
-            if (Directory.Exists("/opt/homebrew/Cellar/tesseract-lang"))
+            if (Directory.Exists("/opt/homebrew/Cellar/tesseract"))
             {
                 foreach (var folder in Directory.EnumerateDirectories("/opt/homebrew/Cellar/tesseract"))
                 {
@@ -128,7 +129,6 @@ public class Se
             folders.Add("/usr/bin");
             folders.Add("/opt/homebrew/bin");
             folders.Add("/opt/local/bin");
-            folders.Add("/usr/local/Cellar");
 
             foreach (var folder in folders.OrderByDescending(p => p))
             {
@@ -246,12 +246,11 @@ public class Se
                 {
                     PropertyNameCaseInsensitive = true,
                     ReadCommentHandling = JsonCommentHandling.Skip,
-                    AllowTrailingCommas = true
+                    AllowTrailingCommas = true,
+                    UnmappedMemberHandling = JsonUnmappedMemberHandling.Skip,
                 };
 
-                options.GetType().GetProperty("IgnoreUnknownProperties")?.SetValue(options, true);
-
-                Settings = JsonSerializer.Deserialize<Se>(json)!;
+                Settings = JsonSerializer.Deserialize<Se>(json, options)!;
             }
             catch (Exception exception)
             {
@@ -367,29 +366,29 @@ public class Se
         Configuration.Settings.General.UseDarkTheme = Settings.Appearance.Theme == "Dark";
         Configuration.Settings.General.UseTimeFormatHHMMSSFF = Settings.General.UseFrameMode;
 
-        var tts = Settings.Tools.AudioToText;
-        Configuration.Settings.Tools.WhisperChoice = tts.WhisperChoice;
-        Configuration.Settings.Tools.WhisperIgnoreVersion = tts.WhisperIgnoreVersion;
-        Configuration.Settings.Tools.WhisperDeleteTempFiles = tts.WhisperDeleteTempFiles;
-        Configuration.Settings.Tools.WhisperModel = tts.WhisperModel;
-        Configuration.Settings.Tools.WhisperLanguageCode = tts.WhisperLanguageCode;
-        Configuration.Settings.Tools.WhisperLocation = tts.WhisperLocation;
-        Configuration.Settings.Tools.WhisperCtranslate2Location = tts.WhisperCtranslate2Location;
-        Configuration.Settings.Tools.WhisperPurfviewFasterWhisperLocation = tts.WhisperPurfviewFasterWhisperLocation;
-        Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd = tts.WhisperPurfviewFasterWhisperDefaultCmd;
-        Configuration.Settings.Tools.WhisperXLocation = tts.WhisperXLocation;
-        Configuration.Settings.Tools.WhisperStableTsLocation = tts.WhisperStableTsLocation;
-        Configuration.Settings.Tools.WhisperCppModelLocation = tts.WhisperCppModelLocation;
-        Configuration.Settings.Tools.WhisperExtraSettings = tts.WhisperCustomCommandLineArguments;
-        Configuration.Settings.Tools.WhisperExtraSettingsHistory = tts.WhisperExtraSettingsHistory;
-        Configuration.Settings.Tools.WhisperAutoAdjustTimings = tts.WhisperAutoAdjustTimings;
-        Configuration.Settings.Tools.WhisperUseLineMaxChars = tts.WhisperUseLineMaxChars;
-        Configuration.Settings.Tools.WhisperPostProcessingAddPeriods = tts.WhisperPostProcessingAddPeriods;
-        Configuration.Settings.Tools.WhisperPostProcessingMergeLines = tts.WhisperPostProcessingMergeLines;
-        Configuration.Settings.Tools.WhisperPostProcessingSplitLines = tts.WhisperPostProcessingSplitLines;
-        Configuration.Settings.Tools.WhisperPostProcessingFixCasing = tts.WhisperPostProcessingFixCasing;
-        Configuration.Settings.Tools.WhisperPostProcessingFixShortDuration = tts.WhisperPostProcessingFixShortDuration;
-        Configuration.Settings.Tools.VoskPostProcessing = tts.PostProcessing;
+        var stt = Settings.Tools.AudioToText;
+        Configuration.Settings.Tools.WhisperChoice = stt.WhisperChoice;
+        Configuration.Settings.Tools.WhisperIgnoreVersion = stt.WhisperIgnoreVersion;
+        Configuration.Settings.Tools.WhisperDeleteTempFiles = stt.WhisperDeleteTempFiles;
+        Configuration.Settings.Tools.WhisperModel = stt.WhisperModel;
+        Configuration.Settings.Tools.WhisperLanguageCode = stt.WhisperLanguageCode;
+        Configuration.Settings.Tools.WhisperLocation = stt.WhisperLocation;
+        Configuration.Settings.Tools.WhisperCtranslate2Location = stt.WhisperCtranslate2Location;
+        Configuration.Settings.Tools.WhisperPurfviewFasterWhisperLocation = stt.WhisperPurfviewFasterWhisperLocation;
+        Configuration.Settings.Tools.WhisperPurfviewFasterWhisperDefaultCmd = stt.WhisperPurfviewFasterWhisperDefaultCmd;
+        Configuration.Settings.Tools.WhisperXLocation = stt.WhisperXLocation;
+        Configuration.Settings.Tools.WhisperStableTsLocation = stt.WhisperStableTsLocation;
+        Configuration.Settings.Tools.WhisperCppModelLocation = stt.WhisperCppModelLocation;
+        Configuration.Settings.Tools.WhisperExtraSettings = stt.WhisperCustomCommandLineArguments;
+        Configuration.Settings.Tools.WhisperExtraSettingsHistory = stt.WhisperExtraSettingsHistory;
+        Configuration.Settings.Tools.WhisperAutoAdjustTimings = stt.WhisperAutoAdjustTimings;
+        Configuration.Settings.Tools.WhisperUseLineMaxChars = stt.WhisperUseLineMaxChars;
+        Configuration.Settings.Tools.WhisperPostProcessingAddPeriods = stt.WhisperPostProcessingAddPeriods;
+        Configuration.Settings.Tools.WhisperPostProcessingMergeLines = stt.WhisperPostProcessingMergeLines;
+        Configuration.Settings.Tools.WhisperPostProcessingSplitLines = stt.WhisperPostProcessingSplitLines;
+        Configuration.Settings.Tools.WhisperPostProcessingFixCasing = stt.WhisperPostProcessingFixCasing;
+        Configuration.Settings.Tools.WhisperPostProcessingFixShortDuration = stt.WhisperPostProcessingFixShortDuration;
+        Configuration.Settings.Tools.VoskPostProcessing = stt.PostProcessing;
 
         Configuration.Settings.Tools.AutoTranslateLastName = Settings.AutoTranslate.AutoTranslateLastName;
 
@@ -447,7 +446,7 @@ public class Se
         return Path.Combine(DataFolder, "speech-to-text-log.txt");
     }
 
-    public static void WriteWhisperLog(string log)
+    public static void WriteSpeechToTextLog(string log)
     {
         try
         {

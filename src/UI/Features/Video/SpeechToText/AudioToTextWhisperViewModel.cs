@@ -1161,7 +1161,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
             sbLog.AppendLine(s.TrimEnd());
         }
 
-        Se.WriteWhisperLog(sbLog.ToString().Trim());
+        Se.WriteSpeechToTextLog(sbLog.ToString().Trim());
 
         var anyLinesTranscribed = transcribedSubtitle != null && transcribedSubtitle.Paragraphs.Count > 0;
 
