@@ -44,7 +44,7 @@ public class WhisperEngineCTranslate2 : ISpeechToTextEngine
 
     public string GetAndCreateWhisperFolder()
     {
-        var baseFolder = Se.WhisperFolder;
+        var baseFolder = Se.SpeechToTextFolder;
         if (!Directory.Exists(baseFolder))
         {
             Directory.CreateDirectory(baseFolder);

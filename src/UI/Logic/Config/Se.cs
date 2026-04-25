@@ -186,7 +186,7 @@ public class Se
     }
 
     public static string FfmpegFolder => Path.Combine(DataFolder, "ffmpeg");
-    public static string WhisperFolder => Path.Combine(DataFolder, "Whisper");
+    public static string SpeechToTextFolder => Path.Combine(DataFolder, "SpeechToText");
     public static string WaveformsFolder => Path.Combine(DataFolder, "Waveforms");
     public static string SpectrogramsFolder => Path.Combine(DataFolder, "Spectrograms");
     public static string ShotChangesFolder => Path.Combine(DataFolder, "ShotChanges");
@@ -439,19 +439,19 @@ public class Se
 
     public static string GetErrorLogFilePath()
     {
-        return Path.Combine(DataFolder, "error_log.txt");
+        return Path.Combine(DataFolder, "error-log.txt");
     }
 
-    public static string GetWhisperLogFilePath()
+    public static string GetSpeechToTextLogFilePath()
     {
-        return Path.Combine(DataFolder, "whisper_log.txt");
+        return Path.Combine(DataFolder, "speech-to-text-log.txt");
     }
 
     public static void WriteWhisperLog(string log)
     {
         try
         {
-            var filePath = GetWhisperLogFilePath();
+            var filePath = GetSpeechToTextLogFilePath();
             using var writer = new StreamWriter(filePath, true, Encoding.UTF8);
             writer.WriteLine("-----------------------------------------------------------------------------");
             writer.WriteLine($"Date: {DateTime.Now.ToString(CultureInfo.InvariantCulture)}");

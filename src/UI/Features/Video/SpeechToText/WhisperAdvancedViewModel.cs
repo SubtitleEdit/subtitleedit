@@ -144,7 +144,7 @@ public partial class WhisperAdvancedViewModel : ObservableObject
 
     private string? GetVadCrispAsrFile()
     {
-        var folder = Path.Combine(Se.WhisperFolder, "CrispASR");
+        var folder = Path.Combine(Se.SpeechToTextFolder, "CrispASR");
         if (!Directory.Exists(folder))
         {
             return null;
@@ -164,8 +164,8 @@ public partial class WhisperAdvancedViewModel : ObservableObject
     {
         var searchPaths = new List<string>
         {
-            Path.Combine(Se.WhisperFolder, "Cpp", "Models"),
-            Path.Combine(Se.WhisperFolder, "Cpp"),
+            Path.Combine(Se.SpeechToTextFolder, "Cpp", "Models"),
+            Path.Combine(Se.SpeechToTextFolder, "Cpp"),
         };
 
         foreach (var searchPath in searchPaths)

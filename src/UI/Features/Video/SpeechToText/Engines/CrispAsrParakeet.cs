@@ -91,7 +91,7 @@ public class CrispAsrParakeet : CrispAsrEngineBase
 
     public override string GetAndCreateWhisperFolder()
     {
-        var baseFolder = Se.WhisperFolder;
+        var baseFolder = Se.SpeechToTextFolder;
         if (!Directory.Exists(baseFolder))
         {
             Directory.CreateDirectory(baseFolder);

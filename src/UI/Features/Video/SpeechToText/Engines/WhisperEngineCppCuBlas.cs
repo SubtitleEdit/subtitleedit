@@ -44,7 +44,7 @@ public class WhisperEngineCppCuBlas : ISpeechToTextEngine
 
     public string GetAndCreateWhisperFolder()
     {
-        var baseFolder = Se.WhisperFolder;
+        var baseFolder = Se.SpeechToTextFolder;
         if (!Directory.Exists(baseFolder))
         {
             Directory.CreateDirectory(baseFolder);
@@ -61,7 +61,7 @@ public class WhisperEngineCppCuBlas : ISpeechToTextEngine
 
     public string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel)
     {
-        var baseFolder = Se.WhisperFolder;
+        var baseFolder = Se.SpeechToTextFolder;
         if (!Directory.Exists(baseFolder))
         {
             Directory.CreateDirectory(baseFolder);

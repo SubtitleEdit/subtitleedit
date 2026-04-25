@@ -804,7 +804,7 @@ public partial class SettingsViewModel : ObservableObject
         LoadFileTypeAssociations();
 
         ExistsErrorLogFile = File.Exists(Se.GetErrorLogFilePath());
-        ExistsWhisperLogFile = File.Exists(Se.GetWhisperLogFilePath());
+        ExistsWhisperLogFile = File.Exists(Se.GetSpeechToTextLogFilePath());
         ExistsSettingsFile = File.Exists(Se.GetSettingsFilePath());
     }
 
@@ -2110,12 +2110,12 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task ShowWhisperLogFile()
     {
-        if (Window == null || !File.Exists(Se.GetWhisperLogFilePath()))
+        if (Window == null || !File.Exists(Se.GetSpeechToTextLogFilePath()))
         {
             return;
         }
 
-        await _folderHelper.OpenFolderWithFileSelected(Window!, Se.GetWhisperLogFilePath());
+        await _folderHelper.OpenFolderWithFileSelected(Window!, Se.GetSpeechToTextLogFilePath());
     }
 
     [RelayCommand]

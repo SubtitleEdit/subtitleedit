@@ -1187,7 +1187,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
 
                 if (Window != null)
                 {
-                    FileHelper.OpenFileWithDefaultProgram(Se.GetWhisperLogFilePath());
+                    FileHelper.OpenFileWithDefaultProgram(Se.GetSpeechToTextLogFilePath());
                 }
 
                 OkPressed = anyLinesTranscribed;
@@ -1356,7 +1356,7 @@ public partial class AudioToTextWhisperViewModel : ObservableObject
     [RelayCommand]
     private void ViewWhisperLogFile()
     {
-        var logFilePath = Se.GetWhisperLogFilePath();
+        var logFilePath = Se.GetSpeechToTextLogFilePath();
         if (Window != null)
         {
             FileHelper.OpenFileWithDefaultProgram(logFilePath);
