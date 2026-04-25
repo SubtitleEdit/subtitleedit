@@ -93,7 +93,7 @@ public class Se
     public static string ThemesFolder => Path.Combine(DataFolder, "Themes");
     public static string AutoBackupFolder => Path.Combine(DataFolder, "AutoBackup");
     public static string FfmpegFolder => Path.Combine(DataFolder, "ffmpeg");
-    public static string TextToSpeechFolder => Path.Combine(DataFolder, "TTS");
+    public static string TextToSpeechFolder => Path.Combine(DataFolder, "TextToSpeech");
     public static string SpeechToTextFolder => Path.Combine(DataFolder, "SpeechToText");
     public static string WaveformsFolder => Path.Combine(DataFolder, "Waveforms");
     public static string SpectrogramsFolder => Path.Combine(DataFolder, "Spectrograms");
