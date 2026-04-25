@@ -10482,6 +10482,18 @@ public partial class MainViewModel :
                     }
                 }
 
+                if (subtitle == null)
+                {
+                    var uknownFormatImporter = new UnknownFormatImporter { UseFrames = true };
+                    var lines = FileUtil.ReadAllLinesShared(fileName, Encoding.UTF8);
+                    var genericParseSubtitle = uknownFormatImporter.AutoGuessImport(lines, fileName);
+                    if (genericParseSubtitle.Paragraphs.Count > 1)
+                    {
+                        subtitle = genericParseSubtitle;
+                        _converted = true;
+                    }
+                }
+
                 // check for .rar file
                 if (subtitle == null && fileSize > 100 && FileUtil.IsRar(fileName))
                 {
