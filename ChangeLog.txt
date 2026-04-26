@@ -18,6 +18,7 @@ v5.0.0-beta19 (xth April 2026)
 * Update Italian translation - thx bovirus
 * Improve "Center text in subtitle text box" - thx enji1000
 * Improve position detect for OCR
+* Improve Qwen3 TTS (Qwen3-TTS-12Hz-1.7B model + Windows-CPU-only-build) 
 
 -----------------------------------------------------------------------------------------------------
 
