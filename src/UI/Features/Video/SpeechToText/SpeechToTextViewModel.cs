@@ -90,7 +90,6 @@ public partial class SpeechToTextViewModel : ObservableObject
     private long _startTicks = 0;
     private double _endSeconds;
     private double _showProgressPct = -1;
-    private double _lastEstimatedMs = double.MaxValue;
     private readonly VideoInfo _videoInfo = new();
     private bool _abort;
     private readonly List<ResultText> _resultList = new();
@@ -300,14 +299,6 @@ public partial class SpeechToTextViewModel : ObservableObject
                 var msPerFrame = durationMs / (_endSeconds * 1000.0);
                 var estimatedTotalMs = msPerFrame * _videoInfo.TotalMilliseconds;
                 var msEstimatedLeft = estimatedTotalMs - durationMs;
-                if (msEstimatedLeft > _lastEstimatedMs)
-                {
-                    msEstimatedLeft = _lastEstimatedMs;
-                }
-                else
-                {
-                    _lastEstimatedMs = msEstimatedLeft;
-                }
 
                 if (_showProgressPct > 0)
                 {
@@ -741,7 +732,6 @@ public partial class SpeechToTextViewModel : ObservableObject
             _startTicks = 0;
             _endSeconds = 0; ;
             _showProgressPct = -1;
-            _lastEstimatedMs = double.MaxValue;
             _outputText.Clear();
             ConsoleLog = string.Empty;
             ProgressText = string.Empty;

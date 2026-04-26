@@ -241,6 +241,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
             // Attach a tunnel handler so we see clicks even if child handles them.
             mainGrid.AddHandler(InputElement.PointerPressedEvent, OnMainGridPointerPressed, RoutingStrategies.Tunnel, handledEventsToo: true);
+            mainGrid.AddHandler(InputElement.PointerReleasedEvent, OnMainGridPointerReleased, RoutingStrategies.Tunnel, handledEventsToo: true);
 
             // Buttons
             var stackPanel = new StackPanel
@@ -449,12 +450,12 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         // Enable/disable click-to-toggle behavior (default on)
         public bool ClickToTogglePlay { get; set; } = true;
         public bool IsSmpteTimingEnabled { get; set; }
+        private bool _surfaceLeftButtonDown;
 
         private void OnMainGridPointerPressed(object? sender, PointerPressedEventArgs e)
         {
-            // Only act on left button presses
             var props = e.GetCurrentPoint(this).Properties;
-            if (!props.IsLeftButtonPressed)
+            if (props.PointerUpdateKind != PointerUpdateKind.LeftButtonPressed || _surfaceLeftButtonDown)
             {
                 return;
             }
@@ -479,6 +480,9 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 return;
             }
 
+            _surfaceLeftButtonDown = true;
+            e.Pointer.Capture(this);
+
             // This is a click on the video surface
             SurfacePointerPressed?.Invoke(this, e);
 
@@ -493,6 +497,21 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             {
                 // Consider this user activity for the auto-hide logic
                 OnUserActivity();
+            }
+        }
+
+        private void OnMainGridPointerReleased(object? sender, PointerReleasedEventArgs e)
+        {
+            if (!_surfaceLeftButtonDown)
+            {
+                return;
+            }
+
+            var props = e.GetCurrentPoint(this).Properties;
+            if (!props.IsLeftButtonPressed)
+            {
+                _surfaceLeftButtonDown = false;
+                e.Pointer.Capture(null);
             }
         }
 
