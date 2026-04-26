@@ -106,8 +106,8 @@ public partial class AdjustDurationViewModel : ObservableObject
             var nextSubtitle = subtitles.GetOrNull(i + 1);
 
             var originalDuration = subtitle.EndTime - subtitle.StartTime;
-            var adjustment = originalDuration.TotalSeconds * (AdjustPercent / 100.0);
-            var newEndTime = subtitle.EndTime + TimeSpan.FromSeconds(adjustment);
+            var newDuration = originalDuration.TotalSeconds * (AdjustPercent / 100.0);
+            var newEndTime = subtitle.StartTime + TimeSpan.FromSeconds(newDuration);
 
             if (nextSubtitle != null && newEndTime > nextSubtitle.StartTime)
             {
