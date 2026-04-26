@@ -249,7 +249,9 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 continue;
             }
 
-            if (engineItem is Qwen3TtsCpp && (!File.Exists(Qwen3TtsCpp.GetExecutableFileName()) || !Qwen3TtsCpp.IsModelsInstalled()))
+            if (engineItem is Qwen3TtsCpp && (!File.Exists(Qwen3TtsCpp.GetExecutableFileName())
+                || (!Qwen3TtsCpp.IsModelsInstalled(Qwen3TtsCpp.ModelKey06B)
+                    && !Qwen3TtsCpp.IsModelsInstalled(Qwen3TtsCpp.ModelKey17BBase))))
             {
                 continue;
             }
@@ -914,6 +916,14 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
                     SelectedModel = Enumerable.First<string>(Models);
+                }
+            }
+            else if (engine is Qwen3TtsCpp)
+            {
+                SelectedModel = Enumerable.FirstOrDefault<string>(Models, p => p == Se.Settings.Video.TextToSpeech.Qwen3TtsCppModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Enumerable.FirstOrDefault<string>(Models);
                 }
             }
         });

@@ -24,11 +24,32 @@ public class Qwen3TtsCpp : ITtsEngine
     public bool HasLanguageParameter => false;
     public bool HasApiKey => false;
     public bool HasRegion => false;
-    public bool HasModel => false;
+    public bool HasModel => true;
     public bool HasKeyFile => false;
 
-    public const string TtsModelFileName = "qwen3-tts-0.6b-q8_0.gguf";
+    public const string ModelKey06B = "0.6B";
+    public const string ModelKey17BBase = "1.7B Base";
+    public const string DefaultModelKey = ModelKey06B;
+
+    public const string TtsModelFileName06B = "qwen3-tts-0.6b-q8_0.gguf";
+    public const string TtsModelFileName17BBase = "Qwen3-TTS-12Hz-1.7B-Base-q8_0.gguf";
     public const string TokenizerModelFileName = "qwen3-tts-tokenizer-q8_0.gguf";
+
+    public static string GetModelFileName(string? modelKey) => modelKey switch
+    {
+        ModelKey17BBase => TtsModelFileName17BBase,
+        _ => TtsModelFileName06B,
+    };
+
+    public static string ResolveModelKey(string? modelKey)
+    {
+        if (string.IsNullOrEmpty(modelKey))
+        {
+            var saved = Se.Settings.Video.TextToSpeech.Qwen3TtsCppModel;
+            return string.IsNullOrEmpty(saved) ? DefaultModelKey : saved;
+        }
+        return modelKey;
+    }
 
     private static readonly HttpClient HttpClient = new()
     {
@@ -37,6 +58,7 @@ public class Qwen3TtsCpp : ITtsEngine
     private static readonly SemaphoreSlim ServerLock = new(1, 1);
     private static Process? _serverProcess;
     private static int _serverPort;
+    private static string? _serverModelFileName;
     private static bool _processExitHooked;
 
     private static string ServerBaseUrl => $"http://127.0.0.1:{_serverPort}";
@@ -46,10 +68,11 @@ public class Qwen3TtsCpp : ITtsEngine
         return Task.FromResult(File.Exists(GetExecutableFileName()));
     }
 
-    public static bool IsModelsInstalled()
+    public static bool IsModelsInstalled(string? modelKey = null)
     {
         var modelsFolder = GetSetModelsFolder();
-        return File.Exists(Path.Combine(modelsFolder, TtsModelFileName)) &&
+        var resolved = ResolveModelKey(modelKey);
+        return File.Exists(Path.Combine(modelsFolder, GetModelFileName(resolved))) &&
                File.Exists(Path.Combine(modelsFolder, TokenizerModelFileName));
     }
 
@@ -127,7 +150,7 @@ public class Qwen3TtsCpp : ITtsEngine
 
     public Task<string[]> GetModels()
     {
-        return Task.FromResult(Array.Empty<string>());
+        return Task.FromResult(new[] { ModelKey06B, ModelKey17BBase });
     }
 
     public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model)
@@ -154,7 +177,8 @@ public class Qwen3TtsCpp : ITtsEngine
             throw new ArgumentException("Voice is not a Qwen3TtsVoice");
         }
 
-        await EnsureServerRunningAsync(cancellationToken);
+        var modelFileName = GetModelFileName(ResolveModelKey(model));
+        await EnsureServerRunningAsync(modelFileName, cancellationToken);
 
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
         var inputText = Utilities.UnbreakLine(text);
@@ -211,9 +235,9 @@ public class Qwen3TtsCpp : ITtsEngine
         }
     }
 
-    private static async Task EnsureServerRunningAsync(CancellationToken ct)
+    private static async Task EnsureServerRunningAsync(string modelFileName, CancellationToken ct)
     {
-        if (_serverProcess is { HasExited: false } && _serverPort != 0)
+        if (_serverProcess is { HasExited: false } && _serverPort != 0 && _serverModelFileName == modelFileName)
         {
             return;
         }
@@ -221,9 +245,15 @@ public class Qwen3TtsCpp : ITtsEngine
         await ServerLock.WaitAsync(ct);
         try
         {
-            if (_serverProcess is { HasExited: false } && _serverPort != 0)
+            if (_serverProcess is { HasExited: false } && _serverPort != 0 && _serverModelFileName == modelFileName)
             {
                 return;
+            }
+
+            // Different model selected, or server not running — (re)start with the requested model.
+            if (_serverProcess != null)
+            {
+                StopServerInternal();
             }
 
             var exe = GetExecutableFileName();
@@ -245,7 +275,7 @@ public class Qwen3TtsCpp : ITtsEngine
             psi.ArgumentList.Add("-m");
             psi.ArgumentList.Add(GetSetModelsFolder());
             psi.ArgumentList.Add("--model-name");
-            psi.ArgumentList.Add(TtsModelFileName);
+            psi.ArgumentList.Add(modelFileName);
             psi.ArgumentList.Add("--host");
             psi.ArgumentList.Add("127.0.0.1");
             psi.ArgumentList.Add("--port");
@@ -268,6 +298,7 @@ public class Qwen3TtsCpp : ITtsEngine
 
             _serverProcess = process;
             _serverPort = port;
+            _serverModelFileName = modelFileName;
             HookProcessExitOnce();
 
             var deadline = DateTime.UtcNow.AddSeconds(120);
@@ -279,6 +310,7 @@ public class Qwen3TtsCpp : ITtsEngine
                     var tail = SnapshotStderr(stderrBuffer);
                     _serverProcess = null;
                     _serverPort = 0;
+                    _serverModelFileName = null;
                     throw new InvalidOperationException(
                         $"qwen3-tts-server exited during startup (code {process.ExitCode}). Output: {tail}");
                 }
@@ -363,6 +395,7 @@ public class Qwen3TtsCpp : ITtsEngine
         var p = _serverProcess;
         _serverProcess = null;
         _serverPort = 0;
+        _serverModelFileName = null;
         if (p == null) return;
         try
         {

@@ -229,6 +229,10 @@ public partial class TextToSpeechViewModel : ObservableObject
             Se.Settings.Video.TextToSpeech.MistralApiKey = ApiKey;
             Se.Settings.Video.TextToSpeech.MistralModel = SelectedModel ?? "voxtral-mini-tts-2603";
         }
+        else if (SelectedEngine is Qwen3TtsCpp)
+        {
+            Se.Settings.Video.TextToSpeech.Qwen3TtsCppModel = SelectedModel ?? Qwen3TtsCpp.DefaultModelKey;
+        }
         else if (SelectedEngine is Murf)
         {
             Se.Settings.Video.TextToSpeech.MurfApiKey = ApiKey;
@@ -633,12 +637,14 @@ public partial class TextToSpeechViewModel : ObservableObject
                 });
             }
 
-            if (!Qwen3TtsCpp.IsModelsInstalled())
+            var qwen3ModelKey = Qwen3TtsCpp.ResolveModelKey(SelectedModel);
+            if (!Qwen3TtsCpp.IsModelsInstalled(qwen3ModelKey))
             {
+                var sizeText = qwen3ModelKey == Qwen3TtsCpp.ModelKey17BBase ? "~2.7 GB" : "~1.6 GB";
                 var answer = await MessageBox.Show(
                     Window,
                     "Download Qwen3 TTS models?",
-                    $"{Environment.NewLine}\"Qwen3 TTS\" requires models (~1.6 GB).{Environment.NewLine}{Environment.NewLine}Download models?",
+                    $"{Environment.NewLine}\"Qwen3 TTS\" ({qwen3ModelKey}) requires models ({sizeText}).{Environment.NewLine}{Environment.NewLine}Download models?",
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -647,8 +653,8 @@ public partial class TextToSpeechViewModel : ObservableObject
                     return false;
                 }
 
-                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadQwen3TtsModels());
-                return dlResult.OkPressed && Qwen3TtsCpp.IsModelsInstalled();
+                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadQwen3TtsModels(qwen3ModelKey));
+                return dlResult.OkPressed && Qwen3TtsCpp.IsModelsInstalled(qwen3ModelKey);
             }
 
             return true;
@@ -1367,6 +1373,14 @@ public partial class TextToSpeechViewModel : ObservableObject
             {
                 ApiKey = Se.Settings.Video.TextToSpeech.MistralApiKey;
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.MistralModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+            }
+            else if (SelectedEngine is Qwen3TtsCpp)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.Qwen3TtsCppModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
                     SelectedModel = Models.FirstOrDefault();
