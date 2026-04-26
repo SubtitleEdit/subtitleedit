@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic;
@@ -591,11 +592,13 @@ public partial class FindService : IFindService
         try
         {
             var searchLine = startIndex > 0 ? line.Substring(startIndex) : line;
+            var originalLength = searchLine.Length;
+            searchLine = NormalizeLineEndingsForRegex(searchLine, out var indexMap);
             var match = Regex.Match(searchLine, searchText);
 
             if (match.Success)
             {
-                return (true, startIndex + match.Index, match.Value);
+                return (true, startIndex + MapNormalizedIndex(indexMap, match.Index, originalLength), match.Value);
             }
         }
         catch (ArgumentException)
@@ -611,12 +614,14 @@ public partial class FindService : IFindService
         try
         {
             var searchLine = line.Substring(0, Math.Min(startIndex + 1, line.Length));
+            var originalLength = searchLine.Length;
+            searchLine = NormalizeLineEndingsForRegex(searchLine, out var indexMap);
             var matches = Regex.Matches(searchLine, searchText);
 
             if (matches.Count > 0)
             {
                 var lastMatch = matches[matches.Count - 1];
-                return (true, lastMatch.Index, lastMatch.Value);
+                return (true, MapNormalizedIndex(indexMap, lastMatch.Index, originalLength), lastMatch.Value);
             }
         }
         catch (ArgumentException)
@@ -639,7 +644,8 @@ public partial class FindService : IFindService
             case FindMode.RegularExpression:
                 try
                 {
-                    return Regex.Matches(line, searchText).Count;
+                    var searchLine = NormalizeLineEndingsForRegex(line, out _);
+                    return Regex.Matches(searchLine, searchText).Count;
                 }
                 catch (ArgumentException)
                 {
@@ -666,10 +672,11 @@ public partial class FindService : IFindService
             case FindMode.RegularExpression:
                 try
                 {
-                    var regexMatches = Regex.Matches(line, searchText);
+                    var searchLine = NormalizeLineEndingsForRegex(line, out var indexMap);
+                    var regexMatches = Regex.Matches(searchLine, searchText);
                     foreach (Match match in regexMatches)
                     {
-                        matches.Add(new FindMatch(match.Index, match.Value));
+                        matches.Add(new FindMatch(MapNormalizedIndex(indexMap, match.Index, line.Length), match.Value));
                     }
                 }
                 catch (ArgumentException)
@@ -720,5 +727,46 @@ public partial class FindService : IFindService
         }
 
         return matches;
+    }
+
+    private static int MapNormalizedIndex(List<int> indexMap, int normalizedIndex, int originalLength)
+    {
+        return normalizedIndex < indexMap.Count ? indexMap[normalizedIndex] : originalLength;
+    }
+
+    private static string NormalizeLineEndingsForRegex(string line, out List<int> indexMap)
+    {
+        indexMap = new List<int>(line.Length);
+
+        if (!line.Contains('\r'))
+        {
+            for (var i = 0; i < line.Length; i++)
+            {
+                indexMap.Add(i);
+            }
+
+            return line;
+        }
+
+        var normalized = new StringBuilder(line.Length);
+        for (var i = 0; i < line.Length; i++)
+        {
+            if (line[i] == '\r')
+            {
+                normalized.Append('\n');
+                indexMap.Add(i);
+                if (i + 1 < line.Length && line[i + 1] == '\n')
+                {
+                    i++;
+                }
+            }
+            else
+            {
+                normalized.Append(line[i]);
+                indexMap.Add(i);
+            }
+        }
+
+        return normalized.ToString();
     }
 }
