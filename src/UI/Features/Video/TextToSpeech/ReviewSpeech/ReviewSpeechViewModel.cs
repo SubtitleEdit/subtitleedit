@@ -256,6 +256,12 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 continue;
             }
 
+            if (engineItem is KokoroTtsCpp && (!File.Exists(KokoroTtsCpp.GetExecutableFileName())
+                || !KokoroTtsCpp.AreModelsInstalled()))
+            {
+                continue;
+            }
+
             Engines.Add(engineItem);
         }
 

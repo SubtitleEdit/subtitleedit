@@ -40,25 +40,32 @@ public partial class DownloadTtsViewModel : ObservableObject
     private Task? _downloadTaskQwen3TtsCpp;
     private Task? _downloadTaskQwen3TtsCppVoices;
     private Task? _downloadTaskQwen3TtsModels;
+    private Task? _downloadTaskKokoroTtsCpp;
+    private Task? _downloadTaskKokoroTtsModels;
     private readonly Timer _timer = new();
 
     private readonly ITtsDownloadService _ttsDownloadService;
     private readonly IQwen3TtsCppDownloadService _qwen3TtsCppDownloadService;
+    private readonly IKokoroTtsCppDownloadService _kokoroTtsCppDownloadService;
     private readonly CancellationTokenSource _cancellationTokenSource;
     private readonly MemoryStream _downloadStream;
     private readonly MemoryStream _downloadStreamModel;
     private readonly MemoryStream _downloadStreamConfig;
     private readonly MemoryStream _downloadStreamQwen3TtsCpp;
     private readonly MemoryStream _downloadStreamQwen3TtsCppVoices;
+    private readonly MemoryStream _downloadStreamKokoroTtsCpp;
     private readonly IZipUnpacker _zipUnpacker;
     private readonly object _lock = new();
     private string _modelFileName;
     private string _configFileName;
 
-    public DownloadTtsViewModel(ITtsDownloadService ttsDownloadService, IZipUnpacker zipUnpacker, IQwen3TtsCppDownloadService qwen3TtsCppDownloadService)
+    public DownloadTtsViewModel(ITtsDownloadService ttsDownloadService, IZipUnpacker zipUnpacker,
+        IQwen3TtsCppDownloadService qwen3TtsCppDownloadService,
+        IKokoroTtsCppDownloadService kokoroTtsCppDownloadService)
     {
         _ttsDownloadService = ttsDownloadService;
         _qwen3TtsCppDownloadService = qwen3TtsCppDownloadService;
+        _kokoroTtsCppDownloadService = kokoroTtsCppDownloadService;
         _zipUnpacker = zipUnpacker;
 
         _cancellationTokenSource = new CancellationTokenSource();
@@ -68,6 +75,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         _downloadStreamConfig = new MemoryStream();
         _downloadStreamQwen3TtsCpp = new MemoryStream();
         _downloadStreamQwen3TtsCppVoices = new MemoryStream();
+        _downloadStreamKokoroTtsCpp = new MemoryStream();
 
         _modelFileName = string.Empty;
         _configFileName = string.Empty;
@@ -362,6 +370,90 @@ public partial class DownloadTtsViewModel : ObservableObject
                     Error = ex?.Message ?? "Unknown error";
                 }
             }
+
+            if (_downloadTaskKokoroTtsCpp is { IsCompleted: true })
+            {
+                _timer.Stop();
+
+                if (_downloadStreamKokoroTtsCpp.Length == 0)
+                {
+                    ProgressText = "Download failed";
+                    Error = "No data received";
+                    return;
+                }
+
+                var folder = KokoroTtsCpp.GetSetFolder();
+                try
+                {
+                    _downloadStreamKokoroTtsCpp.Position = 0;
+                    _zipUnpacker.UnpackZipStream(_downloadStreamKokoroTtsCpp, folder, string.Empty, false, new List<string>(), null);
+                    _downloadStreamKokoroTtsCpp.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    ProgressText = "Unpack failed: " + ex.Message;
+                    Error = ex.Message;
+                    Se.LogError(ex);
+                    return;
+                }
+
+                var exePath = KokoroTtsCpp.GetExecutableFileName();
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    if (File.Exists(exePath))
+                    {
+                        LinuxHelper.MakeExecutable(exePath);
+                    }
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    if (File.Exists(exePath))
+                    {
+                        MacHelper.MakeExecutable(exePath);
+                    }
+                }
+
+                _downloadTaskKokoroTtsCpp = null;
+                OkPressed = true;
+                Close();
+            }
+            else if (_downloadTaskKokoroTtsCpp is { IsFaulted: true })
+            {
+                _timer.Stop();
+                var ex = _downloadTaskKokoroTtsCpp.Exception?.InnerException ?? _downloadTaskKokoroTtsCpp.Exception;
+                if (ex is OperationCanceledException)
+                {
+                    ProgressText = "Download canceled";
+                    Close();
+                }
+                else
+                {
+                    ProgressText = "Download failed";
+                    Error = ex?.Message ?? "Unknown error";
+                }
+            }
+
+            if (_downloadTaskKokoroTtsModels is { IsCompleted: true })
+            {
+                _timer.Stop();
+                OkPressed = true;
+                Close();
+            }
+            else if (_downloadTaskKokoroTtsModels is { IsFaulted: true })
+            {
+                _timer.Stop();
+                var ex = _downloadTaskKokoroTtsModels.Exception?.InnerException ?? _downloadTaskKokoroTtsModels.Exception;
+                if (ex is OperationCanceledException)
+                {
+                    ProgressText = "Download canceled";
+                    Close();
+                }
+                else
+                {
+                    ProgressText = "Download failed";
+                    Error = ex?.Message ?? "Unknown error";
+                }
+            }
         }
     }
 
@@ -517,6 +609,43 @@ public partial class DownloadTtsViewModel : ObservableObject
 
         _downloadTaskQwen3TtsModels =
             _qwen3TtsCppDownloadService.DownloadModels(Qwen3TtsCpp.GetSetModelsFolder(), ttsModelFileName, downloadProgress, titleProgress, _cancellationTokenSource.Token);
+    }
+
+    public void StartDownloadKokoroTtsCpp()
+    {
+        TitleText = "Downloading Kokoro TTS";
+
+        var downloadProgress = new Progress<float>(number =>
+        {
+            var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+            var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+            ProgressValue = percentage;
+            ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+        });
+
+        _downloadTaskKokoroTtsCpp =
+            _kokoroTtsCppDownloadService.DownloadEngine(_downloadStreamKokoroTtsCpp, downloadProgress, _cancellationTokenSource.Token);
+    }
+
+    public void StartDownloadKokoroTtsModels()
+    {
+        TitleText = "Downloading Kokoro TTS models (~380 MB)";
+
+        var downloadProgress = new Progress<float>(number =>
+        {
+            var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+            var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+            ProgressValue = percentage;
+            ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+        });
+
+        var titleProgress = new Action<string>(title =>
+        {
+            Dispatcher.UIThread.Post(() => TitleText = title);
+        });
+
+        _downloadTaskKokoroTtsModels =
+            _kokoroTtsCppDownloadService.DownloadModels(KokoroTtsCpp.GetSetModelsFolder(), downloadProgress, titleProgress, _cancellationTokenSource.Token);
     }
 
     internal void OnKeyDown(KeyEventArgs e)
