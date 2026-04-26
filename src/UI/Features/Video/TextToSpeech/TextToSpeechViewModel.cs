@@ -127,6 +127,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             new Murf(ttsDownloadService),
             new GoogleSpeech(ttsDownloadService),
             new Qwen3TtsCpp(),
+            new KokoroTtsCpp(),
         ];
 
         if (!OperatingSystem.IsMacOS())
@@ -232,6 +233,13 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is Qwen3TtsCpp)
         {
             Se.Settings.Video.TextToSpeech.Qwen3TtsCppModel = SelectedModel ?? Qwen3TtsCpp.DefaultModelKey;
+        }
+        else if (SelectedEngine is KokoroTtsCpp)
+        {
+            if (SelectedVoice?.EngineVoice is Voices.KokoroTtsVoice kokoroVoice && !string.IsNullOrEmpty(kokoroVoice.Voice))
+            {
+                Se.Settings.Video.TextToSpeech.KokoroVoice = kokoroVoice.Voice;
+            }
         }
         else if (SelectedEngine is Murf)
         {
@@ -700,6 +708,55 @@ public partial class TextToSpeechViewModel : ObservableObject
 
                 var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadQwen3TtsModels(qwen3ModelKey));
                 return dlResult.OkPressed && Qwen3TtsCpp.IsModelsInstalled(qwen3ModelKey);
+            }
+
+            return true;
+        }
+
+        if (engine is KokoroTtsCpp)
+        {
+            if (!await engine.IsInstalled(SelectedRegion))
+            {
+                var answer = await MessageBox.Show(
+                    Window,
+                    "Download Kokoro TTS?",
+                    $"{Environment.NewLine}\"Text to speech\" requires Kokoro TTS.{Environment.NewLine}{Environment.NewLine}Download and use Kokoro TTS?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window, vm => vm.StartDownloadKokoroTtsCpp());
+                if (!dlResult.OkPressed)
+                {
+                    return false;
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await RefreshVoices(engine);
+                });
+            }
+
+            if (!KokoroTtsCpp.AreModelsInstalled())
+            {
+                var answer = await MessageBox.Show(
+                    Window,
+                    "Download Kokoro TTS models?",
+                    $"{Environment.NewLine}\"Kokoro TTS\" requires models (~380 MB).{Environment.NewLine}{Environment.NewLine}Download models?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadKokoroTtsModels());
+                return dlResult.OkPressed && KokoroTtsCpp.AreModelsInstalled();
             }
 
             return true;
@@ -1429,6 +1486,18 @@ public partial class TextToSpeechViewModel : ObservableObject
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
                     SelectedModel = Models.FirstOrDefault();
+                }
+            }
+            else if (SelectedEngine is KokoroTtsCpp)
+            {
+                var savedVoice = Se.Settings.Video.TextToSpeech.KokoroVoice;
+                if (!string.IsNullOrEmpty(savedVoice))
+                {
+                    var match = Voices.FirstOrDefault(v => v.Name == savedVoice);
+                    if (match != null)
+                    {
+                        SelectedVoice = match;
+                    }
                 }
             }
             else if (SelectedEngine is Murf)

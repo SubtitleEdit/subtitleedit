@@ -26,6 +26,7 @@ public class SeVideoTextToSpeech
     public string MistralApiKey { get; set; }
     public string MistralModel { get; set; }
     public string Qwen3TtsCppModel { get; set; }
+    public string KokoroVoice { get; set; }
     public string GoogleApiKey { get; set; }
     public string GoogleKeyFile { get; set; }
 
@@ -83,6 +84,7 @@ public class SeVideoTextToSpeech
         MistralApiKey = string.Empty;
         MistralModel = "voxtral-mini-tts-2603";
         Qwen3TtsCppModel = "0.6B";
+        KokoroVoice = "af_maple";
         GoogleApiKey = string.Empty;
         GoogleKeyFile = string.Empty;
         ProAudioChainEnabled = false;
