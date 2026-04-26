@@ -73,13 +73,7 @@ public class WhisperEngineOpenAi : ISpeechToTextEngine
 
     public string GetModelForCmdLine(string modelName)
     {
-        var modelFileName = Path.Combine(GetAndCreateWhisperModelFolder(null), modelName);
-        if (Extension.Length > 0 && !modelFileName.EndsWith(Extension))
-        {
-            modelFileName += Extension;
-        }
-
-        return modelFileName;
+        return modelName;
     }
 
     public async Task<string> GetHelpText()
