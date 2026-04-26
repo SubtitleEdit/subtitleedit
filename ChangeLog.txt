@@ -2,7 +2,7 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-beta19 (xth April 2026)
+v5.0.0-beta19 (26th April 2026)
 
 * Rename "Whisper" folder to "SpeechToText"
 * Rename "TTS" folder to "TextToSpeech"
@@ -20,6 +20,7 @@ v5.0.0-beta19 (xth April 2026)
 * Improve position detect for OCR
 * Improve Qwen3 TTS (Qwen3-TTS-12Hz-1.7B model + Windows-CPU-only-build) 
 * Update Jananese translation - thx hisui3393
+* Add Kokoro TTS
 
 -----------------------------------------------------------------------------------------------------
 
