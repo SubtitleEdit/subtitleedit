@@ -663,9 +663,28 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     {
         var fileName = Path.Combine(Se.OcrFolder, Se.Settings.Ocr.NOcrDatabase + ".nocr");
         var nOcrDb = new NOcrDb(fileName);
-        item.Subtitle = new Subtitle();
-
         var totalCount = imageSubtitles.Count;
+
+        // Pre-flight: detect pixels-is-space from a sample of images.
+        var sampleSize = Math.Min(OcrPreflightSampleSize, totalCount);
+        var pixelsAreSpace = Se.Settings.Ocr.NOcrPixelsAreSpace > 0 ? Se.Settings.Ocr.NOcrPixelsAreSpace : 12;
+        if (sampleSize > 0)
+        {
+            item.Status = Se.Language.General.OcrDotDotDot;
+            var detected = DetectPixelsIsSpace(imageSubtitles, sampleSize, cancellationToken);
+            if (detected.HasValue)
+            {
+                pixelsAreSpace = detected.Value;
+            }
+        }
+
+        if (cancellationToken.IsCancellationRequested)
+        {
+            item.Status = Se.Language.General.Cancelled;
+            return;
+        }
+
+        item.Subtitle = new Subtitle();
         var results = new Paragraph[totalCount];
         var processedCount = 0;
         var lockObj = new object();
@@ -676,47 +695,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             MaxDegreeOfParallelism = Environment.ProcessorCount
         }, i =>
         {
-            var bitmap = imageSubtitles.GetBitmap(i);
-            var parentBitmap = new NikseBitmap2(bitmap);
-            parentBitmap.MakeTwoColor(200);
-            parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
-            var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, 12,
-                false, true, 20, true);
-            int index = 0;
-            var matches = new List<NOcrChar>();
-            while (index < letters.Count)
-            {
-                var splitterItem = letters[index];
-                if (splitterItem.NikseBitmap == null)
-                {
-                    if (splitterItem.SpecialCharacter != null)
-                    {
-                        matches.Add(new NOcrChar { Text = splitterItem.SpecialCharacter });
-                    }
-                }
-                else
-                {
-                    var match = nOcrDb!.GetMatch(parentBitmap, letters, splitterItem, splitterItem.Top, true, 100);
-                    if (match is { ExpandCount: > 0 })
-                    {
-                        index += match.ExpandCount - 1;
-                    }
-
-                    if (match == null)
-                    {
-                        matches.Add(new NOcrChar { Text = "*" });
-                    }
-                    else
-                    {
-                        matches.Add(new NOcrChar { Text = _nOcrCaseFixer.FixUppercaseLowercaseIssues(splitterItem, match), Italic = match.Italic });
-                    }
-                }
-
-                index++;
-            }
-
-            var text = ItalicTextMerger.MergeWithItalicTags(matches).Trim();
-            results[i] = new Paragraph(text, imageSubtitles.GetStartTime(i).TotalMilliseconds, imageSubtitles.GetEndTime(i).TotalMilliseconds);
+            results[i] = OcrSingleNOcrImage(imageSubtitles, i, nOcrDb, pixelsAreSpace);
 
             lock (lockObj)
             {
@@ -736,9 +715,70 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         {
             item.Subtitle.Paragraphs.Add(paragraph);
         }
+
+        // Detect language from the pre-flight sample so downstream functions get the right code.
+        if (sampleSize > 0)
+        {
+            var sampleSubtitle = new Subtitle();
+            for (var i = 0; i < sampleSize; i++)
+            {
+                sampleSubtitle.Paragraphs.Add(results[i]);
+            }
+
+            var detectedLanguage = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(sampleSubtitle);
+            if (!string.IsNullOrEmpty(detectedLanguage))
+            {
+                Language = detectedLanguage;
+            }
+        }
     }
 
-    private const int BinaryOcrPreflightSampleSize = 50;
+    private Paragraph OcrSingleNOcrImage(IOcrSubtitle imageSubtitles, int i, NOcrDb nOcrDb, int pixelsAreSpace)
+    {
+        var bitmap = imageSubtitles.GetBitmap(i);
+        var parentBitmap = new NikseBitmap2(bitmap);
+        parentBitmap.MakeTwoColor(200);
+        parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
+        var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, pixelsAreSpace,
+            false, true, 20, true);
+        var index = 0;
+        var matches = new List<NOcrChar>();
+        while (index < letters.Count)
+        {
+            var splitterItem = letters[index];
+            if (splitterItem.NikseBitmap == null)
+            {
+                if (splitterItem.SpecialCharacter != null)
+                {
+                    matches.Add(new NOcrChar { Text = splitterItem.SpecialCharacter });
+                }
+            }
+            else
+            {
+                var match = nOcrDb.GetMatch(parentBitmap, letters, splitterItem, splitterItem.Top, true, 100);
+                if (match is { ExpandCount: > 0 })
+                {
+                    index += match.ExpandCount - 1;
+                }
+
+                if (match == null)
+                {
+                    matches.Add(new NOcrChar { Text = "*" });
+                }
+                else
+                {
+                    matches.Add(new NOcrChar { Text = _nOcrCaseFixer.FixUppercaseLowercaseIssues(splitterItem, match), Italic = match.Italic });
+                }
+            }
+
+            index++;
+        }
+
+        var text = ItalicTextMerger.MergeWithItalicTags(matches).Trim();
+        return new Paragraph(text, imageSubtitles.GetStartTime(i).TotalMilliseconds, imageSubtitles.GetEndTime(i).TotalMilliseconds);
+    }
+
+    private const int OcrPreflightSampleSize = 50;
 
     private void RunBinaryOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
     {
@@ -758,12 +798,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var totalCount = imageSubtitles.Count;
 
         // Pre-flight: detect pixels-is-space from a sample of images.
-        var sampleSize = Math.Min(BinaryOcrPreflightSampleSize, totalCount);
+        var sampleSize = Math.Min(OcrPreflightSampleSize, totalCount);
         var pixelsAreSpace = Se.Settings.Ocr.BinaryOcrPixelsAreSpace;
         if (sampleSize > 0)
         {
             item.Status = Se.Language.General.OcrDotDotDot;
-            var detected = DetectBinaryOcrPixelsIsSpace(imageSubtitles, sampleSize, cancellationToken);
+            var detected = DetectPixelsIsSpace(imageSubtitles, sampleSize, cancellationToken);
             if (detected.HasValue)
             {
                 pixelsAreSpace = detected.Value;
@@ -869,7 +909,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         return new Paragraph(text, imageSubtitles.GetStartTime(i).TotalMilliseconds, imageSubtitles.GetEndTime(i).TotalMilliseconds);
     }
 
-    private static int? DetectBinaryOcrPixelsIsSpace(IOcrSubtitle imageSubtitles, int sampleSize, CancellationToken cancellationToken)
+    private static int? DetectPixelsIsSpace(IOcrSubtitle imageSubtitles, int sampleSize, CancellationToken cancellationToken)
     {
         var gaps = new List<int>(1024);
         for (var i = 0; i < sampleSize; i++)
