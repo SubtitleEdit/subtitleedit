@@ -481,9 +481,9 @@ public partial class DownloadTtsViewModel : ObservableObject
             downloadProgressNull, _cancellationTokenSource.Token);
     }
 
-    public void StartDownloadQwen3TtsCpp()
+    public void StartDownloadQwen3TtsCpp(string windowsVariant = Qwen3TtsCppDownloadService.WindowsVariantVulkan)
     {
-        TitleText = "Downloading Qwen3 TTS";
+        TitleText = $"Downloading Qwen3 TTS ({windowsVariant})";
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -494,7 +494,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         });
 
         _downloadTaskQwen3TtsCpp =
-            _qwen3TtsCppDownloadService.DownloadEngine(_downloadStreamQwen3TtsCpp, downloadProgress, _cancellationTokenSource.Token);
+            _qwen3TtsCppDownloadService.DownloadEngine(_downloadStreamQwen3TtsCpp, windowsVariant, downloadProgress, _cancellationTokenSource.Token);
     }
 
     public void StartDownloadQwen3TtsModels(string? modelKey = null)

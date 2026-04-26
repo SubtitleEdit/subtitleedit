@@ -1311,40 +1311,6 @@ public partial class SpeechToTextViewModel : ObservableObject
                model.Name == "distil-large-v3";
     }
 
-    private static bool IsVulkanInstalled()
-    {
-        const string vulkanDll = "vulkan-1.dll";
-
-        var systemRoot = Environment.GetFolderPath(Environment.SpecialFolder.System);
-        if (File.Exists(Path.Combine(systemRoot, vulkanDll)))
-        {
-            return true;
-        }
-
-        var sysWow64 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "SysWOW64");
-        if (File.Exists(Path.Combine(sysWow64, vulkanDll)))
-        {
-            return true;
-        }
-
-        var pathVariable = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
-        foreach (var folder in pathVariable.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries))
-        {
-            try
-            {
-                if (File.Exists(Path.Combine(folder, vulkanDll)))
-                {
-                    return true;
-                }
-            }
-            catch
-            {
-                // ignore invalid/inaccessible path entries
-            }
-        }
-
-        return false;
-    }
 
 
     [RelayCommand]
@@ -1624,7 +1590,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                     _ => "vulkan",
                 };
 
-                if (crispVariant == "vulkan" && !IsVulkanInstalled())
+                if (crispVariant == "vulkan" && !VulkanHelper.IsInstalled())
                 {
                     var vulkanAnswer = await MessageBox.Show(
                         Window!,
