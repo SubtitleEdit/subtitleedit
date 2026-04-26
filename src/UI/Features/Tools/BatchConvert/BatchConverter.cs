@@ -65,10 +65,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     private readonly Dictionary<string, Regex> _compiledRegExList;
 
     private readonly INOcrCaseFixer _nOcrCaseFixer;
+    private readonly IBinaryOcrMatcher _binaryOcrMatcher;
 
-    public BatchConverter(INOcrCaseFixer nOcrCaseFixer)
+    public BatchConverter(INOcrCaseFixer nOcrCaseFixer, IBinaryOcrMatcher binaryOcrMatcher)
     {
         _nOcrCaseFixer = nOcrCaseFixer;
+        _binaryOcrMatcher = binaryOcrMatcher;
         _config = new BatchConvertConfig();
         _subtitleFormats = new List<SubtitleFormat>();
         _compiledRegExList = new Dictionary<string, Regex>();
@@ -274,6 +276,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals("nOcr", StringComparison.OrdinalIgnoreCase))
             {
                 RunNOcr(imageSubtitle, item, cancellationToken);
+            }
+            else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals("BinaryOcr", StringComparison.OrdinalIgnoreCase))
+            {
+                RunBinaryOcr(imageSubtitle, item, cancellationToken);
             }
             else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals("PaddleOCR", StringComparison.OrdinalIgnoreCase))
             {
@@ -703,6 +709,96 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                     else
                     {
                         matches.Add(new NOcrChar { Text = _nOcrCaseFixer.FixUppercaseLowercaseIssues(splitterItem, match), Italic = match.Italic });
+                    }
+                }
+
+                index++;
+            }
+
+            var text = ItalicTextMerger.MergeWithItalicTags(matches).Trim();
+            results[i] = new Paragraph(text, imageSubtitles.GetStartTime(i).TotalMilliseconds, imageSubtitles.GetEndTime(i).TotalMilliseconds);
+
+            lock (lockObj)
+            {
+                processedCount++;
+                var pct = processedCount * 100 / totalCount;
+                item.Status = string.Format(Se.Language.General.OcrPercentX, pct);
+            }
+        });
+
+        if (cancellationToken.IsCancellationRequested)
+        {
+            item.Status = Se.Language.General.Cancelled;
+            return;
+        }
+
+        foreach (var paragraph in results)
+        {
+            item.Subtitle.Paragraphs.Add(paragraph);
+        }
+    }
+
+    private void RunBinaryOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
+    {
+        var dbName = string.IsNullOrEmpty(Se.Settings.Tools.BatchConvert.BinaryOcrDatabase)
+            ? "Latin"
+            : Se.Settings.Tools.BatchConvert.BinaryOcrDatabase;
+        var fileName = Path.Combine(Se.OcrFolder, dbName + BinaryOcrDb.Extension);
+        if (!File.Exists(fileName))
+        {
+            item.Status = "BinaryOcr database not found: " + dbName;
+            return;
+        }
+
+        var binaryOcrDb = new BinaryOcrDb(fileName, true);
+        _binaryOcrMatcher.IsLatinDb = dbName.Contains("Latin", StringComparison.OrdinalIgnoreCase);
+        var pixelsAreSpace = Se.Settings.Ocr.BinaryOcrPixelsAreSpace;
+        var maxErrorPercent = Se.Settings.Ocr.BinaryOcrMaxErrorPercent;
+
+        item.Subtitle = new Subtitle();
+        var totalCount = imageSubtitles.Count;
+        var results = new Paragraph[totalCount];
+        var processedCount = 0;
+        var lockObj = new object();
+
+        Parallel.For(0, totalCount, new ParallelOptions
+        {
+            CancellationToken = cancellationToken,
+            MaxDegreeOfParallelism = Environment.ProcessorCount
+        }, i =>
+        {
+            var bitmap = imageSubtitles.GetBitmap(i);
+            var parentBitmap = new NikseBitmap2(bitmap);
+            parentBitmap.MakeTwoColor(200);
+            parentBitmap.CropTop(0, new SKColor(0, 0, 0, 0));
+            var letters = NikseBitmapImageSplitter2.SplitBitmapToLettersNew(parentBitmap, pixelsAreSpace, false, true, 20, true);
+            var index = 0;
+            var matches = new List<BinaryOcrMatcher.CompareMatch>();
+            while (index < letters.Count)
+            {
+                var splitterItem = letters[index];
+                if (splitterItem.NikseBitmap == null)
+                {
+                    if (splitterItem.SpecialCharacter != null)
+                    {
+                        matches.Add(new BinaryOcrMatcher.CompareMatch(splitterItem.SpecialCharacter, false, 0, nameof(splitterItem.SpecialCharacter)));
+                    }
+                }
+                else
+                {
+                    var match = _binaryOcrMatcher.GetCompareMatch(splitterItem, out _, letters, index, binaryOcrDb, maxErrorPercent);
+                    if (match is { ExpandCount: > 0 })
+                    {
+                        index += match.ExpandCount - 1;
+                    }
+
+                    if (match == null)
+                    {
+                        matches.Add(new BinaryOcrMatcher.CompareMatch("*", false, 0, null));
+                    }
+                    else
+                    {
+                        matches.Add(new BinaryOcrMatcher.CompareMatch(match.Text, match.Italic, match.ExpandCount, match.Name));
                     }
                 }
 
