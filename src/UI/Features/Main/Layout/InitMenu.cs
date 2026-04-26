@@ -550,6 +550,17 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = Se.Language.Options.Shortcuts.ToggleWaveformToolbar,
+                Command = vm.ToggleIsWaveformToolbarVisibleCommand,
+                Icon = new Optris.Icons.Avalonia.Icon
+                {
+                    Value = IconNames.CheckBold,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsWaveformToolbarVisible)),
+                }
+            },
+            new MenuItem
+            {
                 Header = Se.Language.Main.Menu.SetVideoOffset,
                 [!MenuItem.HeaderProperty] = new Binding(nameof(vm.SetVideoOffsetText)),
                 Command = vm.ShowVideoSetOffsetCommand,
