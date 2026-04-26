@@ -2,6 +2,25 @@
 Subtitle Edit Changelog
 
 
+v5.0.0-beta19 (xth April 2026)
+
+* Rename "Whisper" folder to "SpeechToText"
+* Rename "TTS" folder to "TextToSpeech"
+* Improve nOcr quality in Batch Convert
+* Auto-detect pixels-is-space and language for BinaryOcr/nOcr in Batch Convert
+* Add BinaryOcr engine in Batch Convert
+* Delete temp files between batch speech-to-text items - thx xjlin0/cookesan
+* Add speech-to-text for new waveform selection - thx Ivo
+* Remember size/pos for translate window - thx Milo
+* More user friendly single-file-batch-speech-to-text - thx GrampaWildWilly
+* Check for large file in open to avoid crash - thx GrampaWildWilly
+* Update CrispASR urls
+* Update Italian translation - thx bovirus
+* Improve "Center text in subtitle text box" - thx enji1000
+* Improve position detect for OCR
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-beta18 (24th April 2026)
 
 * Improve auto-translate error messages - thx hisui3393
