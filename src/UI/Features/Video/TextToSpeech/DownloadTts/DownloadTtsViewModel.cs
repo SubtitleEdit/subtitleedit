@@ -497,9 +497,10 @@ public partial class DownloadTtsViewModel : ObservableObject
             _qwen3TtsCppDownloadService.DownloadEngine(_downloadStreamQwen3TtsCpp, downloadProgress, _cancellationTokenSource.Token);
     }
 
-    public void StartDownloadQwen3TtsModels()
+    public void StartDownloadQwen3TtsModels(string? modelKey = null)
     {
-        TitleText = "Downloading Qwen3 TTS models (~2.8 GB)";
+        var ttsModelFileName = Qwen3TtsCpp.GetModelFileName(Qwen3TtsCpp.ResolveModelKey(modelKey));
+        TitleText = $"Downloading Qwen3 TTS models ({ttsModelFileName})";
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -515,7 +516,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         });
 
         _downloadTaskQwen3TtsModels =
-            _qwen3TtsCppDownloadService.DownloadModels(Qwen3TtsCpp.GetSetModelsFolder(), downloadProgress, titleProgress, _cancellationTokenSource.Token);
+            _qwen3TtsCppDownloadService.DownloadModels(Qwen3TtsCpp.GetSetModelsFolder(), ttsModelFileName, downloadProgress, titleProgress, _cancellationTokenSource.Token);
     }
 
     internal void OnKeyDown(KeyEventArgs e)
