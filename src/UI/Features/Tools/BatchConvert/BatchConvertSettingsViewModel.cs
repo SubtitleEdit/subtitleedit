@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.Logic.Ocr;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -38,9 +39,13 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<OcrLanguage2> _paddleOcrLanguages;
     [ObservableProperty] private OcrLanguage2? _selectedPaddleOcrLanguage;
 
+    [ObservableProperty] private ObservableCollection<string> _binaryOcrDatabases;
+    [ObservableProperty] private string? _selectedBinaryOcrDatabase;
+
     [ObservableProperty] bool _isOcrLanguageVisible;
     [ObservableProperty] bool _isTesseractOcrVisible;
     [ObservableProperty] bool _isPaddleOCrVisible;
+    [ObservableProperty] bool _isBinaryOcrVisible;
 
     public Window? Window { get; set; }
 
@@ -53,7 +58,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         var encodings = EncodingHelper.GetEncodings().Select(p => p.DisplayName).ToList();
         TargetEncodings = new ObservableCollection<string>(encodings);
 
-        OcrEngines = new ObservableCollection<string> { "nOcr", "Tesseract", "Ollama" };
+        OcrEngines = new ObservableCollection<string> { "nOcr", "BinaryOcr", "Tesseract", "Ollama" };
         if (OperatingSystem.IsWindows() && File.Exists(Path.Combine(Se.PaddleOcrFolder, "paddleocr.exe")))
         {
             OcrEngines.Add("PaddleOCR");
@@ -75,6 +80,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
 
         PaddleOcrLanguages = new ObservableCollection<OcrLanguage2>(PaddleOcr.GetLanguages().OrderBy(p => p.ToString()));
         TesseractDictionaryItems = new ObservableCollection<TesseractDictionary>();
+        BinaryOcrDatabases = new ObservableCollection<string>(BinaryOcrDb.GetDatabases());
 
         _folderHelper = folderHelper;
 
@@ -148,6 +154,11 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             Se.Settings.Tools.BatchConvert.PaddleLanguage = SelectedPaddleOcrLanguage?.Code ?? "en";
         }
 
+        if (ocrEngine == "BinaryOcr")
+        {
+            Se.Settings.Tools.BatchConvert.BinaryOcrDatabase = SelectedBinaryOcrDatabase ?? "Latin";
+        }
+
         Se.SaveSettings();
     }
 
@@ -204,9 +215,10 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             return;
         }
 
-        IsOcrLanguageVisible = ocrEngine != "nOcr";
+        IsOcrLanguageVisible = ocrEngine != "nOcr" && ocrEngine != "BinaryOcr";
         IsTesseractOcrVisible = ocrEngine == "Tesseract";
         IsPaddleOCrVisible = ocrEngine == "PaddleOCR";
+        IsBinaryOcrVisible = ocrEngine == "BinaryOcr";
 
         if (ocrEngine == "Tesseract")
         {
@@ -218,6 +230,12 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         {
             SelectedPaddleOcrLanguage = PaddleOcrLanguages
                 .FirstOrDefault(p => p.Code == Se.Settings.Tools.BatchConvert.PaddleLanguage) ?? PaddleOcrLanguages.FirstOrDefault();
+        }
+
+        if (ocrEngine == "BinaryOcr")
+        {
+            SelectedBinaryOcrDatabase = BinaryOcrDatabases
+                .FirstOrDefault(p => p == Se.Settings.Tools.BatchConvert.BinaryOcrDatabase) ?? BinaryOcrDatabases.FirstOrDefault();
         }
     }
 }
