@@ -544,36 +544,73 @@ jobs:
           name: linux-tar-package
           path: ./SubtitleEdit-Linux-x64.tar.gz
 
-  # build-linux-flatpak:
-  #   runs-on: ubuntu-latest
-  #   container:
-  #     image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-24.08
-  #     options: --privileged
+  regenerate-flatpak-nuget-sources:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
 
-  #   steps:
-  #     - uses: actions/checkout@v5
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
 
-  #     - name: Update metainfo version/date from Se.cs
-  #       run: bash installer/flatpak/update-metainfo-version.sh
+      - name: Regenerate nuget-sources.json
+        run: bash installer/flatpak/generate-nuget-sources.sh
 
-  #     - name: Build flatpak bundle
-  #       uses: flatpak/flatpak-github-actions/flatpak-builder@v6
-  #       with:
-  #         bundle: SubtitleEdit-linux-x64.flatpak
-  #         manifest-path: installer/flatpak/dk.nikse.subtitleedit.yaml
-  #         cache-key: flatpak-builder-${{ hashFiles('installer/flatpak/dk.nikse.subtitleedit.yaml', 'installer/flatpak/nuget-sources.json') }}
-  #         arch: x86_64
+      - name: Verify nuget-sources.json is consistent with UI.csproj
+        run: |
+          if ! git diff --quiet -- installer/flatpak/nuget-sources.json; then
+            echo "::notice::nuget-sources.json was stale and has been regenerated for this build."
+            git --no-pager diff --stat -- installer/flatpak/nuget-sources.json
+          else
+            echo "nuget-sources.json is already up to date."
+          fi
 
-  #     - name: Upload flatpak bundle artifact
-  #       uses: actions/upload-artifact@v5
-  #       with:
-  #         name: flatpak-bundle
-  #         path: SubtitleEdit-linux-x64.flatpak
-  #         overwrite: true
+      - name: Upload regenerated nuget-sources.json
+        uses: actions/upload-artifact@v5
+        with:
+          name: flatpak-nuget-sources
+          path: installer/flatpak/nuget-sources.json
+          if-no-files-found: error
+          overwrite: true
+
+  build-linux-flatpak:
+    needs: regenerate-flatpak-nuget-sources
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-24.08
+      options: --privileged
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Download regenerated nuget-sources.json
+        uses: actions/download-artifact@v5
+        with:
+          name: flatpak-nuget-sources
+          path: installer/flatpak/
+
+      - name: Update metainfo version/date from Se.cs
+        run: bash installer/flatpak/update-metainfo-version.sh
+
+      - name: Build flatpak bundle
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: SubtitleEdit-linux-x64.flatpak
+          manifest-path: installer/flatpak/dk.nikse.subtitleedit.yaml
+          cache-key: flatpak-builder-${{ github.sha }}
+          arch: x86_64
+
+      - name: Upload flatpak bundle artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: flatpak-bundle
+          path: SubtitleEdit-linux-x64.flatpak
+          overwrite: true
 
   create-release:
     if: ${{ inputs.create_release }}
-    needs: [build-windows, build-macos, build-linux]
+    needs: [build-windows, build-macos, build-linux, build-linux-flatpak]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -605,6 +642,7 @@ jobs:
           cp ./artifacts/windows-zip-packages/*.zip ./release-assets/
           cp ./artifacts/macos-dmg-packages/*.dmg ./release-assets/
           cp ./artifacts/linux-tar-package/*.tar.gz ./release-assets/
+          cp ./artifacts/flatpak-bundle/*.flatpak ./release-assets/
 
           # List all files that will be uploaded
           echo "Release assets:"
@@ -633,6 +671,7 @@ jobs:
             - **macOS ARM64 (Apple Silicon - M1/M2/M3/M4 architecture):** [SubtitleEdit-macOS-ARM64.dmg](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-macOS-ARM64.dmg)
             - **macOS x64 (Intel 64-bit):** [SubtitleEdit-macOS-x64.dmg](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-macOS-x64.dmg)
             - **Linux x64 (tarball):** [SubtitleEdit-Linux-x64.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Linux-x64.tar.gz)
+            - **Linux x64 (Flatpak):** [SubtitleEdit-linux-x64.flatpak](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-linux-x64.flatpak)
       
             ### Installation
             1. Read and fix requirements, please see [System Requirements](https://github.com/niksedk/subtitleedit-avalonia#system-requirements)
@@ -653,3 +692,4 @@ jobs:
             ./release-assets/SubtitleEdit-macOS-ARM64.dmg
             ./release-assets/SubtitleEdit-macOS-x64.dmg
             ./release-assets/SubtitleEdit-Linux-x64.tar.gz
+            ./release-assets/SubtitleEdit-linux-x64.flatpak
