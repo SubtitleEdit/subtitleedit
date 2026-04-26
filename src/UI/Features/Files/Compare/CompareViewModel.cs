@@ -805,7 +805,10 @@ public partial class CompareViewModel : ObservableObject
 
     private static string GetHtmlText(CompareItem p, string text)
     {
-        return p.IsDefault ? string.Empty : HtmlUtil.EncodeNamed(text);
+        return p.IsDefault ? string.Empty : HtmlUtil.EncodeNamed(text)
+            .Replace("\r\n", "<br />")
+            .Replace("\r", "<br />")
+            .Replace("\n", "<br />");
     }
 
     private static string GetHtmlBackgroundColor(IBrush brush)
