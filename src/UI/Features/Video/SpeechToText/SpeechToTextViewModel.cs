@@ -730,6 +730,10 @@ public partial class SpeechToTextViewModel : ObservableObject
             LastBatchSubtitleFileName = subtitleFileName;
         }
 
+        // Delete temp files from the just-finished item so disk usage doesn't grow across long batches
+        DeleteTempFiles();
+        _filesToDelete.Clear();
+
         _batchIndex++;
         if (_batchIndex < BatchItems.Count)
         {
