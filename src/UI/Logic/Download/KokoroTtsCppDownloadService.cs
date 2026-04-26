@@ -17,9 +17,9 @@ public class KokoroTtsCppDownloadService : IKokoroTtsCppDownloadService
 {
     private readonly HttpClient _httpClient;
 
-    private const string WindowsUrl = "https://github.com/niksedk/kokoro.cpp/releases/download/v0.1.0/kokoro-tts-server-v0.1.0-windows-x64.zip";
-    private const string MacUrl     = "https://github.com/niksedk/kokoro.cpp/releases/download/v0.1.0/kokoro-tts-server-v0.1.0-macos-arm64.zip";
-    private const string LinuxUrl   = "https://github.com/niksedk/kokoro.cpp/releases/download/v0.1.0/kokoro-tts-server-v0.1.0-linux-x64.zip";
+    private const string WindowsUrl = "https://github.com/niksedk/kokoro.cpp/releases/download/v0.1.1/kokoro-tts-server-v0.1.1-windows-x64.zip";
+    private const string MacUrl     = "https://github.com/niksedk/kokoro.cpp/releases/download/v0.1.1/kokoro-tts-server-v0.1.1-macos-arm64.zip";
+    private const string LinuxUrl   = "https://github.com/niksedk/kokoro.cpp/releases/download/v0.1.1/kokoro-tts-server-v0.1.1-linux-x64.zip";
 
     private const string TtsModelFileName    = "kokoro-v1.1-zh.onnx";
     private const string VoicesModelFileName = "voices-v1.1-zh.bin";
