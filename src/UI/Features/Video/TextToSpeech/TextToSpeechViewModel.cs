@@ -613,24 +613,69 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             if (!await engine.IsInstalled(SelectedRegion))
             {
-                var answer = await MessageBox.Show(
-                    Window,
-                    "Download Qwen3 TTS?",
-                    $"{Environment.NewLine}\"Text to speech\" requires Qwen3 TTS.{Environment.NewLine}{Environment.NewLine}Download and use Qwen3 TTS?",
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Question);
-
-                if (answer != MessageBoxResult.Yes)
+                var qwen3Variant = Qwen3TtsCppDownloadService.WindowsVariantVulkan;
+                if (Configuration.IsRunningOnWindows)
                 {
-                    return false;
+                    var variantAnswer = await MessageBox.Show(
+                        Window,
+                        "Download Qwen3 TTS?",
+                        $"{Environment.NewLine}\"Text to speech\" requires Qwen3 TTS.{Environment.NewLine}{Environment.NewLine}Select a build to download:",
+                        MessageBoxButtons.Cancel,
+                        MessageBoxIcon.Question,
+                        "CPU",
+                        "Vulkan");
+
+                    if (variantAnswer == MessageBoxResult.None || variantAnswer == MessageBoxResult.Cancel)
+                    {
+                        return false;
+                    }
+
+                    qwen3Variant = variantAnswer == MessageBoxResult.Custom1
+                        ? Qwen3TtsCppDownloadService.WindowsVariantCpu
+                        : Qwen3TtsCppDownloadService.WindowsVariantVulkan;
+
+                    if (qwen3Variant == Qwen3TtsCppDownloadService.WindowsVariantVulkan && !VulkanHelper.IsInstalled())
+                    {
+                        var vulkanAnswer = await MessageBox.Show(
+                            Window,
+                            "Vulkan runtime may be required",
+                            $"The Vulkan version requires the Vulkan runtime (vulkan-1.dll) which usually ships with current GPU drivers, but was not detected on this system.{Environment.NewLine}{Environment.NewLine}You can install it from:{Environment.NewLine}https://vulkan.lunarg.com/sdk/home{Environment.NewLine}{Environment.NewLine}Continue with Vulkan download anyway?",
+                            MessageBoxButtons.YesNoCancel,
+                            MessageBoxIcon.Question);
+
+                        if (vulkanAnswer == MessageBoxResult.No)
+                        {
+                            UiUtil.OpenUrl("https://vulkan.lunarg.com/sdk/home");
+                            return false;
+                        }
+
+                        if (vulkanAnswer != MessageBoxResult.Yes)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    var answer = await MessageBox.Show(
+                        Window,
+                        "Download Qwen3 TTS?",
+                        $"{Environment.NewLine}\"Text to speech\" requires Qwen3 TTS.{Environment.NewLine}{Environment.NewLine}Download and use Qwen3 TTS?",
+                        MessageBoxButtons.YesNoCancel,
+                        MessageBoxIcon.Question);
+
+                    if (answer != MessageBoxResult.Yes)
+                    {
+                        return false;
+                    }
                 }
 
-                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window, vm => vm.StartDownloadQwen3TtsCpp());
+                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window, vm => vm.StartDownloadQwen3TtsCpp(qwen3Variant));
                 if (!dlResult.OkPressed)
                 {
                     return false;
                 }
-                
+
                 await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
                     await RefreshVoices(engine);

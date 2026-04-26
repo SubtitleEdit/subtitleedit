@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.Download;
 
 public interface IQwen3TtsCppDownloadService
 {
-    Task DownloadEngine(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
+    Task DownloadEngine(Stream stream, string windowsVariant, IProgress<float>? progress, CancellationToken cancellationToken);
     Task DownloadVoices(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
     Task DownloadModels(string modelsFolder, string ttsModelFileName, IProgress<float>? progress, Action<string>? titleProgress, CancellationToken cancellationToken);
 }
@@ -19,11 +19,13 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
 {
     private readonly HttpClient _httpClient;
 
-    private const string WindowsUrl = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.1/qwen3-tts-server-v0.4.1-windows-vulkan-x64.zip";
-    // Linux / macOS server builds are not yet published. The engine (Qwen3TtsCpp.cs)
-    // expects the qwen3-tts-server binary; the old CLI zips below will no longer work.
-    private const string MacUrl = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.1/qwen3-tts-server-v0.4.1-macos-metal-arm64.zip";
-    private const string LinuxUrl = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.1/qwen3-tts-server-v0.4.1-linux-vulkan-x64.zip";
+    public const string WindowsVariantVulkan = "vulkan";
+    public const string WindowsVariantCpu = "cpu";
+
+    private const string WindowsVulkanUrl = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.2/qwen3-tts-server-v0.4.2-windows-vulkan-x64.zip";
+    private const string WindowsCpuUrl    = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.2/qwen3-tts-server-v0.4.2-windows-cpu-x64.zip";
+    private const string MacUrl           = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.2/qwen3-tts-server-v0.4.2-macos-metal-arm64.zip";
+    private const string LinuxUrl         = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.2/qwen3-tts-server-v0.4.2-linux-vulkan-x64.zip";
 
     private const string TokenizerModelFileName = "qwen3-tts-tokenizer-q8_0.gguf";
     private const string TokenizerModelUrl = "https://huggingface.co/koboldcpp/tts/resolve/main/qwen3-tts-tokenizer-q8_0.gguf";
@@ -43,9 +45,9 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
         _httpClient = httpClient;
     }
 
-    public async Task DownloadEngine(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
+    public async Task DownloadEngine(Stream stream, string windowsVariant, IProgress<float>? progress, CancellationToken cancellationToken)
     {
-        await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(), stream, progress, cancellationToken);
+        await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(windowsVariant), stream, progress, cancellationToken);
     }
 
     public async Task DownloadVoices(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
@@ -81,11 +83,11 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
         }
     }
 
-    private static string GetUrl()
+    private static string GetUrl(string windowsVariant)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            return WindowsUrl;
+            return windowsVariant == WindowsVariantCpu ? WindowsCpuUrl : WindowsVulkanUrl;
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
