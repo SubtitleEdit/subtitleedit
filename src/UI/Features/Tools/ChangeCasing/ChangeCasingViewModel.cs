@@ -29,13 +29,6 @@ public partial class ChangeCasingViewModel : ObservableObject
     public ChangeCasingViewModel(IWindowService windowService)
     {
         _windowService = windowService;
-
-        NormalCasing = Se.Settings.Tools.ChangeCasing.NormalCasing;
-        NormalCasingFixNames = Se.Settings.Tools.ChangeCasing.NormalCasingFixNames;
-        NormalCasingOnlyUpper = Se.Settings.Tools.ChangeCasing.NormalCasingOnlyUpper;
-        FixNamesOnly = Se.Settings.Tools.ChangeCasing.FixNamesOnly;
-        AllUppercase = Se.Settings.Tools.ChangeCasing.AllUppercase;
-        AllLowercase = Se.Settings.Tools.ChangeCasing.AllLowercase;
         _subtitle = new Subtitle();
         Subtitle = new Subtitle();
         Info = string.Empty;
