@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var json = jsonBuilder.ToString();
             var content = new StringContent(json, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            var result = await httpClient.PostAsync(url, content);
+            var result = await httpClient.PostAsync(url, content, cancellationToken);
             var parser = new JsonParser();
             var jsonResult = await result.Content.ReadAsStringAsync();
 
