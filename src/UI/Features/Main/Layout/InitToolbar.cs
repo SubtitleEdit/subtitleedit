@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -67,6 +68,7 @@ public static class InitToolbar
                 Content = MakeImage("New"),
                 Command = vm.CommandFileNewCommand,
                 Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.NewHint,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.NewHint, shortcuts, nameof(vm.CommandFileNewCommand)),
             });
             isLastSeparator = false;
@@ -79,6 +81,7 @@ public static class InitToolbar
                 Content = MakeImage("Open"),
                 Command = vm.CommandFileOpenCommand,
                 Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.OpenHint,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.OpenHint, shortcuts, nameof(vm.CommandFileOpenCommand)),
             });
             isLastSeparator = false;
@@ -91,6 +94,7 @@ public static class InitToolbar
                 Content = MakeImage("OpenVideo"),
                 Command = vm.CommandVideoOpenCommand,
                 Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.OpenVideoHint,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.OpenVideoHint, shortcuts, nameof(vm.CommandVideoOpenCommand)),
             });
             isLastSeparator = false;
@@ -103,6 +107,7 @@ public static class InitToolbar
                 Content = MakeImage("Save"),
                 Command = vm.CommandFileSaveCommand,
                 Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.SaveHint,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SaveHint, shortcuts, nameof(vm.CommandFileSaveCommand)),
             });
             isLastSeparator = false;
@@ -115,6 +120,7 @@ public static class InitToolbar
                 Content = MakeImage("SaveAs"),
                 Command = vm.CommandFileSaveAsCommand,
                 Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.SaveAsHint,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SaveAsHint, shortcuts, nameof(vm.CommandFileSaveAsCommand)),
             });
             isLastSeparator = false;
@@ -133,6 +139,7 @@ public static class InitToolbar
                 Content = MakeImage("Find"),
                 Command = vm.ShowFindCommand,
                 Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.FindHint,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.FindHint, shortcuts, nameof(vm.ShowFindCommand)),
             });
             isLastSeparator = false;
@@ -145,6 +152,7 @@ public static class InitToolbar
                 Content = MakeImage("Replace"),
                 Command = vm.ShowReplaceCommand,
                 Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.ReplaceHint,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.ReplaceHint, shortcuts, nameof(vm.ShowReplaceCommand)),
             });
             isLastSeparator = false;
@@ -164,6 +172,7 @@ public static class InitToolbar
                 Content = MakeImage("SpellCheck"),
                 Command = vm.ShowSpellCheckCommand,
                 Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.SpellCheckHint,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SpellCheckHint, shortcuts, nameof(vm.ShowSpellCheckCommand)),
             });
             isLastSeparator = false;
@@ -176,6 +185,7 @@ public static class InitToolbar
                 Content = MakeImage("FixCommonErrors"),
                 Command = vm.ShowToolsFixCommonErrorsCommand,
                 Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.FixCommonErrorsHint,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.FixCommonErrorsHint, shortcuts, nameof(vm.ShowToolsFixCommonErrorsCommand)),
             });
             isLastSeparator = false;
@@ -189,6 +199,7 @@ public static class InitToolbar
                 Content = MakeImage("Settings"),
                 Command = vm.CommandShowSettingsCommand,
                 Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.SettingsHint,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SettingsHint, shortcuts, nameof(vm.CommandShowSettingsCommand)),
             });
             isLastSeparator = false;
@@ -201,6 +212,7 @@ public static class InitToolbar
                 Content = MakeImage("Layout"),
                 Command = vm.CommandShowLayoutCommand,
                 Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.LayoutHint,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.LayoutHint, shortcuts, nameof(vm.CommandShowLayoutCommand)),
             });
             isLastSeparator = false;
@@ -219,6 +231,7 @@ public static class InitToolbar
                 Content = MakeImage("Help"),
                 Command = vm.ShowHelpCommand,
                 Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.HelpHint,
                 [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.HelpHint, shortcuts, nameof(vm.ShowHelpCommand)),
             });
             isLastSeparator = false;
@@ -238,6 +251,7 @@ public static class InitToolbar
             Content = MakeImage("AssaStyle"),
             Command = vm.ShowAssaStylesCommand,
             Background = Brushes.Transparent,
+            [AutomationProperties.NameProperty] = languageHints.AssaStylesHint,
             [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaStylesHint, shortcuts, nameof(vm.ShowAssaStylesCommand)),
             [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatAssa))
             {
@@ -250,6 +264,7 @@ public static class InitToolbar
             Content = MakeImage("AssaProperties"),
             Command = vm.ShowAssaPropertiesCommand,
             Background = Brushes.Transparent,
+            [AutomationProperties.NameProperty] = languageHints.AssaPropertiesHint,
             [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaPropertiesHint, shortcuts, nameof(vm.ShowAssaPropertiesCommand)),
             [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatAssa))
             {
@@ -262,6 +277,7 @@ public static class InitToolbar
             Content = MakeImage("AssaAttachments"),
             Command = vm.ShowAssaAttachmentsCommand,
             Background = Brushes.Transparent,
+            [AutomationProperties.NameProperty] = languageHints.AssaAttachmentsHint,
             [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaAttachmentsHint, shortcuts, nameof(vm.ShowAssaAttachmentsCommand)),
             [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatAssa))
             {
@@ -274,6 +290,7 @@ public static class InitToolbar
             Content = MakeImage("AssaDraw"),
             Command = vm.ShowAssaDrawCommand,
             Background = Brushes.Transparent,
+            [AutomationProperties.NameProperty] = languageHints.AssaDrawHint,
             [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaDrawHint, shortcuts, nameof(vm.ShowAssaDrawCommand)),
             [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatAssa))
             {
@@ -300,6 +317,7 @@ public static class InitToolbar
         var comboBoxSubtitleFormat = new ComboBox
         {
             Width = 200,
+            [AutomationProperties.NameProperty] = Se.Language.General.Format,
             [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.SubtitleFormats)),
             [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedSubtitleFormat)),
             DataContext = vm,
@@ -332,6 +350,7 @@ public static class InitToolbar
             var comboBoxEncoding = new ComboBox
             {
                 Width = 200,
+                [AutomationProperties.NameProperty] = Se.Language.General.Encoding,
                 [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.Encodings)),
                 [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedEncoding)),
                 DataContext = vm,
@@ -350,6 +369,7 @@ public static class InitToolbar
             var comboBoxFrameRate = new ComboBox
             {
                 Width = 110,
+                [AutomationProperties.NameProperty] = Se.Language.General.FrameRate,
                 [!ComboBox.ItemsSourceProperty] = new Binding(nameof(vm.FrameRates)),
                 [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedFrameRate)),
                 DataContext = vm,
