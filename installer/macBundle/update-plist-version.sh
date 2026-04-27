@@ -5,7 +5,7 @@
 
 set -e
 
-SE_CS_PATH="${1:-src/UI_RENAME/Logic/Config/Se.cs}"
+SE_CS_PATH="${1:-src/ui/Logic/Config/Se.cs}"
 PLIST_PATH="${2:-installer/macBundle/SubtitleEdit.app/Contents/Info.plist}"
 
 # Extract version from Se.cs

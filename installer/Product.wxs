@@ -30,7 +30,7 @@
 		<WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectDir)installer/LICENSE.rtf" Overridable="yes" />
 
 		<!-- Icon -->
-		<Icon Id="icon.ico" SourceFile="$(var.ProjectDir)src/UI_RENAME/SE.ico" />
+		<Icon Id="icon.ico" SourceFile="$(var.ProjectDir)src/ui/SE.ico" />
 		<Property Id="ARPPRODUCTICON" Value="icon.ico" />
 
 		<!-- Add/Remove Programs -->

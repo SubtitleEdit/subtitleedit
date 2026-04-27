@@ -21,7 +21,7 @@
 ; Shows "5.0.0 beta4" when suffix is set, plain "5.0.0" for release builds
 #define app_ver_display app_ver_suffix != "" ? app_ver + " " + app_ver_suffix : app_ver
 
-#define bindir "..\..\src\UI_RENAME\bin\Release\net10.0\publish"
+#define bindir "..\..\src\ui\bin\Release\net10.0\publish"
 
 #ifnexist bindir + "\SubtitleEdit.exe"
   #error Compile Subtitle Edit first
@@ -58,7 +58,7 @@ DefaultDirName={autopf}\{#app_name}
 DefaultGroupName={#app_name}
 MinVersion=10.0
 LicenseFile=..\LICENSE.rtf
-SetupIconFile=..\..\src\UI_RENAME\SE.ico
+SetupIconFile=..\..\src\ui\SE.ico
 WizardImageFile=Icons\WizardImageFile.png
 WizardSmallImageFile=Icons\WizardSmallImageFile.png
 OutputDir=.

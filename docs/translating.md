@@ -13,13 +13,13 @@ You can translate Subtitle Edit's user interface into any language by creating a
 
 Subtitle Edit 5 uses JSON language files. All UI strings are stored in a single file, and you create a translated copy for your language.
 
-The English base file lives at: [src/UI_RENAME/Assets/Languages/English.json](https://github.com/SubtitleEdit/subtitleedit/blob/main/src/UI_RENAME/Assets/Languages/English.json)
+The English base file lives at: [src/ui/Assets/Languages/English.json](https://github.com/SubtitleEdit/subtitleedit/blob/main/src/ui/Assets/Languages/English.json)
 
 ---
 
 ## Step 1 — Download the English Base File
 
-Download the raw English base file: [Download](https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/main/src/UI_RENAME/Assets/Languages/English.json)
+Download the raw English base file: [Download](https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/main/src/ui/Assets/Languages/English.json)
 
 
 Save it as a starting point for your translation.
@@ -108,7 +108,7 @@ Create the `Languages` folder if it does not exist.
 Please send your completed translation file to the Subtitle Edit team so it can be included in the official release for everyone to benefit from.
 
 You can submit it via:
-- A [pull request](https://github.com/SubtitleEdit/subtitleedit/pulls) to the repository (place the file under `src/UI_RENAME/Assets/Languages/`)
+- A [pull request](https://github.com/SubtitleEdit/subtitleedit/pulls) to the repository (place the file under `src/ui/Assets/Languages/`)
 - A [GitHub issue](https://github.com/SubtitleEdit/subtitleedit/issues) with the file attached
 - An email to `nikse.dk@gmail.com` with the translation attached
 
