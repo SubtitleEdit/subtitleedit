@@ -1,6 +1,6 @@
 {
   "Title": "Subtitle Edit",
-  "TranslatedBy": "한글화 : Hack茶ん",
+  "TranslatedBy": "Hack茶ん",
   "CultureName": "ko-KR",
   "General": {
     "Abort": "중단",
@@ -2673,7 +2673,7 @@
   },
   "About": {
     "Title": "자막 편집 정보",
-    "TranslatedBy": "번역 : {0}",
+    "TranslatedBy": "한글화 : {0}",
     "LicenseText": "Subtitle Edit은 MIT 라이선스에 따라 배포되는 무료 소프트웨어입니다.",
     "DescriptionTextBeta": "Subtitle Edit 5 베타 버전은 곧 출시될 정식 버전의 개발 버전입니다.\n\n새로운 도구들을 꾸준히 개선하고 있으며, 테스트에 참여해 주셔서 감사합니다.\n최상의 최종 버전을 만들 수 있도록 여러분의 소중한 의견을 공유해 주세요.\n\nSubtitle Edit 커뮤니티에 참여해 주셔서 감사합니다! :)",
     "IssueTrackingAndSourceCode": "이슈 추적 및 소스 코드 : ",
