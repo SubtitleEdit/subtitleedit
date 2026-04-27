@@ -70,6 +70,9 @@ public class AudioVisualizer : Control
     public static readonly StyledProperty<Color> WaveformParagraphRightColorProperty =
         AvaloniaProperty.Register<AudioVisualizer, Color>(nameof(WaveformParagraphRightColor));
 
+    public static readonly StyledProperty<WaveformSplitMode> WaveformSplitModeProperty =
+        AvaloniaProperty.Register<AudioVisualizer, WaveformSplitMode>(nameof(WaveformSplitMode), WaveformSplitMode.None);
+
     public WavePeakData2? WavePeaks
     {
         get => GetValue(WavePeaksProperty);
@@ -205,6 +208,12 @@ public class AudioVisualizer : Control
     public double ShotChangeSnapSeconds { get; set; } = 0.05;
     public WaveformDrawStyle WaveformDrawStyle { get; set; } = WaveformDrawStyle.Classic;
 
+    public WaveformSplitMode WaveformSplitMode
+    {
+        get => GetValue(WaveformSplitModeProperty);
+        set => SetValue(WaveformSplitModeProperty, value);
+    }
+
     public bool SnapToShotChanges { get; set; } = true;
     public bool FocusOnMouseOver { get; set; } = true;
     public int WaveformHeightPercentage { get; set; } = 50;
@@ -309,6 +318,8 @@ public class AudioVisualizer : Control
     private Pen _paintLeft = new Pen(new SolidColorBrush(Color.FromArgb(60, 0, 255, 0)), 2);
     private Pen _paintRight = new Pen(new SolidColorBrush(Color.FromArgb(100, 255, 0, 0)), 2);
     private IBrush _paintText = new SolidColorBrush(Se.Settings.Waveform.WaveformTextColor.FromHexToColor());
+    private static readonly IBrush VisualLaneLabelBrush = new SolidColorBrush(Color.FromArgb(170, 220, 220, 220));
+    private static readonly Pen VisualLaneDividerPen = new Pen(new SolidColorBrush(Color.FromArgb(80, 210, 210, 210)), 1);
     private Typeface _typeface = new Typeface(UiUtil.GetDefaultFontName(), FontStyle.Normal, Se.Settings.Waveform.WaveformTextFontBold ? FontWeight.Bold : FontWeight.Normal);
     private readonly Pen _paintShotChangeParagraphStartPen = new Pen(new SolidColorBrush(Color.FromArgb(175, 0, 100, 0)), 2, dashStyle: DashStyle.Dash);
     private readonly Pen _paintShotChangeParagraphEndPen = new Pen(new SolidColorBrush(Color.FromArgb(175, 110, 10, 10)), 2, dashStyle: DashStyle.Dash);
@@ -407,7 +418,8 @@ public class AudioVisualizer : Control
             ZoomFactorProperty,
             VerticalZoomFactorProperty,
             CurrentVideoPositionSecondsProperty,
-            AllSelectedParagraphsProperty);
+            AllSelectedParagraphsProperty,
+            WaveformSplitModeProperty);
 
         PointerMoved += OnPointerMoved;
         PointerEntered += OnPointerEntered;
@@ -868,9 +880,11 @@ public class AudioVisualizer : Control
             _interactionMode = InteractionMode.ResizingLeft;
 
             var idx = displayableParagraphs.IndexOf(p);
-            if (idx > 0)
+            var visualLaneMap = BuildVisualLaneMap();
+            var previousIndex = FindPreviousVisualNeighborIndex(displayableParagraphs, idx, visualLaneMap);
+            if (previousIndex >= 0)
             {
-                var prevParagraph = displayableParagraphs[idx - 1];
+                var prevParagraph = displayableParagraphs[previousIndex];
                 double prevRightPos = SecondsToXPosition(prevParagraph.EndTime.TotalSeconds - StartPositionSeconds);
 
                 // Only consider "Or" mode if the previous paragraph's right edge is very close
@@ -881,9 +895,9 @@ public class AudioVisualizer : Control
                 }
             }
 
-            if (_isAltDown && idx > 0)
+            if (_isAltDown && previousIndex >= 0)
             {
-                var p2 = HitTestParagraph(point, displayableParagraphs, idx - 1, 100);
+                var p2 = HitTestParagraph(point, displayableParagraphs, previousIndex, 100);
                 if (p2 != null)
                 {
                     _activeParagraphPrevious = p2;
@@ -897,9 +911,11 @@ public class AudioVisualizer : Control
             _interactionMode = InteractionMode.ResizingRight;
 
             var idx = displayableParagraphs.IndexOf(p);
-            if (idx < displayableParagraphs.Count - 1)
+            var visualLaneMap = BuildVisualLaneMap();
+            var nextIndex = FindNextVisualNeighborIndex(displayableParagraphs, idx, visualLaneMap);
+            if (nextIndex >= 0)
             {
-                var nextParagraph = displayableParagraphs[idx + 1];
+                var nextParagraph = displayableParagraphs[nextIndex];
                 double nextLeftPos = SecondsToXPosition(nextParagraph.StartTime.TotalSeconds - StartPositionSeconds);
 
                 // Only consider "Or" mode if the next paragraph's left edge is very close
@@ -910,9 +926,9 @@ public class AudioVisualizer : Control
                 }
             }
 
-            if (_isAltDown && idx < displayableParagraphs.Count - 1)
+            if (_isAltDown && nextIndex >= 0)
             {
-                var p2 = HitTestParagraphRight(point, displayableParagraphs, idx + 1, 100);
+                var p2 = HitTestParagraphRight(point, displayableParagraphs, nextIndex, 100);
                 if (p2 != null)
                 {
                     _activeParagraphNext = p2;
@@ -1045,8 +1061,11 @@ public class AudioVisualizer : Control
         var newEnd = _originalEndSeconds;
 
         var currentIndex = _displayableParagraphs.IndexOf(_activeParagraph);
-        var previous = currentIndex > 0 ? _displayableParagraphs[currentIndex - 1] : null;
-        var next = currentIndex < _displayableParagraphs.Count - 1 ? _displayableParagraphs[currentIndex + 1] : null;
+        var visualLaneMap = BuildVisualLaneMap();
+        var previousIndex = FindPreviousVisualNeighborIndex(_displayableParagraphs, currentIndex, visualLaneMap);
+        var nextIndex = FindNextVisualNeighborIndex(_displayableParagraphs, currentIndex, visualLaneMap);
+        var previous = previousIndex >= 0 ? _displayableParagraphs[previousIndex] : null;
+        var next = nextIndex >= 0 ? _displayableParagraphs[nextIndex] : null;
 
         if (_isShiftDown || Se.Settings.Waveform.AllowOverlap)
         {
@@ -1056,8 +1075,26 @@ public class AudioVisualizer : Control
 
         if (NewSelectionParagraph == _activeParagraph)
         {
-            previous = _displayableParagraphs.LastOrDefault(p => p.StartTime < _activeParagraph.StartTime);
-            next = _displayableParagraphs.FirstOrDefault(p => p.StartTime > _activeParagraph.EndTime);
+            previous = null;
+            next = null;
+            var activeLaneIndex = GetVisualLaneIndex(_activeParagraph, visualLaneMap);
+            for (var i = currentIndex - 1; i >= 0; i--)
+            {
+                if (GetVisualLaneIndex(_displayableParagraphs[i], visualLaneMap) == activeLaneIndex && _displayableParagraphs[i].StartTime < _activeParagraph.StartTime)
+                {
+                    previous = _displayableParagraphs[i];
+                    break;
+                }
+            }
+
+            for (var i = currentIndex + 1; i < _displayableParagraphs.Count; i++)
+            {
+                if (GetVisualLaneIndex(_displayableParagraphs[i], visualLaneMap) == activeLaneIndex && _displayableParagraphs[i].StartTime > _activeParagraph.EndTime)
+                {
+                    next = _displayableParagraphs[i];
+                    break;
+                }
+            }
         }
 
         switch (_interactionMode)
@@ -1070,11 +1107,8 @@ public class AudioVisualizer : Control
                 bool alreadyOverlapping = false;
                 if (_activeParagraph != null && currentIndex >= 0)
                 {
-                    var prevParagraph = currentIndex > 0 ? _displayableParagraphs[currentIndex - 1] : null;
-                    var nextParagraph = currentIndex < _displayableParagraphs.Count - 1 ? _displayableParagraphs[currentIndex + 1] : null;
-
-                    bool alreadyOverlapsPrevious = prevParagraph != null && _originalStartSeconds < prevParagraph.EndTime.TotalSeconds;
-                    bool alreadyOverlapsNext = nextParagraph != null && _originalEndSeconds > nextParagraph.StartTime.TotalSeconds;
+                    bool alreadyOverlapsPrevious = previous != null && _originalStartSeconds < previous.EndTime.TotalSeconds;
+                    bool alreadyOverlapsNext = next != null && _originalEndSeconds > next.StartTime.TotalSeconds;
                     alreadyOverlapping = alreadyOverlapsPrevious || alreadyOverlapsNext;
                 }
 
@@ -1244,14 +1278,183 @@ public class AudioVisualizer : Control
         }
     }
 
+    private Dictionary<string, int> BuildVisualLaneMap()
+    {
+        var result = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        if (WaveformSplitMode == WaveformSplitMode.None)
+        {
+            return result;
+        }
+
+        foreach (var paragraph in _displayableParagraphs)
+        {
+            var key = GetVisualLaneKey(paragraph);
+            if (!result.ContainsKey(key))
+            {
+                result.Add(key, result.Count);
+            }
+        }
+
+        return result;
+    }
+
+    private static int GetVisualLaneCount(IReadOnlyDictionary<string, int>? visualLaneMap)
+    {
+        return Math.Max(1, visualLaneMap?.Count ?? 0);
+    }
+
+    private int GetVisualLaneIndex(SubtitleLineViewModel paragraph, IReadOnlyDictionary<string, int>? visualLaneMap)
+    {
+        if (WaveformSplitMode == WaveformSplitMode.None)
+        {
+            return 0;
+        }
+
+        return visualLaneMap != null && visualLaneMap.TryGetValue(GetVisualLaneKey(paragraph), out var index) ? index : 0;
+    }
+
+    private int GetVisualLaneIndexFromY(double y, IReadOnlyDictionary<string, int>? visualLaneMap)
+    {
+        if (WaveformSplitMode == WaveformSplitMode.None || Bounds.Height <= 0)
+        {
+            return 0;
+        }
+
+        var laneCount = GetVisualLaneCount(visualLaneMap);
+        var laneHeight = Bounds.Height / laneCount;
+        if (laneHeight <= 0)
+        {
+            return 0;
+        }
+
+        return Math.Clamp((int)(y / laneHeight), 0, laneCount - 1);
+    }
+
+    private int FindPreviousVisualNeighborIndex(List<SubtitleLineViewModel> subtitles, int index, IReadOnlyDictionary<string, int>? visualLaneMap)
+    {
+        if (index <= 0 || index >= subtitles.Count)
+        {
+            return -1;
+        }
+
+        if (WaveformSplitMode == WaveformSplitMode.None)
+        {
+            return index - 1;
+        }
+
+        var laneIndex = GetVisualLaneIndex(subtitles[index], visualLaneMap);
+        for (var i = index - 1; i >= 0; i--)
+        {
+            if (GetVisualLaneIndex(subtitles[i], visualLaneMap) == laneIndex)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private int FindNextVisualNeighborIndex(List<SubtitleLineViewModel> subtitles, int index, IReadOnlyDictionary<string, int>? visualLaneMap)
+    {
+        if (index < 0 || index >= subtitles.Count - 1)
+        {
+            return -1;
+        }
+
+        if (WaveformSplitMode == WaveformSplitMode.None)
+        {
+            return index + 1;
+        }
+
+        var laneIndex = GetVisualLaneIndex(subtitles[index], visualLaneMap);
+        for (var i = index + 1; i < subtitles.Count; i++)
+        {
+            if (GetVisualLaneIndex(subtitles[i], visualLaneMap) == laneIndex)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private string GetVisualLaneKey(SubtitleLineViewModel paragraph)
+    {
+        return WaveformSplitMode switch
+        {
+            WaveformSplitMode.Actor => NormalizeVisualLaneValue(paragraph.Actor, "No actor"),
+            WaveformSplitMode.Style => NormalizeVisualLaneValue(string.IsNullOrWhiteSpace(paragraph.Style) ? paragraph.Extra : paragraph.Style, "No style"),
+            WaveformSplitMode.Layer => $"Layer {paragraph.Layer.ToString(CultureInfo.InvariantCulture)}",
+            WaveformSplitMode.AssPositionAlignment => GetAssPositionAlignmentKey(paragraph),
+            _ => string.Empty,
+        };
+    }
+
+    private static string NormalizeVisualLaneValue(string? value, string fallback)
+    {
+        return string.IsNullOrWhiteSpace(value) ? fallback : value.Trim();
+    }
+
+    private static string GetAssPositionAlignmentKey(SubtitleLineViewModel paragraph)
+    {
+        var parts = new List<string>();
+        var text = paragraph.Text ?? string.Empty;
+        var alignment = ExtractAssAlignmentTag(text);
+        if (!string.IsNullOrEmpty(alignment))
+        {
+            parts.Add(alignment);
+        }
+
+        var position = ExtractAssParenthesizedTag(text, "\\pos") ?? ExtractAssParenthesizedTag(text, "\\move");
+        if (!string.IsNullOrEmpty(position))
+        {
+            parts.Add(position);
+        }
+
+        var source = paragraph.Paragraph;
+        if (source != null && (!string.IsNullOrWhiteSpace(source.MarginL) || !string.IsNullOrWhiteSpace(source.MarginR) || !string.IsNullOrWhiteSpace(source.MarginV)))
+        {
+            parts.Add($"Margins {source.MarginL}/{source.MarginR}/{source.MarginV}");
+        }
+
+        return parts.Count > 0 ? string.Join(" ", parts) : "Default position/alignment";
+    }
+
+    private static string? ExtractAssParenthesizedTag(string text, string tag)
+    {
+        var start = text.IndexOf(tag + "(", StringComparison.OrdinalIgnoreCase);
+        if (start < 0)
+        {
+            return null;
+        }
+
+        var end = text.IndexOf(')', start);
+        return end > start ? text.Substring(start, end - start + 1) : tag;
+    }
+
+    private static string? ExtractAssAlignmentTag(string text)
+    {
+        const string tag = "\\an";
+        var start = text.IndexOf(tag, StringComparison.OrdinalIgnoreCase);
+        if (start < 0 || start + tag.Length >= text.Length)
+        {
+            return null;
+        }
+
+        var value = text[start + tag.Length];
+        return char.IsDigit(value) ? tag + value : null;
+    }
+
     private SubtitleLineViewModel? HitTestParagraph(Point point)
     {
         var pointX = point.X;
         var startPosSeconds = StartPositionSeconds;
+        var visualLaneMap = BuildVisualLaneMap();
+        var clickedLaneIndex = GetVisualLaneIndexFromY(point.Y, visualLaneMap);
 
         // Check NewSelectionParagraph first as it's typically the active interaction target
         var newSelection = NewSelectionParagraph;
-        if (newSelection != null)
+        if (newSelection != null && GetVisualLaneIndex(newSelection, visualLaneMap) == clickedLaneIndex)
         {
             var left = SecondsToXPosition(newSelection.StartTime.TotalSeconds - startPosSeconds);
             var right = SecondsToXPosition(newSelection.EndTime.TotalSeconds - startPosSeconds);
@@ -1278,6 +1481,11 @@ public class AudioVisualizer : Control
         for (var i = 0; i < _displayableParagraphs.Count; i++)
         {
             var p = _displayableParagraphs[i];
+            if (GetVisualLaneIndex(p, visualLaneMap) != clickedLaneIndex)
+            {
+                continue;
+            }
+
             var left = SecondsToXPosition(p.StartTime.TotalSeconds - startPosSeconds);
             var right = SecondsToXPosition(p.EndTime.TotalSeconds - startPosSeconds);
 
@@ -1312,10 +1520,15 @@ public class AudioVisualizer : Control
         // If we found an edge, check for adjacent paragraphs that might be closer
         if (closestEdgeParagraph != null)
         {
-            if (isClosestEdgeLeft && closestEdgeIndex > 0)
+            if (isClosestEdgeLeft)
             {
-                // Check if previous paragraph's right edge is closer
-                var prev = _displayableParagraphs[closestEdgeIndex - 1];
+                var previousIndex = FindPreviousVisualNeighborIndex(_displayableParagraphs, closestEdgeIndex, visualLaneMap);
+                if (previousIndex < 0)
+                {
+                    return closestEdgeParagraph;
+                }
+
+                var prev = _displayableParagraphs[previousIndex];
                 var prevRight = SecondsToXPosition(prev.EndTime.TotalSeconds - startPosSeconds);
                 var distToPrevRight = Math.Abs(pointX - prevRight);
 
@@ -1324,10 +1537,15 @@ public class AudioVisualizer : Control
                     return prev;
                 }
             }
-            else if (!isClosestEdgeLeft && closestEdgeIndex < _displayableParagraphs.Count - 1)
+            else if (!isClosestEdgeLeft)
             {
-                // Check if next paragraph's left edge is closer
-                var next = _displayableParagraphs[closestEdgeIndex + 1];
+                var nextIndex = FindNextVisualNeighborIndex(_displayableParagraphs, closestEdgeIndex, visualLaneMap);
+                if (nextIndex < 0)
+                {
+                    return closestEdgeParagraph;
+                }
+
+                var next = _displayableParagraphs[nextIndex];
                 var nextLeft = SecondsToXPosition(next.StartTime.TotalSeconds - startPosSeconds);
                 var distToNextLeft = Math.Abs(pointX - nextLeft);
 
@@ -1353,6 +1571,12 @@ public class AudioVisualizer : Control
         }
 
         var p = subtitles[index];
+        var visualLaneMap = BuildVisualLaneMap();
+        if (GetVisualLaneIndex(p, visualLaneMap) != GetVisualLaneIndexFromY(point.Y, visualLaneMap))
+        {
+            return null;
+        }
+
         var left = SecondsToXPosition(p.StartTime.TotalSeconds - StartPositionSeconds);
         var right = SecondsToXPosition(p.EndTime.TotalSeconds - StartPositionSeconds);
         var pointX = point.X;
@@ -1369,6 +1593,12 @@ public class AudioVisualizer : Control
         }
 
         var p = subtitles[index];
+        var visualLaneMap = BuildVisualLaneMap();
+        if (GetVisualLaneIndex(p, visualLaneMap) != GetVisualLaneIndexFromY(point.Y, visualLaneMap))
+        {
+            return null;
+        }
+
         var leftEdge = SecondsToXPosition(p.StartTime.TotalSeconds - StartPositionSeconds);
         var pointX = point.X;
 
@@ -1389,6 +1619,8 @@ public class AudioVisualizer : Control
         public int SampleRate;
         public double HighestPeak;
         public Rect BoundsRect;
+        public IReadOnlyDictionary<string, int>? VisualLaneMap;
+        public int VisualLaneCount;
 
         public double WaveformHeight { get; internal set; }
         public double SpectrogramHeight { get; internal set; }
@@ -1411,6 +1643,7 @@ public class AudioVisualizer : Control
 
         // Pre-calculate commonly used values
         var waveformHeight = height * (WaveformHeightPercentage / 100.0);
+        var visualLaneMap = BuildVisualLaneMap();
         var renderCtx = new RenderContext
         {
             Width = width,
@@ -1422,6 +1655,8 @@ public class AudioVisualizer : Control
             SampleRate = WavePeaks?.SampleRate ?? 0,
             HighestPeak = WavePeaks?.HighestPeak ?? 1.0,
             BoundsRect = boundsRect,
+            VisualLaneMap = visualLaneMap,
+            VisualLaneCount = GetVisualLaneCount(visualLaneMap),
             WaveformHeight = waveformHeight,
             SpectrogramHeight = height - waveformHeight,
         };
@@ -1432,6 +1667,7 @@ public class AudioVisualizer : Control
             DrawWaveForm(context, ref renderCtx);
             DrawSpectrogram(context, ref renderCtx);
             DrawTimeLine(context, ref renderCtx);
+            DrawVisualLaneDividers(context, ref renderCtx);
             DrawParagraphs(context, ref renderCtx);
             DrawShotChanges(context, ref renderCtx);
             DrawCurrentVideoPosition(context, ref renderCtx);
@@ -1877,6 +2113,45 @@ public class AudioVisualizer : Control
         }
     }
 
+    private void DrawVisualLaneDividers(DrawingContext context, ref RenderContext renderCtx)
+    {
+        if (WaveformSplitMode == WaveformSplitMode.None || renderCtx.VisualLaneCount <= 1 || renderCtx.Height <= 0)
+        {
+            return;
+        }
+
+        var laneHeight = renderCtx.Height / renderCtx.VisualLaneCount;
+        for (var i = 1; i < renderCtx.VisualLaneCount; i++)
+        {
+            var y = i * laneHeight;
+            context.DrawLine(VisualLaneDividerPen, new Point(0, y), new Point(renderCtx.Width, y));
+        }
+
+        if (renderCtx.VisualLaneMap == null)
+        {
+            return;
+        }
+
+        foreach (var item in renderCtx.VisualLaneMap.OrderBy(p => p.Value))
+        {
+            var label = item.Key.Length > 42 ? item.Key.Substring(0, 39) + "..." : item.Key;
+            var formattedText = new FormattedText(label, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, _typeface, 10, VisualLaneLabelBrush);
+            context.DrawText(formattedText, new Point(6, item.Value * laneHeight + 4));
+        }
+    }
+
+    private (double Top, double Height) GetVisualLaneBounds(SubtitleLineViewModel paragraph, ref RenderContext renderCtx)
+    {
+        if (WaveformSplitMode == WaveformSplitMode.None || renderCtx.VisualLaneCount <= 1)
+        {
+            return (0, renderCtx.Height);
+        }
+
+        var laneHeight = renderCtx.Height / renderCtx.VisualLaneCount;
+        var laneIndex = GetVisualLaneIndex(paragraph, renderCtx.VisualLaneMap);
+        return (laneIndex * laneHeight, laneHeight);
+    }
+
     private void DrawParagraphs(DrawingContext context, ref RenderContext renderCtx)
     {
         var paragraphs = _displayableParagraphs;
@@ -1903,15 +2178,15 @@ public class AudioVisualizer : Control
             return;
         }
 
-        var height = renderCtx.Height;
+        var (laneTop, laneHeight) = GetVisualLaneBounds(paragraph, ref renderCtx);
 
         // Draw background rectangle
         context.FillRectangle(AllSelectedParagraphs.Contains(paragraph) ? _paintParagraphSelectedBackground : _paintParagraphBackground,
-            new Rect(currentRegionLeft, 0, currentRegionWidth, height));
+            new Rect(currentRegionLeft, laneTop, currentRegionWidth, laneHeight));
 
         // Draw left and right borders
-        context.DrawLine(_paintLeft, new Point(currentRegionLeft, 0), new Point(currentRegionLeft, height));
-        context.DrawLine(_paintRight, new Point(currentRegionRight - 1, 0), new Point(currentRegionRight - 1, height));
+        context.DrawLine(_paintLeft, new Point(currentRegionLeft, laneTop), new Point(currentRegionLeft, laneTop + laneHeight));
+        context.DrawLine(_paintRight, new Point(currentRegionRight - 1, laneTop), new Point(currentRegionRight - 1, laneTop + laneHeight));
 
         // Draw clipped text
         var text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
@@ -1920,7 +2195,7 @@ public class AudioVisualizer : Control
             text = text.Substring(0, 100).TrimEnd() + "...";
         }
 
-        var textBounds = new Rect(currentRegionLeft + 1, 0, currentRegionWidth - 3, height);
+        var textBounds = new Rect(currentRegionLeft + 1, laneTop, currentRegionWidth - 3, laneHeight);
 
         using (context.PushClip(textBounds))
         {
@@ -1930,7 +2205,7 @@ public class AudioVisualizer : Control
                 text = string.Join("  ", arr);
                 var formattedText = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
                     _typeface, _fontSize, _paintText);
-                context.DrawText(formattedText, new Point(currentRegionLeft + 3, 14));
+                context.DrawText(formattedText, new Point(currentRegionLeft + 3, laneTop + 14));
             }
             else
             {
@@ -1939,7 +2214,7 @@ public class AudioVisualizer : Control
                 {
                     var formattedText = new FormattedText(line, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
                         _typeface, _fontSize, _paintText);
-                    context.DrawText(formattedText, new Point(currentRegionLeft + 3, 14 + addY));
+                    context.DrawText(formattedText, new Point(currentRegionLeft + 3, laneTop + 14 + addY));
                     addY += formattedText.Height;
                 }
             }
