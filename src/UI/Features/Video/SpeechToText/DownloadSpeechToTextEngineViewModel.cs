@@ -303,7 +303,12 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
 
     public void StartDownload()
     {
-        TitleText = string.Format(Se.Language.General.DownloadingX, Engine?.Name);
+        var displayName = Engine is ICrispAsrEngine
+            ? RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                ? "Crisp ASR " + CrispAsrWindowsVariant
+                : "Crisp ASR"
+            : Engine?.Name;
+        TitleText = string.Format(Se.Language.General.DownloadingX, displayName);
 
         var downloadProgress = new Progress<float>(number =>
         {
