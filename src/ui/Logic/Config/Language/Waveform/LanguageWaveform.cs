@@ -32,6 +32,18 @@ public class LanguageWaveform
     public string SetVideoPositionAndPause { get; set; }
     public string SetVideopositionAndPauseAndCenter { get; set; }
     public string SetVideoposition { get; set; }
+    public string SplitWaveformBy { get; set; }
+    public string SplitWaveformByX { get; set; }
+    public string SplitWaveformNone { get; set; }
+    public string SplitWaveformActor { get; set; }
+    public string SplitWaveformStyle { get; set; }
+    public string SplitWaveformLayer { get; set; }
+    public string SplitWaveformAssPositionAlignment { get; set; }
+    public string SplitWaveformNoActor { get; set; }
+    public string SplitWaveformNoStyle { get; set; }
+    public string SplitWaveformDefaultPositionAlignment { get; set; }
+    public string SplitWaveformLayerX { get; set; }
+    public string SplitWaveformMarginsX { get; set; }
 
     public LanguageWaveform()
     {
@@ -67,5 +79,17 @@ public class LanguageWaveform
         SetVideoPositionAndPause = "Set video position and pause";
         SetVideopositionAndPauseAndCenter = "Set video position, pause, and center";
         SetVideoposition = "Set video position";
+        SplitWaveformBy = "Split waveform by";
+        SplitWaveformByX = "Split: {0}";
+        SplitWaveformNone = "None";
+        SplitWaveformActor = "Actor";
+        SplitWaveformStyle = "Style";
+        SplitWaveformLayer = "Layer";
+        SplitWaveformAssPositionAlignment = "ASS position/alignment";
+        SplitWaveformNoActor = "No actor";
+        SplitWaveformNoStyle = "No style";
+        SplitWaveformDefaultPositionAlignment = "Default position/alignment";
+        SplitWaveformLayerX = "Layer {0}";
+        SplitWaveformMarginsX = "Margins {0}/{1}/{2}";
     }
 }

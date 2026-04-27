@@ -621,11 +621,11 @@ public class InitWaveform
 
         var buttonSplitWaveform = new Button
         {
-            Content = "Split: None",
+            Content = string.Format(Se.Language.Waveform.SplitWaveformByX, Se.Language.Waveform.SplitWaveformNone),
             Margin = new Thickness(4, 0, 4, 0),
             FontSize = 11,
             VerticalAlignment = VerticalAlignment.Center,
-            [ToolTip.TipProperty] = "Split waveform by",
+            [ToolTip.TipProperty] = Se.Language.Waveform.SplitWaveformBy,
         };
         var flyoutSplitWaveform = new MenuFlyout();
         buttonSplitWaveform.Flyout = flyoutSplitWaveform;
@@ -645,17 +645,17 @@ public class InitWaveform
                 }
 
                 vm.AudioVisualizer.WaveformSplitMode = mode;
-                buttonSplitWaveform.Content = "Split: " + header;
+                buttonSplitWaveform.Content = string.Format(Se.Language.Waveform.SplitWaveformByX, header);
                 vm.AudioVisualizer.InvalidateVisual();
             };
             flyoutSplitWaveform.Items.Add(menuItem);
         }
 
-        AddSplitModeItem("None", WaveformSplitMode.None);
-        AddSplitModeItem("Actor", WaveformSplitMode.Actor);
-        AddSplitModeItem("Style", WaveformSplitMode.Style);
-        AddSplitModeItem("Layer", WaveformSplitMode.Layer);
-        AddSplitModeItem("ASS position/alignment", WaveformSplitMode.AssPositionAlignment);
+        AddSplitModeItem(Se.Language.Waveform.SplitWaveformNone, WaveformSplitMode.None);
+        AddSplitModeItem(Se.Language.Waveform.SplitWaveformActor, WaveformSplitMode.Actor);
+        AddSplitModeItem(Se.Language.Waveform.SplitWaveformStyle, WaveformSplitMode.Style);
+        AddSplitModeItem(Se.Language.Waveform.SplitWaveformLayer, WaveformSplitMode.Layer);
+        AddSplitModeItem(Se.Language.Waveform.SplitWaveformAssPositionAlignment, WaveformSplitMode.AssPositionAlignment);
 
         var menuItemResetZoom = new MenuItem
         {
@@ -691,8 +691,8 @@ public class InitWaveform
             toggleButtonCenter,
             buttonMore
         );
-        sortableButtons.Add(new SortedControl { Sort = settingMore.SortOrder, Control = buttonSplitWaveform });
-        foreach (var sortedButton in sortableButtons)
+        sortableButtons.Add(new SortedControl { Sort = settingMore.SortOrder + 1, Control = buttonSplitWaveform });
+        foreach (var sortedButton in sortableButtons.OrderBy(p => p.Sort))
         {
             if (sortedButton.Control != null)
             {
