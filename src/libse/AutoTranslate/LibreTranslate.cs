@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var input = "{\"q\": \"" + Json.EncodeJsonText(text.Trim()) + "\", \"source\": \"" + sourceLanguageCode + "\", \"target\": \"" + targetLanguageCode + "\"" + apiKey + "}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            var result = _httpClient.PostAsync("translate", content, cancellationToken).Result;
+            var result = await _httpClient.PostAsync("translate", content, cancellationToken);
             var bytes = await result.Content.ReadAsByteArrayAsync();
             var json = Encoding.UTF8.GetString(bytes).Trim();
             if (!result.IsSuccessStatusCode)
