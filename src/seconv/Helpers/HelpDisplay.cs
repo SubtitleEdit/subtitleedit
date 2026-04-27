@@ -40,6 +40,16 @@ internal static class HelpDisplay
         ShowParameter("--teletextonly", "Process teletext only");
         ShowParameter("--teletextonlypage:<page number>", "Teletext page number");
         ShowParameter("--track-number:<track list>", "Comma separated track number list");
+        ShowParameter("--ocrengine:<engine>", "OCR engine: tesseract | nocr | ollama | paddle");
+        ShowParameter("--ocrlanguage:<lang>", "Language for OCR (e.g. eng, deu, spa)");
+        ShowParameter("--ocrdb:<path.nocr>", "nOCR database file (required for --ocrengine=nocr)");
+        ShowParameter("--ollama-url:<url>", "Ollama API endpoint (default: http://localhost:11434/api/chat)");
+        ShowParameter("--ollama-model:<model>", "Ollama vision model (default: llama3.2-vision)");
+        ShowParameter("--multiplereplace:<path.xml>", "SE MultipleSearchAndReplaceGroups XML applied per paragraph");
+        ShowParameter("--customformat:<path.xml>", "SE CustomFormatItem XML (use with --format customtext)");
+        ShowParameter("--settings:<path.json>", "JSON settings file overriding libse defaults");
+        ShowParameter("--quiet", "Suppress per-file progress; only print the final summary");
+        ShowParameter("--verbose", "Print extra diagnostic information");
         
         AnsiConsole.WriteLine();
         AnsiConsole.MarkupLine("[bold cyan]Operations:[/]");
@@ -67,18 +77,34 @@ internal static class HelpDisplay
         ShowParameter("--SplitLongLines", "Split long lines");
 
         AnsiConsole.WriteLine();
+        ShowSection("Subcommands", null);
+        ShowParameter("formats", "List all available subtitle formats");
+        ShowParameter("list-encodings", "List all supported text encodings (code page + name)");
+        ShowParameter("list-pac-codepages", "List PAC code pages (--pac-codepage values)");
+        ShowParameter("list-ocr-engines", "List OCR engines + installation status");
+
+        AnsiConsole.WriteLine();
         ShowSection("Examples", null);
         ShowExample(
-            "SubtitleEdit *.srt sami",
+            "seconv *.srt sami",
             "Convert all .srt files to SAMI format");
         ShowExample(
-            "SubtitleEdit sub1.srt subrip --encoding:windows-1252",
+            "seconv sub1.srt subrip --encoding:windows-1252",
             "Convert with specific encoding");
         ShowExample(
-            "SubtitleEdit *.sub subrip --fps:25 --outputfolder:C:\\Temp",
+            "seconv *.sub subrip --fps:25 --outputfolder:C:\\Temp",
             "Convert frame-based to time-based with FPS");
         ShowExample(
-            "SubtitleEdit formats",
+            "seconv movie.mkv subrip --track-number:3",
+            "Extract MKV subtitle track #3 to SRT");
+        ShowExample(
+            "seconv movie.sup subrip --ocrengine:nocr --ocrdb:Latin.nocr",
+            "OCR a Blu-Ray .sup using nOCR");
+        ShowExample(
+            "seconv subs.srt customtext --customformat:my-template.xml",
+            "Render via a custom text format template");
+        ShowExample(
+            "seconv formats",
             "List all available formats");
 
         AnsiConsole.WriteLine();

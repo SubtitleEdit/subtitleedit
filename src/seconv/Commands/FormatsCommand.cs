@@ -17,40 +17,30 @@ internal sealed class FormatsCommand : Command<FormatsCommand.Settings>
         AnsiConsole.MarkupLine("[bold cyan]Available Subtitle Formats[/]");
         AnsiConsole.WriteLine();
 
-        var formats = GetAvailableFormats();
+        var formats = LibSEIntegration.GetAvailableFormats();
 
         var table = new Table();
         table.Border(TableBorder.Rounded);
         table.AddColumn("[yellow]#[/]");
         table.AddColumn("[green]Format Name[/]");
         table.AddColumn("[cyan]Extension[/]");
+        table.AddColumn("[magenta]Type[/]");
 
-        int index = 1;
-        foreach (var (name, extension, _) in formats)
+        var index = 1;
+        foreach (var entry in formats)
         {
             table.AddRow(
                 index.ToString(),
-                $"[green]{name}[/]",
-                $"[cyan]{extension}[/]");
+                $"[green]{entry.Format.Name}[/]",
+                $"[cyan]{entry.Format.Extension}[/]",
+                $"[magenta]{entry.Kind}[/]");
             index++;
         }
 
         AnsiConsole.Write(table);
         AnsiConsole.MarkupLine($"\n[yellow]Total formats: {formats.Count}[/]");
+        AnsiConsole.MarkupLine("[dim]'(input)' types can be loaded but not saved as the conversion target.[/]");
 
         return 0;
-    }
-
-    private static List<(string Name, string Extension, string Description)> GetAvailableFormats()
-    {
-        // Get formats from LibSE integration
-        var formats = LibSEIntegration.GetAvailableFormats();
-
-        // Group by name to show unique formats (some formats may have same name but different implementations)
-        return formats
-            .GroupBy(f => f.Name)
-            .Select(g => g.First())
-            .Select(f => (f.Name, f.Extension, f.Name))
-            .ToList();
     }
 }

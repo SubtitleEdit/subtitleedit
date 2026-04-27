@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.Ocr;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
 using System.Collections.ObjectModel;
 using System.IO;

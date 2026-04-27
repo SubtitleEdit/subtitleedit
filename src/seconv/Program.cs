@@ -1,6 +1,7 @@
 using Spectre.Console;
 using Spectre.Console.Cli;
 using SeConv.Commands;
+using SeConv.Core;
 using SeConv.Helpers;
 
 namespace SeConv;
@@ -9,6 +10,9 @@ internal class Program
 {
     static int Main(string[] args)
     {
+        // Encoding code pages and the headless EBU UI helper are wired by the
+        // module initializer in SeConv.Core.Bootstrap.
+
         // Handle legacy /convert syntax and convert to modern syntax
         args = ConvertLegacyArguments(args);
 
@@ -30,6 +34,27 @@ internal class Program
         {
             var formatsCommand = new FormatsCommand();
             return ((ICommand)formatsCommand).ExecuteAsync(null!, new FormatsCommand.Settings(), CancellationToken.None).GetAwaiter().GetResult();
+        }
+
+        // List helpers
+        if (args.Length > 0)
+        {
+            var first = args[0].TrimStart('/').TrimStart('-');
+            if (first.Equals("list-encodings", StringComparison.OrdinalIgnoreCase))
+            {
+                ListHelpers.PrintEncodings();
+                return 0;
+            }
+            if (first.Equals("list-pac-codepages", StringComparison.OrdinalIgnoreCase))
+            {
+                ListHelpers.PrintPacCodepages();
+                return 0;
+            }
+            if (first.Equals("list-ocr-engines", StringComparison.OrdinalIgnoreCase))
+            {
+                ListHelpers.PrintOcrEngines();
+                return 0;
+            }
         }
 
         // Set up Spectre.Console CLI with default command
@@ -58,7 +83,9 @@ internal class Program
     }
 
     /// <summary>
-    /// Converts legacy /parameter syntax to modern --parameter syntax
+    /// Converts legacy SE 4.x <c>/parameter:value</c> syntax to modern <c>--parameter:value</c>.
+    /// Skips path-like arguments (anything containing a path separator after the leading
+    /// slash) so Unix absolute paths and Windows drive paths pass through unchanged.
     /// </summary>
     private static string[] ConvertLegacyArguments(string[] args)
     {
@@ -66,9 +93,8 @@ internal class Program
 
         foreach (var arg in args)
         {
-            if (arg.StartsWith('/') && arg != "/?" && arg != "/help")
+            if (arg.StartsWith('/') && arg != "/?" && arg != "/help" && !LooksLikePath(arg))
             {
-                // Convert /parameter to --parameter
                 converted.Add("--" + arg.Substring(1));
             }
             else
@@ -78,6 +104,27 @@ internal class Program
         }
 
         return converted.ToArray();
+    }
+
+    /// <summary>
+    /// Heuristic: a leading-slash arg is a Unix-style path if it contains another <c>/</c>
+    /// somewhere after position 0 (e.g. <c>/etc/foo</c>), or already contains a backslash
+    /// (e.g. <c>/c/Users/...</c> in MSYS) — neither shape matches the legacy <c>/option:value</c>
+    /// form, where the value sits after a <c>:</c>.
+    /// </summary>
+    private static bool LooksLikePath(string arg)
+    {
+        if (arg.Length < 2)
+        {
+            return false;
+        }
+        var rest = arg.AsSpan(1);
+        // Legacy options use ':' as the value separator (e.g. /encoding:utf-8) — the option
+        // name part is before the first ':'. Only that part shouldn't contain path separators;
+        // the value can contain anything (including drive letters and backslashes).
+        var colonIdx = rest.IndexOf(':');
+        var nameSpan = colonIdx >= 0 ? rest[..colonIdx] : rest;
+        return nameSpan.Contains('/') || nameSpan.Contains('\\');
     }
 
     // Options that take a value as the next argument. Used to know which positional
@@ -107,6 +154,11 @@ internal class Program
         "--DeleteLast",
         "--DeleteContains",
         "--settings",
+        "--ocrlanguage",
+        "--ocrdb",
+        "--ollama-url",
+        "--ollama-model",
+        "--customformat",
     };
 
     private static bool HasFormatOption(string[] args)

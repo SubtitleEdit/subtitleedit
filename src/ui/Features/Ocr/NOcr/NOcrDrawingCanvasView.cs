@@ -4,7 +4,7 @@ using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
-using Nikse.SubtitleEdit.Logic.Ocr;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 using System;
 using System.Collections.Generic;
 using static Nikse.SubtitleEdit.Controls.AudioVisualizerControl.AudioVisualizer;

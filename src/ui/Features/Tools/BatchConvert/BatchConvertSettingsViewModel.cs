@@ -8,7 +8,7 @@ using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
-using Nikse.SubtitleEdit.Logic.Ocr;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -80,7 +80,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
 
         PaddleOcrLanguages = new ObservableCollection<OcrLanguage2>(PaddleOcr.GetLanguages().OrderBy(p => p.ToString()));
         TesseractDictionaryItems = new ObservableCollection<TesseractDictionary>();
-        BinaryOcrDatabases = new ObservableCollection<string>(BinaryOcrDb.GetDatabases());
+        BinaryOcrDatabases = new ObservableCollection<string>(BinaryOcrDb.GetDatabases(Se.OcrFolder));
 
         _folderHelper = folderHelper;
 

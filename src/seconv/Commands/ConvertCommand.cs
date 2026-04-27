@@ -1,6 +1,7 @@
 using Spectre.Console;
 using Spectre.Console.Cli;
 using System.ComponentModel;
+using System.Diagnostics;
 using SeConv.Core;
 
 namespace SeConv.Commands;
@@ -16,6 +17,14 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [CommandOption("--format|-f")]
         [Description("Name of format without spaces")]
         public string Format { get; init; } = string.Empty;
+
+        [CommandOption("--quiet|-q")]
+        [Description("Suppress per-file progress; only print the final summary")]
+        public bool Quiet { get; init; }
+
+        [CommandOption("--verbose|-v")]
+        [Description("Print extra diagnostic information")]
+        public bool Verbose { get; init; }
 
         [CommandOption("--adjustduration")]
         [Description("Adjust duration in milliseconds")]
@@ -46,12 +55,32 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? InputFolder { get; init; }
 
         [CommandOption("--multiplereplace")]
-        [Description("Multiple replace (default rules or comma separated file list)")]
+        [Description("Path to a Subtitle Edit MultipleSearchAndReplaceGroups XML file applied per-paragraph before save")]
         public string? MultipleReplace { get; init; }
 
+        [CommandOption("--customformat")]
+        [Description("Path to a Subtitle Edit custom-format XML file (used with --format customtext)")]
+        public string? CustomFormat { get; init; }
+
         [CommandOption("--ocrengine")]
-        [Description("OCR engine (tesseract/nOCR)")]
+        [Description("OCR engine: tesseract | nocr | ollama | paddle (default: tesseract)")]
         public string? OcrEngine { get; init; }
+
+        [CommandOption("--ocrlanguage")]
+        [Description("Language for OCR (Tesseract: ISO 639-2 like eng/deu; Paddle: en/de; Ollama: human name like English)")]
+        public string? OcrLanguage { get; init; }
+
+        [CommandOption("--ocrdb")]
+        [Description("Path to a .nocr database file (required when --ocrengine=nocr)")]
+        public string? OcrDb { get; init; }
+
+        [CommandOption("--ollama-url")]
+        [Description("Ollama API endpoint (default: http://localhost:11434/api/chat)")]
+        public string? OllamaUrl { get; init; }
+
+        [CommandOption("--ollama-model")]
+        [Description("Ollama vision model (default: llama3.2-vision)")]
+        public string? OllamaModel { get; init; }
 
         [CommandOption("--offset")]
         [Description("Offset time (hh:mm:ss:ms)")]
@@ -76,6 +105,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [CommandOption("--profile")]
         [Description("Profile name")]
         public string? Profile { get; init; }
+
+        [CommandOption("--settings")]
+        [Description("Path to a JSON settings file overriding libse defaults")]
+        public string? SettingsPath { get; init; }
 
         [CommandOption("--renumber")]
         [Description("Renumber starting from this number")]
@@ -183,8 +216,11 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
     {
         try
         {
-            AnsiConsole.MarkupLine("[bold cyan]Subtitle Edit - Batch Converter[/]");
-            AnsiConsole.WriteLine();
+            if (!settings.Quiet)
+            {
+                AnsiConsole.MarkupLine("[bold cyan]Subtitle Edit - Batch Converter[/]");
+                AnsiConsole.WriteLine();
+            }
 
             // Validate input
             if (settings.Pattern.Length == 0)
@@ -196,6 +232,37 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             if (string.IsNullOrWhiteSpace(settings.Format))
             {
                 AnsiConsole.MarkupLine("[red]Error: Format is required. Use --format <name> or pass it as the second positional argument (e.g. seconv *.srt sami)[/]");
+                return 1;
+            }
+
+            // Validate --ocrengine: tesseract | nocr | ollama | paddle
+            var supportedEngines = new[] { "tesseract", "nocr", "ollama", "paddle", "paddleocr" };
+            if (!string.IsNullOrWhiteSpace(settings.OcrEngine) &&
+                !supportedEngines.Contains(settings.OcrEngine, StringComparer.OrdinalIgnoreCase))
+            {
+                AnsiConsole.MarkupLine(
+                    $"[red]Error: OCR engine '{settings.OcrEngine.EscapeMarkup()}' is not supported. " +
+                    $"Use one of: {string.Join(", ", supportedEngines)}.[/]");
+                return 1;
+            }
+
+            // Load --settings:path.json overrides into libse Configuration before any conversion.
+            // --profile <name> selects a named overlay from the same file.
+            if (!string.IsNullOrWhiteSpace(settings.SettingsPath))
+            {
+                try
+                {
+                    SeConvSettings.Load(settings.SettingsPath).ApplyToLibSe(settings.Profile);
+                }
+                catch (Exception ex)
+                {
+                    AnsiConsole.MarkupLine($"[red]Error loading --settings file: {ex.Message.EscapeMarkup()}[/]");
+                    return 1;
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(settings.Profile))
+            {
+                AnsiConsole.MarkupLine("[red]Error: --profile requires --settings:<path.json>[/]");
                 return 1;
             }
 
@@ -218,6 +285,51 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             if (settings.ReverseRtlStartEnd) operations.Add("ReverseRtlStartEnd");
             if (settings.SplitLongLines) operations.Add("SplitLongLines");
 
+            // Parse offset if supplied
+            TimeSpan? offset = null;
+            if (!string.IsNullOrWhiteSpace(settings.Offset))
+            {
+                try
+                {
+                    offset = OffsetParser.Parse(settings.Offset);
+                }
+                catch (FormatException ex)
+                {
+                    AnsiConsole.MarkupLine($"[red]Error: {ex.Message.EscapeMarkup()}[/]");
+                    return 1;
+                }
+            }
+
+            // Parse resolution if supplied
+            (int Width, int Height)? resolution = null;
+            if (!string.IsNullOrWhiteSpace(settings.Resolution))
+            {
+                try
+                {
+                    resolution = ResolutionParser.Parse(settings.Resolution);
+                }
+                catch (FormatException ex)
+                {
+                    AnsiConsole.MarkupLine($"[red]Error: {ex.Message.EscapeMarkup()}[/]");
+                    return 1;
+                }
+            }
+
+            // Parse PAC code page if supplied
+            int? pacCodePage = null;
+            if (!string.IsNullOrWhiteSpace(settings.PacCodepage))
+            {
+                try
+                {
+                    pacCodePage = PacCodepageParser.Parse(settings.PacCodepage);
+                }
+                catch (FormatException ex)
+                {
+                    AnsiConsole.MarkupLine($"[red]Error: {ex.Message.EscapeMarkup()}[/]");
+                    return 1;
+                }
+            }
+
             // Create conversion options
             var options = new ConversionOptions
             {
@@ -234,6 +346,26 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 DeleteFirst = settings.DeleteFirst,
                 DeleteLast = settings.DeleteLast,
                 DeleteContains = settings.DeleteContains,
+                Offset = offset,
+                Renumber = settings.Renumber,
+                AdjustDurationMs = settings.AdjustDuration,
+                Resolution = resolution,
+                AssaStyleFile = settings.AssaStyleFile,
+                PacCodePage = pacCodePage,
+                EbuHeaderFile = settings.EbuHeaderFile,
+                MultipleReplaceFile = settings.MultipleReplace,
+                CustomFormatFile = settings.CustomFormat,
+                TrackNumbers = ParseTrackNumbers(settings.TrackNumber),
+                ForcedOnly = settings.ForcedOnly,
+                OcrEngine = string.IsNullOrWhiteSpace(settings.OcrEngine) ? "tesseract" : settings.OcrEngine,
+                OcrLanguage = settings.OcrLanguage ?? "eng",
+                OcrDb = settings.OcrDb,
+                OllamaUrl = settings.OllamaUrl,
+                OllamaModel = settings.OllamaModel,
+                TeletextOnly = settings.TeletextOnly,
+                TeletextOnlyPage = settings.TeletextOnlyPage,
+                Quiet = settings.Quiet,
+                Verbose = settings.Verbose,
             };
 
             // Display conversion info
@@ -274,19 +406,26 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             if (!string.IsNullOrEmpty(settings.DeleteContains))
                 table.AddRow("Delete Contains", settings.DeleteContains);
 
-            AnsiConsole.Write(table);
-            AnsiConsole.WriteLine();
+            if (!settings.Quiet)
+            {
+                AnsiConsole.Write(table);
+                AnsiConsole.WriteLine();
+            }
 
             // Perform conversion
+            var stopwatch = Stopwatch.StartNew();
             var converter = new SubtitleConverter();
             var result = await converter.ConvertAsync(options);
+            stopwatch.Stop();
+
+            var elapsed = FormatElapsed(stopwatch.Elapsed);
 
             // Display results
             AnsiConsole.WriteLine();
             if (result.Success)
             {
                 AnsiConsole.MarkupLine($"[green]✓[/] Conversion completed successfully!");
-                AnsiConsole.MarkupLine($"[dim]Converted {result.SuccessfulFiles} file(s)[/]");
+                AnsiConsole.MarkupLine($"[dim]Converted {result.SuccessfulFiles} file(s) in {elapsed}[/]");
             }
             else
             {
@@ -295,6 +434,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                     AnsiConsole.MarkupLine($"[yellow]⚠[/] Conversion completed with errors");
                     AnsiConsole.MarkupLine($"[green]Successful: {result.SuccessfulFiles}[/]");
                     AnsiConsole.MarkupLine($"[red]Failed: {result.FailedFiles}[/]");
+                    AnsiConsole.MarkupLine($"[dim]Elapsed: {elapsed}[/]");
                 }
                 else
                 {
@@ -307,7 +447,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                     AnsiConsole.MarkupLine("[red]Errors:[/]");
                     foreach (var error in result.Errors)
                     {
-                        AnsiConsole.MarkupLine($"  [red]•[/] {error}");
+                        AnsiConsole.MarkupLine($"  [red]•[/] {error.EscapeMarkup()}");
                     }
                 }
 
@@ -325,5 +465,35 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             }
             return 1;
         }
+    }
+
+    private static List<int> ParseTrackNumbers(string? csv)
+    {
+        if (string.IsNullOrWhiteSpace(csv))
+        {
+            return [];
+        }
+        var nums = new List<int>();
+        foreach (var part in csv.Split(',', StringSplitOptions.RemoveEmptyEntries))
+        {
+            if (int.TryParse(part.Trim(), out var n))
+            {
+                nums.Add(n);
+            }
+        }
+        return nums;
+    }
+
+    private static string FormatElapsed(TimeSpan e)
+    {
+        if (e.TotalSeconds < 1)
+        {
+            return $"{e.TotalMilliseconds:F0} ms";
+        }
+        if (e.TotalMinutes < 1)
+        {
+            return $"{e.TotalSeconds:F1} s";
+        }
+        return $"{(int)e.TotalMinutes}m {e.Seconds}s";
     }
 }

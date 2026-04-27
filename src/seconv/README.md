@@ -1,158 +1,169 @@
-# SeConv - Subtitle Converter Command Line Tool
+# SeConv - Subtitle Edit Command Line Converter
 
-A modern command-line utility for batch converting subtitle files between various formats.
+A modern, headless command-line utility for batch converting subtitle files between formats.
+Reuses Subtitle Edit's core libraries (libse, libuilogic) so seconv supports the same formats,
+operations, and OCR engines as the desktop UI — without an Avalonia / GUI dependency.
 
 ## Features
 
-- ✅ Batch conversion of subtitle files
-- ✅ Support for 300+ subtitle formats
-- ✅ Colored console output for better readability
-- ✅ Extensive subtitle processing operations
-- ✅ Modern command-line interface with Spectre.Console
+- 300+ subtitle formats (text, binary, image-based)
+- Container input: Matroska (.mkv/.mks), MP4, MCC, transport stream teletext
+- OCR pipelines for image-based sources (Blu-Ray .sup, MKV PGS, DVB-sub)
+- Four OCR engines: Tesseract subprocess, nOCR (built-in), Ollama (HTTP), PaddleOCR subprocess
+- Image-based output: Blu-Ray sup, BDN-XML, DOST, FCP, D-Cinema interop / SMPTE 2014, images-with-time-code
+- Full operation pipeline: offset, fps change, renumber, adjust-duration, fix-common-errors,
+  merge/split, balance, redo casing, RTL fixes, multiple-replace, custom-text format, plain text
+- Cross-platform (Windows, Linux, macOS) — only requires .NET 10 runtime
 
 ## Installation
 
-Build the project:
 ```bash
 dotnet build src/seconv/SeConv.csproj
 ```
 
-Or build from the solution root:
-```bash
-dotnet build
-```
-
-The executable will be named `seconv` (or `seconv.exe` on Windows).
+The executable is `seconv` / `seconv.exe`.
 
 ## Usage
 
-### Basic Syntax
-
 ```bash
 seconv <pattern> <format> [options]
+seconv <pattern> --format <name> [options]   # alternative syntax
 ```
 
-### Examples
+### Quick examples
 
-**Convert all SRT files to SAMI format:**
 ```bash
-seconv *.srt sami
+seconv *.srt sami                                              # SRT → SAMI
+seconv movie.srt subrip --encoding:windows-1252                # encoding override
+seconv *.sub subrip --fps:25 --outputfolder ./out              # frame-based → time-based
+
+seconv movie.mkv subrip --track-number:3                       # extract MKV text track #3
+seconv movie.sup subrip --ocrengine:tesseract --ocrlanguage:eng  # OCR a Blu-Ray .sup
+seconv movie.sup subrip --ocrengine:nocr --ocrdb:Latin.nocr    # OCR via nOCR
+seconv movie.sup subrip --ocrengine:ollama --ollama-model:llama3.2-vision
+
+seconv subs.srt bluraysup --resolution:1920x1080               # render text → Blu-Ray sup
+seconv subs.srt bdnxml --resolution:1920x1080                  # render text → BDN-XML
+
+seconv subs.srt customtext --customformat:my-template.xml      # custom template
+seconv *.srt subrip --multiplereplace:rules.xml                # search-and-replace pass
+
+seconv subs.srt subrip --offset:-2000 --renumber:1 --overwrite  # offset 2s back, renumber from 1
 ```
 
-**Convert with specific encoding:**
-```bash
-seconv *.srt subrip --encoding:windows-1252
-```
+## Subcommands
 
-**List all available formats:**
 ```bash
-seconv formats
+seconv formats                # list all supported formats
+seconv list-encodings         # list text encodings
+seconv list-pac-codepages     # list PAC code pages
+seconv list-ocr-engines       # list OCR engines + installation status
+seconv --help                 # show help
 ```
 
 ## Command Line Options
 
-### File Options
-- `--inputfolder:<path>` - Input folder path
-- `--outputfolder:<path>` - Output folder path
-- `--outputfilename:<name>` - Output file name (for single file only)
-- `--overwrite` - Overwrite existing files
+### File / I/O
+| Option | Description |
+|---|---|
+| `--inputfolder:<path>` | Input folder; relative patterns resolve against it |
+| `--outputfolder:<path>` | Output folder (default: input file's directory) |
+| `--outputfilename:<name>` | Output file name (single input only) |
+| `--overwrite` | Overwrite existing files (default: rotate to `name_2.ext`, `_3.ext`, ...) |
+| `--encoding:<name>` | Encoding name or codepage (defaults: auto-detect on input, UTF-8 BOM on output) |
 
-### Format Options
-- `--encoding:<name>` - Character encoding (e.g., utf-8, windows-1252)
-- `--fps:<rate>` - Frame rate for conversion
-- `--targetfps:<rate>` - Target frame rate
+### Time / Frame
+| Option | Description |
+|---|---|
+| `--offset:hh:mm:ss:ms` | Shift all timecodes (also accepts plain ms) |
+| `--fps:<rate>` | Source frame rate |
+| `--targetfps:<rate>` | Target frame rate (with `--fps`) |
+| `--adjustduration:<ms>` | Add/subtract milliseconds to each duration |
+| `--renumber:<n>` | Renumber paragraphs starting at `n` |
 
-### Additional Options
-- `--adjustduration:<ms>` - Adjust duration in milliseconds
-- `--assa-style-file:<file>` - ASSA style file name
-- `--ebuheaderfile:<file>` - EBU header file name
-- `--forcedonly` - Process forced subtitles only
-- `--multiplereplace` - Use default replace rules
-- `--multiplereplace:<files>` - Comma separated file name list
-- `--ocrengine:<engine>` - OCR engine (tesseract/nOCR)
-- `--offset:hh:mm:ss:ms` - Time offset
-- `--pac-codepage:<page>` - PAC code page
-- `--profile:<name>` - Profile name
-- `--renumber:<number>` - Renumber subtitles from this number
-- `--resolution:<width>x<height>` - Video resolution (e.g., 1920x1080)
-- `--teletextonly` - Process teletext only
-- `--teletextonlypage:<page>` - Teletext page number
-- `--track-number:<tracks>` - Comma separated track number list
+### Format-specific
+| Option | Description |
+|---|---|
+| `--resolution:<WxH>` | Video resolution for ASSA / image-based outputs (default 1920x1080) |
+| `--assa-style-file:<file>` | Apply `[V4+ Styles]` from another ASSA file |
+| `--pac-codepage:<page>` | PAC code page (name or 0-12) |
+| `--ebuheaderfile:<file>` | Use header from an existing STL file when writing EBU |
 
-### Processing Operations
+### Containers / Tracks
+| Option | Description |
+|---|---|
+| `--track-number:<list>` | Comma-separated track numbers to keep |
+| `--forcedonly` | MKV: keep only forced tracks |
+| `--teletextonly` | TS: skip DVB-sub OCR (teletext only) |
+| `--teletextonlypage:<n>` | TS: extract only this teletext page |
 
-Operations are applied in a fixed, sensible order regardless of CLI order:
+### OCR
+| Option | Description |
+|---|---|
+| `--ocrengine:<engine>` | `tesseract` (default) \| `nocr` \| `ollama` \| `paddle` |
+| `--ocrlanguage:<lang>` | Tesseract: ISO 639-2 (`eng`, `deu`); Paddle: short (`en`); Ollama: human (`English`) |
+| `--ocrdb:<path.nocr>` | nOCR database file (required for `--ocrengine=nocr`) |
+| `--ollama-url:<url>` | Default `http://localhost:11434/api/chat` |
+| `--ollama-model:<model>` | Default `llama3.2-vision` |
 
-- `--ApplyDurationLimits` - Apply duration limits
-- `--BalanceLines` - Balance line lengths
-- `--BeautifyTimeCodes` - Beautify time codes
-- `--FixCommonErrors` - Fix common subtitle errors
-- `--MergeSameTexts` - Merge entries with same text
-- `--MergeSameTimeCodes` - Merge entries with same time codes
-- `--RemoveFormatting` - Remove formatting tags
-- `--RemoveTextForHI` - Remove text for hearing impaired
-- `--SplitLongLines` - Split long lines
+### Templates / replacements
+| Option | Description |
+|---|---|
+| `--multiplereplace:<path.xml>` | SE MultipleSearchAndReplaceGroups XML |
+| `--customformat:<path.xml>` | SE CustomFormatItem XML (with `--format customtext`) |
+| `--settings:<path.json>` | JSON settings file overriding libse defaults |
+| `--profile:<name>` | Named overlay from settings file's `profiles` map |
 
-And many more...
+### Verbosity
+| Option | Description |
+|---|---|
+| `--quiet` / `-q` | Suppress per-file progress; only print the final summary |
+| `--verbose` / `-v` | Print extra diagnostic information |
 
-## Supported Formats
+## Operations (boolean flags)
 
-Some popular formats include:
-- SubRip (.srt)
-- SAMI (.smi)
-- Advanced Sub Station Alpha (.ass)
-- WebVTT (.vtt)
-- Adobe Encore (.txt)
-- MicroDVD (.sub)
-- Timed Text (.xml)
+Applied in a fixed, sensible order regardless of CLI order:
 
-Run `seconv formats` to see the complete list of 300+ supported formats.
+`--ApplyDurationLimits` `--BalanceLines` `--BeautifyTimeCodes` `--ConvertColorsToDialog`
+`--DeleteFirst:<n>` `--DeleteLast:<n>` `--DeleteContains:<word>` `--FixCommonErrors`
+`--FixRtlViaUnicodeChars` `--MergeSameTexts` `--MergeSameTimeCodes` `--MergeShortLines`
+`--RedoCasing` `--RemoveFormatting` `--RemoveLineBreaks` `--RemoveTextForHI`
+`--RemoveUnicodeControlChars` `--ReverseRtlStartEnd` `--SplitLongLines`
 
-## Getting Help
+## Output format aliases
 
-```bash
-seconv --help
-seconv /?
 ```
+srt / subrip                      ass / assa                      ssa
+vtt / webvtt                      smi / sami                      sbv
+pac                               unipac / pacunicode             ebu / ebustl / stl
+cavena / cavena890                cheetahcaption                  capmakerplus
+ayato
+bluraysup / sup                   vobsub                          bdnxml / bdn-xml
+dost                              fcpimage                        dcinemainterop
+dcinemasmpte2014                  imageswithtimecode
+plaintext / text / txt            customtext / customtextformat
+```
+
+## Exit codes
+
+- `0` – conversion succeeded for all matched files
+- `1` – any error: validation failure, parse error, or one or more files failed to convert
 
 ## Project Structure
 
 ```
-src/seconv/
-├── Commands/
-│   ├── ConvertCommand.cs     # Main conversion command
-│   └── FormatsCommand.cs     # List available formats
-├── Core/
-│   ├── SubtitleConverter.cs  # Core conversion logic
-│   └── LibSEIntegration.cs   # LibSE integration
-├── Helpers/
-│   └── HelpDisplay.cs        # Help text display
-└── Program.cs                 # Application entry point
+src/
+├── libse/        # core subtitle library (NuGet-shippable, netstandard2.1)
+├── libuilogic/   # shared headless logic (BatchConverter pipeline, OCR matchers, image renderer)
+├── seconv/       # this CLI
+└── ui/           # Avalonia desktop UI (not referenced by seconv)
 ```
 
-Test fixtures live under `tests/seconv/Fixtures/`.
+`seconv` references only `libse` and `libuilogic` — no Avalonia/MVVM transitive deps.
 
-## Dependencies
+## Legacy syntax
 
-- **Spectre.Console** (v0.54.0) - Modern console UI framework
-- **Spectre.Console.Cli** (v0.53.1) - Command-line parsing
-- **LibSE** - Subtitle Edit core library (project reference)
-- **UI** - UI project reference
-
-## Development
-
-The project uses .NET 10.0 and targets modern .NET features.
-
-The executable is named `seconv` (configured via `<AssemblyName>seconv</AssemblyName>` in the .csproj file).
-
-### Legacy Command Support
-
-The tool supports legacy `/parameter` syntax from older versions of SubtitleEdit, automatically converting it to the modern `--parameter` syntax.
-
-To add new features:
-1. The conversion logic should be implemented in `Core/SubtitleConverter.cs`
-2. Commands can be added to the `Commands/` folder
-3. Register new commands in `Program.cs`
+Old SE 4.x `/parameter:value` syntax is auto-translated to `--parameter:value`.
 
 ## License
 
