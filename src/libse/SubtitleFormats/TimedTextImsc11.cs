@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -76,6 +77,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var xml = new XmlDocument { XmlResolver = null };
             var xmlStructure = GetXmlStructure();
+            var original = TryLoadOriginalHeader(subtitle.Header);
             xmlStructure = xmlStructure.Replace("[frameRate]", ((int)Math.Round(Configuration.Settings.General.CurrentFrameRate, MidpointRounding.AwayFromZero)).ToString());
 
             var frameDiff = Configuration.Settings.General.CurrentFrameRate % 1.0;
@@ -88,18 +90,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 xmlStructure = xmlStructure.Replace("[frameRateMultiplier]", "1000 1001");
             }
 
-            var original = new XmlDocument();
-            try
+            if (original != null)
             {
-                original.LoadXml(subtitle.Header);
-
                 var namespaceManagerOriginal = new XmlNamespaceManager(original.NameTable);
                 namespaceManagerOriginal.AddNamespace("ttml", TimedText10.TtmlNamespace);
                 namespaceManagerOriginal.AddNamespace("ttp", TimedText10.TtmlParameterNamespace);
                 namespaceManagerOriginal.AddNamespace("tts", TimedText10.TtmlStylingNamespace);
                 namespaceManagerOriginal.AddNamespace("ttm", TimedText10.TtmlMetadataNamespace);
 
-                var nodeTitle = original.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", namespaceManagerOriginal);
+                var nodeTitle = original.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttm:title", namespaceManagerOriginal) ??
+                                original.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", namespaceManagerOriginal);
                 if (nodeTitle != null)
                 {
                     xmlStructure = xmlStructure.Replace("[title]", nodeTitle.InnerXml);
@@ -110,10 +110,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     xmlStructure = xmlStructure.Replace("ttp:timeBase=\"media\"", $"ttp:timeBase=\"{attr.Value}\"");
                 }
-            }
-            catch
-            {
-                // ignore
             }
 
             var xmlTitle = string.IsNullOrEmpty(subtitle.FileName) ? title : Path.GetFileNameWithoutExtension(subtitle.FileName);
@@ -131,10 +127,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             xml.LoadXml(xmlStructure);
             var namespaceManager = new XmlNamespaceManager(xml.NameTable);
             namespaceManager.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+            namespaceManager.AddNamespace("ttp", TimedText10.TtmlParameterNamespace);
+            namespaceManager.AddNamespace("tts", TimedText10.TtmlStylingNamespace);
+
+            if (original != null)
+            {
+                ApplyHeaderProperties(xml, original, namespaceManager);
+            }
+
             var div = xml.DocumentElement.SelectSingleNode("ttml:body", namespaceManager).SelectSingleNode("ttml:div", namespaceManager);
+            var body = xml.DocumentElement.SelectSingleNode("ttml:body", namespaceManager);
+            var defaultRegion = body?.Attributes?["region"]?.Value;
             foreach (var p in subtitle.Paragraphs)
             {
-                var paragraphNode = MakeParagraph(xml, p);
+                var paragraphNode = MakeParagraph(xml, p, defaultRegion);
                 div.AppendChild(paragraphNode);
             }
 
@@ -143,7 +149,126 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return xmlString;
         }
 
-        private static XmlNode MakeParagraph(XmlDocument xml, Paragraph p)
+        private static XmlDocument TryLoadOriginalHeader(string header)
+        {
+            if (string.IsNullOrWhiteSpace(header))
+            {
+                return null;
+            }
+
+            try
+            {
+                var original = new XmlDocument { XmlResolver = null };
+                original.LoadXml(header);
+                return original;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private static void ApplyHeaderProperties(XmlDocument xml, XmlDocument original, XmlNamespaceManager namespaceManager)
+        {
+            CopyAttribute(original.DocumentElement, xml.DocumentElement, "xml:lang");
+            CopyAttribute(original.DocumentElement, xml.DocumentElement, "ttp:timeBase");
+            CopyAttribute(original.DocumentElement, xml.DocumentElement, "ttp:frameRate");
+            CopyAttribute(original.DocumentElement, xml.DocumentElement, "ttp:frameRateMultiplier");
+            CopyAttribute(original.DocumentElement, xml.DocumentElement, "ttp:dropMode");
+
+            var originalNamespaceManager = new XmlNamespaceManager(original.NameTable);
+            originalNamespaceManager.AddNamespace("ttml", TimedText10.TtmlNamespace);
+            originalNamespaceManager.AddNamespace("ttp", TimedText10.TtmlParameterNamespace);
+            originalNamespaceManager.AddNamespace("tts", TimedText10.TtmlStylingNamespace);
+
+            var originalBody = original.DocumentElement.SelectSingleNode("ttml:body", originalNamespaceManager);
+            var body = xml.DocumentElement.SelectSingleNode("ttml:body", namespaceManager);
+            if (originalBody != null && body != null)
+            {
+                CopyAttribute(originalBody, body, "style");
+                CopyAttribute(originalBody, body, "region");
+            }
+
+            CopyHeaderNodes(original, xml, originalNamespaceManager, namespaceManager, "ttml:head/ttml:styling", "ttml:style");
+            CopyHeaderNodes(original, xml, originalNamespaceManager, namespaceManager, "ttml:head/ttml:layout", "ttml:region");
+        }
+
+        private static void CopyAttribute(XmlNode source, XmlNode target, string attributeName)
+        {
+            var sourceAttribute = source?.Attributes?[attributeName];
+            if (sourceAttribute == null)
+            {
+                return;
+            }
+
+            var targetAttribute = target.Attributes?
+                .Cast<XmlAttribute>()
+                .FirstOrDefault(p => p.LocalName == sourceAttribute.LocalName && p.NamespaceURI == sourceAttribute.NamespaceURI);
+
+            if (targetAttribute == null)
+            {
+                target.Attributes.Append((XmlAttribute)target.OwnerDocument.ImportNode(sourceAttribute, true));
+            }
+            else
+            {
+                targetAttribute.Value = sourceAttribute.Value;
+            }
+        }
+
+        private static void CopyHeaderNodes(XmlDocument sourceDocument, XmlDocument targetDocument, XmlNamespaceManager sourceNamespaceManager, XmlNamespaceManager targetNamespaceManager, string parentPath, string childPath)
+        {
+            var sourceParent = sourceDocument.DocumentElement.SelectSingleNode(parentPath, sourceNamespaceManager);
+            if (sourceParent == null)
+            {
+                return;
+            }
+
+            var targetParent = targetDocument.DocumentElement.SelectSingleNode(parentPath, targetNamespaceManager);
+            if (targetParent == null)
+            {
+                return;
+            }
+
+            foreach (XmlNode sourceNode in sourceParent.SelectNodes(childPath, sourceNamespaceManager))
+            {
+                var id = GetXmlId(sourceNode);
+                if (string.IsNullOrEmpty(id))
+                {
+                    continue;
+                }
+
+                var importedNode = targetDocument.ImportNode(sourceNode, true);
+                var targetNode = FindChildWithId(targetParent, childPath, id, targetNamespaceManager);
+                if (targetNode == null)
+                {
+                    targetParent.AppendChild(importedNode);
+                }
+                else
+                {
+                    targetParent.ReplaceChild(importedNode, targetNode);
+                }
+            }
+        }
+
+        private static XmlNode FindChildWithId(XmlNode parent, string childPath, string id, XmlNamespaceManager namespaceManager)
+        {
+            foreach (XmlNode node in parent.SelectNodes(childPath, namespaceManager))
+            {
+                if (GetXmlId(node) == id)
+                {
+                    return node;
+                }
+            }
+
+            return null;
+        }
+
+        private static string GetXmlId(XmlNode node)
+        {
+            return node.Attributes?["xml:id"]?.Value ?? node.Attributes?["id"]?.Value ?? string.Empty;
+        }
+
+        private static XmlNode MakeParagraph(XmlDocument xml, Paragraph p, string defaultRegion)
         {
             var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedTextImsc11TimeCodeFormat;
             if (string.IsNullOrEmpty(timeCodeFormat))
@@ -163,7 +288,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             paragraph.Attributes.Append(end);
 
             XmlAttribute region = xml.CreateAttribute("region");
-            region.InnerText = GetRegionFromText(p.Text);
+            region.InnerText = GetRegionFromText(p.Text, defaultRegion);
             paragraph.Attributes.Append(region);
 
             // Trying to parse and convert paragraph content
@@ -216,7 +341,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private static string GetRegionFromText(string text)
+        private static string GetRegionFromText(string text, string defaultRegion)
         {
             if (text.StartsWith(@"{\an7", StringComparison.Ordinal))
             {
@@ -258,6 +383,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (text.StartsWith(@"{\an3", StringComparison.Ordinal))
             {
                 return "region.bottomRight";
+            }
+
+            if (!string.IsNullOrEmpty(defaultRegion))
+            {
+                return defaultRegion;
             }
 
             return "region.bottomCenter";

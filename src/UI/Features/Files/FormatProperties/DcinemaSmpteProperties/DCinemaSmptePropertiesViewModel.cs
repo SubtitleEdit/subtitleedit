@@ -254,8 +254,7 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
 
     public void Initialize(Subtitle subtitle)
     {
-        Subtitle = subtitle;
-        LoadSettings();
+        InitializeCore(subtitle, null);
     }
 
     [RelayCommand]
@@ -449,7 +448,26 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
 
     internal void Initialize(SubtitleFormat format)
     {
-        WindowTitle = string.Format(Se.Language.File.XProperties, format.Name);
+        InitializeCore(null, format);
+    }
+
+    internal void Initialize(Subtitle subtitle, SubtitleFormat format)
+    {
+        InitializeCore(subtitle, format);
+    }
+
+    private void InitializeCore(Subtitle? subtitle, SubtitleFormat? format)
+    {
+        if (subtitle != null)
+        {
+            Subtitle = subtitle;
+        }
+
+        if (format != null)
+        {
+            WindowTitle = string.Format(Se.Language.File.XProperties, format.Name);
+        }
+
         LoadSettings();
     }
 }
