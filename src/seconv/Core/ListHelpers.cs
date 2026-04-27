@@ -90,6 +90,10 @@ internal static class ListHelpers
             "in-process",
             "Pass --ocrdb=<path-to-Latin.nocr> (find under %AppData%\\\\Subtitle Edit\\\\Ocr\\\\)");
         table.AddRow(
+            "[green]binaryocr[/]",
+            "in-process",
+            "Pass --ocrdb=<path-to-Latin.db> (find under %AppData%\\\\Subtitle Edit\\\\Ocr\\\\)");
+        table.AddRow(
             "[green]ollama[/]",
             "HTTP",
             "Local Ollama with vision model. --ollama-url, --ollama-model");

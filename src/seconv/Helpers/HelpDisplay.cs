@@ -40,9 +40,9 @@ internal static class HelpDisplay
         ShowParameter("--teletextonly", "Process teletext only");
         ShowParameter("--teletextonlypage:<page number>", "Teletext page number");
         ShowParameter("--track-number:<track list>", "Comma separated track number list");
-        ShowParameter("--ocrengine:<engine>", "OCR engine: tesseract | nocr | ollama | paddle");
+        ShowParameter("--ocrengine:<engine>", "OCR engine: tesseract | nocr | binaryocr | ollama | paddle");
         ShowParameter("--ocrlanguage:<lang>", "Language for OCR (e.g. eng, deu, spa)");
-        ShowParameter("--ocrdb:<path.nocr>", "nOCR database file (required for --ocrengine=nocr)");
+        ShowParameter("--ocrdb:<path>", ".nocr (--ocrengine=nocr) or .db (--ocrengine=binaryocr)");
         ShowParameter("--ollama-url:<url>", "Ollama API endpoint (default: http://localhost:11434/api/chat)");
         ShowParameter("--ollama-model:<model>", "Ollama vision model (default: llama3.2-vision)");
         ShowParameter("--multiplereplace:<path.xml>", "SE MultipleSearchAndReplaceGroups XML applied per paragraph");

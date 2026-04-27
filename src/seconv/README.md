@@ -9,7 +9,7 @@ operations, and OCR engines as the desktop UI — without an Avalonia / GUI depe
 - 300+ subtitle formats (text, binary, image-based)
 - Container input: Matroska (.mkv/.mks), MP4, MCC, transport stream teletext
 - OCR pipelines for image-based sources (Blu-Ray .sup, MKV PGS, DVB-sub)
-- Four OCR engines: Tesseract subprocess, nOCR (built-in), Ollama (HTTP), PaddleOCR subprocess
+- Five OCR engines: Tesseract subprocess, nOCR (built-in), BinaryOCR (built-in), Ollama (HTTP), PaddleOCR subprocess
 - Image-based output: Blu-Ray sup, BDN-XML, DOST, FCP, D-Cinema interop / SMPTE 2014, images-with-time-code
 - Full operation pipeline: offset, fps change, renumber, adjust-duration, fix-common-errors,
   merge/split, balance, redo casing, RTL fixes, multiple-replace, custom-text format, plain text
@@ -40,6 +40,7 @@ seconv *.sub subrip --fps:25 --outputfolder ./out              # frame-based →
 seconv movie.mkv subrip --track-number:3                       # extract MKV text track #3
 seconv movie.sup subrip --ocrengine:tesseract --ocrlanguage:eng  # OCR a Blu-Ray .sup
 seconv movie.sup subrip --ocrengine:nocr --ocrdb:Latin.nocr    # OCR via nOCR
+seconv movie.sup subrip --ocrengine:binaryocr --ocrdb:Latin.db # OCR via BinaryOCR
 seconv movie.sup subrip --ocrengine:ollama --ollama-model:llama3.2-vision
 
 seconv subs.srt bluraysup --resolution:1920x1080               # render text → Blu-Ray sup
@@ -100,7 +101,7 @@ seconv --help                 # show help
 ### OCR
 | Option | Description |
 |---|---|
-| `--ocrengine:<engine>` | `tesseract` (default) \| `nocr` \| `ollama` \| `paddle` |
+| `--ocrengine:<engine>` | `tesseract` (default) \| `nocr` \| `binaryocr` \| `ollama` \| `paddle` |
 | `--ocrlanguage:<lang>` | Tesseract: ISO 639-2 (`eng`, `deu`); Paddle: short (`en`); Ollama: human (`English`) |
 | `--ocrdb:<path.nocr>` | nOCR database file (required for `--ocrengine=nocr`) |
 | `--ollama-url:<url>` | Default `http://localhost:11434/api/chat` |
