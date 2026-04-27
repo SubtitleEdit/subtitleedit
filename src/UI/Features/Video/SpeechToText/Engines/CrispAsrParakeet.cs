@@ -19,6 +19,7 @@ public class CrispAsrParakeet : CrispAsrEngineBase
     public override List<WhisperLanguage> Languages =>
        new()
        {
+            new WhisperLanguage("auto", "Auto detect"),
             new WhisperLanguage("en", "english"),
             new WhisperLanguage("es", "spanish"),
             new WhisperLanguage("fr", "french"),

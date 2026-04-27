@@ -2104,8 +2104,9 @@ public partial class SpeechToTextViewModel : ObservableObject
             var exe = crispAsrEngine.GetExecutable();
             var crispArgs = crispAsrEngine.CommandLineParameter;
             var crispModel = crispAsrEngine.GetModelForCmdLine(model);
-            var langPart = crispAsrEngine.IncludeLanguage
-                ? $"-l {SelectedLanguage?.Code ?? crispAsrEngine.DefaultLanguage} "
+            var langCode = SelectedLanguage?.Code ?? crispAsrEngine.DefaultLanguage;
+            var langPart = crispAsrEngine.IncludeLanguage || langCode == "auto"
+                ? $"-l {langCode} "
                 : string.Empty;
             var alignerPart = string.Empty;
             if (crispAsrEngine is CrispAsrQwen3 crispQwen3)
