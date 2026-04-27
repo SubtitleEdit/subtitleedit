@@ -211,7 +211,15 @@ public class AudioVisualizer : Control
     public WaveformSplitMode WaveformSplitMode
     {
         get => GetValue(WaveformSplitModeProperty);
-        set => SetValue(WaveformSplitModeProperty, value);
+        set
+        {
+            if (WaveformSplitMode != value)
+            {
+                InvalidateVisualLaneMap();
+            }
+
+            SetValue(WaveformSplitModeProperty, value);
+        }
     }
 
     public bool SnapToShotChanges { get; set; } = true;
@@ -332,6 +340,9 @@ public class AudioVisualizer : Control
     private static readonly Cursor _cursorSizeWestEast = new Cursor(StandardCursorType.SizeWestEast);
 
     private readonly List<SubtitleLineViewModel> _displayableParagraphs = new();
+    private readonly Dictionary<string, int> _visualLaneMap = new(StringComparer.OrdinalIgnoreCase);
+    private bool _visualLaneMapDirty = true;
+    private WaveformSplitMode _visualLaneMapMode = WaveformSplitMode.None;
     private bool _isCtrlDown;
     private bool _isMetaDown;
     private bool _isAltDown;
@@ -880,7 +891,7 @@ public class AudioVisualizer : Control
             _interactionMode = InteractionMode.ResizingLeft;
 
             var idx = displayableParagraphs.IndexOf(p);
-            var visualLaneMap = BuildVisualLaneMap();
+            var visualLaneMap = GetVisualLaneMap();
             var previousIndex = FindPreviousVisualNeighborIndex(displayableParagraphs, idx, visualLaneMap);
             if (previousIndex >= 0)
             {
@@ -911,7 +922,7 @@ public class AudioVisualizer : Control
             _interactionMode = InteractionMode.ResizingRight;
 
             var idx = displayableParagraphs.IndexOf(p);
-            var visualLaneMap = BuildVisualLaneMap();
+            var visualLaneMap = GetVisualLaneMap();
             var nextIndex = FindNextVisualNeighborIndex(displayableParagraphs, idx, visualLaneMap);
             if (nextIndex >= 0)
             {
@@ -1061,7 +1072,7 @@ public class AudioVisualizer : Control
         var newEnd = _originalEndSeconds;
 
         var currentIndex = _displayableParagraphs.IndexOf(_activeParagraph);
-        var visualLaneMap = BuildVisualLaneMap();
+        var visualLaneMap = GetVisualLaneMap();
         var previousIndex = FindPreviousVisualNeighborIndex(_displayableParagraphs, currentIndex, visualLaneMap);
         var nextIndex = FindNextVisualNeighborIndex(_displayableParagraphs, currentIndex, visualLaneMap);
         var previous = previousIndex >= 0 ? _displayableParagraphs[previousIndex] : null;
@@ -1278,24 +1289,35 @@ public class AudioVisualizer : Control
         }
     }
 
-    private Dictionary<string, int> BuildVisualLaneMap()
+    private void InvalidateVisualLaneMap()
     {
-        var result = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-        if (WaveformSplitMode == WaveformSplitMode.None)
+        _visualLaneMapDirty = true;
+    }
+
+    private IReadOnlyDictionary<string, int> GetVisualLaneMap()
+    {
+        if (!_visualLaneMapDirty && _visualLaneMapMode == WaveformSplitMode)
         {
-            return result;
+            return _visualLaneMap;
         }
 
-        foreach (var paragraph in _displayableParagraphs)
+        _visualLaneMap.Clear();
+        _visualLaneMapMode = WaveformSplitMode;
+        _visualLaneMapDirty = false;
+
+        if (WaveformSplitMode != WaveformSplitMode.None)
         {
-            var key = GetVisualLaneKey(paragraph);
-            if (!result.ContainsKey(key))
+            foreach (var paragraph in _displayableParagraphs)
             {
-                result.Add(key, result.Count);
+                var key = GetVisualLaneKey(paragraph);
+                if (!_visualLaneMap.ContainsKey(key))
+                {
+                    _visualLaneMap.Add(key, _visualLaneMap.Count);
+                }
             }
         }
 
-        return result;
+        return _visualLaneMap;
     }
 
     private static int GetVisualLaneCount(IReadOnlyDictionary<string, int>? visualLaneMap)
@@ -1382,9 +1404,9 @@ public class AudioVisualizer : Control
     {
         return WaveformSplitMode switch
         {
-            WaveformSplitMode.Actor => NormalizeVisualLaneValue(paragraph.Actor, "No actor"),
-            WaveformSplitMode.Style => NormalizeVisualLaneValue(string.IsNullOrWhiteSpace(paragraph.Style) ? paragraph.Extra : paragraph.Style, "No style"),
-            WaveformSplitMode.Layer => $"Layer {paragraph.Layer.ToString(CultureInfo.InvariantCulture)}",
+            WaveformSplitMode.Actor => NormalizeVisualLaneValue(paragraph.Actor, Se.Language.Waveform.SplitWaveformNoActor),
+            WaveformSplitMode.Style => NormalizeVisualLaneValue(paragraph.Style, Se.Language.Waveform.SplitWaveformNoStyle),
+            WaveformSplitMode.Layer => string.Format(Se.Language.Waveform.SplitWaveformLayerX, paragraph.Layer.ToString(CultureInfo.InvariantCulture)),
             WaveformSplitMode.AssPositionAlignment => GetAssPositionAlignmentKey(paragraph),
             _ => string.Empty,
         };
@@ -1414,10 +1436,10 @@ public class AudioVisualizer : Control
         var source = paragraph.Paragraph;
         if (source != null && (!string.IsNullOrWhiteSpace(source.MarginL) || !string.IsNullOrWhiteSpace(source.MarginR) || !string.IsNullOrWhiteSpace(source.MarginV)))
         {
-            parts.Add($"Margins {source.MarginL}/{source.MarginR}/{source.MarginV}");
+            parts.Add(string.Format(Se.Language.Waveform.SplitWaveformMarginsX, source.MarginL, source.MarginR, source.MarginV));
         }
 
-        return parts.Count > 0 ? string.Join(" ", parts) : "Default position/alignment";
+        return parts.Count > 0 ? string.Join(" ", parts) : Se.Language.Waveform.SplitWaveformDefaultPositionAlignment;
     }
 
     private static string? ExtractAssParenthesizedTag(string text, string tag)
@@ -1449,7 +1471,7 @@ public class AudioVisualizer : Control
     {
         var pointX = point.X;
         var startPosSeconds = StartPositionSeconds;
-        var visualLaneMap = BuildVisualLaneMap();
+        var visualLaneMap = GetVisualLaneMap();
         var clickedLaneIndex = GetVisualLaneIndexFromY(point.Y, visualLaneMap);
 
         // Check NewSelectionParagraph first as it's typically the active interaction target
@@ -1571,7 +1593,7 @@ public class AudioVisualizer : Control
         }
 
         var p = subtitles[index];
-        var visualLaneMap = BuildVisualLaneMap();
+        var visualLaneMap = GetVisualLaneMap();
         if (GetVisualLaneIndex(p, visualLaneMap) != GetVisualLaneIndexFromY(point.Y, visualLaneMap))
         {
             return null;
@@ -1593,7 +1615,7 @@ public class AudioVisualizer : Control
         }
 
         var p = subtitles[index];
-        var visualLaneMap = BuildVisualLaneMap();
+        var visualLaneMap = GetVisualLaneMap();
         if (GetVisualLaneIndex(p, visualLaneMap) != GetVisualLaneIndexFromY(point.Y, visualLaneMap))
         {
             return null;
@@ -1643,7 +1665,7 @@ public class AudioVisualizer : Control
 
         // Pre-calculate commonly used values
         var waveformHeight = height * (WaveformHeightPercentage / 100.0);
-        var visualLaneMap = BuildVisualLaneMap();
+        var visualLaneMap = GetVisualLaneMap();
         var renderCtx = new RenderContext
         {
             Width = width,
@@ -2440,6 +2462,7 @@ public class AudioVisualizer : Control
             _displayableParagraphs.Clear();
             SelectedParagraph = null;
             AllSelectedParagraphs.Clear();
+            InvalidateVisualLaneMap();
 
             if (WavePeaks == null || subtitle.Count == 0)
             {
