@@ -29,7 +29,7 @@ public abstract class CrispAsrEngineBase : ICrispAsrEngine
     public abstract string GetWhisperModelDownloadFileName(WhisperModel whisperModel, string url);
     public abstract string CommandLineParameter { get; set; }
 
-    public async Task<string> GetHelpText()
+    public virtual async Task<string> GetHelpText()
     {
         var assetName = $"{Name.Replace(" ", string.Empty)}.txt";
         var uri = new Uri($"avares://SubtitleEdit/Assets/SpeechToText/{assetName}");

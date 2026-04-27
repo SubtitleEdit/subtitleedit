@@ -39,7 +39,7 @@ public class WhisperEngineCppCuBlas : ISpeechToTextEngine
 
     public override string ToString()
     {
-        return Name;
+        return WhisperCppEngine.GetBackendDisplayName(this);
     }
 
     public string GetAndCreateWhisperFolder()

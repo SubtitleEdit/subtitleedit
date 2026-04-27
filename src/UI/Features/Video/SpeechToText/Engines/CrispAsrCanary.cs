@@ -98,7 +98,7 @@ public class CrispAsrCanary : CrispAsrEngineBase
 
     public override string ToString()
     {
-        return Name;
+        return CrispAsrEngine.GetBackendDisplayName(this);
     }
 
     public override string GetAndCreateWhisperFolder()
