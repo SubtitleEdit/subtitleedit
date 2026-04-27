@@ -9,7 +9,7 @@ command: SubtitleEdit
 # Make the dotnet10 SDK tools available to every module at build time
 build-options:
   append-path: /usr/lib/sdk/dotnet10/bin
-  append-ld-library-path: /usr/lib/sdk/dotnet10/lib
+  append-ld-library-path: /app/lib:/usr/lib/sdk/dotnet10/lib
   no-debuginfo: true
   env:
     PKG_CONFIG_PATH: /app/lib/pkgconfig:/app/share/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig:/usr/lib/sdk/dotnet10/lib/pkgconfig
@@ -37,11 +37,37 @@ cleanup:
 modules:
   # --- libmpv dependencies ---
 
+  - name: harfbuzz
+    buildsystem: meson
+    config-opts:
+      - -Ddocs=disabled
+      - -Dtests=disabled
+      - -Dintrospection=disabled
+      - -Dutilities=disabled
+      - -Dfreetype=enabled
+      - -Dglib=disabled
+      - -Dgobject=disabled
+      - -Dcairo=disabled
+      - -Dicu=disabled
+      - -Dgraphite2=disabled
+      - -Dc_link_args=-lstdc++
+    cleanup:
+      - /bin
+      - /include
+      - /lib/cmake
+      - /lib/libharfbuzz-subset.so*
+      - /lib/pkgconfig/harfbuzz-subset.pc
+      - /share
+    sources:
+      - type: git
+        url: https://github.com/harfbuzz/harfbuzz.git
+        tag: 8.3.1
+        commit: 985366b8b2a4e7e07413af918612334d6764a287
+
   - name: libass
     config-opts:
       - --disable-static
       - --enable-asm
-      - --enable-harfbuzz
       - --enable-fontconfig
     cleanup:
       - /include
