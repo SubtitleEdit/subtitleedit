@@ -11,6 +11,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="3.119.3-preview.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\libse\LibSE.csproj" />
   </ItemGroup>
 

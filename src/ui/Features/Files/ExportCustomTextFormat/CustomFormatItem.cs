@@ -64,4 +64,21 @@ public partial class CustomFormatItem : ObservableObject
             FormatNewLine = FormatNewLine
         };
     }
+
+    /// <summary>
+    /// Returns a plain POCO snapshot for the headless <see cref="Nikse.SubtitleEdit.UiLogic.Export.CustomTextFormatter"/>.
+    /// </summary>
+    public Nikse.SubtitleEdit.UiLogic.Export.CustomFormatTemplate ToTemplate()
+    {
+        return new Nikse.SubtitleEdit.UiLogic.Export.CustomFormatTemplate
+        {
+            Name = Name,
+            Extension = Extension,
+            FormatHeader = FormatHeader,
+            FormatParagraph = FormatParagraph,
+            FormatFooter = FormatFooter,
+            FormatTimeCode = FormatTimeCode,
+            FormatNewLine = FormatNewLine,
+        };
+    }
 }

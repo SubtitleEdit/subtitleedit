@@ -8,8 +8,10 @@ using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Files.ExportCustomTextFormat;
@@ -199,7 +201,7 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
 
     private void GenerateText(CustomFormatItem customFormatItem)
     {
-        PreviewText = CustomTextFormatter.GenerateCustomText(customFormatItem, _subtitles, _title, _videoFileName ?? string.Empty);
+        PreviewText = CustomTextFormatter.GenerateCustomText(customFormatItem.ToTemplate(), _subtitles.Select(s => s.Paragraph).ToList(), _title, _videoFileName ?? string.Empty);
     }
 
     internal async Task GridKeyDown(KeyEventArgs e)

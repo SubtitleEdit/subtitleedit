@@ -14,7 +14,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.Ocr;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.NOcr;

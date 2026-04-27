@@ -619,6 +619,8 @@
       "libuilogic": {
         "type": "Project",
         "dependencies": {
+          "CommunityToolkit.Mvvm": "[8.4.2, )",
+          "SkiaSharp.HarfBuzz": "[3.119.3-preview.1.1, )",
           "libse": "[1.0.0, )"
         }
       }

@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic.BatchConvert;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;

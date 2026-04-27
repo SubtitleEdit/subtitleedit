@@ -141,7 +141,7 @@ using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Initializers;
 using Nikse.SubtitleEdit.Logic.Media;
-using Nikse.SubtitleEdit.Logic.Ocr;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr.GoogleLens;
 using Nikse.SubtitleEdit.Logic.UndoRedo;
 using AssaApplyCustomOverrideTagsViewModel = Nikse.SubtitleEdit.Features.Assa.AssaApplyCustomOverrideTags.AssaApplyCustomOverrideTagsViewModel;

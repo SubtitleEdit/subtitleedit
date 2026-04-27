@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -77,7 +78,7 @@ public partial class EditCustomTextFormatViewModel : ObservableObject
                 return;
             }
 
-            PreviewText = CustomTextFormatter.GenerateCustomText(SelectedCustomFormat, _subtitles, _subtitleTitle, _videoFileName ?? string.Empty);
+            PreviewText = CustomTextFormatter.GenerateCustomText(SelectedCustomFormat.ToTemplate(), _subtitles.Select(s => s.Paragraph).ToList(), _subtitleTitle, _videoFileName ?? string.Empty);
         };
     }
 

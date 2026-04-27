@@ -36,7 +36,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.Logic.Media;
-using Nikse.SubtitleEdit.Logic.Ocr;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr.GoogleLens;
 using SkiaSharp;
 using System;
@@ -171,7 +171,7 @@ public partial class OcrViewModel : ObservableObject
         OcrEngines = new ObservableCollection<OcrEngineItem>(OcrEngineItem.GetOcrEngines());
         OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>();
         NOcrDatabases = new ObservableCollection<string>();
-        ImageCompareDatabases = new ObservableCollection<string>(BinaryOcrDb.GetDatabases());
+        ImageCompareDatabases = new ObservableCollection<string>(BinaryOcrDb.GetDatabases(Se.OcrFolder));
         SelectedImageCompareDatabase = ImageCompareDatabases.FirstOrDefault();
         NOcrMaxWrongPixelsList = new ObservableCollection<int>(Enumerable.Range(0, 500));
         NOcrPixelsAreSpaceList = new ObservableCollection<int>(Enumerable.Range(1, 50));
@@ -874,7 +874,7 @@ public partial class OcrViewModel : ObservableObject
 
                 File.Move(_nOcrDb!.FileName, newFileName);
                 NOcrDatabases.Clear();
-                foreach (var s in NOcrDb.GetDatabases().OrderBy(p => p))
+                foreach (var s in NOcrDb.GetDatabases(Se.OcrFolder).OrderBy(p => p))
                 {
                     NOcrDatabases.Add(s);
                 }
@@ -917,7 +917,7 @@ public partial class OcrViewModel : ObservableObject
                 File.Delete(fileName);
 
                 ImageCompareDatabases.Clear();
-                foreach (var db in BinaryOcrDb.GetDatabases())
+                foreach (var db in BinaryOcrDb.GetDatabases(Se.OcrFolder))
                 {
                     ImageCompareDatabases.Add(db);
                 }
@@ -1005,7 +1005,7 @@ public partial class OcrViewModel : ObservableObject
                 var oldFileName = Path.Combine(Se.OcrFolder, dbName + BinaryOcrDb.Extension);
                 File.Move(oldFileName, newFileName);
                 ImageCompareDatabases.Clear();
-                foreach (var s in BinaryOcrDb.GetDatabases().OrderBy(p => p))
+                foreach (var s in BinaryOcrDb.GetDatabases(Se.OcrFolder).OrderBy(p => p))
                 {
                     ImageCompareDatabases.Add(s);
                 }
@@ -3318,7 +3318,7 @@ public partial class OcrViewModel : ObservableObject
 
         if (IsNOcrVisible && NOcrDatabases.Count == 0)
         {
-            foreach (var s in NOcrDb.GetDatabases().OrderBy(p => p))
+            foreach (var s in NOcrDb.GetDatabases(Se.OcrFolder).OrderBy(p => p))
             {
                 NOcrDatabases.Add(s);
             }
@@ -3331,7 +3331,7 @@ public partial class OcrViewModel : ObservableObject
 
             if (SelectedNOcrDatabase == null)
             {
-                SelectedNOcrDatabase = NOcrDb.GetDatabases().FirstOrDefault();
+                SelectedNOcrDatabase = NOcrDb.GetDatabases(Se.OcrFolder).FirstOrDefault();
             }
         }
 

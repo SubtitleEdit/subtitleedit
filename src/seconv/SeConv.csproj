@@ -22,7 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\libse\LibSE.csproj" />
     <ProjectReference Include="..\libuilogic\LibUiLogic.csproj" />
-    <ProjectReference Include="..\ui\UI.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
 ﻿using Avalonia.Skia;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
@@ -16,11 +17,12 @@ using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Ocr.NOcr;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 using Nikse.SubtitleEdit.UiLogic.AdjustDuration;
+using Nikse.SubtitleEdit.UiLogic.BatchConvert;
 using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
 using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.Ocr;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -214,7 +216,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         {
             if (item.ImageSubtitle != null)
             {
-                imageSubtitle = item.ImageSubtitle;
+                imageSubtitle = item.ImageSubtitle as IOcrSubtitle;
             }
         }
         else if (item.Format == "MP4" &&
@@ -632,7 +634,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return;
         }
 
-        var text = CustomTextFormatter.GenerateCustomText(selectedCustomFormat, subtitles, item.FileName, string.Empty);
+        var paragraphsForCustom = subtitles.Select(s => s.Paragraph).ToList();
+        var text = Nikse.SubtitleEdit.UiLogic.Export.CustomTextFormatter.GenerateCustomText(selectedCustomFormat.ToTemplate(), paragraphsForCustom, item.FileName, string.Empty);
         var path = MakeOutputFileName(item, selectedCustomFormat.Extension);
         await File.WriteAllTextAsync(path, text, cancellationToken);
     }

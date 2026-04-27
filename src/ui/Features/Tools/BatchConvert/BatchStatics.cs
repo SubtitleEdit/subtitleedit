@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.UiLogic.BatchConvert;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert;
 
