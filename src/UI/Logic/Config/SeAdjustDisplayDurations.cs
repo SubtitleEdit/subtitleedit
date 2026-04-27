@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Features.Tools.AdjustDuration;
+﻿using Nikse.SubtitleEdit.UiLogic.AdjustDuration;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 

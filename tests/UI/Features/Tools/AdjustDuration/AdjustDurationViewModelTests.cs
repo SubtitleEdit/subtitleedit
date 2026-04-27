@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Tools.AdjustDuration;
+using Nikse.SubtitleEdit.UiLogic.AdjustDuration;
 using System.Collections.ObjectModel;
 
 namespace UITests.Features.Tools.AdjustDuration;

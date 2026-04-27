@@ -615,6 +615,12 @@
           "SkiaSharp": "[3.119.3-preview.1.1, )",
           "UTF.Unknown": "[2.6.0, )"
         }
+      },
+      "libuilogic": {
+        "type": "Project",
+        "dependencies": {
+          "libse": "[1.0.0, )"
+        }
       }
     }
   }

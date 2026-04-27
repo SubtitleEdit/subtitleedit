@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\seconv\SeConv.csproj" />
+    <ProjectReference Include="..\..\src\libuilogic\LibUiLogic.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,9 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Fixtures\**\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Using Include="Xunit" />
   </ItemGroup>
 
 </Project>

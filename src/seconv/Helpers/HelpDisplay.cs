@@ -43,8 +43,7 @@ internal static class HelpDisplay
         
         AnsiConsole.WriteLine();
         AnsiConsole.MarkupLine("[bold cyan]Operations:[/]");
-        AnsiConsole.MarkupLine("  [dim]The following operations are applied in command line order[/]");
-        AnsiConsole.MarkupLine("  [dim]from left to right, and can be specified multiple times.[/]");
+        AnsiConsole.MarkupLine("  [dim]Operations are applied in a fixed, sensible order regardless of CLI order.[/]");
         AnsiConsole.WriteLine();
         
         ShowParameter("--ApplyDurationLimits", "Apply duration limits");

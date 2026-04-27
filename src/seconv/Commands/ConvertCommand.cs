@@ -195,7 +195,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
 
             if (string.IsNullOrWhiteSpace(settings.Format))
             {
-                AnsiConsole.MarkupLine("[red]Error: Format is required. Use --format <name>[/]");
+                AnsiConsole.MarkupLine("[red]Error: Format is required. Use --format <name> or pass it as the second positional argument (e.g. seconv *.srt sami)[/]");
                 return 1;
             }
 

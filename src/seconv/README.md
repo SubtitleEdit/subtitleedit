@@ -81,7 +81,7 @@ seconv formats
 
 ### Processing Operations
 
-Operations are applied in the order specified on the command line:
+Operations are applied in a fixed, sensible order regardless of CLI order:
 
 - `--ApplyDurationLimits` - Apply duration limits
 - `--BalanceLines` - Balance line lengths
@@ -127,9 +127,10 @@ src/seconv/
 │   └── LibSEIntegration.cs   # LibSE integration
 ├── Helpers/
 │   └── HelpDisplay.cs        # Help text display
-├── OldCommandLineConverter.cs # Legacy converter support
 └── Program.cs                 # Application entry point
 ```
+
+Test fixtures live under `tests/seconv/Fixtures/`.
 
 ## Dependencies
 
@@ -155,4 +156,4 @@ To add new features:
 
 ## License
 
-Part of the Subtitle Edit Avalonia project.
+Part of the Subtitle Edit project.
