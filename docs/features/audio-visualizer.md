@@ -10,6 +10,8 @@ The audio visualizer displays the audio waveform (and/or spectrogram) of the loa
 - **Waveform** — Shows audio amplitude over time
 - **Spectrogram** — Shows frequency distribution over time
 
+The spectrogram can be generated and toggled independently of the waveform. If you disable spectrogram generation, Subtitle Edit hides the spectrogram layer and keeps the waveform view available.
+
 ## Mouse Controls
 
 ### Navigation
@@ -25,9 +27,9 @@ The audio visualizer displays the audio waveform (and/or spectrogram) of the loa
 
 | Mouse Action | Effect |
 |--------------|--------|
-| **Click + Ctrl (cmd on mac) + Shift ** | Set start and offset the rest |
-| **Click + Shift ** | Set start of current |
-| **Click + Ctrl (cmd on mac) ** | Set end of current |
+| **Click + Ctrl (cmd on mac) + Shift** | Set start and offset the rest |
+| **Click + Shift** | Set start of current |
+| **Click + Ctrl (cmd on mac)** | Set end of current |
 | **Click** on empty area | Set video position |
 | **Click** on subtitle | Select the subtitle |
 | **Double-click** on subtitle | Set video position and select subtitle |
@@ -63,6 +65,18 @@ The waveform toolbar (when visible) provides buttons for:
 - Zoom in/out (horizontal and vertical)
 - Toggle waveform/spectrogram mode
 - Toggle grid lines
+- Navigate to previous/next shot change
+- Apply common subtitle timing actions
+
+The toolbar can be toggled from **Video → More → Toggle waveform toolbar**. Subtitle Edit 5 also supports waveform toolbar customization, including button visibility/order and import/export of toolbar settings.
+
+## Waveform Themes
+
+Waveform theme settings can be imported and exported. Use this to copy waveform colors and toolbar preferences between installations or share a timing workspace with another user.
+
+## Spectrogram
+
+The spectrogram view helps locate speech, music, and noise by frequency. It can be used together with the waveform when amplitude alone is not enough to identify a sound or silence boundary.
 
 ## Shot Changes
 
@@ -72,6 +86,8 @@ Shot changes (scene cuts) are displayed as vertical lines on the waveform. These
 - **Go to previous/next shot change** — Navigate between shot changes
 - **Snap to nearest shot change** — Align subtitle edges to nearby shot changes
 - **Extend to next shot change** — Extend subtitle to the next scene cut
+
+The shot change line color can be customized in Subtitle Edit 5, which is useful when your waveform or spectrogram theme makes the default color hard to see.
 
 ## Context Menu
 

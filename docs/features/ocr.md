@@ -35,6 +35,7 @@ Built-in trainable OCR engine.
 Binary image comparison engine.
 - Compares against a database of known character images
 - Fast and accurate for known fonts
+- Supports database editing, character history, max error percentage, and pixels-are-space tuning
 
 ### Google Lens OCR
 Cloud-based OCR using Google Lens.
@@ -48,12 +49,32 @@ Cloud-based OCR using Google Cloud Vision API.
 Local LLM-based OCR using Ollama.
 - Requires Ollama installation
 
+### Llama.cpp OCR
+Local LLM-based OCR using a llama.cpp-compatible workflow.
+
 ### Mistral OCR
 Cloud-based OCR using Mistral API.
+- Requires a Mistral API key
 
 ### PaddleOCR
 Local OCR engine.
 - Download required
+
+### Azure Vision OCR
+Cloud-based OCR using Azure AI Vision.
+- Requires Azure credentials
+
+### Amazon Rekognition OCR
+Cloud-based OCR using Amazon Rekognition.
+- Requires AWS credentials
+
+## Engine Setup Notes
+
+- **nOCR** databases are stored in the Subtitle Edit OCR folder and can be created, renamed, edited, and deleted from the OCR window.
+- **Binary OCR** databases use image comparison and are edited separately from nOCR databases.
+- **PaddleOCR** can download standalone CPU/GPU builds and support files on Windows and Linux, or use a Python installation.
+- **Ollama OCR** and **Llama.cpp OCR** are useful when you want local AI-based OCR and have a vision-capable model available.
+- **Mistral OCR**, **Google Vision**, **Azure Vision**, and **Amazon Rekognition** require cloud credentials.
 
 ## How to Use
 
@@ -103,6 +124,12 @@ Before OCR, you can apply image pre-processing:
 - Binarize (convert to black/white)
 - Invert colors
 - Resize
+
+## Batch OCR
+
+Batch Convert can process image-based subtitle files with OCR. Subtitle Edit 5 includes Binary OCR in Batch Convert and can auto-detect several nOCR/Binary OCR settings such as language and pixels-are-space values.
+
+For command-line workflows, see [Command Line (seconv)](../reference/command-line.md), which documents OCR engines and options for headless conversion.
 
 <!-- Screenshot: OCR pre-processing -->
 ![OCR Pre-processing](../screenshots/ocr-preprocessing.png)
