@@ -58,6 +58,19 @@ public class SpeechToTextWindow : Window
             }
         };
 
+        var labelBackend = UiUtil.MakeTextBlock(Se.Language.General.Backend).WithMarginTop(10)
+            .BindIsVisible(vm, nameof(vm.IsBackendSelectionVisible));
+        var comboWhisperCppBackend = UiUtil.MakeComboBox(vm.WhisperCppBackends, vm, nameof(vm.SelectedWhisperCppBackend))
+            .WithMinWidth(220)
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .WithMarginTop(10)
+            .BindIsVisible(vm, nameof(vm.IsWhisperCppSelected));
+        var comboCrispAsrBackend = UiUtil.MakeComboBox(vm.CrispAsrBackends, vm, nameof(vm.SelectedCrispAsrBackend))
+            .WithMinWidth(220)
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .WithMarginTop(10)
+            .BindIsVisible(vm, nameof(vm.IsCrispAsrSelected));
+
         var labelLanguage = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.InputLanguage).WithMarginTop(10);
         var comboLanguage = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage))
             .WithMinWidth(220)
@@ -279,6 +292,7 @@ public class SpeechToTextWindow : Window
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Engine
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Backend
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Language
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Model
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Translate to English
@@ -333,12 +347,17 @@ public class SpeechToTextWindow : Window
         grid.Add(labelConsoleLog, row, 2, 2, 1);
         row++;
 
-        grid.Add(consoleLogAndBatchView, row, 2, 8);
-        grid.Add(consoleLogOnlyView, row, 2, 8);
+        grid.Add(consoleLogAndBatchView, row, 2, 9);
+        grid.Add(consoleLogOnlyView, row, 2, 9);
         row++;
 
         grid.Add(labelEngine, row, 0);
         grid.Add(panelEngineControls, row, 1);
+        row++;
+
+        grid.Add(labelBackend, row, 0);
+        grid.Add(comboWhisperCppBackend, row, 1);
+        grid.Add(comboCrispAsrBackend, row, 1);
         row++;
 
         grid.Add(labelLanguage, row, 0);

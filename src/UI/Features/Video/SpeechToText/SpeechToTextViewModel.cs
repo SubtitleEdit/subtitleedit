@@ -60,6 +60,13 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private bool _isWhisperPurfviewXxlActive;
     [ObservableProperty] private bool _isTranscribeEnabled;
     [ObservableProperty] private bool _isTranslateVisible;
+    [ObservableProperty] private bool _isBackendSelectionVisible;
+    [ObservableProperty] private bool _isWhisperCppSelected;
+    [ObservableProperty] private ObservableCollection<ISpeechToTextEngine> _whisperCppBackends;
+    [ObservableProperty] private ISpeechToTextEngine? _selectedWhisperCppBackend;
+    [ObservableProperty] private bool _isCrispAsrSelected;
+    [ObservableProperty] private ObservableCollection<CrispAsrEngineBase> _crispAsrBackends;
+    [ObservableProperty] private CrispAsrEngineBase? _selectedCrispAsrBackend;
     [ObservableProperty] private double _progressOpacity;
 
     [ObservableProperty] private double _progressValue;
@@ -119,20 +126,19 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
+    private bool _isUpdatingWhisperCppBackend;
+    private bool _isUpdatingCrispAsrBackend;
 
     public SpeechToTextViewModel(IWindowService windowService, IFileHelper fileHelper)
     {
         _windowService = windowService;
         _fileHelper = fileHelper;
 
-        Engines = [new WhisperEngineCpp()];
+        Engines = [new WhisperCppEngine()];
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            Engines.Add(new WhisperEngineCppCuBlas());
-            Engines.Add(new WhisperEngineCppVulkan());
             Engines.Add(new WhisperEnginePurfviewFasterWhisperXxl());
             Engines.Add(new WhisperEngineConstMe());
-            Engines.Add(new WhisperEngineCppCuBlas());
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
@@ -154,14 +160,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             Engines.Add(new Qwen3AsrCppEngine());
         }
 
-        Engines.Add(new CrispAsrParakeet());
-        Engines.Add(new CrispAsrCanary());
-        Engines.Add(new CrispAsrCohere());
-        Engines.Add(new CrispAsrFireRed());
-        Engines.Add(new CrispAsrGlm());
-        Engines.Add(new CrispAsrGranite());
-        Engines.Add(new CrispAsrQwen3());
-        Engines.Add(new CrispAsrOmni());
+        Engines.Add(new CrispAsrEngine());
 
         SelectedEngine = Engines[0];
 
@@ -171,20 +170,16 @@ public partial class SpeechToTextViewModel : ObservableObject
         Models = new ObservableCollection<SpeechToTextModelDisplay>();
 
         BatchItems = new ObservableCollection<SpeechToTextJobItem>();
+        WhisperCppBackends = new ObservableCollection<ISpeechToTextEngine>();
+        CrispAsrBackends = new ObservableCollection<CrispAsrEngineBase>();
 
         ResultAudioClips = new List<AudioClip>();
 
         IsTranscribeEnabled = true;
-        IsTranslateVisible = SelectedEngine is
-            not ChatLlmCppEngine and
-            not Qwen3AsrCppEngine and
-            not CrispAsrParakeet and
-            not CrispAsrCohere and
-            not CrispAsrQwen3 and
-            not CrispAsrFireRed and
-            not CrispAsrGlm and
-            not CrispAsrGranite and
-            not CrispAsrOmni;
+        IsTranslateVisible = IsTranslateAvailable(GetEffectiveSelectedEngine());
+        IsBackendSelectionVisible = false;
+        IsWhisperCppSelected = false;
+        IsCrispAsrSelected = false;
         Parameters = string.Empty;
         ConsoleLog = string.Empty;
         ProgressText = string.Empty;
@@ -212,13 +207,27 @@ public partial class SpeechToTextViewModel : ObservableObject
         DoAdjustTimings = Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings;
         DoPostProcessing = Se.Settings.Tools.AudioToText.PostProcessing;
 
-        var selectedEngine = Enumerable.FirstOrDefault<ISpeechToTextEngine>((IEnumerable<ISpeechToTextEngine>)Engines, p => p.Choice == Se.Settings.Tools.AudioToText.WhisperChoice);
-        if (selectedEngine != null)
+        var savedChoice = Se.Settings.Tools.AudioToText.WhisperChoice;
+        var whisperCppEngine = Engines.OfType<WhisperCppEngine>().FirstOrDefault();
+        var crispAsrEngine = Engines.OfType<CrispAsrEngine>().FirstOrDefault();
+        if (whisperCppEngine != null && whisperCppEngine.TrySelectBackendChoice(savedChoice))
         {
-            SelectedEngine = selectedEngine;
+            SelectedEngine = whisperCppEngine;
+        }
+        else if (crispAsrEngine != null && crispAsrEngine.TrySelectBackendChoice(savedChoice))
+        {
+            SelectedEngine = crispAsrEngine;
+        }
+        else
+        {
+            var selectedEngine = Enumerable.FirstOrDefault<ISpeechToTextEngine>((IEnumerable<ISpeechToTextEngine>)Engines, p => p.Choice == savedChoice);
+            if (selectedEngine != null)
+            {
+                SelectedEngine = selectedEngine;
+            }
         }
 
-        Parameters = SelectedEngine.CommandLineParameter;
+        Parameters = GetEffectiveSelectedEngine().CommandLineParameter;
 
         EngineChanged();
     }
@@ -227,12 +236,139 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings = DoAdjustTimings;
         Se.Settings.Tools.AudioToText.PostProcessing = DoPostProcessing;
-        SelectedEngine.CommandLineParameter = Parameters;
-        Se.Settings.Tools.AudioToText.WhisperChoice = SelectedEngine.Choice;
+        var engine = GetEffectiveSelectedEngine();
+        engine.CommandLineParameter = Parameters;
+        Se.Settings.Tools.AudioToText.WhisperChoice = engine.Choice;
         Se.Settings.Tools.AudioToText.WhisperModel = SelectedModel?.Model.Name ?? string.Empty;
         Se.Settings.Tools.AudioToText.WhisperLanguageCode = SelectedLanguage?.Code ?? string.Empty;
 
         Se.SaveSettings();
+    }
+
+    private ISpeechToTextEngine GetEffectiveSelectedEngine()
+    {
+        return SelectedEngine switch
+        {
+            WhisperCppEngine whisperCppEngine => whisperCppEngine.SelectedBackend,
+            CrispAsrEngine crispAsrEngine => crispAsrEngine.SelectedBackend,
+            _ => SelectedEngine,
+        };
+    }
+
+    private static bool IsTranslateAvailable(ISpeechToTextEngine engine)
+    {
+        return engine is not ChatLlmCppEngine and not Qwen3AsrCppEngine and not ICrispAsrEngine;
+    }
+
+    private void UpdateBackendSelectionUi()
+    {
+        UpdateWhisperCppBackendUi();
+        UpdateCrispAsrBackendUi();
+        IsBackendSelectionVisible = IsWhisperCppSelected || IsCrispAsrSelected;
+    }
+
+    private void UpdateWhisperCppBackendUi()
+    {
+        if (SelectedEngine is WhisperCppEngine whisperCppEngine)
+        {
+            IsWhisperCppSelected = true;
+            _isUpdatingWhisperCppBackend = true;
+            try
+            {
+                WhisperCppBackends.Clear();
+                foreach (var backend in whisperCppEngine.Backends)
+                {
+                    WhisperCppBackends.Add(backend);
+                }
+
+                SelectedWhisperCppBackend = WhisperCppBackends.FirstOrDefault(p => p.Choice == whisperCppEngine.SelectedBackend.Choice);
+            }
+            finally
+            {
+                _isUpdatingWhisperCppBackend = false;
+            }
+
+            return;
+        }
+
+        IsWhisperCppSelected = false;
+        _isUpdatingWhisperCppBackend = true;
+        try
+        {
+            SelectedWhisperCppBackend = null;
+        }
+        finally
+        {
+            _isUpdatingWhisperCppBackend = false;
+        }
+    }
+
+    private void UpdateCrispAsrBackendUi()
+    {
+        if (SelectedEngine is CrispAsrEngine crispAsrEngine)
+        {
+            IsCrispAsrSelected = true;
+            _isUpdatingCrispAsrBackend = true;
+            try
+            {
+                CrispAsrBackends.Clear();
+                foreach (var backend in crispAsrEngine.Backends)
+                {
+                    CrispAsrBackends.Add(backend);
+                }
+
+                SelectedCrispAsrBackend = CrispAsrBackends.FirstOrDefault(p => p.Choice == crispAsrEngine.SelectedBackend.Choice);
+            }
+            finally
+            {
+                _isUpdatingCrispAsrBackend = false;
+            }
+
+            return;
+        }
+
+        IsCrispAsrSelected = false;
+        _isUpdatingCrispAsrBackend = true;
+        try
+        {
+            SelectedCrispAsrBackend = null;
+        }
+        finally
+        {
+            _isUpdatingCrispAsrBackend = false;
+        }
+    }
+
+    partial void OnSelectedWhisperCppBackendChanged(ISpeechToTextEngine? value)
+    {
+        if (_isUpdatingWhisperCppBackend || value == null || SelectedEngine is not WhisperCppEngine whisperCppEngine)
+        {
+            return;
+        }
+
+        if (string.Equals(whisperCppEngine.SelectedBackend.Choice, value.Choice, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        whisperCppEngine.SelectBackend(value);
+        EngineChanged();
+    }
+
+    partial void OnSelectedCrispAsrBackendChanged(CrispAsrEngineBase? value)
+    {
+        if (_isUpdatingCrispAsrBackend || value == null || SelectedEngine is not CrispAsrEngine crispAsrEngine)
+        {
+            return;
+        }
+
+        if (string.Equals(crispAsrEngine.SelectedBackend.Choice, value.Choice, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        crispAsrEngine.SelectBackend(value);
+        EngineChanged();
     }
 
     private void OnTimerWhisperOnElapsed(object? sender, ElapsedEventArgs args)
@@ -319,13 +455,15 @@ public partial class SpeechToTextViewModel : ObservableObject
             var settings = Se.Settings.Tools.AudioToText;
             _whisperProcess.Dispose();
 
-            if (SelectedEngine is ChatLlmCppEngine chatLlm)
+            var engine = GetEffectiveSelectedEngine();
+
+            if (engine is ChatLlmCppEngine chatLlm)
             {
                 ProcessChatLlmTranscription(settings, chatLlm);
                 return;
             }
 
-            if (SelectedEngine is Qwen3AsrCppEngine qwen3Asr)
+            if (engine is Qwen3AsrCppEngine)
             {
                 ProcessQwen3AsrCppTranscription(settings);
                 return;
@@ -965,11 +1103,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         Task.Delay(500);
 
-        if (SelectedEngine is not ISpeechToTextEngine engine)
-        {
-            resultTexts = new List<ResultText>();
-            return false;
-        }
+        var engine = GetEffectiveSelectedEngine();
 
         if (string.IsNullOrEmpty(waveFileName) && videoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
         {
@@ -1196,6 +1330,16 @@ public partial class SpeechToTextViewModel : ObservableObject
                 TranscribedSubtitle = transcribedSubtitle ?? new Subtitle();
                 Window?.Close();
             }
+            else if (GetEffectiveSelectedEngine() is ICrispAsrEngine)
+            {
+                await MessageBox.Show(Window!, "No transcription result",
+                    "Crisp ASR finished without generating subtitles. Please check the speech-to-text log for engine output.");
+
+                if (Window != null)
+                {
+                    FileHelper.OpenFileWithDefaultProgram(Se.GetSpeechToTextLogFilePath());
+                }
+            }
         }
     }
 
@@ -1306,12 +1450,12 @@ public partial class SpeechToTextViewModel : ObservableObject
     [RelayCommand]
     private void ShowWebLink()
     {
-        var engine = SelectedEngine;
-        if (Window == null || engine == null)
+        if (Window == null)
         {
             return;
         }
 
+        var engine = GetEffectiveSelectedEngine();
         UiUtil.OpenUrl(engine.Url);
     }
 
@@ -1328,12 +1472,12 @@ public partial class SpeechToTextViewModel : ObservableObject
     [RelayCommand]
     private async Task ReDownloadWhisperEngine()
     {
-        var engine = SelectedEngine;
-        if (Window == null || engine == null)
+        if (Window == null)
         {
             return;
         }
 
+        var engine = GetEffectiveSelectedEngine();
         var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
             Window, viewModel =>
             {
@@ -1341,24 +1485,6 @@ public partial class SpeechToTextViewModel : ObservableObject
                 viewModel.StartDownload();
             });
     }
-
-    [RelayCommand]
-    private async Task ReDownloadWhisperEngineVulkan()
-    {
-        var engine = SelectedEngine;
-        if (Window == null || engine == null)
-        {
-            return;
-        }
-
-        var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
-            Window, viewModel =>
-            {
-                viewModel.Engine = engine;
-                viewModel.StartDownload();
-            });
-    }
-
 
     [RelayCommand]
     private void SingleMode()
@@ -1463,7 +1589,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (vm.OkPressed)
         {
-            Parameters = SelectedEngine.CommandLineParameter;
+            Parameters = GetEffectiveSelectedEngine().CommandLineParameter;
         }
     }
 
@@ -1501,7 +1627,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private async Task DownloadModel()
     {
         var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
-            Window!, viewModel => { viewModel.SetModels(Models, SelectedEngine, SelectedModel); });
+            Window!, viewModel => { viewModel.SetModels(Models, GetEffectiveSelectedEngine(), SelectedModel); });
 
         if (vm.OkPressed)
         {
@@ -1542,10 +1668,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             return;
         }
 
-        if (SelectedEngine is not { } engine)
-        {
-            return;
-        }
+        var engine = GetEffectiveSelectedEngine();
 
         _unknownArgument = false;
         _cudaOutOfMemory = false;
@@ -1659,7 +1782,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
                 Window!, viewModel =>
                 {
-                    viewModel.SetModels(Models, SelectedEngine, SelectedModel);
+                    viewModel.SetModels(Models, engine, SelectedModel);
                     viewModel.StartDownload();
                 });
 
@@ -1696,7 +1819,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
                     Window!, viewModel =>
                     {
-                        viewModel.SetModels(models, SelectedEngine, displayModelAligner);
+                        viewModel.SetModels(models, engine, displayModelAligner);
                         viewModel.StartDownload();
                     });
 
@@ -1737,7 +1860,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
                     Window!, viewModel =>
                     {
-                        viewModel.SetModels(models, SelectedEngine, displayModelAligner);
+                        viewModel.SetModels(models, engine, displayModelAligner);
                         viewModel.StartDownload();
                     });
 
@@ -1778,7 +1901,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
                     Window!, viewModel =>
                     {
-                        viewModel.SetModels(models, SelectedEngine, displayModelAligner);
+                        viewModel.SetModels(models, engine, displayModelAligner);
                         viewModel.StartDownload();
                     });
 
@@ -1888,10 +2011,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     public bool TranscribeViaWhisper(string waveFileName, string videoFileName)
     {
-        if (SelectedEngine is not { } engine)
-        {
-            return false;
-        }
+        var engine = GetEffectiveSelectedEngine();
 
         if (_videoFileName == null)
         {
@@ -2563,10 +2683,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private void RefreshDownloadStatus(WhisperModel? result)
     {
-        if (SelectedEngine is not ISpeechToTextEngine engine)
-        {
-            return;
-        }
+        var engine = GetEffectiveSelectedEngine();
 
         if (SelectedModel is not SpeechToTextModelDisplay oldModel)
         {
@@ -2600,7 +2717,8 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private void EngineChanged()
     {
-        var engine = SelectedEngine;
+        var engine = GetEffectiveSelectedEngine();
+        UpdateBackendSelectionUi();
 
         Languages.Clear();
         foreach (var l in engine.Languages)
@@ -2647,7 +2765,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         var isPurfview = engine.Name == WhisperEnginePurfviewFasterWhisperXxl.StaticName;
 
-        IsTranslateVisible = !(engine is ChatLlmCppEngine or Qwen3AsrCppEngine or CrispAsrParakeet or CrispAsrCohere or CrispAsrQwen3 or CrispAsrFireRed or CrispAsrGlm or CrispAsrGranite or CrispAsrOmni);
+        IsTranslateVisible = IsTranslateAvailable(engine);
 
         Parameters = engine.CommandLineParameter;
 
@@ -2714,8 +2832,8 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     internal void WindowContextMenuOpening(object? sender, EventArgs e)
     {
-        var engine = SelectedEngine;
-        if (engine == null || !engine.CanBeDownloaded())
+        var engine = GetEffectiveSelectedEngine();
+        if (!engine.CanBeDownloaded())
         {
             IsReDownloadVisible = false;
             return;

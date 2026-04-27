@@ -19,6 +19,8 @@ public class CrispAsrOmni : CrispAsrEngineBase
     public override List<WhisperLanguage> Languages =>
        new()
        {
+          new WhisperLanguage("auto", "Auto detect"),
+
             // Germanic
             new WhisperLanguage("eng_Latn", "english"),
             new WhisperLanguage("deu_Latn", "german"),
@@ -238,7 +240,7 @@ public class CrispAsrOmni : CrispAsrEngineBase
 
     public override string ToString()
     {
-        return Name;
+        return CrispAsrEngine.GetBackendDisplayName(this);
     }
 
     public override string GetAndCreateWhisperFolder()

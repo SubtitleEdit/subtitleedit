@@ -40,6 +40,7 @@ public class LanguageGeneral
     public string AutoContinue { get; set; }
     public string AutoTranslate { get; set; }
     public string Autodetect { get; set; }
+    public string Backend { get; set; }
     public string Background { get; set; }
     public string BackgroundColor { get; set; }
     public string Backward { get; set; }
@@ -699,6 +700,7 @@ public class LanguageGeneral
         AutoContinue = "Auto-continue";
         AutoTranslate = "Auto-translate";
         Autodetect = "Autodetect";
+        Backend = "Backend";
         Background = "Background";
         BackgroundColor = "Background color";
         Backward = "Backward";
