@@ -300,13 +300,25 @@ namespace Nikse.SubtitleEdit.Logic.Media
             {
                 return null;
             }
+
+            var subtitleFormat = SubtitleFormat.AllSubtitleFormats
+                .FirstOrDefault(f => result.SelectedFileType?.Name == f.Name) ?? currentFormat;
             
             return new FileHelperSubtitleSavePickerResult
             {
-                FileName = result.File.Path.LocalPath,
-                SubtitleFormat = SubtitleFormat.AllSubtitleFormats
-                    .FirstOrDefault(f => result.SelectedFileType?.Name == f.Name) ?? new SubRip(),
+                FileName = AddMissingExtension(result.File.Path.LocalPath, subtitleFormat.Extension),
+                SubtitleFormat = subtitleFormat,
             };
+        }
+
+        private static string AddMissingExtension(string fileName, string extension)
+        {
+            if (string.IsNullOrEmpty(fileName) || Path.HasExtension(fileName))
+            {
+                return fileName;
+            }
+
+            return fileName + (extension.StartsWith('.') ? extension : "." + extension);
         }
 
         public async Task<string> PickSaveSubtitleFile(
