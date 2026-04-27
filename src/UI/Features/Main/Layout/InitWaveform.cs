@@ -67,7 +67,7 @@ public class InitWaveform
         var mainGrid = new Grid
         {
             RowDefinitions = new RowDefinitions("*,Auto"),
-            Margin = new Thickness(10, 0, 10, 0),
+            Margin = new Thickness(8, 0, 8, 0),
             VerticalAlignment = VerticalAlignment.Stretch,
             Height = double.NaN, // Auto height
         };
@@ -547,7 +547,6 @@ public class InitWaveform
                     sliderPosition.Bind(RangeBase.ValueProperty, new Binding(nameof(vp.Position)));
                 });
             });
-
         }
 
         var settingSpeed = GetToolbarSettingFor(SeWaveformToolbarItemType.PlaybackSpeed);

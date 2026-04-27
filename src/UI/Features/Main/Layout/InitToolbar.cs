@@ -30,6 +30,7 @@ public static class InitToolbar
     }
 
     private static string _imagePath = string.Empty;
+
     private static Grid CreateToolbar(MainViewModel vm)
     {
         _imagePath = Path.Combine(Se.ThemesFolder, UiTheme.ThemeName);
@@ -302,7 +303,7 @@ public static class InitToolbar
         {
             Orientation = Orientation.Horizontal,
             Spacing = 1,
-            Margin = new Thickness(2),
+            Margin = new Thickness(2, 2, 8, 2),
             HorizontalAlignment = HorizontalAlignment.Right,
             VerticalAlignment = VerticalAlignment.Top,
         };
@@ -312,7 +313,7 @@ public static class InitToolbar
         {
             Text = Se.Language.General.Format,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(5, 0, 2, 0),
+            Margin = new Thickness(5, 0, 3, 0),
         });
         var comboBoxSubtitleFormat = new ComboBox
         {
@@ -345,7 +346,7 @@ public static class InitToolbar
             {
                 Text = Se.Language.General.Encoding,
                 VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(5, 0, 2, 0),
+                Margin = new Thickness(5, 0, 3, 0),
             });
             var comboBoxEncoding = new ComboBox
             {
@@ -364,7 +365,7 @@ public static class InitToolbar
             {
                 Text = Se.Language.General.FrameRate,
                 VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(5, 0, 2, 0),
+                Margin = new Thickness(5, 0, 3, 0),
             });
             var comboBoxFrameRate = new ComboBox
             {

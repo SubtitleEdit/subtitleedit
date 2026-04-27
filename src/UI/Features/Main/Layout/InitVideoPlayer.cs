@@ -38,7 +38,7 @@ public static class InitVideoPlayer
             RowDefinitions = new RowDefinitions("*"),
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
-            Margin = new Thickness(0),
+            Margin = new Thickness(0, 0, 8, 0),
         };
 
         DragDrop.SetAllowDrop(mainGrid, true);
@@ -59,19 +59,14 @@ public static class InitVideoPlayer
                 }
             });
         }
+
         control.FullScreenCommand = vm.VideoFullScreenCommand;
         videoPlayerControl = control;
         vm.VideoPlayerControl = control;
         control.Volume = Se.Settings.Video.Volume;
         control.VideoPlayerDisplayTimeLeft = Se.Settings.Video.VideoPlayerDisplayTimeLeft;
-        control.VolumeChanged += v =>
-        {
-            Se.Settings.Video.Volume = v;
-        };
-        control.ToggleDisplayProgressTextModeRequested += () =>
-        {
-            vm.ToggleVideoPlayerDisplayTimeLeftCommand.Execute(null);
-        };
+        control.VolumeChanged += v => { Se.Settings.Video.Volume = v; };
+        control.ToggleDisplayProgressTextModeRequested += () => { vm.ToggleVideoPlayerDisplayTimeLeftCommand.Execute(null); };
         control.VideoFileNamePointerPressed += vm.VideoPlayerControlPointerPressed;
         control.SurfacePointerPressed += (_, _) => vm.VideoPlayerAreaPointerPressed();
 
