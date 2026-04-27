@@ -169,13 +169,15 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
                     var skipFolder = Engine is ICrispAsrEngine
                         ? RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
                             ? "crispasr-linux-x86_64"
-                            : CrispAsrWindowsVariant switch
-                            {
-                                "cuda"   => "crispasr-windows-x86_64-cuda",
-                                "cpu"    => "crispasr-windows-x86_64-cpu-legacy",
-                                "vulkan" => "crispasr-windows-x86_64-vulkan",
-                                _        => Engine.UnpackSkipFolder,
-                            }
+                            : RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                                ? "crispasr-macos"
+                                : CrispAsrWindowsVariant switch
+                                {
+                                    "cuda"   => "crispasr-windows-x86_64-cuda",
+                                    "cpu"    => "crispasr-windows-x86_64-cpu-legacy",
+                                    "vulkan" => "crispasr-windows-x86_64-vulkan",
+                                    _        => Engine.UnpackSkipFolder,
+                                }
                         : Engine.UnpackSkipFolder;
                     Unpack(folder, skipFolder);
 
