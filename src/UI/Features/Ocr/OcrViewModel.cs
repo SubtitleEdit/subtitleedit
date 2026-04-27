@@ -3612,6 +3612,48 @@ public partial class OcrViewModel : ObservableObject
                 return string.Empty;
             }
 
+            // Check if image height is larger than approximately 1/3 of screen height
+            var imageHeightRatio = (double)bitmap.Height / screenSize.Height;
+            if (imageHeightRatio > 0.33)
+            {
+                // Try to split lines and set alignment for each line
+                var lines = item.Text.Trim().SplitToLines();
+                if (lines.Count > 1 && item.Text.Length < 40)
+                {
+                    // Similar logic to RunGoogleLensOcr method
+                    var nbmp = new NikseBitmap2(bitmap);
+                    nbmp.MakeOneColor(SKColors.White);
+                    var lineImages = NikseBitmapImageSplitter2.SplitToLinesTransparentOrBlack(nbmp);
+                    var lineImages2 = NikseBitmapImageSplitter2.SplitToLines(nbmp, 20);
+
+                    if (lineImages.Count > 1 || lineImages2.Count > 1)
+                    {
+                        // Multiple lines detected - apply alignment to each line
+                        var result = new List<string>();
+                        var multiLineCenterX = position.X + bitmap.Width / 2.0;
+                        var multiLineRelativeX = multiLineCenterX / screenSize.Width;
+
+                        for (int i = 0; i < lines.Count; i++)
+                        {
+                            // Calculate relative Y position for each line
+                            var lineHeight = bitmap.Height / (double)lines.Count;
+                            var lineY = position.Y + (i * lineHeight) + (lineHeight / 2.0);
+                            var lineRelativeY = lineY / screenSize.Height;
+
+                            // Get alignment for this specific line position
+                            var lineAlignment = GetAssaPositionFromScreen(multiLineRelativeX, lineRelativeY);
+
+                            // Add alignment tag to the line text
+                            result.Add($"{{\\{lineAlignment}}}{lines[i].Trim()}");
+                        }
+
+                        // Update the item text with per-line alignment
+                        item.Text = string.Join("\n", result);
+                        return string.Empty; // Return empty since we've modified the item.Text directly
+                    }
+                }
+            }
+
             // Calculate center point of the image on screen
             var centerX = position.X + bitmap.Width / 2.0;
             var centerY = position.Y + bitmap.Height / 2.0;
