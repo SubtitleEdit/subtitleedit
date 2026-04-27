@@ -63,7 +63,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? CustomFormat { get; init; }
 
         [CommandOption("--ocrengine")]
-        [Description("OCR engine: tesseract | nocr | ollama | paddle (default: tesseract)")]
+        [Description("OCR engine: tesseract | nocr | binaryocr | ollama | paddle (default: tesseract)")]
         public string? OcrEngine { get; init; }
 
         [CommandOption("--ocrlanguage")]
@@ -71,7 +71,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? OcrLanguage { get; init; }
 
         [CommandOption("--ocrdb")]
-        [Description("Path to a .nocr database file (required when --ocrengine=nocr)")]
+        [Description("Path to a .nocr file (--ocrengine=nocr) or .db file (--ocrengine=binaryocr)")]
         public string? OcrDb { get; init; }
 
         [CommandOption("--ollama-url")]
@@ -235,8 +235,8 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 return 1;
             }
 
-            // Validate --ocrengine: tesseract | nocr | ollama | paddle
-            var supportedEngines = new[] { "tesseract", "nocr", "ollama", "paddle", "paddleocr" };
+            // Validate --ocrengine: tesseract | nocr | binaryocr | ollama | paddle
+            var supportedEngines = new[] { "tesseract", "nocr", "binaryocr", "binary", "ollama", "paddle", "paddleocr" };
             if (!string.IsNullOrWhiteSpace(settings.OcrEngine) &&
                 !supportedEngines.Contains(settings.OcrEngine, StringComparer.OrdinalIgnoreCase))
             {

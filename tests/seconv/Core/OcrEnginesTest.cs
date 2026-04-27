@@ -53,12 +53,29 @@ public class OcrEnginesTest : IDisposable
     }
 
     [Fact]
+    public void Factory_BinaryOcrWithoutOcrDb_Throws()
+    {
+        var ex = Assert.Throws<InvalidOperationException>(() => OcrEngineFactory.Create(Opts("binaryocr")));
+        Assert.Contains("--ocrdb", ex.Message);
+        Assert.Contains(".db", ex.Message);
+    }
+
+    [Fact]
+    public void Factory_BinaryOcrAutoAppendsDbExtension()
+    {
+        var ex = Assert.Throws<FileNotFoundException>(() =>
+            OcrEngineFactory.Create(Opts("binaryocr", Path.Combine(_tempRoot, "Latin"))));
+        Assert.Contains("Latin.db", ex.Message);
+    }
+
+    [Fact]
     public void Factory_UnknownEngine_Throws()
     {
         var ex = Assert.Throws<InvalidOperationException>(() => OcrEngineFactory.Create(Opts("nope")));
         Assert.Contains("nope", ex.Message);
         Assert.Contains("tesseract", ex.Message);
         Assert.Contains("nocr", ex.Message);
+        Assert.Contains("binaryocr", ex.Message);
         Assert.Contains("ollama", ex.Message);
         Assert.Contains("paddle", ex.Message);
     }

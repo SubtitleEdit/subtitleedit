@@ -13,26 +13,28 @@ internal static class OcrEngineFactory
         return engine switch
         {
             "tesseract" or "" => TesseractOcrEngine.Create(options.OcrLanguage),
-            "nocr" => new NOcrOcrEngine(ResolveNOcrDbPath(options)),
+            "nocr" => new NOcrOcrEngine(ResolveOcrDbPath(options, "nocr", ".nocr")),
+            "binaryocr" or "binary" => new BinaryOcrOcrEngine(ResolveOcrDbPath(options, "binaryocr", ".db")),
             "ollama" => new OllamaOcrEngine(options.OllamaUrl, options.OllamaModel, options.OcrLanguage),
             "paddle" or "paddleocr" => PaddleOcrEngine.Create(options.OcrLanguage),
             _ => throw new InvalidOperationException(
-                $"OCR engine '{options.OcrEngine}' is not supported. Use one of: tesseract, nocr, ollama, paddle.")
+                $"OCR engine '{options.OcrEngine}' is not supported. Use one of: tesseract, nocr, binaryocr, ollama, paddle.")
         };
     }
 
-    private static string ResolveNOcrDbPath(ConversionOptions options)
+    private static string ResolveOcrDbPath(ConversionOptions options, string engineName, string requiredExtension)
     {
         if (string.IsNullOrWhiteSpace(options.OcrDb))
         {
+            var displayExt = requiredExtension.TrimStart('.');
             throw new InvalidOperationException(
-                "nOCR engine requires --ocrdb=<path-to-Latin.nocr> (or another .nocr file). " +
-                "Find them in `%AppData%\\Subtitle Edit\\Ocr\\` or download from the SE UI.");
+                $"{engineName} engine requires --ocrdb=<path-to-Latin{requiredExtension}> (or another {requiredExtension} file). " +
+                $"Find them in `%AppData%\\Subtitle Edit\\Ocr\\` or download from the SE UI.");
         }
         var path = options.OcrDb;
-        if (!path.EndsWith(".nocr", StringComparison.OrdinalIgnoreCase))
+        if (!path.EndsWith(requiredExtension, StringComparison.OrdinalIgnoreCase))
         {
-            path += ".nocr";
+            path += requiredExtension;
         }
         return path;
     }

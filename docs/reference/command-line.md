@@ -149,6 +149,7 @@ into text. Four engines are supported:
 |---|---|---|
 | `tesseract` (default) | Subprocess | Install Tesseract (e.g. `apt install tesseract-ocr`, `brew install tesseract`, or the Windows installer); ensure it is on `PATH`. Pass `--ocrlanguage` as ISO 639-2 (`eng`, `deu`, `spa`, …). |
 | `nocr` | In-process | Built-in nOCR matcher. Required: `--ocrdb=<path-to-Latin.nocr>` (find these under `%AppData%\Subtitle Edit\Ocr\` or download via the SE UI). |
+| `binaryocr`, `binary` | In-process | Built-in BinaryOCR matcher (alternative to nOCR; different accuracy profile, similar speed). Required: `--ocrdb=<path-to-Latin.db>`. |
 | `ollama` | HTTP | Local Ollama server with a vision-capable model (e.g. `llama3.2-vision`, `qwen2.5vl`). Configure via `--ollama-url` (default `http://localhost:11434/api/chat`) and `--ollama-model` (default `llama3.2-vision`). Pass `--ocrlanguage` as a human name like `English`. |
 | `paddle`, `paddleocr` | Subprocess | Install via `pip install paddleocr`; ensure the `paddleocr` binary is on `PATH`. Pass `--ocrlanguage` as a short code (`en`, `de`, …). |
 
@@ -160,6 +161,9 @@ seconv movie.sup subrip --ocrengine tesseract --ocrlanguage eng
 
 # Same source via nOCR (no external dependency)
 seconv movie.sup subrip --ocrengine nocr --ocrdb "C:\Users\me\AppData\Roaming\Subtitle Edit\Ocr\Latin.nocr"
+
+# Or via BinaryOCR
+seconv movie.sup subrip --ocrengine binaryocr --ocrdb "C:\Users\me\AppData\Roaming\Subtitle Edit\Ocr\Latin.db"
 
 # MKV with image (PGS) tracks — OCR runs automatically
 seconv movie.mkv subrip --ocrengine tesseract --ocrlanguage eng
