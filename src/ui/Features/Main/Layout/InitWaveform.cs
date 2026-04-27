@@ -618,6 +618,45 @@ public class InitWaveform
         var flyoutMore = new MenuFlyout();
         buttonMore.Flyout = flyoutMore;
         buttonMore.Click += (s, e) => flyoutMore.ShowAt(buttonMore, true);
+
+        var buttonSplitWaveform = new Button
+        {
+            Content = "Split: None",
+            Margin = new Thickness(4, 0, 4, 0),
+            FontSize = 11,
+            VerticalAlignment = VerticalAlignment.Center,
+            [ToolTip.TipProperty] = "Split waveform by",
+        };
+        var flyoutSplitWaveform = new MenuFlyout();
+        buttonSplitWaveform.Flyout = flyoutSplitWaveform;
+        buttonSplitWaveform.Click += (s, e) => flyoutSplitWaveform.ShowAt(buttonSplitWaveform, true);
+
+        void AddSplitModeItem(string header, WaveformSplitMode mode)
+        {
+            var menuItem = new MenuItem
+            {
+                Header = header,
+            };
+            menuItem.Click += (s, e) =>
+            {
+                if (vm.AudioVisualizer == null)
+                {
+                    return;
+                }
+
+                vm.AudioVisualizer.WaveformSplitMode = mode;
+                buttonSplitWaveform.Content = "Split: " + header;
+                vm.AudioVisualizer.InvalidateVisual();
+            };
+            flyoutSplitWaveform.Items.Add(menuItem);
+        }
+
+        AddSplitModeItem("None", WaveformSplitMode.None);
+        AddSplitModeItem("Actor", WaveformSplitMode.Actor);
+        AddSplitModeItem("Style", WaveformSplitMode.Style);
+        AddSplitModeItem("Layer", WaveformSplitMode.Layer);
+        AddSplitModeItem("ASS position/alignment", WaveformSplitMode.AssPositionAlignment);
+
         var menuItemResetZoom = new MenuItem
         {
             Header = string.Format(languageHints.ResetZoomAndSpeed, UiUtil.MakeShortcutsString(shortcuts, nameof(vm.ResetWaveformZoomAndSpeedCommand))),
@@ -652,6 +691,7 @@ public class InitWaveform
             toggleButtonCenter,
             buttonMore
         );
+        sortableButtons.Add(new SortedControl { Sort = settingMore.SortOrder, Control = buttonSplitWaveform });
         foreach (var sortedButton in sortableButtons)
         {
             if (sortedButton.Control != null)
