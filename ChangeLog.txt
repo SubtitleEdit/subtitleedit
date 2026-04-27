@@ -19,6 +19,7 @@ v5.0.0-beta20 (xth April 2026)
 * Fix regex multiline anchors with CRLF text - thx Ironship
 * Fix adjust duration percent calculation - thx Ironship
 * Fix TT family properties export - thx Ironship
+* Feature complete "seconv" (command line conversion tool) 
 
 -----------------------------------------------------------------------------------------------------
 
