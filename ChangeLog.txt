@@ -2,6 +2,27 @@
 Subtitle Edit Changelog
 
 
+v5.0.0-beta20 (xth April 2026)
+
+* Add menu toggle for waveform toolbar - thx Ironship
+* Add auto-language for CrispASR glm/parakeet/Qwen3
+* Append missing extension on save as - thx Ironship
+* Allow speech-to-text ETA to increase - thx Ironship
+* Preserve line breaks in compare HTML export - thx Ironship
+* Update Polish translation - thx potplayer-fanpack
+* Update Korean translation - thx Hackjjang
+* Update CrispASR download links
+* Update Kokoro TTS engine to v0.1.1
+* Try to make toolbar more accessible - thx kylesskim-sys
+* Fix Flatpak release bundle publishing
+* Fix repeated video surface click toggles - thx Ironship
+* Fix regex multiline anchors with CRLF text - thx Ironship
+* Fix adjust duration percent calculation - thx Ironship
+* Fix TT family properties export - thx Ironship
+* Feature complete "seconv" (command line conversion tool) 
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-beta19 (26th April 2026)
 
 * Rename "Whisper" folder to "SpeechToText"

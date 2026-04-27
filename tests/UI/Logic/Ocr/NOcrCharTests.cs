@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Logic.Ocr;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 
 namespace UITests.Logic.Ocr;
 

@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var input = "{ \"input\": { \"task_name\":\"T2TT (Text to Text translation)\", \"input_text\": \"" + Json.EncodeJsonText(text.Trim()) + "\", \"input_text_language\": \"" + sourceLanguageCode + "\", \"target_language_text_only\": \"" + targetLanguageCode + "\" }}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            var result = _httpClient.PostAsync("predictions", content).Result;
+            var result = await _httpClient.PostAsync("predictions", content, cancellationToken);
             result.EnsureSuccessStatusCode();
             var bytes = await result.Content.ReadAsByteArrayAsync();
             var json = Encoding.UTF8.GetString(bytes).Trim();

@@ -6,12 +6,12 @@
 # Usage (from repo root):
 #   ./installer/flatpak/update-metainfo-version.sh
 #   ./installer/flatpak/update-metainfo-version.sh \
-#       "src/UI/Logic/Config/Se.cs" \
+#       "src/ui/Logic/Config/Se.cs" \
 #       "installer/flatpak/dk.nikse.subtitleedit.metainfo.xml"
 
 set -e
 
-SE_CS_PATH="${1:-src/UI/Logic/Config/Se.cs}"
+SE_CS_PATH="${1:-src/ui/Logic/Config/Se.cs}"
 METAINFO_PATH="${2:-installer/flatpak/dk.nikse.subtitleedit.metainfo.xml}"
 
 # ---------------------------------------------------------------------------

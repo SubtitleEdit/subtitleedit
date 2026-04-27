@@ -31,6 +31,34 @@ public class SubtitleConverterTest : IDisposable
     }
 
     [Fact]
+    public async Task ConvertAsync_FixtureSrtToVtt_ProducesOutput()
+    {
+        // Arrange
+        var inputFile = Fixtures.Path("test.srt");
+        Assert.True(File.Exists(inputFile), $"Fixture missing: {inputFile}");
+
+        var outputFolder = Path.Combine(_tempRoot, "fixture-out");
+        Directory.CreateDirectory(outputFolder);
+
+        var options = new ConversionOptions
+        {
+            Patterns = [inputFile],
+            Format = "WebVTT",
+            OutputFolder = outputFolder,
+            Overwrite = true,
+        };
+
+        // Act
+        var converter = new SubtitleConverter();
+        var result = await converter.ConvertAsync(options);
+
+        // Assert
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        Assert.Equal(1, result.SuccessfulFiles);
+        Assert.Single(Directory.GetFiles(outputFolder, "*.vtt"));
+    }
+
+    [Fact]
     public async Task ConvertAsync_TwoInputFiles_OneWithCommaInPath_ConvertsAllFiles()
     {
         // Arrange

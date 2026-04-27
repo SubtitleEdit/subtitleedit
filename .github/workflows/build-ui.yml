@@ -56,7 +56,7 @@ jobs:
 
       - name: Publish Windows x64 app
         run: |
-          dotnet publish src/UI/UI.csproj -c ${{ inputs.build_configuration }} -r win-x64 --self-contained true `
+          dotnet publish src/ui/UI.csproj -c ${{ inputs.build_configuration }} -r win-x64 --self-contained true `
             -p:PublishSingleFile=true `
             -p:DebugSymbols=false `
             -p:DebugType=none `
@@ -65,7 +65,7 @@ jobs:
 
       - name: Publish Windows ARM64 app
         run: |
-          dotnet publish src/UI/UI.csproj -c ${{ inputs.build_configuration }} -r win-arm64 --self-contained true `
+          dotnet publish src/ui/UI.csproj -c ${{ inputs.build_configuration }} -r win-arm64 --self-contained true `
             -p:PublishSingleFile=true `
             -p:DebugSymbols=false `
             -p:DebugType=none `
@@ -101,12 +101,12 @@ jobs:
 
       - name: Publish Windows x64 app (framework-dependent, for Inno Setup)
         run: |
-          dotnet publish src/UI/UI.csproj -c ${{ inputs.build_configuration }} -r win-x64 --self-contained false `
+          dotnet publish src/ui/UI.csproj -c ${{ inputs.build_configuration }} -r win-x64 --self-contained false `
             -p:PublishSingleFile=true `
             -p:DebugSymbols=false `
             -p:DebugType=none `
-            -o ./src/UI/bin/Release/net10.0/publish
-          Copy-Item "libmpv-temp/libmpv-2.dll" "./src/UI/bin/Release/net10.0/publish/"
+            -o ./src/ui/bin/Release/net10.0/publish
+          Copy-Item "libmpv-temp/libmpv-2.dll" "./src/ui/bin/Release/net10.0/publish/"
 
       - name: Install Inno Setup
         run: choco install innosetup -y --no-progress
@@ -287,7 +287,7 @@ jobs:
       # Process x64 build first, then clean up before ARM64
       - name: Publish macOS x64 app
         run: |
-          dotnet publish src/UI/UI.csproj -c ${{ inputs.build_configuration }} -r osx-x64 --self-contained true \
+          dotnet publish src/ui/UI.csproj -c ${{ inputs.build_configuration }} -r osx-x64 --self-contained true \
             -p:PublishSingleFile=true \
             -p:DebugSymbols=false \
             -p:DebugType=none \
@@ -369,7 +369,7 @@ jobs:
         run: |
           echo "Disk space before ARM64 publish:"; df -h /
           
-          dotnet publish src/UI/UI.csproj -c ${{ inputs.build_configuration }} -r osx-arm64 --self-contained true \
+          dotnet publish src/ui/UI.csproj -c ${{ inputs.build_configuration }} -r osx-arm64 --self-contained true \
             -p:PublishSingleFile=true \
             -p:DebugSymbols=false \
             -p:DebugType=none \
@@ -522,7 +522,7 @@ jobs:
 
       - name: Publish Linux x64 app
         run: |
-          dotnet publish src/UI/UI.csproj -c ${{ inputs.build_configuration }} -r linux-x64 --self-contained true \
+          dotnet publish src/ui/UI.csproj -c ${{ inputs.build_configuration }} -r linux-x64 --self-contained true \
             -p:PublishSingleFile=true \
             -p:DebugSymbols=false \
             -p:DebugType=none \

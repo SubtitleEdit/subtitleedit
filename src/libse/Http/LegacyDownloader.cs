@@ -80,10 +80,10 @@ namespace Nikse.SubtitleEdit.Core.Http
 
         public HttpRequestHeaders DefaultRequestHeaders => _httpClient.DefaultRequestHeaders;
 
-        public Task<HttpResponseMessage> PostAsync(string uri, StringContent stringContent)
+        public Task<HttpResponseMessage> PostAsync(string uri, StringContent stringContent, CancellationToken cancellationToken = default)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-            return _httpClient.PostAsync(uri, stringContent);
+            return _httpClient.PostAsync(uri, stringContent, cancellationToken);
         }
 
         public async Task<string> GetStringAsync(string url)

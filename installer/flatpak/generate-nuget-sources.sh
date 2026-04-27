@@ -8,7 +8,7 @@
 # a built-in Python snippet restores via system dotnet and produces identical output.
 #
 # Run this script whenever NuGet dependencies change, then commit both
-# nuget-sources.json and src/UI/packages.lock.json alongside the manifest.
+# nuget-sources.json and src/ui/packages.lock.json alongside the manifest.
 #
 # Requires (preferred): flatpak, org.freedesktop.Sdk//24.08,
 #                       org.freedesktop.Sdk.Extension.dotnet10//24.08, python3
@@ -17,7 +17,7 @@
 # Usage (from repo root):
 #   ./installer/flatpak/generate-nuget-sources.sh
 #   ./installer/flatpak/generate-nuget-sources.sh \
-#       "src/UI/UI.csproj" \
+#       "src/ui/UI.csproj" \
 #       "installer/flatpak/nuget-sources.json"
 
 set -e
@@ -25,7 +25,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-PROJECT_PATH="${1:-src/UI/UI.csproj}"
+PROJECT_PATH="${1:-src/ui/UI.csproj}"
 OUTPUT="${2:-installer/flatpak/nuget-sources.json}"
 
 GENERATOR="$SCRIPT_DIR/flatpak-dotnet-generator.py"
@@ -228,5 +228,5 @@ PYTHON
 
 echo ""
 echo "\u2713 Generated: $OUTPUT"
-echo "  Commit this file alongside src/UI/packages.lock.json and the manifest."
+echo "  Commit this file alongside src/ui/packages.lock.json and the manifest."
 echo "  Re-run this script whenever NuGet dependencies change."
