@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\UI\UI.csproj" />
+    <ProjectReference Include="..\..\src\UI_RENAME\UI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

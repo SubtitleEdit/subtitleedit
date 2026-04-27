@@ -11,7 +11,7 @@ This script automatically updates the `Info.plist` file with version information
 ```
 
 If no arguments are provided, it uses default paths:
-- Se.cs: `src/UI/Logic/Config/Se.cs`
+- Se.cs: `src/UI_RENAME/Logic/Config/Se.cs`
 - Info.plist: `installer/macBundle/SubtitleEdit.app/Contents/Info.plist`
 
 ### What it does

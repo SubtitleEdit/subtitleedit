@@ -3,10 +3,10 @@
 #
 # Usage (from repo root):
 #   ./installer/WindowsInno/update-version.ps1
-#   ./installer/WindowsInno/update-version.ps1 -SeCsPath "src/UI/Logic/Config/Se.cs" -IssPath "installer/WindowsInno/Subtitle_Edit_Installer.iss"
+#   ./installer/WindowsInno/update-version.ps1 -SeCsPath "src/UI_RENAME/Logic/Config/Se.cs" -IssPath "installer/WindowsInno/Subtitle_Edit_Installer.iss"
 
 param (
-    [string]$SeCsPath = "src/UI/Logic/Config/Se.cs",
+    [string]$SeCsPath = "src/UI_RENAME/Logic/Config/Se.cs",
     [string]$IssPath  = "installer/WindowsInno/Subtitle_Edit_Installer.iss"
 )
 

@@ -285,7 +285,7 @@ modules:
       # files from nuget-sources.json (dest: nuget-sources by default).
       - |
         . /usr/lib/sdk/dotnet10/enable.sh
-        dotnet publish src/UI/UI.csproj \
+        dotnet publish src/UI_RENAME/UI.csproj \
           --configuration Release \
           --runtime "$RUNTIME" \
           --self-contained true \
@@ -303,7 +303,7 @@ modules:
       - install -Dm644 installer/flatpak/dk.nikse.subtitleedit.metainfo.xml /app/share/metainfo/dk.nikse.subtitleedit.metainfo.xml
 
       # Icon (256x256 PNG from the source tree)
-      - install -Dm644 src/UI/Assets/SE.png /app/share/icons/hicolor/256x256/apps/dk.nikse.subtitleedit.png
+      - install -Dm644 src/UI_RENAME/Assets/SE.png /app/share/icons/hicolor/256x256/apps/dk.nikse.subtitleedit.png
 
     sources:
       # Full repo checkout (path relative to this manifest: installer/flatpak/ -> ../../)
