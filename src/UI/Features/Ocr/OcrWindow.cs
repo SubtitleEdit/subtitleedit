@@ -158,12 +158,10 @@ public class OcrWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        var toggleButtonCaptureTopAlign = new ToggleButton();
-        Attached.SetIcon(toggleButtonCaptureTopAlign, IconNames.DockTop);
-        ToolTip.SetTip(toggleButtonCaptureTopAlign, Se.Language.Ocr.CaptureTopAlign);
-        toggleButtonCaptureTopAlign.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.HasCaptureTopAlign)));
-
-        // No ComboBox needed - position will be automatically detected from image location
+        var toggleButtonCaptureAlignment = new ToggleButton();
+        Attached.SetIcon(toggleButtonCaptureAlignment, IconNames.DockTop);
+        ToolTip.SetTip(toggleButtonCaptureAlignment, Se.Language.Ocr.CaptureTopAlign);
+        toggleButtonCaptureAlignment.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.HasCaptureAlignment)));
 
         var toggleButtonPreProcessing = new ToggleButton
         {
@@ -178,7 +176,7 @@ public class OcrWindow : Window
             HorizontalAlignment = HorizontalAlignment.Right,
             Children =
             {
-                toggleButtonCaptureTopAlign,
+                toggleButtonCaptureAlignment,
                 toggleButtonPreProcessing,
             }
         };

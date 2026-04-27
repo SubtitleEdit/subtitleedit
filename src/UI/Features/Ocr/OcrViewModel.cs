@@ -119,7 +119,7 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<GuessUsedItem> _allGuesses;
     [ObservableProperty] private GuessUsedItem? _selectedAllGuess;
     [ObservableProperty] private bool _hasPreProcessingSettings;
-    [ObservableProperty] private bool _hasCaptureTopAlign; // Repurposed for ASSA position capture
+    [ObservableProperty] private bool _hasCaptureAlignment; 
     [ObservableProperty] private double _imageMaxHeight = 100;
     [ObservableProperty] private double _imageMaxWidth = 200;
     [ObservableProperty] private FontFamily _textBoxFontFamily;
@@ -133,18 +133,6 @@ public partial class OcrViewModel : ObservableObject
     public bool OkPressed { get; private set; }
 
     public readonly List<SubtitleLineViewModel> OcredSubtitle;
-
-    /// <summary>
-    /// Indicates whether ASSA format should be used for the output when capture position is enabled
-    /// </summary>
-    public bool ShouldUseAssaFormat => HasCaptureTopAlign; // Now represents ASSA position capture
-
-    partial void OnHasCaptureTopAlignChanged(bool value)
-    {
-        // Notify that the format requirement has changed
-        OnPropertyChanged(nameof(ShouldUseAssaFormat));
-    }
-
 
     private IOcrSubtitle? _ocrSubtitle;
     private readonly INOcrCaseFixer _nOcrCaseFixer;
@@ -273,7 +261,7 @@ public partial class OcrViewModel : ObservableObject
             DoPromptForUnknownWords = ocr.DoPromptForUnknownWords;
             DoTryToGuessUnknownWords = ocr.DoTryToGuessUnknownWords;
             DoAutoBreak = ocr.DoAutoBreak;
-            HasCaptureTopAlign = ocr.CaptureAssaPosition; // Repurposed for ASSA position capture
+            HasCaptureAlignment = ocr.CaptureAssaPosition; 
         });
     }
 
@@ -298,8 +286,7 @@ public partial class OcrViewModel : ObservableObject
         ocr.DoPromptForUnknownWords = DoPromptForUnknownWords;
         ocr.DoTryToGuessUnknownWords = DoTryToGuessUnknownWords;
         ocr.DoAutoBreak = DoAutoBreak;
-        ocr.CaptureTopAlign = false; // Old functionality disabled
-        ocr.CaptureAssaPosition = HasCaptureTopAlign; // Repurposed property
+        ocr.CaptureAssaPosition = HasCaptureAlignment; 
         ocr.TextBoxFontSize = TextBoxFontSize;
         ocr.TextBoxFontBold = TextBoxFontWeight == FontWeight.Bold;
         ocr.TextBoxFontName = TextBoxFontFamily.Name;
@@ -2556,42 +2543,29 @@ public partial class OcrViewModel : ObservableObject
 
     private void SetText(int i, OcrSubtitleItem item, OcrFixLineResultTemp resultTemp)
     {
+        var alignment = GetAlignment(item);
+
         if (SelectedDictionary != null &&
             SelectedDictionary.Name != GetDictionaryNameNone() &&
             _ocrFixEngine.IsLoaded() && DoFixOcrErrors)
         {
-            var alignment = GetAlignment(item);
-            item.Text = resultTemp.ResultText; // Set text before processing
-            var processedText = ProcessMultiLineText(item);
-
-            // For ASSA position capture, use processed text which includes alignment
-            // For non-ASSA, use original result text
-            var finalText = HasCaptureTopAlign ?
-                (processedText.Contains('\n') ? processedText : alignment + resultTemp.ResultText) :
-                resultTemp.ResultText;
+            var text = alignment + resultTemp.ResultText; 
 
             Dispatcher.UIThread.Post(() =>
             {
-                CurrentText = finalText;
-                item.Text = finalText;
+                CurrentText = text;
+                item.Text = text;
                 item.FixResult = resultTemp.OcrFixLineResult;
             });
         }
         else
         {
-            var alignment = GetAlignment(item);
-            var processedText = ProcessMultiLineText(item);
-
-            // For ASSA position capture, use processed text which includes alignment
-            // For non-ASSA, use the old behavior of adding alignment prefix
-            var finalText = HasCaptureTopAlign ?
-                (processedText.Contains('\n') ? processedText : alignment + item.Text) :
-                alignment + item.Text;
+            var text = alignment + item.Text;
 
             Dispatcher.UIThread.Post(() =>
             {
-                item.Text = finalText;
-                CurrentText = item.Text;
+                item.Text = text;
+                CurrentText = text;
                 item.FixResult = new OcrFixLineResult
                 {
                     LineIndex = i,
@@ -3621,7 +3595,7 @@ public partial class OcrViewModel : ObservableObject
 
     private string GetAlignment(OcrSubtitleItem item)
     {
-        if (!HasCaptureTopAlign) // Repurposed for ASSA position capture
+        if (!HasCaptureAlignment) // Repurposed for ASSA position capture
         {
             return string.Empty;
         }
@@ -3656,7 +3630,7 @@ public partial class OcrViewModel : ObservableObject
         }
     }
 
-    private string GetAssaPositionFromScreen(double relativeX, double relativeY)
+    private static string GetAssaPositionFromScreen(double relativeX, double relativeY)
     {
         // Map screen coordinates to 3x3 grid for ASSA positions
         // relativeX: 0.0 = left, 1.0 = right
@@ -3709,7 +3683,7 @@ public partial class OcrViewModel : ObservableObject
 
     private List<OcrSubtitleItem> SplitImageToLines(OcrSubtitleItem item)
     {
-        if (!HasCaptureTopAlign || item.GetSkBitmapClean() == null)
+        if (!HasCaptureAlignment || item.GetSkBitmapClean() == null)
         {
             return new List<OcrSubtitleItem> { item };
         }
@@ -3779,33 +3753,5 @@ public partial class OcrViewModel : ObservableObject
 
         // If we find enough non-white pixels, assume there's text
         return nonWhitePixels > (samplePoints * samplePoints * 0.1); // 10% threshold
-    }
-
-    public string ProcessMultiLineText(OcrSubtitleItem item)
-    {
-        if (!HasCaptureTopAlign)
-        {
-            return item.Text ?? string.Empty;
-        }
-
-        var lines = SplitImageToLines(item);
-        var result = new List<string>();
-
-        foreach (var line in lines)
-        {
-            var alignment = GetAlignment(line);
-            var text = line.Text ?? string.Empty;
-
-            if (!string.IsNullOrEmpty(alignment) && !string.IsNullOrEmpty(text))
-            {
-                result.Add($"{alignment}{text}");
-            }
-            else if (!string.IsNullOrEmpty(text))
-            {
-                result.Add(text);
-            }
-        }
-
-        return string.Join("\\N", result); // Use \N for line breaks in ASSA format
     }
 }

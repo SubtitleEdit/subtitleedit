@@ -31,7 +31,6 @@ public class SeOcr
     public bool DoTryToGuessUnknownWords { get; set; }
     public bool DoPromptForUnknownWords { get; set; }
     public bool DoAutoBreak { get; set; }
-    public bool CaptureTopAlign { get; set; }
     public bool CaptureAssaPosition { get; set; }
     public bool DoFixOcrErrors { get; set; }
     public string LastLanguageDictionaryFile { get; set; }
