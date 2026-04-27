@@ -23,9 +23,9 @@ namespace Nikse.SubtitleEdit.Core.Http
 
         public HttpRequestHeaders DefaultRequestHeaders => _httpClient.DefaultRequestHeaders;
 
-        public Task<HttpResponseMessage> PostAsync(string uri, StringContent stringContent)
+        public Task<HttpResponseMessage> PostAsync(string uri, StringContent stringContent, CancellationToken cancellationToken = default)
         {
-            return _httpClient.PostAsync(uri, stringContent);
+            return _httpClient.PostAsync(uri, stringContent, cancellationToken);
         }
 
         public Task<string> GetStringAsync(string url)
