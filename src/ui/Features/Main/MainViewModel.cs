@@ -6846,6 +6846,12 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void MergeSelectedLinesBilingual()
+    {
+        MergeLinesSelectedBilingual();
+    }
+
+    [RelayCommand]
     private void ToggleCasing()
     {
         if (IsSubtitleGridFocused())
@@ -13395,6 +13401,72 @@ public partial class MainViewModel :
         _mergeManager.MergeSelectedLinesAsDialog(Subtitles, selectedItems);
         SelectAndScrollToRow(index);
         Renumber();
+    }
+
+    private void MergeLinesSelectedBilingual()
+    {
+        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (selectedItems.Count < 2)
+        {
+            return;
+        }
+
+        var ordered = selectedItems
+            .Select(item => (Item: item, Index: Subtitles.IndexOf(item)))
+            .Where(p => p.Index >= 0)
+            .OrderBy(p => p.Index)
+            .ToList();
+
+        if (ordered.Count != selectedItems.Count)
+        {
+            return;
+        }
+
+        for (var i = 1; i < ordered.Count; i++)
+        {
+            if (ordered[i].Index != ordered[i - 1].Index + 1)
+            {
+                return; // selection must be contiguous
+            }
+        }
+
+        var firstIndex = ordered[0].Index;
+        var first = ordered[0].Item;
+        var last = ordered[ordered.Count - 1].Item;
+
+        first.Text = MergeBilingualLines(ordered.Select(p => p.Item.Text));
+        if (ordered.Any(p => !string.IsNullOrEmpty(p.Item.OriginalText)))
+        {
+            first.OriginalText = MergeBilingualLines(ordered.Select(p => p.Item.OriginalText));
+        }
+
+        first.EndTime = last.EndTime;
+
+        for (var i = ordered.Count - 1; i >= 1; i--)
+        {
+            Subtitles.Remove(ordered[i].Item);
+        }
+
+        Renumber();
+        SelectAndScrollToRow(firstIndex);
+        _updateAudioVisualizer = true;
+    }
+
+    private static string MergeBilingualLines(IEnumerable<string> texts)
+    {
+        var split = texts.Select(t => (t ?? string.Empty).SplitToLines()).ToList();
+        var maxLines = split.Count == 0 ? 0 : split.Max(lines => lines.Count);
+        var resultLines = new List<string>(maxLines);
+        for (var i = 0; i < maxLines; i++)
+        {
+            var parts = split
+                .Select(lines => i < lines.Count ? lines[i].Trim() : string.Empty)
+                .Where(s => s.Length > 0);
+            resultLines.Add(string.Join(" ", parts));
+        }
+
+        var merged = string.Join(Environment.NewLine, resultLines);
+        return HtmlUtil.FixInvalidItalicTags(merged);
     }
 
     private void ToggleItalic()
