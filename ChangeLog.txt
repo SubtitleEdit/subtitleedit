@@ -20,6 +20,9 @@ v5.0.0-beta20 (xth April 2026)
 * Fix adjust duration percent calculation - thx Ironship
 * Fix TT family properties export - thx Ironship
 * Feature complete "seconv" (command line conversion tool) 
+* Atomic save and shared lock for NOcrDb - thx Zoltán
+* Add "Merge selected lines bilingual" shortcut - thx jackqk
+* Stamp executable with version from Se.cs in publish steps - thx Zoltán
 
 -----------------------------------------------------------------------------------------------------
 
