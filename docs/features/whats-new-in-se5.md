@@ -65,7 +65,7 @@ See [Text to Speech](text-to-speech.md) for details.
 
 - nOCR and Binary OCR have improved matching and database workflows.
 - Batch Convert can use Binary OCR and can auto-detect several nOCR/Binary OCR settings.
-- PaddleOCR, Ollama OCR, Mistral OCR, Google Lens, Google Vision, Azure Vision, Amazon Rekognition, and Llama.cpp OCR are available in the OCR workflow.
+- PaddleOCR, Ollama OCR, Mistral OCR, Google Lens, Google Vision, and Llama.cpp OCR are available in the OCR workflow.
 - The command-line converter `seconv` can run subtitle conversion and OCR without the GUI.
 
 See [OCR](ocr.md), [Batch Convert](batch-convert.md), and [Command Line (seconv)](../reference/command-line.md).
