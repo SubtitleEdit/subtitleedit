@@ -4,21 +4,37 @@ Subtitle Edit 5 is the Avalonia-based, cross-platform version of Subtitle Edit. 
 
 ## Application Platform
 
-- Cross-platform Avalonia UI for Windows, Linux, and macOS.
-- Updated video playback integration with libmpv/VLC support.
+- Cross-platform Avalonia UI for Windows, Linux, and **macOS** — macOS is a new supported platform in SE 5.
+- Cleaner, High-DPI-aware UI that scales correctly on modern displays.
+- Follow system theme (light, dark, etc.) automatically, or pick a theme manually.
 - New Flatpak packaging work for Linux.
 - More windows remember their size and position.
-- More complete keyboard shortcut coverage, including single-key workflow settings.
+- Settings dialog has a built-in search to quickly find any option.
+- Native pick-folder dialog wherever a folder is needed (was missing in the WinForms 4.x line).
 
-## Video and Waveform
+## Editing and Grid
+
+- Deleting many lines at once in the subtitle grid / list view is dramatically faster.
+- New **Tools → Change formatting** dialog for adding or removing italic, bold, underline, and other formatting across selected lines.
+
+## Video
+
+- New **Video → Re-encode** tool that re-encodes a video into a format better suited for subtitling work.
+- New **Video → Cut video** tool for trimming video segments directly from Subtitle Edit.
+
+## Sync
+
+- **Visual Sync** now includes a waveform, making it easier to pick precise sync points.
+
+## Waveform and Spectrogram
 
 - Waveform toolbar visibility can be toggled from the Video menu.
 - Waveform toolbar buttons can be customized, sorted, imported, and exported.
 - Waveform themes can be imported and exported.
 - Spectrogram display can be generated and combined with the waveform view.
+- **Spectrogram style** can be changed at runtime — no restart needed.
+- **Spectrogram layout** can be changed at runtime as well.
 - Shot change colors can be customized.
-- Embedded subtitle tracks can be added, removed, previewed, and edited for Matroska/WebM videos.
-- Video tools now include burn-in, transparent subtitle video, blank video generation, re-encode, cut, and embedded subtitle editing workflows.
 
 ## Speech to Text
 
@@ -56,14 +72,12 @@ See [OCR](ocr.md), [Batch Convert](batch-convert.md), and [Command Line (seconv)
 
 ## ASSA Tools
 
-- More ASSA advanced effects are available.
-- Custom override tags include history support.
-- ASSA background boxes, resolution resampling, drawing, positioning, style editing, attachments, and image color picking are available as dedicated feature pages.
+- New **Apply advanced effects** tool that generates cinematic and creative ASSA override-tag animations (typewriter, karaoke, bounce-in, neon, glitch, rainbow, starfield, rain, snow, fireflies, and more) with real-time video preview.
+- **Hide layer** — individual ASSA layers can now be hidden in the preview to focus on the lines you are working on.
 
 ## Where to Look Next
 
 - [Main Window](main-window.md) - updated application layout.
 - [Audio Visualizer / Waveform](audio-visualizer.md) - waveform, spectrogram, and shot change tools.
-- [Embedded Subtitles](embedded-subtitles.md) - SE5 Matroska/WebM embedded track editor.
 - [Third-Party Components](../third-party-components.md) - component setup and data folder locations.
 - [Command Line (seconv)](../reference/command-line.md) - headless conversion and OCR.
