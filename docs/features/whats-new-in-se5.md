@@ -33,7 +33,6 @@ Subtitle Edit 5 is the Avalonia-based, cross-platform version of Subtitle Edit. 
 - Waveform themes can be imported and exported.
 - Spectrogram display can be generated and combined with the waveform view.
 - **Spectrogram style** can be changed at runtime — no restart needed.
-- **Spectrogram layout** can be changed at runtime as well.
 - Shot change colors can be customized.
 
 ## Speech to Text
