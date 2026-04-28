@@ -618,6 +618,45 @@ public class InitWaveform
         var flyoutMore = new MenuFlyout();
         buttonMore.Flyout = flyoutMore;
         buttonMore.Click += (s, e) => flyoutMore.ShowAt(buttonMore, true);
+
+        var buttonSplitWaveform = new Button
+        {
+            Content = string.Format(Se.Language.Waveform.SplitWaveformByX, Se.Language.Waveform.SplitWaveformNone),
+            Margin = new Thickness(4, 0, 4, 0),
+            FontSize = 11,
+            VerticalAlignment = VerticalAlignment.Center,
+            [ToolTip.TipProperty] = Se.Language.Waveform.SplitWaveformBy,
+        };
+        var flyoutSplitWaveform = new MenuFlyout();
+        buttonSplitWaveform.Flyout = flyoutSplitWaveform;
+        buttonSplitWaveform.Click += (s, e) => flyoutSplitWaveform.ShowAt(buttonSplitWaveform, true);
+
+        void AddSplitModeItem(string header, WaveformSplitMode mode)
+        {
+            var menuItem = new MenuItem
+            {
+                Header = header,
+            };
+            menuItem.Click += (s, e) =>
+            {
+                if (vm.AudioVisualizer == null)
+                {
+                    return;
+                }
+
+                vm.AudioVisualizer.WaveformSplitMode = mode;
+                buttonSplitWaveform.Content = string.Format(Se.Language.Waveform.SplitWaveformByX, header);
+                vm.AudioVisualizer.InvalidateVisual();
+            };
+            flyoutSplitWaveform.Items.Add(menuItem);
+        }
+
+        AddSplitModeItem(Se.Language.Waveform.SplitWaveformNone, WaveformSplitMode.None);
+        AddSplitModeItem(Se.Language.Waveform.SplitWaveformActor, WaveformSplitMode.Actor);
+        AddSplitModeItem(Se.Language.Waveform.SplitWaveformStyle, WaveformSplitMode.Style);
+        AddSplitModeItem(Se.Language.Waveform.SplitWaveformLayer, WaveformSplitMode.Layer);
+        AddSplitModeItem(Se.Language.Waveform.SplitWaveformAssPositionAlignment, WaveformSplitMode.AssPositionAlignment);
+
         var menuItemResetZoom = new MenuItem
         {
             Header = string.Format(languageHints.ResetZoomAndSpeed, UiUtil.MakeShortcutsString(shortcuts, nameof(vm.ResetWaveformZoomAndSpeedCommand))),
@@ -652,7 +691,8 @@ public class InitWaveform
             toggleButtonCenter,
             buttonMore
         );
-        foreach (var sortedButton in sortableButtons)
+        sortableButtons.Add(new SortedControl { Sort = settingMore.SortOrder + 1, Control = buttonSplitWaveform });
+        foreach (var sortedButton in sortableButtons.OrderBy(p => p.Sort))
         {
             if (sortedButton.Control != null)
             {
