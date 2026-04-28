@@ -32,9 +32,9 @@ Subtitle Edit 5 is the Avalonia-based, cross-platform version of Subtitle Edit. 
 - Waveform toolbar buttons can be customized, sorted, imported, and exported.
 - Waveform themes can be imported and exported.
 - Spectrogram display can be generated and combined with the waveform view.
-- **Spectrogram style** can be changed at runtime — no restart needed.
-- **Spectrogram layout** can be changed at runtime as well.
-- Shot change colors can be customized.
+- **Spectrogram style** can be changed at runtime — no re-generation needed.
+- More and fancier waveform styles to choose from.
+- More customization options for the waveform and spectrogram, including colors, shot-change colors, and visual style.
 
 ## Speech to Text
 
@@ -65,7 +65,7 @@ See [Text to Speech](text-to-speech.md) for details.
 
 - nOCR and Binary OCR have improved matching and database workflows.
 - Batch Convert can use Binary OCR and can auto-detect several nOCR/Binary OCR settings.
-- PaddleOCR, Ollama OCR, Mistral OCR, Google Lens, Google Vision, Azure Vision, Amazon Rekognition, and Llama.cpp OCR are available in the OCR workflow.
+- PaddleOCR, Ollama OCR, Mistral OCR, Google Lens, Google Vision, and Llama.cpp OCR are available in the OCR workflow.
 - The command-line converter `seconv` can run subtitle conversion and OCR without the GUI.
 
 See [OCR](ocr.md), [Batch Convert](batch-convert.md), and [Command Line (seconv)](../reference/command-line.md).
