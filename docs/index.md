@@ -5,6 +5,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 ## Getting Started
 
 - [Overview](overview.md) — What is Subtitle Edit and how to get started
+- [What's New in Subtitle Edit 5](features/whats-new-in-se5.md) — Major changes from the Windows Forms version to the Avalonia-based version
 - [Main Window](features/main-window.md) — Main window layout, areas, and interaction guide
 - [FAQ](faq.md) — Frequently Asked Questions
 
@@ -20,10 +21,12 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 
 ### Tools
 - [Fix Common Errors](features/fix-common-errors.md) — Automatic error detection and fixing
+- [Check and Fix Netflix Errors](features/netflix-errors.md) — Netflix quality checks, proposed fixes, and CSV reports
 - [Batch Convert](features/batch-convert.md) — Convert multiple subtitle files
 - [Change Casing](features/change-casing.md) — Fix casing issues
 - [Change Formatting](features/change-formatting.md) — Modify subtitle formatting
 - [Convert Actors](features/convert-actors.md) — Convert actor/voice labels between styles
+- [Make Empty Translation](features/empty-translation.md) — Create an empty translation column from the current subtitle
 - [Adjust Duration](features/adjust-duration.md) — Adjust subtitle display durations
 - [Apply Duration Limits](features/apply-duration-limits.md) — Enforce min/max duration rules
 - [Bridge Gaps](features/bridge-gaps.md) — Bridge gaps between subtitles
@@ -31,6 +34,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 - [Merge Short Lines](features/merge-short-lines.md) — Merge short subtitle lines
 - [Merge Lines with Same Text](features/merge-same-text.md) — Merge duplicate text lines
 - [Merge Lines with Same Time Codes](features/merge-same-timecodes.md) — Merge lines with identical timings
+- [Renumber](features/renumber.md) — Renumber subtitle lines from a chosen start number
 - [Split/Break Long Lines](features/split-break-long-lines.md) — Break overly long lines
 - [Split Subtitle](features/split-subtitle.md) — Split one subtitle file into multiple files
 - [Join Subtitles](features/join-subtitles.md) — Join multiple subtitle files
@@ -48,9 +52,10 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 ### Video
 - [Video Player](features/video-player.md) — Video playback controls
 - [Audio Visualizer / Waveform](features/audio-visualizer.md) — Waveform display and editing
-- [Speech to Text (Whisper)](features/speech-to-text.md) — Automatic speech recognition
+- [Speech to Text](features/speech-to-text.md) — Automatic speech recognition with Whisper, Qwen3, Parakeet, Crisp ASR, and related engines
 - [Text to Speech](features/text-to-speech.md) — Generate speech from subtitles
 - [Burn-In Subtitles](features/burn-in.md) — Hardcode subtitles into video
+- [Embedded Subtitles](features/embedded-subtitles.md) — Add, remove, preview, and edit subtitle tracks in Matroska/WebM files
 - [Transparent Subtitles](features/transparent-subtitles.md) — Generate transparent subtitle video
 - [Shot Changes](features/shot-changes.md) — Detect and manage shot changes
 - [Blank Video](features/blank-video.md) — Generate a blank video
@@ -64,6 +69,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 ### Spell Check
 - [Spell Check](features/spell-check.md) — Spell checking subtitles
 - [Find Double Words](features/find-double-words.md) — Find repeated words
+- [Find Double Lines](features/find-double-lines.md) — Find consecutive duplicate subtitle lines
 
 ### OCR (Optical Character Recognition)
 - [OCR](features/ocr.md) — Convert image-based subtitles to text (nOCR, Binary OCR, Tesseract)
@@ -107,4 +113,4 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 - [Keyboard Shortcuts Reference](reference/keyboard-shortcuts.md) — Complete list of keyboard shortcuts
 - [Mouse Controls Reference](reference/mouse-controls.md) — Mouse interactions
 - [Command Line (seconv)](reference/command-line.md) — Command-line converter
-- [Third-Party Components](third-party-components.md) — FFmpeg, MPV, Tesseract, Whisper setup guide
+- [Third-Party Components](third-party-components.md) — FFmpeg, MPV, OCR, speech-to-text, and text-to-speech setup guide

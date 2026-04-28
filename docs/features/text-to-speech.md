@@ -20,11 +20,17 @@ Generate speech audio from subtitle text using various TTS engines.
 ## Supported Engines
 
 - **Piper** — Local, open-source TTS
+- **Edge-TTS** — Microsoft Edge online voices
 - **AllTalk** — Local TTS server
 - **ElevenLabs** — Cloud-based, high-quality voices (requires API key)
 - **Azure Cognitive Services** — Microsoft cloud TTS (requires API key and region)
+- **Mistral TTS** — Cloud-based Mistral speech generation (requires API key)
 - **Google Cloud** — Google cloud TTS (requires key file)
+- **Qwen3 TTS** — Local downloadable Qwen3 TTS server and models
+- **Kokoro TTS** — Local downloadable Kokoro TTS server and models
 - **Murf.ai** — Cloud TTS (requires API key)
+
+Local downloadable engines are installed into the Subtitle Edit data folder when you accept the download prompt.
 
 ## Engine Settings
 
@@ -34,6 +40,29 @@ Some engines require additional configuration:
 - **Region** — Select the Azure region (for Azure engine)
 - **Model** — Select the voice model
 - **Key file** — Browse for Google Cloud service account key file
+
+## Local SE5 Engines
+
+### Qwen3 TTS
+
+Qwen3 TTS runs a local server. Subtitle Edit can download the engine and the selected model on first use.
+
+- Available model choices include **0.6B** and **1.7B Base**.
+- The model download also requires the tokenizer model.
+- Qwen3 TTS supports imported reference WAV voices. Imported voices appear in the voice dropdown.
+- On Windows, Subtitle Edit can offer CPU or Vulkan builds depending on availability.
+
+### Kokoro TTS
+
+Kokoro TTS runs a local server with downloadable models.
+
+- Subtitle Edit downloads the engine and model files when needed.
+- Voice names are available immediately from the bundled voice list and can be refreshed from the running server.
+- It is a good choice when you want a local, multilingual TTS engine without an API key.
+
+### Mistral TTS
+
+Mistral TTS is configured with an API key and model selection. The selected model is remembered in settings.
 
 ## Review Audio Clips
 

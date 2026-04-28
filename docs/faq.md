@@ -69,7 +69,7 @@ You can also download FFmpeg in **Options → Settings**.
 ## Speech to Text
 
 ### What speech-to-text engines are supported?
-Subtitle Edit supports several Whisper-based engines:
+Subtitle Edit supports several local and downloadable speech-to-text engines:
 - **Whisper.cpp** — Cross-platform, CPU-based
 - **Whisper.cpp (cuBLAS)** — GPU-accelerated (Windows, NVIDIA)
 - **Whisper.cpp (Vulkan)** — GPU-accelerated via Vulkan (Windows)
@@ -77,7 +77,8 @@ Subtitle Edit supports several Whisper-based engines:
 - **CTranslate2** — Fast CPU/GPU-based 
 - **Const-me's Whisper** — DirectX-based (Windows)
 - **OpenAI Whisper** — Original Python implementation
-- **Chat LLM cpp** — LLM-based transcription (Windows, Linux)
+- **Chat LLM.cpp** — LLM-based transcription (Windows, Linux, macOS Apple Silicon)
+- **Qwen3 ASR CPP**, **Parakeet.cpp**, and **Crisp ASR** — Additional local engines with downloadable models
 
 ### How do I use Speech to Text?
 1. Open a video file
