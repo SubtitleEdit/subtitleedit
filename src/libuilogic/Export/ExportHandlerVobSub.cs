@@ -2,8 +2,6 @@ using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.VobSub;
 
-using System;
-
 namespace Nikse.SubtitleEdit.UiLogic.Export;
 
 public class ExportHandlerVobSub : IExportHandler

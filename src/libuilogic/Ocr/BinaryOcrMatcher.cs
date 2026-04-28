@@ -1,7 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
-using System;
-using System.Collections.Generic;
-using System.Threading;
 
 namespace Nikse.SubtitleEdit.UiLogic.Ocr;
 

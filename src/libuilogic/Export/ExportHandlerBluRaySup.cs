@@ -1,9 +1,6 @@
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 
-using System;
-using System.IO;
-
 namespace Nikse.SubtitleEdit.UiLogic.Export;
 
 public class ExportHandlerBluRaySup : IExportHandler

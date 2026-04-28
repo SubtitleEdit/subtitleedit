@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Nikse.SubtitleEdit.UiLogic.Ocr;
-
-namespace Nikse.SubtitleEdit.UiLogic.Ocr;
+﻿namespace Nikse.SubtitleEdit.UiLogic.Ocr;
 
 public class NOcrCaseFixer : INOcrCaseFixer
 {

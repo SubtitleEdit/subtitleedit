@@ -1,9 +1,4 @@
-﻿
-using Nikse.SubtitleEdit.UiLogic.Ocr;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 
 namespace Nikse.SubtitleEdit.UiLogic.Ocr;
 
