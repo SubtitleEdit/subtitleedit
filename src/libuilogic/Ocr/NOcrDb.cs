@@ -29,102 +29,113 @@ public class NOcrDb
 
     public List<NOcrChar> OcrCharactersCombined => OcrCharacters.Concat(OcrCharactersExpanded).ToList();
 
-    private Lock SaveLock = new();
+    private readonly Lock _lock = new();
+
     public void Save()
     {
-        lock (SaveLock)
+        lock (_lock)
         {
-            if (File.Exists(FileName))
+            var tempFileName = FileName + ".tmp";
+
+            using (var gz = new GZipStream(File.Create(tempFileName), CompressionMode.Compress))
             {
-                File.Delete(FileName);
+                var versionBuffer = Encoding.ASCII.GetBytes(Version);
+                gz.Write(versionBuffer, 0, versionBuffer.Length);
+
+                foreach (var ocrChar in OcrCharacters)
+                {
+                    ocrChar.Save(gz);
+                }
+
+                foreach (var ocrChar in OcrCharactersExpanded)
+                {
+                    ocrChar.Save(gz);
+                }
             }
 
-            using Stream stream = new GZipStream(File.OpenWrite(FileName), CompressionMode.Compress);
-            var versionBuffer = Encoding.ASCII.GetBytes(Version);
-            stream.Write(versionBuffer, 0, versionBuffer.Length);
-
-            foreach (var ocrChar in OcrCharacters)
-            {
-                ocrChar.Save(stream);
-            }
-
-            foreach (var ocrChar in OcrCharactersExpanded)
-            {
-                ocrChar.Save(stream);
-            }
+            File.Move(tempFileName, FileName, overwrite: true);
         }
     }
 
     public void LoadOcrCharacters()
     {
-        var list = new List<NOcrChar>();
-        var listExpanded = new List<NOcrChar>();
-
-        if (!File.Exists(FileName))
+        lock (_lock)
         {
-            OcrCharacters = list;
-            OcrCharactersExpanded = listExpanded;
-            return;
-        }
+            var list = new List<NOcrChar>();
+            var listExpanded = new List<NOcrChar>();
 
-        byte[] buffer;
-        using (var stream = new MemoryStream())
-        {
-            using (var gz = new GZipStream(File.OpenRead(FileName), CompressionMode.Decompress))
+            if (!File.Exists(FileName))
             {
-                gz.CopyTo(stream);
+                OcrCharacters = list;
+                OcrCharactersExpanded = listExpanded;
+                return;
             }
 
-            buffer = stream.ToArray();
-        }
-
-        var position = 2;
-        var done = false;
-        while (!done)
-        {
-            var ocrChar = new NOcrChar(ref position, buffer);
-            if (ocrChar.LoadedOk)
+            byte[] buffer;
+            using (var stream = new MemoryStream())
             {
-                if (ocrChar.ExpandCount > 0)
+                using (var gz = new GZipStream(File.OpenRead(FileName), CompressionMode.Decompress))
                 {
-                    listExpanded.Add(ocrChar);
+                    gz.CopyTo(stream);
+                }
+
+                buffer = stream.ToArray();
+            }
+
+            var position = 2;
+            var done = false;
+            while (!done)
+            {
+                var ocrChar = new NOcrChar(ref position, buffer);
+                if (ocrChar.LoadedOk)
+                {
+                    if (ocrChar.ExpandCount > 0)
+                    {
+                        listExpanded.Add(ocrChar);
+                    }
+                    else
+                    {
+                        list.Add(ocrChar);
+                    }
                 }
                 else
                 {
-                    list.Add(ocrChar);
+                    done = true;
                 }
             }
-            else
-            {
-                done = true;
-            }
-        }
 
-        OcrCharacters = list;
-        OcrCharactersExpanded = listExpanded;
+            OcrCharacters = list;
+            OcrCharactersExpanded = listExpanded;
+        }
     }
 
     public void Add(NOcrChar ocrChar)
     {
-        if (ocrChar.ExpandCount > 0)
+        lock (_lock)
         {
-            OcrCharactersExpanded.Insert(0, ocrChar);
-        }
-        else
-        {
-            OcrCharacters.Insert(0, ocrChar);
+            if (ocrChar.ExpandCount > 0)
+            {
+                OcrCharactersExpanded.Insert(0, ocrChar);
+            }
+            else
+            {
+                OcrCharacters.Insert(0, ocrChar);
+            }
         }
     }
 
     public void Remove(NOcrChar ocrChar)
     {
-        if (ocrChar.ExpandCount > 0)
+        lock (_lock)
         {
-            OcrCharactersExpanded.Remove(ocrChar);
-        }
-        else
-        {
-            OcrCharacters.Remove(ocrChar);
+            if (ocrChar.ExpandCount > 0)
+            {
+                OcrCharactersExpanded.Remove(ocrChar);
+            }
+            else
+            {
+                OcrCharacters.Remove(ocrChar);
+            }
         }
     }
 
