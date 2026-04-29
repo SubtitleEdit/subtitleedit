@@ -2,7 +2,7 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-beta20 (xth April 2026)
+v5.0.0-beta20 (29th April 2026)
 
 * Add menu toggle for waveform toolbar - thx Ironship
 * Add auto-language for CrispASR glm/parakeet/Qwen3
@@ -20,6 +20,9 @@ v5.0.0-beta20 (xth April 2026)
 * Fix adjust duration percent calculation - thx Ironship
 * Fix TT family properties export - thx Ironship
 * Feature complete "seconv" (command line conversion tool) 
+* Add read suppor of HD SUP
+* Prompt before saving blank text for OCR character - thx Zoltán
+* Update Japanese translation - thx hisui3393
 
 -----------------------------------------------------------------------------------------------------
 
