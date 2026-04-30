@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
@@ -16,6 +17,8 @@ namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
 public static class InitMenu
 {
+    private static readonly HashSet<MenuItem> MenuItemsWaitingToClose = new();
+
     public static void Make(MainViewModel vm)
     {
         var l = Se.Language.Main.Menu;
@@ -866,6 +869,56 @@ public static class InitMenu
         });
 
         menu.Items.Add(menuItemAssaTools);
+        InstallAutoCloseOnPointerLeave(menu);
+    }
+
+    private static void InstallAutoCloseOnPointerLeave(Menu menu)
+    {
+        foreach (var item in menu.Items.OfType<MenuItem>())
+        {
+            item.PointerExited += (_, _) =>
+            {
+                CloseWhenPointerLeavesMenu(item);
+            };
+        }
+    }
+
+    private static void CloseWhenPointerLeavesMenu(MenuItem item)
+    {
+        if (!MenuItemsWaitingToClose.Add(item))
+        {
+            return;
+        }
+
+        CheckPointerLeaveMenu(item);
+    }
+
+    private static void CheckPointerLeaveMenu(MenuItem item)
+    {
+        DispatcherTimer.RunOnce(() =>
+        {
+            if (!item.IsSubMenuOpen)
+            {
+                MenuItemsWaitingToClose.Remove(item);
+                return;
+            }
+
+            if (!item.IsPointerOver && !IsPointerOverSubMenu(item))
+            {
+                item.IsSubMenuOpen = false;
+                MenuItemsWaitingToClose.Remove(item);
+                return;
+            }
+
+            CheckPointerLeaveMenu(item);
+        }, TimeSpan.FromMilliseconds(120));
+    }
+
+    private static bool IsPointerOverSubMenu(MenuItem item)
+    {
+        var menuItemInterface = item.GetType().GetInterfaces().FirstOrDefault(p => p.FullName == "Avalonia.Controls.IMenuItem");
+        var property = menuItemInterface?.GetProperty("IsPointerOverSubMenu");
+        return property?.GetValue(item) is true;
     }
 
     public static void UpdateRecentFiles(MainViewModel vm)
