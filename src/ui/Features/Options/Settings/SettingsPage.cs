@@ -3,17 +3,20 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Options.Settings;
 
@@ -623,9 +626,9 @@ public class SettingsPage : UserControl
                     UiUtil.MakeLabel(Se.Language.General.RequiresRestart).WithMarginLeft(5).WithOpacity(0.6),
                 }
             }),
-            new SettingsItem(Se.Language.Options.Settings.UiFont, () => UiUtil.MakeComboBox(_vm.FontNames, _vm, nameof(_vm.SelectedFontName))),
+            new SettingsItem(Se.Language.Options.Settings.UiFont, () => MakeSearchableFontNameBox(_vm.FontNames, _vm, nameof(_vm.SelectedFontName))),
             new SettingsItem(Se.Language.Options.Settings.SubtitleTextBoxAndGridFontName,
-                () => UiUtil.MakeComboBox(_vm.FontNames, _vm, nameof(_vm.SubtitleTextBoxAndGridFontName))),
+                () => MakeSearchableFontNameBox(_vm.FontNames, _vm, nameof(_vm.SubtitleTextBoxAndGridFontName))),
             MakeNumericSetting(Se.Language.Options.Settings.SubtitleGridFontSize, nameof(_vm.SubtitleGridFontSize)),
             MakeCheckboxSetting(Se.Language.Options.Settings.SubtitleGridTextSingleLine, nameof(_vm.SubtitleGridTextSingleLine)),
             new SettingsItem(Se.Language.Options.Settings.SubtitleGridShowFormatting, () => UiUtil.MakeComboBox(_vm.SubtitleGridFormattings, _vm, nameof(_vm.SubtitleGridFormatting))),
@@ -785,7 +788,7 @@ public class SettingsPage : UserControl
     private Control MakeMpvPreviewSettings(SettingsViewModel vm)
     {
         var labelFontName = UiUtil.MakeLabel(Se.Language.General.FontName);
-        var comboBoxFontName = UiUtil.MakeComboBox(vm.Fonts, vm, nameof(vm.MpvPreviewFontName)).WithMinWidth(150);
+        var comboBoxFontName = MakeSearchableFontNameBox(vm.Fonts, vm, nameof(vm.MpvPreviewFontName));
 
         var labelFontSize = UiUtil.MakeLabel(Se.Language.General.FontSize);
         var numericUpDownFontSize = UiUtil.MakeNumericUpDownOneDecimal(1, 1000, 130, vm, nameof(vm.MpvPreviewFontSize));
@@ -861,6 +864,164 @@ public class SettingsPage : UserControl
         return UiUtil.MakeBorderForControl(grid);
     }
 
+    private static AutoCompleteBox MakeSearchableFontNameBox(IEnumerable<string> fontNames, SettingsViewModel vm, string propertyName)
+    {
+        const double fontBoxWidth = 240;
+        var box = new AutoCompleteBox
+        {
+            DataContext = vm,
+            Width = fontBoxWidth,
+            MinWidth = fontBoxWidth,
+            MaxWidth = fontBoxWidth,
+            ItemsSource = fontNames,
+            MinimumPrefixLength = 0,
+            PlaceholderText = Se.Language.General.SearchFontNames,
+            [!AutoCompleteBox.TextProperty] = new Binding(propertyName) { Mode = BindingMode.TwoWay },
+            ItemTemplate = new FuncDataTemplate<string>((fontName, _) => MakeFontSuggestionTextBlock(fontName, fontBoxWidth), true),
+        };
+        KeepFontDropDownOpen(box, FontMatches);
+        return box;
+    }
+
+    private static Control MakeFontSuggestionTextBlock(string? fontName, double width)
+    {
+        var border = new Border
+        {
+            Width = width - 8,
+            Height = 18,
+            Background = Brushes.Transparent,
+            Margin = new Thickness(-5, -4, 0, -4),
+            Padding = new Thickness(2, 0, 0, 0),
+            Child = new TextBlock
+            {
+                Text = fontName,
+                VerticalAlignment = VerticalAlignment.Center,
+                TextTrimming = TextTrimming.CharacterEllipsis,
+            },
+        };
+        border.AddHandler(InputElement.PointerWheelChangedEvent, (s, e) => UiUtil.ScrollDropDownItemOnPointerWheel(e.Source ?? s, e));
+        return border;
+    }
+
+    private static bool FontMatches(string? searchText, string? fontName)
+    {
+        return string.IsNullOrEmpty(searchText) ||
+               fontName?.Contains(searchText, StringComparison.CurrentCultureIgnoreCase) == true;
+    }
+
+    private static void KeepFontDropDownOpen(AutoCompleteBox box, Func<string?, string?, bool> filter)
+    {
+        var userActivated = false;
+        var showAllForInitialOpen = false;
+        var initialOpenText = string.Empty;
+        var skipNextPointerRelease = false;
+        var keepOpenForTextBoxClick = false;
+
+        box.TextFilter = (searchText, itemText) =>
+        {
+            if (showAllForInitialOpen && string.Equals(searchText, initialOpenText, StringComparison.CurrentCulture))
+            {
+                return true;
+            }
+
+            return filter(searchText, itemText);
+        };
+
+        void OpenDropDown()
+        {
+            if (!userActivated)
+            {
+                return;
+            }
+
+            UiUtil.StabilizeDropDownWidth(box, box.ItemsSource);
+            Dispatcher.UIThread.Post(() =>
+            {
+                box.IsDropDownOpen = true;
+                UiUtil.StabilizeDropDownWidth(box, box.ItemsSource);
+            }, DispatcherPriority.Background);
+            DispatcherTimer.RunOnce(() =>
+            {
+                box.IsDropDownOpen = true;
+                UiUtil.StabilizeDropDownWidth(box, box.ItemsSource);
+            }, TimeSpan.FromMilliseconds(10));
+            DispatcherTimer.RunOnce(() =>
+            {
+                box.IsDropDownOpen = true;
+                UiUtil.StabilizeDropDownWidth(box, box.ItemsSource);
+            }, TimeSpan.FromMilliseconds(50));
+        }
+
+        bool IsPointerInsideFontSearchBox(PointerEventArgs e)
+        {
+            return e.Source is Visual visual &&
+                   (ReferenceEquals(visual, box) || visual.GetVisualAncestors().Contains(box));
+        }
+
+        box.AddHandler(InputElement.PointerReleasedEvent, (_, e) =>
+        {
+            if (skipNextPointerRelease)
+            {
+                skipNextPointerRelease = false;
+                return;
+            }
+
+            userActivated = true;
+            showAllForInitialOpen = true;
+            initialOpenText = box.Text ?? string.Empty;
+            if (keepOpenForTextBoxClick)
+            {
+                e.Handled = true;
+                keepOpenForTextBoxClick = false;
+            }
+
+            OpenDropDown();
+        }, RoutingStrategies.Tunnel, true);
+        box.AddHandler(InputElement.PointerPressedEvent, (_, e) =>
+        {
+            if (box.IsDropDownOpen && e.ClickCount == 1 && IsPointerInsideFontSearchBox(e))
+            {
+                keepOpenForTextBoxClick = true;
+                e.Handled = true;
+                UiUtil.StabilizeDropDownWidth(box, box.ItemsSource);
+                return;
+            }
+
+            if (e.ClickCount > 1)
+            {
+                skipNextPointerRelease = true;
+                userActivated = true;
+                showAllForInitialOpen = true;
+                initialOpenText = box.Text ?? string.Empty;
+                Dispatcher.UIThread.Post(() =>
+                {
+                    box.GetVisualDescendants().OfType<TextBox>().FirstOrDefault()?.SelectAll();
+                    OpenDropDown();
+                });
+            }
+        }, RoutingStrategies.Tunnel, true);
+        box.DropDownOpening += (_, _) => UiUtil.StabilizeDropDownWidth(box, box.ItemsSource);
+        box.DropDownClosing += (_, e) =>
+        {
+            if (!keepOpenForTextBoxClick)
+            {
+                return;
+            }
+
+            e.Cancel = true;
+            keepOpenForTextBoxClick = false;
+            UiUtil.StabilizeDropDownWidth(box, box.ItemsSource);
+        };
+        box.TextChanged += (_, _) =>
+        {
+            if (!string.Equals(box.Text ?? string.Empty, initialOpenText, StringComparison.CurrentCulture))
+            {
+                showAllForInitialOpen = false;
+            }
+
+            OpenDropDown();
+        };
+    }
     private static Border MakeBorderView(SettingsViewModel vm)
     {
         var grid = new Grid

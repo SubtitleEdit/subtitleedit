@@ -45,7 +45,7 @@ public partial class CustomContinuationStyleViewModel : ObservableObject
         {
             string.Empty,
             "...",
-            "…",
+            "\u2026",
             "..",
             "-",
         });

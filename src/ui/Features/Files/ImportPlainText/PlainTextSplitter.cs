@@ -121,7 +121,7 @@ public static class PlainTextSplitter
             var ch = text[i];
             var prevCh = i > 0 ? text[i - 1] : ' ';
 
-            if (prevCh == '.' || prevCh == '!' || prevCh == '?' || prevCh == '…')
+            if (prevCh == '.' || prevCh == '!' || prevCh == '?' || prevCh == '\u2026')
             {
                 if (char.IsWhiteSpace(ch) || i == text.Length - 1)
                 {
@@ -174,6 +174,6 @@ public static class PlainTextSplitter
         }
 
         var prevCh = text[position - 1];
-        return prevCh == '.' || prevCh == '!' || prevCh == '?' || prevCh == '…';
+        return prevCh == '.' || prevCh == '!' || prevCh == '?' || prevCh == '\u2026';
     }
 }

@@ -140,6 +140,8 @@ namespace Nikse.SubtitleEdit
             {
                 UiUtil.SetFontName(Se.Settings.Appearance.FontName);
             }
+
+            UiUtil.RegisterStableDropDownWidths();
         }
 
         private static void SetupNativeMenu(Application app, ClassicDesktopStyleApplicationLifetime lifetime)

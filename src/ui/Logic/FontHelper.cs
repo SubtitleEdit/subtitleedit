@@ -2,6 +2,7 @@ using Avalonia.Media;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -98,10 +99,17 @@ public static class FontHelper
                     continue;
                 }
 
-                var win32Name = ReadWin32FamilyName(typeface);
-                if (!string.IsNullOrEmpty(win32Name) && !map.ContainsKey(win32Name))
+                foreach (var win32Name in ReadWin32FamilyNames(typeface).Select(p => p.Name))
                 {
-                    map[win32Name] = typeface.FamilyName;
+                    if (!string.IsNullOrEmpty(win32Name) && !map.ContainsKey(win32Name))
+                    {
+                        map[win32Name] = typeface.FamilyName;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(typeface.FamilyName) && !map.ContainsKey(typeface.FamilyName))
+                {
+                    map[typeface.FamilyName] = typeface.FamilyName;
                 }
             }
         }
@@ -116,6 +124,48 @@ public static class FontHelper
     /// </summary>
     private static string? ReadWin32FamilyName(SKTypeface typeface)
     {
+        var names = ReadWin32FamilyNames(typeface);
+        if (names.Count == 0)
+        {
+            return null;
+        }
+
+        var culture = CultureInfo.CurrentUICulture;
+        var exactCultureName = names.FirstOrDefault(p => p.LanguageId == culture.LCID).Name;
+        if (!string.IsNullOrEmpty(exactCultureName))
+        {
+            return exactCultureName;
+        }
+
+        var neutralCultureName = names.FirstOrDefault(p => IsSameNeutralLanguage(p.LanguageId, culture.TwoLetterISOLanguageName)).Name;
+        if (!string.IsNullOrEmpty(neutralCultureName))
+        {
+            return neutralCultureName;
+        }
+
+        var englishName = names.FirstOrDefault(p => p.LanguageId == 0x0409).Name;
+        if (!string.IsNullOrEmpty(englishName))
+        {
+            return englishName;
+        }
+
+        return names[0].Name;
+    }
+
+    private static bool IsSameNeutralLanguage(int languageId, string neutralLanguage)
+    {
+        try
+        {
+            return CultureInfo.GetCultureInfo(languageId).TwoLetterISOLanguageName == neutralLanguage;
+        }
+        catch (CultureNotFoundException)
+        {
+            return false;
+        }
+    }
+
+    private static List<(string Name, int LanguageId)> ReadWin32FamilyNames(SKTypeface typeface)
+    {
         byte[]? data;
         try
         {
@@ -125,18 +175,18 @@ public static class FontHelper
         {
             // Type1 (.pfb) and other non-OpenType fonts do not have a 'name' table;
             // SkiaSharp throws instead of returning null for these typefaces.
-            return null;
+            return new List<(string Name, int LanguageId)>();
         }
 
         if (data == null || data.Length < 6)
         {
-            return null;
+            return new List<(string Name, int LanguageId)>();
         }
 
         // name table header: format(2) count(2) stringOffset(2)
         var count = (data[2] << 8) | data[3];
         var stringOffset = (data[4] << 8) | data[5];
-        string? fallback = null;
+        var names = new List<(string Name, int LanguageId)>();
 
         for (var i = 0; i < count; i++)
         {
@@ -146,12 +196,12 @@ public static class FontHelper
                 break;
             }
 
-            int platformId = (data[r] << 8) | data[r + 1];  // 3 = Windows
-            int encodingId = (data[r + 2] << 8) | data[r + 3];  // 1 = Unicode BMP
-            int languageId = (data[r + 4] << 8) | data[r + 5];
-            int nameId = (data[r + 6] << 8) | data[r + 7];  // 1 = Win32 Family Name
-            int length = (data[r + 8] << 8) | data[r + 9];
-            int strOffset = (data[r + 10] << 8) | data[r + 11];
+            var platformId = (data[r] << 8) | data[r + 1]; // 3 = Windows
+            var encodingId = (data[r + 2] << 8) | data[r + 3]; // 1 = Unicode BMP
+            var languageId = (data[r + 4] << 8) | data[r + 5];
+            var nameId = (data[r + 6] << 8) | data[r + 7]; // 1 = Win32 Family Name
+            var length = (data[r + 8] << 8) | data[r + 9];
+            var strOffset = (data[r + 10] << 8) | data[r + 11];
 
             if (platformId != 3 || encodingId != 1 || nameId != 1)
             {
@@ -165,14 +215,12 @@ public static class FontHelper
             }
 
             var name = Encoding.BigEndianUnicode.GetString(data, pos, length);
-            if (languageId == 0x0409)  // English (US) — prefer this over other languages
+            if (!names.Any(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
             {
-                return name;
+                names.Add((name, languageId));
             }
-
-            fallback ??= name;
         }
 
-        return fallback;
+        return names;
     }
 }

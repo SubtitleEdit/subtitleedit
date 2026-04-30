@@ -57,6 +57,7 @@ public partial class AssaStylesViewModel : ObservableObject
     private Subtitle _subtitle;
     private string _subtitleFileName;
     private readonly System.Timers.Timer _timerUpdatePreview;
+    private string? _previewFontName;
 
     public AssaStylesViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
@@ -82,6 +83,11 @@ public partial class AssaStylesViewModel : ObservableObject
         _timerUpdatePreview = new System.Timers.Timer(500);
         _timerUpdatePreview.Elapsed += (s, e) =>
         {
+            if (_previewFontName != null)
+            {
+                return;
+            }
+
             _timerUpdatePreview.Stop();
             UpdatePreview();
             _timerUpdatePreview.Start();
@@ -652,6 +658,7 @@ public partial class AssaStylesViewModel : ObservableObject
         IsFileStyleSelected = SelectedFileStyle != null;
         IsTakeUsagesFromVisible = FileStyleGrid.SelectedItems.Count == 1;
 
+        UpdatePreview();
         _timerUpdatePreview.Start();
     }
 
@@ -729,14 +736,15 @@ public partial class AssaStylesViewModel : ObservableObject
         var text = "This is a test";
 
         var fontSize = (float)style.FontSize;
-        var libAssFontName = FontHelper.GetSkiaFontNameFromLibAssaFontName(style.FontName);
+        var fontName = string.IsNullOrWhiteSpace(_previewFontName) ? style.FontName : _previewFontName;
+        var libAssFontName = FontHelper.GetSkiaFontNameFromLibAssaFontName(fontName);
         SKBitmap bitmap;
 
         if (style.BorderStyle.Style == BorderStyleType.BoxPerLine)
         {
             bitmap = TextToImageGenerator.GenerateImageWithPadding(
                 text,
-                style.FontName,
+                fontName,
                 fontSize,
                 style.Bold,
                 style.ColorPrimary.ToSKColor(),
@@ -784,6 +792,28 @@ public partial class AssaStylesViewModel : ObservableObject
         }
 
         ImagePreview = bitmap.ToAvaloniaBitmap();
+    }
+
+    internal void PreviewFontName(string? fontName)
+    {
+        if (string.Equals(_previewFontName, fontName, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        _previewFontName = fontName;
+        UpdatePreview();
+    }
+
+    internal void ClearPreviewFontName()
+    {
+        if (_previewFontName == null)
+        {
+            return;
+        }
+
+        _previewFontName = null;
+        UpdatePreview();
     }
 
     internal void FileStylesChanged(object? sender, SelectionChangedEventArgs e)

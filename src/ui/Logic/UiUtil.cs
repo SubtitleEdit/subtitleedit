@@ -1,13 +1,17 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Styling;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -16,6 +20,7 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Optris.Icons.Avalonia;
 using SkiaSharp;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -31,8 +36,150 @@ public static class UiUtil
     public const int WindowMarginWidth = 12;
     public const int CornerRadius = 4;
     public const int SplitterWidthOrHeight = 4;
+    private static bool _stableDropDownWidthsRegistered;
 
     public static ControlTheme DataGridNoBorderCellTheme => GetDataGridNoBorderCellTheme();
+
+    public static void RegisterStableDropDownWidths()
+    {
+        if (_stableDropDownWidthsRegistered)
+        {
+            return;
+        }
+
+        _stableDropDownWidthsRegistered = true;
+
+        ComboBox.IsDropDownOpenProperty.Changed.AddClassHandler<ComboBox>((comboBox, e) =>
+        {
+            if (e.NewValue is bool isOpen && isOpen)
+            {
+                StabilizeDropDownWidth(comboBox, comboBox.ItemsSource);
+            }
+        });
+
+        AutoCompleteBox.IsDropDownOpenProperty.Changed.AddClassHandler<AutoCompleteBox>((box, e) =>
+        {
+            if (e.NewValue is bool isOpen && isOpen)
+            {
+                StabilizeDropDownWidth(box, box.ItemsSource);
+            }
+        });
+    }
+
+    public static void StabilizeDropDownWidth(Control owner, IEnumerable? items)
+    {
+        TryStabilizeDropDownWidth(owner, items, 12);
+    }
+
+    private static void TryStabilizeDropDownWidth(Control owner, IEnumerable? items, int remainingAttempts)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            var popup = GetAutoCompleteBoxPopup(owner) ??
+                        owner.GetVisualDescendants().OfType<Popup>()
+                            .Concat(owner.GetLogicalDescendants().OfType<Popup>())
+                            .FirstOrDefault();
+            if (popup == null)
+            {
+                if (remainingAttempts > 0)
+                {
+                    DispatcherTimer.RunOnce(
+                        () => TryStabilizeDropDownWidth(owner, items, remainingAttempts - 1),
+                        TimeSpan.FromMilliseconds(25));
+                }
+
+                return;
+            }
+
+            var width = CalculateDropDownWidth(owner, items);
+            popup.PlacementTarget = owner;
+            popup.Placement = PlacementMode.BottomEdgeAlignedLeft;
+            popup.HorizontalOffset = 0;
+            popup.Width = width;
+            popup.MinWidth = width;
+            popup.MaxWidth = width;
+
+            if (popup.Child is Control popupChild)
+            {
+                popupChild.Width = width;
+                popupChild.MinWidth = width;
+                popupChild.MaxWidth = width;
+            }
+
+            if (remainingAttempts > 0)
+            {
+                DispatcherTimer.RunOnce(
+                    () => TryStabilizeDropDownWidth(owner, items, remainingAttempts - 1),
+                    TimeSpan.FromMilliseconds(25));
+            }
+        }, DispatcherPriority.Background);
+    }
+
+    private static Popup? GetAutoCompleteBoxPopup(Control owner)
+    {
+        if (owner is not AutoCompleteBox autoCompleteBox)
+        {
+            return null;
+        }
+
+        return typeof(AutoCompleteBox)
+            .GetProperty("DropDownPopup", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+            ?.GetValue(autoCompleteBox) as Popup;
+    }
+
+    private static double CalculateDropDownWidth(Control owner, IEnumerable? items)
+    {
+        var width = owner.Bounds.Width;
+        if (double.IsNaN(width) || width <= 0)
+        {
+            width = Math.Max(owner.Width, owner.MinWidth);
+        }
+
+        var maxTextWidth = 0.0;
+        if (items != null)
+        {
+            var fontFamily = owner.GetValue(TextBlock.FontFamilyProperty);
+            var fontSize = owner.GetValue(TextBlock.FontSizeProperty);
+            var typeface = new Typeface(fontFamily);
+            foreach (var item in items.Cast<object?>().Take(500))
+            {
+                var text = item?.ToString();
+                if (string.IsNullOrEmpty(text))
+                {
+                    continue;
+                }
+
+                var formattedText = new FormattedText(
+                    text,
+                    System.Globalization.CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight,
+                    typeface,
+                    fontSize,
+                    Brushes.Black);
+
+                maxTextWidth = Math.Max(maxTextWidth, formattedText.Width);
+            }
+        }
+
+        const double dropDownChromePadding = 56;
+        const double maxReasonableDropDownWidth = 560;
+        return Math.Min(Math.Max(width, maxTextWidth + dropDownChromePadding), maxReasonableDropDownWidth);
+    }
+
+    public static void ScrollDropDownItemOnPointerWheel(object? source, PointerWheelEventArgs e)
+    {
+        var visual = source as Visual;
+        var scrollViewer = visual as ScrollViewer ?? visual?.GetVisualAncestors().OfType<ScrollViewer>().FirstOrDefault();
+        if (scrollViewer != null)
+        {
+            const double wheelStep = 48;
+            var maxOffset = Math.Max(0, scrollViewer.Extent.Height - scrollViewer.Viewport.Height);
+            var offsetY = Math.Clamp(scrollViewer.Offset.Y - e.Delta.Y * wheelStep, 0, maxOffset);
+            scrollViewer.Offset = new Vector(scrollViewer.Offset.X, offsetY);
+        }
+
+        e.Handled = true;
+    }
 
     private static ControlTheme GetDataGridNoBorderCellTheme()
     {
