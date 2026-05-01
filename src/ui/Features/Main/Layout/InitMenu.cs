@@ -12,15 +12,22 @@ using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
 public static class InitMenu
 {
-    private static readonly HashSet<MenuItem> MenuItemsWaitingToClose = new();
+    private static readonly Dictionary<MenuItem, DispatcherTimer> MenuCloseTimers = new();
+    private static readonly PropertyInfo? IsPointerOverSubMenuProperty =
+        typeof(MenuItem)
+            .GetInterfaces()
+            .FirstOrDefault(p => p.FullName == "Avalonia.Controls.IMenuItem")
+            ?.GetProperty("IsPointerOverSubMenu");
 
     public static void Make(MainViewModel vm)
     {
+        StopMenuCloseTimers();
         var l = Se.Language.Main.Menu;
 
         vm.MenuReopen = new MenuItem
@@ -885,40 +892,63 @@ public static class InitMenu
 
     private static void CloseWhenPointerLeavesMenu(MenuItem item)
     {
-        if (!MenuItemsWaitingToClose.Add(item))
+        if (MenuCloseTimers.ContainsKey(item))
         {
             return;
         }
 
-        CheckPointerLeaveMenu(item);
+        var timer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(120),
+        };
+        timer.Tick += (_, _) => CheckPointerLeaveMenu(item);
+        MenuCloseTimers[item] = timer;
+        timer.Start();
     }
 
     private static void CheckPointerLeaveMenu(MenuItem item)
     {
-        DispatcherTimer.RunOnce(() =>
+        if (!MenuCloseTimers.ContainsKey(item))
         {
-            if (!item.IsSubMenuOpen)
-            {
-                MenuItemsWaitingToClose.Remove(item);
-                return;
-            }
+            return;
+        }
 
-            if (!item.IsPointerOver && !IsPointerOverSubMenu(item))
-            {
-                item.IsSubMenuOpen = false;
-                MenuItemsWaitingToClose.Remove(item);
-                return;
-            }
+        if (!item.IsSubMenuOpen)
+        {
+            StopMenuCloseTimer(item);
+            return;
+        }
 
-            CheckPointerLeaveMenu(item);
-        }, TimeSpan.FromMilliseconds(120));
+        if (!item.IsPointerOver && !IsPointerOverSubMenu(item))
+        {
+            item.IsSubMenuOpen = false;
+            StopMenuCloseTimer(item);
+        }
+    }
+
+    private static void StopMenuCloseTimer(MenuItem item)
+    {
+        if (!MenuCloseTimers.Remove(item, out var timer))
+        {
+            return;
+        }
+
+        timer.Stop();
+    }
+
+    private static void StopMenuCloseTimers()
+    {
+        foreach (var timer in MenuCloseTimers.Values)
+        {
+            timer.Stop();
+        }
+
+        MenuCloseTimers.Clear();
     }
 
     private static bool IsPointerOverSubMenu(MenuItem item)
     {
-        var menuItemInterface = item.GetType().GetInterfaces().FirstOrDefault(p => p.FullName == "Avalonia.Controls.IMenuItem");
-        var property = menuItemInterface?.GetProperty("IsPointerOverSubMenu");
-        return property?.GetValue(item) is true;
+        return IsPointerOverSubMenuProperty?.GetValue(item) is true;
     }
 
     public static void UpdateRecentFiles(MainViewModel vm)
