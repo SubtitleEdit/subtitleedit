@@ -142,9 +142,15 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             get => _isFullScreen;
             set
             {
+                if (_isFullScreen == value)
+                {
+                    return;
+                }
+
                 _buttonFullScreenCollapse.IsVisible = value;
                 _buttonFullScreen.IsVisible = !value;
                 _isFullScreen = value;
+                IsFullScreenChanged?.Invoke(value);
 
                 // Start or stop the auto-hide mechanism based on full screen state
                 if (value)
@@ -525,6 +531,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         public event Action? StopRequested;
         public event Action? FullscreenRequested;
         public event Action? FullscreenCollapseRequested;
+        public event Action<bool>? IsFullScreenChanged;
         public event Action<double>? PositionChanged;
         public event Action<double>? VolumeChanged;
         public event Action? ToggleDisplayProgressTextModeRequested;
