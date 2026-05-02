@@ -1417,7 +1417,7 @@ public class AudioVisualizer : Control
         return string.IsNullOrWhiteSpace(value) ? fallback : value.Trim();
     }
 
-    private static string GetAssPositionAlignmentKey(SubtitleLineViewModel paragraph)
+    internal static string GetAssPositionAlignmentKey(SubtitleLineViewModel paragraph)
     {
         var parts = new List<string>();
         var text = paragraph.Text ?? string.Empty;

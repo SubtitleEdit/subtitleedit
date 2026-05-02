@@ -239,6 +239,12 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _showWaveformOnlyWaveform;
     [ObservableProperty] private bool _showWaveformOnlySpectrogram;
     [ObservableProperty] private bool _showWaveformWaveformAndSpectrogram;
+    [ObservableProperty] private bool _isWaveformSplitButtonVisible;
+    [ObservableProperty] private bool _isWaveformSplitActorVisible;
+    [ObservableProperty] private bool _isWaveformSplitStyleVisible;
+    [ObservableProperty] private bool _isWaveformSplitLayerVisible;
+    [ObservableProperty] private bool _isWaveformSplitAssPositionAlignmentVisible;
+    [ObservableProperty] private string _waveformSplitButtonText;
     [ObservableProperty] private bool _isSmpteTimingEnabled;
     [ObservableProperty] private string _videoOffsetText;
     [ObservableProperty] private string _setVideoOffsetText;
@@ -271,6 +277,7 @@ public partial class MainViewModel :
     private static Color _errorColor = Se.Settings.General.ErrorColor.FromHexToColor();
 
     private bool _updateAudioVisualizer;
+    private bool _updatingSubtitles;
     private bool _mpvPreviewDirty = true; // true = subtitle preview needs refresh in mpv
     private string? _subtitleFileName;
     private string? _subtitleFileNameOriginal;
@@ -501,6 +508,7 @@ public partial class MainViewModel :
         ShowUpDownLabels = Se.Settings.Appearance.ShowUpDownLabels;
         SelectCurrentSubtitleWhilePlaying = Se.Settings.General.SelectCurrentSubtitleWhilePlaying;
         WaveformCenter = Se.Settings.Waveform.CenterVideoPosition;
+        WaveformSplitButtonText = string.Format(Se.Language.Waveform.SplitWaveformByX, Se.Language.Waveform.SplitWaveformNone);
         EditTextBoxOriginal = new TextBoxWrapper(new TextBox());
         EditTextCharactersPerSecondOriginal = string.Empty;
         EditTextCharactersPerSecondBackgroundOriginal = Brushes.Transparent;
@@ -11707,10 +11715,18 @@ public partial class MainViewModel :
     {
         SubtitleGrid.ItemsSource = null;
 
-        Subtitles.Clear();
-        foreach (var p in subtitle.Paragraphs)
+        _updatingSubtitles = true;
+        try
         {
-            Subtitles.Add(new SubtitleLineViewModel(p, SelectedSubtitleFormat));
+            Subtitles.Clear();
+            foreach (var p in subtitle.Paragraphs)
+            {
+                Subtitles.Add(new SubtitleLineViewModel(p, SelectedSubtitleFormat));
+            }
+        }
+        finally
+        {
+            _updatingSubtitles = false;
         }
 
         Renumber();
@@ -11719,16 +11735,25 @@ public partial class MainViewModel :
         SubtitleGrid.ItemsSource = Subtitles;
 
         _updateAudioVisualizer = true;
+        UpdateWaveformSplitModeAvailability();
     }
 
     private void SetSubtitles(List<SubtitleLineViewModel> subtitles)
     {
         SubtitleGrid.ItemsSource = null;
 
-        Subtitles.Clear();
-        foreach (var p in subtitles)
+        _updatingSubtitles = true;
+        try
         {
-            Subtitles.Add(p);
+            Subtitles.Clear();
+            foreach (var p in subtitles)
+            {
+                Subtitles.Add(p);
+            }
+        }
+        finally
+        {
+            _updatingSubtitles = false;
         }
 
         Renumber();
@@ -11736,6 +11761,7 @@ public partial class MainViewModel :
 
         SubtitleGrid.ItemsSource = Subtitles;
         _updateAudioVisualizer = true;
+        UpdateWaveformSplitModeAvailability();
     }
 
     public bool HasChanges()
@@ -14685,6 +14711,11 @@ public partial class MainViewModel :
         if (e.OldItems != null)
             foreach (SubtitleLineViewModel item in e.OldItems)
                 item.PropertyChanged -= OnSubtitleItemChangedForMpv;
+
+        if (!_updatingSubtitles)
+        {
+            UpdateWaveformSplitModeAvailability();
+        }
     }
 
     private void OnSubtitleItemChangedForMpv(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -14694,6 +14725,14 @@ public partial class MainViewModel :
             or nameof(SubtitleLineViewModel.EndTime))
         {
             _mpvPreviewDirty = true;
+        }
+
+        if (e.PropertyName is nameof(SubtitleLineViewModel.Actor)
+            or nameof(SubtitleLineViewModel.Style)
+            or nameof(SubtitleLineViewModel.Layer) ||
+            IsFormatAssa && e.PropertyName == nameof(SubtitleLineViewModel.Text))
+        {
+            UpdateWaveformSplitModeAvailability();
         }
     }
 
@@ -15672,6 +15711,88 @@ public partial class MainViewModel :
         }
 
         SelectAndScrollToRow(idx);
+        UpdateWaveformSplitModeAvailability();
+    }
+
+    internal void SetWaveformSplitMode(WaveformSplitMode mode)
+    {
+        if (mode != WaveformSplitMode.None && !IsWaveformSplitModeAvailable(mode))
+        {
+            mode = WaveformSplitMode.None;
+        }
+
+        var header = GetWaveformSplitModeHeader(mode);
+        WaveformSplitButtonText = string.Format(Se.Language.Waveform.SplitWaveformByX, header);
+
+        if (AudioVisualizer == null)
+        {
+            return;
+        }
+
+        AudioVisualizer.WaveformSplitMode = mode;
+        AudioVisualizer.InvalidateVisual();
+    }
+
+    private void UpdateWaveformSplitModeAvailability()
+    {
+        var supportsSplitMetadata = SelectedSubtitleFormat?.HasStyleSupport == true;
+        var isAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
+        var isSsa = SelectedSubtitleFormat is SubStationAlpha;
+
+        IsWaveformSplitActorVisible = supportsSplitMetadata && HasMultipleWaveformSplitValues(Subtitles.Select(p => p.Actor));
+        IsWaveformSplitStyleVisible = supportsSplitMetadata && HasMultipleWaveformSplitValues(Subtitles.Select(p => p.Style));
+        IsWaveformSplitLayerVisible = (isAssa || isSsa) && HasMultipleWaveformSplitValues(Subtitles.Select(p => p.Layer.ToString(CultureInfo.InvariantCulture)));
+        IsWaveformSplitAssPositionAlignmentVisible = isAssa && HasMultipleWaveformSplitValues(Subtitles.Select(Nikse.SubtitleEdit.Controls.AudioVisualizerControl.AudioVisualizer.GetAssPositionAlignmentKey));
+        IsWaveformSplitButtonVisible = IsWaveformSplitActorVisible ||
+                                       IsWaveformSplitStyleVisible ||
+                                       IsWaveformSplitLayerVisible ||
+                                       IsWaveformSplitAssPositionAlignmentVisible;
+
+        var currentMode = AudioVisualizer?.WaveformSplitMode ?? WaveformSplitMode.None;
+        if (!IsWaveformSplitButtonVisible || !IsWaveformSplitModeAvailable(currentMode))
+        {
+            SetWaveformSplitMode(WaveformSplitMode.None);
+        }
+    }
+
+    private bool IsWaveformSplitModeAvailable(WaveformSplitMode mode)
+    {
+        return mode switch
+        {
+            WaveformSplitMode.None => true,
+            WaveformSplitMode.Actor => IsWaveformSplitActorVisible,
+            WaveformSplitMode.Style => IsWaveformSplitStyleVisible,
+            WaveformSplitMode.Layer => IsWaveformSplitLayerVisible,
+            WaveformSplitMode.AssPositionAlignment => IsWaveformSplitAssPositionAlignmentVisible,
+            _ => false,
+        };
+    }
+
+    private static bool HasMultipleWaveformSplitValues(IEnumerable<string?> values)
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var value in values)
+        {
+            seen.Add(string.IsNullOrWhiteSpace(value) ? string.Empty : value.Trim());
+            if (seen.Count > 1)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static string GetWaveformSplitModeHeader(WaveformSplitMode mode)
+    {
+        return mode switch
+        {
+            WaveformSplitMode.Actor => Se.Language.Waveform.SplitWaveformActor,
+            WaveformSplitMode.Style => Se.Language.Waveform.SplitWaveformStyle,
+            WaveformSplitMode.Layer => Se.Language.Waveform.SplitWaveformLayer,
+            WaveformSplitMode.AssPositionAlignment => Se.Language.Waveform.SplitWaveformAssPositionAlignment,
+            _ => Se.Language.Waveform.SplitWaveformNone,
+        };
     }
 
     internal void AutoSelectOnPlayCheckedChanged()

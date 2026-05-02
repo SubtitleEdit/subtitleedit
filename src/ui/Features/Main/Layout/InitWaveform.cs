@@ -621,41 +621,40 @@ public class InitWaveform
 
         var buttonSplitWaveform = new Button
         {
-            Content = string.Format(Se.Language.Waveform.SplitWaveformByX, Se.Language.Waveform.SplitWaveformNone),
             Margin = new Thickness(4, 0, 4, 0),
             FontSize = 11,
             VerticalAlignment = VerticalAlignment.Center,
             [ToolTip.TipProperty] = Se.Language.Waveform.SplitWaveformBy,
         };
+        buttonSplitWaveform.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.WaveformSplitButtonText)) { Source = vm });
+        buttonSplitWaveform.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsWaveformSplitButtonVisible)) { Source = vm });
         var flyoutSplitWaveform = new MenuFlyout();
         buttonSplitWaveform.Flyout = flyoutSplitWaveform;
         buttonSplitWaveform.Click += (s, e) => flyoutSplitWaveform.ShowAt(buttonSplitWaveform, true);
 
-        void AddSplitModeItem(string header, WaveformSplitMode mode)
+        void AddSplitModeItem(string header, WaveformSplitMode mode, string? isVisiblePropertyName = null)
         {
             var menuItem = new MenuItem
             {
                 Header = header,
             };
+            if (!string.IsNullOrEmpty(isVisiblePropertyName))
+            {
+                menuItem.Bind(MenuItem.IsVisibleProperty, new Binding(isVisiblePropertyName) { Source = vm });
+            }
+
             menuItem.Click += (s, e) =>
             {
-                if (vm.AudioVisualizer == null)
-                {
-                    return;
-                }
-
-                vm.AudioVisualizer.WaveformSplitMode = mode;
-                buttonSplitWaveform.Content = string.Format(Se.Language.Waveform.SplitWaveformByX, header);
-                vm.AudioVisualizer.InvalidateVisual();
+                vm.SetWaveformSplitMode(mode);
             };
             flyoutSplitWaveform.Items.Add(menuItem);
         }
 
         AddSplitModeItem(Se.Language.Waveform.SplitWaveformNone, WaveformSplitMode.None);
-        AddSplitModeItem(Se.Language.Waveform.SplitWaveformActor, WaveformSplitMode.Actor);
-        AddSplitModeItem(Se.Language.Waveform.SplitWaveformStyle, WaveformSplitMode.Style);
-        AddSplitModeItem(Se.Language.Waveform.SplitWaveformLayer, WaveformSplitMode.Layer);
-        AddSplitModeItem(Se.Language.Waveform.SplitWaveformAssPositionAlignment, WaveformSplitMode.AssPositionAlignment);
+        AddSplitModeItem(Se.Language.Waveform.SplitWaveformActor, WaveformSplitMode.Actor, nameof(vm.IsWaveformSplitActorVisible));
+        AddSplitModeItem(Se.Language.Waveform.SplitWaveformStyle, WaveformSplitMode.Style, nameof(vm.IsWaveformSplitStyleVisible));
+        AddSplitModeItem(Se.Language.Waveform.SplitWaveformLayer, WaveformSplitMode.Layer, nameof(vm.IsWaveformSplitLayerVisible));
+        AddSplitModeItem(Se.Language.Waveform.SplitWaveformAssPositionAlignment, WaveformSplitMode.AssPositionAlignment, nameof(vm.IsWaveformSplitAssPositionAlignmentVisible));
 
         var menuItemResetZoom = new MenuItem
         {
