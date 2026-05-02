@@ -136,6 +136,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         private bool _isFullScreen = false;
 
+        public event Action<bool>? IsFullScreenChanged;
+
         public bool IsFullScreen
         {
             get => _isFullScreen;
@@ -155,6 +157,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                     StopAutoHideControls();
                     ShowControls();
                 }
+
+                IsFullScreenChanged?.Invoke(value);
             }
         }
 
@@ -241,7 +245,9 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
             // Attach a tunnel handler so we see clicks even if child handles them.
             mainGrid.AddHandler(InputElement.PointerPressedEvent, OnMainGridPointerPressed, RoutingStrategies.Tunnel, handledEventsToo: true);
-            mainGrid.AddHandler(InputElement.PointerReleasedEvent, OnMainGridPointerReleased, RoutingStrategies.Tunnel, handledEventsToo: true);
+            // Release handler is on `this` (not mainGrid) so it still fires when the pointer
+            // is captured to this control — routing wouldn't reach mainGrid in that case.
+            this.AddHandler(InputElement.PointerReleasedEvent, OnMainGridPointerReleased, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: true);
 
             // Buttons
             var stackPanel = new StackPanel

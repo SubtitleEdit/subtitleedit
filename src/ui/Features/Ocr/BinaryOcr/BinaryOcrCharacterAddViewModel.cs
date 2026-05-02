@@ -6,6 +6,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
@@ -13,6 +14,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
 
@@ -241,12 +243,33 @@ public partial class BinaryOcrCharacterAddViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Ok()
+    private async Task Ok()
     {
         if (BinaryOcrBitmap == null || _db.FindExactMatch(BinaryOcrBitmap) >= 0)
         {
             Close();
             return;
+        }
+
+        if (string.IsNullOrEmpty(NewText) && Se.Settings.Ocr.PromptForBlankOcrText)
+        {
+            var answer = await MessageBox.Show(
+                Window!,
+                Se.Language.Ocr.SaveBlankTextTitle,
+                Se.Language.Ocr.SaveBlankTextPrompt,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question,
+                custom1: Se.Language.Ocr.YesAndNeverAskAgain);
+
+            if (answer == MessageBoxResult.No || answer == MessageBoxResult.None)
+            {
+                return;
+            }
+
+            if (answer == MessageBoxResult.Custom1)
+            {
+                Se.Settings.Ocr.PromptForBlankOcrText = false;
+            }
         }
 
         BinaryOcrBitmap.Text = NewText;
@@ -322,7 +345,7 @@ public partial class BinaryOcrCharacterAddViewModel : ObservableObject
         if (e.Key == Key.Enter && !string.IsNullOrWhiteSpace(TextBoxNew.Text))
         {
             e.Handled = true;
-            Ok();
+            _ = Ok();
         }
     }
 
@@ -331,7 +354,7 @@ public partial class BinaryOcrCharacterAddViewModel : ObservableObject
         if (SubmitOnFirstLetter && NewText.Length >= 1)
         {
             e.Handled = true;
-            Ok();
+            _ = Ok();
         }
     }
 

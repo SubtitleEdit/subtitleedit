@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.Interfaces;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Core.VobSub.Ocr.Service;
 using Nikse.SubtitleEdit.Features.Files.ImportImages;
@@ -36,8 +37,8 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.Logic.Media;
-using Nikse.SubtitleEdit.UiLogic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr.GoogleLens;
+using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -119,7 +120,7 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<GuessUsedItem> _allGuesses;
     [ObservableProperty] private GuessUsedItem? _selectedAllGuess;
     [ObservableProperty] private bool _hasPreProcessingSettings;
-    [ObservableProperty] private bool _hasCaptureAlignment; 
+    [ObservableProperty] private bool _hasCaptureAlignment;
     [ObservableProperty] private double _imageMaxHeight = 100;
     [ObservableProperty] private double _imageMaxWidth = 200;
     [ObservableProperty] private FontFamily _textBoxFontFamily;
@@ -261,7 +262,7 @@ public partial class OcrViewModel : ObservableObject
             DoPromptForUnknownWords = ocr.DoPromptForUnknownWords;
             DoTryToGuessUnknownWords = ocr.DoTryToGuessUnknownWords;
             DoAutoBreak = ocr.DoAutoBreak;
-            HasCaptureAlignment = ocr.CaptureAssaPosition; 
+            HasCaptureAlignment = ocr.CaptureAssaPosition;
         });
     }
 
@@ -286,7 +287,7 @@ public partial class OcrViewModel : ObservableObject
         ocr.DoPromptForUnknownWords = DoPromptForUnknownWords;
         ocr.DoTryToGuessUnknownWords = DoTryToGuessUnknownWords;
         ocr.DoAutoBreak = DoAutoBreak;
-        ocr.CaptureAssaPosition = HasCaptureAlignment; 
+        ocr.CaptureAssaPosition = HasCaptureAlignment;
         ocr.TextBoxFontSize = TextBoxFontSize;
         ocr.TextBoxFontBold = TextBoxFontWeight == FontWeight.Bold;
         ocr.TextBoxFontName = TextBoxFontFamily.Name;
@@ -548,6 +549,166 @@ public partial class OcrViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task ImportTextFromSubtitle()
+    {
+        if (Window == null || OcrSubtitleItems.Count == 0)
+        {
+            return;
+        }
+
+        var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle);
+        _isCtrlDown = false;
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return;
+        }
+
+        var subtitle = Subtitle.Parse(fileName);
+        if (subtitle == null)
+        {
+            foreach (var f in SubtitleFormat.GetBinaryFormats(false))
+            {
+                if (f.IsMine(null, fileName))
+                {
+                    subtitle = new Subtitle();
+                    f.LoadSubtitle(subtitle, null, fileName);
+                    subtitle.OriginalFormat = f;
+                    break;
+                }
+            }
+        }
+
+        if (subtitle == null || subtitle.Paragraphs.Count == 0)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.UnknownSubtitleFormat);
+            return;
+        }
+
+        var hasExistingText = OcrSubtitleItems.Any(p => !string.IsNullOrEmpty(p.Text));
+        var overwrite = true;
+        if (hasExistingText)
+        {
+            var promptResult = await MessageBox.Show(
+                Window,
+                Se.Language.General.OverwriteQuestion,
+                Se.Language.Ocr.ImportTextFromSubtitleOverwritePrompt,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (promptResult != MessageBoxResult.Yes)
+            {
+                overwrite = false;
+            }
+        }
+
+        const double toleranceMs = 500.0;
+        var imported = 0;
+        foreach (var item in OcrSubtitleItems)
+        {
+            if (!overwrite && !string.IsNullOrEmpty(item.Text))
+            {
+                continue;
+            }
+
+            var itemStartMs = item.StartTime.TotalMilliseconds;
+            var itemEndMs = item.EndTime.TotalMilliseconds;
+            Paragraph? bestMatch = null;
+            var bestDelta = double.MaxValue;
+            foreach (var p in subtitle.Paragraphs)
+            {
+                var overlaps = p.StartTime.TotalMilliseconds <= itemEndMs && p.EndTime.TotalMilliseconds >= itemStartMs;
+                var delta = Math.Abs(p.StartTime.TotalMilliseconds - itemStartMs);
+                if ((overlaps || delta <= toleranceMs) && delta < bestDelta)
+                {
+                    bestDelta = delta;
+                    bestMatch = p;
+                }
+            }
+
+            if (bestMatch != null)
+            {
+                item.Text = bestMatch.Text;
+                imported++;
+            }
+        }
+
+        if (imported == 0)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Information,
+                Se.Language.Ocr.ImportTextFromSubtitleNoMatchesFound,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            return;
+        }
+
+        ProgressText = string.Format(Se.Language.Ocr.ImportTextFromSubtitleXLinesImported, imported);
+    }
+
+    [RelayCommand]
+    private async Task ExportTextAsSubtitle()
+    {
+        if (Window == null || OcrSubtitleItems.Count == 0)
+        {
+            return;
+        }
+
+        if (OcrSubtitleItems.All(p => string.IsNullOrWhiteSpace(p.Text)))
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Information,
+                Se.Language.Ocr.ExportTextAsSubtitleNoText,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            return;
+        }
+
+        var format = new SubRip();
+        var saveAsResult = await _fileHelper.PickSaveSubtitleFileAs(
+            Window,
+            format,
+            "OcrText" + format.Extension,
+            Se.Language.Ocr.ExportTextAsSubtitleDotDotDot);
+
+        _isCtrlDown = false;
+        if (saveAsResult == null || string.IsNullOrEmpty(saveAsResult.FileName))
+        {
+            return;
+        }
+
+        var subtitle = new Subtitle();
+        foreach (var item in OcrSubtitleItems)
+        {
+            subtitle.Paragraphs.Add(new Paragraph(
+                item.Text ?? string.Empty,
+                item.StartTime.TotalMilliseconds,
+                item.EndTime.TotalMilliseconds));
+        }
+
+        // SubRip.ToText writes p.Number verbatim, and the Paragraph constructor leaves it at 0
+        // (so without this every line was numbered "0").
+        subtitle.Renumber();
+
+        try
+        {
+            var targetFormat = saveAsResult.SubtitleFormat ?? format;
+            var text = targetFormat.ToText(subtitle, Path.GetFileNameWithoutExtension(saveAsResult.FileName));
+            await File.WriteAllTextAsync(saveAsResult.FileName, text);
+        }
+        catch (Exception ex)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                ex.Message,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+        }
+    }
+
+    [RelayCommand]
     private async Task InspectLine()
     {
         var item = SelectedOcrSubtitleItem;
@@ -581,19 +742,33 @@ public partial class OcrViewModel : ObservableObject
         nBmp.CropTop(0, new SKColor(0, 0, 0, 0));
         var letters =
             NikseBitmapImageSplitter2.SplitBitmapToLettersNew(nBmp, SelectedNOcrPixelsAreSpace, false, true, 20, true);
-        var matches = new List<NOcrChar?>();
-        foreach (var splitterItem in letters)
+        var matches = new List<NOcrChar?>(new NOcrChar?[letters.Count]);
+        var idx = 0;
+        while (idx < letters.Count)
         {
+            var splitterItem = letters[idx];
             if (splitterItem.NikseBitmap == null)
             {
-                var match = new NOcrChar { Text = splitterItem.SpecialCharacter ?? string.Empty };
-                matches.Add(match);
+                matches[idx] = new NOcrChar { Text = splitterItem.SpecialCharacter ?? string.Empty };
+                idx++;
+                continue;
+            }
+
+            var match = _nOcrDb!.GetMatch(nBmp, letters, splitterItem, splitterItem.Top, true,
+                SelectedNOcrMaxWrongPixels);
+            matches[idx] = match;
+
+            if (match is { ExpandCount: > 1 })
+            {
+                for (var j = 1; j < match.ExpandCount && idx + j < matches.Count; j++)
+                {
+                    matches[idx + j] = match;
+                }
+                idx += match.ExpandCount;
             }
             else
             {
-                var match = _nOcrDb!.GetMatch(nBmp, letters, splitterItem, splitterItem.Top, true,
-                    SelectedNOcrMaxWrongPixels);
-                matches.Add(match);
+                idx++;
             }
         }
 
@@ -1183,20 +1358,75 @@ public partial class OcrViewModel : ObservableObject
         OkPressed = true;
 
         OcredSubtitle.Clear();
+        var number = 1;
         for (var i = 0; i < OcrSubtitleItems.Count; i++)
         {
             var item = OcrSubtitleItems[i];
-            var subtitleLine = new SubtitleLineViewModel
+            foreach (var groupText in SplitTextByAlignmentGroups(item.Text))
             {
-                Number = i + 1,
-                Text = item.Text,
-                StartTime = item.StartTime,
-                EndTime = item.EndTime,
-            };
-            OcredSubtitle.Add(subtitleLine);
+                OcredSubtitle.Add(new SubtitleLineViewModel
+                {
+                    Number = number++,
+                    Text = groupText,
+                    StartTime = item.StartTime,
+                    EndTime = item.EndTime,
+                });
+            }
         }
 
         Close();
+    }
+
+    private static readonly Regex AlignmentTagRegex = new(@"^\{\\an[1-9]\}", RegexOptions.Compiled);
+
+    // Splits text into groups of lines sharing the same leading {\anN} alignment tag.
+    // A line without a tag continues the current group. Returns the original text as a single
+    // group when fewer than two distinct alignments are present.
+    private static List<string> SplitTextByAlignmentGroups(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return new List<string> { text };
+        }
+
+        var lines = text.SplitToLines();
+        var groups = new List<List<string>>();
+        var currentTag = string.Empty;
+        var currentLines = new List<string>();
+
+        foreach (var line in lines)
+        {
+            var match = AlignmentTagRegex.Match(line);
+            var tag = match.Success ? match.Value : string.Empty;
+
+            if (currentLines.Count == 0)
+            {
+                currentTag = tag;
+                currentLines.Add(line);
+            }
+            else if (tag.Length > 0 && tag != currentTag)
+            {
+                groups.Add(currentLines);
+                currentTag = tag;
+                currentLines = new List<string> { line };
+            }
+            else
+            {
+                currentLines.Add(line);
+            }
+        }
+
+        if (currentLines.Count > 0)
+        {
+            groups.Add(currentLines);
+        }
+
+        if (groups.Count <= 1)
+        {
+            return new List<string> { text };
+        }
+
+        return groups.Select(g => string.Join("\n", g)).ToList();
     }
 
     [RelayCommand]
@@ -1920,7 +2150,11 @@ public partial class OcrViewModel : ObservableObject
                                     OcrSubtitleItems.IndexOf(item));
                                 IsInspectAdditionsVisible = true;
                                 _nOcrDb.Add(result.NOcrChar);
-                                _ = Task.Run(() => _nOcrDb.Save());
+                                var nOcrDbToSave = _nOcrDb;
+                                _ = Task.Run(() => nOcrDbToSave!.Save())
+                                    .ContinueWith(
+                                        t => Se.LogError(t.Exception!, $"Failed to save nOCR database '{nOcrDbToSave!.FileName}'"),
+                                        TaskContinuationOptions.OnlyOnFaulted);
                                 _ = Task.Run(() => RunNOcrLoop(selectedIndices.Where(p => p >= i).ToList(), cancellationToken));
                             }
                             else if (result.AbortPressed)
@@ -2506,12 +2740,7 @@ public partial class OcrViewModel : ObservableObject
         {
             result.OcrFixLineResult = _ocrFixEngine.FixOcrErrors(i, item, DoTryToGuessUnknownWords);
             var alignment = GetAlignment(item);
-            if (!string.IsNullOrEmpty(alignment))
-            {
-                result.OcrFixLineResult.Words.Insert(0, new OcrFixLinePartResult { Word = alignment, IsSpellCheckedOk = null });
-            }
-
-            result.ResultText = result.OcrFixLineResult.GetText();
+            result.ResultText = alignment.AlignmentAdded ? alignment.Text : result.OcrFixLineResult.GetText();
 
             if (!string.IsNullOrEmpty(result.OcrFixLineResult.ReplacementUsed.From))
             {
@@ -2549,7 +2778,7 @@ public partial class OcrViewModel : ObservableObject
             SelectedDictionary.Name != GetDictionaryNameNone() &&
             _ocrFixEngine.IsLoaded() && DoFixOcrErrors)
         {
-            var text = alignment + resultTemp.ResultText; 
+            var text = alignment.AlignmentAdded ? alignment.Text : resultTemp.ResultText;
 
             Dispatcher.UIThread.Post(() =>
             {
@@ -2560,7 +2789,7 @@ public partial class OcrViewModel : ObservableObject
         }
         else
         {
-            var text = alignment + item.Text;
+            var text = alignment.Text;
 
             Dispatcher.UIThread.Post(() =>
             {
@@ -2604,12 +2833,7 @@ public partial class OcrViewModel : ObservableObject
         {
             var result = _ocrFixEngine.FixOcrErrors(i, item, DoTryToGuessUnknownWords);
             var alignment = GetAlignment(item);
-            if (!string.IsNullOrEmpty(alignment))
-            {
-                result.Words.Insert(0, new OcrFixLinePartResult { Word = alignment, IsSpellCheckedOk = null });
-            }
-
-            var resultText = result.GetText();
+            var resultText = alignment.AlignmentAdded ? alignment.Text : result.GetText();
 
             Dispatcher.UIThread.Post(() =>
             {
@@ -2648,7 +2872,7 @@ public partial class OcrViewModel : ObservableObject
             var alignment = GetAlignment(item);
             Dispatcher.UIThread.Post(() =>
             {
-                item.Text = alignment + item.Text;
+                item.Text = alignment.Text;
                 CurrentText = item.Text;
                 item.FixResult = new OcrFixLineResult
                 {
@@ -3251,6 +3475,13 @@ public partial class OcrViewModel : ObservableObject
         OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_ocrSubtitle.MakeOcrSubtitleItems());
     }
 
+    public void InitializeSpDvdSup(string fileName)
+    {
+        Title = string.Format(Se.Language.Ocr.OcrX, fileName);
+        _ocrSubtitle = new OcrSubtitleSpDvdSupImages(fileName);
+        OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_ocrSubtitle.MakeOcrSubtitleItems());
+    }
+
     internal void Initialize(TransportStreamParser tsParser, List<TransportStreamSubtitle> subtitles, string fileName)
     {
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
@@ -3593,11 +3824,11 @@ public partial class OcrViewModel : ObservableObject
         }
     }
 
-    private string GetAlignment(OcrSubtitleItem item)
+    private (string Text, bool AlignmentAdded) GetAlignment(OcrSubtitleItem item)
     {
         if (!HasCaptureAlignment) // Repurposed for ASSA position capture
         {
-            return string.Empty;
+            return (item.Text, false);
         }
 
         try
@@ -3609,7 +3840,7 @@ public partial class OcrViewModel : ObservableObject
 
             if (bitmap == null || screenSize.Width == 0 || screenSize.Height == 0)
             {
-                return string.Empty;
+                return (item.Text, false);
             }
 
             // Check if image height is larger than approximately 1/3 of screen height
@@ -3629,7 +3860,7 @@ public partial class OcrViewModel : ObservableObject
                     if (lineImages.Count > 1 || lineImages2.Count > 1)
                     {
                         // Multiple lines detected - apply alignment to each line
-                        var result = new List<string>();
+                        var perLine = new List<string>();
                         var multiLineCenterX = position.X + bitmap.Width / 2.0;
                         var multiLineRelativeX = multiLineCenterX / screenSize.Width;
 
@@ -3644,12 +3875,10 @@ public partial class OcrViewModel : ObservableObject
                             var lineAlignment = GetAssaPositionFromScreen(multiLineRelativeX, lineRelativeY);
 
                             // Add alignment tag to the line text
-                            result.Add($"{{\\{lineAlignment}}}{lines[i].Trim()}");
+                            perLine.Add($"{{\\{lineAlignment}}}{lines[i].Trim()}");
                         }
 
-                        // Update the item text with per-line alignment
-                        item.Text = string.Join("\n", result);
-                        return string.Empty; // Return empty since we've modified the item.Text directly
+                        return (string.Join("\n", perLine), true);
                     }
                 }
             }
@@ -3664,11 +3893,11 @@ public partial class OcrViewModel : ObservableObject
 
             // Map to ASSA alignment positions (An1-An9)
             var assaPosition = GetAssaPositionFromScreen(relativeX, relativeY);
-            return $"{{\\{assaPosition}}}";
+            return ($"{{\\{assaPosition}}}{item.Text}", true);
         }
         catch
         {
-            return string.Empty;
+            return (item.Text, false);
         }
     }
 

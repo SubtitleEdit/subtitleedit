@@ -3,11 +3,9 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using System;
 using System.Collections.Generic;
-using static Nikse.SubtitleEdit.Controls.AudioVisualizerControl.AudioVisualizer;
 
 public class NOcrDrawingCanvasView : Control
 {
@@ -193,6 +191,14 @@ public class NOcrDrawingCanvasView : Control
 
         // Fill background
         context.FillRectangle(CanvasColor, new Rect(0, 0, Bounds.Width, Bounds.Height));
+
+        using var _ = ZoomFactor > 1f
+            ? context.PushRenderOptions(new RenderOptions
+            {
+                BitmapInterpolationMode = BitmapInterpolationMode.None,
+                EdgeMode = EdgeMode.Aliased,
+            })
+            : default;
 
         // Draw background image if available
         if (BackgroundImage != null)

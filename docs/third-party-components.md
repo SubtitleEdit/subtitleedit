@@ -7,6 +7,8 @@ title: Third-Party Components
 
 Subtitle Edit uses several third-party tools for features like video playback, audio extraction, and OCR. While Subtitle Edit includes built-in downloaders for these components, you might want to use a specific version or a custom build.
 
+Subtitle Edit 5 also includes more downloadable AI components for speech-to-text, text-to-speech, and OCR. Prefer the in-app download prompts unless you need to install a specific build manually.
+
 > **⚠️ Warning**
 > Subtitle Edit is tested with specific versions of these components. Using other versions is **not officially supported** and may cause instability.
 >
@@ -37,6 +39,12 @@ Subtitle Edit stores these components in its **Data Folder**.
 | **Tesseract** | `tesseract.exe`, `tessdata/` folder | `[Data Folder]/Tesseract550` |
 | **Whisper CPP** | `whisper-cli.exe`, `Models/` folder | `[Data Folder]/SpeechToText/Cpp` |
 | **Purfview Faster-Whisper XXL** | `faster-whisper-xxl.exe`, `_models/` folder | `[Data Folder]/SpeechToText/Purfview-Faster-Whisper-XXL` |
+| **Crisp ASR** | `crispasr.exe`, `models/` folder | `[Data Folder]/SpeechToText/CrispASR` |
+| **Qwen3 ASR CPP** | `qwen3-asr-cli.exe`, `models/` folder | `[Data Folder]/Qwen3ASR` |
+| **Parakeet.cpp** | `parakeet.exe`, model folders | `[Data Folder]/parakeet.cpp` |
+| **PaddleOCR** | `paddleocr.exe`, `models/` folder | `[Data Folder]/OCR/PaddleOCR3-1` |
+| **Qwen3 TTS** | `qwen3-tts-server.exe`, `models/`, `voices/` | `[Data Folder]/TextToSpeech/Qwen3TtsCpp` |
+| **Kokoro TTS** | `kokoro-tts-server.exe`, `models/` | `[Data Folder]/TextToSpeech/KokoroTtsCpp` |
 
 ---
 
@@ -99,6 +107,30 @@ Used for GPU-accelerated AI-based speech recognition.
 *   **Files:** Download the Standalone Archive, extract contents so `faster-whisper-xxl.exe` is in the folder root.
 *   **Models:** Place model directories (e.g., `faster-whisper-medium`) inside the `_models` folder.
 
+### SE5 Speech-to-Text Engines
+Subtitle Edit 5 can download additional ASR engines directly from the **Speech to text** window.
+
+*   **Crisp ASR:** Stored in `[Data Folder]/SpeechToText/CrispASR`. Models go into its `models` folder. Crisp ASR backends include Parakeet, Canary, Cohere, Fire Red, GLM, Granite, Qwen3, and Omni.
+*   **Qwen3 ASR CPP:** Stored in `[Data Folder]/Qwen3ASR`. Models go into `[Data Folder]/Qwen3ASR/models`.
+*   **Parakeet.cpp:** Stored in `[Data Folder]/parakeet.cpp`. Each model has its own folder because the model weights and `vocab.txt` must stay together.
+
+Use [Speech to Text](features/speech-to-text.md) for the current engine list and workflow.
+
+### PaddleOCR
+Used for OCR of image-based subtitles.
+
+*   **Destination:** `[Data Folder]/OCR/PaddleOCR3-1`
+*   **Models:** `[Data Folder]/OCR/PaddleOCR3-1/models`
+*   **Builds:** Subtitle Edit can download Windows CPU, Windows CUDA 11/12, Linux CPU, or Linux GPU builds when available.
+
+### Local Text-to-Speech Engines
+Subtitle Edit 5 can download local TTS servers and models from the **Text to speech** window.
+
+*   **Qwen3 TTS:** Stored in `[Data Folder]/TextToSpeech/Qwen3TtsCpp`. Models go into the `models` folder; imported reference voices go into the `voices` folder.
+*   **Kokoro TTS:** Stored in `[Data Folder]/TextToSpeech/KokoroTtsCpp`. Models go into the `models` folder.
+
+Use [Text to Speech](features/text-to-speech.md) for engine-specific options.
+
 ---
 
 ## Linux
@@ -152,6 +184,10 @@ Used for GPU-accelerated AI-based speech recognition.
 *   **Files:** Download the Linux Archive, extract so `faster-whisper-xxl` binary is present.
 *   **Models:** Place model directories (e.g., `faster-whisper-medium`) inside the `_models` folder.
 
+### SE5 Speech-to-Text, OCR, and TTS Engines
+
+The same data-folder layout is used on Linux. Prefer the in-app downloaders for Crisp ASR, Qwen3 ASR, Parakeet.cpp, PaddleOCR, Qwen3 TTS, and Kokoro TTS because the required files differ by build and model.
+
 ---
 
 ## macOS
@@ -196,3 +232,7 @@ Used for AI-based speech recognition.
 *   **Destination:** `[Data Folder]/SpeechToText/Cpp`
 *   **Files:** Download or build the binary and ensure it is named `whisper-cli`.
 *   **Models:** Models (`.bin` files) go into a `Models` subfolder: `[Data Folder]/SpeechToText/Cpp/Models`.
+
+### SE5 Speech-to-Text, OCR, and TTS Engines
+
+Some newer local engines are platform-specific or model-specific. Use the in-app downloaders where available, and check [Speech to Text](features/speech-to-text.md), [Text to Speech](features/text-to-speech.md), and [OCR](features/ocr.md) for current engine notes.

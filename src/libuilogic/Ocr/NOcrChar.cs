@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-namespace Nikse.SubtitleEdit.UiLogic.Ocr;
+﻿namespace Nikse.SubtitleEdit.UiLogic.Ocr;
 
 public class NOcrChar
 {
@@ -18,7 +13,12 @@ public class NOcrChar
     public bool LoadedOk { get; }
     public ImageSplitterItem2? ImageSplitterItem { get; set; }
 
-    public double WidthPercent => Height * 100.0 / Width;
+    /// <summary>
+    /// Height expressed as a percentage of width (i.e. <c>Height * 100 / Width</c>).
+    /// Square = 100, wider-than-tall &lt; 100, taller-than-wide &gt; 100. Used by the
+    /// matcher as a coarse aspect-ratio screen before pixel-level checks.
+    /// </summary>
+    public double HeightToWidthPercent => Height * 100.0 / Width;
 
     public NOcrChar()
     {
@@ -61,6 +61,11 @@ public class NOcrChar
     public bool IsSensitive => Text is "O" or "o" or "0" or "'" or "-" or ":" or "\"";
 
     public NOcrChar(ref int position, byte[] file)
+        : this(ref position, file, true)
+    {
+    }
+
+    public NOcrChar(ref int position, byte[] file, bool isVersion2)
     {
         Text = string.Empty;
         LinesForeground = new List<NOcrLine>();
@@ -68,50 +73,72 @@ public class NOcrChar
 
         try
         {
-            var buffer = new byte[4];
-            if (position + buffer.Length >= file.Length)
+            if (isVersion2)
             {
-                LoadedOk = false;
-                return;
-            }
+                if (position + 4 >= file.Length)
+                {
+                    LoadedOk = false;
+                    return;
+                }
 
-            var isShort = (file[position] & 0b0001_0000) > 0;
-            Italic = (file[position] & 0b0010_0000) > 0;
+                var isShort = (file[position] & 0b0001_0000) > 0;
+                Italic = (file[position] & 0b0010_0000) > 0;
 
-            if (isShort)
-            {
-                ExpandCount = file[position++] & 0b0000_1111;
-                Width = file[position++];
-                Height = file[position++];
-                MarginTop = file[position++];
+                if (isShort)
+                {
+                    ExpandCount = file[position++] & 0b0000_1111;
+                    Width = file[position++];
+                    Height = file[position++];
+                    MarginTop = file[position++];
+                }
+                else
+                {
+                    position++;
+                    ExpandCount = file[position++];
+                    Width = file[position++] << 8 | file[position++];
+                    Height = file[position++] << 8 | file[position++];
+                    MarginTop = file[position++] << 8 | file[position++];
+                }
+
+                var textLen = file[position++];
+                if (textLen > 0)
+                {
+                    Text = System.Text.Encoding.UTF8.GetString(file, position, textLen);
+                    position += textLen;
+                }
+
+                if (isShort)
+                {
+                    LinesForeground = ReadPointsBytes(ref position, file);
+                    LinesBackground = ReadPointsBytes(ref position, file);
+                }
+                else
+                {
+                    LinesForeground = ReadPoints(ref position, file);
+                    LinesBackground = ReadPoints(ref position, file);
+                }
             }
             else
             {
-                position++;
-                ExpandCount = file[position++];
+                if (position + 9 > file.Length)
+                {
+                    LoadedOk = false;
+                    return;
+                }
+
                 Width = file[position++] << 8 | file[position++];
                 Height = file[position++] << 8 | file[position++];
                 MarginTop = file[position++] << 8 | file[position++];
-            }
+                Italic = file[position++] != 0;
+                ExpandCount = file[position++];
 
-            var textLen = file[position++];
-            if (textLen > 0)
-            {
-                Text = System.Text.Encoding.UTF8.GetString(file, position, textLen);
-                position += textLen;
-            }
-            else
-            {
-                Text = string.Empty;
-            }
+                var textLen = file[position++];
+                if (textLen > 0)
+                {
+                    Text = System.Text.Encoding.UTF8.GetString(file, position, textLen);
+                    position += textLen;
+                }
 
-            if (isShort)
-            {
-                LinesForeground = ReadPointsBytes(ref position, file);
-                LinesBackground = ReadPointsBytes(ref position, file);
-            }
-            else
-            {
                 LinesForeground = ReadPoints(ref position, file);
                 LinesBackground = ReadPoints(ref position, file);
             }
@@ -296,8 +323,30 @@ public class NOcrChar
 
     public static void GenerateLineSegments(int maxNumberOfLines, bool veryPrecise, NOcrChar nOcrChar, NikseBitmap2 bitmap)
     {
+        GenerateLineSegments(maxNumberOfLines, veryPrecise, nOcrChar, bitmap, NOcrLineAlgorithm.Random);
+    }
+
+    public static void GenerateLineSegments(int maxNumberOfLines, bool veryPrecise, NOcrChar nOcrChar, NikseBitmap2 bitmap, NOcrLineAlgorithm algorithm)
+    {
+        switch (algorithm)
+        {
+            case NOcrLineAlgorithm.SkeletonDistance:
+                NOcrLineGenerator.GenerateSkeletonDistance(maxNumberOfLines, veryPrecise, nOcrChar, bitmap);
+                break;
+            case NOcrLineAlgorithm.EdgeHough:
+                NOcrLineGenerator.GenerateEdgeHough(maxNumberOfLines, veryPrecise, nOcrChar, bitmap);
+                break;
+            case NOcrLineAlgorithm.Random:
+            default:
+                GenerateLineSegmentsRandom(maxNumberOfLines, veryPrecise, nOcrChar, bitmap);
+                break;
+        }
+    }
+
+    internal static void GenerateLineSegmentsRandom(int maxNumberOfLines, bool veryPrecise, NOcrChar nOcrChar, NikseBitmap2 bitmap)
+    {
         const int giveUpCount = 15_000;
-        var r = new Random();
+        var r = Random.Shared;
 
         GenerateLines(
             maxNumberOfLines, veryPrecise, giveUpCount, nOcrChar, bitmap, r,
@@ -313,6 +362,11 @@ public class NOcrChar
 
         RemoveDuplicates(nOcrChar.LinesForeground);
         RemoveDuplicates(nOcrChar.LinesBackground);
+        // The Random algorithm keeps emitting near-parallel diagonals on top of the same stroke;
+        // RemoveDuplicates above only catches axis-aligned subsets, so collapse the rest by
+        // angle/midpoint similarity (same helper the structured algorithms use).
+        NOcrLineGenerator.RemoveSimilarLines(nOcrChar.LinesForeground, nOcrChar.Width, nOcrChar.Height);
+        NOcrLineGenerator.RemoveSimilarLines(nOcrChar.LinesBackground, nOcrChar.Width, nOcrChar.Height);
     }
 
     private static void GenerateLines(
@@ -458,7 +512,7 @@ public class NOcrChar
         }
     }
 
-    private static bool IsMatchPointForeGround(NOcrLine op, bool loose, NikseBitmap2 nbmp, NOcrChar nOcrChar)
+    internal static bool IsMatchPointForeGround(NOcrLine op, bool loose, NikseBitmap2 nbmp, NOcrChar nOcrChar)
     {
         if (Math.Abs(op.Start.X - op.End.X) < 2 && Math.Abs(op.End.Y - op.Start.Y) < 2)
         {
@@ -467,162 +521,120 @@ public class NOcrChar
 
         foreach (var point in op.ScaledGetPoints(nOcrChar, nbmp.Width, nbmp.Height))
         {
-            if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+            if (point.X < 0 || point.Y < 0 || point.X >= nbmp.Width || point.Y >= nbmp.Height)
             {
-                var c = nbmp.GetPixel(point.X, point.Y);
-                if (c.Alpha > 150)
-                {
-                }
-                else
-                {
-                    return false;
-                }
+                continue;
+            }
 
-                if (loose)
-                {
-                    if (nbmp.Width > 10 && point.X + 1 < nbmp.Width)
-                    {
-                        c = nbmp.GetPixel(point.X + 1, point.Y);
-                        if (c.Alpha > 150)
-                        {
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    }
+            if (nbmp.GetPixel(point.X, point.Y).Alpha <= 150)
+            {
+                return false;
+            }
 
-                    if (nbmp.Width > 10 && point.X >= 1)
-                    {
-                        c = nbmp.GetPixel(point.X - 1, point.Y);
-                        if (c.Alpha > 150)
-                        {
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    }
+            if (!loose)
+            {
+                continue;
+            }
 
-                    if (nbmp.Height > 10 && point.Y + 1 < nbmp.Height)
-                    {
-                        c = nbmp.GetPixel(point.X, point.Y + 1);
-                        if (c.Alpha > 150)
-                        {
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    }
+            if (nbmp.Width > 10 && point.X + 1 < nbmp.Width && nbmp.GetPixel(point.X + 1, point.Y).Alpha <= 150)
+            {
+                return false;
+            }
 
-                    if (nbmp.Height > 10 && point.Y >= 1)
-                    {
-                        c = nbmp.GetPixel(point.X, point.Y - 1);
-                        if (c.Alpha > 150)
-                        {
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    }
-                }
+            if (nbmp.Width > 10 && point.X >= 1 && nbmp.GetPixel(point.X - 1, point.Y).Alpha <= 150)
+            {
+                return false;
+            }
+
+            if (nbmp.Height > 10 && point.Y + 1 < nbmp.Height && nbmp.GetPixel(point.X, point.Y + 1).Alpha <= 150)
+            {
+                return false;
+            }
+
+            if (nbmp.Height > 10 && point.Y >= 1 && nbmp.GetPixel(point.X, point.Y - 1).Alpha <= 150)
+            {
+                return false;
             }
         }
 
         return true;
     }
 
-    private static bool IsMatchPointBackGround(NOcrLine op, bool loose, NikseBitmap2 nbmp, NOcrChar nOcrChar)
+    internal static bool IsMatchPointBackGround(NOcrLine op, bool loose, NikseBitmap2 nbmp, NOcrChar nOcrChar)
     {
         foreach (var point in op.ScaledGetPoints(nOcrChar, nbmp.Width, nbmp.Height))
         {
-            if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
+            if (point.X < 0 || point.Y < 0 || point.X >= nbmp.Width || point.Y >= nbmp.Height)
             {
-                var c = nbmp.GetPixel(point.X, point.Y);
-                if (c.Alpha > 150)
-                {
-                    return false;
-                }
+                continue;
+            }
 
-                if (nbmp.Width > 10 && point.X + 1 < nbmp.Width)
-                {
-                    c = nbmp.GetPixel(point.X + 1, point.Y);
-                    if (c.Alpha > 150)
-                    {
-                        return false;
-                    }
-                }
+            if (nbmp.GetPixel(point.X, point.Y).Alpha > 150)
+            {
+                return false;
+            }
 
-                if (loose)
-                {
-                    if (nbmp.Width > 10 && point.X >= 1)
-                    {
-                        c = nbmp.GetPixel(point.X - 1, point.Y);
-                        if (c.Alpha > 150)
-                        {
-                            return false;
-                        }
-                    }
+            if (!loose)
+            {
+                continue;
+            }
 
-                    if (nbmp.Height > 10 && point.Y + 1 < nbmp.Height)
-                    {
-                        c = nbmp.GetPixel(point.X, point.Y + 1);
-                        if (c.Alpha > 150)
-                        {
-                            return false;
-                        }
-                    }
+            // All four neighbors are gated on `loose` so the function is symmetric;
+            // previously the x+1 neighbor was checked unconditionally, which rejected
+            // BG lines running just to the right of a stroke even in non-loose mode.
+            if (nbmp.Width > 10 && point.X + 1 < nbmp.Width && nbmp.GetPixel(point.X + 1, point.Y).Alpha > 150)
+            {
+                return false;
+            }
 
-                    if (nbmp.Height > 10 && point.Y >= 1)
-                    {
-                        c = nbmp.GetPixel(point.X, point.Y - 1);
-                        if (c.Alpha > 150)
-                        {
-                            return false;
-                        }
-                    }
-                }
+            if (nbmp.Width > 10 && point.X >= 1 && nbmp.GetPixel(point.X - 1, point.Y).Alpha > 150)
+            {
+                return false;
+            }
+
+            if (nbmp.Height > 10 && point.Y + 1 < nbmp.Height && nbmp.GetPixel(point.X, point.Y + 1).Alpha > 150)
+            {
+                return false;
+            }
+
+            if (nbmp.Height > 10 && point.Y >= 1 && nbmp.GetPixel(point.X, point.Y - 1).Alpha > 150)
+            {
+                return false;
             }
         }
         return true;
     }
 
-    private static void RemoveDuplicates(List<NOcrLine> lines)
+    internal static void RemoveDuplicates(List<NOcrLine> lines)
     {
-        var indicesToDelete = new List<int>();
+        var indicesToDelete = new HashSet<int>();
         for (var index = 0; index < lines.Count; index++)
         {
-            var outerPoint = lines[index];
+            var outer = lines[index];
             for (var innerIndex = 0; innerIndex < lines.Count; innerIndex++)
             {
-                var innerPoint = lines[innerIndex];
-                if (innerPoint != outerPoint)
+                if (innerIndex == index || indicesToDelete.Contains(innerIndex))
                 {
-                    if (innerPoint.Start.X == innerPoint.End.X && outerPoint.Start.X == outerPoint.End.X && innerPoint.Start.X == outerPoint.Start.X)
+                    continue;
+                }
+
+                var inner = lines[innerIndex];
+                if (inner.Start.X == inner.End.X && outer.Start.X == outer.End.X && inner.Start.X == outer.Start.X)
+                {
+                    // both vertical at the same x — drop inner if its y-range is contained in outer's
+                    if (Math.Max(inner.Start.Y, inner.End.Y) <= Math.Max(outer.Start.Y, outer.End.Y) &&
+                        Math.Min(inner.Start.Y, inner.End.Y) >= Math.Min(outer.Start.Y, outer.End.Y))
                     {
-                        // same y
-                        if (Math.Max(innerPoint.Start.Y, innerPoint.End.Y) <= Math.Max(outerPoint.Start.Y, outerPoint.End.Y) &&
-                            Math.Min(innerPoint.Start.Y, innerPoint.End.Y) >= Math.Min(outerPoint.Start.Y, outerPoint.End.Y))
-                        {
-                            if (!indicesToDelete.Contains(innerIndex))
-                            {
-                                indicesToDelete.Add(innerIndex);
-                            }
-                        }
+                        indicesToDelete.Add(innerIndex);
                     }
-                    else if (innerPoint.Start.Y == innerPoint.End.Y && outerPoint.Start.Y == outerPoint.End.Y && innerPoint.Start.Y == outerPoint.Start.Y)
+                }
+                else if (inner.Start.Y == inner.End.Y && outer.Start.Y == outer.End.Y && inner.Start.Y == outer.Start.Y)
+                {
+                    // both horizontal at the same y — drop inner if its x-range is contained in outer's
+                    if (Math.Max(inner.Start.X, inner.End.X) <= Math.Max(outer.Start.X, outer.End.X) &&
+                        Math.Min(inner.Start.X, inner.End.X) >= Math.Min(outer.Start.X, outer.End.X))
                     {
-                        // same x
-                        if (Math.Max(innerPoint.Start.X, innerPoint.End.X) <= Math.Max(outerPoint.Start.X, outerPoint.End.X) &&
-                            Math.Min(innerPoint.Start.X, innerPoint.End.X) >= Math.Min(outerPoint.Start.X, outerPoint.End.X))
-                        {
-                            if (!indicesToDelete.Contains(innerIndex))
-                            {
-                                indicesToDelete.Add(innerIndex);
-                            }
-                        }
+                        indicesToDelete.Add(innerIndex);
                     }
                 }
             }

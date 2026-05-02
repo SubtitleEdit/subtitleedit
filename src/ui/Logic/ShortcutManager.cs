@@ -32,6 +32,34 @@ public class ShortcutManager : IShortcutManager
         };
     }
 
+    public static Key GetShortcutKey(KeyEventArgs e)
+    {
+        return GetShortcutKey(e.Key, e.PhysicalKey);
+    }
+
+    public static Key GetShortcutKey(Key key, PhysicalKey physicalKey)
+    {
+        return physicalKey switch
+        {
+            PhysicalKey.NumPad0 => Key.NumPad0,
+            PhysicalKey.NumPad1 => Key.NumPad1,
+            PhysicalKey.NumPad2 => Key.NumPad2,
+            PhysicalKey.NumPad3 => Key.NumPad3,
+            PhysicalKey.NumPad4 => Key.NumPad4,
+            PhysicalKey.NumPad5 => Key.NumPad5,
+            PhysicalKey.NumPad6 => Key.NumPad6,
+            PhysicalKey.NumPad7 => Key.NumPad7,
+            PhysicalKey.NumPad8 => Key.NumPad8,
+            PhysicalKey.NumPad9 => Key.NumPad9,
+            PhysicalKey.NumPadAdd => Key.Add,
+            PhysicalKey.NumPadDecimal => Key.Decimal,
+            PhysicalKey.NumPadDivide => Key.Divide,
+            PhysicalKey.NumPadMultiply => Key.Multiply,
+            PhysicalKey.NumPadSubtract => Key.Subtract,
+            _ => key,
+        };
+    }
+
     public void OnKeyPressed(object? sender, KeyEventArgs e)
     {
         // When IME is processing input, clear all active keys to prevent stale keys
@@ -43,14 +71,16 @@ public class ShortcutManager : IShortcutManager
             return;
         }
 
+        var key = GetShortcutKey(e);
+
         // Avoid adding modifier keys to the active keys set to prevent redundancy
         // with KeyEventArgs.KeyModifiers
-        if (e.Key is not (Key.LeftCtrl or Key.RightCtrl or
+        if (key is not (Key.LeftCtrl or Key.RightCtrl or
             Key.LeftShift or Key.RightShift or
             Key.LeftAlt or Key.RightAlt or
             Key.LWin or Key.RWin))
         {
-            _activeKeys.Add(e.Key);
+            _activeKeys.Add(key);
         }
 
         _isControlPressed = e.KeyModifiers.HasFlag(KeyModifiers.Control);
@@ -66,7 +96,7 @@ public class ShortcutManager : IShortcutManager
         }
         else
         {
-            _activeKeys.Remove(e.Key);
+            _activeKeys.Remove(GetShortcutKey(e));
         }
 
         _isControlPressed = e.KeyModifiers.HasFlag(KeyModifiers.Control);

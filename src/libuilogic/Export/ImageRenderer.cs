@@ -1,8 +1,5 @@
 using SkiaSharp;
 using SkiaSharp.HarfBuzz;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 

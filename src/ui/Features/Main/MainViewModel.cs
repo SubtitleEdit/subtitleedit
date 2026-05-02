@@ -1,4 +1,3 @@
-using Nikse.SubtitleEdit.UiLogic.Export;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -138,10 +137,10 @@ using Nikse.SubtitleEdit.Logic.Config.Language;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Initializers;
 using Nikse.SubtitleEdit.Logic.Media;
-using Nikse.SubtitleEdit.Logic.Platform.Windows;
 using Nikse.SubtitleEdit.Logic.UndoRedo;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6846,6 +6845,12 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void MergeSelectedLinesBilingual()
+    {
+        MergeLinesSelectedBilingual();
+    }
+
+    [RelayCommand]
     private void ToggleCasing()
     {
         if (IsSubtitleGridFocused())
@@ -10074,6 +10079,8 @@ public partial class MainViewModel :
     {
         var columns = SubtitleGrid.Columns.Where(p => p.IsVisible).ToList();
 
+        var showHideWidth = MeasureShowHideColumnWidth();
+
         var numberOfStarColumns = 0;
         for (var i = 0; i < columns.Count; i++)
         {
@@ -10084,7 +10091,8 @@ public partial class MainViewModel :
             if (column.Header.ToString() == Se.Language.General.Show ||
                 column.Header.ToString() == Se.Language.General.Hide)
             {
-                column.Width = new DataGridLength(column.MinWidth, DataGridLengthUnitType.Pixel);
+                var width = Math.Max(column.MinWidth, showHideWidth);
+                column.Width = new DataGridLength(width, DataGridLengthUnitType.Pixel);
                 continue;
             }
             else
@@ -10126,6 +10134,34 @@ public partial class MainViewModel :
         }
 
         SubtitleGrid.UpdateLayout();
+    }
+
+    private double MeasureShowHideColumnWidth()
+    {
+        // Use "8" digits — typically the widest digit glyph in proportional fonts.
+        var sample = Se.Settings.General.UseFrameMode ? "88:88:88.88" : "88:88:88,888";
+        if (Se.Settings.General.CurrentVideoOffsetInMs < 0)
+        {
+            sample = "-" + sample;
+        }
+
+        var fontFamily = SubtitleGrid.FontFamily ?? FontFamily.Default;
+        var typeface = new Typeface(fontFamily);
+        var fontSize = SubtitleGrid.FontSize > 0 ? SubtitleGrid.FontSize : Se.Settings.Appearance.SubtitleGridFontSize;
+
+        var formattedText = new FormattedText(
+            sample,
+            CultureInfo.CurrentCulture,
+            FlowDirection.LeftToRight,
+            typeface,
+            fontSize,
+            Brushes.Black);
+
+        var cellPadding = Se.Settings.Appearance.GridCompactMode ? 0 : 8; // cell theme: 4 left + 4 right
+        const int textBlockMargin = 8; // Avalonia DataGridTextColumn wraps text in TextBlock with Margin=Thickness(4)
+        // Scale safety buffer with font size: gridline + sort indicator chrome + sub-pixel rounding grows with size.
+        var safetyBuffer = Math.Max(10.0, fontSize);
+        return Math.Ceiling(formattedText.Width) + cellPadding + textBlockMargin + safetyBuffer;
     }
 
     private void SelectAllRows()
@@ -10475,12 +10511,31 @@ public partial class MainViewModel :
             {
                 if (ImportSubtitleFromDivX(fileName))
                 {
+                    return;
                 }
-                else
+            }
+
+            // check for video files ext and size >1 MB
+            if (fileSize > 1_000_000 && Utilities.VideoFileExtensions.Contains(ext.ToLowerInvariant()))
+            {
+                var answer = await MessageBox.Show(
+                    Window!,
+                    Se.Language.General.Error,
+                    string.Format(Se.Language.Main.ErrorLoadVideoFilePrompt, fileName),
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+                if (answer == MessageBoxResult.Yes)
                 {
-                    //   MessageBox.Show(_language.NotAValidXSubFile);
+                    await VideoOpenFile(fileName);
                 }
 
+                return;
+            }
+
+            // check for large file size - cannot be a subtitle file
+            if (fileSize > 100_000_000)
+            {
+                await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadLargeFile, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -10501,26 +10556,9 @@ public partial class MainViewModel :
 
             if (subtitle == null)
             {
-                // check for large file size (> 2 GB) - cannot be a subtitle file
-                if (fileSize > 2_000_000_000)
+                if (FileUtil.IsSpDvdSup(fileName))
                 {
-                    await MessageBox.Show(Window!, Se.Language.General.Error, Se.Language.Main.ErrorLoadLargeFile, MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                    // check if file is a video file - prompt to open as video
-                    if (Utilities.VideoFileExtensions.Contains(ext.ToLowerInvariant()))
-                    {
-                        var answer = await MessageBox.Show(
-                            Window!,
-                            Se.Language.General.Error,
-                            Se.Language.Main.ErrorLoadVideoFilePrompt,
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Question);
-                        if (answer == MessageBoxResult.Yes)
-                        {
-                            await VideoOpenFile(fileName);
-                        }
-                    }
-
+                    ImportAndOcrSpDvdSup(fileName);
                     return;
                 }
 
@@ -10891,6 +10929,27 @@ public partial class MainViewModel :
         Dispatcher.UIThread.Post(async () =>
         {
             var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.InitializeWebVtt(subtitle, fileName); });
+
+            if (result.OkPressed)
+            {
+                ResetSubtitle();
+                _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
+                _converted = true;
+                _subtitle.Paragraphs.Clear();
+                Subtitles.Clear();
+                Subtitles.AddRange(result.OcredSubtitle);
+                Renumber();
+                ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
+                SelectAndScrollToRow(0);
+            }
+        });
+    }
+
+    private void ImportAndOcrSpDvdSup(string fileName)
+    {
+        Dispatcher.UIThread.Post(async () =>
+        {
+            var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.InitializeSpDvdSup(fileName); });
 
             if (result.OkPressed)
             {
@@ -12410,6 +12469,8 @@ public partial class MainViewModel :
             }
         }
 
+        ComboBoxSubtitleFormatChanged(null, new SelectionChangedEventArgs(Avalonia.Controls.Primitives.SelectingItemsControl.SelectionChangedEvent, Array.Empty<object>(), Array.Empty<object>()));
+
         Task.Run(async () =>
         {
             if (Se.Settings.Appearance.RightToLeft)
@@ -12429,7 +12490,7 @@ public partial class MainViewModel :
                 {
                     Window.Activate();
                     SubtitleGrid.Focus();
-
+                    
                     SurroundWith1Text = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround1Left, Se.Settings.Surround1Right);
                     SurroundWith2Text = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround2Left, Se.Settings.Surround2Right);
                     SurroundWith3Text = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround3Left, Se.Settings.Surround3Right);
@@ -13397,6 +13458,72 @@ public partial class MainViewModel :
         Renumber();
     }
 
+    private void MergeLinesSelectedBilingual()
+    {
+        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (selectedItems.Count < 2)
+        {
+            return;
+        }
+
+        var ordered = selectedItems
+            .Select(item => (Item: item, Index: Subtitles.IndexOf(item)))
+            .Where(p => p.Index >= 0)
+            .OrderBy(p => p.Index)
+            .ToList();
+
+        if (ordered.Count != selectedItems.Count)
+        {
+            return;
+        }
+
+        for (var i = 1; i < ordered.Count; i++)
+        {
+            if (ordered[i].Index != ordered[i - 1].Index + 1)
+            {
+                return; // selection must be contiguous
+            }
+        }
+
+        var firstIndex = ordered[0].Index;
+        var first = ordered[0].Item;
+        var last = ordered[ordered.Count - 1].Item;
+
+        first.Text = MergeBilingualLines(ordered.Select(p => p.Item.Text));
+        if (ordered.Any(p => !string.IsNullOrEmpty(p.Item.OriginalText)))
+        {
+            first.OriginalText = MergeBilingualLines(ordered.Select(p => p.Item.OriginalText));
+        }
+
+        first.EndTime = last.EndTime;
+
+        for (var i = ordered.Count - 1; i >= 1; i--)
+        {
+            Subtitles.Remove(ordered[i].Item);
+        }
+
+        Renumber();
+        SelectAndScrollToRow(firstIndex);
+        _updateAudioVisualizer = true;
+    }
+
+    private static string MergeBilingualLines(IEnumerable<string> texts)
+    {
+        var split = texts.Select(t => (t ?? string.Empty).SplitToLines()).ToList();
+        var maxLines = split.Count == 0 ? 0 : split.Max(lines => lines.Count);
+        var resultLines = new List<string>(maxLines);
+        for (var i = 0; i < maxLines; i++)
+        {
+            var parts = split
+                .Select(lines => i < lines.Count ? lines[i].Trim() : string.Empty)
+                .Where(s => s.Length > 0);
+            resultLines.Add(string.Join(" ", parts));
+        }
+
+        var merged = string.Join(Environment.NewLine, resultLines);
+        return HtmlUtil.FixInvalidItalicTags(merged);
+    }
+
     private void ToggleItalic()
     {
         var selectedItems = _selectedSubtitles?.ToList() ?? [];
@@ -14027,13 +14154,24 @@ public partial class MainViewModel :
     private bool _subtitleGridIsLeftClick = false;
     private bool _subtitleGridIsControlPressed = false;
     private int _dragSelectStartIndex = -1;
+    private int _dragSelectLastIndex = -1;
+    private int _dragSelectAutoScrollDirection;
+    private int _dragSelectAutoScrollStep = 1;
+    private bool _dragSelectHasMoved;
+    private DispatcherTimer? _dragSelectAutoScrollTimer;
+    private const double DragSelectAutoScrollEdgeSize = 28;
+    private const double DragSelectAutoScrollAccelerationPixels = 18;
+    private const int DragSelectAutoScrollMaxStep = 16;
 
     public void SubtitleGrid_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
+        StopSubtitleGridDragSelectAutoScroll();
         _subtitleGridIsControlPressed = false;
         _subtitleGridIsLeftClick = false;
         _subtitleGridIsRightClick = false;
         _dragSelectStartIndex = -1;
+        _dragSelectLastIndex = -1;
+        _dragSelectHasMoved = false;
         IsSubtitleGridFlyoutHeaderVisible = false;
 
         if (sender is Control { ContextFlyout: not null } control)
@@ -14063,9 +14201,28 @@ public partial class MainViewModel :
                 if (rowIndex >= 0)
                 {
                     _dragSelectStartIndex = rowIndex;
+                    _dragSelectLastIndex = rowIndex;
                 }
             }
         }
+    }
+
+    public void SubtitleGridDropHost_DoubleTapped(object? sender, TappedEventArgs e)
+    {
+        var rowIndex = GetDataGridRowIndexFromPoint(e.GetPosition(SubtitleGrid));
+        if (rowIndex < 0 || rowIndex >= Subtitles.Count)
+        {
+            return;
+        }
+
+        StopSubtitleGridDragSelectAutoScroll();
+        _dragSelectStartIndex = -1;
+        _dragSelectLastIndex = -1;
+        _dragSelectHasMoved = false;
+
+        SubtitleGrid.SelectedItem = Subtitles[rowIndex];
+        OnSubtitleGridDoubleTapped(SubtitleGrid, e);
+        e.Handled = true;
     }
 
     private int GetDataGridRowIndexFromPoint(Avalonia.Point position)
@@ -14095,15 +14252,47 @@ public partial class MainViewModel :
         var props = e.GetCurrentPoint(SubtitleGrid).Properties;
         if (!props.IsLeftButtonPressed)
         {
-            _dragSelectStartIndex = -1;
+            EndSubtitleGridDragSelect(e);
             return;
         }
 
-        var currentIndex = GetDataGridRowIndexFromPoint(e.GetPosition(SubtitleGrid));
-        if (currentIndex < 0 || currentIndex == _dragSelectStartIndex)
+        var position = e.GetPosition(SubtitleGrid);
+        UpdateSubtitleGridDragSelectAutoScroll(position);
+
+        var currentIndex = GetDataGridRowIndexFromPoint(position);
+        if (currentIndex < 0)
         {
             return;
         }
+
+        var wasDragging = _dragSelectHasMoved;
+        DragSelectSubtitleGridToIndex(currentIndex);
+        if (_dragSelectHasMoved)
+        {
+            if (!wasDragging && sender is Control control)
+            {
+                e.Pointer.Capture(control);
+            }
+
+            e.Handled = true;
+        }
+    }
+
+    private void DragSelectSubtitleGridToIndex(int currentIndex)
+    {
+        if (_dragSelectStartIndex < 0 || currentIndex < 0 || currentIndex >= Subtitles.Count)
+        {
+            return;
+        }
+
+        _dragSelectLastIndex = currentIndex;
+
+        if (currentIndex == _dragSelectStartIndex && !_dragSelectHasMoved)
+        {
+            return;
+        }
+
+        _dragSelectHasMoved = true;
 
         var startIdx = Math.Min(_dragSelectStartIndex, currentIndex);
         var endIdx = Math.Max(_dragSelectStartIndex, currentIndex);
@@ -14123,26 +14312,122 @@ public partial class MainViewModel :
         SubtitleGridSelectionChanged();
     }
 
+    private void UpdateSubtitleGridDragSelectAutoScroll(Avalonia.Point position)
+    {
+        if (SubtitleGrid.Bounds.Height <= 0)
+        {
+            StopSubtitleGridDragSelectAutoScroll();
+            return;
+        }
+
+        if (position.Y < DragSelectAutoScrollEdgeSize)
+        {
+            var distanceFromEdge = DragSelectAutoScrollEdgeSize - position.Y;
+            StartSubtitleGridDragSelectAutoScroll(-1, distanceFromEdge);
+        }
+        else if (position.Y > SubtitleGrid.Bounds.Height - DragSelectAutoScrollEdgeSize)
+        {
+            var distanceFromEdge = position.Y - (SubtitleGrid.Bounds.Height - DragSelectAutoScrollEdgeSize);
+            StartSubtitleGridDragSelectAutoScroll(1, distanceFromEdge);
+        }
+        else
+        {
+            StopSubtitleGridDragSelectAutoScroll();
+        }
+    }
+
+    private void StartSubtitleGridDragSelectAutoScroll(int direction, double distanceFromEdge)
+    {
+        if (_dragSelectLastIndex < 0 || Subtitles.Count == 0)
+        {
+            return;
+        }
+
+        _dragSelectAutoScrollDirection = direction;
+        _dragSelectAutoScrollStep = CalculateSubtitleGridDragSelectAutoScrollStep(distanceFromEdge);
+
+        if (_dragSelectAutoScrollTimer != null)
+        {
+            if (!_dragSelectAutoScrollTimer.IsEnabled)
+            {
+                _dragSelectAutoScrollTimer.Start();
+            }
+
+            return;
+        }
+
+        _dragSelectAutoScrollTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(80),
+        };
+        _dragSelectAutoScrollTimer.Tick += (_, _) => SubtitleGridDragSelectAutoScrollTick();
+        _dragSelectAutoScrollTimer.Start();
+    }
+
+    private static int CalculateSubtitleGridDragSelectAutoScrollStep(double distanceFromEdge)
+    {
+        var step = 1 + (int)Math.Floor(Math.Max(0, distanceFromEdge) / DragSelectAutoScrollAccelerationPixels);
+        return Math.Clamp(step, 1, DragSelectAutoScrollMaxStep);
+    }
+
+    private void StopSubtitleGridDragSelectAutoScroll()
+    {
+        _dragSelectAutoScrollDirection = 0;
+        _dragSelectAutoScrollStep = 1;
+        _dragSelectAutoScrollTimer?.Stop();
+    }
+
+    private void SubtitleGridDragSelectAutoScrollTick()
+    {
+        if (_dragSelectStartIndex < 0 || !_subtitleGridIsLeftClick || _dragSelectAutoScrollDirection == 0)
+        {
+            StopSubtitleGridDragSelectAutoScroll();
+            return;
+        }
+
+        var nextIndex = Math.Clamp(
+            _dragSelectLastIndex + _dragSelectAutoScrollDirection * _dragSelectAutoScrollStep,
+            0,
+            Subtitles.Count - 1);
+        if (nextIndex == _dragSelectLastIndex)
+        {
+            StopSubtitleGridDragSelectAutoScroll();
+            return;
+        }
+
+        DragSelectSubtitleGridToIndex(nextIndex);
+        SubtitleGrid.ScrollIntoView(Subtitles[nextIndex], null);
+    }
+
     public void SubtitleGrid_PointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        _dragSelectStartIndex = -1;
+        EndSubtitleGridDragSelect(e);
 
         if (sender is Control { ContextFlyout: MenuFlyout menuFlyout } control)
         {
-            if (_subtitleGridIsRightClick)
+            if (_subtitleGridIsRightClick && !_dragSelectHasMoved)
             {
                 menuFlyout.ShowAt(control, true);
             }
 
             if (OperatingSystem.IsMacOS())
             {
-                if (_subtitleGridIsLeftClick && _subtitleGridIsControlPressed)
+                if (_subtitleGridIsLeftClick && _subtitleGridIsControlPressed && !_dragSelectHasMoved)
                 {
                     menuFlyout.ShowAt(control, true);
                     e.Handled = true;
                 }
             }
         }
+    }
+
+    private void EndSubtitleGridDragSelect(PointerEventArgs e)
+    {
+        StopSubtitleGridDragSelectAutoScroll();
+        e.Pointer.Capture(null);
+        _dragSelectStartIndex = -1;
+        _dragSelectLastIndex = -1;
+        _dragSelectAutoScrollDirection = 0;
     }
 
     public void SubtitleGrid_SelectionChanged(object? sender, SelectionChangedEventArgs e)

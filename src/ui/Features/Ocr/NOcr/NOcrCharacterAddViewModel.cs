@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Threading.Tasks;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -16,6 +11,11 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.NOcr;
 
@@ -46,6 +46,9 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
     [ObservableProperty] private bool _isInspectAdditionsVisible;
     [ObservableProperty] private ObservableCollection<int> _noOfLinesToAutoDrawList;
     [ObservableProperty] private int _selectedNoOfLinesToAutoDraw;
+    [ObservableProperty] private ObservableCollection<NOcrLineAlgorithmItem> _lineAlgorithms;
+    [ObservableProperty] private NOcrLineAlgorithmItem _selectedLineAlgorithm;
+    [ObservableProperty] private string _linesGeneratedInfo;
     [ObservableProperty] private Bitmap _sentenceBitmap;
     [ObservableProperty] private Bitmap _currentBitmap;
 
@@ -86,12 +89,15 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
 
         const int maxLines = 500;
         NoOfLinesToAutoDrawList = new ObservableCollection<int>();
-        for (var i = 10; i <= maxLines; i++)
+        for (var i = 0; i <= maxLines; i++)
         {
             NoOfLinesToAutoDrawList.Add(i);
         }
 
         SelectedNoOfLinesToAutoDraw = 100;
+        LineAlgorithms = new ObservableCollection<NOcrLineAlgorithmItem>(NOcrLineAlgorithmItem.Items);
+        SelectedLineAlgorithm = LineAlgorithms[0];
+        LinesGeneratedInfo = string.Empty;
         NOcrChar = new NOcrChar();
         _nOcrDb = new NOcrDb(string.Empty);
         SentenceBitmap = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
@@ -113,6 +119,19 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
         IsNewTextItalic = Se.Settings.Ocr.IsNewLetterItalic;
         SubmitOnFirstLetter = Se.Settings.Ocr.SubmitOnFirstLetter;
         SelectedNoOfLinesToAutoDraw = Se.Settings.Ocr.NOcrNoOfLinesToAutoDraw;
+
+        var savedAlgo = Se.Settings.Ocr.NOcrLineAlgorithm;
+        if (!string.IsNullOrEmpty(savedAlgo) && Enum.TryParse<NOcrLineAlgorithm>(savedAlgo, out var algoEnum))
+        {
+            foreach (var item in LineAlgorithms)
+            {
+                if (item.Value == algoEnum)
+                {
+                    SelectedLineAlgorithm = item;
+                    break;
+                }
+            }
+        }
     }
 
     private void SaveSettings()
@@ -120,6 +139,7 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
         Se.Settings.Ocr.IsNewLetterItalic = IsNewTextItalic;
         Se.Settings.Ocr.SubmitOnFirstLetter = SubmitOnFirstLetter;
         Se.Settings.Ocr.NOcrNoOfLinesToAutoDraw = SelectedNoOfLinesToAutoDraw;
+        Se.Settings.Ocr.NOcrLineAlgorithm = SelectedLineAlgorithm.Value.ToString();
         Se.SaveSettings();
     }
 
@@ -282,13 +302,74 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Ok()
+    private async Task Ok()
     {
+        if (string.IsNullOrEmpty(NewText) && Se.Settings.Ocr.PromptForBlankOcrText)
+        {
+            var answer = await MessageBox.Show(
+                Window!,
+                Se.Language.Ocr.SaveBlankTextTitle,
+                Se.Language.Ocr.SaveBlankTextPrompt,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question,
+                custom1: Se.Language.Ocr.YesAndNeverAskAgain);
+
+            if (answer == MessageBoxResult.No || answer == MessageBoxResult.None)
+            {
+                return;
+            }
+
+            if (answer == MessageBoxResult.Custom1)
+            {
+                Se.Settings.Ocr.PromptForBlankOcrText = false;
+            }
+        }
+
         NOcrChar.Text = NewText;
         NOcrChar.Italic = IsNewTextItalic;
+        SyncCanvasLinesToNOcrChar();
         OkPressed = true;
         SaveSettings();
         Close();
+    }
+
+    private void SyncCanvasLinesToNOcrChar()
+    {
+        if (PreviewBitmap == null)
+        {
+            return;
+        }
+
+        var bitmapWidth = PreviewBitmap.Width;
+        var bitmapHeight = PreviewBitmap.Height;
+        if (bitmapWidth <= 0 || bitmapHeight <= 0)
+        {
+            return;
+        }
+
+        NOcrChar.LinesForeground.Clear();
+        foreach (var line in NOcrDrawingCanvas.HitPaths)
+        {
+            NOcrChar.LinesForeground.Add(new NOcrLine(
+                new OcrPoint(
+                    (int)Math.Round(line.Start.X * NOcrChar.Width / (double)bitmapWidth, MidpointRounding.AwayFromZero),
+                    (int)Math.Round(line.Start.Y * NOcrChar.Height / (double)bitmapHeight, MidpointRounding.AwayFromZero)),
+                new OcrPoint(
+                    (int)Math.Round(line.End.X * NOcrChar.Width / (double)bitmapWidth, MidpointRounding.AwayFromZero),
+                    (int)Math.Round(line.End.Y * NOcrChar.Height / (double)bitmapHeight, MidpointRounding.AwayFromZero))));
+        }
+
+        NOcrChar.LinesBackground.Clear();
+        foreach (var line in NOcrDrawingCanvas.MissPaths)
+        {
+            NOcrChar.LinesBackground.Add(new NOcrLine(
+                new OcrPoint(
+                    (int)Math.Round(line.Start.X * NOcrChar.Width / (double)bitmapWidth, MidpointRounding.AwayFromZero),
+                    (int)Math.Round(line.Start.Y * NOcrChar.Height / (double)bitmapHeight, MidpointRounding.AwayFromZero)),
+                new OcrPoint(
+                    (int)Math.Round(line.End.X * NOcrChar.Width / (double)bitmapWidth, MidpointRounding.AwayFromZero),
+                    (int)Math.Round(line.End.Y * NOcrChar.Height / (double)bitmapHeight, MidpointRounding.AwayFromZero))));
+        }
     }
 
     [RelayCommand]
@@ -327,11 +408,29 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
         NOcrChar.LinesBackground.Clear();
         if (PreviewBitmap == null)
         {
+            LinesGeneratedInfo = string.Empty;
             return;
         }
 
-        NOcrChar.GenerateLineSegments(SelectedNoOfLinesToAutoDraw, false, NOcrChar, PreviewBitmap);
+        NOcrChar.GenerateLineSegments(SelectedNoOfLinesToAutoDraw, false, NOcrChar, PreviewBitmap, SelectedLineAlgorithm.Value);
+        UpdateLinesGeneratedInfo();
         ShowOcrPoints();
+    }
+
+    private void UpdateLinesGeneratedInfo()
+    {
+        LinesGeneratedInfo = $"Generated: {NOcrChar.LinesForeground.Count} foreground, {NOcrChar.LinesBackground.Count} background";
+    }
+
+    partial void OnSelectedLineAlgorithmChanged(NOcrLineAlgorithmItem value)
+    {
+        // Skip the constructor/LoadSettings firings - DrawAgain returns early on null
+        // PreviewBitmap anyway, but this avoids a flicker through the empty-info path.
+        if (PreviewBitmap == null)
+        {
+            return;
+        }
+        DrawAgain();
     }
 
     [RelayCommand]
@@ -414,6 +513,7 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
 
         NOcrDrawingCanvas.MissPaths.AddRange(NOcrChar.LinesBackground);
         NOcrDrawingCanvas.HitPaths.AddRange(NOcrChar.LinesForeground);
+        UpdateLinesGeneratedInfo();
         NOcrDrawingCanvas.InvalidateVisual();
     }
 
@@ -427,7 +527,7 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
         if (e.Key == Key.Enter && !string.IsNullOrWhiteSpace(TextBoxNew.Text))
         {
             e.Handled = true;
-            Ok();
+            _ = Ok();
         }
     }
 
@@ -436,7 +536,7 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
         if (SubmitOnFirstLetter && NewText.Length >= 1)
         {
             e.Handled = true;
-            Ok();
+            _ = Ok();
         }
     }
 

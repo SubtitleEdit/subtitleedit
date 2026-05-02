@@ -33,12 +33,13 @@ public static class InitVideoPlayer
             vm.VideoPlayerControl = null;
         }
 
+        var nonFullScreenMargin = new Thickness(0, 0, 8, 0);
         var mainGrid = new Grid
         {
             RowDefinitions = new RowDefinitions("*"),
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
-            Margin = new Thickness(0, 0, 8, 0),
+            Margin = nonFullScreenMargin,
         };
 
         DragDrop.SetAllowDrop(mainGrid, true);
@@ -46,6 +47,10 @@ public static class InitVideoPlayer
         mainGrid.AddHandler(DragDrop.DropEvent, vm.VideoOnDrop, RoutingStrategies.Bubble);
 
         var control = MakeVideoPlayer();
+        control.IsFullScreenChanged += isFullScreen =>
+        {
+            mainGrid.Margin = isFullScreen ? new Thickness(0) : nonFullScreenMargin;
+        };
         if (!string.IsNullOrEmpty(mediaFile))
         {
             Dispatcher.UIThread.Post(async () =>

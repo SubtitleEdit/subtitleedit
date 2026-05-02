@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Features.Files.ExportCustomTextFormat;
 using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Ocr;
+using Nikse.SubtitleEdit.Features.Ocr.Download;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.ErrorList;
 using Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
@@ -645,6 +646,12 @@ public partial class BatchConvertViewModel : ObservableObject
         SaveSettings();
 
         var config = MakeBatchConvertConfig();
+
+        if (!await EnsurePaddleOcrAvailable(config))
+        {
+            return;
+        }
+
         _batchConverter.Initialize(config);
         var start = DateTime.UtcNow.Ticks;
 
@@ -702,6 +709,145 @@ public partial class BatchConvertViewModel : ObservableObject
 
             await ShowStatus(message);
         }, _cancellationToken);
+    }
+
+    private async Task<bool> EnsurePaddleOcrAvailable(BatchConvertConfig config)
+    {
+        if (Window == null || Configuration.IsRunningOnMac)
+        {
+            return true;
+        }
+
+        if (config.IsTargetFormatImageBased)
+        {
+            return true;
+        }
+
+        if (!Se.Settings.Tools.BatchConvert.OcrEngine.Equals("PaddleOCR", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (!BatchItems.Any(IsImageBasedInput))
+        {
+            return true;
+        }
+
+        if (Configuration.IsRunningOnWindows && !File.Exists(Path.Combine(Se.PaddleOcrFolder, "paddleocr.exe")))
+        {
+            var answer = await MessageBox.Show(
+                Window,
+                "Download Paddle OCR?",
+                $"{Environment.NewLine}\"Paddle OCR\" requires downloading Paddle OCR.{Environment.NewLine}{Environment.NewLine}Download and use Paddle OCR?",
+                MessageBoxButtons.Cancel,
+                MessageBoxIcon.Question,
+                "CPU",
+                "GPU CUDA 11",
+                "GPU CUDA 12");
+
+            if (answer == MessageBoxResult.Cancel)
+            {
+                return false;
+            }
+
+            var result = await _windowService.ShowDialogAsync<DownloadPaddleOcrWindow, DownloadPaddleOcrViewModel>(Window,
+                vm =>
+                {
+                    var engine = PaddleOcrDownloadType.EngineCpu;
+                    if (answer == MessageBoxResult.Custom1)
+                    {
+                        engine = PaddleOcrDownloadType.EngineCpu;
+                    }
+                    else if (answer == MessageBoxResult.Custom2)
+                    {
+                        engine = PaddleOcrDownloadType.EngineGpu11;
+                    }
+                    else if (answer == MessageBoxResult.Custom3)
+                    {
+                        engine = PaddleOcrDownloadType.EngineGpu12;
+                    }
+
+                    vm.Initialize(engine);
+                });
+
+            if (!result.OkPressed)
+            {
+                return false;
+            }
+        }
+        else if (Configuration.IsRunningOnLinux && !File.Exists(Path.Combine(Se.PaddleOcrFolder, "paddleocr.bin")))
+        {
+            var answer = await MessageBox.Show(
+                Window,
+                "Download Paddle OCR?",
+                $"{Environment.NewLine}\"Paddle OCR\" requires downloading Paddle OCR.{Environment.NewLine}{Environment.NewLine}Download and use Paddle OCR?",
+                MessageBoxButtons.Cancel,
+                MessageBoxIcon.Question,
+                "CPU",
+                "GPU CUDA");
+
+            if (answer == MessageBoxResult.Cancel)
+            {
+                return false;
+            }
+
+            var result = await _windowService.ShowDialogAsync<DownloadPaddleOcrWindow, DownloadPaddleOcrViewModel>(Window,
+                vm =>
+                {
+                    vm.Initialize(answer == MessageBoxResult.Custom1
+                        ? PaddleOcrDownloadType.EngineCpuLinux
+                        : PaddleOcrDownloadType.EngineGpuLinux);
+                });
+
+            if (!result.OkPressed)
+            {
+                return false;
+            }
+        }
+
+        var modelsDirectory = Se.PaddleOcrModelsFolder;
+        if (!Directory.Exists(modelsDirectory))
+        {
+            var result = await _windowService.ShowDialogAsync<DownloadPaddleOcrWindow, DownloadPaddleOcrViewModel>(Window,
+                vm => { vm.Initialize(PaddleOcrDownloadType.Models); });
+
+            if (!result.OkPressed)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool IsImageBasedInput(BatchConvertItem item)
+    {
+        if (item.Format == null)
+        {
+            return false;
+        }
+
+        if (item.Format == BatchConverter.FormatBluRaySup ||
+            item.Format == BatchConverter.FormatBdnXml ||
+            item.Format == BatchConverter.FormatVobSub)
+        {
+            return true;
+        }
+
+        if (item.Format.StartsWith("Matroska", StringComparison.Ordinal) &&
+            (item.Format.Contains("S_VOBSUB", StringComparison.OrdinalIgnoreCase) ||
+             item.Format.Contains("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase) ||
+             item.Format.Contains("S_DVBSUB", StringComparison.OrdinalIgnoreCase)))
+        {
+            return true;
+        }
+
+        if (item.Format.StartsWith("Transport Stream", StringComparison.Ordinal))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     [RelayCommand]

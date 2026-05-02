@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -95,7 +96,16 @@ public class SpellCheckManager : ISpellCheckManager, IDoSpell
         {
             var name = Path.GetFileNameWithoutExtension(dictionaryFile);
             var fiveLetterCode = SpellCheckDictionaryDisplay.GetFiveLetterLanguageName(name);
-            _spellCheckWordLists = new SpellCheckWordLists(fiveLetterCode ?? "en_US", this);
+
+            try
+            {
+                _spellCheckWordLists = new SpellCheckWordLists(fiveLetterCode ?? "en_US", this);
+            }
+            catch (Exception exception)
+            {
+                Se.LogError("Error loading names for SpellCheckManager: " + exception.Message);
+                _spellCheckWordLists = new SpellCheckWordLists(string.Empty, this);
+            }
         }
 
         return true;

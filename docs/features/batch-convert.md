@@ -35,9 +35,29 @@ You can chain multiple conversion functions:
 - Auto translate
 - Delete lines
 
+## OCR in Batch Convert
+
+Batch Convert can OCR image-based subtitle files while converting them to text-based formats.
+
+Supported OCR workflows include:
+
+- Tesseract
+- nOCR
+- Binary OCR
+- Ollama OCR
+- PaddleOCR
+
+Subtitle Edit 5 can auto-detect language and pixels-are-space settings for nOCR/Binary OCR in many batch workflows. This reduces the amount of manual setup needed when converting many image-based subtitle files with similar fonts.
+
+## Speech to Text in Batch Mode
+
+Speech-to-text batch mode can transcribe multiple media files and save the results next to the source files. See [Speech to Text](speech-to-text.md) for engine setup and model details.
+
 ## Settings
 
 - **Output format** — Choose from 300+ subtitle formats
 - **Output folder** — Where converted files are saved
 - **Overwrite existing** — Whether to overwrite files
 - **Encoding** — Text encoding for output files
+
+For headless batch conversion, see [Command Line (seconv)](../reference/command-line.md).

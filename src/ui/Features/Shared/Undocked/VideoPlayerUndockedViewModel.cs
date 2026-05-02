@@ -76,6 +76,8 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
         else
         {
             UiUtil.SaveWindowPosition(Window);
+            _mouseMoveDetectionTimer?.Stop();
+            _mouseMoveDetectionTimer = null;
         }
     }
 
@@ -167,6 +169,10 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
         VideoPlayerControl.FullScreenCommand = ToggleFullScreenCommand;
         VideoPlayerControl.FullscreenCollapseRequested += () => ToggleFullScreen();
 
+        // Sync IsFullScreen with the restored window state so auto-hide engages
+        // without requiring an initial mouse wiggle to trigger it.
+        VideoPlayerControl.IsFullScreen = Window.WindowState == WindowState.FullScreen;
+
         if (!string.IsNullOrEmpty(_originalVideoFileName))
         {
             Dispatcher.UIThread.Post(async () =>
@@ -207,6 +213,7 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
                 // Ignore errors
             }
         };
+        _mouseMoveDetectionTimer.Start();
 
         // Keep these handlers as fallback if native APIs fail
         videoPlayerControl.PointerMoved += (_, e) =>

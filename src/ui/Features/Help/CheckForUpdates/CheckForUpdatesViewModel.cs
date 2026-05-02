@@ -13,7 +13,9 @@ namespace Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 
 public partial class CheckForUpdatesViewModel : ObservableObject
 {
-    private const string ChangeLogUrl = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/ChangeLog.txt";
+    private const string ChangeLogUrl1 = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/Changelog.txt";
+    private const string ChangeLogUrl2 = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/ChangeLog.txt";
+    private const string ChangeLogUrl3 = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/change-log.txt";
     private const string ReleasesUrl = "https://github.com/SubtitleEdit/subtitleedit/releases";
     private static readonly Regex UnreleasedChangeLogRegex = new(@"(x(th|st) \w+ \d+)", RegexOptions.Compiled);
 
@@ -40,7 +42,22 @@ public partial class CheckForUpdatesViewModel : ObservableObject
 
         try
         {
-            var content = await _httpClient.GetStringAsync(ChangeLogUrl);
+            string content;
+            try
+            {
+                content = await _httpClient.GetStringAsync(ChangeLogUrl1);
+            }
+            catch
+            {
+                try
+                {
+                    content = await _httpClient.GetStringAsync(ChangeLogUrl2);
+                }
+                catch
+                {
+                    content = await _httpClient.GetStringAsync(ChangeLogUrl3);
+                }
+            }
 
             ChangeLogText = ParseLatestChangeLog(content);
             var latestVersion = ParseLatestVersion(ChangeLogText);

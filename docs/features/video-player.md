@@ -61,6 +61,14 @@ You can undock the video player into a separate window for multi-monitor setups:
 - **Undock video controls**
 - **Redock video controls**
 
+## Secondary Subtitles
+
+You can open a secondary subtitle on the video player and remove it again from the Video menu. This is useful when checking a translation against the original subtitle while previewing video playback.
+
+## Embedded Subtitles
+
+Use [Embedded Subtitles](embedded-subtitles.md) to add, remove, preview, and edit Matroska/WebM embedded subtitle tracks.
+
 ## Supported Video Players
 
 Configure the video player backend in **Options → Settings → Video Player**:
@@ -84,3 +92,11 @@ This displays:
 ## Audio Tracks
 
 If the video has multiple audio tracks, you can toggle between them via the video menu or a shortcut.
+
+## Video Menu Options
+
+The Video menu also includes:
+
+- **Toggle select subtitle while playing** - automatically select the current subtitle during playback.
+- **Set video offset** - shift video playback relative to the subtitle timing.
+- **SMPTE timing** - toggle SMPTE-style timing display when available.

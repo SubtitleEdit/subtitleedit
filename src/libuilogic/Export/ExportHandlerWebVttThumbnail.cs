@@ -1,7 +1,4 @@
 using Nikse.SubtitleEdit.Core.Common;
-
-
-using System.IO;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.UiLogic.Export;

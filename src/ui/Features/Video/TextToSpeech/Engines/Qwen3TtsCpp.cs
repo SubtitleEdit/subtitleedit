@@ -281,6 +281,20 @@ public class Qwen3TtsCpp : ITtsEngine
             psi.ArgumentList.Add("--port");
             psi.ArgumentList.Add(port.ToString());
 
+            if (OperatingSystem.IsWindows())
+            {
+                var vulkanPath = Se.Settings.Video.TextToSpeech.Qwen3TtsCppVulkanPath;
+                if (string.IsNullOrEmpty(vulkanPath))
+                {
+                    vulkanPath = Logic.VulkanHelper.TryFindBinFolder();
+                }
+                if (!string.IsNullOrEmpty(vulkanPath) && psi.EnvironmentVariables["Path"] != null)
+                {
+                    psi.EnvironmentVariables["Path"] =
+                        psi.EnvironmentVariables["Path"]?.TrimEnd(';') + ";" + vulkanPath;
+                }
+            }
+
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start qwen3-tts-server");
 

@@ -938,6 +938,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             if (failed == 0)
             {
+                OkPressed = true; 
                 Window?.Close();
             }
         });

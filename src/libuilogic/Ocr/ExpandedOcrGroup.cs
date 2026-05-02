@@ -1,6 +1,4 @@
 using SkiaSharp;
-using System;
-using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.UiLogic.Ocr;
 

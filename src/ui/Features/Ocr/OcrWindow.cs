@@ -524,6 +524,24 @@ public class OcrWindow : Window
         menuItemExport.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
         flyout.Items.Add(menuItemExport);
 
+        var menuItemImportTextFromSubtitle = new MenuItem
+        {
+            Header = Se.Language.Ocr.ImportTextFromSubtitleDotDotDot,
+            DataContext = vm,
+            Command = vm.ImportTextFromSubtitleCommand,
+        };
+        menuItemImportTextFromSubtitle.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
+        flyout.Items.Add(menuItemImportTextFromSubtitle);
+
+        var menuItemExportTextAsSubtitle = new MenuItem
+        {
+            Header = Se.Language.Ocr.ExportTextAsSubtitleDotDotDot,
+            DataContext = vm,
+            Command = vm.ExportTextAsSubtitleCommand,
+        };
+        menuItemExportTextAsSubtitle.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
+        flyout.Items.Add(menuItemExportTextAsSubtitle);
+
         vm.SubtitleGrid.ContextFlyout = flyout;
 
         return UiUtil.MakeBorderForControlNoPadding(dataGridSubtitle).WithMarginBottom(5);

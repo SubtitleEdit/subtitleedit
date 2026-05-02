@@ -28,8 +28,16 @@ internal static class SkBitmapExtensions
         return bitmap;
     }
 
-    public static unsafe SKBitmap CropTransparentColors(this SKBitmap originalBitmap, byte alphaThreshold = 0)
+    public static SKBitmap CropTransparentColors(this SKBitmap originalBitmap, byte alphaThreshold = 0)
     {
+        return originalBitmap.CropTransparentColors(out _, out _, alphaThreshold);
+    }
+
+    public static unsafe SKBitmap CropTransparentColors(this SKBitmap originalBitmap, out int offsetX, out int offsetY, byte alphaThreshold = 0)
+    {
+        offsetX = 0;
+        offsetY = 0;
+
         if (originalBitmap.Width == 0 || originalBitmap.Height == 0)
         {
             return originalBitmap;
@@ -124,6 +132,8 @@ internal static class SkBitmapExtensions
         var destination = new SKBitmap();
         originalBitmap.ExtractSubset(destination, subset);
 
+        offsetX = left;
+        offsetY = top;
         return destination;
     }
 

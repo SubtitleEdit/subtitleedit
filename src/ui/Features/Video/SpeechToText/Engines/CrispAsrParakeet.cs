@@ -74,6 +74,15 @@ public class CrispAsrParakeet : CrispAsrEngineBase
                     "https://huggingface.co/cstr/parakeet-tdt-0.6b-v3-GGUF/resolve/main/parakeet-tdt-0.6b-v3.gguf",
                 ],
             },
+            new WhisperModel
+            {
+                Name = "parakeet-tdt-0.6b-ja.gguf",
+                Size = "1.24 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-tdt-0.6b-ja-GGUF/resolve/main/parakeet-tdt-0.6b-ja.gguf",
+                ],
+            },
        };
 
     public override string Extension => string.Empty;

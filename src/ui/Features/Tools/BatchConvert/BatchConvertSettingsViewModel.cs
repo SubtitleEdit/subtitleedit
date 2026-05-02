@@ -59,7 +59,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         TargetEncodings = new ObservableCollection<string>(encodings);
 
         OcrEngines = new ObservableCollection<string> { "nOcr", "BinaryOcr", "Tesseract", "Ollama" };
-        if (OperatingSystem.IsWindows() && File.Exists(Path.Combine(Se.PaddleOcrFolder, "paddleocr.exe")))
+        if (!OperatingSystem.IsMacOS())
         {
             OcrEngines.Add("PaddleOCR");
         }

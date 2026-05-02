@@ -1,6 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.BluRaySup;
 using SkiaSharp;
-using System;
 
 namespace Nikse.SubtitleEdit.UiLogic.Export;
 

@@ -508,7 +508,16 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
     public List<string> ReloadNames()
     {
         var names = _spellCheckWordLists.GetAllNames();
-        _spellCheckWordLists = new SpellCheckWordLists(_fiveLetterName, this);
+        try
+        {
+            _spellCheckWordLists = new SpellCheckWordLists(_fiveLetterName, this);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError("Error loading names for OCR fix engine: " + exception.Message);
+            _spellCheckWordLists = new SpellCheckWordLists(string.Empty, this);
+        }
+        
         return names;
     }
 }

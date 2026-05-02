@@ -117,17 +117,10 @@ for sha_file in pkgs_dir.glob("**/*.nupkg.sha512"):
     version = sha_file.parent.name
     name    = sha_file.parent.parent.name
     filename = f"{name}.{version}.nupkg"
-    # The flatpak build targets linux-x64 / linux-arm64 only, but dotnet restore
-    # on a non-Linux host may drag in host-RID runtime packs (win-*, osx-*, etc.)
-    # Those are wasted bandwidth and bloat the offline cache, so drop them.
-    lower = name.lower()
-    if any(tag in lower for tag in (
-        ".win-", ".win10-", ".windowsdesktop.",
-        ".osx-", ".osx.", ".mac-", ".maccatalyst-",
-        ".android-", ".ios-", ".tvos-",
-        ".freebsd-",
-    )):
-        continue
+    # Don't filter by RID. Old PackageReferences (e.g. System.Net.Http 4.3.x)
+    # declare runtime.osx.*, runtime.win-*, etc. as transitive deps that NuGet
+    # must be able to resolve during restore even when targeting linux-x64.
+    # Stripping them by platform causes NU1101 inside the flatpak sandbox.
     url = f"https://api.nuget.org/v3-flatcontainer/{name}/{version}/{filename}"
     sha512_b64 = sha_file.read_text().strip()
     sha512_hex = binascii.hexlify(base64.b64decode(sha512_b64)).decode("ascii")

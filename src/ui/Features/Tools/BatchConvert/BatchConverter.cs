@@ -1084,14 +1084,13 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
             lock (_paddleLock)
             {
+                ocrCount++;
                 var number = p.Index;
-                var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+                var percentage = numberOfImages > 0 ? ocrCount * 100 / numberOfImages : 0;
                 item.Status = string.Format(Se.Language.General.OcrPercentX, percentage);
 
                 var paragraph = new Paragraph(p.Text, imageSubtitles.GetStartTime(number).TotalMilliseconds, imageSubtitles.GetEndTime(number).TotalMilliseconds);
                 item.Subtitle.Paragraphs.Add(paragraph);
-
-                ocrCount++;
             }
         });
 

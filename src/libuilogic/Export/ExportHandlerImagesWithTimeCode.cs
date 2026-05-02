@@ -1,7 +1,5 @@
 
 
-using System.IO;
-
 namespace Nikse.SubtitleEdit.UiLogic.Export;
 
 public class ExportHandlerImagesWithTimeCode : IExportHandler

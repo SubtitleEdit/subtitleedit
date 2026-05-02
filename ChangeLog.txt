@@ -2,6 +2,24 @@
 Subtitle Edit Changelog
 
 
+v5.0.0-beta21 (xth May 2026)
+
+* Update Simplified Chinese localization - thx Monstercate
+* Try to improve vulkan loading for Qwen3TTS/Vulkan
+* Try to fix full screen video controls at startup - thx GrampaWildWilly
+* Fix for video full screen player right margin - thx GrampaWildWilly
+* Fix grid-auto-fix-columns for large font sizes - thx JDJD777
+* Remove blur when zooming nocr images
+* Allow 0 lines for nOCR auto-draw - thx Zoltán
+* Testing different nOCR drawing algorithms
+* Minor improvements to speech-to-text with 1 file + improve video file check when opening subtitles
+* Minor UI fixes/improvements for OCR in batch convert
+* Fix for click on video player (regression) - thx JDJD777
+* Fix ASSA toolbar not visible when default format is ASSA - thx farisruhi
+* Add Bulgarian translation - thx jekovcar
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-beta20 (29th April 2026)
 
 * Add menu toggle for waveform toolbar - thx Ironship
@@ -23,6 +41,9 @@ v5.0.0-beta20 (29th April 2026)
 * Add read suppor of HD SUP
 * Prompt before saving blank text for OCR character - thx Zoltán
 * Update Japanese translation - thx hisui3393
+* Atomic save and shared lock for NOcrDb - thx Zoltán
+* Add "Merge selected lines bilingual" shortcut - thx jackqk
+* Stamp executable with version from Se.cs in publish steps - thx Zoltán
 
 -----------------------------------------------------------------------------------------------------
 

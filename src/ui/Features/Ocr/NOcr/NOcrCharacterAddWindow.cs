@@ -104,6 +104,8 @@ public class NOcrCharacterAddWindow : Window
         };
 
         vm.TextBoxNew = UiUtil.MakeTextBox(100, vm, nameof(vm.NewText));
+        vm.TextBoxNew.FontStyle = vm.IsNewTextItalic ? FontStyle.Italic : FontStyle.Normal;
+
         var image = new Image
         {
             Margin = new Thickness(5),
@@ -125,7 +127,24 @@ public class NOcrCharacterAddWindow : Window
         };
 
         var checkBoxItalic = UiUtil.MakeCheckBox(Se.Language.General.Italic, vm, nameof(vm.IsNewTextItalic));
+        var italicActiveBrush = new SolidColorBrush(Colors.Orange);
+        void UpdateItalicLabel()
+        {
+            var isItalic = checkBoxItalic.IsChecked == true;
+            checkBoxItalic.FontStyle = isItalic ? FontStyle.Italic : FontStyle.Normal;
+            checkBoxItalic.FontWeight = isItalic ? FontWeight.Bold : FontWeight.Normal;
+            if (isItalic)
+            {
+                checkBoxItalic.Foreground = italicActiveBrush;
+            }
+            else
+            {
+                checkBoxItalic.ClearValue(TemplatedControl.ForegroundProperty);
+            }
+        }
+        UpdateItalicLabel();
         checkBoxItalic.IsCheckedChanged += vm.ItalicCheckChanged;
+        checkBoxItalic.IsCheckedChanged += (_, _) => UpdateItalicLabel();
 
         var checkBoAutoSubmitFirsChar = UiUtil.MakeCheckBox(Se.Language.Ocr.AutoSubmitFirstCharacter, vm, nameof(vm.SubmitOnFirstLetter));
 
@@ -200,6 +219,9 @@ public class NOcrCharacterAddWindow : Window
             }
         };
 
+        var comboBoxAlgorithm = UiUtil.MakeComboBox(vm.LineAlgorithms, vm, nameof(vm.SelectedLineAlgorithm));
+        ToolTip.SetTip(comboBoxAlgorithm, "Algorithm used by Auto-draw to generate foreground/background lines");
+
         var buttonClear = new SplitButton
         {
             Content = Se.Language.General.Clear,
@@ -229,6 +251,9 @@ public class NOcrCharacterAddWindow : Window
             {
                 UiUtil.MakeLabel(Se.Language.Ocr.LinesToDraw).WithBold(),
                 panelLinesToDraw,
+                UiUtil.MakeLabel("Algorithm").WithMarginTop(5),
+                comboBoxAlgorithm,
+                UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.LinesGeneratedInfo)).WithMarginTop(5).WithFontSize(9),
                 UiUtil.MakeButton(Se.Language.Ocr.AutoDrawAgain, vm.DrawAgainCommand).WithMinWidth(100).WithMarginTop(10).WithLeftAlignment().WithMarginLeft(0),
                 buttonClear.WithMinWidth(100).WithMarginTop(5).WithLeftAlignment().WithMarginLeft(0),
             }

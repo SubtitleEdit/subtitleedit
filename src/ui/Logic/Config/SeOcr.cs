@@ -22,8 +22,10 @@ public class SeOcr
     public string MistralApiKey { get; set; }
     public bool IsNewLetterItalic { get; set; }
     public bool SubmitOnFirstLetter { get; set; }
+    public bool PromptForBlankOcrText { get; set; }
     public int NOcrNoOfLinesToAutoDraw { get; set; }
     public int NOcrZoomFactor { get; set; }
+    public string NOcrLineAlgorithm { get; set; }
     public string PaddleOcrMode { get; set; }
     public string PaddleOcrLastLanguage { get; set; }
     public string GoogleVisionOcrLastLanguage { get; set; }
@@ -51,6 +53,7 @@ public class SeOcr
         NOcrDrawUnknownText = true;
         NOcrNoOfLinesToAutoDraw = 60;
         NOcrZoomFactor = 4;
+        NOcrLineAlgorithm = "Random";
 
         BinaryOcrPixelsAreSpace = 12;
         BinaryOcrMaxErrorPercent = 7.5;
@@ -81,5 +84,7 @@ public class SeOcr
         UseWordSplitList = true;
 
         CaptureAssaPosition = false;
+
+        PromptForBlankOcrText = true;
     }
 }

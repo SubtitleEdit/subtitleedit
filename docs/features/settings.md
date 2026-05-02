@@ -38,6 +38,8 @@ Profiles store subtitle rules and limits. You can switch between profiles for di
 - **Remember window position and size** — Restore layout between sessions
 - **Use frame mode** — Display times as frame numbers instead of time codes
 - **Auto backup** — Enable automatic backups at a set interval
+- **Open file on start** — Choose whether Subtitle Edit reopens the previous file on startup
+- **Single-letter shortcuts in text boxes** — Control whether single-key shortcuts are active while editing text
 
 ## Subtitle Defaults
 
@@ -55,6 +57,13 @@ Profiles store subtitle rules and limits. You can switch between profiles for di
 - **Colors** — Primary, outline, and shadow colors
 - **Border style** — Outline or opaque box
 - **Outline/shadow width** — Border dimensions
+
+## Waveform and Audio Visualizer
+
+- **Waveform toolbar visibility** — Show or hide the waveform toolbar
+- **Waveform toolbar customization** — Choose which timing buttons are visible and how they are ordered
+- **Waveform theme import/export** — Reuse waveform color and toolbar preferences
+- **Shot change color** — Customize the color used for shot change markers
 
 ## Keyboard Shortcuts
 

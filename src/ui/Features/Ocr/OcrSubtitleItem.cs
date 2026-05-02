@@ -11,7 +11,12 @@ namespace Nikse.SubtitleEdit.Features.Ocr;
 
 public partial class OcrSubtitleItem : ObservableObject
 {
-    [ObservableProperty] private string _text;
+    // The DataGrid Text-column cell template binds to HasFormattedText (not Text) and re-renders
+    // through a converter that calls CreateFormattedText(). Without this, raw text changes
+    // (e.g. "Import text from subtitle...") update the model but not the UI.
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasFormattedText))]
+    private string _text;
 
     public int Number { get; set; }
     public TimeSpan StartTime { get; set; }

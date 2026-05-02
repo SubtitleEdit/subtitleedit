@@ -80,7 +80,7 @@ public partial class BinaryOcrInspectViewModel : ObservableObject
 
         const int maxLines = 500;
         NoOfLinesToAutoDrawList = new ObservableCollection<int>();
-        for (var i = 10; i <= maxLines; i++)
+        for (var i = 0; i <= maxLines; i++)
         {
             NoOfLinesToAutoDrawList.Add(i);
         }

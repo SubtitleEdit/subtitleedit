@@ -231,7 +231,7 @@ public partial class NOcrDbEditViewModel : ObservableObject
         SelectedCharacter = characters.FirstOrDefault();
         CharactersChanged();
 
-        Title = string.Format(Se.Language.Ocr.EditNOcrDatabaseXWithYItems, System.IO.Path.GetFileNameWithoutExtension(nOcrDb.FileName), nOcrDb.OcrCharactersCombined.Count);
+        Title = string.Format(Se.Language.Ocr.EditNOcrDatabaseXWithYItems, System.IO.Path.GetFileNameWithoutExtension(nOcrDb.FileName), nOcrDb.TotalCharacterCount);
     }
 
     internal void CharactersChanged(object? sender, SelectionChangedEventArgs e)

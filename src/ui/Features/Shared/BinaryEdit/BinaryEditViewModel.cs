@@ -1,4 +1,3 @@
-using Nikse.SubtitleEdit.UiLogic.Export;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
@@ -7,19 +6,21 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
-using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustAllTimes;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryApplyDurationLimits;
+using Nikse.SubtitleEdit.Features.Shared.PickMatroskaTrack;
 using Nikse.SubtitleEdit.Features.Sync.ChangeFrameRate;
 using Nikse.SubtitleEdit.Features.Sync.ChangeSpeed;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -59,15 +60,17 @@ public partial class BinaryEditViewModel : ObservableObject
     private readonly IFolderHelper _folderHelper;
     private readonly IWindowService _windowService;
     private readonly IShortcutManager _shortcutManager;
+    private readonly IBluRayHelper _bluRayHelper;
 
     private string _loadFileName = string.Empty;
 
-    public BinaryEditViewModel(IFileHelper fileHelper, IWindowService windowService, IFolderHelper folderHelper, IShortcutManager shortcutManager)
+    public BinaryEditViewModel(IFileHelper fileHelper, IWindowService windowService, IFolderHelper folderHelper, IShortcutManager shortcutManager, IBluRayHelper bluRayHelper)
     {
         _windowService = windowService;
         _fileHelper = fileHelper;
         _folderHelper = folderHelper;
         _shortcutManager = shortcutManager;
+        _bluRayHelper = bluRayHelper;
         _fileName = string.Empty;
         Subtitles = new ObservableCollection<BinarySubtitleItem>();
         StatusText = string.Empty;
@@ -263,7 +266,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.General.OpenSubtitleFileTitle, Se.Language.General.ImagedBasedSubtitles, "*.sup;*.sub;*.ts;*.xml", Se.Language.General.AllFiles, "*.*");
+        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.General.OpenSubtitleFileTitle, Se.Language.General.ImagedBasedSubtitles, "*.sup;*.sub;*.ts;*.xml;*.mkv;*.mks", Se.Language.General.AllFiles, "*.*");
         if (string.IsNullOrEmpty(fileName))
         {
             return;
@@ -412,7 +415,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        IOcrSubtitle? imageSubtitle = LoadImageSubtitle(fileName);
+        IOcrSubtitle? imageSubtitle = await LoadImageSubtitle(fileName);
 
         if (imageSubtitle == null)
         {
@@ -448,59 +451,263 @@ public partial class BinaryEditViewModel : ObservableObject
         }
     }
 
-    private static IOcrSubtitle? LoadImageSubtitle(string fileName)
+    private async Task<IOcrSubtitle?> LoadImageSubtitle(string fileName)
     {
-        IOcrSubtitle? imageSubtitle = null;
-
         // Blu-ray SUP
         if (FileUtil.IsBluRaySup(fileName))
         {
             var subtitles = BluRaySupParser.ParseBluRaySup(fileName, new StringBuilder());
             if (subtitles.Count > 0)
             {
-                imageSubtitle = new OcrSubtitleBluRay(subtitles);
+                return new OcrSubtitleBluRay(subtitles);
             }
+
+            return null;
         }
 
         // VobSub (.sub + .idx)
-        else if (FileUtil.IsVobSub(fileName))
+        if (FileUtil.IsVobSub(fileName))
         {
             var vobSubParser = new VobSubParser(true);
-            string idxFileName = Path.ChangeExtension(fileName, ".idx");
+            var idxFileName = Path.ChangeExtension(fileName, ".idx");
             vobSubParser.OpenSubIdx(fileName, idxFileName);
             var mergedPacks = vobSubParser.MergeVobSubPacks();
             var palette = vobSubParser.IdxPalette;
             if (mergedPacks.Count > 0)
             {
-                imageSubtitle = new OcrSubtitleVobSub(mergedPacks, palette);
+                return new OcrSubtitleVobSub(mergedPacks, palette);
             }
+
+            return null;
         }
 
         // Transport Stream (.ts)
-        else if (FileUtil.IsTransportStream(fileName))
+        if (FileUtil.IsTransportStream(fileName))
         {
             var tsParser = new TransportStreamParser();
             tsParser.Parse(fileName, null);
             var subtitles = tsParser.GetDvbSubtitles(0);
             if (subtitles.Count > 0)
             {
-                imageSubtitle = new OcrSubtitleTransportStream(tsParser, subtitles, fileName);
+                return new OcrSubtitleTransportStream(tsParser, subtitles, fileName);
             }
+
+            return null;
+        }
+
+        // Matroska (.mkv / .mks) - PGS / VobSub / DVB tracks
+        if (FileUtil.IsMatroskaFileFast(fileName) && FileUtil.IsMatroskaFile(fileName))
+        {
+            return await LoadMatroskaImageSubtitle(fileName);
         }
 
         // BDN XML
-        else if (fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+        if (fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
         {
             var bdnXml = new Nikse.SubtitleEdit.Core.SubtitleFormats.BdnXml();
             var subtitle = new Subtitle();
             bdnXml.LoadSubtitle(subtitle, File.ReadAllLines(fileName).ToList(), fileName);
             if (subtitle.Paragraphs.Count > 0)
             {
-                imageSubtitle = new OcrSubtitleBdn(subtitle, fileName, false);
+                return new OcrSubtitleBdn(subtitle, fileName, false);
             }
         }
 
-        return imageSubtitle;
+        return null;
+    }
+
+    private async Task<IOcrSubtitle?> LoadMatroskaImageSubtitle(string fileName)
+    {
+        if (Window == null)
+        {
+            return null;
+        }
+
+        var matroska = new MatroskaFile(fileName);
+        try
+        {
+            var allTracks = matroska.GetTracks(true);
+            var imageTracks = allTracks.Where(IsImageBasedMatroskaTrack).ToList();
+            if (imageTracks.Count == 0)
+            {
+                return null;
+            }
+
+            MatroskaTrackInfo? selectedTrack;
+            if (imageTracks.Count == 1)
+            {
+                selectedTrack = imageTracks[0];
+            }
+            else
+            {
+                var pickResult = await _windowService.ShowDialogAsync<PickMatroskaTrackWindow, PickMatroskaTrackViewModel>(
+                    Window, vm => vm.Initialize(matroska, imageTracks, fileName));
+                if (!pickResult.OkPressed || pickResult.SelectedMatroskaTrack == null)
+                {
+                    return null;
+                }
+
+                selectedTrack = pickResult.SelectedMatroskaTrack;
+            }
+
+            if (selectedTrack.CodecId.Equals(MatroskaTrackType.BluRay, StringComparison.OrdinalIgnoreCase))
+            {
+                var pcsData = _bluRayHelper.LoadBluRaySubFromMatroska(selectedTrack, matroska, out _);
+                return pcsData.Count == 0 ? null : new OcrSubtitleMkvBluRay(selectedTrack, pcsData);
+            }
+
+            if (selectedTrack.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
+            {
+                if (selectedTrack.ContentEncodingType == 1)
+                {
+                    await MessageBox.Show(Window, Se.Language.General.Error,
+                        "Encrypted VobSub subtitles are not supported.",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
+
+                var (mergedPacks, palette) = ExtractMkvVobSub(selectedTrack, matroska);
+                return mergedPacks.Count == 0 ? null : new OcrSubtitleVobSub(mergedPacks, palette);
+            }
+
+            if (selectedTrack.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase))
+            {
+                var (subtitle, subtitleImages) = ExtractMkvDvb(selectedTrack, matroska);
+                return subtitleImages.Count == 0 ? null : new OcrSubtitleMkvDvb(selectedTrack, subtitle, subtitleImages);
+            }
+
+            return null;
+        }
+        finally
+        {
+            matroska.Dispose();
+        }
+    }
+
+    private static bool IsImageBasedMatroskaTrack(MatroskaTrackInfo track)
+    {
+        return track.CodecId.Equals(MatroskaTrackType.BluRay, StringComparison.OrdinalIgnoreCase)
+            || track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase)
+            || track.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static (List<VobSubMergedPack> mergedPacks, List<SKColor>? palette) ExtractMkvVobSub(
+        MatroskaTrackInfo track, MatroskaFile matroska)
+    {
+        var sub = matroska.GetSubtitle(track.TrackNumber, null);
+        var idx = new Idx(track.GetCodecPrivate().SplitToLines());
+        var mergedVobSubPacks = new List<VobSubMergedPack>();
+
+        foreach (var p in sub)
+        {
+            mergedVobSubPacks.Add(new VobSubMergedPack(p.GetData(track), TimeSpan.FromMilliseconds(p.Start), 32, null));
+            mergedVobSubPacks[mergedVobSubPacks.Count - 1].EndTime = TimeSpan.FromMilliseconds(p.End);
+
+            // fix overlapping (some Handbrake versions produce overlapping timecodes)
+            if (mergedVobSubPacks.Count > 1 &&
+                mergedVobSubPacks[mergedVobSubPacks.Count - 2].EndTime > mergedVobSubPacks[mergedVobSubPacks.Count - 1].StartTime)
+            {
+                mergedVobSubPacks[mergedVobSubPacks.Count - 2].EndTime =
+                    TimeSpan.FromMilliseconds(mergedVobSubPacks[mergedVobSubPacks.Count - 1].StartTime.TotalMilliseconds - 1);
+            }
+        }
+
+        for (var i = mergedVobSubPacks.Count - 1; i >= 0; i--)
+        {
+            if (mergedVobSubPacks[i].SubPicture.SubPictureDateSize <= 2)
+            {
+                mergedVobSubPacks.RemoveAt(i);
+            }
+            else if (mergedVobSubPacks[i].SubPicture.SubPictureDateSize <= 67 &&
+                     mergedVobSubPacks[i].SubPicture.Delay.TotalMilliseconds < 35)
+            {
+                mergedVobSubPacks.RemoveAt(i);
+            }
+        }
+
+        return (mergedVobSubPacks, idx.Palette);
+    }
+
+    private static (Subtitle subtitle, List<DvbSubPes> subtitleImages) ExtractMkvDvb(
+        MatroskaTrackInfo track, MatroskaFile matroska)
+    {
+        var sub = matroska.GetSubtitle(track.TrackNumber, null);
+        var subtitleImages = new List<DvbSubPes>();
+        var subtitle = new Subtitle();
+
+        for (var index = 0; index < sub.Count; index++)
+        {
+            try
+            {
+                var msub = sub[index];
+                DvbSubPes? pes = null;
+                var data = msub.GetData(track);
+                if (data != null && data.Length > 9 && data[0] == 15 &&
+                    data[1] >= SubtitleSegment.PageCompositionSegment &&
+                    data[1] <= SubtitleSegment.DisplayDefinitionSegment)
+                {
+                    var buffer = new byte[data.Length + 3];
+                    Buffer.BlockCopy(data, 0, buffer, 2, data.Length);
+                    buffer[0] = 32;
+                    buffer[1] = 0;
+                    buffer[buffer.Length - 1] = 255;
+                    pes = new DvbSubPes(0, buffer);
+                }
+                else if (VobSubParser.IsMpeg2PackHeader(data))
+                {
+                    pes = new DvbSubPes(data, Mpeg2Header.Length);
+                }
+                else if (VobSubParser.IsPrivateStream1(data, 0))
+                {
+                    pes = new DvbSubPes(data, 0);
+                }
+                else if (data!.Length > 9 && data[0] == 32 && data[1] == 0 && data[2] == 14 && data[3] == 16)
+                {
+                    pes = new DvbSubPes(0, data);
+                }
+
+                if (pes == null && subtitle.Paragraphs.Count > 0)
+                {
+                    var last = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
+                    if (last.DurationTotalMilliseconds < 100)
+                    {
+                        last.EndTime.TotalMilliseconds = msub.Start;
+                        if (last.DurationTotalMilliseconds > Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                        {
+                            last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + 3000;
+                        }
+                    }
+                }
+
+                if (pes != null && pes.PageCompositions != null && pes.PageCompositions.Any(p => p.Regions.Count > 0))
+                {
+                    subtitleImages.Add(pes);
+                    subtitle.Paragraphs.Add(new Paragraph(string.Empty, msub.Start, msub.End));
+                }
+            }
+            catch
+            {
+                // continue
+            }
+        }
+
+        for (var index = 0; index < subtitle.Paragraphs.Count; index++)
+        {
+            var p = subtitle.Paragraphs[index];
+            if (p.DurationTotalMilliseconds < 200)
+            {
+                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 3000;
+            }
+
+            var next = subtitle.GetParagraphOrDefault(index + 1);
+            if (next != null && next.StartTime.TotalMilliseconds < p.EndTime.TotalMilliseconds)
+            {
+                p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds -
+                                              Se.Settings.General.MinimumMillisecondsBetweenLines;
+            }
+        }
+
+        return (subtitle, subtitleImages);
     }
 
     private string? TryGetVideoFileName(string fileName)
@@ -1068,17 +1275,30 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        foreach (var subtitle in selectedItems)
+        foreach (var subtitle in itemsToResize)
         {
             if (subtitle.Bitmap == null)
             {
                 continue;
             }
 
-            subtitle.Bitmap = subtitle.Bitmap.ToSkBitmap().CropTransparentColors().ToAvaloniaBitmap();
+            using var skBitmap = subtitle.Bitmap.ToSkBitmap();
+            using var cropped = skBitmap.CropTransparentColors(out var offsetX, out var offsetY);
+            subtitle.Bitmap = cropped.ToAvaloniaBitmap();
+            subtitle.X += offsetX;
+            subtitle.Y += offsetY;
+        }
+
+        if (SubtitleGrid != null)
+        {
+            var currentIndex = SubtitleGrid.SelectedIndex;
+            SubtitleGrid.ItemsSource = null;
+            SubtitleGrid.ItemsSource = Subtitles;
+            SubtitleGrid.SelectedIndex = currentIndex;
         }
 
         UpdateOverlayPosition();
+        UpdateStatusText();
     }
 
     [RelayCommand]
@@ -1467,13 +1687,13 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.General.OpenSubtitleFileTitle, ".sup", "Blu-ray sup", "All files", "*.*");
+        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.General.OpenSubtitleFileTitle, Se.Language.General.ImagedBasedSubtitles, "*.sup;*.sub;*.ts;*.xml;*.mkv;*.mks", Se.Language.General.AllFiles, "*.*");
         if (string.IsNullOrEmpty(fileName))
         {
             return;
         }
 
-        var imageSubtitle = LoadImageSubtitle(fileName);
+        var imageSubtitle = await LoadImageSubtitle(fileName);
         if (imageSubtitle == null)
         {
             await MessageBox.Show(Window, Se.Language.General.Error, "Image based subtitle format not found/supported.", MessageBoxButtons.OK, MessageBoxIcon.Error);
