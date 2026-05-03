@@ -2,7 +2,17 @@
 
 Subtitle Edit is a free, open-source subtitle editor for creating, editing, synchronizing, translating, running OCR on, and converting subtitles in 300+ formats.
 
+[![Sponsor on GitHub](https://img.shields.io/badge/Sponsor-GitHub%20Sponsors-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/niksedk)
+[![Donate via PayPal](https://img.shields.io/badge/Donate-PayPal-0070ba?logo=paypal&logoColor=white)](https://www.paypal.com/donate/?hosted_button_id=4XEHVLANCQBCU)
+
 ![Subtitle Edit main window](docs/screenshots/main-window.png)
+
+## Support the Author
+
+Subtitle Edit is free to use and maintained as an open-source project. If the app helps your work, you can support continued development, releases, and documentation here:
+
+- [Sponsor Nikse on GitHub](https://github.com/sponsors/niksedk)
+- [Donate via PayPal](https://www.paypal.com/donate/?hosted_button_id=4XEHVLANCQBCU)
 
 ## Documentation
 
@@ -103,13 +113,6 @@ src/ui/bin/Release/net10.0/SubtitleEdit.exe
 Subtitle Edit is an offline, open-source application. It does not collect, store, transmit, or analyze the content of your subtitle files, media files, or associated metadata for analytics, model training, or any other secondary purpose.
 
 Core features such as editing, converting, video playback, and local auto-backup run on your device. If you choose optional third-party online services for translation, speech-to-text, text-to-speech, OCR, or lookups, only the data required for that request is sent directly to the selected provider and governed by that provider's privacy policy.
-
-## Support the Project
-
-If you would like to support continued development of Subtitle Edit, please consider donating:
-
-- [GitHub Sponsors](https://github.com/sponsors/niksedk)
-- [Donate via PayPal](https://www.paypal.com/donate/?hosted_button_id=4XEHVLANCQBCU)
 
 ## Star History
 
