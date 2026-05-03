@@ -1,108 +1,116 @@
 ﻿# Subtitle Edit
 
-The subtitle editor :)
+Subtitle Edit is a free, open-source subtitle editor for creating, editing, synchronizing, translating, running OCR on, and converting subtitles in 300+ formats.
 
----
+![Subtitle Edit main window](docs/screenshots/main-window.png)
 
-## 🌐 Documentation & FAQ
-http://subtitleedit.github.io/subtitleedit/
+## Documentation
 
----
+- [Documentation and FAQ](http://subtitleedit.github.io/subtitleedit/)
+- [Feature overview](docs/overview.md)
+- [Command-line converter reference](docs/reference/command-line.md)
+- [Issue tracker](https://github.com/SubtitleEdit/subtitleedit/issues)
 
-## 🚀 Automated Builds
-You can find the latest cross-platform builds here:  
-👉 [Releases](https://github.com/SubtitleEdit/subtitleedit/releases)
+## Downloads
 
----
+Ready-to-run packages are available on the [Releases](https://github.com/SubtitleEdit/subtitleedit/releases) page.
 
-## 💻 System Requirements
+Available release packages include:
+
+- Windows x64 installer
+- Windows x64 and ARM64 zip packages
+- macOS x64 and ARM64 dmg packages
+- Linux x64 tarball
+- Linux x64 Flatpak bundle
+
+Provided release builds are self-contained and do not require a separate .NET installation.
+
+## Key Features
+
+- Create, edit, synchronize, and convert subtitles in 300+ formats
+- Preview video and audio with waveform and spectrogram support
+- Speech-to-text workflows with local Whisper-based engines and downloadable models
+- OCR for image-based subtitles such as Blu-ray SUP and VobSub
+- Automatic translation, text-to-speech, spell check, and common-error fixing
+- Batch conversion and a separate command-line converter for automation
+- ASSA/SSA styling, positioning, drawing, and advanced override tags
+- Local auto-backup and offline-first editing for normal subtitle workflows
+
+## System Requirements
 
 ### Windows
-- Minimum: Windows 10 or newer
+
+- Windows 10 or newer
 
 ### macOS
 
-- **Minimum macOS version**: 12 (Monterey) or newer
-- **Dependencies for Intel macs** (install via [MacPorts](https://www.macports.org/)):
-    - `mpv`
-        - MacPorts: `sudo port install mpv`
-    - `ffmpeg`
-        - Homebrew: `sudo port install ffmpeg`
+- macOS 12 Monterey or newer
+- Intel Macs need `mpv` and `ffmpeg`, for example via [MacPorts](https://www.macports.org/):
 
+```bash
+sudo port install mpv ffmpeg
+```
 
+Because Subtitle Edit for macOS is not signed with an Apple developer certificate, macOS can block it on first launch. After copying `Subtitle Edit.app` to `Applications`, you can remove the quarantine flag and add an ad-hoc signature:
 
-#### Installing Subtitle Edit on macOS (Unsigned App)
-
-Because *Subtitle Edit* is not signed with an Apple developer certificate, macOS will block it by default. You can still install and run it by following these steps:
-
-1. **Download** and **double-click** the `.dmg` file to mount it.
-2. In the window that appears, **drag `Subtitle Edit.app` into your `Applications` folder**.
-3. Open the **Terminal** app (you can find it via Spotlight or in `/Applications/Utilities/`).
-4. In Terminal, run the following commands to remove macOS’s security quarantine flag and add adhoc code signature:
-   ````bash
-   sudo xattr -rd com.apple.quarantine "/Applications/Subtitle Edit.app"
-   ````
-
-   ````bash
-   sudo codesign --force --deep --sign - "/Applications/Subtitle Edit.app"
-   ````
+```bash
+sudo xattr -rd com.apple.quarantine "/Applications/Subtitle Edit.app"
+sudo codesign --force --deep --sign - "/Applications/Subtitle Edit.app"
+```
 
 ### Linux
 
-#### Flatpak (any distribution)
-
-A Flatpak package is available from the [Releases](https://github.com/SubtitleEdit/subtitleedit/releases) page. It bundles all required dependencies (mpv, ffmpeg) — no separate installation needed.
+The Flatpak bundle from the [Releases](https://github.com/SubtitleEdit/subtitleedit/releases) page includes the required media dependencies:
 
 ```bash
 flatpak install SubtitleEdit-linux-x64.flatpak
 flatpak run dk.nikse.subtitleedit
 ```
 
-#### Native packages
+Native package users should install `mpv` and `ffmpeg` for video playback and audio/video processing:
 
-Requires mpv and ffmpeg (ffmpeg is normally already installed) to enable video functionality.
-
-#### Debian/Ubuntu
 ```bash
+# Debian/Ubuntu
 sudo apt update && sudo apt install -y mpv libmpv-dev ffmpeg
-```
 
-#### Arch
-```bash
+# Arch
 sudo pacman -S mpv ffmpeg
-```
 
-#### Fedora
-```bash
+# Fedora
 sudo dnf install mpv-libs ffmpeg
-```
 
-#### openSUSE
-```bash
+# openSUSE
 sudo zypper install libmpv1 ffmpeg
 ```
 
-> ⚙️ Note: The provided builds are self-contained and do not require a separate .NET installation.
+## Building from Source
 
----
+Subtitle Edit 5 targets .NET 10 and uses Avalonia UI for the cross-platform desktop application. Install the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) before building from source.
 
-## 🔒 Privacy
+```bash
+dotnet restore SubtitleEdit.sln
+dotnet msbuild SubtitleEdit.sln /p:Configuration=Release
+```
 
-**Subtitle Edit** is an offline, open-source application.  
-It does **not** collect, store, transmit, or analyze the content of your subtitle files, media files, or any associated metadata — not for analytics, not for model training, and not for any other secondary purpose, now or in the future.
+After a successful Windows build, the desktop application is available at:
 
-All core features, including editing, converting, video playback, and **local auto-backup**, run entirely on your device.
+```text
+src/ui/bin/Release/net10.0/SubtitleEdit.exe
+```
 
-If you choose to use optional third-party online services within Subtitle Edit (such as translation, speech-to-text, text-to-speech, OCR, or dictionary/lookups), only the minimal data required to perform that specific request is sent directly to the selected provider. Any such data transfer is governed by the provider’s own privacy policy, and Subtitle Edit does not retain or forward this data in any way.
+## Privacy
 
-Subtitle Edit aims to give you full control over your files — your data stays yours.
+Subtitle Edit is an offline, open-source application. It does not collect, store, transmit, or analyze the content of your subtitle files, media files, or associated metadata for analytics, model training, or any other secondary purpose.
 
----
+Core features such as editing, converting, video playback, and local auto-backup run on your device. If you choose optional third-party online services for translation, speech-to-text, text-to-speech, OCR, or lookups, only the data required for that request is sent directly to the selected provider and governed by that provider's privacy policy.
 
-## ❤️ Support the Project
-If you’d like to support the continued development of Subtitle Edit, please consider donating:
+## Support the Project
+
+If you would like to support continued development of Subtitle Edit, please consider donating:
 
 - [GitHub Sponsors](https://github.com/sponsors/niksedk)
 - [Donate via PayPal](https://www.paypal.com/donate/?hosted_button_id=4XEHVLANCQBCU)
 
----
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=SubtitleEdit%2Fsubtitleedit&type=Date&legend=top-left)](https://www.star-history.com/?repos=SubtitleEdit%2Fsubtitleedit&type=date&legend=top-left)
