@@ -16,11 +16,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             public bool Play { get; set; }
         }
 
-        private readonly List<string> _startNames = new List<string> { "start", "start time", "in", "begin", "starttime", "start_time", "starttime", "startmillis", "start_millis", "startms", "start_ms", "startms", "startmilliseconds", "start_millisesonds", "startmilliseconds", "from", "fromtime", "from_ms", "fromms", "frommilliseconds", "from_milliseconds", "tc-in", "tc in", "show", "timecode", "Start TC" };
-        private readonly List<string> _endNames = new List<string> { "end", "end time", "out", "stop", "endtime", "end_time", "endtime", "endmillis", "end_millis", "endms", "end_ms", "endmilliseconds", "end_millisesonds", "endmilliseconds", "to", "totime", "to_ms", "toms", "tomilliseconds", "to_milliseconds", "tc-out", "tc out", "hide", "End TC" };
+        private readonly List<string> _startNames = new List<string> { "start", "start time", "in", "begin", "starttime", "start_time", "starttime", "startmillis", "start_millis", "startms", "start_ms", "startms", "startmilliseconds", "start_millisesonds", "startmilliseconds", "from", "fromtime", "from_ms", "fromms", "frommilliseconds", "from_milliseconds", "tc-in", "tc in", "show", "timecode", "start tc", "start-tc", "tc start", "tc-start" };
+        private readonly List<string> _endNames = new List<string> { "end", "end time", "out", "stop", "endtime", "end_time", "endtime", "endmillis", "end_millis", "endms", "end_ms", "endmilliseconds", "end_millisesonds", "endmilliseconds", "to", "totime", "to_ms", "toms", "tomilliseconds", "to_milliseconds", "tc-out", "tc out", "hide", "end tc", "end-tc", "tc end", "tc-end" };
         private readonly List<string> _durationNames = new List<string> { "duration", "durationms", "dur" };
         private readonly List<string> _textNames = new List<string> { "text", "content", "value", "caption", "sentence", "dialog", "dialogue" };
-        private readonly List<string> _characterNames = new List<string> { "speaker", "voice", "character", "role", "name", "actor", "rolle", "character name", "Sprecher" };
+        private readonly List<string> _characterNames = new List<string> { "speaker", "voice", "character", "role", "name", "actor", "rolle", "character name", "sprecher" };
 
         public Subtitle AutoGuessImport(List<string> lines)
         {
