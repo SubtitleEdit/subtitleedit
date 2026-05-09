@@ -812,16 +812,20 @@ public partial class TextToSpeechViewModel : ObservableObject
                         MessageBoxButtons.Cancel,
                         MessageBoxIcon.Question,
                         "CPU",
-                        "Vulkan");
+                        "Vulkan",
+                        "CUDA");
 
                     if (variantAnswer == MessageBoxResult.None || variantAnswer == MessageBoxResult.Cancel)
                     {
                         return false;
                     }
 
-                    omniVariant = variantAnswer == MessageBoxResult.Custom1
-                        ? OmniVoiceDownloadService.WindowsVariantCpu
-                        : OmniVoiceDownloadService.WindowsVariantVulkan;
+                    omniVariant = variantAnswer switch
+                    {
+                        MessageBoxResult.Custom1 => OmniVoiceDownloadService.WindowsVariantCpu,
+                        MessageBoxResult.Custom3 => OmniVoiceDownloadService.WindowsVariantCuda,
+                        _ => OmniVoiceDownloadService.WindowsVariantVulkan,
+                    };
 
                     if (omniVariant == OmniVoiceDownloadService.WindowsVariantVulkan && !VulkanHelper.IsInstalled())
                     {

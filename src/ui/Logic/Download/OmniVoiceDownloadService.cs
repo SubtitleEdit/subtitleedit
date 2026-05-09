@@ -25,12 +25,14 @@ public class OmniVoiceDownloadService : IOmniVoiceDownloadService
 
     public const string WindowsVariantCpu = "cpu";
     public const string WindowsVariantVulkan = "vulkan";
+    public const string WindowsVariantCuda = "cuda";
 
     private const string ModelBaseUrl = "https://huggingface.co/Serveurperso/OmniVoice-GGUF/resolve/main/omnivoice-base-Q8_0.gguf";
     private const string ModelTokenizerUrl = "https://huggingface.co/Serveurperso/OmniVoice-GGUF/resolve/main/omnivoice-tokenizer-F32.gguf";
 
     private const string WindowsCpuUrl = "https://github.com/SubtitleEdit/support-files/releases/download/omnivoice-26-06/omnivoice-win64-cpu.zip";
     private const string WindowsVulkanUrl = "https://github.com/SubtitleEdit/support-files/releases/download/omnivoice-26-06/omnivoice-win64-vulkan.zip";
+    private const string WindowsCudaUrl = "https://github.com/SubtitleEdit/support-files/releases/download/omnivoice-26-06/omnivoice-win64-cuda.zip";
     private const string MacOsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/omnivoice-26-06/omnivoice-macos-universal-cpu-metal.zip";
     private const string LinuxUrl = "https://github.com/SubtitleEdit/support-files/releases/download/omnivoice-26-06/omnivoice-linux-x64-cpu.zip";
 
@@ -78,7 +80,12 @@ public class OmniVoiceDownloadService : IOmniVoiceDownloadService
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            return windowsVariant == WindowsVariantCpu ? WindowsCpuUrl : WindowsVulkanUrl;
+            return windowsVariant switch
+            {
+                WindowsVariantCuda => WindowsCudaUrl,
+                WindowsVariantVulkan => WindowsVulkanUrl,
+                _ => WindowsCpuUrl,
+            };
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
