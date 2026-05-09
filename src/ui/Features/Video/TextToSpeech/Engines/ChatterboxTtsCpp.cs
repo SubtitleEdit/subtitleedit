@@ -33,12 +33,26 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 public class ChatterboxTtsCpp : ITtsEngine
 {
     public string Name => "Chatterbox TTS";
-    public string Description => "via CrispASR (one baked voice + clone via Import voice)";
+    public string Description => "via CrispASR (Base or Turbo model + voice cloning)";
     public bool HasLanguageParameter => false;
     public bool HasApiKey => false;
     public bool HasRegion => false;
-    public bool HasModel => false;
+    public bool HasModel => true;
     public bool HasKeyFile => false;
+
+    public const string ModelKeyBase = ChatterboxTtsCppDownloadService.ModelKeyBase;
+    public const string ModelKeyTurbo = ChatterboxTtsCppDownloadService.ModelKeyTurbo;
+    public const string DefaultModelKey = ChatterboxTtsCppDownloadService.DefaultModelKey;
+
+    public static string ResolveModelKey(string? modelKey)
+    {
+        if (string.IsNullOrEmpty(modelKey))
+        {
+            var saved = Se.Settings.Video.TextToSpeech.ChatterboxModel;
+            return ChatterboxTtsCppDownloadService.ResolveModelKey(string.IsNullOrEmpty(saved) ? DefaultModelKey : saved);
+        }
+        return ChatterboxTtsCppDownloadService.ResolveModelKey(modelKey);
+    }
 
     private const string BackendName = "chatterbox";
 
@@ -49,6 +63,7 @@ public class ChatterboxTtsCpp : ITtsEngine
     private static readonly SemaphoreSlim ServerLock = new(1, 1);
     private static Process? _serverProcess;
     private static int _serverPort;
+    private static string? _serverModelKey;
     private static bool _processExitHooked;
     // Rolling buffer of the server's stdout+stderr — used to attach context to
     // /v1/audio/speech failures (the response body alone says "synthesis failed"
@@ -148,14 +163,14 @@ public class ChatterboxTtsCpp : ITtsEngine
         return modelsFolder;
     }
 
-    public static string GetT3ModelPath() =>
-        Path.Combine(GetSetModelsFolder(), ChatterboxTtsCppDownloadService.T3ModelFileName);
+    public static string GetT3ModelPath(string? modelKey = null) =>
+        Path.Combine(GetSetModelsFolder(), ChatterboxTtsCppDownloadService.GetT3FileName(ResolveModelKey(modelKey)));
 
-    public static string GetS3GenModelPath() =>
-        Path.Combine(GetSetModelsFolder(), ChatterboxTtsCppDownloadService.S3GenModelFileName);
+    public static string GetS3GenModelPath(string? modelKey = null) =>
+        Path.Combine(GetSetModelsFolder(), ChatterboxTtsCppDownloadService.GetS3GenFileName(ResolveModelKey(modelKey)));
 
-    public static bool AreModelsInstalled() =>
-        File.Exists(GetT3ModelPath()) && File.Exists(GetS3GenModelPath());
+    public static bool AreModelsInstalled(string? modelKey = null) =>
+        File.Exists(GetT3ModelPath(modelKey)) && File.Exists(GetS3GenModelPath(modelKey));
 
     public Task<Voice[]> GetVoices(string language)
     {
@@ -178,7 +193,7 @@ public class ChatterboxTtsCpp : ITtsEngine
 
     public Task<string[]> GetRegions() => Task.FromResult(Array.Empty<string>());
 
-    public Task<string[]> GetModels() => Task.FromResult(Array.Empty<string>());
+    public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyBase, ModelKeyTurbo });
 
     public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(Array.Empty<TtsLanguage>());
 
@@ -201,7 +216,7 @@ public class ChatterboxTtsCpp : ITtsEngine
             throw new ArgumentException("Voice is not a ChatterboxVoice");
         }
 
-        await EnsureServerRunningAsync(cancellationToken);
+        await EnsureServerRunningAsync(ResolveModelKey(model), cancellationToken);
 
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
         var inputText = Utilities.UnbreakLine(text);
@@ -305,9 +320,9 @@ public class ChatterboxTtsCpp : ITtsEngine
         }
     }
 
-    private static async Task EnsureServerRunningAsync(CancellationToken ct)
+    private static async Task EnsureServerRunningAsync(string modelKey, CancellationToken ct)
     {
-        if (_serverProcess is { HasExited: false } && _serverPort != 0)
+        if (_serverProcess is { HasExited: false } && _serverPort != 0 && _serverModelKey == modelKey)
         {
             return;
         }
@@ -315,11 +330,12 @@ public class ChatterboxTtsCpp : ITtsEngine
         await ServerLock.WaitAsync(ct);
         try
         {
-            if (_serverProcess is { HasExited: false } && _serverPort != 0)
+            if (_serverProcess is { HasExited: false } && _serverPort != 0 && _serverModelKey == modelKey)
             {
                 return;
             }
 
+            // Server not running — or running with a different model variant. (Re)start.
             if (_serverProcess != null)
             {
                 StopServerInternal();
@@ -346,12 +362,12 @@ public class ChatterboxTtsCpp : ITtsEngine
             psi.ArgumentList.Add("--backend");
             psi.ArgumentList.Add(BackendName);
             psi.ArgumentList.Add("-m");
-            psi.ArgumentList.Add(GetT3ModelPath());
+            psi.ArgumentList.Add(GetT3ModelPath(modelKey));
             // Pass S3Gen explicitly. The chatterbox backend's auto-discovery only finds
             // *-s3gen-f16.gguf, so without this flag the q8_0 codec we ship is ignored
             // and synth returns empty audio.
             psi.ArgumentList.Add("--codec-model");
-            psi.ArgumentList.Add(GetS3GenModelPath());
+            psi.ArgumentList.Add(GetS3GenModelPath(modelKey));
             psi.ArgumentList.Add("--host");
             psi.ArgumentList.Add("127.0.0.1");
             psi.ArgumentList.Add("--port");
@@ -390,6 +406,7 @@ public class ChatterboxTtsCpp : ITtsEngine
 
             _serverProcess = process;
             _serverPort = port;
+            _serverModelKey = modelKey;
             HookProcessExitOnce();
 
             // First-run model auto-download (~880 MB) needs a generous timeout.
@@ -402,6 +419,7 @@ public class ChatterboxTtsCpp : ITtsEngine
                     var tail = SnapshotServerLog();
                     _serverProcess = null;
                     _serverPort = 0;
+                    _serverModelKey = null;
                     if (LooksLikeOutdatedCrispAsr(tail))
                     {
                         throw new InvalidOperationException(
@@ -531,6 +549,7 @@ public class ChatterboxTtsCpp : ITtsEngine
         var p = _serverProcess;
         _serverProcess = null;
         _serverPort = 0;
+        _serverModelKey = null;
         if (p == null) return;
         try
         {

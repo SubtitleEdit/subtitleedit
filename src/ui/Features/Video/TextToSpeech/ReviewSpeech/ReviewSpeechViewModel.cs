@@ -932,6 +932,14 @@ public partial class ReviewSpeechViewModel : ObservableObject
                     SelectedModel = Enumerable.FirstOrDefault<string>(Models);
                 }
             }
+            else if (engine is ChatterboxTtsCpp)
+            {
+                SelectedModel = Enumerable.FirstOrDefault<string>(Models, p => p == Se.Settings.Video.TextToSpeech.ChatterboxModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Enumerable.FirstOrDefault<string>(Models);
+                }
+            }
         });
     }
 

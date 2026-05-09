@@ -28,6 +28,7 @@ public class SeVideoTextToSpeech
     public string Qwen3TtsCppModel { get; set; }
     public string Qwen3TtsCppVulkanPath { get; set; }
     public string OmniVoiceTtsCppVulkanPath { get; set; }
+    public string ChatterboxModel { get; set; }
     public string KokoroVoice { get; set; }
     public string GoogleApiKey { get; set; }
     public string GoogleKeyFile { get; set; }
@@ -88,6 +89,7 @@ public class SeVideoTextToSpeech
         Qwen3TtsCppModel = "0.6B";
         Qwen3TtsCppVulkanPath = string.Empty;
         OmniVoiceTtsCppVulkanPath = string.Empty;
+        ChatterboxModel = "Base";
         KokoroVoice = "af_maple";
         GoogleApiKey = string.Empty;
         GoogleKeyFile = string.Empty;

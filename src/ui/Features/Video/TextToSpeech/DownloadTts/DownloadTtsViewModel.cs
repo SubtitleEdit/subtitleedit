@@ -866,9 +866,11 @@ public partial class DownloadTtsViewModel : ObservableObject
             _kokoroTtsCppDownloadService.DownloadModels(KokoroTtsCpp.GetSetModelsFolder(), downloadProgress, titleProgress, _cancellationTokenSource.Token);
     }
 
-    public void StartDownloadChatterboxModels()
+    public void StartDownloadChatterboxModels(string? modelKey = null)
     {
-        TitleText = "Downloading Chatterbox TTS models (~880 MB)";
+        var resolved = ChatterboxTtsCppDownloadService.ResolveModelKey(modelKey);
+        var sizeText = resolved == ChatterboxTtsCppDownloadService.ModelKeyTurbo ? "~1 GB" : "~990 MB";
+        TitleText = $"Downloading Chatterbox TTS {resolved} models ({sizeText})";
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -884,7 +886,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         });
 
         _downloadTaskChatterboxModels =
-            _chatterboxTtsCppDownloadService.DownloadModels(ChatterboxTtsCpp.GetSetModelsFolder(), downloadProgress, titleProgress, _cancellationTokenSource.Token);
+            _chatterboxTtsCppDownloadService.DownloadModels(ChatterboxTtsCpp.GetSetModelsFolder(), resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
     }
 
     public void StartDownloadOmniVoice(string windowsVariant = OmniVoiceDownloadService.WindowsVariantVulkan)

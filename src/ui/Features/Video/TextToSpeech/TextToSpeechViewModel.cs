@@ -238,6 +238,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             Se.Settings.Video.TextToSpeech.Qwen3TtsCppModel = SelectedModel ?? Qwen3TtsCpp.DefaultModelKey;
         }
+        else if (SelectedEngine is ChatterboxTtsCpp)
+        {
+            Se.Settings.Video.TextToSpeech.ChatterboxModel = SelectedModel ?? ChatterboxTtsCpp.DefaultModelKey;
+        }
         else if (SelectedEngine is KokoroTtsCpp)
         {
             if (SelectedVoice?.EngineVoice is Voices.KokoroTtsVoice kokoroVoice && !string.IsNullOrEmpty(kokoroVoice.Voice))
@@ -777,12 +781,14 @@ public partial class TextToSpeechViewModel : ObservableObject
                 return false;
             }
 
-            if (!ChatterboxTtsCpp.AreModelsInstalled())
+            var chatterboxModelKey = ChatterboxTtsCpp.ResolveModelKey(SelectedModel);
+            if (!ChatterboxTtsCpp.AreModelsInstalled(chatterboxModelKey))
             {
+                var sizeText = chatterboxModelKey == ChatterboxTtsCpp.ModelKeyTurbo ? "~1 GB" : "~990 MB";
                 var answer = await MessageBox.Show(
                     Window,
                     "Download Chatterbox TTS models?",
-                    $"{Environment.NewLine}\"Chatterbox TTS\" requires models (~880 MB).{Environment.NewLine}{Environment.NewLine}Download models?",
+                    $"{Environment.NewLine}\"Chatterbox TTS\" ({chatterboxModelKey}) requires models ({sizeText}).{Environment.NewLine}{Environment.NewLine}Download models?",
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -791,8 +797,8 @@ public partial class TextToSpeechViewModel : ObservableObject
                     return false;
                 }
 
-                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadChatterboxModels());
-                return dlResult.OkPressed && ChatterboxTtsCpp.AreModelsInstalled();
+                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadChatterboxModels(chatterboxModelKey));
+                return dlResult.OkPressed && ChatterboxTtsCpp.AreModelsInstalled(chatterboxModelKey);
             }
 
             return true;
@@ -1771,6 +1777,14 @@ public partial class TextToSpeechViewModel : ObservableObject
             else if (SelectedEngine is Qwen3TtsCpp)
             {
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.Qwen3TtsCppModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+            }
+            else if (SelectedEngine is ChatterboxTtsCpp)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.ChatterboxModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
                     SelectedModel = Models.FirstOrDefault();
