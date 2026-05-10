@@ -150,6 +150,13 @@ public partial class AddToNamesListViewModel : ObservableObject
             return;
         }
 
+        await MessageBox.Show(
+            Window!,
+            Se.Language.General.Information,
+            string.Format(Se.Language.SpellCheck.XOfYNamesImported, addedCount, names.Count),
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Information);
+
         OkPressed = true;
         Window?.Close();
     }

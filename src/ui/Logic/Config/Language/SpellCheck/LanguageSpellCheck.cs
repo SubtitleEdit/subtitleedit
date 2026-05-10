@@ -14,6 +14,7 @@ public class LanguageSpellCheck
     public string SomeNamesAreNotProperCase { get; set; }
     public string EnterOneNamePerLine { get; set; }
     public string NoNamesAdded { get; set; }
+    public string XOfYNamesImported { get; set; }
     public string NoDictionariesFound { get; set; }
     public string WordNotFound { get; set; }
     public string LineXofY { get; set; }
@@ -43,6 +44,7 @@ public class LanguageSpellCheck
         SomeNamesAreNotProperCase = "Some names do not start with an uppercase letter or are all uppercase. Import anyway?";
         EnterOneNamePerLine = "Enter one name per line";
         NoNamesAdded = "No names were added (perhaps they already exist).";
+        XOfYNamesImported = "{0} of {1} names imported (the rest may already exist).";
         NoDictionariesFound = "No dictionaries found";
         WordNotFound = "Word not found";
         LineXofY = "Spell checker - line {0} of {1}";
