@@ -35,6 +35,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
 
+            if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+            {
+                var csvSubtitle = new UnknownFormatImporterCsv().AutoGuessImport(lines);
+                if (csvSubtitle != null && csvSubtitle.Paragraphs.Count > 0)
+                {
+                    return csvSubtitle;
+                }
+            }
+
             var subtitle = ImportTimeCodesOnSameSeparateLine(lines);
             if (subtitle.Paragraphs.Count < 2)
             {

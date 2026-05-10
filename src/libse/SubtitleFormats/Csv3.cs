@@ -37,6 +37,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 if (m != null && m.Success)
                 {
+                    // Reject multi-column CSVs (Csv3 expects start, end, text, optional secondary text).
+                    var fields = CsvUtil.CsvSplit(line, false, out _, ',');
+                    if (fields.Length > 4)
+                    {
+                        return false;
+                    }
+
                     fine++;
                     string s = line.Remove(0, m.Length);
                     continuation = s.StartsWith('"');

@@ -22,6 +22,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
+            // Reject multi-column CSVs (more than start, end, text) — those should go through UnknownFormatImporterCsv.
+            foreach (var line in lines)
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    continue;
+                }
+
+                var fields = CsvUtil.CsvSplit(line, false, out _, ',');
+                if (fields.Length > 3)
+                {
+                    return false;
+                }
+            }
+
             return base.IsMine(lines, fileName);
         }
 

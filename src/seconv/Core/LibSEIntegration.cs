@@ -69,6 +69,18 @@ internal static class LibSEIntegration
 
         var lines = new List<string>(File.ReadAllLines(filePath, encoding));
 
+        // 0. For .csv files with a recognizable header, prefer the multi-column CSV importer over content
+        // sniffing — generic time-code formats (Spruce, Csv4, ...) match too eagerly and grab everything
+        // past the timestamps as text.
+        if (filePath.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+        {
+            var csvSubtitle = new UnknownFormatImporterCsv().AutoGuessImport(lines);
+            if (csvSubtitle != null && csvSubtitle.Paragraphs.Count > 0)
+            {
+                return (csvSubtitle, new SubRip());
+            }
+        }
+
         // 1. Try text-based formats by content sniffing
         foreach (var format in SubtitleFormat.AllSubtitleFormats)
         {

@@ -10729,8 +10729,23 @@ public partial class MainViewModel :
             }
 
             var fileEncoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
-            var subtitle = Subtitle.Parse(fileName, fileEncoding);
-            if (subtitle != null && subtitle.OriginalFormat.Name == new WebVTT().Name)
+            Subtitle? subtitle = null;
+
+            // For .csv files, try the multi-column CSV importer first. It only succeeds when there is a
+            // recognizable header (start/end/text/etc.), so single-text-column CSV formats fall through to Subtitle.Parse.
+            if (string.Equals(ext, ".csv", StringComparison.OrdinalIgnoreCase))
+            {
+                var csvLines = FileUtil.ReadAllLinesShared(fileName, Encoding.UTF8);
+                var csvSubtitle = new UnknownFormatImporterCsv().AutoGuessImport(csvLines);
+                if (csvSubtitle != null && csvSubtitle.Paragraphs.Count > 0)
+                {
+                    subtitle = csvSubtitle;
+                    _converted = true;
+                }
+            }
+
+            subtitle ??= Subtitle.Parse(fileName, fileEncoding);
+            if (subtitle != null && subtitle.OriginalFormat != null && subtitle.OriginalFormat.Name == new WebVTT().Name)
             {
                 var lines = FileUtil.ReadAllLinesShared(fileName, Encoding.UTF8);
                 var format = new WebVttThumbnail();
