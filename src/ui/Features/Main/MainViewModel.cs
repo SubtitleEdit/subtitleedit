@@ -49,6 +49,7 @@ using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedText10Properties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.TimedTextImsc11Properties;
 using Nikse.SubtitleEdit.Features.Files.FormatProperties.TmpegEncXmlProperties;
 using Nikse.SubtitleEdit.Features.Files.ImportImages;
+using Nikse.SubtitleEdit.Features.Files.ImportCsvXlsxCustomColumns;
 using Nikse.SubtitleEdit.Features.Files.ImportPlainText;
 using Nikse.SubtitleEdit.Features.Files.ManualChosenEncoding;
 using Nikse.SubtitleEdit.Features.Files.RestoreAutoBackup;
@@ -2526,6 +2527,29 @@ public partial class MainViewModel :
             _subtitleFileName = string.Empty;
             ResetSubtitle();
             foreach (var item in result.Subtitles)
+            {
+                Subtitles.Add(item);
+            }
+
+            Renumber();
+            _updateAudioVisualizer = true;
+        }
+    }
+
+    [RelayCommand]
+    private async Task ImportCsvXlsxCustomColumns()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await ShowDialogAsync<ImportCsvXlsxCustomColumnsWindow, ImportCsvXlsxCustomColumnsViewModel>();
+        if (result.OkPressed && result.ResultSubtitles.Count > 0)
+        {
+            _subtitleFileName = string.Empty;
+            ResetSubtitle();
+            foreach (var item in result.ResultSubtitles)
             {
                 Subtitles.Add(item);
             }

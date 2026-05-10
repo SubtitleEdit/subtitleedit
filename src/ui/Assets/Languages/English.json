@@ -1004,7 +1004,13 @@
       "gapMs": "Gap (ms)",
       "useFixedDuration": "Use fixed duration",
       "fixedDurationMs": "Fixed duration (ms)",
-      "alignViaWhisper": "Align time codes via Whisper..."
+      "alignViaWhisper": "Align time codes via Whisper...",
+      "csvXlsxCustomColumnsDotDotDot": "CSV/XLSX with custom columns...",
+      "titleImportCsvXlsxCustomColumns": "Import CSV/XLSX with custom columns",
+      "detectedSeparatorX": "Detected separator: {0}",
+      "csvXlsxFilterTitle": "CSV/XLSX",
+      "separatorTab": "Tab",
+      "separatorSpace": "Space"
     },
     "export": {
       "exportImagesProfiles": "Export images profiles",

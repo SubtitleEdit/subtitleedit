@@ -151,6 +151,11 @@ public static class InitMenu
                             Header = Se.Language.File.Import.PlainTextDotDotDot,
                             Command = vm.ImportPlainTextCommand,
                         },
+                        new MenuItem
+                        {
+                            Header = Se.Language.File.Import.CsvXlsxCustomColumnsDotDotDot,
+                            Command = vm.ImportCsvXlsxCustomColumnsCommand,
+                        },
                         new Separator(),
                         new MenuItem
                         {

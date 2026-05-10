@@ -5,6 +5,12 @@ public class LanguageImport
     public string ImportTimeCodes { get; set; }
     public string PlainTextDotDotDot { get; set; }
     public string TitleImportPlainText { get; set; }
+    public string CsvXlsxCustomColumnsDotDotDot { get; set; }
+    public string TitleImportCsvXlsxCustomColumns { get; set; }
+    public string DetectedSeparatorX { get; set; }
+    public string CsvXlsxFilterTitle { get; set; }
+    public string SeparatorTab { get; set; }
+    public string SeparatorSpace { get; set; }
     public string ImagesForOcrDotDotDot { get; set; }
     public string TimeCodesDotDotDot { get; set; }
     public string SubtitleWithManuallyChosenEncodingDotDotDot { get; set; }
@@ -83,5 +89,11 @@ Rules:
         UseFixedDuration = "Use fixed duration";
         FixedDurationMs = "Fixed duration (ms)";
         AlignViaWhisper = "Align time codes via Whisper...";
+        CsvXlsxCustomColumnsDotDotDot = "CSV/XLSX with custom columns...";
+        TitleImportCsvXlsxCustomColumns = "Import CSV/XLSX with custom columns";
+        DetectedSeparatorX = "Detected separator: {0}";
+        CsvXlsxFilterTitle = "CSV/XLSX";
+        SeparatorTab = "Tab";
+        SeparatorSpace = "Space";
     }
 }
