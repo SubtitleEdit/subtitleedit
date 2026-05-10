@@ -510,7 +510,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
 
         private static List<string> GetVideoExtensions()
         {
-            return new List<string> { "*.mkv", "*.mp4", "*.ts", "*.mov", "*.mpeg", "*.m2ts" };
+            return Utilities.VideoFileExtensions.Select(e => "*" + e).ToList();
         }
 
         private static List<string> GetAudioExtensions()
