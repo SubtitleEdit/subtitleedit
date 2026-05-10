@@ -612,6 +612,16 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             _textBlockPlayerName.Text = _videoPlayerInstance.Name;
             _videoFileName = videoFileName;
 
+            // Re-arm fullscreen auto-hide. A preceding Close() (e.g. via Ctrl+N
+            // before opening a new file) stops _autoHideTimer, and the IsFullScreen
+            // setter doesn't run a fresh true→true transition — so without this
+            // the controls would stay visible until the user moves the cursor on
+            // the fullscreen monitor.
+            if (IsFullScreen)
+            {
+                StartAutoHideControls();
+            }
+
             var shortName = System.IO.Path.GetFileName(videoFileName);
             if (shortName.Length > 55)
             {
