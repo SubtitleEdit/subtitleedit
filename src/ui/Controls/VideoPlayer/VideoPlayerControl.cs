@@ -596,6 +596,13 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         internal async Task Open(string videoFileName)
         {
+            // Reset slider state before LoadFile. Otherwise, when the new file's
+            // Duration arrives on the next timer tick, the slider's Maximum drops
+            // and a stale Value (left over from the previous file) gets clamped to
+            // the new Maximum — firing ValueChanged and seeking mpv to EOF.
+            SetPositionDisplayOnly(0);
+            Duration = 0;
+
             await _videoPlayerInstance.LoadFile(videoFileName);
             _videoPlayerInstance.Volume = Volume;
             _positionTimer?.Stop();
@@ -621,6 +628,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             ProgressText = string.Empty;
             _videoFileName = string.Empty;
             _textBlockVideoFileName.Text = string.Empty;
+            SetPositionDisplayOnly(0);
+            Duration = 0;
         }
 
         internal async Task WaitForPlayersReadyAsync(int timeoutMs = 2500)

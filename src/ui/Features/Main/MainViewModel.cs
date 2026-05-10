@@ -13228,6 +13228,8 @@ public partial class MainViewModel :
         {
             AudioVisualizer.WavePeaks = null;
             AudioVisualizer.ShotChanges = new List<double>();
+            AudioVisualizer.StartPositionSeconds = 0;
+            AudioVisualizer.CurrentVideoPositionSeconds = 0;
         }
     }
 
