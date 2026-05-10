@@ -706,7 +706,7 @@
       "adjustDurations": "_Коригиране на продължителността...",
       "applyDurationLimits": "Прилагане на ограничения за продължителност...",
       "batchConvert": "_Пакетно конвертиране...",
-      "bridgeGaps": "Пропуски в мостове...",
+      "bridgeGaps": "Запълване_празнини...",
       "applyMinGap": "Приложи мин. разстояние между субтитрите...",
       "changeCasing": "_Смяна на главни и малки букви...",
       "changeFormatting": "Промяна на форматирането...",
@@ -720,7 +720,7 @@
       "renumber": "Преномериране...",
       "removeTextForHearingImpaired": "_Премахване на текст за хора с увреден слух...",
       "convertActors": "Преобразуване на актьори...",
-      "joinSubtitles": "_Присъединяване на субтитри...",
+      "joinSubtitles": "_Обединяване на субтитри...",
       "splitSubtitle": "_Разделяне на субтитри...",
       "assaTools": "Инструменти _ASSA",
       "assaProgressBar": "Генериране на _лента за напредък...",
@@ -854,7 +854,7 @@
     "copyTextFromOriginalToCurrent": "Копиране на текст от оригинала в текущия субтитър",
     "insertedXTextsFromSubtitleY": "Вмъкнати са {0} текста от файла със субтитри \"{1}“",
     "italicHint": "Курсив на избраните редове/текст",
-    "joinedSubtitleLoaded": "Заредени са присъединените субтитри",
+    "joinedSubtitleLoaded": "Заредени са обединените субтитри",
     "lineXTextAndTimingChanged": "Ред {0}: Текстът и времето са променени",
     "lineXTextChangedFromYToZ": "Ред {0}: Текстът е променен от \"{1}“ на \"{2}“",
     "lineXTimingChanged": "Ред {0}: Времето е променено",
@@ -1479,11 +1479,11 @@
       "numberOfConversionsX": "Брой реализации: {0}"
     },
     "joinSubtitles": {
-      "title": "Присъедини към субтитрите",
+      "title": "Обединение на субтитри",
       "keepTimeCodes": "Запази времевите кодове",
       "appendTimeCodes": "Добавяне на времеви кодове",
       "addMsAfterEachFile": "Добави милисекунди след всеки файл",
-      "join": "_Присъедини"
+      "join": "_Обедини"
     },
     "splitSubtitle": {
       "title": "Разделяне на субтитри",
@@ -2365,7 +2365,7 @@
       "splitBreakLongLines": "Разделяне/ребалансиране на дълги линии",
       "mergeShortLines": "Обединяване на къси редове",
       "removeTextForHearingImpaired": "Премахване на текст за хора с увреден слух",
-      "joinSubtitles": "Присъедини към субтитрите",
+      "joinSubtitles": "Обединение на субтитри",
       "splitSubtitle": "Разделяне на субтитри",
       "spellCheck": "Правопис",
       "spellCheckGetDictionary": "Вземете речника за проверка на правописа",
