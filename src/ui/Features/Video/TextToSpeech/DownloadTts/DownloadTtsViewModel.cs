@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic;
@@ -513,7 +514,12 @@ public partial class DownloadTtsViewModel : ObservableObject
                 try
                 {
                     _downloadStreamOmniVoice.Position = 0;
-                    _zipUnpacker.UnpackZipStream(_downloadStreamOmniVoice, folder, string.Empty, false, new List<string>(), null);
+                    // The macOS and Linux OmniVoice zips wrap the binaries in a top-level
+                    // folder (e.g. "omnivoice-macos-universal-cpu-metal/"), while the Windows
+                    // zips are flat. Flatten on non-Windows so the binaries land directly in
+                    // the OmniVoice folder where GetExecutableFileName() looks for them.
+                    var flatten = !Configuration.IsRunningOnWindows;
+                    _zipUnpacker.UnpackZipStream(_downloadStreamOmniVoice, folder, string.Empty, flatten, new List<string>(), null);
                     _downloadStreamOmniVoice.Dispose();
                 }
                 catch (Exception ex)
@@ -891,7 +897,21 @@ public partial class DownloadTtsViewModel : ObservableObject
 
     public void StartDownloadOmniVoice(string windowsVariant = OmniVoiceDownloadService.WindowsVariantVulkan)
     {
-        TitleText = $"Downloading OmniVoice TTS ({windowsVariant})";
+        string variantLabel;
+        if (Configuration.IsRunningOnWindows)
+        {
+            variantLabel = windowsVariant;
+        }
+        else if (Configuration.IsRunningOnMac)
+        {
+            variantLabel = "macOS universal CPU+Metal";
+        }
+        else
+        {
+            variantLabel = "Linux x64 CPU";
+        }
+
+        TitleText = $"Downloading OmniVoice TTS ({variantLabel})";
 
         var downloadProgress = new Progress<float>(number =>
         {
