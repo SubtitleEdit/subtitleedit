@@ -259,6 +259,14 @@ public class InitWaveform
             };
             flyout.Items.Add(menuItemSeekSilence);
 
+            var menuItemExtractAudio = new MenuItem
+            {
+                Header = Se.Language.Waveform.ExtractAudioDotDotDot,
+                Command = vm.WaveformExtractAudioCommand,
+            };
+            flyout.Items.Add(menuItemExtractAudio);
+            vm.MenuItemAudioVisualizerExtractAudio = menuItemExtractAudio;
+
             var menuItemSpeechToTextSelectedLines = new MenuItem
             {
                 Header = Se.Language.Waveform.SpeechToTextSelectedLinesDotDotDot,

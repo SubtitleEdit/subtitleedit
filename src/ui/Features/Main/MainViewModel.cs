@@ -83,6 +83,7 @@ using Nikse.SubtitleEdit.Features.Shared.PickRuleProfile;
 using Nikse.SubtitleEdit.Features.Shared.PickSpellCheckDictionary;
 using Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
 using Nikse.SubtitleEdit.Features.Shared.PickTsTrack;
+using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Features.Shared.SetVideoOffset;
 using Nikse.SubtitleEdit.Features.Shared.SourceView;
@@ -363,6 +364,7 @@ public partial class MainViewModel :
     public MenuItem MenuItemAudioVisualizerMergeWithNext { get; set; }
     public MenuItem MenuItemAudioVisualizerSpeechToTextSelectedLines { get; set; }
     public MenuItem MenuItemAudioVisualizerSpeechToTextNewSelection { get; set; }
+    public MenuItem MenuItemAudioVisualizerExtractAudio { get; set; }
     public ITextBoxWrapper EditTextBoxOriginal { get; set; }
     public ITextBoxWrapper EditTextBox { get; set; }
     public TextEditorBindingHelper? EditTextBoxHelper { get; set; }
@@ -451,6 +453,7 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerMergeWithNext = new MenuItem();
         MenuItemAudioVisualizerSpeechToTextSelectedLines = new MenuItem();
         MenuItemAudioVisualizerSpeechToTextNewSelection = new MenuItem();
+        MenuItemAudioVisualizerExtractAudio = new MenuItem();
         MenuItemStyles = new MenuItem();
         MenuItemActors = new MenuItem();
         AudioTraksMenuItem = new MenuItem();
@@ -2895,6 +2898,71 @@ public partial class MainViewModel :
         if (seconds >= 0)
         {
             vp.Position = seconds;
+        }
+    }
+
+    [RelayCommand]
+    private async Task WaveformExtractAudio()
+    {
+        if (Window == null || string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (selectedItems.Count != 1)
+        {
+            return;
+        }
+
+        var ffmpegOk = await RequireFfmpegOk();
+        if (!ffmpegOk)
+        {
+            return;
+        }
+
+        var line = selectedItems[0];
+        var suggestedName = $"{Path.GetFileNameWithoutExtension(_videoFileName)}_{line.Number}.wav";
+        var outputFileName = await _fileHelper.PickSaveFile(Window, ".wav", suggestedName, Se.Language.Waveform.ExtractAudioDotDotDot);
+        if (string.IsNullOrEmpty(outputFileName))
+        {
+            return;
+        }
+
+        try
+        {
+            var arguments = FfmpegGenerator.ExtractAudioClipFromVideoParameters(
+                _videoFileName,
+                line.StartTime.TotalSeconds,
+                line.Duration.TotalSeconds,
+                false,
+                outputFileName);
+
+            using var process = FfmpegGenerator.GetProcess(arguments, (_, _) => { });
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+            await Task.Run(() => process.WaitForExit());
+
+            if (process.ExitCode != 0 || !File.Exists(outputFileName))
+            {
+                await MessageBox.Show(Window, Se.Language.General.Error, "Could not extract audio clip from video.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            await ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(vm =>
+            {
+                vm.Initialize(
+                    Se.Language.General.FileSaved,
+                    string.Format(Se.Language.General.FileSavedToX, outputFileName),
+                    outputFileName,
+                    true,
+                    true);
+            });
+        }
+        catch (Exception exception)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -15788,6 +15856,7 @@ public partial class MainViewModel :
         MenuItemAudioVisualizerMergeWithNext.IsVisible = false;
         MenuItemAudioVisualizerSpeechToTextSelectedLines.IsVisible = false;
         MenuItemAudioVisualizerSpeechToTextNewSelection.IsVisible = false;
+        MenuItemAudioVisualizerExtractAudio.IsVisible = false;
 
         if (e.NewParagraph != null)
         {
@@ -15829,6 +15898,7 @@ public partial class MainViewModel :
             MenuItemAudioVisualizerSplit.IsVisible = true;
             MenuItemAudioVisualizerMergeWithPrevious.IsVisible = selectedIdx > 0;
             MenuItemAudioVisualizerMergeWithNext.IsVisible = !isLast;
+            MenuItemAudioVisualizerExtractAudio.IsVisible = !string.IsNullOrEmpty(_videoFileName);
             return;
         }
 
