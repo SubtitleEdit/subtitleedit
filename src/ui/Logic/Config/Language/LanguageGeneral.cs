@@ -307,6 +307,7 @@ public class LanguageGeneral
     public string MoreInfo { get; set; }
     public string MoveAllShotChangeOneFrameBack { get; set; }
     public string MoveAllShotChangeOneFrameForward { get; set; }
+    public string MultiMode { get; set; }
     public string MoveDown { get; set; }
     public string MoveUp { get; set; }
     public string MultipleReplace { get; set; }
@@ -974,6 +975,7 @@ public class LanguageGeneral
         MoreInfo = "More info";
         MoveAllShotChangeOneFrameBack = "Move all shot changes one frame back";
         MoveAllShotChangeOneFrameForward = "Move all shot changes one frame forward";
+        MultiMode = "Multi mode";
         MoveDown = "Move down";
         MoveUp = "Move up";
         MultipleReplace = "Multiple replace";
