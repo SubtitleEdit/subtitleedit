@@ -7,15 +7,7 @@ public class LanguageImport
     public string TitleImportPlainText { get; set; }
     public string CsvXlsxCustomColumnsDotDotDot { get; set; }
     public string TitleImportCsvXlsxCustomColumns { get; set; }
-    public string PickFileDotDotDot { get; set; }
     public string DetectedSeparatorX { get; set; }
-    public string ColumnTypeNone { get; set; }
-    public string ColumnTypeStart { get; set; }
-    public string ColumnTypeEnd { get; set; }
-    public string ColumnTypeDuration { get; set; }
-    public string ColumnTypeText { get; set; }
-    public string ColumnTypeCharacter { get; set; }
-    public string ColumnXFallback { get; set; }
     public string CsvXlsxFilterTitle { get; set; }
     public string SeparatorTab { get; set; }
     public string SeparatorSpace { get; set; }
@@ -99,15 +91,7 @@ Rules:
         AlignViaWhisper = "Align time codes via Whisper...";
         CsvXlsxCustomColumnsDotDotDot = "CSV/XLSX with custom columns...";
         TitleImportCsvXlsxCustomColumns = "Import CSV/XLSX with custom columns";
-        PickFileDotDotDot = "Pick file...";
         DetectedSeparatorX = "Detected separator: {0}";
-        ColumnTypeNone = "(none)";
-        ColumnTypeStart = "Start";
-        ColumnTypeEnd = "Hide";
-        ColumnTypeDuration = "Duration";
-        ColumnTypeText = "Text";
-        ColumnTypeCharacter = "Character";
-        ColumnXFallback = "Column {0}";
         CsvXlsxFilterTitle = "CSV/XLSX";
         SeparatorTab = "Tab";
         SeparatorSpace = "Space";

@@ -84,7 +84,7 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
 
         var fileName = await _fileHelper.PickOpenFile(
             Window,
-            Se.Language.File.Import.PickFileDotDotDot,
+            Se.Language.General.OpenFile,
             Se.Language.File.Import.CsvXlsxFilterTitle,
             "*.csv;*.xlsx;*.ods;*.tsv;*.txt");
         if (string.IsNullOrEmpty(fileName))
@@ -181,7 +181,7 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
             }
             else
             {
-                headerNames.Add(string.Format(Se.Language.File.Import.ColumnXFallback, i + 1));
+                headerNames.Add($"{Se.Language.General.Column} {i + 1}");
             }
         }
 

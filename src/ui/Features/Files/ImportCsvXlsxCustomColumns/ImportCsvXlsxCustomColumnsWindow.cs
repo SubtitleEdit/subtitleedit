@@ -29,7 +29,7 @@ public class ImportCsvXlsxCustomColumnsWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var buttonPickFile = UiUtil.MakeButton(Se.Language.File.Import.PickFileDotDotDot, vm.PickFileCommand).WithMinWidth(140);
+        var buttonPickFile = UiUtil.MakeButton(Se.Language.General.OpenFile, vm.PickFileCommand).WithMinWidth(140);
         var labelFile = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.FilePath)).WithAlignmentTop();
         var labelSeparator = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.SeparatorDisplay)).WithAlignmentTop();
         var topPanel = new StackPanel
@@ -175,12 +175,12 @@ public class ImportCsvXlsxCustomColumnsWindow : Window
     {
         return new[]
         {
-            new RoleOption(CsvColumnRole.None, Se.Language.File.Import.ColumnTypeNone),
-            new RoleOption(CsvColumnRole.Start, Se.Language.File.Import.ColumnTypeStart),
-            new RoleOption(CsvColumnRole.End, Se.Language.File.Import.ColumnTypeEnd),
-            new RoleOption(CsvColumnRole.Duration, Se.Language.File.Import.ColumnTypeDuration),
-            new RoleOption(CsvColumnRole.Text, Se.Language.File.Import.ColumnTypeText),
-            new RoleOption(CsvColumnRole.Character, Se.Language.File.Import.ColumnTypeCharacter),
+            new RoleOption(CsvColumnRole.None, Se.Language.General.None),
+            new RoleOption(CsvColumnRole.Start, Se.Language.General.Show),
+            new RoleOption(CsvColumnRole.End, Se.Language.General.Hide),
+            new RoleOption(CsvColumnRole.Duration, Se.Language.General.Duration),
+            new RoleOption(CsvColumnRole.Text, Se.Language.General.Text),
+            new RoleOption(CsvColumnRole.Character, Se.Language.General.Character),
         };
     }
 
@@ -277,12 +277,12 @@ public class ImportCsvXlsxCustomColumnsWindow : Window
 
         private static string RoleDisplay(CsvColumnRole role) => role switch
         {
-            CsvColumnRole.Start => Se.Language.File.Import.ColumnTypeStart,
-            CsvColumnRole.End => Se.Language.File.Import.ColumnTypeEnd,
-            CsvColumnRole.Duration => Se.Language.File.Import.ColumnTypeDuration,
-            CsvColumnRole.Text => Se.Language.File.Import.ColumnTypeText,
-            CsvColumnRole.Character => Se.Language.File.Import.ColumnTypeCharacter,
-            _ => Se.Language.File.Import.ColumnTypeNone,
+            CsvColumnRole.Start => Se.Language.General.Show,
+            CsvColumnRole.End => Se.Language.General.Hide,
+            CsvColumnRole.Duration => Se.Language.General.Duration,
+            CsvColumnRole.Text => Se.Language.General.Text,
+            CsvColumnRole.Character => Se.Language.General.Character,
+            _ => Se.Language.General.None,
         };
     }
 }
