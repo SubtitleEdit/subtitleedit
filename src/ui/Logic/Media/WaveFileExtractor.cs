@@ -31,7 +31,7 @@ public static class WaveFileExtractor
             string audioParameter = string.Empty;
             if (audioTrackNumber >= 0)
             {
-                audioParameter = $"-map 0:{audioTrackNumber}";
+                audioParameter = $"-map 0:{audioTrackNumber}?";
             }
 
             var fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -af volume=1.75 -f wav {2} \"{1}\"";

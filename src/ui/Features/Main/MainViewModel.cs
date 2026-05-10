@@ -12781,6 +12781,7 @@ public partial class MainViewModel :
         }
 
         _videoOpenTokenSource?.Cancel();
+        _audioTrack = null;
         await vp.Open(videoFileName);
         _videoFileName = videoFileName;
         RefreshSubtitlePreview();
