@@ -549,6 +549,35 @@ public class InitWaveform
             });
         }
 
+        var sliderPositionUserMoving = false;
+        sliderPosition.AddHandler(InputElement.PointerPressedEvent, (_, _) => sliderPositionUserMoving = true, RoutingStrategies.Tunnel);
+        sliderPosition.AddHandler(InputElement.PointerReleasedEvent, (_, _) => sliderPositionUserMoving = false, RoutingStrategies.Tunnel);
+        sliderPosition.AddHandler(InputElement.PointerCaptureLostEvent, (_, _) => sliderPositionUserMoving = false, RoutingStrategies.Tunnel);
+        sliderPosition.AddHandler(InputElement.KeyDownEvent, (_, e) =>
+        {
+            if (e.Key is Key.Left or Key.Right or Key.Up or Key.Down or Key.Home or Key.End or Key.PageUp or Key.PageDown)
+            {
+                sliderPositionUserMoving = true;
+            }
+        }, RoutingStrategies.Tunnel);
+        sliderPosition.AddHandler(InputElement.KeyUpEvent, (_, _) => sliderPositionUserMoving = false, RoutingStrategies.Tunnel);
+        sliderPosition.ValueChanged += (_, e) =>
+        {
+            if (!sliderPositionUserMoving)
+            {
+                return;
+            }
+
+            var av = vm.AudioVisualizer;
+            if (av?.WavePeaks == null || av.Bounds.Width <= 0 || av.ZoomFactor <= 0 || av.WavePeaks.SampleRate <= 0)
+            {
+                return;
+            }
+
+            var halfWidthInSeconds = (av.Bounds.Width / 2) / (av.WavePeaks.SampleRate * av.ZoomFactor);
+            av.StartPositionSeconds = e.NewValue - halfWidthInSeconds;
+        };
+
         var settingSpeed = GetToolbarSettingFor(SeWaveformToolbarItemType.PlaybackSpeed);
         var labelSpeed = UiUtil.MakeLabel(Se.Language.General.Speed);
         var comboBoxSpeed = new ComboBox

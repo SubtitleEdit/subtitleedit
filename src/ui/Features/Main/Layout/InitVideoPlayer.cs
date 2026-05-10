@@ -78,6 +78,7 @@ public static class InitVideoPlayer
         control.ToggleDisplayProgressTextModeRequested += () => { vm.ToggleVideoPlayerDisplayTimeLeftCommand.Execute(null); };
         control.VideoFileNamePointerPressed += vm.VideoPlayerControlPointerPressed;
         control.SurfacePointerPressed += (_, _) => vm.VideoPlayerAreaPointerPressed();
+        control.UserSeeked += vm.OnVideoPlayerUserSeeked;
 
         Grid.SetRow(control, 0);
         mainGrid.Children.Add(control);

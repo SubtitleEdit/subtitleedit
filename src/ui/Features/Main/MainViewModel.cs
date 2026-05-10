@@ -15262,6 +15262,18 @@ public partial class MainViewModel :
         _updateAudioVisualizer = true;
     }
 
+    internal void OnVideoPlayerUserSeeked(double newPositionSeconds)
+    {
+        var av = AudioVisualizer;
+        if (av?.WavePeaks == null || av.Bounds.Width <= 0 || av.ZoomFactor <= 0 || av.WavePeaks.SampleRate <= 0)
+        {
+            return;
+        }
+
+        var halfWidthInSeconds = (av.Bounds.Width / 2) / (av.WavePeaks.SampleRate * av.ZoomFactor);
+        av.StartPositionSeconds = newPositionSeconds - halfWidthInSeconds;
+    }
+
     internal void AudioVisualizerOnStatus(object sender, ParagraphEventArgs e)
     {
         ShowStatus(e.Paragraph.Text, 3000);

@@ -382,8 +382,28 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             // Also ensure the control can receive keyboard focus
             sliderPosition.Focusable = true;
 
+            var sliderPositionUserMoving = false;
+            sliderPosition.AddHandler(PointerPressedEvent, (_, _) => sliderPositionUserMoving = true, RoutingStrategies.Tunnel);
+            sliderPosition.AddHandler(PointerReleasedEvent, (_, _) => sliderPositionUserMoving = false, RoutingStrategies.Tunnel);
+            sliderPosition.AddHandler(PointerCaptureLostEvent, (_, _) => sliderPositionUserMoving = false, RoutingStrategies.Tunnel);
+            sliderPosition.AddHandler(KeyDownEvent, (_, e) =>
+            {
+                if (e.Key is Key.Left or Key.Right or Key.Up or Key.Down or Key.Home or Key.End or Key.PageUp or Key.PageDown)
+                {
+                    sliderPositionUserMoving = true;
+                }
+            }, RoutingStrategies.Tunnel);
+            sliderPosition.AddHandler(KeyUpEvent, (_, _) => sliderPositionUserMoving = false, RoutingStrategies.Tunnel);
+
             // For any direct value changes
-            sliderPosition.ValueChanged += (s, e) => { NotifyPositionChanged(e.NewValue); };
+            sliderPosition.ValueChanged += (s, e) =>
+            {
+                NotifyPositionChanged(e.NewValue);
+                if (sliderPositionUserMoving)
+                {
+                    UserSeeked?.Invoke(e.NewValue);
+                }
+            };
 
             _gridProgress.Children.Add(sliderPosition);
             Grid.SetColumn(sliderPosition, 1);
@@ -563,6 +583,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         public event Action? FullscreenRequested;
         public event Action? FullscreenCollapseRequested;
         public event Action<double>? PositionChanged;
+        public event Action<double>? UserSeeked;
         public event Action<double>? VolumeChanged;
         public event Action? ToggleDisplayProgressTextModeRequested;
         public event Action<PointerPressedEventArgs>? VideoFileNamePointerPressed;
