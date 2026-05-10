@@ -1,6 +1,27 @@
 
 Subtitle Edit Changelog
 
+v5.0.0-beta24 (xth May 2026)
+
+* Add "Merge two subtitles" tool
+* Add "Import CSV/XLSX with custom columns" window - thx Dubbing-Nerd
+* Add multi-mode to "Add to names list" window + report imported count - thx kt
+* Add OmniVoice TTS CUDA support
+* Add "Extract audio..." to waveform context menu
+* Improve video position sliders and waveform
+* Improvements for seconv (command line conversion tool)
+* Allow importing styles from Aegisub .sty files - thx maxz1717
+* Add a few names to English name list
+* Update Bulgarian translations - thx jekovcar
+* Update Portuguese (Brazil) translation - thx igorruckert
+* Improve CSV import for unknown format detection - thx Dubbing-Nerd
+* Fix waveform issue - thx benshgit
+* Fix for additional video file extensions - thx nms42
+* Fix OmniVoice for mac
+* Fix log text box height - thx rikimtasu
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-beta23 (9th May 2026)
 
 * Update Italian translation - thx bovirus
