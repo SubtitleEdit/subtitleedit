@@ -1396,7 +1396,6 @@ public class AudioVisualizer : Control
 
     public override void Render(DrawingContext context)
     {
-        // Early exit if no valid bounds
         var width = Bounds.Width;
         var height = Bounds.Height;
         if (width <= 0 || height <= 0)
@@ -1405,11 +1404,8 @@ public class AudioVisualizer : Control
         }
 
         var boundsRect = new Rect(0, 0, width, height);
-        context.DrawRectangle(_paintBackground, null, new Rect(Bounds.Size));
+        context.DrawRectangle(_paintBackground, null, boundsRect);
 
-        //var ticks = DateTime.UtcNow.Ticks;
-
-        // Pre-calculate commonly used values
         var waveformHeight = height * (WaveformHeightPercentage / 100.0);
         var renderCtx = new RenderContext
         {
@@ -1442,19 +1438,6 @@ public class AudioVisualizer : Control
                 context.DrawRectangle(null, _paintPenSelected, boundsRect);
             }
         }
-
-        //var timeSpan = TimeSpan.FromTicks(DateTime.UtcNow.Ticks - ticks);
-        //_renderTimes.Enqueue(timeSpan.TotalMilliseconds);
-        //if (_renderTimes.Count > 100)
-        //{
-        //    _renderTimes.Dequeue();
-        //}
-        //var mean = _renderTimes.Average();
-        //OnStatus?.Invoke(this,
-        //    new ParagraphEventArgs(0, new SubtitleLineViewModel()
-        //    {
-        //        Text = $"Render time: {mean:0.00} ms"
-        //    }, new SubtitleLineViewModel()));
     }
 
     private void DrawSpectrogram(DrawingContext context, ref RenderContext renderCtx)
@@ -1507,6 +1490,27 @@ public class AudioVisualizer : Control
         context.DrawImage(avaloniaBitmap, destRectangle);
     }
 
+    // Pooled buffers and FormattedText cache for the timeline ruler.
+    private readonly List<FancyLine> _timeLineMajorTicks = new(128);
+    private readonly List<FancyLine> _timeLineMinorTicks = new(128);
+    private readonly Dictionary<string, FormattedText> _timeLineTextCache = new(256);
+
+    private FormattedText GetCachedTimeLineText(string text)
+    {
+        if (!_timeLineTextCache.TryGetValue(text, out var formatted))
+        {
+            formatted = new FormattedText(
+                text,
+                CultureInfo.CurrentCulture,
+                FlowDirection.LeftToRight,
+                _typeface,
+                _fontSize - 1,
+                _paintText);
+            _timeLineTextCache[text] = formatted;
+        }
+        return formatted;
+    }
+
     private void DrawTimeLine(DrawingContext context, ref RenderContext renderCtx)
     {
         if (renderCtx.SampleRate == 0)
@@ -1517,30 +1521,27 @@ public class AudioVisualizer : Control
         var seconds = Math.Ceiling(renderCtx.StartPositionSeconds) - renderCtx.StartPositionSeconds;
         var position = SecondsToXPositionOptimized(seconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
         var imageHeight = renderCtx.Height;
+        var width = renderCtx.Width;
 
-        var pen = _paintTimeLine;
+        var majorTicks = _timeLineMajorTicks;
+        var minorTicks = _timeLineMinorTicks;
+        majorTicks.Clear();
+        minorTicks.Clear();
 
-        while (position < renderCtx.Width)
+        // Collect ticks first; draw text directly with cached FormattedText (single
+        // DrawText call per label is fine — the per-frame cost was the FormattedText
+        // allocation, not the DrawText call).
+        while (position < width)
         {
             var n = renderCtx.ZoomFactor * renderCtx.SampleRate;
 
             if (n > 38 || (int)Math.Round(renderCtx.StartPositionSeconds + seconds) % 5 == 0)
             {
-                // Draw major tick lines (seconds)
-                context.DrawLine(pen, new Point(position, imageHeight), new Point(position, imageHeight - 10));
+                majorTicks.Add(new FancyLine(position, imageHeight - 10, imageHeight));
 
-                // Draw time text 
                 var timeText = GetDisplayTime(renderCtx.StartPositionSeconds + seconds);
-                var formattedText = new FormattedText(
-                    timeText,
-                    CultureInfo.CurrentCulture,
-                    FlowDirection.LeftToRight,
-                    _typeface,
-                    _fontSize - 1,
-                    _paintText);
-
-                // Try different Y positions - adjust these based on your control height
-                var textY = Math.Max(0, imageHeight - formattedText.Height - 2); // Ensure text is within bounds
+                var formattedText = GetCachedTimeLineText(timeText);
+                var textY = Math.Max(0, imageHeight - formattedText.Height - 2);
                 context.DrawText(formattedText, new Point(position + 2, textY));
             }
 
@@ -1549,13 +1550,15 @@ public class AudioVisualizer : Control
 
             if (n > 64)
             {
-                // Draw minor tick line
-                context.DrawLine(pen, new Point(position, imageHeight), new Point(position, imageHeight - 5));
+                minorTicks.Add(new FancyLine(position, imageHeight - 5, imageHeight));
             }
 
             seconds += 0.5;
             position = SecondsToXPositionOptimized(seconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
         }
+
+        DrawVerticalLineBatch(context, _paintTimeLine, majorTicks);
+        DrawVerticalLineBatch(context, _paintTimeLine, minorTicks);
     }
 
     private readonly Pen _paintTimeLine = new Pen(Brushes.Gray, 1);
@@ -1709,6 +1712,19 @@ public class AudioVisualizer : Control
         return pen;
     }
 
+    private sealed class FancyBatch
+    {
+        public Pen Pen;
+        public readonly List<FancyLine> Lines = new(256);
+        public FancyBatch(Pen pen) { Pen = pen; }
+    }
+
+    private readonly record struct FancyLine(double X, double YMax, double YMin);
+
+    // Pooled across renders to avoid per-render dictionary/list allocation.
+    private readonly Dictionary<int, FancyBatch> _fancyBatches = new(64);
+    private readonly List<int> _fancyBatchKeysInUse = new(64);
+
     private void DrawWaveFormFancy(DrawingContext context, double waveformHeight, ref RenderContext renderCtx)
     {
         _isSelectedHelper.Reset(AllSelectedParagraphs, renderCtx.SampleRate);
@@ -1721,8 +1737,10 @@ public class AudioVisualizer : Control
             return;
         }
 
-        var peaks = WavePeaks.Peaks;
-        var peaksCount = peaks.Count;
+        // Hot loop: get a Span over the peaks array so the per-pixel indexer skips
+        // the IList<T> interface dispatch.
+        var peaks = WavePeaks.AsSpan();
+        var peaksCount = peaks.Length;
         var highestPeak = renderCtx.HighestPeak;
 
         // Draw center line first
@@ -1732,13 +1750,22 @@ public class AudioVisualizer : Control
         var lowThreshold = highestPeak * 0.3;
         var mediumThreshold = highestPeak * 0.6;
 
+        // Reset pooled batches for this render
+        var batches = _fancyBatches;
+        var keysInUse = _fancyBatchKeysInUse;
+        for (var i = 0; i < keysInUse.Count; i++)
+        {
+            batches[keysInUse[i]].Lines.Clear();
+        }
+        keysInUse.Clear();
+
         for (var x = 0; x < renderCtx.Width; x++)
         {
             var pos = (renderCtx.StartPositionSeconds + x / div) * renderCtx.SampleRate;
             var pos0 = (int)pos;
             var pos1 = pos0 + 1;
 
-            if (pos1 >= peaksCount || pos0 > peaksCount)
+            if (pos1 >= peaksCount)
             {
                 break;
             }
@@ -1767,7 +1794,9 @@ public class AudioVisualizer : Control
             var isSelected = isSelectedHelper.IsSelected(pos0);
 
             // Calculate amplitude for color determination
-            var amplitude = Math.Abs(max) > Math.Abs(min) ? Math.Abs(max) : Math.Abs(min);
+            var aMax = Math.Abs(max);
+            var aMin = Math.Abs(min);
+            var amplitude = aMax > aMin ? aMax : aMin;
 
             // Determine color based on amplitude and create a cache key
             Color color;
@@ -1788,12 +1817,11 @@ public class AudioVisualizer : Control
             {
                 // Medium amplitude - blend from base to high color
                 var blend = (amplitude - lowThreshold) / (mediumThreshold - lowThreshold);
-                var lowColor = baseColor;
                 var highColor = WaveformFancyHighColor;
-                var r = (byte)(lowColor.R + blend * (highColor.R - lowColor.R));
-                var g = (byte)(lowColor.G + blend * (highColor.G - lowColor.G));
-                var b = (byte)(lowColor.B + blend * (highColor.B - lowColor.B));
-                var a = (byte)(lowColor.A + blend * (highColor.A - lowColor.A));
+                var r = (byte)(baseColor.R + blend * (highColor.R - baseColor.R));
+                var g = (byte)(baseColor.G + blend * (highColor.G - baseColor.G));
+                var b = (byte)(baseColor.B + blend * (highColor.B - baseColor.B));
+                var a = (byte)(baseColor.A + blend * (highColor.A - baseColor.A));
                 color = Color.FromArgb(a, r, g, b);
                 // Quantize blend to 10 steps for caching
                 colorKey = baseColorKeyOffset + 1 + (int)(blend * 10);
@@ -1809,9 +1837,17 @@ public class AudioVisualizer : Control
                 colorKey = baseColorKeyOffset + 12 + (int)(blend * 10);
             }
 
-            // Get cached pen with gradient
-            var pen = GetCachedFancyWaveformPen(colorKey, color);
-            context.DrawLine(pen, new Point(x, yMax), new Point(x, yMin));
+            // Append to per-pen bucket
+            if (!batches.TryGetValue(colorKey, out var mainBatch))
+            {
+                mainBatch = new FancyBatch(GetCachedFancyWaveformPen(colorKey, color));
+                batches[colorKey] = mainBatch;
+            }
+            if (mainBatch.Lines.Count == 0)
+            {
+                keysInUse.Add(colorKey);
+            }
+            mainBatch.Lines.Add(new FancyLine(x, yMax, yMin));
 
             // Add subtle glow for higher amplitudes
             if (amplitude > mediumThreshold)
@@ -1820,9 +1856,44 @@ public class AudioVisualizer : Control
                 var glowColor = Color.FromArgb(glowAlpha, color.R, color.G, color.B);
                 // Quantize glow alpha to 5 steps for caching
                 var glowKey = 1000 + colorKey * 10 + (glowAlpha / 10);
-                var glowPen = GetCachedFancyWaveformGlowPen(glowKey, glowColor, 3.0);
-                context.DrawLine(glowPen, new Point(x, yMax - 0.5), new Point(x, yMin + 0.5));
+                if (!batches.TryGetValue(glowKey, out var glowBatch))
+                {
+                    glowBatch = new FancyBatch(GetCachedFancyWaveformGlowPen(glowKey, glowColor, 3.0));
+                    batches[glowKey] = glowBatch;
+                }
+                if (glowBatch.Lines.Count == 0)
+                {
+                    keysInUse.Add(glowKey);
+                }
+                glowBatch.Lines.Add(new FancyLine(x, yMax - 0.5, yMin + 0.5));
             }
+        }
+
+        // One DrawGeometry per pen, instead of two DrawLines per column.
+        // The gradient brush bounds become the entire waveform area instead of each
+        // individual line, so the gradient fades across the waveform vertically rather
+        // than per column.
+        for (var i = 0; i < keysInUse.Count; i++)
+        {
+            var batch = batches[keysInUse[i]];
+            var lines = batch.Lines;
+            if (lines.Count == 0)
+            {
+                continue;
+            }
+
+            var geom = new StreamGeometry();
+            using (var gctx = geom.Open())
+            {
+                for (var j = 0; j < lines.Count; j++)
+                {
+                    var l = lines[j];
+                    gctx.BeginFigure(new Point(l.X, l.YMax), false);
+                    gctx.LineTo(new Point(l.X, l.YMin));
+                    gctx.EndFigure(false);
+                }
+            }
+            context.DrawGeometry(null, batch.Pen, geom);
         }
     }
 
@@ -1838,8 +1909,14 @@ public class AudioVisualizer : Control
             return;
         }
 
-        var peaks = WavePeaks.Peaks;
-        var peaksCount = peaks.Count;
+        // See DrawWaveFormFancy: skip IList<T> interface dispatch in the per-pixel loop.
+        var peaks = WavePeaks.AsSpan();
+        var peaksCount = peaks.Length;
+
+        var unselectedLines = _classicUnselectedLines;
+        var selectedLines = _classicSelectedLines;
+        unselectedLines.Clear();
+        selectedLines.Clear();
 
         for (var x = 0; x < renderCtx.Width; x++)
         {
@@ -1847,7 +1924,7 @@ public class AudioVisualizer : Control
             var pos0 = (int)pos;
             var pos1 = pos0 + 1;
 
-            if (pos1 >= peaksCount || pos0 > peaksCount)
+            if (pos1 >= peaksCount)
             {
                 break;
             }
@@ -1874,9 +1951,44 @@ public class AudioVisualizer : Control
                 yMin = yMax + 1;
             }
 
-            var pen = isSelectedHelper.IsSelected(pos0) ? _paintPenSelected : _paintWaveform;
-            context.DrawLine(pen, new Point(x, yMax), new Point(x, yMin));
+            var line = new FancyLine(x, yMax, yMin);
+            if (isSelectedHelper.IsSelected(pos0))
+            {
+                selectedLines.Add(line);
+            }
+            else
+            {
+                unselectedLines.Add(line);
+            }
         }
+
+        DrawVerticalLineBatch(context, _paintWaveform, unselectedLines);
+        DrawVerticalLineBatch(context, _paintPenSelected, selectedLines);
+    }
+
+    // Pooled buffers for the classic waveform's two pens.
+    private readonly List<FancyLine> _classicUnselectedLines = new(2048);
+    private readonly List<FancyLine> _classicSelectedLines = new(2048);
+
+    private static void DrawVerticalLineBatch(DrawingContext context, IPen pen, List<FancyLine> lines)
+    {
+        if (lines.Count == 0)
+        {
+            return;
+        }
+
+        var geom = new StreamGeometry();
+        using (var gctx = geom.Open())
+        {
+            for (var i = 0; i < lines.Count; i++)
+            {
+                var l = lines[i];
+                gctx.BeginFigure(new Point(l.X, l.YMax), false);
+                gctx.LineTo(new Point(l.X, l.YMin));
+                gctx.EndFigure(false);
+            }
+        }
+        context.DrawGeometry(null, pen, geom);
     }
 
     private void DrawParagraphs(DrawingContext context, ref RenderContext renderCtx)
@@ -1968,16 +2080,8 @@ public class AudioVisualizer : Control
 
         while (index < _shotChanges.Count)
         {
-            int pos;
-            try
-            {
-                var time = _shotChanges[index++];
-                pos = SecondsToXPositionOptimized(time - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
-            }
-            catch
-            {
-                pos = -1;
-            }
+            var time = _shotChanges[index++];
+            var pos = SecondsToXPositionOptimized(time - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
 
             if (pos > 0 && pos < renderCtx.Width)
             {
@@ -2005,6 +2109,11 @@ public class AudioVisualizer : Control
         }
     }
 
+    private static readonly Pen _paintPenCursorOnShotChange = new Pen(Brushes.LightCyan, 1.5)
+    {
+        DashStyle = DashStyle.Dash,
+    };
+
     private void DrawCurrentVideoPosition(DrawingContext context, ref RenderContext renderCtx)
     {
         if (renderCtx.CurrentVideoPositionSeconds <= 0)
@@ -2016,24 +2125,10 @@ public class AudioVisualizer : Control
         if (currentPositionPos > 0 && currentPositionPos < renderCtx.Width)
         {
             var isOnShotChange = GetShotChangeIndex(renderCtx.CurrentVideoPositionSeconds) >= 0;
-
-            if (isOnShotChange)
-            {
-                var paintCurrentPositionOverlap = new Pen(Brushes.LightCyan, 1.5)
-                {
-                    DashStyle = DashStyle.Dash,
-                };
-
-                context.DrawLine(paintCurrentPositionOverlap,
-                    new Point(currentPositionPos, 0),
-                    new Point(currentPositionPos, renderCtx.Height));
-            }
-            else
-            {
-                context.DrawLine(_paintPenCursor,
-                    new Point(currentPositionPos, 0),
-                    new Point(currentPositionPos, renderCtx.Height));
-            }
+            var pen = isOnShotChange ? _paintPenCursorOnShotChange : _paintPenCursor;
+            context.DrawLine(pen,
+                new Point(currentPositionPos, 0),
+                new Point(currentPositionPos, renderCtx.Height));
         }
     }
 
@@ -2686,6 +2781,7 @@ public class AudioVisualizer : Control
         _fancyWaveformPenCache.Clear();
         _fancyWaveformGlowPenCache.Clear();
         _fancyWaveformGradientCache.Clear();
+        _timeLineTextCache.Clear();
 
         _paintText = new SolidColorBrush(Se.Settings.Waveform.WaveformTextColor.FromHexToColor());
         _typeface = new Typeface(UiUtil.GetDefaultFontName(), FontStyle.Normal, Se.Settings.Waveform.WaveformTextFontBold ? FontWeight.Bold : FontWeight.Normal);

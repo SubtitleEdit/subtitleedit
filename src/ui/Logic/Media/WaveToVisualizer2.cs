@@ -234,6 +234,29 @@ public class WavePeakData2
 
     public int HighestPeak { get; private set; }
 
+    /// <summary>
+    /// Returns a Span over the underlying peak storage so hot loops can skip the
+    /// IList&lt;T&gt; interface dispatch. Supports the two concrete types currently in
+    /// use (List&lt;WavePeak2&gt; and WavePeak2[]); falls back to copying for any other
+    /// IList implementation.
+    /// </summary>
+    public ReadOnlySpan<WavePeak2> AsSpan()
+    {
+        if (Peaks is WavePeak2[] array)
+        {
+            return array;
+        }
+
+        if (Peaks is List<WavePeak2> list)
+        {
+            return CollectionsMarshal.AsSpan(list);
+        }
+
+        var copy = new WavePeak2[Peaks.Count];
+        Peaks.CopyTo(copy, 0);
+        return copy;
+    }
+
     private void CalculateHighestPeak()
     {
         HighestPeak = 0;
