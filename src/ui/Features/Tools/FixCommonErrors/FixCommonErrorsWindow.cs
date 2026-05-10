@@ -417,23 +417,7 @@ public class FixCommonErrorsWindow : Window
         dataGridSubtitles.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedParagraph)));
         _vm.GridSubtitles = dataGridSubtitles;
 
-        var gridCurrentSubtbtitle = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 0,
-            RowSpacing = 0,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
+        var gridCurrentSubtbtitle = MakeStep2EditPanel();
 
         gridSubtitles.Children.Add(dataGridSubtitles);
         Grid.SetRow(dataGridSubtitles, 0);
@@ -468,6 +452,53 @@ public class FixCommonErrorsWindow : Window
         grid.Children.Add(borderSubtitles);
         Grid.SetRow(borderSubtitles, 1);
         Grid.SetColumn(borderSubtitles, 0);
+
+        return grid;
+    }
+
+    private Grid MakeStep2EditPanel()
+    {
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+            },
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
+            RowSpacing = 2,
+            Margin = new Thickness(4),
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+
+        var labelText = UiUtil.MakeTextBlock(Se.Language.General.Text);
+
+        var textBox = new TextBox
+        {
+            DataContext = _vm,
+            AcceptsReturn = true,
+            TextWrapping = TextWrapping.Wrap,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            MinHeight = 60,
+            [!TextBox.TextProperty] = new Binding($"{nameof(_vm.SelectedParagraph)}.{nameof(SubtitleLineViewModel.Text)}")
+            {
+                Mode = BindingMode.TwoWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+            },
+        };
+
+        grid.Children.Add(labelText);
+        Grid.SetRow(labelText, 0);
+        Grid.SetColumn(labelText, 0);
+
+        grid.Children.Add(textBox);
+        Grid.SetRow(textBox, 1);
+        Grid.SetColumn(textBox, 0);
 
         return grid;
     }

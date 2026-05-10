@@ -32,9 +32,6 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     [ObservableProperty] private FixDisplayItem? _selectedFix;
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _paragraphs;
     [ObservableProperty] private SubtitleLineViewModel? _selectedParagraph;
-    [ObservableProperty] private string _editText;
-    [ObservableProperty] private TimeSpan _editShow;
-    [ObservableProperty] private TimeSpan _editDuration;
     [ObservableProperty] private ObservableCollection<ProfileDisplayItem> _profiles;
     [ObservableProperty] private ProfileDisplayItem? _selectedProfile;
     [ObservableProperty] private bool _step1IsVisible;
@@ -76,7 +73,6 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         Language = new string(' ', 0);
         Fixes = new ObservableCollection<FixDisplayItem>();
         Paragraphs = new ObservableCollection<SubtitleLineViewModel>();
-        EditText = string.Empty;
         _language = Se.Language.Tools.FixCommonErrors;
         Step1IsVisible = true;
         _oldSelectedLanguage = new LanguageDisplayItem(new CultureInfo("en"), "English");
@@ -281,6 +277,29 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         ApplyFixes();
 
         RefreshFixes();
+    }
+
+    partial void OnSelectedParagraphChanged(SubtitleLineViewModel? oldValue, SubtitleLineViewModel? newValue)
+    {
+        if (oldValue != null)
+        {
+            oldValue.PropertyChanged -= SelectedParagraph_PropertyChanged;
+        }
+
+        if (newValue != null)
+        {
+            newValue.PropertyChanged += SelectedParagraph_PropertyChanged;
+        }
+    }
+
+    private void SelectedParagraph_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SubtitleLineViewModel.Text) &&
+            sender is SubtitleLineViewModel vm &&
+            vm.Paragraph != null)
+        {
+            vm.Paragraph.Text = vm.Text;
+        }
     }
 
     private void RefreshFixes()
