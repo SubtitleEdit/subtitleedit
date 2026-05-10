@@ -19,7 +19,23 @@ public class AddToNamesListWindow : Window
         DataContext = vm;
 
         var labelWord = UiUtil.MakeLabel(Se.Language.Ocr.NameToAdd);
-        var textBoxWord = UiUtil.MakeTextBox(200, vm, nameof(vm.Name));
+        labelWord.Bind(Label.IsVisibleProperty, new Binding(nameof(vm.IsSingleMode)));
+
+        var textBoxWord = UiUtil.MakeTextBox(200, vm, nameof(vm.Name), nameof(vm.IsSingleMode));
+
+        var labelMultiNames = UiUtil.MakeLabel(Se.Language.SpellCheck.EnterOneNamePerLine);
+        labelMultiNames.Bind(Label.IsVisibleProperty, new Binding(nameof(vm.IsMultiMode)));
+
+        var textBoxMultiNames = new TextBox
+        {
+            Width = 400,
+            Height = 250,
+            AcceptsReturn = true,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            [!TextBox.TextProperty] = new Binding(nameof(vm.MultiNames)) { Mode = BindingMode.TwoWay },
+            [!TextBox.IsVisibleProperty] = new Binding(nameof(vm.IsMultiMode)),
+        };
 
         var labelDictionary = UiUtil.MakeLabel(Se.Language.General.Dictionary).WithMarginTop(20);
         var comboBoxDictionaries = new ComboBox
@@ -30,13 +46,17 @@ public class AddToNamesListWindow : Window
         };
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var buttonMultiMode = UiUtil.MakeButton(Se.Language.General.MultiMode, vm.ToggleMultiModeCommand);
+        buttonMultiMode.Bind(Button.ContentProperty, new Binding(nameof(vm.MultiModeButtonText)));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonMultiMode, buttonCancel);
 
         var grid = new Grid
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -56,9 +76,11 @@ public class AddToNamesListWindow : Window
 
         grid.Add(labelWord, 0);
         grid.Add(textBoxWord, 1);
-        grid.Add(labelDictionary, 2);
-        grid.Add(comboBoxDictionaries, 3);
-        grid.Add(buttonPanel, 4);
+        grid.Add(labelMultiNames, 2);
+        grid.Add(textBoxMultiNames, 3);
+        grid.Add(labelDictionary, 4);
+        grid.Add(comboBoxDictionaries, 5);
+        grid.Add(buttonPanel, 6);
 
         Content = grid;
 
