@@ -1,8 +1,9 @@
 
 Subtitle Edit Changelog
 
-v5.0.0-beta24 (xth May 2026)
+v5.0.0-beta24 (10th May 2026)
 
+* Fix log text box height in speech-to-text - thx rikimtasu
 * Add "Merge two subtitles" tool
 * Add "Import CSV/XLSX with custom columns" window - thx Dubbing-Nerd
 * Add multi-mode to "Add to names list" window + report imported count - thx kt
@@ -18,7 +19,6 @@ v5.0.0-beta24 (xth May 2026)
 * Fix waveform issue - thx benshgit
 * Fix for additional video file extensions - thx nms42
 * Fix OmniVoice for mac
-* Fix log text box height - thx rikimtasu
 
 -----------------------------------------------------------------------------------------------------
 

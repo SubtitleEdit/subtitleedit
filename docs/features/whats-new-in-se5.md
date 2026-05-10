@@ -58,6 +58,7 @@ Text to speech now includes more local and cloud engines:
 - Mistral TTS.
 - Qwen3 TTS with downloadable local server builds and models.
 - Kokoro TTS with downloadable local server builds and models.
+- OmniVoice TTS with CUDA and Metal builds with downloadable local server builds and models.
 - Review audio clips, regenerate individual lines, keep regeneration history, and export generated clips with metadata.
 
 See [Text to Speech](text-to-speech.md) for details.
@@ -78,6 +79,7 @@ See [OCR](ocr.md), [Batch Convert](batch-convert.md), and [Command Line (seconv)
 ## Subtitle Formats
 
 - Added **IMSC-Rosetta Timed Text** subtitle format support.
+- New **Import CSV/XLSX with custom columns** window for spreadsheets that don't fit the standard layout — pick which columns map to start, end, text, etc.
 
 ## Command Line (seconv)
 
