@@ -14,6 +14,7 @@ public class LanguageWaveform
     public string MaxSilenceVolume { get; set; }
     public string GuessTimeCodesDotDotDot { get; set; }
     public string SeekSilenceDotDotDot { get; set; }
+    public string ExtractAudioDotDotDot { get; set; }
     public string ToggleShotChange { get; set; }
     public string ResetWaveformZoomAndSpeed { get; set; }
     public object ShowOnlyWaveform { get; set; }
@@ -46,6 +47,7 @@ public class LanguageWaveform
         SpeechToTextNewSelectionDotDotDot = "Speech to text for new selection...";
         SeekSilence = "Seek silence";
         SeekSilenceDotDotDot = "Seek silence...";
+        ExtractAudioDotDotDot = "Extract audio...";
         MinSilenceDurationSeconds = "Min. silence duration (seconds):";
         MaxSilenceVolume = "Max. silence volume (0.0 - 1.0):";
         ToggleShotChange = "Toggle shot change";

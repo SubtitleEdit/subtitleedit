@@ -1132,7 +1132,7 @@ public class FfmpegGenerator
         var duration = $"{durationSeconds:0.000}".Replace(",", ".");
 
         // Base parameters
-        var args = $"-ss {start} -t {duration} -i \"{videoFileName}\" -vn -ar 16000 -b:a 32k";
+        var args = $"-y -ss {start} -t {duration} -i \"{videoFileName}\" -vn -ar 16000 -b:a 32k";
 
         // Optional center-channel only
         if (useCenterChannelOnly)
