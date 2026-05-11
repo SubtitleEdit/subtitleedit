@@ -1095,7 +1095,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return list;
         }
 
-        public static string? AutoDetectGoogleLanguageOrNull(Subtitle subtitle)
+        public static string AutoDetectGoogleLanguageOrNull(Subtitle subtitle)
         {
             var s = new Subtitle(subtitle);
             s.RemoveEmptyLines();

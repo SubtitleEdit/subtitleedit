@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
@@ -10493,8 +10494,60 @@ public partial class MainViewModel :
                 var itemToScroll = Subtitles[indexToScroll];
                 SubtitleGrid.SelectedItem = itemToScroll;
                 SubtitleGrid.ScrollIntoView(itemToScroll, null);
+
+                if (Se.Settings.General.SubtitleGridCenterSelectedRow)
+                {
+                    CenterSelectedRowInSubtitleGrid(itemToScroll);
+                }
             }
         });
+    }
+
+    private void CenterSelectedRowInSubtitleGrid(SubtitleLineViewModel itemToCenter)
+    {
+        // Defer until after the layout pass triggered by ScrollIntoView so the row
+        // is materialized and its bounds are valid.
+        Dispatcher.UIThread.Post(() =>
+        {
+            var index = Subtitles.IndexOf(itemToCenter);
+            if (index < 0)
+            {
+                return;
+            }
+
+            var row = SubtitleGrid.GetVisualDescendants().OfType<DataGridRow>()
+                .FirstOrDefault(r => ReferenceEquals(r.DataContext, itemToCenter));
+            if (row == null || row.Bounds.Height <= 0)
+            {
+                return;
+            }
+
+            var rowsPresenter = SubtitleGrid.GetVisualDescendants().OfType<DataGridRowsPresenter>().FirstOrDefault();
+            if (rowsPresenter == null || rowsPresenter.Bounds.Height <= 0)
+            {
+                return;
+            }
+
+            // Approximate the row whose ScrollIntoView would push the target into the
+            // vertical center. Rows may have variable heights, so this uses the target
+            // row's height as an estimate for surrounding rows.
+            var halfVisibleRows = Math.Max(1, (int)Math.Ceiling((rowsPresenter.Bounds.Height / 2.0) / row.Bounds.Height));
+
+            // Scroll above the target first so the next ScrollIntoView is guaranteed
+            // to scroll downward, placing the chosen row at the viewport's bottom and
+            // the target near the center.
+            var topIdx = Math.Max(0, index - halfVisibleRows);
+            var bottomIdx = Math.Min(Subtitles.Count - 1, index + halfVisibleRows);
+
+            if (topIdx != index)
+            {
+                SubtitleGrid.ScrollIntoView(Subtitles[topIdx], null);
+            }
+            if (bottomIdx != index)
+            {
+                SubtitleGrid.ScrollIntoView(Subtitles[bottomIdx], null);
+            }
+        }, DispatcherPriority.Loaded);
     }
 
     public void SelectAndScrollToSubtitle(SubtitleLineViewModel subtitle)
@@ -10523,6 +10576,11 @@ public partial class MainViewModel :
             {
                 SubtitleGrid.SelectedItem = subtitleToScroll;
                 SubtitleGrid.ScrollIntoView(subtitleToScroll, null);
+
+                if (Se.Settings.General.SubtitleGridCenterSelectedRow)
+                {
+                    CenterSelectedRowInSubtitleGrid(subtitleToScroll);
+                }
             }
         }, DispatcherPriority.Background);
     }

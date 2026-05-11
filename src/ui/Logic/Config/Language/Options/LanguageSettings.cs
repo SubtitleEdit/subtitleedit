@@ -234,6 +234,7 @@ public class LanguageSettings
     public string SubtitleGridEnterKeyAction { get; set; }
     public string SubtitleSingleClickAction { get; set; }
     public string SubtitleDoubleClickAction { get; set; }
+    public string SubtitleGridCenterSelectedRow { get; set; }
     public string SaveAsBehavior { get; set; }
     public string SaveAsAppendLanguageCode { get; set; }
     public string GridGoToSubtitleAndSetVideoPosition { get; set; }
@@ -518,6 +519,7 @@ public class LanguageSettings
         SubtitleGridEnterKeyAction = "Subtitle grid Enter-key action";
         SubtitleSingleClickAction = "Subtitle grid single-click action";
         SubtitleDoubleClickAction = "Subtitle grid double-click action";
+        SubtitleGridCenterSelectedRow = "Subtitle grid, center when selecting prev/next row";
         SaveAsBehavior = "\"Save as\" behavior";
         SaveAsAppendLanguageCode = "\"Save as\" append language code";
         GridGoToSubtitleAndSetVideoPosition = "Go to subtitle and set video position";

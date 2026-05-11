@@ -107,6 +107,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _subtitleDoubleClickActionTypes;
     [ObservableProperty] private string _selectedSubtitleDoubleClickActionType;
 
+    [ObservableProperty] private bool _subtitleGridCenterSelectedRow;
+
     [ObservableProperty] private ObservableCollection<string> _saveAsBehaviorTypes;
     [ObservableProperty] private string _selectedSaveAsBehaviorType;
 
@@ -575,6 +577,7 @@ public partial class SettingsViewModel : ObservableObject
         SelectedSubtitleEnterKeyActionType = MapFromSelectedSubtitleEnterKeyAction(Se.Settings.General.SubtitleEnterKeyAction);
         SelectedSubtitleSingleClickActionType = MapFromSelectedSubtitleSingleClickAction(Se.Settings.General.SubtitleSingleClickAction);
         SelectedSubtitleDoubleClickActionType = MapFromSelectedSubtitleDoubleClickAction(Se.Settings.General.SubtitleDoubleClickAction);
+        SubtitleGridCenterSelectedRow = Se.Settings.General.SubtitleGridCenterSelectedRow;
         SelectedSaveAsBehaviorType = MapFromSelectedSaveAsBehavior(Se.Settings.General.SaveAsBehavior);
         SelectedSaveAsAppendLanguageCode = MapFromSelectedSaveAsAppendLanguageCode(Se.Settings.General.SaveAsAppendLanguageCode);
         AutoConvertToUtf8 = general.AutoConvertToUtf8;
@@ -1180,6 +1183,7 @@ public partial class SettingsViewModel : ObservableObject
         general.SubtitleEnterKeyAction = MapToSelectedSubtitleEnterKeyAction(SelectedSubtitleEnterKeyActionType);
         general.SubtitleSingleClickAction = MapToSelectedSubtitleSingleClickAction(SelectedSubtitleSingleClickActionType);
         general.SubtitleDoubleClickAction = MapToSelectedSubtitleDoubleClickAction(SelectedSubtitleDoubleClickActionType);
+        general.SubtitleGridCenterSelectedRow = SubtitleGridCenterSelectedRow;
         general.SaveAsBehavior = MapToSaveAsBehavior(SelectedSaveAsBehaviorType);
         general.SaveAsAppendLanguageCode = MapToSaveAsAppendLanguageCode(SelectedSaveAsAppendLanguageCode);
         general.AutoConvertToUtf8 = AutoConvertToUtf8;

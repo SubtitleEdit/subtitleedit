@@ -59,6 +59,7 @@ public class SeGeneral
     public string SubtitleEnterKeyAction { get; set; }
     public string SubtitleSingleClickAction { get; set; }
     public string SubtitleDoubleClickAction { get; set; }
+    public bool SubtitleGridCenterSelectedRow { get; set; }
     public string SaveAsBehavior { get; set; }
     public string SaveAsAppendLanguageCode { get; set; }
     public bool AutoConvertToUtf8 { get; set; }
@@ -178,6 +179,7 @@ public class SeGeneral
         SubtitleEnterKeyAction = nameof(SubtitleEnterKeyActionType.GoToSubtitleAndSetVideoPosition);
         SubtitleSingleClickAction = nameof(SubtitleSingleClickActionType.None);
         SubtitleDoubleClickAction = nameof(SubtitleDoubleClickActionType.GoToSubtitleAndPause);
+        SubtitleGridCenterSelectedRow = false;
         SaveAsBehavior = nameof(SaveAsBehaviourType.UseVideoFileNameThenSubtitleFileName);
         SaveAsAppendLanguageCode = nameof(SaveAsLanguageAppendType.None);
         AutoConvertToUtf8 = false;

@@ -271,6 +271,7 @@ public class SettingsPage : UserControl
                     Mode = BindingMode.TwoWay,
                 }
             }),
+            MakeCheckboxSetting(Se.Language.Options.Settings.SubtitleGridCenterSelectedRow, nameof(_vm.SubtitleGridCenterSelectedRow)),
 
             new SettingsItem(Se.Language.Options.Settings.SaveAsBehavior, () => new ComboBox
             {
