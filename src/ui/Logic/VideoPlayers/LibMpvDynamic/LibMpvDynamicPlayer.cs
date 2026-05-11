@@ -25,6 +25,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private IntPtr _renderContext = IntPtr.Zero;
     private volatile bool _disposed;
     private string _fileName = string.Empty;
+    private double? _audioEndBound;
 
     [StructLayout(LayoutKind.Sequential)]
     private struct MpvOpenGlInitParams
@@ -748,6 +749,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
         // Reset any end-of-playback bound from a previous file (see audio-only handling below).
         SetOptionString("end", "none");
+        _audioEndBound = null;
 
         var err = await Task.Run(() => DoMpvCommand("loadfile", path));
         if (_disposed)
@@ -830,6 +832,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                 if (d > 0 && !double.IsInfinity(d) && !double.IsNaN(d))
                 {
                     SetOptionString("end", d.ToString(CultureInfo.InvariantCulture));
+                    _audioEndBound = d;
                     break;
                 }
                 await Task.Delay(50);
@@ -881,6 +884,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     {
         _fileName = string.Empty;
         _pausedValue = null;
+        _audioEndBound = null;
 
         EnsureNotDisposed();
         if (_mpv == IntPtr.Zero)
@@ -962,6 +966,31 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     private double? _pausedValue;
 
+    private bool IsEofReached()
+    {
+        if (_mpv == IntPtr.Zero || _mpvGetPropertyDouble == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            double eofValue = 0;
+            var nameBytes = GetUtf8Bytes("eof-reached");
+            var err = _mpvGetPropertyDouble(_mpv, nameBytes, MPV_FORMAT_FLAG, ref eofValue);
+            if (err < 0)
+            {
+                return false;
+            }
+
+            return eofValue != 0;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     public double Position
     {
         get
@@ -986,6 +1015,16 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                 if (err < 0)
                 {
                     return 0;
+                }
+
+                // When playback reaches the bound set for audio-only files, mpv's time-pos
+                // can lag the actual end by several seconds (the lavfi-complex virtual video
+                // produces frames forever, so its demuxer keeps buffering past audio EOF and
+                // the rendered playback time falls behind). Pin to the bound at EOF so the
+                // waveform doesn't appear to jump back when audio playback completes.
+                if (_audioEndBound.HasValue && IsEofReached())
+                {
+                    return _audioEndBound.Value;
                 }
 
                 return position;
