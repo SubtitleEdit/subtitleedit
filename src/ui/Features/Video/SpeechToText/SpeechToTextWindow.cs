@@ -347,13 +347,13 @@ public class SpeechToTextWindow : Window
         grid.ContextFlyout = flyout;
         UiUtil.AttachMacContextFlyoutHandler(this, grid);
 
-        var menuItemViewWhisperLog = new MenuItem
+        var menuItemViewToolsLog = new MenuItem
         {
-            Header = Se.Language.Video.AudioToText.ViewWhisperLogFile,
+            Header = Se.Language.Video.AudioToText.ViewToolsLogFile,
             DataContext = vm,
-            Command = vm.ViewWhisperLogFileCommand,
+            Command = vm.ViewToolsLogFileCommand,
         };
-        flyout.Items.Add(menuItemViewWhisperLog);
+        flyout.Items.Add(menuItemViewToolsLog);
 
         var menuItemReDownloadWhisperEngine = new MenuItem
         {

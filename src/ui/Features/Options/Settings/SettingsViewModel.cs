@@ -252,7 +252,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _isMpvChosen;
 
     [ObservableProperty] private bool _existsErrorLogFile;
-    [ObservableProperty] private bool _existsWhisperLogFile;
+    [ObservableProperty] private bool _existsToolsLogFile;
     [ObservableProperty] private bool _existsSettingsFile;
 
     private int _continuationPause;
@@ -804,7 +804,7 @@ public partial class SettingsViewModel : ObservableObject
         LoadFileTypeAssociations();
 
         ExistsErrorLogFile = File.Exists(Se.GetErrorLogFilePath());
-        ExistsWhisperLogFile = File.Exists(Se.GetSpeechToTextLogFilePath());
+        ExistsToolsLogFile = File.Exists(Se.GetToolsLogFilePath());
         ExistsSettingsFile = File.Exists(Se.GetSettingsFilePath());
     }
 
@@ -2108,14 +2108,14 @@ public partial class SettingsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task ShowWhisperLogFile()
+    private async Task ShowToolsLogFile()
     {
-        if (Window == null || !File.Exists(Se.GetSpeechToTextLogFilePath()))
+        if (Window == null || !File.Exists(Se.GetToolsLogFilePath()))
         {
             return;
         }
 
-        await _folderHelper.OpenFolderWithFileSelected(Window!, Se.GetSpeechToTextLogFilePath());
+        await _folderHelper.OpenFolderWithFileSelected(Window!, Se.GetToolsLogFilePath());
     }
 
     [RelayCommand]

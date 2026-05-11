@@ -18,7 +18,7 @@ public class LanguageAudioToText
     public string WhisperXxlSingleWords { get; set; }
     public string WhisperXxlHighlightWord { get; set; }
     public string SelectModel { get; set; }
-    public string ViewWhisperLogFile { get; set; }
+    public string ViewToolsLogFile { get; set; }
     public string ReDownloadX { get; set; }
     public string UpdateXTitle { get; set; }
     public string UpdateXMessage { get; set; }
@@ -50,7 +50,7 @@ public class LanguageAudioToText
         WhisperXxlSingleWords = "Single words";
         WhisperXxlHighlightWord = "Highlight word";
         SelectModel = "Select model";
-        ViewWhisperLogFile = "View Whisper log file";
+        ViewToolsLogFile = "View tools log file";
         ReDownloadX = "Re-download {0}";
         UpdateXTitle = "Update {0}?";
         UpdateXMessage = "A newer version of {0} is available.{1}{1}Download and install the update now?";

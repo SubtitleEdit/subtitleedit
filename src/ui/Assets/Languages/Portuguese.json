@@ -1575,7 +1575,7 @@
       "WhisperXxlSingleWords": "Palavras \u00FAnicas",
       "WhisperXxlHighlightWord": "Destacar palavra",
       "SelectModel": "Selecionar modelo",
-      "ViewWhisperLogFile": "Ver ficheiro de registo do Whisper",
+      "ViewToolsLogFile": "Ver ficheiro de registo do Whisper",
       "ReDownloadX": "Descarregar novamente {0}",
       "DownloadingSpeechToTextModel": "Descarregar modelo de fala para texto"
     },
@@ -1843,7 +1843,7 @@
       "AdjustAllTimesRememberLineSelectionChoice": "",
       "FilesAndLogs": "",
       "ShowErrorLogFile": "",
-      "ShowWhisperLogFile": "",
+      "ShowToolsLogFile": "",
       "ShowSettingsFile": "",
       "ShowAssaLayer": "",
       "WaveformCursorColor": "Cor do cursor",

@@ -72,35 +72,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
-        public static void WhisperInfo(string message)
-        {
-            try
-            {
-                var filePath = GetWhisperLogFilePath();
-                using (var writer = new StreamWriter(filePath, true, Encoding.UTF8))
-                {
-                    writer.WriteLine("-----------------------------------------------------------------------------");
-                    writer.WriteLine($"Date: {DateTime.Now.ToString(CultureInfo.InvariantCulture)}");
-                    writer.WriteLine($"SE: {GetSeInfo()}");
-                    if (!string.IsNullOrWhiteSpace(message))
-                    {
-                        writer.WriteLine("Message: " + message);
-                    }
-
-                    writer.WriteLine();
-                }
-            }
-            catch
-            {
-                // ignore
-            }
-        }
-
-        public static string GetWhisperLogFilePath()
-        {
-            return Path.Combine(Configuration.DataDirectory, "whisper_log.txt");
-        }
-
         /// <summary>
         /// Get information about the machine that is cached and accessed by the SeLogger class.
         /// </summary>

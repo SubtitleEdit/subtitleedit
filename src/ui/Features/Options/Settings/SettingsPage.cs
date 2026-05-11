@@ -724,8 +724,8 @@ public class SettingsPage : UserControl
         [
             new SettingsItem(Se.Language.Options.Settings.ShowErrorLogFile,
                 () => UiUtil.MakeLink(Se.GetErrorLogFilePath(), _vm.ShowErrorLogFileCommand).WithBindEnabed(_vm, nameof(_vm.ExistsErrorLogFile))),
-            new SettingsItem(Se.Language.Options.Settings.ShowWhisperLogFile,
-                () => UiUtil.MakeLink(Se.GetSpeechToTextLogFilePath(), _vm.ShowWhisperLogFileCommand).WithBindEnabed(_vm, nameof(_vm.ExistsWhisperLogFile))),
+            new SettingsItem(Se.Language.Options.Settings.ShowToolsLogFile,
+                () => UiUtil.MakeLink(Se.GetToolsLogFilePath(), _vm.ShowToolsLogFileCommand).WithBindEnabed(_vm, nameof(_vm.ExistsToolsLogFile))),
             new SettingsItem(Se.Language.Options.Settings.ShowSettingsFile,
                 () => UiUtil.MakeLink(Se.GetSettingsFilePath(), _vm.ShowSettingsFileCommand).WithBindEnabed(_vm, nameof(_vm.ExistsSettingsFile))),
         ]));

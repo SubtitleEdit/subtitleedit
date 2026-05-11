@@ -316,6 +316,16 @@ public partial class TextToSpeechViewModel : ObservableObject
         DoneOrCancelText = Se.Language.General.Cancel;
         SaveSettings();
 
+        Se.WriteToolsLog(
+            $"Text-to-speech: engine={engine.Name}" +
+            $", voice={SelectedVoice?.Name ?? "(none)"}" +
+            $", language={SelectedLanguage?.Code ?? "(default)"}" +
+            $", region={SelectedRegion ?? "(default)"}" +
+            $", model={SelectedModel ?? "(default)"}" +
+            $", segments={_subtitle.Paragraphs.Count}" +
+            $", reviewAudioClips={DoReviewAudioClips}" +
+            $", generateVideoFile={DoGenerateVideoFile}");
+
         // Generate
         var generateSpeechResult = await GenerateSpeech(_cancellationToken);
         if (generateSpeechResult == null)
