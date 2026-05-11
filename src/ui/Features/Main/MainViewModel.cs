@@ -4968,25 +4968,28 @@ public partial class MainViewModel :
         }
         else
         {
-            await SpeechToTextSelectedLines(true);
+            var language = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(GetUpdateSubtitle());
+            await SpeechToTextSelectedLines(true, language);
         }
     }
 
     [RelayCommand]
     private async Task SpeechToTextSelectedLinesPromptForLangaugeAlways()
     {
-        await SpeechToTextSelectedLines(true);
+        await SpeechToTextSelectedLines(true, null);
     }
 
     [RelayCommand]
     private async Task SpeechToTextSelectedLinesPromptForLangaugeFirstTime()
     {
-        var language = LanguageAutoDetect.AutoDetectGoogleLanguage(GetUpdateSubtitle());
-        await SpeechToTextSelectedLines(_audioTrackLangauge != language);
+        var s = GetUpdateSubtitle();
+        var language = LanguageAutoDetect.AutoDetectGoogleLanguage(s);
+        var nullableLanguage = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(s);
+        await SpeechToTextSelectedLines(_audioTrackLangauge != language, nullableLanguage);
         _audioTrackLangauge = language;
     }
 
-    private async Task<bool> SpeechToTextSelectedLines(bool promptEngineAndLanguage)
+    private async Task<bool> SpeechToTextSelectedLines(bool promptEngineAndLanguage, string? language)
     {
         var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (Window == null || selectedItems.Count == 0 || string.IsNullOrEmpty(_videoFileName))
@@ -5009,7 +5012,7 @@ public partial class MainViewModel :
 
         var resultSpeechToText = await ShowDialogAsync<SpeechToTextWindow, SpeechToTextViewModel>(vm =>
         {
-            vm.InitializeBatch(resultGetAudioClips.AudioClips, _audioTrack?.FfIndex ?? -1, !promptEngineAndLanguage);
+            vm.InitializeBatch(resultGetAudioClips.AudioClips, _audioTrack?.FfIndex ?? -1, !promptEngineAndLanguage, language);
         });
 
         if (!resultSpeechToText.OkPressed)

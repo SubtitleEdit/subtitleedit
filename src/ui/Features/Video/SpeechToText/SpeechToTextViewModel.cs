@@ -3290,13 +3290,23 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
     }
 
-    internal void InitializeBatch(List<AudioClip> audioClips, int audioTrackNumber, bool autoStart)
+    internal void InitializeBatch(List<AudioClip> audioClips, int audioTrackNumber, bool autoStart, string? language)
     {
         _audioTrackNumber = audioTrackNumber;
         IsBatchMode = true;
         _audioClips = audioClips;
         _audioClipsAutoStart = autoStart;
         ResultAudioClips = audioClips.Select(ac => new AudioClip(ac)).ToList();
+
+        if (language != null)
+        {
+            var match = Languages.FirstOrDefault(p => p.Code == language)
+                        ?? Languages.FirstOrDefault(p => string.Equals(p.Name, language, StringComparison.OrdinalIgnoreCase));
+            if (match != null)
+            {
+                SelectedLanguage = match;
+            }
+        }
     }
 
     internal void OnWindowLoaded()
