@@ -1575,7 +1575,7 @@
       "whisperXxlSingleWords": "Окремі слова",
       "whisperXxlHighlightWord": "Підсвітити слово",
       "selectModel": "Вибрати модель",
-      "viewWhisperLogFile": "Переглянути файл журналу Whisper",
+      "viewToolsLogFile": "Переглянути файл журналу Whisper",
       "reDownloadX": "Перезавантажити {0}",
       "downloadingSpeechToTextModel": "Завантаження моделі розпізнавання мови"
     },
@@ -1882,7 +1882,7 @@
       "adjustAllTimesRememberLineSelectionChoice": "Налаштувати всі часи, запам'ятати вибір рядка",
       "filesAndLogs": "Файли та журнали",
       "showErrorLogFile": "Показати файл журналу помилок",
-      "showWhisperLogFile": "Показати файл журналу Whisper",
+      "showToolsLogFile": "Показати файл журналу Whisper",
       "showSettingsFile": "Показати файл налаштувань",
       "showAssaLayer": "Показати поле шару ASSA",
       "waveformCursorColor": "Колір курсора/головки хвильової форми",

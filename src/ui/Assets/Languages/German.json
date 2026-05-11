@@ -1304,7 +1304,7 @@
       "WhisperXxlHighlightWord": "Wort hervorheben",
       "DownloadingWhisperModel": "Whisper-Modell wird heruntergeladen",
       "SelectModel": "Modell ausw\u00E4hlen",
-      "ViewWhisperLogFile": "Whisper-Protokolldatei anzeigen",
+      "ViewToolsLogFile": "Whisper-Protokolldatei anzeigen",
       "ReDownloadX": "{0} erneut herunterladen"
     },
     "TextToSpeech": {
@@ -1548,7 +1548,7 @@
       "GoToLineNumberSetsVideoPosition": "Gehe-zu-Zeile legt auch die Videoposition fest",
       "FilesAndLogs": "Dateien und Protokolle",
       "ShowErrorLogFile": "Fehlerprotokolldatei anzeigen",
-      "ShowWhisperLogFile": "Whisper-Protokolldatei anzeigen",
+      "ShowToolsLogFile": "Whisper-Protokolldatei anzeigen",
       "ShowSettingsFile": "Einstellungsdatei anzeigen",
       "ShowAssaLayer": "ASSA-Ebenenfeld anzeigen",
       "WaveformCursorColor": "Wave-Form Cursorfarbe",

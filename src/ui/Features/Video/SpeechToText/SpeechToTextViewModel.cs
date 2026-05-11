@@ -1393,7 +1393,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             sbLog.AppendLine(s.TrimEnd());
         }
 
-        Se.WriteSpeechToTextLog(sbLog.ToString().Trim());
+        Se.WriteToolsLog(sbLog.ToString().Trim());
 
         var anyLinesTranscribed = transcribedSubtitle != null && transcribedSubtitle.Paragraphs.Count > 0;
 
@@ -1419,7 +1419,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
                 if (Window != null)
                 {
-                    FileHelper.OpenFileWithDefaultProgram(Se.GetSpeechToTextLogFilePath());
+                    FileHelper.OpenFileWithDefaultProgram(Se.GetToolsLogFilePath());
                 }
 
                 OkPressed = anyLinesTranscribed;
@@ -1435,11 +1435,11 @@ public partial class SpeechToTextViewModel : ObservableObject
             else if (GetEffectiveSelectedEngine() is ICrispAsrEngine)
             {
                 await MessageBox.Show(Window!, "No transcription result",
-                    "Crisp ASR finished without generating subtitles. Please check the speech-to-text log for engine output.");
+                    "Crisp ASR finished without generating subtitles. Please check the tools log for engine output.");
 
                 if (Window != null)
                 {
-                    FileHelper.OpenFileWithDefaultProgram(Se.GetSpeechToTextLogFilePath());
+                    FileHelper.OpenFileWithDefaultProgram(Se.GetToolsLogFilePath());
                 }
             }
         }
@@ -1479,13 +1479,13 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             if (!File.Exists(_waveFileName))
             {
-                SeLogger.WhisperInfo("Generated wave file not found: " + _waveFileName + Environment.NewLine +
-                                     "ffmpeg: " + _waveExtractProcess.StartInfo.FileName + Environment.NewLine +
-                                     "Parameters: " + _waveExtractProcess.StartInfo.Arguments + Environment.NewLine +
-                                     "OS: " + Environment.OSVersion + Environment.NewLine +
-                                     "64-bit: " + Environment.Is64BitOperatingSystem + Environment.NewLine +
-                                     "ffmpeg exit code: " + _waveExtractProcess.ExitCode + Environment.NewLine +
-                                     "ffmpeg log: " + _ffmpegLog);
+                Se.WriteToolsLog("Generated wave file not found: " + _waveFileName + Environment.NewLine +
+                                 "ffmpeg: " + _waveExtractProcess.StartInfo.FileName + Environment.NewLine +
+                                 "Parameters: " + _waveExtractProcess.StartInfo.Arguments + Environment.NewLine +
+                                 "OS: " + Environment.OSVersion + Environment.NewLine +
+                                 "64-bit: " + Environment.Is64BitOperatingSystem + Environment.NewLine +
+                                 "ffmpeg exit code: " + _waveExtractProcess.ExitCode + Environment.NewLine +
+                                 "ffmpeg log: " + _ffmpegLog);
                 IsTranscribeEnabled = true;
                 _waveExtractProcess = null;
                 return;
@@ -1562,9 +1562,9 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void ViewWhisperLogFile()
+    private void ViewToolsLogFile()
     {
-        var logFilePath = Se.GetSpeechToTextLogFilePath();
+        var logFilePath = Se.GetToolsLogFilePath();
         if (Window != null)
         {
             FileHelper.OpenFileWithDefaultProgram(logFilePath);
@@ -2566,7 +2566,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 ? $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt"
                 : $"--backend {crispAsrEngine.BackendName} {langPart}-m \"{crispModel}\"{alignerPart}{vadPart} -f \"{waveFileName}\" --output-srt {crispArgs}";
 
-            SeLogger.WhisperInfo($"{exe} {crispParams}");
+            Se.WriteToolsLog($"{exe} {crispParams}");
 
             var p = new Process
             {
@@ -2654,7 +2654,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             parameters = parameters.Replace("--model", "--model_directory");
         }
 
-        SeLogger.WhisperInfo($"{w} {parameters}");
+        Se.WriteToolsLog($"{w} {parameters}");
 
         var process = new Process
         {

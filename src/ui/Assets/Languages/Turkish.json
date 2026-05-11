@@ -1575,7 +1575,7 @@
       "whisperXxlSingleWords": "Tek kelimeler",
       "whisperXxlHighlightWord": "Kelime vurgula",
       "selectModel": "Model seç",
-      "viewWhisperLogFile": "Whisper günlüğünü görüntüle",
+      "viewToolsLogFile": "Whisper günlüğünü görüntüle",
       "reDownloadX": "{0} öğesini tekrar indir",
       "downloadingSpeechToTextModel": "Konuşmadan metne modeli indiriliyor"
     },
@@ -1881,7 +1881,7 @@
       "adjustAllTimesRememberLineSelectionChoice": "Tüm zamanları ayarla, satır seçim tercihini hatırla",
       "filesAndLogs": "Dosyalar ve günlükler",
       "showErrorLogFile": "Hata günlüğünü göster",
-      "showWhisperLogFile": "Whisper günlüğünü göster",
+      "showToolsLogFile": "Whisper günlüğünü göster",
       "showSettingsFile": "Ayarlar dosyasını göster",
       "showAssaLayer": "ASSA katman kutusunu göster",
       "waveformCursorColor": "Dalga formu imleç/kafa rengi",

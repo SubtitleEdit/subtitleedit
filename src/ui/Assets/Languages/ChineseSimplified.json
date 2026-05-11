@@ -1408,7 +1408,7 @@
       "whisperXxlHighlightWord": "高亮单词",
       "downloadingWhisperModel": "正在下载 Whisper 模型",
       "selectModel": "选择模型",
-      "viewWhisperLogFile": "查看 Whisper 日志文件",
+      "viewToolsLogFile": "查看 Whisper 日志文件",
       "reDownloadX": "重新下载 {0}"
     },
     "textToSpeech": {
@@ -1713,7 +1713,7 @@
       "adjustAllTimesRememberLineSelectionChoice": "调整所有时间，记住行选择选项",
       "filesAndLogs": "文件和日志",
       "showErrorLogFile": "显示错误日志文件",
-      "showWhisperLogFile": "显示 Whisper 日志文件",
+      "showToolsLogFile": "显示 Whisper 日志文件",
       "showSettingsFile": "显示配置文件",
       "showAssaLayer": "显示 ASSA 层级框",
       "waveformCursorColor": "波形光标/头部颜色",

@@ -374,13 +374,13 @@ public partial class BurnInViewModel : ObservableObject
 
         if (!File.Exists(jobItem.OutputVideoFileName))
         {
-            SeLogger.WhisperInfo("Output video file not found: " + jobItem.OutputVideoFileName + Environment.NewLine +
-                                 "ffmpeg: " + _ffmpegProcess.StartInfo.FileName + Environment.NewLine +
-                                 "Parameters: " + _ffmpegProcess.StartInfo.Arguments + Environment.NewLine +
-                                 "OS: " + Environment.OSVersion + Environment.NewLine +
-                                 "64-bit: " + Environment.Is64BitOperatingSystem + Environment.NewLine +
-                                 "ffmpeg exit code: " + _ffmpegProcess.ExitCode + Environment.NewLine +
-                                 "ffmpeg log: " + _log);
+            Se.WriteToolsLog("Output video file not found: " + jobItem.OutputVideoFileName + Environment.NewLine +
+                             "ffmpeg: " + _ffmpegProcess.StartInfo.FileName + Environment.NewLine +
+                             "Parameters: " + _ffmpegProcess.StartInfo.Arguments + Environment.NewLine +
+                             "OS: " + Environment.OSVersion + Environment.NewLine +
+                             "64-bit: " + Environment.Is64BitOperatingSystem + Environment.NewLine +
+                             "ffmpeg exit code: " + _ffmpegProcess.ExitCode + Environment.NewLine +
+                             "ffmpeg log: " + _log);
 
             Dispatcher.UIThread.Invoke(async () =>
             {

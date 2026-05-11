@@ -182,7 +182,7 @@ public class LanguageSettings
     public string AdjustAllTimesRememberLineSelectionChoice { get; set; }
     public string FilesAndLogs { get; set; }
     public string ShowErrorLogFile { get; set; }
-    public string ShowWhisperLogFile { get; set; }
+    public string ShowToolsLogFile { get; set; }
     public string ShowSettingsFile { get; set; }
     public string ShowAssaLayer { get; set; }
     public string WaveformCursorColor { get; set; }
@@ -467,7 +467,7 @@ public class LanguageSettings
         FavoriteSubtitleFormats = "Favorite subtitle formats";
         FilesAndLogs = "Files and logs";
         ShowErrorLogFile = "Show error log file";
-        ShowWhisperLogFile = "Show Whisper log file";
+        ShowToolsLogFile = "Show tools log file";
         ShowSettingsFile = "Show settings file";
         ShowAssaLayer = "Show ASSA layer box";
         WaveformCursorColor = "Waveform cursor/head color";

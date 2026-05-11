@@ -3,6 +3,7 @@ Subtitle Edit Changelog
 
 v5.0.0-beta24 (10th May 2026)
 
+* Consolidate "Whisper log" and speech-to-text log into a single "tools log" (tools-log.txt)
 * Fix log text box height in speech-to-text - thx rikimtasu
 * Add "Merge two subtitles" tool
 * Add "Import CSV/XLSX with custom columns" window - thx Dubbing-Nerd

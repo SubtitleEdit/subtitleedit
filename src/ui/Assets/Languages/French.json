@@ -1373,7 +1373,7 @@
       "WhisperXxlHighlightWord": "Surligner mot",
       "DownloadingWhisperModel": "T\u00E9l\u00E9chargement du mod\u00E8le Whisper",
       "SelectModel": "S\u00E9lectionner le mod\u00E8le",
-      "ViewWhisperLogFile": "Afficher le fichier journal de Whisper",
+      "ViewToolsLogFile": "Afficher le fichier journal de Whisper",
       "ReDownloadX": "Re-t\u00E9l\u00E9charger {0}"
     },
     "TextToSpeech": {
@@ -1620,7 +1620,7 @@
       "AdjustAllTimesRememberLineSelectionChoice": "Ajuster tout le minutage, m\u00E9moriser le choix de la ligne",
       "FilesAndLogs": "Fichiers et journaux",
       "ShowErrorLogFile": "Afficher le journal des erreurs",
-      "ShowWhisperLogFile": "Afficher le journal Whisper",
+      "ShowToolsLogFile": "Afficher le journal Whisper",
       "ShowSettingsFile": "Afficher le fichier des param\u00E8tres",
       "ShowAssaLayer": "Afficher la bo\u00EEte de couches ASSA",
       "WaveformCursorColor": "Couleur du curseur/de la t\u00EAte de forme d\u0027onde",

@@ -447,16 +447,16 @@ public class Se
         return Path.Combine(DataFolder, "error-log.txt");
     }
 
-    public static string GetSpeechToTextLogFilePath()
+    public static string GetToolsLogFilePath()
     {
-        return Path.Combine(DataFolder, "speech-to-text-log.txt");
+        return Path.Combine(DataFolder, "tools-log.txt");
     }
 
-    public static void WriteSpeechToTextLog(string log)
+    public static void WriteToolsLog(string log)
     {
         try
         {
-            var filePath = GetSpeechToTextLogFilePath();
+            var filePath = GetToolsLogFilePath();
             using var writer = new StreamWriter(filePath, true, Encoding.UTF8);
             writer.WriteLine("-----------------------------------------------------------------------------");
             writer.WriteLine($"Date: {DateTime.Now.ToString(CultureInfo.InvariantCulture)}");
