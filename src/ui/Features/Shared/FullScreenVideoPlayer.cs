@@ -1,10 +1,13 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Declarative;
 using Avalonia.Media;
 using Avalonia.Threading;
+using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
@@ -15,16 +18,17 @@ public class FullScreenVideoWindow : Window
     private (int X, int Y) _lastPointerMovedCursorPosition;
 
     public FullScreenVideoWindow(
-        Controls.VideoPlayer.VideoPlayerControl videoPlayer, 
-        string videoFileName, 
+        Controls.VideoPlayer.VideoPlayerControl videoPlayer,
+        string videoFileName,
         string subtitleFileName,
-        double position, 
+        double position,
         double volume,
-        Action onClose)
-    {       
+        Action onClose,
+        List<string>? toggleShortcutKeys = null)
+    {
         WindowState = WindowState.FullScreen;
         WindowDecorations = WindowDecorations.None;
-        
+
 
         var grid = new Grid
         {
@@ -35,6 +39,16 @@ public class FullScreenVideoWindow : Window
         Content = grid;
 
         const int mouseMovementMinPixels = 20;
+
+        var shortcutManager = new ShortcutManager();
+        if (toggleShortcutKeys != null && toggleShortcutKeys.Count > 0)
+        {
+            shortcutManager.RegisterShortcut(new ShortCut(
+                nameof(FullScreenVideoWindow),
+                toggleShortcutKeys,
+                ShortcutCategory.General,
+                new RelayCommand(Close)));
+        }
 
         // Poll for actual cursor position using platform APIs
         // This works regardless of Avalonia event handling or MPV
@@ -111,10 +125,22 @@ public class FullScreenVideoWindow : Window
                 e.Handled = true;
                 videoPlayer.Volume -= 2;
             }
+            else
+            {
+                shortcutManager.OnKeyPressed(this, e);
+                var command = shortcutManager.CheckShortcuts(e, ShortcutCategory.General.ToString());
+                if (command != null)
+                {
+                    e.Handled = true;
+                    command.Execute(null);
+                }
+            }
 
             // Also notify on any key press
             videoPlayer.NotifyUserActivity();
         };
+
+        KeyUp += (_, e) => shortcutManager.OnKeyReleased(this, e);
 
         videoPlayer.FullscreenCollapseRequested += Close;
 

@@ -8581,12 +8581,14 @@ public partial class MainViewModel :
 
         _fullScreenVideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
         _fullScreenVideoPlayerControl.IsFullScreen = true;
+        var toggleKeys = Se.Settings.Shortcuts
+            .FirstOrDefault(s => s.ActionName == nameof(VideoFullScreenCommand))?.Keys;
         var fullScreenWindow = new FullScreenVideoWindow(_fullScreenVideoPlayerControl, _videoFileName, _subtitleFileName ?? string.Empty, position, volume, () =>
         {
             control!.Position = _fullScreenVideoPlayerControl.Position;
             control!.Volume = _fullScreenVideoPlayerControl.Volume;
             _fullScreenVideoPlayerControl = null;
-        });
+        }, toggleKeys);
         fullScreenWindow.Show(Window!);
         _shortcutManager.ClearKeys();
 
