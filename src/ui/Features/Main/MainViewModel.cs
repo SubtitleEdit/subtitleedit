@@ -153,6 +153,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -10505,16 +10506,8 @@ public partial class MainViewModel :
 
     private void CenterSelectedRowInSubtitleGrid(SubtitleLineViewModel itemToCenter)
     {
-        // Defer until after the layout pass triggered by ScrollIntoView so the row
-        // is materialized and its bounds are valid.
         Dispatcher.UIThread.Post(() =>
         {
-            var index = Subtitles.IndexOf(itemToCenter);
-            if (index < 0)
-            {
-                return;
-            }
-
             var row = SubtitleGrid.GetVisualDescendants().OfType<DataGridRow>()
                 .FirstOrDefault(r => ReferenceEquals(r.DataContext, itemToCenter));
             if (row == null || row.Bounds.Height <= 0)
@@ -10528,25 +10521,39 @@ public partial class MainViewModel :
                 return;
             }
 
-            // Approximate the row whose ScrollIntoView would push the target into the
-            // vertical center. Rows may have variable heights, so this uses the target
-            // row's height as an estimate for surrounding rows.
-            var halfVisibleRows = Math.Max(1, (int)Math.Ceiling((rowsPresenter.Bounds.Height / 2.0) / row.Bounds.Height));
-
-            // Scroll above the target first so the next ScrollIntoView is guaranteed
-            // to scroll downward, placing the chosen row at the viewport's bottom and
-            // the target near the center.
-            var topIdx = Math.Max(0, index - halfVisibleRows);
-            var bottomIdx = Math.Min(Subtitles.Count - 1, index + halfVisibleRows);
-
-            if (topIdx != index)
+            var verticalScrollBar = SubtitleGrid.GetVisualDescendants().OfType<ScrollBar>()
+                .FirstOrDefault(sb => sb.Orientation == Orientation.Vertical);
+            if (verticalScrollBar == null)
             {
-                SubtitleGrid.ScrollIntoView(Subtitles[topIdx], null);
+                return;
             }
-            if (bottomIdx != index)
+
+            // Use the row's actual rendered Y inside the rows presenter — this is
+            // accurate regardless of variable row heights. The delta is exactly how
+            // much we need to shift the scrollbar to center the row.
+            var desiredY = (rowsPresenter.Bounds.Height - row.Bounds.Height) / 2.0;
+            var delta = row.Bounds.Y - desiredY;
+            if (Math.Abs(delta) < 1)
             {
-                SubtitleGrid.ScrollIntoView(Subtitles[bottomIdx], null);
+                return;
             }
+
+            var newValue = Math.Max(0, Math.Min(verticalScrollBar.Value + delta, verticalScrollBar.Maximum));
+            if (Math.Abs(newValue - verticalScrollBar.Value) < 0.5)
+            {
+                return;
+            }
+
+            verticalScrollBar.Value = newValue;
+
+            // Avalonia's DataGrid hooks the scrollbar's Scroll event (not
+            // ValueChanged) to update the visible rows. ScrollEventArgs/ScrollEvent
+            // aren't writable in this version, so invoke the internal handler via
+            // reflection.
+            var processVerticalScroll = typeof(DataGrid).GetMethod(
+                "ProcessVerticalScroll",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            processVerticalScroll?.Invoke(SubtitleGrid, new object[] { ScrollEventType.EndScroll });
         }, DispatcherPriority.Loaded);
     }
 
