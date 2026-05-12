@@ -26,6 +26,7 @@ public partial class GetAudioClipsViewModel : ObservableObject
     public bool OkPressed { get; private set; }
 
     private string _videoFileName;
+    private int _audioTrackFfIndex;
     private readonly CancellationTokenSource _cancellationTokenSource;
     private List<SubtitleLineViewModel> _lines;
 
@@ -37,13 +38,15 @@ public partial class GetAudioClipsViewModel : ObservableObject
         Error = string.Empty;
         AudioClips = new List<AudioClip>();
         _videoFileName = string.Empty;
+        _audioTrackFfIndex = -1;
         _lines = new List<SubtitleLineViewModel>();
     }
 
-    public void Initialize(string videoFileName, List<SubtitleLineViewModel> lines)
+    public void Initialize(string videoFileName, List<SubtitleLineViewModel> lines, int audioTrackFfIndex = -1)
     {
         _videoFileName = videoFileName;
         _lines = lines;
+        _audioTrackFfIndex = audioTrackFfIndex;
     }
 
     private void ExtractLines()
@@ -111,7 +114,8 @@ public partial class GetAudioClipsViewModel : ObservableObject
             line.StartTime.TotalSeconds,
             line.Duration.TotalSeconds,
             useCenterChannelOnly,
-            outputFileName);
+            outputFileName,
+            _audioTrackFfIndex);
 
         return FfmpegGenerator.GetProcess(arguments, OutputHandler);
     }
