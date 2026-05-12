@@ -286,10 +286,13 @@ public class ElevenLabs : ITtsEngine
             throw new ArgumentException("ElevenLabs model is empty");
         }
 
+        Se.WriteToolsLog($"ElevenLabs: voice={elevenLabVoice.Voice}, voiceId={elevenLabVoice.VoiceId}, model={model}, textLen={text.Length}");
+
         var ms = new MemoryStream();
         var ok = await _ttsDownloadService.DownloadElevenLabsVoiceSpeak(text, elevenLabVoice, model, Se.Settings.Video.TextToSpeech.ElevenLabsApiKey, "en", ms, null, cancellationToken);
         if (!ok)
         {
+            Se.WriteToolsLog($"ElevenLabs: request failed (voice={elevenLabVoice.Voice})");
             return new TtsResult { Text = text, FileName = string.Empty, Error = true };
         }
 

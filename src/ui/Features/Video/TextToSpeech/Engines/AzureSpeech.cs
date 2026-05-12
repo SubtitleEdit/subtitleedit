@@ -138,10 +138,13 @@ public class AzureSpeech : ITtsEngine
             throw new ArgumentException("Voice is not an AzureVoice");
         }
 
+        Se.WriteToolsLog($"AzureSpeech: voice={azureVoice.ShortName}, locale={azureVoice.Locale}, region={region}, model={model}, textLen={text.Length}");
+
         var ms = new MemoryStream();
         var ok = await _ttsDownloadService.DownloadAzureVoiceSpeak(text, azureVoice, model!, Se.Settings.Video.TextToSpeech.AzureApiKey, "en", region!, ms, null, cancellationToken);
         if (!ok)
         {
+            Se.WriteToolsLog($"AzureSpeech: request failed (voice={azureVoice.ShortName}, region={region})");
             return new TtsResult { Text = text, FileName = string.Empty, Error = true };
         }
 
