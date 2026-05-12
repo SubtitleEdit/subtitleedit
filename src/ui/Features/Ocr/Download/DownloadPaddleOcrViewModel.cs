@@ -150,7 +150,7 @@ public partial class DownloadPaddleOcrViewModel : ObservableObject
                 else if (_downloadType == PaddleOcrDownloadType.EngineGpuLinux)
                 {
                     StatusText = string.Format(Se.Language.General.UnpackingX, Se.Language.Ocr.PaddleOcr);
-                    Unpacker.Extract7Zip(firstFile, Se.PaddleOcrFolder, "PaddleOCR-GPU-v1.4.0-Linux", _cancellationTokenSource, text => ProgressText = text);
+                    Unpacker.Extract7Zip(firstFile, Se.PaddleOcrFolder, "PaddleOCR-GPU-v1.4.0-CUDA-12.9-Linux", _cancellationTokenSource, text => ProgressText = text);
                     var binFile = Path.Combine(Se.PaddleOcrFolder, "paddleocr.bin");
                     if (File.Exists(binFile))
                     {
