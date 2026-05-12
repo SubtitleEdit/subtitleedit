@@ -454,6 +454,11 @@ public class Se
 
     public static void WriteToolsLog(string log)
     {
+        if (!Settings.Tools.WriteToolsLog)
+        {
+            return;
+        }
+
         try
         {
             var filePath = GetToolsLogFilePath();

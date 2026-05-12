@@ -256,6 +256,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _existsErrorLogFile;
     [ObservableProperty] private bool _existsToolsLogFile;
     [ObservableProperty] private bool _existsSettingsFile;
+    [ObservableProperty] private bool _writeToolsLog;
 
     private int _continuationPause;
     private string _customContinuationStyleSuffix;
@@ -809,6 +810,8 @@ public partial class SettingsViewModel : ObservableObject
         ExistsErrorLogFile = File.Exists(Se.GetErrorLogFilePath());
         ExistsToolsLogFile = File.Exists(Se.GetToolsLogFilePath());
         ExistsSettingsFile = File.Exists(Se.GetSettingsFilePath());
+
+        WriteToolsLog = Se.Settings.Tools.WriteToolsLog;
     }
 
     private bool GetToolbarVisible(SeWaveformToolbarItemType type)
@@ -1209,6 +1212,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Tools.SpeechToTextSelectedLinesPromptFirstTimeOnly = SpeechToTextSelectedLinesPromptFistTimeOnly;
         Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons = MultipleReplaceShowDotDotDotButtons;
         Se.Settings.Tools.GridFocusTextboxAfterInsertNew = GridFocusTextboxAfterInsertNew;
+        Se.Settings.Tools.WriteToolsLog = WriteToolsLog;
 
         appearance.Theme = MapThemeFromTranslation(SelectedTheme);
         appearance.IconTheme = SelectedIconTheme;

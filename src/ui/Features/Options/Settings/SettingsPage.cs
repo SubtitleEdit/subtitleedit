@@ -727,6 +727,8 @@ public class SettingsPage : UserControl
                 () => UiUtil.MakeLink(Se.GetErrorLogFilePath(), _vm.ShowErrorLogFileCommand).WithBindEnabed(_vm, nameof(_vm.ExistsErrorLogFile))),
             new SettingsItem(Se.Language.Options.Settings.ShowToolsLogFile,
                 () => UiUtil.MakeLink(Se.GetToolsLogFilePath(), _vm.ShowToolsLogFileCommand).WithBindEnabed(_vm, nameof(_vm.ExistsToolsLogFile))),
+            new SettingsItem(Se.Language.Options.Settings.WriteToolsLog,
+                () => UiUtil.MakeCheckBox(_vm, nameof(_vm.WriteToolsLog))),
             new SettingsItem(Se.Language.Options.Settings.ShowSettingsFile,
                 () => UiUtil.MakeLink(Se.GetSettingsFilePath(), _vm.ShowSettingsFileCommand).WithBindEnabed(_vm, nameof(_vm.ExistsSettingsFile))),
         ]));
