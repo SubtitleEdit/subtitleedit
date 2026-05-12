@@ -12977,6 +12977,13 @@ public partial class MainViewModel :
 
         IsVideoLoaded = true;
 
+        // Wait until mpv has actually parsed the file before reading the track list.
+        // GetAudioTracks() reads "track-list/count" which is 0 until the file is loaded,
+        // so racing past it produces a bare-hash peak filename ({hash}.wav) on the first
+        // open vs. a track-suffixed one ({hash}-N.wav) on later opens, causing the
+        // waveform to be regenerated on re-open.
+        await vp.WaitForPlayersReadyAsync();
+
         // Resolve _audioTrack before LoadWaveformAndSpectrogram so it sees the right FfIndex (and we don't race LoadAudioTrackMenuItems).
         if (vp.VideoPlayer is LibMpvDynamicPlayer mpv)
         {
