@@ -2938,7 +2938,8 @@ public partial class MainViewModel :
                 line.StartTime.TotalSeconds,
                 line.Duration.TotalSeconds,
                 false,
-                outputFileName);
+                outputFileName,
+                _audioTrack?.FfIndex ?? -1);
 
             using var process = FfmpegGenerator.GetProcess(arguments, (_, _) => { });
             process.Start();
@@ -5005,7 +5006,7 @@ public partial class MainViewModel :
             return false;
         }
 
-        var resultGetAudioClips = await ShowDialogAsync<GetAudioClipsWindow, GetAudioClipsViewModel>(vm => { vm.Initialize(_videoFileName ?? string.Empty, selectedItems); });
+        var resultGetAudioClips = await ShowDialogAsync<GetAudioClipsWindow, GetAudioClipsViewModel>(vm => { vm.Initialize(_videoFileName ?? string.Empty, selectedItems, _audioTrack?.FfIndex ?? -1); });
 
         if (!resultGetAudioClips.OkPressed || resultGetAudioClips.AudioClips.Count == 0)
         {

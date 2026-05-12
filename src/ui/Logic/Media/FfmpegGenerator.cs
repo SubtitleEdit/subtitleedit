@@ -1126,13 +1126,22 @@ public class FfmpegGenerator
        double startSeconds,
        double durationSeconds,
        bool useCenterChannelOnly,
-       string outputFileName)
+       string outputFileName,
+       int audioTrackFfIndex = -1)
     {
         var start = $"{startSeconds:0.000}".Replace(",", ".");
         var duration = $"{durationSeconds:0.000}".Replace(",", ".");
 
         // Base parameters
-        var args = $"-y -ss {start} -t {duration} -i \"{videoFileName}\" -vn -ar 16000 -b:a 32k";
+        var args = $"-y -ss {start} -t {duration} -i \"{videoFileName}\"";
+
+        // Select the requested audio stream (e.g. for videos with multiple audio tracks).
+        if (audioTrackFfIndex >= 0)
+        {
+            args += $" -map 0:{audioTrackFfIndex}";
+        }
+
+        args += " -vn -ar 16000 -b:a 32k";
 
         // Optional center-channel only
         if (useCenterChannelOnly)
