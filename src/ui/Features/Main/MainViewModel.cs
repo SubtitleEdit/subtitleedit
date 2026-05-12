@@ -16313,11 +16313,23 @@ public partial class MainViewModel :
     internal void VideoPlayerControlPointerPressed(PointerPressedEventArgs args)
     {
         var mediaInfo = _mediaInfo;
-        if (mediaInfo == null || Window == null || args.Properties.IsLeftButtonPressed)
+        if (mediaInfo == null || Window == null)
         {
             return;
         }
 
+        var props = args.GetCurrentPoint(null).Properties;
+        var isMacCtrlLeftClick = OperatingSystem.IsMacOS()
+                                 && props.IsLeftButtonPressed
+                                 && args.KeyModifiers.HasFlag(KeyModifiers.Control)
+                                 && !args.KeyModifiers.HasFlag(KeyModifiers.Shift);
+
+        if (!props.IsRightButtonPressed && !isMacCtrlLeftClick)
+        {
+            return;
+        }
+
+        args.Handled = true;
         ShowMediaInformation();
     }
 
