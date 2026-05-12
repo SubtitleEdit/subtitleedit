@@ -7,13 +7,16 @@ using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.GetAudioClips;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
+using System.Net.Http;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -62,6 +65,8 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private bool _isTranscribeEnabled;
     [ObservableProperty] private bool _isTranslateVisible;
     [ObservableProperty] private bool _isBackendSelectionVisible;
+    [ObservableProperty] private bool _isModelSelectionVisible;
+    [ObservableProperty] private bool _isLanguageSelectionVisible;
     [ObservableProperty] private bool _isWhisperCppSelected;
     [ObservableProperty] private ObservableCollection<ISpeechToTextEngine> _whisperCppBackends;
     [ObservableProperty] private ISpeechToTextEngine? _selectedWhisperCppBackend;
@@ -103,6 +108,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private double _showProgressPct = -1;
     private readonly VideoInfo _videoInfo = new();
     private bool _abort;
+    private CancellationTokenSource? _openAiCts;
     private readonly List<ResultText> _resultList = new();
     private bool _useCenterChannelOnly;
 
@@ -160,6 +166,9 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         Engines.Add(new WhisperEngineOpenAi());
 
+        // Add OpenAI Compatible STT engine (available on all platforms)
+        Engines.Add(new OpenAiCompatibleSttEngine());
+
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             //Engines.Add(new ChatLlmCppEngine());
@@ -185,6 +194,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         IsTranscribeEnabled = true;
         IsTranslateVisible = IsTranslateAvailable(GetEffectiveSelectedEngine());
         IsBackendSelectionVisible = false;
+        IsModelSelectionVisible = true;
         IsWhisperCppSelected = false;
         IsCrispAsrSelected = false;
         Parameters = string.Empty;
@@ -265,7 +275,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private static bool IsTranslateAvailable(ISpeechToTextEngine engine)
     {
-        return engine is not ChatLlmCppEngine and not Qwen3AsrCppEngine and not ICrispAsrEngine;
+        return engine is not ChatLlmCppEngine and not Qwen3AsrCppEngine and not ICrispAsrEngine and not OpenAiCompatibleSttEngine;
     }
 
     private void UpdateBackendSelectionUi()
@@ -852,6 +862,163 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
     }
 
+    private async Task ProcessOpenAiCompatibleTranscription(string audioFileName, string? language = null, CancellationToken cancellationToken = default)
+    {
+        var settings = Se.Settings.Tools;
+        var openAiSettings = OpenAiSttService.GetSettingsFromConfiguration();
+
+        if (!OpenAiSttService.IsConfigured())
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                _ = MessageBox.Show(Window!,
+                    "Please configure OpenAI Compatible STT settings first.\n\nGo to Settings > Tools > Audio to Text to configure.",
+                    "Configuration Required");
+                IsTranscribeEnabled = true;
+            });
+            return;
+        }
+
+        ProgressText = "Transcribing...";
+        ProgressValue = 10;
+
+        var subtitle = new Subtitle();
+        var segmentCount = 0;
+
+        try
+        {
+            using var httpClient = new HttpClient();
+            var service = new OpenAiSttService(httpClient, openAiSettings);
+
+            var segmentProgress = new Progress<OpenAiCompatibleSegment>(seg =>
+            {
+                Interlocked.Increment(ref segmentCount);
+                LogToConsole($"  Segment #{segmentCount}: {TimeSpan.FromSeconds(seg.Start):mm\\:ss\\.fff} -> {TimeSpan.FromSeconds(seg.End):mm\\:ss\\.fff}: {seg.Text.Trim()}");
+                if (_startTicks > 0)
+                {
+                    var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
+                    ElapsedText = $"Time elapsed: {new TimeCode(durationMs).ToShortDisplayString()}";
+                }
+                if (_videoInfo.TotalSeconds > 0)
+                {
+                    SetProgressBarPct(seg.End / _videoInfo.TotalSeconds * 100.0);
+                }
+                lock (subtitle.Paragraphs)
+                {
+                    var text = seg.Text.Trim();
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        subtitle.Paragraphs.Add(new Paragraph(text, seg.Start * 1000.0, seg.End * 1000.0));
+                    }
+                }
+            });
+
+            var response = await service.TranscribeAsync(audioFileName, language, null, segmentProgress, cancellationToken);
+
+            ProgressValue = 90;
+            ProgressText = "Processing response...";
+
+            if (response.Segments != null && response.Segments.Count > 0 && subtitle.Paragraphs.Count == 0)
+            {
+                foreach (var segment in response.Segments.OrderBy(s => s.Start))
+                {
+                    var text = segment.Text.Trim();
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        subtitle.Paragraphs.Add(new Paragraph(
+                            text,
+                            segment.Start * 1000.0,
+                            segment.End * 1000.0));
+                    }
+                }
+            }
+            else if (response.Segments == null || response.Segments.Count == 0)
+            {
+                if (!string.IsNullOrEmpty(response.Text))
+                {
+                    // Single text response - use entire audio duration
+                    var fileInfo = new FileInfo(audioFileName);
+                    subtitle.Paragraphs.Add(new Paragraph(
+                        response.Text.Trim(),
+                        0.0,
+                        fileInfo.Length > 0 ? 5000.0 : 0.0));
+                }
+            }
+
+            ProgressValue = 100;
+            ProgressText = "Transcription complete";
+            LogToConsole($"Transcription completed: {subtitle.Paragraphs.Count} segment(s)");
+
+            var postProcessedSubtitle = PostProcess(subtitle);
+
+            if (_audioClips != null && ResultAudioClips.Count > 0)
+            {
+                var outputAudioClip = ResultAudioClips.FirstOrDefault(p => p.AudioFileName == audioFileName);
+                if (outputAudioClip != null)
+                {
+                    outputAudioClip.Transcription = new Subtitle(postProcessedSubtitle);
+                }
+            }
+
+            await Dispatcher.UIThread.InvokeAsync(async () => await MakeResult(postProcessedSubtitle));
+        }
+        catch (OperationCanceledException)
+        {
+            LogToConsole("Transcription cancelled by user");
+            if (subtitle.Paragraphs.Count > 0)
+            {
+                LogToConsole($"Returning {subtitle.Paragraphs.Count} partial segment(s)");
+                var postProcessedSubtitle = PostProcess(subtitle);
+
+                if (_audioClips != null && ResultAudioClips.Count > 0)
+                {
+                    var outputAudioClip = ResultAudioClips.FirstOrDefault(p => p.AudioFileName == audioFileName);
+                    if (outputAudioClip != null)
+                    {
+                        outputAudioClip.Transcription = new Subtitle(postProcessedSubtitle);
+                    }
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () => await MakeResult(postProcessedSubtitle));
+            }
+            else
+            {
+                await Dispatcher.UIThread.InvokeAsync(() => Window?.Close());
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            var message = ex.Message;
+            if (message.Contains("401") || message.Contains("Unauthorized"))
+            {
+                message = "Unauthorized: Invalid API key or insufficient permissions.";
+            }
+            else if (message.Contains("timeout") || message.Contains("timed out"))
+            {
+                message = "Request timeout: The server took too long to respond.";
+            }
+
+            await Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                await MessageBox.Show(Window!, message, "Transcription Error");
+                IsTranscribeEnabled = true;
+            });
+        }
+        catch (Exception ex)
+        {
+            await Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                await MessageBox.Show(Window!, $"Transcription failed: {ex.Message}", "Error");
+                IsTranscribeEnabled = true;
+            });
+        }
+        finally
+        {
+            _openAiCts?.Dispose();
+            _openAiCts = null;
+        }
+    }
+
     /// <summary>
     /// Fixes small/small-negative durations in the subtitle by taking time from prevoius subtitle line.
     /// </summary>
@@ -1039,7 +1206,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             if (failed == 0)
             {
-                OkPressed = true; 
+                OkPressed = true;
                 Window?.Close();
             }
         });
@@ -1480,12 +1647,12 @@ public partial class SpeechToTextViewModel : ObservableObject
             if (!File.Exists(_waveFileName))
             {
                 Se.WriteToolsLog("Generated wave file not found: " + _waveFileName + Environment.NewLine +
-                                 "ffmpeg: " + _waveExtractProcess.StartInfo.FileName + Environment.NewLine +
-                                 "Parameters: " + _waveExtractProcess.StartInfo.Arguments + Environment.NewLine +
-                                 "OS: " + Environment.OSVersion + Environment.NewLine +
-                                 "64-bit: " + Environment.Is64BitOperatingSystem + Environment.NewLine +
-                                 "ffmpeg exit code: " + _waveExtractProcess.ExitCode + Environment.NewLine +
-                                 "ffmpeg log: " + _ffmpegLog);
+                                     "ffmpeg: " + _waveExtractProcess.StartInfo.FileName + Environment.NewLine +
+                                     "Parameters: " + _waveExtractProcess.StartInfo.Arguments + Environment.NewLine +
+                                     "OS: " + Environment.OSVersion + Environment.NewLine +
+                                     "64-bit: " + Environment.Is64BitOperatingSystem + Environment.NewLine +
+                                     "ffmpeg exit code: " + _waveExtractProcess.ExitCode + Environment.NewLine +
+                                     "ffmpeg log: " + _ffmpegLog);
                 IsTranscribeEnabled = true;
                 _waveExtractProcess = null;
                 return;
@@ -1764,6 +1931,13 @@ public partial class SpeechToTextViewModel : ObservableObject
     [RelayCommand]
     private async Task ShowAdvancedSettings()
     {
+        if (GetEffectiveSelectedEngine() is OpenAiCompatibleSttEngine)
+        {
+            var settingsWindow = new SettingsWindow(new SettingsViewModel(_windowService, null!));
+            await settingsWindow.ShowDialog(Window!);
+            return;
+        }
+
         var vm = await _windowService.ShowDialogAsync<SpeechToTextAdvancedWindow, SpeechToTextAdvancedViewModel>(Window!,
             viewModal =>
             {
@@ -1903,101 +2077,131 @@ public partial class SpeechToTextViewModel : ObservableObject
             return;
         }
 
-        if (SelectedModel is not SpeechToTextModelDisplay model)
-        {
-            return;
-        }
-
-        if (SelectedLanguage is not WhisperLanguage language)
-        {
-            return;
-        }
-
         var engine = GetEffectiveSelectedEngine();
 
-        _unknownArgument = false;
-        _cudaOutOfMemory = false;
-        _incompleteModel = false;
-        _loadedFromStdOut = false;
-
-        Se.Settings.Tools.AudioToText.WhisperChoice = engine.Choice;
-
-        if (!engine.IsEngineInstalled())
+        if (engine is not OpenAiCompatibleSttEngine)
         {
-            if (engine is ICrispAsrEngine && Configuration.IsRunningOnWindows)
+            if (SelectedModel is not SpeechToTextModelDisplay model)
             {
-                var answer = await MessageBox.Show(
-                    Window!,
-                    $"Download {engine.Name}?",
-                    $"{Environment.NewLine}\"{engine.Name}\" requires downloading the CrispASR engine.{Environment.NewLine}{Environment.NewLine}Select a version to download:",
-                    MessageBoxButtons.Cancel,
-                    MessageBoxIcon.Question,
-                    "CPU",
-                    "Vulkan",
-                    "CUDA");
+                return;
+            }
 
-                if (answer == MessageBoxResult.None || answer == MessageBoxResult.Cancel)
-                {
-                    return;
-                }
+            if (SelectedLanguage is not WhisperLanguage language)
+            {
+                return;
+            }
 
-                var crispVariant = answer switch
-                {
-                    MessageBoxResult.Custom1 => "cpu",
-                    MessageBoxResult.Custom3 => "cuda",
-                    _ => "vulkan",
-                };
+            _unknownArgument = false;
+            _cudaOutOfMemory = false;
+            _incompleteModel = false;
+            _loadedFromStdOut = false;
 
-                if (crispVariant == "cpu")
+            Se.Settings.Tools.AudioToText.WhisperChoice = engine.Choice;
+
+            if (!engine.IsEngineInstalled())
+            {
+                if (engine is ICrispAsrEngine && Configuration.IsRunningOnWindows)
                 {
-                    var cpuAnswer = await PromptCrispAsrCpuFlavorAsync();
-                    if (cpuAnswer == null)
+                    var answer = await MessageBox.Show(
+                        Window!,
+                        $"Download {engine.Name}?",
+                        $"{Environment.NewLine}\"{engine.Name}\" requires downloading the CrispASR engine.{Environment.NewLine}{Environment.NewLine}Select a version to download:",
+                        MessageBoxButtons.Cancel,
+                        MessageBoxIcon.Question,
+                        "CPU",
+                        "Vulkan",
+                        "CUDA");
+
+                    if (answer == MessageBoxResult.None || answer == MessageBoxResult.Cancel)
                     {
                         return;
                     }
-                    crispVariant = cpuAnswer;
-                }
 
-                if (crispVariant == "vulkan" && !VulkanHelper.IsInstalled())
+                    var crispVariant = answer switch
+                    {
+                        MessageBoxResult.Custom1 => "cpu",
+                        MessageBoxResult.Custom3 => "cuda",
+                        _ => "vulkan",
+                    };
+
+                    if (crispVariant == "cpu")
+                    {
+                        var cpuAnswer = await PromptCrispAsrCpuFlavorAsync();
+                        if (cpuAnswer == null)
+                        {
+                            return;
+                        }
+                        crispVariant = cpuAnswer;
+                    }
+
+                    if (crispVariant == "vulkan" && !VulkanHelper.IsInstalled())
+                    {
+                        var vulkanAnswer = await MessageBox.Show(
+                            Window!,
+                            "Vulkan SDK may be required",
+                            $"The Vulkan version requires the Vulkan SDK to be installed.{Environment.NewLine}{Environment.NewLine}You can download it from:{Environment.NewLine}https://vulkan.lunarg.com/sdk/home{Environment.NewLine}{Environment.NewLine}Continue with Vulkan download?",
+                            MessageBoxButtons.YesNoCancel,
+                            MessageBoxIcon.Question);
+
+                        if (vulkanAnswer == MessageBoxResult.No)
+                        {
+                            UiUtil.OpenUrl("https://vulkan.lunarg.com/sdk/home");
+                            return;
+                        }
+
+                        if (vulkanAnswer != MessageBoxResult.Yes)
+                        {
+                            return;
+                        }
+                    }
+
+                    var crispVm = await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
+                        Window!, viewModel =>
+                        {
+                            viewModel.Engine = engine;
+                            viewModel.CrispAsrWindowsVariant = crispVariant;
+                            viewModel.StartDownload();
+                        });
+
+                    if (!crispVm.OkPressed)
+                    {
+                        return;
+                    }
+                }
+                else
                 {
-                    var vulkanAnswer = await MessageBox.Show(
+                    var answer = await MessageBox.Show(
                         Window!,
-                        "Vulkan SDK may be required",
-                        $"The Vulkan version requires the Vulkan SDK to be installed.{Environment.NewLine}{Environment.NewLine}You can download it from:{Environment.NewLine}https://vulkan.lunarg.com/sdk/home{Environment.NewLine}{Environment.NewLine}Continue with Vulkan download?",
+                        $"Download {engine.Name}?",
+                        $"Download and use {engine.Name}?",
                         MessageBoxButtons.YesNoCancel,
                         MessageBoxIcon.Question);
 
-                    if (vulkanAnswer == MessageBoxResult.No)
-                    {
-                        UiUtil.OpenUrl("https://vulkan.lunarg.com/sdk/home");
-                        return;
-                    }
-
-                    if (vulkanAnswer != MessageBoxResult.Yes)
+                    if (answer != MessageBoxResult.Yes)
                     {
                         return;
                     }
-                }
 
-                var crispVm = await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
-                    Window!, viewModel =>
+                    var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
+                        Window!, viewModel =>
+                        {
+                            viewModel.Engine = engine;
+                            viewModel.StartDownload();
+                        });
+
+                    if (!vm.OkPressed)
                     {
-                        viewModel.Engine = engine;
-                        viewModel.CrispAsrWindowsVariant = crispVariant;
-                        viewModel.StartDownload();
-                    });
-
-                if (!crispVm.OkPressed)
-                {
-                    return;
+                        return;
+                    }
                 }
             }
-            else
+
+            if (!engine.IsModelInstalled(model.Model))
             {
                 var answer = await MessageBox.Show(
                     Window!,
-                    $"Download {engine.Name}?",
-                    $"Download and use {engine.Name}?",
+                    $"Download {model}?",
+                    $"Download and use {model.Model.Name}?",
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -2006,221 +2210,194 @@ public partial class SpeechToTextViewModel : ObservableObject
                     return;
                 }
 
-                var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
-                    Window!, viewModel =>
-                    {
-                        viewModel.Engine = engine;
-                        viewModel.StartDownload();
-                    });
-
-                if (!vm.OkPressed)
-                {
-                    return;
-                }
-            }
-        }
-
-        if (!engine.IsModelInstalled(model.Model))
-        {
-            var answer = await MessageBox.Show(
-                Window!,
-                $"Download {model}?",
-                $"Download and use {model.Model.Name}?",
-                MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Question);
-
-            if (answer != MessageBoxResult.Yes)
-            {
-                return;
-            }
-
-            var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
-                Window!, viewModel =>
-                {
-                    viewModel.SetModels(Models, engine, SelectedModel);
-                    viewModel.StartDownload();
-                });
-
-            RefreshDownloadStatus(vm.SelectedModel?.Model as WhisperModel);
-        }
-
-        if (engine is ChatLlmCppEngine chatLlm)
-        {
-            var modelAligner = chatLlm.ForcedAlignerModel;
-            var displayModelAligner = new SpeechToTextModelDisplay
-            {
-                Model = modelAligner,
-                Display = modelAligner.Name + " (forced aligner for timestamps)",
-                Engine = engine,
-            };
-            if (!engine.IsModelInstalled(modelAligner))
-            {
-                var answer = await MessageBox.Show(
-                                Window!,
-                                $"Download {modelAligner}?",
-                                $"'Chat LLM' requires a forced aligner to create timestamps.\nDownload and use {modelAligner.Name}?",
-                                MessageBoxButtons.YesNoCancel,
-                                MessageBoxIcon.Question);
-
-                if (answer != MessageBoxResult.Yes)
-                {
-                    return;
-                }
-
-                var models = new ObservableCollection<SpeechToTextModelDisplay>
-                {
-                    displayModelAligner
-                };
                 var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
                     Window!, viewModel =>
                     {
-                        viewModel.SetModels(models, engine, displayModelAligner);
+                        viewModel.SetModels(Models, engine, SelectedModel);
                         viewModel.StartDownload();
                     });
 
-                if (!vm.OkPressed)
-                {
-                    return;
-                }
+                RefreshDownloadStatus(vm.SelectedModel?.Model as WhisperModel);
             }
-        }
 
-        if (engine is Qwen3AsrCppEngine qwen3Asr)
-        {
-            var modelAligner = qwen3Asr.ForcedAlignerModel;
-            var displayModelAligner = new SpeechToTextModelDisplay
+            if (engine is ChatLlmCppEngine chatLlm)
             {
-                Model = modelAligner,
-                Display = modelAligner.Name + " (forced aligner for timestamps)",
-                Engine = engine,
-            };
-            if (!engine.IsModelInstalled(modelAligner))
-            {
-                var answer = await MessageBox.Show(
-                                Window!,
-                                $"Download {modelAligner}?",
-                                $"'Qwen3 ASR CPP' requires a forced aligner to create timestamps.\nDownload and use {modelAligner.Name}?",
-                                MessageBoxButtons.YesNoCancel,
-                                MessageBoxIcon.Question);
-
-                if (answer != MessageBoxResult.Yes)
+                var modelAligner = chatLlm.ForcedAlignerModel;
+                var displayModelAligner = new SpeechToTextModelDisplay
                 {
-                    return;
-                }
-
-                var models = new ObservableCollection<SpeechToTextModelDisplay>
-                {
-                    displayModelAligner
-                };
-                var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
-                    Window!, viewModel =>
-                    {
-                        viewModel.SetModels(models, engine, displayModelAligner);
-                        viewModel.StartDownload();
-                    });
-
-                if (!vm.OkPressed)
-                {
-                    return;
-                }
-            }
-        }
-
-        if (engine is CrispAsrQwen3 crispQwen3Engine
-            && (SelectedForcedAligner == null || SelectedForcedAligner.IsBuiltIn))
-        {
-            var modelAligner = crispQwen3Engine.ForcedAlignerModel;
-            var displayModelAligner = new SpeechToTextModelDisplay
-            {
-                Model = modelAligner,
-                Display = modelAligner.Name + " (forced aligner for timestamps)",
-                Engine = engine,
-            };
-            if (!engine.IsModelInstalled(modelAligner))
-            {
-                var answer = await MessageBox.Show(
-                                Window!,
-                                $"Download {modelAligner}?",
-                                $"'Crisp ASR Qwen3' requires a forced aligner to create timestamps.\nDownload and use {modelAligner.Name}?",
-                                MessageBoxButtons.YesNoCancel,
-                                MessageBoxIcon.Question);
-
-                if (answer != MessageBoxResult.Yes)
-                {
-                    return;
-                }
-
-                var models = new ObservableCollection<SpeechToTextModelDisplay>
-                {
-                    displayModelAligner
-                };
-                var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
-                    Window!, viewModel =>
-                    {
-                        viewModel.SetModels(models, engine, displayModelAligner);
-                        viewModel.StartDownload();
-                    });
-
-                if (!vm.OkPressed)
-                {
-                    return;
-                }
-            }
-        }
-
-        if (engine is ICrispAsrEngine crispAsrEngineForAligner
-            && SelectedForcedAligner != null && !SelectedForcedAligner.IsBuiltIn)
-        {
-            var alignerPath = GetForcedAlignerPath(crispAsrEngineForAligner, SelectedForcedAligner);
-            if (string.IsNullOrEmpty(alignerPath) || !File.Exists(alignerPath))
-            {
-                var alignerWhisperModel = SelectedForcedAligner.ToWhisperModel();
-                var displayAligner = new SpeechToTextModelDisplay
-                {
-                    Model = alignerWhisperModel,
+                    Model = modelAligner,
+                    Display = modelAligner.Name + " (forced aligner for timestamps)",
                     Engine = engine,
                 };
+                if (!engine.IsModelInstalled(modelAligner))
+                {
+                    var answer = await MessageBox.Show(
+                                    Window!,
+                                    $"Download {modelAligner}?",
+                                    $"'Chat LLM' requires a forced aligner to create timestamps.\nDownload and use {modelAligner.Name}?",
+                                    MessageBoxButtons.YesNoCancel,
+                                    MessageBoxIcon.Question);
+
+                    if (answer != MessageBoxResult.Yes)
+                    {
+                        return;
+                    }
+
+                    var models = new ObservableCollection<SpeechToTextModelDisplay>
+                {
+                    displayModelAligner
+                };
+                    var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
+                        Window!, viewModel =>
+                        {
+                            viewModel.SetModels(models, engine, displayModelAligner);
+                            viewModel.StartDownload();
+                        });
+
+                    if (!vm.OkPressed)
+                    {
+                        return;
+                    }
+                }
+            }
+
+            if (engine is Qwen3AsrCppEngine qwen3Asr)
+            {
+                var modelAligner = qwen3Asr.ForcedAlignerModel;
+                var displayModelAligner = new SpeechToTextModelDisplay
+                {
+                    Model = modelAligner,
+                    Display = modelAligner.Name + " (forced aligner for timestamps)",
+                    Engine = engine,
+                };
+                if (!engine.IsModelInstalled(modelAligner))
+                {
+                    var answer = await MessageBox.Show(
+                                    Window!,
+                                    $"Download {modelAligner}?",
+                                    $"'Qwen3 ASR CPP' requires a forced aligner to create timestamps.\nDownload and use {modelAligner.Name}?",
+                                    MessageBoxButtons.YesNoCancel,
+                                    MessageBoxIcon.Question);
+
+                    if (answer != MessageBoxResult.Yes)
+                    {
+                        return;
+                    }
+
+                    var models = new ObservableCollection<SpeechToTextModelDisplay>
+                {
+                    displayModelAligner
+                };
+                    var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
+                        Window!, viewModel =>
+                        {
+                            viewModel.SetModels(models, engine, displayModelAligner);
+                            viewModel.StartDownload();
+                        });
+
+                    if (!vm.OkPressed)
+                    {
+                        return;
+                    }
+                }
+            }
+
+            if (engine is CrispAsrQwen3 crispQwen3Engine
+                && (SelectedForcedAligner == null || SelectedForcedAligner.IsBuiltIn))
+            {
+                var modelAligner = crispQwen3Engine.ForcedAlignerModel;
+                var displayModelAligner = new SpeechToTextModelDisplay
+                {
+                    Model = modelAligner,
+                    Display = modelAligner.Name + " (forced aligner for timestamps)",
+                    Engine = engine,
+                };
+                if (!engine.IsModelInstalled(modelAligner))
+                {
+                    var answer = await MessageBox.Show(
+                                    Window!,
+                                    $"Download {modelAligner}?",
+                                    $"'Crisp ASR Qwen3' requires a forced aligner to create timestamps.\nDownload and use {modelAligner.Name}?",
+                                    MessageBoxButtons.YesNoCancel,
+                                    MessageBoxIcon.Question);
+
+                    if (answer != MessageBoxResult.Yes)
+                    {
+                        return;
+                    }
+
+                    var models = new ObservableCollection<SpeechToTextModelDisplay>
+                {
+                    displayModelAligner
+                };
+                    var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
+                        Window!, viewModel =>
+                        {
+                            viewModel.SetModels(models, engine, displayModelAligner);
+                            viewModel.StartDownload();
+                        });
+
+                    if (!vm.OkPressed)
+                    {
+                        return;
+                    }
+                }
+            }
+
+            if (engine is ICrispAsrEngine crispAsrEngineForAligner
+                && SelectedForcedAligner != null && !SelectedForcedAligner.IsBuiltIn)
+            {
+                var alignerPath = GetForcedAlignerPath(crispAsrEngineForAligner, SelectedForcedAligner);
+                if (string.IsNullOrEmpty(alignerPath) || !File.Exists(alignerPath))
+                {
+                    var alignerWhisperModel = SelectedForcedAligner.ToWhisperModel();
+                    var displayAligner = new SpeechToTextModelDisplay
+                    {
+                        Model = alignerWhisperModel,
+                        Engine = engine,
+                    };
+                    var answer = await MessageBox.Show(
+                                    Window!,
+                                    $"Download {SelectedForcedAligner.BaseDisplay}?",
+                                    $"'{SelectedForcedAligner.BaseDisplay}' is selected but not installed.\nDownload and use {SelectedForcedAligner.FileName}?",
+                                    MessageBoxButtons.YesNoCancel,
+                                    MessageBoxIcon.Question);
+
+                    if (answer != MessageBoxResult.Yes)
+                    {
+                        return;
+                    }
+
+                    var alignerModels = new ObservableCollection<SpeechToTextModelDisplay> { displayAligner };
+                    var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
+                        Window!, viewModel =>
+                        {
+                            viewModel.SetModels(alignerModels, engine, displayAligner);
+                            viewModel.StartDownload();
+                        });
+
+                    if (!vm.OkPressed)
+                    {
+                        return;
+                    }
+
+                    UpdateForcedAlignerUi();
+                }
+            }
+
+            if (language.Code != "en" && IsModelEnglishOnly(model.Model))
+            {
                 var answer = await MessageBox.Show(
-                                Window!,
-                                $"Download {SelectedForcedAligner.BaseDisplay}?",
-                                $"'{SelectedForcedAligner.BaseDisplay}' is selected but not installed.\nDownload and use {SelectedForcedAligner.FileName}?",
-                                MessageBoxButtons.YesNoCancel,
-                                MessageBoxIcon.Question);
+                    Window!,
+                    "Warning",
+                    "English model should only be used with English language.\nContinue anyway?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
 
                 if (answer != MessageBoxResult.Yes)
                 {
                     return;
                 }
-
-                var alignerModels = new ObservableCollection<SpeechToTextModelDisplay> { displayAligner };
-                var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
-                    Window!, viewModel =>
-                    {
-                        viewModel.SetModels(alignerModels, engine, displayAligner);
-                        viewModel.StartDownload();
-                    });
-
-                if (!vm.OkPressed)
-                {
-                    return;
-                }
-
-                UpdateForcedAlignerUi();
-            }
-        }
-
-        if (language.Code != "en" && IsModelEnglishOnly(model.Model))
-        {
-            var answer = await MessageBox.Show(
-                Window!,
-                "Warning",
-                "English model should only be used with English language.\nContinue anyway?",
-                MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Question);
-
-            if (answer != MessageBoxResult.Yes)
-            {
-                return;
             }
         }
 
@@ -2299,6 +2476,11 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         if (!IsTranscribeEnabled)
         {
+            if (GetEffectiveSelectedEngine() is OpenAiCompatibleSttEngine)
+            {
+                _openAiCts?.Cancel();
+                return;
+            }
             _abort = true;
             return;
         }
@@ -2313,6 +2495,16 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (_videoFileName == null)
         {
             return false;
+        }
+
+        if (engine is OpenAiCompatibleSttEngine)
+        {
+            var languageCode = SelectedLanguage?.Code;
+            _timerWhisper.Stop();
+            ShowProgressBar();
+            _openAiCts = new CancellationTokenSource();
+            _ = ProcessOpenAiCompatibleTranscription(waveFileName, languageCode, _openAiCts.Token);
+            return true;
         }
 
         if (SelectedModel is not SpeechToTextModelDisplay model)
@@ -3074,6 +3266,18 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         var isPurfview = engine.Name == WhisperEnginePurfviewFasterWhisperXxl.StaticName;
+
+        IsModelSelectionVisible = !(engine is OpenAiCompatibleSttEngine);
+        if (!IsModelSelectionVisible)
+        {
+            SelectedModel = null;
+        }
+
+        IsLanguageSelectionVisible = !(engine is OpenAiCompatibleSttEngine);
+        if (!IsLanguageSelectionVisible)
+        {
+            SelectedLanguage = null;
+        }
 
         IsTranslateVisible = IsTranslateAvailable(engine);
 

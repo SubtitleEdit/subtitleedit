@@ -875,6 +875,12 @@ public static partial class InitListViewAndEditBox
                 },
                 new MenuItem
                 {
+                    Header = Se.Language.General.TranscribeWithOpenAi,
+                    Command = vm.TranscribeWithOpenAiCommand,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
                     Header = Se.Language.Main.Menu.AutoTranslate,
                     Command = vm.AutoTranslateSelectedLinesCommand,
                     DataContext = vm,

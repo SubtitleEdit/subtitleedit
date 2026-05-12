@@ -93,24 +93,29 @@ public class SpeechToTextWindow : Window
             },
         }.BindIsVisible(vm, nameof(vm.IsForcedAlignerVisible));
 
-        var labelLanguage = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.InputLanguage).WithMarginTop(10);
+        var labelLanguage = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.InputLanguage).WithMarginTop(10)
+            .BindIsVisible(vm, nameof(vm.IsLanguageSelectionVisible));
         var comboLanguage = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage))
             .WithMinWidth(220)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .WithMarginTop(10);
+            .WithMarginTop(10)
+            .BindIsVisible(vm, nameof(vm.IsLanguageSelectionVisible));
 
-        var labelModel = UiUtil.MakeTextBlock(Se.Language.General.Model).WithMarginBottom(20).WithMarginTop(10);
+        var labelModel = UiUtil.MakeTextBlock(Se.Language.General.Model).WithMarginBottom(20).WithMarginTop(10)
+            .BindIsVisible(vm, nameof(vm.IsModelSelectionVisible));
         var comboModel = UiUtil.MakeComboBox(vm.Models, vm, nameof(vm.SelectedModel))
             .WithMinWidth(220)
             .WithMarginBottom(20)
             .WithMarginTop(10)
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .BindIsVisible(vm, nameof(vm.IsModelSelectionVisible));
 
         var buttonModelDownload = UiUtil.MakeButtonBrowse(vm.DownloadModelCommand)
             .WithMarginBottom(20)
             .WithMarginTop(10)
             .WithMarginLeft(5)
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .BindIsVisible(vm, nameof(vm.IsModelSelectionVisible));
 
         var panelModelControls = new StackPanel
         {

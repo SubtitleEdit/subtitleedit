@@ -396,6 +396,16 @@ public class Se
         Configuration.Settings.Tools.WhisperPostProcessingFixShortDuration = stt.WhisperPostProcessingFixShortDuration;
         Configuration.Settings.Tools.VoskPostProcessing = stt.PostProcessing;
 
+        Configuration.Settings.Tools.OpenAiCompatibleSttUrl = Settings.Tools.OpenAiCompatibleSttUrl;
+        Configuration.Settings.Tools.OpenAiCompatibleSttApiKey = Settings.Tools.OpenAiCompatibleSttApiKey;
+        Configuration.Settings.Tools.OpenAiCompatibleSttModel = Settings.Tools.OpenAiCompatibleSttModel;
+        Configuration.Settings.Tools.OpenAiCompatibleSttExtraHeaders = Settings.Tools.OpenAiCompatibleSttExtraHeaders;
+        Configuration.Settings.Tools.OpenAiCompatibleSttTimeoutSeconds = Settings.Tools.OpenAiCompatibleSttTimeoutSeconds;
+        Configuration.Settings.Tools.OpenAiCompatibleSttLanguage = Settings.Tools.OpenAiCompatibleSttLanguage;
+        Configuration.Settings.Tools.OpenAiCompatibleSttTemperature = Settings.Tools.OpenAiCompatibleSttTemperature;
+        Configuration.Settings.Tools.OpenAiCompatibleSttPrompt = Settings.Tools.OpenAiCompatibleSttPrompt;
+        Configuration.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection = Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection;
+
         Configuration.Settings.Tools.AutoTranslateLastName = Settings.AutoTranslate.AutoTranslateLastName;
 
         Configuration.Settings.Tools.ImportTextSplitting = Settings.Tools.ImportTextSplitting;

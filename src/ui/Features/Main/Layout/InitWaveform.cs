@@ -275,6 +275,14 @@ public class InitWaveform
             flyout.Items.Add(menuItemSpeechToTextSelectedLines);
             vm.MenuItemAudioVisualizerSpeechToTextSelectedLines = menuItemSpeechToTextSelectedLines;
 
+            var menuItemTranscribeWithOpenAi = new MenuItem
+            {
+                Header = Se.Language.General.TranscribeWithOpenAi,
+                Command = vm.TranscribeWithOpenAiCommand,
+            };
+            flyout.Items.Add(menuItemTranscribeWithOpenAi);
+            vm.MenuItemAudioVisualizerTranscribeWithOpenAi = menuItemTranscribeWithOpenAi;
+
             var separatorDisplayMode = new Separator();
             separatorDisplayMode.DataContext = vm;
             separatorDisplayMode.Bind(Separator.IsVisibleProperty, new Binding(nameof(vm.ShowWaveformDisplayModeSeparator)));

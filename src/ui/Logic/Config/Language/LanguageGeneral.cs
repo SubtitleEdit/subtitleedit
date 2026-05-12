@@ -669,6 +669,7 @@ public class LanguageGeneral
     public string PlaybackSpeed { get; set; }
     public string HoursMinutesSecondsMilliseconds { get; set; }
     public string ImageFiles { get; set; }
+    public string TranscribeWithOpenAi { get; set; }
 
     public LanguageGeneral()
     {
@@ -1337,5 +1338,6 @@ public class LanguageGeneral
         PlaybackSpeed = "Playback speed";
         HoursMinutesSecondsMilliseconds = "HH:MM:SS.FFF";
         ImageFiles = "Image files";
+        TranscribeWithOpenAi = "Transcribe with OpenAI Service";
     }
 }
