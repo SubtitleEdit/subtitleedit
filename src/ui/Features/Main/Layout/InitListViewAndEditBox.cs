@@ -869,7 +869,7 @@ public static partial class InitListViewAndEditBox
             {
                 new MenuItem
                 {
-                    Header = Se.Language.Main.Menu.TextToSpeech,
+                    Header = Se.Language.Main.Menu.SpeechToText,
                     Command = vm.SpeechToTextSelectedLinesCommand,
                     DataContext = vm,
                 },
