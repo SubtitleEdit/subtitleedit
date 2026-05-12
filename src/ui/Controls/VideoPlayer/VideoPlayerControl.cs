@@ -487,9 +487,9 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             {
                 VerticalAlignment = VerticalAlignment.Bottom,
                 HorizontalAlignment = HorizontalAlignment.Right,
-                FontSize = 8,
+                FontSize = 9,
                 FontWeight = FontWeight.Bold,
-                Opacity = 0.4,
+                Opacity = 0.6,
                 TextAlignment = TextAlignment.Right,
             };
             _gridProgress.Add(_textBlockVideoFileName, 0, 1, 1, 3);

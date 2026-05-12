@@ -1,6 +1,7 @@
 using Avalonia.Media;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
+using Nikse.SubtitleEdit.Logic;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Features.Shared.MediaInfoView;
@@ -10,15 +11,33 @@ namespace Nikse.SubtitleEdit.Features.Shared.MediaInfoView;
 /// </summary>
 public partial class MediaInfoSyntaxHighlighting : DocumentColorizingTransformer
 {
-    // Color scheme for media info
-    private static readonly IBrush HeaderBrush = new SolidColorBrush(Color.Parse("#569CD6")); // Blue for headers (File name, Duration, etc.)
-    private static readonly IBrush ValueBrush = new SolidColorBrush(Color.Parse("#CE9178")); // Orange for values
-    private static readonly IBrush TrackNumberBrush = new SolidColorBrush(Color.Parse("#B5CEA8")); // Light green for track numbers
-    private static readonly IBrush TrackTypeBrush = new SolidColorBrush(Color.Parse("#4EC9B0")); // Cyan for track types (Video, Audio, Other)
-    private static readonly IBrush CodecBrush = new SolidColorBrush(Color.Parse("#DCDCAA")); // Yellow for codec names
-    private static readonly IBrush TechnicalBrush = new SolidColorBrush(Color.Parse("#9CDCFE")); // Light blue for technical specs
-    private static readonly IBrush SeparatorBrush = new SolidColorBrush(Color.Parse("#808080")); // Gray for separators and delimiters
+    // Dark theme palette (VS Code dark)
+    private static readonly IBrush HeaderBrushDark = new SolidColorBrush(Color.Parse("#569CD6"));
+    private static readonly IBrush ValueBrushDark = new SolidColorBrush(Color.Parse("#CE9178"));
+    private static readonly IBrush TrackNumberBrushDark = new SolidColorBrush(Color.Parse("#B5CEA8"));
+    private static readonly IBrush TrackTypeBrushDark = new SolidColorBrush(Color.Parse("#4EC9B0"));
+    private static readonly IBrush CodecBrushDark = new SolidColorBrush(Color.Parse("#DCDCAA"));
+    private static readonly IBrush TechnicalBrushDark = new SolidColorBrush(Color.Parse("#9CDCFE"));
+    private static readonly IBrush SeparatorBrushDark = new SolidColorBrush(Color.Parse("#808080"));
+
+    // Light theme palette (darker, saturated colors for contrast on white)
+    private static readonly IBrush HeaderBrushLight = new SolidColorBrush(Color.Parse("#0B5394"));
+    private static readonly IBrush ValueBrushLight = new SolidColorBrush(Color.Parse("#A33800"));
+    private static readonly IBrush TrackNumberBrushLight = new SolidColorBrush(Color.Parse("#2E7D32"));
+    private static readonly IBrush TrackTypeBrushLight = new SolidColorBrush(Color.Parse("#00695C"));
+    private static readonly IBrush CodecBrushLight = new SolidColorBrush(Color.Parse("#7A5C00"));
+    private static readonly IBrush TechnicalBrushLight = new SolidColorBrush(Color.Parse("#1565C0"));
+    private static readonly IBrush SeparatorBrushLight = new SolidColorBrush(Color.Parse("#555555"));
+
     private static readonly Typeface BoldTypeface = new(FontFamily.Default, weight: FontWeight.Bold);
+
+    private static IBrush HeaderBrush => UiTheme.IsDarkThemeEnabled() ? HeaderBrushDark : HeaderBrushLight;
+    private static IBrush ValueBrush => UiTheme.IsDarkThemeEnabled() ? ValueBrushDark : ValueBrushLight;
+    private static IBrush TrackNumberBrush => UiTheme.IsDarkThemeEnabled() ? TrackNumberBrushDark : TrackNumberBrushLight;
+    private static IBrush TrackTypeBrush => UiTheme.IsDarkThemeEnabled() ? TrackTypeBrushDark : TrackTypeBrushLight;
+    private static IBrush CodecBrush => UiTheme.IsDarkThemeEnabled() ? CodecBrushDark : CodecBrushLight;
+    private static IBrush TechnicalBrush => UiTheme.IsDarkThemeEnabled() ? TechnicalBrushDark : TechnicalBrushLight;
+    private static IBrush SeparatorBrush => UiTheme.IsDarkThemeEnabled() ? SeparatorBrushDark : SeparatorBrushLight;
 
     // Pattern for field headers (e.g., "File name:", "Duration:")
     [GeneratedRegex(@"^(File name|File size|Duration|Resolution|Framerate|Container|Tracks):", RegexOptions.Multiline)]
