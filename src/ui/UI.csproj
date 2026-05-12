@@ -23,14 +23,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="12.0.2" />
+		<PackageReference Include="Avalonia" Version="12.0.3" />
 		<PackageReference Include="Avalonia.AvaloniaEdit" Version="12.0.0" />
-		<PackageReference Include="Avalonia.Controls.ColorPicker" Version="12.0.2" />
+		<PackageReference Include="Avalonia.Controls.ColorPicker" Version="12.0.3" />
 		<PackageReference Include="Avalonia.Controls.DataGrid" Version="12.0.0" />
-		<PackageReference Include="Avalonia.Desktop" Version="12.0.2" />
+		<PackageReference Include="Avalonia.Desktop" Version="12.0.3" />
 		<PackageReference Include="Avalonia.Markup.Declarative" Version="12.0.1" />
-		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.2" />
-		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.2" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.3" />
+		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.3" />
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
 		<PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.1">
 			<IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
