@@ -1,6 +1,30 @@
 
 Subtitle Edit Changelog
 
+v5.0.0-beta25 (xth May 2026)
+
+* Add Finnish translation - thx userx77
+* Add Mistral AI to AutoTranslate engine list
+* Add option for "Center-in-subtitle-grid" - thx GrampaWildWilly
+* Add green to WebVTT default color classes - thx wjcarpenter
+* Consolidate Whisper/speech-to-text logs into tools-log (incl. active-setting)
+* Allow editing subtitle text in Fix common errors step 2
+* Honor selected audio track for waveform "Extract audio" and "Speech-to-text"
+* Improve "Speech to text for new selection" language selection - thx routineCode
+* Update CrispASR to v0.6.2
+* Update Bulgarian translations - thx jekovcar
+* Update Czech translation - thx Matěj
+* Update Polish translation - thx potplayer-fanpack
+* Update Simplified Chinese translation - thx wuwufei
+* Fix duplicate waveform generation when opening a recent video
+* Fix minor issue with the right-click menu on mac - thx surfincanoy
+* Fix mp3 playback position jumping back at EOF
+* Fix PaddleOCR CUDA extraction on Linux - thx po5
+* Fix Toggle Full Screen shortcut - thx TospeedArts
+* Fix UI freeze on Settings Apply/OK from file-type association save - thx David/bereld
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-beta24 (10th May 2026)
 
 * Fix log text box height in speech-to-text - thx rikimtasu
