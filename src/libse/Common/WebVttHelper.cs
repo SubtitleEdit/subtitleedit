@@ -432,8 +432,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         // should strip them even when the header has no matching ::cue style.
         private static readonly string[] DefaultColorClasses =
         {
-            "white", "lime", "cyan", "red", "yellow", "magenta", "blue", "black",
-            "bg_white", "bg_lime", "bg_cyan", "bg_red", "bg_yellow", "bg_magenta", "bg_blue", "bg_black",
+            "white", "lime", "cyan", "red", "yellow", "magenta", "blue", "black", "green",
+            "bg_white", "bg_lime", "bg_cyan", "bg_red", "bg_yellow", "bg_magenta", "bg_blue", "bg_black", "bg_green",
         };
 
         public static string RemoveDefaultColorClasses(string input)
