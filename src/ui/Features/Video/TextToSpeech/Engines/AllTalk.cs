@@ -162,6 +162,7 @@ public class AllTalk : ITtsEngine
         }
 
         var languageCode = language != null ? language.Code : "en";
+        Se.WriteToolsLog($"AllTalk: voice={allTalkVoice.Voice}, language={languageCode}, textLen={text.Length}");
         var allTalkFileNameOutputFileName = await _ttsDownloadService.AllTalkVoiceSpeak(text, allTalkVoice, languageCode);
 
         var outputFileName = Path.Combine(GetSetAllTalkFolder(), Guid.NewGuid() + ".wav");

@@ -136,17 +136,21 @@ public class MistralSpeech : ITtsEngine
             throw new ArgumentException("Voice is not a MistralVoice");
         }
 
+        var mistralModel = model ?? "voxtral-mini-tts-2603";
+        Se.WriteToolsLog($"MistralSpeech: voice={mistralVoice.Name}, voiceId={mistralVoice.VoiceId}, model={mistralModel}, textLen={text.Length}");
+
         var ms = new MemoryStream();
         var ok = await _ttsDownloadService.DownloadMistralSpeechSpeak(
             text,
             mistralVoice,
-            model ?? "voxtral-mini-tts-2603",
+            mistralModel,
             Se.Settings.Video.TextToSpeech.MistralApiKey,
             ms,
             null,
             cancellationToken);
         if (!ok)
         {
+            Se.WriteToolsLog($"MistralSpeech: request failed (voice={mistralVoice.Name})");
             return new TtsResult { Text = text, FileName = string.Empty, Error = true };
         }
 

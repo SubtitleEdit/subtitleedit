@@ -158,6 +158,8 @@ public class Murf : ITtsEngine
             throw new ArgumentException("Voice is not a MurfVoice");
         }
 
+        Se.WriteToolsLog($"Murf: voiceId={murfVoice.VoiceId}, locale={murfVoice.Locale}, style={Se.Settings.Video.TextToSpeech.MurfStyle}, textLen={text.Length}");
+
         var ms = new MemoryStream();
         var ok = await _ttsDownloadService
             .DownloadMurfSpeak(
@@ -169,6 +171,7 @@ public class Murf : ITtsEngine
                 cancellationToken);
         if (!ok)
         {
+            Se.WriteToolsLog($"Murf: request failed (voiceId={murfVoice.VoiceId})");
             return new TtsResult { Text = text, FileName = string.Empty, Error = true };
         }
 

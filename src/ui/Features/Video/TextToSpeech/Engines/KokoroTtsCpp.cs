@@ -200,13 +200,16 @@ public class KokoroTtsCpp : ITtsEngine
 
         var body = JsonSerializer.Serialize(new { text = inputText, voice = voiceName });
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
+        Se.WriteToolsLog($"Kokoro TTS: POST {ServerBaseUrl}/v1/synthesize (voice={voiceName}, textLen={text.Length})");
         using var response = await HttpClient.PostAsync($"{ServerBaseUrl}/v1/synthesize", content, cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
             var errorBody = await SafeReadErrorAsync(response, cancellationToken);
-            Se.LogError($"Kokoro TTS server error {(int)response.StatusCode} {response.StatusCode} - "
-                + $"Voice: {voiceName}, Text: {text}, Body: {errorBody}");
+            var errMsg = $"Kokoro TTS server error {(int)response.StatusCode} {response.StatusCode} - "
+                + $"Voice: {voiceName}, Text: {text}, Body: {errorBody}";
+            Se.LogError(errMsg);
+            Se.WriteToolsLog(errMsg);
             throw new InvalidOperationException(
                 $"Kokoro TTS synthesis failed ({(int)response.StatusCode}): {errorBody}");
         }
@@ -285,6 +288,9 @@ public class KokoroTtsCpp : ITtsEngine
 
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start kokoro-tts-server");
+
+            Se.WriteToolsLog($"Kokoro TTS server starting - PID: {process.Id}, "
+                + $"Cmd: {exe} {string.Join(' ', psi.ArgumentList)}");
 
             var stderrBuffer = new StringBuilder();
             process.ErrorDataReceived += (_, e) =>

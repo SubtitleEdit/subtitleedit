@@ -183,6 +183,9 @@ public class Qwen3TtsCpp : ITtsEngine
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
         var inputText = Utilities.UnbreakLine(text);
 
+        var endpoint = string.IsNullOrEmpty(qwen3Voice.FilePath) ? "/v1/synthesize" : "/v1/synthesize_with_voice";
+        Se.WriteToolsLog($"Qwen3 TTS: POST {ServerBaseUrl}{endpoint} (voice={qwen3Voice}, model={modelFileName}, textLen={text.Length})");
+
         using HttpResponseMessage response = string.IsNullOrEmpty(qwen3Voice.FilePath)
             ? await SynthesizeAsync(inputText, cancellationToken)
             : await SynthesizeWithVoiceAsync(inputText, qwen3Voice.FilePath, cancellationToken);
@@ -190,8 +193,10 @@ public class Qwen3TtsCpp : ITtsEngine
         if (!response.IsSuccessStatusCode)
         {
             var errorBody = await SafeReadErrorAsync(response, cancellationToken);
-            Se.LogError($"Qwen3 TTS server error {(int)response.StatusCode} {response.StatusCode} - "
-                + $"Voice: {qwen3Voice}, Text: {text}, Body: {errorBody}");
+            var errMsg = $"Qwen3 TTS server error {(int)response.StatusCode} {response.StatusCode} - "
+                + $"Voice: {qwen3Voice}, Text: {text}, Body: {errorBody}";
+            Se.LogError(errMsg);
+            Se.WriteToolsLog(errMsg);
             throw new InvalidOperationException(
                 $"Qwen3 TTS synthesis failed ({(int)response.StatusCode}): {errorBody}");
         }
@@ -297,6 +302,9 @@ public class Qwen3TtsCpp : ITtsEngine
 
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start qwen3-tts-server");
+
+            Se.WriteToolsLog($"Qwen3 TTS server starting - PID: {process.Id}, "
+                + $"Cmd: {exe} {string.Join(' ', psi.ArgumentList)}");
 
             var stderrBuffer = new StringBuilder();
             process.ErrorDataReceived += (_, e) =>

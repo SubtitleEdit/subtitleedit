@@ -148,6 +148,8 @@ public class GoogleSpeech : ITtsEngine
             throw new ArgumentException("Voice is not a GoogleVoice");
         }
 
+        Se.WriteToolsLog($"GoogleSpeech: voice={googleVoice.Name}, languageCode={googleVoice.LanguageCode}, model={model ?? "Standard"}, textLen={text.Length}");
+
         var ms = new MemoryStream();
         var ok = await _ttsDownloadService.DownloadGoogleVoiceSpeak(
             text,
@@ -159,6 +161,7 @@ public class GoogleSpeech : ITtsEngine
 
         if (!ok)
         {
+            Se.WriteToolsLog($"GoogleSpeech: request failed (voice={googleVoice.Name})");
             return new TtsResult { Text = text, FileName = string.Empty, Error = true };
         }
 

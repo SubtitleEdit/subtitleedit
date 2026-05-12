@@ -110,14 +110,51 @@ public class EdgeTts : ITtsEngine
             args += $" --volume={volume}";
         }
 
+        Se.WriteToolsLog($"EdgeTts: {_cachedExecutableFileName ?? "edge-tts"} {RedactTextArg(args)} (voice={edgeVoice.Name}, textLen={text.Length})");
+
         var (ok, stdOut, stdErr) = await RunEdgeTtsCommand(args, cancellationToken);
         if (!ok || !File.Exists(fileName))
         {
-            Se.LogError($"EdgeTts speak failed. StdOut: {stdOut} StdErr: {stdErr}");
+            var msg = $"EdgeTts speak failed. StdOut: {stdOut} StdErr: {stdErr}";
+            Se.LogError(msg);
+            Se.WriteToolsLog(msg);
             return new TtsResult { Text = text, FileName = string.Empty, Error = true };
         }
 
         return new TtsResult { Text = text, FileName = fileName };
+    }
+
+    // Strip the --text "..." value from the logged command so subtitle content
+    // doesn't end up in tools-log.txt for successful runs (failures still log
+    // full args via Se.LogError).
+    private static string RedactTextArg(string args)
+    {
+        const string marker = "--text \"";
+        var start = args.IndexOf(marker, StringComparison.Ordinal);
+        if (start < 0)
+        {
+            return args;
+        }
+        var contentStart = start + marker.Length;
+        var i = contentStart;
+        while (i < args.Length)
+        {
+            if (args[i] == '\\' && i + 1 < args.Length)
+            {
+                i += 2;
+                continue;
+            }
+            if (args[i] == '"')
+            {
+                break;
+            }
+            i++;
+        }
+        if (i >= args.Length)
+        {
+            return args;
+        }
+        return args.Substring(0, contentStart) + "<text redacted>" + args.Substring(i);
     }
 
     public Task<string[]> GetRegions()

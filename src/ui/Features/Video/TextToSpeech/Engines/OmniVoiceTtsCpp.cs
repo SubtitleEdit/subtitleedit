@@ -222,6 +222,8 @@ public class OmniVoiceTtsCpp : ITtsEngine
             psi.ArgumentList.Add(refTextPath);
         }
 
+        Se.WriteToolsLog($"OmniVoice TTS: {exe} {string.Join(' ', psi.ArgumentList)} (voice={omniVoice}, textLen={text.Length})");
+
         var process = Process.Start(psi)
             ?? throw new InvalidOperationException("Failed to start omnivoice-tts");
 
@@ -239,10 +241,12 @@ public class OmniVoiceTtsCpp : ITtsEngine
 
             if (process.ExitCode != 0 || !File.Exists(outputFileName))
             {
-                Se.LogError($"OmniVoice TTS failed (exit code {process.ExitCode}) - "
+                var msg = $"OmniVoice TTS failed (exit code {process.ExitCode}) - "
                     + $"Voice: {omniVoice}, Text: {text}, "
                     + $"Args: {string.Join(' ', psi.ArgumentList)}, "
-                    + $"StdErr: {stderr.Trim()}, StdOut: {stdout.Trim()}");
+                    + $"StdErr: {stderr.Trim()}, StdOut: {stdout.Trim()}";
+                Se.LogError(msg);
+                Se.WriteToolsLog(msg);
                 throw new InvalidOperationException(
                     $"OmniVoice TTS failed (exit code {process.ExitCode}). {stderr.Trim()}");
             }

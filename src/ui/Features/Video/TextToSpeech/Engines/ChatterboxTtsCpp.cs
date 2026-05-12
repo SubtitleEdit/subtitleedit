@@ -235,6 +235,7 @@ public class ChatterboxTtsCpp : ITtsEngine
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
+        Se.WriteToolsLog($"Chatterbox TTS: POST {ServerBaseUrl}/v1/audio/speech (voice={chatterboxVoice}, model={ResolveModelKey(model)}, textLen={text.Length})");
         HttpResponseMessage response;
         try
         {
@@ -251,8 +252,10 @@ public class ChatterboxTtsCpp : ITtsEngine
             {
                 StopServerInternal();
             }
-            Se.LogError(ex, $"Chatterbox TTS request failed - Voice: {chatterboxVoice}, Text: {text}, "
-                + $"RequestJson: {body}, ServerExited: {died}, ServerLog: {serverLog}");
+            var failMsg = $"Chatterbox TTS request failed - Voice: {chatterboxVoice}, Text: {text}, "
+                + $"RequestJson: {body}, ServerExited: {died}, ServerLog: {serverLog}";
+            Se.LogError(ex, failMsg);
+            Se.WriteToolsLog(failMsg);
 
             var prefix = LooksLikeUpstreamChatterboxCrash(serverLog)
                 ? "Chatterbox TTS hit a CrispASR runtime bug during synthesis (ggml tensor read out of bounds). "
@@ -273,9 +276,11 @@ public class ChatterboxTtsCpp : ITtsEngine
             {
                 var errorBody = await SafeReadErrorAsync(response, cancellationToken);
                 var serverLog = SnapshotServerLog();
-                Se.LogError($"Chatterbox TTS server error {(int)response.StatusCode} {response.StatusCode} - "
+                var errMsg = $"Chatterbox TTS server error {(int)response.StatusCode} {response.StatusCode} - "
                     + $"Voice: {chatterboxVoice}, Text: {text}, RequestJson: {body}, "
-                    + $"ResponseBody: {errorBody}, ServerLog: {serverLog}");
+                    + $"ResponseBody: {errorBody}, ServerLog: {serverLog}";
+                Se.LogError(errMsg);
+                Se.WriteToolsLog(errMsg);
                 throw new InvalidOperationException(
                     $"Chatterbox TTS synthesis failed ({(int)response.StatusCode}): {errorBody}"
                     + (string.IsNullOrEmpty(serverLog) ? string.Empty : $"{Environment.NewLine}Server log:{Environment.NewLine}{serverLog}"));
@@ -291,7 +296,7 @@ public class ChatterboxTtsCpp : ITtsEngine
 
     /// <summary>
     /// Renders the server launch as a shell-quotable string (file path + each arg quoted only
-    /// when it contains whitespace). Goes into the error log so failures can be reproduced.
+    /// when it contains whitespace). Goes into the tools log so failures can be reproduced.
     /// </summary>
     private static string FormatLaunchCommand(string exe, System.Collections.ObjectModel.Collection<string> args)
     {
@@ -385,10 +390,9 @@ public class ChatterboxTtsCpp : ITtsEngine
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start crispasr (chatterbox)");
 
-            // Record the exact launch command in the error log so failures later in this
-            // session can be reproduced from a shell. Logged via LogError because that's
-            // the only severity exposed by Se; this entry is informational.
-            Se.LogError("Chatterbox TTS server starting - "
+            // Record the exact launch command in the tools log so failures later in this
+            // session can be reproduced from a shell.
+            Se.WriteToolsLog("Chatterbox TTS server starting - "
                 + $"PID: {process.Id}, "
                 + $"Cmd: {FormatLaunchCommand(exe, psi.ArgumentList)}");
 

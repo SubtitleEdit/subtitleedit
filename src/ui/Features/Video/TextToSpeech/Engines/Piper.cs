@@ -183,19 +183,21 @@ public class Piper : ITtsEngine
 
         var fileNameOnly = Guid.NewGuid() + ".wav";
         var process = StartPiperProcess(piperVoice, text, fileNameOnly);
+        Se.WriteToolsLog($"Piper: {process.StartInfo.FileName} {process.StartInfo.Arguments} (voice={piperVoice}, textLen={text.Length})");
         var stderrTask = process.StandardError.ReadToEndAsync(cancellationToken);
         await process.WaitForExitAsync(cancellationToken);
         var stderrOutput = await stderrTask;
 
         if (process.ExitCode != 0)
         {
-            Se.LogError($"Piper process exited with code {process.ExitCode} - Parameters: "
+            var msg = $"Piper process exited with code {process.ExitCode} - Parameters: "
                 + $"Voice: {piperVoice}, "
                 + $"Text: {text}, "
                 + $"FileName: {process.StartInfo.FileName}, "
                 + $"Parameters: {process.StartInfo.Arguments}"
-                + (string.IsNullOrWhiteSpace(stderrOutput) ? string.Empty : $", StdErr: {stderrOutput.Trim()}")
-                );
+                + (string.IsNullOrWhiteSpace(stderrOutput) ? string.Empty : $", StdErr: {stderrOutput.Trim()}");
+            Se.LogError(msg);
+            Se.WriteToolsLog(msg);
         }
 
         var fileName = Path.Combine(GetSetPiperFolder(), fileNameOnly);
