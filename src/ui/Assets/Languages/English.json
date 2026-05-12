@@ -1012,7 +1012,7 @@
       "gapMs": "Gap (ms)",
       "useFixedDuration": "Use fixed duration",
       "fixedDurationMs": "Fixed duration (ms)",
-      "alignViaWhisper": "Align time codes via Whisper..."
+      "alignViaTextToSpeech": "Align time codes via \"Text to speech\"..."
     },
     "export": {
       "exportImagesProfiles": "Export images profiles",
@@ -2180,6 +2180,7 @@
       "subtitleGridEnterKeyAction": "Subtitle grid Enter-key action",
       "subtitleSingleClickAction": "Subtitle grid single-click action",
       "subtitleDoubleClickAction": "Subtitle grid double-click action",
+      "subtitleGridCenterSelectedRow": "Subtitle grid, center when selecting prev/next row",
       "saveAsBehavior": "\"Save as\" behavior",
       "saveAsAppendLanguageCode": "\"Save as\" append language code",
       "gridGoToSubtitleAndSetVideoPosition": "Go to subtitle and set video position",
