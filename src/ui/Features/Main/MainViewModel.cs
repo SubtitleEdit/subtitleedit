@@ -302,6 +302,8 @@ public partial class MainViewModel :
     private DispatcherTimer _positionTimer = new();
     private DispatcherTimer _slowTimer = new();
     private CancellationTokenSource _videoOpenTokenSource;
+    private readonly HashSet<string> _waveformsBeingGenerated = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Lock _waveformsBeingGeneratedLock = new();
     private VideoPlayerControl? _fullScreenVideoPlayerControl;
     private static SolidColorBrush _transparentBrush = new SolidColorBrush(Colors.Transparent);
     private static SolidColorBrush _errorBrush = new SolidColorBrush(_errorColor);
@@ -1731,7 +1733,7 @@ public partial class MainViewModel :
             }
 
             VideoCloseFile();
-            await SubtitleOpen(recentFile.SubtitleFileName, recentFile.VideoFileName, recentFile.SelectedLine);
+            await SubtitleOpen(recentFile.SubtitleFileName, recentFile.VideoFileName, recentFile.SelectedLine, desiredAudioTrackId: recentFile.AudioTrack);
 
             if (!string.IsNullOrEmpty(recentFile.SubtitleFileNameOriginal) &&
                 File.Exists(recentFile.SubtitleFileNameOriginal))
@@ -10683,7 +10685,8 @@ public partial class MainViewModel :
         string? videoFileName = null,
         int? selectedSubtitleIndex = null,
         TextEncoding? textEncoding = null,
-        bool skipLoadVideo = false)
+        bool skipLoadVideo = false,
+        int desiredAudioTrackId = -1)
     {
         if (string.IsNullOrEmpty(fileName))
         {
@@ -11107,11 +11110,11 @@ public partial class MainViewModel :
             {
                 if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
                 {
-                    await VideoOpenFile(videoFileName);
+                    await VideoOpenFile(videoFileName, desiredAudioTrackId);
                 }
                 else if (FindVideoFileName.TryFindVideoFileName(fileName, out videoFileName))
                 {
-                    await VideoOpenFile(videoFileName);
+                    await VideoOpenFile(videoFileName, desiredAudioTrackId);
                 }
             }
 
@@ -12803,7 +12806,7 @@ public partial class MainViewModel :
                             InitLayout.RestoreLayoutPositions(Se.Settings.Appearance.CurrentLayoutPositions, ContentGrid.Children.FirstOrDefault() as Grid);
                         }
 
-                        await SubtitleOpen(first.SubtitleFileName, first.VideoFileName, first.SelectedLine, null, skipLoadVideo);
+                        await SubtitleOpen(first.SubtitleFileName, first.VideoFileName, first.SelectedLine, null, skipLoadVideo, first.AudioTrack);
                         var vp = GetVideoPlayerControl();
                         if (!string.IsNullOrEmpty(_videoFileName) && SelectedSubtitle != null && vp != null)
                         {
@@ -12950,7 +12953,7 @@ public partial class MainViewModel :
                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
     }
 
-    private async Task VideoOpenFile(string videoFileName) // OpenVideoFile
+    private async Task VideoOpenFile(string videoFileName, int desiredAudioTrackId = -1) // OpenVideoFile
     {
         var vp = GetVideoPlayerControl();
         if (vp == null)
@@ -12974,6 +12977,26 @@ public partial class MainViewModel :
 
         IsVideoLoaded = true;
 
+        // Resolve _audioTrack before LoadWaveformAndSpectrogram so it sees the right FfIndex (and we don't race LoadAudioTrackMenuItems).
+        if (vp.VideoPlayer is LibMpvDynamicPlayer mpv)
+        {
+            var tracks = mpv.GetAudioTracks();
+            if (tracks.Count > 0)
+            {
+                var chosen = desiredAudioTrackId >= 0
+                    ? tracks.FirstOrDefault(t => t.Id == desiredAudioTrackId)
+                    : null;
+                chosen ??= tracks.FirstOrDefault(t => t.IsSelected) ?? tracks[0];
+
+                if (desiredAudioTrackId >= 0 && chosen.Id != -1)
+                {
+                    mpv.SetAudioTrack(chosen.Id);
+                }
+
+                _audioTrack = chosen;
+            }
+        }
+
         var _ = Task.Run(() =>
         {
             Dispatcher.UIThread.Post(() => LoadWaveformAndSpectrogram(videoFileName));
@@ -12991,6 +13014,14 @@ public partial class MainViewModel :
         {
             if (FfmpegHelper.IsFfmpegInstalled())
             {
+                lock (_waveformsBeingGeneratedLock)
+                {
+                    if (!_waveformsBeingGenerated.Add(peakWaveFileName))
+                    {
+                        return; // already generating for this peak-wave file
+                    }
+                }
+
                 var tempWaveFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.wav");
                 var process = WaveFileExtractor.GetCommandLineProcess(videoFileName, trackNumber, tempWaveFileName,
                     Configuration.Settings.General.VlcWaveTranscodeSettings, out _);
@@ -13308,6 +13339,10 @@ public partial class MainViewModel :
             IsWaveformGenerating = false;
             WaveformGeneratingText = string.Empty;
             DeleteTempFile(tempWaveFileName);
+            lock (_waveformsBeingGeneratedLock)
+            {
+                _waveformsBeingGenerated.Remove(peakWaveFileName);
+            }
         }
     }
 

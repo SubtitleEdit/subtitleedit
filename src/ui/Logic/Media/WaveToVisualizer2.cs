@@ -481,12 +481,21 @@ public class WavePeakGenerator2 : IDisposable
 
         var hash = MovieHasher.GenerateHash(videoFileName);
 
-        var files = Directory.GetFiles(dir, $"{hash}_*.wav")
-            .OrderBy(p => p)
-            .ToList();
-        if (files.Count > 0 && trackNumber < 0)
+        if (trackNumber < 0)
         {
-            return files[0];
+            var bare = Path.Combine(dir, $"{hash}.wav");
+            if (File.Exists(bare))
+            {
+                return bare;
+            }
+
+            var files = Directory.GetFiles(dir, $"{hash}-*.wav")
+                .OrderBy(p => p)
+                .ToList();
+            if (files.Count > 0)
+            {
+                return files[0];
+            }
         }
 
         var wavePeakName = trackNumber >= 0 ? $"{hash}-{trackNumber}.wav" : $"{hash}.wav";
