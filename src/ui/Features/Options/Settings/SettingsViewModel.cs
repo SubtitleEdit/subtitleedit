@@ -2007,20 +2007,20 @@ public partial class SettingsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void CommandOk()
+    private async Task CommandOk()
     {
         SaveSettings();
-        SaveFileTypeAssociations();
+        await FileTypeAssociationsManager.SaveFileTypeAssociationsAsync(FileTypeAssociations, Window);
 
         OkPressed = true;
         Window?.Close();
     }
 
     [RelayCommand]
-    private void Apply()
+    private async Task Apply()
     {
         SaveSettings();
-        SaveFileTypeAssociations();
+        await FileTypeAssociationsManager.SaveFileTypeAssociationsAsync(FileTypeAssociations, Window);
         _mainViewModel?.ApplySettings();
     }
 
@@ -2187,11 +2187,6 @@ public partial class SettingsViewModel : ObservableObject
     private void LoadFileTypeAssociations()
     {
         FileTypeAssociationsManager.LoadFileTypeAssociations(FileTypeAssociations);
-    }
-
-    private async void SaveFileTypeAssociations()
-    {
-        await FileTypeAssociationsManager.SaveFileTypeAssociationsAsync(FileTypeAssociations, Window);
     }
 
     [RelayCommand]

@@ -24,6 +24,7 @@ public static class FileTypeAssociationsManager
         {
             GetIconPath(item);
             item.IsAssociated = FileTypeAssociationsHelper.IsDefault(item.Extension, "SubtitleEdit5");
+            item.InitialIsAssociated = item.IsAssociated;
         }
     }
 
@@ -36,23 +37,52 @@ public static class FileTypeAssociationsManager
             return;
         }
 
+        var changed = fileTypeAssociations
+            .Where(item => item.IsAssociated != item.InitialIsAssociated)
+            .ToList();
+
+        if (changed.Count == 0)
+        {
+            return;
+        }
+
         var exeFileName = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
         if (string.IsNullOrEmpty(exeFileName) || !File.Exists(exeFileName))
         {
             return;
         }
 
+        // Resolve icon paths on the UI thread (AssetLoader is an Avalonia call).
+        var work = changed
+            .Select(item => (
+                item.Extension,
+                item.IsAssociated,
+                IconPath: item.IsAssociated ? GetIconPath(item) : string.Empty))
+            .ToList();
+
         try
         {
-            var hasChanges = fileTypeAssociations.Any(item =>
-                item.IsAssociated != FileTypeAssociationsHelper.IsDefault(item.Extension, "SubtitleEdit5"));
-
-            if (!hasChanges)
+            await Task.Run(() =>
             {
-                return;
-            }
+                foreach (var item in work)
+                {
+                    if (item.IsAssociated)
+                    {
+                        FileTypeAssociationsHelper.SetFileAssociation(item.Extension, exeFileName, "SubtitleEdit5", item.IconPath);
+                    }
+                    else
+                    {
+                        FileTypeAssociationsHelper.DeleteFileAssociation(item.Extension, "SubtitleEdit5");
+                    }
+                }
 
-            await SaveFileTypeAssociationsViaRegistryAsync(fileTypeAssociations, exeFileName);
+                FileTypeAssociationsHelper.Refresh();
+            });
+
+            foreach (var item in changed)
+            {
+                item.InitialIsAssociated = item.IsAssociated;
+            }
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -80,28 +110,6 @@ public static class FileTypeAssociationsManager
                 $"An unexpected error occurred: {ex.Message}",
                 openSettings: false);
         }
-    }
-
-    private static async Task SaveFileTypeAssociationsViaRegistryAsync(
-        IEnumerable<FileTypeAssociationViewModel> fileTypeAssociations,
-        string exeFileName)
-    {
-        foreach (var item in fileTypeAssociations)
-        {
-            var ext = item.Extension;
-            if (item.IsAssociated)
-            {
-                var iconFileName = GetIconPath(item);
-                FileTypeAssociationsHelper.SetFileAssociation(ext, exeFileName, "SubtitleEdit5", iconFileName);
-            }
-            else
-            {
-                FileTypeAssociationsHelper.DeleteFileAssociation(ext, "SubtitleEdit5");
-            }
-        }
-
-        FileTypeAssociationsHelper.Refresh();
-        await Task.CompletedTask;
     }
 
     private static string GetIconPath(FileTypeAssociationViewModel item)
