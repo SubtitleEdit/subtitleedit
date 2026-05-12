@@ -103,6 +103,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             new PerplexityTranslate(),
             new GeminiTranslate(),
             new NvidiaTranslate(),
+            new MistralTranslate(),
             new PapagoTranslate(),
             new NoLanguageLeftBehindServe(),
             new NoLanguageLeftBehindApi(),
@@ -176,6 +177,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.NvidiaUrl = Se.Settings.AutoTranslate.NvidiaUrl;
         Configuration.Settings.Tools.NvidiaModel = Se.Settings.AutoTranslate.NvidiaModel;
         Configuration.Settings.Tools.NvidiaPrompt = Se.Settings.AutoTranslate.NvidiaPrompt;
+
+        Configuration.Settings.Tools.AutoTranslateMistralApiKey = Se.Settings.AutoTranslate.MistralApiKey;
+        Configuration.Settings.Tools.AutoTranslateMistralUrl = Se.Settings.AutoTranslate.MistralUrl;
+        Configuration.Settings.Tools.AutoTranslateMistralModel = Se.Settings.AutoTranslate.MistralModel;
+        Configuration.Settings.Tools.AutoTranslateMistralPrompt = Se.Settings.AutoTranslate.MistralPrompt;
 
         Configuration.Settings.Tools.AvalAiApiKey = Se.Settings.AutoTranslate.AvalAiApiKey;
         Configuration.Settings.Tools.AvalAiUrl = Se.Settings.AutoTranslate.AvalAiUrl;
@@ -330,6 +336,13 @@ public partial class AutoTranslateViewModel : ObservableObject
             Configuration.Settings.Tools.NvidiaModel = apiModel.Trim();
         }
 
+        if (engineType == typeof(MistralTranslate))
+        {
+            Configuration.Settings.Tools.AutoTranslateMistralApiKey = apiKey.Trim();
+            Configuration.Settings.Tools.AutoTranslateMistralUrl = apiUrl.Trim();
+            Configuration.Settings.Tools.AutoTranslateMistralModel = apiModel.Trim();
+        }
+
         if (engineType == typeof(PapagoTranslate))
         {
             Configuration.Settings.Tools.AutoTranslatePapagoApiKeyId = apiUrl.Trim();
@@ -394,6 +407,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.NvidiaUrl = Configuration.Settings.Tools.NvidiaUrl;
         Se.Settings.AutoTranslate.NvidiaModel = Configuration.Settings.Tools.NvidiaModel;
         Se.Settings.AutoTranslate.NvidiaPrompt = Configuration.Settings.Tools.NvidiaPrompt;
+
+        Se.Settings.AutoTranslate.MistralApiKey = Configuration.Settings.Tools.AutoTranslateMistralApiKey;
+        Se.Settings.AutoTranslate.MistralUrl = Configuration.Settings.Tools.AutoTranslateMistralUrl;
+        Se.Settings.AutoTranslate.MistralModel = Configuration.Settings.Tools.AutoTranslateMistralModel;
+        Se.Settings.AutoTranslate.MistralPrompt = Configuration.Settings.Tools.AutoTranslateMistralPrompt;
 
         Se.Settings.AutoTranslate.AvalAiApiKey = Configuration.Settings.Tools.AvalAiApiKey;
         Se.Settings.AutoTranslate.AvalAiUrl = Configuration.Settings.Tools.AvalAiUrl;
@@ -1229,6 +1247,24 @@ public partial class AutoTranslateViewModel : ObservableObject
             ModelIsVisible = true;
             ButtonModelIsVisible = true;
             ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.NvidiaModel) ? _apiModels[0] : Configuration.Settings.Tools.NvidiaModel;
+
+            return;
+        }
+
+        if (engineType == typeof(MistralTranslate))
+        {
+            FillUrls(new List<string>
+            {
+                Configuration.Settings.Tools.AutoTranslateMistralUrl,
+            });
+
+            ApiKeyText = Configuration.Settings.Tools.AutoTranslateMistralApiKey;
+            ApiKeyIsVisible = true;
+
+            _apiModels = MistralTranslate.Models.ToList();
+            ModelIsVisible = true;
+            ButtonModelIsVisible = true;
+            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateMistralModel) ? _apiModels[0] : Configuration.Settings.Tools.AutoTranslateMistralModel;
 
             return;
         }
