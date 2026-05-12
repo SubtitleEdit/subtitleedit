@@ -183,6 +183,7 @@ public class LanguageSettings
     public string FilesAndLogs { get; set; }
     public string ShowErrorLogFile { get; set; }
     public string ShowToolsLogFile { get; set; }
+    public string WriteToolsLog { get; set; }
     public string ShowSettingsFile { get; set; }
     public string ShowAssaLayer { get; set; }
     public string WaveformCursorColor { get; set; }
@@ -469,6 +470,7 @@ public class LanguageSettings
         FilesAndLogs = "Files and logs";
         ShowErrorLogFile = "Show error log file";
         ShowToolsLogFile = "Show tools log file";
+        WriteToolsLog = "Write tools log";
         ShowSettingsFile = "Show settings file";
         ShowAssaLayer = "Show ASSA layer box";
         WaveformCursorColor = "Waveform cursor/head color";

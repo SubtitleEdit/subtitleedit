@@ -106,6 +106,7 @@ public class SeTools
     public bool GridFocusTextboxAfterInsertNew { get; set; }
     public List<string> FindHistory { get; set; } = new List<string>();
     public bool AllowSingleLetterShortcutsInTextbox { get; set; }
+    public bool WriteToolsLog { get; set; } = true;
 
     public SeTools()
     {
@@ -176,7 +177,8 @@ public class SeTools
         SpeechToTextSelectedLinesPromptFirstTimeOnly = true;
         MultipleReplaceShowDotDotDotButtons = true;
         GridFocusTextboxAfterInsertNew = true;
-        AllowSingleLetterShortcutsInTextbox = false; 
+        AllowSingleLetterShortcutsInTextbox = false;
+        WriteToolsLog = true;
 
         LastColorPickerColor = Colors.Yellow.FromColorToHex();
         LastColorPickerColor1 = Colors.Red.FromColorToHex();
