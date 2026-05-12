@@ -202,6 +202,8 @@
 		<AvaloniaResource Include="Assets\SpeechToText\WhisperCTranslate2.txt" />
 		<None Remove="Assets\Languages\Korean.json" />
 		<AvaloniaResource Include="Assets\Languages\Korean.json" />
+		<None Remove="Assets\Languages\Finnish.json" />
+		<AvaloniaResource Include="Assets\Languages\Finnish.json" />
 	</ItemGroup>
 
 	<ItemGroup>
