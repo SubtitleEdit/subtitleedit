@@ -92,4 +92,14 @@ public class WebVttHelperTest
 
         Assert.Equal("Plain text", result);
     }
+
+    [Fact]
+    public void RemoveDefaultColorClassesGreen()
+    {
+        var text = "<c.green>Vert</c>" + Environment.NewLine + "<c.bg_green>Fond vert</c>";
+        var result = WebVttHelper.RemoveDefaultColorClasses(text);
+
+        var expected = "Vert" + Environment.NewLine + "Fond vert";
+        Assert.Equal(expected, result);
+    }
 }
