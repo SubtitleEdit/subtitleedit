@@ -211,6 +211,9 @@ public class FixCommonErrorsWindow : Window
         Content = grid;
 
         Activated += delegate { Focus(); }; // hack to make OnKeyDown work
+
+        Closing += delegate { UiUtil.SaveWindowPosition(this); };
+        Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
     private Grid MakeStep2Grid()
