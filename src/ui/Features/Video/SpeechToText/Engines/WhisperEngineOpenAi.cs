@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
 public class WhisperEngineOpenAi : ISpeechToTextEngine
 {
-    public static string StaticName => "Whisper Open AI";
+    public static string StaticName => "Whisper OpenAI";
     public string Name => StaticName;
     public string Choice => WhisperChoice.OpenAi;
     public string Url => "https://github.com/openai/whisper";
