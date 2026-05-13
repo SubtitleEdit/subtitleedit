@@ -995,6 +995,16 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     {
         get
         {
+            // Audio-EOF pin must take priority over the paused-value cache. mpv auto-pauses
+            // at EOF (keep-open=always), so IsPaused flips true; if the user did any seek
+            // earlier in the session, _pausedValue still holds that stale seek target and
+            // the cache below would return it, causing the position to "jump back" to the
+            // last seek when playback completes. See #10835 / #10877.
+            if (_audioEndBound.HasValue && IsEofReached())
+            {
+                return _audioEndBound.Value;
+            }
+
             if (_pausedValue.HasValue && IsPaused && !Se.Settings.General.UseFrameMode)
             {
                 return _pausedValue.Value;
@@ -1015,16 +1025,6 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                 if (err < 0)
                 {
                     return 0;
-                }
-
-                // When playback reaches the bound set for audio-only files, mpv's time-pos
-                // can lag the actual end by several seconds (the lavfi-complex virtual video
-                // produces frames forever, so its demuxer keeps buffering past audio EOF and
-                // the rendered playback time falls behind). Pin to the bound at EOF so the
-                // waveform doesn't appear to jump back when audio playback completes.
-                if (_audioEndBound.HasValue && IsEofReached())
-                {
-                    return _audioEndBound.Value;
                 }
 
                 return position;
@@ -1204,6 +1204,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     public void Play()
     {
+        _pausedValue = null;
         EnsureNotDisposed();
         if (_mpv == IntPtr.Zero)
         {
