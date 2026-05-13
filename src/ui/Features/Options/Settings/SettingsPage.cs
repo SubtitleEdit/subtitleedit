@@ -584,32 +584,32 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.GridFocusTextboxAfterInsertNew, nameof(_vm.GridFocusTextboxAfterInsertNew)),
 
             // OpenAI Compatible STT settings
-            new SettingsItem("OpenAI Compatible STT Endpoint URL", () => new TextBox
+            new SettingsItem(Se.Language.General.OpenAiCompatibleSttEndpoint, () => new TextBox
             {
                 DataContext = _vm,
                 Width = 400,
                 [!TextBox.TextProperty] = new Binding(nameof(_vm.OpenAiCompatibleSttUrl)) { Mode = BindingMode.TwoWay }
             }),
-            new SettingsItem("OpenAI Compatible STT API Key", () => new TextBox
+            new SettingsItem(Se.Language.General.OpenAiCompatibleSttApiKey, () => new TextBox
             {
                 DataContext = _vm,
                 Width = 400,
                 PasswordChar = '*',
                 [!TextBox.TextProperty] = new Binding(nameof(_vm.OpenAiCompatibleSttApiKey)) { Mode = BindingMode.TwoWay }
             }),
-            new SettingsItem("Model (optional)", () => new TextBox
+            new SettingsItem(Se.Language.General.OpenAiCompatibleSttModel, () => new TextBox
             {
                 DataContext = _vm,
                 Width = 250,
                 [!TextBox.TextProperty] = new Binding(nameof(_vm.OpenAiCompatibleSttModel)) { Mode = BindingMode.TwoWay }
             }),
-            new SettingsItem("Language (optional)", () => new TextBox
+            new SettingsItem(Se.Language.General.OpenAiCompatibleSttLanguage, () => new TextBox
             {
                 DataContext = _vm,
                 Width = 150,
                 [!TextBox.TextProperty] = new Binding(nameof(_vm.OpenAiCompatibleSttLanguage)) { Mode = BindingMode.TwoWay }
             }),
-            new SettingsItem("Timeout (seconds)", () => new NumericUpDown
+            new SettingsItem(Se.Language.General.OpenAiCompatibleSttTimeout, () => new NumericUpDown
             {
                 DataContext = _vm,
                 Width = 100,
@@ -617,7 +617,7 @@ public class SettingsPage : UserControl
                 Maximum = 3600,
                 [!NumericUpDown.ValueProperty] = new Binding(nameof(_vm.OpenAiCompatibleSttTimeoutSeconds)) { Mode = BindingMode.TwoWay }
             }),
-            new SettingsItem("Temperature", () => new NumericUpDown
+            new SettingsItem(Se.Language.General.OpenAiCompatibleSttTemperature, () => new NumericUpDown
             {
                 DataContext = _vm,
                 Width = 100,
@@ -627,13 +627,13 @@ public class SettingsPage : UserControl
                 FormatString = "F2",
                 [!NumericUpDown.ValueProperty] = new Binding(nameof(_vm.OpenAiCompatibleSttTemperature)) { Mode = BindingMode.TwoWay }
             }),
-            new SettingsItem("Prompt (optional)", () => new TextBox
+            new SettingsItem(Se.Language.General.OpenAiCompatibleSttPrompt, () => new TextBox
             {
                 DataContext = _vm,
                 Width = 400,
                 [!TextBox.TextProperty] = new Binding(nameof(_vm.OpenAiCompatibleSttPrompt)) { Mode = BindingMode.TwoWay }
             }),
-            new SettingsItem("Extra Headers (optional, one per line)", () => new TextBox
+            new SettingsItem(Se.Language.General.OpenAiCompatibleSttExtraHeaders, () => new TextBox
             {
                 DataContext = _vm,
                 Width = 400,
@@ -642,7 +642,7 @@ public class SettingsPage : UserControl
                 TextWrapping = TextWrapping.Wrap,
                 [!TextBox.TextProperty] = new Binding(nameof(_vm.OpenAiCompatibleSttExtraHeaders)) { Mode = BindingMode.TwoWay }
             }),
-            new SettingsItem("Auto transcribe on audio selection", () => new CheckBox
+            new SettingsItem(Se.Language.General.OpenAiCompatibleSttAutoTranscribeOnAudioSelection, () => new CheckBox
             {
                 DataContext = _vm,
                 VerticalAlignment = VerticalAlignment.Center,

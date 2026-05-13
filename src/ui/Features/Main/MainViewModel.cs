@@ -9015,7 +9015,7 @@ public partial class MainViewModel :
         var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
         if (selectedItems.Count == 0 || string.IsNullOrEmpty(_videoFileName))
         {
-            await MessageBox.Show(Window, "Please select subtitle lines and ensure a video file is loaded.", "No Selection");
+            await MessageBox.Show(Window, Se.Language.General.PleaseSelectSubtitleLinesAndVideo, Se.Language.General.NoSelection);
             return;
         }
 
@@ -9029,8 +9029,8 @@ public partial class MainViewModel :
         if (!OpenAiSttService.IsConfigured())
         {
             var result = await MessageBox.Show(Window,
-                "OpenAI Compatible STT is not configured.\n\nWould you like to configure it now?",
-                "Configuration Required",
+                Se.Language.General.OpenAiCompatibleSttNotConfigured,
+                Se.Language.General.ConfigurationRequired,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 

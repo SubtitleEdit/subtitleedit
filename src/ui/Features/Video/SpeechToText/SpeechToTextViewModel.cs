@@ -864,7 +864,6 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private async Task ProcessOpenAiCompatibleTranscription(string audioFileName, string? language = null, CancellationToken cancellationToken = default)
     {
-        var settings = Se.Settings.Tools;
         var openAiSettings = OpenAiSttService.GetSettingsFromConfiguration();
 
         if (!OpenAiSttService.IsConfigured())
@@ -872,14 +871,14 @@ public partial class SpeechToTextViewModel : ObservableObject
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 _ = MessageBox.Show(Window!,
-                    "Please configure OpenAI Compatible STT settings first.\n\nGo to Settings > Tools > Audio to Text to configure.",
-                    "Configuration Required");
+                    Se.Language.General.PleaseConfigureOpenAiStt,
+                    Se.Language.General.ConfigurationRequired);
                 IsTranscribeEnabled = true;
             });
             return;
         }
 
-        ProgressText = "Transcribing...";
+        ProgressText = Se.Language.Video.AudioToText.Transcribing;
         ProgressValue = 10;
 
         var subtitle = new Subtitle();
@@ -916,7 +915,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             var response = await service.TranscribeAsync(audioFileName, language, null, segmentProgress, cancellationToken);
 
             ProgressValue = 90;
-            ProgressText = "Processing response...";
+            ProgressText = Se.Language.General.ProcessingResponse;
 
             if (response.Segments != null && response.Segments.Count > 0 && subtitle.Paragraphs.Count == 0)
             {
@@ -946,7 +945,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
 
             ProgressValue = 100;
-            ProgressText = "Transcription complete";
+            ProgressText = Se.Language.General.TranscriptionComplete;
             LogToConsole($"Transcription completed: {subtitle.Paragraphs.Count} segment(s)");
 
             var postProcessedSubtitle = PostProcess(subtitle);
@@ -991,16 +990,16 @@ public partial class SpeechToTextViewModel : ObservableObject
             var message = ex.Message;
             if (message.Contains("401") || message.Contains("Unauthorized"))
             {
-                message = "Unauthorized: Invalid API key or insufficient permissions.";
+                message = Se.Language.General.UnauthorizedApiKey;
             }
             else if (message.Contains("timeout") || message.Contains("timed out"))
             {
-                message = "Request timeout: The server took too long to respond.";
+                message = Se.Language.General.RequestTimeout;
             }
 
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                await MessageBox.Show(Window!, message, "Transcription Error");
+                await MessageBox.Show(Window!, message, Se.Language.General.TranscriptionError);
                 IsTranscribeEnabled = true;
             });
         }
@@ -1008,7 +1007,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                await MessageBox.Show(Window!, $"Transcription failed: {ex.Message}", "Error");
+                await MessageBox.Show(Window!, $"{Se.Language.General.TranscriptionFailed}: {ex.Message}", "Error");
                 IsTranscribeEnabled = true;
             });
         }
