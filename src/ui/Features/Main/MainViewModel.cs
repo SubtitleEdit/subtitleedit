@@ -14353,6 +14353,8 @@ public partial class MainViewModel :
             IsSubtitleGridDataMenuVisible = false;
             IsMergeWithNextOrPreviousVisible = false;
             IsInsertLineNoSelectionVisible = false;
+            MenuItemExtendToLineBefore.IsVisible = false;
+            MenuItemExtendToLineAfter.IsVisible = false;
         }
         else if (Subtitles.Count == 0)
         {
