@@ -504,6 +504,7 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.WaveformParagraphLeftColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformParagraphLeftColor))),
             new SettingsItem(Se.Language.Options.Settings.WaveformParagraphRightColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformParagraphRightColor))),
             new SettingsItem(Se.Language.Options.Settings.WaveformFancyHighColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformFancyHighColor))),
+            MakeCheckboxSetting(Se.Language.General.OpenAiCompatibleSttAutoTranscribeOnAudioSelection, nameof(_vm.OpenAiCompatibleSttAutoTranscribeOnAudioSelection)),
             new SettingsItem(Se.Language.Options.Settings.DownloadFfmpeg, () => new StackPanel
             {
                 Children =
@@ -582,72 +583,6 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.SpeechToTextSelectedLinesPromptFirstTimeOnly, nameof(_vm.SpeechToTextSelectedLinesPromptFistTimeOnly)),
             MakeCheckboxSetting(Se.Language.Options.Settings.MultipleReplaceShowDotDotDotButtons, nameof(_vm.MultipleReplaceShowDotDotDotButtons)),
             MakeCheckboxSetting(Se.Language.Options.Settings.GridFocusTextboxAfterInsertNew, nameof(_vm.GridFocusTextboxAfterInsertNew)),
-
-            // OpenAI Compatible STT settings
-            new SettingsItem(Se.Language.General.OpenAiCompatibleSttEndpoint, () => new TextBox
-            {
-                DataContext = _vm,
-                Width = 400,
-                [!TextBox.TextProperty] = new Binding(nameof(_vm.OpenAiCompatibleSttUrl)) { Mode = BindingMode.TwoWay }
-            }),
-            new SettingsItem(Se.Language.General.OpenAiCompatibleSttApiKey, () => new TextBox
-            {
-                DataContext = _vm,
-                Width = 400,
-                PasswordChar = '*',
-                [!TextBox.TextProperty] = new Binding(nameof(_vm.OpenAiCompatibleSttApiKey)) { Mode = BindingMode.TwoWay }
-            }),
-            new SettingsItem(Se.Language.General.OpenAiCompatibleSttModel, () => new TextBox
-            {
-                DataContext = _vm,
-                Width = 250,
-                [!TextBox.TextProperty] = new Binding(nameof(_vm.OpenAiCompatibleSttModel)) { Mode = BindingMode.TwoWay }
-            }),
-            new SettingsItem(Se.Language.General.OpenAiCompatibleSttLanguage, () => new TextBox
-            {
-                DataContext = _vm,
-                Width = 150,
-                [!TextBox.TextProperty] = new Binding(nameof(_vm.OpenAiCompatibleSttLanguage)) { Mode = BindingMode.TwoWay }
-            }),
-            new SettingsItem(Se.Language.General.OpenAiCompatibleSttTimeout, () => new NumericUpDown
-            {
-                DataContext = _vm,
-                Width = 100,
-                Minimum = 10,
-                Maximum = 3600,
-                [!NumericUpDown.ValueProperty] = new Binding(nameof(_vm.OpenAiCompatibleSttTimeoutSeconds)) { Mode = BindingMode.TwoWay }
-            }),
-            new SettingsItem(Se.Language.General.OpenAiCompatibleSttTemperature, () => new NumericUpDown
-            {
-                DataContext = _vm,
-                Width = 100,
-                Minimum = 0,
-                Maximum = 1,
-                Increment = 0.1m,
-                FormatString = "F2",
-                [!NumericUpDown.ValueProperty] = new Binding(nameof(_vm.OpenAiCompatibleSttTemperature)) { Mode = BindingMode.TwoWay }
-            }),
-            new SettingsItem(Se.Language.General.OpenAiCompatibleSttPrompt, () => new TextBox
-            {
-                DataContext = _vm,
-                Width = 400,
-                [!TextBox.TextProperty] = new Binding(nameof(_vm.OpenAiCompatibleSttPrompt)) { Mode = BindingMode.TwoWay }
-            }),
-            new SettingsItem(Se.Language.General.OpenAiCompatibleSttExtraHeaders, () => new TextBox
-            {
-                DataContext = _vm,
-                Width = 400,
-                Height = 80,
-                AcceptsReturn = true,
-                TextWrapping = TextWrapping.Wrap,
-                [!TextBox.TextProperty] = new Binding(nameof(_vm.OpenAiCompatibleSttExtraHeaders)) { Mode = BindingMode.TwoWay }
-            }),
-            new SettingsItem(Se.Language.General.OpenAiCompatibleSttAutoTranscribeOnAudioSelection, () => new CheckBox
-            {
-                DataContext = _vm,
-                VerticalAlignment = VerticalAlignment.Center,
-                [!CheckBox.IsCheckedProperty] = new Binding(nameof(_vm.OpenAiCompatibleSttAutoTranscribeOnAudioSelection)) { Mode = BindingMode.TwoWay }
-            }),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.Appearance,

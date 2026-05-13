@@ -153,11 +153,15 @@ public class SpeechToTextWindow : Window
             }
         };
 
-        var labelAdvancedSettings = UiUtil.MakeTextBlock(Se.Language.General.AdvancedSettings).WithMarginTop(15);
+        var openAiRows = MakeOpenAiCompatibleSttRows(vm);
+
+        var labelAdvancedSettings = UiUtil.MakeTextBlock(Se.Language.General.AdvancedSettings).WithMarginTop(15)
+            .BindIsVisible(vm, nameof(vm.IsAdvancedSettingsVisible));
 
         var buttonAdvancedSettings = UiUtil.MakeButton(vm.ShowAdvancedSettingsCommand, IconNames.Settings)
                     .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-                    .WithMarginTop(15);
+                    .WithMarginTop(15)
+                    .BindIsVisible(vm, nameof(vm.IsAdvancedSettingsVisible));
 
         var textBoxAdvancedSettings = new TextBox()
         {
@@ -169,7 +173,7 @@ public class SpeechToTextWindow : Window
             Opacity = 0.6,
             BorderThickness = new Thickness(0),
             MaxWidth = 320,
-        };
+        }.BindIsVisible(vm, nameof(vm.IsAdvancedSettingsVisible));
         textBoxAdvancedSettings.Bind(TextBox.TextProperty, new Binding
         {
             Path = nameof(vm.Parameters),
@@ -324,6 +328,14 @@ public class SpeechToTextWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Forced aligner
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Language
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Model
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // OpenAI STT - Endpoint URL
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // OpenAI STT - API Key
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // OpenAI STT - Model
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // OpenAI STT - Language
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // OpenAI STT - Timeout
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // OpenAI STT - Temperature
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // OpenAI STT - Prompt
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // OpenAI STT - Extra Headers
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Translate to English
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Post processing
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Advanced settings
@@ -375,8 +387,8 @@ public class SpeechToTextWindow : Window
         grid.Add(labelConsoleLog, row, 2);
         row++;
 
-        grid.Add(consoleLogAndBatchView, row, 2, 9);
-        grid.Add(consoleLogOnlyView, row, 2, 9);
+        grid.Add(consoleLogAndBatchView, row, 2, 17);
+        grid.Add(consoleLogOnlyView, row, 2, 17);
         row++;
 
         grid.Add(labelEngine, row, 0);
@@ -399,6 +411,13 @@ public class SpeechToTextWindow : Window
         grid.Add(labelModel, row, 0);
         grid.Add(panelModelControls, row, 1);
         row++;
+
+        foreach (var (label, control) in openAiRows)
+        {
+            grid.Add(label, row, 0);
+            grid.Add(control, row, 1);
+            row++;
+        }
 
         grid.Add(labelTranslateToEnglish, row, 0);
         grid.Add(checkTranslateToEnglish, row, 1);
@@ -580,5 +599,81 @@ public class SpeechToTextWindow : Window
         vm.TextBoxConsoleLog = textBoxConsoleLog;
 
         return textBoxConsoleLog;
+    }
+
+    private static (Control Label, Control Control)[] MakeOpenAiCompatibleSttRows(SpeechToTextViewModel vm)
+    {
+        Control MakeLabel(string text) => UiUtil.MakeTextBlock(text).WithMarginTop(10)
+            .BindIsVisible(vm, nameof(vm.IsOpenAiCompatibleSttVisible));
+
+        TextBox MakeText(string property, double width, bool isPassword = false)
+        {
+            var tb = new TextBox
+            {
+                DataContext = vm,
+                Width = width,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 10, 0, 0),
+                [!TextBox.TextProperty] = new Binding(property) { Mode = BindingMode.TwoWay }
+            };
+            if (isPassword)
+            {
+                tb.PasswordChar = '*';
+            }
+            return tb.BindIsVisible(vm, nameof(vm.IsOpenAiCompatibleSttVisible));
+        }
+
+        var numericTimeout = new NumericUpDown
+        {
+            DataContext = vm,
+            Width = 120,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 10, 0, 0),
+            Minimum = 10,
+            Maximum = 3600,
+            FormatString = "F0",
+            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.OpenAiCompatibleSttTimeoutSeconds)) { Mode = BindingMode.TwoWay }
+        }.BindIsVisible(vm, nameof(vm.IsOpenAiCompatibleSttVisible));
+
+        var numericTemperature = new NumericUpDown
+        {
+            DataContext = vm,
+            Width = 120,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 10, 0, 0),
+            Minimum = 0,
+            Maximum = 1,
+            Increment = 0.1m,
+            FormatString = "F2",
+            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.OpenAiCompatibleSttTemperature)) { Mode = BindingMode.TwoWay }
+        }.BindIsVisible(vm, nameof(vm.IsOpenAiCompatibleSttVisible));
+
+        var textExtraHeaders = new TextBox
+        {
+            DataContext = vm,
+            Width = 400,
+            Height = 60,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 10, 0, 0),
+            AcceptsReturn = true,
+            TextWrapping = TextWrapping.Wrap,
+            [!TextBox.TextProperty] = new Binding(nameof(vm.OpenAiCompatibleSttExtraHeaders)) { Mode = BindingMode.TwoWay }
+        }.BindIsVisible(vm, nameof(vm.IsOpenAiCompatibleSttVisible));
+
+        return new (Control, Control)[]
+        {
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttEndpoint), MakeText(nameof(vm.OpenAiCompatibleSttUrl), 400)),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttApiKey), MakeText(nameof(vm.OpenAiCompatibleSttApiKey), 400, isPassword: true)),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttModel), MakeText(nameof(vm.OpenAiCompatibleSttModel), 250)),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttLanguage), MakeText(nameof(vm.OpenAiCompatibleSttLanguage), 150)),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttTimeout), numericTimeout),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttTemperature), numericTemperature),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttPrompt), MakeText(nameof(vm.OpenAiCompatibleSttPrompt), 400)),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttExtraHeaders), textExtraHeaders),
+        };
     }
 }

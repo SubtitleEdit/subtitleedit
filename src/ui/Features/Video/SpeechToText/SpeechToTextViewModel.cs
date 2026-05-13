@@ -7,7 +7,6 @@ using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.GetAudioClips;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
@@ -84,6 +83,17 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private string _estimatedText;
     [ObservableProperty] private bool _isReDownloadVisible;
     [ObservableProperty] private string _reDownloadText;
+
+    [ObservableProperty] private bool _isOpenAiCompatibleSttVisible;
+    [ObservableProperty] private bool _isAdvancedSettingsVisible = true;
+    [ObservableProperty] private string? _openAiCompatibleSttUrl;
+    [ObservableProperty] private string? _openAiCompatibleSttApiKey;
+    [ObservableProperty] private string? _openAiCompatibleSttModel;
+    [ObservableProperty] private string? _openAiCompatibleSttLanguage;
+    [ObservableProperty] private int _openAiCompatibleSttTimeoutSeconds;
+    [ObservableProperty] private decimal _openAiCompatibleSttTemperature;
+    [ObservableProperty] private string? _openAiCompatibleSttPrompt;
+    [ObservableProperty] private string? _openAiCompatibleSttExtraHeaders;
 
     public Window? Window { get; set; }
 
@@ -224,6 +234,15 @@ public partial class SpeechToTextViewModel : ObservableObject
         DoAdjustTimings = Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings;
         DoPostProcessing = Se.Settings.Tools.AudioToText.PostProcessing;
 
+        OpenAiCompatibleSttUrl = Se.Settings.Tools.OpenAiCompatibleSttUrl;
+        OpenAiCompatibleSttApiKey = Se.Settings.Tools.OpenAiCompatibleSttApiKey;
+        OpenAiCompatibleSttModel = Se.Settings.Tools.OpenAiCompatibleSttModel;
+        OpenAiCompatibleSttLanguage = Se.Settings.Tools.OpenAiCompatibleSttLanguage;
+        OpenAiCompatibleSttTimeoutSeconds = Se.Settings.Tools.OpenAiCompatibleSttTimeoutSeconds;
+        OpenAiCompatibleSttTemperature = Se.Settings.Tools.OpenAiCompatibleSttTemperature;
+        OpenAiCompatibleSttPrompt = Se.Settings.Tools.OpenAiCompatibleSttPrompt;
+        OpenAiCompatibleSttExtraHeaders = Se.Settings.Tools.OpenAiCompatibleSttExtraHeaders;
+
         var savedChoice = Se.Settings.Tools.AudioToText.WhisperChoice;
         var whisperCppEngine = Engines.OfType<WhisperCppEngine>().FirstOrDefault();
         var crispAsrEngine = Engines.OfType<CrispAsrEngine>().FirstOrDefault();
@@ -259,6 +278,15 @@ public partial class SpeechToTextViewModel : ObservableObject
         Se.Settings.Tools.AudioToText.WhisperModel = SelectedModel?.Model.Name ?? string.Empty;
         Se.Settings.Tools.AudioToText.WhisperLanguageCode = SelectedLanguage?.Code ?? string.Empty;
         Se.Settings.Tools.AudioToText.CrispAsrForcedAligner = SelectedForcedAligner?.Choice ?? ForcedAlignerOption.BuiltInChoice;
+
+        Se.Settings.Tools.OpenAiCompatibleSttUrl = OpenAiCompatibleSttUrl ?? string.Empty;
+        Se.Settings.Tools.OpenAiCompatibleSttApiKey = OpenAiCompatibleSttApiKey ?? string.Empty;
+        Se.Settings.Tools.OpenAiCompatibleSttModel = OpenAiCompatibleSttModel ?? string.Empty;
+        Se.Settings.Tools.OpenAiCompatibleSttLanguage = OpenAiCompatibleSttLanguage ?? string.Empty;
+        Se.Settings.Tools.OpenAiCompatibleSttTimeoutSeconds = OpenAiCompatibleSttTimeoutSeconds;
+        Se.Settings.Tools.OpenAiCompatibleSttTemperature = OpenAiCompatibleSttTemperature;
+        Se.Settings.Tools.OpenAiCompatibleSttPrompt = OpenAiCompatibleSttPrompt ?? string.Empty;
+        Se.Settings.Tools.OpenAiCompatibleSttExtraHeaders = OpenAiCompatibleSttExtraHeaders ?? string.Empty;
 
         Se.SaveSettings();
     }
@@ -862,16 +890,42 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
     }
 
+    private static async Task<string?> ProbeOpenAiUrlAsync(string url, CancellationToken cancellationToken)
+    {
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+        {
+            return $"Invalid URL: '{url}'";
+        }
+
+        try
+        {
+            using var probeClient = new HttpClient { Timeout = TimeSpan.FromSeconds(8) };
+            var baseUri = new Uri(uri.GetLeftPart(UriPartial.Authority));
+            using var request = new HttpRequestMessage(HttpMethod.Head, baseUri);
+            using var response = await probeClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            return null;
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            return ex.Message;
+        }
+    }
+
     private async Task ProcessOpenAiCompatibleTranscription(string audioFileName, string? language = null, CancellationToken cancellationToken = default)
     {
+        SaveSettings();
         var openAiSettings = OpenAiSttService.GetSettingsFromConfiguration();
 
-        if (!OpenAiSttService.IsConfigured())
+        if (string.IsNullOrWhiteSpace(openAiSettings.EndpointUrl))
         {
-            await Dispatcher.UIThread.InvokeAsync(() =>
+            await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                _ = MessageBox.Show(Window!,
-                    Se.Language.General.PleaseConfigureOpenAiStt,
+                await MessageBox.Show(Window!,
+                    Se.Language.General.OpenAiCompatibleSttUrlMissing,
                     Se.Language.General.ConfigurationRequired);
                 IsTranscribeEnabled = true;
             });
@@ -879,6 +933,27 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         ProgressText = Se.Language.Video.AudioToText.Transcribing;
+        ProgressValue = 5;
+
+        var probeError = await ProbeOpenAiUrlAsync(openAiSettings.EndpointUrl, cancellationToken);
+        if (probeError != null)
+        {
+            LogToConsole($"OpenAI Compatible STT endpoint probe failed: {probeError}. Retrying...");
+            probeError = await ProbeOpenAiUrlAsync(openAiSettings.EndpointUrl, cancellationToken);
+        }
+
+        if (probeError != null)
+        {
+            await Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                await MessageBox.Show(Window!,
+                    string.Format(Se.Language.General.OpenAiCompatibleSttUrlNotResponding, probeError),
+                    Se.Language.General.TranscriptionError);
+                IsTranscribeEnabled = true;
+            });
+            return;
+        }
+
         ProgressValue = 10;
 
         var subtitle = new Subtitle();
@@ -1930,12 +2005,6 @@ public partial class SpeechToTextViewModel : ObservableObject
     [RelayCommand]
     private async Task ShowAdvancedSettings()
     {
-        if (GetEffectiveSelectedEngine() is OpenAiCompatibleSttEngine)
-        {
-            await _windowService.ShowDialogAsync<SettingsWindow, SettingsViewModel>(Window!);
-            return;
-        }
-
         var vm = await _windowService.ShowDialogAsync<SpeechToTextAdvancedWindow, SpeechToTextAdvancedViewModel>(Window!,
             viewModal =>
             {
@@ -3276,6 +3345,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             SelectedLanguage = null;
         }
+
+        IsOpenAiCompatibleSttVisible = engine is OpenAiCompatibleSttEngine;
+        IsAdvancedSettingsVisible = !IsOpenAiCompatibleSttVisible;
 
         IsTranslateVisible = IsTranslateAvailable(engine);
 
