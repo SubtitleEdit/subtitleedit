@@ -102,4 +102,13 @@ public class WebVttHelperTest
         var expected = "Vert" + Environment.NewLine + "Fond vert";
         Assert.Equal(expected, result);
     }
+
+    [Fact]
+    public void RemoveDefaultColorClassesContentWithDot()
+    {
+        var text = "<c.white>france.tv access</c>";
+        var result = WebVttHelper.RemoveDefaultColorClasses(text);
+
+        Assert.Equal("france.tv access", result);
+    }
 }

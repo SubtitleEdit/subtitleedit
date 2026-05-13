@@ -30,7 +30,7 @@ public class ColorService : IColorService
 
     private static void RemoveColorTags(SubtitleLineViewModel p, Subtitle subtitle, SubtitleFormat subtitleFormat)
     {
-        if (subtitleFormat is WebVTT)
+        if (subtitleFormat is WebVTT or WebVTTFileWithLineNumber)
         {
             var styles = WebVttHelper.GetStyles(subtitle.Header);
             foreach (var style in styles)
@@ -63,6 +63,7 @@ public class ColorService : IColorService
         }
 
         p.Text = HtmlUtil.RemoveColorTags(p.Text);
+        p.Text = WebVttHelper.RemoveDefaultColorClasses(p.Text);
     }
 
     public void SetColor(List<SubtitleLineViewModel> subtitles, Color color, Subtitle subtitle, SubtitleFormat subtitleFormat)
