@@ -57,6 +57,7 @@ public partial class TranslateSettingsViewModel : ObservableObject
             engineType == typeof(GroqTranslate) ||
             engineType == typeof(OpenRouterTranslate) ||
             engineType == typeof(NvidiaTranslate) ||
+            engineType == typeof(MistralTranslate) ||
             engineType == typeof(LlamaCppTranslate))
         {
             if (!PromptText.Contains("{0}") || !PromptText.Contains("{1}"))
@@ -128,6 +129,10 @@ public partial class TranslateSettingsViewModel : ObservableObject
             else if (engineType == typeof(NvidiaTranslate))
             {
                 Se.Settings.Tools.NvidiaPrompt = PromptText;
+            }
+            else if (engineType == typeof(MistralTranslate))
+            {
+                Se.Settings.AutoTranslate.MistralPrompt = PromptText;
             }
             else if (engineType == typeof(LlamaCppTranslate))
             {
@@ -221,6 +226,14 @@ public partial class TranslateSettingsViewModel : ObservableObject
             if (string.IsNullOrWhiteSpace(PromptText))
             {
                 PromptText = new SeAutoTranslate().NvidiaPrompt;
+            }
+        }
+        else if (engineType == typeof(MistralTranslate))
+        {
+            PromptText = Se.Settings.AutoTranslate.MistralPrompt;
+            if (string.IsNullOrWhiteSpace(PromptText))
+            {
+                PromptText = new SeAutoTranslate().MistralPrompt;
             }
         }
         else if (engineType == typeof(LlamaCppTranslate))
