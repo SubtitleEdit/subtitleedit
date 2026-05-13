@@ -24,7 +24,9 @@ public class FullScreenVideoWindow : Window
         double position,
         double volume,
         Action onClose,
-        List<string>? toggleShortcutKeys = null)
+        List<string>? toggleShortcutKeys = null,
+        List<string>? showMediaInformationKeys = null,
+        Action<Window>? showMediaInformation = null)
     {
         WindowState = WindowState.FullScreen;
         WindowDecorations = WindowDecorations.None;
@@ -48,6 +50,18 @@ public class FullScreenVideoWindow : Window
                 toggleShortcutKeys,
                 ShortcutCategory.General,
                 new RelayCommand(Close)));
+        }
+
+        // Handle the Show-Media-Information shortcut locally so the dialog can be
+        // opened with the fullscreen window as owner (otherwise it would appear
+        // behind the fullscreen window which has the main window as its owner).
+        if (showMediaInformationKeys != null && showMediaInformationKeys.Count > 0 && showMediaInformation != null)
+        {
+            shortcutManager.RegisterShortcut(new ShortCut(
+                nameof(FullScreenVideoWindow) + "_ShowMediaInformation",
+                showMediaInformationKeys,
+                ShortcutCategory.General,
+                new RelayCommand(() => showMediaInformation(this))));
         }
 
         // Poll for actual cursor position using platform APIs

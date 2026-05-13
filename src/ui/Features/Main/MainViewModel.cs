@@ -8594,12 +8594,30 @@ public partial class MainViewModel :
         _fullScreenVideoPlayerControl.IsFullScreen = true;
         var toggleKeys = Se.Settings.Shortcuts
             .FirstOrDefault(s => s.ActionName == nameof(VideoFullScreenCommand))?.Keys;
+        var showMediaInfoKeys = Se.Settings.Shortcuts
+            .FirstOrDefault(s => s.ActionName == nameof(ShowMediaInformationCommand))?.Keys;
+        Action<Window> showMediaInformationOwnedBy = ownerWindow =>
+        {
+            var mediaInfo = _mediaInfo;
+            var fileName = _videoFileName ?? string.Empty;
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return;
+            }
+
+            Dispatcher.UIThread.Post(async void () =>
+            {
+                await _windowService.ShowDialogAsync<MediaInfoViewWindow, MediaInfoViewViewModel>(
+                    ownerWindow,
+                    vm => vm.Initialize(fileName, mediaInfo));
+            });
+        };
         var fullScreenWindow = new FullScreenVideoWindow(_fullScreenVideoPlayerControl, _videoFileName, _subtitleFileName ?? string.Empty, position, volume, () =>
         {
             control!.Position = _fullScreenVideoPlayerControl.Position;
             control!.Volume = _fullScreenVideoPlayerControl.Volume;
             _fullScreenVideoPlayerControl = null;
-        }, toggleKeys);
+        }, toggleKeys, showMediaInfoKeys, showMediaInformationOwnedBy);
         fullScreenWindow.Show(Window!);
         _shortcutManager.ClearKeys();
 
@@ -16760,12 +16778,12 @@ public partial class MainViewModel :
     [RelayCommand]
     private void ShowMediaInformation()
     {
-        var mediaInfo = _mediaInfo;
-        if (mediaInfo == null || Window == null)
+        if (Window == null || string.IsNullOrEmpty(_videoFileName))
         {
             return;
         }
 
+        var mediaInfo = _mediaInfo;
         Dispatcher.UIThread.Post(async void () =>
         {
             var result = await ShowDialogAsync<MediaInfoViewWindow, MediaInfoViewViewModel>(vm => { vm.Initialize(_videoFileName ?? string.Empty, mediaInfo); });
