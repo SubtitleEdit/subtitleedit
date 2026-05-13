@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -82,7 +83,7 @@ public class OpenAiSttService
         // Add temperature if specified
         if (_settings.Temperature > 0)
         {
-            content.Add(new StringContent(_settings.Temperature.ToString("F2")), "temperature");
+            content.Add(new StringContent(_settings.Temperature.ToString("F2", CultureInfo.InvariantCulture)), "temperature");
         }
 
         // Add prompt if specified
