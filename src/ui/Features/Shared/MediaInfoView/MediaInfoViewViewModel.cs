@@ -41,13 +41,63 @@ public partial class MediaInfoViewViewModel : ObservableObject
         TextBoxContainer = new Border();
     }
 
-    internal void Initialize(string videoFileName, FfmpegMediaInfo2 mediaInfo)
+    internal void Initialize(string videoFileName, FfmpegMediaInfo2? mediaInfo)
     {
         _videoFileName = videoFileName;
 
+        // Show basic file info immediately so the window can open without waiting
+        // for container/ffmpeg parsing on large files.
+        Text = BuildBasicInfoText(videoFileName, includeLoadingHint: true);
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            Task.Delay(50).Wait(); // Slight delay to ensure control is ready
+
+            SourceViewTextBox = CreateAdvancedTextBoxWrapper(Text);
+
+            TextBoxContainer.Child = SourceViewTextBox.ContentControl;
+
+            Task.Delay(50).Wait(); // Slight delay to ensure control is ready
+            SourceViewTextBox.Focus();
+            SourceViewTextBox.CaretIndex = 0;
+        }, DispatcherPriority.Input);
+
+        // Build the full report in the background — MatroskaFile/MP4Parser and
+        // FfmpegMediaInfo2.Parse can be slow on large files.
+        Task.Run(() =>
+        {
+            var info = mediaInfo ?? FfmpegMediaInfo2.Parse(videoFileName);
+            var fullText = BuildFullInfoText(videoFileName, info);
+            Dispatcher.UIThread.Post(() => Text = fullText);
+        });
+    }
+
+    private static string BuildBasicInfoText(string videoFileName, bool includeLoadingHint)
+    {
         var sb = new StringBuilder();
         sb.AppendLine($"File name: {videoFileName}");
-        sb.AppendLine($"File size: {Utilities.FormatBytesToDisplayFileSize(new FileInfo(videoFileName).Length)}");
+        try
+        {
+            sb.AppendLine($"File size: {Utilities.FormatBytesToDisplayFileSize(new FileInfo(videoFileName).Length)}");
+        }
+        catch
+        {
+            // ignored — file may be inaccessible
+        }
+
+        if (includeLoadingHint)
+        {
+            sb.AppendLine();
+            sb.AppendLine("Loading media information...");
+        }
+
+        return sb.ToString().Trim();
+    }
+
+    private static string BuildFullInfoText(string videoFileName, FfmpegMediaInfo2 mediaInfo)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine(BuildBasicInfoText(videoFileName, includeLoadingHint: false));
 
         if (mediaInfo.Duration != null)
         {
@@ -64,12 +114,12 @@ public partial class MediaInfoViewViewModel : ObservableObject
             sb.AppendLine($"Framerate: {mediaInfo.FramesRate:0.###}");
         }
 
-        if (FileUtil.IsWav(_videoFileName))
+        if (FileUtil.IsWav(videoFileName))
         {
             sb.AppendLine($"Codec: WAVE");
         }
 
-        if (FileUtil.IsMp3(_videoFileName))
+        if (FileUtil.IsMp3(videoFileName))
         {
             sb.AppendLine($"Codec: MP3");
         }
@@ -104,20 +154,7 @@ public partial class MediaInfoViewViewModel : ObservableObject
             trackNo++;
         }
 
-        Text = sb.ToString().Trim();
-
-        Dispatcher.UIThread.Post(() =>
-        {
-            Task.Delay(50).Wait(); // Slight delay to ensure control is ready  
-
-            SourceViewTextBox = CreateAdvancedTextBoxWrapper(Text);
-
-            TextBoxContainer.Child = SourceViewTextBox.ContentControl;
-
-            Task.Delay(50).Wait(); // Slight delay to ensure control is ready  
-            SourceViewTextBox.Focus();
-            SourceViewTextBox.CaretIndex = 0;
-        }, DispatcherPriority.Input);
+        return sb.ToString().Trim();
     }
 
     private TextEditorWrapper CreateAdvancedTextBoxWrapper(string text)
