@@ -1933,8 +1933,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         if (GetEffectiveSelectedEngine() is OpenAiCompatibleSttEngine)
         {
-            var settingsWindow = new SettingsWindow(new SettingsViewModel(_windowService, null!));
-            await settingsWindow.ShowDialog(Window!);
+            await _windowService.ShowDialogAsync<SettingsWindow, SettingsViewModel>(Window!);
             return;
         }
 
