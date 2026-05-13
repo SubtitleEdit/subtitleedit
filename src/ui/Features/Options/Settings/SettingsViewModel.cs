@@ -124,16 +124,6 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _speechToTextSelectedLinesPromptFistTimeOnly;
     [ObservableProperty] private bool _multipleReplaceShowDotDotDotButtons;
     [ObservableProperty] private bool _gridFocusTextboxAfterInsertNew;
-
-    // OpenAI Compatible STT settings
-    [ObservableProperty] private string? _openAiCompatibleSttUrl;
-    [ObservableProperty] private string? _openAiCompatibleSttApiKey;
-    [ObservableProperty] private string? _openAiCompatibleSttModel;
-    [ObservableProperty] private string? _openAiCompatibleSttExtraHeaders;
-    [ObservableProperty] private int _openAiCompatibleSttTimeoutSeconds;
-    [ObservableProperty] private string? _openAiCompatibleSttLanguage;
-    [ObservableProperty] private decimal _openAiCompatibleSttTemperature;
-    [ObservableProperty] private string? _openAiCompatibleSttPrompt;
     [ObservableProperty] private bool _openAiCompatibleSttAutoTranscribeOnAudioSelection;
 
     [ObservableProperty] private ObservableCollection<string> _spellCheckEngines;
@@ -631,16 +621,6 @@ public partial class SettingsViewModel : ObservableObject
         SpeechToTextSelectedLinesPromptFistTimeOnly = Se.Settings.Tools.SpeechToTextSelectedLinesPromptFirstTimeOnly;
         MultipleReplaceShowDotDotDotButtons = Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons;
         GridFocusTextboxAfterInsertNew = Se.Settings.Tools.GridFocusTextboxAfterInsertNew;
-
-        // OpenAI Compatible STT settings
-        OpenAiCompatibleSttUrl = Se.Settings.Tools.OpenAiCompatibleSttUrl;
-        OpenAiCompatibleSttApiKey = Se.Settings.Tools.OpenAiCompatibleSttApiKey;
-        OpenAiCompatibleSttModel = Se.Settings.Tools.OpenAiCompatibleSttModel;
-        OpenAiCompatibleSttExtraHeaders = Se.Settings.Tools.OpenAiCompatibleSttExtraHeaders;
-        OpenAiCompatibleSttTimeoutSeconds = Se.Settings.Tools.OpenAiCompatibleSttTimeoutSeconds;
-        OpenAiCompatibleSttLanguage = Se.Settings.Tools.OpenAiCompatibleSttLanguage;
-        OpenAiCompatibleSttTemperature = Se.Settings.Tools.OpenAiCompatibleSttTemperature;
-        OpenAiCompatibleSttPrompt = Se.Settings.Tools.OpenAiCompatibleSttPrompt;
         OpenAiCompatibleSttAutoTranscribeOnAudioSelection = Se.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection;
 
         SelectedTheme = MapThemeToTranslation(appearance.Theme);
@@ -1236,15 +1216,6 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons = MultipleReplaceShowDotDotDotButtons;
         Se.Settings.Tools.GridFocusTextboxAfterInsertNew = GridFocusTextboxAfterInsertNew;
         Se.Settings.Tools.WriteToolsLog = WriteToolsLog;
-        // OpenAI Compatible STT settings
-        Se.Settings.Tools.OpenAiCompatibleSttUrl = OpenAiCompatibleSttUrl;
-        Se.Settings.Tools.OpenAiCompatibleSttApiKey = OpenAiCompatibleSttApiKey;
-        Se.Settings.Tools.OpenAiCompatibleSttModel = OpenAiCompatibleSttModel;
-        Se.Settings.Tools.OpenAiCompatibleSttExtraHeaders = OpenAiCompatibleSttExtraHeaders;
-        Se.Settings.Tools.OpenAiCompatibleSttTimeoutSeconds = OpenAiCompatibleSttTimeoutSeconds;
-        Se.Settings.Tools.OpenAiCompatibleSttLanguage = OpenAiCompatibleSttLanguage;
-        Se.Settings.Tools.OpenAiCompatibleSttTemperature = OpenAiCompatibleSttTemperature;
-        Se.Settings.Tools.OpenAiCompatibleSttPrompt = OpenAiCompatibleSttPrompt;
         Se.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection = OpenAiCompatibleSttAutoTranscribeOnAudioSelection;
 
         appearance.Theme = MapThemeFromTranslation(SelectedTheme);

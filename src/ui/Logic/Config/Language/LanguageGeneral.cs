@@ -692,6 +692,8 @@ public class LanguageGeneral
     public string NoSelection { get; set; }
     public string PleaseSelectSubtitleLinesAndVideo { get; set; }
     public string OpenAiCompatibleSttNotConfigured { get; set; }
+    public string OpenAiCompatibleSttUrlMissing { get; set; }
+    public string OpenAiCompatibleSttUrlNotResponding { get; set; }
     public string TranscriptionFailed { get; set; }
 
     public LanguageGeneral()
@@ -1371,7 +1373,7 @@ public class LanguageGeneral
         OpenAiCompatibleSttLanguage = "Language Hint";
         OpenAiCompatibleSttTemperature = "Temperature";
         OpenAiCompatibleSttPrompt = "Prompt";
-        OpenAiCompatibleSttAutoTranscribeOnAudioSelection = "Auto transcribe on audio selection";
+        OpenAiCompatibleSttAutoTranscribeOnAudioSelection = "Auto-transcribe new waveform selection via speech-to-text";
         ConfigurationRequired = "Configuration Required";
         PleaseConfigureOpenAiStt = "Please configure OpenAI Compatible STT settings first.";
         TranscriptionError = "Transcription Error";
@@ -1384,6 +1386,8 @@ public class LanguageGeneral
         NoSelection = "No Selection";
         PleaseSelectSubtitleLinesAndVideo = "Please select subtitle lines and ensure a video file is loaded.";
         OpenAiCompatibleSttNotConfigured = "OpenAI Compatible STT is not configured.\n\nWould you like to configure it now?";
+        OpenAiCompatibleSttUrlMissing = "OpenAI Compatible STT endpoint URL is required. Please enter a URL and try again.";
+        OpenAiCompatibleSttUrlNotResponding = "The OpenAI Compatible STT endpoint did not respond:\n{0}\n\nPlease verify the URL and that the server is running.";
         TranscriptionFailed = "Transcription failed";
     }
 }
