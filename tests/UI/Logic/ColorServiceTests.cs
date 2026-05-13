@@ -144,6 +144,57 @@ public class ColorServiceTests
     }
 
     [Fact]
+    public void RemoveColorTags_WebVtt_StripsCClassWithDottedContent()
+    {
+        var service = new ColorService();
+        var subtitle = new Subtitle();
+        var format = new WebVTT();
+
+        var lines = new List<SubtitleLineViewModel>
+        {
+            Line("<c.white>france.tv access</c>"),
+        };
+
+        service.RemoveColorTags(lines, subtitle, format);
+
+        Assert.Equal("france.tv access", lines[0].Text);
+    }
+
+    [Fact]
+    public void RemoveColorTags_Srt_StripsCClassColorWrapper()
+    {
+        var service = new ColorService();
+        var subtitle = new Subtitle();
+        var format = new SubRip();
+
+        var lines = new List<SubtitleLineViewModel>
+        {
+            Line("<c.white>france.tv access</c>"),
+        };
+
+        service.RemoveColorTags(lines, subtitle, format);
+
+        Assert.Equal("france.tv access", lines[0].Text);
+    }
+
+    [Fact]
+    public void RemoveColorTags_WebVttFileWithLineNumber_StripsCClassColorWrapper()
+    {
+        var service = new ColorService();
+        var subtitle = new Subtitle();
+        var format = new WebVTTFileWithLineNumber();
+
+        var lines = new List<SubtitleLineViewModel>
+        {
+            Line("<c.white>france.tv access</c>"),
+        };
+
+        service.RemoveColorTags(lines, subtitle, format);
+
+        Assert.Equal("france.tv access", lines[0].Text);
+    }
+
+    [Fact]
     public void RemoveColorTags_Assa_StripsAssaColorTags()
     {
         var service = new ColorService();
