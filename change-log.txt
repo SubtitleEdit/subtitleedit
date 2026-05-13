@@ -1,7 +1,7 @@
 
 Subtitle Edit Changelog
 
-v5.0.0-beta25 (xth May 2026)
+v5.0.0-beta25 (13th May 2026)
 
 * Add Finnish translation - thx userx77
 * Add Mistral AI to AutoTranslate engine list
