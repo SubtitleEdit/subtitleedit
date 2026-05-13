@@ -12,7 +12,7 @@ public class CrispAsrGranite : CrispAsrEngineBase
     public override string Name => StaticName;
     public override string Choice => WhisperChoice.CrispAsrGranite;
     public override string Url => "https://github.com/CrispStrobe/CrispASR";
-    public override string BackendName => "granite";
+    public override string BackendName => "granite-4.1";
     public override string DefaultLanguage => "en";
     public override bool IncludeLanguage => true;
 
@@ -32,38 +32,20 @@ public class CrispAsrGranite : CrispAsrEngineBase
        {
             new WhisperModel
             {
-                Name = "granite-speech-4.0-1b-q4_k.gguf",
-                Size = "2.94 GB",
+                Name = "granite-speech-4.1-2b-q4_k-mini.gguf",
+                Size = "1.78 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/granite-speech-4.0-1b-GGUF/resolve/main/granite-speech-4.0-1b-q4_k.gguf"
+                    "https://huggingface.co/cstr/granite-speech-4.1-2b-GGUF/resolve/main/granite-speech-4.1-2b-q4_k-mini.gguf"
                 ],
             },
             new WhisperModel
             {
-                Name = "granite-speech-4.0-1b-q5_0.gguf",
-                Size = "3.17 GB",
+                Name = "granite-speech-4.1-2b-q4_k-f16enc.gguf",
+                Size = "2.27 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/granite-speech-4.0-1b-GGUF/resolve/main/granite-speech-4.0-1b-q5_0.gguf"
-                ],
-            },
-            new WhisperModel
-            {
-                Name = "granite-speech-4.0-1b-q8_0.gguf",
-                Size = "3.86 GB",
-                Urls =
-                [
-                    "https://huggingface.co/cstr/granite-speech-4.0-1b-GGUF/resolve/main/granite-speech-4.0-1b-q8_0.gguf"
-                ],
-            },
-            new WhisperModel
-            {
-                Name = "granite-speech-4.0-1b-f16.gguf",
-                Size = "5.58 GB",
-                Urls =
-                [
-                    "https://huggingface.co/cstr/granite-speech-4.0-1b-GGUF/resolve/main/granite-speech-4.0-1b-f16.gguf"
+                    "https://huggingface.co/cstr/granite-speech-4.1-2b-GGUF/resolve/main/granite-speech-4.1-2b-q4_k-f16enc.gguf"
                 ],
             },
             new WhisperModel
@@ -77,20 +59,11 @@ public class CrispAsrGranite : CrispAsrEngineBase
             },
             new WhisperModel
             {
-                Name = "granite-speech-4.1-2b-plus-q4_k.gguf",
-                Size = "2.96 GB",
+                Name = "granite-speech-4.1-2b-f16.gguf",
+                Size = "5.58 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/granite-speech-4.1-2b-plus-GGUF/resolve/main/granite-speech-4.1-2b-plus-q4_k.gguf"
-                ],
-            },
-            new WhisperModel
-            {
-                Name = "granite-speech-4.1-2b-nar-q4_k.gguf",
-                Size = "3.41 GB",
-                Urls =
-                [
-                    "https://huggingface.co/cstr/granite-speech-4.1-2b-nar-GGUF/resolve/main/granite-speech-4.1-2b-nar-q4_k.gguf"
+                    "https://huggingface.co/cstr/granite-speech-4.1-2b-GGUF/resolve/main/granite-speech-4.1-2b-f16.gguf"
                 ],
             },
        };
