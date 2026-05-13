@@ -78,6 +78,16 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string LaraApiId { get; set; }
         public string LaraApiSecret { get; set; }
 
+        public string OpenAiCompatibleSttUrl { get; set; }
+        public string OpenAiCompatibleSttApiKey { get; set; }
+        public string OpenAiCompatibleSttModel { get; set; }
+        public string OpenAiCompatibleSttExtraHeaders { get; set; }
+        public int OpenAiCompatibleSttTimeoutSeconds { get; set; }
+        public string OpenAiCompatibleSttLanguage { get; set; }
+        public decimal OpenAiCompatibleSttTemperature { get; set; }
+        public string OpenAiCompatibleSttPrompt { get; set; }
+        public bool OpenAiCompatibleSttAutoTranscribeOnAudioSelection { get; set; }
+
         public string OpenRouterUrl { get; set; }
         public string OpenRouterPrompt { get; set; }
         public string OpenRouterApiKey { get; set; }
@@ -496,6 +506,15 @@ namespace Nikse.SubtitleEdit.Core.Settings
             AssaBgBoxOutlineWidth = 0;
             AssaBgBoxLayer = -11893;
             AssaBgBoxDrawingFileWatch = true;
+
+            OpenAiCompatibleSttUrl = "http://localhost:8000/v1/audio/transcriptions";
+            OpenAiCompatibleSttApiKey = string.Empty;
+            OpenAiCompatibleSttModel = "whisper-1";
+            OpenAiCompatibleSttExtraHeaders = string.Empty;
+            OpenAiCompatibleSttTimeoutSeconds = 300;
+            OpenAiCompatibleSttLanguage = string.Empty;
+            OpenAiCompatibleSttTemperature = 0;
+            OpenAiCompatibleSttPrompt = string.Empty;
 
             VoskPostProcessing = true;
             WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisperXxl : AudioToText.WhisperChoice.OpenAi;

@@ -76,7 +76,7 @@ public class SeTools
     public string BinEditBackgroundColor { get; set; }
     public decimal BinEditOutlineWidth { get; set; }
     public decimal BinEditShadowWidth { get; set; }
-    
+
     public string ImportTextSplitting { get; set; }
     public string ImportTextSplittingLineMode { get; set; }
     public string ImportTextLineBreak { get; set; }
@@ -104,6 +104,18 @@ public class SeTools
     public bool SpeechToTextSelectedLinesPromptFirstTimeOnly { get; set; }
     public bool MultipleReplaceShowDotDotDotButtons { get; set; }
     public bool GridFocusTextboxAfterInsertNew { get; set; }
+
+    // OpenAI Compatible STT settings
+    public string OpenAiCompatibleSttUrl { get; set; } = "http://localhost:8000/v1/audio/transcriptions";
+    public string OpenAiCompatibleSttApiKey { get; set; } = string.Empty;
+    public string OpenAiCompatibleSttModel { get; set; } = "whisper-1";
+    public string OpenAiCompatibleSttExtraHeaders { get; set; } = string.Empty;
+    public int OpenAiCompatibleSttTimeoutSeconds { get; set; } = 300;
+    public string OpenAiCompatibleSttLanguage { get; set; } = string.Empty;
+    public decimal OpenAiCompatibleSttTemperature { get; set; }
+    public string OpenAiCompatibleSttPrompt { get; set; } = string.Empty;
+    public bool OpenAiCompatibleSttAutoTranscribeOnAudioSelection { get; set; }
+
     public List<string> FindHistory { get; set; } = new List<string>();
     public bool AllowSingleLetterShortcutsInTextbox { get; set; }
     public bool WriteToolsLog { get; set; } = true;

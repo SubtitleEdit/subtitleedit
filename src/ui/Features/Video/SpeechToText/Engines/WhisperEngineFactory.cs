@@ -47,6 +47,11 @@ public static class WhisperEngineFactory
             return new Qwen3AsrCppEngine();
         }
 
+        if (staticName == OpenAiCompatibleSttEngine.StaticName)
+        {
+            return new OpenAiCompatibleSttEngine();
+        }
+
         throw new NotImplementedException();
     }
 }

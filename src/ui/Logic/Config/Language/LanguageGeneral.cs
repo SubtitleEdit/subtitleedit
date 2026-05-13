@@ -669,6 +669,30 @@ public class LanguageGeneral
     public string PlaybackSpeed { get; set; }
     public string HoursMinutesSecondsMilliseconds { get; set; }
     public string ImageFiles { get; set; }
+    public string TranscribeWithOpenAi { get; set; }
+    public string OpenAiCompatibleStt { get; set; }
+    public string OpenAiCompatibleSttEndpoint { get; set; }
+    public string OpenAiCompatibleSttApiKey { get; set; }
+    public string OpenAiCompatibleSttModel { get; set; }
+    public string OpenAiCompatibleSttExtraHeaders { get; set; }
+    public string OpenAiCompatibleSttTimeout { get; set; }
+    public string OpenAiCompatibleSttLanguage { get; set; }
+    public string OpenAiCompatibleSttTemperature { get; set; }
+    public string OpenAiCompatibleSttPrompt { get; set; }
+    public string OpenAiCompatibleSttAutoTranscribeOnAudioSelection { get; set; }
+    public string ConfigurationRequired { get; set; }
+    public string PleaseConfigureOpenAiStt { get; set; }
+    public string TranscriptionError { get; set; }
+    public string TranscriptionComplete { get; set; }
+    public string TranscribingWithOpenAi { get; set; }
+    public string ProcessingResponse { get; set; }
+    public string UnauthorizedApiKey { get; set; }
+    public string RequestTimeout { get; set; }
+    public string NoSegmentsReturned { get; set; }
+    public string NoSelection { get; set; }
+    public string PleaseSelectSubtitleLinesAndVideo { get; set; }
+    public string OpenAiCompatibleSttNotConfigured { get; set; }
+    public string TranscriptionFailed { get; set; }
 
     public LanguageGeneral()
     {
@@ -1337,5 +1361,29 @@ public class LanguageGeneral
         PlaybackSpeed = "Playback speed";
         HoursMinutesSecondsMilliseconds = "HH:MM:SS.FFF";
         ImageFiles = "Image files";
+        TranscribeWithOpenAi = "Transcribe with OpenAI Service";
+        OpenAiCompatibleStt = "OpenAI Compatible STT";
+        OpenAiCompatibleSttEndpoint = "STT Endpoint URL";
+        OpenAiCompatibleSttApiKey = "API Key";
+        OpenAiCompatibleSttModel = "Model";
+        OpenAiCompatibleSttExtraHeaders = "Extra Headers";
+        OpenAiCompatibleSttTimeout = "Timeout (seconds)";
+        OpenAiCompatibleSttLanguage = "Language Hint";
+        OpenAiCompatibleSttTemperature = "Temperature";
+        OpenAiCompatibleSttPrompt = "Prompt";
+        OpenAiCompatibleSttAutoTranscribeOnAudioSelection = "Auto transcribe on audio selection";
+        ConfigurationRequired = "Configuration Required";
+        PleaseConfigureOpenAiStt = "Please configure OpenAI Compatible STT settings first.";
+        TranscriptionError = "Transcription Error";
+        TranscriptionComplete = "Transcription complete";
+        TranscribingWithOpenAi = "Transcribing with OpenAI Service...";
+        ProcessingResponse = "Processing response...";
+        UnauthorizedApiKey = "Unauthorized: Invalid API key or insufficient permissions.";
+        RequestTimeout = "Request timeout: The server took too long to respond.";
+        NoSegmentsReturned = "No segments returned from the transcription service.";
+        NoSelection = "No Selection";
+        PleaseSelectSubtitleLinesAndVideo = "Please select subtitle lines and ensure a video file is loaded.";
+        OpenAiCompatibleSttNotConfigured = "OpenAI Compatible STT is not configured.\n\nWould you like to configure it now?";
+        TranscriptionFailed = "Transcription failed";
     }
 }
