@@ -372,7 +372,6 @@ public partial class MainViewModel :
     public MenuItem MenuItemAudioVisualizerSpeechToTextSelectedLines { get; set; }
     public MenuItem MenuItemAudioVisualizerSpeechToTextNewSelection { get; set; }
     public MenuItem MenuItemAudioVisualizerExtractAudio { get; set; }
-    public MenuItem MenuItemAudioVisualizerTranscribeWithOpenAi { get; set; }
     public ITextBoxWrapper EditTextBoxOriginal { get; set; }
     public ITextBoxWrapper EditTextBox { get; set; }
     public TextEditorBindingHelper? EditTextBoxHelper { get; set; }
@@ -16414,7 +16413,6 @@ public partial class MainViewModel :
             MenuItemAudioVisualizerDeleteAtPosition.IsVisible = true;
             MenuItemAudioVisualizerSplitAtPosition.IsVisible = true;
             MenuItemAudioVisualizerSpeechToTextSelectedLines.IsVisible = true;
-            MenuItemAudioVisualizerTranscribeWithOpenAi.IsVisible = true;
         }
 
         if (selectedSubtitles?.Count == 1 &&
