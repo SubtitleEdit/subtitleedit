@@ -6328,8 +6328,16 @@ public partial class MainViewModel :
         if (oldSettngsSerialized != newSettingsSerialized)
         {
             var firstSelectedIndex = SubtitleGrid.SelectedIndex;
-            ApplySettings();
-            SelectAndScrollToRow(firstSelectedIndex);
+
+            // Defer to a fresh dispatcher cycle: ApplySettings rebuilds the layout, which
+            // destroys and recreates the video player control (a native Win32 HWND on Windows
+            // with mpv-wid/VLC). Doing that inside the ShowDialog continuation races the modal
+            // dialog's teardown and can leave the main window disabled - a full UI freeze (#10815).
+            Dispatcher.UIThread.Post(() =>
+            {
+                ApplySettings();
+                SelectAndScrollToRow(firstSelectedIndex);
+            });
         }
     }
 
