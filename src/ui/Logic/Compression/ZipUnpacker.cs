@@ -95,7 +95,8 @@ public class ZipUnpacker : IZipUnpacker
         TarEntry? entry;
         while ((entry = tarReader.GetNextEntry()) != null)
         {
-            if (entry.EntryType != TarEntryType.RegularFile)
+            var isSymbolicLink = entry.EntryType is TarEntryType.SymbolicLink or TarEntryType.HardLink;
+            if (entry.EntryType != TarEntryType.RegularFile && !isSymbolicLink)
             {
                 continue;
             }
@@ -119,20 +120,65 @@ public class ZipUnpacker : IZipUnpacker
                 Directory.CreateDirectory(directoryPath);
             }
 
-            if (!string.IsNullOrEmpty(Path.GetFileName(entryFullName)))
+            if (string.IsNullOrEmpty(Path.GetFileName(entryFullName)))
             {
-                if (allowedExtensions.Count > 0)
+                continue;
+            }
+
+            if (allowedExtensions.Count > 0)
+            {
+                var extension = Path.GetExtension(entryFullName).ToLowerInvariant();
+                if (!allowedExtensions.Contains(extension))
                 {
-                    var extension = Path.GetExtension(entryFullName).ToLowerInvariant();
-                    if (!allowedExtensions.Contains(extension))
+                    continue;
+                }
+            }
+
+            if (isSymbolicLink)
+            {
+                // Versioned native libraries (e.g. macOS/Linux llama.cpp builds) ship as symlink
+                // chains; recreate them so loader @rpath references keep resolving.
+                var linkTarget = entry.LinkName;
+                if (allToOutputPath)
+                {
+                    linkTarget = Path.GetFileName(linkTarget);
+                }
+
+                if (string.IsNullOrEmpty(linkTarget))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    if (File.Exists(filePath) || Directory.Exists(filePath))
+                    {
+                        File.Delete(filePath);
+                    }
+
+                    File.CreateSymbolicLink(filePath, linkTarget);
+                }
+                catch
+                {
+                    // Symlinks may be unsupported (e.g. Windows without privileges) - fall back to
+                    // copying the already-extracted target file when it is available.
+                    var resolvedTarget = Path.Combine(directoryPath ?? outputPath, linkTarget);
+                    if (File.Exists(resolvedTarget) && !File.Exists(filePath))
+                    {
+                        File.Copy(resolvedTarget, filePath);
+                    }
+                    else
                     {
                         continue;
                     }
                 }
-
-                entry.ExtractToFile(filePath, overwrite: true);
-                outputFileNames?.Add(filePath);
             }
+            else
+            {
+                entry.ExtractToFile(filePath, overwrite: true);
+            }
+
+            outputFileNames?.Add(filePath);
         }
     }
 
