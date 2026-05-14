@@ -154,6 +154,14 @@ public static class LlamaCppServerManager
             psi.ArgumentList.Add("99");
             psi.ArgumentList.Add("-c");
             psi.ArgumentList.Add("8192");
+            // TranslateGemma ships a non-standard Jinja chat template (it expects structured
+            // content with source/target language codes) that llama-server rejects at startup.
+            // The curated models are all Gemma-3 based, so fall back to the plain Gemma chat
+            // template - this keeps the OpenAI /v1/chat/completions endpoint working with the
+            // normal text messages the translate engine sends.
+            psi.ArgumentList.Add("--no-jinja");
+            psi.ArgumentList.Add("--chat-template");
+            psi.ArgumentList.Add("gemma");
 
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start llama-server");
