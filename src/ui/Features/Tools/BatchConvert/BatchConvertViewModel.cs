@@ -30,6 +30,8 @@ using Nikse.SubtitleEdit.Features.Tools.BatchConvert.BatchErrorList;
 using Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 using Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
 using Nikse.SubtitleEdit.Features.Translate;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.UiLogic.BatchConvert;
@@ -154,6 +156,9 @@ public partial class BatchConvertViewModel : ObservableObject
     [ObservableProperty] private bool _autoTranslateModelBrowseIsVisible;
     [ObservableProperty] private bool _autoTranslateUrlIsVisible;
     [ObservableProperty] private bool _autoTranslateApiKeyIsVisible;
+    [ObservableProperty] private ObservableCollection<SpeechToTextModelDisplay> _crispAsrModels = new();
+    [ObservableProperty] private SpeechToTextModelDisplay? _selectedCrispAsrModel;
+    [ObservableProperty] private bool _crispAsrModelComboIsVisible;
 
     // Fix common errors
     [ObservableProperty] private FixCommonErrors.ProfileDisplayItem? _fixCommonErrorsProfile;
@@ -1039,7 +1044,15 @@ public partial class BatchConvertViewModel : ObservableObject
             return true;
         }
 
-        return await CrispAsrTranslateDownloadHelper.EnsureReadyAsync(Window, _windowService, null);
+        var ready = await CrispAsrTranslateDownloadHelper.EnsureReadyAsync(Window, _windowService, SelectedCrispAsrModel?.Model.Name);
+        if (ready)
+        {
+            SelectedCrispAsrModel = CrispAsrTranslateDownloadHelper.PopulateModels(
+                CrispAsrModels,
+                Path.GetFileName(Se.Settings.AutoTranslate.CrispAsrModel ?? string.Empty));
+        }
+
+        return ready;
     }
 
     private static bool IsImageBasedInput(BatchConvertItem item)
@@ -2070,13 +2083,38 @@ public partial class BatchConvertViewModel : ObservableObject
         }
     }
 
+    partial void OnSelectedCrispAsrModelChanged(SpeechToTextModelDisplay? value)
+    {
+        if (value == null)
+        {
+            return;
+        }
+
+        Se.Settings.AutoTranslate.CrispAsrModel = new CrispAsrMadlad().GetModelForCmdLine(value.Model.Name);
+        Configuration.Settings.Tools.AutoTranslateCrispAsrModel = Se.Settings.AutoTranslate.CrispAsrModel;
+    }
+
     internal void OnAutoTranslatorChanged()
     {
         var engine = SelectedAutoTranslator;
 
         AutoTranslateModelIsVisible = engine is OllamaTranslate;
+        CrispAsrModelComboIsVisible = engine is CrispAsrMadladTranslate;
 
-        if (engine is OllamaTranslate)
+        if (engine is CrispAsrMadladTranslate)
+        {
+            AutoTranslateModel = string.Empty;
+            AutoTranslateModelBrowseIsVisible = false;
+            AutoTranslateModelIsVisible = false;
+            AutoTranslateUrl = string.Empty;
+            AutoTranslateUrlIsVisible = false;
+            AutoTranslateApiKey = string.Empty;
+            AutoTranslateApiKeyIsVisible = false;
+            SelectedCrispAsrModel = CrispAsrTranslateDownloadHelper.PopulateModels(
+                CrispAsrModels,
+                Path.GetFileName(Se.Settings.AutoTranslate.CrispAsrModel ?? string.Empty));
+        }
+        else if (engine is OllamaTranslate)
         {
             AutoTranslateModel = Se.Settings.AutoTranslate.OllamaModel;
             AutoTranslateModelBrowseIsVisible = true;

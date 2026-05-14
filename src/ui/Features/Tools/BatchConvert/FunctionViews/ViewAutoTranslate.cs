@@ -33,11 +33,15 @@ public static class ViewAutoTranslate
         var labelModel = UiUtil.MakeLabel(Se.Language.General.Model).WithBindVisible(vm, nameof(vm.AutoTranslateModelIsVisible)).WithMarginLeft(10).WithMarginRight(3);
         var textBoxModel = UiUtil.MakeTextBox(150, vm, nameof(vm.AutoTranslateModel), nameof(vm.AutoTranslateModelIsVisible));
         var buttonModel = UiUtil.MakeButtonBrowse(vm.AutoTranslateBrowseModelCommand, nameof(vm.AutoTranslateModelBrowseIsVisible)).WithMarginLeft(3);
+        var labelCrispAsrModel = UiUtil.MakeLabel(Se.Language.General.Model).WithBindVisible(vm, nameof(vm.CrispAsrModelComboIsVisible)).WithMarginLeft(10).WithMarginRight(3);
+        var crispAsrModelCombo = UiUtil.MakeComboBox(vm.CrispAsrModels, vm, nameof(vm.SelectedCrispAsrModel), nameof(vm.CrispAsrModelComboIsVisible));
         var panelEngineControls = UiUtil.MakeHorizontalPanel(
             cbEngines,
             labelModel,
             textBoxModel,
-            buttonModel);
+            buttonModel,
+            labelCrispAsrModel,
+            crispAsrModelCombo);
 
         var labelSourceLanguage = UiUtil.MakeLabel(Se.Language.General.From);
         var sourceLangCombo = UiUtil.MakeComboBox(vm.SourceLanguages, vm, nameof(vm.SelectedSourceLanguage));

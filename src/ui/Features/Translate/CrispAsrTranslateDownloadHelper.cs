@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Translate;
@@ -46,6 +47,29 @@ public static class CrispAsrTranslateDownloadHelper
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Fills <paramref name="target"/> with the available MADLAD models (with download status) and
+    /// returns the one matching <paramref name="selectModelName"/>, or the first model otherwise.
+    /// </summary>
+    public static SpeechToTextModelDisplay? PopulateModels(ObservableCollection<SpeechToTextModelDisplay> target, string? selectModelName)
+    {
+        target.Clear();
+        var engine = new CrispAsrMadlad();
+        SpeechToTextModelDisplay? toSelect = null;
+        foreach (var model in engine.Models)
+        {
+            var display = new SpeechToTextModelDisplay { Model = model, Engine = engine };
+            display.RefreshDownloadStatus();
+            target.Add(display);
+            if (model.Name == selectModelName)
+            {
+                toSelect = display;
+            }
+        }
+
+        return toSelect ?? target.FirstOrDefault();
     }
 
     /// <summary>

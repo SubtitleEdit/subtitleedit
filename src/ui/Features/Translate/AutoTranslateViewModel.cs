@@ -654,27 +654,14 @@ public partial class AutoTranslateViewModel : ObservableObject
         var downloadedModelName = await CrispAsrTranslateDownloadHelper.DownloadAsync(Window, _windowService, SelectedCrispAsrModel?.Model.Name);
         if (downloadedModelName != null)
         {
-            PopulateCrispAsrModels(new CrispAsrMadlad(), downloadedModelName);
+            PopulateCrispAsrModels(downloadedModelName);
             SaveSettings();
         }
     }
 
-    private void PopulateCrispAsrModels(CrispAsrMadlad engine, string? selectModelName)
+    private void PopulateCrispAsrModels(string? selectModelName)
     {
-        CrispAsrModels.Clear();
-        SpeechToTextModelDisplay? toSelect = null;
-        foreach (var model in engine.Models)
-        {
-            var display = new SpeechToTextModelDisplay { Model = model, Engine = engine };
-            display.RefreshDownloadStatus();
-            CrispAsrModels.Add(display);
-            if (model.Name == selectModelName)
-            {
-                toSelect = display;
-            }
-        }
-
-        SelectedCrispAsrModel = toSelect ?? CrispAsrModels.FirstOrDefault();
+        SelectedCrispAsrModel = CrispAsrTranslateDownloadHelper.PopulateModels(CrispAsrModels, selectModelName);
     }
 
     partial void OnSelectedCrispAsrModelChanged(SpeechToTextModelDisplay? value)
@@ -697,7 +684,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         var ready = await CrispAsrTranslateDownloadHelper.EnsureReadyAsync(Window, _windowService, SelectedCrispAsrModel?.Model.Name);
         if (ready)
         {
-            PopulateCrispAsrModels(new CrispAsrMadlad(), Path.GetFileName(Se.Settings.AutoTranslate.CrispAsrModel ?? string.Empty));
+            PopulateCrispAsrModels(Path.GetFileName(Se.Settings.AutoTranslate.CrispAsrModel ?? string.Empty));
         }
 
         return ready;
@@ -1361,14 +1348,13 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         if (engineType == typeof(CrispAsrMadladTranslate))
         {
-            var madladEngine = new CrispAsrMadlad();
             if (string.IsNullOrEmpty(Se.Settings.AutoTranslate.CrispAsrExe))
             {
-                Se.Settings.AutoTranslate.CrispAsrExe = madladEngine.GetExecutable();
+                Se.Settings.AutoTranslate.CrispAsrExe = new CrispAsrMadlad().GetExecutable();
                 Configuration.Settings.Tools.AutoTranslateCrispAsrExe = Se.Settings.AutoTranslate.CrispAsrExe;
             }
 
-            PopulateCrispAsrModels(madladEngine, Path.GetFileName(Se.Settings.AutoTranslate.CrispAsrModel ?? string.Empty));
+            PopulateCrispAsrModels(Path.GetFileName(Se.Settings.AutoTranslate.CrispAsrModel ?? string.Empty));
 
             CrispAsrModelComboIsVisible = true;
             ButtonDownloadIsVisible = true;
