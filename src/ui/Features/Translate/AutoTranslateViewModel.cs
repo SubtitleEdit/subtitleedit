@@ -651,52 +651,10 @@ public partial class AutoTranslateViewModel : ObservableObject
             return;
         }
 
-        var engine = new CrispAsrMadlad();
-
-        if (!engine.IsEngineInstalled())
+        var downloadedModelName = await CrispAsrTranslateDownloadHelper.DownloadAsync(Window, _windowService, SelectedCrispAsrModel?.Model.Name);
+        if (downloadedModelName != null)
         {
-            var engineVm = await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
-                Window, vm =>
-                {
-                    vm.Engine = engine;
-                    vm.CrispAsrWindowsVariant = "cpu";
-                    vm.StartDownload();
-                });
-
-            if (!engineVm.OkPressed || !engine.IsEngineInstalled())
-            {
-                return;
-            }
-        }
-
-        var models = new ObservableCollection<SpeechToTextModelDisplay>();
-        SpeechToTextModelDisplay? selectedModel = null;
-        foreach (var model in engine.Models)
-        {
-            var display = new SpeechToTextModelDisplay
-            {
-                Model = model,
-                Engine = engine,
-            };
-            models.Add(display);
-            if (model.Name == SelectedCrispAsrModel?.Model.Name)
-            {
-                selectedModel = display;
-            }
-        }
-
-        var modelsVm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
-            Window, vm =>
-            {
-                vm.SetModels(models, engine, selectedModel);
-            });
-
-        if (modelsVm is { OkPressed: true, SelectedModel: not null })
-        {
-            Se.Settings.AutoTranslate.CrispAsrExe = engine.GetExecutable();
-            Configuration.Settings.Tools.AutoTranslateCrispAsrExe = Se.Settings.AutoTranslate.CrispAsrExe;
-
-            PopulateCrispAsrModels(engine, modelsVm.SelectedModel.Model.Name);
+            PopulateCrispAsrModels(new CrispAsrMadlad(), downloadedModelName);
             SaveSettings();
         }
     }
@@ -729,13 +687,6 @@ public partial class AutoTranslateViewModel : ObservableObject
         ModelText = new CrispAsrMadlad().GetModelForCmdLine(value.Model.Name);
     }
 
-    private static bool IsCrispAsrReady()
-    {
-        var engine = new CrispAsrMadlad();
-        var modelPath = Se.Settings.AutoTranslate.CrispAsrModel;
-        return engine.IsEngineInstalled() && !string.IsNullOrEmpty(modelPath) && File.Exists(modelPath);
-    }
-
     private async Task<bool> EnsureCrispAsrReady()
     {
         if (Window == null)
@@ -743,26 +694,13 @@ public partial class AutoTranslateViewModel : ObservableObject
             return false;
         }
 
-        if (IsCrispAsrReady())
+        var ready = await CrispAsrTranslateDownloadHelper.EnsureReadyAsync(Window, _windowService, SelectedCrispAsrModel?.Model.Name);
+        if (ready)
         {
-            return true;
+            PopulateCrispAsrModels(new CrispAsrMadlad(), Path.GetFileName(Se.Settings.AutoTranslate.CrispAsrModel ?? string.Empty));
         }
 
-        var answer = await MessageBox.Show(
-            Window,
-            Se.Language.General.Download,
-            $"{SelectedAutoTranslator.Name} requires the CrispASR engine and a MADLAD model to be downloaded. Download now?",
-            MessageBoxButtons.YesNo,
-            MessageBoxIcon.Question);
-
-        if (answer != MessageBoxResult.Yes)
-        {
-            return false;
-        }
-
-        await DownloadCrispAsr();
-
-        return IsCrispAsrReady();
+        return ready;
     }
 
     private async Task<bool> DoTranslate()

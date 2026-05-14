@@ -345,7 +345,8 @@ public partial class BatchConvertViewModel : ObservableObject
             new LmStudioTranslate(),
             new NoLanguageLeftBehindServe(),
             new NoLanguageLeftBehindApi(),
-            new DeepLTranslate()
+            new DeepLTranslate(),
+            new CrispAsrMadladTranslate(),
         ];
         SelectedAutoTranslator = AutoTranslators[0];
         OnAutoTranslatorChanged();
@@ -853,6 +854,11 @@ public partial class BatchConvertViewModel : ObservableObject
             return;
         }
 
+        if (!await EnsureCrispAsrAvailable(config))
+        {
+            return;
+        }
+
         _batchConverter.Initialize(config);
         var start = DateTime.UtcNow.Ticks;
 
@@ -1019,6 +1025,21 @@ public partial class BatchConvertViewModel : ObservableObject
         }
 
         return true;
+    }
+
+    private async Task<bool> EnsureCrispAsrAvailable(BatchConvertConfig config)
+    {
+        if (Window == null)
+        {
+            return true;
+        }
+
+        if (!config.AutoTranslate.IsActive || config.AutoTranslate.Translator is not CrispAsrMadladTranslate)
+        {
+            return true;
+        }
+
+        return await CrispAsrTranslateDownloadHelper.EnsureReadyAsync(Window, _windowService, null);
     }
 
     private static bool IsImageBasedInput(BatchConvertItem item)
