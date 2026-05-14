@@ -63,6 +63,15 @@ Text to speech now includes more local and cloud engines:
 
 See [Text to Speech](text-to-speech.md) for details.
 
+## Auto-translate
+
+Subtitle Edit 5 adds local, downloadable auto-translate engines that run entirely on your own machine:
+
+- **Server-managed llama.cpp** — Subtitle Edit downloads llama.cpp, manages a local `llama-server` process, and offers a curated TranslateGemma model picker, so no manual server setup is required. CPU, Vulkan, and CUDA builds are available, and the server can be started and stopped from the Auto-translate window.
+- **CrispASR MADLAD** — a local MADLAD-based translation engine with downloadable models (shown with size and install status), available in both the Auto-translate window and Batch Convert.
+
+See [Auto-translate](auto-translate.md) for the full engine list and workflow.
+
 ## OCR and Batch Conversion
 
 - Batch Convert can use Binary OCR and can auto-detect several nOCR/Binary OCR settings.

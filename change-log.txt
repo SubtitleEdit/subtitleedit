@@ -1,6 +1,33 @@
 
 Subtitle Edit Changelog
 
+
+v5.0.0-beta26 (xth May 2026)
+
+* Add server-managed llama.cpp auto-translate engine
+* Add CrispASR MADLAD auto-translate engine - also available in Batch Convert
+* Add support for OpenAI-compatible speech-to-text servers
+* Add update detection for the llama.cpp engine
+* Add saving/restoring of Fix common errors window size - thx ironhussar
+* Add Russian translation - thx jekovcar
+* Move CrispASR to a shared data folder
+* Show media info window faster + make shortcut work in fullscreen - thx GrampaWildWilly
+* Update CrispASR to v0.6.6 - Granite engine now uses granite-4.1
+* Update Bulgarian translation - thx jekovcar
+* Update Japanese translation - thx hisui3393
+* Update Polish translation - thx potplayer-fanpack
+* Update Portuguese (Brazil) translation - thx igorruckert
+* Fix main window freeze after closing Settings with OK - thx David/bereld
+* Fix llama.cpp engine download on macOS/Linux - missing symlinked libraries
+* Fix llama-server startup with TranslateGemma models
+* Fix "Clear original" and original-changed flag after translation - thx wjcarpenter
+* Fix Mistral prompt text box missing in translate settings
+* Fix mp3 position jumping back to last seek at end of file
+* Fix removing color from non-WebVTT formats leaving <c.color> tags
+* Hide extend-to-line items in subtitle grid header context menu
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-beta25 (13th May 2026)
 
 * Add Finnish translation - thx userx77

@@ -19,17 +19,29 @@ Automatically translate subtitles using various translation engines and AI servi
 
 ## Supported Engines
 
-- **Google Translate (V1)** — Free Google Translate
-- **Google Translate (V2)** — Google Cloud Translation (requires API key)
-- **Microsoft Translator** — Azure Cognitive Services (requires API key)
-- **DeepL** — DeepL translation (requires API key)
-- **Libre Translate** — Open-source, self-hosted translation
-- **MyMemory** — Free translation memory
-- **Ollama** — Local LLM-based translation
+- **Google Translate V1 API** — Free Google Translate
+- **Google Translate V2 API** — Google Cloud Translation (requires API key)
+- **Bing Microsoft Translator** — Azure Cognitive Services (requires API key)
+- **DeepL V2 translate** — DeepL translation (requires API key)
+- **LibreTranslate** — Open-source, self-hosted translation
+- **MyMemory Translate** — Free translation memory
+- **ChatGPT** — OpenAI AI translation (requires API key)
+- **LM Studio (local LLM)** — Local LLM translation
+- **Ollama (local LLM)** — Local LLM-based translation
+- **llama.cpp (local LLM)** — Server-managed local LLM translation; Subtitle Edit downloads llama.cpp and a curated TranslateGemma model and runs a local `llama-server` for you
 - **Anthropic Claude** — AI translation (requires API key)
-- **OpenAI ChatGPT** — AI translation (requires API key)
 - **Groq** — AI translation (requires API key)
-- **LM Studio** — Local LLM translation
+- **OpenRouter** — AI translation (requires API key)
+- **Lara** — AI translation (requires API key)
+- **Perplexity** — AI translation (requires API key)
+- **Google Gemini** — AI translation (requires API key)
+- **NVIDIA** — AI translation (requires API key)
+- **Mistral AI Translate** — AI translation (requires API key)
+- **Papago Translate** — Naver Papago translation (requires API key)
+- **thammegowda-nllb-serve** — Self-hosted NLLB (No Language Left Behind) server
+- **winstxnhdw-nllb-api** — NLLB (No Language Left Behind) API
+- **Baidu Translate** — Baidu translation (requires App ID and secret)
+- **CrispASR MADLAD** — Local MADLAD-based translation with downloadable models (shown with size and install status); also available in Batch Convert
 
 ## Engine Configuration
 
