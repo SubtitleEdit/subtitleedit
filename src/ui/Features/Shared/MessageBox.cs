@@ -55,11 +55,14 @@ public class MessageBox : Window
     private MessageBox(string title, string message, MessageBoxButtons buttons, MessageBoxIcon icon, string? custom1 = null, string? custom2 = null, string? custom3 = null)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Width = 400;
-        Height = 180;
         Title = title;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         CanResize = false;
+        SizeToContent = SizeToContent.WidthAndHeight;
+        MinWidth = 400;
+        MinHeight = 180;
+        MaxWidth = 900;
+        MaxHeight = 700;
 
         var message1 = message;
 
@@ -111,15 +114,8 @@ public class MessageBox : Window
             TextWrapping = TextWrapping.Wrap,
             Height = double.NaN,
             Width = double.NaN,
+            MaxWidth = 700, // wrap long messages instead of growing the window unbounded
         };
-
-
-        var x = TextMeasurer.MeasureString(message, textBlock.FontFamily.Name, (float)textBlock.FontSize);
-        if (x.Width > Width - 100)
-        {
-            Width += 200;
-            Height += 50;
-        }
 
         if (message.Length > 1000)
         {
@@ -127,6 +123,7 @@ public class MessageBox : Window
             {
                 Width = double.NaN,
                 Height = double.NaN,
+                MaxHeight = 400,
                 Margin = new Thickness(10),
                 Content = textBlock
             };

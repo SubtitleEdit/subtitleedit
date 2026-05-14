@@ -303,6 +303,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<DownloadGoogleLensOcrViewModel>();
         collection.AddTransient<DownloadLibMpvViewModel>();
         collection.AddTransient<DownloadLibVlcViewModel>();
+        collection.AddTransient<DownloadLlamaCppViewModel>();
         collection.AddTransient<DownloadPaddleOcrViewModel>();
         collection.AddTransient<DownloadTesseractModelViewModel>();
         collection.AddTransient<DownloadTesseractViewModel>();

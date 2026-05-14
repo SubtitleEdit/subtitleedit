@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Runtime.InteropServices;
@@ -9,51 +9,69 @@ namespace Nikse.SubtitleEdit.Logic.Download;
 
 public interface ILlamaCppDownloadService
 {
-    Task DownloadllamaCpp(string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken);
-
-    Task DownloadllamaCpp(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
+    Task DownloadEngine(Stream stream, string variant, IProgress<float>? progress, CancellationToken cancellationToken);
+    Task DownloadCudaRuntime(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
+    Task DownloadModel(string url, string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken);
 }
 
 public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadService
 {
-    private const string WindowsUrl = "https://github.com/ggml-org/llama.cpp/releases/download/b7489/llama-b7489-bin-win-cpu-x64.zip";
-    private const string MacArmUrl = "https://github.com/ggml-org/llama.cpp/releases/download/b7489/llama-b7489-bin-macos-arm64.tar.gz";
-    private const string MacX64Url = "https://github.com/ggml-org/llama.cpp/releases/download/b7489/llama-b7489-bin-macos-x64.tar.gz";
-    private const string LinuxUrl = "https://github.com/ggml-org/llama.cpp/releases/download/b7489/llama-b7489-bin-ubuntu-x64.tar.gz";
+    private const string Version = "b9145";
+    private const string BaseUrl = "https://github.com/ggml-org/llama.cpp/releases/download/" + Version + "/";
 
-    public async Task DownloadllamaCpp(string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken)
+    public const string VariantCpu = "cpu";
+    public const string VariantVulkan = "vulkan";
+    public const string VariantCuda = "cuda";
+
+    public async Task DownloadEngine(Stream stream, string variant, IProgress<float>? progress, CancellationToken cancellationToken)
     {
-        await DownloadHelper.DownloadFileAsync(httpClient, GetUrl(), destinationFileName, progress, cancellationToken);
+        await DownloadHelper.DownloadFileAsync(httpClient, GetEngineUrl(variant), stream, progress, cancellationToken);
     }
 
-    public async Task DownloadllamaCpp(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
+    public async Task DownloadCudaRuntime(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
     {
-        await DownloadHelper.DownloadFileAsync(httpClient, GetUrl(), stream, progress, cancellationToken);
+        await DownloadHelper.DownloadFileAsync(httpClient, BaseUrl + "cudart-llama-bin-win-cuda-12.4-x64.zip", stream, progress, cancellationToken);
     }
 
-    private string GetUrl()
+    public async Task DownloadModel(string url, string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken)
+    {
+        await DownloadHelper.DownloadFileAsync(httpClient, url, destinationFileName, progress, cancellationToken);
+    }
+
+    /// <summary>
+    /// True when the given variant ships its GPU runtime DLLs in a separate archive (Windows CUDA build).
+    /// </summary>
+    public static bool VariantNeedsCudaRuntime(string variant)
+    {
+        return OperatingSystem.IsWindows() && variant == VariantCuda;
+    }
+
+    private static string GetEngineUrl(string variant)
     {
         if (OperatingSystem.IsWindows())
         {
-            return WindowsUrl;
+            return variant switch
+            {
+                VariantCuda => BaseUrl + "llama-" + Version + "-bin-win-cuda-12.4-x64.zip",
+                VariantVulkan => BaseUrl + "llama-" + Version + "-bin-win-vulkan-x64.zip",
+                _ => BaseUrl + "llama-" + Version + "-bin-win-cpu-x64.zip",
+            };
         }
 
         if (OperatingSystem.IsLinux())
         {
-            return LinuxUrl;
+            return variant == VariantVulkan
+                ? BaseUrl + "llama-" + Version + "-bin-ubuntu-vulkan-x64.tar.gz"
+                : BaseUrl + "llama-" + Version + "-bin-ubuntu-x64.tar.gz";
         }
 
         if (OperatingSystem.IsMacOS())
         {
-            switch (RuntimeInformation.ProcessArchitecture)
-            {
-                case Architecture.Arm64:
-                    return MacArmUrl; // e.g., for M1, M2, M3, M4, M5 chips
-                case Architecture.X64:
-                    return MacX64Url;
-            }
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
+                ? BaseUrl + "llama-" + Version + "-bin-macos-arm64.tar.gz"
+                : BaseUrl + "llama-" + Version + "-bin-macos-x64.tar.gz";
         }
 
-        throw new PlatformNotSupportedException("Llama.cpp download is not support on this platform.");
+        throw new PlatformNotSupportedException("llama.cpp download is not supported on this platform.");
     }
 }
