@@ -493,6 +493,9 @@ public static class InitMenu
             Command = vm.ShowToolsSplitCommand,
         });
 
+        vm.MenuPlugins.Header = Se.Language.Plugins.Title;
+        UpdatePluginsMenu(vm);
+        menu.Items.Add(vm.MenuPlugins);
 
         menu.Items.Add(new MenuItem
         {
@@ -931,6 +934,48 @@ public static class InitMenu
         {
             vm.MenuReopen.IsVisible = false;
         }
+    }
+
+    /// <summary>
+    /// (Re)builds the contents of the Plugins menu. Safe to call at runtime, e.g. after
+    /// the plugin manager installs, removes, enables, or disables a plugin.
+    /// </summary>
+    public static void UpdatePluginsMenu(MainViewModel vm)
+    {
+        vm.MenuPlugins.Items.Clear();
+
+        var enabledPlugins = vm.GetInstalledPlugins()
+            .Where(p => !Se.Settings.Plugins.DisabledPluginNames.Contains(p.Manifest.Name))
+            .OrderBy(p => p.Manifest.Name)
+            .ToList();
+        if (enabledPlugins.Count == 0)
+        {
+            vm.MenuPlugins.Items.Add(new MenuItem
+            {
+                Header = Se.Language.Plugins.NoPluginsInstalled,
+                IsEnabled = false,
+            });
+        }
+        else
+        {
+            foreach (var plugin in enabledPlugins)
+            {
+                vm.MenuPlugins.Items.Add(new MenuItem
+                {
+                    Header = plugin.Manifest.Name,
+                    Command = vm.RunPluginCommand,
+                    CommandParameter = plugin,
+                    IsEnabled = plugin.CanRun,
+                });
+            }
+        }
+
+        vm.MenuPlugins.Items.Add(new Separator());
+        vm.MenuPlugins.Items.Add(new MenuItem
+        {
+            Header = Se.Language.Plugins.ManagePlugins,
+            Command = vm.ShowPluginManagerCommand,
+        });
     }
 
     private static void DisplayShortcuts(Menu menu, MainViewModel vm)

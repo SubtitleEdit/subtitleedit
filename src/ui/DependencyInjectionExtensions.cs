@@ -43,6 +43,7 @@ using Nikse.SubtitleEdit.Features.Ocr.Download;
 using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
 using Nikse.SubtitleEdit.Features.Ocr.NOcr;
 using Nikse.SubtitleEdit.Features.Options.Language;
+using Nikse.SubtitleEdit.Features.Options.Plugins;
 using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Features.Options.Settings.SettingsImportExport;
 using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
@@ -144,6 +145,7 @@ using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Initializers;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.Logic.Plugins;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr.GoogleLens;
 using Nikse.SubtitleEdit.Logic.UndoRedo;
@@ -199,6 +201,8 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<IOcrFixEngine, OcrFixEngine>();
         collection.AddTransient<IOcrInitializer, OcrInitializer>();
         collection.AddTransient<IPasteFromClipboardHelper, PasteFromClipboardHelper>();
+        collection.AddTransient<IPluginCatalog, PluginCatalog>();
+        collection.AddTransient<IPluginRunner, PluginRunner>();
         collection.AddTransient<IShortcutManager, ShortcutManager>();
         collection.AddTransient<ISpellCheckManager, SpellCheckManager>();
         collection.AddTransient<ISplitManager, SplitManager>();
@@ -225,6 +229,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClient<IKokoroTtsCppDownloadService, KokoroTtsCppDownloadService>();
         collection.AddHttpClient<IChatterboxTtsCppDownloadService, ChatterboxTtsCppDownloadService>();
         collection.AddHttpClient<IOmniVoiceDownloadService, OmniVoiceDownloadService>();
+        collection.AddHttpClient<IPluginDownloadService, PluginDownloadService>();
 
         // Window view models
         collection.AddTransient<AdvancedTtsSettingsViewModel>();
@@ -384,6 +389,8 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<PickSpellCheckDictionaryViewModel>();
         collection.AddTransient<PickSubtitleFormatViewModel>();
         collection.AddTransient<PickTsTrackViewModel>();
+        collection.AddTransient<PluginManagerViewModel>();
+        collection.AddTransient<GetPluginsViewModel>();
         collection.AddTransient<PointSyncViaOtherViewModel>();
         collection.AddTransient<PointSyncViewModel>();
         collection.AddTransient<PreProcessingViewModel>();

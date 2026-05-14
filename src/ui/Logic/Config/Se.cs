@@ -44,6 +44,7 @@ public class Se
     public SeWaveform Waveform { get; set; } = new();
     public SeFormats Formats { get; set; } = new();
     public SeOcr Ocr { get; set; } = new();
+    public SePlugins Plugins { get; set; } = new();
     public static SeLanguage Language { get; set; } = new();
     public static Se Settings { get; set; } = new();
 
@@ -101,6 +102,7 @@ public class Se
     public static string WaveformsFolder => Path.Combine(DataFolder, "Waveforms");
     public static string SpectrogramsFolder => Path.Combine(DataFolder, "Spectrograms");
     public static string ShotChangesFolder => Path.Combine(DataFolder, "ShotChanges");
+    public static string PluginsFolder => Path.Combine(DataFolder, "Plugins");
 
     public static string OcrFolder => Path.Combine(DataFolder, "OCR");
     public static string TranslationFolder => Path.Combine(DataFolder, "Languages");
@@ -332,6 +334,11 @@ public class Se
         if (Settings.Formats == null)
         {
             Settings.Formats = new SeFormats();
+        }
+
+        if (Settings.Plugins == null)
+        {
+            Settings.Plugins = new SePlugins();
         }
 
         if (Settings.Tools.FixCommonErrors.Profiles.Count == 0)
