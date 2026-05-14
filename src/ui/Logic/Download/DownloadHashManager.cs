@@ -48,6 +48,28 @@ public static class DownloadHashManager
         public const string LinuxExecutable = "CrispAsr.Linux.Executable";
     }
 
+    public static class LlamaCpp
+    {
+        // Hashes of the release archive (.zip / .tar.gz) — used when a sidecar hash exists alongside the install.
+        public const string WindowsCpu = "LlamaCpp.Windows.Cpu";
+        public const string WindowsVulkan = "LlamaCpp.Windows.Vulkan";
+        public const string WindowsCuda = "LlamaCpp.Windows.Cuda";
+        public const string LinuxCpu = "LlamaCpp.Linux.Cpu";
+        public const string LinuxVulkan = "LlamaCpp.Linux.Vulkan";
+        public const string MacOsArm64 = "LlamaCpp.MacOs.Arm64";
+        public const string MacOsX64 = "LlamaCpp.MacOs.X64";
+
+        // Hashes of the unpacked llama-server / llama-server.exe — used to detect the installed
+        // version when no sidecar is present (e.g. installs from older SE builds). The Windows
+        // CPU/Vulkan/CUDA builds ship an identical llama-server.exe (the backend lives in the
+        // ggml-*.dll), as do the two Linux builds, so there is a single executable key per OS
+        // (plus per-arch on macOS) — enough to tell "outdated" from "up to date".
+        public const string WindowsExecutable = "LlamaCpp.Windows.Executable";
+        public const string LinuxExecutable = "LlamaCpp.Linux.Executable";
+        public const string MacOsArm64Executable = "LlamaCpp.MacOs.Arm64.Executable";
+        public const string MacOsX64Executable = "LlamaCpp.MacOs.X64.Executable";
+    }
+
     public static class WhisperCpp
     {
         // Hashes of the release archive (.zip) — used when a sidecar hash exists alongside the install.
@@ -199,6 +221,56 @@ public static class DownloadHashManager
                 "7ea6e45b16f396c5cfee8447b0245e872399e504b6dc3d8bb81c3a3c262acbb5", // v0.5.4
                 "a92723269e7e16b93184aadadef3868396e75994665066b817218a0d208c1d2e", // v0.5.3
                 "b99c7d6f51652f7bcddfb6b5bd73f11c541f9947256f040758a20bd1c7ad6591", // v0.5.2
+            },
+
+            // llama.cpp — https://github.com/ggml-org/llama.cpp/releases
+            // Index 0 must match whatever version LlamaCppDownloadService.cs is pinned to,
+            // otherwise users will be prompted to "update" to the same version they just got.
+            [LlamaCpp.WindowsCpu] = new[]
+            {
+                "8e2266646ede106a112023340adc25a2c2150243826e9dfe4bd9f7ed30f8e042", // b9145 (current download URL)
+            },
+            [LlamaCpp.WindowsVulkan] = new[]
+            {
+                "5b54c452458bf6ad06d030a18458c484848b9def4d56b7b94171ff464e670d66", // b9145 (current download URL)
+            },
+            [LlamaCpp.WindowsCuda] = new[]
+            {
+                "a323ccfa87aaa31c47d62be75181799f16f2fe4636786c09bd8beeb6ac722266", // b9145 (current download URL)
+            },
+            [LlamaCpp.LinuxCpu] = new[]
+            {
+                "4cb45bdbf358bc15c77acb84e83e311a3f2c9247b9980f4f1886ebe3bd7e46d0", // b9145 (current download URL)
+            },
+            [LlamaCpp.LinuxVulkan] = new[]
+            {
+                "b4a28b06d973f662b9465b6e0e786d8991cdab4d24101f5d88b0b8f688a97aea", // b9145 (current download URL)
+            },
+            [LlamaCpp.MacOsArm64] = new[]
+            {
+                "3c0cef9bcf8898c3bd169e94fa2acec249b8ebc94d8fade2c165b6d6a01e2693", // b9145 (current download URL)
+            },
+            [LlamaCpp.MacOsX64] = new[]
+            {
+                "0391b2dfe4a4f384916ebf98c33bfe1205443cde8bffec7563b73671d3060149", // b9145 (current download URL)
+            },
+
+            // SHA-256 of llama-server / llama-server.exe extracted from each archive above.
+            [LlamaCpp.WindowsExecutable] = new[]
+            {
+                "528ff8471ff7072ac75494a80467a0fced073ec11dcbf96a0e1c3ec0334b9dd0", // b9145 (current download URL)
+            },
+            [LlamaCpp.LinuxExecutable] = new[]
+            {
+                "855bd9540073d9f020b9b77ad5866ea3ea74ca570ea3fac486da8676f0eb6933", // b9145 (current download URL)
+            },
+            [LlamaCpp.MacOsArm64Executable] = new[]
+            {
+                "61b18501af97dce62cb7e1c019981734d7b0e1003122079ac212edaeb86a36e4", // b9145 (current download URL)
+            },
+            [LlamaCpp.MacOsX64Executable] = new[]
+            {
+                "c33c8f47da7d7751cd07c9ab32e77c84b3f5ac56b56299016f62b2d184fe3dfb", // b9145 (current download URL)
             },
 
             // whisper.cpp — https://github.com/ggml-org/whisper.cpp/releases (and SE-repackaged builds
@@ -555,5 +627,109 @@ public static class DownloadHashManager
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Resolves the llama.cpp archive hash key for the current OS, architecture and (Windows/Linux)
+    /// variant ("cpu" / "vulkan" / "cuda"). Returns null when the combination is unknown.
+    /// </summary>
+    public static string? ResolveLlamaCppKey(string? variant)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return variant switch
+            {
+                "cuda" => LlamaCpp.WindowsCuda,
+                "vulkan" => LlamaCpp.WindowsVulkan,
+                "cpu" => LlamaCpp.WindowsCpu,
+                _ => null,
+            };
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return variant == "vulkan" ? LlamaCpp.LinuxVulkan : LlamaCpp.LinuxCpu;
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
+                ? LlamaCpp.MacOsArm64
+                : LlamaCpp.MacOsX64;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Reverse of <see cref="ResolveLlamaCppKey"/> for Windows variants only:
+    /// returns "cuda" / "vulkan" / "cpu" matching the given archive key, or null otherwise.
+    /// </summary>
+    public static string? GetLlamaCppWindowsVariant(string key)
+    {
+        return key switch
+        {
+            LlamaCpp.WindowsCuda => "cuda",
+            LlamaCpp.WindowsVulkan => "vulkan",
+            LlamaCpp.WindowsCpu => "cpu",
+            _ => null,
+        };
+    }
+
+    /// <summary>
+    /// Resolves the llama.cpp executable-hash key for the current OS and architecture.
+    /// Used as a fallback when no sidecar hash exists alongside the install. The Windows
+    /// CPU/Vulkan/CUDA builds (and the two Linux builds) share an identical llama-server
+    /// binary, so there is a single key per OS, plus per-arch on macOS.
+    /// </summary>
+    public static string? ResolveLlamaCppExecutableKey()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return LlamaCpp.WindowsExecutable;
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return LlamaCpp.LinuxExecutable;
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
+                ? LlamaCpp.MacOsArm64Executable
+                : LlamaCpp.MacOsX64Executable;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Detects which Windows llama.cpp variant is installed from its backend DLLs.
+    /// Returns "cuda" / "vulkan" / "cpu", or null if the folder doesn't look like a llama.cpp install.
+    /// </summary>
+    public static string? DetectLlamaCppWindowsVariant(string installFolder)
+    {
+        if (string.IsNullOrEmpty(installFolder) || !Directory.Exists(installFolder))
+        {
+            return null;
+        }
+
+        if (!File.Exists(Path.Combine(installFolder, "llama-server.exe")))
+        {
+            return null;
+        }
+
+        if (File.Exists(Path.Combine(installFolder, "ggml-cuda.dll")))
+        {
+            return "cuda";
+        }
+
+        if (File.Exists(Path.Combine(installFolder, "ggml-vulkan.dll")))
+        {
+            return "vulkan";
+        }
+
+        return "cpu";
     }
 }
