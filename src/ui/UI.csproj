@@ -81,6 +81,7 @@
 		<None Remove="Assets\Languages\Portuguese %28Brazil%29.json" />
 		<None Remove="Assets\Languages\Portuguese.json" />
 		<None Remove="Assets\Languages\Romanian.json" />
+		<None Remove="Assets\Languages\Russian.json" />
 		<None Remove="Assets\Languages\Spanish.json" />
 		<None Remove="Assets\Languages\Swedish.json" />
 		<None Remove="Assets\Languages\Turkish.json" />
@@ -118,6 +119,7 @@
 		<AvaloniaResource Include="Assets\Languages\Portuguese (Brazil).json" />
 		<AvaloniaResource Include="Assets\Languages\Portuguese.json" />
 		<AvaloniaResource Include="Assets\Languages\Romanian.json" />
+		<AvaloniaResource Include="Assets\Languages\Russian.json" />
 		<AvaloniaResource Include="Assets\Languages\Spanish.json" />
 		<AvaloniaResource Include="Assets\Languages\Swedish.json" />
 		<AvaloniaResource Include="Assets\Languages\Turkish.json" />
