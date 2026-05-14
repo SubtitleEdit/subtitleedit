@@ -139,6 +139,11 @@ public class AutoTranslateWindow : Window
 
         var dataGridBorder = UiUtil.MakeBorderForControlNoPadding(dataGrid);
 
+        var buttonDownloadCrispAsr = UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadCrispAsrCommand).WithMarginLeft(5);
+        buttonDownloadCrispAsr.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.ButtonDownloadIsVisible)));
+
+        var crispAsrModelCombo = UiUtil.MakeComboBox(vm.CrispAsrModels, vm, nameof(vm.SelectedCrispAsrModel), nameof(vm.CrispAsrModelComboIsVisible));
+
         StackPanel settingsBar = UiUtil.MakeControlBarLeft(
 
             UiUtil.MakeTextBlock(Se.Language.General.Id, vm, null, nameof(vm.ApiIdIsVisible)).WithMarginRight(5),
@@ -155,7 +160,11 @@ public class AutoTranslateWindow : Window
 
             UiUtil.MakeTextBlock(Se.Language.General.Model, vm, null, nameof(vm.ModelIsVisible)).WithMarginRight(5),
             UiUtil.MakeTextBox(150, vm, nameof(vm.ModelText), nameof(vm.ModelIsVisible)),
-            UiUtil.MakeButtonBrowse(vm.BrowseModelCommand, nameof(vm.ModelBrowseIsVisible)).WithMarginLeft(5)
+            UiUtil.MakeButtonBrowse(vm.BrowseModelCommand, nameof(vm.ModelBrowseIsVisible)).WithMarginLeft(5),
+
+            UiUtil.MakeTextBlock(Se.Language.General.Model, vm, null, nameof(vm.CrispAsrModelComboIsVisible)).WithMarginRight(5),
+            crispAsrModelCombo,
+            buttonDownloadCrispAsr
         );
 
         var settingsLink = UiUtil.MakeLink(Se.Language.General.Settings, vm.OpenSettingsCommand).WithMarginRight(10);

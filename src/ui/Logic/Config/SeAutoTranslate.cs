@@ -92,6 +92,8 @@ public class SeAutoTranslate
     public string GeminiModel { get; set; }
     public string GeminiPrompt { get; set; }
     public string SeamlessM4TUrl { get; set; }
+    public string CrispAsrExe { get; set; }
+    public string CrispAsrModel { get; set; }
 
     public SeAutoTranslate()
     {
@@ -176,6 +178,8 @@ public class SeAutoTranslate
         PapagoApiKeyId = string.Empty;
         RequestMaxBytes = 1000;
         SeamlessM4TUrl = "http://localhost:5000/";
+        CrispAsrExe = string.Empty;
+        CrispAsrModel = string.Empty;
         LaraApiId = string.Empty;
         LaraApiSecret = string.Empty;
     }

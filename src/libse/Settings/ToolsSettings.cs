@@ -38,6 +38,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string AutoTranslateLibreApiKey { get; set; }
         public string AutoTranslateMyMemoryApiKey { get; set; }
         public string AutoTranslateSeamlessM4TUrl { get; set; }
+        public string AutoTranslateCrispAsrExe { get; set; }
+        public string AutoTranslateCrispAsrModel { get; set; }
         public string AutoTranslateDeepLApiKey { get; set; }
         public string AutoTranslateDeepLUrl { get; set; }
         public string AutoTranslateDeepLFormality { get; set; }
@@ -356,6 +358,8 @@ namespace Nikse.SubtitleEdit.Core.Settings
             AutoTranslateNllbApiUrl = "http://localhost:7860/api/v4/";
             AutoTranslateLibreUrl = "http://localhost:5000/";
             AutoTranslateSeamlessM4TUrl = "http://localhost:5000/";
+            AutoTranslateCrispAsrExe = string.Empty;
+            AutoTranslateCrispAsrModel = string.Empty;
             AutoTranslateDeepLUrl = "https://api-free.deepl.com/";
             AutoTranslateDeepLXUrl = "http://localhost:1188";
             AutoTranslateMistralUrl = "https://api.mistral.ai/v1/chat/completions";

@@ -11,12 +11,15 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.Translate;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -61,6 +64,10 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private bool _modelBrowseIsVisible;
     [ObservableProperty] private string _modelText;
     [ObservableProperty] private bool _buttonModelIsVisible;
+    [ObservableProperty] private bool _buttonDownloadIsVisible;
+    [ObservableProperty] private ObservableCollection<string> _crispAsrModels = new();
+    [ObservableProperty] private string? _selectedCrispAsrModel;
+    [ObservableProperty] private bool _crispAsrModelComboIsVisible;
 
     public DataGrid? RowGrid { get; set; }
 
@@ -108,6 +115,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             new NoLanguageLeftBehindServe(),
             new NoLanguageLeftBehindApi(),
             new BaiduTranslate(),
+            new CrispAsrMadladTranslate(),
         };
         SelectedAutoTranslator = AutoTranslators[0];
         AutoTranslatorLinkText = SelectedAutoTranslator.Name;
@@ -210,6 +218,9 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.GeminiPrompt = Se.Settings.AutoTranslate.GeminiPrompt;
 
         Configuration.Settings.Tools.AutoTranslateSeamlessM4TUrl = Se.Settings.AutoTranslate.SeamlessM4TUrl;
+
+        Configuration.Settings.Tools.AutoTranslateCrispAsrExe = Se.Settings.AutoTranslate.CrispAsrExe;
+        Configuration.Settings.Tools.AutoTranslateCrispAsrModel = Se.Settings.AutoTranslate.CrispAsrModel;
     }
 
     public void SaveSettings()
@@ -349,6 +360,11 @@ public partial class AutoTranslateViewModel : ObservableObject
             Configuration.Settings.Tools.AutoTranslatePapagoApiKey = apiKey.Trim();
         }
 
+        if (engineType == typeof(CrispAsrMadladTranslate))
+        {
+            Configuration.Settings.Tools.AutoTranslateCrispAsrModel = apiModel.Trim();
+        }
+
         Configuration.Settings.Tools.AutoTranslateLastName = SelectedAutoTranslator.Name;
 
         Se.Settings.AutoTranslate.AutoTranslateLastName = SelectedAutoTranslator.Name;
@@ -435,6 +451,9 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.GeminiPrompt = Configuration.Settings.Tools.GeminiPrompt;
 
         Se.Settings.AutoTranslate.SeamlessM4TUrl = Configuration.Settings.Tools.AutoTranslateSeamlessM4TUrl;
+
+        Se.Settings.AutoTranslate.CrispAsrExe = Configuration.Settings.Tools.AutoTranslateCrispAsrExe;
+        Se.Settings.AutoTranslate.CrispAsrModel = Configuration.Settings.Tools.AutoTranslateCrispAsrModel;
 
         Se.SaveSettings();
     }
@@ -624,6 +643,111 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
     }
 
+    [RelayCommand]
+    private async Task DownloadCrispAsr()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var engine = new CrispAsrMadlad();
+
+        if (!engine.IsEngineInstalled())
+        {
+            var engineVm = await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
+                Window, vm =>
+                {
+                    vm.Engine = engine;
+                    vm.CrispAsrWindowsVariant = "cpu";
+                    vm.StartDownload();
+                });
+
+            if (!engineVm.OkPressed || !engine.IsEngineInstalled())
+            {
+                return;
+            }
+        }
+
+        var models = new ObservableCollection<SpeechToTextModelDisplay>();
+        foreach (var model in engine.Models)
+        {
+            models.Add(new SpeechToTextModelDisplay
+            {
+                Model = model,
+                Engine = engine,
+            });
+        }
+
+        var modelsVm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
+            Window, vm =>
+            {
+                vm.SetModels(models, engine, null);
+            });
+
+        if (modelsVm is { OkPressed: true, SelectedModel: not null })
+        {
+            Se.Settings.AutoTranslate.CrispAsrExe = engine.GetExecutable();
+            Configuration.Settings.Tools.AutoTranslateCrispAsrExe = Se.Settings.AutoTranslate.CrispAsrExe;
+
+            var modelName = modelsVm.SelectedModel.Model.Name;
+            if (!CrispAsrModels.Contains(modelName))
+            {
+                CrispAsrModels.Add(modelName);
+            }
+
+            SelectedCrispAsrModel = modelName;
+            ModelText = engine.GetModelForCmdLine(modelName);
+            SaveSettings();
+        }
+    }
+
+    partial void OnSelectedCrispAsrModelChanged(string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            return;
+        }
+
+        ModelText = new CrispAsrMadlad().GetModelForCmdLine(value);
+    }
+
+    private static bool IsCrispAsrReady()
+    {
+        var engine = new CrispAsrMadlad();
+        var modelPath = Se.Settings.AutoTranslate.CrispAsrModel;
+        return engine.IsEngineInstalled() && !string.IsNullOrEmpty(modelPath) && File.Exists(modelPath);
+    }
+
+    private async Task<bool> EnsureCrispAsrReady()
+    {
+        if (Window == null)
+        {
+            return false;
+        }
+
+        if (IsCrispAsrReady())
+        {
+            return true;
+        }
+
+        var answer = await MessageBox.Show(
+            Window,
+            Se.Language.General.Download,
+            $"{SelectedAutoTranslator.Name} requires the CrispASR engine and a MADLAD model to be downloaded. Download now?",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+
+        if (answer != MessageBoxResult.Yes)
+        {
+            return false;
+        }
+
+        await DownloadCrispAsr();
+
+        return IsCrispAsrReady();
+    }
+
     private async Task<bool> DoTranslate()
     {
         var translator = SelectedAutoTranslator;
@@ -679,6 +803,12 @@ public partial class AutoTranslateViewModel : ObservableObject
             return false;
         }
 
+        if (engineType == typeof(CrispAsrMadladTranslate) && !await EnsureCrispAsrReady())
+        {
+            IsProgressEnabled = false;
+            return false;
+        }
+
         _translationInProgress = true;
         _cancellationTokenSource = new CancellationTokenSource();
 
@@ -728,6 +858,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                                       translator.Name ==
                                       NoLanguageLeftBehindApi.StaticName || // NLLB seems to miss some text...
                                       translator.Name == NoLanguageLeftBehindServe.StaticName ||
+                                      translator.Name == CrispAsrMadladTranslate.StaticName || // one CLI process per line
                                       _onlyCurrentLine;
 
             var index = start;
@@ -928,6 +1059,10 @@ public partial class AutoTranslateViewModel : ObservableObject
         ModelIsVisible = false;
         ModelBrowseIsVisible = false;
         ButtonModelIsVisible = false;
+        ButtonDownloadIsVisible = false;
+        CrispAsrModelComboIsVisible = false;
+        CrispAsrModels.Clear();
+        SelectedCrispAsrModel = null;
         ModelText = string.Empty;
         //LabelApiUrl.Text = "API url";
         //LabelApiKey.Text = "API key";
@@ -1265,6 +1400,30 @@ public partial class AutoTranslateViewModel : ObservableObject
             ModelIsVisible = true;
             ButtonModelIsVisible = true;
             ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateMistralModel) ? _apiModels[0] : Configuration.Settings.Tools.AutoTranslateMistralModel;
+
+            return;
+        }
+
+        if (engineType == typeof(CrispAsrMadladTranslate))
+        {
+            var madladEngine = new CrispAsrMadlad();
+            if (string.IsNullOrEmpty(Se.Settings.AutoTranslate.CrispAsrExe))
+            {
+                Se.Settings.AutoTranslate.CrispAsrExe = madladEngine.GetExecutable();
+                Configuration.Settings.Tools.AutoTranslateCrispAsrExe = Se.Settings.AutoTranslate.CrispAsrExe;
+            }
+
+            CrispAsrModels.Clear();
+            foreach (var model in madladEngine.Models)
+            {
+                CrispAsrModels.Add(model.Name);
+            }
+
+            CrispAsrModelComboIsVisible = true;
+            ButtonDownloadIsVisible = true;
+
+            var savedModelName = Path.GetFileName(Se.Settings.AutoTranslate.CrispAsrModel ?? string.Empty);
+            SelectedCrispAsrModel = CrispAsrModels.Contains(savedModelName) ? savedModelName : CrispAsrModels.FirstOrDefault();
 
             return;
         }
