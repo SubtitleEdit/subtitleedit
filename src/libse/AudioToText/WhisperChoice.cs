@@ -24,6 +24,7 @@
         public const string CrispAsrGranite = "Crisp ASR Granite";
         public const string CrispAsrOmni = "Crisp ASR Omni";
         public const string CrispAsrKyutai = "Crisp ASR Kyutai";
+        public const string CrispAsrMadlad = "Crisp ASR MADLAD";
         public const string OpenAiCompatible = "OpenAI Compatible";
     }
 }

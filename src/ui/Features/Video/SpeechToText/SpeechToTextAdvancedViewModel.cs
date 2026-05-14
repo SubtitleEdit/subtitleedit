@@ -144,7 +144,7 @@ public partial class SpeechToTextAdvancedViewModel : ObservableObject
 
     private string? GetVadCrispAsrFile()
     {
-        var folder = Path.Combine(Se.SpeechToTextFolder, "CrispASR");
+        var folder = Se.CrispAsrFolder;
         if (!Directory.Exists(folder))
         {
             return null;

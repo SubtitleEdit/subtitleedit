@@ -24,7 +24,8 @@ public class DoAutoTranslate
                                       nameof(TranslateStrategy.TranslateEachLineSeparately) ||
                                       translator.Name ==
                                       NoLanguageLeftBehindApi.StaticName || // NLLB seems to miss some text...
-                                      translator.Name == NoLanguageLeftBehindServe.StaticName;
+                                      translator.Name == NoLanguageLeftBehindServe.StaticName ||
+                                      translator.Name == CrispAsrMadladTranslate.StaticName; // one CLI process per line
 
             var index = start;
             var linesTranslated = 0;

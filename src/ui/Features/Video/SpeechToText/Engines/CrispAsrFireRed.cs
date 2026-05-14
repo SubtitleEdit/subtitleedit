@@ -124,13 +124,7 @@ public class CrispAsrFireRed : CrispAsrEngineBase
 
     public override string GetAndCreateWhisperFolder()
     {
-        var baseFolder = Se.SpeechToTextFolder;
-        if (!Directory.Exists(baseFolder))
-        {
-            Directory.CreateDirectory(baseFolder);
-        }
-
-        var folder = Path.Combine(baseFolder, "CrispASR");
+        var folder = Se.CrispAsrFolder;
         if (!Directory.Exists(folder))
         {
             Directory.CreateDirectory(folder);

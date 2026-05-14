@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
 using System.IO;
@@ -6,68 +6,52 @@ using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
-public class CrispAsrGlm : CrispAsrEngineBase
+/// <summary>
+/// CrispASR MADLAD-400 text translation backend. This is not a speech-to-text engine - it is
+/// only used to drive the shared CrispASR binary/model download windows for the auto-translate
+/// feature, so it is intentionally not registered in <see cref="CrispAsrEngine"/>.
+/// </summary>
+public class CrispAsrMadlad : CrispAsrEngineBase
 {
-    public static string StaticName => "Crisp ASR GLM";
+    public static string StaticName => "Crisp ASR MADLAD";
     public override string Name => StaticName;
-    public override string Choice => WhisperChoice.CrispAsrGlm;
+    public override string Choice => WhisperChoice.CrispAsrMadlad;
     public override string Url => "https://github.com/CrispStrobe/CrispASR";
-    public override string BackendName => "glm-asr";
-    public override string DefaultLanguage => "zh";
-    public override bool IncludeLanguage => true;
+    public override string BackendName => "madlad";
+    public override string DefaultLanguage => "en";
+    public override bool IncludeLanguage => false;
+    public override bool HasNativeTimestamps => false;
 
-    public override List<WhisperLanguage> Languages =>
-        new()
-        {
-            new WhisperLanguage("auto", "Auto detect"),
-            new WhisperLanguage("zh", "chinese"),
-            new WhisperLanguage("en", "english"),
-            new WhisperLanguage("yue", "cantonese"),
-            new WhisperLanguage("ja", "japanese"),
-            new WhisperLanguage("ko", "korean"),
-            new WhisperLanguage("fr", "french"),
-            new WhisperLanguage("de", "german"),
-            new WhisperLanguage("es", "spanish"),
-            new WhisperLanguage("ru", "russian"),
-            new WhisperLanguage("it", "italian"),
-            new WhisperLanguage("pt", "portuguese"),
-            new WhisperLanguage("vi", "vietnamese"),
-            new WhisperLanguage("th", "thai"),
-            new WhisperLanguage("id", "indonesian"),
-            new WhisperLanguage("ar", "arabic"),
-            new WhisperLanguage("hi", "hindi"),
-            new WhisperLanguage("tr", "turkish"),
-        };
-
+    public override List<WhisperLanguage> Languages => new();
 
     public override List<WhisperModel> Models =>
        new()
        {
             new WhisperModel
             {
-                Name = "glm-asr-nano-q4_k.gguf",
-                Size = "1.3 GB",
+                Name = "madlad400-3b-mt-q4_k.gguf",
+                Size = "1.8 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/glm-asr-nano-GGUF/resolve/main/glm-asr-nano-q4_k.gguf"
+                    "https://huggingface.co/cstr/madlad400-3b-mt-GGUF/resolve/main/madlad400-3b-mt-q4_k.gguf",
                 ],
             },
             new WhisperModel
             {
-                Name = "glm-asr-nano-q8_0.gguf",
-                Size = "2.4 GB",
+                Name = "madlad400-3b-mt-q8_0.gguf",
+                Size = "3.1 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/glm-asr-nano-GGUF/resolve/main/glm-asr-nano-q8_0.gguf"
+                    "https://huggingface.co/cstr/madlad400-3b-mt-GGUF/resolve/main/madlad400-3b-mt-q8_0.gguf",
                 ],
             },
             new WhisperModel
             {
-                Name = "glm-asr-nano.gguf",
-                Size = "4.5 GB",
+                Name = "madlad400-3b-mt-f16.gguf",
+                Size = "5.7 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/glm-asr-nano-GGUF/resolve/main/glm-asr-nano.gguf"
+                    "https://huggingface.co/cstr/madlad400-3b-mt-GGUF/resolve/main/madlad400-3b-mt-f16.gguf",
                 ],
             },
        };
@@ -83,7 +67,7 @@ public class CrispAsrGlm : CrispAsrEngineBase
 
     public override string ToString()
     {
-        return CrispAsrEngine.GetBackendDisplayName(this);
+        return StaticName;
     }
 
     public override string GetAndCreateWhisperFolder()
@@ -111,8 +95,7 @@ public class CrispAsrGlm : CrispAsrEngineBase
 
     public override string GetExecutable()
     {
-        string fullPath = Path.Combine(GetAndCreateWhisperFolder(), GetExecutableFileName());
-        return fullPath;
+        return Path.Combine(GetAndCreateWhisperFolder(), GetExecutableFileName());
     }
 
     public override bool IsModelInstalled(WhisperModel model)
@@ -128,17 +111,14 @@ public class CrispAsrGlm : CrispAsrEngineBase
 
     public override string GetModelForCmdLine(string modelName)
     {
-        var modelFileName = Path.Combine(GetAndCreateWhisperModelFolder(null), modelName);
-        return modelFileName;
+        return Path.Combine(GetAndCreateWhisperModelFolder(null), modelName);
     }
-
 
     public override string GetWhisperModelDownloadFileName(WhisperModel whisperModel, string url)
     {
         var folder = GetAndCreateWhisperModelFolder(whisperModel);
         var fileNameOnly = Path.GetFileName(url);
-        var fileName = Path.Combine(folder, fileNameOnly);
-        return fileName;
+        return Path.Combine(folder, fileNameOnly);
     }
 
     internal static string GetExecutableFileName()
@@ -156,9 +136,5 @@ public class CrispAsrGlm : CrispAsrEngineBase
         return true;
     }
 
-    public override string CommandLineParameter
-    {
-        get => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrGlm;
-        set => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrGlm = value;
-    }
+    public override string CommandLineParameter { get; set; } = string.Empty;
 }

@@ -919,6 +919,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         public string GetFirstObject(string content, string name)
         {
             Errors = new List<string>();
+            if (string.IsNullOrEmpty(content))
+            {
+                return null;
+            }
+
             var i = 0;
             var max = content.Length;
             var state = new Stack<StateElement>();
