@@ -13,6 +13,7 @@ using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
+using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -68,6 +69,11 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<SpeechToTextModelDisplay> _crispAsrModels = new();
     [ObservableProperty] private SpeechToTextModelDisplay? _selectedCrispAsrModel;
     [ObservableProperty] private bool _crispAsrModelComboIsVisible;
+    [ObservableProperty] private ObservableCollection<LlamaCppModelDisplay> _llamaCppModels = new();
+    [ObservableProperty] private LlamaCppModelDisplay? _selectedLlamaCppModel;
+    [ObservableProperty] private bool _llamaCppModelComboIsVisible;
+    [ObservableProperty] private bool _llamaCppButtonsAreVisible;
+    [ObservableProperty] private string _llamaCppServerButtonText = "Start server";
 
     public DataGrid? RowGrid { get; set; }
 
@@ -278,11 +284,8 @@ public partial class AutoTranslateViewModel : ObservableObject
             Configuration.Settings.Tools.LmStudioModel = apiModel.Trim();
         }
 
-        if (engineType == typeof(LlamaCppTranslate))
-        {
-            Configuration.Settings.Tools.LlamaCppApiUrl = apiUrl.Trim();
-            Configuration.Settings.Tools.LlamaCppModel = apiModel.Trim();
-        }
+        // llama.cpp is server-managed: the API URL is set by LlamaCppServerManager and the
+        // model is persisted via OnSelectedLlamaCppModelChanged, so nothing to save here.
 
         if (engineType == typeof(OllamaTranslate))
         {
@@ -691,6 +694,98 @@ public partial class AutoTranslateViewModel : ObservableObject
         return ready;
     }
 
+    partial void OnSelectedLlamaCppModelChanged(LlamaCppModelDisplay? value)
+    {
+        if (value == null)
+        {
+            return;
+        }
+
+        Se.Settings.AutoTranslate.LlamaCppModel = LlamaCppServerManager.GetModelPath(value.Model.FileName);
+        Configuration.Settings.Tools.LlamaCppModel = Se.Settings.AutoTranslate.LlamaCppModel;
+    }
+
+    private void UpdateLlamaCppServerButtonText()
+    {
+        LlamaCppServerButtonText = LlamaCppServerManager.IsServerRunning ? "Stop server" : "Start server";
+    }
+
+    [RelayCommand]
+    private async Task DownloadLlamaCpp()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var model = SelectedLlamaCppModel?.Model;
+        var downloaded = await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model);
+        if (downloaded != null)
+        {
+            var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, selectName);
+        }
+    }
+
+    [RelayCommand]
+    private async Task ToggleLlamaCppServer()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (LlamaCppServerManager.IsServerRunning)
+        {
+            LlamaCppServerManager.StopServer();
+            UpdateLlamaCppServerButtonText();
+            return;
+        }
+
+        await EnsureLlamaCppReady();
+        UpdateLlamaCppServerButtonText();
+    }
+
+    private async Task<bool> EnsureLlamaCppReady()
+    {
+        if (Window == null)
+        {
+            return false;
+        }
+
+        var model = SelectedLlamaCppModel?.Model;
+        if (model == null)
+        {
+            return false;
+        }
+
+        if (!await LlamaCppDownloadHelper.EnsureReadyAsync(Window, _windowService, model.FileName))
+        {
+            return false;
+        }
+
+        SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, model.FileName);
+
+        try
+        {
+            await LlamaCppServerManager.EnsureServerRunningAsync(
+                LlamaCppServerManager.GetModelPath(model.FileName), _cancellationTokenSource.Token);
+        }
+        catch (Exception ex)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                ex.Message,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return false;
+        }
+
+        UpdateLlamaCppServerButtonText();
+        return true;
+    }
+
     private async Task<bool> DoTranslate()
     {
         var translator = SelectedAutoTranslator;
@@ -752,8 +847,15 @@ public partial class AutoTranslateViewModel : ObservableObject
             return false;
         }
 
-        _translationInProgress = true;
         _cancellationTokenSource = new CancellationTokenSource();
+
+        if (engineType == typeof(LlamaCppTranslate) && !await EnsureLlamaCppReady())
+        {
+            IsProgressEnabled = false;
+            return false;
+        }
+
+        _translationInProgress = true;
 
 
         SaveSettings();
@@ -1006,6 +1108,10 @@ public partial class AutoTranslateViewModel : ObservableObject
         CrispAsrModelComboIsVisible = false;
         CrispAsrModels.Clear();
         SelectedCrispAsrModel = null;
+        LlamaCppModelComboIsVisible = false;
+        LlamaCppButtonsAreVisible = false;
+        LlamaCppModels.Clear();
+        SelectedLlamaCppModel = null;
         ModelText = string.Empty;
         //LabelApiUrl.Text = "API url";
         //LabelApiKey.Text = "API key";
@@ -1177,22 +1283,11 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         if (engineType == typeof(LlamaCppTranslate))
         {
-            ModelBrowseIsVisible = false;
-
-            if (string.IsNullOrEmpty(Se.Settings.AutoTranslate.LlamaCppApiUrl))
-            {
-                Se.Settings.AutoTranslate.LlamaCppApiUrl = "http://localhost:8080/v1/chat/completions";
-            }
-
-            FillUrls(new List<string>
-            {
-                Se.Settings.AutoTranslate.LlamaCppApiUrl.TrimEnd('/'),
-            });
-
-            _apiModels = Configuration.Settings.Tools.OllamaModels.Split(',').ToList(); //TODO: fix this to get LlamaCpp models
-            ModelIsVisible = false;
-            ButtonModelIsVisible = false;
-            ModelText = Se.Settings.AutoTranslate.LlamaCppModel;
+            LlamaCppModelComboIsVisible = true;
+            LlamaCppButtonsAreVisible = true;
+            var savedModelName = Path.GetFileName(Se.Settings.AutoTranslate.LlamaCppModel ?? string.Empty);
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, savedModelName);
+            UpdateLlamaCppServerButtonText();
 
             return;
         }

@@ -144,6 +144,15 @@ public class AutoTranslateWindow : Window
 
         var crispAsrModelCombo = UiUtil.MakeComboBox(vm.CrispAsrModels, vm, nameof(vm.SelectedCrispAsrModel), nameof(vm.CrispAsrModelComboIsVisible));
 
+        var llamaCppModelCombo = UiUtil.MakeComboBox(vm.LlamaCppModels, vm, nameof(vm.SelectedLlamaCppModel), nameof(vm.LlamaCppModelComboIsVisible));
+
+        var buttonDownloadLlamaCpp = UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadLlamaCppCommand).WithMarginLeft(5);
+        buttonDownloadLlamaCpp.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppButtonsAreVisible)));
+
+        var buttonLlamaCppServer = UiUtil.MakeButton(string.Empty, vm.ToggleLlamaCppServerCommand).WithMarginLeft(5);
+        buttonLlamaCppServer.Bind(Button.ContentProperty, new Binding(nameof(vm.LlamaCppServerButtonText)));
+        buttonLlamaCppServer.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppButtonsAreVisible)));
+
         StackPanel settingsBar = UiUtil.MakeControlBarLeft(
 
             UiUtil.MakeTextBlock(Se.Language.General.Id, vm, null, nameof(vm.ApiIdIsVisible)).WithMarginRight(5),
@@ -164,7 +173,12 @@ public class AutoTranslateWindow : Window
 
             UiUtil.MakeTextBlock(Se.Language.General.Model, vm, null, nameof(vm.CrispAsrModelComboIsVisible)).WithMarginRight(5),
             crispAsrModelCombo,
-            buttonDownloadCrispAsr
+            buttonDownloadCrispAsr,
+
+            UiUtil.MakeTextBlock(Se.Language.General.Model, vm, null, nameof(vm.LlamaCppModelComboIsVisible)).WithMarginRight(5),
+            llamaCppModelCombo,
+            buttonDownloadLlamaCpp,
+            buttonLlamaCppServer
         );
 
         var settingsLink = UiUtil.MakeLink(Se.Language.General.Settings, vm.OpenSettingsCommand).WithMarginRight(10);
