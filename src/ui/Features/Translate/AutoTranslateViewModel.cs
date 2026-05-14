@@ -670,19 +670,25 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
 
         var models = new ObservableCollection<SpeechToTextModelDisplay>();
+        SpeechToTextModelDisplay? selectedModel = null;
         foreach (var model in engine.Models)
         {
-            models.Add(new SpeechToTextModelDisplay
+            var display = new SpeechToTextModelDisplay
             {
                 Model = model,
                 Engine = engine,
-            });
+            };
+            models.Add(display);
+            if (model.Name == SelectedCrispAsrModel?.Model.Name)
+            {
+                selectedModel = display;
+            }
         }
 
         var modelsVm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
             Window, vm =>
             {
-                vm.SetModels(models, engine, null);
+                vm.SetModels(models, engine, selectedModel);
             });
 
         if (modelsVm is { OkPressed: true, SelectedModel: not null })
