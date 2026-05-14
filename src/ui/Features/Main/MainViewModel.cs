@@ -5941,6 +5941,8 @@ public partial class MainViewModel :
             return;
         }
 
+        var wasOldTranslationChanged = _changeSubtitleHash != GetFastHash();
+
         for (var i = 0; i < Subtitles.Count; i++)
         {
             if (result.Rows.Count <= i)
@@ -5950,6 +5952,11 @@ public partial class MainViewModel :
 
             Subtitles[i].OriginalText = Subtitles[i].Text;
             Subtitles[i].Text = result.Rows[i].TranslatedText;
+        }
+
+        if (!wasOldTranslationChanged)
+        {
+            _changeSubtitleHashOriginal = GetFastHashOriginal();
         }
 
         var targetLanguageCode = result.SelectedTargetLanguage?.TwoLetterIsoLanguageName;
