@@ -12307,7 +12307,7 @@ public partial class MainViewModel :
         return false;
     }
 
-    private void SetSubtitles(Subtitle subtitle)
+    private void SetSubtitles(Subtitle subtitle, Subtitle? subtitleOriginal = null)
     {
         SubtitleGrid.ItemsSource = null;
 
@@ -12315,6 +12315,16 @@ public partial class MainViewModel :
         foreach (var p in subtitle.Paragraphs)
         {
             Subtitles.Add(new SubtitleLineViewModel(p, SelectedSubtitleFormat));
+        }
+
+        if (subtitleOriginal != null)
+        {
+            for (var i = 0; i < subtitle.Paragraphs.Count && i < subtitleOriginal.Paragraphs.Count; i++)
+            {
+                var p = subtitle.Paragraphs[i];
+                var original = subtitleOriginal.Paragraphs[i];
+                Subtitles[i].OriginalText = original.Text;
+            }
         }
 
         Renumber();
@@ -16538,7 +16548,7 @@ public partial class MainViewModel :
 
         var idx = SubtitleGrid.SelectedIndex;
 
-        if (!_opening && e.RemovedItems.Count == 1 && e.AddedItems.Count == 1)
+        if (!_opening && !_changingFormatProgrammatically && e.RemovedItems.Count == 1 && e.AddedItems.Count == 1)
         {
             var format = e.AddedItems[0] as SubtitleFormat;
             var oldFormat = e.RemovedItems[0] as SubtitleFormat;
@@ -16546,6 +16556,7 @@ public partial class MainViewModel :
             if (oldFormat != null && format != null)
             {
                 _subtitle = GetUpdateSubtitle();
+                _subtitleOriginal = GetUpdateSubtitleOriginal();
 
                 oldFormat.RemoveNativeFormatting(_subtitle, format);
 
@@ -16584,7 +16595,7 @@ public partial class MainViewModel :
                     SetAssaResolution(true);
                 }
 
-                SetSubtitles(_subtitle);
+                SetSubtitles(_subtitle, _subtitleOriginal);
             }
         }
 
