@@ -658,6 +658,7 @@ public static class ShortcutsMain
             new(nameof(vm.ShowReplaceCommand), [cmd, "H"], ShortcutCategory.General),
             new(nameof(vm.ShowMultipleReplaceCommand), [cmd, "Shift", "R"], ShortcutCategory.General),
             new(nameof(vm.OpenDataFolderCommand), [cmd, "Alt", "Shift", "D"], ShortcutCategory.General),
+            new(nameof(vm.SaveLanguageFileCommand), [cmd, "Alt", "Shift", "L"], ShortcutCategory.General),
             new(nameof(vm.CommandFileNewCommand), [cmd, "N"], ShortcutCategory.General),
             new(nameof(vm.CommandFileOpenCommand), [cmd, "O"], ShortcutCategory.General),
             new(nameof(vm.CommandFileSaveCommand), [cmd, "S"], ShortcutCategory.General),
