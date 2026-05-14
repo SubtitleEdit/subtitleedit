@@ -65,8 +65,8 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private string _modelText;
     [ObservableProperty] private bool _buttonModelIsVisible;
     [ObservableProperty] private bool _buttonDownloadIsVisible;
-    [ObservableProperty] private ObservableCollection<string> _crispAsrModels = new();
-    [ObservableProperty] private string? _selectedCrispAsrModel;
+    [ObservableProperty] private ObservableCollection<SpeechToTextModelDisplay> _crispAsrModels = new();
+    [ObservableProperty] private SpeechToTextModelDisplay? _selectedCrispAsrModel;
     [ObservableProperty] private bool _crispAsrModelComboIsVisible;
 
     public DataGrid? RowGrid { get; set; }
@@ -690,26 +690,37 @@ public partial class AutoTranslateViewModel : ObservableObject
             Se.Settings.AutoTranslate.CrispAsrExe = engine.GetExecutable();
             Configuration.Settings.Tools.AutoTranslateCrispAsrExe = Se.Settings.AutoTranslate.CrispAsrExe;
 
-            var modelName = modelsVm.SelectedModel.Model.Name;
-            if (!CrispAsrModels.Contains(modelName))
-            {
-                CrispAsrModels.Add(modelName);
-            }
-
-            SelectedCrispAsrModel = modelName;
-            ModelText = engine.GetModelForCmdLine(modelName);
+            PopulateCrispAsrModels(engine, modelsVm.SelectedModel.Model.Name);
             SaveSettings();
         }
     }
 
-    partial void OnSelectedCrispAsrModelChanged(string? value)
+    private void PopulateCrispAsrModels(CrispAsrMadlad engine, string? selectModelName)
     {
-        if (string.IsNullOrEmpty(value))
+        CrispAsrModels.Clear();
+        SpeechToTextModelDisplay? toSelect = null;
+        foreach (var model in engine.Models)
+        {
+            var display = new SpeechToTextModelDisplay { Model = model, Engine = engine };
+            display.RefreshDownloadStatus();
+            CrispAsrModels.Add(display);
+            if (model.Name == selectModelName)
+            {
+                toSelect = display;
+            }
+        }
+
+        SelectedCrispAsrModel = toSelect ?? CrispAsrModels.FirstOrDefault();
+    }
+
+    partial void OnSelectedCrispAsrModelChanged(SpeechToTextModelDisplay? value)
+    {
+        if (value == null)
         {
             return;
         }
 
-        ModelText = new CrispAsrMadlad().GetModelForCmdLine(value);
+        ModelText = new CrispAsrMadlad().GetModelForCmdLine(value.Model.Name);
     }
 
     private static bool IsCrispAsrReady()
@@ -1413,17 +1424,10 @@ public partial class AutoTranslateViewModel : ObservableObject
                 Configuration.Settings.Tools.AutoTranslateCrispAsrExe = Se.Settings.AutoTranslate.CrispAsrExe;
             }
 
-            CrispAsrModels.Clear();
-            foreach (var model in madladEngine.Models)
-            {
-                CrispAsrModels.Add(model.Name);
-            }
+            PopulateCrispAsrModels(madladEngine, Path.GetFileName(Se.Settings.AutoTranslate.CrispAsrModel ?? string.Empty));
 
             CrispAsrModelComboIsVisible = true;
             ButtonDownloadIsVisible = true;
-
-            var savedModelName = Path.GetFileName(Se.Settings.AutoTranslate.CrispAsrModel ?? string.Empty);
-            SelectedCrispAsrModel = CrispAsrModels.Contains(savedModelName) ? savedModelName : CrispAsrModels.FirstOrDefault();
 
             return;
         }
