@@ -773,7 +773,7 @@
       "translateViaCopyPaste": "Автоматический перевод с помощью копирования и вставки...",
       "helpTitle": "_Помощь",
       "help": "_Помощь...",
-      "about": "_О...",
+      "about": "_О программе...",
       "checkForUpdates": "Проверьте наличие обновлений...",
       "fixRightToLeftViaUnicodeControlCharacters": "Исправление символов RTL с помощью управляющих символов Unicode (в выбранных строках).",
       "removeUnicodeControlCharacters": "Удалить управляющие символы Unicode (в выбранных строках)",
