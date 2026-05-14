@@ -34,6 +34,9 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
     /// <summary>The model to download, or null to only install the engine.</summary>
     public LlamaCppTranslateModel? Model { get; set; }
 
+    /// <summary>Re-download the engine binary even when it is already installed (used for updates).</summary>
+    public bool ForceEngineDownload { get; set; }
+
     private const string TemporaryFileExtension = ".$$$";
 
     private readonly ILlamaCppDownloadService _downloadService;
@@ -63,7 +66,7 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
             var folder = LlamaCppServerManager.GetAndCreateFolder();
             var token = _cancellationTokenSource.Token;
 
-            if (!LlamaCppServerManager.IsEngineInstalled())
+            if (ForceEngineDownload || !LlamaCppServerManager.IsEngineInstalled())
             {
                 TitleText = string.Format(Se.Language.General.DownloadingX, "llama.cpp");
                 using (var engineStream = new MemoryStream())
@@ -78,6 +81,8 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
                     TitleText = string.Format(Se.Language.General.UnpackingX, "llama.cpp");
                     engineStream.Position = 0;
                     _zipUnpacker.UnpackZipStream(engineStream, folder, string.Empty, true, new List<string>(), null);
+
+                    WriteInstalledHash(folder, engineStream);
                 }
 
                 if (LlamaCppDownloadService.VariantNeedsCudaRuntime(Variant))
@@ -143,6 +148,32 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
             ProgressValue = percentage;
             ProgressText = string.Format(Se.Language.General.DownloadingXPercent, percentage.ToString(CultureInfo.InvariantCulture));
         });
+    }
+
+    /// <summary>
+    /// Records the downloaded engine archive's hash in a <c>.installed.sha256</c> sidecar so the
+    /// auto-translate window can later tell whether the install is outdated. Best-effort.
+    /// </summary>
+    private void WriteInstalledHash(string folder, Stream engineStream)
+    {
+        try
+        {
+            var key = DownloadHashManager.ResolveLlamaCppKey(Variant);
+            if (string.IsNullOrEmpty(key) || engineStream.Length == 0)
+            {
+                return;
+            }
+
+            engineStream.Position = 0;
+            var hash = DownloadHashManager.ComputeSha256(engineStream);
+
+            var sidecar = Path.Combine(folder, ".installed.sha256");
+            File.WriteAllText(sidecar, key + Environment.NewLine + hash);
+        }
+        catch
+        {
+            // ignore — hash side-car is best-effort
+        }
     }
 
     private static void MakeExecutable(string path)

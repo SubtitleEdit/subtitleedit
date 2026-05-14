@@ -16,6 +16,7 @@ using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Download;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -85,6 +86,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     private bool _onlyCurrentLine;
     private Subtitle _subtitle = new Subtitle();
     private int _translationProgressIndex;
+    private bool _llamaCppUpdatePromptShown;
     private readonly IWindowService _windowService;
 
     public AutoTranslateViewModel(IWindowService windowService)
@@ -786,6 +788,108 @@ public partial class AutoTranslateViewModel : ObservableObject
         return true;
     }
 
+    /// <summary>
+    /// When the llama.cpp engine is selected, checks whether the installed llama-server is older
+    /// than the version SE currently ships and offers to re-download it. The install version is
+    /// taken from the <c>.installed.sha256</c> sidecar, falling back to hashing llama-server itself.
+    /// </summary>
+    private async Task CheckLlamaCppForUpdateAsync()
+    {
+        if (_llamaCppUpdatePromptShown || Window == null || !LlamaCppServerManager.IsEngineInstalled())
+        {
+            return;
+        }
+
+        var folder = LlamaCppServerManager.GetAndCreateFolder();
+        var lookup = TryReadLlamaCppSidecarHash(folder) ?? TryHashInstalledLlamaCppExecutable();
+        if (lookup is not var (key, hash))
+        {
+            return;
+        }
+
+        if (DownloadHashManager.GetStatus(key, hash) != DownloadHashManager.UpdateStatus.UpdateAvailable)
+        {
+            return;
+        }
+
+        _llamaCppUpdatePromptShown = true;
+
+        var answer = await MessageBox.Show(
+            Window,
+            string.Format(Se.Language.Video.AudioToText.UpdateXTitle, "llama.cpp"),
+            string.Format(Se.Language.Video.AudioToText.UpdateXMessage, "llama.cpp", Environment.NewLine),
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question);
+
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        // The running server holds the binary open (and a stale build would keep serving), so
+        // stop it before overwriting the install.
+        LlamaCppServerManager.StopServer();
+        UpdateLlamaCppServerButtonText();
+
+        var variant = DownloadHashManager.GetLlamaCppWindowsVariant(key)
+                      ?? (OperatingSystem.IsWindows() ? DownloadHashManager.DetectLlamaCppWindowsVariant(folder) : null);
+
+        var model = SelectedLlamaCppModel?.Model;
+        var downloaded = await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model, variant, forceEngineDownload: true);
+        if (downloaded != null)
+        {
+            var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, selectName);
+        }
+
+        UpdateLlamaCppServerButtonText();
+    }
+
+    private static (string key, string hash)? TryReadLlamaCppSidecarHash(string folder)
+    {
+        try
+        {
+            var sidecar = Path.Combine(folder, ".installed.sha256");
+            if (!File.Exists(sidecar))
+            {
+                return null;
+            }
+
+            var lines = File.ReadAllLines(sidecar);
+            if (lines.Length < 2)
+            {
+                return null;
+            }
+
+            var key = lines[0].Trim();
+            var hash = lines[1].Trim();
+            return key.Length == 0 || hash.Length == 0 ? null : (key, hash);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static (string key, string hash)? TryHashInstalledLlamaCppExecutable()
+    {
+        try
+        {
+            var key = DownloadHashManager.ResolveLlamaCppExecutableKey();
+            if (key == null)
+            {
+                return null;
+            }
+
+            var hash = DownloadHashManager.ComputeSha256(LlamaCppServerManager.GetExecutable());
+            return hash == null ? null : (key, hash);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     private async Task<bool> DoTranslate()
     {
         var translator = SelectedAutoTranslator;
@@ -1288,6 +1392,11 @@ public partial class AutoTranslateViewModel : ObservableObject
             var savedModelName = Path.GetFileName(Se.Settings.AutoTranslate.LlamaCppModel ?? string.Empty);
             SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, savedModelName);
             UpdateLlamaCppServerButtonText();
+
+            if (!_llamaCppUpdatePromptShown)
+            {
+                Dispatcher.UIThread.Post(async () => await CheckLlamaCppForUpdateAsync());
+            }
 
             return;
         }
