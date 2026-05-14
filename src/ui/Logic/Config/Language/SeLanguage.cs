@@ -28,6 +28,7 @@ public class SeLanguage
     public LanguageSync Sync { get; set; } = new();
     public LanguageTranslate Translate { get; set; } = new();
     public LanguageOptions Options { get; set; } = new();
+    public LanguagePlugins Plugins { get; set; } = new();
     public LanguageHelp Help { get; set; } = new();
     public LanguageOcr Ocr { get; set; } = new();
     public LanguageAssa Assa { get; set; } = new();

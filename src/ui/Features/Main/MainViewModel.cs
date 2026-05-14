@@ -62,6 +62,7 @@ using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Options.Language;
+using Nikse.SubtitleEdit.Features.Options.Plugins;
 using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Nikse.SubtitleEdit.Features.Options.WordLists;
@@ -145,6 +146,7 @@ using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Initializers;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.Platform.Windows;
+using Nikse.SubtitleEdit.Logic.Plugins;
 using Nikse.SubtitleEdit.Logic.UndoRedo;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
@@ -270,6 +272,7 @@ public partial class MainViewModel :
     public MainView? MainView { get; set; }
     public TextBlock StatusTextLeftLabel { get; set; }
     public MenuItem MenuReopen { get; set; }
+    public MenuItem MenuPlugins { get; set; }
     public AudioVisualizer? AudioVisualizer { get; set; }
 
     VideoPlayerUndockedViewModel? _videoPlayerUndockedViewModel;
@@ -340,6 +343,8 @@ public partial class MainViewModel :
     private readonly ISpellCheckManager _spellCheckManager;
     private readonly ICasingToggler _casingToggler;
     private readonly IPasteFromClipboardHelper _pasteFromClipboardHelper;
+    private readonly IPluginCatalog _pluginCatalog;
+    private readonly IPluginRunner _pluginRunner;
 
     private bool IsEmpty => Subtitles.Count == 0 || (Subtitles.Count == 1 && string.IsNullOrEmpty(Subtitles[0].Text));
 
@@ -406,7 +411,9 @@ public partial class MainViewModel :
         IFontNameService fontNameService,
         ISpellCheckManager spellCheckManager,
         ICasingToggler casingToggler,
-        IPasteFromClipboardHelper pasteFromClipboardHelper)
+        IPasteFromClipboardHelper pasteFromClipboardHelper,
+        IPluginCatalog pluginCatalog,
+        IPluginRunner pluginRunner)
     {
         _fileHelper = fileHelper;
         _folderHelper = folderHelper;
@@ -426,6 +433,8 @@ public partial class MainViewModel :
         _spellCheckManager = spellCheckManager;
         _casingToggler = casingToggler;
         _pasteFromClipboardHelper = pasteFromClipboardHelper;
+        _pluginCatalog = pluginCatalog;
+        _pluginRunner = pluginRunner;
 
         _loading = true;
         EditText = string.Empty;
@@ -438,6 +447,7 @@ public partial class MainViewModel :
         EditTextBox = new TextBoxWrapper(new TextBox());
         ContentGrid = new Grid();
         MenuReopen = new MenuItem();
+        MenuPlugins = new MenuItem();
         Menu = new Menu();
         PanelSingleLineLengths = new StackPanel();
         MenuItemMergeAsDialog = new MenuItem();
@@ -4406,6 +4416,206 @@ public partial class MainViewModel :
             SetSubtitles(result.FixedSubtitle);
             SelectAndScrollToRow(idx);
         }
+    }
+
+    public IReadOnlyList<InstalledPlugin> GetInstalledPlugins()
+    {
+        try
+        {
+            return _pluginCatalog.GetPlugins();
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Failed to load plugins");
+            return new List<InstalledPlugin>();
+        }
+    }
+
+    [RelayCommand]
+    private async Task RunPlugin(InstalledPlugin? plugin)
+    {
+        if (Window == null || plugin == null)
+        {
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        if (!plugin.CanRun)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error,
+                string.Format(Se.Language.Plugins.PluginXHasNoExecutable, plugin.Manifest.Name),
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        var request = BuildPluginRequest(plugin);
+        var runResult = await _pluginRunner.RunAsync(plugin, request, System.Threading.CancellationToken.None);
+        if (runResult.WasCancelled)
+        {
+            return;
+        }
+
+        if (!runResult.Succeeded || runResult.Response == null)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error,
+                runResult.ErrorMessage ?? string.Format(Se.Language.Plugins.PluginXFailed, plugin.Manifest.Name),
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        var response = runResult.Response;
+        if (response.Status == PluginConstants.StatusCancelled)
+        {
+            return;
+        }
+
+        if (response.Status == PluginConstants.StatusError)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error,
+                string.IsNullOrWhiteSpace(response.Message)
+                    ? string.Format(Se.Language.Plugins.PluginXReportedError, plugin.Manifest.Name)
+                    : response.Message!,
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        SavePluginSettings(plugin, response);
+
+        if (response.Subtitle == null || string.IsNullOrWhiteSpace(response.Subtitle.Native))
+        {
+            if (!string.IsNullOrWhiteSpace(response.Message))
+            {
+                ShowStatus(response.Message!);
+            }
+
+            return;
+        }
+
+        if (!await ApplyPluginSubtitle(plugin, response))
+        {
+            return;
+        }
+
+        ShowStatus(string.IsNullOrWhiteSpace(response.Message)
+            ? string.Format(Se.Language.Plugins.PluginXDone, plugin.Manifest.Name)
+            : response.Message!);
+    }
+
+    private PluginRequest BuildPluginRequest(InstalledPlugin plugin)
+    {
+        var subtitle = GetUpdateSubtitle();
+        var format = SelectedSubtitleFormat;
+
+        var selectedIndices = new List<int>();
+        if (SubtitleGrid.SelectedItems != null)
+        {
+            foreach (var item in SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>())
+            {
+                var index = Subtitles.IndexOf(item);
+                if (index >= 0)
+                {
+                    selectedIndices.Add(index);
+                }
+            }
+
+            selectedIndices.Sort();
+        }
+
+        var frameRate = _mediaInfo != null
+            ? (double)_mediaInfo.FramesRateNonNormalized
+            : Se.Settings.General.CurrentFrameRate;
+
+        JsonElement? settings = null;
+        if (Se.Settings.Plugins.Settings.TryGetValue(plugin.Manifest.Name, out var settingsJson) &&
+            !string.IsNullOrWhiteSpace(settingsJson))
+        {
+            try
+            {
+                using var doc = JsonDocument.Parse(settingsJson);
+                settings = doc.RootElement.Clone();
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception, "Invalid stored plugin settings for " + plugin.Manifest.Name);
+            }
+        }
+
+        return new PluginRequest
+        {
+            Subtitle = new PluginSubtitle
+            {
+                Format = format.Name,
+                FileName = _subtitleFileName ?? string.Empty,
+                Native = subtitle.ToText(format),
+                SubRip = subtitle.ToText(new Nikse.SubtitleEdit.Core.SubtitleFormats.SubRip()),
+            },
+            SelectedIndices = selectedIndices,
+            VideoFileName = _videoFileName ?? string.Empty,
+            FrameRate = frameRate,
+            UiLanguage = Se.Settings.General.Language ?? string.Empty,
+            Theme = UiTheme.ThemeName,
+            SeVersion = Se.Version,
+            Settings = settings,
+        };
+    }
+
+    private async Task<bool> ApplyPluginSubtitle(InstalledPlugin plugin, PluginResponse response)
+    {
+        var pluginSubtitle = response.Subtitle!;
+        var lines = pluginSubtitle.Native.SplitToLines().ToList();
+
+        var format = SubtitleFormat.AllSubtitleFormats
+            .FirstOrDefault(f => f.Name.Equals(pluginSubtitle.Format, StringComparison.OrdinalIgnoreCase));
+
+        var subtitle = new Subtitle();
+        var loadedFormat = subtitle.ReloadLoadSubtitle(lines, string.Empty, format);
+        if (loadedFormat == null || subtitle.Paragraphs.Count == 0)
+        {
+            await MessageBox.Show(Window!, Se.Language.General.Error,
+                string.Format(Se.Language.Plugins.PluginXReturnedUnparsableSubtitle, plugin.Manifest.Name),
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
+
+        var idx = SelectedSubtitleIndex ?? 0;
+        SetSubtitles(subtitle);
+        SelectAndScrollToRow(Math.Min(idx, Math.Max(0, Subtitles.Count - 1)));
+        return true;
+    }
+
+    private static void SavePluginSettings(InstalledPlugin plugin, PluginResponse response)
+    {
+        if (!response.Settings.HasValue)
+        {
+            return;
+        }
+
+        try
+        {
+            Se.Settings.Plugins.Settings[plugin.Manifest.Name] = response.Settings.Value.GetRawText();
+            Se.SaveSettings();
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Failed to persist plugin settings for " + plugin.Manifest.Name);
+        }
+    }
+
+    [RelayCommand]
+    private async Task ShowPluginManager()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await ShowDialogAsync<PluginManagerWindow, PluginManagerViewModel>(vm => vm.Initialize());
+        Layout.InitMenu.UpdatePluginsMenu(this);
     }
 
     [RelayCommand]
