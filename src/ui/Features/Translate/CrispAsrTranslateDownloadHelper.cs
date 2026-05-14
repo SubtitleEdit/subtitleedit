@@ -19,9 +19,25 @@ namespace Nikse.SubtitleEdit.Features.Translate;
 /// </summary>
 public static class CrispAsrTranslateDownloadHelper
 {
-    public static bool IsReady()
+    /// <summary>
+    /// True when the CrispASR engine is installed and a MADLAD model is available. When
+    /// <paramref name="modelName"/> is given, that specific model must be installed; otherwise
+    /// any installed model counts.
+    /// </summary>
+    public static bool IsReady(string? modelName = null)
     {
-        return new CrispAsrMadlad().IsEngineInstalled() && GetInstalledModelPath() != null;
+        var engine = new CrispAsrMadlad();
+        if (!engine.IsEngineInstalled())
+        {
+            return false;
+        }
+
+        if (!string.IsNullOrEmpty(modelName))
+        {
+            return File.Exists(engine.GetModelForCmdLine(modelName));
+        }
+
+        return GetInstalledModelPath() != null;
     }
 
     /// <summary>
@@ -76,7 +92,7 @@ public static class CrispAsrTranslateDownloadHelper
     /// Opens the download window(s) for the CrispASR engine binary and a MADLAD model and persists the result.
     /// </summary>
     /// <returns>The name of the downloaded model, or null if nothing was downloaded.</returns>
-    public static async Task<string?> DownloadAsync(Window owner, IWindowService windowService, string? preselectModelName)
+    public static async Task<string?> DownloadAsync(Window owner, IWindowService windowService, string? preselectModelName, bool autoStartModelDownload = false)
     {
         var engine = new CrispAsrMadlad();
 
@@ -116,6 +132,10 @@ public static class CrispAsrTranslateDownloadHelper
             owner, vm =>
             {
                 vm.SetModels(models, engine, selectedModel);
+                if (autoStartModelDownload && selectedModel != null)
+                {
+                    vm.StartDownload();
+                }
             });
 
         if (modelsVm is { OkPressed: true, SelectedModel: not null })
@@ -139,29 +159,42 @@ public static class CrispAsrTranslateDownloadHelper
     {
         var engine = new CrispAsrMadlad();
         var engineInstalled = engine.IsEngineInstalled();
-        if (engineInstalled)
-        {
-            var installedModel = GetInstalledModelPath();
-            if (installedModel != null)
-            {
-                // self-heal: point settings at the binary/model that are actually on disk
-                if (Se.Settings.AutoTranslate.CrispAsrExe != engine.GetExecutable() ||
-                    Se.Settings.AutoTranslate.CrispAsrModel != installedModel)
-                {
-                    Se.Settings.AutoTranslate.CrispAsrExe = engine.GetExecutable();
-                    Se.Settings.AutoTranslate.CrispAsrModel = installedModel;
-                    Configuration.Settings.Tools.AutoTranslateCrispAsrExe = Se.Settings.AutoTranslate.CrispAsrExe;
-                    Configuration.Settings.Tools.AutoTranslateCrispAsrModel = installedModel;
-                    Se.SaveSettings();
-                }
 
-                return true;
+        // The model we need on disk: the specific one the caller picked, or any installed one as a fallback.
+        var wantedModelPath = !string.IsNullOrEmpty(preselectModelName)
+            ? engine.GetModelForCmdLine(preselectModelName)
+            : GetInstalledModelPath();
+        var modelInstalled = wantedModelPath != null && File.Exists(wantedModelPath);
+
+        if (engineInstalled && modelInstalled)
+        {
+            // self-heal: point settings at the binary/model that are actually on disk
+            if (Se.Settings.AutoTranslate.CrispAsrExe != engine.GetExecutable() ||
+                Se.Settings.AutoTranslate.CrispAsrModel != wantedModelPath)
+            {
+                Se.Settings.AutoTranslate.CrispAsrExe = engine.GetExecutable();
+                Se.Settings.AutoTranslate.CrispAsrModel = wantedModelPath!;
+                Configuration.Settings.Tools.AutoTranslateCrispAsrExe = Se.Settings.AutoTranslate.CrispAsrExe;
+                Configuration.Settings.Tools.AutoTranslateCrispAsrModel = wantedModelPath!;
+                Se.SaveSettings();
             }
+
+            return true;
         }
 
-        var message = engineInstalled
-            ? $"{CrispAsrMadladTranslate.StaticName} requires a MADLAD model to be downloaded. Download now?"
-            : $"{CrispAsrMadladTranslate.StaticName} requires the CrispASR engine and a MADLAD model to be downloaded. Download now?";
+        string message;
+        if (!engineInstalled && !modelInstalled)
+        {
+            message = $"{CrispAsrMadladTranslate.StaticName} requires the CrispASR engine and a MADLAD model to be downloaded. Download now?";
+        }
+        else if (!engineInstalled)
+        {
+            message = $"{CrispAsrMadladTranslate.StaticName} requires the CrispASR engine to be downloaded. Download now?";
+        }
+        else
+        {
+            message = $"{CrispAsrMadladTranslate.StaticName} requires the selected MADLAD model to be downloaded. Download now?";
+        }
 
         var answer = await MessageBox.Show(
             owner,
@@ -175,8 +208,8 @@ public static class CrispAsrTranslateDownloadHelper
             return false;
         }
 
-        await DownloadAsync(owner, windowService, preselectModelName);
+        await DownloadAsync(owner, windowService, preselectModelName, autoStartModelDownload: !string.IsNullOrEmpty(preselectModelName));
 
-        return IsReady();
+        return IsReady(preselectModelName);
     }
 }

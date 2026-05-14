@@ -651,7 +651,8 @@ public partial class AutoTranslateViewModel : ObservableObject
             return;
         }
 
-        var downloadedModelName = await CrispAsrTranslateDownloadHelper.DownloadAsync(Window, _windowService, SelectedCrispAsrModel?.Model.Name);
+        var downloadedModelName = await CrispAsrTranslateDownloadHelper.DownloadAsync(
+            Window, _windowService, SelectedCrispAsrModel?.Model.Name, autoStartModelDownload: true);
         if (downloadedModelName != null)
         {
             PopulateCrispAsrModels(downloadedModelName);
