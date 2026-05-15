@@ -746,6 +746,15 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         {
             _lastActivityTime = DateTime.UtcNow;
 
+            // When the user opts to hide controls in full-screen, never show them —
+            // not even briefly on entry — and don't bother arming the auto-hide timer.
+            if (Se.Settings.Video.FullscreenHideControls)
+            {
+                HideControls();
+                _autoHideTimer?.Stop();
+                return;
+            }
+
             // Show controls initially when entering full screen
             ShowControls();
 
@@ -780,6 +789,12 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             _lastActivityTime = DateTime.UtcNow;
             if (IsFullScreen)
             {
+                // If the user opted to hide controls in full-screen, don't reveal them on activity.
+                if (Se.Settings.Video.FullscreenHideControls)
+                {
+                    return;
+                }
+
                 ShowControls();
                 if (_autoHideTimer != null)
                 {

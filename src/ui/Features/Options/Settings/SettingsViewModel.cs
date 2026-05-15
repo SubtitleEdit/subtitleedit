@@ -171,6 +171,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private VideoPlayerItem _selectedVideoPlayer;
     [ObservableProperty] private bool _showStopButton;
     [ObservableProperty] private bool _showFullscreenButton;
+    [ObservableProperty] private bool _fullscreenHideControls;
     [ObservableProperty] private bool _autoOpenVideoFile;
 
     [ObservableProperty] private bool _waveformDrawGridLines;
@@ -789,6 +790,7 @@ public partial class SettingsViewModel : ObservableObject
 
         ShowStopButton = video.ShowStopButton;
         ShowFullscreenButton = video.ShowFullscreenButton;
+        FullscreenHideControls = video.FullscreenHideControls;
         AutoOpenVideoFile = video.AutoOpen;
 
         MpvPreviewFontName = video.MpvPreviewFontName;
@@ -1367,6 +1369,7 @@ public partial class SettingsViewModel : ObservableObject
         video.VideoPlayer = SelectedVideoPlayer.Code;
         video.ShowStopButton = ShowStopButton;
         video.ShowFullscreenButton = ShowFullscreenButton;
+        video.FullscreenHideControls = FullscreenHideControls;
         video.AutoOpen = AutoOpenVideoFile;
 
         video.MpvPreviewFontName = MpvPreviewFontName;

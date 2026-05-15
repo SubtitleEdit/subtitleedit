@@ -12,6 +12,7 @@ public class SeVideo
     public double Volume { get; set; }
     public bool ShowStopButton { get; set; }
     public bool ShowFullscreenButton { get; set; }
+    public bool FullscreenHideControls { get; set; }
     public bool AutoOpen { get; set; }
     public bool OpenSearchParentFolder { get; set; }
     public string CutType { get; set; }
