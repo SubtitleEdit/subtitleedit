@@ -3210,8 +3210,18 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         ConsoleLog += s.Trim() + "\n";
 
-        Dispatcher.UIThread.Post(() => { TextBoxConsoleLog.CaretIndex = TextBoxConsoleLog.Text?.Length ?? 0; },
-           DispatcherPriority.Background);
+        // Tail behavior: keep the console scrolled to the latest line so the user
+        // doesn't have to camp on PageDown. Setting CaretIndex alone is unreliable
+        // here — the TextBox isn't focused, so the internal BringCaretToView is a
+        // no-op. ScrollToLine drives the inner TextPresenter directly. Post at
+        // Background priority so it runs after the layout pass that lays out the
+        // freshly-appended text.
+        Dispatcher.UIThread.Post(() =>
+        {
+            var text = TextBoxConsoleLog.Text ?? string.Empty;
+            TextBoxConsoleLog.CaretIndex = text.Length;
+            TextBoxConsoleLog.ScrollToLine(text.Count(c => c == '\n'));
+        }, DispatcherPriority.Background);
     }
 
     private static decimal GetSeconds(string timeCode)
