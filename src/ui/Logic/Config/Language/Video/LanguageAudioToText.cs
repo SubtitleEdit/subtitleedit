@@ -20,8 +20,6 @@ public class LanguageAudioToText
     public string SelectModel { get; set; }
     public string ViewToolsLogFile { get; set; }
     public string ReDownloadX { get; set; }
-    public string Installed { get; set; }
-    public string NotInstalled { get; set; }
     public string DownloadX { get; set; }
     public string UpdateXTitle { get; set; }
     public string UpdateXMessage { get; set; }
@@ -55,8 +53,6 @@ public class LanguageAudioToText
         SelectModel = "Select model";
         ViewToolsLogFile = "View tools log file";
         ReDownloadX = "Re-download {0}";
-        Installed = "Installed";
-        NotInstalled = "Not installed";
         DownloadX = "Download {0}";
         UpdateXTitle = "Update {0}?";
         UpdateXMessage = "A newer version of {0} is available.{1}{1}Download and install the update now?";

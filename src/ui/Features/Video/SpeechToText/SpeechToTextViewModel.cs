@@ -84,11 +84,6 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private bool _isReDownloadVisible;
     [ObservableProperty] private string _reDownloadText;
 
-    // Surfaced next to the engine combo so the user sees at a glance whether the
-    // selected engine is ready to use or still needs a download (with size).
-    [ObservableProperty] private string _engineStatusText;
-    [ObservableProperty] private bool _isEngineStatusVisible;
-    [ObservableProperty] private bool _isEngineInstalledIconVisible;
     [ObservableProperty] private bool _isEngineDownloadButtonVisible;
     [ObservableProperty] private string _engineDownloadHint;
 
@@ -224,7 +219,6 @@ public partial class SpeechToTextViewModel : ObservableObject
         TextBoxConsoleLog = new TextBox();
         BatchGrid = new DataGrid();
         ReDownloadText = string.Empty;
-        EngineStatusText = string.Empty;
         EngineDownloadHint = string.Empty;
         _audioTrackNumber = -1;
         _error = string.Empty;
@@ -3403,47 +3397,22 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
     }
 
-    /// <summary>
-    /// Refresh the install-status indicator and download icon next to the engine combo
-    /// box. The text and visibility reflect three states: cloud-only engine (nothing to
-    /// show), installed locally (✓ Installed), or downloadable-and-missing (size shown so
-    /// the user can decide before clicking the download icon).
-    /// </summary>
     private void UpdateEngineStatusUi(ISpeechToTextEngine engine)
     {
         var canDownload = engine.CanBeDownloaded();
         var isInstalled = engine.IsEngineInstalled();
 
-        if (!canDownload)
+        if (!canDownload || isInstalled)
         {
-            // Cloud / API engines — no install state to show.
-            EngineStatusText = string.Empty;
             EngineDownloadHint = string.Empty;
-            IsEngineStatusVisible = false;
-            IsEngineInstalledIconVisible = false;
-            IsEngineDownloadButtonVisible = false;
-            return;
-        }
-
-        if (isInstalled)
-        {
-            EngineStatusText = Se.Language.Video.AudioToText.Installed;
-            EngineDownloadHint = string.Empty;
-            IsEngineStatusVisible = true;
-            IsEngineInstalledIconVisible = true;
             IsEngineDownloadButtonVisible = false;
             return;
         }
 
         var size = engine.DownloadSizeText;
-        EngineStatusText = string.IsNullOrEmpty(size)
-            ? Se.Language.Video.AudioToText.NotInstalled
-            : $"{Se.Language.Video.AudioToText.NotInstalled} · {size}";
         EngineDownloadHint = string.IsNullOrEmpty(size)
             ? string.Format(Se.Language.Video.AudioToText.DownloadX, engine.Name)
             : string.Format(Se.Language.Video.AudioToText.DownloadX, engine.Name) + $" ({size})";
-        IsEngineStatusVisible = true;
-        IsEngineInstalledIconVisible = false;
         IsEngineDownloadButtonVisible = true;
     }
 

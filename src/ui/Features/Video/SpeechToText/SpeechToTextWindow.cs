@@ -61,28 +61,6 @@ public class SpeechToTextWindow : Window
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
         });
 
-        // Status icon + text (e.g. "✓ Installed" or "Not installed · ~140 MB") next to the combo.
-        var engineInstalledIcon = new Optris.Icons.Avalonia.Icon
-        {
-            Value = IconNames.CheckCircle,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(8, 10, 4, 0),
-            FontSize = 14,
-            Foreground = Brushes.MediumSeaGreen,
-        }.BindIsVisible(vm, nameof(vm.IsEngineInstalledIconVisible));
-        var engineStatusText = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(2, 10, 0, 0),
-            Opacity = 0.75,
-        }.BindIsVisible(vm, nameof(vm.IsEngineStatusVisible));
-        engineStatusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.EngineStatusText))
-        {
-            Source = vm,
-            Mode = BindingMode.OneWay,
-            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-        });
-
         var panelEngineControls = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -93,8 +71,6 @@ public class SpeechToTextWindow : Window
                 comboEngine,
                 buttonEngineWebsite,
                 buttonEngineDownload,
-                engineInstalledIcon,
-                engineStatusText,
             }
         };
 
