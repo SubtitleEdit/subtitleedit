@@ -11,6 +11,12 @@ namespace Nikse.SubtitleEdit.Logic;
 public class ShortcutManager : IShortcutManager
 {
     private readonly HashSet<Key> _activeKeys = [];
+    // Parallel to _activeKeys but uses the physical-key-aware string token (see
+    // GetShortcutKeyName). Numpad keys collapse to NumLock-on names in Avalonia's
+    // Key enum, so HashSet<Key> can't tell main-Delete from numpad-Delete (NumLock
+    // off) from numpad-Decimal (NumLock on). This set is what we hash for lookup
+    // so users can bind each of those independently.
+    private readonly HashSet<string> _activeKeyNames = [];
     private readonly List<ShortCut> _shortcuts = [];
     private FrozenDictionary<string, ShortCut>? _lookupTable;
     private bool _isDirty = true;
@@ -22,14 +28,29 @@ public class ShortcutManager : IShortcutManager
         bool isMac = OperatingSystem.IsMacOS();
         var shortcuts = Se.Language.Options.Shortcuts;
 
-        return key switch
+        switch (key)
         {
-            "Ctrl" or "Control" => isMac ? shortcuts.ControlMac : shortcuts.Control,
-            "Alt" => isMac ? shortcuts.AltMac : shortcuts.Alt,
-            "Shift" => isMac ? shortcuts.ShiftMac : shortcuts.Shift,
-            "Win" or "Cmd" => isMac ? shortcuts.WinMac : shortcuts.Win,
-            _ => key
-        };
+            case "Ctrl":
+            case "Control":
+                return isMac ? shortcuts.ControlMac : shortcuts.Control;
+            case "Alt":
+                return isMac ? shortcuts.AltMac : shortcuts.Alt;
+            case "Shift":
+                return isMac ? shortcuts.ShiftMac : shortcuts.Shift;
+            case "Win":
+            case "Cmd":
+                return isMac ? shortcuts.WinMac : shortcuts.Win;
+        }
+
+        // Render "NumPadDelete" / "NumPad0" as "Numpad Delete" / "Numpad 0" so
+        // the lists and shortcut hints read naturally. Storage stays in the
+        // PascalCase form for matching.
+        if (key.Length > "NumPad".Length && key.StartsWith("NumPad", StringComparison.Ordinal))
+        {
+            return "Numpad " + key.Substring("NumPad".Length);
+        }
+
+        return key;
     }
 
     public static Key GetShortcutKey(KeyEventArgs e)
@@ -37,6 +58,11 @@ public class ShortcutManager : IShortcutManager
         return GetShortcutKey(e.Key, e.PhysicalKey);
     }
 
+    // Legacy accessor: collapses any numpad physical key to its NumLock-on Key
+    // value. Kept for callers that still operate on the Avalonia Key enum (e.g.
+    // single-key allowance checks). New code should prefer GetShortcutKeyName so
+    // numpad keys can be distinguished across NumLock states and from their
+    // main-keyboard counterparts.
     public static Key GetShortcutKey(Key key, PhysicalKey physicalKey)
     {
         return physicalKey switch
@@ -60,6 +86,40 @@ public class ShortcutManager : IShortcutManager
         };
     }
 
+    // Returns a stable token for the pressed key that distinguishes numpad keys
+    // from their main-keyboard counterparts and from each other across NumLock
+    // states. Numpad physical keys get the "NumPad" prefix unless the Avalonia
+    // Key name already carries it (NumPad0..NumPad9). For non-numpad physical
+    // keys this is just Key.ToString(), preserving every existing binding string.
+    public static string GetShortcutKeyName(KeyEventArgs e)
+    {
+        return GetShortcutKeyName(e.Key, e.PhysicalKey);
+    }
+
+    public static string GetShortcutKeyName(Key key, PhysicalKey physicalKey)
+    {
+        if (!IsNumPadPhysicalKey(physicalKey))
+        {
+            return key.ToString();
+        }
+
+        var keyName = key.ToString();
+        return keyName.StartsWith("NumPad", StringComparison.Ordinal)
+            ? keyName
+            : "NumPad" + keyName;
+    }
+
+    private static bool IsNumPadPhysicalKey(PhysicalKey physicalKey)
+    {
+        return physicalKey is
+            PhysicalKey.NumPad0 or PhysicalKey.NumPad1 or PhysicalKey.NumPad2 or
+            PhysicalKey.NumPad3 or PhysicalKey.NumPad4 or PhysicalKey.NumPad5 or
+            PhysicalKey.NumPad6 or PhysicalKey.NumPad7 or PhysicalKey.NumPad8 or
+            PhysicalKey.NumPad9 or PhysicalKey.NumPadAdd or PhysicalKey.NumPadDecimal or
+            PhysicalKey.NumPadDivide or PhysicalKey.NumPadMultiply or
+            PhysicalKey.NumPadSubtract or PhysicalKey.NumPadEnter;
+    }
+
     public void OnKeyPressed(object? sender, KeyEventArgs e)
     {
         // When IME is processing input, clear all active keys to prevent stale keys
@@ -68,19 +128,22 @@ public class ShortcutManager : IShortcutManager
             Key.ImeAccept or Key.ImeModeChange or Key.DeadCharProcessed or Key.None)
         {
             _activeKeys.Clear();
+            _activeKeyNames.Clear();
             return;
         }
 
         var key = GetShortcutKey(e);
 
-        // Avoid adding modifier keys to the active keys set to prevent redundancy
-        // with KeyEventArgs.KeyModifiers
+        // Skip standalone modifier-like keys: Ctrl/Shift/Alt/Win redundantly
+        // duplicate KeyEventArgs.KeyModifiers, and NumLock is a state toggle —
+        // we never want it captured as a shortcut chord on its own.
         if (key is not (Key.LeftCtrl or Key.RightCtrl or
             Key.LeftShift or Key.RightShift or
             Key.LeftAlt or Key.RightAlt or
-            Key.LWin or Key.RWin))
+            Key.LWin or Key.RWin or Key.NumLock))
         {
             _activeKeys.Add(key);
+            _activeKeyNames.Add(GetShortcutKeyName(e));
         }
 
         _isControlPressed = e.KeyModifiers.HasFlag(KeyModifiers.Control);
@@ -93,10 +156,12 @@ public class ShortcutManager : IShortcutManager
             Key.ImeAccept or Key.ImeModeChange or Key.DeadCharProcessed or Key.None)
         {
             _activeKeys.Clear();
+            _activeKeyNames.Clear();
         }
         else
         {
             _activeKeys.Remove(GetShortcutKey(e));
+            _activeKeyNames.Remove(GetShortcutKeyName(e));
         }
 
         _isControlPressed = e.KeyModifiers.HasFlag(KeyModifiers.Control);
@@ -106,6 +171,7 @@ public class ShortcutManager : IShortcutManager
     public void ClearKeys()
     {
         _activeKeys.Clear();
+        _activeKeyNames.Clear();
         _isControlPressed = false;
         _isShiftPressed = false;
     }
@@ -154,12 +220,14 @@ public class ShortcutManager : IShortcutManager
             RebuildLookupTable();
         }
 
-        // Build the current state key list with initial capacity
-        var currentInputKeys = new List<string>(_activeKeys.Count + 2);
+        // Build the current state key list with initial capacity. Read from the
+        // physical-key-aware name set so numpad keys hash distinctly from their
+        // main-keyboard counterparts.
+        var currentInputKeys = new List<string>(_activeKeyNames.Count + 2);
 
-        foreach (var key in _activeKeys)
+        foreach (var keyName in _activeKeyNames)
         {
-            currentInputKeys.Add(key.ToString());
+            currentInputKeys.Add(keyName);
         }
 
         // Add normalized modifiers based on the event state
