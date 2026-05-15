@@ -394,6 +394,8 @@
     "playNext": "Play next",
     "playSelectedLines": "Play selected lines",
     "playSelectedLinesWithLoop": "Play selected lines with loop",
+    "playSelectedLinesAndFocusWaveform": "Play selected lines and focus waveform",
+    "playSelectedLinesWithLoopAndFocusWaveform": "Play selected lines with loop and focus waveform",
     "pleaseEnterAValidValueForX": "Please enter a valid value for \"{0}\"",
     "pleaseWait": "Please wait...",
     "position": "Position",
