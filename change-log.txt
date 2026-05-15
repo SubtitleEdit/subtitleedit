@@ -2,6 +2,19 @@
 Subtitle Edit Changelog
 
 
+v5.0.0-beta27 (15th May 2026)
+
+* Save Settings.json in human-readable indented format - thx schabau
+* Auto-scroll speech-to-text console log to bottom - thx GrampaWildWilly
+* Update Bulgarian translation - thx jekovcar
+* Update Russian translation - thx jekovcar
+* Update Polish translation - thx potplayer-fanpack
+* Fix speech-to-text engine combo not reflecting selection - thx humble-b
+* Fix numeric keypad keys recorded as wrong shortcut - thx GrampaWildWilly
+
+-----------------------------------------------------------------------------------------------------
+
+
 v5.0.0-beta26 (15th May 2026)
 
 * Add server-managed llama.cpp auto-translate engine
