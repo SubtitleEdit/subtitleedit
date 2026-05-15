@@ -87,6 +87,7 @@ using Nikse.SubtitleEdit.Features.Shared.PickRuleProfile;
 using Nikse.SubtitleEdit.Features.Shared.PickSpellCheckDictionary;
 using Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
 using Nikse.SubtitleEdit.Features.Shared.PickTsTrack;
+using Nikse.SubtitleEdit.Features.Shared.PickVobSubLanguage;
 using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Features.Shared.SetVideoOffset;
@@ -12281,42 +12282,23 @@ public partial class MainViewModel :
             return false;
         }
 
+        int streamId;
         if (languageStreamIds.Count > 1)
         {
-            //using (var chooseLanguage = new DvdSubRipChooseLanguage())
-            //{
-            //    if (ShowInTaskbar)
-            //    {
-            //        chooseLanguage.Icon = (Icon)Icon.Clone();
-            //        chooseLanguage.ShowInTaskbar = true;
-            //        chooseLanguage.ShowIcon = true;
-            //    }
+            var pickResult = await ShowDialogAsync<PickVobSubLanguageWindow, PickVobSubLanguageViewModel>(
+                vm => vm.Initialize(streamIdDictionary, palette, vobSubParser.IdxLanguages, vobSubFileName));
+            if (!pickResult.OkPressed)
+            {
+                return false;
+            }
 
-            //    chooseLanguage.Initialize(_vobSubMergedPackList, _palette, vobSubParser.IdxLanguages, string.Empty);
-            //    var form = _main ?? (Form)this;
-            //    if (batchMode)
-            //    {
-            //        chooseLanguage.SelectActive();
-            //        vobSubMergedPackList = chooseLanguage.SelectedVobSubMergedPacks;
-            //        SetTesseractLanguageFromLanguageString(chooseLanguage.SelectedLanguageString);
-            //        _importLanguageString = chooseLanguage.SelectedLanguageString;
-            //        return true;
-            //    }
-
-            //    chooseLanguage.Activate();
-            //    if (chooseLanguage.ShowDialog(form) == DialogResult.OK)
-            //    {
-            //        _vobSubMergedPackList = chooseLanguage.SelectedVobSubMergedPacks;
-            //        SetTesseractLanguageFromLanguageString(chooseLanguage.SelectedLanguageString);
-            //        _importLanguageString = chooseLanguage.SelectedLanguageString;
-            //        return true;
-            //    }
-
-            //    return false;
-            //}
+            streamId = pickResult.SelectedStreamId;
+        }
+        else
+        {
+            streamId = languageStreamIds.First();
         }
 
-        var streamId = languageStreamIds.First();
         var result = await ShowDialogAsync<OcrWindow, OcrViewModel>(vm => { vm.Initialize(streamIdDictionary[streamId], palette, vobSubFileName); });
 
         if (result.OkPressed)
