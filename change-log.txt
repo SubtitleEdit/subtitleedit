@@ -2,7 +2,7 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-beta26 (xth May 2026)
+v5.0.0-beta26 (15th May 2026)
 
 * Add server-managed llama.cpp auto-translate engine
 * Add CrispASR MADLAD auto-translate engine - also available in Batch Convert
@@ -11,6 +11,7 @@ v5.0.0-beta26 (xth May 2026)
 * Add saving/restoring of Fix common errors window size - thx ironhussar
 * Add Russian translation - thx jekovcar
 * Move CrispASR to a shared data folder
+* Show install status and size in speech-to-text engine picker - thx David
 * Show media info window faster + make shortcut work in fullscreen - thx GrampaWildWilly
 * Update CrispASR to v0.6.6 - Granite engine now uses granite-4.1
 * Update Bulgarian translation - thx jekovcar
