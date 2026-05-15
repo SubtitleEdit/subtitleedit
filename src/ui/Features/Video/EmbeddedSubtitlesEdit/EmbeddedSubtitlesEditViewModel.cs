@@ -27,6 +27,8 @@ namespace Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
 {
     [ObservableProperty] private string _videoFileName;
+    public bool HasVideoFileName => !string.IsNullOrEmpty(_videoFileName);
+    public bool CanGenerate => HasVideoFileName && !IsGenerating;
     [ObservableProperty] private ObservableCollection<EmbeddedTrack> _tracks;
     [ObservableProperty] private EmbeddedTrack? _selectedTrck;
     [ObservableProperty] private string _progressText;
@@ -84,6 +86,14 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         _subtitleFormat = subtitleFormat;
         _mediaInfo = mediaInfo;
     }
+
+    partial void OnVideoFileNameChanged(string value)
+    {
+        OnPropertyChanged(nameof(HasVideoFileName));
+        OnPropertyChanged(nameof(CanGenerate));
+    }
+
+    partial void OnIsGeneratingChanged(bool value) => OnPropertyChanged(nameof(CanGenerate));
 
     private void StartTitleTimer()
     {
@@ -586,6 +596,16 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         UiUtil.RestoreWindowPosition(Window);
         Task.Run(() =>
         {
+            if (string.IsNullOrEmpty(VideoFileName) || !File.Exists(VideoFileName))
+            {
+                return;
+            }   
+
+            if (_mediaInfo == null)
+            {
+                _mediaInfo = FfmpegMediaInfo2.Parse(VideoFileName);
+            }
+
             var tracks = FindTracks(VideoFileName, _mediaInfo);
             Dispatcher.UIThread.Invoke(async() =>
             {

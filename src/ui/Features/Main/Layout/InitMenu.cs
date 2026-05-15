@@ -564,11 +564,6 @@ public static class InitMenu
             },
             new MenuItem
             {
-                Header = Se.Language.Video.EmbedSubtitlesDotDotDot,
-                Command = vm.VideoEmbedCommand,
-            },
-            new MenuItem
-            {
                 Header = Se.Language.Options.Shortcuts.ToggleWaveformToolbar,
                 Command = vm.ToggleIsWaveformToolbarVisibleCommand,
                 Icon = new Optris.Icons.Avalonia.Icon
@@ -655,6 +650,11 @@ public static class InitMenu
                 {
                     Header = Se.Language.Video.GenerateBlankVideoDotDotDot,
                     Command = vm.VideoGenerateBlankCommand,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Video.EmbedSubtitlesDotDotDot,
+                    Command = vm.VideoEmbedCommand,
                 },
                 new Separator(),
                 new MenuItem

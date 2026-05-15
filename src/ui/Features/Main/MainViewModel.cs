@@ -3803,19 +3803,9 @@ public partial class MainViewModel :
             return;
         }
 
-        if (string.IsNullOrEmpty(_videoFileName))
-        {
-            await CommandVideoOpen();
-        }
-
-        if (string.IsNullOrEmpty(_videoFileName))
-        {
-            return;
-        }
-
         var result = await ShowDialogAsync<EmbeddedSubtitlesEditWindow, EmbeddedSubtitlesEditViewModel>(vm =>
         {
-            vm.Initialize(_videoFileName, GetUpdateSubtitle(), SelectedSubtitleFormat, _mediaInfo);
+            vm.Initialize(_videoFileName ?? string.Empty, GetUpdateSubtitle(), SelectedSubtitleFormat, _mediaInfo);
         });
 
         if (!result.OkPressed)

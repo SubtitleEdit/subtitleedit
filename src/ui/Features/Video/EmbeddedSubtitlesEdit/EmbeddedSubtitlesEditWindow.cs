@@ -48,10 +48,12 @@ public class EmbeddedSubtitlesEditWindow : Window
         var progressView = MakeProgressView(vm);
 
         var buttonGenerate = UiUtil.MakeButton(Se.Language.General.Generate, vm.GenerateCommand)
-            .WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
+            .WithBindEnabled(nameof(vm.CanGenerate))
+            .WithBindIsVisible(nameof(vm.HasVideoFileName));
         var buttonConfig = UiUtil.MakeButton(vm.OkCommand, IconNames.Settings)
             .WithMarginRight(5)
-            .WithBindEnabled(nameof(vm.IsGenerating), new InverseBooleanConverter());
+            .WithBindEnabled(nameof(vm.CanGenerate))
+            .WithBindIsVisible(nameof(vm.HasVideoFileName));
         var buttonPanel = UiUtil.MakeButtonBar(
             buttonGenerate,
             UiUtil.MakeButtonCancel(vm.CancelCommand)
@@ -183,10 +185,13 @@ public class EmbeddedSubtitlesEditWindow : Window
                     },
                 }
             }
-        };
-        var buttonEdit = UiUtil.MakeButton(Se.Language.General.Edit, vm.EditCommand);
-        var buttonDelete = UiUtil.MakeButton(Se.Language.General.Delete, vm.DeleteCommand);
-        var buttonPreview = UiUtil.MakeButton(Se.Language.General.Preview, vm.PreviewCommand);
+        }.WithBindIsVisible(nameof(vm.HasVideoFileName));
+        var buttonEdit = UiUtil.MakeButton(Se.Language.General.Edit, vm.EditCommand)
+            .WithBindIsVisible(nameof(vm.HasVideoFileName));
+        var buttonDelete = UiUtil.MakeButton(Se.Language.General.Delete, vm.DeleteCommand)
+            .WithBindIsVisible(nameof(vm.HasVideoFileName));
+        var buttonPreview = UiUtil.MakeButton(Se.Language.General.Preview, vm.PreviewCommand)
+            .WithBindIsVisible(nameof(vm.HasVideoFileName));
 
         var panelButtons = new StackPanel
         {
