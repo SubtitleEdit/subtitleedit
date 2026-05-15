@@ -12,6 +12,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
+using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
@@ -9238,209 +9239,6 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
-    private async Task TranscribeWithOpenAi()
-    {
-        if (Window == null)
-        {
-            return;
-        }
-
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
-        if (selectedItems.Count == 0 || string.IsNullOrEmpty(_videoFileName))
-        {
-            await MessageBox.Show(Window, Se.Language.General.PleaseSelectSubtitleLinesAndVideo, Se.Language.General.NoSelection);
-            return;
-        }
-
-        var ffmpegOk = await RequireFfmpegOk();
-        if (!ffmpegOk)
-        {
-            return;
-        }
-
-        // Check if OpenAI Compatible STT is configured
-        if (!OpenAiSttService.IsConfigured())
-        {
-            var result = await MessageBox.Show(Window,
-                Se.Language.General.OpenAiCompatibleSttNotConfigured,
-                Se.Language.General.ConfigurationRequired,
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                var settingsWindow = new SettingsWindow(new SettingsViewModel(_windowService, _folderHelper));
-                await settingsWindow.ShowDialog(Window);
-            }
-            return;
-        }
-
-        // Extract audio clips for selected lines
-        var resultGetAudioClips = await ShowDialogAsync<GetAudioClipsWindow, GetAudioClipsViewModel>(vm =>
-        {
-            vm.Initialize(_videoFileName ?? string.Empty, selectedItems);
-        });
-
-        if (!resultGetAudioClips.OkPressed || resultGetAudioClips.AudioClips.Count == 0)
-        {
-            return;
-        }
-
-        var settings = OpenAiSttService.GetSettingsFromConfiguration();
-        var deleteLines = new List<SubtitleLineViewModel>();
-        var newLines = new List<SubtitleLineViewModel>();
-
-        try
-        {
-            using var httpClient = new HttpClient();
-            var service = new OpenAiSttService(httpClient, settings);
-
-            for (var i = 0; i < selectedItems.Count; i++)
-            {
-                var selectedLine = selectedItems[i];
-                var audioClip = resultGetAudioClips.AudioClips[i];
-
-                var progressViewModel = new TranscriptionProgressViewModel();
-                progressViewModel.StatusText = $"Transcribing {i + 1} of {selectedItems.Count}: {Path.GetFileName(audioClip.AudioFileName)}";
-                progressViewModel.ServerUrl = settings.EndpointUrl;
-                progressViewModel.ModelName = string.IsNullOrEmpty(settings.Model) ? "(auto)" : settings.Model;
-
-                var progressWindow = new TranscriptionProgressWindow(progressViewModel);
-                progressWindow.Show(Window);
-
-                var streamingText = new StringBuilder();
-                var progress = new Progress<string>(delta =>
-                {
-                    streamingText.Append(delta);
-                    progressViewModel.UpdateStreamedText(delta);
-                });
-
-                var segmentProgress = new Progress<OpenAiCompatibleSegment>(seg =>
-                {
-                    progressViewModel.AddSegment(seg.Text, seg.Start, seg.End);
-                });
-
-                OpenAiCompatibleSttResponse? response = null;
-                try
-                {
-                    response = await service.TranscribeAsync(
-                        audioClip.AudioFileName,
-                        settings.Language,
-                        progress,
-                        segmentProgress,
-                        progressViewModel.CancellationToken);
-
-                    progressViewModel.SetCompleted();
-                    await Task.Delay(1000, progressViewModel.CancellationToken);
-                }
-                catch (OperationCanceledException)
-                {
-                    return;
-                }
-                finally
-                {
-                    progressWindow.Close();
-                }
-
-                if (response?.Segments != null && response.Segments.Count > 0)
-                {
-                    if (response.Segments.Count == 1)
-                    {
-                        // Single segment - just update the selected line
-                        selectedLine.Text = response.Segments.OrderBy(s => s.Start).First().Text.Trim();
-                    }
-                    else
-                    {
-                        // Multiple segments - create new subtitle lines from the original selection
-                        deleteLines.Add(selectedLine);
-                        var segmentsOrdered = response.Segments.OrderBy(s => s.Start).ToList();
-                        var sourceStartMs = selectedLine.StartTime.TotalMilliseconds;
-                        var sourceEndMs = selectedLine.EndTime.TotalMilliseconds;
-                        var sourceDurationMs = sourceEndMs - sourceStartMs;
-
-                        // Calculate total duration from segments (in seconds, then convert to ms)
-                        var totalSegmentDurationMs = 0.0;
-                        if (segmentsOrdered.Count > 0)
-                        {
-                            totalSegmentDurationMs = (segmentsOrdered[^1].End - segmentsOrdered[0].Start) * 1000.0;
-                        }
-
-                        for (int segIdx = 0; segIdx < segmentsOrdered.Count; segIdx++)
-                        {
-                            var seg = segmentsOrdered[segIdx];
-
-                            // Calculate timing relative to the source selection
-                            double segStartMs, segEndMs;
-
-                            if (totalSegmentDurationMs > 0 && sourceDurationMs > 0)
-                            {
-                                // Scale segment timings to fit the source duration
-                                var segStartRelative = (seg.Start - segmentsOrdered[0].Start) * 1000.0;
-                                var segEndRelative = (seg.End - segmentsOrdered[0].Start) * 1000.0;
-
-                                // Scale to fit source duration
-                                var scale = sourceDurationMs / totalSegmentDurationMs;
-                                segStartMs = sourceStartMs + (segStartRelative * scale);
-                                segEndMs = sourceStartMs + (segEndRelative * scale);
-                            }
-                            else
-                            {
-                                // No scaling needed or possible
-                                segStartMs = sourceStartMs + (seg.Start * 1000.0);
-                                segEndMs = sourceStartMs + (seg.End * 1000.0);
-                            }
-
-                            // Ensure we don't exceed the source selection end
-                            segEndMs = Math.Min(segEndMs, sourceEndMs);
-
-                            // Ensure minimum duration and valid timing
-                            if (segEndMs <= segStartMs)
-                            {
-                                // If last segment, extend to source end; otherwise, use a minimum duration
-                                if (segIdx == segmentsOrdered.Count - 1)
-                                {
-                                    segEndMs = sourceEndMs;
-                                }
-                                else
-                                {
-                                    segEndMs = segStartMs + 500; // 500ms minimum
-                                }
-                            }
-
-                            var newLine = new SubtitleLineViewModel(
-                                new Paragraph(seg.Text.Trim(), segStartMs, segEndMs),
-                                SelectedSubtitleFormat);
-                            newLines.Add(newLine);
-                        }
-                    }
-                }
-                else if (response != null && !string.IsNullOrEmpty(response.Text))
-                {
-                    var finalText = streamingText.Length > 0 ? streamingText.ToString() : response.Text.Trim();
-                    selectedLine.Text = finalText;
-                }
-
-                // Cleanup
-                try
-                {
-                    if (Se.Settings.Tools.AudioToText.WhisperDeleteTempFiles && File.Exists(audioClip.AudioFileName))
-                        File.Delete(audioClip.AudioFileName);
-                }
-                catch { }
-            }
-
-            foreach (var line in deleteLines) Subtitles.Remove(line);
-            foreach (var line in newLines) _insertService.InsertInCorrectPosition(Subtitles, line);
-            Renumber();
-            _updateAudioVisualizer = true;
-        }
-        catch (Exception ex)
-        {
-            await MessageBox.Show(Window, $"Transcription failed: {ex.Message}", "Error");
-        }
-    }
-
-    [RelayCommand]
     private async Task WaveformNewSelectionPasteFromClipboard()
     {
         var vp = GetVideoPlayerControl();
@@ -15917,14 +15715,31 @@ public partial class MainViewModel :
         }
 
         if (Se.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection &&
-            !string.IsNullOrEmpty(_videoFileName) &&
-            OpenAiSttService.IsConfigured())
+            !string.IsNullOrEmpty(_videoFileName))
         {
             _ = AutoTranscribeParagraphAsync(index, e.Paragraph);
         }
     }
 
     private async Task AutoTranscribeParagraphAsync(int index, SubtitleLineViewModel paragraph)
+    {
+        // Dispatch by the user's currently selected STT engine. Only engines
+        // with a fast headless transcription path are wired up here; engines
+        // that require process startup (whisper.cpp, etc.) are not invoked
+        // from the waveform-selection hook.
+        var choice = Se.Settings.Tools.AudioToText.WhisperChoice;
+        if (choice == WhisperChoice.OpenAiCompatible)
+        {
+            if (!OpenAiSttService.IsConfigured())
+            {
+                return;
+            }
+
+            await AutoTranscribeParagraphViaOpenAiAsync(index, paragraph);
+        }
+    }
+
+    private async Task AutoTranscribeParagraphViaOpenAiAsync(int index, SubtitleLineViewModel paragraph)
     {
         TranscriptionProgressViewModel? progressViewModel = null;
         TranscriptionProgressWindow? progressWindow = null;
@@ -16037,16 +15852,13 @@ public partial class MainViewModel :
                         var originalLine = Subtitles[index];
                         var sourceStartMs = originalLine.StartTime.TotalMilliseconds;
                         var sourceEndMs = originalLine.EndTime.TotalMilliseconds;
-                        var sourceDurationMs = sourceEndMs - sourceStartMs;
-
-                        var totalSegmentDurationMs = 0.0;
-                        if (segmentsOrdered.Count > 0)
-                        {
-                            totalSegmentDurationMs = (segmentsOrdered[^1].End - segmentsOrdered[0].Start) * 1000.0;
-                        }
 
                         Subtitles.RemoveAt(index);
 
+                        // Map server-reported times (seconds, relative to the
+                        // extracted clip that starts at 0) to the source
+                        // selection by simple offset addition. Clamp to the
+                        // source end and ensure non-zero duration.
                         for (int segIdx = 0; segIdx < segmentsOrdered.Count; segIdx++)
                         {
                             var seg = segmentsOrdered[segIdx];
@@ -16056,22 +15868,8 @@ public partial class MainViewModel :
                                 continue;
                             }
 
-                            double segStartMs, segEndMs;
-
-                            if (totalSegmentDurationMs > 0 && sourceDurationMs > 0)
-                            {
-                                var segStartRelative = (seg.Start - segmentsOrdered[0].Start) * 1000.0;
-                                var segEndRelative = (seg.End - segmentsOrdered[0].Start) * 1000.0;
-
-                                var scale = sourceDurationMs / totalSegmentDurationMs;
-                                segStartMs = sourceStartMs + (segStartRelative * scale);
-                                segEndMs = sourceStartMs + (segEndRelative * scale);
-                            }
-                            else
-                            {
-                                segStartMs = sourceStartMs + (seg.Start * 1000.0);
-                                segEndMs = sourceStartMs + (seg.End * 1000.0);
-                            }
+                            var segStartMs = sourceStartMs + (seg.Start * 1000.0);
+                            var segEndMs = sourceStartMs + (seg.End * 1000.0);
 
                             segEndMs = Math.Min(segEndMs, sourceEndMs);
 

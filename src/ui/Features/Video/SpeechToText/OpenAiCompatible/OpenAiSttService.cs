@@ -55,12 +55,7 @@ public class OpenAiSttService
         // Add model
         if (!string.IsNullOrEmpty(_settings.Model))
         {
-            System.Diagnostics.Debug.WriteLine($"Sending model: {_settings.Model}");
             content.Add(new StringContent(_settings.Model), "model");
-        }
-        else
-        {
-            System.Diagnostics.Debug.WriteLine("No model specified");
         }
 
         // Add language if specified
