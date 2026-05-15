@@ -5294,6 +5294,24 @@ public partial class MainViewModel :
         PlayerSelectedLines(false);
     }
 
+    [RelayCommand]
+    private void PlaySelectedLinesAndFocusWaveform()
+    {
+        if (PlayerSelectedLines(false))
+        {
+            AudioVisualizer?.Focus();
+        }
+    }
+
+    [RelayCommand]
+    private void PlaySelectedLinesWithLoopAndFocusWaveform()
+    {
+        if (PlayerSelectedLines(true))
+        {
+            AudioVisualizer?.Focus();
+        }
+    }
+
     private bool PlayerSelectedLines(bool loop)
     {
         var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
