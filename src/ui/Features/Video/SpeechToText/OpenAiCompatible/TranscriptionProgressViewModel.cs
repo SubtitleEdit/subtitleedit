@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -60,7 +61,7 @@ public partial class TranscriptionProgressViewModel : ObservableObject
         Dispatcher.UIThread.Post(() =>
         {
             IsCompleted = true;
-            StatusText = "Transcription completed!";
+            StatusText = Se.Language.General.TranscriptionComplete;
         });
     }
 

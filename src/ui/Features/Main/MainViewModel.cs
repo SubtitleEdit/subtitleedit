@@ -296,6 +296,7 @@ public partial class MainViewModel :
     private AudioTrackInfo? _audioTrack;
     private string? _audioTrackLangauge;
     private CancellationTokenSource? _statusFadeCts;
+    private CancellationTokenSource? _autoTranscribeCts;
     private int _changeSubtitleHash = -1;
     private int _changeSubtitleHashOriginal = -1;
     private bool _subtitleGridSelectionChangedSkip;
@@ -15716,11 +15717,17 @@ public partial class MainViewModel :
         if (Se.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection &&
             !string.IsNullOrEmpty(_videoFileName))
         {
-            _ = AutoTranscribeParagraphAsync(index, e.Paragraph);
+            // Replace-in-flight: if the user makes another waveform selection
+            // while a previous auto-transcribe is still running, cancel the
+            // prior one so we don't pile up ffmpeg processes and HTTP calls.
+            var previous = Interlocked.Exchange(ref _autoTranscribeCts, new CancellationTokenSource());
+            previous?.Cancel();
+            previous?.Dispose();
+            _ = AutoTranscribeParagraphAsync(index, e.Paragraph, _autoTranscribeCts.Token);
         }
     }
 
-    private async Task AutoTranscribeParagraphAsync(int index, SubtitleLineViewModel paragraph)
+    private async Task AutoTranscribeParagraphAsync(int index, SubtitleLineViewModel paragraph, CancellationToken cancellationToken)
     {
         // Dispatch by the user's currently selected STT engine. Only engines
         // with a fast headless transcription path are wired up here; engines
@@ -15734,17 +15741,19 @@ public partial class MainViewModel :
                 return;
             }
 
-            await AutoTranscribeParagraphViaOpenAiAsync(index, paragraph);
+            await AutoTranscribeParagraphViaOpenAiAsync(index, paragraph, cancellationToken);
         }
     }
 
-    private async Task AutoTranscribeParagraphViaOpenAiAsync(int index, SubtitleLineViewModel paragraph)
+    private async Task AutoTranscribeParagraphViaOpenAiAsync(int index, SubtitleLineViewModel paragraph, CancellationToken cancellationToken)
     {
         TranscriptionProgressViewModel? progressViewModel = null;
         TranscriptionProgressWindow? progressWindow = null;
 
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var ffmpegOk = await RequireFfmpegOk();
             if (!ffmpegOk)
             {
@@ -15776,7 +15785,15 @@ public partial class MainViewModel :
                 return;
             }
 
-            await process.WaitForExitAsync();
+            try
+            {
+                await process.WaitForExitAsync(cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                try { if (!process.HasExited) { process.Kill(entireProcessTree: true); } } catch { /* ignore */ }
+                throw;
+            }
 
             if (process.ExitCode != 0 || !File.Exists(outputFileName))
             {
@@ -15785,9 +15802,9 @@ public partial class MainViewModel :
 
             var settings = OpenAiSttService.GetSettingsFromConfiguration();
             progressViewModel = new TranscriptionProgressViewModel();
-            progressViewModel.StatusText = "Transcribing selection...";
+            progressViewModel.StatusText = Se.Language.Video.AudioToText.Transcribing;
             progressViewModel.ServerUrl = settings.EndpointUrl;
-            progressViewModel.ModelName = string.IsNullOrEmpty(settings.Model) ? "(auto)" : settings.Model;
+            progressViewModel.ModelName = string.IsNullOrEmpty(settings.Model) ? Se.Language.General.TranscriptionProgressModelAuto : settings.Model;
 
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
@@ -15809,15 +15826,22 @@ public partial class MainViewModel :
                 progressViewModel.AddSegment(seg.Text, seg.Start, seg.End);
             });
 
+            // Cancel on either: the outer in-flight CTS (a new waveform
+            // selection replaces this one) or the progress window's Cancel
+            // button.
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(
+                cancellationToken,
+                progressViewModel.CancellationToken);
+
             var response = await service.TranscribeAsync(
                 outputFileName,
                 settings.Language,
                 progress,
                 segmentProgress,
-                progressViewModel.CancellationToken);
+                linkedCts.Token);
 
             progressViewModel.SetCompleted();
-            await Task.Delay(300, progressViewModel.CancellationToken);
+            await Task.Delay(300, linkedCts.Token);
 
             await Dispatcher.UIThread.InvokeAsync(() =>
             {

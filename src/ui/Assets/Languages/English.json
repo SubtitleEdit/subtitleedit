@@ -689,7 +689,11 @@
     "noSegmentsReturned": "No segments returned from the transcription service.",
     "openAiCompatibleSttUrlMissing": "OpenAI Compatible STT endpoint URL is required. Please enter a URL and try again.",
     "openAiCompatibleSttUrlNotResponding": "The OpenAI Compatible STT endpoint did not respond:\n{0}\n\nPlease verify the URL and that the server is running.",
-    "transcriptionFailed": "Transcription failed"
+    "transcriptionFailed": "Transcription failed",
+    "transcriptionProgressServerFormat": "Server: {0}",
+    "transcriptionProgressModelFormat": "Model: {0}",
+    "transcriptionProgressReceivedSegmentsFormat": "Received Segments ({0})",
+    "transcriptionProgressModelAuto": "(auto)"
   },
   "main": {
     "menu": {

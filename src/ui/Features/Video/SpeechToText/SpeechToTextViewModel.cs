@@ -890,6 +890,14 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Reachability check before running a transcription. Sends HEAD to the
+    /// URL's authority (scheme://host:port/) — NOT the transcription endpoint
+    /// path itself. We only confirm the server is up; many STT servers will
+    /// 404 the root path, and any 2xx/3xx/4xx still proves the server
+    /// answered. Network/DNS/timeout failures bubble up as the returned
+    /// error string, which the caller displays to the user.
+    /// </summary>
     private static async Task<string?> ProbeOpenAiUrlAsync(string url, CancellationToken cancellationToken)
     {
         if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
@@ -928,6 +936,11 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private async Task ProcessOpenAiCompatibleTranscription(string audioFileName, string? language = null, CancellationToken cancellationToken = default)
     {
+        // The OpenAI Compatible engine reads its config from
+        // Configuration.Settings.Tools via GetSettingsFromConfiguration(), so
+        // the user's in-window edits (URL, key, model, prompt, ...) must be
+        // persisted before we read them. The transcribe action is the commit
+        // moment for this engine — there is no separate OK button.
         SaveSettings();
         var openAiSettings = OpenAiSttService.GetSettingsFromConfiguration();
 
@@ -950,6 +963,8 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (probeError != null)
         {
             LogToConsole($"OpenAI Compatible STT endpoint probe failed: {probeError}. Retrying...");
+            // Brief delay so transient DNS/socket hiccups have a chance to recover before retrying.
+            await Task.Delay(300, cancellationToken);
             probeError = await ProbeOpenAiUrlAsync(openAiSettings.EndpointUrl, cancellationToken);
         }
 

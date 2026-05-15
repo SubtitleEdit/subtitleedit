@@ -690,6 +690,10 @@ public class LanguageGeneral
     public string OpenAiCompatibleSttUrlMissing { get; set; }
     public string OpenAiCompatibleSttUrlNotResponding { get; set; }
     public string TranscriptionFailed { get; set; }
+    public string TranscriptionProgressServerFormat { get; set; }
+    public string TranscriptionProgressModelFormat { get; set; }
+    public string TranscriptionProgressReceivedSegmentsFormat { get; set; }
+    public string TranscriptionProgressModelAuto { get; set; }
 
     public LanguageGeneral()
     {
@@ -1379,5 +1383,9 @@ public class LanguageGeneral
         OpenAiCompatibleSttUrlMissing = "OpenAI Compatible STT endpoint URL is required. Please enter a URL and try again.";
         OpenAiCompatibleSttUrlNotResponding = "The OpenAI Compatible STT endpoint did not respond:\n{0}\n\nPlease verify the URL and that the server is running.";
         TranscriptionFailed = "Transcription failed";
+        TranscriptionProgressServerFormat = "Server: {0}";
+        TranscriptionProgressModelFormat = "Model: {0}";
+        TranscriptionProgressReceivedSegmentsFormat = "Received Segments ({0})";
+        TranscriptionProgressModelAuto = "(auto)";
     }
 }
