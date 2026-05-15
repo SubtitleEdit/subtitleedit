@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
 {
     [ObservableProperty] private string _videoFileName;
-    public bool HasVideoFileName => !string.IsNullOrEmpty(_videoFileName);
+    public bool HasVideoFileName => !string.IsNullOrEmpty(VideoFileName);
     public bool CanGenerate => HasVideoFileName && !IsGenerating;
     [ObservableProperty] private ObservableCollection<EmbeddedTrack> _tracks;
     [ObservableProperty] private EmbeddedTrack? _selectedTrck;

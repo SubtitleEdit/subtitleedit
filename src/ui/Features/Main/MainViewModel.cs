@@ -15750,6 +15750,12 @@ public partial class MainViewModel :
         TranscriptionProgressViewModel? progressViewModel = null;
         TranscriptionProgressWindow? progressWindow = null;
 
+        var videoFileName = _videoFileName;
+        if (string.IsNullOrEmpty(videoFileName) || Window == null)
+        {
+            return;
+        }
+
         try
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -15763,7 +15769,7 @@ public partial class MainViewModel :
             var outputFileName = Path.Combine(Path.GetTempPath(), $"se_audioclip_{Guid.NewGuid()}.wav");
             var useCenterChannelOnly = false;
             var arguments = FfmpegGenerator.ExtractAudioClipFromVideoParameters(
-                _videoFileName,
+                videoFileName,
                 paragraph.StartTime.TotalSeconds,
                 paragraph.Duration.TotalSeconds,
                 useCenterChannelOnly,
@@ -15806,10 +15812,11 @@ public partial class MainViewModel :
             progressViewModel.ServerUrl = settings.EndpointUrl;
             progressViewModel.ModelName = string.IsNullOrEmpty(settings.Model) ? Se.Language.General.TranscriptionProgressModelAuto : settings.Model;
 
+            var ownerWindow = Window!;
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 progressWindow = new TranscriptionProgressWindow(progressViewModel);
-                progressWindow.Show(Window);
+                progressWindow.Show(ownerWindow);
             });
 
             var service = new OpenAiSttService(settings);

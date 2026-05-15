@@ -659,22 +659,29 @@ jobs:
           sudo apt-get install -y flatpak
 
       # Cache the Freedesktop SDK + dotnet extension so we don't re-download
-      # ~6 GB of runtimes on every CI run. Bump the key suffix (-v1) to invalidate.
+      # ~6 GB of runtimes on every CI run. Bump the key suffix (-vN) to invalidate.
+      # We restore by prefix and then always run install/update so the cached
+      # dotnet10 extension picks up Microsoft's monthly patch releases — the
+      # flatpak-builder image used by build-linux-flatpak pulls the latest
+      # extension on every run, and the nuget-sources.json generated here
+      # must reference the same patch version or restore fails (NU1102).
       - name: Cache flatpak runtimes
         id: flatpak-cache
         uses: actions/cache@v4
         with:
           path: ~/.local/share/flatpak
-          key: flatpak-fd24.08-dotnet10-v1
+          key: flatpak-fd24.08-dotnet10-v2
+          restore-keys: |
+            flatpak-fd24.08-dotnet10-
 
-      - name: Install Freedesktop SDK + dotnet extension
-        if: steps.flatpak-cache.outputs.cache-hit != 'true'
+      - name: Install/update Freedesktop SDK + dotnet extension
         run: |
           flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
           flatpak --user install -y --noninteractive flathub \
             org.freedesktop.Platform//24.08 \
             org.freedesktop.Sdk//24.08 \
             org.freedesktop.Sdk.Extension.dotnet10//24.08
+          flatpak --user update -y --noninteractive
 
       - name: Regenerate nuget-sources.json
         run: bash installer/flatpak/generate-nuget-sources.sh
