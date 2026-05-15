@@ -82,6 +82,15 @@ public class LanguageOcr
     public string ImportTextFromSubtitleXLinesImported { get; set; }
     public string ExportTextAsSubtitleDotDotDot { get; set; }
     public string ExportTextAsSubtitleNoText { get; set; }
+    public string VobSubColors { get; set; }
+    public string VobSubColorsTitle { get; set; }
+    public string VobSubColorsHeader { get; set; }
+    public string VobSubColorsDescription { get; set; }
+    public string VobSubColorBackground { get; set; }
+    public string VobSubColorPattern { get; set; }
+    public string VobSubColorEmphasis1 { get; set; }
+    public string VobSubColorEmphasis2 { get; set; }
+    public string VobSubColorsInvert { get; set; }
 
     public LanguageOcr()
     {
@@ -163,5 +172,14 @@ public class LanguageOcr
         ImportTextFromSubtitleXLinesImported = "Imported text for {0} line(s).";
         ExportTextAsSubtitleDotDotDot = "Export text as subtitle...";
         ExportTextAsSubtitleNoText = "No OCR text to export. Run OCR first or import text.";
+        VobSubColors = "VobSub/DVD colors...";
+        VobSubColorsTitle = "VobSub/DVD colors";
+        VobSubColorsHeader = "Customize the four VobSub colors";
+        VobSubColorsDescription = "VobSub/DVD subtitles use four indexed colors: background, pattern, emphasis 1 and emphasis 2. Pick each color below to override the embedded palette - useful when the original colors give poor OCR contrast.";
+        VobSubColorBackground = "Background";
+        VobSubColorPattern = "Pattern";
+        VobSubColorEmphasis1 = "Emphasis 1";
+        VobSubColorEmphasis2 = "Emphasis 2";
+        VobSubColorsInvert = "Invert background / emphasis 1";
     }
 }
