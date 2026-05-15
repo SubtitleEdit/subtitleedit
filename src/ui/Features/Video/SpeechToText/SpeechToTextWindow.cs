@@ -693,13 +693,12 @@ public class SpeechToTextWindow : Window
         };
     }
 
-    /// <summary>
-    /// Item template for the engine combo box: each row carries a small status icon
-    /// (✓ for installed, ⬇ for download-required, blank for cloud/online engines) and
-    /// — when relevant — the approximate download size. Status is read fresh from the
-    /// engine each time the template runs, so the dropdown reflects the current state
-    /// after a download completes (the VM nudges SelectedEngine to force a re-render).
-    /// </summary>
+    // Engine combo item template: each row gets a small status icon (✓ installed,
+    // ⬇ download-required, blank for cloud-only) plus the approximate download size
+    // when relevant. The template hard-codes engine.Name/icon/size at build time
+    // instead of binding, so recycling MUST stay off — otherwise the ComboBox would
+    // reuse one visual across engines and the closed-state display would freeze on
+    // whichever engine first populated the recycled visual.
     private static FuncDataTemplate<ISpeechToTextEngine> MakeEngineItemTemplate()
     {
         return new FuncDataTemplate<ISpeechToTextEngine>((engine, _) =>
@@ -755,6 +754,6 @@ public class SpeechToTextWindow : Window
             }
 
             return panel;
-        }, supportsRecycling: true);
+        });
     }
 }
