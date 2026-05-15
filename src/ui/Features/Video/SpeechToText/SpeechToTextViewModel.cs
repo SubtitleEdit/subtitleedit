@@ -897,17 +897,28 @@ public partial class SpeechToTextViewModel : ObservableObject
             return $"Invalid URL: '{url}'";
         }
 
+        // Apply the 8-second probe deadline via a linked CTS so we can reuse
+        // the shared HttpClient (whose Timeout is InfiniteTimeSpan) without
+        // mutating it.
+        using var probeCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        probeCts.CancelAfter(TimeSpan.FromSeconds(8));
+
         try
         {
-            using var probeClient = new HttpClient { Timeout = TimeSpan.FromSeconds(8) };
             var baseUri = new Uri(uri.GetLeftPart(UriPartial.Authority));
             using var request = new HttpRequestMessage(HttpMethod.Head, baseUri);
-            using var response = await probeClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            using var response = await OpenAiSttService.SharedHttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, probeCts.Token);
             return null;
         }
         catch (OperationCanceledException)
         {
-            throw;
+            // If the caller cancelled, propagate; if our probe timed out, surface a clear message.
+            if (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+
+            return "Probe timed out after 8 seconds";
         }
         catch (Exception ex)
         {
@@ -961,8 +972,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         try
         {
-            using var httpClient = new HttpClient();
-            var service = new OpenAiSttService(httpClient, openAiSettings);
+            var service = new OpenAiSttService(openAiSettings);
 
             var segmentProgress = new Progress<OpenAiCompatibleSegment>(seg =>
             {

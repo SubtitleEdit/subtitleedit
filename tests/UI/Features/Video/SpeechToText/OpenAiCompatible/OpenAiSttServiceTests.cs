@@ -208,6 +208,64 @@ public class OpenAiSttServiceTests
     }
 
     [Fact]
+    public void Constructor_DoesNotMutateHttpClientTimeout()
+    {
+        // Per-call timeouts are now applied via a linked CTS inside
+        // TranscribeAsync; the service must NOT mutate the passed-in
+        // HttpClient.Timeout so the instance is safe to share.
+        using var handler = new StubHandler((req, ct) => Task.FromResult(JsonResponse("""{"text":"ok"}""")));
+        using var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(42) };
+
+        _ = new OpenAiSttService(client, MakeSettings());
+
+        Assert.Equal(TimeSpan.FromSeconds(42), client.Timeout);
+    }
+
+    [Fact]
+    public async Task TranscribeAsync_HonorsPerCallTimeout_FromSettings()
+    {
+        // settings.TimeoutSeconds drives a CancelAfter on a linked CTS;
+        // a handler that never completes should be cancelled by it.
+        var requestStarted = new TaskCompletionSource();
+        using var handler = new StubHandler(async (req, ct) =>
+        {
+            requestStarted.TrySetResult();
+            // Wait forever — the per-call timeout should fire and cancel ct.
+            await Task.Delay(Timeout.Infinite, ct);
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        });
+        using var client = new HttpClient(handler);
+        var settings = MakeSettings();
+        settings.TimeoutSeconds = 1; // 1 second for the test
+        var service = new OpenAiSttService(client, settings);
+
+        var wav = MakeTinyWav();
+        try
+        {
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                () => service.TranscribeAsync(wav, cancellationToken: TestContext.Current.CancellationToken));
+            Assert.True(requestStarted.Task.IsCompletedSuccessfully);
+        }
+        finally
+        {
+            File.Delete(wav);
+        }
+    }
+
+    [Fact]
+    public void SharedHttpClient_IsStableAndHasInfiniteTimeout()
+    {
+        // The shared instance must be reused (single-instance) and must use
+        // InfiniteTimeSpan, otherwise long SSE streams would be truncated by
+        // the default 100-second HttpClient timeout.
+        var a = OpenAiSttService.SharedHttpClient;
+        var b = OpenAiSttService.SharedHttpClient;
+
+        Assert.Same(a, b);
+        Assert.Equal(Timeout.InfiniteTimeSpan, a.Timeout);
+    }
+
+    [Fact]
     public async Task TranscribeAsync_NonSuccessStatus_ThrowsHttpRequestException()
     {
         using var handler = new StubHandler((req, ct) =>

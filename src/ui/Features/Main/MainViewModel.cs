@@ -165,7 +165,6 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -15796,8 +15795,7 @@ public partial class MainViewModel :
                 progressWindow.Show(Window);
             });
 
-            using var httpClient = new HttpClient();
-            var service = new OpenAiSttService(httpClient, settings);
+            var service = new OpenAiSttService(settings);
 
             var streamingText = new StringBuilder();
             var progress = new Progress<string>(delta =>

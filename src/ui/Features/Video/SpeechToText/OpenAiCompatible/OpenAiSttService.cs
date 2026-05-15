@@ -16,14 +16,54 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 
 public class OpenAiSttService
 {
+    private static HttpClient? _sharedHttpClient;
+    private static readonly object _sharedHttpClientLock = new();
+
+    /// <summary>
+    /// Shared HttpClient for the OpenAI Compatible STT service. Created once,
+    /// reused across calls — a fresh HttpClient per request leaks sockets into
+    /// TIME_WAIT and skips DNS caching. Timeout is set to InfiniteTimeSpan so
+    /// per-call deadlines can be applied via a linked CancellationTokenSource;
+    /// callers must NOT mutate Timeout on this instance.
+    /// </summary>
+    public static HttpClient SharedHttpClient
+    {
+        get
+        {
+            if (_sharedHttpClient != null)
+            {
+                return _sharedHttpClient;
+            }
+
+            lock (_sharedHttpClientLock)
+            {
+                if (_sharedHttpClient == null)
+                {
+                    var client = HttpClientFactoryWithProxy.CreateHttpClientWithProxy();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    _sharedHttpClient = client;
+                }
+            }
+
+            return _sharedHttpClient;
+        }
+    }
+
     private readonly HttpClient _httpClient;
     private readonly OpenAiCompatibleSettings _settings;
+
+    public OpenAiSttService(OpenAiCompatibleSettings settings)
+        : this(SharedHttpClient, settings)
+    {
+    }
 
     public OpenAiSttService(HttpClient httpClient, OpenAiCompatibleSettings settings)
     {
         _httpClient = httpClient;
         _settings = settings;
-        _httpClient.Timeout = TimeSpan.FromSeconds(settings.TimeoutSeconds);
+        // Don't mutate _httpClient.Timeout — the instance may be shared. The
+        // per-call timeout from settings.TimeoutSeconds is applied via a
+        // linked CancellationTokenSource in TranscribeAsync.
     }
 
     public async Task<OpenAiCompatibleSttResponse> TranscribeAsync(
@@ -45,6 +85,15 @@ public class OpenAiSttService
         IProgress<OpenAiCompatibleSegment>? segmentProgress = null,
         CancellationToken cancellationToken = default)
     {
+        // Apply the per-call deadline via a linked CTS rather than the shared
+        // HttpClient.Timeout, so the shared client stays unmodified.
+        using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        if (_settings.TimeoutSeconds > 0)
+        {
+            timeoutCts.CancelAfter(TimeSpan.FromSeconds(_settings.TimeoutSeconds));
+        }
+        cancellationToken = timeoutCts.Token;
+
         using var content = new MultipartFormDataContent();
 
         // Add file
