@@ -4,6 +4,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Data;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 
@@ -25,7 +26,7 @@ public class TranscriptionProgressWindow : Window
 
     private void InitializeComponent()
     {
-        Title = "Transcribing...";
+        Title = Se.Language.Video.AudioToText.Transcribing;
         Width = 500;
         Height = 450;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
@@ -39,7 +40,7 @@ public class TranscriptionProgressWindow : Window
             Margin = new Thickness(0, 0, 0, 2),
             TextWrapping = TextWrapping.Wrap
         };
-        connectionInfoText.Bind(TextBlock.TextProperty, new Binding("ServerUrl") { StringFormat = "Server: {0}" });
+        connectionInfoText.Bind(TextBlock.TextProperty, new Binding("ServerUrl") { StringFormat = Se.Language.General.TranscriptionProgressServerFormat });
 
         var modelInfoText = new TextBlock
         {
@@ -47,7 +48,7 @@ public class TranscriptionProgressWindow : Window
             Foreground = Brushes.Gray,
             Margin = new Thickness(0, 0, 0, 10)
         };
-        modelInfoText.Bind(TextBlock.TextProperty, new Binding("ModelName") { StringFormat = "Model: {0}" });
+        modelInfoText.Bind(TextBlock.TextProperty, new Binding("ModelName") { StringFormat = Se.Language.General.TranscriptionProgressModelFormat });
 
         var statusText = new TextBlock
         {
@@ -84,12 +85,12 @@ public class TranscriptionProgressWindow : Window
             IsExpanded = true,
             Content = segmentsList
         };
-        expander.Bind(HeaderedContentControl.HeaderProperty, 
-            new Binding("SegmentCount") { StringFormat = "Received Segments ({0})" });
+        expander.Bind(HeaderedContentControl.HeaderProperty,
+            new Binding("SegmentCount") { StringFormat = Se.Language.General.TranscriptionProgressReceivedSegmentsFormat });
 
         var cancelButton = new Button
         {
-            Content = "Cancel",
+            Content = Se.Language.General.Cancel,
             HorizontalAlignment = HorizontalAlignment.Right,
             Margin = new Thickness(0, 10, 0, 0)
         };
@@ -98,7 +99,7 @@ public class TranscriptionProgressWindow : Window
 
         var closeButton = new Button
         {
-            Content = "Close",
+            Content = Se.Language.General.Close,
             HorizontalAlignment = HorizontalAlignment.Right,
             Margin = new Thickness(0, 10, 0, 0),
             IsDefault = true

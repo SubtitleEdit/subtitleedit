@@ -890,6 +890,14 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Reachability check before running a transcription. Sends HEAD to the
+    /// URL's authority (scheme://host:port/) — NOT the transcription endpoint
+    /// path itself. We only confirm the server is up; many STT servers will
+    /// 404 the root path, and any 2xx/3xx/4xx still proves the server
+    /// answered. Network/DNS/timeout failures bubble up as the returned
+    /// error string, which the caller displays to the user.
+    /// </summary>
     private static async Task<string?> ProbeOpenAiUrlAsync(string url, CancellationToken cancellationToken)
     {
         if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
@@ -897,17 +905,28 @@ public partial class SpeechToTextViewModel : ObservableObject
             return $"Invalid URL: '{url}'";
         }
 
+        // Apply the 8-second probe deadline via a linked CTS so we can reuse
+        // the shared HttpClient (whose Timeout is InfiniteTimeSpan) without
+        // mutating it.
+        using var probeCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        probeCts.CancelAfter(TimeSpan.FromSeconds(8));
+
         try
         {
-            using var probeClient = new HttpClient { Timeout = TimeSpan.FromSeconds(8) };
             var baseUri = new Uri(uri.GetLeftPart(UriPartial.Authority));
             using var request = new HttpRequestMessage(HttpMethod.Head, baseUri);
-            using var response = await probeClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            using var response = await OpenAiSttService.SharedHttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, probeCts.Token);
             return null;
         }
         catch (OperationCanceledException)
         {
-            throw;
+            // If the caller cancelled, propagate; if our probe timed out, surface a clear message.
+            if (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+
+            return "Probe timed out after 8 seconds";
         }
         catch (Exception ex)
         {
@@ -917,6 +936,11 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private async Task ProcessOpenAiCompatibleTranscription(string audioFileName, string? language = null, CancellationToken cancellationToken = default)
     {
+        // The OpenAI Compatible engine reads its config from
+        // Configuration.Settings.Tools via GetSettingsFromConfiguration(), so
+        // the user's in-window edits (URL, key, model, prompt, ...) must be
+        // persisted before we read them. The transcribe action is the commit
+        // moment for this engine — there is no separate OK button.
         SaveSettings();
         var openAiSettings = OpenAiSttService.GetSettingsFromConfiguration();
 
@@ -939,6 +963,8 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (probeError != null)
         {
             LogToConsole($"OpenAI Compatible STT endpoint probe failed: {probeError}. Retrying...");
+            // Brief delay so transient DNS/socket hiccups have a chance to recover before retrying.
+            await Task.Delay(300, cancellationToken);
             probeError = await ProbeOpenAiUrlAsync(openAiSettings.EndpointUrl, cancellationToken);
         }
 
@@ -961,8 +987,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         try
         {
-            using var httpClient = new HttpClient();
-            var service = new OpenAiSttService(httpClient, openAiSettings);
+            var service = new OpenAiSttService(openAiSettings);
 
             var segmentProgress = new Progress<OpenAiCompatibleSegment>(seg =>
             {
