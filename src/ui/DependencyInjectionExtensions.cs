@@ -42,6 +42,7 @@ using Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
 using Nikse.SubtitleEdit.Features.Ocr.Download;
 using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
 using Nikse.SubtitleEdit.Features.Ocr.NOcr;
+using Nikse.SubtitleEdit.Features.Ocr.VobSubColorChooser;
 using Nikse.SubtitleEdit.Features.Options.Language;
 using Nikse.SubtitleEdit.Features.Options.Plugins;
 using Nikse.SubtitleEdit.Features.Options.Settings;
@@ -394,6 +395,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<PointSyncViaOtherViewModel>();
         collection.AddTransient<PointSyncViewModel>();
         collection.AddTransient<PreProcessingViewModel>();
+        collection.AddTransient<VobSubColorChooserViewModel>();
         collection.AddTransient<ProfilesExportViewModel>();
         collection.AddTransient<ProfilesViewModel>();
         collection.AddTransient<PromptFileSavedViewModel>();

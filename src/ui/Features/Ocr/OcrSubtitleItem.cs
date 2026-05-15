@@ -39,6 +39,11 @@ public partial class OcrSubtitleItem : ObservableObject
         }
     }
 
+    public void InvalidateBitmap()
+    {
+        _bitmap = null;
+    }
+
     public SKBitmap GetSkBitmapClean()
     {
         var bitmap = _ocrSubtitle.GetBitmap(_index);

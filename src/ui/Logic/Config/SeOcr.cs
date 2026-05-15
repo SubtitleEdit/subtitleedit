@@ -40,6 +40,11 @@ public class SeOcr
     public bool TextBoxFontBold { get; set; }
     public string TextBoxFontName { get; set; }
     public bool UseWordSplitList { get; set; }
+    public bool VobSubUseCustomColors { get; set; }
+    public string VobSubColorBackground { get; set; }
+    public string VobSubColorPattern { get; set; }
+    public string VobSubColorEmphasis1 { get; set; }
+    public string VobSubColorEmphasis2 { get; set; }
 
     public SeOcr()
     {
@@ -86,5 +91,11 @@ public class SeOcr
         CaptureAssaPosition = false;
 
         PromptForBlankOcrText = true;
+
+        VobSubUseCustomColors = false;
+        VobSubColorBackground = "#00000000";
+        VobSubColorPattern = "#FF000000";
+        VobSubColorEmphasis1 = "#FFFFFFFF";
+        VobSubColorEmphasis2 = "#FF000000";
     }
 }

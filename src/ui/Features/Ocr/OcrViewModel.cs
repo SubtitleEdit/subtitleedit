@@ -93,6 +93,8 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private bool _isGoogleVisionVisible;
     [ObservableProperty] private bool _isGoogleLensVisible;
     [ObservableProperty] private bool _isMistralOcrVisible;
+    [ObservableProperty] private bool _isVobSubVisible;
+    [ObservableProperty] private bool _hasCustomVobSubColors;
     [ObservableProperty] private bool _nOcrDrawUnknownText;
     [ObservableProperty] private bool _isInspectLineVisible;
     [ObservableProperty] private bool _isInspectAdditionsVisible;
@@ -1301,6 +1303,114 @@ public partial class OcrViewModel : ObservableObject
                 _preProcessingSettings.Binarize ||
                 _preProcessingSettings.RemoveBorders;
         });
+    }
+
+    [RelayCommand]
+    private async Task PickVobSubColors()
+    {
+        if (Window == null || _ocrSubtitle is not OcrSubtitleVobSub vobSub)
+        {
+            return;
+        }
+
+        var previewSubPicture = vobSub.GetSubPicture(SelectedOcrSubtitleItem != null
+            ? Math.Max(0, OcrSubtitleItems.IndexOf(SelectedOcrSubtitleItem))
+            : 0);
+
+        var result = await _windowService.ShowDialogAsync<VobSubColorChooser.VobSubColorChooserWindow, VobSubColorChooser.VobSubColorChooserViewModel>(
+            Window,
+            vm => vm.Initialize(previewSubPicture, vobSub.GetPalette(), vobSub.Background, vobSub.Pattern, vobSub.Emphasis1, vobSub.Emphasis2));
+
+        _isCtrlDown = false;
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        vobSub.Background = result.Background;
+        vobSub.Pattern = result.Pattern;
+        vobSub.Emphasis1 = result.Emphasis1;
+        vobSub.Emphasis2 = result.Emphasis2;
+        vobSub.UseCustomColors = !AreDefaultVobSubColors(vobSub);
+
+        HasCustomVobSubColors = vobSub.UseCustomColors;
+        SaveVobSubColors();
+        RefreshOcrSubtitleItemBitmaps();
+    }
+
+    private static bool AreDefaultVobSubColors(OcrSubtitleVobSub vobSub)
+    {
+        return vobSub.Background == SkiaSharp.SKColors.Transparent
+               && vobSub.Pattern == SkiaSharp.SKColors.Black
+               && vobSub.Emphasis1 == SkiaSharp.SKColors.White
+               && vobSub.Emphasis2 == SkiaSharp.SKColors.Black;
+    }
+
+    private void RefreshOcrSubtitleItemBitmaps()
+    {
+        var selectedIndex = SelectedOcrSubtitleItem != null
+            ? OcrSubtitleItems.IndexOf(SelectedOcrSubtitleItem)
+            : -1;
+
+        foreach (var item in OcrSubtitleItems)
+        {
+            item.InvalidateBitmap();
+        }
+
+        var temp = OcrSubtitleItems.ToList();
+        OcrSubtitleItems.Clear();
+        OcrSubtitleItems.AddRange(temp);
+
+        if (selectedIndex >= 0)
+        {
+            SelectAndScrollToRow(selectedIndex);
+        }
+    }
+
+    private void ApplyStoredVobSubColors()
+    {
+        if (_ocrSubtitle is not OcrSubtitleVobSub vobSub)
+        {
+            return;
+        }
+
+        var ocr = Se.Settings.Ocr;
+        if (!ocr.VobSubUseCustomColors)
+        {
+            HasCustomVobSubColors = false;
+            return;
+        }
+
+        try
+        {
+            vobSub.Background = ocr.VobSubColorBackground.FromHex();
+            vobSub.Pattern = ocr.VobSubColorPattern.FromHex();
+            vobSub.Emphasis1 = ocr.VobSubColorEmphasis1.FromHex();
+            vobSub.Emphasis2 = ocr.VobSubColorEmphasis2.FromHex();
+            vobSub.UseCustomColors = !AreDefaultVobSubColors(vobSub);
+            HasCustomVobSubColors = vobSub.UseCustomColors;
+        }
+        catch
+        {
+            HasCustomVobSubColors = false;
+        }
+    }
+
+    private void SaveVobSubColors()
+    {
+        if (_ocrSubtitle is not OcrSubtitleVobSub vobSub)
+        {
+            return;
+        }
+
+        var ocr = Se.Settings.Ocr;
+        ocr.VobSubUseCustomColors = vobSub.UseCustomColors;
+        ocr.VobSubColorBackground = vobSub.Background.ToHex();
+        ocr.VobSubColorPattern = vobSub.Pattern.ToHex();
+        ocr.VobSubColorEmphasis1 = vobSub.Emphasis1.ToHex();
+        ocr.VobSubColorEmphasis2 = vobSub.Emphasis2.ToHex();
+        Se.SaveSettings();
     }
 
     [RelayCommand]
@@ -3424,6 +3534,8 @@ public partial class OcrViewModel : ObservableObject
         Title = string.Format(Se.Language.Ocr.OcrX, vobSubFileName);
         _ocrSubtitle = new OcrSubtitleVobSub(vobSubMergedPackList, palette);
         OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_ocrSubtitle.MakeOcrSubtitleItems());
+        IsVobSubVisible = true;
+        ApplyStoredVobSubColors();
     }
 
     public void Initialize(Trak mp4SubtitleTrack, List<Paragraph> paragraphs, string fileName)
@@ -3438,6 +3550,8 @@ public partial class OcrViewModel : ObservableObject
         Title = string.Format(Se.Language.Ocr.OcrX, fileName);
         _ocrSubtitle = new OcrSubtitleVobSub(mergedVobSubPacks, palette);
         OcrSubtitleItems = new ObservableCollection<OcrSubtitleItem>(_ocrSubtitle.MakeOcrSubtitleItems());
+        IsVobSubVisible = true;
+        ApplyStoredVobSubColors();
     }
 
     public void Initialize(MatroskaTrackInfo matroskaSubtitleInfo, Subtitle subtitle, List<DvbSubPes> subtitleImages, string fileName)

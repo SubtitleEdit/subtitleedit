@@ -170,6 +170,17 @@ public class OcrWindow : Window
         toggleButtonPreProcessing.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.HasPreProcessingSettings)));
         Attached.SetIcon(toggleButtonPreProcessing, IconNames.Image);
         ToolTip.SetTip(toggleButtonPreProcessing, Se.Language.Ocr.ImagePreProcessing);
+
+        var toggleButtonVobSubColors = new ToggleButton
+        {
+            Command = vm.PickVobSubColorsCommand,
+            Margin = new Thickness(2, 0, 0, 0),
+        };
+        toggleButtonVobSubColors.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.HasCustomVobSubColors)));
+        toggleButtonVobSubColors.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsVobSubVisible)));
+        Attached.SetIcon(toggleButtonVobSubColors, IconNames.Palette);
+        ToolTip.SetTip(toggleButtonVobSubColors, Se.Language.Ocr.VobSubColors);
+
         var panelRight = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -178,6 +189,7 @@ public class OcrWindow : Window
             {
                 toggleButtonCaptureAlignment,
                 toggleButtonPreProcessing,
+                toggleButtonVobSubColors,
             }
         };
 
