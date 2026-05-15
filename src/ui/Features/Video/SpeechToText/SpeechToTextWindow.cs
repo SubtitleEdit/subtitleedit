@@ -1,12 +1,14 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -39,13 +41,48 @@ public class SpeechToTextWindow : Window
 
         var labelEngine = UiUtil.MakeTextBlock(Se.Language.General.Engine).WithMarginTop(10);
         var comboEngine = UiUtil.MakeComboBox(vm.Engines, vm, nameof(vm.SelectedEngine))
-            .WithMinWidth(220)
+            .WithMinWidth(260)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
             .WithMarginTop(10);
+        comboEngine.ItemTemplate = MakeEngineItemTemplate();
         comboEngine.SelectionChanged += vm.OnEngineChanged;
         var buttonEngineWebsite = UiUtil.MakeButton(vm.ShowWebLinkCommand, IconNames.Web)
             .WithMarginLeft(5)
             .WithMarginTop(10);
+        var buttonEngineDownload = UiUtil.MakeButton(vm.DownloadSelectedEngineCommand, IconNames.Download)
+            .WithMarginLeft(5)
+            .WithMarginTop(10)
+            .BindIsVisible(vm, nameof(vm.IsEngineDownloadButtonVisible))
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
+        buttonEngineDownload.Bind(ToolTip.TipProperty, new Binding(nameof(vm.EngineDownloadHint))
+        {
+            Source = vm,
+            Mode = BindingMode.OneWay,
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+        });
+
+        // Status icon + text (e.g. "✓ Installed" or "Not installed · ~140 MB") next to the combo.
+        var engineInstalledIcon = new Optris.Icons.Avalonia.Icon
+        {
+            Value = IconNames.CheckCircle,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(8, 10, 4, 0),
+            FontSize = 14,
+            Foreground = Brushes.MediumSeaGreen,
+        }.BindIsVisible(vm, nameof(vm.IsEngineInstalledIconVisible));
+        var engineStatusText = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(2, 10, 0, 0),
+            Opacity = 0.75,
+        }.BindIsVisible(vm, nameof(vm.IsEngineStatusVisible));
+        engineStatusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.EngineStatusText))
+        {
+            Source = vm,
+            Mode = BindingMode.OneWay,
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+        });
+
         var panelEngineControls = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -54,7 +91,10 @@ public class SpeechToTextWindow : Window
             Children =
             {
                 comboEngine,
-                buttonEngineWebsite
+                buttonEngineWebsite,
+                buttonEngineDownload,
+                engineInstalledIcon,
+                engineStatusText,
             }
         };
 
@@ -675,5 +715,70 @@ public class SpeechToTextWindow : Window
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttPrompt), MakeText(nameof(vm.OpenAiCompatibleSttPrompt), 400)),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttExtraHeaders), textExtraHeaders),
         };
+    }
+
+    /// <summary>
+    /// Item template for the engine combo box: each row carries a small status icon
+    /// (✓ for installed, ⬇ for download-required, blank for cloud/online engines) and
+    /// — when relevant — the approximate download size. Status is read fresh from the
+    /// engine each time the template runs, so the dropdown reflects the current state
+    /// after a download completes (the VM nudges SelectedEngine to force a re-render).
+    /// </summary>
+    private static FuncDataTemplate<ISpeechToTextEngine> MakeEngineItemTemplate()
+    {
+        return new FuncDataTemplate<ISpeechToTextEngine>((engine, _) =>
+        {
+            if (engine == null)
+            {
+                return new TextBlock();
+            }
+
+            var canDownload = engine.CanBeDownloaded();
+            var isInstalled = engine.IsEngineInstalled();
+
+            var iconName = !canDownload
+                ? string.Empty
+                : isInstalled
+                    ? IconNames.CheckCircle
+                    : IconNames.Download;
+
+            var iconColor = isInstalled ? Brushes.MediumSeaGreen : Brushes.Gray;
+
+            var panel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                VerticalAlignment = VerticalAlignment.Center,
+                Spacing = 6,
+            };
+
+            if (!string.IsNullOrEmpty(iconName))
+            {
+                panel.Children.Add(new Optris.Icons.Avalonia.Icon
+                {
+                    Value = iconName,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    FontSize = 14,
+                    Foreground = iconColor,
+                });
+            }
+
+            panel.Children.Add(new TextBlock
+            {
+                Text = engine.Name,
+                VerticalAlignment = VerticalAlignment.Center,
+            });
+
+            if (canDownload && !isInstalled && !string.IsNullOrEmpty(engine.DownloadSizeText))
+            {
+                panel.Children.Add(new TextBlock
+                {
+                    Text = $"({engine.DownloadSizeText})",
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Opacity = 0.6,
+                });
+            }
+
+            return panel;
+        }, supportsRecycling: true);
     }
 }

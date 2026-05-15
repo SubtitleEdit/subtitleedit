@@ -169,6 +169,10 @@ public class WhisperEngineCppVulkan : ISpeechToTextEngine
         return true;
     }
 
+    public string DownloadSizeText => RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+        ? "~16 MB"
+        : string.Empty;
+
     public string CommandLineParameter
     {
         get => Se.Settings.Tools.AudioToText.CommandLineParameterCppVulkan;
