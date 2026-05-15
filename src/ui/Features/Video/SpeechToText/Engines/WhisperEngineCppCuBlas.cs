@@ -169,6 +169,24 @@ public class WhisperEngineCppCuBlas : ISpeechToTextEngine
         return true;
     }
 
+    public string DownloadSizeText
+    {
+        get
+        {
+            // Windows: cuBLAS 12.4 binary bundle (CUDA libs included).
+            // Linux: thin Vulkan-CUDA bundle since the CUDA toolkit is system-installed.
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return "~436 MB";
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return "~37 MB";
+            }
+            return string.Empty;
+        }
+    }
+
     public string CommandLineParameter
     {
         get => Se.Settings.Tools.AudioToText.CommandLineParameterCppCuBlas;

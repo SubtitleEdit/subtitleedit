@@ -16,6 +16,15 @@ public interface ISpeechToTextEngine
     string UnpackSkipFolder { get; }
     bool IsEngineInstalled();
     bool CanBeDownloaded();
+
+    /// <summary>
+    /// Approximate download size as user-facing text (e.g. "~14 MB"), platform-aware where
+    /// the install archive differs between Windows/Linux/macOS. Returns an empty string for
+    /// engines that don't need downloading (e.g. cloud APIs) or where the size isn't known.
+    /// Used to inform the user up front in the engine picker before any download starts.
+    /// </summary>
+    string DownloadSizeText => string.Empty;
+
     string GetAndCreateWhisperFolder();
     string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel);
     string GetExecutable();

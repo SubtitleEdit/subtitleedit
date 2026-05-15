@@ -167,6 +167,23 @@ public class WhisperEnginePurfviewFasterWhisperXxl : ISpeechToTextEngine
         return true;
     }
 
+    public string DownloadSizeText
+    {
+        get
+        {
+            // Bundles full CUDA + Python runtime, so the archive is large.
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return "~1.4 GB";
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return "~1.6 GB";
+            }
+            return string.Empty;
+        }
+    }
+
     public string CommandLineParameter
     {
         get => Se.Settings.Tools.AudioToText.CommandLineParameterPurfviewFasterWhisperXxl;

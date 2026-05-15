@@ -171,6 +171,26 @@ public class ChatLlmCppEngine : ISpeechToTextEngine
         return true;
     }
 
+    public string DownloadSizeText
+    {
+        get
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return "~2 MB";
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return "~3 MB";
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return "~1 MB";
+            }
+            return string.Empty;
+        }
+    }
+
     public string CommandLineParameter
     {
         get => Se.Settings.Tools.AudioToText.CommandLineParameterChatLlm;

@@ -24,6 +24,9 @@ internal class IconNames
     public const string Cogs = "mdi-cogs";
     public const string ContentSave = "mdi-content-save";
     public const string Copy = "mdi-content-copy";
+    public const string CheckCircle = "mdi-check-circle";
+    public const string Download = "mdi-download";
+    public const string CloudDownload = "mdi-cloud-download-outline";
     public const string DockTop = "mdi-dock-top";
     public const string DotsHorizontal = "mdi-dots-horizontal";
     public const string DotsVertical = "mdi-dots-vertical";

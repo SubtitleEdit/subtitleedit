@@ -81,6 +81,7 @@ public class WhisperCppEngine : ISpeechToTextEngine
 
     public bool IsEngineInstalled() => SelectedBackend.IsEngineInstalled();
     public bool CanBeDownloaded() => SelectedBackend.CanBeDownloaded();
+    public string DownloadSizeText => SelectedBackend.DownloadSizeText;
     public string GetAndCreateWhisperFolder() => SelectedBackend.GetAndCreateWhisperFolder();
     public string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel) => SelectedBackend.GetAndCreateWhisperModelFolder(whisperModel);
     public string GetExecutable() => SelectedBackend.GetExecutable();

@@ -160,6 +160,27 @@ public class WhisperEngineCpp : ISpeechToTextEngine
         return true;
     }
 
+    public string DownloadSizeText
+    {
+        get
+        {
+            // matches WhisperDownloadService.GetUrl() — the BLAS Windows build, Vulkan Linux build, or universal Mac build.
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return "~14 MB";
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return "~18 MB";
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return "~3 MB";
+            }
+            return string.Empty;
+        }
+    }
+
     public string CommandLineParameter
     {
         get => Se.Settings.Tools.AudioToText.CommandLineParameterCpp;

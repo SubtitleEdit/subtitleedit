@@ -140,6 +140,9 @@ public class WhisperEngineConstMe : ISpeechToTextEngine
         return true;
     }
 
+    // The Const-me CLI is a thin DirectCompute/D3D wrapper — the heavy lifting lives in system libs.
+    public string DownloadSizeText => "~0.4 MB";
+
     public string CommandLineParameter
     {
         get => Se.Settings.Tools.AudioToText.CommandLineParameterConstMe;

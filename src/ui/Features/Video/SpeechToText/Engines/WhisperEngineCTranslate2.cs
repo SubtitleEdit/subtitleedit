@@ -129,6 +129,26 @@ public class WhisperEngineCTranslate2 : ISpeechToTextEngine
         return true;
     }
 
+    public string DownloadSizeText
+    {
+        get
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return "~103 MB";
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return "~149 MB";
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return "~76 MB";
+            }
+            return string.Empty;
+        }
+    }
+
     public string CommandLineParameter
     {
         get => Se.Settings.Tools.AudioToText.CommandLineParameterCTranslate2;

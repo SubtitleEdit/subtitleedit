@@ -84,6 +84,7 @@ public class CrispAsrEngine : CrispAsrEngineBase
 
     public override bool IsEngineInstalled() => SelectedBackend.IsEngineInstalled();
     public override bool CanBeDownloaded() => SelectedBackend.CanBeDownloaded();
+    public override string DownloadSizeText => SelectedBackend.DownloadSizeText;
     public override string GetAndCreateWhisperFolder() => SelectedBackend.GetAndCreateWhisperFolder();
     public override string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel) => SelectedBackend.GetAndCreateWhisperModelFolder(whisperModel);
     public override string GetExecutable() => SelectedBackend.GetExecutable();
