@@ -174,6 +174,7 @@ public class LanguageSettings
 
     public string ShowStopButton { get; set; }
     public string ShowFullscreenButton { get; set; }
+    public string FullscreenHideControls { get; set; }
     public string AutoOpenVideoFile { get; set; }
     public string DownloadMpv { get; set; }
     public string DownloadVlc { get; set; }
@@ -458,6 +459,7 @@ public class LanguageSettings
 
         ShowStopButton = "Show stop button";
         ShowFullscreenButton = "Show full-screen button";
+        FullscreenHideControls = "Hide video controls in full-screen";
         AutoOpenVideoFile = "Auto-open video file when opening subtitle";
         DownloadMpv = "Download mpv";
         DownloadVlc = "Download VLC";
