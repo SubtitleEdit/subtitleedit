@@ -6,6 +6,11 @@ on:
 jobs:
   stale:
     runs-on: ubuntu-latest
+    env:
+      # actions/stale@v9 ships on Node.js 20, which GitHub starts force-upgrading on
+      # 2026-06-02 and removes on 2026-09-16. Opt in to Node.js 24 now to silence the
+      # deprecation warning and avoid surprises around the cut-over.
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/stale@v9
         with:
@@ -17,3 +22,7 @@ jobs:
           stale-issue-label: 'stale'
           # Optional: exempt issues with certain labels (like "pinned" or "security")
           exempt-issue-labels: 'pinned,security'
+          # Default is 30, which only covers ~24 issues per run — far less than the
+          # current ~400 open issues, so old issues never get reached. Bump it so a
+          # single run can drain the backlog.
+          operations-per-run: 300
