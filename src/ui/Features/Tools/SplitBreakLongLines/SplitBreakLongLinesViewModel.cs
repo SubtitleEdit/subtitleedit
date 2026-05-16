@@ -245,12 +245,11 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject
                 segDurationMs = Math.Max(0, Math.Min(segDurationMs, Math.Max(0, originalEndMs - accumulatedMs)));
             }
 
-            // Ensure resulting segment lines are wrapped to SingleLineMaxLength
-            var wrappedSegText = Utilities.AutoBreakLine(segText, perLineMax, Se.Settings.General.UnbreakLinesShorterThan, item.Language ?? "en");
-
+            // Keep the segment text as-is; auto-wrapping is opt-in via the
+            // RebalanceLongLines option, which runs its own AutoBreakLine pass.
             var newLine = new SubtitleLineViewModel(item, true)
             {
-                Text = wrappedSegText,
+                Text = segText,
                 StartTime = TimeSpan.FromMilliseconds(accumulatedMs),
                 EndTime = TimeSpan.FromMilliseconds(accumulatedMs + segDurationMs)
             };

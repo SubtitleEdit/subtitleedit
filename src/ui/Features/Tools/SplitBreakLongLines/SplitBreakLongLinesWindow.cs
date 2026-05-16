@@ -88,7 +88,7 @@ public class SplitBreakLongLinesWindow : Window
         numericUpDownSingleLineMaxLength.ValueChanged += (s, e) => vm.SetChanged();
 
         var labelMaxNumberOfLines = UiUtil.MakeLabel(Se.Language.Options.Settings.MaxLines);
-        var numericUpDownMaxNumberOfLines = UiUtil.MakeNumericUpDownInt(2, 10, 2, 130, vm, nameof(vm.MaxNumberOfLines));
+        var numericUpDownMaxNumberOfLines = UiUtil.MakeNumericUpDownInt(1, 10, 2, 130, vm, nameof(vm.MaxNumberOfLines));
         numericUpDownMaxNumberOfLines.ValueChanged += (s, e) => vm.SetChanged();
 
         grid.Add(checkBoxSplitLongLines, 0);
