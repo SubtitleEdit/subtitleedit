@@ -779,7 +779,25 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
 
         var model = SelectedLlamaCppModel?.Model;
-        var downloaded = await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model);
+        var forceModelDownload = false;
+        if (model != null && LlamaCppServerManager.IsModelInstalled(model.FileName))
+        {
+            var answer = await MessageBox.Show(
+                Window,
+                Se.Language.General.Download,
+                string.Format(Se.Language.Translate.XIsAlreadyDownloadedReDownload, model.DisplayName),
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            forceModelDownload = true;
+        }
+
+        var downloaded = await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model, forceModelDownload: forceModelDownload);
         if (downloaded != null)
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
@@ -1216,11 +1234,12 @@ public partial class AutoTranslateViewModel : ObservableObject
         finally
         {
             _translationInProgress = false;
-            IsTranslateEnabled = true;
-            IsProgressEnabled = false;
 
             Dispatcher.UIThread.Invoke(() =>
             {
+                IsTranslateEnabled = true;
+                IsProgressEnabled = false;
+
                 if (_abort)
                 {
                     StatusText = Se.Language.Translate.TranslationCancelled;
