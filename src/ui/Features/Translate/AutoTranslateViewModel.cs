@@ -119,6 +119,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             new GeminiTranslate(),
             new NvidiaTranslate(),
             new MistralTranslate(),
+            new DeepSeekTranslate(),
             new PapagoTranslate(),
             new NoLanguageLeftBehindServe(),
             new NoLanguageLeftBehindApi(),
@@ -357,6 +358,13 @@ public partial class AutoTranslateViewModel : ObservableObject
             Configuration.Settings.Tools.AutoTranslateMistralApiKey = apiKey.Trim();
             Configuration.Settings.Tools.AutoTranslateMistralUrl = apiUrl.Trim();
             Configuration.Settings.Tools.AutoTranslateMistralModel = apiModel.Trim();
+        }
+
+        if (engineType == typeof(DeepSeekTranslate))
+        {
+            Configuration.Settings.Tools.DeepSeekApiKey = apiKey.Trim();
+            Configuration.Settings.Tools.DeepSeekUrl = apiUrl.Trim();
+            Configuration.Settings.Tools.DeepSeekModel = apiModel.Trim();
         }
 
         if (engineType == typeof(PapagoTranslate))
@@ -1547,6 +1555,24 @@ public partial class AutoTranslateViewModel : ObservableObject
             ModelIsVisible = true;
             ButtonModelIsVisible = true;
             ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateMistralModel) ? _apiModels[0] : Configuration.Settings.Tools.AutoTranslateMistralModel;
+
+            return;
+        }
+
+        if (engineType == typeof(DeepSeekTranslate))
+        {
+            FillUrls(new List<string>
+            {
+                Configuration.Settings.Tools.DeepSeekUrl,
+            });
+
+            ApiKeyText = Configuration.Settings.Tools.DeepSeekApiKey;
+            ApiKeyIsVisible = true;
+
+            _apiModels = DeepSeekTranslate.Models.ToList();
+            ModelIsVisible = true;
+            ButtonModelIsVisible = true;
+            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.DeepSeekModel) ? _apiModels[0] : Configuration.Settings.Tools.DeepSeekModel;
 
             return;
         }

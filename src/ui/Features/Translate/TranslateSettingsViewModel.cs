@@ -58,6 +58,8 @@ public partial class TranslateSettingsViewModel : ObservableObject
             engineType == typeof(OpenRouterTranslate) ||
             engineType == typeof(NvidiaTranslate) ||
             engineType == typeof(MistralTranslate) ||
+            engineType == typeof(GeminiTranslate) ||
+            engineType == typeof(DeepSeekTranslate) ||
             engineType == typeof(LlamaCppTranslate))
         {
             if (!PromptText.Contains("{0}") || !PromptText.Contains("{1}"))
@@ -133,6 +135,14 @@ public partial class TranslateSettingsViewModel : ObservableObject
             else if (engineType == typeof(MistralTranslate))
             {
                 Se.Settings.AutoTranslate.MistralPrompt = PromptText;
+            }
+            else if (engineType == typeof(GeminiTranslate))
+            {
+                Se.Settings.AutoTranslate.GeminiPrompt = PromptText;
+            }
+            else if (engineType == typeof(DeepSeekTranslate))
+            {
+                Se.Settings.AutoTranslate.DeepSeekPrompt = PromptText;
             }
             else if (engineType == typeof(LlamaCppTranslate))
             {
@@ -234,6 +244,22 @@ public partial class TranslateSettingsViewModel : ObservableObject
             if (string.IsNullOrWhiteSpace(PromptText))
             {
                 PromptText = new SeAutoTranslate().MistralPrompt;
+            }
+        }
+        else if (engineType == typeof(GeminiTranslate))
+        {
+            PromptText = Se.Settings.AutoTranslate.GeminiPrompt;
+            if (string.IsNullOrWhiteSpace(PromptText))
+            {
+                PromptText = new SeAutoTranslate().GeminiPrompt;
+            }
+        }
+        else if (engineType == typeof(DeepSeekTranslate))
+        {
+            PromptText = Se.Settings.AutoTranslate.DeepSeekPrompt;
+            if (string.IsNullOrWhiteSpace(PromptText))
+            {
+                PromptText = new SeAutoTranslate().DeepSeekPrompt;
             }
         }
         else if (engineType == typeof(LlamaCppTranslate))
