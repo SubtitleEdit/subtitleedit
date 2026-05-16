@@ -292,7 +292,7 @@ public class OcrWindow : Window
                         nameof(vm.IsLlamaCppVisible))
                     .WithMarginRight(5)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
-                UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadLlamaCppOcrCommand)
+                UiUtil.MakeButton(vm.DownloadLlamaCppOcrCommand, IconNames.Download, Se.Language.General.Download)
                     .WithMarginRight(5)
                     .BindIsVisible(vm, nameof(vm.IsLlamaCppVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
