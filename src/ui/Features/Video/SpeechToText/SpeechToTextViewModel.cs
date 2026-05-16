@@ -16,6 +16,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
+using Optris.Icons.Avalonia;
 using System.Net.Http;
 using System;
 using System.Collections.Concurrent;
@@ -106,6 +107,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     public List<AudioClip> ResultAudioClips { get; private set; }
     public string? LastBatchSubtitleFileName { get; private set; }
     public TextBox TextBoxConsoleLog { get; internal set; }
+    public Button? CopyConsoleLogButton { get; internal set; }
     public DataGrid BatchGrid { get; internal set; }
 
     private bool _unknownArgument;
@@ -1975,6 +1977,13 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         await ClipboardHelper.SetTextAsync(Window, ConsoleLog);
+
+        if (CopyConsoleLogButton != null)
+        {
+            Attached.SetIcon(CopyConsoleLogButton, IconNames.Check);
+            await Task.Delay(1500);
+            Attached.SetIcon(CopyConsoleLogButton, IconNames.Copy);
+        }
     }
 
     [RelayCommand]

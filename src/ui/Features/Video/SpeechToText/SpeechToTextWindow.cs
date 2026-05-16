@@ -39,6 +39,7 @@ public class SpeechToTextWindow : Window
             vm.CopyConsoleLogCommand,
             IconNames.Copy,
             Se.Language.General.CopyTextToClipboard);
+        vm.CopyConsoleLogButton = buttonCopyConsoleLog;
         var panelConsoleLogHeader = UiUtil.MakeHorizontalPanel(labelConsoleLog, buttonCopyConsoleLog);
         panelConsoleLogHeader.Margin = new Thickness(10, 12, 10, 10);
 
