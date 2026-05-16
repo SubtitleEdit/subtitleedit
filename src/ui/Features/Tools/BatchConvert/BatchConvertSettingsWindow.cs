@@ -82,11 +82,15 @@ public class BatchConvertSettingsWindow : Window
             .WithBindVisible(nameof(vm.IsPaddleOCrVisible));
         var comboBoxBinaryOcrDatabases = UiUtil.MakeComboBox(vm.BinaryOcrDatabases, vm, nameof(vm.SelectedBinaryOcrDatabase))
             .WithBindVisible(nameof(vm.IsBinaryOcrVisible));
+        var labelOllamaModel = UiUtil.MakeLabel(Se.Language.General.Model).WithBindVisible(vm, nameof(vm.IsOllamaVisible)).WithMarginLeft(10);
+        var comboBoxOllamaModels = UiUtil.MakeComboBox(vm.OllamaModels, vm, nameof(vm.SelectedOllamaModel))
+            .WithBindVisible(nameof(vm.IsOllamaVisible));
+        var buttonOllamaModelBrowse = UiUtil.MakeButtonBrowse(vm.PickOllamaModelCommand, nameof(vm.IsOllamaVisible)).WithMarginLeft(3);
         var panelOcrEngine = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Margin = new Avalonia.Thickness(0, 30, 0, 0),
-            Children = { labelOcrEngine, comboBoxOcrEngine, labelOcLanguage, comboBoxTesseractLanguages, comboBoxPaddleLanguages, labelBinaryOcrDatabase, comboBoxBinaryOcrDatabases }
+            Children = { labelOcrEngine, comboBoxOcrEngine, labelOcLanguage, comboBoxTesseractLanguages, comboBoxPaddleLanguages, labelBinaryOcrDatabase, comboBoxBinaryOcrDatabases, labelOllamaModel, comboBoxOllamaModels, buttonOllamaModelBrowse }
         };
         comboBoxOcrEngine.SelectionChanged += (s, e) => vm.OnOcrEngineChanged();
 
