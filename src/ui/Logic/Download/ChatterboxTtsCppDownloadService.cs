@@ -46,6 +46,14 @@ public class ChatterboxTtsCppDownloadService : IChatterboxTtsCppDownloadService
     public static string GetS3GenFileName(string? modelKey) =>
         ResolveModelKey(modelKey) == ModelKeyTurbo ? TurboS3GenFileName : BaseS3GenFileName;
 
+    /// <summary>
+    /// CrispASR exposes Chatterbox Turbo as a *separate* backend (chatterbox-turbo) rather
+    /// than as a -m switch on the chatterbox backend; passing Turbo GGUFs to the plain
+    /// chatterbox backend triggers an upstream ggml tensor read out of bounds crash.
+    /// </summary>
+    public static string GetBackendName(string? modelKey) =>
+        ResolveModelKey(modelKey) == ModelKeyTurbo ? "chatterbox-turbo" : "chatterbox";
+
     public ChatterboxTtsCppDownloadService(HttpClient httpClient)
     {
         _httpClient = httpClient;
