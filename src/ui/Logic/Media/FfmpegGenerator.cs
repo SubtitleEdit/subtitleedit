@@ -734,6 +734,29 @@ public class FfmpegGenerator
         return processMakeVideo;
     }
 
+    /// <summary>
+    /// Resamples / mixes the input to mono PCM16 WAV at 24 kHz. Used for the Chatterbox TTS
+    /// voice-clone reference WAV, which only does "atomic" cloning at 24 kHz mono — other
+    /// sample rates / channel counts silently fall back to the default voice.
+    /// </summary>
+    public static Process ConvertToMono24kHzWav(string inputFileName, string outputFileName, DataReceivedEventHandler? dataReceivedHandler = null)
+    {
+        var process = new Process
+        {
+            StartInfo =
+            {
+                FileName = GetFfmpegLocation(),
+                Arguments = $"-y -i \"{inputFileName}\" -ar 24000 -ac 1 -c:a pcm_s16le \"{outputFileName}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            }
+        };
+
+        SetupDataReceiveHandler(dataReceivedHandler, process);
+
+        return process;
+    }
+
     public static string GenerateTransparentVideoFile(string assaSubtitleFileName, string outputVideoFileName, int width, int height, string frameRate, string timeCode)
     {
         if (width % 2 == 1)

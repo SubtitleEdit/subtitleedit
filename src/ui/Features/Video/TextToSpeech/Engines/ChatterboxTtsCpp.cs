@@ -54,7 +54,10 @@ public class ChatterboxTtsCpp : ITtsEngine
         return ChatterboxTtsCppDownloadService.ResolveModelKey(modelKey);
     }
 
-    private const string BackendName = "chatterbox";
+    // Resolved per-model: Base → chatterbox, Turbo → chatterbox-turbo. See
+    // ChatterboxTtsCppDownloadService.GetBackendName for why this matters.
+    private static string GetBackendName(string? modelKey) =>
+        ChatterboxTtsCppDownloadService.GetBackendName(modelKey);
 
     private static readonly HttpClient HttpClient = new()
     {
@@ -365,7 +368,7 @@ public class ChatterboxTtsCpp : ITtsEngine
             };
             psi.ArgumentList.Add("--server");
             psi.ArgumentList.Add("--backend");
-            psi.ArgumentList.Add(BackendName);
+            psi.ArgumentList.Add(GetBackendName(modelKey));
             psi.ArgumentList.Add("-m");
             psi.ArgumentList.Add(GetT3ModelPath(modelKey));
             // Pass S3Gen explicitly. The chatterbox backend's auto-discovery only finds
@@ -421,6 +424,7 @@ public class ChatterboxTtsCpp : ITtsEngine
                 if (process.HasExited)
                 {
                     var tail = SnapshotServerLog();
+                    var exitCode = process.ExitCode;
                     _serverProcess = null;
                     _serverPort = 0;
                     _serverModelKey = null;
@@ -437,8 +441,17 @@ public class ChatterboxTtsCpp : ITtsEngine
                             + GetSetModelsFolder() + " are likely stale or partially downloaded. "
                             + "Delete them and try again so they re-download. Original output: " + tail);
                     }
+                    if (LooksLikeChatterboxTurboStartupCrash(modelKey, tail))
+                    {
+                        throw new InvalidOperationException(
+                            "Chatterbox TTS \"Turbo\" model crashed CrispASR during startup. This is a known "
+                            + "upstream issue in the chatterbox-turbo backend (especially on macOS/CPU). "
+                            + "Try the \"Base\" model instead, or file an issue at "
+                            + "https://github.com/CrispStrobe/CrispASR/issues with the log below."
+                            + Environment.NewLine + Environment.NewLine + tail);
+                    }
                     throw new InvalidOperationException(
-                        $"crispasr (chatterbox) exited during startup (code {process.ExitCode}). Output: {tail}");
+                        $"crispasr (chatterbox) exited during startup (code {exitCode}). Output: {tail}");
                 }
                 if (await ProbeHealthAsync(port, TimeSpan.FromSeconds(2), ct))
                 {
@@ -488,6 +501,21 @@ public class ChatterboxTtsCpp : ITtsEngine
         return output.Contains("required tensor", StringComparison.Ordinal)
             || output.Contains("failed to bind", StringComparison.Ordinal)
             || output.Contains("ggml_uncaught_exception", StringComparison.Ordinal);
+    }
+
+    private static bool LooksLikeChatterboxTurboStartupCrash(string modelKey, string output)
+    {
+        // Known CrispASR 0.6.6 (current) bug: chatterbox-turbo backend segfaults during
+        // s3gen init, right after the auto-fallback-to-CPU notice and before
+        // "precomputed conds loaded". Reproduces deterministically on macOS / Apple
+        // Silicon. The chatterbox (Base) backend on the same binary loads fine.
+        if (!string.Equals(modelKey, ModelKeyTurbo, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return output.Contains("arch=chatterbox_turbo", StringComparison.Ordinal)
+            && !output.Contains("precomputed conds loaded", StringComparison.Ordinal);
     }
 
     private static string SnapshotServerLog()
@@ -602,23 +630,25 @@ public class ChatterboxTtsCpp : ITtsEngine
         var baseName = Path.GetFileNameWithoutExtension(fileName);
         var destinationFileName = GetUniqueDestinationFileName(voicesFolder, baseName);
 
-        if (Path.GetExtension(fileName).Equals(".wav", StringComparison.OrdinalIgnoreCase))
+        // CrispASR's chatterbox backend only does "atomic" voice cloning when the
+        // reference WAV is 24 kHz mono PCM16/F32 — anything else silently falls back
+        // to the default voice. Always resample on import via ffmpeg so the saved
+        // WAV is in the right shape regardless of what the user picked.
+        try
         {
-            File.Copy(fileName, destinationFileName, overwrite: false);
-            return true;
-        }
+            var process = FfmpegGenerator.ConvertToMono24kHzWav(fileName, destinationFileName);
+            if (!process.Start())
+            {
+                return false;
+            }
 
-        var process = FfmpegGenerator.ConvertFormat(fileName, destinationFileName);
-        if (OperatingSystem.IsWindows() || OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
-        {
-            _ = process.Start();
+            process.WaitForExit();
         }
-        else
+        catch (Exception ex)
         {
-            throw new PlatformNotSupportedException("Process.Start() is not supported on this platform.");
+            Se.LogError(ex, "Chatterbox TTS voice import failed (ffmpeg conversion).");
+            return false;
         }
-
-        process.WaitForExit();
 
         return File.Exists(destinationFileName);
     }
