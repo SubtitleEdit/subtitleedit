@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.AudioToText;
@@ -15,6 +16,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
+using Optris.Icons.Avalonia;
 using System.Net.Http;
 using System;
 using System.Collections.Concurrent;
@@ -105,6 +107,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     public List<AudioClip> ResultAudioClips { get; private set; }
     public string? LastBatchSubtitleFileName { get; private set; }
     public TextBox TextBoxConsoleLog { get; internal set; }
+    public Button? CopyConsoleLogButton { get; internal set; }
     public DataGrid BatchGrid { get; internal set; }
 
     private bool _unknownArgument;
@@ -544,7 +547,8 @@ public partial class SpeechToTextViewModel : ObservableObject
                         {
                             _resultList.Clear();
                             partialSub.Paragraphs.Clear();
-                            Cancel();
+                            IsTranscribeEnabled = true;
+                            HideProgressBar();
                             return;
                         }
                     }
@@ -1086,7 +1090,11 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
             else
             {
-                await Dispatcher.UIThread.InvokeAsync(() => Window?.Close());
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    IsTranscribeEnabled = true;
+                    HideProgressBar();
+                });
             }
         }
         catch (HttpRequestException ex)
@@ -1674,7 +1682,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
         else if (_abort)
         {
-            Window?.Close();
+            // User cancelled mid-run. Leave the dialog open so they can adjust
+            // settings and retry (or close it themselves) instead of yanking it
+            // out from under them.
+            IsTranscribeEnabled = true;
+            HideProgressBar();
         }
         else
         {
@@ -1954,6 +1966,24 @@ public partial class SpeechToTextViewModel : ObservableObject
         IsBatchMode = true;
         IsSingleModeVisible = true;
         IsBatchModeVisible = false;
+    }
+
+    [RelayCommand]
+    private async Task CopyConsoleLog()
+    {
+        if (Window == null || string.IsNullOrEmpty(ConsoleLog))
+        {
+            return;
+        }
+
+        await ClipboardHelper.SetTextAsync(Window, ConsoleLog);
+
+        if (CopyConsoleLogButton != null)
+        {
+            Attached.SetIcon(CopyConsoleLogButton, IconNames.Check);
+            await Task.Delay(1500);
+            Attached.SetIcon(CopyConsoleLogButton, IconNames.Copy);
+        }
     }
 
     [RelayCommand]
@@ -3211,16 +3241,16 @@ public partial class SpeechToTextViewModel : ObservableObject
         ConsoleLog += s.Trim() + "\n";
 
         // Tail behavior: keep the console scrolled to the latest line so the user
-        // doesn't have to camp on PageDown. Setting CaretIndex alone is unreliable
-        // here — the TextBox isn't focused, so the internal BringCaretToView is a
-        // no-op. ScrollToLine drives the inner TextPresenter directly. Post at
-        // Background priority so it runs after the layout pass that lays out the
-        // freshly-appended text.
+        // doesn't have to camp on PageDown. CaretIndex / TextBox.ScrollToLine
+        // proved unreliable here — BringCaretToView short-circuits while the
+        // TextBox is unfocused, and ScrollToLine silently no-ops when the inner
+        // TextPresenter isn't templated yet. Drive the inner ScrollViewer
+        // directly. Post at Background priority so the Render-priority layout
+        // pass has updated Extent for the freshly-appended line first.
         Dispatcher.UIThread.Post(() =>
         {
-            var text = TextBoxConsoleLog.Text ?? string.Empty;
-            TextBoxConsoleLog.CaretIndex = text.Length;
-            TextBoxConsoleLog.ScrollToLine(text.Count(c => c == '\n'));
+            var scrollViewer = TextBoxConsoleLog.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+            scrollViewer?.ScrollToEnd();
         }, DispatcherPriority.Background);
     }
 
