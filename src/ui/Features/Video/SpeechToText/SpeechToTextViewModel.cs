@@ -545,7 +545,8 @@ public partial class SpeechToTextViewModel : ObservableObject
                         {
                             _resultList.Clear();
                             partialSub.Paragraphs.Clear();
-                            Cancel();
+                            IsTranscribeEnabled = true;
+                            HideProgressBar();
                             return;
                         }
                     }
@@ -1087,7 +1088,11 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
             else
             {
-                await Dispatcher.UIThread.InvokeAsync(() => Window?.Close());
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    IsTranscribeEnabled = true;
+                    HideProgressBar();
+                });
             }
         }
         catch (HttpRequestException ex)
@@ -1675,7 +1680,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
         else if (_abort)
         {
-            Window?.Close();
+            // User cancelled mid-run. Leave the dialog open so they can adjust
+            // settings and retry (or close it themselves) instead of yanking it
+            // out from under them.
+            IsTranscribeEnabled = true;
+            HideProgressBar();
         }
         else
         {
