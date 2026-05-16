@@ -91,6 +91,10 @@ public class LanguageOcr
     public string VobSubColorEmphasis1 { get; set; }
     public string VobSubColorEmphasis2 { get; set; }
     public string VobSubColorsInvert { get; set; }
+    public string LlamaCppOcrSettingsTitle { get; set; }
+    public string LlamaCppOcrPromptHint { get; set; }
+    public string LlamaCppOcrPromptEmpty { get; set; }
+    public string LlamaCppOcrPromptMissingLanguagePlaceholder { get; set; }
 
     public LanguageOcr()
     {
@@ -181,5 +185,10 @@ public class LanguageOcr
         VobSubColorEmphasis1 = "Emphasis 1";
         VobSubColorEmphasis2 = "Emphasis 2";
         VobSubColorsInvert = "Invert background / emphasis 1";
+
+        LlamaCppOcrSettingsTitle = "llama.cpp OCR settings";
+        LlamaCppOcrPromptHint = "Use {language} to insert the selected OCR language.";
+        LlamaCppOcrPromptEmpty = "The prompt cannot be empty.";
+        LlamaCppOcrPromptMissingLanguagePlaceholder = "The prompt must contain the {language} placeholder.";
     }
 }

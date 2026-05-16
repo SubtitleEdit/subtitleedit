@@ -29,13 +29,13 @@ public partial class LlamaCppOcrSettingsViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(Prompt))
         {
-            await ShowPromptError("The prompt cannot be empty.");
+            await ShowPromptError(Se.Language.Ocr.LlamaCppOcrPromptEmpty);
             return;
         }
 
         if (!Prompt.Contains("{language}"))
         {
-            await ShowPromptError("The prompt must contain the {language} placeholder.");
+            await ShowPromptError(Se.Language.Ocr.LlamaCppOcrPromptMissingLanguagePlaceholder);
             return;
         }
 

@@ -12,7 +12,7 @@ public class LlamaCppOcrSettingsWindow : Window
     public LlamaCppOcrSettingsWindow(LlamaCppOcrSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "llama.cpp OCR settings";
+        Title = Se.Language.Ocr.LlamaCppOcrSettingsTitle;
         Width = 640;
         Height = 320;
         MinWidth = 480;
@@ -50,7 +50,7 @@ public class LlamaCppOcrSettingsWindow : Window
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
         });
 
-        var hintPrompt = UiUtil.MakeTextBlock("Use {language} to insert the selected OCR language.");
+        var hintPrompt = UiUtil.MakeTextBlock(Se.Language.Ocr.LlamaCppOcrPromptHint);
         hintPrompt.Opacity = 0.7;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
