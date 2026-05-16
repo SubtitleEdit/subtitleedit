@@ -41,7 +41,7 @@ public partial class ImportPlainTextViewModel : ObservableObject
     private string _videoFileName = string.Empty;
     private readonly IFileHelper _fileHelper;
     private readonly IWindowService _windowService;
-    private static readonly string[] TextFileExtensions = { ".txt", ".rtf", ".md" };
+    private static readonly string[] TextFileExtensions = { ".txt", ".rtf" };
     private static readonly List<string> TextFilePatterns = TextFileExtensions.Select(e => "*" + e).ToList();
     private bool _dirty;
     private TaskCompletionSource? _previewFlushed;
