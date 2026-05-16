@@ -35,7 +35,8 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
     public ISpeechToTextEngine? Engine { get; internal set; }
 
     /// <summary>
-    /// Windows-only CrispASR download variant: "cpu", "cpu-legacy", "vulkan", or "cuda". Defaults to "vulkan".
+    /// CrispASR download variant. On Windows: "cpu", "cpu-legacy", "vulkan", or "cuda" (defaults to "vulkan").
+    /// On Linux x86_64: "cuda" or null/empty for the default CPU build. Ignored on macOS / Linux ARM64.
     /// </summary>
     public string CrispAsrWindowsVariant { get; set; } = "vulkan";
 
@@ -168,7 +169,9 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
                     var folder = Engine.GetAndCreateWhisperFolder();
                     var skipFolder = Engine is ICrispAsrEngine
                         ? RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
-                            ? "crispasr-linux-x86_64"
+                            ? (CrispAsrWindowsVariant == "cuda" && RuntimeInformation.ProcessArchitecture != Architecture.Arm64
+                                ? "crispasr-linux-x86_64-cuda"
+                                : "crispasr-linux-x86_64")
                             : RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
                                 ? "crispasr-macos"
                                 : CrispAsrWindowsVariant switch
@@ -414,7 +417,9 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
         var displayName = Engine is ICrispAsrEngine
             ? RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
                 ? "Crisp ASR " + CrispAsrWindowsVariant
-                : "Crisp ASR"
+                : RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && CrispAsrWindowsVariant == "cuda"
+                    ? "Crisp ASR cuda"
+                    : "Crisp ASR"
             : Engine?.Name;
         TitleText = string.Format(Se.Language.General.DownloadingX, displayName);
 
@@ -473,6 +478,12 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
                     "cpu-legacy" => _crispAsrDownloadService.DownloadEngineWindowsCpuLegacy(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
                     _            => _crispAsrDownloadService.DownloadEngineWindowsVulkan(_downloadStream, downloadProgress, _cancellationTokenSource.Token),
                 };
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                     && CrispAsrWindowsVariant == "cuda"
+                     && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+            {
+                _downloadTask = _crispAsrDownloadService.DownloadEngineLinuxCuda(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
             }
             else
             {
