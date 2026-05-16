@@ -4,6 +4,7 @@ using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.AutoTranslate;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -103,6 +104,7 @@ public partial class TranslateSettingsViewModel : ObservableObject
             if (engineType == typeof(ChatGptTranslate))
             {
                 Se.Settings.AutoTranslate.ChatGptPrompt = PromptText;
+                Configuration.Settings.Tools.ChatGptPrompt = PromptText;
             }
             else if (engineType == typeof(OllamaTranslate))
             {
@@ -135,14 +137,17 @@ public partial class TranslateSettingsViewModel : ObservableObject
             else if (engineType == typeof(MistralTranslate))
             {
                 Se.Settings.AutoTranslate.MistralPrompt = PromptText;
+                Configuration.Settings.Tools.AutoTranslateMistralPrompt = PromptText;
             }
             else if (engineType == typeof(GeminiTranslate))
             {
                 Se.Settings.AutoTranslate.GeminiPrompt = PromptText;
+                Configuration.Settings.Tools.GeminiPrompt = PromptText;
             }
             else if (engineType == typeof(DeepSeekTranslate))
             {
                 Se.Settings.AutoTranslate.DeepSeekPrompt = PromptText;
+                Configuration.Settings.Tools.DeepSeekPrompt = PromptText;
             }
             else if (engineType == typeof(LlamaCppTranslate))
             {
