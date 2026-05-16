@@ -97,6 +97,7 @@ public class LanguageOcr
     public string LlamaCppOcrPromptMissingLanguagePlaceholder { get; set; }
     public string NOcrBinaryOcrFallbackDatabase { get; set; }
     public string NOcrBinaryOcrFallbackNone { get; set; }
+    public string BinaryOcrNOcrFallbackDatabase { get; set; }
 
     public LanguageOcr()
     {
@@ -195,5 +196,6 @@ public class LanguageOcr
 
         NOcrBinaryOcrFallbackDatabase = "BinaryOCR fallback database";
         NOcrBinaryOcrFallbackNone = "(none)";
+        BinaryOcrNOcrFallbackDatabase = "nOCR fallback database";
     }
 }

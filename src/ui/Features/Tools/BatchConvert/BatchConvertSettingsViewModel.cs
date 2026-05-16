@@ -48,6 +48,9 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _nOcrFallbackBinaryOcrDatabases;
     [ObservableProperty] private string? _selectedNOcrFallbackBinaryOcrDatabase;
 
+    [ObservableProperty] private ObservableCollection<string> _binaryOcrFallbackNOcrDatabases;
+    [ObservableProperty] private string? _selectedBinaryOcrFallbackNOcrDatabase;
+
     [ObservableProperty] private ObservableCollection<string> _ollamaModels;
     [ObservableProperty] private string? _selectedOllamaModel;
 
@@ -98,6 +101,12 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         foreach (var db in BinaryOcrDb.GetDatabases(Se.OcrFolder).OrderBy(p => p))
         {
             NOcrFallbackBinaryOcrDatabases.Add(db);
+        }
+
+        BinaryOcrFallbackNOcrDatabases = new ObservableCollection<string> { Se.Language.Ocr.NOcrBinaryOcrFallbackNone };
+        foreach (var db in NOcrDb.GetDatabases(Se.OcrFolder).OrderBy(p => p))
+        {
+            BinaryOcrFallbackNOcrDatabases.Add(db);
         }
         OllamaModels = new ObservableCollection<string>(Se.Settings.Ocr.OllamaModels);
 
@@ -177,6 +186,12 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         if (ocrEngine == "BinaryOcr")
         {
             Se.Settings.Tools.BatchConvert.BinaryOcrDatabase = SelectedBinaryOcrDatabase ?? "Latin";
+
+            var fallback = SelectedBinaryOcrFallbackNOcrDatabase;
+            Se.Settings.Tools.BatchConvert.BinaryOcrNOcrFallbackDatabase =
+                string.IsNullOrEmpty(fallback) || fallback == Se.Language.Ocr.NOcrBinaryOcrFallbackNone
+                    ? string.Empty
+                    : fallback;
         }
 
         if (ocrEngine == "nOcr" && !string.IsNullOrWhiteSpace(SelectedNOcrDatabase))
@@ -219,6 +234,27 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         if (NOcrFallbackBinaryOcrDatabases != null && NOcrFallbackBinaryOcrDatabases.Contains(value))
         {
             SelectedNOcrFallbackBinaryOcrDatabase = value;
+        }
+    }
+
+    partial void OnSelectedBinaryOcrDatabaseChanged(string? value)
+    {
+        // When the user picks a different BinaryOCR DB and the nOCR fallback isn't an
+        // explicit user choice yet, re-suggest the same-name nOCR DB if one exists.
+        if (string.IsNullOrEmpty(value))
+        {
+            return;
+        }
+
+        var saved = Se.Settings.Tools.BatchConvert.BinaryOcrNOcrFallbackDatabase;
+        if (!string.IsNullOrEmpty(saved) && BinaryOcrFallbackNOcrDatabases != null && BinaryOcrFallbackNOcrDatabases.Contains(saved))
+        {
+            return;
+        }
+
+        if (BinaryOcrFallbackNOcrDatabases != null && BinaryOcrFallbackNOcrDatabases.Contains(value))
+        {
+            SelectedBinaryOcrFallbackNOcrDatabase = value;
         }
     }
 
@@ -298,6 +334,22 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         {
             SelectedBinaryOcrDatabase = BinaryOcrDatabases
                 .FirstOrDefault(p => p == Se.Settings.Tools.BatchConvert.BinaryOcrDatabase) ?? BinaryOcrDatabases.FirstOrDefault();
+
+            // Default the nOCR fallback either to whatever the user previously picked, or
+            // (when nothing is saved) suggest the nOCR DB with the same name as the selected
+            // BinaryOCR DB. Falls back to "(none)" if no match exists.
+            var saved = Se.Settings.Tools.BatchConvert.BinaryOcrNOcrFallbackDatabase;
+            string? toSelect = null;
+            if (!string.IsNullOrEmpty(saved) && BinaryOcrFallbackNOcrDatabases.Contains(saved))
+            {
+                toSelect = saved;
+            }
+            else if (!string.IsNullOrEmpty(SelectedBinaryOcrDatabase) && BinaryOcrFallbackNOcrDatabases.Contains(SelectedBinaryOcrDatabase))
+            {
+                toSelect = SelectedBinaryOcrDatabase;
+            }
+
+            SelectedBinaryOcrFallbackNOcrDatabase = toSelect ?? BinaryOcrFallbackNOcrDatabases.First();
         }
 
         if (ocrEngine == "nOcr")
