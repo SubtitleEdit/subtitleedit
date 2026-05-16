@@ -42,18 +42,27 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _binaryOcrDatabases;
     [ObservableProperty] private string? _selectedBinaryOcrDatabase;
 
+    [ObservableProperty] private ObservableCollection<string> _nOcrDatabases;
+    [ObservableProperty] private string? _selectedNOcrDatabase;
+
+    [ObservableProperty] private ObservableCollection<string> _ollamaModels;
+    [ObservableProperty] private string? _selectedOllamaModel;
+
     [ObservableProperty] bool _isOcrLanguageVisible;
     [ObservableProperty] bool _isTesseractOcrVisible;
     [ObservableProperty] bool _isPaddleOCrVisible;
     [ObservableProperty] bool _isBinaryOcrVisible;
+    [ObservableProperty] bool _isNOcrVisible;
+    [ObservableProperty] bool _isOllamaVisible;
 
     public Window? Window { get; set; }
 
     public bool OkPressed { get; private set; }
 
     private readonly IFolderHelper _folderHelper;
+    private readonly IWindowService _windowService;
 
-    public BatchConvertSettingsViewModel(IFolderHelper folderHelper)
+    public BatchConvertSettingsViewModel(IFolderHelper folderHelper, IWindowService windowService)
     {
         var encodings = EncodingHelper.GetEncodings().Select(p => p.DisplayName).ToList();
         TargetEncodings = new ObservableCollection<string>(encodings);
@@ -81,8 +90,11 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         PaddleOcrLanguages = new ObservableCollection<OcrLanguage2>(PaddleOcr.GetLanguages().OrderBy(p => p.ToString()));
         TesseractDictionaryItems = new ObservableCollection<TesseractDictionary>();
         BinaryOcrDatabases = new ObservableCollection<string>(BinaryOcrDb.GetDatabases(Se.OcrFolder));
+        NOcrDatabases = new ObservableCollection<string>(NOcrDb.GetDatabases(Se.OcrFolder).OrderBy(p => p));
+        OllamaModels = new ObservableCollection<string>(Se.Settings.Ocr.OllamaModels);
 
         _folderHelper = folderHelper;
+        _windowService = windowService;
 
         OutputFolder = string.Empty;
         LoadActiveTesseractDictionaries();
@@ -159,6 +171,16 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             Se.Settings.Tools.BatchConvert.BinaryOcrDatabase = SelectedBinaryOcrDatabase ?? "Latin";
         }
 
+        if (ocrEngine == "nOcr" && !string.IsNullOrWhiteSpace(SelectedNOcrDatabase))
+        {
+            Se.Settings.Ocr.NOcrDatabase = SelectedNOcrDatabase;
+        }
+
+        if (ocrEngine == "Ollama" && !string.IsNullOrWhiteSpace(SelectedOllamaModel))
+        {
+            Se.Settings.Ocr.OllamaModel = SelectedOllamaModel;
+        }
+
         Se.SaveSettings();
     }
 
@@ -215,10 +237,12 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             return;
         }
 
-        IsOcrLanguageVisible = ocrEngine != "nOcr" && ocrEngine != "BinaryOcr";
+        IsOcrLanguageVisible = ocrEngine != "nOcr" && ocrEngine != "BinaryOcr" && ocrEngine != "Ollama";
         IsTesseractOcrVisible = ocrEngine == "Tesseract";
         IsPaddleOCrVisible = ocrEngine == "PaddleOCR";
         IsBinaryOcrVisible = ocrEngine == "BinaryOcr";
+        IsNOcrVisible = ocrEngine == "nOcr";
+        IsOllamaVisible = ocrEngine == "Ollama";
 
         if (ocrEngine == "Tesseract")
         {
@@ -236,6 +260,40 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         {
             SelectedBinaryOcrDatabase = BinaryOcrDatabases
                 .FirstOrDefault(p => p == Se.Settings.Tools.BatchConvert.BinaryOcrDatabase) ?? BinaryOcrDatabases.FirstOrDefault();
+        }
+
+        if (ocrEngine == "nOcr")
+        {
+            SelectedNOcrDatabase = NOcrDatabases
+                .FirstOrDefault(p => p == Se.Settings.Ocr.NOcrDatabase) ?? NOcrDatabases.FirstOrDefault();
+        }
+
+        if (ocrEngine == "Ollama")
+        {
+            var current = Se.Settings.Ocr.OllamaModel;
+            if (!string.IsNullOrWhiteSpace(current) && !OllamaModels.Contains(current))
+            {
+                OllamaModels.Add(current);
+            }
+
+            SelectedOllamaModel = OllamaModels.FirstOrDefault(p => p == current) ?? OllamaModels.FirstOrDefault();
+        }
+    }
+
+    [RelayCommand]
+    private async Task PickOllamaModel()
+    {
+        var result = await _windowService.ShowDialogAsync<PickOllamaModelWindow, PickOllamaModelViewModel>(Window!,
+            vm => { vm.Initialize(Se.Language.General.PickOllamaModel, SelectedOllamaModel, Se.Settings.Ocr.OllamaUrl); });
+
+        if (result is { OkPressed: true, SelectedModel: not null })
+        {
+            if (!OllamaModels.Contains(result.SelectedModel))
+            {
+                OllamaModels.Add(result.SelectedModel);
+            }
+
+            SelectedOllamaModel = result.SelectedModel;
         }
     }
 }
