@@ -46,7 +46,7 @@ public static class ViewSplitBreakLongLines
         var numericUpDownSingleLineMaxLength = UiUtil.MakeNumericUpDownInt(5, 1000, 10, 130, vm, nameof(vm.SplitBreakSingleLineMaxLength));
 
         var labelMaxNumberOfLines = UiUtil.MakeLabel(Se.Language.Options.Settings.MaxLines);
-        var numericUpDownMaxNumberOfLines = UiUtil.MakeNumericUpDownInt(2, 10, 2, 130, vm, nameof(vm.SplitBreakMaxNumberOfLines));
+        var numericUpDownMaxNumberOfLines = UiUtil.MakeNumericUpDownInt(1, 10, 2, 130, vm, nameof(vm.SplitBreakMaxNumberOfLines));
 
         grid.Add(labelHeader, 0, 0, 2);
 

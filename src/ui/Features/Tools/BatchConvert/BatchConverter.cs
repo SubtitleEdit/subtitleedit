@@ -1703,7 +1703,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private Subtitle SplitBreakLongLines(Subtitle subtitle, string language)
     {
-        if (!_config.AddFormatting.IsActive)
+        if (!_config.SplitBreakLongLines.IsActive)
         {
             return subtitle;
         }
