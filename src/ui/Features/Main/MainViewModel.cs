@@ -6184,8 +6184,19 @@ public partial class MainViewModel :
         if (!string.IsNullOrEmpty(_subtitleFileName) && !string.IsNullOrEmpty(targetLanguageCode))
         {
             var directory = Path.GetDirectoryName(_subtitleFileName) ?? string.Empty;
-            var nameWithoutExt = Path.GetFileNameWithoutExtension(_subtitleFileName);
-            var extension = Path.GetExtension(_subtitleFileName);
+            var fileName = Path.GetFileName(_subtitleFileName);
+
+            var nameWithoutExt = fileName;
+            var extension = string.Empty;
+            foreach (var ext in SubtitleFormats.Select(f => f.Extension))
+            {
+                if (fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase))
+                {
+                    nameWithoutExt = fileName.Substring(0, fileName.Length - ext.Length);
+                    extension = ext;
+                    break;
+                }
+            }
 
             var lastDot = nameWithoutExt.LastIndexOf('.');
             if (lastDot > 0)
