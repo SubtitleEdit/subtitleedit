@@ -130,7 +130,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             new GoogleSpeech(ttsDownloadService),
             new Qwen3TtsCpp(),
             new KokoroTtsCpp(),
-            //new ChatterboxTtsCpp(),
+            new ChatterboxTtsCpp(),
             new OmniVoiceTtsCpp(),
         ];
 
