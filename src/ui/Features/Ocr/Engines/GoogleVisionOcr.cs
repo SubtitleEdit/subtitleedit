@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization;
@@ -184,7 +183,7 @@ public class GoogleVisionOcr
         string content;
         try
         {
-            var result = _httpClient.PostAsync(uri, new StringContent(requestBodyString)).Result;
+            var result = await _httpClient.PostAsync(uri, new StringContent(requestBodyString), cancellationToken);
             if ((int)result.StatusCode == 400)
             {
                 throw new OcrException("API key invalid (or perhaps billing/API is not enabled)?");
@@ -202,18 +201,9 @@ public class GoogleVisionOcr
 
             content = await result.Content.ReadAsStringAsync(cancellationToken);
         }
-        catch (WebException webException)
+        catch (HttpRequestException httpException)
         {
-            var message = string.Empty;
-            if (webException.Message.Contains("(400) Bad Request"))
-            {
-                message = "API key invalid (or perhaps billing is not enabled)?";
-            }
-            else if (webException.Message.Contains("(403) Forbidden."))
-            {
-                message = "Perhaps billing is not enabled (or API key is invalid)?";
-            }
-            throw new OcrException(message, webException);
+            throw new OcrException("Error calling Cloud Vision API: " + httpException.Message, httpException);
         }
 
         return string.Join(Environment.NewLine, JsonToStringList(language, content));

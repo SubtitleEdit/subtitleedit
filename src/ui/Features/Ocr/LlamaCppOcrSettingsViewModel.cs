@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
@@ -17,11 +18,13 @@ public partial class LlamaCppOcrSettingsViewModel : ObservableObject
 
     [ObservableProperty] private string _url;
     [ObservableProperty] private string _prompt;
+    [ObservableProperty] private int _timeoutMinutes;
 
     public LlamaCppOcrSettingsViewModel()
     {
         _url = Se.Settings.Ocr.LlamaCppUrl ?? string.Empty;
         _prompt = Se.Settings.Ocr.LlamaCppOcrPrompt ?? string.Empty;
+        _timeoutMinutes = Math.Max(1, Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
     }
 
     [RelayCommand]
@@ -41,6 +44,7 @@ public partial class LlamaCppOcrSettingsViewModel : ObservableObject
 
         Se.Settings.Ocr.LlamaCppUrl = Url ?? string.Empty;
         Se.Settings.Ocr.LlamaCppOcrPrompt = Prompt;
+        Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes = Math.Max(1, TimeoutMinutes);
         OkPressed = true;
         Close();
     }

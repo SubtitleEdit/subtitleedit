@@ -412,3 +412,6 @@ FodyWeavers.xsd
 
 # Claude AI settings (local, not project config)
 .claude/
+
+# macOS Finder metadata
+.DS_Store

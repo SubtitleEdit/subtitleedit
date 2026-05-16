@@ -34,6 +34,9 @@ public class LlamaCppOcrSettingsWindow : Window
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
         });
 
+        var labelTimeout = UiUtil.MakeTextBlock(Se.Language.Ocr.LlamaCppOcrTimeoutMinutes);
+        var numericTimeout = UiUtil.MakeNumericUpDownInt(1, 120, 5, 100, vm, nameof(vm.TimeoutMinutes));
+
         var labelPrompt = UiUtil.MakeTextBlock(Se.Language.General.OpenAiCompatibleSttPrompt);
         var textBoxPrompt = new TextBox
         {
@@ -64,6 +67,8 @@ public class LlamaCppOcrSettingsWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -78,10 +83,12 @@ public class LlamaCppOcrSettingsWindow : Window
 
         grid.Add(labelUrl, 0, 0);
         grid.Add(textBoxUrl, 1, 0);
-        grid.Add(labelPrompt, 2, 0);
-        grid.Add(textBoxPrompt, 3, 0);
-        grid.Add(hintPrompt, 4, 0);
-        grid.Add(buttonBar, 5, 0);
+        grid.Add(labelTimeout, 2, 0);
+        grid.Add(numericTimeout, 3, 0);
+        grid.Add(labelPrompt, 4, 0);
+        grid.Add(textBoxPrompt, 5, 0);
+        grid.Add(hintPrompt, 6, 0);
+        grid.Add(buttonBar, 7, 0);
 
         Content = grid;
 
