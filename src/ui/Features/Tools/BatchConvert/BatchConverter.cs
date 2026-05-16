@@ -678,6 +678,23 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var totalCount = imageSubtitles.Count;
         var maxWrongPixels = Se.Settings.Ocr.NOcrMaxWrongPixels > 0 ? Se.Settings.Ocr.NOcrMaxWrongPixels : 25;
 
+        // Optional BinaryOCR fallback for characters nOCR can't recognise. Falling back to
+        // a wrong-but-recognised character beats an asterisk because the OCR fix-up tools
+        // can still chew on it. The user picks the fallback DB in batch-convert settings;
+        // empty / missing = no fallback.
+        BinaryOcrDb? binaryOcrFallbackDb = null;
+        BinaryOcrMatcher? binaryOcrFallbackMatcher = null;
+        var fallbackName = Se.Settings.Tools.BatchConvert.NOcrBinaryOcrFallbackDatabase;
+        if (!string.IsNullOrEmpty(fallbackName))
+        {
+            var fallbackPath = Path.Combine(Se.OcrFolder, fallbackName + BinaryOcrDb.Extension);
+            if (File.Exists(fallbackPath))
+            {
+                binaryOcrFallbackDb = new BinaryOcrDb(fallbackPath, true);
+                binaryOcrFallbackMatcher = new BinaryOcrMatcher();
+            }
+        }
+
         // Pre-flight: detect pixels-is-space from a sample of images.
         var sampleSize = Math.Min(OcrPreflightSampleSize, totalCount);
         var pixelsAreSpace = Se.Settings.Ocr.NOcrPixelsAreSpace > 0 ? Se.Settings.Ocr.NOcrPixelsAreSpace : 12;
@@ -708,7 +725,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             MaxDegreeOfParallelism = Environment.ProcessorCount
         }, i =>
         {
-            results[i] = OcrSingleNOcrImage(imageSubtitles, i, nOcrDb, pixelsAreSpace, maxWrongPixels);
+            results[i] = OcrSingleNOcrImage(imageSubtitles, i, nOcrDb, pixelsAreSpace, maxWrongPixels, binaryOcrFallbackDb, binaryOcrFallbackMatcher);
 
             lock (lockObj)
             {
@@ -746,7 +763,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         }
     }
 
-    private Paragraph OcrSingleNOcrImage(IOcrSubtitle imageSubtitles, int i, NOcrDb nOcrDb, int pixelsAreSpace, int maxWrongPixels)
+    private Paragraph OcrSingleNOcrImage(IOcrSubtitle imageSubtitles, int i, NOcrDb nOcrDb, int pixelsAreSpace, int maxWrongPixels, BinaryOcrDb? binaryOcrFallbackDb, BinaryOcrMatcher? binaryOcrFallbackMatcher)
     {
         var bitmap = imageSubtitles.GetBitmap(i);
         var parentBitmap = new NikseBitmap2(bitmap);
@@ -756,6 +773,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             false, true, 20, true);
         var index = 0;
         var matches = new List<NOcrChar>();
+        var maxErrorPercent = Se.Settings.Ocr.BinaryOcrMaxErrorPercent > 0 ? Se.Settings.Ocr.BinaryOcrMaxErrorPercent : 7.5;
         while (index < letters.Count)
         {
             var splitterItem = letters[index];
@@ -772,6 +790,28 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 if (match is { ExpandCount: > 0 })
                 {
                     index += match.ExpandCount - 1;
+                }
+
+                if (match == null && binaryOcrFallbackDb != null && binaryOcrFallbackMatcher != null)
+                {
+                    var compare = binaryOcrFallbackMatcher.GetCompareMatch(splitterItem, out _, letters, index, binaryOcrFallbackDb, maxErrorPercent);
+                    if (compare != null && !string.IsNullOrEmpty(compare.Text))
+                    {
+                        if (compare.ExpandCount > 0)
+                        {
+                            index += compare.ExpandCount - 1;
+                        }
+
+                        matches.Add(new NOcrChar
+                        {
+                            Text = compare.Text,
+                            Italic = compare.Italic,
+                            ExpandCount = compare.ExpandCount,
+                            ImageSplitterItem = splitterItem,
+                        });
+                        index++;
+                        continue;
+                    }
                 }
 
                 if (match == null)
