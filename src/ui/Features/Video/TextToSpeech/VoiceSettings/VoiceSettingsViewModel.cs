@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared;
@@ -9,6 +10,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +21,9 @@ public partial class VoiceSettingsViewModel : ObservableObject
 {
     [ObservableProperty] private string _voiceTestText;
     [ObservableProperty] private bool _isImportVoiceVisible;
+    [ObservableProperty] private bool _isDragOver;
+
+    private static readonly string[] SupportedAudioExtensions = { ".wav", ".mp3" };
 
     private ITtsEngine? _engine;
     private readonly IFileHelper _fileHelper;
@@ -55,6 +60,16 @@ public partial class VoiceSettingsViewModel : ObservableObject
 
         var fileName = await _fileHelper.PickOpenFile(Window!, "Open audio file (for clone)", Se.Language.General.AudioFiles, "*.wav;*.mp3");
         if (string.IsNullOrEmpty(fileName))
+        {
+            return;
+        }
+
+        await ImportVoiceFromFileAsync(fileName);
+    }
+
+    private async Task ImportVoiceFromFileAsync(string fileName)
+    {
+        if (Window == null || _engine == null)
         {
             return;
         }
@@ -103,6 +118,73 @@ public partial class VoiceSettingsViewModel : ObservableObject
             await MessageBox.Show(Window, Se.Language.Video.TextToSpeech.VoiceImportSuccessTitle, string.Format(Se.Language.Video.TextToSpeech.VoiceXImported, fileNameOnly));
             RefreshVoices = true;
         }
+    }
+
+    internal void OnDragOver(object? sender, DragEventArgs e)
+    {
+        if (!IsImportVoiceVisible)
+        {
+            e.DragEffects = DragDropEffects.None;
+            IsDragOver = false;
+            e.Handled = true;
+            return;
+        }
+
+        if (e.DataTransfer.Contains(DataFormat.File) && HasSupportedAudioFile(e))
+        {
+            e.DragEffects = DragDropEffects.Copy;
+            IsDragOver = true;
+        }
+        else
+        {
+            e.DragEffects = DragDropEffects.None;
+            IsDragOver = false;
+        }
+
+        e.Handled = true;
+    }
+
+    internal void OnDragLeave(object? sender, DragEventArgs e)
+    {
+        IsDragOver = false;
+    }
+
+    internal void OnDrop(object? sender, DragEventArgs e)
+    {
+        IsDragOver = false;
+
+        if (!IsImportVoiceVisible || !e.DataTransfer.Contains(DataFormat.File))
+        {
+            return;
+        }
+
+        var fileName = e.DataTransfer.TryGetFiles()?
+            .Select(f => f.Path.LocalPath)
+            .FirstOrDefault(IsSupportedAudioFile);
+
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return;
+        }
+
+        Dispatcher.UIThread.Post(async () => await ImportVoiceFromFileAsync(fileName));
+    }
+
+    private static bool HasSupportedAudioFile(DragEventArgs e)
+    {
+        var files = e.DataTransfer.TryGetFiles();
+        return files != null && files.Any(f => IsSupportedAudioFile(f.Path.LocalPath));
+    }
+
+    private static bool IsSupportedAudioFile(string fileName)
+    {
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return false;
+        }
+
+        var ext = Path.GetExtension(fileName);
+        return SupportedAudioExtensions.Any(s => string.Equals(s, ext, StringComparison.OrdinalIgnoreCase));
     }
 
     private static string? TryReadSiblingTranscript(string audioFileName)

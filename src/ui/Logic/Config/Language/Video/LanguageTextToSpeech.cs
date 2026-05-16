@@ -29,6 +29,8 @@ public class LanguageTextToSpeech
     public string ImportVoiceDotDotDot { get; set; }
     public string VoiceImportSuccessTitle { get; set; }
     public string VoiceXImported { get; set; }
+    public string DropAudioFileHereToImportVoice { get; set; }
+    public string DropAudioFileHereHint { get; set; }
     public string VoiceCloneTranscriptTitle { get; set; }
     public string UseSpeechToTextDotDotDot { get; set; }
     public string AdvancedTtsSettings { get; set; }
@@ -81,6 +83,8 @@ public class LanguageTextToSpeech
         ImportVoiceDotDotDot = "Import voice...";
         VoiceImportSuccessTitle = "Voice imported";
         VoiceXImported = "Voice '{0}' imported successfully";
+        DropAudioFileHereToImportVoice = "Drop audio file here to import voice";
+        DropAudioFileHereHint = ".wav or .mp3";
         VoiceCloneTranscriptTitle = "Enter transcript of the audio (required for voice cloning)";
         UseSpeechToTextDotDotDot = "Use speech-to-text...";
         AdvancedTtsSettings = "Advanced TTS settings";
