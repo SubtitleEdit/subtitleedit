@@ -82,6 +82,9 @@ public class BatchConvertSettingsWindow : Window
             .WithBindVisible(nameof(vm.IsPaddleOCrVisible));
         var comboBoxBinaryOcrDatabases = UiUtil.MakeComboBox(vm.BinaryOcrDatabases, vm, nameof(vm.SelectedBinaryOcrDatabase))
             .WithBindVisible(nameof(vm.IsBinaryOcrVisible));
+        var labelBinaryOcrFallback = UiUtil.MakeLabel(Se.Language.Ocr.BinaryOcrNOcrFallbackDatabase).WithBindVisible(vm, nameof(vm.IsBinaryOcrVisible)).WithMarginLeft(10);
+        var comboBoxBinaryOcrFallback = UiUtil.MakeComboBox(vm.BinaryOcrFallbackNOcrDatabases, vm, nameof(vm.SelectedBinaryOcrFallbackNOcrDatabase))
+            .WithBindVisible(nameof(vm.IsBinaryOcrVisible));
         var labelNOcrDatabase = UiUtil.MakeLabel(Se.Language.Ocr.Database).WithBindVisible(vm, nameof(vm.IsNOcrVisible)).WithMarginLeft(10);
         var comboBoxNOcrDatabases = UiUtil.MakeComboBox(vm.NOcrDatabases, vm, nameof(vm.SelectedNOcrDatabase))
             .WithBindVisible(nameof(vm.IsNOcrVisible));
@@ -96,7 +99,7 @@ public class BatchConvertSettingsWindow : Window
         {
             Orientation = Orientation.Horizontal,
             Margin = new Avalonia.Thickness(0, 30, 0, 0),
-            Children = { labelOcrEngine, comboBoxOcrEngine, labelOcLanguage, comboBoxTesseractLanguages, comboBoxPaddleLanguages, labelBinaryOcrDatabase, comboBoxBinaryOcrDatabases, labelNOcrDatabase, comboBoxNOcrDatabases, labelNOcrFallback, comboBoxNOcrFallback, labelOllamaModel, comboBoxOllamaModels, buttonOllamaModelBrowse }
+            Children = { labelOcrEngine, comboBoxOcrEngine, labelOcLanguage, comboBoxTesseractLanguages, comboBoxPaddleLanguages, labelBinaryOcrDatabase, comboBoxBinaryOcrDatabases, labelBinaryOcrFallback, comboBoxBinaryOcrFallback, labelNOcrDatabase, comboBoxNOcrDatabases, labelNOcrFallback, comboBoxNOcrFallback, labelOllamaModel, comboBoxOllamaModels, buttonOllamaModelBrowse }
         };
         comboBoxOcrEngine.SelectionChanged += (s, e) => vm.OnOcrEngineChanged();
 

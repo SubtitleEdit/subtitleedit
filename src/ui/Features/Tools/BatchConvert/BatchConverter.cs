@@ -908,6 +908,23 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return;
         }
 
+        // Optional nOCR fallback for characters BinaryOCR can't recognise. Falling back to
+        // a wrong-but-recognised character beats an asterisk because the OCR fix-up tools
+        // can still chew on it. The user picks the fallback DB in batch-convert settings;
+        // empty / missing = no fallback. The DB is shared across worker threads (read-only
+        // after construction).
+        NOcrDb? nOcrFallbackDb = null;
+        var nOcrMaxWrongPixels = Se.Settings.Ocr.NOcrMaxWrongPixels > 0 ? Se.Settings.Ocr.NOcrMaxWrongPixels : 25;
+        var nOcrFallbackName = Se.Settings.Tools.BatchConvert.BinaryOcrNOcrFallbackDatabase;
+        if (!string.IsNullOrEmpty(nOcrFallbackName))
+        {
+            var nOcrFallbackPath = Path.Combine(Se.OcrFolder, nOcrFallbackName + ".nocr");
+            if (File.Exists(nOcrFallbackPath))
+            {
+                nOcrFallbackDb = new NOcrDb(nOcrFallbackPath);
+            }
+        }
+
         item.Subtitle = new Subtitle();
         var sharedBinaryOcrDb = new BinaryOcrDb(fileName, true);
         var results = RunBinaryOcrParallel(
@@ -920,7 +937,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 var pct = processedCount * 100 / totalCount;
                 item.Status = string.Format(Se.Language.General.OcrPercentX, pct);
             },
-            cancellationToken);
+            cancellationToken,
+            nOcrFallbackDb,
+            nOcrMaxWrongPixels);
 
         if (cancellationToken.IsCancellationRequested)
         {
@@ -956,7 +975,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         int pixelsAreSpace,
         double maxErrorPercent,
         Action<int>? onProgress,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        NOcrDb? nOcrFallbackDb = null,
+        int nOcrMaxWrongPixels = 25)
     {
         var totalCount = imageSubtitles.Count;
         var results = new Paragraph[totalCount];
@@ -974,7 +995,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             () => new BinaryOcrDb(sharedBinaryOcrDb),
             (i, _, threadDb) =>
             {
-                results[i] = OcrSingleBinaryImage(imageSubtitles, i, threadDb, pixelsAreSpace, maxErrorPercent);
+                results[i] = OcrSingleBinaryImage(imageSubtitles, i, threadDb, pixelsAreSpace, maxErrorPercent, nOcrFallbackDb, nOcrMaxWrongPixels);
 
                 lock (lockObj)
                 {
@@ -989,7 +1010,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         return results;
     }
 
-    private Paragraph OcrSingleBinaryImage(IOcrSubtitle imageSubtitles, int i, BinaryOcrDb binaryOcrDb, int pixelsAreSpace, double maxErrorPercent)
+    private Paragraph OcrSingleBinaryImage(IOcrSubtitle imageSubtitles, int i, BinaryOcrDb binaryOcrDb, int pixelsAreSpace, double maxErrorPercent, NOcrDb? nOcrFallbackDb, int nOcrMaxWrongPixels)
     {
         var bitmap = imageSubtitles.GetBitmap(i);
         var parentBitmap = new NikseBitmap2(bitmap);
@@ -1016,6 +1037,23 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                     index += match.ExpandCount - 1;
                 }
 
+                if (match == null && nOcrFallbackDb != null)
+                {
+                    var nMatch = nOcrFallbackDb.GetMatch(parentBitmap, letters, splitterItem, splitterItem.Top, true, nOcrMaxWrongPixels, lastDitch: true);
+                    if (nMatch != null)
+                    {
+                        if (nMatch.ExpandCount > 0)
+                        {
+                            index += nMatch.ExpandCount - 1;
+                        }
+
+                        var text = _nOcrCaseFixer.FixUppercaseLowercaseIssues(splitterItem, nMatch);
+                        matches.Add(new BinaryOcrMatcher.CompareMatch(text, nMatch.Italic, nMatch.ExpandCount, nMatch.Text ?? string.Empty));
+                        index++;
+                        continue;
+                    }
+                }
+
                 if (match == null)
                 {
                     matches.Add(new BinaryOcrMatcher.CompareMatch("*", false, 0, null));
@@ -1029,8 +1067,8 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             index++;
         }
 
-        var text = ItalicTextMerger.MergeWithItalicTags(matches).Trim();
-        return new Paragraph(text, imageSubtitles.GetStartTime(i).TotalMilliseconds, imageSubtitles.GetEndTime(i).TotalMilliseconds);
+        var text2 = ItalicTextMerger.MergeWithItalicTags(matches).Trim();
+        return new Paragraph(text2, imageSubtitles.GetStartTime(i).TotalMilliseconds, imageSubtitles.GetEndTime(i).TotalMilliseconds);
     }
 
     private static int? DetectPixelsIsSpace(IOcrSubtitle imageSubtitles, int sampleSize, CancellationToken cancellationToken)
