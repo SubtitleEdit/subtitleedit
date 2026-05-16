@@ -92,6 +92,7 @@ public class AssaDrawWindow : Window
         var saveButton = CreateToolButton("fa-solid fa-floppy-disk", "Save", vm.SaveCommand);
         var loadButton = CreateToolButton("fa-solid fa-folder-open", "Load", vm.LoadCommand);
         var copyButton = CreateToolButton("fa-solid fa-copy", Se.Language.Assa.DrawCopyToClipboard, vm.CopyToClipboardCommand);
+        vm.CopyToClipboardButton = copyButton;
 
         toolbarPanel.Children.Add(saveButton);
         toolbarPanel.Children.Add(loadButton);

@@ -28,6 +28,7 @@ public partial class AssaDrawViewModel : ObservableObject
 {
     public Window? Window { get; set; }
     public AssaDrawCanvas? Canvas { get; set; }
+    public Button? CopyToClipboardButton { get; set; }
 
     public bool OkPressed { get; private set; }
 
@@ -650,9 +651,18 @@ public partial class AssaDrawViewModel : ObservableObject
     private async Task CopyToClipboard()
     {
         var code = GenerateAssaCode();
-        if (!string.IsNullOrEmpty(code) && Window?.Clipboard != null)
+        if (string.IsNullOrEmpty(code) || Window?.Clipboard == null)
         {
-            await ClipboardHelper.SetTextAsync(Window, code);
+            return;
+        }
+
+        await ClipboardHelper.SetTextAsync(Window, code);
+
+        if (CopyToClipboardButton?.Content is Optris.Icons.Avalonia.Icon icon)
+        {
+            icon.Value = "fa-solid fa-check";
+            await Task.Delay(1500);
+            icon.Value = "fa-solid fa-copy";
         }
     }
 
