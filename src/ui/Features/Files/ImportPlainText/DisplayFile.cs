@@ -23,7 +23,10 @@ public partial class DisplayFile : ObservableObject
         var displayName = Path.GetFileNameWithoutExtension(fileName);
         if (displayName.Length > 20)
         {
-            displayName = displayName.Remove(0, 20);
+            // Keep the tail — for time-coded / episode-numbered names the meaningful
+            // suffix is more useful than the prefix. Add a leading ellipsis so the
+            // user can see it's been truncated.
+            displayName = "…" + displayName.Substring(displayName.Length - 20);
         }
 
         FileName = displayName;

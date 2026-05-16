@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -28,8 +29,6 @@ public partial class ImportPlainTextViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _splitAtOptions;
     [ObservableProperty] private string _selectedSplitAtOption;
     [ObservableProperty] private bool _isImportFilesVisible;
-    [ObservableProperty] private bool _isDeleteVisible;
-    [ObservableProperty] private bool _isDeleteAllVisible;
     [ObservableProperty] private int _minGapMs;
     [ObservableProperty] private bool _useFixedDuration;
     [ObservableProperty] private int _fixedDurationMs;
@@ -39,16 +38,14 @@ public partial class ImportPlainTextViewModel : ObservableObject
     public Window? Window { get; internal set; }
     public bool OkPressed { get; private set; }
 
-    private Subtitle _subtitle = new Subtitle();
     private string _videoFileName = string.Empty;
     private readonly IFileHelper _fileHelper;
     private readonly IWindowService _windowService;
-    private readonly List<string> _textExtensions = new List<string>
-    {
-        "*.txt",
-        "*.rtf" ,
-    };
+    private static readonly string[] TextFileExtensions = { ".txt", ".rtf" };
+    private static readonly List<string> TextFilePatterns = TextFileExtensions.Select(e => "*" + e).ToList();
     private bool _dirty;
+    private TaskCompletionSource? _previewFlushed;
+    private readonly object _previewFlushLock = new();
     private readonly System.Timers.Timer _timerUpdatePreview;
 
     public ImportPlainTextViewModel(IFileHelper fileHelper, IWindowService windowService)
@@ -74,6 +71,31 @@ public partial class ImportPlainTextViewModel : ObservableObject
         _timerUpdatePreview.Interval = 250;
         _timerUpdatePreview.Elapsed += TimerUpdatePreviewElapsed;
         _timerUpdatePreview.Start();
+    }
+
+    private void MarkDirty()
+    {
+        lock (_previewFlushLock)
+        {
+            _dirty = true;
+            // Invalidate any prior flush wait so a fresh AlignScript call waits for the
+            // upcoming update, not a stale one.
+            _previewFlushed = null;
+        }
+    }
+
+    private Task EnsurePreviewFlushedAsync()
+    {
+        lock (_previewFlushLock)
+        {
+            if (!_dirty)
+            {
+                return Task.CompletedTask;
+            }
+
+            _previewFlushed ??= new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            return _previewFlushed.Task;
+        }
     }
 
     private void TimerUpdatePreviewElapsed(object? sender, ElapsedEventArgs e)
@@ -127,9 +149,15 @@ public partial class ImportPlainTextViewModel : ObservableObject
                     NumberOfSubtitles = string.Empty;
                 }
 
+                TaskCompletionSource? toSignal;
+                lock (_previewFlushLock)
+                {
+                    _dirty = false;
+                    toSignal = _previewFlushed;
+                    _previewFlushed = null;
+                }
+                toSignal?.TrySetResult();
             });
-
-            _dirty = false;
         }
     }
 
@@ -253,11 +281,9 @@ public partial class ImportPlainTextViewModel : ObservableObject
             return;
         }
 
-        // Wait for any pending preview update to finish populating Subtitles.
-        if (_dirty)
-        {
-            await Task.Delay(500);
-        }
+        // Wait for any pending preview update to finish populating Subtitles. Deterministic
+        // (no fixed Task.Delay) — the preview timer signals via _previewFlushed when done.
+        await EnsurePreviewFlushedAsync();
 
         if (Subtitles.Count == 0)
         {
@@ -284,7 +310,22 @@ public partial class ImportPlainTextViewModel : ObservableObject
             return;
         }
 
-        ScriptSyncService.SyncScript(Subtitles.ToList(), whisperVm.TranscribedSubtitle);
+        var result = ScriptSyncService.SyncScript(Subtitles.ToList(), whisperVm.TranscribedSubtitle);
+
+        // If more than a quarter of the script couldn't be matched to the transcription,
+        // it's likely the transcription is for the wrong audio / language / model. Tell
+        // the user so they don't silently end up with bad time codes.
+        if (result.TotalLines > 0 && result.UnmatchedLines > result.TotalLines / 4)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Warning,
+                $"Alignment matched {result.MatchedLines} of {result.TotalLines} lines. "
+                + $"{result.UnmatchedLines} line(s) could not be aligned and kept their original time codes. "
+                + "If the audio language or content doesn't match the script, the transcription may be off.",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+        }
     }
 
 
@@ -304,7 +345,7 @@ public partial class ImportPlainTextViewModel : ObservableObject
 
         var text = await File.ReadAllTextAsync(fileName);
         PlainText = text;
-        _dirty = true;
+        MarkDirty();
     }
 
     [RelayCommand]
@@ -315,7 +356,7 @@ public partial class ImportPlainTextViewModel : ObservableObject
             return;
         }
 
-        var fileNames = await _fileHelper.PickOpenFiles(Window, Se.Language.General.ChooseImageFiles, Se.Language.General.Images, _textExtensions, string.Empty, new List<string>());
+        var fileNames = await _fileHelper.PickOpenFiles(Window, Se.Language.General.ChooseImageFiles, Se.Language.General.Images, TextFilePatterns, string.Empty, new List<string>());
         if (fileNames.Length == 0)
         {
             return;
@@ -328,14 +369,14 @@ public partial class ImportPlainTextViewModel : ObservableObject
             Files.Add(displayFile);
         }
 
-        _dirty = true;
+        MarkDirty();
     }
 
     [RelayCommand]
-    private async Task FilesClear()
+    private void FilesClear()
     {
         Files.Clear();
-        _dirty = true;
+        MarkDirty();
     }
 
     private void Close()
@@ -386,7 +427,7 @@ public partial class ImportPlainTextViewModel : ObservableObject
                     if (path != null && File.Exists(path))
                     {
                         var ext = Path.GetExtension(path).ToLowerInvariant();
-                        if (!_textExtensions.Any(x => x.EndsWith(ext)))
+                        if (!TextFileExtensions.Contains(ext, StringComparer.OrdinalIgnoreCase))
                         {
                             continue;
                         }
@@ -396,34 +437,33 @@ public partial class ImportPlainTextViewModel : ObservableObject
                         Files.Add(displayFile);
                     }
                 }
-                _dirty = true;
+                MarkDirty();
             });
         }
     }
 
     internal void PlainTextChanged()
     {
-        _dirty = true;
+        MarkDirty();
     }
 
     internal void SplitAtOptionChanged()
     {
-        _dirty = true;
+        MarkDirty();
     }
 
     internal void CheckBoxImportFilesChanged()
     {
-        _dirty = true;
+        MarkDirty();
     }
 
     internal void Initialize(Subtitle subtitle, string? videoFileName)
     {
-        _subtitle = new Subtitle(subtitle, false);
         _videoFileName = videoFileName ?? string.Empty;
     }
 
     internal void GapChanged(object? sender, NumericUpDownValueChangedEventArgs e)
     {
-        _dirty = true;
+        MarkDirty();
     }
 }
