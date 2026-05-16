@@ -23,7 +23,7 @@ public partial class DisplayFile : ObservableObject
         var displayName = Path.GetFileNameWithoutExtension(fileName);
         if (displayName.Length > 20)
         {
-            displayName = displayName.Remove(0, 20);
+            displayName = displayName.Substring(0, 20) + "…";
         }
 
         FileName = displayName;

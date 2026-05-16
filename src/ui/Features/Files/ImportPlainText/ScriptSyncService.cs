@@ -11,10 +11,20 @@ public static class ScriptSyncService
 {
     private sealed record WordTimestamp(string Word, double StartMs, double EndMs);
 
-    private const int Lookahead = 60;
+    // Greedy alignment window. After several consecutive misses we widen the search
+    // (up to MaxLookahead) so a single Whisper drop or insertion doesn't desync the
+    // rest of the script on long videos.
+    private const int InitialLookahead = 60;
+    private const int MaxLookahead = 600;
+    private const int MissesBeforeWidening = 3;
     private const double SimilarityThreshold = 0.45;
 
-    public static void SyncScript(List<SubtitleLineViewModel> scriptLines, Subtitle whisperSubtitle)
+    public readonly record struct SyncResult(int TotalLines, int UnmatchedLines)
+    {
+        public int MatchedLines => TotalLines - UnmatchedLines;
+    }
+
+    public static SyncResult SyncScript(List<SubtitleLineViewModel> scriptLines, Subtitle whisperSubtitle)
     {
         var minDurationMs = (double)Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
         var maxDurationMs = (double)Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
@@ -23,7 +33,7 @@ public static class ScriptSyncService
         var whisperWords = ExtractWordTimestamps(whisperSubtitle);
         if (whisperWords.Count == 0)
         {
-            return;
+            return new SyncResult(scriptLines.Count, scriptLines.Count);
         }
 
         var scriptTokens = new List<(string Word, int LineIdx)>();
@@ -39,7 +49,7 @@ public static class ScriptSyncService
 
         if (scriptTokens.Count == 0)
         {
-            return;
+            return new SyncResult(scriptLines.Count, scriptLines.Count);
         }
 
         var alignments = AlignWords(scriptTokens.Select(t => t.Word).ToList(), whisperWords);
@@ -108,10 +118,12 @@ public static class ScriptSyncService
             }
         }
 
+        var unmatched = 0;
         for (int i = 0; i < scriptLines.Count; i++)
         {
             if (lineStartMs[i] < 0)
             {
+                unmatched++;
                 continue;
             }
 
@@ -119,22 +131,30 @@ public static class ScriptSyncService
             scriptLines[i].EndTime = TimeSpan.FromMilliseconds(lineEndMs[i]);
             scriptLines[i].UpdateDuration();
         }
+
+        return new SyncResult(scriptLines.Count, unmatched);
     }
 
     private static List<int> AlignWords(List<string> scriptWords, List<WordTimestamp> whisperWords)
     {
         var result = new List<int>(scriptWords.Count);
-        int whisperPos = 0;
+        var whisperPos = 0;
+        var consecutiveMisses = 0;
 
-        for (int i = 0; i < scriptWords.Count; i++)
+        for (var i = 0; i < scriptWords.Count; i++)
         {
-            int windowEnd = Math.Min(whisperPos + Lookahead, whisperWords.Count);
-            double bestScore = SimilarityThreshold;
-            int bestPos = -1;
+            // Widen the search window after a streak of misses (e.g. Whisper dropped a
+            // sentence) so we don't permanently desync. Reset when we find a match.
+            var lookahead = consecutiveMisses < MissesBeforeWidening
+                ? InitialLookahead
+                : Math.Min(MaxLookahead, InitialLookahead * (1 + consecutiveMisses - MissesBeforeWidening));
+            var windowEnd = Math.Min(whisperPos + lookahead, whisperWords.Count);
+            var bestScore = SimilarityThreshold;
+            var bestPos = -1;
 
-            for (int wp = whisperPos; wp < windowEnd; wp++)
+            for (var wp = whisperPos; wp < windowEnd; wp++)
             {
-                double score = WordSimilarity(scriptWords[i], whisperWords[wp].Word);
+                var score = WordSimilarity(scriptWords[i], whisperWords[wp].Word);
                 if (score > bestScore)
                 {
                     bestScore = score;
@@ -146,6 +166,11 @@ public static class ScriptSyncService
             if (bestPos >= 0)
             {
                 whisperPos = bestPos + 1;
+                consecutiveMisses = 0;
+            }
+            else
+            {
+                consecutiveMisses++;
             }
         }
 
