@@ -303,7 +303,6 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
     internal async void OnLoaded()
     {
         UiUtil.RestoreWindowPosition(Window);
-        UiUtil.SetupWindowsSystemMenu(Window);
 
         if (string.IsNullOrEmpty(_videoFileName))
         {

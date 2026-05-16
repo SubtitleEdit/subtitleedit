@@ -105,6 +105,5 @@ public partial class AudioVisualizerUndockedViewModel : ObservableObject
     {
         Window!.Content = AudioVisualizer;
         UiUtil.RestoreWindowPosition(Window);
-        UiUtil.SetupWindowsSystemMenu(Window);
     }
 }

@@ -430,7 +430,6 @@ public partial class BinaryOcrCharacterAddViewModel : ObservableObject
     internal void Onloaded(object? sender, RoutedEventArgs e)
     {
         UiUtil.RestoreWindowPosition(Window);
-        UiUtil.SetupWindowsSystemMenu(Window);
     }
 
     internal void OnClosing(object? sender, WindowClosingEventArgs e)
