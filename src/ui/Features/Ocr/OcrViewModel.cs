@@ -33,9 +33,11 @@ using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 using Nikse.SubtitleEdit.Features.Shared.ShowImage;
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
+using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
+using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.Ocr.GoogleLens;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
@@ -78,6 +80,9 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private string _ollamaModel;
     [ObservableProperty] private string _ollamaUrl;
     [ObservableProperty] private string _llamaCppUrl;
+    [ObservableProperty] private ObservableCollection<LlamaCppModelDisplay> _llamaCppOcrModels;
+    [ObservableProperty] private LlamaCppModelDisplay? _selectedLlamaCppOcrModel;
+    [ObservableProperty] private string _llamaCppOcrServerButtonText;
     [ObservableProperty] private string _progressText;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private Bitmap? _currentImageSource;
@@ -190,6 +195,8 @@ public partial class OcrViewModel : ObservableObject
         OllamaModel = string.Empty;
         OllamaUrl = string.Empty;
         LlamaCppUrl = string.Empty;
+        LlamaCppOcrModels = new ObservableCollection<LlamaCppModelDisplay>();
+        LlamaCppOcrServerButtonText = "Start server";
         TesseractDictionaryItems = new ObservableCollection<TesseractDictionary>();
         GoogleVisionApiKey = string.Empty;
         MistralApiKey = string.Empty;
@@ -282,6 +289,10 @@ public partial class OcrViewModel : ObservableObject
         ocr.OllamaUrl = OllamaUrl;
         ocr.OllamaLanguage = SelectedOllamaLanguage ?? "English";
         ocr.LlamaCppUrl = LlamaCppUrl;
+        if (SelectedLlamaCppOcrModel != null)
+        {
+            ocr.LlamaCppOcrModel = LlamaCppServerManager.GetModelPath(SelectedLlamaCppOcrModel.Model.FileName);
+        }
         ocr.GoogleVisionApiKey = GoogleVisionApiKey;
         ocr.MistralApiKey = MistralApiKey;
         ocr.GoogleVisionLanguage = SelectedGoogleVisionLanguage?.Code ?? "en";
@@ -934,6 +945,161 @@ public partial class OcrViewModel : ObservableObject
         {
             OllamaModel = result.SelectedModel;
         }
+    }
+
+    partial void OnSelectedLlamaCppOcrModelChanged(LlamaCppModelDisplay? value)
+    {
+        if (value == null)
+        {
+            return;
+        }
+
+        Se.Settings.Ocr.LlamaCppOcrModel = LlamaCppServerManager.GetModelPath(value.Model.FileName);
+    }
+
+    [RelayCommand]
+    private async Task ShowLlamaCppOcrSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<LlamaCppOcrSettingsWindow, LlamaCppOcrSettingsViewModel>(Window);
+        if (result.OkPressed)
+        {
+            LlamaCppUrl = Se.Settings.Ocr.LlamaCppUrl;
+        }
+    }
+
+    private void UpdateLlamaCppOcrServerButtonText()
+    {
+        LlamaCppOcrServerButtonText = LlamaCppServerManager.IsServerRunning ? "Stop server" : "Start server";
+    }
+
+    [RelayCommand]
+    private async Task DownloadLlamaCppOcr()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var model = SelectedLlamaCppOcrModel?.Model;
+        var forceModelDownload = false;
+        if (model != null && LlamaCppServerManager.IsModelInstalled(model))
+        {
+            var answer = await MessageBox.Show(
+                Window,
+                Se.Language.General.Download,
+                string.Format(Se.Language.Translate.XIsAlreadyDownloadedReDownload, model.DisplayName),
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            forceModelDownload = true;
+        }
+
+        var downloaded = await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model, forceModelDownload: forceModelDownload);
+        if (downloaded != null)
+        {
+            var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
+            SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.OcrModels, selectName);
+        }
+    }
+
+    [RelayCommand]
+    private async Task ToggleLlamaCppOcrServer()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (LlamaCppServerManager.IsServerRunning)
+        {
+            LlamaCppServerManager.StopServer();
+            UpdateLlamaCppOcrServerButtonText();
+            return;
+        }
+
+        await EnsureLlamaCppOcrReady();
+        UpdateLlamaCppOcrServerButtonText();
+    }
+
+    private async Task<bool> EnsureLlamaCppOcrReady()
+    {
+        if (Window == null)
+        {
+            return false;
+        }
+
+        var model = SelectedLlamaCppOcrModel?.Model;
+        if (model == null)
+        {
+            return false;
+        }
+
+        var engineInstalled = LlamaCppServerManager.IsEngineInstalled();
+        var modelInstalled = LlamaCppServerManager.IsModelInstalled(model);
+        if (!engineInstalled || !modelInstalled)
+        {
+            string message;
+            if (!engineInstalled && !modelInstalled)
+            {
+                message = "llama.cpp requires the llama-server engine and the selected OCR model to be downloaded. Download now?";
+            }
+            else if (!engineInstalled)
+            {
+                message = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
+            }
+            else
+            {
+                message = "llama.cpp requires the selected OCR model to be downloaded. Download now?";
+            }
+
+            var answer = await MessageBox.Show(
+                Window,
+                Se.Language.General.Download,
+                message,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (answer != MessageBoxResult.Yes)
+            {
+                return false;
+            }
+
+            await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model);
+            if (!LlamaCppServerManager.IsEngineInstalled() || !LlamaCppServerManager.IsModelInstalled(model))
+            {
+                return false;
+            }
+        }
+
+        SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.OcrModels, model.FileName);
+
+        try
+        {
+            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationTokenSource.Token);
+        }
+        catch (Exception ex)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                ex.Message,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return false;
+        }
+
+        UpdateLlamaCppOcrServerButtonText();
+        return true;
     }
 
     [RelayCommand]
@@ -3146,9 +3312,31 @@ public partial class OcrViewModel : ObservableObject
     private void RunLlamaCppOcr(List<int> selectedIndices, CancellationToken cancellationToken)
     {
         var engine = new LlamaCppOcr();
+        var selectedModel = SelectedLlamaCppOcrModel?.Model;
+        var prompt = Se.Settings.Ocr.LlamaCppOcrPrompt;
 
         _ = Task.Run(async () =>
         {
+            string url;
+            string modelName;
+            if (selectedModel != null)
+            {
+                var ready = await Dispatcher.UIThread.InvokeAsync(EnsureLlamaCppOcrReady);
+                if (!ready)
+                {
+                    PauseOcr();
+                    return;
+                }
+
+                url = LlamaCppServerManager.ApiUrl;
+                modelName = Path.GetFileNameWithoutExtension(selectedModel.FileName);
+            }
+            else
+            {
+                url = LlamaCppUrl;
+                modelName = "glmocr";
+            }
+
             for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
             {
                 var i = selectedIndices[processedIndex];
@@ -3164,7 +3352,7 @@ public partial class OcrViewModel : ObservableObject
 
                 SelectAndScrollToRow(i);
 
-                var text = await engine.Ocr(bitmap, LlamaCppUrl, "", SelectedOllamaLanguage ?? "English", cancellationToken);
+                var text = await engine.Ocr(bitmap, url, modelName, SelectedOllamaLanguage ?? "English", prompt, cancellationToken);
                 item.Text = text;
 
                 OcrFixLineAndSetText(i, item);
@@ -3706,6 +3894,13 @@ public partial class OcrViewModel : ObservableObject
                 SelectedGoogleVisionLanguage = GoogleVisionLanguages.FirstOrDefault(p => p.Code == "eng") ??
                                                GoogleVisionLanguages.FirstOrDefault();
             }
+        }
+
+        if (IsLlamaCppVisible && LlamaCppOcrModels.Count == 0)
+        {
+            var savedModelName = Path.GetFileName(Se.Settings.Ocr.LlamaCppOcrModel ?? string.Empty);
+            SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.OcrModels, savedModelName);
+            UpdateLlamaCppOcrServerButtonText();
         }
     }
 

@@ -25,7 +25,7 @@ public class LlamaCppOcr
         _httpClient.Timeout = TimeSpan.FromMinutes(25);
     }
 
-    public async Task<string> Ocr(SKBitmap bitmap, string url, string model, string language, CancellationToken cancellationToken)
+    public async Task<string> Ocr(SKBitmap bitmap, string url, string model, string language, string promptTemplate, CancellationToken cancellationToken)
     {
         try
         {
@@ -35,11 +35,19 @@ public class LlamaCppOcr
 
             //var pngBytes = paddedBitmap.ToPngArray();
             //System.IO.File.WriteAllBytes("c:\\temp\\ollama-ocr-image.png", pngBytes);
-            
-            var prompt = string.Format("Extract all text exactly as written. The language is {0}. Preserve line breaks.", language);
+
+            var template = string.IsNullOrWhiteSpace(promptTemplate)
+                ? "Extract all text exactly as written. The language is {language}. Preserve line breaks."
+                : promptTemplate;
+            var prompt = template
+                .Replace("{language}", language)
+                .Replace("\"", "\\\"")
+                .Replace("\r", " ")
+                .Replace("\n", " ");
+            var modelName = string.IsNullOrEmpty(model) ? "glmocr" : model;
 
             var input =
-                "{ \"model\": \"glmocr\", \"temperature\": 0, \"messages\": [ { \"role\": \"user\", \"content\": [ " +
+                "{ \"model\": \"" + modelName + "\", \"temperature\": 0, \"messages\": [ { \"role\": \"user\", \"content\": [ " +
                 "{ \"type\": \"text\", \"text\": \"" + prompt + "\" }, " +
                 "{ \"type\": \"image_url\", \"image_url\": { \"url\": \"data:image/png;base64," + base64Image + "\" } } " +
                 "] } ] }";

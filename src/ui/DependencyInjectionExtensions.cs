@@ -375,6 +375,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<NOcrDbNewViewModel>();
         collection.AddTransient<NOcrInspectViewModel>();
         collection.AddTransient<NOcrSettingsViewModel>();
+        collection.AddTransient<LlamaCppOcrSettingsViewModel>();
         collection.AddTransient<OcrViewModel>();
         collection.AddTransient<OpenFromUrlViewModel>();
         collection.AddTransient<OpenSecondarySubtitleViewModel>();

@@ -801,7 +801,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (downloaded != null)
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
-            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, selectName);
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.TranslateModels, selectName);
         }
     }
 
@@ -842,12 +842,11 @@ public partial class AutoTranslateViewModel : ObservableObject
             return false;
         }
 
-        SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, model.FileName);
+        SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.TranslateModels, model.FileName);
 
         try
         {
-            await LlamaCppServerManager.EnsureServerRunningAsync(
-                LlamaCppServerManager.GetModelPath(model.FileName), _cancellationTokenSource.Token);
+            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationTokenSource.Token);
         }
         catch (Exception ex)
         {
@@ -915,7 +914,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (downloaded != null)
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
-            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, selectName);
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.TranslateModels, selectName);
         }
 
         UpdateLlamaCppServerButtonText();
@@ -1491,7 +1490,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             LlamaCppModelComboIsVisible = true;
             LlamaCppButtonsAreVisible = true;
             var savedModelName = Path.GetFileName(Se.Settings.AutoTranslate.LlamaCppModel ?? string.Empty);
-            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, savedModelName);
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.TranslateModels, savedModelName);
             UpdateLlamaCppServerButtonText();
 
             if (!_llamaCppUpdatePromptShown)
