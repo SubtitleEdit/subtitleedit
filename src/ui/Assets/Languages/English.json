@@ -1014,7 +1014,7 @@
       "subtitleWithManuallyChosenEncodingDotDotDot": "_Subtitle with manually chosen encoding...",
       "titleImportImages": "Import images",
       "importFileLabel": "Choose images to import (time codes in file names supported)",
-      "importFilesInfo": "Use time-coded filenames:\nstart_HH_MM_SS_MMM__end_HH_MM_SS_MMM[_index].ext\n\nExamples:\n0_00_01_042__0_00_03_919_0001.png\n0_00_01_042__0_00_03_919.png\n\nRules:\n• HH_MM_SS_MMM for start and end times\n• Double underscore separates start/end\n• Optional index after end time",
+      "importFilesInfo": "Use time-coded filenames:\r\nstart_HH_MM_SS_MMM__end_HH_MM_SS_MMM[_index].ext\r\n\r\nExamples:\r\n0_00_01_042__0_00_03_919_0001.png\r\n0_00_01_042__0_00_03_919.png\r\n\r\nRules:\r\n• HH_MM_SS_MMM for start and end times\r\n• Double underscore separates start/end\r\n• Optional index after end time",
       "formattingDotDotDot": "Formatting...",
       "imagedBasedSubtitleForEditDotDotDot": "Imaged-based subtitle for edit...",
       "imagedBasedSubtitleForOcrDotDotDot": "Imaged-based subtitle for OCR...",
@@ -1848,7 +1848,7 @@
       "edgeTtsPitchDescription": "Pitch adjustment for Edge-TTS, e.g. \"+10Hz\", \"-5Hz\", or \"+0Hz\" for default.",
       "edgeTtsVolume": "Edge-TTS volume",
       "edgeTtsVolumeDescription": "Volume adjustment for Edge-TTS, e.g. \"+20%\", \"-10%\", or \"+0%\" for default.",
-      "downloadPiperPrompt": "\"Text to speech\" requires Piper.\n\nDownload and use Piper?"
+      "downloadPiperPrompt": "\"Text to speech\" requires Piper.\r\n\r\nDownload and use Piper?"
     },
     "shotChanges": {
       "titleGenerateOrImport": "Generate/import shot changes",
@@ -1895,11 +1895,11 @@
     "openFromUrlTitle": "Open video file from URL",
     "toggleCurrentSubtitleWhilePlaying": "Toggle current subtitle while playing",
     "onlyMkvCanSupportEmbeddedSubtitleEditing": "Only Matroska (.mkv, .webm) files are supported for editing embedded subtitles.",
-    "reEncodeInfo": "Re-encoding can make subtitling smoother:\n• Smaller resolution (high resolutions make subtitling slow)\n• Re-encode the video to H.264 + yuv420p makes it more compatible\n• Optimized for fast seeking",
+    "reEncodeInfo": "Re-encoding can make subtitling smoother:\r\n• Smaller resolution (high resolutions make subtitling slow)\r\n• Re-encode the video to H.264 + yuv420p makes it more compatible\r\n• Optimized for fast seeking",
     "reEncodeGeneratingVideoX": "Generating video... {0}%     {1}",
     "reEncodeGeneratingVideoXofY": "Generating video {0}/{1}... {2}%     {3}",
     "reEncodeUnableToGenerateVideo": "Unable to generate video",
-    "reEncodeOutputVideoFileNotGenerated": "Output video file not generated: {0}\nParameters: {1}",
+    "reEncodeOutputVideoFileNotGenerated": "Output video file not generated: {0}\r\nParameters: {1}",
     "reEncodeGeneratingDone": "Generating done",
     "reEncodeGeneratedFilesX": "Generated files ({0}):",
     "reEncodeFfmpegParameters": "ffmpeg parameters"
@@ -1990,7 +1990,13 @@
     "showTechnicalDetails": "Show technical details",
     "hideTechnicalDetails": "Hide technical details",
     "technicalDetails": "Technical details",
-    "pleaseSelectATargetLanguage": "Please select a target language"
+    "pleaseSelectATargetLanguage": "Please select a target language",
+    "readyToTranslate": "Ready to translate",
+    "translating": "Translating...",
+    "translationComplete": "Translation complete",
+    "translationCancelled": "Translation cancelled",
+    "swapLanguages": "Swap source and target languages",
+    "xIsAlreadyDownloadedReDownload": "{0} is already downloaded. Re-download?"
   },
   "options": {
     "settings": {
@@ -2661,7 +2667,16 @@
     "vobSubColorPattern": "Pattern",
     "vobSubColorEmphasis1": "Emphasis 1",
     "vobSubColorEmphasis2": "Emphasis 2",
-    "vobSubColorsInvert": "Invert background / emphasis 1"
+    "vobSubColorsInvert": "Invert background / emphasis 1",
+    "llamaCppOcrSettingsTitle": "llama.cpp OCR settings",
+    "llamaCppOcrPromptHint": "Use {language} to insert the selected OCR language.",
+    "llamaCppOcrPromptEmpty": "The prompt cannot be empty.",
+    "llamaCppOcrPromptMissingLanguagePlaceholder": "The prompt must contain the {language} placeholder.",
+    "nOcrBinaryOcrFallbackDatabase": "BinaryOCR fallback database",
+    "nOcrBinaryOcrFallbackNone": "(none)",
+    "binaryOcrNOcrFallbackDatabase": "nOCR fallback database",
+    "showAllOllamaModels": "Show all models (not just vision-capable)",
+    "ollamaModelLikelyWrong": "Ollama returned no text - the selected model may not support OCR / vision"
   },
   "assa": {
     "assaDraw": "ASSA Draw",
