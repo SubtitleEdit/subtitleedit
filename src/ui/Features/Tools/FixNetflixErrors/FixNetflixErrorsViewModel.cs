@@ -181,7 +181,7 @@ public partial class FixNetflixErrorsViewModel : ObservableObject
         {
             var p = _subtitle.Paragraphs[index];
             var fixedParagraph = Fixes.FirstOrDefault(ri => ri.Index == index);
-            if (fixedParagraph != null)
+            if (fixedParagraph != null && fixedParagraph.Apply)
             {
                 p.Text = fixedParagraph.After;
             }
