@@ -58,7 +58,7 @@ internal sealed class NOcrOcrEngine : IOcrEngine
             }
             else
             {
-                var match = _db.GetMatch(parent, letters, item, item.Top, true, MaxWrongPixels);
+                var match = _db.GetMatch(parent, letters, item, item.Top, true, MaxWrongPixels, lastDitch: true);
                 if (match is { ExpandCount: > 0 })
                 {
                     i += match.ExpandCount - 1;

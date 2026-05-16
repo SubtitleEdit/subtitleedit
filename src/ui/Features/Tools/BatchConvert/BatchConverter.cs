@@ -768,7 +768,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             }
             else
             {
-                var match = nOcrDb.GetMatch(parentBitmap, letters, splitterItem, splitterItem.Top, true, maxWrongPixels);
+                var match = nOcrDb.GetMatch(parentBitmap, letters, splitterItem, splitterItem.Top, true, maxWrongPixels, lastDitch: true);
                 if (match is { ExpandCount: > 0 })
                 {
                     index += match.ExpandCount - 1;
