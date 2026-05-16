@@ -1,6 +1,42 @@
 
 Subtitle Edit Changelog
 
+v5.0.0-beta28 (xth May 2026)
+
+* Add drag-and-drop area to TTS voice settings for importing a voice
+* Add DeepSeek auto-translate engine
+* Add llama.cpp model picker, download, and Start/Stop server to OCR window
+* Add Ollama model picker for OCR window
+* Add nOCR database picker for OCR window
+* Add Ollama OCR model picker for Batch Convert
+* Add opt-in last-ditch nOCR pass for Batch Convert
+* Add nOCR fallback for BinaryOCR in Batch Convert
+* Add BinaryOCR fallback for nOCR in Batch Convert
+* Add copy-to-clipboard icon button for the speech-to-text console log
+* Add Linux ARM64 (aarch64) support to release builds and downloads
+* Add Linux x86_64 CUDA option to CrispASR
+* Redesign auto-translate window for better usability
+* Show llama.cpp model size for not-yet-installed entries
+* Localize llama.cpp OCR settings dialog and validation strings
+* Improve OCR cancellation handling and add llama.cpp request timeout
+* Register Alt+Space Windows system menu via Window class handler
+* Keep speech-to-text window open after Cancel
+* Clean up Import Plain Text and harden script alignment for long videos
+* Guard Ollama OCR against wrong (non-vision) model choices
+* Flash a check icon after copying ASSA draw code to the clipboard
+* Update llama.cpp to b9174
+* Update CrispASR to v0.6.7
+* Update Bulgarian translation - thx jekovcar
+* Update Russian translation - thx jekovcar
+* Fix Chatterbox TTS Turbo crash and silent default-voice fallback
+* Fix MP3 playback stopping before the end of the file
+* Fix batch Split/Break long lines adding stray line breaks
+* Fix auto-translate OK button and prompt before re-downloading llama.cpp model
+* Fix auto-translate prompt persistence and translated filename
+* Fix Netflix Quality Check ignoring per-check Apply checkboxes
+* Fix subtitle format changing to source format on save after auto-translate
+
+-----------------------------------------------------------------------------------------------------
 
 v5.0.0-beta27 (15th May 2026)
 
@@ -13,7 +49,6 @@ v5.0.0-beta27 (15th May 2026)
 * Fix numeric keypad keys recorded as wrong shortcut - thx GrampaWildWilly
 
 -----------------------------------------------------------------------------------------------------
-
 
 v5.0.0-beta26 (15th May 2026)
 
