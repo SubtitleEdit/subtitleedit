@@ -1,78 +1,249 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
-using Avalonia.Styling;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System.ComponentModel;
 
 namespace Nikse.SubtitleEdit.Features.Translate;
 
 public class AutoTranslateWindow : Window
 {
     private readonly AutoTranslateViewModel _vm;
+    private Button? _buttonTranslate;
+    private Button? _buttonOk;
 
     public AutoTranslateWindow(AutoTranslateViewModel vm)
-    {        
+    {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.General.AutoTranslate;
-        Width = 950;
-        MinWidth = 750;
-        Height = 700;
-        MinHeight = 400;
+        Width = 1050;
+        MinWidth = 800;
+        Height = 780;
+        MinHeight = 480;
 
         DataContext = vm;
         vm.Window = this;
         _vm = vm;
 
-        var topBarPoweredBy = new StackPanel
+        var dataGridCard = BuildDataGridCard(vm);
+        var controlsCard = BuildControlsCard(vm);
+        var apiConfigCard = BuildApiConfigCard(vm);
+        var footer = BuildFooter(vm);
+
+        var grid = new Grid
         {
-            Orientation = Orientation.Horizontal,
-            Margin = new Thickness(10),
-            HorizontalAlignment = HorizontalAlignment.Right,
-            Spacing = 10,
-            Children =
-            {
-                UiUtil.MakeTextBlock(Se.Language.General.PoweredBy),
-                UiUtil.MakeLink("Google Translate V1", vm.GoToAutoTranslatorUriCommand, vm, nameof(vm.AutoTranslatorLinkText))
-                    .WithMarginRight(UiUtil.WindowMarginWidth),
-            }
+            RowDefinitions = new RowDefinitions("*,Auto,Auto,Auto"),
+            RowSpacing = 10,
+            Margin = UiUtil.MakeWindowMargin(),
         };
 
-        var engineCombo = UiUtil.MakeComboBox(vm.AutoTranslators, vm, nameof(vm.SelectedAutoTranslator));
+        var row = 0;
+        grid.Children.Add(dataGridCard);
+        Grid.SetRow(dataGridCard, row++);
 
+        grid.Children.Add(controlsCard);
+        Grid.SetRow(controlsCard, row++);
+
+        grid.Children.Add(apiConfigCard);
+        Grid.SetRow(apiConfigCard, row++);
+
+        grid.Children.Add(footer);
+        Grid.SetRow(footer, row++);
+
+        Content = grid;
+
+        ApplyButtonAccentStates(vm);
+        vm.PropertyChanged += OnViewModelPropertyChanged;
+
+        Loaded += (s, e) => UiUtil.RestoreWindowPosition(this);
+    }
+
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is not AutoTranslateViewModel vm)
+        {
+            return;
+        }
+
+        if (e.PropertyName is nameof(AutoTranslateViewModel.IsTranslatePrimary)
+            or nameof(AutoTranslateViewModel.IsOkPrimary))
+        {
+            ApplyButtonAccentStates(vm);
+        }
+    }
+
+    private void ApplyButtonAccentStates(AutoTranslateViewModel vm)
+    {
+        SetAccent(_buttonTranslate, vm.IsTranslatePrimary);
+        SetAccent(_buttonOk, vm.IsOkPrimary);
+    }
+
+    private static void SetAccent(Button? button, bool accent)
+    {
+        if (button == null)
+        {
+            return;
+        }
+
+        if (accent)
+        {
+            if (!button.Classes.Contains("accent"))
+            {
+                button.Classes.Add("accent");
+            }
+        }
+        else
+        {
+            button.Classes.Remove("accent");
+        }
+    }
+
+    private static Border BuildControlsCard(AutoTranslateViewModel vm)
+    {
+        var engineLabel = UiUtil.MakeTextBlock(Se.Language.General.Engine);
+        engineLabel.VerticalAlignment = VerticalAlignment.Center;
+        engineLabel.Margin = new Thickness(0, 0, 8, 0);
+
+        var engineCombo = UiUtil.MakeComboBox(vm.AutoTranslators, vm, nameof(vm.SelectedAutoTranslator));
+        engineCombo.MinWidth = 220;
         engineCombo.SelectionChanged += (s, e) =>
         {
             vm.AutoTranslatorChanged(engineCombo);
         };
 
-        var sourceLangCombo = UiUtil.MakeComboBox(vm.SourceLanguages!, vm, nameof(vm.SelectedSourceLanguage));
-        var targetLangCombo = UiUtil.MakeComboBox(vm.TargetLanguages!, vm, nameof(vm.SelectedTargetLanguage));
-        var buttonTranslate = UiUtil.MakeButton(Se.Language.General.Translate, vm.TranslateCommand);
-        buttonTranslate.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsTranslateEnabled)));
+        var fromLabel = UiUtil.MakeTextBlock(Se.Language.General.From);
+        fromLabel.VerticalAlignment = VerticalAlignment.Center;
+        fromLabel.Margin = new Thickness(16, 0, 8, 0);
 
-        var topBar = new StackPanel
+        var sourceCombo = UiUtil.MakeComboBox(vm.SourceLanguages!, vm, nameof(vm.SelectedSourceLanguage));
+        sourceCombo.MinWidth = 180;
+
+        var swapButton = UiUtil.MakeButton(vm.SwapLanguagesCommand, IconNames.SwapVertical, Se.Language.Translate.SwapLanguages);
+        swapButton.Margin = new Thickness(8, 0);
+        swapButton.VerticalAlignment = VerticalAlignment.Center;
+
+        var toLabel = UiUtil.MakeTextBlock(Se.Language.General.To);
+        toLabel.VerticalAlignment = VerticalAlignment.Center;
+        toLabel.Margin = new Thickness(0, 0, 8, 0);
+
+        var targetCombo = UiUtil.MakeComboBox(vm.TargetLanguages!, vm, nameof(vm.SelectedTargetLanguage));
+        targetCombo.MinWidth = 180;
+
+        var controlsPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Margin = new Thickness(10),
-            HorizontalAlignment = HorizontalAlignment.Right,
-            Spacing = 10,
+            VerticalAlignment = VerticalAlignment.Center,
             Children =
             {
-                UiUtil.MakeTextBlock(Se.Language.General.Engine),
+                engineLabel,
                 engineCombo,
-                UiUtil.MakeSeparatorForHorizontal(vm),
-                UiUtil.MakeTextBlock(Se.Language.General.From),
-                sourceLangCombo,
-                UiUtil.MakeTextBlock(Se.Language.General.To),
-                targetLangCombo,
-                buttonTranslate,
-            }
+                fromLabel,
+                sourceCombo,
+                swapButton,
+                toLabel,
+                targetCombo,
+            },
         };
 
+        var poweredByLabel = UiUtil.MakeTextBlock(Se.Language.General.PoweredBy);
+        poweredByLabel.Foreground = UiUtil.GetTextColor(0.65);
+        poweredByLabel.FontSize = 11;
+        poweredByLabel.VerticalAlignment = VerticalAlignment.Center;
+
+        var poweredByLink = UiUtil.MakeLink("Google Translate V1", vm.GoToAutoTranslatorUriCommand, vm, nameof(vm.AutoTranslatorLinkText));
+        poweredByLink.FontSize = 11;
+        poweredByLink.VerticalAlignment = VerticalAlignment.Center;
+
+        var poweredByPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Margin = new Thickness(0, 0, 0, 6),
+            Children = { poweredByLabel, poweredByLink },
+        };
+
+        var stack = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Children = { poweredByPanel, controlsPanel },
+        };
+
+        return MakeCard(stack);
+    }
+
+    private static Border BuildApiConfigCard(AutoTranslateViewModel vm)
+    {
+        var buttonDownloadCrispAsr = UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadCrispAsrCommand).WithMarginLeft(5);
+        buttonDownloadCrispAsr.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.ButtonDownloadIsVisible)));
+
+        var crispAsrModelCombo = UiUtil.MakeComboBox(vm.CrispAsrModels, vm, nameof(vm.SelectedCrispAsrModel), nameof(vm.CrispAsrModelComboIsVisible));
+
+        var llamaCppModelCombo = UiUtil.MakeComboBox(vm.LlamaCppModels, vm, nameof(vm.SelectedLlamaCppModel), nameof(vm.LlamaCppModelComboIsVisible));
+
+        var buttonDownloadLlamaCpp = UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadLlamaCppCommand).WithMarginLeft(5);
+        buttonDownloadLlamaCpp.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppButtonsAreVisible)));
+
+        var buttonLlamaCppServer = UiUtil.MakeButton(string.Empty, vm.ToggleLlamaCppServerCommand).WithMarginLeft(5);
+        buttonLlamaCppServer.Bind(Button.ContentProperty, new Binding(nameof(vm.LlamaCppServerButtonText)));
+        buttonLlamaCppServer.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppButtonsAreVisible)));
+
+        var settingsPanel = new WrapPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Id, vm, null, nameof(vm.ApiIdIsVisible)).WithMarginRight(5));
+        settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ApiIdText), nameof(vm.ApiIdIsVisible)).WithMarginRight(15));
+
+        settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.ApiSecret, vm, null, nameof(vm.ApiSecretIsVisible)).WithMarginRight(5));
+        settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ApiSecretText), nameof(vm.ApiSecretIsVisible)).WithMarginRight(15));
+
+        settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.ApiKey, vm, null, nameof(vm.ApiKeyIsVisible)).WithMarginRight(5));
+        settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ApiKeyText), nameof(vm.ApiKeyIsVisible)).WithMarginRight(15));
+
+        settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Url, vm, null, nameof(vm.ApiUrlIsVisible)).WithMarginRight(5));
+        settingsPanel.Children.Add(UiUtil.MakeTextBox(200, vm, nameof(vm.ApiUrlText), nameof(vm.ApiUrlIsVisible)).WithMarginRight(15));
+
+        settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Model, vm, null, nameof(vm.ModelIsVisible)).WithMarginRight(5));
+        settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ModelText), nameof(vm.ModelIsVisible)));
+        settingsPanel.Children.Add(UiUtil.MakeButtonBrowse(vm.BrowseModelCommand, nameof(vm.ModelBrowseIsVisible)).WithMarginLeft(5));
+
+        settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Model, vm, null, nameof(vm.CrispAsrModelComboIsVisible)).WithMarginRight(5));
+        settingsPanel.Children.Add(crispAsrModelCombo);
+        settingsPanel.Children.Add(buttonDownloadCrispAsr);
+
+        settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Model, vm, null, nameof(vm.LlamaCppModelComboIsVisible)).WithMarginRight(5));
+        settingsPanel.Children.Add(llamaCppModelCombo);
+        settingsPanel.Children.Add(buttonDownloadLlamaCpp);
+        settingsPanel.Children.Add(buttonLlamaCppServer);
+
+        var settingsButton = UiUtil.MakeButton(vm.OpenSettingsCommand, IconNames.Settings, Se.Language.General.Settings);
+        settingsButton.HorizontalAlignment = HorizontalAlignment.Right;
+        settingsButton.VerticalAlignment = VerticalAlignment.Center;
+        settingsButton.Margin = new Thickness(8, 0, 0, 0);
+
+        var grid = new Grid
+        {
+            ColumnDefinitions = new ColumnDefinitions("*,Auto"),
+        };
+        grid.Children.Add(settingsPanel);
+        Grid.SetColumn(settingsPanel, 0);
+        grid.Children.Add(settingsButton);
+        Grid.SetColumn(settingsButton, 1);
+
+        return MakeCard(grid);
+    }
+
+    private Border BuildDataGridCard(AutoTranslateViewModel vm)
+    {
         var contextMenu = new MenuFlyout
         {
             Items =
@@ -87,7 +258,7 @@ public class AutoTranslateWindow : Window
 
         var dataGrid = new DataGrid
         {
-            Height = double.NaN, // auto size inside scroll viewer
+            Height = double.NaN,
             CanUserSortColumns = false,
             ContextFlyout = contextMenu,
             DataContext = vm,
@@ -132,135 +303,102 @@ public class AutoTranslateWindow : Window
                 }
             }
         };
+
         dataGrid.Bind(DataGrid.ItemsSourceProperty, new Binding(nameof(vm.Rows)));
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedTranslateRow)));
         UiUtil.AttachMacContextFlyoutHandler(dataGrid);
         vm.RowGrid = dataGrid;
 
         var dataGridBorder = UiUtil.MakeBorderForControlNoPadding(dataGrid);
+        return MakeCard(dataGridBorder, new Thickness(1));
+    }
 
-        var buttonDownloadCrispAsr = UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadCrispAsrCommand).WithMarginLeft(5);
-        buttonDownloadCrispAsr.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.ButtonDownloadIsVisible)));
-
-        var crispAsrModelCombo = UiUtil.MakeComboBox(vm.CrispAsrModels, vm, nameof(vm.SelectedCrispAsrModel), nameof(vm.CrispAsrModelComboIsVisible));
-
-        var llamaCppModelCombo = UiUtil.MakeComboBox(vm.LlamaCppModels, vm, nameof(vm.SelectedLlamaCppModel), nameof(vm.LlamaCppModelComboIsVisible));
-
-        var buttonDownloadLlamaCpp = UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadLlamaCppCommand).WithMarginLeft(5);
-        buttonDownloadLlamaCpp.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppButtonsAreVisible)));
-
-        var buttonLlamaCppServer = UiUtil.MakeButton(string.Empty, vm.ToggleLlamaCppServerCommand).WithMarginLeft(5);
-        buttonLlamaCppServer.Bind(Button.ContentProperty, new Binding(nameof(vm.LlamaCppServerButtonText)));
-        buttonLlamaCppServer.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppButtonsAreVisible)));
-
-        StackPanel settingsBar = UiUtil.MakeControlBarLeft(
-
-            UiUtil.MakeTextBlock(Se.Language.General.Id, vm, null, nameof(vm.ApiIdIsVisible)).WithMarginRight(5),
-            UiUtil.MakeTextBox(150, vm, nameof(vm.ApiIdText), nameof(vm.ApiIdIsVisible)).WithMarginRight(15),
-
-            UiUtil.MakeTextBlock(Se.Language.General.ApiSecret, vm, null, nameof(vm.ApiSecretIsVisible)).WithMarginRight(5),
-            UiUtil.MakeTextBox(150, vm, nameof(vm.ApiSecretText), nameof(vm.ApiSecretIsVisible)).WithMarginRight(15),
-
-            UiUtil.MakeTextBlock(Se.Language.General.ApiKey, vm, null, nameof(vm.ApiKeyIsVisible)).WithMarginRight(5),
-            UiUtil.MakeTextBox(150, vm, nameof(vm.ApiKeyText), nameof(vm.ApiKeyIsVisible)).WithMarginRight(15),
-
-            UiUtil.MakeTextBlock(Se.Language.General.Url, vm, null, nameof(vm.ApiUrlIsVisible)).WithMarginRight(5),
-            UiUtil.MakeTextBox(200, vm, nameof(vm.ApiUrlText), nameof(vm.ApiUrlIsVisible)).WithMarginRight(15),
-
-            UiUtil.MakeTextBlock(Se.Language.General.Model, vm, null, nameof(vm.ModelIsVisible)).WithMarginRight(5),
-            UiUtil.MakeTextBox(150, vm, nameof(vm.ModelText), nameof(vm.ModelIsVisible)),
-            UiUtil.MakeButtonBrowse(vm.BrowseModelCommand, nameof(vm.ModelBrowseIsVisible)).WithMarginLeft(5),
-
-            UiUtil.MakeTextBlock(Se.Language.General.Model, vm, null, nameof(vm.CrispAsrModelComboIsVisible)).WithMarginRight(5),
-            crispAsrModelCombo,
-            buttonDownloadCrispAsr,
-
-            UiUtil.MakeTextBlock(Se.Language.General.Model, vm, null, nameof(vm.LlamaCppModelComboIsVisible)).WithMarginRight(5),
-            llamaCppModelCombo,
-            buttonDownloadLlamaCpp,
-            buttonLlamaCppServer
-        );
-
-        var settingsLink = UiUtil.MakeLink(Se.Language.General.Settings, vm.OpenSettingsCommand).WithMarginRight(10);
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        buttonOk.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsTranslateEnabled)));
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-
-        var bottomGrid = new Grid
-        {
-            RowDefinitions = new RowDefinitions("*,Auto"),
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
-        var progressSlider = new Slider
+    private Control BuildFooter(AutoTranslateViewModel vm)
+    {
+        var progressBar = new ProgressBar
         {
             Minimum = 0,
             Maximum = 100,
-            IsHitTestVisible = false,
-            Focusable = false,
-            Margin = new Thickness(10, 0, 0, 0),
-            Width = double.NaN,
-            Height = 10,
-            VerticalAlignment = VerticalAlignment.Center,
+            Height = 6,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            Styles =
-            {
-                new Style(x => x.OfType<Thumb>())
-                {
-                    Setters =
-                    {
-                        new Setter(Thumb.IsVisibleProperty, false)
-                    },
-                },
-                new Style(x => x.OfType<Track>())
-                {
-                    Setters =
-                    {
-                        new Setter(Track.HeightProperty, 8.0)
-                    },
-                },
-            },
+            VerticalAlignment = VerticalAlignment.Center,
+            CornerRadius = new CornerRadius(3),
         };
-        progressSlider.Bind(Slider.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        progressSlider.Bind(Slider.IsVisibleProperty, new Binding(nameof(vm.IsProgressEnabled)));
-        bottomGrid.Children.Add(progressSlider);
-        Grid.SetRow(progressSlider, 0);
-        var bottomBar = UiUtil.MakeButtonBar(settingsLink, buttonOk, buttonCancel);
-        bottomGrid.Children.Add(bottomBar);
-        Grid.SetRow(bottomBar, 1);
+        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
+        progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsProgressEnabled)));
 
-
-        var grid = new Grid
+        var progressLabel = new TextBlock
         {
-            RowDefinitions = new RowDefinitions("Auto,Auto,*,Auto,Auto"),
-            Margin = new Thickness(UiUtil.WindowMarginWidth),
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Margin = new Thickness(10, 0, 0, 0),
+            MinWidth = 50,
+            Foreground = UiUtil.GetTextColor(0.75),
+        };
+        progressLabel.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
+        progressLabel.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsProgressEnabled)));
+
+        var progressGrid = new Grid
+        {
+            ColumnDefinitions = new ColumnDefinitions("*,Auto"),
+            Margin = new Thickness(0, 0, 0, 10),
+            MinHeight = 8,
+        };
+        progressGrid.Children.Add(progressBar);
+        Grid.SetColumn(progressBar, 0);
+        progressGrid.Children.Add(progressLabel);
+        Grid.SetColumn(progressLabel, 1);
+
+        _buttonTranslate = UiUtil.MakeButton(Se.Language.General.Translate, vm.TranslateCommand);
+        _buttonTranslate.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsTranslateEnabled)));
+
+        _buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        _buttonOk.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.IsOkEnabled)));
+
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+
+        var buttonBar = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Center,
+            Spacing = 8,
+            Children =
+            {
+                _buttonTranslate,
+                buttonCancel,
+                _buttonOk,
+            }
         };
 
-        var row = 0;
-        grid.Children.Add(topBarPoweredBy);
-        Grid.SetRow(topBarPoweredBy, row++);
+        var footerGrid = new Grid
+        {
+            RowDefinitions = new RowDefinitions("Auto,Auto"),
+        };
+        footerGrid.Children.Add(progressGrid);
+        Grid.SetRow(progressGrid, 0);
+        footerGrid.Children.Add(buttonBar);
+        Grid.SetRow(buttonBar, 1);
 
-        grid.Children.Add(topBar);
-        Grid.SetRow(topBar, row++);
+        return footerGrid;
+    }
 
-        grid.Children.Add(dataGridBorder);
-        Grid.SetRow(dataGridBorder, row++);
-
-        grid.Children.Add(settingsBar);
-        Grid.SetRow(settingsBar, row++);
-
-        grid.Children.Add(bottomGrid);
-        Grid.SetRow(bottomGrid, row++);
-
-        Content = grid;
-        
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
-        Loaded += (s, e) => UiUtil.RestoreWindowPosition(this);
+    private static Border MakeCard(Control child, Thickness? padding = null)
+    {
+        return new Border
+        {
+            Child = child,
+            BorderThickness = new Thickness(1),
+            BorderBrush = UiUtil.GetTextColor(0.18),
+            Background = UiUtil.GetTextColor(0.04),
+            Padding = padding ?? new Thickness(14, 12),
+            CornerRadius = new CornerRadius(8),
+        };
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
     {
-        base.OnKeyDown(e);  
+        base.OnKeyDown(e);
         _vm.KeyDown(e);
     }
 
@@ -277,6 +415,7 @@ public class AutoTranslateWindow : Window
         if (DataContext is AutoTranslateViewModel vm)
         {
             vm.SaveSettings();
+            vm.PropertyChanged -= OnViewModelPropertyChanged;
         }
 
         UiUtil.SaveWindowPosition(this);

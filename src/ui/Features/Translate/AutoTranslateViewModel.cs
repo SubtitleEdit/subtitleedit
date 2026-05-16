@@ -48,10 +48,26 @@ public partial class AutoTranslateViewModel : ObservableObject
 
     [ObservableProperty] private TranslateRow? _selectedTranslateRow;
 
-    [ObservableProperty] private bool _isTranslateEnabled;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsTranslatePrimary))]
+    [NotifyPropertyChangedFor(nameof(IsOkPrimary))]
+    [NotifyPropertyChangedFor(nameof(IsOkEnabled))]
+    private bool _isTranslateEnabled;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsTranslatePrimary))]
+    [NotifyPropertyChangedFor(nameof(IsOkPrimary))]
+    [NotifyPropertyChangedFor(nameof(IsOkEnabled))]
+    private bool _hasTranslatedSomething;
+
+    public bool IsTranslatePrimary => IsTranslateEnabled && !HasTranslatedSomething;
+    public bool IsOkPrimary => IsTranslateEnabled && HasTranslatedSomething;
+    public bool IsOkEnabled => IsTranslateEnabled && HasTranslatedSomething;
+
+    [ObservableProperty] private string _statusText = string.Empty;
     [ObservableProperty] double _progressValue;
     [ObservableProperty] bool _isProgressEnabled;
+    [ObservableProperty] private string _progressText = string.Empty;
 
     [ObservableProperty] private bool _apiKeyIsVisible;
     [ObservableProperty] private string _apiKeyText;
@@ -131,6 +147,8 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         Rows = new ObservableCollection<TranslateRow>();
         IsTranslateEnabled = true;
+        HasTranslatedSomething = false;
+        StatusText = Se.Language.Translate.ReadyToTranslate;
         _cancellationTokenSource = new CancellationTokenSource();
     }
 
@@ -596,6 +614,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     [RelayCommand]
     private void Cancel()
     {
+        var wasTranslating = !IsTranslateEnabled;
         _cancellationTokenSource.Cancel();
         _abort = true;
         IsProgressEnabled = false;
@@ -603,6 +622,37 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (IsTranslateEnabled)
         {
             Window?.Close();
+            return;
+        }
+
+        if (wasTranslating)
+        {
+            StatusText = Se.Language.Translate.TranslationCancelled;
+        }
+    }
+
+    [RelayCommand]
+    private void SwapLanguages()
+    {
+        if (SelectedSourceLanguage == null || SelectedTargetLanguage == null)
+        {
+            return;
+        }
+
+        var sourceCode = SelectedSourceLanguage.Code;
+        var targetCode = SelectedTargetLanguage.Code;
+
+        var newSource = SourceLanguages.FirstOrDefault(p => p.Code == targetCode);
+        var newTarget = TargetLanguages.FirstOrDefault(p => p.Code == sourceCode);
+
+        if (newSource != null)
+        {
+            SelectedSourceLanguage = newSource;
+        }
+
+        if (newTarget != null)
+        {
+            SelectedTargetLanguage = newTarget;
         }
     }
 
@@ -973,6 +1023,9 @@ public partial class AutoTranslateViewModel : ObservableObject
         SaveSettings();
 
         IsTranslateEnabled = false;
+        StatusText = Se.Language.Translate.Translating;
+        ProgressValue = 0;
+        ProgressText = "0 %";
 
         translator.Initialize();
 
@@ -1049,8 +1102,14 @@ public partial class AutoTranslateViewModel : ObservableObject
                         Dispatcher.UIThread.Invoke(() =>
                         {
                             ProgressValue = (double)index1 * 100 / Rows.Count;
+                            ProgressText = $"{(int)ProgressValue} %";
+                            HasTranslatedSomething = true;
                             SelectAndScrollToRow(index1 - 1);
                         });
+                    }
+                    else
+                    {
+                        Dispatcher.UIThread.Invoke(() => HasTranslatedSomething = true);
                     }
 
                     linesTranslated += linesMergedAndTranslated;
@@ -1095,6 +1154,8 @@ public partial class AutoTranslateViewModel : ObservableObject
                     Dispatcher.UIThread.Invoke(() =>
                     {
                         ProgressValue = (double)progressIndex * 100 / Rows.Count;
+                        ProgressText = $"{(int)ProgressValue} %";
+                        HasTranslatedSomething = true;
                         SelectAndScrollToRow(progressIndex - 1);
                     });
 
@@ -1154,8 +1215,21 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
         finally
         {
+            _translationInProgress = false;
             IsTranslateEnabled = true;
             IsProgressEnabled = false;
+
+            Dispatcher.UIThread.Invoke(() =>
+            {
+                if (_abort)
+                {
+                    StatusText = Se.Language.Translate.TranslationCancelled;
+                }
+                else if (HasTranslatedSomething)
+                {
+                    StatusText = Se.Language.Translate.TranslationComplete;
+                }
+            });
 
             var lastTranslatedRow = Rows.LastOrDefault(p => !string.IsNullOrEmpty(p.Text));
             if (lastTranslatedRow != null)
