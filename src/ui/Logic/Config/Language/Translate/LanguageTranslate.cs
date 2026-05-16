@@ -23,6 +23,11 @@ public class LanguageTranslate
     public string HideTechnicalDetails { get; set; }
     public string TechnicalDetails { get; set; }
     public string PleaseSelectATargetLanguage { get; set; }
+    public string ReadyToTranslate { get; set; }
+    public string Translating { get; set; }
+    public string TranslationComplete { get; set; }
+    public string TranslationCancelled { get; set; }
+    public string SwapLanguages { get; set; }
 
     public LanguageTranslate()
     {
@@ -47,5 +52,10 @@ public class LanguageTranslate
         HideTechnicalDetails = "Hide technical details";
         TechnicalDetails = "Technical details";
         PleaseSelectATargetLanguage = "Please select a target language";
+        ReadyToTranslate = "Ready to translate";
+        Translating = "Translating...";
+        TranslationComplete = "Translation complete";
+        TranslationCancelled = "Translation cancelled";
+        SwapLanguages = "Swap source and target languages";
     }
 }
