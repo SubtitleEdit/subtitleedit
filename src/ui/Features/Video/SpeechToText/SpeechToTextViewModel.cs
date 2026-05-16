@@ -1958,6 +1958,17 @@ public partial class SpeechToTextViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task CopyConsoleLog()
+    {
+        if (Window == null || string.IsNullOrEmpty(ConsoleLog))
+        {
+            return;
+        }
+
+        await ClipboardHelper.SetTextAsync(Window, ConsoleLog);
+    }
+
+    [RelayCommand]
     private async Task Add()
     {
         var fileNames = await _fileHelper.PickOpenVideoFiles(Window!, Se.Language.General.AddVideoFiles);

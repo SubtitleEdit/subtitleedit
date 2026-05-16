@@ -33,8 +33,14 @@ public class SpeechToTextWindow : Window
         {
             Text = Se.Language.General.ConsoleLog,
             HorizontalAlignment = HorizontalAlignment.Left,
-            Margin = new Thickness(10, 12, 10, 10),
+            VerticalAlignment = VerticalAlignment.Center,
         };
+        var buttonCopyConsoleLog = UiUtil.MakeButton(
+            vm.CopyConsoleLogCommand,
+            IconNames.Copy,
+            Se.Language.General.CopyTextToClipboard);
+        var panelConsoleLogHeader = UiUtil.MakeHorizontalPanel(labelConsoleLog, buttonCopyConsoleLog);
+        panelConsoleLogHeader.Margin = new Thickness(10, 12, 10, 10);
 
         var consoleLogAndBatchView = MakeConsoleLogAndBatchView(vm);
         var consoleLogOnlyView = MakeConsoleLogOnlyView(vm);
@@ -400,7 +406,7 @@ public class SpeechToTextWindow : Window
 
         var row = 0;
 
-        grid.Add(labelConsoleLog, row, 2);
+        grid.Add(panelConsoleLogHeader, row, 2);
         row++;
 
         grid.Add(consoleLogAndBatchView, row, 2, 17);
