@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -19,7 +20,13 @@ public partial class PickOllamaModelViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _models;
     [ObservableProperty] private string? _selectedModel;
     [ObservableProperty] private string _title;
+    [ObservableProperty] private bool _showAllModels;
     private string? _oldModel;
+
+    // Full list returned by /api/tags plus a per-model flag for vision capability.
+    // We keep the unfiltered list so the "Show all models" checkbox can re-populate
+    // without re-hitting the Ollama API.
+    private List<(string Name, bool IsVision)> _allModels = new();
 
     public Window? Window { get; set; }
 
@@ -39,6 +46,12 @@ public partial class PickOllamaModelViewModel : ObservableObject
         public string Name { get; set; } = string.Empty;
     }
 
+    private class OllamaShowResponse
+    {
+        [JsonPropertyName("capabilities")]
+        public List<string>? Capabilities { get; set; }
+    }
+
     public PickOllamaModelViewModel()
     {
         Models = new ObservableCollection<string>();
@@ -52,52 +65,106 @@ public partial class PickOllamaModelViewModel : ObservableObject
         _oldModel = selectedModel;
         _ = Task.Run(async () =>
         {
-            var models = await GetModelsAsync(url);
+            var fetched = await GetModelsWithCapabilitiesAsync(url);
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
             {
-                foreach (var model in models)
-                {
-                    Models.Add(model);
-                }
-                if (!string.IsNullOrEmpty(_oldModel) && Models.Contains(_oldModel))
-                {
-                    SelectedModel = _oldModel;
-                }
-                else if (Models.Count > 0)
-                {
-                    SelectedModel = Models[0];
-                }
+                _allModels = fetched;
+                RepopulateVisibleModels();
             });
         });
     }
 
-    private async Task<List<string>> GetModelsAsync(string url)
+    partial void OnShowAllModelsChanged(bool value)
     {
-        var models = new List<string>();
-        var baseUrl = GetBaseUrl(url);
-        var ollamaUrl = baseUrl.TrimEnd('/') + "/api/tags";
+        RepopulateVisibleModels();
+    }
 
+    private void RepopulateVisibleModels()
+    {
+        Models.Clear();
+        IEnumerable<string> visible = ShowAllModels
+            ? _allModels.Select(m => m.Name)
+            : _allModels.Where(m => m.IsVision).Select(m => m.Name);
+
+        foreach (var name in visible)
+        {
+            Models.Add(name);
+        }
+
+        // If filtering hides every model (e.g. no vision-capable model installed),
+        // fall back to the full list so the user still has something to pick.
+        if (Models.Count == 0 && _allModels.Count > 0)
+        {
+            ShowAllModels = true;
+            return; // OnShowAllModelsChanged will call us back
+        }
+
+        if (!string.IsNullOrEmpty(_oldModel) && Models.Contains(_oldModel))
+        {
+            SelectedModel = _oldModel;
+        }
+        else if (Models.Count > 0)
+        {
+            SelectedModel = Models[0];
+        }
+    }
+
+    private async Task<List<(string Name, bool IsVision)>> GetModelsWithCapabilitiesAsync(string url)
+    {
+        var result = new List<(string, bool)>();
+        var baseUrl = GetBaseUrl(url);
+        var tagsUrl = baseUrl.TrimEnd('/') + "/api/tags";
+        var showUrl = baseUrl.TrimEnd('/') + "/api/show";
+
+        List<string> names;
         try
         {
-            using var response = await _httpClient.GetAsync(ollamaUrl);
+            using var response = await _httpClient.GetAsync(tagsUrl);
             response.EnsureSuccessStatusCode();
 
             await using var stream = await response.Content.ReadAsStreamAsync();
             var data = await JsonSerializer.DeserializeAsync<OllamaModelsResponse>(stream);
 
-            if (data?.Models != null)
-            {
-                models.AddRange(data.Models
-                    .Where(m => !string.IsNullOrWhiteSpace(m.Name))
-                    .Select(m => m.Name));
-            }
+            names = data?.Models
+                ?.Where(m => !string.IsNullOrWhiteSpace(m.Name))
+                .Select(m => m.Name)
+                .ToList() ?? new List<string>();
         }
         catch (Exception ex)
         {
             Se.LogError(ex, "getting Ollama models from: " + url);
+            return result;
         }
 
-        return models;
+        // Query /api/show for each model in parallel. A failed lookup is treated as
+        // "vision unknown" → IsVision = false, so the model appears only when the user
+        // ticks "Show all models". Failures don't bring down the picker.
+        var capabilityTasks = names.Select(async name =>
+        {
+            try
+            {
+                var body = new StringContent($"{{\"name\":\"{name}\"}}", Encoding.UTF8, "application/json");
+                using var response = await _httpClient.PostAsync(showUrl, body);
+                if (!response.IsSuccessStatusCode)
+                {
+                    return (name, false);
+                }
+
+                await using var stream = await response.Content.ReadAsStreamAsync();
+                var show = await JsonSerializer.DeserializeAsync<OllamaShowResponse>(stream);
+                var isVision = show?.Capabilities?.Any(c =>
+                    c.Equals("vision", StringComparison.OrdinalIgnoreCase)) ?? false;
+                return (name, isVision);
+            }
+            catch
+            {
+                return (name, false);
+            }
+        });
+
+        var capabilityResults = await Task.WhenAll(capabilityTasks);
+        result.AddRange(capabilityResults);
+        return result;
     }
 
     public static string GetBaseUrl(string url)

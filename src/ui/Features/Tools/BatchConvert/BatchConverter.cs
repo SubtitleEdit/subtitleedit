@@ -1229,7 +1229,40 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var model = Se.Settings.Ocr.OllamaModel;
         var language = Se.Settings.Ocr.OllamaLanguage;
         item.Subtitle = new Subtitle();
-        for (var i = 0; i < imageSubtitles.Count; i++)
+
+        // Pre-flight: if every one of the first few lines comes back empty, the configured
+        // Ollama model probably doesn't support vision/OCR. Bail fast with a clear status
+        // instead of grinding through hundreds of empty results. (#10766)
+        var preflightCount = Math.Min(3, imageSubtitles.Count);
+        var preflightEmpty = 0;
+        for (var i = 0; i < preflightCount; i++)
+        {
+            var pct = (i + 1) * 100 / imageSubtitles.Count;
+            item.Status = string.Format(Se.Language.General.OcrPercentX, pct);
+            var bitmap = imageSubtitles.GetBitmap(i);
+            var text = await ollamaOcr.Ocr(bitmap, url, model, language, cancellationToken);
+            var p = new Paragraph(text, imageSubtitles.GetStartTime(i).TotalMilliseconds, imageSubtitles.GetEndTime(i).TotalMilliseconds);
+            item.Subtitle.Paragraphs.Add(p);
+
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                preflightEmpty++;
+            }
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                item.Status = Se.Language.General.Cancelled;
+                return;
+            }
+        }
+
+        if (preflightCount > 0 && preflightEmpty == preflightCount)
+        {
+            item.Status = Se.Language.Ocr.OllamaModelLikelyWrong;
+            return;
+        }
+
+        for (var i = preflightCount; i < imageSubtitles.Count; i++)
         {
             var pct = (i + 1) * 100 / imageSubtitles.Count;
             item.Status = string.Format(Se.Language.General.OcrPercentX, pct);

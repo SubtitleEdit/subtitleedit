@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 
@@ -10,7 +11,7 @@ public class PickOllamaModelWindow : Window
     public PickOllamaModelWindow(PickOllamaModelViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Bind(TitleProperty, new Binding(nameof(vm.Title))); 
+        Bind(TitleProperty, new Binding(nameof(vm.Title)));
         CanResize = true;
         Width = 500;
         Height = 500;
@@ -28,6 +29,7 @@ public class PickOllamaModelWindow : Window
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
@@ -51,8 +53,11 @@ public class PickOllamaModelWindow : Window
             Height = double.NaN,
         };
 
+        var checkBoxShowAll = UiUtil.MakeCheckBox(Se.Language.Ocr.ShowAllOllamaModels, vm, nameof(vm.ShowAllModels));
+
         grid.Add(listBox, 0);
-        grid.Add(panelButtons, 1);
+        grid.Add(checkBoxShowAll, 1);
+        grid.Add(panelButtons, 2);
 
         Content = grid;
 
