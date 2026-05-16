@@ -283,7 +283,7 @@ public class NOcrDb
         return new OcrPoint(maximumX - minimumX, maximumY - minimumY);
     }
 
-    public NOcrChar? GetMatch(NikseBitmap2 parentBitmap, List<ImageSplitterItem2> list, ImageSplitterItem2 item, int topMargin, bool deepSeek, int maxWrongPixels)
+    public NOcrChar? GetMatch(NikseBitmap2 parentBitmap, List<ImageSplitterItem2> list, ImageSplitterItem2 item, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch = false)
     {
         if (item.NikseBitmap == null)
         {
@@ -304,7 +304,7 @@ public class NOcrDb
             return expandedResult;
         }
 
-        return GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels);
+        return GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch);
     }
 
     private NOcrChar? GetExactMatchSingle(NikseBitmap2 bitmap, int topMargin)
@@ -323,7 +323,7 @@ public class NOcrDb
         return null;
     }
 
-    public NOcrChar? GetMatchSingle(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels)
+    public NOcrChar? GetMatchSingle(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch = false)
     {
         var exact = GetExactMatchSingle(bitmap, topMargin);
         if (exact != null)
@@ -336,6 +336,11 @@ public class NOcrDb
         foreach (var pass in MatchPasses)
         {
             if (pass.RequireDeepSeek && !deepSeek)
+            {
+                continue;
+            }
+
+            if (pass.RequireLastDitch && !lastDitch)
             {
                 continue;
             }
@@ -412,6 +417,7 @@ public class NOcrDb
     {
         public int MinAllowance { get; init; }       // run only if maxWrongPixels >= this (0 = always)
         public bool RequireDeepSeek { get; init; }
+        public bool RequireLastDitch { get; init; }  // run only when the caller opted in (batch convert)
         public int AspectMaxDelta { get; init; }     // int.MaxValue = no aspect-ratio check
         public int SizeMaxDelta { get; init; }       // int.MaxValue = no width/height check; otherwise applied to both
         public int MarginTopMaxDelta { get; init; }
@@ -426,6 +432,7 @@ public class NOcrDb
     private static readonly Func<int, int> ErrorsCappedAtThree = max => Math.Min(3, max);
     private static readonly Func<int, int> ErrorsCappedAtTwenty = max => Math.Min(20, max);
     private static readonly Func<int, int> ErrorsAsRequested = max => max;
+    private static readonly Func<int, int> ErrorsAsRequestedDoubled = max => max * 2;
 
     private static readonly MatchPass[] MatchPasses =
     {
@@ -479,6 +486,18 @@ public class NOcrDb
             AspectMaxDelta = 60, SizeMaxDelta = int.MaxValue, MarginTopMaxDelta = 17,
             MinLineCount = 51,
             ErrorsAllowed = ErrorsAsRequested,
+        },
+        // last-ditch: opt-in from batch contexts where the user can't fix asterisks inline.
+        // Drop the MinLineCount gate that blocks sparsely-trained DB characters and double the
+        // error budget so we return a best-guess character instead of "*". Wrong guesses can
+        // still be cleaned up by the "fix common OCR errors" and replace-list passes; an
+        // asterisk blocks them entirely. (#10766)
+        new MatchPass
+        {
+            RequireLastDitch = true,
+            AspectMaxDelta = 80, SizeMaxDelta = int.MaxValue, MarginTopMaxDelta = 25,
+            MinLineCount = 15,
+            ErrorsAllowed = ErrorsAsRequestedDoubled,
         },
     };
 
