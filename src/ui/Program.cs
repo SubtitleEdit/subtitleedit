@@ -142,6 +142,9 @@ namespace Nikse.SubtitleEdit
 
                 // Setup native menu
                 SetupNativeMenu(b.Instance, lifetime);
+
+                // Register Alt+Space handler for all windows (Windows-only)
+                UiUtil.RegisterWindowsSystemMenuClassHandler();
             }
 
             // Set custom font

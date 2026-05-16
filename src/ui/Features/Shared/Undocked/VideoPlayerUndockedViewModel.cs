@@ -161,7 +161,6 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
         }   
 
         UiUtil.RestoreWindowPosition(Window);
-        UiUtil.SetupWindowsSystemMenu(Window);
 
         VideoPlayer = InitVideoPlayer.MakeLayoutVideoPlayer(MainViewModel, new Avalonia.Thickness(0), out var videoPlayerControl);
         Window!.Content = VideoPlayer;

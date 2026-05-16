@@ -2335,7 +2335,6 @@ public partial class SettingsViewModel : ObservableObject
     internal void Onloaded(object? sender, RoutedEventArgs e)
     {
         UiUtil.RestoreWindowPosition(Window);
-        UiUtil.SetupWindowsSystemMenu(Window);
         _ = UpdateWaveformSpaceInfoAsync();
     }
 

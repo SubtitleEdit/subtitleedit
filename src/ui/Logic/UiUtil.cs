@@ -2458,17 +2458,25 @@ public static class UiUtil
         return false;
     }
 
-    internal static void SetupWindowsSystemMenu(Window? window)
+    private static bool _windowsSystemMenuClassHandlerRegistered;
+
+    /// <summary>
+    /// Registers a single class-level handler so every <see cref="Window"/> in the app
+    /// responds to Alt+Space by opening the standard Windows system menu. Call once at
+    /// application startup. No-op on non-Windows platforms or if already registered.
+    /// </summary>
+    internal static void RegisterWindowsSystemMenuClassHandler()
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || window == null)
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || _windowsSystemMenuClassHandlerRegistered)
         {
             return;
         }
 
-        window.AddHandler(InputElement.KeyDownEvent, (sender, e) =>
-        {
-            TryHandleWindowSystemMenu(e, window);
-        }, RoutingStrategies.Tunnel | RoutingStrategies.Bubble);
+        _windowsSystemMenuClassHandlerRegistered = true;
+
+        InputElement.KeyDownEvent.AddClassHandler<Window>(
+            (window, e) => TryHandleWindowSystemMenu(e, window),
+            RoutingStrategies.Tunnel | RoutingStrategies.Bubble);
     }
 
     /// <summary>
