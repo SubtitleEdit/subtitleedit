@@ -17,16 +17,16 @@ namespace Nikse.SubtitleEdit.Features.Translate;
 /// </summary>
 public class LlamaCppModelDisplay
 {
-    public LlamaCppTranslateModel Model { get; }
+    public LlamaCppModel Model { get; }
 
-    public LlamaCppModelDisplay(LlamaCppTranslateModel model)
+    public LlamaCppModelDisplay(LlamaCppModel model)
     {
         Model = model;
     }
 
     public override string ToString()
     {
-        var installed = LlamaCppServerManager.IsModelInstalled(Model.FileName);
+        var installed = LlamaCppServerManager.IsModelInstalled(Model);
         return installed
             ? $"{Model.DisplayName} ({Model.Size})"
             : $"{Model.DisplayName} ({Model.Size}, not installed)";
@@ -70,7 +70,7 @@ public static class LlamaCppDownloadHelper
             return configured;
         }
 
-        foreach (var model in LlamaCppServerManager.Models)
+        foreach (var model in LlamaCppServerManager.TranslateModels)
         {
             var path = LlamaCppServerManager.GetModelPath(model.FileName);
             if (File.Exists(path))
@@ -83,14 +83,17 @@ public static class LlamaCppDownloadHelper
     }
 
     /// <summary>
-    /// Fills <paramref name="target"/> with the curated models and returns the one matching
+    /// Fills <paramref name="target"/> with the given curated models and returns the one matching
     /// <paramref name="selectFileName"/>, or the first model otherwise.
     /// </summary>
-    public static LlamaCppModelDisplay? PopulateModels(ObservableCollection<LlamaCppModelDisplay> target, string? selectFileName)
+    public static LlamaCppModelDisplay? PopulateModels(
+        ObservableCollection<LlamaCppModelDisplay> target,
+        System.Collections.Generic.IReadOnlyList<LlamaCppModel> models,
+        string? selectFileName)
     {
         target.Clear();
         LlamaCppModelDisplay? toSelect = null;
-        foreach (var model in LlamaCppServerManager.Models)
+        foreach (var model in models)
         {
             var display = new LlamaCppModelDisplay(model);
             target.Add(display);
@@ -103,19 +106,19 @@ public static class LlamaCppDownloadHelper
         return toSelect ?? target.FirstOrDefault();
     }
 
-    private static LlamaCppTranslateModel? ResolveModel(string? modelFileName)
+    private static LlamaCppModel? ResolveModel(string? modelFileName)
     {
         if (!string.IsNullOrEmpty(modelFileName))
         {
-            var match = LlamaCppServerManager.Models.FirstOrDefault(m => m.FileName == modelFileName);
+            var match = LlamaCppServerManager.TranslateModels.FirstOrDefault(m => m.FileName == modelFileName);
             if (match != null)
             {
                 return match;
             }
         }
 
-        return LlamaCppServerManager.Models.FirstOrDefault(m => LlamaCppServerManager.IsModelInstalled(m.FileName))
-               ?? LlamaCppServerManager.Models.FirstOrDefault();
+        return LlamaCppServerManager.TranslateModels.FirstOrDefault(m => LlamaCppServerManager.IsModelInstalled(m.FileName))
+               ?? LlamaCppServerManager.TranslateModels.FirstOrDefault();
     }
 
     /// <summary>
@@ -127,7 +130,7 @@ public static class LlamaCppDownloadHelper
     /// is already installed.
     /// </summary>
     /// <returns>The downloaded model file name, or null if nothing was downloaded.</returns>
-    public static async Task<string?> DownloadAsync(Window owner, IWindowService windowService, LlamaCppTranslateModel? model, string? forceVariant = null, bool forceEngineDownload = false, bool forceModelDownload = false)
+    public static async Task<string?> DownloadAsync(Window owner, IWindowService windowService, LlamaCppModel? model, string? forceVariant = null, bool forceEngineDownload = false, bool forceModelDownload = false)
     {
         var variant = forceVariant ?? Logic.Download.LlamaCppDownloadService.VariantCpu;
         if (forceVariant == null && !LlamaCppServerManager.IsEngineInstalled() && OperatingSystem.IsWindows())
@@ -171,15 +174,7 @@ public static class LlamaCppDownloadHelper
             return null;
         }
 
-        if (model != null)
-        {
-            Se.Settings.AutoTranslate.LlamaCppModel = LlamaCppServerManager.GetModelPath(model.FileName);
-            Configuration.Settings.Tools.LlamaCppModel = Se.Settings.AutoTranslate.LlamaCppModel;
-            Se.SaveSettings();
-            return model.FileName;
-        }
-
-        return string.Empty;
+        return model?.FileName ?? string.Empty;
     }
 
     /// <summary>
@@ -190,7 +185,7 @@ public static class LlamaCppDownloadHelper
     {
         var engineInstalled = LlamaCppServerManager.IsEngineInstalled();
         var model = ResolveModel(modelFileName);
-        var modelInstalled = model != null && LlamaCppServerManager.IsModelInstalled(model.FileName);
+        var modelInstalled = model != null && LlamaCppServerManager.IsModelInstalled(model);
 
         if (engineInstalled && modelInstalled)
         {
@@ -235,6 +230,6 @@ public static class LlamaCppDownloadHelper
 
         return LlamaCppServerManager.IsEngineInstalled()
                && model != null
-               && LlamaCppServerManager.IsModelInstalled(model.FileName);
+               && LlamaCppServerManager.IsModelInstalled(model);
     }
 }

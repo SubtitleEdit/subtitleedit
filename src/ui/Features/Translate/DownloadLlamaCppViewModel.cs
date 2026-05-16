@@ -32,7 +32,7 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
     public string Variant { get; set; } = LlamaCppDownloadService.VariantCpu;
 
     /// <summary>The model to download, or null to only install the engine.</summary>
-    public LlamaCppTranslateModel? Model { get; set; }
+    public LlamaCppModel? Model { get; set; }
 
     /// <summary>Re-download the engine binary even when it is already installed (used for updates).</summary>
     public bool ForceEngineDownload { get; set; }
@@ -113,6 +113,28 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
                 var finalPath = LlamaCppServerManager.GetModelPath(Model.FileName);
                 var tempPath = finalPath + TemporaryFileExtension;
                 await _downloadService.DownloadModel(Model.Url, tempPath, MakeProgress(), token);
+                if (token.IsCancellationRequested)
+                {
+                    TryDelete(tempPath);
+                    Close();
+                    return;
+                }
+
+                if (File.Exists(finalPath))
+                {
+                    File.Delete(finalPath);
+                }
+
+                File.Move(tempPath, finalPath);
+            }
+
+            if (Model?.MmprojFileName != null && Model.MmprojUrl != null &&
+                (ForceModelDownload || !LlamaCppServerManager.IsModelInstalled(Model.MmprojFileName)))
+            {
+                TitleText = string.Format(Se.Language.General.DownloadingX, Model.MmprojFileName);
+                var finalPath = LlamaCppServerManager.GetModelPath(Model.MmprojFileName);
+                var tempPath = finalPath + TemporaryFileExtension;
+                await _downloadService.DownloadModel(Model.MmprojUrl, tempPath, MakeProgress(), token);
                 if (token.IsCancellationRequested)
                 {
                     TryDelete(tempPath);

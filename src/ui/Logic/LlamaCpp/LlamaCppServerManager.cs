@@ -15,27 +15,55 @@ using System.Threading.Tasks;
 namespace Nikse.SubtitleEdit.Logic.LlamaCpp;
 
 /// <summary>
-/// A curated TranslateGemma model that can be downloaded and served via llama.cpp.
+/// A curated llama.cpp model that can be downloaded and served. Optional <paramref name="MmprojFileName"/>
+/// / <paramref name="MmprojUrl"/> are set for multimodal (vision) models that need a separate vision
+/// projector. <paramref name="ChatTemplate"/> and <paramref name="NoJinja"/> override the llama-server
+/// launch flags when the bundled chat template needs replacing (TranslateGemma ships a non-standard
+/// Jinja template).
 /// </summary>
-public sealed record LlamaCppTranslateModel(string DisplayName, string FileName, string Size, string Url);
+public sealed record LlamaCppModel(
+    string DisplayName,
+    string FileName,
+    string Size,
+    string Url,
+    string? MmprojFileName = null,
+    string? MmprojUrl = null,
+    string? ChatTemplate = null,
+    bool NoJinja = false);
 
 /// <summary>
-/// Manages the local <c>llama-server</c> process used by the llama.cpp auto-translate engine:
-/// folder/executable paths, the curated model list, and the server lifecycle (start, health
-/// probe, stop, kill on app exit). Modeled on the CrispASR/Chatterbox server handling.
+/// Manages the local <c>llama-server</c> process used by the llama.cpp auto-translate and OCR
+/// engines: folder/executable paths, the curated model lists, and the server lifecycle (start,
+/// health probe, stop, kill on app exit). Modeled on the CrispASR/Chatterbox server handling.
 /// </summary>
 public static class LlamaCppServerManager
 {
-    public static readonly IReadOnlyList<LlamaCppTranslateModel> Models = new[]
+    public static readonly IReadOnlyList<LlamaCppModel> TranslateModels = new[]
     {
-        new LlamaCppTranslateModel("TranslateGemma 4B (Q4_K_M)", "translategemma-4b_Q4_K_M.gguf", "2.5 GB",
-            "https://huggingface.co/SandLogicTechnologies/translategemma-4b-it-GGUF/resolve/main/translategemma-4b_Q4_K_M.gguf"),
-        new LlamaCppTranslateModel("TranslateGemma 4B (Q5_K_M)", "translategemma-4b_Q5_K_M.gguf", "2.8 GB",
-            "https://huggingface.co/SandLogicTechnologies/translategemma-4b-it-GGUF/resolve/main/translategemma-4b_Q5_K_M.gguf"),
-        new LlamaCppTranslateModel("TranslateGemma 4B (Q8_0)", "translategemma-4b-it-q8_0.gguf", "4.1 GB",
-            "https://huggingface.co/NikolayKozloff/translategemma-4b-it-Q8_0-GGUF/resolve/main/translategemma-4b-it-q8_0.gguf"),
-        new LlamaCppTranslateModel("TranslateGemma 12B (Q4_K_M)", "translategemma-12b-it-q4_k_m.gguf", "7.3 GB",
-            "https://huggingface.co/NikolayKozloff/translategemma-12b-it-Q4_K_M-GGUF/resolve/main/translategemma-12b-it-q4_k_m.gguf"),
+        new LlamaCppModel("TranslateGemma 4B (Q4_K_M)", "translategemma-4b_Q4_K_M.gguf", "2.5 GB",
+            "https://huggingface.co/SandLogicTechnologies/translategemma-4b-it-GGUF/resolve/main/translategemma-4b_Q4_K_M.gguf",
+            ChatTemplate: "gemma", NoJinja: true),
+        new LlamaCppModel("TranslateGemma 4B (Q5_K_M)", "translategemma-4b_Q5_K_M.gguf", "2.8 GB",
+            "https://huggingface.co/SandLogicTechnologies/translategemma-4b-it-GGUF/resolve/main/translategemma-4b_Q5_K_M.gguf",
+            ChatTemplate: "gemma", NoJinja: true),
+        new LlamaCppModel("TranslateGemma 4B (Q8_0)", "translategemma-4b-it-q8_0.gguf", "4.1 GB",
+            "https://huggingface.co/NikolayKozloff/translategemma-4b-it-Q8_0-GGUF/resolve/main/translategemma-4b-it-q8_0.gguf",
+            ChatTemplate: "gemma", NoJinja: true),
+        new LlamaCppModel("TranslateGemma 12B (Q4_K_M)", "translategemma-12b-it-q4_k_m.gguf", "7.3 GB",
+            "https://huggingface.co/NikolayKozloff/translategemma-12b-it-Q4_K_M-GGUF/resolve/main/translategemma-12b-it-q4_k_m.gguf",
+            ChatTemplate: "gemma", NoJinja: true),
+    };
+
+    public static readonly IReadOnlyList<LlamaCppModel> OcrModels = new[]
+    {
+        new LlamaCppModel("GLM-OCR 0.9B (Q8_0)", "GLM-OCR-Q8_0.gguf", "1.4 GB",
+            "https://huggingface.co/ggml-org/GLM-OCR-GGUF/resolve/main/GLM-OCR-Q8_0.gguf",
+            MmprojFileName: "mmproj-GLM-OCR-Q8_0.gguf",
+            MmprojUrl: "https://huggingface.co/ggml-org/GLM-OCR-GGUF/resolve/main/mmproj-GLM-OCR-Q8_0.gguf"),
+        new LlamaCppModel("LightOnOCR 1B (Q8_0)", "LightOnOCR-1B-1025-Q8_0.gguf", "1.2 GB",
+            "https://huggingface.co/ggml-org/LightOnOCR-1B-1025-GGUF/resolve/main/LightOnOCR-1B-1025-Q8_0.gguf",
+            MmprojFileName: "mmproj-LightOnOCR-1B-1025-Q8_0.gguf",
+            MmprojUrl: "https://huggingface.co/ggml-org/LightOnOCR-1B-1025-GGUF/resolve/main/mmproj-LightOnOCR-1B-1025-Q8_0.gguf"),
     };
 
     private static readonly HttpClient HttpClient = new() { Timeout = TimeSpan.FromMinutes(5) };
@@ -95,12 +123,28 @@ public static class LlamaCppServerManager
         return File.Exists(path) && new FileInfo(path).Length > 10_000_000;
     }
 
+    public static bool IsModelInstalled(LlamaCppModel model)
+    {
+        if (!IsModelInstalled(model.FileName))
+        {
+            return false;
+        }
+
+        if (model.MmprojFileName == null)
+        {
+            return true;
+        }
+
+        return IsModelInstalled(model.MmprojFileName);
+    }
+
     /// <summary>
     /// Starts (or reuses) a llama-server for the given model and points
     /// <see cref="Core.Settings.ToolsSettings.LlamaCppApiUrl"/> at it. Throws on failure.
     /// </summary>
-    public static async Task EnsureServerRunningAsync(string modelPath, CancellationToken cancellationToken)
+    public static async Task EnsureServerRunningAsync(LlamaCppModel model, CancellationToken cancellationToken)
     {
+        var modelPath = GetModelPath(model.FileName);
         if (IsServerRunning && _serverModelPath == modelPath)
         {
             Configuration.Settings.Tools.LlamaCppApiUrl = ApiUrl;
@@ -133,6 +177,16 @@ public static class LlamaCppServerManager
                 throw new FileNotFoundException("llama.cpp model not found - please download a model first.", modelPath);
             }
 
+            string? mmprojPath = null;
+            if (model.MmprojFileName != null)
+            {
+                mmprojPath = GetModelPath(model.MmprojFileName);
+                if (!File.Exists(mmprojPath))
+                {
+                    throw new FileNotFoundException("llama.cpp vision projector not found - please download the model first.", mmprojPath);
+                }
+            }
+
             var port = FindFreeLoopbackPort();
             var psi = new ProcessStartInfo
             {
@@ -145,6 +199,11 @@ public static class LlamaCppServerManager
             };
             psi.ArgumentList.Add("-m");
             psi.ArgumentList.Add(modelPath);
+            if (mmprojPath != null)
+            {
+                psi.ArgumentList.Add("--mmproj");
+                psi.ArgumentList.Add(mmprojPath);
+            }
             psi.ArgumentList.Add("--host");
             psi.ArgumentList.Add("127.0.0.1");
             psi.ArgumentList.Add("--port");
@@ -154,14 +213,15 @@ public static class LlamaCppServerManager
             psi.ArgumentList.Add("99");
             psi.ArgumentList.Add("-c");
             psi.ArgumentList.Add("8192");
-            // TranslateGemma ships a non-standard Jinja chat template (it expects structured
-            // content with source/target language codes) that llama-server rejects at startup.
-            // The curated models are all Gemma-3 based, so fall back to the plain Gemma chat
-            // template - this keeps the OpenAI /v1/chat/completions endpoint working with the
-            // normal text messages the translate engine sends.
-            psi.ArgumentList.Add("--no-jinja");
-            psi.ArgumentList.Add("--chat-template");
-            psi.ArgumentList.Add("gemma");
+            if (model.NoJinja)
+            {
+                psi.ArgumentList.Add("--no-jinja");
+            }
+            if (model.ChatTemplate != null)
+            {
+                psi.ArgumentList.Add("--chat-template");
+                psi.ArgumentList.Add(model.ChatTemplate);
+            }
 
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start llama-server");

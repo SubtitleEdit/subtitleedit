@@ -37,9 +37,10 @@ public class LlamaCppOcr
             //System.IO.File.WriteAllBytes("c:\\temp\\ollama-ocr-image.png", pngBytes);
             
             var prompt = string.Format("Extract all text exactly as written. The language is {0}. Preserve line breaks.", language);
+            var modelName = string.IsNullOrEmpty(model) ? "glmocr" : model;
 
             var input =
-                "{ \"model\": \"glmocr\", \"temperature\": 0, \"messages\": [ { \"role\": \"user\", \"content\": [ " +
+                "{ \"model\": \"" + modelName + "\", \"temperature\": 0, \"messages\": [ { \"role\": \"user\", \"content\": [ " +
                 "{ \"type\": \"text\", \"text\": \"" + prompt + "\" }, " +
                 "{ \"type\": \"image_url\", \"image_url\": { \"url\": \"data:image/png;base64," + base64Image + "\" } } " +
                 "] } ] }";
