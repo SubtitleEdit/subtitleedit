@@ -29,7 +29,7 @@ public class LlamaCppModelDisplay
         var installed = LlamaCppServerManager.IsModelInstalled(Model);
         return installed
             ? Model.DisplayName
-            : $"{Model.DisplayName} - not installed";
+            : $"{Model.DisplayName} ({Model.Size}, not installed)";
     }
 }
 
