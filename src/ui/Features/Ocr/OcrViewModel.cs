@@ -957,6 +957,21 @@ public partial class OcrViewModel : ObservableObject
         Se.Settings.Ocr.LlamaCppOcrModel = LlamaCppServerManager.GetModelPath(value.Model.FileName);
     }
 
+    [RelayCommand]
+    private async Task ShowLlamaCppOcrSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<LlamaCppOcrSettingsWindow, LlamaCppOcrSettingsViewModel>(Window);
+        if (result.OkPressed)
+        {
+            LlamaCppUrl = Se.Settings.Ocr.LlamaCppUrl;
+        }
+    }
+
     private void UpdateLlamaCppOcrServerButtonText()
     {
         LlamaCppOcrServerButtonText = LlamaCppServerManager.IsServerRunning ? "Stop server" : "Start server";
@@ -3298,6 +3313,7 @@ public partial class OcrViewModel : ObservableObject
     {
         var engine = new LlamaCppOcr();
         var selectedModel = SelectedLlamaCppOcrModel?.Model;
+        var prompt = Se.Settings.Ocr.LlamaCppOcrPrompt;
 
         _ = Task.Run(async () =>
         {
@@ -3336,7 +3352,7 @@ public partial class OcrViewModel : ObservableObject
 
                 SelectAndScrollToRow(i);
 
-                var text = await engine.Ocr(bitmap, url, modelName, SelectedOllamaLanguage ?? "English", cancellationToken);
+                var text = await engine.Ocr(bitmap, url, modelName, SelectedOllamaLanguage ?? "English", prompt, cancellationToken);
                 item.Text = text;
 
                 OcrFixLineAndSetText(i, item);

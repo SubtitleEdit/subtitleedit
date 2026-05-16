@@ -290,6 +290,7 @@ public class OcrWindow : Window
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Model, vm => vm.IsLlamaCppVisible),
                 UiUtil.MakeComboBox(vm.LlamaCppOcrModels, vm, nameof(vm.SelectedLlamaCppOcrModel),
                         nameof(vm.IsLlamaCppVisible))
+                    .WithWidth(220)
                     .WithMarginRight(5)
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
                 UiUtil.MakeButton(vm.DownloadLlamaCppOcrCommand, IconNames.Download, Se.Language.General.Download)
@@ -297,11 +298,11 @@ public class OcrWindow : Window
                     .BindIsVisible(vm, nameof(vm.IsLlamaCppVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
                 MakeLlamaCppOcrToggleServerButton(vm)
-                    .WithMarginRight(10)
+                    .WithMarginRight(5)
                     .BindIsVisible(vm, nameof(vm.IsLlamaCppVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
-                UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Url, vm => vm.IsLlamaCppVisible),
-                UiUtil.MakeTextBox(220, vm, nameof(vm.LlamaCppUrl))
+                UiUtil.MakeButton(vm.ShowLlamaCppOcrSettingsCommand, IconNames.Settings, Se.Language.General.Settings)
+                    .WithMarginRight(10)
                     .BindIsVisible(vm, nameof(vm.IsLlamaCppVisible))
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
 

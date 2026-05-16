@@ -185,7 +185,7 @@ public class AutoTranslateWindow : Window
 
         var crispAsrModelCombo = UiUtil.MakeComboBox(vm.CrispAsrModels, vm, nameof(vm.SelectedCrispAsrModel), nameof(vm.CrispAsrModelComboIsVisible));
 
-        var llamaCppModelCombo = UiUtil.MakeComboBox(vm.LlamaCppModels, vm, nameof(vm.SelectedLlamaCppModel), nameof(vm.LlamaCppModelComboIsVisible));
+        var llamaCppModelCombo = UiUtil.MakeComboBox(vm.LlamaCppModels, vm, nameof(vm.SelectedLlamaCppModel), nameof(vm.LlamaCppModelComboIsVisible)).WithWidth(220);
 
         var buttonDownloadLlamaCpp = UiUtil.MakeButton(vm.DownloadLlamaCppCommand, IconNames.Download, Se.Language.General.Download).WithMarginLeft(5);
         buttonDownloadLlamaCpp.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppButtonsAreVisible)));
