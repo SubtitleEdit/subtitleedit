@@ -627,9 +627,23 @@ jobs:
           # Native PDBs from the SkiaSharp runtime NuGet aren't suppressed by -p:DebugType=none.
           find ./publish/linux-x64 -name "*.pdb" -delete
 
-      - name: Create Linux TAR package
+      - name: Publish Linux ARM64 app
+        run: |
+          dotnet publish src/ui/UI.csproj -c ${{ inputs.build_configuration }} -r linux-arm64 --self-contained true \
+            -p:PublishSingleFile=true \
+            -p:DebugSymbols=false \
+            -p:DebugType=none \
+            -p:Version="$APP_VER_FULL" \
+            -p:FileVersion="$APP_VER_FULL" \
+            -p:InformationalVersion="$APP_VER_DISPLAY" \
+            -o ./publish/linux-arm64
+
+          find ./publish/linux-arm64 -name "*.pdb" -delete
+
+      - name: Create Linux TAR packages
         run: |
           cd ./publish/linux-x64 && tar -czf ../../SubtitleEdit-Linux-x64.tar.gz . && cd ../..
+          cd ./publish/linux-arm64 && tar -czf ../../SubtitleEdit-Linux-ARM64.tar.gz . && cd ../..
 
       - name: Upload Linux x64 artifact
         uses: actions/upload-artifact@v5
@@ -637,11 +651,19 @@ jobs:
           name: se-linux-x64
           path: ./publish/linux-x64/
 
-      - name: Upload Linux TAR package
+      - name: Upload Linux ARM64 artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: se-linux-arm64
+          path: ./publish/linux-arm64/
+
+      - name: Upload Linux TAR packages
         uses: actions/upload-artifact@v5
         with:
           name: linux-tar-package
-          path: ./SubtitleEdit-Linux-x64.tar.gz
+          path: |
+            ./SubtitleEdit-Linux-x64.tar.gz
+            ./SubtitleEdit-Linux-ARM64.tar.gz
 
   regenerate-flatpak-nuget-sources:
     runs-on: ubuntu-latest
@@ -800,6 +822,7 @@ jobs:
             - **macOS ARM64 (Apple Silicon - M1/M2/M3/M4 architecture):** [SubtitleEdit-macOS-ARM64.dmg](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-macOS-ARM64.dmg)
             - **macOS x64 (Intel 64-bit):** [SubtitleEdit-macOS-x64.dmg](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-macOS-x64.dmg)
             - **Linux x64 (tarball):** [SubtitleEdit-Linux-x64.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Linux-x64.tar.gz)
+            - **Linux ARM64 (tarball, aarch64):** [SubtitleEdit-Linux-ARM64.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Linux-ARM64.tar.gz)
             - **Linux x64 (Flatpak):** [SubtitleEdit-linux-x64.flatpak](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-linux-x64.flatpak)
       
             ### Installation
@@ -821,4 +844,5 @@ jobs:
             ./release-assets/SubtitleEdit-macOS-ARM64.dmg
             ./release-assets/SubtitleEdit-macOS-x64.dmg
             ./release-assets/SubtitleEdit-Linux-x64.tar.gz
+            ./release-assets/SubtitleEdit-Linux-ARM64.tar.gz
             ./release-assets/SubtitleEdit-linux-x64.flatpak

@@ -17,9 +17,10 @@ public class KokoroTtsCppDownloadService : IKokoroTtsCppDownloadService
 {
     private readonly HttpClient _httpClient;
 
-    private const string WindowsUrl = "https://github.com/niksedk/kokoro.cpp/releases/download/v0.1.1/kokoro-tts-server-v0.1.1-windows-x64.zip";
-    private const string MacUrl     = "https://github.com/niksedk/kokoro.cpp/releases/download/v0.1.1/kokoro-tts-server-v0.1.1-macos-arm64.zip";
-    private const string LinuxUrl   = "https://github.com/niksedk/kokoro.cpp/releases/download/v0.1.1/kokoro-tts-server-v0.1.1-linux-x64.zip";
+    private const string WindowsUrl  = "https://github.com/niksedk/kokoro.cpp/releases/download/v0.1.2/kokoro-tts-server-v0.1.2-windows-x64.zip";
+    private const string MacUrl      = "https://github.com/niksedk/kokoro.cpp/releases/download/v0.1.2/kokoro-tts-server-v0.1.2-macos-arm64.zip";
+    private const string LinuxUrl    = "https://github.com/niksedk/kokoro.cpp/releases/download/v0.1.2/kokoro-tts-server-v0.1.2-linux-x64.zip";
+    private const string LinuxArmUrl = "https://github.com/niksedk/kokoro.cpp/releases/download/v0.1.2/kokoro-tts-server-v0.1.2-linux-arm64.zip";
 
     private const string TtsModelFileName    = "kokoro-v1.1-zh.onnx";
     private const string VoicesModelFileName = "voices-v1.1-zh.bin";
@@ -68,7 +69,7 @@ public class KokoroTtsCppDownloadService : IKokoroTtsCppDownloadService
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            return LinuxUrl;
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? LinuxArmUrl : LinuxUrl;
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))

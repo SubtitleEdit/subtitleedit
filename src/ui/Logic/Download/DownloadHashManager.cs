@@ -56,6 +56,8 @@ public static class DownloadHashManager
         public const string WindowsCuda = "LlamaCpp.Windows.Cuda";
         public const string LinuxCpu = "LlamaCpp.Linux.Cpu";
         public const string LinuxVulkan = "LlamaCpp.Linux.Vulkan";
+        public const string LinuxArm64Cpu = "LlamaCpp.Linux.Arm64.Cpu";
+        public const string LinuxArm64Vulkan = "LlamaCpp.Linux.Arm64.Vulkan";
         public const string MacOsArm64 = "LlamaCpp.MacOs.Arm64";
         public const string MacOsX64 = "LlamaCpp.MacOs.X64";
 
@@ -63,9 +65,10 @@ public static class DownloadHashManager
         // version when no sidecar is present (e.g. installs from older SE builds). The Windows
         // CPU/Vulkan/CUDA builds ship an identical llama-server.exe (the backend lives in the
         // ggml-*.dll), as do the two Linux builds, so there is a single executable key per OS
-        // (plus per-arch on macOS) — enough to tell "outdated" from "up to date".
+        // (plus per-arch on macOS / Linux) — enough to tell "outdated" from "up to date".
         public const string WindowsExecutable = "LlamaCpp.Windows.Executable";
         public const string LinuxExecutable = "LlamaCpp.Linux.Executable";
+        public const string LinuxArm64Executable = "LlamaCpp.Linux.Arm64.Executable";
         public const string MacOsArm64Executable = "LlamaCpp.MacOs.Arm64.Executable";
         public const string MacOsX64Executable = "LlamaCpp.MacOs.X64.Executable";
     }
@@ -251,6 +254,14 @@ public static class DownloadHashManager
                 "d5787fa775220b3c0f896947885fa0f3dedddbb5388bd68603376a2a97252e72", // b9174 (current download URL)
                 "b4a28b06d973f662b9465b6e0e786d8991cdab4d24101f5d88b0b8f688a97aea", // b9145
             },
+            [LlamaCpp.LinuxArm64Cpu] = new[]
+            {
+                "7ad708abbb58a6dd5a148eed24d9d2ccf155f57cde8cf3c0e44f73d0d2b95c6d", // b9174 (current download URL)
+            },
+            [LlamaCpp.LinuxArm64Vulkan] = new[]
+            {
+                "84adac128b781f495804fb84d0c27d27e21cde6da03338b9ce0931ee324304f2", // b9174 (current download URL)
+            },
             [LlamaCpp.MacOsArm64] = new[]
             {
                 "39406deaac6083000446530e68194b77bb64c64ecf0533040a49d8e7cfceb363", // b9174 (current download URL)
@@ -272,6 +283,10 @@ public static class DownloadHashManager
             {
                 "fc6322995eafb9146db0454acb2b2d3f14244fa3eecb62ba742c129f8b4f5de1", // b9174 (current download URL)
                 "855bd9540073d9f020b9b77ad5866ea3ea74ca570ea3fac486da8676f0eb6933", // b9145
+            },
+            [LlamaCpp.LinuxArm64Executable] = new[]
+            {
+                "a39b9d8200591e3e16f14b933f97ba0856e464097e0ba79cd3fb101313bdde96", // b9174 (current download URL)
             },
             [LlamaCpp.MacOsArm64Executable] = new[]
             {
@@ -659,6 +674,11 @@ public static class DownloadHashManager
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
+            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+            {
+                return variant == "vulkan" ? LlamaCpp.LinuxArm64Vulkan : LlamaCpp.LinuxArm64Cpu;
+            }
+
             return variant == "vulkan" ? LlamaCpp.LinuxVulkan : LlamaCpp.LinuxCpu;
         }
 
@@ -702,7 +722,9 @@ public static class DownloadHashManager
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            return LlamaCpp.LinuxExecutable;
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
+                ? LlamaCpp.LinuxArm64Executable
+                : LlamaCpp.LinuxExecutable;
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))

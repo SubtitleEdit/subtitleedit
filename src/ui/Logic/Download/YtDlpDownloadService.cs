@@ -18,6 +18,7 @@ public class YtDlpDownloadService : IYtDlpDownloadService
     private readonly HttpClient _httpClient;
     private const string WindowsUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/2026.03.17/yt-dlp.exe";
     private const string LinuxUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/2026.03.17/yt-dlp_linux";
+    private const string LinuxArmUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/2026.03.17/yt-dlp_linux_aarch64";
     private const string MacUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/2026.03.17/yt-dlp_macos";
 
     public YtDlpDownloadService(HttpClient httpClient)
@@ -34,7 +35,9 @@ public class YtDlpDownloadService : IYtDlpDownloadService
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            return Path.Combine(Se.DataFolder, "yt-dlp_linux");
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
+                ? Path.Combine(Se.DataFolder, "yt-dlp_linux_aarch64")
+                : Path.Combine(Se.DataFolder, "yt-dlp_linux");
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -53,7 +56,7 @@ public class YtDlpDownloadService : IYtDlpDownloadService
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            return LinuxUrl;
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? LinuxArmUrl : LinuxUrl;
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))

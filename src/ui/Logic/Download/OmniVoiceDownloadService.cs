@@ -95,6 +95,11 @@ public class OmniVoiceDownloadService : IOmniVoiceDownloadService
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
+            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+            {
+                throw new PlatformNotSupportedException("OmniVoice is not available for Linux ARM64.");
+            }
+
             return LinuxUrl;
         }
 

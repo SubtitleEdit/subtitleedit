@@ -39,6 +39,11 @@ public class Qwen3AsrCppDownloadService : IQwen3AsrCppDownloadService
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
+            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+            {
+                throw new PlatformNotSupportedException("Qwen3 ASR is not available for Linux ARM64.");
+            }
+
             return LinuxUrl;
         }
 

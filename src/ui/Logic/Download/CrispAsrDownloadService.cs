@@ -26,6 +26,7 @@ public class CrispAsrDownloadService : ICrispAsrDownloadService
     private const string WindowsCpuLegacyUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.6/crispasr-windows-x86_64-cpu-legacy.zip";
     private const string MacUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.6/crispasr-macos.tar.gz";
     private const string LinuxUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.6/crispasr-linux-x86_64.tar.gz";
+    private const string LinuxArmUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.6/crispasr-linux-arm64.tar.gz";
 
     public CrispAsrDownloadService(HttpClient httpClient)
     {
@@ -66,7 +67,7 @@ public class CrispAsrDownloadService : ICrispAsrDownloadService
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            return LinuxUrl;
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? LinuxArmUrl : LinuxUrl;
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))

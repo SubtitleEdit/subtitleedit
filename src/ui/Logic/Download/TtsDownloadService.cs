@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -80,6 +81,7 @@ public class TtsDownloadService : ITtsDownloadService
     private const string WindowsPiperUrl = "https://github.com/rhasspy/piper/releases/download/2023.11.14-2/piper_windows_amd64.zip";
     private const string MacPiperUrl = "https://github.com/rhasspy/piper/releases/download/2023.11.14-2/piper_macos_x64.tar.gz";
     private const string LinuxPiperUrl = "https://github.com/rhasspy/piper/releases/download/2023.11.14-2/piper_linux_x86_64.tar.gz";
+    private const string LinuxPiperArmUrl = "https://github.com/rhasspy/piper/releases/download/2023.11.14-2/piper_linux_aarch64.tar.gz";
 
     public TtsDownloadService(HttpClient httpClient)
     {
@@ -97,11 +99,11 @@ public class TtsDownloadService : ITtsDownloadService
         var url = WindowsPiperUrl;
         if (OperatingSystem.IsLinux())
         {
-            url = LinuxPiperUrl;
+            url = RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? LinuxPiperArmUrl : LinuxPiperUrl;
         }
         else if (OperatingSystem.IsMacOS())
         {
-            url = MacPiperUrl; 
+            url = MacPiperUrl;
         }
 
         await DownloadHelper.DownloadFileAsync(_httpClient, url, stream, progress, cancellationToken);
