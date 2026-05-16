@@ -3284,34 +3284,42 @@ public partial class OcrViewModel : ObservableObject
 
         _ = Task.Run(async () =>
         {
-            for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
+            try
             {
-                var i = selectedIndices[processedIndex];
-                if (cancellationToken.IsCancellationRequested)
+                for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
                 {
-                    return;
+                    var i = selectedIndices[processedIndex];
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
+
+                    var item = OcrSubtitleItems[i];
+                    var bitmap = item.GetSkBitmap();
+
+                    SelectAndScrollToRow(i);
+
+                    var text = await ollamaOcr.Ocr(bitmap, OllamaUrl, OllamaModel, SelectedOllamaLanguage ?? "English", cancellationToken);
+                    item.Text = text;
+
+                    OcrFixLineAndSetText(i, item);
                 }
-
-                UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
-
-                var item = OcrSubtitleItems[i];
-                var bitmap = item.GetSkBitmap();
-
-                SelectAndScrollToRow(i);
-
-                var text = await ollamaOcr.Ocr(bitmap, OllamaUrl, OllamaModel, SelectedOllamaLanguage ?? "English", cancellationToken);
-                item.Text = text;
-
-                OcrFixLineAndSetText(i, item);
             }
-
-            PauseOcr();
+            catch (OperationCanceledException)
+            {
+            }
+            finally
+            {
+                PauseOcr();
+            }
         });
     }
 
     private void RunLlamaCppOcr(List<int> selectedIndices, CancellationToken cancellationToken)
     {
-        var engine = new LlamaCppOcr();
+        var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
         var selectedModel = SelectedLlamaCppOcrModel?.Model;
         var prompt = Se.Settings.Ocr.LlamaCppOcrPrompt;
 
@@ -3337,28 +3345,36 @@ public partial class OcrViewModel : ObservableObject
                 modelName = "glmocr";
             }
 
-            for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
+            try
             {
-                var i = selectedIndices[processedIndex];
-                if (cancellationToken.IsCancellationRequested)
+                for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
                 {
-                    return;
+                    var i = selectedIndices[processedIndex];
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
+
+                    var item = OcrSubtitleItems[i];
+                    var bitmap = item.GetSkBitmap();
+
+                    SelectAndScrollToRow(i);
+
+                    var text = await engine.Ocr(bitmap, url, modelName, SelectedOllamaLanguage ?? "English", prompt, cancellationToken);
+                    item.Text = text;
+
+                    OcrFixLineAndSetText(i, item);
                 }
-
-                UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
-
-                var item = OcrSubtitleItems[i];
-                var bitmap = item.GetSkBitmap();
-
-                SelectAndScrollToRow(i);
-
-                var text = await engine.Ocr(bitmap, url, modelName, SelectedOllamaLanguage ?? "English", prompt, cancellationToken);
-                item.Text = text;
-
-                OcrFixLineAndSetText(i, item);
             }
-
-            PauseOcr();
+            catch (OperationCanceledException)
+            {
+            }
+            finally
+            {
+                PauseOcr();
+            }
         });
     }
 
@@ -3368,28 +3384,36 @@ public partial class OcrViewModel : ObservableObject
 
         _ = Task.Run(async () =>
         {
-            for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
+            try
             {
-                var i = selectedIndices[processedIndex];
-                if (cancellationToken.IsCancellationRequested)
+                for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
                 {
-                    return;
+                    var i = selectedIndices[processedIndex];
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
+
+                    var item = OcrSubtitleItems[i];
+                    var bitmap = item.GetSkBitmap();
+
+                    SelectAndScrollToRow(i);
+
+                    var text = await mistralOcr.Ocr(bitmap, SelectedOllamaLanguage ?? "English", cancellationToken);
+                    item.Text = text;
+
+                    OcrFixLineAndSetText(i, item);
                 }
-
-                UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
-
-                var item = OcrSubtitleItems[i];
-                var bitmap = item.GetSkBitmap();
-
-                SelectAndScrollToRow(i);
-
-                var text = await mistralOcr.Ocr(bitmap, SelectedOllamaLanguage ?? "English", cancellationToken);
-                item.Text = text;
-
-                OcrFixLineAndSetText(i, item);
             }
-
-            PauseOcr();
+            catch (OperationCanceledException)
+            {
+            }
+            finally
+            {
+                PauseOcr();
+            }
         });
     }
 
@@ -3399,28 +3423,36 @@ public partial class OcrViewModel : ObservableObject
 
         _ = Task.Run(async () =>
         {
-            for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
+            try
             {
-                var i = selectedIndices[processedIndex];
-                if (cancellationToken.IsCancellationRequested)
+                for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
                 {
-                    return;
+                    var i = selectedIndices[processedIndex];
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
+
+                    var item = OcrSubtitleItems[i];
+                    var bitmap = item.GetSkBitmap();
+
+                    SelectAndScrollToRow(i);
+
+                    var text = await engine.Ocr(bitmap, GoogleVisionApiKey, SelectedGoogleVisionLanguage?.Code ?? "en", cancellationToken);
+                    item.Text = text;
+
+                    OcrFixLineAndSetText(i, item);
                 }
-
-                UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
-
-                var item = OcrSubtitleItems[i];
-                var bitmap = item.GetSkBitmap();
-
-                SelectAndScrollToRow(i);
-
-                var text = await engine.Ocr(bitmap, GoogleVisionApiKey, SelectedGoogleVisionLanguage?.Code ?? "en", cancellationToken);
-                item.Text = text;
-
-                OcrFixLineAndSetText(i, item);
             }
-
-            PauseOcr();
+            catch (OperationCanceledException)
+            {
+            }
+            finally
+            {
+                PauseOcr();
+            }
         });
     }
 

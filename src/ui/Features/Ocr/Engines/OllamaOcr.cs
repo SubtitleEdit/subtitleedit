@@ -74,6 +74,10 @@ public class OllamaOcr
 
             return resultText.Trim();
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
             SeLogger.Error(ex, "Error calling Ollama for OCR");

@@ -95,6 +95,7 @@ public class LanguageOcr
     public string LlamaCppOcrPromptHint { get; set; }
     public string LlamaCppOcrPromptEmpty { get; set; }
     public string LlamaCppOcrPromptMissingLanguagePlaceholder { get; set; }
+    public string LlamaCppOcrTimeoutMinutes { get; set; }
     public string NOcrBinaryOcrFallbackDatabase { get; set; }
     public string NOcrBinaryOcrFallbackNone { get; set; }
     public string BinaryOcrNOcrFallbackDatabase { get; set; }
@@ -195,6 +196,7 @@ public class LanguageOcr
         LlamaCppOcrPromptHint = "Use {language} to insert the selected OCR language.";
         LlamaCppOcrPromptEmpty = "The prompt cannot be empty.";
         LlamaCppOcrPromptMissingLanguagePlaceholder = "The prompt must contain the {language} placeholder.";
+        LlamaCppOcrTimeoutMinutes = "Request timeout (minutes)";
 
         NOcrBinaryOcrFallbackDatabase = "BinaryOCR fallback database";
         NOcrBinaryOcrFallbackNone = "(none)";

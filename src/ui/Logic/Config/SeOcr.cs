@@ -19,6 +19,7 @@ public class SeOcr
     public string LlamaCppUrl { get; set; }
     public string LlamaCppOcrModel { get; set; }
     public string LlamaCppOcrPrompt { get; set; }
+    public int LlamaCppOcrTimeoutMinutes { get; set; }
     public string GoogleVisionApiKey { get; set; }
     public string GoogleVisionLanguage { get; set; }
     public string MistralApiKey { get; set; }
@@ -73,6 +74,7 @@ public class SeOcr
         LlamaCppUrl = "http://127.0.0.1:8080/v1/chat/completions";
         LlamaCppOcrModel = string.Empty;
         LlamaCppOcrPrompt = "Extract all text exactly as written. The language is {language}. Preserve line breaks.";
+        LlamaCppOcrTimeoutMinutes = 5;
 
         GoogleVisionApiKey = string.Empty;
         GoogleVisionLanguage = "en";

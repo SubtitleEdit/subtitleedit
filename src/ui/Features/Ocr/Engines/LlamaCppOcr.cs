@@ -16,13 +16,13 @@ public class LlamaCppOcr
 
     public string Error { get; set; }
 
-    public LlamaCppOcr()
+    public LlamaCppOcr(int timeoutMinutes = 5)
     {
         Error = string.Empty;
         _httpClient = new HttpClient();
         _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
         _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-        _httpClient.Timeout = TimeSpan.FromMinutes(25);
+        _httpClient.Timeout = TimeSpan.FromMinutes(Math.Max(1, timeoutMinutes));
     }
 
     public async Task<string> Ocr(SKBitmap bitmap, string url, string model, string language, string promptTemplate, CancellationToken cancellationToken)
@@ -85,6 +85,16 @@ public class LlamaCppOcr
             }
 
             return resultText.Trim();
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (OperationCanceledException ex)
+        {
+            Error = "Request timed out";
+            SeLogger.Error(ex, "llama.cpp OCR request timed out");
+            return string.Empty;
         }
         catch (Exception ex)
         {
