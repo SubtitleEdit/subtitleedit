@@ -452,6 +452,22 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             // User clicked Cancel on the GeneratingAudio window — close quietly.
         }
+        catch (Exception ex)
+        {
+            // Anything else (engine startup failure, server crash, network error, ...) must
+            // not propagate or the Avalonia dispatcher tears the whole app down. Surface a
+            // dialog with the message instead.
+            Se.LogError(ex, "Test voice failed.");
+            if (Window != null)
+            {
+                await MessageBox.Show(
+                    Window,
+                    "Test voice error",
+                    ex.Message,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
         finally
         {
             generatingAudioVm.Close();
@@ -1429,6 +1445,25 @@ public partial class TextToSpeechViewModel : ObservableObject
                         Window,
                         Se.Language.General.Error,
                         "TTS server error: " + ex.Message,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+            });
+            return null;
+        }
+        catch (Exception ex)
+        {
+            // Anything else (engine startup failure, server segfault, native crash, ...)
+            // must not propagate or the Avalonia dispatcher tears the whole app down.
+            SeLogger.Error(ex, "Unexpected error during speech generation.");
+            await Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                if (Window != null)
+                {
+                    await MessageBox.Show(
+                        Window,
+                        Se.Language.General.Error,
+                        ex.Message,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 }

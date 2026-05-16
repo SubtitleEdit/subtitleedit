@@ -424,6 +424,7 @@ public class ChatterboxTtsCpp : ITtsEngine
                 if (process.HasExited)
                 {
                     var tail = SnapshotServerLog();
+                    var exitCode = process.ExitCode;
                     _serverProcess = null;
                     _serverPort = 0;
                     _serverModelKey = null;
@@ -440,8 +441,17 @@ public class ChatterboxTtsCpp : ITtsEngine
                             + GetSetModelsFolder() + " are likely stale or partially downloaded. "
                             + "Delete them and try again so they re-download. Original output: " + tail);
                     }
+                    if (LooksLikeChatterboxTurboStartupCrash(modelKey, tail))
+                    {
+                        throw new InvalidOperationException(
+                            "Chatterbox TTS \"Turbo\" model crashed CrispASR during startup. This is a known "
+                            + "upstream issue in the chatterbox-turbo backend (especially on macOS/CPU). "
+                            + "Try the \"Base\" model instead, or file an issue at "
+                            + "https://github.com/CrispStrobe/CrispASR/issues with the log below."
+                            + Environment.NewLine + Environment.NewLine + tail);
+                    }
                     throw new InvalidOperationException(
-                        $"crispasr (chatterbox) exited during startup (code {process.ExitCode}). Output: {tail}");
+                        $"crispasr (chatterbox) exited during startup (code {exitCode}). Output: {tail}");
                 }
                 if (await ProbeHealthAsync(port, TimeSpan.FromSeconds(2), ct))
                 {
@@ -491,6 +501,21 @@ public class ChatterboxTtsCpp : ITtsEngine
         return output.Contains("required tensor", StringComparison.Ordinal)
             || output.Contains("failed to bind", StringComparison.Ordinal)
             || output.Contains("ggml_uncaught_exception", StringComparison.Ordinal);
+    }
+
+    private static bool LooksLikeChatterboxTurboStartupCrash(string modelKey, string output)
+    {
+        // Known CrispASR 0.6.6 (current) bug: chatterbox-turbo backend segfaults during
+        // s3gen init, right after the auto-fallback-to-CPU notice and before
+        // "precomputed conds loaded". Reproduces deterministically on macOS / Apple
+        // Silicon. The chatterbox (Base) backend on the same binary loads fine.
+        if (!string.Equals(modelKey, ModelKeyTurbo, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return output.Contains("arch=chatterbox_turbo", StringComparison.Ordinal)
+            && !output.Contains("precomputed conds loaded", StringComparison.Ordinal);
     }
 
     private static string SnapshotServerLog()
