@@ -826,16 +826,35 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             // The lavfi-complex color source above produces frames forever, so without
             // an explicit end mpv would keep "playing" the black video past the audio's
             // end. Bound playback to the audio duration so it pauses at EOF.
-            for (var i = 0; i < 50 && !_disposed; i++)
+            //
+            // For .mp3 we read the duration by walking the frame headers ourselves
+            // because libmpv reports a bitrate-based estimate for VBR MP3s without a
+            // Xing/Info header, which is often a few seconds short and would cause
+            // playback to stop before the real end of the file (issue #10953).
+            double? bound = null;
+            if (ext.Equals(".mp3", StringComparison.OrdinalIgnoreCase))
             {
-                var d = Duration;
-                if (d > 0 && !double.IsInfinity(d) && !double.IsNaN(d))
+                bound = Media.Mp3DurationReader.TryGetDurationSeconds(path);
+            }
+
+            if (bound.HasValue && bound.Value > 0)
+            {
+                SetOptionString("end", bound.Value.ToString(CultureInfo.InvariantCulture));
+                _audioEndBound = bound.Value;
+            }
+            else
+            {
+                for (var i = 0; i < 50 && !_disposed; i++)
                 {
-                    SetOptionString("end", d.ToString(CultureInfo.InvariantCulture));
-                    _audioEndBound = d;
-                    break;
+                    var d = Duration;
+                    if (d > 0 && !double.IsInfinity(d) && !double.IsNaN(d))
+                    {
+                        SetOptionString("end", d.ToString(CultureInfo.InvariantCulture));
+                        _audioEndBound = d;
+                        break;
+                    }
+                    await Task.Delay(50);
                 }
-                await Task.Delay(50);
             }
         }
     }
