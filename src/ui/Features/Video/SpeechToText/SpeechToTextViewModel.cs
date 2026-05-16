@@ -1918,6 +1918,17 @@ public partial class SpeechToTextViewModel : ObservableObject
                 }
             }
         }
+        else if (engine is ICrispAsrEngine
+                 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                 && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+        {
+            var linuxAnswer = await PromptCrispAsrLinuxVariantAsync(CrispAsrEngine.StaticName);
+            if (linuxAnswer == null)
+            {
+                return;
+            }
+            crispVariant = linuxAnswer;
+        }
 
         await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
             Window, viewModel =>
@@ -1948,6 +1959,29 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             MessageBoxResult.Custom1 => "cpu",
             MessageBoxResult.Custom2 => "cpu-legacy",
+            _ => null,
+        };
+    }
+
+    /// <summary>
+    /// Linux x86_64 build prompt: CPU vs CUDA. Returns "cuda", empty string for the default CPU build,
+    /// or null when the user cancels.
+    /// </summary>
+    private async Task<string?> PromptCrispAsrLinuxVariantAsync(string engineName)
+    {
+        var answer = await MessageBox.Show(
+            Window!,
+            $"Download {engineName}?",
+            $"{Environment.NewLine}\"{engineName}\" requires downloading the CrispASR engine.{Environment.NewLine}{Environment.NewLine}Select a version to download:",
+            MessageBoxButtons.Cancel,
+            MessageBoxIcon.Question,
+            "CPU",
+            "CUDA");
+
+        return answer switch
+        {
+            MessageBoxResult.Custom1 => string.Empty,
+            MessageBoxResult.Custom2 => "cuda",
             _ => null,
         };
     }
@@ -2279,6 +2313,29 @@ public partial class SpeechToTextViewModel : ObservableObject
                         {
                             return;
                         }
+                    }
+
+                    var crispVm = await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
+                        Window!, viewModel =>
+                        {
+                            viewModel.Engine = engine;
+                            viewModel.CrispAsrWindowsVariant = crispVariant;
+                            viewModel.StartDownload();
+                        });
+
+                    if (!crispVm.OkPressed)
+                    {
+                        return;
+                    }
+                }
+                else if (engine is ICrispAsrEngine
+                         && RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                         && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+                {
+                    var crispVariant = await PromptCrispAsrLinuxVariantAsync(engine.Name);
+                    if (crispVariant == null)
+                    {
+                        return;
                     }
 
                     var crispVm = await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
@@ -3508,7 +3565,8 @@ public partial class SpeechToTextViewModel : ObservableObject
             return;
         }
 
-        var crispVariant = DownloadHashManager.GetCrispAsrWindowsVariant(key) ?? "vulkan";
+        var crispVariant = DownloadHashManager.GetCrispAsrVariant(key)
+                           ?? (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "vulkan" : string.Empty);
 
         await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
             Window!, viewModel =>
@@ -3622,9 +3680,16 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         try
         {
-            var variant = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                ? DownloadHashManager.DetectCrispAsrWindowsVariant(folder)
-                : null;
+            string? variant = null;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                variant = DownloadHashManager.DetectCrispAsrWindowsVariant(folder);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                     && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+            {
+                variant = DownloadHashManager.DetectCrispAsrLinuxVariant(folder);
+            }
             var key = DownloadHashManager.ResolveCrispAsrExecutableKey(variant);
             if (key == null)
             {
