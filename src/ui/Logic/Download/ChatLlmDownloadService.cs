@@ -56,6 +56,11 @@ public class ChatLlmDownloadService : IChatLlmDownloadService
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
+            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+            {
+                throw new PlatformNotSupportedException("ChatLLM is not available for Linux ARM64.");
+            }
+
             return LinuxUrl;
         }
 

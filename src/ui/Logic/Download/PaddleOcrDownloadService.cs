@@ -39,6 +39,11 @@ public class PaddleOcrDownloadService : IPaddleOcrDownloadService
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
+            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+            {
+                throw new PlatformNotSupportedException("PaddleOCR is not available for Linux ARM64.");
+            }
+
             url = DownloadLinuxEngineCpuUrl;
         }
 
@@ -51,6 +56,11 @@ public class PaddleOcrDownloadService : IPaddleOcrDownloadService
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
+            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+            {
+                throw new PlatformNotSupportedException("PaddleOCR is not available for Linux ARM64.");
+            }
+
             url = DownloadLinuxEngineGpuUrl;
         }
 

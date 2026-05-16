@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -38,6 +39,11 @@ public class GoogleLensOcrDownloadService(HttpClient httpClient) : IGoogleLensOc
 
         if (OperatingSystem.IsLinux())
         {
+            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+            {
+                throw new PlatformNotSupportedException("Google Lens OCR is not available for Linux ARM64.");
+            }
+
             return LinuxUrl;
         }
 

@@ -60,6 +60,18 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
 
         if (OperatingSystem.IsLinux())
         {
+            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+            {
+                if (variant == VariantCuda)
+                {
+                    throw new PlatformNotSupportedException("llama.cpp CUDA build is not available for Linux ARM64.");
+                }
+
+                return variant == VariantVulkan
+                    ? BaseUrl + "llama-" + Version + "-bin-ubuntu-vulkan-arm64.tar.gz"
+                    : BaseUrl + "llama-" + Version + "-bin-ubuntu-arm64.tar.gz";
+            }
+
             return variant == VariantVulkan
                 ? BaseUrl + "llama-" + Version + "-bin-ubuntu-vulkan-x64.tar.gz"
                 : BaseUrl + "llama-" + Version + "-bin-ubuntu-x64.tar.gz";

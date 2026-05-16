@@ -22,10 +22,11 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
     public const string WindowsVariantVulkan = "vulkan";
     public const string WindowsVariantCpu = "cpu";
 
-    private const string WindowsVulkanUrl = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.2/qwen3-tts-server-v0.4.2-windows-vulkan-x64.zip";
-    private const string WindowsCpuUrl    = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.2/qwen3-tts-server-v0.4.2-windows-cpu-x64.zip";
-    private const string MacUrl           = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.2/qwen3-tts-server-v0.4.2-macos-metal-arm64.zip";
-    private const string LinuxUrl         = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.2/qwen3-tts-server-v0.4.2-linux-vulkan-x64.zip";
+    private const string WindowsVulkanUrl = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.3/qwen3-tts-server-v0.4.3-windows-vulkan-x64.zip";
+    private const string WindowsCpuUrl    = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.3/qwen3-tts-server-v0.4.3-windows-cpu-x64.zip";
+    private const string MacUrl           = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.3/qwen3-tts-server-v0.4.3-macos-metal-arm64.zip";
+    private const string LinuxUrl         = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.3/qwen3-tts-server-v0.4.3-linux-vulkan-x64.zip";
+    private const string LinuxArmUrl      = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.3/qwen3-tts-server-v0.4.3-linux-arm64.zip";
 
     private const string TokenizerModelFileName = "qwen3-tts-tokenizer-q8_0.gguf";
     private const string TokenizerModelUrl = "https://huggingface.co/koboldcpp/tts/resolve/main/qwen3-tts-tokenizer-q8_0.gguf";
@@ -92,7 +93,7 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            return LinuxUrl;
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? LinuxArmUrl : LinuxUrl;
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))

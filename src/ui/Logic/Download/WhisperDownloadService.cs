@@ -76,6 +76,11 @@ public class WhisperDownloadService : IWhisperDownloadService
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
+            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+            {
+                throw new PlatformNotSupportedException("Faster-Whisper-XXL is not available for Linux ARM64.");
+            }
+
             url = DownloadUrlPurfviewFasterWhisperXxlLinux;
         }
 
@@ -141,6 +146,11 @@ public class WhisperDownloadService : IWhisperDownloadService
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
+            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+            {
+                throw new PlatformNotSupportedException("whisper.cpp Vulkan build is not available for Linux ARM64.");
+            }
+
             return LinuxUrl;
         }
 
@@ -169,6 +179,11 @@ public class WhisperDownloadService : IWhisperDownloadService
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
+            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+            {
+                throw new PlatformNotSupportedException("whisper.cpp CUDA build is not available for Linux ARM64.");
+            }
+
             return LinuxUrlCuBlass;
         }
 
