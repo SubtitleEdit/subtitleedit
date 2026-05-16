@@ -98,6 +98,8 @@ public class LanguageOcr
     public string NOcrBinaryOcrFallbackDatabase { get; set; }
     public string NOcrBinaryOcrFallbackNone { get; set; }
     public string BinaryOcrNOcrFallbackDatabase { get; set; }
+    public string ShowAllOllamaModels { get; set; }
+    public string OllamaModelLikelyWrong { get; set; }
 
     public LanguageOcr()
     {
@@ -197,5 +199,8 @@ public class LanguageOcr
         NOcrBinaryOcrFallbackDatabase = "BinaryOCR fallback database";
         NOcrBinaryOcrFallbackNone = "(none)";
         BinaryOcrNOcrFallbackDatabase = "nOCR fallback database";
+
+        ShowAllOllamaModels = "Show all models (not just vision-capable)";
+        OllamaModelLikelyWrong = "Ollama returned no text - the selected model may not support OCR / vision";
     }
 }

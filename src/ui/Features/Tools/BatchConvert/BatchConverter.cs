@@ -1229,6 +1229,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         var model = Se.Settings.Ocr.OllamaModel;
         var language = Se.Settings.Ocr.OllamaLanguage;
         item.Subtitle = new Subtitle();
+        var cancelled = false;
         for (var i = 0; i < imageSubtitles.Count; i++)
         {
             var pct = (i + 1) * 100 / imageSubtitles.Count;
@@ -1241,8 +1242,19 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             if (cancellationToken.IsCancellationRequested)
             {
                 item.Status = Se.Language.General.Cancelled;
+                cancelled = true;
                 break;
             }
+        }
+
+        // If every line came back blank, the configured Ollama model probably doesn't
+        // support vision/OCR (#10766). Flag the file so the user notices instead of
+        // ending up with a silently-empty subtitle. We don't bail mid-run because Ollama
+        // can be slow and the picker already filters to vision-capable models by default.
+        if (!cancelled && item.Subtitle.Paragraphs.Count > 0 &&
+            item.Subtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
+        {
+            item.Status = Se.Language.Ocr.OllamaModelLikelyWrong;
         }
     }
 
