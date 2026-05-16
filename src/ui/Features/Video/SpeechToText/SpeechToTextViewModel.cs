@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.AudioToText;
@@ -3211,16 +3212,16 @@ public partial class SpeechToTextViewModel : ObservableObject
         ConsoleLog += s.Trim() + "\n";
 
         // Tail behavior: keep the console scrolled to the latest line so the user
-        // doesn't have to camp on PageDown. Setting CaretIndex alone is unreliable
-        // here — the TextBox isn't focused, so the internal BringCaretToView is a
-        // no-op. ScrollToLine drives the inner TextPresenter directly. Post at
-        // Background priority so it runs after the layout pass that lays out the
-        // freshly-appended text.
+        // doesn't have to camp on PageDown. CaretIndex / TextBox.ScrollToLine
+        // proved unreliable here — BringCaretToView short-circuits while the
+        // TextBox is unfocused, and ScrollToLine silently no-ops when the inner
+        // TextPresenter isn't templated yet. Drive the inner ScrollViewer
+        // directly. Post at Background priority so the Render-priority layout
+        // pass has updated Extent for the freshly-appended line first.
         Dispatcher.UIThread.Post(() =>
         {
-            var text = TextBoxConsoleLog.Text ?? string.Empty;
-            TextBoxConsoleLog.CaretIndex = text.Length;
-            TextBoxConsoleLog.ScrollToLine(text.Count(c => c == '\n'));
+            var scrollViewer = TextBoxConsoleLog.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+            scrollViewer?.ScrollToEnd();
         }, DispatcherPriority.Background);
     }
 
