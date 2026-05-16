@@ -41,7 +41,7 @@ public class LanguageImport
     public string GapMs { get; set; }
     public string UseFixedDuration { get; set; }
     public string FixedDurationMs { get; set; }
-    public string AlignViaTextToSpeech { get; set; }
+    public string AlignViaSpeechToText { get; set; }
 
     public LanguageImport()
     {
@@ -88,7 +88,7 @@ Rules:
         GapMs = "Gap (ms)";
         UseFixedDuration = "Use fixed duration";
         FixedDurationMs = "Fixed duration (ms)";
-        AlignViaTextToSpeech = "Align time codes via \"Text to speech\"...";
+        AlignViaSpeechToText = "Align time codes via \"Speech to text\"...";
         CsvXlsxCustomColumnsDotDotDot = "CSV/XLSX with custom columns...";
         TitleImportCsvXlsxCustomColumns = "Import CSV/XLSX with custom columns";
         DetectedSeparatorX = "Detected separator: {0}";
