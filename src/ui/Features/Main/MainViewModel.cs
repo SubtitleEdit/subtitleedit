@@ -1808,7 +1808,7 @@ public partial class MainViewModel :
         var saved = await SaveSubtitle();
         var savedOriginal = false;
 
-        if (ShowColumnOriginalText)
+        if (ShowColumnOriginalText && _changeSubtitleHashOriginal != GetFastHashOriginal())
         {
             savedOriginal = await SaveSubtitleOriginal();
         }
@@ -4063,6 +4063,8 @@ public partial class MainViewModel :
         }
 
         _subtitleFileNameOriginal = _subtitleFileName;
+        _subtitleOriginal ??= new Subtitle();
+        _subtitleOriginal.OriginalFormat = _subtitle.OriginalFormat ?? SelectedSubtitleFormat;
         _subtitleFileName = null;
         _converted = true;
         _shortcutManager.ClearKeys();
@@ -6181,6 +6183,8 @@ public partial class MainViewModel :
 
         var targetLanguageCode = result.SelectedTargetLanguage?.TwoLetterIsoLanguageName;
         _subtitleFileNameOriginal = _subtitleFileName;
+        _subtitleOriginal ??= new Subtitle();
+        _subtitleOriginal.OriginalFormat = _subtitle.OriginalFormat ?? SelectedSubtitleFormat;
         if (!string.IsNullOrEmpty(_subtitleFileName) && !string.IsNullOrEmpty(targetLanguageCode))
         {
             var directory = Path.GetDirectoryName(_subtitleFileName) ?? string.Empty;
@@ -6310,6 +6314,8 @@ public partial class MainViewModel :
         }
 
         _subtitleFileNameOriginal = _subtitleFileName;
+        _subtitleOriginal ??= new Subtitle();
+        _subtitleOriginal.OriginalFormat = _subtitle.OriginalFormat ?? SelectedSubtitleFormat;
         _subtitleFileName = string.Empty;
         ShowColumnOriginalText = true;
         AutoFitColumns();
@@ -12540,17 +12546,13 @@ public partial class MainViewModel :
             return false;
         }
 
-        if (string.IsNullOrEmpty(_subtitleFileNameOriginal) || _converted)
+        if (string.IsNullOrEmpty(_subtitleFileNameOriginal))
         {
             return await SaveSubtitleOriginalAs();
         }
 
-        if (_lastOpenSaveFormat == null || _lastOpenSaveFormat.Name != SelectedSubtitleFormat.Name)
-        {
-            return await SaveSubtitleOriginalAs();
-        }
-
-        var text = GetUpdateSubtitleOriginal(true).ToText(SelectedSubtitleFormat);
+        var originalFormat = _subtitleOriginal?.OriginalFormat ?? SelectedSubtitleFormat;
+        var text = GetUpdateSubtitleOriginal(true).ToText(originalFormat);
 
         try
         {
@@ -12576,7 +12578,6 @@ public partial class MainViewModel :
         }
 
         _changeSubtitleHashOriginal = GetFastHashOriginal();
-        _lastOpenSaveFormat = SelectedSubtitleFormat;
         return true;
     }
 
@@ -12596,11 +12597,12 @@ public partial class MainViewModel :
     {
         _subtitleOriginal ??= new Subtitle();
         _subtitleOriginal.OriginalFormat ??= SelectedSubtitleFormat;
+        var originalFormat = _subtitleOriginal.OriginalFormat ?? SelectedSubtitleFormat;
 
         _subtitleOriginal.Paragraphs.Clear();
         foreach (var line in Subtitles)
         {
-            var p = line.ToParagraphOriginal(SelectedSubtitleFormat);
+            var p = line.ToParagraphOriginal(originalFormat);
             _subtitleOriginal.Paragraphs.Add(p);
         }
 
