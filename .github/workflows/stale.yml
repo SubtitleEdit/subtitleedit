@@ -26,4 +26,4 @@ jobs:
           # Default is 30, which only covers ~24 issues per run — far less than the
           # current ~400 open issues, so old issues never get reached. Bump it so a
           # single run can drain the backlog.
-          operations-per-run: 300
+          operations-per-run: 500
