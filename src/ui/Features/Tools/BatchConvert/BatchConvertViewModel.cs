@@ -1561,6 +1561,7 @@ public partial class BatchConvertViewModel : ObservableObject
 
         if (result is { OkPressed: true, SelectedModel: not null })
         {
+            AutoTranslateModel = result.SelectedModel;
             Se.Settings.AutoTranslate.OllamaModel = result.SelectedModel;
             SaveSettings();
         }
