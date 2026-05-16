@@ -45,6 +45,9 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _nOcrDatabases;
     [ObservableProperty] private string? _selectedNOcrDatabase;
 
+    [ObservableProperty] private ObservableCollection<string> _nOcrFallbackBinaryOcrDatabases;
+    [ObservableProperty] private string? _selectedNOcrFallbackBinaryOcrDatabase;
+
     [ObservableProperty] private ObservableCollection<string> _ollamaModels;
     [ObservableProperty] private string? _selectedOllamaModel;
 
@@ -91,6 +94,11 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         TesseractDictionaryItems = new ObservableCollection<TesseractDictionary>();
         BinaryOcrDatabases = new ObservableCollection<string>(BinaryOcrDb.GetDatabases(Se.OcrFolder));
         NOcrDatabases = new ObservableCollection<string>(NOcrDb.GetDatabases(Se.OcrFolder).OrderBy(p => p));
+        NOcrFallbackBinaryOcrDatabases = new ObservableCollection<string> { Se.Language.Ocr.NOcrBinaryOcrFallbackNone };
+        foreach (var db in BinaryOcrDb.GetDatabases(Se.OcrFolder).OrderBy(p => p))
+        {
+            NOcrFallbackBinaryOcrDatabases.Add(db);
+        }
         OllamaModels = new ObservableCollection<string>(Se.Settings.Ocr.OllamaModels);
 
         _folderHelper = folderHelper;
@@ -176,12 +184,42 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             Se.Settings.Ocr.NOcrDatabase = SelectedNOcrDatabase;
         }
 
+        if (ocrEngine == "nOcr")
+        {
+            var fallback = SelectedNOcrFallbackBinaryOcrDatabase;
+            Se.Settings.Tools.BatchConvert.NOcrBinaryOcrFallbackDatabase =
+                string.IsNullOrEmpty(fallback) || fallback == Se.Language.Ocr.NOcrBinaryOcrFallbackNone
+                    ? string.Empty
+                    : fallback;
+        }
+
         if (ocrEngine == "Ollama" && !string.IsNullOrWhiteSpace(SelectedOllamaModel))
         {
             Se.Settings.Ocr.OllamaModel = SelectedOllamaModel;
         }
 
         Se.SaveSettings();
+    }
+
+    partial void OnSelectedNOcrDatabaseChanged(string? value)
+    {
+        // When the user picks a different nOCR DB and the fallback isn't an explicit user
+        // choice yet, re-suggest the same-name BinaryOCR DB if one exists.
+        if (string.IsNullOrEmpty(value))
+        {
+            return;
+        }
+
+        var saved = Se.Settings.Tools.BatchConvert.NOcrBinaryOcrFallbackDatabase;
+        if (!string.IsNullOrEmpty(saved) && NOcrFallbackBinaryOcrDatabases != null && NOcrFallbackBinaryOcrDatabases.Contains(saved))
+        {
+            return;
+        }
+
+        if (NOcrFallbackBinaryOcrDatabases != null && NOcrFallbackBinaryOcrDatabases.Contains(value))
+        {
+            SelectedNOcrFallbackBinaryOcrDatabase = value;
+        }
     }
 
     [RelayCommand]
@@ -266,6 +304,22 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         {
             SelectedNOcrDatabase = NOcrDatabases
                 .FirstOrDefault(p => p == Se.Settings.Ocr.NOcrDatabase) ?? NOcrDatabases.FirstOrDefault();
+
+            // Default the BinaryOCR fallback either to whatever the user previously picked,
+            // or (when nothing is saved) suggest the BinaryOCR DB with the same name as the
+            // selected nOCR DB. Falls back to "(none)" if no match exists.
+            var saved = Se.Settings.Tools.BatchConvert.NOcrBinaryOcrFallbackDatabase;
+            string? toSelect = null;
+            if (!string.IsNullOrEmpty(saved) && NOcrFallbackBinaryOcrDatabases.Contains(saved))
+            {
+                toSelect = saved;
+            }
+            else if (!string.IsNullOrEmpty(SelectedNOcrDatabase) && NOcrFallbackBinaryOcrDatabases.Contains(SelectedNOcrDatabase))
+            {
+                toSelect = SelectedNOcrDatabase;
+            }
+
+            SelectedNOcrFallbackBinaryOcrDatabase = toSelect ?? NOcrFallbackBinaryOcrDatabases.First();
         }
 
         if (ocrEngine == "Ollama")
