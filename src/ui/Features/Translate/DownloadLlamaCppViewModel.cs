@@ -37,6 +37,9 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
     /// <summary>Re-download the engine binary even when it is already installed (used for updates).</summary>
     public bool ForceEngineDownload { get; set; }
 
+    /// <summary>Re-download the model file even when it is already installed.</summary>
+    public bool ForceModelDownload { get; set; }
+
     private const string TemporaryFileExtension = ".$$$";
 
     private readonly ILlamaCppDownloadService _downloadService;
@@ -104,7 +107,7 @@ public partial class DownloadLlamaCppViewModel : ObservableObject
                 MakeExecutable(LlamaCppServerManager.GetExecutable());
             }
 
-            if (Model != null && !LlamaCppServerManager.IsModelInstalled(Model.FileName))
+            if (Model != null && (ForceModelDownload || !LlamaCppServerManager.IsModelInstalled(Model.FileName)))
             {
                 TitleText = string.Format(Se.Language.General.DownloadingX, Model.DisplayName);
                 var finalPath = LlamaCppServerManager.GetModelPath(Model.FileName);

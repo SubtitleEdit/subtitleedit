@@ -122,10 +122,12 @@ public static class LlamaCppDownloadHelper
     /// Opens the llama.cpp download window (engine binary + selected model) and persists the result.
     /// When <paramref name="forceVariant"/> is given (e.g. re-downloading an update), that build is
     /// used and the Windows build picker is skipped. When <paramref name="forceEngineDownload"/> is
-    /// set, the engine binary is re-downloaded even though it is already installed.
+    /// set, the engine binary is re-downloaded even though it is already installed. When
+    /// <paramref name="forceModelDownload"/> is set, the model file is re-downloaded even though it
+    /// is already installed.
     /// </summary>
     /// <returns>The downloaded model file name, or null if nothing was downloaded.</returns>
-    public static async Task<string?> DownloadAsync(Window owner, IWindowService windowService, LlamaCppTranslateModel? model, string? forceVariant = null, bool forceEngineDownload = false)
+    public static async Task<string?> DownloadAsync(Window owner, IWindowService windowService, LlamaCppTranslateModel? model, string? forceVariant = null, bool forceEngineDownload = false, bool forceModelDownload = false)
     {
         var variant = forceVariant ?? Logic.Download.LlamaCppDownloadService.VariantCpu;
         if (forceVariant == null && !LlamaCppServerManager.IsEngineInstalled() && OperatingSystem.IsWindows())
@@ -160,6 +162,7 @@ public static class LlamaCppDownloadHelper
                 vm.Variant = variant;
                 vm.Model = model;
                 vm.ForceEngineDownload = forceEngineDownload;
+                vm.ForceModelDownload = forceModelDownload;
                 vm.StartDownload();
             });
 

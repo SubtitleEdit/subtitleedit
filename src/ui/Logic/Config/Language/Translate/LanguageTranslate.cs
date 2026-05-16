@@ -28,6 +28,7 @@ public class LanguageTranslate
     public string TranslationComplete { get; set; }
     public string TranslationCancelled { get; set; }
     public string SwapLanguages { get; set; }
+    public string XIsAlreadyDownloadedReDownload { get; set; }
 
     public LanguageTranslate()
     {
@@ -57,5 +58,6 @@ public class LanguageTranslate
         TranslationComplete = "Translation complete";
         TranslationCancelled = "Translation cancelled";
         SwapLanguages = "Swap source and target languages";
+        XIsAlreadyDownloadedReDownload = "{0} is already downloaded. Re-download?";
     }
 }
