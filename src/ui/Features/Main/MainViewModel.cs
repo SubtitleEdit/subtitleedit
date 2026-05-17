@@ -5359,16 +5359,28 @@ public partial class MainViewModel :
         }
 
         var isYouTubeDlInstalled = File.Exists(YtDlpDownloadService.GetFullFileName());
+        var downloadMessage = string.Empty;
         if (!isYouTubeDlInstalled)
         {
+            downloadMessage = Se.Language.Main.YoutubeDlNotInstalledDownloadNow;
+        }
+        else if (await YtDlpDownloadService.IsInstalledVersionOutdated(CancellationToken.None))
+        {
+            downloadMessage = Se.Language.Main.YoutubeDlOutdatedDownloadNow;
+        }
+
+        if (!string.IsNullOrEmpty(downloadMessage))
+        {
             var download = await MessageBox.Show(Window, Se.Language.General.Information,
-                Se.Language.Main.YoutubeDlNotInstalledDownloadNow,
+                downloadMessage,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Information);
             if (download == MessageBoxResult.Yes)
             {
-                var downloadResult = await ShowDialogAsync<DownloadYtDlpWindow, DownloadYtDlpViewModel>();
+                await ShowDialogAsync<DownloadYtDlpWindow, DownloadYtDlpViewModel>();
                 isYouTubeDlInstalled = File.Exists(YtDlpDownloadService.GetFullFileName());
-                if (isYouTubeDlInstalled)
+                var isYouTubeDlCurrent = isYouTubeDlInstalled &&
+                                         !await YtDlpDownloadService.IsInstalledVersionOutdated(CancellationToken.None);
+                if (isYouTubeDlCurrent)
                 {
                     ShowStatus(Se.Language.Main.YoutubeDlDownloadedSuccessfully);
                 }
