@@ -21,14 +21,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          reviewer_exists="$(gh api \
-            "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers" \
-            --jq '.users[].login' | grep -ixc 'Copilot' || true)"
+          requested_reviewers="$(gh api \
+            "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers")"
 
-          if [ "$reviewer_exists" -eq 0 ]; then
-            gh api \
-              --method POST \
-              -H "Accept: application/vnd.github+json" \
-              "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers" \
-              -f reviewers[]='Copilot'
+          if echo "$requested_reviewers" | jq -e '.users[].login | ascii_downcase == "copilot"' >/dev/null; then
+            exit 0
           fi
+
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers" \
+            -f reviewers[]='Copilot'
