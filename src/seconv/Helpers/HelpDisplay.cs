@@ -23,6 +23,7 @@ internal static class HelpDisplay
         ShowParameter("--change-speed:<percent>", "Change speed by percent (e.g. 125 = 1.25x faster)");
         ShowParameter("--ebu-header-file:<file name>", "EBU header file");
         ShowParameter("--encoding:<encoding name>", "Character encoding (e.g., utf-8, windows-1252)");
+        ShowParameter("--input-encoding-fallback:<name>", "Assumed input encoding when no BOM and not UTF-8 (skips ANSI guess)");
         ShowParameter("--forced-only", "Process forced subtitles only");
         ShowParameter("--fps:<frame rate>", "Frame rate for conversion");
         ShowParameter("--input-folder:<folder name>", "Input folder path");
@@ -97,6 +98,9 @@ internal static class HelpDisplay
         ShowExample(
             "seconv sub1.srt subrip --encoding:windows-1252",
             "Convert with specific encoding");
+        ShowExample(
+            "seconv *.srt subrip --input-encoding-fallback:windows-1250",
+            "Bulk convert to UTF-8; assume CP1250 only when input isn't UTF-8");
         ShowExample(
             "seconv *.sub subrip --fps:25 --output-folder:C:\\Temp",
             "Convert frame-based to time-based with FPS");

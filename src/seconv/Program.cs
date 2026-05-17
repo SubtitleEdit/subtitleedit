@@ -153,6 +153,7 @@ internal class Program
         "--custom-format", "--customformat",
         "--ebu-header-file", "--ebuheaderfile",
         "--encoding",
+        "--input-encoding-fallback", "--inputencodingfallback",
         "--fps",
         "--input-folder", "--inputfolder",
         "--multiple-replace", "--multiplereplace",

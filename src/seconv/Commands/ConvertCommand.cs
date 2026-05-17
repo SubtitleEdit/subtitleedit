@@ -50,6 +50,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Encoding name")]
         public string? Encoding { get; init; }
 
+        [CommandOption("--input-encoding-fallback|--inputencodingfallback")]
+        [Description("Encoding to assume when input is not UTF-8 / has no BOM (skips ANSI auto-detection). Ignored when --encoding is set.")]
+        public string? InputEncodingFallback { get; init; }
+
         [CommandOption("--forced-only|--forcedonly")]
         [Description("Forced subtitles only")]
         public bool ForcedOnly { get; init; }
@@ -389,6 +393,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 OutputFolder = settings.OutputFolder,
                 OutputFilename = settings.OutputFilename,
                 Encoding = settings.Encoding,
+                InputEncodingFallback = settings.InputEncodingFallback,
                 Fps = settings.Fps,
                 TargetFps = settings.TargetFps,
                 Overwrite = settings.Overwrite,
@@ -447,6 +452,9 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
 
             if (!string.IsNullOrEmpty(settings.Encoding))
                 table.AddRow("Encoding", settings.Encoding);
+
+            if (string.IsNullOrEmpty(settings.Encoding) && !string.IsNullOrEmpty(settings.InputEncodingFallback))
+                table.AddRow("Input encoding fallback", settings.InputEncodingFallback);
 
             if (operations.Count > 0)
                 table.AddRow("Operations", string.Join(", ", operations));

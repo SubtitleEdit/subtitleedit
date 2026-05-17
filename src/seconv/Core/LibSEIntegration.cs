@@ -51,11 +51,14 @@ internal static class LibSEIntegration
 
     /// <summary>
     /// Loads a subtitle file using LibSE. When <paramref name="encodingName"/> is null/blank,
-    /// the encoding is auto-detected from the file's content. Also returns the detected
-    /// source format so the save side can apply <c>RemoveNativeFormatting</c> if the target
-    /// is different.
+    /// the encoding is auto-detected from the file's content. When
+    /// <paramref name="fallbackEncodingName"/> is supplied (and <paramref name="encodingName"/>
+    /// is not), the fallback replaces the ANSI codepage heuristic: a BOM still wins, valid
+    /// UTF-8 still wins, but anything else uses the fallback rather than DetectAnsiEncoding.
+    /// Also returns the detected source format so the save side can apply
+    /// <c>RemoveNativeFormatting</c> if the target is different.
     /// </summary>
-    public static (Subtitle Subtitle, SubtitleFormat Format) LoadSubtitleWithFormat(string filePath, string? encodingName = null)
+    public static (Subtitle Subtitle, SubtitleFormat Format) LoadSubtitleWithFormat(string filePath, string? encodingName = null, string? fallbackEncodingName = null)
     {
         if (!File.Exists(filePath))
         {
@@ -63,9 +66,19 @@ internal static class LibSEIntegration
         }
 
         var subtitle = new Subtitle();
-        var encoding = string.IsNullOrWhiteSpace(encodingName)
-            ? LanguageAutoDetect.GetEncodingFromFile(filePath)
-            : GetEncoding(encodingName);
+        Encoding encoding;
+        if (!string.IsNullOrWhiteSpace(encodingName))
+        {
+            encoding = GetEncoding(encodingName);
+        }
+        else if (!string.IsNullOrWhiteSpace(fallbackEncodingName))
+        {
+            encoding = DetectEncodingWithFallback(filePath, fallbackEncodingName);
+        }
+        else
+        {
+            encoding = LanguageAutoDetect.GetEncodingFromFile(filePath);
+        }
 
         var lines = new List<string>(File.ReadAllLines(filePath, encoding));
 
@@ -145,6 +158,113 @@ internal static class LibSEIntegration
     /// </summary>
     public static Subtitle LoadSubtitle(string filePath, string? encodingName = null)
         => LoadSubtitleWithFormat(filePath, encodingName).Subtitle;
+
+    /// <summary>
+    /// Resolves the input encoding for a file when the user supplied
+    /// <c>--input-encoding-fallback</c> but no explicit <c>--encoding</c>.
+    /// Mirrors the early decisions in <see cref="LanguageAutoDetect.GetEncodingFromFile"/>
+    /// (BOM, then UTF-8 byte-pattern check) and replaces the final ANSI heuristic with the
+    /// user-supplied fallback. The fallback only fires when no BOM is present and the bytes
+    /// do not validate as UTF-8, which is exactly where the heuristic was misfiring on
+    /// Central European content getting tagged as Western European.
+    /// </summary>
+    internal static Encoding DetectEncodingWithFallback(string filePath, string fallbackEncodingName)
+    {
+        try
+        {
+            using var file = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var bom = new byte[4];
+            var bomRead = file.Read(bom, 0, bom.Length);
+
+            if (bomRead >= 3 && bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf)
+            {
+                return Encoding.UTF8;
+            }
+            if (bomRead >= 4 && bom[0] == 0xff && bom[1] == 0xfe && bom[2] == 0 && bom[3] == 0)
+            {
+                return Encoding.GetEncoding(12000);
+            }
+            if (bomRead >= 2 && bom[0] == 0xff && bom[1] == 0xfe)
+            {
+                return Encoding.Unicode;
+            }
+            if (bomRead >= 2 && bom[0] == 0xfe && bom[1] == 0xff)
+            {
+                return Encoding.BigEndianUnicode;
+            }
+            if (bomRead >= 4 && bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff)
+            {
+                return Encoding.GetEncoding(12001);
+            }
+
+            // No BOM — sniff for valid UTF-8 byte patterns over up to the first 500KB.
+            file.Position = 0;
+            var length = file.Length > 500_000 ? 500_000 : file.Length;
+            var buffer = new byte[length];
+            var totalRead = 0;
+            while (totalRead < buffer.Length)
+            {
+                var n = file.Read(buffer, totalRead, buffer.Length - totalRead);
+                if (n <= 0) break;
+                totalRead += n;
+            }
+
+            if (LooksLikeUtf8(buffer, totalRead))
+            {
+                return Encoding.UTF8;
+            }
+        }
+        catch
+        {
+            // Fall through to the user-supplied fallback on any read/IO trouble.
+        }
+
+        return GetEncoding(fallbackEncodingName);
+    }
+
+    /// <summary>
+    /// Returns true when <paramref name="buffer"/> contains at least one valid multi-byte
+    /// UTF-8 sequence and no invalid ones. Mirrors the private
+    /// <c>LanguageAutoDetect.IsUtf8</c> so we can decide UTF-8 vs. fallback without
+    /// touching libse's API surface.
+    /// </summary>
+    private static bool LooksLikeUtf8(byte[] buffer, int length)
+    {
+        var utf8Count = 0;
+        var i = 0;
+        while (i < length - 3)
+        {
+            var b = buffer[i];
+            if (b > 127)
+            {
+                if (b >= 194 && b <= 223 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191)
+                {
+                    utf8Count++;
+                    i++;
+                }
+                else if (b >= 224 && b <= 239 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191 &&
+                                                 buffer[i + 2] >= 128 && buffer[i + 2] <= 191)
+                {
+                    utf8Count++;
+                    i += 2;
+                }
+                else if (b >= 240 && b <= 244 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191 &&
+                                                 buffer[i + 2] >= 128 && buffer[i + 2] <= 191 &&
+                                                 buffer[i + 3] >= 128 && buffer[i + 3] <= 191)
+                {
+                    utf8Count++;
+                    i += 3;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            i++;
+        }
+
+        return utf8Count > 0;
+    }
 
     /// <summary>
     /// Saves a subtitle to a file using LibSE. Dispatches to format-specific Save methods
