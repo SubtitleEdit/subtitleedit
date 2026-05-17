@@ -2,6 +2,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 using Nikse.SubtitleEdit.Features.Tools.BatchConvert;
+using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
 using System.Collections.Concurrent;
@@ -21,7 +22,7 @@ public class BatchConverterRunBinaryOcrTests
     [Fact]
     public void RunBinaryOcrParallel_TenImages_ReturnsParagraphsInOrderWithExpectedText()
     {
-        var converter = new BatchConverter(new FakeNOcrCaseFixer(), new FakeBinaryOcrMatcher());
+        var converter = new BatchConverter(new FakeNOcrCaseFixer(), new FakeBinaryOcrMatcher(), new FakeNamesList());
         var imageSubtitles = new FakeOcrSubtitle(count: 10);
         var sharedDb = new BinaryOcrDb(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".db"), loadCompareImages: false);
 
@@ -51,7 +52,7 @@ public class BatchConverterRunBinaryOcrTests
     [Fact]
     public void RunBinaryOcrParallel_EmptyInput_ReturnsEmptyArray()
     {
-        var converter = new BatchConverter(new FakeNOcrCaseFixer(), new FakeBinaryOcrMatcher());
+        var converter = new BatchConverter(new FakeNOcrCaseFixer(), new FakeBinaryOcrMatcher(), new FakeNamesList());
         var imageSubtitles = new FakeOcrSubtitle(count: 0);
         var sharedDb = new BinaryOcrDb(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".db"), loadCompareImages: false);
 
@@ -134,5 +135,15 @@ public class BatchConverterRunBinaryOcrTests
     {
         public bool HasWarmedUp { get; set; }
         public string FixUppercaseLowercaseIssues(ImageSplitterItem2 targetItem, NOcrChar result) => result.Text ?? string.Empty;
+    }
+
+    private sealed class FakeNamesList : INamesList
+    {
+        public void Load(string dictionaryFolder, string languageCode)
+        {
+        }
+
+        public bool IsName(string candidate) => false;
+        public HashSet<string> GetAbbreviations() => new();
     }
 }
