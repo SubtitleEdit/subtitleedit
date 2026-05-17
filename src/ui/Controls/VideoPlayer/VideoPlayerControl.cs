@@ -822,13 +822,13 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             var videoFileName = _videoFileName;
             var position = Position;
             Close();
-            Dispatcher.UIThread.Post(async void () =>
+            Dispatcher.UIThread.Post(async () =>
             {
                 try
                 {
-                    Task.Delay(100).Wait();
+                    await Task.Delay(100);
                     await Open(videoFileName);
-                    Task.Delay(100).Wait();
+                    await Task.Delay(100);
                     Position = position;
                 }
                 catch (Exception e)

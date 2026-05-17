@@ -88,9 +88,9 @@ public partial class SourceViewViewModel : ObservableObject
         _subtitleFormat = subtitleFormat;
         _cursorTimer.Start();
 
-        Dispatcher.UIThread.Post(() =>
+        Dispatcher.UIThread.Post(async () =>
         {
-            Task.Delay(50).Wait(); // Slight delay to ensure control is ready  
+            await Task.Delay(50); // Slight delay to ensure control is ready
 
             var useSimpleTextBox = text.Length > 2_000_000;
             if (useSimpleTextBox)
@@ -104,7 +104,7 @@ public partial class SourceViewViewModel : ObservableObject
 
             TextBoxContainer.Child = SourceViewTextBox.ContentControl;
 
-            Task.Delay(50).Wait(); // Slight delay to ensure control is ready  
+            await Task.Delay(50); // Slight delay to ensure control is ready
             SourceViewTextBox.Focus();
             SourceViewTextBox.CaretIndex = 0;
         }, DispatcherPriority.Input);
