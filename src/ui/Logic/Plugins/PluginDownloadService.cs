@@ -33,9 +33,10 @@ public class PluginDownloadService : IPluginDownloadService
 
     public async Task InstallAsync(PluginIndexEntry entry, IProgress<float>? progress, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(entry.DownloadUrl))
+        var downloadUrl = PluginPlatform.ResolveDownloadUrl(entry);
+        if (string.IsNullOrWhiteSpace(downloadUrl))
         {
-            throw new InvalidOperationException($"Plugin '{entry.Name}' has no download URL.");
+            throw new InvalidOperationException($"Plugin '{entry.Name}' has no download for this platform ({PluginPlatform.GetCurrentKey() ?? "unknown"}).");
         }
 
         Directory.CreateDirectory(Se.PluginsFolder);
@@ -48,7 +49,7 @@ public class PluginDownloadService : IPluginDownloadService
 
             using (var zipStream = new MemoryStream())
             {
-                await DownloadHelper.DownloadFileAsync(_httpClient, entry.DownloadUrl, zipStream, progress, cancellationToken);
+                await DownloadHelper.DownloadFileAsync(_httpClient, downloadUrl, zipStream, progress, cancellationToken);
                 zipStream.Position = 0;
                 _zipUnpacker.UnpackZipStream(zipStream, tempDirectory);
             }

@@ -18,6 +18,12 @@ public class PluginIndexEntry
     public string Date { get; set; } = string.Empty;
     public string? MinSeVersion { get; set; }
 
-    /// <summary>URL of the plugin .zip. The zip must contain the plugin's folder (with plugin.json inside).</summary>
-    public string DownloadUrl { get; set; } = string.Empty;
+    /// <summary>
+    /// Per-platform download URLs keyed by <see cref="PluginPlatform.GetCurrentKey"/>
+    /// (e.g. "win-x64", "linux-arm64", "osx-arm64"). Each URL must point to a .zip
+    /// containing the plugin's folder (with plugin.json inside). Keys are
+    /// matched case-insensitively. A plugin without a key for the current
+    /// platform is shown but cannot be installed.
+    /// </summary>
+    public Dictionary<string, string> Downloads { get; set; } = new();
 }

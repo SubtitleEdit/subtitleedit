@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -15,6 +16,7 @@ namespace Nikse.SubtitleEdit.Logic.Plugins;
 [JsonSerializable(typeof(PluginRequest))]
 [JsonSerializable(typeof(PluginResponse))]
 [JsonSerializable(typeof(PluginIndex))]
+[JsonSerializable(typeof(Dictionary<string, string>))]
 internal partial class PluginJsonContext : JsonSerializerContext
 {
 }

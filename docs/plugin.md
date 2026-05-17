@@ -71,13 +71,27 @@ download. The index lives at the URL in `PluginConstants.OnlineIndexUrl`
       "url": "https://github.com/example/se-uppercase-plugin",
       "date": "2026-05-01",
       "minSeVersion": "5.0.0",
-      "downloadUrl": "https://github.com/example/se-uppercase-plugin/releases/download/v1.0.0/Uppercase.zip"
+      "downloads": {
+        "win-x64":     "https://github.com/example/se-uppercase-plugin/releases/download/v1.0.0/Uppercase-win-x64.zip",
+        "win-arm64":   "https://github.com/example/se-uppercase-plugin/releases/download/v1.0.0/Uppercase-win-arm64.zip",
+        "linux-x64":   "https://github.com/example/se-uppercase-plugin/releases/download/v1.0.0/Uppercase-linux-x64.zip",
+        "linux-arm64": "https://github.com/example/se-uppercase-plugin/releases/download/v1.0.0/Uppercase-linux-arm64.zip",
+        "osx-x64":     "https://github.com/example/se-uppercase-plugin/releases/download/v1.0.0/Uppercase-osx-x64.zip",
+        "osx-arm64":   "https://github.com/example/se-uppercase-plugin/releases/download/v1.0.0/Uppercase-osx-arm64.zip"
+      }
     }
   ]
 }
 ```
 
-- `downloadUrl` points to a `.zip` that contains the plugin's folder (with
+- `downloads` is a map of platform key → zip URL. Each key has the form
+  `{os}-{arch}` where `os` is `win`, `linux`, or `osx` and `arch` is `x64`,
+  `arm64`, `x86`, or `arm`. Keys are matched case-insensitively.
+- Subtitle Edit picks the URL whose key matches the user's OS + architecture.
+  A plugin with no key for the current platform is still shown in
+  **Get plugins online...** but its **Install** button is disabled with the
+  status *Not supported on this operating system*.
+- Each URL must point to a `.zip` containing the plugin's folder (with
   `plugin.json` inside). Subtitle Edit unpacks it into the `Plugins` directory.
 - If the zip has a single top-level folder it is used as the plugin folder name;
   otherwise the files are placed in a folder named after `name`.
