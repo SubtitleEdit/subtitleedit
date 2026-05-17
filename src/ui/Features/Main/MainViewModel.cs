@@ -135,6 +135,7 @@ using Nikse.SubtitleEdit.Features.Video.CutVideo;
 using Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 using Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
 using Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
+using Nikse.SubtitleEdit.Features.Video.OpenFromUrl.PickOnlineSubtitle;
 using Nikse.SubtitleEdit.Features.Video.ReEncodeVideo;
 using Nikse.SubtitleEdit.Features.Video.ShotChanges;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
@@ -347,6 +348,7 @@ public partial class MainViewModel :
     private readonly IPasteFromClipboardHelper _pasteFromClipboardHelper;
     private readonly IPluginCatalog _pluginCatalog;
     private readonly IPluginRunner _pluginRunner;
+    private readonly IYtDlpDownloadService _ytDlpDownloadService;
 
     private bool IsEmpty => Subtitles.Count == 0 || (Subtitles.Count == 1 && string.IsNullOrEmpty(Subtitles[0].Text));
 
@@ -415,7 +417,8 @@ public partial class MainViewModel :
         ICasingToggler casingToggler,
         IPasteFromClipboardHelper pasteFromClipboardHelper,
         IPluginCatalog pluginCatalog,
-        IPluginRunner pluginRunner)
+        IPluginRunner pluginRunner,
+        IYtDlpDownloadService ytDlpDownloadService)
     {
         _fileHelper = fileHelper;
         _folderHelper = folderHelper;
@@ -437,6 +440,7 @@ public partial class MainViewModel :
         _pasteFromClipboardHelper = pasteFromClipboardHelper;
         _pluginCatalog = pluginCatalog;
         _pluginRunner = pluginRunner;
+        _ytDlpDownloadService = ytDlpDownloadService;
 
         _loading = true;
         EditText = string.Empty;
@@ -5449,11 +5453,84 @@ public partial class MainViewModel :
         {
             case OpenFromUrlMode.OpenOnline:
                 await VideoOpenFile(url);
+                if (result.DownloadSubtitles)
+                {
+                    // No video on disk — fetch subs to a temp dir, show picker, then
+                    // clean up the temp dir once the picked subtitle is loaded.
+                    await DownloadSubtitlesOnlyAndPickAsync(url);
+                }
                 break;
 
             case OpenFromUrlMode.DownloadAndOpen:
-                await DownloadVideoFromUrlAndOpen(url);
+                // The picker is invoked inside DownloadVideoFromUrlAndOpen so it
+                // only fires when the video download actually succeeds — skipping
+                // it when the user cancels the save-as or the download itself.
+                await DownloadVideoFromUrlAndOpen(url, result.DownloadSubtitles);
                 break;
+        }
+    }
+
+    /// <summary>
+    /// Streaming-mode helper: runs yt-dlp once to write every available subtitle
+    /// to a temp directory, shows the chooser, loads the selected file, then
+    /// cleans the temp directory. Best-effort — failures don't roll back the
+    /// already-opened video.
+    /// </summary>
+    private async Task DownloadSubtitlesOnlyAndPickAsync(string url)
+    {
+        var tempDirectory = Path.Combine(Path.GetTempPath(), "SE-online-subs-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            Directory.CreateDirectory(tempDirectory);
+            var stem = Path.Combine(tempDirectory, "sub");
+
+            ShowStatus(Se.Language.Video.PickOnlineSubtitleFetching);
+            await _ytDlpDownloadService.DownloadAllSubtitlesAsync(url, stem, CancellationToken.None);
+
+            var downloaded = YtDlpDownloadService.EnumerateDownloadedSubtitles(tempDirectory, "sub");
+            await ShowPickerAndLoadAsync(downloaded);
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "Failed to fetch subtitles for streaming URL");
+        }
+        finally
+        {
+            TryDeleteDirectory(tempDirectory);
+        }
+    }
+
+    /// <summary>
+    /// Shows the subtitle chooser populated with <paramref name="subtitles"/>; if
+    /// the user picks one, loads it into the editor. The picker itself never
+    /// downloads anything — it's just a chooser over files already on disk.
+    /// </summary>
+    private async Task ShowPickerAndLoadAsync(IReadOnlyList<DownloadedSubtitleInfo> subtitles)
+    {
+        var pickerResult = await ShowDialogAsync<PickOnlineSubtitleWindow, PickOnlineSubtitleViewModel>(
+            vm => { vm.Initialize(subtitles); });
+
+        if (!pickerResult.OkPressed || string.IsNullOrEmpty(pickerResult.SelectedSubtitlePath))
+        {
+            return;
+        }
+
+        await SubtitleOpen(pickerResult.SelectedSubtitlePath, skipLoadVideo: true);
+    }
+
+    private static void TryDeleteDirectory(string? path)
+    {
+        if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
+        {
+            return;
+        }
+        try
+        {
+            Directory.Delete(path, recursive: true);
+        }
+        catch
+        {
+            // best effort — leave the OS to garbage-collect /tmp
         }
     }
 
@@ -5486,7 +5563,7 @@ public partial class MainViewModel :
         return true;
     }
 
-    private async Task DownloadVideoFromUrlAndOpen(string url)
+    private async Task DownloadVideoFromUrlAndOpen(string url, bool downloadSubtitles)
     {
         if (Window == null)
         {
@@ -5502,12 +5579,31 @@ public partial class MainViewModel :
 
         var downloadResult = await ShowDialogAsync<DownloadVideoFromUrlWindow, DownloadVideoFromUrlViewModel>(vm =>
         {
-            vm.Initialize(url, outputPath);
+            vm.Initialize(url, outputPath, downloadSubtitles);
         });
 
         if (downloadResult.Success && File.Exists(downloadResult.OutputPath))
         {
             await VideoOpenFile(downloadResult.OutputPath);
+
+            if (downloadSubtitles)
+            {
+                // Subs were written into a per-download GUID temp directory so the
+                // picker can't accidentally list any pre-existing sidecar files
+                // sitting next to the user's chosen save folder. Show the picker,
+                // load the chosen file, then clean the temp dir up.
+                try
+                {
+                    if (downloadResult.DownloadedSubtitles.Count > 0)
+                    {
+                        await ShowPickerAndLoadAsync(downloadResult.DownloadedSubtitles);
+                    }
+                }
+                finally
+                {
+                    TryDeleteDirectory(downloadResult.TempSubtitleDirectory);
+                }
+            }
         }
     }
 

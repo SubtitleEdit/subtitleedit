@@ -14,6 +14,7 @@ public enum OpenFromUrlMode
 public partial class OpenFromUrlViewModel : ObservableObject
 {
     [ObservableProperty] private string _url;
+    [ObservableProperty] private bool _downloadSubtitles;
 
     public Window? Window { get; set; }
 
@@ -24,6 +25,7 @@ public partial class OpenFromUrlViewModel : ObservableObject
     public OpenFromUrlViewModel()
     {
         Url = string.Empty;
+        DownloadSubtitles = false;
     }
 
     [RelayCommand]

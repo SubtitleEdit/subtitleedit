@@ -48,6 +48,10 @@ public class LanguageVideo
     public string OpenFromUrlMissing { get; set; }
     public string OpenFromUrlDownloadingTitle { get; set; }
     public string OpenFromUrlSaveAs { get; set; }
+    public string OpenFromUrlDownloadSubtitles { get; set; }
+    public string PickOnlineSubtitleTitle { get; set; }
+    public string PickOnlineSubtitleFetching { get; set; }
+    public string PickOnlineSubtitleNoneFound { get; set; }
     public string ToggleCurrentSubtitleWhilePlaying { get; set; }
     public string OnlyMkvCanSupportEmbeddedSubtitleEditing { get; set; }
     public string ReEncodeInfo { get; set; }
@@ -101,6 +105,10 @@ public class LanguageVideo
         OpenFromUrlMissing = "Please enter a video URL first.";
         OpenFromUrlDownloadingTitle = "Downloading video";
         OpenFromUrlSaveAs = "Save video as";
+        OpenFromUrlDownloadSubtitles = "Also download subtitles";
+        PickOnlineSubtitleTitle = "Pick subtitle to download";
+        PickOnlineSubtitleFetching = "Downloading subtitles...";
+        PickOnlineSubtitleNoneFound = "No subtitles found for this URL.";
         ToggleCurrentSubtitleWhilePlaying = "Toggle current subtitle while playing";
         OnlyMkvCanSupportEmbeddedSubtitleEditing = "Only Matroska (.mkv, .webm) files are supported for editing embedded subtitles.";
         ReEncodeInfo = "Re-encoding can make subtitling smoother:" + Environment.NewLine +

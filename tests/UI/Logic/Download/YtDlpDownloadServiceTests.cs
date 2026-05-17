@@ -52,4 +52,40 @@ public class YtDlpDownloadServiceTests
 
         Assert.Equal(expected, actual);
     }
+
+    [Fact]
+    public void EnumerateDownloadedSubtitles_FindsSidecarFiles_FiltersByExtensionAndSorts()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), "EnumerateSubsTest_" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(tempDir);
+        try
+        {
+            File.WriteAllText(Path.Combine(tempDir, "video.mkv"), ""); // not a sub — filtered out by ext
+            File.WriteAllText(Path.Combine(tempDir, "video.es.vtt"), "");
+            File.WriteAllText(Path.Combine(tempDir, "video.en.vtt"), "");
+            File.WriteAllText(Path.Combine(tempDir, "video.fr.srt"), "");
+            File.WriteAllText(Path.Combine(tempDir, "video.txt"), ""); // no language segment
+            File.WriteAllText(Path.Combine(tempDir, "other.en.vtt"), ""); // different stem
+
+            var result = YtDlpDownloadService.EnumerateDownloadedSubtitles(tempDir, "video");
+
+            Assert.Equal(3, result.Count);
+            Assert.Equal("en", result[0].LanguageCode);
+            Assert.Equal("vtt", result[0].Format);
+            Assert.Equal("es", result[1].LanguageCode);
+            Assert.Equal("fr", result[2].LanguageCode);
+            Assert.Equal("srt", result[2].Format);
+        }
+        finally
+        {
+            Directory.Delete(tempDir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void EnumerateDownloadedSubtitles_MissingDirOrEmptyStem_ReturnsEmpty()
+    {
+        Assert.Empty(YtDlpDownloadService.EnumerateDownloadedSubtitles("/nonexistent/path", "video"));
+        Assert.Empty(YtDlpDownloadService.EnumerateDownloadedSubtitles(Path.GetTempPath(), ""));
+    }
 }
