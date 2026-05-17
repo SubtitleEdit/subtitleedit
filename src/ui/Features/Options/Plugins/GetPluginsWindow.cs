@@ -86,38 +86,26 @@ public class GetPluginsWindow : Window
             actionLabel.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.ActionText)));
             actionLabel.Bind(IsVisibleProperty, new Binding(nameof(GetPluginsDisplayItem.NotBusy)));
 
-            // Busy state: small "47%" label with a thin progress bar underneath, both centered in the button.
-            var percentLabel = new TextBlock
-            {
-                HorizontalAlignment = HorizontalAlignment.Center,
-                FontWeight = FontWeight.SemiBold,
-                FontSize = 11,
-            };
-            percentLabel.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.DownloadProgressText)));
-
+            // Busy state: a 60-wide bar that fills the button's full content height with the percent inside.
+            // MinWidth=0 is needed to override FluentTheme's default ProgressBar MinWidth, which would
+            // otherwise blow past our Width=60.
             var downloadProgress = new ProgressBar
             {
                 Minimum = 0,
                 Maximum = 100,
                 Width = 60,
-                Height = 3,
+                MinWidth = 0,
+                ShowProgressText = true,
+                ProgressTextFormat = "{0:0}%",
                 HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Stretch,
             };
             downloadProgress.Bind(ProgressBar.ValueProperty, new Binding(nameof(GetPluginsDisplayItem.DownloadProgress)));
-
-            var busyContent = new StackPanel
-            {
-                Orientation = Orientation.Vertical,
-                Spacing = 3,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                Children = { percentLabel, downloadProgress },
-            };
-            busyContent.Bind(IsVisibleProperty, new Binding(nameof(GetPluginsDisplayItem.IsBusy)));
+            downloadProgress.Bind(IsVisibleProperty, new Binding(nameof(GetPluginsDisplayItem.IsBusy)));
 
             var buttonContent = new Grid();
             buttonContent.Children.Add(actionLabel);
-            buttonContent.Children.Add(busyContent);
+            buttonContent.Children.Add(downloadProgress);
 
             var installButton = new Button
             {
