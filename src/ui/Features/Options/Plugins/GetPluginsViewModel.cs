@@ -91,9 +91,13 @@ public partial class GetPluginsViewModel : ObservableObject
         }
 
         item.IsBusy = true;
+        item.DownloadProgress = 0;
         var previousStatus = item.StatusText;
         var progress = new Progress<float>(p =>
-            item.StatusText = string.Format(Se.Language.Plugins.DownloadingXPercent, (int)Math.Round(p * 100)));
+        {
+            item.DownloadProgress = p * 100;
+            item.StatusText = string.Format(Se.Language.Plugins.DownloadingXPercent, (int)Math.Round(p * 100));
+        });
 
         try
         {
