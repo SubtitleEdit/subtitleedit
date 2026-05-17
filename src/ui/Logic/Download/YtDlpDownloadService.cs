@@ -72,8 +72,7 @@ public class YtDlpDownloadService : IYtDlpDownloadService
 
     public async Task DownloadYtDlp(IProgress<float>? progress, CancellationToken cancellationToken)
     {
-        var path = Path.Combine(GetFullFileName());
-        await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(), path, progress, cancellationToken);
+        await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(), GetFullFileName(), progress, cancellationToken);
     }
 
     public static async Task<bool> IsInstalledVersionOutdated(CancellationToken cancellationToken)
@@ -94,8 +93,9 @@ public class YtDlpDownloadService : IYtDlpDownloadService
         {
             throw;
         }
-        catch
+        catch (Exception ex)
         {
+            Se.LogError(ex, "Failed to determine installed yt-dlp version; treating as outdated.");
             return true;
         }
 
