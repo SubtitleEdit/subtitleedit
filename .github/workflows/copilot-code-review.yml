@@ -22,8 +22,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           if ! requested_reviewers="$(gh api \
-            "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers")"; then
-            echo "Failed to fetch requested reviewers for PR #${{ github.event.pull_request.number }}" >&2
+            "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers" 2>&1)"; then
+            echo "Failed to fetch requested reviewers for PR #${{ github.event.pull_request.number }}: $requested_reviewers" >&2
             exit 1
           fi
 
