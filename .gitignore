@@ -432,3 +432,5 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/.claude
+/installer/flatpak
