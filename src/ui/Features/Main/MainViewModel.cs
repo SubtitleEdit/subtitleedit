@@ -5379,7 +5379,7 @@ public partial class MainViewModel :
                 await ShowDialogAsync<DownloadYtDlpWindow, DownloadYtDlpViewModel>();
                 isYouTubeDlInstalled = File.Exists(YtDlpDownloadService.GetFullFileName());
                 var isYouTubeDlCurrent = isYouTubeDlInstalled &&
-                                         !await YtDlpDownloadService.IsInstalledVersionOutdated(CancellationToken.None);
+                                         !await YtDlpDownloadService.IsInstalledVersionOutdated(CancellationToken.None, forceRefresh: true);
                 if (isYouTubeDlCurrent)
                 {
                     ShowStatus(Se.Language.Main.YoutubeDlDownloadedSuccessfully);

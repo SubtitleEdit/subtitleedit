@@ -184,31 +184,63 @@ public class YtDlpDownloadService : IYtDlpDownloadService
         progress.Report(clamped);
     }
 
-    public static async Task<bool> IsInstalledVersionOutdated(CancellationToken cancellationToken)
+    private static readonly object _versionCheckCacheLock = new();
+    private static bool? _cachedIsOutdated;
+
+    public static async Task<bool> IsInstalledVersionOutdated(CancellationToken cancellationToken, bool forceRefresh = false)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
+        if (!forceRefresh)
+        {
+            lock (_versionCheckCacheLock)
+            {
+                if (_cachedIsOutdated is { } cached)
+                {
+                    return cached;
+                }
+            }
+        }
+
+        bool result;
         if (!File.Exists(GetFullFileName()))
         {
-            return true;
+            result = true;
+        }
+        else
+        {
+            string? installedVersion;
+            try
+            {
+                installedVersion = await GetInstalledVersion(cancellationToken);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Se.LogError(ex, "Failed to determine installed yt-dlp version; treating as outdated.");
+                return true; // don't cache failures — antivirus blips etc. shouldn't poison the session
+            }
+
+            result = IsVersionOutdated(installedVersion);
         }
 
-        string? installedVersion;
-        try
+        lock (_versionCheckCacheLock)
         {
-            installedVersion = await GetInstalledVersion(cancellationToken);
-        }
-        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-        {
-            throw;
-        }
-        catch (Exception ex)
-        {
-            Se.LogError(ex, "Failed to determine installed yt-dlp version; treating as outdated.");
-            return true;
+            _cachedIsOutdated = result;
         }
 
-        return IsVersionOutdated(installedVersion);
+        return result;
+    }
+
+    public static void InvalidateInstalledVersionCache()
+    {
+        lock (_versionCheckCacheLock)
+        {
+            _cachedIsOutdated = null;
+        }
     }
 
     internal static bool IsVersionOutdated(string? installedVersion)
