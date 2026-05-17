@@ -93,7 +93,7 @@ public class GetPluginsWindow : Window
             {
                 Minimum = 0,
                 Maximum = 100,
-                Width = 60,
+                Width = 80,
                 MinWidth = 0,
                 ShowProgressText = true,
                 ProgressTextFormat = "{0:0}%",
