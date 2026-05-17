@@ -86,13 +86,15 @@ public class GetPluginsWindow : Window
             actionLabel.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.ActionText)));
             actionLabel.Bind(IsVisibleProperty, new Binding(nameof(GetPluginsDisplayItem.NotBusy)));
 
-            // Slim progress bar; percentage is shown in the row's status text, no need to repeat it inside the bar.
+            // Slim progress bar with the percentage inside.
             var downloadProgress = new ProgressBar
             {
                 Minimum = 0,
                 Maximum = 100,
-                Width = 48,
-                Height = 6,
+                Width = 56,
+                Height = 14,
+                ShowProgressText = true,
+                ProgressTextFormat = "{0:0}%",
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
             };
