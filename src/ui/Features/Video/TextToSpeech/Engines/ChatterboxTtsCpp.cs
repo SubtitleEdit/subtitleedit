@@ -23,9 +23,9 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// Chatterbox TTS via the existing CrispASR install (shared with the speech-to-text feature).
 /// Spawns `crispasr --server --backend chatterbox -m &lt;t3&gt; --codec-model &lt;s3gen&gt;` and POSTs
 /// to the OpenAI-compatible /v1/audio/speech endpoint. Requires CrispASR v0.6.0 or newer.
-/// The T3 + S3Gen GGUFs are downloaded explicitly into TextToSpeech/Chatterbox/models/ —
-/// `-m auto` is avoided because its codec auto-discovery only finds *-s3gen-f16.gguf
-/// while it actually downloads the q8_0 variants.
+/// The T3 + S3Gen GGUFs are downloaded into CrispASR/models/ (shared with the CrispASR
+/// speech-to-text models) — `-m auto` is avoided because its codec auto-discovery only
+/// finds *-s3gen-f16.gguf while it actually downloads the q8_0 variants.
 /// Chatterbox has one baked default voice; "voices" listed beyond Default come from
 /// WAVs imported via <see cref="ImportVoice"/>. The full reference-WAV path is sent per-request
 /// as the `voice` field — runtime WAV cloning is wired upstream in CrispASR's chatterbox backend.
@@ -158,13 +158,75 @@ public class ChatterboxTtsCpp : ITtsEngine
 
     public static string GetSetModelsFolder()
     {
-        var modelsFolder = Path.Combine(GetSetFolder(), "models");
+        // Chatterbox is driven by the CrispASR binary, so its GGUFs live alongside
+        // the CrispASR speech-to-text models in CrispASR/models/ rather than under
+        // TextToSpeech/Chatterbox/. The voices folder and synth output WAVs still
+        // live under TextToSpeech/Chatterbox/ since those are TTS-engine state, not
+        // models.
+        var modelsFolder = Path.Combine(Se.CrispAsrFolder, "models");
         if (!Directory.Exists(modelsFolder))
         {
             Directory.CreateDirectory(modelsFolder);
         }
 
+        MigrateLegacyModels(modelsFolder);
+
         return modelsFolder;
+    }
+
+    private static bool _legacyMigrationDone;
+
+    /// <summary>
+    /// One-time best-effort move of chatterbox-*.gguf files from the old
+    /// TextToSpeech/Chatterbox/models/ location into CrispASR/models/, so users
+    /// don't have to re-download ~1 GB after the layout change. Safe to call
+    /// repeatedly; bails out after the first call per process.
+    /// </summary>
+    private static void MigrateLegacyModels(string modelsFolder)
+    {
+        if (_legacyMigrationDone)
+        {
+            return;
+        }
+        _legacyMigrationDone = true;
+
+        var legacyFolder = Path.Combine(Se.TextToSpeechFolder, "Chatterbox", "models");
+        if (!Directory.Exists(legacyFolder))
+        {
+            return;
+        }
+
+        try
+        {
+            foreach (var src in Directory.GetFiles(legacyFolder, "chatterbox-*.gguf"))
+            {
+                var dest = Path.Combine(modelsFolder, Path.GetFileName(src));
+                try
+                {
+                    if (File.Exists(dest))
+                    {
+                        File.Delete(src);
+                    }
+                    else
+                    {
+                        File.Move(src, dest);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Se.LogError(ex, $"Chatterbox: failed to migrate legacy model '{src}' to '{dest}'");
+                }
+            }
+
+            if (Directory.GetFileSystemEntries(legacyFolder).Length == 0)
+            {
+                Directory.Delete(legacyFolder);
+            }
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "Chatterbox: legacy models migration failed");
+        }
     }
 
     public static string GetT3ModelPath(string? modelKey = null) =>
