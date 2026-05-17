@@ -1,9 +1,11 @@
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,6 +14,7 @@ namespace Nikse.SubtitleEdit.Logic.Download;
 public interface IYtDlpDownloadService
 {
     Task DownloadYtDlp(IProgress<float>? progress, CancellationToken cancellationToken);
+    Task DownloadVideo(string url, string outputPath, IProgress<float>? progress, CancellationToken cancellationToken);
 }
 
 public class YtDlpDownloadService : IYtDlpDownloadService
@@ -73,6 +76,112 @@ public class YtDlpDownloadService : IYtDlpDownloadService
     public async Task DownloadYtDlp(IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(), GetFullFileName(), progress, cancellationToken);
+    }
+
+    private static readonly Regex PercentageRegex = new(@"(?<pct>\d+(?:\.\d+)?)\s*%", RegexOptions.Compiled);
+
+    public async Task DownloadVideo(string url, string outputPath, IProgress<float>? progress, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (!File.Exists(GetFullFileName()))
+        {
+            throw new InvalidOperationException("yt-dlp is not installed");
+        }
+
+        using var process = new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = GetFullFileName(),
+                ArgumentList =
+                {
+                    "--newline",       // emit one progress line per update, never carriage-return rewriting
+                    "--no-mtime",      // don't carry remote mtime to the local file
+                    "--no-playlist",   // single video only — playlist URLs would download many files
+                    "-o", outputPath,
+                    url,
+                },
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            },
+            EnableRaisingEvents = true,
+        };
+
+        var stderrBuffer = new System.Text.StringBuilder();
+
+        process.OutputDataReceived += (_, e) =>
+        {
+            if (e.Data is null)
+            {
+                return;
+            }
+
+            ReportProgressFromLine(e.Data, progress);
+        };
+
+        process.ErrorDataReceived += (_, e) =>
+        {
+            if (e.Data is null)
+            {
+                return;
+            }
+
+            stderrBuffer.AppendLine(e.Data);
+            ReportProgressFromLine(e.Data, progress);
+        };
+
+        if (!process.Start())
+        {
+            throw new InvalidOperationException("Failed to start yt-dlp");
+        }
+
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+
+        try
+        {
+            await process.WaitForExitAsync(cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            TryKillProcess(process);
+            throw;
+        }
+
+        if (process.ExitCode != 0)
+        {
+            var details = stderrBuffer.ToString().Trim();
+            throw new InvalidOperationException(
+                $"yt-dlp exited with code {process.ExitCode}." +
+                (string.IsNullOrEmpty(details) ? string.Empty : Environment.NewLine + details));
+        }
+
+        progress?.Report(1f);
+    }
+
+    private static void ReportProgressFromLine(string line, IProgress<float>? progress)
+    {
+        if (progress is null || !line.Contains('%'))
+        {
+            return;
+        }
+
+        var match = PercentageRegex.Match(line);
+        if (!match.Success)
+        {
+            return;
+        }
+
+        if (!float.TryParse(match.Groups["pct"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var pct))
+        {
+            return;
+        }
+
+        var clamped = Math.Clamp(pct / 100f, 0f, 1f);
+        progress.Report(clamped);
     }
 
     public static async Task<bool> IsInstalledVersionOutdated(CancellationToken cancellationToken)

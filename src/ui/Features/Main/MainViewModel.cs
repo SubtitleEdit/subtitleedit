@@ -5397,14 +5397,76 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<OpenFromUrlWindow, OpenFromUrlViewModel>();
 
-        if (result.OkPressed)
+        if (!result.OkPressed || result.SelectedMode is null)
         {
-            var videoFileName = result.Url.Trim();
-            if (!string.IsNullOrEmpty(videoFileName))
+            return;
+        }
+
+        var url = result.Url.Trim();
+        if (string.IsNullOrEmpty(url))
+        {
+            return;
+        }
+
+        switch (result.SelectedMode.Value)
+        {
+            case OpenFromUrlMode.OpenOnline:
+                await VideoOpenFile(url);
+                break;
+
+            case OpenFromUrlMode.DownloadAndOpen:
+                await DownloadVideoFromUrlAndOpen(url);
+                break;
+        }
+    }
+
+    private async Task DownloadVideoFromUrlAndOpen(string url)
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var suggestedName = MakeDownloadSuggestedFileName(url);
+        var outputPath = await _fileHelper.PickSaveFile(Window, ".mkv", suggestedName, Se.Language.Video.OpenFromUrlSaveAs);
+        if (string.IsNullOrEmpty(outputPath))
+        {
+            return;
+        }
+
+        var downloadResult = await ShowDialogAsync<DownloadVideoFromUrlWindow, DownloadVideoFromUrlViewModel>(vm =>
+        {
+            vm.Initialize(url, outputPath);
+        });
+
+        if (downloadResult.Success && File.Exists(downloadResult.OutputPath))
+        {
+            await VideoOpenFile(downloadResult.OutputPath);
+        }
+    }
+
+    private static string MakeDownloadSuggestedFileName(string url)
+    {
+        try
+        {
+            var uri = new Uri(url);
+            var segments = uri.Segments;
+            for (var i = segments.Length - 1; i >= 0; i--)
             {
-                await VideoOpenFile(videoFileName);
+                var segment = segments[i].Trim('/');
+                if (!string.IsNullOrEmpty(segment))
+                {
+                    var sanitized = string.Join('_', segment.Split(Path.GetInvalidFileNameChars()));
+                    return Path.ChangeExtension(sanitized, ".mkv");
+                }
             }
         }
+        catch
+        {
+            // fall through to default
+        }
+
+        return "video.mkv";
     }
 
     [RelayCommand]
