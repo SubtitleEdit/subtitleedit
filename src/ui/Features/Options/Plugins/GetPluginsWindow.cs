@@ -63,7 +63,7 @@ public class GetPluginsWindow : Window
             };
             installButton.Bind(ContentControl.ContentProperty, new Binding(nameof(GetPluginsDisplayItem.ActionText)));
             installButton.Bind(Button.CommandParameterProperty, new Binding());
-            installButton.Bind(IsEnabledProperty, new Binding(nameof(GetPluginsDisplayItem.NotBusy)));
+            installButton.Bind(IsEnabledProperty, new Binding(nameof(GetPluginsDisplayItem.CanInstall)));
 
             var rowGrid = new Grid
             {
