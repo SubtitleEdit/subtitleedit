@@ -378,6 +378,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<LlamaCppOcrSettingsViewModel>();
         collection.AddTransient<OcrViewModel>();
         collection.AddTransient<OpenFromUrlViewModel>();
+        collection.AddTransient<DownloadVideoFromUrlViewModel>();
         collection.AddTransient<OpenSecondarySubtitleViewModel>();
         collection.AddTransient<PartsSavedViewModel>();
         collection.AddTransient<PickAlignmentViewModel>();

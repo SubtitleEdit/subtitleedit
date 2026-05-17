@@ -82,6 +82,7 @@ public class LanguageMain
     public string XShotChangedLoaded { get; set; }
     public string YoutubeDlDownloadedSuccessfully { get; set; }
     public string YoutubeDlNotInstalledDownloadNow { get; set; }
+    public string YoutubeDlOutdatedDownloadNow { get; set; }
     public string InsertUnicodeSymbol { get; set; }
     public string TrimmedXLines { get; set; }
     public string OpenOriginalDifferentNumberOfSubtitlesXY { get; set; }
@@ -186,6 +187,7 @@ public class LanguageMain
         XShotChangedLoaded = "{0} shot changes loaded";
         YoutubeDlDownloadedSuccessfully = "\"yt-dlp\" downloaded successfully.";
         YoutubeDlNotInstalledDownloadNow = "\"yt-dlp\" is not installed and is required for playing online videos.\n\nDownload now?";
+        YoutubeDlOutdatedDownloadNow = "\"yt-dlp\" is outdated and may not work with online videos.\n\nDownload the current version now?";
         InsertUnicodeSymbol = "Insert Unicode symbol";
         TrimmedXLines = "Trimmed {0} subtitle lines";
         OpenOriginalDifferentNumberOfSubtitlesXY = "The original subtitle file does not have the same number of subtitles as the current subtitle file.\n\n• Original subtitles: {0}\n• Current subtitles: {1}";

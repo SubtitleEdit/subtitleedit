@@ -174,7 +174,7 @@ public partial class GetDictionariesViewModel : ObservableObject
         using var stream = AssetLoader.Open(uri);
         using var reader = new StreamReader(stream);
 
-        var jsonContent = reader.ReadToEndAsync().Result;
+        var jsonContent = reader.ReadToEnd();
 
         var options = new JsonSerializerOptions
         {

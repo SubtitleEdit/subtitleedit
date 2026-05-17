@@ -1293,7 +1293,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
 
             _timerWhisper.Stop();
-            Task.Delay(250).Wait();
+            await Task.Delay(250);
             HideProgressBar();
             ProgressText = string.Empty;
             EstimatedText = string.Empty;

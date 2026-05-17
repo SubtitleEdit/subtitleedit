@@ -226,9 +226,9 @@ public partial class PromptUnknownWordViewModel : ObservableObject
 
     internal void OnEditWholeTextClicked()
     {
-        Dispatcher.UIThread.Invoke(() =>
+        Dispatcher.UIThread.Post(async () =>
         {
-            Task.Delay(50).Wait();
+            await Task.Delay(50);
             if (DoEditWholeText)
             {
                 TextBoxWholeText.Focus();

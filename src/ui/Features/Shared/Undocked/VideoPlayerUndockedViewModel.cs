@@ -176,11 +176,11 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
         {
             Dispatcher.UIThread.Post(async () =>
             {
-                Task.Delay(100).Wait();
+                await Task.Delay(100);
                 await videoPlayerControl.Open(_originalVideoFileName);
-                Task.Delay(100).Wait();
+                await Task.Delay(100);
                 await videoPlayerControl.WaitForPlayersReadyAsync();
-                Task.Delay(100).Wait();
+                await Task.Delay(100);
 
                 videoPlayerControl.Volume = _originalVolume;
                 videoPlayerControl.Position = _originalPosition;

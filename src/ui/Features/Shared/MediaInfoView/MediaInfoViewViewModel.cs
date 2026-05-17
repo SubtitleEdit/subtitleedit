@@ -49,15 +49,15 @@ public partial class MediaInfoViewViewModel : ObservableObject
         // for container/ffmpeg parsing on large files.
         Text = BuildBasicInfoText(videoFileName, includeLoadingHint: true);
 
-        Dispatcher.UIThread.Post(() =>
+        Dispatcher.UIThread.Post(async () =>
         {
-            Task.Delay(50).Wait(); // Slight delay to ensure control is ready
+            await Task.Delay(50); // Slight delay to ensure control is ready
 
             SourceViewTextBox = CreateAdvancedTextBoxWrapper(Text);
 
             TextBoxContainer.Child = SourceViewTextBox.ContentControl;
 
-            Task.Delay(50).Wait(); // Slight delay to ensure control is ready
+            await Task.Delay(50); // Slight delay to ensure control is ready
             SourceViewTextBox.Focus();
             SourceViewTextBox.CaretIndex = 0;
         }, DispatcherPriority.Input);

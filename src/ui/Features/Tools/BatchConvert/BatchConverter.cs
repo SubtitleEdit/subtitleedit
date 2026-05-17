@@ -23,6 +23,7 @@ using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
 using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
 using System;
@@ -69,11 +70,15 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     private readonly INOcrCaseFixer _nOcrCaseFixer;
     private readonly IBinaryOcrMatcher _binaryOcrMatcher;
+    private readonly INamesList _namesList;
+    private string _namesListFolder = string.Empty;
+    private string _namesListLanguage = string.Empty;
 
-    public BatchConverter(INOcrCaseFixer nOcrCaseFixer, IBinaryOcrMatcher binaryOcrMatcher)
+    public BatchConverter(INOcrCaseFixer nOcrCaseFixer, IBinaryOcrMatcher binaryOcrMatcher, INamesList namesList)
     {
         _nOcrCaseFixer = nOcrCaseFixer;
         _binaryOcrMatcher = binaryOcrMatcher;
+        _namesList = namesList;
         _config = new BatchConvertConfig();
         _subtitleFormats = new List<SubtitleFormat>();
         _compiledRegExList = new Dictionary<string, Regex>();
@@ -1971,6 +1976,15 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             return subtitle;
         }
 
+        var dictionaryFolder = Se.DictionariesFolder;
+        if (!string.Equals(_namesListFolder, dictionaryFolder, StringComparison.Ordinal) ||
+            !string.Equals(_namesListLanguage, Language, StringComparison.Ordinal))
+        {
+            _namesList.Load(dictionaryFolder, Language);
+            _namesListFolder = dictionaryFolder;
+            _namesListLanguage = Language;
+        }
+
         foreach (var fix in _config.FixCommonErrors.Profile.FixRules)
         {
             if (fix.IsSelected)
@@ -2634,12 +2648,12 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
 
     public bool IsName(string candidate)
     {
-        return false; //TODO: fix name checking
+        return _namesList.IsName(candidate);
     }
 
     public HashSet<string> GetAbbreviations()
     {
-        return new HashSet<string>(); //TODO: fix abbreviation checking
+        return _namesList.GetAbbreviations();
     }
 
     public void AddToTotalErrors(int count)

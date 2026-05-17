@@ -5359,16 +5359,28 @@ public partial class MainViewModel :
         }
 
         var isYouTubeDlInstalled = File.Exists(YtDlpDownloadService.GetFullFileName());
+        var downloadMessage = string.Empty;
         if (!isYouTubeDlInstalled)
         {
+            downloadMessage = Se.Language.Main.YoutubeDlNotInstalledDownloadNow;
+        }
+        else if (await YtDlpDownloadService.IsInstalledVersionOutdated(CancellationToken.None))
+        {
+            downloadMessage = Se.Language.Main.YoutubeDlOutdatedDownloadNow;
+        }
+
+        if (!string.IsNullOrEmpty(downloadMessage))
+        {
             var download = await MessageBox.Show(Window, Se.Language.General.Information,
-                Se.Language.Main.YoutubeDlNotInstalledDownloadNow,
+                downloadMessage,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Information);
             if (download == MessageBoxResult.Yes)
             {
-                var downloadResult = await ShowDialogAsync<DownloadYtDlpWindow, DownloadYtDlpViewModel>();
+                await ShowDialogAsync<DownloadYtDlpWindow, DownloadYtDlpViewModel>();
                 isYouTubeDlInstalled = File.Exists(YtDlpDownloadService.GetFullFileName());
-                if (isYouTubeDlInstalled)
+                var isYouTubeDlCurrent = isYouTubeDlInstalled &&
+                                         !await YtDlpDownloadService.IsInstalledVersionOutdated(CancellationToken.None, forceRefresh: true);
+                if (isYouTubeDlCurrent)
                 {
                     ShowStatus(Se.Language.Main.YoutubeDlDownloadedSuccessfully);
                 }
@@ -5385,14 +5397,76 @@ public partial class MainViewModel :
 
         var result = await ShowDialogAsync<OpenFromUrlWindow, OpenFromUrlViewModel>();
 
-        if (result.OkPressed)
+        if (!result.OkPressed || result.SelectedMode is null)
         {
-            var videoFileName = result.Url.Trim();
-            if (!string.IsNullOrEmpty(videoFileName))
+            return;
+        }
+
+        var url = result.Url.Trim();
+        if (string.IsNullOrEmpty(url))
+        {
+            return;
+        }
+
+        switch (result.SelectedMode.Value)
+        {
+            case OpenFromUrlMode.OpenOnline:
+                await VideoOpenFile(url);
+                break;
+
+            case OpenFromUrlMode.DownloadAndOpen:
+                await DownloadVideoFromUrlAndOpen(url);
+                break;
+        }
+    }
+
+    private async Task DownloadVideoFromUrlAndOpen(string url)
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var suggestedName = MakeDownloadSuggestedFileName(url);
+        var outputPath = await _fileHelper.PickSaveFile(Window, ".mkv", suggestedName, Se.Language.Video.OpenFromUrlSaveAs);
+        if (string.IsNullOrEmpty(outputPath))
+        {
+            return;
+        }
+
+        var downloadResult = await ShowDialogAsync<DownloadVideoFromUrlWindow, DownloadVideoFromUrlViewModel>(vm =>
+        {
+            vm.Initialize(url, outputPath);
+        });
+
+        if (downloadResult.Success && File.Exists(downloadResult.OutputPath))
+        {
+            await VideoOpenFile(downloadResult.OutputPath);
+        }
+    }
+
+    private static string MakeDownloadSuggestedFileName(string url)
+    {
+        try
+        {
+            var uri = new Uri(url);
+            var segments = uri.Segments;
+            for (var i = segments.Length - 1; i >= 0; i--)
             {
-                await VideoOpenFile(videoFileName);
+                var segment = segments[i].Trim('/');
+                if (!string.IsNullOrEmpty(segment))
+                {
+                    var sanitized = string.Join('_', segment.Split(Path.GetInvalidFileNameChars()));
+                    return Path.ChangeExtension(sanitized, ".mkv");
+                }
             }
         }
+        catch
+        {
+            // fall through to default
+        }
+
+        return "video.mkv";
     }
 
     [RelayCommand]

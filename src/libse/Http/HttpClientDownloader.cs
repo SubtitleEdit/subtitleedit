@@ -28,10 +28,10 @@ namespace Nikse.SubtitleEdit.Core.Http
             return _httpClient.PostAsync(uri, stringContent, cancellationToken);
         }
 
-        public Task<string> GetStringAsync(string url)
+        public async Task<string> GetStringAsync(string url)
         {
-            var response = _httpClient.GetByteArrayAsync(url).Result;
-            return Task.FromResult(Encoding.UTF8.GetString(response, 0, response.Length));
+            var response = await _httpClient.GetByteArrayAsync(url).ConfigureAwait(false);
+            return Encoding.UTF8.GetString(response, 0, response.Length);
         }
 
         public async Task DownloadAsync(string requestUri, Stream destination, IProgress<float> progress = null, CancellationToken cancellationToken = default)

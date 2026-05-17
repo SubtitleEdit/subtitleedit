@@ -39,6 +39,15 @@ public class LanguageVideo
     public string ViewMatroskaTrackX { get; set; }
     public string ResolutionSeparator { get; set; }
     public string OpenFromUrlTitle { get; set; }
+    public string OpenFromUrlOpenOnline { get; set; }
+    public string OpenFromUrlOpenOnlineDescription { get; set; }
+    public string OpenFromUrlOpenOnlineNote { get; set; }
+    public string OpenFromUrlDownloadAndOpen { get; set; }
+    public string OpenFromUrlDownloadAndOpenDescription { get; set; }
+    public string OpenFromUrlDownloadAndOpenNote { get; set; }
+    public string OpenFromUrlMissing { get; set; }
+    public string OpenFromUrlDownloadingTitle { get; set; }
+    public string OpenFromUrlSaveAs { get; set; }
     public string ToggleCurrentSubtitleWhilePlaying { get; set; }
     public string OnlyMkvCanSupportEmbeddedSubtitleEditing { get; set; }
     public string ReEncodeInfo { get; set; }
@@ -83,6 +92,15 @@ public class LanguageVideo
         ViewMatroskaTrackX = "View Matroska track - {0}";
         ResolutionSeparator = "x";
         OpenFromUrlTitle = "Open video file from URL";
+        OpenFromUrlOpenOnline = "Open online";
+        OpenFromUrlOpenOnlineDescription = "Stream the video directly. Fastest start.";
+        OpenFromUrlOpenOnlineNote = "Speech-to-text and waveform spikes are not available in this mode.";
+        OpenFromUrlDownloadAndOpen = "Download and open";
+        OpenFromUrlDownloadAndOpenDescription = "Save the video locally, then open it.";
+        OpenFromUrlDownloadAndOpenNote = "Required for speech-to-text and waveform spikes.";
+        OpenFromUrlMissing = "Please enter a video URL first.";
+        OpenFromUrlDownloadingTitle = "Downloading video";
+        OpenFromUrlSaveAs = "Save video as";
         ToggleCurrentSubtitleWhilePlaying = "Toggle current subtitle while playing";
         OnlyMkvCanSupportEmbeddedSubtitleEditing = "Only Matroska (.mkv, .webm) files are supported for editing embedded subtitles.";
         ReEncodeInfo = "Re-encoding can make subtitling smoother:" + Environment.NewLine +
