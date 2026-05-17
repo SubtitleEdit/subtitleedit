@@ -1,7 +1,7 @@
 
 Subtitle Edit Changelog
 
-v5.0.0-beta28 (xth May 2026)
+v5.0.0-beta28 (17th May 2026)
 
 * Add drag-and-drop area to TTS voice settings for importing a voice
 * Add DeepSeek auto-translate engine
@@ -35,6 +35,8 @@ v5.0.0-beta28 (xth May 2026)
 * Fix auto-translate prompt persistence and translated filename
 * Fix Netflix Quality Check ignoring per-check Apply checkboxes
 * Fix subtitle format changing to source format on save after auto-translate
+* Update Polish translation - thx potplayer-fanpack
+* Fix "Import plain text" align-button label to "Speech to text" - thx David
 
 -----------------------------------------------------------------------------------------------------
 
