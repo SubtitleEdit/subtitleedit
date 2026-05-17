@@ -155,7 +155,7 @@ internal class SubtitleConverter
             {
                 // Load subtitle file using LibSE — keep the detected format so the
                 // save side can apply RemoveNativeFormatting when the target differs.
-                var (subtitle, sourceFormat) = LibSEIntegration.LoadSubtitleWithFormat(inputFile, options.Encoding);
+                var (subtitle, sourceFormat) = LibSEIntegration.LoadSubtitleWithFormat(inputFile, options.Encoding, options.InputEncodingFallback);
 
                 if (subtitle == null || subtitle.Paragraphs.Count == 0)
                 {
@@ -348,6 +348,13 @@ internal class ConversionOptions
     public string? OutputFolder { get; init; }
     public string? OutputFilename { get; init; }
     public string? Encoding { get; init; }
+
+    /// <summary>
+    /// Encoding to assume when input has no BOM and is not detected as UTF-8.
+    /// Replaces the ANSI codepage heuristic only — BOM and valid UTF-8 still win.
+    /// Ignored when <see cref="Encoding"/> is set (which already forces input encoding).
+    /// </summary>
+    public string? InputEncodingFallback { get; init; }
     public double? Fps { get; init; }
     public double? TargetFps { get; init; }
     public bool Overwrite { get; init; }

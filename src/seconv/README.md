@@ -35,6 +35,7 @@ seconv <pattern> --format <name> [options]   # alternative syntax
 ```bash
 seconv *.srt sami                                              # SRT → SAMI
 seconv movie.srt subrip --encoding:windows-1252                # encoding override
+seconv *.srt subrip --input-encoding-fallback:windows-1250     # UTF-8 wins; CP1250 only if not UTF-8
 seconv *.sub subrip --fps:25 --output-folder ./out             # frame-based → time-based
 
 seconv movie.mkv subrip --track-number:3                       # extract MKV text track #3
@@ -85,6 +86,7 @@ seconv lint *.srt --json                    # CI-friendly: exit 1 on any issue
 | `--output-filename:<name>` | Output file name (single input only) |
 | `--overwrite` | Overwrite existing files (default: rotate to `name_2.ext`, `_3.ext`, ...) |
 | `--encoding:<name>` | Encoding name or codepage (defaults: auto-detect on input, UTF-8 BOM on output) |
+| `--input-encoding-fallback:<name>` | Encoding to assume when input has no BOM and is not detected as UTF-8 (replaces the ANSI codepage heuristic). Ignored when `--encoding` is set. |
 
 ### Time / Frame
 | Option | Description |
