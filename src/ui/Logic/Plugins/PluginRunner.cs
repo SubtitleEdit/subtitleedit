@@ -2,6 +2,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -47,6 +48,7 @@ public class PluginRunner : IPluginRunner
             }
             else
             {
+                EnsureExecutable(plugin.LaunchPath);
                 startInfo.FileName = plugin.LaunchPath;
             }
 
@@ -112,6 +114,31 @@ public class PluginRunner : IPluginRunner
         finally
         {
             TryDeleteDirectory(tempDirectory);
+        }
+    }
+
+    // System.IO.Compression.ZipFile.ExtractToDirectory does not preserve Unix file
+    // modes, so a self-contained plugin binary unpacked from a zip on macOS/Linux
+    // arrives without its +x bit. Set it here before launching.
+    private static void EnsureExecutable(string path)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return;
+        }
+
+        try
+        {
+            var mode = File.GetUnixFileMode(path);
+            var needed = UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute;
+            if ((mode & needed) != needed)
+            {
+                File.SetUnixFileMode(path, mode | needed);
+            }
+        }
+        catch
+        {
+            // ignore - if we can't chmod, Process.Start will fail with a clear permission error
         }
     }
 
