@@ -32,6 +32,8 @@ public partial class GetPluginsDisplayItem : ObservableObject
     public FontWeight StatusFontWeight => UpdateAvailable ? FontWeight.SemiBold : FontWeight.Normal;
     public double StatusOpacity => UpdateAvailable ? 1.0 : 0.6;
 
+    public string DownloadProgressText => $"{(int)System.Math.Round(DownloadProgress)}%";
+
     public GetPluginsDisplayItem(PluginIndexEntry entry, string? installedVersion)
     {
         Entry = entry;
@@ -89,6 +91,11 @@ public partial class GetPluginsDisplayItem : ObservableObject
     {
         OnPropertyChanged(nameof(NotBusy));
         OnPropertyChanged(nameof(CanInstall));
+    }
+
+    partial void OnDownloadProgressChanged(double value)
+    {
+        OnPropertyChanged(nameof(DownloadProgressText));
     }
 
     private static bool IsNewer(string candidate, string current)

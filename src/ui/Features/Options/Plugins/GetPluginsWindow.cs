@@ -86,15 +86,19 @@ public class GetPluginsWindow : Window
             actionLabel.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.ActionText)));
             actionLabel.Bind(IsVisibleProperty, new Binding(nameof(GetPluginsDisplayItem.NotBusy)));
 
-            // Slim progress bar; percentage is shown in the row's status text, no need to repeat it inside the bar.
+            // Busy state: a 60-wide bar that fills the button's full content height with the percent inside.
+            // MinWidth=0 is needed to override FluentTheme's default ProgressBar MinWidth, which would
+            // otherwise blow past our Width=60.
             var downloadProgress = new ProgressBar
             {
                 Minimum = 0,
                 Maximum = 100,
-                Width = 48,
-                Height = 6,
+                Width = 80,
+                MinWidth = 0,
+                ShowProgressText = true,
+                ProgressTextFormat = "{0:0}%",
                 HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Stretch,
             };
             downloadProgress.Bind(ProgressBar.ValueProperty, new Binding(nameof(GetPluginsDisplayItem.DownloadProgress)));
             downloadProgress.Bind(IsVisibleProperty, new Binding(nameof(GetPluginsDisplayItem.IsBusy)));
@@ -106,7 +110,7 @@ public class GetPluginsWindow : Window
             var installButton = new Button
             {
                 VerticalAlignment = VerticalAlignment.Center,
-                MinWidth = 100,
+                Width = 110,
                 Command = vm.InstallCommand,
                 Content = buttonContent,
             };
