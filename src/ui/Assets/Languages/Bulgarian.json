@@ -1050,7 +1050,7 @@
       "paddingLeftRight": "Разминаване отляво/отдясно",
       "paddingTopBottom": "Подплата отгоре/отдолу",
       "previewTitle": "Преглед - текущ размер: {0}x{1}, целеви размер: {2}x{3}, мащабиране: {4}%",
-      "titleExportVobSub": "VobSub (суб/idx)",
+      "titleExportVobSub": "VobSub (sub/idx)",
       "customTextFormatsDotDotDot": "_Персонализирани текстови формати...",
       "plainTextDotDotDot": "_Обикновен текст...",
       "customTextFormats": "Персонализирани текстови формати",
@@ -1990,7 +1990,13 @@
     "showTechnicalDetails": "Покажи технически подробности",
     "hideTechnicalDetails": "Скриване на технически подробности",
     "technicalDetails": "Технически подробности",
-    "pleaseSelectATargetLanguage": "Моля, изберете целеви език"
+    "pleaseSelectATargetLanguage": "Моля, изберете целеви език",
+    "readyToTranslate": "Готов за превод",
+    "translating": "Превежда се...",
+    "translationComplete": "Преводът е завършен",
+    "translationCancelled": "Преводът е анулиран",
+    "swapLanguages": "Размяна на изходния и целевия език",
+    "xIsAlreadyDownloadedReDownload": "{0} вече е изтеглен. Да се изтегли ли отново?"
   },
   "options": {
     "settings": {
@@ -2661,7 +2667,16 @@
     "vobSubColorPattern": "Модел",
     "vobSubColorEmphasis1": "Акцент 1",
     "vobSubColorEmphasis2": "Акцент 2",
-    "vobSubColorsInvert": "Инвертиране на фона / акцент 1"
+    "vobSubColorsInvert": "Инвертиране на фона / акцент 1",
+    "llamaCppOcrSettingsTitle": "llama.cpp OCR настройки",
+    "llamaCppOcrPromptHint": "Използвай {language}, за да вмъкне избрания OCR език.",
+    "llamaCppOcrPromptEmpty": "Подканата не може да е празна.",
+    "llamaCppOcrPromptMissingLanguagePlaceholder": "Подканата трябва да съдържа заместител {language}.",
+    "nOcrBinaryOcrFallbackDatabase": "BinaryOCR fallback database",
+    "nOcrBinaryOcrFallbackNone": "(няма)",
+    "binaryOcrNOcrFallbackDatabase": "nOCR fallback database",
+    "showAllOllamaModels": "Покажи всички модели (не само с визуално възприятие)",
+    "ollamaModelLikelyWrong": "Ollama returned без текст - избраният модел може да не поддържа OCR / Vision"
   },
   "assa": {
     "assaDraw": "ASSA - жребий",
