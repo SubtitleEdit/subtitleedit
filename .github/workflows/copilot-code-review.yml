@@ -21,22 +21,16 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if ! requested_reviewers="$(gh api \
-            "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers" 2>&1)"; then
-            echo "Failed to fetch requested reviewers for PR #${{ github.event.pull_request.number }}: $requested_reviewers" >&2
-            exit 1
-          fi
+          requested_reviewers="$(gh api \
+            "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers")"
 
-          if echo "$requested_reviewers" | jq -e '(.users // []) | any(.login | ascii_downcase == "copilot")' >/dev/null; then
+          if echo "$requested_reviewers" | jq -e '([.users[]?, .teams[]?] | any(.login | ascii_downcase == "copilot"))' >/dev/null; then
             echo "Copilot review already requested, skipping."
             exit 0
           fi
 
-          if ! add_reviewer_output="$(gh api \
+          gh api \
             --method POST \
             -H "Accept: application/vnd.github+json" \
             "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers" \
-            -f reviewers[]='copilot' 2>&1)"; then
-            echo "Failed to request Copilot review for PR #${{ github.event.pull_request.number }}: $add_reviewer_output" >&2
-            exit 1
-          fi
+            -f reviewers[]='copilot'
