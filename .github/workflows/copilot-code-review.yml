@@ -21,8 +21,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          requested_reviewers="$(gh api \
-            "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers")"
+          if ! requested_reviewers="$(gh api \
+            "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers")"; then
+            echo "Failed to fetch requested reviewers for PR #${{ github.event.pull_request.number }}" >&2
+            exit 1
+          fi
 
           if echo "$requested_reviewers" | jq -e 'any(.users[]?; .login | ascii_downcase == "copilot")' >/dev/null; then
             exit 0
@@ -32,4 +35,4 @@ jobs:
             --method POST \
             -H "Accept: application/vnd.github+json" \
             "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers" \
-            -f reviewers[]='Copilot'
+            -f reviewers[]='copilot'
