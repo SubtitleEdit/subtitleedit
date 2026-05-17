@@ -4447,7 +4447,30 @@ public partial class MainViewModel :
             return;
         }
 
-        var request = BuildPluginRequest(plugin);
+        var selectedIndices = GetSelectedSubtitleIndices();
+        if (selectedIndices.Count > 0 && selectedIndices.Count < Subtitles.Count)
+        {
+            var choice = await MessageBox.Show(
+                Window,
+                plugin.Manifest.Name,
+                string.Format(Se.Language.Plugins.ApplyPluginToWhichLinesX, plugin.Manifest.Name),
+                MessageBoxButtons.Cancel,
+                MessageBoxIcon.Question,
+                custom1: string.Format(Se.Language.Plugins.ApplyToSelectedLinesX, selectedIndices.Count),
+                custom2: string.Format(Se.Language.Plugins.ApplyToAllLinesX, Subtitles.Count));
+
+            if (choice == MessageBoxResult.Cancel || choice == MessageBoxResult.None)
+            {
+                return;
+            }
+
+            if (choice == MessageBoxResult.Custom2)
+            {
+                selectedIndices.Clear();
+            }
+        }
+
+        var request = BuildPluginRequest(plugin, selectedIndices);
         var runResult = await _pluginRunner.RunAsync(plugin, request, System.Threading.CancellationToken.None);
         if (runResult.WasCancelled)
         {
@@ -4500,11 +4523,8 @@ public partial class MainViewModel :
             : response.Message!);
     }
 
-    private PluginRequest BuildPluginRequest(InstalledPlugin plugin)
+    private List<int> GetSelectedSubtitleIndices()
     {
-        var subtitle = GetUpdateSubtitle();
-        var format = SelectedSubtitleFormat;
-
         var selectedIndices = new List<int>();
         if (SubtitleGrid.SelectedItems != null)
         {
@@ -4519,6 +4539,14 @@ public partial class MainViewModel :
 
             selectedIndices.Sort();
         }
+
+        return selectedIndices;
+    }
+
+    private PluginRequest BuildPluginRequest(InstalledPlugin plugin, List<int> selectedIndices)
+    {
+        var subtitle = GetUpdateSubtitle();
+        var format = SelectedSubtitleFormat;
 
         var frameRate = _mediaInfo != null
             ? (double)_mediaInfo.FramesRateNonNormalized
