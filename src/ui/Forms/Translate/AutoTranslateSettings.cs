@@ -175,8 +175,7 @@ namespace Nikse.SubtitleEdit.Forms.Translate
 
             if (nikseTextBoxPrompt.Text.Length > 4000)
             {
-                MessageBox.Show("Too many characters in prompt");
-                return;
+                MessageBox.Show("Warning: Prompt may be too long for some translation engines.");
             }
 
             Configuration.Settings.Tools.AutoTranslateDelaySeconds = (int)nikseUpDownDelay.Value;
