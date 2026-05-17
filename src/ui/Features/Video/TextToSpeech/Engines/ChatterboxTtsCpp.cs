@@ -67,6 +67,7 @@ public class ChatterboxTtsCpp : ITtsEngine
     private static Process? _serverProcess;
     private static int _serverPort;
     private static string? _serverModelKey;
+    private static string? _serverLaunchCommand;
     private static bool _processExitHooked;
     // Rolling buffer of the server's stdout+stderr — used to attach context to
     // /v1/audio/speech failures (the response body alone says "synthesis failed"
@@ -250,13 +251,15 @@ public class ChatterboxTtsCpp : ITtsEngine
             // during synth (ggml fault, OOM, etc.). Attach what the server printed
             // so the user/we can see the underlying reason.
             var serverLog = SnapshotServerLog();
+            var launchCommand = _serverLaunchCommand;
             var died = _serverProcess?.HasExited == true;
             if (died)
             {
                 StopServerInternal();
             }
             var failMsg = $"Chatterbox TTS request failed - Voice: {chatterboxVoice}, Text: {text}, "
-                + $"RequestJson: {body}, ServerExited: {died}, ServerLog: {serverLog}";
+                + $"RequestJson: {body}, ServerExited: {died}, ServerLog: {serverLog}"
+                + LaunchCmdSuffix(launchCommand);
             Se.LogError(ex, failMsg);
             Se.WriteToolsLog(failMsg);
 
@@ -269,7 +272,9 @@ public class ChatterboxTtsCpp : ITtsEngine
                   + (died ? "the crispasr server crashed during synthesis." : "the connection to the crispasr server was dropped.");
 
             throw new InvalidOperationException(
-                prefix + (string.IsNullOrEmpty(serverLog) ? string.Empty : $"{Environment.NewLine}Server log:{Environment.NewLine}{serverLog}"),
+                prefix
+                    + (string.IsNullOrEmpty(serverLog) ? string.Empty : $"{Environment.NewLine}Server log:{Environment.NewLine}{serverLog}")
+                    + LaunchCmdSuffix(launchCommand),
                 ex);
         }
 
@@ -279,14 +284,17 @@ public class ChatterboxTtsCpp : ITtsEngine
             {
                 var errorBody = await SafeReadErrorAsync(response, cancellationToken);
                 var serverLog = SnapshotServerLog();
+                var launchCommand = _serverLaunchCommand;
                 var errMsg = $"Chatterbox TTS server error {(int)response.StatusCode} {response.StatusCode} - "
                     + $"Voice: {chatterboxVoice}, Text: {text}, RequestJson: {body}, "
-                    + $"ResponseBody: {errorBody}, ServerLog: {serverLog}";
+                    + $"ResponseBody: {errorBody}, ServerLog: {serverLog}"
+                    + LaunchCmdSuffix(launchCommand);
                 Se.LogError(errMsg);
                 Se.WriteToolsLog(errMsg);
                 throw new InvalidOperationException(
                     $"Chatterbox TTS synthesis failed ({(int)response.StatusCode}): {errorBody}"
-                    + (string.IsNullOrEmpty(serverLog) ? string.Empty : $"{Environment.NewLine}Server log:{Environment.NewLine}{serverLog}"));
+                    + (string.IsNullOrEmpty(serverLog) ? string.Empty : $"{Environment.NewLine}Server log:{Environment.NewLine}{serverLog}")
+                    + LaunchCmdSuffix(launchCommand));
             }
 
             await using var fileStream = File.Create(outputFileName);
@@ -315,6 +323,11 @@ public class ChatterboxTtsCpp : ITtsEngine
         }
         return sb.ToString();
     }
+
+    private static string LaunchCmdSuffix(string? launchCommand) =>
+        string.IsNullOrEmpty(launchCommand)
+            ? string.Empty
+            : $"{Environment.NewLine}Launch command: {launchCommand}";
 
     private static async Task<string> SafeReadErrorAsync(HttpResponseMessage response, CancellationToken ct)
     {
@@ -394,10 +407,13 @@ public class ChatterboxTtsCpp : ITtsEngine
                 ?? throw new InvalidOperationException("Failed to start crispasr (chatterbox)");
 
             // Record the exact launch command in the tools log so failures later in this
-            // session can be reproduced from a shell.
+            // session can be reproduced from a shell. Also cache it on the static so the
+            // runtime/startup error paths can surface it inline with the error dialog.
+            var launchCommand = FormatLaunchCommand(exe, psi.ArgumentList);
+            _serverLaunchCommand = launchCommand;
             Se.WriteToolsLog("Chatterbox TTS server starting - "
                 + $"PID: {process.Id}, "
-                + $"Cmd: {FormatLaunchCommand(exe, psi.ArgumentList)}");
+                + $"Cmd: {launchCommand}");
 
             lock (_serverLog) _serverLog.Clear();
             process.ErrorDataReceived += (_, e) =>
@@ -425,21 +441,25 @@ public class ChatterboxTtsCpp : ITtsEngine
                 {
                     var tail = SnapshotServerLog();
                     var exitCode = process.ExitCode;
+                    var exitedLaunchCommand = _serverLaunchCommand;
                     _serverProcess = null;
                     _serverPort = 0;
                     _serverModelKey = null;
+                    _serverLaunchCommand = null;
                     if (LooksLikeOutdatedCrispAsr(tail))
                     {
                         throw new InvalidOperationException(
                             "Chatterbox requires CrispASR v0.6.0 or newer. Re-download CrispASR via "
-                            + "Video → Audio to text → Engine settings → Re-download, then try again.");
+                            + "Video → Audio to text → Engine settings → Re-download, then try again."
+                            + LaunchCmdSuffix(exitedLaunchCommand));
                     }
                     if (LooksLikeStaleModelCache(tail))
                     {
                         throw new InvalidOperationException(
                             "Chatterbox failed to load its model — the GGUFs in "
                             + GetSetModelsFolder() + " are likely stale or partially downloaded. "
-                            + "Delete them and try again so they re-download. Original output: " + tail);
+                            + "Delete them and try again so they re-download. Original output: " + tail
+                            + LaunchCmdSuffix(exitedLaunchCommand));
                     }
                     if (LooksLikeChatterboxTurboStartupCrash(modelKey, tail))
                     {
@@ -448,10 +468,12 @@ public class ChatterboxTtsCpp : ITtsEngine
                             + "upstream issue in the chatterbox-turbo backend (especially on macOS/CPU). "
                             + "Try the \"Base\" model instead, or file an issue at "
                             + "https://github.com/CrispStrobe/CrispASR/issues with the log below."
-                            + Environment.NewLine + Environment.NewLine + tail);
+                            + Environment.NewLine + Environment.NewLine + tail
+                            + LaunchCmdSuffix(exitedLaunchCommand));
                     }
                     throw new InvalidOperationException(
-                        $"crispasr (chatterbox) exited during startup (code {exitCode}). Output: {tail}");
+                        $"crispasr (chatterbox) exited during startup (code {exitCode}). Output: {tail}"
+                        + LaunchCmdSuffix(exitedLaunchCommand));
                 }
                 if (await ProbeHealthAsync(port, TimeSpan.FromSeconds(2), ct))
                 {
@@ -461,9 +483,11 @@ public class ChatterboxTtsCpp : ITtsEngine
             }
 
             var lastOutput = SnapshotServerLog();
+            var timeoutLaunchCommand = _serverLaunchCommand;
             StopServerInternal();
             throw new TimeoutException(
-                $"crispasr (chatterbox) did not report healthy within 15 minutes. Last output: {lastOutput}");
+                $"crispasr (chatterbox) did not report healthy within 15 minutes. Last output: {lastOutput}"
+                + LaunchCmdSuffix(timeoutLaunchCommand));
         }
         finally
         {
@@ -582,6 +606,7 @@ public class ChatterboxTtsCpp : ITtsEngine
         _serverProcess = null;
         _serverPort = 0;
         _serverModelKey = null;
+        _serverLaunchCommand = null;
         if (p == null) return;
         try
         {
