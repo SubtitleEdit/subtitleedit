@@ -17,6 +17,7 @@ public class LibVlcDynamicNativeControl : NativeControlHost
     private bool _isInitialized;
     private IntPtr _nativeHandle;
     private IntPtr _ownedChildHandle;
+    private IntPtr _x11Display;
 
     // Window Styles
     private const uint WS_CHILD = 0x40000000;
@@ -31,6 +32,7 @@ public class LibVlcDynamicNativeControl : NativeControlHost
     private const uint WS_EX_TRANSPARENT = 0x00000020;
 
     private static bool ShouldUseOwnedChildHandle => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+    private static bool ShouldUseOwnedX11Child => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
     public LibVlcDynamicPlayer? Player => _vlcPlayer;
 
@@ -50,7 +52,11 @@ public class LibVlcDynamicNativeControl : NativeControlHost
     protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
     {
         _nativeHandle = CreateRenderTargetHandle(parent.Handle);
-        var handleDescriptor = _ownedChildHandle != IntPtr.Zero ? "HWND" : parent.HandleDescriptor;
+        var handleDescriptor = parent.HandleDescriptor;
+        if (_ownedChildHandle != IntPtr.Zero && ShouldUseOwnedChildHandle)
+        {
+            handleDescriptor = "HWND";
+        }
 
         if (!_isInitialized && _vlcPlayer != null)
         {
@@ -76,7 +82,17 @@ public class LibVlcDynamicNativeControl : NativeControlHost
     {
         if (_ownedChildHandle != IntPtr.Zero)
         {
-            DestroyWindow(_ownedChildHandle);
+            if (ShouldUseOwnedX11Child && _x11Display != IntPtr.Zero)
+            {
+                XDestroyWindow(_x11Display, _ownedChildHandle);
+                XSync(_x11Display, false);
+                XCloseDisplay(_x11Display);
+                _x11Display = IntPtr.Zero;
+            }
+            else
+            {
+                DestroyWindow(_ownedChildHandle);
+            }
             _ownedChildHandle = IntPtr.Zero;
         }
 
@@ -87,6 +103,11 @@ public class LibVlcDynamicNativeControl : NativeControlHost
 
     private IntPtr CreateRenderTargetHandle(IntPtr parentHandle)
     {
+        if (ShouldUseOwnedX11Child)
+        {
+            return CreateX11ChildWindow(parentHandle);
+        }
+
         if (!ShouldUseOwnedChildHandle)
         {
             return parentHandle;
@@ -125,6 +146,59 @@ public class LibVlcDynamicNativeControl : NativeControlHost
         }
 
         return _ownedChildHandle;
+    }
+
+    // Avalonia's NativeControlHost on X11 hands us the host window's XID. libVLC then renders
+    // into that window via libvlc_media_player_set_xwindow, but the host window has no opaque
+    // background, so VLC's output composites over whatever sits behind the Avalonia window —
+    // visible as translucent video (see issue #10977). Mirror the Windows path: create an
+    // X11 child window with BlackPixel as its background and give that XID to VLC.
+    private IntPtr CreateX11ChildWindow(IntPtr parentHandle)
+    {
+        try
+        {
+            _x11Display = XOpenDisplay(IntPtr.Zero);
+            if (_x11Display == IntPtr.Zero)
+            {
+                System.Diagnostics.Debug.WriteLine("Failed to open X11 display for VLC child window. Falling back to parent handle.");
+                return parentHandle;
+            }
+
+            var screen = XDefaultScreen(_x11Display);
+            var black = XBlackPixel(_x11Display, screen);
+
+            _ownedChildHandle = XCreateSimpleWindow(
+                _x11Display,
+                parentHandle,
+                0, 0,
+                1, 1,
+                0,
+                black,
+                black);
+
+            if (_ownedChildHandle == IntPtr.Zero)
+            {
+                System.Diagnostics.Debug.WriteLine("Failed to create X11 child window for VLC. Falling back to parent handle.");
+                XCloseDisplay(_x11Display);
+                _x11Display = IntPtr.Zero;
+                return parentHandle;
+            }
+
+            XMapWindow(_x11Display, _ownedChildHandle);
+            XSync(_x11Display, false);
+            return _ownedChildHandle;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"X11 child window creation threw: {ex.Message}. Falling back to parent handle.");
+            if (_x11Display != IntPtr.Zero)
+            {
+                XCloseDisplay(_x11Display);
+                _x11Display = IntPtr.Zero;
+            }
+            _ownedChildHandle = IntPtr.Zero;
+            return parentHandle;
+        }
     }
 
     private void InitializeWithNativeWindow(IntPtr windowHandle)
@@ -169,6 +243,39 @@ public class LibVlcDynamicNativeControl : NativeControlHost
     [DllImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool DestroyWindow(IntPtr hWnd);
+
+    [DllImport("libX11.so.6")]
+    private static extern IntPtr XOpenDisplay(IntPtr display);
+
+    [DllImport("libX11.so.6")]
+    private static extern int XCloseDisplay(IntPtr display);
+
+    [DllImport("libX11.so.6")]
+    private static extern int XDefaultScreen(IntPtr display);
+
+    [DllImport("libX11.so.6")]
+    private static extern UIntPtr XBlackPixel(IntPtr display, int screenNumber);
+
+    [DllImport("libX11.so.6")]
+    private static extern IntPtr XCreateSimpleWindow(
+        IntPtr display,
+        IntPtr parent,
+        int x,
+        int y,
+        uint width,
+        uint height,
+        uint borderWidth,
+        UIntPtr border,
+        UIntPtr background);
+
+    [DllImport("libX11.so.6")]
+    private static extern int XMapWindow(IntPtr display, IntPtr window);
+
+    [DllImport("libX11.so.6")]
+    private static extern int XDestroyWindow(IntPtr display, IntPtr window);
+
+    [DllImport("libX11.so.6")]
+    private static extern int XSync(IntPtr display, [MarshalAs(UnmanagedType.Bool)] bool discard);
 
     public async void LoadFile(string path)
     {
