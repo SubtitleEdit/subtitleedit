@@ -67,14 +67,17 @@ public class GetPluginsWindow : Window
             {
                 Minimum = 0,
                 Maximum = 100,
-                Height = 14,
-                HorizontalAlignment = HorizontalAlignment.Stretch,
+                Width = 70,
+                Height = 16,
+                ShowProgressText = true,
+                ProgressTextFormat = "{0:0}%",
+                HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
             };
             downloadProgress.Bind(ProgressBar.ValueProperty, new Binding(nameof(GetPluginsDisplayItem.DownloadProgress)));
             downloadProgress.Bind(IsVisibleProperty, new Binding(nameof(GetPluginsDisplayItem.IsBusy)));
 
-            var buttonContent = new Grid { MinWidth = 80 };
+            var buttonContent = new Grid();
             buttonContent.Children.Add(actionLabel);
             buttonContent.Children.Add(downloadProgress);
 
