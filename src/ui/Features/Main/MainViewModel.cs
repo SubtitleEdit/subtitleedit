@@ -5387,37 +5387,21 @@ public partial class MainViewModel :
         }
 
         var isYouTubeDlInstalled = File.Exists(YtDlpDownloadService.GetFullFileName());
-        var downloadMessage = string.Empty;
+
+        // If yt-dlp is installed, run the "is it outdated" check in the background
+        // while the URL dialog is on screen — IsInstalledVersionOutdated spawns
+        // `yt-dlp --version` which can take a noticeable moment (especially on
+        // macOS where the self-extracting binary unpacks on first run). We only
+        // need the result if the user actually submits a URL.
+        Task<bool>? outdatedCheckTask = isYouTubeDlInstalled
+            ? Task.Run(() => YtDlpDownloadService.IsInstalledVersionOutdated(CancellationToken.None))
+            : null;
+
         if (!isYouTubeDlInstalled)
         {
-            downloadMessage = Se.Language.Main.YoutubeDlNotInstalledDownloadNow;
-        }
-        else if (await YtDlpDownloadService.IsInstalledVersionOutdated(CancellationToken.None))
-        {
-            downloadMessage = Se.Language.Main.YoutubeDlOutdatedDownloadNow;
-        }
-
-        if (!string.IsNullOrEmpty(downloadMessage))
-        {
-            var download = await MessageBox.Show(Window, Se.Language.General.Information,
-                downloadMessage,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-            if (download == MessageBoxResult.Yes)
-            {
-                await ShowDialogAsync<DownloadYtDlpWindow, DownloadYtDlpViewModel>();
-                isYouTubeDlInstalled = File.Exists(YtDlpDownloadService.GetFullFileName());
-                var isYouTubeDlCurrent = isYouTubeDlInstalled &&
-                                         !await YtDlpDownloadService.IsInstalledVersionOutdated(CancellationToken.None, forceRefresh: true);
-                if (isYouTubeDlCurrent)
-                {
-                    ShowStatus(Se.Language.Main.YoutubeDlDownloadedSuccessfully);
-                }
-                else
-                {
-                    return;
-                }
-            }
-            else
+            // Without the binary on disk there's nothing useful the URL dialog can
+            // do — block on installing it first.
+            if (!await PromptToDownloadYtDlp(Se.Language.Main.YoutubeDlNotInstalledDownloadNow))
             {
                 return;
             }
@@ -5436,6 +5420,31 @@ public partial class MainViewModel :
             return;
         }
 
+        // Now that the user has committed to a URL, see whether the background
+        // version check came back "outdated" — and only then interrupt with the
+        // upgrade prompt. The check is almost always finished by this point, but
+        // we await it to be safe.
+        if (outdatedCheckTask is not null)
+        {
+            bool isOutdated;
+            try
+            {
+                isOutdated = await outdatedCheckTask;
+            }
+            catch
+            {
+                // Treat check failures as not-outdated; a stale binary will surface
+                // its own error on the next yt-dlp invocation.
+                isOutdated = false;
+            }
+
+            if (isOutdated &&
+                !await PromptToDownloadYtDlp(Se.Language.Main.YoutubeDlOutdatedDownloadNow))
+            {
+                return;
+            }
+        }
+
         switch (result.SelectedMode.Value)
         {
             case OpenFromUrlMode.OpenOnline:
@@ -5446,6 +5455,35 @@ public partial class MainViewModel :
                 await DownloadVideoFromUrlAndOpen(url);
                 break;
         }
+    }
+
+    /// <summary>
+    /// Asks the user whether to download yt-dlp, runs the download window if so, and
+    /// returns true when a usable binary is on disk afterwards. Returns false if the
+    /// user declined or the download did not produce a file (cancelled / failed).
+    /// </summary>
+    private async Task<bool> PromptToDownloadYtDlp(string message)
+    {
+        var download = await MessageBox.Show(Window!, Se.Language.General.Information,
+            message,
+            MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+        if (download != MessageBoxResult.Yes)
+        {
+            return false;
+        }
+
+        await ShowDialogAsync<DownloadYtDlpWindow, DownloadYtDlpViewModel>();
+        if (!File.Exists(YtDlpDownloadService.GetFullFileName()))
+        {
+            return false;
+        }
+
+        // We just downloaded YtDlpDownloadService.CurrentVersion, so the binary on
+        // disk is known-current; drop the cached "outdated" flag so any later
+        // periodic check reflects the new file.
+        YtDlpDownloadService.InvalidateInstalledVersionCache();
+        ShowStatus(Se.Language.Main.YoutubeDlDownloadedSuccessfully);
+        return true;
     }
 
     private async Task DownloadVideoFromUrlAndOpen(string url)

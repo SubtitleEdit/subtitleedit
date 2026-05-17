@@ -5,11 +5,11 @@ namespace UITests.Logic.Download;
 public class YtDlpDownloadServiceTests
 {
     [Theory]
-    [InlineData("2025.07.21", true)]
-    [InlineData(YtDlpDownloadService.CurrentVersion, false)]
-    [InlineData("", true)]
-    [InlineData("not-a-version", true)]
-    public void IsVersionOutdated_DetectsStaleOrInvalidVersions(string installedVersion, bool expected)
+    [InlineData("2025.07.21", true)]   // definitively older → nag
+    [InlineData(YtDlpDownloadService.CurrentVersion, false)] // current → don't nag
+    [InlineData("", false)]            // unknown → don't nag (subprocess returned nothing)
+    [InlineData("not-a-version", false)] // unknown → don't nag (unparseable output)
+    public void IsVersionOutdated_OnlyFlagsConfirmedOlderVersions(string installedVersion, bool expected)
     {
         var actual = YtDlpDownloadService.IsVersionOutdated(installedVersion);
 
@@ -35,5 +35,21 @@ public class YtDlpDownloadServiceTests
 
         await Assert.ThrowsAsync<OperationCanceledException>(() =>
             YtDlpDownloadService.IsInstalledVersionOutdated(cancellationTokenSource.Token));
+    }
+
+    [Theory]
+    [InlineData("2026.03.17\n", "2026.03.17")]
+    [InlineData("v2026.03.17\n", "2026.03.17")]
+    [InlineData("  2026.03.17  \n", "2026.03.17")]
+    [InlineData("2026.03.17.1\n", "2026.03.17.1")]
+    [InlineData("[debug] Bootstrapping...\nExtracting bundle\n2026.03.17\n", "2026.03.17")]
+    [InlineData("", null)]
+    [InlineData("   \n  \n", null)]
+    [InlineData("not a version at all", null)]
+    public void ExtractVersion_PullsVersionFromAnyLineInOutput(string output, string? expected)
+    {
+        var actual = YtDlpDownloadService.ExtractVersion(output);
+
+        Assert.Equal(expected, actual);
     }
 }

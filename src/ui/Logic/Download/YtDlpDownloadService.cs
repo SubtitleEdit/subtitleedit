@@ -21,7 +21,10 @@ public class YtDlpDownloadService : IYtDlpDownloadService
 {
     private readonly HttpClient _httpClient;
     internal const string CurrentVersion = "2026.03.17";
-    private static readonly TimeSpan VersionCheckTimeout = TimeSpan.FromSeconds(5);
+    // First-run extraction of the self-extracting yt-dlp bundle (especially
+    // yt-dlp_macos) routinely needs more than 5s on slower disks; bumped to 15s
+    // so the timeout doesn't masquerade as "version unknown / outdated".
+    private static readonly TimeSpan VersionCheckTimeout = TimeSpan.FromSeconds(15);
     private const string WindowsUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/" + CurrentVersion + "/yt-dlp.exe";
     private const string LinuxUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/" + CurrentVersion + "/yt-dlp_linux";
     private const string LinuxArmUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/" + CurrentVersion + "/yt-dlp_linux_aarch64";
@@ -243,13 +246,42 @@ public class YtDlpDownloadService : IYtDlpDownloadService
         }
     }
 
+    private static readonly Regex VersionLineRegex = new(@"^\s*v?(\d+\.\d+(?:\.\d+){0,2})\s*$",
+        RegexOptions.Compiled | RegexOptions.Multiline);
+
+    /// <summary>
+    /// Extracts a YYYY.MM[.DD[.N]] version string from <c>yt-dlp --version</c>
+    /// output. Scans all lines instead of taking the first because the macOS
+    /// self-extracting bundle can print bootstrap/extraction noise on first run
+    /// before the actual version line. Returns null if no line in the output
+    /// matches a version shape.
+    /// </summary>
+    internal static string? ExtractVersion(string? output)
+    {
+        if (string.IsNullOrWhiteSpace(output))
+        {
+            return null;
+        }
+
+        var match = VersionLineRegex.Match(output);
+        return match.Success ? match.Groups[1].Value : null;
+    }
+
+    /// <summary>
+    /// Returns true only when we can confirm the installed version is older than
+    /// <see cref="CurrentVersion"/>. Anything we can't parse — null, empty, weird
+    /// pre-release suffix, extraction-noise output — returns false. Nagging the
+    /// user to redownload every session because <c>--version</c> printed something
+    /// we didn't expect is worse than trusting the binary and letting the next
+    /// real yt-dlp call surface a concrete error.
+    /// </summary>
     internal static bool IsVersionOutdated(string? installedVersion)
     {
         if (string.IsNullOrWhiteSpace(installedVersion) ||
             !Version.TryParse(installedVersion.Trim(), out var parsedInstalledVersion) ||
             !Version.TryParse(CurrentVersion, out var parsedCurrentVersion))
         {
-            return true;
+            return false;
         }
 
         return parsedInstalledVersion < parsedCurrentVersion;
@@ -300,8 +332,7 @@ public class YtDlpDownloadService : IYtDlpDownloadService
             }
 
             var output = await stdoutTask;
-            var lines = output.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            return lines.Length == 0 ? null : lines[0];
+            return ExtractVersion(output);
         }
         finally
         {
