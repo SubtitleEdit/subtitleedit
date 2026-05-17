@@ -38,13 +38,18 @@ public static class InitMenu
         menu.Items.Clear();
         menu.Opened += (s, e) => DisplayShortcuts(menu, vm);
 
-        // Drop the menu's font one notch below the theme default — a slightly
-        // denser menu reads better when there are this many entries. The style
-        // also targets nested MenuItems so submenus inherit the size.
+        // Drop the menu's font one notch below the theme default and tighten
+        // each item's vertical padding — a denser menu reads better when there
+        // are this many entries. The style targets nested MenuItems so submenu
+        // items inherit the same look.
         menu.FontSize = MenuFontSize;
         menu.Styles.Add(new Style(x => x.OfType<MenuItem>())
         {
-            Setters = { new Setter(MenuItem.FontSizeProperty, MenuFontSize) },
+            Setters =
+            {
+                new Setter(MenuItem.FontSizeProperty, MenuFontSize),
+                new Setter(MenuItem.PaddingProperty, new Thickness(10, 3)),
+            },
         });
 
         menu.Items.Add(new MenuItem
