@@ -55,13 +55,36 @@ public class GetPluginsWindow : Window
                 Children = { titleRow, description, status },
             };
 
+            var actionLabel = new TextBlock
+            {
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            actionLabel.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.ActionText)));
+            actionLabel.Bind(IsVisibleProperty, new Binding(nameof(GetPluginsDisplayItem.NotBusy)));
+
+            var downloadProgress = new ProgressBar
+            {
+                Minimum = 0,
+                Maximum = 100,
+                Height = 14,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            downloadProgress.Bind(ProgressBar.ValueProperty, new Binding(nameof(GetPluginsDisplayItem.DownloadProgress)));
+            downloadProgress.Bind(IsVisibleProperty, new Binding(nameof(GetPluginsDisplayItem.IsBusy)));
+
+            var buttonContent = new Grid { MinWidth = 80 };
+            buttonContent.Children.Add(actionLabel);
+            buttonContent.Children.Add(downloadProgress);
+
             var installButton = new Button
             {
                 VerticalAlignment = VerticalAlignment.Center,
                 MinWidth = 100,
                 Command = vm.InstallCommand,
+                Content = buttonContent,
             };
-            installButton.Bind(ContentControl.ContentProperty, new Binding(nameof(GetPluginsDisplayItem.ActionText)));
             installButton.Bind(Button.CommandParameterProperty, new Binding());
             installButton.Bind(IsEnabledProperty, new Binding(nameof(GetPluginsDisplayItem.CanInstall)));
 

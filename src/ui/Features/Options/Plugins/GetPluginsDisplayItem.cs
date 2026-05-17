@@ -9,6 +9,7 @@ public partial class GetPluginsDisplayItem : ObservableObject
     [ObservableProperty] private bool _isBusy;
     [ObservableProperty] private string _statusText = string.Empty;
     [ObservableProperty] private string _actionText = string.Empty;
+    [ObservableProperty] private double _downloadProgress;
 
     public PluginIndexEntry Entry { get; }
 
