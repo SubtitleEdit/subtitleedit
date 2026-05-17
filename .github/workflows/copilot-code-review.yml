@@ -32,8 +32,11 @@ jobs:
             exit 0
           fi
 
-          gh api \
+          if ! add_reviewer_output="$(gh api \
             --method POST \
             -H "Accept: application/vnd.github+json" \
             "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers" \
-            -f reviewers[]='copilot'
+            -f reviewers[]='copilot' 2>&1)"; then
+            echo "Failed to request Copilot review for PR #${{ github.event.pull_request.number }}: $add_reviewer_output" >&2
+            exit 1
+          fi
