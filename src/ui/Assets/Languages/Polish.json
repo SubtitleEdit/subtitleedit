@@ -1,7 +1,7 @@
 ﻿{
   "title": "Subtitle Edit",
   "version": null,
-  "translatedBy": "Adam Malich v15.05.2026",
+  "translatedBy": "Adam Malich v17.05.2026",
   "cultureName": "pl-PL",
   "general": {
     "abort": "Przerwij",
@@ -410,7 +410,6 @@
     "property": "Właściwość",
     "question": "Pytanie",
     "reDownloadX": "Pobierz ponownie {0}",
-      "downloadX": "Pobierz {0}",
     "reason": "Powód",
     "recentFiles": "Ostatnie pliki",
     "redo": "Ponów",
@@ -1015,7 +1014,7 @@
       "subtitleWithManuallyChosenEncodingDotDotDot": "_Napisy z ręcznie wybranym kodowaniem...",
       "titleImportImages": "Importuj obrazy",
       "importFileLabel": "Wybierz obrazy do importu (obsługiwane są kody czasowe w nazwach plików)",
-      "importFilesInfo": "Użyj nazw plików z kodami czasowymi:\nstart_HH_MM_SS_MMM__end_HH_MM_SS_MMM[_index].ext\n\nPrzykłady:\n0_00_01_042__0_00_03_919_0001.png\n0_00_01_042__0_00_03_919.png\n\nReguły:\n• HH_MM_SS_MMM dla czasów rozpoczęcia i zakończenia\n• Podwójny znak podkreślenia oddziela początek/koniec\n• Opcjonalny indeks po czasie zakończenia",
+      "importFilesInfo": "Użyj nazw plików z kodami czasowymi:\r\nstart_HH_MM_SS_MMM__end_HH_MM_SS_MMM[_index].ext\r\n\r\nPrzykłady:\r\n0_00_01_042__0_00_03_919_0001.png\r\n0_00_01_042__0_00_03_919.png\r\n\r\nReguły:\r\n• HH_MM_SS_MMM dla czasów rozpoczęcia i zakończenia\r\n• Podwójny znak podkreślenia oddziela początek/koniec\r\n• Opcjonalny indeks po czasie zakończenia",
       "formattingDotDotDot": "Formatowanie...",
       "imagedBasedSubtitleForEditDotDotDot": "Napisy oparte na obrazach do edycji...",
       "imagedBasedSubtitleForOcrDotDotDot": "Napisy oparte na obrazach do OCR...",
@@ -1787,6 +1786,7 @@
       "selectModel": "Wybierz model",
       "viewToolsLogFile": "Wyświetl plik dziennika narzędzi",
       "reDownloadX": "Pobierz ponownie {0}",
+      "downloadX": "Pobierz {0}",
       "updateXTitle": "Zaktualizować {0}?",
       "updateXMessage": "Dostępna jest nowsza wersja {0}.{1}{1}Czy pobrać i zainstalować aktualizację teraz?",
       "downloadingSpeechToTextModel": "Pobieranie modelu zamiany mowy na tekst",
@@ -1848,7 +1848,7 @@
       "edgeTtsPitchDescription": "Regulacja wysokości dźwięku dla Edge-TTS, np. \"+10Hz\", \"-5Hz\", lub \"+0Hz\" jako wartość domyślną.",
       "edgeTtsVolume": "Głośność Edge-TTS",
       "edgeTtsVolumeDescription": "Dostosowanie głośności dla Edge-TTS, np. \"+20%\", \"-10%\", lub \"+0%\" jako wartość domyślną.",
-      "downloadPiperPrompt": "Funkcja \"Zamiana mowy na tekst\" wymaga aplikacji Piper.\n\nChcesz pobrać i używać Piper?"
+      "downloadPiperPrompt": "Funkcja \"Zamiana mowy na tekst\" wymaga aplikacji Piper.\r\n\r\nChcesz pobrać i używać Piper?"
     },
     "shotChanges": {
       "titleGenerateOrImport": "Generuj/Importuj zmiany ujęcia",
@@ -1895,11 +1895,11 @@
     "openFromUrlTitle": "Otwórz plik wideo z adresu URL",
     "toggleCurrentSubtitleWhilePlaying": "Włącz/wyłącz zaznaczanie bieżących napisów podczas odtwarzania",
     "onlyMkvCanSupportEmbeddedSubtitleEditing": "Edytować napisy osadzone można wyłącznie w plikach Matroska (.mkv, .webm).",
-    "reEncodeInfo": "Ponowne kodowanie może sprawić, że napisy będą bardziej płynne:\n• Niższa rozdzielczość (wysokie rozdzielczości spowalniają wyświetlanie napisów)\n• Ponowne zakodowanie wideo do formatu H.264 + yuv420p zwiększy jego kompatybilność\n• Zoptymalizowane pod kątem szybkiego wyszukiwania",
+    "reEncodeInfo": "Ponowne kodowanie może sprawić, że napisy będą bardziej płynne:\r\n• Niższa rozdzielczość (wysokie rozdzielczości spowalniają wyświetlanie napisów)\r\n• Ponowne zakodowanie wideo do formatu H.264 + yuv420p zwiększy jego kompatybilność\r\n• Zoptymalizowane pod kątem szybkiego wyszukiwania",
     "reEncodeGeneratingVideoX": "Generowanie wideo... {0}%     {1}",
     "reEncodeGeneratingVideoXofY": "Generowanie wideo {0}/{1}... {2}%     {3}",
     "reEncodeUnableToGenerateVideo": "Nie można wygenerować wideo",
-    "reEncodeOutputVideoFileNotGenerated": "Nie wygenerowano pliku wideo wyjściowego: {0}\nParametry: {1}",
+    "reEncodeOutputVideoFileNotGenerated": "Nie wygenerowano pliku wideo wyjściowego: {0}\r\nParametry: {1}",
     "reEncodeGeneratingDone": "Generowanie zakończone",
     "reEncodeGeneratedFilesX": "Wygenerowane pliki ({0}):",
     "reEncodeFfmpegParameters": "Parametry ffmpeg"
@@ -1990,7 +1990,13 @@
     "showTechnicalDetails": "Pokaż szczegóły techniczne",
     "hideTechnicalDetails": "Ukryj szczegóły techniczne",
     "technicalDetails": "Szczegóły techniczne",
-    "pleaseSelectATargetLanguage": "Proszę wybrać język docelowy"
+    "pleaseSelectATargetLanguage": "Proszę wybrać język docelowy",
+    "readyToTranslate": "Gotowy do tłumaczenia",
+    "translating": "Tłumaczenie...",
+    "translationComplete": "Tłumaczenie zakończone",
+    "translationCancelled": "Tłumaczenie zostało anulowane",
+    "swapLanguages": "Zamień język źródłowy i docelowy",
+    "xIsAlreadyDownloadedReDownload": "Plik {0} został już pobrany. Czy chcesz pobrać go ponownie?"
   },
   "options": {
     "settings": {
@@ -2661,7 +2667,16 @@
     "vobSubColorPattern": "Deseń",
     "vobSubColorEmphasis1": "Wyróżnienie 1",
     "vobSubColorEmphasis2": "Wyróżnienie 2",
-    "vobSubColorsInvert": "Odwróć kolor tła / wyróżnienie 1"
+    "vobSubColorsInvert": "Odwróć kolor tła / wyróżnienie 1",
+    "llamaCppOcrSettingsTitle": "llama.cpp – ustawienia OCR",
+    "llamaCppOcrPromptHint": "Użyj {language}, aby wstawić wybrany język OCR.",
+    "llamaCppOcrPromptEmpty": "Monit nie może być pusty.",
+    "llamaCppOcrPromptMissingLanguagePlaceholder": "Monit musi zawierać symbol zastępczy {language}.",
+    "nOcrBinaryOcrFallbackDatabase": "Rezerwowa baza danych BinaryOCR",
+    "nOcrBinaryOcrFallbackNone": "(brak)",
+    "binaryOcrNOcrFallbackDatabase": "Rezerwowa baza danych nOCR",
+    "showAllOllamaModels": "Pokaż wszystkie modele (nie tylko te z funkcją przetwarzania obrazu)",
+    "ollamaModelLikelyWrong": "Ollama nie zwrócił tekstu – wybrany model może nie obsługiwać OCR/przetwarzania obrazu"
   },
   "assa": {
     "assaDraw": "Rysuj ASSA",
