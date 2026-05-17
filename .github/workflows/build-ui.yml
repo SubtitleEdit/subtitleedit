@@ -819,7 +819,7 @@ jobs:
             - **Windows x64 installer (Inno Setup):** [SubtitleEdit-Windows-x64-Setup.exe](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Windows-x64-Setup.exe)
             - **Windows x64:** [SubtitleEdit-Windows-x64.zip](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Windows-x64.zip)
             - **Windows ARM64:** [SubtitleEdit-Windows-ARM64.zip](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Windows-ARM64.zip)
-            - **macOS ARM64 (Apple Silicon - M1/M2/M3/M4 architecture):** [SubtitleEdit-macOS-ARM64.dmg](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-macOS-ARM64.dmg)
+            - **macOS ARM64 (Apple Silicon - M1/M2/M3/M4/M5 architecture):** [SubtitleEdit-macOS-ARM64.dmg](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-macOS-ARM64.dmg)
             - **macOS x64 (Intel 64-bit):** [SubtitleEdit-macOS-x64.dmg](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-macOS-x64.dmg)
             - **Linux x64 (tarball):** [SubtitleEdit-Linux-x64.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Linux-x64.tar.gz)
             - **Linux ARM64 (tarball, aarch64):** [SubtitleEdit-Linux-ARM64.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-Linux-ARM64.tar.gz)
