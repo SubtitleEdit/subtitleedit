@@ -488,7 +488,7 @@ public class SpeechToTextWindow : Window
             Source = vm,
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
         });
-        vm.TextBoxConsoleLog = textBoxConsoleLog;
+        vm.TextBoxConsoleLogBatch = textBoxConsoleLog;
 
 
         var dataGrid = new DataGrid
@@ -619,7 +619,7 @@ public class SpeechToTextWindow : Window
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
         });
         textBoxConsoleLog.WithBindIsVisible(nameof(vm.IsBatchMode), new InverseBooleanConverter());
-        vm.TextBoxConsoleLog = textBoxConsoleLog;
+        vm.TextBoxConsoleLogSingle = textBoxConsoleLog;
 
         return textBoxConsoleLog;
     }
