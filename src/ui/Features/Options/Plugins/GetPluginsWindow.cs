@@ -108,7 +108,7 @@ public class GetPluginsWindow : Window
             var installButton = new Button
             {
                 VerticalAlignment = VerticalAlignment.Center,
-                MinWidth = 100,
+                Width = 110,
                 Command = vm.InstallCommand,
                 Content = buttonContent,
             };
