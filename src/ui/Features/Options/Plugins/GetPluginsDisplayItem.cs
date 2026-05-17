@@ -1,3 +1,4 @@
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Plugins;
@@ -6,6 +7,8 @@ namespace Nikse.SubtitleEdit.Features.Options.Plugins;
 
 public partial class GetPluginsDisplayItem : ObservableObject
 {
+    private static readonly IBrush AccentBrush = new SolidColorBrush(Color.FromRgb(0x00, 0x78, 0xD4));
+
     [ObservableProperty] private bool _isBusy;
     [ObservableProperty] private string _statusText = string.Empty;
     [ObservableProperty] private string _actionText = string.Empty;
@@ -25,6 +28,10 @@ public partial class GetPluginsDisplayItem : ObservableObject
     public bool NotBusy => !IsBusy;
     public bool CanInstall => NotBusy && IsSupportedOnCurrentPlatform;
 
+    public IBrush? StatusBrush => UpdateAvailable ? AccentBrush : null;
+    public FontWeight StatusFontWeight => UpdateAvailable ? FontWeight.SemiBold : FontWeight.Normal;
+    public double StatusOpacity => UpdateAvailable ? 1.0 : 0.6;
+
     public GetPluginsDisplayItem(PluginIndexEntry entry, string? installedVersion)
     {
         Entry = entry;
@@ -40,6 +47,7 @@ public partial class GetPluginsDisplayItem : ObservableObject
             UpdateAvailable = false;
             StatusText = Se.Language.Plugins.NotSupportedOnThisOs;
             ActionText = Se.Language.Plugins.Install;
+            NotifyStatusVisualsChanged();
             return;
         }
 
@@ -49,6 +57,7 @@ public partial class GetPluginsDisplayItem : ObservableObject
             UpdateAvailable = false;
             StatusText = Se.Language.Plugins.NotInstalled;
             ActionText = Se.Language.Plugins.Install;
+            NotifyStatusVisualsChanged();
             return;
         }
 
@@ -64,6 +73,16 @@ public partial class GetPluginsDisplayItem : ObservableObject
             StatusText = string.Format(Se.Language.Plugins.InstalledX, installedVersion);
             ActionText = Se.Language.Plugins.Reinstall;
         }
+        NotifyStatusVisualsChanged();
+    }
+
+    private void NotifyStatusVisualsChanged()
+    {
+        OnPropertyChanged(nameof(UpdateAvailable));
+        OnPropertyChanged(nameof(IsInstalled));
+        OnPropertyChanged(nameof(StatusBrush));
+        OnPropertyChanged(nameof(StatusFontWeight));
+        OnPropertyChanged(nameof(StatusOpacity));
     }
 
     partial void OnIsBusyChanged(bool value)
