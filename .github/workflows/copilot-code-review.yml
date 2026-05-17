@@ -27,7 +27,8 @@ jobs:
             exit 1
           fi
 
-          if echo "$requested_reviewers" | jq -e 'any(.users[]?; .login | ascii_downcase == "copilot")' >/dev/null; then
+          if echo "$requested_reviewers" | jq -e '(.users // []) | any(.login | ascii_downcase == "copilot")' >/dev/null; then
+            echo "Copilot review already requested, skipping."
             exit 0
           fi
 
