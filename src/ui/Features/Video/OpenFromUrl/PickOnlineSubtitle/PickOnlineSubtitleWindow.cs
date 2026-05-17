@@ -101,7 +101,7 @@ public class PickOnlineSubtitleWindow : Window
                 },
                 new DataGridTextColumn
                 {
-                    Header = "Format",
+                    Header = Se.Language.General.Format,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     Binding = new Binding(nameof(OnlineSubtitleTrackDisplay.Format)),
                     IsReadOnly = true,

@@ -5536,8 +5536,10 @@ public partial class MainViewModel :
 
     /// <summary>
     /// Asks the user whether to download yt-dlp, runs the download window if so, and
-    /// returns true when a usable binary is on disk afterwards. Returns false if the
-    /// user declined or the download did not produce a file (cancelled / failed).
+    /// returns true when a usable current-version binary is on disk afterwards.
+    /// Returns false if the user declined, no file was produced, or — for the
+    /// outdated-upgrade path — the download didn't take and the old binary is
+    /// still on disk.
     /// </summary>
     private async Task<bool> PromptToDownloadYtDlp(string message)
     {
@@ -5555,10 +5557,18 @@ public partial class MainViewModel :
             return false;
         }
 
-        // We just downloaded YtDlpDownloadService.CurrentVersion, so the binary on
-        // disk is known-current; drop the cached "outdated" flag so any later
-        // periodic check reflects the new file.
+        // For the upgrade path File.Exists alone isn't enough — if the user
+        // cancelled the download or it errored, the old (outdated) binary is
+        // still on disk and File.Exists still returns true. Re-run the version
+        // check to confirm the binary really is current. Safe because
+        // IsVersionOutdated treats unknown/unparseable output as "not outdated"
+        // (a flaky --version on a freshly written binary won't false-positive).
         YtDlpDownloadService.InvalidateInstalledVersionCache();
+        if (await YtDlpDownloadService.IsInstalledVersionOutdated(CancellationToken.None, forceRefresh: true))
+        {
+            return false;
+        }
+
         ShowStatus(Se.Language.Main.YoutubeDlDownloadedSuccessfully);
         return true;
     }
