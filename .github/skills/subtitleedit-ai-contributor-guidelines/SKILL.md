@@ -67,6 +67,20 @@ AI-assisted PRs should make maintainer review easier, not harder.
 - Keep generated descriptions factual and concise.
 - Do not hide that AI assistance was used if the contribution was materially AI-assisted.
 
+## 7. Follow The AI Pull Request Gate
+
+When an AI agent owns a change from implementation to merge, it must use the full branch, PR, review, and merge workflow instead of committing directly to `main`.
+
+- Create a dedicated branch for the change and open a pull request into `main`.
+- Request a GitHub Copilot review and wait for it to finish before treating the PR as merge-ready.
+- Read Copilot's comments critically. Fix findings that identify a real bug, regression risk, missing test, unclear behavior, or maintainability problem, then rerun the relevant verification.
+- If a Copilot comment is not applicable, explain that decision briefly in the PR discussion instead of silently ignoring it.
+- Resolve review threads after addressing them or after documenting why no code change is needed.
+- Request another Copilot review after meaningful follow-up changes, and repeat loop "request review --> fix --> request revie --> fix" until Copilot has no comments about possible code issues.
+- Merge to `main` only after the PR is verified, Copilot review is complete, all useful findings are handled, and review threads are resolved.
+
+- As AI you have to be patient. Copilot review takes sometimes 5 to 10 minutes. No possible code issues found by copilot have following comment: "Copilot reviewed x out of x changed files in this pull request and generated no new comments." This is a sign that merge to main might be done.
+
 ## Attribution
 
 This is an original, project-specific adaptation inspired by `forrestchang/andrej-karpathy-skills` and Andrej Karpathy's public observations about common LLM coding failure modes.
