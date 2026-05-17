@@ -86,24 +86,19 @@ public class GetPluginsWindow : Window
             actionLabel.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.ActionText)));
             actionLabel.Bind(IsVisibleProperty, new Binding(nameof(GetPluginsDisplayItem.NotBusy)));
 
-            // Slim progress bar with the percentage inside.
-            var downloadProgress = new ProgressBar
+            // No bar — just the percentage text. The row's status line already shows "Downloading X%...".
+            var percentLabel = new TextBlock
             {
-                Minimum = 0,
-                Maximum = 100,
-                Width = 56,
-                Height = 14,
-                ShowProgressText = true,
-                ProgressTextFormat = "{0:0}%",
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
+                FontWeight = FontWeight.SemiBold,
             };
-            downloadProgress.Bind(ProgressBar.ValueProperty, new Binding(nameof(GetPluginsDisplayItem.DownloadProgress)));
-            downloadProgress.Bind(IsVisibleProperty, new Binding(nameof(GetPluginsDisplayItem.IsBusy)));
+            percentLabel.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.DownloadProgressText)));
+            percentLabel.Bind(IsVisibleProperty, new Binding(nameof(GetPluginsDisplayItem.IsBusy)));
 
             var buttonContent = new Grid();
             buttonContent.Children.Add(actionLabel);
-            buttonContent.Children.Add(downloadProgress);
+            buttonContent.Children.Add(percentLabel);
 
             var installButton = new Button
             {
