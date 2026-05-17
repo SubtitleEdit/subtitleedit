@@ -75,7 +75,7 @@ public static class Unpacker
                 Directory.CreateDirectory(extractPath);
             }
 
-            var process = new System.Diagnostics.Process
+            using var process = new System.Diagnostics.Process
             {
                 StartInfo = new System.Diagnostics.ProcessStartInfo
                 {
@@ -179,7 +179,7 @@ public static class Unpacker
                 Directory.CreateDirectory(extractPath);
             }
 
-            var process = new System.Diagnostics.Process
+            using var process = new System.Diagnostics.Process
             {
                 StartInfo = new System.Diagnostics.ProcessStartInfo
                 {
