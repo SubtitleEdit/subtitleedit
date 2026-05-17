@@ -55,6 +55,14 @@ public class OpenFromUrlWindow : Window
             [!TextBox.TextProperty] = new Binding(nameof(vm.Url)) { Mode = BindingMode.TwoWay },
         };
 
+        var downloadSubtitlesCheckBox = new CheckBox
+        {
+            Content = Se.Language.Video.OpenFromUrlDownloadSubtitles,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Margin = new Thickness(0, 4, 0, 4),
+            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.DownloadSubtitles)) { Mode = BindingMode.TwoWay },
+        };
+
         var openOnlineCard = BuildCard(
             "▶", // ▶
             Se.Language.Video.OpenFromUrlOpenOnline,
@@ -85,13 +93,22 @@ public class OpenFromUrlWindow : Window
                 new Border { Height = 4 }, // spacer
                 openOnlineCard,
                 downloadCard,
+                downloadSubtitlesCheckBox,
                 cancelBar,
             },
         };
 
         Content = content;
 
-        Activated += delegate { _urlTextBox.Focus(); };
+        // Activated fires before the visual tree is fully ready; deferring the
+        // Focus call to Loaded + Input priority makes it actually stick when the
+        // window first opens.
+        Loaded += (_, _) =>
+        {
+            Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(
+                () => _urlTextBox.Focus(),
+                Avalonia.Threading.DispatcherPriority.Input);
+        };
     }
 
     private Button BuildCard(string iconGlyph, string title, string description, string note, IRelayCommand command, bool isRecommended)

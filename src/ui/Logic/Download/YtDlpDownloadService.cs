@@ -1,8 +1,10 @@
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -14,14 +16,37 @@ namespace Nikse.SubtitleEdit.Logic.Download;
 public interface IYtDlpDownloadService
 {
     Task DownloadYtDlp(IProgress<float>? progress, CancellationToken cancellationToken);
-    Task DownloadVideo(string url, string outputPath, IProgress<float>? progress, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Downloads <paramref name="url"/> to <paramref name="outputPath"/>. When
+    /// <paramref name="downloadAllSubtitles"/> is true, also writes every
+    /// human-uploaded subtitle track as a sibling file
+    /// (<c>{stem}.{lang}.{ext}</c>) using the same single yt-dlp invocation.
+    /// </summary>
+    Task DownloadVideo(string url, string outputPath, bool downloadAllSubtitles, IProgress<float>? progress, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Subtitle-only download (no video). Writes every human-uploaded subtitle
+    /// track to <paramref name="outputStem"/>.<c>{lang}.{ext}</c> via a single
+    /// yt-dlp invocation. Caller is responsible for cleaning up the directory.
+    /// </summary>
+    Task DownloadAllSubtitlesAsync(string url, string outputStem, CancellationToken cancellationToken);
 }
+
+/// <summary>
+/// A subtitle file that yt-dlp wrote to disk. Constructed from the resulting
+/// filename — yt-dlp uses <c>{stem}.{lang}.{ext}</c>.
+/// </summary>
+public sealed record DownloadedSubtitleInfo(string FilePath, string LanguageCode, string Format);
 
 public class YtDlpDownloadService : IYtDlpDownloadService
 {
     private readonly HttpClient _httpClient;
     internal const string CurrentVersion = "2026.03.17";
-    private static readonly TimeSpan VersionCheckTimeout = TimeSpan.FromSeconds(5);
+    // First-run extraction of the self-extracting yt-dlp bundle (especially
+    // yt-dlp_macos) routinely needs more than 5s on slower disks; bumped to 15s
+    // so the timeout doesn't masquerade as "version unknown / outdated".
+    private static readonly TimeSpan VersionCheckTimeout = TimeSpan.FromSeconds(15);
     private const string WindowsUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/" + CurrentVersion + "/yt-dlp.exe";
     private const string LinuxUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/" + CurrentVersion + "/yt-dlp_linux";
     private const string LinuxArmUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/" + CurrentVersion + "/yt-dlp_linux_aarch64";
@@ -80,7 +105,7 @@ public class YtDlpDownloadService : IYtDlpDownloadService
 
     private static readonly Regex PercentageRegex = new(@"(?<pct>\d+(?:\.\d+)?)\s*%", RegexOptions.Compiled);
 
-    public async Task DownloadVideo(string url, string outputPath, IProgress<float>? progress, CancellationToken cancellationToken)
+    public async Task DownloadVideo(string url, string outputPath, bool downloadAllSubtitles, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -89,19 +114,33 @@ public class YtDlpDownloadService : IYtDlpDownloadService
             throw new InvalidOperationException("yt-dlp is not installed");
         }
 
+        var args = new List<string>
+        {
+            "--newline",       // emit one progress line per update, never carriage-return rewriting
+            "--no-mtime",      // don't carry remote mtime to the local file
+            "--no-playlist",   // single video only — playlist URLs would download many files
+            "-o", outputPath,
+        };
+
+        if (downloadAllSubtitles)
+        {
+            // Ride along with the video download: yt-dlp writes every available
+            // human-uploaded subtitle track as a sibling file using the same
+            // <stem>.<lang>.<ext> naming so the caller can find them by globbing.
+            args.Add("--write-subs");
+            args.Add("--sub-langs");
+            args.Add("all");
+            args.Add("--sub-format");
+            args.Add("vtt/best");
+        }
+
+        args.Add(url);
+
         using var process = new Process
         {
             StartInfo = new ProcessStartInfo
             {
                 FileName = GetFullFileName(),
-                ArgumentList =
-                {
-                    "--newline",       // emit one progress line per update, never carriage-return rewriting
-                    "--no-mtime",      // don't carry remote mtime to the local file
-                    "--no-playlist",   // single video only — playlist URLs would download many files
-                    "-o", outputPath,
-                    url,
-                },
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
@@ -109,6 +148,7 @@ public class YtDlpDownloadService : IYtDlpDownloadService
             },
             EnableRaisingEvents = true,
         };
+        foreach (var a in args) process.StartInfo.ArgumentList.Add(a);
 
         var stderrBuffer = new System.Text.StringBuilder();
 
@@ -161,6 +201,124 @@ public class YtDlpDownloadService : IYtDlpDownloadService
 
         progress?.Report(1f);
     }
+
+    public async Task DownloadAllSubtitlesAsync(string url, string outputStem, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        if (!File.Exists(GetFullFileName()))
+        {
+            throw new InvalidOperationException("yt-dlp is not installed");
+        }
+
+        var directory = Path.GetDirectoryName(outputStem);
+        if (!string.IsNullOrEmpty(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        var args = new List<string>
+        {
+            "--skip-download",
+            "--no-warnings",
+            "--no-playlist",
+            "--write-subs",
+            "--sub-langs", "all",
+            "--sub-format", "vtt/best",
+            "-o", outputStem,
+            url,
+        };
+
+        using var process = new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = GetFullFileName(),
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            },
+        };
+        foreach (var a in args) process.StartInfo.ArgumentList.Add(a);
+
+        if (!process.Start())
+        {
+            throw new InvalidOperationException("Failed to start yt-dlp");
+        }
+
+        var stdoutTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
+        var stderrTask = process.StandardError.ReadToEndAsync(cancellationToken);
+
+        try
+        {
+            await process.WaitForExitAsync(cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            TryKillProcess(process);
+            throw;
+        }
+
+        await stdoutTask;
+        if (process.ExitCode != 0)
+        {
+            var details = (await stderrTask).Trim();
+            throw new InvalidOperationException(
+                $"yt-dlp subtitle download exited with code {process.ExitCode}." +
+                (string.IsNullOrEmpty(details) ? string.Empty : Environment.NewLine + details));
+        }
+    }
+
+    /// <summary>
+    /// Scans <paramref name="directory"/> for files yt-dlp produced via its
+    /// <c>{stem}.{lang}.{ext}</c> sidecar naming. Filters to subtitle extensions
+    /// so the video file (and any unrelated stem.* files) are excluded.
+    /// </summary>
+    public static IReadOnlyList<DownloadedSubtitleInfo> EnumerateDownloadedSubtitles(string directory, string stem)
+    {
+        var results = new List<DownloadedSubtitleInfo>();
+        if (string.IsNullOrEmpty(directory) || !Directory.Exists(directory) || string.IsNullOrEmpty(stem))
+        {
+            return results;
+        }
+
+        var prefix = stem + ".";
+        foreach (var path in Directory.EnumerateFiles(directory, stem + ".*"))
+        {
+            var fileName = Path.GetFileName(path);
+            if (!fileName.StartsWith(prefix, StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            var rest = fileName.Substring(prefix.Length);
+            var dotIdx = rest.LastIndexOf('.');
+            if (dotIdx <= 0)
+            {
+                // No language segment — that's the video file (or other) itself.
+                continue;
+            }
+
+            var lang = rest.Substring(0, dotIdx);
+            var ext = rest.Substring(dotIdx + 1);
+            if (!IsSubtitleExtension(ext))
+            {
+                continue;
+            }
+
+            results.Add(new DownloadedSubtitleInfo(path, lang, ext));
+        }
+
+        results.Sort(static (a, b) => string.Compare(a.LanguageCode, b.LanguageCode, StringComparison.OrdinalIgnoreCase));
+        return results;
+    }
+
+    private static bool IsSubtitleExtension(string ext) => ext switch
+    {
+        "vtt" or "srt" or "ttml" or "ass" or "ssa" or "sbv" or "lrc"
+            or "srv1" or "srv2" or "srv3" or "json3" or "ytt" => true,
+        _ => false,
+    };
 
     private static void ReportProgressFromLine(string line, IProgress<float>? progress)
     {
@@ -243,13 +401,42 @@ public class YtDlpDownloadService : IYtDlpDownloadService
         }
     }
 
+    private static readonly Regex VersionLineRegex = new(@"^\s*v?(\d+\.\d+(?:\.\d+){0,2})\s*$",
+        RegexOptions.Compiled | RegexOptions.Multiline);
+
+    /// <summary>
+    /// Extracts a YYYY.MM[.DD[.N]] version string from <c>yt-dlp --version</c>
+    /// output. Scans all lines instead of taking the first because the macOS
+    /// self-extracting bundle can print bootstrap/extraction noise on first run
+    /// before the actual version line. Returns null if no line in the output
+    /// matches a version shape.
+    /// </summary>
+    internal static string? ExtractVersion(string? output)
+    {
+        if (string.IsNullOrWhiteSpace(output))
+        {
+            return null;
+        }
+
+        var match = VersionLineRegex.Match(output);
+        return match.Success ? match.Groups[1].Value : null;
+    }
+
+    /// <summary>
+    /// Returns true only when we can confirm the installed version is older than
+    /// <see cref="CurrentVersion"/>. Anything we can't parse — null, empty, weird
+    /// pre-release suffix, extraction-noise output — returns false. Nagging the
+    /// user to redownload every session because <c>--version</c> printed something
+    /// we didn't expect is worse than trusting the binary and letting the next
+    /// real yt-dlp call surface a concrete error.
+    /// </summary>
     internal static bool IsVersionOutdated(string? installedVersion)
     {
         if (string.IsNullOrWhiteSpace(installedVersion) ||
             !Version.TryParse(installedVersion.Trim(), out var parsedInstalledVersion) ||
             !Version.TryParse(CurrentVersion, out var parsedCurrentVersion))
         {
-            return true;
+            return false;
         }
 
         return parsedInstalledVersion < parsedCurrentVersion;
@@ -300,8 +487,7 @@ public class YtDlpDownloadService : IYtDlpDownloadService
             }
 
             var output = await stdoutTask;
-            var lines = output.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            return lines.Length == 0 ? null : lines[0];
+            return ExtractVersion(output);
         }
         finally
         {

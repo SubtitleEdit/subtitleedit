@@ -135,6 +135,7 @@ using Nikse.SubtitleEdit.Features.Video.CutVideo;
 using Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
 using Nikse.SubtitleEdit.Features.Video.GoToVideoPosition;
 using Nikse.SubtitleEdit.Features.Video.OpenFromUrl;
+using Nikse.SubtitleEdit.Features.Video.OpenFromUrl.PickOnlineSubtitle;
 using Nikse.SubtitleEdit.Features.Video.ReEncodeVideo;
 using Nikse.SubtitleEdit.Features.Video.ShotChanges;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
@@ -347,6 +348,7 @@ public partial class MainViewModel :
     private readonly IPasteFromClipboardHelper _pasteFromClipboardHelper;
     private readonly IPluginCatalog _pluginCatalog;
     private readonly IPluginRunner _pluginRunner;
+    private readonly IYtDlpDownloadService _ytDlpDownloadService;
 
     private bool IsEmpty => Subtitles.Count == 0 || (Subtitles.Count == 1 && string.IsNullOrEmpty(Subtitles[0].Text));
 
@@ -415,7 +417,8 @@ public partial class MainViewModel :
         ICasingToggler casingToggler,
         IPasteFromClipboardHelper pasteFromClipboardHelper,
         IPluginCatalog pluginCatalog,
-        IPluginRunner pluginRunner)
+        IPluginRunner pluginRunner,
+        IYtDlpDownloadService ytDlpDownloadService)
     {
         _fileHelper = fileHelper;
         _folderHelper = folderHelper;
@@ -437,6 +440,7 @@ public partial class MainViewModel :
         _pasteFromClipboardHelper = pasteFromClipboardHelper;
         _pluginCatalog = pluginCatalog;
         _pluginRunner = pluginRunner;
+        _ytDlpDownloadService = ytDlpDownloadService;
 
         _loading = true;
         EditText = string.Empty;
@@ -5387,37 +5391,21 @@ public partial class MainViewModel :
         }
 
         var isYouTubeDlInstalled = File.Exists(YtDlpDownloadService.GetFullFileName());
-        var downloadMessage = string.Empty;
+
+        // If yt-dlp is installed, run the "is it outdated" check in the background
+        // while the URL dialog is on screen — IsInstalledVersionOutdated spawns
+        // `yt-dlp --version` which can take a noticeable moment (especially on
+        // macOS where the self-extracting binary unpacks on first run). We only
+        // need the result if the user actually submits a URL.
+        Task<bool>? outdatedCheckTask = isYouTubeDlInstalled
+            ? Task.Run(() => YtDlpDownloadService.IsInstalledVersionOutdated(CancellationToken.None))
+            : null;
+
         if (!isYouTubeDlInstalled)
         {
-            downloadMessage = Se.Language.Main.YoutubeDlNotInstalledDownloadNow;
-        }
-        else if (await YtDlpDownloadService.IsInstalledVersionOutdated(CancellationToken.None))
-        {
-            downloadMessage = Se.Language.Main.YoutubeDlOutdatedDownloadNow;
-        }
-
-        if (!string.IsNullOrEmpty(downloadMessage))
-        {
-            var download = await MessageBox.Show(Window, Se.Language.General.Information,
-                downloadMessage,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-            if (download == MessageBoxResult.Yes)
-            {
-                await ShowDialogAsync<DownloadYtDlpWindow, DownloadYtDlpViewModel>();
-                isYouTubeDlInstalled = File.Exists(YtDlpDownloadService.GetFullFileName());
-                var isYouTubeDlCurrent = isYouTubeDlInstalled &&
-                                         !await YtDlpDownloadService.IsInstalledVersionOutdated(CancellationToken.None, forceRefresh: true);
-                if (isYouTubeDlCurrent)
-                {
-                    ShowStatus(Se.Language.Main.YoutubeDlDownloadedSuccessfully);
-                }
-                else
-                {
-                    return;
-                }
-            }
-            else
+            // Without the binary on disk there's nothing useful the URL dialog can
+            // do — block on installing it first.
+            if (!await PromptToDownloadYtDlp(Se.Language.Main.YoutubeDlNotInstalledDownloadNow))
             {
                 return;
             }
@@ -5436,19 +5424,156 @@ public partial class MainViewModel :
             return;
         }
 
+        // Now that the user has committed to a URL, see whether the background
+        // version check came back "outdated" — and only then interrupt with the
+        // upgrade prompt. The check is almost always finished by this point, but
+        // we await it to be safe.
+        if (outdatedCheckTask is not null)
+        {
+            bool isOutdated;
+            try
+            {
+                isOutdated = await outdatedCheckTask;
+            }
+            catch
+            {
+                // Treat check failures as not-outdated; a stale binary will surface
+                // its own error on the next yt-dlp invocation.
+                isOutdated = false;
+            }
+
+            if (isOutdated &&
+                !await PromptToDownloadYtDlp(Se.Language.Main.YoutubeDlOutdatedDownloadNow))
+            {
+                return;
+            }
+        }
+
         switch (result.SelectedMode.Value)
         {
             case OpenFromUrlMode.OpenOnline:
                 await VideoOpenFile(url);
+                if (result.DownloadSubtitles)
+                {
+                    // No video on disk — fetch subs to a temp dir, show picker, then
+                    // clean up the temp dir once the picked subtitle is loaded.
+                    await DownloadSubtitlesOnlyAndPickAsync(url);
+                }
                 break;
 
             case OpenFromUrlMode.DownloadAndOpen:
-                await DownloadVideoFromUrlAndOpen(url);
+                // The picker is invoked inside DownloadVideoFromUrlAndOpen so it
+                // only fires when the video download actually succeeds — skipping
+                // it when the user cancels the save-as or the download itself.
+                await DownloadVideoFromUrlAndOpen(url, result.DownloadSubtitles);
                 break;
         }
     }
 
-    private async Task DownloadVideoFromUrlAndOpen(string url)
+    /// <summary>
+    /// Streaming-mode helper: runs yt-dlp once to write every available subtitle
+    /// to a temp directory, shows the chooser, loads the selected file, then
+    /// cleans the temp directory. Best-effort — failures don't roll back the
+    /// already-opened video.
+    /// </summary>
+    private async Task DownloadSubtitlesOnlyAndPickAsync(string url)
+    {
+        var tempDirectory = Path.Combine(Path.GetTempPath(), "SE-online-subs-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            Directory.CreateDirectory(tempDirectory);
+            var stem = Path.Combine(tempDirectory, "sub");
+
+            ShowStatus(Se.Language.Video.PickOnlineSubtitleFetching);
+            await _ytDlpDownloadService.DownloadAllSubtitlesAsync(url, stem, CancellationToken.None);
+
+            var downloaded = YtDlpDownloadService.EnumerateDownloadedSubtitles(tempDirectory, "sub");
+            await ShowPickerAndLoadAsync(downloaded);
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "Failed to fetch subtitles for streaming URL");
+        }
+        finally
+        {
+            TryDeleteDirectory(tempDirectory);
+        }
+    }
+
+    /// <summary>
+    /// Shows the subtitle chooser populated with <paramref name="subtitles"/>; if
+    /// the user picks one, loads it into the editor. The picker itself never
+    /// downloads anything — it's just a chooser over files already on disk.
+    /// </summary>
+    private async Task ShowPickerAndLoadAsync(IReadOnlyList<DownloadedSubtitleInfo> subtitles)
+    {
+        var pickerResult = await ShowDialogAsync<PickOnlineSubtitleWindow, PickOnlineSubtitleViewModel>(
+            vm => { vm.Initialize(subtitles); });
+
+        if (!pickerResult.OkPressed || string.IsNullOrEmpty(pickerResult.SelectedSubtitlePath))
+        {
+            return;
+        }
+
+        await SubtitleOpen(pickerResult.SelectedSubtitlePath, skipLoadVideo: true);
+    }
+
+    private static void TryDeleteDirectory(string? path)
+    {
+        if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
+        {
+            return;
+        }
+        try
+        {
+            Directory.Delete(path, recursive: true);
+        }
+        catch
+        {
+            // best effort — leave the OS to garbage-collect /tmp
+        }
+    }
+
+    /// <summary>
+    /// Asks the user whether to download yt-dlp, runs the download window if so, and
+    /// returns true when a usable current-version binary is on disk afterwards.
+    /// Returns false if the user declined, no file was produced, or — for the
+    /// outdated-upgrade path — the download didn't take and the old binary is
+    /// still on disk.
+    /// </summary>
+    private async Task<bool> PromptToDownloadYtDlp(string message)
+    {
+        var download = await MessageBox.Show(Window!, Se.Language.General.Information,
+            message,
+            MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+        if (download != MessageBoxResult.Yes)
+        {
+            return false;
+        }
+
+        await ShowDialogAsync<DownloadYtDlpWindow, DownloadYtDlpViewModel>();
+        if (!File.Exists(YtDlpDownloadService.GetFullFileName()))
+        {
+            return false;
+        }
+
+        // For the upgrade path File.Exists alone isn't enough — if the user
+        // cancelled the download or it errored, the old (outdated) binary is
+        // still on disk and File.Exists still returns true. Re-run the version
+        // check to confirm the binary really is current. Safe because
+        // IsVersionOutdated treats unknown/unparseable output as "not outdated"
+        // (a flaky --version on a freshly written binary won't false-positive).
+        YtDlpDownloadService.InvalidateInstalledVersionCache();
+        if (await YtDlpDownloadService.IsInstalledVersionOutdated(CancellationToken.None, forceRefresh: true))
+        {
+            return false;
+        }
+
+        ShowStatus(Se.Language.Main.YoutubeDlDownloadedSuccessfully);
+        return true;
+    }
+
+    private async Task DownloadVideoFromUrlAndOpen(string url, bool downloadSubtitles)
     {
         if (Window == null)
         {
@@ -5464,12 +5589,31 @@ public partial class MainViewModel :
 
         var downloadResult = await ShowDialogAsync<DownloadVideoFromUrlWindow, DownloadVideoFromUrlViewModel>(vm =>
         {
-            vm.Initialize(url, outputPath);
+            vm.Initialize(url, outputPath, downloadSubtitles);
         });
 
         if (downloadResult.Success && File.Exists(downloadResult.OutputPath))
         {
             await VideoOpenFile(downloadResult.OutputPath);
+
+            if (downloadSubtitles)
+            {
+                // Subs were written into a per-download GUID temp directory so the
+                // picker can't accidentally list any pre-existing sidecar files
+                // sitting next to the user's chosen save folder. Show the picker,
+                // load the chosen file, then clean the temp dir up.
+                try
+                {
+                    if (downloadResult.DownloadedSubtitles.Count > 0)
+                    {
+                        await ShowPickerAndLoadAsync(downloadResult.DownloadedSubtitles);
+                    }
+                }
+                finally
+                {
+                    TryDeleteDirectory(downloadResult.TempSubtitleDirectory);
+                }
+            }
         }
     }
 
