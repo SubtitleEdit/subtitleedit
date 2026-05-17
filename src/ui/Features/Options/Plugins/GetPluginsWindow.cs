@@ -11,6 +11,8 @@ namespace Nikse.SubtitleEdit.Features.Options.Plugins;
 
 public class GetPluginsWindow : Window
 {
+    private static readonly IBrush AccentBrush = new SolidColorBrush(Color.FromRgb(0x00, 0x78, 0xD4));
+
     public GetPluginsWindow(GetPluginsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -28,30 +30,51 @@ public class GetPluginsWindow : Window
         listBox.Bind(ListBox.SelectedItemProperty, new Binding(nameof(vm.SelectedPlugin)) { Mode = BindingMode.TwoWay });
         listBox.ItemTemplate = new FuncDataTemplate<GetPluginsDisplayItem>((_, _) =>
         {
-            var name = new TextBlock { FontWeight = FontWeight.Bold };
+            var name = new TextBlock { FontWeight = FontWeight.Bold, VerticalAlignment = VerticalAlignment.Bottom };
             name.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.Name)));
 
-            var version = new TextBlock { Opacity = 0.7, Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
+            var version = new TextBlock { Opacity = 0.7, FontSize = 11, Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
             version.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.Version)));
 
-            var author = new TextBlock { Opacity = 0.7, Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
+            var author = new TextBlock { Opacity = 0.7, FontSize = 11, Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
             author.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.Author)));
+
+            // Small accent-coloured "Update" pill that appears only when an update is available.
+            var updateBadge = new Border
+            {
+                Background = AccentBrush,
+                CornerRadius = new CornerRadius(3),
+                Padding = new Thickness(6, 1),
+                Margin = new Thickness(8, 0, 0, 1),
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Child = new TextBlock
+                {
+                    Text = Se.Language.Plugins.Update,
+                    FontSize = 10,
+                    FontWeight = FontWeight.SemiBold,
+                    Foreground = Brushes.White,
+                },
+            };
+            updateBadge.Bind(IsVisibleProperty, new Binding(nameof(GetPluginsDisplayItem.UpdateAvailable)));
 
             var titleRow = new StackPanel
             {
                 Orientation = Orientation.Horizontal,
-                Children = { name, version, author },
+                Children = { name, version, author, updateBadge },
             };
 
             var description = new TextBlock { Opacity = 0.8, TextWrapping = TextWrapping.Wrap };
             description.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.Description)));
 
-            var status = new TextBlock { Opacity = 0.6, FontSize = 11 };
+            var status = new TextBlock { FontSize = 11 };
             status.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.StatusText)));
+            status.Bind(TextBlock.ForegroundProperty, new Binding(nameof(GetPluginsDisplayItem.StatusBrush)));
+            status.Bind(TextBlock.FontWeightProperty, new Binding(nameof(GetPluginsDisplayItem.StatusFontWeight)));
+            status.Bind(TextBlock.OpacityProperty, new Binding(nameof(GetPluginsDisplayItem.StatusOpacity)));
 
             var textPanel = new StackPanel
             {
-                Spacing = 2,
+                Spacing = 3,
                 Children = { titleRow, description, status },
             };
 
@@ -63,14 +86,13 @@ public class GetPluginsWindow : Window
             actionLabel.Bind(TextBlock.TextProperty, new Binding(nameof(GetPluginsDisplayItem.ActionText)));
             actionLabel.Bind(IsVisibleProperty, new Binding(nameof(GetPluginsDisplayItem.NotBusy)));
 
+            // Slim progress bar; percentage is shown in the row's status text, no need to repeat it inside the bar.
             var downloadProgress = new ProgressBar
             {
                 Minimum = 0,
                 Maximum = 100,
-                Width = 70,
-                Height = 16,
-                ShowProgressText = true,
-                ProgressTextFormat = "{0:0}%",
+                Width = 48,
+                Height = 6,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
             };
@@ -98,11 +120,18 @@ public class GetPluginsWindow : Window
                     new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                     new ColumnDefinition { Width = GridLength.Auto },
                 },
-                Margin = new Thickness(0, 4),
             };
             rowGrid.Add(textPanel, 0, 0);
             rowGrid.Add(installButton, 0, 1);
-            return rowGrid;
+
+            // Thin separator at the bottom of each row.
+            return new Border
+            {
+                BorderBrush = new SolidColorBrush(Color.FromArgb(0x22, 0x80, 0x80, 0x80)),
+                BorderThickness = new Thickness(0, 0, 0, 1),
+                Padding = new Thickness(0, 8, 0, 8),
+                Child = rowGrid,
+            };
         }, true);
 
         var statusMessage = new TextBlock { Opacity = 0.8 };
