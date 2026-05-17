@@ -276,6 +276,17 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 return 1;
             }
 
+            // Fail fast on a typo in --input-encoding-fallback so we don't silently substitute
+            // UTF-8 and decode the input incorrectly without the user noticing.
+            if (!string.IsNullOrWhiteSpace(settings.InputEncodingFallback) &&
+                !LibSEIntegration.TryGetEncoding(settings.InputEncodingFallback, out _))
+            {
+                AnsiConsole.MarkupLine(
+                    $"[red]Error: Unknown encoding '{settings.InputEncodingFallback.EscapeMarkup()}' for --input-encoding-fallback.[/]");
+                AnsiConsole.MarkupLine("[dim]Use 'seconv list-encodings' to see supported encodings.[/]");
+                return 1;
+            }
+
             // Load --settings:path.json overrides into libse Configuration before any conversion.
             // --profile <name> selects a named overlay from the same file.
             if (!string.IsNullOrWhiteSpace(settings.SettingsPath))

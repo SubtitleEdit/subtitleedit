@@ -226,31 +226,35 @@ internal static class LibSEIntegration
     /// Returns true when <paramref name="buffer"/> contains at least one valid multi-byte
     /// UTF-8 sequence and no invalid ones. Mirrors the private
     /// <c>LanguageAutoDetect.IsUtf8</c> so we can decide UTF-8 vs. fallback without
-    /// touching libse's API surface.
+    /// touching libse's API surface — but scans the full buffer (libse stops 3 bytes
+    /// early, which misses a UTF-8 file whose only non-ASCII char is at the tail).
     /// </summary>
     private static bool LooksLikeUtf8(byte[] buffer, int length)
     {
         var utf8Count = 0;
         var i = 0;
-        while (i < length - 3)
+        while (i < length)
         {
             var b = buffer[i];
             if (b > 127)
             {
-                if (b >= 194 && b <= 223 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191)
+                if (b >= 194 && b <= 223 && i + 1 < length &&
+                    buffer[i + 1] >= 128 && buffer[i + 1] <= 191)
                 {
                     utf8Count++;
                     i++;
                 }
-                else if (b >= 224 && b <= 239 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191 &&
-                                                 buffer[i + 2] >= 128 && buffer[i + 2] <= 191)
+                else if (b >= 224 && b <= 239 && i + 2 < length &&
+                         buffer[i + 1] >= 128 && buffer[i + 1] <= 191 &&
+                         buffer[i + 2] >= 128 && buffer[i + 2] <= 191)
                 {
                     utf8Count++;
                     i += 2;
                 }
-                else if (b >= 240 && b <= 244 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191 &&
-                                                 buffer[i + 2] >= 128 && buffer[i + 2] <= 191 &&
-                                                 buffer[i + 3] >= 128 && buffer[i + 3] <= 191)
+                else if (b >= 240 && b <= 244 && i + 3 < length &&
+                         buffer[i + 1] >= 128 && buffer[i + 1] <= 191 &&
+                         buffer[i + 2] >= 128 && buffer[i + 2] <= 191 &&
+                         buffer[i + 3] >= 128 && buffer[i + 3] <= 191)
                 {
                     utf8Count++;
                     i += 3;
@@ -837,6 +841,47 @@ internal static class LibSEIntegration
         {
             // Fall back to UTF-8 with BOM if encoding not found
             return new UTF8Encoding(true);
+        }
+    }
+
+    /// <summary>
+    /// Non-throwing variant of <see cref="GetEncoding"/> used to validate user input. Returns
+    /// false (and a null out) for an unrecognized name or code page so the CLI can report
+    /// a typo instead of silently substituting UTF-8 and producing mojibake.
+    /// </summary>
+    internal static bool TryGetEncoding(string? encodingName, out Encoding? encoding)
+    {
+        if (string.IsNullOrWhiteSpace(encodingName))
+        {
+            encoding = null;
+            return false;
+        }
+
+        var name = encodingName.Trim().ToLowerInvariant();
+
+        if (name is "utf8" or "utf-8" or "utf-8-bom")
+        {
+            encoding = new UTF8Encoding(true);
+            return true;
+        }
+
+        if (name is "utf-8-no-bom" or "utf-8-nobom" or "utf8-nobom")
+        {
+            encoding = new UTF8Encoding(false);
+            return true;
+        }
+
+        try
+        {
+            encoding = int.TryParse(encodingName, out var codePage)
+                ? Encoding.GetEncoding(codePage)
+                : Encoding.GetEncoding(encodingName);
+            return true;
+        }
+        catch
+        {
+            encoding = null;
+            return false;
         }
     }
 

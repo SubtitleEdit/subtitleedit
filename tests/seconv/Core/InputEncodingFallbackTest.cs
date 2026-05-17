@@ -89,6 +89,48 @@ public class InputEncodingFallbackTest : IDisposable
     }
 
     [Fact]
+    public void DetectEncodingWithFallback_Utf8MultibyteAtVeryEndOfFile_ReturnsUtf8()
+    {
+        // Regression: the libse IsUtf8 scan stops 3 bytes early; the LooksLikeUtf8 fix
+        // scans the full buffer so a UTF-8 file whose only non-ASCII char sits at the
+        // tail is still recognized as UTF-8 (and not decoded with the fallback).
+        var path = Path.Combine(_tempRoot, "tail.srt");
+        var bytes = new List<byte>(Encoding.ASCII.GetBytes("ABCDEFGHIJK"));
+        bytes.AddRange(new byte[] { 0xC4, 0x85 }); // 'ą' in UTF-8 at the very end
+        File.WriteAllBytes(path, bytes.ToArray());
+
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        var result = LibSEIntegration.DetectEncodingWithFallback(path, "windows-1250");
+
+        Assert.Equal(Encoding.UTF8.WebName, result.WebName);
+    }
+
+    [Fact]
+    public void TryGetEncoding_KnownName_ReturnsTrue()
+    {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+        Assert.True(LibSEIntegration.TryGetEncoding("windows-1250", out var enc));
+        Assert.NotNull(enc);
+        Assert.Equal(1250, enc!.CodePage);
+    }
+
+    [Fact]
+    public void TryGetEncoding_UnknownName_ReturnsFalse()
+    {
+        Assert.False(LibSEIntegration.TryGetEncoding("windowz-1250", out var enc));
+        Assert.Null(enc);
+    }
+
+    [Fact]
+    public void TryGetEncoding_NullOrEmpty_ReturnsFalse()
+    {
+        Assert.False(LibSEIntegration.TryGetEncoding(null, out _));
+        Assert.False(LibSEIntegration.TryGetEncoding(string.Empty, out _));
+        Assert.False(LibSEIntegration.TryGetEncoding("   ", out _));
+    }
+
+    [Fact]
     public async Task ConvertAsync_CentralEuropeanInputWithFallback_OutputsCorrectUtf8()
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
