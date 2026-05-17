@@ -3,6 +3,8 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Media;
+using Avalonia.Styling;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
@@ -16,6 +18,9 @@ namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
 public static class InitMenu
 {
+    // One notch below the Fluent theme default (~14).
+    private const double MenuFontSize = 13.0;
+
     public static void Make(MainViewModel vm)
     {
         var l = Se.Language.Main.Menu;
@@ -32,6 +37,20 @@ public static class InitMenu
         menu.DataContext = vm;
         menu.Items.Clear();
         menu.Opened += (s, e) => DisplayShortcuts(menu, vm);
+
+        // Drop the menu's font one notch below the theme default and tighten
+        // each item's vertical padding — a denser menu reads better when there
+        // are this many entries. The style targets nested MenuItems so submenu
+        // items inherit the same look.
+        menu.FontSize = MenuFontSize;
+        menu.Styles.Add(new Style(x => x.OfType<MenuItem>())
+        {
+            Setters =
+            {
+                new Setter(MenuItem.FontSizeProperty, MenuFontSize),
+                new Setter(MenuItem.PaddingProperty, new Thickness(10, 3)),
+            },
+        });
 
         menu.Items.Add(new MenuItem
         {
@@ -910,12 +929,20 @@ public static class InitMenu
                     }
                 }
 
+                // Wrap the path in an explicit TextBlock with TextTrimming.None so
+                // long file paths render in full instead of being clipped with an
+                // ellipsis. The MenuItem widens to fit.
                 var item = new MenuItem
                 {
-                    Header = header,
+                    Header = new TextBlock
+                    {
+                        Text = header,
+                        TextTrimming = TextTrimming.None,
+                    },
                     Command = vm.CommandFileReopenCommand,
+                    CommandParameter = file,
+                    [ToolTip.TipProperty] = header,
                 };
-                item.CommandParameter = file;
                 vm.MenuReopen.Items.Add(item);
             }
 
