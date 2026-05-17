@@ -21,10 +21,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
+
           requested_reviewers="$(gh api \
             "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers")"
 
-          if echo "$requested_reviewers" | jq -e '([.users[]?, .teams[]?] | any(.login | ascii_downcase == "copilot"))' >/dev/null; then
+          if echo "$requested_reviewers" | jq -e '(.users // []) | any(.login | ascii_downcase == "copilot")' >/dev/null; then
             echo "Copilot review already requested, skipping."
             exit 0
           fi
