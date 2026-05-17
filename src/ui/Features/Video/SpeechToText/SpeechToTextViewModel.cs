@@ -106,7 +106,12 @@ public partial class SpeechToTextViewModel : ObservableObject
     public Subtitle TranscribedSubtitle { get; private set; }
     public List<AudioClip> ResultAudioClips { get; private set; }
     public string? LastBatchSubtitleFileName { get; private set; }
-    public TextBox TextBoxConsoleLog { get; internal set; }
+    // Two views host the console log — the batch-mode grid layout and the single-mode
+    // standalone TextBox. Only one is visible at a time, so we track both and tail
+    // both in LogToConsole; otherwise the hidden one's reference can shadow the
+    // visible one and the user sees the log freeze at the top.
+    public TextBox TextBoxConsoleLogBatch { get; internal set; }
+    public TextBox TextBoxConsoleLogSingle { get; internal set; }
     public Button? CopyConsoleLogButton { get; internal set; }
     public DataGrid BatchGrid { get; internal set; }
 
@@ -219,7 +224,8 @@ public partial class SpeechToTextViewModel : ObservableObject
         ElapsedText = string.Empty;
         EstimatedText = string.Empty;
         TranscribedSubtitle = new Subtitle();
-        TextBoxConsoleLog = new TextBox();
+        TextBoxConsoleLogBatch = new TextBox();
+        TextBoxConsoleLogSingle = new TextBox();
         BatchGrid = new DataGrid();
         ReDownloadText = string.Empty;
         EngineDownloadHint = string.Empty;
@@ -3304,11 +3310,22 @@ public partial class SpeechToTextViewModel : ObservableObject
         // TextPresenter isn't templated yet. Drive the inner ScrollViewer
         // directly. Post at Background priority so the Render-priority layout
         // pass has updated Extent for the freshly-appended line first.
+        //
+        // Scroll BOTH the batch and single-mode TextBoxes — only one is visible
+        // at any time, and which one depends on IsBatchMode. Scrolling the hidden
+        // one is a harmless no-op; scrolling only the wrong one (the bug before
+        // this) left the visible log frozen at the top.
         Dispatcher.UIThread.Post(() =>
         {
-            var scrollViewer = TextBoxConsoleLog.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
-            scrollViewer?.ScrollToEnd();
+            ScrollTextBoxToEnd(TextBoxConsoleLogBatch);
+            ScrollTextBoxToEnd(TextBoxConsoleLogSingle);
         }, DispatcherPriority.Background);
+    }
+
+    private static void ScrollTextBoxToEnd(TextBox? textBox)
+    {
+        var scrollViewer = textBox?.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+        scrollViewer?.ScrollToEnd();
     }
 
     private static decimal GetSeconds(string timeCode)
