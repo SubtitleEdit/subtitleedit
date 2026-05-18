@@ -49,7 +49,7 @@ public partial class OmniVoiceSettingsViewModel : ObservableObject
     private void Refresh()
     {
         IsInstalled = File.Exists(OmniVoiceTtsCpp.GetExecutableFileName());
-        BackendLabel = IsInstalled ? DetectInstalledBackend() : "Not installed";
+        BackendLabel = IsInstalled ? DetectInstalledBackend() : Se.Language.General.NotInstalled;
         ApplyStatus(IsInstalled ? OmniVoiceTtsCpp.GetEngineUpdateStatus() : DownloadHashManager.UpdateStatus.Unknown, IsInstalled);
     }
 
@@ -57,7 +57,7 @@ public partial class OmniVoiceSettingsViewModel : ObservableObject
     {
         if (!installed)
         {
-            StatusLabel = "Not installed";
+            StatusLabel = Se.Language.General.NotInstalled;
             StatusBrush = new SolidColorBrush(Color.FromRgb(0xF4, 0x43, 0x36));   // red
             return;
         }
@@ -65,15 +65,15 @@ public partial class OmniVoiceSettingsViewModel : ObservableObject
         switch (status)
         {
             case DownloadHashManager.UpdateStatus.UpToDate:
-                StatusLabel = "Up to date";
+                StatusLabel = Se.Language.General.UpToDate;
                 StatusBrush = new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50)); // green
                 break;
             case DownloadHashManager.UpdateStatus.UpdateAvailable:
-                StatusLabel = "Update available";
+                StatusLabel = Se.Language.General.UpdateAvailable;
                 StatusBrush = new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00)); // amber
                 break;
             default:
-                StatusLabel = "Unknown (no install record)";
+                StatusLabel = Se.Language.General.UnknownNoInstallRecord;
                 StatusBrush = new SolidColorBrush(Color.FromRgb(0x9E, 0x9E, 0x9E)); // grey
                 break;
         }
@@ -138,8 +138,8 @@ public partial class OmniVoiceSettingsViewModel : ObservableObject
         {
             var variantAnswer = await MessageBox.Show(
                 Window,
-                "Re-download OmniVoice TTS",
-                $"{Environment.NewLine}Select the build to download:",
+                Se.Language.Video.TextToSpeech.ReDownloadOmniVoiceTts,
+                Se.Language.Video.TextToSpeech.SelectTheBuildToDownload,
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
                 "CPU",
@@ -160,16 +160,17 @@ public partial class OmniVoiceSettingsViewModel : ObservableObject
 
             if (variant == OmniVoiceDownloadService.WindowsVariantVulkan && !VulkanHelper.IsInstalled())
             {
+                const string vulkanUrl = "https://vulkan.lunarg.com/sdk/home";
                 var vulkanAnswer = await MessageBox.Show(
                     Window,
-                    "Vulkan runtime may be required",
-                    $"The Vulkan build needs the Vulkan runtime (vulkan-1.dll). It usually ships with current GPU drivers but was not detected.{Environment.NewLine}{Environment.NewLine}Install it from:{Environment.NewLine}https://vulkan.lunarg.com/sdk/home{Environment.NewLine}{Environment.NewLine}Continue with Vulkan anyway?",
+                    Se.Language.Video.TextToSpeech.VulkanRuntimeMayBeRequired,
+                    string.Format(Se.Language.Video.TextToSpeech.VulkanRuntimeNotDetectedMessage, vulkanUrl),
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
                 if (vulkanAnswer == MessageBoxResult.No)
                 {
-                    UiUtil.OpenUrl("https://vulkan.lunarg.com/sdk/home");
+                    UiUtil.OpenUrl(vulkanUrl);
                     return;
                 }
                 if (vulkanAnswer != MessageBoxResult.Yes)
@@ -182,8 +183,8 @@ public partial class OmniVoiceSettingsViewModel : ObservableObject
         {
             var answer = await MessageBox.Show(
                 Window,
-                "Re-download OmniVoice TTS",
-                $"{Environment.NewLine}Download the latest OmniVoice TTS now?",
+                Se.Language.Video.TextToSpeech.ReDownloadOmniVoiceTts,
+                Se.Language.Video.TextToSpeech.DownloadTheLatestOmniVoiceTtsPrompt,
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
             if (answer != MessageBoxResult.Yes)

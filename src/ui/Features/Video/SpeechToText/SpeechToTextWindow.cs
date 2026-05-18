@@ -73,7 +73,7 @@ public class SpeechToTextWindow : Window
             .WithMarginTop(10)
             .BindIsVisible(vm, nameof(vm.IsEngineSettingsButtonVisible))
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
-        ToolTip.SetTip(buttonEngineSettings, "Backend and update status");
+        ToolTip.SetTip(buttonEngineSettings, Se.Language.Video.AudioToText.BackendAndUpdateStatus);
 
         var panelEngineControls = new StackPanel
         {

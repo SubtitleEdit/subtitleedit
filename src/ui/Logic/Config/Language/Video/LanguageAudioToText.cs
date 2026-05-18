@@ -33,6 +33,10 @@ public class LanguageAudioToText
     public string AddPeriods { get; set; }
     public string ChangeUnderlineToColor { get; set; }
 
+    public string EngineSettings { get; set; }
+    public string EngineSettingsSubtitle { get; set; }
+    public string BackendAndUpdateStatus { get; set; }
+
     public LanguageAudioToText()
     {
         Title = "Speech to text";
@@ -65,5 +69,9 @@ public class LanguageAudioToText
         FixCasing = "Fix casing";
         AddPeriods = "Add periods";
         ChangeUnderlineToColor = "Change underline to color";
+
+        EngineSettings = "Speech-to-text engine settings";
+        EngineSettingsSubtitle = "Speech-to-text engine";
+        BackendAndUpdateStatus = "Backend and update status";
     }
 }
