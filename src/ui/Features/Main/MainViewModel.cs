@@ -2605,6 +2605,7 @@ public partial class MainViewModel :
             _subtitleFileName = string.Empty;
             ResetSubtitle();
             Subtitles.AddRange(ocrResult.OcredSubtitle);
+            SelectAndScrollToRow(0);
         }
     }
 
@@ -11261,6 +11262,7 @@ public partial class MainViewModel :
                             _converted = true;
                             Subtitles.Clear();
                             Subtitles.AddRange(result.OcredSubtitle);
+                            SelectAndScrollToRow(0);
                         }
                     });
                     return;
@@ -12011,6 +12013,7 @@ public partial class MainViewModel :
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 Subtitles.Clear();
                 Subtitles.AddRange(result.OcredSubtitle);
+                SelectAndScrollToRow(0);
             }
         });
 
@@ -12273,6 +12276,7 @@ public partial class MainViewModel :
                     Subtitles.Clear();
                     Subtitles.AddRange(result.OcredSubtitle);
                     Renumber();
+                    SelectAndScrollToRow(0);
                 }
             });
 
@@ -12471,6 +12475,7 @@ public partial class MainViewModel :
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 Subtitles.Clear();
                 Subtitles.AddRange(result.OcredSubtitle);
+                SelectAndScrollToRow(0);
             }
         });
 
@@ -12570,6 +12575,7 @@ public partial class MainViewModel :
             _converted = true;
             Subtitles.Clear();
             Subtitles.AddRange(result.OcredSubtitle);
+            SelectAndScrollToRow(0);
             return true;
         }
 
