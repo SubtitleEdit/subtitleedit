@@ -17054,7 +17054,9 @@ public partial class MainViewModel :
             return;
         }
 
-        if (!IsEmpty)
+        // Prompt + run the save-if-unsaved flow whenever either column has content,
+        // so the original-text column's unsaved edits aren't silently discarded.
+        if (!IsEmpty || !IsEmptyOriginal)
         {
             var answer = await MessageBox.Show(
                 Window!,

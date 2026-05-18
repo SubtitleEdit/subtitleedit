@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security;
 
 namespace Nikse.SubtitleEdit.Logic.Media;
 
@@ -17,7 +18,10 @@ public static class FindSubtitleFileName
             return false;
         }
 
-        var directory = Path.GetDirectoryName(videoFileName) ?? string.Empty;
+        var rawDirectory = Path.GetDirectoryName(videoFileName);
+        // Drop targets always carry an absolute path, but treat a missing directory
+        // as "current directory" so relative-path callers still get the fallback scan.
+        var directory = string.IsNullOrEmpty(rawDirectory) ? "." : rawDirectory;
         var nameWithoutExtension = Path.GetFileNameWithoutExtension(videoFileName);
         var extensions = SubtitleFormat.AllSubtitleFormats
             .Select(p => p.Extension)
@@ -31,7 +35,7 @@ public static class FindSubtitleFileName
         }
 
         // Fall back: scan the directory for files like "{name}.{lang}.{subExt}" (e.g. "movie.en.srt")
-        if (!string.IsNullOrEmpty(directory) && Directory.Exists(directory))
+        if (Directory.Exists(directory))
         {
             try
             {
@@ -46,9 +50,13 @@ public static class FindSubtitleFileName
                     }
                 }
             }
-            catch
+            catch (Exception ex) when (
+                ex is IOException ||
+                ex is UnauthorizedAccessException ||
+                ex is SecurityException ||
+                ex is ArgumentException)
             {
-                // ignore - directory not accessible
+                // ignore - directory not accessible or path invalid
             }
         }
 
