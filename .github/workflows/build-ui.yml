@@ -28,6 +28,16 @@ on:
         type: string
 
 
+env:
+  # Pin the IINA release we harvest libmpv + deps from. To bump:
+  #   1. Update IINA_VERSION below.
+  #   2. Download https://github.com/iina/iina/releases/download/<ver>/IINA.<ver>.dmg
+  #   3. Run `shasum -a 256` on it and update IINA_SHA256.
+  #   4. Verify the new release still ships a universal Contents/Frameworks/ payload.
+  IINA_VERSION: v1.4.2
+  IINA_SHA256: 2e0fd89fbba1c92a6c115171e5b51904883bb497fbe513a6961d080fbab08ff6
+
+
 jobs:
   build-windows:
     runs-on: windows-latest
@@ -195,14 +205,38 @@ jobs:
           path: ./SubtitleEdit-Windows-x64-Setup.exe
 
 
+  # Bundled macOS DMGs (ARM64 + x64). One matrix job — both legs run on
+  # macos-latest; the x64 leg cross-publishes osx-x64 from the ARM runner.
+  # ffmpeg: osxexperts.net per-arch static binaries (SHA-256 verified).
+  # libmpv + dep tree: extracted from IINA's universal DMG (SHA-256 verified).
   build-macos:
     runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: arm64
+            arch_label: ARM64
+            runtime: osx-arm64
+            ffmpeg_url: https://www.osxexperts.net/ffmpeg81arm.zip
+            ffmpeg_sha256: ebb82529562b71170807bbc6b0e7eb4f0b13af8cbb0e085bb9e8f6fe709598ad
+            dmg_format: UDBZ
+            expected_arch: arm64
+          - arch: x64
+            arch_label: x64
+            runtime: osx-x64
+            ffmpeg_url: https://www.osxexperts.net/ffmpeg80intel.zip
+            ffmpeg_sha256: 2d24d22db78c87f394a5822867acd5c5dc5e762cd261a44bd26923f3a5af3e07
+            dmg_format: UDZO
+            expected_arch: x86_64
     steps:
       - uses: actions/checkout@v5
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
+
       - name: Extract version from Se.cs
         run: |
           set -e
@@ -225,107 +259,62 @@ jobs:
           echo "APP_VER_FULL=$app_ver_full" >> "$GITHUB_ENV"
           echo "APP_VER_DISPLAY=$version_string"
           echo "APP_VER_FULL=$app_ver_full"
+
       - name: Restore dependencies
         run: dotnet restore
+
       - name: Build
         run: dotnet build --configuration ${{ inputs.build_configuration }} --no-restore
-      # - name: Test
-      #   run: dotnet test --no-build --verbosity normal
-      - name: Download ffmpeg for macOS
-        run: |
-          curl -L -o ffmpeg8-mac-arm.zip "https://github.com/SubtitleEdit/support-files/releases/download/ffmpeg-v8/ffmpeg8-mac-arm.zip"
-          unzip ffmpeg8-mac-arm.zip -d ffmpeg-temp
-          rm ffmpeg8-mac-arm.zip  # Clean up immediately after extraction
-      - name: Download libmpv for macOS ARM64
-        run: |
-          curl -L -o libmpv-mac-arm.zip "https://github.com/SubtitleEdit/support-files/releases/download/libmpv-2025-01-25/libmpv-mac-arm.zip"
-          unzip libmpv-mac-arm.zip -d libmpv-temp
-          rm libmpv-mac-arm.zip  # Clean up immediately after extraction
-          
-          # Remove __MACOSX folders (not needed, saves space)
-          rm -rf libmpv-temp/__MACOSX 2>/dev/null || true
 
-      - name: Free disk space before builds
+      - name: Download + verify static ffmpeg (${{ matrix.arch }})
         run: |
-          echo "Before cleanup:"; df -h /
-    
-          # Clear NuGet caches
-          dotnet nuget locals all --clear
-    
-          # Remove Homebrew caches 
-          brew cleanup --prune=all -s
-          rm -rf ~/Library/Caches/Homebrew/* 2>/dev/null || true
-    
-          # Remove Xcode/iOS dev files (not needed for .NET)
-          rm -rf ~/Library/Developer/Xcode/DerivedData/* 2>/dev/null || true
-          rm -rf ~/Library/Developer/CoreSimulator/* 2>/dev/null || true
-          rm -rf ~/Library/Developer/Xcode/Archives/* 2>/dev/null || true
-    
-          # Remove Android SDK files if present (not needed for .NET)
-          rm -rf ~/Library/Android/sdk/build-tools/* 2>/dev/null || true
-          rm -rf ~/Library/Android/sdk/platforms/* 2>/dev/null || true
-    
-          # Remove CocoaPods cache (iOS dev tool, not needed)
-          rm -rf ~/Library/Caches/CocoaPods/* 2>/dev/null || true
-    
-          # Remove Carthage cache (Mac dev tool, not needed)
-          rm -rf ~/Library/Caches/org.carthage.CarthageKit/* 2>/dev/null || true
-    
-          # Remove pip/Python caches (not needed for .NET)
-          rm -rf ~/Library/Caches/pip/* 2>/dev/null || true
-          rm -rf ~/Library/Caches/pypoetry/* 2>/dev/null || true
-    
-          # Additional aggressive cleanup for GitHub Actions runners
-    
-          # Remove large tool caches (often 5-10 GB total)
-          sudo rm -rf /usr/local/lib/android 2>/dev/null || true
-          sudo rm -rf /usr/share/dotnet 2>/dev/null || true  # Old .NET versions if present
-          sudo rm -rf /usr/share/swift 2>/dev/null || true
-    
-          # Remove Docker images and containers (can be several GB)
-          docker system prune -a -f 2>/dev/null || true
-    
-          # Remove Gradle caches (Java build tool)
-          rm -rf ~/.gradle/caches/* 2>/dev/null || true
-          rm -rf ~/.gradle/wrapper/* 2>/dev/null || true
-    
-          # Remove Maven caches (Java build tool)
-          rm -rf ~/.m2/repository/* 2>/dev/null || true
-    
-          # Remove npm/yarn caches (JavaScript package managers)
-          npm cache clean --force 2>/dev/null || true
-          rm -rf ~/.npm/* 2>/dev/null || true
-          rm -rf ~/.yarn/cache/* 2>/dev/null || true
-    
-          # Remove Go caches
-          rm -rf ~/go/pkg/* 2>/dev/null || true
-          go clean -cache -modcache -testcache 2>/dev/null || true
-    
-          # Remove Ruby gems cache
-          rm -rf ~/.gem/* 2>/dev/null || true
-    
-          # Remove Rust/Cargo caches
-          rm -rf ~/.cargo/registry/* 2>/dev/null || true
-          rm -rf ~/.cargo/git/* 2>/dev/null || true
-    
-          # Remove browser caches
-          rm -rf ~/Library/Caches/Google/Chrome/* 2>/dev/null || true
-          rm -rf ~/Library/Caches/com.apple.Safari/* 2>/dev/null || true
-    
-          # Remove temporary files
-          sudo rm -rf /tmp/* 2>/dev/null || true
-          sudo rm -rf /var/tmp/* 2>/dev/null || true
-    
-          echo "After cleanup:"; df -h /
+          set -e
+          curl -fL -o ffmpeg.zip "${{ matrix.ffmpeg_url }}"
+          echo "${{ matrix.ffmpeg_sha256 }}  ffmpeg.zip" | shasum -a 256 -c -
+          mkdir -p ffmpeg-temp
+          unzip -o ffmpeg.zip -d ffmpeg-temp
+          rm ffmpeg.zip
+          if [ ! -f ffmpeg-temp/ffmpeg ]; then
+            found=$(find ffmpeg-temp -maxdepth 3 -type f -name ffmpeg | head -1)
+            [ -n "$found" ] && mv "$found" ffmpeg-temp/ffmpeg
+          fi
+          chmod +x ffmpeg-temp/ffmpeg
+          file ffmpeg-temp/ffmpeg
+          # Arch sanity: fail loudly if osxexperts ever serves a wrong-arch or
+          # universal binary. `lipo -archs` returns space-separated arch names;
+          # we require an exact single-arch match (a universal "x86_64 arm64"
+          # would not equal "x86_64" and would correctly fail).
+          archs=$(lipo -archs ffmpeg-temp/ffmpeg)
+          if [ "$archs" != "${{ matrix.expected_arch }}" ]; then
+            echo "ERROR: ffmpeg binary archs are '$archs', expected exactly '${{ matrix.expected_arch }}'"
+            exit 1
+          fi
 
-      # Setup signing environment if certificates and credentials are available
-      # Required secrets:
-      # * MACOS_CERTIFICATE: Base64-encoded .p12 Apple Developer ID certificate
-      # * MACOS_CERTIFICATE_PASSWORD: Password for the .p12 certificate
-      # * MACOS_CERTIFICATE_NAME: Common Name (CN) of the certificate (e.g. "Developer ID Application: Your Name (TEAMID)")
-      # * APPLE_ID_USER: Apple ID (email address)
-      # * APPLE_APP_SPECIFIC_PASSWORD: App-specific password, see https://support.apple.com/en-us/102654
-      # * APPLE_TEAM_ID: Team ID associated with the Apple Developer account (last part of the certificate name w/o parentheses)
+      - name: Download + verify + extract libmpv from IINA
+        run: |
+          set -e
+          curl -fL -o iina.dmg "https://github.com/iina/iina/releases/download/${IINA_VERSION}/IINA.${IINA_VERSION}.dmg"
+          echo "${IINA_SHA256}  iina.dmg" | shasum -a 256 -c -
+          hdiutil attach iina.dmg -nobrowse -readonly -mountpoint ./iina-mnt
+          mkdir -p libmpv-temp
+          # Copy every bundled dylib except Swift runtime libs (IINA itself is
+          # Swift; libmpv + its C deps don't link Swift, so these are dead weight).
+          for dylib in ./iina-mnt/IINA.app/Contents/Frameworks/*.dylib; do
+            name=$(basename "$dylib")
+            case "$name" in
+              libswift_*) continue ;;
+            esac
+            cp -L "$dylib" "./libmpv-temp/$name"
+          done
+          hdiutil detach ./iina-mnt
+          rm -f iina.dmg
+          # Sanity: assert libmpv landed. Catches a future IINA layout change
+          # that would otherwise produce an empty Frameworks/ + broken DMG.
+          [ -f libmpv-temp/libmpv.2.dylib ] || {
+            echo "ERROR: libmpv.2.dylib not extracted from IINA - did the bundle layout change?"; exit 1;
+          }
+          echo "Extracted $(ls libmpv-temp | wc -l) dylibs ($(du -sh libmpv-temp | cut -f1))"
+
       - name: Setup code signing (if certificates available)
         run: |
           if [ -n "${{ secrets.MACOS_CERTIFICATE }}" ] && [ -n "${{ secrets.APPLE_ID_USER }}" ]; then
@@ -343,233 +332,119 @@ jobs:
             echo "SIGNING_AVAILABLE=false" >> $GITHUB_ENV
           fi
 
-      # Process x64 build first, then clean up before ARM64
-      - name: Publish macOS x64 app
+      - name: Publish macOS app (${{ matrix.arch }})
         run: |
-          dotnet publish src/ui/UI.csproj -c ${{ inputs.build_configuration }} -r osx-x64 --self-contained true \
+          set -e
+          dotnet publish src/ui/UI.csproj -c ${{ inputs.build_configuration }} -r ${{ matrix.runtime }} --self-contained true \
             -p:PublishSingleFile=true \
             -p:DebugSymbols=false \
             -p:DebugType=none \
             -p:Version="$APP_VER_FULL" \
             -p:FileVersion="$APP_VER_FULL" \
             -p:InformationalVersion="$APP_VER_DISPLAY" \
-            -o ./publish/macos-x64
+            -o ./publish/macos-${{ matrix.arch }}
+          find ./publish/macos-${{ matrix.arch }} -name "*.pdb" -delete
+          # Arch sanity on the cross-published SE executable (lipo: exact match).
+          file ./publish/macos-${{ matrix.arch }}/SubtitleEdit
+          archs=$(lipo -archs ./publish/macos-${{ matrix.arch }}/SubtitleEdit)
+          if [ "$archs" != "${{ matrix.expected_arch }}" ]; then
+            echo "ERROR: SubtitleEdit binary archs are '$archs', expected exactly '${{ matrix.expected_arch }}'"
+            exit 1
+          fi
 
-          # Native PDBs from the SkiaSharp runtime NuGet aren't suppressed by -p:DebugType=none.
-          find ./publish/macos-x64 -name "*.pdb" -delete
-
-          echo "Disk space after x64 publish:"; df -h /
-      
       - name: Update Info.plist with version from Se.cs
         run: |
           chmod +x ./installer/macBundle/update-plist-version.sh
           ./installer/macBundle/update-plist-version.sh
-      
-      - name: Create, sign, and package x64 DMG
+
+      - name: Assemble, sign, and package DMG (${{ matrix.arch }})
         run: |
-          echo "Disk space before x64 DMG creation:"; df -h /
-          
-          # Copy template for x64
-          cp -R "./installer/macBundle/SubtitleEdit.app" "./SubtitleEdit-x64.app"
-      
-          # Copy all files (executable + dylibs) to app bundle
-          cp "./publish/macos-x64/SubtitleEdit" "./SubtitleEdit-x64.app/Contents/MacOS/"
-          cp "./publish/macos-x64/"*.dylib "./SubtitleEdit-x64.app/Contents/MacOS/" 2>/dev/null || true
-          chmod +x "./SubtitleEdit-x64.app/Contents/MacOS/SubtitleEdit"
-          
-          # Delete publish directory immediately after copying
-          rm -rf "./publish/macos-x64"
-      
-          # Fix library linking for x64
-          executable="./SubtitleEdit-x64.app/Contents/MacOS/SubtitleEdit"
-          if ! otool -l "$executable" | grep -q "@executable_path/../Frameworks"; then
-            install_name_tool -add_rpath "@executable_path/../Frameworks" "$executable" || true
-          fi
-      
-          # Sign the x64 app if certificates are available
-          if [ "$SIGNING_AVAILABLE" = "true" ]; then
-            echo "Signing x64 app..."
-            codesign --force --options runtime --timestamp --deep --entitlements "./installer/macBundle/Entitlements.plist" --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" "./SubtitleEdit-x64.app"
-            codesign --verify --verbose "./SubtitleEdit-x64.app"
-          else
-            # Remove broken/conflicting signature from unsigned build (workaround for startup failures)
-            codesign --remove-signature "./SubtitleEdit-x64.app" 2>/dev/null || true
-          fi
-      
-          # Create DMG for x64
-          mkdir -p "./dmg-temp-x64"
-          cp -R "./SubtitleEdit-x64.app" "./dmg-temp-x64/Subtitle Edit.app"
+          set -e
+          app="./SubtitleEdit-${{ matrix.arch_label }}.app"
+          cp -R "./installer/macBundle/SubtitleEdit.app" "$app"
 
-          # Delete app bundle immediately after copying
-          rm -rf "./SubtitleEdit-x64.app"
+          cp "./publish/macos-${{ matrix.arch }}/SubtitleEdit" "$app/Contents/MacOS/"
+          cp "./publish/macos-${{ matrix.arch }}/"*.dylib "$app/Contents/MacOS/" 2>/dev/null || true
+          chmod +x "$app/Contents/MacOS/SubtitleEdit"
+          rm -rf "./publish/macos-${{ matrix.arch }}"
 
-          # Add unsigned-app helper files if signing was skipped
-          if [ "$SIGNING_AVAILABLE" != "true" ]; then
-            cp "./installer/macBundle/README-macOS.txt" "./dmg-temp-x64/README-macOS.txt"
-            cp "./installer/macBundle/fix-unsigned-app.sh" "./dmg-temp-x64/fix-unsigned-app.sh"
-            chmod +x "./dmg-temp-x64/fix-unsigned-app.sh"
-          fi
-
-          ln -s /Applications "./dmg-temp-x64/Applications"
-          hdiutil create -volname "SubtitleEdit x64" -srcfolder "./dmg-temp-x64" -ov -format UDZO "./SubtitleEdit-macOS-x64.dmg"
-
-          # Sign and notarize the x64 DMG if certificates are available
-          if [ "$SIGNING_AVAILABLE" = "true" ]; then
-            echo "Signing x64 DMG..."
-            codesign --timestamp --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" "./SubtitleEdit-macOS-x64.dmg"
-            codesign --verify --verbose "./SubtitleEdit-macOS-x64.dmg"
-
-            echo "Notarizing x64 DMG..."
-            xcrun notarytool submit "./SubtitleEdit-macOS-x64.dmg" --apple-id "${{ secrets.APPLE_ID_USER }}" --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}" --team-id "${{ secrets.APPLE_TEAM_ID }}" --wait
-            xcrun stapler staple "./SubtitleEdit-macOS-x64.dmg"
-            xcrun stapler validate "./SubtitleEdit-macOS-x64.dmg"
-          fi
-
-          # Immediate cleanup of x64 temp directory
-          rm -rf "./dmg-temp-x64"
-          
-          echo "Disk space after x64 DMG creation:"; df -h /
-
-      - name: Publish macOS ARM64 app
-        run: |
-          echo "Disk space before ARM64 publish:"; df -h /
-
-          dotnet publish src/ui/UI.csproj -c ${{ inputs.build_configuration }} -r osx-arm64 --self-contained true \
-            -p:PublishSingleFile=true \
-            -p:DebugSymbols=false \
-            -p:DebugType=none \
-            -p:Version="$APP_VER_FULL" \
-            -p:FileVersion="$APP_VER_FULL" \
-            -p:InformationalVersion="$APP_VER_DISPLAY" \
-            -o ./publish/macos-arm64
-
-          find ./publish/macos-arm64 -name "*.pdb" -delete
-
-          echo "Disk space after ARM64 publish:"; df -h /
-      
-      - name: Create, sign, and package ARM64 DMG
-        run: |
-          echo "Disk space before ARM64 DMG creation:"; df -h /
-          
-          # Copy template for ARM64
-          cp -R "./installer/macBundle/SubtitleEdit.app" "./SubtitleEdit-ARM64.app"
-      
-          # Copy all files (executable + dylibs) to app bundle
-          cp "./publish/macos-arm64/SubtitleEdit" "./SubtitleEdit-ARM64.app/Contents/MacOS/"
-          cp "./publish/macos-arm64/"*.dylib "./SubtitleEdit-ARM64.app/Contents/MacOS/" 2>/dev/null || true
-          chmod +x "./SubtitleEdit-ARM64.app/Contents/MacOS/SubtitleEdit"
-          
-          # Delete publish directory immediately after copying
-          rm -rf "./publish/macos-arm64"
-      
-          # Copy ffmpeg to ARM64 bundle
-          cp "./ffmpeg-temp/ffmpeg" "./SubtitleEdit-ARM64.app/Contents/MacOS/" 2>/dev/null || true
-          chmod +x "./SubtitleEdit-ARM64.app/Contents/MacOS/ffmpeg" 2>/dev/null || true
-          
-          # Delete ffmpeg temp immediately after copying
+          cp "./ffmpeg-temp/ffmpeg" "$app/Contents/MacOS/"
+          chmod +x "$app/Contents/MacOS/ffmpeg"
           rm -rf "./ffmpeg-temp"
-      
-          # Create Frameworks directory and copy libmpv for ARM64
-          mkdir -p "./SubtitleEdit-ARM64.app/Contents/Frameworks"
-          cp "./libmpv-temp/"*.dylib "./SubtitleEdit-ARM64.app/Contents/Frameworks/" 2>/dev/null || true
-          cp "./libmpv-temp/"*.framework "./SubtitleEdit-ARM64.app/Contents/Frameworks/" 2>/dev/null || true
-          chmod -R 755 "./SubtitleEdit-ARM64.app/Contents/Frameworks/"
-          
-          # Delete libmpv temp immediately after copying
+
+          mkdir -p "$app/Contents/Frameworks"
+          cp "./libmpv-temp/"*.dylib "$app/Contents/Frameworks/"
+          chmod -R 755 "$app/Contents/Frameworks/"
           rm -rf "./libmpv-temp"
-      
-          # Fix library linking for ARM64
-          executable="./SubtitleEdit-ARM64.app/Contents/MacOS/SubtitleEdit"
+
+          # Point the SE executable at the bundled Frameworks for @rpath resolution.
+          # The dylibs themselves already use @rpath/* internally (IINA's CI fixed
+          # them), so no further install_name_tool work is needed on the libs.
+          executable="$app/Contents/MacOS/SubtitleEdit"
           if ! otool -l "$executable" | grep -q "@executable_path/../Frameworks"; then
             install_name_tool -add_rpath "@executable_path/../Frameworks" "$executable" || true
           fi
-      
-          # Fix any absolute paths to libmpv in the executable
-          otool -L "$executable" | grep -E "libmpv|/opt/local|/usr/local" | awk '{print $1}' | while read lib; do
-            if [ -n "$lib" ] && [[ "$lib" != @* ]]; then
-              lib_name=$(basename "$lib")
-              install_name_tool -change "$lib" "@rpath/$lib_name" "$executable" 2>/dev/null || true
-            fi
-          done
-      
-          # Fix any bundled dylibs in Frameworks
-          frameworks_dir="./SubtitleEdit-ARM64.app/Contents/Frameworks"
-          if [ -d "$frameworks_dir" ]; then
-            for dylib in "$frameworks_dir"/*.dylib; do
-              if [ -f "$dylib" ]; then
-                filename=$(basename "$dylib")
-                install_name_tool -id "@rpath/$filename" "$dylib" 2>/dev/null || true
-            
-                otool -L "$dylib" | grep -E "/opt/local|/usr/local" | awk '{print $1}' | while read dep; do
-                  if [ -n "$dep" ]; then
-                    dep_name=$(basename "$dep")
-                    install_name_tool -change "$dep" "@rpath/$dep_name" "$dylib" 2>/dev/null || true
-                  fi
-                done
-              fi
+
+          if [ "$SIGNING_AVAILABLE" = "true" ]; then
+            cert="${{ secrets.MACOS_CERTIFICATE_NAME }}"
+            # Sign inside-out: nested binaries first, then the outer .app.
+            # Apple deprecated --deep for signing; explicit per-binary signing
+            # is the recommended notarization-robust pattern.
+            echo "Signing nested binaries (dylibs + bundled ffmpeg)..."
+            for f in "$app/Contents/Frameworks/"*.dylib "$app/Contents/MacOS/"*.dylib "$app/Contents/MacOS/ffmpeg"; do
+              [ -f "$f" ] || continue
+              codesign --force --options runtime --timestamp --sign "$cert" "$f"
             done
-          fi
-      
-          # Sign the ARM64 app if certificates are available
-          if [ "$SIGNING_AVAILABLE" = "true" ]; then
-            echo "Signing ARM64 app..."
-            codesign --force --options runtime --timestamp --deep --entitlements "./installer/macBundle/Entitlements.plist" --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" "./SubtitleEdit-ARM64.app"
-            codesign --verify --verbose "./SubtitleEdit-ARM64.app"
+            echo "Signing app bundle..."
+            codesign --force --options runtime --timestamp --entitlements "./installer/macBundle/Entitlements.plist" --sign "$cert" "$app"
+            # --deep --strict on verify is still recommended (it walks the
+            # bundle and complains about any unsigned nested code).
+            codesign --verify --verbose --deep --strict "$app"
           else
-            # Remove broken/conflicting signature from unsigned build (workaround for startup failures)
-            codesign --remove-signature "./SubtitleEdit-ARM64.app" 2>/dev/null || true
+            codesign --remove-signature "$app" 2>/dev/null || true
           fi
-      
-          # Create DMG for ARM64
-          mkdir -p "./dmg-temp-arm64"
-          cp -R "./SubtitleEdit-ARM64.app" "./dmg-temp-arm64/Subtitle Edit.app"
 
-          # Delete app bundle immediately after copying
-          rm -rf "./SubtitleEdit-ARM64.app"
+          dmg_dir="./dmg-temp-${{ matrix.arch }}"
+          dmg_out="./SubtitleEdit-macOS-${{ matrix.arch_label }}.dmg"
+          mkdir -p "$dmg_dir"
+          cp -R "$app" "$dmg_dir/Subtitle Edit.app"
+          rm -rf "$app"
 
-          # Add unsigned-app helper files if signing was skipped
+          cp "./installer/macBundle/THIRD_PARTY_LICENSES.txt" "$dmg_dir/THIRD_PARTY_LICENSES.txt"
+
           if [ "$SIGNING_AVAILABLE" != "true" ]; then
-            cp "./installer/macBundle/README-macOS.txt" "./dmg-temp-arm64/README-macOS.txt"
-            cp "./installer/macBundle/fix-unsigned-app.sh" "./dmg-temp-arm64/fix-unsigned-app.sh"
-            chmod +x "./dmg-temp-arm64/fix-unsigned-app.sh"
+            cp "./installer/macBundle/README-macOS.txt" "$dmg_dir/README-macOS.txt"
+            cp "./installer/macBundle/fix-unsigned-app.sh" "$dmg_dir/fix-unsigned-app.sh"
+            chmod +x "$dmg_dir/fix-unsigned-app.sh"
           fi
 
-          ln -s /Applications "./dmg-temp-arm64/Applications"
-          hdiutil create -volname "SubtitleEdit ARM64" -srcfolder "./dmg-temp-arm64" -ov -format UDBZ "./SubtitleEdit-macOS-ARM64.dmg"
-      
-          # Sign and notarize the ARM64 DMG if certificates are available
+          ln -s /Applications "$dmg_dir/Applications"
+          hdiutil create -volname "SubtitleEdit ${{ matrix.arch_label }}" -srcfolder "$dmg_dir" -ov -format ${{ matrix.dmg_format }} "$dmg_out"
+
           if [ "$SIGNING_AVAILABLE" = "true" ]; then
-            echo "Signing ARM64 DMG..."
-            codesign --timestamp --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" "./SubtitleEdit-macOS-ARM64.dmg"
-            codesign --verify --verbose "./SubtitleEdit-macOS-ARM64.dmg"
+            echo "Signing DMG..."
+            codesign --timestamp --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" "$dmg_out"
+            codesign --verify --verbose "$dmg_out"
 
-            echo "Notarizing ARM64 DMG..."
-            xcrun notarytool submit "./SubtitleEdit-macOS-ARM64.dmg" --apple-id "${{ secrets.APPLE_ID_USER }}" --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}" --team-id "${{ secrets.APPLE_TEAM_ID }}" --wait
-            xcrun stapler staple "./SubtitleEdit-macOS-ARM64.dmg"
-            xcrun stapler validate "./SubtitleEdit-macOS-ARM64.dmg"
+            echo "Notarizing DMG..."
+            xcrun notarytool submit "$dmg_out" --apple-id "${{ secrets.APPLE_ID_USER }}" --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}" --team-id "${{ secrets.APPLE_TEAM_ID }}" --wait
+            xcrun stapler staple "$dmg_out"
+            xcrun stapler validate "$dmg_out"
           fi
 
-          # Final cleanup
-          rm -rf "./dmg-temp-arm64"
-          
-          echo "Disk space after ARM64 DMG creation:"; df -h /
+          rm -rf "$dmg_dir"
 
       - name: Cleanup signing keychain
         if: env.SIGNING_AVAILABLE == 'true'
         run: |
           security delete-keychain build.keychain || true
 
-      # Upload only the DMG files now, not the publish directories
-      - name: Upload macOS DMG packages
+      - name: Upload macOS DMG
         uses: actions/upload-artifact@v5
         with:
-          name: macos-dmg-packages
-          path: |
-            ./SubtitleEdit-macOS-x64.dmg
-            ./SubtitleEdit-macOS-ARM64.dmg
+          name: macos-dmg-${{ matrix.arch }}
+          path: ./SubtitleEdit-macOS-${{ matrix.arch_label }}.dmg
           overwrite: true
-
- 
   build-linux:
     runs-on: ubuntu-latest
 
@@ -791,7 +666,8 @@ jobs:
           # Copy ZIP/TAR packages to release assets
           cp ./artifacts/windows-inno-installer/SubtitleEdit-Windows-x64-Setup.exe ./release-assets/
           cp ./artifacts/windows-zip-packages/*.zip ./release-assets/
-          cp ./artifacts/macos-dmg-packages/*.dmg ./release-assets/
+          cp ./artifacts/macos-dmg-arm64/*.dmg ./release-assets/
+          cp ./artifacts/macos-dmg-x64/*.dmg ./release-assets/
           cp ./artifacts/linux-tar-package/*.tar.gz ./release-assets/
           cp ./artifacts/flatpak-bundle/*.flatpak ./release-assets/
 
