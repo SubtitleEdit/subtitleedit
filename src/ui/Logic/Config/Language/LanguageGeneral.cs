@@ -258,6 +258,7 @@ public class LanguageGeneral
     public string InsertSubtitleAfterCurrentLine { get; set; }
     public string InsertSubtitleFileAtVideoPositionDotDotDot { get; set; }
     public string InspectAdditions { get; set; }
+    public string InstallFolder { get; set; }
     public string InvertSelection { get; set; }
     public string IsDefault { get; set; }
     public string Italic { get; set; }
@@ -413,6 +414,8 @@ public class LanguageGeneral
     public string Reason { get; set; }
     public string RecentFiles { get; set; }
     public string Redo { get; set; }
+    public string Redownload { get; set; }
+    public string Release { get; set; }
     public string Refresh { get; set; }
     public string Region { get; set; }
     public string RegularExpression { get; set; }
@@ -590,14 +593,17 @@ public class LanguageGeneral
     public string Underline { get; set; }
     public string Undo { get; set; }
     public string Unknown { get; set; }
+    public string UnknownNoInstallRecord { get; set; }
     public string UnknownSubtitleFormat { get; set; }
     public string Unpacking7ZipArchiveDotDotDot { get; set; }
     public string UnpackingX { get; set; }
     public string Untitled { get; set; }
     public string Update { get; set; }
     public string UpdateAndClose { get; set; }
+    public string UpdateAvailable { get; set; }
     public string UpdateDetails { get; set; }
     public string UpdatedBy { get; set; }
+    public string UpToDate { get; set; }
     public string Url { get; set; }
     public string Usages { get; set; }
     public string Use { get; set; }
@@ -953,6 +959,7 @@ public class LanguageGeneral
         InsertSubtitleAfterCurrentLine = "Insert subtitle after current line...";
         InsertSubtitleFileAtVideoPositionDotDotDot = "Insert subtitle file at video position...";
         InspectAdditions = "Inspect additions...";
+        InstallFolder = "Install folder";
         InvertSelection = "Invert selection";
         IsDefault = "Is default";
         Italic = "Italic";
@@ -1108,6 +1115,8 @@ public class LanguageGeneral
         Reason = "Reason";
         RecentFiles = "Recent files";
         Redo = "Redo";
+        Redownload = "Re-download...";
+        Release = "Release";
         Refresh = "Refresh";
         Region = "Region";
         RegularExpression = "Regular expression";
@@ -1285,14 +1294,17 @@ public class LanguageGeneral
         Underline = "Underline";
         Undo = "Undo";
         Unknown = "Unknown";
+        UnknownNoInstallRecord = "Unknown (no install record)";
         UnknownSubtitleFormat = "Unknown subtitle format";
         Unpacking7ZipArchiveDotDotDot = "Unpacking 7-zip archive...";
         UnpackingX = "Unpacking {0}";
         Untitled = "Untitled";
         Update = "Update";
         UpdateAndClose = "Update and close";
+        UpdateAvailable = "Update available";
         UpdateDetails = "Update details";
         UpdatedBy = "Updated by";
+        UpToDate = "Up to date";
         Url = "URL";
         Usages = "Usages";
         Use = "Use";

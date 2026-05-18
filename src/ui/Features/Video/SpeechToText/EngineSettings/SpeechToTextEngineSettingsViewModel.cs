@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
 
@@ -44,7 +45,7 @@ public partial class SpeechToTextEngineSettingsViewModel : ObservableObject
         _redownloadAsync = redownloadAsync;
 
         TitleText = engine.Name;
-        SubtitleText = "Speech-to-text engine";
+        SubtitleText = Se.Language.Video.AudioToText.EngineSettingsSubtitle;
 
         Refresh();
     }
@@ -58,7 +59,7 @@ public partial class SpeechToTextEngineSettingsViewModel : ObservableObject
 
         InstallFolder = _engine.GetAndCreateWhisperFolder();
         IsInstalled = _engine.IsEngineInstalled();
-        BackendLabel = IsInstalled ? DetectBackend(_engine, InstallFolder) : "Not installed";
+        BackendLabel = IsInstalled ? DetectBackend(_engine, InstallFolder) : Se.Language.General.NotInstalled;
         ApplyStatus(IsInstalled ? ComputeStatus(_engine, InstallFolder) : DownloadHashManager.UpdateStatus.Unknown, IsInstalled);
     }
 
@@ -66,7 +67,7 @@ public partial class SpeechToTextEngineSettingsViewModel : ObservableObject
     {
         if (!installed)
         {
-            StatusLabel = "Not installed";
+            StatusLabel = Se.Language.General.NotInstalled;
             StatusBrush = new SolidColorBrush(Color.FromRgb(0xF4, 0x43, 0x36));   // red
             return;
         }
@@ -74,15 +75,15 @@ public partial class SpeechToTextEngineSettingsViewModel : ObservableObject
         switch (status)
         {
             case DownloadHashManager.UpdateStatus.UpToDate:
-                StatusLabel = "Up to date";
+                StatusLabel = Se.Language.General.UpToDate;
                 StatusBrush = new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50)); // green
                 break;
             case DownloadHashManager.UpdateStatus.UpdateAvailable:
-                StatusLabel = "Update available";
+                StatusLabel = Se.Language.General.UpdateAvailable;
                 StatusBrush = new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00)); // amber
                 break;
             default:
-                StatusLabel = "Unknown (no install record)";
+                StatusLabel = Se.Language.General.UnknownNoInstallRecord;
                 StatusBrush = new SolidColorBrush(Color.FromRgb(0x9E, 0x9E, 0x9E)); // grey
                 break;
         }

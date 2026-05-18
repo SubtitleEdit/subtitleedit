@@ -56,6 +56,13 @@ public class LanguageTextToSpeech
     public string EdgeTtsVolumeDescription { get; set; }
     public string DownloadPiperPrompt { get; set; }
 
+    public string OmniVoiceTtsSettings { get; set; }
+    public string ReDownloadOmniVoiceTts { get; set; }
+    public string SelectTheBuildToDownload { get; set; }
+    public string DownloadTheLatestOmniVoiceTtsPrompt { get; set; }
+    public string VulkanRuntimeMayBeRequired { get; set; }
+    public string VulkanRuntimeNotDetectedMessage { get; set; }
+
     public LanguageTextToSpeech()
     {
         Title = "Text to speech";
@@ -109,5 +116,12 @@ public class LanguageTextToSpeech
         EdgeTtsVolume = "Edge-TTS volume";
         EdgeTtsVolumeDescription = "Volume adjustment for Edge-TTS, e.g. \"+20%\", \"-10%\", or \"+0%\" for default.";
         DownloadPiperPrompt = $"\"Text to speech\" requires Piper.{Environment.NewLine}{Environment.NewLine}Download and use Piper?";
+
+        OmniVoiceTtsSettings = "OmniVoice TTS settings";
+        ReDownloadOmniVoiceTts = "Re-download OmniVoice TTS";
+        SelectTheBuildToDownload = $"{Environment.NewLine}Select the build to download:";
+        DownloadTheLatestOmniVoiceTtsPrompt = $"{Environment.NewLine}Download the latest OmniVoice TTS now?";
+        VulkanRuntimeMayBeRequired = "Vulkan runtime may be required";
+        VulkanRuntimeNotDetectedMessage = $"The Vulkan build needs the Vulkan runtime (vulkan-1.dll). It usually ships with current GPU drivers but was not detected.{Environment.NewLine}{Environment.NewLine}Install it from:{Environment.NewLine}{{0}}{Environment.NewLine}{Environment.NewLine}Continue with Vulkan anyway?";
     }
 }

@@ -21,7 +21,7 @@ public class OmniVoiceSettingsWindow : Window
     public OmniVoiceSettingsWindow(OmniVoiceSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "OmniVoice TTS settings";
+        Title = Se.Language.Video.TextToSpeech.OmniVoiceTtsSettings;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 540;
@@ -108,11 +108,11 @@ public class OmniVoiceSettingsWindow : Window
         };
 
         // Backend
-        grid.Add(MakeLabel("Backend"), 0, 0);
+        grid.Add(MakeLabel(Se.Language.General.Backend), 0, 0);
         grid.Add(MakeValue(nameof(vm.BackendLabel)), 0, 1);
 
         // Status (colored dot + text)
-        grid.Add(MakeLabel("Status"), 1, 0);
+        grid.Add(MakeLabel(Se.Language.General.Status), 1, 0);
         var statusDot = new Ellipse
         {
             Width = 10,
@@ -134,7 +134,7 @@ public class OmniVoiceSettingsWindow : Window
         grid.Add(statusPanel, 1, 1);
 
         // Release
-        grid.Add(MakeLabel("Release"), 2, 0);
+        grid.Add(MakeLabel(Se.Language.General.Release), 2, 0);
         var releaseText = new TextBlock
         {
             FontFamily = new FontFamily("Cascadia Mono,Consolas,Menlo,Monaco,monospace"),
@@ -145,7 +145,7 @@ public class OmniVoiceSettingsWindow : Window
         grid.Add(releaseText, 2, 1);
 
         // Install folder
-        grid.Add(MakeLabel("Install folder"), 3, 0);
+        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 3, 0);
         var folderText = new TextBox
         {
             IsReadOnly = true,
@@ -171,8 +171,8 @@ public class OmniVoiceSettingsWindow : Window
 
     private static Grid BuildActions(OmniVoiceSettingsViewModel vm)
     {
-        var redownload = UiUtil.MakeButton("Re-download...", vm.RedownloadCommand).WithIconLeft(IconNames.Download);
-        var openFolder = UiUtil.MakeButton("Open folder", vm.OpenFolderCommand).WithIconLeft(IconNames.FolderOpen);
+        var redownload = UiUtil.MakeButton(Se.Language.General.Redownload, vm.RedownloadCommand).WithIconLeft(IconNames.Download);
+        var openFolder = UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenFolderCommand).WithIconLeft(IconNames.FolderOpen);
         var close = UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand);
 
         var leftPanel = new StackPanel

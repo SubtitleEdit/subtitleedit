@@ -20,7 +20,7 @@ public class SpeechToTextEngineSettingsWindow : Window
     public SpeechToTextEngineSettingsWindow(SpeechToTextEngineSettingsViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
-        Title = "Speech-to-text engine settings";
+        Title = Se.Language.Video.AudioToText.EngineSettings;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
         MinWidth = 540;
@@ -106,11 +106,11 @@ public class SpeechToTextEngineSettingsWindow : Window
         };
 
         // Backend
-        grid.Add(MakeLabel("Backend"), 0, 0);
+        grid.Add(MakeLabel(Se.Language.General.Backend), 0, 0);
         grid.Add(MakeValue(nameof(vm.BackendLabel)), 0, 1);
 
         // Status (coloured dot + text)
-        grid.Add(MakeLabel("Status"), 1, 0);
+        grid.Add(MakeLabel(Se.Language.General.Status), 1, 0);
         var statusDot = new Ellipse
         {
             Width = 10,
@@ -132,7 +132,7 @@ public class SpeechToTextEngineSettingsWindow : Window
         grid.Add(statusPanel, 1, 1);
 
         // Install folder
-        grid.Add(MakeLabel("Install folder"), 2, 0);
+        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 2, 0);
         var folderText = new TextBox
         {
             IsReadOnly = true,
@@ -158,8 +158,8 @@ public class SpeechToTextEngineSettingsWindow : Window
 
     private static Grid BuildActions(SpeechToTextEngineSettingsViewModel vm)
     {
-        var redownload = UiUtil.MakeButton("Re-download...", vm.RedownloadCommand).WithIconLeft(IconNames.Download);
-        var openFolder = UiUtil.MakeButton("Open folder", vm.OpenFolderCommand).WithIconLeft(IconNames.FolderOpen);
+        var redownload = UiUtil.MakeButton(Se.Language.General.Redownload, vm.RedownloadCommand).WithIconLeft(IconNames.Download);
+        var openFolder = UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenFolderCommand).WithIconLeft(IconNames.FolderOpen);
         var close = UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand);
 
         var leftPanel = new StackPanel
