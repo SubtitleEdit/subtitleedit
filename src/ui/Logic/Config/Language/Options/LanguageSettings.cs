@@ -257,6 +257,7 @@ public class LanguageSettings
     public string SaveAsBehaviorUseSubtitleFileName { get; set; }
     public string SaveAsAppendLanguageCodeTwoLetter { get; set; }
     public string SaveAsAppendLanguageCodeThreeLetter { get; set; }
+    public string SaveAsAppendLanguageCodeThreeLetterBibliographic { get; set; }
     public string SaveAsAppendLanguageCodeLanguageName { get; set; }
     public string SplitOddLineActionWeightTop { get; set; }
     public string SplitOddLineActionWeightBottom { get; set; }
@@ -543,7 +544,8 @@ public class LanguageSettings
         SaveAsBehaviorUseVideoFileName = "Use video file name";
         SaveAsBehaviorUseSubtitleFileName = "Use subtitle file name";
         SaveAsAppendLanguageCodeTwoLetter = "Two-letter";
-        SaveAsAppendLanguageCodeThreeLetter = "Three-letter";
+        SaveAsAppendLanguageCodeThreeLetter = "Three letter (ISO 639-2/T)";
+        SaveAsAppendLanguageCodeThreeLetterBibliographic = "Three letter (ISO 639-2/B)";
         SaveAsAppendLanguageCodeLanguageName = "Language name";
         SplitOddLineActionWeightTop = "Weight top";
         SplitOddLineActionWeightBottom = "Weight bottom";

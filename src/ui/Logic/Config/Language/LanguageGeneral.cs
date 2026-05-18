@@ -565,6 +565,7 @@ public class LanguageGeneral
     public string TextFiles { get; set; }
     public string TextOrImage { get; set; }
     public string ThreeLetterLanguageCode { get; set; }
+    public string ThreeLetterLanguageCodeBibliographic { get; set; }
     public string Time { get; set; }
     public string TimeCodes { get; set; }
     public string Timing { get; set; }
@@ -1265,7 +1266,8 @@ public class LanguageGeneral
         TextColor = "Text color";
         TextFiles = "Text files";
         TextOrImage = "Text/image";
-        ThreeLetterLanguageCode = "Three-letter language code";
+        ThreeLetterLanguageCode = "Three letter (ISO 639-2/T)";
+        ThreeLetterLanguageCodeBibliographic = "Three letter (ISO 639-2/B)";
         Time = "Time";
         TimeCodes = "Time codes";
         Timing = "Timing";
