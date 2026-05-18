@@ -139,6 +139,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceSettings;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.EngineSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.EncodingSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceSettings;
@@ -262,6 +263,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<SsaStylesViewModel>();
         collection.AddTransient<AssaTagHistoryViewModel>();
         collection.AddTransient<SpeechToTextViewModel>();
+        collection.AddTransient<SpeechToTextEngineSettingsViewModel>();
         collection.AddTransient<AudioVisualizerUndockedViewModel>();
         collection.AddTransient<AutoTranslateViewModel>();
         collection.AddTransient<BatchConvertAssaViewModel>();

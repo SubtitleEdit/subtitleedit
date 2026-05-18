@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.GetAudioClips;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.EngineSettings;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -87,6 +88,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private string _reDownloadText;
 
     [ObservableProperty] private bool _isEngineDownloadButtonVisible;
+    [ObservableProperty] private bool _isEngineSettingsButtonVisible;
     [ObservableProperty] private string _engineDownloadHint;
 
     [ObservableProperty] private bool _isOpenAiCompatibleSttVisible;
@@ -3516,6 +3518,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         var canDownload = engine.CanBeDownloaded();
         var isInstalled = engine.IsEngineInstalled();
 
+        // Settings gear is for downloadable engines that already have a binary on disk.
+        // It opens a dialog with the installed backend, status and Re-download — which is
+        // also the answer to issue #11022 (switch backend after the initial install).
+        IsEngineSettingsButtonVisible = canDownload && isInstalled && IsSettingsCapable(engine);
+
         if (!canDownload || isInstalled)
         {
             EngineDownloadHint = string.Empty;
@@ -3530,6 +3537,19 @@ public partial class SpeechToTextViewModel : ObservableObject
         IsEngineDownloadButtonVisible = true;
     }
 
+    // Show the gear for any engine that is locally downloadable (i.e. produces a binary on disk
+    // we can describe, re-download or open the folder for). Whisper.cpp variants and CrispASR
+    // additionally have hash tracking so their Status row is meaningful; CTranslate2 / ConstMe /
+    // Purfview have no DownloadHashManager entry yet and will show "Unknown" until hashes land.
+    private static bool IsSettingsCapable(ISpeechToTextEngine engine)
+        => engine is WhisperEngineCpp
+                   or WhisperEngineCppCuBlas
+                   or WhisperEngineCppVulkan
+                   or WhisperEngineCTranslate2
+                   or WhisperEngineConstMe
+                   or WhisperEnginePurfviewFasterWhisperXxl
+                   or ICrispAsrEngine;
+
     [RelayCommand]
     private async Task DownloadSelectedEngine()
     {
@@ -3540,6 +3560,27 @@ public partial class SpeechToTextViewModel : ObservableObject
         // opened — that's acceptable since the typical path is download → transcribe and
         // the user doesn't revisit the dropdown mid-session.
         await ReDownloadWhisperEngine();
+        UpdateEngineStatusUi(GetEffectiveSelectedEngine());
+    }
+
+    [RelayCommand]
+    private async Task ShowEngineSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var engine = GetEffectiveSelectedEngine();
+        if (!IsSettingsCapable(engine) || !engine.IsEngineInstalled())
+        {
+            return;
+        }
+
+        await _windowService.ShowDialogAsync<SpeechToTextEngineSettingsWindow, SpeechToTextEngineSettingsViewModel>(
+            Window,
+            vm => vm.Initialize(engine, async () => await ReDownloadWhisperEngine()));
+
         UpdateEngineStatusUi(GetEffectiveSelectedEngine());
     }
 

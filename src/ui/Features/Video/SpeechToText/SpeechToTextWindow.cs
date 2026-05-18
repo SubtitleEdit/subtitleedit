@@ -68,6 +68,13 @@ public class SpeechToTextWindow : Window
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
         });
 
+        var buttonEngineSettings = UiUtil.MakeButton(vm.ShowEngineSettingsCommand, IconNames.Settings)
+            .WithMarginLeft(5)
+            .WithMarginTop(10)
+            .BindIsVisible(vm, nameof(vm.IsEngineSettingsButtonVisible))
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
+        ToolTip.SetTip(buttonEngineSettings, "Backend and update status");
+
         var panelEngineControls = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -78,6 +85,7 @@ public class SpeechToTextWindow : Window
                 comboEngine,
                 buttonEngineWebsite,
                 buttonEngineDownload,
+                buttonEngineSettings,
             }
         };
 
