@@ -54,6 +54,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private Task? _downloadTaskOmniVoice;
     private Task? _downloadTaskOmniVoiceVoices;
     private Task? _downloadTaskOmniVoiceModels;
+    private string _omniVoiceVariant = OmniVoiceDownloadService.WindowsVariantVulkan;
     private readonly Timer _timer = new();
 
     private readonly ITtsDownloadService _ttsDownloadService;
@@ -520,6 +521,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                     // the OmniVoice folder where GetExecutableFileName() looks for them.
                     var flatten = !Configuration.IsRunningOnWindows;
                     _zipUnpacker.UnpackZipStream(_downloadStreamOmniVoice, folder, string.Empty, flatten, new List<string>(), null);
+                    WriteOmniVoiceInstalledHash(folder, _downloadStreamOmniVoice, DownloadHashManager.ResolveOmniVoiceKey(_omniVoiceVariant));
                     _downloadStreamOmniVoice.Dispose();
                 }
                 catch (Exception ex)
@@ -609,6 +611,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                     {
                         _downloadStreamOmniVoiceVoices.Position = 0;
                         _zipUnpacker.UnpackZipStream(_downloadStreamOmniVoiceVoices, voicesFolder, string.Empty, false, new List<string>(), null);
+                        WriteOmniVoiceInstalledHash(voicesFolder, _downloadStreamOmniVoiceVoices, DownloadHashManager.OmniVoice.Voices);
                     }
                     catch (Exception ex)
                     {
@@ -741,6 +744,30 @@ public partial class DownloadTtsViewModel : ObservableObject
     private static string QuoteForBash(string value)
     {
         return "'" + value.Replace("'", "'\"'\"'") + "'";
+    }
+
+    // Records the downloaded archive's hash in a .installed.sha256 sidecar so SE can later tell
+    // whether the install is outdated (see DownloadHashManager.GetStatus). Best-effort - failure
+    // is swallowed because the engine itself is already on disk and usable without the sidecar.
+    private static void WriteOmniVoiceInstalledHash(string folder, Stream archiveStream, string? key)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(key) || archiveStream.Length == 0)
+            {
+                return;
+            }
+
+            archiveStream.Position = 0;
+            var hash = DownloadHashManager.ComputeSha256(archiveStream);
+
+            var sidecar = Path.Combine(folder, ".installed.sha256");
+            File.WriteAllText(sidecar, key + Environment.NewLine + hash);
+        }
+        catch
+        {
+            // ignore - hash sidecar is best-effort
+        }
     }
 
     private void Close()
@@ -897,6 +924,8 @@ public partial class DownloadTtsViewModel : ObservableObject
 
     public void StartDownloadOmniVoice(string windowsVariant = OmniVoiceDownloadService.WindowsVariantVulkan)
     {
+        _omniVoiceVariant = windowsVariant;
+
         string variantLabel;
         if (Configuration.IsRunningOnWindows)
         {
@@ -905,6 +934,10 @@ public partial class DownloadTtsViewModel : ObservableObject
         else if (Configuration.IsRunningOnMac)
         {
             variantLabel = "macOS universal CPU+Metal";
+        }
+        else if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+        {
+            variantLabel = "Linux ARM64 CPU";
         }
         else
         {

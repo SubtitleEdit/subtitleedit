@@ -30,13 +30,19 @@ public class OmniVoiceDownloadService : IOmniVoiceDownloadService
     private const string ModelBaseUrl = "https://huggingface.co/Serveurperso/OmniVoice-GGUF/resolve/main/omnivoice-base-Q8_0.gguf";
     private const string ModelTokenizerUrl = "https://huggingface.co/Serveurperso/OmniVoice-GGUF/resolve/main/omnivoice-tokenizer-F32.gguf";
 
-    private const string WindowsCpuUrl = "https://github.com/SubtitleEdit/support-files/releases/download/omnivoice-26-06/omnivoice-win64-cpu.zip";
-    private const string WindowsVulkanUrl = "https://github.com/SubtitleEdit/support-files/releases/download/omnivoice-26-06/omnivoice-win64-vulkan.zip";
-    private const string WindowsCudaUrl = "https://github.com/SubtitleEdit/support-files/releases/download/omnivoice-26-06/omnivoice-win64-cuda.zip";
-    private const string MacOsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/omnivoice-26-06/omnivoice-macos-universal-cpu-metal.zip";
-    private const string LinuxUrl = "https://github.com/SubtitleEdit/support-files/releases/download/omnivoice-26-06/omnivoice-linux-x64-cpu.zip";
+    // omnivoice.cpp release pin. Bump in lockstep with the hashes in DownloadHashManager.OmniVoice
+    // (each new release: prepend the new SHA-256 at index 0, keep the previous one for "update available").
+    private const string ReleaseTag = "omnivoice-2026-05-17";
+    private const string ReleaseUrlBase = "https://github.com/niksedk/omnivoice.cpp/releases/download/" + ReleaseTag + "/";
 
-    private const string VoicesUrl = "https://github.com/SubtitleEdit/support-files/releases/download/omnivoice-26-06/OmniVoices.zip";
+    private const string WindowsCpuUrl = ReleaseUrlBase + "omnivoice-win64-cpu.zip";
+    private const string WindowsVulkanUrl = ReleaseUrlBase + "omnivoice-win64-vulkan.zip";
+    private const string WindowsCudaUrl = ReleaseUrlBase + "omnivoice-win64-cuda.zip";
+    private const string MacOsUrl = ReleaseUrlBase + "omnivoice-macos-universal-cpu-metal.zip";
+    private const string LinuxX64Url = ReleaseUrlBase + "omnivoice-linux-x64-cpu.zip";
+    private const string LinuxArm64Url = ReleaseUrlBase + "omnivoice-linux-arm64-cpu.zip";
+
+    private const string VoicesUrl = ReleaseUrlBase + "OmniVoices.zip";
 
     public OmniVoiceDownloadService(HttpClient httpClient)
     {
@@ -69,11 +75,41 @@ public class OmniVoiceDownloadService : IOmniVoiceDownloadService
     public async Task DownloadEngine(Stream stream, string windowsVariant, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(windowsVariant), stream, progress, cancellationToken);
+        VerifyArchive(stream, DownloadHashManager.ResolveOmniVoiceKey(windowsVariant), "engine");
     }
 
     public async Task DownloadVoices(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(_httpClient, VoicesUrl, stream, progress, cancellationToken);
+        VerifyArchive(stream, DownloadHashManager.OmniVoice.Voices, "voices");
+    }
+
+    // Compares the downloaded bytes against the known SHA-256 for this key and throws on mismatch
+    // so the caller's IsFaulted branch surfaces "Download failed" instead of silently unpacking a
+    // truncated or tampered file. A null/unknown key (e.g. unrecognised Windows variant) skips the
+    // check rather than failing closed - same policy as the rest of DownloadHashManager.
+    private static void VerifyArchive(Stream stream, string? key, string label)
+    {
+        if (string.IsNullOrEmpty(key) || stream.Length == 0)
+        {
+            return;
+        }
+
+        var expected = DownloadHashManager.GetLatestKnownHash(key);
+        if (string.IsNullOrEmpty(expected))
+        {
+            return;
+        }
+
+        stream.Position = 0;
+        var actual = DownloadHashManager.ComputeSha256(stream);
+        stream.Position = 0;
+
+        if (!string.Equals(expected, actual, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new IOException(
+                $"OmniVoice {label} download failed integrity check (expected SHA-256 {expected}, got {actual}).");
+        }
     }
 
     private static string GetUrl(string windowsVariant)
@@ -95,12 +131,9 @@ public class OmniVoiceDownloadService : IOmniVoiceDownloadService
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
-            {
-                throw new PlatformNotSupportedException("OmniVoice is not available for Linux ARM64.");
-            }
-
-            return LinuxUrl;
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
+                ? LinuxArm64Url
+                : LinuxX64Url;
         }
 
         throw new PlatformNotSupportedException();

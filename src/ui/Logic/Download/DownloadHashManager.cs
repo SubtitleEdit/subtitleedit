@@ -75,6 +75,21 @@ public static class DownloadHashManager
         public const string MacOsX64Executable = "LlamaCpp.MacOs.X64.Executable";
     }
 
+    public static class OmniVoice
+    {
+        // Hashes of the release archive (.zip) - used at download time to fail fast on a corrupt
+        // or tampered file, and later to recognise the installed version from the .installed.sha256
+        // sidecar. There is no executable-hash fallback because OmniVoice has only ever shipped via
+        // SE with a sidecar (no legacy installs to migrate).
+        public const string WindowsCpu = "OmniVoice.Windows.Cpu";
+        public const string WindowsVulkan = "OmniVoice.Windows.Vulkan";
+        public const string WindowsCuda = "OmniVoice.Windows.Cuda";
+        public const string MacOs = "OmniVoice.MacOs";
+        public const string LinuxX64 = "OmniVoice.Linux.X64";
+        public const string LinuxArm64 = "OmniVoice.Linux.Arm64";
+        public const string Voices = "OmniVoice.Voices";
+    }
+
     public static class WhisperCpp
     {
         // Hashes of the release archive (.zip) — used when a sidecar hash exists alongside the install.
@@ -318,6 +333,38 @@ public static class DownloadHashManager
             {
                 "a63265bf5136200b2a8c2f86404151975090a58dae24df934a6054b52348aa1c", // b9174 (current download URL)
                 "c33c8f47da7d7751cd07c9ab32e77c84b3f5ac56b56299016f62b2d184fe3dfb", // b9145
+            },
+
+            // OmniVoice — https://github.com/niksedk/omnivoice.cpp/releases
+            // Index 0 must match whatever release OmniVoiceDownloadService.cs is pinned to,
+            // otherwise users will be prompted to "update" to the same version they just got.
+            [OmniVoice.WindowsCpu] = new[]
+            {
+                "ea1f0c6032f5a0333103ccffa7d7478c5ee00a35867776c277d717512587766c", // omnivoice-2026-05-17 (current download URL)
+            },
+            [OmniVoice.WindowsVulkan] = new[]
+            {
+                "b461b8535892b3e6979aec79eff4d6a0109a31184008b778b6848d7d36ea9901", // omnivoice-2026-05-17 (current download URL)
+            },
+            [OmniVoice.WindowsCuda] = new[]
+            {
+                "79308e79bb47df9f2bd2d31c6a60fe5672b74f43c3caf9b0a09566408894789e", // omnivoice-2026-05-17 (current download URL)
+            },
+            [OmniVoice.MacOs] = new[]
+            {
+                "bbe354cdf8995641074c46d02d7f8b9353fa4803452cb45a762de10e899aca8e", // omnivoice-2026-05-17 (current download URL)
+            },
+            [OmniVoice.LinuxX64] = new[]
+            {
+                "198046721ebcbe49ded959fd832ec4a091d899be49e2a26b549723e32b82daba", // omnivoice-2026-05-17 (current download URL)
+            },
+            [OmniVoice.LinuxArm64] = new[]
+            {
+                "3802d4136a6ffdc37cce72b286ab7c17422d55964fec13d4e3eb36f26e6ae1fe", // omnivoice-2026-05-17 (current download URL)
+            },
+            [OmniVoice.Voices] = new[]
+            {
+                "5d252eb78e8f4891279a36fa5127ea5ab80be35057eeaa5fadb49baeacd0c773", // omnivoice-2026-05-17 (current download URL — identical to the support-files/omnivoice-26-06 copy)
             },
 
             // whisper.cpp — https://github.com/ggml-org/whisper.cpp/releases (and SE-repackaged builds
@@ -827,6 +874,39 @@ public static class DownloadHashManager
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
                 ? LlamaCpp.MacOsArm64Executable
                 : LlamaCpp.MacOsX64Executable;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Resolves the OmniVoice archive hash key for the current OS, architecture and
+    /// (Windows-only) variant ("cpu" / "vulkan" / "cuda"). Returns null when the
+    /// combination is unknown.
+    /// </summary>
+    public static string? ResolveOmniVoiceKey(string? windowsVariant)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return windowsVariant switch
+            {
+                "cuda" => OmniVoice.WindowsCuda,
+                "vulkan" => OmniVoice.WindowsVulkan,
+                "cpu" => OmniVoice.WindowsCpu,
+                _ => OmniVoice.WindowsVulkan, // Vulkan is the recommended default on Windows.
+            };
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return OmniVoice.MacOs;
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
+                ? OmniVoice.LinuxArm64
+                : OmniVoice.LinuxX64;
         }
 
         return null;
