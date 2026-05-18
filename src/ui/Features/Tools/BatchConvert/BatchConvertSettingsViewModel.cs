@@ -86,6 +86,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             Se.Language.General.NoLanguageCode,
             Se.Language.General.TwoLetterLanguageCode,
             Se.Language.General.ThreeLetterLanguageCode,
+            Se.Language.General.ThreeLetterLanguageCodeBibliographic,
         };
         SelectedLanguagePostFix = Se.Settings.Tools.BatchConvert.LanguagePostFix;
         if (SelectedLanguagePostFix == null)

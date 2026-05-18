@@ -2591,6 +2591,33 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                     fileName += "." + code;
                 }
             }
+            else if (Se.Settings.Tools.BatchConvert.LanguagePostFix == Se.Language.General.ThreeLetterLanguageCodeBibliographic)
+            {
+                var code = item.LanguageCode;
+                if (code.Length == 2)
+                {
+                    code = Iso639Dash2LanguageCode.GetThreeLetterBibliographicCodeFromTwoLetterCode(code);
+                }
+                else if (code.Length == 3)
+                {
+                    // GetTwoLetterCodeFromThreeLetterCode now matches both /T and /B forms.
+                    var twoLetter = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(code);
+                    if (!string.IsNullOrEmpty(twoLetter))
+                    {
+                        code = Iso639Dash2LanguageCode.GetThreeLetterBibliographicCodeFromTwoLetterCode(twoLetter);
+                    }
+                }
+                else if (code.Length > 3)
+                {
+                    code = Iso639Dash2LanguageCode.GetTwoLetterCodeFromEnglishName(code);
+                    code = Iso639Dash2LanguageCode.GetThreeLetterBibliographicCodeFromTwoLetterCode(code);
+                }
+
+                if (code.Length == 3 && !fileName.EndsWith("." + code, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    fileName += "." + code;
+                }
+            }
         }
 
         var outputFileName = Path.Combine(outputFolder, fileName + targetExtension);

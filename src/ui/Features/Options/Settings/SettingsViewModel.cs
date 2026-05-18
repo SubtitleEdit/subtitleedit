@@ -453,6 +453,7 @@ public partial class SettingsViewModel : ObservableObject
             Se.Language.General.None,
             Se.Language.Options.Settings.SaveAsAppendLanguageCodeTwoLetter,
             Se.Language.Options.Settings.SaveAsAppendLanguageCodeThreeLetter,
+            Se.Language.Options.Settings.SaveAsAppendLanguageCodeThreeLetterBibliographic,
             Se.Language.Options.Settings.SaveAsAppendLanguageCodeLanguageName,
         ];
         SelectedSaveAsAppendLanguageCode = SaveAsAppendLanguageCode[0];
@@ -957,6 +958,11 @@ public partial class SettingsViewModel : ObservableObject
         if (languageAppendType == nameof(SaveAsLanguageAppendType.ThreeLEtterLanguageCode))
         {
             return Se.Language.Options.Settings.SaveAsAppendLanguageCodeThreeLetter;
+        }
+
+        if (languageAppendType == nameof(SaveAsLanguageAppendType.ThreeLetterLanguageCodeBibliographic))
+        {
+            return Se.Language.Options.Settings.SaveAsAppendLanguageCodeThreeLetterBibliographic;
         }
 
         if (languageAppendType == nameof(SaveAsLanguageAppendType.FullLanguageName))
@@ -1502,6 +1508,11 @@ public partial class SettingsViewModel : ObservableObject
         if (selectedSaveAsAppendLanguageCode == Se.Language.Options.Settings.SaveAsAppendLanguageCodeThreeLetter)
         {
             return nameof(SaveAsLanguageAppendType.ThreeLEtterLanguageCode);
+        }
+
+        if (selectedSaveAsAppendLanguageCode == Se.Language.Options.Settings.SaveAsAppendLanguageCodeThreeLetterBibliographic)
+        {
+            return nameof(SaveAsLanguageAppendType.ThreeLetterLanguageCodeBibliographic);
         }
 
         if (selectedSaveAsAppendLanguageCode == Se.Language.Options.Settings.SaveAsAppendLanguageCodeLanguageName)
