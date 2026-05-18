@@ -1117,7 +1117,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             {
                 if (_abort || cancellationToken.IsCancellationRequested)
                 {
-                    IsTranslateEnabled = true;
+                    Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
                     break;
                 }
 
@@ -1181,7 +1181,7 @@ public partial class AutoTranslateViewModel : ObservableObject
 
                 if (_abort || cancellationToken.IsCancellationRequested)
                 {
-                    IsTranslateEnabled = true;
+                    Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
                     return;
                 }
 
@@ -1200,7 +1200,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                     if (_onlyCurrentLine)
                     {
                         _translationProgressIndex = index - 1;
-                        IsTranslateEnabled = true;
+                        Dispatcher.UIThread.Invoke(() => IsTranslateEnabled = true);
                         break;
                     }
                 }
