@@ -1406,9 +1406,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 }
             }
 
-            var converted = targetFormat.ToText(s, _config.TargetEncoding);
+            var converted = targetFormat.ToText(s, Path.GetFileNameWithoutExtension(item.FileName));
             var path = MakeOutputFileName(item, targetFormat.Extension);
-            await File.WriteAllTextAsync(path, converted, cancellationToken);
+            var encoding = EncodingHelper.ResolveEncoding(_config.TargetEncoding, item.FileName);
+            await File.WriteAllTextAsync(path, converted, encoding, cancellationToken);
             item.Status = Se.Language.General.Converted;
         }
         catch (Exception exception)

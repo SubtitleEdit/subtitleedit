@@ -71,6 +71,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     public BatchConvertSettingsViewModel(IFolderHelper folderHelper, IWindowService windowService)
     {
         var encodings = EncodingHelper.GetEncodings().Select(p => p.DisplayName).ToList();
+        encodings.Insert(0, EncodingHelper.TryToUseSourceEncoding);
         TargetEncodings = new ObservableCollection<string>(encodings);
 
         OcrEngines = new ObservableCollection<string> { "nOcr", "BinaryOcr", "Tesseract", "Ollama" };
@@ -159,8 +160,10 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         UseOutputFolder = !UseSourceFolder;
         OutputFolder = Se.Settings.Tools.BatchConvert.OutputFolder;
         Overwrite = Se.Settings.Tools.BatchConvert.Overwrite;
-        SelectedTargetEncoding = Se.Settings.Tools.BatchConvert.TargetEncoding;
-        SelectedOcrEngine = OcrEngines.FirstOrDefault(p => p == Se.Settings.Tools.BatchConvert.OcrEngine) ?? OcrEngines.First();    
+        SelectedTargetEncoding = TargetEncodings.FirstOrDefault(p => p == Se.Settings.Tools.BatchConvert.TargetEncoding)
+            ?? TargetEncodings.FirstOrDefault(p => p == TextEncoding.Utf8WithBom)
+            ?? TargetEncodings.First();
+        SelectedOcrEngine = OcrEngines.FirstOrDefault(p => p == Se.Settings.Tools.BatchConvert.OcrEngine) ?? OcrEngines.First();
     }
 
     private void SaveSettings()
@@ -168,7 +171,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         Se.Settings.Tools.BatchConvert.SaveInSourceFolder = !UseOutputFolder;
         Se.Settings.Tools.BatchConvert.OutputFolder = OutputFolder;
         Se.Settings.Tools.BatchConvert.Overwrite = Overwrite;
-        Se.Settings.Tools.BatchConvert.TargetEncoding = SelectedTargetEncoding ?? TargetEncodings.First();
+        Se.Settings.Tools.BatchConvert.TargetEncoding = SelectedTargetEncoding ?? TextEncoding.Utf8WithBom;
         Se.Settings.Tools.BatchConvert.LanguagePostFix = SelectedLanguagePostFix ?? Se.Language.General.TwoLetterLanguageCode;
         Se.Settings.Tools.BatchConvert.OcrEngine = SelectedOcrEngine ?? "nOcr";
 
