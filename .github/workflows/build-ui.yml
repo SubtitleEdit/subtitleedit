@@ -37,9 +37,6 @@ env:
   IINA_VERSION: v1.4.2
   IINA_SHA256: 2e0fd89fbba1c92a6c115171e5b51904883bb497fbe513a6961d080fbab08ff6
 
-  # Per-arch static ffmpeg URLs + SHA-256 pins live in the build-macos job
-  # matrix below (osxexperts.net, single binary, no dynamic deps to bundle).
-
 
 jobs:
   build-windows:
@@ -283,10 +280,15 @@ jobs:
           fi
           chmod +x ffmpeg-temp/ffmpeg
           file ffmpeg-temp/ffmpeg
-          # Arch sanity: fail loudly if osxexperts ever serves a wrong-arch binary.
-          file ffmpeg-temp/ffmpeg | grep -q "${{ matrix.expected_arch }}" || {
-            echo "ERROR: ffmpeg binary is not ${{ matrix.expected_arch }}"; exit 1;
-          }
+          # Arch sanity: fail loudly if osxexperts ever serves a wrong-arch or
+          # universal binary. `lipo -archs` returns space-separated arch names;
+          # we require an exact single-arch match (a universal "x86_64 arm64"
+          # would not equal "x86_64" and would correctly fail).
+          archs=$(lipo -archs ffmpeg-temp/ffmpeg)
+          if [ "$archs" != "${{ matrix.expected_arch }}" ]; then
+            echo "ERROR: ffmpeg binary archs are '$archs', expected exactly '${{ matrix.expected_arch }}'"
+            exit 1
+          fi
 
       - name: Download + verify + extract libmpv from IINA
         run: |
@@ -342,11 +344,13 @@ jobs:
             -p:InformationalVersion="$APP_VER_DISPLAY" \
             -o ./publish/macos-${{ matrix.arch }}
           find ./publish/macos-${{ matrix.arch }} -name "*.pdb" -delete
-          # Arch sanity on the cross-published SE executable.
+          # Arch sanity on the cross-published SE executable (lipo: exact match).
           file ./publish/macos-${{ matrix.arch }}/SubtitleEdit
-          file ./publish/macos-${{ matrix.arch }}/SubtitleEdit | grep -q "${{ matrix.expected_arch }}" || {
-            echo "ERROR: SubtitleEdit binary is not ${{ matrix.expected_arch }}"; exit 1;
-          }
+          archs=$(lipo -archs ./publish/macos-${{ matrix.arch }}/SubtitleEdit)
+          if [ "$archs" != "${{ matrix.expected_arch }}" ]; then
+            echo "ERROR: SubtitleEdit binary archs are '$archs', expected exactly '${{ matrix.expected_arch }}'"
+            exit 1
+          fi
 
       - name: Update Info.plist with version from Se.cs
         run: |
@@ -382,9 +386,20 @@ jobs:
           fi
 
           if [ "$SIGNING_AVAILABLE" = "true" ]; then
-            echo "Signing app..."
-            codesign --force --options runtime --timestamp --deep --entitlements "./installer/macBundle/Entitlements.plist" --sign "${{ secrets.MACOS_CERTIFICATE_NAME }}" "$app"
-            codesign --verify --verbose "$app"
+            cert="${{ secrets.MACOS_CERTIFICATE_NAME }}"
+            # Sign inside-out: nested binaries first, then the outer .app.
+            # Apple deprecated --deep for signing; explicit per-binary signing
+            # is the recommended notarization-robust pattern.
+            echo "Signing nested binaries (dylibs + bundled ffmpeg)..."
+            for f in "$app/Contents/Frameworks/"*.dylib "$app/Contents/MacOS/"*.dylib "$app/Contents/MacOS/ffmpeg"; do
+              [ -f "$f" ] || continue
+              codesign --force --options runtime --timestamp --sign "$cert" "$f"
+            done
+            echo "Signing app bundle..."
+            codesign --force --options runtime --timestamp --entitlements "./installer/macBundle/Entitlements.plist" --sign "$cert" "$app"
+            # --deep --strict on verify is still recommended (it walks the
+            # bundle and complains about any unsigned nested code).
+            codesign --verify --verbose --deep --strict "$app"
           else
             codesign --remove-signature "$app" 2>/dev/null || true
           fi
