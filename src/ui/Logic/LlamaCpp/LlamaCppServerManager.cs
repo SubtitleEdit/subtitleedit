@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
@@ -121,6 +122,80 @@ public static class LlamaCppServerManager
     {
         var path = GetModelPath(fileName);
         return File.Exists(path) && new FileInfo(path).Length > 10_000_000;
+    }
+
+    /// <summary>
+    /// Returns the curated <see cref="TranslateModels"/> plus any other <c>*.gguf</c> the user has
+    /// dropped into the llama.cpp models folder. Custom entries are emitted with an empty <c>Url</c>
+    /// (no download needed - already on disk), the file name as <c>DisplayName</c>, and a
+    /// human-readable file size. <c>mmproj-*.gguf</c> sidecars are skipped because they're not
+    /// standalone translation models.
+    /// </summary>
+    public static IReadOnlyList<LlamaCppModel> GetAllTranslateModels()
+    {
+        var folder = GetAndCreateModelsFolder();
+        if (!Directory.Exists(folder))
+        {
+            return TranslateModels;
+        }
+
+        var knownNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var m in TranslateModels.Concat(OcrModels))
+        {
+            knownNames.Add(m.FileName);
+            if (!string.IsNullOrEmpty(m.MmprojFileName))
+            {
+                knownNames.Add(m.MmprojFileName);
+            }
+        }
+
+        var custom = new List<LlamaCppModel>();
+        try
+        {
+            foreach (var path in Directory.EnumerateFiles(folder, "*.gguf", SearchOption.TopDirectoryOnly))
+            {
+                var name = Path.GetFileName(path);
+                if (knownNames.Contains(name))
+                {
+                    continue;
+                }
+                if (name.StartsWith("mmproj-", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                var size = FormatFileSize(new FileInfo(path).Length);
+                custom.Add(new LlamaCppModel(name, name, size, Url: string.Empty));
+            }
+        }
+        catch
+        {
+            // ignore - if the folder can't be scanned (locked / IO error) just fall back to curated only.
+            return TranslateModels;
+        }
+
+        if (custom.Count == 0)
+        {
+            return TranslateModels;
+        }
+
+        custom.Sort((a, b) => string.Compare(a.FileName, b.FileName, StringComparison.OrdinalIgnoreCase));
+        return TranslateModels.Concat(custom).ToList();
+    }
+
+    private static string FormatFileSize(long bytes)
+    {
+        const double gb = 1024d * 1024d * 1024d;
+        const double mb = 1024d * 1024d;
+        if (bytes >= gb)
+        {
+            return (bytes / gb).ToString("0.#", CultureInfo.InvariantCulture) + " GB";
+        }
+        if (bytes >= mb)
+        {
+            return (bytes / mb).ToString("0", CultureInfo.InvariantCulture) + " MB";
+        }
+        return (bytes / 1024d).ToString("0", CultureInfo.InvariantCulture) + " KB";
     }
 
     public static bool IsModelInstalled(LlamaCppModel model)

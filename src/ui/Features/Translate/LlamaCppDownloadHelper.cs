@@ -26,6 +26,13 @@ public class LlamaCppModelDisplay
 
     public override string ToString()
     {
+        // Custom entries (no Url) come from a *.gguf the user dropped into the models folder -
+        // by definition already on disk, so just flag them visually instead of saying "installed".
+        if (string.IsNullOrEmpty(Model.Url))
+        {
+            return $"{Model.DisplayName} (custom, {Model.Size})";
+        }
+
         var installed = LlamaCppServerManager.IsModelInstalled(Model);
         return installed
             ? Model.DisplayName
@@ -60,7 +67,8 @@ public static class LlamaCppDownloadHelper
 
     /// <summary>
     /// Path of an installed model - the one from settings if it still exists, otherwise any
-    /// known model file found in the llama.cpp models folder.
+    /// known model file found in the llama.cpp models folder. "Known" includes both curated
+    /// entries and custom <c>*.gguf</c> files the user has dropped into the folder.
     /// </summary>
     public static string? GetInstalledModelPath()
     {
@@ -70,7 +78,7 @@ public static class LlamaCppDownloadHelper
             return configured;
         }
 
-        foreach (var model in LlamaCppServerManager.TranslateModels)
+        foreach (var model in LlamaCppServerManager.GetAllTranslateModels())
         {
             var path = LlamaCppServerManager.GetModelPath(model.FileName);
             if (File.Exists(path))
@@ -108,17 +116,18 @@ public static class LlamaCppDownloadHelper
 
     private static LlamaCppModel? ResolveModel(string? modelFileName)
     {
+        var all = LlamaCppServerManager.GetAllTranslateModels();
         if (!string.IsNullOrEmpty(modelFileName))
         {
-            var match = LlamaCppServerManager.TranslateModels.FirstOrDefault(m => m.FileName == modelFileName);
+            var match = all.FirstOrDefault(m => m.FileName == modelFileName);
             if (match != null)
             {
                 return match;
             }
         }
 
-        return LlamaCppServerManager.TranslateModels.FirstOrDefault(m => LlamaCppServerManager.IsModelInstalled(m.FileName))
-               ?? LlamaCppServerManager.TranslateModels.FirstOrDefault();
+        return all.FirstOrDefault(m => LlamaCppServerManager.IsModelInstalled(m.FileName))
+               ?? all.FirstOrDefault();
     }
 
     /// <summary>
@@ -198,6 +207,20 @@ public static class LlamaCppDownloadHelper
             }
 
             return true;
+        }
+
+        // Custom (user-supplied) model whose .gguf has vanished between discovery and now -
+        // there's no Url to download from, so prompting to download would just fail. Tell the
+        // user the file is gone and bail.
+        if (model != null && string.IsNullOrEmpty(model.Url) && !modelInstalled)
+        {
+            await MessageBox.Show(
+                owner,
+                Se.Language.General.Error,
+                $"The custom model file '{model.FileName}' was not found in the llama.cpp models folder.",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return false;
         }
 
         string message;
