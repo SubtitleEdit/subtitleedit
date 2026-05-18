@@ -1,0 +1,171 @@
+================================================================================
+Subtitle Edit — Third-party components bundled with the macOS distribution
+================================================================================
+
+Subtitle Edit itself is distributed under the MIT License (see the project
+LICENSE file). The macOS DMGs additionally bundle the third-party binaries
+listed below. Each component is the sole property of its respective authors
+and is redistributed here under its own license.
+
+This file describes WHAT is bundled and WHERE it came from. The full license
+texts for each component are available at the upstream sources linked in each
+section.
+
+
+--------------------------------------------------------------------------------
+1. ffmpeg (command-line binary, Contents/MacOS/ffmpeg)
+--------------------------------------------------------------------------------
+
+Project:        FFmpeg                https://ffmpeg.org/
+License:        GPL v2 or later (this build is the GPL build, not the LGPL one)
+Build source:   osxexperts.net        https://www.osxexperts.net/
+                Static, single-binary builds of upstream FFmpeg release sources.
+                arm64: https://www.osxexperts.net/ffmpeg81arm.zip
+                x64:   https://www.osxexperts.net/ffmpeg80intel.zip
+
+Notes:          As a GPL build, FFmpeg's source code is available from the
+                upstream project at https://ffmpeg.org/download.html. Subtitle
+                Edit does not modify the FFmpeg binary in any way.
+
+
+--------------------------------------------------------------------------------
+2. libmpv and its dynamic library dependencies (Contents/Frameworks/*.dylib)
+--------------------------------------------------------------------------------
+
+The libmpv playback engine and the full set of libraries it transitively links
+against are bundled in Contents/Frameworks/. These dylibs are sourced from the
+IINA video player's public macOS release, which already ships them as universal
+(x86_64 + arm64) binaries with their inter-library references resolved to
+@rpath/. Subtitle Edit re-bundles these dylibs unmodified.
+
+Upstream source:   IINA player        https://iina.io/
+                   https://github.com/iina/iina/releases
+                   (IINA's own application code is NOT bundled — only the
+                   third-party dylibs it ships in Contents/Frameworks/.)
+
+The bundled dylibs and their upstream projects / licenses:
+
+  libmpv               mpv player                LGPL v2.1 or later (default;
+                       https://mpv.io/           with GPL components disabled)
+  libass               libass                    ISC
+                       https://github.com/libass/libass
+  libavcodec, libavdevice, libavfilter, libavformat, libavutil,
+  libpostproc, libswresample, libswscale      FFmpeg libraries
+                       https://ffmpeg.org/      LGPL v2.1+ / GPL v2+ depending
+                                                on build configuration
+  libplacebo           libplacebo                LGPL v2.1 or later
+                       https://code.videolan.org/videolan/libplacebo
+  libfreetype          FreeType                  FreeType License or GPL v2
+                       https://freetype.org/
+  libfontconfig        Fontconfig                MIT-style (BSD-like)
+                       https://www.freedesktop.org/wiki/Software/fontconfig/
+  libfribidi           GNU FriBidi               LGPL v2.1 or later
+                       https://github.com/fribidi/fribidi
+  libharfbuzz          HarfBuzz                  MIT (Old)
+                       https://harfbuzz.github.io/
+  libgraphite2         Graphite2                 LGPL v2.1 or later
+                       https://graphite.sil.org/
+  libpng16             libpng                    PNG Reference Library License
+                       http://www.libpng.org/pub/png/libpng.html
+  libjpeg              libjpeg-turbo             BSD-3-Clause / IJG / zlib
+                       https://libjpeg-turbo.org/
+  libjxl, libjxl_cms, libjxl_threads   libjxl    BSD-3-Clause
+                       https://github.com/libjxl/libjxl
+  libsharpyuv, libwebp libwebp                   BSD-3-Clause
+                       https://chromium.googlesource.com/webm/libwebp
+  libwebpmux, libwebpdemux  (same project as libwebp)
+  libdav1d             dav1d AV1 decoder         BSD-2-Clause
+                       https://code.videolan.org/videolan/dav1d
+  libvpx               libvpx                    BSD-3-Clause
+                       https://chromium.googlesource.com/webm/libvpx
+  libx264              x264                      GPL v2 or later
+                       https://www.videolan.org/developers/x264.html
+  libx265              x265                      GPL v2 or later
+                       http://x265.org/
+  libaom               aom AV1                   BSD-2-Clause
+                       https://aomedia.googlesource.com/aom
+  libopus              Opus codec                BSD-3-Clause
+                       https://opus-codec.org/
+  libvorbis, libvorbisenc, libogg   Xiph.Org      BSD-3-Clause
+                       https://xiph.org/
+  libtheora            Theora video              BSD-3-Clause
+                       https://www.theora.org/
+  libspeex             Speex codec               BSD-3-Clause
+                       https://www.speex.org/
+  libmp3lame           LAME MP3 encoder          LGPL v2 or later
+                       https://lame.sourceforge.io/
+  libtwolame           TwoLAME MP2 encoder       LGPL v2.1 or later
+                       https://www.twolame.org/
+  libsoxr              SoX Resampler             LGPL v2.1 or later
+                       https://sourceforge.net/projects/soxr/
+  libsamplerate        Secret Rabbit Code        BSD-2-Clause
+                       http://libsndfile.github.io/libsamplerate/
+  librubberband        Rubber Band Library       GPL v2 or later
+                       https://breakfastquay.com/rubberband/
+  libsnappy            Snappy                    BSD-3-Clause
+                       https://github.com/google/snappy
+  liblz4               LZ4                       BSD-2-Clause (lib) / GPL (CLI)
+                       https://github.com/lz4/lz4
+  liblzma              XZ Utils                  Public Domain / 0BSD
+                       https://tukaani.org/xz/
+  libzstd              Zstandard                 BSD-3-Clause / GPL v2
+                       https://github.com/facebook/zstd
+  libbrotlicommon, libbrotlidec, libbrotlienc   Brotli    MIT
+                       https://github.com/google/brotli
+  libbluray            libbluray                 LGPL v2.1 or later
+                       https://www.videolan.org/developers/libbluray.html
+  libdvdread, libdvdnav   VideoLAN libdvd*       GPL v2 or later
+                       https://www.videolan.org/developers/libdvdread.html
+  libarchive           libarchive                BSD-2-Clause
+                       https://libarchive.org/
+  libb2                BLAKE2                    CC0 / Apache 2.0 / OpenSSL
+                       https://github.com/BLAKE2/libb2
+  libuchardet          uchardet                  MPL 1.1 / GPL / LGPL tri-license
+                       https://www.freedesktop.org/wiki/Software/uchardet/
+  libunibreak          libunibreak               zlib
+                       https://github.com/adah1972/libunibreak
+  libluajit-5.1        LuaJIT                    MIT
+                       https://luajit.org/
+  libmujs              MuJS JavaScript engine    ISC
+                       https://mujs.com/
+  libvulkan            Vulkan-Loader             Apache 2.0
+                       https://github.com/KhronosGroup/Vulkan-Loader
+  libshaderc_shared    Google shaderc            Apache 2.0
+                       https://github.com/google/shaderc
+  libglib-2.0, libintl, libpcre2-8   GNU GLib    LGPL v2.1 or later
+                       https://gitlab.gnome.org/GNOME/glib
+  libgnutls, libtasn1, libnettle, libhogweed, libidn2, libunistring,
+  libp11-kit, libgmp                              LGPL v2.1+ / LGPL v3+
+                       https://gnutls.org/, https://gnu.org/software/nettle/
+  liblcms2             Little CMS                MIT
+                       https://www.littlecms.com/
+  libsodium            libsodium                 ISC
+                       https://libsodium.org/
+  libhwy               Google Highway            Apache 2.0
+                       https://github.com/google/highway
+  libvidstab           vid.stab                  GPL v2 or later
+                       http://public.hronopik.de/vid.stab/
+  libgcc_s, libstdc++  GCC runtime               GPL v3 with libgcc exception
+
+(Exact dylib set may vary slightly between IINA releases. Run
+ `ls "Subtitle Edit.app/Contents/Frameworks/"` in the installed bundle for the
+ authoritative list.)
+
+
+--------------------------------------------------------------------------------
+Source code availability (GPL components)
+--------------------------------------------------------------------------------
+
+For the GPL-licensed components above (FFmpeg, x264, x265, librubberband,
+libdvdread/libdvdnav, libvidstab), the corresponding source code is available
+from each project's upstream website linked in the section above. Subtitle
+Edit does not modify these binaries.
+
+
+--------------------------------------------------------------------------------
+Acknowledgments
+--------------------------------------------------------------------------------
+
+Subtitle Edit gratefully acknowledges the IINA project (https://iina.io/) and
+all upstream library authors whose work makes media playback in Subtitle Edit
+on macOS possible.
