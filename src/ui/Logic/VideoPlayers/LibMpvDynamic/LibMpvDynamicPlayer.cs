@@ -257,6 +257,9 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             [
                 MpvPath,
                 Directory.GetCurrentDirectory(),
+                // Running .app bundle's Frameworks dir, regardless of install
+                // location. AppContext.BaseDirectory is Contents/MacOS/.
+                Path.Combine(AppContext.BaseDirectory, "..", "Frameworks"),
                 "/Applications/Subtitle Edit.app/Contents/Frameworks",
                 "/opt/local/lib",
                 "/usr/local/lib",
