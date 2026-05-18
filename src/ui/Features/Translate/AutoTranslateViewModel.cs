@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
+using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -104,10 +105,12 @@ public partial class AutoTranslateViewModel : ObservableObject
     private int _translationProgressIndex;
     private bool _llamaCppUpdatePromptShown;
     private readonly IWindowService _windowService;
+    private readonly IFolderHelper _folderHelper;
 
-    public AutoTranslateViewModel(IWindowService windowService)
+    public AutoTranslateViewModel(IWindowService windowService, IFolderHelper folderHelper)
     {
         _windowService = windowService;
+        _folderHelper = folderHelper;
 
         ApiKeyText = string.Empty;
         ApiUrlText = string.Empty;
@@ -801,7 +804,25 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (downloaded != null)
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
-            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.TranslateModels, selectName);
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllTranslateModels(), selectName);
+        }
+    }
+
+    [RelayCommand]
+    private async Task OpenLlamaCppModelsFolder()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        try
+        {
+            await _folderHelper.OpenFolder(Window, LlamaCppServerManager.GetAndCreateModelsFolder());
+        }
+        catch
+        {
+            // best-effort - the path itself is shown in the model combo, so a silent failure is OK
         }
     }
 
@@ -842,7 +863,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             return false;
         }
 
-        SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.TranslateModels, model.FileName);
+        SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllTranslateModels(), model.FileName);
 
         try
         {
@@ -914,7 +935,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (downloaded != null)
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
-            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.TranslateModels, selectName);
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllTranslateModels(), selectName);
         }
 
         UpdateLlamaCppServerButtonText();
@@ -1490,7 +1511,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             LlamaCppModelComboIsVisible = true;
             LlamaCppButtonsAreVisible = true;
             var savedModelName = Path.GetFileName(Se.Settings.AutoTranslate.LlamaCppModel ?? string.Empty);
-            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.TranslateModels, savedModelName);
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllTranslateModels(), savedModelName);
             UpdateLlamaCppServerButtonText();
 
             if (!_llamaCppUpdatePromptShown)

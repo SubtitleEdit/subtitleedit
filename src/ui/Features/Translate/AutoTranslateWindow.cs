@@ -194,6 +194,10 @@ public class AutoTranslateWindow : Window
         buttonLlamaCppServer.Bind(Button.ContentProperty, new Binding(nameof(vm.LlamaCppServerButtonText)));
         buttonLlamaCppServer.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppButtonsAreVisible)));
 
+        var buttonLlamaCppOpenFolder = UiUtil.MakeButton(vm.OpenLlamaCppModelsFolderCommand, IconNames.FolderOpen, Se.Language.General.OpenContainingFolder)
+            .WithMarginLeft(5);
+        buttonLlamaCppOpenFolder.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppButtonsAreVisible)));
+
         var settingsPanel = new WrapPanel
         {
             Orientation = Orientation.Horizontal,
@@ -224,6 +228,7 @@ public class AutoTranslateWindow : Window
         settingsPanel.Children.Add(llamaCppModelCombo);
         settingsPanel.Children.Add(buttonDownloadLlamaCpp);
         settingsPanel.Children.Add(buttonLlamaCppServer);
+        settingsPanel.Children.Add(buttonLlamaCppOpenFolder);
 
         var settingsButton = UiUtil.MakeButton(vm.OpenSettingsCommand, IconNames.Settings, Se.Language.General.Settings);
         settingsButton.HorizontalAlignment = HorizontalAlignment.Right;
