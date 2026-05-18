@@ -53,6 +53,19 @@ public static class LlamaCppServerManager
         new LlamaCppModel("TranslateGemma 12B (Q4_K_M)", "translategemma-12b-it-q4_k_m.gguf", "7.3 GB",
             "https://huggingface.co/NikolayKozloff/translategemma-12b-it-Q4_K_M-GGUF/resolve/main/translategemma-12b-it-q4_k_m.gguf",
             ChatTemplate: "gemma", NoJinja: true),
+
+        // Alternative model family. Qwen 3 is the strongest open model for CJK
+        // (Chinese/Japanese/Korean) and competitive elsewhere — useful fallback
+        // when Gemma's quirks bite (occasional refusals, formatting drift, etc).
+        // --no-jinja + chatml bypasses the embedded Jinja template's
+        // enable_thinking logic on the hybrid Qwen3-8B so output is clean
+        // translation, not <think>...</think> reasoning blocks.
+        new LlamaCppModel("Qwen 3 4B Instruct (Q4_K_M)", "Qwen_Qwen3-4B-Instruct-2507-Q4_K_M.gguf", "2.5 GB",
+            "https://huggingface.co/bartowski/Qwen_Qwen3-4B-Instruct-2507-GGUF/resolve/main/Qwen_Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+            ChatTemplate: "chatml", NoJinja: true),
+        new LlamaCppModel("Qwen 3 8B (Q4_K_M)", "Qwen_Qwen3-8B-Q4_K_M.gguf", "4.7 GB",
+            "https://huggingface.co/bartowski/Qwen_Qwen3-8B-GGUF/resolve/main/Qwen_Qwen3-8B-Q4_K_M.gguf",
+            ChatTemplate: "chatml", NoJinja: true),
     };
 
     public static readonly IReadOnlyList<LlamaCppModel> OcrModels = new[]
