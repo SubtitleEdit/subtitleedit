@@ -339,6 +339,7 @@ public partial class BatchConvertViewModel : ObservableObject
         _cancellationToken = _cancellationTokenSource.Token;
 
         _encodings = EncodingHelper.GetEncodings().Select(p => p.DisplayName).ToList();
+        _encodings.Insert(0, EncodingHelper.TryToUseSourceEncoding);
 
         AutoTranslateModel = string.Empty;
         AutoTranslateUrl = string.Empty;
@@ -773,7 +774,8 @@ public partial class BatchConvertViewModel : ObservableObject
             _encodings.FirstOrDefault(p => p == Se.Settings.Tools.BatchConvert.TargetEncoding);
         if (targetEncoding == null)
         {
-            targetEncoding = _encodings.First();
+            targetEncoding = _encodings.FirstOrDefault(p => p == TextEncoding.Utf8WithBom)
+                ?? _encodings.First();
             Se.Settings.Tools.BatchConvert.TargetEncoding = targetEncoding;
         }
 
