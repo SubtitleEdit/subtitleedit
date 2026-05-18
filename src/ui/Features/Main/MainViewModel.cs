@@ -17033,10 +17033,50 @@ public partial class MainViewModel :
                         }
 
                         await VideoOpenFile(path);
+                        await TryLoadAssociatedSubtitle(path);
                     }
                 }
             });
         }
+    }
+
+    private async Task TryLoadAssociatedSubtitle(string videoFileName)
+    {
+        if (!FindSubtitleFileName.TryFindSubtitleFileName(videoFileName, out var foundSubtitleFileName))
+        {
+            return;
+        }
+
+        // Already loaded in the editor - nothing to do.
+        if (!string.IsNullOrEmpty(_subtitleFileName) &&
+            string.Equals(Path.GetFullPath(_subtitleFileName), Path.GetFullPath(foundSubtitleFileName), StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        // Prompt + run the save-if-unsaved flow whenever either column has content,
+        // so the original-text column's unsaved edits aren't silently discarded.
+        if (!IsEmpty || !IsEmptyOriginal)
+        {
+            var answer = await MessageBox.Show(
+                Window!,
+                Se.Language.Title,
+                string.Format(Se.Language.Main.OpenSubtitleFileX, Path.GetFileName(foundSubtitleFileName)),
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            var doContinue = await HasChangesContinue();
+            if (!doContinue)
+            {
+                return;
+            }
+        }
+
+        await SubtitleOpen(foundSubtitleFileName, skipLoadVideo: true);
     }
 
     internal void AudioVisualizerOnDeletePressed(object sender, ParagraphEventArgs e)
