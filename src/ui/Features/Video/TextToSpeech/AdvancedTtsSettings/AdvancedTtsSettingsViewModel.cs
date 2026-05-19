@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 
@@ -55,9 +56,9 @@ public partial class AdvancedTtsSettingsViewModel : ObservableObject
         s.HighQualityTimeStretchEnabled = DoHighQualityTimeStretch;
         s.SilencePaddingMs = int.TryParse(SilencePaddingMs, out var sp) ? sp : 0;
         s.OutputSampleRate = int.TryParse(OutputSampleRate, out var sr) ? sr : 0;
-        s.EdgeTtsRate = EdgeTtsRate;
-        s.EdgeTtsPitch = EdgeTtsPitch;
-        s.EdgeTtsVolume = EdgeTtsVolume;
+        s.EdgeTtsRate = EdgeTts.NormalizeProsodyValue(EdgeTtsRate, "%");
+        s.EdgeTtsPitch = EdgeTts.NormalizeProsodyValue(EdgeTtsPitch, "Hz");
+        s.EdgeTtsVolume = EdgeTts.NormalizeProsodyValue(EdgeTtsVolume, "%");
         Se.SaveSettings();
 
         OkPressed = true;

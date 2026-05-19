@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,6 +27,43 @@ public class EdgeTts : ITtsEngine
 
     private static readonly Regex VoiceLineRegex =
         new(@"^(?<name>\S+)\s+(?<gender>Male|Female|Neutral)\s+", RegexOptions.Compiled);
+
+    private const int SpeakMaxAttempts = 3;
+
+    // edge-tts requires rate/volume as "[+-]N%" and pitch as "[+-]NHz" (signed integer + unit).
+    // Users frequently type "10%" or "10" — which fails edge-tts's own input validation before
+    // any network call, so every TTS request errors instantly. Coerce common inputs into the
+    // canonical form; return empty for hopeless values so the caller drops the arg entirely.
+    public static string NormalizeProsodyValue(string? value, string unit)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return string.Empty;
+        }
+
+        var trimmed = value.Trim();
+        var sign = '+';
+        var i = 0;
+        if (trimmed[0] == '+' || trimmed[0] == '-')
+        {
+            sign = trimmed[0];
+            i = 1;
+        }
+
+        var digits = new StringBuilder();
+        while (i < trimmed.Length && char.IsDigit(trimmed[i]))
+        {
+            digits.Append(trimmed[i]);
+            i++;
+        }
+
+        if (digits.Length == 0)
+        {
+            return string.Empty;
+        }
+
+        return $"{sign}{digits}{unit}";
+    }
 
     public override string ToString()
     {
@@ -91,37 +129,65 @@ public class EdgeTts : ITtsEngine
         var args =
             $"--voice \"{escapedVoice}\" --text \"{escapedText}\" --write-media \"{fileName}\"";
 
-        // Add optional prosody parameters from settings
-        var rate = Se.Settings.Video.TextToSpeech.EdgeTtsRate;
-        if (!string.IsNullOrWhiteSpace(rate))
+        var rate = NormalizeProsodyValue(Se.Settings.Video.TextToSpeech.EdgeTtsRate, "%");
+        if (!string.IsNullOrEmpty(rate))
         {
             args += $" --rate={rate}";
         }
 
-        var pitch = Se.Settings.Video.TextToSpeech.EdgeTtsPitch;
-        if (!string.IsNullOrWhiteSpace(pitch))
+        var pitch = NormalizeProsodyValue(Se.Settings.Video.TextToSpeech.EdgeTtsPitch, "Hz");
+        if (!string.IsNullOrEmpty(pitch))
         {
             args += $" --pitch={pitch}";
         }
 
-        var volume = Se.Settings.Video.TextToSpeech.EdgeTtsVolume;
-        if (!string.IsNullOrWhiteSpace(volume))
+        var volume = NormalizeProsodyValue(Se.Settings.Video.TextToSpeech.EdgeTtsVolume, "%");
+        if (!string.IsNullOrEmpty(volume))
         {
             args += $" --volume={volume}";
         }
 
         Se.WriteToolsLog($"EdgeTts: {_cachedExecutableFileName ?? "edge-tts"} {RedactTextArg(args)} (voice={edgeVoice.Name}, textLen={text.Length})");
 
-        var (ok, stdOut, stdErr) = await RunEdgeTtsCommand(args, cancellationToken);
-        if (!ok || !File.Exists(fileName))
+        for (var attempt = 1; attempt <= SpeakMaxAttempts; attempt++)
         {
-            var msg = $"EdgeTts speak failed. StdOut: {stdOut} StdErr: {stdErr}";
-            Se.LogError(msg);
-            Se.WriteToolsLog(msg);
-            return new TtsResult { Text = text, FileName = string.Empty, Error = true };
+            if (File.Exists(fileName))
+            {
+                try { File.Delete(fileName); } catch { /* ignore */ }
+            }
+
+            var (ok, stdOut, stdErr) = await RunEdgeTtsCommand(args, cancellationToken);
+            if (ok && File.Exists(fileName) && new FileInfo(fileName).Length > 0)
+            {
+                return new TtsResult { Text = text, FileName = fileName };
+            }
+
+            // Validation errors (bad rate/pitch/volume, unknown voice) will fail identically on
+            // every retry — bail immediately so we don't waste seconds per segment.
+            var isValidationError =
+                stdErr.Contains("ValueError", StringComparison.Ordinal) ||
+                stdErr.Contains("Invalid voice", StringComparison.OrdinalIgnoreCase);
+
+            if (isValidationError || attempt >= SpeakMaxAttempts || cancellationToken.IsCancellationRequested)
+            {
+                var msg = $"EdgeTts speak failed (attempt {attempt}/{SpeakMaxAttempts}). StdOut: {stdOut} StdErr: {stdErr}";
+                Se.LogError(msg);
+                Se.WriteToolsLog(msg);
+                return new TtsResult { Text = text, FileName = string.Empty, Error = true };
+            }
+
+            Se.WriteToolsLog($"EdgeTts: attempt {attempt} failed, retrying. StdErr: {stdErr}");
+            try
+            {
+                await Task.Delay(3000 * attempt, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                return new TtsResult { Text = text, FileName = string.Empty, Error = true };
+            }
         }
 
-        return new TtsResult { Text = text, FileName = fileName };
+        return new TtsResult { Text = text, FileName = string.Empty, Error = true };
     }
 
     // Strip the --text "..." value from the logged command so subtitle content

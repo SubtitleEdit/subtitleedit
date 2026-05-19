@@ -1456,6 +1456,27 @@ public partial class TextToSpeechViewModel : ObservableObject
             }
             ProgressValue = 100;
 
+            var failedCount = resultList.Count(r => string.IsNullOrEmpty(r.CurrentFileName));
+            if (failedCount == resultList.Count && resultList.Count > 0)
+            {
+                var msg = $"Text-to-speech failed for all {failedCount} segments. " +
+                          "Check the engine settings (rate/pitch/volume must be a signed integer, e.g. \"+10\") and try again.";
+                SeLogger.Error(msg);
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    if (Window != null)
+                    {
+                        await MessageBox.Show(Window, Se.Language.General.Error, msg, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                });
+                return null;
+            }
+
+            if (failedCount > 0)
+            {
+                SeLogger.Error($"TextToSpeech: {failedCount} of {resultList.Count} segments failed to generate; continuing with the rest.");
+            }
+
             return resultList.ToArray();
         }
         catch (OperationCanceledException)
@@ -1525,6 +1546,12 @@ public partial class TextToSpeechViewModel : ObservableObject
                 var item = previousStepResult[index];
                 var p = item.Paragraph;
                 var next = index + 1 < previousStepResult.Length ? previousStepResult[index + 1] : null;
+
+                if (string.IsNullOrEmpty(item.CurrentFileName) || !File.Exists(item.CurrentFileName))
+                {
+                    SeLogger.Error($"TextToSpeech: skipping segment {index + 1} in FixSpeed - upstream produced no audio file");
+                    continue;
+                }
 
                 // Step 1: Trim silence from start and end
                 var outputFileName1 = Path.Combine(Path.GetDirectoryName(item.CurrentFileName)!, Guid.NewGuid() + ".wav");
@@ -1675,6 +1702,12 @@ public partial class TextToSpeechViewModel : ObservableObject
             {
                 ProgressText = $"Post-processing: segment {index + 1} of {previousStepResult.Length}";
                 var item = previousStepResult[index];
+
+                if (string.IsNullOrEmpty(item.CurrentFileName) || !File.Exists(item.CurrentFileName))
+                {
+                    SeLogger.Error($"TextToSpeech: skipping segment {index + 1} in post-processing - no audio file");
+                    continue;
+                }
 
                 var processedFile = await TtsPostProcessor.ApplyPostProcessing(item.CurrentFileName, Path.GetDirectoryName(item.CurrentFileName)!, cancellationToken);
 
