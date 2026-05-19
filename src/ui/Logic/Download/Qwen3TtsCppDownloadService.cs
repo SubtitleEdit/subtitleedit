@@ -21,14 +21,16 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
 
     public const string WindowsVariantVulkan = "vulkan";
     public const string WindowsVariantCpu = "cpu";
+    public const string WindowsVariantCuda = "cuda";
 
     // qwen3-tts.cpp release pin. Bump in lockstep with the hashes in
     // DownloadHashManager.Qwen3TtsCpp (each new release: prepend the new SHA-256 at index 0).
-    public const string ReleaseTag = "v0.4.3";
+    public const string ReleaseTag = "v0.4.4";
     private const string ReleaseUrlBase = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/" + ReleaseTag + "/";
 
     private const string WindowsVulkanUrl = ReleaseUrlBase + "qwen3-tts-server-" + ReleaseTag + "-windows-vulkan-x64.zip";
     private const string WindowsCpuUrl    = ReleaseUrlBase + "qwen3-tts-server-" + ReleaseTag + "-windows-cpu-x64.zip";
+    private const string WindowsCudaUrl   = ReleaseUrlBase + "qwen3-tts-server-" + ReleaseTag + "-windows-cuda-x64.zip";
     private const string MacUrl           = ReleaseUrlBase + "qwen3-tts-server-" + ReleaseTag + "-macos-metal-arm64.zip";
     private const string LinuxUrl         = ReleaseUrlBase + "qwen3-tts-server-" + ReleaseTag + "-linux-vulkan-x64.zip";
     private const string LinuxArmUrl      = ReleaseUrlBase + "qwen3-tts-server-" + ReleaseTag + "-linux-arm64.zip";
@@ -122,7 +124,12 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            return windowsVariant == WindowsVariantCpu ? WindowsCpuUrl : WindowsVulkanUrl;
+            return windowsVariant switch
+            {
+                WindowsVariantCpu => WindowsCpuUrl,
+                WindowsVariantCuda => WindowsCudaUrl,
+                _ => WindowsVulkanUrl,
+            };
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))

@@ -97,6 +97,7 @@ public static class DownloadHashManager
         // misreported as "update available" immediately after a fresh download.
         public const string WindowsVulkan = "Qwen3TtsCpp.Windows.Vulkan";
         public const string WindowsCpu = "Qwen3TtsCpp.Windows.Cpu";
+        public const string WindowsCuda = "Qwen3TtsCpp.Windows.Cuda";
         public const string MacOs = "Qwen3TtsCpp.MacOs";
         public const string LinuxX64 = "Qwen3TtsCpp.Linux.X64";
         public const string LinuxArm64 = "Qwen3TtsCpp.Linux.Arm64";
@@ -395,23 +396,32 @@ public static class DownloadHashManager
             // otherwise users will be prompted to "update" to the same version they just got.
             [Qwen3TtsCpp.WindowsVulkan] = new[]
             {
-                "42dff2cb2e921a337c588e5331b5ea963b777751303729a66bf0124be242297d", // v0.4.3 (current download URL)
+                "697b4871b803172ef2d30682e099008c646591e59835e655c598d275163723c8", // v0.4.4 (current download URL)
+                "42dff2cb2e921a337c588e5331b5ea963b777751303729a66bf0124be242297d", // v0.4.3
             },
             [Qwen3TtsCpp.WindowsCpu] = new[]
             {
-                "afa9fef938ddd8d22a0f5c955b5c3a2e402f49a6d1ddc587da2d07d6993f4120", // v0.4.3 (current download URL)
+                "e09875f4d329b1c7623af2e7ea5fae2c838c1bd880712415220323f969370975", // v0.4.4 (current download URL)
+                "afa9fef938ddd8d22a0f5c955b5c3a2e402f49a6d1ddc587da2d07d6993f4120", // v0.4.3
+            },
+            [Qwen3TtsCpp.WindowsCuda] = new[]
+            {
+                "cb53effe905d05e60e61f8dcadda00544d6d427d567be017c7ed4bea2148acb2", // v0.4.4 (current download URL)
             },
             [Qwen3TtsCpp.MacOs] = new[]
             {
-                "625f32817ff9e5cacea48db24ad8ae1149406e382a7e58068fc87182238baa07", // v0.4.3 (current download URL)
+                "faecc2b93d9586f8d7bdf2601343c5a14f8d6bd2546578ed2559a0e2d191412c", // v0.4.4 (current download URL)
+                "625f32817ff9e5cacea48db24ad8ae1149406e382a7e58068fc87182238baa07", // v0.4.3
             },
             [Qwen3TtsCpp.LinuxX64] = new[]
             {
-                "4456b19fa62ac52c6ef6302f36effc1336d559be0fde200222be302746dd2579", // v0.4.3 (current download URL)
+                "c9ecec169ebed93909ac72b65e0acbb8958047f08c8b9cf4f5d07d0e3bfc2844", // v0.4.4 (current download URL)
+                "4456b19fa62ac52c6ef6302f36effc1336d559be0fde200222be302746dd2579", // v0.4.3
             },
             [Qwen3TtsCpp.LinuxArm64] = new[]
             {
-                "3e9bdc9d176ea13a109d8e8a813009e110df003a988d10dc317e58572517d014", // v0.4.3 (current download URL)
+                "bba376f4ead8356a496a48d37572e6c56d66161d52026f502e74afd050654f41", // v0.4.4 (current download URL)
+                "3e9bdc9d176ea13a109d8e8a813009e110df003a988d10dc317e58572517d014", // v0.4.3
             },
             [Qwen3TtsCpp.Voices] = new[]
             {
@@ -984,7 +994,7 @@ public static class DownloadHashManager
 
     /// <summary>
     /// Resolves the Qwen3 TTS archive hash key for the current OS, architecture and
-    /// (Windows-only) variant ("cpu" / "vulkan"). Returns null when the combination is unknown.
+    /// (Windows-only) variant ("cpu" / "vulkan" / "cuda"). Returns null when the combination is unknown.
     /// </summary>
     public static string? ResolveQwen3TtsCppKey(string? windowsVariant)
     {
@@ -994,6 +1004,7 @@ public static class DownloadHashManager
             {
                 "cpu" => Qwen3TtsCpp.WindowsCpu,
                 "vulkan" => Qwen3TtsCpp.WindowsVulkan,
+                "cuda" => Qwen3TtsCpp.WindowsCuda,
                 _ => Qwen3TtsCpp.WindowsVulkan, // Vulkan is the recommended default on Windows.
             };
         }

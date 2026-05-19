@@ -140,16 +140,20 @@ public partial class Qwen3TtsSettingsViewModel : ObservableObject
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
                 "CPU",
-                "Vulkan");
+                "Vulkan (GPU)",
+                "CUDA (NVIDIA GPU)");
 
             if (variantAnswer == MessageBoxResult.None || variantAnswer == MessageBoxResult.Cancel)
             {
                 return;
             }
 
-            variant = variantAnswer == MessageBoxResult.Custom1
-                ? Qwen3TtsCppDownloadService.WindowsVariantCpu
-                : Qwen3TtsCppDownloadService.WindowsVariantVulkan;
+            variant = variantAnswer switch
+            {
+                MessageBoxResult.Custom1 => Qwen3TtsCppDownloadService.WindowsVariantCpu,
+                MessageBoxResult.Custom3 => Qwen3TtsCppDownloadService.WindowsVariantCuda,
+                _ => Qwen3TtsCppDownloadService.WindowsVariantVulkan,
+            };
 
             if (variant == Qwen3TtsCppDownloadService.WindowsVariantVulkan && !VulkanHelper.IsInstalled())
             {
