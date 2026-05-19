@@ -49,6 +49,7 @@ public static class InitMenu
             {
                 new Setter(MenuItem.FontSizeProperty, MenuFontSize),
                 new Setter(MenuItem.PaddingProperty, new Thickness(10, 1)),
+                new Setter(MenuItem.MinHeightProperty, 22.0),
             },
         });
 
