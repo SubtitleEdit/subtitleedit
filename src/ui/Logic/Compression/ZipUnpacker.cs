@@ -42,7 +42,9 @@ public class ZipUnpacker : IZipUnpacker
 
         allowedExtensions = allowedExtensions.Select(x => x.ToLowerInvariant()).ToList();
 
-        using var archive = new ZipArchive(zipStream, ZipArchiveMode.Read);
+        // leaveOpen: true so callers retain control of the underlying stream — they typically need
+        // to read it again afterwards (e.g. to hash the archive for an .installed.sha256 sidecar).
+        using var archive = new ZipArchive(zipStream, ZipArchiveMode.Read, leaveOpen: true);
 
         foreach (var entry in archive.Entries)
         {
