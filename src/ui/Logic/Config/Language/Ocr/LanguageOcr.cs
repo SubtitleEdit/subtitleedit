@@ -32,6 +32,7 @@ public class LanguageOcr
     public string LineIndexX { get; set; }
     public string InspectNOcrAdditions { get; set; }
     public string OcrSelectedLines { get; set; }
+    public string FillSelectedLinesWithClipboard { get; set; }
     public string ShowImage { get; set; }
     public string FixOcrErrors { get; set; }
     public string PromptForUknownWords { get; set; }
@@ -132,6 +133,7 @@ public class LanguageOcr
         LineIndexX = "Line {0}";
         InspectNOcrAdditions = "Inspect new nOCR additions";
         OcrSelectedLines = "OCR selected lines";
+        FillSelectedLinesWithClipboard = "Fill selected lines with clipboard text";
         ShowImage = "Show image";
         FixOcrErrors = "Fix OCR errors";
         PromptForUknownWords = "Prompt for unknown words";

@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -62,7 +63,11 @@ public class GetKeyWindow : Window
 
         Content = grid;
         
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Opened += (_, _) =>
+        {
+            Activate();
+            Dispatcher.UIThread.Post(() => buttonOk.Focus(), DispatcherPriority.Input);
+        };
         KeyUp += vm.KeyUp;
     }
 

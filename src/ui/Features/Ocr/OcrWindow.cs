@@ -512,6 +512,15 @@ public class OcrWindow : Window
         menuItemDelete.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowContextMenu)) { Mode = BindingMode.TwoWay });
         flyout.Items.Add(menuItemDelete);
 
+        var menuItemFillSelectedLinesWithClipboard = new MenuItem
+        {
+            Header = Se.Language.Ocr.FillSelectedLinesWithClipboard,
+            DataContext = vm,
+            Command = vm.FillSelectedLinesWithClipboardCommand,
+        };
+        menuItemFillSelectedLinesWithClipboard.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.HasMultipleLinesSelected)) { Mode = BindingMode.TwoWay });
+        flyout.Items.Add(menuItemFillSelectedLinesWithClipboard);
+
         flyout.Items.Add(new Separator());
 
         var menuItemItalic = new MenuItem

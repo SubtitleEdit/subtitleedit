@@ -4,6 +4,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -243,7 +244,11 @@ public class ShortcutsWindow : Window
         Content = grid;
 
         _searchBox.TextChanged += (s, e) => vm.UpdateVisibleShortcuts(_searchBox.Text ?? string.Empty);
-        Activated += delegate { _searchBox.Focus(); }; // hack to make OnKeyDown work
+        Opened += (_, _) =>
+        {
+            Activate();
+            Dispatcher.UIThread.Post(() => _searchBox.Focus(), DispatcherPriority.Input);
+        };
         Loaded += vm.Onloaded;
         Closing += vm.OnClosing;
     }

@@ -907,6 +907,13 @@ public static partial class InitListViewAndEditBox
                 },
                 new MenuItem
                 {
+                    Header = Se.Language.Main.Menu.FillSelectedLinesWithClipboard,
+                    Command = vm.FillSelectedLinesWithClipboardCommand,
+                    DataContext = vm,
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.HasMultipleLinesSelected)),
+                },
+                new MenuItem
+                {
                     [!MenuItem.HeaderProperty] = new Binding(nameof(vm.SurroundWith1Text)),
                     Command = vm.SurroundWith1Command,
                     DataContext = vm,

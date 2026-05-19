@@ -112,6 +112,7 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<OcrLanguage2> _paddleOcrLanguages;
     [ObservableProperty] private OcrLanguage2? _selectedPaddleOcrLanguage;
     [ObservableProperty] private bool _showContextMenu;
+    [ObservableProperty] private bool _hasMultipleLinesSelected;
     [ObservableProperty] private ObservableCollection<SpellCheckDictionaryDisplay> _dictionaries;
     [ObservableProperty] private SpellCheckDictionaryDisplay? _selectedDictionary;
     [ObservableProperty] private bool _doFixOcrErrors;
@@ -3681,6 +3682,14 @@ public partial class OcrViewModel : ObservableObject
                 Dispatcher.UIThread.Post(() => SubtitleGrid.RowHeight = rowHeight);
             }
         }
+        else if (e.Key == Key.V && e.KeyModifiers.HasFlag(KeyModifiers.Control) && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        {
+            if (SubtitleGrid != null && SubtitleGrid.SelectedItems.Count > 1)
+            {
+                e.Handled = true;
+                Dispatcher.UIThread.Post(async void () => { await FillSelectedLinesWithClipboard(); });
+            }
+        }
         else if (UiUtil.IsHelp(e))
         {
             e.Handled = true;
@@ -3976,6 +3985,38 @@ public partial class OcrViewModel : ObservableObject
     internal void SubtitleGridContextOpening(object? sender, EventArgs e)
     {
         ShowContextMenu = OcrSubtitleItems.Count > 0;
+        HasMultipleLinesSelected = SubtitleGrid != null && SubtitleGrid.SelectedItems.Count > 1;
+    }
+
+    [RelayCommand]
+    private async Task FillSelectedLinesWithClipboard()
+    {
+        if (Window == null || SubtitleGrid == null)
+        {
+            return;
+        }
+
+        var selectedItems = SubtitleGrid.SelectedItems.Cast<OcrSubtitleItem>().ToList();
+        if (selectedItems.Count < 2)
+        {
+            return;
+        }
+
+        var text = await ClipboardHelper.GetTextAsync(Window);
+        if (string.IsNullOrEmpty(text))
+        {
+            return;
+        }
+
+        foreach (var item in selectedItems)
+        {
+            item.Text = text;
+            var idx = OcrSubtitleItems.IndexOf(item);
+            if (idx >= 0)
+            {
+                item.FixResult = new OcrFixLineResult(idx, text);
+            }
+        }
     }
 
     public void DictionaryChanged()

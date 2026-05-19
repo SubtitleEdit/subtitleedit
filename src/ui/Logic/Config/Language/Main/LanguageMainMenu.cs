@@ -32,6 +32,7 @@ public class LanguageMainMenu
     public string FindNext { get; set; }
     public string Replace { get; set; }
     public string MultipleReplace { get; set; }
+    public string FillSelectedLinesWithClipboard { get; set; }
     public string GoToLineNumber { get; set; }
     public string RightToLeftMode { get; set; }
     public string ModifySelectionDotDotDot { get; set; }
@@ -160,6 +161,7 @@ public class LanguageMainMenu
         FindNext = "Find _next";
         Replace = "_Replace...";
         MultipleReplace = "_Multiple replace...";
+        FillSelectedLinesWithClipboard = "Fill selected lines with clipboard text";
         GoToLineNumber = "_Go to line number...";
         RightToLeftMode = "R_ight-to-left mode";
         ModifySelectionDotDotDot = "Modify _selection...";

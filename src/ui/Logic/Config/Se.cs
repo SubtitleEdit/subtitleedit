@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
@@ -193,12 +194,22 @@ public class Se
 
     public void InitializeMainShortcuts(MainViewModel vm)
     {
-        if (Shortcuts.Count > 0)
+        var defaults = ShortcutsMain.GetDefaultShortcuts(vm);
+
+        if (Shortcuts.Count == 0)
         {
+            Shortcuts = defaults;
             return;
         }
 
-        Shortcuts = ShortcutsMain.GetDefaultShortcuts(vm);
+        var existing = new HashSet<string>(Shortcuts.Select(s => s.ActionName), StringComparer.Ordinal);
+        foreach (var def in defaults)
+        {
+            if (!existing.Contains(def.ActionName))
+            {
+                Shortcuts.Add(def);
+            }
+        }
     }
 
     public static void SaveSettings()

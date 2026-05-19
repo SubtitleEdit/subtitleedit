@@ -241,6 +241,7 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _waveformCenter;
     [ObservableProperty] private bool _isRightToLeftEnabled;
     [ObservableProperty] private bool _showAutoTranslateSelectedLines;
+    [ObservableProperty] private bool _hasMultipleLinesSelected;
     [ObservableProperty] private bool _showShotChangesListMenuItem;
     [ObservableProperty] private bool _showLayer;
     [ObservableProperty] private bool _showLayerFilterIcon;
@@ -6655,6 +6656,40 @@ public partial class MainViewModel :
 
             vm.Initialize(sub, SelectedSubtitleFormat, _subtitleFileName ?? string.Empty);
         });
+    }
+
+    [RelayCommand]
+    private async Task FillSelectedLinesWithClipboard()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (selectedItems.Count < 2)
+        {
+            return;
+        }
+
+        var text = await ClipboardHelper.GetTextAsync(Window);
+        if (string.IsNullOrEmpty(text))
+        {
+            ShowStatus(Se.Language.Main.NoTextInClipboard);
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        foreach (var line in selectedItems)
+        {
+            var p = Subtitles.FirstOrDefault(x => x.Id == line.Id);
+            if (p != null)
+            {
+                p.Text = text;
+            }
+        }
+
+        _updateAudioVisualizer = true;
     }
 
     [RelayCommand]
@@ -14662,6 +14697,7 @@ public partial class MainViewModel :
         MenuItemExtendToLineAfter.IsVisible = SubtitleGrid.SelectedItems.Count == 1 && Subtitles.Count > 1 && idx < count - 1;
         AreAssaContentMenuItemsVisible = false;
         ShowAutoTranslateSelectedLines = SubtitleGrid.SelectedItems.Count > 0 && ShowColumnOriginalText;
+        HasMultipleLinesSelected = SubtitleGrid.SelectedItems.Count > 1;
         ShowColumnLayerFlyoutMenuItem = IsFormatAssa;
 
         if (IsSubtitleGridFlyoutHeaderVisible)

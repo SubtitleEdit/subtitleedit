@@ -93,6 +93,7 @@ public class LanguageSettingsShortcuts
     public string EditFindPrevious { get; set; }
     public string EditReplace { get; set; }
     public string EditMultipleReplace { get; set; }
+    public string FillSelectedLinesWithClipboard { get; set; }
     public string EditModifySelection { get; set; }
 
     public string ListSelectAll { get; set; }
@@ -355,6 +356,7 @@ public class LanguageSettingsShortcuts
         EditFindPrevious = "Find previous";
         EditReplace = "Replace";
         EditMultipleReplace = "Multiple replace";
+        FillSelectedLinesWithClipboard = "Fill selected lines with clipboard text";
         EditModifySelection = "Modify selection";
 
         ListSelectAll = "Select all";

@@ -57,6 +57,7 @@ public static class ShortcutsMain
     public static readonly Dictionary<string, string> CommandTranslationLookup = new Dictionary<string, string>
     {
         { nameof(MainViewModel.DeleteSelectedLinesCommand), Se.Language.Options.Shortcuts.ListDeleteSelection },
+        { nameof(MainViewModel.FillSelectedLinesWithClipboardCommand), Se.Language.Options.Shortcuts.FillSelectedLinesWithClipboard },
         { nameof(MainViewModel.RippleDeleteSelectedLinesCommand), Se.Language.Options.Shortcuts.RippleDeleteSelection },
         { nameof(MainViewModel.DuplicateSelectedLinesCommand), Se.Language.Options.Shortcuts.DuplicateSelectedLines},
         { nameof(MainViewModel.ShowAlignmentPickerCommand), Se.Language.Options.Shortcuts.ShowAlignmentPicker},
@@ -629,6 +630,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ShowAssaPropertiesCommand, nameof(vm.ShowAssaPropertiesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowAssaAttachmentsCommand, nameof(vm.ShowAssaAttachmentsCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.RecalculateDurationSelectedLinesCommand, nameof(vm.RecalculateDurationSelectedLinesCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.FillSelectedLinesWithClipboardCommand, nameof(vm.FillSelectedLinesWithClipboardCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.WaveformToggleWaveformSpectrogramHeightCommand, nameof(vm.WaveformToggleWaveformSpectrogramHeightCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SpectrogramToggleStyleCommand, nameof(vm.SpectrogramToggleStyleCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowBeautifyTimeCodesCommand, nameof(vm.ShowBeautifyTimeCodesCommand), ShortcutCategory.General);
@@ -689,6 +691,7 @@ public static class ShortcutsMain
             new(nameof(vm.ShowToolsRemoveTextForHearingImpairedCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.H)], ShortcutCategory.General),
             new(nameof(vm.ShowSyncAdjustAllTimesCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.A)], ShortcutCategory.General),
             new(nameof(vm.WaveformPasteFromClipboardCommand), [cmd, nameof(Avalonia.Input.Key.V)], ShortcutCategory.Waveform),
+            new(nameof(vm.FillSelectedLinesWithClipboardCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.V)], ShortcutCategory.SubtitleGrid),
         ];
     }
 
