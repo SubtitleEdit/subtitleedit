@@ -697,16 +697,20 @@ public partial class TextToSpeechViewModel : ObservableObject
                         MessageBoxButtons.Cancel,
                         MessageBoxIcon.Question,
                         "CPU",
-                        "Vulkan");
+                        "Vulkan (GPU)",
+                        "CUDA (NVIDIA GPU)");
 
                     if (variantAnswer == MessageBoxResult.None || variantAnswer == MessageBoxResult.Cancel)
                     {
                         return false;
                     }
 
-                    qwen3Variant = variantAnswer == MessageBoxResult.Custom1
-                        ? Qwen3TtsCppDownloadService.WindowsVariantCpu
-                        : Qwen3TtsCppDownloadService.WindowsVariantVulkan;
+                    qwen3Variant = variantAnswer switch
+                    {
+                        MessageBoxResult.Custom1 => Qwen3TtsCppDownloadService.WindowsVariantCpu,
+                        MessageBoxResult.Custom3 => Qwen3TtsCppDownloadService.WindowsVariantCuda,
+                        _ => Qwen3TtsCppDownloadService.WindowsVariantVulkan,
+                    };
 
                     if (qwen3Variant == Qwen3TtsCppDownloadService.WindowsVariantVulkan && !VulkanHelper.IsInstalled())
                     {
