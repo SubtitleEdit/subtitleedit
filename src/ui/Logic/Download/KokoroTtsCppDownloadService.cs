@@ -17,10 +17,15 @@ public class KokoroTtsCppDownloadService : IKokoroTtsCppDownloadService
 {
     private readonly HttpClient _httpClient;
 
-    private const string WindowsUrl  = "https://github.com/niksedk/kokoro.cpp/releases/download/v0.1.2/kokoro-tts-server-v0.1.2-windows-x64.zip";
-    private const string MacUrl      = "https://github.com/niksedk/kokoro.cpp/releases/download/v0.1.2/kokoro-tts-server-v0.1.2-macos-arm64.zip";
-    private const string LinuxUrl    = "https://github.com/niksedk/kokoro.cpp/releases/download/v0.1.2/kokoro-tts-server-v0.1.2-linux-x64.zip";
-    private const string LinuxArmUrl = "https://github.com/niksedk/kokoro.cpp/releases/download/v0.1.2/kokoro-tts-server-v0.1.2-linux-arm64.zip";
+    // kokoro.cpp release pin. Bump in lockstep with the hashes in
+    // DownloadHashManager.KokoroTtsCpp (each new release: prepend the new SHA-256 at index 0).
+    public const string ReleaseTag = "v0.1.2";
+    private const string ReleaseUrlBase = "https://github.com/niksedk/kokoro.cpp/releases/download/" + ReleaseTag + "/";
+
+    private const string WindowsUrl  = ReleaseUrlBase + "kokoro-tts-server-" + ReleaseTag + "-windows-x64.zip";
+    private const string MacUrl      = ReleaseUrlBase + "kokoro-tts-server-" + ReleaseTag + "-macos-arm64.zip";
+    private const string LinuxUrl    = ReleaseUrlBase + "kokoro-tts-server-" + ReleaseTag + "-linux-x64.zip";
+    private const string LinuxArmUrl = ReleaseUrlBase + "kokoro-tts-server-" + ReleaseTag + "-linux-arm64.zip";
 
     private const string TtsModelFileName    = "kokoro-v1.1-zh.onnx";
     private const string VoicesModelFileName = "voices-v1.1-zh.bin";
@@ -35,6 +40,34 @@ public class KokoroTtsCppDownloadService : IKokoroTtsCppDownloadService
     public async Task DownloadEngine(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(), stream, progress, cancellationToken);
+        VerifyArchive(stream, DownloadHashManager.ResolveKokoroTtsCppKey(), "engine");
+    }
+
+    // Compares the downloaded bytes against the known SHA-256 for this key and throws on mismatch
+    // so the caller's IsFaulted branch surfaces "Download failed" instead of silently unpacking a
+    // truncated or tampered file. Mirrors OmniVoiceDownloadService.VerifyArchive.
+    private static void VerifyArchive(Stream stream, string? key, string label)
+    {
+        if (string.IsNullOrEmpty(key) || stream.Length == 0)
+        {
+            return;
+        }
+
+        var expected = DownloadHashManager.GetLatestKnownHash(key);
+        if (string.IsNullOrEmpty(expected))
+        {
+            return;
+        }
+
+        stream.Position = 0;
+        var actual = DownloadHashManager.ComputeSha256(stream);
+        stream.Position = 0;
+
+        if (!string.Equals(expected, actual, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new IOException(
+                $"Kokoro TTS {label} download failed integrity check (expected SHA-256 {expected}, got {actual}).");
+        }
     }
 
     public async Task DownloadModels(string modelsFolder, IProgress<float>? progress, Action<string>? titleProgress, CancellationToken cancellationToken)

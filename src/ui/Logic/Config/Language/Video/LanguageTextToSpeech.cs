@@ -62,6 +62,9 @@ public class LanguageTextToSpeech
     public string DownloadTheLatestOmniVoiceTtsPrompt { get; set; }
     public string VulkanRuntimeMayBeRequired { get; set; }
     public string VulkanRuntimeNotDetectedMessage { get; set; }
+    public string Qwen3TtsSettings { get; set; }
+    public string KokoroTtsSettings { get; set; }
+    public string ChatterboxTtsSettings { get; set; }
 
     public LanguageTextToSpeech()
     {
@@ -123,5 +126,8 @@ public class LanguageTextToSpeech
         DownloadTheLatestOmniVoiceTtsPrompt = $"{Environment.NewLine}Download the latest OmniVoice TTS now?";
         VulkanRuntimeMayBeRequired = "Vulkan runtime may be required";
         VulkanRuntimeNotDetectedMessage = $"The Vulkan build needs the Vulkan runtime (vulkan-1.dll). It usually ships with current GPU drivers but was not detected.{Environment.NewLine}{Environment.NewLine}Install it from:{Environment.NewLine}{{0}}{Environment.NewLine}{Environment.NewLine}Continue with Vulkan anyway?";
+        Qwen3TtsSettings = "Qwen3 TTS settings";
+        KokoroTtsSettings = "Kokoro TTS settings";
+        ChatterboxTtsSettings = "Chatterbox TTS settings";
     }
 }

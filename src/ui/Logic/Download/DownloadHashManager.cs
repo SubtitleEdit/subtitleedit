@@ -90,6 +90,29 @@ public static class DownloadHashManager
         public const string Voices = "OmniVoice.Voices";
     }
 
+    public static class Qwen3TtsCpp
+    {
+        // Hashes of the release archive (.zip) - same role as OmniVoice's set. Index 0 must match
+        // whatever release Qwen3TtsCppDownloadService.cs is pinned to, otherwise installs will be
+        // misreported as "update available" immediately after a fresh download.
+        public const string WindowsVulkan = "Qwen3TtsCpp.Windows.Vulkan";
+        public const string WindowsCpu = "Qwen3TtsCpp.Windows.Cpu";
+        public const string MacOs = "Qwen3TtsCpp.MacOs";
+        public const string LinuxX64 = "Qwen3TtsCpp.Linux.X64";
+        public const string LinuxArm64 = "Qwen3TtsCpp.Linux.Arm64";
+        public const string Voices = "Qwen3TtsCpp.Voices";
+    }
+
+    public static class KokoroTtsCpp
+    {
+        // Hashes of the release archive (.zip) - same role as OmniVoice's set. Index 0 must match
+        // whatever release KokoroTtsCppDownloadService.cs is pinned to.
+        public const string Windows = "KokoroTtsCpp.Windows";
+        public const string MacOs = "KokoroTtsCpp.MacOs";
+        public const string LinuxX64 = "KokoroTtsCpp.Linux.X64";
+        public const string LinuxArm64 = "KokoroTtsCpp.Linux.Arm64";
+    }
+
     public static class WhisperCpp
     {
         // Hashes of the release archive (.zip) — used when a sidecar hash exists alongside the install.
@@ -365,6 +388,53 @@ public static class DownloadHashManager
             [OmniVoice.Voices] = new[]
             {
                 "5d252eb78e8f4891279a36fa5127ea5ab80be35057eeaa5fadb49baeacd0c773", // omnivoice-2026-05-17 (current download URL — identical to the support-files/omnivoice-26-06 copy)
+            },
+
+            // Qwen3 TTS — https://github.com/niksedk/qwen3-tts.cpp/releases
+            // Index 0 must match whatever release Qwen3TtsCppDownloadService.cs is pinned to,
+            // otherwise users will be prompted to "update" to the same version they just got.
+            [Qwen3TtsCpp.WindowsVulkan] = new[]
+            {
+                "42dff2cb2e921a337c588e5331b5ea963b777751303729a66bf0124be242297d", // v0.4.3 (current download URL)
+            },
+            [Qwen3TtsCpp.WindowsCpu] = new[]
+            {
+                "afa9fef938ddd8d22a0f5c955b5c3a2e402f49a6d1ddc587da2d07d6993f4120", // v0.4.3 (current download URL)
+            },
+            [Qwen3TtsCpp.MacOs] = new[]
+            {
+                "625f32817ff9e5cacea48db24ad8ae1149406e382a7e58068fc87182238baa07", // v0.4.3 (current download URL)
+            },
+            [Qwen3TtsCpp.LinuxX64] = new[]
+            {
+                "4456b19fa62ac52c6ef6302f36effc1336d559be0fde200222be302746dd2579", // v0.4.3 (current download URL)
+            },
+            [Qwen3TtsCpp.LinuxArm64] = new[]
+            {
+                "3e9bdc9d176ea13a109d8e8a813009e110df003a988d10dc317e58572517d014", // v0.4.3 (current download URL)
+            },
+            [Qwen3TtsCpp.Voices] = new[]
+            {
+                "ace389f8326e23dc65c22c081d13efb28b9ee5a78e8586bc259d1148f7346e05", // qwen3-tts-cpp-2026-4 (current download URL)
+            },
+
+            // Kokoro TTS — https://github.com/niksedk/kokoro.cpp/releases
+            // Index 0 must match whatever release KokoroTtsCppDownloadService.cs is pinned to.
+            [KokoroTtsCpp.Windows] = new[]
+            {
+                "560014a5f82ccb2df2dc54b7701adfbad7d23d154783d70530c86a577a9ab918", // v0.1.2 (current download URL)
+            },
+            [KokoroTtsCpp.MacOs] = new[]
+            {
+                "39a1b4e15b48b364862ba29cf923507ee759f37d420de42bd41d333cd4dcc0ab", // v0.1.2 (current download URL)
+            },
+            [KokoroTtsCpp.LinuxX64] = new[]
+            {
+                "3383a9154a1d34f227ea4e8a1d5aff5dd60adf4061a3b14bf93e1ad8582eddf9", // v0.1.2 (current download URL)
+            },
+            [KokoroTtsCpp.LinuxArm64] = new[]
+            {
+                "673f49ffd2c0653b195a57f566038c05b2a962defc3e1c9c2664c8306d09352d", // v0.1.2 (current download URL)
             },
 
             // whisper.cpp — https://github.com/ggml-org/whisper.cpp/releases (and SE-repackaged builds
@@ -907,6 +977,63 @@ public static class DownloadHashManager
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
                 ? OmniVoice.LinuxArm64
                 : OmniVoice.LinuxX64;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Resolves the Qwen3 TTS archive hash key for the current OS, architecture and
+    /// (Windows-only) variant ("cpu" / "vulkan"). Returns null when the combination is unknown.
+    /// </summary>
+    public static string? ResolveQwen3TtsCppKey(string? windowsVariant)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return windowsVariant switch
+            {
+                "cpu" => Qwen3TtsCpp.WindowsCpu,
+                "vulkan" => Qwen3TtsCpp.WindowsVulkan,
+                _ => Qwen3TtsCpp.WindowsVulkan, // Vulkan is the recommended default on Windows.
+            };
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return Qwen3TtsCpp.MacOs;
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
+                ? Qwen3TtsCpp.LinuxArm64
+                : Qwen3TtsCpp.LinuxX64;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Resolves the Kokoro TTS archive hash key for the current OS and architecture.
+    /// Returns null when the platform is unsupported.
+    /// </summary>
+    public static string? ResolveKokoroTtsCppKey()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return KokoroTtsCpp.Windows;
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return KokoroTtsCpp.MacOs;
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
+                ? KokoroTtsCpp.LinuxArm64
+                : KokoroTtsCpp.LinuxX64;
         }
 
         return null;

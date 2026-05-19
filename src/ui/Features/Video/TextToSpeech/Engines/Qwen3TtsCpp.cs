@@ -1,6 +1,7 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
@@ -74,6 +75,42 @@ public class Qwen3TtsCpp : ITtsEngine
         var resolved = ResolveModelKey(modelKey);
         return File.Exists(Path.Combine(modelsFolder, GetModelFileName(resolved))) &&
                File.Exists(Path.Combine(modelsFolder, TokenizerModelFileName));
+    }
+
+    /// <summary>
+    /// Returns the update status of the installed Qwen3 TTS engine relative to the release pinned
+    /// in <see cref="Qwen3TtsCppDownloadService"/>. Reads the key from the <c>.installed.sha256</c>
+    /// sidecar written at install time. Returns <see cref="DownloadHashManager.UpdateStatus.Unknown"/>
+    /// when nothing is installed yet or the sidecar is missing (older installs predating hash
+    /// tracking) so callers do not false-positive an update prompt.
+    /// </summary>
+    public static DownloadHashManager.UpdateStatus GetEngineUpdateStatus()
+    {
+        var folder = GetSetFolder();
+        if (!File.Exists(GetExecutableFileName()))
+        {
+            return DownloadHashManager.UpdateStatus.Unknown;
+        }
+
+        var sidecar = Path.Combine(folder, ".installed.sha256");
+        if (!File.Exists(sidecar))
+        {
+            return DownloadHashManager.UpdateStatus.Unknown;
+        }
+
+        try
+        {
+            var lines = File.ReadAllLines(sidecar);
+            if (lines.Length < 2)
+            {
+                return DownloadHashManager.UpdateStatus.Unknown;
+            }
+            return DownloadHashManager.GetStatus(lines[0].Trim(), lines[1].Trim());
+        }
+        catch
+        {
+            return DownloadHashManager.UpdateStatus.Unknown;
+        }
     }
 
     public override string ToString() => Name;
