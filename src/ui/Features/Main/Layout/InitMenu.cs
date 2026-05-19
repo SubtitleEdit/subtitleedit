@@ -48,7 +48,7 @@ public static class InitMenu
             Setters =
             {
                 new Setter(MenuItem.FontSizeProperty, MenuFontSize),
-                new Setter(MenuItem.PaddingProperty, new Thickness(10, 3)),
+                new Setter(MenuItem.PaddingProperty, new Thickness(10, 1)),
             },
         });
 
@@ -929,15 +929,15 @@ public static class InitMenu
                     }
                 }
 
-                // Wrap the path in an explicit TextBlock with TextTrimming.None so
-                // long file paths render in full instead of being clipped with an
-                // ellipsis. The MenuItem widens to fit.
+                // Trim the directory prefix with "…" when the path is too long so
+                // the filename stays visible. Full path is still available via tooltip.
                 var item = new MenuItem
                 {
                     Header = new TextBlock
                     {
                         Text = header,
-                        TextTrimming = TextTrimming.None,
+                        TextTrimming = TextTrimming.PrefixCharacterEllipsis,
+                        MaxWidth = 600,
                     },
                     Command = vm.CommandFileReopenCommand,
                     CommandParameter = file,
