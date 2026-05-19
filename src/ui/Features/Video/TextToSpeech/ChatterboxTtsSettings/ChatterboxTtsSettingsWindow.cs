@@ -165,8 +165,10 @@ public class ChatterboxTtsSettingsWindow : Window
 
     private static Grid BuildActions(ChatterboxTtsSettingsViewModel vm)
     {
-        var redownloadBase = UiUtil.MakeButton("Re-download Base", vm.RedownloadBaseModelsCommand).WithIconLeft(IconNames.Download);
-        var redownloadTurbo = UiUtil.MakeButton("Re-download Turbo", vm.RedownloadTurboModelsCommand).WithIconLeft(IconNames.Download);
+        var redownloadBase = UiUtil.MakeButton(string.Empty, vm.RedownloadBaseModelsCommand).WithIconLeft(IconNames.Download);
+        redownloadBase.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.BaseDownloadButtonText)));
+        var redownloadTurbo = UiUtil.MakeButton(string.Empty, vm.RedownloadTurboModelsCommand).WithIconLeft(IconNames.Download);
+        redownloadTurbo.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.TurboDownloadButtonText)));
         var openFolder = UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenModelsFolderCommand).WithIconLeft(IconNames.FolderOpen);
         var close = UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand);
 

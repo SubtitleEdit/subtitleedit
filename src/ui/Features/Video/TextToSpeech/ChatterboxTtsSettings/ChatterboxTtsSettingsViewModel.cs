@@ -25,8 +25,10 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
     [ObservableProperty] private IBrush _engineBrush = Brushes.Gray;
     [ObservableProperty] private string _baseModelLabel = string.Empty;
     [ObservableProperty] private IBrush _baseModelBrush = Brushes.Gray;
+    [ObservableProperty] private string _baseDownloadButtonText = string.Empty;
     [ObservableProperty] private string _turboModelLabel = string.Empty;
     [ObservableProperty] private IBrush _turboModelBrush = Brushes.Gray;
+    [ObservableProperty] private string _turboDownloadButtonText = string.Empty;
     [ObservableProperty] private string _modelsFolder = string.Empty;
     [ObservableProperty] private string _voicesFolder = string.Empty;
     [ObservableProperty] private bool _isEngineInstalled;
@@ -66,15 +68,19 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
             EngineBrush = new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50)); // green
         }
 
+        var baseInstalled = ChatterboxTtsCpp.AreModelsInstalled(ChatterboxTtsCpp.ModelKeyBase);
         ApplyModelStatus(
-            ChatterboxTtsCpp.AreModelsInstalled(ChatterboxTtsCpp.ModelKeyBase),
+            baseInstalled,
             label => BaseModelLabel = label,
             brush => BaseModelBrush = brush);
+        BaseDownloadButtonText = baseInstalled ? "Re-download Base" : "Download Base";
 
+        var turboInstalled = ChatterboxTtsCpp.AreModelsInstalled(ChatterboxTtsCpp.ModelKeyTurbo);
         ApplyModelStatus(
-            ChatterboxTtsCpp.AreModelsInstalled(ChatterboxTtsCpp.ModelKeyTurbo),
+            turboInstalled,
             label => TurboModelLabel = label,
             brush => TurboModelBrush = brush);
+        TurboDownloadButtonText = turboInstalled ? "Re-download Turbo" : "Download Turbo";
     }
 
     private static void ApplyModelStatus(bool installed, Action<string> setLabel, Action<IBrush> setBrush)
@@ -110,9 +116,12 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
             return;
         }
 
+        var installed = ChatterboxTtsCpp.AreModelsInstalled(modelKey);
+        var title = installed ? "Re-download Chatterbox TTS models" : "Download Chatterbox TTS models";
+
         var answer = await MessageBox.Show(
             Window,
-            "Re-download Chatterbox TTS models",
+            title,
             $"{Environment.NewLine}Download the Chatterbox TTS \"{modelKey}\" models ({sizeText}) now?",
             MessageBoxButtons.YesNoCancel,
             MessageBoxIcon.Question);
