@@ -44,6 +44,7 @@ Options accept either `--option:value`, `--option=value`, or `--option value`. T
 ```bash
 seconv *.srt sami                                                  # SRT → SAMI
 seconv movie.srt subrip --encoding:windows-1252                    # encoding override
+seconv movie.srt subrip --encoding:source                          # keep input's encoding on output
 seconv *.sub subrip --fps:25 --output-folder:./out                 # frame-based → time-based
 
 seconv movie.mkv subrip --track-number:3                           # extract MKV text track #3

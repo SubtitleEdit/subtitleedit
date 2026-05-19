@@ -35,6 +35,7 @@ seconv <pattern> --format <name> [options]   # alternative syntax
 ```bash
 seconv *.srt sami                                              # SRT → SAMI
 seconv movie.srt subrip --encoding:windows-1252                # encoding override
+seconv movie.srt subrip --encoding:source                      # keep input's encoding on output
 seconv *.srt subrip --input-encoding-fallback:windows-1250     # UTF-8 wins; CP1250 only if not UTF-8
 seconv *.sub subrip --fps:25 --output-folder ./out             # frame-based → time-based
 
