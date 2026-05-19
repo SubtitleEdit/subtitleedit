@@ -55,6 +55,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private Task? _downloadTaskOmniVoiceVoices;
     private Task? _downloadTaskOmniVoiceModels;
     private string _omniVoiceVariant = OmniVoiceDownloadService.WindowsVariantVulkan;
+    private string _qwen3TtsCppVariant = Qwen3TtsCppDownloadService.WindowsVariantVulkan;
     private readonly Timer _timer = new();
 
     private readonly ITtsDownloadService _ttsDownloadService;
@@ -260,6 +261,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 {
                     _downloadStreamQwen3TtsCpp.Position = 0;
                     _zipUnpacker.UnpackZipStream(_downloadStreamQwen3TtsCpp, folder, string.Empty, false, new List<string>(), null);
+                    WriteInstalledHashSidecar(folder, _downloadStreamQwen3TtsCpp, DownloadHashManager.ResolveQwen3TtsCppKey(_qwen3TtsCppVariant));
                     _downloadStreamQwen3TtsCpp.Dispose();
                 }
                 catch (Exception ex)
@@ -340,6 +342,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                     {
                         _downloadStreamQwen3TtsCppVoices.Position = 0;
                         _zipUnpacker.UnpackZipStream(_downloadStreamQwen3TtsCppVoices, voicesFolder, string.Empty, false, new List<string>(), null);
+                        WriteInstalledHashSidecar(voicesFolder, _downloadStreamQwen3TtsCppVoices, DownloadHashManager.Qwen3TtsCpp.Voices);
                     }
                     catch (Exception ex)
                     {
@@ -410,6 +413,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 {
                     _downloadStreamKokoroTtsCpp.Position = 0;
                     _zipUnpacker.UnpackZipStream(_downloadStreamKokoroTtsCpp, folder, string.Empty, false, new List<string>(), null);
+                    WriteInstalledHashSidecar(folder, _downloadStreamKokoroTtsCpp, DownloadHashManager.ResolveKokoroTtsCppKey());
                     _downloadStreamKokoroTtsCpp.Dispose();
                 }
                 catch (Exception ex)
@@ -521,7 +525,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                     // the OmniVoice folder where GetExecutableFileName() looks for them.
                     var flatten = !Configuration.IsRunningOnWindows;
                     _zipUnpacker.UnpackZipStream(_downloadStreamOmniVoice, folder, string.Empty, flatten, new List<string>(), null);
-                    WriteOmniVoiceInstalledHash(folder, _downloadStreamOmniVoice, DownloadHashManager.ResolveOmniVoiceKey(_omniVoiceVariant));
+                    WriteInstalledHashSidecar(folder, _downloadStreamOmniVoice, DownloadHashManager.ResolveOmniVoiceKey(_omniVoiceVariant));
                     _downloadStreamOmniVoice.Dispose();
                 }
                 catch (Exception ex)
@@ -611,7 +615,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                     {
                         _downloadStreamOmniVoiceVoices.Position = 0;
                         _zipUnpacker.UnpackZipStream(_downloadStreamOmniVoiceVoices, voicesFolder, string.Empty, false, new List<string>(), null);
-                        WriteOmniVoiceInstalledHash(voicesFolder, _downloadStreamOmniVoiceVoices, DownloadHashManager.OmniVoice.Voices);
+                        WriteInstalledHashSidecar(voicesFolder, _downloadStreamOmniVoiceVoices, DownloadHashManager.OmniVoice.Voices);
                     }
                     catch (Exception ex)
                     {
@@ -749,7 +753,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     // Records the downloaded archive's hash in a .installed.sha256 sidecar so SE can later tell
     // whether the install is outdated (see DownloadHashManager.GetStatus). Best-effort - failure
     // is swallowed because the engine itself is already on disk and usable without the sidecar.
-    private static void WriteOmniVoiceInstalledHash(string folder, Stream archiveStream, string? key)
+    private static void WriteInstalledHashSidecar(string folder, Stream archiveStream, string? key)
     {
         try
         {
@@ -826,6 +830,8 @@ public partial class DownloadTtsViewModel : ObservableObject
 
     public void StartDownloadQwen3TtsCpp(string windowsVariant = Qwen3TtsCppDownloadService.WindowsVariantVulkan)
     {
+        _qwen3TtsCppVariant = windowsVariant;
+
         TitleText = $"Downloading Qwen3 TTS ({windowsVariant})";
 
         var downloadProgress = new Progress<float>(number =>

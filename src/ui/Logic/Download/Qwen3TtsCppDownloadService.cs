@@ -22,11 +22,16 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
     public const string WindowsVariantVulkan = "vulkan";
     public const string WindowsVariantCpu = "cpu";
 
-    private const string WindowsVulkanUrl = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.3/qwen3-tts-server-v0.4.3-windows-vulkan-x64.zip";
-    private const string WindowsCpuUrl    = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.3/qwen3-tts-server-v0.4.3-windows-cpu-x64.zip";
-    private const string MacUrl           = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.3/qwen3-tts-server-v0.4.3-macos-metal-arm64.zip";
-    private const string LinuxUrl         = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.3/qwen3-tts-server-v0.4.3-linux-vulkan-x64.zip";
-    private const string LinuxArmUrl      = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/v0.4.3/qwen3-tts-server-v0.4.3-linux-arm64.zip";
+    // qwen3-tts.cpp release pin. Bump in lockstep with the hashes in
+    // DownloadHashManager.Qwen3TtsCpp (each new release: prepend the new SHA-256 at index 0).
+    public const string ReleaseTag = "v0.4.3";
+    private const string ReleaseUrlBase = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/" + ReleaseTag + "/";
+
+    private const string WindowsVulkanUrl = ReleaseUrlBase + "qwen3-tts-server-" + ReleaseTag + "-windows-vulkan-x64.zip";
+    private const string WindowsCpuUrl    = ReleaseUrlBase + "qwen3-tts-server-" + ReleaseTag + "-windows-cpu-x64.zip";
+    private const string MacUrl           = ReleaseUrlBase + "qwen3-tts-server-" + ReleaseTag + "-macos-metal-arm64.zip";
+    private const string LinuxUrl         = ReleaseUrlBase + "qwen3-tts-server-" + ReleaseTag + "-linux-vulkan-x64.zip";
+    private const string LinuxArmUrl      = ReleaseUrlBase + "qwen3-tts-server-" + ReleaseTag + "-linux-arm64.zip";
 
     private const string TokenizerModelFileName = "qwen3-tts-tokenizer-q8_0.gguf";
     private const string TokenizerModelUrl = "https://huggingface.co/koboldcpp/tts/resolve/main/qwen3-tts-tokenizer-q8_0.gguf";
@@ -49,11 +54,40 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
     public async Task DownloadEngine(Stream stream, string windowsVariant, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(windowsVariant), stream, progress, cancellationToken);
+        VerifyArchive(stream, DownloadHashManager.ResolveQwen3TtsCppKey(windowsVariant), "engine");
     }
 
     public async Task DownloadVoices(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(_httpClient, VoicesUrl, stream, progress, cancellationToken);
+        VerifyArchive(stream, DownloadHashManager.Qwen3TtsCpp.Voices, "voices");
+    }
+
+    // Compares the downloaded bytes against the known SHA-256 for this key and throws on mismatch
+    // so the caller's IsFaulted branch surfaces "Download failed" instead of silently unpacking a
+    // truncated or tampered file. Mirrors OmniVoiceDownloadService.VerifyArchive.
+    private static void VerifyArchive(Stream stream, string? key, string label)
+    {
+        if (string.IsNullOrEmpty(key) || stream.Length == 0)
+        {
+            return;
+        }
+
+        var expected = DownloadHashManager.GetLatestKnownHash(key);
+        if (string.IsNullOrEmpty(expected))
+        {
+            return;
+        }
+
+        stream.Position = 0;
+        var actual = DownloadHashManager.ComputeSha256(stream);
+        stream.Position = 0;
+
+        if (!string.Equals(expected, actual, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new IOException(
+                $"Qwen3 TTS {label} download failed integrity check (expected SHA-256 {expected}, got {actual}).");
+        }
     }
 
     public async Task DownloadModels(string modelsFolder, string ttsModelFileName, IProgress<float>? progress, Action<string>? titleProgress, CancellationToken cancellationToken)

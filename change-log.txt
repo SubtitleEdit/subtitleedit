@@ -1,6 +1,16 @@
 
 Subtitle Edit Changelog
 
+
+v5.0.0-beta29 (xth May 2026)
+
+* Add Engine settings dialog for Qwen3 TTS, Kokoro TTS, and Chatterbox TTS
+* Track install hashes for Qwen3 TTS and Kokoro TTS so update status can be reported
+* Update Bulgarian translation - thx jekovcar
+* Update Russian translation - thx jekovcar
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-beta28 (17th May 2026)
 
 * Add drag-and-drop area to TTS voice settings for importing a voice

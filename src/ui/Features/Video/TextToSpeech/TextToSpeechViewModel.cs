@@ -13,7 +13,10 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.EncodingSettings;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ChatterboxTtsSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceSettings;
@@ -385,6 +388,24 @@ public partial class TextToSpeechViewModel : ObservableObject
         if (SelectedEngine is OmniVoiceTtsCpp)
         {
             await _windowService.ShowDialogAsync<OmniVoiceSettingsWindow, OmniVoiceSettingsViewModel>(Window!, vm => vm.Initialize());
+            return;
+        }
+
+        if (SelectedEngine is Qwen3TtsCpp)
+        {
+            await _windowService.ShowDialogAsync<Qwen3TtsSettingsWindow, Qwen3TtsSettingsViewModel>(Window!, vm => vm.Initialize());
+            return;
+        }
+
+        if (SelectedEngine is KokoroTtsCpp)
+        {
+            await _windowService.ShowDialogAsync<KokoroTtsSettingsWindow, KokoroTtsSettingsViewModel>(Window!, vm => vm.Initialize());
+            return;
+        }
+
+        if (SelectedEngine is ChatterboxTtsCpp)
+        {
+            await _windowService.ShowDialogAsync<ChatterboxTtsSettingsWindow, ChatterboxTtsSettingsViewModel>(Window!, vm => vm.Initialize());
             return;
         }
 
@@ -1833,6 +1854,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 {
                     SelectedModel = Models.FirstOrDefault();
                 }
+                IsEngineSettingsVisible = true;
             }
             else if (SelectedEngine is ChatterboxTtsCpp)
             {
@@ -1841,6 +1863,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 {
                     SelectedModel = Models.FirstOrDefault();
                 }
+                IsEngineSettingsVisible = true;
             }
             else if (SelectedEngine is OmniVoiceTtsCpp)
             {
@@ -1858,6 +1881,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                         SelectedVoice = match;
                     }
                 }
+                IsEngineSettingsVisible = true;
             }
             else if (SelectedEngine is Murf)
             {
