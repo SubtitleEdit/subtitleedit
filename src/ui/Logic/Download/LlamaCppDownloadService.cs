@@ -26,6 +26,34 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
     public async Task DownloadEngine(Stream stream, string variant, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(httpClient, GetEngineUrl(variant), stream, progress, cancellationToken);
+        VerifyArchive(stream, DownloadHashManager.ResolveLlamaCppKey(variant), "engine");
+    }
+
+    // Compares the downloaded bytes against the known SHA-256 for this key and throws on mismatch
+    // so the caller's IsFaulted branch surfaces "Download failed" instead of silently unpacking a
+    // truncated or tampered file. Mirrors Qwen3TtsCppDownloadService.VerifyArchive.
+    private static void VerifyArchive(Stream stream, string? key, string label)
+    {
+        if (string.IsNullOrEmpty(key) || stream.Length == 0)
+        {
+            return;
+        }
+
+        var expected = DownloadHashManager.GetLatestKnownHash(key);
+        if (string.IsNullOrEmpty(expected))
+        {
+            return;
+        }
+
+        stream.Position = 0;
+        var actual = DownloadHashManager.ComputeSha256(stream);
+        stream.Position = 0;
+
+        if (!string.Equals(expected, actual, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new IOException(
+                $"llama.cpp {label} download failed integrity check (expected SHA-256 {expected}, got {actual}).");
+        }
     }
 
     public async Task DownloadCudaRuntime(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
