@@ -966,7 +966,7 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<LlamaCppOcrSettingsWindow, LlamaCppOcrSettingsViewModel>(Window);
+        var result = await _windowService.ShowDialogAsync<LlamaCppOcrSettingsWindow, LlamaCppOcrSettingsViewModel>(Window, vm => vm.Initialize());
         if (result.OkPressed)
         {
             LlamaCppUrl = Se.Settings.Ocr.LlamaCppUrl;

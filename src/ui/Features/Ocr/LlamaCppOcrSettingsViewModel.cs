@@ -1,11 +1,14 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Download;
+using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using System;
 using System.Threading.Tasks;
 
@@ -19,12 +22,47 @@ public partial class LlamaCppOcrSettingsViewModel : ObservableObject
     [ObservableProperty] private string _url;
     [ObservableProperty] private string _prompt;
     [ObservableProperty] private int _timeoutMinutes;
+    [ObservableProperty] private string _engineLabel = string.Empty;
+    [ObservableProperty] private IBrush _engineBrush = Brushes.Gray;
+    [ObservableProperty] private bool _isEngineInstalled;
 
     public LlamaCppOcrSettingsViewModel()
     {
         _url = Se.Settings.Ocr.LlamaCppUrl ?? string.Empty;
         _prompt = Se.Settings.Ocr.LlamaCppOcrPrompt ?? string.Empty;
         _timeoutMinutes = Math.Max(1, Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
+    }
+
+    public void Initialize()
+    {
+        Refresh();
+    }
+
+    private void Refresh()
+    {
+        IsEngineInstalled = LlamaCppServerManager.IsEngineInstalled();
+        if (!IsEngineInstalled)
+        {
+            EngineLabel = Se.Language.General.NotInstalled;
+            EngineBrush = new SolidColorBrush(Color.FromRgb(0xF4, 0x43, 0x36)); // red
+            return;
+        }
+
+        switch (LlamaCppServerManager.GetEngineUpdateStatus())
+        {
+            case DownloadHashManager.UpdateStatus.UpToDate:
+                EngineLabel = Se.Language.General.UpToDate;
+                EngineBrush = new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50)); // green
+                break;
+            case DownloadHashManager.UpdateStatus.UpdateAvailable:
+                EngineLabel = Se.Language.General.UpdateAvailable;
+                EngineBrush = new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00)); // amber
+                break;
+            default:
+                EngineLabel = Se.Language.General.UnknownNoInstallRecord;
+                EngineBrush = new SolidColorBrush(Color.FromRgb(0x9E, 0x9E, 0x9E)); // grey
+                break;
+        }
     }
 
     [RelayCommand]
