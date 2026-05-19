@@ -36,6 +36,7 @@ public class LanguageInitializer() : ILanguageInitializer
         "Japanese",
         "Korean",
         "Norwegian",
+        "Macedonian",
         "Polish",
         "Portuguese",
         "Portuguese (Brazil)",
