@@ -47,7 +47,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? EbuHeaderFile { get; init; }
 
         [CommandOption("--encoding")]
-        [Description("Encoding name")]
+        [Description("Encoding name (e.g. utf-8, utf-8-no-bom, windows-1252, 1252). Use 'source' to keep the input file's detected encoding.")]
         public string? Encoding { get; init; }
 
         [CommandOption("--input-encoding-fallback|--inputencodingfallback")]
@@ -273,6 +273,19 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 AnsiConsole.MarkupLine(
                     $"[red]Error: OCR engine '{settings.OcrEngine.EscapeMarkup()}' is not supported (pass via --ocr-engine). " +
                     $"Use one of: {string.Join(", ", supportedEngines)}.[/]");
+                return 1;
+            }
+
+            // Fail fast on a typo in --encoding so we don't silently substitute UTF-8 and
+            // decode the input incorrectly without the user noticing. The literal "source"
+            // is a sentinel — resolved per-file from the input's detected encoding.
+            if (!string.IsNullOrWhiteSpace(settings.Encoding) &&
+                !LibSEIntegration.IsSourceEncodingSentinel(settings.Encoding) &&
+                !LibSEIntegration.TryGetEncoding(settings.Encoding, out _))
+            {
+                AnsiConsole.MarkupLine(
+                    $"[red]Error: Unknown encoding '{settings.Encoding.EscapeMarkup()}' for --encoding.[/]");
+                AnsiConsole.MarkupLine("[dim]Use 'seconv list-encodings' to see supported encodings, or 'source' to keep the input file's encoding.[/]");
                 return 1;
             }
 

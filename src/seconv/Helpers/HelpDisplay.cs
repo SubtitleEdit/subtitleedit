@@ -22,7 +22,7 @@ internal static class HelpDisplay
         ShowParameter("--assa-style-file:<file name>", "ASSA style file");
         ShowParameter("--change-speed:<percent>", "Change speed by percent (e.g. 125 = 1.25x faster)");
         ShowParameter("--ebu-header-file:<file name>", "EBU header file");
-        ShowParameter("--encoding:<encoding name>", "Character encoding (e.g., utf-8, windows-1252)");
+        ShowParameter("--encoding:<encoding name>", "Character encoding (e.g., utf-8, windows-1252, or 'source' to keep the input file's encoding)");
         ShowParameter("--input-encoding-fallback:<name>", "Assumed input encoding when no BOM and not UTF-8 (skips ANSI guess)");
         ShowParameter("--forced-only", "Process forced subtitles only");
         ShowParameter("--fps:<frame rate>", "Frame rate for conversion");

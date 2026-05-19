@@ -153,16 +153,26 @@ internal class SubtitleConverter
 
             await Task.Run(() =>
             {
+                // --encoding:source means "use the input file's detected encoding for both
+                // read and write". Resolve it per-file before the load so the same encoding
+                // name flows into the save side too.
+                var resolvedOptions = options;
+                if (LibSEIntegration.IsSourceEncodingSentinel(options.Encoding))
+                {
+                    var detected = LibSEIntegration.DetectSourceEncodingName(inputFile, options.InputEncodingFallback);
+                    resolvedOptions = options with { Encoding = detected };
+                }
+
                 // Load subtitle file using LibSE — keep the detected format so the
                 // save side can apply RemoveNativeFormatting when the target differs.
-                var (subtitle, sourceFormat) = LibSEIntegration.LoadSubtitleWithFormat(inputFile, options.Encoding, options.InputEncodingFallback);
+                var (subtitle, sourceFormat) = LibSEIntegration.LoadSubtitleWithFormat(inputFile, resolvedOptions.Encoding, resolvedOptions.InputEncodingFallback);
 
                 if (subtitle == null || subtitle.Paragraphs.Count == 0)
                 {
                     throw new InvalidOperationException($"No subtitles found in file: {inputFile}");
                 }
 
-                ApplyTransformsAndSave(subtitle, sourceFormat, outputFile, options);
+                ApplyTransformsAndSave(subtitle, sourceFormat, outputFile, resolvedOptions);
             });
         }
         finally
@@ -340,7 +350,7 @@ internal class SubtitleConverter
     }
 }
 
-internal class ConversionOptions
+internal record class ConversionOptions
 {
     public required IReadOnlyList<string> Patterns { get; init; }
     public required string Format { get; init; }

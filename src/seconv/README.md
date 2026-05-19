@@ -85,7 +85,7 @@ seconv lint *.srt --json                    # CI-friendly: exit 1 on any issue
 | `--output-folder:<path>` | Output folder (default: input file's directory) |
 | `--output-filename:<name>` | Output file name (single input only) |
 | `--overwrite` | Overwrite existing files (default: rotate to `name_2.ext`, `_3.ext`, ...) |
-| `--encoding:<name>` | Encoding name or codepage (defaults: auto-detect on input, UTF-8 BOM on output) |
+| `--encoding:<name>` | Encoding name or codepage (defaults: auto-detect on input, UTF-8 BOM on output). Use `source` to keep the input file's detected encoding. |
 | `--input-encoding-fallback:<name>` | Encoding to assume when input has no BOM and is not detected as UTF-8 (replaces the ANSI codepage heuristic). Ignored when `--encoding` is set. |
 
 ### Time / Frame

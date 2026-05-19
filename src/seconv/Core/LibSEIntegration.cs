@@ -845,6 +845,49 @@ internal static class LibSEIntegration
     }
 
     /// <summary>
+    /// True when the user passed <c>--encoding:source</c> (case-insensitive) — a sentinel
+    /// meaning "save with the same encoding the input file was read in". Resolved per-file
+    /// via <see cref="DetectSourceEncodingName"/> before the load/save calls.
+    /// </summary>
+    internal static bool IsSourceEncodingSentinel(string? encodingName)
+        => !string.IsNullOrWhiteSpace(encodingName) &&
+           string.Equals(encodingName.Trim(), "source", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Resolves <c>--encoding:source</c> for a given input file: runs the same detection
+    /// <see cref="LoadSubtitleWithFormat"/> would and returns a name that round-trips
+    /// through <see cref="GetEncoding"/> (preserving the UTF-8 BOM/no-BOM distinction the
+    /// raw <see cref="Encoding"/> object would lose on save).
+    /// </summary>
+    internal static string DetectSourceEncodingName(string filePath, string? fallbackEncodingName)
+    {
+        var encoding = !string.IsNullOrWhiteSpace(fallbackEncodingName)
+            ? DetectEncodingWithFallback(filePath, fallbackEncodingName)
+            : LanguageAutoDetect.GetEncodingFromFile(filePath);
+
+        if (encoding.CodePage == 65001)
+        {
+            return FileStartsWithUtf8Bom(filePath) ? "utf-8" : "utf-8-no-bom";
+        }
+
+        return encoding.CodePage.ToString(System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    private static bool FileStartsWithUtf8Bom(string filePath)
+    {
+        try
+        {
+            using var fs = File.OpenRead(filePath);
+            Span<byte> bom = stackalloc byte[3];
+            return fs.Read(bom) >= 3 && bom[0] == 0xEF && bom[1] == 0xBB && bom[2] == 0xBF;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
     /// Non-throwing variant of <see cref="GetEncoding"/> used to validate user input. Returns
     /// false (and a null out) for an unrecognized name or code page so the CLI can report
     /// a typo instead of silently substituting UTF-8 and producing mojibake.
