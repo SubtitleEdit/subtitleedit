@@ -13,6 +13,7 @@ v5.0.0-beta29 (xth May 2026)
 * Add Macedonian translation - thx kirepp-cmd
 * Find and offer a matching subtitle when a video file is dropped - thx GrampaWildWilly
 * Redesign llama.cpp OCR settings dialog and localize engine status labels
+* Get spell check dictionaries from the maintained LibreOffice repository and redesign the dialog
 * Select first row after OCR completes - thx LurkingNinja
 * Trim long paths in the Reopen menu and tighten menu spacing
 * seconv: reject unknown --encoding values and add --encoding:source
