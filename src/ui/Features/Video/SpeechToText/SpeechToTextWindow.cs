@@ -214,7 +214,7 @@ public class SpeechToTextWindow : Window
         });
 
         var progressBar = UiUtil.MakeProgressBar();
-        progressBar.Margin = new Thickness(10, 0, 0, 0);
+        progressBar.Margin = new Thickness(10, 0, 0, 8);
         progressBar.Width = double.NaN;
         progressBar.VerticalAlignment = VerticalAlignment.Center;
         progressBar.HorizontalAlignment = HorizontalAlignment.Stretch;
