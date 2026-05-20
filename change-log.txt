@@ -25,7 +25,7 @@ v5.0.0-beta29 (xth May 2026)
 * Fix Edge TTS crash on bad rate format and retry transient failures - thx KevinHa59
 * Fix shortcut window not receiving focus
 * Fix Cancel button being clipped in the llama.cpp and speech-to-text engine download windows
-* Fix Alt+O / Alt+C / Alt+D shortcuts not firing standard OK / Cancel / Done buttons - thx LurkingNinja
+* Fix Alt-key access shortcuts not firing on buttons - underscore in label now drives the access key - thx LurkingNinja
 
 -----------------------------------------------------------------------------------------------------
 
