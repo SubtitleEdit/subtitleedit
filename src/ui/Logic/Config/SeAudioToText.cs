@@ -46,6 +46,7 @@ public class SeAudioToText
     public string CommandLineParameterCrispAsrCanary { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrCohere { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrFireRed { get; set; } = "--max-len 50 --split-on-punct";
+    public string CommandLineParameterCrispAsrFunAsrMltNano { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrGlm { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrGranite { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrParakeet { get; set; } = "--max-len 50 --split-on-punct";
