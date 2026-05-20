@@ -905,34 +905,11 @@ public class OcrWindow : Window
 
     private static Grid MakeBottomView(OcrViewModel vm)
     {
-        var progressSlider = new Slider
-        {
-            Minimum = 0,
-            Maximum = 100,
-            IsHitTestVisible = false,
-            Focusable = false,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            Styles =
-            {
-                new Style(x => x.OfType<Thumb>())
-                {
-                    Setters =
-                    {
-                        new Setter(Thumb.IsVisibleProperty, false)
-                    }
-                },
-                new Style(x => x.OfType<Track>())
-                {
-                    Setters =
-                    {
-                        new Setter(Track.HeightProperty, 6.0)
-                    }
-                },
-            }
-        };
-        progressSlider.Bind(Slider.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        progressSlider.Bind(Slider.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm });
+        var progressBar = UiUtil.MakeProgressBar();
+        progressBar.Width = double.NaN;
+        progressBar.HorizontalAlignment = HorizontalAlignment.Stretch;
+        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
+        progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm });
 
         var statusText = new TextBlock().WithMarginTop(22);
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
@@ -976,7 +953,7 @@ public class OcrWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(progressSlider, 0, 0);
+        grid.Add(progressBar, 0, 0);
         grid.Add(statusText, 0, 0);
         grid.Add(buttonStart, 0, 1);
         grid.Add(buttonPause, 0, 2);

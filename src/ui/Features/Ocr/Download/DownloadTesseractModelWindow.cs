@@ -56,33 +56,10 @@ public class DownloadTesseractModelWindow : Window
         };
         panelPickDictionary.Bind(Panel.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)) { Converter = new InverseBooleanConverter() });
 
-        var progressSlider = new Slider
-        {
-            Minimum = 0,
-            Maximum = 100,
-            IsHitTestVisible = false,
-            Focusable = false,
-            MinWidth = 400,
-            Styles =
-            {
-                new Style(x => x.OfType<Thumb>())
-                {
-                    Setters =
-                    {
-                        new Setter(Thumb.IsVisibleProperty, false)
-                    }
-                },
-                new Style(x => x.OfType<Track>())
-                {
-                    Setters =
-                    {
-                        new Setter(Track.HeightProperty, 6.0)
-                    }
-                },
-            }
-        };
-        progressSlider.Bind(Slider.ValueProperty, new Binding(nameof(DownloadFfmpegViewModel.Progress)));
-        progressSlider.Bind(Slider.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)));
+        var progressBar = UiUtil.MakeProgressBar();
+        progressBar.MinWidth = 400;
+        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(DownloadFfmpegViewModel.Progress)));
+        progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsProgressVisible)));
 
         var statusText = new TextBlock();
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(DownloadFfmpegViewModel.StatusText)));
@@ -99,7 +76,7 @@ public class DownloadTesseractModelWindow : Window
             {
                 titleText,
                 panelPickDictionary,
-                progressSlider,
+                progressBar,
                 statusText,
                 buttonBar,
             }

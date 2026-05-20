@@ -27,32 +27,9 @@ public class DownloadLibMpvWindow : Window
             FontWeight = FontWeight.Bold,
         };
 
-        var progressSlider = new Slider
-        {
-            Minimum = 0,
-            Maximum = 100,
-            IsHitTestVisible = false,
-            Focusable = false,
-            MinWidth = 400,
-            Styles =
-            {
-                new Style(x => x.OfType<Thumb>())
-                {
-                    Setters =
-                    {
-                        new Setter(Thumb.IsVisibleProperty, false)
-                    }
-                },
-                new Style(x => x.OfType<Track>())
-                {
-                    Setters =
-                    {
-                        new Setter(Track.HeightProperty, 6.0)
-                    }
-                },
-            }
-        };
-        progressSlider.Bind(Slider.ValueProperty, new Binding(nameof(DownloadLibMpvViewModel.Progress)));
+        var progressBar = UiUtil.MakeProgressBar();
+        progressBar.MinWidth = 400;
+        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(DownloadLibMpvViewModel.Progress)));
 
         var statusText = new TextBlock();
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(DownloadLibMpvViewModel.StatusText)));
@@ -67,7 +44,7 @@ public class DownloadLibMpvWindow : Window
             Children =
             {
                 titleText,
-                progressSlider,
+                progressBar,
                 statusText,
                 buttonBar,
             }

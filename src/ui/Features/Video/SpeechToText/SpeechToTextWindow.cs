@@ -213,43 +213,19 @@ public class SpeechToTextWindow : Window
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
         });
 
-        var progressSlider = new Slider()
-        {
-            Minimum = 0,
-            Maximum = 100,
-            IsHitTestVisible = false,
-            Focusable = false,
-            Margin = new Thickness(10, 0, 0, 0),
-            Width = double.NaN,
-            Height = 10,
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            Styles =
-            {
-                new Style(x => x.OfType<Thumb>())
-                {
-                    Setters =
-                    {
-                        new Setter(Thumb.IsVisibleProperty, false)
-                    },
-                },
-                new Style(x => x.OfType<Track>())
-                {
-                    Setters =
-                    {
-                        new Setter(Track.HeightProperty, 8.0)
-                    },
-                },
-            },
-        };
-        progressSlider.Bind(Slider.ValueProperty, new Binding
+        var progressBar = UiUtil.MakeProgressBar();
+        progressBar.Margin = new Thickness(10, 0, 0, 0);
+        progressBar.Width = double.NaN;
+        progressBar.VerticalAlignment = VerticalAlignment.Center;
+        progressBar.HorizontalAlignment = HorizontalAlignment.Stretch;
+        progressBar.Bind(ProgressBar.ValueProperty, new Binding
         {
             Path = nameof(vm.ProgressValue),
             Mode = BindingMode.OneWay,
             Source = vm,
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
         });
-        progressSlider.Bind(Slider.OpacityProperty, new Binding
+        progressBar.Bind(ProgressBar.OpacityProperty, new Binding
         {
             Path = nameof(vm.ProgressOpacity),
             Mode = BindingMode.OneWay,
@@ -328,7 +304,7 @@ public class SpeechToTextWindow : Window
             VerticalAlignment = VerticalAlignment.Top,
             Children =
             {
-                progressSlider,
+                progressBar,
                 progressText,
                 elapsedTimeText,
                 estimatedTimeText,

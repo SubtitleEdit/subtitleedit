@@ -207,32 +207,9 @@ public class BlankVideoWindow : Window
 
     private static Grid MakeProgressView(BlankVideoViewModel vm)
     {
-        var progressSlider = new Slider
-        {
-            Minimum = 0,
-            Maximum = 100,
-            IsHitTestVisible = false,
-            Focusable = false,
-            Styles =
-            {
-                new Style(x => x.OfType<Thumb>())
-                {
-                    Setters =
-                    {
-                        new Setter(Thumb.IsVisibleProperty, false)
-                    }
-                },
-                new Style(x => x.OfType<Track>())
-                {
-                    Setters =
-                    {
-                        new Setter(Track.HeightProperty, 6.0)
-                    }
-                },
-            }
-        };
-        progressSlider.Bind(Slider.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        progressSlider.Bind(Slider.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
+        var progressBar = UiUtil.MakeProgressBar();
+        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
+        progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
 
         var statusText = new TextBlock
         {
@@ -255,7 +232,7 @@ public class BlankVideoWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(progressSlider, 0, 0);
+        grid.Add(progressBar, 0, 0);
         grid.Add(statusText, 0, 0);
 
         return grid;

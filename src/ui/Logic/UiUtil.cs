@@ -205,6 +205,20 @@ public static class UiUtil
         };
     }
 
+    /// <summary>
+    /// Creates the standard progress bar used by download and progress windows.
+    /// </summary>
+    public static ProgressBar MakeProgressBar(double height = 10)
+    {
+        return new ProgressBar
+        {
+            Minimum = 0,
+            Maximum = 100,
+            Height = height,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+    }
+
     public static Button MakeButton(string text, IRelayCommand? command, object? parameter = null)
     {
         var button = new Button
