@@ -279,13 +279,11 @@ public static class UiUtil
         var upper = char.ToUpperInvariant(c);
         if (upper >= 'A' && upper <= 'Z')
         {
-            key = (Key)((int)Key.A + (upper - 'A'));
-            return true;
+            return Enum.TryParse(upper.ToString(), out key);
         }
         if (upper >= '0' && upper <= '9')
         {
-            key = (Key)((int)Key.D0 + (upper - '0'));
-            return true;
+            return Enum.TryParse("D" + upper, out key);
         }
         key = Key.None;
         return false;
