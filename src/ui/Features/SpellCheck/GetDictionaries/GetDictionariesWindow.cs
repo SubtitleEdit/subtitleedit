@@ -149,7 +149,7 @@ public class GetDictionariesWindow : Window
         var status = new TextBlock
         {
             HorizontalAlignment = HorizontalAlignment.Center,
-            Margin = new Thickness(0, 4, 0, 0),
+            Margin = new Thickness(0, 8, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)),
         };
 
