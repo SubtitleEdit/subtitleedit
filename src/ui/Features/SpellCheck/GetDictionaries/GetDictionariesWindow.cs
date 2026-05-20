@@ -1,9 +1,11 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Shapes;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Layout;
-using Avalonia.Styling;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -11,133 +13,253 @@ namespace Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
 
 public class GetDictionariesWindow : Window
 {
+    private const int LabelWidth = 90;
+    private const int ContentWidth = 380;
+
     public GetDictionariesWindow(GetDictionariesViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.SpellCheck.GetDictionariesTitle;
         SizeToContent = SizeToContent.WidthAndHeight;
         CanResize = false;
+        MinWidth = 520;
         vm.Window = this;
         DataContext = vm;
 
-        var label = new Label
+        var downloadButton = UiUtil.MakeButton(string.Empty, vm.DownloadCommand)
+            .WithIconLeft(IconNames.Download)
+            .WithBindEnabled(nameof(vm.IsDownloadEnabled));
+        downloadButton.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.DownloadButtonText)));
+
+        var stack = new StackPanel
         {
-            Content = Se.Language.SpellCheck.GetDictionaryInstructions,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 10, 0, 0),
+            Orientation = Orientation.Vertical,
+            Spacing = 14,
+            Children =
+            {
+                BuildHeader(),
+                BuildDetails(vm),
+                BuildProgress(vm),
+                BuildActions(vm, downloadButton),
+            },
+        };
+
+        var outerGrid = new Grid { Margin = UiUtil.MakeWindowMargin() };
+        outerGrid.Children.Add(stack);
+
+        Content = new Border
+        {
+            Child = outerGrid,
+            Padding = new Thickness(4),
+        };
+
+        Activated += delegate { downloadButton.Focus(); }; // hack to make OnKeyDown work
+        KeyDown += (_, e) => vm.OnKeyDown(e);
+    }
+
+    private static TextBlock BuildHeader() => new()
+    {
+        Text = Se.Language.SpellCheck.GetDictionaryInstructions,
+        TextWrapping = TextWrapping.Wrap,
+        Opacity = 0.85,
+        MaxWidth = LabelWidth + ContentWidth + 12,
+    };
+
+    private static Border BuildDetails(GetDictionariesViewModel vm)
+    {
+        var grid = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(LabelWidth, GridUnitType.Pixel) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
+            RowDefinitions =
+            {
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto },
+            },
+            ColumnSpacing = 12,
+            RowSpacing = 12,
         };
 
         var combo = new ComboBox
         {
             ItemsSource = vm.Dictionaries,
-            VerticalAlignment = VerticalAlignment.Center,
-            MinWidth = 180,
-            Margin = new Thickness(0, 10, 10, 2),
+            ItemTemplate = BuildDictionaryItemTemplate(),
+            MinWidth = ContentWidth,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            [!ComboBox.SelectedItemProperty] = new Binding(nameof(vm.SelectedDictionary)),
             [!ComboBox.IsEnabledProperty] = new Binding(nameof(vm.IsDownloadEnabled)),
-            [!ComboBox.SelectedValueProperty] = new Binding(nameof(vm.SelectedDictionary)),
         };
 
-        var buttonDownload = UiUtil
-            .MakeButton(Se.Language.General.Download, vm.DownloadCommand)
-            .WithLeftAlignment()
-            .WithMargin(0, 10, 10, 2)
-            .WithBindEnabled(nameof(vm.IsDownloadEnabled));
-
-        var panelDownload = new StackPanel
+        var description = new TextBlock
         {
-            Orientation = Orientation.Horizontal,
+            TextWrapping = TextWrapping.Wrap,
             VerticalAlignment = VerticalAlignment.Center,
+            MinHeight = 32,
+            MaxWidth = ContentWidth,
+            Opacity = 0.85,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.Description)),
+        };
+
+        var folder = new TextBox
+        {
+            IsReadOnly = true,
+            BorderThickness = new Thickness(0),
+            Background = Brushes.Transparent,
+            Padding = new Thickness(0),
+            VerticalContentAlignment = VerticalAlignment.Center,
+            FontSize = 12,
+            MaxWidth = ContentWidth,
             HorizontalAlignment = HorizontalAlignment.Left,
-            Children =
-            {
-                combo,
-                buttonDownload
-            }
+            [!TextBox.TextProperty] = new Binding(nameof(vm.DictionariesFolder)),
         };
 
-        var labelDescription = new Label
+        grid.Add(MakeLabel(Se.Language.General.Dictionary), 0, 0);
+        grid.Add(combo, 0, 1);
+
+        grid.Add(MakeLabel(Se.Language.General.Status), 1, 0);
+        grid.Add(MakeStatusPanel(nameof(vm.SelectedStatusBrush), nameof(vm.SelectedStatusText)), 1, 1);
+
+        grid.Add(MakeLabel(Se.Language.General.Description), 2, 0);
+        grid.Add(description, 2, 1);
+
+        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 3, 0);
+        grid.Add(folder, 3, 1);
+
+        return new Border
         {
-            Content = "Description:",
-            VerticalAlignment = VerticalAlignment.Center,
-            [!Label.ContentProperty] = new Binding(nameof(vm.SelectedDictionary) + "." + nameof(vm.Description)),
+            Child = grid,
+            Padding = new Thickness(14),
+            CornerRadius = new CornerRadius(6),
+            BorderThickness = new Thickness(1),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(0x40, 0x80, 0x80, 0x80)),
         };
+    }
 
-        var sliderProgress = new Slider
+    private static StackPanel BuildProgress(GetDictionariesViewModel vm)
+    {
+        var bar = new ProgressBar
         {
             Minimum = 0,
             Maximum = 100,
-            IsHitTestVisible = false,
-            Focusable = false,
-            MinWidth = 400,
-            Styles =
-            {
-                new Style(x => x.OfType<Thumb>())
-                {
-                    Setters =
-                    {
-                        new Setter(Thumb.IsVisibleProperty, false)
-                    }
-                },
-                new Style(x => x.OfType<Track>())
-                {
-                    Setters =
-                    {
-                        new Setter(Track.HeightProperty, 6.0)
-                    }
-                },
-            },
-            [!Slider.OpacityProperty] = new Binding(nameof(vm.ProgressOpacity)),
-            [!Slider.ValueProperty] = new Binding(nameof(vm.Progress)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
+            Height = 8,
+            [!ProgressBar.ValueProperty] = new Binding(nameof(vm.Progress)),
+            [!Visual.OpacityProperty] = new Binding(nameof(vm.ProgressOpacity)),
         };
 
-        var labelDownloadStatus = new Label
+        var status = new TextBlock
         {
-            VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Center,
-            Width = double.NaN,
-            Margin = new Thickness(0, 20, 0, 20),
-            [!Label.ContentProperty] = new Binding(nameof(vm.StatusText)),
-            [!Label.IsVisibleProperty] = new Binding(nameof(vm.IsProgressVisible)),
+            Margin = new Thickness(0, 4, 0, 0),
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)),
         };
 
-        var linkOpenFolder = UiUtil.MakeLink(Se.Language.General.OpenDictionaryFolder, vm.OpenFolderCommand);
+        return new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Children = { bar, status },
+        };
+    }
 
-        var buttonOk = UiUtil.MakeButtonDone(vm.OkCommand);
-        buttonOk.WithBindIsVisible(nameof(vm.IsDownloadEnabled));
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        buttonCancel.WithBindIsVisible(nameof(vm.IsProgressVisible));
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+    private static Grid BuildActions(GetDictionariesViewModel vm, Button downloadButton)
+    {
+        var openFolder = UiUtil.MakeButton(Se.Language.General.OpenDictionaryFolder, vm.OpenFolderCommand)
+            .WithIconLeft(IconNames.FolderOpen);
+
+        var leftPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            Children = { downloadButton, openFolder },
+        };
+
+        var close = UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand)
+            .WithBindIsVisible(nameof(vm.IsDownloadEnabled));
+        var cancel = UiUtil.MakeButtonCancel(vm.CancelCommand)
+            .WithBindIsVisible(nameof(vm.IsProgressVisible));
+
+        var rightPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Spacing = 8,
+            Children = { close, cancel },
+        };
 
         var grid = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = GridLength.Auto },
             },
-            Margin = UiUtil.MakeWindowMargin(),
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+        grid.Add(leftPanel, 0, 0);
+        grid.Add(rightPanel, 0, 2);
+        return grid;
+    }
+
+    private static FuncDataTemplate<GetSpellCheckDictionaryDisplay> BuildDictionaryItemTemplate()
+    {
+        return new FuncDataTemplate<GetSpellCheckDictionaryDisplay>((_, _) =>
+        {
+            var dot = new Ellipse
+            {
+                Width = 10,
+                Height = 10,
+                VerticalAlignment = VerticalAlignment.Center,
+                [!Shape.FillProperty] = new Binding(nameof(GetSpellCheckDictionaryDisplay.StatusBrush)),
+            };
+
+            var text = new TextBlock
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(8, 0, 0, 0),
+                [!TextBlock.TextProperty] = new Binding(nameof(GetSpellCheckDictionaryDisplay.DisplayName)),
+            };
+
+            return new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Children = { dot, text },
+            };
+        }, true);
+    }
+
+    private static StackPanel MakeStatusPanel(string brushBindingPath, string textBindingPath)
+    {
+        var dot = new Ellipse
+        {
+            Width = 10,
+            Height = 10,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!Shape.FillProperty] = new Binding(brushBindingPath),
         };
 
-        grid.Add(label, 0, 0);
-        grid.Add(panelDownload, 1, 0);
-        grid.Add(labelDescription, 2, 0);
-        grid.Add(sliderProgress, 3, 0);
-        grid.Add(labelDownloadStatus, 3, 0);
-        grid.Add(linkOpenFolder, 4, 0);
-        grid.Add(panelButtons, 4, 0);
+        var text = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            FontWeight = FontWeight.SemiBold,
+            Margin = new Thickness(8, 0, 0, 0),
+            [!TextBlock.TextProperty] = new Binding(textBindingPath),
+        };
 
-        Content = grid;
-
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
-        KeyDown += (_, e) => vm.OnKeyDown(e);
+        return new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children = { dot, text },
+        };
     }
+
+    private static TextBlock MakeLabel(string text) => new()
+    {
+        Text = text,
+        Opacity = 0.7,
+        VerticalAlignment = VerticalAlignment.Center,
+    };
 }

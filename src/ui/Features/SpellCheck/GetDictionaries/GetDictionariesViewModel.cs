@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -32,6 +33,10 @@ public partial class GetDictionariesViewModel : ObservableObject
     [ObservableProperty] private bool _isDownloadEnabled;
     [ObservableProperty] private bool _isProgressVisible;
     [ObservableProperty] private double _progressOpacity;
+    [ObservableProperty] private IBrush _selectedStatusBrush;
+    [ObservableProperty] private string _selectedStatusText;
+    [ObservableProperty] private string _downloadButtonText;
+    [ObservableProperty] private string _dictionariesFolder;
 
     public Window? Window { get; set; }
 
@@ -42,11 +47,35 @@ public partial class GetDictionariesViewModel : ObservableObject
     private bool _done;
     private readonly System.Timers.Timer _timer;
     private readonly CancellationTokenSource _cancellationTokenSource;
-    private readonly MemoryStream _downloadStream;
 
     private readonly ISpellCheckDictionaryDownloadService _spellCheckDictionaryDownloadService;
     private readonly IZipUnpacker _zipUnpacker;
     private readonly IFolderHelper _folderHelper;
+
+    private static readonly IBrush InstalledBrush = new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50));
+    private static readonly IBrush NotInstalledBrush = new SolidColorBrush(Color.FromRgb(0x9E, 0x9E, 0x9E));
+
+    /// <summary>
+    /// Legacy archive entries do not expose a .dic file name in their download URL, so the
+    /// installed state is detected by looking for a .dic file with this language prefix.
+    /// </summary>
+    private static readonly Dictionary<string, string> LegacyDicPrefixes = new(StringComparer.OrdinalIgnoreCase)
+    {
+        { "Finnish", "fi" },
+        { "Polish", "pl_PL" },
+        { "Basque", "eu" },
+        { "Irish", "ga" },
+        { "Khmer", "km" },
+        { "Latin", "la" },
+        { "Lower Sorbian", "dsb" },
+        { "Malay", "ms" },
+        { "Malayalam", "ml" },
+        { "Macedonian", "mk" },
+        { "Vietnamese and English", "vi_VN-and" },
+        { "Welsh", "cy" },
+        { "Xhosa", "xh" },
+        { "Zulu", "zu" },
+    };
 
     public GetDictionariesViewModel(ISpellCheckDictionaryDownloadService spellCheckDictionaryDownloadService, IZipUnpacker zipUnpacker, IFolderHelper folderHelper)
     {
@@ -63,10 +92,15 @@ public partial class GetDictionariesViewModel : ObservableObject
         DictionaryFileName = string.Empty;
 
         _cancellationTokenSource = new CancellationTokenSource();
-        _downloadStream = new MemoryStream();
         _progressOpacity = 0;
 
+        SelectedStatusBrush = NotInstalledBrush;
+        SelectedStatusText = string.Empty;
+        DownloadButtonText = Se.Language.General.Download;
+        DictionariesFolder = Se.DictionariesFolder;
+
         LoadDictionaries();
+        RefreshInstalledStatus();
         _timer = new System.Timers.Timer(500);
         _timer.Elapsed += OnTimerOnElapsed;
         _timer.Start();
@@ -78,87 +112,157 @@ public partial class GetDictionariesViewModel : ObservableObject
     {
         lock (_lockObj)
         {
-            if (_done)
+            if (_done || _downloadTask == null)
             {
                 return;
             }
 
-            if (_downloadTask is { IsCompleted: true })
+            var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
+            if (_downloadTask.IsCanceled || ex is OperationCanceledException)
             {
                 _timer.Stop();
                 _done = true;
-
-                if (_downloadStream.Length == 0)
-                {
-                    StatusText = "Download failed";
-                    return;
-                }
-
-                DictionaryFileName = UnpackDictionary();
-                OkPressed = true;
+                StatusText = "Download canceled";
                 Close();
             }
             else if (_downloadTask is { IsFaulted: true })
             {
-                _timer.Stop();
-                _done = true;
-                var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
-                if (ex is OperationCanceledException)
+                HandleDownloadFailure();
+            }
+            else if (_downloadTask is { IsCompletedSuccessfully: true })
+            {
+                if (string.IsNullOrEmpty(DictionaryFileName))
                 {
-                    StatusText = "Download canceled";
-                    Close();
+                    HandleDownloadFailure();
                 }
                 else
                 {
-                    StatusText = "Download failed";
+                    _timer.Stop();
+                    _done = true;
+                    OkPressed = true;
+                    Close();
                 }
             }
         }
     }
 
+    /// <summary>
+    /// Resets the window to its idle state after a failed download so the user can
+    /// retry or close it normally. The timer keeps running to pick up a retry.
+    /// </summary>
+    private void HandleDownloadFailure()
+    {
+        _downloadTask = null;
+        Dispatcher.UIThread.Post(() =>
+        {
+            StatusText = "Download failed";
+            Progress = 0;
+            ProgressOpacity = 0;
+            IsProgressVisible = false;
+            IsDownloadEnabled = true;
+        });
+    }
+
     private void Close()
     {
+        _timer.Stop();
         Dispatcher.UIThread.Post(() =>
         {
             Window?.Close();
         });
     }
 
-    private string? UnpackDictionary()
+    /// <summary>
+    /// Downloads every file of the selected dictionary. A LibreOffice entry has direct
+    /// .aff/.dic links that are saved as-is; a legacy entry has a single .oxt/.zip/.xpi
+    /// archive that is unzipped. Sets <see cref="DictionaryFileName"/> to the largest .dic.
+    /// </summary>
+    private async Task DownloadAndUnpackAsync(IReadOnlyList<string> files, IProgress<float> progress, CancellationToken cancellationToken)
     {
         var folder = Se.DictionariesFolder;
-
         if (!Directory.Exists(folder))
         {
             Directory.CreateDirectory(folder);
         }
 
-        var outputFileNames = new List<string>();
+        var dicFiles = new List<string>();
 
-        _downloadStream.Position = 0;
-        _zipUnpacker.UnpackZipStream(
-            _downloadStream,
-            folder,
-            string.Empty,
-            true,
-            new List<string> { ".dic", ".aff" },
-            outputFileNames);
-
-        _downloadStream.Dispose();
-        
-        var dicFiles = outputFileNames.Where(p=>p.EndsWith(".dic")).ToList();
-        if (dicFiles.Count == 0)
+        for (var i = 0; i < files.Count; i++)
         {
-            return string.Empty;
+            var url = files[i];
+            var fileIndex = i;
+            var fileProgress = new Progress<float>(p => progress.Report((fileIndex + p) / files.Count));
+
+            using var stream = new MemoryStream();
+            await _spellCheckDictionaryDownloadService.DownloadDictionary(stream, url, fileProgress, cancellationToken);
+
+            if (stream.Length == 0)
+            {
+                throw new InvalidOperationException($"Dictionary download failed: {url}");
+            }
+
+            stream.Position = 0;
+
+            if (IsHunspellFile(url))
+            {
+                var targetFileName = Path.Combine(folder, GetFileNameFromUrl(url));
+                await using (var fileStream = File.Create(targetFileName))
+                {
+                    await stream.CopyToAsync(fileStream, cancellationToken);
+                }
+
+                if (targetFileName.EndsWith(".dic", StringComparison.OrdinalIgnoreCase))
+                {
+                    dicFiles.Add(targetFileName);
+                }
+            }
+            else
+            {
+                var outputFileNames = new List<string>();
+                _zipUnpacker.UnpackZipStream(
+                    stream,
+                    folder,
+                    string.Empty,
+                    true,
+                    new List<string> { ".dic", ".aff" },
+                    outputFileNames);
+
+                dicFiles.AddRange(outputFileNames.Where(p => p.EndsWith(".dic", StringComparison.OrdinalIgnoreCase)));
+            }
         }
 
+        DictionaryFileName = GetLargestFile(dicFiles);
+    }
+
+    private static bool IsHunspellFile(string url)
+    {
+        var path = RemoveUrlQuery(url);
+        return path.EndsWith(".dic", StringComparison.OrdinalIgnoreCase) ||
+               path.EndsWith(".aff", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string GetFileNameFromUrl(string url)
+    {
+        var path = RemoveUrlQuery(url);
+        var slashIndex = path.LastIndexOf('/');
+        return slashIndex >= 0 ? path.Substring(slashIndex + 1) : path;
+    }
+
+    private static string RemoveUrlQuery(string url)
+    {
+        var queryIndex = url.IndexOf('?');
+        return queryIndex >= 0 ? url.Substring(0, queryIndex) : url;
+    }
+
+    private static string GetLargestFile(IEnumerable<string> files)
+    {
         var largestFileSize = (long)-1;
         var largestFileName = string.Empty;
 
-        foreach (var file in dicFiles)
+        foreach (var file in files)
         {
             var fi = new FileInfo(file);
-            if (fi.Length > largestFileSize)
+            if (fi.Exists && fi.Length > largestFileSize)
             {
                 largestFileSize = fi.Length;
                 largestFileName = file;
@@ -219,11 +323,73 @@ public partial class GetDictionariesViewModel : ObservableObject
         }
     }
 
+    partial void OnSelectedDictionaryChanged(GetSpellCheckDictionaryDisplay? value)
+    {
+        Description = value?.Description ?? string.Empty;
+        UpdateSelectedStatus();
+    }
+
+    /// <summary>
+    /// Marks each dictionary as installed or not by checking the dictionaries folder,
+    /// and updates the green/gray status dots accordingly.
+    /// </summary>
+    private void RefreshInstalledStatus()
+    {
+        var installedDicFiles = new List<string>();
+        if (Directory.Exists(Se.DictionariesFolder))
+        {
+            foreach (var file in Directory.GetFiles(Se.DictionariesFolder, "*.dic"))
+            {
+                installedDicFiles.Add(Path.GetFileName(file));
+            }
+        }
+
+        foreach (var dictionary in Dictionaries)
+        {
+            dictionary.IsInstalled = IsEntryInstalled(dictionary, installedDicFiles);
+            dictionary.StatusBrush = dictionary.IsInstalled ? InstalledBrush : NotInstalledBrush;
+        }
+
+        UpdateSelectedStatus();
+    }
+
+    private void UpdateSelectedStatus()
+    {
+        var selected = SelectedDictionary;
+        if (selected == null)
+        {
+            SelectedStatusBrush = NotInstalledBrush;
+            SelectedStatusText = string.Empty;
+            DownloadButtonText = Se.Language.General.Download;
+            return;
+        }
+
+        SelectedStatusBrush = selected.IsInstalled ? InstalledBrush : NotInstalledBrush;
+        SelectedStatusText = selected.IsInstalled ? Se.Language.General.Installed : Se.Language.General.NotInstalled;
+        DownloadButtonText = selected.IsInstalled ? Se.Language.General.Redownload : Se.Language.General.Download;
+    }
+
+    private static bool IsEntryInstalled(GetSpellCheckDictionaryDisplay entry, List<string> installedDicFiles)
+    {
+        var dicNames = entry.Files
+            .Select(GetFileNameFromUrl)
+            .Where(name => name.EndsWith(".dic", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        if (dicNames.Count > 0)
+        {
+            return dicNames.Any(name => installedDicFiles.Any(f => f.Equals(name, StringComparison.OrdinalIgnoreCase)));
+        }
+
+        return LegacyDicPrefixes.TryGetValue(entry.EnglishName, out var prefix) &&
+               installedDicFiles.Any(f => f.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
+    }
+
     [RelayCommand]
     private void Download()
     {
         var selected = SelectedDictionary;
-        if (selected == null)
+        if (selected == null || selected.Files.Count == 0)
         {
             return;
         }
@@ -241,17 +407,7 @@ public partial class GetDictionariesViewModel : ObservableObject
             StatusText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
         });
 
-        var folder = Se.FfmpegFolder;
-        if (!Directory.Exists(folder))
-        {
-            Directory.CreateDirectory(folder);
-        }
-
-        _downloadTask = _spellCheckDictionaryDownloadService.DownloadDictionary(
-            _downloadStream,
-            selected.DownloadLink,
-            downloadProgress,
-            _cancellationTokenSource.Token);
+        _downloadTask = DownloadAndUnpackAsync(selected.Files, downloadProgress, _cancellationTokenSource.Token);
     }
 
     [RelayCommand]
