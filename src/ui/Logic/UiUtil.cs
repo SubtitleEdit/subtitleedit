@@ -263,17 +263,23 @@ public static class UiUtil
 
     public static Button MakeButtonOk(IRelayCommand? command)
     {
-        return MakeButton(Se.Language.General.Ok, command);
+        var button = MakeButton(Se.Language.General.Ok, command);
+        button.HotKey = new KeyGesture(Key.O, KeyModifiers.Alt);
+        return button;
     }
 
     public static Button MakeButtonDone(IRelayCommand? command)
     {
-        return MakeButton(Se.Language.General.Done, command);
+        var button = MakeButton(Se.Language.General.Done, command);
+        button.HotKey = new KeyGesture(Key.D, KeyModifiers.Alt);
+        return button;
     }
 
     public static Button MakeButtonCancel(IRelayCommand? command)
     {
-        return MakeButton(Se.Language.General.Cancel, command);
+        var button = MakeButton(Se.Language.General.Cancel, command);
+        button.HotKey = new KeyGesture(Key.C, KeyModifiers.Alt);
+        return button;
     }
 
     public static Button MakeButton(IRelayCommand? command, string iconName)
