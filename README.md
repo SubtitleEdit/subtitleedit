@@ -18,7 +18,7 @@ You can find the latest cross-platform builds here:
 ## 💻 System Requirements
 
 ### Windows
-- Minimum: Windows 10 or newer
+- Minimum: Windows 10 version 22H2 (build 19045) or newer, fully updated. Older Windows 10 builds (2004/20H2/21H1/21H2) are end-of-life and may fail to start with a .NET runtime error (`0x80131506`).
 
 ### macOS
 
