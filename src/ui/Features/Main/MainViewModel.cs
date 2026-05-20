@@ -2865,6 +2865,7 @@ public partial class MainViewModel :
             _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
         }
 
+        Renumber();
         _updateAudioVisualizer = true;
     }
 
