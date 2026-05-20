@@ -57,7 +57,7 @@ public class DownloadSpeechToTextModelsWindow : Window
 
 
         var progressBar = UiUtil.MakeProgressBar();
-        progressBar.Margin = new Thickness(0, 0, 0, 0);
+        progressBar.Margin = new Thickness(0, 0, 0, 8);
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
         progressBar.Bind(ProgressBar.OpacityProperty, new Binding(nameof(vm.ProgressOpacity)));
         var statusText = new TextBlock
