@@ -344,40 +344,6 @@ public class ReviewSpeechWindow : Window
 
         var elevenLabsControls = MakeElevenLabsControls(vm);
 
-        var buttonRegenerateAudio = new Button
-        {
-            Content = Se.Language.Video.TextToSpeech.RegenerateAudioSelectedLine,
-            Command = vm.RegenerateAudioCommand,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            Width = double.NaN,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 5),
-        }.WithIconLeft(IconNames.Recycle);
-
-        //var buttonPlay = new Button
-        //{
-        //    Content = Se.Language.General.PlaySelectedLine,
-        //    Command = vm.PlayCommand,
-        //    HorizontalAlignment = HorizontalAlignment.Stretch,
-        //    Width = double.NaN,
-        //    VerticalAlignment = VerticalAlignment.Center,
-        //}.WithIconLeft(IconNames.PlayCircle).WithBindIsVisible(nameof(vm.IsPlayVisible));
-
-        var buttonStop = new Button
-        {
-            Content = Se.Language.General.Stop,
-            Command = vm.StopCommand,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            Width = double.NaN,
-            VerticalAlignment = VerticalAlignment.Center,
-        }.WithIconLeft(IconNames.StopCircle).WithBindIsVisible(nameof(vm.IsStopVisible));
-
-        //var checkBoxAutoContinue = new CheckBox
-        //{
-        //    Content = Se.Language.General.AutoContinue,
-        //    [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.AutoContinue)) { Mode = BindingMode.TwoWay },
-        //};
-
         var grid = new Grid
         {
             RowDefinitions =
@@ -389,9 +355,6 @@ public class ReviewSpeechWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // filler
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -410,10 +373,6 @@ public class ReviewSpeechWindow : Window
         grid.Add(panelLanguage, 4, 0);
         grid.Add(elevenLabsControls, 5, 0);
         // 6 is filler
-        //grid.Add(buttonRegenerateAudio, 7, 0);
-        //grid.Add(buttonPlay, 8, 0);
-        // grid.Add(buttonStop, 8, 0);
-        //  grid.Add(checkBoxAutoContinue, 9, 0);
 
         return UiUtil.MakeBorderForControl(grid);
     }

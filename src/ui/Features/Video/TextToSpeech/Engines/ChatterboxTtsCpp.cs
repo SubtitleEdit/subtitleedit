@@ -649,19 +649,6 @@ public class ChatterboxTtsCpp : ITtsEngine
         AppDomain.CurrentDomain.ProcessExit += (_, _) => StopServerInternal();
     }
 
-    public static void StopServer()
-    {
-        ServerLock.Wait();
-        try
-        {
-            StopServerInternal();
-        }
-        finally
-        {
-            ServerLock.Release();
-        }
-    }
-
     private static void StopServerInternal()
     {
         var p = _serverProcess;

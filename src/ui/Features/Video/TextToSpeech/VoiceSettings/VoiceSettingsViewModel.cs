@@ -167,7 +167,7 @@ public partial class VoiceSettingsViewModel : ObservableObject
             return;
         }
 
-        Dispatcher.UIThread.Post(async () => await ImportVoiceFromFileAsync(fileName));
+        Dispatcher.UIThread.PostSafe(() => ImportVoiceFromFileAsync(fileName));
     }
 
     private static bool HasSupportedAudioFile(DragEventArgs e)
