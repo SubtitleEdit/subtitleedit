@@ -118,16 +118,16 @@ public class GetDictionariesWindow : Window
             [!TextBox.TextProperty] = new Binding(nameof(vm.DictionariesFolder)),
         };
 
-        grid.Add(MakeLabel("Dictionary"), 0, 0);
+        grid.Add(MakeLabel(Se.Language.General.Dictionary), 0, 0);
         grid.Add(combo, 0, 1);
 
-        grid.Add(MakeLabel("Status"), 1, 0);
+        grid.Add(MakeLabel(Se.Language.General.Status), 1, 0);
         grid.Add(MakeStatusPanel(nameof(vm.SelectedStatusBrush), nameof(vm.SelectedStatusText)), 1, 1);
 
-        grid.Add(MakeLabel("Description"), 2, 0);
+        grid.Add(MakeLabel(Se.Language.General.Description), 2, 0);
         grid.Add(description, 2, 1);
 
-        grid.Add(MakeLabel("Folder"), 3, 0);
+        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 3, 0);
         grid.Add(folder, 3, 1);
 
         return new Border
@@ -156,7 +156,6 @@ public class GetDictionariesWindow : Window
             HorizontalAlignment = HorizontalAlignment.Center,
             Margin = new Thickness(0, 4, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.StatusText)),
-            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsProgressVisible)),
         };
 
         return new StackPanel

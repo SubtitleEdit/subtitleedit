@@ -112,45 +112,60 @@ public partial class GetDictionariesViewModel : ObservableObject
     {
         lock (_lockObj)
         {
-            if (_done)
+            if (_done || _downloadTask == null)
             {
                 return;
             }
 
-            if (_downloadTask is { IsFaulted: true } or { IsCanceled: true })
+            var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
+            if (_downloadTask.IsCanceled || ex is OperationCanceledException)
             {
                 _timer.Stop();
                 _done = true;
-                var ex = _downloadTask.Exception?.InnerException ?? _downloadTask.Exception;
-                if (_downloadTask.IsCanceled || ex is OperationCanceledException)
-                {
-                    StatusText = "Download canceled";
-                    Close();
-                }
-                else
-                {
-                    StatusText = "Download failed";
-                }
+                StatusText = "Download canceled";
+                Close();
+            }
+            else if (_downloadTask is { IsFaulted: true })
+            {
+                HandleDownloadFailure();
             }
             else if (_downloadTask is { IsCompletedSuccessfully: true })
             {
-                _timer.Stop();
-                _done = true;
-
                 if (string.IsNullOrEmpty(DictionaryFileName))
                 {
-                    StatusText = "Download failed";
-                    return;
+                    HandleDownloadFailure();
                 }
-
-                OkPressed = true;
-                Close();
+                else
+                {
+                    _timer.Stop();
+                    _done = true;
+                    OkPressed = true;
+                    Close();
+                }
             }
         }
     }
 
+    /// <summary>
+    /// Resets the window to its idle state after a failed download so the user can
+    /// retry or close it normally. The timer keeps running to pick up a retry.
+    /// </summary>
+    private void HandleDownloadFailure()
+    {
+        _downloadTask = null;
+        Dispatcher.UIThread.Post(() =>
+        {
+            StatusText = "Download failed";
+            Progress = 0;
+            ProgressOpacity = 0;
+            IsProgressVisible = false;
+            IsDownloadEnabled = true;
+        });
+    }
+
     private void Close()
     {
+        _timer.Stop();
         Dispatcher.UIThread.Post(() =>
         {
             Window?.Close();
@@ -350,8 +365,8 @@ public partial class GetDictionariesViewModel : ObservableObject
         }
 
         SelectedStatusBrush = selected.IsInstalled ? InstalledBrush : NotInstalledBrush;
-        SelectedStatusText = selected.IsInstalled ? "Installed" : "Not installed";
-        DownloadButtonText = selected.IsInstalled ? "Re-download" : Se.Language.General.Download;
+        SelectedStatusText = selected.IsInstalled ? Se.Language.General.Installed : Se.Language.General.NotInstalled;
+        DownloadButtonText = selected.IsInstalled ? Se.Language.General.Redownload : Se.Language.General.Download;
     }
 
     private static bool IsEntryInstalled(GetSpellCheckDictionaryDisplay entry, List<string> installedDicFiles)

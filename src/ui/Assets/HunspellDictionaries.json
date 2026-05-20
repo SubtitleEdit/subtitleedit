@@ -387,7 +387,7 @@
     "EnglishName": "Khmer",
     "NativeName": "ខ្មែរ",
     "Files": [
-      "http://downloads.sourceforge.net/project/aoo-extensions/5067/2/dict-km.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fkhmer-spelling-dictionary&amp;ts=1373998173&amp;use_mirror=netcologne"
+      "https://downloads.sourceforge.net/project/aoo-extensions/5067/2/dict-km.oxt"
     ],
     "Description": "Khmer spelling dictionary 2011.05.11"
   },
@@ -447,7 +447,7 @@
     "EnglishName": "Macedonian",
     "NativeName": "Македонски",
     "Files": [
-      "http://downloads.sourceforge.net/project/aoo-extensions/3403/0/dict-mk.oxt"
+      "https://downloads.sourceforge.net/project/aoo-extensions/3403/0/dict-mk.oxt"
     ],
     "Description": "Macedonian dictionary was created by Taras Bendik"
   },
@@ -455,7 +455,7 @@
     "EnglishName": "Malay",
     "NativeName": "Bahasa Melayu",
     "Files": [
-      "http://downloads.sourceforge.net/project/aoo-extensions/3904/0/ms_my.oxt"
+      "https://downloads.sourceforge.net/project/aoo-extensions/3904/0/ms_my.oxt"
     ],
     "Description": "Malay Spell Checker v0.1 - 07/10/04"
   },
@@ -782,7 +782,7 @@
     "EnglishName": "Zulu",
     "NativeName": "isiZulu",
     "Files": [
-      "https://downloads.sourceforge.net/project/aoo-extensions/3132/3/dict-zu_za-2010.01.26.oxt?ts=gAAAAABl8wwk0LSrL-Co9B6dhwP__TVfnFtKRlLCcpi7LQ95GaviSGizVP6yGTHQpmPbvamIUfkt3Pqx79EvbTFP1GSBGlEdGQ%3D%3D&amp;r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Faoo-extensions%2Ffiles%2F3132%2F3%2Fdict-zu_za-2010.01.26.oxt%2Fdownload"
+      "https://downloads.sourceforge.net/project/aoo-extensions/3132/3/dict-zu_za-2010.01.26.oxt"
     ],
     "Description": "Zulu spell checker"
   }
