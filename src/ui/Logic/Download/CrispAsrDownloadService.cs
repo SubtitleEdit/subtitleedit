@@ -12,8 +12,6 @@ public interface ICrispAsrDownloadService
     Task DownloadEngine(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
     Task DownloadEngineWindowsCuda(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
     Task DownloadEngineWindowsVulkan(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
-    Task DownloadEngineWindowsCpu(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
-    Task DownloadEngineWindowsCpuLegacy(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
     Task DownloadEngineLinuxCuda(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
 }
 
@@ -21,14 +19,16 @@ public class CrispAsrDownloadService : ICrispAsrDownloadService
 {
     private readonly HttpClient _httpClient;
 
-    private const string WindowsCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.7/crispasr-windows-x86_64-cuda.zip";
-    private const string WindowsVulkanUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.7/crispasr-windows-x86_64-vulkan.zip";
-    private const string WindowsCpuUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.7/crispasr-windows-x86_64-cpu.zip";
-    private const string WindowsCpuLegacyUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.7/crispasr-windows-x86_64-cpu-legacy.zip";
-    private const string MacUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.7/crispasr-macos.tar.gz";
-    private const string LinuxUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.7/crispasr-linux-x86_64.tar.gz";
-    private const string LinuxCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.7/crispasr-linux-x86_64-cuda.tar.gz";
-    private const string LinuxArmUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.7/crispasr-linux-arm64.tar.gz";
+    // Windows CPU and CPU-legacy builds were dropped upstream after v0.6.7; users on
+    // Windows now pick Vulkan (default) or CUDA. Existing CPU installs from older SE
+    // builds keep working — only the *download* path is gone, detection of an
+    // already-installed CPU build still lives in DownloadHashManager.
+    private const string WindowsCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.8/crispasr-windows-x86_64-cuda.zip";
+    private const string WindowsVulkanUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.8/crispasr-windows-x86_64-vulkan.zip";
+    private const string MacUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.8/crispasr-macos.tar.gz";
+    private const string LinuxUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.8/crispasr-linux-x86_64.tar.gz";
+    private const string LinuxCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.8/crispasr-linux-x86_64-cuda.tar.gz";
+    private const string LinuxArmUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.8/crispasr-linux-arm64.tar.gz";
 
     public CrispAsrDownloadService(HttpClient httpClient)
     {
@@ -48,16 +48,6 @@ public class CrispAsrDownloadService : ICrispAsrDownloadService
     public async Task DownloadEngineWindowsVulkan(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(_httpClient, WindowsVulkanUrl, stream, progress, cancellationToken);
-    }
-
-    public async Task DownloadEngineWindowsCpu(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
-    {
-        await DownloadHelper.DownloadFileAsync(_httpClient, WindowsCpuUrl, stream, progress, cancellationToken);
-    }
-
-    public async Task DownloadEngineWindowsCpuLegacy(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
-    {
-        await DownloadHelper.DownloadFileAsync(_httpClient, WindowsCpuLegacyUrl, stream, progress, cancellationToken);
     }
 
     public async Task DownloadEngineLinuxCuda(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)

@@ -102,7 +102,7 @@ public static class CrispAsrTranslateDownloadHelper
                 owner, vm =>
                 {
                     vm.Engine = engine;
-                    vm.CrispAsrWindowsVariant = "cpu";
+                    vm.CrispAsrWindowsVariant = "vulkan";
                     vm.StartDownload();
                 });
 
