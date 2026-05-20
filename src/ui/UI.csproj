@@ -156,6 +156,9 @@
 		<AvaloniaResource Include="Assets\SpeechToText\CrispASRFireRed.txt">
 		  <CopyToOutputDirectory></CopyToOutputDirectory>
 		</AvaloniaResource>
+		<AvaloniaResource Include="Assets\SpeechToText\CrispASRFun-ASRMLTNano.txt">
+		  <CopyToOutputDirectory></CopyToOutputDirectory>
+		</AvaloniaResource>
 		<AvaloniaResource Include="Assets\SpeechToText\CrispASRGLM.txt">
 		  <CopyToOutputDirectory></CopyToOutputDirectory>
 		</AvaloniaResource>

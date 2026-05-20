@@ -98,11 +98,25 @@ public static class CrispAsrTranslateDownloadHelper
 
         if (!engine.IsEngineInstalled())
         {
+            // CrispASR no longer ships a CPU build for Windows; ask the user whether to grab the
+            // Vulkan or CUDA archive — the same prompt the speech-to-text and TTS flows use — so
+            // we don't silently download a runtime the machine can't actually use.
+            string variant = "vulkan";
+            if (Configuration.IsRunningOnWindows)
+            {
+                var chosen = await ChooseCrispAsrWindowsVariantAsync(owner);
+                if (chosen == null)
+                {
+                    return null;
+                }
+                variant = chosen;
+            }
+
             var engineVm = await windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
                 owner, vm =>
                 {
                     vm.Engine = engine;
-                    vm.CrispAsrWindowsVariant = "vulkan";
+                    vm.CrispAsrWindowsVariant = variant;
                     vm.StartDownload();
                 });
 
@@ -211,5 +225,47 @@ public static class CrispAsrTranslateDownloadHelper
         await DownloadAsync(owner, windowService, preselectModelName, autoStartModelDownload: !string.IsNullOrEmpty(preselectModelName));
 
         return IsReady(preselectModelName);
+    }
+
+    private static async Task<string?> ChooseCrispAsrWindowsVariantAsync(Window owner)
+    {
+        var answer = await MessageBox.Show(
+            owner,
+            "Download CrispASR?",
+            $"{System.Environment.NewLine}\"{CrispAsrMadladTranslate.StaticName}\" requires downloading the CrispASR engine.{System.Environment.NewLine}{System.Environment.NewLine}Select a version to download:",
+            MessageBoxButtons.Cancel,
+            MessageBoxIcon.Question,
+            "Vulkan",
+            "CUDA");
+
+        if (answer == MessageBoxResult.None || answer == MessageBoxResult.Cancel)
+        {
+            return null;
+        }
+
+        var variant = answer == MessageBoxResult.Custom2 ? "cuda" : "vulkan";
+
+        if (variant == "vulkan" && !VulkanHelper.IsInstalled())
+        {
+            var vulkanAnswer = await MessageBox.Show(
+                owner,
+                "Vulkan SDK may be required",
+                $"The Vulkan version requires the Vulkan SDK to be installed.{System.Environment.NewLine}{System.Environment.NewLine}You can download it from:{System.Environment.NewLine}https://vulkan.lunarg.com/sdk/home{System.Environment.NewLine}{System.Environment.NewLine}Continue with Vulkan download?",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+
+            if (vulkanAnswer == MessageBoxResult.No)
+            {
+                UiUtil.OpenUrl("https://vulkan.lunarg.com/sdk/home");
+                return null;
+            }
+
+            if (vulkanAnswer != MessageBoxResult.Yes)
+            {
+                return null;
+            }
+        }
+
+        return variant;
     }
 }

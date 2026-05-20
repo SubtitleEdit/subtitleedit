@@ -1,0 +1,6 @@
+
+🌐 Fun-ASR MLT Nano
+
+Type: Speech-LLM (SANM encoder + Qwen3-0.6B AR decoder)
+Focus: 🎯 Multilingual ASR with native LID, 31 languages
+

@@ -20,9 +20,10 @@ public class CrispAsrDownloadService : ICrispAsrDownloadService
     private readonly HttpClient _httpClient;
 
     // Windows CPU and CPU-legacy builds were dropped upstream after v0.6.7; users on
-    // Windows now pick Vulkan (default) or CUDA. Existing CPU installs from older SE
-    // builds keep working — only the *download* path is gone, detection of an
-    // already-installed CPU build still lives in DownloadHashManager.
+    // Windows now pick Vulkan (default) or CUDA. Detection of older CPU/CPU-legacy
+    // installs was also removed — DetectCrispAsrWindowsVariant only recognises Vulkan
+    // and CUDA, so a leftover CPU-only crispasr.exe reads as "unknown" and the engine
+    // settings page will prompt the user to re-download as Vulkan or CUDA.
     private const string WindowsCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.8/crispasr-windows-x86_64-cuda.zip";
     private const string WindowsVulkanUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.8/crispasr-windows-x86_64-vulkan.zip";
     private const string MacUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.8/crispasr-macos.tar.gz";

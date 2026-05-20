@@ -543,7 +543,7 @@ public static class DownloadHashManager
 
     /// <summary>
     /// Resolves the CrispASR hash key for the current OS and variant.
-    /// On Windows the variant selects between cuda/vulkan/cpu/cpu-legacy.
+    /// On Windows the variant selects between cuda and vulkan.
     /// On Linux x86_64 the variant selects between cuda and the default CPU build.
     /// Returns null if the platform / variant combination is unknown.
     /// </summary>
