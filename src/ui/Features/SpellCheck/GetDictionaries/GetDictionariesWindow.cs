@@ -142,14 +142,9 @@ public class GetDictionariesWindow : Window
 
     private static StackPanel BuildProgress(GetDictionariesViewModel vm)
     {
-        var bar = new ProgressBar
-        {
-            Minimum = 0,
-            Maximum = 100,
-            Height = 8,
-            [!ProgressBar.ValueProperty] = new Binding(nameof(vm.Progress)),
-            [!Visual.OpacityProperty] = new Binding(nameof(vm.ProgressOpacity)),
-        };
+        var bar = UiUtil.MakeProgressBar();
+        bar[!ProgressBar.ValueProperty] = new Binding(nameof(vm.Progress));
+        bar[!Visual.OpacityProperty] = new Binding(nameof(vm.ProgressOpacity));
 
         var status = new TextBlock
         {

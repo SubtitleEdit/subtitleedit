@@ -341,36 +341,13 @@ public class TextToSpeechWindow : Window
             [!Label.ContentProperty] = new Binding(nameof(vm.ProgressText)) { Mode = BindingMode.TwoWay },
         };
 
-        var progressSlider = new Slider
-        {
-            Minimum = 0,
-            Maximum = 100,
-            IsHitTestVisible = false,
-            Focusable = false,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            Styles =
-            {
-                new Style(x => x.OfType<Thumb>())
-                {
-                    Setters =
-                    {
-                        new Setter(Thumb.IsVisibleProperty, false)
-                    }
-                },
-                new Style(x => x.OfType<Track>())
-                {
-                    Setters =
-                    {
-                        new Setter(Track.HeightProperty, 6.0)
-                    }
-                },
-            }
-        };
-        progressSlider.Bind(Slider.ValueProperty, new Binding(nameof(vm.ProgressValue)));
+        var progressBar = UiUtil.MakeProgressBar();
+        progressBar.Width = double.NaN;
+        progressBar.HorizontalAlignment = HorizontalAlignment.Stretch;
+        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
 
         grid.Add(label, 0, 0);
-        grid.Add(progressSlider, 0, 0);
+        grid.Add(progressBar, 0, 0);
 
         return grid;
     }

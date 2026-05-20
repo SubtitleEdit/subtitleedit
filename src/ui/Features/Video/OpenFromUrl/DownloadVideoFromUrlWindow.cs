@@ -38,27 +38,10 @@ public class DownloadVideoFromUrlWindow : Window
             [!TextBlock.TextProperty] = new Binding(nameof(vm.FileNameDisplay)),
         };
 
-        var progressSlider = new Slider
-        {
-            Minimum = 0,
-            Maximum = 100,
-            IsHitTestVisible = false,
-            Focusable = false,
-            MinWidth = 400,
-            Margin = new Thickness(0, 4, 0, 0),
-            Styles =
-            {
-                new Style(x => x.OfType<Thumb>())
-                {
-                    Setters = { new Setter(Thumb.IsVisibleProperty, false) }
-                },
-                new Style(x => x.OfType<Track>())
-                {
-                    Setters = { new Setter(Track.HeightProperty, 6.0) }
-                },
-            }
-        };
-        progressSlider.Bind(Slider.ValueProperty, new Binding(nameof(vm.Progress)));
+        var progressBar = UiUtil.MakeProgressBar();
+        progressBar.MinWidth = 400;
+        progressBar.Margin = new Thickness(0, 4, 0, 0);
+        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.Progress)));
 
         var statusText = new TextBlock { Opacity = 0.85 };
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.StatusText)));
@@ -85,7 +68,7 @@ public class DownloadVideoFromUrlWindow : Window
             {
                 heading,
                 fileName,
-                progressSlider,
+                progressBar,
                 statusText,
                 errorText,
                 buttonBar,

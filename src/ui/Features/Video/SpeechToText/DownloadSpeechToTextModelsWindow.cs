@@ -56,34 +56,10 @@ public class DownloadSpeechToTextModelsWindow : Window
         };
 
 
-        var progressSlider = new Slider
-        {
-            Height = 8,
-            Margin = new Thickness(0, 0, 0, 0),
-            Minimum = 0,
-            Maximum = 100,
-            IsHitTestVisible = false,
-            Focusable = false,
-            Styles =
-            {
-                new Style(x => x.OfType<Thumb>())
-                {
-                    Setters =
-                    {
-                        new Setter(Thumb.IsVisibleProperty, false)
-                    }
-                },
-                new Style(x => x.OfType<Track>())
-                {
-                    Setters =
-                    {
-                        new Setter(Track.HeightProperty, 6.0)
-                    }
-                },
-            }
-        };
-        progressSlider.Bind(Slider.ValueProperty, new Binding(nameof(vm.ProgressValue)));
-        progressSlider.Bind(Slider.OpacityProperty, new Binding(nameof(vm.ProgressOpacity)));
+        var progressBar = UiUtil.MakeProgressBar();
+        progressBar.Margin = new Thickness(0, 0, 0, 0);
+        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
+        progressBar.Bind(ProgressBar.OpacityProperty, new Binding(nameof(vm.ProgressOpacity)));
         var statusText = new TextBlock
         {
             Margin = new Thickness(0, 1, 0, 1),
@@ -106,7 +82,7 @@ public class DownloadSpeechToTextModelsWindow : Window
             Margin = new Thickness(0, 35, 0, 10),
             Children =
             {
-                progressSlider,
+                progressBar,
                 statusText,
                 fileText,
             }

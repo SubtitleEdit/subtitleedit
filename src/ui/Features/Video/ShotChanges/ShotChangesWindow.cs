@@ -160,33 +160,9 @@ public class ShotChangesWindow : Window
             }
         };
 
-        var sliderProgress = new Slider
-        {
-            Minimum = 0,
-            Maximum = 100,
-            IsHitTestVisible = false,
-            Focusable = false,
-            MinWidth = 400,
-            Styles =
-            {
-                new Style(x => x.OfType<Thumb>())
-                {
-                    Setters =
-                    {
-                        new Setter(Thumb.IsVisibleProperty, false)
-                    }
-                },
-                new Style(x => x.OfType<Track>())
-                {
-                    Setters =
-                    {
-                        new Setter(Track.HeightProperty, 2.0)
-                    }
-                },
-            },
-            [!Slider.ValueProperty] = new Binding(nameof(vm.ProgressValue)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
-            
-        };
+        var progressBar = UiUtil.MakeProgressBar();
+        progressBar.MinWidth = 400;
+        progressBar[!ProgressBar.ValueProperty] = new Binding(nameof(vm.ProgressValue)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged };
         var progressText = UiUtil.MakeLabel().WithBindText(vm, nameof(ShotChangesViewModel.ProgressText)).WithAlignmentCenter().WithMarginTop(14); 
         var gridProgress = new Grid
         {
@@ -201,7 +177,7 @@ public class ShotChangesWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
         };
-        gridProgress.Add(sliderProgress, 0);    
+        gridProgress.Add(progressBar, 0);
         gridProgress.Add(progressText, 0);
 
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 0);
