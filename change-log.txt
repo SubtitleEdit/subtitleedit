@@ -16,6 +16,7 @@ v5.0.0-beta29 (xth May 2026)
 * Get spell check dictionaries from the maintained LibreOffice repository and redesign the dialog
 * Select first row after OCR completes - thx LurkingNinja
 * Trim long paths in the Reopen menu and tighten menu spacing
+* Use a consistent, thicker progress bar across download and progress windows
 * seconv: reject unknown --encoding values and add --encoding:source
 * Update Bulgarian translation - thx jekovcar
 * Update Russian translation - thx jekovcar
@@ -23,6 +24,7 @@ v5.0.0-beta29 (xth May 2026)
 * Fix Text-to-speech async and Piper engine bugs
 * Fix Edge TTS crash on bad rate format and retry transient failures - thx KevinHa59
 * Fix shortcut window not receiving focus
+* Fix Cancel button being clipped in the llama.cpp and speech-to-text engine download windows
 
 -----------------------------------------------------------------------------------------------------
 
