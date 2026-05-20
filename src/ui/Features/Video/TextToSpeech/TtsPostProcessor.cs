@@ -30,10 +30,7 @@ public static class TtsPostProcessor
             {
                 var proChainOutput = Path.Combine(waveFolder, $"pro_{Guid.NewGuid()}.wav");
                 var proProcess = FfmpegGenerator.ApplyProAudioChain(currentFile, proChainOutput);
-#pragma warning disable CA1416 // Validate platform compatibility
-                _ = proProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-                await proProcess.WaitForExitAsync(cancellationToken);
+                await proProcess.StartAndWaitAsync(cancellationToken);
 
                 if (File.Exists(proChainOutput))
                 {
@@ -50,17 +47,11 @@ public static class TtsPostProcessor
             {
                 var silenceFile = Path.Combine(waveFolder, $"pad_{Guid.NewGuid()}.wav");
                 var silenceProcess = FfmpegGenerator.GenerateSilence(silenceFile, silencePaddingMs);
-#pragma warning disable CA1416 // Validate platform compatibility
-                _ = silenceProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-                await silenceProcess.WaitForExitAsync(cancellationToken);
+                await silenceProcess.StartAndWaitAsync(cancellationToken);
 
                 var paddedOutput = Path.Combine(waveFolder, $"padded_{Guid.NewGuid()}.wav");
                 var concatProcess = FfmpegGenerator.ConcatAudio(currentFile, silenceFile, paddedOutput);
-#pragma warning disable CA1416 // Validate platform compatibility
-                _ = concatProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-                await concatProcess.WaitForExitAsync(cancellationToken);
+                await concatProcess.StartAndWaitAsync(cancellationToken);
 
                 SafeDelete(silenceFile);
                 if (File.Exists(paddedOutput))
@@ -78,10 +69,7 @@ public static class TtsPostProcessor
             {
                 var resampledOutput = Path.Combine(waveFolder, $"sr_{Guid.NewGuid()}.wav");
                 var srProcess = FfmpegGenerator.ChangeSampleRate(currentFile, resampledOutput, outputSampleRate);
-#pragma warning disable CA1416 // Validate platform compatibility
-                _ = srProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-                await srProcess.WaitForExitAsync(cancellationToken);
+                await srProcess.StartAndWaitAsync(cancellationToken);
 
                 if (File.Exists(resampledOutput))
                 {

@@ -110,72 +110,79 @@ public partial class ReviewSpeechViewModel : ObservableObject
         _timer.Start();
     }
 
-    private void OnTimerOnElapsed(object? sender, ElapsedEventArgs args)
+    private async void OnTimerOnElapsed(object? sender, ElapsedEventArgs args)
     {
-        _timer.Stop();
-
-        if (_cancellationTokenSource.IsCancellationRequested || _mpvContext == null)
+        try
         {
-            IsPlayVisible = true;
-            IsStopVisible = false;
-            foreach (var l in Lines)
+            _timer.Stop();
+
+            if (_cancellationTokenSource.IsCancellationRequested || _mpvContext == null)
             {
-                l.IsPlaying = false;
-                l.IsPlayingEnabled = true;
+                IsPlayVisible = true;
+                IsStopVisible = false;
+                foreach (var l in Lines)
+                {
+                    l.IsPlaying = false;
+                    l.IsPlayingEnabled = true;
+                }
+
+                return;
             }
 
-            return;
-        }
+            var paused = _mpvContext.IsPaused;
 
-        var paused = _mpvContext.IsPaused;
-
-        var line = SelectedLine;
-        var timeSinceStart = TimeSpan.FromTicks(DateTime.UtcNow.Ticks - _startPlayTicks);
-        if (paused && AutoContinue && !_skipAutoContinue && line != null && timeSinceStart.TotalMilliseconds > 500)
-        {
-            Dispatcher.UIThread.Invoke<Task>(async () =>
+            var line = SelectedLine;
+            var timeSinceStart = TimeSpan.FromTicks(DateTime.UtcNow.Ticks - _startPlayTicks);
+            if (paused && AutoContinue && !_skipAutoContinue && line != null && timeSinceStart.TotalMilliseconds > 500)
             {
-                line.IsPlaying = false;
-                var index = Lines.IndexOf(line);
-                if (index < Lines.Count - 1)
+                await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
-                    var nextLine = Lines[index + 1];
-                    nextLine.IsPlaying = true;
-                    SelectedLine = nextLine;
-                    LineGrid.ScrollIntoView(nextLine, null);
-                    await PlayAudio(nextLine.StepResult.CurrentFileName);
-                }
-                else
-                {
-                    _skipAutoContinue = true; // no more lines to play
-
-                    IsPlayVisible = true;
-                    IsStopVisible = false;
-                    foreach (var l in Lines)
+                    line.IsPlaying = false;
+                    var index = Lines.IndexOf(line);
+                    if (index < Lines.Count - 1)
                     {
-                        l.IsPlaying = false;
-                        l.IsPlayingEnabled = true;
+                        var nextLine = Lines[index + 1];
+                        nextLine.IsPlaying = true;
+                        SelectedLine = nextLine;
+                        LineGrid.ScrollIntoView(nextLine, null);
+                        await PlayAudio(nextLine.StepResult.CurrentFileName);
                     }
-                }
-            });
+                    else
+                    {
+                        _skipAutoContinue = true; // no more lines to play
 
-            return;
-        }
+                        IsPlayVisible = true;
+                        IsStopVisible = false;
+                        foreach (var l in Lines)
+                        {
+                            l.IsPlaying = false;
+                            l.IsPlayingEnabled = true;
+                        }
+                    }
+                });
 
-        IsPlayVisible = paused;
-        IsStopVisible = !paused;
-
-        if (paused)
-        {
-            foreach (var l in Lines)
-            {
-                l.IsPlaying = false;
-                l.IsPlayingEnabled = true;
+                return;
             }
-            return;
-        }
 
-        _timer.Start();
+            IsPlayVisible = paused;
+            IsStopVisible = !paused;
+
+            if (paused)
+            {
+                foreach (var l in Lines)
+                {
+                    l.IsPlaying = false;
+                    l.IsPlayingEnabled = true;
+                }
+                return;
+            }
+
+            _timer.Start();
+        }
+        catch (Exception ex)
+        {
+            SeLogger.Error(ex, "Error in ReviewSpeech playback timer.");
+        }
     }
 
     private async Task PlayAudio(string fileName)
@@ -502,22 +509,12 @@ public partial class ReviewSpeechViewModel : ObservableObject
             return;
         }
 
-        IsRegenerateEnabled = false;
-        if (!engine.IsVoiceInstalled(voice) && voice.EngineVoice is PiperVoice piperVoice)
+        if (!await TtsVoiceInstaller.EnsureVoiceInstalled(engine, voice, Window, _windowService))
         {
-            var modelFileName = Path.Combine(Piper.GetSetPiperFolder(), piperVoice.ModelShort);
-            var configFileName = Path.Combine(Piper.GetSetPiperFolder(), piperVoice.ConfigShort);
-            if (!File.Exists(modelFileName) || !File.Exists(configFileName))
-            {
-                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadPiperVoice(piperVoice));
-                if (!dlResult.OkPressed)
-                {
-                    SafeDelete(modelFileName);
-                    SafeDelete(configFileName);
-                    return;
-                }
-            }
+            return;
         }
+
+        IsRegenerateEnabled = false;
 
         var oldStyle = SelectedStyle;
         if (engine is Murf && !string.IsNullOrEmpty(SelectedStyle))
@@ -579,18 +576,6 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         _skipAutoContinue = true;
         await PlayAudio(line.StepResult.CurrentFileName);
-    }
-
-    private static void SafeDelete(string fileName)
-    {
-        try
-        {
-            File.Delete(fileName);
-        }
-        catch
-        {
-            // ignore
-        }
     }
 
     [RelayCommand]
@@ -676,7 +661,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             });
         }
 
-        StepResults = Enumerable.Where<ReviewRow>(Lines, p => p.Include).Select(p => p.StepResult).ToArray();
+        StepResults = Lines.Where(p => p.Include).Select(p => p.StepResult).ToArray();
 
 
         Se.SaveSettings();
@@ -709,10 +694,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         // Step 1: Trim silence from start and end
         var outputFileNameTrim = Path.Combine(_waveFolder, Guid.NewGuid() + ".wav");
         var trimProcess = FfmpegGenerator.TrimSilenceStartAndEnd(item.CurrentFileName, outputFileNameTrim);
-#pragma warning disable CA1416 // Validate platform compatibility
-        _ = trimProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-        await trimProcess.WaitForExitAsync(_cancellationToken);
+        await trimProcess.StartAndWaitAsync(_cancellationToken);
 
         var currentFile = outputFileNameTrim;
 
@@ -721,10 +703,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         {
             var vadOutput = Path.Combine(_waveFolder, $"vad_{Guid.NewGuid()}.wav");
             var vadProcess = FfmpegGenerator.CompressInternalSilence(currentFile, vadOutput, vadMaxSilence);
-#pragma warning disable CA1416 // Validate platform compatibility
-            _ = vadProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-            await vadProcess.WaitForExitAsync(_cancellationToken);
+            await vadProcess.StartAndWaitAsync(_cancellationToken);
 
             if (File.Exists(vadOutput) && new FileInfo(vadOutput).Length > 0)
             {
@@ -789,19 +768,13 @@ public partial class ReviewSpeechViewModel : ObservableObject
         {
             speedProcess = FfmpegGenerator.ChangeSpeed(currentFile, outputFileName2, (float)factor);
         }
-#pragma warning disable CA1416 // Validate platform compatibility
-        _ = speedProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-        await speedProcess.WaitForExitAsync(_cancellationToken);
+        await speedProcess.StartAndWaitAsync(_cancellationToken);
 
         // Fallback: if rubberband failed, retry with atempo
         if (doHighQualityStretch && (!File.Exists(outputFileName2) || new FileInfo(outputFileName2).Length == 0))
         {
             var fallbackProcess = FfmpegGenerator.ChangeSpeed(currentFile, outputFileName2, (float)factor);
-#pragma warning disable CA1416 // Validate platform compatibility
-            _ = fallbackProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-            await fallbackProcess.WaitForExitAsync(_cancellationToken);
+            await fallbackProcess.StartAndWaitAsync(_cancellationToken);
         }
 
         return new TtsStepResult
@@ -835,7 +808,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 return;
             }
 
-            RegenerateAudio(SelectedLine).ConfigureAwait(false);
+            if (RegenerateAudioCommand.CanExecute(line))
+            {
+                RegenerateAudioCommand.Execute(line);
+            }
         }
     }
 
@@ -852,7 +828,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             return;
         }
 
-        Dispatcher.UIThread.Post(async () =>
+        Dispatcher.UIThread.PostSafe(async () =>
         {
             var voices = await engine.GetVoices(SelectedLanguage?.Code ?? string.Empty);
             Voices.Clear();
@@ -861,14 +837,14 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 Voices.Add(vo);
             }
 
-            var lastVoice = Enumerable.FirstOrDefault<Voice>(Voices, v => v.Name == Se.Settings.Video.TextToSpeech.Voice);
+            var lastVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice);
             if (lastVoice == null)
             {
-                lastVoice = Enumerable.FirstOrDefault<Voice>(Voices, p => p.Name.StartsWith("en", StringComparison.OrdinalIgnoreCase) ||
-                                                                          p.Name.Contains("English", StringComparison.OrdinalIgnoreCase));
+                lastVoice = Voices.FirstOrDefault(p => p.Name.StartsWith("en", StringComparison.OrdinalIgnoreCase) ||
+                                                      p.Name.Contains("English", StringComparison.OrdinalIgnoreCase));
             }
 
-            SelectedVoice = lastVoice ?? Enumerable.First<Voice>(Voices);
+            SelectedVoice = lastVoice ?? Voices.First();
 
             if (engine.HasLanguageParameter)
             {
@@ -879,7 +855,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
                     Languages.Add(language);
                 }
 
-                SelectedLanguage = Enumerable.FirstOrDefault<TtsLanguage>(Languages);
+                SelectedLanguage = Languages.FirstOrDefault();
             }
 
             if (engine.HasRegion)
@@ -891,7 +867,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
                     Regions.Add(region);
                 }
 
-                SelectedRegion = Enumerable.FirstOrDefault<string>(Regions);
+                SelectedRegion = Regions.FirstOrDefault();
             }
 
             if (engine.HasModel)
@@ -903,7 +879,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
                     Models.Add(model);
                 }
 
-                SelectedModel = Enumerable.FirstOrDefault<string>(Models);
+                SelectedModel = Models.FirstOrDefault();
             }
 
             IsElevenLabsControlsVisible = false;
@@ -921,23 +897,23 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 SelectedModel = Se.Settings.Video.TextToSpeech.ElevenLabsModel;
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
-                    SelectedModel = Enumerable.First<string>(Models);
+                    SelectedModel = Models.First();
                 }
             }
             else if (engine is Qwen3TtsCpp)
             {
-                SelectedModel = Enumerable.FirstOrDefault<string>(Models, p => p == Se.Settings.Video.TextToSpeech.Qwen3TtsCppModel);
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.Qwen3TtsCppModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
-                    SelectedModel = Enumerable.FirstOrDefault<string>(Models);
+                    SelectedModel = Models.FirstOrDefault();
                 }
             }
             else if (engine is ChatterboxTtsCpp)
             {
-                SelectedModel = Enumerable.FirstOrDefault<string>(Models, p => p == Se.Settings.Video.TextToSpeech.ChatterboxModel);
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.ChatterboxModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
-                    SelectedModel = Enumerable.FirstOrDefault<string>(Models);
+                    SelectedModel = Models.FirstOrDefault();
                 }
             }
         });
@@ -953,20 +929,20 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         if (engine is Murf murf)
         {
-            Dispatcher.UIThread.Post(async () =>
+            Dispatcher.UIThread.PostSafe(async () =>
             {
                 var voices = await murf.GetVoices(SelectedLanguage?.Code ?? string.Empty);
                 Voices.Clear();
                 ObservableCollectionExtensions.AddRange(Voices, voices);
 
-                var lastVoice = Enumerable.FirstOrDefault<Voice>(Voices, v => v.Name == Se.Settings.Video.TextToSpeech.Voice);
+                var lastVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice);
                 if (lastVoice == null)
                 {
-                    lastVoice = Enumerable.FirstOrDefault<Voice>(Voices, p => p.Name.StartsWith("en", StringComparison.OrdinalIgnoreCase) ||
-                                                                              p.Name.Contains("English", StringComparison.OrdinalIgnoreCase));
+                    lastVoice = Voices.FirstOrDefault(p => p.Name.StartsWith("en", StringComparison.OrdinalIgnoreCase) ||
+                                                          p.Name.Contains("English", StringComparison.OrdinalIgnoreCase));
                 }
 
-                SelectedVoice = lastVoice ?? Enumerable.First<Voice>(Voices);
+                SelectedVoice = lastVoice ?? Voices.First();
             });
         }
     }
@@ -982,7 +958,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             return;
         }
 
-        Dispatcher.UIThread.Post(async () =>
+        Dispatcher.UIThread.PostSafe(async () =>
         {
             if (engine is ElevenLabs && model == "eleven_v3")
             {
@@ -998,10 +974,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
                     Languages.Add(language);
                 }
 
-                SelectedLanguage = Enumerable.FirstOrDefault<TtsLanguage>(Languages, p => p.Name == Se.Settings.Video.TextToSpeech.ElevenLabsLanguage);
+                SelectedLanguage = Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.ElevenLabsLanguage);
                 if (SelectedLanguage == null)
                 {
-                    SelectedLanguage = Enumerable.FirstOrDefault<TtsLanguage>(Languages, p => p.Code == "en");
+                    SelectedLanguage = Languages.FirstOrDefault(p => p.Code == "en");
                 }
             }
         });

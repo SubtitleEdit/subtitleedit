@@ -198,9 +198,22 @@ public class Piper : ITtsEngine
                 + (string.IsNullOrWhiteSpace(stderrOutput) ? string.Empty : $", StdErr: {stderrOutput.Trim()}");
             Se.LogError(msg);
             Se.WriteToolsLog(msg);
+            return new TtsResult { Text = text, FileName = string.Empty, Error = true };
         }
 
         var fileName = Path.Combine(GetSetPiperFolder(), fileNameOnly);
+        if (!File.Exists(fileName) || new FileInfo(fileName).Length == 0)
+        {
+            var msg = $"Piper exited successfully but produced no audio - Parameters: "
+                + $"Voice: {piperVoice}, "
+                + $"FileName: {process.StartInfo.FileName}, "
+                + $"Parameters: {process.StartInfo.Arguments}"
+                + (string.IsNullOrWhiteSpace(stderrOutput) ? string.Empty : $", StdErr: {stderrOutput.Trim()}");
+            Se.LogError(msg);
+            Se.WriteToolsLog(msg);
+            return new TtsResult { Text = text, FileName = string.Empty, Error = true };
+        }
+
         return new TtsResult(fileName, text);
     }
 
@@ -229,7 +242,7 @@ public class Piper : ITtsEngine
             throw new PlatformNotSupportedException("Process.Start() is not supported on this platform.");
         }
 
-        var streamWriter = new StreamWriter(processPiper.StandardInput.BaseStream, Encoding.UTF8);
+        var streamWriter = new StreamWriter(processPiper.StandardInput.BaseStream, new UTF8Encoding(false));
         var text = Utilities.UnbreakLine(inputText);
         streamWriter.Write(text);
         streamWriter.Flush();

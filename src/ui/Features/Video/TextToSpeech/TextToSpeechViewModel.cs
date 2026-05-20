@@ -310,6 +310,12 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
+        var voice = SelectedVoice;
+        if (voice != null && !await TtsVoiceInstaller.EnsureVoiceInstalled(engine, voice, Window, _windowService))
+        {
+            return;
+        }
+
         _cancellationTokenSource = new();
         _cancellationToken = _cancellationTokenSource.Token;
         ProgressValue = 0;
@@ -428,20 +434,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
-        if (!engine.IsVoiceInstalled(voice) && voice.EngineVoice is PiperVoice piperVoice)
+        if (!await TtsVoiceInstaller.EnsureVoiceInstalled(engine, voice, Window, _windowService))
         {
-            var modelFileName = Path.Combine(Piper.GetSetPiperFolder(), piperVoice.ModelShort);
-            var configFileName = Path.Combine(Piper.GetSetPiperFolder(), piperVoice.ConfigShort);
-            if (!File.Exists(modelFileName) || !File.Exists(configFileName))
-            {
-                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window, vm => vm.StartDownloadPiperVoice(piperVoice));
-                if (!dlResult.OkPressed)
-                {
-                    SafeDelete(modelFileName);
-                    SafeDelete(configFileName);
-                    return;
-                }
-            }
+            return;
         }
 
         SaveSettings();
@@ -636,18 +631,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         IsNotGenerating = true;
         ProgressOpacity = 0;
         Close();
-    }
-
-    private static void SafeDelete(string fileName)
-    {
-        try
-        {
-            File.Delete(fileName);
-        }
-        catch
-        {
-            // ignore
-        }
     }
 
     private void Close()
@@ -1293,10 +1276,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         var addAudioProcess = Se.Settings.Video.TextToSpeech.AudioDuckingEnabled
             ? FfmpegGenerator.AddAudioTrackWithDucking(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo, Se.Settings.Video.TextToSpeech.AudioDuckingOriginalVolume)
             : FfmpegGenerator.AddAudioTrack(_videoFileName, audioFileName, outputFileName, audioEncoding, stereo);
-#pragma warning disable CA1416 // Validate platform compatibility
-        var _ = addAudioProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-        await addAudioProcess.WaitForExitAsync(cancellationToken);
+        await addAudioProcess.StartAndWaitAsync(cancellationToken);
 
         ProgressText = string.Empty;
         return outputFileName;
@@ -1339,10 +1319,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 var mergeProcess = FfmpegGenerator.MergeAudioTracks(inputFileName, item.CurrentFileName, outputFileName, (float)item.Paragraph.StartTime.TotalSeconds, forceStereo);
                 var fileNameToDelete = inputFileName;
                 inputFileName = outputFileName;
-#pragma warning disable CA1416 // Validate platform compatibility
-                _ = mergeProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-                await mergeProcess.WaitForExitAsync(cancellationToken);
+                await mergeProcess.StartAndWaitAsync(cancellationToken);
 
                 ProgressValue = (double)(index + 1) / previousStepResult.Length * 100.0;
 
@@ -1394,10 +1371,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
 
         var silenceProcess = FfmpegGenerator.GenerateEmptyAudio(silenceFileName, durationInSeconds);
-#pragma warning disable CA1416 // Validate platform compatibility
-        _ = silenceProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-        await silenceProcess.WaitForExitAsync(cancellationToken);
+        await silenceProcess.StartAndWaitAsync(cancellationToken);
         return silenceFileName;
     }
 
@@ -1560,10 +1534,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 // Step 1: Trim silence from start and end
                 var outputFileName1 = Path.Combine(Path.GetDirectoryName(item.CurrentFileName)!, Guid.NewGuid() + ".wav");
                 var trimProcess = FfmpegGenerator.TrimSilenceStartAndEnd(item.CurrentFileName, outputFileName1);
-#pragma warning disable CA1416 // Validate platform compatibility
-                _ = trimProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-                await trimProcess.WaitForExitAsync(cancellationToken);
+                await trimProcess.StartAndWaitAsync(cancellationToken);
 
                 var currentFile = outputFileName1;
 
@@ -1574,10 +1545,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 {
                     var vadOutput = Path.Combine(Path.GetDirectoryName(item.CurrentFileName)!, $"vad_{Guid.NewGuid()}.wav");
                     var vadProcess = FfmpegGenerator.CompressInternalSilence(currentFile, vadOutput, vadMaxSilence);
-#pragma warning disable CA1416 // Validate platform compatibility
-                    _ = vadProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-                    await vadProcess.WaitForExitAsync(cancellationToken);
+                    await vadProcess.StartAndWaitAsync(cancellationToken);
 
                     if (File.Exists(vadOutput) && new FileInfo(vadOutput).Length > 0)
                     {
@@ -1661,19 +1629,13 @@ public partial class TextToSpeechViewModel : ObservableObject
                 {
                     speedProcess = FfmpegGenerator.ChangeSpeed(currentFile, outputFileName2, (float)factor);
                 }
-#pragma warning disable CA1416 // Validate platform compatibility
-                _ = speedProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-                await speedProcess.WaitForExitAsync(cancellationToken);
+                await speedProcess.StartAndWaitAsync(cancellationToken);
 
                 // Fallback: if rubberband failed (not available in FFmpeg build), retry with atempo
                 if (doHighQualityStretch && (!File.Exists(outputFileName2) || new FileInfo(outputFileName2).Length == 0))
                 {
                     var fallbackProcess = FfmpegGenerator.ChangeSpeed(currentFile, outputFileName2, (float)factor);
-#pragma warning disable CA1416 // Validate platform compatibility
-                    _ = fallbackProcess.Start();
-#pragma warning restore CA1416 // Validate platform compatibility
-                    await fallbackProcess.WaitForExitAsync(cancellationToken);
+                    await fallbackProcess.StartAndWaitAsync(cancellationToken);
                 }
             }
             ProgressValue = 100;
@@ -1786,7 +1748,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
-        Dispatcher.UIThread.Post(async () =>
+        Dispatcher.UIThread.PostSafe(async () =>
         {
             IsEngineSettingsVisible = false;
             var voices = await engine.GetVoices(SelectedLanguage?.Code ?? string.Empty);
@@ -1973,7 +1935,7 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         if (engine is Murf murf)
         {
-            Dispatcher.UIThread.Post(async () =>
+            Dispatcher.UIThread.PostSafe(async () =>
             {
                 var voices = await murf.GetVoices(SelectedLanguage?.Code ?? string.Empty);
                 Voices.Clear();
@@ -2000,7 +1962,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
-        Dispatcher.UIThread.Post(async () =>
+        Dispatcher.UIThread.PostSafe(async () =>
         {
             if (engine.HasLanguageParameter)
             {

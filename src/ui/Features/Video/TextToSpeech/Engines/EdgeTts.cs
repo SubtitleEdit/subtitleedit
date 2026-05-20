@@ -269,9 +269,7 @@ public class EdgeTts : ITtsEngine
         using var process = new Process { StartInfo = startInfo };
         try
         {
-#pragma warning disable CA1416
-            process.Start();
-#pragma warning restore CA1416
+            process.StartProcess();
         }
         catch
         {
