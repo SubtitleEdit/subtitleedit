@@ -18,6 +18,8 @@ v5.0.0-beta29 (xth May 2026)
 * Trim long paths in the Reopen menu and tighten menu spacing
 * Use a consistent, thicker progress bar across download and progress windows
 * seconv: reject unknown --encoding values and add --encoding:source
+* Add Crisp ASR Fun-ASR MLT Nano speech-to-text engine - 31 languages with native LID
+* Update CrispASR to v0.6.8 - adds funasr, fun-asr-mlt-nano, and sensevoice (FunAudioLLM) backends; voxcpm2 TTS ~5-10x speedup
 * Update Bulgarian translation - thx jekovcar
 * Update Russian translation - thx jekovcar
 * Update Portuguese (Brazil) translation - thx igorruckert

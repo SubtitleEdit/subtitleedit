@@ -1086,7 +1086,6 @@ public partial class TextToSpeechViewModel : ObservableObject
                 $"{Environment.NewLine}\"Chatterbox TTS\" runs through the CrispASR runtime. Select a build to download:",
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
-                "CPU",
                 "Vulkan",
                 "CUDA");
 
@@ -1097,20 +1096,9 @@ public partial class TextToSpeechViewModel : ObservableObject
 
             crispVariant = variantAnswer switch
             {
-                MessageBoxResult.Custom1 => "cpu",
-                MessageBoxResult.Custom3 => "cuda",
+                MessageBoxResult.Custom2 => "cuda",
                 _ => "vulkan",
             };
-
-            if (crispVariant == "cpu")
-            {
-                var cpuAnswer = await PromptCrispAsrCpuFlavorAsync();
-                if (cpuAnswer == null)
-                {
-                    return false;
-                }
-                crispVariant = cpuAnswer;
-            }
 
             if (crispVariant == "vulkan" && !VulkanHelper.IsInstalled())
             {
@@ -1164,30 +1152,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
 
         return await engine.IsInstalled(SelectedRegion) && ChatterboxTtsCpp.IsCrispAsrChatterboxCapable();
-    }
-
-    /// <summary>
-    /// Follow-up prompt after the user picks "CPU" in the CrispASR variant selector.
-    /// Returns "cpu" (modern, recommended), "cpu-legacy" (compatibility build for CPUs without AVX2),
-    /// or null when the user cancels.
-    /// </summary>
-    private async Task<string?> PromptCrispAsrCpuFlavorAsync()
-    {
-        var cpuAnswer = await MessageBox.Show(
-            Window!,
-            "CrispASR CPU build",
-            $"{Environment.NewLine}Standard is recommended for most machines.{Environment.NewLine}{Environment.NewLine}Legacy is a fallback for older CPUs without AVX2 support.",
-            MessageBoxButtons.Cancel,
-            MessageBoxIcon.Question,
-            "Standard",
-            "Legacy");
-
-        return cpuAnswer switch
-        {
-            MessageBoxResult.Custom1 => "cpu",
-            MessageBoxResult.Custom2 => "cpu-legacy",
-            _ => null,
-        };
     }
 
     private async Task MergeAndAddToVideo(TtsStepResult[] fixSpeedResult)
