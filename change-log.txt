@@ -5,9 +5,23 @@ Subtitle Edit Changelog
 v5.0.0-beta29 (xth May 2026)
 
 * Add Engine settings dialog for Qwen3 TTS, Kokoro TTS, and Chatterbox TTS
-* Track install hashes for Qwen3 TTS and Kokoro TTS so update status can be reported
+* Bundle macOS DMG with mpv and ffmpeg
+* Add "Fill selected lines with clipboard text" to the main and OCR grid (Ctrl+Shift+V)
+* Add "Three letter (ISO 639-2/B)" language code option to save-as - thx LurkingNinja
+* Add "Try to use source encoding" option to Batch Convert - thx Hlsgs
+* Add Windows CUDA variant for Qwen3 TTS
+* Add Macedonian translation - thx kirepp-cmd
+* Find and offer a matching subtitle when a video file is dropped - thx GrampaWildWilly
+* Redesign llama.cpp OCR settings dialog and localize engine status labels
+* Select first row after OCR completes - thx LurkingNinja
+* Trim long paths in the Reopen menu and tighten menu spacing
+* seconv: reject unknown --encoding values and add --encoding:source
 * Update Bulgarian translation - thx jekovcar
 * Update Russian translation - thx jekovcar
+* Update Portuguese (Brazil) translation - thx igorruckert
+* Fix Text-to-speech async and Piper engine bugs
+* Fix Edge TTS crash on bad rate format and retry transient failures - thx KevinHa59
+* Fix shortcut window not receiving focus
 
 -----------------------------------------------------------------------------------------------------
 
