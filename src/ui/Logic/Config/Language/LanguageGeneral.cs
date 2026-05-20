@@ -835,7 +835,7 @@ public class LanguageGeneral
         Dictionary = "Dictionary";
         DiskSpace = "Disk space";
         DoNoChange = "Do not change";
-        Done = "Done";
+        Done = "_Done";
         DoubleWords = "Double words";
         DoubleLines = "Double lines";
         Download = "Download";

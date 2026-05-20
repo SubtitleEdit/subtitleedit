@@ -221,9 +221,11 @@ public static class UiUtil
 
     public static Button MakeButton(string text, IRelayCommand? command, object? parameter = null)
     {
+        var (displayText, accessKey) = ParseAccessKey(text);
+
         var button = new Button
         {
-            Content = text,
+            Content = displayText,
             Margin = new Thickness(4, 0),
             Padding = new Thickness(12, 6),
             MinWidth = 80,
@@ -232,8 +234,13 @@ public static class UiUtil
             HorizontalContentAlignment = HorizontalAlignment.Center,
             VerticalContentAlignment = VerticalAlignment.Center,
             Command = command,
-            CommandParameter = parameter
+            CommandParameter = parameter,
         };
+
+        if (accessKey.HasValue)
+        {
+            button.HotKey = new KeyGesture(accessKey.Value, KeyModifiers.Alt);
+        }
 
         if (Se.Settings.Appearance.UseFocusedButtonBackgroundColor)
         {
@@ -244,6 +251,42 @@ public static class UiUtil
         }
 
         return button;
+    }
+
+    // Parses a single `_` access-key marker out of a button label and returns the visible text plus
+    // the matching Avalonia Key. Mirrors the WinForms `&` convention used in the language files
+    // (e.g. "_OK" → display "OK", Alt+O; "C_ancel" → display "Cancel", Alt+A).
+    private static (string Display, Key? AccessKey) ParseAccessKey(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return (text ?? string.Empty, null);
+        }
+
+        var idx = text.IndexOf('_');
+        if (idx < 0 || idx + 1 >= text.Length)
+        {
+            return (text, null);
+        }
+
+        var accessChar = text[idx + 1];
+        var display = text.Remove(idx, 1);
+        return TryGetAccessKey(accessChar, out var key) ? (display, key) : (display, null);
+    }
+
+    private static bool TryGetAccessKey(char c, out Key key)
+    {
+        var upper = char.ToUpperInvariant(c);
+        if (upper >= 'A' && upper <= 'Z')
+        {
+            return Enum.TryParse(upper.ToString(), out key);
+        }
+        if (upper >= '0' && upper <= '9')
+        {
+            return Enum.TryParse("D" + upper, out key);
+        }
+        key = Key.None;
+        return false;
     }
 
     public static Button MakeBrowseButton(IRelayCommand? command)
