@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net10.0</TargetFramework>
@@ -208,6 +208,8 @@
 		<AvaloniaResource Include="Assets\Languages\Korean.json" />
 		<None Remove="Assets\Languages\Finnish.json" />
 		<AvaloniaResource Include="Assets\Languages\Finnish.json" />
+		<None Remove="Assets\Languages\Hebrew.json" />
+		<AvaloniaResource Include="Assets\Languages\Hebrew.json" />
 	</ItemGroup>
 
 	<ItemGroup>
