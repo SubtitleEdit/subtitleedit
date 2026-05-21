@@ -1,7 +1,7 @@
 ﻿{
   "title": "Subtitle Edit",
   "version": null,
-  "translatedBy": "Adam Malich v20.05.2026",
+  "translatedBy": "Adam Malich v21.05.2026",
   "cultureName": "pl-PL",
   "general": {
     "abort": "Przerwij",
@@ -1868,7 +1868,7 @@
       "selectTheBuildToDownload": "\nWybierz kompilację do pobrania:",
       "downloadTheLatestOmniVoiceTtsPrompt": "\nChcesz teraz pobrać najnowszą wersję OmniVoice TTS?",
       "vulkanRuntimeMayBeRequired": "Może być wymagane środowisko uruchomieniowe Vulkan",
-      "vulkanRuntimeNotDetectedMessage": "Kompilacja Vulkan wymaga środowiska uruchomieniowego Vulkan (vulkan-1.dll). Zazwyczaj jest dostarczany z aktualnymi sterownikami GPU, ale nie został wykryty.\n\nZainstaluj z:\n{0}\n\nCzy mimo wszystko chcesz kontynuować korzystanie z Vulkan?";
+      "vulkanRuntimeNotDetectedMessage": "Kompilacja Vulkan wymaga środowiska uruchomieniowego Vulkan (vulkan-1.dll). Zazwyczaj jest dostarczany z aktualnymi sterownikami GPU, ale nie został wykryty.\n\nZainstaluj z:\n{0}\n\nCzy mimo wszystko chcesz kontynuować korzystanie z Vulkan?",
       "qwen3TtsSettings": "Ustawienia Qwen3 TTS",
       "kokoroTtsSettings": "Ustawienia Kokoro TTS",
       "chatterboxTtsSettings": "Ustawienia Chatterbox TTS"
@@ -2650,7 +2650,7 @@
     "lineIndexX": "Linia {0}",
     "inspectNOcrAdditions": "Sprawdź nowe dodatki nOCR",
     "ocrSelectedLines": "OCR zaznaczonych linii",
-    "fillSelectedLinesWithClipboard": "Wypełnij zaznaczone linie tekstem ze schowka,
+    "fillSelectedLinesWithClipboard": "Wypełnij zaznaczone linie tekstem ze schowka",
     "showImage": "Pokaż obraz",
     "fixOcrErrors": "Napraw błędy OCR",
     "promptForUknownWords": "Pytaj o nieznane słowa",
