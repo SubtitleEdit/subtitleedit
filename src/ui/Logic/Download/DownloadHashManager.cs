@@ -493,6 +493,36 @@ public static class DownloadHashManager
     }
 
     /// <summary>
+    /// Reads the <c>.installed.sha256</c> sidecar in <paramref name="installFolder"/> and returns
+    /// the update status of the recorded build. Returns <see cref="UpdateStatus.Unknown"/> when the
+    /// sidecar is missing or unreadable (e.g. installs predating hash tracking). Cheap - no file
+    /// hashing - so it is safe to call while populating a combo box.
+    /// </summary>
+    public static UpdateStatus GetSidecarStatus(string installFolder)
+    {
+        try
+        {
+            var sidecar = Path.Combine(installFolder, ".installed.sha256");
+            if (!File.Exists(sidecar))
+            {
+                return UpdateStatus.Unknown;
+            }
+
+            var lines = File.ReadAllLines(sidecar);
+            if (lines.Length < 2)
+            {
+                return UpdateStatus.Unknown;
+            }
+
+            return GetStatus(lines[0].Trim(), lines[1].Trim());
+        }
+        catch
+        {
+            return UpdateStatus.Unknown;
+        }
+    }
+
+    /// <summary>
     /// Returns the latest known SHA-256 hash for <paramref name="key"/>, or null if the key is unknown.
     /// </summary>
     public static string? GetLatestKnownHash(string key)

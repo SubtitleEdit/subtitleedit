@@ -11,6 +11,7 @@ using Avalonia.Styling;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText;
@@ -140,6 +141,7 @@ public class SpeechToTextWindow : Window
             .WithMarginTop(10)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
             .BindIsVisible(vm, nameof(vm.IsModelSelectionVisible));
+        comboModel.ItemTemplate = MakeModelItemTemplate();
 
         var buttonModelDownload = UiUtil.MakeButtonBrowse(vm.DownloadModelCommand)
             .WithMarginBottom(20)
@@ -684,67 +686,44 @@ public class SpeechToTextWindow : Window
         };
     }
 
-    // Engine combo item template: each row gets a small status icon (✓ installed,
-    // ⬇ download-required, blank for cloud-only) plus the approximate download size
-    // when relevant. The template hard-codes engine.Name/icon/size at build time
-    // instead of binding, so recycling MUST stay off — otherwise the ComboBox would
-    // reuse one visual across engines and the closed-state display would freeze on
-    // whichever engine first populated the recycled visual.
+    // Engine combo item template: each row gets a small install-status dot (green = ready,
+    // amber = update available, grey = not downloaded yet, none for cloud/API engines) plus the
+    // approximate download size for engines that still need downloading.
     private static FuncDataTemplate<ISpeechToTextEngine> MakeEngineItemTemplate()
     {
-        return new FuncDataTemplate<ISpeechToTextEngine>((engine, _) =>
+        return StatusDots.ComboItemTemplate<ISpeechToTextEngine>(
+            engine => engine.Name,
+            engine => engine.CanBeDownloaded() && !engine.IsEngineInstalled() && !string.IsNullOrEmpty(engine.DownloadSizeText)
+                ? engine.DownloadSizeText
+                : null,
+            GetEngineDotStatus);
+    }
+
+    private static DownloadDotStatus GetEngineDotStatus(ISpeechToTextEngine engine)
+    {
+        if (!engine.CanBeDownloaded())
         {
-            if (engine == null)
-            {
-                return new TextBlock();
-            }
+            return DownloadDotStatus.None; // cloud / API engine - nothing to install
+        }
 
-            var canDownload = engine.CanBeDownloaded();
-            var isInstalled = engine.IsEngineInstalled();
+        if (!engine.IsEngineInstalled())
+        {
+            return DownloadDotStatus.NotInstalled;
+        }
 
-            var iconName = !canDownload
-                ? string.Empty
-                : isInstalled
-                    ? IconNames.CheckCircle
-                    : IconNames.Download;
+        // Installed: read the cheap .installed.sha256 sidecar so an outdated build shows amber.
+        return StatusDots.From(true, DownloadHashManager.GetSidecarStatus(engine.GetAndCreateWhisperFolder()));
+    }
 
-            var iconColor = isInstalled ? Brushes.MediumSeaGreen : Brushes.Gray;
-
-            var panel = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                VerticalAlignment = VerticalAlignment.Center,
-                Spacing = 6,
-            };
-
-            if (!string.IsNullOrEmpty(iconName))
-            {
-                panel.Children.Add(new Optris.Icons.Avalonia.Icon
-                {
-                    Value = iconName,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    FontSize = 14,
-                    Foreground = iconColor,
-                });
-            }
-
-            panel.Children.Add(new TextBlock
-            {
-                Text = engine.Name,
-                VerticalAlignment = VerticalAlignment.Center,
-            });
-
-            if (canDownload && !isInstalled && !string.IsNullOrEmpty(engine.DownloadSizeText))
-            {
-                panel.Children.Add(new TextBlock
-                {
-                    Text = $"({engine.DownloadSizeText})",
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Opacity = 0.6,
-                });
-            }
-
-            return panel;
-        });
+    // Model combo item template: a dot (green = downloaded, grey = not downloaded yet) plus the
+    // model's download size, replacing the old "..., not installed" text suffix.
+    private static FuncDataTemplate<SpeechToTextModelDisplay> MakeModelItemTemplate()
+    {
+        return StatusDots.ComboItemTemplate<SpeechToTextModelDisplay>(
+            model => model.Model.Name,
+            model => string.IsNullOrEmpty(model.Model.Size) ? null : model.Model.Size,
+            model => model.Engine.IsModelInstalled(model.Model)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled);
     }
 }
