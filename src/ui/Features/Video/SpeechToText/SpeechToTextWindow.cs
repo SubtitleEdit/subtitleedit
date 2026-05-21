@@ -54,6 +54,11 @@ public class SpeechToTextWindow : Window
             .WithMarginTop(10);
         comboEngine.ItemTemplate = MakeEngineItemTemplate();
         comboEngine.SelectionChanged += vm.OnEngineChanged;
+
+        // Force the combo to rebuild its row visuals after a re-download finishes, so the
+        // install-status dot reflects the freshly-written .installed.sha256 sidecar instead
+        // of the snapshot taken when each row was first realised.
+        vm.RefreshEngineCombo = () => comboEngine.ItemTemplate = MakeEngineItemTemplate();
         var buttonEngineWebsite = UiUtil.MakeButton(vm.ShowWebLinkCommand, IconNames.Web)
             .WithMarginLeft(5)
             .WithMarginTop(10);

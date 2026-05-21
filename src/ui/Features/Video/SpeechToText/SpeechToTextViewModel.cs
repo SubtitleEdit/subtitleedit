@@ -164,6 +164,14 @@ public partial class SpeechToTextViewModel : ObservableObject
     private static bool _crispAsrUpdatePromptShown;
     private static bool _whisperCppUpdatePromptShown;
 
+    /// <summary>
+    /// Hook the view wires up so the engine combobox can re-evaluate its install-status dots
+    /// after a re-download. The combo's <c>FuncDataTemplate</c> snapshots the install state when
+    /// each row is realised, so without an explicit refresh the dot stays on its old colour
+    /// (typically amber) even though the sidecar now reports up-to-date.
+    /// </summary>
+    public Action? RefreshEngineCombo { get; set; }
+
     public SpeechToTextViewModel(IWindowService windowService, IFileHelper fileHelper)
     {
         _windowService = windowService;
@@ -1945,6 +1953,8 @@ public partial class SpeechToTextViewModel : ObservableObject
                 viewModel.CrispAsrWindowsVariant = crispVariant;
                 viewModel.StartDownload();
             });
+
+        RefreshEngineCombo?.Invoke();
     }
 
     /// <summary>
