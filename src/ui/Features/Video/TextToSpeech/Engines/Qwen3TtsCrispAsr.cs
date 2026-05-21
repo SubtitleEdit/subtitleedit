@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
@@ -167,7 +168,66 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             Directory.CreateDirectory(voicesFolder);
         }
 
+        SeedVoicesFromQwen3TtsCppIfEmpty(voicesFolder);
         return voicesFolder;
+    }
+
+    private static bool _voiceSeedAttempted;
+
+    /// <summary>
+    /// One-time best-effort copy of WAV reference voices from the existing qwen3-tts.cpp
+    /// engine's voices folder. The same files work for both engines (just 24 kHz mono
+    /// reference audio with optional .txt sidecars), so users who already downloaded the
+    /// qwen3-tts.cpp voice pack get them for free here without a second ~10 MB download.
+    /// Users who never installed qwen3-tts.cpp start empty and can use Import Voice or wait
+    /// for the dedicated voices.zip downloader (TODO).
+    /// </summary>
+    private static void SeedVoicesFromQwen3TtsCppIfEmpty(string voicesFolder)
+    {
+        if (_voiceSeedAttempted)
+        {
+            return;
+        }
+        _voiceSeedAttempted = true;
+
+        try
+        {
+            if (Directory.EnumerateFiles(voicesFolder, "*.wav").Any())
+            {
+                return;
+            }
+
+            var sourceFolder = Qwen3TtsCpp.GetSetVoicesFolder();
+            if (!Directory.Exists(sourceFolder) || !Directory.EnumerateFiles(sourceFolder, "*.wav").Any())
+            {
+                return;
+            }
+
+            foreach (var src in Directory.GetFiles(sourceFolder, "*.wav"))
+            {
+                var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
+                if (!File.Exists(dest))
+                {
+                    File.Copy(src, dest);
+                }
+
+                // Copy the matching .txt sidecar too (CrispASR uses it as the reference
+                // transcription for CustomVoice cloning).
+                var sidecar = Path.ChangeExtension(src, ".txt");
+                if (File.Exists(sidecar))
+                {
+                    var sidecarDest = Path.ChangeExtension(dest, ".txt");
+                    if (!File.Exists(sidecarDest))
+                    {
+                        File.Copy(sidecar, sidecarDest);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "Qwen3 TTS (CrispASR): voice seeding from qwen3-tts.cpp folder failed");
+        }
     }
 
     public static string GetTalkerPath(string? modelKey = null) =>

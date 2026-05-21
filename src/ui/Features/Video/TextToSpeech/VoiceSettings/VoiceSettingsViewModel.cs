@@ -255,6 +255,9 @@ public partial class VoiceSettingsViewModel : ObservableObject
     internal void Initialize(ITtsEngine engine)
     {
         _engine = engine;
-        IsImportVoiceVisible = engine.GetType() == typeof(Qwen3TtsCpp) || engine.GetType() == typeof(ChatterboxTtsCpp) || engine.GetType() == typeof(OmniVoiceTtsCpp);
+        IsImportVoiceVisible = engine.GetType() == typeof(Qwen3TtsCpp)
+                               || engine.GetType() == typeof(Qwen3TtsCrispAsr)
+                               || engine.GetType() == typeof(ChatterboxTtsCpp)
+                               || engine.GetType() == typeof(OmniVoiceTtsCpp);
     }
 }
