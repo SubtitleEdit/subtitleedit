@@ -7,6 +7,7 @@ v5.0.0-beta30 (xth May 2026)
 * Add Qwen3 TTS 1.7B VoiceDesign model with natural-language voice instructions - thx subof
 * Add voice-design keyword picker to Text-to-speech for OmniVoice TTS - thx subof
 * Update CrispASR to v0.6.9 - restores Windows CPU and CPU-Legacy builds
+* Update Qwen3 TTS to v0.4.6 - unblocks the cstr CrispASR-converted VoiceDesign GGUF on all platforms
 
 v5.0.0-beta29 (20th May 2026)
 
