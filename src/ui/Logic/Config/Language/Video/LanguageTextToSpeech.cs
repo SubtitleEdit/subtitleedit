@@ -65,6 +65,13 @@ public class LanguageTextToSpeech
     public string Qwen3TtsSettings { get; set; }
     public string KokoroTtsSettings { get; set; }
     public string ChatterboxTtsSettings { get; set; }
+    public string VoiceInstruction { get; set; }
+    public string VoiceInstructionHint { get; set; }
+    public string VoiceGender { get; set; }
+    public string VoiceAge { get; set; }
+    public string VoicePitch { get; set; }
+    public string VoiceAccent { get; set; }
+    public string VoiceInstructionClonedVoiceNote { get; set; }
 
     public LanguageTextToSpeech()
     {
@@ -129,5 +136,12 @@ public class LanguageTextToSpeech
         Qwen3TtsSettings = "Qwen3 TTS settings";
         KokoroTtsSettings = "Kokoro TTS settings";
         ChatterboxTtsSettings = "Chatterbox TTS settings";
+        VoiceInstruction = "Voice instruction";
+        VoiceInstructionHint = "Optional - e.g. \"Speak in a calm and friendly tone\"";
+        VoiceGender = "Gender";
+        VoiceAge = "Age";
+        VoicePitch = "Pitch";
+        VoiceAccent = "Accent";
+        VoiceInstructionClonedVoiceNote = "Voice design only affects the \"Default\" voice - a cloned voice keeps its own characteristics.";
     }
 }

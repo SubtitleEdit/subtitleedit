@@ -44,6 +44,9 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
         // khimaros' rebuild includes the projection tensor (named code_pred.mtp_proj.*) that
         // qwen3-tts.cpp needs for the 1.7B variant. The koboldcpp upload predates that change.
         ["Qwen3-TTS-12Hz-1.7B-Base-q8_0.gguf"] = "https://huggingface.co/khimaros/Qwen3-TTS-12Hz-1.7B-Base-GGUF/resolve/main/Qwen3-TTS-12Hz-1.7B-Base-Q8_0.gguf",
+        // Instruction-tuned VoiceDesign variant - the voice is described by free-text rather
+        // than cloned or picked from a speaker table. Shares the 12Hz tokenizer above.
+        ["qwen3-tts-12hz-1.7b-voicedesign-q8_0.gguf"] = "https://huggingface.co/cstr/qwen3-tts-1.7b-voicedesign-GGUF/resolve/main/qwen3-tts-12hz-1.7b-voicedesign-q8_0.gguf",
     };
 
     private const string VoicesUrl = "https://github.com/SubtitleEdit/support-files/releases/download/qwen3-tts-cpp-2026-4/voices.zip";

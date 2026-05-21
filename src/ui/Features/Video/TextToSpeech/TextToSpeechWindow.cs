@@ -1,11 +1,14 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Avalonia.Styling;
+using System.Collections.ObjectModel;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -15,6 +18,8 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 public class TextToSpeechWindow : Window
 {
     private readonly TextToSpeechViewModel _vm;
+    private ComboBox? _comboBoxEngines;
+    private ComboBox? _comboBoxModels;
 
     public TextToSpeechWindow(TextToSpeechViewModel vm)
     {
@@ -25,6 +30,7 @@ public class TextToSpeechWindow : Window
 
         _vm = vm;
         vm.Window = this;
+        vm.RefreshDownloadDots = RefreshDownloadDots;
         DataContext = vm;
 
         var labelEngine = new Label
@@ -114,17 +120,62 @@ public class TextToSpeechWindow : Window
         }
     }
 
-    private static Border MakeEngineControls(TextToSpeechViewModel vm)
+    private static FuncDataTemplate<ITtsEngine> BuildEngineItemTemplate()
+    {
+        return StatusDots.ComboItemTemplate<ITtsEngine>(
+            engine => engine.Name,
+            _ => null,
+            GetTtsEngineDotStatus);
+    }
+
+    // Install-status dot for a model in the model combo. Local engines (Qwen3, Chatterbox) get
+    // a green/grey dot per model; cloud engines (ElevenLabs, Mistral) have nothing to install.
+    private static DownloadDotStatus GetTtsModelDotStatus(ITtsEngine? engine, string modelKey)
+    {
+        return engine switch
+        {
+            Qwen3TtsCpp => Qwen3TtsCpp.IsModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            ChatterboxTtsCpp => ChatterboxTtsCpp.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            _ => DownloadDotStatus.None,
+        };
+    }
+
+    private static FuncDataTemplate<string> BuildModelItemTemplate(TextToSpeechViewModel vm)
+    {
+        return StatusDots.ComboItemTemplate<string>(
+            modelKey => modelKey,
+            _ => null,
+            modelKey => GetTtsModelDotStatus(vm.SelectedEngine, modelKey));
+    }
+
+    // Rebuilds the engine and model combo item templates so the install-status dots are
+    // re-evaluated. Called after an engine/model may have been (re)downloaded - the dots are
+    // one-off snapshots, so a fresh template is the refresh.
+    public void RefreshDownloadDots()
+    {
+        if (_comboBoxEngines != null)
+        {
+            _comboBoxEngines.ItemTemplate = BuildEngineItemTemplate();
+        }
+        if (_comboBoxModels != null)
+        {
+            _comboBoxModels.ItemTemplate = BuildModelItemTemplate(_vm);
+        }
+    }
+
+    private Border MakeEngineControls(TextToSpeechViewModel vm)
     {
         var labelMinWidth = 100;
         var controlMinWidth = 200;
 
         var comboBoxEngines = UiUtil.MakeComboBox(vm.Engines, vm, nameof(vm.SelectedEngine)).WithWidth(controlMinWidth);
-        comboBoxEngines.ItemTemplate = StatusDots.ComboItemTemplate<ITtsEngine>(
-            engine => engine.Name,
-            _ => null,
-            GetTtsEngineDotStatus);
+        comboBoxEngines.ItemTemplate = BuildEngineItemTemplate();
         comboBoxEngines.SelectionChanged += vm.SelectedEngineChanged;
+        _comboBoxEngines = comboBoxEngines;
 
         var panelEngine = new StackPanel
         {
@@ -145,6 +196,11 @@ public class TextToSpeechWindow : Window
         };
 
         var buttonTestVoice = UiUtil.MakeButton(Se.Language.Video.TextToSpeech.TestVoice, vm.TestVoiceCommand).WithBindIsEnabled(nameof(vm.IsVoiceTestEnabled));
+
+        // The Qwen3 VoiceDesign model has no speaker encoder - the combo is locked to "Default".
+        var comboBoxVoices = UiUtil.MakeComboBox(vm.Voices, vm, nameof(vm.SelectedVoice)).WithWidth(controlMinWidth);
+        comboBoxVoices.Bind(ComboBox.IsEnabledProperty, new Binding(nameof(vm.IsVoiceComboEnabled)) { Mode = BindingMode.OneWay });
+
         var panelVoice = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -156,7 +212,7 @@ public class TextToSpeechWindow : Window
                     Content = Se.Language.General.Voice,
                     MinWidth = labelMinWidth,
                 },
-                UiUtil.MakeComboBox(vm.Voices, vm, nameof(vm.SelectedVoice)).WithWidth(controlMinWidth),
+                comboBoxVoices,
                 new Label
                 {
                     [!Label.ContentProperty] = new Binding(nameof(vm.VoiceCountInfo)) { Mode = BindingMode.TwoWay }
@@ -167,6 +223,8 @@ public class TextToSpeechWindow : Window
         };
 
         var comboBoxModels = UiUtil.MakeComboBox(vm.Models, vm, nameof(vm.SelectedModel)).WithWidth(controlMinWidth);
+        comboBoxModels.ItemTemplate = BuildModelItemTemplate(vm);
+        _comboBoxModels = comboBoxModels;
         var panelModel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -251,6 +309,45 @@ public class TextToSpeechWindow : Window
             [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.HasKeyFile)) { Mode = BindingMode.OneWay },
         };
 
+        // Voice instruction applied to every segment. Qwen3 TTS takes free text; OmniVoice TTS
+        // only accepts fixed voice-design keywords, so it gets a multi-select picker instead.
+        // The panel is shown for both (HasInstruction); the two controls toggle within it.
+        var textBoxInstruction = new TextBox
+        {
+            Width = 325,
+            Height = 60,
+            AcceptsReturn = true,
+            TextWrapping = TextWrapping.Wrap,
+            VerticalContentAlignment = VerticalAlignment.Top,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            PlaceholderText = Se.Language.Video.TextToSpeech.VoiceInstructionHint,
+            DataContext = vm,
+            [!TextBox.IsVisibleProperty] = new Binding(nameof(vm.IsInstructionTextVisible)) { Mode = BindingMode.OneWay },
+        };
+        textBoxInstruction.Bind(TextBox.TextProperty, new Binding(nameof(vm.Instruction))
+        {
+            Mode = BindingMode.TwoWay,
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+        });
+
+        var panelInstruction = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Margin = new Thickness(0, 10, 0, 0),
+            Children =
+            {
+                new Label
+                {
+                    Content = Se.Language.Video.TextToSpeech.VoiceInstruction,
+                    MinWidth = labelMinWidth,
+                    VerticalAlignment = VerticalAlignment.Top,
+                },
+                textBoxInstruction,
+                MakeInstructionKeywordPicker(vm),
+            },
+            [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.HasInstruction)) { Mode = BindingMode.OneWay },
+        };
+
         var grid = new Grid
         {
             RowDefinitions =
@@ -281,8 +378,74 @@ public class TextToSpeechWindow : Window
         grid.Add(panelLanguage, 4, 0);
         grid.Add(panelApiKey, 5, 0);
         grid.Add(panelKeyFile, 6, 0);
+        grid.Add(panelInstruction, 7, 0);
 
         return UiUtil.MakeBorderForControl(grid);
+    }
+
+    // Single-select picker of OmniVoice TTS voice-design keywords: one combo box per mutually
+    // exclusive group (gender, age, pitch, accent) plus a stand-alone "whisper" checkbox. Shown
+    // only for OmniVoice; disabled with a note for cloned voices, since omnivoice-tts ignores
+    // --instruct when a reference WAV is used.
+    private static Control MakeInstructionKeywordPicker(TextToSpeechViewModel vm)
+    {
+        var grid = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+            },
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+            ColumnSpacing = 8,
+            RowSpacing = 6,
+            [!Grid.IsEnabledProperty] = new Binding(nameof(vm.IsInstructionPickerEnabled)) { Mode = BindingMode.OneWay },
+        };
+
+        AddInstructionPickerRow(grid, 0, Se.Language.Video.TextToSpeech.VoiceGender, vm, vm.OmniVoiceGenders, nameof(vm.SelectedOmniVoiceGender));
+        AddInstructionPickerRow(grid, 1, Se.Language.Video.TextToSpeech.VoiceAge, vm, vm.OmniVoiceAges, nameof(vm.SelectedOmniVoiceAge));
+        AddInstructionPickerRow(grid, 2, Se.Language.Video.TextToSpeech.VoicePitch, vm, vm.OmniVoicePitches, nameof(vm.SelectedOmniVoicePitch));
+        AddInstructionPickerRow(grid, 3, Se.Language.Video.TextToSpeech.VoiceAccent, vm, vm.OmniVoiceAccents, nameof(vm.SelectedOmniVoiceAccent));
+
+        var whisper = new CheckBox
+        {
+            Content = OmniVoiceTtsCpp.InstructionWhisper,
+            DataContext = vm,
+            Margin = new Thickness(0, 4, 0, 0),
+        };
+        whisper.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(vm.OmniVoiceWhisper)) { Mode = BindingMode.TwoWay });
+        grid.Add(whisper, 4, 0, 1, 2);
+
+        var clonedVoiceNote = new TextBlock
+        {
+            Text = Se.Language.Video.TextToSpeech.VoiceInstructionClonedVoiceNote,
+            TextWrapping = TextWrapping.Wrap,
+            Opacity = 0.7,
+            MaxWidth = 280,
+            Margin = new Thickness(0, 6, 0, 0),
+            [!TextBlock.IsVisibleProperty] = new Binding(nameof(vm.IsInstructionVoiceHintVisible)) { Mode = BindingMode.OneWay },
+        };
+
+        return new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Children = { grid, clonedVoiceNote },
+            [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.IsInstructionPickerVisible)) { Mode = BindingMode.OneWay },
+        };
+    }
+
+    private static void AddInstructionPickerRow(Grid grid, int row, string label, TextToSpeechViewModel vm,
+        ObservableCollection<string> items, string selectedPropertyPath)
+    {
+        grid.Add(new Label { Content = label, MinWidth = 60, VerticalAlignment = VerticalAlignment.Center }, row, 0);
+        grid.Add(UiUtil.MakeComboBox(items, vm, selectedPropertyPath).WithWidth(200), row, 1);
     }
 
     private static Border MakeSettingsControls(TextToSpeechViewModel vm)

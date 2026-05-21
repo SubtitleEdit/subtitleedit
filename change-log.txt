@@ -2,6 +2,11 @@
 Subtitle Edit Changelog
 
 
+v5.0.0-beta30 (xth May 2026)
+
+* Add Qwen3 TTS 1.7B VoiceDesign model with natural-language voice instructions - thx subof
+* Add voice-design keyword picker to Text-to-speech for OmniVoice TTS - thx subof
+
 v5.0.0-beta29 (20th May 2026)
 
 * Add Engine settings dialog for Qwen3 TTS, Kokoro TTS, and Chatterbox TTS

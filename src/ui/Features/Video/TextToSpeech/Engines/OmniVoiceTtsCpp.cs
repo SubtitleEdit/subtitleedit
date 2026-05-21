@@ -29,6 +29,50 @@ public class OmniVoiceTtsCpp : ITtsEngine
     public bool HasModel => false;
     public bool HasKeyFile => false;
 
+    // Voice-design attribute keywords accepted by omnivoice-tts' --instruct flag (English set).
+    // The CLI rejects free text - only these values, comma+space separated, are valid. Grouped
+    // because each group is mutually exclusive (one gender, one age, one pitch, one accent).
+    public static readonly string[] InstructionGenders =
+    {
+        "female",
+        "male",
+    };
+
+    public static readonly string[] InstructionAges =
+    {
+        "child",
+        "teenager",
+        "young adult",
+        "middle-aged",
+        "elderly",
+    };
+
+    public static readonly string[] InstructionPitches =
+    {
+        "very low pitch",
+        "low pitch",
+        "moderate pitch",
+        "high pitch",
+        "very high pitch",
+    };
+
+    public static readonly string[] InstructionAccents =
+    {
+        "american accent",
+        "australian accent",
+        "british accent",
+        "canadian accent",
+        "chinese accent",
+        "indian accent",
+        "japanese accent",
+        "korean accent",
+        "portuguese accent",
+        "russian accent",
+    };
+
+    // Stand-alone toggle - not part of any mutually-exclusive group.
+    public const string InstructionWhisper = "whisper";
+
     public Task<bool> IsInstalled(string? region)
     {
         return Task.FromResult(File.Exists(GetExecutableFileName()));
@@ -242,7 +286,8 @@ public class OmniVoiceTtsCpp : ITtsEngine
         // The transcript is captured at import time; if it has been deleted out from under
         // us we fail loudly so the user knows custom voice cloning isn't happening, rather
         // than silently producing the default speaker.
-        if (!string.IsNullOrEmpty(omniVoice.FilePath) && File.Exists(omniVoice.FilePath))
+        var usingReference = !string.IsNullOrEmpty(omniVoice.FilePath) && File.Exists(omniVoice.FilePath);
+        if (usingReference)
         {
             var refTextPath = Path.ChangeExtension(omniVoice.FilePath, ".txt");
             if (!File.Exists(refTextPath))
@@ -257,6 +302,18 @@ public class OmniVoiceTtsCpp : ITtsEngine
             psi.ArgumentList.Add(omniVoice.FilePath);
             psi.ArgumentList.Add("--ref-text");
             psi.ArgumentList.Add(refTextPath);
+        }
+
+        // Voice-design keywords (--instruct) only shape the voice when there is no reference
+        // audio - with --ref-wav omnivoice-tts takes the voice from the clone and ignores them.
+        if (!usingReference)
+        {
+            var instruction = (Se.Settings.Video.TextToSpeech.OmniVoiceTtsCppInstruction ?? string.Empty).Trim();
+            if (!string.IsNullOrEmpty(instruction))
+            {
+                psi.ArgumentList.Add("--instruct");
+                psi.ArgumentList.Add(instruction);
+            }
         }
 
         Se.WriteToolsLog($"OmniVoice TTS: {exe} {string.Join(' ', psi.ArgumentList)} (voice={omniVoice}, textLen={text.Length})");

@@ -952,6 +952,25 @@ public static class UiUtil
         return control;
     }
 
+    // Like WithIconLeft, but the text is bound to a view-model property instead of being fixed,
+    // so the caption can change at runtime (e.g. "Download" vs "Re-download").
+    public static Button WithIconLeftBindText(this Button control, string iconName, string textPropertyPath)
+    {
+        var label = new TextBlock { Padding = new Thickness(4, 0, 0, 0) };
+        label.Bind(TextBlock.TextProperty, new Binding { Path = textPropertyPath });
+
+        var image = new ContentControl();
+        Attached.SetIcon(image, iconName);
+
+        control.Content = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children = { image, label },
+        };
+
+        return control;
+    }
+
     public static ComboBox WithLeftAlignment(this ComboBox control)
     {
         control.HorizontalAlignment = HorizontalAlignment.Left;

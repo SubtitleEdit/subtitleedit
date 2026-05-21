@@ -167,7 +167,8 @@ public class KokoroTtsSettingsWindow : Window
 
     private static Grid BuildActions(KokoroTtsSettingsViewModel vm)
     {
-        var redownload = UiUtil.MakeButton(Se.Language.General.Redownload, vm.RedownloadCommand).WithIconLeft(IconNames.Download);
+        var redownload = UiUtil.MakeButton(string.Empty, vm.RedownloadCommand)
+            .WithIconLeftBindText(IconNames.Download, nameof(vm.DownloadButtonLabel));
         var openFolder = UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenFolderCommand).WithIconLeft(IconNames.FolderOpen);
         var close = UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand);
 
