@@ -34,9 +34,26 @@ public partial class SpeechToTextEngineSettingsViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(DownloadButtonLabel))]
     private bool _isInstalled;
 
-    public string DownloadButtonLabel => IsInstalled
-        ? Se.Language.General.Redownload
-        : Se.Language.General.Download;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DownloadButtonLabel))]
+    private DownloadHashManager.UpdateStatus _engineUpdateStatus;
+
+    // "Download" when not installed, "Update" when a newer engine release is available,
+    // otherwise "Re-download".
+    public string DownloadButtonLabel
+    {
+        get
+        {
+            if (!IsInstalled)
+            {
+                return Se.Language.General.Download;
+            }
+
+            return EngineUpdateStatus == DownloadHashManager.UpdateStatus.UpdateAvailable
+                ? Se.Language.General.Update
+                : Se.Language.General.Redownload;
+        }
+    }
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -67,7 +84,8 @@ public partial class SpeechToTextEngineSettingsViewModel : ObservableObject
         InstallFolder = _engine.GetAndCreateWhisperFolder();
         IsInstalled = _engine.IsEngineInstalled();
         BackendLabel = IsInstalled ? DetectBackend(_engine, InstallFolder) : Se.Language.General.NotInstalled;
-        ApplyStatus(IsInstalled ? ComputeStatus(_engine, InstallFolder) : DownloadHashManager.UpdateStatus.Unknown, IsInstalled);
+        EngineUpdateStatus = IsInstalled ? ComputeStatus(_engine, InstallFolder) : DownloadHashManager.UpdateStatus.Unknown;
+        ApplyStatus(EngineUpdateStatus, IsInstalled);
     }
 
     private void ApplyStatus(DownloadHashManager.UpdateStatus status, bool installed)
