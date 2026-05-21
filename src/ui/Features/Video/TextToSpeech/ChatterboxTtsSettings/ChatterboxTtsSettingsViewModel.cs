@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Media;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.ChatterboxTtsSettings;
@@ -23,6 +24,7 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
 
     [ObservableProperty] private string _engineLabel = string.Empty;
     [ObservableProperty] private IBrush _engineBrush = Brushes.Gray;
+    [ObservableProperty] private string _engineDownloadButtonText = string.Empty;
     [ObservableProperty] private string _baseModelLabel = string.Empty;
     [ObservableProperty] private IBrush _baseModelBrush = Brushes.Gray;
     [ObservableProperty] private string _baseDownloadButtonText = string.Empty;
@@ -54,12 +56,17 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
         IsEngineInstalled = File.Exists(ChatterboxTtsCpp.GetCrispAsrExecutable());
         if (!IsEngineInstalled)
         {
-            EngineLabel = "CrispASR not installed — install via Audio to text first";
+            EngineLabel = "CrispASR not installed";
             EngineBrush = new SolidColorBrush(Color.FromRgb(0xF4, 0x43, 0x36)); // red
         }
         else if (!ChatterboxTtsCpp.IsCrispAsrChatterboxCapable())
         {
-            EngineLabel = "CrispASR too old — update via Audio to text → Engine settings";
+            EngineLabel = "CrispASR too old - update required";
+            EngineBrush = new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00)); // amber
+        }
+        else if (ChatterboxTtsCpp.GetEngineUpdateStatus() == DownloadHashManager.UpdateStatus.UpdateAvailable)
+        {
+            EngineLabel = "CrispASR - update available";
             EngineBrush = new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00)); // amber
         }
         else
@@ -67,6 +74,7 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
             EngineLabel = "CrispASR (Chatterbox-capable)";
             EngineBrush = new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50)); // green
         }
+        EngineDownloadButtonText = IsEngineInstalled ? "Re-download CrispASR" : "Download CrispASR";
 
         var baseInstalled = ChatterboxTtsCpp.AreModelsInstalled(ChatterboxTtsCpp.ModelKeyBase);
         ApplyModelStatus(
@@ -131,6 +139,20 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
         }
 
         await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window, vm => vm.StartDownloadChatterboxModels(modelKey));
+        Refresh();
+    }
+
+    [RelayCommand]
+    private async Task RedownloadEngine()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        // CrispASR is shared with Speech-to-text; this runs the same download flow as the
+        // "Generate speech" path, then refreshes the status shown here.
+        await TtsVoiceInstaller.EnsureCrispAsrForChatterbox(Window, _windowService, forceRedownload: true);
         Refresh();
     }
 

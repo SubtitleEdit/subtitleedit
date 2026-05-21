@@ -108,7 +108,13 @@ public class ChatterboxTtsSettingsWindow : Window
         };
 
         grid.Add(MakeLabel("Engine"), 0, 0);
-        grid.Add(MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel)), 0, 1);
+        var enginePanel = MakeStatusPanel(nameof(vm.EngineBrush), nameof(vm.EngineLabel));
+        var engineButton = UiUtil.MakeButton(string.Empty, vm.RedownloadEngineCommand)
+            .WithIconLeft(IconNames.Download)
+            .WithMarginLeft(12);
+        engineButton.Bind(ContentControl.ContentProperty, new Binding(nameof(vm.EngineDownloadButtonText)));
+        enginePanel.Children.Add(engineButton);
+        grid.Add(enginePanel, 0, 1);
 
         grid.Add(MakeLabel("Base model"), 1, 0);
         grid.Add(MakeStatusPanel(nameof(vm.BaseModelBrush), nameof(vm.BaseModelLabel)), 1, 1);

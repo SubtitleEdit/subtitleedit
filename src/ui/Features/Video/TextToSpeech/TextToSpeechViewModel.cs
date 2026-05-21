@@ -1017,7 +1017,7 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         if (engine is ChatterboxTtsCpp)
         {
-            if (!await EnsureCrispAsrForChatterbox(engine))
+            if (!await TtsVoiceInstaller.EnsureCrispAsrForChatterbox(Window, _windowService, forceRedownload: false))
             {
                 return false;
             }
@@ -1238,120 +1238,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
 
         return false;
-    }
-
-    private async Task<bool> EnsureCrispAsrForChatterbox(ITtsEngine engine)
-    {
-        if (Window == null)
-        {
-            return false;
-        }
-
-        var isInstalled = await engine.IsInstalled(SelectedRegion);
-        var isCapable = isInstalled && ChatterboxTtsCpp.IsCrispAsrChatterboxCapable();
-        if (isInstalled && isCapable)
-        {
-            return true;
-        }
-
-        var crispAsrEngine = (ISpeechToTextEngine)new CrispAsrCohere();
-        string crispVariant;
-
-        if (isInstalled)
-        {
-            // Already installed but the hash matches a known older release —
-            // re-download with the same variant the user picked originally.
-            var folder = crispAsrEngine.GetAndCreateWhisperFolder();
-            crispVariant = (Configuration.IsRunningOnWindows
-                ? DownloadHashManager.DetectCrispAsrWindowsVariant(folder)
-                : null) ?? "vulkan";
-
-            var answer = await MessageBox.Show(
-                Window,
-                "CrispASR update required",
-                $"{Environment.NewLine}\"Chatterbox TTS\" needs CrispASR v0.6.0 or newer. Re-download now?",
-                MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Question);
-
-            if (answer != MessageBoxResult.Yes)
-            {
-                return false;
-            }
-        }
-        else if (Configuration.IsRunningOnWindows)
-        {
-            var variantAnswer = await MessageBox.Show(
-                Window,
-                "Download CrispASR?",
-                $"{Environment.NewLine}\"Chatterbox TTS\" runs through the CrispASR runtime. Select a build to download:",
-                MessageBoxButtons.Cancel,
-                MessageBoxIcon.Question,
-                "Vulkan",
-                "CUDA");
-
-            if (variantAnswer == MessageBoxResult.None || variantAnswer == MessageBoxResult.Cancel)
-            {
-                return false;
-            }
-
-            crispVariant = variantAnswer switch
-            {
-                MessageBoxResult.Custom2 => "cuda",
-                _ => "vulkan",
-            };
-
-            if (crispVariant == "vulkan" && !VulkanHelper.IsInstalled())
-            {
-                var vulkanAnswer = await MessageBox.Show(
-                    Window,
-                    "Vulkan SDK may be required",
-                    $"The Vulkan version requires the Vulkan SDK to be installed.{Environment.NewLine}{Environment.NewLine}You can download it from:{Environment.NewLine}https://vulkan.lunarg.com/sdk/home{Environment.NewLine}{Environment.NewLine}Continue with Vulkan download?",
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Question);
-
-                if (vulkanAnswer == MessageBoxResult.No)
-                {
-                    UiUtil.OpenUrl("https://vulkan.lunarg.com/sdk/home");
-                    return false;
-                }
-
-                if (vulkanAnswer != MessageBoxResult.Yes)
-                {
-                    return false;
-                }
-            }
-        }
-        else
-        {
-            var answer = await MessageBox.Show(
-                Window,
-                "Download CrispASR?",
-                $"{Environment.NewLine}\"Chatterbox TTS\" runs through the CrispASR runtime. Download and install now?",
-                MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Question);
-
-            if (answer != MessageBoxResult.Yes)
-            {
-                return false;
-            }
-
-            crispVariant = "vulkan"; // ignored on non-Windows
-        }
-
-        var dlVm = await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
-            Window!, viewModel =>
-            {
-                viewModel.Engine = crispAsrEngine;
-                viewModel.CrispAsrWindowsVariant = crispVariant;
-                viewModel.StartDownload();
-            });
-
-        if (!dlVm.OkPressed)
-        {
-            return false;
-        }
-
-        return await engine.IsInstalled(SelectedRegion) && ChatterboxTtsCpp.IsCrispAsrChatterboxCapable();
     }
 
     private async Task MergeAndAddToVideo(TtsStepResult[] fixSpeedResult)

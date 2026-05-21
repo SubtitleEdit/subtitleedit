@@ -1,8 +1,14 @@
 using Avalonia.Controls;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Download;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -39,6 +45,127 @@ public static class TtsVoiceInstaller
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// Ensures the CrispASR runtime that Chatterbox TTS runs on is installed and new enough.
+    /// When <paramref name="forceRedownload"/> is true the download runs even if CrispASR is
+    /// already Chatterbox-capable - used by the settings "Update CrispASR" button when a newer
+    /// release exists. Returns true when CrispASR ends up installed and Chatterbox-capable.
+    /// </summary>
+    public static async Task<bool> EnsureCrispAsrForChatterbox(Window? window, IWindowService windowService, bool forceRedownload)
+    {
+        if (window == null)
+        {
+            return false;
+        }
+
+        var isInstalled = File.Exists(ChatterboxTtsCpp.GetCrispAsrExecutable());
+        var isCapable = isInstalled && ChatterboxTtsCpp.IsCrispAsrChatterboxCapable();
+        if (!forceRedownload && isInstalled && isCapable)
+        {
+            return true;
+        }
+
+        var crispAsrEngine = (ISpeechToTextEngine)new CrispAsrCohere();
+        string crispVariant;
+
+        if (isInstalled)
+        {
+            // Already installed - re-download with the variant the user originally picked.
+            var folder = crispAsrEngine.GetAndCreateWhisperFolder();
+            crispVariant = (Configuration.IsRunningOnWindows
+                ? DownloadHashManager.DetectCrispAsrWindowsVariant(folder)
+                : null) ?? "vulkan";
+
+            var answer = await MessageBox.Show(
+                window,
+                isCapable ? "Update CrispASR" : "CrispASR update required",
+                isCapable
+                    ? $"{Environment.NewLine}A newer CrispASR runtime is available. Re-download it now?"
+                    : $"{Environment.NewLine}\"Chatterbox TTS\" needs CrispASR v0.6.0 or newer. Re-download now?",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+
+            if (answer != MessageBoxResult.Yes)
+            {
+                return false;
+            }
+        }
+        else if (Configuration.IsRunningOnWindows)
+        {
+            var variantAnswer = await MessageBox.Show(
+                window,
+                "Download CrispASR?",
+                $"{Environment.NewLine}\"Chatterbox TTS\" runs through the CrispASR runtime. Select a build to download:",
+                MessageBoxButtons.Cancel,
+                MessageBoxIcon.Question,
+                "Vulkan",
+                "CUDA");
+
+            if (variantAnswer == MessageBoxResult.None || variantAnswer == MessageBoxResult.Cancel)
+            {
+                return false;
+            }
+
+            crispVariant = variantAnswer switch
+            {
+                MessageBoxResult.Custom2 => "cuda",
+                _ => "vulkan",
+            };
+
+            if (crispVariant == "vulkan" && !VulkanHelper.IsInstalled())
+            {
+                var vulkanAnswer = await MessageBox.Show(
+                    window,
+                    "Vulkan SDK may be required",
+                    $"The Vulkan version requires the Vulkan SDK to be installed.{Environment.NewLine}{Environment.NewLine}You can download it from:{Environment.NewLine}https://vulkan.lunarg.com/sdk/home{Environment.NewLine}{Environment.NewLine}Continue with Vulkan download?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (vulkanAnswer == MessageBoxResult.No)
+                {
+                    UiUtil.OpenUrl("https://vulkan.lunarg.com/sdk/home");
+                    return false;
+                }
+
+                if (vulkanAnswer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+            }
+        }
+        else
+        {
+            var answer = await MessageBox.Show(
+                window,
+                "Download CrispASR?",
+                $"{Environment.NewLine}\"Chatterbox TTS\" runs through the CrispASR runtime. Download and install now?",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+
+            if (answer != MessageBoxResult.Yes)
+            {
+                return false;
+            }
+
+            crispVariant = "vulkan"; // ignored on non-Windows
+        }
+
+        var dlVm = await windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
+            window, viewModel =>
+            {
+                viewModel.Engine = crispAsrEngine;
+                viewModel.CrispAsrWindowsVariant = crispVariant;
+                viewModel.StartDownload();
+            });
+
+        if (!dlVm.OkPressed)
+        {
+            return false;
+        }
+
+        return File.Exists(ChatterboxTtsCpp.GetCrispAsrExecutable()) && ChatterboxTtsCpp.IsCrispAsrChatterboxCapable();
     }
 
     private static void SafeDelete(string fileName)
