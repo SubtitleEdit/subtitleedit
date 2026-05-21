@@ -33,17 +33,23 @@ public static class DownloadHashManager
         // Hashes of the release archive (.zip / .tar.gz) — used when a sidecar hash exists alongside the install.
         public const string WindowsCuda = "CrispAsr.Windows.Cuda";
         public const string WindowsVulkan = "CrispAsr.Windows.Vulkan";
+        public const string WindowsCpu = "CrispAsr.Windows.Cpu";
+        public const string WindowsCpuLegacy = "CrispAsr.Windows.CpuLegacy";
         public const string MacOs = "CrispAsr.MacOs";
         public const string Linux = "CrispAsr.Linux";
         public const string LinuxCuda = "CrispAsr.Linux.Cuda";
+        public const string LinuxArm = "CrispAsr.Linux.Arm";
 
         // Hashes of the unpacked main executable (crispasr.exe / crispasr) — used to detect the
         // installed version when no sidecar is present (e.g. installs from older SE builds).
         public const string WindowsCudaExecutable = "CrispAsr.Windows.Cuda.Executable";
         public const string WindowsVulkanExecutable = "CrispAsr.Windows.Vulkan.Executable";
+        public const string WindowsCpuExecutable = "CrispAsr.Windows.Cpu.Executable";
+        public const string WindowsCpuLegacyExecutable = "CrispAsr.Windows.CpuLegacy.Executable";
         public const string MacOsExecutable = "CrispAsr.MacOs.Executable";
         public const string LinuxExecutable = "CrispAsr.Linux.Executable";
         public const string LinuxCudaExecutable = "CrispAsr.Linux.Cuda.Executable";
+        public const string LinuxArmExecutable = "CrispAsr.Linux.Arm.Executable";
     }
 
     public static class LlamaCpp
@@ -152,7 +158,8 @@ public static class DownloadHashManager
             // otherwise users will be prompted to "update" to the same version they just got.
             [CrispAsr.WindowsCuda] = new[]
             {
-                "b2a3eb60bd674d8a176b885227783036014193a84e25f597ddf62a06ad363f2d", // v0.6.8 (current download URL)
+                "a9a04f7a9eb3eca727112f217338329907323ed4a69dc42523acc216bd1989d3", // v0.6.9 (current download URL)
+                "b2a3eb60bd674d8a176b885227783036014193a84e25f597ddf62a06ad363f2d", // v0.6.8
                 "43dc3ed70aaac3eec976871905fadbf818d8dc34bc0d7f868d0a6b1622f4c63b", // v0.6.7
                 "be610e9a8bb283cc283dc3d0df45b5f110ccb350a13443e9b8e4092345d78596", // v0.6.6
                 "48d279a0d8358dde68d95ccdc6a5ac8e3eb8dd65dc2a400166f33dd072aa7202", // v0.6.2
@@ -166,7 +173,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.WindowsVulkan] = new[]
             {
-                "da28d90f1883ea2cb0b08583b00f442a39b3732232f06ea6c9cd96e6c2d24b81", // v0.6.8 (current download URL)
+                "38047a59e03cd69f32f4e7dc8de39649e62c993a459289e4636659d4105769d7", // v0.6.9 (current download URL)
+                "da28d90f1883ea2cb0b08583b00f442a39b3732232f06ea6c9cd96e6c2d24b81", // v0.6.8
                 "95dc640e612cc9cc95266268cc2fd03841f5fa82088a64bddb0c7ff881d7737d", // v0.6.7
                 "3fda38ec66b75eca1d9145787ace497a4ca56ce2d6c218773f925f458790622d", // v0.6.6
                 "b70420f6f2ed71f7390bc9f3960175ead212f41f03d0509d485902c1b2c8c882", // v0.6.2
@@ -178,9 +186,32 @@ public static class DownloadHashManager
                 "aadb324d33dea7c28ff703a64403169a0814dc71449f7d635f270e8bc1e0b7c3", // v0.5.3
                 "b7c58fba959f8a7a013e458764cf526a4cf6595d8c6247b8893c37cb8c9dd000", // v0.5.2
             },
+            [CrispAsr.WindowsCpu] = new[]
+            {
+                "44175685b630cb8e657dc9cc173c70218fcc8fdbcf2271a09c5061b8019b48ef", // v0.6.9 (current download URL)
+                "621c6e811eeba9873abfe8f01fb2f4c08c7190a14106384b3e11a4b25bc4c86d", // v0.6.7
+                "05f629c4d022fb8a05a24b16cb155c45ab65e90dc0aa7eed46ae31feccf43de8", // v0.6.6
+                "4b36e5634c1acc7f7387c9bce3b1302e8fbd8441b3e10d37b5d5952064bbc552", // v0.6.2
+                "46fe3bc88966c973eef66b7c2271f95bb40b2b4bf338643e71834186cba0ae3d", // v0.6.0 (first non-legacy CPU build SE has shipped)
+            },
+            [CrispAsr.WindowsCpuLegacy] = new[]
+            {
+                "7d0631467890b4c865b89c01029c1332129e255b9755c77592d9ffe6380f344e", // v0.6.9 (current download URL)
+                "8a33a0fb0444e95f06ff1a48bb4b48436d6a59bd7c96c6e74db0221a1a215423", // v0.6.7
+                "d9fd9306246cda7b4b3006441aad8ba755d617b066f6f033358b51c860d28f89", // v0.6.6
+                "eb27d98fc8051d38dca76c0e0fc2a2b1fcbfbbac18267e781dbb2839367b9f18", // v0.6.2
+                "5b59d9268f37c683cc8793322d553121d850163d7a8ac3ca8323a05270b5a999", // v0.6.0
+                "e04be09ca8fb608c54de0d823a6a761adc93a16ab9ff5d4c7025e5515e1759e7", // v0.5.7
+                "e8eddaa4a988be019919c8a0c3fae32680732f4b17ab2ee06a8756200cc4883a", // v0.5.6
+                "c111fe567df600e52754e0eab93d2cd37527623328abe2c4f8dae283ae2ae059", // v0.5.5
+                "bbc6422fb0346dc79a7be41b0800ffd67b42dfe81691084c4bc76c85a1caa985", // v0.5.4
+                "88e62281ce19047e34290680ecab35ea2e24af6fc2b9edd6244234733a228703", // v0.5.3
+                "7faa7c92b4b48a64fb653f13e0e985618d4495d6d05abc366b3fd4b27098e65c", // v0.5.2
+            },
             [CrispAsr.MacOs] = new[]
             {
-                "8fa0fc2bd7ff8889de87c5b19bcf24c5882abd1aa9a03b98a980cd944a70c914", // v0.6.8 (current download URL)
+                "df0989bbca7d87ab2343405058cb5fa3e985fc3a601e54ac35eb7a3ae10d27b4", // v0.6.9 (current download URL)
+                "8fa0fc2bd7ff8889de87c5b19bcf24c5882abd1aa9a03b98a980cd944a70c914", // v0.6.8
                 "a2360c4c425345338cf468a19c978cabd61ddd9873d863075e882bb46695abd8", // v0.6.7
                 "32dab6eb5f2be8150f3f66131dfdd09da5f7a2682ff1e594794bcbf51b5a3c91", // v0.6.6
                 "8d8a882cd4887c521197e03389e1cfad693ccd85a78eb66af24d348e97add41b", // v0.6.2
@@ -194,7 +225,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.Linux] = new[]
             {
-                "da3ea0675168a3c7396858ffe9c483a401e581ae3bb080f8825a5e0cbc8b5589", // v0.6.8 (current download URL)
+                "7d2642301b7185f6e18a219da8b9e363ce0972f9331f51eb91a6af530c16d484", // v0.6.9 (current download URL)
+                "da3ea0675168a3c7396858ffe9c483a401e581ae3bb080f8825a5e0cbc8b5589", // v0.6.8
                 "54edc828b29ab25217582d906416f07109dfd6d085f9c407521d0411268a9665", // v0.6.7
                 "2ac612bada388345c2dd9580353e2401e07924cb3fbe37c0cae6c5564b51068e", // v0.6.6
                 "52a9b6791ef23c73b0448475712611cd97bbd8598ee0101e7f28ff3e8ba5906b", // v0.6.2
@@ -208,15 +240,21 @@ public static class DownloadHashManager
             },
             [CrispAsr.LinuxCuda] = new[]
             {
-                "9a493e0f19421e3b73307a48113dd18c326756dfe751bd3a9bc4bc8d049137d1", // v0.6.8 (current download URL)
+                "870c37ef44afc8d63f216c192719c9cc5291493eeac43d2709d64fe5c826cecb", // v0.6.9 (current download URL)
+                "9a493e0f19421e3b73307a48113dd18c326756dfe751bd3a9bc4bc8d049137d1", // v0.6.8
                 "0e2ebbcb8012285a8c2089c5254d61f8e4e870e3397f220bcd9708ec569f3037", // v0.6.7 (first SE-tracked Linux CUDA build)
+            },
+            [CrispAsr.LinuxArm] = new[]
+            {
+                "b3dacccb8d16afb88a7c426edbeefaa6c8bee0f6bc5a5e6493fb4616c2ec32d1", // v0.6.9 (current download URL — first SE-tracked Linux ARM64 build)
             },
 
             // SHA-256 of crispasr.exe / crispasr extracted from each archive above.
             // Windows CUDA executable hash intentionally omitted (the CUDA archive is ~700 MB; not yet hashed).
             [CrispAsr.WindowsVulkanExecutable] = new[]
             {
-                "e0546b739f17b4e5fdbe732801e695006b48c6019247f4fe0b51149163ec9a00", // v0.6.8 (current download URL)
+                "90776be4e17bdb47dd9f912e43d201a90e89906e8845c56f06dd49bf7c797b5e", // v0.6.9 (current download URL)
+                "e0546b739f17b4e5fdbe732801e695006b48c6019247f4fe0b51149163ec9a00", // v0.6.8
                 "137a80127527d4cec89a93616cf94e072b437ed4d674b4a0fe27839be26ab6a0", // v0.6.7
                 "fc9a592eb6cfa41d74f165e65cabe607712a06d546ba77bc3e3a93823ac9d3f3", // v0.6.6
                 "ac0b6c10d27de1d908759c4cfbbb6062937edac3f712cc51b8c2f5d37e73bcaf", // v0.6.2
@@ -228,9 +266,32 @@ public static class DownloadHashManager
                 "6217ae5ff00fac3997225e930576aa9ff58b8708d8a66a86163c2c555bb88ec5", // v0.5.3
                 "112862f031cfc65656e282a61b0b156f8f3037a3d2f606df826fb7ed824d3d92", // v0.5.2
             },
+            [CrispAsr.WindowsCpuExecutable] = new[]
+            {
+                "a9900bcc3c8bae6b092b940c9df210e5514c7faeecffa6f1d7c6bc85b4d02e6e", // v0.6.9 (current download URL)
+                "a528743af75665975bd7d2ca71cdd758fa7fb261b49755a6fdf7f0c113506ec4", // v0.6.7
+                "69f01b93054cf0c359eaa31f80f6ff06452f52de5306588aa2c743c0a5a6c4f5", // v0.6.6
+                "b63eb3a28ae7da8c0fcb486fa0f460a07ad85ace545359a338fc053bdea69dbf", // v0.6.2
+                "28da4dcf6e72738b408400ebdef00203f8e70dccf392446ecee90a15c971e186", // v0.6.0 (first non-legacy CPU build SE has shipped)
+            },
+            [CrispAsr.WindowsCpuLegacyExecutable] = new[]
+            {
+                "2bb24c9e0f1d4d887622b492dc018ea690df1b59858b0aeb18152cd1cb9f6938", // v0.6.9 (current download URL)
+                "d049f9da2d5599e308cb3a6432f64271c46e8acd4989556e7b9b730c55508f64", // v0.6.7
+                "352483e379cdeff5d42d2cd4f95c3c41f73f451986b26ee7a65843281cf4153c", // v0.6.6
+                "089c35a3775292e3d13c200c00612d9c26709e1007f78e0139dca1466b9d644e", // v0.6.2
+                "a399e96790cd170c95c354f152f88e9cd1dc44b4a6becb4f5eb2b7f203d8a184", // v0.6.0
+                "44c6865ac7795c6e09b65a516b0111b9fd77e72758ab25d1e1768bbb75a3a0c8", // v0.5.7
+                "f4dbf3f11245632c8f56872e1f8a56185d336c17a858fe97876fb12e76bbe2e1", // v0.5.6
+                "057e7c642f2da1cf5ddb84ddac8d740234d8b84ddf33dadcb2bae91c06692956", // v0.5.5
+                "07ae4e499abb68fd64987a617c69aa0a007753eb9409d379229a5a871584025f", // v0.5.4
+                "e05962d3fb38336f340150b285aa6c78c31fbb7c63791748934e30d9aac81a25", // v0.5.3
+                "07f8e26b7068f9af0ebe0fe2fe4d4335c9f5c2719e753620655ba9a0961a6fdc", // v0.5.2
+            },
             [CrispAsr.LinuxExecutable] = new[]
             {
-                "6d2ae10f068cd152f2f0d49cb4de0fca39d7085a9b71e0ef2f514ded06e47627", // v0.6.8 (current download URL)
+                "ee374d16df3fedf900b694f28f8b9500b415798444635ea8b967796dcfc2a1ee", // v0.6.9 (current download URL)
+                "6d2ae10f068cd152f2f0d49cb4de0fca39d7085a9b71e0ef2f514ded06e47627", // v0.6.8
                 "425bbf26de4e6f742cb191c08eef1676a167c11a8f46cc47942b50551f929d32", // v0.6.7
                 "31e955f45739471c5d1464d8e8c484704124715e13c944c27b6d47db6857ef06", // v0.6.6
                 "32f23c42260c0f315b51818c674505b4e7c619af1b17d13f07ccad9a76a4aed0", // v0.6.2
@@ -244,7 +305,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.MacOsExecutable] = new[]
             {
-                "552421500735de8ccf15565e8e2bf5556c5ceb7b2f6c41609e3f91ce1f138a03", // v0.6.8 (current download URL)
+                "3e0d5398091bb7af2d492bf0fdb34ea4664e1b781183c5a0f1ae0c9d7989fb9f", // v0.6.9 (current download URL)
+                "552421500735de8ccf15565e8e2bf5556c5ceb7b2f6c41609e3f91ce1f138a03", // v0.6.8
                 "7d2edd77f31882885a41956fb7c5d8e8345c5532361c98180af26cea1a2ae1b6", // v0.6.7
                 "abfb92985fed2b69e25473b7dd6a39b637f7e3025d7b379077a762d7cf8df8de", // v0.6.6
                 "fc60809052f50622663ae4912088f9f547023e4b6d528e902aa0e1a6619fe387", // v0.6.2
@@ -258,8 +320,13 @@ public static class DownloadHashManager
             },
             [CrispAsr.LinuxCudaExecutable] = new[]
             {
-                "363864a0f41e7f61a930c8f070e1b1357dc9b86063f747b719651890b446d0a7", // v0.6.8 (current download URL)
+                "6ae31308ff2856a42bc13de16470e95c5cc03a26ee117e3386005364ee384c75", // v0.6.9 (current download URL)
+                "363864a0f41e7f61a930c8f070e1b1357dc9b86063f747b719651890b446d0a7", // v0.6.8
                 "6af1d3dace190fd7047ce90634764c80bf2fb6d64094e2a5821afe8e0c74bb65", // v0.6.7 (first SE-tracked Linux CUDA build)
+            },
+            [CrispAsr.LinuxArmExecutable] = new[]
+            {
+                "865b215977eb67035af8cd51bf17a657de5a69c8d076fa287652d27e69bac8c0", // v0.6.9 (current download URL — first SE-tracked Linux ARM64 build)
             },
 
             // llama.cpp — https://github.com/ggml-org/llama.cpp/releases
@@ -609,15 +676,20 @@ public static class DownloadHashManager
 
     /// <summary>
     /// Resolves the CrispASR hash key for the current OS and variant.
-    /// On Windows the variant selects between cuda and vulkan.
+    /// On Windows the variant selects between cuda, vulkan, cpu, and cpu-legacy.
     /// On Linux x86_64 the variant selects between cuda and the default CPU build.
+    /// On Linux ARM64 the variant is ignored (only one build).
     /// Returns null if the platform / variant combination is unknown.
     /// </summary>
     public static string? ResolveCrispAsrKey(string? variant)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            if (variant == "cuda" && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+            {
+                return CrispAsr.LinuxArm;
+            }
+            if (variant == "cuda")
             {
                 return CrispAsr.LinuxCuda;
             }
@@ -634,6 +706,8 @@ public static class DownloadHashManager
             return variant switch
             {
                 "cuda" => CrispAsr.WindowsCuda,
+                "cpu" => CrispAsr.WindowsCpu,
+                "cpu-legacy" => CrispAsr.WindowsCpuLegacy,
                 "vulkan" => CrispAsr.WindowsVulkan,
                 _ => null,
             };
@@ -644,7 +718,7 @@ public static class DownloadHashManager
 
     /// <summary>
     /// Reverse of <see cref="ResolveCrispAsrKey"/> — returns the variant string matching the
-    /// given hash key. For Windows: "cuda" / "vulkan". For Linux x86_64:
+    /// given hash key. For Windows: "cuda" / "vulkan" / "cpu" / "cpu-legacy". For Linux x86_64:
     /// "cuda" for the CUDA build, empty string for the default CPU build. Returns null otherwise.
     /// </summary>
     public static string? GetCrispAsrVariant(string key)
@@ -653,8 +727,11 @@ public static class DownloadHashManager
         {
             CrispAsr.WindowsCuda or CrispAsr.WindowsCudaExecutable => "cuda",
             CrispAsr.WindowsVulkan or CrispAsr.WindowsVulkanExecutable => "vulkan",
+            CrispAsr.WindowsCpu or CrispAsr.WindowsCpuExecutable => "cpu",
+            CrispAsr.WindowsCpuLegacy or CrispAsr.WindowsCpuLegacyExecutable => "cpu-legacy",
             CrispAsr.LinuxCuda or CrispAsr.LinuxCudaExecutable => "cuda",
             CrispAsr.Linux or CrispAsr.LinuxExecutable => string.Empty,
+            CrispAsr.LinuxArm or CrispAsr.LinuxArmExecutable => string.Empty,
             _ => null,
         };
     }
@@ -669,6 +746,8 @@ public static class DownloadHashManager
         {
             CrispAsr.WindowsCuda or CrispAsr.WindowsCudaExecutable => "cuda",
             CrispAsr.WindowsVulkan or CrispAsr.WindowsVulkanExecutable => "vulkan",
+            CrispAsr.WindowsCpu or CrispAsr.WindowsCpuExecutable => "cpu",
+            CrispAsr.WindowsCpuLegacy or CrispAsr.WindowsCpuLegacyExecutable => "cpu-legacy",
             _ => null,
         };
     }
@@ -681,7 +760,11 @@ public static class DownloadHashManager
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            if (variant == "cuda" && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+            {
+                return CrispAsr.LinuxArmExecutable;
+            }
+            if (variant == "cuda")
             {
                 return CrispAsr.LinuxCudaExecutable;
             }
@@ -699,6 +782,8 @@ public static class DownloadHashManager
             {
                 "cuda" => CrispAsr.WindowsCudaExecutable,
                 "vulkan" => CrispAsr.WindowsVulkanExecutable,
+                "cpu" => CrispAsr.WindowsCpuExecutable,
+                "cpu-legacy" => CrispAsr.WindowsCpuLegacyExecutable,
                 _ => null,
             };
         }
@@ -708,8 +793,9 @@ public static class DownloadHashManager
 
     /// <summary>
     /// Detects which Windows CrispASR variant is installed.
-    /// Returns "cuda" / "vulkan", or null if the folder doesn't look like a CrispASR install.
-    /// CUDA and Vulkan are identified by their backend DLLs.
+    /// Returns "cuda" / "vulkan" / "cpu" / "cpu-legacy", or null if the folder doesn't look like a
+    /// CrispASR install. CUDA and Vulkan are identified by their backend DLLs; CPU vs CPU-legacy
+    /// is decided by sidecar or executable-hash match (CPU-legacy is the AVX2-less fallback).
     /// </summary>
     public static string? DetectCrispAsrWindowsVariant(string installFolder)
     {
@@ -728,7 +814,37 @@ public static class DownloadHashManager
             return "vulkan";
         }
 
-        return null;
+        var exe = Path.Combine(installFolder, "crispasr.exe");
+        if (!File.Exists(exe))
+        {
+            return null;
+        }
+
+        var sidecarKey = TryReadInstalledKey(installFolder);
+        if (sidecarKey == CrispAsr.WindowsCpuLegacy)
+        {
+            return "cpu-legacy";
+        }
+        if (sidecarKey == CrispAsr.WindowsCpu)
+        {
+            return "cpu";
+        }
+
+        // No usable sidecar — match the EXE against known CPU-legacy hashes so older
+        // installs (made before the sidecar existed) are still recognised as legacy.
+        var exeHash = ComputeSha256(exe);
+        if (exeHash != null)
+        {
+            foreach (var legacy in GetKnownHashes(CrispAsr.WindowsCpuLegacyExecutable))
+            {
+                if (legacy.Equals(exeHash, StringComparison.OrdinalIgnoreCase))
+                {
+                    return "cpu-legacy";
+                }
+            }
+        }
+
+        return "cpu";
     }
 
     /// <summary>
