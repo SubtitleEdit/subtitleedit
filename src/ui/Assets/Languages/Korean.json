@@ -2580,7 +2580,7 @@
     }
   },
   "plugins": {
-    "title": "플러그인",
+    "title": "플러그인(_P)",
     "managePlugins": "플러그인 관리...",
     "noPluginsInstalled": "설치된 플러그인 없음",
     "getPluginsOnline": "온라인에서 플러그인 찾기...",
