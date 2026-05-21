@@ -111,6 +111,27 @@ public class Qwen3TtsCrispAsr : ITtsEngine
         return new CrispAsrCohere().GetExecutable();
     }
 
+    /// <summary>
+    /// Returns the update status of the CrispASR runtime this engine sits on top of.
+    /// Reads the speech-to-text CrispASR install's <c>.installed.sha256</c> sidecar;
+    /// returns <see cref="DownloadHashManager.UpdateStatus.Unknown"/> when CrispASR
+    /// is not installed or the sidecar is missing. Mirrors
+    /// <see cref="ChatterboxTtsCpp.GetEngineUpdateStatus"/>.
+    /// </summary>
+    public static DownloadHashManager.UpdateStatus GetEngineUpdateStatus()
+    {
+        var exe = GetCrispAsrExecutable();
+        if (!File.Exists(exe))
+        {
+            return DownloadHashManager.UpdateStatus.Unknown;
+        }
+
+        var folder = Path.GetDirectoryName(exe);
+        return string.IsNullOrEmpty(folder)
+            ? DownloadHashManager.UpdateStatus.Unknown
+            : DownloadHashManager.GetSidecarStatus(folder);
+    }
+
     public static string GetSetFolder()
     {
         if (!Directory.Exists(Se.TextToSpeechFolder))
