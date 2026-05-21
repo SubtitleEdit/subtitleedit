@@ -34,9 +34,26 @@ public partial class OmniVoiceSettingsViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(DownloadButtonLabel))]
     private bool _isInstalled;
 
-    public string DownloadButtonLabel => IsInstalled
-        ? Se.Language.General.Redownload
-        : Se.Language.General.Download;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DownloadButtonLabel))]
+    private DownloadHashManager.UpdateStatus _engineUpdateStatus;
+
+    // "Download" when not installed, "Update" when a newer engine release is available,
+    // otherwise "Re-download".
+    public string DownloadButtonLabel
+    {
+        get
+        {
+            if (!IsInstalled)
+            {
+                return Se.Language.General.Download;
+            }
+
+            return EngineUpdateStatus == DownloadHashManager.UpdateStatus.UpdateAvailable
+                ? Se.Language.General.Update
+                : Se.Language.General.Redownload;
+        }
+    }
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -57,7 +74,8 @@ public partial class OmniVoiceSettingsViewModel : ObservableObject
     {
         IsInstalled = File.Exists(OmniVoiceTtsCpp.GetExecutableFileName());
         BackendLabel = IsInstalled ? DetectInstalledBackend() : Se.Language.General.NotInstalled;
-        ApplyStatus(IsInstalled ? OmniVoiceTtsCpp.GetEngineUpdateStatus() : DownloadHashManager.UpdateStatus.Unknown, IsInstalled);
+        EngineUpdateStatus = IsInstalled ? OmniVoiceTtsCpp.GetEngineUpdateStatus() : DownloadHashManager.UpdateStatus.Unknown;
+        ApplyStatus(EngineUpdateStatus, IsInstalled);
     }
 
     private void ApplyStatus(DownloadHashManager.UpdateStatus status, bool installed)
