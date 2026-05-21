@@ -116,6 +116,7 @@ public class LanguageGeneral
     public string Cps { get; set; }
     public string CurrentSubtitle { get; set; }
     public string CurrentVideoPosition { get; set; }
+    public string Custom { get; set; }
     public string Cut { get; set; }
     public string Dark { get; set; }
     public string DateAndTime { get; set; }
@@ -818,6 +819,7 @@ public class LanguageGeneral
         Cps = "Chars/sec";
         CurrentSubtitle = "Current subtitle";
         CurrentVideoPosition = "Current video position";
+        Custom = "Custom";
         Cut = "Cut";
         Dark = "Dark";
         DateAndTime = "Date and time";

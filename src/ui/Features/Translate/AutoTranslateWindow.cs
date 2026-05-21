@@ -217,7 +217,8 @@ public class AutoTranslateWindow : Window
     {
         if (string.IsNullOrEmpty(model.Model.Url))
         {
-            return string.IsNullOrEmpty(model.Model.Size) ? "custom" : $"custom, {model.Model.Size}";
+            var custom = Se.Language.General.Custom;
+            return string.IsNullOrEmpty(model.Model.Size) ? custom : $"{custom}, {model.Model.Size}";
         }
 
         return string.IsNullOrEmpty(model.Model.Size) ? null : model.Model.Size;

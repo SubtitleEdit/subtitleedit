@@ -9,7 +9,6 @@ using Avalonia.Styling;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.Download;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 
@@ -107,8 +106,9 @@ public class TextToSpeechWindow : Window
             case OmniVoiceTtsCpp:
                 return StatusDots.From(engine.IsInstalled(null).Result, OmniVoiceTtsCpp.GetEngineUpdateStatus());
             case ChatterboxTtsCpp:
+                return StatusDots.From(engine.IsInstalled(null).Result, ChatterboxTtsCpp.GetEngineUpdateStatus());
             case Piper:
-                return StatusDots.From(engine.IsInstalled(null).Result, DownloadHashManager.UpdateStatus.Unknown);
+                return StatusDots.From(engine.IsInstalled(null).Result, Piper.GetEngineUpdateStatus());
             default:
                 return DownloadDotStatus.None;
         }

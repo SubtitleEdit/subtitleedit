@@ -139,6 +139,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 {
                     _downloadStream.Position = 0;
                     _zipUnpacker.UnpackZipStream(_downloadStream, folder, "piper", false, new List<string>(), null);
+                    WriteInstalledHashSidecar(folder, _downloadStream, DownloadHashManager.ResolvePiperKey());
                     _downloadStream.Dispose();
                 }
                 catch (Exception ex)

@@ -93,6 +93,26 @@ public class ChatterboxTtsCpp : ITtsEngine
     }
 
     /// <summary>
+    /// Returns the update status of the CrispASR engine Chatterbox runs on. Because Chatterbox
+    /// shares the speech-to-text CrispASR install, this reflects that engine's
+    /// <c>.installed.sha256</c> sidecar; returns <see cref="DownloadHashManager.UpdateStatus.Unknown"/>
+    /// when CrispASR is not installed or the sidecar is missing.
+    /// </summary>
+    public static DownloadHashManager.UpdateStatus GetEngineUpdateStatus()
+    {
+        var exe = GetCrispAsrExecutable();
+        if (!File.Exists(exe))
+        {
+            return DownloadHashManager.UpdateStatus.Unknown;
+        }
+
+        var folder = Path.GetDirectoryName(exe);
+        return string.IsNullOrEmpty(folder)
+            ? DownloadHashManager.UpdateStatus.Unknown
+            : DownloadHashManager.GetSidecarStatus(folder);
+    }
+
+    /// <summary>
     /// Returns true when the installed crispasr executable matches a known
     /// chatterbox-capable release (currently v0.6.0+ — earlier builds neither
     /// recognise --backend chatterbox nor expose the /v1/audio/speech endpoint).

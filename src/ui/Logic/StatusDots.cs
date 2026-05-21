@@ -1,9 +1,12 @@
 using System;
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Controls.Templates;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
 
 namespace Nikse.SubtitleEdit.Logic;
@@ -28,8 +31,10 @@ public enum DownloadDotStatus
 
 /// <summary>
 /// Shared helpers for the coloured install-status dot used by the text-to-speech, speech-to-text
-/// and auto-translate engine/model combo boxes. The green/amber/grey palette matches the status
-/// dot already shown in the engine settings dialogs.
+/// and auto-translate engine/model combo boxes. Green ("up to date") and amber ("update available")
+/// match the status dot in the engine settings dialogs; "not installed" is grey here rather than
+/// the dialogs' red, because in an engine/model picker "not downloaded yet" is a normal choice, not
+/// an error state.
 /// </summary>
 public static class StatusDots
 {
@@ -43,6 +48,18 @@ public static class StatusDots
         DownloadDotStatus.UpToDate => Green,
         DownloadDotStatus.UpdateAvailable => Amber,
         DownloadDotStatus.NotInstalled => Grey,
+        _ => null,
+    };
+
+    /// <summary>
+    /// The textual status used for the row's tooltip and accessible name, or null when no dot is
+    /// shown. Conveys the install state in text so it does not rely on dot colour alone.
+    /// </summary>
+    public static string? StatusText(DownloadDotStatus status) => status switch
+    {
+        DownloadDotStatus.UpToDate => Se.Language.General.UpToDate,
+        DownloadDotStatus.UpdateAvailable => Se.Language.General.UpdateAvailable,
+        DownloadDotStatus.NotInstalled => Se.Language.General.NotInstalled,
         _ => null,
     };
 
@@ -67,7 +84,8 @@ public static class StatusDots
     /// Builds a combo-box item template that renders "[dot] name (size)". The dot sits in a
     /// fixed-width slot so names line up whether or not a row has a dot; a
     /// <see cref="DownloadDotStatus.None"/> row leaves the slot empty. The size suffix is dropped
-    /// when null/empty.
+    /// when null/empty. The install state is also exposed as a tooltip and accessible name so it
+    /// does not depend on dot colour alone.
     /// </summary>
     /// <remarks>
     /// Recycling is left at the <see cref="FuncDataTemplate{T}"/> default (off): each row's visual
@@ -92,13 +110,16 @@ public static class StatusDots
                 VerticalAlignment = VerticalAlignment.Center,
             };
 
+            var status = getStatus(item);
+            var name = getName(item);
+
             var dotSlot = new Panel
             {
                 Width = 16,
                 VerticalAlignment = VerticalAlignment.Stretch,
             };
 
-            var brush = BrushFor(getStatus(item));
+            var brush = BrushFor(status);
             if (brush != null)
             {
                 dotSlot.Children.Add(new Ellipse
@@ -115,7 +136,7 @@ public static class StatusDots
 
             panel.Children.Add(new TextBlock
             {
-                Text = getName(item),
+                Text = name,
                 VerticalAlignment = VerticalAlignment.Center,
             });
 
@@ -124,10 +145,19 @@ public static class StatusDots
             {
                 panel.Children.Add(new TextBlock
                 {
-                    Text = $"  ({size})",
+                    Text = $"({size})",
                     Opacity = 0.6,
+                    Margin = new Thickness(6, 0, 0, 0),
                     VerticalAlignment = VerticalAlignment.Center,
                 });
+            }
+
+            // Convey the install state in text too (tooltip + screen reader), not colour alone.
+            var statusText = StatusText(status);
+            if (statusText != null)
+            {
+                ToolTip.SetTip(panel, statusText);
+                AutomationProperties.SetName(panel, $"{name}, {statusText}");
             }
 
             return panel;
