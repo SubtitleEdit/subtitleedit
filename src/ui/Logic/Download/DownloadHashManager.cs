@@ -38,6 +38,7 @@ public static class DownloadHashManager
         public const string MacOs = "CrispAsr.MacOs";
         public const string Linux = "CrispAsr.Linux";
         public const string LinuxCuda = "CrispAsr.Linux.Cuda";
+        public const string LinuxArm = "CrispAsr.Linux.Arm";
 
         // Hashes of the unpacked main executable (crispasr.exe / crispasr) — used to detect the
         // installed version when no sidecar is present (e.g. installs from older SE builds).
@@ -48,6 +49,7 @@ public static class DownloadHashManager
         public const string MacOsExecutable = "CrispAsr.MacOs.Executable";
         public const string LinuxExecutable = "CrispAsr.Linux.Executable";
         public const string LinuxCudaExecutable = "CrispAsr.Linux.Cuda.Executable";
+        public const string LinuxArmExecutable = "CrispAsr.Linux.Arm.Executable";
     }
 
     public static class LlamaCpp
@@ -242,6 +244,10 @@ public static class DownloadHashManager
                 "9a493e0f19421e3b73307a48113dd18c326756dfe751bd3a9bc4bc8d049137d1", // v0.6.8
                 "0e2ebbcb8012285a8c2089c5254d61f8e4e870e3397f220bcd9708ec569f3037", // v0.6.7 (first SE-tracked Linux CUDA build)
             },
+            [CrispAsr.LinuxArm] = new[]
+            {
+                "b3dacccb8d16afb88a7c426edbeefaa6c8bee0f6bc5a5e6493fb4616c2ec32d1", // v0.6.9 (current download URL — first SE-tracked Linux ARM64 build)
+            },
 
             // SHA-256 of crispasr.exe / crispasr extracted from each archive above.
             // Windows CUDA executable hash intentionally omitted (the CUDA archive is ~700 MB; not yet hashed).
@@ -317,6 +323,10 @@ public static class DownloadHashManager
                 "6ae31308ff2856a42bc13de16470e95c5cc03a26ee117e3386005364ee384c75", // v0.6.9 (current download URL)
                 "363864a0f41e7f61a930c8f070e1b1357dc9b86063f747b719651890b446d0a7", // v0.6.8
                 "6af1d3dace190fd7047ce90634764c80bf2fb6d64094e2a5821afe8e0c74bb65", // v0.6.7 (first SE-tracked Linux CUDA build)
+            },
+            [CrispAsr.LinuxArmExecutable] = new[]
+            {
+                "865b215977eb67035af8cd51bf17a657de5a69c8d076fa287652d27e69bac8c0", // v0.6.9 (current download URL — first SE-tracked Linux ARM64 build)
             },
 
             // llama.cpp — https://github.com/ggml-org/llama.cpp/releases
@@ -668,13 +678,18 @@ public static class DownloadHashManager
     /// Resolves the CrispASR hash key for the current OS and variant.
     /// On Windows the variant selects between cuda, vulkan, cpu, and cpu-legacy.
     /// On Linux x86_64 the variant selects between cuda and the default CPU build.
+    /// On Linux ARM64 the variant is ignored (only one build).
     /// Returns null if the platform / variant combination is unknown.
     /// </summary>
     public static string? ResolveCrispAsrKey(string? variant)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            if (variant == "cuda" && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+            {
+                return CrispAsr.LinuxArm;
+            }
+            if (variant == "cuda")
             {
                 return CrispAsr.LinuxCuda;
             }
@@ -716,6 +731,7 @@ public static class DownloadHashManager
             CrispAsr.WindowsCpuLegacy or CrispAsr.WindowsCpuLegacyExecutable => "cpu-legacy",
             CrispAsr.LinuxCuda or CrispAsr.LinuxCudaExecutable => "cuda",
             CrispAsr.Linux or CrispAsr.LinuxExecutable => string.Empty,
+            CrispAsr.LinuxArm or CrispAsr.LinuxArmExecutable => string.Empty,
             _ => null,
         };
     }
@@ -744,7 +760,11 @@ public static class DownloadHashManager
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            if (variant == "cuda" && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+            {
+                return CrispAsr.LinuxArmExecutable;
+            }
+            if (variant == "cuda")
             {
                 return CrispAsr.LinuxCudaExecutable;
             }
