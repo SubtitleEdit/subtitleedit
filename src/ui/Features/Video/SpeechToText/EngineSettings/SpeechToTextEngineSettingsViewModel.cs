@@ -156,6 +156,8 @@ public partial class SpeechToTextEngineSettingsViewModel : ObservableObject
             {
                 "cuda" => "Windows x64 (CUDA)",
                 "vulkan" => "Windows x64 (Vulkan)",
+                "cpu-legacy" => "Windows x64 (CPU, legacy)",
+                "cpu" => "Windows x64 (CPU)",
                 _ => "Windows x64",
             };
         }
