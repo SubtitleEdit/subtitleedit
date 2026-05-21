@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// </summary>
 public class ChatterboxTtsCpp : ITtsEngine
 {
-    public string Name => "Chatterbox TTS";
+    public string Name => "Chatterbox TTS (CrispASR)";
     public string Description => "via CrispASR (Base or Turbo model + voice cloning)";
     public bool HasLanguageParameter => false;
     public bool HasApiKey => false;
