@@ -284,6 +284,13 @@ public partial class TextToSpeechViewModel : ObservableObject
             Se.Settings.Video.TextToSpeech.Qwen3TtsCppModel = SelectedModel ?? Qwen3TtsCpp.DefaultModelKey;
             Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction = (Instruction ?? string.Empty).Trim();
         }
+        else if (SelectedEngine is Qwen3TtsCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrModel = SelectedModel ?? Qwen3TtsCrispAsr.DefaultModelKey;
+            // Shared instruction text with the qwen3-tts.cpp engine so the same voice
+            // description applies whichever Qwen3 backend the user picks.
+            Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction = (Instruction ?? string.Empty).Trim();
+        }
         else if (SelectedEngine is OmniVoiceTtsCpp)
         {
             Se.Settings.Video.TextToSpeech.OmniVoiceTtsCppInstruction = (Instruction ?? string.Empty).Trim();
@@ -313,10 +320,13 @@ public partial class TextToSpeechViewModel : ObservableObject
     }
 
     // The instruction control is shared in the UI; each engine that supports it keeps its own
-    // persisted value, so it always reflects the currently selected engine.
+    // persisted value, so it always reflects the currently selected engine. Both Qwen3 engines
+    // (qwen3-tts.cpp and CrispASR) share the same Qwen3TtsCppInstruction setting so users get
+    // the same voice description whichever backend they're testing with.
     private static string GetInstructionForEngine(ITtsEngine? engine) => engine switch
     {
         Qwen3TtsCpp => Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction ?? string.Empty,
+        Qwen3TtsCrispAsr => Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction ?? string.Empty,
         OmniVoiceTtsCpp => Se.Settings.Video.TextToSpeech.OmniVoiceTtsCppInstruction ?? string.Empty,
         _ => string.Empty,
     };
@@ -341,17 +351,22 @@ public partial class TextToSpeechViewModel : ObservableObject
     // 1.7B Base models are not instruction-tuned. OmniVoice always shows its keyword picker.
     private void RefreshInstructionVisibility()
     {
-        IsInstructionTextVisible = SelectedEngine is Qwen3TtsCpp && Qwen3TtsCpp.IsVoiceDesignModel(SelectedModel);
+        IsInstructionTextVisible =
+            (SelectedEngine is Qwen3TtsCpp && Qwen3TtsCpp.IsVoiceDesignModel(SelectedModel))
+            || (SelectedEngine is Qwen3TtsCrispAsr && Qwen3TtsCrispAsr.IsVoiceDesignModel(SelectedModel));
         IsInstructionPickerVisible = SelectedEngine is OmniVoiceTtsCpp;
         HasInstruction = IsInstructionTextVisible || IsInstructionPickerVisible;
     }
 
     // The Qwen3 VoiceDesign model has no speaker encoder - the voice is defined entirely by the
     // instruction. Lock the voice combo to the "Default" entry so an imported voice cannot route
-    // through the (unsupported) cloning path.
+    // through the (unsupported) cloning path. Applies to both Qwen3 engines (qwen3-tts.cpp and
+    // CrispASR) when the VoiceDesign model is selected.
     private void UpdateVoiceLock()
     {
-        var isVoiceDesign = SelectedEngine is Qwen3TtsCpp && Qwen3TtsCpp.IsVoiceDesignModel(SelectedModel);
+        var isVoiceDesign =
+            (SelectedEngine is Qwen3TtsCpp && Qwen3TtsCpp.IsVoiceDesignModel(SelectedModel))
+            || (SelectedEngine is Qwen3TtsCrispAsr && Qwen3TtsCrispAsr.IsVoiceDesignModel(SelectedModel));
         IsVoiceComboEnabled = !isVoiceDesign;
 
         if (isVoiceDesign
@@ -1906,6 +1921,14 @@ public partial class TextToSpeechViewModel : ObservableObject
                     SelectedModel = Models.FirstOrDefault();
                 }
                 IsEngineSettingsVisible = true;
+            }
+            else if (SelectedEngine is Qwen3TtsCrispAsr)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
             }
             else if (SelectedEngine is ChatterboxTtsCpp)
             {

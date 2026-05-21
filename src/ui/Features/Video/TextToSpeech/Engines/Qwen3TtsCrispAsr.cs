@@ -74,6 +74,13 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             ? "qwen3-tts-1.7b-customvoice"
             : "qwen3-tts-1.7b-voicedesign";
 
+    /// <summary>
+    /// True when the resolved model is the instruction-tuned VoiceDesign variant. Only this
+    /// model honours the voice instruction; CustomVoice ignores it and uses voice cloning.
+    /// </summary>
+    public static bool IsVoiceDesignModel(string? modelKey) =>
+        ResolveModelKey(modelKey) == ModelKeyVoiceDesign;
+
     private static readonly HttpClient HttpClient = new()
     {
         Timeout = TimeSpan.FromMinutes(5),
