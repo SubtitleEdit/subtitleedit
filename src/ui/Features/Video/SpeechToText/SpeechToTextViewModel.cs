@@ -2395,6 +2395,8 @@ public partial class SpeechToTextViewModel : ObservableObject
                         return;
                     }
                 }
+
+                RefreshEngineCombo?.Invoke();
             }
 
             if (!engine.IsModelInstalled(model.Model))
@@ -3643,6 +3645,8 @@ public partial class SpeechToTextViewModel : ObservableObject
                 viewModel.CrispAsrWindowsVariant = crispVariant;
                 viewModel.StartDownload();
             });
+
+        RefreshEngineCombo?.Invoke();
     }
 
     private async Task CheckWhisperCppForUpdateAsync()
@@ -3691,6 +3695,8 @@ public partial class SpeechToTextViewModel : ObservableObject
                 viewModel.Engine = engine;
                 viewModel.StartDownload();
             });
+
+        RefreshEngineCombo?.Invoke();
     }
 
     private static (string key, string hash)? TryHashWhisperCppExecutable(ISpeechToTextEngine engine)
