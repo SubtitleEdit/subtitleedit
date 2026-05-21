@@ -236,7 +236,9 @@ public class AutoTranslateWindow : Window
 
     private static Border BuildApiConfigCard(AutoTranslateViewModel vm)
     {
-        var buttonDownloadCrispAsr = UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadCrispAsrCommand).WithMarginLeft(5);
+        var buttonDownloadCrispAsr = UiUtil.MakeButton(string.Empty, vm.DownloadCrispAsrCommand)
+            .WithIconLeftBindText(IconNames.Download, nameof(vm.CrispAsrDownloadButtonText))
+            .WithMarginLeft(5);
         buttonDownloadCrispAsr.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.ButtonDownloadIsVisible)));
 
         var crispAsrModelCombo = UiUtil.MakeComboBox(vm.CrispAsrModels, vm, nameof(vm.SelectedCrispAsrModel), nameof(vm.CrispAsrModelComboIsVisible));
@@ -253,7 +255,9 @@ public class AutoTranslateWindow : Window
             GetLlamaCppModelSize,
             GetLlamaCppModelDotStatus);
 
-        var buttonDownloadLlamaCpp = UiUtil.MakeButton(vm.DownloadLlamaCppCommand, IconNames.Download, Se.Language.General.Download).WithMarginLeft(5);
+        var buttonDownloadLlamaCpp = UiUtil.MakeButton(string.Empty, vm.DownloadLlamaCppCommand)
+            .WithIconLeftBindText(IconNames.Download, nameof(vm.LlamaCppDownloadButtonText))
+            .WithMarginLeft(5);
         buttonDownloadLlamaCpp.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppButtonsAreVisible)));
 
         var buttonLlamaCppServer = UiUtil.MakeButton(string.Empty, vm.ToggleLlamaCppServerCommand).WithMarginLeft(5);

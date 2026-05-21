@@ -92,6 +92,8 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private bool _llamaCppModelComboIsVisible;
     [ObservableProperty] private bool _llamaCppButtonsAreVisible;
     [ObservableProperty] private string _llamaCppServerButtonText = "Start server";
+    [ObservableProperty] private string _llamaCppDownloadButtonText = string.Empty;
+    [ObservableProperty] private string _crispAsrDownloadButtonText = string.Empty;
 
     public DataGrid? RowGrid { get; set; }
 
@@ -733,12 +735,23 @@ public partial class AutoTranslateViewModel : ObservableObject
 
     partial void OnSelectedCrispAsrModelChanged(SpeechToTextModelDisplay? value)
     {
+        UpdateCrispAsrDownloadButtonText();
+
         if (value == null)
         {
             return;
         }
 
         ModelText = new CrispAsrMadlad().GetModelForCmdLine(value.Model.Name);
+    }
+
+    // "Download" when the selected model is not on disk, "Re-download" when it is.
+    private void UpdateCrispAsrDownloadButtonText()
+    {
+        var selected = SelectedCrispAsrModel;
+        CrispAsrDownloadButtonText = selected != null && selected.Engine.IsModelInstalled(selected.Model)
+            ? Se.Language.General.Redownload
+            : Se.Language.General.Download;
     }
 
     private async Task<bool> EnsureCrispAsrReady()
@@ -759,6 +772,8 @@ public partial class AutoTranslateViewModel : ObservableObject
 
     partial void OnSelectedLlamaCppModelChanged(LlamaCppModelDisplay? value)
     {
+        UpdateLlamaCppDownloadButtonText();
+
         if (value == null)
         {
             return;
@@ -766,6 +781,15 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         Se.Settings.AutoTranslate.LlamaCppModel = LlamaCppServerManager.GetModelPath(value.Model.FileName);
         Configuration.Settings.Tools.LlamaCppModel = Se.Settings.AutoTranslate.LlamaCppModel;
+    }
+
+    // "Download" when the selected model is not on disk, "Re-download" when it is.
+    private void UpdateLlamaCppDownloadButtonText()
+    {
+        var model = SelectedLlamaCppModel?.Model;
+        LlamaCppDownloadButtonText = model != null && LlamaCppServerManager.IsModelInstalled(model)
+            ? Se.Language.General.Redownload
+            : Se.Language.General.Download;
     }
 
     private void UpdateLlamaCppServerButtonText()
