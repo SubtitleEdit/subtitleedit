@@ -386,6 +386,16 @@ public partial class TextToSpeechViewModel : ObservableObject
     {
         RefreshInstructionVisibility();
         UpdateVoiceLock();
+
+        // Qwen3 (CrispASR) returns a different voice list per model — VoiceDesign exposes
+        // "Default", CustomVoice only shows imported WAVs since it can't synthesise without
+        // a reference. Persist the model change first so GetVoices reads the new value, then
+        // re-pull the voice list.
+        if (SelectedEngine is Qwen3TtsCrispAsr engine)
+        {
+            Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrModel = value ?? Qwen3TtsCrispAsr.DefaultModelKey;
+            _ = RefreshVoices(engine);
+        }
     }
 
     // omnivoice-tts applies voice-design keywords only without a reference WAV, so the picker

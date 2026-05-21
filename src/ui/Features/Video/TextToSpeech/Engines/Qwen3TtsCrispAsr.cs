@@ -181,12 +181,16 @@ public class Qwen3TtsCrispAsr : ITtsEngine
 
     public Task<Voice[]> GetVoices(string language)
     {
-        var result = new List<Voice>
+        var result = new List<Voice>();
+
+        // VoiceDesign has a baked default voice (the instruction string drives the rest).
+        // CustomVoice is pure voice cloning and refuses requests without a reference WAV,
+        // so don't offer a "Default" entry there — the user must import a voice first.
+        var modelKey = ResolveModelKey(Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrModel);
+        if (modelKey == ModelKeyVoiceDesign)
         {
-            // Default voice — for VoiceDesign this means "use the instruction string only";
-            // for CustomVoice it falls back to the model's baked voice.
-            new Voice(new Qwen3TtsVoice("Default", string.Empty)),
-        };
+            result.Add(new Voice(new Qwen3TtsVoice("Default", string.Empty)));
+        }
 
         var voicesFolder = GetSetVoicesFolder();
         if (Directory.Exists(voicesFolder))
@@ -227,6 +231,18 @@ public class Qwen3TtsCrispAsr : ITtsEngine
         }
 
         var modelKey = ResolveModelKey(model);
+
+        // CustomVoice does voice cloning and rejects requests without a `voice` field.
+        // Surface a clear up-front error instead of letting the backend return 500.
+        if (modelKey == ModelKeyCustomVoice && string.IsNullOrEmpty(qwen3Voice.FilePath))
+        {
+            throw new InvalidOperationException(
+                "Qwen3 TTS (CrispASR) CustomVoice requires a reference voice WAV. "
+                + "Import one via the voice settings, then pick it in the voice combo. "
+                + "Reference WAV should be 24 kHz mono; an adjacent .txt file with the "
+                + "spoken transcription is required for best cloning quality.");
+        }
+
         await EnsureServerRunningAsync(modelKey, cancellationToken);
 
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
@@ -382,18 +398,12 @@ public class Qwen3TtsCrispAsr : ITtsEngine
                     "CrispASR executable not found. Install CrispASR via Video → Audio to text first.", exe);
             }
 
+            // Talker and codec GGUFs: if locally staged, use directly; otherwise hand off to
+            // crispasr's --auto-download to fetch them into ~/.cache/crispasr/ on first run.
+            // Slower the first time, instant after. A proper SE-side download service is a
+            // follow-up; this keeps the engine usable without manual file placement.
             var talker = GetTalkerPath(modelKey);
-            if (!File.Exists(talker))
-            {
-                throw new FileNotFoundException(
-                    $"Qwen3 TTS (CrispASR) talker GGUF not found at {talker}. "
-                    + "Place the file manually until the auto-downloader lands.", talker);
-            }
-
-            // The CrispASR-style codec/tokenizer GGUF (qwen3-tts-tokenizer-12hz.gguf, ~986 MB)
-            // is NOT the same file as qwen3-tts.cpp's tokenizer. If it's not in our engine
-            // folder, fall back to letting crispasr --auto-download fetch it into its own
-            // cache (~/.cache/crispasr/) on first run — slower the first time, instant after.
+            var hasLocalTalker = File.Exists(talker);
             var codec = GetCodecPath();
             var hasLocalCodec = File.Exists(codec);
 
@@ -411,13 +421,13 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             psi.ArgumentList.Add("--backend");
             psi.ArgumentList.Add(GetBackendName(modelKey));
             psi.ArgumentList.Add("-m");
-            psi.ArgumentList.Add(talker);
+            psi.ArgumentList.Add(hasLocalTalker ? talker : "auto");
             if (hasLocalCodec)
             {
                 psi.ArgumentList.Add("--codec-model");
                 psi.ArgumentList.Add(codec);
             }
-            else
+            if (!hasLocalTalker || !hasLocalCodec)
             {
                 psi.ArgumentList.Add("--auto-download");
             }
@@ -457,8 +467,8 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             _serverModelKey = modelKey;
             HookProcessExitOnce();
 
-            // First-run codec auto-download (~986 MB) needs a generous timeout.
-            var deadline = DateTime.UtcNow.AddMinutes(hasLocalCodec ? 5 : 30);
+            // First-run auto-download (~2 GB talker + ~986 MB codec) needs a generous timeout.
+            var deadline = DateTime.UtcNow.AddMinutes(hasLocalTalker && hasLocalCodec ? 5 : 30);
             while (DateTime.UtcNow < deadline)
             {
                 ct.ThrowIfCancellationRequested();
@@ -486,7 +496,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             var timeoutLaunchCommand = _serverLaunchCommand;
             StopServerInternal();
             throw new TimeoutException(
-                $"crispasr (qwen3-tts) did not report healthy within {(hasLocalCodec ? 5 : 30)} minutes. Last output: {lastOutput}"
+                $"crispasr (qwen3-tts) did not report healthy within {(hasLocalTalker && hasLocalCodec ? 5 : 30)} minutes. Last output: {lastOutput}"
                 + LaunchCmdSuffix(timeoutLaunchCommand));
         }
         finally
