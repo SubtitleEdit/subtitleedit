@@ -109,6 +109,13 @@ public partial class AutoTranslateViewModel : ObservableObject
     private readonly IWindowService _windowService;
     private readonly IFolderHelper _folderHelper;
 
+    /// <summary>
+    /// Hook the view wires up so the engine combobox can re-evaluate its install-status dots
+    /// after a download finishes. Without this, the FuncDataTemplate row visuals stay on the
+    /// pre-download snapshot (typically amber/grey) even though the install is now current.
+    /// </summary>
+    public Action? RefreshDownloadDots { get; set; }
+
     public AutoTranslateViewModel(IWindowService windowService, IFolderHelper folderHelper)
     {
         _windowService = windowService;
@@ -726,6 +733,8 @@ public partial class AutoTranslateViewModel : ObservableObject
             PopulateCrispAsrModels(downloadedModelName);
             SaveSettings();
         }
+
+        RefreshDownloadDots?.Invoke();
     }
 
     private void PopulateCrispAsrModels(string? selectModelName)
@@ -767,6 +776,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             PopulateCrispAsrModels(Path.GetFileName(Se.Settings.AutoTranslate.CrispAsrModel ?? string.Empty));
         }
 
+        RefreshDownloadDots?.Invoke();
         return ready;
     }
 
@@ -830,6 +840,8 @@ public partial class AutoTranslateViewModel : ObservableObject
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
             SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllTranslateModels(), selectName);
         }
+
+        RefreshDownloadDots?.Invoke();
     }
 
     [RelayCommand]
@@ -888,6 +900,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
 
         SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllTranslateModels(), model.FileName);
+        RefreshDownloadDots?.Invoke();
 
         try
         {
@@ -962,6 +975,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllTranslateModels(), selectName);
         }
 
+        RefreshDownloadDots?.Invoke();
         UpdateLlamaCppServerButtonText();
     }
 

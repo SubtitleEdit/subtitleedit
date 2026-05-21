@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -116,14 +117,16 @@ public class AutoTranslateWindow : Window
 
         var engineCombo = UiUtil.MakeComboBox(vm.AutoTranslators, vm, nameof(vm.SelectedAutoTranslator));
         engineCombo.MinWidth = 220;
-        engineCombo.ItemTemplate = StatusDots.ComboItemTemplate<IAutoTranslator>(
-            translator => translator.Name,
-            _ => null,
-            GetTranslatorDotStatus);
+        engineCombo.ItemTemplate = BuildTranslatorItemTemplate();
         engineCombo.SelectionChanged += (s, e) =>
         {
             vm.AutoTranslatorChanged(engineCombo);
         };
+
+        // Re-evaluate the engine combo's install-status dots after a download finishes - the
+        // FuncDataTemplate caches each row's dot when first realised, so a fresh template is
+        // the simplest way to refresh. The model combos already rebuild via PopulateModels.
+        vm.RefreshDownloadDots = () => engineCombo.ItemTemplate = BuildTranslatorItemTemplate();
 
         var fromLabel = UiUtil.MakeTextBlock(Se.Language.General.From);
         fromLabel.VerticalAlignment = VerticalAlignment.Center;
@@ -185,6 +188,14 @@ public class AutoTranslateWindow : Window
         };
 
         return MakeCard(stack);
+    }
+
+    private static FuncDataTemplate<IAutoTranslator> BuildTranslatorItemTemplate()
+    {
+        return StatusDots.ComboItemTemplate<IAutoTranslator>(
+            translator => translator.Name,
+            _ => null,
+            GetTranslatorDotStatus);
     }
 
     // Install-status dot for the auto-translate engine combo. Only the two engines that Subtitle
