@@ -25,7 +25,7 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
 
     // qwen3-tts.cpp release pin. Bump in lockstep with the hashes in
     // DownloadHashManager.Qwen3TtsCpp (each new release: prepend the new SHA-256 at index 0).
-    public const string ReleaseTag = "v0.4.4";
+    public const string ReleaseTag = "v0.4.5";
     private const string ReleaseUrlBase = "https://github.com/niksedk/qwen3-tts.cpp/releases/download/" + ReleaseTag + "/";
 
     private const string WindowsVulkanUrl = ReleaseUrlBase + "qwen3-tts-server-" + ReleaseTag + "-windows-vulkan-x64.zip";
