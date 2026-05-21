@@ -171,6 +171,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             new Murf(ttsDownloadService),
             new GoogleSpeech(ttsDownloadService),
             new Qwen3TtsCpp(),
+            new Qwen3TtsCrispAsr(),
             new KokoroTtsCpp(),
             new ChatterboxTtsCpp(),
             new OmniVoiceTtsCpp(),

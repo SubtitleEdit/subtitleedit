@@ -28,6 +28,7 @@ public class SeVideoTextToSpeech
     public string Qwen3TtsCppModel { get; set; }
     public string Qwen3TtsCppVulkanPath { get; set; }
     public string Qwen3TtsCppInstruction { get; set; }
+    public string Qwen3TtsCrispAsrModel { get; set; }
     public string OmniVoiceTtsCppVulkanPath { get; set; }
     public string OmniVoiceTtsCppInstruction { get; set; }
     public string ChatterboxModel { get; set; }
@@ -91,6 +92,7 @@ public class SeVideoTextToSpeech
         Qwen3TtsCppModel = "0.6B";
         Qwen3TtsCppVulkanPath = string.Empty;
         Qwen3TtsCppInstruction = string.Empty;
+        Qwen3TtsCrispAsrModel = "1.7B VoiceDesign";
         OmniVoiceTtsCppVulkanPath = string.Empty;
         OmniVoiceTtsCppInstruction = string.Empty;
         ChatterboxModel = "Base";
