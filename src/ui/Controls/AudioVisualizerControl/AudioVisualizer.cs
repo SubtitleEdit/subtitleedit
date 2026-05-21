@@ -1114,6 +1114,8 @@ public class AudioVisualizer : Control
                     newStart = 0;
                 }
 
+                newStart = SnapToFrame(newStart);
+
                 if (_activeParagraph != null)
                 {
                     _activeParagraph.StartTime = TimeSpan.FromSeconds(newStart);
@@ -1123,6 +1125,9 @@ public class AudioVisualizer : Control
             case InteractionMode.ResizeLeftAnd:
                 newStart = _originalStartSeconds + deltaSeconds - StartPositionSeconds;
                 var newPrevEnd = _originalPreviousEndSeconds + deltaSeconds - StartPositionSeconds;
+                var snappedLeft = SnapToFrame(newStart);
+                newPrevEnd += snappedLeft - newStart;
+                newStart = snappedLeft;
                 if (_activeParagraphPrevious != null)
                 {
                     _activeParagraph.SetStartTimeOnly(TimeSpan.FromSeconds(newStart));
@@ -1133,6 +1138,9 @@ public class AudioVisualizer : Control
             case InteractionMode.ResizeRightAnd:
                 newEnd = _originalEndSeconds + deltaSeconds - StartPositionSeconds;
                 var newNextStart = _originalNextStartSeconds + deltaSeconds - StartPositionSeconds;
+                var snappedRight = SnapToFrame(newEnd);
+                newNextStart += snappedRight - newEnd;
+                newEnd = snappedRight;
                 if (_activeParagraphNext != null)
                 {
                     _activeParagraph.EndTime = TimeSpan.FromSeconds(newEnd);
@@ -1148,6 +1156,7 @@ public class AudioVisualizer : Control
                     newStart = 0;
                 }
 
+                var snappedToShotLeft = false;
                 if (SnapToShotChanges)
                 {
                     var nearestShotChange = ShotChangesHelper.GetClosestShotChange(_shotChanges, TimeCode.FromSeconds(newStart));
@@ -1157,8 +1166,14 @@ public class AudioVisualizer : Control
                         if (nearest != newStart && Math.Abs(newStart - nearest) < ShotChangeSnapSeconds)
                         {
                             newStart = nearest;
+                            snappedToShotLeft = true;
                         }
                     }
+                }
+
+                if (!snappedToShotLeft)
+                {
+                    newStart = SnapToFrame(newStart);
                 }
 
                 if (previous != null && newStart < previous.EndTime.TotalSeconds + MinGapSeconds)
@@ -1175,6 +1190,7 @@ public class AudioVisualizer : Control
             case InteractionMode.ResizingRight:
                 newEnd = _originalEndSeconds + deltaSeconds - StartPositionSeconds;
 
+                var snappedToShotRight = false;
                 if (SnapToShotChanges)
                 {
                     var oneFrameSeconds = 0; // Or should it be one frame before, like  0.042 (Get fps from video)
@@ -1185,8 +1201,14 @@ public class AudioVisualizer : Control
                         if (nearest != newEnd && Math.Abs(newEnd - nearest + oneFrameSeconds) < ShotChangeSnapSeconds)
                         {
                             newEnd = nearest - oneFrameSeconds;
+                            snappedToShotRight = true;
                         }
                     }
+                }
+
+                if (!snappedToShotRight)
+                {
+                    newEnd = SnapToFrame(newEnd);
                 }
 
                 if (next != null && newEnd > next.StartTime.TotalSeconds - MinGapSeconds)
@@ -1203,6 +1225,23 @@ public class AudioVisualizer : Control
         }
 
         InvalidateVisual();
+    }
+
+    private static double SnapToFrame(double seconds)
+    {
+        if (!Se.Settings.Waveform.SnapToFrames)
+        {
+            return seconds;
+        }
+
+        var fps = Se.Settings.General.CurrentFrameRate;
+        if (fps < 1)
+        {
+            return seconds;
+        }
+
+        var frameDur = 1.0 / fps;
+        return Math.Round(seconds / frameDur) * frameDur;
     }
 
     private void UpdateCursor(Point point)

@@ -31,6 +31,7 @@ public class SeWaveform
     public double ShotChangesSensitivity { get; set; }
     public string ShotChangesImportTimeCodeFormat { get; set; }
     public bool SnapToShotChanges { get; set; }
+    public bool SnapToFrames { get; set; }
     public bool ShotChangesAutoGenerate { get; set; }
     public int SnapToShotChangesPixels { get; set; }
     public bool FocusOnMouseOver { get; set; }
@@ -76,6 +77,7 @@ public class SeWaveform
         ShotChangesImportTimeCodeFormat = "Seconds";
         SnapToShotChangesPixels = 8;
         SnapToShotChanges = true;
+        SnapToFrames = false;
         ShotChangesAutoGenerate = false;
 
         SpectrogramStyle = nameof(SeSpectrogramStyle.Classic);
