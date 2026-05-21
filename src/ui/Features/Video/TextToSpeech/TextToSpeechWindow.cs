@@ -6,6 +6,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Styling;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -89,12 +90,40 @@ public class TextToSpeechWindow : Window
         Activated += delegate { buttonDone.Focus(); }; // hack to make OnKeyDown work
     }
 
+    // Install-status dot for the engine combo: green = ready, amber = a newer build is available,
+    // grey = downloadable but not on disk. Cloud/online engines (Azure, ElevenLabs, Google,
+    // Edge TTS, ...) have nothing to install and get no dot.
+    private static DownloadDotStatus GetTtsEngineDotStatus(ITtsEngine engine)
+    {
+        // IsInstalled is a Task only by interface contract; the local engines below complete it
+        // synchronously (Task.FromResult of a File.Exists check), so .Result does not block.
+        switch (engine)
+        {
+            case KokoroTtsCpp:
+                return StatusDots.From(engine.IsInstalled(null).Result, KokoroTtsCpp.GetEngineUpdateStatus());
+            case Qwen3TtsCpp:
+                return StatusDots.From(engine.IsInstalled(null).Result, Qwen3TtsCpp.GetEngineUpdateStatus());
+            case OmniVoiceTtsCpp:
+                return StatusDots.From(engine.IsInstalled(null).Result, OmniVoiceTtsCpp.GetEngineUpdateStatus());
+            case ChatterboxTtsCpp:
+                return StatusDots.From(engine.IsInstalled(null).Result, ChatterboxTtsCpp.GetEngineUpdateStatus());
+            case Piper:
+                return StatusDots.From(engine.IsInstalled(null).Result, Piper.GetEngineUpdateStatus());
+            default:
+                return DownloadDotStatus.None;
+        }
+    }
+
     private static Border MakeEngineControls(TextToSpeechViewModel vm)
     {
         var labelMinWidth = 100;
         var controlMinWidth = 200;
 
         var comboBoxEngines = UiUtil.MakeComboBox(vm.Engines, vm, nameof(vm.SelectedEngine)).WithWidth(controlMinWidth);
+        comboBoxEngines.ItemTemplate = StatusDots.ComboItemTemplate<ITtsEngine>(
+            engine => engine.Name,
+            _ => null,
+            GetTtsEngineDotStatus);
         comboBoxEngines.SelectionChanged += vm.SelectedEngineChanged;
 
         var panelEngine = new StackPanel

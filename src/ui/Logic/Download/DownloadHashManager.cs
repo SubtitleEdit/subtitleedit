@@ -110,6 +110,17 @@ public static class DownloadHashManager
         public const string LinuxArm64 = "KokoroTtsCpp.Linux.Arm64";
     }
 
+    public static class Piper
+    {
+        // Hashes of the release archive (.zip / .tar.gz) - recognised from the .installed.sha256
+        // sidecar written at install time. Piper is pinned to a single fixed rhasspy/piper release,
+        // so each key currently has just one known hash.
+        public const string Windows = "Piper.Windows";
+        public const string MacOs = "Piper.MacOs";
+        public const string LinuxX64 = "Piper.Linux.X64";
+        public const string LinuxArm64 = "Piper.Linux.Arm64";
+    }
+
     public static class WhisperCpp
     {
         // Hashes of the release archive (.zip) — used when a sidecar hash exists alongside the install.
@@ -412,6 +423,25 @@ public static class DownloadHashManager
                 "673f49ffd2c0653b195a57f566038c05b2a962defc3e1c9c2664c8306d09352d", // v0.1.2 (current download URL)
             },
 
+            // Piper — https://github.com/rhasspy/piper/releases. Pinned to release 2023.11.14-2 in
+            // TtsDownloadService.cs; index 0 must match that release.
+            [Piper.Windows] = new[]
+            {
+                "f3c58906402b24f3a96d92145f58acba6d86c9b5db896d207f78dc80811efcea", // 2023.11.14-2 (current download URL)
+            },
+            [Piper.MacOs] = new[]
+            {
+                "ced85c0a3df13945b1e623b878a48fdc2854d5c485b4b67f62857cf551deaf8b", // 2023.11.14-2 (current download URL)
+            },
+            [Piper.LinuxX64] = new[]
+            {
+                "a50cb45f355b7af1f6d758c1b360717877ba0a398cc8cbe6d2a7a3a26e225992", // 2023.11.14-2 (current download URL)
+            },
+            [Piper.LinuxArm64] = new[]
+            {
+                "fea0fd2d87c54dbc7078d0f878289f404bd4d6eea6e7444a77835d1537ab88eb", // 2023.11.14-2 (current download URL)
+            },
+
             // whisper.cpp — https://github.com/ggml-org/whisper.cpp/releases (and SE-repackaged builds
             // under https://github.com/SubtitleEdit/support-files/releases). Index 0 must match
             // whatever URL WhisperDownloadService.cs is pinned to.
@@ -490,6 +520,36 @@ public static class DownloadHashManager
         }
 
         return UpdateStatus.Unknown;
+    }
+
+    /// <summary>
+    /// Reads the <c>.installed.sha256</c> sidecar in <paramref name="installFolder"/> and returns
+    /// the update status of the recorded build. Returns <see cref="UpdateStatus.Unknown"/> when the
+    /// sidecar is missing or unreadable (e.g. installs predating hash tracking). Cheap - no file
+    /// hashing - so it is safe to call while populating a combo box.
+    /// </summary>
+    public static UpdateStatus GetSidecarStatus(string installFolder)
+    {
+        try
+        {
+            var sidecar = Path.Combine(installFolder, ".installed.sha256");
+            if (!File.Exists(sidecar))
+            {
+                return UpdateStatus.Unknown;
+            }
+
+            var lines = File.ReadAllLines(sidecar);
+            if (lines.Length < 2)
+            {
+                return UpdateStatus.Unknown;
+            }
+
+            return GetStatus(lines[0].Trim(), lines[1].Trim());
+        }
+        catch
+        {
+            return UpdateStatus.Unknown;
+        }
     }
 
     /// <summary>
@@ -969,6 +1029,32 @@ public static class DownloadHashManager
             return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
                 ? KokoroTtsCpp.LinuxArm64
                 : KokoroTtsCpp.LinuxX64;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Resolves the <see cref="Piper"/> archive key for the current OS/arch, matching the URL
+    /// <c>TtsDownloadService</c> downloads. Returns null on an unsupported platform.
+    /// </summary>
+    public static string? ResolvePiperKey()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return Piper.Windows;
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return Piper.MacOs;
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
+                ? Piper.LinuxArm64
+                : Piper.LinuxX64;
         }
 
         return null;

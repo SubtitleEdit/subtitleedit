@@ -5,8 +5,13 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Core.AutoTranslate;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Download;
+using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using System.ComponentModel;
 
 namespace Nikse.SubtitleEdit.Features.Translate;
@@ -111,6 +116,10 @@ public class AutoTranslateWindow : Window
 
         var engineCombo = UiUtil.MakeComboBox(vm.AutoTranslators, vm, nameof(vm.SelectedAutoTranslator));
         engineCombo.MinWidth = 220;
+        engineCombo.ItemTemplate = StatusDots.ComboItemTemplate<IAutoTranslator>(
+            translator => translator.Name,
+            _ => null,
+            GetTranslatorDotStatus);
         engineCombo.SelectionChanged += (s, e) =>
         {
             vm.AutoTranslatorChanged(engineCombo);
@@ -178,14 +187,71 @@ public class AutoTranslateWindow : Window
         return MakeCard(stack);
     }
 
+    // Install-status dot for the auto-translate engine combo. Only the two engines that Subtitle
+    // Edit downloads itself - llama.cpp and CrispASR/MADLAD - get a dot; cloud/API translators
+    // (Google, DeepL, ChatGPT, ...) and externally-hosted servers have nothing to install.
+    private static DownloadDotStatus GetTranslatorDotStatus(IAutoTranslator translator)
+    {
+        switch (translator)
+        {
+            case LlamaCppTranslate:
+                return StatusDots.From(
+                    LlamaCppServerManager.IsEngineInstalled(),
+                    LlamaCppServerManager.GetEngineUpdateStatus());
+            case CrispAsrMadladTranslate:
+                var crispAsr = new CrispAsrMadlad();
+                if (!crispAsr.IsEngineInstalled())
+                {
+                    return DownloadDotStatus.NotInstalled;
+                }
+
+                return StatusDots.From(true, DownloadHashManager.GetSidecarStatus(crispAsr.GetAndCreateWhisperFolder()));
+            default:
+                return DownloadDotStatus.None;
+        }
+    }
+
+    // A custom *.gguf the user dropped into the models folder has no Url - it is already on disk,
+    // so it shows a green dot and a "custom" size tag rather than a download size.
+    private static string? GetLlamaCppModelSize(LlamaCppModelDisplay model)
+    {
+        if (string.IsNullOrEmpty(model.Model.Url))
+        {
+            var custom = Se.Language.General.Custom;
+            return string.IsNullOrEmpty(model.Model.Size) ? custom : $"{custom}, {model.Model.Size}";
+        }
+
+        return string.IsNullOrEmpty(model.Model.Size) ? null : model.Model.Size;
+    }
+
+    private static DownloadDotStatus GetLlamaCppModelDotStatus(LlamaCppModelDisplay model)
+    {
+        if (string.IsNullOrEmpty(model.Model.Url) || LlamaCppServerManager.IsModelInstalled(model.Model))
+        {
+            return DownloadDotStatus.UpToDate;
+        }
+
+        return DownloadDotStatus.NotInstalled;
+    }
+
     private static Border BuildApiConfigCard(AutoTranslateViewModel vm)
     {
         var buttonDownloadCrispAsr = UiUtil.MakeButton(Se.Language.General.Download, vm.DownloadCrispAsrCommand).WithMarginLeft(5);
         buttonDownloadCrispAsr.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.ButtonDownloadIsVisible)));
 
         var crispAsrModelCombo = UiUtil.MakeComboBox(vm.CrispAsrModels, vm, nameof(vm.SelectedCrispAsrModel), nameof(vm.CrispAsrModelComboIsVisible));
+        crispAsrModelCombo.ItemTemplate = StatusDots.ComboItemTemplate<SpeechToTextModelDisplay>(
+            model => model.Model.Name,
+            model => string.IsNullOrEmpty(model.Model.Size) ? null : model.Model.Size,
+            model => model.Engine.IsModelInstalled(model.Model)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled);
 
         var llamaCppModelCombo = UiUtil.MakeComboBox(vm.LlamaCppModels, vm, nameof(vm.SelectedLlamaCppModel), nameof(vm.LlamaCppModelComboIsVisible)).WithWidth(220);
+        llamaCppModelCombo.ItemTemplate = StatusDots.ComboItemTemplate<LlamaCppModelDisplay>(
+            model => model.Model.DisplayName,
+            GetLlamaCppModelSize,
+            GetLlamaCppModelDotStatus);
 
         var buttonDownloadLlamaCpp = UiUtil.MakeButton(vm.DownloadLlamaCppCommand, IconNames.Download, Se.Language.General.Download).WithMarginLeft(5);
         buttonDownloadLlamaCpp.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.LlamaCppButtonsAreVisible)));

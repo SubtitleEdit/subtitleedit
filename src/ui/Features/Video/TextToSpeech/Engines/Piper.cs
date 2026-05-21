@@ -29,6 +29,22 @@ public class Piper : ITtsEngine
         return Task.FromResult(File.Exists(GetPiperExecutableFileName()));
     }
 
+    /// <summary>
+    /// Returns the update status of the installed Piper engine relative to the release pinned in
+    /// <c>TtsDownloadService</c>. Reads the key/hash from the <c>.installed.sha256</c> sidecar
+    /// written at install time; returns <see cref="DownloadHashManager.UpdateStatus.Unknown"/> when
+    /// Piper is not installed or the sidecar is missing (installs predating hash tracking).
+    /// </summary>
+    public static DownloadHashManager.UpdateStatus GetEngineUpdateStatus()
+    {
+        if (!File.Exists(GetPiperExecutableFileName()))
+        {
+            return DownloadHashManager.UpdateStatus.Unknown;
+        }
+
+        return DownloadHashManager.GetSidecarStatus(GetSetPiperFolder());
+    }
+
     private readonly ITtsDownloadService _ttsDownloadService;
 
     public Piper(ITtsDownloadService ttsDownloadService)
