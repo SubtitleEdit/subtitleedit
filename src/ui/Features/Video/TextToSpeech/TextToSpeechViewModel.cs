@@ -63,6 +63,7 @@ public partial class TextToSpeechViewModel : ObservableObject
     [ObservableProperty] private int _voiceCount;
     [ObservableProperty] private string _voiceCountInfo;
     [ObservableProperty] private bool _isVoiceTestEnabled;
+    [ObservableProperty] private bool _isVoiceComboEnabled;
     [ObservableProperty] private bool _doReviewAudioClips;
     [ObservableProperty] private bool _doGenerateVideoFile;
     [ObservableProperty] private bool _isEdgeTtsEngine;
@@ -75,9 +76,30 @@ public partial class TextToSpeechViewModel : ObservableObject
     [ObservableProperty] private string _doneOrCancelText;
     [ObservableProperty] private bool _hasKeyFile;
     [ObservableProperty] private string _keyFile;
+    [ObservableProperty] private bool _hasInstruction;
+    [ObservableProperty] private bool _isInstructionTextVisible;
+    [ObservableProperty] private bool _isInstructionPickerVisible;
+    [ObservableProperty] private bool _isInstructionPickerEnabled;
+    [ObservableProperty] private bool _isInstructionVoiceHintVisible;
+    [ObservableProperty] private string _instruction;
+    [ObservableProperty] private string _selectedOmniVoiceGender;
+    [ObservableProperty] private string _selectedOmniVoiceAge;
+    [ObservableProperty] private string _selectedOmniVoicePitch;
+    [ObservableProperty] private string _selectedOmniVoiceAccent;
+    [ObservableProperty] private bool _omniVoiceWhisper;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
+
+    // Set by the window; re-evaluates the install-status dots in the engine and model combos.
+    public Action? RefreshDownloadDots { get; set; }
+
+    // The OmniVoice TTS voice-design keyword picker - one combo box per mutually exclusive
+    // group. omnivoice-tts' --instruct only accepts these keyword values.
+    public ObservableCollection<string> OmniVoiceGenders { get; }
+    public ObservableCollection<string> OmniVoiceAges { get; }
+    public ObservableCollection<string> OmniVoicePitches { get; }
+    public ObservableCollection<string> OmniVoiceAccents { get; }
 
     private Subtitle _subtitle = new();
     private readonly IFileHelper _fileHelper;
@@ -92,6 +114,8 @@ public partial class TextToSpeechViewModel : ObservableObject
     private Lock _playLock;
     private readonly Timer _timer;
     private readonly IWindowService _windowService;
+    private bool _suppressKeywordSync;
+    private const string OmniVoiceAny = "(any)";
 
     public TextToSpeechViewModel(ITtsDownloadService ttsDownloadService, IWindowService windowService, IFileHelper fileHelper, IFolderHelper folderHelper)
     {
@@ -111,9 +135,23 @@ public partial class TextToSpeechViewModel : ObservableObject
         ProgressText = string.Empty;
         DoneOrCancelText = string.Empty;
         IsVoiceTestEnabled = true;
+        IsVoiceComboEnabled = true;
         IsGenerating = false;
         IsNotGenerating = true;
         KeyFile = string.Empty;
+        Instruction = string.Empty;
+
+        OmniVoiceGenders = BuildKeywordOptions(OmniVoiceTtsCpp.InstructionGenders);
+        OmniVoiceAges = BuildKeywordOptions(OmniVoiceTtsCpp.InstructionAges);
+        OmniVoicePitches = BuildKeywordOptions(OmniVoiceTtsCpp.InstructionPitches);
+        OmniVoiceAccents = BuildKeywordOptions(OmniVoiceTtsCpp.InstructionAccents);
+
+        _suppressKeywordSync = true;
+        SelectedOmniVoiceGender = OmniVoiceAny;
+        SelectedOmniVoiceAge = OmniVoiceAny;
+        SelectedOmniVoicePitch = OmniVoiceAny;
+        SelectedOmniVoiceAccent = OmniVoiceAny;
+        _suppressKeywordSync = false;
 
         _cancellationTokenSource = new CancellationTokenSource();
         _playLock = new Lock();
@@ -176,6 +214,8 @@ public partial class TextToSpeechViewModel : ObservableObject
             HasKeyFile = SelectedEngine.HasKeyFile;
             IsEdgeTtsEngine = SelectedEngine is EdgeTts;
         }
+
+        ApplyInstructionForEngine(SelectedEngine);
 
         var lastVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice);
         if (lastVoice == null)
@@ -241,6 +281,11 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is Qwen3TtsCpp)
         {
             Se.Settings.Video.TextToSpeech.Qwen3TtsCppModel = SelectedModel ?? Qwen3TtsCpp.DefaultModelKey;
+            Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction = (Instruction ?? string.Empty).Trim();
+        }
+        else if (SelectedEngine is OmniVoiceTtsCpp)
+        {
+            Se.Settings.Video.TextToSpeech.OmniVoiceTtsCppInstruction = (Instruction ?? string.Empty).Trim();
         }
         else if (SelectedEngine is ChatterboxTtsCpp)
         {
@@ -264,6 +309,152 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
 
         Se.SaveSettings();
+    }
+
+    // The instruction control is shared in the UI; each engine that supports it keeps its own
+    // persisted value, so it always reflects the currently selected engine.
+    private static string GetInstructionForEngine(ITtsEngine? engine) => engine switch
+    {
+        Qwen3TtsCpp => Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction ?? string.Empty,
+        OmniVoiceTtsCpp => Se.Settings.Video.TextToSpeech.OmniVoiceTtsCppInstruction ?? string.Empty,
+        _ => string.Empty,
+    };
+
+    // Loads the saved instruction value for the engine and refreshes which instruction control
+    // is shown (free-text box for Qwen3 VoiceDesign, keyword picker for OmniVoice).
+    private void ApplyInstructionForEngine(ITtsEngine? engine)
+    {
+        Instruction = GetInstructionForEngine(engine);
+
+        if (engine is OmniVoiceTtsCpp)
+        {
+            SyncOmniVoicePickerFromInstruction();
+        }
+
+        RefreshInstructionVisibility();
+        UpdateVoiceLock();
+        UpdateOmniVoicePickerState();
+    }
+
+    // Qwen3's free-text instruction only does anything on the VoiceDesign model - the 0.6B and
+    // 1.7B Base models are not instruction-tuned. OmniVoice always shows its keyword picker.
+    private void RefreshInstructionVisibility()
+    {
+        IsInstructionTextVisible = SelectedEngine is Qwen3TtsCpp && Qwen3TtsCpp.IsVoiceDesignModel(SelectedModel);
+        IsInstructionPickerVisible = SelectedEngine is OmniVoiceTtsCpp;
+        HasInstruction = IsInstructionTextVisible || IsInstructionPickerVisible;
+    }
+
+    // The Qwen3 VoiceDesign model has no speaker encoder - the voice is defined entirely by the
+    // instruction. Lock the voice combo to the "Default" entry so an imported voice cannot route
+    // through the (unsupported) cloning path.
+    private void UpdateVoiceLock()
+    {
+        var isVoiceDesign = SelectedEngine is Qwen3TtsCpp && Qwen3TtsCpp.IsVoiceDesignModel(SelectedModel);
+        IsVoiceComboEnabled = !isVoiceDesign;
+
+        if (isVoiceDesign
+            && SelectedVoice?.EngineVoice is Voices.Qwen3TtsVoice currentVoice
+            && !string.IsNullOrEmpty(currentVoice.FilePath))
+        {
+            var defaultVoice = Voices.FirstOrDefault(v =>
+                v.EngineVoice is Voices.Qwen3TtsVoice q && string.IsNullOrEmpty(q.FilePath));
+            if (defaultVoice != null)
+            {
+                SelectedVoice = defaultVoice;
+            }
+        }
+    }
+
+    partial void OnSelectedModelChanged(string? value)
+    {
+        RefreshInstructionVisibility();
+        UpdateVoiceLock();
+    }
+
+    // omnivoice-tts applies voice-design keywords only without a reference WAV, so the picker
+    // is usable for the "Default" voice but disabled (with a note) for cloned voices.
+    private void UpdateOmniVoicePickerState()
+    {
+        var isOmniVoice = SelectedEngine is OmniVoiceTtsCpp;
+        var isDefaultVoice = SelectedVoice?.EngineVoice is Voices.OmniVoiceVoice omniVoice
+                             && string.IsNullOrEmpty(omniVoice.FilePath);
+
+        IsInstructionPickerEnabled = isOmniVoice && isDefaultVoice;
+        IsInstructionVoiceHintVisible = isOmniVoice && !isDefaultVoice;
+    }
+
+    partial void OnSelectedVoiceChanged(Voice? value)
+    {
+        UpdateOmniVoicePickerState();
+    }
+
+    private static ObservableCollection<string> BuildKeywordOptions(string[] keywords)
+    {
+        var options = new ObservableCollection<string> { OmniVoiceAny };
+        foreach (var keyword in keywords)
+        {
+            options.Add(keyword);
+        }
+        return options;
+    }
+
+    private static bool IsRealOmniVoiceKeyword(string? value)
+    {
+        return !string.IsNullOrEmpty(value) && value != OmniVoiceAny;
+    }
+
+    partial void OnSelectedOmniVoiceGenderChanged(string value) => OnOmniVoicePickerChanged();
+    partial void OnSelectedOmniVoiceAgeChanged(string value) => OnOmniVoicePickerChanged();
+    partial void OnSelectedOmniVoicePitchChanged(string value) => OnOmniVoicePickerChanged();
+    partial void OnSelectedOmniVoiceAccentChanged(string value) => OnOmniVoicePickerChanged();
+    partial void OnOmniVoiceWhisperChanged(bool value) => OnOmniVoicePickerChanged();
+
+    private void OnOmniVoicePickerChanged()
+    {
+        if (!_suppressKeywordSync)
+        {
+            Instruction = BuildOmniVoiceInstruction();
+        }
+    }
+
+    private string BuildOmniVoiceInstruction()
+    {
+        var parts = new List<string>();
+        if (IsRealOmniVoiceKeyword(SelectedOmniVoiceGender)) parts.Add(SelectedOmniVoiceGender);
+        if (IsRealOmniVoiceKeyword(SelectedOmniVoiceAge)) parts.Add(SelectedOmniVoiceAge);
+        if (IsRealOmniVoiceKeyword(SelectedOmniVoicePitch)) parts.Add(SelectedOmniVoicePitch);
+        if (IsRealOmniVoiceKeyword(SelectedOmniVoiceAccent)) parts.Add(SelectedOmniVoiceAccent);
+        if (OmniVoiceWhisper) parts.Add(OmniVoiceTtsCpp.InstructionWhisper);
+        return string.Join(", ", parts);
+    }
+
+    // Reflects the saved instruction string into the picker controls, then rewrites Instruction
+    // from the picker so any unrecognised text (e.g. legacy free-text values from before the
+    // picker existed) is dropped instead of failing omnivoice-tts.
+    private void SyncOmniVoicePickerFromInstruction()
+    {
+        var present = (Instruction ?? string.Empty)
+            .Split(',')
+            .Select(s => s.Trim())
+            .Where(s => s.Length > 0)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        _suppressKeywordSync = true;
+        SelectedOmniVoiceGender = MatchOmniVoiceGroup(OmniVoiceTtsCpp.InstructionGenders, present);
+        SelectedOmniVoiceAge = MatchOmniVoiceGroup(OmniVoiceTtsCpp.InstructionAges, present);
+        SelectedOmniVoicePitch = MatchOmniVoiceGroup(OmniVoiceTtsCpp.InstructionPitches, present);
+        SelectedOmniVoiceAccent = MatchOmniVoiceGroup(OmniVoiceTtsCpp.InstructionAccents, present);
+        OmniVoiceWhisper = present.Contains(OmniVoiceTtsCpp.InstructionWhisper);
+        _suppressKeywordSync = false;
+
+        Instruction = BuildOmniVoiceInstruction();
+    }
+
+    // The first keyword from the group present in the saved instruction, or "(any)" if none.
+    private static string MatchOmniVoiceGroup(string[] group, HashSet<string> present)
+    {
+        return Array.Find(group, present.Contains) ?? OmniVoiceAny;
     }
 
     public void Initialize(Subtitle subtitle, string videoFileName, WavePeakData2? wavePeakData, string waveFolder)
@@ -309,6 +500,9 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             return;
         }
+
+        // The engine and/or its models may have just been downloaded - refresh the combo dots.
+        RefreshDownloadDots?.Invoke();
 
         var voice = SelectedVoice;
         if (voice != null && !await TtsVoiceInstaller.EnsureVoiceInstalled(engine, voice, Window, _windowService))
@@ -394,28 +588,27 @@ public partial class TextToSpeechViewModel : ObservableObject
         if (SelectedEngine is OmniVoiceTtsCpp)
         {
             await _windowService.ShowDialogAsync<OmniVoiceSettingsWindow, OmniVoiceSettingsViewModel>(Window!, vm => vm.Initialize());
-            return;
         }
-
-        if (SelectedEngine is Qwen3TtsCpp)
+        else if (SelectedEngine is Qwen3TtsCpp)
         {
             await _windowService.ShowDialogAsync<Qwen3TtsSettingsWindow, Qwen3TtsSettingsViewModel>(Window!, vm => vm.Initialize());
-            return;
         }
-
-        if (SelectedEngine is KokoroTtsCpp)
+        else if (SelectedEngine is KokoroTtsCpp)
         {
             await _windowService.ShowDialogAsync<KokoroTtsSettingsWindow, KokoroTtsSettingsViewModel>(Window!, vm => vm.Initialize());
-            return;
         }
-
-        if (SelectedEngine is ChatterboxTtsCpp)
+        else if (SelectedEngine is ChatterboxTtsCpp)
         {
             await _windowService.ShowDialogAsync<ChatterboxTtsSettingsWindow, ChatterboxTtsSettingsViewModel>(Window!, vm => vm.Initialize());
-            return;
+        }
+        else
+        {
+            await _windowService.ShowDialogAsync<ElevenLabsSettingsWindow, ElevenLabsSettingsViewModel>(Window!, vm => { });
         }
 
-        await _windowService.ShowDialogAsync<ElevenLabsSettingsWindow, ElevenLabsSettingsViewModel>(Window!, vm => { });
+        // An engine may have been (re)downloaded inside its settings dialog - re-check the
+        // install-status dots in the engine and model combos.
+        RefreshDownloadDots?.Invoke();
     }
 
     [RelayCommand]
@@ -433,6 +626,8 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             return;
         }
+
+        RefreshDownloadDots?.Invoke();
 
         if (!await TtsVoiceInstaller.EnsureVoiceInstalled(engine, voice, Window, _windowService))
         {
@@ -746,7 +941,12 @@ public partial class TextToSpeechViewModel : ObservableObject
             var qwen3ModelKey = Qwen3TtsCpp.ResolveModelKey(SelectedModel);
             if (!Qwen3TtsCpp.IsModelsInstalled(qwen3ModelKey))
             {
-                var sizeText = qwen3ModelKey == Qwen3TtsCpp.ModelKey17BBase ? "~2.7 GB" : "~1.6 GB";
+                var sizeText = qwen3ModelKey switch
+                {
+                    Qwen3TtsCpp.ModelKey17BBase => "~2.7 GB",
+                    Qwen3TtsCpp.ModelKey17BVoiceDesign => "~2.8 GB",
+                    _ => "~1.6 GB",
+                };
                 var answer = await MessageBox.Show(
                     Window,
                     "Download Qwen3 TTS models?",
@@ -1741,6 +1941,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             HasModel = engine.HasModel;
             HasKeyFile = engine.HasKeyFile;
             IsEdgeTtsEngine = engine is EdgeTts;
+            ApplyInstructionForEngine(engine);
 
             if (HasLanguageParameter)
             {

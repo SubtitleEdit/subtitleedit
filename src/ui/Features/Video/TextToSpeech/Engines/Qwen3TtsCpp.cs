@@ -30,15 +30,18 @@ public class Qwen3TtsCpp : ITtsEngine
 
     public const string ModelKey06B = "0.6B";
     public const string ModelKey17BBase = "1.7B Base";
+    public const string ModelKey17BVoiceDesign = "1.7B Voice Design";
     public const string DefaultModelKey = ModelKey06B;
 
     public const string TtsModelFileName06B = "qwen3-tts-0.6b-q8_0.gguf";
     public const string TtsModelFileName17BBase = "Qwen3-TTS-12Hz-1.7B-Base-q8_0.gguf";
+    public const string TtsModelFileName17BVoiceDesign = "qwen3-tts-12hz-1.7b-voicedesign-q8_0.gguf";
     public const string TokenizerModelFileName = "qwen3-tts-tokenizer-q8_0.gguf";
 
     public static string GetModelFileName(string? modelKey) => modelKey switch
     {
         ModelKey17BBase => TtsModelFileName17BBase,
+        ModelKey17BVoiceDesign => TtsModelFileName17BVoiceDesign,
         _ => TtsModelFileName06B,
     };
 
@@ -52,6 +55,15 @@ public class Qwen3TtsCpp : ITtsEngine
         return modelKey;
     }
 
+    /// <summary>
+    /// True when the resolved model is the instruction-tuned VoiceDesign variant. Only this
+    /// model honors the voice instruction; the 0.6B and 1.7B Base models ignore it.
+    /// </summary>
+    public static bool IsVoiceDesignModel(string? modelKey)
+    {
+        return ResolveModelKey(modelKey) == ModelKey17BVoiceDesign;
+    }
+
     private static readonly HttpClient HttpClient = new()
     {
         Timeout = TimeSpan.FromMinutes(5),
@@ -61,6 +73,7 @@ public class Qwen3TtsCpp : ITtsEngine
     private static int _serverPort;
     private static string? _serverModelFileName;
     private static bool _processExitHooked;
+    private static StringBuilder? _serverStderr;
 
     private static string ServerBaseUrl => $"http://127.0.0.1:{_serverPort}";
 
@@ -187,7 +200,7 @@ public class Qwen3TtsCpp : ITtsEngine
 
     public Task<string[]> GetModels()
     {
-        return Task.FromResult(new[] { ModelKey06B, ModelKey17BBase });
+        return Task.FromResult(new[] { ModelKey06B, ModelKey17BBase, ModelKey17BVoiceDesign });
     }
 
     public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model)
@@ -220,44 +233,75 @@ public class Qwen3TtsCpp : ITtsEngine
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
         var inputText = Utilities.UnbreakLine(text);
 
+        // Voice instruction only does anything on the instruction-tuned VoiceDesign model;
+        // the 0.6B and 1.7B Base models ignore it, so it is omitted there entirely.
+        var instruction = IsVoiceDesignModel(model)
+            ? (Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction ?? string.Empty).Trim()
+            : string.Empty;
+
         var endpoint = string.IsNullOrEmpty(qwen3Voice.FilePath) ? "/v1/synthesize" : "/v1/synthesize_with_voice";
-        Se.WriteToolsLog($"Qwen3 TTS: POST {ServerBaseUrl}{endpoint} (voice={qwen3Voice}, model={modelFileName}, textLen={text.Length})");
+        Se.WriteToolsLog($"Qwen3 TTS: POST {ServerBaseUrl}{endpoint} (voice={qwen3Voice}, model={modelFileName}, textLen={text.Length}, instructionLen={instruction.Length})");
 
-        using HttpResponseMessage response = string.IsNullOrEmpty(qwen3Voice.FilePath)
-            ? await SynthesizeAsync(inputText, cancellationToken)
-            : await SynthesizeWithVoiceAsync(inputText, qwen3Voice.FilePath, cancellationToken);
-
-        if (!response.IsSuccessStatusCode)
+        HttpResponseMessage response;
+        try
         {
-            var errorBody = await SafeReadErrorAsync(response, cancellationToken);
-            var errMsg = $"Qwen3 TTS server error {(int)response.StatusCode} {response.StatusCode} - "
-                + $"Voice: {qwen3Voice}, Text: {text}, Body: {errorBody}";
-            Se.LogError(errMsg);
-            Se.WriteToolsLog(errMsg);
-            throw new InvalidOperationException(
-                $"Qwen3 TTS synthesis failed ({(int)response.StatusCode}): {errorBody}");
+            response = string.IsNullOrEmpty(qwen3Voice.FilePath)
+                ? await SynthesizeAsync(inputText, instruction, cancellationToken)
+                : await SynthesizeWithVoiceAsync(inputText, qwen3Voice.FilePath, instruction, cancellationToken);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            // A crashed/exited server surfaces here as a bare connection error - attach whatever
+            // the server printed (model-load / synthesis failures land in its stdout/stderr).
+            var serverOutput = SnapshotServerStderr();
+            var msg = $"Qwen3 TTS request failed: {ex.Message}"
+                + (serverOutput.Length == 0 ? string.Empty : $"{Environment.NewLine}Server output:{Environment.NewLine}{serverOutput}");
+            Se.LogError(ex, msg);
+            Se.WriteToolsLog(msg);
+            throw new InvalidOperationException(msg, ex);
         }
 
-        await using (var fileStream = File.Create(outputFileName))
-        await using (var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken))
+        using (response)
         {
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorBody = await SafeReadErrorAsync(response, cancellationToken);
+                var serverOutput = SnapshotServerStderr();
+                var errMsg = $"Qwen3 TTS server error {(int)response.StatusCode} {response.StatusCode} - "
+                    + $"Voice: {qwen3Voice}, Text: {text}, Body: {errorBody}"
+                    + (serverOutput.Length == 0 ? string.Empty : $"{Environment.NewLine}Server output:{Environment.NewLine}{serverOutput}");
+                Se.LogError(errMsg);
+                Se.WriteToolsLog(errMsg);
+                throw new InvalidOperationException(
+                    $"Qwen3 TTS synthesis failed ({(int)response.StatusCode}): {errorBody}");
+            }
+
+            await using var fileStream = File.Create(outputFileName);
+            await using var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
             await contentStream.CopyToAsync(fileStream, cancellationToken);
         }
 
         return new TtsResult(outputFileName, text);
     }
 
-    private static async Task<HttpResponseMessage> SynthesizeAsync(string text, CancellationToken ct)
+    private static async Task<HttpResponseMessage> SynthesizeAsync(string text, string instruction, CancellationToken ct)
     {
-        var body = JsonSerializer.Serialize(new { text });
+        object payload = string.IsNullOrEmpty(instruction)
+            ? new { text }
+            : new { text, instruction };
+        var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
         return await HttpClient.PostAsync($"{ServerBaseUrl}/v1/synthesize", content, ct);
     }
 
-    private static async Task<HttpResponseMessage> SynthesizeWithVoiceAsync(string text, string referenceWav, CancellationToken ct)
+    private static async Task<HttpResponseMessage> SynthesizeWithVoiceAsync(string text, string referenceWav, string instruction, CancellationToken ct)
     {
         using var form = new MultipartFormDataContent();
         form.Add(new StringContent(text, Encoding.UTF8), "text");
+        if (!string.IsNullOrEmpty(instruction))
+        {
+            form.Add(new StringContent(instruction, Encoding.UTF8), "instruction");
+        }
         var refBytes = await File.ReadAllBytesAsync(referenceWav, ct);
         var fileContent = new ByteArrayContent(refBytes);
         fileContent.Headers.ContentType = new MediaTypeHeaderValue("audio/wav");
@@ -358,6 +402,7 @@ public class Qwen3TtsCpp : ITtsEngine
             _serverProcess = process;
             _serverPort = port;
             _serverModelFileName = modelFileName;
+            _serverStderr = stderrBuffer;
             HookProcessExitOnce();
 
             var deadline = DateTime.UtcNow.AddSeconds(120);
@@ -398,6 +443,14 @@ public class Qwen3TtsCpp : ITtsEngine
             var s = buffer.ToString().TrimEnd();
             return s.Length > 2000 ? s[^2000..] : s;
         }
+    }
+
+    // Tail of the running server's captured stdout/stderr - empty when no server is tracked.
+    // Used to surface model-load / synthesis failures that otherwise only reach the console.
+    private static string SnapshotServerStderr()
+    {
+        var buffer = _serverStderr;
+        return buffer == null ? string.Empty : SnapshotStderr(buffer);
     }
 
     private static async Task<bool> ProbeHealthAsync(int port, TimeSpan timeout, CancellationToken ct)
@@ -442,6 +495,7 @@ public class Qwen3TtsCpp : ITtsEngine
         _serverProcess = null;
         _serverPort = 0;
         _serverModelFileName = null;
+        _serverStderr = null;
         if (p == null) return;
         try
         {

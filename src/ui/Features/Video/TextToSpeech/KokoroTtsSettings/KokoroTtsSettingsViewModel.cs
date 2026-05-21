@@ -28,7 +28,14 @@ public partial class KokoroTtsSettingsViewModel : ObservableObject
     [ObservableProperty] private IBrush _statusBrush = Brushes.Gray;
     [ObservableProperty] private string _releaseTag = KokoroTtsCppDownloadService.ReleaseTag;
     [ObservableProperty] private string _installFolder = string.Empty;
-    [ObservableProperty] private bool _isInstalled;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DownloadButtonLabel))]
+    private bool _isInstalled;
+
+    public string DownloadButtonLabel => IsInstalled
+        ? Se.Language.General.Redownload
+        : Se.Language.General.Download;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
