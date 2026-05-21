@@ -833,7 +833,9 @@ public partial class DownloadTtsViewModel : ObservableObject
     {
         _qwen3TtsCppVariant = windowsVariant;
 
-        TitleText = $"Downloading Qwen3 TTS ({windowsVariant})";
+        TitleText = Configuration.IsRunningOnWindows
+            ? $"Downloading Qwen3 TTS ({windowsVariant})"
+            : "Downloading Qwen3 TTS";
 
         var downloadProgress = new Progress<float>(number =>
         {
