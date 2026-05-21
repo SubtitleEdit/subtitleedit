@@ -138,6 +138,7 @@ public class LanguageSettings
     public string WaveformFocusTextboxAfterInsertNew { get; set; }
     public string WaveformInvertMouseWheel { get; set; }
     public string WaveformSnapToShotChanges { get; set; }
+    public string WaveformSnapToFrames { get; set; }
     public string WaveformShotChangesAutoGenerate { get; set; }
     public string WaveformTextFontSize { get; set; }
     public string WaveformTextFontBold { get; set; }
@@ -428,6 +429,7 @@ public class LanguageSettings
         WaveformFocusTextboxAfterInsertNew = "Focus text box after insert";
         WaveformInvertMouseWheel = "Invert mouse-wheel";
         WaveformSnapToShotChanges = "Snap to shot changes";
+        WaveformSnapToFrames = "Snap to frames";
         WaveformShotChangesAutoGenerate = "Shot changes auto-generate";
         WaveformTextFontSize = "Waveform text font size";
         WaveformTextFontBold = "Waveform text font bold";
