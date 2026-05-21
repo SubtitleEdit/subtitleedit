@@ -1082,6 +1082,8 @@ public class AudioVisualizer : Control
                 // (previous and next are already null if _isShiftDown or Se.Settings.Waveform.AllowOverlap)
                 bool allowOverlap = (previous == null && next == null) || alreadyOverlapping;
 
+                newStart = SnapToFrame(newStart);
+
                 if (!allowOverlap && (previous != null || next != null))
                 {
                     // Calculate available space considering MinGapSeconds
@@ -1096,15 +1098,15 @@ public class AudioVisualizer : Control
                         break;
                     }
 
-                    // Clamp to available space to prevent overlap
+                    // Clamp to available space to prevent overlap (frame-aligned when snap is on)
                     if (newStart < availableStart)
                     {
-                        newStart = availableStart;
+                        newStart = SnapToFrameCeil(availableStart);
                     }
 
-                    if (newEnd > availableEnd)
+                    if (newStart + _originalDurationSeconds > availableEnd)
                     {
-                        newStart = availableEnd - _originalDurationSeconds;
+                        newStart = SnapToFrameFloor(availableEnd - _originalDurationSeconds);
                     }
                 }
 
@@ -1113,8 +1115,6 @@ public class AudioVisualizer : Control
                 {
                     newStart = 0;
                 }
-
-                newStart = SnapToFrame(newStart);
 
                 if (_activeParagraph != null)
                 {
@@ -1179,6 +1179,7 @@ public class AudioVisualizer : Control
                 if (previous != null && newStart < previous.EndTime.TotalSeconds + MinGapSeconds)
                 {
                     newStart = previous.EndTime.TotalSeconds + MinGapSeconds + 0.001;
+                    newStart = SnapToFrameCeil(newStart);
                 }
 
                 if (newStart < _activeParagraph.EndTime.TotalSeconds - 0.1)
@@ -1214,6 +1215,7 @@ public class AudioVisualizer : Control
                 if (next != null && newEnd > next.StartTime.TotalSeconds - MinGapSeconds)
                 {
                     newEnd = next.StartTime.TotalSeconds - 0.001 - MinGapSeconds;
+                    newEnd = SnapToFrameFloor(newEnd);
                 }
 
                 if (newEnd > _activeParagraph.StartTime.TotalSeconds + 0.1)
@@ -1229,19 +1231,50 @@ public class AudioVisualizer : Control
 
     private static double SnapToFrame(double seconds)
     {
-        if (!Se.Settings.Waveform.SnapToFrames)
+        if (!TryGetFrameDuration(out var frameDur))
         {
             return seconds;
+        }
+
+        return Math.Round(seconds / frameDur, MidpointRounding.AwayFromZero) * frameDur;
+    }
+
+    private static double SnapToFrameCeil(double seconds)
+    {
+        if (!TryGetFrameDuration(out var frameDur))
+        {
+            return seconds;
+        }
+
+        return Math.Ceiling(seconds / frameDur) * frameDur;
+    }
+
+    private static double SnapToFrameFloor(double seconds)
+    {
+        if (!TryGetFrameDuration(out var frameDur))
+        {
+            return seconds;
+        }
+
+        return Math.Floor(seconds / frameDur) * frameDur;
+    }
+
+    private static bool TryGetFrameDuration(out double frameDur)
+    {
+        frameDur = 0;
+        if (!Se.Settings.Waveform.SnapToFrames)
+        {
+            return false;
         }
 
         var fps = Se.Settings.General.CurrentFrameRate;
         if (fps < 1)
         {
-            return seconds;
+            return false;
         }
 
-        var frameDur = 1.0 / fps;
-        return Math.Round(seconds / frameDur) * frameDur;
+        frameDur = 1.0 / fps;
+        return true;
     }
 
     private void UpdateCursor(Point point)
