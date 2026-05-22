@@ -407,31 +407,37 @@ public static class DownloadHashManager
             // otherwise users will be prompted to "update" to the same version they just got.
             [OmniVoice.WindowsCpu] = new[]
             {
-                "ea1f0c6032f5a0333103ccffa7d7478c5ee00a35867776c277d717512587766c", // omnivoice-2026-05-17 (current download URL)
+                "4af38bcb264ef34d7d39a7c76af00993e32f731a17253b7e82a9b8a6140a736b", // omnivoice-2026-05-22 (current download URL)
+                "ea1f0c6032f5a0333103ccffa7d7478c5ee00a35867776c277d717512587766c", // omnivoice-2026-05-17
             },
             [OmniVoice.WindowsVulkan] = new[]
             {
-                "b461b8535892b3e6979aec79eff4d6a0109a31184008b778b6848d7d36ea9901", // omnivoice-2026-05-17 (current download URL)
+                "ff90f8eb8c36ea64d46bd1d245e109ef80cadf234417bdc2c78b7420ab8f9a43", // omnivoice-2026-05-22 (current download URL)
+                "b461b8535892b3e6979aec79eff4d6a0109a31184008b778b6848d7d36ea9901", // omnivoice-2026-05-17
             },
             [OmniVoice.WindowsCuda] = new[]
             {
-                "79308e79bb47df9f2bd2d31c6a60fe5672b74f43c3caf9b0a09566408894789e", // omnivoice-2026-05-17 (current download URL)
+                "735d5672507b3796138cecabcde6512e6a1e60bc9e6e86efd0fa6ce13a361fa1", // omnivoice-2026-05-22 (current download URL)
+                "79308e79bb47df9f2bd2d31c6a60fe5672b74f43c3caf9b0a09566408894789e", // omnivoice-2026-05-17
             },
             [OmniVoice.MacOs] = new[]
             {
-                "bbe354cdf8995641074c46d02d7f8b9353fa4803452cb45a762de10e899aca8e", // omnivoice-2026-05-17 (current download URL)
+                "d5ce6807adc50e6e1f1f92235828bad7c139c50042090a5361d0506e069ad1ba", // omnivoice-2026-05-22 (current download URL — RPATH fix)
+                "bbe354cdf8995641074c46d02d7f8b9353fa4803452cb45a762de10e899aca8e", // omnivoice-2026-05-17
             },
             [OmniVoice.LinuxX64] = new[]
             {
-                "198046721ebcbe49ded959fd832ec4a091d899be49e2a26b549723e32b82daba", // omnivoice-2026-05-17 (current download URL)
+                "c8eec5e66b362ddd3504658021a890a8acd4d2c092ba51a847fce1e80f4807e9", // omnivoice-2026-05-22 (current download URL — RPATH fix)
+                "198046721ebcbe49ded959fd832ec4a091d899be49e2a26b549723e32b82daba", // omnivoice-2026-05-17
             },
             [OmniVoice.LinuxArm64] = new[]
             {
-                "3802d4136a6ffdc37cce72b286ab7c17422d55964fec13d4e3eb36f26e6ae1fe", // omnivoice-2026-05-17 (current download URL)
+                "a46029c360398fc8775d6a4d703df158fa6f3ee6576e6efd3be0b7be424e5276", // omnivoice-2026-05-22 (current download URL — RPATH fix)
+                "3802d4136a6ffdc37cce72b286ab7c17422d55964fec13d4e3eb36f26e6ae1fe", // omnivoice-2026-05-17
             },
             [OmniVoice.Voices] = new[]
             {
-                "5d252eb78e8f4891279a36fa5127ea5ab80be35057eeaa5fadb49baeacd0c773", // omnivoice-2026-05-17 (current download URL — identical to the support-files/omnivoice-26-06 copy)
+                "5d252eb78e8f4891279a36fa5127ea5ab80be35057eeaa5fadb49baeacd0c773", // omnivoice-2026-05-22 (current download URL — unchanged from -05-17, identical to support-files/omnivoice-26-06 copy)
             },
 
             // Qwen3 TTS — https://github.com/niksedk/qwen3-tts.cpp/releases
