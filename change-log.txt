@@ -7,10 +7,11 @@ v5.0.0-beta30 (xth May 2026)
 * Add Qwen3 TTS 1.7B VoiceDesign model with natural-language voice instructions - thx subof
 * Add voice-design keyword picker to Text-to-speech for OmniVoice TTS - thx subof
 * Update CrispASR to v0.6.9 - restores Windows CPU and CPU-Legacy builds
-* Update Qwen3 TTS to v0.4.6 - unblocks the cstr CrispASR-converted VoiceDesign GGUF on all platforms
-* Add "Qwen3 TTS (CrispASR)" engine (1.7B VoiceDesign + CustomVoice via the CrispASR runtime)
-* Rename "Chatterbox TTS" to "Chatterbox TTS (CrispASR)" so the runtime is explicit
-* Update OmniVoice TTS to omnivoice-2026-05-22 - fixes the macOS/Linux dyld "Library not loaded: @rpath/libggml.0.dylib" error on first launch
+* Update OmniVoice TTS to omnivoice-2026-05-22 - fixes the macOS/Linux dyld "Library not loaded" error
+* Add "green/orange/grey" dot for engines/models for STT/TTS/Auto-translate
+* Add snap-to-frames option for waveform drag
+* Update Japanese translation - thx hisui3393
+* Add frame-based min-gap setting - thx p33t3r
 
 v5.0.0-beta29 (20th May 2026)
 
