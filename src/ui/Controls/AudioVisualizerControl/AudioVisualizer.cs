@@ -2720,7 +2720,7 @@ public class AudioVisualizer : Control
 
         int length50Ms = SecondsToSampleIndex(0.050);
         double secondsPerParagraph = defaultMilliseconds / TimeCode.BaseUnit;
-        int minBetween = SecondsToSampleIndex(Se.Settings.General.MinimumMillisecondsBetweenLines / TimeCode.BaseUnit);
+        int minBetween = SecondsToSampleIndex(Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / TimeCode.BaseUnit);
         bool subtitleOn = false;
         int i = begin;
         while (i < WavePeaks.Peaks.Count)

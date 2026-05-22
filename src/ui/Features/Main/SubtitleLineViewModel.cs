@@ -376,7 +376,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         get
         {
             if (Se.Settings.General.ColorGapTooShort &&
-                Gap < Se.Settings.General.MinimumMillisecondsBetweenLines)
+                Gap < Se.Settings.General.MinimumBetweenLines.GetMilliseconds())
             {
                 return _errorBrush;
             }
@@ -590,11 +590,11 @@ public partial class SubtitleLineViewModel : ObservableObject
                     errors.AppendLine("Overlap from previous: " + Math.Round(-gapPrev, 3));
                 }
             }
-            else if (gapPrev < general.MinimumMillisecondsBetweenLines)
+            else if (gapPrev < general.MinimumBetweenLines.GetMilliseconds())
             {
                 if (Se.Settings.General.ColorGapTooShort)
                 {
-                    errors.AppendLine("Min gap to previous: " + Math.Round(gapPrev, 3) + " < " + general.MinimumMillisecondsBetweenLines);
+                    errors.AppendLine("Min gap to previous: " + Math.Round(gapPrev, 3) + " < " + general.MinimumBetweenLines.GetMilliseconds());
                 }
             }
         }
@@ -612,11 +612,11 @@ public partial class SubtitleLineViewModel : ObservableObject
                 errors.AppendLine("Overlap to next: " + Math.Round(-gapNext, 3));
             }
         }
-        else if (gapNext < general.MinimumMillisecondsBetweenLines)
+        else if (gapNext < general.MinimumBetweenLines.GetMilliseconds())
         {
             if (Se.Settings.General.ColorGapTooShort)
             {
-                errors.AppendLine("Min gap to next: " + Math.Round(gapNext, 3) + " < " + general.MinimumMillisecondsBetweenLines);
+                errors.AppendLine("Min gap to next: " + Math.Round(gapNext, 3) + " < " + general.MinimumBetweenLines.GetMilliseconds());
             }
         }
 

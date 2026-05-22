@@ -24,7 +24,7 @@ public class PasteFromClipboardHelper : IPasteFromClipboardHelper
         ObservableCollection<SubtitleLineViewModel> subtitles, 
         SubtitleFormat subtitleFormat)
     {
-        var minGapBetweenLines = Se.Settings.General.MinimumMillisecondsBetweenLines;
+        var minGapBetweenLines = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         var tmp = new Subtitle();
         SubtitleFormat format = new SubRip();
         var list = new List<string>(text.SplitToLines());

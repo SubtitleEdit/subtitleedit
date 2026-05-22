@@ -1218,7 +1218,7 @@ public partial class CutVideoViewModel : ObservableObject
         }
 
         var videoPositionSeconds = vp.Position;
-        var gap = Se.Settings.General.MinimumMillisecondsBetweenLines / 1000.0;
+        var gap = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
         if (videoPositionSeconds < s.StartTime.TotalSeconds + gap)
         {
             return;

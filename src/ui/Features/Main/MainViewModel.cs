@@ -647,7 +647,7 @@ public partial class MainViewModel :
         Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds = Se.Settings.General.SubtitleMaximumCharactersPerSeconds;
         Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds = Se.Settings.General.SubtitleOptimalCharactersPerSeconds;
         Configuration.Settings.General.SubtitleMaximumWordsPerMinute = Se.Settings.General.SubtitleMaximumWordsPerMinute;
-        Configuration.Settings.General.MinimumMillisecondsBetweenLines = Se.Settings.General.MinimumMillisecondsBetweenLines;
+        Configuration.Settings.General.MinimumMillisecondsBetweenLines = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         Configuration.Settings.General.MaxNumberOfLines = Se.Settings.General.MaxNumberOfLines;
         Configuration.Settings.General.MergeLinesShorterThan = Se.Settings.General.UnbreakLinesShorterThan;
 
@@ -3150,7 +3150,7 @@ public partial class MainViewModel :
             var maxEndTime = TimeSpan.FromMilliseconds(selectedLine.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMaximumDisplayMilliseconds);
             if (nextSubtitle != null)
             {
-                var tempMaxEntTime = TimeSpan.FromMilliseconds(nextSubtitle.StartTime.TotalMilliseconds - Se.Settings.General.MinimumMillisecondsBetweenLines);
+                var tempMaxEntTime = TimeSpan.FromMilliseconds(nextSubtitle.StartTime.TotalMilliseconds - Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
                 if (tempMaxEntTime < maxEndTime)
                 {
                     maxEndTime = tempMaxEntTime;
@@ -5129,7 +5129,8 @@ public partial class MainViewModel :
             Se.Settings.General.SubtitleMaximumCharactersPerSeconds = (double)p.SubtitleMaximumCharactersPerSeconds;
             Se.Settings.General.SubtitleOptimalCharactersPerSeconds = (double)p.SubtitleOptimalCharactersPerSeconds;
             Se.Settings.General.SubtitleMaximumWordsPerMinute = (double)p.SubtitleMaximumWordsPerMinute;
-            Se.Settings.General.MinimumMillisecondsBetweenLines = p.MinimumMillisecondsBetweenLines;
+            Se.Settings.General.MinimumBetweenLines.Milliseconds = p.MinimumMillisecondsBetweenLines;
+            Se.Settings.General.MinimumBetweenLines.Frames = SubtitleFormat.MillisecondsToFrames(p.MinimumMillisecondsBetweenLines);
             Se.Settings.General.MaxNumberOfLines = p.MaxNumberOfLines;
             Se.Settings.General.UnbreakLinesShorterThan = p.MergeLinesShorterThan;
             Se.Settings.General.DialogStyle = p.DialogStyle.ToString();
@@ -6045,7 +6046,7 @@ public partial class MainViewModel :
                 var newDuration = next!.StartTime - line.StartTime;
                 if (newDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
-                    line.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - Se.Settings.General.MinimumMillisecondsBetweenLines);
+                    line.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
                 }
 
                 continue;
@@ -6075,7 +6076,7 @@ public partial class MainViewModel :
                 var newDuration = next.StartTime - line.StartTime;
                 if (newDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
-                    line.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - Se.Settings.General.MinimumMillisecondsBetweenLines);
+                    line.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
                 }
             }
         }
@@ -6902,7 +6903,7 @@ public partial class MainViewModel :
             AudioVisualizer.UpdateTheme();
             AudioVisualizer.IsReadOnly = LockTimeCodes;
             AudioVisualizer.WaveformDrawStyle = InitWaveform.GetWaveformDrawStyle(Se.Settings.Waveform.WaveformDrawStyle);
-            AudioVisualizer.MinGapSeconds = Se.Settings.General.MinimumMillisecondsBetweenLines / 1000.0;
+            AudioVisualizer.MinGapSeconds = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
             AudioVisualizer.WaveformHeightPercentage = Se.Settings.Waveform.SpectrogramCombinedWaveformHeight;
             AudioVisualizer.FocusOnMouseOver = Se.Settings.Waveform.FocusOnMouseOver;
             AudioVisualizer.ResetCache();
@@ -9072,7 +9073,7 @@ public partial class MainViewModel :
             if (next.StartTime.TotalMilliseconds < endMs)
             {
                 newParagraph.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds -
-                                                                 Se.Settings.General.MinimumMillisecondsBetweenLines);
+                                                                 Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
             }
         }
 
@@ -9649,7 +9650,7 @@ public partial class MainViewModel :
                 if (next.StartTime.TotalMilliseconds < endMs && next.StartTime.TotalMilliseconds > newParagraph.StartTime.TotalMilliseconds + 200)
                 {
                     newParagraph.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds -
-                                                                     Se.Settings.General.MinimumMillisecondsBetweenLines);
+                                                                     Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
                 }
             }
         });
@@ -9689,7 +9690,7 @@ public partial class MainViewModel :
                 if (next.StartTime.TotalMilliseconds < endMs && next.StartTime.TotalMilliseconds > newParagraph.StartTime.TotalMilliseconds + 200)
                 {
                     newParagraph.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds -
-                                                                     Se.Settings.General.MinimumMillisecondsBetweenLines);
+                                                                     Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
                 }
             }
 
@@ -9808,7 +9809,7 @@ public partial class MainViewModel :
         }
 
         var videoPositionSeconds = vp.Position;
-        var gap = Se.Settings.General.MinimumMillisecondsBetweenLines / 1000.0;
+        var gap = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
         if (videoPositionSeconds >= s.EndTime.TotalSeconds - gap)
         {
             return;
@@ -9842,7 +9843,7 @@ public partial class MainViewModel :
         }
 
         var videoPositionSeconds = vp.Position;
-        var gap = Se.Settings.General.MinimumMillisecondsBetweenLines / 1000.0;
+        var gap = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
         if (videoPositionSeconds < s.StartTime.TotalSeconds + gap)
         {
             return;
@@ -9882,7 +9883,7 @@ public partial class MainViewModel :
         }
 
         var videoPositionSeconds = vp.Position;
-        var gap = Se.Settings.General.MinimumMillisecondsBetweenLines / 1000.0;
+        var gap = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
         if (videoPositionSeconds < s.StartTime.TotalSeconds + gap)
         {
             return;
@@ -9914,7 +9915,7 @@ public partial class MainViewModel :
         }
 
         var videoPositionSeconds = vp.Position;
-        var gapMs = Se.Settings.General.MinimumMillisecondsBetweenLines;
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         if (videoPositionSeconds < s.StartTime.TotalSeconds + 0.001)
         {
             return;
@@ -9945,7 +9946,7 @@ public partial class MainViewModel :
         }
 
         var videoPositionSeconds = vp.Position;
-        var gapMs = Se.Settings.General.MinimumMillisecondsBetweenLines;
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         if (videoPositionSeconds < s.StartTime.TotalSeconds + 0.001)
         {
             return;
@@ -9978,7 +9979,7 @@ public partial class MainViewModel :
         }
 
         var videoPositionSeconds = vp.Position;
-        var gapMs = Se.Settings.General.MinimumMillisecondsBetweenLines;
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         if (videoPositionSeconds > s.EndTime.TotalSeconds - 0.001)
         {
             return;
@@ -10418,7 +10419,7 @@ public partial class MainViewModel :
         }
 
         var prev = Subtitles[idx.Value - 1];
-        s.SetStartTimeOnly(TimeSpan.FromMilliseconds(prev.EndTime.TotalMilliseconds + Se.Settings.General.MinimumMillisecondsBetweenLines));
+        s.SetStartTimeOnly(TimeSpan.FromMilliseconds(prev.EndTime.TotalMilliseconds + Se.Settings.General.MinimumBetweenLines.GetMilliseconds()));
         _updateAudioVisualizer = true;
     }
 
@@ -10440,7 +10441,7 @@ public partial class MainViewModel :
 
         ;
         s.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds -
-                                              Se.Settings.General.MinimumMillisecondsBetweenLines);
+                                              Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
         _updateAudioVisualizer = true;
     }
 
@@ -12430,7 +12431,7 @@ public partial class MainViewModel :
             if (next != null && next.StartTime.TotalMilliseconds < p.EndTime.TotalMilliseconds)
             {
                 p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds -
-                                              Se.Settings.General.MinimumMillisecondsBetweenLines;
+                                              Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
             }
         }
 

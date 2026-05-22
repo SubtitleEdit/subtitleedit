@@ -28,7 +28,7 @@ public static class ScriptSyncService
     {
         var minDurationMs = (double)Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
         var maxDurationMs = (double)Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
-        var minGapMs = (double)Se.Settings.General.MinimumMillisecondsBetweenLines;
+        var minGapMs = (double)Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
 
         var whisperWords = ExtractWordTimestamps(whisperSubtitle);
         if (whisperWords.Count == 0)

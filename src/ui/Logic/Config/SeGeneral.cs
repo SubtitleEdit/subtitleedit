@@ -67,7 +67,7 @@ public class SeGeneral
     public int MaxNumberOfLinesPlusAbort { get; set; }
     public int SubtitleMinimumDisplayMilliseconds { get; set; }
     public int SubtitleMaximumDisplayMilliseconds { get; set; }
-    public int MinimumMillisecondsBetweenLines { get; set; }
+    public MsOrFramesValue MinimumBetweenLines { get; set; } = new() { Milliseconds = 24, Frames = 2 };
     public int NewEmptyDefaultMs { get; set; }
     public bool PromptBeforeDelete { get; set; }
     public bool LockTimeCodes { get; set; }
@@ -123,7 +123,6 @@ public class SeGeneral
         UnbreakLinesShorterThan = 33;
         SubtitleMinimumDisplayMilliseconds = 1000;
         SubtitleMaximumDisplayMilliseconds = 8 * 1000;
-        MinimumMillisecondsBetweenLines = 24;
         SubtitleMaximumCharactersPerSeconds = 25.0;
         SubtitleOptimalCharactersPerSeconds = 15.0;
         SubtitleMaximumWordsPerMinute = 400;
@@ -164,7 +163,7 @@ public class SeGeneral
             SubtitleMinimumDisplayMilliseconds = SubtitleMinimumDisplayMilliseconds,
             SubtitleMaximumWordsPerMinute = (decimal)SubtitleMaximumWordsPerMinute,
             CpsLineLengthStrategy = CpsLineLengthStrategy,
-            MinimumMillisecondsBetweenLines = MinimumMillisecondsBetweenLines,
+            MinimumMillisecondsBetweenLines = MinimumBetweenLines.Milliseconds,
             DialogStyle = Enum.Parse<DialogType>(DialogStyle),
             ContinuationStyle = Enum.Parse<ContinuationStyle>(ContinuationStyle),
         });

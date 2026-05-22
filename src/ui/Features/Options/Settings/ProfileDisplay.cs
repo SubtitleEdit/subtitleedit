@@ -92,7 +92,7 @@ public partial class ProfileDisplay : ObservableObject
             SubtitleMaximumWordsPerMinute = (decimal)(MaxWordsPerMin ?? s.SubtitleMaximumWordsPerMinute),
             SubtitleMinimumDisplayMilliseconds = MinDurationMs ?? s.SubtitleMinimumDisplayMilliseconds,
             SubtitleMaximumDisplayMilliseconds = MaxDurationMs ?? s.SubtitleMaximumDisplayMilliseconds,
-            MinimumMillisecondsBetweenLines = MinGapMs ?? s.MinimumMillisecondsBetweenLines,
+            MinimumMillisecondsBetweenLines = MinGapMs ?? s.MinimumBetweenLines.Milliseconds,
             MaxNumberOfLines = MaxLines ?? s.MaxNumberOfLines,
             MergeLinesShorterThan = UnbreakLinesShorterThan ?? s.UnbreakLinesShorterThan,
             DialogStyle = Enum.Parse<DialogType>(DialogStyle.Code),

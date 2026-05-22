@@ -99,6 +99,7 @@ public class LanguageSettings
     public string MinDurationMs { get; set; }
     public string MaxDurationMs { get; set; }
     public string MinGapMs { get; set; }
+    public string MinGapFrames { get; set; }
     public string MaxLines { get; set; }
     public string UnbreakSubtitlesShortThan { get; set; }
     public string NewEmptyDefaultMs { get; set; }
@@ -389,6 +390,7 @@ public class LanguageSettings
         MinDurationMs = "Min duration (ms)";
         MaxDurationMs = "Max duration (ms)";
         MinGapMs = "Min gap (ms)";
+        MinGapFrames = "Min gap (frames)";
         MaxLines = "Max number of lines";
         UnbreakSubtitlesShortThan = "Unbreak subtitles shorter than";
         NewEmptyDefaultMs = "Default new subtitle duration (ms)";

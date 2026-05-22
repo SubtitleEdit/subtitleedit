@@ -63,7 +63,7 @@ public partial class ImportPlainTextViewModel : ObservableObject
         };
         SelectedSplitAtOption = SplitAtOptions[0];
         PlainText = string.Empty;
-        MinGapMs = Se.Settings.General.MinimumMillisecondsBetweenLines;
+        MinGapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         NumberOfSubtitles = string.Empty;
         FixedDurationMs = (int)Math.Round(Se.Settings.Tools.AdjustDurations.AdjustDurationFixed * 1000.0, MidpointRounding.AwayFromZero);
 

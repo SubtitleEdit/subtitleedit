@@ -119,9 +119,9 @@ public partial class ApplyMinGapViewModel : ObservableObject
 
     private void LoadSettings()
     {
-        MinGapMsOrFrames = Se.Settings.General.UseFrameMode 
-            ? SubtitleFormat.MillisecondsToFrames(Se.Settings.General.MinimumMillisecondsBetweenLines) 
-            : Se.Settings.General.MinimumMillisecondsBetweenLines;
+        MinGapMsOrFrames = Se.Settings.General.UseFrameMode
+            ? Se.Settings.General.MinimumBetweenLines.Frames
+            : Se.Settings.General.MinimumBetweenLines.Milliseconds;
     }
 
     private void SaveSettings()

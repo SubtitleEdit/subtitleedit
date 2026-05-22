@@ -25,7 +25,7 @@ public class InsertService : IInsertService
             firstSelectedIndex = index.Value;
         }
 
-        var minGapBetweenLines = Se.Settings.General.MinimumMillisecondsBetweenLines;
+        var minGapBetweenLines = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         int addMilliseconds = minGapBetweenLines + 1;
         if (addMilliseconds < 1)
         {
@@ -128,7 +128,7 @@ public class InsertService : IInsertService
         var prev = subtitles.GetOrNull(firstSelectedIndex);
         var next = subtitles.GetOrNull(firstSelectedIndex + 1);
 
-        var minGapBetweenLines = Se.Settings.General.MinimumMillisecondsBetweenLines;
+        var minGapBetweenLines = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         var addMilliseconds = minGapBetweenLines;
         if (addMilliseconds < 1)
         {

@@ -200,7 +200,24 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.MaxWordsPerMin, () => MakeNumericUpDown(nameof(_vm.MaxWordsPerMin), _vm.RuleValueChanged)),
             new SettingsItem(Se.Language.Options.Settings.MinDurationMs, () => MakeNumericUpDownInt(nameof(_vm.MinDurationMs), _vm.RuleValueChanged)),
             new SettingsItem(Se.Language.Options.Settings.MaxDurationMs, () => MakeNumericUpDownInt(nameof(_vm.MaxDurationMs), _vm.RuleValueChanged)),
-            new SettingsItem(Se.Language.Options.Settings.MinGapMs, () => MakeNumericUpDownInt(nameof(_vm.MinGapMs), _vm.RuleValueChanged)),
+            new SettingsItem(Se.Language.Options.Settings.MinGapMs + " " + Se.Language.Options.Settings.MinGapFrames, _vm, nameof(_vm.MinGapLabel), () => new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 5,
+                Children =
+                {
+                    MakeNumericUpDownInt(nameof(_vm.MinGapMs), _vm.RuleValueChanged)
+                        .WithBindIsVisible(_vm, nameof(_vm.IsMsMode)),
+                    MakeNumericUpDownInt(nameof(_vm.MinGapFrames), _vm.RuleValueChanged)
+                        .WithBindIsVisible(_vm, nameof(_vm.UseFrameMode)),
+                    new TextBlock
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Opacity = 0.6,
+                        [!TextBlock.TextProperty] = new Binding(nameof(_vm.MinGapFramesAsMs)) { Source = _vm },
+                    }.WithBindIsVisible(_vm, nameof(_vm.UseFrameMode)),
+                }
+            }),
             new SettingsItem(Se.Language.Options.Settings.MaxLines, () => MakeNumericUpDownInt(nameof(_vm.MaxLines), _vm.RuleValueChanged)),
             new SettingsItem(Se.Language.Options.Settings.UnbreakSubtitlesShortThan, () => MakeNumericUpDownInt(nameof(_vm.UnbreakLinesShorterThan), _vm.RuleValueChanged)),
 
