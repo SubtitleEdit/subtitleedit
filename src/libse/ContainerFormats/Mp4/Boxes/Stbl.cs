@@ -177,11 +177,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     totalTime += sampleTime / (double)TimeScale;
                     totalTicks += sampleTime;
 
-                    var p = new Paragraph();
                     if (sampleSize > 2)
                     {
-                        p.StartTime.TotalSeconds = before;
-
                         if (handlerType == "vide")
                         {
                             if (Discardable[index] == 1)
@@ -258,6 +255,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                             if (textSize > 0)
                             {
+                                var p = new Paragraph();
+                                p.StartTime.TotalSeconds = before;
+                                p.EndTime.TotalSeconds = totalTime;
+
                                 if (handlerType == "subp") // VobSub created with Mp4Box
                                 {
                                     if (textSize > 100)
@@ -279,16 +280,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                                     {
                                         p.Text = MakeScenaristText(buffer);
                                     }
+
+                                    if (!string.IsNullOrEmpty(p.Text))
+                                    {
+                                        paragraphs.Add(p);
+                                    }
                                 }
                             }
                         }
-                    }
-
-                    p.EndTime.TotalSeconds = totalTime;
-
-                    if (!string.IsNullOrEmpty(p.Text))
-                    {
-                        paragraphs.Add(p);
                     }
 
                     index++;
