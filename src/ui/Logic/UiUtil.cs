@@ -1671,8 +1671,33 @@ public static class UiUtil
 
     internal static Button MakeColorPickerButton(object source, string colorPropertyPath, bool showAlpha = true)
     {
-        var propInfo = source.GetType().GetProperty(colorPropertyPath, BindingFlags.Public | BindingFlags.Instance);
-        var initialColor = propInfo?.GetValue(source) is Color c ? c : Colors.White;
+        var pathParts = colorPropertyPath.Split('.');
+
+        (object? Owner, PropertyInfo? Property) ResolveLeaf()
+        {
+            object? current = source;
+            for (var i = 0; i < pathParts.Length - 1; i++)
+            {
+                if (current == null)
+                {
+                    return (null, null);
+                }
+                var pi = current.GetType().GetProperty(pathParts[i], BindingFlags.Public | BindingFlags.Instance);
+                current = pi?.GetValue(current);
+            }
+            if (current == null)
+            {
+                return (null, null);
+            }
+            var leafProp = current.GetType().GetProperty(pathParts[^1], BindingFlags.Public | BindingFlags.Instance);
+            return (current, leafProp);
+        }
+
+        Color ReadColor()
+        {
+            var (owner, prop) = ResolveLeaf();
+            return prop?.GetValue(owner) is Color c ? c : Colors.White;
+        }
 
         var colorSwatch = new Border
         {
@@ -1681,7 +1706,7 @@ public static class UiUtil
             CornerRadius = new CornerRadius(CornerRadius),
             BorderThickness = new Thickness(1),
             BorderBrush = new SolidColorBrush(Colors.Gray),
-            Background = new SolidColorBrush(initialColor),
+            Background = new SolidColorBrush(ReadColor()),
             VerticalAlignment = VerticalAlignment.Center,
         };
 
@@ -1692,29 +1717,73 @@ public static class UiUtil
             VerticalAlignment = VerticalAlignment.Center,
         };
 
-        if (source is INotifyPropertyChanged inpc)
-        {
-            void OnPropertyChanged(object? _, PropertyChangedEventArgs e)
-            {
-                if (e.PropertyName != colorPropertyPath && !string.IsNullOrEmpty(e.PropertyName))
-                {
-                    return;
-                }
+        var subscriptions = new List<(INotifyPropertyChanged Source, PropertyChangedEventHandler Handler)>();
 
-                var updated = propInfo?.GetValue(source) is Color nc ? nc : Colors.White;
-                if (Dispatcher.UIThread.CheckAccess())
+        void RefreshSwatch()
+        {
+            var updated = ReadColor();
+            if (Dispatcher.UIThread.CheckAccess())
+            {
+                colorSwatch.Background = new SolidColorBrush(updated);
+            }
+            else
+            {
+                Dispatcher.UIThread.Post(() => colorSwatch.Background = new SolidColorBrush(updated));
+            }
+        }
+
+        void Unsubscribe()
+        {
+            foreach (var (src, handler) in subscriptions)
+            {
+                src.PropertyChanged -= handler;
+            }
+            subscriptions.Clear();
+        }
+
+        void Subscribe()
+        {
+            object? current = source;
+            for (var i = 0; i < pathParts.Length; i++)
+            {
+                if (current is INotifyPropertyChanged inpc)
                 {
-                    colorSwatch.Background = new SolidColorBrush(updated);
+                    var partName = pathParts[i];
+                    var isLeaf = i == pathParts.Length - 1;
+                    PropertyChangedEventHandler handler = (_, e) =>
+                    {
+                        if (!string.IsNullOrEmpty(e.PropertyName) && e.PropertyName != partName)
+                        {
+                            return;
+                        }
+                        if (isLeaf)
+                        {
+                            RefreshSwatch();
+                        }
+                        else
+                        {
+                            Unsubscribe();
+                            Subscribe();
+                            RefreshSwatch();
+                        }
+                    };
+                    inpc.PropertyChanged += handler;
+                    subscriptions.Add((inpc, handler));
                 }
-                else
+                if (i < pathParts.Length - 1)
                 {
-                    Dispatcher.UIThread.Post(() => colorSwatch.Background = new SolidColorBrush(updated));
+                    if (current == null)
+                    {
+                        break;
+                    }
+                    var pi = current.GetType().GetProperty(pathParts[i], BindingFlags.Public | BindingFlags.Instance);
+                    current = pi?.GetValue(current);
                 }
             }
-
-            inpc.PropertyChanged += OnPropertyChanged;
-            button.DetachedFromVisualTree += (_, _) => inpc.PropertyChanged -= OnPropertyChanged;
         }
+
+        Subscribe();
+        button.DetachedFromVisualTree += (_, _) => Unsubscribe();
 
         button.Click += async (_, _) =>
         {
@@ -1723,7 +1792,13 @@ public static class UiUtil
                 return;
             }
 
-            var currentColor = propInfo?.GetValue(source) is Color cc ? cc : Colors.White;
+            var (owner, prop) = ResolveLeaf();
+            if (owner == null || prop == null)
+            {
+                return;
+            }
+
+            var currentColor = prop.GetValue(owner) is Color cc ? cc : Colors.White;
             var vm = new ColorPickerViewModel();
             vm.Initialize(currentColor);
             vm.ShowAlpha = showAlpha;
@@ -1732,7 +1807,7 @@ public static class UiUtil
 
             if (vm.OkPressed)
             {
-                propInfo?.SetValue(source, vm.SelectedColor);
+                prop.SetValue(owner, vm.SelectedColor);
                 colorSwatch.Background = new SolidColorBrush(vm.SelectedColor);
             }
         };
