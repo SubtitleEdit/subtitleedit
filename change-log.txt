@@ -2,17 +2,18 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-beta30 (xth May 2026)
+v5.0.0-beta30 (22th May 2026)
 
 * Add Qwen3 TTS 1.7B VoiceDesign model with natural-language voice instructions - thx subof
 * Add voice-design keyword picker to Text-to-speech for OmniVoice TTS - thx subof
 * Update CrispASR to v0.6.9 - restores Windows CPU and CPU-Legacy builds
-* Update OmniVoice TTS to omnivoice-2026-05-22 - fixes the macOS/Linux dyld "Library not loaded" error
-* Add "green/orange/grey" dot for engines/models for STT/TTS/Auto-translate
+* Update OmniVoice TTS to OmniVoice-2026-05-22 - fixes the macOS/Linux dyld "Library not loaded" error
+* Add "green/orange/gray" dot for engines/models for STT/TTS/Auto-translate
 * Add snap-to-frames option for waveform drag
 * Update Japanese translation - thx hisui3393
 * Add frame-based min-gap setting - thx p33t3r
 * Fix MP4 tx3g import returning only one subtitle when samples share a chunk
+* Update Italian translation - thx bovirus
 
 -----------------------------------------------------------------------------------------------------
 
