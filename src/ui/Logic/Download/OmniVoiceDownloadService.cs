@@ -32,7 +32,7 @@ public class OmniVoiceDownloadService : IOmniVoiceDownloadService
 
     // omnivoice.cpp release pin. Bump in lockstep with the hashes in DownloadHashManager.OmniVoice
     // (each new release: prepend the new SHA-256 at index 0, keep the previous one for "update available").
-    public const string ReleaseTag = "omnivoice-2026-05-17";
+    public const string ReleaseTag = "omnivoice-2026-05-22";
     private const string ReleaseUrlBase = "https://github.com/niksedk/omnivoice.cpp/releases/download/" + ReleaseTag + "/";
 
     private const string WindowsCpuUrl = ReleaseUrlBase + "omnivoice-win64-cpu.zip";
