@@ -92,7 +92,7 @@ public class InitWaveform
                 VerticalAlignment = VerticalAlignment.Stretch,
                 Height = double.NaN, // Auto height
                 WaveformDrawStyle = GetWaveformDrawStyle(settings.WaveformDrawStyle),
-                MinGapSeconds = Se.Settings.General.MinimumMillisecondsBetweenLines / 1000.0,
+                MinGapSeconds = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0,
                 FocusOnMouseOver = settings.FocusOnMouseOver,
                 IsReadOnly = Se.Settings.General.LockTimeCodes,
                 WaveformHeightPercentage = settings.SpectrogramCombinedWaveformHeight,

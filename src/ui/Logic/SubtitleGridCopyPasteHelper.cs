@@ -56,13 +56,13 @@ internal static class SubtitleGridCopyPasteHelper
         var addTimeMilliseconds = (double)0;
         if (subtitles.Count > 0 && index >= 0 && index < subtitles.Count)
         {
-            addTimeMilliseconds = (double)subtitles[index].EndTime.TotalMilliseconds + Se.Settings.General.MinimumMillisecondsBetweenLines;
+            addTimeMilliseconds = (double)subtitles[index].EndTime.TotalMilliseconds + Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
             index++;
         }
         else if (subtitles.Count > 0)
         {
              // If index is invalid (e.g. -1), append to end
-             addTimeMilliseconds = (double)subtitles[subtitles.Count - 1].EndTime.TotalMilliseconds + Se.Settings.General.MinimumMillisecondsBetweenLines;
+             addTimeMilliseconds = (double)subtitles[subtitles.Count - 1].EndTime.TotalMilliseconds + Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
              index = subtitles.Count;
         }
 
@@ -98,7 +98,7 @@ internal static class SubtitleGridCopyPasteHelper
                 };
                 subtitles.Insert(index, p);
                 index++;
-                addTimeMilliseconds += Se.Settings.General.NewEmptyDefaultMs + Se.Settings.General.MinimumMillisecondsBetweenLines;
+                addTimeMilliseconds += Se.Settings.General.NewEmptyDefaultMs + Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
             }
         }
     }

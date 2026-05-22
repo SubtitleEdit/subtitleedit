@@ -107,7 +107,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds = Se.Settings.General.SubtitleMaximumCharactersPerSeconds;
         Configuration.Settings.General.MaxNumberOfLines = Se.Settings.General.MaxNumberOfLines;
         Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds = Se.Settings.General.SubtitleOptimalCharactersPerSeconds;
-        Configuration.Settings.General.MinimumMillisecondsBetweenLines = Se.Settings.General.MinimumMillisecondsBetweenLines;
+        Configuration.Settings.General.MinimumMillisecondsBetweenLines = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
 
         InitStep1(languageCode, subtitle);
         LoadProfiles();

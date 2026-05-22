@@ -49,6 +49,15 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private int? _minDurationMs;
     [ObservableProperty] private int? _maxDurationMs;
     [ObservableProperty] private int? _minGapMs;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(MinGapFramesAsMs))]
+    private int? _minGapFrames;
+
+    public string MinGapFramesAsMs =>
+        MinGapFrames.HasValue
+            ? $"= {SubtitleFormat.FramesToMilliseconds(MinGapFrames.Value)} ms"
+            : string.Empty;
     [ObservableProperty] private int? _maxLines;
     [ObservableProperty] private int? _unbreakLinesShorterThan;
     [ObservableProperty] private ObservableCollection<DialogStyleDisplay> _dialogStyles;
@@ -77,7 +86,15 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _lockTimeCodes;
     [ObservableProperty] private bool _rememberPositionAndSize;
     [ObservableProperty] private bool _openLastFileOnStart;
-    [ObservableProperty] private bool _useFrameMode;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsMsMode))]
+    [NotifyPropertyChangedFor(nameof(MinGapLabel))]
+    private bool _useFrameMode;
+
+    public bool IsMsMode => !UseFrameMode;
+    public string MinGapLabel => UseFrameMode
+        ? Se.Language.Options.Settings.MinGapFrames
+        : Se.Language.Options.Settings.MinGapMs;
     [ObservableProperty] private bool _textBoxLimitNewLines;
     [ObservableProperty] private bool _autoBackupOn;
     [ObservableProperty] private int? _autoBackupIntervalMinutes;
@@ -562,7 +579,8 @@ public partial class SettingsViewModel : ObservableObject
         MaxWordsPerMin = general.SubtitleMaximumWordsPerMinute;
         MinDurationMs = general.SubtitleMinimumDisplayMilliseconds;
         MaxDurationMs = general.SubtitleMaximumDisplayMilliseconds;
-        MinGapMs = general.MinimumMillisecondsBetweenLines;
+        MinGapMs = general.MinimumBetweenLines.Milliseconds;
+        MinGapFrames = general.MinimumBetweenLines.Frames;
         MaxLines = general.MaxNumberOfLines;
         UnbreakLinesShorterThan = general.UnbreakLinesShorterThan;
         DialogStyle = DialogStyles.FirstOrDefault(p => p.Code == general.DialogStyle) ?? DialogStyles.First();
@@ -1178,7 +1196,8 @@ public partial class SettingsViewModel : ObservableObject
         general.SubtitleMaximumWordsPerMinute = MaxWordsPerMin ?? general.SubtitleMaximumWordsPerMinute;
         general.SubtitleMinimumDisplayMilliseconds = MinDurationMs ?? general.SubtitleMinimumDisplayMilliseconds;
         general.SubtitleMaximumDisplayMilliseconds = MaxDurationMs ?? general.SubtitleMaximumDisplayMilliseconds;
-        general.MinimumMillisecondsBetweenLines = MinGapMs ?? general.MinimumMillisecondsBetweenLines;
+        general.MinimumBetweenLines.Milliseconds = MinGapMs ?? general.MinimumBetweenLines.Milliseconds;
+        general.MinimumBetweenLines.Frames = MinGapFrames ?? general.MinimumBetweenLines.Frames;
         general.MaxNumberOfLines = MaxLines ?? general.MaxNumberOfLines;
         general.UnbreakLinesShorterThan = UnbreakLinesShorterThan ?? general.UnbreakLinesShorterThan;
         general.DialogStyle = DialogStyle.Code;
@@ -1409,7 +1428,7 @@ public partial class SettingsViewModel : ObservableObject
                 SubtitleMaximumWordsPerMinute = (decimal?)profile.MaxWordsPerMin ?? (decimal)general.SubtitleMaximumWordsPerMinute,
                 SubtitleMinimumDisplayMilliseconds = profile.MinDurationMs ?? general.SubtitleMinimumDisplayMilliseconds,
                 SubtitleMaximumDisplayMilliseconds = profile.MaxDurationMs ?? general.SubtitleMaximumDisplayMilliseconds,
-                MinimumMillisecondsBetweenLines = profile.MinGapMs ?? general.MinimumMillisecondsBetweenLines,
+                MinimumMillisecondsBetweenLines = profile.MinGapMs ?? general.MinimumBetweenLines.Milliseconds,
                 MaxNumberOfLines = profile.MaxLines ?? general.MaxNumberOfLines,
                 MergeLinesShorterThan = profile.UnbreakLinesShorterThan ?? general.UnbreakLinesShorterThan,
                 DialogStyle = Enum.Parse<DialogType>(profile.DialogStyle.Code),
@@ -1988,7 +2007,7 @@ public partial class SettingsViewModel : ObservableObject
                 Se.Settings.General.SubtitleMaximumWordsPerMinute = g.SubtitleMaximumWordsPerMinute;
                 Se.Settings.General.SubtitleMinimumDisplayMilliseconds = g.SubtitleMinimumDisplayMilliseconds;
                 Se.Settings.General.SubtitleMaximumDisplayMilliseconds = g.SubtitleMaximumDisplayMilliseconds;
-                Se.Settings.General.MinimumMillisecondsBetweenLines = g.MinimumMillisecondsBetweenLines;
+                Se.Settings.General.MinimumBetweenLines = g.MinimumBetweenLines;
                 Se.Settings.General.MaxNumberOfLines = g.MaxNumberOfLines;
                 Se.Settings.General.UnbreakLinesShorterThan = g.UnbreakLinesShorterThan;
                 Se.Settings.General.DialogStyle = g.DialogStyle;
@@ -2098,7 +2117,7 @@ public partial class SettingsViewModel : ObservableObject
                 MaxWordsPerMin = (double)g.SubtitleMaximumWordsPerMinute,
                 MinDurationMs = g.SubtitleMinimumDisplayMilliseconds,
                 MaxDurationMs = g.SubtitleMaximumDisplayMilliseconds,
-                MinGapMs = g.MinimumMillisecondsBetweenLines,
+                MinGapMs = g.MinimumBetweenLines.Milliseconds,
                 MaxLines = g.MaxNumberOfLines,
                 UnbreakLinesShorterThan = g.UnbreakLinesShorterThan,
                 DialogStyle = DialogStyles.FirstOrDefault(p => p.Code == g.DialogStyle) ?? DialogStyles.First(),

@@ -132,7 +132,7 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject
                         var newEndTime = TimeSpan.FromMilliseconds(item.StartTime.TotalMilliseconds + minMs);
                         if (newEndTime > next.StartTime)
                         {
-                            var cappedEndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - Se.Settings.General.MinimumMillisecondsBetweenLines);
+                            var cappedEndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
                             if (cappedEndTime > item.EndTime)
                             {
                                 // improved, but not fixed

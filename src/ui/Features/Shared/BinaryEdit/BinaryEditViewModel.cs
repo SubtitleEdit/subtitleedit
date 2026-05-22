@@ -703,7 +703,7 @@ public partial class BinaryEditViewModel : ObservableObject
             if (next != null && next.StartTime.TotalMilliseconds < p.EndTime.TotalMilliseconds)
             {
                 p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds -
-                                              Se.Settings.General.MinimumMillisecondsBetweenLines;
+                                              Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
             }
         }
 
@@ -1534,7 +1534,7 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         var newItem = new BinarySubtitleItem(selectedItem);
-        newItem.EndTime = TimeSpan.FromMilliseconds(selectedItem.StartTime.TotalMilliseconds + Se.Settings.General.MinimumMillisecondsBetweenLines);
+        newItem.EndTime = TimeSpan.FromMilliseconds(selectedItem.StartTime.TotalMilliseconds + Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
         newItem.StartTime = TimeSpan.FromMilliseconds(newItem.EndTime.TotalMilliseconds - Se.Settings.General.NewEmptyDefaultMs);
         var selectedIndex = SubtitleGrid.SelectedIndex;
         Subtitles.Insert(selectedIndex, newItem);
@@ -1557,7 +1557,7 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         var newItem = new BinarySubtitleItem(selectedItem);
-        newItem.StartTime = TimeSpan.FromMilliseconds(selectedItem.EndTime.TotalMilliseconds + Se.Settings.General.MinimumMillisecondsBetweenLines);
+        newItem.StartTime = TimeSpan.FromMilliseconds(selectedItem.EndTime.TotalMilliseconds + Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
         newItem.EndTime = TimeSpan.FromMilliseconds(newItem.StartTime.TotalMilliseconds + Se.Settings.General.NewEmptyDefaultMs);
         var selectedIndex = SubtitleGrid.SelectedIndex;
         Subtitles.Insert(selectedIndex + 1, newItem);

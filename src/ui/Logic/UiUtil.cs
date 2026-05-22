@@ -1194,6 +1194,28 @@ public static class UiUtil
         return control;
     }
 
+    public static T WithBindIsVisible<T>(this T control, string isVisiblePropertyPath) where T : Control
+    {
+        control.Bind(Visual.IsVisibleProperty, new Binding
+        {
+            Path = isVisiblePropertyPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
+    public static T WithBindIsVisible<T>(this T control, object source, string isVisiblePropertyPath) where T : Control
+    {
+        control.Bind(Visual.IsVisibleProperty, new Binding(isVisiblePropertyPath)
+        {
+            Source = source,
+            Mode = BindingMode.TwoWay,
+        });
+
+        return control;
+    }
+
     public static Button WithBindIsEnabled(this Button control, string isEnabledPropertyPath)
     {
         control.Bind(Button.IsEnabledProperty, new Binding

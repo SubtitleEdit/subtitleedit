@@ -10,6 +10,8 @@ public class SettingsItem
 {
     private readonly string _label;
     private readonly Func<Control> _controlFactory;
+    private readonly object? _labelBindingSource;
+    private readonly string? _labelBindingPath;
     public bool IsVisible { get; private set; } = true;
     public string? IsVisibleBinding { get; set; }
     public bool IsHidden { get; set; } = false;
@@ -30,6 +32,14 @@ public class SettingsItem
         IsHidden = isHidden;
     }
 
+    public SettingsItem(string label, object labelBindingSource, string labelBindingPath, Func<Control> controlFactory)
+    {
+        _label = label;
+        _controlFactory = controlFactory;
+        _labelBindingSource = labelBindingSource;
+        _labelBindingPath = labelBindingPath;
+    }
+
     public void Filter(string filter)
     {
         if (IsHidden)
@@ -44,6 +54,21 @@ public class SettingsItem
 
     public Control Build()
     {
+        var labelTextBlock = new TextBlock
+        {
+            Text = _label,
+            MinWidth = 200,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        if (_labelBindingPath != null && _labelBindingSource != null)
+        {
+            labelTextBlock.Bind(TextBlock.TextProperty, new Binding(_labelBindingPath)
+            {
+                Source = _labelBindingSource,
+            });
+        }
+
         var stackPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -51,12 +76,7 @@ public class SettingsItem
             Margin = new Thickness(0, 0, 0, 15),
             Children =
             {
-                new TextBlock
-                {
-                    Text = _label,
-                    MinWidth = 200,
-                    VerticalAlignment = VerticalAlignment.Center,
-                },
+                labelTextBlock,
                 _controlFactory()
             }
         };

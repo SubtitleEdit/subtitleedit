@@ -27,7 +27,7 @@ public class SplitManager : ISplitManager
         }
 
         var newSubtitle = new SubtitleLineViewModel(subtitle, true);
-        var gap = Se.Settings.General.MinimumMillisecondsBetweenLines / 2.0;
+        var gap = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 2.0;
 
         var dividePositionMs = subtitle.StartTime.TotalMilliseconds + subtitle.Duration.TotalMilliseconds / 2.0 + gap;
         if (videoPositionSeconds > 0 && videoPositionSeconds > subtitle.StartTime.TotalSeconds && videoPositionSeconds < subtitle.EndTime.TotalSeconds)
