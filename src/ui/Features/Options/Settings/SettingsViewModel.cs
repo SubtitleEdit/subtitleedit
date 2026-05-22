@@ -28,6 +28,7 @@ using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -54,10 +55,20 @@ public partial class SettingsViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(MinGapFramesAsMs))]
     private int? _minGapFrames;
 
-    public string MinGapFramesAsMs =>
-        MinGapFrames.HasValue
-            ? $"= {SubtitleFormat.FramesToMilliseconds(MinGapFrames.Value)} ms"
-            : string.Empty;
+    public string MinGapFramesAsMs
+    {
+        get
+        {
+            if (!MinGapFrames.HasValue)
+            {
+                return string.Empty;
+            }
+
+            var fps = Configuration.Settings.General.CurrentFrameRate;
+            var ms = SubtitleFormat.FramesToMilliseconds(MinGapFrames.Value, fps);
+            return $"= {ms} ms (at {fps.ToString("0.###", CultureInfo.InvariantCulture)} fps)";
+        }
+    }
     [ObservableProperty] private int? _maxLines;
     [ObservableProperty] private int? _unbreakLinesShorterThan;
     [ObservableProperty] private ObservableCollection<DialogStyleDisplay> _dialogStyles;
