@@ -200,7 +200,7 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.MaxWordsPerMin, () => MakeNumericUpDown(nameof(_vm.MaxWordsPerMin), _vm.RuleValueChanged)),
             new SettingsItem(Se.Language.Options.Settings.MinDurationMs, () => MakeNumericUpDownInt(nameof(_vm.MinDurationMs), _vm.RuleValueChanged)),
             new SettingsItem(Se.Language.Options.Settings.MaxDurationMs, () => MakeNumericUpDownInt(nameof(_vm.MaxDurationMs), _vm.RuleValueChanged)),
-            new SettingsItem(Se.Language.Options.Settings.MinGapMs, _vm, nameof(_vm.MinGapLabel), () => new StackPanel
+            new SettingsItem(Se.Language.Options.Settings.MinGapMs + " " + Se.Language.Options.Settings.MinGapFrames, _vm, nameof(_vm.MinGapLabel), () => new StackPanel
             {
                 Orientation = Orientation.Horizontal,
                 Spacing = 5,

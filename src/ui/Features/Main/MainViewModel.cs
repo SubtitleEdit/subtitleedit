@@ -5130,6 +5130,7 @@ public partial class MainViewModel :
             Se.Settings.General.SubtitleOptimalCharactersPerSeconds = (double)p.SubtitleOptimalCharactersPerSeconds;
             Se.Settings.General.SubtitleMaximumWordsPerMinute = (double)p.SubtitleMaximumWordsPerMinute;
             Se.Settings.General.MinimumBetweenLines.Milliseconds = p.MinimumMillisecondsBetweenLines;
+            Se.Settings.General.MinimumBetweenLines.Frames = SubtitleFormat.MillisecondsToFrames(p.MinimumMillisecondsBetweenLines);
             Se.Settings.General.MaxNumberOfLines = p.MaxNumberOfLines;
             Se.Settings.General.UnbreakLinesShorterThan = p.MergeLinesShorterThan;
             Se.Settings.General.DialogStyle = p.DialogStyle.ToString();

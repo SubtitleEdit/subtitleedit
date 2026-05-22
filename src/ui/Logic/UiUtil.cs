@@ -1199,7 +1199,7 @@ public static class UiUtil
         control.Bind(Visual.IsVisibleProperty, new Binding
         {
             Path = isVisiblePropertyPath,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
@@ -1210,7 +1210,7 @@ public static class UiUtil
         control.Bind(Visual.IsVisibleProperty, new Binding(isVisiblePropertyPath)
         {
             Source = source,
-            Mode = BindingMode.TwoWay,
+            Mode = BindingMode.OneWay,
         });
 
         return control;
