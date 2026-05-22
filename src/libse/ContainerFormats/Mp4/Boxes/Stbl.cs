@@ -163,7 +163,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                 var chunkOffset = ChunkOffsets[chunkIndex];
                 var sampleOffset = chunkOffset; // tracks the byte position of the current sample within the chunk
-                var p = new Paragraph();
                 for (var i = 0; i < samplesPerChunk; i++)
                 {
                     if (index >= SampleSizes.Count || index >= Ssts.Count)
@@ -180,8 +179,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                     if (sampleSize > 2)
                     {
-                        p.StartTime.TotalSeconds = before;
-
                         if (handlerType == "vide")
                         {
                             if (Discardable[index] == 1)
@@ -256,14 +253,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                             fs.Read(buffer, 0, buffer.Length);
                             var textSize = (uint)GetWord(buffer, 0);
 
-                            if (textSize == 0 && samplesPerChunk > 1)
-                            {
-                                fs.Read(buffer, 0, buffer.Length);
-                                textSize = (uint)GetWord(buffer, 0);
-                            }
-
                             if (textSize > 0)
                             {
+                                var p = new Paragraph();
+                                p.StartTime.TotalSeconds = before;
+                                p.EndTime.TotalSeconds = totalTime;
+
                                 if (handlerType == "subp") // VobSub created with Mp4Box
                                 {
                                     if (textSize > 100)
@@ -285,19 +280,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                                     {
                                         p.Text = MakeScenaristText(buffer);
                                     }
+
+                                    if (!string.IsNullOrEmpty(p.Text))
+                                    {
+                                        paragraphs.Add(p);
+                                    }
                                 }
                             }
                         }
                     }
 
-                    p.EndTime.TotalSeconds = totalTime;
                     index++;
                     sampleOffset += sampleSize; // advance to next sample within this chunk
-                }
-
-                if (!string.IsNullOrEmpty(p.Text))
-                {
-                    paragraphs.Add(p);
                 }
             }
 
