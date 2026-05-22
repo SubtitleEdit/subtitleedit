@@ -1,10 +1,8 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
-using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -151,7 +149,7 @@ public class BlankVideoWindow : Window
         var radioButtonCheckeredImage = UiUtil.MakeRadioButton(Se.Language.Video.CheckeredImage, vm, nameof(vm.UseCheckedImage), "background");
 
         var radioButtonUseSolidColor = UiUtil.MakeRadioButton(Se.Language.General.SolidColor, vm, nameof(vm.UseSolidColor), "background");
-        var colorPicker = UiUtil.MakeColorPicker(vm, nameof(_vm.SolidColor));
+        var colorPicker = UiUtil.MakeColorPickerButton(vm, nameof(_vm.SolidColor), false);
         var panelSolidColor = new StackPanel
         {
             Orientation = Orientation.Horizontal,

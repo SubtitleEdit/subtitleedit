@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -26,7 +27,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
-using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 
 namespace Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
 
@@ -1194,6 +1194,10 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     {
         UpdateNonAssaPreview();
     }
+
+    partial void OnFontTextColorChanged(Color value) => UpdateNonAssaPreview();
+    partial void OnFontOutlineColorChanged(Color value) => UpdateNonAssaPreview();
+    partial void OnFontShadowColorChanged(Color value) => UpdateNonAssaPreview();
 
     internal void ComboBoxChanged(object? sender, SelectionChangedEventArgs e)
     {
