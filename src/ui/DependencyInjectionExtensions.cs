@@ -142,6 +142,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ChatterboxTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.EngineSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.EncodingSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
@@ -386,6 +387,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<OcrViewModel>();
         collection.AddTransient<OmniVoiceSettingsViewModel>();
         collection.AddTransient<Qwen3TtsSettingsViewModel>();
+        collection.AddTransient<Qwen3TtsCrispAsrSettingsViewModel>();
         collection.AddTransient<KokoroTtsSettingsViewModel>();
         collection.AddTransient<ChatterboxTtsSettingsViewModel>();
         collection.AddTransient<OpenFromUrlViewModel>();

@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ChatterboxTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceSettings;
@@ -171,6 +172,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             new Murf(ttsDownloadService),
             new GoogleSpeech(ttsDownloadService),
             new Qwen3TtsCpp(),
+            new Qwen3TtsCrispAsr(),
             new KokoroTtsCpp(),
             new ChatterboxTtsCpp(),
             new OmniVoiceTtsCpp(),
@@ -199,7 +201,16 @@ public partial class TextToSpeechViewModel : ObservableObject
 
     private void LoadSettings()
     {
-        var lastEngine = Engines.FirstOrDefault(e => e.Name == Se.Settings.Video.TextToSpeech.Engine);
+        // Migrate the pre-rename engine name so users who had "Chatterbox TTS" saved
+        // before the rename to "Chatterbox TTS (CrispASR)" land on the same engine.
+        // Cheap enough to do unconditionally; only kicks in once per affected install.
+        var savedEngine = Se.Settings.Video.TextToSpeech.Engine ?? string.Empty;
+        if (savedEngine == "Chatterbox TTS")
+        {
+            savedEngine = "Chatterbox TTS (CrispASR)";
+        }
+
+        var lastEngine = Engines.FirstOrDefault(e => e.Name == savedEngine);
         if (lastEngine != null)
         {
             SelectedEngine = lastEngine;
@@ -283,6 +294,13 @@ public partial class TextToSpeechViewModel : ObservableObject
             Se.Settings.Video.TextToSpeech.Qwen3TtsCppModel = SelectedModel ?? Qwen3TtsCpp.DefaultModelKey;
             Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction = (Instruction ?? string.Empty).Trim();
         }
+        else if (SelectedEngine is Qwen3TtsCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrModel = SelectedModel ?? Qwen3TtsCrispAsr.DefaultModelKey;
+            // Shared instruction text with the qwen3-tts.cpp engine so the same voice
+            // description applies whichever Qwen3 backend the user picks.
+            Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction = (Instruction ?? string.Empty).Trim();
+        }
         else if (SelectedEngine is OmniVoiceTtsCpp)
         {
             Se.Settings.Video.TextToSpeech.OmniVoiceTtsCppInstruction = (Instruction ?? string.Empty).Trim();
@@ -312,10 +330,13 @@ public partial class TextToSpeechViewModel : ObservableObject
     }
 
     // The instruction control is shared in the UI; each engine that supports it keeps its own
-    // persisted value, so it always reflects the currently selected engine.
+    // persisted value, so it always reflects the currently selected engine. Both Qwen3 engines
+    // (qwen3-tts.cpp and CrispASR) share the same Qwen3TtsCppInstruction setting so users get
+    // the same voice description whichever backend they're testing with.
     private static string GetInstructionForEngine(ITtsEngine? engine) => engine switch
     {
         Qwen3TtsCpp => Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction ?? string.Empty,
+        Qwen3TtsCrispAsr => Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction ?? string.Empty,
         OmniVoiceTtsCpp => Se.Settings.Video.TextToSpeech.OmniVoiceTtsCppInstruction ?? string.Empty,
         _ => string.Empty,
     };
@@ -340,17 +361,22 @@ public partial class TextToSpeechViewModel : ObservableObject
     // 1.7B Base models are not instruction-tuned. OmniVoice always shows its keyword picker.
     private void RefreshInstructionVisibility()
     {
-        IsInstructionTextVisible = SelectedEngine is Qwen3TtsCpp && Qwen3TtsCpp.IsVoiceDesignModel(SelectedModel);
+        IsInstructionTextVisible =
+            (SelectedEngine is Qwen3TtsCpp && Qwen3TtsCpp.IsVoiceDesignModel(SelectedModel))
+            || (SelectedEngine is Qwen3TtsCrispAsr && Qwen3TtsCrispAsr.IsVoiceDesignModel(SelectedModel));
         IsInstructionPickerVisible = SelectedEngine is OmniVoiceTtsCpp;
         HasInstruction = IsInstructionTextVisible || IsInstructionPickerVisible;
     }
 
     // The Qwen3 VoiceDesign model has no speaker encoder - the voice is defined entirely by the
     // instruction. Lock the voice combo to the "Default" entry so an imported voice cannot route
-    // through the (unsupported) cloning path.
+    // through the (unsupported) cloning path. Applies to both Qwen3 engines (qwen3-tts.cpp and
+    // CrispASR) when the VoiceDesign model is selected.
     private void UpdateVoiceLock()
     {
-        var isVoiceDesign = SelectedEngine is Qwen3TtsCpp && Qwen3TtsCpp.IsVoiceDesignModel(SelectedModel);
+        var isVoiceDesign =
+            (SelectedEngine is Qwen3TtsCpp && Qwen3TtsCpp.IsVoiceDesignModel(SelectedModel))
+            || (SelectedEngine is Qwen3TtsCrispAsr && Qwen3TtsCrispAsr.IsVoiceDesignModel(SelectedModel));
         IsVoiceComboEnabled = !isVoiceDesign;
 
         if (isVoiceDesign
@@ -370,6 +396,28 @@ public partial class TextToSpeechViewModel : ObservableObject
     {
         RefreshInstructionVisibility();
         UpdateVoiceLock();
+
+        // Qwen3 (CrispASR) returns a different voice list per model — VoiceDesign exposes
+        // "Default", CustomVoice only shows imported WAVs since it can't synthesise without
+        // a reference. Persist the model change first so GetVoices reads the new value, then
+        // re-pull the voice list. Wrap the fire-and-forget in a try/catch so any throw doesn't
+        // surface later as an unobserved task exception; the worst case is the combo keeps
+        // showing the old voice list.
+        if (SelectedEngine is Qwen3TtsCrispAsr engine)
+        {
+            Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrModel = value ?? Qwen3TtsCrispAsr.DefaultModelKey;
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await Dispatcher.UIThread.InvokeAsync(async () => await RefreshVoices(engine));
+                }
+                catch (Exception ex)
+                {
+                    Se.LogError(ex, "Qwen3 TTS (CrispASR): refreshing voices on model change failed");
+                }
+            });
+        }
     }
 
     // omnivoice-tts applies voice-design keywords only without a reference WAV, so the picker
@@ -592,6 +640,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is Qwen3TtsCpp)
         {
             await _windowService.ShowDialogAsync<Qwen3TtsSettingsWindow, Qwen3TtsSettingsViewModel>(Window!, vm => vm.Initialize());
+        }
+        else if (SelectedEngine is Qwen3TtsCrispAsr)
+        {
+            await _windowService.ShowDialogAsync<Qwen3TtsCrispAsrSettingsWindow, Qwen3TtsCrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
         }
         else if (SelectedEngine is KokoroTtsCpp)
         {
@@ -1900,6 +1952,15 @@ public partial class TextToSpeechViewModel : ObservableObject
             else if (SelectedEngine is Qwen3TtsCpp)
             {
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.Qwen3TtsCppModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+            }
+            else if (SelectedEngine is Qwen3TtsCrispAsr)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
                     SelectedModel = Models.FirstOrDefault();
