@@ -12,6 +12,7 @@ v5.0.0-beta30 (xth May 2026)
 * Add snap-to-frames option for waveform drag
 * Update Japanese translation - thx hisui3393
 * Add frame-based min-gap setting - thx p33t3r
+* Fix MP4 tx3g import returning only one subtitle when samples share a chunk
 
 -----------------------------------------------------------------------------------------------------
 
