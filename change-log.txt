@@ -13,6 +13,8 @@ v5.0.0-beta30 (xth May 2026)
 * Update Japanese translation - thx hisui3393
 * Add frame-based min-gap setting - thx p33t3r
 
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-beta29 (20th May 2026)
 
 * Add Engine settings dialog for Qwen3 TTS, Kokoro TTS, and Chatterbox TTS
