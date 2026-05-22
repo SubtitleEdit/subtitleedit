@@ -19,6 +19,7 @@ public class ShortCut
 
     public ShortCut(string name, List<string> keys, ShortcutCategory category, IRelayCommand action)
     {
+        ShortcutManager.MigrateLegacyOemKeys(keys);
         Name = name;
         Keys = keys;
         Category = category;
@@ -42,6 +43,9 @@ public class ShortCut
 
     public ShortCut(ShortcutsMain.AvailableShortcut shortcut, SeShortCut keys)
     {
+        // Mutates the underlying SeShortCut.Keys list so the migrated names
+        // also get persisted on the next save — drops legacy "Oem*" tokens.
+        ShortcutManager.MigrateLegacyOemKeys(keys.Keys);
         Keys = keys.Keys;
         Action = shortcut.RelayCommand;
         Category = shortcut.Category;

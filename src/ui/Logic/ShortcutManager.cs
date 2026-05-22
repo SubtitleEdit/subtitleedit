@@ -98,15 +98,66 @@ public class ShortcutManager : IShortcutManager
 
     public static string GetShortcutKeyName(Key key, PhysicalKey physicalKey)
     {
-        if (!IsNumPadPhysicalKey(physicalKey))
+        if (IsNumPadPhysicalKey(physicalKey))
         {
-            return key.ToString();
+            var keyName = key.ToString();
+            return keyName.StartsWith("NumPad", StringComparison.Ordinal)
+                ? keyName
+                : "NumPad" + keyName;
         }
 
-        var keyName = key.ToString();
-        return keyName.StartsWith("NumPad", StringComparison.Ordinal)
-            ? keyName
-            : "NumPad" + keyName;
+        // Avalonia's Key enum derives Oem* values from the character produced
+        // against a US-keyboard table, so Shift+. on a Swedish layout reports
+        // as OemSemicolon (because ':' lives on the semicolon key in US) and
+        // collides with Shift+,. The non-ASCII '<' next to Z is mis-reported
+        // as OemComma for the same reason. Fall back to the layout-independent
+        // PhysicalKey so each physical key gets a unique, stable token.
+        if (key.ToString().StartsWith("Oem", StringComparison.Ordinal))
+        {
+            return physicalKey.ToString();
+        }
+
+        return key.ToString();
+    }
+
+    // Maps tokens that were stored before the PhysicalKey fix onto the modern
+    // PhysicalKey names. Existing user shortcut files have entries like
+    // "OemPeriod" / "Oem1"; without this migration they would silently stop
+    // matching after the upgrade.
+    private static readonly Dictionary<string, string> LegacyOemKeyMap = new(StringComparer.Ordinal)
+    {
+        ["OemPeriod"] = "Period",
+        ["OemComma"] = "Comma",
+        ["OemSemicolon"] = "Semicolon",
+        ["Oem1"] = "Semicolon",
+        ["OemQuestion"] = "Slash",
+        ["Oem2"] = "Slash",
+        ["OemTilde"] = "Backquote",
+        ["Oem3"] = "Backquote",
+        ["OemOpenBrackets"] = "BracketLeft",
+        ["Oem4"] = "BracketLeft",
+        ["OemPipe"] = "Backslash",
+        ["Oem5"] = "Backslash",
+        ["OemCloseBrackets"] = "BracketRight",
+        ["Oem6"] = "BracketRight",
+        ["OemQuotes"] = "Quote",
+        ["Oem7"] = "Quote",
+        ["Oem8"] = "IntlBackslash",
+        ["OemMinus"] = "Minus",
+        ["OemPlus"] = "Equal",
+        ["OemBackslash"] = "IntlBackslash",
+        ["Oem102"] = "IntlBackslash",
+    };
+
+    public static void MigrateLegacyOemKeys(List<string> keys)
+    {
+        for (var i = 0; i < keys.Count; i++)
+        {
+            if (LegacyOemKeyMap.TryGetValue(keys[i], out var modern))
+            {
+                keys[i] = modern;
+            }
+        }
     }
 
     private static bool IsNumPadPhysicalKey(PhysicalKey physicalKey)

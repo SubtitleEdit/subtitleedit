@@ -1,5 +1,6 @@
 using Avalonia.Input;
 using Nikse.SubtitleEdit.Logic;
+using System.Collections.Generic;
 
 namespace UITests.Logic;
 
@@ -64,5 +65,58 @@ public class ShortcutManagerTests
         var main = ShortcutManager.GetShortcutKeyName(Key.Delete, PhysicalKey.Delete);
 
         Assert.NotEqual(numpad, main);
+    }
+
+    // Bug #11082: on a non-US layout (e.g. Swedish) Avalonia's Key enum is
+    // derived from the produced character mapped against a US-keyboard table,
+    // so Shift+. ('=>:') reports Key.OemSemicolon and Shift+, ('=>;') also
+    // reports Key.OemSemicolon. Falling back to PhysicalKey for any Oem* key
+    // gives each physical key a unique, layout-independent token.
+    [Theory]
+    [InlineData(Key.OemPeriod, PhysicalKey.Period, "Period")]
+    [InlineData(Key.OemComma, PhysicalKey.Comma, "Comma")]
+    [InlineData(Key.OemSemicolon, PhysicalKey.Period, "Period")]      // Swedish Shift+.
+    [InlineData(Key.OemSemicolon, PhysicalKey.Comma, "Comma")]        // Swedish Shift+,
+    [InlineData(Key.OemComma, PhysicalKey.IntlBackslash, "IntlBackslash")] // Swedish '<' next to Z
+    [InlineData(Key.OemMinus, PhysicalKey.Minus, "Minus")]
+    [InlineData(Key.OemPlus, PhysicalKey.Equal, "Equal")]
+    [InlineData(Key.OemQuestion, PhysicalKey.Slash, "Slash")]
+    [InlineData(Key.OemTilde, PhysicalKey.Backquote, "Backquote")]
+    public void GetShortcutKeyNameUsesPhysicalKeyForOemKeys(Key key, PhysicalKey physicalKey, string expected)
+    {
+        var result = ShortcutManager.GetShortcutKeyName(key, physicalKey);
+
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void GetShortcutKeyNameSwedishShiftPeriodNotEqualSwedishShiftComma()
+    {
+        // The collision behind #11082: both produce Key.OemSemicolon on Swedish,
+        // so before the fix they shared a token and second-bound shortcut won.
+        var shiftPeriod = ShortcutManager.GetShortcutKeyName(Key.OemSemicolon, PhysicalKey.Period);
+        var shiftComma = ShortcutManager.GetShortcutKeyName(Key.OemSemicolon, PhysicalKey.Comma);
+
+        Assert.NotEqual(shiftPeriod, shiftComma);
+    }
+
+    [Fact]
+    public void MigrateLegacyOemKeysRewritesKnownTokensInPlace()
+    {
+        var keys = new List<string> { "Shift", "OemPeriod", "OemComma", "Oem1", "A" };
+
+        ShortcutManager.MigrateLegacyOemKeys(keys);
+
+        Assert.Equal(new[] { "Shift", "Period", "Comma", "Semicolon", "A" }, keys);
+    }
+
+    [Fact]
+    public void MigrateLegacyOemKeysLeavesUnknownTokensUnchanged()
+    {
+        var keys = new List<string> { "Control", "F5", "NumPad7", "Period" };
+
+        ShortcutManager.MigrateLegacyOemKeys(keys);
+
+        Assert.Equal(new[] { "Control", "F5", "NumPad7", "Period" }, keys);
     }
 }
