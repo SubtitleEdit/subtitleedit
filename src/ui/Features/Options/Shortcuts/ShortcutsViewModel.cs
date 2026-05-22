@@ -135,6 +135,27 @@ public partial class ShortcutsViewModel : ObservableObject
         }
     }
 
+    // Punctuation tokens emitted by ShortcutManager.GetShortcutKeyName when it
+    // falls back to PhysicalKey for layout-dependent Key.Oem* values (see
+    // ShortcutManager). The manual-pick dropdown must offer the same tokens
+    // the capture path produces, otherwise dropdown picks won't match runtime
+    // matching.
+    private static readonly string[] PhysicalPunctuationKeys =
+    [
+        "Backquote",
+        "Minus",
+        "Equal",
+        "BracketLeft",
+        "BracketRight",
+        "Backslash",
+        "Semicolon",
+        "Quote",
+        "Comma",
+        "Period",
+        "Slash",
+        "IntlBackslash",
+    ];
+
     private static List<string> GetShortcutKeys()
     {
         var result = new List<string>();
@@ -147,7 +168,8 @@ public partial class ShortcutsViewModel : ObservableObject
                 key == nameof(Key.LeftAlt) ||
                 key == nameof(Key.RightAlt) ||
                 key == nameof(Key.LeftShift) ||
-                key == nameof(Key.RightShift))
+                key == nameof(Key.RightShift) ||
+                key.StartsWith("Oem", StringComparison.Ordinal))
             {
                 continue;
             }
@@ -155,6 +177,7 @@ public partial class ShortcutsViewModel : ObservableObject
             result.Add(key);
         }
 
+        result.AddRange(PhysicalPunctuationKeys);
         return result;
     }
 
