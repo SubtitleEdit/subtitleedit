@@ -811,11 +811,6 @@ public partial class ExportImageBasedViewModel : ObservableObject
         _timerUpdatePreview.Start();
     }
 
-    internal void ColorChanged(object? sender, ColorChangedEventArgs e)
-    {
-        _dirty = true;
-    }
-
     partial void OnFontColorChanged(Color value) => _dirty = true;
     partial void OnOutlineColorChanged(Color value) => _dirty = true;
     partial void OnShadowColorChanged(Color value) => _dirty = true;

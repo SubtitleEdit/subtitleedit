@@ -131,12 +131,6 @@ namespace Nikse.SubtitleEdit
                     Source = new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml")
                 });
 
-                // Add ColorPicker styles
-                b.Instance.Styles.Add(new StyleInclude(new Uri("avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml", UriKind.Absolute))
-                {
-                    Source = new Uri("avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml", UriKind.Absolute)
-                });
-
                 // Set application name
                 b.Instance.Name = AppName;
 

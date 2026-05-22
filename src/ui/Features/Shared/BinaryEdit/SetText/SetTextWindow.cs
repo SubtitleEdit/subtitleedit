@@ -108,13 +108,13 @@ public class SetTextWindow : Window
         var labelFontColor = UiUtil.MakeLabel(Se.Language.General.TextColor);
         labelFontColor.Margin = new Thickness(5);
         
-        var colorPickerFontColor = UiUtil.MakeColorPicker(vm, nameof(vm.FontColor));
+        var colorPickerFontColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.FontColor));
         colorPickerFontColor.Margin = new Thickness(5);
 
         var labelOutlineColor = UiUtil.MakeLabel(Se.Language.General.OutlineColor);
         labelOutlineColor.Margin = new Thickness(5);
         
-        var colorPickerOutlineColor = UiUtil.MakeColorPicker(vm, nameof(vm.OutlineColor));
+        var colorPickerOutlineColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.OutlineColor));
         colorPickerOutlineColor.Margin = new Thickness(5);
 
         var labelOutlineWidth = UiUtil.MakeLabel(Se.Language.General.Width);
@@ -126,7 +126,7 @@ public class SetTextWindow : Window
         var labelShadowColor = UiUtil.MakeLabel(Se.Language.General.Shadow);
         labelShadowColor.Margin = new Thickness(5);
         
-        var colorPickerShadowColor = UiUtil.MakeColorPicker(vm, nameof(vm.ShadowColor));
+        var colorPickerShadowColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.ShadowColor));
         colorPickerShadowColor.Margin = new Thickness(5);
 
         var labelShadowWidth = UiUtil.MakeLabel(Se.Language.General.Width);
@@ -145,7 +145,7 @@ public class SetTextWindow : Window
         var labelBackgroundColor = UiUtil.MakeLabel("Background color:");
         labelBackgroundColor.Margin = new Thickness(5);
         
-        var colorPickerBackgroundColor = UiUtil.MakeColorPicker(vm, nameof(vm.BackgroundColor));
+        var colorPickerBackgroundColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.BackgroundColor));
         colorPickerBackgroundColor.Margin = new Thickness(5);
 
         var grid = new Grid

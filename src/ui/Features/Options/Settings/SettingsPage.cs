@@ -368,24 +368,7 @@ public class SettingsPage : UserControl
             MakeSeparator(),
             MakeCheckboxSetting(Se.Language.Options.Settings.ColorGapTooShort, nameof(_vm.ColorGapTooShort)),
             MakeSeparator(),
-            new SettingsItem(Se.Language.Options.Settings.ErrorBackgroundColor, () => new ColorPicker()
-            {
-                Width = 200,
-                IsAlphaEnabled = true,
-                IsAlphaVisible = true,
-                IsColorSpectrumSliderVisible = false,
-                IsColorComponentsVisible = true,
-                IsColorModelVisible = false,
-                IsColorPaletteVisible = false,
-                IsAccentColorsVisible = false,
-                IsColorSpectrumVisible = true,
-                IsComponentTextInputVisible = true,
-                [!ColorPicker.ColorProperty] = new Binding(nameof(_vm.ErrorColor))
-                {
-                    Source = _vm,
-                    Mode = BindingMode.TwoWay
-                },
-            }),
+            new SettingsItem(Se.Language.Options.Settings.ErrorBackgroundColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.ErrorColor))),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.VideoPlayer,
@@ -512,17 +495,17 @@ public class SettingsPage : UserControl
                 nameof(_vm.WaveformTextFontSize))),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformTextFontBold, nameof(_vm.WaveformTextFontBold)),
             new SettingsItem(string.Empty, () => UiUtil.MakeButton(Se.Language.Options.Settings.WaveformColorThemesDotDotDot, _vm.OpenWaveformThemesCommand)),
-            new SettingsItem(Se.Language.Options.Settings.WaveformTextColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformTextColor))),
-            new SettingsItem(Se.Language.Options.Settings.WaveformColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformColor))),
-            new SettingsItem(Se.Language.Options.Settings.WaveformParagraphBackgroundColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformParagraphBackgroundColor))),
-            new SettingsItem(Se.Language.Options.Settings.WaveformBackgroundColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformBackgroundColor))),
-            new SettingsItem(Se.Language.Options.Settings.WaveformParagraphSelectedBackgroundColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformParagraphSelectedBackgroundColor))),
-            new SettingsItem(Se.Language.Options.Settings.WaveformSelectedColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformSelectedColor))),
-            new SettingsItem(Se.Language.Options.Settings.WaveformCursorColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformCursorColor))),
-            new SettingsItem(Se.Language.Options.Settings.WaveformShotChangeColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformShotChangeColor))),
-            new SettingsItem(Se.Language.Options.Settings.WaveformParagraphLeftColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformParagraphLeftColor))),
-            new SettingsItem(Se.Language.Options.Settings.WaveformParagraphRightColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformParagraphRightColor))),
-            new SettingsItem(Se.Language.Options.Settings.WaveformFancyHighColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.WaveformFancyHighColor))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformTextColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.WaveformTextColor))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.WaveformColor))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformParagraphBackgroundColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.WaveformParagraphBackgroundColor))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformBackgroundColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.WaveformBackgroundColor))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformParagraphSelectedBackgroundColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.WaveformParagraphSelectedBackgroundColor))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformSelectedColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.WaveformSelectedColor))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformCursorColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.WaveformCursorColor))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformShotChangeColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.WaveformShotChangeColor))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformParagraphLeftColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.WaveformParagraphLeftColor))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformParagraphRightColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.WaveformParagraphRightColor))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformFancyHighColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.WaveformFancyHighColor))),
             MakeCheckboxSetting(Se.Language.General.OpenAiCompatibleSttAutoTranscribeOnAudioSelection, nameof(_vm.OpenAiCompatibleSttAutoTranscribeOnAudioSelection)),
             new SettingsItem(Se.Language.Options.Settings.DownloadFfmpeg, () => new StackPanel
             {
@@ -621,7 +604,7 @@ public class SettingsPage : UserControl
                 Orientation = Orientation.Horizontal,
                 Children =
                 {
-                    UiUtil.MakeColorPicker(_vm, nameof(_vm.DarkModeForegroundColor)),
+                    UiUtil.MakeColorPickerButton(_vm, nameof(_vm.DarkModeForegroundColor)),
                     UiUtil.MakeLabel(Se.Language.General.RequiresRestart).WithMarginLeft(5).WithOpacity(0.6),
                 }
             }),
@@ -630,7 +613,7 @@ public class SettingsPage : UserControl
                 Orientation = Orientation.Horizontal,
                 Children =
                 {
-                    UiUtil.MakeColorPicker(_vm, nameof(_vm.DarkModeBackgroundColor)),
+                    UiUtil.MakeColorPickerButton(_vm, nameof(_vm.DarkModeBackgroundColor)),
                     UiUtil.MakeLabel(Se.Language.General.RequiresRestart).WithMarginLeft(5).WithOpacity(0.6),
                 }
             }),
@@ -640,7 +623,7 @@ public class SettingsPage : UserControl
                 Orientation = Orientation.Horizontal,
                 Children =
                 {
-                    UiUtil.MakeColorPicker(_vm, nameof(_vm.FocusedButtonBackgroundColor)),
+                    UiUtil.MakeColorPickerButton(_vm, nameof(_vm.FocusedButtonBackgroundColor)),
                     UiUtil.MakeLabel(Se.Language.General.RequiresRestart).WithMarginLeft(5).WithOpacity(0.6),
                 }
             }),
@@ -670,7 +653,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowButtonHints, nameof(_vm.ShowButtonHints)),
             MakeCheckboxSetting(Se.Language.Options.Settings.GridCompactMode, nameof(_vm.GridCompactMode)),
             new SettingsItem(Se.Language.Options.Settings.ShowGridLines, () => UiUtil.MakeComboBox(_vm.GridLinesVisibilities, _vm, nameof(_vm.SelectedGridLinesVisibility))),
-            new SettingsItem(Se.Language.Options.Settings.BookmarkColor, () => UiUtil.MakeColorPicker(_vm, nameof(_vm.BookmarkColor))),
+            new SettingsItem(Se.Language.Options.Settings.BookmarkColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.BookmarkColor))),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowAssaLayer, nameof(_vm.ShowAssaLayer)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowHorizontalLineAboveToolbar, nameof(_vm.ShowHorizontalLineAboveToolbar)),
         ]));
@@ -824,13 +807,13 @@ public class SettingsPage : UserControl
         numericUpDownMargin.Increment = 1;
 
         var labelColorPrimary = UiUtil.MakeLabel(Se.Language.Assa.Primary);
-        var colorPickerPrimary = UiUtil.MakeColorPicker(vm, nameof(vm.MpvPreviewColorPrimary));
+        var colorPickerPrimary = UiUtil.MakeColorPickerButton(vm, nameof(vm.MpvPreviewColorPrimary));
 
         var labelColorOutline = UiUtil.MakeLabel(Se.Language.General.Outline);
-        var colorPickerOutline = UiUtil.MakeColorPicker(vm, nameof(vm.MpvPreviewColorOutline));
+        var colorPickerOutline = UiUtil.MakeColorPickerButton(vm, nameof(vm.MpvPreviewColorOutline));
 
         var labelColorShadow = UiUtil.MakeLabel(Se.Language.General.Shadow);
-        var colorPickerShadow = UiUtil.MakeColorPicker(vm, nameof(vm.MpvPreviewColorShadow));
+        var colorPickerShadow = UiUtil.MakeColorPickerButton(vm, nameof(vm.MpvPreviewColorShadow));
 
         var grid = new Grid
         {

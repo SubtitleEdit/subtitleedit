@@ -22,16 +22,6 @@
           "Avalonia": "12.0.0"
         }
       },
-      "Avalonia.Controls.ColorPicker": {
-        "type": "Direct",
-        "requested": "[12.0.3, )",
-        "resolved": "12.0.3",
-        "contentHash": "Hb6AyDVpMrNaV8T14DJ9WjV64x4SXpZzhZag212Uyfyc+ZYqpbBWaptGRlalwP2hdML++ThTTqGRvbYyY6A2Vw==",
-        "dependencies": {
-          "Avalonia": "12.0.3",
-          "Avalonia.Remote.Protocol": "12.0.3"
-        }
-      },
       "Avalonia.Controls.DataGrid": {
         "type": "Direct",
         "requested": "[12.0.0, )",

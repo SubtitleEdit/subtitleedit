@@ -8,6 +8,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -18,6 +19,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -1667,33 +1669,35 @@ public static class UiUtil
         return new Thickness(WindowMarginWidth, WindowMarginWidth * 2, WindowMarginWidth, WindowMarginWidth);
     }
 
-    internal static ColorPicker MakeColorPicker(object vm, string colorPropertyPath)
+    internal static Button MakeColorPickerButton(object source, string colorPropertyPath, bool showAlpha = true)
     {
-        return new ColorPicker
-        {
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            IsAlphaEnabled = true,
-            IsAlphaVisible = true,
-            IsColorSpectrumSliderVisible = false,
-            IsColorComponentsVisible = true,
-            IsColorModelVisible = false,
-            IsColorPaletteVisible = false,
-            IsAccentColorsVisible = false,
-            IsColorSpectrumVisible = true,
-            IsComponentTextInputVisible = true,
-            [!ColorPicker.ColorProperty] = new Binding(colorPropertyPath)
-            {
-                Source = vm,
-                Mode = BindingMode.TwoWay
-            },
-        };
-    }
+        var pathParts = colorPropertyPath.Split('.');
 
-    internal static Button MakeColorPickerButton(object source, string colorPropertyPath, bool showAlpha)
-    {
-        var propInfo = source.GetType().GetProperty(colorPropertyPath, BindingFlags.Public | BindingFlags.Instance);
-        var initialColor = propInfo?.GetValue(source) is Color c ? c : Colors.White;
+        (object? Owner, PropertyInfo? Property) ResolveLeaf()
+        {
+            object? current = source;
+            for (var i = 0; i < pathParts.Length - 1; i++)
+            {
+                if (current == null)
+                {
+                    return (null, null);
+                }
+                var pi = current.GetType().GetProperty(pathParts[i], BindingFlags.Public | BindingFlags.Instance);
+                current = pi?.GetValue(current);
+            }
+            if (current == null)
+            {
+                return (null, null);
+            }
+            var leafProp = current.GetType().GetProperty(pathParts[^1], BindingFlags.Public | BindingFlags.Instance);
+            return (current, leafProp);
+        }
+
+        Color ReadColor()
+        {
+            var (owner, prop) = ResolveLeaf();
+            return prop?.GetValue(owner) is Color c ? c : Colors.White;
+        }
 
         var colorSwatch = new Border
         {
@@ -1702,7 +1706,7 @@ public static class UiUtil
             CornerRadius = new CornerRadius(CornerRadius),
             BorderThickness = new Thickness(1),
             BorderBrush = new SolidColorBrush(Colors.Gray),
-            Background = new SolidColorBrush(initialColor),
+            Background = new SolidColorBrush(ReadColor()),
             VerticalAlignment = VerticalAlignment.Center,
         };
 
@@ -1713,6 +1717,74 @@ public static class UiUtil
             VerticalAlignment = VerticalAlignment.Center,
         };
 
+        var subscriptions = new List<(INotifyPropertyChanged Source, PropertyChangedEventHandler Handler)>();
+
+        void RefreshSwatch()
+        {
+            var updated = ReadColor();
+            if (Dispatcher.UIThread.CheckAccess())
+            {
+                colorSwatch.Background = new SolidColorBrush(updated);
+            }
+            else
+            {
+                Dispatcher.UIThread.Post(() => colorSwatch.Background = new SolidColorBrush(updated));
+            }
+        }
+
+        void Unsubscribe()
+        {
+            foreach (var (src, handler) in subscriptions)
+            {
+                src.PropertyChanged -= handler;
+            }
+            subscriptions.Clear();
+        }
+
+        void Subscribe()
+        {
+            object? current = source;
+            for (var i = 0; i < pathParts.Length; i++)
+            {
+                if (current is INotifyPropertyChanged inpc)
+                {
+                    var partName = pathParts[i];
+                    var isLeaf = i == pathParts.Length - 1;
+                    PropertyChangedEventHandler handler = (_, e) =>
+                    {
+                        if (!string.IsNullOrEmpty(e.PropertyName) && e.PropertyName != partName)
+                        {
+                            return;
+                        }
+                        if (isLeaf)
+                        {
+                            RefreshSwatch();
+                        }
+                        else
+                        {
+                            Unsubscribe();
+                            Subscribe();
+                            RefreshSwatch();
+                        }
+                    };
+                    inpc.PropertyChanged += handler;
+                    subscriptions.Add((inpc, handler));
+                }
+                if (i < pathParts.Length - 1)
+                {
+                    if (current == null)
+                    {
+                        break;
+                    }
+                    var pi = current.GetType().GetProperty(pathParts[i], BindingFlags.Public | BindingFlags.Instance);
+                    current = pi?.GetValue(current);
+                }
+            }
+        }
+
+        Subscribe();
+        button.DetachedFromVisualTree += (_, _) => Unsubscribe();
+
         button.Click += async (_, _) =>
         {
             if (TopLevel.GetTopLevel(button) is not Window window)
@@ -1720,7 +1792,13 @@ public static class UiUtil
                 return;
             }
 
-            var currentColor = propInfo?.GetValue(source) is Color cc ? cc : Colors.White;
+            var (owner, prop) = ResolveLeaf();
+            if (owner == null || prop == null)
+            {
+                return;
+            }
+
+            var currentColor = prop.GetValue(owner) is Color cc ? cc : Colors.White;
             var vm = new ColorPickerViewModel();
             vm.Initialize(currentColor);
             vm.ShowAlpha = showAlpha;
@@ -1729,7 +1807,7 @@ public static class UiUtil
 
             if (vm.OkPressed)
             {
-                propInfo?.SetValue(source, vm.SelectedColor);
+                prop.SetValue(owner, vm.SelectedColor);
                 colorSwatch.Background = new SolidColorBrush(vm.SelectedColor);
             }
         };

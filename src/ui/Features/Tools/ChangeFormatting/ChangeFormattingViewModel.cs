@@ -149,8 +149,5 @@ public partial class ChangeFormattingViewModel : ObservableObject
         IsColorVisible = SelectedToType?.Type == ChangeFormattingType.Color;
     }
 
-    internal void ColorChanged(object? sender, ColorChangedEventArgs e)
-    {
-        _dirty = true;
-    }
+    partial void OnSelectedColorChanged(Color value) => _dirty = true;
 }

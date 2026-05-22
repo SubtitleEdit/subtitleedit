@@ -441,24 +441,7 @@ public class AssaDrawWindow : Window
         };
         panel.Children.Add(changeLayerButton);
 
-        var colorPicker = new ColorPicker
-        {
-            Width = 200,
-            IsAlphaEnabled = true,
-            IsAlphaVisible = true,
-            IsColorSpectrumSliderVisible = false,
-            IsColorComponentsVisible = true,
-            IsColorModelVisible = false,
-            IsColorPaletteVisible = false,
-            IsAccentColorsVisible = false,
-            IsColorSpectrumVisible = true,
-            IsComponentTextInputVisible = true,
-            [!ColorPicker.ColorProperty] = new Binding(nameof(vm.LayerColor))
-            {
-                Source = vm,
-                Mode = BindingMode.TwoWay
-            },
-        };
+        var colorPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.LayerColor));
         panel.Children.Add(colorPicker);
 
         return panel;
