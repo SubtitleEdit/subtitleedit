@@ -101,24 +101,115 @@ public static class ImageRenderer
         using var tempCanvas = new SKCanvas(tempBitmap);
         tempCanvas.Clear(SKColors.Transparent);
 
-        // Render text to temporary bitmap to measure actual bounds
+        // Render text to temporary bitmap to measure actual bounds.
+        // textStartY must be at least as large as the ascent + effects so the top of
+        // the first line is never above y=0 in the temp bitmap.
+        var margin = 10;
+        var textStartX = (int)(Math.Abs(shadowWidth) + Math.Abs(outlineWidth) + margin);
+        var textStartY = (int)(Math.Abs(fontMetrics.Ascent) + Math.Abs(shadowWidth) + Math.Abs(outlineWidth) + margin);
         RenderTextToCanvas(tempCanvas, lines, ip, regularFont, boldFont, italicFont, boldItalicFont,
-            100, 100, baseLineHeight, lineSpacing,
+            textStartX, textStartY, baseLineHeight, lineSpacing,
             outlineColor, shadowColor, outlineWidth, shadowWidth);
 
         //System.IO.File.WriteAllBytes(@"C:\temp\debug_raw.png", tempBitmap.ToPngArray());
 
         var bitmapNoPadding = tempBitmap.TrimTransparentPixels();
-        //System.IO.File.WriteAllBytes(@"C:\temp\debug_no_padding.png", bitmapNoPadding.TrimmedBitmap.ToPngArray());
-        if (ip.PaddingTopBottom == 0 && ip.PaddingLeftRight == 0)
+        var textBitmap = bitmapNoPadding.TrimmedBitmap;
+
+        if (ip.BoxType != ExportBoxType.None)
         {
-            return bitmapNoPadding.TrimmedBitmap;
+            textBitmap = DrawBoxBehindText(textBitmap, lines, ip, regularFont, boldFont, italicFont, boldItalicFont, baseLineHeight, lineSpacing);
         }
 
-        var bitmapWithMargins = bitmapNoPadding.TrimmedBitmap.AddTransparentMargins(ip.PaddingLeftRight, ip.PaddingTopBottom, ip.PaddingLeftRight, ip.PaddingTopBottom);
+        if (ip.PaddingTopBottom == 0 && ip.PaddingLeftRight == 0)
+        {
+            return textBitmap;
+        }
+
+        var bitmapWithMargins = textBitmap.AddTransparentMargins(ip.PaddingLeftRight, ip.PaddingTopBottom, ip.PaddingLeftRight, ip.PaddingTopBottom);
         //System.IO.File.WriteAllBytes(@"C:\temp\debug_with_margins.png", bitmapWithMargins.ToPngArray());
 
         return bitmapWithMargins;
+    }
+
+    private static SKBitmap DrawBoxBehindText(
+        SKBitmap textBitmap,
+        List<List<TextSegment>> lines,
+        ImageParameter ip,
+        SKFont regularFont,
+        SKFont boldFont,
+        SKFont italicFont,
+        SKFont boldItalicFont,
+        float baseLineHeight,
+        float lineSpacing)
+    {
+        var padLeft = ip.BoxPaddingLeft;
+        var padRight = ip.BoxPaddingRight;
+        var padTop = ip.BoxPaddingTop;
+        var padBottom = ip.BoxPaddingBottom;
+        var resultWidth = textBitmap.Width + padLeft + padRight;
+        var resultHeight = textBitmap.Height + padTop + padBottom;
+        var result = new SKBitmap(resultWidth, resultHeight);
+        using var canvas = new SKCanvas(result);
+        canvas.Clear(SKColors.Transparent);
+
+        using var boxPaint = new SKPaint
+        {
+            Color = ip.BackgroundColor,
+            IsAntialias = true,
+            Style = SKPaintStyle.Fill,
+        };
+
+        var radius = (float)ip.BackgroundCornerRadius;
+
+        if (ip.BoxType == ExportBoxType.OneBox)
+        {
+            canvas.DrawRoundRect(
+                new SKRoundRect(new SKRect(0, 0, resultWidth, resultHeight), radius, radius),
+                boxPaint);
+        }
+        else if (ip.BoxType == ExportBoxType.BoxPerLine)
+        {
+            // Pre-calculate line widths (same logic as RenderTextToCanvas)
+            var lineWidths = new float[lines.Count];
+            for (var li = 0; li < lines.Count; li++)
+            {
+                var line = lines[li];
+                for (var j = 0; j < line.Count; j++)
+                {
+                    var seg = line[j];
+                    var font = GetFont(seg, regularFont, boldFont, italicFont, boldItalicFont);
+                    lineWidths[li] += MeasureTextWithShaping(seg.Text, font);
+                    if ((seg.IsItalic || seg.IsBold) && j < line.Count - 1)
+                        lineWidths[li] += regularFont.Size * 0.17f;
+                }
+            }
+            var maxLineWidth = lineWidths.Length > 0 ? lineWidths.Max() : 0f;
+
+            // Draw one box per line, aligned the same way as text rendering
+            var currentY = (float)padTop;
+            for (var li = 0; li < lines.Count; li++)
+            {
+                var lineWidth = lineWidths[li];
+                float textX;
+                if (ip.ContentAlignment == ExportContentAlignment.Center)
+                    textX = padLeft + (maxLineWidth - lineWidth) / 2;
+                else if (ip.ContentAlignment == ExportContentAlignment.Right)
+                    textX = padLeft + maxLineWidth - lineWidth;
+                else
+                    textX = padLeft;
+
+                canvas.DrawRoundRect(
+                    new SKRoundRect(new SKRect(textX - padLeft, currentY - padTop, textX + lineWidth + padRight, currentY + baseLineHeight + padBottom), radius, radius),
+                    boxPaint);
+
+                currentY += baseLineHeight + lineSpacing;
+            }
+        }
+
+        // Draw the already-rendered text bitmap on top of the boxes, offset by padding
+        canvas.DrawBitmap(textBitmap, padLeft, padTop);
+        return result;
     }
 
     private static void RenderTextToCanvas(

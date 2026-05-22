@@ -21,7 +21,7 @@ public class SplitManagerTests
     public void Split_SingleLineSingleWord_SplitsIntoTwoSubtitles()
     {
         // Arrange
-        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
         var manager = new SplitManager();
         var subtitle = MakeSubtitle("Hello world", 1, 3);
         var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
@@ -39,7 +39,7 @@ public class SplitManagerTests
     public void Split_TwoLineText_SplitsOnLineBreak()
     {
         // Arrange
-        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
         var manager = new SplitManager();
         var subtitle = MakeSubtitle($"First line{Environment.NewLine}Second line", 1, 3);
         var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
@@ -57,7 +57,7 @@ public class SplitManagerTests
     public void Split_WithTextIndex_SplitsAtIndex()
     {
         // Arrange
-        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
         var manager = new SplitManager();
         var subtitle = MakeSubtitle("Hello world", 1, 3);
         var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
@@ -75,7 +75,7 @@ public class SplitManagerTests
     public void Split_WithVideoPosition_UsesVideoPositionAsTimeSplitPoint()
     {
         // Arrange
-        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
         var manager = new SplitManager();
         var subtitle = MakeSubtitle("Hello world", 1, 3);
         var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
@@ -92,7 +92,7 @@ public class SplitManagerTests
     public void Split_SubtitleNotInCollection_DoesNotModifyCollection()
     {
         // Arrange
-        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
         var manager = new SplitManager();
         var subtitle = MakeSubtitle("Hello world", 1, 3);
         var other = MakeSubtitle("Other", 4, 5);
@@ -109,7 +109,7 @@ public class SplitManagerTests
     public void Split_InsertsNewSubtitleDirectlyAfterOriginal()
     {
         // Arrange
-        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
         var manager = new SplitManager();
         var first = MakeSubtitle("First subtitle", 0, 2);
         var second = MakeSubtitle("Third subtitle", 5, 7);
@@ -127,7 +127,7 @@ public class SplitManagerTests
     public void Split_TimingsAreConsistent_NewSubtitleStartsAfterOriginalEnd()
     {
         // Arrange
-        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
         var manager = new SplitManager();
         var subtitle = MakeSubtitle("Hello world", 1, 3);
         var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
@@ -144,7 +144,7 @@ public class SplitManagerTests
     {
         // Arrange – two lines where the second starts with a dash and the first ends
         // with a sentence-ending period, so IsDialog returns true.
-        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
         Configuration.Settings.General.DialogStyle = DialogType.DashBothLinesWithSpace;
         var manager = new SplitManager();
         var subtitle = MakeSubtitle($"- Hello there.{Environment.NewLine}- Hi back.", 1, 3);
@@ -163,7 +163,7 @@ public class SplitManagerTests
     public void Split_TwoLineNonDialogText_KeepsBothLinesAsIs()
     {
         // Arrange – two plain lines with no leading dashes, so IsDialog returns false.
-        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
         Configuration.Settings.General.DialogStyle = DialogType.DashBothLinesWithSpace;
         var manager = new SplitManager();
         var subtitle = MakeSubtitle($"First line{Environment.NewLine}Second line", 1, 3);
@@ -184,7 +184,7 @@ public class SplitManagerTests
     public void Split_BoldTagOpenInFirstPart_IsClosedAndReopenedInSecond()
     {
         // Arrange – the split happens at the word boundary; <b> in text1 must be closed and re-opened in text2
-        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
         var manager = new SplitManager();
         var subtitle = MakeSubtitle($"<b>Hello world</b>", 1, 3);
         var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
@@ -200,7 +200,7 @@ public class SplitManagerTests
     [Fact]
     public void Split_ItalicTagOpenInFirstLine_ClosedAndReopenedInSecondLine()
     {
-        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
         var manager = new SplitManager();
         var subtitle = MakeSubtitle($"<i>First line{Environment.NewLine}Second line</i>", 1, 3);
         var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
@@ -214,7 +214,7 @@ public class SplitManagerTests
     [Fact]
     public void Split_UnderlineTagOpenInFirstLine_ClosedAndReopenedInSecondLine()
     {
-        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
         var manager = new SplitManager();
         var subtitle = MakeSubtitle($"<u>First line{Environment.NewLine}Second line</u>", 1, 3);
         var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
@@ -228,7 +228,7 @@ public class SplitManagerTests
     [Fact]
     public void Split_AlreadyClosedTagInFirstLine_NotDuplicated()
     {
-        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
         var manager = new SplitManager();
         var subtitle = MakeSubtitle($"<b>First</b> line{Environment.NewLine}Second line", 1, 3);
         var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
@@ -245,7 +245,7 @@ public class SplitManagerTests
     [Fact]
     public void Split_FontTagOpenInFirstLine_ClosedAndReopenedInSecondLine()
     {
-        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
         var manager = new SplitManager();
         var subtitle = MakeSubtitle($"<font color=\"red\">First line{Environment.NewLine}Second line</font>", 1, 3);
         var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
@@ -259,7 +259,7 @@ public class SplitManagerTests
     [Fact]
     public void Split_NoTagsInText_TextUnchanged()
     {
-        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
         var manager = new SplitManager();
         var subtitle = MakeSubtitle($"Hello world{Environment.NewLine}How are you", 1, 3);
         var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
@@ -273,7 +273,7 @@ public class SplitManagerTests
     [Fact]
     public void Split_AssaBoldTagActiveInFirstLine_PropagatedToSecondLine()
     {
-        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
         var manager = new SplitManager();
         var subtitle = MakeSubtitle($@"{{\b1}}First line{Environment.NewLine}Second line", 1, 3);
         var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
@@ -286,7 +286,7 @@ public class SplitManagerTests
     [Fact]
     public void Split_AssaBoldTagClosedInFirstLine_NotPropagatedToSecondLine()
     {
-        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
         var manager = new SplitManager();
         var subtitle = MakeSubtitle($@"{{\b1}}First{{\b0}} line{Environment.NewLine}Second line", 1, 3);
         var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
@@ -299,7 +299,7 @@ public class SplitManagerTests
     [Fact]
     public void Split_MultipleMixedTagsOpenInFirstLine_AllClosedAndReopened()
     {
-        Se.Settings.General.MinimumMillisecondsBetweenLines = 0;
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
         var manager = new SplitManager();
         var subtitle = MakeSubtitle($"<b><i>First line{Environment.NewLine}Second line</i></b>", 1, 3);
         var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };

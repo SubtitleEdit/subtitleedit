@@ -137,15 +137,13 @@ public class BurnInWindow : Window
         checkBoxUseBold.IsCheckedChanged += (_, _) => vm.ParameterChanged();
 
         var labelTextColor = UiUtil.MakeLabel(Se.Language.General.TextColor);
-        var colorPickerTextColor = UiUtil.MakeColorPicker(vm, nameof(vm.FontTextColor));
-        colorPickerTextColor.ColorChanged += vm.ColorChanged;
+        var colorPickerTextColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.FontTextColor), true);
 
         var labelOutline = UiUtil.MakeLabel(string.Empty)
             .WithBindText(vm, nameof(vm.FontOutlineText));
         var textBoxBoxWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 50, 130, vm, nameof(vm.SelectedFontOutline));
         textBoxBoxWidth.ValueChanged += vm.NumericUpDownChanged;
-        var colorPickerBoxColor = UiUtil.MakeColorPicker(vm, nameof(vm.FontOutlineColor));
-        colorPickerBoxColor.ColorChanged += vm.ColorChanged;
+        var colorPickerBoxColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.FontOutlineColor), true);
         var panelBox = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -163,8 +161,7 @@ public class BurnInWindow : Window
             .WithBindText(vm, nameof(vm.FontShadowText));
         var textBoxShadowWidth = UiUtil.MakeNumericUpDownOneDecimal(0, 50, 130, vm, nameof(vm.SelectedFontShadowWidth));
         textBoxShadowWidth.ValueChanged += vm.NumericUpDownChanged;
-        var colorPickerShadowColor = UiUtil.MakeColorPicker(vm, nameof(vm.FontShadowColor));
-        colorPickerShadowColor.ColorChanged += vm.ColorChanged;
+        var colorPickerShadowColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.FontShadowColor), true);
         var panelShadow = new StackPanel
         {
             Orientation = Orientation.Horizontal,

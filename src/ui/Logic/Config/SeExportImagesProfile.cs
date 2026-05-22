@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Features.Files.ExportImageBased;
+using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.UiLogic.Export;
 using SkiaSharp;
 using System;
@@ -36,6 +37,11 @@ public class SeExportImagesProfile
     public int PaddingLeftRight { get; set; }
     public int PaddingTopBottom { get; set; }
     public int LineSpacingPercent { get; set; }
+    public FontBoxType BoxType { get; set; }
+    public int BoxPaddingLeft { get; set; }
+    public int BoxPaddingRight { get; set; }
+    public int BoxPaddingTop { get; set; }
+    public int BoxPaddingBottom { get; set; }
 
     public SeExportImagesProfile()
     {
@@ -49,7 +55,7 @@ public class SeExportImagesProfile
         OutlineWidth = 2;
         ShadowColor = SKColors.Black.ToHex(true);
         ShadowWidth = 2;
-        BackgroundColor = SKColors.Transparent.ToHex(true);
+        BackgroundColor = new SKColor(0, 0, 0, 180).ToHex(true);
         BackgroundCornerRadius = 0;
         ScreenWidth = 1920;
         ScreenHeight = 1080;
@@ -59,8 +65,13 @@ public class SeExportImagesProfile
         FramesPerSecond = 25;
         OverridePosition = string.Empty;
         LineSpacingPercent = 0;
+        BoxType = FontBoxType.None;
         PaddingLeftRight = 2;
         PaddingTopBottom = 2;
+        BoxPaddingLeft = 5;
+        BoxPaddingRight = 5;
+        BoxPaddingTop = 3;
+        BoxPaddingBottom = 3;
     }
 
     public override string ToString()

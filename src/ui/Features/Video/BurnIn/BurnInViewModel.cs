@@ -1746,7 +1746,7 @@ public partial class BurnInViewModel : ObservableObject
                 FontIsBold,
                 FontTextColor.ToSKColor(),
                 FontOutlineColor.ToSKColor(),
-                SKColors.Red,
+                FontShadowColor.ToSKColor(),
                 FontShadowColor.ToSKColor(),
                 (float)(SelectedFontOutline ?? 0),
                 0,
@@ -1775,6 +1775,11 @@ public partial class BurnInViewModel : ObservableObject
     {
         UpdateNonAssaPreview();
     }
+
+    partial void OnFontTextColorChanged(Color value) => UpdateNonAssaPreview();
+    partial void OnFontOutlineColorChanged(Color value) => UpdateNonAssaPreview();
+    partial void OnFontShadowColorChanged(Color value) => UpdateNonAssaPreview();
+    partial void OnSelectedFontBoxTypeChanged(FontBoxItem value) => BoxTypeChanged();
 
     internal void ComboBoxChanged(object? sender, SelectionChangedEventArgs e)
     {

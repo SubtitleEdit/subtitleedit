@@ -36,6 +36,11 @@ public class ImageParameter
     public bool IsFullFrame { get; set; }
     public double FramesPerSecond { get; set; }
     public bool IsRightToLeft { get; set; } = false;
+    public ExportBoxType BoxType { get; set; } = ExportBoxType.None;
+    public int BoxPaddingLeft { get; set; } = 0;
+    public int BoxPaddingRight { get; set; } = 0;
+    public int BoxPaddingTop { get; set; } = 0;
+    public int BoxPaddingBottom { get; set; } = 0;
 
     public ImageParameter()
     {

@@ -66,9 +66,11 @@ public class LanguageGeneral
     public string BottomCenter { get; set; }
     public string BottomLeft { get; set; }
     public string BottomRight { get; set; }
+    public string Bottom { get; set; }
     public string Box { get; set; }
     public string BoxColor { get; set; }
     public string BoxCornerRadius { get; set; }
+    public string BoxPadding { get; set; }
     public string BoxPerLine { get; set; }
     public string BridgeGaps { get; set; }
     public string Cancel { get; set; }
@@ -581,6 +583,7 @@ public class LanguageGeneral
     public string TopCenter { get; set; }
     public string TopLeft { get; set; }
     public string TopRight { get; set; }
+    public string Top { get; set; }
     public string TotalAdjustmentX { get; set; }
     public string TotalFramesX { get; set; }
     public string TotalLengthX { get; set; }
@@ -769,9 +772,11 @@ public class LanguageGeneral
         BottomCenter = "Bottom-Center";
         BottomLeft = "Bottom-Left";
         BottomRight = "Bottom-Right";
+        Bottom = "Bottom";
         Box = "Box";
         BoxColor = "Box color";
         BoxCornerRadius = "Box corner radius";
+        BoxPadding = "Box padding";
         BoxPerLine = "Box per line";
         BridgeGaps = "Bridge gaps";
         Cancel = "C_ancel";
@@ -1284,6 +1289,7 @@ public class LanguageGeneral
         TopCenter = "Top-Center";
         TopLeft = "Top-Left";
         TopRight = "Top-Right";
+        Top = "Top";
         TotalAdjustmentX = "Total adjustment: {0}";
         TotalFramesX = "Total frames: {0:#;##0.##}";
         TotalLengthX = "Total length: {0}";

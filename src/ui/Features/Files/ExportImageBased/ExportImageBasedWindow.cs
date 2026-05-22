@@ -331,94 +331,22 @@ public class ExportImageBasedWindow : Window
 
         // column 2
         var labelFontColor = UiUtil.MakeLabel(Se.Language.General.FontColor);
-        var colorPickerFontColor = new ColorPicker
-        {
-            Width = 100,
-            IsAlphaEnabled = true,
-            IsAlphaVisible = true,
-            IsColorSpectrumSliderVisible = false,
-            IsColorComponentsVisible = true,
-            IsColorModelVisible = false,
-            IsColorPaletteVisible = false,
-            IsAccentColorsVisible = false,
-            IsColorSpectrumVisible = true,
-            IsComponentTextInputVisible = true,
-            [!ColorPicker.ColorProperty] = new Binding(nameof(vm.FontColor))
-            {
-                Source = vm,
-                Mode = BindingMode.TwoWay
-            },
-        };
-        colorPickerFontColor.ColorChanged += vm.ColorChanged;
+        var colorPickerFontColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.FontColor), true);
         grid.Add(labelFontColor, 0, 2);
         grid.Add(colorPickerFontColor, 0, 3);
 
-        var labelOutlineColor = UiUtil.MakeLabel(Se.Language.General.OutlineColor);
-        var colorPickerOutlineColor = new ColorPicker
-        {
-            Width = 100,
-            IsAlphaEnabled = true,
-            IsAlphaVisible = true,
-            IsColorSpectrumSliderVisible = false,
-            IsColorComponentsVisible = true,
-            IsColorModelVisible = false,
-            IsColorPaletteVisible = false,
-            IsAccentColorsVisible = false,
-            IsColorSpectrumVisible = true,
-            IsComponentTextInputVisible = true,
-            [!ColorPicker.ColorProperty] = new Binding(nameof(vm.OutlineColor))
-            {
-                Source = vm,
-                Mode = BindingMode.TwoWay
-            },
-        };
-        colorPickerOutlineColor.ColorChanged += vm.ColorChanged;
+        var labelOutlineColor = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.OutlineColorText));
+        var colorPickerOutlineColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.OutlineColor), true);
         grid.Add(labelOutlineColor, 1, 2);
         grid.Add(colorPickerOutlineColor, 1, 3);
 
-        var labelShadowColor = UiUtil.MakeLabel(Se.Language.General.ShadowColor);
-        var colorPickerShadowColor = new ColorPicker
-        {
-            Width = 100,
-            IsAlphaEnabled = true,
-            IsAlphaVisible = true,
-            IsColorSpectrumSliderVisible = false,
-            IsColorComponentsVisible = true,
-            IsColorModelVisible = false,
-            IsColorPaletteVisible = false,
-            IsAccentColorsVisible = false,
-            IsColorSpectrumVisible = true,
-            IsComponentTextInputVisible = true,
-            [!ColorPicker.ColorProperty] = new Binding(nameof(vm.ShadowColor))
-            {
-                Source = vm,
-                Mode = BindingMode.TwoWay
-            },
-        };
-        colorPickerShadowColor.ColorChanged += vm.ColorChanged;
+        var labelShadowColor = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.ShadowColorText));
+        var colorPickerShadowColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.ShadowColor), true);
         grid.Add(labelShadowColor, 2, 2);
         grid.Add(colorPickerShadowColor, 2, 3);
 
-        var labelBaclgroundColor = UiUtil.MakeLabel(Se.Language.General.BoxColor);
-        var colorPickerBackgroundColor = new ColorPicker
-        {
-            Width = 100,
-            IsAlphaEnabled = true,
-            IsAlphaVisible = true,
-            IsColorSpectrumSliderVisible = false,
-            IsColorComponentsVisible = true,
-            IsColorModelVisible = false,
-            IsColorPaletteVisible = false,
-            IsAccentColorsVisible = false,
-            IsColorSpectrumVisible = true,
-            IsComponentTextInputVisible = true,
-            [!ColorPicker.ColorProperty] = new Binding(nameof(vm.BoxColor))
-            {
-                Source = vm,
-                Mode = BindingMode.TwoWay
-            },
-        };
-        colorPickerBackgroundColor.ColorChanged += vm.ColorChanged;
+        var labelBaclgroundColor = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.BoxColorText));
+        var colorPickerBackgroundColor = UiUtil.MakeColorPickerButton(vm, nameof(vm.BoxColor), true);
         grid.Add(labelBaclgroundColor, 3, 2);
         grid.Add(colorPickerBackgroundColor, 3, 3);
 
@@ -463,6 +391,35 @@ public class ExportImageBasedWindow : Window
         comboBoxBoxCornerRadius.SelectionChanged += vm.ComboChanged;
         grid.Add(labelBoxCornerRadius, 3, 4);
         grid.Add(comboBoxBoxCornerRadius, 3, 5);
+
+        var comboPadLeft = UiUtil.MakeComboBox(vm.BoxPaddingValues, vm, nameof(vm.BoxPaddingLeft));
+        ToolTip.SetTip(comboPadLeft, Se.Language.General.Left);
+        comboPadLeft.SelectionChanged += vm.ComboChanged;
+        var comboPadRight = UiUtil.MakeComboBox(vm.BoxPaddingValues, vm, nameof(vm.BoxPaddingRight));
+        ToolTip.SetTip(comboPadRight, Se.Language.General.Right);
+        comboPadRight.SelectionChanged += vm.ComboChanged;
+        var comboPadTop = UiUtil.MakeComboBox(vm.BoxPaddingValues, vm, nameof(vm.BoxPaddingTop));
+        ToolTip.SetTip(comboPadTop, Se.Language.General.Top);
+        comboPadTop.SelectionChanged += vm.ComboChanged;
+        var comboPadBottom = UiUtil.MakeComboBox(vm.BoxPaddingValues, vm, nameof(vm.BoxPaddingBottom));
+        ToolTip.SetTip(comboPadBottom, Se.Language.General.Bottom);
+        comboPadBottom.SelectionChanged += vm.ComboChanged;
+        var panelBoxPadding = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 3,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { comboPadLeft, comboPadRight, comboPadTop, comboPadBottom }
+        };
+        var labelBoxPadding = UiUtil.MakeLabel(Se.Language.General.BoxPadding);
+        grid.Add(labelBoxPadding, 4, 4);
+        grid.Add(panelBoxPadding, 4, 5);
+
+        var labelBoxType = UiUtil.MakeLabel(Se.Language.Video.BurnIn.BoxType);
+        var comboBoxBoxType = UiUtil.MakeComboBox(vm.BoxTypes, vm, nameof(vm.SelectedBoxType));
+        comboBoxBoxType.SelectionChanged += vm.ComboChanged;
+        grid.Add(labelBoxType, 5, 4);
+        grid.Add(comboBoxBoxType, 5, 5);
         
         var checkBoxRightToLeft = UiUtil.MakeCheckBox(Se.Language.General.RightToLeft, vm, nameof(vm.IsRightToLeft));
         checkBoxRightToLeft.IsCheckedChanged += vm.CheckBoxChanged;
