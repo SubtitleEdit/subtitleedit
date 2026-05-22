@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
@@ -66,9 +67,6 @@ public partial class Qwen3TtsCrispAsrSettingsViewModel : ObservableObject
     {
         var exe = Qwen3TtsCrispAsr.GetCrispAsrExecutable();
         IsEngineInstalled = File.Exists(exe);
-        var versionSuffix = IsEngineInstalled
-            ? (CrispAsrVersion.TryGet(exe) is { Length: > 0 } v ? $" v{v}" : string.Empty)
-            : string.Empty;
 
         if (!IsEngineInstalled)
         {
@@ -78,33 +76,64 @@ public partial class Qwen3TtsCrispAsrSettingsViewModel : ObservableObject
         }
         else if (Qwen3TtsCrispAsr.GetEngineUpdateStatus() == DownloadHashManager.UpdateStatus.UpdateAvailable)
         {
-            EngineLabel = $"CrispASR{versionSuffix} - update available";
+            EngineLabel = "CrispASR - update available";
             EngineBrush = Amber;
             EngineDownloadButtonText = "Update CrispASR";
         }
         else
         {
-            EngineLabel = $"CrispASR{versionSuffix}";
+            EngineLabel = "CrispASR";
             EngineBrush = Green;
             EngineDownloadButtonText = "Re-download CrispASR";
         }
 
+        // Append the installed CrispASR version asynchronously - the probe is a child
+        // process and we don't want to block the dialog opening (the probe is cached
+        // after the first call but the first one can be a few hundred ms).
+        if (IsEngineInstalled)
+        {
+            var baseLabel = EngineLabel;
+            _ = Task.Run(() =>
+            {
+                try
+                {
+                    var version = CrispAsrVersion.TryGet(exe);
+                    if (string.IsNullOrEmpty(version))
+                    {
+                        return;
+                    }
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        if (EngineLabel == baseLabel)
+                        {
+                            EngineLabel = baseLabel.Replace("CrispASR", $"CrispASR v{version}");
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Se.LogError(ex, "Qwen3TtsCrispAsrSettings: CrispASR version probe failed");
+                }
+            });
+        }
+
         // Talker GGUFs live in the engine's own models folder OR are auto-downloaded by
         // crispasr into ~/.cache/crispasr. We can only verify the engine-folder copy here;
-        // a missing local talker isn't fatal (the engine falls back to --auto-download) so
-        // surface it as a neutral "Auto-download on first use" rather than an error.
+        // when CrispASR is installed, a missing local file is fine ("Auto-download on first
+        // use"). When CrispASR is NOT installed, that message is misleading — there's no
+        // path to auto-download anything until the user installs the runtime first.
         var voiceDesignPath = Qwen3TtsCrispAsr.GetTalkerPath(Qwen3TtsCrispAsr.ModelKeyVoiceDesign);
-        ApplyModelStatus(File.Exists(voiceDesignPath),
+        ApplyModelStatus(File.Exists(voiceDesignPath), IsEngineInstalled,
             label => VoiceDesignTalkerLabel = label,
             brush => VoiceDesignTalkerBrush = brush);
 
         var customVoicePath = Qwen3TtsCrispAsr.GetTalkerPath(Qwen3TtsCrispAsr.ModelKeyCustomVoice);
-        ApplyModelStatus(File.Exists(customVoicePath),
+        ApplyModelStatus(File.Exists(customVoicePath), IsEngineInstalled,
             label => CustomVoiceTalkerLabel = label,
             brush => CustomVoiceTalkerBrush = brush);
 
         var codecPath = Qwen3TtsCrispAsr.GetCodecPath();
-        ApplyModelStatus(File.Exists(codecPath),
+        ApplyModelStatus(File.Exists(codecPath), IsEngineInstalled,
             label => CodecLabel = label,
             brush => CodecBrush = brush);
 
@@ -123,18 +152,26 @@ public partial class Qwen3TtsCrispAsrSettingsViewModel : ObservableObject
         }
     }
 
-    private static void ApplyModelStatus(bool installed, Action<string> setLabel, Action<IBrush> setBrush)
+    private static void ApplyModelStatus(bool fileInstalled, bool engineInstalled, Action<string> setLabel, Action<IBrush> setBrush)
     {
-        if (installed)
+        if (fileInstalled)
         {
             setLabel("Installed");
             setBrush(Green);
+            return;
         }
-        else
+
+        if (!engineInstalled)
         {
-            setLabel("Auto-download on first use");
+            // No CrispASR runtime means there's nothing to auto-download into, so don't
+            // promise a download that can't happen until the user installs CrispASR.
+            setLabel("CrispASR required");
             setBrush(Grey);
+            return;
         }
+
+        setLabel("Auto-download on first use");
+        setBrush(Grey);
     }
 
     [RelayCommand]
@@ -145,10 +182,10 @@ public partial class Qwen3TtsCrispAsrSettingsViewModel : ObservableObject
             return;
         }
 
-        // CrispASR is shared with Speech-to-text; piggy-back on the same redownload flow
-        // Chatterbox uses, then refresh status here. The crispasr binary itself does not
-        // care which TTS engine triggered the download.
-        await TtsVoiceInstaller.EnsureCrispAsrForChatterbox(Window, _windowService, forceRedownload: true);
+        // CrispASR is shared with Speech-to-text and Chatterbox; we use the Qwen3-specific
+        // entry point so the prompts read "Qwen3 TTS (CrispASR)" rather than "Chatterbox TTS"
+        // (the crispasr binary itself doesn't care which engine triggered the download).
+        await TtsVoiceInstaller.EnsureCrispAsrForQwen3(Window, _windowService, forceRedownload: true);
         Refresh();
     }
 

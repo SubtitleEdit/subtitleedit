@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
@@ -83,25 +84,43 @@ public partial class SpeechToTextEngineSettingsViewModel : ObservableObject
 
         InstallFolder = _engine.GetAndCreateWhisperFolder();
         IsInstalled = _engine.IsEngineInstalled();
-        BackendLabel = IsInstalled ? AppendVersion(_engine, DetectBackend(_engine, InstallFolder)) : Se.Language.General.NotInstalled;
+        var backendLabel = IsInstalled ? DetectBackend(_engine, InstallFolder) : Se.Language.General.NotInstalled;
+        BackendLabel = backendLabel;
         EngineUpdateStatus = IsInstalled ? ComputeStatus(_engine, InstallFolder) : DownloadHashManager.UpdateStatus.Unknown;
         ApplyStatus(EngineUpdateStatus, IsInstalled);
-    }
 
-    // For CrispASR engines, append the installed runtime version (probed once via
-    // `crispasr --version`) so users can tell at a glance which build they have.
-    // Other engines stay as-is.
-    private static string AppendVersion(ISpeechToTextEngine engine, string backendLabel)
-    {
-        if (engine is not ICrispAsrEngine crispAsr)
+        // For CrispASR engines, append the installed runtime version once it's been probed.
+        // The probe shells out to `crispasr --version` with a 5 s timeout, so do it off the
+        // UI thread and patch BackendLabel via the dispatcher when the result lands. First
+        // call is uncached (a few hundred ms typically); subsequent ones hit the cache and
+        // return immediately, but we still go through Task.Run for consistency.
+        if (IsInstalled && _engine is ICrispAsrEngine crispAsr)
         {
-            return backendLabel;
+            var exe = crispAsr.GetExecutable();
+            _ = Task.Run(() =>
+            {
+                try
+                {
+                    var version = CrispAsrVersion.TryGet(exe);
+                    if (string.IsNullOrEmpty(version))
+                    {
+                        return;
+                    }
+                    var withVersion = $"{backendLabel}, v{version}";
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        if (BackendLabel == backendLabel)
+                        {
+                            BackendLabel = withVersion;
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Se.LogError(ex, "SpeechToTextEngineSettings: CrispASR version probe failed");
+                }
+            });
         }
-
-        var version = CrispAsrVersion.TryGet(crispAsr.GetExecutable());
-        return string.IsNullOrEmpty(version)
-            ? backendLabel
-            : $"{backendLabel}, v{version}";
     }
 
     private void ApplyStatus(DownloadHashManager.UpdateStatus status, bool installed)

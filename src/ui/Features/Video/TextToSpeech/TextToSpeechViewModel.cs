@@ -201,7 +201,16 @@ public partial class TextToSpeechViewModel : ObservableObject
 
     private void LoadSettings()
     {
-        var lastEngine = Engines.FirstOrDefault(e => e.Name == Se.Settings.Video.TextToSpeech.Engine);
+        // Migrate the pre-rename engine name so users who had "Chatterbox TTS" saved
+        // before the rename to "Chatterbox TTS (CrispASR)" land on the same engine.
+        // Cheap enough to do unconditionally; only kicks in once per affected install.
+        var savedEngine = Se.Settings.Video.TextToSpeech.Engine ?? string.Empty;
+        if (savedEngine == "Chatterbox TTS")
+        {
+            savedEngine = "Chatterbox TTS (CrispASR)";
+        }
+
+        var lastEngine = Engines.FirstOrDefault(e => e.Name == savedEngine);
         if (lastEngine != null)
         {
             SelectedEngine = lastEngine;
@@ -391,11 +400,23 @@ public partial class TextToSpeechViewModel : ObservableObject
         // Qwen3 (CrispASR) returns a different voice list per model — VoiceDesign exposes
         // "Default", CustomVoice only shows imported WAVs since it can't synthesise without
         // a reference. Persist the model change first so GetVoices reads the new value, then
-        // re-pull the voice list.
+        // re-pull the voice list. Wrap the fire-and-forget in a try/catch so any throw doesn't
+        // surface later as an unobserved task exception; the worst case is the combo keeps
+        // showing the old voice list.
         if (SelectedEngine is Qwen3TtsCrispAsr engine)
         {
             Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrModel = value ?? Qwen3TtsCrispAsr.DefaultModelKey;
-            _ = RefreshVoices(engine);
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await Dispatcher.UIThread.InvokeAsync(async () => await RefreshVoices(engine));
+                }
+                catch (Exception ex)
+                {
+                    Se.LogError(ex, "Qwen3 TTS (CrispASR): refreshing voices on model change failed");
+                }
+            });
         }
     }
 

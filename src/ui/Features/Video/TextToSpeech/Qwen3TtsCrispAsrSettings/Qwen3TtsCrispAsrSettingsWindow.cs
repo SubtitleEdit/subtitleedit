@@ -185,8 +185,8 @@ public class Qwen3TtsCrispAsrSettingsWindow : Window
 
     private static Grid BuildActions(Qwen3TtsCrispAsrSettingsViewModel vm)
     {
-        var openModelsFolder = UiUtil.MakeButton("Open models folder", vm.OpenModelsFolderCommand).WithIconLeft(IconNames.FolderOpen);
-        var openVoicesFolder = UiUtil.MakeButton("Open voices folder", vm.OpenVoicesFolderCommand).WithIconLeft(IconNames.FolderOpen);
+        var openModelsFolder = UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenModelsFolderCommand).WithIconLeft(IconNames.FolderOpen);
+        var openVoicesFolder = UiUtil.MakeButton("Voices folder", vm.OpenVoicesFolderCommand).WithIconLeft(IconNames.FolderOpen);
         var close = UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand);
 
         var leftPanel = new StackPanel

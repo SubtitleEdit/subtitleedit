@@ -53,7 +53,39 @@ public static class TtsVoiceInstaller
     /// already Chatterbox-capable - used by the settings "Update CrispASR" button when a newer
     /// release exists. Returns true when CrispASR ends up installed and Chatterbox-capable.
     /// </summary>
-    public static async Task<bool> EnsureCrispAsrForChatterbox(Window? window, IWindowService windowService, bool forceRedownload)
+    public static Task<bool> EnsureCrispAsrForChatterbox(Window? window, IWindowService windowService, bool forceRedownload)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload,
+            engineDisplayName: "Chatterbox TTS",
+            extraCapabilityCheck: () => ChatterboxTtsCpp.IsCrispAsrChatterboxCapable(),
+            minVersionNote: "v0.6.0 or newer");
+
+    /// <summary>
+    /// Ensures the CrispASR runtime that Qwen3 TTS (CrispASR) runs on is installed.
+    /// No extra capability check (any sufficiently recent CrispASR exposes the qwen3-tts
+    /// backends), so the dialogs read with the right engine name and don't mention
+    /// Chatterbox.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForQwen3(Window? window, IWindowService windowService, bool forceRedownload)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload,
+            engineDisplayName: "Qwen3 TTS (CrispASR)",
+            extraCapabilityCheck: null,
+            minVersionNote: null);
+
+    /// <summary>
+    /// Shared CrispASR install/update flow used by all TTS engines that sit on the
+    /// CrispASR runtime. Prompts refer to <paramref name="engineDisplayName"/> so users
+    /// see the right engine name. <paramref name="extraCapabilityCheck"/> lets the caller
+    /// require a backend-specific minimum (Chatterbox needs the chatterbox backend to be
+    /// present in the binary, for example); returning false there triggers a re-download
+    /// even when CrispASR itself looks up to date.
+    /// </summary>
+    private static async Task<bool> EnsureCrispAsrAsync(
+        Window? window,
+        IWindowService windowService,
+        bool forceRedownload,
+        string engineDisplayName,
+        Func<bool>? extraCapabilityCheck,
+        string? minVersionNote)
     {
         if (window == null)
         {
@@ -61,7 +93,7 @@ public static class TtsVoiceInstaller
         }
 
         var isInstalled = File.Exists(ChatterboxTtsCpp.GetCrispAsrExecutable());
-        var isCapable = isInstalled && ChatterboxTtsCpp.IsCrispAsrChatterboxCapable();
+        var isCapable = isInstalled && (extraCapabilityCheck?.Invoke() ?? true);
         if (!forceRedownload && isInstalled && isCapable)
         {
             return true;
@@ -78,12 +110,16 @@ public static class TtsVoiceInstaller
                 ? DownloadHashManager.DetectCrispAsrWindowsVariant(folder)
                 : null) ?? "vulkan";
 
+            var versionRequirement = !string.IsNullOrEmpty(minVersionNote)
+                ? $" needs CrispASR {minVersionNote}"
+                : " requires a newer CrispASR runtime";
+
             var answer = await MessageBox.Show(
                 window,
                 isCapable ? "Update CrispASR" : "CrispASR update required",
                 isCapable
                     ? $"{Environment.NewLine}A newer CrispASR runtime is available. Re-download it now?"
-                    : $"{Environment.NewLine}\"Chatterbox TTS\" needs CrispASR v0.6.0 or newer. Re-download now?",
+                    : $"{Environment.NewLine}\"{engineDisplayName}\"{versionRequirement}. Re-download now?",
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
@@ -97,7 +133,7 @@ public static class TtsVoiceInstaller
             var variantAnswer = await MessageBox.Show(
                 window,
                 "Download CrispASR?",
-                $"{Environment.NewLine}\"Chatterbox TTS\" runs through the CrispASR runtime. Select a build to download:",
+                $"{Environment.NewLine}\"{engineDisplayName}\" runs through the CrispASR runtime. Select a build to download:",
                 MessageBoxButtons.Cancel,
                 MessageBoxIcon.Question,
                 "CPU",
@@ -152,7 +188,7 @@ public static class TtsVoiceInstaller
             var answer = await MessageBox.Show(
                 window,
                 "Download CrispASR?",
-                $"{Environment.NewLine}\"Chatterbox TTS\" runs through the CrispASR runtime. Download and install now?",
+                $"{Environment.NewLine}\"{engineDisplayName}\" runs through the CrispASR runtime. Download and install now?",
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Question);
 
@@ -177,7 +213,8 @@ public static class TtsVoiceInstaller
             return false;
         }
 
-        return File.Exists(ChatterboxTtsCpp.GetCrispAsrExecutable()) && ChatterboxTtsCpp.IsCrispAsrChatterboxCapable();
+        return File.Exists(ChatterboxTtsCpp.GetCrispAsrExecutable())
+               && (extraCapabilityCheck?.Invoke() ?? true);
     }
 
     /// <summary>

@@ -684,6 +684,34 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             return false;
         }
 
-        return File.Exists(destinationFileName);
+        if (!File.Exists(destinationFileName))
+        {
+            return false;
+        }
+
+        // CustomVoice voice cloning expects a matching .txt sidecar holding the spoken
+        // transcription of the reference WAV. If the source had one (same basename, .txt),
+        // copy it alongside the imported WAV under the de-duplicated destination name.
+        try
+        {
+            var sourceSidecar = Path.ChangeExtension(fileName, ".txt");
+            if (File.Exists(sourceSidecar))
+            {
+                var destSidecar = Path.ChangeExtension(destinationFileName, ".txt");
+                if (!File.Exists(destSidecar))
+                {
+                    File.Copy(sourceSidecar, destSidecar);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Sidecar copy is best-effort — log and continue. The imported WAV alone is
+            // still usable; CustomVoice quality drops without the transcription but it
+            // doesn't fail outright.
+            Se.LogError(ex, "Qwen3 TTS (CrispASR) voice import: failed to copy .txt sidecar");
+        }
+
+        return true;
     }
 }

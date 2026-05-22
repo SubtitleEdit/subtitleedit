@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
@@ -56,9 +57,6 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
     {
         var exe = ChatterboxTtsCpp.GetCrispAsrExecutable();
         IsEngineInstalled = File.Exists(exe);
-        var versionSuffix = IsEngineInstalled
-            ? (CrispAsrVersion.TryGet(exe) is { Length: > 0 } v ? $" v{v}" : string.Empty)
-            : string.Empty;
 
         if (!IsEngineInstalled)
         {
@@ -68,21 +66,51 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
         }
         else if (!ChatterboxTtsCpp.IsCrispAsrChatterboxCapable())
         {
-            EngineLabel = $"CrispASR{versionSuffix} too old - update required";
+            EngineLabel = "CrispASR too old - update required";
             EngineBrush = new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00)); // amber
             EngineDownloadButtonText = "Update CrispASR";
         }
         else if (ChatterboxTtsCpp.GetEngineUpdateStatus() == DownloadHashManager.UpdateStatus.UpdateAvailable)
         {
-            EngineLabel = $"CrispASR{versionSuffix} - update available";
+            EngineLabel = "CrispASR - update available";
             EngineBrush = new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00)); // amber
             EngineDownloadButtonText = "Update CrispASR";
         }
         else
         {
-            EngineLabel = $"CrispASR{versionSuffix} (Chatterbox-capable)";
+            EngineLabel = "CrispASR (Chatterbox-capable)";
             EngineBrush = new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50)); // green
             EngineDownloadButtonText = "Re-download CrispASR";
+        }
+
+        // Append the installed CrispASR version asynchronously so the `crispasr --version`
+        // probe doesn't block the dialog opening. Label gets patched in once the result is
+        // available. Skip when CrispASR isn't installed (nothing to probe).
+        if (IsEngineInstalled)
+        {
+            var baseLabel = EngineLabel;
+            _ = Task.Run(() =>
+            {
+                try
+                {
+                    var version = CrispAsrVersion.TryGet(exe);
+                    if (string.IsNullOrEmpty(version))
+                    {
+                        return;
+                    }
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        if (EngineLabel == baseLabel)
+                        {
+                            EngineLabel = baseLabel.Replace("CrispASR", $"CrispASR v{version}");
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Se.LogError(ex, "ChatterboxTtsSettings: CrispASR version probe failed");
+                }
+            });
         }
 
         var baseInstalled = ChatterboxTtsCpp.AreModelsInstalled(ChatterboxTtsCpp.ModelKeyBase);
