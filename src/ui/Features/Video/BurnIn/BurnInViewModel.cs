@@ -1771,11 +1771,6 @@ public partial class BurnInViewModel : ObservableObject
         ImagePreview = bitmap.CropTransparentColors().ToAvaloniaBitmap();
     }
 
-    internal void ColorChanged(object? sender, ColorChangedEventArgs e)
-    {
-        UpdateNonAssaPreview();
-    }
-
     partial void OnFontTextColorChanged(Color value) => UpdateNonAssaPreview();
     partial void OnFontOutlineColorChanged(Color value) => UpdateNonAssaPreview();
     partial void OnFontShadowColorChanged(Color value) => UpdateNonAssaPreview();

@@ -43,24 +43,7 @@ public class SpeechToTextPostProcessingWindow : Window
 
         var labelChangeUnderlineToColor = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.ChangeUnderlineToColor);
         var checkChangeUnderlineToColor = UiUtil.MakeCheckBox(vm, nameof(SpeechToTextPostProcessingViewModel.ChangeUnderlineToColor));
-        var colorPickerUnderlineToColor = new ColorPicker()
-        {
-            Width = 200,
-            IsAlphaEnabled = true,
-            IsAlphaVisible = true,
-            IsColorSpectrumSliderVisible = false,
-            IsColorComponentsVisible = true,
-            IsColorModelVisible = false,
-            IsColorPaletteVisible = false,
-            IsAccentColorsVisible = false,
-            IsColorSpectrumVisible = true,
-            IsComponentTextInputVisible = true,
-            [!ColorPicker.ColorProperty] = new Binding(nameof(_vm.ChangeUnderlineToColorColor))
-            {
-                Source = _vm,
-                Mode = BindingMode.TwoWay
-            },
-        };
+        var colorPickerUnderlineToColor = UiUtil.MakeColorPickerButton(_vm, nameof(_vm.ChangeUnderlineToColorColor));
 
 
         var buttonPanel = UiUtil.MakeButtonBar(

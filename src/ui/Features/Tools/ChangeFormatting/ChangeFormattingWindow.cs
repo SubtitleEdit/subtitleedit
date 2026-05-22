@@ -33,9 +33,8 @@ public class ChangeFormattingWindow : Window
         comboBoxTo.SelectionChanged += vm.SelectionChanged;
 
         var labelColor = UiUtil.MakeLabel(Se.Language.General.Color);
-        var colorPicker = UiUtil.MakeColorPicker(vm, nameof(vm.SelectedColor));
-        colorPicker.Bind(ColorPicker.IsVisibleProperty, new Binding(nameof(vm.IsColorVisible)));
-        colorPicker.ColorChanged += vm.ColorChanged;
+        var colorPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.SelectedColor));
+        colorPicker.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsColorVisible)));
 
         var panelControls = UiUtil.MakeHorizontalPanel(
             labelFrom,

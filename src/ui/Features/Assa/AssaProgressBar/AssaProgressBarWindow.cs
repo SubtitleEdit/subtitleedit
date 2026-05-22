@@ -194,7 +194,7 @@ public class AssaProgressBarWindow : Window
         Grid.SetRow(fgLabel, 3);
         grid.Children.Add(fgLabel);
 
-        var fgPicker = UiUtil.MakeColorPicker(vm, nameof(vm.ForegroundColor));
+        var fgPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.ForegroundColor));
         fgPicker.HorizontalAlignment = HorizontalAlignment.Left;
         Grid.SetRow(fgPicker, 3);
         Grid.SetColumn(fgPicker, 1);
@@ -204,7 +204,7 @@ public class AssaProgressBarWindow : Window
         Grid.SetRow(bgLabel, 4);
         grid.Children.Add(bgLabel);
 
-        var bgPicker = UiUtil.MakeColorPicker(vm, nameof(vm.BackgroundColor));
+        var bgPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.BackgroundColor));
         bgPicker.HorizontalAlignment = HorizontalAlignment.Left;
         Grid.SetRow(bgPicker, 4);
         Grid.SetColumn(bgPicker, 1);
@@ -462,7 +462,7 @@ public class AssaProgressBarWindow : Window
         var colorLabel = new TextBlock { Text = Se.Language.General.Color + ":", VerticalAlignment = VerticalAlignment.Center };
         grid.Add(colorLabel, 5);
 
-        var colorPicker = UiUtil.MakeColorPicker(vm, nameof(vm.TextColor));
+        var colorPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.TextColor));
         colorPicker.HorizontalAlignment = HorizontalAlignment.Left;
         grid.Add(colorPicker, 5, 1);
 

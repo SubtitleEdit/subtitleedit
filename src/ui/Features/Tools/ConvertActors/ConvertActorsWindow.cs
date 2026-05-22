@@ -33,9 +33,8 @@ public class ConvertActorsWindow : Window
         comboBoxTo.SelectionChanged += vm.SelectionChanged;
 
         var checkBoxSetColor = UiUtil.MakeCheckBox(Se.Language.Tools.ConvertActors.SetColor, vm, nameof(vm.SetColor));
-        var colorPicker = UiUtil.MakeColorPicker(vm, nameof(vm.SelectedColor));
-        colorPicker.Bind(ColorPicker.IsVisibleProperty, new Binding(nameof(vm.SetColor)) { Source = vm, Mode = BindingMode.OneWay });
-        colorPicker.ColorChanged += vm.ColorChanged;
+        var colorPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.SelectedColor));
+        colorPicker.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.SetColor)) { Source = vm, Mode = BindingMode.OneWay });
 
         var checkBoxChangeCasing = UiUtil.MakeCheckBox(Se.Language.General.ChangeCasing, vm, nameof(vm.ChangeCasing));
         var comboBoxCasing = new ComboBox

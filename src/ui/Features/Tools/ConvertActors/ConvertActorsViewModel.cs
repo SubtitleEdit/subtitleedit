@@ -337,8 +337,4 @@ public partial class ConvertActorsViewModel : ObservableObject
         _dirty = true;
     }
 
-    internal void ColorChanged(object? sender, ColorChangedEventArgs e)
-    {
-        _dirty = true;
-    }
 }

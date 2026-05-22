@@ -8,6 +8,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -18,6 +19,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -1667,30 +1669,7 @@ public static class UiUtil
         return new Thickness(WindowMarginWidth, WindowMarginWidth * 2, WindowMarginWidth, WindowMarginWidth);
     }
 
-    internal static ColorPicker MakeColorPicker(object vm, string colorPropertyPath)
-    {
-        return new ColorPicker
-        {
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Center,
-            IsAlphaEnabled = true,
-            IsAlphaVisible = true,
-            IsColorSpectrumSliderVisible = false,
-            IsColorComponentsVisible = true,
-            IsColorModelVisible = false,
-            IsColorPaletteVisible = false,
-            IsAccentColorsVisible = false,
-            IsColorSpectrumVisible = true,
-            IsComponentTextInputVisible = true,
-            [!ColorPicker.ColorProperty] = new Binding(colorPropertyPath)
-            {
-                Source = vm,
-                Mode = BindingMode.TwoWay
-            },
-        };
-    }
-
-    internal static Button MakeColorPickerButton(object source, string colorPropertyPath, bool showAlpha)
+    internal static Button MakeColorPickerButton(object source, string colorPropertyPath, bool showAlpha = true)
     {
         var propInfo = source.GetType().GetProperty(colorPropertyPath, BindingFlags.Public | BindingFlags.Instance);
         var initialColor = propInfo?.GetValue(source) is Color c ? c : Colors.White;
@@ -1712,6 +1691,30 @@ public static class UiUtil
             Padding = new Thickness(4, 2),
             VerticalAlignment = VerticalAlignment.Center,
         };
+
+        if (source is INotifyPropertyChanged inpc)
+        {
+            void OnPropertyChanged(object? _, PropertyChangedEventArgs e)
+            {
+                if (e.PropertyName != colorPropertyPath && !string.IsNullOrEmpty(e.PropertyName))
+                {
+                    return;
+                }
+
+                var updated = propInfo?.GetValue(source) is Color nc ? nc : Colors.White;
+                if (Dispatcher.UIThread.CheckAccess())
+                {
+                    colorSwatch.Background = new SolidColorBrush(updated);
+                }
+                else
+                {
+                    Dispatcher.UIThread.Post(() => colorSwatch.Background = new SolidColorBrush(updated));
+                }
+            }
+
+            inpc.PropertyChanged += OnPropertyChanged;
+            button.DetachedFromVisualTree += (_, _) => inpc.PropertyChanged -= OnPropertyChanged;
+        }
 
         button.Click += async (_, _) =>
         {

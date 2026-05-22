@@ -25,24 +25,7 @@ public static class ViewAddFormatting
         var panelAlignment = UiUtil.MakeHorizontalPanel(checkBoxAddAlignmentTag, comboBoxAlignment);
 
         var checkBoxAddColor = UiUtil.MakeCheckBox(Se.Language.Tools.BatchConvert.AddColor, vm, nameof(vm.FormattingAddColor));
-        var colorPickerAdd = new ColorPicker()
-        {
-            Width = 200,
-            IsAlphaEnabled = true,
-            IsAlphaVisible = true,
-            IsColorSpectrumSliderVisible = false,
-            IsColorComponentsVisible = true,
-            IsColorModelVisible = false,
-            IsColorPaletteVisible = false,
-            IsAccentColorsVisible = false,
-            IsColorSpectrumVisible = true,
-            IsComponentTextInputVisible = true,
-            [!ColorPicker.ColorProperty] = new Binding(nameof(vm.FormattingAddColorValue))
-            {
-                Source = vm,
-                Mode = BindingMode.TwoWay
-            },
-        };
+        var colorPickerAdd = UiUtil.MakeColorPickerButton(vm, nameof(vm.FormattingAddColorValue));
         var panelColor = UiUtil.MakeHorizontalPanel(checkBoxAddColor, colorPickerAdd);
 
         var panel = new StackPanel

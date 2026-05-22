@@ -309,7 +309,7 @@ public class AssSetBackgroundWindow : Window
         var boxLabel = new TextBlock { Text = Se.Language.Assa.BackgroundBoxBoxColor, VerticalAlignment = VerticalAlignment.Center };
         grid.Add(boxLabel, 1, 0);
 
-        var boxPicker = UiUtil.MakeColorPicker(vm, nameof(vm.BoxColor));
+        var boxPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.BoxColor));
         boxPicker.HorizontalAlignment = HorizontalAlignment.Left;
         grid.Add(boxPicker, 1, 1);
 
@@ -317,7 +317,7 @@ public class AssSetBackgroundWindow : Window
         var outlineLabel = new TextBlock { Text = Se.Language.General.Outline, VerticalAlignment = VerticalAlignment.Center };
         grid.Add(outlineLabel, 2, 0);
 
-        var outlinePicker = UiUtil.MakeColorPicker(vm, nameof(vm.OutlineColor));
+        var outlinePicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.OutlineColor));
         outlinePicker.HorizontalAlignment = HorizontalAlignment.Left;
         grid.Add(outlinePicker, 2, 1);
 
@@ -325,7 +325,7 @@ public class AssSetBackgroundWindow : Window
         var shadowLabel = new TextBlock { Text = Se.Language.General.Shadow, VerticalAlignment = VerticalAlignment.Center };
         grid.Add(shadowLabel, 3, 0);
 
-        var shadowPicker = UiUtil.MakeColorPicker(vm, nameof(vm.ShadowColor));
+        var shadowPicker = UiUtil.MakeColorPickerButton(vm, nameof(vm.ShadowColor));
         shadowPicker.HorizontalAlignment = HorizontalAlignment.Left;
         grid.Add(shadowPicker, 3, 1);
 
