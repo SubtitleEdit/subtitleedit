@@ -163,7 +163,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                 var chunkOffset = ChunkOffsets[chunkIndex];
                 var sampleOffset = chunkOffset; // tracks the byte position of the current sample within the chunk
-                var p = new Paragraph();
                 for (var i = 0; i < samplesPerChunk; i++)
                 {
                     if (index >= SampleSizes.Count || index >= Ssts.Count)
@@ -178,6 +177,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     totalTime += sampleTime / (double)TimeScale;
                     totalTicks += sampleTime;
 
+                    var p = new Paragraph();
                     if (sampleSize > 2)
                     {
                         p.StartTime.TotalSeconds = before;
@@ -256,12 +256,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                             fs.Read(buffer, 0, buffer.Length);
                             var textSize = (uint)GetWord(buffer, 0);
 
-                            if (textSize == 0 && samplesPerChunk > 1)
-                            {
-                                fs.Read(buffer, 0, buffer.Length);
-                                textSize = (uint)GetWord(buffer, 0);
-                            }
-
                             if (textSize > 0)
                             {
                                 if (handlerType == "subp") // VobSub created with Mp4Box
@@ -291,13 +285,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     }
 
                     p.EndTime.TotalSeconds = totalTime;
+
+                    if (!string.IsNullOrEmpty(p.Text))
+                    {
+                        paragraphs.Add(p);
+                    }
+
                     index++;
                     sampleOffset += sampleSize; // advance to next sample within this chunk
-                }
-
-                if (!string.IsNullOrEmpty(p.Text))
-                {
-                    paragraphs.Add(p);
                 }
             }
 
