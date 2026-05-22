@@ -83,9 +83,25 @@ public partial class SpeechToTextEngineSettingsViewModel : ObservableObject
 
         InstallFolder = _engine.GetAndCreateWhisperFolder();
         IsInstalled = _engine.IsEngineInstalled();
-        BackendLabel = IsInstalled ? DetectBackend(_engine, InstallFolder) : Se.Language.General.NotInstalled;
+        BackendLabel = IsInstalled ? AppendVersion(_engine, DetectBackend(_engine, InstallFolder)) : Se.Language.General.NotInstalled;
         EngineUpdateStatus = IsInstalled ? ComputeStatus(_engine, InstallFolder) : DownloadHashManager.UpdateStatus.Unknown;
         ApplyStatus(EngineUpdateStatus, IsInstalled);
+    }
+
+    // For CrispASR engines, append the installed runtime version (probed once via
+    // `crispasr --version`) so users can tell at a glance which build they have.
+    // Other engines stay as-is.
+    private static string AppendVersion(ISpeechToTextEngine engine, string backendLabel)
+    {
+        if (engine is not ICrispAsrEngine crispAsr)
+        {
+            return backendLabel;
+        }
+
+        var version = CrispAsrVersion.TryGet(crispAsr.GetExecutable());
+        return string.IsNullOrEmpty(version)
+            ? backendLabel
+            : $"{backendLabel}, v{version}";
     }
 
     private void ApplyStatus(DownloadHashManager.UpdateStatus status, bool installed)

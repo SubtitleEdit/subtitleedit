@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Logic;
@@ -53,7 +54,12 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
 
     private void Refresh()
     {
-        IsEngineInstalled = File.Exists(ChatterboxTtsCpp.GetCrispAsrExecutable());
+        var exe = ChatterboxTtsCpp.GetCrispAsrExecutable();
+        IsEngineInstalled = File.Exists(exe);
+        var versionSuffix = IsEngineInstalled
+            ? (CrispAsrVersion.TryGet(exe) is { Length: > 0 } v ? $" v{v}" : string.Empty)
+            : string.Empty;
+
         if (!IsEngineInstalled)
         {
             EngineLabel = "CrispASR not installed";
@@ -62,19 +68,19 @@ public partial class ChatterboxTtsSettingsViewModel : ObservableObject
         }
         else if (!ChatterboxTtsCpp.IsCrispAsrChatterboxCapable())
         {
-            EngineLabel = "CrispASR too old - update required";
+            EngineLabel = $"CrispASR{versionSuffix} too old - update required";
             EngineBrush = new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00)); // amber
             EngineDownloadButtonText = "Update CrispASR";
         }
         else if (ChatterboxTtsCpp.GetEngineUpdateStatus() == DownloadHashManager.UpdateStatus.UpdateAvailable)
         {
-            EngineLabel = "CrispASR - update available";
+            EngineLabel = $"CrispASR{versionSuffix} - update available";
             EngineBrush = new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00)); // amber
             EngineDownloadButtonText = "Update CrispASR";
         }
         else
         {
-            EngineLabel = "CrispASR (Chatterbox-capable)";
+            EngineLabel = $"CrispASR{versionSuffix} (Chatterbox-capable)";
             EngineBrush = new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50)); // green
             EngineDownloadButtonText = "Re-download CrispASR";
         }
