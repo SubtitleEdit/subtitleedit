@@ -1,0 +1,12 @@
+<Project>
+  <PropertyGroup>
+    <!--
+      Opt the Windows apphost out of CET (Control-flow Enforcement Technology) shadow-stack
+      enforcement. Some native dependencies (e.g. SkiaSharp, HarfBuzzSharp) can trigger a
+      shadow-stack violation that kills the process before managed code runs. Disabling this
+      only flips a flag in the generated apphost PE header and is a no-op on hardware/OS
+      configurations where CET would not have been enforced anyway. See issue #11062.
+    -->
+    <CetCompat>false</CetCompat>
+  </PropertyGroup>
+</Project>
