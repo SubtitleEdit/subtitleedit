@@ -34,8 +34,9 @@ public class OcrFallbackDatabaseWindow : Window
             Children = { labelEngineCaption, labelEngineName },
         };
 
-        var labelDatabase = UiUtil.MakeLabel(string.Empty).WithMarginTop(10);
+        var labelDatabase = UiUtil.MakeLabel(string.Empty);
         labelDatabase.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Label)));
+        labelDatabase.Margin = new Thickness(0, 10, 0, 0);
 
         var comboBoxDatabases = new ComboBox
         {
@@ -63,7 +64,7 @@ public class OcrFallbackDatabaseWindow : Window
             },
             Margin = UiUtil.MakeWindowMargin(),
             ColumnSpacing = 2,
-            RowSpacing = 4,
+            RowSpacing = 0,
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
