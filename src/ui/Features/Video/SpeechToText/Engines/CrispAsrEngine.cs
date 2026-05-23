@@ -28,6 +28,7 @@ public class CrispAsrEngine : CrispAsrEngineBase
             new CrispAsrGlm(),
             new CrispAsrGranite(),
             new CrispAsrQwen3(),
+            new CrispAsrMega(),
             new CrispAsrOmni(),
             new CrispAsrKyutai(),
         };

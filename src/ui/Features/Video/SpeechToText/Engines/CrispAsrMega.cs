@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.AudioToText;
+using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
 using System.IO;
@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
-public class CrispAsrQwen3 : CrispAsrEngineBase
+public class CrispAsrMega : CrispAsrEngineBase
 {
-    public static string StaticName => "Crisp ASR Qwen3";
+    public static string StaticName => "Crisp ASR Mega";
     public override string Name => StaticName;
-    public override string Choice => WhisperChoice.CrispAsrQwen3;
-    public override string BackendName => "qwen3";
+    public override string Choice => WhisperChoice.CrispAsrMega;
+    public override string BackendName => "mega-asr";
     public override string DefaultLanguage => "en";
     public override bool IncludeLanguage => true;
     public override string Url => "https://github.com/CrispStrobe/CrispASR";
@@ -20,36 +20,8 @@ public class CrispAsrQwen3 : CrispAsrEngineBase
        new()
        {
             new WhisperLanguage("auto", "Auto detect"),
-            new WhisperLanguage("zh", "chinese"),
             new WhisperLanguage("en", "english"),
-            new WhisperLanguage("yue", "cantonese"),
-            new WhisperLanguage("ar", "arabic"),
-            new WhisperLanguage("de", "german"),
-            new WhisperLanguage("fr", "french"),
-            new WhisperLanguage("es", "spanish"),
-            new WhisperLanguage("pt", "portuguese"),
-            new WhisperLanguage("id", "indonesian"),
-            new WhisperLanguage("it", "italian"),
-            new WhisperLanguage("ko", "korean"),
-            new WhisperLanguage("ru", "russian"),
-            new WhisperLanguage("th", "thai"),
-            new WhisperLanguage("vi", "vietnamese"),
-            new WhisperLanguage("ja", "japanese"),
-            new WhisperLanguage("tr", "turkish"),
-            new WhisperLanguage("hi", "hindi"),
-            new WhisperLanguage("ms", "malay"),
-            new WhisperLanguage("nl", "dutch"),
-            new WhisperLanguage("sv", "swedish"),
-            new WhisperLanguage("da", "danish"),
-            new WhisperLanguage("fi", "finnish"),
-            new WhisperLanguage("pl", "polish"),
-            new WhisperLanguage("cs", "czech"),
-            new WhisperLanguage("fil", "filipino"),
-            new WhisperLanguage("fa", "persian"),
-            new WhisperLanguage("el", "greek"),
-            new WhisperLanguage("hu", "hungarian"),
-            new WhisperLanguage("mk", "macedonian"),
-            new WhisperLanguage("ro", "romanian"),
+            new WhisperLanguage("zh", "chinese"),
        };
 
     public override List<WhisperModel> Models =>
@@ -57,29 +29,20 @@ public class CrispAsrQwen3 : CrispAsrEngineBase
        {
             new WhisperModel
             {
-                Name = "qwen3-asr-1.7b-q4_k.gguf",
-                Size = "1.33 GB",
+                Name = "mega-asr-1.7b-q4_k.gguf",
+                Size = "1.3 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-q4_k.gguf",
+                    "https://huggingface.co/cstr/mega-asr-GGUF/resolve/main/mega-asr-1.7b-q4_k.gguf",
                 ],
             },
             new WhisperModel
             {
-                Name = "qwen3-asr-1.7b-q8_0.gguf",
-                Size = "2.51 GB",
+                Name = "mega-asr-1.7b-f16.gguf",
+                Size = "4.4 GB",
                 Urls =
                 [
-                    "https://huggingface.co/cstr/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-q8_0.gguf",
-                ],
-            },
-            new WhisperModel
-            {
-                Name = "qwen3-asr-1.7b-f16.gguf",
-                Size = "4.7 GB",
-                Urls =
-                [
-                    "https://huggingface.co/cstr/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-f16.gguf",
+                    "https://huggingface.co/cstr/mega-asr-GGUF/resolve/main/mega-asr-1.7b-f16.gguf",
                 ],
             },
        };
@@ -177,7 +140,7 @@ public class CrispAsrQwen3 : CrispAsrEngineBase
 
     public override string CommandLineParameter
     {
-        get => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrQwen3;
-        set => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrQwen3 = value;
+        get => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrMega;
+        set => Se.Settings.Tools.AudioToText.CommandLineParameterCrispAsrMega = value;
     }
 }

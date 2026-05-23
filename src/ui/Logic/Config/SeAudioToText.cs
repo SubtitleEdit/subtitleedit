@@ -53,6 +53,7 @@ public class SeAudioToText
     public string CommandLineParameterCrispAsrQwen3 { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrOmni { get; set; } = "--max-len 50 --split-on-punct";
     public string CommandLineParameterCrispAsrKyutai { get; set; } = "--max-len 50 --split-on-punct";
+    public string CommandLineParameterCrispAsrMega { get; set; } = "--max-len 50 --split-on-punct";
     public string CrispAsrForcedAligner { get; set; } = "built-in";
 
     public string WhisperExtraSettingsHistory { get; set; } = string.Empty;
