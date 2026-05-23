@@ -20,26 +20,29 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsCrispAsrSetting
 
 public partial class Qwen3TtsCrispAsrSettingsViewModel : ObservableObject
 {
-    private static readonly IBrush Green = new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50));
-    private static readonly IBrush Amber = new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00));
-    private static readonly IBrush Red = new SolidColorBrush(Color.FromRgb(0xF4, 0x43, 0x36));
-    private static readonly IBrush Grey = new SolidColorBrush(Color.FromRgb(0x9E, 0x9E, 0x9E));
+    // A SolidColorBrush set as Shape.Fill is parented into that shape's visual tree, so the
+    // same instance can't be shared across multiple bound Ellipses (only one dot would render).
+    // Construct a fresh brush per assignment instead.
+    private static IBrush Green() => new SolidColorBrush(Color.FromRgb(0x4C, 0xAF, 0x50));
+    private static IBrush Amber() => new SolidColorBrush(Color.FromRgb(0xFF, 0x98, 0x00));
+    private static IBrush Red() => new SolidColorBrush(Color.FromRgb(0xF4, 0x43, 0x36));
+    private static IBrush Grey() => new SolidColorBrush(Color.FromRgb(0x9E, 0x9E, 0x9E));
 
     private readonly IWindowService _windowService;
     private readonly IFolderHelper _folderHelper;
 
     [ObservableProperty] private string _engineLabel = string.Empty;
-    [ObservableProperty] private IBrush _engineBrush = Grey;
+    [ObservableProperty] private IBrush _engineBrush = Grey();
     [ObservableProperty] private string _engineDownloadButtonText = string.Empty;
 
     [ObservableProperty] private string _voiceDesignTalkerLabel = string.Empty;
-    [ObservableProperty] private IBrush _voiceDesignTalkerBrush = Grey;
+    [ObservableProperty] private IBrush _voiceDesignTalkerBrush = Grey();
 
     [ObservableProperty] private string _customVoiceTalkerLabel = string.Empty;
-    [ObservableProperty] private IBrush _customVoiceTalkerBrush = Grey;
+    [ObservableProperty] private IBrush _customVoiceTalkerBrush = Grey();
 
     [ObservableProperty] private string _codecLabel = string.Empty;
-    [ObservableProperty] private IBrush _codecBrush = Grey;
+    [ObservableProperty] private IBrush _codecBrush = Grey();
 
     [ObservableProperty] private string _voicesLabel = string.Empty;
 
@@ -71,19 +74,19 @@ public partial class Qwen3TtsCrispAsrSettingsViewModel : ObservableObject
         if (!IsEngineInstalled)
         {
             EngineLabel = "CrispASR not installed";
-            EngineBrush = Red;
+            EngineBrush = Red();
             EngineDownloadButtonText = "Download CrispASR";
         }
         else if (Qwen3TtsCrispAsr.GetEngineUpdateStatus() == DownloadHashManager.UpdateStatus.UpdateAvailable)
         {
             EngineLabel = "CrispASR - update available";
-            EngineBrush = Amber;
+            EngineBrush = Amber();
             EngineDownloadButtonText = "Update CrispASR";
         }
         else
         {
             EngineLabel = "CrispASR";
-            EngineBrush = Green;
+            EngineBrush = Green();
             EngineDownloadButtonText = "Re-download CrispASR";
         }
 
@@ -157,7 +160,7 @@ public partial class Qwen3TtsCrispAsrSettingsViewModel : ObservableObject
         if (fileInstalled)
         {
             setLabel("Installed");
-            setBrush(Green);
+            setBrush(Green());
             return;
         }
 
@@ -166,12 +169,12 @@ public partial class Qwen3TtsCrispAsrSettingsViewModel : ObservableObject
             // No CrispASR runtime means there's nothing to auto-download into, so don't
             // promise a download that can't happen until the user installs CrispASR.
             setLabel("CrispASR required");
-            setBrush(Grey);
+            setBrush(Grey());
             return;
         }
 
         setLabel("Auto-download on first use");
-        setBrush(Grey);
+        setBrush(Grey());
     }
 
     [RelayCommand]
