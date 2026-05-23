@@ -7457,6 +7457,9 @@ public partial class MainViewModel :
 
         Se.Language = language ?? new SeLanguage();
 
+        // Rebuild settings-page dropdown labels that capture Se.Language at type init.
+        SettingsViewModel.ReloadLanguageMaps();
+
         // reload current layout
         InitMenu.Make(this);
         SetLayout(Se.Settings.General.LayoutNumber);
