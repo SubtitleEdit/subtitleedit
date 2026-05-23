@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Settings;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 
@@ -121,8 +122,11 @@ public class OpenAiSttService
         content.Add(new StringContent("segment"), "timestamp_granularities[]");
         content.Add(new StringContent("word"), "timestamp_granularities[]");
 
-        // Enable streaming
-        content.Add(new StringContent("true"), "stream");
+        // Enable streaming (some OpenAI-compatible servers, e.g. Groq, reject this param)
+        if (_settings.Stream)
+        {
+            content.Add(new StringContent("true"), "stream");
+        }
 
         // Add temperature if specified
         if (_settings.Temperature > 0)
@@ -160,7 +164,25 @@ public class OpenAiSttService
         if (!response.IsSuccessStatusCode)
         {
             var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
-            throw new HttpRequestException($"STT request failed with status {(int)response.StatusCode}: {response.StatusCode}. {errorContent}");
+            var statusCode = (int)response.StatusCode;
+            var temperatureSummary = _settings.Temperature > 0
+                ? _settings.Temperature.ToString("F2", CultureInfo.InvariantCulture)
+                : "(not sent)";
+            var paramSummary =
+                $"model={_settings.Model}, language={languageToUse}, " +
+                $"response_format=json, timestamp_granularities=[segment,word], " +
+                $"stream={(_settings.Stream ? "true" : "(not sent)")}, " +
+                $"temperature={temperatureSummary}, " +
+                $"promptLen={_settings.Prompt?.Length ?? 0}, file={fileName}";
+            var safeEndpoint = SanitizeEndpointForLog(_settings.EndpointUrl);
+            _settings.Logger?.Invoke(
+                $"OpenAI-compatible STT failed: POST {safeEndpoint}{Environment.NewLine}" +
+                $"Status: {statusCode} {response.StatusCode}{Environment.NewLine}" +
+                $"RequestParams: {paramSummary}{Environment.NewLine}" +
+                $"ResponseBody: {errorContent}");
+            throw new HttpRequestException(
+                $"STT request failed with status {statusCode} ({response.StatusCode}) " +
+                $"calling {safeEndpoint}. Response: {errorContent}");
         }
 
         // Check if streaming (SSE)
@@ -353,6 +375,66 @@ public class OpenAiSttService
         };
     }
 
+    /// <summary>
+    /// Strip credentials from an endpoint URL before logging or echoing it back
+    /// to the user. Removes any userinfo segment and redacts the values of
+    /// query parameters that commonly carry secrets (api_key, apikey, key,
+    /// token, access_token). Non-URL strings are returned unchanged.
+    /// </summary>
+    internal static string SanitizeEndpointForLog(string endpointUrl)
+    {
+        if (string.IsNullOrWhiteSpace(endpointUrl))
+        {
+            return endpointUrl;
+        }
+
+        if (!Uri.TryCreate(endpointUrl, UriKind.Absolute, out var uri))
+        {
+            return endpointUrl;
+        }
+
+        var builder = new UriBuilder(uri)
+        {
+            UserName = string.Empty,
+            Password = string.Empty,
+        };
+
+        if (!string.IsNullOrEmpty(uri.Query))
+        {
+            var query = uri.Query.StartsWith('?') ? uri.Query[1..] : uri.Query;
+            var redacted = new StringBuilder();
+            foreach (var part in query.Split('&', StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (redacted.Length > 0)
+                {
+                    redacted.Append('&');
+                }
+                var eq = part.IndexOf('=');
+                var name = eq >= 0 ? part[..eq] : part;
+                if (eq >= 0 && IsSensitiveQueryParam(name))
+                {
+                    redacted.Append(name).Append("=***");
+                }
+                else
+                {
+                    redacted.Append(part);
+                }
+            }
+            builder.Query = redacted.ToString();
+        }
+
+        return builder.Uri.ToString();
+    }
+
+    private static bool IsSensitiveQueryParam(string name)
+    {
+        return name.Equals("api_key", StringComparison.OrdinalIgnoreCase)
+            || name.Equals("apikey", StringComparison.OrdinalIgnoreCase)
+            || name.Equals("key", StringComparison.OrdinalIgnoreCase)
+            || name.Equals("token", StringComparison.OrdinalIgnoreCase)
+            || name.Equals("access_token", StringComparison.OrdinalIgnoreCase);
+    }
+
     private static void AddExtraHeaders(HttpRequestHeaders headers, string extraHeaders)
     {
         if (string.IsNullOrWhiteSpace(extraHeaders))
@@ -397,7 +479,9 @@ public class OpenAiSttService
             TimeoutSeconds = settings.OpenAiCompatibleSttTimeoutSeconds,
             Language = settings.OpenAiCompatibleSttLanguage,
             Temperature = (double)settings.OpenAiCompatibleSttTemperature,
-            Prompt = settings.OpenAiCompatibleSttPrompt
+            Prompt = settings.OpenAiCompatibleSttPrompt,
+            Stream = settings.OpenAiCompatibleSttStream,
+            Logger = Se.WriteToolsLog
         };
     }
 
@@ -419,6 +503,15 @@ public class OpenAiCompatibleSettings
     public string Language { get; set; } = string.Empty;
     public double Temperature { get; set; }
     public string Prompt { get; set; } = string.Empty;
+    public bool Stream { get; set; }
+
+    /// <summary>
+    /// Optional diagnostic sink used on failure paths. Set by
+    /// <see cref="OpenAiSttService.GetSettingsFromConfiguration"/> to
+    /// <c>Se.WriteToolsLog</c>; left null in unit tests so the service
+    /// does not touch the SE data folder.
+    /// </summary>
+    public Action<string>? Logger { get; set; }
 }
 
 // SSE event models

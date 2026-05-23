@@ -101,6 +101,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private decimal _openAiCompatibleSttTemperature;
     [ObservableProperty] private string? _openAiCompatibleSttPrompt;
     [ObservableProperty] private string? _openAiCompatibleSttExtraHeaders;
+    [ObservableProperty] private bool _openAiCompatibleSttStream;
 
     public Window? Window { get; set; }
 
@@ -265,6 +266,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         OpenAiCompatibleSttTemperature = Se.Settings.Tools.OpenAiCompatibleSttTemperature;
         OpenAiCompatibleSttPrompt = Se.Settings.Tools.OpenAiCompatibleSttPrompt;
         OpenAiCompatibleSttExtraHeaders = Se.Settings.Tools.OpenAiCompatibleSttExtraHeaders;
+        OpenAiCompatibleSttStream = Se.Settings.Tools.OpenAiCompatibleSttStream;
 
         var savedChoice = Se.Settings.Tools.AudioToText.WhisperChoice;
         var whisperCppEngine = Engines.OfType<WhisperCppEngine>().FirstOrDefault();
@@ -310,6 +312,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         Se.Settings.Tools.OpenAiCompatibleSttTemperature = OpenAiCompatibleSttTemperature;
         Se.Settings.Tools.OpenAiCompatibleSttPrompt = OpenAiCompatibleSttPrompt ?? string.Empty;
         Se.Settings.Tools.OpenAiCompatibleSttExtraHeaders = OpenAiCompatibleSttExtraHeaders ?? string.Empty;
+        Se.Settings.Tools.OpenAiCompatibleSttStream = OpenAiCompatibleSttStream;
 
         Se.SaveSettings();
     }

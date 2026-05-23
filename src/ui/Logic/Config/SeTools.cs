@@ -115,6 +115,7 @@ public class SeTools
     public decimal OpenAiCompatibleSttTemperature { get; set; }
     public string OpenAiCompatibleSttPrompt { get; set; } = string.Empty;
     public bool OpenAiCompatibleSttAutoTranscribeOnAudioSelection { get; set; }
+    public bool OpenAiCompatibleSttStream { get; set; }
 
     public List<string> FindHistory { get; set; } = new List<string>();
     public bool AllowSingleLetterShortcutsInTextbox { get; set; }
