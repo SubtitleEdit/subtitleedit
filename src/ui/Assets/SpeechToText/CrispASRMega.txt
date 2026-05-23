@@ -1,0 +1,8 @@
+
+🦣 Mega-ASR
+
+Type: Qwen3-ASR-1.7B + merged robustness LoRA (always-on robust path)
+Focus: 🔊 Accuracy on noisy, reverberant, clipped, band-limited, overlapping
+        or otherwise degraded audio (in-the-wild speech)
+Languages: English, Chinese
+

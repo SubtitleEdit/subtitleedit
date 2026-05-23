@@ -373,7 +373,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         var preferredChoice = hasNative
             ? ForcedAlignerOption.BuiltInChoice
-            : (crispEngine is CrispAsrQwen3 ? ForcedAlignerOption.Qwen3Choice : ForcedAlignerOption.CanaryCtcChoice);
+            : (crispEngine is CrispAsrQwen3 or CrispAsrMega ? ForcedAlignerOption.Qwen3Choice : ForcedAlignerOption.CanaryCtcChoice);
 
         var match = ForcedAligners.FirstOrDefault(p => p.Choice == preferredChoice)
                     ?? ForcedAligners.FirstOrDefault();
@@ -2550,6 +2550,48 @@ public partial class SpeechToTextViewModel : ObservableObject
                 }
             }
 
+            if (engine is CrispAsrMega crispMegaEngine
+                && (SelectedForcedAligner == null || SelectedForcedAligner.IsBuiltIn))
+            {
+                var modelAligner = crispMegaEngine.ForcedAlignerModel;
+                var displayModelAligner = new SpeechToTextModelDisplay
+                {
+                    Model = modelAligner,
+                    Display = modelAligner.Name + " (forced aligner for timestamps)",
+                    Engine = engine,
+                };
+                if (!engine.IsModelInstalled(modelAligner))
+                {
+                    var answer = await MessageBox.Show(
+                                    Window!,
+                                    $"Download {modelAligner}?",
+                                    $"'Crisp ASR Mega' requires a forced aligner to create timestamps.\nDownload and use {modelAligner.Name}?",
+                                    MessageBoxButtons.YesNoCancel,
+                                    MessageBoxIcon.Question);
+
+                    if (answer != MessageBoxResult.Yes)
+                    {
+                        return;
+                    }
+
+                    var models = new ObservableCollection<SpeechToTextModelDisplay>
+                {
+                    displayModelAligner
+                };
+                    var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
+                        Window!, viewModel =>
+                        {
+                            viewModel.SetModels(models, engine, displayModelAligner);
+                            viewModel.StartDownload();
+                        });
+
+                    if (!vm.OkPressed)
+                    {
+                        return;
+                    }
+                }
+            }
+
             if (engine is ICrispAsrEngine crispAsrEngineForAligner
                 && SelectedForcedAligner != null && !SelectedForcedAligner.IsBuiltIn)
             {
@@ -2938,6 +2980,14 @@ public partial class SpeechToTextViewModel : ObservableObject
             else if (crispAsrEngine is CrispAsrQwen3 crispQwen3)
             {
                 var alignerPath = crispQwen3.GetModelForCmdLine(crispQwen3.ForcedAlignerModel.Name);
+                if (File.Exists(alignerPath))
+                {
+                    alignerPart = $" -am \"{alignerPath}\"";
+                }
+            }
+            else if (crispAsrEngine is CrispAsrMega crispMega)
+            {
+                var alignerPath = crispMega.GetModelForCmdLine(crispMega.ForcedAlignerModel.Name);
                 if (File.Exists(alignerPath))
                 {
                     alignerPart = $" -am \"{alignerPath}\"";
