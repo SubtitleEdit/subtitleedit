@@ -20,6 +20,7 @@ public class ReEncodeVideoWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Video.ReEncodeVideoForBetterSubtitlingTitle;
         SizeToContent = SizeToContent.WidthAndHeight;
+        MinWidth = 600;
         CanResize = false;
 
         _vm = vm;
@@ -66,7 +67,7 @@ public class ReEncodeVideoWindow : Window
             },
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
             Margin = UiUtil.MakeWindowMargin(),
             Width = double.NaN,
@@ -162,7 +163,7 @@ public class ReEncodeVideoWindow : Window
 
         var statusText = new TextBlock
         {
-            Margin = new Thickness(5, 20, 0, 0),
+            Margin = new Thickness(5, 0, 0, 0),
         };
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
         statusText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
@@ -171,18 +172,21 @@ public class ReEncodeVideoWindow : Window
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
+            RowSpacing = 10,
+            Margin = new Thickness(0, 5, 0, 0),
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
         grid.Add(progressBar, 0, 0);
-        grid.Add(statusText, 0, 0);
+        grid.Add(statusText, 1, 0);
 
         return grid;
     }
