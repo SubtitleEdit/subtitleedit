@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             // is captured to this control — routing wouldn't reach mainGrid in that case.
             this.AddHandler(InputElement.PointerReleasedEvent, OnMainGridPointerReleased, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: true);
             // Scrub the video by scrolling the mouse wheel over the video surface (issue #11080).
-            this.AddHandler(InputElement.PointerWheelChangedEvent, OnVideoWheelChanged, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: true);
+            this.AddHandler(InputElement.PointerWheelChangedEvent, OnVideoWheelChanged, RoutingStrategies.Bubble, handledEventsToo: true);
 
             // Buttons
             var stackPanel = new StackPanel
