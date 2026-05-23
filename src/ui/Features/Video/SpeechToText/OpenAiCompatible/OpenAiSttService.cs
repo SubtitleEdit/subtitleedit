@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Settings;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 
@@ -121,8 +122,11 @@ public class OpenAiSttService
         content.Add(new StringContent("segment"), "timestamp_granularities[]");
         content.Add(new StringContent("word"), "timestamp_granularities[]");
 
-        // Enable streaming
-        content.Add(new StringContent("true"), "stream");
+        // Enable streaming (some OpenAI-compatible servers, e.g. Groq, reject this param)
+        if (_settings.Stream)
+        {
+            content.Add(new StringContent("true"), "stream");
+        }
 
         // Add temperature if specified
         if (_settings.Temperature > 0)
@@ -160,7 +164,21 @@ public class OpenAiSttService
         if (!response.IsSuccessStatusCode)
         {
             var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
-            throw new HttpRequestException($"STT request failed with status {(int)response.StatusCode}: {response.StatusCode}. {errorContent}");
+            var statusCode = (int)response.StatusCode;
+            var paramSummary =
+                $"model={_settings.Model}, language={languageToUse}, " +
+                $"response_format=json, timestamp_granularities=[segment,word], " +
+                $"stream={(_settings.Stream ? "true" : "(not sent)")}, " +
+                $"temperature={_settings.Temperature.ToString("F2", CultureInfo.InvariantCulture)}, " +
+                $"promptLen={_settings.Prompt?.Length ?? 0}, file={fileName}";
+            Se.WriteToolsLog(
+                $"OpenAI-compatible STT failed: POST {_settings.EndpointUrl}{Environment.NewLine}" +
+                $"Status: {statusCode} {response.StatusCode}{Environment.NewLine}" +
+                $"RequestParams: {paramSummary}{Environment.NewLine}" +
+                $"ResponseBody: {errorContent}");
+            throw new HttpRequestException(
+                $"STT request failed with status {statusCode} ({response.StatusCode}) " +
+                $"calling {_settings.EndpointUrl}. Response: {errorContent}");
         }
 
         // Check if streaming (SSE)
@@ -397,7 +415,8 @@ public class OpenAiSttService
             TimeoutSeconds = settings.OpenAiCompatibleSttTimeoutSeconds,
             Language = settings.OpenAiCompatibleSttLanguage,
             Temperature = (double)settings.OpenAiCompatibleSttTemperature,
-            Prompt = settings.OpenAiCompatibleSttPrompt
+            Prompt = settings.OpenAiCompatibleSttPrompt,
+            Stream = settings.OpenAiCompatibleSttStream
         };
     }
 
@@ -419,6 +438,7 @@ public class OpenAiCompatibleSettings
     public string Language { get; set; } = string.Empty;
     public double Temperature { get; set; }
     public string Prompt { get; set; } = string.Empty;
+    public bool Stream { get; set; }
 }
 
 // SSE event models

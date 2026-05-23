@@ -678,6 +678,10 @@ public class SpeechToTextWindow : Window
             [!TextBox.TextProperty] = new Binding(nameof(vm.OpenAiCompatibleSttExtraHeaders)) { Mode = BindingMode.TwoWay }
         }.BindIsVisible(vm, nameof(vm.IsOpenAiCompatibleSttVisible));
 
+        var checkStream = UiUtil.MakeCheckBox(vm, nameof(vm.OpenAiCompatibleSttStream))
+            .BindIsVisible(vm, nameof(vm.IsOpenAiCompatibleSttVisible));
+        ToolTip.SetTip(checkStream, Se.Language.General.OpenAiCompatibleSttStreamHint);
+
         return new (Control, Control)[]
         {
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttEndpoint), MakeText(nameof(vm.OpenAiCompatibleSttUrl), 400)),
@@ -688,6 +692,7 @@ public class SpeechToTextWindow : Window
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttTemperature), numericTemperature),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttPrompt), MakeText(nameof(vm.OpenAiCompatibleSttPrompt), 400)),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttExtraHeaders), textExtraHeaders),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttStream), checkStream),
         };
     }
 
