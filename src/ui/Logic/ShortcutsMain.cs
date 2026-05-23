@@ -236,6 +236,8 @@ public static class ShortcutsMain
         { nameof(MainViewModel.MoveAllShotChangeOneFrameBackCommand),  Se.Language.General.MoveAllShotChangeOneFrameBack },
         { nameof(MainViewModel.MoveAllShotChangeOneFrameForwardCommand),  Se.Language.General.MoveAllShotChangeOneFrameForward },
         { nameof(MainViewModel.ShowWaveformSeekSilenceCommand),  Se.Language.Options.Shortcuts.SeekSilence },
+        { nameof(MainViewModel.SeekSilenceBackCommand),  Se.Language.Options.Shortcuts.SeekSilenceBack },
+        { nameof(MainViewModel.SeekSilenceForwardCommand),  Se.Language.Options.Shortcuts.SeekSilenceForward },
         { nameof(MainViewModel.ShowShotChangesListCommand),  Se.Language.General.ShowShotChangesList },
         { nameof(MainViewModel.VideoUndockControlsCommand),  Se.Language.Options.Shortcuts.UndockVideoControls },
         { nameof(MainViewModel.VideoRedockControlsCommand),  Se.Language.Options.Shortcuts.RedockVideoControls },

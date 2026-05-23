@@ -2928,6 +2928,40 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void SeekSilenceBack()
+    {
+        var vp = GetVideoPlayerControl();
+        if (AudioVisualizer?.WavePeaks == null || vp == null)
+        {
+            return;
+        }
+
+        var s = Se.Settings.Waveform;
+        var seconds = AudioVisualizer.FindDataBelowThresholdBack(s.SeekSilenceMaxVolume, s.SeekSilenceMinDurationSeconds);
+        if (seconds >= 0)
+        {
+            vp.Position = seconds;
+        }
+    }
+
+    [RelayCommand]
+    private void SeekSilenceForward()
+    {
+        var vp = GetVideoPlayerControl();
+        if (AudioVisualizer?.WavePeaks == null || vp == null)
+        {
+            return;
+        }
+
+        var s = Se.Settings.Waveform;
+        var seconds = AudioVisualizer.FindDataBelowThreshold(s.SeekSilenceMaxVolume, s.SeekSilenceMinDurationSeconds);
+        if (seconds >= 0)
+        {
+            vp.Position = seconds;
+        }
+    }
+
+    [RelayCommand]
     private async Task WaveformExtractAudio()
     {
         if (Window == null || string.IsNullOrEmpty(_videoFileName))
