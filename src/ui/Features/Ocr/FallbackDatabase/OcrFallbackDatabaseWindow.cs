@@ -2,9 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
-using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Ocr.FallbackDatabase;
 
@@ -20,28 +18,10 @@ public class OcrFallbackDatabaseWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var labelEngineCaption = new TextBlock
-        {
-            Text = Se.Language.Ocr.OcrEngine,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-        var labelEngineName = new TextBlock
-        {
-            FontWeight = FontWeight.Bold,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(5, 0, 0, 0),
-        };
-        labelEngineName.Bind(TextBlock.TextProperty, new Binding(nameof(vm.EngineName)));
-        var panelEngine = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Children = { labelEngineCaption, labelEngineName },
-        };
-
         var labelDatabase = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 6, 0, 2),
+            Margin = new Thickness(0, 0, 0, 2),
         };
         labelDatabase.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Label)));
 
@@ -63,7 +43,6 @@ public class OcrFallbackDatabaseWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -76,10 +55,9 @@ public class OcrFallbackDatabaseWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(panelEngine, 0);
-        grid.Add(labelDatabase, 1);
-        grid.Add(comboBoxDatabases, 2);
-        grid.Add(buttonPanel, 3);
+        grid.Add(labelDatabase, 0);
+        grid.Add(comboBoxDatabases, 1);
+        grid.Add(buttonPanel, 2);
 
         Content = grid;
 

@@ -11,7 +11,6 @@ namespace Nikse.SubtitleEdit.Features.Ocr.FallbackDatabase;
 public partial class OcrFallbackDatabaseViewModel : ObservableObject
 {
     [ObservableProperty] private string _title;
-    [ObservableProperty] private string _engineName;
     [ObservableProperty] private string _label;
     [ObservableProperty] private ObservableCollection<string> _databases;
     [ObservableProperty] private string? _selectedDatabase;
@@ -22,14 +21,12 @@ public partial class OcrFallbackDatabaseViewModel : ObservableObject
     public OcrFallbackDatabaseViewModel()
     {
         Title = Se.Language.Ocr.PickFallbackDatabase;
-        EngineName = string.Empty;
         Label = Se.Language.Ocr.FallbackOcrDatabase;
         Databases = new ObservableCollection<string>();
     }
 
-    public void Initialize(string engineName, string label, IEnumerable<string> databases, string? selected)
+    public void Initialize(string label, IEnumerable<string> databases, string? selected)
     {
-        EngineName = engineName;
         Label = label;
         Databases = new ObservableCollection<string>(databases);
         SelectedDatabase = !string.IsNullOrEmpty(selected) && Databases.Contains(selected)

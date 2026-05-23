@@ -1466,10 +1466,9 @@ public partial class OcrViewModel : ObservableObject
                 : BinaryOcrNOcrFallbackDatabase;
         }
 
-        var engineName = SelectedOcrEngine?.Name ?? string.Empty;
         var result = await _windowService.ShowDialogAsync<OcrFallbackDatabaseWindow, OcrFallbackDatabaseViewModel>(
             Window,
-            vm => vm.Initialize(engineName, label, databases, selected));
+            vm => vm.Initialize(label, databases, selected));
 
         if (result.OkPressed)
         {
