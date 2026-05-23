@@ -20,6 +20,7 @@ public class ReEncodeVideoWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Video.ReEncodeVideoForBetterSubtitlingTitle;
         SizeToContent = SizeToContent.WidthAndHeight;
+        MinWidth = 600;
         CanResize = false;
 
         _vm = vm;
@@ -66,7 +67,7 @@ public class ReEncodeVideoWindow : Window
             },
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
             Margin = UiUtil.MakeWindowMargin(),
             Width = double.NaN,
@@ -157,12 +158,14 @@ public class ReEncodeVideoWindow : Window
     private static Grid MakeProgressView(ReEncodeVideoViewModel vm)
     {
         var progressBar = UiUtil.MakeProgressBar();
+        progressBar.VerticalAlignment = VerticalAlignment.Top;
+        progressBar.Margin = new Thickness(0, 5, 0, 0);
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
         progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
 
         var statusText = new TextBlock
         {
-            Margin = new Thickness(5, 20, 0, 0),
+            Margin = new Thickness(5, 25, 0, 0),
         };
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
         statusText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
