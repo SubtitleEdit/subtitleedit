@@ -171,7 +171,8 @@ public partial class TextToSpeechViewModel : ObservableObject
             new MistralSpeech(ttsDownloadService),
             new Murf(ttsDownloadService),
             new GoogleSpeech(ttsDownloadService),
-            new Qwen3TtsCpp(),
+            // Qwen3TtsCpp hidden: talker produces scrambled noise on 1.7B —
+            // use Qwen3TtsCrispAsr until upstream qwen3-tts.cpp is fixed.
             new Qwen3TtsCrispAsr(),
             new KokoroTtsCpp(),
             new ChatterboxTtsCpp(),
