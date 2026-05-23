@@ -171,7 +171,8 @@ public partial class TextToSpeechViewModel : ObservableObject
             new MistralSpeech(ttsDownloadService),
             new Murf(ttsDownloadService),
             new GoogleSpeech(ttsDownloadService),
-            new Qwen3TtsCpp(),
+            // Qwen3TtsCpp hidden: talker produces scrambled noise on 1.7B —
+            // use Qwen3TtsCrispAsr until upstream qwen3-tts.cpp is fixed.
             new Qwen3TtsCrispAsr(),
             new KokoroTtsCpp(),
             new ChatterboxTtsCpp(),
@@ -1013,6 +1014,38 @@ public partial class TextToSpeechViewModel : ObservableObject
 
                 var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadQwen3TtsModels(qwen3ModelKey));
                 return dlResult.OkPressed && Qwen3TtsCpp.IsModelsInstalled(qwen3ModelKey);
+            }
+
+            return true;
+        }
+
+        if (engine is Qwen3TtsCrispAsr)
+        {
+            // Runtime first: the same crispasr.exe that Speech-to-text / Chatterbox use.
+            if (!await TtsVoiceInstaller.EnsureCrispAsrForQwen3(Window, _windowService, forceRedownload: false))
+            {
+                return false;
+            }
+
+            var crispAsrModelKey = Qwen3TtsCrispAsr.ResolveModelKey(SelectedModel);
+            if (!Qwen3TtsCrispAsr.AreModelsInstalled(crispAsrModelKey))
+            {
+                // Both keys ship the same ~358 MB 12 Hz codec; the talker is ~2 GB regardless.
+                const string sizeText = "~2.4 GB";
+                var answer = await MessageBox.Show(
+                    Window,
+                    "Download Qwen3 TTS (CrispASR) models?",
+                    $"{Environment.NewLine}\"Qwen3 TTS (CrispASR)\" ({crispAsrModelKey}) requires models ({sizeText}).{Environment.NewLine}{Environment.NewLine}Download models?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadQwen3TtsCrispAsrModels(crispAsrModelKey));
+                return dlResult.OkPressed && Qwen3TtsCrispAsr.AreModelsInstalled(crispAsrModelKey);
             }
 
             return true;

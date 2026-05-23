@@ -139,6 +139,9 @@ public class TextToSpeechWindow : Window
             Qwen3TtsCpp => Qwen3TtsCpp.IsModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
+            Qwen3TtsCrispAsr => Qwen3TtsCrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
             ChatterboxTtsCpp => ChatterboxTtsCpp.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
@@ -374,8 +377,8 @@ public class TextToSpeechWindow : Window
         };
 
         grid.Add(panelEngine, 0, 0);
-        grid.Add(panelVoice, 1, 0);
-        grid.Add(panelModel, 2, 0);
+        grid.Add(panelModel, 1, 0);
+        grid.Add(panelVoice, 2, 0);
         grid.Add(panelRegion, 3, 0);
         grid.Add(panelLanguage, 4, 0);
         grid.Add(panelApiKey, 5, 0);

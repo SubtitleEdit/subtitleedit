@@ -106,6 +106,16 @@ public static class DownloadHashManager
         public const string Voices = "Qwen3TtsCpp.Voices";
     }
 
+    public static class Qwen3TtsCrispAsr
+    {
+        // Hashes of the GGUF model files served by cstr's HuggingFace repos. Unlike the
+        // qwen3-tts.cpp archive keys these never change unless cstr re-uploads a model, so
+        // each key holds a single hash rather than a release-pinned list.
+        public const string VoiceDesignTalker = "Qwen3TtsCrispAsr.VoiceDesignTalker";
+        public const string CustomVoiceTalker = "Qwen3TtsCrispAsr.CustomVoiceTalker";
+        public const string Codec = "Qwen3TtsCrispAsr.Codec";
+    }
+
     public static class KokoroTtsCpp
     {
         // Hashes of the release archive (.zip) - same role as OmniVoice's set. Index 0 must match
@@ -487,6 +497,18 @@ public static class DownloadHashManager
             [Qwen3TtsCpp.Voices] = new[]
             {
                 "ace389f8326e23dc65c22c081d13efb28b9ee5a78e8586bc259d1148f7346e05", // qwen3-tts-cpp-2026-4 (current download URL)
+            },
+
+            // Qwen3 TTS (CrispASR): CustomVoiceTalker is intentionally absent — its hash hasn't
+            // been verified locally. VerifyFile skips when GetLatestKnownHash returns null, so
+            // the download still works; integrity check just doesn't gate it yet.
+            [Qwen3TtsCrispAsr.VoiceDesignTalker] = new[]
+            {
+                "ce9c6d69146891f7854ac46be3bf4e40f803fbebbfe7cdbd12ae3a4b24777295", // qwen3-tts-12hz-1.7b-voicedesign-q8_0.gguf
+            },
+            [Qwen3TtsCrispAsr.Codec] = new[]
+            {
+                "70dc95dbfdd9aa5d9d406236ff771d061bf17b0cda02a72513953355606e719b", // qwen3-tts-tokenizer-12hz.gguf
             },
 
             // Kokoro TTS — https://github.com/niksedk/kokoro.cpp/releases
