@@ -627,8 +627,8 @@ public partial class AutoTranslateViewModel : ObservableObject
     private void Cancel()
     {
         var wasTranslating = !IsTranslateEnabled;
-        _cancellationTokenSource.Cancel();
         _abort = true;
+        _cancellationTokenSource.Cancel();
         IsProgressEnabled = false;
 
         if (IsTranslateEnabled)
@@ -1249,9 +1249,11 @@ public partial class AutoTranslateViewModel : ObservableObject
             }
 
         }
-        catch (OperationCanceledException) when (_abort)
+        catch (OperationCanceledException) when (_abort || _cancellationTokenSource.IsCancellationRequested)
         {
             // User pressed Cancel — let the finally block report it; do not surface as an error.
+            // Check both _abort and the token: Cancel() sets _abort then fires the token, but the
+            // worker thread can observe cancellation before _abort is visible across threads.
         }
         catch (Exception ex)
         {
