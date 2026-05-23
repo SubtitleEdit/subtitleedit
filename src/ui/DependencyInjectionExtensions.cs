@@ -413,6 +413,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<PointSyncViaOtherViewModel>();
         collection.AddTransient<PointSyncViewModel>();
         collection.AddTransient<PreProcessingViewModel>();
+        collection.AddTransient<Features.Ocr.FallbackDatabase.OcrFallbackDatabaseViewModel>();
         collection.AddTransient<VobSubColorChooserViewModel>();
         collection.AddTransient<ProfilesExportViewModel>();
         collection.AddTransient<ProfilesViewModel>();

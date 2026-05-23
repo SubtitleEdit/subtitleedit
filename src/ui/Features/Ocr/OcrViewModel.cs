@@ -20,6 +20,7 @@ using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Ocr.BinaryOcr;
 using Nikse.SubtitleEdit.Features.Ocr.Download;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
+using Nikse.SubtitleEdit.Features.Ocr.FallbackDatabase;
 using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
 using Nikse.SubtitleEdit.Features.Ocr.NOcr;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
@@ -129,6 +130,10 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private GuessUsedItem? _selectedAllGuess;
     [ObservableProperty] private bool _hasPreProcessingSettings;
     [ObservableProperty] private bool _hasCaptureAlignment;
+    [ObservableProperty] private bool _hasFallbackDatabase;
+    [ObservableProperty] private bool _isFallbackDatabaseVisible;
+    [ObservableProperty] private string _nOcrBinaryOcrFallbackDatabase;
+    [ObservableProperty] private string _binaryOcrNOcrFallbackDatabase;
     [ObservableProperty] private double _imageMaxHeight = 100;
     [ObservableProperty] private double _imageMaxWidth = 200;
     [ObservableProperty] private FontFamily _textBoxFontFamily;
@@ -154,6 +159,9 @@ public partial class OcrViewModel : ObservableObject
     private bool _isCtrlDown;
     private CancellationTokenSource _cancellationTokenSource;
     private NOcrDb? _nOcrDb;
+    private BinaryOcrDb? _nOcrFallbackBinaryOcrDb;
+    private BinaryOcrMatcher? _nOcrFallbackBinaryOcrMatcher;
+    private NOcrDb? _binaryOcrFallbackNOcrDb;
     private readonly List<SkipOnceChar> _runOnceChars;
     private readonly List<SkipOnceChar> _skipOnceChars;
     private readonly NOcrAddHistoryManager _nOcrAddHistoryManager;
@@ -219,6 +227,8 @@ public partial class OcrViewModel : ObservableObject
         TextBoxFontSize = 14;
         TextBoxFontWeight = FontWeight.Regular;
         UnknownWordsRemoveCurrentText = string.Empty;
+        NOcrBinaryOcrFallbackDatabase = string.Empty;
+        BinaryOcrNOcrFallbackDatabase = string.Empty;
         LoadSettings();
         EngineSelectionChanged();
         LoadDictionaries();
@@ -273,6 +283,8 @@ public partial class OcrViewModel : ObservableObject
             DoTryToGuessUnknownWords = ocr.DoTryToGuessUnknownWords;
             DoAutoBreak = ocr.DoAutoBreak;
             HasCaptureAlignment = ocr.CaptureAssaPosition;
+            NOcrBinaryOcrFallbackDatabase = ocr.NOcrBinaryOcrFallbackDatabase ?? string.Empty;
+            BinaryOcrNOcrFallbackDatabase = ocr.BinaryOcrNOcrFallbackDatabase ?? string.Empty;
         });
     }
 
@@ -302,6 +314,8 @@ public partial class OcrViewModel : ObservableObject
         ocr.DoTryToGuessUnknownWords = DoTryToGuessUnknownWords;
         ocr.DoAutoBreak = DoAutoBreak;
         ocr.CaptureAssaPosition = HasCaptureAlignment;
+        ocr.NOcrBinaryOcrFallbackDatabase = NOcrBinaryOcrFallbackDatabase ?? string.Empty;
+        ocr.BinaryOcrNOcrFallbackDatabase = BinaryOcrNOcrFallbackDatabase ?? string.Empty;
         ocr.TextBoxFontSize = TextBoxFontSize;
         ocr.TextBoxFontBold = TextBoxFontWeight == FontWeight.Bold;
         ocr.TextBoxFontName = TextBoxFontFamily.Name;
@@ -1416,6 +1430,96 @@ public partial class OcrViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task PickFallbackDatabase()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var et = SelectedOcrEngine?.EngineType;
+        if (et != OcrEngineType.nOcr && et != OcrEngineType.BinaryImageCompare)
+        {
+            return;
+        }
+
+        string label;
+        List<string> databases;
+        string? selected;
+
+        if (et == OcrEngineType.nOcr)
+        {
+            label = Se.Language.Ocr.NOcrBinaryOcrFallbackDatabase;
+            databases = new List<string> { Se.Language.Ocr.NOcrBinaryOcrFallbackNone };
+            databases.AddRange(BinaryOcrDb.GetDatabases(Se.OcrFolder).OrderBy(p => p));
+            selected = string.IsNullOrEmpty(NOcrBinaryOcrFallbackDatabase)
+                ? Se.Language.Ocr.NOcrBinaryOcrFallbackNone
+                : NOcrBinaryOcrFallbackDatabase;
+        }
+        else
+        {
+            label = Se.Language.Ocr.BinaryOcrNOcrFallbackDatabase;
+            databases = new List<string> { Se.Language.Ocr.NOcrBinaryOcrFallbackNone };
+            databases.AddRange(NOcrDb.GetDatabases(Se.OcrFolder).OrderBy(p => p));
+            selected = string.IsNullOrEmpty(BinaryOcrNOcrFallbackDatabase)
+                ? Se.Language.Ocr.NOcrBinaryOcrFallbackNone
+                : BinaryOcrNOcrFallbackDatabase;
+        }
+
+        var result = await _windowService.ShowDialogAsync<OcrFallbackDatabaseWindow, OcrFallbackDatabaseViewModel>(
+            Window,
+            vm => vm.Initialize(label, databases, selected));
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        var picked = result.SelectedDatabase;
+        var value = string.IsNullOrEmpty(picked) || picked == Se.Language.Ocr.NOcrBinaryOcrFallbackNone
+            ? string.Empty
+            : picked;
+
+        if (et == OcrEngineType.nOcr)
+        {
+            NOcrBinaryOcrFallbackDatabase = value;
+        }
+        else
+        {
+            BinaryOcrNOcrFallbackDatabase = value;
+        }
+
+        UpdateHasFallbackDatabase();
+    }
+
+    private void UpdateHasFallbackDatabase()
+    {
+        var et = SelectedOcrEngine?.EngineType;
+        if (et == OcrEngineType.nOcr)
+        {
+            HasFallbackDatabase = !string.IsNullOrEmpty(NOcrBinaryOcrFallbackDatabase);
+        }
+        else if (et == OcrEngineType.BinaryImageCompare)
+        {
+            HasFallbackDatabase = !string.IsNullOrEmpty(BinaryOcrNOcrFallbackDatabase);
+        }
+        else
+        {
+            HasFallbackDatabase = false;
+        }
+    }
+
+    partial void OnNOcrBinaryOcrFallbackDatabaseChanged(string value)
+    {
+        UpdateHasFallbackDatabase();
+    }
+
+    partial void OnBinaryOcrNOcrFallbackDatabaseChanged(string value)
+    {
+        UpdateHasFallbackDatabase();
+    }
+
+    [RelayCommand]
     private async Task ShowPreProcessing()
     {
         if (Window == null)
@@ -2309,6 +2413,8 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        InitNOcrFallbackBinaryOcrDb();
+
         if (!_nOcrCaseFixer.HasWarmedUp)
         {
             NOcrWarmUp();
@@ -2317,6 +2423,56 @@ public partial class OcrViewModel : ObservableObject
 
         _skipOnceChars.Clear();
         _ = Task.Run(() => RunNOcrLoop(selectedIndices, cancellationToken));
+    }
+
+    private void InitNOcrFallbackBinaryOcrDb()
+    {
+        var name = NOcrBinaryOcrFallbackDatabase;
+        if (string.IsNullOrEmpty(name))
+        {
+            _nOcrFallbackBinaryOcrDb = null;
+            _nOcrFallbackBinaryOcrMatcher = null;
+            return;
+        }
+
+        var path = Path.Combine(Se.OcrFolder, name + BinaryOcrDb.Extension);
+        if (!File.Exists(path))
+        {
+            _nOcrFallbackBinaryOcrDb = null;
+            _nOcrFallbackBinaryOcrMatcher = null;
+            return;
+        }
+
+        if (_nOcrFallbackBinaryOcrDb == null || _nOcrFallbackBinaryOcrDb.FileName != path)
+        {
+            _nOcrFallbackBinaryOcrDb = new BinaryOcrDb(path, true);
+            _nOcrFallbackBinaryOcrMatcher = new BinaryOcrMatcher
+            {
+                IsLatinDb = name.Contains("Latin", StringComparison.OrdinalIgnoreCase),
+            };
+        }
+    }
+
+    private void InitBinaryOcrFallbackNOcrDb()
+    {
+        var name = BinaryOcrNOcrFallbackDatabase;
+        if (string.IsNullOrEmpty(name))
+        {
+            _binaryOcrFallbackNOcrDb = null;
+            return;
+        }
+
+        var path = Path.Combine(Se.OcrFolder, name + ".nocr");
+        if (!File.Exists(path))
+        {
+            _binaryOcrFallbackNOcrDb = null;
+            return;
+        }
+
+        if (_binaryOcrFallbackNOcrDb == null || _binaryOcrFallbackNOcrDb.FileName != path)
+        {
+            _binaryOcrFallbackNOcrDb = new NOcrDb(path);
+        }
     }
 
     private void NOcrWarmUp()
@@ -2385,6 +2541,28 @@ public partial class OcrViewModel : ObservableObject
                 {
                     var match = _nOcrDb!.GetMatch(parentBitmap, letters, splitterItem, splitterItem.Top, true,
                         SelectedNOcrMaxWrongPixels);
+
+                    if (match == null && _nOcrFallbackBinaryOcrDb != null && _nOcrFallbackBinaryOcrMatcher != null)
+                    {
+                        var compare = _nOcrFallbackBinaryOcrMatcher.GetCompareMatch(splitterItem, out _, letters, index, _nOcrFallbackBinaryOcrDb, BinaryOcrMaxErrorPercent);
+                        if (compare != null && !string.IsNullOrEmpty(compare.Text))
+                        {
+                            if (compare.ExpandCount > 0)
+                            {
+                                index += compare.ExpandCount - 1;
+                            }
+
+                            matches.Add(new NOcrChar
+                            {
+                                Text = compare.Text,
+                                Italic = compare.Italic,
+                                ExpandCount = compare.ExpandCount,
+                                ImageSplitterItem = splitterItem,
+                            });
+                            index++;
+                            continue;
+                        }
+                    }
 
                     if (NOcrDrawUnknownText && match == null)
                     {
@@ -2724,6 +2902,8 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        InitBinaryOcrFallbackNOcrDb();
+
         _skipOnceChars.Clear();
         _ = Task.Run(() => RunBinaryImageCompareOcrLoop(db, selectedIndices, cancellationToken));
     }
@@ -2781,6 +2961,22 @@ public partial class OcrViewModel : ObservableObject
                 else
                 {
                     var match = _binaryOcrMatcher.GetCompareMatch(splitterItem, out var secondBestMatch, letters, index, db, BinaryOcrMaxErrorPercent);
+
+                    if (match == null && _binaryOcrFallbackNOcrDb != null)
+                    {
+                        var nMatch = _binaryOcrFallbackNOcrDb.GetMatch(parentBitmap, letters, splitterItem, splitterItem.Top, true, SelectedNOcrMaxWrongPixels, lastDitch: true);
+                        if (nMatch != null && !string.IsNullOrEmpty(nMatch.Text))
+                        {
+                            if (nMatch.ExpandCount > 0)
+                            {
+                                index += nMatch.ExpandCount - 1;
+                            }
+
+                            matches.Add(new BinaryOcrMatcher.CompareMatch(nMatch.Text, nMatch.Italic, nMatch.ExpandCount, "nOcrFallback"));
+                            index++;
+                            continue;
+                        }
+                    }
 
                     if (match == null)
                     {
@@ -3889,6 +4085,8 @@ public partial class OcrViewModel : ObservableObject
         IsGoogleLensVisible = et == OcrEngineType.GoogleLens || et == OcrEngineType.GoogleLensSharp;
         IsMistralOcrVisible = et == OcrEngineType.Mistral;
         IsBinaryImageCompareVisible = et == OcrEngineType.BinaryImageCompare;
+        IsFallbackDatabaseVisible = IsNOcrVisible || IsBinaryImageCompareVisible;
+        UpdateHasFallbackDatabase();
 
         if (IsNOcrVisible && NOcrDatabases.Count == 0)
         {
