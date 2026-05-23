@@ -20,7 +20,11 @@ public class OcrFallbackDatabaseWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var labelEngineCaption = UiUtil.MakeLabel(Se.Language.Ocr.OcrEngine);
+        var labelEngineCaption = new TextBlock
+        {
+            Text = Se.Language.Ocr.OcrEngine,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
         var labelEngineName = new TextBlock
         {
             FontWeight = FontWeight.Bold,
@@ -34,9 +38,12 @@ public class OcrFallbackDatabaseWindow : Window
             Children = { labelEngineCaption, labelEngineName },
         };
 
-        var labelDatabase = UiUtil.MakeLabel(string.Empty);
+        var labelDatabase = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 6, 0, 2),
+        };
         labelDatabase.Bind(TextBlock.TextProperty, new Binding(nameof(vm.Label)));
-        labelDatabase.Margin = new Thickness(0, 10, 0, 0);
 
         var comboBoxDatabases = new ComboBox
         {
