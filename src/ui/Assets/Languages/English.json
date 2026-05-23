@@ -2731,6 +2731,8 @@
     "nOcrBinaryOcrFallbackDatabase": "BinaryOCR fallback database",
     "nOcrBinaryOcrFallbackNone": "(none)",
     "binaryOcrNOcrFallbackDatabase": "nOCR fallback database",
+    "pickFallbackDatabase": "Pick fallback OCR database",
+    "fallbackOcrDatabase": "Fallback OCR database",
     "showAllOllamaModels": "Show all models (not just vision-capable)",
     "ollamaModelLikelyWrong": "Ollama returned no text - the selected model may not support OCR / vision"
   },

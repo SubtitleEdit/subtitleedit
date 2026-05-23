@@ -181,6 +181,16 @@ public class OcrWindow : Window
         Attached.SetIcon(toggleButtonVobSubColors, IconNames.Palette);
         ToolTip.SetTip(toggleButtonVobSubColors, Se.Language.Ocr.VobSubColors);
 
+        var toggleButtonFallbackDatabase = new ToggleButton
+        {
+            Command = vm.PickFallbackDatabaseCommand,
+            Margin = new Thickness(2, 0, 0, 0),
+        };
+        toggleButtonFallbackDatabase.Bind(ToggleButton.IsCheckedProperty, new Binding(nameof(vm.HasFallbackDatabase)));
+        toggleButtonFallbackDatabase.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsFallbackDatabaseVisible)));
+        Attached.SetIcon(toggleButtonFallbackDatabase, IconNames.DatabaseArrowRight);
+        ToolTip.SetTip(toggleButtonFallbackDatabase, Se.Language.Ocr.FallbackOcrDatabase);
+
         var panelRight = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -190,6 +200,7 @@ public class OcrWindow : Window
                 toggleButtonCaptureAlignment,
                 toggleButtonPreProcessing,
                 toggleButtonVobSubColors,
+                toggleButtonFallbackDatabase,
             }
         };
 
