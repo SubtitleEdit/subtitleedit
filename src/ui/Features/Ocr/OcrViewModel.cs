@@ -1471,25 +1471,25 @@ public partial class OcrViewModel : ObservableObject
             Window,
             vm => vm.Initialize(engineName, label, databases, selected));
 
-        if (!result.OkPressed)
+        if (result.OkPressed)
         {
-            return;
+            var picked = result.SelectedDatabase;
+            var value = string.IsNullOrEmpty(picked) || picked == Se.Language.Ocr.NOcrBinaryOcrFallbackNone
+                ? string.Empty
+                : picked;
+
+            if (et == OcrEngineType.nOcr)
+            {
+                NOcrBinaryOcrFallbackDatabase = value;
+            }
+            else
+            {
+                BinaryOcrNOcrFallbackDatabase = value;
+            }
         }
 
-        var picked = result.SelectedDatabase;
-        var value = string.IsNullOrEmpty(picked) || picked == Se.Language.Ocr.NOcrBinaryOcrFallbackNone
-            ? string.Empty
-            : picked;
-
-        if (et == OcrEngineType.nOcr)
-        {
-            NOcrBinaryOcrFallbackDatabase = value;
-        }
-        else
-        {
-            BinaryOcrNOcrFallbackDatabase = value;
-        }
-
+        // ToggleButton's TwoWay IsChecked binding flips HasFallbackDatabase on click; recompute
+        // unconditionally so the checked state always reflects the underlying setting.
         UpdateHasFallbackDatabase();
     }
 
@@ -2973,7 +2973,8 @@ public partial class OcrViewModel : ObservableObject
                                 index += nMatch.ExpandCount - 1;
                             }
 
-                            matches.Add(new BinaryOcrMatcher.CompareMatch(nMatch.Text, nMatch.Italic, nMatch.ExpandCount, "nOcrFallback"));
+                            var text = _nOcrCaseFixer.FixUppercaseLowercaseIssues(splitterItem, nMatch);
+                            matches.Add(new BinaryOcrMatcher.CompareMatch(text, nMatch.Italic, nMatch.ExpandCount, "nOcrFallback"));
                             index++;
                             continue;
                         }
