@@ -254,6 +254,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             // Release handler is on `this` (not mainGrid) so it still fires when the pointer
             // is captured to this control — routing wouldn't reach mainGrid in that case.
             this.AddHandler(InputElement.PointerReleasedEvent, OnMainGridPointerReleased, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, handledEventsToo: true);
+            // Scrub the video by scrolling the mouse wheel over the video surface (issue #11080).
+            this.AddHandler(InputElement.PointerWheelChangedEvent, OnVideoWheelChanged, RoutingStrategies.Bubble, handledEventsToo: true);
 
             // Buttons
             var stackPanel = new StackPanel
@@ -576,6 +578,67 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 _surfaceLeftButtonDown = false;
                 e.Pointer.Capture(null);
             }
+        }
+
+        private void OnVideoWheelChanged(object? sender, PointerWheelEventArgs e)
+        {
+            // Ignore wheel events over the controls row (sliders, buttons).
+            try
+            {
+                if (_gridProgress.IsVisible)
+                {
+                    var ptInControls = e.GetPosition(_gridProgress);
+                    if (ptInControls.X >= 0 && ptInControls.Y >= 0 &&
+                        ptInControls.X <= _gridProgress.Bounds.Width &&
+                        ptInControls.Y <= _gridProgress.Bounds.Height)
+                    {
+                        return;
+                    }
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+
+            var delta = e.Delta.Y;
+            if (Math.Abs(delta) < 0.1 && Math.Abs(e.Delta.X) > 0.1)
+            {
+                delta = e.Delta.X;
+            }
+
+            if (Math.Abs(delta) < 0.0001)
+            {
+                return;
+            }
+
+            if (Se.Settings.Waveform.InvertMouseWheel)
+            {
+                delta = -delta;
+            }
+
+            const double stepSeconds = 0.5;
+            var newPosition = Position + delta * stepSeconds;
+
+            var duration = Duration;
+            if (newPosition < 0)
+            {
+                newPosition = 0;
+            }
+            else if (duration > 0 && newPosition > duration)
+            {
+                newPosition = duration;
+            }
+
+            NotifyPositionChanged(newPosition);
+            UserSeeked?.Invoke(newPosition);
+
+            if (IsFullScreen)
+            {
+                OnUserActivity();
+            }
+
+            e.Handled = true;
         }
 
         public event Action? PlayPauseRequested;
