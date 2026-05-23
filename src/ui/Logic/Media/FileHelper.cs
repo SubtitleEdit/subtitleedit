@@ -314,12 +314,45 @@ namespace Nikse.SubtitleEdit.Logic.Media
 
         private static string AddMissingExtension(string fileName, string extension)
         {
-            if (string.IsNullOrEmpty(fileName) || Path.HasExtension(fileName))
+            if (string.IsNullOrEmpty(fileName))
             {
                 return fileName;
             }
 
-            return fileName + (extension.StartsWith('.') ? extension : "." + extension);
+            var ext = extension.StartsWith('.') ? extension : "." + extension;
+
+            // Only treat the existing suffix as an "extension" if it's a known subtitle
+            // format extension - otherwise things like "Foo.sv" or "Foo.en" (language tags
+            // left over from container extraction) are misread as extensions and the chosen
+            // format extension is never appended. See issue #10349.
+            var existingExtension = Path.GetExtension(fileName);
+            if (!string.IsNullOrEmpty(existingExtension) && IsKnownSubtitleExtension(existingExtension))
+            {
+                return fileName;
+            }
+
+            return fileName + ext;
+        }
+
+        private static bool IsKnownSubtitleExtension(string extension)
+        {
+            foreach (var format in SubtitleFormat.AllSubtitleFormats)
+            {
+                if (string.Equals(format.Extension, extension, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+
+                foreach (var alternate in format.AlternateExtensions)
+                {
+                    if (string.Equals(alternate, extension, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public async Task<string> PickSaveSubtitleFile(
