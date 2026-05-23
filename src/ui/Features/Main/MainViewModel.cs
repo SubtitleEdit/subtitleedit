@@ -768,6 +768,9 @@ public partial class MainViewModel :
     {
         _shortcutManager.ClearShortcuts();
         Se.Settings.InitializeMainShortcuts(this);
+        // Rebuild shortcut display names so the Shortcuts window reflects the current
+        // UI language (the dictionary captured Se.Language strings at type init).
+        ShortcutsMain.ReloadCommandTranslations();
         foreach (var shortCut in ShortcutsMain.GetUsedShortcuts(this))
         {
             _shortcutManager.RegisterShortcut(shortCut);
@@ -7453,6 +7456,9 @@ public partial class MainViewModel :
             });
 
         Se.Language = language ?? new SeLanguage();
+
+        // Rebuild settings-page dropdown labels that capture Se.Language at type init.
+        SettingsViewModel.ReloadLanguageMaps();
 
         // reload current layout
         InitMenu.Make(this);

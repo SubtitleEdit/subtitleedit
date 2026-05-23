@@ -858,7 +858,9 @@ public partial class SettingsViewModel : ObservableObject
             .IsVisible;
     }
 
-    private static readonly Dictionary<string, string> _waveformSingleClickActionToTextMap = new Dictionary<string, string>
+    private static readonly Dictionary<string, string> _waveformSingleClickActionToTextMap = BuildWaveformSingleClickActionToTextMap();
+
+    private static Dictionary<string, string> BuildWaveformSingleClickActionToTextMap() => new Dictionary<string, string>
     {
         { WaveformSingleClickActionType.SetVideoPositionAndPauseAndSelectSubtitle.ToString(), Se.Language.Waveform.SetVideoPositionAndPauseAndSelectSubtitle },
         { WaveformSingleClickActionType.SetVideopositionAndPauseAndSelectSubtitleAndCenter.ToString(), Se.Language.Waveform.SetVideopositionAndPauseAndSelectSubtitleAndCenter },
@@ -881,7 +883,9 @@ public partial class SettingsViewModel : ObservableObject
             : Se.Language.Waveform.SetVideoPositionAndPauseAndSelectSubtitle;
     }
 
-    private static readonly Dictionary<string, string> _waveformDoubleClickActionToTextMap = new Dictionary<string, string>
+    private static readonly Dictionary<string, string> _waveformDoubleClickActionToTextMap = BuildWaveformDoubleClickActionToTextMap();
+
+    private static Dictionary<string, string> BuildWaveformDoubleClickActionToTextMap() => new Dictionary<string, string>
     {
         { WaveformDoubleClickActionType.None.ToString(), Se.Language.General.None },
         { WaveformDoubleClickActionType.SelectSubtitle.ToString(), Se.Language.General.SelectSubtitle },
@@ -1092,7 +1096,9 @@ public partial class SettingsViewModel : ObservableObject
         }
     }
 
-    private static readonly Dictionary<string, string> _keyEnterActionToTextMap = new Dictionary<string, string>
+    private static readonly Dictionary<string, string> _keyEnterActionToTextMap = BuildKeyEnterActionToTextMap();
+
+    private static Dictionary<string, string> BuildKeyEnterActionToTextMap() => new Dictionary<string, string>
     {
         { SubtitleEnterKeyActionType.GoToSubtitleAndSetVideoPosition.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndSetVideoPosition },
         { SubtitleEnterKeyActionType.GoToNextLine.ToString(), Se.Language.Options.Settings.GridGoToNextLine },
@@ -1124,7 +1130,9 @@ public partial class SettingsViewModel : ObservableObject
             : SubtitleSingleClickActionType.None.ToString();
     }
 
-    private static readonly Dictionary<string, string> _singleClickActionToTextMap = new Dictionary<string, string>
+    private static readonly Dictionary<string, string> _singleClickActionToTextMap = BuildSingleClickActionToTextMap();
+
+    private static Dictionary<string, string> BuildSingleClickActionToTextMap() => new Dictionary<string, string>
     {
         { SubtitleSingleClickActionType.None.ToString(), Se.Language.General.None },
         { SubtitleSingleClickActionType.GoToWaveformOnlyNoVideoPosition.ToString(), Se.Language.Options.Settings.GridGoToSubtitleOnlyWaveformOnly },
@@ -1160,7 +1168,9 @@ public partial class SettingsViewModel : ObservableObject
             : SubtitleSingleClickActionType.None.ToString();
     }
 
-    private static readonly Dictionary<string, string> _actionToTextMap = new Dictionary<string, string>
+    private static readonly Dictionary<string, string> _actionToTextMap = BuildDoubleClickActionToTextMap();
+
+    private static Dictionary<string, string> BuildDoubleClickActionToTextMap() => new Dictionary<string, string>
     {
         { SubtitleDoubleClickActionType.None.ToString(), Se.Language.General.None },
         { SubtitleDoubleClickActionType.GoToSubtitleAndPause.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndPause },
@@ -1168,6 +1178,26 @@ public partial class SettingsViewModel : ObservableObject
         { SubtitleDoubleClickActionType.GoToSubtitleOnly.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndSetVideoPosition },
         { SubtitleDoubleClickActionType.GoToSubtitleAndPauseAndFocusTextBox.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndPauseAndFocusTextBox },
     };
+
+    // Rebuilds the static language-dependent maps in place so callers keep their reference.
+    // Call after Se.Language has been swapped (UI language change).
+    public static void ReloadLanguageMaps()
+    {
+        Refill(_waveformSingleClickActionToTextMap, BuildWaveformSingleClickActionToTextMap());
+        Refill(_waveformDoubleClickActionToTextMap, BuildWaveformDoubleClickActionToTextMap());
+        Refill(_keyEnterActionToTextMap, BuildKeyEnterActionToTextMap());
+        Refill(_singleClickActionToTextMap, BuildSingleClickActionToTextMap());
+        Refill(_actionToTextMap, BuildDoubleClickActionToTextMap());
+    }
+
+    private static void Refill(Dictionary<string, string> target, Dictionary<string, string> source)
+    {
+        target.Clear();
+        foreach (var kv in source)
+        {
+            target[kv.Key] = kv.Value;
+        }
+    }
 
     private static Dictionary<string, string> TextToActionMap => _actionToTextMap.ToDictionary(x => x.Value, x => x.Key);
 
