@@ -158,14 +158,12 @@ public class ReEncodeVideoWindow : Window
     private static Grid MakeProgressView(ReEncodeVideoViewModel vm)
     {
         var progressBar = UiUtil.MakeProgressBar();
-        progressBar.VerticalAlignment = VerticalAlignment.Top;
-        progressBar.Margin = new Thickness(0, 5, 0, 0);
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
         progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
 
         var statusText = new TextBlock
         {
-            Margin = new Thickness(5, 25, 0, 0),
+            Margin = new Thickness(5, 0, 0, 0),
         };
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
         statusText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
@@ -174,18 +172,21 @@ public class ReEncodeVideoWindow : Window
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
+            RowSpacing = 10,
+            Margin = new Thickness(0, 5, 0, 0),
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
         grid.Add(progressBar, 0, 0);
-        grid.Add(statusText, 0, 0);
+        grid.Add(statusText, 1, 0);
 
         return grid;
     }
