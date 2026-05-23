@@ -54,7 +54,24 @@ public static class ShortcutsMain
         list.Add(new AvailableShortcut(command, name, category));
     }
 
-    public static readonly Dictionary<string, string> CommandTranslationLookup = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> CommandTranslationLookup = BuildCommandTranslations();
+
+    // Rebuilds CommandTranslationLookup in place so callers keep their reference to
+    // the same dictionary instance. Call after Se.Language has been swapped (e.g.,
+    // user changed UI language) so cached display names pick up the new strings.
+    public static void ReloadCommandTranslations()
+    {
+        var fresh = BuildCommandTranslations();
+        CommandTranslationLookup.Clear();
+        foreach (var kv in fresh)
+        {
+            CommandTranslationLookup[kv.Key] = kv.Value;
+        }
+    }
+
+    private static Dictionary<string, string> BuildCommandTranslations()
+    {
+        return new Dictionary<string, string>
     {
         { nameof(MainViewModel.DeleteSelectedLinesCommand), Se.Language.Options.Shortcuts.ListDeleteSelection },
         { nameof(MainViewModel.FillSelectedLinesWithClipboardCommand), Se.Language.Options.Shortcuts.FillSelectedLinesWithClipboard },
@@ -350,6 +367,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.OpenSecondarySubtitleCommand), Se.Language.Video.OpenSecondarySubtitleOnVideoPlayer },
         { nameof(MainViewModel.ToggleCurrentSubtitleWhilePlayingCommand), Se.Language.Video.ToggleCurrentSubtitleWhilePlaying },
     };
+    }
 
     private static List<AvailableShortcut> GetAllAvailableShortcuts(MainViewModel vm)
     {
