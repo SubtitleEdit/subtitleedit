@@ -292,6 +292,141 @@ public class OpenAiSttServiceTests
         }
     }
 
+    [Fact]
+    public async Task TranscribeAsync_DefaultSettings_DoesNotSendStreamPart()
+    {
+        // Groq and some other OpenAI-compatible providers reject the `stream`
+        // multipart field with HTTP 400. The opt-in default must keep the
+        // field out of the request entirely.
+        var capturedNames = await CaptureMultipartFieldNamesAsync(MakeSettings());
+
+        Assert.DoesNotContain("stream", capturedNames);
+    }
+
+    [Fact]
+    public async Task TranscribeAsync_StreamEnabled_SendsStreamTruePart()
+    {
+        var settings = MakeSettings();
+        settings.Stream = true;
+
+        var (names, values) = await CaptureMultipartFieldNamesAndValuesAsync(settings);
+
+        Assert.Contains("stream", names);
+        Assert.Equal("true", values["stream"]);
+    }
+
+    [Fact]
+    public async Task TranscribeAsync_NonSuccessStatus_InvokesLogger_WithSanitizedUrl()
+    {
+        var logEntries = new List<string>();
+        var settings = MakeSettings();
+        settings.EndpointUrl = "https://user:secret@api.example.com/v1/audio/transcriptions?api_key=SHOULD_NOT_LEAK&model=x";
+        settings.Logger = msg => logEntries.Add(msg);
+
+        using var handler = new StubHandler((req, ct) =>
+            Task.FromResult(new HttpResponseMessage(HttpStatusCode.BadRequest)
+            {
+                Content = new StringContent("{\"error\":\"nope\"}", Encoding.UTF8, "application/json"),
+            }));
+        using var client = new HttpClient(handler);
+        var service = new OpenAiSttService(client, settings);
+
+        var ct = TestContext.Current.CancellationToken;
+        var wav = MakeTinyWav();
+        try
+        {
+            var ex = await Assert.ThrowsAsync<HttpRequestException>(
+                () => service.TranscribeAsync(wav, cancellationToken: ct));
+
+            // Logger must have been invoked exactly once and the credentials
+            // must not appear in either the log entry or the exception message.
+            Assert.Single(logEntries);
+            Assert.DoesNotContain("secret", logEntries[0]);
+            Assert.DoesNotContain("SHOULD_NOT_LEAK", logEntries[0]);
+            Assert.Contains("api_key=***", logEntries[0]);
+            Assert.DoesNotContain("secret", ex.Message);
+            Assert.DoesNotContain("SHOULD_NOT_LEAK", ex.Message);
+        }
+        finally
+        {
+            File.Delete(wav);
+        }
+    }
+
+    [Fact]
+    public void SanitizeEndpointForLog_RedactsUserInfoAndSensitiveQueryParams()
+    {
+        var sanitized = OpenAiSttService.SanitizeEndpointForLog(
+            "https://user:pw@example.com/v1/audio/transcriptions?api_key=AAA&token=BBB&model=whisper&access_token=CCC");
+
+        Assert.DoesNotContain("user", sanitized);
+        Assert.DoesNotContain("pw@", sanitized);
+        Assert.DoesNotContain("AAA", sanitized);
+        Assert.DoesNotContain("BBB", sanitized);
+        Assert.DoesNotContain("CCC", sanitized);
+        Assert.Contains("api_key=***", sanitized);
+        Assert.Contains("token=***", sanitized);
+        Assert.Contains("access_token=***", sanitized);
+        Assert.Contains("model=whisper", sanitized);
+    }
+
+    [Fact]
+    public void SanitizeEndpointForLog_PassesThroughNonUrlOrEmpty()
+    {
+        Assert.Equal("", OpenAiSttService.SanitizeEndpointForLog(""));
+        Assert.Equal("not-a-url", OpenAiSttService.SanitizeEndpointForLog("not-a-url"));
+    }
+
+    private static async Task<HashSet<string>> CaptureMultipartFieldNamesAsync(OpenAiCompatibleSettings settings)
+    {
+        var (names, _) = await CaptureMultipartFieldNamesAndValuesAsync(settings);
+        return names;
+    }
+
+    private static async Task<(HashSet<string> Names, Dictionary<string, string> Values)>
+        CaptureMultipartFieldNamesAndValuesAsync(OpenAiCompatibleSettings settings)
+    {
+        // We need to inspect the parts before the handler returns, since
+        // MultipartFormDataContent is disposed once the request completes.
+        var names = new HashSet<string>(StringComparer.Ordinal);
+        var values = new Dictionary<string, string>(StringComparer.Ordinal);
+        using var handler = new StubHandler(async (req, ct) =>
+        {
+            if (req.Content is MultipartFormDataContent multipart)
+            {
+                foreach (var part in multipart)
+                {
+                    var name = part.Headers.ContentDisposition?.Name?.Trim('"') ?? string.Empty;
+                    if (string.IsNullOrEmpty(name))
+                    {
+                        continue;
+                    }
+                    names.Add(name);
+                    // Only read string-valued parts, not the file stream.
+                    if (part is StringContent)
+                    {
+                        values[name] = await part.ReadAsStringAsync(ct);
+                    }
+                }
+            }
+            return JsonResponse("""{"text":"ok"}""");
+        });
+        using var client = new HttpClient(handler);
+        var service = new OpenAiSttService(client, settings);
+
+        var ct = TestContext.Current.CancellationToken;
+        var wav = MakeTinyWav();
+        try
+        {
+            await service.TranscribeAsync(wav, cancellationToken: ct);
+        }
+        finally
+        {
+            File.Delete(wav);
+        }
+        return (names, values);
+    }
+
     private static HttpResponseMessage JsonResponse(string body, string contentType = "application/json")
     {
         var resp = new HttpResponseMessage(HttpStatusCode.OK)
