@@ -62,7 +62,6 @@ public class CrispAsrQwen3 : CrispAsrEngineBase
                 Urls =
                 [
                     "https://huggingface.co/cstr/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-q4_k.gguf",
-                    "https://huggingface.co/cstr/qwen3-forced-aligner-0.6b-GGUF/resolve/main/qwen3-forced-aligner-0.6b-q8_0.gguf"
                 ],
             },
             new WhisperModel
@@ -72,7 +71,6 @@ public class CrispAsrQwen3 : CrispAsrEngineBase
                 Urls =
                 [
                     "https://huggingface.co/cstr/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-q8_0.gguf",
-                    "https://huggingface.co/cstr/qwen3-forced-aligner-0.6b-GGUF/resolve/main/qwen3-forced-aligner-0.6b-q8_0.gguf"
                 ],
             },
             new WhisperModel
@@ -82,7 +80,6 @@ public class CrispAsrQwen3 : CrispAsrEngineBase
                 Urls =
                 [
                     "https://huggingface.co/cstr/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-f16.gguf",
-                    "https://huggingface.co/cstr/qwen3-forced-aligner-0.6b-GGUF/resolve/main/qwen3-forced-aligner-0.6b-q8_0.gguf"
                 ],
             },
        };

@@ -34,7 +34,6 @@ public class CrispAsrMega : CrispAsrEngineBase
                 Urls =
                 [
                     "https://huggingface.co/cstr/mega-asr-GGUF/resolve/main/mega-asr-1.7b-q4_k.gguf",
-                    "https://huggingface.co/cstr/qwen3-forced-aligner-0.6b-GGUF/resolve/main/qwen3-forced-aligner-0.6b-q8_0.gguf"
                 ],
             },
             new WhisperModel
@@ -44,7 +43,6 @@ public class CrispAsrMega : CrispAsrEngineBase
                 Urls =
                 [
                     "https://huggingface.co/cstr/mega-asr-GGUF/resolve/main/mega-asr-1.7b-f16.gguf",
-                    "https://huggingface.co/cstr/qwen3-forced-aligner-0.6b-GGUF/resolve/main/qwen3-forced-aligner-0.6b-q8_0.gguf"
                 ],
             },
        };
