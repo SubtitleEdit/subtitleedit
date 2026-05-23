@@ -51,6 +51,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private Task? _downloadTaskKokoroTtsCpp;
     private Task? _downloadTaskKokoroTtsModels;
     private Task? _downloadTaskChatterboxModels;
+    private Task? _downloadTaskQwen3TtsCrispAsrModels;
     private Task? _downloadTaskOmniVoice;
     private Task? _downloadTaskOmniVoiceVoices;
     private Task? _downloadTaskOmniVoiceModels;
@@ -62,6 +63,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private readonly IQwen3TtsCppDownloadService _qwen3TtsCppDownloadService;
     private readonly IKokoroTtsCppDownloadService _kokoroTtsCppDownloadService;
     private readonly IChatterboxTtsCppDownloadService _chatterboxTtsCppDownloadService;
+    private readonly IQwen3TtsCrispAsrDownloadService _qwen3TtsCrispAsrDownloadService;
     private readonly IOmniVoiceDownloadService _omniVoiceDownloadService;
     private readonly CancellationTokenSource _cancellationTokenSource;
     private readonly MemoryStream _downloadStream;
@@ -81,12 +83,14 @@ public partial class DownloadTtsViewModel : ObservableObject
         IQwen3TtsCppDownloadService qwen3TtsCppDownloadService,
         IKokoroTtsCppDownloadService kokoroTtsCppDownloadService,
         IChatterboxTtsCppDownloadService chatterboxTtsCppDownloadService,
+        IQwen3TtsCrispAsrDownloadService qwen3TtsCrispAsrDownloadService,
         IOmniVoiceDownloadService omniVoiceDownloadService)
     {
         _ttsDownloadService = ttsDownloadService;
         _qwen3TtsCppDownloadService = qwen3TtsCppDownloadService;
         _kokoroTtsCppDownloadService = kokoroTtsCppDownloadService;
         _chatterboxTtsCppDownloadService = chatterboxTtsCppDownloadService;
+        _qwen3TtsCrispAsrDownloadService = qwen3TtsCrispAsrDownloadService;
         _omniVoiceDownloadService = omniVoiceDownloadService;
         _zipUnpacker = zipUnpacker;
 
@@ -493,6 +497,28 @@ public partial class DownloadTtsViewModel : ObservableObject
             {
                 _timer.Stop();
                 var ex = _downloadTaskChatterboxModels.Exception?.InnerException ?? _downloadTaskChatterboxModels.Exception;
+                if (ex is OperationCanceledException)
+                {
+                    ProgressText = "Download canceled";
+                    Close();
+                }
+                else
+                {
+                    ProgressText = "Download failed";
+                    Error = ex?.Message ?? "Unknown error";
+                }
+            }
+
+            if (_downloadTaskQwen3TtsCrispAsrModels is { IsCompleted: true })
+            {
+                _timer.Stop();
+                OkPressed = true;
+                Close();
+            }
+            else if (_downloadTaskQwen3TtsCrispAsrModels is { IsFaulted: true })
+            {
+                _timer.Stop();
+                var ex = _downloadTaskQwen3TtsCrispAsrModels.Exception?.InnerException ?? _downloadTaskQwen3TtsCrispAsrModels.Exception;
                 if (ex is OperationCanceledException)
                 {
                     ProgressText = "Download canceled";
@@ -929,6 +955,29 @@ public partial class DownloadTtsViewModel : ObservableObject
 
         _downloadTaskChatterboxModels =
             _chatterboxTtsCppDownloadService.DownloadModels(ChatterboxTtsCpp.GetSetModelsFolder(), resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
+    }
+
+    public void StartDownloadQwen3TtsCrispAsrModels(string? modelKey = null)
+    {
+        var resolved = Qwen3TtsCrispAsr.ResolveModelKey(modelKey);
+        var talkerFileName = Qwen3TtsCrispAsr.GetTalkerFileName(resolved);
+        TitleText = $"Downloading Qwen3 TTS (CrispASR) models ({resolved}): {talkerFileName}";
+
+        var downloadProgress = new Progress<float>(number =>
+        {
+            var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+            var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+            ProgressValue = percentage;
+            ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+        });
+
+        var titleProgress = new Action<string>(title =>
+        {
+            Dispatcher.UIThread.Post(() => TitleText = title);
+        });
+
+        _downloadTaskQwen3TtsCrispAsrModels =
+            _qwen3TtsCrispAsrDownloadService.DownloadModels(Qwen3TtsCrispAsr.GetSetModelsFolder(), resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
     }
 
     public void StartDownloadOmniVoice(string windowsVariant = OmniVoiceDownloadService.WindowsVariantVulkan)

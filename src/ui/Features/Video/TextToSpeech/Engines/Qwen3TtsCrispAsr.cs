@@ -239,6 +239,45 @@ public class Qwen3TtsCrispAsr : ITtsEngine
     public static bool AreModelsInstalled(string? modelKey = null) =>
         File.Exists(GetTalkerPath(modelKey)) && File.Exists(GetCodecPath());
 
+    /// <summary>
+    /// Path crispasr's --auto-download writes GGUFs to before SE took over model management.
+    /// Exposed so the SE downloader can copy already-cached files instead of re-pulling 2 GB,
+    /// and so settings UI can reference the same location.
+    /// </summary>
+    public static string GetCrispAsrCacheFolder() =>
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache", "crispasr");
+
+    /// <summary>
+    /// Best-effort copy of <paramref name="fileName"/> from <see cref="GetCrispAsrCacheFolder"/>
+    /// into SE's models folder. Used by the downloader to avoid re-pulling files crispasr's
+    /// own --auto-download has already fetched. Returns true if the destination ends up present
+    /// (whether seeded just now or already there); false on any IO failure.
+    /// </summary>
+    public static bool TrySeedModelFromCrispAsrCache(string fileName, string destinationPath)
+    {
+        if (File.Exists(destinationPath))
+        {
+            return true;
+        }
+
+        try
+        {
+            var cachePath = Path.Combine(GetCrispAsrCacheFolder(), fileName);
+            if (!File.Exists(cachePath))
+            {
+                return false;
+            }
+
+            File.Copy(cachePath, destinationPath);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, $"Qwen3 TTS (CrispASR): cache seed copy failed for {fileName}");
+            return false;
+        }
+    }
+
     public Task<Voice[]> GetVoices(string language)
     {
         var result = new List<Voice>();

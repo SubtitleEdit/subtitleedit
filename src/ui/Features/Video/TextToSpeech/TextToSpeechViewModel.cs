@@ -1018,6 +1018,38 @@ public partial class TextToSpeechViewModel : ObservableObject
             return true;
         }
 
+        if (engine is Qwen3TtsCrispAsr)
+        {
+            // Runtime first: the same crispasr.exe that Speech-to-text / Chatterbox use.
+            if (!await TtsVoiceInstaller.EnsureCrispAsrForQwen3(Window, _windowService, forceRedownload: false))
+            {
+                return false;
+            }
+
+            var crispAsrModelKey = Qwen3TtsCrispAsr.ResolveModelKey(SelectedModel);
+            if (!Qwen3TtsCrispAsr.AreModelsInstalled(crispAsrModelKey))
+            {
+                // Both keys ship the same ~358 MB 12 Hz codec; the talker is ~2 GB regardless.
+                const string sizeText = "~2.4 GB";
+                var answer = await MessageBox.Show(
+                    Window,
+                    "Download Qwen3 TTS (CrispASR) models?",
+                    $"{Environment.NewLine}\"Qwen3 TTS (CrispASR)\" ({crispAsrModelKey}) requires models ({sizeText}).{Environment.NewLine}{Environment.NewLine}Download models?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadQwen3TtsCrispAsrModels(crispAsrModelKey));
+                return dlResult.OkPressed && Qwen3TtsCrispAsr.AreModelsInstalled(crispAsrModelKey);
+            }
+
+            return true;
+        }
+
         if (engine is KokoroTtsCpp)
         {
             if (!await engine.IsInstalled(SelectedRegion))

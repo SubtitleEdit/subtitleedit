@@ -235,6 +235,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClient<ILlamaCppDownloadService, LlamaCppDownloadService>();
         collection.AddHttpClient<IQwen3AsrCppDownloadService, Qwen3AsrCppDownloadService>();
         collection.AddHttpClient<IQwen3TtsCppDownloadService, Qwen3TtsCppDownloadService>();
+        collection.AddHttpClient<IQwen3TtsCrispAsrDownloadService, Qwen3TtsCrispAsrDownloadService>();
         collection.AddHttpClient<IKokoroTtsCppDownloadService, KokoroTtsCppDownloadService>();
         collection.AddHttpClient<IChatterboxTtsCppDownloadService, ChatterboxTtsCppDownloadService>();
         collection.AddHttpClient<IOmniVoiceDownloadService, OmniVoiceDownloadService>();
