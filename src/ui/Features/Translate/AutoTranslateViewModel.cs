@@ -1249,6 +1249,10 @@ public partial class AutoTranslateViewModel : ObservableObject
             }
 
         }
+        catch (OperationCanceledException) when (_abort)
+        {
+            // User pressed Cancel — let the finally block report it; do not surface as an error.
+        }
         catch (Exception ex)
         {
             _ = Dispatcher.UIThread.Invoke(async () =>
