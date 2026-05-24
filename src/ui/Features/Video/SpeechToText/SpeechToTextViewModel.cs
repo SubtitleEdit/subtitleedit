@@ -2998,7 +2998,9 @@ public partial class SpeechToTextViewModel : ObservableObject
             }
 
             var vadPart = string.Empty;
-            if (crispAsrEngine is CrispAsrCohere
+            // Mega-ASR (crispasr 0.6.10) silently writes a zero-byte SRT unless VAD chunking
+            // is enabled — the transcription log says it succeeded but no segments are emitted.
+            if (crispAsrEngine is CrispAsrCohere or CrispAsrMega
                 && !Regex.IsMatch(crispArgs ?? string.Empty, @"(^|\s)(--vad|-vm|--vad-model)\b"))
             {
                 var crispFolder = crispAsrEngine.GetAndCreateWhisperFolder();
