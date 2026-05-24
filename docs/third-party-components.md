@@ -38,7 +38,7 @@ Subtitle Edit stores these components in its **Data Folder**.
 | **Qwen3 ASR CPP** | `qwen3-asr-cli.exe`, `models/` folder | `[Data Folder]/Qwen3ASR` |
 | **Parakeet.cpp** | `parakeet.exe`, model folders | `[Data Folder]/parakeet.cpp` |
 | **PaddleOCR** | `paddleocr.exe`, `models/` folder | `[Data Folder]/OCR/PaddleOCR3-1` |
-| **Qwen3 TTS (CrispASR)** | shares `crispasr.exe` from `[Data Folder]/CrispASR`; `models/`, `voices/` | `[Data Folder]/TextToSpeech/Qwen3TtsCrispAsr` |
+| **Qwen3 TTS (CrispASR)** | shares `crispasr.exe` + `models/` from `[Data Folder]/CrispASR`; reference voices in `voices/` | `[Data Folder]/TextToSpeech/Qwen3TtsCrispAsr` (voices only) |
 | **Chatterbox TTS (CrispASR)** | shares `crispasr.exe` + `models/` from `[Data Folder]/CrispASR`; reference voices in `voices/` | `[Data Folder]/TextToSpeech/Chatterbox` (voices only) |
 | **OmniVoice TTS** | `omnivoice-tts.exe`, `omnivoice-codec.exe`, `models/`, `voices/` | `[Data Folder]/TextToSpeech/OmniVoice` |
 | **Kokoro TTS** | `kokoro-tts-server.exe`, `models/` | `[Data Folder]/TextToSpeech/KokoroTtsCpp` |
@@ -123,8 +123,8 @@ Used for OCR of image-based subtitles.
 ### Local Text-to-Speech Engines
 Subtitle Edit 5 can download local TTS servers and models from the **Text to speech** window.
 
-*   **Qwen3 TTS (CrispASR):** Stored in `[Data Folder]/TextToSpeech/Qwen3TtsCrispAsr`. Runs through the shared CrispASR runtime (`[Data Folder]/CrispASR/crispasr.exe`) rather than a dedicated server, so installing Crisp ASR first is recommended. Models (VoiceDesign 1.7B or CustomVoice 1.7B) go into the `models` folder; reference voices go into the `voices` folder.
-*   **Chatterbox TTS (CrispASR):** Reference voices are stored in `[Data Folder]/TextToSpeech/Chatterbox/voices`. The Base / Turbo model GGUFs (T3 + S3Gen) are downloaded into the shared `[Data Folder]/CrispASR/models` cache alongside the Crisp ASR speech-to-text models, not under `TextToSpeech/Chatterbox/models` — installing Crisp ASR first is therefore recommended. Older installs that still have model files under the legacy `TextToSpeech/Chatterbox/models` folder are migrated automatically on first launch.
+*   **Qwen3 TTS (CrispASR):** Reference voices are stored in `[Data Folder]/TextToSpeech/Qwen3TtsCrispAsr/voices`. The talker GGUFs (VoiceDesign 1.7B or CustomVoice 1.7B) and the 12 Hz codec are downloaded into the shared `[Data Folder]/CrispASR/models` cache alongside the Crisp ASR speech-to-text models, not under `TextToSpeech/Qwen3TtsCrispAsr/models` — installing Crisp ASR first is therefore recommended. Older installs that still have model files under the legacy `TextToSpeech/Qwen3TtsCrispAsr/models` folder are migrated automatically the first time the engine is used.
+*   **Chatterbox TTS (CrispASR):** Reference voices are stored in `[Data Folder]/TextToSpeech/Chatterbox/voices`. The Base / Turbo model GGUFs (T3 + S3Gen) are downloaded into the shared `[Data Folder]/CrispASR/models` cache alongside the Crisp ASR speech-to-text models, not under `TextToSpeech/Chatterbox/models` — installing Crisp ASR first is therefore recommended. Older installs that still have model files under the legacy `TextToSpeech/Chatterbox/models` folder are migrated automatically the first time the engine is used.
 *   **OmniVoice TTS:** Stored in `[Data Folder]/TextToSpeech/OmniVoice`. Brings its own `omnivoice-tts` and `omnivoice-codec` binaries. Supports 646 languages and voice cloning on CPU. `models/` and `voices/` subfolders.
 *   **Kokoro TTS:** Stored in `[Data Folder]/TextToSpeech/KokoroTtsCpp`. Models go into the `models` folder.
 

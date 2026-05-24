@@ -151,13 +151,89 @@ public class Qwen3TtsCrispAsr : ITtsEngine
 
     public static string GetSetModelsFolder()
     {
-        var modelsFolder = Path.Combine(GetSetFolder(), "models");
+        // Qwen3 TTS (CrispASR) is driven by the CrispASR binary, so its GGUFs live
+        // alongside the CrispASR speech-to-text models in CrispASR/models/ rather
+        // than under TextToSpeech/Qwen3TtsCrispAsr/. The voices folder and synth
+        // output WAVs still live under TextToSpeech/Qwen3TtsCrispAsr/ since those
+        // are TTS-engine state, not models. Mirrors ChatterboxTtsCpp's layout.
+        var modelsFolder = Path.Combine(Se.CrispAsrFolder, "models");
         if (!Directory.Exists(modelsFolder))
         {
             Directory.CreateDirectory(modelsFolder);
         }
 
+        MigrateLegacyModels(modelsFolder);
+
         return modelsFolder;
+    }
+
+    private static bool _legacyModelsMigrationDone;
+
+    /// <summary>
+    /// One-time best-effort move of qwen3-tts-*.gguf files from the old
+    /// TextToSpeech/Qwen3TtsCrispAsr/models/ location into CrispASR/models/, so
+    /// users don't have to re-download up to ~5 GB after the layout change. Safe
+    /// to call repeatedly; bails out after the first call per process. Mirrors
+    /// <see cref="ChatterboxTtsCpp"/>'s MigrateLegacyModels.
+    /// </summary>
+    private static void MigrateLegacyModels(string modelsFolder)
+    {
+        if (_legacyModelsMigrationDone)
+        {
+            return;
+        }
+        _legacyModelsMigrationDone = true;
+
+        var legacyFolder = Path.Combine(Se.TextToSpeechFolder, "Qwen3TtsCrispAsr", "models");
+        if (!Directory.Exists(legacyFolder))
+        {
+            return;
+        }
+
+        var fileNames = new[]
+        {
+            VoiceDesignTalkerFileName,
+            CustomVoiceTalkerFileName,
+            CodecFileName,
+        };
+
+        try
+        {
+            foreach (var fileName in fileNames)
+            {
+                var src = Path.Combine(legacyFolder, fileName);
+                if (!File.Exists(src))
+                {
+                    continue;
+                }
+
+                var dest = Path.Combine(modelsFolder, fileName);
+                try
+                {
+                    if (File.Exists(dest))
+                    {
+                        File.Delete(src);
+                    }
+                    else
+                    {
+                        File.Move(src, dest);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Se.LogError(ex, $"Qwen3 TTS (CrispASR): failed to migrate legacy model '{src}' to '{dest}'");
+                }
+            }
+
+            if (Directory.GetFileSystemEntries(legacyFolder).Length == 0)
+            {
+                Directory.Delete(legacyFolder);
+            }
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "Qwen3 TTS (CrispASR): legacy models migration failed");
+        }
     }
 
     public static string GetSetVoicesFolder()
