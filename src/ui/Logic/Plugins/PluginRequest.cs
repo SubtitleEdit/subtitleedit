@@ -35,6 +35,9 @@ public class PluginRequest
     /// <summary>Current theme, e.g. "Dark" or "Light".</summary>
     public string Theme { get; set; } = string.Empty;
 
+    /// <summary>Colors of the active theme so the plugin's own UI can match.</summary>
+    public PluginThemeColors? ThemeColors { get; set; }
+
     public string SeVersion { get; set; } = string.Empty;
 
     /// <summary>The plugin's own settings as last persisted by Subtitle Edit (null on first run).</summary>
