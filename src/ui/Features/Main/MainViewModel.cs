@@ -4612,6 +4612,12 @@ public partial class MainViewModel :
             }
         }
 
+        int? settingsVersion = null;
+        if (Se.Settings.Plugins.SettingsVersions.TryGetValue(plugin.Manifest.Name, out var storedVersion))
+        {
+            settingsVersion = storedVersion;
+        }
+
         return new PluginRequest
         {
             Subtitle = new PluginSubtitle
@@ -4624,11 +4630,15 @@ public partial class MainViewModel :
             SelectedIndices = selectedIndices,
             VideoFileName = _videoFileName ?? string.Empty,
             FrameRate = frameRate,
+            VideoDurationSeconds = _mediaInfo?.Duration?.TotalSeconds,
+            VideoWidth = _mediaInfo?.Dimension.Width,
+            VideoHeight = _mediaInfo?.Dimension.Height,
             UiLanguage = Se.Settings.General.Language ?? string.Empty,
             Theme = UiTheme.ThemeName,
             ThemeColors = PluginThemeColorsFactory.Build(),
             SeVersion = Se.Version,
             Settings = settings,
+            SettingsVersion = settingsVersion,
         };
     }
 
@@ -4666,6 +4676,14 @@ public partial class MainViewModel :
         try
         {
             Se.Settings.Plugins.Settings[plugin.Manifest.Name] = response.Settings.Value.GetRawText();
+            if (response.SettingsVersion.HasValue)
+            {
+                Se.Settings.Plugins.SettingsVersions[plugin.Manifest.Name] = response.SettingsVersion.Value;
+            }
+            else
+            {
+                Se.Settings.Plugins.SettingsVersions.Remove(plugin.Manifest.Name);
+            }
             Se.SaveSettings();
         }
         catch (Exception exception)

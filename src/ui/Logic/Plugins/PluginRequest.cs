@@ -29,6 +29,15 @@ public class PluginRequest
 
     public double FrameRate { get; set; }
 
+    /// <summary>Total duration of the video in seconds. Null when no video is loaded.</summary>
+    public double? VideoDurationSeconds { get; set; }
+
+    /// <summary>Video frame width in pixels. Null when no video is loaded.</summary>
+    public int? VideoWidth { get; set; }
+
+    /// <summary>Video frame height in pixels. Null when no video is loaded.</summary>
+    public int? VideoHeight { get; set; }
+
     /// <summary>Current UI language name, e.g. "English".</summary>
     public string UiLanguage { get; set; } = string.Empty;
 
@@ -42,4 +51,12 @@ public class PluginRequest
 
     /// <summary>The plugin's own settings as last persisted by Subtitle Edit (null on first run).</summary>
     public JsonElement? Settings { get; set; }
+
+    /// <summary>
+    /// Schema version the plugin attached to <see cref="Settings"/> in its last response.
+    /// Null when the plugin has never persisted settings (or persisted them with no version).
+    /// The plugin owns the value; SE just round-trips it so the plugin can migrate or
+    /// reset stale settings when it changes its own schema.
+    /// </summary>
+    public int? SettingsVersion { get; set; }
 }

@@ -159,6 +159,9 @@ launched as `dotnet <entry> <requestFilePath>`.
   "selectedIndices": [3, 4, 5],
   "videoFileName": "C:\\videos\\episode01.mkv",
   "frameRate": 23.976,
+  "videoDurationSeconds": 1432.5,
+  "videoWidth": 1920,
+  "videoHeight": 1080,
   "uiLanguage": "English",
   "theme": "Dark",
   "themeColors": {
@@ -171,7 +174,8 @@ launched as `dotnet <entry> <requestFilePath>`.
     "bookmarkColor": "#FFFFD700"
   },
   "seVersion": "5.0.0",
-  "settings": { "lastUsedOption": true }
+  "settings": { "lastUsedOption": true },
+  "settingsVersion": 2
 }
 ```
 
@@ -181,6 +185,13 @@ launched as `dotnet <entry> <requestFilePath>`.
 - `selectedIndices` are zero-based line indices selected in the grid (empty if none).
 - `settings` is whatever JSON your plugin returned in its previous response;
   it is `null` on first run. Use it to persist plugin-private settings.
+- `settingsVersion` is the schema version your plugin attached to `settings` in
+  its previous response, handed back unchanged. Use it to migrate or reset old
+  settings when you change your own schema. Null on first run, and on older SE
+  versions that don't track it.
+- `videoDurationSeconds`, `videoWidth`, `videoHeight` describe the loaded video.
+  Null when no video is loaded (or on older SE versions). Saves you from
+  re-opening the video file just to read these.
 - `theme` and `uiLanguage` let your plugin's own UI match Subtitle Edit.
 - `themeColors` carries the active theme's colors as `#AARRGGBB` hex strings so
   your plugin's own UI can match Subtitle Edit. May be omitted in older SE
@@ -200,6 +211,7 @@ Write this file to `responseFilePath` before exiting with code `0`.
     "native": "1\n00:00:01,000 --> 00:00:03,000\nHELLO WORLD\n\n..."
   },
   "settings": { "lastUsedOption": true },
+  "settingsVersion": 2,
   "undoDescription": "Uppercase Selected Lines 1.0.0"
 }
 ```
@@ -215,6 +227,11 @@ Write this file to `responseFilePath` before exiting with code `0`.
 - If `subtitle.native` cannot be parsed, Subtitle Edit aborts with an error and
   makes no changes.
 - `settings` is stored by Subtitle Edit and handed back in the next request.
+- `settingsVersion` is stored alongside `settings` and handed back via
+  `request.settingsVersion` on the next run. Bump it whenever you change the
+  shape of `settings` so you can detect (and migrate or discard) stale data
+  written by an older build of your plugin. Optional; if you don't write it,
+  SE clears any previously-stored version for this plugin.
 - `undoDescription` is optional; it labels the undo-history entry.
 
 ## Notes for plugin authors
