@@ -24,6 +24,14 @@ public class PluginResponse
     /// <summary>Plugin settings to persist; handed back unchanged in the next request.</summary>
     public JsonElement? Settings { get; set; }
 
+    /// <summary>
+    /// Schema version for <see cref="Settings"/>. Stored verbatim by Subtitle Edit and
+    /// handed back in the next request via <see cref="PluginRequest.SettingsVersion"/>
+    /// so the plugin can migrate (or reset) stale settings when it changes its own
+    /// schema. Optional; null means "unversioned".
+    /// </summary>
+    public int? SettingsVersion { get; set; }
+
     /// <summary>Optional description used for the undo history entry.</summary>
     public string? UndoDescription { get; set; }
 }

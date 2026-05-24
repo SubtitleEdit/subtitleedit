@@ -257,6 +257,7 @@ public partial class PluginManagerViewModel : ObservableObject
 
         Se.Settings.Plugins.DisabledPluginNames.Remove(item.Name);
         Se.Settings.Plugins.Settings.Remove(item.Name);
+        Se.Settings.Plugins.SettingsVersions.Remove(item.Name);
         Se.SaveSettings();
 
         Plugins.Remove(item);
