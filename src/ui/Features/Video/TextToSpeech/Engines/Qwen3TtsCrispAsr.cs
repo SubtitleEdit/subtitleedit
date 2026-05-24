@@ -221,13 +221,18 @@ public class Qwen3TtsCrispAsr : ITtsEngine
                 }
                 catch (Exception ex)
                 {
-                    Se.LogError(ex, $"Qwen3 TTS (CrispASR): legacy model migration failed for {fileName}");
+                    Se.LogError(ex, $"Qwen3 TTS (CrispASR): failed to migrate legacy model '{src}' to '{dest}'");
                 }
+            }
+
+            if (Directory.GetFileSystemEntries(legacyFolder).Length == 0)
+            {
+                Directory.Delete(legacyFolder);
             }
         }
         catch (Exception ex)
         {
-            Se.LogError(ex, "Qwen3 TTS (CrispASR): legacy model migration enumeration failed");
+            Se.LogError(ex, "Qwen3 TTS (CrispASR): legacy models migration failed");
         }
     }
 
