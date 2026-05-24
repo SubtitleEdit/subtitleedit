@@ -34,11 +34,13 @@ Subtitle Edit stores these components in its **Data Folder**.
 | **Tesseract** | `tesseract.exe`, `tessdata/` folder | `[Data Folder]/Tesseract550` |
 | **Whisper CPP** | `whisper-cli.exe`, `Models/` folder | `[Data Folder]/SpeechToText/Cpp` |
 | **Purfview Faster-Whisper XXL** | `faster-whisper-xxl.exe`, `_models/` folder | `[Data Folder]/SpeechToText/Purfview-Faster-Whisper-XXL` |
-| **Crisp ASR** | `crispasr.exe`, `models/` folder | `[Data Folder]/SpeechToText/CrispASR` |
+| **Crisp ASR** | `crispasr.exe`, `models/` folder | `[Data Folder]/CrispASR` |
 | **Qwen3 ASR CPP** | `qwen3-asr-cli.exe`, `models/` folder | `[Data Folder]/Qwen3ASR` |
 | **Parakeet.cpp** | `parakeet.exe`, model folders | `[Data Folder]/parakeet.cpp` |
 | **PaddleOCR** | `paddleocr.exe`, `models/` folder | `[Data Folder]/OCR/PaddleOCR3-1` |
-| **Qwen3 TTS** | `qwen3-tts-server.exe`, `models/`, `voices/` | `[Data Folder]/TextToSpeech/Qwen3TtsCpp` |
+| **Qwen3 TTS (CrispASR)** | shares `crispasr.exe` from `[Data Folder]/CrispASR`; `models/`, `voices/` | `[Data Folder]/TextToSpeech/Qwen3TtsCrispAsr` |
+| **Chatterbox TTS (CrispASR)** | shares `crispasr.exe` from `[Data Folder]/CrispASR`; `models/`, `voices/` | `[Data Folder]/TextToSpeech/Chatterbox` |
+| **OmniVoice TTS** | `omnivoice-tts.exe`, `omnivoice-codec.exe`, `models/`, `voices/` | `[Data Folder]/TextToSpeech/OmniVoice` |
 | **Kokoro TTS** | `kokoro-tts-server.exe`, `models/` | `[Data Folder]/TextToSpeech/KokoroTtsCpp` |
 
 ---
@@ -105,7 +107,7 @@ Used for GPU-accelerated AI-based speech recognition.
 ### SE5 Speech-to-Text Engines
 Subtitle Edit 5 can download additional ASR engines directly from the **Speech to text** window.
 
-*   **Crisp ASR:** Stored in `[Data Folder]/SpeechToText/CrispASR`. Models go into its `models` folder. Crisp ASR backends include Parakeet, Canary, Cohere, Fire Red, GLM, Granite, Qwen3, Mega, Omni, and Kyutai.
+*   **Crisp ASR:** Stored in `[Data Folder]/CrispASR`. Models go into its `models` folder. Crisp ASR backends include Parakeet, Canary, Cohere, Fire Red, GLM, Granite, Qwen3, Mega, Omni, and Kyutai.
 *   **Qwen3 ASR CPP:** Stored in `[Data Folder]/Qwen3ASR`. Models go into `[Data Folder]/Qwen3ASR/models`.
 *   **Parakeet.cpp:** Stored in `[Data Folder]/parakeet.cpp`. Each model has its own folder because the model weights and `vocab.txt` must stay together.
 
@@ -121,7 +123,9 @@ Used for OCR of image-based subtitles.
 ### Local Text-to-Speech Engines
 Subtitle Edit 5 can download local TTS servers and models from the **Text to speech** window.
 
-*   **Qwen3 TTS:** Stored in `[Data Folder]/TextToSpeech/Qwen3TtsCpp`. Models go into the `models` folder; imported reference voices go into the `voices` folder.
+*   **Qwen3 TTS (CrispASR):** Stored in `[Data Folder]/TextToSpeech/Qwen3TtsCrispAsr`. Runs through the shared CrispASR runtime (`[Data Folder]/CrispASR/crispasr.exe`) rather than a dedicated server, so installing Crisp ASR first is recommended. Models (VoiceDesign 1.7B or CustomVoice 1.7B) go into the `models` folder; reference voices go into the `voices` folder.
+*   **Chatterbox TTS (CrispASR):** Stored in `[Data Folder]/TextToSpeech/Chatterbox`. Also runs through the shared CrispASR runtime. Base or Turbo model plus voice-cloning samples; `models/` and `voices/` subfolders.
+*   **OmniVoice TTS:** Stored in `[Data Folder]/TextToSpeech/OmniVoice`. Brings its own `omnivoice-tts` and `omnivoice-codec` binaries. Supports 646 languages and voice cloning on CPU. `models/` and `voices/` subfolders.
 *   **Kokoro TTS:** Stored in `[Data Folder]/TextToSpeech/KokoroTtsCpp`. Models go into the `models` folder.
 
 Use [Text to Speech](features/text-to-speech.md) for engine-specific options.
@@ -181,7 +185,7 @@ Used for GPU-accelerated AI-based speech recognition.
 
 ### SE5 Speech-to-Text, OCR, and TTS Engines
 
-The same data-folder layout is used on Linux. Prefer the in-app downloaders for Crisp ASR, Qwen3 ASR, Parakeet.cpp, PaddleOCR, Qwen3 TTS, and Kokoro TTS because the required files differ by build and model.
+The same data-folder layout is used on Linux. Prefer the in-app downloaders for Crisp ASR, Qwen3 ASR, Parakeet.cpp, PaddleOCR, Qwen3 TTS (CrispASR), Chatterbox TTS (CrispASR), OmniVoice TTS, and Kokoro TTS because the required files differ by build and model.
 
 ---
 
