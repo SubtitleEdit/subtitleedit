@@ -81,6 +81,11 @@ public class PluginManagerWindow : Window
             .WithHorizontalAlignmentStretch()
             .WithMinWidth(180);
 
+        // Left-align icon+text inside the stretched buttons so the icons line up vertically.
+        buttonGetPlugins.HorizontalContentAlignment = HorizontalAlignment.Left;
+        buttonOpenFolder.HorizontalContentAlignment = HorizontalAlignment.Left;
+        buttonRemove.HorizontalContentAlignment = HorizontalAlignment.Left;
+
         var sidePanel = new StackPanel
         {
             Orientation = Orientation.Vertical,
