@@ -108,8 +108,7 @@ Used for GPU-accelerated AI-based speech recognition.
 Subtitle Edit 5 can download additional ASR engines directly from the **Speech to text** window.
 
 *   **Crisp ASR:** Stored in `[Data Folder]/CrispASR`. Models go into its `models` folder. Crisp ASR backends include Parakeet, Canary, Cohere, Fire Red, GLM, Granite, Qwen3, Mega, Omni, and Kyutai.
-    *   The speech-to-text dialog also offers a **Forced aligner** combo for word-level timestamps. Built-in (where the backend supports it), Canary CTC, Qwen3, and 12 language-specific wav2vec2 aligners (the WhisperX aligner zoo): `en`, `de`, `fr`, `es`, `it`, `ja`, `zh`, `nl`, `pt`, `ar`, `uk`, `cs`.
-    *   When you pick an ASR language and haven't explicitly chosen an aligner, the wav2vec2 aligner matching that language is suggested automatically. Explicit picks — including the built-in aligner — are preserved across language changes.
+    *   The speech-to-text dialog also offers a **Forced aligner** combo for word-level timestamps. Built-in (where the backend supports it), Canary CTC, Qwen3, and 12 language-specific wav2vec2 aligners (the WhisperX aligner zoo): `en`, `de`, `fr`, `es`, `it`, `ja`, `zh`, `nl`, `pt`, `ar`, `uk`, `cs`. The default is the built-in aligner when the backend supports it, otherwise Qwen3 or Canary CTC depending on the backend; pick a wav2vec2 entry manually to use one of those.
 *   **Qwen3 ASR CPP:** Stored in `[Data Folder]/Qwen3ASR`. Models go into `[Data Folder]/Qwen3ASR/models`.
 *   **Parakeet.cpp:** Stored in `[Data Folder]/parakeet.cpp`. Each model has its own folder because the model weights and `vocab.txt` must stay together.
 
