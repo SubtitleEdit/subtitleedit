@@ -18,9 +18,24 @@ public partial class PluginDisplayItem : ObservableObject
     public string FolderPath => Plugin.FolderPath;
     public bool CanRun => Plugin.CanRun;
 
+    /// <summary>Catalog entry providing a newer version, or null when up to date / no catalog match.</summary>
+    public PluginIndexEntry? AvailableUpdate { get; private set; }
+
+    public bool UpdateAvailable => AvailableUpdate != null;
+
     public string StatusText => !Plugin.CanRun
         ? Se.Language.Plugins.NotSupportedOnThisOs
-        : IsEnabled ? Se.Language.Plugins.Enabled : Se.Language.Plugins.Disabled;
+        : UpdateAvailable
+            ? string.Format(Se.Language.Plugins.UpdateAvailableXToY, Version, AvailableUpdate!.Version)
+            : IsEnabled ? Se.Language.Plugins.Enabled : Se.Language.Plugins.Disabled;
+
+    public void SetAvailableUpdate(PluginIndexEntry? entry)
+    {
+        AvailableUpdate = entry;
+        OnPropertyChanged(nameof(AvailableUpdate));
+        OnPropertyChanged(nameof(UpdateAvailable));
+        OnPropertyChanged(nameof(StatusText));
+    }
 
     /// <summary>Raised when the user toggles the enabled checkbox.</summary>
     public Action<PluginDisplayItem>? EnabledChanged { get; set; }

@@ -6,6 +6,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Options.Plugins;
 
@@ -80,11 +81,23 @@ public class PluginManagerWindow : Window
             .WithIconLeft(IconNames.Trash)
             .WithHorizontalAlignmentStretch()
             .WithMinWidth(180);
+        var buttonUpdateAll = UiUtil.MakeButton(string.Empty, vm.UpdateAllCommand)
+            .WithIconLeft(IconNames.Refresh)
+            .WithHorizontalAlignmentStretch()
+            .WithMinWidth(180);
+        // Replace the empty placeholder text with a bound TextBlock inside the icon+text panel.
+        if (buttonUpdateAll.Content is StackPanel stack && stack.Children.OfType<TextBlock>().FirstOrDefault() is { } labelTb)
+        {
+            labelTb.Bind(TextBlock.TextProperty, new Binding(nameof(vm.UpdateAllButtonText)));
+        }
+        buttonUpdateAll.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.HasUpdates)));
+        buttonUpdateAll.Bind(IsEnabledProperty, new Binding(nameof(vm.CanUpdateAll)));
 
         // Left-align icon+text inside the stretched buttons so the icons line up vertically.
         buttonGetPlugins.HorizontalContentAlignment = HorizontalAlignment.Left;
         buttonOpenFolder.HorizontalContentAlignment = HorizontalAlignment.Left;
         buttonRemove.HorizontalContentAlignment = HorizontalAlignment.Left;
+        buttonUpdateAll.HorizontalContentAlignment = HorizontalAlignment.Left;
 
         var sidePanel = new StackPanel
         {
@@ -92,7 +105,7 @@ public class PluginManagerWindow : Window
             Spacing = 5,
             Margin = new Thickness(10, 0, 0, 0),
             VerticalAlignment = VerticalAlignment.Top,
-            Children = { buttonGetPlugins, buttonOpenFolder, buttonRemove },
+            Children = { buttonGetPlugins, buttonOpenFolder, buttonRemove, buttonUpdateAll },
         };
 
         var contentGrid = new Grid

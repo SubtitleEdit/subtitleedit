@@ -33,6 +33,8 @@ public class LanguagePlugins
     public string ApplyPluginToWhichLinesX { get; set; }
     public string ApplyToSelectedLinesX { get; set; }
     public string ApplyToAllLinesX { get; set; }
+    public string UpdateAllXAvailable { get; set; }
+    public string UpdatingXOfY { get; set; }
 
     public LanguagePlugins()
     {
@@ -67,5 +69,7 @@ public class LanguagePlugins
         ApplyPluginToWhichLinesX = "Apply '{0}' to:";
         ApplyToSelectedLinesX = "Selected lines ({0})";
         ApplyToAllLinesX = "All lines ({0})";
+        UpdateAllXAvailable = "Update all ({0})";
+        UpdatingXOfY = "Updating {0}/{1}...";
     }
 }
