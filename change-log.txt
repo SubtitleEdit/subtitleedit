@@ -1,6 +1,28 @@
 
 Subtitle Edit Changelog
 
+v5.0.0-beta31 (xth May 2026)
+
+* Add Crisp ASR "Mega" backend (Qwen3-ASR-1.7B + robustness LoRA) for noisy / degraded speech
+* Add WhisperX-style wav2vec2 forced-aligner zoo to the Speech-to-text dialog (12 language-specific CTC aligners)
+* Add scrub video position by mouse wheel over the video surface
+* Add OCR fallback database picker to the OCR window
+* Add waveform Seek Silence back/forward shortcuts
+* Update CrispASR to v0.6.10 - required for the new Mega backend
+* Manage Qwen3 TTS (CrispASR) model downloads in SE
+* Reload settings-page action labels and shortcut display names after a UI language change
+* Make OpenAI-compatible STT 'stream' opt-in (default off)
+* Update Korean translation - thx 12si27
+* Update Russian translation - thx jekovcar
+* Update Bulgarian translation - thx jekovcar
+* Update Polish translation - thx potplayer-fanpack
+* Race-proof the auto-translate cancel guard and suppress the cancel-error dialog
+* Tighten Re-encode video window progress layout
+* Fix freeze on Settings OK after toggling "Show stop/fullscreen button" - thx bichitoxxx
+* Fix invisible status dots in Qwen3 TTS (CrispASR) settings
+* Fix Save As dropping extension after a language suffix
+
+-----------------------------------------------------------------------------------------------------
 
 v5.0.0-beta30 (22th May 2026)
 
