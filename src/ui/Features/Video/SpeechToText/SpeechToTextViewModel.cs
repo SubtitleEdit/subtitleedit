@@ -354,6 +354,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
         newOptions.Add(ForcedAlignerOption.CanaryCtc());
         newOptions.Add(ForcedAlignerOption.Qwen3());
+        // wav2vec2 "WhisperX aligner zoo" — 12 language-specific CTC aligners
+        // that work on top of any Crisp ASR backend via `-am <path>`.
+        newOptions.AddRange(ForcedAlignerOption.Wav2Vec2All());
 
         foreach (var opt in newOptions)
         {
@@ -381,6 +384,47 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             SelectedForcedAligner = match;
         }
+
+        // After resetting the default, try to upgrade BuiltIn → matching
+        // wav2vec2 aligner when the selected ASR language has one.
+        AutoSuggestWav2Vec2Aligner(SelectedLanguage);
+    }
+
+    /// <summary>
+    /// When the user picks an ASR language and the current forced aligner is
+    /// the built-in one (i.e. no explicit user pick yet), switch to the
+    /// matching wav2vec2 aligner if CrispASR ships one for that language.
+    /// No-op for explicit non-builtin picks so a deliberate Canary/Qwen3
+    /// choice survives a language change.
+    /// </summary>
+    private void AutoSuggestWav2Vec2Aligner(WhisperLanguage? language)
+    {
+        if (language == null)
+        {
+            return;
+        }
+
+        if (SelectedForcedAligner != null && !SelectedForcedAligner.IsBuiltIn)
+        {
+            return;
+        }
+
+        var choice = ForcedAlignerOption.Wav2Vec2ChoiceForLanguage(language.Code);
+        if (choice == null)
+        {
+            return;
+        }
+
+        var match = ForcedAligners.FirstOrDefault(p => p.Choice == choice);
+        if (match != null && !ReferenceEquals(SelectedForcedAligner, match))
+        {
+            SelectedForcedAligner = match;
+        }
+    }
+
+    partial void OnSelectedLanguageChanged(WhisperLanguage? value)
+    {
+        AutoSuggestWav2Vec2Aligner(value);
     }
 
     private static string BuildAlignerDisplay(ForcedAlignerOption option, ICrispAsrEngine? crispEngine)
