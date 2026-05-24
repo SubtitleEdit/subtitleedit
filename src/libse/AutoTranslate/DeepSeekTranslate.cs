@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 Configuration.Settings.Tools.DeepSeekPrompt = new ToolsSettings().DeepSeekPrompt;
             }
             var prompt = string.Format(Configuration.Settings.Tools.DeepSeekPrompt, sourceLanguageCode, targetLanguageCode);
-            var input = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+            var input = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
 
             int[] retryDelays = { 2555, 5007, 9013 };
             HttpResponseMessage result = null;
