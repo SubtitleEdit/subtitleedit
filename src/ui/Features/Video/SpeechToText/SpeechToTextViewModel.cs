@@ -1056,7 +1056,12 @@ public partial class SpeechToTextViewModel : ObservableObject
             else
             {
                 var response = await service.TranscribeAsync(audioFileName, language, null, segmentProgress, cancellationToken);
-                IngestTranscriptionResponse(response, subtitle, audioFileName, offsetSeconds: 0.0, paragraphsBeforeResponse: 0);
+                IngestTranscriptionResponse(
+                    response,
+                    subtitle,
+                    offsetSeconds: 0.0,
+                    chunkEndSeconds: _videoInfo.TotalSeconds,
+                    paragraphsBeforeResponse: 0);
             }
 
             ProgressValue = 90;
@@ -1146,13 +1151,16 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// (paragraph count grew while we were waiting), do nothing — that's the
     /// common case. Otherwise fall back to whatever the non-streaming
     /// response gave us, with absolute timestamps obtained by adding the
-    /// slice's offset into the source audio.
+    /// slice's offset into the source audio. <paramref name="chunkEndSeconds"/>
+    /// is the absolute end time of this slice and is used to span the
+    /// text-only fallback paragraph across the chunk's duration; otherwise
+    /// chunks after the first would get zero-duration paragraphs.
     /// </summary>
     private static void IngestTranscriptionResponse(
         OpenAiCompatibleSttResponse response,
         Subtitle subtitle,
-        string audioFileName,
         double offsetSeconds,
+        double chunkEndSeconds,
         int paragraphsBeforeResponse)
     {
         lock (subtitle.Paragraphs)
@@ -1180,11 +1188,13 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             if (!string.IsNullOrEmpty(response.Text))
             {
-                // No segment timings — drop the whole text at the chunk's start.
-                // For the single-file path we preserve the historical 5 s end
-                // time so the paragraph isn't a zero-width point.
+                // No segment timings — span the whole slice. Falling back to a
+                // historical 5 s window only when we genuinely don't know the
+                // end (callers without a populated _videoInfo).
                 var startMs = offsetSeconds * 1000.0;
-                var endMs = startMs + (offsetSeconds == 0.0 && new FileInfo(audioFileName).Length > 0 ? 5000.0 : 0.0);
+                var endMs = chunkEndSeconds > offsetSeconds
+                    ? chunkEndSeconds * 1000.0
+                    : startMs + 5000.0;
                 subtitle.Paragraphs.Add(new Paragraph(response.Text.Trim(), startMs, endMs));
             }
         }
@@ -1269,7 +1279,12 @@ public partial class SpeechToTextViewModel : ObservableObject
             var chunkResponse = await service.TranscribeAsync(
                 chunkPath, language, null, offsettingProgress, cancellationToken);
 
-            IngestTranscriptionResponse(chunkResponse, subtitle, chunkPath, offsetSeconds, paragraphsBeforeChunk);
+            IngestTranscriptionResponse(
+                chunkResponse,
+                subtitle,
+                offsetSeconds,
+                chunkEndSeconds: boundary.EndSeconds,
+                paragraphsBeforeChunk);
         }
     }
 

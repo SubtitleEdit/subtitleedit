@@ -66,9 +66,11 @@ public static class OpenAiSttChunker
     /// <summary>
     /// Split totalSeconds into chunkCount approximately equal windows, then
     /// snap each internal boundary to the midpoint of the nearest unused
-    /// silence interval within ±maxOffsetSeconds of its target time. Cuts
-    /// stay strictly increasing — if snapping would push a cut back behind
-    /// the previous one, the original even-time target is used instead.
+    /// silence interval within ±maxOffsetSeconds of its target time
+    /// (inclusive at the edge). Cuts stay strictly increasing — if snapping
+    /// (or the even-time target itself) would land at or behind the previous
+    /// cut, the cut is placed at <c>lastCut + (totalSeconds - lastCut) /
+    /// remaining</c> so the remaining chunks spread evenly over what's left.
     /// </summary>
     public static IReadOnlyList<ChunkBoundary> ComputeAdjustedBoundaries(
         double totalSeconds,
@@ -108,7 +110,7 @@ public static class OpenAiSttChunker
         {
             var target = totalSeconds * (i + 1) / chunkCount;
             var bestCut = target;
-            var bestOffset = maxOffsetSeconds;
+            var bestOffset = double.PositiveInfinity;
             var bestIdx = -1;
 
             // Skip silences we've already used or that fall before the
@@ -128,6 +130,13 @@ public static class OpenAiSttChunker
                 }
 
                 var offset = Math.Abs(mp - target);
+                if (offset > maxOffsetSeconds)
+                {
+                    // Inside the sorted-scan upper bound but outside the
+                    // window on the low side — ignore.
+                    continue;
+                }
+
                 if (offset < bestOffset)
                 {
                     bestOffset = offset;

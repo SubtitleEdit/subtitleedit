@@ -69,6 +69,19 @@ public class OpenAiSttChunkerTests
     }
 
     [Fact]
+    public void ComputeAdjustedBoundaries_SilenceExactlyAtWindowEdge_StillSnaps()
+    {
+        // The docstring promises "within ±maxOffsetSeconds" (inclusive).
+        // Silence midpoint sits exactly 10 s (the default window) from the
+        // target of 60 — must snap, not be silently dropped.
+        var silences = new[] { new SilenceInterval(69.0, 71.0) }; // midpoint 70
+
+        var result = ComputeAdjustedBoundaries(120.0, 2, silences);
+
+        Assert.Equal(70.0, result[0].EndSeconds);
+    }
+
+    [Fact]
     public void ComputeAdjustedBoundaries_SilenceOutsideWindow_KeepsEvenTimeTarget()
     {
         // Only silence is at midpoint 80, target is 60, default window is
