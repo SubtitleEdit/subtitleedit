@@ -16,7 +16,7 @@ public interface ILlamaCppDownloadService
 
 public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadService
 {
-    private const string Version = "b9174";
+    private const string Version = "b9297";
     private const string BaseUrl = "https://github.com/ggml-org/llama.cpp/releases/download/" + Version + "/";
 
     public const string VariantCpu = "cpu";
@@ -59,6 +59,7 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
     public async Task DownloadCudaRuntime(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(httpClient, BaseUrl + "cudart-llama-bin-win-cuda-12.4-x64.zip", stream, progress, cancellationToken);
+        VerifyArchive(stream, DownloadHashManager.LlamaCpp.WindowsCudaRuntime, "CUDA runtime");
     }
 
     public async Task DownloadModel(string url, string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken)
