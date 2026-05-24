@@ -93,29 +93,6 @@ public class ForcedAlignerOption
         Wav2Vec2(Wav2Vec2CsChoice),
     };
 
-    /// <summary>
-    /// Returns the wav2vec2 aligner choice for the given ISO-639-1 language
-    /// code (e.g. "ja"), or null when no aligner is available for that
-    /// language. Used by the speech-to-text UI to auto-suggest a matching
-    /// aligner when the user picks an ASR language.
-    /// </summary>
-    public static string? Wav2Vec2ChoiceForLanguage(string? languageCode)
-    {
-        if (string.IsNullOrEmpty(languageCode))
-        {
-            return null;
-        }
-
-        // Normalise common variants. Upstream zh-cn maps to plain "zh".
-        var code = languageCode.ToLowerInvariant();
-        if (code.StartsWith("zh", StringComparison.Ordinal))
-        {
-            code = "zh";
-        }
-
-        return Wav2Vec2MetaByCode.TryGetValue(code, out var meta) ? meta.Choice : null;
-    }
-
     public static ForcedAlignerOption Wav2Vec2(string choice)
     {
         var code = ExtractLanguageCode(choice);
