@@ -165,6 +165,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6887,6 +6888,29 @@ public partial class MainViewModel :
         {
             var firstSelectedIndex = SubtitleGrid.SelectedIndex;
 
+            // Apply video-player visibility toggles directly on the existing
+            // VideoPlayerControl. StopIsVisible / FullScreenIsVisible are plain
+            // Avalonia styled properties, so writing to them updates the button
+            // bar in place — no new control, no new native HWND, no layout
+            // rebuild. The full ApplySettings path below only runs when
+            // *other* settings changed, which is what avoided #10815 in beta 26
+            // via the Dispatcher.Post defer but apparently still races the
+            // modal teardown on some Windows configurations (re-reported in
+            // beta 30, comment 4526345049 on the issue). Removing the trigger
+            // entirely for these toggles is more robust than tightening the
+            // defer priority.
+            var vp = GetVideoPlayerControl();
+            if (vp != null)
+            {
+                vp.StopIsVisible = Se.Settings.Video.ShowStopButton;
+                vp.FullScreenIsVisible = Se.Settings.Video.ShowFullscreenButton;
+            }
+
+            if (OnlyVideoPlayerVisibilityFlagsChanged(oldSettngsSerialized, newSettingsSerialized))
+            {
+                return;
+            }
+
             // Defer to a fresh dispatcher cycle: ApplySettings rebuilds the layout, which
             // destroys and recreates the video player control (a native Win32 HWND on Windows
             // with mpv-wid/VLC). Doing that inside the ShowDialog continuation races the modal
@@ -6896,6 +6920,54 @@ public partial class MainViewModel :
                 ApplySettings();
                 SelectAndScrollToRow(firstSelectedIndex);
             });
+        }
+    }
+
+    /// <summary>
+    /// True iff the two serialized <see cref="Se.Settings"/> snapshots differ
+    /// only in <c>Video.ShowStopButton</c> and/or <c>Video.ShowFullscreenButton</c>.
+    /// Callers use this to skip the heavyweight <see cref="ApplySettings"/>
+    /// path (which rebuilds the entire layout and recreates the video player's
+    /// native HWND) when the only changes are visibility flags that can be
+    /// applied in place on the existing <see cref="VideoPlayerControl"/>.
+    /// Conservative on parse failure: returns false so the caller still
+    /// performs the full rebuild.
+    /// </summary>
+    private static bool OnlyVideoPlayerVisibilityFlagsChanged(string oldJson, string newJson)
+    {
+        try
+        {
+            var oldNode = JsonNode.Parse(oldJson);
+            var newNode = JsonNode.Parse(newJson);
+            if (oldNode is null || newNode is null)
+            {
+                return false;
+            }
+
+            // Mask both flag fields to the same canonical value in both trees.
+            // If the trees are equal after masking, those flags were the only
+            // differences. The fields may legitimately be absent from a JSON
+            // snapshot (older settings file), in which case the masking is a
+            // no-op and the comparison is still correct.
+            MaskVideoVisibilityFlags(oldNode);
+            MaskVideoVisibilityFlags(newNode);
+
+            return string.Equals(oldNode.ToJsonString(), newNode.ToJsonString(), StringComparison.Ordinal);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static void MaskVideoVisibilityFlags(JsonNode root)
+    {
+        if (root is JsonObject rootObj
+            && rootObj.TryGetPropertyValue("Video", out var videoNode)
+            && videoNode is JsonObject videoObj)
+        {
+            videoObj["ShowStopButton"] = false;
+            videoObj["ShowFullscreenButton"] = false;
         }
     }
 
