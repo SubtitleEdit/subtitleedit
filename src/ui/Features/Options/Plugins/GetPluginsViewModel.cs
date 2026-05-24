@@ -110,6 +110,11 @@ public partial class GetPluginsViewModel : ObservableObject
             item.Refresh(match?.Manifest.Version);
             StatusMessage = string.Format(Se.Language.Plugins.PluginXInstalled, item.Name);
         }
+        catch (OperationCanceledException)
+        {
+            item.StatusText = previousStatus;
+            StatusMessage = Se.Language.General.Cancelled;
+        }
         catch (Exception exception)
         {
             Se.LogError(exception, "Failed to install plugin: " + item.Name);
@@ -120,6 +125,12 @@ public partial class GetPluginsViewModel : ObservableObject
         {
             item.IsBusy = false;
         }
+    }
+
+    [RelayCommand]
+    private void CancelDownload()
+    {
+        _cancellationTokenSource?.Cancel();
     }
 
     [RelayCommand]

@@ -68,9 +68,18 @@ public class PluginManagerWindow : Window
             };
         }, true);
 
-        var buttonGetPlugins = UiUtil.MakeButton(Se.Language.Plugins.GetPluginsOnline, vm.GetPluginsOnlineCommand).WithMinWidth(160);
-        var buttonOpenFolder = UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenPluginsFolderCommand).WithMinWidth(160);
-        var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemovePluginCommand).WithMinWidth(160);
+        var buttonGetPlugins = UiUtil.MakeButton(Se.Language.Plugins.GetPluginsOnline, vm.GetPluginsOnlineCommand)
+            .WithIconLeft(IconNames.CloudDownload)
+            .WithHorizontalAlignmentStretch()
+            .WithMinWidth(180);
+        var buttonOpenFolder = UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenPluginsFolderCommand)
+            .WithIconLeft(IconNames.FolderOpen)
+            .WithHorizontalAlignmentStretch()
+            .WithMinWidth(180);
+        var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemovePluginCommand)
+            .WithIconLeft(IconNames.Trash)
+            .WithHorizontalAlignmentStretch()
+            .WithMinWidth(180);
 
         var sidePanel = new StackPanel
         {

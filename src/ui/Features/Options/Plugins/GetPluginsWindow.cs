@@ -6,6 +6,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Options.Plugins;
 
@@ -117,16 +118,31 @@ public class GetPluginsWindow : Window
             installButton.Bind(Button.CommandParameterProperty, new Binding());
             installButton.Bind(IsEnabledProperty, new Binding(nameof(GetPluginsDisplayItem.CanInstall)));
 
+            var cancelButton = new Button
+            {
+                Content = new Icon { Value = IconNames.Close, FontSize = 16 },
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(4, 0, 0, 0),
+                Padding = new Thickness(6),
+                Background = null,
+                BorderBrush = null,
+                Command = vm.CancelDownloadCommand,
+                [ToolTip.TipProperty] = Se.Language.General.Cancel.Replace("_", string.Empty),
+            };
+            cancelButton.Bind(IsVisibleProperty, new Binding(nameof(GetPluginsDisplayItem.IsBusy)));
+
             var rowGrid = new Grid
             {
                 ColumnDefinitions =
                 {
                     new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                     new ColumnDefinition { Width = GridLength.Auto },
+                    new ColumnDefinition { Width = GridLength.Auto },
                 },
             };
             rowGrid.Add(textPanel, 0, 0);
             rowGrid.Add(installButton, 0, 1);
+            rowGrid.Add(cancelButton, 0, 2);
 
             // Thin separator at the bottom of each row.
             return new Border
