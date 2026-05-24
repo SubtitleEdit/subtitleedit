@@ -20,7 +20,8 @@ v5.0.0-beta31 (xth May 2026)
 * Tighten Re-encode video window progress layout
 * Fix freeze on Settings OK after toggling "Show stop/fullscreen button" - thx bichitoxxx
 * Fix invisible status dots in Qwen3 TTS (CrispASR) settings
-* Fix Save As dropping extension after a language suffix
+* Fix Save-As dropping extension after a language suffix
+* Update llama.cpp
 
 -----------------------------------------------------------------------------------------------------
 
