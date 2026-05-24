@@ -74,18 +74,6 @@ public class OpenAiSttService
         IProgress<OpenAiCompatibleSegment>? segmentProgress = null,
         CancellationToken cancellationToken = default)
     {
-        // The on-disk extension is the source of truth for the Content-Type we
-        // send. The settings.AudioFormat is just the *target* the caller asked
-        // ffmpeg to produce — but the WAV short-circuit in the ViewModel can
-        // bypass ffmpeg entirely and hand us a real .wav even when the user
-        // picked "mp3". Mismatched Content-Type/bytes gets rejected by OpenAI,
-        // so trust the file we actually got.
-        var extension = Path.GetExtension(audioFilePath).TrimStart('.');
-        if (!string.IsNullOrEmpty(extension))
-        {
-            _settings.AudioFormat = extension;
-        }
-
         using var fileStream = File.OpenRead(audioFilePath);
         return await TranscribeAsync(fileStream, Path.GetFileName(audioFilePath), language, progress, segmentProgress, cancellationToken);
     }
@@ -109,15 +97,17 @@ public class OpenAiSttService
 
         using var content = new MultipartFormDataContent();
 
-        // Add file. Content-Type must match the actual audio bytes so OpenAI's
-        // upload validator accepts the file (it allows mp3, mp4, mpeg, mpga,
-        // m4a, wav, and webm). Pick the MIME type and the upload filename
-        // extension from the configured AudioFormat — uploading webm-Opus with
-        // an "audio/wav" header is rejected.
+        // Content-Type, upload filename extension, and bytes must all agree —
+        // OpenAI rejects e.g. webm-Opus bytes sent as audio/wav. The on-disk
+        // extension is the source of truth: the ViewModel's 16 kHz WAV short-
+        // circuit can hand us a real .wav even when the user picked "mp3" in
+        // settings. Fall back to the configured AudioFormat only when the
+        // file's extension isn't one we recognise, and never mutate _settings.
+        var effectiveFormat = ResolveEffectiveFormat(fileName);
+        var uploadFileName = NormalizeUploadFileName(fileName, effectiveFormat);
         var fileContent = new StreamContent(audioStream);
-        var mediaType = GetMediaTypeForFormat(_settings.AudioFormat);
-        fileContent.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
-        content.Add(fileContent, "file", fileName);
+        fileContent.Headers.ContentType = new MediaTypeHeaderValue(GetMediaTypeForFormat(effectiveFormat));
+        content.Add(fileContent, "file", uploadFileName);
 
         // Add model
         if (!string.IsNullOrEmpty(_settings.Model))
@@ -484,6 +474,40 @@ public class OpenAiSttService
         }
 
         return format.Trim().ToLowerInvariant();
+    }
+
+    /// <summary>
+    /// Pick the format we will actually report to the server. Prefer the
+    /// extension of the file we are about to upload (the bytes don't lie); if
+    /// that extension isn't one we have a MIME mapping for, fall back to the
+    /// configured AudioFormat. Never mutates _settings.
+    /// </summary>
+    private string ResolveEffectiveFormat(string fileName)
+    {
+        var ext = Path.GetExtension(fileName).TrimStart('.').ToLowerInvariant();
+        return ext switch
+        {
+            "mp3" or "m4a" or "webm" or "wav" => ext,
+            _ => NormalizeFormat(_settings.AudioFormat),
+        };
+    }
+
+    /// <summary>
+    /// Force the multipart "filename" to end in the effective format's
+    /// extension so the filename, Content-Type, and bytes all agree. Servers
+    /// that dispatch their decoder off the filename (instead of the Content-
+    /// Type header) need this to pick the right codec.
+    /// </summary>
+    private static string NormalizeUploadFileName(string fileName, string effectiveFormat)
+    {
+        var ext = GetFileExtensionForFormat(effectiveFormat);
+        var baseName = Path.GetFileNameWithoutExtension(fileName);
+        if (string.IsNullOrEmpty(baseName))
+        {
+            baseName = "audio";
+        }
+
+        return baseName + "." + ext;
     }
 
     private static bool IsSensitiveQueryParam(string name)

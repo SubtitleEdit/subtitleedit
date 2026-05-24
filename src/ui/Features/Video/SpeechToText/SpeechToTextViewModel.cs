@@ -125,7 +125,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private bool _incompleteModel;
     private bool _loadedFromStdOut;
     private string? _videoFileName;
-    private string _waveFileName = string.Empty;
+    private string _audioFileName = string.Empty;
     private int _audioTrackNumber;
     private readonly List<string> _filesToDelete = new();
     private readonly ConcurrentQueue<string> _outputText = new();
@@ -148,8 +148,8 @@ public partial class SpeechToTextViewModel : ObservableObject
     private readonly Regex _pctWhisperFaster = new(@"^\s*\d+%\s*\|", RegexOptions.Compiled);
     private readonly System.Timers.Timer _timerWhisper = new();
     private Process _whisperProcess = new();
-    private Process? _waveExtractProcess = new();
-    private readonly System.Timers.Timer _timerWaveExtract = new();
+    private Process? _audioExtractProcess = new();
+    private readonly System.Timers.Timer _timerAudioExtract = new();
     private Stopwatch _sw = new();
     private StringBuilder _ffmpegLog = new();
     private readonly Lock _lockObj = new();
@@ -250,8 +250,8 @@ public partial class SpeechToTextViewModel : ObservableObject
         _timerWhisper.Interval = 100;
         _timerWhisper.Elapsed += OnTimerWhisperOnElapsed;
 
-        _timerWaveExtract.Interval = 100;
-        _timerWaveExtract.Elapsed += OnTimerWaveExtractOnElapsed;
+        _timerAudioExtract.Interval = 100;
+        _timerAudioExtract.Elapsed += OnTimerAudioExtractOnElapsed;
     }
 
     private void LoadSettings()
@@ -667,7 +667,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                     hasError = true;
                 }
 
-                if (!hasError && GetResultFromSrt(_waveFileName, _videoFileName!, out var resultTexts, _outputText, _filesToDelete))
+                if (!hasError && GetResultFromSrt(_audioFileName, _videoFileName!, out var resultTexts, _outputText, _filesToDelete))
                 {
                     _loadedFromStdOut = false;
                     var subtitle = new Subtitle();
@@ -770,7 +770,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         _outputText.Clear();
 
         var exe = chatLlm.GetExecutable();
-        var chatLlmParams = $" -m \"{chatLlm.GetModelForCmdLine("qwen3-focedaligner-0.6b.bin")}\" --multimedia-file-tags {{{{ }}}} -p \"{{{{audio:{_waveFileName}}}}}{_chatLlmText}\"";
+        var chatLlmParams = $" -m \"{chatLlm.GetModelForCmdLine("qwen3-focedaligner-0.6b.bin")}\" --multimedia-file-tags {{{{ }}}} -p \"{{{{audio:{_audioFileName}}}}}{_chatLlmText}\"";
 
         var p = new Process
         {
@@ -1304,7 +1304,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 BatchGrid.ScrollIntoView(jobItem, null);
             });
 
-            var startGenerateWaveFileOk = GenerateWavFile(_videoFileName, _audioTrackNumber);
+            var startGenerateAudioFileOk = GenerateAudioFile(_videoFileName, _audioTrackNumber);
             return;
         }
 
@@ -1754,21 +1754,21 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
     }
 
-    private void OnTimerWaveExtractOnElapsed(object? sender, ElapsedEventArgs e)
+    private void OnTimerAudioExtractOnElapsed(object? sender, ElapsedEventArgs e)
     {
         lock (_lockObj)
         {
-            if (_waveExtractProcess == null)
+            if (_audioExtractProcess == null)
             {
                 return;
             }
 
             if (_abort)
             {
-                _timerWaveExtract.Stop();
+                _timerAudioExtract.Stop();
 
 #pragma warning disable CA1416
-                _waveExtractProcess.Kill(true);
+                _audioExtractProcess.Kill(true);
 #pragma warning restore CA1416
 
                 ProgressOpacity = 0;
@@ -1776,7 +1776,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 return;
             }
 
-            if (!_waveExtractProcess.HasExited)
+            if (!_audioExtractProcess.HasExited)
             {
                 var durationMs = (DateTime.UtcNow.Ticks - _startTicks) / 10_000;
                 ElapsedText = $"Time elapsed: {new TimeCode(durationMs).ToShortDisplayString()}";
@@ -1784,23 +1784,23 @@ public partial class SpeechToTextViewModel : ObservableObject
                 return;
             }
 
-            _timerWaveExtract.Stop();
+            _timerAudioExtract.Stop();
 
-            if (!File.Exists(_waveFileName))
+            if (!File.Exists(_audioFileName))
             {
-                Se.WriteToolsLog("Generated wave file not found: " + _waveFileName + Environment.NewLine +
-                                     "ffmpeg: " + _waveExtractProcess.StartInfo.FileName + Environment.NewLine +
-                                     "Parameters: " + _waveExtractProcess.StartInfo.Arguments + Environment.NewLine +
+                Se.WriteToolsLog("Generated audio file not found: " + _audioFileName + Environment.NewLine +
+                                     "ffmpeg: " + _audioExtractProcess.StartInfo.FileName + Environment.NewLine +
+                                     "Parameters: " + _audioExtractProcess.StartInfo.Arguments + Environment.NewLine +
                                      "OS: " + Environment.OSVersion + Environment.NewLine +
                                      "64-bit: " + Environment.Is64BitOperatingSystem + Environment.NewLine +
-                                     "ffmpeg exit code: " + _waveExtractProcess.ExitCode + Environment.NewLine +
+                                     "ffmpeg exit code: " + _audioExtractProcess.ExitCode + Environment.NewLine +
                                      "ffmpeg log: " + _ffmpegLog);
                 IsTranscribeEnabled = true;
-                _waveExtractProcess = null;
+                _audioExtractProcess = null;
                 return;
             }
 
-            _waveExtractProcess = null;
+            _audioExtractProcess = null;
             if (string.IsNullOrEmpty(_videoFileName))
             {
                 IsTranscribeEnabled = true;
@@ -1812,7 +1812,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 return;
             }
 
-            var startOk = TranscribeViaWhisper(_waveFileName, _videoFileName);
+            var startOk = TranscribeViaWhisper(_audioFileName, _videoFileName);
             if (!startOk)
             {
                 IsTranscribeEnabled = true;
@@ -2712,8 +2712,8 @@ public partial class SpeechToTextViewModel : ObservableObject
         _startTicks = DateTime.UtcNow.Ticks;
 
         _batchIndex = 0;
-        var startGenerateWaveFileOk = GenerateWavFile(_videoFileName, _audioTrackNumber);
-        if (!startGenerateWaveFileOk)
+        var startGenerateAudioFileOk = GenerateAudioFile(_videoFileName, _audioTrackNumber);
+        if (!startGenerateAudioFileOk)
         {
             if (string.IsNullOrEmpty(_error))
             {
@@ -3207,14 +3207,20 @@ public partial class SpeechToTextViewModel : ObservableObject
         return "--translate ";
     }
 
-    private bool GenerateWavFile(string videoFileName, int audioTrackNumber)
+    private bool GenerateAudioFile(string videoFileName, int audioTrackNumber)
     {
         if (string.IsNullOrEmpty(videoFileName))
         {
             return false;
         }
 
-        if (videoFileName.EndsWith(".wav"))
+        // Local whisper engines read the file directly and want 16 kHz PCM, so
+        // a pre-extracted 16 kHz WAV can be handed to them as-is. The OpenAI-
+        // compatible engine uploads the file instead, and a 16 kHz WAV easily
+        // exceeds the 25 MB cap on long audio — skip the short-circuit and
+        // transcode through ffmpeg into the chosen compressed format.
+        var isOpenAiEngine = GetEffectiveSelectedEngine() is OpenAiCompatibleSttEngine;
+        if (!isOpenAiEngine && videoFileName.EndsWith(".wav"))
         {
             try
             {
@@ -3240,28 +3246,28 @@ public partial class SpeechToTextViewModel : ObservableObject
         // upload stays under the limit; other engines (whisper.cpp, faster-
         // whisper, ...) keep getting WAV because they read the file locally
         // and expect PCM.
-        var sttAudioFormat = GetEffectiveSelectedEngine() is OpenAiCompatibleSttEngine
+        var sttAudioFormat = isOpenAiEngine
             ? OpenAiCompatibleSttAudioFormat
             : "wav";
         var extension = OpenAiSttService.GetFileExtensionForFormat(sttAudioFormat);
-        _waveFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + "." + extension);
-        _filesToDelete.Add(_waveFileName);
-        _waveExtractProcess = GetFfmpegProcess(videoFileName, audioTrackNumber, _waveFileName, sttAudioFormat);
-        if (_waveExtractProcess == null)
+        _audioFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + "." + extension);
+        _filesToDelete.Add(_audioFileName);
+        _audioExtractProcess = GetFfmpegProcess(videoFileName, audioTrackNumber, _audioFileName, sttAudioFormat);
+        if (_audioExtractProcess == null)
         {
             return false;
         }
 
-        _waveExtractProcess.ErrorDataReceived += (sender, args) => { _ffmpegLog.AppendLine(args.Data); };
+        _audioExtractProcess.ErrorDataReceived += (sender, args) => { _ffmpegLog.AppendLine(args.Data); };
 
-        _waveExtractProcess.StartInfo.RedirectStandardError = true;
+        _audioExtractProcess.StartInfo.RedirectStandardError = true;
 #pragma warning disable CA1416
-        var started = _waveExtractProcess.Start();
+        var started = _audioExtractProcess.Start();
 #pragma warning restore CA1416
 
-        _waveExtractProcess.BeginErrorReadLine();
+        _audioExtractProcess.BeginErrorReadLine();
         _abort = false;
-        _timerWaveExtract.Start();
+        _timerAudioExtract.Start();
         return true;
     }
 
@@ -3421,7 +3427,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         return (decimal)(TimeCode.ParseToMilliseconds(timeCode) / 1000.0);
     }
 
-    private Process? GetFfmpegProcess(string videoFileName, int audioTrackNumber, string outWaveFile, string audioFormat = "wav")
+    private Process? GetFfmpegProcess(string videoFileName, int audioTrackNumber, string outAudioFile, string audioFormat = "wav")
     {
         if (!File.Exists(Se.Settings.General.FfmpegPath) && Configuration.IsRunningOnWindows)
         {
@@ -3434,7 +3440,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             audioParameter = $"-map 0:{audioTrackNumber}";
         }
 
-        var fFmpegWaveTranscodeSettings = GetFfmpegTranscodeFormatString(audioFormat, _useCenterChannelOnly);
+        var fFmpegAudioTranscodeSettings = GetFfmpegTranscodeFormatString(audioFormat, _useCenterChannelOnly);
 
         //-i indicates the input
         //-vn means no video output
@@ -3450,7 +3456,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             exeFilePath = "ffmpeg";
         }
 
-        var parameters = string.Format(fFmpegWaveTranscodeSettings, videoFileName, outWaveFile, audioParameter);
+        var parameters = string.Format(fFmpegAudioTranscodeSettings, videoFileName, outAudioFile, audioParameter);
         return new Process
         {
             StartInfo = new ProcessStartInfo(exeFilePath, parameters)
