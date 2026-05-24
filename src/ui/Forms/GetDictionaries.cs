@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
             public string EnglishName { get; set; }
             public string NativeName { get; set; }
             public string Description { get; set; }
-            public string DownloadLink { get; set; }
+            public List<string> DownloadLinks { get; set; } = new List<string>();
             public string DisplayText { get; set; }
             public override string ToString() => DisplayText;
         }
@@ -88,7 +88,16 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var englishName = node.SelectSingleNode("EnglishName").InnerText;
                     var nativeName = node.SelectSingleNode("NativeName").InnerText;
-                    var downloadLink = node.SelectSingleNode("DownloadLink").InnerText;
+
+                    var downloadLinks = new List<string>();
+                    foreach (XmlNode linkNode in node.SelectNodes("DownloadLink"))
+                    {
+                        var link = linkNode?.InnerText;
+                        if (!string.IsNullOrWhiteSpace(link))
+                        {
+                            downloadLinks.Add(link.Trim());
+                        }
+                    }
 
                     var description = string.Empty;
                     if (node.SelectSingleNode("Description") != null)
@@ -96,14 +105,14 @@ namespace Nikse.SubtitleEdit.Forms
                         description = node.SelectSingleNode("Description").InnerText;
                     }
 
-                    if (!string.IsNullOrEmpty(downloadLink))
+                    if (downloadLinks.Count > 0)
                     {
                         var item = new DictionaryItem
                         {
                             EnglishName = englishName,
                             NativeName = nativeName,
                             Description = description,
-                            DownloadLink = downloadLink,
+                            DownloadLinks = downloadLinks,
                             DisplayText = $"{englishName}{(string.IsNullOrEmpty(nativeName) ? "" : $" - {nativeName}")}",
                         };
 
@@ -184,8 +193,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonDownload_Click(object sender, EventArgs e)
         {
             var item = (DictionaryItem)comboBoxDictionaries.SelectedItem;
-            _downloadLink = item.DownloadLink;
             SelectedEnglishName = item.EnglishName;
+
             try
             {
                 labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait;
@@ -196,29 +205,59 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
-                using (var httpClient = DownloaderFactory.MakeHttpClient())
-                using (var downloadStream = new MemoryStream())
+                var dictionaryFolder = Utilities.DictionaryFolder;
+                if (!Directory.Exists(dictionaryFolder))
                 {
-                    var downloadTask = httpClient.DownloadAsync(_downloadLink, downloadStream, new Progress<float>((progress) =>
-                    {
-                        var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
-                        labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + pct + "%";
-                    }), _cancellationTokenSource.Token);
-
-                    while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
-                    {
-                        Application.DoEvents();
-                    }
-
-                    if (downloadTask.IsCanceled)
-                    {
-                        DialogResult = DialogResult.Cancel;
-                        labelPleaseWait.Refresh();
-                        return;
-                    }
-
-                    CompleteDownload(downloadStream);
+                    Directory.CreateDirectory(dictionaryFolder);
                 }
+
+                // Direct mode: every link is an individual .aff / .dic file we save by basename.
+                // Legacy mode: a single .oxt / .zip we download and extract.
+                var directMode = item.DownloadLinks.All(IsDirectDictionaryUrl);
+
+                for (var i = 0; i < item.DownloadLinks.Count; i++)
+                {
+                    var link = item.DownloadLinks[i];
+                    _downloadLink = link;
+                    var stepIndex = i + 1;
+                    var stepCount = item.DownloadLinks.Count;
+
+                    using (var httpClient = DownloaderFactory.MakeHttpClient())
+                    using (var downloadStream = new MemoryStream())
+                    {
+                        var downloadTask = httpClient.DownloadAsync(link, downloadStream, new Progress<float>((progress) =>
+                        {
+                            var pct = (int)Math.Round(progress * 100.0, MidpointRounding.AwayFromZero);
+                            var prefix = stepCount > 1 ? $"({stepIndex}/{stepCount}) " : string.Empty;
+                            labelPleaseWait.Text = LanguageSettings.Current.General.PleaseWait + "  " + prefix + pct + "%";
+                        }), _cancellationTokenSource.Token);
+
+                        while (!downloadTask.IsCompleted && !downloadTask.IsCanceled)
+                        {
+                            Application.DoEvents();
+                        }
+
+                        if (downloadTask.IsCanceled)
+                        {
+                            DialogResult = DialogResult.Cancel;
+                            labelPleaseWait.Refresh();
+                            return;
+                        }
+
+                        if (directMode)
+                        {
+                            SaveDirectFile(dictionaryFolder, downloadStream, link);
+                        }
+                        else
+                        {
+                            // Legacy OXT/ZIP entries are single-link by design; ignore extras.
+                            ExtractZipStream(dictionaryFolder, downloadStream);
+                            break;
+                        }
+                    }
+                }
+
+                FinishDownload();
             }
             catch (Exception exception)
             {
@@ -234,22 +273,44 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void CompleteDownload(MemoryStream downloadStream)
+        private static bool IsDirectDictionaryUrl(string url)
+        {
+            var fileName = GetFileNameFromUrl(url);
+            return fileName.EndsWith(".aff", StringComparison.OrdinalIgnoreCase) ||
+                   fileName.EndsWith(".dic", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string GetFileNameFromUrl(string url)
+        {
+            try
+            {
+                return Path.GetFileName(new Uri(url).AbsolutePath);
+            }
+            catch
+            {
+                return Path.GetFileName(url);
+            }
+        }
+
+        private void SaveDirectFile(string dictionaryFolder, MemoryStream downloadStream, string url)
+        {
+            if (downloadStream.Length == 0)
+            {
+                throw new Exception($"No content downloaded for {url}");
+            }
+
+            var fileName = GetFileNameFromUrl(url);
+            var path = Path.Combine(dictionaryFolder, fileName);
+            File.WriteAllBytes(path, downloadStream.ToArray());
+            LastDownload = fileName;
+        }
+
+        private void ExtractZipStream(string dictionaryFolder, MemoryStream downloadStream)
         {
             if (downloadStream.Length == 0)
             {
                 throw new Exception("No content downloaded - missing file or no internet connection!");
             }
-
-            Cursor = Cursors.Default;
-
-            var dictionaryFolder = Utilities.DictionaryFolder;
-            if (!Directory.Exists(dictionaryFolder))
-            {
-                Directory.CreateDirectory(dictionaryFolder);
-            }
-
-            var index = comboBoxDictionaries.SelectedIndex;
 
             using (var zip = ZipExtractor.Open(downloadStream))
             {
@@ -275,7 +336,11 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+        }
 
+        private void FinishDownload()
+        {
+            var index = comboBoxDictionaries.SelectedIndex;
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             buttonOK.Enabled = true;
