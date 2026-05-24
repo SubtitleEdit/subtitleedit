@@ -223,7 +223,7 @@ public class LanguageGeneral
     public string GenerateImportShotChanges { get; set; }
     public string Generating { get; set; }
     public string GeneratingImageXofY { get; set; }
-    public string GeneratingWavFile { get; set; }
+    public string GeneratingAudioFile { get; set; }
     public string GetAudioClips { get; set; }
     public string GoTo { get; set; }
     public string GoToLineNumber { get; set; }
@@ -694,6 +694,8 @@ public class LanguageGeneral
     public string OpenAiCompatibleSttAutoTranscribeOnAudioSelection { get; set; }
     public string OpenAiCompatibleSttStream { get; set; }
     public string OpenAiCompatibleSttStreamHint { get; set; }
+    public string OpenAiCompatibleSttAudioFormat { get; set; }
+    public string OpenAiCompatibleSttAudioFormatHint { get; set; }
     public string ConfigurationRequired { get; set; }
     public string TranscriptionError { get; set; }
     public string TranscriptionComplete { get; set; }
@@ -931,7 +933,7 @@ public class LanguageGeneral
         GenerateImportShotChanges = "Generate/import shot changes";
         Generating = "Generating...";
         GeneratingImageXofY = "Generating image {0:#,##0} of {1:#,##0}...";
-        GeneratingWavFile = "Generating wav file...";
+        GeneratingAudioFile = "Generating audio file...";
         GetAudioClips = "Get audio clips";
         GoTo = "Go to";
         GoToLineNumber = "Go to line number";
@@ -1402,6 +1404,8 @@ public class LanguageGeneral
         OpenAiCompatibleSttAutoTranscribeOnAudioSelection = "Auto-transcribe new waveform selection via speech-to-text";
         OpenAiCompatibleSttStream = "Stream response";
         OpenAiCompatibleSttStreamHint = "Send 'stream=true' to receive live text deltas (SSE). Disable for servers that reject the 'stream' parameter (e.g. Groq).";
+        OpenAiCompatibleSttAudioFormat = "Audio upload format";
+        OpenAiCompatibleSttAudioFormatHint = "Audio format sent to the STT server. OpenAI caps uploads at 25 MB, so MP3/M4A/WebM (Opus) are recommended for long videos. WAV is lossless but ~5x larger.";
         ConfigurationRequired = "Configuration Required";
         TranscriptionError = "Transcription Error";
         TranscriptionComplete = "Transcription complete";

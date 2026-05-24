@@ -97,10 +97,17 @@ public class OpenAiSttService
 
         using var content = new MultipartFormDataContent();
 
-        // Add file
+        // Content-Type, upload filename extension, and bytes must all agree —
+        // OpenAI rejects e.g. webm-Opus bytes sent as audio/wav. The on-disk
+        // extension is the source of truth: the ViewModel's 16 kHz WAV short-
+        // circuit can hand us a real .wav even when the user picked "mp3" in
+        // settings. Fall back to the configured AudioFormat only when the
+        // file's extension isn't one we recognise, and never mutate _settings.
+        var effectiveFormat = ResolveEffectiveFormat(fileName);
+        var uploadFileName = NormalizeUploadFileName(fileName, effectiveFormat);
         var fileContent = new StreamContent(audioStream);
-        fileContent.Headers.ContentType = new MediaTypeHeaderValue("audio/wav");
-        content.Add(fileContent, "file", fileName);
+        fileContent.Headers.ContentType = new MediaTypeHeaderValue(GetMediaTypeForFormat(effectiveFormat));
+        content.Add(fileContent, "file", uploadFileName);
 
         // Add model
         if (!string.IsNullOrEmpty(_settings.Model))
@@ -434,6 +441,83 @@ public class OpenAiSttService
         return builder.Uri.ToString();
     }
 
+    /// <summary>
+    /// MIME type to send for an audio upload format. OpenAI accepts mp3, mp4,
+    /// mpeg, mpga, m4a, wav, and webm — Opus is shipped inside a webm
+    /// container. Unknown formats fall back to audio/wav for safety.
+    /// </summary>
+    internal static string GetMediaTypeForFormat(string? format)
+    {
+        return NormalizeFormat(format) switch
+        {
+            "mp3" => "audio/mpeg",
+            "m4a" => "audio/mp4",
+            "webm" => "audio/webm",
+            _ => "audio/wav",
+        };
+    }
+
+    /// <summary>
+    /// File extension (no leading dot) for an audio upload format. The
+    /// extension is part of the multipart "filename" the server uses to
+    /// dispatch its decoder, so it must agree with the bytes and the
+    /// Content-Type.
+    /// </summary>
+    internal static string GetFileExtensionForFormat(string? format)
+    {
+        return NormalizeFormat(format) switch
+        {
+            "mp3" => "mp3",
+            "m4a" => "m4a",
+            "webm" => "webm",
+            _ => "wav",
+        };
+    }
+
+    private static string NormalizeFormat(string? format)
+    {
+        if (string.IsNullOrWhiteSpace(format))
+        {
+            return "wav";
+        }
+
+        return format.Trim().ToLowerInvariant();
+    }
+
+    /// <summary>
+    /// Pick the format we will actually report to the server. Prefer the
+    /// extension of the file we are about to upload (the bytes don't lie); if
+    /// that extension isn't one we have a MIME mapping for, fall back to the
+    /// configured AudioFormat. Never mutates _settings.
+    /// </summary>
+    private string ResolveEffectiveFormat(string fileName)
+    {
+        var ext = Path.GetExtension(fileName).TrimStart('.').ToLowerInvariant();
+        return ext switch
+        {
+            "mp3" or "m4a" or "webm" or "wav" => ext,
+            _ => NormalizeFormat(_settings.AudioFormat),
+        };
+    }
+
+    /// <summary>
+    /// Force the multipart "filename" to end in the effective format's
+    /// extension so the filename, Content-Type, and bytes all agree. Servers
+    /// that dispatch their decoder off the filename (instead of the Content-
+    /// Type header) need this to pick the right codec.
+    /// </summary>
+    private static string NormalizeUploadFileName(string fileName, string effectiveFormat)
+    {
+        var ext = GetFileExtensionForFormat(effectiveFormat);
+        var baseName = Path.GetFileNameWithoutExtension(fileName);
+        if (string.IsNullOrEmpty(baseName))
+        {
+            baseName = "audio";
+        }
+
+        return baseName + "." + ext;
+    }
+
     private static bool IsSensitiveQueryParam(string name)
     {
         return name.Equals("api_key", StringComparison.OrdinalIgnoreCase)
@@ -489,6 +573,7 @@ public class OpenAiSttService
             Temperature = (double)settings.OpenAiCompatibleSttTemperature,
             Prompt = settings.OpenAiCompatibleSttPrompt,
             Stream = settings.OpenAiCompatibleSttStream,
+            AudioFormat = settings.OpenAiCompatibleSttAudioFormat,
             Logger = Se.WriteToolsLog
         };
     }
@@ -512,6 +597,14 @@ public class OpenAiCompatibleSettings
     public double Temperature { get; set; }
     public string Prompt { get; set; } = string.Empty;
     public bool Stream { get; set; }
+
+    /// <summary>
+    /// Audio container/codec sent to the STT endpoint. Valid values: "wav",
+    /// "mp3", "m4a", "webm" (webm carries Opus). Used to pick the multipart
+    /// Content-Type and filename extension. Defaults to "wav" to match the
+    /// historical behavior when callers don't set it.
+    /// </summary>
+    public string AudioFormat { get; set; } = "wav";
 
     /// <summary>
     /// Optional diagnostic sink used on failure paths. Set by

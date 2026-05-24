@@ -90,6 +90,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string OpenAiCompatibleSttPrompt { get; set; }
         public bool OpenAiCompatibleSttAutoTranscribeOnAudioSelection { get; set; }
         public bool OpenAiCompatibleSttStream { get; set; }
+        public string OpenAiCompatibleSttAudioFormat { get; set; }
 
         public string OpenRouterUrl { get; set; }
         public string OpenRouterPrompt { get; set; }
@@ -521,6 +522,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             OpenAiCompatibleSttTemperature = 0;
             OpenAiCompatibleSttPrompt = string.Empty;
             OpenAiCompatibleSttStream = false;
+            OpenAiCompatibleSttAudioFormat = "mp3";
 
             VoskPostProcessing = true;
             WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisperXxl : AudioToText.WhisperChoice.OpenAi;
