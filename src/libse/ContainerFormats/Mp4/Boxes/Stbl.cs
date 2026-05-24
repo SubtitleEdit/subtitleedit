@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public List<uint> SampleSizes;
         public List<uint> Discardable;
         public List<uint> Ssts { get; set; }
+        public List<int> Ctts { get; set; }
         public List<SampleToChunkMap> Stsc { get; set; }
         public List<ulong> ChunkOffsets;
         public List<Paragraph> Paragraphs;
@@ -33,6 +34,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             _mdia = mdia;
             Position = (ulong)fs.Position;
             Ssts = new List<uint>();
+            Ctts = new List<int>();
             Stsc = new List<SampleToChunkMap>();
             SampleSizes = new List<uint>();
             Discardable = new List<uint>();
@@ -114,6 +116,27 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         for (var j = 0; j < sampleCount; j++)
                         {
                             Ssts.Add(sampleDelta);
+                        }
+                    }
+                }
+                else if (Name == "ctts") // composition time offset (PTS = DTS + offset); needed when B-frames make storage order differ from display order
+                {
+                    Buffer = new byte[Size - 4];
+                    fs.Read(Buffer, 0, Buffer.Length);
+                    int version = Buffer[0];
+                    var numberOfEntries = GetUInt(4);
+                    for (var i = 0; i < numberOfEntries; i++)
+                    {
+                        if (12 + i * 8 + 3 >= Buffer.Length)
+                        {
+                            break;
+                        }
+                        var sampleCount = GetUInt(8 + i * 8);
+                        var offsetRaw = GetUInt(12 + i * 8);
+                        var sampleOffset = version == 1 ? unchecked((int)offsetRaw) : (int)offsetRaw;
+                        for (var j = 0; j < sampleCount; j++)
+                        {
+                            Ctts.Add(sampleOffset);
                         }
                     }
                 }

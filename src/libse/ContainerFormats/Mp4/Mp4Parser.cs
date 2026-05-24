@@ -329,9 +329,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                             {
                                 var scanSize = Math.Min((ulong)sampleSize, 1000UL);
                                 var ccData = GetCcDataHelper.GetCcData(fs, chunkOffset, scanSize);
+                                // Use presentation timestamp (DTS + ctts offset) so cc_data from B-frames lands in display order.
+                                var cttsOffset = index < stbl.Ctts.Count ? stbl.Ctts[index] : 0;
+                                var pts = (ulong)((long)totalTicks + cttsOffset);
                                 foreach (var cc in ccData)
                                 {
-                                    cc.Time = totalTicks;
+                                    cc.Time = pts;
                                     ccDataList.Add(cc);
                                     if (cc.Type >= 0 && cc.Type < ccTypeCounts.Length)
                                     {
@@ -368,7 +371,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                     var endMs = data.End / (double)timeScale * 1000.0;
                     TrunCea608Subtitle.Paragraphs.Add(new Paragraph(GetText(data.Screen), startMs, endMs));
                 };
-                foreach (var cc in ccDataList)
+                foreach (var cc in ccDataList.OrderBy(p => p.Time))
                 {
                     cea608Parser.AddData((int)cc.Time, new[] { cc.Data1, cc.Data2 });
                 }
