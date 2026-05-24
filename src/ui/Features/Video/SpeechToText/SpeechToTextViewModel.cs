@@ -2708,7 +2708,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         _videoInfo.Height = BatchItems[0].MediaInfo.Dimension.Height;
 
         ProgressOpacity = 1;
-        ProgressText = "Generating wav file...";
+        ProgressText = Se.Language.General.GeneratingWavFile;
         _startTicks = DateTime.UtcNow.Ticks;
 
         _batchIndex = 0;
@@ -3220,7 +3220,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         // exceeds the 25 MB cap on long audio — skip the short-circuit and
         // transcode through ffmpeg into the chosen compressed format.
         var isOpenAiEngine = GetEffectiveSelectedEngine() is OpenAiCompatibleSttEngine;
-        if (!isOpenAiEngine && videoFileName.EndsWith(".wav"))
+        if (!isOpenAiEngine && videoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
         {
             try
             {

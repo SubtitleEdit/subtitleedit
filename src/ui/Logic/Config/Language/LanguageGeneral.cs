@@ -933,7 +933,7 @@ public class LanguageGeneral
         GenerateImportShotChanges = "Generate/import shot changes";
         Generating = "Generating...";
         GeneratingImageXofY = "Generating image {0:#,##0} of {1:#,##0}...";
-        GeneratingWavFile = "Generating wav file...";
+        GeneratingWavFile = "Generating audio file...";
         GetAudioClips = "Get audio clips";
         GoTo = "Go to";
         GoToLineNumber = "Go to line number";
