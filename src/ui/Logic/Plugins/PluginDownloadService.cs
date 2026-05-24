@@ -47,42 +47,51 @@ public class PluginDownloadService : IPluginDownloadService
         {
             Directory.CreateDirectory(tempDirectory);
 
-            using (var zipStream = new MemoryStream())
+            using var zipStream = new MemoryStream();
+            await DownloadHelper.DownloadFileAsync(_httpClient, downloadUrl, zipStream, progress, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            // Unzip and the subsequent file moves are synchronous; running them on a worker
+            // thread keeps the UI responsive (notably for the cancel-download button) and lets
+            // ThrowIfCancellationRequested between phases stop work as soon as the user reacts.
+            await Task.Run(() =>
             {
-                await DownloadHelper.DownloadFileAsync(_httpClient, downloadUrl, zipStream, progress, cancellationToken);
                 zipStream.Position = 0;
                 _zipUnpacker.UnpackZipStream(zipStream, tempDirectory);
-            }
+                cancellationToken.ThrowIfCancellationRequested();
 
-            var rootEntries = Directory.GetFileSystemEntries(tempDirectory);
-            string source;
-            string targetName;
-            if (rootEntries.Length == 1 && Directory.Exists(rootEntries[0]))
-            {
-                source = rootEntries[0];
-                targetName = Path.GetFileName(rootEntries[0]);
-            }
-            else
-            {
-                source = tempDirectory;
-                targetName = SanitizeFolderName(entry.Name);
-            }
+                var rootEntries = Directory.GetFileSystemEntries(tempDirectory);
+                string source;
+                string targetName;
+                if (rootEntries.Length == 1 && Directory.Exists(rootEntries[0]))
+                {
+                    source = rootEntries[0];
+                    targetName = Path.GetFileName(rootEntries[0]);
+                }
+                else
+                {
+                    source = tempDirectory;
+                    targetName = SanitizeFolderName(entry.Name);
+                }
 
-            // Remove any previously installed copy of the same plugin.
-            var existing = _pluginCatalog.GetPlugins()
-                .FirstOrDefault(p => p.Manifest.Name.Equals(entry.Name, StringComparison.OrdinalIgnoreCase));
-            if (existing != null && Directory.Exists(existing.FolderPath))
-            {
-                Directory.Delete(existing.FolderPath, recursive: true);
-            }
+                // Remove any previously installed copy of the same plugin.
+                var existing = _pluginCatalog.GetPlugins()
+                    .FirstOrDefault(p => p.Manifest.Name.Equals(entry.Name, StringComparison.OrdinalIgnoreCase));
+                if (existing != null && Directory.Exists(existing.FolderPath))
+                {
+                    Directory.Delete(existing.FolderPath, recursive: true);
+                }
 
-            var targetPath = Path.Combine(Se.PluginsFolder, targetName);
-            if (Directory.Exists(targetPath))
-            {
-                Directory.Delete(targetPath, recursive: true);
-            }
+                cancellationToken.ThrowIfCancellationRequested();
 
-            Directory.Move(source, targetPath);
+                var targetPath = Path.Combine(Se.PluginsFolder, targetName);
+                if (Directory.Exists(targetPath))
+                {
+                    Directory.Delete(targetPath, recursive: true);
+                }
+
+                Directory.Move(source, targetPath);
+            }, cancellationToken);
         }
         finally
         {

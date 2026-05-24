@@ -90,9 +90,12 @@ public partial class GetPluginsViewModel : ObservableObject
             return;
         }
 
-        item.IsBusy = true;
+        // Create the cancellation source BEFORE flipping IsBusy so the cancel button
+        // always has a token to cancel from the moment it becomes visible.
+        _cancellationTokenSource = new CancellationTokenSource();
         item.DownloadProgress = 0;
         var previousStatus = item.StatusText;
+        item.IsBusy = true;
         var progress = new Progress<float>(p =>
         {
             item.DownloadProgress = p * 100;
@@ -101,7 +104,6 @@ public partial class GetPluginsViewModel : ObservableObject
 
         try
         {
-            _cancellationTokenSource = new CancellationTokenSource();
             await _downloadService.InstallAsync(item.Entry, progress, _cancellationTokenSource.Token);
             InstalledAnything = true;
 
@@ -109,6 +111,11 @@ public partial class GetPluginsViewModel : ObservableObject
                 p.Manifest.Name.Equals(item.Entry.Name, StringComparison.OrdinalIgnoreCase));
             item.Refresh(match?.Manifest.Version);
             StatusMessage = string.Format(Se.Language.Plugins.PluginXInstalled, item.Name);
+        }
+        catch (OperationCanceledException)
+        {
+            item.StatusText = previousStatus;
+            StatusMessage = Se.Language.General.Cancelled;
         }
         catch (Exception exception)
         {
@@ -120,6 +127,12 @@ public partial class GetPluginsViewModel : ObservableObject
         {
             item.IsBusy = false;
         }
+    }
+
+    [RelayCommand]
+    private void CancelDownload()
+    {
+        _cancellationTokenSource?.Cancel();
     }
 
     [RelayCommand]
