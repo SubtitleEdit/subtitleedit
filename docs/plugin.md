@@ -161,6 +161,15 @@ launched as `dotnet <entry> <requestFilePath>`.
   "frameRate": 23.976,
   "uiLanguage": "English",
   "theme": "Dark",
+  "themeColors": {
+    "isDark": true,
+    "backgroundColor": "#FF212121",
+    "foregroundColor": "#FFDCDCDC",
+    "accentColor": "#631E90FF",
+    "backgroundColorLighter": "#FF262626",
+    "backgroundColorHeader": "#FF303030",
+    "bookmarkColor": "#FFFFD700"
+  },
   "seVersion": "5.0.0",
   "settings": { "lastUsedOption": true }
 }
@@ -173,6 +182,9 @@ launched as `dotnet <entry> <requestFilePath>`.
 - `settings` is whatever JSON your plugin returned in its previous response;
   it is `null` on first run. Use it to persist plugin-private settings.
 - `theme` and `uiLanguage` let your plugin's own UI match Subtitle Edit.
+- `themeColors` carries the active theme's colors as `#AARRGGBB` hex strings so
+  your plugin's own UI can match Subtitle Edit. May be omitted in older SE
+  versions — fall back to your platform's defaults when it is missing.
 
 ## response.json (plugin → Subtitle Edit)
 

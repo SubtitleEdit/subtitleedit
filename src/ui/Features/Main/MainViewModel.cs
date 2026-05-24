@@ -4626,6 +4626,7 @@ public partial class MainViewModel :
             FrameRate = frameRate,
             UiLanguage = Se.Settings.General.Language ?? string.Empty,
             Theme = UiTheme.ThemeName,
+            ThemeColors = PluginThemeColorsFactory.Build(),
             SeVersion = Se.Version,
             Settings = settings,
         };
