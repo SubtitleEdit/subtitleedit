@@ -131,9 +131,20 @@ public class ForcedAlignerOption
     private static string? ExtractLanguageCode(string choice)
     {
         const string prefix = "wav2vec2-aligner-";
-        return choice != null && choice.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
-            ? choice.Substring(prefix.Length).ToLowerInvariant()
-            : null;
+        if (choice == null || !choice.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        // Same zh-cn → zh / zh-tw → zh collapse as Wav2Vec2ChoiceForLanguage,
+        // so e.g. a manually-edited "wav2vec2-aligner-zh-cn" still resolves to
+        // the Chinese aligner instead of falling through to BuiltIn.
+        var code = choice.Substring(prefix.Length).ToLowerInvariant();
+        if (code.StartsWith("zh", StringComparison.Ordinal))
+        {
+            code = "zh";
+        }
+        return code;
     }
 
     private readonly record struct Wav2Vec2Meta(string Choice, string Display, string FileName, string Url, string Size);

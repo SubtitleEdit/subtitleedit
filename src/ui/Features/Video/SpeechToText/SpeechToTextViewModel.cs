@@ -382,24 +382,69 @@ public partial class SpeechToTextViewModel : ObservableObject
                     ?? ForcedAligners.FirstOrDefault();
         if (!ReferenceEquals(SelectedForcedAligner, match))
         {
-            SelectedForcedAligner = match;
+            SetForcedAlignerProgrammatically(match);
         }
+
+        // Engine change resets the "did the user pick this?" tracker so the
+        // language-driven auto-suggest below is allowed to fire even though
+        // we just programmatically wrote SelectedForcedAligner.
+        _userExplicitlySetForcedAligner = false;
 
         // After resetting the default, try to upgrade BuiltIn → matching
         // wav2vec2 aligner when the selected ASR language has one.
         AutoSuggestWav2Vec2Aligner(SelectedLanguage);
     }
 
+    // Flips true the moment the user picks something from the Forced aligner
+    // combo, and resets false on engine change (UpdateForcedAlignerUi). Lets
+    // AutoSuggestWav2Vec2Aligner skip override when the user has made any
+    // deliberate choice — including explicitly picking the built-in aligner
+    // to avoid the wav2vec2 download.
+    private bool _userExplicitlySetForcedAligner;
+
+    // Set while we write SelectedForcedAligner from inside the view-model so
+    // the partial-method change handler can distinguish programmatic writes
+    // from genuine user picks. Same pattern as _isUpdating*Backend above.
+    private bool _isUpdatingForcedAlignerProgrammatically;
+
+    private void SetForcedAlignerProgrammatically(ForcedAlignerOption? value)
+    {
+        _isUpdatingForcedAlignerProgrammatically = true;
+        try
+        {
+            SelectedForcedAligner = value;
+        }
+        finally
+        {
+            _isUpdatingForcedAlignerProgrammatically = false;
+        }
+    }
+
+    partial void OnSelectedForcedAlignerChanged(ForcedAlignerOption? value)
+    {
+        if (_isUpdatingForcedAlignerProgrammatically)
+        {
+            return;
+        }
+        _userExplicitlySetForcedAligner = true;
+    }
+
     /// <summary>
-    /// When the user picks an ASR language and the current forced aligner is
-    /// the built-in one (i.e. no explicit user pick yet), switch to the
-    /// matching wav2vec2 aligner if CrispASR ships one for that language.
-    /// No-op for explicit non-builtin picks so a deliberate Canary/Qwen3
-    /// choice survives a language change.
+    /// When the user picks an ASR language and they haven't explicitly chosen
+    /// a forced aligner yet (i.e. it's still the engine-derived default),
+    /// switch to the matching wav2vec2 aligner if CrispASR ships one for that
+    /// language. Any explicit user pick — Canary, Qwen3, a wav2vec2 entry, or
+    /// even the built-in aligner picked deliberately to avoid a large
+    /// download — is preserved across language changes.
     /// </summary>
     private void AutoSuggestWav2Vec2Aligner(WhisperLanguage? language)
     {
         if (language == null)
+        {
+            return;
+        }
+
+        if (_userExplicitlySetForcedAligner)
         {
             return;
         }
@@ -418,7 +463,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         var match = ForcedAligners.FirstOrDefault(p => p.Choice == choice);
         if (match != null && !ReferenceEquals(SelectedForcedAligner, match))
         {
-            SelectedForcedAligner = match;
+            SetForcedAlignerProgrammatically(match);
         }
     }
 
