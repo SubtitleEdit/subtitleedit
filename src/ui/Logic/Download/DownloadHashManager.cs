@@ -359,71 +359,87 @@ public static class DownloadHashManager
             // otherwise users will be prompted to "update" to the same version they just got.
             [LlamaCpp.WindowsCpu] = new[]
             {
-                "15739e9a11aa587d8232d2bc473a7dd7b3ac7f2f2384276309bc91474084ab1e", // b9174 (current download URL)
+                "ea7f96855a08c3ad2597d45808cd7304ef00607d99654b76cdf0e7bc37b18633", // b9297 (current download URL)
+                "15739e9a11aa587d8232d2bc473a7dd7b3ac7f2f2384276309bc91474084ab1e", // b9174
                 "8e2266646ede106a112023340adc25a2c2150243826e9dfe4bd9f7ed30f8e042", // b9145
             },
             [LlamaCpp.WindowsVulkan] = new[]
             {
-                "120b9c822f1c55e7e6f05d77743ebfb53a8c622fa8d34fc57847fdb9f628cb7a", // b9174 (current download URL)
+                "533bfc014a28941b624b70ac177ada2d463e1b64b6ddaf4dfebfe4aef6ef931e", // b9297 (current download URL)
+                "120b9c822f1c55e7e6f05d77743ebfb53a8c622fa8d34fc57847fdb9f628cb7a", // b9174
                 "5b54c452458bf6ad06d030a18458c484848b9def4d56b7b94171ff464e670d66", // b9145
             },
             [LlamaCpp.WindowsCuda] = new[]
             {
-                "edbdcb670f04f6fac0da35cffeff1fa9ae22319cce327074d19b39f98b6c4838", // b9174 (current download URL)
+                "ad58f4d4e19874c6588d430f6241ccf884cf08eb22c76fde61e76f7d959a4206", // b9297 (current download URL)
+                "edbdcb670f04f6fac0da35cffeff1fa9ae22319cce327074d19b39f98b6c4838", // b9174
                 "a323ccfa87aaa31c47d62be75181799f16f2fe4636786c09bd8beeb6ac722266", // b9145
             },
             [LlamaCpp.LinuxCpu] = new[]
             {
-                "94325e296a4561cb95161321b546685a6821513b4fab1a7cb28f76d4003c56d1", // b9174 (current download URL)
+                "7abf0249c7d73d100770779bf3a189ed7dcdfb42b13d3d4012a063c9954798ac", // b9297 (current download URL)
+                "94325e296a4561cb95161321b546685a6821513b4fab1a7cb28f76d4003c56d1", // b9174
                 "4cb45bdbf358bc15c77acb84e83e311a3f2c9247b9980f4f1886ebe3bd7e46d0", // b9145
             },
             [LlamaCpp.LinuxVulkan] = new[]
             {
-                "d5787fa775220b3c0f896947885fa0f3dedddbb5388bd68603376a2a97252e72", // b9174 (current download URL)
+                "f50222f987a431561c843c42cdb6d384bb40fd63a1c88cb2e63b85094bdb0f7e", // b9297 (current download URL)
+                "d5787fa775220b3c0f896947885fa0f3dedddbb5388bd68603376a2a97252e72", // b9174
                 "b4a28b06d973f662b9465b6e0e786d8991cdab4d24101f5d88b0b8f688a97aea", // b9145
             },
             [LlamaCpp.LinuxArm64Cpu] = new[]
             {
-                "7ad708abbb58a6dd5a148eed24d9d2ccf155f57cde8cf3c0e44f73d0d2b95c6d", // b9174 (current download URL)
+                "cd067ee2921a5b8c825d163d622947c2c554dbcc1d43ddeebedc7ecd5ca2a518", // b9297 (current download URL)
+                "7ad708abbb58a6dd5a148eed24d9d2ccf155f57cde8cf3c0e44f73d0d2b95c6d", // b9174
             },
             [LlamaCpp.LinuxArm64Vulkan] = new[]
             {
-                "84adac128b781f495804fb84d0c27d27e21cde6da03338b9ce0931ee324304f2", // b9174 (current download URL)
+                "78995ef0a75f3ffd7eacddb07bc214ab100c1503be7eab1efc3514e1b8c80969", // b9297 (current download URL)
+                "84adac128b781f495804fb84d0c27d27e21cde6da03338b9ce0931ee324304f2", // b9174
             },
             [LlamaCpp.MacOsArm64] = new[]
             {
-                "39406deaac6083000446530e68194b77bb64c64ecf0533040a49d8e7cfceb363", // b9174 (current download URL)
+                "059658804b94007659364677192c451440429d39aac2443325b6320b9a244b0f", // b9297 (current download URL)
+                "39406deaac6083000446530e68194b77bb64c64ecf0533040a49d8e7cfceb363", // b9174
                 "3c0cef9bcf8898c3bd169e94fa2acec249b8ebc94d8fade2c165b6d6a01e2693", // b9145
             },
             [LlamaCpp.MacOsX64] = new[]
             {
-                "f4040d729027dbc4352023ed32cbc5157a12a740223ec0d93d42032817554c6b", // b9174 (current download URL)
+                "7f179110941b3e82a24b8274c77b5cb90a7ae60dbbfd9587ceddea3a8eacce0e", // b9297 (current download URL)
+                "f4040d729027dbc4352023ed32cbc5157a12a740223ec0d93d42032817554c6b", // b9174
                 "0391b2dfe4a4f384916ebf98c33bfe1205443cde8bffec7563b73671d3060149", // b9145
             },
 
             // SHA-256 of llama-server / llama-server.exe extracted from each archive above.
+            // The Windows hash is the same across CPU / Vulkan / CUDA variants because all
+            // three ship the identical dispatcher EXE that dynamically loads the backend DLLs.
             [LlamaCpp.WindowsExecutable] = new[]
             {
-                "569a751e9e95c8b52683ce640120997fe684d2b629e40552cf8945032a082569", // b9174 (current download URL)
+                "fd70ce6fc227cc2c5b284ad57b90e130e223bd3ef6efc0f1467a004a818dbf74", // b9297 (current download URL)
+                "569a751e9e95c8b52683ce640120997fe684d2b629e40552cf8945032a082569", // b9174
                 "528ff8471ff7072ac75494a80467a0fced073ec11dcbf96a0e1c3ec0334b9dd0", // b9145
             },
             [LlamaCpp.LinuxExecutable] = new[]
             {
-                "fc6322995eafb9146db0454acb2b2d3f14244fa3eecb62ba742c129f8b4f5de1", // b9174 (current download URL)
+                "3484ef2c04f19e01bd65121f28bb137b6e18558418d1e7fcdd77e88f92766d87", // b9297 (current download URL)
+                "fc6322995eafb9146db0454acb2b2d3f14244fa3eecb62ba742c129f8b4f5de1", // b9174
                 "855bd9540073d9f020b9b77ad5866ea3ea74ca570ea3fac486da8676f0eb6933", // b9145
             },
             [LlamaCpp.LinuxArm64Executable] = new[]
             {
-                "a39b9d8200591e3e16f14b933f97ba0856e464097e0ba79cd3fb101313bdde96", // b9174 (current download URL)
+                "95770e0b72f77f1d2e726365dd65dbd720a15b871378f77104b2e963edda1a89", // b9297 (current download URL)
+                "a39b9d8200591e3e16f14b933f97ba0856e464097e0ba79cd3fb101313bdde96", // b9174
             },
             [LlamaCpp.MacOsArm64Executable] = new[]
             {
-                "1ebdcadd5939620f1cdd9e5d2d6c7ba2902e85301f0f2ba15f51cb5beb8b4fcc", // b9174 (current download URL)
+                "6dcf6d0ac4df68f51953699a3c0c40d7e18ce6417379fef23d104c017be3bcf1", // b9297 (current download URL)
+                "1ebdcadd5939620f1cdd9e5d2d6c7ba2902e85301f0f2ba15f51cb5beb8b4fcc", // b9174
                 "61b18501af97dce62cb7e1c019981734d7b0e1003122079ac212edaeb86a36e4", // b9145
             },
             [LlamaCpp.MacOsX64Executable] = new[]
             {
-                "a63265bf5136200b2a8c2f86404151975090a58dae24df934a6054b52348aa1c", // b9174 (current download URL)
+                "b0af61933b55b1c8b9c2ec2dfb56963fbbe8d107e659305dc2f79b4efc3d3152", // b9297 (current download URL)
+                "a63265bf5136200b2a8c2f86404151975090a58dae24df934a6054b52348aa1c", // b9174
                 "c33c8f47da7d7751cd07c9ab32e77c84b3f5ac56b56299016f62b2d184fe3dfb", // b9145
             },
 
