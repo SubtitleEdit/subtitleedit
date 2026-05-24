@@ -1,6 +1,6 @@
 {
   "Title": "SubtitleEdit",
-  "TranslatedBy": "v. 22.05.2026 di bovirus",
+  "TranslatedBy": "v. 24.05.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -691,6 +691,8 @@
     "OpenAiCompatibleSttTemperature": "Temperatura",
     "OpenAiCompatibleSttPrompt": "Prompt",
     "OpenAiCompatibleSttAutoTranscribeOnAudioSelection": "Trascrizione automatica selezione nuova forma d'onda tramite sintesi vocale",
+    "OpenAiCompatibleSttStream": "Risposta streaming",
+    "OpenAiCompatibleSttStreamHint": "Per ricevere delta di testo in tempo reale (SSE) invia \"stream=true\" .\r\nDisabilita per i server che rifiutano il parametro 'stream' (ad esempio Groq).",
     "ConfigurationRequired": "Richiesta configurazione",
     "TranscriptionError": "Errore trascrizione",
     "TranscriptionComplete": "Trascrizione completata",
@@ -2523,6 +2525,8 @@
       "SwitchOriginalAndTranslationSelectedLines": "Alterna originale e traduzione (righe selezionate)",
       "MergeOriginalIntoTranslationSelectedLines": "Unisci originale e traduzione (righe selezionate)",
       "SeekSilence": "Cerca silenzio",
+      "SeekSilenceBack": "Cerca indietro il silenzio",
+      "SeekSilenceForward": "Cerca il silenzio in avanti",
       "SetVideoPositionCurrentSubtitleStart": "Imposta la posizione video all'inizio della riga attuale",
       "SetVideoPositionCurrentSubtitleEnd": "Imposta la posizione video alla fine della riga attuale",
       "ToggleAudioTracks": "Attiva/disattiva tracce audio",
@@ -2730,6 +2734,8 @@
     "NOcrBinaryOcrFallbackDatabase": "Database di riserva BinaryOCR",
     "NOcrBinaryOcrFallbackNone": "(nessuno)",
     "BinaryOcrNOcrFallbackDatabase": "Database di riserva nOCR",
+    "PickFallbackDatabase": "Scegli il database OCR di riserva",
+    "FallbackOcrDatabase": "Database OCR di riserva",
     "ShowAllOllamaModels": "Visualizza tutti i modelli (non solo quelli con visione)",
     "OllamaModelLikelyWrong": "Ollama non ha restituito testo: il modello selezionato potrebbe non supportare OCR/visione"
   },
