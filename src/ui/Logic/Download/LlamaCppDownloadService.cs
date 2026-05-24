@@ -59,6 +59,7 @@ public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadS
     public async Task DownloadCudaRuntime(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
     {
         await DownloadHelper.DownloadFileAsync(httpClient, BaseUrl + "cudart-llama-bin-win-cuda-12.4-x64.zip", stream, progress, cancellationToken);
+        VerifyArchive(stream, DownloadHashManager.LlamaCpp.WindowsCudaRuntime, "CUDA runtime");
     }
 
     public async Task DownloadModel(string url, string destinationFileName, IProgress<float>? progress, CancellationToken cancellationToken)

@@ -65,6 +65,11 @@ public static class DownloadHashManager
         public const string MacOsArm64 = "LlamaCpp.MacOs.Arm64";
         public const string MacOsX64 = "LlamaCpp.MacOs.X64";
 
+        // CUDA runtime sidecar archive (NVIDIA cudart redistributable) downloaded
+        // separately by LlamaCppDownloadService.DownloadCudaRuntime when the user
+        // picks the Windows CUDA variant.
+        public const string WindowsCudaRuntime = "LlamaCpp.Windows.CudaRuntime";
+
         // Hashes of the unpacked llama-server / llama-server.exe — used to detect the installed
         // version when no sidecar is present (e.g. installs from older SE builds). The Windows
         // CPU/Vulkan/CUDA builds ship an identical llama-server.exe (the backend lives in the
@@ -374,6 +379,10 @@ public static class DownloadHashManager
                 "ad58f4d4e19874c6588d430f6241ccf884cf08eb22c76fde61e76f7d959a4206", // b9297 (current download URL)
                 "edbdcb670f04f6fac0da35cffeff1fa9ae22319cce327074d19b39f98b6c4838", // b9174
                 "a323ccfa87aaa31c47d62be75181799f16f2fe4636786c09bd8beeb6ac722266", // b9145
+            },
+            [LlamaCpp.WindowsCudaRuntime] = new[]
+            {
+                "8c79a9b226de4b3cacfd1f83d24f962d0773be79f1e7b75c6af4ded7e32ae1d6", // b9297 (current download URL)
             },
             [LlamaCpp.LinuxCpu] = new[]
             {
