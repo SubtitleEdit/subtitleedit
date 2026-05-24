@@ -223,7 +223,7 @@ public class LanguageGeneral
     public string GenerateImportShotChanges { get; set; }
     public string Generating { get; set; }
     public string GeneratingImageXofY { get; set; }
-    public string GeneratingWavFile { get; set; }
+    public string GeneratingAudioFile { get; set; }
     public string GetAudioClips { get; set; }
     public string GoTo { get; set; }
     public string GoToLineNumber { get; set; }
@@ -933,7 +933,7 @@ public class LanguageGeneral
         GenerateImportShotChanges = "Generate/import shot changes";
         Generating = "Generating...";
         GeneratingImageXofY = "Generating image {0:#,##0} of {1:#,##0}...";
-        GeneratingWavFile = "Generating audio file...";
+        GeneratingAudioFile = "Generating audio file...";
         GetAudioClips = "Get audio clips";
         GoTo = "Go to";
         GoToLineNumber = "Go to line number";

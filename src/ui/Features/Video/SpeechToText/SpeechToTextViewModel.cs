@@ -1290,7 +1290,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             _videoInfo.Height = jobItem.MediaInfo.Dimension.Height;
 
             ProgressOpacity = 1;
-            ProgressText = Se.Language.General.GeneratingWavFile;
+            ProgressText = Se.Language.General.GeneratingAudioFile;
             _startTicks = DateTime.UtcNow.Ticks;
 
             Dispatcher.UIThread.Post(() =>
@@ -2708,7 +2708,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         _videoInfo.Height = BatchItems[0].MediaInfo.Dimension.Height;
 
         ProgressOpacity = 1;
-        ProgressText = Se.Language.General.GeneratingWavFile;
+        ProgressText = Se.Language.General.GeneratingAudioFile;
         _startTicks = DateTime.UtcNow.Ticks;
 
         _batchIndex = 0;
