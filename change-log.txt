@@ -1,10 +1,9 @@
 
 Subtitle Edit Changelog
 
+
 v5.0.0-beta31 (xth May 2026)
 
-* Add Crisp ASR "Mega" backend (Qwen3-ASR-1.7B + robustness LoRA) for noisy / degraded speech
-* Add WhisperX-style wav2vec2 forced-aligner zoo to the Speech-to-text dialog (12 language-specific CTC aligners)
 * Add scrub video position by mouse wheel over the video surface
 * Add OCR fallback database picker to the OCR window
 * Add waveform Seek Silence back/forward shortcuts
@@ -21,6 +20,8 @@ v5.0.0-beta31 (xth May 2026)
 * Fix freeze on Settings OK after toggling "Show stop/fullscreen button" - thx bichitoxxx
 * Fix invisible status dots in Qwen3 TTS (CrispASR) settings
 * Fix Save-As dropping extension after a language suffix
+* Add Crisp ASR "Mega" backend (Qwen3-ASR-1.7B + robustness LoRA) for noisy / degraded speech
+* Add WhisperX-style wav2vec2 forced-aligner zoo to the Speech-to-text dialog
 * Update llama.cpp
 
 -----------------------------------------------------------------------------------------------------
