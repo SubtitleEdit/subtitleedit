@@ -3214,13 +3214,22 @@ public partial class SpeechToTextViewModel : ObservableObject
             return false;
         }
 
-        // Local whisper engines read the file directly and want 16 kHz PCM, so
-        // a pre-extracted 16 kHz WAV can be handed to them as-is. The OpenAI-
-        // compatible engine uploads the file instead, and a 16 kHz WAV easily
-        // exceeds the 25 MB cap on long audio — skip the short-circuit and
-        // transcode through ffmpeg into the chosen compressed format.
-        var isOpenAiEngine = GetEffectiveSelectedEngine() is OpenAiCompatibleSttEngine;
-        if (!isOpenAiEngine && videoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+        // OpenAI's STT endpoint caps uploads at 25 MB and a 2-hour WAV blows
+        // past that. When the OpenAI-compatible engine is selected, transcode
+        // to the user's chosen compressed format (mp3 by default) so the
+        // upload stays under the limit; other engines (whisper.cpp, faster-
+        // whisper, ...) keep getting WAV because they read the file locally
+        // and expect PCM.
+        var sttAudioFormat = GetEffectiveSelectedEngine() is OpenAiCompatibleSttEngine
+            ? OpenAiCompatibleSttAudioFormat
+            : "wav";
+        var extension = OpenAiSttService.GetFileExtensionForFormat(sttAudioFormat);
+
+        // Skip ffmpeg only when no conversion is needed: target format is wav
+        // and the input is already a 16 kHz WAV. If the user picked a
+        // compressed target (mp3/m4a/webm) we must still transcode — uploading
+        // the original WAV would defeat the whole point of the format choice.
+        if (extension == "wav" && videoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
         {
             try
             {
@@ -3239,17 +3248,6 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         _ffmpegLog = new StringBuilder();
-
-        // OpenAI's STT endpoint caps uploads at 25 MB and a 2-hour WAV blows
-        // past that. When the OpenAI-compatible engine is selected, transcode
-        // to the user's chosen compressed format (mp3 by default) so the
-        // upload stays under the limit; other engines (whisper.cpp, faster-
-        // whisper, ...) keep getting WAV because they read the file locally
-        // and expect PCM.
-        var sttAudioFormat = isOpenAiEngine
-            ? OpenAiCompatibleSttAudioFormat
-            : "wav";
-        var extension = OpenAiSttService.GetFileExtensionForFormat(sttAudioFormat);
         _audioFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + "." + extension);
         _filesToDelete.Add(_audioFileName);
         _audioExtractProcess = GetFfmpegProcess(videoFileName, audioTrackNumber, _audioFileName, sttAudioFormat);
