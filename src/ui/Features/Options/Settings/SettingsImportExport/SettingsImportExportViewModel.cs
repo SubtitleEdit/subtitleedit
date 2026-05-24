@@ -6,6 +6,8 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -98,6 +100,12 @@ public partial class SettingsImportExportViewModel : ObservableObject
     private bool _isExport;
     private string _importFilePath = string.Empty;
     private Se? _importData;
+    private string? _importSourceOs;
+
+    // Marker property name written at the top level of the export JSON so the
+    // importer can tell which OS the file came from (Se has no such field, so
+    // System.Text.Json silently ignores it when deserializing into Se).
+    private const string ExportSourceOsProperty = "exportSourceOs";
     public bool OkPressed { get; set; }
     public Window? Window { get; set; }
     private readonly IFileHelper _fileHelper;
@@ -159,6 +167,8 @@ public partial class SettingsImportExportViewModel : ObservableObject
             {
                 return false;
             }
+
+            _importSourceOs = TryReadExportSourceOs(json);
 
             IsRulesEnabled = _importData.General != null;
             IsAppearanceEnabled = _importData.Appearance != null;
@@ -292,7 +302,8 @@ public partial class SettingsImportExportViewModel : ObservableObject
         }
 
         var json = JsonSerializer.Serialize(exportData, new JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(fileName, json);
+        var jsonWithSource = InjectExportSourceOs(json, GetCurrentOsName());
+        File.WriteAllText(fileName, jsonWithSource);
     }
 
     private void ImportSettings()
@@ -355,6 +366,12 @@ public partial class SettingsImportExportViewModel : ObservableObject
         {
             if (importData.Shortcuts != null)
             {
+                if (_importSourceOs != null &&
+                    !string.Equals(_importSourceOs, GetCurrentOsName(), StringComparison.Ordinal))
+                {
+                    NormalizeShortcutModifiersForCurrentOs(importData.Shortcuts);
+                }
+
                 Se.Settings.Shortcuts = importData.Shortcuts;
             }
         }
@@ -368,6 +385,102 @@ public partial class SettingsImportExportViewModel : ObservableObject
         }
 
         Se.SaveSettings();
+    }
+
+    // Default shortcuts use "Win" as the modifier on macOS (the Cmd/⌘ key) and
+    // "Ctrl" on Windows/Linux — see ShortcutsMain.GetCommandOrWin. Only called
+    // when the import file is known to have come from a different OS, so we
+    // don't disturb user-customized modifiers (e.g. a real Ctrl shortcut on
+    // macOS) during a same-OS round-trip.
+    private static void NormalizeShortcutModifiersForCurrentOs(List<SeShortCut> shortcuts)
+    {
+        var isMac = OperatingSystem.IsMacOS();
+        var from = isMac ? "Ctrl" : "Win";
+        var to = isMac ? "Win" : "Ctrl";
+
+        foreach (var shortcut in shortcuts)
+        {
+            if (shortcut.Keys == null)
+            {
+                continue;
+            }
+
+            for (var i = 0; i < shortcut.Keys.Count; i++)
+            {
+                if (string.Equals(shortcut.Keys[i], from, StringComparison.Ordinal))
+                {
+                    shortcut.Keys[i] = to;
+                }
+            }
+        }
+    }
+
+    private static string GetCurrentOsName()
+    {
+        if (OperatingSystem.IsMacOS())
+        {
+            return "MacOS";
+        }
+
+        if (OperatingSystem.IsWindows())
+        {
+            return "Windows";
+        }
+
+        return "Linux";
+    }
+
+    // Adds a top-level "exportSourceOs" property to the serialized JSON without
+    // touching the Se type. Se has no such property, so System.Text.Json
+    // silently ignores it on import.
+    private static string InjectExportSourceOs(string json, string osName)
+    {
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            if (doc.RootElement.ValueKind != JsonValueKind.Object)
+            {
+                return json;
+            }
+
+            using var stream = new MemoryStream();
+            using (var writer = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }))
+            {
+                writer.WriteStartObject();
+                writer.WriteString(ExportSourceOsProperty, osName);
+                foreach (var prop in doc.RootElement.EnumerateObject())
+                {
+                    prop.WriteTo(writer);
+                }
+                writer.WriteEndObject();
+            }
+
+            return System.Text.Encoding.UTF8.GetString(stream.ToArray());
+        }
+        catch
+        {
+            return json;
+        }
+    }
+
+    private static string? TryReadExportSourceOs(string json)
+    {
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            if (doc.RootElement.ValueKind == JsonValueKind.Object &&
+                doc.RootElement.TryGetProperty(ExportSourceOsProperty, out var element) &&
+                element.ValueKind == JsonValueKind.String)
+            {
+                return element.GetString();
+            }
+        }
+        catch
+        {
+            // Fall through — missing marker is treated as unknown source OS.
+        }
+
+        return null;
     }
 
     public async void OnLoaded(object? sender, RoutedEventArgs e)
