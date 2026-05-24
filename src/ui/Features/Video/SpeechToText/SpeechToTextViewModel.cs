@@ -1047,37 +1047,25 @@ public partial class SpeechToTextViewModel : ObservableObject
                 }
             });
 
-            var response = await service.TranscribeAsync(audioFileName, language, null, segmentProgress, cancellationToken);
+            var audioSizeBytes = new FileInfo(audioFileName).Length;
+            if (audioSizeBytes > OpenAiSttChunker.DefaultThresholdBytes && _videoInfo.TotalSeconds > 0)
+            {
+                LogToConsole($"Audio file is {audioSizeBytes / (1024 * 1024)} MB — splitting into chunks to stay under the OpenAI 25 MB cap");
+                await TranscribeInChunksAsync(service, audioFileName, language, subtitle, segmentProgress, cancellationToken);
+            }
+            else
+            {
+                var response = await service.TranscribeAsync(audioFileName, language, null, segmentProgress, cancellationToken);
+                IngestTranscriptionResponse(
+                    response,
+                    subtitle,
+                    offsetSeconds: 0.0,
+                    chunkEndSeconds: _videoInfo.TotalSeconds,
+                    paragraphsBeforeResponse: 0);
+            }
 
             ProgressValue = 90;
             ProgressText = Se.Language.General.ProcessingResponse;
-
-            if (response.Segments != null && response.Segments.Count > 0 && subtitle.Paragraphs.Count == 0)
-            {
-                foreach (var segment in response.Segments.OrderBy(s => s.Start))
-                {
-                    var text = segment.Text.Trim();
-                    if (!string.IsNullOrEmpty(text))
-                    {
-                        subtitle.Paragraphs.Add(new Paragraph(
-                            text,
-                            segment.Start * 1000.0,
-                            segment.End * 1000.0));
-                    }
-                }
-            }
-            else if (response.Segments == null || response.Segments.Count == 0)
-            {
-                if (!string.IsNullOrEmpty(response.Text))
-                {
-                    // Single text response - use entire audio duration
-                    var fileInfo = new FileInfo(audioFileName);
-                    subtitle.Paragraphs.Add(new Paragraph(
-                        response.Text.Trim(),
-                        0.0,
-                        fileInfo.Length > 0 ? 5000.0 : 0.0));
-                }
-            }
 
             ProgressValue = 100;
             ProgressText = Se.Language.General.TranscriptionComplete;
@@ -1154,6 +1142,149 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             _openAiCts?.Dispose();
             _openAiCts = null;
+        }
+    }
+
+    /// <summary>
+    /// Merge one TranscribeAsync response into the running subtitle. If the
+    /// streaming progress callback already added the segments for this slice
+    /// (paragraph count grew while we were waiting), do nothing — that's the
+    /// common case. Otherwise fall back to whatever the non-streaming
+    /// response gave us, with absolute timestamps obtained by adding the
+    /// slice's offset into the source audio. <paramref name="chunkEndSeconds"/>
+    /// is the absolute end time of this slice and is used to span the
+    /// text-only fallback paragraph across the chunk's duration; otherwise
+    /// chunks after the first would get zero-duration paragraphs.
+    /// </summary>
+    private static void IngestTranscriptionResponse(
+        OpenAiCompatibleSttResponse response,
+        Subtitle subtitle,
+        double offsetSeconds,
+        double chunkEndSeconds,
+        int paragraphsBeforeResponse)
+    {
+        lock (subtitle.Paragraphs)
+        {
+            if (subtitle.Paragraphs.Count > paragraphsBeforeResponse)
+            {
+                return;
+            }
+
+            if (response.Segments != null && response.Segments.Count > 0)
+            {
+                foreach (var segment in response.Segments.OrderBy(s => s.Start))
+                {
+                    var text = segment.Text.Trim();
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        subtitle.Paragraphs.Add(new Paragraph(
+                            text,
+                            (segment.Start + offsetSeconds) * 1000.0,
+                            (segment.End + offsetSeconds) * 1000.0));
+                    }
+                }
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(response.Text))
+            {
+                // No segment timings — span the whole slice. Falling back to a
+                // historical 5 s window only when we genuinely don't know the
+                // end (callers without a populated _videoInfo).
+                var startMs = offsetSeconds * 1000.0;
+                var endMs = chunkEndSeconds > offsetSeconds
+                    ? chunkEndSeconds * 1000.0
+                    : startMs + 5000.0;
+                subtitle.Paragraphs.Add(new Paragraph(response.Text.Trim(), startMs, endMs));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Split audioFileName into ~23 MB pieces, snap each cut to nearby silence
+    /// via ffmpeg silencedetect, then upload each chunk sequentially with
+    /// segment timestamps offset back to absolute time. Any chunk failure
+    /// aborts the run; partial subtitle so far is preserved by the outer
+    /// catch-blocks like the single-file path.
+    /// </summary>
+    private async Task TranscribeInChunksAsync(
+        OpenAiSttService service,
+        string audioFileName,
+        string? language,
+        Subtitle subtitle,
+        IProgress<OpenAiCompatibleSegment> segmentProgress,
+        CancellationToken cancellationToken)
+    {
+        var totalSeconds = _videoInfo.TotalSeconds;
+        var fileSize = new FileInfo(audioFileName).Length;
+        var chunkCount = OpenAiSttChunker.ComputeChunkCount(fileSize);
+
+        var ffmpegPath = Se.Settings.General.FfmpegPath;
+        if (!File.Exists(ffmpegPath))
+        {
+            ffmpegPath = "ffmpeg";
+        }
+
+        LogToConsole($"Running silencedetect on audio file...");
+        var silences = await OpenAiSttChunker.DetectSilenceIntervalsAsync(
+            ffmpegPath, audioFileName, cancellationToken: cancellationToken);
+        LogToConsole($"  Found {silences.Count} silence interval(s); computing {chunkCount} chunk boundaries");
+
+        var boundaries = OpenAiSttChunker.ComputeAdjustedBoundaries(totalSeconds, chunkCount, silences);
+        var extension = Path.GetExtension(audioFileName);
+
+        for (var i = 0; i < boundaries.Count; i++)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var boundary = boundaries[i];
+            var chunkPath = Path.Combine(Path.GetTempPath(), $"se-stt-chunk-{Guid.NewGuid()}{extension}");
+            _filesToDelete.Add(chunkPath);
+
+            LogToConsole(
+                $"Chunk {i + 1}/{boundaries.Count}: " +
+                $"{TimeSpan.FromSeconds(boundary.StartSeconds):mm\\:ss} → {TimeSpan.FromSeconds(boundary.EndSeconds):mm\\:ss}");
+
+            var extractOk = await OpenAiSttChunker.ExtractChunkAsync(
+                ffmpegPath, audioFileName, chunkPath,
+                boundary.StartSeconds, boundary.DurationSeconds, cancellationToken);
+            if (!extractOk)
+            {
+                throw new InvalidOperationException(
+                    $"ffmpeg failed to extract chunk {i + 1}/{boundaries.Count} " +
+                    $"({boundary.StartSeconds:0.##}s → {boundary.EndSeconds:0.##}s) from {audioFileName}");
+            }
+
+            // Wrap the caller's segment progress so streaming segments coming
+            // from this chunk get offset back to absolute time before the UI
+            // sees them.
+            var offsetSeconds = boundary.StartSeconds;
+            var offsettingProgress = new Progress<OpenAiCompatibleSegment>(seg =>
+            {
+                segmentProgress.Report(new OpenAiCompatibleSegment
+                {
+                    Id = seg.Id,
+                    Start = seg.Start + offsetSeconds,
+                    End = seg.End + offsetSeconds,
+                    Text = seg.Text,
+                });
+            });
+
+            int paragraphsBeforeChunk;
+            lock (subtitle.Paragraphs)
+            {
+                paragraphsBeforeChunk = subtitle.Paragraphs.Count;
+            }
+
+            var chunkResponse = await service.TranscribeAsync(
+                chunkPath, language, null, offsettingProgress, cancellationToken);
+
+            IngestTranscriptionResponse(
+                chunkResponse,
+                subtitle,
+                offsetSeconds,
+                chunkEndSeconds: boundary.EndSeconds,
+                paragraphsBeforeChunk);
         }
     }
 
