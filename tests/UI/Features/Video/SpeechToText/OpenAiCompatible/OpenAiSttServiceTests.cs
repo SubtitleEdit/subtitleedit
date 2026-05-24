@@ -316,6 +316,31 @@ public class OpenAiSttServiceTests
     }
 
     [Fact]
+    public async Task TranscribeAsync_NonStreaming_UsesVerboseJsonWithGranularities()
+    {
+        // Issue #11146: the OpenAI API rejects timestamp_granularities[] unless
+        // response_format=verbose_json. The non-streaming path must pair them.
+        var (names, values) = await CaptureMultipartFieldNamesAndValuesAsync(MakeSettings());
+
+        Assert.Equal("verbose_json", values["response_format"]);
+        Assert.Contains("timestamp_granularities[]", names);
+    }
+
+    [Fact]
+    public async Task TranscribeAsync_StreamEnabled_UsesJsonAndOmitsGranularities()
+    {
+        // Streaming only emits response_format=json; timestamp_granularities[]
+        // is incompatible with it and must not be sent.
+        var settings = MakeSettings();
+        settings.Stream = true;
+
+        var (names, values) = await CaptureMultipartFieldNamesAndValuesAsync(settings);
+
+        Assert.Equal("json", values["response_format"]);
+        Assert.DoesNotContain("timestamp_granularities[]", names);
+    }
+
+    [Fact]
     public async Task TranscribeAsync_NonSuccessStatus_InvokesLogger_WithSanitizedUrl()
     {
         var logEntries = new List<string>();
