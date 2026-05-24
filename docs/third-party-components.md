@@ -105,7 +105,7 @@ Used for GPU-accelerated AI-based speech recognition.
 ### SE5 Speech-to-Text Engines
 Subtitle Edit 5 can download additional ASR engines directly from the **Speech to text** window.
 
-*   **Crisp ASR:** Stored in `[Data Folder]/SpeechToText/CrispASR`. Models go into its `models` folder. Crisp ASR backends include Parakeet, Canary, Cohere, Fire Red, GLM, Granite, Qwen3, and Omni.
+*   **Crisp ASR:** Stored in `[Data Folder]/SpeechToText/CrispASR`. Models go into its `models` folder. Crisp ASR backends include Parakeet, Canary, Cohere, Fire Red, GLM, Granite, Qwen3, Mega, Omni, and Kyutai.
 *   **Qwen3 ASR CPP:** Stored in `[Data Folder]/Qwen3ASR`. Models go into `[Data Folder]/Qwen3ASR/models`.
 *   **Parakeet.cpp:** Stored in `[Data Folder]/parakeet.cpp`. Each model has its own folder because the model weights and `vocab.txt` must stay together.
 
