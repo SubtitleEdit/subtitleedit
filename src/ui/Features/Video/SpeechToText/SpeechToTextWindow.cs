@@ -682,6 +682,12 @@ public class SpeechToTextWindow : Window
             .BindIsVisible(vm, nameof(vm.IsOpenAiCompatibleSttVisible));
         ToolTip.SetTip(checkStream, Se.Language.General.OpenAiCompatibleSttStreamHint);
 
+        var comboAudioFormat = UiUtil.MakeComboBox(vm.OpenAiCompatibleSttAudioFormats, vm, nameof(vm.OpenAiCompatibleSttAudioFormat))
+            .WithMinWidth(120)
+            .WithMarginTop(10)
+            .BindIsVisible(vm, nameof(vm.IsOpenAiCompatibleSttVisible));
+        ToolTip.SetTip(comboAudioFormat, Se.Language.General.OpenAiCompatibleSttAudioFormatHint);
+
         return new (Control, Control)[]
         {
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttEndpoint), MakeText(nameof(vm.OpenAiCompatibleSttUrl), 400)),
@@ -692,6 +698,7 @@ public class SpeechToTextWindow : Window
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttTemperature), numericTemperature),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttPrompt), MakeText(nameof(vm.OpenAiCompatibleSttPrompt), 400)),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttExtraHeaders), textExtraHeaders),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttAudioFormat), comboAudioFormat),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttStream), checkStream),
         };
     }

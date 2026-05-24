@@ -116,6 +116,7 @@ public class SeTools
     public string OpenAiCompatibleSttPrompt { get; set; } = string.Empty;
     public bool OpenAiCompatibleSttAutoTranscribeOnAudioSelection { get; set; }
     public bool OpenAiCompatibleSttStream { get; set; }
+    public string OpenAiCompatibleSttAudioFormat { get; set; } = "mp3";
 
     public List<string> FindHistory { get; set; } = new List<string>();
     public bool AllowSingleLetterShortcutsInTextbox { get; set; }

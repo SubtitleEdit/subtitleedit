@@ -354,6 +354,75 @@ public class OpenAiSttServiceTests
     }
 
     [Fact]
+    public async Task TranscribeAsync_FileExtensionDrivesContentType_OverridingAudioFormat()
+    {
+        // Issue #11147: the ViewModel can short-circuit and hand us a .wav even
+        // when the user picked "mp3" in settings (e.g. dropping in an already-
+        // 16kHz WAV). Trusting settings.AudioFormat would attach Content-Type:
+        // audio/mpeg to WAV bytes — OpenAI rejects that. The actual on-disk
+        // extension must win.
+        MediaTypeHeaderValue? fileContentType = null;
+        using var handler = new StubHandler(async (req, ct) =>
+        {
+            if (req.Content is MultipartFormDataContent multipart)
+            {
+                foreach (var part in multipart)
+                {
+                    if (part.Headers.ContentDisposition?.Name?.Trim('"') == "file")
+                    {
+                        fileContentType = part.Headers.ContentType;
+                        // Drain so the request completes cleanly.
+                        await part.ReadAsByteArrayAsync(ct);
+                    }
+                }
+            }
+            return JsonResponse("""{"text":"ok"}""");
+        });
+        using var client = new HttpClient(handler);
+        var settings = MakeSettings();
+        settings.AudioFormat = "mp3"; // user picked mp3...
+        var service = new OpenAiSttService(client, settings);
+
+        var ct = TestContext.Current.CancellationToken;
+        var wav = MakeTinyWav(); // ...but the file we hand over is a .wav
+        try
+        {
+            await service.TranscribeAsync(wav, cancellationToken: ct);
+
+            Assert.NotNull(fileContentType);
+            Assert.Equal("audio/wav", fileContentType!.MediaType);
+        }
+        finally
+        {
+            File.Delete(wav);
+        }
+    }
+
+    [Theory]
+    [InlineData("mp3", "audio/mpeg")]
+    [InlineData("m4a", "audio/mp4")]
+    [InlineData("webm", "audio/webm")]
+    [InlineData("wav", "audio/wav")]
+    [InlineData("", "audio/wav")]
+    [InlineData(null, "audio/wav")]
+    public void GetMediaTypeForFormat_MapsKnownFormats(string? format, string expectedMediaType)
+    {
+        Assert.Equal(expectedMediaType, OpenAiSttService.GetMediaTypeForFormat(format));
+    }
+
+    [Theory]
+    [InlineData("mp3", "mp3")]
+    [InlineData("M4A", "m4a")]
+    [InlineData("webm", "webm")]
+    [InlineData("wav", "wav")]
+    [InlineData("", "wav")]
+    [InlineData(null, "wav")]
+    public void GetFileExtensionForFormat_MapsKnownFormats(string? format, string expectedExtension)
+    {
+        Assert.Equal(expectedExtension, OpenAiSttService.GetFileExtensionForFormat(format));
+    }
+
+    [Fact]
     public void SanitizeEndpointForLog_RedactsUserInfoAndSensitiveQueryParams()
     {
         var sanitized = OpenAiSttService.SanitizeEndpointForLog(

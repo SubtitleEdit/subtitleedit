@@ -102,6 +102,8 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private string? _openAiCompatibleSttPrompt;
     [ObservableProperty] private string? _openAiCompatibleSttExtraHeaders;
     [ObservableProperty] private bool _openAiCompatibleSttStream;
+    [ObservableProperty] private string _openAiCompatibleSttAudioFormat = "mp3";
+    public ObservableCollection<string> OpenAiCompatibleSttAudioFormats { get; } = new(new[] { "mp3", "m4a", "webm", "wav" });
 
     public Window? Window { get; set; }
 
@@ -267,6 +269,8 @@ public partial class SpeechToTextViewModel : ObservableObject
         OpenAiCompatibleSttPrompt = Se.Settings.Tools.OpenAiCompatibleSttPrompt;
         OpenAiCompatibleSttExtraHeaders = Se.Settings.Tools.OpenAiCompatibleSttExtraHeaders;
         OpenAiCompatibleSttStream = Se.Settings.Tools.OpenAiCompatibleSttStream;
+        var savedFormat = Se.Settings.Tools.OpenAiCompatibleSttAudioFormat;
+        OpenAiCompatibleSttAudioFormat = OpenAiCompatibleSttAudioFormats.Contains(savedFormat) ? savedFormat : "mp3";
 
         var savedChoice = Se.Settings.Tools.AudioToText.WhisperChoice;
         var whisperCppEngine = Engines.OfType<WhisperCppEngine>().FirstOrDefault();
@@ -313,6 +317,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         Se.Settings.Tools.OpenAiCompatibleSttPrompt = OpenAiCompatibleSttPrompt ?? string.Empty;
         Se.Settings.Tools.OpenAiCompatibleSttExtraHeaders = OpenAiCompatibleSttExtraHeaders ?? string.Empty;
         Se.Settings.Tools.OpenAiCompatibleSttStream = OpenAiCompatibleSttStream;
+        Se.Settings.Tools.OpenAiCompatibleSttAudioFormat = OpenAiCompatibleSttAudioFormat ?? "mp3";
 
         Se.SaveSettings();
     }
@@ -3228,9 +3233,20 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         _ffmpegLog = new StringBuilder();
-        _waveFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".wav");
+
+        // OpenAI's STT endpoint caps uploads at 25 MB and a 2-hour WAV blows
+        // past that. When the OpenAI-compatible engine is selected, transcode
+        // to the user's chosen compressed format (mp3 by default) so the
+        // upload stays under the limit; other engines (whisper.cpp, faster-
+        // whisper, ...) keep getting WAV because they read the file locally
+        // and expect PCM.
+        var sttAudioFormat = GetEffectiveSelectedEngine() is OpenAiCompatibleSttEngine
+            ? OpenAiCompatibleSttAudioFormat
+            : "wav";
+        var extension = OpenAiSttService.GetFileExtensionForFormat(sttAudioFormat);
+        _waveFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + "." + extension);
         _filesToDelete.Add(_waveFileName);
-        _waveExtractProcess = GetFfmpegProcess(videoFileName, audioTrackNumber, _waveFileName);
+        _waveExtractProcess = GetFfmpegProcess(videoFileName, audioTrackNumber, _waveFileName, sttAudioFormat);
         if (_waveExtractProcess == null)
         {
             return false;
@@ -3405,7 +3421,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         return (decimal)(TimeCode.ParseToMilliseconds(timeCode) / 1000.0);
     }
 
-    private Process? GetFfmpegProcess(string videoFileName, int audioTrackNumber, string outWaveFile)
+    private Process? GetFfmpegProcess(string videoFileName, int audioTrackNumber, string outWaveFile, string audioFormat = "wav")
     {
         if (!File.Exists(Se.Settings.General.FfmpegPath) && Configuration.IsRunningOnWindows)
         {
@@ -3418,12 +3434,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             audioParameter = $"-map 0:{audioTrackNumber}";
         }
 
-        var fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 16000 -ac 1 -ab 32k -af volume=1.75 -f wav {2} \"{1}\"";
-        if (_useCenterChannelOnly)
-        {
-            fFmpegWaveTranscodeSettings =
-                "-i \"{0}\" -vn -ar 16000 -ab 32k -af volume=1.75 -af \"pan=mono|c0=FC\" -f wav {2} \"{1}\"";
-        }
+        var fFmpegWaveTranscodeSettings = GetFfmpegTranscodeFormatString(audioFormat, _useCenterChannelOnly);
 
         //-i indicates the input
         //-vn means no video output
@@ -3448,6 +3459,32 @@ public partial class SpeechToTextViewModel : ObservableObject
                 CreateNoWindow = true,
                 UseShellExecute = false,
             }
+        };
+    }
+
+    /// <summary>
+    /// ffmpeg argument template for transcoding the source audio. WAV stays on
+    /// the historical pipeline (lossless 16 kHz mono PCM); the compressed
+    /// formats target ~32 kbit/s mono at 16 kHz, which is plenty for speech
+    /// recognition and keeps a 2-hour video well under OpenAI's 25 MB upload
+    /// limit. Opus is shipped inside a webm container because OpenAI accepts
+    /// webm but rejects bare ".opus" uploads.
+    /// </summary>
+    private static string GetFfmpegTranscodeFormatString(string audioFormat, bool useCenterChannelOnly)
+    {
+        var normalized = string.IsNullOrWhiteSpace(audioFormat) ? "wav" : audioFormat.Trim().ToLowerInvariant();
+        var channelArgs = useCenterChannelOnly
+            ? "-af \"pan=mono|c0=FC,volume=1.75\""
+            : "-ac 1 -af volume=1.75";
+
+        return normalized switch
+        {
+            "mp3" => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a libmp3lame -b:a 32k -f mp3 {2} \"{1}\"",
+            "m4a" => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a aac -b:a 32k -f ipod {2} \"{1}\"",
+            "webm" => "-i \"{0}\" -vn -ar 16000 " + channelArgs + " -c:a libopus -b:a 28k -f webm {2} \"{1}\"",
+            _ => useCenterChannelOnly
+                ? "-i \"{0}\" -vn -ar 16000 -ab 32k -af volume=1.75 -af \"pan=mono|c0=FC\" -f wav {2} \"{1}\""
+                : "-i \"{0}\" -vn -ar 16000 -ac 1 -ab 32k -af volume=1.75 -f wav {2} \"{1}\"",
         };
     }
 
