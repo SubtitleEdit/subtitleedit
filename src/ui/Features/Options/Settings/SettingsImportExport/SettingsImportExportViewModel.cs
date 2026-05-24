@@ -6,6 +6,8 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -355,6 +357,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
         {
             if (importData.Shortcuts != null)
             {
+                NormalizeShortcutModifiersForCurrentOs(importData.Shortcuts);
                 Se.Settings.Shortcuts = importData.Shortcuts;
             }
         }
@@ -368,6 +371,33 @@ public partial class SettingsImportExportViewModel : ObservableObject
         }
 
         Se.SaveSettings();
+    }
+
+    // Default shortcuts use "Win" as the modifier on macOS (the Cmd/⌘ key) and
+    // "Ctrl" on Windows/Linux — see ShortcutsMain.GetCommandOrWin. When a
+    // settings file is moved across platforms the stored modifier no longer
+    // matches the host's expected default, so translate it on import.
+    private static void NormalizeShortcutModifiersForCurrentOs(List<SeShortCut> shortcuts)
+    {
+        var isMac = OperatingSystem.IsMacOS();
+        var from = isMac ? "Ctrl" : "Win";
+        var to = isMac ? "Win" : "Ctrl";
+
+        foreach (var shortcut in shortcuts)
+        {
+            if (shortcut.Keys == null)
+            {
+                continue;
+            }
+
+            for (var i = 0; i < shortcut.Keys.Count; i++)
+            {
+                if (string.Equals(shortcut.Keys[i], from, StringComparison.Ordinal))
+                {
+                    shortcut.Keys[i] = to;
+                }
+            }
+        }
     }
 
     public async void OnLoaded(object? sender, RoutedEventArgs e)
