@@ -444,6 +444,17 @@ public partial class SpeechToTextViewModel : ObservableObject
             return;
         }
 
+        // The auto-generated SelectedLanguage setter fires this handler during
+        // the constructor (line ~215), *before* ForcedAligners is initialized
+        // (line ~222) and *before* UpdateForcedAlignerUi has populated it. The
+        // null guard avoids a startup NRE that crashes the Speech-to-text
+        // dialog on open; UpdateForcedAlignerUi calls back here after building
+        // the list, so the language-based auto-suggest still kicks in later.
+        if (ForcedAligners == null)
+        {
+            return;
+        }
+
         if (_userExplicitlySetForcedAligner)
         {
             return;
