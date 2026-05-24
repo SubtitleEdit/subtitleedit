@@ -118,14 +118,27 @@ public class GetPluginsWindow : Window
             installButton.Bind(Button.CommandParameterProperty, new Binding());
             installButton.Bind(IsEnabledProperty, new Binding(nameof(GetPluginsDisplayItem.CanInstall)));
 
+            // A generous hit area: a 32x32 square with the icon inside. Without an explicit
+            // size the button can be missed during a short download (the icon glyph itself
+            // is only ~16px wide). Transparent background still receives hit-tests so the
+            // whole 32x32 area is clickable.
             var cancelButton = new Button
             {
-                Content = new Icon { Value = IconNames.Close, FontSize = 16 },
+                Content = new Icon
+                {
+                    Value = IconNames.Close,
+                    FontSize = 18,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                },
+                Width = 32,
+                Height = 32,
+                Padding = new Thickness(0),
                 VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(4, 0, 0, 0),
-                Padding = new Thickness(6),
-                Background = null,
+                Margin = new Thickness(6, 0, 0, 0),
+                Background = Brushes.Transparent,
                 BorderBrush = null,
+                Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand),
                 Command = vm.CancelDownloadCommand,
                 [ToolTip.TipProperty] = Se.Language.General.Cancel.Replace("_", string.Empty),
             };
