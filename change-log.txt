@@ -2,7 +2,7 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-beta31 (xth May 2026)
+v5.0.0-beta31 (24th May 2026)
 
 * Add scrub video position by mouse wheel over the video surface
 * Add OCR fallback database picker to the OCR window
@@ -23,6 +23,7 @@ v5.0.0-beta31 (xth May 2026)
 * Add Crisp ASR "Mega" backend (Qwen3-ASR-1.7B + robustness LoRA) for noisy / degraded speech
 * Add WhisperX-style wav2vec2 forced-aligner zoo to the Speech-to-text dialog
 * Update llama.cpp
+* Work on plugins
 
 -----------------------------------------------------------------------------------------------------
 

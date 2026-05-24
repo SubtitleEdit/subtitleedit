@@ -15,6 +15,8 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 
 public class Se
 {
+    public static string Version { get; set; } = "v5.0.0-beta31";
+
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
     public string Color1 { get; set; } = "#ffff00ff";
@@ -189,8 +191,6 @@ public class Se
 
         return Path.Combine(TesseractFolder, "tessdata");
     }
-
-    public static string Version { get; set; } = "v5.0.0-beta30";
 
     public void InitializeMainShortcuts(MainViewModel vm)
     {
