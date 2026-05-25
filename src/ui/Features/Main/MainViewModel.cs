@@ -14218,6 +14218,7 @@ public partial class MainViewModel :
             SelectedFrameRate = _mediaInfo?.FramesRate.ToString(CultureInfo.InvariantCulture) ?? FrameRates[0];
             Se.Settings.General.CurrentFrameRate = (double)(_mediaInfo?.FramesRate ?? 23.976m);
             Configuration.Settings.General.CurrentFrameRate = (double)(_mediaInfo?.FramesRate ?? 23.976m);
+            _updateAudioVisualizer = true;
 
             if (IsFormatAssa)
             {
@@ -14277,6 +14278,7 @@ public partial class MainViewModel :
         {
             Se.Settings.General.CurrentFrameRate = frameRate;
             Configuration.Settings.General.CurrentFrameRate = frameRate;
+            _updateAudioVisualizer = true;
         }
     }
 
