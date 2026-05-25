@@ -309,4 +309,19 @@ public partial class PluginManagerViewModel : ObservableObject
             Window?.Close();
         }
     }
+
+    // Cancel an in-flight Update-All loop when the manager window closes — without
+    // this, _updateAllCts is never signalled and the per-iteration cancellation
+    // guard in UpdateAll is dead code.
+    internal void OnClosing()
+    {
+        try
+        {
+            _updateAllCts?.Cancel();
+            _checkCts?.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+        }
+    }
 }
