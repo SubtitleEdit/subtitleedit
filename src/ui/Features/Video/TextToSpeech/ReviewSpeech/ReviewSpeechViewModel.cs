@@ -3,7 +3,9 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
@@ -16,6 +18,7 @@ using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -83,7 +86,18 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
     public Window? Window { get; set; }
     public DataGrid LineGrid { get; internal set; }
+    public AudioVisualizer? AudioVisualizer { get; set; }
     public TtsStepResult[] StepResults { get; set; }
+
+    // Source-of-truth peaks (of the original video audio) for the waveform shown next to the
+    // review grid. May be null when no video is loaded — the visualizer then sits idle.
+    [ObservableProperty] private WavePeakData2? _wavePeakData;
+
+    // Each ReviewRow's paragraph projected as a SubtitleLineViewModel so AudioVisualizer drag
+    // logic (which writes to SubtitleLineViewModel.StartTime/EndTime) works unchanged. We push
+    // edits back to the source StepResult.Paragraph in OnWaveformParagraphChanged.
+    public List<SubtitleLineViewModel> WaveformParagraphs { get; } = new();
+    private readonly Dictionary<SubtitleLineViewModel, ReviewRow> _waveformParagraphToRow = new();
 
     // Cast travelling with the audio. Populated by the main TTS VM via SetActorVoiceMappings;
     // round-tripped through SubtitleEditTts.json so a future Import re-applies the same voices.
@@ -259,7 +273,26 @@ public partial class ReviewSpeechViewModel : ObservableObject
             };
             row.StartHistory();
             Lines.Add(row);
+
+            // Mirror this row's paragraph as a SubtitleLineViewModel so the AudioVisualizer can
+            // draw + drag it. The visualizer's drag handlers mutate StartTime/EndTime on the VM,
+            // so OnWaveformParagraphChanged below forwards those edits back to row.StepResult.Paragraph.
+            var waveformParagraph = new SubtitleLineViewModel
+            {
+                Number = p.Paragraph.Number,
+                Text = p.Text,
+                StartTime = TimeSpan.FromMilliseconds(p.Paragraph.StartTime.TotalMilliseconds),
+                EndTime = TimeSpan.FromMilliseconds(p.Paragraph.EndTime.TotalMilliseconds),
+            };
+            waveformParagraph.UpdateDuration();
+            waveformParagraph.PropertyChanged += OnWaveformParagraphChanged;
+            WaveformParagraphs.Add(waveformParagraph);
+            _waveformParagraphToRow[waveformParagraph] = row;
         }
+
+        // Default to an empty placeholder so the visualizer renders an empty timeline instead of
+        // refusing to draw anything (LengthInSeconds == 0 with null peaks).
+        WavePeakData = wavePeakData;
 
         // Shared with the Cast dialog (see ActorVoiceDetector.FilterUsableEngines) so the two
         // windows always show the same set of usable engines. Add new engine availability rules
@@ -286,6 +319,68 @@ public partial class ReviewSpeechViewModel : ObservableObject
             LineGrid.SelectedIndex = 0;
             LineGrid.ScrollIntoView(LineGrid.SelectedItem, null);
         }
+    }
+
+    // Drag/edit done on the waveform mutates the SubtitleLineViewModel mirror; this writes the
+    // new times back to the underlying TtsStepResult.Paragraph so OK/Export see the change.
+    private void OnWaveformParagraphChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (sender is not SubtitleLineViewModel waveformParagraph)
+        {
+            return;
+        }
+
+        if (e.PropertyName != nameof(SubtitleLineViewModel.StartTime) &&
+            e.PropertyName != nameof(SubtitleLineViewModel.EndTime))
+        {
+            return;
+        }
+
+        if (!_waveformParagraphToRow.TryGetValue(waveformParagraph, out var row))
+        {
+            return;
+        }
+
+        var paragraph = row.StepResult.Paragraph;
+        paragraph.StartTime = new TimeCode(waveformParagraph.StartTime);
+        paragraph.EndTime = new TimeCode(waveformParagraph.EndTime);
+
+        // Cps depends on duration; refresh so the grid stays consistent with the dragged times.
+        row.Cps = Math.Round(paragraph.GetCharactersPerSecond(), 2).ToString(CultureInfo.CurrentCulture);
+    }
+
+    // Centers the visualizer on the currently selected paragraph and marks it as selected so the
+    // user can grab its start/end handles. Safe to call before AudioVisualizer is attached.
+    public void RefreshWaveformPosition()
+    {
+        var av = AudioVisualizer;
+        if (av == null || WavePeakData == null)
+        {
+            return;
+        }
+
+        var row = SelectedLine;
+        if (row == null || WaveformParagraphs.Count == 0)
+        {
+            return;
+        }
+
+        var index = Lines.IndexOf(row);
+        if (index < 0 || index >= WaveformParagraphs.Count)
+        {
+            return;
+        }
+
+        var waveformParagraph = WaveformParagraphs[index];
+        var startSeconds = Math.Max(0, waveformParagraph.StartTime.TotalSeconds - 2.0);
+
+        av.SetPosition(
+            startSeconds,
+            WaveformParagraphs,
+            waveformParagraph.StartTime.TotalSeconds,
+            index,
+            new List<SubtitleLineViewModel> { waveformParagraph });
+        av.InvalidateVisual();
     }
 
     [RelayCommand]
@@ -1062,6 +1157,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
     // voice).
     partial void OnSelectedLineChanged(ReviewRow? value)
     {
+        // Re-center the waveform on the newly selected row regardless of the left-panel sync
+        // state — the visual cue should follow the user's click immediately.
+        RefreshWaveformPosition();
+
         if (value == null)
         {
             return;
@@ -1282,5 +1381,6 @@ public partial class ReviewSpeechViewModel : ObservableObject
     internal void Loaded()
     {
         UiUtil.RestoreWindowPosition(Window);
+        RefreshWaveformPosition();
     }
 }

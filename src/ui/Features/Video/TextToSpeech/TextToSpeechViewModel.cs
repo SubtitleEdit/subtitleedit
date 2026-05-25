@@ -1048,6 +1048,21 @@ public partial class TextToSpeechViewModel : ObservableObject
             });
         }
 
+        // Prefer the video referenced in the imported JSON — the user is reopening that specific
+        // TTS session and the main TTS window may have been opened without a video at all.
+        var videoFileNameForReview = !string.IsNullOrEmpty(importExport.VideoFileName) && File.Exists(importExport.VideoFileName)
+            ? importExport.VideoFileName
+            : _videoFileName;
+        if (string.IsNullOrEmpty(_videoFileName) && !string.IsNullOrEmpty(videoFileNameForReview))
+        {
+            _videoFileName = videoFileNameForReview;
+        }
+
+        // Try to populate _wavePeakData synchronously from the on-disk cache (fast, no ffmpeg).
+        // If the cache miss, GenerateWavePeaksIfNeededAsync below kicks off a background ffmpeg
+        // job and pushes the result into the review VM once ready.
+        var peaksForReview = TryLoadWavePeaksFromDisk(videoFileNameForReview) ?? _wavePeakData;
+
         var result = await _windowService.ShowDialogAsync<ReviewSpeechWindow, ReviewSpeechViewModel>(Window, vm =>
         {
             vm.Initialize(
@@ -1058,13 +1073,101 @@ public partial class TextToSpeechViewModel : ObservableObject
                 SelectedVoice ?? Voices.First(),
                 Languages.ToArray(),
                 SelectedLanguage,
-                _videoFileName,
+                videoFileNameForReview,
                 Path.GetDirectoryName(fileName)!,
-                _wavePeakData);
+                peaksForReview);
             // Forward the imported cast so a subsequent Export round-trips the mappings instead
             // of writing ActorVoiceMappings = [] back to SubtitleEditTts.json.
             vm.ActorVoiceMappings.AddRange(_actorVoiceMappings);
+
+            if (peaksForReview == null || peaksForReview.Peaks.Count == 0)
+            {
+                _ = GenerateWavePeaksIfNeededAsync(videoFileNameForReview, vm);
+            }
         });
+    }
+
+    private static WavePeakData2? TryLoadWavePeaksFromDisk(string videoFileName)
+    {
+        if (string.IsNullOrEmpty(videoFileName) || !File.Exists(videoFileName))
+        {
+            return null;
+        }
+
+        try
+        {
+            var peakWaveFileName = WavePeakGenerator2.GetPeakWaveFileName(videoFileName);
+            if (File.Exists(peakWaveFileName))
+            {
+                return WavePeakData2.FromDisk(peakWaveFileName);
+            }
+        }
+        catch (Exception ex)
+        {
+            SeLogger.Error(ex, $"Failed to load cached wave peaks for '{videoFileName}'");
+        }
+
+        return null;
+    }
+
+    // Background peak generation for imported TTS sessions. The review window opens immediately
+    // with a blank waveform; when ffmpeg finishes, the resulting peaks are pushed into the VM
+    // and the AudioVisualizer's WavePeaks binding picks them up.
+    private static async Task GenerateWavePeaksIfNeededAsync(string videoFileName, ReviewSpeechViewModel reviewVm)
+    {
+        if (string.IsNullOrEmpty(videoFileName) || !File.Exists(videoFileName))
+        {
+            return;
+        }
+
+        if (!FfmpegHelper.IsFfmpegInstalled())
+        {
+            return;
+        }
+
+        try
+        {
+            var peakWaveFileName = WavePeakGenerator2.GetPeakWaveFileName(videoFileName);
+            var tempWaveFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.wav");
+
+            var process = WaveFileExtractor.GetCommandLineProcess(
+                videoFileName,
+                -1,
+                tempWaveFileName,
+                Configuration.Settings.General.VlcWaveTranscodeSettings,
+                out _);
+
+            await Task.Run(() =>
+            {
+                process.Start();
+                process.WaitForExit();
+            });
+
+            if (!File.Exists(tempWaveFileName))
+            {
+                return;
+            }
+
+            WavePeakData2? peaks = null;
+            try
+            {
+                using var waveFile = new WavePeakGenerator2(tempWaveFileName);
+                peaks = waveFile.GeneratePeaks(0, peakWaveFileName);
+            }
+            finally
+            {
+                try { File.Delete(tempWaveFileName); } catch { /* best effort */ }
+            }
+
+            if (peaks != null)
+            {
+                await Dispatcher.UIThread.InvokeAsync(() => reviewVm.WavePeakData = peaks);
+            }
+        }
+        catch (Exception ex)
+        {
+            SeLogger.Error(ex, $"Background wave-peak generation failed for '{videoFileName}'");
+        }
     }
 
     [RelayCommand]
