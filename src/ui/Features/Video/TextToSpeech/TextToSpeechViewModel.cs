@@ -662,6 +662,17 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
+        var explain = await MessageBox.Show(
+            Window!,
+            Se.Language.Video.TextToSpeech.MergeContinuationLinesPromptTitle,
+            Se.Language.Video.TextToSpeech.MergeContinuationLinesPromptMessage,
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+        if (explain != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
         var result = await _windowService
             .ShowDialogAsync<MergeContinuationLinesWindow, MergeContinuationLinesViewModel>(
                 Window!, vm => vm.Initialize(viewModels, language, maxGapMs, maxCharacters));

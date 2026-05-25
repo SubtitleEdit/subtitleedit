@@ -88,6 +88,8 @@ public class LanguageTextToSpeech
     public string VoiceDesign { get; set; }
     public string NoActorsFoundMessage { get; set; }
     public string NoWebVttVoicesFoundMessage { get; set; }
+    public string MergeContinuationLinesPromptTitle { get; set; }
+    public string MergeContinuationLinesPromptMessage { get; set; }
 
     public LanguageTextToSpeech()
     {
@@ -174,5 +176,9 @@ public class LanguageTextToSpeech
         VoiceDesign = "Voice design";
         NoActorsFoundMessage = "No actors found. Set the Actor field on subtitle lines first.";
         NoWebVttVoicesFoundMessage = "No <v Name> voices found in the WebVTT file.";
+        MergeContinuationLinesPromptTitle = "Merge continuation lines?";
+        MergeContinuationLinesPromptMessage = "Some lines appear to be a single sentence split across multiple subtitles." + Environment.NewLine + Environment.NewLine +
+                                              "Merging them before generation lets the TTS engine speak each thought as one breath group, which usually sounds more natural." + Environment.NewLine + Environment.NewLine +
+                                              "Review and apply merges now?";
     }
 }
