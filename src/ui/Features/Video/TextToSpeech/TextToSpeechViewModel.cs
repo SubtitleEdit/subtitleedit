@@ -1194,7 +1194,18 @@ public partial class TextToSpeechViewModel : ObservableObject
                 }
 
                 var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadQwen3TtsCrispAsrModels(crispAsrModelKey));
-                return dlResult.OkPressed && Qwen3TtsCrispAsr.AreModelsInstalled(crispAsrModelKey);
+                if (!dlResult.OkPressed || !Qwen3TtsCrispAsr.AreModelsInstalled(crispAsrModelKey))
+                {
+                    return false;
+                }
+
+                // The download dialog also pulls voices.zip when none are present, so
+                // refresh the voice list to surface them in the combo.
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await RefreshVoices(engine);
+                });
+                return true;
             }
 
             return true;
