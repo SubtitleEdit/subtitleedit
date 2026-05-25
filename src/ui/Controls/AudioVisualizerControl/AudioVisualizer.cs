@@ -1708,7 +1708,10 @@ public class AudioVisualizer : Control
 
     private static string GetFrameDisplayTime(double seconds)
     {
-        if (Se.Settings.General.CurrentVideoOffsetInMs > 0.00001)
+        // CurrentVideoOffsetInMs is signed; the previous `> 0.00001` guard silently
+        // dropped negative offsets so the timeline labels were wrong whenever the
+        // audio leads the video.
+        if (Math.Abs(Se.Settings.General.CurrentVideoOffsetInMs) > 0.00001)
         {
             seconds = seconds + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0;
         }
@@ -1720,7 +1723,7 @@ public class AudioVisualizer : Control
 
     private static string GetDisplayTime(double seconds)
     {
-        if (Se.Settings.General.CurrentVideoOffsetInMs > 0.00001)
+        if (Math.Abs(Se.Settings.General.CurrentVideoOffsetInMs) > 0.00001)
         {
             seconds = seconds + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0;
         }
