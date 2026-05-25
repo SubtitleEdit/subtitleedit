@@ -66,6 +66,42 @@ public class CrispAsrGranite : CrispAsrEngineBase
                     "https://huggingface.co/cstr/granite-speech-4.1-2b-GGUF/resolve/main/granite-speech-4.1-2b-f16.gguf"
                 ],
             },
+            new WhisperModel
+            {
+                Name = "granite-speech-4.1-2b-plus-q4_k-mini.gguf",
+                Size = "1.54 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/granite-speech-4.1-2b-plus-GGUF/resolve/main/granite-speech-4.1-2b-plus-q4_k-mini.gguf"
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "granite-speech-4.1-2b-plus-q4_k-f16enc.gguf",
+                Size = "2.13 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/granite-speech-4.1-2b-plus-GGUF/resolve/main/granite-speech-4.1-2b-plus-q4_k-f16enc.gguf"
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "granite-speech-4.1-2b-plus-q4_k.gguf",
+                Size = "2.75 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/granite-speech-4.1-2b-plus-GGUF/resolve/main/granite-speech-4.1-2b-plus-q4_k.gguf"
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "granite-speech-4.1-2b-plus-f16.gguf",
+                Size = "5.21 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/granite-speech-4.1-2b-plus-GGUF/resolve/main/granite-speech-4.1-2b-plus-f16.gguf"
+                ],
+            },
        };
 
     public override string Extension => string.Empty;
