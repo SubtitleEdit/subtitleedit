@@ -717,9 +717,22 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             var first = (objSeq & 0x80) == 0x80 || forceFirst;
             var last = (objSeq & 0x40) == 0x40;
 
-            var info = new ImageObjectFragment();
+            var info = new ImageObjectFragment
+            {
+                ImageBuffer = Array.Empty<byte>(),
+            };
             if (first)
             {
+                // First-fragment ODS layout: 11 bytes of header (object id+ver+seq+
+                // 3-byte length + 2-byte width + 2-byte height) before the image
+                // bytes. A malformed / truncated PGS file can advertise a Size
+                // smaller than that — `new byte[Size - 11]` then throws
+                // OverflowException and aborts the whole SUP parse. Bail out with
+                // an empty fragment instead so the rest of the file is still read.
+                if (segment.Size < 11 || buffer.Length < 11)
+                {
+                    return new OdsData { IsFirst = true, Fragment = info, ObjectId = objId, ObjectVersion = objVer, Message = "ODS too short" };
+                }
                 var width = BigEndianInt16(buffer, 7);      // object_width
                 var height = BigEndianInt16(buffer, 9);     // object_height
 
@@ -739,6 +752,12 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 };
             }
 
+            // Continuation-fragment ODS layout: 4-byte header before image bytes.
+            // Same defensive guard as the first-fragment branch above.
+            if (segment.Size < 4 || buffer.Length < 4)
+            {
+                return new OdsData { IsFirst = false, Fragment = info, ObjectId = objId, ObjectVersion = objVer, Message = "ODS too short" };
+            }
             info.ImagePacketSize = segment.Size - 4;
             info.ImageBuffer = new byte[info.ImagePacketSize];
             Buffer.BlockCopy(buffer, 4, info.ImageBuffer, 0, info.ImagePacketSize);
