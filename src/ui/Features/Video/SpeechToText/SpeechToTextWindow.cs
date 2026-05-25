@@ -221,7 +221,7 @@ public class SpeechToTextWindow : Window
         });
 
         var progressBar = UiUtil.MakeProgressBar();
-        progressBar.Margin = new Thickness(10, 0, 0, 8);
+        progressBar.Margin = new Thickness(10, 0, 10, 8);
         progressBar.Width = double.NaN;
         progressBar.VerticalAlignment = VerticalAlignment.Center;
         progressBar.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -309,6 +309,7 @@ public class SpeechToTextWindow : Window
             Orientation = Orientation.Vertical,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, 5, 0, 0),
             Children =
             {
                 progressBar,
@@ -331,32 +332,34 @@ public class SpeechToTextWindow : Window
             buttonSingleMode,
             UiUtil.MakeButtonCancel(vm.CancelCommand)
         );
+        buttonPanel.Margin = new Thickness(10, 0, 10, 10);
 
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Console log label
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // Console log (right) / Engine (left)
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Backend
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Forced aligner
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Language
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Model
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // OpenAI STT - Endpoint URL
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // OpenAI STT - API Key
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // OpenAI STT - Model
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // OpenAI STT - Language
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // OpenAI STT - Timeout
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // OpenAI STT - Temperature
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // OpenAI STT - Prompt
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // OpenAI STT - Extra Headers
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Translate to English
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Post processing
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // Advanced settings
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // textBoxAdvancedSettings
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // panelProgress
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // OK/Cancel
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 0: Console log label
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // 1: Console log (right) — Star fills remaining
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 2: Engine
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 3: Backend
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 4: Forced aligner
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 5: Language
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 6: Model
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 7: OpenAI STT - Endpoint URL
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 8: OpenAI STT - API Key
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 9: OpenAI STT - Model
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 10: OpenAI STT - Language
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 11: OpenAI STT - Timeout
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 12: OpenAI STT - Temperature
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 13: OpenAI STT - Prompt
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 14: OpenAI STT - Extra Headers
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 15: OpenAI STT - Audio Format
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 16: OpenAI STT - Stream
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 17: Translate to English
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 18: Post processing
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 19: Advanced settings label + button
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 20: textBoxAdvancedSettings (parameters)
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 21: panelProgress + OK/Cancel (same row)
             },
             ColumnDefinitions =
             {
@@ -401,8 +404,8 @@ public class SpeechToTextWindow : Window
         grid.Add(panelConsoleLogHeader, row, 2);
         row++;
 
-        grid.Add(consoleLogAndBatchView, row, 2, 17);
-        grid.Add(consoleLogOnlyView, row, 2, 17);
+        grid.Add(consoleLogAndBatchView, row, 2, 20);
+        grid.Add(consoleLogOnlyView, row, 2, 20);
         row++;
 
         grid.Add(labelEngine, row, 0);
@@ -448,9 +451,7 @@ public class SpeechToTextWindow : Window
         grid.Add(textBoxAdvancedSettings, row, 0, 1, 2);
         row++;
 
-        grid.Add(panelProgress, row, 0, 2, 3);
-        row++;
-
+        grid.Add(panelProgress, row, 0, 1, 3);
         grid.Add(buttonPanel, row, 0, 1, 3);
 
         Content = grid;
