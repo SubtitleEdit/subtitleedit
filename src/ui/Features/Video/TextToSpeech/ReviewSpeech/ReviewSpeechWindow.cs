@@ -663,7 +663,7 @@ public class ReviewSpeechWindow : Window
         return new Border
         {
             Margin = new Thickness(2),
-            Height = 180,
+            Height = 120,
             Child = audioVisualizer,
         };
     }
