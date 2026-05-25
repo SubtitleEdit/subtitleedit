@@ -6,7 +6,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
@@ -634,6 +636,63 @@ public partial class TextToSpeechViewModel : ObservableObject
         KeyFile = fileName;
     }
 
+    private async Task PromptMergeContinuationLines()
+    {
+        if (Window == null || _subtitle.Paragraphs.Count < 2)
+        {
+            return;
+        }
+
+        var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+        if (MergeContinuationLinesHelper.IsLanguageSkipped(language))
+        {
+            return;
+        }
+
+        var format = _subtitle.OriginalFormat ?? new SubRip();
+        var viewModels = _subtitle.Paragraphs
+            .Select(p => new SubtitleLineViewModel(p, format))
+            .ToList();
+
+        const int maxGapMs = 500;
+        const int maxCharacters = 500;
+        var candidates = MergeContinuationLinesHelper.Detect(viewModels, language, maxGapMs, maxCharacters);
+        if (candidates.Count == 0)
+        {
+            return;
+        }
+
+        var explain = await MessageBox.Show(
+            Window!,
+            Se.Language.Video.TextToSpeech.MergeContinuationLinesPromptTitle,
+            Se.Language.Video.TextToSpeech.MergeContinuationLinesPromptMessage,
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+        if (explain != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        var result = await _windowService
+            .ShowDialogAsync<MergeContinuationLinesWindow, MergeContinuationLinesViewModel>(
+                Window!, vm => vm.Initialize(viewModels, language, maxGapMs, maxCharacters));
+
+        if (!result.OkPressed || result.AllSubtitlesFixed.Count == _subtitle.Paragraphs.Count)
+        {
+            return;
+        }
+
+        // Clone via copy constructor to preserve Header/Footer/OriginalEncoding and any other
+        // metadata, then replace Paragraphs with the merged set. The caller's Subtitle is untouched.
+        var merged = new Subtitle(_subtitle);
+        merged.Paragraphs.Clear();
+        foreach (var line in result.AllSubtitlesFixed)
+        {
+            merged.Paragraphs.Add(line.ToParagraph(_subtitle.OriginalFormat));
+        }
+        _subtitle = merged;
+    }
+
     [RelayCommand]
     public async Task GenerateTts()
     {
@@ -651,6 +710,11 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         // The engine and/or its models may have just been downloaded - refresh the combo dots.
         RefreshDownloadDots?.Invoke();
+
+        if (Se.Settings.Tools.TextToSpeechPromptMergeContinuationLines)
+        {
+            await PromptMergeContinuationLines();
+        }
 
         var voice = SelectedVoice;
         if (voice != null && !await TtsVoiceInstaller.EnsureVoiceInstalled(engine, voice, Window, _windowService))

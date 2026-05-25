@@ -473,6 +473,11 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = l.MergeContinuationLines,
+                Command = vm.ShowToolsMergeContinuationLinesCommand,
+            },
+            new MenuItem
+            {
                 Header = l.MergeTwoSubtitles,
                 Command = vm.ShowToolsMergeTwoSubtitlesCommand,
             },
