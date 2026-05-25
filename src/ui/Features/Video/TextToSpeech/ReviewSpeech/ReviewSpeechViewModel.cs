@@ -1118,16 +1118,22 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 ? Engines.FirstOrDefault(e => string.Equals(e.Name, SelectedEngine?.Name, StringComparison.OrdinalIgnoreCase))
                 : SelectedEngine;
 
-            if (targetEngine != null && !ReferenceEquals(targetEngine, SelectedEngine))
+            // Refresh Voices / Models / Languages / Regions when:
+            //   - The row's engine differs from the current engine, OR
+            //   - We haven't loaded for this engine yet. After Initialize (Lines.Count > 0) the
+            //     Loaded-time refresh is skipped, and if the first row's engine matches the
+            //     caller-supplied SelectedEngine the engine-change branch above also skips —
+            //     leaving Models empty. We detect that with `engine.HasModel && Models.Count==0`.
+            //
+            // Setting SelectedEngine also fires the ComboBox's SelectionChanged → which would
+            // dispatch its own fire-and-forget refresh. We suppress that with the flag so the
+            // two don't race; the awaited call below does the same work and lets us apply the
+            // row's voice/model on top of it without it being immediately overwritten.
+            var needsRefresh = targetEngine != null
+                && (!ReferenceEquals(targetEngine, SelectedEngine)
+                    || (targetEngine.HasModel && Models.Count == 0));
+            if (needsRefresh)
             {
-                // Switch engine and await the refill of Voices / Models / Languages / Regions
-                // before applying the row's saved selections, otherwise the SelectedVoice write
-                // below races the refresh and lands on a stale (or empty) Voices list.
-                //
-                // Setting SelectedEngine also fires the ComboBox's SelectionChanged → which
-                // dispatches its own fire-and-forget refresh. We suppress that here so the two
-                // don't race; the awaited call below does the same work and lets us apply the
-                // row's voice/model on top of it without it being immediately overwritten.
                 _suppressEngineRefreshDispatch = true;
                 try
                 {
