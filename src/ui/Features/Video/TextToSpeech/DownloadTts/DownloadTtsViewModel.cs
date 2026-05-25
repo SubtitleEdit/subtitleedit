@@ -52,6 +52,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private Task? _downloadTaskKokoroTtsModels;
     private Task? _downloadTaskChatterboxModels;
     private Task? _downloadTaskQwen3TtsCrispAsrModels;
+    private Task? _downloadTaskQwen3TtsCrispAsrVoices;
     private Task? _downloadTaskOmniVoice;
     private Task? _downloadTaskOmniVoiceVoices;
     private Task? _downloadTaskOmniVoiceModels;
@@ -72,6 +73,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private readonly MemoryStream _downloadStreamQwen3TtsCpp;
     private readonly MemoryStream _downloadStreamQwen3TtsCppVoices;
     private readonly MemoryStream _downloadStreamKokoroTtsCpp;
+    private readonly MemoryStream _downloadStreamQwen3TtsCrispAsrVoices;
     private readonly MemoryStream _downloadStreamOmniVoice;
     private readonly MemoryStream _downloadStreamOmniVoiceVoices;
     private readonly IZipUnpacker _zipUnpacker;
@@ -102,6 +104,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         _downloadStreamQwen3TtsCpp = new MemoryStream();
         _downloadStreamQwen3TtsCppVoices = new MemoryStream();
         _downloadStreamKokoroTtsCpp = new MemoryStream();
+        _downloadStreamQwen3TtsCrispAsrVoices = new MemoryStream();
         _downloadStreamOmniVoice = new MemoryStream();
         _downloadStreamOmniVoiceVoices = new MemoryStream();
 
@@ -512,8 +515,38 @@ public partial class DownloadTtsViewModel : ObservableObject
             if (_downloadTaskQwen3TtsCrispAsrModels is { IsCompleted: true })
             {
                 _timer.Stop();
-                OkPressed = true;
-                Close();
+                _downloadTaskQwen3TtsCrispAsrModels = null;
+
+                // Chain the voices download, unless the user already has voices installed.
+                // Qwen3TtsCrispAsr.GetSetVoicesFolder lazily seeds from qwen3-tts.cpp's
+                // voices folder if any exist there, so users who already have them get
+                // skipped automatically.
+                var voicesFolder = Qwen3TtsCrispAsr.GetSetVoicesFolder();
+                var voicesAlreadyInstalled = Directory.Exists(voicesFolder) &&
+                                             Directory.EnumerateFiles(voicesFolder, "*.wav").Any();
+                if (voicesAlreadyInstalled)
+                {
+                    OkPressed = true;
+                    Close();
+                    return;
+                }
+
+                TitleText = "Downloading Qwen3 TTS (CrispASR) voices";
+                ProgressValue = 0;
+                ProgressText = Se.Language.General.StartingDotDotDot;
+                var voicesProgress = new Progress<float>(number =>
+                {
+                    var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+                    var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+                    ProgressValue = percentage;
+                    ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+                });
+                // Same voices.zip as qwen3-tts.cpp (24 kHz mono WAV + .txt sidecars,
+                // identical format). Reuse the Qwen3 TTS .cpp download service rather
+                // than adding a second copy of the URL/hash.
+                _downloadTaskQwen3TtsCrispAsrVoices = _qwen3TtsCppDownloadService.DownloadVoices(
+                    _downloadStreamQwen3TtsCrispAsrVoices, voicesProgress, _cancellationTokenSource.Token);
+                _timer.Start();
             }
             else if (_downloadTaskQwen3TtsCrispAsrModels is { IsFaulted: true })
             {
@@ -529,6 +562,50 @@ public partial class DownloadTtsViewModel : ObservableObject
                     ProgressText = "Download failed";
                     Error = ex?.Message ?? "Unknown error";
                 }
+            }
+
+            if (_downloadTaskQwen3TtsCrispAsrVoices is { IsCompleted: true })
+            {
+                _timer.Stop();
+
+                if (_downloadStreamQwen3TtsCrispAsrVoices.Length > 0)
+                {
+                    var voicesFolder = Qwen3TtsCrispAsr.GetSetVoicesFolder();
+                    try
+                    {
+                        _downloadStreamQwen3TtsCrispAsrVoices.Position = 0;
+                        _zipUnpacker.UnpackZipStream(_downloadStreamQwen3TtsCrispAsrVoices, voicesFolder, string.Empty, false, new List<string>(), null);
+                        WriteInstalledHashSidecar(voicesFolder, _downloadStreamQwen3TtsCrispAsrVoices, DownloadHashManager.Qwen3TtsCpp.Voices);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Voices are optional; log and continue so the engine is still usable.
+                        Se.LogError(ex);
+                    }
+                    _downloadStreamQwen3TtsCrispAsrVoices.Dispose();
+                }
+
+                OkPressed = true;
+                Close();
+            }
+            else if (_downloadTaskQwen3TtsCrispAsrVoices is { IsFaulted: true })
+            {
+                _timer.Stop();
+                var ex = _downloadTaskQwen3TtsCrispAsrVoices.Exception?.InnerException ?? _downloadTaskQwen3TtsCrispAsrVoices.Exception;
+                if (ex is OperationCanceledException)
+                {
+                    ProgressText = "Download canceled";
+                    Close();
+                    return;
+                }
+
+                // Voices are optional — the models are already installed. Log and close with success.
+                if (ex != null)
+                {
+                    Se.LogError(ex);
+                }
+                OkPressed = true;
+                Close();
             }
 
             if (_downloadTaskOmniVoice is { IsCompleted: true })

@@ -255,8 +255,8 @@ public class Qwen3TtsCrispAsr : ITtsEngine
     /// engine's voices folder. The same files work for both engines (just 24 kHz mono
     /// reference audio with optional .txt sidecars), so users who already downloaded the
     /// qwen3-tts.cpp voice pack get them for free here without a second ~10 MB download.
-    /// Users who never installed qwen3-tts.cpp start empty and can use Import Voice or wait
-    /// for the dedicated voices.zip downloader (TODO).
+    /// Users who never installed qwen3-tts.cpp get voices.zip pulled by the
+    /// DownloadTtsViewModel flow that chains after model download.
     /// </summary>
     private static void SeedVoicesFromQwen3TtsCppIfEmpty(string voicesFolder)
     {
