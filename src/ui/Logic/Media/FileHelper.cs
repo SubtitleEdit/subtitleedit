@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
 {
     public class FileHelper : IFileHelper
     {
-        public async Task<string> PickOpenFile(Visual sender, string title, string extensionTitle, string extension, string extensionTitle2 = "", string extension2 = "")
+        public async Task<string> PickOpenFile(Visual sender, string title, string extensionTitle, string extension, string extensionTitle2 = "", string extension2 = "", string? suggestedStartFolder = null)
         {
             // Get top level from the current control. Alternatively, you can use Window reference instead.
             var topLevel = TopLevel.GetTopLevel(sender)!;
@@ -46,13 +46,30 @@ namespace Nikse.SubtitleEdit.Logic.Media
                 });
             }
 
-            // Start async operation to open the dialog.
-            var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            var options = new FilePickerOpenOptions
             {
                 Title = title,
                 AllowMultiple = false,
                 FileTypeFilter = fileTypes,
-            });
+            };
+
+            if (!string.IsNullOrEmpty(suggestedStartFolder) && Directory.Exists(suggestedStartFolder))
+            {
+                try
+                {
+                    var folder = await topLevel.StorageProvider.TryGetFolderFromPathAsync(suggestedStartFolder);
+                    if (folder != null)
+                    {
+                        options.SuggestedStartLocation = folder;
+                    }
+                }
+                catch
+                {
+                }
+            }
+
+            // Start async operation to open the dialog.
+            var files = await topLevel.StorageProvider.OpenFilePickerAsync(options);
 
             if (files.Count >= 1)
             {

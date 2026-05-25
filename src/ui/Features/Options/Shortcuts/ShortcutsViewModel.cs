@@ -59,6 +59,9 @@ public partial class ShortcutsViewModel : ObservableObject
     private string _surround2Right;
     private string _surround3Left;
     private string _surround3Right;
+    // Mirror Se.Settings.Actor1..10 while the dialog is open so OK/Cancel
+    // semantics match the other configurable slots (Color1..8, Surround1..3).
+    private readonly string[] _actorSlots = new string[10];
 
     // Add this flag to prevent updates during selection changes
     private bool _isLoadingSelection = false;
@@ -93,6 +96,16 @@ public partial class ShortcutsViewModel : ObservableObject
         _surround2Right = Se.Settings.Surround2Right;
         _surround3Left = Se.Settings.Surround3Left;
         _surround3Right = Se.Settings.Surround3Right;
+        _actorSlots[0] = Se.Settings.Actor1;
+        _actorSlots[1] = Se.Settings.Actor2;
+        _actorSlots[2] = Se.Settings.Actor3;
+        _actorSlots[3] = Se.Settings.Actor4;
+        _actorSlots[4] = Se.Settings.Actor5;
+        _actorSlots[5] = Se.Settings.Actor6;
+        _actorSlots[6] = Se.Settings.Actor7;
+        _actorSlots[7] = Se.Settings.Actor8;
+        _actorSlots[8] = Se.Settings.Actor9;
+        _actorSlots[9] = Se.Settings.Actor10;
     }
 
     partial void OnCtrlIsSelectedChanged(bool value)
@@ -202,6 +215,16 @@ public partial class ShortcutsViewModel : ObservableObject
         _configurableCommands.Add(vm.VideoMoveCustom1ForwardCommand);
         _configurableCommands.Add(vm.VideoMoveCustom2BackCommand);
         _configurableCommands.Add(vm.VideoMoveCustom2ForwardCommand);
+        _configurableCommands.Add(vm.SetActor1Command);
+        _configurableCommands.Add(vm.SetActor2Command);
+        _configurableCommands.Add(vm.SetActor3Command);
+        _configurableCommands.Add(vm.SetActor4Command);
+        _configurableCommands.Add(vm.SetActor5Command);
+        _configurableCommands.Add(vm.SetActor6Command);
+        _configurableCommands.Add(vm.SetActor7Command);
+        _configurableCommands.Add(vm.SetActor8Command);
+        _configurableCommands.Add(vm.SetActor9Command);
+        _configurableCommands.Add(vm.SetActor10Command);
     }
 
     internal void UpdateVisibleShortcuts(string searchText)
@@ -315,6 +338,74 @@ public partial class ShortcutsViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task ImportFromSe4()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        // If an SE 4 install is detected on this machine (either AppData or
+        // Program Files), start the file picker in that folder so the user
+        // doesn't have to navigate manually.
+        var detectedSe4SettingsFile = Se4ShortcutsImporter.FindDefaultSettingsFile();
+        var suggestedStartFolder = detectedSe4SettingsFile != null
+            ? System.IO.Path.GetDirectoryName(detectedSe4SettingsFile)
+            : null;
+
+        var fileName = await _fileHelper.PickOpenFile(
+            Window,
+            Se.Language.Options.Shortcuts.ImportFromSe4Title,
+            "Subtitle Edit 4 Settings",
+            ".xml",
+            suggestedStartFolder: suggestedStartFolder);
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return;
+        }
+
+        try
+        {
+            var importResult = Se4ShortcutsImporter.ImportFromFile(fileName);
+            if (importResult.Shortcuts.Count == 0)
+            {
+                await MessageBox.Show(Window, Se.Language.General.Error, "No shortcuts found in file.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            foreach (var imported in importResult.Shortcuts)
+            {
+                var existing = Se.Settings.Shortcuts.FirstOrDefault(s => s.ActionName == imported.ActionName);
+                if (existing != null)
+                {
+                    Se.Settings.Shortcuts.Remove(existing);
+                }
+
+                Se.Settings.Shortcuts.Add(imported);
+            }
+
+            if (MainViewModel != null)
+            {
+                _allShortcuts = ShortcutsMain.GetAllShortcuts(MainViewModel);
+                UpdateVisibleShortcuts(SearchText);
+            }
+
+            await MessageBox.Show(Window, Se.Language.General.Information,
+                string.Format(Se.Language.Options.Shortcuts.ImportFromSe4XImportedYSkipped,
+                    importResult.Shortcuts.Count,
+                    System.IO.Path.GetFileName(fileName),
+                    importResult.SkippedNoMapping),
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        catch (Exception ex)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error,
+                $"Failed to import SE 4 shortcuts:\r\n{ex.Message}",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    [RelayCommand]
     private async Task Export()
     {
         if (Window == null)
@@ -423,10 +514,27 @@ public partial class ShortcutsViewModel : ObservableObject
         Se.Settings.Surround2Right = _surround2Right;
         Se.Settings.Surround3Left = _surround3Left;
         Se.Settings.Surround3Right = _surround3Right;
+        Se.Settings.Actor1 = _actorSlots[0];
+        Se.Settings.Actor2 = _actorSlots[1];
+        Se.Settings.Actor3 = _actorSlots[2];
+        Se.Settings.Actor4 = _actorSlots[3];
+        Se.Settings.Actor5 = _actorSlots[4];
+        Se.Settings.Actor6 = _actorSlots[5];
+        Se.Settings.Actor7 = _actorSlots[6];
+        Se.Settings.Actor8 = _actorSlots[7];
+        Se.Settings.Actor9 = _actorSlots[8];
+        Se.Settings.Actor10 = _actorSlots[9];
 
         ShortcutsMain.CommandTranslationLookup[nameof(MainViewModel.SurroundWith1Command)] = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround1Left, Se.Settings.Surround1Right);
         ShortcutsMain.CommandTranslationLookup[nameof(MainViewModel.SurroundWith2Command)] = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround2Left, Se.Settings.Surround2Right);
         ShortcutsMain.CommandTranslationLookup[nameof(MainViewModel.SurroundWith3Command)] = string.Format(Se.Language.Options.Shortcuts.SurroundWithXY, Se.Settings.Surround3Left, Se.Settings.Surround3Right);
+        for (var i = 0; i < 10; i++)
+        {
+            var commandName = i == 9
+                ? nameof(MainViewModel.SetActor10Command)
+                : $"SetActor{i + 1}Command";
+            ShortcutsMain.CommandTranslationLookup[commandName] = string.Format(Se.Language.Options.Shortcuts.SetActorXY, (i + 1).ToString(), _actorSlots[i]);
+        }
 
         Se.SaveSettings();
 
@@ -440,6 +548,13 @@ public partial class ShortcutsViewModel : ObservableObject
         var node = SelectedNode;
         if (Window == null || MainViewModel == null || node?.ShortCut == null)
         {
+            return;
+        }
+
+        var actorSlotIndex = GetActorSlotIndex(node.ShortCut.Action);
+        if (actorSlotIndex >= 0)
+        {
+            await ConfigureActorSlot(node, actorSlotIndex);
             return;
         }
 
@@ -652,6 +767,48 @@ public partial class ShortcutsViewModel : ObservableObject
                     flatNodeForward.Title = string.Format(Se.Language.General.VideoCustom2ForwardX, Se.Settings.Video.MoveVideoPositionCustom2Forward);
                 }
             }
+        }
+    }
+
+    private int GetActorSlotIndex(IRelayCommand action)
+    {
+        if (MainViewModel == null)
+        {
+            return -1;
+        }
+
+        if (action == MainViewModel.SetActor1Command) { return 0; }
+        if (action == MainViewModel.SetActor2Command) { return 1; }
+        if (action == MainViewModel.SetActor3Command) { return 2; }
+        if (action == MainViewModel.SetActor4Command) { return 3; }
+        if (action == MainViewModel.SetActor5Command) { return 4; }
+        if (action == MainViewModel.SetActor6Command) { return 5; }
+        if (action == MainViewModel.SetActor7Command) { return 6; }
+        if (action == MainViewModel.SetActor8Command) { return 7; }
+        if (action == MainViewModel.SetActor9Command) { return 8; }
+        if (action == MainViewModel.SetActor10Command) { return 9; }
+        return -1;
+    }
+
+    private async Task ConfigureActorSlot(ShortcutTreeNode node, int slotIndex)
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var slotNumber = slotIndex + 1;
+        var current = _actorSlots[slotIndex];
+        var result = await _windowService.ShowDialogAsync<Nikse.SubtitleEdit.Features.Shared.PromptTextBox.PromptTextBoxWindow,
+            Nikse.SubtitleEdit.Features.Shared.PromptTextBox.PromptTextBoxViewModel>(Window, vm =>
+        {
+            vm.Initialize(string.Format(Se.Language.Options.Shortcuts.SetActorSlotXTitle, slotNumber.ToString()), current, 250, 20, true);
+        });
+
+        if (result.OkPressed && !string.IsNullOrWhiteSpace(result.Text))
+        {
+            _actorSlots[slotIndex] = result.Text;
+            node.Title = string.Format(Se.Language.Options.Shortcuts.SetActorXY, slotNumber.ToString(), result.Text);
         }
     }
 

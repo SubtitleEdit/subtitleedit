@@ -147,11 +147,20 @@ public class ShortcutsWindow : Window
         };
         flyout.Items.Add(menuItemExport);
 
+        var menuItemImportSe4 = new MenuItem
+        {
+            Header = language.ImportFromSe4,
+            DataContext = vm,
+            Command = vm.ImportFromSe4Command,
+        };
+        flyout.Items.Add(menuItemImportSe4);
+
 
         var buttonOk = UiUtil.MakeButtonOk(vm.CommandOkCommand);
         var buttonResetAllShortcuts = UiUtil.MakeButton(Se.Language.General.Reset, vm.ResetAllShortcutsCommand);
+        var buttonImportSe4 = UiUtil.MakeButton(language.ImportFromSe4, vm.ImportFromSe4Command);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonResetAllShortcuts, buttonCancel);
+        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonResetAllShortcuts, buttonImportSe4, buttonCancel);
 
         var grid = new Grid
         {
