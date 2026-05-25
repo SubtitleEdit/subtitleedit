@@ -93,7 +93,15 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                             {
                                 var ccData1 = buffer[i + 1];
                                 var ccData2 = buffer[i + 2];
-                                if (IsNonEmptyCcData(ccData1, ccData2))
+                                // The "non-empty" filter is a CEA-608 convention
+                                // (high bit is parity; both bytes need non-zero
+                                // low-7-bits to be a meaningful char pair). For
+                                // CEA-708 packet data (types 2/3), 0x80 / 0x00
+                                // are legal payload bytes — e.g. a window-bitmap
+                                // argument — and dropping them corrupts the
+                                // DTVCC packet. Scope the filter to CEA-608.
+                                var isCea608 = ccType == 0 || ccType == 1;
+                                if (!isCea608 || IsNonEmptyCcData(ccData1, ccData2))
                                 {
                                     fieldData.Add(new CcData(ccType, ccData1, ccData2));
                                 }
@@ -108,7 +116,10 @@ namespace Nikse.SubtitleEdit.Core.Cea608
 
         private static bool IsCcType(int type)
         {
-            return type == 0 || type == 1;
+            // 0 = NTSC CEA-608 field 1, 1 = NTSC CEA-608 field 2,
+            // 2 = DTVCC packet data, 3 = DTVCC packet start. Callers
+            // filter by CcData.Type to route 0/1 → CEA-608 and 2/3 → CEA-708.
+            return type >= 0 && type <= 3;
         }
 
         private static bool IsNonEmptyCcData(int ccData1, int ccData2)

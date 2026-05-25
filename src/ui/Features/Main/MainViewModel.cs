@@ -12678,10 +12678,19 @@ public partial class MainViewModel :
                 return true;
             }
 
-            if (mp4Parser.TrunCea608Subtitle?.Paragraphs.Count > 0)
+            // Prefer CEA-608 if present, otherwise fall back to CEA-708 — most US
+            // broadcast MP4s carry both, but newer streams (and many international
+            // ones) carry only CEA-708.
+            var captionsFromH264 = mp4Parser.TrunCea608Subtitle?.Paragraphs.Count > 0
+                ? mp4Parser.TrunCea608Subtitle
+                : mp4Parser.TrunCea708Subtitle?.Paragraphs.Count > 0
+                    ? mp4Parser.TrunCea708Subtitle
+                    : null;
+
+            if (captionsFromH264 != null)
             {
                 ResetSubtitle();
-                _subtitle = mp4Parser.TrunCea608Subtitle;
+                _subtitle = captionsFromH264;
                 _subtitle.Renumber();
                 _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) +
                                     SelectedSubtitleFormat.Extension;
