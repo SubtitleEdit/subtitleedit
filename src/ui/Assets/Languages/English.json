@@ -660,6 +660,7 @@
     "xFiles": "{0:#,###,##0} files",
     "xFilesConvertedInY": "{0:#,###,##0} files converted in {1}",
     "xNotFound": "\"{0}\" not found",
+    "noBookmarksFound": "No more bookmarks found",
     "xRequiresAnApiKey": "{0} requires an API key",
     "xSeconds": "{0:0.0##} seconds",
     "xSubtitles": "{0:#,###,##0} subtitles",
@@ -2549,6 +2550,9 @@
       "exportShortcutsTitle": "Export shortcuts",
       "xShortcutsImportedFromY": "{0} shortcuts imported from {1}",
       "xShortcutsExportedToY": "{0} shortcuts exported to {1}",
+      "importFromSe4": "Import from SE 4...",
+      "importFromSe4Title": "Import shortcuts from Subtitle Edit 4",
+      "importFromSe4XImportedYSkipped": "{0} shortcuts imported from {1} ({2} skipped — no matching SE 5 action)",
       "importImageSubtitleForEdit": "Import image-based subtitle for edit",
       "showPointSyncViaOther": "Show point sync via other subtitle",
       "showPointSync": "Show point sync",
@@ -2579,7 +2583,14 @@
       "toggleSpectrogramStyle": "Toggle spectrogram style",
       "copyMsRelativeToCurrentSubtitleLineToClipboard": "Copy milliseconds relative to current subtitle line to clipboard",
       "layoutZoomIn": "Layout zoom in (scale UI)",
-      "layoutZoomOut": "Layout zoom out (scale UI)"
+      "layoutZoomOut": "Layout zoom out (scale UI)",
+      "goToPreviousBookmark": "Go to previous bookmark",
+      "selectionToLower": "Text box: Selection to lowercase",
+      "selectionToUpper": "Text box: Selection to uppercase",
+      "googleIt": "Google it (selected text)",
+      "setActorXY": "Set actor {0}: {1}",
+      "setNewActor": "Set new actor...",
+      "setActorSlotXTitle": "Actor slot {0}"
     },
     "wordLists": {
       "title": "Word lists",

@@ -238,6 +238,9 @@ public class LanguageSettingsShortcuts
     public string ExportShortcutsTitle { get; set; }
     public string XShortcutsImportedFromY { get; set; }
     public string XShortcutsExportedToY { get; set; }
+    public string ImportFromSe4 { get; set; }
+    public string ImportFromSe4Title { get; set; }
+    public string ImportFromSe4XImportedYSkipped { get; set; }
     public string ImportImageSubtitleForEdit { get; set; }
     public string ShowPointSyncViaOther { get; set; }
     public string ShowPointSync { get; set; }
@@ -269,6 +272,13 @@ public class LanguageSettingsShortcuts
     public string CopyMsRelativeToCurrentSubtitleLineToClipboard { get; set; }
     public string LayoutZoomIn { get; set; }
     public string LayoutZoomOut { get; set; }
+    public string GoToPreviousBookmark { get; set; }
+    public string SelectionToLower { get; set; }
+    public string SelectionToUpper { get; set; }
+    public string GoogleIt { get; set; }
+    public string SetActorXY { get; set; }
+    public string SetNewActor { get; set; }
+    public string SetActorSlotXTitle { get; set; }
 
     public LanguageSettingsShortcuts()
     {
@@ -509,6 +519,9 @@ public class LanguageSettingsShortcuts
         ExportShortcutsTitle = "Export shortcuts";
         XShortcutsImportedFromY = "{0} shortcuts imported from {1}";
         XShortcutsExportedToY = "{0} shortcuts exported to {1}";
+        ImportFromSe4 = "Import from SE 4...";
+        ImportFromSe4Title = "Import shortcuts from Subtitle Edit 4";
+        ImportFromSe4XImportedYSkipped = "{0} shortcuts imported from {1} ({2} skipped — no matching SE 5 action)";
         ImportImageSubtitleForEdit = "Import image-based subtitle for edit";
         ShowPointSyncViaOther = "Show point sync via other subtitle";
         ShowPointSync = "Show point sync";
@@ -540,5 +553,12 @@ public class LanguageSettingsShortcuts
         CopyMsRelativeToCurrentSubtitleLineToClipboard = "Copy milliseconds relative to current subtitle line to clipboard";
         LayoutZoomIn = "Layout zoom in (scale UI)";
         LayoutZoomOut = "Layout zoom out (scale UI)";
+        GoToPreviousBookmark = "Go to previous bookmark";
+        SelectionToLower = "Text box: Selection to lowercase";
+        SelectionToUpper = "Text box: Selection to uppercase";
+        GoogleIt = "Google it (selected text)";
+        SetActorXY = "Set actor {0}: {1}";
+        SetNewActor = "Set new actor...";
+        SetActorSlotXTitle = "Actor slot {0}";
     }
 }
