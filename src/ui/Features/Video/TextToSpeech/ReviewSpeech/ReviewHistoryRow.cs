@@ -14,9 +14,19 @@ public partial class ReviewHistoryRow : ObservableObject
     public Voice? Voice { get; set; }
     public float Speed { get; set; }
 
+    // Snapshot of the engine settings that produced this history entry, so picking it back from
+    // the history dialog can restore the full left-panel state (not just the voice). Empty for
+    // legacy history rows that pre-date this field.
+    public string EngineName { get; set; }
+    public string Model { get; set; }
+    public string Instruction { get; set; }
+
     public ReviewHistoryRow()
     {
         FileName = string.Empty;
         VoiceName = string.Empty;
+        EngineName = string.Empty;
+        Model = string.Empty;
+        Instruction = string.Empty;
     }
 }

@@ -49,12 +49,23 @@ public class TextToSpeechWindow : Window
 
         var settingsLayout = MakeSettingsControls(vm);
 
-        var progressBarLayout = MakeProgressBarControls(vm);
+        // Wrap the progress bar layout in WidthIgnoringPanel so its measured width never feeds
+        // back up into the outer grid's column sizing. See the panel's class comment for why.
+        var progressBarLayout = new WidthIgnoringPanel { Children = { MakeProgressBarControls(vm) } };
 
         var buttonDone = UiUtil.MakeButtonDone(vm.DoneCommand).WithBindIsVisible(nameof(vm.IsNotGenerating));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand).WithBindIsVisible(nameof(vm.IsGenerating));
+        var buttonCast = UiUtil.MakeButton(string.Empty, vm.ShowCastCommand)
+            .WithIconLeftBindText(IconNames.PoliceBadge, nameof(vm.CastButtonText))
+            .WithBindIsVisible(nameof(vm.HasCast))
+            .WithBindIsEnabled(nameof(vm.IsNotGenerating));
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(buttonCast, Se.Language.Video.TextToSpeech.SetupCastHint);
+        }
         var buttonPanel = UiUtil.MakeButtonBar(
             UiUtil.MakeButton(Se.Language.Video.TextToSpeech.GenerateSpeechFromText, vm.GenerateTtsCommand).WithBindIsEnabled(nameof(vm.IsNotGenerating)),
+            buttonCast,
             UiUtil.MakeButton(Se.Language.General.ImportDotDotDot, vm.ImportCommand).WithBindIsEnabled(nameof(vm.IsNotGenerating)),
             buttonCancel,
             buttonDone
@@ -385,7 +396,12 @@ public class TextToSpeechWindow : Window
         grid.Add(panelKeyFile, 6, 0);
         grid.Add(panelInstruction, 7, 0);
 
-        return UiUtil.MakeBorderForControl(grid);
+        // Give the left (Engine/Voice/Model/...) panel a sensible minimum so the window doesn't
+        // collapse into a narrow column when the right-side panel happens to be wider than the
+        // engine controls' intrinsic size.
+        var border = UiUtil.MakeBorderForControl(grid);
+        border.MinWidth = 500;
+        return border;
     }
 
     // Single-select picker of OmniVoice TTS voice-design keywords: one combo box per mutually
@@ -485,6 +501,9 @@ public class TextToSpeechWindow : Window
 
         var buttonAdvanced = UiUtil.MakeButton(Se.Language.General.AdvancedDotDotDot, vm.ShowAdvancedSettingsCommand)
             .WithMarginTop(5);
+        // MakeButton defaults to Center; the right-side settings panel reads more cleanly with
+        // the Advanced button left-aligned under the checkboxes above it.
+        buttonAdvanced.HorizontalAlignment = HorizontalAlignment.Left;
 
         var grid = new Grid
         {
@@ -513,38 +532,51 @@ public class TextToSpeechWindow : Window
 
     private static Grid MakeProgressBarControls(TextToSpeechViewModel vm)
     {
+        // Two rows so the status label and the progress bar stack vertically instead of
+        // overlapping in the same cell. Two columns so the progress text can explicitly span
+        // both — same shape as the outer window grid, so the text gets the full available
+        // width when long messages render (e.g. "Generating speech: segment 999 of 1000").
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            Margin = new Thickness(0, 0, 0, 20),
+            Margin = new Thickness(0, 5, 0, 7),
             [!Grid.OpacityProperty] = new Binding(nameof(vm.ProgressOpacity)) { Mode = BindingMode.OneWay },
         };
 
-        var label = new Label
+        // TextBlock (not Label) so we can use TextTrimming for overflow rendering. The actual
+        // "don't grow the window" guarantee comes from the WidthIgnoringPanel wrapper around
+        // this whole grid below — that panel reports 0 desired width up the layout chain so the
+        // outer grid's Star columns never see the progress text's natural width.
+        var label = new TextBlock
         {
-            Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Bottom,
-            Margin = new Thickness(0, 20, 0, 0),
-            [!Label.ContentProperty] = new Binding(nameof(vm.ProgressText)) { Mode = BindingMode.TwoWay },
+            VerticalAlignment = VerticalAlignment.Center,
+            TextAlignment = TextAlignment.Left,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            Margin = new Thickness(0, 6, 0, 0),
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.ProgressText)) { Mode = BindingMode.OneWay },
         };
 
         var progressBar = UiUtil.MakeProgressBar();
-        progressBar.Width = double.NaN;
         progressBar.HorizontalAlignment = HorizontalAlignment.Stretch;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
 
-        grid.Add(label, 0, 0);
-        grid.Add(progressBar, 0, 0);
+        // Both rows explicitly span the two columns so the bar and status text use the full
+        // window width (matching the engine + settings panels above), and so the text doesn't
+        // need to grow horizontally when messages get longer.
+        grid.Add(progressBar, 0, 0, 1, 2);
+        grid.Add(label, 1, 0, 1, 2);
 
         return grid;
     }
@@ -565,5 +597,47 @@ public class TextToSpeechWindow : Window
     {
         base.OnLoaded(e);
         _vm.OnLoaded(e);
+    }
+}
+
+// Wraps a child whose width should not influence the parent's measure. We use this for the
+// progress text + bar at the bottom of the TTS window.
+//
+// Without it, the progress TextBlock's natural text width feeds up through the inner grid into
+// the outer 2-column grid, where colSpan=2 distributes that desired width across both Star
+// columns. Each column then grows to max(natural, distributedShare), so when the progress text
+// gets longer mid-generation (e.g. "Adding audio to video file..."), the column with the
+// smaller natural content (the settings panel) is pushed wider — making the whole window jump.
+// TextTrimming on the TextBlock doesn't help because trimming runs at render time, not measure.
+//
+// MeasureOverride still measures the child (so it can lay itself out correctly in arrange and
+// know its height), but reports Size(0, childHeight) as our own desired. ArrangeOverride gives
+// the child the final size we were allocated — which the outer grid computed purely from the
+// engine/settings panels and the button bar, not from our child's text content. Net effect: the
+// outer grid's column widths are stable across progress-text changes, and the bar/text simply
+// trim within whatever width the engine/settings rows decided.
+internal sealed class WidthIgnoringPanel : Panel
+{
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        var height = 0d;
+        foreach (var child in Children)
+        {
+            child.Measure(availableSize);
+            if (child.DesiredSize.Height > height)
+            {
+                height = child.DesiredSize.Height;
+            }
+        }
+        return new Size(0, height);
+    }
+
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        foreach (var child in Children)
+        {
+            child.Arrange(new Rect(finalSize));
+        }
+        return finalSize;
     }
 }

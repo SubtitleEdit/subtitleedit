@@ -73,6 +73,22 @@ public class LanguageTextToSpeech
     public string VoiceAccent { get; set; }
     public string VoiceInstructionClonedVoiceNote { get; set; }
 
+    // Cast dialog
+    public string ActorVoicesTitle { get; set; }
+    public string ActorVoicesSubtitle { get; set; }
+    public string ActorVoicesAssignedXOfY { get; set; }
+    public string ActorOrVoice { get; set; }
+    public string ApplyDefaultToAll { get; set; }
+    public string ClearAllAssignmentsConfirm { get; set; }
+    public string SetupCast { get; set; }
+    public string SetupCastHint { get; set; }
+    public string ActorVoicesRowSettingsTitle { get; set; }
+    public string VoiceSettingsForX { get; set; }
+    public string VoiceInstructionFreeTextHint { get; set; }
+    public string VoiceDesign { get; set; }
+    public string NoActorsFoundMessage { get; set; }
+    public string NoWebVttVoicesFoundMessage { get; set; }
+
     public LanguageTextToSpeech()
     {
         Title = "Text to speech";
@@ -136,12 +152,27 @@ public class LanguageTextToSpeech
         Qwen3TtsSettings = "Qwen3 TTS settings";
         KokoroTtsSettings = "Kokoro TTS settings";
         ChatterboxTtsSettings = "Chatterbox TTS settings";
-        VoiceInstruction = "Voice instruction";
+        VoiceInstruction = "Voice design";
         VoiceInstructionHint = "Optional - e.g. \"Speak in a calm and friendly tone\"";
         VoiceGender = "Gender";
         VoiceAge = "Age";
         VoicePitch = "Pitch";
         VoiceAccent = "Accent";
         VoiceInstructionClonedVoiceNote = "Voice design only affects the \"Default\" voice - a cloned voice keeps its own characteristics.";
+
+        ActorVoicesTitle = "TTS - Cast";
+        ActorVoicesSubtitle = "Assign a TTS voice (and optional voice-design instruction) to each actor or voice.";
+        ActorVoicesAssignedXOfY = "{0} of {1} assigned";
+        ActorOrVoice = "Actor / Voice";
+        ApplyDefaultToAll = "Apply default to all";
+        ClearAllAssignmentsConfirm = "Clear all voice assignments?";
+        SetupCast = "Cast...";
+        SetupCastHint = "Assign a TTS voice to each actor (ASSA) or voice (WebVTT).";
+        ActorVoicesRowSettingsTitle = "TTS - Voice settings";
+        VoiceSettingsForX = "Voice settings for \"{0}\"";
+        VoiceInstructionFreeTextHint = "Free text used by the engine to shape the voice's tone.";
+        VoiceDesign = "Voice design";
+        NoActorsFoundMessage = "No actors found. Set the Actor field on subtitle lines first.";
+        NoWebVttVoicesFoundMessage = "No <v Name> voices found in the WebVTT file.";
     }
 }

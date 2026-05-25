@@ -135,6 +135,7 @@ using Nikse.SubtitleEdit.Features.Video.OpenFromUrl.PickOnlineSubtitle;
 using Nikse.SubtitleEdit.Features.Video.ReEncodeVideo;
 using Nikse.SubtitleEdit.Features.Video.ShotChanges;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
@@ -451,6 +452,8 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<SurroundWithViewModel>();
         collection.AddTransient<SyntaxColorTooWideSettingsViewModel>();
         collection.AddTransient<TextToSpeechViewModel>();
+        collection.AddTransient<ActorVoiceMappingViewModel>();
+        collection.AddTransient<ActorVoiceRowSettingsViewModel>();
         collection.AddTransient<TimedText10PropertiesViewModel>();
         collection.AddTransient<TimedTextImsc11PropertiesViewModel>();
         collection.AddTransient<TmpegEncXmlPropertiesViewModel>();

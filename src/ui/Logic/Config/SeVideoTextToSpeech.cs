@@ -1,4 +1,7 @@
-﻿namespace Nikse.SubtitleEdit.Logic.Config;
+﻿using System.Collections.Generic;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
+
+namespace Nikse.SubtitleEdit.Logic.Config;
 
 public class SeVideoTextToSpeech
 {
@@ -64,6 +67,11 @@ public class SeVideoTextToSpeech
     // Output sample rate (0 = default)
     public int OutputSampleRate { get; set; }
 
+    // Remembered actor/voice mappings. Pre-fills the cast dialog so users don't have to
+    // re-assign the same character voices every time they open a new subtitle. Keyed by actor
+    // name; matches happen case-insensitively.
+    public List<ActorVoiceMapping> LastActorVoiceMappings { get; set; }
+
     public SeVideoTextToSpeech()
     {
         Engine = "Piper";
@@ -111,5 +119,6 @@ public class SeVideoTextToSpeech
         HighQualityTimeStretchEnabled = false;
         SilencePaddingMs = 0;
         OutputSampleRate = 0;
+        LastActorVoiceMappings = new List<ActorVoiceMapping>();
     }
 }

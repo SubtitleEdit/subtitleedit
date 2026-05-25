@@ -75,10 +75,18 @@ public class ReviewSpeechWindow : Window
         Content = grid;
 
         Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
-        Loaded += delegate 
+        Loaded += delegate
         {
             vm.Loaded();
-            vm.SelectedEngineChanged(); 
+            // When Initialize already selected the first row (Lines.Count > 0), that selection
+            // has already kicked off ApplyLineToLeftPanelAsync which loads the right engine's
+            // voices/models for the row. Firing SelectedEngineChanged here would post another
+            // fire-and-forget refresh that races (and wins against) the row sync, replacing the
+            // row's voice/model/instruction with the engine's defaults.
+            if (vm.Lines.Count == 0)
+            {
+                vm.SelectedEngineChanged();
+            }
         };
     }
 
@@ -343,11 +351,13 @@ public class ReviewSpeechWindow : Window
 
 
         var elevenLabsControls = MakeElevenLabsControls(vm);
+        var panelInstruction = MakeInstructionPanel(vm, labelMinWidth);
 
         var grid = new Grid
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -367,14 +377,124 @@ public class ReviewSpeechWindow : Window
         };
 
         grid.Add(panelEngine, 0, 0);
-        grid.Add(panelVoice, 1, 0);
-        grid.Add(panelModel, 2, 0);
+        // Model comes before Voice — same ordering as the main TTS window and Cast dialog so the
+        // user picks a model first (which sometimes filters the voice list) and the dropdowns
+        // line up across windows.
+        grid.Add(panelModel, 1, 0);
+        grid.Add(panelVoice, 2, 0);
         grid.Add(panelRegion, 3, 0);
         grid.Add(panelLanguage, 4, 0);
         grid.Add(elevenLabsControls, 5, 0);
-        // 6 is filler
+        grid.Add(panelInstruction, 6, 0);
+        // 7 is filler
 
         return UiUtil.MakeBorderForControl(grid);
+    }
+
+    // Voice-design controls shared with the main TTS window: free-text instruction (Qwen3
+    // VoiceDesign model) and OmniVoice keyword picker. Visibility flags on the VM mirror those
+    // in TextToSpeechViewModel — see ReviewSpeechViewModel.UpdateInstructionVisibility.
+    private static StackPanel MakeInstructionPanel(ReviewSpeechViewModel vm, int labelMinWidth)
+    {
+        var textBoxInstruction = new TextBox
+        {
+            Width = 260,
+            Height = 90,
+            AcceptsReturn = true,
+            TextWrapping = TextWrapping.Wrap,
+            VerticalContentAlignment = VerticalAlignment.Top,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            PlaceholderText = Se.Language.Video.TextToSpeech.VoiceInstructionHint,
+            DataContext = vm,
+            [!TextBox.IsVisibleProperty] = new Binding(nameof(vm.IsInstructionTextVisible)) { Mode = BindingMode.OneWay },
+        };
+        textBoxInstruction.Bind(TextBox.TextProperty, new Binding(nameof(vm.Instruction))
+        {
+            Mode = BindingMode.TwoWay,
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+        });
+
+        return new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Margin = new Thickness(0, 10, 0, 0),
+            Children =
+            {
+                new Label
+                {
+                    Content = Se.Language.Video.TextToSpeech.VoiceInstruction,
+                    MinWidth = labelMinWidth,
+                    VerticalAlignment = VerticalAlignment.Top,
+                },
+                textBoxInstruction,
+                MakeInstructionKeywordPicker(vm),
+            },
+            [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.HasInstruction)) { Mode = BindingMode.OneWay },
+        };
+    }
+
+    // OmniVoice keyword picker — gender/age/pitch/accent combos plus a whisper checkbox and a
+    // "doesn't apply to cloned voices" hint. Mirrors the picker in the main TTS window so the
+    // user sees the same control set regardless of which window they regenerate from.
+    private static Control MakeInstructionKeywordPicker(ReviewSpeechViewModel vm)
+    {
+        var grid = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+            },
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+            ColumnSpacing = 8,
+            RowSpacing = 6,
+            [!Grid.IsEnabledProperty] = new Binding(nameof(vm.IsInstructionPickerEnabled)) { Mode = BindingMode.OneWay },
+        };
+
+        AddPickerRow(grid, 0, Se.Language.Video.TextToSpeech.VoiceGender, vm, vm.OmniVoiceGenders, nameof(vm.SelectedOmniVoiceGender));
+        AddPickerRow(grid, 1, Se.Language.Video.TextToSpeech.VoiceAge, vm, vm.OmniVoiceAges, nameof(vm.SelectedOmniVoiceAge));
+        AddPickerRow(grid, 2, Se.Language.Video.TextToSpeech.VoicePitch, vm, vm.OmniVoicePitches, nameof(vm.SelectedOmniVoicePitch));
+        AddPickerRow(grid, 3, Se.Language.Video.TextToSpeech.VoiceAccent, vm, vm.OmniVoiceAccents, nameof(vm.SelectedOmniVoiceAccent));
+
+        var whisper = new CheckBox
+        {
+            Content = OmniVoiceTtsCpp.InstructionWhisper,
+            DataContext = vm,
+            Margin = new Thickness(0, 4, 0, 0),
+        };
+        whisper.Bind(CheckBox.IsCheckedProperty, new Binding(nameof(vm.OmniVoiceWhisper)) { Mode = BindingMode.TwoWay });
+        grid.Add(whisper, 4, 0, 1, 2);
+
+        var clonedVoiceNote = new TextBlock
+        {
+            Text = Se.Language.Video.TextToSpeech.VoiceInstructionClonedVoiceNote,
+            TextWrapping = TextWrapping.Wrap,
+            Opacity = 0.7,
+            MaxWidth = 280,
+            Margin = new Thickness(0, 6, 0, 0),
+            [!TextBlock.IsVisibleProperty] = new Binding(nameof(vm.IsInstructionVoiceHintVisible)) { Mode = BindingMode.OneWay },
+        };
+
+        return new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Children = { grid, clonedVoiceNote },
+            [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.IsInstructionPickerVisible)) { Mode = BindingMode.OneWay },
+        };
+    }
+
+    private static void AddPickerRow(Grid grid, int row, string label, ReviewSpeechViewModel vm,
+        System.Collections.ObjectModel.ObservableCollection<string> items, string selectedPropertyPath)
+    {
+        grid.Add(new Label { Content = label, MinWidth = 60, VerticalAlignment = VerticalAlignment.Center }, row, 0);
+        grid.Add(UiUtil.MakeComboBox(items, vm, selectedPropertyPath).WithWidth(200), row, 1);
     }
 
     private static Grid MakeElevenLabsControls(ReviewSpeechViewModel vm)
