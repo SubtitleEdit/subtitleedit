@@ -785,10 +785,19 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// Reads a fixed length unsigned integer as int from the current stream.
         /// </summary>
         /// <param name="length">The length in bytes of the integer.</param>
-        /// <returns>An integer.</returns>
+        /// <returns>An integer, or 0 if the stream is too short.</returns>
         private int ReadUIntAsInt(long length)
         {
-            _stream.Read(_buffer, 0, (int)length);
+            // Stream.Read may legitimately return fewer bytes than requested
+            // (truncated file, network stream, etc.). The previous code ignored
+            // the count and folded stale _buffer bytes left over from prior
+            // reads into the integer — silent garbage track numbers / pixel
+            // dimensions / durations on truncated MKV files.
+            var bytesRead = _stream.Read(_buffer, 0, (int)length);
+            if (bytesRead < length)
+            {
+                return 0;
+            }
             var result = 0;
             for (var i = 0; i < length; i++)
             {
@@ -801,10 +810,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// Reads a fixed length unsigned integer as long from the current stream.
         /// </summary>
         /// <param name="length">The length in bytes of the integer.</param>
-        /// <returns>A long integer.</returns>
+        /// <returns>A long integer, or 0 if the stream is too short.</returns>
         private long ReadUIntAsLong(long length)
         {
-            _stream.Read(_buffer, 0, (int)length);
+            // Same short-read concern as ReadUIntAsInt above.
+            var bytesRead = _stream.Read(_buffer, 0, (int)length);
+            if (bytesRead < length)
+            {
+                return 0L;
+            }
             var result = 0L;
             for (var i = 0; i < length; i++)
             {
