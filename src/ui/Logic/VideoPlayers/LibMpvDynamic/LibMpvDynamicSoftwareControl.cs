@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -6,6 +7,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Threading;
 using Avalonia.Input;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 
@@ -132,11 +134,33 @@ public class LibMpvDynamicSoftwareControl : Control
     {
         base.OnDetachedFromVisualTree(e);
 
-        if (_mpvPlayer != null)
+        // mpv_terminate_destroy (called from LibMpvDynamicPlayer.Dispose) stops every
+        // mpv worker and blocks until they exit. When mpv is idle this returns in
+        // milliseconds, but when a file load is still in flight on a slow or stuck
+        // path — network mount, weird codec, demuxer hung in I/O — it can stall the
+        // calling thread for many seconds. That's the UI thread here, which is what
+        // produces the "dialog opens, can only be killed from Task Manager" freeze
+        // reported in #11176 for the BurnIn logo/effect dialogs.
+        //
+        // Detach the render callback synchronously (so this control is collectible
+        // immediately) but hand the native dispose off to a worker thread; the OS
+        // reclaims the mpv resources at its own pace without holding the UI hostage.
+        var playerToDispose = _mpvPlayer;
+        _mpvPlayer = null;
+        if (playerToDispose != null)
         {
-            _mpvPlayer.RequestRender -= OnMpvRequestRender;
-            _mpvPlayer.Dispose();
-            _mpvPlayer = null;
+            playerToDispose.RequestRender -= OnMpvRequestRender;
+            _ = Task.Run(() =>
+            {
+                try
+                {
+                    playerToDispose.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Se.LogError(ex, "LibMpvDynamicSoftwareControl background dispose");
+                }
+            });
         }
 
         _renderTarget?.Dispose();

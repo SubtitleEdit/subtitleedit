@@ -255,42 +255,51 @@ public partial class BurnInLogoViewModel : ObservableObject
 
     internal async void OnLoaded()
     {
-        if (!string.IsNullOrEmpty(BurnInLogo.LogoFileName) && File.Exists(BurnInLogo.LogoFileName))
+        // async void: any throw here lands in the dispatcher's unhandled-exception
+        // path. Catch so a bad logo file or a stuck video open can't crash the app.
+        try
         {
-            LogoFileName = BurnInLogo.LogoFileName;
-            await LoadLogo();
+            if (!string.IsNullOrEmpty(BurnInLogo.LogoFileName) && File.Exists(BurnInLogo.LogoFileName))
+            {
+                LogoFileName = BurnInLogo.LogoFileName;
+                await LoadLogo();
+            }
+
+            // Initialize video player if video file is available
+            if (!string.IsNullOrEmpty(VideoFileName) && File.Exists(VideoFileName) && VideoPlayerControl != null)
+            {
+                await VideoPlayerControl.Open(VideoFileName);
+                await VideoPlayerControl.WaitForPlayersReadyAsync();
+
+                // Seek to a position to show a frame
+                if (PositionInSeconds > 0)
+                {
+                    VideoPlayerControl.Position = PositionInSeconds;
+                }
+                else
+                {
+                    VideoPlayerControl.Position = 1.0; // Show frame at 1 second
+                }
+
+                VideoPlayerControl.VideoPlayer.Pause();
+
+                // Wait for the video player to render and have valid bounds
+                // Try multiple times with increasing delays to ensure accurate border calculation
+                for (int i = 0; i < 3; i++)
+                {
+                    await Task.Delay(50 + (i * 50)); // 50ms, 100ms, 150ms
+                    UpdateBorder();
+                }
+
+                if (HasLogo)
+                {
+                    UpdateLogoPosition();
+                }
+            }
         }
-
-        // Initialize video player if video file is available
-        if (!string.IsNullOrEmpty(VideoFileName) && File.Exists(VideoFileName) && VideoPlayerControl != null)
+        catch (Exception ex)
         {
-            await VideoPlayerControl.Open(VideoFileName);
-            await VideoPlayerControl.WaitForPlayersReadyAsync();
-
-            // Seek to a position to show a frame
-            if (PositionInSeconds > 0)
-            {
-                VideoPlayerControl.Position = PositionInSeconds;
-            }
-            else
-            {
-                VideoPlayerControl.Position = 1.0; // Show frame at 1 second
-            }
-
-            VideoPlayerControl.VideoPlayer.Pause();
-
-            // Wait for the video player to render and have valid bounds
-            // Try multiple times with increasing delays to ensure accurate border calculation
-            for (int i = 0; i < 3; i++)
-            {
-                await Task.Delay(50 + (i * 50)); // 50ms, 100ms, 150ms
-                UpdateBorder();
-            }
-
-            if (HasLogo)
-            {
-                UpdateLogoPosition();
-            }
+            Se.LogError(ex, "BurnInLogoViewModel.OnLoaded");
         }
     }
 
