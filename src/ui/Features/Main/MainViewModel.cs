@@ -7886,6 +7886,16 @@ public partial class MainViewModel :
             item.Text = hasStartDash
                 ? RemoveDialogDashes(item.Text)
                 : AddDialogDashes(item.Text, dialogHelper);
+
+            // Keep the translation/original column in sync so the two views
+            // don't drift apart — matches what MergeManager.MergeSelectedLinesAsDialog
+            // already does for OriginalText.
+            if (!string.IsNullOrEmpty(item.OriginalText))
+            {
+                item.OriginalText = hasStartDash
+                    ? RemoveDialogDashes(item.OriginalText)
+                    : AddDialogDashes(item.OriginalText, dialogHelper);
+            }
         }
 
         _updateAudioVisualizer = true;
@@ -7954,8 +7964,18 @@ public partial class MainViewModel :
             return;
         }
 
+        // Mirror the WaveformSetStart guard: keep start at least MinimumBetweenLines
+        // ahead of end, so repeated "move start forward" hotkey presses can't
+        // collapse the duration to zero or negative.
         var deltaMs = FramesToMilliseconds(frames);
-        s.SetStartTimeOnly(TimeSpan.FromMilliseconds(s.StartTime.TotalMilliseconds + deltaMs));
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        var newStartMs = s.StartTime.TotalMilliseconds + deltaMs;
+        if (newStartMs >= s.EndTime.TotalMilliseconds - gapMs)
+        {
+            return;
+        }
+
+        s.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs));
         _updateAudioVisualizer = true;
     }
 
@@ -7967,8 +7987,18 @@ public partial class MainViewModel :
             return;
         }
 
+        // Mirror the WaveformSetEnd guard: keep end at least MinimumBetweenLines
+        // behind start so repeated "move end back" hotkey presses can't push
+        // end before start.
         var deltaMs = FramesToMilliseconds(frames);
-        s.EndTime = TimeSpan.FromMilliseconds(s.EndTime.TotalMilliseconds + deltaMs);
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        var newEndMs = s.EndTime.TotalMilliseconds + deltaMs;
+        if (newEndMs <= s.StartTime.TotalMilliseconds + gapMs)
+        {
+            return;
+        }
+
+        s.EndTime = TimeSpan.FromMilliseconds(newEndMs);
         _updateAudioVisualizer = true;
     }
 
