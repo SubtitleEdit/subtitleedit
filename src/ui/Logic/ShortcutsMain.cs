@@ -273,6 +273,13 @@ public static class ShortcutsMain
         { nameof(MainViewModel.MergeWithLineAfterCommand), Se.Language.General.MergeWithLineAfterAndAutoBreak },
         { nameof(MainViewModel.MergeWithLineBeforeKeepBreaksCommand), Se.Language.General.MergeWithLineBeforeKeepBreaks },
         { nameof(MainViewModel.MergeWithLineAfterKeepBreaksCommand), Se.Language.General.MergeWithLineAfterKeepBreaks },
+        { nameof(MainViewModel.MergeWithLineBeforeAsDialogCommand), Se.Language.Options.Shortcuts.MergeWithLineBeforeAsDialog },
+        { nameof(MainViewModel.MergeWithLineAfterAsDialogCommand), Se.Language.Options.Shortcuts.MergeWithLineAfterAsDialog },
+        { nameof(MainViewModel.ToggleDialogDashesCommand), Se.Language.Options.Shortcuts.ToggleDialogDashes },
+        { nameof(MainViewModel.MoveStartOneFrameBackCommand), Se.Language.Options.Shortcuts.MoveStartOneFrameBack },
+        { nameof(MainViewModel.MoveStartOneFrameForwardCommand), Se.Language.Options.Shortcuts.MoveStartOneFrameForward },
+        { nameof(MainViewModel.MoveEndOneFrameBackCommand), Se.Language.Options.Shortcuts.MoveEndOneFrameBack },
+        { nameof(MainViewModel.MoveEndOneFrameForwardCommand), Se.Language.Options.Shortcuts.MoveEndOneFrameForward },
         { nameof(MainViewModel.MergeSelectedLinesCommand), Se.Language.General.MergeSelectedLines },
         { nameof(MainViewModel.MergeSelectedLinesDialogCommand), Se.Language.General.MergeSelectedLinesDialog },
         { nameof(MainViewModel.MergeSelectedLinesBilingualCommand), Se.Language.Options.Shortcuts.GeneralMergeSelectedLinesBilingual },
@@ -588,6 +595,13 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.MergeSelectedLinesCommand, nameof(vm.MergeSelectedLinesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MergeWithLineBeforeKeepBreaksCommand, nameof(vm.MergeWithLineBeforeKeepBreaksCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MergeWithLineAfterKeepBreaksCommand, nameof(vm.MergeWithLineAfterKeepBreaksCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MergeWithLineBeforeAsDialogCommand, nameof(vm.MergeWithLineBeforeAsDialogCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MergeWithLineAfterAsDialogCommand, nameof(vm.MergeWithLineAfterAsDialogCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ToggleDialogDashesCommand, nameof(vm.ToggleDialogDashesCommand), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.MoveStartOneFrameBackCommand, nameof(vm.MoveStartOneFrameBackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveStartOneFrameForwardCommand, nameof(vm.MoveStartOneFrameForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveEndOneFrameBackCommand, nameof(vm.MoveEndOneFrameBackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveEndOneFrameForwardCommand, nameof(vm.MoveEndOneFrameForwardCommand), ShortcutCategory.General);
 
         AddShortcut(shortcuts, vm.MergeSelectedLinesDialogCommand, nameof(vm.MergeSelectedLinesDialogCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MergeSelectedLinesBilingualCommand, nameof(vm.MergeSelectedLinesBilingualCommand), ShortcutCategory.General);

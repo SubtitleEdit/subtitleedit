@@ -15,6 +15,7 @@ using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
@@ -7806,6 +7807,210 @@ public partial class MainViewModel :
         {
             MergeLineAfterKeepBreaks();
         });
+    }
+
+    [RelayCommand]
+    private void MergeWithLineAfterAsDialog()
+    {
+        RunWithoutChangeDetection(() =>
+        {
+            var selected = SelectedSubtitle;
+            if (selected == null)
+            {
+                return;
+            }
+
+            var index = Subtitles.IndexOf(selected);
+            var next = Subtitles.GetOrNull(index + 1);
+            if (next == null)
+            {
+                return;
+            }
+
+            _mergeManager.MergeSelectedLinesAsDialog(Subtitles, new List<SubtitleLineViewModel> { selected, next });
+            Renumber();
+            SelectAndScrollToRow(index);
+            _updateAudioVisualizer = true;
+        });
+    }
+
+    [RelayCommand]
+    private void MergeWithLineBeforeAsDialog()
+    {
+        RunWithoutChangeDetection(() =>
+        {
+            var selected = SelectedSubtitle;
+            if (selected == null)
+            {
+                return;
+            }
+
+            var index = Subtitles.IndexOf(selected);
+            if (index <= 0)
+            {
+                return;
+            }
+
+            var prev = Subtitles[index - 1];
+            _mergeManager.MergeSelectedLinesAsDialog(Subtitles, new List<SubtitleLineViewModel> { prev, selected });
+            Renumber();
+            SelectAndScrollToRow(index - 1);
+            _updateAudioVisualizer = true;
+        });
+    }
+
+    [RelayCommand]
+    private void ToggleDialogDashes()
+    {
+        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        // Determine direction from the first selected line: if any of its lines
+        // already start with a dash, toggle OFF for every selected line; else
+        // toggle ON. Matches SE 4 behaviour so a single hotkey flips the whole
+        // selection in one direction.
+        var firstLines = selectedItems[0].Text?.SplitToLines() ?? new List<string>();
+        var hasStartDash = firstLines.Any(l =>
+            HtmlUtil.RemoveHtmlTags(l, true).TrimStart().StartsWith('-'));
+
+        var dialogStyle = Enum.TryParse<DialogType>(Se.Settings.General.DialogStyle, out var ds)
+            ? ds
+            : DialogType.DashBothLinesWithSpace;
+        var dialogHelper = new DialogSplitMerge { DialogStyle = dialogStyle, SkipLineEndingCheck = true };
+
+        foreach (var item in selectedItems)
+        {
+            item.Text = hasStartDash
+                ? RemoveDialogDashes(item.Text)
+                : AddDialogDashes(item.Text, dialogHelper);
+
+            // Keep the translation/original column in sync so the two views
+            // don't drift apart — matches what MergeManager.MergeSelectedLinesAsDialog
+            // already does for OriginalText.
+            if (!string.IsNullOrEmpty(item.OriginalText))
+            {
+                item.OriginalText = hasStartDash
+                    ? RemoveDialogDashes(item.OriginalText)
+                    : AddDialogDashes(item.OriginalText, dialogHelper);
+            }
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    private static string AddDialogDashes(string text, DialogSplitMerge dialogHelper)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return text;
+        }
+
+        var lines = text.SplitToLines();
+        if (lines.Count < 2 || lines.Count > 3)
+        {
+            return text; // only dialog-shaped paragraphs (2-3 lines) get dashes
+        }
+
+        var sb = new System.Text.StringBuilder();
+        foreach (var line in lines)
+        {
+            var pre = string.Empty;
+            var s = Utilities.SplitStartTags(line, ref pre);
+            sb.Append(pre).Append("- ").AppendLine(s);
+        }
+
+        return dialogHelper.FixDashesAndSpaces(sb.ToString().Trim());
+    }
+
+    private static string RemoveDialogDashes(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return text;
+        }
+
+        var lines = text.SplitToLines();
+        var sb = new System.Text.StringBuilder();
+        foreach (var line in lines)
+        {
+            var pre = string.Empty;
+            var s = Utilities.SplitStartTags(line, ref pre);
+            sb.Append(pre).AppendLine(s.TrimStart('-', '‐').TrimStart());
+        }
+
+        return sb.ToString().Trim();
+    }
+
+    [RelayCommand]
+    private void MoveStartOneFrameBack() => MoveStartByFrames(-1);
+
+    [RelayCommand]
+    private void MoveStartOneFrameForward() => MoveStartByFrames(1);
+
+    [RelayCommand]
+    private void MoveEndOneFrameBack() => MoveEndByFrames(-1);
+
+    [RelayCommand]
+    private void MoveEndOneFrameForward() => MoveEndByFrames(1);
+
+    private void MoveStartByFrames(int frames)
+    {
+        var s = SelectedSubtitle;
+        if (s == null || LockTimeCodes)
+        {
+            return;
+        }
+
+        // Mirror the WaveformSetStart guard: keep start at least MinimumBetweenLines
+        // ahead of end, so repeated "move start forward" hotkey presses can't
+        // collapse the duration to zero or negative.
+        var deltaMs = FramesToMilliseconds(frames);
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        var newStartMs = s.StartTime.TotalMilliseconds + deltaMs;
+        if (newStartMs >= s.EndTime.TotalMilliseconds - gapMs)
+        {
+            return;
+        }
+
+        s.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs));
+        _updateAudioVisualizer = true;
+    }
+
+    private void MoveEndByFrames(int frames)
+    {
+        var s = SelectedSubtitle;
+        if (s == null || LockTimeCodes)
+        {
+            return;
+        }
+
+        // Mirror the WaveformSetEnd guard: keep end at least MinimumBetweenLines
+        // behind start so repeated "move end back" hotkey presses can't push
+        // end before start.
+        var deltaMs = FramesToMilliseconds(frames);
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        var newEndMs = s.EndTime.TotalMilliseconds + deltaMs;
+        if (newEndMs <= s.StartTime.TotalMilliseconds + gapMs)
+        {
+            return;
+        }
+
+        s.EndTime = TimeSpan.FromMilliseconds(newEndMs);
+        _updateAudioVisualizer = true;
+    }
+
+    private static int FramesToMilliseconds(int frames)
+    {
+        var frameRate = Se.Settings.General.CurrentFrameRate;
+        if (frameRate < 10)
+        {
+            frameRate = 25; // safe fallback if frame rate hasn't been set
+        }
+
+        return (int)Math.Round(frames * 1000.0 / frameRate, MidpointRounding.AwayFromZero);
     }
 
     [RelayCommand]
