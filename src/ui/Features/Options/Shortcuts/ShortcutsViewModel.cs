@@ -345,11 +345,20 @@ public partial class ShortcutsViewModel : ObservableObject
             return;
         }
 
+        // If an SE 4 install is detected on this machine (either AppData or
+        // Program Files), start the file picker in that folder so the user
+        // doesn't have to navigate manually.
+        var detectedSe4SettingsFile = Se4ShortcutsImporter.FindDefaultSettingsFile();
+        var suggestedStartFolder = detectedSe4SettingsFile != null
+            ? System.IO.Path.GetDirectoryName(detectedSe4SettingsFile)
+            : null;
+
         var fileName = await _fileHelper.PickOpenFile(
             Window,
             Se.Language.Options.Shortcuts.ImportFromSe4Title,
             "Subtitle Edit 4 Settings",
-            ".xml");
+            ".xml",
+            suggestedStartFolder: suggestedStartFolder);
         if (string.IsNullOrEmpty(fileName))
         {
             return;

@@ -7320,7 +7320,7 @@ public partial class MainViewModel :
             }
         }
 
-        ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+        ShowStatus(Se.Language.General.NoBookmarksFound);
     }
 
     [RelayCommand]
@@ -7347,7 +7347,7 @@ public partial class MainViewModel :
             }
         }
 
-        ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+        ShowStatus(Se.Language.General.NoBookmarksFound);
     }
 
     [RelayCommand]

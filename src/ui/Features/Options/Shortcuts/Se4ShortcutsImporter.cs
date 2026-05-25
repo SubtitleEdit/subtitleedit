@@ -315,7 +315,15 @@ public static class Se4ShortcutsImporter
     {
         var result = new ImportResult();
         var doc = XDocument.Parse(xml);
-        var shortcutsElement = doc.Root?.Element("Shortcuts");
+
+        // SE 4 ships two layouts of the same data: the full Settings.xml has
+        // <Settings>...<Shortcuts>...</Shortcuts></Settings>, while exported
+        // SE_Shortcuts.xml files have <Shortcuts> as the document root. Accept
+        // both — fall back to the root itself when no child element matches.
+        var shortcutsElement =
+            doc.Root?.Name.LocalName == "Shortcuts"
+                ? doc.Root
+                : doc.Root?.Element("Shortcuts");
         if (shortcutsElement == null)
         {
             return result;
@@ -404,9 +412,13 @@ public static class Se4ShortcutsImporter
             return null;
         }
 
+        // SE 4 stores Settings.xml in %AppData%\Subtitle Edit when installed, and
+        // next to the .exe (in Program Files) when run portable. Check both.
         var candidates = new[]
         {
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit", "Settings.xml"),
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Subtitle Edit", "Settings.xml"),
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Subtitle Edit", "Settings.xml"),
         };
 
         return candidates.FirstOrDefault(File.Exists);

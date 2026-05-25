@@ -660,6 +660,7 @@ public class LanguageGeneral
     public string XFiles { get; set; }
     public string XFilesConvertedInY { get; set; }
     public string XNotFound { get; set; }
+    public string NoBookmarksFound { get; set; }
     public string XRequiresAnApiKey { get; set; }
     public string XSeconds { get; set; }
     public string XSubtitles { get; set; }
@@ -1370,6 +1371,7 @@ public class LanguageGeneral
         XFiles = "{0:#,###,##0} files";
         XFilesConvertedInY = "{0:#,###,##0} files converted in {1}";
         XNotFound = "\"{0}\" not found";
+        NoBookmarksFound = "No more bookmarks found";
         XRequiresAnApiKey = "{0} requires an API key";
         XSeconds = "{0:0.0##} seconds";
         XSubtitles = "{0:#,###,##0} subtitles";

@@ -520,7 +520,7 @@ public class LanguageSettingsShortcuts
         XShortcutsImportedFromY = "{0} shortcuts imported from {1}";
         XShortcutsExportedToY = "{0} shortcuts exported to {1}";
         ImportFromSe4 = "Import from SE 4...";
-        ImportFromSe4Title = "Import shortcuts from Subtitle Edit 4 Settings.xml";
+        ImportFromSe4Title = "Import shortcuts from Subtitle Edit 4";
         ImportFromSe4XImportedYSkipped = "{0} shortcuts imported from {1} ({2} skipped — no matching SE 5 action)";
         ImportImageSubtitleForEdit = "Import image-based subtitle for edit";
         ShowPointSyncViaOther = "Show point sync via other subtitle";
