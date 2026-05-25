@@ -12,8 +12,11 @@ namespace Nikse.SubtitleEdit.Features.Options.Plugins;
 
 public class PluginManagerWindow : Window
 {
+    private readonly PluginManagerViewModel _vm;
+
     public PluginManagerWindow(PluginManagerViewModel vm)
     {
+        _vm = vm;
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Plugins.Title;
         CanResize = true;
@@ -140,5 +143,11 @@ public class PluginManagerWindow : Window
 
         Activated += delegate { buttonClose.Focus(); };
         KeyDown += (_, e) => vm.OnKeyDown(e);
+    }
+
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        base.OnClosing(e);
+        _vm.OnClosing();
     }
 }

@@ -535,9 +535,9 @@ public partial class ActorVoiceMappingViewModel : ObservableObject
         {
             _cancellationTokenSource.Cancel();
         }
-        catch
+        catch (ObjectDisposedException)
         {
-            // ignored
+            // CTS already disposed via OnClosing
         }
 
         lock (_playLock)
@@ -570,6 +570,11 @@ public partial class ActorVoiceMappingViewModel : ObservableObject
     internal void OnClosing(WindowClosingEventArgs e)
     {
         StopPlayback();
+        // The CTS we created in the constructor is reassigned in TestRow to one
+        // owned by GeneratingAudioViewModel, so by the time we get here we may
+        // be holding either. Dispose what we have — borrowing the test-run CTS
+        // is harmless because the test dialog has already closed.
+        try { _cancellationTokenSource.Dispose(); } catch (ObjectDisposedException) { }
         UiUtil.SaveWindowPosition(Window);
     }
 }

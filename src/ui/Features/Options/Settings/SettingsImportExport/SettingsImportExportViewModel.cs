@@ -392,10 +392,19 @@ public partial class SettingsImportExportViewModel : ObservableObject
     // when the import file is known to have come from a different OS, so we
     // don't disturb user-customized modifiers (e.g. a real Ctrl shortcut on
     // macOS) during a same-OS round-trip.
+    //
+    // Shortcuts coming from the SE 4 importer use "Control" instead of "Ctrl"
+    // (Se4ShortcutsImporter normalises to the Avalonia token), and historical
+    // SE 5 settings may contain either spelling — ShortcutManager treats them
+    // as the same modifier. Map both spellings so the cross-OS rewrite catches
+    // every case.
     private static void NormalizeShortcutModifiersForCurrentOs(List<SeShortCut> shortcuts)
     {
         var isMac = OperatingSystem.IsMacOS();
-        var from = isMac ? "Ctrl" : "Win";
+        // From-set is matched as a group; we always emit the OS-default token.
+        var fromTokens = isMac
+            ? new[] { "Ctrl", "Control" }
+            : new[] { "Win" };
         var to = isMac ? "Win" : "Ctrl";
 
         foreach (var shortcut in shortcuts)
@@ -407,9 +416,13 @@ public partial class SettingsImportExportViewModel : ObservableObject
 
             for (var i = 0; i < shortcut.Keys.Count; i++)
             {
-                if (string.Equals(shortcut.Keys[i], from, StringComparison.Ordinal))
+                foreach (var from in fromTokens)
                 {
-                    shortcut.Keys[i] = to;
+                    if (string.Equals(shortcut.Keys[i], from, StringComparison.Ordinal))
+                    {
+                        shortcut.Keys[i] = to;
+                        break;
+                    }
                 }
             }
         }

@@ -1239,52 +1239,65 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             var boundary = boundaries[i];
             var chunkPath = Path.Combine(Path.GetTempPath(), $"se-stt-chunk-{Guid.NewGuid()}{extension}");
+            // Register before extraction so a throw mid-extract still drains
+            // the (possibly partial) file via the outer _filesToDelete sweep.
             _filesToDelete.Add(chunkPath);
 
             LogToConsole(
                 $"Chunk {i + 1}/{boundaries.Count}: " +
                 $"{TimeSpan.FromSeconds(boundary.StartSeconds):mm\\:ss} → {TimeSpan.FromSeconds(boundary.EndSeconds):mm\\:ss}");
 
-            var extractOk = await OpenAiSttChunker.ExtractChunkAsync(
-                ffmpegPath, audioFileName, chunkPath,
-                boundary.StartSeconds, boundary.DurationSeconds, cancellationToken);
-            if (!extractOk)
+            try
             {
-                throw new InvalidOperationException(
-                    $"ffmpeg failed to extract chunk {i + 1}/{boundaries.Count} " +
-                    $"({boundary.StartSeconds:0.##}s → {boundary.EndSeconds:0.##}s) from {audioFileName}");
-            }
-
-            // Wrap the caller's segment progress so streaming segments coming
-            // from this chunk get offset back to absolute time before the UI
-            // sees them.
-            var offsetSeconds = boundary.StartSeconds;
-            var offsettingProgress = new Progress<OpenAiCompatibleSegment>(seg =>
-            {
-                segmentProgress.Report(new OpenAiCompatibleSegment
+                var extractOk = await OpenAiSttChunker.ExtractChunkAsync(
+                    ffmpegPath, audioFileName, chunkPath,
+                    boundary.StartSeconds, boundary.DurationSeconds, cancellationToken);
+                if (!extractOk)
                 {
-                    Id = seg.Id,
-                    Start = seg.Start + offsetSeconds,
-                    End = seg.End + offsetSeconds,
-                    Text = seg.Text,
+                    throw new InvalidOperationException(
+                        $"ffmpeg failed to extract chunk {i + 1}/{boundaries.Count} " +
+                        $"({boundary.StartSeconds:0.##}s → {boundary.EndSeconds:0.##}s) from {audioFileName}");
+                }
+
+                // Wrap the caller's segment progress so streaming segments coming
+                // from this chunk get offset back to absolute time before the UI
+                // sees them.
+                var offsetSeconds = boundary.StartSeconds;
+                var offsettingProgress = new Progress<OpenAiCompatibleSegment>(seg =>
+                {
+                    segmentProgress.Report(new OpenAiCompatibleSegment
+                    {
+                        Id = seg.Id,
+                        Start = seg.Start + offsetSeconds,
+                        End = seg.End + offsetSeconds,
+                        Text = seg.Text,
+                    });
                 });
-            });
 
-            int paragraphsBeforeChunk;
-            lock (subtitle.Paragraphs)
-            {
-                paragraphsBeforeChunk = subtitle.Paragraphs.Count;
+                int paragraphsBeforeChunk;
+                lock (subtitle.Paragraphs)
+                {
+                    paragraphsBeforeChunk = subtitle.Paragraphs.Count;
+                }
+
+                var chunkResponse = await service.TranscribeAsync(
+                    chunkPath, language, null, offsettingProgress, cancellationToken);
+
+                IngestTranscriptionResponse(
+                    chunkResponse,
+                    subtitle,
+                    offsetSeconds,
+                    chunkEndSeconds: boundary.EndSeconds,
+                    paragraphsBeforeChunk);
             }
-
-            var chunkResponse = await service.TranscribeAsync(
-                chunkPath, language, null, offsettingProgress, cancellationToken);
-
-            IngestTranscriptionResponse(
-                chunkResponse,
-                subtitle,
-                offsetSeconds,
-                chunkEndSeconds: boundary.EndSeconds,
-                paragraphsBeforeChunk);
+            finally
+            {
+                // Delete this chunk as soon as we're done with it instead of
+                // accumulating up to N×23 MB of WAV in temp for long runs. The
+                // entry stays in _filesToDelete for the outer sweep as a
+                // safety net in case Delete throws here.
+                try { if (File.Exists(chunkPath)) File.Delete(chunkPath); } catch { /* swept later */ }
+            }
         }
     }
 

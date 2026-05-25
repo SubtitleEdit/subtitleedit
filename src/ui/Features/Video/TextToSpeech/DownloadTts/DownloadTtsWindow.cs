@@ -64,4 +64,10 @@ public sealed class DownloadTtsWindow : Window
         base.OnKeyDown(e);
         _vm.OnKeyDown(e);
     }
+
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        base.OnClosing(e);
+        _vm.OnClosing();
+    }
 }

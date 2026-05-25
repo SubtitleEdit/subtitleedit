@@ -172,8 +172,10 @@ public class OpenAiSttService
             AddExtraHeaders(request.Headers, _settings.ExtraHeaders);
         }
 
-        // Send request
-        var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+        // Send request. Dispose the HttpResponseMessage in both branches so we
+        // don't leak the connection — ParseSseStreamAsync only owns the body
+        // stream, not the response itself.
+        using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {

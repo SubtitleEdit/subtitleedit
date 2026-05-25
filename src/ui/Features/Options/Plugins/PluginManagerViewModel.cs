@@ -36,6 +36,7 @@ public partial class PluginManagerViewModel : ObservableObject
     private readonly IFolderHelper _folderHelper;
     private readonly IWindowService _windowService;
     private CancellationTokenSource? _checkCts;
+    private CancellationTokenSource? _updateAllCts;
 
     public PluginManagerViewModel(IPluginCatalog pluginCatalog, IPluginDownloadService downloadService, IFolderHelper folderHelper, IWindowService windowService)
     {
@@ -146,16 +147,27 @@ public partial class PluginManagerViewModel : ObservableObject
         }
 
         IsUpdating = true;
+        var cts = new CancellationTokenSource();
+        _updateAllCts = cts;
         try
         {
             var done = 0;
             foreach (var (item, entry) in toUpdate)
             {
+                if (cts.IsCancellationRequested)
+                {
+                    break;
+                }
+
                 done++;
                 UpdateAllButtonText = string.Format(Se.Language.Plugins.UpdatingXOfY, done, toUpdate.Count);
                 try
                 {
-                    await _downloadService.InstallAsync(entry, progress: null, CancellationToken.None);
+                    await _downloadService.InstallAsync(entry, progress: null, cts.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
                 }
                 catch (Exception exception)
                 {
@@ -169,6 +181,8 @@ public partial class PluginManagerViewModel : ObservableObject
         finally
         {
             IsUpdating = false;
+            _updateAllCts = null;
+            cts.Dispose();
             RefreshUpdateAllButtonText();
         }
     }
@@ -293,6 +307,21 @@ public partial class PluginManagerViewModel : ObservableObject
         {
             e.Handled = true;
             Window?.Close();
+        }
+    }
+
+    // Cancel an in-flight Update-All loop when the manager window closes — without
+    // this, _updateAllCts is never signalled and the per-iteration cancellation
+    // guard in UpdateAll is dead code.
+    internal void OnClosing()
+    {
+        try
+        {
+            _updateAllCts?.Cancel();
+            _checkCts?.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
         }
     }
 }

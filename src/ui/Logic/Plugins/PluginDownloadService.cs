@@ -90,6 +90,10 @@ public class PluginDownloadService : IPluginDownloadService
                     Directory.Delete(targetPath, recursive: true);
                 }
 
+                // Last chance to abort before the move that publishes the new
+                // plugin. Cancelling between the deletes above and the move
+                // would leave the user with no plugin at all.
+                cancellationToken.ThrowIfCancellationRequested();
                 Directory.Move(source, targetPath);
             }, cancellationToken);
         }

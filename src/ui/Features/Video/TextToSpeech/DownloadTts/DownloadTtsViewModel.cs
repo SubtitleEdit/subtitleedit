@@ -1121,4 +1121,34 @@ public partial class DownloadTtsViewModel : ObservableObject
             Cancel();
         }
     }
+
+    // Drain everything we own when the window goes away. The happy-path
+    // handlers above dispose each MemoryStream as soon as it's unpacked, but
+    // cancel or an early throw can leave several streams (each holding the
+    // full multi-GB download in memory) alive. Disposing here is idempotent —
+    // MemoryStream.Dispose can be called twice safely.
+    internal void OnClosing()
+    {
+        try { _cancellationTokenSource.Cancel(); } catch (ObjectDisposedException) { }
+        _timer.Stop();
+        _timer.Elapsed -= OnTimerOnElapsed;
+        _timer.Dispose();
+
+        DisposeQuietly(_downloadStream);
+        DisposeQuietly(_downloadStreamModel);
+        DisposeQuietly(_downloadStreamConfig);
+        DisposeQuietly(_downloadStreamQwen3TtsCpp);
+        DisposeQuietly(_downloadStreamQwen3TtsCppVoices);
+        DisposeQuietly(_downloadStreamKokoroTtsCpp);
+        DisposeQuietly(_downloadStreamQwen3TtsCrispAsrVoices);
+        DisposeQuietly(_downloadStreamOmniVoice);
+        DisposeQuietly(_downloadStreamOmniVoiceVoices);
+
+        try { _cancellationTokenSource.Dispose(); } catch (ObjectDisposedException) { }
+    }
+
+    private static void DisposeQuietly(MemoryStream stream)
+    {
+        try { stream.Dispose(); } catch { /* already disposed or never opened */ }
+    }
 }

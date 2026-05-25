@@ -119,6 +119,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
     private CancellationToken _cancellationToken;
     private bool _skipAutoContinue;
     private long _startPlayTicks;
+    private readonly List<string> _tempAudioFiles = new();
 
     public ReviewSpeechViewModel(IFolderHelper folderHelper, IWindowService windowService)
     {
@@ -582,6 +583,21 @@ public partial class ReviewSpeechViewModel : ObservableObject
         await ElevenLabsSettingsViewModel.ShowStyleExaggerationHelp(Window!);
     }
 
+    // Replace _cancellationTokenSource, disposing the previous instance. The
+    // RegenerateAudio path swaps in a CTS owned by GeneratingAudioViewModel,
+    // so disposing the old one here just frees the per-window CTS created in
+    // the constructor (or a previous Play*/RegenerateAudio call we own).
+    private void ReplaceCts(CancellationTokenSource next)
+    {
+        var old = _cancellationTokenSource;
+        _cancellationTokenSource = next;
+        _cancellationToken = next.Token;
+        if (!ReferenceEquals(old, next))
+        {
+            try { old.Dispose(); } catch (ObjectDisposedException) { }
+        }
+    }
+
     [RelayCommand]
     private async Task RegenerateAudio(ReviewRow? row)
     {
@@ -644,8 +660,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         }
 
         var generatingAudioVm = _windowService.ShowWindow<GeneratingAudioWindow, GeneratingAudioViewModel>(Window!);
-        _cancellationTokenSource = generatingAudioVm.CancellationTokenSource;
-        _cancellationToken = _cancellationTokenSource.Token;
+        ReplaceCts(generatingAudioVm.CancellationTokenSource);
 
         TtsResult speakResult;
         try
@@ -713,8 +728,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             return;
         }
 
-        _cancellationTokenSource = new CancellationTokenSource();
-        _cancellationToken = _cancellationTokenSource.Token;
+        ReplaceCts(new CancellationTokenSource());
         _skipAutoContinue = false;
         _startPlayTicks = DateTime.UtcNow.Ticks;
 
@@ -737,8 +751,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             return;
         }
 
-        _cancellationTokenSource = new CancellationTokenSource();
-        _cancellationToken = _cancellationTokenSource.Token;
+        ReplaceCts(new CancellationTokenSource());
         _skipAutoContinue = false;
         _startPlayTicks = DateTime.UtcNow.Ticks;
         await PlayAudio(line.StepResult.CurrentFileName);
@@ -763,33 +776,14 @@ public partial class ReviewSpeechViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
-        // set StepResults with the current lines
-        var stepResults = new List<TtsStepResult>();
+        // Push any edits the user made to row.Text back into the step results so
+        // the caller sees them, then publish the included rows as StepResults.
         foreach (var row in Lines)
         {
-            var stepResult = row.StepResult;
-            stepResult.Text = row.Text;
-            stepResults.Add(stepResult);
-        }
-
-        StepResults = stepResults.ToArray();
-
-        foreach (var p in stepResults)
-        {
-            Lines.Add(new ReviewRow
-            {
-                Include = true,
-                Number = p.Paragraph.Number,
-                Text = p.Text,
-                Voice = p.Voice == null ? string.Empty : p.Voice.ToString(),
-                Speed = Math.Round(p.SpeedFactor, 2).ToString(CultureInfo.CurrentCulture),
-                Cps = Math.Round(p.Paragraph.GetCharactersPerSecond(), 2).ToString(CultureInfo.CurrentCulture),
-                StepResult = p
-            });
+            row.StepResult.Text = row.Text;
         }
 
         StepResults = Lines.Where(p => p.Include).Select(p => p.StepResult).ToArray();
-
 
         Se.SaveSettings();
         OkPressed = true;
@@ -820,6 +814,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         // Step 1: Trim silence from start and end
         var outputFileNameTrim = Path.Combine(_waveFolder, Guid.NewGuid() + ".wav");
+        _tempAudioFiles.Add(outputFileNameTrim);
         var trimProcess = FfmpegGenerator.TrimSilenceStartAndEnd(item.CurrentFileName, outputFileNameTrim);
         await trimProcess.StartAndWaitAsync(_cancellationToken);
 
@@ -829,6 +824,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         if (doVad)
         {
             var vadOutput = Path.Combine(_waveFolder, $"vad_{Guid.NewGuid()}.wav");
+            _tempAudioFiles.Add(vadOutput);
             var vadProcess = FfmpegGenerator.CompressInternalSilence(currentFile, vadOutput, vadMaxSilence);
             await vadProcess.StartAndWaitAsync(_cancellationToken);
 
@@ -890,6 +886,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         {
             outputFileName2 = Path.Combine(_waveFolder, $"{Path.GetFileNameWithoutExtension(overrideFileName)}_{Guid.NewGuid()}{ext}");
         }
+        _tempAudioFiles.Add(outputFileName2);
 
         // Use rubberband (WSOLA) for high-quality stretch, or atempo as fallback
         Process speedProcess;
@@ -1364,12 +1361,35 @@ public partial class ReviewSpeechViewModel : ObservableObject
     {
         _skipAutoContinue = true;
         _timer.Stop();
-        _cancellationTokenSource.Cancel();
+        _timer.Elapsed -= OnTimerOnElapsed;
+        _timer.Dispose();
+        try { _cancellationTokenSource.Cancel(); } catch (ObjectDisposedException) { }
+        try { _cancellationTokenSource.Dispose(); } catch (ObjectDisposedException) { }
         lock (_playLock)
         {
             _mpvContext?.Dispose();
             _mpvContext = null;
         }
+
+        // The waveform mirrors subscribe to PropertyChanged in Initialize so drags
+        // on the visualizer write back into the per-row TtsStepResult. Detach now
+        // so the mirror VMs (and the rows they reference) become collectible.
+        foreach (var wp in WaveformParagraphs)
+        {
+            wp.PropertyChanged -= OnWaveformParagraphChanged;
+        }
+        WaveformParagraphs.Clear();
+        _waveformParagraphToRow.Clear();
+
+        // Intermediate WAVs from TrimAndAdjustSpeed land in _waveFolder and would
+        // otherwise pile up across regenerate cycles. Best-effort — _waveFolder is
+        // usually a session-scoped temp dir but a stray locked file shouldn't tank
+        // window close.
+        foreach (var f in _tempAudioFiles)
+        {
+            try { if (File.Exists(f)) File.Delete(f); } catch { /* ignore */ }
+        }
+        _tempAudioFiles.Clear();
 
         UiUtil.SaveWindowPosition(Window);
     }
