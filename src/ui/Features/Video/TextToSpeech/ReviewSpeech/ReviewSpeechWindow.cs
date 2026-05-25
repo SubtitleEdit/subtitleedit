@@ -5,6 +5,8 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
+using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Logic;
@@ -617,10 +619,52 @@ public class ReviewSpeechWindow : Window
 
     private static Border MakeWaveform(ReviewSpeechViewModel vm)
     {
+        // Mirror the main window's waveform theme so the review waveform looks the same as the
+        // one users are already used to.
+        var settings = Se.Settings.Waveform;
+        var audioVisualizer = new AudioVisualizer
+        {
+            DrawGridLines = settings.DrawGridLines,
+            WaveformColor = settings.WaveformColor.FromHexToColor(),
+            WaveformBackgroundColor = settings.WaveformBackgroundColor.FromHexToColor(),
+            WaveformSelectedColor = settings.WaveformSelectedColor.FromHexToColor(),
+            WaveformCursorColor = settings.WaveformCursorColor.FromHexToColor(),
+            WaveformShotChangeColor = settings.WaveformShotChangeColor.FromHexToColor(),
+            WaveformParagraphLeftColor = settings.WaveformParagraphLeftColor.FromHexToColor(),
+            WaveformParagraphRightColor = settings.WaveformParagraphRightColor.FromHexToColor(),
+            WaveformFancyHighColor = settings.WaveformFancyHighColor.FromHexToColor(),
+            ParagraphBackground = settings.ParagraphBackground.FromHexToColor(),
+            ParagraphSelectedBackground = settings.ParagraphSelectedBackground.FromHexToColor(),
+            InvertMouseWheel = settings.InvertMouseWheel,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Height = double.NaN,
+            WaveformDrawStyle = InitWaveform.GetWaveformDrawStyle(settings.WaveformDrawStyle),
+            MinGapSeconds = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0,
+            FocusOnMouseOver = settings.FocusOnMouseOver,
+            IsReadOnly = Se.Settings.General.LockTimeCodes,
+            WaveformHeightPercentage = settings.SpectrogramCombinedWaveformHeight,
+        };
+
+        vm.AudioVisualizer = audioVisualizer;
+        audioVisualizer.Bind(AudioVisualizer.WavePeaksProperty, new Binding(nameof(vm.WavePeakData)));
+
+        // Re-center on the selected paragraph whenever peaks arrive (e.g., async-loaded) or the
+        // user picks a different row. SelectedLine changes also call RefreshWaveformPosition via
+        // the VM's partial OnSelectedLineChanged.
+        audioVisualizer.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == AudioVisualizer.WavePeaksProperty)
+            {
+                vm.RefreshWaveformPosition();
+            }
+        };
+
         return new Border
         {
             Margin = new Thickness(2),
-            //          Child = new TextBlock { Text = "Waveform placeholder" } // Placeholder for waveform control
+            Height = 120,
+            Child = audioVisualizer,
         };
     }
 
