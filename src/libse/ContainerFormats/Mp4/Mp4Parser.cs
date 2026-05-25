@@ -23,6 +23,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
         public string VttcLanguage { get; private set; }
 
         public Subtitle TrunCea608Subtitle { get; private set; }
+        public Subtitle TrunCea708Subtitle { get; private set; }
         private List<Cea608.CcData> _trunCea608CcData = new List<Cea608.CcData>();
         public string DebugInfo { get; private set; }
 
@@ -363,25 +364,117 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                     return;
                 }
 
-                TrunCea608Subtitle = new Subtitle();
-                var cea608Parser = new CcDataC608Parser();
-                cea608Parser.DisplayScreen += data =>
+                var sortedCcData = ccDataList.OrderBy(p => p.Time).ToList();
+
+                // CEA-608 (NTSC fields 1 + 2)
+                var cea608Entries = sortedCcData.Where(c => c.Type == 0 || c.Type == 1).ToList();
+                if (cea608Entries.Count > 0)
                 {
-                    var startMs = data.Start / (double)timeScale * 1000.0;
-                    var endMs = data.End / (double)timeScale * 1000.0;
-                    TrunCea608Subtitle.Paragraphs.Add(new Paragraph(GetText(data.Screen), startMs, endMs));
-                };
-                foreach (var cc in ccDataList.OrderBy(p => p.Time))
-                {
-                    cea608Parser.AddData((int)cc.Time, new[] { cc.Data1, cc.Data2 });
+                    TrunCea608Subtitle = new Subtitle();
+                    var cea608Parser = new CcDataC608Parser();
+                    cea608Parser.DisplayScreen += data =>
+                    {
+                        var startMs = data.Start / (double)timeScale * 1000.0;
+                        var endMs = data.End / (double)timeScale * 1000.0;
+                        TrunCea608Subtitle.Paragraphs.Add(new Paragraph(GetText(data.Screen), startMs, endMs));
+                    };
+                    foreach (var cc in cea608Entries)
+                    {
+                        cea608Parser.AddData((int)cc.Time, new[] { cc.Data1, cc.Data2 });
+                    }
                 }
 
-                //debugInfo.AppendLine($"CheckForMoovVideoCea608: paragraphs={TrunCea608Subtitle.Paragraphs.Count}");
+                // CEA-708 (DTVCC). type==3 is the packet-start triplet whose second
+                // byte carries packet_size_code (not service-block content); type==2
+                // triplets carry the service-block bytes. Mirror MacCaption10's
+                // approach (CcDataSection.GetText) and feed only type==2 bytes into
+                // the Cea708 decoder — its state machine is tolerant of starting
+                // partway through a packet and works well for service 1, which is
+                // by far the most common.
+                DecodeMoovVideoCea708(sortedCcData, timeScale);
+
+                //debugInfo.AppendLine($"CheckForMoovVideoCea608: paragraphs={TrunCea608Subtitle?.Paragraphs.Count ?? 0}, cea708 paragraphs={TrunCea708Subtitle?.Paragraphs.Count ?? 0}");
             }
             catch (Exception e)
             {
                 SeLogger.Error(e, "Error while parsing MP4 moov video track CEA-608");
             }
+        }
+
+        private void DecodeMoovVideoCea708(List<Cea608.CcData> sortedCcData, ulong timeScale)
+        {
+            try
+            {
+                // Group cc_type==2 (DTVCC packet data) bytes by their original PTS
+                // frame. Each "frame" gets fed to Cea708.Decode as one chunk — the
+                // decoder accumulates text in its CommandState and flushes when a
+                // display command (DisplayWindows / HideWindows / ToggleWindows /
+                // DeleteWindows) arrives, returning the freshly-flushed text.
+                var cea708Frames = sortedCcData
+                    .Where(c => c.Type == 2)
+                    .GroupBy(c => c.Time)
+                    .OrderBy(g => g.Key)
+                    .ToList();
+
+                if (cea708Frames.Count == 0)
+                {
+                    return;
+                }
+
+                TrunCea708Subtitle = new Subtitle();
+                var state = new Cea708.CommandState();
+                var frameTimesMs = new List<double>();
+
+                foreach (var frame in cea708Frames)
+                {
+                    var bytes = new List<byte>();
+                    foreach (var cc in frame)
+                    {
+                        bytes.Add((byte)cc.Data1);
+                        bytes.Add((byte)cc.Data2);
+                    }
+
+                    var frameMs = frame.Key / (double)timeScale * 1000.0;
+                    frameTimesMs.Add(frameMs);
+                    var lineIndex = frameTimesMs.Count - 1;
+
+                    var text = Cea708.Cea708.Decode(lineIndex, bytes.ToArray(), state, flush: false);
+                    EmitCea708Paragraph(text, state, frameTimesMs, endMs: frameMs);
+                }
+
+                // Final flush so any text still buffered (no terminating display
+                // command in the stream) still gets surfaced. End-time falls back
+                // to the last frame's PTS.
+                var tailText = Cea708.Cea708.Decode(frameTimesMs.Count, Array.Empty<byte>(), state, flush: true);
+                EmitCea708Paragraph(tailText, state, frameTimesMs, endMs: frameTimesMs[frameTimesMs.Count - 1]);
+
+                if (TrunCea708Subtitle.Paragraphs.Count == 0)
+                {
+                    TrunCea708Subtitle = null;
+                }
+            }
+            catch (Exception e)
+            {
+                SeLogger.Error(e, "Error while parsing MP4 moov video track CEA-708");
+            }
+        }
+
+        private void EmitCea708Paragraph(string text, Cea708.CommandState state, List<double> frameTimesMs, double endMs)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
+
+            // state.StartLineIndex is set by Cea708.FlushText to the lineIndex of
+            // the first SetText command that contributed to the just-emitted
+            // caption — i.e., when the text "started". Clamp defensively in case
+            // the index isn't valid (e.g., flush with empty state).
+            var startIndex = state.StartLineIndex >= 0 && state.StartLineIndex < frameTimesMs.Count
+                ? state.StartLineIndex
+                : frameTimesMs.Count - 1;
+            var startMs = frameTimesMs[startIndex];
+            TrunCea708Subtitle.Paragraphs.Add(new Paragraph(text.Trim(), startMs, endMs));
         }
 
         private static void CountRawCcTypes(Stream fs, ulong chunkOffset, ulong scanSize, int[] ccTypeCounts)

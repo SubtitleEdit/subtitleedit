@@ -33,7 +33,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     return;
                 }
 
-                if (Name == "minf" && IsTextSubtitle || IsVobSubSubtitle || IsClosedCaption || IsVideo)
+                // Parens matter: without them, `IsVobSubSubtitle || IsClosedCaption
+                // || IsVideo` bind independently of `Name == "minf"`, so e.g. a
+                // mdhd box on a video track was being parsed as if it were minf —
+                // which left Mdhd unset and forced the default 90000 timescale
+                // for video tracks (incorrect MP4 timing for CEA-608/708).
+                if (Name == "minf" && (IsTextSubtitle || IsVobSubSubtitle || IsClosedCaption || IsVideo))
                 {
                     ulong timeScale = 90000;
                     if (Mdhd != null)
