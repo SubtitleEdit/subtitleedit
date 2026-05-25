@@ -717,7 +717,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             var first = (objSeq & 0x80) == 0x80 || forceFirst;
             var last = (objSeq & 0x40) == 0x40;
 
-            var info = new ImageObjectFragment();
+            var info = new ImageObjectFragment
+            {
+                ImageBuffer = Array.Empty<byte>(),
+            };
             if (first)
             {
                 // First-fragment ODS layout: 11 bytes of header (object id+ver+seq+
