@@ -19,8 +19,8 @@ public class LanguageMergeContinuationLines
         Title = "Merge continuation lines";
         CandidatesFoundX = "Continuation candidates found: {0}";
         NoCandidatesFound = "No continuation candidates found";
-        MaxMillisecondsBetweenLines = "Maximum milliseconds between lines";
-        MaxCharacters = "Maximum characters in one paragraph";
+        MaxMillisecondsBetweenLines = "Max gap between lines (ms)";
+        MaxCharacters = "Max characters per paragraph";
         ColumnMerge = "Merge";
         ColumnFirst = "First line";
         ColumnSecond = "Second line";

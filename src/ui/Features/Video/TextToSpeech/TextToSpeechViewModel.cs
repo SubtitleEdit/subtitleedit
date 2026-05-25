@@ -654,9 +654,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             .Select(p => new SubtitleLineViewModel(p, format))
             .ToList();
 
-        var maxGap = Se.Settings.Tools.BridgeGaps.BridgeGapsSmallerThanMs;
-        var maxLen = Se.Settings.General.SubtitleLineMaximumLength * Se.Settings.General.MaxNumberOfLines;
-        var candidates = MergeContinuationLinesHelper.Detect(viewModels, language, maxGap, maxLen);
+        const int maxGapMs = 500;
+        const int maxCharacters = 500;
+        var candidates = MergeContinuationLinesHelper.Detect(viewModels, language, maxGapMs, maxCharacters);
         if (candidates.Count == 0)
         {
             return;
@@ -664,7 +664,7 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         var result = await _windowService
             .ShowDialogAsync<MergeContinuationLinesWindow, MergeContinuationLinesViewModel>(
-                Window!, vm => vm.Initialize(viewModels, language));
+                Window!, vm => vm.Initialize(viewModels, language, maxGapMs, maxCharacters));
 
         if (!result.OkPressed || result.AllSubtitlesFixed.Count == _subtitle.Paragraphs.Count)
         {

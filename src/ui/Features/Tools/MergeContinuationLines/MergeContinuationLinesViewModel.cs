@@ -36,7 +36,7 @@ public partial class MergeContinuationLinesViewModel : ObservableObject
         AllSubtitlesFixed = new List<SubtitleLineViewModel>();
         CandidatesInfo = string.Empty;
 
-        MaxMillisecondsBetweenLines = Se.Settings.Tools.BridgeGaps.BridgeGapsSmallerThanMs;
+        MaxMillisecondsBetweenLines = 500;
         MaxCharacters = Se.Settings.General.SubtitleLineMaximumLength * Se.Settings.General.MaxNumberOfLines;
 
         _previewTimer = new System.Timers.Timer(250);
@@ -52,10 +52,18 @@ public partial class MergeContinuationLinesViewModel : ObservableObject
         };
     }
 
-    public void Initialize(List<SubtitleLineViewModel> subtitles, string? language)
+    public void Initialize(List<SubtitleLineViewModel> subtitles, string? language, int? maxGapMs = null, int? maxCharacters = null)
     {
         _allSubtitles = subtitles;
         _language = language;
+        if (maxGapMs.HasValue)
+        {
+            MaxMillisecondsBetweenLines = maxGapMs.Value;
+        }
+        if (maxCharacters.HasValue)
+        {
+            MaxCharacters = maxCharacters.Value;
+        }
         _previewTimer.Start();
         _isDirty = true;
     }
