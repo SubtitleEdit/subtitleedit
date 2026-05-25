@@ -54,6 +54,7 @@ public class LanguageMainMenu
     public string MergeLinesWithSameTimeCodes { get; set; }
     public string SplitBreakLongLines { get; set; }
     public string MergeShortLines { get; set; }
+    public string MergeContinuationLines { get; set; }
     public string Renumber { get; set; }
     public string RemoveTextForHearingImpaired { get; set; }
     public string ConvertActors { get; set; }
@@ -177,6 +178,7 @@ public class LanguageMainMenu
         MergeLinesWithSameTimeCodes = "Merge lines with same time codes...";
         SplitBreakLongLines = "Split/rebalance long lines...";
         MergeShortLines = "Merge short lines...";
+        MergeContinuationLines = "Merge continuation lines...";
         Renumber = "Renumber...";
         RemoveTextForHearingImpaired = "_Remove text for hearing impaired...";
         ConvertActors = "Convert actors...";

@@ -121,6 +121,7 @@ using Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 using Nikse.SubtitleEdit.Features.Tools.FixNetflixErrors;
 using Nikse.SubtitleEdit.Features.Tools.JoinSubtitles;
 using Nikse.SubtitleEdit.Features.Tools.MergeTwoSubtitles;
+using Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
 using Nikse.SubtitleEdit.Features.Tools.MergeShortLines;
 using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameText;
 using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
@@ -4832,6 +4833,35 @@ public partial class MainViewModel :
         var result = await _windowService
             .ShowDialogAsync<MergeShortLinesWindow, MergeShortLinesViewModel>(
                 Window!, vm => { vm.Initialize(Subtitles.ToList(), AudioVisualizer?.ShotChanges ?? new List<double>()); });
+
+        if (result.OkPressed)
+        {
+            Subtitles.Clear();
+            Subtitles.AddRange(result.AllSubtitlesFixed);
+            SelectAndScrollToRow(0);
+            _updateAudioVisualizer = true;
+            RefreshSubtitlePreview();
+        }
+    }
+
+    [RelayCommand]
+    private async Task ShowToolsMergeContinuationLines()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        var language = Subtitles.AutoDetectGoogleLanguage();
+        var result = await _windowService
+            .ShowDialogAsync<MergeContinuationLinesWindow, MergeContinuationLinesViewModel>(
+                Window!, vm => { vm.Initialize(Subtitles.ToList(), language); });
 
         if (result.OkPressed)
         {
