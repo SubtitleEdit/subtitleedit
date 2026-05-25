@@ -591,8 +591,7 @@ public partial class DownloadTtsViewModel : ObservableObject
             else if (_downloadTaskQwen3TtsCrispAsrVoices is { IsFaulted: true })
             {
                 _timer.Stop();
-                var ex = _downloadTaskQwen3TtsCrispAsrVoices.Exception?.InnerException ?? _downloadTaskQwen3TtsCrispAsrVoices.Exception;
-                if (ex is OperationCanceledException)
+                if (_cancellationTokenSource.IsCancellationRequested)
                 {
                     ProgressText = "Download canceled";
                     Close();
@@ -600,6 +599,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
 
                 // Voices are optional — the models are already installed. Log and close with success.
+                var ex = _downloadTaskQwen3TtsCrispAsrVoices.Exception?.InnerException ?? _downloadTaskQwen3TtsCrispAsrVoices.Exception;
                 if (ex != null)
                 {
                     Se.LogError(ex);
