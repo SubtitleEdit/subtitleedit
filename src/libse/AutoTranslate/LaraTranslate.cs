@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             // netstandard2.1: ReadAsByteArrayAsync has no CancellationToken
             // overload; the token is flowed through SendAsync, which is where
             // the long blocking happens.
-            var response = await _httpClient.SendAsync(request, cancellationToken);
+            using var response = await _httpClient.SendAsync(request, cancellationToken);
 
             var bytes = await response.Content.ReadAsByteArrayAsync();
             var json = Encoding.UTF8.GetString(bytes).Trim();
