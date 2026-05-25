@@ -93,6 +93,7 @@ public class LanguageMain
     public string ColorHint { get; set; }
     public string RemoveFormattingHint { get; set; }
     public string AssaResolutionResamplerDone { get; set; }
+    public string SnappedXTimesToFrames { get; set; }
     public string LanguageFileSavedToX { get; set; }
     public string FileExportedInFormatXToY { get; set; }
     public string FileExportedInFormatXToFileY { get; set; }
@@ -198,6 +199,7 @@ public class LanguageMain
         ColorHint = "Color selected lines";
         RemoveFormattingHint = "Remove formatting from selected lines";
         AssaResolutionResamplerDone = "ASSA resolution changed.";
+        SnappedXTimesToFrames = "Snapped {0} time codes to frames at {1:0.###} fps";
         LanguageFileSavedToX = "Language file saved to {0}";
         FileExportedInFormatXToY = "File exported in format {0} to {1}";
         FileExportedInFormatXToFileY = "File exported in format \"{0}\" to file \"{1}\"";

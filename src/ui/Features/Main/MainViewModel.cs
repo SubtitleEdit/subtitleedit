@@ -4889,6 +4889,60 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void SnapAllTimesToFrames()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        var frameRate = Se.Settings.General.CurrentFrameRate;
+        if (frameRate < 1)
+        {
+            return;
+        }
+
+        var frameDurMs = 1000.0 / frameRate;
+        var changed = 0;
+        RunWithoutChangeDetection(() =>
+        {
+            foreach (var s in Subtitles)
+            {
+                var newStartMs = Math.Round(s.StartTime.TotalMilliseconds / frameDurMs, MidpointRounding.AwayFromZero) * frameDurMs;
+                var newEndMs = Math.Round(s.EndTime.TotalMilliseconds / frameDurMs, MidpointRounding.AwayFromZero) * frameDurMs;
+
+                // Snapping can collapse start and end to the same frame (or invert them) for
+                // sub-frame durations; keep the cue at least one frame long.
+                if (newEndMs <= newStartMs)
+                {
+                    newEndMs = newStartMs + frameDurMs;
+                }
+
+                if (Math.Abs(newStartMs - s.StartTime.TotalMilliseconds) >= 0.5)
+                {
+                    s.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs));
+                    changed++;
+                }
+
+                if (Math.Abs(newEndMs - s.EndTime.TotalMilliseconds) >= 0.5)
+                {
+                    s.EndTime = TimeSpan.FromMilliseconds(newEndMs);
+                    changed++;
+                }
+            }
+        });
+
+        _updateAudioVisualizer = true;
+        ShowStatus(string.Format(Se.Language.Main.SnappedXTimesToFrames, changed, frameRate));
+    }
+
+    [RelayCommand]
     private async Task ShowToolsMergeContinuationLines()
     {
         if (Window == null)
