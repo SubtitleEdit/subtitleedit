@@ -1510,6 +1510,19 @@ public partial class BurnInViewModel : ObservableObject
                 "p7",
             };
         }
+        else if (videoCodec == "h264_qsv" || videoCodec == "hevc_qsv")
+        {
+            items = new List<string>
+            {
+                "veryfast",
+                "faster",
+                "fast",
+                "medium",
+                "slow",
+                "slower",
+                "veryslow",
+            };
+        }
         else if (videoCodec == "h264_amf")
         {
             items = new List<string> { string.Empty };
