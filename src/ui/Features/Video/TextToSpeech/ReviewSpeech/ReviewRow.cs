@@ -43,10 +43,13 @@ public partial class ReviewRow : ObservableObject
             VoiceName = StepResult.Voice?.Name ?? string.Empty,
             Voice = StepResult.Voice,
             Speed = StepResult.SpeedFactor,
+            EngineName = StepResult.EngineName,
+            Model = StepResult.Model,
+            Instruction = StepResult.Instruction,
         });
     }
 
-    internal void AddHistory(Voices.Voice voice, string processedFileName)
+    internal void AddHistory(Voices.Voice voice, string processedFileName, string engineName, string model, string instruction)
     {
         HistoryItems.Add(new ReviewHistoryRow
         {
@@ -55,6 +58,9 @@ public partial class ReviewRow : ObservableObject
             VoiceName = voice.Name,
             Voice = voice,
             Speed = StepResult.SpeedFactor,
+            EngineName = engineName,
+            Model = model,
+            Instruction = instruction,
         });
 
         HasHistory = true;

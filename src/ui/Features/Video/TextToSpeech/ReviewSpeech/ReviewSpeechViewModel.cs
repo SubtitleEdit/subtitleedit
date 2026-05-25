@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
@@ -58,9 +59,35 @@ public partial class ReviewSpeechViewModel : ObservableObject
     [ObservableProperty] private double _speed;
     [ObservableProperty] private double _styleExaggeration;
 
+    // Voice-design controls mirrored from the main TTS window. Visibility is engine+model+voice
+    // driven so the picker doesn't appear for engines that don't use it.
+    [ObservableProperty] private bool _hasInstruction;
+    [ObservableProperty] private bool _isInstructionTextVisible;
+    [ObservableProperty] private bool _isInstructionPickerVisible;
+    [ObservableProperty] private bool _isInstructionPickerEnabled;
+    [ObservableProperty] private bool _isInstructionVoiceHintVisible;
+    [ObservableProperty] private string _instruction = string.Empty;
+    [ObservableProperty] private string _selectedOmniVoiceGender = OmniVoiceAny;
+    [ObservableProperty] private string _selectedOmniVoiceAge = OmniVoiceAny;
+    [ObservableProperty] private string _selectedOmniVoicePitch = OmniVoiceAny;
+    [ObservableProperty] private string _selectedOmniVoiceAccent = OmniVoiceAny;
+    [ObservableProperty] private bool _omniVoiceWhisper;
+
+    public ObservableCollection<string> OmniVoiceGenders { get; } = BuildKeywordOptions(OmniVoiceTtsCpp.InstructionGenders);
+    public ObservableCollection<string> OmniVoiceAges { get; } = BuildKeywordOptions(OmniVoiceTtsCpp.InstructionAges);
+    public ObservableCollection<string> OmniVoicePitches { get; } = BuildKeywordOptions(OmniVoiceTtsCpp.InstructionPitches);
+    public ObservableCollection<string> OmniVoiceAccents { get; } = BuildKeywordOptions(OmniVoiceTtsCpp.InstructionAccents);
+
+    private const string OmniVoiceAny = "(any)";
+    private bool _suppressKeywordSync;
+
     public Window? Window { get; set; }
     public DataGrid LineGrid { get; internal set; }
     public TtsStepResult[] StepResults { get; set; }
+
+    // Cast travelling with the audio. Populated by the main TTS VM via SetActorVoiceMappings;
+    // round-tripped through SubtitleEditTts.json so a future Import re-applies the same voices.
+    public List<ActorVoiceMapping> ActorVoiceMappings { get; private set; } = new();
 
     public bool OkPressed { get; private set; }
 
@@ -340,7 +367,11 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         // Copy files
         var index = 0;
-        var exportFormat = new TtsImportExport { VideoFileName = _videoFileName };
+        var exportFormat = new TtsImportExport
+        {
+            VideoFileName = _videoFileName,
+            ActorVoiceMappings = ActorVoiceMappings.ToList(),
+        };
         foreach (var line in Lines)
         {
             index++;
@@ -373,7 +404,14 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 StartMs = (long)Math.Round((double)line.StepResult.Paragraph.StartTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
                 EndMs = (long)Math.Round((double)line.StepResult.Paragraph.EndTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
                 VoiceName = line.StepResult.Voice?.Name ?? string.Empty,
-                EngineName = SelectedEngine != null ? SelectedEngine.ToString() : string.Empty,
+                // Per-line engine snapshot, not the global SelectedEngine — different rows can
+                // come from different engines via the cast workflow, and on re-import we want
+                // each line to remember which engine produced it.
+                EngineName = string.IsNullOrEmpty(line.StepResult.EngineName)
+                    ? (SelectedEngine?.Name ?? string.Empty)
+                    : line.StepResult.EngineName,
+                Model = line.StepResult.Model,
+                Instruction = line.StepResult.Instruction,
                 SpeedFactor = line.StepResult.SpeedFactor,
                 Text = line.Text,
                 Include = line.Include,
@@ -414,10 +452,21 @@ public partial class ReviewSpeechViewModel : ObservableObject
             return;
         }
 
-        line.Voice = result.SelectedHistoryItem?.Voice?.Name ?? string.Empty;
-        line.StepResult.CurrentFileName = result.SelectedHistoryItem?.FileName ?? string.Empty;
-        line.StepResult.Voice = result.SelectedHistoryItem?.Voice;
-        line.Speed = Math.Round(result.SelectedHistoryItem?.Speed ?? 1.0f, 2).ToString(CultureInfo.CurrentCulture);
+        var picked = result.SelectedHistoryItem;
+        line.Voice = picked.Voice?.Name ?? string.Empty;
+        line.StepResult.CurrentFileName = picked.FileName ?? string.Empty;
+        line.StepResult.Voice = picked.Voice;
+        // Restore the full engine snapshot stored with the history row so the line knows which
+        // engine/model/instruction produced this audio. Without this, clicking the row would
+        // sync the left panel to the live (last-set) values rather than what's actually playing.
+        line.StepResult.EngineName = picked.EngineName ?? string.Empty;
+        line.StepResult.Model = picked.Model ?? string.Empty;
+        line.StepResult.Instruction = picked.Instruction ?? string.Empty;
+        line.Speed = Math.Round(picked.Speed, 2).ToString(CultureInfo.CurrentCulture);
+
+        // Mirror the click-to-sync behaviour so the left panel immediately reflects the picked
+        // history entry's engine/model/voice/instruction.
+        await ApplyLineToLeftPanelAsync(line);
     }
 
     [RelayCommand]
@@ -529,7 +578,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
         TtsResult speakResult;
         try
         {
-            speakResult = await engine.Speak(line.Text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, _cancellationToken);
+            speakResult = await TtsInstructionSwap.RunAsync(engine, Instruction, () =>
+                engine.Speak(line.Text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, _cancellationToken));
 
             line.StepResult.CurrentFileName = speakResult.FileName;
             line.StepResult.Voice = voice;
@@ -543,12 +593,17 @@ public partial class ReviewSpeechViewModel : ObservableObject
             }
 
             adjustSpeedStepResult.CurrentFileName = postProcessedFileName;
+            // Record which engine/model/instruction this regenerate used so the row's "click to
+            // sync left panel" feature can restore them later.
+            adjustSpeedStepResult.EngineName = engine.Name;
+            adjustSpeedStepResult.Model = SelectedModel ?? string.Empty;
+            adjustSpeedStepResult.Instruction = Instruction ?? string.Empty;
             line.Speed = Math.Round(adjustSpeedStepResult.SpeedFactor, 2).ToString(CultureInfo.CurrentCulture);
             line.Cps = Math.Round(adjustSpeedStepResult.Paragraph.GetCharactersPerSecond(), 2).ToString(CultureInfo.CurrentCulture);
             line.StepResult = adjustSpeedStepResult;
             line.Voice = voice.ToString();
 
-            line.AddHistory(voice, line.StepResult.CurrentFileName);
+            line.AddHistory(voice, line.StepResult.CurrentFileName, engine.Name, SelectedModel ?? string.Empty, Instruction ?? string.Empty);
         }
         catch (HttpRequestException ex)
         {
@@ -732,6 +787,9 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 CurrentFileName = currentFile,
                 SpeedFactor = 1.0f,
                 Voice = item.Voice,
+                EngineName = item.EngineName,
+                Model = item.Model,
+                Instruction = item.Instruction,
             };
         }
 
@@ -745,6 +803,9 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 CurrentFileName = item.CurrentFileName,
                 SpeedFactor = 1.0f,
                 Voice = item.Voice,
+                EngineName = item.EngineName,
+                Model = item.Model,
+                Instruction = item.Instruction,
             };
         }
 
@@ -784,6 +845,9 @@ public partial class ReviewSpeechViewModel : ObservableObject
             CurrentFileName = outputFileName2,
             SpeedFactor = (float)factor,
             Voice = item.Voice,
+            EngineName = item.EngineName,
+            Model = item.Model,
+            Instruction = item.Instruction,
         };
     }
 
@@ -820,7 +884,26 @@ public partial class ReviewSpeechViewModel : ObservableObject
         SelectedEngineChanged();
     }
 
+    // True while ApplyLineToLeftPanelAsync is in the middle of switching the engine itself. We
+    // skip the fire-and-forget refresh that the ComboBox's SelectionChanged event triggers in
+    // that case, otherwise it races our own awaited refresh and wins — overwriting the row's
+    // voice/model/instruction with the engine's defaults.
+    private bool _suppressEngineRefreshDispatch;
+
     public void SelectedEngineChanged()
+    {
+        if (_suppressEngineRefreshDispatch)
+        {
+            return;
+        }
+
+        // Fire-and-forget wrapper for the SelectionChanged event. Callers that need to wait for
+        // the refresh (e.g. ApplyLineToLeftPanelAsync) should await SelectedEngineChangedAsync()
+        // directly so they see the new Voices/Models populated before applying further changes.
+        Dispatcher.UIThread.PostSafe(async () => await SelectedEngineChangedAsync());
+    }
+
+    public async Task SelectedEngineChangedAsync()
     {
         var engine = SelectedEngine;
         if (engine == null)
@@ -828,95 +911,94 @@ public partial class ReviewSpeechViewModel : ObservableObject
             return;
         }
 
-        Dispatcher.UIThread.PostSafe(async () =>
+        var voices = await engine.GetVoices(SelectedLanguage?.Code ?? string.Empty);
+        Voices.Clear();
+        foreach (var vo in voices)
         {
-            var voices = await engine.GetVoices(SelectedLanguage?.Code ?? string.Empty);
-            Voices.Clear();
-            foreach (var vo in voices)
+            Voices.Add(vo);
+        }
+
+        var lastVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice);
+        if (lastVoice == null)
+        {
+            lastVoice = Voices.FirstOrDefault(p => p.Name.StartsWith("en", StringComparison.OrdinalIgnoreCase) ||
+                                                  p.Name.Contains("English", StringComparison.OrdinalIgnoreCase));
+        }
+
+        SelectedVoice = lastVoice ?? Voices.First();
+
+        if (engine.HasLanguageParameter)
+        {
+            var languages = await engine.GetLanguages(SelectedVoice, null); // SelectedModel);
+            Languages.Clear();
+            foreach (var language in languages)
             {
-                Voices.Add(vo);
+                Languages.Add(language);
             }
 
-            var lastVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice);
-            if (lastVoice == null)
+            SelectedLanguage = Languages.FirstOrDefault();
+        }
+
+        if (engine.HasRegion)
+        {
+            var regions = await engine.GetRegions();
+            Regions.Clear();
+            foreach (var region in regions)
             {
-                lastVoice = Voices.FirstOrDefault(p => p.Name.StartsWith("en", StringComparison.OrdinalIgnoreCase) ||
-                                                      p.Name.Contains("English", StringComparison.OrdinalIgnoreCase));
+                Regions.Add(region);
             }
 
-            SelectedVoice = lastVoice ?? Voices.First();
+            SelectedRegion = Regions.FirstOrDefault();
+        }
 
-            if (engine.HasLanguageParameter)
+        if (engine.HasModel)
+        {
+            var models = await engine.GetModels();
+            Models.Clear();
+            foreach (var model in models)
             {
-                var languages = await engine.GetLanguages(SelectedVoice, null); // SelectedModel);
-                Languages.Clear();
-                foreach (var language in languages)
-                {
-                    Languages.Add(language);
-                }
-
-                SelectedLanguage = Languages.FirstOrDefault();
+                Models.Add(model);
             }
 
-            if (engine.HasRegion)
-            {
-                var regions = await engine.GetRegions();
-                Regions.Clear();
-                foreach (var region in regions)
-                {
-                    Regions.Add(region);
-                }
+            SelectedModel = Models.FirstOrDefault();
+        }
 
-                SelectedRegion = Regions.FirstOrDefault();
+        IsElevenLabsControlsVisible = false;
+        UpdateInstructionVisibility();
+        LoadInstructionForEngine();
+        if (engine is AzureSpeech)
+        {
+            SelectedRegion = Se.Settings.Video.TextToSpeech.AzureRegion;
+            if (string.IsNullOrEmpty(SelectedRegion))
+            {
+                SelectedRegion = "westeurope";
             }
-
-            if (engine.HasModel)
+        }
+        else if (engine is ElevenLabs)
+        {
+            IsElevenLabsControlsVisible = true;
+            SelectedModel = Se.Settings.Video.TextToSpeech.ElevenLabsModel;
+            if (string.IsNullOrEmpty(SelectedModel))
             {
-                var models = await engine.GetModels();
-                Models.Clear();
-                foreach (var model in models)
-                {
-                    Models.Add(model);
-                }
-
+                SelectedModel = Models.First();
+            }
+        }
+        else if (engine is Qwen3TtsCpp)
+        {
+            SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.Qwen3TtsCppModel);
+            if (string.IsNullOrEmpty(SelectedModel))
+            {
                 SelectedModel = Models.FirstOrDefault();
             }
-
-            IsElevenLabsControlsVisible = false;
-            if (engine is AzureSpeech)
+        }
+        else if (engine is ChatterboxTtsCpp)
+        {
+            SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.ChatterboxModel);
+            if (string.IsNullOrEmpty(SelectedModel))
             {
-                SelectedRegion = Se.Settings.Video.TextToSpeech.AzureRegion;
-                if (string.IsNullOrEmpty(SelectedRegion))
-                {
-                    SelectedRegion = "westeurope";
-                }
+                SelectedModel = Models.FirstOrDefault();
             }
-            else if (engine is ElevenLabs)
-            {
-                IsElevenLabsControlsVisible = true;
-                SelectedModel = Se.Settings.Video.TextToSpeech.ElevenLabsModel;
-                if (string.IsNullOrEmpty(SelectedModel))
-                {
-                    SelectedModel = Models.First();
-                }
-            }
-            else if (engine is Qwen3TtsCpp)
-            {
-                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.Qwen3TtsCppModel);
-                if (string.IsNullOrEmpty(SelectedModel))
-                {
-                    SelectedModel = Models.FirstOrDefault();
-                }
-            }
-            else if (engine is ChatterboxTtsCpp)
-            {
-                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.ChatterboxModel);
-                if (string.IsNullOrEmpty(SelectedModel))
-                {
-                    SelectedModel = Models.FirstOrDefault();
-                }
-            }
-        });
+        }
     }
 
     internal void SelectedLanguageChanged(object? sender, SelectionChangedEventArgs e)
@@ -953,6 +1035,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         var voice = SelectedVoice;
         var model = SelectedModel;
         IsElevenLabsEngineV3Selected = false;
+        UpdateInstructionVisibility();
         if (engine == null || voice == null || model == null)
         {
             return;
@@ -981,6 +1064,218 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 }
             }
         });
+    }
+
+    // ---- voice-design / instruction helpers -----------------------------------------------
+
+    private static ObservableCollection<string> BuildKeywordOptions(string[] keywords)
+    {
+        var options = new ObservableCollection<string> { OmniVoiceAny };
+        foreach (var k in keywords)
+        {
+            options.Add(k);
+        }
+        return options;
+    }
+
+    private static bool IsReal(string? value) => !string.IsNullOrEmpty(value) && value != OmniVoiceAny;
+
+    partial void OnSelectedVoiceChanged(Voice? value) => UpdateInstructionVisibility();
+
+    // When the user clicks a row, push that row's recorded engine/voice/model/instruction into
+    // the left-side combos so they reflect what produced the selected line. Without this the
+    // panel always shows the *current* (last-set) values, which is confusing when each line was
+    // generated from a different per-actor mapping.
+    //
+    // Guard with _suppressSelectedLineSync so the chain of engine/model writes doesn't loop
+    // back through SelectedEngineChanged (which would reset Voices and clobber our intended
+    // voice).
+    partial void OnSelectedLineChanged(ReviewRow? value)
+    {
+        if (value == null)
+        {
+            return;
+        }
+
+        // If another apply is in flight, queue this selection — we'll re-apply at the end of the
+        // current cycle so the panel ends up on the row the user actually clicked last (not
+        // wherever the in-flight apply ends).
+        if (_suppressSelectedLineSync)
+        {
+            _pendingApplyRow = value;
+            return;
+        }
+
+        _ = ApplyLineWithFollowUpAsync(value);
+    }
+
+    private async Task ApplyLineWithFollowUpAsync(ReviewRow row)
+    {
+        await ApplyLineToLeftPanelAsync(row);
+
+        // Drain any selection changes that landed during the await. Loop until we catch up so
+        // multiple rapid clicks all resolve to the latest.
+        while (_pendingApplyRow != null && !ReferenceEquals(_pendingApplyRow, row))
+        {
+            var next = _pendingApplyRow;
+            _pendingApplyRow = null;
+            row = next;
+            await ApplyLineToLeftPanelAsync(row);
+        }
+        _pendingApplyRow = null;
+    }
+
+    private bool _suppressSelectedLineSync;
+    private ReviewRow? _pendingApplyRow;
+
+    private async Task ApplyLineToLeftPanelAsync(ReviewRow row)
+    {
+        var step = row.StepResult;
+        if (step == null)
+        {
+            return;
+        }
+
+        _suppressSelectedLineSync = true;
+        try
+        {
+            ITtsEngine? targetEngine = null;
+            if (!string.IsNullOrEmpty(step.EngineName))
+            {
+                targetEngine = Engines.FirstOrDefault(e => string.Equals(e.Name, step.EngineName, StringComparison.OrdinalIgnoreCase));
+            }
+            targetEngine ??= step.Voice != null
+                ? Engines.FirstOrDefault(e => string.Equals(e.Name, SelectedEngine?.Name, StringComparison.OrdinalIgnoreCase))
+                : SelectedEngine;
+
+            if (targetEngine != null && !ReferenceEquals(targetEngine, SelectedEngine))
+            {
+                // Switch engine and await the refill of Voices / Models / Languages / Regions
+                // before applying the row's saved selections, otherwise the SelectedVoice write
+                // below races the refresh and lands on a stale (or empty) Voices list.
+                //
+                // Setting SelectedEngine also fires the ComboBox's SelectionChanged → which
+                // dispatches its own fire-and-forget refresh. We suppress that here so the two
+                // don't race; the awaited call below does the same work and lets us apply the
+                // row's voice/model on top of it without it being immediately overwritten.
+                _suppressEngineRefreshDispatch = true;
+                try
+                {
+                    SelectedEngine = targetEngine;
+                    await SelectedEngineChangedAsync();
+                }
+                finally
+                {
+                    _suppressEngineRefreshDispatch = false;
+                }
+            }
+
+            // Voice: prefer the recorded Voice instance, otherwise match by name.
+            if (step.Voice != null)
+            {
+                var match = Voices.FirstOrDefault(v => string.Equals(v.Name, step.Voice.Name, StringComparison.OrdinalIgnoreCase));
+                SelectedVoice = match ?? step.Voice;
+            }
+
+            if (!string.IsNullOrEmpty(step.Model))
+            {
+                var matchModel = Models.FirstOrDefault(m => string.Equals(m, step.Model, StringComparison.OrdinalIgnoreCase));
+                if (matchModel != null)
+                {
+                    SelectedModel = matchModel;
+                }
+            }
+
+            Instruction = step.Instruction ?? string.Empty;
+            UpdateInstructionVisibility();
+            if (IsInstructionPickerVisible)
+            {
+                SyncOmniVoicePickerFromInstruction();
+            }
+        }
+        finally
+        {
+            _suppressSelectedLineSync = false;
+        }
+    }
+
+    partial void OnSelectedOmniVoiceGenderChanged(string value) => RebuildOmniVoiceInstruction();
+    partial void OnSelectedOmniVoiceAgeChanged(string value) => RebuildOmniVoiceInstruction();
+    partial void OnSelectedOmniVoicePitchChanged(string value) => RebuildOmniVoiceInstruction();
+    partial void OnSelectedOmniVoiceAccentChanged(string value) => RebuildOmniVoiceInstruction();
+    partial void OnOmniVoiceWhisperChanged(bool value) => RebuildOmniVoiceInstruction();
+
+    private void RebuildOmniVoiceInstruction()
+    {
+        if (_suppressKeywordSync || !IsInstructionPickerVisible)
+        {
+            return;
+        }
+
+        var parts = new List<string>();
+        if (IsReal(SelectedOmniVoiceGender)) parts.Add(SelectedOmniVoiceGender);
+        if (IsReal(SelectedOmniVoiceAge)) parts.Add(SelectedOmniVoiceAge);
+        if (IsReal(SelectedOmniVoicePitch)) parts.Add(SelectedOmniVoicePitch);
+        if (IsReal(SelectedOmniVoiceAccent)) parts.Add(SelectedOmniVoiceAccent);
+        if (OmniVoiceWhisper) parts.Add(OmniVoiceTtsCpp.InstructionWhisper);
+        Instruction = string.Join(", ", parts);
+    }
+
+    private void SyncOmniVoicePickerFromInstruction()
+    {
+        var present = (Instruction ?? string.Empty)
+            .Split(',')
+            .Select(s => s.Trim())
+            .Where(s => s.Length > 0)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        _suppressKeywordSync = true;
+        SelectedOmniVoiceGender = MatchGroup(OmniVoiceTtsCpp.InstructionGenders, present);
+        SelectedOmniVoiceAge = MatchGroup(OmniVoiceTtsCpp.InstructionAges, present);
+        SelectedOmniVoicePitch = MatchGroup(OmniVoiceTtsCpp.InstructionPitches, present);
+        SelectedOmniVoiceAccent = MatchGroup(OmniVoiceTtsCpp.InstructionAccents, present);
+        OmniVoiceWhisper = present.Contains(OmniVoiceTtsCpp.InstructionWhisper);
+        _suppressKeywordSync = false;
+
+        RebuildOmniVoiceInstruction();
+    }
+
+    private static string MatchGroup(string[] group, HashSet<string> present)
+        => Array.Find(group, present.Contains) ?? OmniVoiceAny;
+
+    // Recomputes the three visibility/enabled flags from the current engine, model, and voice.
+    // Call after any of those change. Mirrors RefreshInstructionVisibility +
+    // UpdateOmniVoicePickerState in the main TTS VM.
+    private void UpdateInstructionVisibility()
+    {
+        var engine = SelectedEngine;
+        var model = SelectedModel;
+
+        IsInstructionTextVisible =
+            (engine is Qwen3TtsCpp && Qwen3TtsCpp.IsVoiceDesignModel(model))
+            || (engine is Qwen3TtsCrispAsr && Qwen3TtsCrispAsr.IsVoiceDesignModel(model));
+        IsInstructionPickerVisible = engine is OmniVoiceTtsCpp;
+        HasInstruction = IsInstructionTextVisible || IsInstructionPickerVisible;
+
+        var isDefaultOmniVoice = SelectedVoice?.EngineVoice is OmniVoiceVoice ov && string.IsNullOrEmpty(ov.FilePath);
+        IsInstructionPickerEnabled = IsInstructionPickerVisible && isDefaultOmniVoice;
+        IsInstructionVoiceHintVisible = IsInstructionPickerVisible && !isDefaultOmniVoice;
+    }
+
+    private void LoadInstructionForEngine()
+    {
+        Instruction = SelectedEngine switch
+        {
+            Qwen3TtsCpp => Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction ?? string.Empty,
+            Qwen3TtsCrispAsr => Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction ?? string.Empty,
+            OmniVoiceTtsCpp => Se.Settings.Video.TextToSpeech.OmniVoiceTtsCppInstruction ?? string.Empty,
+            _ => string.Empty,
+        };
+
+        if (IsInstructionPickerVisible)
+        {
+            SyncOmniVoicePickerFromInstruction();
+        }
     }
 
     internal void OnClosing(WindowClosingEventArgs e)

@@ -5912,8 +5912,11 @@ public partial class MainViewModel :
 
         await ShowDialogAsync<TextToSpeechWindow, TextToSpeechViewModel>(vm =>
         {
-            vm.Initialize(GetUpdateSubtitle(), _videoFileName ?? string.Empty, AudioVisualizer?.WavePeaks,
-                Path.GetTempPath());
+            // Pass SelectedSubtitleFormat explicitly so the TTS window's cast detection uses the
+            // user's *current* selection (the editor normalises subtitles to ASSA internally, so
+            // subtitle.OriginalFormat doesn't reflect what's shown in the format combo).
+            vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat,
+                _videoFileName ?? string.Empty, AudioVisualizer?.WavePeaks, Path.GetTempPath());
         });
     }
 

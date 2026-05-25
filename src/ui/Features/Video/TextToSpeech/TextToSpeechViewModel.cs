@@ -5,7 +5,9 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
@@ -88,6 +90,13 @@ public partial class TextToSpeechViewModel : ObservableObject
     [ObservableProperty] private string _selectedOmniVoicePitch;
     [ObservableProperty] private string _selectedOmniVoiceAccent;
     [ObservableProperty] private bool _omniVoiceWhisper;
+    [ObservableProperty] private bool _hasCast;
+    [ObservableProperty] private string _castButtonText;
+
+    // Per-actor (ASSA) or per-voice (WebVTT) mappings the user has configured via the Cast
+    // dialog. When empty, every paragraph falls back to the global SelectedEngine/SelectedVoice.
+    private readonly List<ActorVoiceMapping> _actorVoiceMappings = new();
+    private ActorVoiceDetector.CastKind _castKind = ActorVoiceDetector.CastKind.None;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -141,6 +150,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         IsNotGenerating = true;
         KeyFile = string.Empty;
         Instruction = string.Empty;
+        CastButtonText = Se.Language.Video.TextToSpeech.SetupCast;
 
         OmniVoiceGenders = BuildKeywordOptions(OmniVoiceTtsCpp.InstructionGenders);
         OmniVoiceAges = BuildKeywordOptions(OmniVoiceTtsCpp.InstructionAges);
@@ -171,12 +181,15 @@ public partial class TextToSpeechViewModel : ObservableObject
             new MistralSpeech(ttsDownloadService),
             new Murf(ttsDownloadService),
             new GoogleSpeech(ttsDownloadService),
+            new KokoroTtsCpp(),
+            new OmniVoiceTtsCpp(),
+            // CrispASR-based engines grouped at the bottom: both share the same heavy CrispASR
+            // runtime download (~hundreds of MB) and are typically picked together, so we group
+            // them last so the lighter cloud/local engines surface first in the list.
             // Qwen3TtsCpp hidden: talker produces scrambled noise on 1.7B —
             // use Qwen3TtsCrispAsr until upstream qwen3-tts.cpp is fixed.
             new Qwen3TtsCrispAsr(),
-            new KokoroTtsCpp(),
             new ChatterboxTtsCpp(),
-            new OmniVoiceTtsCpp(),
         ];
 
         if (!OperatingSystem.IsMacOS())
@@ -507,6 +520,9 @@ public partial class TextToSpeechViewModel : ObservableObject
     }
 
     public void Initialize(Subtitle subtitle, string videoFileName, WavePeakData2? wavePeakData, string waveFolder)
+        => Initialize(subtitle, null, videoFileName, wavePeakData, waveFolder);
+
+    public void Initialize(Subtitle subtitle, SubtitleFormat? format, string videoFileName, WavePeakData2? wavePeakData, string waveFolder)
     {
         _subtitle = subtitle;
         _subtitle.RemoveEmptyLines();
@@ -521,6 +537,89 @@ public partial class TextToSpeechViewModel : ObservableObject
         ProgressText = string.Empty;
         ProgressValue = 0.0;
         _waveFolder = waveFolder;
+
+        _castKind = ActorVoiceDetector.Detect(subtitle, format);
+        // Only surface the cast button when there's actually more than one actor/voice to assign
+        // — a single-speaker subtitle uses the global engine/voice and the button would be a no-op.
+        var actorCount = _castKind == ActorVoiceDetector.CastKind.None
+            ? 0
+            : ActorVoiceDetector.GetNames(subtitle, _castKind).Count;
+        HasCast = actorCount > 1;
+        CastButtonText = HasCast
+            ? string.Format("{0} ({1})", Se.Language.Video.TextToSpeech.SetupCast.TrimEnd('.'), actorCount)
+            : Se.Language.Video.TextToSpeech.SetupCast;
+
+        // Seed from last session's persisted cast so users don't have to re-assign every time
+        // they open the same set of actors. The Cast dialog merges fresh edits back on save.
+        _actorVoiceMappings.Clear();
+        if (HasCast)
+        {
+            var actorNames = ActorVoiceDetector.GetNames(subtitle, _castKind)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            foreach (var saved in Se.Settings.Video.TextToSpeech.LastActorVoiceMappings ?? new List<ActorVoiceMapping>())
+            {
+                if (saved == null || string.IsNullOrWhiteSpace(saved.Actor))
+                {
+                    continue;
+                }
+
+                // Trim before probing the set — the set was built from ActorVoiceDetector.GetNames
+                // which trims, but a legacy saved entry might have stored whitespace around the
+                // actor name and the case-insensitive Contains() still treats trailing spaces
+                // as a mismatch.
+                var actorKey = saved.Actor.Trim();
+                if (actorNames.Contains(actorKey))
+                {
+                    _actorVoiceMappings.Add(new ActorVoiceMapping
+                    {
+                        Actor = actorKey,
+                        EngineName = saved.EngineName ?? string.Empty,
+                        VoiceName = saved.VoiceName ?? string.Empty,
+                        Model = saved.Model ?? string.Empty,
+                        Instruction = saved.Instruction ?? string.Empty,
+                    });
+                }
+            }
+        }
+    }
+
+    [RelayCommand]
+    private async Task ShowCast()
+    {
+        if (Window == null || !HasCast)
+        {
+            return;
+        }
+
+        var actorNames = ActorVoiceDetector.GetNames(_subtitle, _castKind);
+        if (actorNames.Count == 0 && Window != null)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.Video.TextToSpeech.ActorVoicesTitle,
+                _castKind == ActorVoiceDetector.CastKind.AssaActors
+                    ? Se.Language.Video.TextToSpeech.NoActorsFoundMessage
+                    : Se.Language.Video.TextToSpeech.NoWebVttVoicesFoundMessage,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            return;
+        }
+
+        // Same filter the Review window uses — only show engines that are usable right now
+        // (have credentials / are installed). Otherwise the user can pick an engine the cast
+        // can't actually drive, BuildCastContextAsync silently swallows the GetVoices failure,
+        // and the row quietly falls back to the global voice.
+        var usableEngines = ActorVoiceDetector.FilterUsableEngines(Engines).ToList();
+        var result = await _windowService.ShowDialogAsync<ActorVoiceMappingWindow, ActorVoiceMappingViewModel>(Window!, vm =>
+        {
+            vm.Initialize(actorNames, usableEngines, _actorVoiceMappings, SelectedEngine, SelectedVoice, _castKind, _waveFolder);
+        });
+
+        if (result.OkPressed)
+        {
+            _actorVoiceMappings.Clear();
+            _actorVoiceMappings.AddRange(result.Mappings);
+        }
     }
 
     [RelayCommand]
@@ -823,6 +922,13 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
+        // Restore the cast that travelled with the export so re-generating uses the same voices.
+        if (importExport.ActorVoiceMappings != null && importExport.ActorVoiceMappings.Count > 0)
+        {
+            _actorVoiceMappings.Clear();
+            _actorVoiceMappings.AddRange(importExport.ActorVoiceMappings);
+        }
+
         var stepResults = new List<TtsStepResult>();
         for (var index = 0; index < importExport.Items.Count; index++)
         {
@@ -833,8 +939,14 @@ public partial class TextToSpeechViewModel : ObservableObject
                 Text = item.Text,
                 CurrentFileName = item.AudioFileName,
                 Paragraph = paragraph,
-                SpeedFactor = 1.0f,
+                SpeedFactor = item.SpeedFactor <= 0 ? 1.0f : item.SpeedFactor,
                 Voice = Voices.FirstOrDefault(v => v.Name == item.VoiceName),
+                // Restore the per-line engine snapshot so the review window's click-to-sync
+                // (and any future regeneration) can recover the exact engine/model/instruction
+                // each line was produced with.
+                EngineName = item.EngineName ?? string.Empty,
+                Model = item.Model ?? string.Empty,
+                Instruction = item.Instruction ?? string.Empty,
             });
         }
 
@@ -851,6 +963,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 _videoFileName,
                 Path.GetDirectoryName(fileName)!,
                 _wavePeakData);
+            // Forward the imported cast so a subsequent Export round-trips the mappings instead
+            // of writing ActorVoiceMappings = [] back to SubtitleEditTts.json.
+            vm.ActorVoiceMappings.AddRange(_actorVoiceMappings);
         });
     }
 
@@ -1547,18 +1662,40 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             var resultList = new List<TtsStepResult>();
             ProgressValue = 0;
+
+            // Resolved per-actor cast (engine + voice + instruction). When _actorVoiceMappings is
+            // empty, every paragraph falls back to the globally selected engine/voice.
+            var castContext = await BuildCastContextAsync();
+
             for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
             {
                 ProgressText = $"Generating speech: segment {index + 1} of {_subtitle.Paragraphs.Count}";
                 var paragraph = _subtitle.Paragraphs[index];
-                var speakResult = await engine.Speak(paragraph.Text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, cancellationToken);
+                var resolution = ResolveVoiceForParagraph(paragraph, castContext, engine, voice);
+                // When the row's engine differs from the globally selected engine, the global
+                // SelectedLanguage/SelectedRegion/SelectedModel were resolved for a different
+                // engine and don't apply (e.g. ElevenLabs voice IDs would be passed to Edge
+                // TTS). Pass null in that case and let the row's engine fall back to its own
+                // defaults.
+                var isCrossEngine = !ReferenceEquals(resolution.Engine, engine);
+                var language = isCrossEngine ? null : SelectedLanguage;
+                var region = isCrossEngine ? null : SelectedRegion;
+                var model = resolution.Model ?? (isCrossEngine ? null : SelectedModel);
+                var speakResult = await TtsInstructionSwap.RunAsync(
+                    resolution.Engine,
+                    resolution.Instruction,
+                    () => resolution.Engine.Speak(resolution.Text, _waveFolder, resolution.Voice,
+                        language, region, model, cancellationToken));
                 resultList.Add(new TtsStepResult
                 {
-                    Text = paragraph.Text,
+                    Text = resolution.Text,
                     CurrentFileName = speakResult.FileName,
                     Paragraph = paragraph,
                     SpeedFactor = 1.0f,
-                    Voice = voice,
+                    Voice = resolution.Voice,
+                    EngineName = resolution.Engine.Name,
+                    Model = resolution.Model ?? SelectedModel ?? string.Empty,
+                    Instruction = resolution.Instruction,
                 });
                 ProgressValue = (double)(index + 1) / _subtitle.Paragraphs.Count * 100.0;
 
@@ -1632,6 +1769,110 @@ public partial class TextToSpeechViewModel : ObservableObject
             });
             return null;
         }
+    }
+
+    private sealed class CastContext
+    {
+        public Dictionary<string, ActorVoiceMapping> ByActor { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+        public Dictionary<string, ITtsEngine> EnginesByName { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+        public Dictionary<string, Voice[]> VoicesByEngine { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+    }
+
+    // Loads voices for every engine referenced by a mapping once, so the per-paragraph lookup
+    // in the generate loop is a cheap dictionary hit. Engines whose GetVoices() throws (e.g.
+    // missing API key) are skipped silently — those mappings fall through to the global voice.
+    private async Task<CastContext> BuildCastContextAsync()
+    {
+        var ctx = new CastContext();
+        if (_actorVoiceMappings.Count == 0 || _castKind == ActorVoiceDetector.CastKind.None)
+        {
+            return ctx;
+        }
+
+        foreach (var m in _actorVoiceMappings)
+        {
+            if (!string.IsNullOrWhiteSpace(m.Actor))
+            {
+                ctx.ByActor[m.Actor.Trim()] = m;
+            }
+        }
+
+        var engineNames = _actorVoiceMappings
+            .Select(m => m.EngineName)
+            .Where(n => !string.IsNullOrWhiteSpace(n))
+            .Distinct(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var name in engineNames)
+        {
+            var engine = Engines.FirstOrDefault(e => string.Equals(e.Name, name, StringComparison.OrdinalIgnoreCase));
+            if (engine == null)
+            {
+                continue;
+            }
+
+            ctx.EnginesByName[name] = engine;
+            try
+            {
+                ctx.VoicesByEngine[name] = await engine.GetVoices(string.Empty);
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, $"Cast: loading voices for engine '{name}' failed - mappings using it will fall back to the global voice.");
+            }
+        }
+
+        return ctx;
+    }
+
+    private readonly struct ResolvedVoice
+    {
+        public ResolvedVoice(ITtsEngine engine, Voice voice, string? model, string text, string instruction)
+        {
+            Engine = engine;
+            Voice = voice;
+            Model = model;
+            Text = text;
+            Instruction = instruction;
+        }
+
+        public ITtsEngine Engine { get; }
+        public Voice Voice { get; }
+        public string? Model { get; }
+        public string Text { get; }
+        public string Instruction { get; }
+    }
+
+    // Picks engine + voice + text for a paragraph. For WebVTT it also strips the <v ...> wrapper
+    // out of the text so the engine doesn't speak the tag. Falls back to the global engine/voice
+    // when the paragraph has no actor, the mapping points at an unknown engine, or that engine's
+    // voice list couldn't be loaded.
+    private ResolvedVoice ResolveVoiceForParagraph(Paragraph paragraph, CastContext ctx, ITtsEngine defaultEngine, Voice defaultVoice)
+    {
+        var actor = ActorVoiceDetector.GetParagraphActor(paragraph, _castKind);
+        var text = _castKind == ActorVoiceDetector.CastKind.WebVttVoices
+            ? ActorVoiceDetector.StripWebVttVoiceTags(paragraph.Text)
+            : paragraph.Text;
+
+        if (string.IsNullOrEmpty(actor) || !ctx.ByActor.TryGetValue(actor, out var mapping))
+        {
+            return new ResolvedVoice(defaultEngine, defaultVoice, null, text, string.Empty);
+        }
+
+        if (!ctx.EnginesByName.TryGetValue(mapping.EngineName, out var mappedEngine)
+            || !ctx.VoicesByEngine.TryGetValue(mapping.EngineName, out var voices))
+        {
+            return new ResolvedVoice(defaultEngine, defaultVoice, null, text, string.Empty);
+        }
+
+        var mappedVoice = voices.FirstOrDefault(v => string.Equals(v.Name, mapping.VoiceName, StringComparison.OrdinalIgnoreCase));
+        if (mappedVoice == null)
+        {
+            return new ResolvedVoice(defaultEngine, defaultVoice, null, text, string.Empty);
+        }
+
+        // Per-row model overrides the global one; empty string means "use the global model".
+        var modelOverride = string.IsNullOrWhiteSpace(mapping.Model) ? null : mapping.Model;
+        return new ResolvedVoice(mappedEngine, mappedVoice, modelOverride, text, mapping.Instruction ?? string.Empty);
     }
 
     private async Task<TtsStepResult[]?> FixSpeed(TtsStepResult[] previousStepResult, CancellationToken cancellationToken)
@@ -1715,6 +1956,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                         CurrentFileName = currentFile,
                         SpeedFactor = 1.0f,
                         Voice = item.Voice,
+                        EngineName = item.EngineName,
+                        Model = item.Model,
+                        Instruction = item.Instruction,
                     });
                     continue;
                 }
@@ -1729,6 +1973,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                         CurrentFileName = item.CurrentFileName,
                         SpeedFactor = 1.0f,
                         Voice = item.Voice,
+                        EngineName = item.EngineName,
+                        Model = item.Model,
+                        Instruction = item.Instruction,
                     });
 
                     SeLogger.Error($"TextToSpeech: Duration is zero (skipping): {item.CurrentFileName}, {p}");
@@ -1752,6 +1999,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                     CurrentFileName = outputFileName2,
                     SpeedFactor = (float)factor,
                     Voice = item.Voice,
+                    EngineName = item.EngineName,
+                    Model = item.Model,
+                    Instruction = item.Instruction,
                 });
 
                 // Use rubberband (WSOLA) for high-quality pitch-preserving stretch, or atempo as fallback
@@ -1819,6 +2069,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                     CurrentFileName = processedFile,
                     SpeedFactor = item.SpeedFactor,
                     Voice = item.Voice,
+                    EngineName = item.EngineName,
+                    Model = item.Model,
+                    Instruction = item.Instruction,
                 });
 
                 ProgressValue = (double)(index + 1) / previousStepResult.Length * 100.0;
@@ -1865,6 +2118,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 _videoFileName,
                 _waveFolder,
                 _wavePeakData);
+            vm.ActorVoiceMappings.AddRange(_actorVoiceMappings);
         });
 
         if (result.OkPressed)
