@@ -1590,6 +1590,13 @@ public class AudioVisualizer : Control
             return;
         }
 
+        var fps = Se.Settings.General.CurrentFrameRate;
+        if (Se.Settings.General.UseFrameMode && fps >= 1)
+        {
+            DrawFrameAlignedTimeLine(context, ref renderCtx, fps);
+            return;
+        }
+
         var seconds = Math.Ceiling(renderCtx.StartPositionSeconds) - renderCtx.StartPositionSeconds;
         var position = SecondsToXPositionOptimized(seconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
         var imageHeight = renderCtx.Height;
@@ -1631,6 +1638,75 @@ public class AudioVisualizer : Control
 
         DrawVerticalLineBatch(context, _paintTimeLine, majorTicks);
         DrawVerticalLineBatch(context, _paintTimeLine, minorTicks);
+    }
+
+    private void DrawFrameAlignedTimeLine(DrawingContext context, ref RenderContext renderCtx, double fps)
+    {
+        var imageHeight = renderCtx.Height;
+        var width = renderCtx.Width;
+        var pixelsPerFrame = renderCtx.SampleRate * renderCtx.ZoomFactor / fps;
+        if (pixelsPerFrame <= 0)
+        {
+            return;
+        }
+
+        // Mirror the time-mode density: majors >= 38 px apart, minors at half-step
+        // (and only when the half-step lands on a whole frame and stays >= 24 px apart).
+        var majorStepFrames = PickFramesPerStep(pixelsPerFrame, 38);
+        var minorStepFrames = (majorStepFrames > 1 && majorStepFrames % 2 == 0 && pixelsPerFrame * (majorStepFrames / 2) >= 24)
+            ? majorStepFrames / 2
+            : 0;
+
+        var majorTicks = _timeLineMajorTicks;
+        var minorTicks = _timeLineMinorTicks;
+        majorTicks.Clear();
+        minorTicks.Clear();
+
+        // First major boundary (absolute frame index) at-or-before the visible start.
+        var firstAbsFrame = Math.Floor(renderCtx.StartPositionSeconds * fps / majorStepFrames) * majorStepFrames;
+
+        for (var absFrame = firstAbsFrame; ; absFrame += majorStepFrames)
+        {
+            var relSeconds = absFrame / fps - renderCtx.StartPositionSeconds;
+            var xPosition = SecondsToXPositionOptimized(relSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
+            if (xPosition >= width)
+            {
+                break;
+            }
+
+            if (xPosition >= 0)
+            {
+                majorTicks.Add(new FancyLine(xPosition, imageHeight - 10, imageHeight));
+
+                var timeText = GetFrameDisplayTime(absFrame / fps);
+                var formattedText = GetCachedTimeLineText(timeText);
+                var textY = Math.Max(0, imageHeight - formattedText.Height - 2);
+                context.DrawText(formattedText, new Point(xPosition + 2, textY));
+            }
+
+            if (minorStepFrames > 0)
+            {
+                var minorRelSeconds = (absFrame + minorStepFrames) / fps - renderCtx.StartPositionSeconds;
+                var minorX = SecondsToXPositionOptimized(minorRelSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
+                if (minorX >= 0 && minorX < width)
+                {
+                    minorTicks.Add(new FancyLine(minorX, imageHeight - 5, imageHeight));
+                }
+            }
+        }
+
+        DrawVerticalLineBatch(context, _paintTimeLine, majorTicks);
+        DrawVerticalLineBatch(context, _paintTimeLine, minorTicks);
+    }
+
+    private static string GetFrameDisplayTime(double seconds)
+    {
+        if (Se.Settings.General.CurrentVideoOffsetInMs > 0.00001)
+        {
+            seconds = seconds + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0;
+        }
+
+        return new TimeCode(seconds * 1000.0).ToShortStringHHMMSSFF();
     }
 
     private readonly Pen _paintTimeLine = new Pen(Brushes.Gray, 1);
@@ -1687,15 +1763,41 @@ public class AudioVisualizer : Control
             for (var i = 0; i < width; i += 10)
             {
                 context.DrawLine(_paintGridLines, new Point(i, 0), new Point(i, height));
-                context.DrawLine(_paintGridLines, new Point(0, i), new Point(width, i));
+            }
+            return;
+        }
+
+        var fps = Se.Settings.General.CurrentFrameRate;
+        if (Se.Settings.General.UseFrameMode && fps >= 1)
+        {
+            var pixelsPerFrame = renderCtx.SampleRate * renderCtx.ZoomFactor / fps;
+            if (pixelsPerFrame <= 0)
+            {
+                return;
+            }
+
+            var framesPerStep = PickFramesPerStep(pixelsPerFrame, minPixelGap: 8);
+            var stepSeconds = framesPerStep / fps;
+
+            // First frame boundary (absolute frame index) at-or-before the visible start.
+            var firstAbsFrame = Math.Floor(renderCtx.StartPositionSeconds * fps / framesPerStep) * framesPerStep;
+            var relSeconds = firstAbsFrame / fps - renderCtx.StartPositionSeconds;
+            var xPosition = SecondsToXPositionOptimized(relSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
+
+            while (xPosition < width)
+            {
+                if (xPosition >= 0)
+                {
+                    context.DrawLine(_paintGridLines, new Point(xPosition, 0), new Point(xPosition, height));
+                }
+                relSeconds += stepSeconds;
+                xPosition = SecondsToXPositionOptimized(relSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
             }
         }
         else
         {
             var seconds = Math.Ceiling(renderCtx.StartPositionSeconds) - renderCtx.StartPositionSeconds - 1;
             var xPosition = SecondsToXPositionOptimized(seconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
-            var yPosition = 0;
-            var yCounter = 0d;
             var interval = renderCtx.ZoomFactor >= 0.4d
                 ? 0.1d
                 : // a pixel is 0.1 second
@@ -1707,14 +1809,21 @@ public class AudioVisualizer : Control
                 seconds += interval;
                 xPosition = SecondsToXPositionOptimized(seconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
             }
+        }
+    }
 
-            while (yPosition < height)
+    private static readonly int[] FrameStepCandidates = { 1, 2, 5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000 };
+
+    private static int PickFramesPerStep(double pixelsPerFrame, double minPixelGap)
+    {
+        foreach (var c in FrameStepCandidates)
+        {
+            if (pixelsPerFrame * c >= minPixelGap)
             {
-                context.DrawLine(_paintGridLines, new Point(0, yPosition), new Point(width, yPosition));
-                yCounter += interval;
-                yPosition = Convert.ToInt32(yCounter * renderCtx.SampleRate * renderCtx.ZoomFactor);
+                return c;
             }
         }
+        return FrameStepCandidates[^1];
     }
 
     private void DrawWaveForm(DrawingContext context, ref RenderContext renderCtx)
