@@ -4910,22 +4910,33 @@ public partial class MainViewModel :
 
         var frameDurMs = 1000.0 / frameRate;
         var changed = 0;
-        foreach (var s in Subtitles)
+        RunWithoutChangeDetection(() =>
         {
-            var newStartMs = Math.Round(s.StartTime.TotalMilliseconds / frameDurMs, MidpointRounding.AwayFromZero) * frameDurMs;
-            var newEndMs = Math.Round(s.EndTime.TotalMilliseconds / frameDurMs, MidpointRounding.AwayFromZero) * frameDurMs;
-            if (Math.Abs(newStartMs - s.StartTime.TotalMilliseconds) >= 0.5)
+            foreach (var s in Subtitles)
             {
-                s.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs));
-                changed++;
-            }
+                var newStartMs = Math.Round(s.StartTime.TotalMilliseconds / frameDurMs, MidpointRounding.AwayFromZero) * frameDurMs;
+                var newEndMs = Math.Round(s.EndTime.TotalMilliseconds / frameDurMs, MidpointRounding.AwayFromZero) * frameDurMs;
 
-            if (Math.Abs(newEndMs - s.EndTime.TotalMilliseconds) >= 0.5)
-            {
-                s.EndTime = TimeSpan.FromMilliseconds(newEndMs);
-                changed++;
+                // Snapping can collapse start and end to the same frame (or invert them) for
+                // sub-frame durations; keep the cue at least one frame long.
+                if (newEndMs <= newStartMs)
+                {
+                    newEndMs = newStartMs + frameDurMs;
+                }
+
+                if (Math.Abs(newStartMs - s.StartTime.TotalMilliseconds) >= 0.5)
+                {
+                    s.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs));
+                    changed++;
+                }
+
+                if (Math.Abs(newEndMs - s.EndTime.TotalMilliseconds) >= 0.5)
+                {
+                    s.EndTime = TimeSpan.FromMilliseconds(newEndMs);
+                    changed++;
+                }
             }
-        }
+        });
 
         _updateAudioVisualizer = true;
         ShowStatus(string.Format(Se.Language.Main.SnappedXTimesToFrames, changed, frameRate));
