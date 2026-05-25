@@ -1663,8 +1663,15 @@ public class AudioVisualizer : Control
         minorTicks.Clear();
 
         // First major boundary (absolute frame index) at-or-before the visible start.
-        var firstAbsFrame = Math.Floor(renderCtx.StartPositionSeconds * fps / majorStepFrames) * majorStepFrames;
+        // Use integer-space floor: double-space Math.Floor near a frame boundary can
+        // land on 24.9999... instead of 25, offsetting every tick by a full step.
+        var startFrame = FloorWithEpsilon(renderCtx.StartPositionSeconds * fps);
+        if (startFrame < 0)
+        {
+            startFrame = 0;
+        }
 
+        var firstAbsFrame = startFrame - startFrame % majorStepFrames;
         for (var absFrame = firstAbsFrame; ; absFrame += majorStepFrames)
         {
             var relSeconds = absFrame / fps - renderCtx.StartPositionSeconds;
@@ -1777,21 +1784,31 @@ public class AudioVisualizer : Control
             }
 
             var framesPerStep = PickFramesPerStep(pixelsPerFrame, minPixelGap: 8);
-            var stepSeconds = framesPerStep / fps;
 
             // First frame boundary (absolute frame index) at-or-before the visible start.
-            var firstAbsFrame = Math.Floor(renderCtx.StartPositionSeconds * fps / framesPerStep) * framesPerStep;
-            var relSeconds = firstAbsFrame / fps - renderCtx.StartPositionSeconds;
-            var xPosition = SecondsToXPositionOptimized(relSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
-
-            while (xPosition < width)
+            // Compute the start frame in integer space — Math.Floor in double space can land
+            // on the wrong side of a boundary when StartPositionSeconds * fps rounds to
+            // 24.9999... instead of exactly 25.0, which would offset every gridline by a step.
+            var startFrame = FloorWithEpsilon(renderCtx.StartPositionSeconds * fps);
+            if (startFrame < 0)
             {
+                startFrame = 0;
+            }
+
+            var firstAbsFrame = startFrame - startFrame % framesPerStep;
+            for (var absFrame = firstAbsFrame; ; absFrame += framesPerStep)
+            {
+                var relSeconds = absFrame / fps - renderCtx.StartPositionSeconds;
+                var xPosition = SecondsToXPositionOptimized(relSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
+                if (xPosition >= width)
+                {
+                    break;
+                }
+
                 if (xPosition >= 0)
                 {
                     context.DrawLine(_paintGridLines, new Point(xPosition, 0), new Point(xPosition, height));
                 }
-                relSeconds += stepSeconds;
-                xPosition = SecondsToXPositionOptimized(relSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
             }
         }
         else
@@ -1825,6 +1842,10 @@ public class AudioVisualizer : Control
         }
         return FrameStepCandidates[^1];
     }
+
+    // floor(value) with a small positive epsilon so a value that should be an integer
+    // but came out of double math as integer - 1e-12 still floors up correctly.
+    private static long FloorWithEpsilon(double value) => (long)Math.Floor(value + 1e-6);
 
     private void DrawWaveForm(DrawingContext context, ref RenderContext renderCtx)
     {
