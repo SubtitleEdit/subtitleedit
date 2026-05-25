@@ -45,7 +45,7 @@ public class LanguageAudioToText
         Transcribing = "Transcribing...";
         TranscribingXOfY = "Transcribing {0} of {1}...";
         InputLanguage = "Input language";
-        AdvancedWhisperSettings = "Advanced Whisper settings";
+        AdvancedWhisperSettings = "Advanced speech-to-text parameters";
         DownloadingSpeechToTextEngine = "Downloading speech-to-text engine";
         UnpackingSpeechToTextEngine = "Unpacking speech-to-text engine";
         EnableVad = "Enable VAD";

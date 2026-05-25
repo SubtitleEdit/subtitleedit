@@ -28,6 +28,11 @@ public class SpeechToTextAdvancedWindow : Window
         {
             AcceptsReturn = true,
             AcceptsTab = true,
+            // Long single-line parameter strings used to trigger a horizontal
+            // scrollbar that overlapped the text inside this otherwise-tiny
+            // multi-line textbox (#11181). Reserve enough vertical room so the
+            // scrollbar sits below the text, not on top of it.
+            MinHeight = 60,
             DataContext = vm,
         };
         textBoxParameters.Bind(TextBox.TextProperty, new Binding(nameof(vm.Parameters))
