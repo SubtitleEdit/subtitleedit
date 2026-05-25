@@ -7,31 +7,38 @@ namespace LibSETests.Core.ContainerFormats.Mp4;
 public class Mp4Cea708H264Test
 {
     // Verifies CEA-708 (DTVCC) captions carried in H.264 SEI cc_data are
-    // assembled, fed to the Cea708 decoder, and surfaced as paragraphs.
+    // assembled into DTVCC packets, the primary caption service (1) is
+    // extracted, and the bytes are decoded into paragraphs by Cea708.Decode.
     //
-    // Two samples are emitted with one SEI each:
-    //   sample 0 (PTS 0):   cc_type=2 [0x48 'H', 0x69 'i']
-    //   sample 1 (PTS 1s):  cc_type=2 [0x21 '!', 0x8A HideWindows]
-    //                       cc_type=2 [0x80 window-bitmap, 0x00 padding]
+    // Two DTVCC packets, one per sample:
+    //   sample 0 (PTS 0):     packet seq=0 size=2 → service-1 block_size=2
+    //                         data: 'H' 'i'
+    //   sample 1 (PTS 1s):    packet seq=1 size=3 → service-1 block_size=3
+    //                         data: '!' 0x8A(HideWindows) 0x80(window-bitmap)
+    //                         + 1 NULL-pad byte
     //
-    // Decoder behaviour: 'H' 'i' '!' are accumulated as SetText commands
-    // (no flush). 0x8A = HideWindows triggers FlushText, emitting "Hi!".
-    // The 0x80 byte after HideWindows is the window bitmap (consumed by the
-    // command), 0x00 is harmless C0 padding.
+    // Decoder behaviour: 'H' 'i' '!' accumulate as SetText commands; HideWindows
+    // triggers FlushText emitting "Hi!" and timestamps it from packet-0's PTS
+    // (where state.StartLineIndex points) to packet-1's PTS.
     //
-    // Expected: a single paragraph "Hi!" spanning frame 0 → frame 1.
+    // Expected: a single paragraph "Hi!" spanning 0 → 1000 ms.
     [Fact]
     public void TrunCea708_AssemblesTextFromDtvccTripletsAcrossFrames()
     {
         var ccDataPerSample = new[]
         {
-            // sample 0: cc_type=2 triplet carrying 'H' 'i'
-            new[] { new CcTriplet(2, 0x48, 0x69) },
-            // sample 1: two cc_type=2 triplets carrying '!', HideWindows, window-bitmap, padding
+            // sample 0 → packet seq=0, size_code=2 (4 bytes total), service 1, block_size=2
             new[]
             {
-                new CcTriplet(2, 0x21, 0x8A),
-                new CcTriplet(2, 0x80, 0x00),
+                new CcTriplet(3, 0x02, 0x22),  // packet header + service block header
+                new CcTriplet(2, 0x48, 0x69),  // service data 'H' 'i'
+            },
+            // sample 1 → packet seq=1, size_code=3 (6 bytes total), service 1, block_size=3
+            new[]
+            {
+                new CcTriplet(3, 0x43, 0x23),  // packet header + service block header
+                new CcTriplet(2, 0x21, 0x8A),  // service data '!' + HideWindows command
+                new CcTriplet(2, 0x80, 0x00),  // window bitmap (HideWindows arg) + NULL pad
             },
         };
 
