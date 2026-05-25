@@ -213,7 +213,13 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             }
 
             var url = $"?langpair={sourceLanguageCode}|{targetLanguageCode}{apiKey}&q={Utilities.UrlEncode(text)}";
-            var jsonResultString = await _httpClient.GetStringAsync(url);
+            // netstandard2.1 has no GetStringAsync(string, CancellationToken)
+            // overload, so we go via SendAsync to flow the token into the
+            // connection/send phase (cancel propagates there).
+            using var request = new HttpRequestMessage(HttpMethod.Get, url);
+            using var response = await _httpClient.SendAsync(request, cancellationToken);
+            response.EnsureSuccessStatusCode();
+            var jsonResultString = await response.Content.ReadAsStringAsync();
             var textResult = _jsonParser.GetFirstObject(jsonResultString, "translatedText");
             var result = Json.DecodeJsonText(textResult);
 

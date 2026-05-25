@@ -13782,28 +13782,48 @@ public partial class MainViewModel :
             // Cancel the closing to show the dialog
             e.Cancel = true;
 
-            var result = await MessageBox.Show(
-                Window,
-                Se.Language.General.SaveChangesTitle,
-                Se.Language.General.SaveChangesMessage,
-                MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Question);
-
-            if (result == MessageBoxResult.Cancel)
+            // This is an async-void event handler — any throw from the awaits
+            // below (MessageBox or SaveSubtitle: disk full, permission denied,
+            // OneDrive sync conflict, ...) lands in the dispatcher's
+            // unhandled-exception path and leaves the user staring at a
+            // half-closed window. Catch, log, and force-close so shutdown
+            // always progresses.
+            try
             {
-                // Stay cancelled - window won't close
-                return;
-            }
+                var result = await MessageBox.Show(
+                    Window,
+                    Se.Language.General.SaveChangesTitle,
+                    Se.Language.General.SaveChangesMessage,
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
 
-            if (result == MessageBoxResult.Yes)
+                if (result == MessageBoxResult.Cancel)
+                {
+                    // Stay cancelled - window won't close
+                    return;
+                }
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    await SaveSubtitle();
+                }
+
+                CleanUp();
+
+                Window.Closing -= OnClosing;
+                Window.Close();
+            }
+            catch (Exception ex)
             {
-                await SaveSubtitle();
+                Se.LogError(ex, "MainViewModel.OnClosing");
+                // Don't trap the user in a frozen window — clean up and let it close.
+                CleanUp();
+                if (Window != null)
+                {
+                    Window.Closing -= OnClosing;
+                    Window.Close();
+                }
             }
-
-            CleanUp();
-
-            Window.Closing -= OnClosing;
-            Window.Close();
         }
         else
         {

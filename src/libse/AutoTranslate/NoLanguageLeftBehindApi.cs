@@ -44,7 +44,10 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
             var content = new StringContent("{ \"text\": \"" + Json.EncodeJsonText(text) + "\",  \"source\": \"" + sourceLanguageCode + "\", \"target\": \"" + targetLanguageCode + "\" }", Encoding.UTF8, "application/json");
-            var result = await _httpClient.PostAsync("translator", content);
+            // netstandard2.1: ReadAsStringAsync has no CancellationToken
+            // overload; the token is flowed through PostAsync, which is where
+            // the long blocking happens.
+            var result = await _httpClient.PostAsync("translator", content, cancellationToken);
             result.EnsureSuccessStatusCode();
 
             var responseString = await result.Content.ReadAsStringAsync();
