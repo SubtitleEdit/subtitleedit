@@ -478,6 +478,11 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = l.SnapAllTimesToFrames,
+                Command = vm.SnapAllTimesToFramesCommand,
+            },
+            new MenuItem
+            {
                 Header = l.MergeTwoSubtitles,
                 Command = vm.ShowToolsMergeTwoSubtitlesCommand,
             },

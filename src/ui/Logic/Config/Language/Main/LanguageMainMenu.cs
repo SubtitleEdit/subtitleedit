@@ -55,6 +55,7 @@ public class LanguageMainMenu
     public string SplitBreakLongLines { get; set; }
     public string MergeShortLines { get; set; }
     public string MergeContinuationLines { get; set; }
+    public string SnapAllTimesToFrames { get; set; }
     public string Renumber { get; set; }
     public string RemoveTextForHearingImpaired { get; set; }
     public string ConvertActors { get; set; }
@@ -179,6 +180,7 @@ public class LanguageMainMenu
         SplitBreakLongLines = "Split/rebalance long lines...";
         MergeShortLines = "Merge short lines...";
         MergeContinuationLines = "Merge continuation lines...";
+        SnapAllTimesToFrames = "Snap all times to frames";
         Renumber = "Renumber...";
         RemoveTextForHearingImpaired = "_Remove text for hearing impaired...";
         ConvertActors = "Convert actors...";
