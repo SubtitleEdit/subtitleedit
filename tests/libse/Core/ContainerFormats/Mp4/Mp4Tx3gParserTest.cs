@@ -6,6 +6,73 @@ namespace LibSETests.Core.ContainerFormats.Mp4;
 
 public class Mp4Tx3gParserTest
 {
+    // Multi-byte UTF-8 round-trip: the tx3g sample payload is a 16-bit big-endian
+    // length prefix followed by UTF-8 bytes. The parser reads `length` bytes and
+    // decodes via UTF-8. Verify that mixed-script content (Latin / CJK / emoji)
+    // survives without splitting a multi-byte sequence.
+    [Fact]
+    public void GetParagraphs_Utf8MultiByteText_RoundTripsCorrectly()
+    {
+        var samples = new[]
+        {
+            "Hello, world!",       // ASCII
+            "日本語のテスト",        // Japanese (3-byte UTF-8 sequences)
+            "Hej — pingvin 🐧!",    // mixed Latin + em dash (3-byte) + emoji (4-byte)
+            "Привет",              // Cyrillic (2-byte sequences)
+        };
+
+        var tempFile = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllBytes(tempFile, BuildSingleChunkTx3gMp4(samples, sampleDurationTicks: 500, timeScale: 1000));
+            var parser = new MP4Parser(tempFile);
+            var paragraphs = parser.GetSubtitleTracks()[0].Mdia.Minf.Stbl.GetParagraphs();
+            Assert.Equal(samples.Length, paragraphs.Count);
+            for (var i = 0; i < samples.Length; i++)
+            {
+                Assert.Equal(samples[i], paragraphs[i].Text);
+            }
+        }
+        finally
+        {
+            File.Delete(tempFile);
+        }
+    }
+
+    // Empty samples (text_length == 0) are valid tx3g — used to clear the
+    // overlay between captions — and must not produce phantom blank paragraphs
+    // or crash the parser. Documents the current Stbl.GetParagraphs behaviour
+    // that drops empty-text samples via `!string.IsNullOrEmpty(p.Text)`.
+    [Fact]
+    public void GetParagraphs_EmptyTextSample_IsSkippedNotEmittedBlank()
+    {
+        var samples = new[] { "First", "", "Third" };
+
+        var tempFile = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllBytes(tempFile, BuildSingleChunkTx3gMp4(samples, sampleDurationTicks: 1000, timeScale: 1000));
+            var parser = new MP4Parser(tempFile);
+            var paragraphs = parser.GetSubtitleTracks()[0].Mdia.Minf.Stbl.GetParagraphs();
+
+            // The empty middle sample is dropped — only the two non-empty paragraphs survive.
+            Assert.Equal(2, paragraphs.Count);
+            Assert.Equal("First", paragraphs[0].Text);
+            Assert.Equal("Third", paragraphs[1].Text);
+
+            // Timing for the surviving paragraphs still reflects the original sample order,
+            // so the dropped middle sample leaves a gap between p0 and p1 (1000-2000 ms).
+            Assert.Equal(0, paragraphs[0].StartTime.TotalMilliseconds, 1);
+            Assert.Equal(1000, paragraphs[0].EndTime.TotalMilliseconds, 1);
+            Assert.Equal(2000, paragraphs[1].StartTime.TotalMilliseconds, 1);
+            Assert.Equal(3000, paragraphs[1].EndTime.TotalMilliseconds, 1);
+        }
+        finally
+        {
+            File.Delete(tempFile);
+        }
+    }
+
     [Fact]
     public void GetParagraphs_MultipleTextSamplesInSingleChunk_ReturnsEverySample()
     {
