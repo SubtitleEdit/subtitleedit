@@ -2,6 +2,27 @@
 Subtitle Edit Changelog
 
 
+v5.0.0-beta32 (25th May 2026)
+
+* Add TTS Cast: per-actor voice / model / instruction mapping in Text-to-speech (for ASSA)
+* Add "Import from SE 4..." to the Shortcuts editor (Settings.xml / SE_Shortcuts.xml) 
+* Add slot-based "Set actor 1..10" + "Set new actor..." commands for ASS/SSA workflows
+* Add "Go to previous bookmark", "Selection to lowercase/uppercase", and "Google it" (selected text) commands
+* Add CrispASR Granite "plus" model (granite-speech-4.1-2b-plus, 4 quants)
+* Chunk OpenAI-compatible STT uploads > 25 MB with silence-aware splits
+* Add audio upload format choice (MP3/M4A/WebM/WAV) for OpenAI-compatible STT - thx harjoc
+* Update Czech translation - thx Matěj
+* Update Italian translation - thx bovirus
+* Update Polish translation - thx potplayer-fanpack
+* Fix CrispASR Mega advanced-settings crash on Speech-to-text - thx rikimtasu
+* Fix CEA-608 ordering when reading H.264 captions from MP4 with B-frames
+* Fix STT response_format mismatch when sending timestamp_granularities - thx harjoc
+* Fix Mac → Windows shortcut import mapping Cmd to WIN instead of Ctrl - thx Larxen
+* Fix DeepSeek auto-translate prompt JSON-escaping - thx halaxy
+* Fix h264_qsv / hevc_qsv preset list (drop unsupported ultrafast / superfast) - thx bichitoxxx
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-beta31 (24th May 2026)
 
 * Add scrub video position by mouse wheel over the video surface

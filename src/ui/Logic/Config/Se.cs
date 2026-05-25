@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 
 public class Se
 {
-    public static string Version { get; set; } = "v5.0.0-beta31";
+    public static string Version { get; set; } = "v5.0.0-beta32";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
