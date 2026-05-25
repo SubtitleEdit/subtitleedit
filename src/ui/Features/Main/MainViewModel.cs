@@ -4844,6 +4844,51 @@ public partial class MainViewModel :
         }
     }
 
+    private async Task<Subtitle> PromptMergeContinuationLinesAsync(Subtitle subtitle)
+    {
+        if (Window == null || subtitle.Paragraphs.Count < 2)
+        {
+            return subtitle;
+        }
+
+        var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+        if (MergeContinuationLinesHelper.IsLanguageSkipped(language))
+        {
+            return subtitle;
+        }
+
+        var format = subtitle.OriginalFormat ?? SelectedSubtitleFormat ?? new SubRip();
+        var viewModels = subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, format)).ToList();
+
+        const int maxGapMs = 500;
+        const int maxCharacters = 500;
+        var candidates = MergeContinuationLinesHelper.Detect(viewModels, language, maxGapMs, maxCharacters);
+        if (candidates.Count == 0)
+        {
+            return subtitle;
+        }
+
+        var result = await _windowService
+            .ShowDialogAsync<MergeContinuationLinesWindow, MergeContinuationLinesViewModel>(
+                Window!, vm => vm.Initialize(viewModels, language, maxGapMs, maxCharacters));
+
+        if (!result.OkPressed || result.AllSubtitlesFixed.Count == subtitle.Paragraphs.Count)
+        {
+            return subtitle;
+        }
+
+        var merged = new Subtitle
+        {
+            OriginalFormat = subtitle.OriginalFormat,
+            FileName = subtitle.FileName,
+        };
+        foreach (var line in result.AllSubtitlesFixed)
+        {
+            merged.Paragraphs.Add(line.ToParagraph(subtitle.OriginalFormat));
+        }
+        return merged;
+    }
+
     [RelayCommand]
     private async Task ShowToolsMergeContinuationLines()
     {
@@ -5257,6 +5302,12 @@ public partial class MainViewModel :
             ResetSubtitle();
 
             _subtitle = result.TranscribedSubtitle;
+
+            if (Se.Settings.Tools.SpeechToTextPromptMergeContinuationLines)
+            {
+                _subtitle = await PromptMergeContinuationLinesAsync(_subtitle);
+            }
+
             if (SelectedSubtitleFormat is AdvancedSubStationAlpha)
             {
                 foreach (var p in _subtitle.Paragraphs)
@@ -5270,7 +5321,7 @@ public partial class MainViewModel :
 
             SetSubtitles(_subtitle);
             SelectAndScrollToRow(0);
-            ShowStatus(string.Format(Se.Language.Main.TranscriptionCompletedWithXLines, result.TranscribedSubtitle.Paragraphs.Count));
+            ShowStatus(string.Format(Se.Language.Main.TranscriptionCompletedWithXLines, _subtitle.Paragraphs.Count));
         }
         else if (result.OkPressed && result.IsBatchMode && result.BatchItems.Count == 1)
         {
