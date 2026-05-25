@@ -1054,7 +1054,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public static int MsToFramesMaxFrameRate(double milliseconds, double frameRate)
         {
             var frames = (int)Math.Round(milliseconds / (TimeCode.BaseUnit / frameRate));
-            if (frames >= Configuration.Settings.General.CurrentFrameRate)
+            // Clamp against the parameter, not the global CurrentFrameRate setting.
+            // Using the global produced the wrong cap when exporting at a frame
+            // rate that differed from the active project setting.
+            if (frames >= frameRate)
             {
                 frames = (int)(frameRate - 0.01);
             }

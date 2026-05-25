@@ -46,7 +46,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return $" #{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}-{Math.Round(time.Milliseconds / 100.0, 0):0}# ";
+            // The format only allows a single decisecond digit (see RegexTimeCodes,
+            // "^\d\d:\d\d:\d\d-\d$"). Math.Round on 9.5..9.99 returns 10, which
+            // would emit "..-10" — invalid per the regex, so the file fails to
+            // re-parse and those subtitles disappear on reload. Clamp to 9.
+            var ds = Math.Min(9, (int)Math.Round(time.Milliseconds / 100.0));
+            return $" #{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}-{ds}# ";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
