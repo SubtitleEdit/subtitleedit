@@ -1125,38 +1125,36 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
+        var tempWaveFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.wav");
         try
         {
             var peakWaveFileName = WavePeakGenerator2.GetPeakWaveFileName(videoFileName);
-            var tempWaveFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.wav");
 
-            var process = WaveFileExtractor.GetCommandLineProcess(
+            using (var process = WaveFileExtractor.GetCommandLineProcess(
                 videoFileName,
                 -1,
                 tempWaveFileName,
                 Configuration.Settings.General.VlcWaveTranscodeSettings,
-                out _);
-
-            await Task.Run(() =>
+                out _))
             {
                 process.Start();
-                process.WaitForExit();
-            });
+                await process.WaitForExitAsync();
+                if (process.ExitCode != 0)
+                {
+                    SeLogger.Error($"ffmpeg exited with code {process.ExitCode} extracting wave for TTS review: '{videoFileName}'");
+                    return;
+                }
+            }
 
             if (!File.Exists(tempWaveFileName))
             {
                 return;
             }
 
-            WavePeakData2? peaks = null;
-            try
+            WavePeakData2? peaks;
+            using (var waveFile = new WavePeakGenerator2(tempWaveFileName))
             {
-                using var waveFile = new WavePeakGenerator2(tempWaveFileName);
                 peaks = waveFile.GeneratePeaks(0, peakWaveFileName);
-            }
-            finally
-            {
-                try { File.Delete(tempWaveFileName); } catch { /* best effort */ }
             }
 
             if (peaks != null)
@@ -1167,6 +1165,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         catch (Exception ex)
         {
             SeLogger.Error(ex, $"Background wave-peak generation failed for '{videoFileName}'");
+        }
+        finally
+        {
+            try { File.Delete(tempWaveFileName); } catch { /* best effort */ }
         }
     }
 

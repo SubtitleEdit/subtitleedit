@@ -94,8 +94,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
     [ObservableProperty] private WavePeakData2? _wavePeakData;
 
     // Each ReviewRow's paragraph projected as a SubtitleLineViewModel so AudioVisualizer drag
-    // logic (which writes to SubtitleLineViewModel.StartTime/EndTime) works unchanged. We push
-    // edits back to the source StepResult.Paragraph in OnWaveformParagraphChanged.
+    // logic (which writes to SubtitleLineViewModel.StartTime/EndTime) works unchanged. The
+    // canonical link is ReviewRow.WaveformParagraph (set in Initialize); this list is the
+    // sorted-by-start-time view the visualizer needs, and the dictionary is the reverse lookup
+    // used by OnWaveformParagraphChanged to find the row that owns a mirror VM.
     public List<SubtitleLineViewModel> WaveformParagraphs { get; } = new();
     private readonly Dictionary<SubtitleLineViewModel, ReviewRow> _waveformParagraphToRow = new();
 
@@ -286,12 +288,15 @@ public partial class ReviewSpeechViewModel : ObservableObject
             };
             waveformParagraph.UpdateDuration();
             waveformParagraph.PropertyChanged += OnWaveformParagraphChanged;
+            row.WaveformParagraph = waveformParagraph;
             WaveformParagraphs.Add(waveformParagraph);
             _waveformParagraphToRow[waveformParagraph] = row;
         }
 
-        // Default to an empty placeholder so the visualizer renders an empty timeline instead of
-        // refusing to draw anything (LengthInSeconds == 0 with null peaks).
+        // The caller passes either real peaks of the source video, an empty placeholder (when
+        // there's no video yet), or null. The visualizer renders nothing when peaks are missing;
+        // background generation in TextToSpeechViewModel.Import pushes real peaks into this
+        // property once ffmpeg finishes, at which point the binding refreshes the visualizer.
         WavePeakData = wavePeakData;
 
         // Shared with the Cast dialog (see ActorVoiceDetector.FilterUsableEngines) so the two
@@ -360,18 +365,20 @@ public partial class ReviewSpeechViewModel : ObservableObject
         }
 
         var row = SelectedLine;
-        if (row == null || WaveformParagraphs.Count == 0)
+        var waveformParagraph = row?.WaveformParagraph;
+        if (waveformParagraph == null || WaveformParagraphs.Count == 0)
         {
             return;
         }
 
-        var index = Lines.IndexOf(row);
-        if (index < 0 || index >= WaveformParagraphs.Count)
+        // SetPosition still wants an index into the list it's given — we know the mirror is in
+        // WaveformParagraphs because Initialize put it there.
+        var index = WaveformParagraphs.IndexOf(waveformParagraph);
+        if (index < 0)
         {
             return;
         }
 
-        var waveformParagraph = WaveformParagraphs[index];
         var startSeconds = Math.Max(0, waveformParagraph.StartTime.TotalSeconds - 2.0);
 
         av.SetPosition(

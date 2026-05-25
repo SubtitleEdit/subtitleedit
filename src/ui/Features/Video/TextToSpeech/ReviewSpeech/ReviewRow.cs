@@ -1,5 +1,6 @@
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Nikse.SubtitleEdit.Features.Main;
 using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
@@ -19,6 +20,10 @@ public partial class ReviewRow : ObservableObject
 
     public TtsStepResult StepResult { get; set; }
     public List<ReviewHistoryRow> HistoryItems { get; set; }
+
+    // Mirror of StepResult.Paragraph used by the AudioVisualizer in ReviewSpeechWindow. Stored
+    // on the row itself so lookup is direct (no Lines.IndexOf, which would break under sorting).
+    public SubtitleLineViewModel? WaveformParagraph { get; set; }
 
     public ReviewRow()
     {
