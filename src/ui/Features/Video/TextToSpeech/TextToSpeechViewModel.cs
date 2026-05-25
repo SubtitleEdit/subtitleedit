@@ -929,18 +929,52 @@ public partial class TextToSpeechViewModel : ObservableObject
             _actorVoiceMappings.AddRange(importExport.ActorVoiceMappings);
         }
 
+        // Resolve each line's Voice against the engine that *generated* it (per-line
+        // EngineName), not the currently selected engine — otherwise cast lines from another
+        // engine would land with Voice = null and click-to-sync/regenerate would break. Load
+        // each distinct engine's voice list once and reuse it for every line referencing that
+        // engine.
+        var voicesByEngine = new Dictionary<string, Voice[]>(StringComparer.OrdinalIgnoreCase);
+        var engineNames = importExport.Items
+            .Select(i => i.EngineName ?? string.Empty)
+            .Where(n => !string.IsNullOrEmpty(n))
+            .Distinct(StringComparer.OrdinalIgnoreCase);
+        foreach (var engineName in engineNames)
+        {
+            var matchingEngine = Engines.FirstOrDefault(e => string.Equals(e.Name, engineName, StringComparison.OrdinalIgnoreCase));
+            if (matchingEngine == null)
+            {
+                continue;
+            }
+            try
+            {
+                voicesByEngine[engineName] = await matchingEngine.GetVoices(string.Empty);
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, $"Import: loading voices for engine '{engineName}' failed — lines using it will fall back to the global voice list.");
+            }
+        }
+
         var stepResults = new List<TtsStepResult>();
         for (var index = 0; index < importExport.Items.Count; index++)
         {
             var item = importExport.Items[index];
             var paragraph = new Paragraph(item.Text, item.StartMs, item.EndMs) { Number = index + 1 };
+            Voice? voice = null;
+            if (!string.IsNullOrEmpty(item.EngineName)
+                && voicesByEngine.TryGetValue(item.EngineName, out var perEngineVoices))
+            {
+                voice = perEngineVoices.FirstOrDefault(v => string.Equals(v.Name, item.VoiceName, StringComparison.OrdinalIgnoreCase));
+            }
+            voice ??= Voices.FirstOrDefault(v => v.Name == item.VoiceName);
             stepResults.Add(new TtsStepResult
             {
                 Text = item.Text,
                 CurrentFileName = item.AudioFileName,
                 Paragraph = paragraph,
                 SpeedFactor = item.SpeedFactor <= 0 ? 1.0f : item.SpeedFactor,
-                Voice = Voices.FirstOrDefault(v => v.Name == item.VoiceName),
+                Voice = voice,
                 // Restore the per-line engine snapshot so the review window's click-to-sync
                 // (and any future regeneration) can recover the exact engine/model/instruction
                 // each line was produced with.
@@ -1694,7 +1728,11 @@ public partial class TextToSpeechViewModel : ObservableObject
                     SpeedFactor = 1.0f,
                     Voice = resolution.Voice,
                     EngineName = resolution.Engine.Name,
-                    Model = resolution.Model ?? SelectedModel ?? string.Empty,
+                    // Record the model the engine actually saw: empty for cross-engine lines
+                    // with no per-row override (which used the engine's own default), the
+                    // override when set, or the global SelectedModel for same-engine lines.
+                    // Avoids snapshotting a global model that belongs to a different engine.
+                    Model = model ?? string.Empty,
                     Instruction = resolution.Instruction,
                 });
                 ProgressValue = (double)(index + 1) / _subtitle.Paragraphs.Count * 100.0;

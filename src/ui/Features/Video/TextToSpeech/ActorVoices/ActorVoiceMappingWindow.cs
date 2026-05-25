@@ -234,6 +234,11 @@ public class ActorVoiceMappingWindow : Window
                             return new TextBlock();
                         }
 
+                        // Single IsEnabled binding via the row's combined IsVoiceComboReady
+                        // (= IsVoiceComboEnabled && !IsBusy). Avalonia's Bind() replaces an
+                        // existing binding on the same property, so binding twice (once to
+                        // IsVoiceComboEnabled and once to !IsBusy) would silently drop the
+                        // first.
                         var combo = new ComboBox
                         {
                             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -244,7 +249,7 @@ public class ActorVoiceMappingWindow : Window
                             {
                                 Mode = BindingMode.TwoWay,
                             },
-                            [!InputElement.IsEnabledProperty] = new Binding(nameof(ActorVoiceRow.IsVoiceComboEnabled))
+                            [!InputElement.IsEnabledProperty] = new Binding(nameof(ActorVoiceRow.IsVoiceComboReady))
                             {
                                 Mode = BindingMode.OneWay,
                             },
@@ -263,11 +268,6 @@ public class ActorVoiceMappingWindow : Window
                                 Mode = BindingMode.OneWay,
                             },
                         };
-                        combo.Bind(InputElement.IsEnabledProperty, new Binding(nameof(ActorVoiceRow.IsBusy))
-                        {
-                            Mode = BindingMode.OneWay,
-                            Converter = new InverseBooleanConverter(),
-                        });
 
                         return new Grid
                         {

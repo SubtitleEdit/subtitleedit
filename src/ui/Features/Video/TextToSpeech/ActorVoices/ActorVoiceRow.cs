@@ -45,6 +45,15 @@ public partial class ActorVoiceRow : ObservableObject
         _isVoiceComboEnabled = true;
     }
 
+    // Combined "can the user pick a voice right now?" flag bound by the row's ComboBox so we
+    // don't have to bind IsEnabled twice (the second Bind() in Avalonia overwrites the first).
+    // True only when both the voice combo is allowed (more than one voice available) and the
+    // row isn't mid-load.
+    public bool IsVoiceComboReady => IsVoiceComboEnabled && !IsBusy;
+
+    partial void OnIsVoiceComboEnabledChanged(bool value) => OnPropertyChanged(nameof(IsVoiceComboReady));
+    partial void OnIsBusyChanged(bool value) => OnPropertyChanged(nameof(IsVoiceComboReady));
+
     partial void OnSelectedEngineChanged(ITtsEngine? value)
     {
         if (SuppressEngineEvent)

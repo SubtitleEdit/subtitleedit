@@ -114,9 +114,9 @@ public static class ActorVoiceDetector
     }
 
     // Drops engines that aren't usable right now — missing API key, missing runtime/models, etc.
-    // Same set of checks the Review window uses, factored out so the Cast dialog gets the same
-    // filtered list. An engine in the raw list but not installable would otherwise show up in
-    // the Cast dropdown, the user picks it, and BuildCastContextAsync silently swallows the
+    // Shared between the Cast dialog and the Review window so both surface exactly the same set
+    // of engines. An engine in the raw list but not installable would otherwise show up in the
+    // Cast dropdown, the user picks it, and BuildCastContextAsync silently swallows the
     // GetVoices exception → row falls back to the global voice with no UI feedback.
     public static IEnumerable<ITtsEngine> FilterUsableEngines(IEnumerable<ITtsEngine> engines)
     {

@@ -6,6 +6,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -176,7 +177,8 @@ public class ActorVoiceRowSettingsWindow : Window
 
         var whisper = new CheckBox
         {
-            Content = "Whisper",
+            // Use the engine's own constant — same label as the main TTS window and Review window.
+            Content = OmniVoiceTtsCpp.InstructionWhisper,
             Margin = new Thickness(0, 4, 0, 0),
             [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.OmniVoiceWhisper)) { Mode = BindingMode.TwoWay },
         };

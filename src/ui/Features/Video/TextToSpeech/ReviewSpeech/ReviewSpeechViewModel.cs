@@ -261,41 +261,11 @@ public partial class ReviewSpeechViewModel : ObservableObject
             Lines.Add(row);
         }
 
-        foreach (var engineItem in engines)
+        // Shared with the Cast dialog (see ActorVoiceDetector.FilterUsableEngines) so the two
+        // windows always show the same set of usable engines. Add new engine availability rules
+        // there, not here.
+        foreach (var engineItem in ActorVoiceDetector.FilterUsableEngines(engines))
         {
-            if (engineItem is ElevenLabs && string.IsNullOrWhiteSpace(Se.Settings.Video.TextToSpeech.ElevenLabsApiKey))
-            {
-                continue;
-            }
-
-            if (engineItem is Murf && string.IsNullOrWhiteSpace(Se.Settings.Video.TextToSpeech.MurfApiKey))
-            {
-                continue;
-            }
-
-            if (engineItem is AzureSpeech && string.IsNullOrWhiteSpace(Se.Settings.Video.TextToSpeech.AzureApiKey))
-            {
-                continue;
-            }
-
-            if (engineItem is GoogleSpeech && string.IsNullOrWhiteSpace(Se.Settings.Video.TextToSpeech.GoogleKeyFile))
-            {
-                continue;
-            }
-
-            if (engineItem is Qwen3TtsCpp && (!File.Exists(Qwen3TtsCpp.GetExecutableFileName())
-                || (!Qwen3TtsCpp.IsModelsInstalled(Qwen3TtsCpp.ModelKey06B)
-                    && !Qwen3TtsCpp.IsModelsInstalled(Qwen3TtsCpp.ModelKey17BBase))))
-            {
-                continue;
-            }
-
-            if (engineItem is KokoroTtsCpp && (!File.Exists(KokoroTtsCpp.GetExecutableFileName())
-                || !KokoroTtsCpp.AreModelsInstalled()))
-            {
-                continue;
-            }
-
             Engines.Add(engineItem);
         }
 

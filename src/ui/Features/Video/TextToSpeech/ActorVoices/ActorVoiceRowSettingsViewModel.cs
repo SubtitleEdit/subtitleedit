@@ -44,7 +44,6 @@ public partial class ActorVoiceRowSettingsViewModel : ObservableObject
     public const string OmniVoiceAny = "(any)";
 
     private bool _suppressKeywordSync;
-    private ITtsEngine? _engine;
 
     public ActorVoiceRowSettingsViewModel()
     {
@@ -66,7 +65,6 @@ public partial class ActorVoiceRowSettingsViewModel : ObservableObject
 
     public void Initialize(ActorVoiceRow row)
     {
-        _engine = row.SelectedEngine;
         Actor = row.Actor;
         EngineName = row.SelectedEngine?.Name ?? string.Empty;
         VoiceName = row.SelectedVoice?.Name ?? string.Empty;
