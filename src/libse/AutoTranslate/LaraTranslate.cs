@@ -81,7 +81,10 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var signature = Sign(method, "/translate", contentMd5 ?? "", actualContentType, dateHeader);
             request.Headers.TryAddWithoutValidation("Authorization", $"Lara {_accessKeyId}:{signature}");
 
-            var response = await _httpClient.SendAsync(request);
+            // netstandard2.1: ReadAsByteArrayAsync has no CancellationToken
+            // overload; the token is flowed through SendAsync, which is where
+            // the long blocking happens.
+            using var response = await _httpClient.SendAsync(request, cancellationToken);
 
             var bytes = await response.Content.ReadAsByteArrayAsync();
             var json = Encoding.UTF8.GetString(bytes).Trim();

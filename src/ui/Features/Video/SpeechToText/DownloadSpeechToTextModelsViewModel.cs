@@ -253,7 +253,9 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
         _downloadFileName = GetDownloadFileName(model.Model, _downloadUrls[_downloadIndex]);
         _downloadTask = _whisperDownloadService.DownloadFile(_downloadUrls[_downloadIndex], _downloadFileName, MakeDownloadProgress(), _cancellationTokenSource.Token);
         _timer.Interval = 500;
-        _timer.Elapsed += OnTimerOnElapsed;
+        // Constructor already subscribed OnTimerOnElapsed; re-subscribing here
+        // duplicated the handler on every Download() call, so a cancel-and-retry
+        // caused the state-machine tick to fire 2x (then 3x, 4x ...).
         _timer.Start();
 
         ProgressFileName = string.Format(Se.Language.General.FileNameX, Path.GetFileName(_downloadUrls[_downloadIndex]));
