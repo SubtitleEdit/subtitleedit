@@ -2606,7 +2606,14 @@
       "googleIt": "Google it (selected text)",
       "setActorXY": "Set actor {0}: {1}",
       "setNewActor": "Set new actor...",
-      "setActorSlotXTitle": "Actor slot {0}"
+      "setActorSlotXTitle": "Actor slot {0}",
+      "toggleDialogDashes": "Toggle dialog dashes",
+      "mergeWithLineBeforeAsDialog": "Merge with line before as dialog",
+      "mergeWithLineAfterAsDialog": "Merge with line after as dialog",
+      "moveStartOneFrameBack": "Move start one frame back",
+      "moveStartOneFrameForward": "Move start one frame forward",
+      "moveEndOneFrameBack": "Move end one frame back",
+      "moveEndOneFrameForward": "Move end one frame forward"
     },
     "wordLists": {
       "title": "Word lists",

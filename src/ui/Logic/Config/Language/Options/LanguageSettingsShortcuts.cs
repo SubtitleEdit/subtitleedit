@@ -279,6 +279,13 @@ public class LanguageSettingsShortcuts
     public string SetActorXY { get; set; }
     public string SetNewActor { get; set; }
     public string SetActorSlotXTitle { get; set; }
+    public string ToggleDialogDashes { get; set; }
+    public string MergeWithLineBeforeAsDialog { get; set; }
+    public string MergeWithLineAfterAsDialog { get; set; }
+    public string MoveStartOneFrameBack { get; set; }
+    public string MoveStartOneFrameForward { get; set; }
+    public string MoveEndOneFrameBack { get; set; }
+    public string MoveEndOneFrameForward { get; set; }
 
     public LanguageSettingsShortcuts()
     {
@@ -560,5 +567,12 @@ public class LanguageSettingsShortcuts
         SetActorXY = "Set actor {0}: {1}";
         SetNewActor = "Set new actor...";
         SetActorSlotXTitle = "Actor slot {0}";
+        ToggleDialogDashes = "Toggle dialog dashes";
+        MergeWithLineBeforeAsDialog = "Merge with line before as dialog";
+        MergeWithLineAfterAsDialog = "Merge with line after as dialog";
+        MoveStartOneFrameBack = "Move start one frame back";
+        MoveStartOneFrameForward = "Move start one frame forward";
+        MoveEndOneFrameBack = "Move end one frame back";
+        MoveEndOneFrameForward = "Move end one frame forward";
     }
 }
