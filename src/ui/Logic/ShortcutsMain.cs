@@ -94,6 +94,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.MergeOriginalIntoTranslationSelectedLinesCommand), Se.Language.Options.Shortcuts.MergeOriginalIntoTranslationSelectedLines},
         { nameof(MainViewModel.ListBookmarksCommand), Se.Language.Options.Shortcuts.ListBookmarks},
         { nameof(MainViewModel.GoToNextBookmarkCommand), Se.Language.Options.Shortcuts.GoToNextBookmark},
+        { nameof(MainViewModel.GoToPreviousBookmarkCommand), Se.Language.Options.Shortcuts.GoToPreviousBookmark},
         { nameof(MainViewModel.OpenDataFolderCommand), Se.Language.Options.Shortcuts.OpenSeDataFolder },
         { nameof(MainViewModel.ToggleIsWaveformToolbarVisibleCommand), Se.Language.Options.Shortcuts.ToggleWaveformToolbar },
 
@@ -315,6 +316,17 @@ public static class ShortcutsMain
         { nameof(MainViewModel.SetColor7Command), string.Format(Se.Language.Options.Shortcuts.ColorX, "7") },
         { nameof(MainViewModel.SetColor8Command), string.Format(Se.Language.Options.Shortcuts.ColorX, "8") },
         { nameof(MainViewModel.RemoveColorCommand), Se.Language.Options.Shortcuts.RemoveColor },
+        { nameof(MainViewModel.SetActor1Command), string.Format(Se.Language.Options.Shortcuts.SetActorXY, "1", Se.Settings.Actor1) },
+        { nameof(MainViewModel.SetActor2Command), string.Format(Se.Language.Options.Shortcuts.SetActorXY, "2", Se.Settings.Actor2) },
+        { nameof(MainViewModel.SetActor3Command), string.Format(Se.Language.Options.Shortcuts.SetActorXY, "3", Se.Settings.Actor3) },
+        { nameof(MainViewModel.SetActor4Command), string.Format(Se.Language.Options.Shortcuts.SetActorXY, "4", Se.Settings.Actor4) },
+        { nameof(MainViewModel.SetActor5Command), string.Format(Se.Language.Options.Shortcuts.SetActorXY, "5", Se.Settings.Actor5) },
+        { nameof(MainViewModel.SetActor6Command), string.Format(Se.Language.Options.Shortcuts.SetActorXY, "6", Se.Settings.Actor6) },
+        { nameof(MainViewModel.SetActor7Command), string.Format(Se.Language.Options.Shortcuts.SetActorXY, "7", Se.Settings.Actor7) },
+        { nameof(MainViewModel.SetActor8Command), string.Format(Se.Language.Options.Shortcuts.SetActorXY, "8", Se.Settings.Actor8) },
+        { nameof(MainViewModel.SetActor9Command), string.Format(Se.Language.Options.Shortcuts.SetActorXY, "9", Se.Settings.Actor9) },
+        { nameof(MainViewModel.SetActor10Command), string.Format(Se.Language.Options.Shortcuts.SetActorXY, "10", Se.Settings.Actor10) },
+        { nameof(MainViewModel.SetNewActorCommand), Se.Language.Options.Shortcuts.SetNewActor },
         { nameof(MainViewModel.SurroundWith1Command), string.Format(Se.Language.Options.Shortcuts.SurroundWithXY,  Se.Settings.Surround1Left, Se.Settings.Surround1Right) },
         { nameof(MainViewModel.SurroundWith2Command), string.Format(Se.Language.Options.Shortcuts.SurroundWithXY,  Se.Settings.Surround2Left, Se.Settings.Surround2Right) },
         { nameof(MainViewModel.SurroundWith3Command), string.Format(Se.Language.Options.Shortcuts.SurroundWithXY,  Se.Settings.Surround3Left, Se.Settings.Surround3Right) },
@@ -338,6 +350,9 @@ public static class ShortcutsMain
         { nameof(MainViewModel.PlaySelectedLinesAndFocusWaveformCommand), Se.Language.General.PlaySelectedLinesAndFocusWaveform },
         { nameof(MainViewModel.PlaySelectedLinesWithLoopAndFocusWaveformCommand), Se.Language.General.PlaySelectedLinesWithLoopAndFocusWaveform },
         { nameof(MainViewModel.ToggleCasingCommand), Se.Language.General.ToggleCasing },
+        { nameof(MainViewModel.SelectionToLowerCommand), Se.Language.Options.Shortcuts.SelectionToLower },
+        { nameof(MainViewModel.SelectionToUpperCommand), Se.Language.Options.Shortcuts.SelectionToUpper },
+        { nameof(MainViewModel.GoogleItCommand), Se.Language.Options.Shortcuts.GoogleIt },
         { nameof(MainViewModel.ImportImageSubtitleForEditCommand), Se.Language.Options.Shortcuts.ImportImageSubtitleForEdit },
         { nameof(MainViewModel.ShowMediaInformationCommand), Se.Language.Options.Shortcuts.ShowMediaInformation },
         { nameof(MainViewModel.ShowSubtitleFormatPickerCommand), Se.Language.Options.Shortcuts.ChooseSubtitleFormat },
@@ -395,6 +410,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.MergeOriginalIntoTranslationSelectedLinesCommand, nameof(vm.MergeOriginalIntoTranslationSelectedLinesCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.ListBookmarksCommand, nameof(vm.ListBookmarksCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.GoToNextBookmarkCommand, nameof(vm.GoToNextBookmarkCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.GoToPreviousBookmarkCommand, nameof(vm.GoToPreviousBookmarkCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.OpenDataFolderCommand, nameof(vm.OpenDataFolderCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ToggleIsWaveformToolbarVisibleCommand, nameof(vm.ToggleIsWaveformToolbarVisibleCommand), ShortcutCategory.General);
 
@@ -608,6 +624,17 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.SetColor7Command, nameof(vm.SetColor7Command), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.SetColor8Command, nameof(vm.SetColor8Command), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.RemoveColorCommand, nameof(vm.RemoveColorCommand), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.SetActor1Command, nameof(vm.SetActor1Command), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.SetActor2Command, nameof(vm.SetActor2Command), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.SetActor3Command, nameof(vm.SetActor3Command), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.SetActor4Command, nameof(vm.SetActor4Command), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.SetActor5Command, nameof(vm.SetActor5Command), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.SetActor6Command, nameof(vm.SetActor6Command), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.SetActor7Command, nameof(vm.SetActor7Command), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.SetActor8Command, nameof(vm.SetActor8Command), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.SetActor9Command, nameof(vm.SetActor9Command), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.SetActor10Command, nameof(vm.SetActor10Command), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.SetNewActorCommand, nameof(vm.SetNewActorCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.SurroundWith1Command, nameof(vm.SurroundWith1Command), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.SurroundWith2Command, nameof(vm.SurroundWith2Command), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.SurroundWith3Command, nameof(vm.SurroundWith3Command), ShortcutCategory.SubtitleGridAndTextBox);
@@ -631,6 +658,9 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.PlaySelectedLinesAndFocusWaveformCommand, nameof(vm.PlaySelectedLinesAndFocusWaveformCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.PlaySelectedLinesWithLoopAndFocusWaveformCommand, nameof(vm.PlaySelectedLinesWithLoopAndFocusWaveformCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ToggleCasingCommand, nameof(vm.ToggleCasingCommand), ShortcutCategory.SubtitleGridAndTextBox);
+        AddShortcut(shortcuts, vm.SelectionToLowerCommand, nameof(vm.SelectionToLowerCommand), ShortcutCategory.TextBox);
+        AddShortcut(shortcuts, vm.SelectionToUpperCommand, nameof(vm.SelectionToUpperCommand), ShortcutCategory.TextBox);
+        AddShortcut(shortcuts, vm.GoogleItCommand, nameof(vm.GoogleItCommand), ShortcutCategory.TextBox);
         AddShortcut(shortcuts, vm.ImportImageSubtitleForEditCommand, nameof(vm.ImportImageSubtitleForEditCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowMediaInformationCommand, nameof(vm.ShowMediaInformationCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowSubtitleFormatPickerCommand, nameof(vm.ShowSubtitleFormatPickerCommand), ShortcutCategory.General);

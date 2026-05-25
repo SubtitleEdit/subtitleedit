@@ -33,6 +33,16 @@ public class Se
     public string Surround2Right { get; set; } = "♫";
     public string Surround3Left { get; set; } = "[";
     public string Surround3Right { get; set; } = "]";
+    public string Actor1 { get; set; } = "Actor 1";
+    public string Actor2 { get; set; } = "Actor 2";
+    public string Actor3 { get; set; } = "Actor 3";
+    public string Actor4 { get; set; } = "Actor 4";
+    public string Actor5 { get; set; } = "Actor 5";
+    public string Actor6 { get; set; } = "Actor 6";
+    public string Actor7 { get; set; } = "Actor 7";
+    public string Actor8 { get; set; } = "Actor 8";
+    public string Actor9 { get; set; } = "Actor 9";
+    public string Actor10 { get; set; } = "Actor 10";
     public SeFile File { get; set; } = new();
     public SeEdit Edit { get; set; } = new();
     public SeTools Tools { get; set; } = new();

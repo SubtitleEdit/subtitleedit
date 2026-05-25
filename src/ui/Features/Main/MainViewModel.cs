@@ -7324,6 +7324,33 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void GoToPreviousBookmark()
+    {
+        var selected = SelectedSubtitle;
+        if (selected == null)
+        {
+            return;
+        }
+
+        var idx = Subtitles.IndexOf(selected);
+        if (idx < 0)
+        {
+            return;
+        }
+
+        for (var i = idx - 1; i >= 0; i--)
+        {
+            if (Subtitles[i].Bookmark != null)
+            {
+                SelectAndScrollToSubtitle(Subtitles[i]);
+                return;
+            }
+        }
+
+        ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+    }
+
+    [RelayCommand]
     private void SortByStartTime()
     {
         if (IsEmpty)
@@ -7825,6 +7852,40 @@ public partial class MainViewModel :
         }
 
         EditTextBox.SelectedText = _casingToggler.ToggleCasing(EditTextBox.SelectedText, SelectedSubtitleFormat);
+    }
+
+    [RelayCommand]
+    private void SelectionToLower()
+    {
+        if (EditTextBox.SelectedText.Length <= 0)
+        {
+            return;
+        }
+
+        EditTextBox.SelectedText = EditTextBox.SelectedText.ToLower(CultureInfo.CurrentCulture);
+    }
+
+    [RelayCommand]
+    private void SelectionToUpper()
+    {
+        if (EditTextBox.SelectedText.Length <= 0)
+        {
+            return;
+        }
+
+        EditTextBox.SelectedText = EditTextBox.SelectedText.ToUpper(CultureInfo.CurrentCulture);
+    }
+
+    [RelayCommand]
+    private void GoogleIt()
+    {
+        var selected = EditTextBox.SelectedText;
+        if (string.IsNullOrWhiteSpace(selected))
+        {
+            return;
+        }
+
+        UiUtil.OpenUrl("https://www.google.com/search?q=" + Uri.EscapeDataString(selected));
     }
 
     [RelayCommand]
@@ -10797,6 +10858,50 @@ public partial class MainViewModel :
                 p.Actor = actorName;
             }
         });
+    }
+
+    [RelayCommand]
+    private void SetActor1() => SetActorForSelectedLines(Se.Settings.Actor1);
+
+    [RelayCommand]
+    private void SetActor2() => SetActorForSelectedLines(Se.Settings.Actor2);
+
+    [RelayCommand]
+    private void SetActor3() => SetActorForSelectedLines(Se.Settings.Actor3);
+
+    [RelayCommand]
+    private void SetActor4() => SetActorForSelectedLines(Se.Settings.Actor4);
+
+    [RelayCommand]
+    private void SetActor5() => SetActorForSelectedLines(Se.Settings.Actor5);
+
+    [RelayCommand]
+    private void SetActor6() => SetActorForSelectedLines(Se.Settings.Actor6);
+
+    [RelayCommand]
+    private void SetActor7() => SetActorForSelectedLines(Se.Settings.Actor7);
+
+    [RelayCommand]
+    private void SetActor8() => SetActorForSelectedLines(Se.Settings.Actor8);
+
+    [RelayCommand]
+    private void SetActor9() => SetActorForSelectedLines(Se.Settings.Actor9);
+
+    [RelayCommand]
+    private void SetActor10() => SetActorForSelectedLines(Se.Settings.Actor10);
+
+    [RelayCommand]
+    private async Task SetNewActor()
+    {
+        var result = await ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(vm =>
+        {
+            vm.Initialize(Se.Language.General.Actor + " - " + Se.Language.General.New, string.Empty, 250, 20, true);
+        });
+
+        if (result.OkPressed && !string.IsNullOrWhiteSpace(result.Text))
+        {
+            SetActorForSelectedLines(result.Text);
+        }
     }
 
     private async Task<TViewModel> ShowDialogAsync<TWindow, TViewModel>(
