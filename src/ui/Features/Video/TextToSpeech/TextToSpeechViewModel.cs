@@ -682,12 +682,10 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
 
-        // Build a new working subtitle from the merged lines so the caller's Subtitle reference is untouched.
-        var merged = new Subtitle
-        {
-            OriginalFormat = _subtitle.OriginalFormat,
-            FileName = _subtitle.FileName,
-        };
+        // Clone via copy constructor to preserve Header/Footer/OriginalEncoding and any other
+        // metadata, then replace Paragraphs with the merged set. The caller's Subtitle is untouched.
+        var merged = new Subtitle(_subtitle);
+        merged.Paragraphs.Clear();
         foreach (var line in result.AllSubtitlesFixed)
         {
             merged.Paragraphs.Add(line.ToParagraph(_subtitle.OriginalFormat));

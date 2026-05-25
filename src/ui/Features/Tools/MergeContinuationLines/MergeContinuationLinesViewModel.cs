@@ -104,6 +104,14 @@ public partial class MergeContinuationLinesViewModel : ObservableObject
         Window?.Close();
     }
 
+    // Called from the window's Closed event. Stops the recurring preview timer so the VM
+    // (and the subtitles it references) can be garbage-collected after the dialog goes away.
+    internal void OnClosed()
+    {
+        _previewTimer.Stop();
+        _previewTimer.Dispose();
+    }
+
     [RelayCommand]
     private void SelectAll()
     {

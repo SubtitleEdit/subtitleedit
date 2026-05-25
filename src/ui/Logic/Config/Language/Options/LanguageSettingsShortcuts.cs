@@ -179,6 +179,7 @@ public class LanguageSettingsShortcuts
     public string MergeLinesWithSameTimeCodes { get; set; }
     public string SplitBreakLongLines { get; set; }
     public string MergeShortLines { get; set; }
+    public string MergeContinuationLines { get; set; }
     public string RemoveTextForHearingImpaired { get; set; }
     public string JoinSubtitles { get; set; }
     public string SplitSubtitle { get; set; }
@@ -467,6 +468,7 @@ public class LanguageSettingsShortcuts
         MergeLinesWithSameTimeCodes = "Merge lines with same time codes";
         SplitBreakLongLines = "Split/rebalance long lines";
         MergeShortLines = "Merge short lines";
+        MergeContinuationLines = "Merge continuation lines";
         RemoveTextForHearingImpaired = "Remove text for hearing impaired";
         JoinSubtitles = "Join subtitles";
         SplitSubtitle = "Split subtitle";

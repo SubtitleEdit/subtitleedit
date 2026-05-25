@@ -4877,11 +4877,10 @@ public partial class MainViewModel :
             return subtitle;
         }
 
-        var merged = new Subtitle
-        {
-            OriginalFormat = subtitle.OriginalFormat,
-            FileName = subtitle.FileName,
-        };
+        // Clone via copy constructor to preserve Header/Footer/OriginalEncoding, then replace
+        // Paragraphs with the merged set.
+        var merged = new Subtitle(subtitle);
+        merged.Paragraphs.Clear();
         foreach (var line in result.AllSubtitlesFixed)
         {
             merged.Paragraphs.Add(line.ToParagraph(subtitle.OriginalFormat));

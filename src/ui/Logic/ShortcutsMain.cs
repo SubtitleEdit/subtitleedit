@@ -152,6 +152,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ShowToolsMergeLinesWithSameTimeCodesCommand), Se.Language.Options.Shortcuts.MergeLinesWithSameTimeCodes },
         { nameof(MainViewModel.ShowToolsSplitBreakLongLinesCommand), Se.Language.Options.Shortcuts.SplitBreakLongLines },
         { nameof(MainViewModel.ShowToolsMergeShortLinesCommand), Se.Language.Options.Shortcuts.MergeShortLines },
+        { nameof(MainViewModel.ShowToolsMergeContinuationLinesCommand), Se.Language.Options.Shortcuts.MergeContinuationLines },
         { nameof(MainViewModel.ShowToolsRemoveTextForHearingImpairedCommand), Se.Language.Options.Shortcuts.RemoveTextForHearingImpaired },
         { nameof(MainViewModel.ShowToolsJoinCommand), Se.Language.Options.Shortcuts.JoinSubtitles },
         { nameof(MainViewModel.ShowToolsSplitCommand), Se.Language.Options.Shortcuts.SplitSubtitle },
@@ -513,6 +514,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ShowToolsMergeLinesWithSameTimeCodesCommand, nameof(vm.ShowToolsMergeLinesWithSameTimeCodesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowToolsSplitBreakLongLinesCommand, nameof(vm.ShowToolsSplitBreakLongLinesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowToolsMergeShortLinesCommand, nameof(vm.ShowToolsMergeShortLinesCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ShowToolsMergeContinuationLinesCommand, nameof(vm.ShowToolsMergeContinuationLinesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowToolsRemoveTextForHearingImpairedCommand, nameof(vm.ShowToolsRemoveTextForHearingImpairedCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowToolsJoinCommand, nameof(vm.ShowToolsJoinCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowToolsSplitCommand, nameof(vm.ShowToolsSplitCommand), ShortcutCategory.General);
