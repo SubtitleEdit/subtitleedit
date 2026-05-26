@@ -29,9 +29,8 @@ Search for text in the subtitle.
 - **Find previous:** `Shift+F3`
 
 Options:
-- Case sensitive
-- Whole word
-- Regular expressions
+- Whole word (checkbox)
+- Search type (radio buttons): Case sensitive, Case insensitive, or Regular expression
 
 <!-- Screenshot: Find window -->
 ![Find](../screenshots/find.png)

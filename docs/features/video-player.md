@@ -7,7 +7,7 @@ Subtitle Edit includes an integrated video player for previewing subtitles with 
 
 ## Opening Video
 
-- **Menu:** Video → Open video file...
+- **Menu:** Video → Open video...
 - **Shortcut:** Configurable via Options → Shortcuts
 - **Drag and drop** a video file onto the Subtitle Edit window
 - You can also open video from a URL: **Video → Open video from URL...**
@@ -42,7 +42,7 @@ Subtitle Edit includes an integrated video player for previewing subtitles with 
 
 Jump to a specific time code position in the video.
 
-- **Menu:** Video → Go to video position...
+- **Shortcut:** Configurable via **Options → Shortcuts** (search for "Go to video position")
 
 ## Playback Speed
 
@@ -71,14 +71,15 @@ Use [Embedded Subtitles](embedded-subtitles.md) to add, remove, preview, and edi
 
 ## Supported Video Players
 
-Configure the video player backend in **Options → Settings → Video Player**:
-- **libmpv** — Recommended for best format support
-- **VLC** — Popular alternative
-- **None** — Disable video playback
+Configure the video player backend in **Options → Settings → Video player**:
+- **libmpv - OpenGL** — Recommended for best format support (default)
+- **libmpv - Native Window ID rendering** — Alternative mpv rendering mode (not available on macOS)
+- **libmpv - Software rendering (slow)** — Fallback mpv mode without hardware acceleration
+- **libVLC - Native Window ID rendering** — VLC backend (Windows and Linux only)
 
 ## Video Info
 
-You can view detailed information about the video file by right-clicking on the video file name.
+You can view detailed information about the video file by right-clicking the video player (or via the "Show media information" shortcut).
 
 This displays:
 - Video codec, resolution, frame rate, and bitrate

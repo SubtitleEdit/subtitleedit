@@ -2,15 +2,17 @@
 
 Detect scene/shot changes in a video using FFmpeg, or import them from a file.
 
-- **Menu:** Video → Shot changes → Generate / Import
+- **Menu:** Video → Generate/import shot changes
 - **Shortcut:** Configurable
+
+A second menu item, **Show shot changes list**, appears under the Video menu once the loaded video has any shot changes.
 
 <!-- Screenshot: Shot changes window -->
 ![Shot Changes](../screenshots/shot-changes.png)
 
 ## How to Use
 
-1. Open **Video → Shot changes → Generate shot changes...**
+1. Open **Video → Generate/import shot changes**
 2. Adjust the **Sensitivity** slider (higher = fewer detected changes)
 3. Click **Generate** to run FFmpeg scene detection
 4. Detected shot change times appear in the list

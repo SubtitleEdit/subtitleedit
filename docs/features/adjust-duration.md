@@ -9,7 +9,8 @@ Adjust the display duration of subtitle lines.
 
 ## Options
 
-- **Add/subtract seconds** — Adjust all durations by a fixed amount
-- **Add/subtract percent** — Adjust durations by a percentage
-- **Fixed duration** — Set all durations to a fixed value
-- **Recalculate** — Recalculate durations based on text length and reading speed
+- **Seconds** — Adjust all durations by a fixed number of seconds (positive or negative)
+- **Percent** — Scale durations by a percentage
+- **Fixed** — Set all durations to a fixed value (in seconds)
+- **Recalculate** — Recalculate durations from text length using optimal and maximum characters/second
+  - **Extend only** — Never shorten a subtitle, only extend it

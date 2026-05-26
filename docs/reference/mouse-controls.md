@@ -19,9 +19,10 @@ See also: [Audio Visualizer](../features/audio-visualizer.md) | [Video Player](.
 | Left-click + drag on subtitle edge | Adjust start/end time of subtitle |
 | Left-click + drag in empty area | Create a new selection |
 | Right-click | Open context menu |
-| Scroll wheel | Scroll waveform |
+| Scroll wheel | Scroll waveform horizontally |
 | Alt + Scroll wheel | Horizontal zoom in/out |
 | Shift + Scroll wheel | Vertical zoom in/out |
+| Ctrl (or Cmd) + Scroll wheel | Scroll waveform and seek video to cursor |
 | Double-click on subtitle | Select the subtitle in the grid |
 
 ## Subtitle Grid

@@ -39,15 +39,15 @@ You can chain multiple conversion functions:
 
 Batch Convert can OCR image-based subtitle files while converting them to text-based formats.
 
-Supported OCR workflows include:
+Supported OCR engines in Batch Convert:
 
+- nOcr
+- BinaryOcr
 - Tesseract
-- nOCR
-- Binary OCR
-- Ollama OCR
-- PaddleOCR
+- Ollama
+- PaddleOCR (Windows and Linux only)
 
-Subtitle Edit 5 can auto-detect language and pixels-are-space settings for nOCR/Binary OCR in many batch workflows. This reduces the amount of manual setup needed when converting many image-based subtitle files with similar fonts.
+Subtitle Edit 5 can auto-detect language and pixels-are-space settings for nOcr/BinaryOcr in many batch workflows. This reduces the amount of manual setup needed when converting many image-based subtitle files with similar fonts.
 
 ## Speech to Text in Batch Mode
 

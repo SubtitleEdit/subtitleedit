@@ -1,8 +1,8 @@
-# ASSA Apply Custom Override Tags
+# ASSA Apply Override Tags
 
-Apply custom ASSA override tags to subtitle lines with a live video preview.
+Apply ASSA override tags to subtitle lines with a live video preview.
 
-**Menu:** `ASSA` → `Apply Custom Override Tags...`
+**Menu:** `ASSA tools` → `Apply override tags...`
 
 ![ASSA Override Tags Screenshot](../screenshots/assa-override-tags.png)
 
@@ -10,7 +10,7 @@ Apply custom ASSA override tags to subtitle lines with a live video preview.
 
 1. Load a video and subtitle file in ASSA format.
 2. Optionally select specific subtitle lines to apply tags to.
-3. Go to **ASSA** → **Apply Custom Override Tags...** to open the dialog.
+3. Go to **ASSA tools** → **Apply override tags...** to open the dialog.
 4. Select an override tag from the list or enter a custom tag.
 5. Choose the scope: all lines, selected lines, or selected lines and forward.
 6. Preview the result in the built-in video player.

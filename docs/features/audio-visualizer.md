@@ -21,7 +21,6 @@ The spectrogram can be generated and toggled independently of the waveform. If y
 | **Scroll wheel** | Scroll waveform left/right |
 | **Alt+Scroll wheel** | Horizontal zoom in/out |
 | **Shift+Scroll wheel** | Vertical zoom in/out |
-| **Middle-click drag** | Pan the waveform |
 
 ### Subtitle Timing
 
@@ -41,7 +40,7 @@ The spectrogram can be generated and toggled independently of the waveform. If y
 
 | Mouse Action | Effect |
 |--------------|--------|
-| **Click+Drag** in empty area | Create a new subtitle with the selected time range |
+| **Click+Drag** in empty area | Mark a new subtitle range; press **Enter** to insert it (Escape cancels) |
 
 ## Keyboard Shortcuts (Waveform)
 

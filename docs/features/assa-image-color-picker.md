@@ -2,14 +2,14 @@
 
 Pick colors directly from a video frame screenshot for use in ASSA subtitle styles and override tags.
 
-**Menu:** `ASSA` → `Image Color Picker...`
+**Menu:** `ASSA tools` → `Image color picker...`
 
 ![ASSA Image Color Picker Screenshot](../screenshots/assa-image-color-picker.png)
 
 ## How to Use
 
 1. Load a video and select a subtitle line.
-2. Go to **ASSA** → **Image Color Picker...** to open the color picker.
+2. Go to **ASSA tools** → **Image color picker...** to open the color picker.
 3. A screenshot of the current video frame is displayed.
 4. Move the mouse over the image — the current color under the cursor is shown in real time.
 5. Click on the image to select a color.

@@ -12,7 +12,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. It allows you t
 
 - **Create and edit** subtitles in 300+ formats
 - **Synchronize** subtitles to video with visual tools
-- **Speech to Text** — transcribe audio using Whisper engines
+- **Speech to Text** — transcribe audio using Whisper, Qwen3 ASR, Crisp ASR, and other local/cloud engines
 - **Text to Speech** — generate audio from subtitle text
 - **Translate** subtitles automatically
 - **OCR** — convert image-based subtitles (Blu-ray, DVD, etc.) to text
@@ -27,7 +27,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. It allows you t
 
 ## System Requirements
 
-- Windows 10+ / Linux / macOS 
+- Windows 10 (version 22H2 / build 19045) or newer, Linux, or macOS 12 (Monterey) or newer
 - [FFmpeg](https://ffmpeg.org/) (for audio/video processing)
 - [libmpv](https://mpv.io/) for video playback
 

@@ -2,14 +2,14 @@
 
 Edit the script info header properties of an Advanced SubStation Alpha (ASS/SSA) subtitle file.
 
-**Menu:** `ASSA` → `Properties...`
+**Menu:** `ASSA tools` → `Properties...`
 
 ![ASSA Properties Screenshot](../screenshots/assa-properties.png)
 
 ## How to Use
 
 1. Open a subtitle file in ASS/SSA format.
-2. Go to **ASSA** → **Properties...** to open the properties dialog.
+2. Go to **ASSA tools** → **Properties...** to open the properties dialog.
 3. Edit the script info fields as needed.
 4. Set the video resolution (PlayResX / PlayResY) — use **Get resolution from current video** if a video is loaded.
 5. Choose a wrap style and border/shadow scaling mode.

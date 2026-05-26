@@ -19,16 +19,18 @@ Generate speech audio from subtitle text using various TTS engines.
 
 ## Supported Engines
 
-- **Piper** — Local, open-source TTS
-- **Edge-TTS** — Microsoft Edge online voices
+- **Piper** — Local, open-source TTS (Windows and Linux)
+- **EdgeTts** — Microsoft Edge online voices
 - **AllTalk** — Local TTS server
 - **ElevenLabs** — Cloud-based, high-quality voices (requires API key)
-- **Azure Cognitive Services** — Microsoft cloud TTS (requires API key and region)
-- **Mistral TTS** — Cloud-based Mistral speech generation (requires API key)
-- **Google Cloud** — Google cloud TTS (requires key file)
-- **Qwen3 TTS** — Local downloadable Qwen3 TTS server and models
+- **AzureSpeech** — Microsoft cloud TTS (requires API key and region)
+- **MistralSpeech** — Cloud-based Mistral speech generation (requires API key)
+- **Murf** — Cloud TTS (requires API key)
+- **GoogleSpeech** — Google cloud TTS (requires key file)
 - **Kokoro TTS** — Local downloadable Kokoro TTS server and models
-- **Murf.ai** — Cloud TTS (requires API key)
+- **OmniVoice TTS** — Local CPU TTS with voice cloning and many languages
+- **Qwen3 TTS (CrispASR)** — Local Qwen3 TTS running through the CrispASR runtime (VoiceDesign and CustomVoice 1.7B models)
+- **Chatterbox TTS (CrispASR)** — Chatterbox TTS via the CrispASR runtime, with voice cloning (Base or Turbo model)
 
 Local downloadable engines are installed into the Subtitle Edit data folder when you accept the download prompt.
 
@@ -43,14 +45,20 @@ Some engines require additional configuration:
 
 ## Local SE5 Engines
 
-### Qwen3 TTS
+### Qwen3 TTS (CrispASR)
 
-Qwen3 TTS runs a local server. Subtitle Edit can download the engine and the selected model on first use.
+Qwen3 TTS runs through the CrispASR runtime and shares the `CrispASR/models` directory with the speech-to-text Crisp ASR engines.
 
-- Available model choices include **0.6B** and **1.7B Base**.
-- The model download also requires the tokenizer model.
-- Qwen3 TTS supports imported reference WAV voices. Imported voices appear in the voice dropdown.
-- On Windows, Subtitle Edit can offer CPU or Vulkan builds depending on availability.
+- Available model choices are **1.7B VoiceDesign** (uses a free-text voice instruction) and **1.7B CustomVoice** (voice cloning from a reference WAV).
+- Subtitle Edit downloads the engine and the selected talker + codec/tokenizer GGUFs on first use.
+- Imported reference WAV voices appear in the voice dropdown.
+
+### Chatterbox TTS (CrispASR)
+
+Chatterbox TTS runs through the CrispASR runtime (shared with the speech-to-text feature) and supports voice cloning.
+
+- Available model choices are **Base** and **Turbo**.
+- Imported reference WAV voices are sent as the per-request voice for runtime cloning.
 
 ### Kokoro TTS
 
@@ -60,13 +68,17 @@ Kokoro TTS runs a local server with downloadable models.
 - Voice names are available immediately from the bundled voice list and can be refreshed from the running server.
 - It is a good choice when you want a local, multilingual TTS engine without an API key.
 
-### Mistral TTS
+### OmniVoice TTS
 
-Mistral TTS is configured with an API key and model selection. The selected model is remembered in settings.
+OmniVoice TTS runs the omnivoice-tts CLI on CPU. It supports a large set of languages and voice cloning from reference WAV files (with an accompanying transcript).
+
+### MistralSpeech
+
+MistralSpeech is configured with an API key and model selection. The selected model is remembered in settings.
 
 ## Review Audio Clips
 
-When **Review audio clips** is enabled, a dedicated review window opens after generation. This window lets you inspect, play, and regenerate audio for every subtitle line before the result is used.
+When **Review audio clips** is enabled, a dedicated review window opens after generation. This window lets you inspect, play, and regenerate audio for every subtitle line before the result is used. A 120px waveform of the original video audio is shown above the grid as a reference. Per-session review state (clips, history, includes, edits) is persisted to `SubtitleEditTts.json` so you can return to the same review later.
 
 ### The Review Grid
 

@@ -16,7 +16,7 @@ Subtitle Edit stores these components in its **Data Folder**.
 *   **Installed Version (Windows):** `%APPDATA%\Subtitle Edit`
     *   (Press `Win+R`, type `%APPDATA%\Subtitle Edit`, and hit Enter)
 *   **Linux:** `~/.config/Subtitle Edit` (or `$XDG_CONFIG_HOME/Subtitle Edit`).
-*   **macOS:** `~/Library/Application Support/Subtitle Edit`.
+*   **macOS:** `~/.config/Subtitle Edit` (or `$XDG_CONFIG_HOME/Subtitle Edit`).
 
 > **Tip:** You can open the Data Folder directly from Subtitle Edit by pressing `Ctrl+Alt+Shift+D` (Windows/Linux) or `Cmd+Alt+Shift+D` (macOS).
 
