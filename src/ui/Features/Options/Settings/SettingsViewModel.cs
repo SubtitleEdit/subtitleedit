@@ -243,6 +243,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private Color _waveformFancyHighColor;
     [ObservableProperty] private bool _waveformInvertMouseWheel;
     [ObservableProperty] private bool _waveformSnapToShotChanges;
+    [ObservableProperty] private int _waveformSnapToShotChangeOffsetFrames;
     [ObservableProperty] private bool _waveformSnapToFrames;
     [ObservableProperty] private bool _waveformShotChangesAutoGenerate;
     [ObservableProperty] private bool _waveformAllowOverlap;
@@ -781,6 +782,7 @@ public partial class SettingsViewModel : ObservableObject
         WaveformFancyHighColor = Se.Settings.Waveform.WaveformFancyHighColor.FromHexToColor();
         WaveformInvertMouseWheel = Se.Settings.Waveform.InvertMouseWheel;
         WaveformSnapToShotChanges = Se.Settings.Waveform.SnapToShotChanges;
+        WaveformSnapToShotChangeOffsetFrames = Se.Settings.Waveform.SnapToShotChangeOffsetFrames;
         WaveformSnapToFrames = Se.Settings.Waveform.SnapToFrames;
         WaveformShotChangesAutoGenerate = Se.Settings.Waveform.ShotChangesAutoGenerate;
         WaveformAllowOverlap = Se.Settings.Waveform.AllowOverlap;
@@ -1405,6 +1407,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.WaveformFancyHighColor = WaveformFancyHighColor.FromColorToHex();
         Se.Settings.Waveform.InvertMouseWheel = WaveformInvertMouseWheel;
         Se.Settings.Waveform.SnapToShotChanges = WaveformSnapToShotChanges;
+        Se.Settings.Waveform.SnapToShotChangeOffsetFrames = WaveformSnapToShotChangeOffsetFrames;
         Se.Settings.Waveform.SnapToFrames = WaveformSnapToFrames;
         Se.Settings.Waveform.ShotChangesAutoGenerate = WaveformShotChangesAutoGenerate;
         Se.Settings.Waveform.AllowOverlap = WaveformAllowOverlap;

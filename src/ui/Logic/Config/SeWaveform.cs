@@ -34,6 +34,7 @@ public class SeWaveform
     public bool SnapToFrames { get; set; }
     public bool ShotChangesAutoGenerate { get; set; }
     public int SnapToShotChangesPixels { get; set; }
+    public int SnapToShotChangeOffsetFrames { get; set; }
     public bool FocusOnMouseOver { get; set; }
     public bool GuessTimeCodeStartFromBeginning { get; set; }
     public int GuessTimeCodeScanBlockSize { get; set; }
@@ -77,6 +78,7 @@ public class SeWaveform
         ShotChangesImportTimeCodeFormat = "Seconds";
         SnapToShotChangesPixels = 8;
         SnapToShotChanges = true;
+        SnapToShotChangeOffsetFrames = 2;
         SnapToFrames = false;
         ShotChangesAutoGenerate = false;
 

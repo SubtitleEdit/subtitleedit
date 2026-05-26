@@ -6299,6 +6299,8 @@ public partial class MainViewModel :
             return;
         }
 
+        var offsetSeconds = GetShotChangeSnapOffsetSeconds();
+
         foreach (var line in selectedLines)
         {
             var idx = Subtitles.IndexOf(line);
@@ -6320,11 +6322,12 @@ public partial class MainViewModel :
 
             if (nearestStartShotChange == 0)
             {
-                var newDuration = TimeSpan.FromSeconds(nearestEndShotChange) - line.StartTime;
+                var endTarget = nearestEndShotChange - offsetSeconds;
+                var newDuration = TimeSpan.FromSeconds(endTarget) - line.StartTime;
                 if (newDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds &&
                     newDuration.TotalMilliseconds >= Se.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 {
-                    line.EndTime = TimeSpan.FromSeconds(nearestEndShotChange);
+                    line.EndTime = TimeSpan.FromSeconds(endTarget);
                 }
 
                 continue;
@@ -6332,11 +6335,12 @@ public partial class MainViewModel :
 
             if (nearestEndShotChange == 0)
             {
-                var newDuration = line.EndTime - TimeSpan.FromSeconds(nearestStartShotChange);
+                var startTarget = nearestStartShotChange + offsetSeconds;
+                var newDuration = line.EndTime - TimeSpan.FromSeconds(startTarget);
                 if (newDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds &&
                     newDuration.TotalMilliseconds >= Se.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 {
-                    line.StartTime = TimeSpan.FromSeconds(nearestStartShotChange);
+                    line.StartTime = TimeSpan.FromSeconds(startTarget);
                 }
 
                 continue;
@@ -6348,16 +6352,16 @@ public partial class MainViewModel :
                     .OrderBy(s => Math.Abs(s - line.EndTime.TotalSeconds))
                     .FirstOrDefault(s => Math.Abs(s - line.EndTime.TotalSeconds) < 0.5); //TODO: customizable
 
-                if (nearestEndShotChange > 0 && nearestEndShotChange > line.StartTime.TotalSeconds)
+                if (nearestEndShotChange > 0 && nearestEndShotChange - offsetSeconds > line.StartTime.TotalSeconds)
                 {
-                    line.EndTime = TimeSpan.FromSeconds(nearestEndShotChange);
+                    line.EndTime = TimeSpan.FromSeconds(nearestEndShotChange - offsetSeconds);
                 }
 
                 continue;
             }
 
-            var newStartTime = TimeSpan.FromSeconds(nearestStartShotChange);
-            var newEndTime = TimeSpan.FromSeconds(nearestEndShotChange);
+            var newStartTime = TimeSpan.FromSeconds(nearestStartShotChange + offsetSeconds);
+            var newEndTime = TimeSpan.FromSeconds(nearestEndShotChange - offsetSeconds);
             var newCombinedDuration = newEndTime - newStartTime;
             if (newCombinedDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds &&
                 newCombinedDuration.TotalMilliseconds >= Se.Settings.General.SubtitleMinimumDisplayMilliseconds)
@@ -6368,6 +6372,18 @@ public partial class MainViewModel :
         }
 
         _updateAudioVisualizer = true;
+    }
+
+    private static double GetShotChangeSnapOffsetSeconds()
+    {
+        var frames = Se.Settings.Waveform.SnapToShotChangeOffsetFrames;
+        if (frames <= 0)
+        {
+            return 0;
+        }
+
+        var fps = Se.Settings.General.CurrentFrameRate;
+        return fps >= 1 ? frames / fps : 0;
     }
 
     [RelayCommand]
@@ -6446,6 +6462,7 @@ public partial class MainViewModel :
 
         var minDurationMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
         var maxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
+        var offsetSeconds = GetShotChangeSnapOffsetSeconds();
         foreach (var line in selectedLines)
         {
             // Cast to nullable so a shot change at t=0 isn't lost to the
@@ -6458,7 +6475,7 @@ public partial class MainViewModel :
                 continue;
             }
 
-            var newStart = TimeSpan.FromSeconds(next.Value);
+            var newStart = TimeSpan.FromSeconds(next.Value + offsetSeconds);
             if (newStart >= line.EndTime)
             {
                 continue;
@@ -6492,6 +6509,7 @@ public partial class MainViewModel :
 
         var minDurationMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
         var maxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
+        var offsetSeconds = GetShotChangeSnapOffsetSeconds();
         foreach (var line in selectedLines)
         {
             // Cast to nullable so a shot change at t=0 isn't lost to the
@@ -6504,7 +6522,7 @@ public partial class MainViewModel :
                 continue;
             }
 
-            var newEnd = TimeSpan.FromSeconds(prev.Value);
+            var newEnd = TimeSpan.FromSeconds(prev.Value - offsetSeconds);
             if (newEnd <= line.StartTime)
             {
                 continue;

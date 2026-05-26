@@ -1163,9 +1163,11 @@ public class AudioVisualizer : Control
                     if (nearestShotChange != null)
                     {
                         var nearest = (double)nearestShotChange;
-                        if (nearest != newStart && Math.Abs(newStart - nearest) < ShotChangeSnapSeconds)
+                        var offsetSeconds = GetShotChangeSnapOffsetSeconds();
+                        var snapTarget = nearest + offsetSeconds;
+                        if (snapTarget != newStart && Math.Abs(newStart - snapTarget) < ShotChangeSnapSeconds)
                         {
-                            newStart = nearest;
+                            newStart = snapTarget;
                             snappedToShotLeft = true;
                         }
                     }
@@ -1194,14 +1196,15 @@ public class AudioVisualizer : Control
                 var snappedToShotRight = false;
                 if (SnapToShotChanges)
                 {
-                    var oneFrameSeconds = 0; // Or should it be one frame before, like  0.042 (Get fps from video)
                     var nearestShotChange = ShotChangesHelper.GetClosestShotChange(_shotChanges, TimeCode.FromSeconds(newEnd));
                     if (nearestShotChange != null)
                     {
                         var nearest = (double)nearestShotChange;
-                        if (nearest != newEnd && Math.Abs(newEnd - nearest + oneFrameSeconds) < ShotChangeSnapSeconds)
+                        var offsetSeconds = GetShotChangeSnapOffsetSeconds();
+                        var snapTarget = nearest - offsetSeconds;
+                        if (snapTarget != newEnd && Math.Abs(newEnd - snapTarget) < ShotChangeSnapSeconds)
                         {
-                            newEnd = nearest - oneFrameSeconds;
+                            newEnd = snapTarget;
                             snappedToShotRight = true;
                         }
                     }
@@ -1275,6 +1278,18 @@ public class AudioVisualizer : Control
 
         frameDur = 1.0 / fps;
         return true;
+    }
+
+    private static double GetShotChangeSnapOffsetSeconds()
+    {
+        var frames = Se.Settings.Waveform.SnapToShotChangeOffsetFrames;
+        if (frames <= 0)
+        {
+            return 0;
+        }
+
+        var fps = Se.Settings.General.CurrentFrameRate;
+        return fps >= 1 ? frames / fps : 0;
     }
 
     private void UpdateCursor(Point point)

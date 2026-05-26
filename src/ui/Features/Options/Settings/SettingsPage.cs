@@ -480,6 +480,13 @@ public class SettingsPage : UserControl
 
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformRightClickSelectsSubtitle, nameof(_vm.WaveformRightClickSelectsSubtitle)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformSnapToShotChanges, nameof(_vm.WaveformSnapToShotChanges)),
+            new SettingsItem(Se.Language.Options.Settings.WaveformSnapToShotChangeOffsetFrames, () => UiUtil.MakeNumericUpDownInt(
+                0,
+                30,
+                2,
+                120,
+                _vm,
+                nameof(_vm.WaveformSnapToShotChangeOffsetFrames))),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformSnapToFrames, nameof(_vm.WaveformSnapToFrames)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformShotChangesAutoGenerate, nameof(_vm.WaveformShotChangesAutoGenerate)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformFocusOnMouseOver, nameof(_vm.WaveformFocusOnMouseOver)),
