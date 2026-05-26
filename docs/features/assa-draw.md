@@ -2,14 +2,14 @@
 
 A vector drawing tool for creating ASSA drawing commands (\p1 ... \p0) used in Advanced SubStation Alpha subtitles.
 
-**Menu:** `ASSA` → `Draw...`
+**Menu:** `ASSA tools` → `Draw...`
 
 ![ASSA Draw Screenshot](../screenshots/assa-draw.png)
 
 ## How to Use
 
-1. Go to **ASSA** → **Draw...** to open the drawing canvas.
-2. Select a drawing tool (Line, Bézier curve, etc.) from the toolbar.
+1. Go to **ASSA tools** → **Draw...** to open the drawing canvas.
+2. Select a drawing tool (Line, Bézier curve, Rectangle, Circle, etc.) from the toolbar.
 3. Click on the canvas to create points and shapes.
 4. Use the shape tree on the side to manage layers and shapes.
 5. Adjust individual point coordinates for precise positioning.
@@ -19,9 +19,12 @@ A vector drawing tool for creating ASSA drawing commands (\p1 ... \p0) used in A
 ## Features
 
 ### Drawing Tools
+- **Select:** Selection/move tool for picking and dragging existing shapes and points.
 - **Line:** Draw straight line segments.
 - **Bézier Curve:** Draw smooth curves with control points.
-- **Eraser:** Remove shapes or points.
+- **Rectangle:** Draw rectangles.
+- **Circle:** Draw circles/ellipses.
+- **Color Picker:** Pick a color from the canvas.
 
 ### Canvas
 - Configurable canvas size (default 1920×1080).

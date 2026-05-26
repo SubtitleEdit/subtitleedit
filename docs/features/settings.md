@@ -40,6 +40,7 @@ Profiles store subtitle rules and limits. You can switch between profiles for di
 - **Auto backup** — Enable automatic backups at a set interval
 - **Open file on start** — Choose whether Subtitle Edit reopens the previous file on startup
 - **Single-letter shortcuts in text boxes** — Control whether single-key shortcuts are active while editing text
+- **Focus text box after insert (grid / waveform)** — Move focus to the subtitle text box after inserting a new line from the grid or waveform
 
 ## Subtitle Defaults
 

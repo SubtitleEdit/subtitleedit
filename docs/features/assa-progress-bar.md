@@ -2,14 +2,14 @@
 
 Generate an animated progress bar overlay in ASSA format, with optional chapter markers.
 
-**Menu:** `ASSA` → `Progress Bar...`
+**Menu:** `ASSA tools` → `Generate progress bar...`
 
 ![ASSA Progress Bar Screenshot](../screenshots/assa-progress-bar.png)
 
 ## How to Use
 
 1. Load a video and subtitle file in ASSA format.
-2. Go to **ASSA** → **Progress Bar...** to open the progress bar dialog.
+2. Go to **ASSA tools** → **Generate progress bar...** to open the progress bar dialog.
 3. Configure the bar position, height, colors, and corner style.
 4. Optionally add chapter markers with text labels.
 5. Preview the result in the built-in video player.

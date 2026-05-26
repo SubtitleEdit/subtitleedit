@@ -2,7 +2,7 @@
 
 Generate a transparent video overlay with rendered subtitles that can be composited over other video.
 
-- **Menu:** Video → Generate transparent subtitles...
+- **Menu:** Video → Generate transparent video with subtitles...
 - **Shortcut:** Configurable
 
 <!-- Screenshot: Transparent subtitles window -->
@@ -10,10 +10,10 @@ Generate a transparent video overlay with rendered subtitles that can be composi
 
 ## How to Use
 
-1. Open **Video → Generate transparent subtitles...**
+1. Open **Video → Generate transparent video with subtitles...**
 2. Configure font settings (name, size, colors, outline, shadow, alignment)
 3. Set the video resolution and frame rate
-4. Select the output video extension (e.g. `.mov`, `.webm`)
+4. Select the output video extension (e.g. `.mov`, `.mkv`, `.mp4`, `.webm`)
 5. Select an output folder
 6. Click **Generate** to create the transparent video
 
@@ -34,7 +34,7 @@ Generate a transparent video overlay with rendered subtitles that can be composi
 
 - **Resolution** — Output video width and height (or use source resolution)
 - **Frame rate** — Output frame rate
-- **Extension** — Output container format (`.mov`, `.webm`)
+- **Extension** — Output container format (`.mov`, `.mkv`, `.mp4`, `.webm`)
 
 ## Cut Options
 

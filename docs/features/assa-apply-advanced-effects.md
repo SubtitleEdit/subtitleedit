@@ -36,9 +36,14 @@ Effects range from text animations (typewriter, karaoke, bounce-in) to visual en
 | **Typewriter** | Characters appear one-by-one as if being typed |
 | **Typewriter with highlight** | Characters appear one-by-one with a glowing highlight on the active character |
 | **Word by word** | Words appear one-by-one instead of characters |
-| **Karaoke** | Classic karaoke color-wipe effect synchronized to subtitle timing |
+| **Karaoke** | Highlights each character in sequence, revealing the text left to right like karaoke lyrics |
+| **Karaoke - active word pop** | Dims inactive words and pops/glows a pre-marked active word (via `\u1` or highlight color); can auto-detect the active word |
 | **Scramble reveal** | Text starts scrambled and gradually resolves to the correct characters |
 | **Bounce in** | Each character springs in with an elastic pop animation |
+| **Slow zoom-in** | Text starts at normal size and gently grows slightly over the subtitle duration |
+| **Slow zoom-out** | Text starts slightly larger and gently shrinks to normal size over the subtitle duration |
+| **Slide in from left** | Text slides in from off-screen left, holds, then exits back to the left |
+| **Slide in from right** | Text slides in from off-screen right, holds, then exits back to the right |
 | **Word spacing** | Increases spacing between words using the `\fsp` tag for better readability |
 
 ### Visual Enhancement Effects
@@ -59,6 +64,7 @@ Effects range from text animations (typewriter, karaoke, bounce-in) to visual en
 | **Transition - fade-in** | Per-line fade-in from black at the start of each subtitle |
 | **Transition - fade-out** | Per-line fade-out to black at the end of each subtitle |
 | **Transition - TV close** | Black bars grow inward from top and bottom while the middle fades to white, then cuts to solid black — mimics an old CRT TV powering off |
+| **Fade in/out** | Text fades in at the start and fades out at the end of each subtitle |
 
 ### Decorative/Atmospheric Effects
 
@@ -140,6 +146,6 @@ Effects that involve positioning or drawing (background effects, particles, tran
 ## Related Features
 
 - [ASSA Styles](assa-styles.md) — Manage base styles for text appearance
-- [ASSA Apply Custom Override Tags](assa-override-tags.md) — Manually add override tags to specific subtitles
+- [ASSA Apply Override Tags](assa-override-tags.md) — Manually add override tags to specific subtitles
 - [ASSA Properties](assa-properties.md) — Edit script-level properties (resolution, aspect ratio, etc.)
 - [ASSA Draw](assa-draw.md) — Create custom vector shapes and drawings

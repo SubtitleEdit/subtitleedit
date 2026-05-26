@@ -83,7 +83,7 @@ Save your translated file as **`{CultureName}.json`** (e.g., `de-DE.json`) and p
 | **Windows (installed)** | `%APPDATA%\Subtitle Edit\Languages\` |
 | **Windows (portable)** | `[Subtitle Edit folder]\Languages\` |
 | **Linux** | `~/.config/Subtitle Edit/Languages/` |
-| **macOS** | `~/Library/Application Support/Subtitle Edit/Languages/` |
+| **macOS** | `~/.config/Subtitle Edit/Languages/` |
 
 Create the `Languages` folder if it does not exist.
 

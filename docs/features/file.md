@@ -132,7 +132,3 @@ Restore a previously auto-saved backup of a subtitle file.
 ## Open Containing Folder
 
 Open the folder containing the current subtitle file in the file manager.
-
-## Open Data Folder
-
-Open the Subtitle Edit data/settings folder.

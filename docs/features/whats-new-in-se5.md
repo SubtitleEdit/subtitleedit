@@ -42,9 +42,10 @@ Subtitle Edit 5 is the Avalonia-based, cross-platform version of Subtitle Edit. 
 
 Speech recognition is no longer limited to classic Whisper workflows. Subtitle Edit 5 includes a broader set of local and downloadable engines:
 
-- Purfview Faster-Whisper XXL, CTranslate2, Whisper.cpp, OpenAI Whisper, and Const-me's Whisper.
+- Purfview Faster-Whisper XXL, CTranslate2, Whisper.cpp (with cuBLAS and Vulkan backends on Windows), OpenAI Whisper, OpenAI-compatible STT, and Const-me's Whisper.
 - Qwen3 ASR with multiple GGUF model sizes.
-- Crisp ASR variants including GLM, Qwen3, Granite, Omni, Parakeet, Canary, Cohere, and Fire Red.
+- Crisp ASR variants including GLM, Qwen3, Granite, Omni, Parakeet, Canary, Cohere, Fire Red, Mega, and Kyutai.
+- Forced-aligner picker (built-in / Canary CTC / Qwen3 / 12 language-specific wav2vec2 aligners) for word-level timestamps.
 - Per-engine advanced parameters and batch transcription improvements.
 - Automatic language selection for several newer engines.
 

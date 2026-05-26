@@ -40,6 +40,7 @@ Some commands have additional configuration beyond the shortcut key:
 - **Set color 1–8** — Choose a color for each color shortcut
 - **Surround with 1–3** — Define the left/right text to surround selected text with
 - **Video move custom 1–2 back/forward** — Set the number of milliseconds to skip
+- **Set actor 1–10** — Define the actor name assigned by each actor shortcut
 
 Select a configurable command and click **Configure** to adjust its settings.
 

@@ -21,13 +21,14 @@ The menu bar provides access to all features organized into categories:
 | **File** | New, Open, Save, Import, Export, Compare, Statistics |
 | **Edit** | Undo, Redo, Find, Replace, Multiple Replace, Modify Selection |
 | **Tools** | Fix Common Errors, Batch Convert, Change Casing, Merge/Split, etc. |
-| **Spell check** | Spell checking, dictionaries, find double words |
+| **Plugins** | Run installed plugins; manage installed plugins |
+| **Spell check** | Spell checking, dictionaries, find double words / lines |
 | **Video** | Open/close video, Speech to Text, Text to Speech, Burn-In, etc. |
 | **Sync** | Adjust All Times, Visual Sync, Point Sync, Change Frame Rate/Speed |
 | **Translate** | Auto Translate, Copy/Paste Translate |
-| **ASSA** | Styles, Properties, Attachments, Drawing, Positioning, etc. |
 | **Options** | Settings, Shortcuts, Word Lists, Language |
-| **Help** | About |
+| **Help** | Check for updates, Help, About |
+| **ASSA tools** | Styles, Properties, Attachments, Drawing, Positioning, etc. (only visible when an ASSA/SSA subtitle is loaded) |
 
 See the individual [feature pages](../index.md) for details on each menu item.
 
@@ -36,7 +37,7 @@ See the individual [feature pages](../index.md) for details on each menu item.
 
 ### 2. Toolbar
 
-The toolbar provides quick one-click access to the most common actions. You can customize which buttons appear in **Options → Settings → Appearance → Toolbar**.
+The toolbar provides quick one-click access to the most common actions. You can customize which buttons appear in **Options → Settings → Toolbar**.
 
 Available toolbar buttons include:
 
@@ -282,7 +283,7 @@ The status bar at the bottom shows:
 
 ## Layouts
 
-Subtitle Edit offers **12 predefined layouts** for arranging the main window areas. Choose a layout via **Options → Choose layout** or the keyboard shortcut.
+Subtitle Edit offers **12 predefined layouts** for arranging the main window areas. Choose a layout via the **Layout** button on the toolbar or the configurable keyboard shortcut.
 
 | Layout | Description |
 |--------|-------------|

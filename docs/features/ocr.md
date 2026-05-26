@@ -2,7 +2,7 @@
 
 Subtitle Edit can convert image-based subtitle formats to text using OCR.
 
-- **Menu:** File → Import image subtitle for edit (OCR)...
+- **Menu:** File → Import → Imaged-based subtitle for OCR...
 
 <!-- Screenshot: OCR window -->
 ![OCR Window](../screenshots/ocr.png)
@@ -37,44 +37,39 @@ Binary image comparison engine.
 - Fast and accurate for known fonts
 - Supports database editing, character history, max error percentage, and pixels-are-space tuning
 
-### Google Lens OCR
-Cloud-based OCR using Google Lens.
-- Requires internet connection
+### Google Lens Sharp / Google Lens Standalone
+Cloud-based OCR using Google Lens (free, but capped).
+- Requires internet connection.
+- The Standalone variant is Windows-only.
 
-### Google Vision OCR
+### Google Vision
 Cloud-based OCR using Google Cloud Vision API.
 - Requires API key
 
-### Ollama OCR
-Local LLM-based OCR using Ollama.
-- Requires Ollama installation
+### Ollama
+Local LLM-based OCR via an Ollama server (e.g. with a vision model).
+- Default endpoint: `http://localhost:11434/api/chat`
 
-### Llama.cpp OCR
-Local LLM-based OCR using a llama.cpp-compatible workflow.
+### llama.cpp
+Local LLM-based OCR using a llama.cpp-compatible server.
+- Default endpoint: `http://127.0.0.1:8080/v1/chat/completions`
 
 ### Mistral OCR
 Cloud-based OCR using Mistral API.
 - Requires a Mistral API key
 
-### PaddleOCR
+### Paddle OCR Standalone / Paddle OCR Python
 Local OCR engine.
-- Download required
-
-### Azure Vision OCR
-Cloud-based OCR using Azure AI Vision.
-- Requires Azure credentials
-
-### Amazon Rekognition OCR
-Cloud-based OCR using Amazon Rekognition.
-- Requires AWS credentials
+- Standalone (downloadable CPU/GPU builds) is available on Windows and Linux.
+- The Python variant works anywhere a Paddle OCR Python install is available.
 
 ## Engine Setup Notes
 
 - **nOCR** databases are stored in the Subtitle Edit OCR folder and can be created, renamed, edited, and deleted from the OCR window.
 - **Binary OCR** databases use image comparison and are edited separately from nOCR databases.
 - **PaddleOCR** can download standalone CPU/GPU builds and support files on Windows and Linux, or use a Python installation.
-- **Ollama OCR** and **Llama.cpp OCR** are useful when you want local AI-based OCR and have a vision-capable model available.
-- **Mistral OCR**, **Google Vision**, **Azure Vision**, and **Amazon Rekognition** require cloud credentials.
+- **Ollama** and **llama.cpp** are useful when you want local AI-based OCR and have a vision-capable model available.
+- **Mistral OCR** and **Google Vision** require cloud credentials.
 
 ## How to Use
 

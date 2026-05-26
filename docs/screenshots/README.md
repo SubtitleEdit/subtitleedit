@@ -164,6 +164,6 @@ The following feature pages exist but have no companion screenshot. Adding these
 
 ## Counts
 
-- Top-level screenshots: **86**
-- ASSA override-tag examples (`assa/`): **34**
-- Total: **120**
+- Top-level screenshots: **87**
+- ASSA override-tag examples (`assa/`): **35**
+- Total: **122**

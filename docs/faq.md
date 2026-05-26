@@ -10,12 +10,12 @@ Yes. Subtitle Edit is released under the MIT license. It is completely free with
 
 ### What platforms does Subtitle Edit 5 run on?
 Subtitle Edit 5 is built with Avalonia UI and runs on:
-- Windows 10 and later
-- Linux
-- macOS (Apple Silicon / arm64)
+- Windows 10 (version 22H2 / build 19045) and later
+- Linux (native packages or Flatpak)
+- macOS 12 (Monterey) or later, on both Apple Silicon (arm64) and Intel (x64)
 
 ### Where is my data stored?
-Subtitle Edit stores settings and data in a platform-specific data folder. You can open it via **File → Open data folder** or the keyboard shortcut.
+Subtitle Edit stores settings and data in a platform-specific data folder. You can open it with the keyboard shortcut `Ctrl+Alt+Shift+D` (Windows/Linux) or `Cmd+Alt+Shift+D` (macOS).
 
 ### How do I report a bug or request a feature?
 Please open an issue on the [GitHub repository](https://github.com/SubtitleEdit/subtitleedit/issues).
@@ -73,12 +73,13 @@ Subtitle Edit supports several local and downloadable speech-to-text engines:
 - **Whisper.cpp** — Cross-platform, CPU-based
 - **Whisper.cpp (cuBLAS)** — GPU-accelerated (Windows, NVIDIA)
 - **Whisper.cpp (Vulkan)** — GPU-accelerated via Vulkan (Windows)
-- **Purfview's Faster Whisper XXL** — Fast GPU/CPU-based (Windows, Linux)
-- **CTranslate2** — Fast CPU/GPU-based 
+- **Purfview's Faster-Whisper-XXL** — Fast GPU/CPU-based (Windows, Linux)
+- **CTranslate2** — Fast CPU/GPU-based
 - **Const-me's Whisper** — DirectX-based (Windows)
 - **OpenAI Whisper** — Original Python implementation
-- **Chat LLM.cpp** — LLM-based transcription (Windows, Linux, macOS Apple Silicon)
-- **Qwen3 ASR CPP**, **Parakeet.cpp**, and **Crisp ASR** — Additional local engines with downloadable models
+- **OpenAI-compatible STT** — Send audio to any OpenAI-compatible speech endpoint
+- **Qwen3 ASR CPP** — Local GGUF-based engine (Windows, Linux)
+- **Crisp ASR** — Local engine with multiple backends (Parakeet, Canary, Cohere, Fire Red, GLM, Granite, Qwen3, Mega, Omni, Kyutai) and a Forced-aligner picker (built-in / Canary CTC / Qwen3 / 12 wav2vec2 language aligners) for word-level timestamps
 
 ### How do I use Speech to Text?
 1. Open a video file

@@ -9,6 +9,8 @@ Add or remove formatting (bold, italic, underline, etc.) from subtitle text.
 
 ## Options
 
-- **Remove formatting** — Strip selected formatting types
-- **Add formatting** — Apply formatting to all selected lines
-- Supports italic, bold, underline, and other formatting tags
+- **From** — The formatting type to convert from: Italic, Bold, Underline, or Color
+- **To** — The formatting type to convert to: Italic, Bold, Underline, or Color
+- **Color** — When *To* is Color, the color to apply (color picker)
+
+All matching subtitles are shown in a preview list with **Before** and **After** columns before any changes are applied.

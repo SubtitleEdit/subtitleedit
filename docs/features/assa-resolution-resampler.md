@@ -2,14 +2,14 @@
 
 Resample ASSA subtitle styles and positions from one video resolution to another, so subtitles look correct at a different resolution.
 
-**Menu:** `ASSA` → `Resolution Resampler...`
+**Menu:** `ASSA tools` → `Change resolution...`
 
 ![ASSA Resolution Resampler Screenshot](../screenshots/assa-resolution-resampler.png)
 
 ## How to Use
 
 1. Open a subtitle file in ASS/SSA format.
-2. Go to **ASSA** → **Resolution Resampler...** to open the resampler dialog.
+2. Go to **ASSA tools** → **Change resolution...** to open the resampler dialog.
 3. The **Source resolution** is read from the subtitle header (PlayResX / PlayResY).
 4. Set the **Target resolution** — if a video is loaded, it is used as the default.
 5. Choose which elements to resample (margins, font sizes, positions, drawings).

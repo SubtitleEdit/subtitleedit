@@ -18,7 +18,7 @@ Check spelling of subtitle text and correct misspelled words.
    - **Change all** — Replace all occurrences
    - **Skip once** — Ignore this occurrence
    - **Skip all** — Ignore all occurrences of this word
-   - **Add to names list** — Add the word to the names/proper nouns list
+   - **Add to names list (case sensitive)** — Add the word to the names/proper nouns list (matches the exact casing)
    - **Add to user dictionary** — Add the word to your personal dictionary
 5. The spell checker advances to the next unknown word automatically
 6. When all words have been checked, the window closes

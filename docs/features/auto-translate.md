@@ -37,6 +37,7 @@ Automatically translate subtitles using various translation engines and AI servi
 - **Google Gemini** — AI translation (requires API key)
 - **NVIDIA** — AI translation (requires API key)
 - **Mistral AI Translate** — AI translation (requires API key)
+- **DeepSeek** — AI translation (requires API key)
 - **Papago Translate** — Naver Papago translation (requires API key)
 - **thammegowda-nllb-serve** — Self-hosted NLLB (No Language Left Behind) server
 - **winstxnhdw-nllb-api** — NLLB (No Language Left Behind) API

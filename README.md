@@ -27,7 +27,7 @@ You can find the latest cross-platform builds here:
     - `mpv`
         - MacPorts: `sudo port install mpv`
     - `ffmpeg`
-        - Homebrew: `sudo port install ffmpeg`
+        - MacPorts: `sudo port install ffmpeg`
 
 
 
