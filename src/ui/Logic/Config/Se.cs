@@ -447,8 +447,8 @@ public class Se
 
         // BeautifyTimeCodes profile: skip apply on a fresh install so libse's built-in
         // default-preset values stay intact. Once the user clicks OK in the profile editor,
-        // SeBeautifyTimeCodes.IsEmpty() returns false and the saved profile takes over.
-        if (!Settings.BeautifyTimeCodes.IsEmpty())
+        // Saved flips to true and the persisted profile takes over.
+        if (Settings.BeautifyTimeCodes.Saved)
         {
             Settings.BeautifyTimeCodes.ApplyTo(Configuration.Settings.BeautifyTimeCodes);
         }

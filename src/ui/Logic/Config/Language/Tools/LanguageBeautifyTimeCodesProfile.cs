@@ -21,7 +21,7 @@ public class LanguageBeautifyTimeCodesProfile
     public string ConnectedSubtitles { get; set; } = "Connected subtitles";
     public string InCueClosest { get; set; } = "In cue is closest";
     public string OutCueClosest { get; set; } = "Out cue is closest";
-    public string TreadAsConnected { get; set; } = "Treat as connected if gap smaller than:";
+    public string TreatAsConnected { get; set; } = "Treat as connected if gap smaller than:";
 
     public string Chaining { get; set; } = "Chaining";
     public string InCueOnShot { get; set; } = "In cue on shot change";
@@ -38,7 +38,7 @@ public class LanguageBeautifyTimeCodesProfile
 
     // Hints
     public string HintGap { get; set; } = "Minimum gap between subtitles, expressed in frames. Used by all 'gap' fields below as the base value.";
-    public string HintZones { get; set; } = "Snap (red) and warn (green) thresholds in frames, measured from the nearest shot change. Two values per side: red zone (snap) then green zone (allowed).";
+    public string HintZones { get; set; } = "Snap (red) and warn (green) thresholds in frames, measured from the nearest shot change. Four values, left to right: left green, left red, right red, right green.";
     public string HintConnected { get; set; } = "When two subtitles are connected (gap below threshold), the gap from the closest cue is preserved.";
     public string HintChaining { get; set; } = "How to handle subtitles that almost touch — extend them together, or push apart, depending on whether a shot change sits in between.";
 }

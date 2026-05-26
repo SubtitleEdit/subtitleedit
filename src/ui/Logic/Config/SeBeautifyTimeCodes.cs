@@ -10,6 +10,10 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 /// </summary>
 public class SeBeautifyTimeCodes
 {
+    /// <summary>True once the user has saved the profile at least once. Until then we let
+    /// libse's built-in default-preset values stand instead of clobbering them with zeros.</summary>
+    public bool Saved { get; set; }
+
     public bool AlignTimeCodes { get; set; }
     public bool ExtractExactTimeCodes { get; set; }
     public bool SnapToShotChanges { get; set; }
@@ -64,16 +68,9 @@ public class SeBeautifyTimeCodes
     public int ChainingOutCueOnShotShotChangeBehavior { get; set; }
     public bool ChainingOutCueOnShotCheckGeneral { get; set; }
 
-    /// <summary>Are we still at the all-zeros default (fresh install, never edited)?</summary>
-    public bool IsEmpty()
-    {
-        // Gap is always >=3 in any built-in preset; if it's 0 we treat the config as
-        // never-saved and let the libse defaults stand.
-        return Gap == 0 && OutCuesGap == 0 && InCuesLeftGreenZone == 0;
-    }
-
     public void CopyFrom(BeautifyTimeCodesSettings source)
     {
+        Saved = true;
         AlignTimeCodes = source.AlignTimeCodes;
         ExtractExactTimeCodes = source.ExtractExactTimeCodes;
         SnapToShotChanges = source.SnapToShotChanges;

@@ -284,7 +284,7 @@ public class BeautifyTimeCodesProfileWindow : Window
             Spacing = 6,
             Children =
             {
-                UiUtil.MakeLabel(_l.TreadAsConnected),
+                UiUtil.MakeLabel(_l.TreatAsConnected),
                 MakeMsNud(nameof(_vm.ConnectedTreatConnectedMs)),
                 UiUtil.MakeLabel(_l.Milliseconds),
             }

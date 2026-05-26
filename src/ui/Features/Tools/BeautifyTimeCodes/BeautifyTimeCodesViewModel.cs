@@ -417,7 +417,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     }
 
     private string FormatTime(TimeSpan t) =>
-        $"{(int)t.TotalHours:D2}:{t.Minutes:D2}:{t.Seconds:D2}.{t.Milliseconds:D3}";
+        $"{(int)t.TotalHours:D2}:{t.Minutes:D2}:{t.Seconds:D2},{t.Milliseconds:D3}";
 
     private string FormatDelta(double ms)
     {
