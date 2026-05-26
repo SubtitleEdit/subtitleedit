@@ -10,7 +10,7 @@ public class LanguageBeautifyTimeCodesProfile
 
     public string General { get; set; } = "General";
     public string Gap { get; set; } = "Gap";
-    public string GapSuffix { get; set; } = "frames (will overwrite custom settings)";
+    public string GapSuffix { get; set; } = "frames (also updates non-zero gap fields below)";
     public string Milliseconds { get; set; } = "ms";
     public string Frames { get; set; } = "frames";
     public string Zones { get; set; } = "Zones";

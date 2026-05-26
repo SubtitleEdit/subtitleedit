@@ -148,18 +148,30 @@ public class SeBeautifyTimeCodes
         p.ChainingGeneralMaxGap = ChainingGeneralMaxGap;
         p.ChainingGeneralLeftGreenZone = ChainingGeneralLeftGreenZone;
         p.ChainingGeneralLeftRedZone = ChainingGeneralLeftRedZone;
-        p.ChainingGeneralShotChangeBehavior = (BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum)ChainingGeneralShotChangeBehavior;
+        p.ChainingGeneralShotChangeBehavior = ToChainingEnum(ChainingGeneralShotChangeBehavior);
         p.ChainingInCueOnShotUseZones = ChainingInCueOnShotUseZones;
         p.ChainingInCueOnShotMaxGap = ChainingInCueOnShotMaxGap;
         p.ChainingInCueOnShotLeftGreenZone = ChainingInCueOnShotLeftGreenZone;
         p.ChainingInCueOnShotLeftRedZone = ChainingInCueOnShotLeftRedZone;
-        p.ChainingInCueOnShotShotChangeBehavior = (BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum)ChainingInCueOnShotShotChangeBehavior;
+        p.ChainingInCueOnShotShotChangeBehavior = ToChainingEnum(ChainingInCueOnShotShotChangeBehavior);
         p.ChainingInCueOnShotCheckGeneral = ChainingInCueOnShotCheckGeneral;
         p.ChainingOutCueOnShotUseZones = ChainingOutCueOnShotUseZones;
         p.ChainingOutCueOnShotMaxGap = ChainingOutCueOnShotMaxGap;
         p.ChainingOutCueOnShotRightRedZone = ChainingOutCueOnShotRightRedZone;
         p.ChainingOutCueOnShotRightGreenZone = ChainingOutCueOnShotRightGreenZone;
-        p.ChainingOutCueOnShotShotChangeBehavior = (BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum)ChainingOutCueOnShotShotChangeBehavior;
+        p.ChainingOutCueOnShotShotChangeBehavior = ToChainingEnum(ChainingOutCueOnShotShotChangeBehavior);
         p.ChainingOutCueOnShotCheckGeneral = ChainingOutCueOnShotCheckGeneral;
+    }
+
+    /// <summary>
+    /// Clamp a persisted int to a valid <see cref="BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum"/>
+    /// value. The libse beautifier switches without a default case, so an out-of-range
+    /// cast would silently skip behavior — fall back to <c>DontChain</c> instead.
+    /// </summary>
+    private static BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum ToChainingEnum(int value)
+    {
+        return System.Enum.IsDefined(typeof(BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum), value)
+            ? (BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum)value
+            : BeautifyTimeCodesSettings.BeautifyTimeCodesProfile.ChainingShotChangeBehaviorEnum.DontChain;
     }
 }
