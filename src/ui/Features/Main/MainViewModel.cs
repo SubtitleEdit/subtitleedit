@@ -9272,24 +9272,40 @@ public partial class MainViewModel :
         if (idx < 0)
         {
             ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+            _shortcutManager.ClearKeys();
             return;
         }
 
+        var foundText = _findService.CurrentTextFound;
+        var foundLine = _findService.CurrentLineNumber;
+        var foundIndex = _findService.CurrentTextIndex;
+
         Dispatcher.UIThread.Post(() =>
         {
-            SubtitleGrid.SelectedIndex = idx;
-            SubtitleGrid.ScrollIntoView(SubtitleGrid.SelectedItem, null);
+            var subtitle = Subtitles.GetOrNull(idx);
+            if (subtitle == null)
+            {
+                return;
+            }
 
-            ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, _findService.CurrentTextFound, _findService.CurrentLineNumber + 1, _findService.CurrentTextIndex + 1));
+            SubtitleGrid.SelectedIndex = idx;
+            SubtitleGrid.SelectedItem = subtitle;
+            SubtitleGrid.ScrollIntoView(subtitle, null);
+
+            ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
 
             // wait for text box to update
-            Task.Delay(50);
+            Task.Delay(75);
 
-            EditTextBox.CaretIndex = _findService.CurrentTextIndex;
-            EditTextBox.SelectionStart = _findService.CurrentTextIndex;
-            EditTextBox.SelectionEnd = _findService.CurrentTextIndex + _findService.CurrentTextFound.Length;
+            if (EditTextBox.Text == string.Empty)
+            {
+                EditTextBox.Text = subtitle.Text;
+            }
+
+            EditTextBox.CaretIndex = foundIndex;
+            EditTextBox.SelectionStart = foundIndex;
+            EditTextBox.SelectionEnd = foundIndex + foundText.Length;
         });
-
 
         _shortcutManager.ClearKeys();
     }
@@ -9311,22 +9327,39 @@ public partial class MainViewModel :
         if (idx < 0)
         {
             ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+            _shortcutManager.ClearKeys();
             return;
         }
 
+        var foundText = _findService.CurrentTextFound;
+        var foundLine = _findService.CurrentLineNumber;
+        var foundIndex = _findService.CurrentTextIndex;
+
         Dispatcher.UIThread.Post(() =>
         {
-            SubtitleGrid.SelectedIndex = idx;
-            SubtitleGrid.ScrollIntoView(SubtitleGrid.SelectedItem, null);
+            var subtitle = Subtitles.GetOrNull(idx);
+            if (subtitle == null)
+            {
+                return;
+            }
 
-            ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, _findService.CurrentTextFound, _findService.CurrentLineNumber + 1, _findService.CurrentTextIndex + 1));
+            SubtitleGrid.SelectedIndex = idx;
+            SubtitleGrid.SelectedItem = subtitle;
+            SubtitleGrid.ScrollIntoView(subtitle, null);
+
+            ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
 
             // wait for text box to update
-            Task.Delay(50);
+            Task.Delay(75);
 
-            EditTextBox.CaretIndex = _findService.CurrentTextIndex;
-            EditTextBox.SelectionStart = _findService.CurrentTextIndex;
-            EditTextBox.SelectionEnd = _findService.CurrentTextIndex + _findService.CurrentTextFound.Length;
+            if (EditTextBox.Text == string.Empty)
+            {
+                EditTextBox.Text = subtitle.Text;
+            }
+
+            EditTextBox.CaretIndex = foundIndex;
+            EditTextBox.SelectionStart = foundIndex;
+            EditTextBox.SelectionEnd = foundIndex + foundText.Length;
         });
     }
 
