@@ -9328,6 +9328,8 @@ public partial class MainViewModel :
             EditTextBox.SelectionStart = _findService.CurrentTextIndex;
             EditTextBox.SelectionEnd = _findService.CurrentTextIndex + _findService.CurrentTextFound.Length;
         });
+
+        _shortcutManager.ClearKeys();
     }
 
     [RelayCommand]
