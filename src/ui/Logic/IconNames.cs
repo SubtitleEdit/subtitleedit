@@ -6,11 +6,13 @@ internal class IconNames
     public const string AlignHorizontalDistribute = "mdi-align-horizontal-distribute";
     public const string AnimationPlay = "mdi-animation-play";
     public const string ArrowCollapseVertical = "mdi-arrow-collapse-vertical";
+    public const string ArrowDownThin = "mdi-arrow-down-thin";
     public const string ArrowExpandRight = "mdi-arrow-expand-right";
     public const string ArrowLeftRightBold = "mdi-arrow-left-right-bold";
     public const string ArrowLeftThick = "mdi-arrow-left-thick";
     public const string ArrowRightThick = "mdi-arrow-right-thick";
     public const string ArrowUpDownBold = "mdi-arrow-up-down-bold";
+    public const string ArrowUpThin = "mdi-arrow-up-thin";
     public const string Bold = "mdi-format-bold";
     public const string Bookmark = "mdi-bookmark";
     public const string CardRemoveOutline = "mdi-card-remove-outline";

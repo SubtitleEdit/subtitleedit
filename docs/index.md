@@ -23,6 +23,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 - [Fix Common Errors](features/fix-common-errors.md) — Automatic error detection and fixing
 - [Check and Fix Netflix Errors](features/netflix-errors.md) — Netflix quality checks, proposed fixes, and CSV reports
 - [Batch Convert](features/batch-convert.md) — Convert multiple subtitle files
+- [Beautify Time Codes](features/beautify-time-codes.md) — Snap cues to shot changes and frames using a configurable profile, with a live before/after preview
 - [Change Casing](features/change-casing.md) — Fix casing issues
 - [Change Formatting](features/change-formatting.md) — Modify subtitle formatting
 - [Convert Actors](features/convert-actors.md) — Convert actor/voice labels between styles

@@ -16,6 +16,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Options.Settings.SyntaxColorTooWideSettings;
+using Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes.Profile;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformThemes;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformToolbarItems;
 using Nikse.SubtitleEdit.Features.Shared;
@@ -1751,6 +1752,20 @@ public partial class SettingsViewModel : ObservableObject
                 FavoriteSubtitleFormats.Add(selectedFormat.FriendlyName);
             }
         }
+    }
+
+    [RelayCommand]
+    private async Task EditBeautifyTimeCodesProfile()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await _windowService.ShowDialogAsync<BeautifyTimeCodesProfileWindow, BeautifyTimeCodesProfileViewModel>(Window, vm =>
+        {
+            vm.Initialize();
+        });
     }
 
     [RelayCommand]

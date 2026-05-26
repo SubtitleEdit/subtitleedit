@@ -1,9 +1,11 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes;
 
@@ -14,229 +16,189 @@ public class BeautifyTimeCodesWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Tools.BeautifyTimeCodes.Title;
         CanResize = true;
-        Width = 1000;
-        Height = 800;
+        Width = 1100;
+        Height = 680;
         MinWidth = 900;
-        MinHeight = 500;
+        MinHeight = 520;
         vm.Window = this;
         DataContext = vm;
 
-        // Settings panel - Row 1
-        var checkBoxSnapToFrames = new CheckBox
+        Content = new Grid
         {
-            Content = Se.Language.Tools.BeautifyTimeCodes.SnapToFrames,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!CheckBox.IsCheckedProperty] = new Avalonia.Data.Binding($"{nameof(BeautifyTimeCodesViewModel.Settings)}.{nameof(BeautifySettings.SnapToFrames)}") { Source = vm, Mode = BindingMode.TwoWay },
-        };
-
-        var labelFrameGap = new TextBlock
-        {
-            Text = Se.Language.Tools.BeautifyTimeCodes.FrameGap,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-
-        var numericFrameGap = new NumericUpDown
-        {
-            Minimum = 0,
-            Maximum = 10,
-            Increment = 1,
-            FormatString = "0",
-            Width = 120,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!NumericUpDown.ValueProperty] = new Avalonia.Data.Binding($"{nameof(BeautifyTimeCodesViewModel.Settings)}.{nameof(BeautifySettings.FrameGap)}") { Source = vm, Mode = BindingMode.TwoWay },
-        };
-        numericFrameGap.ValueChanged += vm.ValueChanged;
-
-        var labelMinDuration = new TextBlock
-        {
-            Text = Se.Language.Tools.BeautifyTimeCodes.MinDuration,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-
-        var numericMinDuration = new NumericUpDown
-        {
-            Minimum = 100,
-            Maximum = 10000,
-            Increment = 100,
-            FormatString = "0",
-            Width = 120,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!NumericUpDown.ValueProperty] = new Avalonia.Data.Binding($"{nameof(BeautifyTimeCodesViewModel.Settings)}.{nameof(BeautifySettings.MinDurationMs)}") { Source = vm, Mode = BindingMode.TwoWay },
-        };
-        numericMinDuration.ValueChanged += vm.ValueChanged;
-
-        // Settings panel - Row 2
-        var labelShotChangeThreshold = new TextBlock
-        {
-            Text = Se.Language.Tools.BeautifyTimeCodes.ShotChangeThreshold,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-
-        var numericShotChangeThreshold = new NumericUpDown
-        {
-            Minimum = 0,
-            Maximum = 1000,
-            Increment = 10,
-            FormatString = "0",
-            Width = 120,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!NumericUpDown.ValueProperty] = new Avalonia.Data.Binding($"{nameof(BeautifyTimeCodesViewModel.Settings)}.{nameof(BeautifySettings.ShotChangeThresholdMs)}") { Source = vm, Mode = BindingMode.TwoWay },
-        };
-        numericShotChangeThreshold.ValueChanged += vm.ValueChanged;
-
-        var labelShotChangeOffset = new TextBlock
-        {
-            Text = Se.Language.Tools.BeautifyTimeCodes.ShotChangeOffset,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
-
-        var numericShotChangeOffset = new NumericUpDown
-        {
-            Minimum = 0,
-            Maximum = 10,
-            Increment = 1,
-            FormatString = "0",
-            Width = 120,
-            VerticalAlignment = VerticalAlignment.Center,
-            [!NumericUpDown.ValueProperty] = new Avalonia.Data.Binding($"{nameof(BeautifyTimeCodesViewModel.Settings)}.{nameof(BeautifySettings.ShotChangeOffsetFrames)}") { Source = vm, Mode = BindingMode.TwoWay },
-        };
-        numericShotChangeOffset.ValueChanged += vm.ValueChanged;
-
-        var settingsGrid = new Grid
-        {
-            RowDefinitions = new RowDefinitions("Auto,12,Auto,12,Auto"),
-            ColumnDefinitions = new ColumnDefinitions("Auto,10,120,30,Auto,10,120"),
-            RowSpacing = 0,
-        };
-
-        // Row 0: Checkbox (spans 3 columns)
-        settingsGrid.Add(checkBoxSnapToFrames, 0, 0, 1, 3);
-
-        // Row 2: Frame Gap and Min Duration
-        settingsGrid.Add(labelFrameGap, 2, 0);
-        settingsGrid.Add(numericFrameGap, 2, 2);
-        settingsGrid.Add(labelMinDuration, 2, 4);
-        settingsGrid.Add(numericMinDuration, 2, 6);
-
-        // Row 4: Shot Change Threshold and Shot Change Offset
-        settingsGrid.Add(labelShotChangeThreshold, 4, 0);
-        settingsGrid.Add(numericShotChangeThreshold, 4, 2);
-        settingsGrid.Add(labelShotChangeOffset, 4, 4);
-        settingsGrid.Add(numericShotChangeOffset, 4, 6);
-
-        var settingsTitle = new TextBlock
-        {
-            Text = Se.Language.Tools.BeautifyTimeCodes.BeautifySettings,
-            FontWeight = FontWeight.Bold,
-            FontSize = 14,
-            Margin = new Avalonia.Thickness(0, 0, 0, 10),
-        };
-
-        var settingsPanel = new StackPanel
-        {
-            Spacing = 10,
-        };
-        settingsPanel.Children.Add(settingsTitle);
-        settingsPanel.Children.Add(settingsGrid);
-
-        var settingsBorder = new Border
-        {
-            BorderBrush = Brushes.Gray,
-            BorderThickness = new Avalonia.Thickness(1),
-            Padding = new Avalonia.Thickness(10),
-            CornerRadius = new Avalonia.CornerRadius(4),
-            Child = settingsPanel,
-        };
-
-        // Audio visualizers
-        var labelOriginal = new TextBlock
-        {
-            Text = Se.Language.Tools.BeautifyTimeCodes.Original,
-            FontWeight = FontWeight.Bold,
-            Margin = new Avalonia.Thickness(5),
-        };
-
-        var audioVisualizerOriginal = new Controls.AudioVisualizerControl.AudioVisualizer
-        {
-            IsReadOnly = true,
-            DrawGridLines = true,
-        };
-
-        var borderOriginal = new Border
-        {
-            BorderBrush = Brushes.Gray,
-            BorderThickness = new Avalonia.Thickness(1),
-            Background = Brushes.Black,
-            Child = audioVisualizerOriginal,
-        };
-
-        var labelBeautified = new TextBlock
-        {
-            Text = Se.Language.Tools.BeautifyTimeCodes.Beautified,
-            FontWeight = FontWeight.Bold,
-            Margin = new Avalonia.Thickness(5),
-        };
-
-        var audioVisualizerBeautified = new Controls.AudioVisualizerControl.AudioVisualizer
-        {
-            IsReadOnly = true,
-            DrawGridLines = true,
-        };
-
-        var borderBeautified = new Border
-        {
-            BorderBrush = Brushes.Gray,
-            BorderThickness = new Avalonia.Thickness(1),
-            Background = Brushes.Black,
-            Child = audioVisualizerBeautified,
-        };
-
-        // Set up visualizers in ViewModel
-        vm.AudioVisualizerOriginal = audioVisualizerOriginal;
-        vm.AudioVisualizerBeautified = audioVisualizerBeautified;
-
-        // Sync scroll and zoom changes from original to beautified
-        audioVisualizerOriginal.PropertyChanged += (s, e) =>
-        {
-            if (e.Property.Name == "StartPositionSeconds")
-                audioVisualizerBeautified.StartPositionSeconds = audioVisualizerOriginal.StartPositionSeconds;
-            else if (e.Property.Name == "ZoomFactor")
-                audioVisualizerBeautified.ZoomFactor = audioVisualizerOriginal.ZoomFactor;
-            else if (e.Property.Name == "VerticalZoomFactor")
-                audioVisualizerBeautified.VerticalZoomFactor = audioVisualizerOriginal.VerticalZoomFactor;
-        };
-
-        var visualizerGrid = new Grid
-        {
-            RowDefinitions = new RowDefinitions("Auto,5*,10,Auto,5*"),
-            ColumnDefinitions = new ColumnDefinitions("*"),
-        };
-        visualizerGrid.Add(labelOriginal, 0, 0);
-        visualizerGrid.Add(borderOriginal, 1, 0);
-        visualizerGrid.Add(labelBeautified, 3, 0);
-        visualizerGrid.Add(borderBeautified, 4, 0);
-
-        // Buttons
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-
-        // Main grid
-        var grid = new Grid
-        {
-            RowDefinitions = new RowDefinitions("Auto,*,Auto"),
+            RowDefinitions = new RowDefinitions("Auto,*,Auto,Auto"),
             ColumnDefinitions = new ColumnDefinitions("*"),
             Margin = UiUtil.MakeWindowMargin(),
             RowSpacing = 10,
+            Children =
+            {
+                BuildTopBar(vm),
+                BuildVisualizerArea(vm),
+                BuildChangeNavBar(vm),
+                BuildButtonBar(vm),
+            },
         };
-        grid.Add(settingsBorder, 0, 0);
-        grid.Add(visualizerGrid, 1, 0);
-        grid.Add(panelButtons, 2, 0);
 
-        Content = grid;
+        var c = (Grid)Content;
+        Grid.SetRow(c.Children[0], 0);
+        Grid.SetRow(c.Children[1], 1);
+        Grid.SetRow(c.Children[2], 2);
+        Grid.SetRow(c.Children[3], 3);
 
-        Activated += delegate { buttonOk.Focus(); };
+        Activated += delegate { /* leave focus on the visualizer for keyboard nav */ };
         KeyDown += (_, e) => vm.OnKeyDown(e);
         Closing += (_, __) => vm.Dispose();
+    }
+
+    private static Control BuildTopBar(BeautifyTimeCodesViewModel vm)
+    {
+        var l = Se.Language.Tools.BeautifyTimeCodesProfile;
+
+        var buttonEditProfile = UiUtil.MakeButton(l.Title, vm.EditProfileCommand);
+
+        var stats = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Opacity = 0.8,
+            FontSize = 12,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.StatsLine)) { Source = vm },
+        };
+
+        var grid = new Grid
+        {
+            ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"),
+        };
+        grid.Add(buttonEditProfile, 0, 0);
+        grid.Add(stats, 0, 2);
+        return grid;
+    }
+
+    private static Control BuildVisualizerArea(BeautifyTimeCodesViewModel vm)
+    {
+        var l = Se.Language.Tools.BeautifyTimeCodes;
+
+        var (labelOriginal, borderOriginal, avOriginal) = BuildLabeledVisualizer(l.Original);
+        var (labelBeautified, borderBeautified, avBeautified) = BuildLabeledVisualizer(l.Beautified);
+
+        vm.AudioVisualizerOriginal = avOriginal;
+        vm.AudioVisualizerBeautified = avBeautified;
+
+        avOriginal.PropertyChanged += (s, e) =>
+        {
+            if (e.Property.Name == "StartPositionSeconds")
+                avBeautified.StartPositionSeconds = avOriginal.StartPositionSeconds;
+            else if (e.Property.Name == "ZoomFactor")
+                avBeautified.ZoomFactor = avOriginal.ZoomFactor;
+            else if (e.Property.Name == "VerticalZoomFactor")
+                avBeautified.VerticalZoomFactor = avOriginal.VerticalZoomFactor;
+        };
+
+        var grid = new Grid
+        {
+            RowDefinitions = new RowDefinitions("Auto,3*,10,Auto,3*"),
+            ColumnDefinitions = new ColumnDefinitions("*"),
+        };
+        grid.Add(labelOriginal, 0, 0);
+        grid.Add(borderOriginal, 1, 0);
+        grid.Add(labelBeautified, 3, 0);
+        grid.Add(borderBeautified, 4, 0);
+        return grid;
+    }
+
+    private static (TextBlock label, Border border, Controls.AudioVisualizerControl.AudioVisualizer av) BuildLabeledVisualizer(string title)
+    {
+        var label = new TextBlock
+        {
+            Text = title,
+            FontWeight = FontWeight.Bold,
+            Margin = new Thickness(5, 5, 5, 2),
+        };
+
+        var av = new Controls.AudioVisualizerControl.AudioVisualizer
+        {
+            IsReadOnly = true,
+            DrawGridLines = true,
+            // Stronger tints so paragraphs stand out on the dark waveform
+            ParagraphBackground = Color.FromArgb(140, 70, 110, 180),       // regular: blue
+            ParagraphSelectedBackground = Color.FromArgb(210, 230, 160, 40), // current change: amber
+        };
+
+        var border = new Border
+        {
+            BorderBrush = Brushes.Gray,
+            BorderThickness = new Thickness(1),
+            Background = Brushes.Black,
+            Child = av,
+        };
+        return (label, border, av);
+    }
+
+    private static Control BuildChangeNavBar(BeautifyTimeCodesViewModel vm)
+    {
+        var l = Se.Language.Tools.BeautifyTimeCodes;
+
+        var buttonPrev = UiUtil.MakeButton(vm.PreviousChangeCommand, IconNames.ArrowUpThin, l.PreviousChange);
+        buttonPrev.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.CanGoPrevious)) { Source = vm });
+
+        var buttonNext = UiUtil.MakeButton(vm.NextChangeCommand, IconNames.ArrowDownThin, l.NextChange);
+        buttonNext.Bind(Button.IsEnabledProperty, new Binding(nameof(vm.CanGoNext)) { Source = vm });
+
+        var labelPosition = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            FontWeight = FontWeight.SemiBold,
+            MinWidth = 120,
+            TextAlignment = TextAlignment.Center,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.ChangePositionLabel)) { Source = vm },
+        };
+
+        var detail = new TextBlock
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            TextWrapping = TextWrapping.Wrap,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            Margin = new Thickness(0, 4, 0, 0),
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.ChangeDetail)) { Source = vm },
+        };
+
+        var notes = new TextBlock
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            TextWrapping = TextWrapping.Wrap,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            Opacity = 0.75,
+            FontStyle = FontStyle.Italic,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.ChangeNotes)) { Source = vm },
+        };
+
+        var navRow = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { buttonPrev, labelPosition, buttonNext },
+        };
+
+        var inner = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 2,
+            Children = { navRow, detail, notes },
+        };
+
+        return new Border
+        {
+            BorderBrush = new SolidColorBrush(Color.FromArgb(120, 128, 128, 128)),
+            BorderThickness = new Thickness(0, 1, 0, 1),
+            Padding = new Thickness(6, 6, 6, 6),
+            Child = inner,
+        };
+    }
+
+    private static Control BuildButtonBar(BeautifyTimeCodesViewModel vm)
+    {
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        return UiUtil.MakeButtonBar(buttonOk, buttonCancel);
     }
 }

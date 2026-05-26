@@ -418,6 +418,11 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = l.BeautifyTimeCodes,
+                Command = vm.ShowBeautifyTimeCodesCommand,
+            },
+            new MenuItem
+            {
                 Header = l.BridgeGaps,
                 Command = vm.ShowBridgeGapsCommand,
             },

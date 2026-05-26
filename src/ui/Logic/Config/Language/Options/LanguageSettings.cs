@@ -432,7 +432,7 @@ public class LanguageSettings
         ShowWaveformToolbarPlaybackSpeed = "Toolbar: show playback speed";
         WaveformFocusTextboxAfterInsertNew = "Focus text box after insert";
         WaveformInvertMouseWheel = "Invert mouse-wheel";
-        WaveformSnapToShotChanges = "Snap to shot changes";
+        WaveformSnapToShotChanges = "Snap to shot changes (hold Shift to override)";
         WaveformSnapToFrames = "Snap to frames";
         WaveformShotChangesAutoGenerate = "Shot changes auto-generate";
         WaveformTextFontSize = "Waveform text font size";
