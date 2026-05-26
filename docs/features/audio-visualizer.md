@@ -83,7 +83,7 @@ Shot changes (scene cuts) are displayed as vertical lines on the waveform. These
 
 - **Toggle shot change at video position** — Add or remove a shot change marker
 - **Go to previous/next shot change** — Navigate between shot changes
-- **Snap to nearest shot change** — Align subtitle edges to nearby shot changes
+- **Snap to nearest shot change** — Align subtitle edges to nearby shot changes. The snap distance follows the *In cues* / *Out cues* red zones in the [Beautify time codes](beautify-time-codes.md) profile. Out-cues snap to one frame **before** the shot change. **Hold Shift** while dragging to bypass the snap.
 - **Extend to next shot change** — Extend subtitle to the next scene cut
 
 The shot change line color can be customized in Subtitle Edit 5, which is useful when your waveform or spectrogram theme makes the default color hard to see.

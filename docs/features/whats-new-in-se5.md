@@ -37,6 +37,12 @@ Subtitle Edit 5 is the Avalonia-based, cross-platform version of Subtitle Edit. 
 - Waveform themes can be imported and exported.
 - **Spectrogram style** can be changed at runtime — no re-generation needed.
 - More customization options for the waveform and spectrogram, including colors, shot-change colors, and visual style.
+- **Snap to shot changes** now reads its snap window from the *Beautify time codes* profile's red zones, and **Shift** while dragging temporarily disables the snap.
+
+## Beautify Time Codes
+
+- New **Tools → Beautify time codes…** brings the SE 4 beautifier across, but as a live tool: two stacked waveform visualizers (original / beautified) show the result before you accept it, with prev/next navigation, frame and millisecond deltas, and a per-cue reason line (*snapped to shot change* · *min. gap enforced* · *min. duration enforced*, etc.).
+- The full **profile editor** (zones, chaining, connected-subtitle handling, per-cue gap, presets for Netflix and SDI) is available from the tool window and from Options → Settings → Waveform. Profile edits persist into `Settings.json`.
 
 ## Speech to Text
 
