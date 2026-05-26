@@ -95,7 +95,7 @@ public class BeautifyTimeCodesWindow : Window
 
         var grid = new Grid
         {
-            RowDefinitions = new RowDefinitions("Auto,5*,10,Auto,5*"),
+            RowDefinitions = new RowDefinitions("Auto,3*,10,Auto,3*"),
             ColumnDefinitions = new ColumnDefinitions("*"),
         };
         grid.Add(labelOriginal, 0, 0);
@@ -154,20 +154,28 @@ public class BeautifyTimeCodesWindow : Window
 
         var detail = new TextBlock
         {
-            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
             TextWrapping = TextWrapping.NoWrap,
             TextTrimming = TextTrimming.CharacterEllipsis,
             FontFamily = new FontFamily("Consolas, Menlo, monospace"),
-            Margin = new Thickness(10, 0, 0, 0),
+            FontSize = 11,
+            Margin = new Thickness(0, 4, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ChangeDetail)) { Source = vm },
         };
 
-        var inner = new StackPanel
+        var navRow = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 6,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { buttonPrev, labelPosition, buttonNext, detail },
+            Children = { buttonPrev, labelPosition, buttonNext },
+        };
+
+        var inner = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 2,
+            Children = { navRow, detail },
         };
 
         return new Border
