@@ -666,6 +666,7 @@ public class LanguageGeneral
     public string XNoLinesUpdated { get; set; }
     public string XNotFound { get; set; }
     public string XOfYLinesUpdated { get; set; }
+    public string XOfYLinesUpdatedAndZNeighborsAdjusted { get; set; }
     public string NoBookmarksFound { get; set; }
     public string XRequiresAnApiKey { get; set; }
     public string XSeconds { get; set; }
@@ -1383,6 +1384,7 @@ public class LanguageGeneral
         XNoLinesUpdated = "{0}: no line(s) updated";
         XNotFound = "\"{0}\" not found";
         XOfYLinesUpdated = "{0}: {1} of {2} line(s) updated";
+        XOfYLinesUpdatedAndZNeighborsAdjusted = "{0}: {1} of {2} line(s) updated, {3} neighbor(s) adjusted";
         NoBookmarksFound = "No more bookmarks found";
         XRequiresAnApiKey = "{0} requires an API key";
         XSeconds = "{0:0.0##} seconds";

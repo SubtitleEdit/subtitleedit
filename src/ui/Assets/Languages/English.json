@@ -666,6 +666,7 @@
     "xNoLinesUpdated": "{0}: no line(s) updated",
     "xNotFound": "\"{0}\" not found",
     "xOfYLinesUpdated": "{0}: {1} of {2} line(s) updated",
+    "xOfYLinesUpdatedAndZNeighborsAdjusted": "{0}: {1} of {2} line(s) updated, {3} neighbor(s) adjusted",
     "noBookmarksFound": "No more bookmarks found",
     "xRequiresAnApiKey": "{0} requires an API key",
     "xSeconds": "{0:0.0##} seconds",
