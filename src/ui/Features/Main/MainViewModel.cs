@@ -6379,56 +6379,44 @@ public partial class MainViewModel :
         }
 
         var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        var maxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
         foreach (var line in selectedLines)
         {
             var idx = Subtitles.IndexOf(line);
             var prev = Subtitles.GetOrNull(idx - 1);
             var shotChange = AudioVisualizer.ShotChanges.LastOrDefault(s => s < line.StartTime.TotalSeconds + 0.01);
-            if (prev == null && shotChange == 0)
+
+            // Lower bound for the new start: the previous shot change and, if
+            // present, the previous subtitle's end plus the configured gap.
+            // Whichever is later wins so we never pull the start back past
+            // either constraint.
+            double? candidateStartMs = null;
+            if (shotChange > 0)
+            {
+                candidateStartMs = shotChange * 1000.0;
+            }
+
+            if (prev != null)
+            {
+                var prevEndPlusGapMs = prev.EndTime.TotalMilliseconds + gapMs;
+                candidateStartMs = candidateStartMs.HasValue
+                    ? Math.Max(candidateStartMs.Value, prevEndPlusGapMs)
+                    : prevEndPlusGapMs;
+            }
+
+            if (candidateStartMs == null)
             {
                 continue;
             }
 
-            if (shotChange == 0)
+            var newStartMs = candidateStartMs.Value;
+            var newDurationMs = line.EndTime.TotalMilliseconds - newStartMs;
+            if (newDurationMs <= 0 || newDurationMs > maxDurationMs)
             {
-                var newStartMs = prev!.EndTime.TotalMilliseconds + gapMs;
-                var newDuration = line.EndTime - TimeSpan.FromMilliseconds(newStartMs);
-                if (newDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                {
-                    line.StartTime = TimeSpan.FromMilliseconds(newStartMs);
-                }
-
                 continue;
             }
 
-            if (prev == null)
-            {
-                var newDuration = line.EndTime - TimeSpan.FromSeconds(shotChange);
-                if (newDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                {
-                    line.StartTime = TimeSpan.FromSeconds(shotChange);
-                }
-
-                continue;
-            }
-
-            if (TimeSpan.FromSeconds(shotChange) > prev.EndTime)
-            {
-                var newDuration = line.EndTime - TimeSpan.FromSeconds(shotChange);
-                if (newDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                {
-                    line.StartTime = TimeSpan.FromSeconds(shotChange);
-                }
-            }
-            else
-            {
-                var newStartMs = prev.EndTime.TotalMilliseconds + gapMs;
-                var newDuration = line.EndTime - TimeSpan.FromMilliseconds(newStartMs);
-                if (newDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                {
-                    line.StartTime = TimeSpan.FromMilliseconds(newStartMs);
-                }
-            }
+            line.StartTime = TimeSpan.FromMilliseconds(newStartMs);
         }
 
         _updateAudioVisualizer = true;
