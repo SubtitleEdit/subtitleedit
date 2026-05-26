@@ -6385,10 +6385,12 @@ public partial class MainViewModel :
             var idx = Subtitles.IndexOf(line);
             var prev = Subtitles.GetOrNull(idx - 1);
             // Cast to nullable so "no match" is null and a real shot change
-            // at t=0 isn't conflated with the default value.
+            // at t=0 isn't conflated with the default value. Strict `<` so
+            // shot changes at or after the current start can't qualify and
+            // cause "extend to previous" to actually move the start forward.
             var shotChange = AudioVisualizer.ShotChanges
                 .Cast<double?>()
-                .LastOrDefault(s => s < line.StartTime.TotalSeconds + 0.01);
+                .LastOrDefault(s => s < line.StartTime.TotalSeconds);
 
             // Lower bound for the new start: the previous shot change and, if
             // present, the previous subtitle's end plus the configured gap.
