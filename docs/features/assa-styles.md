@@ -2,14 +2,14 @@
 
 Manage Advanced SubStation Alpha (ASS/SSA) subtitle styles, including file styles and storage (template) styles.
 
-**Menu:** `ASSA` → `Styles...`
+**Menu:** `ASSA tools` → `Styles...`
 
 ![ASSA Styles Screenshot](../screenshots/assa-styles.png)
 
 ## How to Use
 
 1. Open a subtitle file in ASS/SSA format (or convert your current subtitle to ASSA format).
-2. Go to **ASSA** → **Styles...** to open the styles manager.
+2. Go to **ASSA tools** → **Styles...** to open the styles manager.
 3. The left panel shows **File Styles** (styles in the current subtitle), and the right panel shows **Storage Styles** (reusable template styles).
 4. Select a style to view and edit its properties — font, colors, border, shadow, alignment, margins, and more.
 5. Use the preview area to see how your style looks.

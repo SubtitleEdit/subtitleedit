@@ -2,14 +2,14 @@
 
 Manage fonts and images embedded as attachments in an Advanced SubStation Alpha (ASS/SSA) subtitle file.
 
-**Menu:** `ASSA` → `Attachments...`
+**Menu:** `ASSA tools` → `Attachments...`
 
 ![ASSA Attachments Screenshot](../screenshots/assa-attachments.png)
 
 ## How to Use
 
 1. Open a subtitle file in ASS/SSA format.
-2. Go to **ASSA** → **Attachments...** to open the attachments manager.
+2. Go to **ASSA tools** → **Attachments...** to open the attachments manager.
 3. View the list of currently embedded fonts and images.
 4. Use **Add** to attach new font or image files.
 5. Select an attachment and use **Delete** or **Delete All** to remove attachments.

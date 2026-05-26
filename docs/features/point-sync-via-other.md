@@ -14,3 +14,5 @@ Synchronize a subtitle file using another subtitle file as reference.
 3. Select the reference subtitle file
 4. Match corresponding lines between the two files
 5. Click **OK** to apply
+
+The window remembers its size and position between sessions.

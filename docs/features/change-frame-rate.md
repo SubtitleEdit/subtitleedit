@@ -16,3 +16,5 @@ Convert subtitle timings from one frame rate to another.
 - 30
 - 50 (PAL interlaced)
 - 59.94 (NTSC interlaced)
+
+The window remembers its size and position between sessions.

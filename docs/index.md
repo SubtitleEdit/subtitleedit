@@ -52,7 +52,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 ### Video
 - [Video Player](features/video-player.md) — Video playback controls
 - [Audio Visualizer / Waveform](features/audio-visualizer.md) — Waveform display and editing
-- [Speech to Text](features/speech-to-text.md) — Automatic speech recognition with Whisper, Qwen3, Parakeet, Crisp ASR, and related engines
+- [Speech to Text](features/speech-to-text.md) — Automatic speech recognition with Whisper, Qwen3 ASR, Crisp ASR, and related engines
 - [Text to Speech](features/text-to-speech.md) — Generate speech from subtitles
 - [Burn-In Subtitles](features/burn-in.md) — Hardcode subtitles into video
 - [Embedded Subtitles](features/embedded-subtitles.md) — Add, remove, preview, and edit subtitle tracks in Matroska/WebM files

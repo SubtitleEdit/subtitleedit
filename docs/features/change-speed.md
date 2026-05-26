@@ -11,3 +11,5 @@ Adjust subtitle timings for videos with different playback speeds.
 
 - Converting between PAL (25fps) and NTSC (23.976fps) video speeds
 - Adjusting for speed-up or slow-down transfers
+
+The window remembers its size and position between sessions.

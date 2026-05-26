@@ -10,11 +10,11 @@ Find and fix repeated/double words in subtitle text (e.g., "the the").
 
 ## How to Use
 
-1. Open **Spell check → Find double words**
+1. Open **Spell check → Find double words...**
 2. The tool scans all subtitle lines for consecutive repeated words
-3. Each occurrence is listed with the line number and the repeated word
-4. Click on an entry to navigate to the subtitle line
-5. Fix the text manually or use the provided actions
+3. Each occurrence is listed with the line number, the subtitle text, and the repeated word
+4. Select a row and click **Go to**, press **Enter**, or double-click to jump to that subtitle in the main grid
+5. Edit the text manually in the main window
 
 ## What It Detects
 

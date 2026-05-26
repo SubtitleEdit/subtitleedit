@@ -44,13 +44,16 @@ Right-click anywhere in the **column header row** to open the column visibility 
 ## Context Menu
 
 Right-click a line to access:
+- Delete
 - Insert before / Insert after
-- Delete selected lines
-- Duplicate selected lines
+- Column (delete text, insert text, paste from clipboard, shift cells up/down, text up/down)
 - Split line
-- Merge with previous / next
-- Set alignment
-- Toggle bookmark
+- Merge before / Merge after / Merge selected / Merge selected as dialog
+- Extend to line before / Extend to line after
+- Remove formatting (all, bold, italic, underline, color, font name, alignment)
+- Italic / Bold / Color... / Font name... / Alignment...
+- Bookmark...
+- Selected lines... (Speech to text, Auto translate, Change casing, Set layer, Fix common errors, etc.)
 
 ## Keyboard Shortcuts (Grid)
 

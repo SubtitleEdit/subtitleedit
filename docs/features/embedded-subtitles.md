@@ -2,14 +2,18 @@
 
 Add, remove, preview, and edit subtitle tracks embedded in a video file.
 
-- **Menu:** Video → More → Add/remove embedded subtitles...
+- **Menu:** Video → Add/remove embedded subtitles...
 
 ## Supported Video Files
 
-The embedded subtitle editor currently supports editing subtitle tracks in Matroska containers:
+The embedded subtitle editor edits subtitle tracks in Matroska containers:
 
 - `.mkv`
 - `.webm`
+
+Subtitle tracks can also be inspected from MP4-style containers (`.mp4`, `.m4v`, `.mov`), but the editor warns when the loaded file cannot be edited as a Matroska container.
+
+Embedded subtitle reading supports a range of sources elsewhere in Subtitle Edit, including PGS/VobSub/DVB image tracks in Matroska, MP4-embedded VobSub/WebVTT, and CEA-708 (DTVCC) captions carried in H.264 SEI messages inside MP4.
 
 FFmpeg is required. If FFmpeg is not available, Subtitle Edit will prompt you to install or configure it before generating the output video.
 
@@ -28,7 +32,7 @@ FFmpeg is required. If FFmpeg is not available, Subtitle Edit will prompt you to
 
 1. Open a video file.
 2. Open or create the subtitle you want to embed.
-3. Select **Video → More → Add/remove embedded subtitles...**.
+3. Select **Video → Add/remove embedded subtitles...**.
 4. Click **Add current**.
 5. Edit the track metadata if needed.
 6. Click **Generate** and choose an output file name.
@@ -37,7 +41,7 @@ If the current subtitle format is not suitable for Matroska embedding, Subtitle 
 
 ## Add an External Subtitle File
 
-1. Open **Video → More → Add/remove embedded subtitles...**.
+1. Open **Video → Add/remove embedded subtitles...**.
 2. Click **Add**.
 3. Choose a subtitle file.
 4. Review the detected language and title.

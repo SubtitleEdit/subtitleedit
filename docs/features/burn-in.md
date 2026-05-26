@@ -2,7 +2,7 @@
 
 Hardcode (burn-in) subtitles permanently into a video file using FFmpeg.
 
-- **Menu:** Video → Burn-in subtitles...
+- **Menu:** Video → Generate video with burned-in subtitles...
 - **Shortcut:** Configurable
 
 <!-- Screenshot: Burn-in subtitles window -->
@@ -10,7 +10,7 @@ Hardcode (burn-in) subtitles permanently into a video file using FFmpeg.
 
 ## How to Use
 
-1. Open **Video → Burn-in subtitles...**
+1. Open **Video → Generate video with burned-in subtitles...**
 2. Select or confirm the video file
 3. Configure font settings (name, size, colors, outline, shadow)
 4. Configure video encoding settings (encoder, preset, CRF, pixel format)

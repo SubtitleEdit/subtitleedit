@@ -11,23 +11,15 @@ Re-encode a video file with different resolution, frame rate, or container forma
 ## How to Use
 
 1. Open **Video → Re-encode video...**
-2. Select or confirm the input video file
-3. Set the output resolution (or use source resolution)
-4. Select the output frame rate
-5. Select the output container format (`.mkv`, `.mp4`, `.webm`)
-6. Click **Generate** to start re-encoding
+2. Select the output frame rate
+3. Select the output container format (`.mkv`, `.mp4`, `.webm`)
+4. Click **Generate** to start re-encoding (or use the **Generate** split-button menu to prompt for FFmpeg parameters before encoding)
 
 ## Options
 
-- **Resolution** — Output video width and height
-- **Use source resolution** — Keep the original video resolution
 - **Frame rate** — Output frame rate
 - **Video extension** — Output container format
-- **Prompt for FFmpeg parameters** — Edit the FFmpeg command line before encoding
-
-## Batch Mode
-
-Multiple re-encoding jobs can be queued for batch processing.
+- **Prompt for FFmpeg parameters and generate** — Edit the FFmpeg command line before encoding (available from the **Generate** split-button menu)
 
 ## Keyboard Shortcuts
 

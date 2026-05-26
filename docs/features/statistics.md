@@ -11,7 +11,7 @@ View detailed statistics about the currently loaded subtitle file, including lin
 1. Open a subtitle file.
 2. Go to **File** → **Statistics...** to open the statistics dialog.
 3. View general statistics, most used words, and most used lines.
-4. Use **Save as...** to export the statistics to a text file.
+4. Use **Export** to save the statistics to a text file.
 
 ## Features
 

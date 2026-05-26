@@ -2,14 +2,14 @@
 
 Visually position subtitles on screen by dragging them over a video screenshot, generating the appropriate ASSA \pos override tag.
 
-**Menu:** `ASSA` → `Set Position...`
+**Menu:** `ASSA tools` → `Set position...`
 
 ![ASSA Set Position Screenshot](../screenshots/assa-set-position.png)
 
 ## How to Use
 
 1. Load a video and select a subtitle line.
-2. Go to **ASSA** → **Set Position...** to open the positioning dialog.
+2. Go to **ASSA tools** → **Set position...** to open the positioning dialog.
 3. A screenshot of the current video frame is shown with the subtitle text overlaid.
 4. Drag the subtitle text to the desired position on the screen.
 5. The position coordinates update in real time.

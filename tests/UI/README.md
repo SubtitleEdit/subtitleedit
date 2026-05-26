@@ -1,6 +1,6 @@
 # UI Tests
 
-This project contains unit tests for the UI project, specifically for OCR fix engine features.
+This project contains unit tests for the UI project, covering areas such as OCR, spell-check, shortcuts, merge/split, find/replace, color services, downloads, undo/redo, and media helpers.
 
 ## SpellCheckRegexTests
 

@@ -9,11 +9,12 @@ Synchronize subtitles visually by matching two points in the video.
 
 ## How to Use
 
-1. Open **Sync → Visual sync...**
-2. Play the video to find where the first subtitle should appear
-3. Set the first sync point
-4. Play to where the last subtitle should appear
-5. Set the second sync point
-6. Click **OK** to apply the synchronization
+The Visual sync window shows two video player panes ("Start scene" and "End scene"), each with its own audio visualizer and a combo box for picking a subtitle line.
 
-The timing of all subtitles will be linearly adjusted to match the two sync points.
+1. Open **Sync → Visual sync...**
+2. In the **Start scene** pane, pick a subtitle line near the beginning and play the video to the position where that line should start
+3. In the **End scene** pane, pick a subtitle line near the end and play the video to the position where that line should start
+4. Click **Sync** to apply (or use **Manual sync...** from the Sync split-button for a manual offset/speed adjustment)
+5. Click **OK** to keep the result
+
+The timing of all subtitles is linearly adjusted to match the two sync points. The window remembers its size and position between sessions.

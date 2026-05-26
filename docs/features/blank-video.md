@@ -19,18 +19,14 @@ Generate a blank video file for testing or subtitle preview purposes.
 
 ## Background Options
 
-- **Checked image** — Classic checkered pattern (useful for transparency testing)
+- **Checkered image** — Classic checkered pattern (useful for transparency testing)
 - **Solid color** — A single flat color background
-- **Background image** — Use a custom image file as the background
+- **Image** — Use a custom image file as the background
 
 ## Additional Options
 
 - **Generate time codes** — Burn time code display into the video
-- **Use source resolution** — Match resolution from an existing video
-
-## Batch Mode
-
-Multiple blank videos can be queued as jobs for batch generation.
+- **Use source resolution** — Match resolution from an existing video (picked via the resolution browse button)
 
 ## Keyboard Shortcuts
 

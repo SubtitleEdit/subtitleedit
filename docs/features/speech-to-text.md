@@ -11,32 +11,23 @@ Subtitle Edit can automatically transcribe audio to text using Whisper-based and
 
 | Engine | Platform | Notes |
 |--------|----------|-------|
-| Whisper.cpp | Windows, Linux, macOS | Local CPU engine |
-| Whisper.cpp (cuBLAS) | Windows | NVIDIA CUDA build |
-| Whisper.cpp (Vulkan) | Windows | Vulkan GPU build |
-| Purfview's Faster Whisper XXL | Windows, Linux | Fast local engine, often used with NVIDIA CUDA |
-| Whisper CTranslate2 | Windows, Linux, macOS | CPU / NVIDIA CUDA depending on installation; CUDA requires [CUDA 12.x](https://developer.nvidia.com/cuda-12-0-0-download-archive) |
-| Const-me's Whisper | Windows | DirectX-based engine |
-| OpenAI Whisper | All | Python-based OpenAI Whisper workflow |
-| Chat LLM.cpp | Windows, Linux, macOS | Local LLM transcription workflow; macOS download is for Apple Silicon |
-| Qwen3 ASR CPP | Windows, Linux, macOS | Local Qwen3 ASR engine with downloadable GGUF models |
-| Parakeet.cpp | Windows, Linux, macOS | Local Parakeet engine; some models are English-only, larger models are multilingual |
-| Crisp ASR GLM | Windows, Linux, macOS | Crisp ASR backend |
-| Crisp ASR Qwen3 | Windows, Linux, macOS | Crisp ASR backend |
-| Crisp ASR Granite | Windows, Linux, macOS | Crisp ASR backend |
-| Crisp ASR Omni | Windows, Linux, macOS | Crisp ASR backend |
-| Crisp ASR Parakeet | Windows, Linux, macOS | Crisp ASR backend |
-| Crisp ASR Canary | Windows, Linux, macOS | Crisp ASR backend |
-| Crisp ASR Cohere | Windows, Linux, macOS | Crisp ASR backend |
-| Crisp ASR Fire Red | Windows, Linux, macOS | Crisp ASR backend |
+| Whisper CPP | Windows, Linux, macOS | Local CPU engine. On Windows the cuBLAS (NVIDIA CUDA) and Vulkan GPU backends can also be selected from the Whisper CPP backend dropdown. |
+| Purfview Faster Whisper XXL | Windows, Linux | Fast local engine, often used with NVIDIA CUDA |
+| Whisper CTranslate2 | Windows, Linux (x64), macOS (Apple Silicon) | CPU / NVIDIA CUDA depending on installation; CUDA requires [CUDA 12.x](https://developer.nvidia.com/cuda-12-0-0-download-archive) |
+| Whisper Const-me | Windows | DirectX-based engine |
+| Whisper OpenAI | All | Python-based OpenAI Whisper workflow |
+| OpenAI Compatible Server | All | Connect to any OpenAI-compatible speech-to-text endpoint |
+| Qwen3 ASR CPP | Windows, Linux | Local Qwen3 ASR engine with downloadable GGUF models |
+| Crisp ASR | Windows, Linux, macOS | Single engine with selectable backends: Parakeet, Canary, Cohere, Fire Red, GLM, Granite, Qwen3, Mega, Omni, Kyutai |
 
 Engines and models are downloaded automatically on first use.
 
 ## SE5 Engine Notes
 
+- **Whisper CPP** is shown as a single entry; the CPU / cuBLAS / Vulkan backends are selected from a secondary dropdown when Whisper CPP is selected.
 - **Qwen3 ASR CPP** includes 0.6B and 1.7B model options, plus a forced-aligner model used for timing workflows.
-- **Parakeet.cpp** stores each model in its own folder because a model needs both weights and a vocabulary file.
-- **Crisp ASR** engines share a common backend workflow and expose different model families such as GLM, Qwen3, Granite, Omni, Parakeet, Canary, Cohere, and Fire Red.
+- **Crisp ASR** is exposed as one engine that wraps multiple backends (Parakeet, Canary, Cohere, Fire Red, GLM, Granite, Qwen3, Mega, Omni, Kyutai). Pick the backend from the Crisp ASR backend dropdown.
+- A **Forced aligner** option is shown for Crisp ASR backends and exposes the built-in aligner, Canary CTC, Qwen3, and the wav2vec2 zoo (12 language-specific CTC aligners that run on top of any Crisp ASR backend).
 - Several newer engines support automatic language selection.
 - Each engine can have separate advanced command-line parameters.
 
@@ -79,7 +70,7 @@ Click the **Advanced** button to configure custom command-line arguments for the
 - Highlight spoken words in the transcript
 - Adjust temperature or other model parameters
 
-Advanced settings are stored per engine, so you can keep separate parameters for Whisper.cpp, Qwen3 ASR, Parakeet.cpp, Crisp ASR, and other engines.
+Advanced settings are stored per engine, so you can keep separate parameters for Whisper CPP, Qwen3 ASR, Crisp ASR, and other engines.
 
 ## Post-Processing Settings
 
@@ -98,8 +89,8 @@ The console log at the bottom shows real-time output from the Whisper process, u
 
 ## Tips
 
-- For NVIDIA GPU users, use **Whisper.cpp (cuBLAS)** or **Purfview's Faster Whisper XXL** for fastest transcription
+- For NVIDIA GPU users, use the **Whisper CPP** cuBLAS backend or **Purfview Faster Whisper XXL** for fastest transcription
 - If you get "CUDA out of memory" errors, try a smaller model
-- The `--standard` parameter is automatically added for Purfview's Faster Whisper XXL
+- The `--standard` parameter is automatically added for Purfview Faster Whisper XXL
 - You can re-download an engine by right-clicking the engine area
 - If a new engine has no model installed yet, let Subtitle Edit download both the engine and the selected model before starting transcription

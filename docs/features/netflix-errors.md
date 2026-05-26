@@ -13,6 +13,7 @@ The checker can report common Netflix delivery issues, including:
 - maximum line length
 - maximum number of lines
 - minimum two-frame gaps
+- bridge short gaps
 - shot change rules
 - dialog hyphen spacing
 - ellipsis style
@@ -20,7 +21,8 @@ The checker can report common Netflix delivery issues, including:
 - allowed glyphs
 - italics rules
 - HI/sound-effect bracket style
-- numbers that should be spelled out
+- numbers 1–10 that should be spelled out
+- numbers at the start of a subtitle that should be spelled out
 - Timed Text frame-rate issues
 
 ## How to Use

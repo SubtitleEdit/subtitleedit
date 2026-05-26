@@ -23,13 +23,7 @@ You can find the latest cross-platform builds here:
 ### macOS
 
 - **Minimum macOS version**: 12 (Monterey) or newer
-- **Dependencies for Intel macs** (install via [MacPorts](https://www.macports.org/)):
-    - `mpv`
-        - MacPorts: `sudo port install mpv`
-    - `ffmpeg`
-        - Homebrew: `sudo port install ffmpeg`
-
-
+- The `.dmg` is self-contained: `libmpv` and `ffmpeg` are bundled inside `Subtitle Edit.app`, so no MacPorts or Homebrew install is required.
 
 #### Installing Subtitle Edit on macOS (Unsigned App)
 

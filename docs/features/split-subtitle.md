@@ -9,7 +9,16 @@ Split a single subtitle file into two or more parts.
 
 ## Split Options
 
-- **Split at line number** — Split at a specific line
-- **Split at time** — Split at a specific time code
-- **Split by number of equal parts** — Divide into equal segments
-- **Split by characters** — Split based on character count
+Choose how to divide the subtitle into roughly equal parts:
+
+- **Lines** — Split so each part has the same number of subtitle lines
+- **Characters** — Split so each part has roughly the same number of characters
+- **Time** — Split so each part covers roughly the same duration
+
+Then set:
+
+- **Number of equal parts** — How many output files to produce
+- **Output folder** — Where to save the split files
+- **Format** and **Encoding** — Subtitle format and text encoding used for the split files
+
+Click **Save split parts** to write all parts to the output folder.

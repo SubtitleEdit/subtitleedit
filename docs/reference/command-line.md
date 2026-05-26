@@ -299,7 +299,7 @@ Operations run after the structural transforms (offset, fps, renumber, adjust-du
 | `--delete-first:<n>` | Delete first N entries |
 | `--delete-last:<n>` | Delete last N entries |
 | `--delete-contains:<word>` | Delete entries containing the given word |
-| `--fix-common-errors` | Fix common subtitle errors (all 38 rules) |
+| `--fix-common-errors` | Fix common subtitle errors (all 39 rules) |
 | `--fix-common-errors-rules:<list>` | Run a subset of FCE rules (CSV; supports `all,-RuleId`) |
 | `--fix-rtl-via-unicode-chars` | Fix RTL via Unicode characters |
 | `--merge-same-texts` | Merge entries with same text |
@@ -320,7 +320,7 @@ seconv *.srt subrip --remove-text-for-hi --merge-same-texts --split-long-lines -
 
 ### FixCommonErrors rule selection
 
-`--fix-common-errors` (no value) runs all 38 rules. Pass `--fix-common-errors-rules:<list>` to pick a subset — supplying that option implies `--fix-common-errors`.
+`--fix-common-errors` (no value) runs all 39 rules. Pass `--fix-common-errors-rules:<list>` to pick a subset — supplying that option implies `--fix-common-errors`.
 
 ```bash
 seconv movie.srt subrip --fix-common-errors                                  # all rules

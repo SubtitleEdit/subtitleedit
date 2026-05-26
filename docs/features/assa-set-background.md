@@ -2,14 +2,14 @@
 
 Add styled background boxes behind subtitle text using ASSA drawing commands.
 
-**Menu:** `ASSA` → `Set Background Box...`
+**Menu:** `ASSA tools` → `Generate background boxes...`
 
 ![ASSA Set Background Screenshot](../screenshots/assa-set-background.png)
 
 ## How to Use
 
 1. Load a video and subtitle file in ASSA format.
-2. Go to **ASSA** → **Set Background Box...** to open the background dialog.
+2. Go to **ASSA tools** → **Generate background boxes...** to open the background dialog.
 3. Configure the background box style — shape, colors, padding, and outline.
 4. Preview the result in the built-in video player.
 5. Click **OK** to apply the background box to your subtitle.
@@ -20,6 +20,7 @@ Add styled background boxes behind subtitle text using ASSA drawing commands.
 - **Square corners:** Rectangular background box.
 - **Rounded corners:** Background box with configurable corner radius.
 - **Circle:** Circular background shape.
+- **Spikes**, **Bubbles**, **Wave**, **Hexagon**, **Torn paper**, **Cloud**, **Torn paper (double)**, **Starburst**, **Scroll:** Additional decorative box shapes.
 
 ### Padding
 - Configure left, right, top, and bottom padding independently.

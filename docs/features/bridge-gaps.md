@@ -9,7 +9,8 @@ Extend subtitle durations to fill gaps between consecutive subtitles.
 
 ## Options
 
-- **Maximum gap to bridge** — Only bridge gaps smaller than this value
-- **Minimum gap after bridge** — Maintain at least this much gap
-- **Extend previous subtitle** — Extend the end of the previous subtitle
-- Preview affected lines before applying
+- **Bridge gaps smaller than** — Only bridge gaps smaller than this value
+- **Min. gap** — Keep at least this much gap between the bridged subtitles
+- **Percent for previous** — How much of the gap is given to the previous subtitle (the rest goes to the next subtitle)
+
+Values are entered in milliseconds, or in frames when the global *Use time format HH:MM:SS:FF* setting is enabled. The preview updates live and the status text shows the number of bridged gaps.

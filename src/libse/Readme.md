@@ -10,7 +10,7 @@ var firstStartMilliseconds = subtitle.Paragraphs.First().StartTime.TotalMillisec
 
 ## How to save a subtitle file
 ```csharp
-File.WriteAllText(@"C:\Data\new.srt", new SubRip().ToText(subtitle, "untitled"));
+File.WriteAllText("new.srt", new SubRip().ToText(subtitle, "untitled"));
 ```
 
 ## License
