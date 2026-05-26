@@ -281,6 +281,7 @@ public partial class SetSyncPointViewModel : ObservableObject
 
     internal void OnClosing()
     {
+        UiUtil.SaveWindowPosition(Window);
         _positionTimer.Stop();
         VideoPlayerControl.VideoPlayer.CloseFile();
     }
@@ -303,6 +304,8 @@ public partial class SetSyncPointViewModel : ObservableObject
 
     internal async void OnLoaded()
     {
+        UiUtil.RestoreWindowPosition(Window);
+
         if (string.IsNullOrEmpty(_videoFileName))
         {
             return;

@@ -221,5 +221,6 @@ public partial class AdjustAllTimesViewModel : ObservableObject
 
     internal void OnClosing(WindowClosingEventArgs e)
     {
+        UiUtil.SaveWindowPosition(Window);
     }
 }
