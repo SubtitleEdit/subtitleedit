@@ -6365,6 +6365,130 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void SetInCueToClosestShotChangeLeftGreenZone() =>
+        SetCueToClosestShotChangeGreenZone(isInCue: true, isLeftZone: true,
+            Se.Language.General.SetInCueToClosestShotChangeLeftGreenZone);
+
+    [RelayCommand]
+    private void SetInCueToClosestShotChangeRightGreenZone() =>
+        SetCueToClosestShotChangeGreenZone(isInCue: true, isLeftZone: false,
+            Se.Language.General.SetInCueToClosestShotChangeRightGreenZone);
+
+    [RelayCommand]
+    private void SetOutCueToClosestShotChangeLeftGreenZone() =>
+        SetCueToClosestShotChangeGreenZone(isInCue: false, isLeftZone: true,
+            Se.Language.General.SetOutCueToClosestShotChangeLeftGreenZone);
+
+    [RelayCommand]
+    private void SetOutCueToClosestShotChangeRightGreenZone() =>
+        SetCueToClosestShotChangeGreenZone(isInCue: false, isLeftZone: false,
+            Se.Language.General.SetOutCueToClosestShotChangeRightGreenZone);
+
+    // Snaps a cue (in or out) onto the closest shot change, offset by the
+    // configured green-zone frame count from BeautifyTimeCodes.Profile.
+    // Left zone = cue lands BEFORE the shot change; right zone = AFTER.
+    // Skips a line if applying the snap would invalidate duration or run
+    // into the previous/next subtitle's gap.
+    private void SetCueToClosestShotChangeGreenZone(bool isInCue, bool isLeftZone, string actionLabel)
+    {
+        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (string.IsNullOrEmpty(_videoFileName) ||
+            AudioVisualizer == null ||
+            AudioVisualizer.ShotChanges.Count == 0 ||
+            selectedLines.Count == 0)
+        {
+            return;
+        }
+
+        var profile = Configuration.Settings.BeautifyTimeCodes.Profile;
+        int zoneFrames;
+        if (isInCue)
+        {
+            zoneFrames = isLeftZone ? profile.InCuesLeftGreenZone : profile.InCuesRightGreenZone;
+        }
+        else
+        {
+            zoneFrames = isLeftZone ? profile.OutCuesLeftGreenZone : profile.OutCuesRightGreenZone;
+        }
+
+        var frameRate = _mediaInfo != null ? (double)_mediaInfo.FramesRateNonNormalized : Se.Settings.General.CurrentFrameRate;
+        var zoneMs = SubtitleFormat.FramesToMilliseconds(zoneFrames, frameRate);
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        var minDurationMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
+        var maxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
+
+        var changed = 0;
+        foreach (var line in selectedLines)
+        {
+            var idx = Subtitles.IndexOf(line);
+            var cue = isInCue ? line.StartTime : line.EndTime;
+            var closestShotChange = ShotChangeHelper.GetClosestShotChange(AudioVisualizer.ShotChanges, new TimeCode(cue));
+            if (closestShotChange == null)
+            {
+                continue;
+            }
+
+            var shotChangeMs = closestShotChange.Value * 1000.0;
+            var newCueMs = isLeftZone ? shotChangeMs - zoneMs : shotChangeMs + zoneMs;
+
+            if (isInCue)
+            {
+                if (newCueMs < 0 || newCueMs >= line.EndTime.TotalMilliseconds)
+                {
+                    continue;
+                }
+
+                var newDuration = line.EndTime.TotalMilliseconds - newCueMs;
+                if (newDuration < minDurationMs || newDuration > maxDurationMs)
+                {
+                    continue;
+                }
+
+                var prev = Subtitles.GetOrNull(idx - 1);
+                if (prev != null && newCueMs < prev.EndTime.TotalMilliseconds + gapMs)
+                {
+                    continue;
+                }
+
+                line.StartTime = TimeSpan.FromMilliseconds(newCueMs);
+            }
+            else
+            {
+                if (newCueMs <= line.StartTime.TotalMilliseconds)
+                {
+                    continue;
+                }
+
+                var newDuration = newCueMs - line.StartTime.TotalMilliseconds;
+                if (newDuration < minDurationMs || newDuration > maxDurationMs)
+                {
+                    continue;
+                }
+
+                var next = Subtitles.GetOrNull(idx + 1);
+                if (next != null && newCueMs > next.StartTime.TotalMilliseconds - gapMs)
+                {
+                    continue;
+                }
+
+                line.EndTime = TimeSpan.FromMilliseconds(newCueMs);
+            }
+
+            changed++;
+        }
+
+        if (changed > 0)
+        {
+            ShowStatus(string.Format(Se.Language.General.XOfYLinesUpdated, actionLabel, changed, selectedLines.Count));
+            _updateAudioVisualizer = true;
+        }
+        else
+        {
+            ShowStatus(string.Format(Se.Language.General.XNoLinesUpdated, actionLabel));
+        }
+    }
+
+    [RelayCommand]
     private void MoveAllShotChangeOneFrameBack()
     {
         if (AudioVisualizer == null || AudioVisualizer.ShotChanges.Count == 0)
