@@ -6365,6 +6365,124 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void ExtendSelectedLinesToPreviousShotChange()
+    {
+        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
+        var vp = GetVideoPlayerControl();
+        if (string.IsNullOrEmpty(_videoFileName) ||
+            vp == null ||
+            AudioVisualizer == null ||
+            AudioVisualizer.ShotChanges.Count == 0 ||
+            selectedLines.Count == 0)
+        {
+            return;
+        }
+
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        foreach (var line in selectedLines)
+        {
+            var idx = Subtitles.IndexOf(line);
+            var prev = Subtitles.GetOrNull(idx - 1);
+            var shotChange = AudioVisualizer.ShotChanges.LastOrDefault(s => s < line.StartTime.TotalSeconds + 0.01);
+            if (prev == null && shotChange == 0)
+            {
+                continue;
+            }
+
+            if (shotChange == 0)
+            {
+                var newStartMs = prev!.EndTime.TotalMilliseconds + gapMs;
+                var newDuration = line.EndTime - TimeSpan.FromMilliseconds(newStartMs);
+                if (newDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                {
+                    line.StartTime = TimeSpan.FromMilliseconds(newStartMs);
+                }
+
+                continue;
+            }
+
+            if (prev == null)
+            {
+                var newDuration = line.EndTime - TimeSpan.FromSeconds(shotChange);
+                if (newDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                {
+                    line.StartTime = TimeSpan.FromSeconds(shotChange);
+                }
+
+                continue;
+            }
+
+            if (TimeSpan.FromSeconds(shotChange) > prev.EndTime)
+            {
+                var newDuration = line.EndTime - TimeSpan.FromSeconds(shotChange);
+                if (newDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                {
+                    line.StartTime = TimeSpan.FromSeconds(shotChange);
+                }
+            }
+            else
+            {
+                var newStartMs = prev.EndTime.TotalMilliseconds + gapMs;
+                var newDuration = line.EndTime - TimeSpan.FromMilliseconds(newStartMs);
+                if (newDuration.TotalMilliseconds <= Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                {
+                    line.StartTime = TimeSpan.FromMilliseconds(newStartMs);
+                }
+            }
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
+    private void SnapSelectedLinesStartToNextShotChange()
+    {
+        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (string.IsNullOrEmpty(_videoFileName) ||
+            AudioVisualizer == null ||
+            AudioVisualizer.ShotChanges.Count == 0 ||
+            selectedLines.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var line in selectedLines)
+        {
+            var next = AudioVisualizer.ShotChanges.FirstOrDefault(s => s > line.StartTime.TotalSeconds + 0.001);
+            if (next > 0 && TimeSpan.FromSeconds(next) < line.EndTime)
+            {
+                line.StartTime = TimeSpan.FromSeconds(next);
+            }
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
+    private void SnapSelectedLinesEndToPreviousShotChange()
+    {
+        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (string.IsNullOrEmpty(_videoFileName) ||
+            AudioVisualizer == null ||
+            AudioVisualizer.ShotChanges.Count == 0 ||
+            selectedLines.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var line in selectedLines)
+        {
+            var prev = AudioVisualizer.ShotChanges.LastOrDefault(s => s < line.EndTime.TotalSeconds - 0.001);
+            if (prev > 0 && TimeSpan.FromSeconds(prev) > line.StartTime)
+            {
+                line.EndTime = TimeSpan.FromSeconds(prev);
+            }
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
     private void MoveAllShotChangeOneFrameBack()
     {
         if (AudioVisualizer == null || AudioVisualizer.ShotChanges.Count == 0)
