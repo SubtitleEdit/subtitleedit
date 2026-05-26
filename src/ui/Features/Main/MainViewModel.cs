@@ -6396,7 +6396,9 @@ public partial class MainViewModel :
     {
         var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>()
             .OrderBy(p => p.StartTime).ToList();
+        var vp = GetVideoPlayerControl();
         if (string.IsNullOrEmpty(_videoFileName) ||
+            vp == null ||
             AudioVisualizer == null ||
             AudioVisualizer.ShotChanges.Count == 0 ||
             selectedLines.Count == 0)
