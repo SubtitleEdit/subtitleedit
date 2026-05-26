@@ -61,7 +61,9 @@ public class PointSyncViaOtherWindow : Window
         Loaded += delegate
         {
             buttonCancel.Focus(); // hack to make OnKeyDown work
+            UiUtil.RestoreWindowPosition(this);
         };
+        Closing += (_, _) => UiUtil.SaveWindowPosition(this);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 

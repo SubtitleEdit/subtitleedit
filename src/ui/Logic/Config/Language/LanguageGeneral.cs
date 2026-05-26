@@ -166,6 +166,7 @@ public class LanguageGeneral
     public string ExtendAfter { get; set; }
     public string ExtendBefore { get; set; }
     public string ExtendSelectedLinesToNextShotChangeOrNextSubtitle { get; set; }
+    public string ExtendSelectedLinesToPreviousShotChange { get; set; }
     public string ExtendSelectedToNext { get; set; }
     public string ExtendSelectedToPrevious { get; set; }
     public string ExtractingAudioClips { get; set; }
@@ -525,6 +526,8 @@ public class LanguageGeneral
     public string SkipAll { get; set; }
     public string SkipOnce { get; set; }
     public string Smart { get; set; }
+    public string SnapSelectedLinesEndToPreviousShotChange { get; set; }
+    public string SnapSelectedLinesStartToNextShotChange { get; set; }
     public string SnapSelectedLinesToNearestShotChange { get; set; }
     public string SolidColor { get; set; }
     public string SourceViewX { get; set; }
@@ -884,6 +887,7 @@ public class LanguageGeneral
         ExtendAfter = "Extend/shorten to line after";
         ExtendBefore = "Extend/shorten to line before";
         ExtendSelectedLinesToNextShotChangeOrNextSubtitle = "Extend selected lines to next shot change (or next subtitle)";
+        ExtendSelectedLinesToPreviousShotChange = "Extend selected lines to previous shot change (or previous subtitle)";
         ExtendSelectedToNext = "Extend selected to next";
         ExtendSelectedToPrevious = "Extend selected to previous";
         ExtractingAudioClips = "Extracting audio clips...";
@@ -1243,6 +1247,8 @@ public class LanguageGeneral
         SkipAll = "Skip all";
         SkipOnce = "Skip once";
         Smart = "Smart";
+        SnapSelectedLinesEndToPreviousShotChange = "Snap selected lines end to previous shot change";
+        SnapSelectedLinesStartToNextShotChange = "Snap selected lines start to next shot change";
         SnapSelectedLinesToNearestShotChange = "Snap selected lines start/end to nearest shot change";
         SolidColor = "Solid color";
         SourceViewX = "Source view - {0}";

@@ -106,7 +106,11 @@ public class AdjustAllTimesWindow : Window
 
         Content = grid;
 
-        Loaded += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Loaded += delegate
+        {
+            buttonOk.Focus(); // hack to make OnKeyDown work
+            UiUtil.RestoreWindowPosition(this);
+        };
         KeyDown += (_, e) => vm.OnKeyDown(e);
         Closing += (_, e) => vm.OnClosing(e);
     }
