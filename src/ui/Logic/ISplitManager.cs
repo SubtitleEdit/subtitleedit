@@ -44,6 +44,16 @@ public class SplitManager : ISplitManager
         {
             subtitle.Text = text.Substring(0, textIndex).Trim();
             newSubtitle.Text = text.Substring(textIndex).Trim();
+
+            if (lines.Count == 2)
+            {
+                var dialogHelper = new DialogSplitMerge { DialogStyle = Configuration.Settings.General.DialogStyle, TwoLetterLanguageCode = languageCode };
+                if (dialogHelper.IsDialog(lines))
+                {
+                    subtitle.Text = DialogSplitMerge.RemoveStartDash(subtitle.Text);
+                    newSubtitle.Text = DialogSplitMerge.RemoveStartDash(newSubtitle.Text);
+                }
+            }
         }
         else if (lines.Count == 2)
         {
