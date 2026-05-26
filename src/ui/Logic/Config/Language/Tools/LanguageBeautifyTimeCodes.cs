@@ -17,6 +17,11 @@ public class LanguageBeautifyTimeCodes
     public string ChangeXOfY { get; set; }
     public string NoChanges { get; set; }
     public string SnappedToShotChange { get; set; }
+    public string SnappedToFrame { get; set; }
+    public string MinGapEnforced { get; set; }
+    public string MinDurationEnforced { get; set; }
+    public string MaxDurationEnforced { get; set; }
+    public string NoReasonNote { get; set; }
     public string PreviousChange { get; set; }
     public string NextChange { get; set; }
 
@@ -37,6 +42,11 @@ public class LanguageBeautifyTimeCodes
         ChangeXOfY = "Change {0} of {1}";
         NoChanges = "No changes — every cue is already on target";
         SnappedToShotChange = "snapped to shot change";
+        SnappedToFrame = "snapped to frame";
+        MinGapEnforced = "min. gap enforced";
+        MinDurationEnforced = "min. duration enforced";
+        MaxDurationEnforced = "max. duration enforced";
+        NoReasonNote = "—";
         PreviousChange = "Previous change";
         NextChange = "Next change";
     }

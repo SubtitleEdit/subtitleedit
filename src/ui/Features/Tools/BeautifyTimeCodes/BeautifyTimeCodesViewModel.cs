@@ -45,6 +45,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     [ObservableProperty] private string _statsLine = string.Empty;
     [ObservableProperty] private string _changePositionLabel = string.Empty;
     [ObservableProperty] private string _changeDetail = string.Empty;
+    [ObservableProperty] private string _changeNotes = string.Empty;
     [ObservableProperty] private bool _hasChanges;
     [ObservableProperty] private bool _canGoPrevious;
     [ObservableProperty] private bool _canGoNext;
@@ -198,6 +199,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         {
             ChangePositionLabel = string.Empty;
             ChangeDetail = Se.Language.Tools.BeautifyTimeCodes.NoChanges;
+            ChangeNotes = string.Empty;
             CanGoPrevious = false;
             CanGoNext = false;
             if (AudioVisualizerOriginal != null) AudioVisualizerOriginal.AllSelectedParagraphs = new List<SubtitleLineViewModel>();
@@ -216,6 +218,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         var b = _beautifiedSubtitles[idx];
 
         ChangeDetail = BuildChangeDetail(o, b);
+        ChangeNotes = BuildChangeNotes(o, b);
 
         // Highlight: AllSelectedParagraphs drives the paint-with-selected-background path.
         if (AudioVisualizerOriginal != null)
@@ -238,7 +241,6 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
 
     private string BuildChangeDetail(SubtitleLineViewModel original, SubtitleLineViewModel beautified)
     {
-        var lang = Se.Language.Tools.BeautifyTimeCodes;
         var sb = new System.Text.StringBuilder();
 
         sb.Append('#').Append(beautified.Number).Append("   ");
@@ -251,8 +253,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
               .Append(" → ")
               .Append(FormatTime(beautified.StartTime))
               .Append("  ")
-              .Append(FormatDelta(startDeltaMs))
-              .Append(SnappedNote(beautified.StartTime.TotalSeconds));
+              .Append(FormatDelta(startDeltaMs));
         }
 
         var endDeltaMs = beautified.EndTime.TotalMilliseconds - original.EndTime.TotalMilliseconds;
@@ -264,26 +265,155 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
               .Append(" → ")
               .Append(FormatTime(beautified.EndTime))
               .Append("  ")
-              .Append(FormatDelta(endDeltaMs))
-              .Append(SnappedNote(beautified.EndTime.TotalSeconds + (_frameRate > 0 ? 1.0 / _frameRate : 0)));
+              .Append(FormatDelta(endDeltaMs));
         }
 
         return sb.ToString();
     }
 
-    private string SnappedNote(double seconds)
+    private string BuildChangeNotes(SubtitleLineViewModel original, SubtitleLineViewModel beautified)
     {
-        if (_shotChanges.Count == 0 || _frameRate <= 0) return string.Empty;
-        var tolFrames = 1.5;
-        var tol = tolFrames / _frameRate;
-        foreach (var sc in _shotChanges)
+        var lang = Se.Language.Tools.BeautifyTimeCodes;
+        var idx = _beautifiedSubtitles.IndexOf(beautified);
+        var prevB = idx > 0 ? _beautifiedSubtitles[idx - 1] : null;
+        var nextB = (idx >= 0 && idx < _beautifiedSubtitles.Count - 1) ? _beautifiedSubtitles[idx + 1] : null;
+
+        var parts = new System.Collections.Generic.List<string>();
+
+        var startChanged = Math.Abs(beautified.StartTime.TotalMilliseconds - original.StartTime.TotalMilliseconds) > 0.5;
+        if (startChanged)
         {
-            if (Math.Abs(sc - seconds) <= tol)
+            var reason = DetectStartReason(original, beautified, prevB);
+            if (reason != null)
             {
-                return "  · " + Se.Language.Tools.BeautifyTimeCodes.SnappedToShotChange;
+                parts.Add(Se.Language.General.StartTime + ": " + reason);
             }
         }
-        return string.Empty;
+
+        var endChanged = Math.Abs(beautified.EndTime.TotalMilliseconds - original.EndTime.TotalMilliseconds) > 0.5;
+        if (endChanged)
+        {
+            var reason = DetectEndReason(original, beautified, nextB);
+            if (reason != null)
+            {
+                parts.Add(Se.Language.General.EndTime + ": " + reason);
+            }
+        }
+
+        // Duration reason — applies regardless of which side moved
+        var durationReason = DetectDurationReason(original, beautified);
+        if (durationReason != null)
+        {
+            parts.Add(Se.Language.General.Duration + ": " + durationReason);
+        }
+
+        return parts.Count == 0 ? lang.NoReasonNote : string.Join("    ·    ", parts);
+    }
+
+    private string? DetectStartReason(SubtitleLineViewModel original, SubtitleLineViewModel beautified, SubtitleLineViewModel? prev)
+    {
+        if (_frameRate <= 0)
+        {
+            return null;
+        }
+
+        var snap = DetectShotChangeSnap(beautified.StartTime, isOutCue: false);
+        if (snap != null) return snap;
+
+        // Min-gap-to-previous: new start equals previous end + min-gap
+        if (prev != null)
+        {
+            var minGapMs = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+            var expected = prev.EndTime.TotalMilliseconds + minGapMs;
+            var halfFrame = (1.0 / _frameRate) * 500.0;
+            if (Math.Abs(beautified.StartTime.TotalMilliseconds - expected) <= halfFrame)
+            {
+                return Se.Language.Tools.BeautifyTimeCodes.MinGapEnforced;
+            }
+        }
+
+        return DetectFrameSnap(original.StartTime, beautified.StartTime);
+    }
+
+    private string? DetectEndReason(SubtitleLineViewModel original, SubtitleLineViewModel beautified, SubtitleLineViewModel? next)
+    {
+        if (_frameRate <= 0)
+        {
+            return null;
+        }
+
+        var snap = DetectShotChangeSnap(beautified.EndTime, isOutCue: true);
+        if (snap != null) return snap;
+
+        if (next != null)
+        {
+            var minGapMs = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+            var expected = next.StartTime.TotalMilliseconds - minGapMs;
+            var halfFrame = (1.0 / _frameRate) * 500.0;
+            if (Math.Abs(beautified.EndTime.TotalMilliseconds - expected) <= halfFrame)
+            {
+                return Se.Language.Tools.BeautifyTimeCodes.MinGapEnforced;
+            }
+        }
+
+        return DetectFrameSnap(original.EndTime, beautified.EndTime);
+    }
+
+    private string? DetectShotChangeSnap(TimeSpan beautifiedT, bool isOutCue)
+    {
+        if (_shotChanges.Count == 0 || _frameRate <= 0)
+        {
+            return null;
+        }
+
+        var oneFrame = 1.0 / _frameRate;
+        var refSec = isOutCue ? beautifiedT.TotalSeconds + oneFrame : beautifiedT.TotalSeconds;
+        foreach (var sc in _shotChanges)
+        {
+            if (Math.Abs(sc - refSec) <= oneFrame)
+            {
+                return Se.Language.Tools.BeautifyTimeCodes.SnappedToShotChange;
+            }
+        }
+        return null;
+    }
+
+    private string? DetectFrameSnap(TimeSpan originalT, TimeSpan beautifiedT)
+    {
+        var origFrames = originalT.TotalSeconds * _frameRate;
+        var newFrames = beautifiedT.TotalSeconds * _frameRate;
+        var origAligned = Math.Abs(origFrames - Math.Round(origFrames)) < 0.05;
+        var newAligned = Math.Abs(newFrames - Math.Round(newFrames)) < 0.05;
+        if (newAligned && !origAligned)
+        {
+            return Se.Language.Tools.BeautifyTimeCodes.SnappedToFrame;
+        }
+        return null;
+    }
+
+    private string? DetectDurationReason(SubtitleLineViewModel original, SubtitleLineViewModel beautified)
+    {
+        var newDuration = beautified.EndTime.TotalMilliseconds - beautified.StartTime.TotalMilliseconds;
+        var oldDuration = original.EndTime.TotalMilliseconds - original.StartTime.TotalMilliseconds;
+        if (Math.Abs(newDuration - oldDuration) < 1.0)
+        {
+            return null; // duration didn't change meaningfully
+        }
+
+        var minMs = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+        var maxMs = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+        var tol = _frameRate > 0 ? 1000.0 / _frameRate * 0.5 : 5.0; // half-frame tolerance
+
+        if (oldDuration < minMs && Math.Abs(newDuration - minMs) <= tol)
+        {
+            return Se.Language.Tools.BeautifyTimeCodes.MinDurationEnforced;
+        }
+        if (oldDuration > maxMs && Math.Abs(newDuration - maxMs) <= tol)
+        {
+            return Se.Language.Tools.BeautifyTimeCodes.MaxDurationEnforced;
+        }
+
+        return null;
     }
 
     private string FormatTime(TimeSpan t) =>

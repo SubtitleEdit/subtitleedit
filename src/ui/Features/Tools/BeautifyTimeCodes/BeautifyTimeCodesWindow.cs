@@ -156,11 +156,19 @@ public class BeautifyTimeCodesWindow : Window
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             TextWrapping = TextWrapping.Wrap,
-            MaxLines = 2,
             TextTrimming = TextTrimming.CharacterEllipsis,
-            FontFamily = new FontFamily("Consolas, Menlo, monospace"),
             Margin = new Thickness(0, 4, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ChangeDetail)) { Source = vm },
+        };
+
+        var notes = new TextBlock
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            TextWrapping = TextWrapping.Wrap,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            Opacity = 0.75,
+            FontStyle = FontStyle.Italic,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.ChangeNotes)) { Source = vm },
         };
 
         var navRow = new StackPanel
@@ -175,7 +183,7 @@ public class BeautifyTimeCodesWindow : Window
         {
             Orientation = Orientation.Vertical,
             Spacing = 2,
-            Children = { navRow, detail },
+            Children = { navRow, detail, notes },
         };
 
         return new Border
