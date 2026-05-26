@@ -252,7 +252,10 @@ public static class ShortcutsMain
         { nameof(MainViewModel.GoToPreviousShotChangeCommand),  Se.Language.General.GoToPreviousShotChange },
         { nameof(MainViewModel.GoToNextShotChangeCommand),  Se.Language.General.GoToNextShotChange },
         { nameof(MainViewModel.ExtendSelectedLinesToNextShotChangeOrNextSubtitleCommand),  Se.Language.General.ExtendSelectedLinesToNextShotChangeOrNextSubtitle },
+        { nameof(MainViewModel.ExtendSelectedLinesToPreviousShotChangeCommand),  Se.Language.General.ExtendSelectedLinesToPreviousShotChange },
         { nameof(MainViewModel.SnapSelectedLinesToNearestShotChangeCommand),  Se.Language.General.SnapSelectedLinesToNearestShotChange },
+        { nameof(MainViewModel.SnapSelectedLinesStartToNextShotChangeCommand),  Se.Language.General.SnapSelectedLinesStartToNextShotChange },
+        { nameof(MainViewModel.SnapSelectedLinesEndToPreviousShotChangeCommand),  Se.Language.General.SnapSelectedLinesEndToPreviousShotChange },
         { nameof(MainViewModel.MoveAllShotChangeOneFrameBackCommand),  Se.Language.General.MoveAllShotChangeOneFrameBack },
         { nameof(MainViewModel.MoveAllShotChangeOneFrameForwardCommand),  Se.Language.General.MoveAllShotChangeOneFrameForward },
         { nameof(MainViewModel.ShowWaveformSeekSilenceCommand),  Se.Language.Options.Shortcuts.SeekSilence },
@@ -584,7 +587,10 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.GoToPreviousShotChangeCommand, nameof(vm.GoToPreviousShotChangeCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.GoToNextShotChangeCommand, nameof(vm.GoToNextShotChangeCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ExtendSelectedLinesToNextShotChangeOrNextSubtitleCommand, nameof(vm.ExtendSelectedLinesToNextShotChangeOrNextSubtitleCommand), ShortcutCategory.General);
-        AddShortcut(shortcuts, vm.SnapSelectedLinesToNearestShotChangeCommand, nameof(vm.SnapSelectedLinesToNearestShotChangeCommand), ShortcutCategory.General);   
+        AddShortcut(shortcuts, vm.ExtendSelectedLinesToPreviousShotChangeCommand, nameof(vm.ExtendSelectedLinesToPreviousShotChangeCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SnapSelectedLinesToNearestShotChangeCommand, nameof(vm.SnapSelectedLinesToNearestShotChangeCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SnapSelectedLinesStartToNextShotChangeCommand, nameof(vm.SnapSelectedLinesStartToNextShotChangeCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SnapSelectedLinesEndToPreviousShotChangeCommand, nameof(vm.SnapSelectedLinesEndToPreviousShotChangeCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveAllShotChangeOneFrameBackCommand, nameof(vm.MoveAllShotChangeOneFrameBackCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveAllShotChangeOneFrameForwardCommand, nameof(vm.MoveAllShotChangeOneFrameForwardCommand), ShortcutCategory.General);   
 

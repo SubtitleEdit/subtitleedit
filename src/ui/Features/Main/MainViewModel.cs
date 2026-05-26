@@ -6371,6 +6371,158 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void ExtendSelectedLinesToPreviousShotChange()
+    {
+        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
+        var vp = GetVideoPlayerControl();
+        if (string.IsNullOrEmpty(_videoFileName) ||
+            vp == null ||
+            AudioVisualizer == null ||
+            AudioVisualizer.ShotChanges.Count == 0 ||
+            selectedLines.Count == 0)
+        {
+            return;
+        }
+
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        var maxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
+        foreach (var line in selectedLines)
+        {
+            var idx = Subtitles.IndexOf(line);
+            var prev = Subtitles.GetOrNull(idx - 1);
+            // Cast to nullable so "no match" is null and a real shot change
+            // at t=0 isn't conflated with the default value. Strict `<` so
+            // shot changes at or after the current start can't qualify and
+            // cause "extend to previous" to actually move the start forward.
+            var shotChange = AudioVisualizer.ShotChanges
+                .Cast<double?>()
+                .LastOrDefault(s => s < line.StartTime.TotalSeconds);
+
+            // Lower bound for the new start: the previous shot change and, if
+            // present, the previous subtitle's end plus the configured gap.
+            // Whichever is later wins so we never pull the start back past
+            // either constraint.
+            double? candidateStartMs = shotChange.HasValue ? shotChange.Value * 1000.0 : (double?)null;
+            if (prev != null)
+            {
+                var prevEndPlusGapMs = prev.EndTime.TotalMilliseconds + gapMs;
+                candidateStartMs = candidateStartMs.HasValue
+                    ? Math.Max(candidateStartMs.Value, prevEndPlusGapMs)
+                    : prevEndPlusGapMs;
+            }
+
+            if (candidateStartMs == null)
+            {
+                continue;
+            }
+
+            var newStartMs = candidateStartMs.Value;
+            var newDurationMs = line.EndTime.TotalMilliseconds - newStartMs;
+            if (newDurationMs <= 0 || newDurationMs > maxDurationMs)
+            {
+                continue;
+            }
+
+            // Use SetStartTimeOnly so EndTime stays fixed (the StartTime
+            // setter would otherwise shift EndTime to preserve Duration —
+            // see SubtitleLineViewModel.OnStartTimeChanged).
+            line.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs));
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
+    private void SnapSelectedLinesStartToNextShotChange()
+    {
+        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (string.IsNullOrEmpty(_videoFileName) ||
+            AudioVisualizer == null ||
+            AudioVisualizer.ShotChanges.Count == 0 ||
+            selectedLines.Count == 0)
+        {
+            return;
+        }
+
+        var minDurationMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
+        var maxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
+        foreach (var line in selectedLines)
+        {
+            // Cast to nullable so a shot change at t=0 isn't lost to the
+            // default-value collision.
+            var next = AudioVisualizer.ShotChanges
+                .Cast<double?>()
+                .FirstOrDefault(s => s > line.StartTime.TotalSeconds + 0.001);
+            if (next == null)
+            {
+                continue;
+            }
+
+            var newStart = TimeSpan.FromSeconds(next.Value);
+            if (newStart >= line.EndTime)
+            {
+                continue;
+            }
+
+            var newDurationMs = (line.EndTime - newStart).TotalMilliseconds;
+            if (newDurationMs < minDurationMs || newDurationMs > maxDurationMs)
+            {
+                continue;
+            }
+
+            // Use SetStartTimeOnly so EndTime stays fixed (the StartTime
+            // setter would otherwise shift EndTime to preserve Duration).
+            line.SetStartTimeOnly(newStart);
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
+    private void SnapSelectedLinesEndToPreviousShotChange()
+    {
+        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (string.IsNullOrEmpty(_videoFileName) ||
+            AudioVisualizer == null ||
+            AudioVisualizer.ShotChanges.Count == 0 ||
+            selectedLines.Count == 0)
+        {
+            return;
+        }
+
+        var minDurationMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
+        var maxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
+        foreach (var line in selectedLines)
+        {
+            // Cast to nullable so a shot change at t=0 isn't lost to the
+            // default-value collision.
+            var prev = AudioVisualizer.ShotChanges
+                .Cast<double?>()
+                .LastOrDefault(s => s < line.EndTime.TotalSeconds - 0.001);
+            if (prev == null)
+            {
+                continue;
+            }
+
+            var newEnd = TimeSpan.FromSeconds(prev.Value);
+            if (newEnd <= line.StartTime)
+            {
+                continue;
+            }
+
+            var newDurationMs = (newEnd - line.StartTime).TotalMilliseconds;
+            if (newDurationMs < minDurationMs || newDurationMs > maxDurationMs)
+            {
+                continue;
+            }
+
+            line.EndTime = newEnd;
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
     private void MoveAllShotChangeOneFrameBack()
     {
         if (AudioVisualizer == null || AudioVisualizer.ShotChanges.Count == 0)
