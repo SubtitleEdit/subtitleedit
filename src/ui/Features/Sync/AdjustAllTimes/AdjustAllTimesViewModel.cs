@@ -223,4 +223,10 @@ public partial class AdjustAllTimesViewModel : ObservableObject
     {
         UiUtil.SaveWindowPosition(Window);
     }
+
+    internal void ResetForNewSubtitle()
+    {
+        _totalAdjustment = TimeSpan.Zero;
+        StatusText = string.Empty;
+    }
 }
