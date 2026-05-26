@@ -256,6 +256,10 @@ public static class ShortcutsMain
         { nameof(MainViewModel.SnapSelectedLinesToNearestShotChangeCommand),  Se.Language.General.SnapSelectedLinesToNearestShotChange },
         { nameof(MainViewModel.SnapSelectedLinesStartToNextShotChangeCommand),  Se.Language.General.SnapSelectedLinesStartToNextShotChange },
         { nameof(MainViewModel.SnapSelectedLinesEndToPreviousShotChangeCommand),  Se.Language.General.SnapSelectedLinesEndToPreviousShotChange },
+        { nameof(MainViewModel.SetInCueToClosestShotChangeLeftGreenZoneCommand),  Se.Language.General.SetInCueToClosestShotChangeLeftGreenZone },
+        { nameof(MainViewModel.SetInCueToClosestShotChangeRightGreenZoneCommand),  Se.Language.General.SetInCueToClosestShotChangeRightGreenZone },
+        { nameof(MainViewModel.SetOutCueToClosestShotChangeLeftGreenZoneCommand),  Se.Language.General.SetOutCueToClosestShotChangeLeftGreenZone },
+        { nameof(MainViewModel.SetOutCueToClosestShotChangeRightGreenZoneCommand),  Se.Language.General.SetOutCueToClosestShotChangeRightGreenZone },
         { nameof(MainViewModel.MoveAllShotChangeOneFrameBackCommand),  Se.Language.General.MoveAllShotChangeOneFrameBack },
         { nameof(MainViewModel.MoveAllShotChangeOneFrameForwardCommand),  Se.Language.General.MoveAllShotChangeOneFrameForward },
         { nameof(MainViewModel.ShowWaveformSeekSilenceCommand),  Se.Language.Options.Shortcuts.SeekSilence },
@@ -591,6 +595,10 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.SnapSelectedLinesToNearestShotChangeCommand, nameof(vm.SnapSelectedLinesToNearestShotChangeCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SnapSelectedLinesStartToNextShotChangeCommand, nameof(vm.SnapSelectedLinesStartToNextShotChangeCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SnapSelectedLinesEndToPreviousShotChangeCommand, nameof(vm.SnapSelectedLinesEndToPreviousShotChangeCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SetInCueToClosestShotChangeLeftGreenZoneCommand, nameof(vm.SetInCueToClosestShotChangeLeftGreenZoneCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SetInCueToClosestShotChangeRightGreenZoneCommand, nameof(vm.SetInCueToClosestShotChangeRightGreenZoneCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SetOutCueToClosestShotChangeLeftGreenZoneCommand, nameof(vm.SetOutCueToClosestShotChangeLeftGreenZoneCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SetOutCueToClosestShotChangeRightGreenZoneCommand, nameof(vm.SetOutCueToClosestShotChangeRightGreenZoneCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveAllShotChangeOneFrameBackCommand, nameof(vm.MoveAllShotChangeOneFrameBackCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveAllShotChangeOneFrameForwardCommand, nameof(vm.MoveAllShotChangeOneFrameForwardCommand), ShortcutCategory.General);   
 

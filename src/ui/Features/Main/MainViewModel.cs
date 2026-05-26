@@ -6523,6 +6523,216 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void SetInCueToClosestShotChangeLeftGreenZone() =>
+        SetCueToClosestShotChangeGreenZone(isInCue: true, isLeftZone: true,
+            Se.Language.General.SetInCueToClosestShotChangeLeftGreenZone);
+
+    [RelayCommand]
+    private void SetInCueToClosestShotChangeRightGreenZone() =>
+        SetCueToClosestShotChangeGreenZone(isInCue: true, isLeftZone: false,
+            Se.Language.General.SetInCueToClosestShotChangeRightGreenZone);
+
+    [RelayCommand]
+    private void SetOutCueToClosestShotChangeLeftGreenZone() =>
+        SetCueToClosestShotChangeGreenZone(isInCue: false, isLeftZone: true,
+            Se.Language.General.SetOutCueToClosestShotChangeLeftGreenZone);
+
+    [RelayCommand]
+    private void SetOutCueToClosestShotChangeRightGreenZone() =>
+        SetCueToClosestShotChangeGreenZone(isInCue: false, isLeftZone: false,
+            Se.Language.General.SetOutCueToClosestShotChangeRightGreenZone);
+
+    // Snaps a cue (in or out) onto the closest shot change, offset by the
+    // configured green-zone frame count from BeautifyTimeCodes.Profile.
+    // Left zone = cue lands BEFORE the shot change; right zone = AFTER.
+    // Mirrors SE 4's push-neighbor behavior: if the new cue would overlap
+    // the previous (for in-cue) or next (for out-cue) subtitle's gap, the
+    // neighbor is shortened to make room rather than skipping the line.
+    // Both subtitles must still end up with positive duration; otherwise
+    // the line is skipped.
+    private void SetCueToClosestShotChangeGreenZone(bool isInCue, bool isLeftZone, string actionLabel)
+    {
+        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>()
+            .OrderBy(p => p.StartTime).ToList();
+        var vp = GetVideoPlayerControl();
+        if (string.IsNullOrEmpty(_videoFileName) ||
+            vp == null ||
+            AudioVisualizer == null ||
+            AudioVisualizer.ShotChanges.Count == 0 ||
+            selectedLines.Count == 0)
+        {
+            return;
+        }
+
+        var profile = Configuration.Settings.BeautifyTimeCodes.Profile;
+        int zoneFrames;
+        if (isInCue)
+        {
+            zoneFrames = isLeftZone ? profile.InCuesLeftGreenZone : profile.InCuesRightGreenZone;
+        }
+        else
+        {
+            zoneFrames = isLeftZone ? profile.OutCuesLeftGreenZone : profile.OutCuesRightGreenZone;
+        }
+
+        // Fall back to the user-configured frame rate when ffmpeg parsing
+        // didn't produce a usable rate (e.g., ffmpeg missing → FramesRate is 0,
+        // which would make FramesToMilliseconds divide by zero).
+        var frameRate = _mediaInfo != null && _mediaInfo.FramesRateNonNormalized > 0
+            ? (double)_mediaInfo.FramesRateNonNormalized
+            : Se.Settings.General.CurrentFrameRate;
+        var zoneMs = SubtitleFormat.FramesToMilliseconds(zoneFrames, frameRate);
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+
+        var selectedSet = new HashSet<SubtitleLineViewModel>(selectedLines);
+        var adjustedNeighbors = new HashSet<SubtitleLineViewModel>();
+        var changed = 0;
+        foreach (var line in selectedLines)
+        {
+            var idx = Subtitles.IndexOf(line);
+            var originalCueMs = isInCue ? line.StartTime.TotalMilliseconds : line.EndTime.TotalMilliseconds;
+            var cue = isInCue ? line.StartTime : line.EndTime;
+            var closestShotChange = ShotChangeHelper.GetClosestShotChange(AudioVisualizer.ShotChanges, new TimeCode(cue));
+            if (closestShotChange == null)
+            {
+                continue;
+            }
+
+            var shotChangeMs = closestShotChange.Value * 1000.0;
+
+            if (isInCue)
+            {
+                var newInCueMs = isLeftZone ? shotChangeMs - zoneMs : shotChangeMs + zoneMs;
+                if (newInCueMs < 0 || newInCueMs >= line.EndTime.TotalMilliseconds)
+                {
+                    continue;
+                }
+
+                var newStartMs = newInCueMs;
+                var prev = Subtitles.GetOrNull(idx - 1);
+                if (prev != null)
+                {
+                    double newPreviousEndMs;
+                    if (isLeftZone)
+                    {
+                        // Cue lands before the shot change — keep previous
+                        // where it was unless it crosses into our gap.
+                        newPreviousEndMs = Math.Min(prev.EndTime.TotalMilliseconds, newStartMs - gapMs);
+                    }
+                    else
+                    {
+                        // Cue lands after the shot change — cap previous at
+                        // the green-zone in-cue position (matching SE 4), then
+                        // push the new start later if shortening didn't free
+                        // up enough room for the gap.
+                        newPreviousEndMs = Math.Min(newInCueMs, prev.EndTime.TotalMilliseconds);
+                        newStartMs = Math.Max(newInCueMs, newPreviousEndMs + gapMs);
+                    }
+
+                    // Both subtitles must still have positive duration.
+                    if (newPreviousEndMs - prev.StartTime.TotalMilliseconds <= 0 ||
+                        line.EndTime.TotalMilliseconds - newStartMs <= 0)
+                    {
+                        continue;
+                    }
+
+                    // Use SetStartTimeOnly so the line's EndTime stays put
+                    // (the StartTime setter would otherwise shift EndTime to
+                    // preserve Duration — see OnStartTimeChanged).
+                    line.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs));
+                    if (Math.Abs(newPreviousEndMs - prev.EndTime.TotalMilliseconds) > 0.5)
+                    {
+                        prev.EndTime = TimeSpan.FromMilliseconds(newPreviousEndMs);
+                        if (!selectedSet.Contains(prev))
+                        {
+                            adjustedNeighbors.Add(prev);
+                        }
+                    }
+                }
+                else
+                {
+                    line.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs));
+                }
+            }
+            else
+            {
+                var newOutCueMs = isLeftZone ? shotChangeMs - zoneMs : shotChangeMs + zoneMs;
+                if (newOutCueMs <= line.StartTime.TotalMilliseconds)
+                {
+                    continue;
+                }
+
+                var newEndMs = newOutCueMs;
+                var next = Subtitles.GetOrNull(idx + 1);
+                if (next != null)
+                {
+                    double newNextStartMs;
+                    if (!isLeftZone)
+                    {
+                        // Cue lands after the shot change — keep next where
+                        // it was unless it crosses into our gap.
+                        newNextStartMs = Math.Max(next.StartTime.TotalMilliseconds, newEndMs + gapMs);
+                    }
+                    else
+                    {
+                        // Cue lands before the shot change — cap next at
+                        // the green-zone out-cue position (matching SE 4),
+                        // then pull the new end earlier if shortening didn't
+                        // free up enough room for the gap.
+                        newNextStartMs = Math.Max(next.StartTime.TotalMilliseconds, newOutCueMs);
+                        newEndMs = Math.Min(newNextStartMs - gapMs, newOutCueMs);
+                    }
+
+                    // Both subtitles must still have positive duration.
+                    if (next.EndTime.TotalMilliseconds - newNextStartMs <= 0 ||
+                        newEndMs - line.StartTime.TotalMilliseconds <= 0)
+                    {
+                        continue;
+                    }
+
+                    line.EndTime = TimeSpan.FromMilliseconds(newEndMs);
+                    if (Math.Abs(newNextStartMs - next.StartTime.TotalMilliseconds) > 0.5)
+                    {
+                        // SetStartTimeOnly so the next subtitle's EndTime
+                        // isn't shifted to preserve its previous Duration.
+                        next.SetStartTimeOnly(TimeSpan.FromMilliseconds(newNextStartMs));
+                        if (!selectedSet.Contains(next))
+                        {
+                            adjustedNeighbors.Add(next);
+                        }
+                    }
+                }
+                else
+                {
+                    line.EndTime = TimeSpan.FromMilliseconds(newEndMs);
+                }
+            }
+
+            // Only count this line as "updated" if its cue actually moved —
+            // re-running the command on already-snapped lines should report 0.
+            var newCueMs = isInCue ? line.StartTime.TotalMilliseconds : line.EndTime.TotalMilliseconds;
+            if (Math.Abs(newCueMs - originalCueMs) > 0.5)
+            {
+                changed++;
+            }
+        }
+
+        var neighborsAdjusted = adjustedNeighbors.Count;
+        if (changed > 0 || neighborsAdjusted > 0)
+        {
+            var statusMessage = neighborsAdjusted > 0
+                ? string.Format(Se.Language.General.XOfYLinesUpdatedAndZNeighborsAdjusted, actionLabel, changed, selectedLines.Count, neighborsAdjusted)
+                : string.Format(Se.Language.General.XOfYLinesUpdated, actionLabel, changed, selectedLines.Count);
+            ShowStatus(statusMessage);
+            _updateAudioVisualizer = true;
+        }
+        else
+        {
+            ShowStatus(string.Format(Se.Language.General.XNoLinesUpdated, actionLabel));
+        }
+    }
+
+    [RelayCommand]
     private void MoveAllShotChangeOneFrameBack()
     {
         if (AudioVisualizer == null || AudioVisualizer.ShotChanges.Count == 0)

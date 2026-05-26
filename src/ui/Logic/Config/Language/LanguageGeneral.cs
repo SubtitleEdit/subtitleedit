@@ -487,6 +487,10 @@ public class LanguageGeneral
     public string SetEndAndGoToNext { get; set; }
     public string SetEndAndOffsetTheRest { get; set; }
     public string SetFontDotDotDot { get; set; }
+    public string SetInCueToClosestShotChangeLeftGreenZone { get; set; }
+    public string SetInCueToClosestShotChangeRightGreenZone { get; set; }
+    public string SetOutCueToClosestShotChangeLeftGreenZone { get; set; }
+    public string SetOutCueToClosestShotChangeRightGreenZone { get; set; }
     public string SetStart { get; set; }
     public string SetStartAndOffsetTheRest { get; set; }
     public string SetVideoOffset { get; set; }
@@ -662,7 +666,10 @@ public class LanguageGeneral
     public string Wpm { get; set; }
     public string XFiles { get; set; }
     public string XFilesConvertedInY { get; set; }
+    public string XNoLinesUpdated { get; set; }
     public string XNotFound { get; set; }
+    public string XOfYLinesUpdated { get; set; }
+    public string XOfYLinesUpdatedAndZNeighborsAdjusted { get; set; }
     public string NoBookmarksFound { get; set; }
     public string XRequiresAnApiKey { get; set; }
     public string XSeconds { get; set; }
@@ -1201,6 +1208,10 @@ public class LanguageGeneral
         SetEndAndGoToNext = "Set end and go to next";
         SetEndAndOffsetTheRest = "Set end and offset the rest";
         SetFontDotDotDot = "Set font...";
+        SetInCueToClosestShotChangeLeftGreenZone = "Set in-cue to closest shot change (snap to left green zone)";
+        SetInCueToClosestShotChangeRightGreenZone = "Set in-cue to closest shot change (snap to right green zone)";
+        SetOutCueToClosestShotChangeLeftGreenZone = "Set out-cue to closest shot change (snap to left green zone)";
+        SetOutCueToClosestShotChangeRightGreenZone = "Set out-cue to closest shot change (snap to right green zone)";
         SetStart = "Set start";
         SetStartAndOffsetTheRest = "Set start and offset the rest";
         SetVideoOffset = "Set video offset";
@@ -1376,7 +1387,10 @@ public class LanguageGeneral
         Wpm = "Words/min";
         XFiles = "{0:#,###,##0} files";
         XFilesConvertedInY = "{0:#,###,##0} files converted in {1}";
+        XNoLinesUpdated = "{0}: no line(s) updated";
         XNotFound = "\"{0}\" not found";
+        XOfYLinesUpdated = "{0}: {1} of {2} line(s) updated";
+        XOfYLinesUpdatedAndZNeighborsAdjusted = "{0}: {1} of {2} line(s) updated, {3} neighbor(s) adjusted";
         NoBookmarksFound = "No more bookmarks found";
         XRequiresAnApiKey = "{0} requires an API key";
         XSeconds = "{0:0.0##} seconds";
