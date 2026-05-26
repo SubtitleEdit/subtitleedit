@@ -160,6 +160,28 @@ public class SplitManagerTests
     }
 
     [Fact]
+    public void Split_TwoLineDialogText_WithTextIndex_StripsLeadingDashesFromBothParts()
+    {
+        // Arrange – two-line dialog, split at the text-box cursor position
+        // (textIndex points between the two dialog lines).
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        Configuration.Settings.General.DialogStyle = DialogType.DashBothLinesWithSpace;
+        var manager = new SplitManager();
+        var text = $"- Hello there.{Environment.NewLine}- Hi back.";
+        var subtitle = MakeSubtitle(text, 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+        var cursor = text.IndexOf(Environment.NewLine, StringComparison.Ordinal) + Environment.NewLine.Length;
+
+        // Act – split at video position + text-box cursor position
+        manager.Split(subtitles, subtitle, videoPositionSeconds: 2.0, textIndex: cursor, languageCode: "en");
+
+        // Assert – leading dialog dashes are stripped from both parts
+        Assert.Equal(2, subtitles.Count);
+        Assert.Equal("Hello there.", subtitles[0].Text);
+        Assert.Equal("Hi back.", subtitles[1].Text);
+    }
+
+    [Fact]
     public void Split_TwoLineNonDialogText_KeepsBothLinesAsIs()
     {
         // Arrange – two plain lines with no leading dashes, so IsDialog returns false.
