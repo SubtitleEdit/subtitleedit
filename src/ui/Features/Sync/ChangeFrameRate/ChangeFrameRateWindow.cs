@@ -93,6 +93,8 @@ public class ChangeFrameRateWindow : Window
         Content = grid;
         
         Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);
+        Closing += (_, _) => UiUtil.SaveWindowPosition(this);
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

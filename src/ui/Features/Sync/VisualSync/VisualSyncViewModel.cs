@@ -470,6 +470,7 @@ public partial class VisualSyncViewModel : ObservableObject
 
     internal void OnClosing()
     {
+        UiUtil.SaveWindowPosition(Window);
         _positionTimer.Stop();
         VideoPlayerControlLeft.VideoPlayer.CloseFile();
         VideoPlayerControlRight.VideoPlayer.CloseFile();
@@ -509,6 +510,8 @@ public partial class VisualSyncViewModel : ObservableObject
 
     internal async void OnLoaded()
     {
+        UiUtil.RestoreWindowPosition(Window);
+
         if (string.IsNullOrEmpty(_videoFileName))
         {
             return;

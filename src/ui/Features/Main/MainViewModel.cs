@@ -1479,8 +1479,14 @@ public partial class MainViewModel :
 
         if (_adjustAllTimesViewModel != null)
         {
-            _adjustAllTimesViewModel.Window?.Close();
-            _adjustAllTimesViewModel = null;
+            if (_adjustAllTimesViewModel.Window is { IsVisible: true })
+            {
+                _adjustAllTimesViewModel.ResetForNewSubtitle();
+            }
+            else
+            {
+                _adjustAllTimesViewModel = null;
+            }
         }
 
         var vp = GetVideoPlayerControl();
