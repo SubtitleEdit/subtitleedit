@@ -1157,13 +1157,14 @@ public class AudioVisualizer : Control
                 }
 
                 var snappedToShotLeft = false;
-                if (SnapToShotChanges)
+                if (SnapToShotChanges && !_isShiftDown)
                 {
                     var nearestShotChange = ShotChangesHelper.GetClosestShotChange(_shotChanges, TimeCode.FromSeconds(newStart));
                     if (nearestShotChange != null)
                     {
                         var nearest = (double)nearestShotChange;
-                        if (nearest != newStart && Math.Abs(newStart - nearest) < ShotChangeSnapSeconds)
+                        var snapSeconds = GetInCueSnapSeconds();
+                        if (nearest != newStart && Math.Abs(newStart - nearest) < snapSeconds)
                         {
                             newStart = nearest;
                             snappedToShotLeft = true;
@@ -1192,14 +1193,18 @@ public class AudioVisualizer : Control
                 newEnd = _originalEndSeconds + deltaSeconds - StartPositionSeconds;
 
                 var snappedToShotRight = false;
-                if (SnapToShotChanges)
+                if (SnapToShotChanges && !_isShiftDown)
                 {
-                    var oneFrameSeconds = 0; // Or should it be one frame before, like  0.042 (Get fps from video)
+                    // OUT cues conventionally land one frame BEFORE the shot change so they
+                    // don't bleed visually onto the next shot.
+                    var fps = Se.Settings.General.CurrentFrameRate;
+                    var oneFrameSeconds = fps >= 1 ? 1.0 / fps : 0.0;
                     var nearestShotChange = ShotChangesHelper.GetClosestShotChange(_shotChanges, TimeCode.FromSeconds(newEnd));
                     if (nearestShotChange != null)
                     {
                         var nearest = (double)nearestShotChange;
-                        if (nearest != newEnd && Math.Abs(newEnd - nearest + oneFrameSeconds) < ShotChangeSnapSeconds)
+                        var snapSeconds = GetOutCueSnapSeconds();
+                        if (nearest != newEnd && Math.Abs(newEnd - nearest + oneFrameSeconds) < snapSeconds)
                         {
                             newEnd = nearest - oneFrameSeconds;
                             snappedToShotRight = true;
@@ -1275,6 +1280,48 @@ public class AudioVisualizer : Control
 
         frameDur = 1.0 / fps;
         return true;
+    }
+
+    /// <summary>
+    /// Snap distance (seconds) for a paragraph IN-cue near a shot change, derived from
+    /// the BeautifyTimeCodes profile's InCues red zones. Falls back to <see cref="ShotChangeSnapSeconds"/>
+    /// when no profile / fps is available.
+    /// </summary>
+    private double GetInCueSnapSeconds()
+    {
+        var fps = Se.Settings.General.CurrentFrameRate;
+        if (fps < 1)
+        {
+            return ShotChangeSnapSeconds;
+        }
+
+        var profile = Nikse.SubtitleEdit.Core.Common.Configuration.Settings.BeautifyTimeCodes?.Profile;
+        if (profile == null)
+        {
+            return ShotChangeSnapSeconds;
+        }
+
+        var frames = Math.Max(profile.InCuesLeftRedZone, profile.InCuesRightRedZone);
+        return frames > 0 ? frames / fps : ShotChangeSnapSeconds;
+    }
+
+    /// <summary>Snap distance (seconds) for a paragraph OUT-cue, derived from OutCues red zones.</summary>
+    private double GetOutCueSnapSeconds()
+    {
+        var fps = Se.Settings.General.CurrentFrameRate;
+        if (fps < 1)
+        {
+            return ShotChangeSnapSeconds;
+        }
+
+        var profile = Nikse.SubtitleEdit.Core.Common.Configuration.Settings.BeautifyTimeCodes?.Profile;
+        if (profile == null)
+        {
+            return ShotChangeSnapSeconds;
+        }
+
+        var frames = Math.Max(profile.OutCuesLeftRedZone, profile.OutCuesRightRedZone);
+        return frames > 0 ? frames / fps : ShotChangeSnapSeconds;
     }
 
     private void UpdateCursor(Point point)

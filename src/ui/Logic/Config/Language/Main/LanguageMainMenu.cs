@@ -43,6 +43,7 @@ public class LanguageMainMenu
     public string AdjustDurations { get; set; }
     public string ApplyDurationLimits { get; set; }
     public string BatchConvert { get; set; }
+    public string BeautifyTimeCodes { get; set; }
     public string BridgeGaps { get; set; }
     public string ApplyMinGap { get; set; }
     public string ChangeCasing { get; set; }
@@ -189,6 +190,7 @@ public class LanguageMainMenu
         BridgeGaps = "Bridge _gaps...";
         ApplyMinGap = "Apply min. gap between subtitles...";
         BatchConvert = "_Batch convert...";
+        BeautifyTimeCodes = "Beautify time codes...";
         JoinSubtitles = "_Join subtitles...";
         SplitSubtitle = "_Split subtitle...";
         MergeTwoSubtitles = "Merge two subtitles...";

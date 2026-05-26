@@ -55,6 +55,7 @@ public class Se
     public SeSsa Ssa { get; set; } = new();
     public SeVideo Video { get; set; } = new();
     public SeWaveform Waveform { get; set; } = new();
+    public SeBeautifyTimeCodes BeautifyTimeCodes { get; set; } = new();
     public SeFormats Formats { get; set; } = new();
     public SeOcr Ocr { get; set; } = new();
     public SePlugins Plugins { get; set; } = new();
@@ -347,6 +348,11 @@ public class Se
             Settings.Waveform = new();
         }
 
+        if (Settings.BeautifyTimeCodes == null)
+        {
+            Settings.BeautifyTimeCodes = new();
+        }
+
         if (Settings.Ocr == null)
         {
             Settings.Ocr = new();
@@ -438,6 +444,14 @@ public class Se
         Configuration.Settings.Tools.OpenAiCompatibleSttStream = Settings.Tools.OpenAiCompatibleSttStream;
 
         Configuration.Settings.Tools.AutoTranslateLastName = Settings.AutoTranslate.AutoTranslateLastName;
+
+        // BeautifyTimeCodes profile: skip apply on a fresh install so libse's built-in
+        // default-preset values stay intact. Once the user clicks OK in the profile editor,
+        // SeBeautifyTimeCodes.IsEmpty() returns false and the saved profile takes over.
+        if (!Settings.BeautifyTimeCodes.IsEmpty())
+        {
+            Settings.BeautifyTimeCodes.ApplyTo(Configuration.Settings.BeautifyTimeCodes);
+        }
 
         Configuration.Settings.Tools.ImportTextSplitting = Settings.Tools.ImportTextSplitting;
         Configuration.Settings.Tools.ImportTextSplittingLineMode = Settings.Tools.ImportTextSplittingLineMode;

@@ -480,7 +480,15 @@ public class SettingsPage : UserControl
 
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformRightClickSelectsSubtitle, nameof(_vm.WaveformRightClickSelectsSubtitle)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformAllowOverlap, nameof(_vm.WaveformAllowOverlap)),
-            MakeCheckboxSetting(Se.Language.Options.Settings.WaveformSnapToShotChanges, nameof(_vm.WaveformSnapToShotChanges)),
+            new SettingsItem(Se.Language.Options.Settings.WaveformSnapToShotChanges, () =>
+                UiUtil.MakeHorizontalPanel(
+                    new CheckBox
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        [!ToggleButton.IsCheckedProperty] = new Binding(nameof(_vm.WaveformSnapToShotChanges)) { Source = _vm, Mode = BindingMode.TwoWay }
+                    },
+                    UiUtil.MakeButton(_vm.EditBeautifyTimeCodesProfileCommand, IconNames.Cogs, Se.Language.Tools.BeautifyTimeCodesProfile.Title)
+                )),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformSnapToFrames, nameof(_vm.WaveformSnapToFrames)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformShotChangesAutoGenerate, nameof(_vm.WaveformShotChangesAutoGenerate)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformFocusOnMouseOver, nameof(_vm.WaveformFocusOnMouseOver)),

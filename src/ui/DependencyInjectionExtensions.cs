@@ -279,6 +279,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<BatchConvertViewModel>();
         collection.AddTransient<BatchErrorListViewModel>();
         collection.AddTransient<BeautifyTimeCodesViewModel>();
+        collection.AddTransient<Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes.Profile.BeautifyTimeCodesProfileViewModel>();
         collection.AddTransient<BinaryAdjustAllTimesViewModel>();
         collection.AddTransient<BinaryAdjustAlphaViewModel>();
         collection.AddTransient<BinaryAdjustBrightnessViewModel>();
