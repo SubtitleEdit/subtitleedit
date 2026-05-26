@@ -6478,7 +6478,10 @@ public partial class MainViewModel :
                         continue;
                     }
 
-                    line.StartTime = TimeSpan.FromMilliseconds(newStartMs);
+                    // Use SetStartTimeOnly so the line's EndTime stays put
+                    // (the StartTime setter would otherwise shift EndTime to
+                    // preserve Duration — see OnStartTimeChanged).
+                    line.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs));
                     if (Math.Abs(newPreviousEndMs - prev.EndTime.TotalMilliseconds) > 0.5)
                     {
                         prev.EndTime = TimeSpan.FromMilliseconds(newPreviousEndMs);
@@ -6490,7 +6493,7 @@ public partial class MainViewModel :
                 }
                 else
                 {
-                    line.StartTime = TimeSpan.FromMilliseconds(newStartMs);
+                    line.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs));
                 }
             }
             else
@@ -6532,7 +6535,9 @@ public partial class MainViewModel :
                     line.EndTime = TimeSpan.FromMilliseconds(newEndMs);
                     if (Math.Abs(newNextStartMs - next.StartTime.TotalMilliseconds) > 0.5)
                     {
-                        next.StartTime = TimeSpan.FromMilliseconds(newNextStartMs);
+                        // SetStartTimeOnly so the next subtitle's EndTime
+                        // isn't shifted to preserve its previous Duration.
+                        next.SetStartTimeOnly(TimeSpan.FromMilliseconds(newNextStartMs));
                         if (!selectedSet.Contains(next))
                         {
                             adjustedNeighbors.Add(next);
