@@ -3,8 +3,10 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Edit.Find;
 
@@ -154,7 +156,16 @@ public class FindWindow : Window
 
         Content = grid;
 
-        Activated += delegate { textBoxFind.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate 
+        { 
+            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            {
+                textBoxFind.GetVisualDescendants()
+                           .OfType<TextBox>()
+                           .FirstOrDefault()?
+                           .Focus();
+            });
+        }; // hack to make OnKeyDown work
         AddHandler(KeyDownEvent, vm.OnKeyDown, RoutingStrategies.Tunnel);
         Closing += (_, _) => vm.SaveSettings();
     }
