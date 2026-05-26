@@ -4505,19 +4505,13 @@ public partial class MainViewModel :
             return;
         }
 
+        var idx = SelectedSubtitleIndex ?? 0;
         var result =
             await ShowDialogAsync<ChangeFormattingWindow, ChangeFormattingViewModel>(vm => { vm.Initialize(Subtitles.ToList(), SelectedSubtitleFormat); });
 
-        if (!result.OkPressed)
-        {
-            return;
-        }
-
-        var idx = SelectedSubtitleIndex ?? 0;
         if (result.OkPressed)
         {
-            SetSubtitles(result.FixedSubtitle);
-            SelectAndScrollToRow(idx);
+            ApplyFixedSubtitle(result.FixedSubtitle, idx);
         }
     }
 
@@ -4552,19 +4546,13 @@ public partial class MainViewModel :
             return;
         }
 
+        var idx = SelectedSubtitleIndex ?? 0;
         var result =
             await ShowDialogAsync<ConvertActorsWindow, ConvertActorsViewModel>(vm => { vm.Initialize(Subtitles.ToList(), SelectedSubtitleFormat); });
 
-        if (!result.OkPressed)
-        {
-            return;
-        }
-
-        var idx = SelectedSubtitleIndex ?? 0;
         if (result.OkPressed)
         {
-            SetSubtitles(result.FixedSubtitle);
-            SelectAndScrollToRow(idx);
+            ApplyFixedSubtitle(result.FixedSubtitle, idx);
         }
     }
 
@@ -4831,12 +4819,12 @@ public partial class MainViewModel :
             return;
         }
 
+        var idx = SelectedSubtitleIndex ?? 0;
         var viewModel = await ShowDialogAsync<FixCommonErrorsWindow, FixCommonErrorsViewModel>(vm => { vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat); });
 
         if (viewModel.OkPressed)
         {
-            SetSubtitles(viewModel.FixedSubtitle);
-            SelectAndScrollToRow(0);
+            ApplyFixedSubtitle(viewModel.FixedSubtitle, idx);
             ShowStatus(string.Format(Se.Language.Main.FixedXLines, viewModel.FixedSubtitle.Paragraphs.Count));
         }
     }
@@ -4855,12 +4843,12 @@ public partial class MainViewModel :
             return;
         }
 
+        var idx = SelectedSubtitleIndex ?? 0;
         var viewModel = await ShowDialogAsync<FixNetflixErrorsWindow, FixNetflixErrorsViewModel>(vm => { vm.Initialize(GetUpdateSubtitle(), _videoFileName ?? string.Empty); });
 
         if (viewModel.OkPressed)
         {
-            SetSubtitles(viewModel.FixedSubtitle);
-            SelectAndScrollToRow(0);
+            ApplyFixedSubtitle(viewModel.FixedSubtitle, idx);
             ShowStatus(string.Format(Se.Language.Main.FixedXLines, viewModel.FixedSubtitle.Paragraphs.Count));
         }
     }
@@ -12457,6 +12445,56 @@ public partial class MainViewModel :
                 BindingFlags.NonPublic | BindingFlags.Instance);
             processVerticalScroll?.Invoke(SubtitleGrid, new object[] { ScrollEventType.EndScroll });
         }, DispatcherPriority.Loaded);
+    }
+
+    /// <summary>
+    /// Applies the fixed subtitle returned by Fix Common Errors / Fix Netflix Errors.
+    /// When the paragraph count is unchanged (the common case), updates each
+    /// SubtitleLineViewModel in-place so the grid keeps its current scroll position
+    /// and selection without any manipulation.
+    /// Falls back to a full SetSubtitles reset only when rows were added or removed.
+    /// </summary>
+    /// <summary>
+    /// Applies the fixed subtitle returned by Fix Common Errors / Fix Netflix Errors.
+    /// When the paragraph count is unchanged (the common case), updates each
+    /// SubtitleLineViewModel in-place so the grid keeps its current scroll position
+    /// and selection without any manipulation.
+    /// Falls back to a full SetSubtitles reset only when rows were added or removed.
+    /// </summary>
+    private void ApplyFixedSubtitle(Subtitle fixedSubtitle, int selectedIndex)
+    {
+        if (fixedSubtitle.Paragraphs.Count == Subtitles.Count)
+        {
+            for (var i = 0; i < Subtitles.Count; i++)
+                Subtitles[i].UpdateFrom(fixedSubtitle.Paragraphs[i]);
+            Renumber();
+            UpdateGaps();
+        }
+        else
+        {
+            SetSubtitles(fixedSubtitle);
+            SelectAndScrollToRow(selectedIndex);
+        }
+    }
+
+    /// <summary>
+    /// Overload for dialogs (ChangeFormatting, ConvertActors) that return a
+    /// pre-built List&lt;SubtitleLineViewModel&gt; rather than a raw Subtitle.
+    /// </summary>
+    private void ApplyFixedSubtitle(List<SubtitleLineViewModel> fixedSubtitles, int selectedIndex)
+    {
+        if (fixedSubtitles.Count == Subtitles.Count)
+        {
+            for (var i = 0; i < Subtitles.Count; i++)
+                Subtitles[i].UpdateFrom(fixedSubtitles[i]);
+            Renumber();
+            UpdateGaps();
+        }
+        else
+        {
+            SetSubtitles(fixedSubtitles);
+            SelectAndScrollToRow(selectedIndex);
+        }
     }
 
     public void SelectAndScrollToSubtitle(SubtitleLineViewModel subtitle)

@@ -492,6 +492,39 @@ public partial class SubtitleLineViewModel : ObservableObject
         OnPropertyChanged(nameof(Text));
     }
 
+    /// <summary>Updates all display properties from a fixed <see cref="Paragraph"/> in-place.</summary>
+    internal void UpdateFrom(Paragraph p)
+    {
+        Paragraph = p;
+        Text = p.Text;
+        Actor = p.Actor;
+        Style = p.Style;
+        Layer = p.Layer;
+        Extra = p.Extra;
+        _skipUpdate = true;
+        StartTime = TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds);
+        EndTime = TimeSpan.FromMilliseconds(p.EndTime.TotalMilliseconds);
+        _skipUpdate = false;
+        UpdateDuration();
+    }
+
+    /// <summary>Updates all display properties from another <see cref="SubtitleLineViewModel"/> in-place.</summary>
+    internal void UpdateFrom(SubtitleLineViewModel src)
+    {
+        if (src.Paragraph != null)
+            Paragraph = src.Paragraph;
+        Text = src.Text;
+        Actor = src.Actor;
+        Style = src.Style;
+        Layer = src.Layer;
+        Extra = src.Extra;
+        _skipUpdate = true;
+        StartTime = src.StartTime;
+        EndTime = src.EndTime;
+        _skipUpdate = false;
+        UpdateDuration();
+    }
+
     internal void SetStartTimeOnly(TimeSpan timeSpan)
     {
         _skipUpdate = true;
