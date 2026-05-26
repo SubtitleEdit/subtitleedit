@@ -6417,7 +6417,10 @@ public partial class MainViewModel :
                 continue;
             }
 
-            line.StartTime = TimeSpan.FromMilliseconds(newStartMs);
+            // Use SetStartTimeOnly so EndTime stays fixed (the StartTime
+            // setter would otherwise shift EndTime to preserve Duration —
+            // see SubtitleLineViewModel.OnStartTimeChanged).
+            line.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs));
         }
 
         _updateAudioVisualizer = true;
@@ -6461,7 +6464,9 @@ public partial class MainViewModel :
                 continue;
             }
 
-            line.StartTime = newStart;
+            // Use SetStartTimeOnly so EndTime stays fixed (the StartTime
+            // setter would otherwise shift EndTime to preserve Duration).
+            line.SetStartTimeOnly(newStart);
         }
 
         _updateAudioVisualizer = true;
