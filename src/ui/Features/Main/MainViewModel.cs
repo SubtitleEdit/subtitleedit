@@ -6417,15 +6417,22 @@ public partial class MainViewModel :
             zoneFrames = isLeftZone ? profile.OutCuesLeftGreenZone : profile.OutCuesRightGreenZone;
         }
 
-        var frameRate = _mediaInfo != null ? (double)_mediaInfo.FramesRateNonNormalized : Se.Settings.General.CurrentFrameRate;
+        // Fall back to the user-configured frame rate when ffmpeg parsing
+        // didn't produce a usable rate (e.g., ffmpeg missing → FramesRate is 0,
+        // which would make FramesToMilliseconds divide by zero).
+        var frameRate = _mediaInfo != null && _mediaInfo.FramesRateNonNormalized > 0
+            ? (double)_mediaInfo.FramesRateNonNormalized
+            : Se.Settings.General.CurrentFrameRate;
         var zoneMs = SubtitleFormat.FramesToMilliseconds(zoneFrames, frameRate);
         var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
 
+        var selectedSet = new HashSet<SubtitleLineViewModel>(selectedLines);
+        var adjustedNeighbors = new HashSet<SubtitleLineViewModel>();
         var changed = 0;
-        var neighborsAdjusted = 0;
         foreach (var line in selectedLines)
         {
             var idx = Subtitles.IndexOf(line);
+            var originalCueMs = isInCue ? line.StartTime.TotalMilliseconds : line.EndTime.TotalMilliseconds;
             var cue = isInCue ? line.StartTime : line.EndTime;
             var closestShotChange = ShotChangeHelper.GetClosestShotChange(AudioVisualizer.ShotChanges, new TimeCode(cue));
             if (closestShotChange == null)
@@ -6450,15 +6457,16 @@ public partial class MainViewModel :
                     double newPreviousEndMs;
                     if (isLeftZone)
                     {
-                        // Cue is just before the shot change — keep previous
+                        // Cue lands before the shot change — keep previous
                         // where it was unless it crosses into our gap.
                         newPreviousEndMs = Math.Min(prev.EndTime.TotalMilliseconds, newStartMs - gapMs);
                     }
                     else
                     {
-                        // Cue is just after the shot change — cap previous at
-                        // the shot change, then push the new start later if
-                        // shortening didn't free up enough room.
+                        // Cue lands after the shot change — cap previous at
+                        // the green-zone in-cue position (matching SE 4), then
+                        // push the new start later if shortening didn't free
+                        // up enough room for the gap.
                         newPreviousEndMs = Math.Min(newInCueMs, prev.EndTime.TotalMilliseconds);
                         newStartMs = Math.Max(newInCueMs, newPreviousEndMs + gapMs);
                     }
@@ -6474,7 +6482,10 @@ public partial class MainViewModel :
                     if (Math.Abs(newPreviousEndMs - prev.EndTime.TotalMilliseconds) > 0.5)
                     {
                         prev.EndTime = TimeSpan.FromMilliseconds(newPreviousEndMs);
-                        neighborsAdjusted++;
+                        if (!selectedSet.Contains(prev))
+                        {
+                            adjustedNeighbors.Add(prev);
+                        }
                     }
                 }
                 else
@@ -6497,15 +6508,16 @@ public partial class MainViewModel :
                     double newNextStartMs;
                     if (!isLeftZone)
                     {
-                        // Cue is just after the shot change — keep next where
+                        // Cue lands after the shot change — keep next where
                         // it was unless it crosses into our gap.
                         newNextStartMs = Math.Max(next.StartTime.TotalMilliseconds, newEndMs + gapMs);
                     }
                     else
                     {
-                        // Cue is just before the shot change — cap next at
-                        // the shot change, then pull the new end earlier if
-                        // shortening didn't free up enough room.
+                        // Cue lands before the shot change — cap next at
+                        // the green-zone out-cue position (matching SE 4),
+                        // then pull the new end earlier if shortening didn't
+                        // free up enough room for the gap.
                         newNextStartMs = Math.Max(next.StartTime.TotalMilliseconds, newOutCueMs);
                         newEndMs = Math.Min(newNextStartMs - gapMs, newOutCueMs);
                     }
@@ -6521,7 +6533,10 @@ public partial class MainViewModel :
                     if (Math.Abs(newNextStartMs - next.StartTime.TotalMilliseconds) > 0.5)
                     {
                         next.StartTime = TimeSpan.FromMilliseconds(newNextStartMs);
-                        neighborsAdjusted++;
+                        if (!selectedSet.Contains(next))
+                        {
+                            adjustedNeighbors.Add(next);
+                        }
                     }
                 }
                 else
@@ -6530,10 +6545,17 @@ public partial class MainViewModel :
                 }
             }
 
-            changed++;
+            // Only count this line as "updated" if its cue actually moved —
+            // re-running the command on already-snapped lines should report 0.
+            var newCueMs = isInCue ? line.StartTime.TotalMilliseconds : line.EndTime.TotalMilliseconds;
+            if (Math.Abs(newCueMs - originalCueMs) > 0.5)
+            {
+                changed++;
+            }
         }
 
-        if (changed > 0)
+        var neighborsAdjusted = adjustedNeighbors.Count;
+        if (changed > 0 || neighborsAdjusted > 0)
         {
             var statusMessage = neighborsAdjusted > 0
                 ? string.Format(Se.Language.General.XOfYLinesUpdatedAndZNeighborsAdjusted, actionLabel, changed, selectedLines.Count, neighborsAdjusted)
