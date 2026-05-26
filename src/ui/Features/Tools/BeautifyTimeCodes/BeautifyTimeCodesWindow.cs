@@ -17,9 +17,9 @@ public class BeautifyTimeCodesWindow : Window
         Title = Se.Language.Tools.BeautifyTimeCodes.Title;
         CanResize = true;
         Width = 1100;
-        Height = 820;
+        Height = 680;
         MinWidth = 900;
-        MinHeight = 560;
+        MinHeight = 520;
         vm.Window = this;
         DataContext = vm;
 
@@ -155,10 +155,10 @@ public class BeautifyTimeCodesWindow : Window
         var detail = new TextBlock
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            TextWrapping = TextWrapping.NoWrap,
+            TextWrapping = TextWrapping.Wrap,
+            MaxLines = 2,
             TextTrimming = TextTrimming.CharacterEllipsis,
             FontFamily = new FontFamily("Consolas, Menlo, monospace"),
-            FontSize = 11,
             Margin = new Thickness(0, 4, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ChangeDetail)) { Source = vm },
         };
