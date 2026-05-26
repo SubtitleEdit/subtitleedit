@@ -6384,18 +6384,17 @@ public partial class MainViewModel :
         {
             var idx = Subtitles.IndexOf(line);
             var prev = Subtitles.GetOrNull(idx - 1);
-            var shotChange = AudioVisualizer.ShotChanges.LastOrDefault(s => s < line.StartTime.TotalSeconds + 0.01);
+            // Cast to nullable so "no match" is null and a real shot change
+            // at t=0 isn't conflated with the default value.
+            var shotChange = AudioVisualizer.ShotChanges
+                .Cast<double?>()
+                .LastOrDefault(s => s < line.StartTime.TotalSeconds + 0.01);
 
             // Lower bound for the new start: the previous shot change and, if
             // present, the previous subtitle's end plus the configured gap.
             // Whichever is later wins so we never pull the start back past
             // either constraint.
-            double? candidateStartMs = null;
-            if (shotChange > 0)
-            {
-                candidateStartMs = shotChange * 1000.0;
-            }
-
+            double? candidateStartMs = shotChange.HasValue ? shotChange.Value * 1000.0 : (double?)null;
             if (prev != null)
             {
                 var prevEndPlusGapMs = prev.EndTime.TotalMilliseconds + gapMs;
@@ -6434,13 +6433,33 @@ public partial class MainViewModel :
             return;
         }
 
+        var minDurationMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
+        var maxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
         foreach (var line in selectedLines)
         {
-            var next = AudioVisualizer.ShotChanges.FirstOrDefault(s => s > line.StartTime.TotalSeconds + 0.001);
-            if (next > 0 && TimeSpan.FromSeconds(next) < line.EndTime)
+            // Cast to nullable so a shot change at t=0 isn't lost to the
+            // default-value collision.
+            var next = AudioVisualizer.ShotChanges
+                .Cast<double?>()
+                .FirstOrDefault(s => s > line.StartTime.TotalSeconds + 0.001);
+            if (next == null)
             {
-                line.StartTime = TimeSpan.FromSeconds(next);
+                continue;
             }
+
+            var newStart = TimeSpan.FromSeconds(next.Value);
+            if (newStart >= line.EndTime)
+            {
+                continue;
+            }
+
+            var newDurationMs = (line.EndTime - newStart).TotalMilliseconds;
+            if (newDurationMs < minDurationMs || newDurationMs > maxDurationMs)
+            {
+                continue;
+            }
+
+            line.StartTime = newStart;
         }
 
         _updateAudioVisualizer = true;
@@ -6458,13 +6477,33 @@ public partial class MainViewModel :
             return;
         }
 
+        var minDurationMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
+        var maxDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
         foreach (var line in selectedLines)
         {
-            var prev = AudioVisualizer.ShotChanges.LastOrDefault(s => s < line.EndTime.TotalSeconds - 0.001);
-            if (prev > 0 && TimeSpan.FromSeconds(prev) > line.StartTime)
+            // Cast to nullable so a shot change at t=0 isn't lost to the
+            // default-value collision.
+            var prev = AudioVisualizer.ShotChanges
+                .Cast<double?>()
+                .LastOrDefault(s => s < line.EndTime.TotalSeconds - 0.001);
+            if (prev == null)
             {
-                line.EndTime = TimeSpan.FromSeconds(prev);
+                continue;
             }
+
+            var newEnd = TimeSpan.FromSeconds(prev.Value);
+            if (newEnd <= line.StartTime)
+            {
+                continue;
+            }
+
+            var newDurationMs = (newEnd - line.StartTime).TotalMilliseconds;
+            if (newDurationMs < minDurationMs || newDurationMs > maxDurationMs)
+            {
+                continue;
+            }
+
+            line.EndTime = newEnd;
         }
 
         _updateAudioVisualizer = true;
