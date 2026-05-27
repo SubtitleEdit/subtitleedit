@@ -208,6 +208,49 @@ public class VibeVoiceCrispAsr : ITtsEngine
     public static string GetTalkerPath() =>
         Path.Combine(GetSetModelsFolder(), TalkerFileName);
 
+    /// <summary>
+    /// Path crispasr's --auto-download writes GGUFs to. Mirrors the Qwen3 (CrispASR) helper so
+    /// the SE-side downloader can adopt already-cached files instead of re-pulling 2.8 GB.
+    /// </summary>
+    public static string GetCrispAsrCacheFolder() =>
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache", "crispasr");
+
+    /// <summary>
+    /// Best-effort copy of <paramref name="fileName"/> from <see cref="GetCrispAsrCacheFolder"/>
+    /// into SE's models folder. See <see cref="Qwen3TtsCrispAsr.TrySeedModelFromCrispAsrCache"/>
+    /// for rationale — same truncation-guard semantics.
+    /// </summary>
+    public static bool TrySeedModelFromCrispAsrCache(string fileName, string destinationPath)
+    {
+        if (IsValidLocalModelFile(destinationPath, fileName))
+        {
+            return true;
+        }
+
+        try
+        {
+            if (File.Exists(destinationPath))
+            {
+                Se.LogError($"VibeVoice (CrispASR): removing wrong-sized local model file {destinationPath}");
+                File.Delete(destinationPath);
+            }
+
+            var cachePath = Path.Combine(GetCrispAsrCacheFolder(), fileName);
+            if (!IsValidLocalModelFile(cachePath, fileName))
+            {
+                return false;
+            }
+
+            File.Copy(cachePath, destinationPath);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, $"VibeVoice (CrispASR): cache seed copy failed for {fileName}");
+            return false;
+        }
+    }
+
     public static bool AreModelsInstalled() =>
         IsValidLocalModelFile(GetTalkerPath(), TalkerFileName);
 

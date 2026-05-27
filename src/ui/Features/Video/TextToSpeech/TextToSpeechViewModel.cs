@@ -1411,13 +1411,37 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         if (engine is VibeVoiceCrispAsr)
         {
-            // Runtime is the only thing SE installs directly — the ~2.8 GB GGUF is fetched
-            // by crispasr's own --auto-download on first server start. That keeps VibeVoice's
-            // first run slower but avoids a separate SE-side download service for a single
-            // file (per #11206 simplification: stick with ICrispAsrDownloadService).
             if (!await TtsVoiceInstaller.EnsureCrispAsrForVibeVoice(Window, _windowService, forceRedownload: false))
             {
                 return false;
+            }
+
+            if (!VibeVoiceCrispAsr.AreModelsInstalled())
+            {
+                const string sizeText = "~2.8 GB";
+                var answer = await MessageBox.Show(
+                    Window,
+                    "Download VibeVoice (CrispASR) model?",
+                    $"{Environment.NewLine}\"VibeVoice (CrispASR)\" requires a model ({sizeText}).{Environment.NewLine}{Environment.NewLine}Download model?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadVibeVoiceCrispAsrModels());
+                if (!dlResult.OkPressed || !VibeVoiceCrispAsr.AreModelsInstalled())
+                {
+                    return false;
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await RefreshVoices(engine);
+                });
+                return true;
             }
 
             return true;
@@ -1425,11 +1449,38 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         if (engine is IndexTtsCrispAsr)
         {
-            // Same pattern as VibeVoice — SE installs the runtime, crispasr's --auto-download
-            // pulls the ~870 MB GGUFs (GPT talker + BigVGAN codec) on first server start.
             if (!await TtsVoiceInstaller.EnsureCrispAsrForIndexTts(Window, _windowService, forceRedownload: false))
             {
                 return false;
+            }
+
+            if (!IndexTtsCrispAsr.AreModelsInstalled())
+            {
+                // ~613 MB GPT talker + ~256 MB BigVGAN codec; round up for the prompt.
+                const string sizeText = "~870 MB";
+                var answer = await MessageBox.Show(
+                    Window,
+                    "Download IndexTTS (CrispASR) models?",
+                    $"{Environment.NewLine}\"IndexTTS (CrispASR)\" requires models ({sizeText}).{Environment.NewLine}{Environment.NewLine}Download models?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadIndexTtsCrispAsrModels());
+                if (!dlResult.OkPressed || !IndexTtsCrispAsr.AreModelsInstalled())
+                {
+                    return false;
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await RefreshVoices(engine);
+                });
+                return true;
             }
 
             return true;
