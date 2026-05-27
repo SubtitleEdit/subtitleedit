@@ -4,7 +4,6 @@ Subtitle Edit Changelog
 
 v5.0.0-beta33 (xth May 2026)
 
-* Add VibeVoice TTS engine (Microsoft, voice cloning ~2.8 GB) via CrispASR
 * Add IndexTTS TTS engine (Bilibili / IndexTeam, voice cloning ~870 MB) via CrispASR
 * Add CEA-708 (DTVCC) caption decoding from H.264 SEI cc_data in MP4
 * Add Beautify time codes profile editor + integrated beautify tool
