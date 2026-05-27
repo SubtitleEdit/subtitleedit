@@ -24,6 +24,7 @@ public class LanguageBeautifyTimeCodes
     public string NoReasonNote { get; set; }
     public string PreviousChange { get; set; }
     public string NextChange { get; set; }
+    public string EditProfile { get; set; }
 
     public LanguageBeautifyTimeCodes()
     {
@@ -46,8 +47,9 @@ public class LanguageBeautifyTimeCodes
         MinGapEnforced = "min. gap enforced";
         MinDurationEnforced = "min. duration enforced";
         MaxDurationEnforced = "max. duration enforced";
-        NoReasonNote = "—";
+        NoReasonNote = "refined by profile rules";
         PreviousChange = "Previous change";
         NextChange = "Next change";
+        EditProfile = "Edit profile...";
     }
 }

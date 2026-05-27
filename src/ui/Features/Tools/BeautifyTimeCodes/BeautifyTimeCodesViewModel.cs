@@ -283,21 +283,15 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         var startChanged = Math.Abs(beautified.StartTime.TotalMilliseconds - original.StartTime.TotalMilliseconds) > 0.5;
         if (startChanged)
         {
-            var reason = DetectStartReason(original, beautified, prevB);
-            if (reason != null)
-            {
-                parts.Add(Se.Language.General.StartTime + ": " + reason);
-            }
+            var reason = DetectStartReason(original, beautified, prevB) ?? lang.NoReasonNote;
+            parts.Add(Se.Language.General.StartTime + ": " + reason);
         }
 
         var endChanged = Math.Abs(beautified.EndTime.TotalMilliseconds - original.EndTime.TotalMilliseconds) > 0.5;
         if (endChanged)
         {
-            var reason = DetectEndReason(original, beautified, nextB);
-            if (reason != null)
-            {
-                parts.Add(Se.Language.General.EndTime + ": " + reason);
-            }
+            var reason = DetectEndReason(original, beautified, nextB) ?? lang.NoReasonNote;
+            parts.Add(Se.Language.General.EndTime + ": " + reason);
         }
 
         // Duration reason — applies regardless of which side moved
@@ -307,7 +301,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
             parts.Add(Se.Language.General.Duration + ": " + durationReason);
         }
 
-        return parts.Count == 0 ? lang.NoReasonNote : string.Join("    ·    ", parts);
+        return string.Join("    ·    ", parts);
     }
 
     private string? DetectStartReason(SubtitleLineViewModel original, SubtitleLineViewModel beautified, SubtitleLineViewModel? prev)

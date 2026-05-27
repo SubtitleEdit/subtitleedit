@@ -1479,9 +1479,10 @@
       "minGapEnforced": "min. gap enforced",
       "minDurationEnforced": "min. duration enforced",
       "maxDurationEnforced": "max. duration enforced",
-      "noReasonNote": "—",
+      "noReasonNote": "refined by profile rules",
       "previousChange": "Previous change",
-      "nextChange": "Next change"
+      "nextChange": "Next change",
+      "editProfile": "Edit profile..."
     },
     "beautifyTimeCodesProfile": {
       "title": "Edit beautify time codes profile",
