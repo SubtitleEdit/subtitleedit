@@ -2622,6 +2622,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 {
                     SelectedModel = Models.FirstOrDefault();
                 }
+                IsEngineSettingsVisible = true;
             }
             else if (SelectedEngine is IndexTtsCrispAsr)
             {
@@ -2630,6 +2631,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 {
                     SelectedModel = Models.FirstOrDefault();
                 }
+                IsEngineSettingsVisible = true;
             }
             else if (SelectedEngine is ChatterboxTtsCpp)
             {
