@@ -192,6 +192,19 @@ public static class InitToolbar
             isLastSeparator = false;
         }
 
+        if (appearance.ToolbarShowBurnIn)
+        {
+            stackPanelLeft.Children.Add(new Button
+            {
+                Content = MakeImage("BurnIn"),
+                Command = vm.ShowVideoBurnInCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.BurnInHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.BurnInHint, shortcuts, nameof(vm.ShowVideoBurnInCommand)),
+            });
+            isLastSeparator = false;
+        }
+
 
         if (appearance.ToolbarShowSettings)
         {
