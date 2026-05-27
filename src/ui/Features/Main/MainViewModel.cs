@@ -9470,7 +9470,7 @@ public partial class MainViewModel :
 
         _replacePreviousFocus = Window?.FocusManager?.GetFocusedElement() as Control;
         var subs = Subtitles.Select(p => p.Text).ToList();
-        var result = _windowService.ShowWindow<ReplaceWindow, ReplaceViewModel>(Window, (window, vm) =>
+        var result = _windowService.ShowWindow<ReplaceWindow, ReplaceViewModel>(Window!, (window, vm) =>
         {
             window.Topmost = true;
             _replaceViewModel = vm;
