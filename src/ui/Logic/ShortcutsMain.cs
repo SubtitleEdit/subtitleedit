@@ -390,6 +390,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ShowAssaPropertiesCommand), Se.Language.Options.Shortcuts.AssaProperties },
         { nameof(MainViewModel.ShowAssaAttachmentsCommand), Se.Language.Options.Shortcuts.AssaAttachments },
         { nameof(MainViewModel.RecalculateDurationSelectedLinesCommand), Se.Language.Options.Shortcuts.RecalculateDurationSelectedLines },
+        { nameof(MainViewModel.SetDurationMaxCpsSelectedLinesCommand), Se.Language.Options.Shortcuts.SetDurationMaxCpsSelectedLines },
         { nameof(MainViewModel.WaveformToggleWaveformSpectrogramHeightCommand), Se.Language.Options.Shortcuts.ToggleWaveformAndSpectrogramHeight },
         { nameof(MainViewModel.SpectrogramToggleStyleCommand), Se.Language.Options.Shortcuts.ToggleSpectrogramStyle },
         { nameof(MainViewModel.ShowBeautifyTimeCodesCommand), Se.Language.Tools.BeautifyTimeCodes.Title },
@@ -714,6 +715,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ShowAssaPropertiesCommand, nameof(vm.ShowAssaPropertiesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowAssaAttachmentsCommand, nameof(vm.ShowAssaAttachmentsCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.RecalculateDurationSelectedLinesCommand, nameof(vm.RecalculateDurationSelectedLinesCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SetDurationMaxCpsSelectedLinesCommand, nameof(vm.SetDurationMaxCpsSelectedLinesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.FillSelectedLinesWithClipboardCommand, nameof(vm.FillSelectedLinesWithClipboardCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.WaveformToggleWaveformSpectrogramHeightCommand, nameof(vm.WaveformToggleWaveformSpectrogramHeightCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SpectrogramToggleStyleCommand, nameof(vm.SpectrogramToggleStyleCommand), ShortcutCategory.General);
