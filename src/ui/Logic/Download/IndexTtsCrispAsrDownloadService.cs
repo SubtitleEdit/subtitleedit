@@ -87,15 +87,60 @@ public class IndexTtsCrispAsrDownloadService : IIndexTtsCrispAsrDownloadService
         try
         {
             await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(fileName), partPath, progress, cancellationToken);
-            // Hash registry doesn't have IndexTTS entries yet (would require local SHA-256
-            // computation); the engine's size check on next load catches truncation, which is
-            // the failure mode we actually see in the wild.
+            await VerifyFile(partPath, GetHashKey(fileName), fileName, cancellationToken);
             File.Move(partPath, finalPath);
         }
         catch
         {
             TryDelete(partPath);
             throw;
+        }
+    }
+
+    private static string? GetHashKey(string fileName)
+    {
+        if (string.Equals(fileName, IndexTtsCrispAsr.TalkerQ4KFileName, StringComparison.OrdinalIgnoreCase))
+        {
+            return DownloadHashManager.IndexTtsCrispAsr.TalkerQ4K;
+        }
+        if (string.Equals(fileName, IndexTtsCrispAsr.TalkerQ8_0FileName, StringComparison.OrdinalIgnoreCase))
+        {
+            return DownloadHashManager.IndexTtsCrispAsr.TalkerQ8_0;
+        }
+        if (string.Equals(fileName, IndexTtsCrispAsr.TalkerF16FileName, StringComparison.OrdinalIgnoreCase))
+        {
+            return DownloadHashManager.IndexTtsCrispAsr.TalkerF16;
+        }
+        if (string.Equals(fileName, IndexTtsCrispAsr.CodecFileName, StringComparison.OrdinalIgnoreCase))
+        {
+            return DownloadHashManager.IndexTtsCrispAsr.Codec;
+        }
+        return null;
+    }
+
+    private static async Task VerifyFile(string filePath, string? key, string fileName, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrEmpty(key))
+        {
+            return;
+        }
+
+        var expected = DownloadHashManager.GetLatestKnownHash(key);
+        if (string.IsNullOrEmpty(expected))
+        {
+            return;
+        }
+
+        string actual;
+        await using (var stream = File.OpenRead(filePath))
+        {
+            actual = await DownloadHashManager.ComputeSha256Async(stream, cancellationToken);
+        }
+
+        if (!string.Equals(expected, actual, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new IOException(
+                $"IndexTTS (CrispASR) model {fileName} failed integrity check (expected SHA-256 {expected}, got {actual}).");
         }
     }
 

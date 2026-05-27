@@ -121,6 +121,26 @@ public static class DownloadHashManager
         public const string Codec = "Qwen3TtsCrispAsr.Codec";
     }
 
+    public static class VibeVoiceCrispAsr
+    {
+        // SHA-256 of the GGUF talker files served by cstr's HuggingFace repo. Same shape as
+        // the Qwen3 keys — pulled from the HF tree API's lfs.oid for each file, verified
+        // against a local sha256sum of the Q8_0 file.
+        public const string TalkerQ4K = "VibeVoiceCrispAsr.TalkerQ4K";
+        public const string TalkerQ8_0 = "VibeVoiceCrispAsr.TalkerQ8_0";
+        public const string TalkerF16 = "VibeVoiceCrispAsr.TalkerF16";
+    }
+
+    public static class IndexTtsCrispAsr
+    {
+        // SHA-256 of the GPT talker (3 quants) and the shared BigVGAN codec. Verified
+        // against local sha256sum of the Q8_0 + bigvgan files.
+        public const string TalkerQ4K = "IndexTtsCrispAsr.TalkerQ4K";
+        public const string TalkerQ8_0 = "IndexTtsCrispAsr.TalkerQ8_0";
+        public const string TalkerF16 = "IndexTtsCrispAsr.TalkerF16";
+        public const string Codec = "IndexTtsCrispAsr.Codec";
+    }
+
     public static class KokoroTtsCpp
     {
         // Hashes of the release archive (.zip) - same role as OmniVoice's set. Index 0 must match
@@ -564,6 +584,40 @@ public static class DownloadHashManager
             [Qwen3TtsCrispAsr.Codec] = new[]
             {
                 "70dc95dbfdd9aa5d9d406236ff771d061bf17b0cda02a72513953355606e719b", // qwen3-tts-tokenizer-12hz.gguf
+            },
+
+            // VibeVoice (CrispASR) — cstr/vibevoice-1.5b-GGUF on HuggingFace.
+            // Hashes are HF LFS oid (= SHA-256); Q8_0 verified by local sha256sum.
+            [VibeVoiceCrispAsr.TalkerQ4K] = new[]
+            {
+                "fb034200191b7f593b0675302cceba38d209dd01c3e339a25cb1f143926d18ff", // vibevoice-1.5b-tts-q4_k.gguf
+            },
+            [VibeVoiceCrispAsr.TalkerQ8_0] = new[]
+            {
+                "d402c7afe796dddbac4a28c721fd9a8f14915a4f63b0a5120916bf287450dc99", // vibevoice-1.5b-tts-q8_0.gguf
+            },
+            [VibeVoiceCrispAsr.TalkerF16] = new[]
+            {
+                "64dface8a1080ae268191286ebd8033c18184af0ab8be6cc36038841bdba1405", // vibevoice-1.5b-tts-f16.gguf
+            },
+
+            // IndexTTS (CrispASR) — cstr/indextts-1.5-GGUF on HuggingFace.
+            // Q8_0 and codec verified by local sha256sum; Q4_K and F16 pulled from HF API.
+            [IndexTtsCrispAsr.TalkerQ4K] = new[]
+            {
+                "35a56e7a1c7c49c45586e6eb4b9c55df7711dcb07968f84d43fc7d71e079056e", // indextts-gpt-q4_k.gguf
+            },
+            [IndexTtsCrispAsr.TalkerQ8_0] = new[]
+            {
+                "9bd7edbfc9ecf9705ccc7fa08407f88e87fc0a3d7e7b7efc0195a8a335bea4b0", // indextts-gpt-q8_0.gguf
+            },
+            [IndexTtsCrispAsr.TalkerF16] = new[]
+            {
+                "37fb043a674feb045424ba2711d8d86a21705d3f85fd43a7bafd73b3ca5e76ce", // indextts-gpt.gguf (F16)
+            },
+            [IndexTtsCrispAsr.Codec] = new[]
+            {
+                "fcba9a322d80ef318da8a17c01e8a5e7f299ccdf881c62a43abf62cb3c104268", // indextts-bigvgan.gguf
             },
 
             // Kokoro TTS — https://github.com/niksedk/kokoro.cpp/releases

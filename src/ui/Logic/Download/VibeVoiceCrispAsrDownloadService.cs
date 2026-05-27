@@ -71,12 +71,59 @@ public class VibeVoiceCrispAsrDownloadService : IVibeVoiceCrispAsrDownloadServic
         try
         {
             await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(fileName), partPath, progress, cancellationToken);
+            await VerifyFile(partPath, GetHashKey(fileName), fileName, cancellationToken);
             File.Move(partPath, finalPath);
         }
         catch
         {
             TryDelete(partPath);
             throw;
+        }
+    }
+
+    private static string? GetHashKey(string fileName)
+    {
+        if (string.Equals(fileName, VibeVoiceCrispAsr.TalkerQ4KFileName, StringComparison.OrdinalIgnoreCase))
+        {
+            return DownloadHashManager.VibeVoiceCrispAsr.TalkerQ4K;
+        }
+        if (string.Equals(fileName, VibeVoiceCrispAsr.TalkerQ8_0FileName, StringComparison.OrdinalIgnoreCase))
+        {
+            return DownloadHashManager.VibeVoiceCrispAsr.TalkerQ8_0;
+        }
+        if (string.Equals(fileName, VibeVoiceCrispAsr.TalkerF16FileName, StringComparison.OrdinalIgnoreCase))
+        {
+            return DownloadHashManager.VibeVoiceCrispAsr.TalkerF16;
+        }
+        return null;
+    }
+
+    // Mirrors Qwen3TtsCrispAsrDownloadService.VerifyFile — async + cancellable since
+    // these GGUFs are multi-GB and a synchronous SHA-256 would freeze the dialog for
+    // 10-20 s on cancel.
+    private static async Task VerifyFile(string filePath, string? key, string fileName, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrEmpty(key))
+        {
+            return;
+        }
+
+        var expected = DownloadHashManager.GetLatestKnownHash(key);
+        if (string.IsNullOrEmpty(expected))
+        {
+            return;
+        }
+
+        string actual;
+        await using (var stream = File.OpenRead(filePath))
+        {
+            actual = await DownloadHashManager.ComputeSha256Async(stream, cancellationToken);
+        }
+
+        if (!string.Equals(expected, actual, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new IOException(
+                $"VibeVoice (CrispASR) model {fileName} failed integrity check (expected SHA-256 {expected}, got {actual}).");
         }
     }
 
