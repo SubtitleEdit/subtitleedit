@@ -1479,7 +1479,7 @@
       "minGapEnforced": "min. gap enforced",
       "minDurationEnforced": "min. duration enforced",
       "maxDurationEnforced": "max. duration enforced",
-      "noReasonNote": "Adjusted by beautify profile",
+      "noReasonNote": "refined by profile rules",
       "previousChange": "Previous change",
       "nextChange": "Next change",
       "editProfile": "Edit profile..."

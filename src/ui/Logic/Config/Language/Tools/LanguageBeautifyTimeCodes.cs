@@ -47,7 +47,7 @@ public class LanguageBeautifyTimeCodes
         MinGapEnforced = "min. gap enforced";
         MinDurationEnforced = "min. duration enforced";
         MaxDurationEnforced = "max. duration enforced";
-        NoReasonNote = "Adjusted by beautify profile";
+        NoReasonNote = "refined by profile rules";
         PreviousChange = "Previous change";
         NextChange = "Next change";
         EditProfile = "Edit profile...";
