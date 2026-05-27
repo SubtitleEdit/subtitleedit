@@ -9531,7 +9531,10 @@ public partial class MainViewModel :
 
     private async Task<MessageBoxResult> ShowWrapAroundDialog(string message)
     {
-        var dialogWindow = _findViewModel?.Window ?? _replaceViewModel?.Window;
+        var findWin = _findViewModel?.Window;
+        var replaceWin = _replaceViewModel?.Window;
+        var dialogWindow = (findWin?.IsVisible == true ? findWin : null)
+                        ?? (replaceWin?.IsVisible == true ? replaceWin : null);
         if (dialogWindow != null) dialogWindow.Topmost = false;
         try
         {
