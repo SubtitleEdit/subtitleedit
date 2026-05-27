@@ -174,6 +174,9 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showToolbarReplace;
     [ObservableProperty] private bool _showToolbarSpellCheck;
     [ObservableProperty] private bool _showToolbarFixCommonErrors;
+    [ObservableProperty] private bool _showToolbarRemoveTextForHi;
+    [ObservableProperty] private bool _showToolbarVisualSync;
+    [ObservableProperty] private bool _showToolbarBeautifyTimeCodes;
     [ObservableProperty] private bool _showToolbarBurnIn;
     [ObservableProperty] private bool _showToolbarSettings;
     [ObservableProperty] private bool _showToolbarLayout;
@@ -675,6 +678,9 @@ public partial class SettingsViewModel : ObservableObject
         ShowToolbarReplace = appearance.ToolbarShowReplace;
         ShowToolbarSpellCheck = appearance.ToolbarShowSpellCheck;
         ShowToolbarFixCommonErrors = appearance.ToolbarShowFixCommonErrors;
+        ShowToolbarRemoveTextForHi = appearance.ToolbarShowRemoveTextForHi;
+        ShowToolbarVisualSync = appearance.ToolbarShowVisualSync;
+        ShowToolbarBeautifyTimeCodes = appearance.ToolbarShowBeautifyTimeCodes;
         ShowToolbarBurnIn = appearance.ToolbarShowBurnIn;
         ShowToolbarSettings = appearance.ToolbarShowSettings;
         ShowToolbarLayout = appearance.ToolbarShowLayout;
@@ -1313,6 +1319,9 @@ public partial class SettingsViewModel : ObservableObject
         appearance.ToolbarShowReplace = ShowToolbarReplace;
         appearance.ToolbarShowSpellCheck = ShowToolbarSpellCheck;
         appearance.ToolbarShowFixCommonErrors = ShowToolbarFixCommonErrors;
+        appearance.ToolbarShowRemoveTextForHi = ShowToolbarRemoveTextForHi;
+        appearance.ToolbarShowVisualSync = ShowToolbarVisualSync;
+        appearance.ToolbarShowBeautifyTimeCodes = ShowToolbarBeautifyTimeCodes;
         appearance.ToolbarShowBurnIn = ShowToolbarBurnIn;
         appearance.ToolbarShowSettings = ShowToolbarSettings;
         appearance.ToolbarShowLayout = ShowToolbarLayout;
