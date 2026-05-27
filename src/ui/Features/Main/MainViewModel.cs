@@ -9517,19 +9517,35 @@ public partial class MainViewModel :
                 return;
             }
 
+            var foundText = _findService.CurrentTextFound;
+            var foundLine = _findService.CurrentLineNumber;
+            var foundIndex = _findService.CurrentTextIndex;
+
             Dispatcher.UIThread.Post(() =>
             {
+                var subtitle = Subtitles.GetOrNull(idx);
+                if (subtitle == null)
+                {
+                    return;
+                }
+
                 SubtitleGrid.SelectedIndex = idx;
-                SubtitleGrid.ScrollIntoView(SubtitleGrid.SelectedItem, null);
+                SubtitleGrid.SelectedItem = subtitle;
+                SubtitleGrid.ScrollIntoView(subtitle, null);
 
-                ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, _findService.CurrentTextFound, _findService.CurrentLineNumber + 1, _findService.CurrentTextIndex + 1));
+                ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
 
-                // wait for text box to update
-                Task.Delay(50);
+                // The text-box may still be empty if the SelectedItem binding hasn't propagated
+                // yet by the time this dispatcher post runs; fall back to writing the text
+                // ourselves so the selection range below lands on real characters.
+                if (EditTextBox.Text == string.Empty)
+                {
+                    EditTextBox.Text = subtitle.Text;
+                }
 
-                EditTextBox.CaretIndex = _findService.CurrentTextIndex;
-                EditTextBox.SelectionStart = _findService.CurrentTextIndex;
-                EditTextBox.SelectionEnd = _findService.CurrentTextIndex + _findService.CurrentTextFound.Length;
+                EditTextBox.CaretIndex = foundIndex;
+                EditTextBox.SelectionStart = foundIndex;
+                EditTextBox.SelectionEnd = foundIndex + foundText.Length;
             });
         }
     }
