@@ -17,9 +17,9 @@ public class BeautifyTimeCodesWindow : Window
         Title = Se.Language.Tools.BeautifyTimeCodes.Title;
         CanResize = true;
         Width = 1100;
-        Height = 680;
+        Height = 600;
         MinWidth = 900;
-        MinHeight = 520;
+        MinHeight = 460;
         vm.Window = this;
         DataContext = vm;
 
@@ -51,10 +51,6 @@ public class BeautifyTimeCodesWindow : Window
 
     private static Control BuildTopBar(BeautifyTimeCodesViewModel vm)
     {
-        var l = Se.Language.Tools.BeautifyTimeCodesProfile;
-
-        var buttonEditProfile = UiUtil.MakeButton(l.Title, vm.EditProfileCommand);
-
         var stats = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
@@ -66,10 +62,9 @@ public class BeautifyTimeCodesWindow : Window
 
         var grid = new Grid
         {
-            ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"),
+            ColumnDefinitions = new ColumnDefinitions("*"),
         };
-        grid.Add(buttonEditProfile, 0, 0);
-        grid.Add(stats, 0, 2);
+        grid.Add(stats, 0, 0);
         return grid;
     }
 
@@ -197,8 +192,9 @@ public class BeautifyTimeCodesWindow : Window
 
     private static Control BuildButtonBar(BeautifyTimeCodesViewModel vm)
     {
+        var buttonEditProfile = UiUtil.MakeButton(Se.Language.Tools.BeautifyTimeCodes.EditProfile, vm.EditProfileCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        return UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        return UiUtil.MakeButtonBar(buttonEditProfile, buttonOk, buttonCancel);
     }
 }
