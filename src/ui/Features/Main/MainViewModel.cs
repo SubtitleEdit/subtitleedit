@@ -9315,7 +9315,7 @@ public partial class MainViewModel :
         }
     }
 
-    public void HandleFindResult(FindViewModel result)
+    public async Task HandleFindResult(FindViewModel result)
     {
         result.ResultFound = false;
 
@@ -9343,8 +9343,25 @@ public partial class MainViewModel :
 
             if (idx < 0)
             {
-                ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
-                return;
+                var parentWindow = _findViewModel?.Window ?? Window!;
+                var message = result.FindNextPressed
+                    ? Se.Language.General.SearchItemNotFoundContinueFromTop
+                    : Se.Language.General.SearchItemNotFoundContinueFromBottom;
+                var answer = await MessageBox.Show(parentWindow, Se.Language.General.ContinueFindTitle,
+                    message, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (answer != MessageBoxResult.Yes)
+                {
+                    ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+                    return;
+                }
+                idx = result.FindNextPressed
+                    ? _findService.FindNext(result.SearchText, subs, 0, 0)
+                    : _findService.FindPrevious(result.SearchText, subs, subs.Count, 0);
+                if (idx < 0)
+                {
+                    ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+                    return;
+                }
             }
 
             if (_findViewModel != null)
@@ -9382,10 +9399,10 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
-    private void FindNext()
+    private async Task FindNext()
     {
         var selectedSubtitle = SelectedSubtitle;
-        if (Subtitles.Count == 0 || selectedSubtitle == null)
+        if (Subtitles.Count == 0 || selectedSubtitle == null || Window == null)
         {
             return;
         }
@@ -9397,9 +9414,22 @@ public partial class MainViewModel :
 
         if (idx < 0)
         {
-            ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
-            _shortcutManager.ClearKeys();
-            return;
+            var answer = await MessageBox.Show(Window!, Se.Language.General.ContinueFindTitle,
+                Se.Language.General.SearchItemNotFoundContinueFromTop,
+                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            if (answer != MessageBoxResult.Yes)
+            {
+                ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+                _shortcutManager.ClearKeys();
+                return;
+            }
+            idx = _findService.FindNext(_findService.SearchText, subs, 0, 0);
+            if (idx < 0)
+            {
+                ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+                _shortcutManager.ClearKeys();
+                return;
+            }
         }
 
         var foundText = _findService.CurrentTextFound;
@@ -9438,10 +9468,10 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
-    private void FindPrevious()
+    private async Task FindPrevious()
     {
         var selectedSubtitle = SelectedSubtitle;
-        if (Subtitles.Count == 0 || selectedSubtitle == null)
+        if (Subtitles.Count == 0 || selectedSubtitle == null || Window == null)
         {
             return;
         }
@@ -9452,9 +9482,22 @@ public partial class MainViewModel :
 
         if (idx < 0)
         {
-            ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
-            _shortcutManager.ClearKeys();
-            return;
+            var answer = await MessageBox.Show(Window!, Se.Language.General.ContinueFindTitle,
+                Se.Language.General.SearchItemNotFoundContinueFromBottom,
+                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            if (answer != MessageBoxResult.Yes)
+            {
+                ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+                _shortcutManager.ClearKeys();
+                return;
+            }
+            idx = _findService.FindPrevious(_findService.SearchText, subs, subs.Count, 0);
+            if (idx < 0)
+            {
+                ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+                _shortcutManager.ClearKeys();
+                return;
+            }
         }
 
         var foundText = _findService.CurrentTextFound;

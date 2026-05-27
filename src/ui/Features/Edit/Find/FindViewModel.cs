@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using static Nikse.SubtitleEdit.Logic.FindService;
 
 namespace Nikse.SubtitleEdit.Features.Edit.Find;
@@ -63,23 +64,23 @@ public partial class FindViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void FindPrevious()
+    private async Task FindPrevious()
     {
         CountResult = string.Empty;
         FindNextPressed = false;
         FindPreviousPressed = true;
         SaveSettings();
-        _findResult?.HandleFindResult(this);
+        if (_findResult != null) await _findResult.HandleFindResult(this);
     }
 
     [RelayCommand]
-    private void FindNext()
+    private async Task FindNext()
     {
         CountResult = string.Empty;
         FindNextPressed = true;
         FindPreviousPressed = false;
         SaveSettings();
-        _findResult?.HandleFindResult(this);
+        if (_findResult != null) await _findResult.HandleFindResult(this);
     }
 
     [RelayCommand]
@@ -135,13 +136,13 @@ public partial class FindViewModel : ObservableObject
         }
     }
 
-    internal void FindTextBoxKeyDown(object? sender, KeyEventArgs e)
+    internal async void FindTextBoxKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter)
         {
             e.Handled = true;
-            FindNext();
-        }       
+            await FindNext();
+        }
     }
 
     internal void InitializeFindData(IFindService findService, List<string> subs, string selectedText, IFindResult findResult)

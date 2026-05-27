@@ -105,6 +105,9 @@ public class LanguageGeneral
     public string Column { get; set; }
     public string ConsoleLog { get; set; }
     public string ContentAlignment { get; set; }
+    public string ContinueFindTitle { get; set; }
+    public string SearchItemNotFoundContinueFromTop { get; set; }
+    public string SearchItemNotFoundContinueFromBottom { get; set; }
     public string ConversionCancelledByUser { get; set; }
     public string Convert { get; set; }
     public string Converted { get; set; }
@@ -826,6 +829,9 @@ public class LanguageGeneral
         Column = "Column";
         ConsoleLog = "Console log";
         ContentAlignment = "Content alignment";
+        ContinueFindTitle = "Continue Find?";
+        SearchItemNotFoundContinueFromTop = "The search item was not found.\nWould you like to start from the top of the document and search one more time?";
+        SearchItemNotFoundContinueFromBottom = "The search item was not found.\nWould you like to start from the end of the document and search one more time?";
         ConversionCancelledByUser = "Conversion cancelled by user";
         Convert = "Convert";
         Converted = "Converted";
