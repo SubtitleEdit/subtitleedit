@@ -40,20 +40,58 @@ public class IndexTtsCrispAsr : ITtsEngine
     public bool HasLanguageParameter => false;
     public bool HasApiKey => false;
     public bool HasRegion => false;
-    public bool HasModel => false;
+    public bool HasModel => true;
     public bool HasKeyFile => false;
 
-    public const string TalkerFileName = "indextts-gpt-q8_0.gguf";
+    // Three GPT quants share the same BigVGAN codec — user picks GPT size vs. quality.
+    // Codec sizes (~256 MB) added to each label so the dropdown shows realistic totals.
+    public const string ModelKeyQ4K = "Q4_K (~600 MB)";
+    public const string ModelKeyQ8_0 = "Q8_0 (~870 MB)";
+    public const string ModelKeyF16 = "F16 (~2.4 GB)";
+    public const string DefaultModelKey = ModelKeyQ8_0;
+
+    public const string TalkerQ4KFileName = "indextts-gpt-q4_k.gguf";
+    public const string TalkerQ8_0FileName = "indextts-gpt-q8_0.gguf";
+    public const string TalkerF16FileName = "indextts-gpt.gguf";
     public const string CodecFileName = "indextts-bigvgan.gguf";
+
+    // Kept as aliases so download services that don't know about quants can still reach
+    // sensible defaults.
+    public const string TalkerFileName = TalkerQ8_0FileName;
     public const string BackendName = "indextts";
 
-    // Exact byte size on cstr's HuggingFace repo (X-Linked-Size). Used to reject truncated
+    // Exact byte sizes on cstr's HuggingFace repo (X-Linked-Size). Used to reject truncated
     // files that crispasr's --auto-download may have left behind — same trap that bit Qwen3
     // earlier (Windows access violation 0xC0000005 deep in the legacy GGUF loader).
     private static readonly Dictionary<string, long> ExpectedFileSizes = new(StringComparer.OrdinalIgnoreCase)
     {
-        [TalkerFileName] = 641977344L,
+        [TalkerQ4KFileName] = 363016960L,
+        [TalkerQ8_0FileName] = 641977344L,
+        [TalkerF16FileName] = 2280869504L,
         [CodecFileName] = 268168960L,
+    };
+
+    public static string ResolveModelKey(string? modelKey)
+    {
+        if (string.IsNullOrEmpty(modelKey))
+        {
+            var saved = Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrModel;
+            return string.IsNullOrEmpty(saved) ? DefaultModelKey : ResolveModelKey(saved);
+        }
+
+        return modelKey switch
+        {
+            ModelKeyQ4K => ModelKeyQ4K,
+            ModelKeyF16 => ModelKeyF16,
+            _ => ModelKeyQ8_0,
+        };
+    }
+
+    public static string GetTalkerFileName(string? modelKey) => ResolveModelKey(modelKey) switch
+    {
+        ModelKeyQ4K => TalkerQ4KFileName,
+        ModelKeyF16 => TalkerF16FileName,
+        _ => TalkerQ8_0FileName,
     };
 
     public static bool IsValidLocalModelFile(string path, string fileName)
@@ -91,6 +129,9 @@ public class IndexTtsCrispAsr : ITtsEngine
     // reference audio from the startup --voice flag, so a voice change requires us to
     // tear down and restart the server. See PR #11210 discussion for the upstream bug.
     private static string? _serverVoicePath;
+    // Tracks the GPT quant the running server was started with. A switch from Q8_0 to
+    // Q4_K means a different talker GGUF, so the server is torn down and restarted.
+    private static string? _serverModelKey;
     private static bool _processExitHooked;
     private static readonly StringBuilder _serverLog = new();
 
@@ -233,14 +274,14 @@ public class IndexTtsCrispAsr : ITtsEngine
         }
     }
 
-    public static string GetTalkerPath() =>
-        Path.Combine(GetSetModelsFolder(), TalkerFileName);
+    public static string GetTalkerPath(string? modelKey = null) =>
+        Path.Combine(GetSetModelsFolder(), GetTalkerFileName(modelKey));
 
     public static string GetCodecPath() =>
         Path.Combine(GetSetModelsFolder(), CodecFileName);
 
-    public static bool AreModelsInstalled() =>
-        IsValidLocalModelFile(GetTalkerPath(), TalkerFileName)
+    public static bool AreModelsInstalled(string? modelKey = null) =>
+        IsValidLocalModelFile(GetTalkerPath(modelKey), GetTalkerFileName(modelKey))
         && IsValidLocalModelFile(GetCodecPath(), CodecFileName);
 
     /// <summary>
@@ -309,7 +350,7 @@ public class IndexTtsCrispAsr : ITtsEngine
 
     public Task<string[]> GetRegions() => Task.FromResult(Array.Empty<string>());
 
-    public Task<string[]> GetModels() => Task.FromResult(Array.Empty<string>());
+    public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyQ4K, ModelKeyQ8_0, ModelKeyF16 });
 
     public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(Array.Empty<TtsLanguage>());
 
@@ -338,7 +379,8 @@ public class IndexTtsCrispAsr : ITtsEngine
                 + "Reference WAV should be 24 kHz mono (3-10 s of clean speech).");
         }
 
-        await EnsureServerRunningAsync(indexVoice.FilePath, cancellationToken);
+        var modelKey = ResolveModelKey(model);
+        await EnsureServerRunningAsync(modelKey, indexVoice.FilePath, cancellationToken);
 
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
         var inputText = Utilities.UnbreakLine(text);
@@ -453,15 +495,16 @@ public class IndexTtsCrispAsr : ITtsEngine
         }
     }
 
-    private static async Task EnsureServerRunningAsync(string voicePath, CancellationToken ct)
+    private static async Task EnsureServerRunningAsync(string modelKey, string voicePath, CancellationToken ct)
     {
         // CrispASR 0.6.11's indextts server backend doesn't honour the per-request `voice`
         // field — it only reads the reference audio from the --voice path passed at server
-        // startup. So we have to restart the server every time the selected voice changes;
-        // otherwise the synth runs unconditioned and produces noise. Tracked separately
-        // from _serverProcess so an already-running server with the right voice is reused.
+        // startup. So we have to restart the server every time the selected voice OR the
+        // selected quant changes. Tracked next to _serverProcess so an already-running
+        // server with matching voice + quant is reused.
         if (_serverProcess is { HasExited: false } && _serverPort != 0
-            && string.Equals(_serverVoicePath, voicePath, StringComparison.OrdinalIgnoreCase))
+            && string.Equals(_serverVoicePath, voicePath, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase))
         {
             return;
         }
@@ -470,7 +513,8 @@ public class IndexTtsCrispAsr : ITtsEngine
         try
         {
             if (_serverProcess is { HasExited: false } && _serverPort != 0
-                && string.Equals(_serverVoicePath, voicePath, StringComparison.OrdinalIgnoreCase))
+                && string.Equals(_serverVoicePath, voicePath, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
@@ -489,8 +533,9 @@ public class IndexTtsCrispAsr : ITtsEngine
 
             // Talker + codec GGUFs: use locally staged copies when present; otherwise fall back
             // to crispasr's own --auto-download (fetches into ~/.cache/crispasr/ on first run).
-            var talker = GetTalkerPath();
-            var hasLocalTalker = IsValidLocalModelFile(talker, TalkerFileName);
+            var talkerFileName = GetTalkerFileName(modelKey);
+            var talker = GetTalkerPath(modelKey);
+            var hasLocalTalker = IsValidLocalModelFile(talker, talkerFileName);
             var codec = GetCodecPath();
             var hasLocalCodec = IsValidLocalModelFile(codec, CodecFileName);
 
@@ -555,6 +600,7 @@ public class IndexTtsCrispAsr : ITtsEngine
             _serverProcess = process;
             _serverPort = port;
             _serverVoicePath = voicePath;
+            _serverModelKey = modelKey;
             HookProcessExitOnce();
 
             // First-run auto-download (~870 MB total) needs a generous timeout, but much
@@ -572,6 +618,7 @@ public class IndexTtsCrispAsr : ITtsEngine
                     _serverPort = 0;
                     _serverLaunchCommand = null;
                     _serverVoicePath = null;
+                    _serverModelKey = null;
                     throw new InvalidOperationException(
                         $"crispasr (indextts) exited during startup (code {exitCode}). Output: {tail}"
                         + LaunchCmdSuffix(exitedLaunchCommand));
@@ -655,6 +702,7 @@ public class IndexTtsCrispAsr : ITtsEngine
         _serverPort = 0;
         _serverLaunchCommand = null;
         _serverVoicePath = null;
+        _serverModelKey = null;
         if (p == null) return;
         try
         {

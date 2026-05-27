@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.Download;
 
 public interface IIndexTtsCrispAsrDownloadService
 {
-    Task DownloadModels(string modelsFolder, IProgress<float>? progress, Action<string>? titleProgress, CancellationToken cancellationToken);
+    Task DownloadModels(string modelsFolder, string modelKey, IProgress<float>? progress, Action<string>? titleProgress, CancellationToken cancellationToken);
 }
 
 /// <summary>
@@ -26,8 +26,12 @@ public class IndexTtsCrispAsrDownloadService : IIndexTtsCrispAsrDownloadService
 
     private static readonly Dictionary<string, string> ModelUrls = new(StringComparer.OrdinalIgnoreCase)
     {
-        [IndexTtsCrispAsr.TalkerFileName] =
+        [IndexTtsCrispAsr.TalkerQ4KFileName] =
+            "https://huggingface.co/cstr/indextts-1.5-GGUF/resolve/main/indextts-gpt-q4_k.gguf",
+        [IndexTtsCrispAsr.TalkerQ8_0FileName] =
             "https://huggingface.co/cstr/indextts-1.5-GGUF/resolve/main/indextts-gpt-q8_0.gguf",
+        [IndexTtsCrispAsr.TalkerF16FileName] =
+            "https://huggingface.co/cstr/indextts-1.5-GGUF/resolve/main/indextts-gpt.gguf",
         [IndexTtsCrispAsr.CodecFileName] =
             "https://huggingface.co/cstr/indextts-1.5-GGUF/resolve/main/indextts-bigvgan.gguf",
     };
@@ -37,12 +41,12 @@ public class IndexTtsCrispAsrDownloadService : IIndexTtsCrispAsrDownloadService
         _httpClient = httpClient;
     }
 
-    public async Task DownloadModels(string modelsFolder, IProgress<float>? progress, Action<string>? titleProgress, CancellationToken cancellationToken)
+    public async Task DownloadModels(string modelsFolder, string modelKey, IProgress<float>? progress, Action<string>? titleProgress, CancellationToken cancellationToken)
     {
-        var talkerFileName = IndexTtsCrispAsr.TalkerFileName;
+        var talkerFileName = IndexTtsCrispAsr.GetTalkerFileName(modelKey);
         var codecFileName = IndexTtsCrispAsr.CodecFileName;
 
-        var talkerPath = IndexTtsCrispAsr.GetTalkerPath();
+        var talkerPath = IndexTtsCrispAsr.GetTalkerPath(modelKey);
         var codecPath = IndexTtsCrispAsr.GetCodecPath();
 
         // Cache seeding does synchronous File.Copy of up to ~870 MB; the caller passes us

@@ -1278,10 +1278,11 @@ public partial class DownloadTtsViewModel : ObservableObject
             _qwen3TtsCrispAsrDownloadService.DownloadModels(Qwen3TtsCrispAsr.GetSetModelsFolder(), resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
     }
 
-    public void StartDownloadVibeVoiceCrispAsrModels()
+    public void StartDownloadVibeVoiceCrispAsrModels(string? modelKey = null)
     {
-        var talkerFileName = VibeVoiceCrispAsr.TalkerFileName;
-        TitleText = $"Downloading VibeVoice (CrispASR) model: {talkerFileName}";
+        var resolved = VibeVoiceCrispAsr.ResolveModelKey(modelKey);
+        var talkerFileName = VibeVoiceCrispAsr.GetTalkerFileName(resolved);
+        TitleText = $"Downloading VibeVoice (CrispASR) model ({resolved}): {talkerFileName}";
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -1297,13 +1298,14 @@ public partial class DownloadTtsViewModel : ObservableObject
         });
 
         _downloadTaskVibeVoiceCrispAsrModels =
-            _vibeVoiceCrispAsrDownloadService.DownloadModels(VibeVoiceCrispAsr.GetSetModelsFolder(), downloadProgress, titleProgress, _cancellationTokenSource.Token);
+            _vibeVoiceCrispAsrDownloadService.DownloadModels(VibeVoiceCrispAsr.GetSetModelsFolder(), resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
     }
 
-    public void StartDownloadIndexTtsCrispAsrModels()
+    public void StartDownloadIndexTtsCrispAsrModels(string? modelKey = null)
     {
-        var talkerFileName = IndexTtsCrispAsr.TalkerFileName;
-        TitleText = $"Downloading IndexTTS (CrispASR) models: {talkerFileName}";
+        var resolved = IndexTtsCrispAsr.ResolveModelKey(modelKey);
+        var talkerFileName = IndexTtsCrispAsr.GetTalkerFileName(resolved);
+        TitleText = $"Downloading IndexTTS (CrispASR) models ({resolved}): {talkerFileName}";
 
         var downloadProgress = new Progress<float>(number =>
         {
@@ -1319,7 +1321,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         });
 
         _downloadTaskIndexTtsCrispAsrModels =
-            _indexTtsCrispAsrDownloadService.DownloadModels(IndexTtsCrispAsr.GetSetModelsFolder(), downloadProgress, titleProgress, _cancellationTokenSource.Token);
+            _indexTtsCrispAsrDownloadService.DownloadModels(IndexTtsCrispAsr.GetSetModelsFolder(), resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
     }
 
     public void StartDownloadOmniVoice(string windowsVariant = OmniVoiceDownloadService.WindowsVariantVulkan)

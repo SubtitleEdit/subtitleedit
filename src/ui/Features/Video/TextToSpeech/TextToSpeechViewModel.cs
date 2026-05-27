@@ -319,6 +319,14 @@ public partial class TextToSpeechViewModel : ObservableObject
             // description applies whichever Qwen3 backend the user picks.
             Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction = (Instruction ?? string.Empty).Trim();
         }
+        else if (SelectedEngine is VibeVoiceCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.VibeVoiceCrispAsrModel = SelectedModel ?? VibeVoiceCrispAsr.DefaultModelKey;
+        }
+        else if (SelectedEngine is IndexTtsCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrModel = SelectedModel ?? IndexTtsCrispAsr.DefaultModelKey;
+        }
         else if (SelectedEngine is OmniVoiceTtsCpp)
         {
             Se.Settings.Video.TextToSpeech.OmniVoiceTtsCppInstruction = (Instruction ?? string.Empty).Trim();
@@ -1421,13 +1429,20 @@ public partial class TextToSpeechViewModel : ObservableObject
                 return false;
             }
 
-            if (!VibeVoiceCrispAsr.AreModelsInstalled())
+            var vibeModelKey = VibeVoiceCrispAsr.ResolveModelKey(SelectedModel);
+            if (!VibeVoiceCrispAsr.AreModelsInstalled(vibeModelKey))
             {
-                const string sizeText = "~2.8 GB";
+                // Strip the parenthesised size off the model key so the prompt reads cleanly.
+                var sizeText = vibeModelKey switch
+                {
+                    VibeVoiceCrispAsr.ModelKeyQ4K => "~1.6 GB",
+                    VibeVoiceCrispAsr.ModelKeyF16 => "~5.0 GB",
+                    _ => "~2.8 GB",
+                };
                 var answer = await MessageBox.Show(
                     Window,
                     "Download VibeVoice (CrispASR) model?",
-                    $"{Environment.NewLine}\"VibeVoice (CrispASR)\" requires a model ({sizeText}).{Environment.NewLine}{Environment.NewLine}Download model?",
+                    $"{Environment.NewLine}\"VibeVoice (CrispASR)\" ({vibeModelKey}) requires a model ({sizeText}).{Environment.NewLine}{Environment.NewLine}Download model?",
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -1436,8 +1451,8 @@ public partial class TextToSpeechViewModel : ObservableObject
                     return false;
                 }
 
-                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadVibeVoiceCrispAsrModels());
-                if (!dlResult.OkPressed || !VibeVoiceCrispAsr.AreModelsInstalled())
+                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadVibeVoiceCrispAsrModels(vibeModelKey));
+                if (!dlResult.OkPressed || !VibeVoiceCrispAsr.AreModelsInstalled(vibeModelKey))
                 {
                     return false;
                 }
@@ -1459,14 +1474,19 @@ public partial class TextToSpeechViewModel : ObservableObject
                 return false;
             }
 
-            if (!IndexTtsCrispAsr.AreModelsInstalled())
+            var indexModelKey = IndexTtsCrispAsr.ResolveModelKey(SelectedModel);
+            if (!IndexTtsCrispAsr.AreModelsInstalled(indexModelKey))
             {
-                // ~613 MB GPT talker + ~256 MB BigVGAN codec; round up for the prompt.
-                const string sizeText = "~870 MB";
+                var sizeText = indexModelKey switch
+                {
+                    IndexTtsCrispAsr.ModelKeyQ4K => "~600 MB",
+                    IndexTtsCrispAsr.ModelKeyF16 => "~2.4 GB",
+                    _ => "~870 MB",
+                };
                 var answer = await MessageBox.Show(
                     Window,
                     "Download IndexTTS (CrispASR) models?",
-                    $"{Environment.NewLine}\"IndexTTS (CrispASR)\" requires models ({sizeText}).{Environment.NewLine}{Environment.NewLine}Download models?",
+                    $"{Environment.NewLine}\"IndexTTS (CrispASR)\" ({indexModelKey}) requires models ({sizeText}).{Environment.NewLine}{Environment.NewLine}Download models?",
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -1475,8 +1495,8 @@ public partial class TextToSpeechViewModel : ObservableObject
                     return false;
                 }
 
-                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadIndexTtsCrispAsrModels());
-                if (!dlResult.OkPressed || !IndexTtsCrispAsr.AreModelsInstalled())
+                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadIndexTtsCrispAsrModels(indexModelKey));
+                if (!dlResult.OkPressed || !IndexTtsCrispAsr.AreModelsInstalled(indexModelKey))
                 {
                     return false;
                 }
@@ -2589,6 +2609,22 @@ public partial class TextToSpeechViewModel : ObservableObject
                     SelectedModel = Models.FirstOrDefault();
                 }
                 IsEngineSettingsVisible = true;
+            }
+            else if (SelectedEngine is VibeVoiceCrispAsr)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.VibeVoiceCrispAsrModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+            }
+            else if (SelectedEngine is IndexTtsCrispAsr)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
             }
             else if (SelectedEngine is ChatterboxTtsCpp)
             {
