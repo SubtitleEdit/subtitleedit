@@ -248,8 +248,9 @@ public sealed class UndoRedoManager : IUndoRedoManager
             var timingChanged =
                 Math.Abs(o.StartTime.TotalMilliseconds - n.StartTime.TotalMilliseconds) > 0.5 ||
                 Math.Abs(o.EndTime.TotalMilliseconds - n.EndTime.TotalMilliseconds) > 0.5;
+            var bookmarkChanged = o.Bookmark != n.Bookmark;
 
-            if (!textChanged && !timingChanged) continue;
+            if (!textChanged && !timingChanged && !bookmarkChanged) continue;
 
             changedLines.Add(i + 1);
             if (textChanged) textChanges++;
