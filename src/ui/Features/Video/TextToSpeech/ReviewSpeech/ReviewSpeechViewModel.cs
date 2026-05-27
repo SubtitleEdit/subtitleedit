@@ -666,7 +666,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         try
         {
             speakResult = await TtsInstructionSwap.RunAsync(engine, Instruction, () =>
-                engine.Speak(line.Text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, _cancellationToken));
+                engine.Speak(Utilities.UnbreakLine(line.Text), _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, _cancellationToken));
 
             line.StepResult.CurrentFileName = speakResult.FileName;
             line.StepResult.Voice = voice;

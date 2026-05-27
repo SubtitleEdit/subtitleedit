@@ -232,7 +232,7 @@ public class KokoroTtsCpp : ITtsEngine
         await EnsureServerRunningAsync(cancellationToken);
 
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
-        var inputText = Utilities.UnbreakLine(text);
+        var inputText = text;
         var voiceName = string.IsNullOrEmpty(kokoroVoice.Voice) ? DefaultVoice : kokoroVoice.Voice;
 
         var body = JsonSerializer.Serialize(new { text = inputText, voice = voiceName });

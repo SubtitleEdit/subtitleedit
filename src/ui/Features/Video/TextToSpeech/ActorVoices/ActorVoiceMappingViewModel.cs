@@ -354,7 +354,7 @@ public partial class ActorVoiceMappingViewModel : ObservableObject
         {
             row.IsPlaying = true;
             var result = await TtsInstructionSwap.RunAsync(row.SelectedEngine, row.Instruction, () =>
-                row.SelectedEngine.Speak(_voiceTestText, _waveFolder, row.SelectedVoice,
+                row.SelectedEngine.Speak(Utilities.UnbreakLine(_voiceTestText), _waveFolder, row.SelectedVoice,
                     null, null, null, _cancellationTokenSource.Token));
 
             if (!_cancellationTokenSource.IsCancellationRequested && File.Exists(result.FileName))

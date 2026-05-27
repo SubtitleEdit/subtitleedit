@@ -407,7 +407,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
         await EnsureServerRunningAsync(modelKey, cancellationToken);
 
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
-        var inputText = Utilities.UnbreakLine(text);
+        var inputText = text;
         // Share the qwen3-tts.cpp instruction setting so users get the same voice description
         // regardless of which Qwen3 engine they're testing with.
         var instruction = Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction ?? string.Empty;
