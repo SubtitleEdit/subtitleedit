@@ -1053,6 +1053,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         foreach (var wav in Directory.GetFiles(folder, "*.wav"))
         {
             var temp = wav + ".24k.wav";
+            var consumed = false;
             try
             {
                 var ffmpeg = FfmpegGenerator.ConvertToMono24kHzWav(wav, temp);
@@ -1065,12 +1066,23 @@ public partial class DownloadTtsViewModel : ObservableObject
                 {
                     File.Delete(wav);
                     File.Move(temp, wav);
+                    consumed = true;
                 }
             }
             catch (Exception ex)
             {
                 Se.LogError(ex, $"Resample voice to 24 kHz failed for '{wav}'; leaving original in place");
-                try { if (File.Exists(temp)) File.Delete(temp); } catch { }
+            }
+            finally
+            {
+                // Cover every non-success exit path: ffmpeg crashed, produced a 0-byte file,
+                // or threw during the rename. Without this an accumulating set of *.24k.wav
+                // temp files would slowly clutter the voices folder and bloat .zip / sync
+                // backups.
+                if (!consumed && File.Exists(temp))
+                {
+                    try { File.Delete(temp); } catch { /* leave it; not worth retrying */ }
+                }
             }
         }
     }
@@ -1408,6 +1420,8 @@ public partial class DownloadTtsViewModel : ObservableObject
         DisposeQuietly(_downloadStreamQwen3TtsCppVoices);
         DisposeQuietly(_downloadStreamKokoroTtsCpp);
         DisposeQuietly(_downloadStreamQwen3TtsCrispAsrVoices);
+        DisposeQuietly(_downloadStreamVibeVoiceCrispAsrVoices);
+        DisposeQuietly(_downloadStreamIndexTtsCrispAsrVoices);
         DisposeQuietly(_downloadStreamOmniVoice);
         DisposeQuietly(_downloadStreamOmniVoices);
 

@@ -14,11 +14,11 @@ public interface IIndexTtsCrispAsrDownloadService
 }
 
 /// <summary>
-/// Downloads the IndexTTS (CrispASR) GPT talker + BigVGAN codec GGUFs into SE's CrispASR/models
-/// folder so the user gets a progress dialog instead of crispasr's silent --auto-download on
-/// first synth. Two files (~870 MB total Q8_0): GPT talker + BigVGAN codec — same shape as
-/// <see cref="Qwen3TtsCrispAsrDownloadService"/> but without model-key variants since there's
-/// only one quant exposed in SE today.
+/// Downloads the IndexTTS (CrispASR) GPT talker (Q4_K / Q8_0 / F16, user-picked) plus the
+/// shared BigVGAN codec into SE's CrispASR/models folder so the user gets a progress dialog
+/// instead of crispasr's silent --auto-download on first synth. Same shape as
+/// <see cref="Qwen3TtsCrispAsrDownloadService"/>: ModelUrls maps every filename to its HF
+/// URL so the .part / size-check / hash-verify path doesn't care which quant the user picked.
 /// </summary>
 public class IndexTtsCrispAsrDownloadService : IIndexTtsCrispAsrDownloadService
 {

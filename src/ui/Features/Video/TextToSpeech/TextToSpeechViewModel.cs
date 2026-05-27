@@ -1432,17 +1432,12 @@ public partial class TextToSpeechViewModel : ObservableObject
             var vibeModelKey = VibeVoiceCrispAsr.ResolveModelKey(SelectedModel);
             if (!VibeVoiceCrispAsr.AreModelsInstalled(vibeModelKey))
             {
-                // Strip the parenthesised size off the model key so the prompt reads cleanly.
-                var sizeText = vibeModelKey switch
-                {
-                    VibeVoiceCrispAsr.ModelKeyQ4K => "~1.6 GB",
-                    VibeVoiceCrispAsr.ModelKeyF16 => "~5.0 GB",
-                    _ => "~2.8 GB",
-                };
+                // Model key already includes the size in its label (e.g. "Q8_0 (~2.8 GB)") so
+                // we don't append a separate size — avoids duplication in the prompt.
                 var answer = await MessageBox.Show(
                     Window,
                     "Download VibeVoice (CrispASR) model?",
-                    $"{Environment.NewLine}\"VibeVoice (CrispASR)\" ({vibeModelKey}) requires a model ({sizeText}).{Environment.NewLine}{Environment.NewLine}Download model?",
+                    $"{Environment.NewLine}\"VibeVoice (CrispASR)\" ({vibeModelKey}) requires a model.{Environment.NewLine}{Environment.NewLine}Download model?",
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
@@ -1477,16 +1472,12 @@ public partial class TextToSpeechViewModel : ObservableObject
             var indexModelKey = IndexTtsCrispAsr.ResolveModelKey(SelectedModel);
             if (!IndexTtsCrispAsr.AreModelsInstalled(indexModelKey))
             {
-                var sizeText = indexModelKey switch
-                {
-                    IndexTtsCrispAsr.ModelKeyQ4K => "~600 MB",
-                    IndexTtsCrispAsr.ModelKeyF16 => "~2.4 GB",
-                    _ => "~870 MB",
-                };
+                // Model key already includes the size in its label (e.g. "Q8_0 (~870 MB)")
+                // so we don't append a separate size — avoids duplication in the prompt.
                 var answer = await MessageBox.Show(
                     Window,
                     "Download IndexTTS (CrispASR) models?",
-                    $"{Environment.NewLine}\"IndexTTS (CrispASR)\" ({indexModelKey}) requires models ({sizeText}).{Environment.NewLine}{Environment.NewLine}Download models?",
+                    $"{Environment.NewLine}\"IndexTTS (CrispASR)\" ({indexModelKey}) requires models.{Environment.NewLine}{Environment.NewLine}Download models?",
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
