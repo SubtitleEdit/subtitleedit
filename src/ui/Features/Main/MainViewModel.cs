@@ -818,6 +818,7 @@ public partial class MainViewModel :
         var savedAudioTrack = _audioTrack;
         Se.Settings.General.LayoutNumber = InitLayout.MakeLayout(MainView!, this, layoutNumber);
         SelectAndScrollToRow(Math.Max(0, idx));
+        Dispatcher.UIThread.Post(() => SubtitleGrid.Focus());
         RefreshSubtitlePreview();
 
         if (savedAudioTrack != null && !string.IsNullOrEmpty(_videoFileName))
