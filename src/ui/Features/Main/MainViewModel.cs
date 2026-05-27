@@ -9294,9 +9294,9 @@ public partial class MainViewModel :
 
             ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
 
-            // wait for text box to update
-            Task.Delay(75);
-
+            // The text-box may still be empty if the SelectedItem binding hasn't propagated
+            // yet by the time this dispatcher post runs; fall back to writing the text
+            // ourselves so the selection range below lands on real characters.
             if (EditTextBox.Text == string.Empty)
             {
                 EditTextBox.Text = subtitle.Text;
@@ -9349,9 +9349,9 @@ public partial class MainViewModel :
 
             ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
 
-            // wait for text box to update
-            Task.Delay(75);
-
+            // The text-box may still be empty if the SelectedItem binding hasn't propagated
+            // yet by the time this dispatcher post runs; fall back to writing the text
+            // ourselves so the selection range below lands on real characters.
             if (EditTextBox.Text == string.Empty)
             {
                 EditTextBox.Text = subtitle.Text;
@@ -9361,6 +9361,8 @@ public partial class MainViewModel :
             EditTextBox.SelectionStart = foundIndex;
             EditTextBox.SelectionEnd = foundIndex + foundText.Length;
         });
+
+        _shortcutManager.ClearKeys();
     }
 
     [RelayCommand]
