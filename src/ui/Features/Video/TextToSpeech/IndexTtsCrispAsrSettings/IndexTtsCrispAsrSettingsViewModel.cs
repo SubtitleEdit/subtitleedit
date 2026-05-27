@@ -48,6 +48,16 @@ public partial class IndexTtsCrispAsrSettingsViewModel : ObservableObject
 
     [ObservableProperty] private string _voicesLabel = string.Empty;
 
+    [ObservableProperty] private double _speed = 1.0;
+
+    public string SpeedLabel => $"Speed {Speed:0.00}x";
+
+    partial void OnSpeedChanged(double value)
+    {
+        OnPropertyChanged(nameof(SpeedLabel));
+        Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrSpeed = Math.Clamp(value, 0.25, 4.0);
+    }
+
     [ObservableProperty] private string _modelsFolder = string.Empty;
     [ObservableProperty] private string _voicesFolder = string.Empty;
     [ObservableProperty] private bool _isEngineInstalled;
@@ -65,6 +75,7 @@ public partial class IndexTtsCrispAsrSettingsViewModel : ObservableObject
     {
         ModelsFolder = IndexTtsCrispAsr.GetSetModelsFolder();
         VoicesFolder = IndexTtsCrispAsr.GetSetVoicesFolder();
+        Speed = Math.Clamp(Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrSpeed, 0.25, 4.0);
         Refresh();
     }
 

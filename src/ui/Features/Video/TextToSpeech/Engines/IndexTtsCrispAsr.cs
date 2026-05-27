@@ -386,17 +386,21 @@ public class IndexTtsCrispAsr : ITtsEngine
         //   - `input`             — the text to synthesise
         //   - `response_format`   — "wav"
         //   - `voice`             — absolute WAV path or filename in --voice-dir
+        //   - `speed`             — server-side linear resample of the synth output (0.25-4.0).
+        //                           Default is 1.0; the user can override in the engine settings.
         // The server-mode indextts backend ignores the request `voice` field, so we still
         // pass it (for logging / future server fix) but the reference audio actually used
         // is the --voice path baked in at server startup — see EnsureServerRunningAsync.
         // IndexTTS handles transcription internally (BigVGAN + ECAPA-TDNN), so unlike
         // Qwen3 CustomVoice there is no `ref-text` parameter. v1.5 has no `instructions`
         // (emotion control) — that's IndexTTS-2 which isn't in CrispASR yet.
+        var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrSpeed, 0.25, 4.0);
         var payload = new Dictionary<string, object>
         {
             ["input"] = inputText,
             ["response_format"] = "wav",
             ["voice"] = indexVoice.FilePath,
+            ["speed"] = speed,
         };
 
         var body = JsonSerializer.Serialize(payload);

@@ -374,12 +374,17 @@ public class VibeVoiceCrispAsr : ITtsEngine
         //   - `input`             — the text to synthesise
         //   - `response_format`   — "wav"
         //   - `voice`             — absolute WAV path or filename in --voice-dir
+        //   - `speed`             — server-side linear resample of the synth output (0.25-4.0).
+        //                           VibeVoice 1.5B tends to be on the slow side; default is 1.1
+        //                           and the user can override in the engine settings dialog.
         // VibeVoice does not use `instructions` or `ref-text` (those are qwen3-tts-only).
+        var speed = Math.Clamp(Se.Settings.Video.TextToSpeech.VibeVoiceCrispAsrSpeed, 0.25, 4.0);
         var payload = new Dictionary<string, object>
         {
             ["input"] = inputText,
             ["response_format"] = "wav",
             ["voice"] = vibeVoice.FilePath,
+            ["speed"] = speed,
         };
 
         var body = JsonSerializer.Serialize(payload);
