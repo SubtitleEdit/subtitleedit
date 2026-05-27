@@ -157,7 +157,6 @@ The following feature pages exist but have no companion screenshot. Adding these
 - `merge-two-subtitles.png` — Merge Two Subtitles (`Tools → Merge two subtitles`)
 - `beautify-time-codes.png` — Beautify Time Codes
 - `embedded-subtitles.png` — Add/remove embedded subtitles
-- `find-double-lines.png` — Find double lines
 - `renumber.png` — Renumber
 - `netflix-errors.png` — Check and Fix Netflix Errors
 
