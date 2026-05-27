@@ -72,6 +72,28 @@ public static class TtsVoiceInstaller
             minVersionNote: null);
 
     /// <summary>
+    /// Ensures the CrispASR runtime that VibeVoice (CrispASR) runs on is installed.
+    /// VibeVoice's GGUF is fetched on first server start via crispasr's own --auto-download,
+    /// so this is the only install step SE drives directly.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForVibeVoice(Window? window, IWindowService windowService, bool forceRedownload)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload,
+            engineDisplayName: "VibeVoice (CrispASR)",
+            extraCapabilityCheck: null,
+            minVersionNote: null);
+
+    /// <summary>
+    /// Ensures the CrispASR runtime that IndexTTS (CrispASR) runs on is installed.
+    /// IndexTTS's GGUFs are fetched on first server start via crispasr's own --auto-download,
+    /// so this is the only install step SE drives directly.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForIndexTts(Window? window, IWindowService windowService, bool forceRedownload)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload,
+            engineDisplayName: "IndexTTS (CrispASR)",
+            extraCapabilityCheck: null,
+            minVersionNote: null);
+
+    /// <summary>
     /// Shared CrispASR install/update flow used by all TTS engines that sit on the
     /// CrispASR runtime. Prompts refer to <paramref name="engineDisplayName"/> so users
     /// see the right engine name. <paramref name="extraCapabilityCheck"/> lets the caller
