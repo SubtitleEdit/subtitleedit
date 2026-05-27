@@ -818,6 +818,7 @@ public partial class MainViewModel :
         var savedAudioTrack = _audioTrack;
         Se.Settings.General.LayoutNumber = InitLayout.MakeLayout(MainView!, this, layoutNumber);
         SelectAndScrollToRow(Math.Max(0, idx));
+        Dispatcher.UIThread.Post(() => SubtitleGrid.Focus());
         RefreshSubtitlePreview();
 
         if (savedAudioTrack != null && !string.IsNullOrEmpty(_videoFileName))
@@ -4870,9 +4871,8 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await _windowService
-            .ShowDialogAsync<SplitBreakLongLinesWindow, SplitBreakLongLinesViewModel>(
-                Window!, vm => { vm.Initialize(Subtitles.ToList()); });
+        var result = await ShowDialogAsync<SplitBreakLongLinesWindow, SplitBreakLongLinesViewModel>(
+            vm => { vm.Initialize(Subtitles.ToList()); });
 
         if (result.OkPressed && result.AllSubtitlesFixed.Count > 0)
         {
@@ -4898,9 +4898,8 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await _windowService
-            .ShowDialogAsync<MergeShortLinesWindow, MergeShortLinesViewModel>(
-                Window!, vm => { vm.Initialize(Subtitles.ToList(), AudioVisualizer?.ShotChanges ?? new List<double>()); });
+        var result = await ShowDialogAsync<MergeShortLinesWindow, MergeShortLinesViewModel>(
+            vm => { vm.Initialize(Subtitles.ToList(), AudioVisualizer?.ShotChanges ?? new List<double>()); });
 
         if (result.OkPressed)
         {
@@ -5025,9 +5024,8 @@ public partial class MainViewModel :
         }
 
         var language = Subtitles.AutoDetectGoogleLanguage();
-        var result = await _windowService
-            .ShowDialogAsync<MergeContinuationLinesWindow, MergeContinuationLinesViewModel>(
-                Window!, vm => { vm.Initialize(Subtitles.ToList(), language); });
+        var result = await ShowDialogAsync<MergeContinuationLinesWindow, MergeContinuationLinesViewModel>(
+            vm => { vm.Initialize(Subtitles.ToList(), language); });
 
         if (result.OkPressed)
         {
@@ -5053,9 +5051,8 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await _windowService
-            .ShowDialogAsync<RemoveTextForHearingImpairedWindow, RemoveTextForHearingImpairedViewModel>(
-                Window!, vm => { vm.Initialize(GetUpdateSubtitle()); });
+        var result = await ShowDialogAsync<RemoveTextForHearingImpairedWindow, RemoveTextForHearingImpairedViewModel>(
+            vm => { vm.Initialize(GetUpdateSubtitle()); });
 
         if (result.OkPressed)
         {
@@ -7381,8 +7378,8 @@ public partial class MainViewModel :
             return;
         }
 
-        var viewModel = await _windowService
-            .ShowDialogAsync<BeautifyTimeCodesWindow, BeautifyTimeCodesViewModel>(Window!, vm => { vm.Initialize(Subtitles.ToList(), AudioVisualizer, _videoFileName); });
+        var viewModel = await ShowDialogAsync<BeautifyTimeCodesWindow, BeautifyTimeCodesViewModel>(
+            vm => { vm.Initialize(Subtitles.ToList(), AudioVisualizer, _videoFileName); });
 
         if (!viewModel.OkPressed)
         {
@@ -7459,12 +7456,11 @@ public partial class MainViewModel :
         Se.Settings.General.WindowPositions = Se.Settings.General.WindowPositions.OrderBy(p => p.WindowName).ToList();
         var oldSettngsSerialized = JsonSerializer.Serialize(Se.Settings);
 
-        var viewModel = await _windowService
-            .ShowDialogAsync<SettingsWindow, SettingsViewModel>(Window!, vm => { vm.Initialize(this); });
+        var viewModel = await ShowDialogAsync<SettingsWindow, SettingsViewModel>(
+            vm => { vm.Initialize(this); });
 
         if (!viewModel.OkPressed)
         {
-            _shortcutManager.ClearKeys();
             return;
         }
 
@@ -9165,8 +9161,7 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ShowRestoreAutoBackup()
     {
-        var viewModel = await _windowService
-            .ShowDialogAsync<RestoreAutoBackupWindow, RestoreAutoBackupViewModel>(Window!);
+        var viewModel = await ShowDialogAsync<RestoreAutoBackupWindow, RestoreAutoBackupViewModel>();
 
         if (viewModel.OkPressed && !string.IsNullOrEmpty(viewModel.RestoreFileName))
         {
