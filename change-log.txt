@@ -2,6 +2,50 @@
 Subtitle Edit Changelog
 
 
+v5.0.0-beta33 (TBD)
+
+* Add VibeVoice TTS engine (Microsoft, voice cloning ~2.8 GB) via CrispASR
+* Add IndexTTS TTS engine (Bilibili / IndexTeam, voice cloning ~870 MB) via CrispASR
+* Add CEA-708 (DTVCC) caption decoding from H.264 SEI cc_data in MP4
+* Add Beautify time codes profile editor + integrated beautify tool
+* Add Merge continuation lines tool + Speech-to-text prompt
+* Add Snap-all-times-to-frames tool
+* Add Toggle dialog dashes / Merge as dialog / Frame-move commands
+* Add ShotChanges set-cue-to-shot-change green-zone commands (SE 4 parity) - thx JDTR75
+* Add ShotChanges extend/snap shortcuts (SE 4 parity) - thx JDTR75
+* Add waveform of original video audio in TTS review window
+* Add burn-in / RemoveTextForHi / VisualSync / BeautifyTimeCodes toolbar icons
+* Update CrispASR to v0.6.11
+* Stop other CrispASR TTS servers between engine switches to avoid VRAM stacking
+* Frame-align waveform gridlines and timeline labels in frame mode
+* Remember/restore window position + size for Sync windows
+* Keep AdjustAllTimes window open across New/Open
+* Show "Allow overlap" checkbox on Waveform settings page
+* Show min/max warning background in SecondsUpDown duration field
+* Strip dialog dashes when splitting at text-box position
+* Speed up waveform layer filtering
+* Update English translation
+* Update Italian translation - thx bovirus
+* Update Korean translation - thx 12si27
+* Update Russian translation - thx jekovcar
+* Update Bulgarian translation - thx jekovcar
+* Update Portuguese (Brazil) translation - thx igorruckert
+* Update Finnish translation - thx Encrust8368
+* Fix Find Previous shortcut not working after first use - thx mjuhasz
+* Fix CJK IME input issue on Find/Replace auto-focus - thx pdjdev
+* Fix #11181: Whisper parameters textbox scrollbar overlapping text - thx yawoo
+* Fix #11176: BurnIn dialog unable to close after adding a logo - thx bichitoxxx
+* Fix Qwen3 TTS (CrispASR) crash from truncated GGUF
+* Fix negative video offset / DCinema clamp / F4Text rounding bugs
+* Fix BluRaySup crash on empty ODS fragments
+* Fix BluRaySup / Matroska crash on truncated input files
+* Fix mpv dispose blocking UI on Windows
+* Fix duplicate-row bug, Update-All cancel, and other resource leaks
+* Async fixes: flow CancellationToken, drop dup timer sub, guard OnClosing
+
+-----------------------------------------------------------------------------------------------------
+
+
 v5.0.0-beta32 (25th May 2026)
 
 * Add TTS Cast: per-actor voice / model / instruction mapping in Text-to-speech (for ASSA)

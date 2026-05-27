@@ -17,7 +17,7 @@ public partial class CheckForUpdatesViewModel : ObservableObject
     private const string ChangeLogUrl2 = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/Changelog.txt";
     private const string ChangeLogUrl3 = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/ChangeLog.txt";
     private const string ReleasesUrl = "https://github.com/SubtitleEdit/subtitleedit/releases";
-    private static readonly Regex UnreleasedChangeLogRegex = new(@"(x(th|st) \w+ \d+)", RegexOptions.Compiled);
+    private static readonly Regex UnreleasedChangeLogRegex = new(@"(x(th|st) \w+ \d+|TBD)", RegexOptions.Compiled);
 
     private readonly HttpClient _httpClient;
 
