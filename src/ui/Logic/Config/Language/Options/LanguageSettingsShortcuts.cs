@@ -269,6 +269,7 @@ public class LanguageSettingsShortcuts
     public string AssaAttachments { get; set; }
     public string AssaVideoColorPicker { get; set; }
     public string RecalculateDurationSelectedLines { get; set; }
+    public string SetDurationMaxCpsSelectedLines { get; set; }
     public string ToggleWaveformAndSpectrogramHeight { get; set; }
     public string ToggleSpectrogramStyle { get; set; }
     public string CopyMsRelativeToCurrentSubtitleLineToClipboard { get; set; }
@@ -559,6 +560,7 @@ public class LanguageSettingsShortcuts
         AssaProperties = "ASSA Properties";
         AssaVideoColorPicker = "ASSA Video color picker";
         RecalculateDurationSelectedLines = "Recalculate duration (selected lines)";
+        SetDurationMaxCpsSelectedLines = "Set duration to max CPS (selected lines)";
         ToggleWaveformAndSpectrogramHeight = "Toggle waveform/spectrogram divided height";
         ToggleSpectrogramStyle = "Toggle spectrogram style";
         CopyMsRelativeToCurrentSubtitleLineToClipboard = "Copy milliseconds relative to current subtitle line to clipboard";

@@ -3225,6 +3225,59 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void SetDurationMaxCpsSelectedLines()
+    {
+        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (selectedLines.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var selectedLine in selectedLines)
+        {
+            var idx = Subtitles.IndexOf(selectedLine);
+            if (idx < 0)
+            {
+                continue;
+            }
+
+            var charCount = selectedLine.Text?.Length ?? 0;
+            if (charCount == 0)
+            {
+                continue;
+            }
+
+            var nextSubtitle = Subtitles.GetOrNull(idx + 1);
+            var targetDuration = TimeSpan.FromSeconds(charCount / Se.Settings.General.SubtitleMaximumCharactersPerSeconds);
+            var newEndTime = selectedLine.StartTime + targetDuration;
+
+            var minEndTime = TimeSpan.FromMilliseconds(selectedLine.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
+            if (newEndTime < minEndTime)
+            {
+                newEndTime = minEndTime;
+            }
+
+            var maxEndTime = TimeSpan.FromMilliseconds(selectedLine.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMaximumDisplayMilliseconds);
+            if (nextSubtitle != null)
+            {
+                var gapBound = TimeSpan.FromMilliseconds(nextSubtitle.StartTime.TotalMilliseconds - Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
+                if (gapBound < maxEndTime)
+                {
+                    maxEndTime = gapBound;
+                }
+            }
+            if (newEndTime > maxEndTime)
+            {
+                newEndTime = maxEndTime;
+            }
+
+            selectedLine.EndTime = newEndTime;
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
     private void DoWaveformCenter()
     {
         var vp = GetVideoPlayerControl();
