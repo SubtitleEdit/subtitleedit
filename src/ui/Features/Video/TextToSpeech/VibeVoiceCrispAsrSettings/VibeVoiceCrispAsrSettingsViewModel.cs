@@ -45,6 +45,16 @@ public partial class VibeVoiceCrispAsrSettingsViewModel : ObservableObject
 
     [ObservableProperty] private string _voicesLabel = string.Empty;
 
+    [ObservableProperty] private double _speed = 1.0;
+
+    public string SpeedLabel => $"Speed {Speed:0.00}x";
+
+    partial void OnSpeedChanged(double value)
+    {
+        OnPropertyChanged(nameof(SpeedLabel));
+        Se.Settings.Video.TextToSpeech.VibeVoiceCrispAsrSpeed = Math.Clamp(value, 0.25, 4.0);
+    }
+
     [ObservableProperty] private string _modelsFolder = string.Empty;
     [ObservableProperty] private string _voicesFolder = string.Empty;
     [ObservableProperty] private bool _isEngineInstalled;
@@ -62,6 +72,7 @@ public partial class VibeVoiceCrispAsrSettingsViewModel : ObservableObject
     {
         ModelsFolder = VibeVoiceCrispAsr.GetSetModelsFolder();
         VoicesFolder = VibeVoiceCrispAsr.GetSetVoicesFolder();
+        Speed = Math.Clamp(Se.Settings.Video.TextToSpeech.VibeVoiceCrispAsrSpeed, 0.25, 4.0);
         Refresh();
     }
 

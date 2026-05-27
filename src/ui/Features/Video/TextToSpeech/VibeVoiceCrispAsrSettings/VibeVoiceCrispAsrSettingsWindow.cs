@@ -104,6 +104,7 @@ public class VibeVoiceCrispAsrSettingsWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnSpacing = 12,
             RowSpacing = 10,
@@ -136,7 +137,10 @@ public class VibeVoiceCrispAsrSettingsWindow : Window
         };
         grid.Add(voicesText, 4, 1);
 
-        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 5, 0);
+        grid.Add(MakeLabel(Se.Language.General.Speed), 5, 0);
+        grid.Add(MakeSpeedPanel(), 5, 1);
+
+        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 6, 0);
         var folderText = new TextBox
         {
             IsReadOnly = true,
@@ -148,7 +152,7 @@ public class VibeVoiceCrispAsrSettingsWindow : Window
             FontSize = 12,
             [!TextBox.TextProperty] = new Binding(nameof(vm.ModelsFolder)),
         };
-        grid.Add(folderText, 5, 1);
+        grid.Add(folderText, 6, 1);
 
         return new Border
         {
@@ -157,6 +161,35 @@ public class VibeVoiceCrispAsrSettingsWindow : Window
             CornerRadius = new CornerRadius(6),
             BorderThickness = new Thickness(1),
             BorderBrush = new SolidColorBrush(Color.FromArgb(0x40, 0x80, 0x80, 0x80)),
+        };
+    }
+
+    private static StackPanel MakeSpeedPanel()
+    {
+        // Server accepts 0.25-4.0; cap UI at 0.5-2.0 since anything outside that range is
+        // already a hack rather than a "preferred pace" choice.
+        var slider = new Slider
+        {
+            Minimum = 0.5,
+            Maximum = 2.0,
+            Width = 220,
+            TickFrequency = 0.05,
+            IsSnapToTickEnabled = true,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!Slider.ValueProperty] = new Binding(nameof(VibeVoiceCrispAsrSettingsViewModel.Speed)),
+        };
+        var label = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            FontWeight = FontWeight.SemiBold,
+            Margin = new Thickness(8, 0, 0, 0),
+            Width = 80,
+            [!TextBlock.TextProperty] = new Binding(nameof(VibeVoiceCrispAsrSettingsViewModel.SpeedLabel)),
+        };
+        return new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children = { slider, label },
         };
     }
 
