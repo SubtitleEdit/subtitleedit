@@ -319,6 +319,14 @@ public partial class TextToSpeechViewModel : ObservableObject
             // description applies whichever Qwen3 backend the user picks.
             Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction = (Instruction ?? string.Empty).Trim();
         }
+        else if (SelectedEngine is VibeVoiceCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.VibeVoiceCrispAsrModel = SelectedModel ?? VibeVoiceCrispAsr.DefaultModelKey;
+        }
+        else if (SelectedEngine is IndexTtsCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrModel = SelectedModel ?? IndexTtsCrispAsr.DefaultModelKey;
+        }
         else if (SelectedEngine is OmniVoiceTtsCpp)
         {
             Se.Settings.Video.TextToSpeech.OmniVoiceTtsCppInstruction = (Instruction ?? string.Empty).Trim();
@@ -744,9 +752,12 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         // Free GPU memory held by any other CrispASR-based engine before we load this one's
         // model. Without this, switching between Qwen3 / VibeVoice / IndexTTS / Chatterbox
-        // within a session stacks crispasr.exe processes (each holding 1-3 GB of GGUFs) until
-        // the next load OOMs on a typical 8 GB GPU.
-        StopOtherCrispAsrServers(engine);
+        // within a session stacks crispasr.exe processes (each holding 1-3 GB of GGUFs)
+        // until the next load OOMs on a typical 8 GB GPU. Each StopServer does Kill +
+        // WaitForExit(2000), so do it off the UI thread — calling synchronously here can
+        // freeze the app for up to 4 × 2 s when multiple engines have been used in the
+        // session.
+        await Task.Run(() => StopOtherCrispAsrServers(engine));
 
         _cancellationTokenSource = new();
         _cancellationToken = _cancellationTokenSource.Token;
@@ -879,7 +890,9 @@ public partial class TextToSpeechViewModel : ObservableObject
         SaveSettings();
 
         // Free GPU memory held by any other CrispASR engine — see GenerateTts for rationale.
-        StopOtherCrispAsrServers(engine);
+        // Off the UI thread so a Kill + WaitForExit on a sluggish process doesn't freeze
+        // the test-voice button for a few seconds.
+        await Task.Run(() => StopOtherCrispAsrServers(engine));
 
         var text = Se.Settings.Video.TextToSpeech.VoiceTestText;
         if (string.IsNullOrEmpty(text))
@@ -1411,13 +1424,39 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         if (engine is VibeVoiceCrispAsr)
         {
-            // Runtime is the only thing SE installs directly — the ~2.8 GB GGUF is fetched
-            // by crispasr's own --auto-download on first server start. That keeps VibeVoice's
-            // first run slower but avoids a separate SE-side download service for a single
-            // file (per #11206 simplification: stick with ICrispAsrDownloadService).
             if (!await TtsVoiceInstaller.EnsureCrispAsrForVibeVoice(Window, _windowService, forceRedownload: false))
             {
                 return false;
+            }
+
+            var vibeModelKey = VibeVoiceCrispAsr.ResolveModelKey(SelectedModel);
+            if (!VibeVoiceCrispAsr.AreModelsInstalled(vibeModelKey))
+            {
+                // Model key already includes the size in its label (e.g. "Q8_0 (~2.8 GB)") so
+                // we don't append a separate size — avoids duplication in the prompt.
+                var answer = await MessageBox.Show(
+                    Window,
+                    "Download VibeVoice (CrispASR) model?",
+                    $"{Environment.NewLine}\"VibeVoice (CrispASR)\" ({vibeModelKey}) requires a model.{Environment.NewLine}{Environment.NewLine}Download model?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadVibeVoiceCrispAsrModels(vibeModelKey));
+                if (!dlResult.OkPressed || !VibeVoiceCrispAsr.AreModelsInstalled(vibeModelKey))
+                {
+                    return false;
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await RefreshVoices(engine);
+                });
+                return true;
             }
 
             return true;
@@ -1425,11 +1464,39 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         if (engine is IndexTtsCrispAsr)
         {
-            // Same pattern as VibeVoice — SE installs the runtime, crispasr's --auto-download
-            // pulls the ~870 MB GGUFs (GPT talker + BigVGAN codec) on first server start.
             if (!await TtsVoiceInstaller.EnsureCrispAsrForIndexTts(Window, _windowService, forceRedownload: false))
             {
                 return false;
+            }
+
+            var indexModelKey = IndexTtsCrispAsr.ResolveModelKey(SelectedModel);
+            if (!IndexTtsCrispAsr.AreModelsInstalled(indexModelKey))
+            {
+                // Model key already includes the size in its label (e.g. "Q8_0 (~870 MB)")
+                // so we don't append a separate size — avoids duplication in the prompt.
+                var answer = await MessageBox.Show(
+                    Window,
+                    "Download IndexTTS (CrispASR) models?",
+                    $"{Environment.NewLine}\"IndexTTS (CrispASR)\" ({indexModelKey}) requires models.{Environment.NewLine}{Environment.NewLine}Download models?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadIndexTtsCrispAsrModels(indexModelKey));
+                if (!dlResult.OkPressed || !IndexTtsCrispAsr.AreModelsInstalled(indexModelKey))
+                {
+                    return false;
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await RefreshVoices(engine);
+                });
+                return true;
             }
 
             return true;
@@ -1954,8 +2021,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 // Qwen3, Bob uses VibeVoice). Free GPU memory held by any *other* CrispASR
                 // engine before this Speak so they don't stack — see StopOtherCrispAsrServers
                 // for VRAM math. No-op when the engine doesn't change between rows or when
-                // the row's engine isn't CrispASR-backed.
-                StopOtherCrispAsrServers(resolution.Engine);
+                // the row's engine isn't CrispASR-backed. Off the UI thread because Kill +
+                // WaitForExit can take a few seconds per stuck process.
+                await Task.Run(() => StopOtherCrispAsrServers(resolution.Engine));
                 var speakResult = await TtsInstructionSwap.RunAsync(
                     resolution.Engine,
                     resolution.Instruction,
@@ -2532,6 +2600,22 @@ public partial class TextToSpeechViewModel : ObservableObject
                     SelectedModel = Models.FirstOrDefault();
                 }
                 IsEngineSettingsVisible = true;
+            }
+            else if (SelectedEngine is VibeVoiceCrispAsr)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.VibeVoiceCrispAsrModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+            }
+            else if (SelectedEngine is IndexTtsCrispAsr)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
             }
             else if (SelectedEngine is ChatterboxTtsCpp)
             {

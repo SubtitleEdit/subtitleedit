@@ -40,20 +40,55 @@ public class IndexTtsCrispAsr : ITtsEngine
     public bool HasLanguageParameter => false;
     public bool HasApiKey => false;
     public bool HasRegion => false;
-    public bool HasModel => false;
+    public bool HasModel => true;
     public bool HasKeyFile => false;
 
-    public const string TalkerFileName = "indextts-gpt-q8_0.gguf";
+    // Three GPT quants share the same BigVGAN codec — user picks GPT size vs. quality.
+    // Codec sizes (~256 MB) added to each label so the dropdown shows realistic totals.
+    public const string ModelKeyQ4K = "Q4_K (~600 MB)";
+    public const string ModelKeyQ8_0 = "Q8_0 (~870 MB)";
+    public const string ModelKeyF16 = "F16 (~2.4 GB)";
+    public const string DefaultModelKey = ModelKeyQ8_0;
+
+    public const string TalkerQ4KFileName = "indextts-gpt-q4_k.gguf";
+    public const string TalkerQ8_0FileName = "indextts-gpt-q8_0.gguf";
+    public const string TalkerF16FileName = "indextts-gpt.gguf";
     public const string CodecFileName = "indextts-bigvgan.gguf";
+
     public const string BackendName = "indextts";
 
-    // Exact byte size on cstr's HuggingFace repo (X-Linked-Size). Used to reject truncated
+    // Exact byte sizes on cstr's HuggingFace repo (X-Linked-Size). Used to reject truncated
     // files that crispasr's --auto-download may have left behind — same trap that bit Qwen3
     // earlier (Windows access violation 0xC0000005 deep in the legacy GGUF loader).
     private static readonly Dictionary<string, long> ExpectedFileSizes = new(StringComparer.OrdinalIgnoreCase)
     {
-        [TalkerFileName] = 641977344L,
+        [TalkerQ4KFileName] = 363016960L,
+        [TalkerQ8_0FileName] = 641977344L,
+        [TalkerF16FileName] = 2280869504L,
         [CodecFileName] = 268168960L,
+    };
+
+    public static string ResolveModelKey(string? modelKey)
+    {
+        if (string.IsNullOrEmpty(modelKey))
+        {
+            var saved = Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrModel;
+            return string.IsNullOrEmpty(saved) ? DefaultModelKey : ResolveModelKey(saved);
+        }
+
+        return modelKey switch
+        {
+            ModelKeyQ4K => ModelKeyQ4K,
+            ModelKeyF16 => ModelKeyF16,
+            _ => ModelKeyQ8_0,
+        };
+    }
+
+    public static string GetTalkerFileName(string? modelKey) => ResolveModelKey(modelKey) switch
+    {
+        ModelKeyQ4K => TalkerQ4KFileName,
+        ModelKeyF16 => TalkerF16FileName,
+        _ => TalkerQ8_0FileName,
     };
 
     public static bool IsValidLocalModelFile(string path, string fileName)
@@ -86,6 +121,14 @@ public class IndexTtsCrispAsr : ITtsEngine
     private static Process? _serverProcess;
     private static int _serverPort;
     private static string? _serverLaunchCommand;
+    // Tracks the --voice path the running server was started with. CrispASR's indextts
+    // backend ignores the request body's `voice` field in server mode and only loads the
+    // reference audio from the startup --voice flag, so a voice change requires us to
+    // tear down and restart the server. See PR #11210 discussion for the upstream bug.
+    private static string? _serverVoicePath;
+    // Tracks the GPT quant the running server was started with. A switch from Q8_0 to
+    // Q4_K means a different talker GGUF, so the server is torn down and restarted.
+    private static string? _serverModelKey;
     private static bool _processExitHooked;
     private static readonly StringBuilder _serverLog = new();
 
@@ -169,10 +212,11 @@ public class IndexTtsCrispAsr : ITtsEngine
     private static bool _voiceSeedAttempted;
 
     /// <summary>
-    /// One-time best-effort copy of WAV reference voices from qwen3-tts.cpp's voices folder.
-    /// IndexTTS, VibeVoice, and Qwen3 CustomVoice all clone from 24 kHz mono reference WAVs,
-    /// so the same voice pack works in all three — users who already pulled the Qwen3 voice
-    /// pack get them here for free.
+    /// One-time best-effort seed of WAV reference voices from qwen3-tts.cpp's voices folder.
+    /// The qwen3-tts.cpp voice pack ships at 16 kHz mono, but IndexTTS clones from 24 kHz —
+    /// crispasr resamples on every synth call (lossy) if we pass it 16 kHz. So resample on
+    /// seed via ffmpeg, same path ImportVoice uses for user-picked files. Saves an
+    /// upsample-per-synth and avoids the audible "16k seed → 24k clone" quality drop.
     /// </summary>
     private static void SeedVoicesFromQwen3TtsCppIfEmpty(string voicesFolder)
     {
@@ -198,9 +242,26 @@ public class IndexTtsCrispAsr : ITtsEngine
             foreach (var src in Directory.GetFiles(sourceFolder, "*.wav"))
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
-                if (!File.Exists(dest))
+                if (File.Exists(dest))
                 {
-                    File.Copy(src, dest);
+                    continue;
+                }
+
+                try
+                {
+                    var ffmpeg = FfmpegGenerator.ConvertToMono24kHzWav(src, dest);
+                    if (!ffmpeg.Start())
+                    {
+                        // ffmpeg unavailable — better to seed at 16 kHz than skip the voice.
+                        File.Copy(src, dest);
+                        continue;
+                    }
+                    ffmpeg.WaitForExit();
+                }
+                catch (Exception ex)
+                {
+                    Se.LogError(ex, $"IndexTTS (CrispASR): resample seed '{src}' failed; falling back to plain copy");
+                    try { if (!File.Exists(dest)) File.Copy(src, dest); } catch { }
                 }
             }
         }
@@ -210,15 +271,58 @@ public class IndexTtsCrispAsr : ITtsEngine
         }
     }
 
-    public static string GetTalkerPath() =>
-        Path.Combine(GetSetModelsFolder(), TalkerFileName);
+    public static string GetTalkerPath(string? modelKey = null) =>
+        Path.Combine(GetSetModelsFolder(), GetTalkerFileName(modelKey));
 
     public static string GetCodecPath() =>
         Path.Combine(GetSetModelsFolder(), CodecFileName);
 
-    public static bool AreModelsInstalled() =>
-        IsValidLocalModelFile(GetTalkerPath(), TalkerFileName)
+    public static bool AreModelsInstalled(string? modelKey = null) =>
+        IsValidLocalModelFile(GetTalkerPath(modelKey), GetTalkerFileName(modelKey))
         && IsValidLocalModelFile(GetCodecPath(), CodecFileName);
+
+    /// <summary>
+    /// Path crispasr's --auto-download writes GGUFs to. Mirrors the Qwen3 (CrispASR) helper so
+    /// the SE-side downloader can adopt already-cached files instead of re-pulling ~870 MB.
+    /// </summary>
+    public static string GetCrispAsrCacheFolder() =>
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache", "crispasr");
+
+    /// <summary>
+    /// Best-effort copy of <paramref name="fileName"/> from <see cref="GetCrispAsrCacheFolder"/>
+    /// into SE's models folder. See <see cref="Qwen3TtsCrispAsr.TrySeedModelFromCrispAsrCache"/>
+    /// for rationale — same truncation-guard semantics.
+    /// </summary>
+    public static bool TrySeedModelFromCrispAsrCache(string fileName, string destinationPath)
+    {
+        if (IsValidLocalModelFile(destinationPath, fileName))
+        {
+            return true;
+        }
+
+        try
+        {
+            if (File.Exists(destinationPath))
+            {
+                Se.LogError($"IndexTTS (CrispASR): removing wrong-sized local model file {destinationPath}");
+                File.Delete(destinationPath);
+            }
+
+            var cachePath = Path.Combine(GetCrispAsrCacheFolder(), fileName);
+            if (!IsValidLocalModelFile(cachePath, fileName))
+            {
+                return false;
+            }
+
+            File.Copy(cachePath, destinationPath);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, $"IndexTTS (CrispASR): cache seed copy failed for {fileName}");
+            return false;
+        }
+    }
 
     public Task<Voice[]> GetVoices(string language)
     {
@@ -243,7 +347,7 @@ public class IndexTtsCrispAsr : ITtsEngine
 
     public Task<string[]> GetRegions() => Task.FromResult(Array.Empty<string>());
 
-    public Task<string[]> GetModels() => Task.FromResult(Array.Empty<string>());
+    public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyQ4K, ModelKeyQ8_0, ModelKeyF16 });
 
     public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(Array.Empty<TtsLanguage>());
 
@@ -272,7 +376,8 @@ public class IndexTtsCrispAsr : ITtsEngine
                 + "Reference WAV should be 24 kHz mono (3-10 s of clean speech).");
         }
 
-        await EnsureServerRunningAsync(cancellationToken);
+        var modelKey = ResolveModelKey(model);
+        await EnsureServerRunningAsync(modelKey, indexVoice.FilePath, cancellationToken);
 
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
         var inputText = Utilities.UnbreakLine(text);
@@ -281,7 +386,10 @@ public class IndexTtsCrispAsr : ITtsEngine
         //   - `input`             — the text to synthesise
         //   - `response_format`   — "wav"
         //   - `voice`             — absolute WAV path or filename in --voice-dir
-        // IndexTTS handles ASR of the reference internally (BigVGAN + ECAPA-TDNN), so unlike
+        // The server-mode indextts backend ignores the request `voice` field, so we still
+        // pass it (for logging / future server fix) but the reference audio actually used
+        // is the --voice path baked in at server startup — see EnsureServerRunningAsync.
+        // IndexTTS handles transcription internally (BigVGAN + ECAPA-TDNN), so unlike
         // Qwen3 CustomVoice there is no `ref-text` parameter. v1.5 has no `instructions`
         // (emotion control) — that's IndexTTS-2 which isn't in CrispASR yet.
         var payload = new Dictionary<string, object>
@@ -384,9 +492,16 @@ public class IndexTtsCrispAsr : ITtsEngine
         }
     }
 
-    private static async Task EnsureServerRunningAsync(CancellationToken ct)
+    private static async Task EnsureServerRunningAsync(string modelKey, string voicePath, CancellationToken ct)
     {
-        if (_serverProcess is { HasExited: false } && _serverPort != 0)
+        // CrispASR 0.6.11's indextts server backend doesn't honour the per-request `voice`
+        // field — it only reads the reference audio from the --voice path passed at server
+        // startup. So we have to restart the server every time the selected voice OR the
+        // selected quant changes. Tracked next to _serverProcess so an already-running
+        // server with matching voice + quant is reused.
+        if (_serverProcess is { HasExited: false } && _serverPort != 0
+            && string.Equals(_serverVoicePath, voicePath, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase))
         {
             return;
         }
@@ -394,7 +509,9 @@ public class IndexTtsCrispAsr : ITtsEngine
         await ServerLock.WaitAsync(ct);
         try
         {
-            if (_serverProcess is { HasExited: false } && _serverPort != 0)
+            if (_serverProcess is { HasExited: false } && _serverPort != 0
+                && string.Equals(_serverVoicePath, voicePath, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
@@ -413,8 +530,9 @@ public class IndexTtsCrispAsr : ITtsEngine
 
             // Talker + codec GGUFs: use locally staged copies when present; otherwise fall back
             // to crispasr's own --auto-download (fetches into ~/.cache/crispasr/ on first run).
-            var talker = GetTalkerPath();
-            var hasLocalTalker = IsValidLocalModelFile(talker, TalkerFileName);
+            var talkerFileName = GetTalkerFileName(modelKey);
+            var talker = GetTalkerPath(modelKey);
+            var hasLocalTalker = IsValidLocalModelFile(talker, talkerFileName);
             var codec = GetCodecPath();
             var hasLocalCodec = IsValidLocalModelFile(codec, CodecFileName);
 
@@ -449,6 +567,11 @@ public class IndexTtsCrispAsr : ITtsEngine
             // /v1/audio/speech gates `voice` field on --voice-dir being set. Same as Qwen3.
             psi.ArgumentList.Add("--voice-dir");
             psi.ArgumentList.Add(GetSetVoicesFolder());
+            // Required for indextts: the server-mode voice cloning only respects the startup
+            // --voice path. Skipping this means the request's `voice` is ignored and the synth
+            // produces noise. See CrispASR 0.6.11 upstream bug.
+            psi.ArgumentList.Add("--voice");
+            psi.ArgumentList.Add(voicePath);
 
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start crispasr (indextts)");
@@ -473,6 +596,8 @@ public class IndexTtsCrispAsr : ITtsEngine
 
             _serverProcess = process;
             _serverPort = port;
+            _serverVoicePath = voicePath;
+            _serverModelKey = modelKey;
             HookProcessExitOnce();
 
             // First-run auto-download (~870 MB total) needs a generous timeout, but much
@@ -489,6 +614,8 @@ public class IndexTtsCrispAsr : ITtsEngine
                     _serverProcess = null;
                     _serverPort = 0;
                     _serverLaunchCommand = null;
+                    _serverVoicePath = null;
+                    _serverModelKey = null;
                     throw new InvalidOperationException(
                         $"crispasr (indextts) exited during startup (code {exitCode}). Output: {tail}"
                         + LaunchCmdSuffix(exitedLaunchCommand));
@@ -571,6 +698,8 @@ public class IndexTtsCrispAsr : ITtsEngine
         _serverProcess = null;
         _serverPort = 0;
         _serverLaunchCommand = null;
+        _serverVoicePath = null;
+        _serverModelKey = null;
         if (p == null) return;
         try
         {

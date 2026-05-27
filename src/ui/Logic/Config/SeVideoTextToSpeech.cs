@@ -32,6 +32,8 @@ public class SeVideoTextToSpeech
     public string Qwen3TtsCppVulkanPath { get; set; }
     public string Qwen3TtsCppInstruction { get; set; }
     public string Qwen3TtsCrispAsrModel { get; set; }
+    public string VibeVoiceCrispAsrModel { get; set; }
+    public string IndexTtsCrispAsrModel { get; set; }
     public string OmniVoiceTtsCppVulkanPath { get; set; }
     public string OmniVoiceTtsCppInstruction { get; set; }
     public string ChatterboxModel { get; set; }
@@ -101,6 +103,8 @@ public class SeVideoTextToSpeech
         Qwen3TtsCppVulkanPath = string.Empty;
         Qwen3TtsCppInstruction = string.Empty;
         Qwen3TtsCrispAsrModel = "1.7B VoiceDesign";
+        VibeVoiceCrispAsrModel = "Q8_0 (~2.8 GB)";
+        IndexTtsCrispAsrModel = "Q8_0 (~870 MB)";
         OmniVoiceTtsCppVulkanPath = string.Empty;
         OmniVoiceTtsCppInstruction = string.Empty;
         ChatterboxModel = "Base";

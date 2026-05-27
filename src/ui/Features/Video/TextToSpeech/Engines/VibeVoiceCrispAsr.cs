@@ -36,18 +36,53 @@ public class VibeVoiceCrispAsr : ITtsEngine
     public bool HasLanguageParameter => false;
     public bool HasApiKey => false;
     public bool HasRegion => false;
-    public bool HasModel => false;
+    public bool HasModel => true;
     public bool HasKeyFile => false;
 
-    public const string TalkerFileName = "vibevoice-1.5b-tts-q8_0.gguf";
+    // Three quants of the same backend — user picks size vs. quality. Q8_0 is the README
+    // recommended default; Q4_K is the lightest option for 8 GB GPUs; F16 is the reference.
+    public const string ModelKeyQ4K = "Q4_K (~1.6 GB)";
+    public const string ModelKeyQ8_0 = "Q8_0 (~2.8 GB)";
+    public const string ModelKeyF16 = "F16 (~5.0 GB)";
+    public const string DefaultModelKey = ModelKeyQ8_0;
+
+    public const string TalkerQ4KFileName = "vibevoice-1.5b-tts-q4_k.gguf";
+    public const string TalkerQ8_0FileName = "vibevoice-1.5b-tts-q8_0.gguf";
+    public const string TalkerF16FileName = "vibevoice-1.5b-tts-f16.gguf";
+
     public const string BackendName = "vibevoice-1.5b";
 
-    // Exact byte size on cstr's HuggingFace repo (X-Linked-Size). Mirrors the truncation
+    // Exact byte sizes on cstr's HuggingFace repo (X-Linked-Size). Mirrors the truncation
     // guard in Qwen3TtsCrispAsr — a partial file from an interrupted --auto-download would
     // otherwise crash the loader at startup with a Windows access violation.
     private static readonly Dictionary<string, long> ExpectedFileSizes = new(StringComparer.OrdinalIgnoreCase)
     {
-        [TalkerFileName] = 2995704736L,
+        [TalkerQ4KFileName] = 1706804128L,
+        [TalkerQ8_0FileName] = 2995704736L,
+        [TalkerF16FileName] = 5412393280L,
+    };
+
+    public static string ResolveModelKey(string? modelKey)
+    {
+        if (string.IsNullOrEmpty(modelKey))
+        {
+            var saved = Se.Settings.Video.TextToSpeech.VibeVoiceCrispAsrModel;
+            return string.IsNullOrEmpty(saved) ? DefaultModelKey : ResolveModelKey(saved);
+        }
+
+        return modelKey switch
+        {
+            ModelKeyQ4K => ModelKeyQ4K,
+            ModelKeyF16 => ModelKeyF16,
+            _ => ModelKeyQ8_0,
+        };
+    }
+
+    public static string GetTalkerFileName(string? modelKey) => ResolveModelKey(modelKey) switch
+    {
+        ModelKeyQ4K => TalkerQ4KFileName,
+        ModelKeyF16 => TalkerF16FileName,
+        _ => TalkerQ8_0FileName,
     };
 
     public static bool IsValidLocalModelFile(string path, string fileName)
@@ -80,6 +115,9 @@ public class VibeVoiceCrispAsr : ITtsEngine
     private static Process? _serverProcess;
     private static int _serverPort;
     private static string? _serverLaunchCommand;
+    // Tracks the quant the running server was started with. A switch from Q8_0 to Q4_K
+    // means a different GGUF, so EnsureServerRunningAsync tears down and restarts.
+    private static string? _serverModelKey;
     private static bool _processExitHooked;
     private static readonly StringBuilder _serverLog = new();
 
@@ -190,12 +228,32 @@ public class VibeVoiceCrispAsr : ITtsEngine
                 return;
             }
 
+            // qwen3-tts.cpp's voice pack ships at 16 kHz; VibeVoice clones at 24 kHz and
+            // crispasr resamples on every synth (lossy). Resample on seed so cloning sees
+            // 24 kHz audio directly and matches what ImportVoice writes for user files.
             foreach (var src in Directory.GetFiles(sourceFolder, "*.wav"))
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
-                if (!File.Exists(dest))
+                if (File.Exists(dest))
                 {
-                    File.Copy(src, dest);
+                    continue;
+                }
+
+                try
+                {
+                    var ffmpeg = FfmpegGenerator.ConvertToMono24kHzWav(src, dest);
+                    if (!ffmpeg.Start())
+                    {
+                        // ffmpeg unavailable — better to seed at 16 kHz than skip the voice.
+                        File.Copy(src, dest);
+                        continue;
+                    }
+                    ffmpeg.WaitForExit();
+                }
+                catch (Exception ex)
+                {
+                    Se.LogError(ex, $"VibeVoice (CrispASR): resample seed '{src}' failed; falling back to plain copy");
+                    try { if (!File.Exists(dest)) File.Copy(src, dest); } catch { }
                 }
             }
         }
@@ -205,11 +263,54 @@ public class VibeVoiceCrispAsr : ITtsEngine
         }
     }
 
-    public static string GetTalkerPath() =>
-        Path.Combine(GetSetModelsFolder(), TalkerFileName);
+    public static string GetTalkerPath(string? modelKey = null) =>
+        Path.Combine(GetSetModelsFolder(), GetTalkerFileName(modelKey));
 
-    public static bool AreModelsInstalled() =>
-        IsValidLocalModelFile(GetTalkerPath(), TalkerFileName);
+    /// <summary>
+    /// Path crispasr's --auto-download writes GGUFs to. Mirrors the Qwen3 (CrispASR) helper so
+    /// the SE-side downloader can adopt already-cached files instead of re-pulling 2.8 GB.
+    /// </summary>
+    public static string GetCrispAsrCacheFolder() =>
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache", "crispasr");
+
+    /// <summary>
+    /// Best-effort copy of <paramref name="fileName"/> from <see cref="GetCrispAsrCacheFolder"/>
+    /// into SE's models folder. See <see cref="Qwen3TtsCrispAsr.TrySeedModelFromCrispAsrCache"/>
+    /// for rationale — same truncation-guard semantics.
+    /// </summary>
+    public static bool TrySeedModelFromCrispAsrCache(string fileName, string destinationPath)
+    {
+        if (IsValidLocalModelFile(destinationPath, fileName))
+        {
+            return true;
+        }
+
+        try
+        {
+            if (File.Exists(destinationPath))
+            {
+                Se.LogError($"VibeVoice (CrispASR): removing wrong-sized local model file {destinationPath}");
+                File.Delete(destinationPath);
+            }
+
+            var cachePath = Path.Combine(GetCrispAsrCacheFolder(), fileName);
+            if (!IsValidLocalModelFile(cachePath, fileName))
+            {
+                return false;
+            }
+
+            File.Copy(cachePath, destinationPath);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, $"VibeVoice (CrispASR): cache seed copy failed for {fileName}");
+            return false;
+        }
+    }
+
+    public static bool AreModelsInstalled(string? modelKey = null) =>
+        IsValidLocalModelFile(GetTalkerPath(modelKey), GetTalkerFileName(modelKey));
 
     public Task<Voice[]> GetVoices(string language)
     {
@@ -234,7 +335,7 @@ public class VibeVoiceCrispAsr : ITtsEngine
 
     public Task<string[]> GetRegions() => Task.FromResult(Array.Empty<string>());
 
-    public Task<string[]> GetModels() => Task.FromResult(Array.Empty<string>());
+    public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyQ4K, ModelKeyQ8_0, ModelKeyF16 });
 
     public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(Array.Empty<TtsLanguage>());
 
@@ -263,7 +364,8 @@ public class VibeVoiceCrispAsr : ITtsEngine
                 + "Reference WAV should be 24 kHz mono.");
         }
 
-        await EnsureServerRunningAsync(cancellationToken);
+        var modelKey = ResolveModelKey(model);
+        await EnsureServerRunningAsync(modelKey, cancellationToken);
 
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
         var inputText = Utilities.UnbreakLine(text);
@@ -373,9 +475,12 @@ public class VibeVoiceCrispAsr : ITtsEngine
         }
     }
 
-    private static async Task EnsureServerRunningAsync(CancellationToken ct)
+    private static async Task EnsureServerRunningAsync(string modelKey, CancellationToken ct)
     {
-        if (_serverProcess is { HasExited: false } && _serverPort != 0)
+        // A running server stays valid only while the quant matches — switching from Q8_0
+        // to Q4_K means a different GGUF, so tear down and restart.
+        if (_serverProcess is { HasExited: false } && _serverPort != 0
+            && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase))
         {
             return;
         }
@@ -383,7 +488,8 @@ public class VibeVoiceCrispAsr : ITtsEngine
         await ServerLock.WaitAsync(ct);
         try
         {
-            if (_serverProcess is { HasExited: false } && _serverPort != 0)
+            if (_serverProcess is { HasExited: false } && _serverPort != 0
+                && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
@@ -403,8 +509,9 @@ public class VibeVoiceCrispAsr : ITtsEngine
             // Talker GGUF: if locally staged, use directly; otherwise hand off to crispasr's
             // --auto-download to fetch into ~/.cache/crispasr/ on first run. VibeVoice 1.5B
             // doesn't need a separate codec file (unlike Qwen3 TTS).
-            var talker = GetTalkerPath();
-            var hasLocalTalker = IsValidLocalModelFile(talker, TalkerFileName);
+            var talkerFileName = GetTalkerFileName(modelKey);
+            var talker = GetTalkerPath(modelKey);
+            var hasLocalTalker = IsValidLocalModelFile(talker, talkerFileName);
 
             var port = FindFreeLoopbackPort();
             var psi = new ProcessStartInfo
@@ -456,6 +563,7 @@ public class VibeVoiceCrispAsr : ITtsEngine
 
             _serverProcess = process;
             _serverPort = port;
+            _serverModelKey = modelKey;
             HookProcessExitOnce();
 
             // First-run auto-download (~2.8 GB talker) needs a generous timeout.
@@ -471,6 +579,7 @@ public class VibeVoiceCrispAsr : ITtsEngine
                     _serverProcess = null;
                     _serverPort = 0;
                     _serverLaunchCommand = null;
+                    _serverModelKey = null;
                     throw new InvalidOperationException(
                         $"crispasr (vibevoice) exited during startup (code {exitCode}). Output: {tail}"
                         + LaunchCmdSuffix(exitedLaunchCommand));
@@ -553,6 +662,7 @@ public class VibeVoiceCrispAsr : ITtsEngine
         _serverProcess = null;
         _serverPort = 0;
         _serverLaunchCommand = null;
+        _serverModelKey = null;
         if (p == null) return;
         try
         {
