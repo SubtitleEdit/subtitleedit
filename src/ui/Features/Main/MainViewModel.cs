@@ -3247,17 +3247,15 @@ public partial class MainViewModel :
                 continue;
             }
 
-            var nextSubtitle = Subtitles.GetOrNull(idx + 1);
-            var targetDuration = TimeSpan.FromSeconds(charCount / Se.Settings.General.SubtitleMaximumCharactersPerSeconds);
-            var newEndTime = selectedLine.StartTime + targetDuration;
-
-            var minEndTime = TimeSpan.FromMilliseconds(selectedLine.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
-            if (newEndTime < minEndTime)
+            var maxCps = Se.Settings.General.SubtitleMaximumCharactersPerSeconds;
+            if (maxCps <= 0)
             {
-                newEndTime = minEndTime;
+                continue;
             }
 
+            var minEndTime = TimeSpan.FromMilliseconds(selectedLine.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMinimumDisplayMilliseconds);
             var maxEndTime = TimeSpan.FromMilliseconds(selectedLine.StartTime.TotalMilliseconds + Se.Settings.General.SubtitleMaximumDisplayMilliseconds);
+            var nextSubtitle = Subtitles.GetOrNull(idx + 1);
             if (nextSubtitle != null)
             {
                 var gapBound = TimeSpan.FromMilliseconds(nextSubtitle.StartTime.TotalMilliseconds - Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
@@ -3265,6 +3263,17 @@ public partial class MainViewModel :
                 {
                     maxEndTime = gapBound;
                 }
+            }
+
+            if (maxEndTime < minEndTime)
+            {
+                continue;
+            }
+
+            var newEndTime = selectedLine.StartTime + TimeSpan.FromSeconds(charCount / maxCps);
+            if (newEndTime < minEndTime)
+            {
+                newEndTime = minEndTime;
             }
             if (newEndTime > maxEndTime)
             {
