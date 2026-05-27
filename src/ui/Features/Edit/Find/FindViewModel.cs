@@ -24,6 +24,7 @@ public partial class FindViewModel : ObservableObject
 
     public bool FindNextPressed { get; private set; }
     public bool FindPreviousPressed { get; private set; }
+    public bool ResultFound { get; set; }
 
     private IFindService? _findService;
     private List<string> _subs = new List<string>();

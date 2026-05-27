@@ -284,6 +284,7 @@ public partial class MainViewModel :
     VideoPlayerUndockedViewModel? _videoPlayerUndockedViewModel;
     AudioVisualizerUndockedViewModel? _audioVisualizerUndockedViewModel;
     FindViewModel? _findViewModel;
+    Control? _findPreviousFocus;
     ReplaceViewModel? _replaceViewModel;
     AdjustAllTimesViewModel? _adjustAllTimesViewModel;
 
@@ -9212,10 +9213,12 @@ public partial class MainViewModel :
 
         if (_findViewModel != null && _findViewModel.Window != null && _findViewModel.Window.IsVisible)
         {
+            _findPreviousFocus = Window?.FocusManager?.GetFocusedElement() as Control;
             _findViewModel.Window.Activate();
             return;
         }
 
+        _findPreviousFocus = Window?.FocusManager?.GetFocusedElement() as Control;
         var subs = Subtitles.Select(p => p.Text).ToList();
         var result = _windowService.ShowWindow<FindWindow, FindViewModel>(Window!, (window, vm) =>
         {
@@ -9234,6 +9237,17 @@ public partial class MainViewModel :
             }
 
             vm.InitializeFindData(_findService, subs, selectedText, this);
+            window.Closed += (_, _) =>
+            {
+                if (vm.ResultFound)
+                {
+                    FocusEditTextBox();
+                }
+                else
+                {
+                    Dispatcher.UIThread.Post(() => _findPreviousFocus?.Focus());
+                }
+            };
         });
 
         _shortcutManager.ClearKeys();
@@ -9287,6 +9301,11 @@ public partial class MainViewModel :
             {
                 ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
                 return;
+            }
+
+            if (_findViewModel != null)
+            {
+                _findViewModel.ResultFound = true;
             }
 
             Dispatcher.UIThread.Post(() =>
