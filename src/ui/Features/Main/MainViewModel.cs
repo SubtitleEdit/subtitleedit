@@ -12700,6 +12700,7 @@ public partial class MainViewModel :
             {
                 SelectAndScrollToRow(0);
             }
+            Dispatcher.UIThread.Post(() => SubtitleGrid.Focus());
 
             if (Se.Settings.Video.AutoOpen && skipLoadVideo == false)
             {
