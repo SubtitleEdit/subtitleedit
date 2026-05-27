@@ -9,13 +9,13 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 /// <summary>
 /// Cached <c>crispasr --version</c> probe. Used by the speech-to-text engine settings
 /// dialog and by Chatterbox / Qwen3 (CrispASR) TTS settings to show the user which
-/// CrispASR runtime they have installed. <c>crispasr --version</c> on v0.6.10 prints
+/// CrispASR runtime they have installed. <c>crispasr --version</c> on v0.6.11 prints
 /// something like:
 ///
 ///   <c>=== build info ===</c>
-///   <c>  version       : 0.6.10</c>
-///   <c>  git sha       : 962a3913</c>
-///   <c>  git date      : 2026-05-23T19:54:13Z</c>
+///   <c>  version       : 0.6.11</c>
+///   <c>  git sha       : 9dfb1490</c>
+///   <c>  git date      : 2026-05-26T23:28:31+02:00</c>
 ///   <c>  ...</c>
 ///
 /// Older releases printed a single banner line like
@@ -30,14 +30,14 @@ public static class CrispAsrVersion
     private static DateTime _cachedExeMtimeUtc;
     private static string? _cachedVersion;
 
-    // Matches either `version : 0.6.10` (structured --version output) or
-    // `crispasr 0.6.10` (legacy single-line banner).
+    // Matches either `version : 0.6.11` (structured --version output) or
+    // `crispasr 0.6.11` (legacy single-line banner).
     private static readonly Regex VersionRegex = new(
         @"(?:^\s*version\s*:\s*|\bcrispasr\s+)([\w.\-+]+)",
         RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
     /// <summary>
-    /// Returns the CrispASR version string (e.g. "0.6.10") for the binary at
+    /// Returns the CrispASR version string (e.g. "0.6.11") for the binary at
     /// <paramref name="exePath"/>, or null when the binary is missing, fails to launch,
     /// or doesn't emit a recognisable version line within a short timeout. Safe to
     /// call repeatedly — each unique (path, mtime) pair is probed at most once.
