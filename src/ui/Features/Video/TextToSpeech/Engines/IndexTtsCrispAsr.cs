@@ -55,9 +55,6 @@ public class IndexTtsCrispAsr : ITtsEngine
     public const string TalkerF16FileName = "indextts-gpt.gguf";
     public const string CodecFileName = "indextts-bigvgan.gguf";
 
-    // Kept as aliases so download services that don't know about quants can still reach
-    // sensible defaults.
-    public const string TalkerFileName = TalkerQ8_0FileName;
     public const string BackendName = "indextts";
 
     // Exact byte sizes on cstr's HuggingFace repo (X-Linked-Size). Used to reject truncated

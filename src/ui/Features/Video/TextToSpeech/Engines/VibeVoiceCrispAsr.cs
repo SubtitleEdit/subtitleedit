@@ -50,10 +50,6 @@ public class VibeVoiceCrispAsr : ITtsEngine
     public const string TalkerQ8_0FileName = "vibevoice-1.5b-tts-q8_0.gguf";
     public const string TalkerF16FileName = "vibevoice-1.5b-tts-f16.gguf";
 
-    // Keep TalkerFileName as an alias pointing at the recommended quant so download
-    // services that don't care about the user's choice (e.g. when starting Download from
-    // a generic flow) still get a sensible default.
-    public const string TalkerFileName = TalkerQ8_0FileName;
     public const string BackendName = "vibevoice-1.5b";
 
     // Exact byte sizes on cstr's HuggingFace repo (X-Linked-Size). Mirrors the truncation
