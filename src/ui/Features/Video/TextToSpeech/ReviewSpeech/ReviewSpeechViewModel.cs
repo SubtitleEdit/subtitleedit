@@ -1336,7 +1336,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         IsInstructionPickerVisible = engine is OmniVoiceTtsCpp;
         HasInstruction = IsInstructionTextVisible || IsInstructionPickerVisible;
 
-        var isDefaultOmniVoice = SelectedVoice?.EngineVoice is OmniVoiceVoice ov && string.IsNullOrEmpty(ov.FilePath);
+        var isDefaultOmniVoice = SelectedVoice?.EngineVoice is OmniVoiceTtsVoice ov && string.IsNullOrEmpty(ov.FilePath);
         IsInstructionPickerEnabled = IsInstructionPickerVisible && isDefaultOmniVoice;
         IsInstructionVoiceHintVisible = IsInstructionPickerVisible && !isDefaultOmniVoice;
     }

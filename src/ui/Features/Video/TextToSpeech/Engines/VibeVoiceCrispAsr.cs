@@ -223,7 +223,7 @@ public class VibeVoiceCrispAsr : ITtsEngine
             foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
             {
                 var name = Path.GetFileNameWithoutExtension(file).Replace('_', ' ');
-                result.Add(new Voice(new VibeVoiceVoice(name, file)));
+                result.Add(new Voice(new VibeVoiceTtsVoice(name, file)));
             }
         }
 
@@ -250,9 +250,9 @@ public class VibeVoiceCrispAsr : ITtsEngine
         string? model,
         CancellationToken cancellationToken)
     {
-        if (voice.EngineVoice is not VibeVoiceVoice vibeVoice)
+        if (voice.EngineVoice is not VibeVoiceTtsVoice vibeVoice)
         {
-            throw new ArgumentException("Voice is not a VibeVoiceVoice");
+            throw new ArgumentException("Voice is not a VibeVoiceTtsVoice");
         }
 
         if (string.IsNullOrEmpty(vibeVoice.FilePath))

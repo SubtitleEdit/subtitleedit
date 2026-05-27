@@ -1,6 +1,6 @@
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 
-public class VibeVoiceVoice
+public class VibeVoiceTtsVoice
 {
     public string Voice { get; set; }
     public string FilePath { get; set; }
@@ -10,13 +10,13 @@ public class VibeVoiceVoice
         return Voice;
     }
 
-    public VibeVoiceVoice()
+    public VibeVoiceTtsVoice()
     {
         Voice = string.Empty;
         FilePath = string.Empty;
     }
 
-    public VibeVoiceVoice(string voice, string filePath)
+    public VibeVoiceTtsVoice(string voice, string filePath)
     {
         Voice = voice;
         FilePath = filePath;

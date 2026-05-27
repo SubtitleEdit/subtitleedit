@@ -443,7 +443,7 @@ public partial class TextToSpeechViewModel : ObservableObject
     private void UpdateOmniVoicePickerState()
     {
         var isOmniVoice = SelectedEngine is OmniVoiceTtsCpp;
-        var isDefaultVoice = SelectedVoice?.EngineVoice is Voices.OmniVoiceVoice omniVoice
+        var isDefaultVoice = SelectedVoice?.EngineVoice is Voices.OmniVoiceTtsVoice omniVoice
                              && string.IsNullOrEmpty(omniVoice.FilePath);
 
         IsInstructionPickerEnabled = isOmniVoice && isDefaultVoice;
