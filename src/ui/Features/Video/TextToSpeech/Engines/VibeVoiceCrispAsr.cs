@@ -190,12 +190,32 @@ public class VibeVoiceCrispAsr : ITtsEngine
                 return;
             }
 
+            // qwen3-tts.cpp's voice pack ships at 16 kHz; VibeVoice clones at 24 kHz and
+            // crispasr resamples on every synth (lossy). Resample on seed so cloning sees
+            // 24 kHz audio directly and matches what ImportVoice writes for user files.
             foreach (var src in Directory.GetFiles(sourceFolder, "*.wav"))
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
-                if (!File.Exists(dest))
+                if (File.Exists(dest))
                 {
-                    File.Copy(src, dest);
+                    continue;
+                }
+
+                try
+                {
+                    var ffmpeg = FfmpegGenerator.ConvertToMono24kHzWav(src, dest);
+                    if (!ffmpeg.Start())
+                    {
+                        // ffmpeg unavailable — better to seed at 16 kHz than skip the voice.
+                        File.Copy(src, dest);
+                        continue;
+                    }
+                    ffmpeg.WaitForExit();
+                }
+                catch (Exception ex)
+                {
+                    Se.LogError(ex, $"VibeVoice (CrispASR): resample seed '{src}' failed; falling back to plain copy");
+                    try { if (!File.Exists(dest)) File.Copy(src, dest); } catch { }
                 }
             }
         }
