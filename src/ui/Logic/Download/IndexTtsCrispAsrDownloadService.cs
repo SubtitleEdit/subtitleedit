@@ -45,12 +45,18 @@ public class IndexTtsCrispAsrDownloadService : IIndexTtsCrispAsrDownloadService
         var talkerPath = IndexTtsCrispAsr.GetTalkerPath();
         var codecPath = IndexTtsCrispAsr.GetCodecPath();
 
-        // Try the local crispasr cache before the network — same bytes, no re-download.
-        IndexTtsCrispAsr.TrySeedModelFromCrispAsrCache(talkerFileName, talkerPath);
-        IndexTtsCrispAsr.TrySeedModelFromCrispAsrCache(codecFileName, codecPath);
-
-        EnsureRemovedIfInvalid(talkerPath, talkerFileName);
-        EnsureRemovedIfInvalid(codecPath, codecFileName);
+        // Cache seeding does synchronous File.Copy of up to ~870 MB; the caller passes us
+        // the resulting Task without awaiting (DownloadTtsViewModel polls it from a timer),
+        // so anything before the first real await runs on the caller's thread (the UI
+        // thread when invoked from the download dialog's init callback). Push the seeding
+        // and size-check work onto the threadpool so the dialog stays responsive.
+        await Task.Run(() =>
+        {
+            IndexTtsCrispAsr.TrySeedModelFromCrispAsrCache(talkerFileName, talkerPath);
+            IndexTtsCrispAsr.TrySeedModelFromCrispAsrCache(codecFileName, codecPath);
+            EnsureRemovedIfInvalid(talkerPath, talkerFileName);
+            EnsureRemovedIfInvalid(codecPath, codecFileName);
+        }, cancellationToken);
 
         var needTalker = !IndexTtsCrispAsr.IsValidLocalModelFile(talkerPath, talkerFileName);
         var needCodec = !IndexTtsCrispAsr.IsValidLocalModelFile(codecPath, codecFileName);

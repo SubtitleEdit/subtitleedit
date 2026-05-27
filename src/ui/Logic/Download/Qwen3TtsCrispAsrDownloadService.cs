@@ -55,18 +55,23 @@ public class Qwen3TtsCrispAsrDownloadService : IQwen3TtsCrispAsrDownloadService
         var talkerPath = Qwen3TtsCrispAsr.GetTalkerPath(modelKey);
         var codecPath = Qwen3TtsCrispAsr.GetCodecPath();
 
-        // Try the local crispasr cache before the network — same bytes, no 2 GB re-download.
-        // TrySeedModelFromCrispAsrCache size-checks both sides, so a wrong-sized destination
-        // or wrong-sized cache file is rejected (and a wrong-sized destination is deleted)
-        // rather than being silently propagated.
-        Qwen3TtsCrispAsr.TrySeedModelFromCrispAsrCache(talkerFileName, talkerPath);
-        Qwen3TtsCrispAsr.TrySeedModelFromCrispAsrCache(codecFileName, codecPath);
-
-        // Use the size-checked validity gate so a previously truncated file at the final path
-        // (e.g. left behind by crispasr's own --auto-download being interrupted) triggers
-        // re-download instead of being mistaken for an installed model.
-        EnsureRemovedIfInvalid(talkerPath, talkerFileName);
-        EnsureRemovedIfInvalid(codecPath, codecFileName);
+        // Cache seeding does synchronous File.Copy of up to ~2.3 GB total; the caller passes
+        // us the resulting Task without awaiting (DownloadTtsViewModel polls it from a timer),
+        // so anything before the first real await runs on the caller's thread (the UI thread
+        // when invoked from the download dialog's init callback). Push the seeding and
+        // size-check work onto the threadpool so the dialog stays responsive.
+        await Task.Run(() =>
+        {
+            // TrySeedModelFromCrispAsrCache size-checks both sides, so a wrong-sized
+            // destination or wrong-sized cache file is rejected (and a wrong-sized
+            // destination is deleted) rather than being silently propagated. Same applies
+            // to EnsureRemovedIfInvalid — a previously truncated file at the final path
+            // triggers re-download instead of being mistaken for an installed model.
+            Qwen3TtsCrispAsr.TrySeedModelFromCrispAsrCache(talkerFileName, talkerPath);
+            Qwen3TtsCrispAsr.TrySeedModelFromCrispAsrCache(codecFileName, codecPath);
+            EnsureRemovedIfInvalid(talkerPath, talkerFileName);
+            EnsureRemovedIfInvalid(codecPath, codecFileName);
+        }, cancellationToken);
 
         var needTalker = !Qwen3TtsCrispAsr.IsValidLocalModelFile(talkerPath, talkerFileName);
         var needCodec = !Qwen3TtsCrispAsr.IsValidLocalModelFile(codecPath, codecFileName);

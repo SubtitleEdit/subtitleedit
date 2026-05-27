@@ -37,12 +37,16 @@ public class VibeVoiceCrispAsrDownloadService : IVibeVoiceCrispAsrDownloadServic
         var talkerFileName = VibeVoiceCrispAsr.TalkerFileName;
         var talkerPath = VibeVoiceCrispAsr.GetTalkerPath();
 
-        // Try the local crispasr cache before the network — same bytes, no 2.8 GB re-download.
-        VibeVoiceCrispAsr.TrySeedModelFromCrispAsrCache(talkerFileName, talkerPath);
-
-        // Size-checked validity gate so a previously truncated file at the final path triggers
-        // re-download instead of being mistaken for an installed model.
-        EnsureRemovedIfInvalid(talkerPath, talkerFileName);
+        // Cache seeding does synchronous File.Copy of up to ~2.8 GB; the caller passes us
+        // the resulting Task without awaiting (DownloadTtsViewModel polls it from a timer),
+        // so anything before the first real await runs on the caller's thread (the UI
+        // thread when invoked from the download dialog's init callback). Push the seeding
+        // and size-check work onto the threadpool so the dialog stays responsive.
+        await Task.Run(() =>
+        {
+            VibeVoiceCrispAsr.TrySeedModelFromCrispAsrCache(talkerFileName, talkerPath);
+            EnsureRemovedIfInvalid(talkerPath, talkerFileName);
+        }, cancellationToken);
 
         if (VibeVoiceCrispAsr.IsValidLocalModelFile(talkerPath, talkerFileName))
         {

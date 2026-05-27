@@ -744,9 +744,12 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         // Free GPU memory held by any other CrispASR-based engine before we load this one's
         // model. Without this, switching between Qwen3 / VibeVoice / IndexTTS / Chatterbox
-        // within a session stacks crispasr.exe processes (each holding 1-3 GB of GGUFs) until
-        // the next load OOMs on a typical 8 GB GPU.
-        StopOtherCrispAsrServers(engine);
+        // within a session stacks crispasr.exe processes (each holding 1-3 GB of GGUFs)
+        // until the next load OOMs on a typical 8 GB GPU. Each StopServer does Kill +
+        // WaitForExit(2000), so do it off the UI thread — calling synchronously here can
+        // freeze the app for up to 4 × 2 s when multiple engines have been used in the
+        // session.
+        await Task.Run(() => StopOtherCrispAsrServers(engine));
 
         _cancellationTokenSource = new();
         _cancellationToken = _cancellationTokenSource.Token;
@@ -879,7 +882,9 @@ public partial class TextToSpeechViewModel : ObservableObject
         SaveSettings();
 
         // Free GPU memory held by any other CrispASR engine — see GenerateTts for rationale.
-        StopOtherCrispAsrServers(engine);
+        // Off the UI thread so a Kill + WaitForExit on a sluggish process doesn't freeze
+        // the test-voice button for a few seconds.
+        await Task.Run(() => StopOtherCrispAsrServers(engine));
 
         var text = Se.Settings.Video.TextToSpeech.VoiceTestText;
         if (string.IsNullOrEmpty(text))
@@ -2005,8 +2010,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 // Qwen3, Bob uses VibeVoice). Free GPU memory held by any *other* CrispASR
                 // engine before this Speak so they don't stack — see StopOtherCrispAsrServers
                 // for VRAM math. No-op when the engine doesn't change between rows or when
-                // the row's engine isn't CrispASR-backed.
-                StopOtherCrispAsrServers(resolution.Engine);
+                // the row's engine isn't CrispASR-backed. Off the UI thread because Kill +
+                // WaitForExit can take a few seconds per stuck process.
+                await Task.Run(() => StopOtherCrispAsrServers(resolution.Engine));
                 var speakResult = await TtsInstructionSwap.RunAsync(
                     resolution.Engine,
                     resolution.Instruction,
