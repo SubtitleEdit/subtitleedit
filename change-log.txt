@@ -12,6 +12,7 @@ v5.0.0-beta33 (xth May 2026)
 * Add Toggle dialog dashes / Merge as dialog / Frame-move commands
 * Add ShotChanges set-cue-to-shot-change green-zone commands (SE 4 parity) - thx JDTR75
 * Add ShotChanges extend/snap shortcuts (SE 4 parity) - thx JDTR75
+* Add "Set duration to max CPS" shortcut for selected lines
 * Add waveform of original video audio in TTS review window
 * Add burn-in / RemoveTextForHi / VisualSync / BeautifyTimeCodes toolbar icons
 * Update CrispASR to v0.6.11
@@ -26,8 +27,13 @@ v5.0.0-beta33 (xth May 2026)
 * Update Bulgarian translation - thx jekovcar
 * Update Portuguese (Brazil) translation - thx igorruckert
 * Update Finnish translation - thx Encrust8368
+* Update Polish translation - thx potplayer-fanpack
 * Fix Find Previous shortcut not working after first use - thx mjuhasz
 * Fix CJK IME input issue on Find/Replace auto-focus - thx pdjdev
+* Fix bookmark persistence after line mutations and undo/redo - thx mjuhasz
+* Detect bookmark changes in undo/redo change detection - thx mjuhasz
+* Restore subtitle grid focus after toolbar/panel layout change - thx mjuhasz
+* Fix dialogs reopening due to stale shortcut key state after close - thx mjuhasz
 * Fix #11181: Whisper parameters textbox scrollbar overlapping text - thx yawoo
 * Fix #11176: BurnIn dialog unable to close after adding a logo - thx bichitoxxx
 
