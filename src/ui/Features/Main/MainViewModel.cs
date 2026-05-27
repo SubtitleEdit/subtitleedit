@@ -9531,17 +9531,17 @@ public partial class MainViewModel :
 
     private async Task<MessageBoxResult> ShowWrapAroundDialog(string message)
     {
-        var findWindow = _findViewModel?.Window;
-        if (findWindow != null) findWindow.Topmost = false;
+        var dialogWindow = _findViewModel?.Window ?? _replaceViewModel?.Window;
+        if (dialogWindow != null) dialogWindow.Topmost = false;
         try
         {
-            var parentWindow = findWindow ?? Window!;
+            var parentWindow = dialogWindow ?? Window!;
             return await MessageBox.Show(parentWindow, Se.Language.General.ContinueFindTitle,
                 message, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
         }
         finally
         {
-            if (findWindow != null) findWindow.Topmost = true;
+            if (dialogWindow != null) dialogWindow.Topmost = true;
         }
     }
 
@@ -9609,7 +9609,7 @@ public partial class MainViewModel :
         _shortcutManager.ClearKeys();
     }
 
-    public void HandleReplaceResult(ReplaceViewModel result)
+    public async Task HandleReplaceResult(ReplaceViewModel result)
     {
         result.ResultFound = false;
 
@@ -9661,8 +9661,18 @@ public partial class MainViewModel :
 
             if (idx < 0)
             {
-                ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
-                return;
+                var answer = await ShowWrapAroundDialog(Se.Language.General.SearchItemNotFoundContinueFromTop);
+                if (answer != MessageBoxResult.Yes)
+                {
+                    ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+                    return;
+                }
+                idx = _findService.FindNext(result.SearchText, subs, 0, 0);
+                if (idx < 0)
+                {
+                    ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+                    return;
+                }
             }
 
             if (_replaceViewModel != null)

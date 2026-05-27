@@ -7,5 +7,5 @@ public interface IFindResult
 {
     public void RequestFindData();
     public Task HandleFindResult(FindViewModel result);
-    public void HandleReplaceResult(ReplaceViewModel result);
+    public Task HandleReplaceResult(ReplaceViewModel result);
 }

@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using static Nikse.SubtitleEdit.Logic.FindService;
 
 namespace Nikse.SubtitleEdit.Features.Edit.Replace;
@@ -57,33 +58,33 @@ public partial class ReplaceViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Replace()
+    private async Task Replace()
     {
         ReplacePressed = true;
         ReplaceAllPressed = false;
         FindNextPressed = false;
         SaveSettings();
-        _findResult?.HandleReplaceResult(this);
+        if (_findResult != null) await _findResult.HandleReplaceResult(this);
     }
 
     [RelayCommand]
-    private void ReplaceAll()
+    private async Task ReplaceAll()
     {
         ReplacePressed = false;
         ReplaceAllPressed = true;
         FindNextPressed = false;
         SaveSettings();
-        _findResult?.HandleReplaceResult(this);
+        if (_findResult != null) await _findResult.HandleReplaceResult(this);
     }
 
     [RelayCommand]
-    private void FindNext()
+    private async Task FindNext()
     {
         ReplacePressed = false;
         ReplaceAllPressed = false;
         FindNextPressed = true;
         SaveSettings();
-        _findResult?.HandleReplaceResult(this);
+        if (_findResult != null) await _findResult.HandleReplaceResult(this);
     }
 
     [RelayCommand]
@@ -167,12 +168,12 @@ public partial class ReplaceViewModel : ObservableObject
         }
     }
 
-    internal void FindTextBoxKeyDown(object? sender, KeyEventArgs e)
+    internal async void FindTextBoxKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter)
         {
             e.Handled = true;
-            FindNext();
+            await FindNext();
         }
     }
 }
