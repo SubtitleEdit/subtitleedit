@@ -13870,6 +13870,8 @@ public partial class MainViewModel :
         _changeSubtitleHash = GetFastHash();
         _lastOpenSaveFormat = SelectedSubtitleFormat;
 
+        new BookmarkPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+
         return true;
     }
 

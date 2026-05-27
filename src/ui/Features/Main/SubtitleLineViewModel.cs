@@ -100,6 +100,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         Layer = p.Layer;
         Number = p.Number;
         Extra = p.Extra;
+        Bookmark = p.Bookmark;
 
         Id = generateNewId ? Guid.NewGuid() : p.Id;
 
