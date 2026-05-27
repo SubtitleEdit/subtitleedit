@@ -1950,6 +1950,12 @@ public partial class TextToSpeechViewModel : ObservableObject
                 var language = isCrossEngine ? null : SelectedLanguage;
                 var region = isCrossEngine ? null : SelectedRegion;
                 var model = resolution.Model ?? (isCrossEngine ? null : SelectedModel);
+                // Per-actor cast workflow: rows can target different engines (e.g. Alice uses
+                // Qwen3, Bob uses VibeVoice). Free GPU memory held by any *other* CrispASR
+                // engine before this Speak so they don't stack — see StopOtherCrispAsrServers
+                // for VRAM math. No-op when the engine doesn't change between rows or when
+                // the row's engine isn't CrispASR-backed.
+                StopOtherCrispAsrServers(resolution.Engine);
                 var speakResult = await TtsInstructionSwap.RunAsync(
                     resolution.Engine,
                     resolution.Instruction,
@@ -2588,10 +2594,12 @@ public partial class TextToSpeechViewModel : ObservableObject
             _mpvContext = null;
         }
         // Release VRAM held by any still-running crispasr.exe servers so models don't stay
-        // pinned for the rest of the SE session after the user closes the TTS window. Costs
-        // a model re-load (seconds) the next time the window is opened, not the multi-minute
-        // first-time download.
-        StopAllCrispAsrServers();
+        // pinned for the rest of the SE session. Fire-and-forget on the threadpool — each
+        // StopServer is Kill + WaitForExit(2000), so doing this on the UI thread could block
+        // the close by up to 4 × 2 s if all four engines were used. AppDomain.ProcessExit
+        // performs the same teardown if SE exits before the task completes, so nothing is
+        // left running.
+        _ = Task.Run(StopAllCrispAsrServers);
         UiUtil.SaveWindowPosition(Window);
     }
 

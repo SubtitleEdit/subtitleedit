@@ -232,7 +232,7 @@ public class IndexTtsCrispAsr : ITtsEngine
             foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
             {
                 var name = Path.GetFileNameWithoutExtension(file).Replace('_', ' ');
-                result.Add(new Voice(new IndexTtsTtsVoice(name, file)));
+                result.Add(new Voice(new IndexTtsVoice(name, file)));
             }
         }
 
@@ -259,9 +259,9 @@ public class IndexTtsCrispAsr : ITtsEngine
         string? model,
         CancellationToken cancellationToken)
     {
-        if (voice.EngineVoice is not IndexTtsTtsVoice indexVoice)
+        if (voice.EngineVoice is not IndexTtsVoice indexVoice)
         {
-            throw new ArgumentException("Voice is not an IndexTtsTtsVoice");
+            throw new ArgumentException("Voice is not an IndexTtsVoice");
         }
 
         if (string.IsNullOrEmpty(indexVoice.FilePath))

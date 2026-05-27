@@ -1,6 +1,6 @@
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 
-public class IndexTtsTtsVoice
+public class IndexTtsVoice
 {
     public string Voice { get; set; }
     public string FilePath { get; set; }
@@ -10,13 +10,13 @@ public class IndexTtsTtsVoice
         return Voice;
     }
 
-    public IndexTtsTtsVoice()
+    public IndexTtsVoice()
     {
         Voice = string.Empty;
         FilePath = string.Empty;
     }
 
-    public IndexTtsTtsVoice(string voice, string filePath)
+    public IndexTtsVoice(string voice, string filePath)
     {
         Voice = voice;
         FilePath = filePath;
