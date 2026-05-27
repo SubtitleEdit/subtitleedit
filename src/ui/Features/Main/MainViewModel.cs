@@ -9513,6 +9513,7 @@ public partial class MainViewModel :
                 if (selectedText == result.SearchText)
                 {
                     EditTextBox.SelectedText = result.ReplaceText;
+                    subs[currentLineIndex] = EditTextBox.Text; // reflect replacement so FindNext won't re-match here
                 }
 
                 idx = _findService.FindNext(result.SearchText, subs, currentLineIndex, EditTextBox.SelectionEnd);
@@ -9542,10 +9543,9 @@ public partial class MainViewModel :
 
                 ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
 
-                // The text-box may still be empty if the SelectedItem binding hasn't propagated
-                // yet by the time this dispatcher post runs; fall back to writing the text
-                // ourselves so the selection range below lands on real characters.
-                if (EditTextBox.Text == string.Empty)
+                // The text-box binding may not have propagated yet by the time this dispatcher
+                // post runs; ensure it shows the target subtitle's text before selecting.
+                if (EditTextBox.Text != subtitle.Text)
                 {
                     EditTextBox.Text = subtitle.Text;
                 }
