@@ -159,6 +159,9 @@ public class LanguageSettings
     public string ShowToolbarReplace { get; set; }
     public string ShowToolbarSpellCheck { get; set; }
     public string ShowToolbarFixCommonErrors { get; set; }
+    public string ShowToolbarRemoveTextForHi { get; set; }
+    public string ShowToolbarVisualSync { get; set; }
+    public string ShowToolbarBeautifyTimeCodes { get; set; }
     public string ShowToolbarBurnIn { get; set; }
     public string ShowToolbarSettings { get; set; }
     public string ShowToolbarLayout { get; set; }
@@ -454,6 +457,9 @@ public class LanguageSettings
         ShowToolbarReplace = "Show replace icon";
         ShowToolbarSpellCheck = "Show spell check icon";
         ShowToolbarFixCommonErrors = "Show fix common errors icon";
+        ShowToolbarRemoveTextForHi = "Show remove text for hearing impaired icon";
+        ShowToolbarVisualSync = "Show visual sync icon";
+        ShowToolbarBeautifyTimeCodes = "Show beautify time codes icon";
         ShowToolbarBurnIn = "Show burn-in icon";
         ShowToolbarSettings = "Show settings icon";
         ShowToolbarLayout = "Show layout icon";

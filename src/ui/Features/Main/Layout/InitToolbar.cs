@@ -192,6 +192,45 @@ public static class InitToolbar
             isLastSeparator = false;
         }
 
+        if (appearance.ToolbarShowRemoveTextForHi)
+        {
+            stackPanelLeft.Children.Add(new Button
+            {
+                Content = MakeImage("RemoveTextForHi"),
+                Command = vm.ShowToolsRemoveTextForHearingImpairedCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.RemoveTextForHiHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.RemoveTextForHiHint, shortcuts, nameof(vm.ShowToolsRemoveTextForHearingImpairedCommand)),
+            });
+            isLastSeparator = false;
+        }
+
+        if (appearance.ToolbarShowVisualSync)
+        {
+            stackPanelLeft.Children.Add(new Button
+            {
+                Content = MakeImage("VisualSync"),
+                Command = vm.ShowVisualSyncCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.VisualSyncHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.VisualSyncHint, shortcuts, nameof(vm.ShowVisualSyncCommand)),
+            });
+            isLastSeparator = false;
+        }
+
+        if (appearance.ToolbarShowBeautifyTimeCodes)
+        {
+            stackPanelLeft.Children.Add(new Button
+            {
+                Content = MakeImage("BeautifyTimeCodes"),
+                Command = vm.ShowBeautifyTimeCodesCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = languageHints.BeautifyTimeCodesHint,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.BeautifyTimeCodesHint, shortcuts, nameof(vm.ShowBeautifyTimeCodesCommand)),
+            });
+            isLastSeparator = false;
+        }
+
         if (appearance.ToolbarShowBurnIn)
         {
             stackPanelLeft.Children.Add(new Button
