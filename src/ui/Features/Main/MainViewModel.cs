@@ -9343,12 +9343,10 @@ public partial class MainViewModel :
 
             if (idx < 0)
             {
-                var parentWindow = _findViewModel?.Window ?? Window!;
                 var message = result.FindNextPressed
                     ? Se.Language.General.SearchItemNotFoundContinueFromTop
                     : Se.Language.General.SearchItemNotFoundContinueFromBottom;
-                var answer = await MessageBox.Show(parentWindow, Se.Language.General.ContinueFindTitle,
-                    message, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                var answer = await ShowWrapAroundDialog(message);
                 if (answer != MessageBoxResult.Yes)
                 {
                     ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
@@ -9414,9 +9412,7 @@ public partial class MainViewModel :
 
         if (idx < 0)
         {
-            var answer = await MessageBox.Show(Window!, Se.Language.General.ContinueFindTitle,
-                Se.Language.General.SearchItemNotFoundContinueFromTop,
-                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            var answer = await ShowWrapAroundDialog(Se.Language.General.SearchItemNotFoundContinueFromTop);
             if (answer != MessageBoxResult.Yes)
             {
                 ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
@@ -9482,9 +9478,7 @@ public partial class MainViewModel :
 
         if (idx < 0)
         {
-            var answer = await MessageBox.Show(Window!, Se.Language.General.ContinueFindTitle,
-                Se.Language.General.SearchItemNotFoundContinueFromBottom,
-                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            var answer = await ShowWrapAroundDialog(Se.Language.General.SearchItemNotFoundContinueFromBottom);
             if (answer != MessageBoxResult.Yes)
             {
                 ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
@@ -9533,6 +9527,22 @@ public partial class MainViewModel :
 
         FocusEditTextBox();
         _shortcutManager.ClearKeys();
+    }
+
+    private async Task<MessageBoxResult> ShowWrapAroundDialog(string message)
+    {
+        var findWindow = _findViewModel?.Window;
+        if (findWindow != null) findWindow.Topmost = false;
+        try
+        {
+            var parentWindow = findWindow ?? Window!;
+            return await MessageBox.Show(parentWindow, Se.Language.General.ContinueFindTitle,
+                message, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+        }
+        finally
+        {
+            if (findWindow != null) findWindow.Topmost = true;
+        }
     }
 
     [RelayCommand]
