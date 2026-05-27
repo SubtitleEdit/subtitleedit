@@ -42,6 +42,7 @@ public class SeAppearance
     public bool ToolbarShowReplace { get; set; }
     public bool ToolbarShowFixCommonErrors { get; set; }
     public bool ToolbarShowSpellCheck { get; set; }
+    public bool ToolbarShowBurnIn { get; set; }
     public bool ToolbarShowSettings { get; set; }
     public bool ToolbarShowLayout { get; set; }
     public bool ToolbarShowHelp { get; set; }
@@ -101,6 +102,7 @@ public class SeAppearance
         ToolbarShowReplace = true;
         ToolbarShowFixCommonErrors = false;
         ToolbarShowSpellCheck = true;
+        ToolbarShowBurnIn = false;
         ToolbarShowSettings = true;
         ToolbarShowLayout = true;
         ToolbarShowHelp = true;
