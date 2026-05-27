@@ -9305,8 +9305,7 @@ public partial class MainViewModel :
 
         var subs = Subtitles.Select(p => p.Text).ToList();
         var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
-        var currentCharIndex = EditTextBox.CaretIndex;
-        var idx = _findService.FindPrevious(_findService.SearchText, subs, currentLineIndex, currentCharIndex - 1);
+        var idx = _findService.FindPrevious(_findService.SearchText, subs, currentLineIndex, EditTextBox.SelectionStart - 1);
 
         if (idx < 0)
         {
@@ -9328,6 +9327,8 @@ public partial class MainViewModel :
             EditTextBox.SelectionStart = _findService.CurrentTextIndex;
             EditTextBox.SelectionEnd = _findService.CurrentTextIndex + _findService.CurrentTextFound.Length;
         });
+
+        _shortcutManager.ClearKeys();
     }
 
     [RelayCommand]
