@@ -1,6 +1,6 @@
 namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 
-public class KokoroTtsVoice
+public class KokoroVoice
 {
     // Kokoro voice id, e.g. "af_maple", "bf_vale", "zf_001". Maps directly to a
     // pre-trained 256-dim style vector inside voices-v1.1-zh.bin; Kokoro does
@@ -12,12 +12,12 @@ public class KokoroTtsVoice
         return GetDisplayName(Voice);
     }
 
-    public KokoroTtsVoice()
+    public KokoroVoice()
     {
         Voice = string.Empty;
     }
 
-    public KokoroTtsVoice(string voice)
+    public KokoroVoice(string voice)
     {
         Voice = voice;
     }

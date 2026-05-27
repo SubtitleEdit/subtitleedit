@@ -329,7 +329,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
         else if (SelectedEngine is KokoroTtsCpp)
         {
-            if (SelectedVoice?.EngineVoice is Voices.KokoroTtsVoice kokoroVoice && !string.IsNullOrEmpty(kokoroVoice.Voice))
+            if (SelectedVoice?.EngineVoice is Voices.KokoroVoice kokoroVoice && !string.IsNullOrEmpty(kokoroVoice.Voice))
             {
                 Se.Settings.Video.TextToSpeech.KokoroVoice = kokoroVoice.Voice;
             }
@@ -443,7 +443,7 @@ public partial class TextToSpeechViewModel : ObservableObject
     private void UpdateOmniVoicePickerState()
     {
         var isOmniVoice = SelectedEngine is OmniVoiceTtsCpp;
-        var isDefaultVoice = SelectedVoice?.EngineVoice is Voices.OmniVoiceTtsVoice omniVoice
+        var isDefaultVoice = SelectedVoice?.EngineVoice is Voices.OmniVoice omniVoice
                              && string.IsNullOrEmpty(omniVoice.FilePath);
 
         IsInstructionPickerEnabled = isOmniVoice && isDefaultVoice;
@@ -2552,7 +2552,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 if (!string.IsNullOrEmpty(savedVoice))
                 {
                     var match = Voices.FirstOrDefault(v =>
-                        v.EngineVoice is Voices.KokoroTtsVoice kv && kv.Voice == savedVoice);
+                        v.EngineVoice is Voices.KokoroVoice kv && kv.Voice == savedVoice);
                     if (match != null)
                     {
                         SelectedVoice = match;

@@ -180,14 +180,14 @@ public class OmniVoiceTtsCpp : ITtsEngine
     {
         var result = new List<Voice>
         {
-            new Voice(new OmniVoiceTtsVoice("Default", string.Empty)),
+            new Voice(new OmniVoice("Default", string.Empty)),
         };
 
         var voicesFolder = GetSetVoicesFolder();
         foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
         {
             var name = Path.GetFileNameWithoutExtension(file).Replace('_', ' ');
-            result.Add(new Voice(new OmniVoiceTtsVoice(name, file)));
+            result.Add(new Voice(new OmniVoice(name, file)));
         }
 
         return Task.FromResult(result.ToArray());
@@ -215,9 +215,9 @@ public class OmniVoiceTtsCpp : ITtsEngine
         string? model,
         CancellationToken cancellationToken)
     {
-        if (voice.EngineVoice is not OmniVoiceTtsVoice omniVoice)
+        if (voice.EngineVoice is not OmniVoice omniVoice)
         {
-            throw new ArgumentException("Voice is not an OmniVoiceTtsVoice");
+            throw new ArgumentException("Voice is not an OmniVoice");
         }
 
         var exe = GetExecutableFileName();

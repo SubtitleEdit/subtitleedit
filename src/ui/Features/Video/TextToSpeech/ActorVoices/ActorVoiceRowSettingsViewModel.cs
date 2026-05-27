@@ -79,7 +79,7 @@ public partial class ActorVoiceRowSettingsViewModel : ObservableObject
             || (row.SelectedEngine is Qwen3TtsCrispAsr && Qwen3TtsCrispAsr.IsVoiceDesignModel(row.SelectedModel));
 
         IsOmniVoicePickerVisible = row.SelectedEngine is OmniVoiceTtsCpp;
-        var isDefaultOmniVoice = row.SelectedVoice?.EngineVoice is OmniVoiceTtsVoice ov && string.IsNullOrEmpty(ov.FilePath);
+        var isDefaultOmniVoice = row.SelectedVoice?.EngineVoice is OmniVoice ov && string.IsNullOrEmpty(ov.FilePath);
         IsOmniVoicePickerEnabled = IsOmniVoicePickerVisible && isDefaultOmniVoice;
         IsClonedVoiceNoteVisible = IsOmniVoicePickerVisible && !isDefaultOmniVoice;
 
