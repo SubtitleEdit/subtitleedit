@@ -160,7 +160,6 @@ The following feature pages exist but have no companion screenshot. Adding these
 - `find-double-lines.png` — Find double lines
 - `renumber.png` — Renumber
 - `netflix-errors.png` — Check and Fix Netflix Errors
-- `empty-translation.png` — Make Empty Translation
 
 ## Counts
 
