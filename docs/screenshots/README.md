@@ -43,6 +43,7 @@ All listed files exist on disk. Filenames are stable and may be linked from `../
 - `fix-common-errors-rules.png` — Fix common errors rules list
 - `fix-common-errors-fixes.png` — Fix common errors fixes
 - `fix-names.png` — Fix names window
+- `netflix-errors.png` — Check and fix Netflix errors window
 - `interjections.png` — Interjections window
 - `batch-convert.png` — Batch convert window
 - `change-casing.png` — Change casing window
@@ -55,10 +56,12 @@ All listed files exist on disk. Filenames are stable and may be linked from `../
 - `merge-short-lines.png` — Merge short lines window
 - `merge-same-text.png` — Merge same text window
 - `merge-same-timecodes.png` — Merge same time codes window
+- `merge-two-subtitles.png` — Merge two subtitles window
 - `split-break-long-lines.png` — Split/break long lines window
 - `split-subtitle.png` — Split subtitle window
 - `join-subtitles.png` — Join subtitles window
 - `sort-by.png` — Sort by window
+- `renumber.png` — Renumber window
 - `remove-text-hi.png` — Remove text for hearing impaired window
 
 ## Synchronization
@@ -69,11 +72,13 @@ All listed files exist on disk. Filenames are stable and may be linked from `../
 - `point-sync-via-other.png` — Point sync via other window
 - `change-frame-rate.png` — Change frame rate window
 - `change-speed.png` — Change speed window
+- `beautify-time-codes.png` — Beautify time codes window
 
 ## Video
 
 - `video-player.png` — Video player window
 - `video-info.png` — Video information window
+- `embedded-subtitles.png` — Add/remove embedded subtitles window
 - `speech-to-text.png` — Speech to text window
 - `text-to-speech.png` — Text to speech window
 - `burn-in.png` — Burn-in window
@@ -150,18 +155,8 @@ Used by `../reference/assa-override-tags.md` to illustrate individual override t
 - `shortcuts.png` — Shortcuts window
 - `word-lists.png` — Word lists window
 
-## Coverage Gaps
-
-The following feature pages exist but have no companion screenshot. Adding these would round out coverage:
-
-- `merge-two-subtitles.png` — Merge Two Subtitles (`Tools → Merge two subtitles`)
-- `beautify-time-codes.png` — Beautify Time Codes
-- `embedded-subtitles.png` — Add/remove embedded subtitles
-- `renumber.png` — Renumber
-- `netflix-errors.png` — Check and Fix Netflix Errors
-
 ## Counts
 
-- Top-level screenshots: **87**
+- Top-level screenshots: **92**
 - ASSA override-tag examples (`assa/`): **35**
-- Total: **122**
+- Total: **127**
