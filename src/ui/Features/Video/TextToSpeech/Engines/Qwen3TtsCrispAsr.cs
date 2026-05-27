@@ -52,6 +52,49 @@ public class Qwen3TtsCrispAsr : ITtsEngine
     public const string CustomVoiceTalkerFileName = "qwen3-tts-12hz-1.7b-customvoice-q8_0.gguf";
     public const string CodecFileName = "qwen3-tts-tokenizer-12hz.gguf";
 
+    // Exact byte size of each GGUF on cstr's HuggingFace repos (X-Linked-Size). Used to reject
+    // truncated files that crispasr's own --auto-download may have left behind in ~/.cache/crispasr/
+    // when a download was interrupted: the loader passes the bounds check on these "looks-like-a-
+    // GGUF" partials before segfaulting deep in the legacy weight loader, which surfaces as an
+    // opaque process exit (Windows access violation 0xC0000005) with a CUDA banner in the log
+    // that wrongly suggests a GPU problem. A size check is essentially free (one stat call) and
+    // catches the truncation case completely. SHA-256 verification stays on the SE-side
+    // downloader for content integrity; sizes-only is enough at the cache-seed gate.
+    private static readonly Dictionary<string, long> ExpectedFileSizes = new(StringComparer.OrdinalIgnoreCase)
+    {
+        [VoiceDesignTalkerFileName] = 2042225536L,
+        [CustomVoiceTalkerFileName] = 2042225952L,
+        [CodecFileName] = 358453280L,
+    };
+
+    /// <summary>
+    /// True if <paramref name="path"/> exists and (when an expected size is known for
+    /// <paramref name="fileName"/>) matches that size. Used in place of bare File.Exists at every
+    /// gate that decides whether a local GGUF is usable, so partial downloads can't masquerade as
+    /// installed models.
+    /// </summary>
+    public static bool IsValidLocalModelFile(string path, string fileName)
+    {
+        if (!File.Exists(path))
+        {
+            return false;
+        }
+
+        if (!ExpectedFileSizes.TryGetValue(fileName, out var expected))
+        {
+            return true;
+        }
+
+        try
+        {
+            return new FileInfo(path).Length == expected;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     public static string ResolveModelKey(string? modelKey)
     {
         if (string.IsNullOrEmpty(modelKey))
@@ -162,78 +205,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             Directory.CreateDirectory(modelsFolder);
         }
 
-        MigrateLegacyModels(modelsFolder);
-
         return modelsFolder;
-    }
-
-    private static bool _legacyModelsMigrationDone;
-
-    /// <summary>
-    /// One-time best-effort move of qwen3-tts-*.gguf files from the old
-    /// TextToSpeech/Qwen3TtsCrispAsr/models/ location into CrispASR/models/, so
-    /// users don't have to re-download up to ~5 GB after the layout change. Safe
-    /// to call repeatedly; bails out after the first call per process. Mirrors
-    /// <see cref="ChatterboxTtsCpp"/>'s MigrateLegacyModels.
-    /// </summary>
-    private static void MigrateLegacyModels(string modelsFolder)
-    {
-        if (_legacyModelsMigrationDone)
-        {
-            return;
-        }
-        _legacyModelsMigrationDone = true;
-
-        var legacyFolder = Path.Combine(Se.TextToSpeechFolder, "Qwen3TtsCrispAsr", "models");
-        if (!Directory.Exists(legacyFolder))
-        {
-            return;
-        }
-
-        var fileNames = new[]
-        {
-            VoiceDesignTalkerFileName,
-            CustomVoiceTalkerFileName,
-            CodecFileName,
-        };
-
-        try
-        {
-            foreach (var fileName in fileNames)
-            {
-                var src = Path.Combine(legacyFolder, fileName);
-                if (!File.Exists(src))
-                {
-                    continue;
-                }
-
-                var dest = Path.Combine(modelsFolder, fileName);
-                try
-                {
-                    if (File.Exists(dest))
-                    {
-                        File.Delete(src);
-                    }
-                    else
-                    {
-                        File.Move(src, dest);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Se.LogError(ex, $"Qwen3 TTS (CrispASR): failed to migrate legacy model '{src}' to '{dest}'");
-                }
-            }
-
-            if (Directory.GetFileSystemEntries(legacyFolder).Length == 0)
-            {
-                Directory.Delete(legacyFolder);
-            }
-        }
-        catch (Exception ex)
-        {
-            Se.LogError(ex, "Qwen3 TTS (CrispASR): legacy models migration failed");
-        }
     }
 
     public static string GetSetVoicesFolder()
@@ -313,7 +285,8 @@ public class Qwen3TtsCrispAsr : ITtsEngine
         Path.Combine(GetSetModelsFolder(), CodecFileName);
 
     public static bool AreModelsInstalled(string? modelKey = null) =>
-        File.Exists(GetTalkerPath(modelKey)) && File.Exists(GetCodecPath());
+        IsValidLocalModelFile(GetTalkerPath(modelKey), GetTalkerFileName(modelKey))
+        && IsValidLocalModelFile(GetCodecPath(), CodecFileName);
 
     /// <summary>
     /// Path crispasr's --auto-download writes GGUFs to before SE took over model management.
@@ -331,16 +304,29 @@ public class Qwen3TtsCrispAsr : ITtsEngine
     /// </summary>
     public static bool TrySeedModelFromCrispAsrCache(string fileName, string destinationPath)
     {
-        if (File.Exists(destinationPath))
+        if (IsValidLocalModelFile(destinationPath, fileName))
         {
             return true;
         }
 
         try
         {
-            var cachePath = Path.Combine(GetCrispAsrCacheFolder(), fileName);
-            if (!File.Exists(cachePath))
+            // A pre-existing wrong-sized destination is a leftover partial — almost always
+            // copied here by a previous run of this seeder from a half-downloaded cache file.
+            // Remove it so the SE-side downloader can replace it cleanly; otherwise every later
+            // File.Exists gate would happily reuse the bad bytes.
+            if (File.Exists(destinationPath))
             {
+                Se.LogError($"Qwen3 TTS (CrispASR): removing wrong-sized local model file {destinationPath}");
+                File.Delete(destinationPath);
+            }
+
+            var cachePath = Path.Combine(GetCrispAsrCacheFolder(), fileName);
+            if (!IsValidLocalModelFile(cachePath, fileName))
+            {
+                // Either no cache file or it's a truncated --auto-download partial. Don't seed
+                // from it — the SE-side downloader does .part + SHA-256 verify, which is the
+                // safe path. Leave the cache file alone (it's shared with other crispasr users).
                 return false;
             }
 
@@ -578,9 +564,9 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             // Slower the first time, instant after. A proper SE-side download service is a
             // follow-up; this keeps the engine usable without manual file placement.
             var talker = GetTalkerPath(modelKey);
-            var hasLocalTalker = File.Exists(talker);
+            var hasLocalTalker = IsValidLocalModelFile(talker, GetTalkerFileName(modelKey));
             var codec = GetCodecPath();
-            var hasLocalCodec = File.Exists(codec);
+            var hasLocalCodec = IsValidLocalModelFile(codec, CodecFileName);
 
             var port = FindFreeLoopbackPort();
             var psi = new ProcessStartInfo

@@ -56,11 +56,20 @@ public class Qwen3TtsCrispAsrDownloadService : IQwen3TtsCrispAsrDownloadService
         var codecPath = Qwen3TtsCrispAsr.GetCodecPath();
 
         // Try the local crispasr cache before the network — same bytes, no 2 GB re-download.
+        // TrySeedModelFromCrispAsrCache size-checks both sides, so a wrong-sized destination
+        // or wrong-sized cache file is rejected (and a wrong-sized destination is deleted)
+        // rather than being silently propagated.
         Qwen3TtsCrispAsr.TrySeedModelFromCrispAsrCache(talkerFileName, talkerPath);
         Qwen3TtsCrispAsr.TrySeedModelFromCrispAsrCache(codecFileName, codecPath);
 
-        var needTalker = !File.Exists(talkerPath);
-        var needCodec = !File.Exists(codecPath);
+        // Use the size-checked validity gate so a previously truncated file at the final path
+        // (e.g. left behind by crispasr's own --auto-download being interrupted) triggers
+        // re-download instead of being mistaken for an installed model.
+        EnsureRemovedIfInvalid(talkerPath, talkerFileName);
+        EnsureRemovedIfInvalid(codecPath, codecFileName);
+
+        var needTalker = !Qwen3TtsCrispAsr.IsValidLocalModelFile(talkerPath, talkerFileName);
+        var needCodec = !Qwen3TtsCrispAsr.IsValidLocalModelFile(codecPath, codecFileName);
         var total = (needTalker ? 1 : 0) + (needCodec ? 1 : 0);
         var step = 0;
 
@@ -156,5 +165,14 @@ public class Qwen3TtsCrispAsrDownloadService : IQwen3TtsCrispAsrDownloadService
     private static void TryDelete(string path)
     {
         try { File.Delete(path); } catch { /* best-effort cleanup */ }
+    }
+
+    private static void EnsureRemovedIfInvalid(string path, string fileName)
+    {
+        if (!File.Exists(path) || Qwen3TtsCrispAsr.IsValidLocalModelFile(path, fileName))
+        {
+            return;
+        }
+        TryDelete(path);
     }
 }
