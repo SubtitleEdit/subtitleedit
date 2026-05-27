@@ -193,7 +193,11 @@ public partial class TextToSpeechViewModel : ObservableObject
             // Qwen3TtsCpp hidden: talker produces scrambled noise on 1.7B —
             // use Qwen3TtsCrispAsr until upstream qwen3-tts.cpp is fixed.
             new Qwen3TtsCrispAsr(),
-            new VibeVoiceCrispAsr(),
+            // VibeVoiceCrispAsr hidden: output quality is unusable in practice even after
+            // bumping the post-synth speed knob (#11223). The engine class + download service +
+            // settings dialog are kept so this becomes a one-line re-enable when upstream
+            // CrispASR's VibeVoice backend ships a higher-quality build.
+            // new VibeVoiceCrispAsr(),
             new IndexTtsCrispAsr(),
             new ChatterboxTtsCpp(),
         ];
