@@ -54,7 +54,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private Task? _downloadTaskQwen3TtsCrispAsrModels;
     private Task? _downloadTaskQwen3TtsCrispAsrVoices;
     private Task? _downloadTaskOmniVoice;
-    private Task? _downloadTaskOmniVoiceVoices;
+    private Task? _downloadTaskOmniVoices;
     private Task? _downloadTaskOmniVoiceModels;
     private string _omniVoiceVariant = OmniVoiceDownloadService.WindowsVariantVulkan;
     private string _qwen3TtsCppVariant = Qwen3TtsCppDownloadService.WindowsVariantVulkan;
@@ -75,7 +75,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private readonly MemoryStream _downloadStreamKokoroTtsCpp;
     private readonly MemoryStream _downloadStreamQwen3TtsCrispAsrVoices;
     private readonly MemoryStream _downloadStreamOmniVoice;
-    private readonly MemoryStream _downloadStreamOmniVoiceVoices;
+    private readonly MemoryStream _downloadStreamOmniVoices;
     private readonly IZipUnpacker _zipUnpacker;
     private readonly object _lock = new();
     private string _modelFileName;
@@ -106,7 +106,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         _downloadStreamKokoroTtsCpp = new MemoryStream();
         _downloadStreamQwen3TtsCrispAsrVoices = new MemoryStream();
         _downloadStreamOmniVoice = new MemoryStream();
-        _downloadStreamOmniVoiceVoices = new MemoryStream();
+        _downloadStreamOmniVoices = new MemoryStream();
 
         _modelFileName = string.Empty;
         _configFileName = string.Empty;
@@ -688,8 +688,8 @@ public partial class DownloadTtsViewModel : ObservableObject
                     ProgressValue = percentage;
                     ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
                 });
-                _downloadTaskOmniVoiceVoices = _omniVoiceDownloadService.DownloadVoices(
-                    _downloadStreamOmniVoiceVoices, voicesProgress, _cancellationTokenSource.Token);
+                _downloadTaskOmniVoices = _omniVoiceDownloadService.DownloadVoices(
+                    _downloadStreamOmniVoices, voicesProgress, _cancellationTokenSource.Token);
                 _timer.Start();
             }
             else if (_downloadTaskOmniVoice is { IsFaulted: true })
@@ -708,34 +708,34 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
             }
 
-            if (_downloadTaskOmniVoiceVoices is { IsCompleted: true })
+            if (_downloadTaskOmniVoices is { IsCompleted: true })
             {
                 _timer.Stop();
 
-                if (_downloadStreamOmniVoiceVoices.Length > 0)
+                if (_downloadStreamOmniVoices.Length > 0)
                 {
                     var voicesFolder = OmniVoiceTtsCpp.GetSetVoicesFolder();
                     try
                     {
-                        _downloadStreamOmniVoiceVoices.Position = 0;
-                        _zipUnpacker.UnpackZipStream(_downloadStreamOmniVoiceVoices, voicesFolder, string.Empty, false, new List<string>(), null);
-                        WriteInstalledHashSidecar(voicesFolder, _downloadStreamOmniVoiceVoices, DownloadHashManager.OmniVoice.Voices);
+                        _downloadStreamOmniVoices.Position = 0;
+                        _zipUnpacker.UnpackZipStream(_downloadStreamOmniVoices, voicesFolder, string.Empty, false, new List<string>(), null);
+                        WriteInstalledHashSidecar(voicesFolder, _downloadStreamOmniVoices, DownloadHashManager.OmniVoice.Voices);
                     }
                     catch (Exception ex)
                     {
                         // Voices are optional; log and continue so the engine is still usable.
                         Se.LogError(ex);
                     }
-                    _downloadStreamOmniVoiceVoices.Dispose();
+                    _downloadStreamOmniVoices.Dispose();
                 }
 
                 OkPressed = true;
                 Close();
             }
-            else if (_downloadTaskOmniVoiceVoices is { IsFaulted: true })
+            else if (_downloadTaskOmniVoices is { IsFaulted: true })
             {
                 _timer.Stop();
-                var ex = _downloadTaskOmniVoiceVoices.Exception?.InnerException ?? _downloadTaskOmniVoiceVoices.Exception;
+                var ex = _downloadTaskOmniVoices.Exception?.InnerException ?? _downloadTaskOmniVoices.Exception;
                 if (ex is OperationCanceledException)
                 {
                     ProgressText = "Download canceled";
@@ -1142,7 +1142,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         DisposeQuietly(_downloadStreamKokoroTtsCpp);
         DisposeQuietly(_downloadStreamQwen3TtsCrispAsrVoices);
         DisposeQuietly(_downloadStreamOmniVoice);
-        DisposeQuietly(_downloadStreamOmniVoiceVoices);
+        DisposeQuietly(_downloadStreamOmniVoices);
 
         try { _cancellationTokenSource.Dispose(); } catch (ObjectDisposedException) { }
     }

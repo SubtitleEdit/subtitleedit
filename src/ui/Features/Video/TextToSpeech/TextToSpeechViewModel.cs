@@ -191,6 +191,8 @@ public partial class TextToSpeechViewModel : ObservableObject
             // Qwen3TtsCpp hidden: talker produces scrambled noise on 1.7B —
             // use Qwen3TtsCrispAsr until upstream qwen3-tts.cpp is fixed.
             new Qwen3TtsCrispAsr(),
+            new VibeVoiceCrispAsr(),
+            new IndexTtsCrispAsr(),
             new ChatterboxTtsCpp(),
         ];
 
@@ -327,7 +329,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
         else if (SelectedEngine is KokoroTtsCpp)
         {
-            if (SelectedVoice?.EngineVoice is Voices.KokoroTtsVoice kokoroVoice && !string.IsNullOrEmpty(kokoroVoice.Voice))
+            if (SelectedVoice?.EngineVoice is Voices.KokoroVoice kokoroVoice && !string.IsNullOrEmpty(kokoroVoice.Voice))
             {
                 Se.Settings.Video.TextToSpeech.KokoroVoice = kokoroVoice.Voice;
             }
@@ -441,7 +443,7 @@ public partial class TextToSpeechViewModel : ObservableObject
     private void UpdateOmniVoicePickerState()
     {
         var isOmniVoice = SelectedEngine is OmniVoiceTtsCpp;
-        var isDefaultVoice = SelectedVoice?.EngineVoice is Voices.OmniVoiceVoice omniVoice
+        var isDefaultVoice = SelectedVoice?.EngineVoice is Voices.OmniVoice omniVoice
                              && string.IsNullOrEmpty(omniVoice.FilePath);
 
         IsInstructionPickerEnabled = isOmniVoice && isDefaultVoice;
@@ -693,6 +695,24 @@ public partial class TextToSpeechViewModel : ObservableObject
         _subtitle = merged;
     }
 
+    /// <summary>
+    /// Stop the crispasr.exe servers of every CrispASR-based TTS engine EXCEPT
+    /// <paramref name="keepAlive"/>. Pass null to stop all four. Called before starting synth
+    /// (Test Voice / Generate TTS) and on window close, so models from previously selected
+    /// engines don't pile up in VRAM and OOM the next load — typical user GPUs (8 GB) can fit
+    /// at most one of these engines at a time once you account for the codec/vocoder and KV
+    /// cache. No-op for engines that aren't currently running. Cheap when nothing's running.
+    /// </summary>
+    private static void StopOtherCrispAsrServers(ITtsEngine? keepAlive)
+    {
+        if (keepAlive is not Qwen3TtsCrispAsr) Qwen3TtsCrispAsr.StopServer();
+        if (keepAlive is not VibeVoiceCrispAsr) VibeVoiceCrispAsr.StopServer();
+        if (keepAlive is not IndexTtsCrispAsr) IndexTtsCrispAsr.StopServer();
+        if (keepAlive is not ChatterboxTtsCpp) ChatterboxTtsCpp.StopServer();
+    }
+
+    private static void StopAllCrispAsrServers() => StopOtherCrispAsrServers(null);
+
     [RelayCommand]
     public async Task GenerateTts()
     {
@@ -721,6 +741,12 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             return;
         }
+
+        // Free GPU memory held by any other CrispASR-based engine before we load this one's
+        // model. Without this, switching between Qwen3 / VibeVoice / IndexTTS / Chatterbox
+        // within a session stacks crispasr.exe processes (each holding 1-3 GB of GGUFs) until
+        // the next load OOMs on a typical 8 GB GPU.
+        StopOtherCrispAsrServers(engine);
 
         _cancellationTokenSource = new();
         _cancellationToken = _cancellationTokenSource.Token;
@@ -851,6 +877,9 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
 
         SaveSettings();
+
+        // Free GPU memory held by any other CrispASR engine — see GenerateTts for rationale.
+        StopOtherCrispAsrServers(engine);
 
         var text = Se.Settings.Video.TextToSpeech.VoiceTestText;
         if (string.IsNullOrEmpty(text))
@@ -1380,6 +1409,32 @@ public partial class TextToSpeechViewModel : ObservableObject
             return true;
         }
 
+        if (engine is VibeVoiceCrispAsr)
+        {
+            // Runtime is the only thing SE installs directly — the ~2.8 GB GGUF is fetched
+            // by crispasr's own --auto-download on first server start. That keeps VibeVoice's
+            // first run slower but avoids a separate SE-side download service for a single
+            // file (per #11206 simplification: stick with ICrispAsrDownloadService).
+            if (!await TtsVoiceInstaller.EnsureCrispAsrForVibeVoice(Window, _windowService, forceRedownload: false))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        if (engine is IndexTtsCrispAsr)
+        {
+            // Same pattern as VibeVoice — SE installs the runtime, crispasr's --auto-download
+            // pulls the ~870 MB GGUFs (GPT talker + BigVGAN codec) on first server start.
+            if (!await TtsVoiceInstaller.EnsureCrispAsrForIndexTts(Window, _windowService, forceRedownload: false))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         if (engine is KokoroTtsCpp)
         {
             if (!await engine.IsInstalled(SelectedRegion))
@@ -1895,6 +1950,12 @@ public partial class TextToSpeechViewModel : ObservableObject
                 var language = isCrossEngine ? null : SelectedLanguage;
                 var region = isCrossEngine ? null : SelectedRegion;
                 var model = resolution.Model ?? (isCrossEngine ? null : SelectedModel);
+                // Per-actor cast workflow: rows can target different engines (e.g. Alice uses
+                // Qwen3, Bob uses VibeVoice). Free GPU memory held by any *other* CrispASR
+                // engine before this Speak so they don't stack — see StopOtherCrispAsrServers
+                // for VRAM math. No-op when the engine doesn't change between rows or when
+                // the row's engine isn't CrispASR-backed.
+                StopOtherCrispAsrServers(resolution.Engine);
                 var speakResult = await TtsInstructionSwap.RunAsync(
                     resolution.Engine,
                     resolution.Instruction,
@@ -2491,7 +2552,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 if (!string.IsNullOrEmpty(savedVoice))
                 {
                     var match = Voices.FirstOrDefault(v =>
-                        v.EngineVoice is Voices.KokoroTtsVoice kv && kv.Voice == savedVoice);
+                        v.EngineVoice is Voices.KokoroVoice kv && kv.Voice == savedVoice);
                     if (match != null)
                     {
                         SelectedVoice = match;
@@ -2532,6 +2593,13 @@ public partial class TextToSpeechViewModel : ObservableObject
             _mpvContext?.Dispose();
             _mpvContext = null;
         }
+        // Release VRAM held by any still-running crispasr.exe servers so models don't stay
+        // pinned for the rest of the SE session. Fire-and-forget on the threadpool — each
+        // StopServer is Kill + WaitForExit(2000), so doing this on the UI thread could block
+        // the close by up to 4 × 2 s if all four engines were used. AppDomain.ProcessExit
+        // performs the same teardown if SE exits before the task completes, so nothing is
+        // left running.
+        _ = Task.Run(StopAllCrispAsrServers);
         UiUtil.SaveWindowPosition(Window);
     }
 

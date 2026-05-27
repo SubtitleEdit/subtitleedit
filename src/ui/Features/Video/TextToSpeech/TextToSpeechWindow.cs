@@ -122,6 +122,10 @@ public class TextToSpeechWindow : Window
                 return StatusDots.From(engine.IsInstalled(null).Result, Qwen3TtsCpp.GetEngineUpdateStatus());
             case Qwen3TtsCrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, Qwen3TtsCrispAsr.GetEngineUpdateStatus());
+            case VibeVoiceCrispAsr:
+                return StatusDots.From(engine.IsInstalled(null).Result, VibeVoiceCrispAsr.GetEngineUpdateStatus());
+            case IndexTtsCrispAsr:
+                return StatusDots.From(engine.IsInstalled(null).Result, IndexTtsCrispAsr.GetEngineUpdateStatus());
             case OmniVoiceTtsCpp:
                 return StatusDots.From(engine.IsInstalled(null).Result, OmniVoiceTtsCpp.GetEngineUpdateStatus());
             case ChatterboxTtsCpp:

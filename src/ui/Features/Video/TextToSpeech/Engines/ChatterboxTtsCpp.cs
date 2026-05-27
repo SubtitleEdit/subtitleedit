@@ -669,6 +669,13 @@ public class ChatterboxTtsCpp : ITtsEngine
         AppDomain.CurrentDomain.ProcessExit += (_, _) => StopServerInternal();
     }
 
+    /// <summary>
+    /// Stop the running crispasr (chatterbox) server if any, releasing GPU memory. Called by
+    /// <c>TextToSpeechViewModel</c> when starting synthesis on a different engine or when the
+    /// TTS window closes, so the four CrispASR-based TTS engines don't pile up in VRAM.
+    /// </summary>
+    public static void StopServer() => StopServerInternal();
+
     private static void StopServerInternal()
     {
         var p = _serverProcess;

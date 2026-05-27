@@ -152,7 +152,7 @@ public class KokoroTtsCpp : ITtsEngine
         var result = new List<Voice>(names.Count);
         foreach (var name in names)
         {
-            result.Add(new Voice(new KokoroTtsVoice(name)));
+            result.Add(new Voice(new KokoroVoice(name)));
         }
         return Task.FromResult(result.ToArray());
     }
@@ -224,9 +224,9 @@ public class KokoroTtsCpp : ITtsEngine
         string? model,
         CancellationToken cancellationToken)
     {
-        if (voice.EngineVoice is not KokoroTtsVoice kokoroVoice)
+        if (voice.EngineVoice is not KokoroVoice kokoroVoice)
         {
-            throw new ArgumentException("Voice is not a KokoroTtsVoice");
+            throw new ArgumentException("Voice is not a KokoroVoice");
         }
 
         await EnsureServerRunningAsync(cancellationToken);

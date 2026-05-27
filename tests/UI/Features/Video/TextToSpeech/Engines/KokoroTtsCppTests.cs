@@ -18,7 +18,7 @@ public class KokoroTtsCppTests
 
         // Spot-check the default + one each of American Female, British Female,
         // Mandarin Female, Mandarin Male.
-        var voiceNames = voices.Select(v => ((KokoroTtsVoice)v.EngineVoice!).Voice).ToList();
+        var voiceNames = voices.Select(v => ((KokoroVoice)v.EngineVoice!).Voice).ToList();
         Assert.Contains(KokoroTtsCpp.DefaultVoice, voiceNames);
         Assert.Contains("af_maple", voiceNames);
         Assert.Contains("bf_vale", voiceNames);
