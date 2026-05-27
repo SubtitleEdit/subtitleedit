@@ -9390,6 +9390,7 @@ public partial class MainViewModel :
             EditTextBox.SelectionEnd = foundIndex + foundText.Length;
         });
 
+        FocusEditTextBox();
         _shortcutManager.ClearKeys();
     }
 
@@ -9444,6 +9445,7 @@ public partial class MainViewModel :
             EditTextBox.SelectionEnd = foundIndex + foundText.Length;
         });
 
+        FocusEditTextBox();
         _shortcutManager.ClearKeys();
     }
 
