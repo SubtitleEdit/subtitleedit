@@ -235,7 +235,7 @@ public class OmniVoiceTtsCpp : ITtsEngine
         }
 
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
-        var inputText = Utilities.UnbreakLine(text);
+        var inputText = text;
 
         var psi = new ProcessStartInfo
         {

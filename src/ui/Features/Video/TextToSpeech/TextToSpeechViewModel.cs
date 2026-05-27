@@ -909,6 +909,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             text = "This is a test";
         }
+        text = Utilities.UnbreakLine(text);
 
         var generatingAudioVm = _windowService.ShowWindow<GeneratingAudioWindow, GeneratingAudioViewModel>(Window!);
         _cancellationTokenSource = generatingAudioVm.CancellationTokenSource;
@@ -2206,9 +2207,12 @@ public partial class TextToSpeechViewModel : ObservableObject
     private ResolvedVoice ResolveVoiceForParagraph(Paragraph paragraph, CastContext ctx, ITtsEngine defaultEngine, Voice defaultVoice)
     {
         var actor = ActorVoiceDetector.GetParagraphActor(paragraph, _castKind);
-        var text = _castKind == ActorVoiceDetector.CastKind.WebVttVoices
+        var rawText = _castKind == ActorVoiceDetector.CastKind.WebVttVoices
             ? ActorVoiceDetector.StripWebVttVoiceTags(paragraph.Text)
             : paragraph.Text;
+        // Unbreak line endings centrally so every engine sees a single flowing line —
+        // many TTS engines otherwise insert weird pauses on \r\n.
+        var text = Utilities.UnbreakLine(rawText);
 
         if (string.IsNullOrEmpty(actor) || !ctx.ByActor.TryGetValue(actor, out var mapping))
         {

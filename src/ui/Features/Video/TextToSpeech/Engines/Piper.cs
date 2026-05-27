@@ -259,8 +259,7 @@ public class Piper : ITtsEngine
         }
 
         var streamWriter = new StreamWriter(processPiper.StandardInput.BaseStream, new UTF8Encoding(false));
-        var text = Utilities.UnbreakLine(inputText);
-        streamWriter.Write(text);
+        streamWriter.Write(inputText);
         streamWriter.Flush();
         streamWriter.Close();
 

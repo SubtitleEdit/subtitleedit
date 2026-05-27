@@ -305,7 +305,7 @@ public class ChatterboxTtsCpp : ITtsEngine
         await EnsureServerRunningAsync(ResolveModelKey(model), cancellationToken);
 
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
-        var inputText = Utilities.UnbreakLine(text);
+        var inputText = text;
 
         // Per /v1/audio/speech: send full reference WAV path as the `voice` field.
         // Empty string falls back to the model's baked default voice.
