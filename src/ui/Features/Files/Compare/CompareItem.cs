@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using System;
@@ -9,9 +10,9 @@ namespace Nikse.SubtitleEdit.Features.Files.Compare;
 
 public partial class CompareItem : ObservableObject
 {
-    [ObservableProperty] private int _number;
-    [ObservableProperty] private TimeSpan _startTime;
-    [ObservableProperty] private TimeSpan _endTime;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(NumberDisplay))] private int _number;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(StartTimeDisplay))] private TimeSpan _startTime;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(EndTimeDisplay))] private TimeSpan _endTime;
     [ObservableProperty] private TimeSpan _duration;
     [ObservableProperty] private string _text;
     [ObservableProperty] private StackPanel _textPanel;
@@ -23,6 +24,9 @@ public partial class CompareItem : ObservableObject
     [ObservableProperty] private IBrush _textBackgroundBrush;
     public bool HasDifference { get; set; }
     public bool IsDefault => Text == string.Empty && Number == 0 && Duration == TimeSpan.Zero && StartTime == TimeSpan.Zero;
+    public string NumberDisplay => IsDefault ? string.Empty : Number.ToString();
+    public string StartTimeDisplay => IsDefault ? string.Empty : new TimeCode(StartTime).ToDisplayString();
+    public string EndTimeDisplay => IsDefault ? string.Empty : new TimeCode(EndTime).ToDisplayString();
 
     public CompareItem()
     {

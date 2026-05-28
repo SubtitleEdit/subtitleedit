@@ -10,7 +10,6 @@ using Avalonia.Threading;
 using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System;
 using System.Collections.ObjectModel;
 
@@ -178,15 +177,13 @@ public class CompareWindow : Window
                 var textBlock = new TextBlock
                 {
                     VerticalAlignment = VerticalAlignment.Center,
-                    [!TextBlock.TextProperty] = new Binding(nameof(CompareItem.Number))
+                    [!TextBlock.TextProperty] = new Binding(nameof(CompareItem.NumberDisplay))
                 };
 
                 border.Child = textBlock;
                 return border;
             })
         });
-
-        var fullTimeConverter = new TimeSpanToDisplayFullConverter();
 
         // StartTime column
         dg.Columns.Add(new DataGridTemplateColumn
@@ -205,7 +202,7 @@ public class CompareWindow : Window
                 var textBlock = new TextBlock
                 {
                     VerticalAlignment = VerticalAlignment.Center,
-                    [!TextBlock.TextProperty] = new Binding(nameof(CompareItem.StartTime)) { Converter = fullTimeConverter },
+                    [!TextBlock.TextProperty] = new Binding(nameof(CompareItem.StartTimeDisplay)),
                 };
 
                 border.Child = textBlock;
@@ -230,7 +227,7 @@ public class CompareWindow : Window
                 var textBlock = new TextBlock
                 {
                     VerticalAlignment = VerticalAlignment.Center,
-                    [!TextBlock.TextProperty] = new Binding(nameof(CompareItem.EndTime)) { Converter = fullTimeConverter },
+                    [!TextBlock.TextProperty] = new Binding(nameof(CompareItem.EndTimeDisplay)),
                 };
 
                 border.Child = textBlock;
