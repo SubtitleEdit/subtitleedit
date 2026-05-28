@@ -89,10 +89,7 @@ public class TextEditorBindingHelper
     private void OnTextAreaLostFocus(object? sender, RoutedEventArgs e)
     {
         _textEditorBorder.BorderBrush = _defaultBorderBrush;
-        if (_isOriginal)
-        {
-            _wrapper.HasFocus = false;
-        }
+        _wrapper.HasFocus = false;
     }
 
     private void OnTextEditorTextChanged(object? sender, System.EventArgs e)

@@ -9987,6 +9987,19 @@ public partial class MainViewModel :
     [RelayCommand]
     private void SelectAllLines()
     {
+        if (IsTextInputFocused())
+        {
+            var textBoxWrapper = GetFocusedTextBoxWrapper();
+            if (textBoxWrapper != null)
+            {
+                textBoxWrapper.SelectAll();
+            }
+            else
+            {
+                (Window?.FocusManager?.GetFocusedElement() as TextBox)?.SelectAll();
+            }
+            return;
+        }
         SelectAllRows();
         _shortcutManager.ClearKeys();
     }
