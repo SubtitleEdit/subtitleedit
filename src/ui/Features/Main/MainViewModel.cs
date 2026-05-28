@@ -9345,7 +9345,7 @@ public partial class MainViewModel :
         }
     }
 
-    public void HandleFindResult(FindViewModel result)
+    public async Task HandleFindResult(FindViewModel result)
     {
         result.ResultFound = false;
 
@@ -9373,8 +9373,23 @@ public partial class MainViewModel :
 
             if (idx < 0)
             {
-                ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
-                return;
+                var message = result.FindNextPressed
+                    ? Se.Language.General.SearchItemNotFoundContinueFromTop
+                    : Se.Language.General.SearchItemNotFoundContinueFromBottom;
+                var answer = await ShowWrapAroundDialog(message);
+                if (answer != MessageBoxResult.Yes)
+                {
+                    ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+                    return;
+                }
+                idx = result.FindNextPressed
+                    ? _findService.FindNext(result.SearchText, subs, 0, 0)
+                    : _findService.FindPrevious(result.SearchText, subs, subs.Count, 0);
+                if (idx < 0)
+                {
+                    ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+                    return;
+                }
             }
 
             if (_findViewModel != null)
@@ -9396,12 +9411,9 @@ public partial class MainViewModel :
 
                 ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, _findService.CurrentTextFound, _findService.CurrentLineNumber + 1, _findService.CurrentTextIndex + 1));
 
-                // wait for text box to update
-                Task.Delay(75);
-
-                if (EditTextBox.Text == string.Empty)
+                if (EditTextBox.Text != subtitle.Text)
                 {
-                    EditTextBox.Text = Subtitles[idx].Text;
+                    EditTextBox.Text = subtitle.Text;
                 }
 
                 EditTextBox.CaretIndex = _findService.CurrentTextIndex;
@@ -9412,11 +9424,17 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
-    private void FindNext()
+    private async Task FindNext()
     {
         var selectedSubtitle = SelectedSubtitle;
-        if (Subtitles.Count == 0 || selectedSubtitle == null)
+        if (Subtitles.Count == 0 || selectedSubtitle == null || Window == null)
         {
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_findService.SearchText))
+        {
+            ShowFind();
             return;
         }
 
@@ -9427,9 +9445,20 @@ public partial class MainViewModel :
 
         if (idx < 0)
         {
-            ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
-            _shortcutManager.ClearKeys();
-            return;
+            var answer = await ShowWrapAroundDialog(Se.Language.General.SearchItemNotFoundContinueFromTop);
+            if (answer != MessageBoxResult.Yes)
+            {
+                ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+                _shortcutManager.ClearKeys();
+                return;
+            }
+            idx = _findService.FindNext(_findService.SearchText, subs, 0, 0);
+            if (idx < 0)
+            {
+                ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+                _shortcutManager.ClearKeys();
+                return;
+            }
         }
 
         var foundText = _findService.CurrentTextFound;
@@ -9468,11 +9497,17 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
-    private void FindPrevious()
+    private async Task FindPrevious()
     {
         var selectedSubtitle = SelectedSubtitle;
-        if (Subtitles.Count == 0 || selectedSubtitle == null)
+        if (Subtitles.Count == 0 || selectedSubtitle == null || Window == null)
         {
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_findService.SearchText))
+        {
+            ShowFind();
             return;
         }
 
@@ -9482,9 +9517,20 @@ public partial class MainViewModel :
 
         if (idx < 0)
         {
-            ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
-            _shortcutManager.ClearKeys();
-            return;
+            var answer = await ShowWrapAroundDialog(Se.Language.General.SearchItemNotFoundContinueFromBottom);
+            if (answer != MessageBoxResult.Yes)
+            {
+                ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+                _shortcutManager.ClearKeys();
+                return;
+            }
+            idx = _findService.FindPrevious(_findService.SearchText, subs, subs.Count, 0);
+            if (idx < 0)
+            {
+                ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+                _shortcutManager.ClearKeys();
+                return;
+            }
         }
 
         var foundText = _findService.CurrentTextFound;
@@ -9520,6 +9566,26 @@ public partial class MainViewModel :
 
         FocusEditTextBox();
         _shortcutManager.ClearKeys();
+    }
+
+    private async Task<MessageBoxResult> ShowWrapAroundDialog(string message)
+    {
+        if (Window == null) return MessageBoxResult.No;
+        var findWin = _findViewModel?.Window;
+        var replaceWin = _replaceViewModel?.Window;
+        var dialogWindow = (findWin?.IsVisible == true ? findWin : null)
+                        ?? (replaceWin?.IsVisible == true ? replaceWin : null);
+        if (dialogWindow != null) dialogWindow.Topmost = false;
+        try
+        {
+            var parentWindow = dialogWindow ?? Window!;
+            return await MessageBox.Show(parentWindow, Se.Language.General.ContinueFindTitle,
+                message, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+        }
+        finally
+        {
+            if (dialogWindow != null) dialogWindow.Topmost = true;
+        }
     }
 
     [RelayCommand]
@@ -9586,7 +9652,7 @@ public partial class MainViewModel :
         _shortcutManager.ClearKeys();
     }
 
-    public void HandleReplaceResult(ReplaceViewModel result)
+    public async Task HandleReplaceResult(ReplaceViewModel result)
     {
         result.ResultFound = false;
 
@@ -9638,8 +9704,18 @@ public partial class MainViewModel :
 
             if (idx < 0)
             {
-                ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
-                return;
+                var answer = await ShowWrapAroundDialog(Se.Language.General.SearchItemNotFoundContinueFromTop);
+                if (answer != MessageBoxResult.Yes)
+                {
+                    ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+                    return;
+                }
+                idx = _findService.FindNext(result.SearchText, subs, 0, 0);
+                if (idx < 0)
+                {
+                    ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
+                    return;
+                }
             }
 
             if (_replaceViewModel != null)
@@ -9663,8 +9739,6 @@ public partial class MainViewModel :
                 SubtitleGrid.SelectedItem = subtitle;
                 SubtitleGrid.ScrollIntoView(subtitle, null);
 
-                ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
-
                 // The text-box binding may not have propagated yet by the time this dispatcher
                 // post runs; ensure it shows the target subtitle's text before selecting.
                 if (EditTextBox.Text != subtitle.Text)
@@ -9675,6 +9749,8 @@ public partial class MainViewModel :
                 EditTextBox.CaretIndex = foundIndex;
                 EditTextBox.SelectionStart = foundIndex;
                 EditTextBox.SelectionEnd = foundIndex + foundText.Length;
+
+                ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
             });
         }
     }
