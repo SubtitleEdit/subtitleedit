@@ -2024,6 +2024,7 @@
     "mpvRenderSoftware": "Software (slow)",
     "importCurrentSubtitle": "Import current subtitle",
     "addRemoveEmbeddedSubtitlesTitle": "Add/remove embedded subtitles",
+    "addRemoveEmbeddedSubtitlesMp4Title": "Add/remove embedded subtitles (MP4)",
     "addCurrentSubtitle": "Add current subtitle",
     "titleOrLanguage": "Title/language",
     "viewMatroskaTrackX": "View Matroska track - {0}",

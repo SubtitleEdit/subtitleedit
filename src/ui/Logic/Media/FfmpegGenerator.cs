@@ -1293,4 +1293,98 @@ public class FfmpegGenerator
 
         return string.Join(" ", args);
     }
+
+    // Builds the ffmpeg command line for editing the subtitle track set of an MP4-family
+    // container (.mp4 / .m4v / .mov). Video and audio are stream-copied; the subtitle
+    // tracks are rewritten:
+    //   - existing tracks marked Deleted are dropped
+    //   - existing tracks kept are stream-copied (preserves their codec, e.g. mov_text / tx3g)
+    //   - newly added text-based subtitle files are muxed in as mov_text
+    // Caller is responsible for ensuring `embeddedTracks[i].FileName` for new entries points
+    // to a text-based subtitle ffmpeg can convert (SRT is the safe choice).
+    internal static string AlterEmbeddedTracksMp4(List<EmbeddedTrack> embeddedTracks, List<EmbeddedTrack> originalTracks, string inputFileName, string outputFileName)
+    {
+        var args = new List<string>
+        {
+            "-y",
+            "-fflags +genpts",
+            $"-i \"{inputFileName}\"",
+        };
+
+        var newInputs = embeddedTracks
+            .Where(t => t.New && !t.Deleted && !string.IsNullOrEmpty(t.FileName) && File.Exists(t.FileName))
+            .ToList();
+        foreach (var track in newInputs)
+        {
+            args.Add($"-i \"{track.FileName}\"");
+        }
+
+        // Keep first video + first audio from the source. The "0:V:0" form ignores attached
+        // pictures (cover art); 0:a:0? makes audio optional so audio-less inputs still work.
+        args.Add("-map 0:V:0");
+        args.Add("-map 0:a:0?");
+
+        // Map kept existing subtitle streams in their original order so the relative subtitle
+        // index matches `track.Number` from the parsed media info.
+        var keptOriginals = embeddedTracks.Where(t => !t.New && !t.Deleted).ToList();
+        foreach (var track in keptOriginals)
+        {
+            args.Add($"-map 0:s:{track.Number}");
+        }
+
+        // Map each new external subtitle file (each is its own input, indices 1..N).
+        for (var i = 0; i < newInputs.Count; i++)
+        {
+            args.Add($"-map {i + 1}:0");
+        }
+
+        // Video and audio passthrough; subtitles transcode to mov_text (the only widely
+        // compatible text-subtitle codec for MP4). Existing mov_text/tx3g tracks re-encode
+        // without information loss; tag-heavy formats (ASS) flatten to plain text — caller
+        // should pre-convert to SRT for predictable results.
+        args.Add("-c:v copy");
+        args.Add("-c:a copy");
+        args.Add("-c:s mov_text");
+
+        args.Add("-avoid_negative_ts make_zero");
+        args.Add("-max_interleave_delta 0");
+
+        // Per-output-subtitle metadata + dispositions, in the same order we mapped them above.
+        var outputSubs = new List<EmbeddedTrack>(keptOriginals);
+        outputSubs.AddRange(embeddedTracks.Where(t => t.New && !t.Deleted && !string.IsNullOrEmpty(t.FileName) && File.Exists(t.FileName)));
+
+        for (var outIndex = 0; outIndex < outputSubs.Count; outIndex++)
+        {
+            var t = outputSubs[outIndex];
+            if (!string.IsNullOrEmpty(t.LanguageOrTitle))
+            {
+                var lang = t.LanguageOrTitle.Contains(' ') ? $"\"{t.LanguageOrTitle}\"" : t.LanguageOrTitle;
+                args.Add($"-metadata:s:s:{outIndex} language={lang}");
+            }
+
+            if (!string.IsNullOrEmpty(t.Name))
+            {
+                args.Add($"-metadata:s:s:{outIndex} title=\"{t.Name}\"");
+            }
+
+            var dispositions = new List<string>();
+            if (t.Default)
+            {
+                dispositions.Add("default");
+            }
+
+            if (t.Forced)
+            {
+                dispositions.Add("forced");
+            }
+
+            args.Add(dispositions.Count > 0
+                ? $"-disposition:s:{outIndex} {string.Join("+", dispositions)}"
+                : $"-disposition:s:{outIndex} 0");
+        }
+
+        args.Add($"\"{outputFileName}\"");
+
+        return string.Join(" ", args);
+    }
 }

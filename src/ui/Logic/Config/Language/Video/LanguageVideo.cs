@@ -34,6 +34,7 @@ public class LanguageVideo
     public string MpvRenderSoftware { get; set; }
     public string ImportCurrentSubtitle { get; set; }
     public string AddRemoveEmbeddedSubtitlesTitle { get; set; }
+    public string AddRemoveEmbeddedSubtitlesMp4Title { get; set; }
     public string AddCurrentSubtitle { get; set; }
     public string TitleOrLanguage { get; set; }
     public string ViewMatroskaTrackX { get; set; }
@@ -91,6 +92,7 @@ public class LanguageVideo
         MpvRenderSoftware = "Software (slow)";
         ImportCurrentSubtitle = "Import current subtitle";
         AddRemoveEmbeddedSubtitlesTitle = "Add/remove embedded subtitles";
+        AddRemoveEmbeddedSubtitlesMp4Title = "Add/remove embedded subtitles (MP4)";
         AddCurrentSubtitle = "Add current subtitle";
         TitleOrLanguage = "Title/language";
         ViewMatroskaTrackX = "View Matroska track - {0}";
