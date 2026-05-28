@@ -31,7 +31,11 @@ namespace Nikse.SubtitleEdit.Features.Main.Layout;
 public static class InitNativeMacMenu
 {
     private static readonly List<(Func<MainViewModel, IRelayCommand> GetCmd, NativeMenuItem Item)> _gestureItems = [];
-    private static readonly List<(NativeMenuItem Item, Func<MainViewModel, bool> IsEnabled, string[] Props)> _conditionals = [];
+    // IsVisible maps directly to NSMenuItem.setHidden: via Avalonia's SetIsVisible vtable slot.
+    // IsEnabled has no equivalent vtable slot — it only reaches the native layer through the
+    // SetAction predicate, which macOS never calls for container items (submenu, no action).
+    // All items here were IsVisible bindings in InitMenu.cs, so IsVisible is the correct mapping.
+    private static readonly List<(NativeMenuItem Item, Func<MainViewModel, bool> IsVisible, string[] Props)> _visibilities = [];
     private static readonly List<(NativeMenuItem Item, Func<MainViewModel, bool> IsChecked, string[] Props)> _toggles = [];
     private static readonly List<(NativeMenuItem Item, Func<MainViewModel, string> GetHeader, string[] Props)> _dynamicHeaders = [];
     private static PropertyChangedEventHandler? _handler;
@@ -56,6 +60,10 @@ public static class InitNativeMacMenu
         var aboutItem = new NativeMenuItem(Clean(Se.Language.Help.AboutSubtitleEdit));
         aboutItem.Click += (_, _) => GetVm()?.ShowAboutCommand.Execute(null);
         appMenu.Items.Add(aboutItem);
+
+        var checkForUpdatesItem = new NativeMenuItem(Clean(Se.Language.Main.Menu.CheckForUpdates));
+        checkForUpdatesItem.Click += (_, _) => GetVm()?.ShowCheckForUpdatesCommand.Execute(null);
+        appMenu.Items.Add(checkForUpdatesItem);
         appMenu.Items.Add(new NativeMenuItemSeparator());
 
         var prefsItem = new NativeMenuItem(Clean(Se.Language.Main.Menu.Settings));
@@ -74,7 +82,7 @@ public static class InitNativeMacMenu
     public static void MakeStructure(NativeMenu root)
     {
         _gestureItems.Clear();
-        _conditionals.Clear();
+        _visibilities.Clear();
         _toggles.Clear();
         _dynamicHeaders.Clear();
 
@@ -107,7 +115,7 @@ public static class InitNativeMacMenu
         var filePropsItem = new NativeMenuItem(string.Empty);
         filePropsItem.Click += (_, _) => GetVm()?.FilePropertiesShowCommand.Execute(null);
         _dynamicHeaders.Add((filePropsItem, v => Clean(v.FilePropertiesText), [nameof(MainViewModel.FilePropertiesText)]));
-        _conditionals.Add((filePropsItem, v => v.IsFilePropertiesVisible, [nameof(MainViewModel.IsFilePropertiesVisible)]));
+        _visibilities.Add((filePropsItem, v => v.IsFilePropertiesVisible, [nameof(MainViewModel.IsFilePropertiesVisible)]));
         fileItems.Items.Add(filePropsItem);
 
         fileItems.Items.Add(Item(Clean(l.OpenContainingFolder), v => v.OpenContainingFolderCommand));
@@ -226,7 +234,7 @@ public static class InitNativeMacMenu
         videoItems.Items.Add(Item(Clean(l.CloseVideoFile), v => v.CommandVideoCloseCommand));
 
         _audioTracksItem = new NativeMenuItem(Clean(l.AudioTracks)) { Menu = new NativeMenu() };
-        _conditionals.Add((_audioTracksItem, v => v.IsAudioTracksVisible, [nameof(MainViewModel.IsAudioTracksVisible)]));
+        _visibilities.Add((_audioTracksItem, v => v.IsAudioTracksVisible, [nameof(MainViewModel.IsAudioTracksVisible)]));
         videoItems.Items.Add(_audioTracksItem);
 
         videoItems.Items.Add(new NativeMenuItemSeparator());
@@ -274,7 +282,7 @@ public static class InitNativeMacMenu
         foreach (var item in videoMoreList.OrderBy(i => i.Header?.TrimStart('_', ' ')))
             videoMoreItems.Items.Add(item);
         var videoMoreMenu = new NativeMenuItem(Clean(Se.Language.General.More)) { Menu = videoMoreItems };
-        _conditionals.Add((videoMoreMenu, v => v.IsVideoLoaded, [nameof(MainViewModel.IsVideoLoaded)]));
+        _visibilities.Add((videoMoreMenu, v => v.IsVideoLoaded, [nameof(MainViewModel.IsVideoLoaded)]));
         videoItems.Items.Add(videoMoreMenu);
 
         // ── Synchronization ───────────────────────────────────────────────────
@@ -293,16 +301,13 @@ public static class InitNativeMacMenu
 
         // ── Options ───────────────────────────────────────────────────────────
         var optionsItems = new NativeMenu();
-        optionsItems.Items.Add(Item(Clean(l.Settings), v => v.CommandShowSettingsCommand));
         optionsItems.Items.Add(Item(Clean(l.Shortcuts), v => v.CommandShowSettingsShortcutsCommand));
         optionsItems.Items.Add(Item(Clean(l.WordLists), v => v.ShowWordListsCommand));
         optionsItems.Items.Add(Item(Clean(l.ChooseLanguage), v => v.CommandShowSettingsLanguageCommand));
 
         // ── Help ──────────────────────────────────────────────────────────────
         var helpItems = new NativeMenu();
-        helpItems.Items.Add(Item(Clean(l.CheckForUpdates), v => v.ShowCheckForUpdatesCommand));
-        helpItems.Items.Add(new NativeMenuItemSeparator());
-        helpItems.Items.Add(Item(Clean(l.Help), v => v.ShowHelpCommand));
+        helpItems.Items.Add(Item($"{Clean(Se.Language.Title)} {Clean(l.HelpTitle)}", v => v.ShowHelpCommand));
         helpItems.Items.Add(Item(Clean(l.About), v => v.ShowAboutCommand));
 
         // ── ASSA Tools ────────────────────────────────────────────────────────
@@ -326,7 +331,7 @@ public static class InitNativeMacMenu
         assaItems.Items.Add(new NativeMenuItemSeparator());
         assaItems.Items.Add(Item(Clean(l.FilterLayersForDisplayDotDotDot), v => v.ShowPickLayerFilterCommand));
         var assaMenu = new NativeMenuItem(Clean(l.AssaTools)) { Menu = assaItems };
-        _conditionals.Add((assaMenu, v => v.IsFormatAssa, [nameof(MainViewModel.IsFormatAssa)]));
+        _visibilities.Add((assaMenu, v => v.IsFormatAssa, [nameof(MainViewModel.IsFormatAssa)]));
 
         // ── Assemble ──────────────────────────────────────────────────────────
         root.Items.Add(new NativeMenuItem(Clean(l.File)) { Menu = fileItems });
@@ -361,8 +366,8 @@ public static class InitNativeMacMenu
         foreach (var (getCmd, item) in _gestureItems)
             item.Gesture = FindGesture(getCmd(vm), shortcuts);
 
-        foreach (var (item, isEnabled, _) in _conditionals)
-            item.IsEnabled = isEnabled(vm);
+        foreach (var (item, isVisible, _) in _visibilities)
+            item.IsVisible = isVisible(vm);
 
         foreach (var (item, isChecked, _) in _toggles)
             item.IsChecked = isChecked(vm);
@@ -377,8 +382,8 @@ public static class InitNativeMacMenu
         {
             if (s is not MainViewModel v2 || e.PropertyName is null)
                 return;
-            foreach (var (item, isEnabled, props) in _conditionals)
-                if (props.Contains(e.PropertyName)) item.IsEnabled = isEnabled(v2);
+            foreach (var (item, isVisible, props) in _visibilities)
+                if (props.Contains(e.PropertyName)) item.IsVisible = isVisible(v2);
             foreach (var (item, isChecked, props) in _toggles)
                 if (props.Contains(e.PropertyName)) item.IsChecked = isChecked(v2);
             foreach (var (item, getHeader, props) in _dynamicHeaders)
@@ -513,10 +518,10 @@ public static class InitNativeMacMenu
     }
 
     private static NativeMenuItem Conditional(string? header, Func<MainViewModel, IRelayCommand> getCmd,
-        Func<MainViewModel, bool> isEnabled, params string[] propertyNames)
+        Func<MainViewModel, bool> isVisible, params string[] propertyNames)
     {
         var item = Item(header, getCmd);
-        _conditionals.Add((item, isEnabled, propertyNames));
+        _visibilities.Add((item, isVisible, propertyNames));
         return item;
     }
 
