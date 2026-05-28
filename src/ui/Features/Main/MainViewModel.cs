@@ -9660,7 +9660,6 @@ public partial class MainViewModel :
                 idx = _findService.FindNext(result.SearchText, subs, currentLineIndex, EditTextBox.SelectionEnd);
             }
 
-            var performWrappedReplace = false;
             if (idx < 0)
             {
                 var answer = await ShowWrapAroundDialog(Se.Language.General.SearchItemNotFoundContinueFromTop);
@@ -9675,7 +9674,6 @@ public partial class MainViewModel :
                     ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
                     return;
                 }
-                performWrappedReplace = result.ReplacePressed;
             }
 
             if (_replaceViewModel != null)
@@ -9686,7 +9684,6 @@ public partial class MainViewModel :
             var foundText = _findService.CurrentTextFound;
             var foundLine = _findService.CurrentLineNumber;
             var foundIndex = _findService.CurrentTextIndex;
-            var replaceText = result.ReplaceText;
 
             Dispatcher.UIThread.Post(() =>
             {
@@ -9711,16 +9708,7 @@ public partial class MainViewModel :
                 EditTextBox.SelectionStart = foundIndex;
                 EditTextBox.SelectionEnd = foundIndex + foundText.Length;
 
-                if (performWrappedReplace)
-                {
-                    EditTextBox.SelectedText = replaceText;
-                    subtitle.Text = EditTextBox.Text;
-                    ShowStatus(string.Format(Se.Language.Main.ReplacedXWithYCountZ, foundText, replaceText, 1));
-                }
-                else
-                {
-                    ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
-                }
+                ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
             });
         }
     }
