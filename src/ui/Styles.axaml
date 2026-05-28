@@ -1,8 +1,8 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui">
-    <Style Selector="DataGridCell:focus /template/ #FocusVisual">
+    <Style Selector="DataGridCell:focus /template/ Grid#FocusVisual">
         <Setter Property="IsVisible" Value="False"/>
     </Style>
-    <Style Selector="DataGridCell:current /template/ #CurrencyVisual">
+    <Style Selector="DataGridCell:current /template/ Rectangle#CurrencyVisual">
         <Setter Property="IsVisible" Value="False"/>
     </Style>
     <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
