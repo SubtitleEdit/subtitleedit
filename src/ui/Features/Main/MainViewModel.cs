@@ -9402,6 +9402,12 @@ public partial class MainViewModel :
             return;
         }
 
+        if (string.IsNullOrEmpty(_findService.SearchText))
+        {
+            ShowFind();
+            return;
+        }
+
         var subs = Subtitles.Select(p => p.Text).ToList();
         var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
         var currentCharIndex = EditTextBox.CaretIndex;
@@ -9466,6 +9472,12 @@ public partial class MainViewModel :
         var selectedSubtitle = SelectedSubtitle;
         if (Subtitles.Count == 0 || selectedSubtitle == null || Window == null)
         {
+            return;
+        }
+
+        if (string.IsNullOrEmpty(_findService.SearchText))
+        {
+            ShowFind();
             return;
         }
 
