@@ -135,8 +135,8 @@ public class CompareWindow : Window
         Activated += delegate { Dispatcher.UIThread.Post(() => buttonOk.Focus()); }; // hack to make OnKeyDown work
         KeyDown += vm.KeyDown;
 
-        vm.LeftDataGrid = leftView.Child as DataGrid;
-        vm.RightDataGrid = rightView.Child as DataGrid;
+        vm.LeftDataGrid = (leftView.Child as Border)?.Child as DataGrid;
+        vm.RightDataGrid = (rightView.Child as Border)?.Child as DataGrid;
         if (vm.LeftDataGrid != null && vm.RightDataGrid != null)
         {
             vm.LeftDataGrid.SelectionChanged += vm.LeftDataGridSelectionChanged;
