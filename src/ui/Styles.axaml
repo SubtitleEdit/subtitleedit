@@ -10,8 +10,10 @@
     </Style>
     <Style Selector="DataGridRow:selected:pointerover /template/ Rectangle#BackgroundRectangle">
         <Setter Property="Fill" Value="{DynamicResource DataGridRowSelectedUnfocusedBackgroundBrush}"/>
+        <Setter Property="Opacity" Value="{DynamicResource DataGridRowSelectedUnfocusedBackgroundOpacity}"/>
     </Style>
     <Style Selector="DataGridRow:selected:pointerover:focus /template/ Rectangle#BackgroundRectangle">
         <Setter Property="Fill" Value="{DynamicResource DataGridRowSelectedBackgroundBrush}"/>
+        <Setter Property="Opacity" Value="{DynamicResource DataGridRowSelectedBackgroundOpacity}"/>
     </Style>
 </Styles>
