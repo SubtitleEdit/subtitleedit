@@ -1356,15 +1356,25 @@ public class FfmpegGenerator
         for (var outIndex = 0; outIndex < outputSubs.Count; outIndex++)
         {
             var t = outputSubs[outIndex];
+            // mov_text expects a 2-/3-letter ISO 639 code in `language=`. The
+            // LanguageOrTitle column doubles as the title field in the Edit dialog,
+            // so the user may have typed a free-form string ("English title") here —
+            // emit it as `title=` instead of mangling the language tag.
             if (!string.IsNullOrEmpty(t.LanguageOrTitle))
             {
-                var lang = t.LanguageOrTitle.Contains(' ') ? $"\"{t.LanguageOrTitle}\"" : t.LanguageOrTitle;
-                args.Add($"-metadata:s:s:{outIndex} language={lang}");
+                if (LooksLikeIsoLanguageCode(t.LanguageOrTitle))
+                {
+                    args.Add($"-metadata:s:s:{outIndex} language={t.LanguageOrTitle}");
+                }
+                else if (string.IsNullOrEmpty(t.Name))
+                {
+                    args.Add($"-metadata:s:s:{outIndex} title=\"{EscapeFfmpegArg(t.LanguageOrTitle)}\"");
+                }
             }
 
             if (!string.IsNullOrEmpty(t.Name))
             {
-                args.Add($"-metadata:s:s:{outIndex} title=\"{t.Name}\"");
+                args.Add($"-metadata:s:s:{outIndex} title=\"{EscapeFfmpegArg(t.Name)}\"");
             }
 
             var dispositions = new List<string>();
@@ -1386,5 +1396,32 @@ public class FfmpegGenerator
         args.Add($"\"{outputFileName}\"");
 
         return string.Join(" ", args);
+    }
+
+    private static bool LooksLikeIsoLanguageCode(string s)
+    {
+        if (string.IsNullOrEmpty(s) || s.Length is < 2 or > 3)
+        {
+            return false;
+        }
+
+        foreach (var c in s)
+        {
+            if (!char.IsLetter(c))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // Strip characters that would break out of a double-quoted ffmpeg argument:
+    // embedded quotes close the string; backslashes can escape the closing quote
+    // on Windows shells. Replace both with safe placeholders rather than try to
+    // round-trip them.
+    private static string EscapeFfmpegArg(string s)
+    {
+        return s.Replace("\\", "_").Replace("\"", "'");
     }
 }

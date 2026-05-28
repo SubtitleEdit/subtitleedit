@@ -36,6 +36,18 @@ public class LanguageVideo
     public string AddRemoveEmbeddedSubtitlesTitle { get; set; }
     public string AddRemoveEmbeddedSubtitlesMp4Title { get; set; }
     public string AddCurrentSubtitle { get; set; }
+    public string EmbeddedTrackColumnNew { get; set; }
+    public string EmbeddedTrackNoSubtitlesFoundTitle { get; set; }
+    public string EmbeddedTrackNoSubtitlesFoundMessage { get; set; }
+    public string EmbeddedTrackNoTracksTitle { get; set; }
+    public string EmbeddedTrackNoTracksMessage { get; set; }
+    public string EmbeddedTrackUnableToGenerateTitle { get; set; }
+    public string EmbeddedTrackUnableToGenerateMessage { get; set; }
+    public string EmbeddedTrackPreviewUnavailableTitle { get; set; }
+    public string EmbeddedTrackPreviewUnavailableMessage { get; set; }
+    public string EmbeddedTrackGeneratingVideoXY { get; set; }
+    public string EmbeddedTrackGeneratingVideo { get; set; }
+    public string Mp4FilesFilter { get; set; }
     public string TitleOrLanguage { get; set; }
     public string ViewMatroskaTrackX { get; set; }
     public string ResolutionSeparator { get; set; }
@@ -94,6 +106,18 @@ public class LanguageVideo
         AddRemoveEmbeddedSubtitlesTitle = "Add/remove embedded subtitles";
         AddRemoveEmbeddedSubtitlesMp4Title = "Add/remove embedded subtitles (MP4)";
         AddCurrentSubtitle = "Add current subtitle";
+        EmbeddedTrackColumnNew = "New";
+        EmbeddedTrackNoSubtitlesFoundTitle = "No subtitles found";
+        EmbeddedTrackNoSubtitlesFoundMessage = "The selected subtitle file does not contain any subtitles.";
+        EmbeddedTrackNoTracksTitle = "No tracks added";
+        EmbeddedTrackNoTracksMessage = "Add one or more subtitle tracks, or load a video that already has embedded subtitles.";
+        EmbeddedTrackUnableToGenerateTitle = "Unable to generate video";
+        EmbeddedTrackUnableToGenerateMessage = "Output video file not generated: {0}{1}Parameters: {2}";
+        EmbeddedTrackPreviewUnavailableTitle = "Preview not available";
+        EmbeddedTrackPreviewUnavailableMessage = "Could not extract the selected subtitle stream. The codec may not be a text format that ffmpeg can convert to SRT (e.g. bitmap-based subtitles).";
+        EmbeddedTrackGeneratingVideoXY = "Generating video... {0}%     {1}";
+        EmbeddedTrackGeneratingVideo = "Generating video...";
+        Mp4FilesFilter = "MP4 files";
         TitleOrLanguage = "Title/language";
         ViewMatroskaTrackX = "View Matroska track - {0}";
         ResolutionSeparator = "x";

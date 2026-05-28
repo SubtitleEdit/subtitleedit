@@ -113,6 +113,16 @@ public class EmbeddedSubtitlesEditMp4Window : Window
                 },
                 new DataGridTextColumn
                 {
+                    // Visual cue distinguishing newly-added tracks from streams already
+                    // present in the MP4. Without this users can't tell which row is
+                    // theirs vs the original after clicking Add.
+                    Header = Se.Language.Video.EmbeddedTrackColumnNew,
+                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    Binding = new Binding(nameof(EmbeddedTrack.New)) { Mode = BindingMode.OneWay, Converter = booleanToCheckMarkConverter },
+                    IsReadOnly = true,
+                },
+                new DataGridTextColumn
+                {
                     Header = Se.Language.General.Name,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     Binding = new Binding(nameof(EmbeddedTrack.Name)) { Mode = BindingMode.OneWay },
@@ -179,13 +189,18 @@ public class EmbeddedSubtitlesEditMp4Window : Window
                     },
                 }
             }
-        }.WithBindIsVisible(nameof(vm.HasVideoFileName));
+        }
+            .WithBindIsVisible(nameof(vm.HasVideoFileName))
+            .WithBindEnabled(nameof(vm.CanEditTracks));
         var buttonEdit = UiUtil.MakeButton(Se.Language.General.Edit, vm.EditCommand)
-            .WithBindIsVisible(nameof(vm.HasVideoFileName));
+            .WithBindIsVisible(nameof(vm.HasVideoFileName))
+            .WithBindEnabled(nameof(vm.CanEditTracks));
         var buttonDelete = UiUtil.MakeButton(Se.Language.General.Delete, vm.DeleteCommand)
-            .WithBindIsVisible(nameof(vm.HasVideoFileName));
+            .WithBindIsVisible(nameof(vm.HasVideoFileName))
+            .WithBindEnabled(nameof(vm.CanEditTracks));
         var buttonPreview = UiUtil.MakeButton(Se.Language.General.Preview, vm.PreviewCommand)
-            .WithBindIsVisible(nameof(vm.HasVideoFileName));
+            .WithBindIsVisible(nameof(vm.HasVideoFileName))
+            .WithBindEnabled(nameof(vm.CanEditTracks));
 
         var panelButtons = new StackPanel
         {

@@ -30,12 +30,19 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
 {
     [ObservableProperty] private string _videoFileName;
     public bool HasVideoFileName => !string.IsNullOrEmpty(VideoFileName);
-    public bool CanGenerate => HasVideoFileName && !IsGenerating;
+    public bool CanGenerate => HasVideoFileName && !IsGenerating && TracksReady;
+    public bool CanEditTracks => HasVideoFileName && TracksReady;
     [ObservableProperty] private ObservableCollection<EmbeddedTrack> _tracks;
     [ObservableProperty] private EmbeddedTrack? _selectedTrack;
     [ObservableProperty] private string _progressText;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private bool _isGenerating;
+    // Flips true after the initial off-thread ffmpeg scan finishes populating Tracks.
+    // Add/Edit/Delete/Preview bind their IsEnabled to CanEditTracks so the user can't
+    // race the scan: clicking Add before existing tracks land would otherwise append
+    // the new track first, then look like the original "duplicated" once the scan
+    // completed and appended what was already in the MP4.
+    [ObservableProperty] private bool _tracksReady;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -97,9 +104,16 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     {
         OnPropertyChanged(nameof(HasVideoFileName));
         OnPropertyChanged(nameof(CanGenerate));
+        OnPropertyChanged(nameof(CanEditTracks));
     }
 
     partial void OnIsGeneratingChanged(bool value) => OnPropertyChanged(nameof(CanGenerate));
+
+    partial void OnTracksReadyChanged(bool value)
+    {
+        OnPropertyChanged(nameof(CanGenerate));
+        OnPropertyChanged(nameof(CanEditTracks));
+    }
 
     private void TimerGenerateElapsed(object? sender, ElapsedEventArgs e)
     {
@@ -130,11 +144,11 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
                 var estimatedTotalMs = msPerFrame * _totalFrames;
                 var estimatedLeft = ProgressHelper.ToProgressTime(estimatedTotalMs - durationMs);
 
-                ProgressText = $"Generating video... {percentage}%     {estimatedLeft}";
+                ProgressText = string.Format(Se.Language.Video.EmbeddedTrackGeneratingVideoXY, percentage, estimatedLeft);
             }
             else
             {
-                ProgressText = "Generating video...";
+                ProgressText = Se.Language.Video.EmbeddedTrackGeneratingVideo;
             }
 
             return;
@@ -143,10 +157,12 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         _timerGenerate.Stop();
         ProgressValue = 100;
         ProgressText = string.Empty;
-        Se.LogError(_log.ToString());
 
         if (!File.Exists(_outputFileName))
         {
+            // Only log ffmpeg output on failure; successful generates would otherwise spam
+            // the error log on every edit.
+            Se.LogError(_log.ToString());
             SeLogger.Error("Output video file not found: " + _outputFileName + Environment.NewLine +
                                  "ffmpeg: " + _ffmpegProcess.StartInfo.FileName + Environment.NewLine +
                                  "Parameters: " + _ffmpegProcess.StartInfo.Arguments + Environment.NewLine +
@@ -158,9 +174,9 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
             Dispatcher.UIThread.Invoke(async () =>
             {
                 await MessageBox.Show(Window!,
-                    "Unable to generate video",
-                    "Output video file not generated: " + _outputFileName + Environment.NewLine +
-                    "Parameters: " + _ffmpegProcess.StartInfo.Arguments,
+                    Se.Language.Video.EmbeddedTrackUnableToGenerateTitle,
+                    string.Format(Se.Language.Video.EmbeddedTrackUnableToGenerateMessage,
+                        _outputFileName, Environment.NewLine, _ffmpegProcess.StartInfo.Arguments),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
@@ -287,8 +303,8 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
             {
                 await MessageBox.Show(
                     Window,
-                    "No subtitles found",
-                    "The selected subtitle file does not contain any subtitles.",
+                    Se.Language.Video.EmbeddedTrackNoSubtitlesFoundTitle,
+                    Se.Language.Video.EmbeddedTrackNoSubtitlesFoundMessage,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
                 return;
@@ -426,8 +442,8 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
             {
                 await MessageBox.Show(
                     Window,
-                    "Preview not available",
-                    "Could not extract the selected subtitle stream. The codec may not be a text format that ffmpeg can convert to SRT (e.g. bitmap-based subtitles).",
+                    Se.Language.Video.EmbeddedTrackPreviewUnavailableTitle,
+                    Se.Language.Video.EmbeddedTrackPreviewUnavailableMessage,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
                 return;
@@ -457,7 +473,11 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         var args = $"-y -i \"{VideoFileName}\" -map 0:s:{track.Number} -c:s srt \"{tempSrt}\"";
 
         var tcs = new TaskCompletionSource<bool>();
-        var process = FfmpegGenerator.GetProcess(args, null);
+        // GetProcess sets RedirectStandardError + RedirectStandardOutput. Provide a no-op
+        // sink and call Begin*ReadLine — without those, ffmpeg deadlocks once its stderr
+        // buffer fills (and ffmpeg is chatty on stderr for every operation), and we'd
+        // always hit the watchdog timeout.
+        var process = FfmpegGenerator.GetProcess(args, (_, _) => { });
         process.EnableRaisingEvents = true;
         process.Exited += (_, _) => tcs.TrySetResult(true);
 
@@ -466,6 +486,8 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
 #pragma warning disable CA1416
             process.Start();
 #pragma warning restore CA1416
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
         }
         catch
         {
@@ -494,7 +516,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         var fileName = await _fileHelper.PickOpenFile(
             Window,
             Se.Language.General.OpenVideoFileTitle,
-            "MP4 files",
+            Se.Language.Video.Mp4FilesFilter,
             "*.mp4;*.m4v;*.mov");
         if (string.IsNullOrEmpty(fileName))
         {
@@ -502,18 +524,29 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         }
 
         VideoFileName = fileName;
-        _mediaInfo = FfmpegMediaInfo2.Parse(fileName);
-
         Tracks.Clear();
         _originalTracks.Clear();
-        var tracks = FindMp4SubtitleTracks(_mediaInfo);
-        foreach (var track in tracks)
-        {
-            Tracks.Add(track);
-            _originalTracks.Add(new EmbeddedTrack(track));
-        }
+        TracksReady = false;
 
-        SelectAndScrollToRow(0);
+        // FfmpegMediaInfo2.Parse spawns ffmpeg and can take seconds on large files;
+        // keep it off the UI thread, matching the OnLoaded path.
+        _ = Task.Run(() =>
+        {
+            var mediaInfo = FfmpegMediaInfo2.Parse(fileName);
+            var tracks = FindMp4SubtitleTracks(mediaInfo);
+            Dispatcher.UIThread.Invoke(() =>
+            {
+                _mediaInfo = mediaInfo;
+                foreach (var track in tracks)
+                {
+                    Tracks.Add(track);
+                    _originalTracks.Add(new EmbeddedTrack(track));
+                }
+
+                SelectAndScrollToRow(0);
+                TracksReady = true;
+            });
+        });
     }
 
     [RelayCommand]
@@ -525,17 +558,19 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         {
             await MessageBox.Show(
                 Window!,
-                "No tracks added",
-                "Add one or more subtitle tracks, or load a video that already has embedded subtitles.",
+                Se.Language.Video.EmbeddedTrackNoTracksTitle,
+                Se.Language.Video.EmbeddedTrackNoTracksMessage,
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return;
         }
 
         var outputVideoFileName = MakeOutputFileName(VideoFileName);
+        // PickSaveFile builds its picker pattern as "*" + extension, so the leading dot
+        // must stay (otherwise the filter becomes e.g. "*mp4" and silently matches nothing).
         outputVideoFileName = await _fileHelper.PickSaveFile(
             Window!,
-            Path.GetExtension(VideoFileName).TrimStart('.'),
+            string.IsNullOrEmpty(Path.GetExtension(VideoFileName)) ? ".mp4" : Path.GetExtension(VideoFileName),
             outputVideoFileName,
             Se.Language.Video.SaveVideoAsTitle);
         if (string.IsNullOrEmpty(outputVideoFileName))
@@ -606,6 +641,8 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
         UiUtil.RestoreWindowPosition(Window);
         if (string.IsNullOrEmpty(VideoFileName) || !File.Exists(VideoFileName))
         {
+            // Nothing to scan; let the user pick a video manually.
+            TracksReady = true;
             return;
         }
 
@@ -626,6 +663,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
                 }
 
                 SelectAndScrollToRow(0);
+                TracksReady = true;
             });
         });
     }
