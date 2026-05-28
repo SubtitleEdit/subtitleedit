@@ -14589,6 +14589,9 @@ public partial class MainViewModel :
 
     internal void OnLoaded()
     {
+        if (OperatingSystem.IsMacOS() && Avalonia.Application.Current is { } macApp)
+            Layout.InitNativeMacMenu.Make(macApp, this);
+
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && string.IsNullOrEmpty(Se.Settings.General.LibMpvPath))
         {
             Dispatcher.UIThread.Post(async void () =>

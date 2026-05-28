@@ -149,6 +149,14 @@ namespace Nikse.SubtitleEdit
 
         private static void SetupNativeMenu(Application app, ClassicDesktopStyleApplicationLifetime lifetime)
         {
+            // Register an empty native menu early so Avalonia's macOS backend doesn't
+            // install its own "About Avalonia" defaults. InitNativeMacMenu.Make will
+            // populate the full menu once the view model is available (OnLoaded).
+            if (OperatingSystem.IsMacOS())
+            {
+                NativeMenu.SetMenu(app, new NativeMenu());
+            }
+
             // mac finder "Send to"
             if (OperatingSystem.IsMacOS())
             {
