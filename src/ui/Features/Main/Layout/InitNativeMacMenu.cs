@@ -304,7 +304,12 @@ public static class InitNativeMacMenu
         RegisterUpdater(v => assaMenu.IsEnabled = v.IsFormatAssa, nameof(vm.IsFormatAssa));
 
         // ── Assemble ─────────────────────────────────────────────────────────
-        var root = new NativeMenu();
+        // Reuse the root NativeMenu registered during startup. Avalonia's macOS
+        // backend subscribes to the items collection on that specific object;
+        // replacing it with a new NativeMenu via NativeMenu.SetMenu does not
+        // propagate to NSApplication.mainMenu after initial setup.
+        var root = NativeMenu.GetMenu(app) ?? new NativeMenu();
+        root.Items.Clear();
         root.Items.Add(new NativeMenuItem("Subtitle Edit") { Menu = appItems });
         root.Items.Add(new NativeMenuItem(Clean(l.File)) { Menu = fileItems });
         root.Items.Add(new NativeMenuItem(Clean(l.Edit)) { Menu = editItems });
@@ -330,7 +335,9 @@ public static class InitNativeMacMenu
         };
         vm.PropertyChanged += _handler;
 
-        NativeMenu.SetMenu(app, root);
+        if (NativeMenu.GetMenu(app) == null)
+            NativeMenu.SetMenu(app, root);
+
         UpdateRecentFiles(vm);
     }
 
