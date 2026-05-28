@@ -49,6 +49,9 @@ public static class InitNativeMacMenu
     // we must hold a reference to the specific instance that owns the main window.
     private static MainViewModel? _vm;
 
+    private static Window? _window;
+    private static NativeMenu? _root;
+
     // ── App menu ─────────────────────────────────────────────────────────────
     // Called from Program.cs. Sets the "Subtitle Edit" app dropdown contents.
     // Avalonia also auto-appends the standard macOS items (Hide, Quit, etc.).
@@ -79,8 +82,10 @@ public static class InitNativeMacMenu
     // with all top-level menus. Called before NativeMenu.SetMenu(window, root).
     // Commands use lazy VM resolution since the ViewModel may not be ready yet.
 
-    public static void MakeStructure(NativeMenu root)
+    public static void MakeStructure(NativeMenu root, Window window)
     {
+        _root = root;
+        _window = window;
         _gestureItems.Clear();
         _visibilities.Clear();
         _toggles.Clear();
@@ -346,6 +351,19 @@ public static class InitNativeMacMenu
         root.Items.Add(assaMenu);
     }
 
+    // Called from LoadLanguage to rebuild all menu strings after a language switch.
+    public static void Rebuild(MainViewModel vm)
+    {
+        if (_root == null || _window == null)
+            return;
+        _root.Items.Clear();
+        MakeStructure(_root, _window);
+        NativeMenu.SetMenu(_window, _root);
+        if (Application.Current != null)
+            SetupAppMenu(Application.Current);
+        Sync(vm);
+    }
+
     // ── Phase 2 ──────────────────────────────────────────────────────────────
     // Called from MainViewModel.OnLoaded. Applies initial states, gestures,
     // PropertyChanged subscriptions, and dynamic submenus.
@@ -531,6 +549,7 @@ public static class InitNativeMacMenu
         item.ToggleType = MenuItemToggleType.CheckBox;
         item.Click += (_, _) => { var v = GetVm(); if (v != null) getCmd(v).Execute(null); };
         _toggles.Add((item, isChecked, propertyNames));
+        _gestureItems.Add((getCmd, item));
         return item;
     }
 

@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit
                     if (OperatingSystem.IsMacOS() && lifetime.MainWindow != null)
                     {
                         var menuBarRoot = new NativeMenu();
-                        Nikse.SubtitleEdit.Features.Main.Layout.InitNativeMacMenu.MakeStructure(menuBarRoot);
+                        Nikse.SubtitleEdit.Features.Main.Layout.InitNativeMacMenu.MakeStructure(menuBarRoot, lifetime.MainWindow);
                         NativeMenu.SetMenu(lifetime.MainWindow, menuBarRoot);
                     }
                 }
