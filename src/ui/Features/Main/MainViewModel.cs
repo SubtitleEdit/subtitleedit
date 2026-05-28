@@ -285,8 +285,10 @@ public partial class MainViewModel :
     AudioVisualizerUndockedViewModel? _audioVisualizerUndockedViewModel;
     FindViewModel? _findViewModel;
     Control? _findPreviousFocus;
+    bool _findClosingProgrammatically;
     ReplaceViewModel? _replaceViewModel;
     Control? _replacePreviousFocus;
+    bool _replaceClosingProgrammatically;
     AdjustAllTimesViewModel? _adjustAllTimesViewModel;
 
     private static Color _errorColor = Se.Settings.General.ErrorColor.FromHexToColor();
@@ -9208,6 +9210,7 @@ public partial class MainViewModel :
 
         if (_replaceViewModel != null)
         {
+            _replaceClosingProgrammatically = true;
             _replaceViewModel.Window?.Close();
             _replaceViewModel = null;
         }
@@ -9215,6 +9218,7 @@ public partial class MainViewModel :
         if (_findViewModel != null && _findViewModel.Window != null && _findViewModel.Window.IsVisible)
         {
             _findPreviousFocus = Window?.FocusManager?.GetFocusedElement() as Control;
+            _findViewModel.ResultFound = false;
             _findViewModel.Window.Activate();
             return;
         }
@@ -9240,6 +9244,12 @@ public partial class MainViewModel :
             vm.InitializeFindData(_findService, subs, selectedText, this);
             window.Closed += (_, _) =>
             {
+                if (_findClosingProgrammatically)
+                {
+                    _findClosingProgrammatically = false;
+                    return;
+                }
+
                 if (vm.ResultFound)
                 {
                     FocusEditTextBox();
@@ -9459,6 +9469,7 @@ public partial class MainViewModel :
 
         if (_findViewModel != null)
         {
+            _findClosingProgrammatically = true;
             _findViewModel.Window?.Close();
             _findViewModel = null;
         }
@@ -9466,6 +9477,7 @@ public partial class MainViewModel :
         if (_replaceViewModel != null && _replaceViewModel.Window != null && _replaceViewModel.Window.IsVisible)
         {
             _replacePreviousFocus = Window?.FocusManager?.GetFocusedElement() as Control;
+            _replaceViewModel.ResultFound = false;
             _replaceViewModel.Window.Activate();
             return;
         }
@@ -9491,6 +9503,12 @@ public partial class MainViewModel :
             vm.InitializeFindData(_findService, subs, selectedText, this);
             window.Closed += (_, _) =>
             {
+                if (_replaceClosingProgrammatically)
+                {
+                    _replaceClosingProgrammatically = false;
+                    return;
+                }
+
                 if (vm.ResultFound)
                 {
                     FocusEditTextBox();
