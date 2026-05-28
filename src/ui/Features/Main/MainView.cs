@@ -102,6 +102,7 @@ public class MainView : ViewBase
                 InitLayout.MakeLayout(this, _vm, Se.Settings.General.LayoutNumber);
                 _vm.ContentGrid.InvalidateMeasure();
                 _vm.ContentGrid.InvalidateArrange();
+                Dispatcher.UIThread.Post(() => _vm.SubtitleGrid.Focus());
             }, DispatcherPriority.Loaded);
         };
 
