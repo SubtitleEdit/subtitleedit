@@ -141,7 +141,7 @@ public partial class FindViewModel : ObservableObject
         if (e.Key == Key.Enter)
         {
             e.Handled = true;
-            await FindNext();
+            await FindNextCommand.ExecuteAsync(null);
         }
     }
 

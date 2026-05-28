@@ -173,7 +173,7 @@ public partial class ReplaceViewModel : ObservableObject
         if (e.Key == Key.Enter)
         {
             e.Handled = true;
-            await FindNext();
+            await FindNextCommand.ExecuteAsync(null);
         }
     }
 }

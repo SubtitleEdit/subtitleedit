@@ -9381,12 +9381,9 @@ public partial class MainViewModel :
 
                 ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, _findService.CurrentTextFound, _findService.CurrentLineNumber + 1, _findService.CurrentTextIndex + 1));
 
-                // wait for text box to update
-                Task.Delay(75);
-
-                if (EditTextBox.Text == string.Empty)
+                if (EditTextBox.Text != subtitle.Text)
                 {
-                    EditTextBox.Text = Subtitles[idx].Text;
+                    EditTextBox.Text = subtitle.Text;
                 }
 
                 EditTextBox.CaretIndex = _findService.CurrentTextIndex;
@@ -9531,6 +9528,7 @@ public partial class MainViewModel :
 
     private async Task<MessageBoxResult> ShowWrapAroundDialog(string message)
     {
+        if (Window == null) return MessageBoxResult.No;
         var findWin = _findViewModel?.Window;
         var replaceWin = _replaceViewModel?.Window;
         var dialogWindow = (findWin?.IsVisible == true ? findWin : null)
@@ -9540,7 +9538,7 @@ public partial class MainViewModel :
         {
             var parentWindow = dialogWindow ?? Window!;
             return await MessageBox.Show(parentWindow, Se.Language.General.ContinueFindTitle,
-                message, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                message, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
         finally
         {
@@ -9662,6 +9660,7 @@ public partial class MainViewModel :
                 idx = _findService.FindNext(result.SearchText, subs, currentLineIndex, EditTextBox.SelectionEnd);
             }
 
+            var performWrappedReplace = false;
             if (idx < 0)
             {
                 var answer = await ShowWrapAroundDialog(Se.Language.General.SearchItemNotFoundContinueFromTop);
@@ -9676,6 +9675,7 @@ public partial class MainViewModel :
                     ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
                     return;
                 }
+                performWrappedReplace = result.ReplacePressed;
             }
 
             if (_replaceViewModel != null)
@@ -9686,6 +9686,7 @@ public partial class MainViewModel :
             var foundText = _findService.CurrentTextFound;
             var foundLine = _findService.CurrentLineNumber;
             var foundIndex = _findService.CurrentTextIndex;
+            var replaceText = result.ReplaceText;
 
             Dispatcher.UIThread.Post(() =>
             {
@@ -9699,8 +9700,6 @@ public partial class MainViewModel :
                 SubtitleGrid.SelectedItem = subtitle;
                 SubtitleGrid.ScrollIntoView(subtitle, null);
 
-                ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
-
                 // The text-box binding may not have propagated yet by the time this dispatcher
                 // post runs; ensure it shows the target subtitle's text before selecting.
                 if (EditTextBox.Text != subtitle.Text)
@@ -9711,6 +9710,17 @@ public partial class MainViewModel :
                 EditTextBox.CaretIndex = foundIndex;
                 EditTextBox.SelectionStart = foundIndex;
                 EditTextBox.SelectionEnd = foundIndex + foundText.Length;
+
+                if (performWrappedReplace)
+                {
+                    EditTextBox.SelectedText = replaceText;
+                    subtitle.Text = EditTextBox.Text;
+                    ShowStatus(string.Format(Se.Language.Main.ReplacedXWithYCountZ, foundText, replaceText, 1));
+                }
+                else
+                {
+                    ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
+                }
             });
         }
     }
