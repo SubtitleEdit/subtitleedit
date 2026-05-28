@@ -5214,13 +5214,13 @@ public partial class MainViewModel :
                 _audioVisualizerUndockedViewModel = null;
             }
 
-            _windowService.ShowWindow<VideoPlayerUndockedWindow, VideoPlayerUndockedViewModel>(Window, (window, vm) =>
+            _windowService.ShowIndependentWindow<VideoPlayerUndockedWindow, VideoPlayerUndockedViewModel>((window, vm) =>
             {
                 _videoPlayerUndockedViewModel = vm;
                 vm.Initialize(_videoFileName ?? string.Empty, position, volume, this);
             });
 
-            _windowService.ShowWindow<AudioVisualizerUndockedWindow, AudioVisualizerUndockedViewModel>(Window, (window, vm) =>
+            _windowService.ShowIndependentWindow<AudioVisualizerUndockedWindow, AudioVisualizerUndockedViewModel>((window, vm) =>
             {
                 _audioVisualizerUndockedViewModel = vm;
                 vm.Initialize(AudioVisualizer, this);

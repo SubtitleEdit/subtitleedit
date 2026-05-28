@@ -64,7 +64,12 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
 
     internal void OnClosing(object? sender, WindowClosingEventArgs e)
     {
-        if (!AllowClose && e.CloseReason != WindowCloseReason.OwnerWindowClosing)
+        // Only intercept explicit user closes (clicking the title-bar X). Owner-window
+        // and app-shutdown closes must be allowed through; otherwise the app gets stuck
+        // when the main window is closing or the OS is shutting down. Since this window
+        // is now an independent top-level (no owner), the cascade comes from
+        // MainViewModel.CleanUp() which sets AllowClose=true before calling Close().
+        if (!AllowClose && e.CloseReason == WindowCloseReason.WindowClosing)
         {
             e.Cancel = true;
 
@@ -72,13 +77,13 @@ public partial class VideoPlayerUndockedViewModel : ObservableObject
             {
                 Window.WindowState = WindowState.Minimized;
             }
+
+            return;
         }
-        else
-        {
-            UiUtil.SaveWindowPosition(Window);
-            _mouseMoveDetectionTimer?.Stop();
-            _mouseMoveDetectionTimer = null;
-        }
+
+        UiUtil.SaveWindowPosition(Window);
+        _mouseMoveDetectionTimer?.Stop();
+        _mouseMoveDetectionTimer = null;
     }
 
     internal void OnKeyDown(object? sender, KeyEventArgs e)
