@@ -8,4 +8,10 @@
     <Style Selector="DataGridRow:not(:selected):pointerover /template/ Rectangle#BackgroundRectangle">
         <Setter Property="Fill" Value="Transparent"/>
     </Style>
+    <Style Selector="DataGridRow:selected:pointerover /template/ Rectangle#BackgroundRectangle">
+        <Setter Property="Fill" Value="{DynamicResource DataGridRowSelectedUnfocusedBackgroundBrush}"/>
+    </Style>
+    <Style Selector="DataGridRow:selected:pointerover:focus /template/ Rectangle#BackgroundRectangle">
+        <Setter Property="Fill" Value="{DynamicResource DataGridRowSelectedBackgroundBrush}"/>
+    </Style>
 </Styles>
