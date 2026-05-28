@@ -9584,7 +9584,7 @@ public partial class MainViewModel :
         }
         finally
         {
-            if (dialogWindow != null) dialogWindow.Topmost = true;
+            if (dialogWindow != null) dialogWindow.Topmost = !OperatingSystem.IsMacOS();
         }
     }
 
