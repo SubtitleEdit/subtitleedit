@@ -2,7 +2,7 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-beta33 (xth May 2026)
+v5.0.0-beta33 (28th May 2026)
 
 * Add IndexTTS TTS engine (Bilibili / IndexTeam, voice cloning ~870 MB) via CrispASR
 * Add CEA-708 (DTVCC) caption decoding from H.264 SEI cc_data in MP4
