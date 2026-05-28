@@ -9242,15 +9242,22 @@ public partial class MainViewModel :
     public void RequestFindData()
     {
         var selectedSubtitle = SelectedSubtitle;
-        if (Subtitles.Count == 0 || selectedSubtitle == null || _findViewModel == null)
+        if (Subtitles.Count == 0 || selectedSubtitle == null)
         {
             return;
         }
 
-        var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
-        var currentCharIndex = EditTextBox.CaretIndex;
         var subs = Subtitles.Select(p => p.Text).ToList();
-        _findViewModel.InitializeFindData(_findService, subs, _findService.SearchText, this);
+
+        if (_findViewModel != null)
+        {
+            _findViewModel.InitializeFindData(_findService, subs, _findService.SearchText, this);
+        }
+
+        if (_replaceViewModel != null)
+        {
+            _replaceViewModel.RefreshSubtitles(subs);
+        }
     }
 
     public void HandleFindResult(FindViewModel result)
@@ -9506,6 +9513,7 @@ public partial class MainViewModel :
                 if (selectedText == result.SearchText)
                 {
                     EditTextBox.SelectedText = result.ReplaceText;
+                    subs[currentLineIndex] = EditTextBox.Text; // reflect replacement so FindNext won't re-match here
                 }
 
                 idx = _findService.FindNext(result.SearchText, subs, currentLineIndex, EditTextBox.SelectionEnd);
@@ -9517,19 +9525,34 @@ public partial class MainViewModel :
                 return;
             }
 
+            var foundText = _findService.CurrentTextFound;
+            var foundLine = _findService.CurrentLineNumber;
+            var foundIndex = _findService.CurrentTextIndex;
+
             Dispatcher.UIThread.Post(() =>
             {
+                var subtitle = Subtitles.GetOrNull(idx);
+                if (subtitle == null)
+                {
+                    return;
+                }
+
                 SubtitleGrid.SelectedIndex = idx;
-                SubtitleGrid.ScrollIntoView(SubtitleGrid.SelectedItem, null);
+                SubtitleGrid.SelectedItem = subtitle;
+                SubtitleGrid.ScrollIntoView(subtitle, null);
 
-                ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, _findService.CurrentTextFound, _findService.CurrentLineNumber + 1, _findService.CurrentTextIndex + 1));
+                ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
 
-                // wait for text box to update
-                Task.Delay(50);
+                // The text-box binding may not have propagated yet by the time this dispatcher
+                // post runs; ensure it shows the target subtitle's text before selecting.
+                if (EditTextBox.Text != subtitle.Text)
+                {
+                    EditTextBox.Text = subtitle.Text;
+                }
 
-                EditTextBox.CaretIndex = _findService.CurrentTextIndex;
-                EditTextBox.SelectionStart = _findService.CurrentTextIndex;
-                EditTextBox.SelectionEnd = _findService.CurrentTextIndex + _findService.CurrentTextFound.Length;
+                EditTextBox.CaretIndex = foundIndex;
+                EditTextBox.SelectionStart = foundIndex;
+                EditTextBox.SelectionEnd = foundIndex + foundText.Length;
             });
         }
     }

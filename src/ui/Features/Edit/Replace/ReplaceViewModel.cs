@@ -141,6 +141,11 @@ public partial class ReplaceViewModel : ObservableObject
         }
     }
 
+    internal void RefreshSubtitles(List<string> subs)
+    {
+        _subs = subs;
+    }
+
     internal void InitializeFindData(IFindService findService, List<string> subs, string selectedText, MainViewModel mainViewModel)
     {
         _findService = findService;
