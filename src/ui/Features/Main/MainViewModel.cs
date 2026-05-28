@@ -9288,7 +9288,7 @@ public partial class MainViewModel :
         var subs = Subtitles.Select(p => p.Text).ToList();
         var result = _windowService.ShowWindow<FindWindow, FindViewModel>(Window!, (window, vm) =>
         {
-            window.Topmost = true;
+            window.Topmost = !OperatingSystem.IsMacOS();
             _findViewModel = vm;
 
             var selectedText = string.Empty;
@@ -9615,7 +9615,7 @@ public partial class MainViewModel :
         var subs = Subtitles.Select(p => p.Text).ToList();
         var result = _windowService.ShowWindow<ReplaceWindow, ReplaceViewModel>(Window!, (window, vm) =>
         {
-            window.Topmost = true;
+            window.Topmost = !OperatingSystem.IsMacOS();
             _replaceViewModel = vm;
 
             var selectedText = string.Empty;
