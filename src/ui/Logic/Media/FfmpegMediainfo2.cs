@@ -98,6 +98,12 @@ public class FfmpegMediaInfo2
             }
         }
 
+        // `ffmpeg -i input` always exits non-zero (no output file), so GetFfmpegLog's
+        // retry path runs every call and appends a second copy of the log. Without
+        // deduping we'd report every Stream #N:M twice and downstream consumers (e.g.
+        // the MP4 embedded-subtitles window) would show duplicate tracks.
+        var seenStreamPrefixes = new HashSet<string>(StringComparer.Ordinal);
+
         foreach (var line in log.SplitToLines())
         {
             var s = line.Trim();
@@ -119,6 +125,14 @@ public class FfmpegMediaInfo2
                 var arr = s.Replace(": ", "¤").Split('¤');
                 if (arr.Length == 3)
                 {
+                    // arr[0] is the "Stream #N:M(LANG)" prefix — unique per stream. Skip
+                    // any repeat caused by the retry path so we don't add the same track
+                    // twice.
+                    if (!seenStreamPrefixes.Add(arr[0]))
+                    {
+                        continue;
+                    }
+
                     var trackType = arr[1].Trim();
                     var trackInfo = arr[2].Trim();
                     // arr[0] still carries the "Stream #N:M(LANG)" prefix; parse the
