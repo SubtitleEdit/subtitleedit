@@ -184,6 +184,8 @@ public class EmbeddedSubtitlesEditMp4Window : Window
             .WithBindIsVisible(nameof(vm.HasVideoFileName));
         var buttonDelete = UiUtil.MakeButton(Se.Language.General.Delete, vm.DeleteCommand)
             .WithBindIsVisible(nameof(vm.HasVideoFileName));
+        var buttonPreview = UiUtil.MakeButton(Se.Language.General.Preview, vm.PreviewCommand)
+            .WithBindIsVisible(nameof(vm.HasVideoFileName));
 
         var panelButtons = new StackPanel
         {
@@ -193,6 +195,7 @@ public class EmbeddedSubtitlesEditMp4Window : Window
                 buttonAdd,
                 buttonEdit,
                 buttonDelete,
+                buttonPreview,
             },
         };
 

@@ -53,6 +53,13 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     private List<EmbeddedTrack> _originalTracks;
     private long _totalFrames;
     private string _outputFileName;
+    // Guards against re-entrant calls on the Add command. Avalonia doesn't busy-disable
+    // a button while its async [RelayCommand] is in flight, so a fast double-click would
+    // otherwise queue two file dialogs and append two identical tracks.
+    private bool _isAdding;
+    // Avalonia's Window.Loaded can fire more than once (re-attach to visual tree, layout
+    // pass). Without this guard the initial track scan would re-append on every fire.
+    private bool _loaded;
     private static readonly Regex FrameFinderRegex = new(@"[Ff]rame=\s*\d+", RegexOptions.Compiled);
 
     private readonly IFolderHelper _folderHelper;
@@ -255,47 +262,55 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
     [RelayCommand]
     private async Task Add()
     {
-        if (Window == null)
+        if (Window == null || _isAdding)
         {
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenFile(
-            Window,
-            Se.Language.General.OpenSubtitleFileTitle,
-            Se.Language.General.SubtitleFiles,
-            "*.srt;*.vtt;*.ass;*.ssa",
-            Se.Language.General.AllFiles,
-            "*.*");
-        if (string.IsNullOrEmpty(fileName))
+        _isAdding = true;
+        try
         {
-            return;
-        }
-
-        var subtitle = Subtitle.Parse(fileName);
-        if (subtitle == null || subtitle.Paragraphs.Count == 0)
-        {
-            await MessageBox.Show(
+            var fileName = await _fileHelper.PickOpenFile(
                 Window,
-                "No subtitles found",
-                "The selected subtitle file does not contain any subtitles.",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
-            return;
+                Se.Language.General.OpenSubtitleFileTitle,
+                Se.Language.General.SubtitleFiles,
+                "*.srt;*.vtt;*.ass;*.ssa",
+                Se.Language.General.AllFiles,
+                "*.*");
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return;
+            }
+
+            var subtitle = Subtitle.Parse(fileName);
+            if (subtitle == null || subtitle.Paragraphs.Count == 0)
+            {
+                await MessageBox.Show(
+                    Window,
+                    "No subtitles found",
+                    "The selected subtitle file does not contain any subtitles.",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
+            var srtFileName = EnsureSrtForMovText(fileName, subtitle);
+            var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+            var isoLanguage = Iso639Dash2LanguageCode.List.FirstOrDefault(l => l.TwoLetterCode.Equals(language, StringComparison.OrdinalIgnoreCase));
+
+            Tracks.Add(new EmbeddedTrack
+            {
+                Format = "mov_text",
+                LanguageOrTitle = isoLanguage?.ThreeLetterCode ?? language,
+                Name = isoLanguage?.EnglishName ?? string.Empty,
+                FileName = srtFileName,
+                New = true,
+            });
         }
-
-        var srtFileName = EnsureSrtForMovText(fileName, subtitle);
-        var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
-        var isoLanguage = Iso639Dash2LanguageCode.List.FirstOrDefault(l => l.TwoLetterCode.Equals(language, StringComparison.OrdinalIgnoreCase));
-
-        Tracks.Add(new EmbeddedTrack
+        finally
         {
-            Format = "mov_text",
-            LanguageOrTitle = isoLanguage?.ThreeLetterCode ?? language,
-            Name = isoLanguage?.EnglishName ?? string.Empty,
-            FileName = srtFileName,
-            New = true,
-        });
+            _isAdding = false;
+        }
     }
 
     [RelayCommand]
@@ -390,6 +405,82 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
 
             selectedTrack.Default = result.IsDefault;
         }
+    }
+
+    [RelayCommand]
+    private async Task Preview()
+    {
+        var selectedTrack = SelectedTrack;
+        if (Window == null || selectedTrack == null)
+        {
+            return;
+        }
+
+        // Newly-added tracks already have a local SRT (we wrote it in Add / AddCurrent).
+        // For existing tracks read from the MP4, extract via ffmpeg to a temp SRT first.
+        var subtitleFileName = selectedTrack.FileName;
+        if (string.IsNullOrEmpty(subtitleFileName) || !File.Exists(subtitleFileName))
+        {
+            subtitleFileName = await ExtractSubtitleStreamToTempSrt(selectedTrack);
+            if (string.IsNullOrEmpty(subtitleFileName))
+            {
+                await MessageBox.Show(
+                    Window,
+                    "Preview not available",
+                    "Could not extract the selected subtitle stream. The codec may not be a text format that ffmpeg can convert to SRT (e.g. bitmap-based subtitles).",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+        }
+
+        await _windowService.ShowDialogAsync<EmbedTrackPreviewWindow, EmbedTrackPreviewViewModel>(Window, vm =>
+        {
+            // matroskaFile is unused when subtitleFileName is non-empty (preview takes the
+            // local-file branch). Pass a fresh MatroskaFile instance just to satisfy the
+            // non-nullable parameter — the preview won't read from it.
+            vm.Initialize(new Core.ContainerFormats.Matroska.MatroskaFile(VideoFileName), null, VideoFileName, subtitleFileName);
+        });
+    }
+
+    private async Task<string> ExtractSubtitleStreamToTempSrt(EmbeddedTrack track)
+    {
+        if (string.IsNullOrEmpty(VideoFileName) || !File.Exists(VideoFileName))
+        {
+            return string.Empty;
+        }
+
+        var tempSrt = Path.Combine(Path.GetTempPath(), "EmbeddedSubtitleEditMp4_Preview_" + Guid.NewGuid() + ".srt");
+        // -y overwrite; map subtitle stream by its subtitle-relative index; convert to
+        // SRT text. Bitmap codecs (vobsub, pgs, etc.) will fail this conversion — we
+        // surface that as the "Preview not available" message in the caller.
+        var args = $"-y -i \"{VideoFileName}\" -map 0:s:{track.Number} -c:s srt \"{tempSrt}\"";
+
+        var tcs = new TaskCompletionSource<bool>();
+        var process = FfmpegGenerator.GetProcess(args, null);
+        process.EnableRaisingEvents = true;
+        process.Exited += (_, _) => tcs.TrySetResult(true);
+
+        try
+        {
+#pragma warning disable CA1416
+            process.Start();
+#pragma warning restore CA1416
+        }
+        catch
+        {
+            return string.Empty;
+        }
+
+        // Cap the wait so a wedged ffmpeg can't hang the UI thread forever.
+        var completed = await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromSeconds(30)));
+        if (completed != tcs.Task)
+        {
+            try { process.Kill(true); } catch { /* ignore */ }
+            return string.Empty;
+        }
+
+        return File.Exists(tempSrt) && new FileInfo(tempSrt).Length > 0 ? tempSrt : string.Empty;
     }
 
     [RelayCommand]
@@ -506,6 +597,12 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
 
     internal void OnLoaded()
     {
+        if (_loaded)
+        {
+            return;
+        }
+
+        _loaded = true;
         UiUtil.RestoreWindowPosition(Window);
         if (string.IsNullOrEmpty(VideoFileName) || !File.Exists(VideoFileName))
         {
@@ -548,10 +645,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
             {
                 Number = subtitleIndex,
                 Format = ParseCodecFromInfo(track.TrackInfo),
-                // Language is lost in FfmpegMediaInfo2.ParseLog (it splits on ": " and drops the
-                // "Stream #0:2(eng)" prefix that holds the language tag). User can fill it in via
-                // the Edit dialog — ffmpeg keeps the original language on copied streams anyway.
-                LanguageOrTitle = string.Empty,
+                LanguageOrTitle = track.Language,
                 Name = string.Empty,
                 FileName = string.Empty,
                 FfmpegTrackInfo = track,
