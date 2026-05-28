@@ -284,7 +284,11 @@ public partial class MainViewModel :
     VideoPlayerUndockedViewModel? _videoPlayerUndockedViewModel;
     AudioVisualizerUndockedViewModel? _audioVisualizerUndockedViewModel;
     FindViewModel? _findViewModel;
+    Control? _findPreviousFocus;
+    bool _findClosingProgrammatically;
     ReplaceViewModel? _replaceViewModel;
+    Control? _replacePreviousFocus;
+    bool _replaceClosingProgrammatically;
     AdjustAllTimesViewModel? _adjustAllTimesViewModel;
 
     private static Color _errorColor = Se.Settings.General.ErrorColor.FromHexToColor();
@@ -9206,16 +9210,20 @@ public partial class MainViewModel :
 
         if (_replaceViewModel != null)
         {
+            _replaceClosingProgrammatically = true;
             _replaceViewModel.Window?.Close();
             _replaceViewModel = null;
         }
 
         if (_findViewModel != null && _findViewModel.Window != null && _findViewModel.Window.IsVisible)
         {
+            _findPreviousFocus = Window?.FocusManager?.GetFocusedElement() as Control;
+            _findViewModel.ResultFound = false;
             _findViewModel.Window.Activate();
             return;
         }
 
+        _findPreviousFocus = Window?.FocusManager?.GetFocusedElement() as Control;
         var subs = Subtitles.Select(p => p.Text).ToList();
         var result = _windowService.ShowWindow<FindWindow, FindViewModel>(Window!, (window, vm) =>
         {
@@ -9234,6 +9242,23 @@ public partial class MainViewModel :
             }
 
             vm.InitializeFindData(_findService, subs, selectedText, this);
+            window.Closed += (_, _) =>
+            {
+                if (_findClosingProgrammatically)
+                {
+                    _findClosingProgrammatically = false;
+                    return;
+                }
+
+                if (vm.ResultFound)
+                {
+                    FocusEditTextBox();
+                }
+                else
+                {
+                    Dispatcher.UIThread.Post(() => _findPreviousFocus?.Focus());
+                }
+            };
         });
 
         _shortcutManager.ClearKeys();
@@ -9287,6 +9312,11 @@ public partial class MainViewModel :
             {
                 ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
                 return;
+            }
+
+            if (_findViewModel != null)
+            {
+                _findViewModel.ResultFound = true;
             }
 
             Dispatcher.UIThread.Post(() =>
@@ -9370,6 +9400,7 @@ public partial class MainViewModel :
             EditTextBox.SelectionEnd = foundIndex + foundText.Length;
         });
 
+        FocusEditTextBox();
         _shortcutManager.ClearKeys();
     }
 
@@ -9424,6 +9455,7 @@ public partial class MainViewModel :
             EditTextBox.SelectionEnd = foundIndex + foundText.Length;
         });
 
+        FocusEditTextBox();
         _shortcutManager.ClearKeys();
     }
 
@@ -9437,18 +9469,22 @@ public partial class MainViewModel :
 
         if (_findViewModel != null)
         {
+            _findClosingProgrammatically = true;
             _findViewModel.Window?.Close();
             _findViewModel = null;
         }
 
         if (_replaceViewModel != null && _replaceViewModel.Window != null && _replaceViewModel.Window.IsVisible)
         {
+            _replacePreviousFocus = Window?.FocusManager?.GetFocusedElement() as Control;
+            _replaceViewModel.ResultFound = false;
             _replaceViewModel.Window.Activate();
             return;
         }
 
+        _replacePreviousFocus = Window?.FocusManager?.GetFocusedElement() as Control;
         var subs = Subtitles.Select(p => p.Text).ToList();
-        var result = _windowService.ShowWindow<ReplaceWindow, ReplaceViewModel>(Window, (window, vm) =>
+        var result = _windowService.ShowWindow<ReplaceWindow, ReplaceViewModel>(Window!, (window, vm) =>
         {
             window.Topmost = true;
             _replaceViewModel = vm;
@@ -9465,6 +9501,23 @@ public partial class MainViewModel :
             }
 
             vm.InitializeFindData(_findService, subs, selectedText, this);
+            window.Closed += (_, _) =>
+            {
+                if (_replaceClosingProgrammatically)
+                {
+                    _replaceClosingProgrammatically = false;
+                    return;
+                }
+
+                if (vm.ResultFound)
+                {
+                    FocusEditTextBox();
+                }
+                else
+                {
+                    Dispatcher.UIThread.Post(() => _replacePreviousFocus?.Focus());
+                }
+            };
         });
 
         _shortcutManager.ClearKeys();
@@ -9522,6 +9575,11 @@ public partial class MainViewModel :
             {
                 ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
                 return;
+            }
+
+            if (_replaceViewModel != null)
+            {
+                _replaceViewModel.ResultFound = true;
             }
 
             var foundText = _findService.CurrentTextFound;
