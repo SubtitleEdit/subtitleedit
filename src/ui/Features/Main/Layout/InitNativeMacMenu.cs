@@ -7,7 +7,6 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -40,6 +39,11 @@ public static class InitNativeMacMenu
     private static NativeMenuItem? _reopenItem;
     private static NativeMenuItem? _pluginsItem;
     private static NativeMenuItem? _audioTracksItem;
+
+    // The real VM instance — set by Sync(), used by all lazy click handlers.
+    // MainViewModel is AddTransient in DI, so GetService() returns a new instance;
+    // we must hold a reference to the specific instance that owns the main window.
+    private static MainViewModel? _vm;
 
     // ── App menu ─────────────────────────────────────────────────────────────
     // Called from Program.cs. Sets the "Subtitle Edit" app dropdown contents.
@@ -344,8 +348,10 @@ public static class InitNativeMacMenu
 
     public static void Sync(MainViewModel vm)
     {
-        if (_handler != null)
-            vm.PropertyChanged -= _handler;
+        if (_handler != null && _vm != null)
+            _vm.PropertyChanged -= _handler;
+
+        _vm = vm;
 
         vm.NativeMenuReopen = _reopenItem;
         vm.NativeMenuPlugins = _pluginsItem;
@@ -496,8 +502,7 @@ public static class InitNativeMacMenu
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private static MainViewModel? GetVm() =>
-        Locator.Services?.GetService<MainViewModel>();
+    private static MainViewModel? GetVm() => _vm;
 
     private static NativeMenuItem Item(string? header, Func<MainViewModel, IRelayCommand> getCmd)
     {
