@@ -62,6 +62,7 @@ public partial class ReplaceViewModel : ObservableObject
         ReplacePressed = true;
         ReplaceAllPressed = false;
         FindNextPressed = false;
+        SaveSettings();
         _findResult?.HandleReplaceResult(this);
     }
 
@@ -71,6 +72,7 @@ public partial class ReplaceViewModel : ObservableObject
         ReplacePressed = false;
         ReplaceAllPressed = true;
         FindNextPressed = false;
+        SaveSettings();
         _findResult?.HandleReplaceResult(this);
     }
 
@@ -80,6 +82,7 @@ public partial class ReplaceViewModel : ObservableObject
         ReplacePressed = false;
         ReplaceAllPressed = false;
         FindNextPressed = true;
+        SaveSettings();
         _findResult?.HandleReplaceResult(this);
     }
 

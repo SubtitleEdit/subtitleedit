@@ -9286,6 +9286,8 @@ public partial class MainViewModel :
 
     public void HandleFindResult(FindViewModel result)
     {
+        result.ResultFound = false;
+
         var selectedSubtitle = SelectedSubtitle;
         if (Subtitles.Count == 0 || selectedSubtitle == null)
         {
@@ -9525,6 +9527,8 @@ public partial class MainViewModel :
 
     public void HandleReplaceResult(ReplaceViewModel result)
     {
+        result.ResultFound = false;
+
         var selectedSubtitle = SelectedSubtitle;
         if (Subtitles.Count == 0 || selectedSubtitle == null)
         {
