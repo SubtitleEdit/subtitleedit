@@ -21,12 +21,18 @@ namespace Nikse.SubtitleEdit.Features.Main.Layout;
 ///   - SetMenu(Application, menu) → _factory.SetAppMenu()  → the "Subtitle Edit" app menu dropdown only
 ///   - SetMenu(Window, menu)      → avnWindow.SetMainMenu() → the full NSMenuBar with separate menus
 ///
-/// Two-phase design:
+/// Two-phase init:
 ///   SetupAppMenu + MakeStructure: called from Program.cs after SetupMainWindow.
 ///     The Window-level menu creates the full NSMenuBar (File, Edit, etc.).
 ///     The Application-level menu populates the App menu (About, Preferences).
-///   Sync: called from OnLoaded once the ViewModel is available to wire up
-///     initial states, gestures, PropertyChanged subscriptions, and dynamic submenus.
+///   Sync: called from MainViewModel.OnLoaded to wire up initial states,
+///     gestures, PropertyChanged subscriptions, and dynamic submenus.
+///
+/// Post-init updaters (called as state changes):
+///   Rebuild: rebuilds the full structure after a language switch.
+///   UpdateShortcuts: re-resolves gestures after shortcut settings change.
+///   UpdateRecentFiles / UpdatePluginsMenu / UpdateAudioTracksMenu: refresh
+///     dynamic submenus on demand.
 /// </summary>
 public static class InitNativeMacMenu
 {
