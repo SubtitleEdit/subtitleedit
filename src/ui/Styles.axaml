@@ -5,7 +5,7 @@
     <Style Selector="DataGridCell:current /template/ #CurrencyVisual">
         <Setter Property="IsVisible" Value="False"/>
     </Style>
-    <Style Selector="DataGridRow:pointerover">
-        <Setter Property="Background" Value="Transparent"/>
+    <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
+        <Setter Property="Fill" Value="Transparent"/>
     </Style>
 </Styles>
