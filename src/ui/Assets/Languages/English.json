@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.0.0-beta32",
+  "version": "v5.0.0-beta33",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -105,6 +105,9 @@
     "column": "Column",
     "consoleLog": "Console log",
     "contentAlignment": "Content alignment",
+    "continueFindTitle": "Continue Find?",
+    "searchItemNotFoundContinueFromTop": "The search item was not found.\nWould you like to start from the top of the document and search one more time?",
+    "searchItemNotFoundContinueFromBottom": "The search item was not found.\nWould you like to start from the end of the document and search one more time?",
     "conversionCancelledByUser": "Conversion cancelled by user",
     "convert": "Convert",
     "converted": "Converted",
@@ -2315,6 +2318,7 @@
       "showToolbarHelp": "Show help icon",
       "showToolbarEncoding": "Show encoding",
       "showToolbarFrameRate": "Show frame rate",
+      "showPluginsMenu": "Show Plugins menu",
       "proxyAddress": "Proxy address",
       "username": "Username",
       "password": "Password",
