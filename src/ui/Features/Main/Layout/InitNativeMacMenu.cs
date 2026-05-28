@@ -18,38 +18,54 @@ namespace Nikse.SubtitleEdit.Features.Main.Layout;
 /// <summary>
 /// Builds and maintains the native macOS menu bar.
 ///
-/// Two-phase design: MakeStructure must be called during application setup
-/// (AfterSetup, before SetupWithLifetime) so Avalonia's macOS backend creates
-/// the NSMenuBar from our full menu tree. Sync is called later (OnLoaded) to
-/// set gestures, initial enabled/checked states, PropertyChanged subscriptions,
-/// and dynamic submenus once the ViewModel is available.
+/// Avalonia routes NativeMenu.SetMenu calls differently depending on the target:
+///   - SetMenu(Application, menu) → _factory.SetAppMenu()  → the "Subtitle Edit" app menu dropdown only
+///   - SetMenu(Window, menu)      → avnWindow.SetMainMenu() → the full NSMenuBar with separate menus
+///
+/// Two-phase design:
+///   SetupAppMenu + MakeStructure: called from Program.cs after SetupMainWindow.
+///     The Window-level menu creates the full NSMenuBar (File, Edit, etc.).
+///     The Application-level menu populates the App menu (About, Preferences).
+///   Sync: called from OnLoaded once the ViewModel is available to wire up
+///     initial states, gestures, PropertyChanged subscriptions, and dynamic submenus.
 /// </summary>
 public static class InitNativeMacMenu
 {
-    // Items whose Gesture must be set in Sync
     private static readonly List<(Func<MainViewModel, IRelayCommand> GetCmd, NativeMenuItem Item)> _gestureItems = [];
-
-    // Items whose IsEnabled tracks a VM property
     private static readonly List<(NativeMenuItem Item, Func<MainViewModel, bool> IsEnabled, string[] Props)> _conditionals = [];
-
-    // Toggle (CheckBox) items whose IsChecked tracks a VM property
     private static readonly List<(NativeMenuItem Item, Func<MainViewModel, bool> IsChecked, string[] Props)> _toggles = [];
-
-    // Items with a dynamic Header string
     private static readonly List<(NativeMenuItem Item, Func<MainViewModel, string> GetHeader, string[] Props)> _dynamicHeaders = [];
-
-    // Single PropertyChanged handler, replaced on each Sync call
     private static PropertyChangedEventHandler? _handler;
 
-    // References to dynamic-submenu items, surfaced so Sync/UpdateX can reach them
     private static NativeMenuItem? _reopenItem;
     private static NativeMenuItem? _pluginsItem;
     private static NativeMenuItem? _audioTracksItem;
 
-    // ── Phase 1 ──────────────────────────────────────────────────────────────
-    // Called from Program.cs SetupNativeMenu (inside AfterSetup, before
-    // SetupWithLifetime). Builds the full NativeMenu tree with lazy command
-    // resolution — the ViewModel is not available yet.
+    // ── App menu ─────────────────────────────────────────────────────────────
+    // Called from Program.cs. Sets the "Subtitle Edit" app dropdown contents.
+    // Avalonia also auto-appends the standard macOS items (Hide, Quit, etc.).
+
+    public static void SetupAppMenu(Application app)
+    {
+        var appMenu = new NativeMenu();
+
+        var aboutItem = new NativeMenuItem(Clean(Se.Language.Help.AboutSubtitleEdit));
+        aboutItem.Click += (_, _) => GetVm()?.ShowAboutCommand.Execute(null);
+        appMenu.Items.Add(aboutItem);
+        appMenu.Items.Add(new NativeMenuItemSeparator());
+
+        var prefsItem = new NativeMenuItem(Clean(Se.Language.Main.Menu.Settings));
+        prefsItem.Gesture = new KeyGesture(Key.OemComma, KeyModifiers.Meta);
+        prefsItem.Click += (_, _) => GetVm()?.CommandShowSettingsCommand.Execute(null);
+        appMenu.Items.Add(prefsItem);
+
+        NativeMenu.SetMenu(app, appMenu);
+    }
+
+    // ── Full NSMenuBar ────────────────────────────────────────────────────────
+    // MakeStructure populates the root NativeMenu (passed in from Program.cs)
+    // with all top-level menus. Called before NativeMenu.SetMenu(window, root).
+    // Commands use lazy VM resolution since the ViewModel may not be ready yet.
 
     public static void MakeStructure(NativeMenu root)
     {
@@ -59,19 +75,6 @@ public static class InitNativeMacMenu
         _dynamicHeaders.Clear();
 
         var l = Se.Language.Main.Menu;
-
-        // ── App menu ──────────────────────────────────────────────────────────
-        var appItems = new NativeMenu();
-        appItems.Items.Add(Item(Clean(Se.Language.Help.AboutSubtitleEdit), v => v.ShowAboutCommand));
-        appItems.Items.Add(new NativeMenuItemSeparator());
-        var prefsItem = Item(Clean(l.Settings), v => v.CommandShowSettingsCommand);
-        prefsItem.Gesture = new KeyGesture(Key.OemComma, KeyModifiers.Meta);
-        appItems.Items.Add(prefsItem);
-        appItems.Items.Add(new NativeMenuItemSeparator());
-        var quitItem = new NativeMenuItem(Clean(l.Exit));
-        quitItem.Gesture = new KeyGesture(Key.Q, KeyModifiers.Meta);
-        quitItem.Click += (_, _) => GetVm()?.CommandExitCommand.Execute(null);
-        appItems.Items.Add(quitItem);
 
         // ── File ──────────────────────────────────────────────────────────────
         var fileItems = new NativeMenu();
@@ -99,10 +102,8 @@ public static class InitNativeMacMenu
 
         var filePropsItem = new NativeMenuItem(string.Empty);
         filePropsItem.Click += (_, _) => GetVm()?.FilePropertiesShowCommand.Execute(null);
-        _dynamicHeaders.Add((filePropsItem, v => Clean(v.FilePropertiesText),
-            [nameof(MainViewModel.FilePropertiesText)]));
-        _conditionals.Add((filePropsItem, v => v.IsFilePropertiesVisible,
-            [nameof(MainViewModel.IsFilePropertiesVisible)]));
+        _dynamicHeaders.Add((filePropsItem, v => Clean(v.FilePropertiesText), [nameof(MainViewModel.FilePropertiesText)]));
+        _conditionals.Add((filePropsItem, v => v.IsFilePropertiesVisible, [nameof(MainViewModel.IsFilePropertiesVisible)]));
         fileItems.Items.Add(filePropsItem);
 
         fileItems.Items.Add(Item(Clean(l.OpenContainingFolder), v => v.OpenContainingFolderCommand));
@@ -221,8 +222,7 @@ public static class InitNativeMacMenu
         videoItems.Items.Add(Item(Clean(l.CloseVideoFile), v => v.CommandVideoCloseCommand));
 
         _audioTracksItem = new NativeMenuItem(Clean(l.AudioTracks)) { Menu = new NativeMenu() };
-        _conditionals.Add((_audioTracksItem, v => v.IsAudioTracksVisible,
-            [nameof(MainViewModel.IsAudioTracksVisible)]));
+        _conditionals.Add((_audioTracksItem, v => v.IsAudioTracksVisible, [nameof(MainViewModel.IsAudioTracksVisible)]));
         videoItems.Items.Add(_audioTracksItem);
 
         videoItems.Items.Add(new NativeMenuItemSeparator());
@@ -260,8 +260,7 @@ public static class InitNativeMacMenu
 
         var setOffsetItem = new NativeMenuItem(string.Empty);
         setOffsetItem.Click += (_, _) => GetVm()?.ShowVideoSetOffsetCommand.Execute(null);
-        _dynamicHeaders.Add((setOffsetItem, v => Clean(v.SetVideoOffsetText),
-            [nameof(MainViewModel.SetVideoOffsetText)]));
+        _dynamicHeaders.Add((setOffsetItem, v => Clean(v.SetVideoOffsetText), [nameof(MainViewModel.SetVideoOffsetText)]));
         videoMoreList.Add(setOffsetItem);
 
         videoMoreList.Add(Toggle(Clean(l.SmpteTiming), v => v.ToggleSmpteTimingCommand,
@@ -270,7 +269,6 @@ public static class InitNativeMacMenu
         var videoMoreItems = new NativeMenu();
         foreach (var item in videoMoreList.OrderBy(i => i.Header?.TrimStart('_', ' ')))
             videoMoreItems.Items.Add(item);
-
         var videoMoreMenu = new NativeMenuItem(Clean(Se.Language.General.More)) { Menu = videoMoreItems };
         _conditionals.Add((videoMoreMenu, v => v.IsVideoLoaded, [nameof(MainViewModel.IsVideoLoaded)]));
         videoItems.Items.Add(videoMoreMenu);
@@ -327,7 +325,6 @@ public static class InitNativeMacMenu
         _conditionals.Add((assaMenu, v => v.IsFormatAssa, [nameof(MainViewModel.IsFormatAssa)]));
 
         // ── Assemble ──────────────────────────────────────────────────────────
-        root.Items.Add(new NativeMenuItem("Subtitle Edit") { Menu = appItems });
         root.Items.Add(new NativeMenuItem(Clean(l.File)) { Menu = fileItems });
         root.Items.Add(new NativeMenuItem(Clean(l.Edit)) { Menu = editItems });
         root.Items.Add(new NativeMenuItem(Clean(l.Tools)) { Menu = toolItems });
@@ -342,42 +339,34 @@ public static class InitNativeMacMenu
     }
 
     // ── Phase 2 ──────────────────────────────────────────────────────────────
-    // Called from MainViewModel.OnLoaded (after the event loop starts).
-    // Syncs initial states, gestures, PropertyChanged subscriptions, and dynamic
-    // submenus onto the items already created by MakeStructure.
+    // Called from MainViewModel.OnLoaded. Applies initial states, gestures,
+    // PropertyChanged subscriptions, and dynamic submenus.
 
-    public static void Sync(Application app, MainViewModel vm)
+    public static void Sync(MainViewModel vm)
     {
         if (_handler != null)
             vm.PropertyChanged -= _handler;
 
-        // Expose dynamic submenu references on the VM
         vm.NativeMenuReopen = _reopenItem;
         vm.NativeMenuPlugins = _pluginsItem;
         vm.NativeMenuAudioTracks = _audioTracksItem;
 
-        // Gestures
         var shortcuts = ShortcutsMain.GetUsedShortcuts(vm);
         foreach (var (getCmd, item) in _gestureItems)
             item.Gesture = FindGesture(getCmd(vm), shortcuts);
 
-        // Initial conditional states
         foreach (var (item, isEnabled, _) in _conditionals)
             item.IsEnabled = isEnabled(vm);
 
-        // Initial toggle states
         foreach (var (item, isChecked, _) in _toggles)
             item.IsChecked = isChecked(vm);
 
-        // Initial dynamic headers
         foreach (var (item, getHeader, _) in _dynamicHeaders)
             item.Header = getHeader(vm);
 
-        // Plugins visibility
         if (_pluginsItem != null)
             _pluginsItem.IsEnabled = Se.Settings.Appearance.ShowPluginsMenu;
 
-        // PropertyChanged handler
         _handler = (s, e) =>
         {
             if (s is not MainViewModel v2 || e.PropertyName is null)
@@ -391,7 +380,6 @@ public static class InitNativeMacMenu
         };
         vm.PropertyChanged += _handler;
 
-        // Dynamic submenus
         UpdateRecentFiles(vm);
         UpdatePluginsMenu(vm);
     }
@@ -501,9 +489,6 @@ public static class InitNativeMacMenu
 
     public static void UpdateShortcuts(MainViewModel vm)
     {
-        if (Avalonia.Application.Current is not { } app)
-            return;
-
         var shortcuts = ShortcutsMain.GetUsedShortcuts(vm);
         foreach (var (getCmd, item) in _gestureItems)
             item.Gesture = FindGesture(getCmd(vm), shortcuts);

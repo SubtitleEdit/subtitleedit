@@ -90,6 +90,17 @@ namespace Nikse.SubtitleEdit
                 else
                 {
                     SetupMainWindow(lifetime);
+
+                    // Set the full macOS menu bar (File, Edit, Tools, …) on the Window.
+                    // NativeMenu.SetMenu(Application, …) only controls the App menu dropdown;
+                    // NativeMenu.SetMenu(Window, …) calls avnWindow.SetMainMenu and builds
+                    // the full NSMenuBar with separate top-level menus.
+                    if (OperatingSystem.IsMacOS() && lifetime.MainWindow != null)
+                    {
+                        var menuBarRoot = new NativeMenu();
+                        Nikse.SubtitleEdit.Features.Main.Layout.InitNativeMacMenu.MakeStructure(menuBarRoot);
+                        NativeMenu.SetMenu(lifetime.MainWindow, menuBarRoot);
+                    }
                 }
 
 #if DEBUG
@@ -149,15 +160,11 @@ namespace Nikse.SubtitleEdit
 
         private static void SetupNativeMenu(Application app, ClassicDesktopStyleApplicationLifetime lifetime)
         {
-            // Build the full native menu structure during setup, before Avalonia's macOS
-            // backend initializes NSMenuBar. Commands use lazy VM resolution so the
-            // ViewModel is not needed here. Sync() (called from OnLoaded) applies
-            // gestures, initial states, and dynamic submenus once the VM is ready.
+            // Populate the "Subtitle Edit" app menu dropdown (About, Preferences…).
+            // Standard macOS items (Hide, Quit, etc.) are auto-appended by Avalonia.
             if (OperatingSystem.IsMacOS())
             {
-                var root = new NativeMenu();
-                Nikse.SubtitleEdit.Features.Main.Layout.InitNativeMacMenu.MakeStructure(root);
-                NativeMenu.SetMenu(app, root);
+                Nikse.SubtitleEdit.Features.Main.Layout.InitNativeMacMenu.SetupAppMenu(app);
             }
 
             // mac finder "Send to"
