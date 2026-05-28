@@ -9241,8 +9241,7 @@ public partial class MainViewModel :
 
     public void RequestFindData()
     {
-        var selectedSubtitle = SelectedSubtitle;
-        if (Subtitles.Count == 0 || selectedSubtitle == null)
+        if (Subtitles.Count == 0)
         {
             return;
         }
