@@ -12306,6 +12306,9 @@ public partial class MainViewModel :
             return;
         }
 
+        _shiftSelectAnchorIndex = -1;
+        _shiftSelectCurrentIndex = -1;
+
         lock (_scrollLock)
         {
             _pendingScrollIndex = index;
@@ -16358,7 +16361,24 @@ public partial class MainViewModel :
 
             if (IsSubtitleGridFocused())
             {
-                if (keyEventArgs.Key == Key.Home && keyEventArgs.KeyModifiers == KeyModifiers.None && Subtitles.Count > 0)
+                if (keyEventArgs.Key == Key.Down && keyEventArgs.KeyModifiers == KeyModifiers.Shift && Subtitles.Count > 0)
+                {
+                    keyEventArgs.Handled = true;
+                    HandleShiftArrowSelection(1);
+                    return;
+                }
+                else if (keyEventArgs.Key == Key.Up && keyEventArgs.KeyModifiers == KeyModifiers.Shift && Subtitles.Count > 0)
+                {
+                    keyEventArgs.Handled = true;
+                    HandleShiftArrowSelection(-1);
+                    return;
+                }
+                else if ((keyEventArgs.Key == Key.Down || keyEventArgs.Key == Key.Up) && keyEventArgs.KeyModifiers == KeyModifiers.None)
+                {
+                    _shiftSelectAnchorIndex = -1;
+                    _shiftSelectCurrentIndex = -1;
+                }
+                else if (keyEventArgs.Key == Key.Home && keyEventArgs.KeyModifiers == KeyModifiers.None && Subtitles.Count > 0)
                 {
                     keyEventArgs.Handled = true;
                     SelectAndScrollToRow(0);
@@ -16461,6 +16481,8 @@ public partial class MainViewModel :
     private bool _subtitleGridIsControlPressed = false;
     private int _dragSelectStartIndex = -1;
     private int _dragSelectLastIndex = -1;
+    private int _shiftSelectAnchorIndex = -1;
+    private int _shiftSelectCurrentIndex = -1;
     private int _dragSelectAutoScrollDirection;
     private int _dragSelectAutoScrollStep = 1;
     private bool _dragSelectHasMoved;
@@ -16478,6 +16500,8 @@ public partial class MainViewModel :
         _dragSelectStartIndex = -1;
         _dragSelectLastIndex = -1;
         _dragSelectHasMoved = false;
+        _shiftSelectAnchorIndex = -1;
+        _shiftSelectCurrentIndex = -1;
         IsSubtitleGridFlyoutHeaderVisible = false;
 
         if (sender is Control { ContextFlyout: not null } control)
@@ -16615,6 +16639,51 @@ public partial class MainViewModel :
 
         _subtitleGridSelectionChangedSkip = false;
 
+        SubtitleGridSelectionChanged();
+    }
+
+    private void HandleShiftArrowSelection(int direction)
+    {
+        if (Subtitles.Count == 0)
+        {
+            return;
+        }
+
+        if (_shiftSelectAnchorIndex < 0)
+        {
+            var anchor = SelectedSubtitleIndex ?? (SubtitleGrid.SelectedItems.Count > 0
+                ? Subtitles.IndexOf((SubtitleLineViewModel)SubtitleGrid.SelectedItems[0]!)
+                : -1);
+            if (anchor < 0)
+            {
+                return;
+            }
+
+            _shiftSelectAnchorIndex = anchor;
+            _shiftSelectCurrentIndex = anchor;
+        }
+
+        var newCurrent = _shiftSelectCurrentIndex + direction;
+        if (newCurrent < 0 || newCurrent >= Subtitles.Count)
+        {
+            return;
+        }
+
+        _shiftSelectCurrentIndex = newCurrent;
+
+        var startIdx = Math.Min(_shiftSelectAnchorIndex, _shiftSelectCurrentIndex);
+        var endIdx = Math.Max(_shiftSelectAnchorIndex, _shiftSelectCurrentIndex);
+
+        _subtitleGridSelectionChangedSkip = true;
+        SubtitleGrid.SelectedItems.Clear();
+        for (var i = startIdx; i <= endIdx; i++)
+        {
+            SubtitleGrid.SelectedItems.Add(Subtitles[i]);
+        }
+
+        _subtitleGridSelectionChangedSkip = false;
+
+        SubtitleGrid.ScrollIntoView(Subtitles[_shiftSelectCurrentIndex], null);
         SubtitleGridSelectionChanged();
     }
 
