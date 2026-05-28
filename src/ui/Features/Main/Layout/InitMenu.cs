@@ -529,6 +529,7 @@ public static class InitMenu
         });
 
         vm.MenuPlugins.Header = Se.Language.Plugins.Title;
+        vm.MenuPlugins.IsVisible = Se.Settings.Appearance.ShowPluginsMenu;
         UpdatePluginsMenu(vm);
         menu.Items.Add(vm.MenuPlugins);
 

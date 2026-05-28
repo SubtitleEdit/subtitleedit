@@ -184,6 +184,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showToolbarEncoding;
     [ObservableProperty] private bool _showToolbarFrameRate;
 
+    [ObservableProperty] private bool _showPluginsMenu;
+
     [ObservableProperty] private bool _textBoxButtonShowAutoBreak;
     [ObservableProperty] private bool _textBoxButtonShowUnbreak;
     [ObservableProperty] private bool _textBoxButtonShowItalic;
@@ -687,6 +689,7 @@ public partial class SettingsViewModel : ObservableObject
         ShowToolbarHelp = appearance.ToolbarShowHelp;
         ShowToolbarEncoding = appearance.ToolbarShowEncoding;
         ShowToolbarFrameRate = appearance.ToolbarShowFrameRate;
+        ShowPluginsMenu = appearance.ShowPluginsMenu;
         SubtitleGridFontSize = appearance.SubtitleGridFontSize;
         SubtitleGridTextSingleLine = appearance.SubtitleGridTextSingleLine;
         SubtitleGridFormatting = MapGridFormattingToText(appearance.SubtitleGridFormattingType);
@@ -1328,6 +1331,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.ToolbarShowHelp = ShowToolbarHelp;
         appearance.ToolbarShowEncoding = ShowToolbarEncoding;
         appearance.ToolbarShowFrameRate = ShowToolbarFrameRate;
+        appearance.ShowPluginsMenu = ShowPluginsMenu;
         appearance.SubtitleGridFontSize = SubtitleGridFontSize;
         appearance.SubtitleGridTextSingleLine = SubtitleGridTextSingleLine;
         appearance.SubtitleGridFormattingType = MapGridFormattingToCode(SubtitleGridFormatting);

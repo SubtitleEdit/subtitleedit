@@ -168,6 +168,7 @@ public class LanguageSettings
     public string ShowToolbarHelp { get; set; }
     public string ShowToolbarEncoding { get; set; }
     public string ShowToolbarFrameRate { get; set; }
+    public string ShowPluginsMenu { get; set; }
 
     // Network
     public string ProxyAddress { get; set; }
@@ -466,6 +467,7 @@ public class LanguageSettings
         ShowToolbarHelp = "Show help icon";
         ShowToolbarEncoding = "Show encoding";
         ShowToolbarFrameRate = "Show frame rate";
+        ShowPluginsMenu = "Show Plugins menu";
 
         // Network
         ProxyAddress = "Proxy address";

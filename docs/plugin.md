@@ -15,6 +15,10 @@ compatible with SE5 and must be ported.
 > and update plugins from the index) are implemented. Installing, enabling, disabling,
 > and removing plugins update the **Plugins** menu live (no restart needed). A startup
 > update notification is still to come.
+>
+> The **Plugins** menu is shown by default but can be hidden via
+> **Options → Settings → Appearance → Show Plugins menu**. The menu must be enabled
+> there to run or manage plugins from the main window.
 
 ## How a plugin runs
 
