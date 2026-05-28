@@ -259,7 +259,7 @@ public static class InitNativeMacMenu
             v => !v.AreVideoControlsUndocked, nameof(MainViewModel.AreVideoControlsUndocked)));
         videoItems.Items.Add(Conditional(Clean(l.DockVideoControls), v => v.VideoRedockControlsCommand,
             v => v.AreVideoControlsUndocked, nameof(MainViewModel.AreVideoControlsUndocked)));
-        videoItems.Items.Add(Toggle(Clean(l.ToggleSelectSubtitleWhilePlayingCurrentlyOff), v => v.ToggleCurrentSubtitleWhilePlayingCommand,
+        videoItems.Items.Add(Toggle(Clean(l.SelectSubtitleWhilePlaying), v => v.ToggleCurrentSubtitleWhilePlayingCommand,
             v => v.SelectCurrentSubtitleWhilePlaying, nameof(MainViewModel.SelectCurrentSubtitleWhilePlaying)));
 
         var lVideo = Se.Language.Video;
