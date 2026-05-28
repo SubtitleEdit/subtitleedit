@@ -7607,6 +7607,8 @@ public partial class MainViewModel :
             }
         }
 
+        MenuPlugins.IsVisible = Se.Settings.Appearance.ShowPluginsMenu;
+
         LockTimeCodes = Se.Settings.General.LockTimeCodes;
         IsWaveformToolbarVisible = Se.Settings.Waveform.ShowToolbar;
 
