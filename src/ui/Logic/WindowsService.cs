@@ -32,6 +32,18 @@ namespace Nikse.SubtitleEdit.Logic
             where TViewModel : class;
 
         /// <summary>
+        /// Shows a window of type T with a specified ViewModel type as an independent top-level
+        /// window (no owner). Use this for windows that should appear in the OS Alt+Tab list
+        /// independently and not be grouped with the main window — e.g. the undocked video player
+        /// and audio visualizer. Owned windows on Windows form an Alt+Tab "group" with their
+        /// owner, which traps focus and prevents the user from Alt+Tabbing back to the main
+        /// window once one of the owned windows is active.
+        /// </summary>
+        TViewModel ShowIndependentWindow<T, TViewModel>(Action<T, TViewModel>? configure = null)
+            where T : Window
+            where TViewModel : class;
+
+        /// <summary>
         /// Shows a window of type T as a dialog.
         /// </summary>
         /// <typeparam name="T">The type of window to show as dialog.</typeparam>
@@ -101,6 +113,31 @@ namespace Nikse.SubtitleEdit.Logic
 
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner; //TODO: does this work on mac?
             window.Show(owner);
+            window.Focus();
+
+            ApplyRightToLeftSettings(window);
+            UiTheme.ApplyScaleToWindow(window);
+
+            return viewModel;
+        }
+
+        /// <inheritdoc />
+        public TViewModel ShowIndependentWindow<T, TViewModel>(Action<T, TViewModel>? configureViewModel = null)
+            where T : Window
+            where TViewModel : class
+        {
+            var viewModel = _serviceProvider.GetRequiredService<TViewModel>();
+
+            var w = Activator.CreateInstance(typeof(T), viewModel);
+            if (w == null)
+            {
+                throw new InvalidOperationException($"Failed to create window of type {typeof(T).Name} with constructor param {typeof(TViewModel).Name}");
+            }
+
+            var window = (T)w;
+            configureViewModel?.Invoke(window, viewModel);
+
+            window.Show();
             window.Focus();
 
             ApplyRightToLeftSettings(window);
