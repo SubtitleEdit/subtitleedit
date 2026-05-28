@@ -1293,4 +1293,135 @@ public class FfmpegGenerator
 
         return string.Join(" ", args);
     }
+
+    // Builds the ffmpeg command line for editing the subtitle track set of an MP4-family
+    // container (.mp4 / .m4v / .mov). Video and audio are stream-copied; the subtitle
+    // tracks are rewritten:
+    //   - existing tracks marked Deleted are dropped
+    //   - existing tracks kept are stream-copied (preserves their codec, e.g. mov_text / tx3g)
+    //   - newly added text-based subtitle files are muxed in as mov_text
+    // Caller is responsible for ensuring `embeddedTracks[i].FileName` for new entries points
+    // to a text-based subtitle ffmpeg can convert (SRT is the safe choice).
+    internal static string AlterEmbeddedTracksMp4(List<EmbeddedTrack> embeddedTracks, List<EmbeddedTrack> originalTracks, string inputFileName, string outputFileName)
+    {
+        var args = new List<string>
+        {
+            "-y",
+            "-fflags +genpts",
+            $"-i \"{inputFileName}\"",
+        };
+
+        var newInputs = embeddedTracks
+            .Where(t => t.New && !t.Deleted && !string.IsNullOrEmpty(t.FileName) && File.Exists(t.FileName))
+            .ToList();
+        foreach (var track in newInputs)
+        {
+            args.Add($"-i \"{track.FileName}\"");
+        }
+
+        // Keep first video + first audio from the source. The "0:V:0" form ignores attached
+        // pictures (cover art); 0:a:0? makes audio optional so audio-less inputs still work.
+        args.Add("-map 0:V:0");
+        args.Add("-map 0:a:0?");
+
+        // Map kept existing subtitle streams in their original order so the relative subtitle
+        // index matches `track.Number` from the parsed media info.
+        var keptOriginals = embeddedTracks.Where(t => !t.New && !t.Deleted).ToList();
+        foreach (var track in keptOriginals)
+        {
+            args.Add($"-map 0:s:{track.Number}");
+        }
+
+        // Map each new external subtitle file (each is its own input, indices 1..N).
+        for (var i = 0; i < newInputs.Count; i++)
+        {
+            args.Add($"-map {i + 1}:0");
+        }
+
+        // Video and audio passthrough; subtitles transcode to mov_text (the only widely
+        // compatible text-subtitle codec for MP4). Existing mov_text/tx3g tracks re-encode
+        // without information loss; tag-heavy formats (ASS) flatten to plain text — caller
+        // should pre-convert to SRT for predictable results.
+        args.Add("-c:v copy");
+        args.Add("-c:a copy");
+        args.Add("-c:s mov_text");
+
+        args.Add("-avoid_negative_ts make_zero");
+        args.Add("-max_interleave_delta 0");
+
+        // Per-output-subtitle metadata + dispositions, in the same order we mapped them above.
+        var outputSubs = new List<EmbeddedTrack>(keptOriginals);
+        outputSubs.AddRange(embeddedTracks.Where(t => t.New && !t.Deleted && !string.IsNullOrEmpty(t.FileName) && File.Exists(t.FileName)));
+
+        for (var outIndex = 0; outIndex < outputSubs.Count; outIndex++)
+        {
+            var t = outputSubs[outIndex];
+            // mov_text expects a 2-/3-letter ISO 639 code in `language=`. The
+            // LanguageOrTitle column doubles as the title field in the Edit dialog,
+            // so the user may have typed a free-form string ("English title") here —
+            // emit it as `title=` instead of mangling the language tag.
+            if (!string.IsNullOrEmpty(t.LanguageOrTitle))
+            {
+                if (LooksLikeIsoLanguageCode(t.LanguageOrTitle))
+                {
+                    args.Add($"-metadata:s:s:{outIndex} language={t.LanguageOrTitle}");
+                }
+                else if (string.IsNullOrEmpty(t.Name))
+                {
+                    args.Add($"-metadata:s:s:{outIndex} title=\"{EscapeFfmpegArg(t.LanguageOrTitle)}\"");
+                }
+            }
+
+            if (!string.IsNullOrEmpty(t.Name))
+            {
+                args.Add($"-metadata:s:s:{outIndex} title=\"{EscapeFfmpegArg(t.Name)}\"");
+            }
+
+            var dispositions = new List<string>();
+            if (t.Default)
+            {
+                dispositions.Add("default");
+            }
+
+            if (t.Forced)
+            {
+                dispositions.Add("forced");
+            }
+
+            args.Add(dispositions.Count > 0
+                ? $"-disposition:s:{outIndex} {string.Join("+", dispositions)}"
+                : $"-disposition:s:{outIndex} 0");
+        }
+
+        args.Add($"\"{outputFileName}\"");
+
+        return string.Join(" ", args);
+    }
+
+    private static bool LooksLikeIsoLanguageCode(string s)
+    {
+        if (string.IsNullOrEmpty(s) || s.Length is < 2 or > 3)
+        {
+            return false;
+        }
+
+        foreach (var c in s)
+        {
+            if (!char.IsLetter(c))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // Strip characters that would break out of a double-quoted ffmpeg argument:
+    // embedded quotes close the string; backslashes can escape the closing quote
+    // on Windows shells. Replace both with safe placeholders rather than try to
+    // round-trip them.
+    private static string EscapeFfmpegArg(string s)
+    {
+        return s.Replace("\\", "_").Replace("\"", "'");
+    }
 }

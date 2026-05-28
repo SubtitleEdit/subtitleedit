@@ -3925,6 +3925,21 @@ public partial class MainViewModel :
             return;
         }
 
+        if (IsMp4LikeFile(_videoFileName))
+        {
+            var mp4Result = await ShowDialogAsync<EmbeddedSubtitlesEditMp4Window, EmbeddedSubtitlesEditMp4ViewModel>(vm =>
+            {
+                vm.Initialize(_videoFileName ?? string.Empty, GetUpdateSubtitle(), SelectedSubtitleFormat, _mediaInfo);
+            });
+
+            if (!mp4Result.OkPressed)
+            {
+                return;
+            }
+
+            return;
+        }
+
         var result = await ShowDialogAsync<EmbeddedSubtitlesEditWindow, EmbeddedSubtitlesEditViewModel>(vm =>
         {
             vm.Initialize(_videoFileName ?? string.Empty, GetUpdateSubtitle(), SelectedSubtitleFormat, _mediaInfo);
@@ -3934,6 +3949,19 @@ public partial class MainViewModel :
         {
             return;
         }
+    }
+
+    private static bool IsMp4LikeFile(string? fileName)
+    {
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return false;
+        }
+
+        var ext = Path.GetExtension(fileName);
+        return ext.Equals(".mp4", StringComparison.OrdinalIgnoreCase)
+            || ext.Equals(".m4v", StringComparison.OrdinalIgnoreCase)
+            || ext.Equals(".mov", StringComparison.OrdinalIgnoreCase);
     }
 
     [RelayCommand]

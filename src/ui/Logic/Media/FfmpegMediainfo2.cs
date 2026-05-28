@@ -23,6 +23,10 @@ public class FfmpegMediaInfo2
     private static readonly Regex DurationRegex = new Regex(@"Duration: \d+[:\.,]\d+[:\.,]\d+[:\.,]\d+", RegexOptions.Compiled);
     private static readonly Regex Fps1Regex = new Regex(@" \d+\.\d+ fps", RegexOptions.Compiled);
     private static readonly Regex Fps2Regex = new Regex(@" \d+ fps", RegexOptions.Compiled);
+    // Match the language tag in the ffmpeg stream header prefix, e.g.
+    //   "Stream #0:2(eng): Subtitle: ..."   or   "Stream #0:2[0x3](eng): ...".
+    // Captures the 2-3 letter ISO code in group "lang".
+    private static readonly Regex StreamLanguageRegex = new Regex(@"^Stream #\d+:\d+(?:\[[^\]]+\])?\((?<lang>[a-zA-Z]{2,3})\)", RegexOptions.Compiled);
 
     private FfmpegMediaInfo2()
     {
@@ -94,6 +98,12 @@ public class FfmpegMediaInfo2
             }
         }
 
+        // `ffmpeg -i input` always exits non-zero (no output file), so GetFfmpegLog's
+        // retry path runs every call and appends a second copy of the log. Without
+        // deduping we'd report every Stream #N:M twice and downstream consumers (e.g.
+        // the MP4 embedded-subtitles window) would show duplicate tracks.
+        var seenStreamPrefixes = new HashSet<string>(StringComparer.Ordinal);
+
         foreach (var line in log.SplitToLines())
         {
             var s = line.Trim();
@@ -115,23 +125,40 @@ public class FfmpegMediaInfo2
                 var arr = s.Replace(": ", "¤").Split('¤');
                 if (arr.Length == 3)
                 {
+                    // arr[0] is the "Stream #N:M(LANG)" prefix — unique per stream. Skip
+                    // any repeat caused by the retry path so we don't add the same track
+                    // twice.
+                    if (!seenStreamPrefixes.Add(arr[0]))
+                    {
+                        continue;
+                    }
+
                     var trackType = arr[1].Trim();
                     var trackInfo = arr[2].Trim();
+                    // arr[0] still carries the "Stream #N:M(LANG)" prefix; parse the
+                    // language tag from there since the rest of the parser drops it.
+                    var language = string.Empty;
+                    var langMatch = StreamLanguageRegex.Match(arr[0]);
+                    if (langMatch.Success)
+                    {
+                        language = langMatch.Groups["lang"].Value;
+                    }
+
                     if (trackType == FfmpegTrackType.Audio.ToString())
                     {
-                        info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Audio, TrackInfo = trackInfo });
+                        info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Audio, TrackInfo = trackInfo, Language = language });
                     }
                     else if (trackType == FfmpegTrackType.Video.ToString())
                     {
-                        info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Video, TrackInfo = trackInfo });
+                        info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Video, TrackInfo = trackInfo, Language = language });
                     }
                     else if (trackType == FfmpegTrackType.Subtitle.ToString())
                     {
-                        info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Subtitle, TrackInfo = trackInfo });
+                        info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Subtitle, TrackInfo = trackInfo, Language = language });
                     }
                     else
                     {
-                        info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Other, TrackInfo = trackInfo });
+                        info.Tracks.Add(new FfmpegTrackInfo { TrackType = FfmpegTrackType.Other, TrackInfo = trackInfo, Language = language });
                     }
                 }
             }

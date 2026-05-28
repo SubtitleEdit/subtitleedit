@@ -342,6 +342,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<ElevenLabsSettingsViewModel>();
         collection.AddTransient<EmbedTrackPreviewViewModel>();
         collection.AddTransient<EmbeddedSubtitlesEditViewModel>();
+        collection.AddTransient<EmbeddedSubtitlesEditMp4ViewModel>();
         collection.AddTransient<EncodingSettingsViewModel>();
         collection.AddTransient<ErrorListViewModel>();
         collection.AddTransient<ExportCavena890ViewModel>();
