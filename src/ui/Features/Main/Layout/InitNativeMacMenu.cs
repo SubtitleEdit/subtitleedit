@@ -308,7 +308,6 @@ public static class InitNativeMacMenu
         // ── Help ──────────────────────────────────────────────────────────────
         var helpItems = new NativeMenu();
         helpItems.Items.Add(Item($"{Clean(Se.Language.Title)} {Clean(l.HelpTitle)}", v => v.ShowHelpCommand));
-        helpItems.Items.Add(Item(Clean(l.About), v => v.ShowAboutCommand));
 
         // ── ASSA Tools ────────────────────────────────────────────────────────
         var assaList = new List<NativeMenuItem>
