@@ -15,6 +15,8 @@ v5.0.0-beta33 (xth May 2026)
 * Add "Set duration to max CPS" shortcut for selected lines
 * Add waveform of original video audio in TTS review window
 * Add burn-in / RemoveTextForHi / VisualSync / BeautifyTimeCodes toolbar icons
+* Expand SE 4 shortcut importer (15 more legacy mappings) + Sort by number / Video toggle brightness (mpv) commands
+* TTS: unbreak lines centrally before handing text to engines
 * Update CrispASR to v0.6.11
 * Frame-align waveform gridlines and timeline labels in frame mode
 * Keep AdjustAllTimes window open across New/Open
@@ -34,6 +36,12 @@ v5.0.0-beta33 (xth May 2026)
 * Detect bookmark changes in undo/redo change detection - thx mjuhasz
 * Restore subtitle grid focus after toolbar/panel layout change - thx mjuhasz
 * Fix dialogs reopening due to stale shortcut key state after close - thx mjuhasz
+* Restore focus to subtitle grid / text box when Find/Replace closes; focus edit text box after Find Next/Previous - thx mjuhasz
+* Focus subtitle grid on startup so keyboard shortcuts work immediately - thx mjuhasz
+* Fix FindNext crash from null ScrollIntoView and stale find state - thx mjuhasz
+* Fix Replace dialog crashes (shorter/empty replacement, empty text editor) and stale Count after Replace All - thx mjuhasz
+* Fix Alt+Tab not returning to main window when video/waveform are undocked
+* Beautify window: move profile button to bottom + per-side fallback in change notes
 * Fix #11181: Whisper parameters textbox scrollbar overlapping text - thx yawoo
 * Fix #11176: BurnIn dialog unable to close after adding a logo - thx bichitoxxx
 
