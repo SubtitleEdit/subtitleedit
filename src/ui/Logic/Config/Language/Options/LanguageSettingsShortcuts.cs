@@ -256,8 +256,10 @@ public class LanguageSettingsShortcuts
     public string CopySubtitlePathToClipboard { get; set; }
     public string CopySubtitleOriginalPathToClipboard { get; set; }
     public string FocusTextBox { get; set; }
+    public string SortByNumber { get; set; }
     public string SortByStartTime { get; set; }
     public string SortByEndTime { get; set; }
+    public string VideoToggleBrightness { get; set; }
     public string DuplicatesFound { get; set; }
     public string CopyTextToClipboard { get; set; }
     public string CopyTextFromOriginalToClipboard { get; set; }
@@ -547,8 +549,10 @@ public class LanguageSettingsShortcuts
         CopySubtitlePathToClipboard = "Copy subtitle path to clipboard";
         CopySubtitleOriginalPathToClipboard = "Copy subtitle path of original to clipboard";
         FocusTextBox = "Focus text box";
+        SortByNumber = "Sort by number";
         SortByStartTime = "Sort by \"Show\" time";
         SortByEndTime = "Sort by \"Hide\" time";
+        VideoToggleBrightness = "Video: toggle brightness (mpv only)";
         DuplicatesFound = "The following duplicate shortcuts were found:";
         CopyTextToClipboard = "Copy text to clipboard (selected lines)";
         CopyTextFromOriginalToClipboard = "Copy text from original to clipboard (selected lines)";
