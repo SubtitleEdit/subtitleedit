@@ -38,7 +38,7 @@ public class LanguagePlugins
 
     public LanguagePlugins()
     {
-        Title = "Plugins";
+        Title = "_Plugins";
         ManagePlugins = "Manage plugins...";
         NoPluginsInstalled = "No plugins installed";
         GetPluginsOnline = "Get plugins online...";

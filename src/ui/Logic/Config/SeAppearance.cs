@@ -114,7 +114,7 @@ public class SeAppearance
         ToolbarShowLayout = true;
         ToolbarShowHelp = true;
         ToolbarShowEncoding = false;
-        ShowPluginsMenu = true;
+        ShowPluginsMenu = false;
 
         TextBoxShowButtonAutoBreak = true;
         TextBoxShowButtonUnbreak = true;
