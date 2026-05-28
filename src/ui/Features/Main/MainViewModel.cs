@@ -9241,14 +9241,11 @@ public partial class MainViewModel :
 
     public void RequestFindData()
     {
-        var selectedSubtitle = SelectedSubtitle;
-        if (Subtitles.Count == 0 || selectedSubtitle == null || _findViewModel == null)
+        if (Subtitles.Count == 0 || _findViewModel == null)
         {
             return;
         }
 
-        var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
-        var currentCharIndex = EditTextBox.CaretIndex;
         var subs = Subtitles.Select(p => p.Text).ToList();
         _findViewModel.InitializeFindData(_findService, subs, _findService.SearchText, this);
     }
