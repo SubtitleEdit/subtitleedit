@@ -7978,6 +7978,37 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void SortByNumber()
+    {
+        if (IsEmpty)
+        {
+            return;
+        }
+
+        var selected = SelectedSubtitle;
+
+        var sortedSubtitles = Subtitles.OrderBy(p => p.Number).ToList();
+        Subtitles.Clear();
+        foreach (var s in sortedSubtitles)
+        {
+            Subtitles.Add(s);
+        }
+
+        Renumber();
+
+        if (selected != null)
+        {
+            SelectAndScrollToSubtitle(selected);
+        }
+        else
+        {
+            SelectAndScrollToRow(0);
+        }
+
+        ShowStatus(Se.Language.Main.SortedByNumber);
+    }
+
+    [RelayCommand]
     private async Task ShowSortBy()
     {
         if (Window == null)
@@ -11419,6 +11450,19 @@ public partial class MainViewModel :
     private void Video100MsForward()
     {
         MoveVideoPositionMs(100);
+    }
+
+    [RelayCommand]
+    private void VideoToggleBrightness()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp?.VideoPlayer is not LibMpvDynamicPlayer mpv)
+        {
+            return;
+        }
+
+        var value = mpv.ToggleBrightness();
+        ShowStatus(string.Format(Se.Language.Main.VideoBrightnessSetTo, value));
     }
 
     [RelayCommand]

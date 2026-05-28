@@ -42,8 +42,11 @@ public static class Se4ShortcutsImporter
         ["MainFileCloseTranslation"] = nameof(MainViewModel.FileCloseTranslationCommand),
         ["MainFileCompare"] = nameof(MainViewModel.ShowCompareCommand),
         ["MainFileImportTimeCodes"] = nameof(MainViewModel.ImportTimeCodesCommand),
+        ["MainFileImportPlainText"] = nameof(MainViewModel.ImportPlainTextCommand),
         ["MainFileExportPlainText"] = nameof(MainViewModel.ShowExportPlainTextCommand),
         ["MainFileExportBdSup"] = nameof(MainViewModel.ExportBluRaySupCommand),
+        ["MainFileExportEbu"] = nameof(MainViewModel.ExportEbuStlCommand),
+        ["MainFileExportPac"] = nameof(MainViewModel.ExportPacCommand),
         ["MainFileExportCustomText1"] = nameof(MainViewModel.ShowExportCustomTextFormatCommand),
         ["MainFileExportCustomText2"] = nameof(MainViewModel.ShowExportCustomTextFormatCommand),
         ["MainFileExportCustomText3"] = nameof(MainViewModel.ShowExportCustomTextFormatCommand),
@@ -62,6 +65,8 @@ public static class Se4ShortcutsImporter
         ["MainEditReverseStartAndEndingForRTL"] = nameof(MainViewModel.ReverseRightToLeftStartEndCommand),
         ["MainEditInverseSelection"] = nameof(MainViewModel.InverseSelectionCommand),
         ["MainEditModifySelection"] = nameof(MainViewModel.ShowModifySelectionCommand),
+        ["MainEditFixRTLViaUnicodeChars"] = nameof(MainViewModel.FixRightToLeftViaUnicodeControlCharactersCommand),
+        ["MainEditRemoveRTLUnicodeChars"] = nameof(MainViewModel.RemoveUnicodeControlCharactersCommand),
 
         // Tools
         ["MainToolsAdjustDuration"] = nameof(MainViewModel.ShowToolsAdjustDurationsCommand),
@@ -82,6 +87,7 @@ public static class Se4ShortcutsImporter
         ["MainToolsBeautifyTimeCodes"] = nameof(MainViewModel.ShowBeautifyTimeCodesCommand),
         ["MainToolsStyleManager"] = nameof(MainViewModel.ShowAssaStylesCommand),
         ["MainToolsAutoDuration"] = nameof(MainViewModel.RecalculateDurationSelectedLinesCommand),
+        ["MainToolsRenumber"] = nameof(MainViewModel.ShowToolsRenumberCommand),
 
         // Spell check
         ["MainSpellCheck"] = nameof(MainViewModel.ShowSpellCheckCommand),
@@ -111,6 +117,7 @@ public static class Se4ShortcutsImporter
         ["MainVideoSpeedToggle"] = nameof(MainViewModel.TogglePlaybackSpeedCommand),
         ["MainVideoAudioToTextWhisper"] = nameof(MainViewModel.ShowSpeechToTextWhisperCommand),
         ["MainVideoTextToSpeech"] = nameof(MainViewModel.ShowVideoTextToSpeechCommand),
+        ["MainVideoToggleBrightness"] = nameof(MainViewModel.VideoToggleBrightnessCommand),
         ["MainVideoToggleVideoControls"] = nameof(MainViewModel.VideoUndockControlsCommand),
         ["MainVideoPlayFromBeginning"] = nameof(MainViewModel.PlayFromStartOfVideoCommand),
         ["MainVideoPlaySelectedLines"] = nameof(MainViewModel.PlaySelectedLinesWithoutLoopCommand),
@@ -154,8 +161,15 @@ public static class Se4ShortcutsImporter
         ["MainListViewCopyText"] = nameof(MainViewModel.CopyTextToClipboardCommand),
         ["MainListViewCopyOriginalText"] = nameof(MainViewModel.CopyTextFromOriginalToClipboardCommand),
         ["MainListViewCopyTextFromOriginalToCurrent"] = nameof(MainViewModel.CopyTextFromOriginalToTranslationCommand),
+        ["MainListViewSortByNumber"] = nameof(MainViewModel.SortByNumberCommand),
         ["MainListViewSortByStartTime"] = nameof(MainViewModel.SortByStartTimeCommand),
         ["MainListViewSortByEndTime"] = nameof(MainViewModel.SortByEndTimeCommand),
+        ["MainListViewColumnDeleteText"] = nameof(MainViewModel.ColumnDeleteTextCommand),
+        ["MainListViewColumnDeleteTextAndShiftUp"] = nameof(MainViewModel.ColumnDeleteTextAndShiftCellsUpCommand),
+        ["MainListViewColumnInsertText"] = nameof(MainViewModel.ColumnInsertEmptyTextAndShiftCellsDownCommand),
+        ["MainListViewColumnPaste"] = nameof(MainViewModel.ColumnPasteFromClipboardCommand),
+        ["MainListViewColumnTextUp"] = nameof(MainViewModel.ColumnTextUpCommand),
+        ["MainListViewColumnTextDown"] = nameof(MainViewModel.ColumnTextDownCommand),
         ["MainListViewListErrors"] = nameof(MainViewModel.ListErrorsCommand),
         ["MainListViewGoToNextError"] = nameof(MainViewModel.GoToNextErrorCommand),
         ["MainListViewAutoDuration"] = nameof(MainViewModel.RecalculateDurationSelectedLinesCommand),
@@ -190,6 +204,7 @@ public static class Se4ShortcutsImporter
         ["MainTextBoxSelectionToUpper"] = nameof(MainViewModel.SelectionToUpperCommand),
         ["MainTextBoxAutoBreak"] = nameof(MainViewModel.AutoBreakCommand),
         ["MainTextBoxUnbreak"] = nameof(MainViewModel.UnbreakCommand),
+        ["MainTextBoxInsertUnicodeSymbol"] = nameof(MainViewModel.TextBoxInsertUnicodeSymbolCommand),
 
         // Create / adjust
         ["MainCreateInsertSubAtVideoPos"] = nameof(MainViewModel.WaveformInsertAtPositionAndFocusTextBoxCommand),
@@ -233,6 +248,7 @@ public static class Se4ShortcutsImporter
 
         // Translate
         ["MainTranslateAuto"] = nameof(MainViewModel.ShowAutoTranslateCommand),
+        ["MainTranslateAutoSelectedLines"] = nameof(MainViewModel.AutoTranslateSelectedLinesCommand),
         ["MainTranslateGoogleTranslateIt"] = nameof(MainViewModel.ShowTranslateViaCopyPasteCommand),
         ["MainTranslateGoogleIt"] = nameof(MainViewModel.GoogleItCommand),
 
@@ -284,6 +300,7 @@ public static class Se4ShortcutsImporter
         ["GeneralMergeWithPrevious"] = nameof(MainViewModel.MergeWithLineBeforeCommand),
         ["GeneralApplyAssaOverrideTags"] = nameof(MainViewModel.ShowAssaApplyCustomOverrideTagsCommand),
         ["GeneralSetAssaPosition"] = nameof(MainViewModel.ShowAssaSetPositionCommand),
+        ["GeneralSetAssaResolution"] = nameof(MainViewModel.ShowAssaChangeResolutionCommand),
         ["GeneralSetAssaBgBox"] = nameof(MainViewModel.ShowAssaGenerateBackgroundCommand),
         ["GeneralColorPicker"] = nameof(MainViewModel.ShowColorPickerCommand),
         ["OpenDataFolder"] = nameof(MainViewModel.OpenDataFolderCommand),

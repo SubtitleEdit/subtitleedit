@@ -90,6 +90,8 @@ public class LanguageMain
     public string VideoOpenedChangeLayoutQuestion { get; set; }
     public string SortedByStartTime { get; set; }
     public string SortedByEndTime { get; set; }
+    public string SortedByNumber { get; set; }
+    public string VideoBrightnessSetTo { get; set; }
     public string ColorHint { get; set; }
     public string RemoveFormattingHint { get; set; }
     public string AssaResolutionResamplerDone { get; set; }
@@ -196,6 +198,8 @@ public class LanguageMain
         VideoOpenedChangeLayoutQuestion = "A video file has been opened.\n\nDo you want to change the layout to show the video panel?";
         SortedByStartTime = "Sorted by \"Show\" time";
         SortedByEndTime = "Sorted by \"Hide\" time";
+        SortedByNumber = "Sorted by number";
+        VideoBrightnessSetTo = "Brightness: {0}";
         ColorHint = "Color selected lines";
         RemoveFormattingHint = "Remove formatting from selected lines";
         AssaResolutionResamplerDone = "ASSA resolution changed.";

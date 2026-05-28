@@ -383,6 +383,20 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         return _mpvSetOptionString(_mpv, nameBytes, valueBytes);
     }
 
+    private int _brightness;
+
+    public int ToggleBrightness()
+    {
+        _brightness += 25;
+        if (_brightness > 100)
+        {
+            _brightness = -100;
+        }
+
+        SetOptionString("brightness", _brightness.ToString(CultureInfo.InvariantCulture));
+        return _brightness;
+    }
+
     public static IntPtr AllocateUtf8IntPtrArrayWithSentinel(string[] arr, out IntPtr[] byteArrayPointers)
     {
         var numberOfStrings = arr.Length + 1;

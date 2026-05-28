@@ -374,8 +374,10 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ShowSubtitleFormatPickerCommand), Se.Language.Options.Shortcuts.ChooseSubtitleFormat },
         { nameof(MainViewModel.TrimWhitespaceSelectedLinesCommand), Se.Language.Options.Shortcuts.TrimWhitespaceSelectedLines },
         { nameof(MainViewModel.FocusTextBoxCommand), Se.Language.Options.Shortcuts.FocusTextBox },
+        { nameof(MainViewModel.SortByNumberCommand), Se.Language.Options.Shortcuts.SortByNumber },
         { nameof(MainViewModel.SortByStartTimeCommand), Se.Language.Options.Shortcuts.SortByStartTime },
         { nameof(MainViewModel.SortByEndTimeCommand), Se.Language.Options.Shortcuts.SortByEndTime },
+        { nameof(MainViewModel.VideoToggleBrightnessCommand), Se.Language.Options.Shortcuts.VideoToggleBrightness },
         { nameof(MainViewModel.ShowPickLayerFilterCommand), Se.Language.General.FilterByLayer },
         { nameof(MainViewModel.ShowPickLayerCommand), Se.Language.General.PickLayer },
         { nameof(MainViewModel.CopyTextToClipboardCommand), Se.Language.Options.Shortcuts.CopyTextToClipboard },
@@ -699,8 +701,10 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ShowSubtitleFormatPickerCommand, nameof(vm.ShowSubtitleFormatPickerCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.TrimWhitespaceSelectedLinesCommand, nameof(vm.TrimWhitespaceSelectedLinesCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.FocusTextBoxCommand, nameof(vm.FocusTextBoxCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SortByNumberCommand, nameof(vm.SortByNumberCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SortByStartTimeCommand, nameof(vm.SortByStartTimeCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SortByEndTimeCommand, nameof(vm.SortByEndTimeCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.VideoToggleBrightnessCommand, nameof(vm.VideoToggleBrightnessCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowPickLayerFilterCommand, nameof(vm.ShowPickLayerFilterCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowPickLayerCommand, nameof(vm.ShowPickLayerCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.CopyTextToClipboardCommand, nameof(vm.CopyTextToClipboardCommand), ShortcutCategory.General);
