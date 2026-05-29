@@ -411,13 +411,14 @@ public partial class MergeTwoSubtitlesViewModel : ObservableObject
         var result = new Subtitle { Header = header };
         foreach (var p in sub1.Paragraphs)
         {
-            var copy = new Paragraph(p) { Extra = "Style1" };
+            // Different layer per track so the two streams don't collide/stack against each other when shown at the same time
+            var copy = new Paragraph(p) { Extra = "Style1", Layer = 0 };
             result.Paragraphs.Add(copy);
         }
 
         foreach (var p in sub2.Paragraphs)
         {
-            var copy = new Paragraph(p) { Extra = "Style2" };
+            var copy = new Paragraph(p) { Extra = "Style2", Layer = 1 };
             result.Paragraphs.Add(copy);
         }
 
