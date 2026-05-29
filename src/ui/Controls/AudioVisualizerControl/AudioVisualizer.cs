@@ -2344,7 +2344,11 @@ public class AudioVisualizer : Control
         string? baseLine = null;
         if (Se.Settings.Waveform.WaveformShowNumberAndDuration)
         {
-            var durationText = $"{paragraph.Duration:mm\\:ss\\.fff}";
+            // ToShortDisplayString consults the libse UseTimeFormatHHMMSSFF flag, which SE 5
+            // mirrors from Se.Settings.General.UseFrameMode (Se.cs:409). So flipping frame
+            // mode on automatically switches this label between the time form ("2,500") and
+            // the frame form ("00:00:02:12") without an explicit branch here.
+            var durationText = new TimeCode(paragraph.Duration.TotalMilliseconds).ToShortDisplayString();
             var withDuration = $"#{paragraph.Number}  {durationText}";
             var probe = new FormattedText(withDuration, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
                 _typeface, _fontSize, _paintText);
