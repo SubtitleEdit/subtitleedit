@@ -23,13 +23,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="12.0.3" />
+		<PackageReference Include="Avalonia" Version="12.0.4" />
 		<PackageReference Include="Avalonia.AvaloniaEdit" Version="12.0.0" />
 		<PackageReference Include="Avalonia.Controls.DataGrid" Version="12.0.0" />
-		<PackageReference Include="Avalonia.Desktop" Version="12.0.3" />
+		<PackageReference Include="Avalonia.Desktop" Version="12.0.4" />
 		<PackageReference Include="Avalonia.Markup.Declarative" Version="12.0.1" />
-		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.3" />
-		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.3" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.4" />
+		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.4" />
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
 		<PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.1">
 			<IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
@@ -44,9 +44,9 @@
 		<PackageReference Include="Optris.Icons.Avalonia" Version="12.0.6" />
 		<PackageReference Include="Optris.Icons.Avalonia.FontAwesome" Version="12.0.6" />
 		<PackageReference Include="Optris.Icons.Avalonia.MaterialDesign" Version="12.0.6" />
-		<PackageReference Include="SharpCompress" Version="0.48.1" />
-		<PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.4-preview.1.1" />
-		<PackageReference Include="SkiaSharp.HarfBuzz" Version="3.119.4-preview.1.1" />
+		<PackageReference Include="SharpCompress" Version="0.49.0" />
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.4" />
+		<PackageReference Include="SkiaSharp.HarfBuzz" Version="3.119.4" />
 		<PackageReference Include="TagLibSharp" Version="2.3.0" />
 		<PackageReference Include="WeCantSpell.Hunspell" Version="7.0.1" />
 	</ItemGroup>
