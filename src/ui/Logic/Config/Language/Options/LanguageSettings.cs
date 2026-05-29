@@ -274,7 +274,6 @@ public class LanguageSettings
     public string MultipleReplaceShowDotDotDotButtons { get; set; }
     public string GridFocusTextboxAfterInsertNew { get; set; }
     public string TextToSpeechPromptMergeContinuationLines { get; set; }
-    public string SpeechToTextPromptMergeContinuationLines { get; set; }
     public string UseFocusedButtonBackgroundColor { get; set; }
     public string FocusedButtonBackgroundColor { get; set; }
     public string ForceCrLfOnSave { get; set; }
@@ -571,7 +570,6 @@ public class LanguageSettings
         MultipleReplaceShowDotDotDotButtons = "Multiple replace: show context menu buttons";
         GridFocusTextboxAfterInsertNew = "Grid: focus text box after insert new subtitle";
         TextToSpeechPromptMergeContinuationLines = "Text to speech: prompt to merge continuation lines";
-        SpeechToTextPromptMergeContinuationLines = "Speech to text: prompt to merge continuation lines";
         UseFocusedButtonBackgroundColor = "Use focused button background color";
         FocusedButtonBackgroundColor = "Focused button background color";
         ForceCrLfOnSave = "Force CR+LF on save (text subtitle files)";

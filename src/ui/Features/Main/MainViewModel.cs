@@ -4950,50 +4950,6 @@ public partial class MainViewModel :
         }
     }
 
-    private async Task<Subtitle> PromptMergeContinuationLinesAsync(Subtitle subtitle)
-    {
-        if (Window == null || subtitle.Paragraphs.Count < 2)
-        {
-            return subtitle;
-        }
-
-        var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
-        if (MergeContinuationLinesHelper.IsLanguageSkipped(language))
-        {
-            return subtitle;
-        }
-
-        var format = subtitle.OriginalFormat ?? SelectedSubtitleFormat ?? new SubRip();
-        var viewModels = subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, format)).ToList();
-
-        const int maxGapMs = 500;
-        const int maxCharacters = 500;
-        var candidates = MergeContinuationLinesHelper.Detect(viewModels, language, maxGapMs, maxCharacters);
-        if (candidates.Count == 0)
-        {
-            return subtitle;
-        }
-
-        var result = await _windowService
-            .ShowDialogAsync<MergeContinuationLinesWindow, MergeContinuationLinesViewModel>(
-                Window!, vm => vm.Initialize(viewModels, language, maxGapMs, maxCharacters));
-
-        if (!result.OkPressed || result.AllSubtitlesFixed.Count == subtitle.Paragraphs.Count)
-        {
-            return subtitle;
-        }
-
-        // Clone via copy constructor to preserve Header/Footer/OriginalEncoding, then replace
-        // Paragraphs with the merged set.
-        var merged = new Subtitle(subtitle);
-        merged.Paragraphs.Clear();
-        foreach (var line in result.AllSubtitlesFixed)
-        {
-            merged.Paragraphs.Add(line.ToParagraph(subtitle.OriginalFormat));
-        }
-        return merged;
-    }
-
     [RelayCommand]
     private void SnapAllTimesToFrames()
     {
@@ -5465,11 +5421,6 @@ public partial class MainViewModel :
             ResetSubtitle();
 
             _subtitle = result.TranscribedSubtitle;
-
-            if (Se.Settings.Tools.SpeechToTextPromptMergeContinuationLines)
-            {
-                _subtitle = await PromptMergeContinuationLinesAsync(_subtitle);
-            }
 
             if (SelectedSubtitleFormat is AdvancedSubStationAlpha)
             {
