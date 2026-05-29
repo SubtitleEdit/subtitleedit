@@ -50,9 +50,48 @@ public class ConvertActorsWindow : Window
 
         var checkBoxOnlyNames = UiUtil.MakeCheckBox(Se.Language.Tools.ConvertActors.OnlyNames, vm, nameof(vm.OnlyNames));
 
-        var panelRow1 = UiUtil.MakeHorizontalPanel(labelFrom, comboBoxFrom, labelTo, comboBoxTo);
-        var panelRow2 = UiUtil.MakeHorizontalPanel(checkBoxSetColor, colorPicker, checkBoxChangeCasing, comboBoxCasing, checkBoxOnlyNames);
-        var panelControls = UiUtil.MakeVerticalPanel(panelRow1, panelRow2);
+        var panelConversion = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = GridLength.Auto },
+            },
+            RowDefinitions =
+            {
+                new RowDefinition { Height = GridLength.Auto },
+                new RowDefinition { Height = GridLength.Auto },
+            },
+            ColumnSpacing = 5,
+            RowSpacing = 5,
+        };
+        panelConversion.Add(labelFrom, 0, 0);
+        panelConversion.Add(comboBoxFrom, 0, 1);
+        panelConversion.Add(labelTo, 1, 0);
+        panelConversion.Add(comboBoxTo, 1, 1);
+
+        var panelOptions = UiUtil.MakeVerticalPanel(
+            UiUtil.MakeHorizontalPanel(checkBoxSetColor, colorPicker),
+            UiUtil.MakeHorizontalPanel(checkBoxChangeCasing, comboBoxCasing),
+            checkBoxOnlyNames);
+
+        var panelControls = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+            ColumnSpacing = 24,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+        panelControls.Add(panelConversion, 0, 0);
+        panelControls.Add(panelOptions, 0, 1);
 
         var subtitleView = MakeSubtitleView(vm);
 
