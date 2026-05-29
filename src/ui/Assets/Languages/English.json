@@ -844,7 +844,8 @@
       "setLayer": "Set layer...",
       "filterLayersForDisplayDotDotDot": "Filter layers for display...",
       "toggleSelectSubtitleWhilePlayingCurrentlyOn": "Toggle select subtitle while playing (currently: on)",
-      "toggleSelectSubtitleWhilePlayingCurrentlyOff": "Toggle select subtitle while playing (currently: off)"
+      "toggleSelectSubtitleWhilePlayingCurrentlyOff": "Toggle select subtitle while playing (currently: off)",
+      "selectSubtitleWhilePlaying": "Select subtitle while playing"
     },
     "toolbar": {
       "newHint": "Start a new subtitle file {0}",
@@ -2420,7 +2421,6 @@
       "multipleReplaceShowDotDotDotButtons": "Multiple replace: show context menu buttons",
       "gridFocusTextboxAfterInsertNew": "Grid: focus text box after insert new subtitle",
       "textToSpeechPromptMergeContinuationLines": "Text to speech: prompt to merge continuation lines",
-      "speechToTextPromptMergeContinuationLines": "Speech to text: prompt to merge continuation lines",
       "useFocusedButtonBackgroundColor": "Use focused button background color",
       "focusedButtonBackgroundColor": "Focused button background color",
       "forceCrLfOnSave": "Force CR+LF on save (text subtitle files)",
@@ -2725,7 +2725,11 @@
       "moveStartOneFrameBack": "Move start one frame back",
       "moveStartOneFrameForward": "Move start one frame forward",
       "moveEndOneFrameBack": "Move end one frame back",
-      "moveEndOneFrameForward": "Move end one frame forward"
+      "moveEndOneFrameForward": "Move end one frame forward",
+      "moveStartOneFrameBackKeepGapPrev": "Move start one frame back (keep gap to previous if close)",
+      "moveStartOneFrameForwardKeepGapPrev": "Move start one frame forward (keep gap to previous if close)",
+      "moveEndOneFrameBackKeepGapNext": "Move end one frame back (keep gap to next if close)",
+      "moveEndOneFrameForwardKeepGapNext": "Move end one frame forward (keep gap to next if close)"
     },
     "wordLists": {
       "title": "Word lists",
@@ -2743,7 +2747,7 @@
     }
   },
   "plugins": {
-    "title": "Plugins",
+    "title": "_Plugins",
     "managePlugins": "Manage plugins...",
     "noPluginsInstalled": "No plugins installed",
     "getPluginsOnline": "Get plugins online...",
