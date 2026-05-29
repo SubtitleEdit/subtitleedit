@@ -16768,7 +16768,7 @@ public partial class MainViewModel :
             var rowHeight = SubtitleGrid.RowHeight;
             if (!double.IsNaN(rowHeight) && rowHeight > 0)
             {
-                return Math.Max(1, (int)(rowsPresenter.Bounds.Height / rowHeight) - 1);
+                return Math.Max(1, (int)Math.Ceiling(rowsPresenter.Bounds.Height / rowHeight) - 1);
             }
         }
 
