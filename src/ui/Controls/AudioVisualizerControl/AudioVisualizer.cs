@@ -1231,6 +1231,23 @@ public class AudioVisualizer : Control
                 break;
         }
 
+        // SE 4 parity: scrub the video to the edge being dragged so the user sees the
+        // exact frame at the new start/end while resizing (whole-paragraph moves are excluded).
+        if (Se.Settings.Waveform.SetVideoPositionOnMoveStartEnd && OnVideoPositionChanged != null && _activeParagraph != null)
+        {
+            switch (_interactionMode)
+            {
+                case InteractionMode.ResizingLeft:
+                case InteractionMode.ResizeLeftAnd:
+                    OnVideoPositionChanged.Invoke(this, new PositionEventArgs { PositionInSeconds = _activeParagraph.StartTime.TotalSeconds });
+                    break;
+                case InteractionMode.ResizingRight:
+                case InteractionMode.ResizeRightAnd:
+                    OnVideoPositionChanged.Invoke(this, new PositionEventArgs { PositionInSeconds = _activeParagraph.EndTime.TotalSeconds });
+                    break;
+            }
+        }
+
         InvalidateVisual();
     }
 

@@ -49,6 +49,7 @@ public class SeWaveform
     public string LastDisplayMode { get; set; }
     public bool RightClickSelectsSubtitle { get; set; }
     public bool AllowOverlap { get; set; }
+    public bool SetVideoPositionOnMoveStartEnd { get; set; }
     public string SingleClickAction { get; set; }
     public string DoubleClickAction { get; set; }
     public bool WaveformUnwrapText { get; set; }
