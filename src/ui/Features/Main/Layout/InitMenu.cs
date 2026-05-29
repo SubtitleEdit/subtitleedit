@@ -1053,7 +1053,7 @@ public static class InitMenu
         return null;
     }
 
-    private static KeyGesture? ToKeyGesture(ShortCut shortcut)
+    internal static KeyGesture? ToKeyGesture(ShortCut shortcut)
     {
         if (shortcut.Keys == null || shortcut.Keys.Count == 0)
         {

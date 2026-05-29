@@ -73,6 +73,10 @@ public class MainView : ViewBase
 
         // Menu bar
         InitMenu.Make(_vm);
+        if (OperatingSystem.IsMacOS())
+        {
+            _vm.Menu.IsVisible = false;
+        }
         DockPanel.SetDock(_vm.Menu, Dock.Top);
         root.Children.Add(_vm.Menu);
 

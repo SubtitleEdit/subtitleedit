@@ -6,7 +6,6 @@ using Avalonia.Styling;
 using Avalonia.Themes.Fluent;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
-using Nikse.SubtitleEdit.Features.Help.About;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Tools.BatchConvert;
 using Nikse.SubtitleEdit.Logic;
@@ -91,6 +90,17 @@ namespace Nikse.SubtitleEdit
                 else
                 {
                     SetupMainWindow(lifetime);
+
+                    // Set the full macOS menu bar (File, Edit, Tools, …) on the Window.
+                    // NativeMenu.SetMenu(Application, …) only controls the App menu dropdown;
+                    // NativeMenu.SetMenu(Window, …) calls avnWindow.SetMainMenu and builds
+                    // the full NSMenuBar with separate top-level menus.
+                    if (OperatingSystem.IsMacOS() && lifetime.MainWindow != null)
+                    {
+                        var menuBarRoot = new NativeMenu();
+                        Nikse.SubtitleEdit.Features.Main.Layout.InitNativeMacMenu.MakeStructure(menuBarRoot, lifetime.MainWindow);
+                        NativeMenu.SetMenu(lifetime.MainWindow, menuBarRoot);
+                    }
                 }
 
 #if DEBUG
@@ -150,20 +160,12 @@ namespace Nikse.SubtitleEdit
 
         private static void SetupNativeMenu(Application app, ClassicDesktopStyleApplicationLifetime lifetime)
         {
-            var nativeMenu = new NativeMenu();
-            var aboutMenu = new NativeMenuItem(Se.Language.Help.AboutSubtitleEdit);
-
-            aboutMenu.Click += async (sender, e) =>
+            // Populate the "Subtitle Edit" app menu dropdown (About, Preferences…).
+            // Standard macOS items (Hide, Quit, etc.) are auto-appended by Avalonia.
+            if (OperatingSystem.IsMacOS())
             {
-                var aboutWindow = new AboutWindow(new AboutViewModel());
-                if (lifetime.MainWindow != null)
-                {
-                    await aboutWindow.ShowDialog(lifetime.MainWindow);
-                }
-            };
-
-            nativeMenu.Items.Add(aboutMenu);
-            NativeMenu.SetMenu(app, nativeMenu);
+                Nikse.SubtitleEdit.Features.Main.Layout.InitNativeMacMenu.SetupAppMenu(app);
+            }
 
             // mac finder "Send to"
             if (OperatingSystem.IsMacOS())

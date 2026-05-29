@@ -400,6 +400,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ZoomLayoutOutCommand), Se.Language.Options.Shortcuts.LayoutZoomOut },
         { nameof(MainViewModel.OpenSecondarySubtitleCommand), Se.Language.Video.OpenSecondarySubtitleOnVideoPlayer },
         { nameof(MainViewModel.ToggleCurrentSubtitleWhilePlayingCommand), Se.Language.Video.ToggleCurrentSubtitleWhilePlaying },
+        { nameof(MainViewModel.ToggleSmpteTimingCommand), Se.Language.Main.Menu.SmpteTiming },
     };
     }
 
@@ -728,6 +729,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ZoomLayoutOutCommand, nameof(vm.ZoomLayoutOutCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.OpenSecondarySubtitleCommand, nameof(vm.OpenSecondarySubtitleCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ToggleCurrentSubtitleWhilePlayingCommand, nameof(vm.ToggleCurrentSubtitleWhilePlayingCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ToggleSmpteTimingCommand, nameof(vm.ToggleSmpteTimingCommand), ShortcutCategory.General);
 
         return shortcuts;
     }
