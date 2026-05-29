@@ -253,6 +253,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _waveformSnapToFrames;
     [ObservableProperty] private bool _waveformShotChangesAutoGenerate;
     [ObservableProperty] private bool _waveformAllowOverlap;
+    [ObservableProperty] private bool _waveformSetVideoPositionOnMoveStartEnd;
 
     [ObservableProperty] private ObservableCollection<string> _waveformSingleClickActionTypes;
     [ObservableProperty] private string _selectedWaveformSingleClickActionType;
@@ -796,6 +797,7 @@ public partial class SettingsViewModel : ObservableObject
         WaveformSnapToFrames = Se.Settings.Waveform.SnapToFrames;
         WaveformShotChangesAutoGenerate = Se.Settings.Waveform.ShotChangesAutoGenerate;
         WaveformAllowOverlap = Se.Settings.Waveform.AllowOverlap;
+        WaveformSetVideoPositionOnMoveStartEnd = Se.Settings.Waveform.SetVideoPositionOnMoveStartEnd;
 
         SelectedWaveformSingleClickActionType = MapWaveformSingleClickToTranslation(Se.Settings.Waveform.SingleClickAction);
         SelectedWaveformDoubleClickActionType = MapWaveformDoubleClickToTranslation(Se.Settings.Waveform.DoubleClickAction);
@@ -1425,6 +1427,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.SnapToFrames = WaveformSnapToFrames;
         Se.Settings.Waveform.ShotChangesAutoGenerate = WaveformShotChangesAutoGenerate;
         Se.Settings.Waveform.AllowOverlap = WaveformAllowOverlap;
+        Se.Settings.Waveform.SetVideoPositionOnMoveStartEnd = WaveformSetVideoPositionOnMoveStartEnd;
 
         Se.Settings.Waveform.SingleClickAction = MapWaveformSingleClickFromTranslation(SelectedWaveformSingleClickActionType);
         Se.Settings.Waveform.DoubleClickAction = MapWaveformDoubleClickFromTranslation(SelectedWaveformDoubleClickActionType);

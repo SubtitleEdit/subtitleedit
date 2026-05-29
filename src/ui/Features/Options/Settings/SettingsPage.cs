@@ -480,6 +480,7 @@ public class SettingsPage : UserControl
 
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformRightClickSelectsSubtitle, nameof(_vm.WaveformRightClickSelectsSubtitle)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformAllowOverlap, nameof(_vm.WaveformAllowOverlap)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.WaveformSetVideoPositionOnMoveStartEnd, nameof(_vm.WaveformSetVideoPositionOnMoveStartEnd)),
             new SettingsItem(Se.Language.Options.Settings.WaveformSnapToShotChanges, () =>
                 UiUtil.MakeHorizontalPanel(
                     new CheckBox
