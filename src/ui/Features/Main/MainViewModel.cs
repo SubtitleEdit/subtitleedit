@@ -9288,7 +9288,7 @@ public partial class MainViewModel :
         var subs = Subtitles.Select(p => p.Text).ToList();
         var result = _windowService.ShowWindow<FindWindow, FindViewModel>(Window!, (window, vm) =>
         {
-            window.Topmost = true;
+            WindowService.KeepTopmostWhileOwnerActive(window, Window!);
             _findViewModel = vm;
 
             var selectedText = string.Empty;
@@ -9575,17 +9575,9 @@ public partial class MainViewModel :
         var replaceWin = _replaceViewModel?.Window;
         var dialogWindow = (findWin?.IsVisible == true ? findWin : null)
                         ?? (replaceWin?.IsVisible == true ? replaceWin : null);
-        if (dialogWindow != null) dialogWindow.Topmost = false;
-        try
-        {
-            var parentWindow = dialogWindow ?? Window!;
-            return await MessageBox.Show(parentWindow, Se.Language.General.ContinueFindTitle,
-                message, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-        }
-        finally
-        {
-            if (dialogWindow != null) dialogWindow.Topmost = true;
-        }
+        var parentWindow = dialogWindow ?? Window!;
+        return await MessageBox.Show(parentWindow, Se.Language.General.ContinueFindTitle,
+            message, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
     }
 
     [RelayCommand]
@@ -9615,7 +9607,7 @@ public partial class MainViewModel :
         var subs = Subtitles.Select(p => p.Text).ToList();
         var result = _windowService.ShowWindow<ReplaceWindow, ReplaceViewModel>(Window!, (window, vm) =>
         {
-            window.Topmost = true;
+            WindowService.KeepTopmostWhileOwnerActive(window, Window!);
             _replaceViewModel = vm;
 
             var selectedText = string.Empty;
