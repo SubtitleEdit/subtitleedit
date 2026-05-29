@@ -1,13 +1,11 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Styling;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -23,9 +21,9 @@ public class SpeechToTextWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Video.AudioToText.Title;
         Width = 1100;
-        Height = 660;
+        Height = 680;
         MinWidth = 800;
-        MinHeight = 500;
+        MinHeight = 680;
         CanResize = true;
         vm.Window = this;
         DataContext = vm;
