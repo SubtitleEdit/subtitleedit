@@ -1814,9 +1814,37 @@ public partial class TextToSpeechViewModel : ObservableObject
             return;
         }
         var outputFolder = result;
-        var audioFileName = Path.Combine(outputFolder, GetBestFileName(outputFolder, ".wav"));
+        var exportExt = GetAudioExportExtension();
+        var audioFileName = Path.Combine(outputFolder, GetBestFileName(outputFolder, exportExt));
 
-        File.Move(mergedAudioFileName, audioFileName);
+        if (exportExt == ".wav")
+        {
+            File.Move(mergedAudioFileName, audioFileName);
+        }
+        else
+        {
+            // Transcode the pipeline's WAV output to the user's chosen audio format
+            // (Settings → Tools → Audio export format). ffmpeg infers the codec from
+            // the output extension. Drop the intermediate WAV after a successful
+            // convert; on failure we keep the WAV alongside so the user doesn't lose
+            // a long synthesis run.
+            var transcode = FfmpegGenerator.ConvertFormat(mergedAudioFileName, audioFileName);
+            await transcode.StartAndWaitAsync(_cancellationToken);
+            if (File.Exists(audioFileName))
+            {
+                try { File.Delete(mergedAudioFileName); } catch { /* best effort */ }
+            }
+            else
+            {
+                // ffmpeg didn't produce the target file — fall back to keeping the
+                // WAV so the user has *something*. Surface the transcode failure path
+                // by moving the WAV under its original temp name into the output
+                // folder with a .wav extension.
+                var fallback = Path.Combine(outputFolder, GetBestFileName(outputFolder, ".wav"));
+                File.Move(mergedAudioFileName, fallback);
+                audioFileName = fallback;
+            }
+        }
 
         await HandleAddToVideo(audioFileName, outputFolder, _cancellationToken);
 
@@ -1974,6 +2002,23 @@ public partial class TextToSpeechViewModel : ObservableObject
         var silenceProcess = FfmpegGenerator.GenerateEmptyAudio(silenceFileName, durationInSeconds);
         await silenceProcess.StartAndWaitAsync(cancellationToken);
         return silenceFileName;
+    }
+
+    // Maps the Settings → Tools → "Audio export format" selection (an AudioExportFormatType
+    // enum name) to its corresponding ffmpeg-friendly file extension. ffmpeg uses the output
+    // extension to pick the encoder, so e.g. ".mp3" -> libmp3lame is automatic. Unknown
+    // values fall back to ".wav" so a malformed Settings.json never silently produces a
+    // wrongly-named file.
+    private static string GetAudioExportExtension()
+    {
+        return Se.Settings.General.AudioExportFormat switch
+        {
+            nameof(AudioExportFormatType.Mp3) => ".mp3",
+            nameof(AudioExportFormatType.Ogg) => ".ogg",
+            nameof(AudioExportFormatType.Flac) => ".flac",
+            nameof(AudioExportFormatType.M4a) => ".m4a",
+            _ => ".wav",
+        };
     }
 
     private string GetBestFileName(string folder, string extension)

@@ -246,6 +246,7 @@ public class LanguageSettings
     public string SubtitleGridCenterSelectedRow { get; set; }
     public string SaveAsBehavior { get; set; }
     public string SaveAsAppendLanguageCode { get; set; }
+    public string AudioExportFormat { get; set; }
     public string GridGoToSubtitleAndSetVideoPosition { get; set; }
     public string GridGoToNextLine { get; set; }
     public string GridGoToSubtitleOnlyWaveformOnly { get; set; }
@@ -543,6 +544,7 @@ public class LanguageSettings
         SubtitleGridCenterSelectedRow = "Subtitle grid, center when selecting prev/next row";
         SaveAsBehavior = "\"Save as\" behavior";
         SaveAsAppendLanguageCode = "\"Save as\" append language code";
+        AudioExportFormat = "Audio export format";
         GridGoToSubtitleAndSetVideoPosition = "Go to subtitle and set video position";
         GridGoToNextLine = "Go to next line";
         GridGoToSubtitleOnlyWaveformOnly = "Go to subtitle only (waveform only)";

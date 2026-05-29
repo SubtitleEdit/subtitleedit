@@ -62,6 +62,12 @@ public class SeGeneral
     public bool SubtitleGridCenterSelectedRow { get; set; }
     public string SaveAsBehavior { get; set; }
     public string SaveAsAppendLanguageCode { get; set; }
+
+    // Generic audio-file output format, read by features that write standalone audio
+    // (currently: TTS export). Defaults to Wav for backwards compatibility; non-Wav
+    // values trigger a post-pipeline ffmpeg transcode at the export step.
+    // Values are AudioExportFormatType enum names ("Wav", "Mp3", "Ogg", "Flac", "M4a").
+    public string AudioExportFormat { get; set; }
     public bool AutoConvertToUtf8 { get; set; }
     public bool AutoGuessAnsiEncoding { get; set; }
     public int MaxNumberOfLinesPlusAbort { get; set; }
@@ -181,6 +187,7 @@ public class SeGeneral
         SubtitleGridCenterSelectedRow = false;
         SaveAsBehavior = nameof(SaveAsBehaviourType.UseVideoFileNameThenSubtitleFileName);
         SaveAsAppendLanguageCode = nameof(SaveAsLanguageAppendType.None);
+        AudioExportFormat = nameof(AudioExportFormatType.Wav);
         AutoConvertToUtf8 = false;
         AutoGuessAnsiEncoding = true;
         NewEmptyDefaultMs = 2000;

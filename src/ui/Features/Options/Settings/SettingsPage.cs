@@ -596,6 +596,16 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.GridFocusTextboxAfterInsertNew, nameof(_vm.GridFocusTextboxAfterInsertNew)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextToSpeechPromptMergeContinuationLines, nameof(_vm.TextToSpeechPromptMergeContinuationLines)),
             MakeCheckboxSetting(Se.Language.Options.Settings.SpeechToTextPromptMergeContinuationLines, nameof(_vm.SpeechToTextPromptMergeContinuationLines)),
+            new SettingsItem(Se.Language.Options.Settings.AudioExportFormat, () => new ComboBox
+            {
+                MinWidth = 200,
+                DataContext = _vm,
+                [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(_vm.AudioExportFormats)),
+                [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(_vm.SelectedAudioExportFormat))
+                {
+                    Mode = BindingMode.TwoWay,
+                }
+            }),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.Appearance,

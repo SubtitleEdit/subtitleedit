@@ -144,6 +144,9 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _saveAsAppendLanguageCode;
     [ObservableProperty] private string _selectedSaveAsAppendLanguageCode;
 
+    [ObservableProperty] private ObservableCollection<string> _audioExportFormats = new();
+    [ObservableProperty] private string _selectedAudioExportFormat = string.Empty;
+
     [ObservableProperty] private bool _allowSingleLetterShortcutsInTextbox;
     [ObservableProperty] private bool _goToLineNumberAlsoSetVideoPosition;
     [ObservableProperty] private bool _adjustAllTimesRememberLineSelectionChoice;
@@ -486,6 +489,19 @@ public partial class SettingsViewModel : ObservableObject
         ];
         SelectedSaveAsBehaviorType = SaveAsBehaviorTypes[0];
 
+        // Format names are not localized — these strings are also the persisted enum
+        // names (AudioExportFormatType), so the dropdown value can be written to
+        // Se.Settings.General.AudioExportFormat without a separate mapper.
+        AudioExportFormats =
+        [
+            nameof(AudioExportFormatType.Wav),
+            nameof(AudioExportFormatType.Mp3),
+            nameof(AudioExportFormatType.Ogg),
+            nameof(AudioExportFormatType.Flac),
+            nameof(AudioExportFormatType.M4a),
+        ];
+        SelectedAudioExportFormat = AudioExportFormats[0];
+
         SaveAsAppendLanguageCode =
         [
             Se.Language.General.None,
@@ -624,6 +640,11 @@ public partial class SettingsViewModel : ObservableObject
         SubtitleGridCenterSelectedRow = Se.Settings.General.SubtitleGridCenterSelectedRow;
         SelectedSaveAsBehaviorType = MapFromSelectedSaveAsBehavior(Se.Settings.General.SaveAsBehavior);
         SelectedSaveAsAppendLanguageCode = MapFromSelectedSaveAsAppendLanguageCode(Se.Settings.General.SaveAsAppendLanguageCode);
+        // Audio export format is round-tripped through the AudioExportFormatType enum
+        // names; unknown / legacy values fall back to Wav.
+        SelectedAudioExportFormat = AudioExportFormats.Contains(Se.Settings.General.AudioExportFormat)
+            ? Se.Settings.General.AudioExportFormat
+            : nameof(AudioExportFormatType.Wav);
         AutoConvertToUtf8 = general.AutoConvertToUtf8;
         ForceCrLfOnSave = general.ForceCrLfOnSave;
         AutoTrimWhiteSpace = general.AutoTrimWhiteSpace;
@@ -1278,6 +1299,7 @@ public partial class SettingsViewModel : ObservableObject
         general.SubtitleGridCenterSelectedRow = SubtitleGridCenterSelectedRow;
         general.SaveAsBehavior = MapToSaveAsBehavior(SelectedSaveAsBehaviorType);
         general.SaveAsAppendLanguageCode = MapToSaveAsAppendLanguageCode(SelectedSaveAsAppendLanguageCode);
+        general.AudioExportFormat = SelectedAudioExportFormat;
         general.AutoConvertToUtf8 = AutoConvertToUtf8;
         general.ForceCrLfOnSave = ForceCrLfOnSave;
         general.AutoTrimWhiteSpace = AutoTrimWhiteSpace;
