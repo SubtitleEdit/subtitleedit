@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -188,6 +189,45 @@ namespace Nikse.SubtitleEdit.Logic
             await window.ShowDialog(owner);
             
             return viewModel;
+        }
+
+        /// <summary>
+        /// Keeps <paramref name="child"/> on top of other windows only while <paramref name="owner"/>
+        /// or the child itself has focus. Use this instead of a blanket Topmost=true for
+        /// non-modal tool windows (Find, Replace, etc.) so they don't float above other
+        /// applications on macOS, where Avalonia maps Topmost to NSWindowLevel.Floating
+        /// process-wide.
+        /// </summary>
+        public static void KeepTopmostWhileOwnerActive(Window child, Window owner)
+        {
+            void OnFocusChanged(object? sender, EventArgs e)
+            {
+                // Defer so the new active window's IsActive has settled before we read it
+                // (Deactivated of the old window can fire before Activated of the new one).
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (!child.IsLoaded)
+                    {
+                        return;
+                    }
+
+                    child.Topmost = owner.IsActive || child.IsActive;
+                });
+            }
+
+            owner.Activated += OnFocusChanged;
+            owner.Deactivated += OnFocusChanged;
+            child.Activated += OnFocusChanged;
+            child.Deactivated += OnFocusChanged;
+            child.Closed += (_, _) =>
+            {
+                owner.Activated -= OnFocusChanged;
+                owner.Deactivated -= OnFocusChanged;
+                child.Activated -= OnFocusChanged;
+                child.Deactivated -= OnFocusChanged;
+            };
+
+            child.Topmost = owner.IsActive || child.IsActive;
         }
 
         /// <summary>
