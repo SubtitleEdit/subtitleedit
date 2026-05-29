@@ -291,6 +291,10 @@ public class LanguageSettingsShortcuts
     public string MoveStartOneFrameForward { get; set; }
     public string MoveEndOneFrameBack { get; set; }
     public string MoveEndOneFrameForward { get; set; }
+    public string MoveStartOneFrameBackKeepGapPrev { get; set; }
+    public string MoveStartOneFrameForwardKeepGapPrev { get; set; }
+    public string MoveEndOneFrameBackKeepGapNext { get; set; }
+    public string MoveEndOneFrameForwardKeepGapNext { get; set; }
 
     public LanguageSettingsShortcuts()
     {
@@ -584,5 +588,9 @@ public class LanguageSettingsShortcuts
         MoveStartOneFrameForward = "Move start one frame forward";
         MoveEndOneFrameBack = "Move end one frame back";
         MoveEndOneFrameForward = "Move end one frame forward";
+        MoveStartOneFrameBackKeepGapPrev = "Move start one frame back (keep gap to previous if close)";
+        MoveStartOneFrameForwardKeepGapPrev = "Move start one frame forward (keep gap to previous if close)";
+        MoveEndOneFrameBackKeepGapNext = "Move end one frame back (keep gap to next if close)";
+        MoveEndOneFrameForwardKeepGapNext = "Move end one frame forward (keep gap to next if close)";
     }
 }

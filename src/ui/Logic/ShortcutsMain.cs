@@ -289,6 +289,10 @@ public static class ShortcutsMain
         { nameof(MainViewModel.MoveStartOneFrameForwardCommand), Se.Language.Options.Shortcuts.MoveStartOneFrameForward },
         { nameof(MainViewModel.MoveEndOneFrameBackCommand), Se.Language.Options.Shortcuts.MoveEndOneFrameBack },
         { nameof(MainViewModel.MoveEndOneFrameForwardCommand), Se.Language.Options.Shortcuts.MoveEndOneFrameForward },
+        { nameof(MainViewModel.MoveStartOneFrameBackKeepGapPrevCommand), Se.Language.Options.Shortcuts.MoveStartOneFrameBackKeepGapPrev },
+        { nameof(MainViewModel.MoveStartOneFrameForwardKeepGapPrevCommand), Se.Language.Options.Shortcuts.MoveStartOneFrameForwardKeepGapPrev },
+        { nameof(MainViewModel.MoveEndOneFrameBackKeepGapNextCommand), Se.Language.Options.Shortcuts.MoveEndOneFrameBackKeepGapNext },
+        { nameof(MainViewModel.MoveEndOneFrameForwardKeepGapNextCommand), Se.Language.Options.Shortcuts.MoveEndOneFrameForwardKeepGapNext },
         { nameof(MainViewModel.MergeSelectedLinesCommand), Se.Language.General.MergeSelectedLines },
         { nameof(MainViewModel.MergeSelectedLinesDialogCommand), Se.Language.General.MergeSelectedLinesDialog },
         { nameof(MainViewModel.MergeSelectedLinesBilingualCommand), Se.Language.Options.Shortcuts.GeneralMergeSelectedLinesBilingual },
@@ -624,6 +628,10 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.MoveStartOneFrameForwardCommand, nameof(vm.MoveStartOneFrameForwardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveEndOneFrameBackCommand, nameof(vm.MoveEndOneFrameBackCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveEndOneFrameForwardCommand, nameof(vm.MoveEndOneFrameForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveStartOneFrameBackKeepGapPrevCommand, nameof(vm.MoveStartOneFrameBackKeepGapPrevCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveStartOneFrameForwardKeepGapPrevCommand, nameof(vm.MoveStartOneFrameForwardKeepGapPrevCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveEndOneFrameBackKeepGapNextCommand, nameof(vm.MoveEndOneFrameBackKeepGapNextCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.MoveEndOneFrameForwardKeepGapNextCommand, nameof(vm.MoveEndOneFrameForwardKeepGapNextCommand), ShortcutCategory.General);
 
         AddShortcut(shortcuts, vm.MergeSelectedLinesDialogCommand, nameof(vm.MergeSelectedLinesDialogCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MergeSelectedLinesBilingualCommand, nameof(vm.MergeSelectedLinesBilingualCommand), ShortcutCategory.General);

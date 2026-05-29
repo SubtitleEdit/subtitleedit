@@ -8587,18 +8587,34 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
-    private void MoveStartOneFrameBack() => MoveStartByFrames(-1);
+    private void MoveStartOneFrameBack() => MoveStartByFrames(-1, keepGapPrevIfClose: false);
 
     [RelayCommand]
-    private void MoveStartOneFrameForward() => MoveStartByFrames(1);
+    private void MoveStartOneFrameForward() => MoveStartByFrames(1, keepGapPrevIfClose: false);
 
     [RelayCommand]
-    private void MoveEndOneFrameBack() => MoveEndByFrames(-1);
+    private void MoveEndOneFrameBack() => MoveEndByFrames(-1, keepGapNextIfClose: false);
 
     [RelayCommand]
-    private void MoveEndOneFrameForward() => MoveEndByFrames(1);
+    private void MoveEndOneFrameForward() => MoveEndByFrames(1, keepGapNextIfClose: false);
 
-    private void MoveStartByFrames(int frames)
+    // SE 4 parity (issue #11245) — "keep gap" variants: when the previous/next
+    // subtitle is already <= MinimumBetweenLines away, dragging the cue also drags the
+    // neighbor's edge by the same delta, preserving the existing small gap instead of
+    // collapsing into the neighbor or being clamped.
+    [RelayCommand]
+    private void MoveStartOneFrameBackKeepGapPrev() => MoveStartByFrames(-1, keepGapPrevIfClose: true);
+
+    [RelayCommand]
+    private void MoveStartOneFrameForwardKeepGapPrev() => MoveStartByFrames(1, keepGapPrevIfClose: true);
+
+    [RelayCommand]
+    private void MoveEndOneFrameBackKeepGapNext() => MoveEndByFrames(-1, keepGapNextIfClose: true);
+
+    [RelayCommand]
+    private void MoveEndOneFrameForwardKeepGapNext() => MoveEndByFrames(1, keepGapNextIfClose: true);
+
+    private void MoveStartByFrames(int frames, bool keepGapPrevIfClose)
     {
         var s = SelectedSubtitle;
         if (s == null || LockTimeCodes)
@@ -8606,22 +8622,54 @@ public partial class MainViewModel :
             return;
         }
 
-        // Mirror the WaveformSetStart guard: keep start at least MinimumBetweenLines
-        // ahead of end, so repeated "move start forward" hotkey presses can't
-        // collapse the duration to zero or negative.
         var deltaMs = FramesToMilliseconds(frames);
         var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         var newStartMs = s.StartTime.TotalMilliseconds + deltaMs;
+
+        // Mirror the WaveformSetStart guard: keep start at least MinimumBetweenLines
+        // ahead of end, so repeated "move start forward" hotkey presses can't
+        // collapse the duration to zero or negative.
         if (newStartMs >= s.EndTime.TotalMilliseconds - gapMs)
         {
             return;
         }
 
+        // KeepGapPrev variant: when the previous subtitle is already "close"
+        // (gap to it is within MinimumBetweenLines, i.e. tighter than the default),
+        // drag its end along with this start by the same delta so the original gap
+        // is preserved. Otherwise SE 4's behavior would either collapse the gap
+        // (moving back) or be clamped at the standard gap (moving forward).
+        var idx = SelectedSubtitleIndex ?? -1;
+        var prev = idx > 0 ? Subtitles[idx - 1] : null;
+        var prevGapMs = 0.0;
+        var prevIsClose = false;
+        if (keepGapPrevIfClose && prev != null
+            && prev.EndTime.TotalMilliseconds <= s.StartTime.TotalMilliseconds
+            && prev.EndTime.TotalMilliseconds + gapMs >= s.StartTime.TotalMilliseconds)
+        {
+            prevIsClose = true;
+            prevGapMs = s.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds;
+
+            // If moving back would push the previous subtitle below min duration, abort.
+            var minDurMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
+            if (deltaMs < 0
+                && (prev.EndTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds) + deltaMs < minDurMs)
+            {
+                return;
+            }
+        }
+
         s.SetStartTimeOnly(TimeSpan.FromMilliseconds(newStartMs));
+
+        if (prevIsClose && prev != null)
+        {
+            prev.EndTime = TimeSpan.FromMilliseconds(newStartMs - prevGapMs);
+        }
+
         _updateAudioVisualizer = true;
     }
 
-    private void MoveEndByFrames(int frames)
+    private void MoveEndByFrames(int frames, bool keepGapNextIfClose)
     {
         var s = SelectedSubtitle;
         if (s == null || LockTimeCodes)
@@ -8629,18 +8677,46 @@ public partial class MainViewModel :
             return;
         }
 
-        // Mirror the WaveformSetEnd guard: keep end at least MinimumBetweenLines
-        // behind start so repeated "move end back" hotkey presses can't push
-        // end before start.
         var deltaMs = FramesToMilliseconds(frames);
         var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
         var newEndMs = s.EndTime.TotalMilliseconds + deltaMs;
+
+        // Mirror the WaveformSetEnd guard: keep end at least MinimumBetweenLines
+        // behind start so repeated "move end back" hotkey presses can't push
+        // end before start.
         if (newEndMs <= s.StartTime.TotalMilliseconds + gapMs)
         {
             return;
         }
 
+        // KeepGapNext variant: symmetric counterpart to KeepGapPrev above.
+        var idx = SelectedSubtitleIndex ?? -1;
+        var next = idx >= 0 && idx + 1 < Subtitles.Count ? Subtitles[idx + 1] : null;
+        var nextGapMs = 0.0;
+        var nextIsClose = false;
+        if (keepGapNextIfClose && next != null
+            && s.EndTime.TotalMilliseconds <= next.StartTime.TotalMilliseconds
+            && s.EndTime.TotalMilliseconds + gapMs >= next.StartTime.TotalMilliseconds)
+        {
+            nextIsClose = true;
+            nextGapMs = next.StartTime.TotalMilliseconds - s.EndTime.TotalMilliseconds;
+
+            // If moving forward would push the next subtitle below min duration, abort.
+            var minDurMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
+            if (deltaMs > 0
+                && (next.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds) - deltaMs < minDurMs)
+            {
+                return;
+            }
+        }
+
         s.EndTime = TimeSpan.FromMilliseconds(newEndMs);
+
+        if (nextIsClose && next != null)
+        {
+            next.SetStartTimeOnly(TimeSpan.FromMilliseconds(newEndMs + nextGapMs));
+        }
+
         _updateAudioVisualizer = true;
     }
 
