@@ -16812,6 +16812,15 @@ public partial class MainViewModel :
             return;
         }
 
+        // Any user-driven selection change that isn't our own shift-arrow manipulation
+        // (HandleShiftArrowSelection sets _subtitleGridSelectionChangedSkip and short-circuits
+        // above) obsoletes the shift-select anchor. Plain Up/Down already clear it in the
+        // key handler, but PageUp/PageDown, mouse clicks, Home/End, programmatic jumps,
+        // etc. all land here and must reset the anchor so the next Shift+Down starts from
+        // the current row instead of resuming an old range.
+        _shiftSelectAnchorIndex = -1;
+        _shiftSelectCurrentIndex = -1;
+
         var selectedItems = SubtitleGrid.SelectedItems;
 
         // If user is trying to deselect the last selected item
