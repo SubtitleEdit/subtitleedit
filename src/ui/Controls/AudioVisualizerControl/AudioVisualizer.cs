@@ -1775,19 +1775,21 @@ public class AudioVisualizer : Control
             seconds = seconds + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0;
         }
 
-        var secs = (int)Math.Round(seconds, MidpointRounding.AwayFromZero);
-        if (secs < 60)
+        // SE 4 parity: read components directly from TimeSpan (truncation, not rounding)
+        // and zero-pad minutes/hours so the labels keep a stable width across the ruler
+        // (e.g. "02:05" instead of "2:05", "01:23:45" instead of "1:23:45").
+        var ts = TimeSpan.FromSeconds(seconds);
+        if (ts.Hours == 0 && ts.Minutes == 0)
         {
-            return secs.ToString(CultureInfo.InvariantCulture);
+            return ts.Seconds.ToString(CultureInfo.InvariantCulture);
         }
 
-        var timeSpan = TimeSpan.FromSeconds(seconds);
-        if (timeSpan.TotalHours >= 1)
+        if (ts.Hours == 0)
         {
-            return timeSpan.ToString(@"h\:mm\:ss");
+            return $"{ts.Minutes:00}:{ts.Seconds:00}";
         }
 
-        return timeSpan.ToString(@"m\:ss");
+        return $"{ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}";
     }
 
     public double EndPositionSeconds
@@ -2309,6 +2311,83 @@ public class AudioVisualizer : Control
                     addY += formattedText.Height;
                 }
             }
+
+            DrawParagraphFooter(context, paragraph, currentRegionLeft, currentRegionWidth, height, ref renderCtx);
+        }
+    }
+
+    // SE 4 parity: small footer at the bottom-left of each paragraph rectangle with
+    // up to three rows: characters-per-second (top), then "#NUMBER  DURATION".
+    //
+    // Zoom thresholds match SE 4 (n = samplesPerPixel = zoomFactor * sampleRate):
+    //   n <= 15  → nothing (too zoomed out, the rectangle is barely visible)
+    //   n <= 51  OR  "#N  Duration" wouldn't fit                       → just "#NUMBER"
+    //   51 < n <= 99                                                   → "#NUMBER  DURATION"
+    //   n > 99                                                         → add CPS line above
+    private void DrawParagraphFooter(DrawingContext context, SubtitleLineViewModel paragraph,
+        double currentRegionLeft, double currentRegionWidth, double height, ref RenderContext renderCtx)
+    {
+        if (!Se.Settings.Waveform.WaveformShowNumberAndDuration && !Se.Settings.Waveform.WaveformShowCps)
+        {
+            return;
+        }
+
+        var n = renderCtx.ZoomFactor * renderCtx.SampleRate;
+        if (n <= 15)
+        {
+            return;
+        }
+
+        const double padding = 3;
+        var availableWidth = currentRegionWidth - padding - 1;
+
+        string? baseLine = null;
+        if (Se.Settings.Waveform.WaveformShowNumberAndDuration)
+        {
+            var durationText = $"{paragraph.Duration:mm\\:ss\\.fff}";
+            var withDuration = $"#{paragraph.Number}  {durationText}";
+            var probe = new FormattedText(withDuration, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+                _typeface, _fontSize, _paintText);
+
+            baseLine = (n <= 51 || probe.Width >= availableWidth)
+                ? $"#{paragraph.Number}"
+                : withDuration;
+        }
+
+        string? cpsLine = null;
+        if (n > 99 && Se.Settings.Waveform.WaveformShowCps && paragraph.Duration.TotalMilliseconds > 0)
+        {
+            cpsLine = $"{paragraph.CharactersPerSecond:0.00}";
+        }
+
+        if (baseLine == null && cpsLine == null)
+        {
+            return;
+        }
+
+        // Layout from the bottom up so the optional CPS line stacks above the base line.
+        var bottomY = height - 14;
+        var x = currentRegionLeft + padding;
+
+        if (baseLine != null)
+        {
+            var baseText = new FormattedText(baseLine, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+                _typeface, _fontSize, _paintText);
+            var baseY = bottomY - baseText.Height;
+            context.DrawText(baseText, new Point(x, baseY));
+
+            if (cpsLine != null)
+            {
+                var cpsText = new FormattedText(cpsLine, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+                    _typeface, _fontSize, _paintText);
+                context.DrawText(cpsText, new Point(x, baseY - cpsText.Height));
+            }
+        }
+        else if (cpsLine != null)
+        {
+            var cpsText = new FormattedText(cpsLine, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+                _typeface, _fontSize, _paintText);
+            context.DrawText(cpsText, new Point(x, bottomY - cpsText.Height));
         }
     }
 
