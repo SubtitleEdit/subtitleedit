@@ -16501,6 +16501,30 @@ public partial class MainViewModel :
                     _shiftSelectAnchorIndex = -1;
                     _shiftSelectCurrentIndex = -1;
                 }
+                else if (keyEventArgs.Key == Key.PageDown && keyEventArgs.KeyModifiers == KeyModifiers.Shift && Subtitles.Count > 0)
+                {
+                    keyEventArgs.Handled = true;
+                    HandleShiftArrowSelection(GetSubtitleGridPageSize());
+                    return;
+                }
+                else if (keyEventArgs.Key == Key.PageUp && keyEventArgs.KeyModifiers == KeyModifiers.Shift && Subtitles.Count > 0)
+                {
+                    keyEventArgs.Handled = true;
+                    HandleShiftArrowSelection(-GetSubtitleGridPageSize());
+                    return;
+                }
+                else if (keyEventArgs.Key == Key.Home && keyEventArgs.KeyModifiers == KeyModifiers.Shift && Subtitles.Count > 0)
+                {
+                    keyEventArgs.Handled = true;
+                    HandleShiftArrowSelection(-Subtitles.Count); // clamps to 0
+                    return;
+                }
+                else if (keyEventArgs.Key == Key.End && keyEventArgs.KeyModifiers == KeyModifiers.Shift && Subtitles.Count > 0)
+                {
+                    keyEventArgs.Handled = true;
+                    HandleShiftArrowSelection(Subtitles.Count); // clamps to Count - 1
+                    return;
+                }
                 else if (keyEventArgs.Key == Key.Home && keyEventArgs.KeyModifiers == KeyModifiers.None && Subtitles.Count > 0)
                 {
                     keyEventArgs.Handled = true;
@@ -16786,8 +16810,8 @@ public partial class MainViewModel :
             _shiftSelectCurrentIndex = anchor;
         }
 
-        var newCurrent = _shiftSelectCurrentIndex + direction;
-        if (newCurrent < 0 || newCurrent >= Subtitles.Count)
+        var newCurrent = Math.Clamp(_shiftSelectCurrentIndex + direction, 0, Subtitles.Count - 1);
+        if (newCurrent == _shiftSelectCurrentIndex)
         {
             return;
         }
@@ -16808,6 +16832,27 @@ public partial class MainViewModel :
 
         SubtitleGrid.ScrollIntoView(Subtitles[_shiftSelectCurrentIndex], null);
         SubtitleGridSelectionChanged();
+    }
+
+    private int GetSubtitleGridPageSize()
+    {
+        var rowsPresenter = SubtitleGrid.GetVisualDescendants()
+            .OfType<DataGridRowsPresenter>()
+            .FirstOrDefault();
+        if (rowsPresenter != null && rowsPresenter.Bounds.Height > 0)
+        {
+            var rowHeight = SubtitleGrid.RowHeight;
+            if (!double.IsNaN(rowHeight) && rowHeight > 0)
+            {
+                return Math.Max(1, (int)Math.Ceiling(rowsPresenter.Bounds.Height / rowHeight) - 1);
+            }
+        }
+
+        // Fallback for variable row heights: count rendered rows in the visual tree
+        var visibleRowCount = SubtitleGrid.GetVisualDescendants()
+            .OfType<DataGridRow>()
+            .Count(r => r.IsVisible && r.Bounds.Height > 0);
+        return Math.Max(1, visibleRowCount - 1);
     }
 
     private void UpdateSubtitleGridDragSelectAutoScroll(Avalonia.Point position)
