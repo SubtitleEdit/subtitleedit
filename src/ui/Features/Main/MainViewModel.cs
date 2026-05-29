@@ -16760,14 +16760,19 @@ public partial class MainViewModel :
 
     private int GetSubtitleGridPageSize()
     {
-        var scrollBar = SubtitleGrid.GetVisualDescendants()
-            .OfType<ScrollBar>()
-            .FirstOrDefault(sb => sb.Orientation == Orientation.Vertical);
-        if (scrollBar != null && scrollBar.LargeChange > 0)
+        var rowsPresenter = SubtitleGrid.GetVisualDescendants()
+            .OfType<DataGridRowsPresenter>()
+            .FirstOrDefault();
+        if (rowsPresenter != null && rowsPresenter.Bounds.Height > 0)
         {
-            return Math.Max(1, (int)scrollBar.LargeChange - 1);
+            var rowHeight = SubtitleGrid.RowHeight;
+            if (!double.IsNaN(rowHeight) && rowHeight > 0)
+            {
+                return Math.Max(1, (int)(rowsPresenter.Bounds.Height / rowHeight) - 1);
+            }
         }
 
+        // Fallback for variable row heights: count rendered rows in the visual tree
         var visibleRowCount = SubtitleGrid.GetVisualDescendants()
             .OfType<DataGridRow>()
             .Count(r => r.IsVisible && r.Bounds.Height > 0);
