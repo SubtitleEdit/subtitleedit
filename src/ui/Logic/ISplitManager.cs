@@ -51,6 +51,12 @@ public class SplitManager : ISplitManager
                     newSubtitle.Text = DialogSplitMerge.RemoveStartDash(newSubtitle.Text);
                 }
             }
+
+            // SE 4 parity (#11245 follow-up): if either half ends up with a single line
+            // longer than the configured max, auto-break it. Cursor-split at the middle
+            // of a long single-line subtitle would otherwise leave a too-wide line.
+            subtitle.Text = AutoBreakIfTooLong(subtitle.Text, languageCode);
+            newSubtitle.Text = AutoBreakIfTooLong(newSubtitle.Text, languageCode);
         }
         else if (lines.Count == 2)
         {
@@ -197,6 +203,30 @@ public class SplitManager : ISplitManager
     private static string StripForLengthMeasure(string text)
     {
         return HtmlUtil.RemoveHtmlTags(text ?? string.Empty, true).Replace(Environment.NewLine, string.Empty);
+    }
+
+    // Mirrors SE 4's per-half guard in SplitSelectedParagraph: if any line in `text`
+    // (after stripping HTML/ASSA tags for measurement) is over the configured
+    // single-line max length, fold it via Utilities.AutoBreakLine. Otherwise the user
+    // keeps the line breaks they intentionally chose.
+    private static string AutoBreakIfTooLong(string text, string languageCode)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return text;
+        }
+
+        var maxLen = Configuration.Settings.General.SubtitleLineMaximumLength;
+        if (maxLen <= 0)
+        {
+            return text;
+        }
+
+        var anyLineTooLong = HtmlUtil.RemoveHtmlTags(text, true)
+            .SplitToLines()
+            .Any(line => line.Length > maxLen);
+
+        return anyLineTooLong ? Utilities.AutoBreakLine(text, languageCode) : text;
     }
 
     private static readonly (string Open, string Close)[] SimpleHtmlTags =

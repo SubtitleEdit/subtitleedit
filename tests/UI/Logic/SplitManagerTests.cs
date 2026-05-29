@@ -422,6 +422,53 @@ public class SplitManagerTests
     }
 
     [Fact]
+    public void Split_WithTextIndex_AutoBreaksHalvesThatExceedMaxLineLength()
+    {
+        // SE 4 parity (#11245 follow-up): cursor-splitting a long single-line
+        // subtitle should auto-break either half if it's still over the configured
+        // single-line max. Each half here is 39 chars (above MergeLinesShorterThan=33,
+        // so AutoBreakLine will actually fold them) and over the configured max of 20.
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        Configuration.Settings.General.SubtitleLineMaximumLength = 20;
+        Configuration.Settings.General.MergeLinesShorterThan = 33;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle(
+            "AAAAAAAAA BBBBBBBBB CCCCCCCCC DDDDDDDDD EEEEEEEEE FFFFFFFFF GGGGGGGGG HHHHHHHHH",
+            1, 5);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        // Cursor at the space between DDDDDDDDD and EEEEEEEEE (index 40).
+        manager.Split(subtitles, subtitle, textIndex: 40, languageCode: "en");
+
+        Assert.Equal(2, subtitles.Count);
+        Assert.Contains(Environment.NewLine, subtitles[0].Text);
+        Assert.Contains(Environment.NewLine, subtitles[1].Text);
+        // No individual line on either side exceeds the configured max.
+        Assert.All(subtitles[0].Text.Split(Environment.NewLine),
+            line => Assert.True(line.Length <= 20, $"'{line}' exceeds 20 chars"));
+        Assert.All(subtitles[1].Text.Split(Environment.NewLine),
+            line => Assert.True(line.Length <= 20, $"'{line}' exceeds 20 chars"));
+    }
+
+    [Fact]
+    public void Split_WithTextIndex_ShortHalves_NoAutoBreak()
+    {
+        // Counter-test: when both halves fit on a single line, the existing line
+        // breaks (here: none) are preserved.
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        Configuration.Settings.General.SubtitleLineMaximumLength = 40;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle("Hello world", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, textIndex: 5, languageCode: "en");
+
+        Assert.Equal(2, subtitles.Count);
+        Assert.Equal("Hello", subtitles[0].Text);
+        Assert.Equal("world", subtitles[1].Text);
+    }
+
+    [Fact]
     public void Split_WithVideoPosition_LeavesFullMinimumBetweenLinesGap()
     {
         // User-chosen video frame becomes the new line's start; the old line ends
