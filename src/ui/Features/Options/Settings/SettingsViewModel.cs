@@ -154,7 +154,6 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _multipleReplaceShowDotDotDotButtons;
     [ObservableProperty] private bool _gridFocusTextboxAfterInsertNew;
     [ObservableProperty] private bool _textToSpeechPromptMergeContinuationLines;
-    [ObservableProperty] private bool _speechToTextPromptMergeContinuationLines;
     [ObservableProperty] private bool _openAiCompatibleSttAutoTranscribeOnAudioSelection;
 
     [ObservableProperty] private ObservableCollection<string> _spellCheckEngines;
@@ -664,7 +663,6 @@ public partial class SettingsViewModel : ObservableObject
         MultipleReplaceShowDotDotDotButtons = Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons;
         GridFocusTextboxAfterInsertNew = Se.Settings.Tools.GridFocusTextboxAfterInsertNew;
         TextToSpeechPromptMergeContinuationLines = Se.Settings.Tools.TextToSpeechPromptMergeContinuationLines;
-        SpeechToTextPromptMergeContinuationLines = Se.Settings.Tools.SpeechToTextPromptMergeContinuationLines;
         OpenAiCompatibleSttAutoTranscribeOnAudioSelection = Se.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection;
 
         SelectedTheme = MapThemeToTranslation(appearance.Theme);
@@ -1304,7 +1302,6 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons = MultipleReplaceShowDotDotDotButtons;
         Se.Settings.Tools.GridFocusTextboxAfterInsertNew = GridFocusTextboxAfterInsertNew;
         Se.Settings.Tools.TextToSpeechPromptMergeContinuationLines = TextToSpeechPromptMergeContinuationLines;
-        Se.Settings.Tools.SpeechToTextPromptMergeContinuationLines = SpeechToTextPromptMergeContinuationLines;
         Se.Settings.Tools.WriteToolsLog = WriteToolsLog;
         Se.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection = OpenAiCompatibleSttAutoTranscribeOnAudioSelection;
 

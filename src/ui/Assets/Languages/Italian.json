@@ -2419,7 +2419,6 @@
       "MultipleReplaceShowDotDotDotButtons": "Sostituzione multipla: visualizza pulsanti menu contestuale",
       "GridFocusTextboxAfterInsertNew": "Griglia: attiva la casella di testo dopo aver inserito un nuovo sottotitolo",
       "TextToSpeechPromptMergeContinuationLines": "Sintesi vocale: richiedi di unire le righe di continuazione",
-      "SpeechToTextPromptMergeContinuationLines": "Lettura testo: richiedi di unire le righe di continuazione",
       "UseFocusedButtonBackgroundColor": "Usa colore di sfondo pulsante evidenziato",
       "FocusedButtonBackgroundColor": "Colore di sfondo pulsante in evidenza",
       "ForceCrLfOnSave": "Forza CR+LF al salvataggio (file sottotitoli testo)",
