@@ -1775,21 +1775,30 @@ public class AudioVisualizer : Control
             seconds = seconds + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0;
         }
 
-        // SE 4 parity: read components directly from TimeSpan (truncation, not rounding)
-        // and zero-pad minutes/hours so the labels keep a stable width across the ruler
-        // (e.g. "02:05" instead of "2:05", "01:23:45" instead of "1:23:45").
-        var ts = TimeSpan.FromSeconds(seconds);
-        if (ts.Hours == 0 && ts.Minutes == 0)
+        // SE 4 parity: zero-pad minutes/hours so the labels keep a stable width across the
+        // ruler (e.g. "02:05" instead of "2:05", "01:23:45" instead of "1:23:45").
+        //
+        // Work in the absolute domain and prepend a single sign so a negative pan or
+        // negative video offset produces "-01:23:45" rather than "-01:-23:-45"; and use
+        // TotalHours to include the day component, otherwise a >24h video wraps to "00:…".
+        var sign = seconds < 0 ? "-" : string.Empty;
+        var abs = Math.Abs(seconds);
+        var totalHours = (int)(abs / 3600);
+        var ts = TimeSpan.FromSeconds(abs);
+        var minutes = ts.Minutes;
+        var secs = ts.Seconds;
+
+        if (totalHours == 0 && minutes == 0)
         {
-            return ts.Seconds.ToString(CultureInfo.InvariantCulture);
+            return $"{sign}{secs.ToString(CultureInfo.InvariantCulture)}";
         }
 
-        if (ts.Hours == 0)
+        if (totalHours == 0)
         {
-            return $"{ts.Minutes:00}:{ts.Seconds:00}";
+            return $"{sign}{minutes:00}:{secs:00}";
         }
 
-        return $"{ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}";
+        return $"{sign}{totalHours:00}:{minutes:00}:{secs:00}";
     }
 
     public double EndPositionSeconds
@@ -2344,18 +2353,28 @@ public class AudioVisualizer : Control
         string? baseLine = null;
         if (Se.Settings.Waveform.WaveformShowNumberAndDuration)
         {
-            // ToShortDisplayString consults the libse UseTimeFormatHHMMSSFF flag, which SE 5
-            // mirrors from Se.Settings.General.UseFrameMode (Se.cs:409). So flipping frame
-            // mode on automatically switches this label between the time form ("2,500") and
-            // the frame form ("00:00:02:12") without an explicit branch here.
-            var durationText = new TimeCode(paragraph.Duration.TotalMilliseconds).ToShortDisplayString();
-            var withDuration = $"#{paragraph.Number}  {durationText}";
-            var probe = new FormattedText(withDuration, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-                _typeface, _fontSize, _paintText);
+            // At narrow zoom we already know we're falling back to just "#N", so don't pay
+            // for the FormattedText probe and TimeCode formatting that compute the wider
+            // "#N  Duration" candidate.
+            if (n <= 51)
+            {
+                baseLine = $"#{paragraph.Number}";
+            }
+            else
+            {
+                // ToShortDisplayString consults the libse UseTimeFormatHHMMSSFF flag, which SE 5
+                // mirrors from Se.Settings.General.UseFrameMode (Se.cs:409). So flipping frame
+                // mode on automatically switches this label between the time form ("2,500") and
+                // the frame form ("00:00:02:12") without an explicit branch here.
+                var durationText = new TimeCode(paragraph.Duration.TotalMilliseconds).ToShortDisplayString();
+                var withDuration = $"#{paragraph.Number}  {durationText}";
+                var probe = new FormattedText(withDuration, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+                    _typeface, _fontSize, _paintText);
 
-            baseLine = (n <= 51 || probe.Width >= availableWidth)
-                ? $"#{paragraph.Number}"
-                : withDuration;
+                baseLine = probe.Width >= availableWidth
+                    ? $"#{paragraph.Number}"
+                    : withDuration;
+            }
         }
 
         string? cpsLine = null;
