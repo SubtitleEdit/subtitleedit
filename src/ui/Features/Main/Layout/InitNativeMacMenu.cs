@@ -281,7 +281,10 @@ public static class InitNativeMacMenu
         videoMoreList.Add(Toggle(Clean(Se.Language.Options.Shortcuts.ToggleWaveformToolbar), v => v.ToggleIsWaveformToolbarVisibleCommand,
             v => v.IsWaveformToolbarVisible, nameof(MainViewModel.IsWaveformToolbarVisible)));
 
-        var setOffsetItem = new NativeMenuItem(string.Empty);
+        // Seed with the default header (matches MainViewModel.SetVideoOffsetText's initial value)
+        // so the alphabetical sort below places this item with the other "S" entries instead of
+        // floating it to the top while the dynamic-header binding waits for Sync(vm) to run.
+        var setOffsetItem = new NativeMenuItem(Clean(l.SetVideoOffset));
         setOffsetItem.Click += (_, _) => GetVm()?.ShowVideoSetOffsetCommand.Execute(null);
         _dynamicHeaders.Add((setOffsetItem, v => Clean(v.SetVideoOffsetText), [nameof(MainViewModel.SetVideoOffsetText)]));
         videoMoreList.Add(setOffsetItem);

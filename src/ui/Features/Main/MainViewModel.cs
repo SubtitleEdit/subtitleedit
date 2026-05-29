@@ -9996,7 +9996,23 @@ public partial class MainViewModel :
             }
             else
             {
-                (Window?.FocusManager?.GetFocusedElement() as TextBox)?.SelectAll();
+                // Fallback covers the same control set as IsTextInputFocused so Cmd+A from the
+                // native menu isn't swallowed in non-edit-box text inputs (timecode MaskedTextBox,
+                // source view TextEditor, actor AutoCompleteBox, etc.). MaskedTextBox inherits
+                // from TextBox so the first branch already catches it.
+                var focused = Window?.FocusManager?.GetFocusedElement();
+                if (focused is TextBox tb)
+                {
+                    tb.SelectAll();
+                }
+                else if (focused is TextEditor editor)
+                {
+                    editor.SelectAll();
+                }
+                else if (focused is AutoCompleteBox acb)
+                {
+                    acb.FindDescendantOfType<TextBox>()?.SelectAll();
+                }
             }
             return;
         }
