@@ -2,6 +2,7 @@
   "Title": "Subtitle Edit",
   "TranslatedBy": "Traduction de Pierre le Lidgeu. (1st DRAFT V5, Jan, 09 2026)",
   "CultureName": "fr-FR",
+  "Version": "v5.0.0-rc1",
   "General": {
     "Abort": "Interrompre",
     "Actor": "Acteur",
@@ -2040,5 +2041,17 @@
     "OpenStyleImportFile": "Ouvrir le fichier de sous-titres pour en importer les styles",
     "Primary": "Primaire",
     "Secondary": "Secondaire"
+  },
+  "About": {
+    "Title": "À propos de Subtitle Edit",
+    "TranslatedBy": "Traduit par : {0}",
+    "LicenseText": "Subtitle Edit est un logiciel libre sous licence MIT.",
+    "DescriptionTextBeta": "Subtitle Edit 5 est une version candidate de notre prochaine version majeure.\nNous mettons la dernière main aux nouveaux outils et apprécions votre aide pour les tests.\nN'hésitez pas à partager vos commentaires pour nous aider à garantir la meilleure version finale possible.\n\nMerci de faire partie de la communauté Subtitle Edit ! :)",
+    "IssueTrackingAndSourceCode": "Suivi des problèmes et code source : ",
+    "GitHub": "Github",
+    "Donate": "Faire un don : ",
+    "PayPal": "PayPal",
+    "GitHubSponsor": "Sponsor Github",
+    "Or": " ou "
   }
 }

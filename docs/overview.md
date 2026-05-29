@@ -6,7 +6,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. It allows you t
 
 **Subtitle Edit 5** is the latest generation, built with [Avalonia UI](https://avaloniaui.net/) for cross-platform support (Windows, Linux, macOS).
 
-> **Note:** Subtitle Edit 5 is currently in beta testing.
+> **Note:** Subtitle Edit 5 is currently a release candidate.
 
 ## Key Features
 

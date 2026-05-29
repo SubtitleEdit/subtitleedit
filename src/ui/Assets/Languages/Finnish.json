@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": null,
+  "version": "v5.0.0-rc1",
   "translatedBy": "LibreTranslate",
   "cultureName": "fi-FI",
   "general": {
@@ -2801,7 +2801,7 @@
     "title": "Tietoja Subtitle Editistä",
     "translatedBy": "Käännös: {0}",
     "licenseText": "Subtitle Edit on ilmainen ohjelmisto, joka on julkaistu MIT-lisenssillä.",
-    "descriptionTextBeta": "Subtitle Edit 5 beta on tulevan pääjulkaisumme kehitysvaiheessa oleva versio.\nKehitämme aktiivisesti uusia työkaluja ja arvostamme apuasi testauksessa.\nJaa palautteesi, jotta voimme varmistaa parhaan mahdollisen lopullisen version.\n\nKiitos, että olet osa Subtitle Edit -yhteisöä! :)",
+    "descriptionTextBeta": "Subtitle Edit 5 on tulevan pääjulkaisumme julkaisuehdokas.\nKehitämme aktiivisesti uusia työkaluja ja arvostamme apuasi testauksessa.\nJaa palautteesi, jotta voimme varmistaa parhaan mahdollisen lopullisen version.\n\nKiitos, että olet osa Subtitle Edit -yhteisöä! :)",
     "issueTrackingAndSourceCode": "Vianseuranta ja lähdekoodi: ",
     "gitHub": "Github",
     "donate": "Lahjoita: ",

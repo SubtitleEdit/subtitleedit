@@ -2,6 +2,37 @@
 Subtitle Edit Changelog
 
 
+v5.0.0-rc1 (xth May 2026)
+
+* Update docs for RC1
+* Add native macOS menu bar (NativeMenu) - thx mjuhasz
+* Add wrap-around to Find and Replace (Find Next/Previous + Replace) - thx mjuhasz
+* Add setting to hide the Plugins menu (default off)
+* Add SE 4 "Move start/end one frame (keep gap if close)" shortcuts
+* Add waveform "Set video position when moving start/end" (SE 4 parity)
+* Add SE 4 per-paragraph waveform footer + zero-padded ruler labels
+* Extend Shift+selection to Page Up/Down and Home/End in subtitle grid - thx mjuhasz
+* Float undocked video/waveform windows while SE main window is active
+* Show undocked video/waveform as independent top-level windows (own Alt+Tab entry)
+* Split-line: use full MinGap, proportional duration, and auto-break halves over max line length
+* Merge two subtitles: keep ASSA styles and split tracks by layer
+* Remove merge-continuation-lines prompt after speech to text
+* Route Compare time display through the full time-code converter - thx mjuhasz
+* Change a few default settings (video player on Windows + write tools log)
+* Update Italian translation - thx bovirus
+* Update Korean translation - thx 12si27
+* Update Polish translation
+* Fix Compare dialog previous/next difference buttons and selection sync - thx mjuhasz
+* Fix Compare dialog showing 0 and 00:00:00.000 for placeholder rows - thx mjuhasz
+* Fix selected DataGridRow hover darkening / hover highlight issues - thx mjuhasz
+* Fix Shift+arrow selection in subtitle grid - thx mjuhasz
+* Fix Shift+PageDown skipping the last partially visible row - thx mjuhasz
+* Fix subtitle grid page size returning fewer rows than visible - thx mjuhasz
+* Make Find/Replace topmost only while the main window has focus
+* Fix Cmd+A selecting all rows instead of text when the edit box is focused (macOS) - thx mjuhasz
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-beta33 (28th May 2026)
 
 * Add IndexTTS TTS engine (Bilibili / IndexTeam, voice cloning ~870 MB) via CrispASR
