@@ -21,10 +21,10 @@ public class LanguageAbout
         LicenseText = "Subtitle Edit is free software under the MIT license.";
         DescriptionTextBeta = "Subtitle Edit 5 is a release candidate for our upcoming major release.\nWe are putting the finishing touches on the new tools and appreciate your help in testing.\nPlease share your feedback to help us ensure the best possible final version.\n\nThank you for being part of the Subtitle Edit community! :)";
         IssueTrackingAndSourceCode = "Issue tracking and source code: ";
-        GitHub = "Github";
+        GitHub = "GitHub";
         Donate = "Donate: ";
         PayPal = "PayPal";
-        GitHubSponsor = "Github sponsor";
+        GitHubSponsor = "GitHub sponsor";
         Or = " or ";
     }
 }
