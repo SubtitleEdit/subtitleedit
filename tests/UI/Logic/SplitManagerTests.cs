@@ -333,4 +333,110 @@ public class SplitManagerTests
         Assert.Contains("<b>", subtitles[1].Text, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("<i>", subtitles[1].Text, StringComparison.OrdinalIgnoreCase);
     }
+
+    [Fact]
+    public void Split_AutoSplit_LeavesFullMinimumBetweenLinesGap()
+    {
+        // Bug repro for #11245: with MinimumBetweenLines > 0, the gap between the two
+        // halves was previously MinimumBetweenLines / 2. Auto-split (no video position)
+        // must leave the full configured gap.
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 100;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($"First line{Environment.NewLine}Second line", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        Assert.Equal(2, subtitles.Count);
+        var gapMs = subtitles[1].StartTime.TotalMilliseconds - subtitles[0].EndTime.TotalMilliseconds;
+        Assert.Equal(100.0, gapMs, 1);
+    }
+
+    [Fact]
+    public void Split_AutoSplit_EqualLengthHalves_DivideAtMidpoint()
+    {
+        // Balanced halves should still split at the literal midpoint, with the gap
+        // straddling it (halfGap before, halfGap after).
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 80;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle($"Same len.{Environment.NewLine}Same len.", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        // Midpoint = 2000 ms; with 80 ms gap symmetric around it:
+        //   first.End  = 1960 ms
+        //   second.Start = 2040 ms
+        Assert.Equal(2, subtitles.Count);
+        Assert.Equal(1960.0, subtitles[0].EndTime.TotalMilliseconds, 1);
+        Assert.Equal(2040.0, subtitles[1].StartTime.TotalMilliseconds, 1);
+    }
+
+    [Fact]
+    public void Split_AutoSplit_LongerFirstHalf_GetsProportionallyMoreDuration()
+    {
+        // SE 4 parity (#11245): when one half has materially more text, it should
+        // get a proportionally larger share of the original duration, clamped to
+        // [0.25, 0.75] so the smaller half never drops below a quarter.
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        var manager = new SplitManager();
+        // ~70 chars vs ~10 chars — startFactor before clamp would be ~0.875, clamped
+        // to 0.75. Original duration is 4 s, so middle ≈ start + 3.0 s.
+        var first = "This is the much longer first half of the subtitle text content.";
+        var second = "Tiny end.";
+        var subtitle = MakeSubtitle($"{first}{Environment.NewLine}{second}", 1, 5);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        Assert.Equal(2, subtitles.Count);
+        var firstDurationMs = subtitles[0].Duration.TotalMilliseconds;
+        var secondDurationMs = subtitles[1].Duration.TotalMilliseconds;
+        Assert.True(firstDurationMs > secondDurationMs,
+            $"Expected first half > second half; got {firstDurationMs}ms vs {secondDurationMs}ms");
+        // Clamped startFactor of 0.75 means first half is ~3 s out of 4 s.
+        Assert.InRange(firstDurationMs, 2900, 3100);
+    }
+
+    [Fact]
+    public void Split_AutoSplit_LongerSecondHalf_GetsProportionallyMoreDuration()
+    {
+        // Mirror of the previous test: longer text on the second half gets the
+        // proportionally larger duration.
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        var manager = new SplitManager();
+        var first = "Tiny start.";
+        var second = "This is the much longer second half of the subtitle text content.";
+        var subtitle = MakeSubtitle($"{first}{Environment.NewLine}{second}", 1, 5);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        Assert.Equal(2, subtitles.Count);
+        var firstDurationMs = subtitles[0].Duration.TotalMilliseconds;
+        var secondDurationMs = subtitles[1].Duration.TotalMilliseconds;
+        Assert.True(secondDurationMs > firstDurationMs,
+            $"Expected second half > first half; got {secondDurationMs}ms vs {firstDurationMs}ms");
+        // Clamped startFactor of 0.25 means first half is ~1 s out of 4 s.
+        Assert.InRange(firstDurationMs, 900, 1100);
+    }
+
+    [Fact]
+    public void Split_WithVideoPosition_LeavesFullMinimumBetweenLinesGap()
+    {
+        // User-chosen video frame becomes the new line's start; the old line ends
+        // one full MinGap earlier (mirrors SE 4 SplitBehavior == 0).
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 100;
+        var manager = new SplitManager();
+        var subtitle = MakeSubtitle("Hello world", 1, 3);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, videoPositionSeconds: 2.0, languageCode: "en");
+
+        Assert.Equal(2, subtitles.Count);
+        Assert.Equal(2000.0, subtitles[1].StartTime.TotalMilliseconds, 1);
+        Assert.Equal(1900.0, subtitles[0].EndTime.TotalMilliseconds, 1);
+        var gapMs = subtitles[1].StartTime.TotalMilliseconds - subtitles[0].EndTime.TotalMilliseconds;
+        Assert.Equal(100.0, gapMs, 1);
+    }
 }
