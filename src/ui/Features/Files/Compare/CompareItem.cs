@@ -1,10 +1,11 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.ValueConverters;
 using System;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Features.Files.Compare;
 
@@ -25,8 +26,11 @@ public partial class CompareItem : ObservableObject
     public bool HasDifference { get; set; }
     public bool IsDefault => Text == string.Empty && Number == 0 && Duration == TimeSpan.Zero && StartTime == TimeSpan.Zero;
     public string NumberDisplay => IsDefault ? string.Empty : Number.ToString();
-    public string StartTimeDisplay => IsDefault ? string.Empty : new TimeCode(StartTime).ToDisplayString();
-    public string EndTimeDisplay => IsDefault ? string.Empty : new TimeCode(EndTime).ToDisplayString();
+    public string StartTimeDisplay => IsDefault ? string.Empty : FormatTime(StartTime);
+    public string EndTimeDisplay => IsDefault ? string.Empty : FormatTime(EndTime);
+
+    private static string FormatTime(TimeSpan ts) =>
+        (string)TimeSpanToDisplayFullConverter.Instance.Convert(ts, typeof(string), null, CultureInfo.CurrentCulture);
 
     public CompareItem()
     {
