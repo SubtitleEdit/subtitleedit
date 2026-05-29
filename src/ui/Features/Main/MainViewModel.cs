@@ -5253,6 +5253,11 @@ public partial class MainViewModel :
             {
                 _videoPlayerUndockedViewModel = vm;
                 vm.Initialize(_videoFileName ?? string.Empty, position, volume, this);
+                // Float above main while main (or this window) is active, but drop behind when
+                // SE loses focus to another app. Mirrors the Find/Replace helper from #11243.
+                // The two undocked windows are still independent in Alt+Tab — KeepTopmost… is
+                // just a Z-order knob, not an ownership change.
+                WindowService.KeepTopmostWhileOwnerActive(window, Window!);
             });
 
             _windowService.ShowIndependentWindow<AudioVisualizerUndockedWindow, AudioVisualizerUndockedViewModel>((window, vm) =>
@@ -5260,6 +5265,7 @@ public partial class MainViewModel :
                 _audioVisualizerUndockedViewModel = vm;
                 vm.Initialize(AudioVisualizer, this);
                 ReloadAudioVisualizer();
+                WindowService.KeepTopmostWhileOwnerActive(window, Window!);
             });
 
             InitLayout.MakeLayout12KeepVideo(MainView!, this);
