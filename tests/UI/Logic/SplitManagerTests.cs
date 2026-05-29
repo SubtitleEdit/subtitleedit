@@ -469,6 +469,60 @@ public class SplitManagerTests
     }
 
     [Fact]
+    public void Split_MinGapLargerThanLineDuration_GivesBothHalvesPositiveDuration()
+    {
+        // Edge case (Copilot review on #11248): when MinimumBetweenLines is larger than
+        // the subtitle's own duration, the clamp must still produce two halves with
+        // strictly positive duration. We give up the configured gap before we collapse
+        // either half to zero.
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 500;
+        var manager = new SplitManager();
+        // 100 ms line — far shorter than the 500 ms configured gap.
+        var subtitle = MakeSubtitle("Hi there", 1.000, 1.100);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        Assert.Equal(2, subtitles.Count);
+        Assert.True(subtitles[0].Duration.TotalMilliseconds > 0,
+            $"first half duration must be positive, was {subtitles[0].Duration.TotalMilliseconds}");
+        Assert.True(subtitles[1].Duration.TotalMilliseconds > 0,
+            $"second half duration must be positive, was {subtitles[1].Duration.TotalMilliseconds}");
+        Assert.True(subtitles[1].StartTime >= subtitles[0].EndTime);
+        Assert.True(subtitles[0].StartTime.TotalMilliseconds >= 1000);
+        Assert.True(subtitles[1].EndTime.TotalMilliseconds <= 1100);
+    }
+
+    [Fact]
+    public void Split_NonNewLineLineBreaks_StillProportionalByVisibleText()
+    {
+        // Copilot review on #11248: StripForLengthMeasure must collapse all line-break
+        // variants (\n, \r, U+2028, etc.), not just Environment.NewLine, so that the
+        // proportional-duration weighting reflects the visible text length consistently
+        // regardless of which line-break characters happened to be in the input.
+        Se.Settings.General.MinimumBetweenLines.Milliseconds = 0;
+        var manager = new SplitManager();
+        // First half embeds a bare LF (no CR); makes it ~47 visible chars regardless of
+        // host OS. Without the broader strip these embedded line-break chars would
+        // either be counted or not depending on the platform, skewing the ratio.
+        var first = "AAAAAA\nBBBBBB CCCCCC DDDDDD EEEEEE FFFFFF GGGGGG";
+        var second = "Tiny. end.";
+        var subtitle = MakeSubtitle($"{first}{Environment.NewLine}{second}", 1, 5);
+        var subtitles = new ObservableCollection<SubtitleLineViewModel> { subtitle };
+
+        manager.Split(subtitles, subtitle, languageCode: "en");
+
+        Assert.Equal(2, subtitles.Count);
+        var firstDurationMs = subtitles[0].Duration.TotalMilliseconds;
+        var secondDurationMs = subtitles[1].Duration.TotalMilliseconds;
+        // Same expectation as the proportional test: the longer (visible) first half
+        // gets the clamped maximum 75% share of the 4 s window, ~3 s.
+        Assert.True(firstDurationMs > secondDurationMs,
+            $"expected first > second; got {firstDurationMs}ms vs {secondDurationMs}ms");
+        Assert.InRange(firstDurationMs, 2900, 3100);
+    }
+
+    [Fact]
     public void Split_WithVideoPosition_LeavesFullMinimumBetweenLinesGap()
     {
         // User-chosen video frame becomes the new line's start; the old line ends

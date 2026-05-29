@@ -179,19 +179,26 @@ public class SplitManager : ISplitManager
         }
 
         // Don't let either half collapse to zero / negative duration when MinGap is
-        // larger than the available headroom on a short subtitle. Clamp to the
-        // line's original boundaries; a sub-minimum half is better than a negative one.
-        if (subtitleEndMs <= originalStartMs)
+        // larger than the available headroom on a short subtitle. Each half needs
+        // strictly positive duration; we give up the configured gap before we give
+        // up a positive duration on either side.
+        if (subtitleEndMs < originalStartMs + 1)
         {
             subtitleEndMs = originalStartMs + 1;
         }
-        if (newSubtitleStartMs >= originalEndMs)
+        if (newSubtitleStartMs > originalEndMs - 1)
         {
             newSubtitleStartMs = originalEndMs - 1;
         }
-        if (newSubtitleStartMs < subtitleEndMs)
+        if (subtitleEndMs > newSubtitleStartMs)
         {
-            newSubtitleStartMs = subtitleEndMs;
+            // No room left for the requested gap — collapse to the midpoint of the
+            // available window so both halves still end up with positive duration
+            // (originalEnd > newSubtitleStart > originalStart, and
+            //  originalStart < subtitleEnd < originalEnd).
+            var midpoint = (subtitleEndMs + newSubtitleStartMs) / 2.0;
+            subtitleEndMs = midpoint;
+            newSubtitleStartMs = midpoint;
         }
 
         subtitle.EndTime = TimeSpan.FromMilliseconds(subtitleEndMs);
@@ -200,9 +207,29 @@ public class SplitManager : ISplitManager
         subtitles.Insert(idx + 1, newSubtitle);
     }
 
+    // Strip HTML/ASSA tags and ALL line-break variants for length measurement.
+    // Subtitle text may contain CRLF, LF, CR, or Unicode line separator (U+2028)
+    // regardless of platform — these are all recognised by SplitToLines — and
+    // counting them as characters would skew the proportional-duration weighting.
     private static string StripForLengthMeasure(string text)
     {
-        return HtmlUtil.RemoveHtmlTags(text ?? string.Empty, true).Replace(Environment.NewLine, string.Empty);
+        if (string.IsNullOrEmpty(text))
+        {
+            return string.Empty;
+        }
+
+        var stripped = HtmlUtil.RemoveHtmlTags(text, true);
+        var sb = new System.Text.StringBuilder(stripped.Length);
+        foreach (var c in stripped)
+        {
+            // CR, LF, NEL (U+0085), line separator (U+2028), paragraph separator (U+2029).
+            if (c == '\r' || c == '\n' || c == '\u0085' || c == '\u2028' || c == '\u2029')
+            {
+                continue;
+            }
+            sb.Append(c);
+        }
+        return sb.ToString();
     }
 
     // Mirrors SE 4's per-half guard in SplitSelectedParagraph: if any line in `text`
