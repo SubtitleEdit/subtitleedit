@@ -27,16 +27,13 @@ public class SplitManager : ISplitManager
         }
 
         var newSubtitle = new SubtitleLineViewModel(subtitle, true);
-        var gap = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 2.0;
+        var originalStartMs = subtitle.StartTime.TotalMilliseconds;
+        var originalDurationMs = subtitle.Duration.TotalMilliseconds;
+        var originalEndMs = subtitle.EndTime.TotalMilliseconds;
 
-        var dividePositionMs = subtitle.StartTime.TotalMilliseconds + subtitle.Duration.TotalMilliseconds / 2.0 + gap;
-        if (videoPositionSeconds > 0 && videoPositionSeconds > subtitle.StartTime.TotalSeconds && videoPositionSeconds < subtitle.EndTime.TotalSeconds)
-        {
-            dividePositionMs = videoPositionSeconds * 1000.0;
-        }
-
-        newSubtitle.SetStartTimeOnly(TimeSpan.FromMilliseconds(dividePositionMs));
-        subtitle.EndTime = TimeSpan.FromMilliseconds(newSubtitle.StartTime.TotalMilliseconds - gap);
+        var hasUserVideoPosition = videoPositionSeconds > 0
+            && videoPositionSeconds > subtitle.StartTime.TotalSeconds
+            && videoPositionSeconds < subtitle.EndTime.TotalSeconds;
 
         var text = subtitle.Text;
         var lines = text.SplitToLines();
@@ -54,6 +51,12 @@ public class SplitManager : ISplitManager
                     newSubtitle.Text = DialogSplitMerge.RemoveStartDash(newSubtitle.Text);
                 }
             }
+
+            // SE 4 parity (#11245 follow-up): if either half ends up with a single line
+            // longer than the configured max, auto-break it. Cursor-split at the middle
+            // of a long single-line subtitle would otherwise leave a too-wide line.
+            subtitle.Text = AutoBreakIfTooLong(subtitle.Text, languageCode);
+            newSubtitle.Text = AutoBreakIfTooLong(newSubtitle.Text, languageCode);
         }
         else if (lines.Count == 2)
         {
@@ -128,7 +131,129 @@ public class SplitManager : ISplitManager
         subtitle.Text = s1;
         newSubtitle.Text = s2;
 
+        // Time split — done AFTER the text split so we can weight the divide point
+        // by the resulting text-length ratio when no user video position was given.
+        //
+        // The gap between the two halves is the full MinimumBetweenLines (SE 4 parity).
+        // Before #11247 follow-up, SE 5 inserted only half the configured gap because
+        // `gap` was divided by 2 and applied only on the leading edge.
+        var minGapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        var halfGapMs = minGapMs / 2.0;
+
+        double subtitleEndMs;
+        double newSubtitleStartMs;
+
+        if (hasUserVideoPosition)
+        {
+            // User picked a video frame — that frame becomes the start of the new
+            // line; the old line ends one full MinGap earlier. Mirrors SE 4's
+            // SplitBehavior == 0 path in SetSplitTime.
+            var divideMs = videoPositionSeconds * 1000.0;
+            newSubtitleStartMs = divideMs;
+            subtitleEndMs = divideMs - minGapMs;
+        }
+        else
+        {
+            // Auto-split — divide at the midpoint, weighted by the text-length
+            // ratio of the two halves when they differ by more than a couple of
+            // characters. Clamp to [0.25, 0.75] so a very lopsided split still
+            // produces two viable durations. SE 4 Main.cs:12808 SetSplitTime.
+            var firstTextLen = StripForLengthMeasure(subtitle.Text).Length;
+            var secondTextLen = StripForLengthMeasure(newSubtitle.Text).Length;
+
+            var startFactor = 0.5;
+            if (Math.Abs(firstTextLen - secondTextLen) > 2)
+            {
+                var total = firstTextLen + secondTextLen;
+                if (total > 0)
+                {
+                    startFactor = (double)firstTextLen / total;
+                    if (startFactor < 0.25) startFactor = 0.25;
+                    if (startFactor > 0.75) startFactor = 0.75;
+                }
+            }
+
+            var middleMs = originalStartMs + originalDurationMs * startFactor;
+            subtitleEndMs = middleMs - halfGapMs;
+            newSubtitleStartMs = middleMs + halfGapMs;
+        }
+
+        // Don't let either half collapse to zero / negative duration when MinGap is
+        // larger than the available headroom on a short subtitle. Each half needs
+        // strictly positive duration; we give up the configured gap before we give
+        // up a positive duration on either side.
+        if (subtitleEndMs < originalStartMs + 1)
+        {
+            subtitleEndMs = originalStartMs + 1;
+        }
+        if (newSubtitleStartMs > originalEndMs - 1)
+        {
+            newSubtitleStartMs = originalEndMs - 1;
+        }
+        if (subtitleEndMs > newSubtitleStartMs)
+        {
+            // No room left for the requested gap — collapse to the midpoint of the
+            // available window so both halves still end up with positive duration
+            // (originalEnd > newSubtitleStart > originalStart, and
+            //  originalStart < subtitleEnd < originalEnd).
+            var midpoint = (subtitleEndMs + newSubtitleStartMs) / 2.0;
+            subtitleEndMs = midpoint;
+            newSubtitleStartMs = midpoint;
+        }
+
+        subtitle.EndTime = TimeSpan.FromMilliseconds(subtitleEndMs);
+        newSubtitle.SetStartTimeOnly(TimeSpan.FromMilliseconds(newSubtitleStartMs));
+
         subtitles.Insert(idx + 1, newSubtitle);
+    }
+
+    // Strip HTML/ASSA tags and ALL line-break variants for length measurement.
+    // Subtitle text may contain CRLF, LF, CR, or Unicode line separator (U+2028)
+    // regardless of platform — these are all recognised by SplitToLines — and
+    // counting them as characters would skew the proportional-duration weighting.
+    private static string StripForLengthMeasure(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return string.Empty;
+        }
+
+        var stripped = HtmlUtil.RemoveHtmlTags(text, true);
+        var sb = new System.Text.StringBuilder(stripped.Length);
+        foreach (var c in stripped)
+        {
+            // CR, LF, NEL (U+0085), line separator (U+2028), paragraph separator (U+2029).
+            if (c == '\r' || c == '\n' || c == '\u0085' || c == '\u2028' || c == '\u2029')
+            {
+                continue;
+            }
+            sb.Append(c);
+        }
+        return sb.ToString();
+    }
+
+    // Mirrors SE 4's per-half guard in SplitSelectedParagraph: if any line in `text`
+    // (after stripping HTML/ASSA tags for measurement) is over the configured
+    // single-line max length, fold it via Utilities.AutoBreakLine. Otherwise the user
+    // keeps the line breaks they intentionally chose.
+    private static string AutoBreakIfTooLong(string text, string languageCode)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return text;
+        }
+
+        var maxLen = Configuration.Settings.General.SubtitleLineMaximumLength;
+        if (maxLen <= 0)
+        {
+            return text;
+        }
+
+        var anyLineTooLong = HtmlUtil.RemoveHtmlTags(text, true)
+            .SplitToLines()
+            .Any(line => line.Length > maxLen);
+
+        return anyLineTooLong ? Utilities.AutoBreakLine(text, languageCode) : text;
     }
 
     private static readonly (string Open, string Close)[] SimpleHtmlTags =
