@@ -54,6 +54,12 @@ public class SeWaveform
     public bool WaveformUnwrapText { get; set; }
     public int WaveformMinimumSampleRate { get; set; }
 
+    // SE 4 parity: small footer at the bottom-left of each paragraph rectangle showing
+    // the subtitle number, duration, and characters-per-second. Defaults on so SE 5
+    // matches the SE 4 out-of-box look; users can hide them via Settings.json.
+    public bool WaveformShowNumberAndDuration { get; set; }
+    public bool WaveformShowCps { get; set; }
+
     public SeWaveform()
     {
         ShowToolbar = true;
@@ -97,6 +103,9 @@ public class SeWaveform
         SeekSilenceMinDurationSeconds = 0.3;
         SeekSilenceMaxVolume = 0.1;
         WaveformMinimumSampleRate = 126;
+
+        WaveformShowNumberAndDuration = true;
+        WaveformShowCps = true;
 
         ToolbarItems =
         [
