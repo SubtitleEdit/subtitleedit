@@ -136,6 +136,12 @@ namespace Nikse.SubtitleEdit
                     Source = new Uri("avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml")
                 });
 
+                // Apply app-level style overrides (must come after DataGrid theme)
+                b.Instance.Styles.Add(new StyleInclude(new Uri("avares://SubtitleEdit/Styles.axaml", UriKind.Absolute))
+                {
+                    Source = new Uri("avares://SubtitleEdit/Styles.axaml")
+                });
+
                 b.Instance.Styles.Add(new StyleInclude(new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml", UriKind.Absolute))
                 {
                     Source = new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml")

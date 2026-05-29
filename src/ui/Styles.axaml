@@ -1,8 +1,19 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui">
-    <Style Selector="DataGridCell:focus /template/ #FocusVisual">
+    <Style Selector="DataGridCell:focus /template/ Grid#FocusVisual">
         <Setter Property="IsVisible" Value="False"/>
     </Style>
-    <Style Selector="DataGridCell:current /template/ #CurrencyVisual">
+    <Style Selector="DataGridCell:current /template/ Rectangle#CurrencyVisual">
         <Setter Property="IsVisible" Value="False"/>
+    </Style>
+    <Style Selector="DataGridRow:not(:selected):pointerover /template/ Rectangle#BackgroundRectangle">
+        <Setter Property="Fill" Value="Transparent"/>
+    </Style>
+    <Style Selector="DataGridRow:selected:pointerover /template/ Rectangle#BackgroundRectangle">
+        <Setter Property="Fill" Value="{DynamicResource DataGridRowSelectedUnfocusedBackgroundBrush}"/>
+        <Setter Property="Opacity" Value="{DynamicResource DataGridRowSelectedUnfocusedBackgroundOpacity}"/>
+    </Style>
+    <Style Selector="DataGridRow:selected:pointerover:focus /template/ Rectangle#BackgroundRectangle">
+        <Setter Property="Fill" Value="{DynamicResource DataGridRowSelectedBackgroundBrush}"/>
+        <Setter Property="Opacity" Value="{DynamicResource DataGridRowSelectedBackgroundOpacity}"/>
     </Style>
 </Styles>
