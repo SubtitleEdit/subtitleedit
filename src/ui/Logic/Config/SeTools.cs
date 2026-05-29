@@ -121,7 +121,7 @@ public class SeTools
 
     public List<string> FindHistory { get; set; } = new List<string>();
     public bool AllowSingleLetterShortcutsInTextbox { get; set; }
-    public bool WriteToolsLog { get; set; } = true;
+    public bool WriteToolsLog { get; set; } = false;
 
     public SeTools()
     {
