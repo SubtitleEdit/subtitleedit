@@ -4132,9 +4132,12 @@ public partial class MainViewModel :
         }
 
         ResetSubtitle();
-        SetSubtitles(result.ResultSubtitle);
+        // Set the format before building the rows so SubtitleLineViewModel copies the ASSA style (Extra) into Style
         SetSubtitleFormat(SubtitleFormats.FirstOrDefault(p => p.Name == result.ResultFormat.Name) ??
                           SubtitleFormats[0]);
+        SetSubtitles(result.ResultSubtitle);
+        // Carry over the header so the merged styles (Style1/Style2) are kept
+        _subtitle.Header = result.ResultSubtitle.Header;
         SelectAndScrollToRow(0);
     }
 
