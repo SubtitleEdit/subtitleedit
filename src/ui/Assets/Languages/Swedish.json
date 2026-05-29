@@ -2,6 +2,7 @@
   "Title": "Subtitle Edit",
   "TranslatedBy": "Claude (Opus 4.7)",
   "CultureName": "sv-SE",
+  "Version": "v5.0.0-rc1",
   "General": {
     "Abort": "Avbryt",
     "Actor": "Skådespelare",
