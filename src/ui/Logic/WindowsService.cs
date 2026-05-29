@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit.Features.Main.MainHelpers;
+using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Logic
@@ -206,7 +207,7 @@ namespace Nikse.SubtitleEdit.Logic
                 // (Deactivated of the old window can fire before Activated of the new one).
                 Dispatcher.UIThread.Post(() =>
                 {
-                    if (!child.IsLoaded)
+                    if (child.IsClosing() || owner.IsClosing())
                     {
                         return;
                     }
