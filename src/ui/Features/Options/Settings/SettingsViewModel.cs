@@ -260,6 +260,13 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _waveformDoubleClickActionTypes;
     [ObservableProperty] private string _selectedWaveformDoubleClickActionType;
 
+    [ObservableProperty] private ObservableCollection<string> _waveformExtractAudioFormats;
+    [ObservableProperty] private string _selectedWaveformExtractAudioFormat;
+    [ObservableProperty] private ObservableCollection<string> _waveformExtractAudioSampleRates;
+    [ObservableProperty] private string _selectedWaveformExtractAudioSampleRate;
+    [ObservableProperty] private ObservableCollection<string> _waveformExtractAudioBitRates;
+    [ObservableProperty] private string _selectedWaveformExtractAudioBitRate;
+
     [ObservableProperty] private bool _waveformRightClickSelectsSubtitle;
     [ObservableProperty] private ObservableCollection<string> _themes;
     [ObservableProperty] private string _selectedTheme;
@@ -425,6 +432,21 @@ public partial class SettingsViewModel : ObservableObject
             Se.Language.General.Play,
         ];
         SelectedWaveformDoubleClickActionType = WaveformDoubleClickActionTypes[0];
+
+        WaveformExtractAudioFormats = new ObservableCollection<string>(
+            ExtractAudioFormatOrder.Select(ExtractAudioFormatToLabel));
+        SelectedWaveformExtractAudioFormat = WaveformExtractAudioFormats[0];
+        WaveformExtractAudioSampleRates = new ObservableCollection<string>
+        {
+            Se.Language.Options.Settings.WaveformExtractAudioSampleRateOriginal,
+            "48000",
+            "44100",
+            "32000",
+            "16000",
+        };
+        SelectedWaveformExtractAudioSampleRate = WaveformExtractAudioSampleRates[0];
+        WaveformExtractAudioBitRates = new ObservableCollection<string> { "96k", "128k", "192k", "256k", "320k" };
+        SelectedWaveformExtractAudioBitRate = "192k";
 
         var subtitleFormats = SubtitleFormat.AllSubtitleFormats;
         var defaultSubtitleFormats = new List<string>();
@@ -800,6 +822,14 @@ public partial class SettingsViewModel : ObservableObject
         SelectedWaveformSingleClickActionType = MapWaveformSingleClickToTranslation(Se.Settings.Waveform.SingleClickAction);
         SelectedWaveformDoubleClickActionType = MapWaveformDoubleClickToTranslation(Se.Settings.Waveform.DoubleClickAction);
 
+        SelectedWaveformExtractAudioFormat = ExtractAudioFormatToLabel(Se.Settings.Waveform.ExtractAudioFormat);
+        SelectedWaveformExtractAudioSampleRate = Se.Settings.Waveform.ExtractAudioSampleRate <= 0
+            ? WaveformExtractAudioSampleRates[0]
+            : Se.Settings.Waveform.ExtractAudioSampleRate.ToString(CultureInfo.InvariantCulture);
+        SelectedWaveformExtractAudioBitRate = string.IsNullOrEmpty(Se.Settings.Waveform.ExtractAudioBitRate)
+            ? "192k"
+            : Se.Settings.Waveform.ExtractAudioBitRate;
+
         WaveformRightClickSelectsSubtitle = Se.Settings.Waveform.RightClickSelectsSubtitle;
 
         ColorDurationTooLong = general.ColorDurationTooLong;
@@ -872,6 +902,39 @@ public partial class SettingsViewModel : ObservableObject
         return Se.Settings.Waveform.ToolbarItems
             .First(p => p.Type == type)
             .IsVisible;
+    }
+
+    // Display label <-> stored extension for the waveform "Extract audio" format.
+    // ExtractAudioFormatOrder fixes the dropdown order (and thus the default at index 0);
+    // a Dictionary's enumeration order is not contractually guaranteed.
+    private static readonly string[] ExtractAudioFormatOrder = { "wav", "mp3", "m4a", "flac" };
+
+    private static readonly Dictionary<string, string> ExtractAudioFormatLabels = new()
+    {
+        { "wav", "WAV" },
+        { "mp3", "MP3" },
+        { "m4a", "M4A (AAC)" },
+        { "flac", "FLAC" },
+    };
+
+    private string ExtractAudioFormatToLabel(string format)
+    {
+        return ExtractAudioFormatLabels.TryGetValue(format.Trim().ToLowerInvariant(), out var label)
+            ? label
+            : ExtractAudioFormatLabels["wav"];
+    }
+
+    private string ExtractAudioLabelToFormat(string label)
+    {
+        foreach (var kvp in ExtractAudioFormatLabels)
+        {
+            if (kvp.Value == label)
+            {
+                return kvp.Key;
+            }
+        }
+
+        return "wav";
     }
 
     private static readonly Dictionary<string, string> _waveformSingleClickActionToTextMap = BuildWaveformSingleClickActionToTextMap();
@@ -1428,6 +1491,13 @@ public partial class SettingsViewModel : ObservableObject
 
         Se.Settings.Waveform.SingleClickAction = MapWaveformSingleClickFromTranslation(SelectedWaveformSingleClickActionType);
         Se.Settings.Waveform.DoubleClickAction = MapWaveformDoubleClickFromTranslation(SelectedWaveformDoubleClickActionType);
+
+        Se.Settings.Waveform.ExtractAudioFormat = ExtractAudioLabelToFormat(SelectedWaveformExtractAudioFormat);
+        Se.Settings.Waveform.ExtractAudioSampleRate =
+            int.TryParse(SelectedWaveformExtractAudioSampleRate, NumberStyles.Integer, CultureInfo.InvariantCulture, out var extractRate)
+                ? extractRate
+                : 0; // "Original" (non-numeric) keeps the source sample rate
+        Se.Settings.Waveform.ExtractAudioBitRate = SelectedWaveformExtractAudioBitRate;
 
         Se.Settings.Waveform.RightClickSelectsSubtitle = WaveformRightClickSelectsSubtitle;
 

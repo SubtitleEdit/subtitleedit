@@ -413,19 +413,29 @@ namespace Nikse.SubtitleEdit.Logic.Media
             return string.Empty;
         }
 
-        public async Task<string> PickSaveFile(
+        public Task<string> PickSaveFile(
             Visual sender,
             string extension,
             string suggestedFileName,
             string title)
         {
+            return PickSaveFile(sender, new[] { (extension, extension) }, suggestedFileName, title);
+        }
+
+        public async Task<string> PickSaveFile(
+            Visual sender,
+            IReadOnlyList<(string Name, string Extension)> fileTypes,
+            string suggestedFileName,
+            string title)
+        {
             var topLevel = TopLevel.GetTopLevel(sender)!;
+            var defaultExtension = fileTypes.Count > 0 ? fileTypes[0].Extension : string.Empty;
             var options = new FilePickerSaveOptions
             {
                 Title = title,
                 SuggestedFileName = System.IO.Path.GetFileName(suggestedFileName),
-                FileTypeChoices = MakeSaveFilePickerFileTypes(extension, extension),
-                DefaultExtension = extension.TrimStart('.'),
+                FileTypeChoices = MakeSaveFilePickerFileTypes(fileTypes),
+                DefaultExtension = defaultExtension.TrimStart('.'),
             };
 
             var suggestedStartLocationPath = Path.GetDirectoryName(suggestedFileName);
@@ -452,6 +462,20 @@ namespace Nikse.SubtitleEdit.Logic.Media
             }
 
             return string.Empty;
+        }
+
+        private static List<FilePickerFileType> MakeSaveFilePickerFileTypes(IReadOnlyList<(string Name, string Extension)> fileTypes)
+        {
+            var result = new List<FilePickerFileType>();
+            foreach (var (name, extension) in fileTypes)
+            {
+                result.Add(new FilePickerFileType(name)
+                {
+                    Patterns = new List<string> { "*" + extension },
+                });
+            }
+
+            return result;
         }
 
         private static List<FilePickerFileType> MakeSaveFilePickerFileTypes(SubtitleFormat currentFormat)

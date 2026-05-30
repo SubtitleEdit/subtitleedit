@@ -3004,8 +3004,13 @@ public partial class MainViewModel :
         }
 
         var line = selectedItems[0];
-        var suggestedName = $"{Path.GetFileNameWithoutExtension(_videoFileName)}_{line.Number}.wav";
-        var outputFileName = await _fileHelper.PickSaveFile(Window, ".wav", suggestedName, Se.Language.Waveform.ExtractAudioDotDotDot);
+
+        // Offer the configured format first in the Save dialog, then the rest; the
+        // user can still switch the type there (issues #11235 / #11237).
+        var configuredFormat = NormalizeExtractAudioFormat(Se.Settings.Waveform.ExtractAudioFormat);
+        var fileTypes = ExtractAudioFileTypes(configuredFormat);
+        var suggestedName = $"{Path.GetFileNameWithoutExtension(_videoFileName)}_{line.Number}.{configuredFormat}";
+        var outputFileName = await _fileHelper.PickSaveFile(Window, fileTypes, suggestedName, Se.Language.Waveform.ExtractAudioDotDotDot);
         if (string.IsNullOrEmpty(outputFileName))
         {
             return;
@@ -3013,13 +3018,22 @@ public partial class MainViewModel :
 
         try
         {
+            // The actual output format is whatever extension the file ended up with
+            // (the user may have changed the type in the dialog). ffmpeg picks the
+            // codec from the extension; bitrate only applies to lossy formats.
+            var chosenFormat = NormalizeExtractAudioFormat(Path.GetExtension(outputFileName).TrimStart('.'));
+            var sampleRate = Se.Settings.Waveform.ExtractAudioSampleRate;
+            var bitRate = IsLossyAudioFormat(chosenFormat) ? Se.Settings.Waveform.ExtractAudioBitRate : string.Empty;
+
             var arguments = FfmpegGenerator.ExtractAudioClipFromVideoParameters(
                 _videoFileName,
                 line.StartTime.TotalSeconds,
                 line.Duration.TotalSeconds,
                 false,
                 outputFileName,
-                _audioTrack?.FfIndex ?? -1);
+                _audioTrack?.FfIndex ?? -1,
+                sampleRate,
+                bitRate);
 
             using var process = FfmpegGenerator.GetProcess(arguments, (_, _) => { });
             process.Start();
@@ -3047,6 +3061,35 @@ public partial class MainViewModel :
         {
             await MessageBox.Show(Window, Se.Language.General.Error, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+    }
+
+    // Output formats offered by the waveform "Extract audio..." action. Order here is the
+    // fallback order; the user's configured format is always moved to the front.
+    private static readonly string[] ExtractAudioFormats = { "wav", "mp3", "m4a", "flac" };
+
+    private static string NormalizeExtractAudioFormat(string? format)
+    {
+        var f = format?.Trim().ToLowerInvariant();
+        return !string.IsNullOrEmpty(f) && ExtractAudioFormats.Contains(f) ? f! : "wav";
+    }
+
+    private static bool IsLossyAudioFormat(string format) => format is "mp3" or "m4a";
+
+    private static IReadOnlyList<(string Name, string Extension)> ExtractAudioFileTypes(string preferredFormat)
+    {
+        string DisplayName(string f) => f switch
+        {
+            "wav" => "WAV",
+            "mp3" => "MP3",
+            "m4a" => "M4A (AAC)",
+            "flac" => "FLAC",
+            _ => f.ToUpperInvariant(),
+        };
+
+        // Preferred format first so it's the dialog's default selection.
+        var ordered = new List<string> { preferredFormat };
+        ordered.AddRange(ExtractAudioFormats.Where(f => f != preferredFormat));
+        return ordered.Select(f => (DisplayName(f), "." + f)).ToList();
     }
 
     [RelayCommand]

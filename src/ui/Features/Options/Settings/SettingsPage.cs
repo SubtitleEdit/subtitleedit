@@ -478,6 +478,13 @@ public class SettingsPage : UserControl
                 }
             }),
 
+            new SettingsItem(Se.Language.Options.Settings.WaveformExtractAudioFormat,
+                () => UiUtil.MakeComboBox(_vm.WaveformExtractAudioFormats, _vm, nameof(_vm.SelectedWaveformExtractAudioFormat))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformExtractAudioSampleRate,
+                () => UiUtil.MakeComboBox(_vm.WaveformExtractAudioSampleRates, _vm, nameof(_vm.SelectedWaveformExtractAudioSampleRate))),
+            new SettingsItem(Se.Language.Options.Settings.WaveformExtractAudioBitRate,
+                () => UiUtil.MakeComboBox(_vm.WaveformExtractAudioBitRates, _vm, nameof(_vm.SelectedWaveformExtractAudioBitRate))),
+
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformRightClickSelectsSubtitle, nameof(_vm.WaveformRightClickSelectsSubtitle)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformAllowOverlap, nameof(_vm.WaveformAllowOverlap)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformSetVideoPositionOnMoveStartEnd, nameof(_vm.WaveformSetVideoPositionOnMoveStartEnd)),
