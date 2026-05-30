@@ -1,7 +1,7 @@
 {
   "Title": "SubtitleEdit",
-  "Version": "v. 5.0.0-beta33",
-  "TranslatedBy": "v. 28.05.2026 di bovirus",
+  "Version": "v. 5.0.0 RC1",
+  "TranslatedBy": "v. 30.05.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -949,7 +949,8 @@
       "SetLayer": "Imposta livello...",
       "FilterLayersForDisplayDotDotDot": "Filtra livelli per la visualizzazione...",
       "ToggleSelectSubtitleWhilePlayingCurrentlyOn": "Attiva/disattiva selezione sottotitoli durante la riproduzione (attualmente: attiva)",
-      "ToggleSelectSubtitleWhilePlayingCurrentlyOff": "Attiva/disattiva selezione sottotitoli durante la riproduzione (attualmente: non attiva)"
+      "ToggleSelectSubtitleWhilePlayingCurrentlyOff": "Attiva/disattiva selezione sottotitoli durante la riproduzione (attualmente: non attiva)",
+      "SelectSubtitleWhilePlaying": "Seleziona sottotitoli durante riproduzione"
     },
     "Toolbar": {
       "NewHint": "Crea nuovo file sottotitoli {0}",
@@ -2384,6 +2385,10 @@
       "WaveformRightClickSelectsSubtitle": "Seleziona sottotitolo con clic destro",
       "WaveformPauseOnSingleClick": "Pausa con singolo clic",
       "WaveformDrawStyle": "Stile disegno forma d'onda",
+      "WaveformExtractAudioFormat": "Estrai formato audio",
+      "WaveformExtractAudioSampleRate": "Estrai frequenza campionamento audio",
+      "WaveformExtractAudioSampleRateOriginal": "Originale (mantieni sorgente)",
+      "WaveformExtractAudioBitRate": "Estrai bitrate audio (MP3/M4A)",
       "VlcWidRendering": "libVLC - rendering ID finestra nativa",
       "SubtitleGridEnterKeyAction": "Griglia sottotitoli - azione tasto Invio ",
       "SubtitleSingleClickAction": "Griglia sottotitoli - azione singolo clic ",
@@ -2403,6 +2408,7 @@
       "WaveformParagraphBackgroundColor": "Colore di sfondo sottotitoli forma d'onda",
       "WaveformParagraphSelectedBackgroundColor": "Colore di sfondo sottotitoli selezionati forma d'onda",
       "WaveformAllowOverlap": "Permetti sovrapposizione (quando sposti/ridimensioni)",
+      "WaveformSetVideoPositionOnMoveStartEnd": "Imposta posizione video quando sposti inizio/fine",
       "SaveAsBehaviorUseSubtitleVideoFilename": "Usa nome file sottotitoli/video",
       "SaveAsBehaviorUseVideoSubtitleFilename": "Usa nome file video/sottotitoli",
       "SaveAsBehaviorUseVideoFileName": "Usa nome file video",
@@ -2723,7 +2729,11 @@
       "MoveStartOneFrameBack": "Sposta l'inizio indietro di un fotogramma",
       "MoveStartOneFrameForward": "Sposta l'inizio avanti di un fotogramma",
       "MoveEndOneFrameBack": "Sposta la fine indietro di un fotogramma",
-      "MoveEndOneFrameForward": "Sposta la fine avanti di un fotogramma"
+      "MoveEndOneFrameForward": "Sposta la fine avanti di un fotogramma",
+      "MoveStartOneFrameBackKeepGapPrev": "Sposta inizio un fotogramma indietro (mantieni spazio rispetto al precedente se vicino)",
+      "MoveStartOneFrameForwardKeepGapPrev": "Sposta inizio un fotogramma in avanti (mantieni spazio rispetto al precedente se vicino)",
+      "MoveEndOneFrameBackKeepGapNext": "Sposta fine un fotogramma indietro (mantieni spazio rispetto al successivo se vicino)",
+      "MoveEndOneFrameForwardKeepGapNext": "Sposta fine un fotogramma avanti (mantieni spazio rispetto al successivo se vicino)"
     },
     "WordLists": {
       "Title": "Elenchi parole",
