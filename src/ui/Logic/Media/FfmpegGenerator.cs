@@ -1146,8 +1146,8 @@ public class FfmpegGenerator
 
     /// <summary>
     /// Build ffmpeg parameters for extracting an audio clip from a video/audio file.
-    /// The output codec is inferred from <paramref name="outputFileName"/>'s extension
-    /// (wav→pcm, mp3→libmp3lame, m4a→aac, flac→flac).
+    /// No <c>-c:a</c> is set, so ffmpeg picks the default encoder for the output
+    /// extension (typically pcm for .wav, libmp3lame for .mp3, aac for .m4a, flac for .flac).
     /// </summary>
     /// <param name="sampleRate">Output sample rate in Hz, or 0 to keep the source rate (no -ar).</param>
     /// <param name="audioBitRate">Bitrate for lossy outputs (e.g. "192k"); empty to omit -b:a.</param>

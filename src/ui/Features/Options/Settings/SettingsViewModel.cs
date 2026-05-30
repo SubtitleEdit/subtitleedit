@@ -433,7 +433,8 @@ public partial class SettingsViewModel : ObservableObject
         ];
         SelectedWaveformDoubleClickActionType = WaveformDoubleClickActionTypes[0];
 
-        WaveformExtractAudioFormats = new ObservableCollection<string>(ExtractAudioFormatLabels.Values);
+        WaveformExtractAudioFormats = new ObservableCollection<string>(
+            ExtractAudioFormatOrder.Select(ExtractAudioFormatToLabel));
         SelectedWaveformExtractAudioFormat = WaveformExtractAudioFormats[0];
         WaveformExtractAudioSampleRates = new ObservableCollection<string>
         {
@@ -904,6 +905,10 @@ public partial class SettingsViewModel : ObservableObject
     }
 
     // Display label <-> stored extension for the waveform "Extract audio" format.
+    // ExtractAudioFormatOrder fixes the dropdown order (and thus the default at index 0);
+    // a Dictionary's enumeration order is not contractually guaranteed.
+    private static readonly string[] ExtractAudioFormatOrder = { "wav", "mp3", "m4a", "flac" };
+
     private static readonly Dictionary<string, string> ExtractAudioFormatLabels = new()
     {
         { "wav", "WAV" },
