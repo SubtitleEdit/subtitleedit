@@ -2302,6 +2302,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (vm.OkPressed)
         {
+            DoAdjustTimings = vm.AdjustTimings;
             Se.Settings.Tools.AudioToText.WhisperAutoAdjustTimings = vm.AdjustTimings;
             Se.Settings.Tools.AudioToText.WhisperPostProcessingFixShortDuration = vm.FixShortDuration;
             Se.Settings.Tools.AudioToText.WhisperPostProcessingFixCasing = vm.FixCasing;
