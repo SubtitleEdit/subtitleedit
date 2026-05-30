@@ -55,6 +55,16 @@ public class SeWaveform
     public bool WaveformUnwrapText { get; set; }
     public int WaveformMinimumSampleRate { get; set; }
 
+    // Defaults for the waveform "Extract audio..." context-menu action. The STT
+    // audio-clip path stays at 16 kHz mono regardless of these; these only apply
+    // to the user-initiated extract (issues #11235 / #11237).
+    // ExtractAudioFormat: container/extension without the dot ("wav", "mp3", "m4a", "flac").
+    // ExtractAudioSampleRate: 0 = keep the source sample rate; otherwise e.g. 48000.
+    // ExtractAudioBitRate: bitrate for lossy formats (mp3/m4a), e.g. "192k"; ignored for wav/flac.
+    public string ExtractAudioFormat { get; set; }
+    public int ExtractAudioSampleRate { get; set; }
+    public string ExtractAudioBitRate { get; set; }
+
     // SE 4 parity: small footer at the bottom-left of each paragraph rectangle showing
     // the subtitle number, duration, and characters-per-second. Defaults on so SE 5
     // matches the SE 4 out-of-box look; users can hide them via Settings.json.
@@ -104,6 +114,10 @@ public class SeWaveform
         SeekSilenceMinDurationSeconds = 0.3;
         SeekSilenceMaxVolume = 0.1;
         WaveformMinimumSampleRate = 126;
+
+        ExtractAudioFormat = "wav";
+        ExtractAudioSampleRate = 0; // keep source sample rate
+        ExtractAudioBitRate = "192k";
 
         WaveformShowNumberAndDuration = true;
         WaveformShowCps = true;

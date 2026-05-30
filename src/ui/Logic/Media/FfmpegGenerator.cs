@@ -1144,13 +1144,27 @@ public class FfmpegGenerator
         return arguments.Trim();
     }
 
+    /// <summary>
+    /// Build ffmpeg parameters for extracting an audio clip from a video/audio file.
+    /// The output codec is inferred from <paramref name="outputFileName"/>'s extension
+    /// (wav→pcm, mp3→libmp3lame, m4a→aac, flac→flac).
+    /// </summary>
+    /// <param name="sampleRate">Output sample rate in Hz, or 0 to keep the source rate (no -ar).</param>
+    /// <param name="audioBitRate">Bitrate for lossy outputs (e.g. "192k"); empty to omit -b:a.</param>
+    /// <remarks>
+    /// The defaults (16 kHz, 32k) reproduce the historical command used for the
+    /// speech-to-text audio clips; only the user-initiated waveform "Extract audio..."
+    /// passes different values (issues #11235 / #11237).
+    /// </remarks>
     internal static string ExtractAudioClipFromVideoParameters(
        string videoFileName,
        double startSeconds,
        double durationSeconds,
        bool useCenterChannelOnly,
        string outputFileName,
-       int audioTrackFfIndex = -1)
+       int audioTrackFfIndex = -1,
+       int sampleRate = 16000,
+       string audioBitRate = "32k")
     {
         var start = $"{startSeconds:0.000}".Replace(",", ".");
         var duration = $"{durationSeconds:0.000}".Replace(",", ".");
@@ -1164,7 +1178,19 @@ public class FfmpegGenerator
             args += $" -map 0:{audioTrackFfIndex}";
         }
 
-        args += " -vn -ar 16000 -b:a 32k";
+        args += " -vn";
+
+        // sampleRate <= 0 means "keep the source sample rate" — omit -ar entirely.
+        if (sampleRate > 0)
+        {
+            args += $" -ar {sampleRate}";
+        }
+
+        // -b:a only matters for lossy encoders; it's harmlessly ignored by pcm/flac.
+        if (!string.IsNullOrEmpty(audioBitRate))
+        {
+            args += $" -b:a {audioBitRate}";
+        }
 
         // Optional center-channel only
         if (useCenterChannelOnly)

@@ -239,6 +239,10 @@ public class LanguageSettings
     public string WaveformRightClickSelectsSubtitle { get; set; }
     public string WaveformPauseOnSingleClick { get; set; }
     public string WaveformDrawStyle { get; set; }
+    public string WaveformExtractAudioFormat { get; set; }
+    public string WaveformExtractAudioSampleRate { get; set; }
+    public string WaveformExtractAudioSampleRateOriginal { get; set; }
+    public string WaveformExtractAudioBitRate { get; set; }
     public string VlcWidRendering { get; set; }
     public string SubtitleGridEnterKeyAction { get; set; }
     public string SubtitleSingleClickAction { get; set; }
@@ -537,6 +541,10 @@ public class LanguageSettings
         WaveformRightClickSelectsSubtitle = "Select subtitle on right click";
         WaveformPauseOnSingleClick = "Pause on single click";
         WaveformDrawStyle = "Waveform draw style";
+        WaveformExtractAudioFormat = "Extract audio format";
+        WaveformExtractAudioSampleRate = "Extract audio sample rate";
+        WaveformExtractAudioSampleRateOriginal = "Original (keep source)";
+        WaveformExtractAudioBitRate = "Extract audio bitrate (MP3/M4A)";
         SubtitleGridEnterKeyAction = "Subtitle grid Enter-key action";
         SubtitleSingleClickAction = "Subtitle grid single-click action";
         SubtitleDoubleClickAction = "Subtitle grid double-click action";

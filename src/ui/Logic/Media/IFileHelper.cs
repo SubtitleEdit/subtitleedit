@@ -35,6 +35,18 @@ public interface IFileHelper
         string extension,
         string suggestedFileName,
         string title);
+
+    /// <summary>
+    /// Save-file picker that offers several file types. The first entry is the
+    /// default selection / default extension. Each tuple is (display name, extension
+    /// including the leading dot), e.g. ("WAV", ".wav").
+    /// </summary>
+    Task<string> PickSaveFile(
+        Visual sender,
+        IReadOnlyList<(string Name, string Extension)> fileTypes,
+        string suggestedFileName,
+        string title);
+
     Task<string> PickOpenVideoFile(Visual sender, string title);
     Task<string[]> PickOpenVideoFiles(Visual sender, string title);
     Task<string> PickOpenImageFile(Visual sender, string title);
