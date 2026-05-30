@@ -2,7 +2,7 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-rc1 (xth May 2026)
+v5.0.0-rc1 (30th May 2026)
 
 * Update docs for RC1
 * Add native macOS menu bar (NativeMenu) - thx mjuhasz
@@ -11,6 +11,8 @@ v5.0.0-rc1 (xth May 2026)
 * Add SE 4 "Move start/end one frame (keep gap if close)" shortcuts
 * Add waveform "Set video position when moving start/end" (SE 4 parity)
 * Add SE 4 per-paragraph waveform footer + zero-padded ruler labels
+* Add waveform "Extract audio" format and sample rate settings (no more forced 16 kHz)
+* Read word-level timestamps from OpenAI-compatible speech to text (e.g. Grok)
 * Extend Shift+selection to Page Up/Down and Home/End in subtitle grid - thx mjuhasz
 * Float undocked video/waveform windows while SE main window is active
 * Show undocked video/waveform as independent top-level windows (own Alt+Tab entry)
@@ -30,6 +32,7 @@ v5.0.0-rc1 (xth May 2026)
 * Fix subtitle grid page size returning fewer rows than visible - thx mjuhasz
 * Make Find/Replace topmost only while the main window has focus
 * Fix Cmd+A selecting all rows instead of text when the edit box is focused (macOS) - thx mjuhasz
+* Fix "Merge continuation lines" finding nothing on mixed-language (CJK + Latin) files
 
 -----------------------------------------------------------------------------------------------------
 
