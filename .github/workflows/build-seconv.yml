@@ -93,6 +93,9 @@ jobs:
 
       - name: Create Windows ZIP packages
         run: |
+          # Stage the repo LICENSE so the SeConv zip carries the MIT terms too (issue #11278).
+          Copy-Item "./LICENSE" "./publish/windows-x64/LICENSE"
+          Copy-Item "./LICENSE" "./publish/windows-arm64/LICENSE"
           Compress-Archive -Path "./publish/windows-x64/*" -DestinationPath "./SeConv-Windows-x64.zip"
           Compress-Archive -Path "./publish/windows-arm64/*" -DestinationPath "./SeConv-Windows-ARM64.zip"
 
@@ -161,6 +164,9 @@ jobs:
 
       - name: Create macOS ZIP packages
         run: |
+          # Stage the repo LICENSE so the SeConv zip carries the MIT terms too (issue #11278).
+          cp ./LICENSE ./publish/macos-x64/LICENSE
+          cp ./LICENSE ./publish/macos-arm64/LICENSE
           cd ./publish/macos-x64 && zip -r ../../SeConv-macOS-x64.zip . && cd ../..
           cd ./publish/macos-arm64 && zip -r ../../SeConv-macOS-ARM64.zip . && cd ../..
 
@@ -237,6 +243,9 @@ jobs:
 
       - name: Create Linux TAR packages
         run: |
+          # Stage the repo LICENSE so the SeConv tarball carries the MIT terms too (issue #11278).
+          cp ./LICENSE ./publish/linux-x64/LICENSE
+          cp ./LICENSE ./publish/linux-arm64/LICENSE
           cd ./publish/linux-x64 && tar -czf ../../SeConv-Linux-x64.tar.gz . && cd ../..
           cd ./publish/linux-arm64 && tar -czf ../../SeConv-Linux-ARM64.tar.gz . && cd ../..
 

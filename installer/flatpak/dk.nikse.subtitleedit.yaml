@@ -305,6 +305,9 @@ modules:
       # Icon (256x256 PNG from the source tree)
       - install -Dm644 src/ui/Assets/SE.png /app/share/icons/hicolor/256x256/apps/dk.nikse.subtitleedit.png
 
+      # MIT license — distribute the project's terms alongside the app (issue #11278).
+      - install -Dm644 LICENSE /app/share/licenses/dk.nikse.subtitleedit/LICENSE
+
     sources:
       # Full repo checkout (path relative to this manifest: installer/flatpak/ -> ../../)
       - type: dir

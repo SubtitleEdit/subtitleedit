@@ -267,6 +267,10 @@ jobs:
 
       - name: Create Windows ZIP packages
         run: |
+          # Stage the repo LICENSE alongside the binaries so distributors and end users
+          # have the MIT terms readily available in the zip (issue #11278).
+          Copy-Item "./LICENSE" "./publish/windows-x64/LICENSE"
+          Copy-Item "./LICENSE" "./publish/windows-arm64/LICENSE"
           Compress-Archive -Path "./publish/windows-x64/*" -DestinationPath "./SubtitleEdit-Windows-x64.zip"
           Compress-Archive -Path "./publish/windows-arm64/*" -DestinationPath "./SubtitleEdit-Windows-ARM64.zip"
 
@@ -510,6 +514,9 @@ jobs:
           cp -R "$app" "$dmg_dir/Subtitle Edit.app"
           rm -rf "$app"
 
+          # Ship the project's own MIT terms next to the existing third-party bundle so
+          # the DMG carries both (issue #11278).
+          cp "./LICENSE" "$dmg_dir/LICENSE"
           cp "./installer/macBundle/THIRD_PARTY_LICENSES.txt" "$dmg_dir/THIRD_PARTY_LICENSES.txt"
 
           if [ "$SIGNING_AVAILABLE" != "true" ]; then
@@ -631,6 +638,10 @@ jobs:
 
       - name: Create Linux TAR packages
         run: |
+          # Stage the repo LICENSE alongside the binaries so the tarball carries the MIT
+          # terms — important for downstream Linux distributors (issue #11278).
+          cp ./LICENSE ./publish/linux-x64/LICENSE
+          cp ./LICENSE ./publish/linux-arm64/LICENSE
           cd ./publish/linux-x64 && tar -czf ../../SubtitleEdit-Linux-x64.tar.gz . && cd ../..
           cd ./publish/linux-arm64 && tar -czf ../../SubtitleEdit-Linux-ARM64.tar.gz . && cd ../..
 
