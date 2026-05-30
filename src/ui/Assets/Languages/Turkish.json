@@ -1,7 +1,7 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.0.0-beta33",
-  "translatedBy": "Utku Gogus; Son güncelleme: Ahmet Murat Özhan (29.05.2026)",
+  "version": "v5.0.0-rcl",
+  "translatedBy": "Utku Gogus; Son güncelleme: Ahmet Murat Özhan (30.05.2026)",
   "cultureName": "tr-TR",
   "general": {
     "abort": "İptal",
@@ -845,7 +845,8 @@
       "setLayer": "Katmanı ayarla...",
       "filterLayersForDisplayDotDotDot": "Görüntülenecek katmanları filtrele...",
       "toggleSelectSubtitleWhilePlayingCurrentlyOn": "Oynatırken alt yazıyı seçmeyi aç/kapat (şu anda: açık)",
-    "toggleSelectSubtitleWhilePlayingCurrentlyOff": "Oynatırken alt yazıyı seçmeyi aç/kapat (şu anda: kapalı)"
+      "toggleSelectSubtitleWhilePlayingCurrentlyOff": "Oynatırken alt yazıyı seçmeyi aç/kapat (şu anda: kapalı)",
+	  "selectSubtitleWhilePlaying": "Oynatılırken alt yazıyı seç"
     },
     "toolbar": {
       "newHint": "Yeni bir alt yazı dosyası başlat {0}",
@@ -2384,6 +2385,10 @@
       "waveformRightClickSelectsSubtitle": "Sağ tıklamada alt yazıyı seç",
       "waveformPauseOnSingleClick": "Tek tıklamada duraklat",
       "waveformDrawStyle": "Ses dalgası çizim stili",
+	  "waveformExtractAudioFormat": "Ses çıkarma biçimi",
+      "waveformExtractAudioSampleRate": "Ses çıkarma örnekleme hızı",
+      "waveformExtractAudioSampleRateOriginal": "Orijinal (kaynağı koru)",
+      "waveformExtractAudioBitRate": "Ses çıkarma bit hızı (MP3/M4A)",
       "vlcWidRendering": "libVLC - Yerel Pencere ID oluşturma",
       "subtitleGridEnterKeyAction": "Alt yazı ızgarası Enter tuşu eylemi",
       "subtitleSingleClickAction": "Alt yazı ızgarası tek tıklama eylemi",
@@ -2420,7 +2425,7 @@
       "multipleReplaceShowDotDotDotButtons": "Çoklu değiştir: Bağlam menüsü butonlarını göster",
       "gridFocusTextboxAfterInsertNew": "Izgara: Yeni alt yazı ekledikten sonra metin kutusuna odaklan",
       "textToSpeechPromptMergeContinuationLines": "Metinden sese: Devam eden satırları birleştirmek için sor",
-      "speechToTextPromptMergeContinuationLines": "Sesten metne: Devam eden satırları birleştirmek için sor",
+      
       "useFocusedButtonBackgroundColor": "Odaklanmış buton arka plan rengini kullan",
       "focusedButtonBackgroundColor": "Odaklanmış buton arka plan rengi",
       "forceCrLfOnSave": "Kaydederken CR+LF zorla (metin al yazı dosyaları)",
@@ -2725,7 +2730,11 @@
       "moveStartOneFrameBack": "Başlangıcı bir kare geri taşı",
       "moveStartOneFrameForward": "Başlangıcı bir kare ileri taşı",
       "moveEndOneFrameBack": "Bitişi bir kare geri taşı",
-      "moveEndOneFrameForward": "Bitişi bir kare ileri taşı"
+      "moveEndOneFrameForward": "Bitişi bir kare ileri taşı",
+	  "moveStartOneFrameBackKeepGapPrev": "Başlangıcı bir kare geri taşı (yakınsa öncekiyle boşluğu koru)",
+      "moveStartOneFrameForwardKeepGapPrev": "Başlangıcı bir kare ileri taşı (yakınsa öncekiyle boşluğu koru)",
+      "moveEndOneFrameBackKeepGapNext": "Bitişi bir kare geri taşı (yakınsa sonrakiyle boşluğu koru)",
+      "moveEndOneFrameForwardKeepGapNext": "Bitişi bir kare ileri taşı (yakınsa sonrakiyle boşluğu koru)"
     },
     "wordLists": {
       "title": "Kelime listeleri",
@@ -2743,7 +2752,7 @@
     }
   },
   "plugins": {
-    "title": "Eklentiler",
+    "title": "_Eklentiler",
     "managePlugins": "Eklentileri yönet...",
     "noPluginsInstalled": "Yüklü eklenti yok",
     "getPluginsOnline": "Çevrim içi eklenti edin...",
@@ -3080,12 +3089,12 @@
     "title": "Subtitle Edit Hakkında",
     "translatedBy": "Türkçeye çeviren: {0}",
     "licenseText": "Subtitle Edit, MIT lisansı altında ücretsiz bir yazılımdır.",
-    "descriptionTextBeta": "Subtitle Edit 5 beta, gelecek büyük sürümümüzün bir geliştirme versiyonudur.\nYeni araçları aktif olarak geliştiriyoruz ve test aşamasındaki yardımınız için teşekkür ederiz.\nMümkün olan en iyi son sürümünü sağlamamıza yardımcı olmak için lütfen geri bildirimlerinizi paylaşın.\n\nSubtitle Edit topluluğunun bir parçası olduğunuz için teşekkürler! :)",
+    "descriptionTextBeta": "Subtitle Edit 5, yaklaşmakta olan büyük sürümümüz için bir aday sürümdür (RC).\nYeni araçlar üzerinde son rötuşları yapıyoruz ve test aşamasındaki yardımınız için teşekkür ederiz.\nMümkün olan en iyi son sürümünü sağlamamıza yardımcı olmak için lütfen geri bildirimlerinizi paylaşın.\n\nSubtitle Edit topluluğunun bir parçası olduğunuz için teşekkürler! :)",
     "issueTrackingAndSourceCode": "Hata takibi ve kaynak kod: ",
-    "gitHub": "Github",
+    "gitHub": "GitHub",
     "donate": "Bağış yap: ",
     "payPal": "PayPal",
-    "gitHubSponsor": "Github sponsor",
+    "gitHubSponsor": "GitHub sponsor",
     "or": " veya "
   }
 }
