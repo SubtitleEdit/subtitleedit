@@ -11,6 +11,15 @@ public class OpenAiCompatibleSttResponse
     [JsonPropertyName("segments")]
     public List<OpenAiCompatibleSegment>? Segments { get; set; }
 
+    /// <summary>
+    /// Top-level word timings. Some OpenAI-compatible providers (e.g. xAI Grok
+    /// at /v1/stt) return only this array — with per-word start/end and no
+    /// <see cref="Segments"/> — so the timings must be grouped into segments
+    /// instead of being dropped (discussion #11239).
+    /// </summary>
+    [JsonPropertyName("words")]
+    public List<OpenAiCompatibleWord>? Words { get; set; }
+
     [JsonPropertyName("language")]
     public string? Language { get; set; }
 
@@ -53,6 +62,13 @@ public class OpenAiCompatibleWord
     [JsonPropertyName("word")]
     public string Word { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Word text under the "text" key. OpenAI's verbose_json uses "word"; xAI
+    /// Grok uses "text". Whichever the provider sends, the other stays empty.
+    /// </summary>
+    [JsonPropertyName("text")]
+    public string Text { get; set; } = string.Empty;
+
     [JsonPropertyName("start")]
     public double Start { get; set; }
 
@@ -61,4 +77,10 @@ public class OpenAiCompatibleWord
 
     [JsonPropertyName("probability")]
     public double Probability { get; set; }
+
+    /// <summary>
+    /// The word text regardless of which key the provider used ("word" or "text").
+    /// </summary>
+    [JsonIgnore]
+    public string EffectiveText => !string.IsNullOrEmpty(Word) ? Word : Text;
 }

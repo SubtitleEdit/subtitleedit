@@ -368,6 +368,16 @@ public class OpenAiSttService
             var result = JsonSerializer.Deserialize<OpenAiCompatibleSttResponse>(jsonResponse, options);
             if (result != null)
             {
+                // Providers that return only top-level word timings and no
+                // segments (e.g. xAI Grok at /v1/stt, discussion #11239) would
+                // otherwise collapse to a single timestamp-less block. Group the
+                // words into segments so the timings survive.
+                if ((result.Segments == null || result.Segments.Count == 0) &&
+                    result.Words != null && result.Words.Count > 0)
+                {
+                    result.Segments = BuildSegmentsFromWords(result.Words);
+                }
+
                 return result;
             }
         }
@@ -390,6 +400,72 @@ public class OpenAiSttService
                 }
             }
         };
+    }
+
+    /// <summary>
+    /// Group word-level timings into subtitle-sized segments. Used when a
+    /// provider returns only a top-level <c>words</c> array and no
+    /// <c>segments</c> (e.g. xAI Grok at /v1/stt). Starts a new segment on a
+    /// gap larger than 0.5 s or once the line would exceed ~80 characters,
+    /// mirroring the word-grouping used for the Qwen3 ASR engine.
+    /// </summary>
+    internal static List<OpenAiCompatibleSegment> BuildSegmentsFromWords(List<OpenAiCompatibleWord> words)
+    {
+        var segments = new List<OpenAiCompatibleSegment>();
+        var currentText = new StringBuilder();
+        var startTime = 0.0;
+        var endTime = 0.0;
+        var first = true;
+        var id = 0;
+
+        foreach (var word in words)
+        {
+            var text = word.EffectiveText;
+            if (string.IsNullOrEmpty(text))
+            {
+                continue;
+            }
+
+            if (first)
+            {
+                startTime = word.Start;
+                first = false;
+            }
+
+            if (currentText.Length > 0 && (word.Start - endTime > 0.5 || currentText.Length + text.Length > 80))
+            {
+                segments.Add(new OpenAiCompatibleSegment
+                {
+                    Id = id++,
+                    Start = startTime,
+                    End = endTime,
+                    Text = currentText.ToString().Trim(),
+                });
+                currentText.Clear();
+                startTime = word.Start;
+            }
+
+            if (currentText.Length > 0)
+            {
+                currentText.Append(' ');
+            }
+
+            currentText.Append(text);
+            endTime = word.End;
+        }
+
+        if (currentText.Length > 0)
+        {
+            segments.Add(new OpenAiCompatibleSegment
+            {
+                Id = id,
+                Start = startTime,
+                End = endTime,
+                Text = currentText.ToString().Trim(),
+            });
+        }
+
+        return segments;
     }
 
     /// <summary>

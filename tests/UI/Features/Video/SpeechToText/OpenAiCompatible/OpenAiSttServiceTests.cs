@@ -80,6 +80,90 @@ public class OpenAiSttServiceTests
     }
 
     [Fact]
+    public async Task TranscribeAsync_TopLevelWords_GroupsIntoSegmentsWithTimeCodes()
+    {
+        // Discussion #11239: xAI Grok (/v1/stt) returns only a top-level "words"
+        // array (with "text"/start/end) and no "segments". Those timings must be
+        // grouped into segments instead of collapsing to one timestamp-less block.
+        const string json = """
+            {
+              "text": "The balance is fine. Thanks a lot.",
+              "language": "English",
+              "duration": 3.45,
+              "words": [
+                { "text": "The", "start": 0.24, "end": 0.48 },
+                { "text": "balance", "start": 0.48, "end": 0.96 },
+                { "text": "is", "start": 0.96, "end": 1.12 },
+                { "text": "fine.", "start": 1.12, "end": 1.60 },
+                { "text": "Thanks", "start": 2.40, "end": 2.80 },
+                { "text": "a", "start": 2.80, "end": 2.90 },
+                { "text": "lot.", "start": 2.90, "end": 3.20 }
+              ]
+            }
+            """;
+
+        using var handler = new StubHandler((req, ct) => Task.FromResult(JsonResponse(json)));
+        using var client = new HttpClient(handler);
+        var service = new OpenAiSttService(client, MakeSettings());
+
+        var ct = TestContext.Current.CancellationToken;
+        var wav = MakeTinyWav();
+        try
+        {
+            var response = await service.TranscribeAsync(wav, cancellationToken: ct);
+
+            Assert.NotNull(response.Segments);
+            // A >0.5 s gap between "fine." (ends 1.60) and "Thanks" (starts 2.40)
+            // splits the words into two segments.
+            Assert.Equal(2, response.Segments!.Count);
+            Assert.Equal("The balance is fine.", response.Segments[0].Text);
+            Assert.Equal(0.24, response.Segments[0].Start);
+            Assert.Equal(1.60, response.Segments[0].End);
+            Assert.Equal("Thanks a lot.", response.Segments[1].Text);
+            Assert.Equal(2.40, response.Segments[1].Start);
+            Assert.Equal(3.20, response.Segments[1].End);
+        }
+        finally
+        {
+            File.Delete(wav);
+        }
+    }
+
+    [Fact]
+    public void BuildSegmentsFromWords_SplitsOnLongLineLength()
+    {
+        // With no large gaps, grouping must still break once a line would exceed
+        // ~80 characters so we don't emit one giant subtitle line.
+        var words = new List<OpenAiCompatibleWord>();
+        for (var i = 0; i < 30; i++)
+        {
+            words.Add(new OpenAiCompatibleWord { Text = "word", Start = i * 0.2, End = i * 0.2 + 0.1 });
+        }
+
+        var segments = OpenAiSttService.BuildSegmentsFromWords(words);
+
+        Assert.True(segments.Count > 1, "Expected long word run to split into multiple segments.");
+        Assert.All(segments, s => Assert.True(s.Text.Length <= 80, $"Segment too long: '{s.Text}'"));
+    }
+
+    [Fact]
+    public void BuildSegmentsFromWords_PrefersWordKeyWhenBothPresent()
+    {
+        // OpenAI verbose_json uses "word"; Grok uses "text". EffectiveText must
+        // resolve either, preferring the OpenAI "word" key when set.
+        var words = new List<OpenAiCompatibleWord>
+        {
+            new() { Word = "Hello", Start = 0.0, End = 0.5 },
+            new() { Text = "world", Start = 0.5, End = 1.0 },
+        };
+
+        var segments = OpenAiSttService.BuildSegmentsFromWords(words);
+
+        Assert.Single(segments);
+        Assert.Equal("Hello world", segments[0].Text);
+    }
+
+    [Fact]
     public async Task TranscribeAsync_PlainTextBody_FallsBackToSingleSegment()
     {
         // Body that JsonSerializer cannot deserialize into OpenAiCompatibleSttResponse
