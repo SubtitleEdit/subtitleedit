@@ -493,7 +493,7 @@ public partial class SubtitleLineViewModel : ObservableObject
     }
 
     /// <summary>Updates all display properties from a fixed <see cref="Paragraph"/> in-place.</summary>
-    internal void UpdateFrom(Paragraph p)
+    internal void UpdateFrom(Paragraph p, SubtitleFormat? subtitleFormat)
     {
         Paragraph = p;
         Text = p.Text;
@@ -501,6 +501,10 @@ public partial class SubtitleLineViewModel : ObservableObject
         Style = p.Style;
         Layer = p.Layer;
         Extra = p.Extra;
+        if (subtitleFormat is AdvancedSubStationAlpha)
+        {
+            Style = p.Extra;
+        }
         _skipUpdate = true;
         StartTime = TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds);
         EndTime = TimeSpan.FromMilliseconds(p.EndTime.TotalMilliseconds);

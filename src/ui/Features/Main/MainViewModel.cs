@@ -4824,7 +4824,7 @@ public partial class MainViewModel :
 
         if (viewModel.OkPressed)
         {
-            ApplyFixedSubtitle(viewModel.FixedSubtitle, idx);
+            ApplyFixedSubtitle(viewModel.FixedSubtitle, idx, SelectedSubtitleFormat);
             ShowStatus(string.Format(Se.Language.Main.FixedXLines, viewModel.FixedSubtitle.Paragraphs.Count));
         }
     }
@@ -4848,7 +4848,7 @@ public partial class MainViewModel :
 
         if (viewModel.OkPressed)
         {
-            ApplyFixedSubtitle(viewModel.FixedSubtitle, idx);
+            ApplyFixedSubtitle(viewModel.FixedSubtitle, idx, SelectedSubtitleFormat);
             ShowStatus(string.Format(Se.Language.Main.FixedXLines, viewModel.FixedSubtitle.Paragraphs.Count));
         }
     }
@@ -12454,26 +12454,19 @@ public partial class MainViewModel :
     /// and selection without any manipulation.
     /// Falls back to a full SetSubtitles reset only when rows were added or removed.
     /// </summary>
-    /// <summary>
-    /// Applies the fixed subtitle returned by Fix Common Errors / Fix Netflix Errors.
-    /// When the paragraph count is unchanged (the common case), updates each
-    /// SubtitleLineViewModel in-place so the grid keeps its current scroll position
-    /// and selection without any manipulation.
-    /// Falls back to a full SetSubtitles reset only when rows were added or removed.
-    /// </summary>
-    private void ApplyFixedSubtitle(Subtitle fixedSubtitle, int selectedIndex)
+    private void ApplyFixedSubtitle(Subtitle fixedSubtitle, int selectedIndex, SubtitleFormat? subtitleFormat)
     {
         if (fixedSubtitle.Paragraphs.Count == Subtitles.Count)
         {
             for (var i = 0; i < Subtitles.Count; i++)
-                Subtitles[i].UpdateFrom(fixedSubtitle.Paragraphs[i]);
+                Subtitles[i].UpdateFrom(fixedSubtitle.Paragraphs[i], subtitleFormat);
             Renumber();
             UpdateGaps();
         }
         else
         {
             SetSubtitles(fixedSubtitle);
-            SelectAndScrollToRow(selectedIndex);
+            SelectAndScrollToRow(Math.Min(selectedIndex, Subtitles.Count - 1));
         }
     }
 
@@ -12493,7 +12486,7 @@ public partial class MainViewModel :
         else
         {
             SetSubtitles(fixedSubtitles);
-            SelectAndScrollToRow(selectedIndex);
+            SelectAndScrollToRow(Math.Min(selectedIndex, Subtitles.Count - 1));
         }
     }
 
