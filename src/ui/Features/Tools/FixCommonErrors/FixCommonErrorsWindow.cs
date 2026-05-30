@@ -150,6 +150,7 @@ public class FixCommonErrorsWindow : Window
 
         var buttonApplyFixes = UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.ApplyFixesAndClose, vm.OkCommand)
             .BindIsVisible(vm, nameof(vm.Step2IsVisible));
+        buttonApplyFixes.IsDefault = true;
 
         var buttonPanelRight = UiUtil.MakeButtonBar(
             buttonBackToFixList,
@@ -328,13 +329,37 @@ public class FixCommonErrorsWindow : Window
         dataGridFixes.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
         dataGridFixes.SelectionChanged += DataGridFixes_SelectionChanged;
 
-        var buttonBarFixes = UiUtil.MakeButtonBar(
-            UiUtil.MakeButton(Se.Language.General.SelectAll, _vm.FixesSelectAllCommand),
-            UiUtil.MakeButton(Se.Language.General.InvertSelection, _vm.FixesInverseSelectedCommand),
-            UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.RefreshFixes, _vm.DoRefreshFixesCommand),
-            UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.ApplySelectedFixes, _vm.DoApplyFixesCommand)
-        );
-        buttonBarFixes.WithMarginTop(2);
+        var leftButtons = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Spacing = 0,
+        };
+        leftButtons.Children.Add(UiUtil.MakeButton(Se.Language.General.SelectAll, _vm.FixesSelectAllCommand));
+        leftButtons.Children.Add(UiUtil.MakeButton(Se.Language.General.InvertSelection, _vm.FixesInverseSelectedCommand));
+
+        var rightButtons = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Center,
+            Spacing = 0,
+        };
+        rightButtons.Children.Add(UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.RefreshFixes, _vm.DoRefreshFixesCommand));
+        rightButtons.Children.Add(UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.ApplySelectedFixes, _vm.DoApplyFixesCommand));
+
+        var buttonBarFixes = new Grid
+        {
+            Margin = new Thickness(10, 10, 10, 10),
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
+        };
+        buttonBarFixes.Add(leftButtons, 0, 0);
+        buttonBarFixes.Add(rightButtons, 0, 1);
 
         gridFixes.Children.Add(dataGridFixes);
         Grid.SetRow(dataGridFixes, 0);
@@ -414,6 +439,7 @@ public class FixCommonErrorsWindow : Window
                     Binding = new Binding(nameof(SubtitleLineViewModel.Text)),
                     IsReadOnly = true,
                     CellTheme = UiUtil.DataGridNoBorderCellTheme,
+                    Width = new DataGridLength(1, DataGridLengthUnitType.Star),
                 },
             },
         };

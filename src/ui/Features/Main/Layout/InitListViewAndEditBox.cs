@@ -965,7 +965,7 @@ public static partial class InitListViewAndEditBox
         // Left panel for time controls
         var timeControlsPanel = new StackPanel
         {
-            Spacing = 0,
+            Spacing = 6,
             Margin = new Thickness(0, 0, 0, 0),
             VerticalAlignment = VerticalAlignment.Top,
         };

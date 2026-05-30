@@ -374,9 +374,9 @@ public static class InitToolbar
         {
             Orientation = Orientation.Horizontal,
             Spacing = 1,
-            Margin = new Thickness(2, 2, 8, 2),
+            Margin = new Thickness(2, 6, 8, 6),
             HorizontalAlignment = HorizontalAlignment.Right,
-            VerticalAlignment = VerticalAlignment.Top,
+            VerticalAlignment = VerticalAlignment.Center,
         };
 
         // subtitle formats
