@@ -1,0 +1,127 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".github/workflows/build-seconv.yml" />
+    <File Path=".github/workflows/build-ui.yml" />
+    <File Path=".github/workflows/deploy-docs.yml" />
+    <File Path=".github/workflows/stale.yml" />
+    <File Path="appveyor.yml" />
+    <File Path="change-log.txt" />
+    <File Path="Changelog.txt" />
+    <File Path="installer/LICENSE.rtf" />
+    <File Path="installer/Product.wxs" />
+    <File Path="LICENSE" />
+    <File Path="make-installer.bat" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/docs/">
+    <File Path="docs/faq.md" />
+    <File Path="docs/index.md" />
+    <File Path="docs/overview.md" />
+    <File Path="docs/third-party-components.md" />
+    <File Path="docs/translating.md" />
+    <File Path="docs/_config.yml" />
+  </Folder>
+  <Folder Name="/Solution Items/docs/features/">
+    <File Path="docs/features/adjust-all-times.md" />
+    <File Path="docs/features/adjust-duration.md" />
+    <File Path="docs/features/apply-duration-limits.md" />
+    <File Path="docs/features/apply-min-gap.md" />
+    <File Path="docs/features/assa-apply-advanced-effects.md" />
+    <File Path="docs/features/assa-attachments.md" />
+    <File Path="docs/features/assa-draw.md" />
+    <File Path="docs/features/assa-image-color-picker.md" />
+    <File Path="docs/features/assa-override-tags.md" />
+    <File Path="docs/features/assa-progress-bar.md" />
+    <File Path="docs/features/assa-properties.md" />
+    <File Path="docs/features/assa-resolution-resampler.md" />
+    <File Path="docs/features/assa-set-background.md" />
+    <File Path="docs/features/assa-set-position.md" />
+    <File Path="docs/features/assa-styles.md" />
+    <File Path="docs/features/audio-visualizer.md" />
+    <File Path="docs/features/auto-translate.md" />
+    <File Path="docs/features/batch-convert.md" />
+    <File Path="docs/features/blank-video.md" />
+    <File Path="docs/features/bridge-gaps.md" />
+    <File Path="docs/features/burn-in.md" />
+    <File Path="docs/features/change-casing.md" />
+    <File Path="docs/features/change-formatting.md" />
+    <File Path="docs/features/change-frame-rate.md" />
+    <File Path="docs/features/change-speed.md" />
+    <File Path="docs/features/compare.md" />
+    <File Path="docs/features/copy-paste-translate.md" />
+    <File Path="docs/features/cut-video.md" />
+    <File Path="docs/features/edit.md" />
+    <File Path="docs/features/file.md" />
+    <File Path="docs/features/find-double-words.md" />
+    <File Path="docs/features/fix-common-errors.md" />
+    <File Path="docs/features/join-subtitles.md" />
+    <File Path="docs/features/main-window.md" />
+    <File Path="docs/features/merge-same-text.md" />
+    <File Path="docs/features/merge-same-timecodes.md" />
+    <File Path="docs/features/merge-short-lines.md" />
+    <File Path="docs/features/ocr.md" />
+    <File Path="docs/features/point-sync-via-other.md" />
+    <File Path="docs/features/point-sync.md" />
+    <File Path="docs/features/re-encode-video.md" />
+    <File Path="docs/features/remove-text-hi.md" />
+    <File Path="docs/features/settings.md" />
+    <File Path="docs/features/shortcuts.md" />
+    <File Path="docs/features/shot-changes.md" />
+    <File Path="docs/features/sort-by.md" />
+    <File Path="docs/features/speech-to-text.md" />
+    <File Path="docs/features/spell-check.md" />
+    <File Path="docs/features/split-break-long-lines.md" />
+    <File Path="docs/features/split-subtitle.md" />
+    <File Path="docs/features/statistics.md" />
+    <File Path="docs/features/subtitle-grid.md" />
+    <File Path="docs/features/text-editor.md" />
+    <File Path="docs/features/text-to-speech.md" />
+    <File Path="docs/features/transparent-subtitles.md" />
+    <File Path="docs/features/video-player.md" />
+    <File Path="docs/features/visual-sync.md" />
+    <File Path="docs/features/whats-new-in-se5.md" />
+    <File Path="docs/features/word-lists.md" />
+  </Folder>
+  <Folder Name="/Solution Items/docs/reference/">
+    <File Path="docs/reference/assa-override-tags.md" />
+    <File Path="docs/reference/assa.md" />
+    <File Path="docs/reference/command-line.md" />
+    <File Path="docs/reference/keyboard-shortcuts.md" />
+    <File Path="docs/reference/mouse-controls.md" />
+    <File Path="docs/reference/subrip.md" />
+    <File Path="docs/reference/supported-formats.md" />
+    <File Path="docs/reference/webvtt.md" />
+  </Folder>
+  <Folder Name="/Solution Items/docs/screenshots/">
+    <File Path="docs/screenshots/README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/docs/_layouts/">
+    <File Path="docs/_layouts/default.html" />
+  </Folder>
+  <Folder Name="/Solution Items/flatpak/">
+    <File Path="installer/flatpak/dk.nikse.subtitleedit.desktop" />
+    <File Path="installer/flatpak/dk.nikse.subtitleedit.metainfo.xml" />
+    <File Path="installer/flatpak/dk.nikse.subtitleedit.yaml" />
+    <File Path="installer/flatpak/generate-nuget-sources.sh" />
+    <File Path="installer/flatpak/update-metainfo-version.sh" />
+  </Folder>
+  <Folder Name="/Solution Items/macBundle/">
+    <File Path="installer/macBundle/SubtitleEdit.app/Contents/Info.plist" />
+    <File Path="installer/macBundle/update-plist-version.sh" />
+  </Folder>
+  <Folder Name="/Solution Items/WindowsInno/">
+    <File Path="installer/WindowsInno/Subtitle_Edit_Installer.iss" />
+    <File Path="installer/WindowsInno/Subtitle_Edit_Localization.iss" />
+    <File Path="installer/WindowsInno/update-version.ps1" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/libse/LibSETests.csproj" />
+    <Project Path="tests/libuilogic/LibUiLogicTests.csproj" />
+    <Project Path="tests/seconv/SeConvTests.csproj" />
+    <Project Path="tests/UI/UITests.csproj" />
+  </Folder>
+  <Project Path="src/libse/LibSE.csproj" />
+  <Project Path="src/libuilogic/LibUiLogic.csproj" />
+  <Project Path="src/seconv/SeConv.csproj" />
+  <Project Path="src/ui/UI.csproj" />
+</Solution>

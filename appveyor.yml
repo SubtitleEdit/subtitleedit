@@ -9,11 +9,11 @@ install:
 configuration: Release
 
 before_build:
-  - dotnet restore SubtitleEdit.sln
+  - dotnet restore SubtitleEdit.slnx
 
 build_script:
   # Using MSBuild with the AppVeyor logger to track progress in the UI
-  - msbuild SubtitleEdit.sln /p:Configuration=Release /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" -verbosity:m
+  - msbuild SubtitleEdit.slnx /p:Configuration=Release /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" -verbosity:m
 
 test_script:
   # Run unit tests (excluding benchmarks)
