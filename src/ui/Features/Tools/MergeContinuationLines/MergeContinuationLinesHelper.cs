@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Features.Main;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ public static class MergeContinuationLinesHelper
         int maxTotalLength)
     {
         var result = new List<MergeContinuationLinesCandidate>();
-        if (subtitles == null || subtitles.Count < 2 || IsLanguageSkipped(language))
+        if (subtitles == null || subtitles.Count < 2)
         {
             return result;
         }
@@ -41,6 +42,16 @@ public static class MergeContinuationLinesHelper
             var nextP = next.ToParagraph();
 
             if (!Utilities.QualifiesForMerge(p, nextP, maxGapMs, maxTotalLength, onlyContinuationLines: true))
+            {
+                continue;
+            }
+
+            // Detect CJK per line rather than skipping the whole file by its overall
+            // detected language (issue #11267): a file can mix scripts (e.g. a few
+            // Japanese lines over an English body). In CJK the absence of sentence-final
+            // punctuation makes QualifiesForMerge treat almost every line as a
+            // continuation, so skip only those lines that actually end in CJK.
+            if (EndsWithCjk(current.Text))
             {
                 continue;
             }
@@ -102,6 +113,19 @@ public static class MergeContinuationLinesHelper
         }
 
         return result;
+    }
+
+    // Mirrors the CJK check inside Utilities.QualifiesForMerge: sanitize tags/whitespace
+    // the same way and test the last visible character.
+    private static bool EndsWithCjk(string? text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return false;
+        }
+
+        var sanitized = HtmlUtil.RemoveHtmlTags(text!.Trim(), true);
+        return sanitized.Length > 0 && CalcCjk.IsCjk(sanitized[sanitized.Length - 1]);
     }
 
     private static bool StartsWithDashSpeaker(string? text)
