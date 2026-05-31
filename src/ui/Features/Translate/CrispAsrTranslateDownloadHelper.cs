@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Download;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -38,6 +39,18 @@ public static class CrispAsrTranslateDownloadHelper
         }
 
         return GetInstalledModelPath() != null;
+    }
+
+    /// <summary>
+    /// True when the CrispASR engine binary is installed but an updated build is available - the
+    /// install sidecar hash no longer matches the latest known build. Mirrors the amber status dot
+    /// shown next to the engine in the auto-translate combo.
+    /// </summary>
+    public static bool IsEngineUpdateAvailable()
+    {
+        var engine = new CrispAsrMadlad();
+        return engine.IsEngineInstalled()
+            && DownloadHashManager.GetSidecarStatus(engine.GetAndCreateWhisperFolder()) == DownloadHashManager.UpdateStatus.UpdateAvailable;
     }
 
     /// <summary>
@@ -152,6 +165,36 @@ public static class CrispAsrTranslateDownloadHelper
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Forces a re-download of the CrispASR engine binary to apply an available update. The MADLAD
+    /// models are left untouched - only the engine executable (and its sidecar hash) is refreshed.
+    /// </summary>
+    /// <returns>True if the engine was re-installed.</returns>
+    public static async Task<bool> UpdateEngineAsync(Window owner, IWindowService windowService)
+    {
+        var engine = new CrispAsrMadlad();
+
+        // Same small CPU build the regular CrispASR/MADLAD flow installs - this is a CPU-bound
+        // translation model, so there is no GPU variant to choose between.
+        var engineVm = await windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
+            owner, vm =>
+            {
+                vm.Engine = engine;
+                vm.CrispAsrWindowsVariant = "cpu";
+                vm.StartDownload();
+            });
+
+        if (!engineVm.OkPressed || !engine.IsEngineInstalled())
+        {
+            return false;
+        }
+
+        Se.Settings.AutoTranslate.CrispAsrExe = engine.GetExecutable();
+        Configuration.Settings.Tools.AutoTranslateCrispAsrExe = Se.Settings.AutoTranslate.CrispAsrExe;
+        Se.SaveSettings();
+        return true;
     }
 
     /// <summary>

@@ -128,6 +128,15 @@ public class AutoTranslateWindow : Window
         // the simplest way to refresh. The model combos already rebuild via PopulateModels.
         vm.RefreshDownloadDots = () => engineCombo.ItemTemplate = BuildTranslatorItemTemplate();
 
+        // Appears only when the selected SE-managed engine (CrispASR/MADLAD or llama.cpp) is installed
+        // but outdated - i.e. it shows the amber "update available" dot - giving the user a way to act on it.
+        var updateEngineButton = UiUtil.MakeButton(Se.Language.General.Update, vm.UpdateEngineCommand)
+            .WithIconLeft(IconNames.Download)
+            .WithMarginLeft(8);
+        updateEngineButton.VerticalAlignment = VerticalAlignment.Center;
+        updateEngineButton.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.EngineUpdateButtonIsVisible)));
+        ToolTip.SetTip(updateEngineButton, Se.Language.General.UpdateAvailable);
+
         var fromLabel = UiUtil.MakeTextBlock(Se.Language.General.From);
         fromLabel.VerticalAlignment = VerticalAlignment.Center;
         fromLabel.Margin = new Thickness(16, 0, 8, 0);
@@ -154,6 +163,7 @@ public class AutoTranslateWindow : Window
             {
                 engineLabel,
                 engineCombo,
+                updateEngineButton,
                 fromLabel,
                 sourceCombo,
                 swapButton,
