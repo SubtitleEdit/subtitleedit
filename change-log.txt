@@ -2,6 +2,12 @@
 Subtitle Edit Changelog
 
 
+v5.0.0-rc2 (31st May 2026)
+
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-rc1 (30th May 2026)
 
 * Update docs for RC1
