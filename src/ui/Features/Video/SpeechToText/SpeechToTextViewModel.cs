@@ -1075,7 +1075,12 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             if (_audioClips != null && ResultAudioClips.Count > 0)
             {
-                var outputAudioClip = ResultAudioClips.FirstOrDefault(p => p.AudioFileName == audioFileName);
+                // Match on _videoFileName (the original clip), NOT audioFileName:
+                // for the OpenAI engine audioFileName is a transcoded temp file
+                // (e.g. <GUID>.mp3) that never equals a clip's AudioFileName, so
+                // matching on it would leave Transcription unset and the selected
+                // line empty. Mirrors the whisper paths above.
+                var outputAudioClip = ResultAudioClips.FirstOrDefault(p => p.AudioFileName == _videoFileName);
                 if (outputAudioClip != null)
                 {
                     outputAudioClip.Transcription = new Subtitle(postProcessedSubtitle);
@@ -1094,7 +1099,9 @@ public partial class SpeechToTextViewModel : ObservableObject
 
                 if (_audioClips != null && ResultAudioClips.Count > 0)
                 {
-                    var outputAudioClip = ResultAudioClips.FirstOrDefault(p => p.AudioFileName == audioFileName);
+                    // See note above: match the original clip via _videoFileName,
+                    // not the transcoded temp file passed as audioFileName.
+                    var outputAudioClip = ResultAudioClips.FirstOrDefault(p => p.AudioFileName == _videoFileName);
                     if (outputAudioClip != null)
                     {
                         outputAudioClip.Transcription = new Subtitle(postProcessedSubtitle);
