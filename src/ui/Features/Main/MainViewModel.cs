@@ -5567,9 +5567,13 @@ public partial class MainViewModel :
             var transcribedLine = resultSpeechToText.ResultAudioClips[i];
             if (transcribedLine != null)
             {
-                if (selectedLine.Duration.TotalSeconds > 10 && transcribedLine.Transcription.Paragraphs.Count > 1)
+                if (transcribedLine.Transcription.Paragraphs.Count > 1)
                 {
-                    // generate new subtitles
+                    // The engine split this clip into several segments — replace the
+                    // selected line with one new line per segment instead of folding
+                    // them all into the original. Segment times are relative to the
+                    // clip, so offset each by the selected line's start (the StartTime
+                    // setter preserves Duration, so EndTime follows automatically).
                     deleteLines.Add(selectedLine);
                     foreach (var p in transcribedLine.Transcription.Paragraphs)
                     {
