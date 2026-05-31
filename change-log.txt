@@ -2,7 +2,7 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-rc2 (31st May 2026)
+v5.0.0-rc2 (TBD)
 
 * Update Japanese translation - thx hisui3393
 
