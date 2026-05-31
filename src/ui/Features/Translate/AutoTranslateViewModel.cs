@@ -87,6 +87,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<SpeechToTextModelDisplay> _crispAsrModels = new();
     [ObservableProperty] private SpeechToTextModelDisplay? _selectedCrispAsrModel;
     [ObservableProperty] private bool _crispAsrModelComboIsVisible;
+    [ObservableProperty] private bool _engineUpdateButtonIsVisible;
     [ObservableProperty] private ObservableCollection<LlamaCppModelDisplay> _llamaCppModels = new();
     [ObservableProperty] private LlamaCppModelDisplay? _selectedLlamaCppModel;
     [ObservableProperty] private bool _llamaCppModelComboIsVisible;
@@ -735,6 +736,51 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
 
         RefreshDownloadDots?.Invoke();
+        RefreshEngineUpdateButton();
+    }
+
+    [RelayCommand]
+    private async Task UpdateEngine()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (SelectedAutoTranslator is CrispAsrMadladTranslate)
+        {
+            await UpdateCrispAsrEngineAsync();
+        }
+        else if (SelectedAutoTranslator is LlamaCppTranslate && GetLlamaCppEngineUpdate() is var (key, _))
+        {
+            await UpdateLlamaCppEngineAsync(key);
+        }
+    }
+
+    private async Task UpdateCrispAsrEngineAsync()
+    {
+        var updated = await CrispAsrTranslateDownloadHelper.UpdateEngineAsync(Window!, _windowService);
+        if (updated)
+        {
+            PopulateCrispAsrModels(SelectedCrispAsrModel?.Model.Name);
+            SaveSettings();
+        }
+
+        RefreshDownloadDots?.Invoke();
+        RefreshEngineUpdateButton();
+    }
+
+    // Shows the "Update" button next to the engine combo only when the selected SE-managed engine is
+    // installed but outdated (the amber status dot): CrispASR/MADLAD or llama.cpp. Cloud/API translators
+    // have no local binary to update, so the button stays hidden for them.
+    private void RefreshEngineUpdateButton()
+    {
+        EngineUpdateButtonIsVisible = SelectedAutoTranslator switch
+        {
+            CrispAsrMadladTranslate => CrispAsrTranslateDownloadHelper.IsEngineUpdateAvailable(),
+            LlamaCppTranslate => GetLlamaCppEngineUpdate() != null,
+            _ => false,
+        };
     }
 
     private void PopulateCrispAsrModels(string? selectModelName)
@@ -777,6 +823,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
 
         RefreshDownloadDots?.Invoke();
+        RefreshEngineUpdateButton();
         return ready;
     }
 
@@ -928,19 +975,12 @@ public partial class AutoTranslateViewModel : ObservableObject
     /// </summary>
     private async Task CheckLlamaCppForUpdateAsync()
     {
-        if (_llamaCppUpdatePromptShown || Window == null || !LlamaCppServerManager.IsEngineInstalled())
+        if (_llamaCppUpdatePromptShown || Window == null)
         {
             return;
         }
 
-        var folder = LlamaCppServerManager.GetAndCreateFolder();
-        var lookup = TryReadLlamaCppSidecarHash(folder) ?? TryHashInstalledLlamaCppExecutable();
-        if (lookup is not var (key, hash))
-        {
-            return;
-        }
-
-        if (DownloadHashManager.GetStatus(key, hash) != DownloadHashManager.UpdateStatus.UpdateAvailable)
+        if (GetLlamaCppEngineUpdate() is not var (key, _))
         {
             return;
         }
@@ -959,12 +999,48 @@ public partial class AutoTranslateViewModel : ObservableObject
             return;
         }
 
-        // The running server holds the binary open (and a stale build would keep serving), so
-        // stop it before overwriting the install.
+        await UpdateLlamaCppEngineAsync(key);
+    }
+
+    /// <summary>
+    /// Returns the install key/hash of the installed llama-server when a newer build than the one
+    /// SE ships is available (sidecar hash, falling back to hashing the executable), otherwise null.
+    /// </summary>
+    private (string key, string hash)? GetLlamaCppEngineUpdate()
+    {
+        if (!LlamaCppServerManager.IsEngineInstalled())
+        {
+            return null;
+        }
+
+        var folder = LlamaCppServerManager.GetAndCreateFolder();
+        var lookup = TryReadLlamaCppSidecarHash(folder) ?? TryHashInstalledLlamaCppExecutable();
+        if (lookup is not var (key, hash))
+        {
+            return null;
+        }
+
+        return DownloadHashManager.GetStatus(key, hash) == DownloadHashManager.UpdateStatus.UpdateAvailable
+            ? (key, hash)
+            : null;
+    }
+
+    /// <summary>
+    /// Stops the running llama-server (it holds the binary open and would keep serving a stale build),
+    /// re-downloads the matching llama.cpp build, and refreshes the model list and status indicators.
+    /// </summary>
+    private async Task UpdateLlamaCppEngineAsync(string installedKey)
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
         LlamaCppServerManager.StopServer();
         UpdateLlamaCppServerButtonText();
 
-        var variant = DownloadHashManager.GetLlamaCppWindowsVariant(key)
+        var folder = LlamaCppServerManager.GetAndCreateFolder();
+        var variant = DownloadHashManager.GetLlamaCppWindowsVariant(installedKey)
                       ?? (OperatingSystem.IsWindows() ? DownloadHashManager.DetectLlamaCppWindowsVariant(folder) : null);
 
         var model = SelectedLlamaCppModel?.Model;
@@ -977,6 +1053,7 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         RefreshDownloadDots?.Invoke();
         UpdateLlamaCppServerButtonText();
+        RefreshEngineUpdateButton();
     }
 
     private static (string key, string hash)? TryReadLlamaCppSidecarHash(string folder)
@@ -1375,6 +1452,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         ButtonModelIsVisible = false;
         ButtonDownloadIsVisible = false;
         CrispAsrModelComboIsVisible = false;
+        EngineUpdateButtonIsVisible = false;
         CrispAsrModels.Clear();
         SelectedCrispAsrModel = null;
         LlamaCppModelComboIsVisible = false;
@@ -1557,6 +1635,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             var savedModelName = Path.GetFileName(Se.Settings.AutoTranslate.LlamaCppModel ?? string.Empty);
             SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.GetAllTranslateModels(), savedModelName);
             UpdateLlamaCppServerButtonText();
+            RefreshEngineUpdateButton();
 
             if (!_llamaCppUpdatePromptShown)
             {
@@ -1746,6 +1825,7 @@ public partial class AutoTranslateViewModel : ObservableObject
 
             CrispAsrModelComboIsVisible = true;
             ButtonDownloadIsVisible = true;
+            RefreshEngineUpdateButton();
 
             return;
         }
