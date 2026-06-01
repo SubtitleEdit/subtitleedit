@@ -68,7 +68,7 @@ internal static class ContainerSubtitleLoader
 
         if (ext == ".mxf")
         {
-            return LoadMxf(filePath);
+            return LoadMxf(filePath, options);
         }
 
         return null;
@@ -86,9 +86,24 @@ internal static class ContainerSubtitleLoader
     /// MxfParser collects the bitmaps but doesn't carry per-essence PTS, so there's no
     /// timing context for image output. Flagged as a warning instead.
     /// </summary>
-    private static List<LoadedTrack>? LoadMxf(string filePath)
+    private static List<LoadedTrack>? LoadMxf(string filePath, ConversionOptions options)
     {
-        var parser = new MxfParser(filePath);
+        // MxfParser walks the KLV structure inside its constructor, so any malformed
+        // packet (zero-length essence, truncated BER length, etc.) surfaces here as a
+        // low-level exception like IndexOutOfRangeException. Wrap it so the user sees
+        // an MXF-contextual error instead of a stack-traceless "Index was outside the
+        // bounds of the array".
+        MxfParser parser;
+        try
+        {
+            parser = new MxfParser(filePath);
+        }
+        catch (Exception ex) when (ex is not InvalidOperationException)
+        {
+            throw new InvalidOperationException(
+                $"Failed to parse MXF file '{filePath}': {ex.Message}", ex);
+        }
+
         if (!parser.IsValid)
         {
             // Not a real MXF (no Header Partition Pack signature). Fall through to the
@@ -121,6 +136,14 @@ internal static class ContainerSubtitleLoader
         var trackNumber = 1;
         foreach (var subtitleText in subtitleTexts)
         {
+            // Honour --track-number against the 1-based essence index — mirrors how
+            // LoadMatroska / LoadMp4 filter their multi-track inputs (line ~96).
+            if (options.TrackNumbers.Count > 0 && !options.TrackNumbers.Contains(trackNumber))
+            {
+                trackNumber++;
+                continue;
+            }
+
             var subtitle = new Subtitle();
             var lines = new List<string>(subtitleText.SplitToLines());
             // ReloadLoadSubtitle scans every SubtitleFormat's IsMine until one claims the text.
@@ -142,6 +165,11 @@ internal static class ContainerSubtitleLoader
 
         if (tracks.Count == 0)
         {
+            if (options.TrackNumbers.Count > 0)
+            {
+                throw new InvalidOperationException(
+                    $"MXF contained {subtitleTexts.Count} essence(s) but none matched --track-number ({string.Join(",", options.TrackNumbers)}): {filePath}");
+            }
             throw new InvalidOperationException(
                 $"MXF contained {subtitleTexts.Count} candidate subtitle essence(s) but none parsed as a known format: {filePath}");
         }

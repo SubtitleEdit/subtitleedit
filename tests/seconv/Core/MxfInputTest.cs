@@ -35,7 +35,7 @@ public class MxfInputTest : IDisposable
         var srt =
             "1\n00:00:01,000 --> 00:00:04,000\nHello from MXF!\n\n"
             + "2\n00:00:05,000 --> 00:00:08,000\nSecond subtitle.\n\n";
-        File.WriteAllBytes(mxfPath, BuildSyntheticMxf(srt));
+        File.WriteAllBytes(mxfPath, BuildSyntheticMxf([srt]));
 
         var outputFolder = Path.Combine(_tempRoot, "out");
         Directory.CreateDirectory(outputFolder);
@@ -59,6 +59,63 @@ public class MxfInputTest : IDisposable
         var content = await File.ReadAllTextAsync(srts[0], TestContext.Current.CancellationToken);
         Assert.Contains("Hello from MXF!", content);
         Assert.Contains("Second subtitle.", content);
+    }
+
+    [Fact]
+    public async Task ConvertAsync_MxfWithTrackNumberFilter_PicksOneEssence()
+    {
+        // Two-essence MXF, request only essence #2 via --track-number. The first
+        // essence's text must not appear in the output.
+        var mxfPath = Path.Combine(_tempRoot, "movie.mxf");
+        var srt1 = "1\n00:00:01,000 --> 00:00:02,000\nFirst essence.\n\n";
+        var srt2 = "1\n00:00:03,000 --> 00:00:04,000\nSecond essence.\n\n";
+        File.WriteAllBytes(mxfPath, BuildSyntheticMxf([srt1, srt2]));
+
+        var outputFolder = Path.Combine(_tempRoot, "out");
+        Directory.CreateDirectory(outputFolder);
+
+        var converter = new SubtitleConverter();
+        var result = await converter.ConvertAsync(new ConversionOptions
+        {
+            Patterns = [mxfPath],
+            Format = "SubRip",
+            OutputFolder = outputFolder,
+            Overwrite = true,
+            TrackNumbers = [2],
+        });
+
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        var srts = Directory.GetFiles(outputFolder, "*.srt");
+        Assert.Single(srts);
+        Assert.Contains(srts, p => Path.GetFileName(p).Contains("mxf_track2"));
+        var content = await File.ReadAllTextAsync(srts[0], TestContext.Current.CancellationToken);
+        Assert.Contains("Second essence.", content);
+        Assert.DoesNotContain("First essence.", content);
+    }
+
+    [Fact]
+    public async Task ConvertAsync_MxfWithCorruptKlv_ProducesMxfContextualError()
+    {
+        // A file with a valid Header Partition Pack signature but a truncated KLV
+        // packet should surface a "Failed to parse MXF" error, not a raw
+        // IndexOutOfRangeException leaked from libse's KLV reader.
+        var mxfPath = Path.Combine(_tempRoot, "corrupt.mxf");
+        File.WriteAllBytes(mxfPath, BuildCorruptMxf());
+        var outputFolder = Path.Combine(_tempRoot, "out");
+        Directory.CreateDirectory(outputFolder);
+
+        var converter = new SubtitleConverter();
+        var result = await converter.ConvertAsync(new ConversionOptions
+        {
+            Patterns = [mxfPath],
+            Format = "SubRip",
+            OutputFolder = outputFolder,
+            Overwrite = true,
+        });
+
+        Assert.False(result.Success);
+        Assert.Single(result.Errors);
+        Assert.Contains("MXF", result.Errors[0]);
     }
 
     [Fact]
@@ -94,11 +151,12 @@ public class MxfInputTest : IDisposable
 
     /// <summary>
     /// Builds a minimal valid MXF byte stream: 16-byte Header Partition Pack key with
-    /// no payload, followed by a 16-byte Essence Element key carrying <paramref name="payload"/>
-    /// as UTF-8 bytes. This is the smallest structure MxfParser will walk successfully
-    /// (header signature at offset 0, single KLV essence containing the subtitle text).
+    /// no payload, followed by one Essence Element KLV per entry in <paramref name="payloads"/>
+    /// carrying the entry as UTF-8 bytes. This is the smallest structure MxfParser will
+    /// walk successfully — header signature at offset 0, then N KLV essences containing
+    /// the subtitle text(s).
     /// </summary>
-    private static byte[] BuildSyntheticMxf(string payload)
+    private static byte[] BuildSyntheticMxf(IReadOnlyList<string> payloads)
     {
         // Header Partition Pack: only bytes 0..10 are checked by ReadHeaderPartitionPack;
         // the remaining 5 bytes can be anything per the spec's wildcard convention.
@@ -107,25 +165,53 @@ public class MxfInputTest : IDisposable
         // placeholder works.
         byte[] essenceKey = [0x06, 0x0E, 0x2B, 0x34, 0x01, 0x02, 0x01, 0x01, 0x0D, 0x01, 0x03, 0x01, 0xFF, 0xFF, 0xFF, 0xFF];
 
-        var payloadBytes = System.Text.Encoding.UTF8.GetBytes(payload);
-
         using var ms = new MemoryStream();
         // First KLV: header partition pack with zero-length payload (BER 0x00).
         ms.Write(headerKey);
         ms.WriteByte(0x00);
-        // Second KLV: essence element with the SRT text. BER long-form length: 0x84
-        // means "4-byte big-endian length follows", which handles payloads up to 4 GB
-        // and avoids the short-form 0..127 boundary case.
-        ms.Write(essenceKey);
-        ms.WriteByte(0x84);
-        ms.WriteByte((byte)((payloadBytes.Length >> 24) & 0xFF));
-        ms.WriteByte((byte)((payloadBytes.Length >> 16) & 0xFF));
-        ms.WriteByte((byte)((payloadBytes.Length >> 8) & 0xFF));
-        ms.WriteByte((byte)(payloadBytes.Length & 0xFF));
-        ms.Write(payloadBytes);
+        // Each payload becomes its own essence-element KLV. BER long-form length:
+        // 0x84 means "4-byte big-endian length follows", which handles payloads up to
+        // 4 GB and avoids the short-form 0..127 boundary case.
+        foreach (var payload in payloads)
+        {
+            var payloadBytes = System.Text.Encoding.UTF8.GetBytes(payload);
+            ms.Write(essenceKey);
+            ms.WriteByte(0x84);
+            ms.WriteByte((byte)((payloadBytes.Length >> 24) & 0xFF));
+            ms.WriteByte((byte)((payloadBytes.Length >> 16) & 0xFF));
+            ms.WriteByte((byte)((payloadBytes.Length >> 8) & 0xFF));
+            ms.WriteByte((byte)(payloadBytes.Length & 0xFF));
+            ms.Write(payloadBytes);
+        }
         // ReadHeaderPartitionPack requires the file to be >= 100 bytes; pad if smaller.
-        // (With a typical multi-cue SRT payload, we're already well past 100 bytes, but
+        // (With typical multi-cue SRT payload, we're already well past 100 bytes, but
         // the guard keeps short single-cue tests honest.)
+        while (ms.Length < 100)
+        {
+            ms.WriteByte(0x00);
+        }
+        return ms.ToArray();
+    }
+
+    /// <summary>
+    /// Builds a byte stream with a valid Header Partition Pack signature followed by
+    /// a KLV that announces a huge payload but is truncated before the data — exercises
+    /// the error path where the libse KLV reader runs off the end of the file.
+    /// </summary>
+    private static byte[] BuildCorruptMxf()
+    {
+        byte[] headerKey = [0x06, 0x0E, 0x2B, 0x34, 0x02, 0x05, 0x01, 0x01, 0x0D, 0x01, 0x02, 0x01, 0x01, 0x00, 0x00, 0x00];
+        byte[] essenceKey = [0x06, 0x0E, 0x2B, 0x34, 0x01, 0x02, 0x01, 0x01, 0x0D, 0x01, 0x03, 0x01, 0xFF, 0xFF, 0xFF, 0xFF];
+
+        using var ms = new MemoryStream();
+        ms.Write(headerKey);
+        ms.WriteByte(0x00);
+        ms.Write(essenceKey);
+        // Claim a 1 MB payload but write only a few bytes — the parser's stream.Read
+        // will return a short count and downstream parsing trips up.
+        ms.WriteByte(0x83);
+        ms.WriteByte(0x0F); ms.WriteByte(0xFF); ms.WriteByte(0xFF);
+        ms.Write([0x01, 0x02, 0x03]);
         while (ms.Length < 100)
         {
             ms.WriteByte(0x00);
