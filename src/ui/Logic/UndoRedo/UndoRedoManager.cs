@@ -159,12 +159,17 @@ public sealed class UndoRedoManager : IUndoRedoManager
                 // ticks). Snapshot the live state onto redo BEFORE stepping back,
                 // so redo can restore it — issue #11280: undoing a fast text-edit
                 // + waveform-drag combo used to discard the unrecorded state
-                // silently, leaving the user unable to redo. Now those changes
-                // become a redo entry the same way an explicit Do() would.
+                // silently, leaving the user unable to redo.
+                //
+                // The unrecorded edit is a divergence from any prior redo
+                // timeline (same as a regular Do() — see DoCore). Clear redo
+                // first so the user can't redo into the stale future that
+                // existed before this edit, then push the live snapshot.
                 var live = _undoRedoClient.MakeUndoRedoObject("Unrecorded changes");
                 if (live is not null)
                 {
-                    PushIfNew(_redoList, live);
+                    _redoList.Clear();
+                    _redoList.Add(live);
                 }
             }
 

@@ -214,6 +214,32 @@ public class UndoRedoManagerTests
     }
 
     [Fact]
+    public void Undo_WhenLiveHashUnrecorded_ClearsStaleRedoBeforeSnapshot()
+    {
+        // The unrecorded edit diverges from any prior redo timeline (same
+        // semantic as a regular Do() clearing redo). If we left stale redo
+        // entries in place, the user could redo into a future that's
+        // incoherent with the live state they just diverged from.
+        var client = new FakeClient { Hash = 2 };
+        var manager = new UndoRedoManager();
+        manager.SetupChangeDetection(client);
+        manager.Do(MakeItem("state-a", 1));
+        manager.Do(MakeItem("state-b", 2));
+        manager.Undo(); // pops state-b onto redo. UndoList=[state-a], RedoList=[state-b]
+        Assert.Equal(1, manager.RedoCount);
+
+        // Now simulate an unrecorded edit — live hash diverges from top of undo.
+        client.Hash = 99;
+
+        manager.Undo();
+
+        // Stale state-b entry on redo should be gone; replaced by the live snapshot.
+        Assert.Equal(1, manager.RedoCount);
+        Assert.Equal("Unrecorded changes", manager.RedoList[0].Description);
+        Assert.Equal(99, manager.RedoList[0].Hash);
+    }
+
+    [Fact]
     public void Undo_ReturnsNull_WhenOnlyBaselineExistsWithMatchingHash()
     {
         var client = new FakeClient { Hash = 1 };
