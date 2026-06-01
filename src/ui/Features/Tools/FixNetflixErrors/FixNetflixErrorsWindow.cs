@@ -6,6 +6,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Threading;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -112,6 +113,7 @@ public class FixNetflixErrorsWindow : Window
             {
                 var cb = new CheckBox
                 {
+                    Focusable = false,
                     [!ToggleButton.IsCheckedProperty] = new Binding(nameof(NetflixCheckDisplayItem.IsSelected)) { Mode = BindingMode.TwoWay },
                     HorizontalAlignment = HorizontalAlignment.Center,
                 };
@@ -134,6 +136,15 @@ public class FixNetflixErrorsWindow : Window
             IsReadOnly = true,
             Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
         });
+        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key == Key.Space && dataGrid.SelectedItem is NetflixCheckDisplayItem selectedItem)
+            {
+                selectedItem.IsSelected = !selectedItem.IsSelected;
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
+        dataGrid.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => dataGrid.Focus());
 
         var grid = new Grid
         {
@@ -178,6 +189,7 @@ public class FixNetflixErrorsWindow : Window
                     {
                         var cb = new CheckBox
                         {
+                            Focusable = false,
                             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixNetflixErrorsItem.Apply)) { Mode = BindingMode.TwoWay },
                             HorizontalAlignment = HorizontalAlignment.Center,
                         };
@@ -226,6 +238,15 @@ public class FixNetflixErrorsWindow : Window
             },
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
+        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key == Key.Space && dataGrid.SelectedItem is FixNetflixErrorsItem selectedItem && selectedItem.CanBeFixed)
+            {
+                selectedItem.Apply = !selectedItem.Apply;
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
+        dataGrid.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => dataGrid.Focus());
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);
     }

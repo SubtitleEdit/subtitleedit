@@ -3,7 +3,10 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Threading;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 using Nikse.SubtitleEdit.Logic;
@@ -56,7 +59,7 @@ public class BatchConvertFixCommonErrorsSettingsWindow : Window
         Content = grid;
 
         Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
-        KeyDown += (s, e) => vm.OnKeyDown(e);
+        KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
     private static Border MakeRulesView(BatchConvertFixCommonErrorsSettingsViewModel vm)
@@ -86,6 +89,7 @@ public class BatchConvertFixCommonErrorsSettingsWindow : Window
                             Padding = new Thickness(4),
                             Child = new CheckBox
                             {
+                                Focusable = false,
                                 [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixRuleDisplayItem.IsSelected)),
                                 HorizontalAlignment = HorizontalAlignment.Center
                             }
@@ -109,14 +113,16 @@ public class BatchConvertFixCommonErrorsSettingsWindow : Window
                 },
             },
         };
-        rulesGrid.CellPointerPressed += (sender, e) =>
+        rulesGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
-            if (e.Column is DataGridCheckBoxColumn column && e.Row.DataContext is FixRuleDisplayItem item)
+            if (e.Key == Key.Space && rulesGrid.SelectedItem is FixRuleDisplayItem selectedItem)
             {
-                item.IsSelected = !item.IsSelected;
+                selectedItem.IsSelected = !selectedItem.IsSelected;
+                e.Handled = true;
             }
-        };
-        
+        }, RoutingStrategies.Tunnel);
+        rulesGrid.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => rulesGrid.Focus());
+
         return UiUtil.MakeBorderForControl(rulesGrid);
     }
 }

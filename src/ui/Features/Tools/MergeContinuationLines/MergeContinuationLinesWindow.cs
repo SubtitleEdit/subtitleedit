@@ -3,7 +3,10 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Threading;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -147,6 +150,7 @@ public class MergeContinuationLinesWindow : Window
                             Padding = new Thickness(4),
                             Child = new CheckBox
                             {
+                                Focusable = false,
                                 [!ToggleButton.IsCheckedProperty] = new Binding(nameof(MergeContinuationLinesCandidate.IsSelected))
                                 {
                                     Mode = BindingMode.TwoWay,
@@ -190,6 +194,15 @@ public class MergeContinuationLinesWindow : Window
                 },
             },
         };
+        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key == Key.Space && dataGrid.SelectedItem is MergeContinuationLinesCandidate selectedItem)
+            {
+                selectedItem.IsSelected = !selectedItem.IsSelected;
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
+        dataGrid.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => dataGrid.Focus());
 
         grid.Add(labelInfo, 0);
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);

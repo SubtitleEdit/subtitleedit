@@ -3,7 +3,10 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Threading;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
@@ -155,6 +158,7 @@ public class ApplyDurationLimitsWindow : Window
                             Padding = new Thickness(4),
                             Child = new CheckBox
                             {
+                                Focusable = false,
                                 [!ToggleButton.IsCheckedProperty] = new Binding(nameof(ApplyDurationLimitItem.Apply)),
                                 HorizontalAlignment = HorizontalAlignment.Center
                             }
@@ -178,6 +182,15 @@ public class ApplyDurationLimitsWindow : Window
                 },
             },
         };
+        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key == Key.Space && dataGrid.SelectedItem is ApplyDurationLimitItem selectedItem)
+            {
+                selectedItem.Apply = !selectedItem.Apply;
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
+        dataGrid.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => dataGrid.Focus());
 
         grid.Add(labelFixesAvailable, 0);
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
