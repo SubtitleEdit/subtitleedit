@@ -429,6 +429,16 @@ internal class SubtitleConverter
 
     private async Task<bool> PassThroughTransportStreamDvbAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex)
     {
+        // --teletext-only means "skip DVB-sub". The regular container path
+        // (ContainerSubtitleLoader.LoadTransportStream) honors this by gating its DVB-sub
+        // load on !options.TeletextOnly; this preserve path has to do the same or the
+        // flag is bypassed whenever the target is an image format.
+        if (options.TeletextOnly)
+        {
+            await Task.CompletedTask;
+            return false;
+        }
+
         var streams = BitmapSubtitleLoader.LoadTransportStreamDvbSub(inputFile);
         if (streams.Count == 0)
         {
