@@ -109,13 +109,14 @@ internal class SubtitleConverter
                 }
                 catch (Exception ex)
                 {
+                    var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
                     result.FailedFiles++;
-                    result.Errors.Add($"{Path.GetFileName(inputFile)}: {ex.Message}");
-                    result.Files.Add(new FileConversionResult(inputFile, null, false, ex.Message));
+                    result.Errors.Add($"{Path.GetFileName(inputFile)}: {msg}");
+                    result.Files.Add(new FileConversionResult(inputFile, null, false, msg));
 
                     if (!options.Quiet)
                     {
-                        AnsiConsole.MarkupLine($" [red]error: {ex.Message.EscapeMarkup()}[/]");
+                        AnsiConsole.MarkupLine($" [red]error: {msg.EscapeMarkup()}[/]");
                     }
                 }
 
@@ -124,7 +125,7 @@ internal class SubtitleConverter
         }
         catch (Exception ex)
         {
-            result.Errors.Add($"Conversion failed: {ex.Message}");
+            result.Errors.Add($"Conversion failed: {ErrorMessageFormatter.FormatForUser(ex, options.Verbose)}");
         }
 
         return result;
@@ -238,15 +239,16 @@ internal class SubtitleConverter
         }
         catch (Exception ex)
         {
+            var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
             result.FailedFiles = vobFiles.Count;
-            result.Errors.Add($"VOB extraction failed: {ex.Message}");
+            result.Errors.Add($"VOB extraction failed: {msg}");
             foreach (var f in vobFiles)
             {
-                result.Files.Add(new FileConversionResult(f, null, false, ex.Message));
+                result.Files.Add(new FileConversionResult(f, null, false, msg));
             }
             if (!options.Quiet)
             {
-                AnsiConsole.MarkupLine($" [red]error: {ex.Message.EscapeMarkup()}[/]");
+                AnsiConsole.MarkupLine($" [red]error: {msg.EscapeMarkup()}[/]");
             }
         }
 
@@ -327,12 +329,13 @@ internal class SubtitleConverter
         }
         catch (Exception ex)
         {
+            var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
             result.FailedFiles++;
-            result.Errors.Add($"{Path.GetFileName(inputFile)}: {ex.Message}");
-            result.Files.Add(new FileConversionResult(inputFile, null, false, ex.Message));
+            result.Errors.Add($"{Path.GetFileName(inputFile)}: {msg}");
+            result.Files.Add(new FileConversionResult(inputFile, null, false, msg));
             if (!options.Quiet)
             {
-                AnsiConsole.MarkupLine($" [red]error: {ex.Message.EscapeMarkup()}[/]");
+                AnsiConsole.MarkupLine($" [red]error: {msg.EscapeMarkup()}[/]");
             }
         }
         finally
@@ -403,12 +406,13 @@ internal class SubtitleConverter
             }
             catch (Exception ex)
             {
+                var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
                 result.FailedFiles++;
-                result.Errors.Add($"{Path.GetFileName(inputFile)} track #{track.TrackNumber}: {ex.Message}");
-                result.Files.Add(new FileConversionResult(inputFile, null, false, ex.Message));
+                result.Errors.Add($"{Path.GetFileName(inputFile)} track #{track.TrackNumber}: {msg}");
+                result.Files.Add(new FileConversionResult(inputFile, null, false, msg));
                 if (!options.Quiet)
                 {
-                    AnsiConsole.MarkupLine($" [red]error: {ex.Message.EscapeMarkup()}[/]");
+                    AnsiConsole.MarkupLine($" [red]error: {msg.EscapeMarkup()}[/]");
                 }
             }
             finally
@@ -479,12 +483,13 @@ internal class SubtitleConverter
             }
             catch (Exception ex)
             {
+                var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
                 result.FailedFiles++;
-                result.Errors.Add($"{Path.GetFileName(inputFile)} PID {pid}: {ex.Message}");
-                result.Files.Add(new FileConversionResult(inputFile, null, false, ex.Message));
+                result.Errors.Add($"{Path.GetFileName(inputFile)} PID {pid}: {msg}");
+                result.Files.Add(new FileConversionResult(inputFile, null, false, msg));
                 if (!options.Quiet)
                 {
-                    AnsiConsole.MarkupLine($" [red]error: {ex.Message.EscapeMarkup()}[/]");
+                    AnsiConsole.MarkupLine($" [red]error: {msg.EscapeMarkup()}[/]");
                 }
             }
             finally

@@ -220,7 +220,7 @@ seconv movie.ts fcpimage                                       # DVB-sub → FCP
 | Option | Description |
 |---|---|
 | `--quiet` / `-q` | Suppress per-file progress; only print the final summary |
-| `--verbose` / `-v` | Print extra diagnostic information |
+| `--verbose` / `-v` | Print extra diagnostic information (incl. full `Exception.ToString()` with stack traces on errors; without it, the message chain is still walked so wrapper exceptions like `TypeInitializationException` surface their root cause) |
 | `--json` | Emit per-file results as JSON to stdout (suppresses Spectre output) |
 
 ## Operations (boolean flags)
