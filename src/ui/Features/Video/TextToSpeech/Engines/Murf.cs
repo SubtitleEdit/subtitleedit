@@ -130,7 +130,7 @@ public class Murf : ITtsEngine
             new("Spanish (Mexico)", "es-MX"),
             new("Italian", "it-IT"),
             new("Portuguese (Brazil)", "pt-BR"),
-            new("Portuguese (Portugal)", "pl-PL"),
+            new("Portuguese (Portugal)", "pt-PT"),
         };
 
         return Task.FromResult(languages.OrderBy(p => p.Name).ToArray());

@@ -54,7 +54,7 @@ public static class SpeechToTextTimingFixer
             var prevEndSecs = -1.0;
             if (index > 0)
             {
-                prevEndSecs = s.Paragraphs[index].EndTime.TotalSeconds;
+                prevEndSecs = s.Paragraphs[index - 1].EndTime.TotalSeconds;
             }
 
             // Find nearest silence
@@ -101,7 +101,7 @@ public static class SpeechToTextTimingFixer
 
                             if (x > prevEndSecs)
                             {
-                                p.StartTime.TotalMilliseconds = x;
+                                p.StartTime.TotalSeconds = x;
                             }
                         }
                         else
@@ -114,7 +114,7 @@ public static class SpeechToTextTimingFixer
 
                             if (x > prevEndSecs)
                             {
-                                p.StartTime.TotalMilliseconds = x;
+                                p.StartTime.TotalSeconds = x;
                             }
                         }
 
