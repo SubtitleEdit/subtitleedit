@@ -4,6 +4,7 @@ Subtitle Edit Changelog
 
 v5.0.0-rc2 (TBD)
 
+* Update Polish translation - thx potplayer-fanpack
 * Update Japanese translation - thx hisui3393
 
 -----------------------------------------------------------------------------------------------------
