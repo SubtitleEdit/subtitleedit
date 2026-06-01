@@ -263,7 +263,8 @@ and OCR engine setup that seconv doesn't carry.
 ## Output format aliases
 
 All aliases below are case-insensitive and accepted by `--format` / the positional
-argument. Both kebab-case and run-together spellings work for the multi-word ones.
+argument. Only the spellings shown in the table are recognised — variants that
+aren't listed (e.g. `plain-text`, `custom-text`) won't resolve.
 
 ```
 srt / subrip                       ass / assa                       ssa
