@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -65,7 +66,87 @@ internal static class ContainerSubtitleLoader
             return LoadTransportStream(filePath, options);
         }
 
+        if (ext == ".mxf")
+        {
+            return LoadMxf(filePath);
+        }
+
         return null;
+    }
+
+    /// <summary>
+    /// MXF (Material Exchange Format) container — broadcast / DCP workflows wrap timed
+    /// text essences (TTML, SRT, etc.) inside KLV-packetised "essence elements". libse's
+    /// <see cref="MxfParser"/> walks the KLV structure and extracts each candidate
+    /// subtitle blob; we hand them to <see cref="Subtitle.ReloadLoadSubtitle"/> to
+    /// auto-detect which SubtitleFormat each one actually is.
+    ///
+    /// Returns one <see cref="LoadedTrack"/> per parseable subtitle essence. Image
+    /// essences (PNG payloads in MxfParser.GetImages) are *not* surfaced here —
+    /// MxfParser collects the bitmaps but doesn't carry per-essence PTS, so there's no
+    /// timing context for image output. Flagged as a warning instead.
+    /// </summary>
+    private static List<LoadedTrack>? LoadMxf(string filePath)
+    {
+        var parser = new MxfParser(filePath);
+        if (!parser.IsValid)
+        {
+            // Not a real MXF (no Header Partition Pack signature). Fall through to the
+            // text loader — the file might just have a misleading extension.
+            return null;
+        }
+
+        var subtitleTexts = parser.GetSubtitles();
+        var images = parser.GetImages();
+
+        if (subtitleTexts.Count == 0)
+        {
+            if (images.Count > 0)
+            {
+                throw new InvalidOperationException(
+                    $"MXF contains {images.Count} image essence(s) but no text subtitles. "
+                    + "Image-based MXF subtitles (PNG essences) aren't supported yet — "
+                    + "the parser doesn't reconstruct per-essence PTS, so the bitmaps have no timing.");
+            }
+            throw new InvalidOperationException($"No subtitle essences found in MXF: {filePath}");
+        }
+
+        if (images.Count > 0)
+        {
+            AnsiConsole.MarkupLine(
+                $"[yellow]Note: MXF also contains {images.Count} image essence(s) — skipped (no timing context).[/]");
+        }
+
+        var tracks = new List<LoadedTrack>();
+        var trackNumber = 1;
+        foreach (var subtitleText in subtitleTexts)
+        {
+            var subtitle = new Subtitle();
+            var lines = new List<string>(subtitleText.SplitToLines());
+            // ReloadLoadSubtitle scans every SubtitleFormat's IsMine until one claims the text.
+            // Passing null for all three "preferred format" hints means full auto-detect.
+            var format = subtitle.ReloadLoadSubtitle(lines, null, null);
+            if (format == null || subtitle.Paragraphs.Count == 0)
+            {
+                AnsiConsole.MarkupLine(
+                    $"[yellow]Warning: MXF essence #{trackNumber} doesn't parse as a known subtitle format; skipped.[/]");
+                trackNumber++;
+                continue;
+            }
+            subtitle.Renumber();
+            // Use "mxf_track{n}" as the language-suffix slot so multi-track MXFs produce
+            // stably-named outputs (mirrors the teletext_<page> / dvb_pid<n> conventions).
+            tracks.Add(new LoadedTrack(subtitle, format, $"mxf_track{trackNumber}", trackNumber));
+            trackNumber++;
+        }
+
+        if (tracks.Count == 0)
+        {
+            throw new InvalidOperationException(
+                $"MXF contained {subtitleTexts.Count} candidate subtitle essence(s) but none parsed as a known format: {filePath}");
+        }
+
+        return tracks;
     }
 
     private static List<LoadedTrack> LoadMatroska(string filePath, ConversionOptions options)

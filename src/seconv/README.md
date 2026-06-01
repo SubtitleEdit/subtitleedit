@@ -7,7 +7,7 @@ operations, and OCR engines as the desktop UI — without an Avalonia / GUI depe
 ## Features
 
 - 380+ subtitle formats (text, binary, image-based)
-- Container input: Matroska (.mkv/.mks), MP4, MCC, transport stream teletext
+- Container input: Matroska (.mkv/.mks), MP4, MCC, MXF, transport stream teletext
 - OCR pipelines for image-based sources (Blu-Ray .sup, MKV PGS, DVB-sub)
 - Five OCR engines: Tesseract subprocess, nOCR (built-in), BinaryOCR (built-in), Ollama (HTTP), PaddleOCR subprocess
 - Image-based output: Blu-Ray sup, BDN-XML, DOST, FCP, D-Cinema interop / SMPTE 2014, images-with-time-code, WebVTT thumbnails
