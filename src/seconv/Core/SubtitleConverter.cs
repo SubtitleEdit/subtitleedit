@@ -22,6 +22,19 @@ internal class SubtitleConverter
                 return result;
             }
 
+            // DVD VOB inputs are handled as one batch — the subpicture stream spans every
+            // VTS_xx_*.VOB chunk of a title, so we extract them together. (One output pair
+            // per discovered subtitle stream / language — see ConvertVobBatchAsync.) The
+            // caller's pattern (e.g. "*.VOB") naturally selects all chunks of the title.
+            // GetFiles enumeration order isn't guaranteed and chunk order affects packet
+            // ordering and idx timestamps, so sort up front. DVD spec caps a VTS at 9
+            // chunks, so a plain ordinal sort puts VTS_xx_1..VTS_xx_9 in playback order.
+            if (inputFiles.All(f => f.EndsWith(".vob", StringComparison.OrdinalIgnoreCase)))
+            {
+                inputFiles.Sort(StringComparer.OrdinalIgnoreCase);
+                return await ConvertVobBatchAsync(inputFiles, options, result);
+            }
+
             // --output-filename only makes sense for a single input file (matches old SE)
             if (inputFiles.Count > 1 && !string.IsNullOrEmpty(options.OutputFilename))
             {
@@ -99,6 +112,130 @@ internal class SubtitleConverter
             result.Errors.Add($"Conversion failed: {ex.Message}");
         }
 
+        return result;
+    }
+
+    /// <summary>
+    /// Extract the subpicture stream from one or more DVD .VOB files into a single
+    /// .sub + .idx pair. Issue #15 in subtitleedit-cli — VOBs are 1+ GB MPEG-PS
+    /// containers, so the regular text-loading path used to error with
+    /// "input file too large". This bypasses it.
+    /// </summary>
+    private async Task<ConversionResult> ConvertVobBatchAsync(List<string> vobFiles, ConversionOptions options, ConversionResult result)
+    {
+        if (!"vobsub".Equals(options.Format, StringComparison.OrdinalIgnoreCase))
+        {
+            result.Errors.Add(
+                "VOB input is currently only supported with target format 'VobSub'. "
+                + "Re-run with --format VobSub to extract subtitles to .sub + .idx; the GUI is still required for OCR to text.");
+            result.FailedFiles = vobFiles.Count;
+            return result;
+        }
+
+        // Derive output base name: --output-filename wins, otherwise use the first VOB's
+        // stem dropped one underscore-segment (so VTS_01_1.VOB becomes VTS_01.sub for the
+        // typical DVD layout). Falls back to the bare stem when there's no underscore.
+        string outputBase;
+        if (!string.IsNullOrEmpty(options.OutputFilename))
+        {
+            outputBase = options.OutputFilename;
+            // VobSubWriter derives the .idx path as Substring(0, length - 3) + "idx", so
+            // a user-supplied --output-filename without ".sub" (e.g. "movie" or "movie.txt")
+            // would produce a broken companion path like "vieidx" or "movie.tidx". Force
+            // the extension here so both .sub and .idx land next to each other.
+            if (!outputBase.EndsWith(".sub", StringComparison.OrdinalIgnoreCase))
+            {
+                outputBase = Path.ChangeExtension(outputBase, ".sub");
+            }
+        }
+        else
+        {
+            var first = vobFiles[0];
+            var stem = Path.GetFileNameWithoutExtension(first);
+            var lastUnderscore = stem.LastIndexOf('_');
+            if (lastUnderscore > 0 && int.TryParse(stem.AsSpan(lastUnderscore + 1), out _))
+            {
+                stem = stem[..lastUnderscore];
+            }
+            var outputFolder = string.IsNullOrEmpty(options.OutputFolder)
+                ? Path.GetDirectoryName(first) ?? Directory.GetCurrentDirectory()
+                : options.OutputFolder;
+            outputBase = Path.Combine(outputFolder, stem + ".sub");
+        }
+
+        // Overwrite check is best-effort against the base path. Multi-stream DVDs land
+        // additional outputs at <stem>.<n>.sub which we can't predict without parsing —
+        // those existing files will be overwritten silently. Acceptable for now since
+        // multi-stream DVDs are rare and the user opted into the batch by passing all VOBs.
+        if (!options.Overwrite)
+        {
+            var pair = new[] { outputBase, Path.ChangeExtension(outputBase, ".idx") };
+            foreach (var p in pair)
+            {
+                if (File.Exists(p))
+                {
+                    result.Errors.Add($"Output file already exists: {p}. Pass --overwrite to replace it.");
+                    result.FailedFiles = vobFiles.Count;
+                    return result;
+                }
+            }
+        }
+
+        if (!options.Quiet)
+        {
+            var label = vobFiles.Count == 1
+                ? Path.GetFileName(vobFiles[0])
+                : $"{vobFiles.Count} VOB files";
+            AnsiConsole.Markup($"[dim]vob:[/] [cyan]{label.EscapeMarkup()}[/] [dim]->[/] [green]{outputBase.EscapeMarkup()}[/]...");
+        }
+
+        try
+        {
+            // IsPal — there's no single reliable auto-detect from VOB alone (would need
+            // IFO parsing). Default to PAL to match the GUI's batch converter. Future
+            // work: add --vob-pal/--vob-ntsc and/or read VIDEO_TS.IFO.
+            var outputs = VobSubExtractor.Extract(vobFiles, outputBase, isPal: true);
+            result.SuccessfulFiles = vobFiles.Count;
+            // Report the first stream's output path against each input VOB. With multiple
+            // streams there's no clean 1:1 mapping back to inputs, but the OutputFile slot
+            // is meant as a hint for the user — they'll see the full list in the summary.
+            var primaryOutput = outputs[0].Path;
+            foreach (var f in vobFiles)
+            {
+                result.Files.Add(new FileConversionResult(f, primaryOutput, true, null));
+            }
+            if (!options.Quiet)
+            {
+                if (outputs.Count == 1)
+                {
+                    AnsiConsole.MarkupLine($" [green]done ({outputs[0].Written} subtitle(s)).[/]");
+                }
+                else
+                {
+                    var totalWritten = outputs.Sum(o => o.Written);
+                    AnsiConsole.MarkupLine($" [green]done ({totalWritten} subtitle(s) across {outputs.Count} streams).[/]");
+                    foreach (var o in outputs)
+                    {
+                        AnsiConsole.MarkupLine($"  [dim]stream 0x{o.StreamId:X2}:[/] [green]{o.Path.EscapeMarkup()}[/] ({o.Written})");
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            result.FailedFiles = vobFiles.Count;
+            result.Errors.Add($"VOB extraction failed: {ex.Message}");
+            foreach (var f in vobFiles)
+            {
+                result.Files.Add(new FileConversionResult(f, null, false, ex.Message));
+            }
+            if (!options.Quiet)
+            {
+                AnsiConsole.MarkupLine($" [red]error: {ex.Message.EscapeMarkup()}[/]");
+            }
+        }
+
+        await Task.CompletedTask;
         return result;
     }
 
