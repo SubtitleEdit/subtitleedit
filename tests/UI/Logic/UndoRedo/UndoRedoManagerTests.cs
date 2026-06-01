@@ -191,6 +191,29 @@ public class UndoRedoManagerTests
     }
 
     [Fact]
+    public void Undo_WhenLiveHashUnrecorded_SnapshotsLiveOntoRedoStack()
+    {
+        // Regression for #11280 — when the user undoes between polling ticks,
+        // the live state has changes that aren't yet in the undo stack. Those
+        // changes used to be discarded silently (the comment said "we can't
+        // snapshot it here"), which is why users couldn't redo a quick
+        // text-edit + waveform-drag combo. Now the live state is captured onto
+        // redo before stepping back.
+        var client = new FakeClient { Hash = 99 };  // live hash != any in undo stack
+        var manager = new UndoRedoManager();
+        manager.SetupChangeDetection(client);
+        manager.Do(MakeItem("state-a", 1));
+        manager.Do(MakeItem("state-b", 2));
+
+        var result = manager.Undo();
+
+        Assert.NotNull(result);
+        Assert.Equal(2, result.Hash);            // stepped back to state-b
+        Assert.Equal(1, manager.RedoCount);      // live state was snapshotted onto redo
+        Assert.Equal("Unrecorded changes", manager.RedoList[0].Description);
+    }
+
+    [Fact]
     public void Undo_ReturnsNull_WhenOnlyBaselineExistsWithMatchingHash()
     {
         var client = new FakeClient { Hash = 1 };
