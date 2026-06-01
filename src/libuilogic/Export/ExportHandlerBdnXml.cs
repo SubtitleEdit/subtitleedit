@@ -68,7 +68,7 @@ public class ExportHandlerBdnXml : IExportHandler
                 y = _height - (param.Bitmap.Height + param.BottomTopMargin);
                 break;
             case ExportAlignment.BottomRight:
-                x = _height - param.Bitmap.Width - border;
+                x = _width - param.Bitmap.Width - border;
                 y = _height - (param.Bitmap.Height + param.BottomTopMargin);
                 break;
             case ExportAlignment.MiddleCenter:
@@ -97,9 +97,14 @@ public class ExportHandlerBdnXml : IExportHandler
                 break;
         }
 
+        // OverridePosition is the bitmap's top-left in screen coordinates (e.g. taken
+        // from a DVD/Blu-Ray PCS object's display area). Validate against the screen
+        // dimensions, not the bitmap's own — checking against the bitmap's W/H rejects
+        // any sensible screen-coord placement (a 200×40 cue at x=500 on a 1920-wide
+        // frame would fail X < 200), silently dropping the override.
         if (param.OverridePosition.HasValue &&
-            param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.Bitmap.Width &&
-            param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.Bitmap.Height)
+            param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < _width &&
+            param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < _height)
         {
             x = param.OverridePosition.Value.X;
             y = param.OverridePosition.Value.Y;
