@@ -10,7 +10,8 @@ operations, and OCR engines as the desktop UI — without an Avalonia / GUI depe
 - Container input: Matroska (.mkv/.mks), MP4, MCC, transport stream teletext
 - OCR pipelines for image-based sources (Blu-Ray .sup, MKV PGS, DVB-sub)
 - Five OCR engines: Tesseract subprocess, nOCR (built-in), BinaryOCR (built-in), Ollama (HTTP), PaddleOCR subprocess
-- Image-based output: Blu-Ray sup, BDN-XML, DOST, FCP, D-Cinema interop / SMPTE 2014, images-with-time-code
+- Image-based output: Blu-Ray sup, BDN-XML, DOST, FCP, D-Cinema interop / SMPTE 2014, images-with-time-code, WebVTT thumbnails
+- Image-to-image conversion (preserve source bitmaps, no OCR): Blu-Ray .sup, VobSub .sub/.idx, MKV PGS, TS DVB-sub → any image output format
 - Full operation pipeline: offset, fps change, renumber, adjust-duration, fix-common-errors,
   merge/split, balance, redo casing, RTL fixes, multiple-replace, custom-text format, plain text
 - Cross-platform (Windows, Linux, macOS) — only requires .NET 10 runtime
@@ -47,6 +48,12 @@ seconv movie.sup subrip --ocr-engine:ollama --ollama-model:llama3.2-vision
 
 seconv subs.srt bluraysup --resolution:1920x1080               # render text → Blu-Ray sup
 seconv subs.srt bdnxml --resolution:1920x1080                  # render text → BDN-XML
+
+seconv movie.sup bdnxml                                        # preserve bitmaps: .sup → BDN-XML (no OCR)
+seconv movie.sup vobsub                                        # preserve bitmaps: Blu-Ray → DVD
+seconv movie.sub bdnxml                                        # preserve bitmaps: VobSub → BDN-XML (.idx auto-detected)
+seconv movie.mkv bluraysup                                     # preserve bitmaps: MKV PGS track → .sup
+seconv movie.ts dost                                           # preserve bitmaps: DVB-sub → DOST (one output per PID)
 
 seconv subs.srt customtext --custom-format:my-template.xml     # custom template
 seconv *.srt subrip --multiple-replace:rules.xml               # search-and-replace pass
@@ -153,6 +160,31 @@ already has and only repair true overlaps.
 >   and [`Ocr/Latin.db`](https://github.com/SubtitleEdit/subtitleedit/raw/main/Ocr/Latin.db).
 > - Other languages: download from the SE UI (Tools → "OCR with nOCR" / BinaryOCR → download).
 
+### Image-to-image conversion (no OCR)
+
+When **both** the input and target are image-based subtitle formats, seconv passes the
+source bitmaps straight through to the output handler instead of OCR'ing them to text
+and re-rasterising at the CLI's default font. Routing is automatic — no flag needed:
+
+| Input | Detection | Outputs |
+|---|---|---|
+| `.sup` | extension | any image format |
+| `.sub` (VobSub) | `.idx` companion next to it | any image format |
+| `.mkv` / `.mks` | `S_HDMV/PGS` track present | any image format (one output per track) |
+| `.ts` / `.m2ts` / `.mts` | DVB-sub PID present | any image format (one output per PID) |
+
+The same input with a text target (`subrip`, `ass`, ...) still routes through OCR.
+Source video dimensions (e.g. 1920x1080 for Blu-Ray) are preserved automatically and
+take precedence over `--resolution`.
+
+```bash
+seconv movie.sup bdnxml                                        # Blu-Ray → BDN-XML for NLE re-authoring
+seconv movie.sup vobsub                                        # Blu-Ray → DVD
+seconv movie.sub bluraysup                                     # DVD → Blu-Ray (.idx auto-detected)
+seconv movie.mkv dost                                          # MKV PGS → DOST (per track)
+seconv movie.ts fcpimage                                       # DVB-sub → FCP image XML (per PID)
+```
+
 ### Templates / replacements
 | Option | Description |
 |---|---|
@@ -238,7 +270,7 @@ cavena / cavena890                cheetahcaption                  capmakerplus
 ayato
 bluraysup / sup                   vobsub                          bdnxml / bdn-xml
 dost                              fcpimage                        dcinemainterop
-dcinemasmpte2014                  imageswithtimecode
+dcinemasmpte2014                  imageswithtimecode              webvttthumbnail / webvtt-thumbnail / vttthumb
 plaintext / text / txt            customtext / customtextformat
 ```
 
