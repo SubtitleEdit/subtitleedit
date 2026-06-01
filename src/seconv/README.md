@@ -97,7 +97,24 @@ seconv lint *.srt --json                    # CI-friendly: exit 1 on any issue
 | `--target-fps:<rate>` | Target frame rate (with `--fps`) |
 | `--adjust-duration:<ms>` | Add/subtract milliseconds to each duration |
 | `--change-speed:<percent>` | Scale all times by 100/percent (e.g. `125` = 1.25x faster) |
+| `--apply-min-gap:<ms>` | Enforce a minimum gap between paragraphs; pull the next start back / push the previous end back so the gap holds. See note below. |
 | `--renumber:<n>` | Renumber paragraphs starting at `n` |
+
+#### `--apply-min-gap` vs `--FixCommonErrorsRules:FixOverlappingDisplayTimes`
+
+Both touch boundary timings but solve different problems:
+
+- `--apply-min-gap:<ms>` is a **hard**, absolute pass over every pair of adjacent
+  paragraphs and guarantees at least the supplied gap. Use this when you want
+  consistent gaps for a delivery spec (e.g. broadcast standards that demand
+  2 frames between cues).
+- `FixOverlappingDisplayTimes` is one rule inside Fix Common Errors and only
+  resolves cases where paragraph end > next paragraph start (true overlap).
+  It does *not* enforce a non-zero minimum gap once overlaps are gone.
+
+In most batch pipelines `--apply-min-gap:<ms>` is the better choice; reach for
+the FCE rule when you specifically want to keep tight 1 ms gaps the source
+already has and only repair true overlaps.
 
 ### Format-specific
 | Option | Description |
@@ -137,8 +154,31 @@ seconv lint *.srt --json                    # CI-friendly: exit 1 on any issue
 |---|---|
 | `--multiple-replace:<path.xml>` | SE MultipleSearchAndReplaceGroups XML |
 | `--custom-format:<path.xml>` | SE CustomFormatItem XML (with `--format customtext`) |
-| `--settings:<path.json>` | JSON settings file overriding libse defaults |
+| `--settings:<path.json>` | JSON settings file overriding libse defaults (seconv-specific schema — **not** the SE 5 GUI's `Settings.json`) |
 | `--profile:<name>` | Named overlay from settings file's `profiles` map |
+
+> ⚠️ **`--settings:` is not the SE 5 GUI's `Settings.json`.** seconv accepts a
+> small, libse-shaped schema with three top-level keys: `general`, `tools`, and
+> `removeTextForHearingImpaired`. Property names follow the **libse** spelling,
+> e.g. `RemoveIfAllUppercase` — *not* the GUI's `IsRemoveTextUppercaseLineOn`.
+> The GUI's `Settings.json` is a much larger, GUI-specific dump and can't be
+> consumed directly.
+>
+> Minimal example: removing speaker labels on all-uppercase lines.
+>
+> ```json
+> {
+>   "removeTextForHearingImpaired": {
+>     "RemoveIfAllUppercase": true
+>   }
+> }
+> ```
+>
+> ```bash
+> seconv movie.srt subrip --settings:./hi.json --remove-text-for-hi
+> ```
+>
+> The full list of supported keys lives in `src/seconv/Core/SeConvSettings.cs`.
 
 ### Verbosity
 | Option | Description |
@@ -161,6 +201,13 @@ Applied in a fixed, sensible order regardless of CLI order:
 
 `--FixCommonErrors` (no value) runs all 38 rules. Pass `--FixCommonErrorsRules:<list>`
 to pick a subset — supplying the option implies `--FixCommonErrors`.
+
+A handful of rules are **language-conditional** and only run in the default
+"all rules" pass when the auto-detected language matches:
+
+- `FixSpanishInvertedQuestionAndExclamationMarks` — only runs on `es`. The
+  GUI's Fix Common Errors window has the same gating. You can still opt in on
+  non-Spanish content by naming the rule explicitly in `--FixCommonErrorsRules`.
 
 ```bash
 seconv movie.srt subrip --FixCommonErrors                              # all rules

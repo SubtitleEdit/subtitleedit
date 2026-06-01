@@ -60,6 +60,17 @@ internal static class FixCommonErrorsRunner
                 continue;
             }
 
+            // Language-conditional rules mirror what the GUI's Fix Common Errors
+            // window does: it only surfaces FixSpanishInvertedQuestionAndExclamationMarks
+            // when the detected language is "es" (FixCommonErrorsViewModel.cs:377).
+            // Running it on non-Spanish content would insert ¿ / ¡ on questions and
+            // exclamations in any language, which surprises users (issue #11037 item 3).
+            // The user can still opt in explicitly via --FixCommonErrorsRules.
+            if (wanted == null && IsLanguageOnlyRule(id, language))
+            {
+                continue;
+            }
+
             try
             {
                 factory().Fix(subtitle, callbacks);
@@ -69,6 +80,22 @@ internal static class FixCommonErrorsRunner
                 // A rogue rule shouldn't kill the conversion. Skip and continue.
             }
         }
+    }
+
+    /// <summary>
+    /// Returns true when <paramref name="ruleId"/> is a language-conditional rule
+    /// that should not run in the default ("all rules") pass because the detected
+    /// language doesn't match. Skipped here, included by name in an explicit
+    /// <c>--FixCommonErrorsRules</c> list.
+    /// </summary>
+    private static bool IsLanguageOnlyRule(string ruleId, string language)
+    {
+        return ruleId switch
+        {
+            "FixSpanishInvertedQuestionAndExclamationMarks"
+                => !"es".Equals(language, StringComparison.OrdinalIgnoreCase),
+            _ => false,
+        };
     }
 
     /// <summary>

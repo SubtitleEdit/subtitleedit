@@ -155,4 +155,55 @@ public class FixCommonErrorsRunnerTest
 
         Assert.Contains("NotARealRule", ex.Message);
     }
+
+    // -------------------------------------------------------------------------
+    // Issue #11037 item 3: language-conditional rules should mirror the GUI's
+    // Fix Common Errors window — Spanish-only rules don't run on non-Spanish
+    // content in the default "all rules" pass, but the user can still opt in
+    // via an explicit --FixCommonErrorsRules list.
+    // -------------------------------------------------------------------------
+
+    [Fact]
+    public void RunAll_OnEnglish_SkipsSpanishInvertedMarks()
+    {
+        // English line that ends with '?' should NOT get a leading '¿'.
+        var sub = new Subtitle();
+        sub.Paragraphs.Add(new Paragraph("Are you coming home tonight?", 0, 3000));
+        sub.Renumber();
+
+        FixCommonErrorsRunner.RunAll(sub);
+
+        Assert.DoesNotContain('¿', sub.Paragraphs[0].Text);
+        Assert.DoesNotContain('¡', sub.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void RunAll_OnSpanish_AppliesSpanishInvertedMarks()
+    {
+        // Spanish-language paragraphs should get the inverted-mark fix as the
+        // GUI does for "es" content. Use enough text for LanguageAutoDetect.
+        var sub = new Subtitle();
+        sub.Paragraphs.Add(new Paragraph("Cuántos años tienes?", 0, 3000));
+        sub.Paragraphs.Add(new Paragraph("Dónde está la biblioteca?", 4000, 7000));
+        sub.Paragraphs.Add(new Paragraph("Qué hora es?", 8000, 11000));
+        sub.Renumber();
+
+        FixCommonErrorsRunner.RunAll(sub);
+
+        Assert.Contains('¿', sub.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void Run_WithExplicitSpanishRule_AppliesEvenOnNonSpanishText()
+    {
+        // Opt-in path: --FixCommonErrorsRules:FixSpanishInvertedQuestionAndExclamationMarks
+        // runs the rule regardless of detected language.
+        var sub = new Subtitle();
+        sub.Paragraphs.Add(new Paragraph("Are you coming home tonight?", 0, 3000));
+        sub.Renumber();
+
+        FixCommonErrorsRunner.Run(sub, new[] { "FixSpanishInvertedQuestionAndExclamationMarks" });
+
+        Assert.Contains('¿', sub.Paragraphs[0].Text);
+    }
 }
