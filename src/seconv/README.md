@@ -262,16 +262,20 @@ and OCR engine setup that seconv doesn't carry.
 
 ## Output format aliases
 
+All aliases below are case-insensitive and accepted by `--format` / the positional
+argument. Only the spellings shown in the table are recognised — variants that
+aren't listed (e.g. `plain-text`, `custom-text`) won't resolve.
+
 ```
-srt / subrip                      ass / assa                      ssa
-vtt / webvtt                      smi / sami                      sbv
-pac                               unipac / pacunicode             ebu / ebustl / stl
-cavena / cavena890                cheetahcaption                  capmakerplus
-ayato
-bluraysup / sup                   vobsub                          bdnxml / bdn-xml
-dost                              fcpimage                        dcinemainterop
-dcinemasmpte2014                  imageswithtimecode              webvttthumbnail / webvtt-thumbnail / vttthumb
-plaintext / text / txt            customtext / customtextformat
+srt / subrip                       ass / assa                       ssa
+vtt / webvtt                       smi / sami                       sbv
+pac                                unipac / pacunicode              ebu / ebustl / stl
+cavena / cavena890                 cheetah / cheetahcaption         capmaker / capmakerplus
+ayato                              vobsub                           bluraysup / sup
+bdnxml / bdn-xml                   dost / dostimage                 fcp / fcpimage
+dcinemainterop / dcinema-interop   dcinemasmpte2014 / dcinema-smpte
+imageswithtimecode / imagesintc    webvttthumbnail / webvtt-thumbnail / vttthumb
+plaintext / text / txt             customtext / customtextformat
 ```
 
 ## Exit codes
