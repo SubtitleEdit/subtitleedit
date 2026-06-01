@@ -12,13 +12,24 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             public static string FixCommas { get; set; } = "Fix commas";
         }
 
+        // Hoisted out of Fix() so each Fix() call reuses the same compiled NFA instead of
+        // recompiling per-call. The Arabic variants below used to be re-allocated *per
+        // paragraph* — for a 1000-line Arabic subtitle that's ~5000 unnecessary Regex+compile
+        // cycles per FCE run.
+        private static readonly Regex CommaDouble = new Regex(@"([\p{L}\d\s]),,([\p{L}\d\s])", RegexOptions.Compiled);
+        private static readonly Regex CommaTriple = new Regex(@"([\p{L}\d\s]) *, *, *,([\p{L}\d\s])", RegexOptions.Compiled);
+        private static readonly Regex CommaTripleEndOfLine = new Regex(@"([\p{L}\d\s]), *, *,$", RegexOptions.Compiled);
+        private static readonly Regex CommaWhiteSpaceBetween = new Regex(@"([\p{L}\d\s]),\s+,([\p{L}\d\s])", RegexOptions.Compiled);
+        private static readonly Regex CommaFollowedByLetter = new Regex(@",(\p{L})", RegexOptions.Compiled);
+
+        private static readonly Regex CommaDoubleAr = new Regex(@"([\p{L}\d\s]) *،،([\p{L}\d\s])", RegexOptions.Compiled);
+        private static readonly Regex CommaTripleAr = new Regex(@"([\p{L}\d\s]) *، *، *،([\p{L}\d\s])", RegexOptions.Compiled);
+        private static readonly Regex CommaTripleEndOfLineAr = new Regex(@"([\p{L}\d\s]) *، *، *،$", RegexOptions.Compiled);
+        private static readonly Regex CommaWhiteSpaceBetweenAr = new Regex(@"([\p{L}\d\s]) *،\s+،([\p{L}\d\s])", RegexOptions.Compiled);
+        private static readonly Regex CommaFollowedByLetterAr = new Regex(@"،(\p{L})", RegexOptions.Compiled);
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var commaDouble = new Regex(@"([\p{L}\d\s]),,([\p{L}\d\s])");
-            var commaTriple = new Regex(@"([\p{L}\d\s]) *, *, *,([\p{L}\d\s])");
-            var commaTripleEndOfLine = new Regex(@"([\p{L}\d\s]), *, *,$");
-            var commaWhiteSpaceBetween = new Regex(@"([\p{L}\d\s]),\s+,([\p{L}\d\s])");
-            var commaFollowedByLetter = new Regex(@",(\p{L})");
 
             var fixAction = Language.FixCommas;
             var fixCount = 0;
@@ -32,15 +43,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                     if (p.Text.IndexOf(',') >= 0)
                     {
-                        s = commaDouble.Replace(s, "$1,$2");
-                        s = commaTriple.Replace(s, "$1...$2");
-                        s = commaTripleEndOfLine.Replace(s, "$1...");
-                        s = commaWhiteSpaceBetween.Replace(s, "$1,$2");
+                        s = CommaDouble.Replace(s, "$1,$2");
+                        s = CommaTriple.Replace(s, "$1...$2");
+                        s = CommaTripleEndOfLine.Replace(s, "$1...");
+                        s = CommaWhiteSpaceBetween.Replace(s, "$1,$2");
 
-                        var match = commaFollowedByLetter.Match(s);
+                        var match = CommaFollowedByLetter.Match(s);
                         if (match.Success && (!(match.Index > 0 && s[match.Index-1] == 'ό' && s.Substring(match.Index).StartsWith(",τι", StringComparison.OrdinalIgnoreCase)) || callbacks.Language != "el"))
                         {
-                            s = commaFollowedByLetter.Replace(s, ", $1");
+                            s = CommaFollowedByLetter.Replace(s, ", $1");
                         }
 
                         s = RemoveCommaBeforeSentenceEndingChar(s, ',');
@@ -48,16 +59,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                     if (p.Text.IndexOf('،') >= 0)
                     {
-                        var commaDoubleAr = new Regex(@"([\p{L}\d\s]) *،،([\p{L}\d\s])");
-                        var commaTripleAr = new Regex(@"([\p{L}\d\s]) *، *، *،([\p{L}\d\s])");
-                        var commaTripleEndOfLineAr = new Regex(@"([\p{L}\d\s]) *، *، *،$");
-                        var commaWhiteSpaceBetweenAr = new Regex(@"([\p{L}\d\s]) *،\s+،([\p{L}\d\s])");
-                        var commaFollowedByLetterAr = new Regex(@"،(\p{L})");
-                        s = commaDoubleAr.Replace(s, "$1،$2");
-                        s = commaTripleAr.Replace(s, "$1...$2");
-                        s = commaTripleEndOfLineAr.Replace(s, "$1...");
-                        s = commaWhiteSpaceBetweenAr.Replace(s, "$1،$2");
-                        s = commaFollowedByLetterAr.Replace(s, "، $1");
+                        s = CommaDoubleAr.Replace(s, "$1،$2");
+                        s = CommaTripleAr.Replace(s, "$1...$2");
+                        s = CommaTripleEndOfLineAr.Replace(s, "$1...");
+                        s = CommaWhiteSpaceBetweenAr.Replace(s, "$1،$2");
+                        s = CommaFollowedByLetterAr.Replace(s, "، $1");
 
                         s = RemoveCommaBeforeSentenceEndingChar(s, '،');
                     }

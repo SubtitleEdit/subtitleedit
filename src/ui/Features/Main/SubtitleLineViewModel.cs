@@ -246,16 +246,26 @@ public partial class SubtitleLineViewModel : ObservableObject
     {
         get
         {
-            if (Se.Settings.General.ColorTextTooLong && !string.IsNullOrEmpty(Text))
+            if (string.IsNullOrEmpty(Text))
+            {
+                return _transparentBrush;
+            }
+
+            // Avalonia re-evaluates this getter on every cell repaint (scroll, selection,
+            // edit, focus). Previously the getter could call HtmlUtil.RemoveHtmlTags(Text)
+            // up to three times per repaint — once inside CharactersPerSecond and once per
+            // settings-enabled branch below. Strip once and reuse across all branches.
+            string? stripped = null;
+
+            if (Se.Settings.General.ColorTextTooLong)
             {
                 if (CharactersPerSecond > Se.Settings.General.SubtitleMaximumCharactersPerSeconds)
                 {
                     return _errorBrush;
                 }
 
-                var text = HtmlUtil.RemoveHtmlTags(Text, true);
-                var lines = text.SplitToLines();
-                foreach (var line in lines)
+                stripped = HtmlUtil.RemoveHtmlTags(Text, true);
+                foreach (var line in stripped.SplitToLines())
                 {
                     if (line.Length > Se.Settings.General.SubtitleLineMaximumLength)
                     {
@@ -264,10 +274,10 @@ public partial class SubtitleLineViewModel : ObservableObject
                 }
             }
 
-            if (Se.Settings.General.ColorTextTooWide && !string.IsNullOrEmpty(Text))
+            if (Se.Settings.General.ColorTextTooWide)
             {
-                var text = HtmlUtil.RemoveHtmlTags(Text, true);
-                foreach (var line in text.SplitToLines())
+                stripped ??= HtmlUtil.RemoveHtmlTags(Text, true);
+                foreach (var line in stripped.SplitToLines())
                 {
                     if (CalculatePixelWidth(line) > Se.Settings.General.ColorTextTooWidePixels)
                     {
