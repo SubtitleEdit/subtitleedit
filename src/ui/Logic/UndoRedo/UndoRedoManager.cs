@@ -20,8 +20,12 @@ public sealed class UndoRedoManager : IUndoRedoManager
     // under _lock for ordering vs other field mutations.
     private volatile IUndoRedoClient? _undoRedoClient;
     private volatile bool _isChangeDetectionActive;
-    // Int + Interlocked instead of `volatile bool` so concurrent Dispose() calls
-    // can't both pass the check-and-set and double-dispose the timer.
+    // Int (instead of `volatile bool`) so Dispose() can use Interlocked.Exchange
+    // to atomically check-and-set — concurrent Dispose() calls can't both pass
+    // the gate and double-dispose the timer. Reads outside the lock use
+    // Volatile.Read so the disposal flag is still observed promptly across
+    // threads (plain int reads aren't guaranteed visible on weak memory
+    // architectures).
     private int _disposed;
     // Narrowed from 1s → 250ms to reduce the window in which two distinct user
     // actions (e.g. text edit + waveform drag) get bundled into a single undo
@@ -84,7 +88,7 @@ public sealed class UndoRedoManager : IUndoRedoManager
 
     public void SetupChangeDetection(IUndoRedoClient client, TimeSpan? interval = null)
     {
-        ObjectDisposedException.ThrowIf(_disposed != 0, this);
+        ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
 
         lock (_lock)
         {
@@ -102,7 +106,7 @@ public sealed class UndoRedoManager : IUndoRedoManager
 
     public void StartChangeDetection()
     {
-        ObjectDisposedException.ThrowIf(_disposed != 0, this);
+        ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
 
         lock (_lock)
         {
@@ -228,7 +232,7 @@ public sealed class UndoRedoManager : IUndoRedoManager
         // even if SetupChangeDetection races with us. `_undoRedoClient` is
         // volatile so this read isn't torn.
         var client = _undoRedoClient;
-        if (client is null || !_isChangeDetectionActive || _disposed != 0)
+        if (client is null || !_isChangeDetectionActive || Volatile.Read(ref _disposed) != 0)
         {
             return;
         }
