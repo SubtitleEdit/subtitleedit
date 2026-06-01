@@ -17,8 +17,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var template = @"app=InqScribe
-cache.mediaend=[START]
-cache.mediastart=[END]
+cache.mediastart=[START]
+cache.mediaend=[END]
 file.data=
 font.name=Arial
 font.size=12

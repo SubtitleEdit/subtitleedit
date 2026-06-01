@@ -602,7 +602,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return !l0.HasSentenceEnding(TwoLetterLanguageCode) &&
                    l1.HasSentenceEnding(TwoLetterLanguageCode) &&
                    !(l1.TrimStart().StartsWith(GetDashChar()) || l1.TrimStart().StartsWith(GetAlternateDashChar())) &&
-                   (l2.TrimStart().StartsWith(GetDashChar())) || l2.TrimStart().StartsWith(GetAlternateDashChar());
+                   (l2.TrimStart().StartsWith(GetDashChar()) || l2.TrimStart().StartsWith(GetAlternateDashChar()));
         }
 
         private string GetLineStartFromDashStyle(int lineIndex)

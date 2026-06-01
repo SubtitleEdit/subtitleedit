@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             lines.ForEach(line => sb.AppendLine(line));
 
             string allText = sb.ToString();
-            if (!allText.Contains("<FLVCoreCuePoints") && allText.Contains("<CuePoint"))
+            if (!allText.Contains("<FLVCoreCuePoints") || !allText.Contains("<CuePoint"))
             {
                 return;
             }
