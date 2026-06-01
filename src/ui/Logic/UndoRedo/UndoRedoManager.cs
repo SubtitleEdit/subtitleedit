@@ -18,7 +18,11 @@ public sealed class UndoRedoManager : IUndoRedoManager
     private IUndoRedoClient? _undoRedoClient;
     private volatile bool _isChangeDetectionActive;
     private volatile bool _disposed;
-    private TimeSpan _detectionInterval = TimeSpan.FromSeconds(1);
+    // Narrowed from 1s → 250ms to reduce the window in which two distinct user
+    // actions (e.g. text edit + waveform drag) get bundled into a single undo
+    // entry — issue #11280. CheckForChanges is gated by IsTyping() and
+    // IsAlreadyTracked() so most ticks are nearly free when nothing has changed.
+    private TimeSpan _detectionInterval = TimeSpan.FromMilliseconds(250);
 
     private const int MaxUndoItems = 100;
     private const int MaxPreviewLength = 50;
@@ -77,7 +81,9 @@ public sealed class UndoRedoManager : IUndoRedoManager
         lock (_lock)
         {
             _undoRedoClient = client;
-            _detectionInterval = interval ?? TimeSpan.FromSeconds(1);
+            // Keep the field-initializer default (250ms) when caller passes null
+            // — see the comment on _detectionInterval for the rationale.
+            _detectionInterval = interval ?? _detectionInterval;
 
             _changeDetectionTimer?.Dispose();
             _changeDetectionTimer = new Timer(
@@ -147,9 +153,25 @@ public sealed class UndoRedoManager : IUndoRedoManager
                 if (_undoList.Count == 1) return null;
                 PushIfNew(_redoList, PopLast(_undoList));
             }
-            // If top doesn't match, the live state is an unrecorded change.
-            // We can't snapshot it here, so just step back to the last
-            // recorded state without touching redo.
+            else if (_undoRedoClient is not null)
+            {
+                // Live state has unrecorded changes (user edited between polling
+                // ticks). Snapshot the live state onto redo BEFORE stepping back,
+                // so redo can restore it — issue #11280: undoing a fast text-edit
+                // + waveform-drag combo used to discard the unrecorded state
+                // silently, leaving the user unable to redo.
+                //
+                // The unrecorded edit is a divergence from any prior redo
+                // timeline (same as a regular Do() — see DoCore). Clear redo
+                // first so the user can't redo into the stale future that
+                // existed before this edit, then push the live snapshot.
+                var live = _undoRedoClient.MakeUndoRedoObject("Unrecorded changes");
+                if (live is not null)
+                {
+                    _redoList.Clear();
+                    _redoList.Add(live);
+                }
+            }
 
             return UndoRedoItem.Clone(_undoList.Last());
         }

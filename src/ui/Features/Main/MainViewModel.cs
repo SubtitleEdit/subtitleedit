@@ -605,7 +605,10 @@ public partial class MainViewModel :
 
         StartTimers();
         _autoBackupService.StartAutoBackup(this);
-        _undoRedoManager.SetupChangeDetection(this, TimeSpan.FromSeconds(1));
+        // Polling interval lives on UndoRedoManager's field default (see the
+        // comment on _detectionInterval) so it can be tuned in one place
+        // without callers overriding it back to a longer value (#11280).
+        _undoRedoManager.SetupChangeDetection(this);
         LockTimeCodes = Se.Settings.General.LockTimeCodes;
         SetLibSeSettings();
         _dropDownFormatsSearchTimer.Elapsed += (s, e) =>
