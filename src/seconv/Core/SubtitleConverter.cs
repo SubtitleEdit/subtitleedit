@@ -42,11 +42,26 @@ internal class SubtitleConverter
                 return result;
             }
 
+            // Image-to-image preserve path: if the user asks for an image-based target
+            // (.sup, .sub/.idx, BDN-XML, DOST, FCP, D-Cinema, ImagesWithTimeCode, WebVTT
+            // thumbnail) and the input is an image-based source (.sup, .sub+.idx, MKV PGS,
+            // TS DVB-sub), pass the source bitmaps straight through instead of OCR'ing them
+            // to text and re-rasterising at the CLI's default font. Detect once up front so
+            // the per-file loop below sees only text-eligible inputs.
+            var imageTargetHandler = ImageOutputWriter.TryCreateHandler(LibSEIntegration.NormalizeFormatName(options.Format));
+
             var fileIndex = 1;
             foreach (var inputFile in inputFiles)
             {
                 try
                 {
+                    if (imageTargetHandler is not null
+                        && await TryConvertImageToImageAsync(inputFile, options, result, fileIndex))
+                    {
+                        fileIndex++;
+                        continue;
+                    }
+
                     var tracks = ContainerSubtitleLoader.TryLoadTracks(inputFile, options);
                     if (tracks is null)
                     {
@@ -237,6 +252,267 @@ internal class SubtitleConverter
 
         await Task.CompletedTask;
         return result;
+    }
+
+    /// <summary>
+    /// Image-to-image conversion: when both source and target are image-based, parse the
+    /// source's bitmaps directly and feed them into the image output handler — no OCR, no
+    /// re-rasterise at Arial 50pt. Supports .sup, .sub+.idx, MKV PGS, and TS DVB-sub on
+    /// input. Returns true if the input was handled (recorded in <paramref name="result"/>),
+    /// false if it should fall through to the OCR / text pipeline.
+    /// </summary>
+    private async Task<bool> TryConvertImageToImageAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex)
+    {
+        var ext = Path.GetExtension(inputFile).ToLowerInvariant();
+
+        if (ext == ".sup")
+        {
+            return await PassThroughSingleStreamAsync(inputFile, options, result, fileIndex,
+                () => BitmapSubtitleLoader.LoadBluRaySup(inputFile));
+        }
+
+        if (ext == ".sub")
+        {
+            // Treat .sub as VobSub input only when an .idx companion exists — otherwise
+            // (e.g. a text MicroDVD .sub) leave it for the text loader to detect via IsMine.
+            var idxPath = Path.ChangeExtension(inputFile, ".idx");
+            if (File.Exists(idxPath))
+            {
+                // IsPal: default to PAL to match VobSubExtractor. The .idx "size:" field
+                // could disambiguate per-file, but a wrong guess only affects timing scale,
+                // not bitmap content.
+                return await PassThroughSingleStreamAsync(inputFile, options, result, fileIndex,
+                    () => BitmapSubtitleLoader.LoadVobSub(inputFile, idxPath, isPal: true));
+            }
+            return false;
+        }
+
+        if (ext is ".mkv" or ".mks")
+        {
+            return await PassThroughMatroskaPgsAsync(inputFile, options, result, fileIndex);
+        }
+
+        if (ext is ".ts" or ".m2ts" or ".mts")
+        {
+            return await PassThroughTransportStreamDvbAsync(inputFile, options, result, fileIndex);
+        }
+
+        return false;
+    }
+
+    private async Task<bool> PassThroughSingleStreamAsync(
+        string inputFile,
+        ConversionOptions options,
+        ConversionResult result,
+        int fileIndex,
+        Func<IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem>> load)
+    {
+        var outputFile = ResolveOutputFileName(inputFile, options);
+        if (!options.Quiet)
+        {
+            AnsiConsole.Markup($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile).EscapeMarkup()}[/] [dim](img→img)→[/] [green]{outputFile.EscapeMarkup()}[/]...");
+        }
+
+        IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem>? items = null;
+        try
+        {
+            items = load();
+            WritePreservedBitmaps(items, outputFile, options);
+            result.SuccessfulFiles++;
+            result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
+            if (!options.Quiet)
+            {
+                AnsiConsole.MarkupLine($" [green]done ({items.Count} bitmap(s)).[/]");
+            }
+        }
+        catch (Exception ex)
+        {
+            result.FailedFiles++;
+            result.Errors.Add($"{Path.GetFileName(inputFile)}: {ex.Message}");
+            result.Files.Add(new FileConversionResult(inputFile, null, false, ex.Message));
+            if (!options.Quiet)
+            {
+                AnsiConsole.MarkupLine($" [red]error: {ex.Message.EscapeMarkup()}[/]");
+            }
+        }
+        finally
+        {
+            if (items is not null)
+            {
+                foreach (var item in items)
+                {
+                    item.Dispose();
+                }
+            }
+        }
+
+        await Task.CompletedTask;
+        return true;
+    }
+
+    private async Task<bool> PassThroughMatroskaPgsAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex)
+    {
+        using var matroska = new Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaFile(inputFile);
+        if (!matroska.IsValid)
+        {
+            // Not really an MKV — let the regular container loader / text loader try.
+            return false;
+        }
+
+        var pgsTracks = matroska.GetTracks(true)
+            .Where(t => t.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
+            .Where(t => !options.ForcedOnly || t.IsForced)
+            .Where(t => options.TrackNumbers.Count == 0 || options.TrackNumbers.Contains(t.TrackNumber))
+            .ToList();
+
+        if (pgsTracks.Count == 0)
+        {
+            // MKV has no PGS tracks usable for image-to-image; fall through so the regular
+            // container loader can handle text tracks / OCR-friendly tracks.
+            return false;
+        }
+
+        if (pgsTracks.Count > 1 && !string.IsNullOrEmpty(options.OutputFilename))
+        {
+            throw new InvalidOperationException(
+                "--output-filename can only target a single track. Use --track-number to select one.");
+        }
+
+        foreach (var track in pgsTracks)
+        {
+            var outputFile = ResolveOutputFileName(
+                inputFile, options, SanitizeLanguage(track.Language), track.TrackNumber);
+
+            if (!options.Quiet)
+            {
+                var trackLabel = $"#{track.TrackNumber} ";
+                AnsiConsole.Markup($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile).EscapeMarkup()}[/] [yellow]{trackLabel}[/][dim](PGS img→img)→[/] [green]{outputFile.EscapeMarkup()}[/]...");
+            }
+
+            IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem>? items = null;
+            try
+            {
+                items = BitmapSubtitleLoader.LoadMatroskaPgs(matroska, track);
+                WritePreservedBitmaps(items, outputFile, options);
+                result.SuccessfulFiles++;
+                result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
+                if (!options.Quiet)
+                {
+                    AnsiConsole.MarkupLine($" [green]done ({items.Count} bitmap(s)).[/]");
+                }
+            }
+            catch (Exception ex)
+            {
+                result.FailedFiles++;
+                result.Errors.Add($"{Path.GetFileName(inputFile)} track #{track.TrackNumber}: {ex.Message}");
+                result.Files.Add(new FileConversionResult(inputFile, null, false, ex.Message));
+                if (!options.Quiet)
+                {
+                    AnsiConsole.MarkupLine($" [red]error: {ex.Message.EscapeMarkup()}[/]");
+                }
+            }
+            finally
+            {
+                if (items is not null)
+                {
+                    foreach (var item in items)
+                    {
+                        item.Dispose();
+                    }
+                }
+            }
+        }
+
+        await Task.CompletedTask;
+        return true;
+    }
+
+    private async Task<bool> PassThroughTransportStreamDvbAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex)
+    {
+        var streams = BitmapSubtitleLoader.LoadTransportStreamDvbSub(inputFile);
+        if (streams.Count == 0)
+        {
+            // No DVB-sub PIDs found; let the regular container loader handle teletext / etc.
+            return false;
+        }
+
+        if (streams.Count > 1 && !string.IsNullOrEmpty(options.OutputFilename))
+        {
+            throw new InvalidOperationException(
+                "--output-filename can only target a single DVB-sub PID. Found "
+                + $"{streams.Count} PIDs in the transport stream.");
+        }
+
+        foreach (var (items, pid) in streams)
+        {
+            // PID is the natural per-stream identifier — use it as the track-number-like
+            // suffix so multi-PID streams don't collide on output.
+            var outputFile = ResolveOutputFileName(inputFile, options, languageSuffix: null, trackNumber: pid);
+
+            if (!options.Quiet)
+            {
+                AnsiConsole.Markup($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile).EscapeMarkup()}[/] [yellow]PID {pid} [/][dim](DVB img→img)→[/] [green]{outputFile.EscapeMarkup()}[/]...");
+            }
+
+            try
+            {
+                WritePreservedBitmaps(items, outputFile, options);
+                result.SuccessfulFiles++;
+                result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
+                if (!options.Quiet)
+                {
+                    AnsiConsole.MarkupLine($" [green]done ({items.Count} bitmap(s)).[/]");
+                }
+            }
+            catch (Exception ex)
+            {
+                result.FailedFiles++;
+                result.Errors.Add($"{Path.GetFileName(inputFile)} PID {pid}: {ex.Message}");
+                result.Files.Add(new FileConversionResult(inputFile, null, false, ex.Message));
+                if (!options.Quiet)
+                {
+                    AnsiConsole.MarkupLine($" [red]error: {ex.Message.EscapeMarkup()}[/]");
+                }
+            }
+            finally
+            {
+                foreach (var item in items)
+                {
+                    item.Dispose();
+                }
+            }
+        }
+
+        await Task.CompletedTask;
+        return true;
+    }
+
+    private static void WritePreservedBitmaps(
+        IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem> items,
+        string outputFile,
+        ConversionOptions options)
+    {
+        var handler = ImageOutputWriter.TryCreateHandler(LibSEIntegration.NormalizeFormatName(options.Format))
+            ?? throw new InvalidOperationException($"No image handler for format '{options.Format}'");
+        var outputDir = Path.GetDirectoryName(outputFile);
+        if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+        {
+            Directory.CreateDirectory(outputDir);
+        }
+        ImageOutputWriter.WritePreservedBitmaps(items, outputFile, handler, options);
+    }
+
+    /// <summary>
+    /// Mirrors <c>ContainerSubtitleLoader.SanitizeLang</c> — Matroska Language can be empty
+    /// or "und". Caller wants null in those cases so the language suffix is omitted.
+    /// </summary>
+    private static string? SanitizeLanguage(string? language)
+    {
+        if (string.IsNullOrWhiteSpace(language) || language.Equals("und", StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+        return language;
     }
 
     private List<string> GetInputFiles(ConversionOptions options)
