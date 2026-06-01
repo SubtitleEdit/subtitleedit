@@ -23,11 +23,15 @@ internal class SubtitleConverter
             }
 
             // DVD VOB inputs are handled as one batch — the subpicture stream spans every
-            // VTS_xx_*.VOB chunk of a title, so we extract them together into a single
-            // .sub/.idx pair (matches what mkvmerge / the GUI batch converter produce).
-            // Caller's pattern (e.g. "*.VOB") naturally selects all chunks of the title.
+            // VTS_xx_*.VOB chunk of a title, so we extract them together. (One output pair
+            // per discovered subtitle stream / language — see ConvertVobBatchAsync.) The
+            // caller's pattern (e.g. "*.VOB") naturally selects all chunks of the title.
+            // GetFiles enumeration order isn't guaranteed and chunk order affects packet
+            // ordering and idx timestamps, so sort up front. DVD spec caps a VTS at 9
+            // chunks, so a plain ordinal sort puts VTS_xx_1..VTS_xx_9 in playback order.
             if (inputFiles.All(f => f.EndsWith(".vob", StringComparison.OrdinalIgnoreCase)))
             {
+                inputFiles.Sort(StringComparer.OrdinalIgnoreCase);
                 return await ConvertVobBatchAsync(inputFiles, options, result);
             }
 
@@ -135,6 +139,14 @@ internal class SubtitleConverter
         if (!string.IsNullOrEmpty(options.OutputFilename))
         {
             outputBase = options.OutputFilename;
+            // VobSubWriter derives the .idx path as Substring(0, length - 3) + "idx", so
+            // a user-supplied --output-filename without ".sub" (e.g. "movie" or "movie.txt")
+            // would produce a broken companion path like "vieidx" or "movie.tidx". Force
+            // the extension here so both .sub and .idx land next to each other.
+            if (!outputBase.EndsWith(".sub", StringComparison.OrdinalIgnoreCase))
+            {
+                outputBase = Path.ChangeExtension(outputBase, ".sub");
+            }
         }
         else
         {
@@ -151,6 +163,10 @@ internal class SubtitleConverter
             outputBase = Path.Combine(outputFolder, stem + ".sub");
         }
 
+        // Overwrite check is best-effort against the base path. Multi-stream DVDs land
+        // additional outputs at <stem>.<n>.sub which we can't predict without parsing —
+        // those existing files will be overwritten silently. Acceptable for now since
+        // multi-stream DVDs are rare and the user opted into the batch by passing all VOBs.
         if (!options.Overwrite)
         {
             var pair = new[] { outputBase, Path.ChangeExtension(outputBase, ".idx") };
@@ -178,15 +194,31 @@ internal class SubtitleConverter
             // IsPal — there's no single reliable auto-detect from VOB alone (would need
             // IFO parsing). Default to PAL to match the GUI's batch converter. Future
             // work: add --vob-pal/--vob-ntsc and/or read VIDEO_TS.IFO.
-            var written = VobSubExtractor.Extract(vobFiles, outputBase, isPal: true);
+            var outputs = VobSubExtractor.Extract(vobFiles, outputBase, isPal: true);
             result.SuccessfulFiles = vobFiles.Count;
+            // Report the first stream's output path against each input VOB. With multiple
+            // streams there's no clean 1:1 mapping back to inputs, but the OutputFile slot
+            // is meant as a hint for the user — they'll see the full list in the summary.
+            var primaryOutput = outputs[0].Path;
             foreach (var f in vobFiles)
             {
-                result.Files.Add(new FileConversionResult(f, outputBase, true, null));
+                result.Files.Add(new FileConversionResult(f, primaryOutput, true, null));
             }
             if (!options.Quiet)
             {
-                AnsiConsole.MarkupLine($" [green]done ({written} subtitle(s)).[/]");
+                if (outputs.Count == 1)
+                {
+                    AnsiConsole.MarkupLine($" [green]done ({outputs[0].Written} subtitle(s)).[/]");
+                }
+                else
+                {
+                    var totalWritten = outputs.Sum(o => o.Written);
+                    AnsiConsole.MarkupLine($" [green]done ({totalWritten} subtitle(s) across {outputs.Count} streams).[/]");
+                    foreach (var o in outputs)
+                    {
+                        AnsiConsole.MarkupLine($"  [dim]stream 0x{o.StreamId:X2}:[/] [green]{o.Path.EscapeMarkup()}[/] ({o.Written})");
+                    }
+                }
             }
         }
         catch (Exception ex)
