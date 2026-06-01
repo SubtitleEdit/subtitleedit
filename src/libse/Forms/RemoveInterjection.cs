@@ -526,10 +526,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     return "<i>" + lines[1].Remove(0, 4).Trim();
                 }
 
-                if (lines[0].Length > 1 && lines[1] == "-" || lines[1] == "." || lines[1] == "!" || lines[1] == "?")
+                if (lines[0].Length > 1 && (lines[1] == "-" || lines[1] == "." || lines[1] == "!" || lines[1] == "?"))
                 {
                     var oldFirstLine = oldText.SplitToLines()[0];
-                    if (context.OnlySeparatedLines && oldFirstLine.Length > 1 && lines[1] == "-" || lines[1] == "." || lines[1] == "!" || lines[1] == "?")
+                    if (context.OnlySeparatedLines && oldFirstLine.Length > 1 && (lines[1] == "-" || lines[1] == "." || lines[1] == "!" || lines[1] == "?"))
                     {
                         lines[0] = oldFirstLine;
                     }
