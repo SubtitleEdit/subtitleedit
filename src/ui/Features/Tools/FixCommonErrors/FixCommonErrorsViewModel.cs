@@ -37,6 +37,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     [ObservableProperty] private bool _step1IsVisible;
     [ObservableProperty] private bool _step2IsVisible;
     [ObservableProperty] private string _step2Title;
+    [ObservableProperty] private string _fixesAppliedText = string.Empty;
 
     public Window? Window { get; set; }
 
@@ -187,6 +188,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         ApplyFixes();
 
         RefreshFixes();
+        FixesAppliedText = string.Format(_language.XFixesApplied, _totalFixes);
     }
 
     [RelayCommand]
@@ -205,6 +207,8 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         SaveProfiles();
         _oldSelectedLanguage = SelectedLanguage!;
 
+        _totalFixes = 0;
+        FixesAppliedText = string.Empty;
         RefreshFixes();
     }
 
@@ -217,8 +221,6 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     [RelayCommand]
     private void Ok()
     {
-        _previewMode = false;
-        ApplyFixes();
         OkPressed = true;
         Se.SaveSettings();
         Window?.Close();
