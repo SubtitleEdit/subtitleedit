@@ -14829,6 +14829,13 @@ public partial class MainViewModel :
                             {
                                 vp.Position = s.StartTime.TotalSeconds;
                                 Dispatcher.UIThread.Post(() => { vp.Position = SelectedSubtitle.StartTime.TotalSeconds; });
+                                // If wave peaks were already cached and loaded by this point,
+                                // the waveform load fired before vp.Position was set and so
+                                // is anchored at 0:00. Center it now (issue #11305). If peaks
+                                // haven't finished loading yet, the load-completion paths in
+                                // LoadWaveformAndSpectrogram / ExtractWaveformAndSpectrogram
+                                // AndShotChanges will do the centering instead.
+                                CenterAudioVisualizerOnCurrentVideoPosition();
                             }
                         }
 
@@ -15078,6 +15085,12 @@ public partial class MainViewModel :
                     {
                         ExtractShotChanges(videoFileName, trackNumber);
                     }
+
+                    // Session-restore on startup sets the video position to the last-edited
+                    // cue *before* wave peaks are loaded from disk, so the waveform window
+                    // would otherwise stay at 0:00 (issue #11305). Center now that peaks
+                    // are available.
+                    CenterAudioVisualizerOnCurrentVideoPosition();
 
                     _updateAudioVisualizer = true;
                 });
@@ -15344,6 +15357,12 @@ public partial class MainViewModel :
                         }
 
                         InitializeWaveformDisplayMode();
+
+                        // Same rationale as the cached-peaks path in LoadWaveformAndSpectrogram:
+                        // by the time FFmpeg has produced the peak data, the video position
+                        // may already be set (session-restore / user click). Bring the
+                        // waveform window in line.
+                        CenterAudioVisualizerOnCurrentVideoPosition();
                     }
 
                     _updateAudioVisualizer = true;
@@ -17968,6 +17987,24 @@ public partial class MainViewModel :
                 _updateAudioVisualizer = true;
             }
         }
+    }
+
+    /// <summary>
+    /// Re-centers the waveform on the video player's current position if it falls
+    /// outside the currently visible waveform window. Used after wave peaks finish
+    /// loading and after session-restore sets the video position — without this,
+    /// the waveform stays anchored at 0:00 even though the grid and video are
+    /// pointed at the last-edited cue (issue #11305).
+    /// </summary>
+    private void CenterAudioVisualizerOnCurrentVideoPosition()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null || vp.Position <= 0)
+        {
+            // No video / fresh open at zero — keep the default 0:00 view.
+            return;
+        }
+        AudioVisualizerCenterOnPositionIfNeeded(vp.Position);
     }
 
     private CancellationTokenSource? _singleTapCancellationTokenSource;
