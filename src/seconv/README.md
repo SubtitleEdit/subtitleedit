@@ -97,17 +97,21 @@ seconv lint *.srt --json                    # CI-friendly: exit 1 on any issue
 | `--target-fps:<rate>` | Target frame rate (with `--fps`) |
 | `--adjust-duration:<ms>` | Add/subtract milliseconds to each duration |
 | `--change-speed:<percent>` | Scale all times by 100/percent (e.g. `125` = 1.25x faster) |
-| `--apply-min-gap:<ms>` | Enforce a minimum gap between paragraphs; pull the next start back / push the previous end back so the gap holds. See note below. |
+| `--apply-min-gap:<ms>` | Best-effort enforcement of a minimum gap between paragraphs by shortening the previous cue's end time. See note below. |
 | `--renumber:<n>` | Renumber paragraphs starting at `n` |
 
 #### `--apply-min-gap` vs `--FixCommonErrorsRules:FixOverlappingDisplayTimes`
 
 Both touch boundary timings but solve different problems:
 
-- `--apply-min-gap:<ms>` is a **hard**, absolute pass over every pair of adjacent
-  paragraphs and guarantees at least the supplied gap. Use this when you want
-  consistent gaps for a delivery spec (e.g. broadcast standards that demand
-  2 frames between cues).
+- `--apply-min-gap:<ms>` walks every pair of adjacent paragraphs and, when the
+  gap is shorter than `<ms>`, **shortens the previous cue's end time** to open
+  it up. It does **not** move the next cue's start. Pairs are also **skipped**
+  when shortening would drop the previous cue below
+  `General.SubtitleMinimumDisplayMilliseconds` — so this is best-effort, not a
+  hard guarantee. Use it for delivery specs (e.g. broadcast standards that ask
+  for 2 frames between cues) while accepting that minimum-display-duration
+  collisions are left alone.
 - `FixOverlappingDisplayTimes` is one rule inside Fix Common Errors and only
   resolves cases where paragraph end > next paragraph start (true overlap).
   It does *not* enforce a non-zero minimum gap once overlaps are gone.
@@ -203,11 +207,16 @@ Applied in a fixed, sensible order regardless of CLI order:
 to pick a subset — supplying the option implies `--FixCommonErrors`.
 
 A handful of rules are **language-conditional** and only run in the default
-"all rules" pass when the auto-detected language matches:
+"all rules" pass when the auto-detected language matches. The GUI's Fix Common
+Errors window has the same gating:
 
-- `FixSpanishInvertedQuestionAndExclamationMarks` — only runs on `es`. The
-  GUI's Fix Common Errors window has the same gating. You can still opt in on
-  non-Spanish content by naming the rule explicitly in `--FixCommonErrorsRules`.
+- `FixAloneLowercaseIToUppercaseI` — only on `en`
+- `FixDanishLetterI` — only on `da`
+- `FixSpanishInvertedQuestionAndExclamationMarks` — only on `es`
+- `FixTurkishAnsiToUnicode` — only on `tr`
+
+You can still opt in on any content by naming the rule explicitly in
+`--FixCommonErrorsRules` (e.g. `--FixCommonErrorsRules:FixSpanishInvertedQuestionAndExclamationMarks`).
 
 ```bash
 seconv movie.srt subrip --FixCommonErrors                              # all rules
