@@ -390,7 +390,11 @@ internal class SubtitleConverter
 
         if (options.Operations.Count > 0)
         {
-            LibSEIntegration.ApplyOperations(subtitle, options.Operations, options.FixCommonErrorsRules);
+            LibSEIntegration.ApplyOperations(
+                subtitle,
+                options.Operations,
+                options.FixCommonErrorsRules,
+                options.FixCommonErrorsExplicitlyNamedRules);
         }
 
         if (options.BridgeGapsMaxMs.HasValue && options.BridgeGapsMaxMs.Value > 0)
@@ -512,6 +516,14 @@ internal record class ConversionOptions
     /// Resolve via <see cref="FixCommonErrorsRunner.ResolveRuleIds"/>.
     /// </summary>
     public IReadOnlyList<string> FixCommonErrorsRules { get; init; } = [];
+
+    /// <summary>
+    /// Rules the user named by hand in <c>--FixCommonErrorsRules</c>. Used to bypass
+    /// language gating for explicitly-requested rules. Populate via
+    /// <see cref="FixCommonErrorsRunner.ParseExplicitlyNamedRules"/>. Empty means
+    /// "implicit all-rules pass" (gates stay active).
+    /// </summary>
+    public IReadOnlyList<string> FixCommonErrorsExplicitlyNamedRules { get; init; } = [];
     public int? DeleteFirst { get; init; }
     public int? DeleteLast { get; init; }
     public string? DeleteContains { get; init; }
