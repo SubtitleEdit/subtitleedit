@@ -246,16 +246,41 @@ public partial class SubtitleLineViewModel : ObservableObject
     {
         get
         {
-            if (Se.Settings.General.ColorTextTooLong && !string.IsNullOrEmpty(Text))
+            if (string.IsNullOrEmpty(Text))
             {
-                if (CharactersPerSecond > Se.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                return _transparentBrush;
+            }
+
+            // Avalonia re-evaluates this getter on every cell repaint (scroll, selection,
+            // edit, focus). Previously the getter could call HtmlUtil.RemoveHtmlTags(Text)
+            // up to three times per repaint — once inside CharactersPerSecond and once per
+            // settings-enabled branch below. Strip once and reuse across all branches —
+            // including a local CPS calculation so we don't re-strip via CharactersPerSecond.
+            string? stripped = null;
+
+            if (Se.Settings.General.ColorTextTooLong)
+            {
+                stripped = HtmlUtil.RemoveHtmlTags(Text, true);
+
+                // Compute CPS from the just-stripped text instead of calling the
+                // CharactersPerSecond property (which would strip again). Mirrors the
+                // logic in that property; kept in sync with it.
+                double cps;
+                if (Duration.TotalMilliseconds <= 1.0)
+                {
+                    cps = 999.0;
+                }
+                else
+                {
+                    cps = (double)stripped.CountCharacters(forCps: true) / Duration.TotalSeconds;
+                }
+
+                if (cps > Se.Settings.General.SubtitleMaximumCharactersPerSeconds)
                 {
                     return _errorBrush;
                 }
 
-                var text = HtmlUtil.RemoveHtmlTags(Text, true);
-                var lines = text.SplitToLines();
-                foreach (var line in lines)
+                foreach (var line in stripped.SplitToLines())
                 {
                     if (line.Length > Se.Settings.General.SubtitleLineMaximumLength)
                     {
@@ -264,10 +289,10 @@ public partial class SubtitleLineViewModel : ObservableObject
                 }
             }
 
-            if (Se.Settings.General.ColorTextTooWide && !string.IsNullOrEmpty(Text))
+            if (Se.Settings.General.ColorTextTooWide)
             {
-                var text = HtmlUtil.RemoveHtmlTags(Text, true);
-                foreach (var line in text.SplitToLines())
+                stripped ??= HtmlUtil.RemoveHtmlTags(Text, true);
+                foreach (var line in stripped.SplitToLines())
                 {
                     if (CalculatePixelWidth(line) > Se.Settings.General.ColorTextTooWidePixels)
                     {

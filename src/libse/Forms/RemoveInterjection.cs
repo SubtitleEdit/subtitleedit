@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -29,6 +30,18 @@ namespace Nikse.SubtitleEdit.Core.Forms
     {
         // https://github.com/SubtitleEdit/subtitleedit/issues/1421 + https://github.com/SubtitleEdit/subtitleedit/issues/7563
 
+        // Cache compiled `\bWORD\b` regexes keyed by interjection. Invoke() is called once per
+        // paragraph during HI removal; the inner foreach iterates over ~100+ interjections, and
+        // each match used to allocate-and-compile a fresh Regex. For a 1000-paragraph HI subtitle
+        // that's tens of thousands of redundant Regex constructions per "Remove text for HI" run.
+        // The interjection set is small and stable across a run, so a process-wide cache is safe.
+        private static readonly ConcurrentDictionary<string, Regex> InterjectionRegexCache = new ConcurrentDictionary<string, Regex>();
+
+        private static Regex GetWordBoundaryRegex(string word)
+        {
+            return InterjectionRegexCache.GetOrAdd(word, w => new Regex("\\b" + Regex.Escape(w) + "\\b", RegexOptions.Compiled));
+        }
+
         public string Invoke(InterjectionRemoveContext context)
         {
             if (string.IsNullOrWhiteSpace(context.Text))
@@ -46,7 +59,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 {
                     if (text.Contains(s))
                     {
-                        var regex = new Regex("\\b" + Regex.Escape(s) + "\\b");
+                        var regex = GetWordBoundaryRegex(s);
                         var match = regex.Match(text);
                         if (match.Success)
                         {
