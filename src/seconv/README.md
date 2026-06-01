@@ -238,7 +238,7 @@ cavena / cavena890                cheetahcaption                  capmakerplus
 ayato
 bluraysup / sup                   vobsub                          bdnxml / bdn-xml
 dost                              fcpimage                        dcinemainterop
-dcinemasmpte2014                  imageswithtimecode              webvttthumbnail / vttthumb
+dcinemasmpte2014                  imageswithtimecode              webvttthumbnail / webvtt-thumbnail / vttthumb
 plaintext / text / txt            customtext / customtextformat
 ```
 
