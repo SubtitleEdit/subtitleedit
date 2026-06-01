@@ -1,5 +1,4 @@
 using SeConv.Core;
-using SkiaSharp;
 using Xunit;
 
 namespace SeConvTests.Core;

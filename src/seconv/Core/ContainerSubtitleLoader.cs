@@ -260,7 +260,13 @@ internal static class ContainerSubtitleLoader
         return tracks;
     }
 
-    private static string SanitizeLang(string? lang)
+    /// <summary>
+    /// Cleans a language tag for use in an output filename. Empty/whitespace → empty
+    /// string (caller treats as "no suffix"). Otherwise strips characters that are
+    /// problematic in filenames on Windows. Note: "und" (ISO 639 "undetermined") is
+    /// kept, so MKV tracks tagged as such still get a distinct suffix.
+    /// </summary>
+    internal static string SanitizeLang(string? lang)
     {
         if (string.IsNullOrWhiteSpace(lang))
         {

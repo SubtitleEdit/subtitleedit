@@ -381,7 +381,7 @@ internal class SubtitleConverter
         foreach (var track in pgsTracks)
         {
             var outputFile = ResolveOutputFileName(
-                inputFile, options, SanitizeLanguage(track.Language), track.TrackNumber);
+                inputFile, options, ContainerSubtitleLoader.SanitizeLang(track.Language), track.TrackNumber);
 
             if (!options.Quiet)
             {
@@ -445,9 +445,12 @@ internal class SubtitleConverter
 
         foreach (var (items, pid) in streams)
         {
-            // PID is the natural per-stream identifier — use it as the track-number-like
-            // suffix so multi-PID streams don't collide on output.
-            var outputFile = ResolveOutputFileName(inputFile, options, languageSuffix: null, trackNumber: pid);
+            // PID is the natural per-stream identifier. ResolveOutputFileName only embeds
+            // languageSuffix into the filename stem (trackNumber is only used as the
+            // de-duplication fallback for overwrite collisions), so pass the PID *as* the
+            // language suffix to keep each PID's output stably named — otherwise multiple
+            // PIDs would collide and only differ by an opaque "_2", "_3" rotation.
+            var outputFile = ResolveOutputFileName(inputFile, options, languageSuffix: $"dvb_pid{pid}", trackNumber: pid);
 
             if (!options.Quiet)
             {
@@ -500,19 +503,6 @@ internal class SubtitleConverter
             Directory.CreateDirectory(outputDir);
         }
         ImageOutputWriter.WritePreservedBitmaps(items, outputFile, handler, options);
-    }
-
-    /// <summary>
-    /// Mirrors <c>ContainerSubtitleLoader.SanitizeLang</c> — Matroska Language can be empty
-    /// or "und". Caller wants null in those cases so the language suffix is omitted.
-    /// </summary>
-    private static string? SanitizeLanguage(string? language)
-    {
-        if (string.IsNullOrWhiteSpace(language) || language.Equals("und", StringComparison.OrdinalIgnoreCase))
-        {
-            return null;
-        }
-        return language;
     }
 
     private List<string> GetInputFiles(ConversionOptions options)

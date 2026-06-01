@@ -66,8 +66,10 @@ internal static class BitmapSubtitleLoader
     /// VobSub <c>.sub</c> + <c>.idx</c> pair → bitmap events. Uses
     /// <see cref="VobSubParser.OpenSubIdx"/> so the .idx provides timing + palette
     /// and the .sub provides the subpicture stream payload. The VobSub spec doesn't
-    /// carry a screen size, so we leave dims unset and let the caller decide
-    /// (typical defaults: 720x576 PAL, 720x480 NTSC).
+    /// store a screen size in the index file, so we bake in the DVD-standard frame
+    /// sizes (720x576 PAL, 720x480 NTSC) — otherwise the output writer would fall
+    /// back to <c>--resolution</c> / 1920x1080, which is wrong metadata for DVD
+    /// sources.
     /// </summary>
     public static IReadOnlyList<BitmapSubtitleItem> LoadVobSub(string subPath, string idxPath, bool isPal)
     {
@@ -84,6 +86,9 @@ internal static class BitmapSubtitleLoader
             throw new InvalidOperationException($"No VobSub subtitle packs in: {subPath}");
         }
 
+        var screenWidth = 720;
+        var screenHeight = isPal ? 576 : 480;
+
         var items = new List<BitmapSubtitleItem>(packs.Count);
         foreach (var pack in packs)
         {
@@ -92,7 +97,7 @@ internal static class BitmapSubtitleLoader
             {
                 continue;
             }
-            items.Add(new BitmapSubtitleItem(pack.StartTimeCode, pack.EndTimeCode, bmp));
+            items.Add(new BitmapSubtitleItem(pack.StartTimeCode, pack.EndTimeCode, bmp, screenWidth, screenHeight));
         }
         return items;
     }
