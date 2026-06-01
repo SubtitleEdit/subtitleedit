@@ -59,12 +59,16 @@ public class ExportHandlerDost : IExportHandler
 
         if (param.Alignment == ExportAlignment.MiddleLeft || param.Alignment == ExportAlignment.MiddleCenter || param.Alignment == ExportAlignment.MiddleRight)
         {
-            top = param.ScreenHeight - (param.Bitmap.Height / 2);
+            top = (param.ScreenHeight - param.Bitmap.Height) / 2;
         }
 
+        // OverridePosition carries screen coordinates (typically from a source-format's
+        // declared display area, e.g. DVD PCS); validate against screen dims, not the
+        // bitmap's own. The prior check against Bitmap.W/H rejected almost every
+        // realistic override since subtitle bitmaps are smaller than the screen.
         if (param.OverridePosition.HasValue &&
-            param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.Bitmap.Width &&
-            param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.Bitmap.Height)
+            param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.ScreenWidth &&
+            param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.ScreenHeight)
         {
             left = param.OverridePosition.Value.X;
             top = param.OverridePosition.Value.Y;
