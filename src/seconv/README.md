@@ -10,7 +10,7 @@ operations, and OCR engines as the desktop UI — without an Avalonia / GUI depe
 - Container input: Matroska (.mkv/.mks), MP4, MCC, transport stream teletext
 - OCR pipelines for image-based sources (Blu-Ray .sup, MKV PGS, DVB-sub)
 - Five OCR engines: Tesseract subprocess, nOCR (built-in), BinaryOCR (built-in), Ollama (HTTP), PaddleOCR subprocess
-- Image-based output: Blu-Ray sup, BDN-XML, DOST, FCP, D-Cinema interop / SMPTE 2014, images-with-time-code
+- Image-based output: Blu-Ray sup, BDN-XML, DOST, FCP, D-Cinema interop / SMPTE 2014, images-with-time-code, WebVTT thumbnails
 - Full operation pipeline: offset, fps change, renumber, adjust-duration, fix-common-errors,
   merge/split, balance, redo casing, RTL fixes, multiple-replace, custom-text format, plain text
 - Cross-platform (Windows, Linux, macOS) — only requires .NET 10 runtime
@@ -238,7 +238,7 @@ cavena / cavena890                cheetahcaption                  capmakerplus
 ayato
 bluraysup / sup                   vobsub                          bdnxml / bdn-xml
 dost                              fcpimage                        dcinemainterop
-dcinemasmpte2014                  imageswithtimecode
+dcinemasmpte2014                  imageswithtimecode              webvttthumbnail / vttthumb
 plaintext / text / txt            customtext / customtextformat
 ```
 

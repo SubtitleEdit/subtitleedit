@@ -1038,6 +1038,7 @@ internal static class LibSEIntegration
             "dcinemainterop" or "dcinema-interop" => "D-Cinema interop/png",
             "dcinemasmpte2014" or "dcinema-smpte" => "D-Cinema SMPTE 2014/png",
             "imageswithtimecode" or "imagesintc" => "Images with time codes in file name",
+            "webvttthumbnail" or "webvtt-thumbnail" or "vttthumb" => "WebVTT Thumbnail",
             "plaintext" or "text" or "txt" => "Plain text",
             "customtext" or "customtextformat" => "Custom text format",
             _ => formatName

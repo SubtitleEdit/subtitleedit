@@ -35,6 +35,13 @@ internal static class ImageOutputWriter
                 => new ExportHandlerDCinemaSmpte2014Png(),
             var x when x.Equals("Images with time codes in file name", StringComparison.OrdinalIgnoreCase) || x.Equals("ImagesWithTimeCodes", StringComparison.OrdinalIgnoreCase)
                 => new ExportHandlerImagesWithTimeCode(),
+            // WebVTT thumbnail bundle: a directory of numbered PNG sprites plus an
+            // index.vtt that references each by start/end time. The handler treats
+            // the output path as a folder (creates it, writes PNGs + index.vtt
+            // inside), so e.g. `seconv movie.srt webvttthumbnail` produces
+            // `movie.vtt/0001.png`, `0002.png`, ..., `index.vtt`.
+            var x when x.Equals("WebVTT Thumbnail", StringComparison.OrdinalIgnoreCase) || x.Equals("WebVttThumbnail", StringComparison.OrdinalIgnoreCase)
+                => new ExportHandlerWebVttThumbnail(),
             _ => null,
         };
     }

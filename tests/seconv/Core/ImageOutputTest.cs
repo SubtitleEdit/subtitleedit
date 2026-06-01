@@ -124,4 +124,26 @@ public class ImageOutputTest : IDisposable
         var pngs = Directory.GetFiles(Path.Combine(_tempRoot, "tc"), "*.png", SearchOption.AllDirectories);
         Assert.NotEmpty(pngs);
     }
+
+    [Fact]
+    public async Task ConvertAsync_WebVttThumbnailOutput_ProducesPngsAndIndexVtt()
+    {
+        // WebVTT thumbnail bundle: the handler treats the output path as a folder
+        // (creates it, drops 0001.png, 0002.png, ..., index.vtt inside). Verify both
+        // the PNG sprites and the index.vtt cueing them are produced.
+        var result = await ConvertTo("webvttthumbnail", "vttthumb");
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+
+        var pngs = Directory.GetFiles(Path.Combine(_tempRoot, "vttthumb"), "*.png", SearchOption.AllDirectories);
+        Assert.Equal(2, pngs.Length);
+        Assert.Contains(pngs, p => Path.GetFileName(p) == "0001.png");
+        Assert.Contains(pngs, p => Path.GetFileName(p) == "0002.png");
+
+        var indexes = Directory.GetFiles(Path.Combine(_tempRoot, "vttthumb"), "index.vtt", SearchOption.AllDirectories);
+        Assert.Single(indexes);
+        var index = await File.ReadAllTextAsync(indexes[0], TestContext.Current.CancellationToken);
+        Assert.StartsWith("WEBVTT", index);
+        Assert.Contains("0001.png", index);
+        Assert.Contains("0002.png", index);
+    }
 }
