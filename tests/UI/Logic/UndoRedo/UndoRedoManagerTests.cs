@@ -503,4 +503,31 @@ public class UndoRedoManagerTests
         Assert.Equal(0, manager.UndoCount);
         Assert.Equal(0, manager.RedoCount);
     }
+
+    // -----------------------------------------------------------------------
+    // UndoRedoItem.Clone
+    // -----------------------------------------------------------------------
+
+    [Fact]
+    public void Clone_PreservesCreatedTimestamp()
+    {
+        // Regression: Clone used to overwrite Created with DateTime.Now via the
+        // constructor, so every Undo/Redo round-trip restamped the entry as
+        // "created now" — surprising for any UI/log that displays Created and
+        // breaks chronological ordering of the undo history.
+        var originalCreated = new DateTime(2020, 1, 15, 12, 30, 45, DateTimeKind.Utc);
+        var original = new UndoRedoItem("test", [], 1, null, [], 0, 0)
+        {
+            Created = originalCreated,
+        };
+
+        var clone = UndoRedoItem.Clone(original);
+
+        Assert.NotNull(clone);
+        Assert.Equal(originalCreated, clone.Created);
+        // Sanity: hash and description copied too (so the test exercises Clone
+        // generally, not just the Created field).
+        Assert.Equal(original.Hash, clone.Hash);
+        Assert.Equal(original.Description, clone.Description);
+    }
 }

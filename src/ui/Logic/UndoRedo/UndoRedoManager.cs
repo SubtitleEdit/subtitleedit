@@ -15,9 +15,18 @@ public sealed class UndoRedoManager : IUndoRedoManager
     private readonly Lock _lock = new();
 
     private Timer? _changeDetectionTimer;
-    private IUndoRedoClient? _undoRedoClient;
+    // `volatile` so the lock-free pre-check in CheckForChanges doesn't tear-read
+    // the reference on weak memory architectures (ARM). Writers still assign
+    // under _lock for ordering vs other field mutations.
+    private volatile IUndoRedoClient? _undoRedoClient;
     private volatile bool _isChangeDetectionActive;
-    private volatile bool _disposed;
+    // Int (instead of `volatile bool`) so Dispose() can use Interlocked.Exchange
+    // to atomically check-and-set — concurrent Dispose() calls can't both pass
+    // the gate and double-dispose the timer. Reads outside the lock use
+    // Volatile.Read so the disposal flag is still observed promptly across
+    // threads (plain int reads aren't guaranteed visible on weak memory
+    // architectures).
+    private int _disposed;
     // Narrowed from 1s → 250ms to reduce the window in which two distinct user
     // actions (e.g. text edit + waveform drag) get bundled into a single undo
     // entry — issue #11280. CheckForChanges is gated by IsTyping() and
@@ -46,10 +55,13 @@ public sealed class UndoRedoManager : IUndoRedoManager
     {
         get
         {
+            // Read the hash outside the lock so client.GetFastHash() (which
+            // enumerates the subtitle collection) can't invert lock order with
+            // any caller holding a collection-side lock while waiting on _lock.
+            var currentHash = _undoRedoClient?.GetFastHash() ?? 0;
             lock (_lock)
             {
                 if (_undoList.Count == 0) return false;
-                var currentHash = _undoRedoClient?.GetFastHash() ?? 0;
                 return _undoList.Last().Hash != currentHash || _undoList.Count > 1;
             }
         }
@@ -76,7 +88,7 @@ public sealed class UndoRedoManager : IUndoRedoManager
 
     public void SetupChangeDetection(IUndoRedoClient client, TimeSpan? interval = null)
     {
-        ObjectDisposedException.ThrowIf(_disposed, this);
+        ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
 
         lock (_lock)
         {
@@ -94,7 +106,7 @@ public sealed class UndoRedoManager : IUndoRedoManager
 
     public void StartChangeDetection()
     {
-        ObjectDisposedException.ThrowIf(_disposed, this);
+        ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
 
         lock (_lock)
         {
@@ -140,37 +152,52 @@ public sealed class UndoRedoManager : IUndoRedoManager
 
     public UndoRedoItem? Undo()
     {
+        // Capture the client + read the live hash outside the lock — see the
+        // CanUndo / CheckForChanges comments for why.
+        var client = _undoRedoClient;
+        var currentHash = client?.GetFastHash() ?? 0;
+
+        // First lock: decide which path to take. If the top of the undo stack
+        // matches the live state, the resolution is purely internal (pop/push)
+        // and we can return immediately without calling back into the client.
         lock (_lock)
         {
-            if (_undoList.Count == 0) return null;
-
-            var currentHash = _undoRedoClient?.GetFastHash() ?? 0;
+            if (_undoList.Count == 0)
+            {
+                return null;
+            }
 
             if (_undoList.Last().Hash == currentHash)
             {
-                // Top of stack is the live state — pop it onto redo so we can
-                // come back, and step back to the state beneath.
-                if (_undoList.Count == 1) return null;
-                PushIfNew(_redoList, PopLast(_undoList));
-            }
-            else if (_undoRedoClient is not null)
-            {
-                // Live state has unrecorded changes (user edited between polling
-                // ticks). Snapshot the live state onto redo BEFORE stepping back,
-                // so redo can restore it — issue #11280: undoing a fast text-edit
-                // + waveform-drag combo used to discard the unrecorded state
-                // silently, leaving the user unable to redo.
-                //
-                // The unrecorded edit is a divergence from any prior redo
-                // timeline (same as a regular Do() — see DoCore). Clear redo
-                // first so the user can't redo into the stale future that
-                // existed before this edit, then push the live snapshot.
-                var live = _undoRedoClient.MakeUndoRedoObject("Unrecorded changes");
-                if (live is not null)
+                if (_undoList.Count == 1)
                 {
-                    _redoList.Clear();
-                    _redoList.Add(live);
+                    return null;
                 }
+                PushIfNew(_redoList, PopLast(_undoList));
+                return UndoRedoItem.Clone(_undoList.Last());
+            }
+        }
+
+        // Else: live state has unrecorded changes. Snapshot it OUTSIDE the lock
+        // because MakeUndoRedoObject enumerates the subtitle collection — see
+        // issue #11280 for why we need the snapshot in the first place. The
+        // unrecorded edit is a divergence from any prior redo timeline (same
+        // semantic as DoCore clearing redo on a new explicit action).
+        var live = client?.MakeUndoRedoObject("Unrecorded changes");
+
+        lock (_lock)
+        {
+            // Re-check: another thread may have cleared the undo list (Reset)
+            // between the two locks. Bail safely instead of returning a stale ref.
+            if (_undoList.Count == 0)
+            {
+                return null;
+            }
+
+            if (live is not null)
+            {
+                _redoList.Clear();
+                _redoList.Add(live);
             }
 
             return UndoRedoItem.Clone(_undoList.Last());
@@ -201,37 +228,74 @@ public sealed class UndoRedoManager : IUndoRedoManager
 
     public void CheckForChanges(object? state)
     {
-        if (_undoRedoClient is null || !_isChangeDetectionActive || _disposed)
+        // Capture the client once so subsequent calls see a consistent reference
+        // even if SetupChangeDetection races with us. `_undoRedoClient` is
+        // volatile so this read isn't torn.
+        var client = _undoRedoClient;
+        if (client is null || !_isChangeDetectionActive || Volatile.Read(ref _disposed) != 0)
+        {
             return;
+        }
 
-        if (_undoRedoClient.IsTyping())
+        if (client.IsTyping())
+        {
             return;
+        }
 
         try
         {
-            // Read hash before acquiring lock to keep critical section short.
-            var currentHash = _undoRedoClient.GetFastHash();
+            // Both GetFastHash and MakeUndoRedoObject enumerate the subtitle
+            // collection; calling them under _lock would invert lock order with
+            // anything on the UI thread that holds a collection lock and is
+            // waiting on _lock. Do all client calls outside the lock.
+            var currentHash = client.GetFastHash();
+
+            bool alreadyTracked;
+            lock (_lock)
+            {
+                alreadyTracked = IsAlreadyTracked(currentHash);
+            }
+            if (alreadyTracked)
+            {
+                return;
+            }
+
+            var snapshot = client.MakeUndoRedoObject("Changes detected");
+            if (snapshot is null)
+            {
+                return;
+            }
 
             lock (_lock)
             {
-                if (IsAlreadyTracked(currentHash)) return;
-
-                var snapshot = _undoRedoClient.MakeUndoRedoObject("Changes detected");
-                if (snapshot is null) return;
+                // Re-validate after the lock release/reacquire window — another
+                // tick or an explicit Do() may have captured this hash already.
+                if (IsAlreadyTracked(snapshot.Hash))
+                {
+                    return;
+                }
 
                 var last = _undoList.LastOrDefault();
-                if (last is not null && !HasChanges(last, snapshot)) return;
+                if (last is not null && !HasChanges(last, snapshot))
+                {
+                    return;
+                }
 
                 DoCore(snapshot);
             }
         }
-        catch
+        catch (Exception ex)
         {
-            // Swallow — change detection must never crash the application.
+            // Change detection must never crash the application, but swallowing
+            // silently used to hide real bugs in MakeUndoRedoObject and friends.
+            // Log so they're at least diagnosable.
+            Se.LogError(ex, "UndoRedoManager.CheckForChanges");
         }
     }
 
-    private bool IsAlreadyTracked(long hash) =>
+    // Hash on UndoRedoItem and the value returned by GetFastHash are both int;
+    // accepting `long` here silently widened both sides on every call.
+    private bool IsAlreadyTracked(int hash) =>
         _undoList.LastOrDefault()?.Hash == hash ||
         _redoList.LastOrDefault()?.Hash == hash;
 
@@ -357,8 +421,14 @@ public sealed class UndoRedoManager : IUndoRedoManager
 
     public void Dispose()
     {
-        if (_disposed) return;
-        _disposed = true;
+        // Interlocked.Exchange is atomic — concurrent Dispose() calls can't
+        // both pass the check-and-set and double-dispose the timer (Timer.Dispose
+        // is idempotent today, but the previous `if (_disposed) return; _disposed = true;`
+        // pattern was a TOCTOU race regardless).
+        if (Interlocked.Exchange(ref _disposed, 1) != 0)
+        {
+            return;
+        }
 
         StopChangeDetection();
         _changeDetectionTimer?.Dispose();
