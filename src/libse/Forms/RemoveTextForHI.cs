@@ -914,7 +914,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 var stSub = new StrippableText(s, pre, post);
                 var strippedText = stSub.StrippedText;
-                if (lineNumber == parts.Count - 1 && st.Post.Contains('?') || stSub.Post.Contains('?'))
+                if (lineNumber == parts.Count - 1 && (st.Post.Contains('?') || stSub.Post.Contains('?')))
                 {
                     strippedText += "?";
                 }
