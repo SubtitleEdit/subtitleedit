@@ -1,5 +1,6 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -96,5 +97,45 @@ public class ScenaristClosedCaptionsTest
 
         Assert.Single(subtitle.Paragraphs);
         Assert.Equal(new string('A', 40), HtmlUtil.RemoveHtmlTags(subtitle.Paragraphs[0].Text, true));
+    }
+
+    [Fact]
+    public void ItalicPreambleAddressCodeProducesItalic()
+    {
+        // Issue #9803: italics are carried by italic-style PACs (916e, 92ce, ...), not by mid-row
+        // codes. "NARRADOR:" (regular PAC 91d0) stays regular; the next rows (916e/92ce) are italic.
+        var subtitle = LoadScc(
+            "00:00:25:00\t9420 9420 91d0 91d0 cec1 5252 c1c4 4f52 ba80 916e 916e c173 6820 7920 7375 7320 616d e967 ef73 92ce 92ce e3ef 6ef4 e96e e061 6e20 7375 2076 e961 eae5 942c 942c 942f 942f",
+            "00:45:36:04\t942c 942c");
+
+        Assert.Single(subtitle.Paragraphs);
+        Assert.Equal("{\\an7}NARRADOR:" + Environment.NewLine + "<i>Ash y sus amigos" + Environment.NewLine + "continúan su viaje</i>",
+            subtitle.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void DecodesMusicNoteSplitAcrossWordBoundary()
+    {
+        // Issue #9803: a trailing " ♪" can arrive byte-misaligned as "2091 3780" (space + the note
+        // code 9137 split over two words + 80 padding). It must decode to ♪, not "7".
+        var subtitle = LoadScc(
+            "00:00:25:00\t9420 9420 946e 946e 9137 9137 2045 ec20 6d75 6e64 ef20 f175 e9e5 f2ef 2076 e5f2 2091 3780 942c 942c 942f 942f",
+            "00:45:36:04\t942c 942c");
+
+        Assert.Single(subtitle.Paragraphs);
+        Assert.Equal("<i>♪ El mundo quiero ver ♪</i>", subtitle.Paragraphs[0].Text);
+        Assert.DoesNotContain("7", subtitle.Paragraphs[0].Text);
+    }
+
+    [Fact]
+    public void DecodesAlignedMusicNotes()
+    {
+        // The common case: both notes byte-aligned as full 9137 words must keep working.
+        var subtitle = LoadScc(
+            "00:00:25:00\t9420 9420 946e 946e 9137 9137 20c4 e520 d075 e562 ecef 20d0 61ec e5f4 6120 73ef 7920 9137 9137 942c 942c 942f 942f",
+            "00:45:36:04\t942c 942c");
+
+        Assert.Single(subtitle.Paragraphs);
+        Assert.Equal("<i>♪ De Pueblo Paleta soy ♪</i>", subtitle.Paragraphs[0].Text);
     }
 }

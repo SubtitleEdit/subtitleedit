@@ -969,11 +969,36 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             // Row-code first byte: low 7 bits in 0x10-0x17 (parity-stripped 10-17), plus the
             // odd-parity forms that differ (11->91, 12->92, 14->94, 17->97).
             var firstByte = code.Substring(0, 2);
-            var isRowCode = firstByte == "10" || firstByte == "11" || firstByte == "12" || firstByte == "13" ||
-                            firstByte == "14" || firstByte == "15" || firstByte == "16" || firstByte == "17" ||
-                            firstByte == "91" || firstByte == "92" || firstByte == "94" || firstByte == "97";
-            var isPositionByte = "4567cdef".IndexOf(code[2]) >= 0;
-            return isRowCode && isPositionByte;
+            return IsPreambleAddressRowCode(firstByte) && "4567cdef".IndexOf(code[2]) >= 0;
+        }
+
+        private static bool IsPreambleAddressRowCode(string firstByte)
+        {
+            // Row-code first byte: low 7 bits in 0x10-0x17 (parity-stripped 10-17), plus the
+            // odd-parity forms that differ (11->91, 12->92, 14->94, 17->97).
+            return firstByte == "10" || firstByte == "11" || firstByte == "12" || firstByte == "13" ||
+                   firstByte == "14" || firstByte == "15" || firstByte == "16" || firstByte == "17" ||
+                   firstByte == "91" || firstByte == "92" || firstByte == "94" || firstByte == "97";
+        }
+
+        // A PAC also carries the row's style. White italic (optionally underlined) is encoded in the
+        // second byte; parity-stripped that byte is 0x4e/0x4f/0x6e/0x6f (#9803). Many real files use
+        // the parity-applied row codes (916e, 92ce, ...) that are not in SccPositionAndStyleTable.
+        private static bool IsItalicPreambleAddressCode(string code)
+        {
+            if (!IsPreambleAddressCode(code))
+            {
+                return false;
+            }
+
+            var secondByte = Convert.ToInt32(code.Substring(2, 2), 16) & 0x7f;
+            return secondByte == 0x4e || secondByte == 0x4f || secondByte == 0x6e || secondByte == 0x6f;
+        }
+
+        // First byte of a two-byte CEA-608 control code (PAC, mid-row, special char): high nibble 1 or 9.
+        private static bool IsControlCodeFirstByte(string twoHex)
+        {
+            return twoHex.Length == 2 && (twoHex[0] == '1' || twoHex[0] == '9');
         }
 
         public static string GetSccText(string s, ref int errorCount)
@@ -1207,7 +1232,35 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                             sb.AppendLine();
                                         }
 
+                                        // The PAC also sets the row's style; honour white italic. (#9803)
+                                        if (IsItalicPreambleAddressCode(part) && !italicOn)
+                                        {
+                                            sb.Append("<i>");
+                                            italicOn = true;
+                                        }
+                                        else if (!IsItalicPreambleAddressCode(part) && italicOn)
+                                        {
+                                            sb.Append("</i>");
+                                            italicOn = false;
+                                        }
+
                                         break;
+                                    }
+
+                                    // A two-byte control code can straddle the SCC word boundary, e.g.
+                                    // " ♪" arrives as "2091 3780" = char(20) + control(9137) + pad(80)
+                                    // instead of the aligned "2080 9137". Re-join it. (#9803)
+                                    if (k < parts.Length - 1 && IsControlCodeFirstByte(part.Substring(2, 2)) &&
+                                        parts[k + 1].EndsWith("80", StringComparison.Ordinal))
+                                    {
+                                        var joined = GetLetterFromCode(part.Substring(2, 2) + parts[k + 1].Substring(0, 2));
+                                        if (joined != null)
+                                        {
+                                            sb.Append(GetLetterFromCode(part.Substring(0, 2)));
+                                            sb.Append(joined);
+                                            k += 2;
+                                            continue;
+                                        }
                                     }
 
                                     var result = GetLetterFromCode(part);
