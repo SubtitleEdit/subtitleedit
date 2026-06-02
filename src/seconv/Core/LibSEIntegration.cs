@@ -458,12 +458,15 @@ internal static class LibSEIntegration
     /// <summary>
     /// Applies subtitle operations/transformations. <paramref name="fixCommonErrorsRules"/>
     /// is consulted only when <c>fixcommonerrors</c> is in the operation list — pass
-    /// <c>null</c> or empty to run all FCE rules.
+    /// <c>null</c> or empty to run all FCE rules. <paramref name="fixCommonErrorsExplicitlyNamedRules"/>
+    /// is the set of rules the user named by hand (used to bypass FCE language gating);
+    /// pass empty for "no explicit selection" (implicit-all CLI path).
     /// </summary>
     public static void ApplyOperations(
         Subtitle subtitle,
         List<string> operations,
-        IReadOnlyList<string>? fixCommonErrorsRules = null)
+        IReadOnlyList<string>? fixCommonErrorsRules = null,
+        IReadOnlyList<string>? fixCommonErrorsExplicitlyNamedRules = null)
     {
         if (subtitle == null || operations == null || operations.Count == 0)
         {
@@ -472,19 +475,20 @@ internal static class LibSEIntegration
 
         foreach (var operation in operations)
         {
-            ApplyOperation(subtitle, operation, fixCommonErrorsRules);
+            ApplyOperation(subtitle, operation, fixCommonErrorsRules, fixCommonErrorsExplicitlyNamedRules);
         }
     }
 
     private static void ApplyOperation(
         Subtitle subtitle,
         string operation,
-        IReadOnlyList<string>? fixCommonErrorsRules)
+        IReadOnlyList<string>? fixCommonErrorsRules,
+        IReadOnlyList<string>? fixCommonErrorsExplicitlyNamedRules)
     {
         switch (operation.ToLowerInvariant())
         {
             case "fixcommonerrors":
-                FixCommonErrorsRunner.Run(subtitle, fixCommonErrorsRules);
+                FixCommonErrorsRunner.Run(subtitle, fixCommonErrorsRules, fixCommonErrorsExplicitlyNamedRules);
                 break;
 
             case "removetextforhi":
@@ -1034,6 +1038,7 @@ internal static class LibSEIntegration
             "dcinemainterop" or "dcinema-interop" => "D-Cinema interop/png",
             "dcinemasmpte2014" or "dcinema-smpte" => "D-Cinema SMPTE 2014/png",
             "imageswithtimecode" or "imagesintc" => "Images with time codes in file name",
+            "webvttthumbnail" or "webvtt-thumbnail" or "vttthumb" => "WebVTT Thumbnail",
             "plaintext" or "text" or "txt" => "Plain text",
             "customtext" or "customtextformat" => "Custom text format",
             _ => formatName

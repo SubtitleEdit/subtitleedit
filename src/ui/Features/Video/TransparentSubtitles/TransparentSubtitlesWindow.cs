@@ -517,7 +517,7 @@ public class TransparentSubtitlesWindow : Window
 
         var buttonOutputProperties = UiUtil.MakeButton(Se.Language.Video.BurnIn.OutputProperties, vm.OutputPropertiesCommand);
         var labelOutputPropertiesFolder = UiUtil.MakeLink(string.Empty, vm.OpenOutputFolderCommand)
-            .WithBindText(vm, nameof(vm.OutputFolder))
+            .WithFilePathText(vm, nameof(vm.OutputFolder))
             .WithBindVisible(vm, nameof(vm.UseOutputFolderVisible));
         var labelOutputPropertiesUseSourceFolder = UiUtil.MakeLabel(Se.Language.Video.BurnIn.UseSourceFolder)
             .WithBindVisible(vm, nameof(vm.UseSourceFolderVisible));
@@ -565,7 +565,7 @@ public class TransparentSubtitlesWindow : Window
     private static Border MakeVideoInfoView(TransparentSubtitlesViewModel vm)
     {
         var labelVideoFile = UiUtil.MakeLabel(Se.Language.General.VideoFile);
-        var labelVideoFileName = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.VideoFileName));
+        var labelVideoFileName = UiUtil.MakeFilePathLabel(vm, nameof(vm.VideoFileName));
 
         var labelVideoSize = UiUtil.MakeLabel(Se.Language.Video.BurnIn.VideoFileSize);
         var labelVideoSizeValue = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.VideoFileSize));

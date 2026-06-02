@@ -5,6 +5,8 @@ Subtitle Edit Changelog
 v5.0.0-rc2 (TBD)
 
 * Update Inno Setup installer Italian translation - thx bovirus
+* Update Polish translation - thx potplayer-fanpack
+* Update Japanese translation - thx hisui3393
 
 -----------------------------------------------------------------------------------------------------
 

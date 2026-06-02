@@ -2421,7 +2421,7 @@
       "splitOddLineActionWeightBottom": "下行を多めに配分する",
       "splitOddLinesAction": "字幕行 分割時の動作",
       "ocrUseWordSplitList": "OCR:単語を誤分割しない為に 単語分割リストを使う",
-      "speechToTextSelectedLinesPromptFistTimeOnly": "音声認識：言語/エンジンの選択は 初回のみ",
+      "speechToTextSelectedLinesPromptFirstTimeOnly": "音声認識：言語/エンジンの選択は 初回のみ",
       "multipleReplaceShowDotDotDotButtons": "複数置換：コンテキストメニューボタンを表示",
       "gridFocusTextboxAfterInsertNew": "グリッド：新しい字幕を挿入した後 テキスト欄をアクティブに",
       "textToSpeechPromptMergeContinuationLines": "音声合成: 継続行結合を確認",

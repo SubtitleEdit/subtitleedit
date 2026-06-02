@@ -30,11 +30,30 @@ internal static class FixCommonErrorsRunner
     public static void RunAll(Subtitle subtitle) => Run(subtitle, null);
 
     /// <summary>
-    /// Runs the specified rules. Pass <c>null</c> or an empty collection to run all rules.
-    /// Rules execute in canonical order, not caller order, to keep behaviour stable
-    /// across invocations.
+    /// Back-compat overload. Pass <c>null</c> or an empty collection to run all rules
+    /// (gates language-conditional rules to their language). When a non-empty list is
+    /// passed, every entry is treated as both <em>wanted</em> and <em>explicitly named</em> —
+    /// language gates are bypassed for those rules. Rules execute in canonical order,
+    /// not caller order, to keep behaviour stable across invocations.
     /// </summary>
     public static void Run(Subtitle subtitle, IReadOnlyCollection<string>? ruleIds)
+        => Run(subtitle, ruleIds, explicitlyNamedRules: ruleIds);
+
+    /// <summary>
+    /// Runs the specified rules.
+    /// <para><paramref name="ruleIds"/> selects which rules execute (<c>null</c>/empty = all).</para>
+    /// <para><paramref name="explicitlyNamedRules"/> lists rules the user named by hand —
+    /// these bypass language gating. <c>null</c> means "no signal, treat <paramref name="ruleIds"/>
+    /// as explicit" (back-compat); an empty collection means "no rule was explicitly named"
+    /// (the CLI's implicit <c>--FixCommonErrors</c> path), which keeps language gates active.</para>
+    /// The split matters because the CLI pre-resolves a bare <c>--FixCommonErrors</c> to
+    /// the full rule list, so a <c>wanted == null</c> check alone would never fire for the
+    /// default path — see <see cref="ParseExplicitlyNamedRules"/>.
+    /// </summary>
+    public static void Run(
+        Subtitle subtitle,
+        IReadOnlyCollection<string>? ruleIds,
+        IReadOnlyCollection<string>? explicitlyNamedRules)
     {
         if (subtitle == null || subtitle.Paragraphs.Count == 0)
         {
@@ -45,6 +64,23 @@ internal static class FixCommonErrorsRunner
         if (ruleIds != null && ruleIds.Count > 0)
         {
             wanted = new HashSet<string>(ruleIds, StringComparer.OrdinalIgnoreCase);
+        }
+
+        // null = treat wanted as explicit (back-compat path used by direct callers / tests).
+        // empty = "user named nothing" — keeps language gates fully active.
+        // non-empty = exact set of rules the user typed by hand.
+        HashSet<string>? explicitlyNamed;
+        if (explicitlyNamedRules == null)
+        {
+            explicitlyNamed = wanted;
+        }
+        else if (explicitlyNamedRules.Count == 0)
+        {
+            explicitlyNamed = null;
+        }
+        else
+        {
+            explicitlyNamed = new HashSet<string>(explicitlyNamedRules, StringComparer.OrdinalIgnoreCase);
         }
 
         var language = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle) ?? "en";
@@ -60,6 +96,17 @@ internal static class FixCommonErrorsRunner
                 continue;
             }
 
+            // Language-conditional rules mirror the GUI's Fix Common Errors window
+            // (FixCommonErrorsViewModel.cs:359-377), which only surfaces these rules
+            // when the detected language matches. Running e.g. the Spanish inverted-mark
+            // fix on French content would insert ¿ / ¡ on every question — issue #11037.
+            // The user can still opt in explicitly by naming the rule in --FixCommonErrorsRules.
+            if (IsLanguageOnlyRule(id, language)
+                && (explicitlyNamed == null || !explicitlyNamed.Contains(id)))
+            {
+                continue;
+            }
+
             try
             {
                 factory().Fix(subtitle, callbacks);
@@ -69,6 +116,47 @@ internal static class FixCommonErrorsRunner
                 // A rogue rule shouldn't kill the conversion. Skip and continue.
             }
         }
+    }
+
+    /// <summary>
+    /// Extracts the rule IDs a user named by hand in a <c>--FixCommonErrorsRules</c> spec.
+    /// Returns an empty list for null / empty / whitespace / <c>all</c> specs (= no rule
+    /// was explicitly named). Negative tokens (<c>-FixCommas</c>) and the literal <c>all</c>
+    /// are excluded — only positive, named rules count as "explicit". Unknown rule names
+    /// are kept as-is here; <see cref="ResolveRuleIds"/> is responsible for validation.
+    /// </summary>
+    public static IReadOnlyList<string> ParseExplicitlyNamedRules(string? spec)
+    {
+        if (string.IsNullOrWhiteSpace(spec))
+        {
+            return [];
+        }
+
+        return spec.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Where(t => !t.StartsWith('-') && !"all".Equals(t, StringComparison.OrdinalIgnoreCase))
+            .ToArray();
+    }
+
+    /// <summary>
+    /// Returns true when <paramref name="ruleId"/> is a language-conditional rule
+    /// that should not run because the detected language doesn't match. Mirrors
+    /// the GUI's per-language rule additions in <c>FixCommonErrorsViewModel</c>.
+    /// Bypassable via explicit <c>--FixCommonErrorsRules</c>.
+    /// </summary>
+    private static bool IsLanguageOnlyRule(string ruleId, string language)
+    {
+        return ruleId switch
+        {
+            "FixAloneLowercaseIToUppercaseI"
+                => !"en".Equals(language, StringComparison.OrdinalIgnoreCase),
+            "FixDanishLetterI"
+                => !"da".Equals(language, StringComparison.OrdinalIgnoreCase),
+            "FixSpanishInvertedQuestionAndExclamationMarks"
+                => !"es".Equals(language, StringComparison.OrdinalIgnoreCase),
+            "FixTurkishAnsiToUnicode"
+                => !"tr".Equals(language, StringComparison.OrdinalIgnoreCase),
+            _ => false,
+        };
     }
 
     /// <summary>

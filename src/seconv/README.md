@@ -7,10 +7,11 @@ operations, and OCR engines as the desktop UI — without an Avalonia / GUI depe
 ## Features
 
 - 380+ subtitle formats (text, binary, image-based)
-- Container input: Matroska (.mkv/.mks), MP4, MCC, transport stream teletext
+- Container input: Matroska (.mkv/.mks), MP4, MCC, MXF, transport stream teletext
 - OCR pipelines for image-based sources (Blu-Ray .sup, MKV PGS, DVB-sub)
 - Five OCR engines: Tesseract subprocess, nOCR (built-in), BinaryOCR (built-in), Ollama (HTTP), PaddleOCR subprocess
-- Image-based output: Blu-Ray sup, BDN-XML, DOST, FCP, D-Cinema interop / SMPTE 2014, images-with-time-code
+- Image-based output: Blu-Ray sup, BDN-XML, DOST, FCP, D-Cinema interop / SMPTE 2014, images-with-time-code, WebVTT thumbnails
+- Image-to-image conversion (preserve source bitmaps, no OCR): Blu-Ray .sup, VobSub .sub/.idx, MKV PGS, TS DVB-sub → any image output format
 - Full operation pipeline: offset, fps change, renumber, adjust-duration, fix-common-errors,
   merge/split, balance, redo casing, RTL fixes, multiple-replace, custom-text format, plain text
 - Cross-platform (Windows, Linux, macOS) — only requires .NET 10 runtime
@@ -47,6 +48,12 @@ seconv movie.sup subrip --ocr-engine:ollama --ollama-model:llama3.2-vision
 
 seconv subs.srt bluraysup --resolution:1920x1080               # render text → Blu-Ray sup
 seconv subs.srt bdnxml --resolution:1920x1080                  # render text → BDN-XML
+
+seconv movie.sup bdnxml                                        # preserve bitmaps: .sup → BDN-XML (no OCR)
+seconv movie.sup vobsub                                        # preserve bitmaps: Blu-Ray → DVD
+seconv movie.sub bdnxml                                        # preserve bitmaps: VobSub → BDN-XML (.idx auto-detected)
+seconv movie.mkv bluraysup                                     # preserve bitmaps: MKV PGS track → .sup
+seconv movie.ts dost                                           # preserve bitmaps: DVB-sub → DOST (one output per PID)
 
 seconv subs.srt customtext --custom-format:my-template.xml     # custom template
 seconv *.srt subrip --multiple-replace:rules.xml               # search-and-replace pass
@@ -97,7 +104,28 @@ seconv lint *.srt --json                    # CI-friendly: exit 1 on any issue
 | `--target-fps:<rate>` | Target frame rate (with `--fps`) |
 | `--adjust-duration:<ms>` | Add/subtract milliseconds to each duration |
 | `--change-speed:<percent>` | Scale all times by 100/percent (e.g. `125` = 1.25x faster) |
+| `--apply-min-gap:<ms>` | Best-effort enforcement of a minimum gap between paragraphs by shortening the previous cue's end time. See note below. |
 | `--renumber:<n>` | Renumber paragraphs starting at `n` |
+
+#### `--apply-min-gap` vs `--FixCommonErrorsRules:FixOverlappingDisplayTimes`
+
+Both touch boundary timings but solve different problems:
+
+- `--apply-min-gap:<ms>` walks every pair of adjacent paragraphs and, when the
+  gap is shorter than `<ms>`, **shortens the previous cue's end time** to open
+  it up. It does **not** move the next cue's start. Pairs are also **skipped**
+  when shortening would drop the previous cue below
+  `General.SubtitleMinimumDisplayMilliseconds` — so this is best-effort, not a
+  hard guarantee. Use it for delivery specs (e.g. broadcast standards that ask
+  for 2 frames between cues) while accepting that minimum-display-duration
+  collisions are left alone.
+- `FixOverlappingDisplayTimes` is one rule inside Fix Common Errors and only
+  resolves cases where paragraph end > next paragraph start (true overlap).
+  It does *not* enforce a non-zero minimum gap once overlaps are gone.
+
+In most batch pipelines `--apply-min-gap:<ms>` is the better choice; reach for
+the FCE rule when you specifically want to keep tight 1 ms gaps the source
+already has and only repair true overlaps.
 
 ### Format-specific
 | Option | Description |
@@ -132,19 +160,67 @@ seconv lint *.srt --json                    # CI-friendly: exit 1 on any issue
 >   and [`Ocr/Latin.db`](https://github.com/SubtitleEdit/subtitleedit/raw/main/Ocr/Latin.db).
 > - Other languages: download from the SE UI (Tools → "OCR with nOCR" / BinaryOCR → download).
 
+### Image-to-image conversion (no OCR)
+
+When **both** the input and target are image-based subtitle formats, seconv passes the
+source bitmaps straight through to the output handler instead of OCR'ing them to text
+and re-rasterising at the CLI's default font. Routing is automatic — no flag needed:
+
+| Input | Detection | Outputs |
+|---|---|---|
+| `.sup` | extension | any image format |
+| `.sub` (VobSub) | `.idx` companion next to it | any image format |
+| `.mkv` / `.mks` | `S_HDMV/PGS` track present | any image format (one output per track) |
+| `.ts` / `.m2ts` / `.mts` | DVB-sub PID present | any image format (one output per PID) |
+
+The same input with a text target (`subrip`, `ass`, ...) still routes through OCR.
+Source video dimensions (e.g. 1920x1080 for Blu-Ray) are preserved automatically and
+take precedence over `--resolution`.
+
+```bash
+seconv movie.sup bdnxml                                        # Blu-Ray → BDN-XML for NLE re-authoring
+seconv movie.sup vobsub                                        # Blu-Ray → DVD
+seconv movie.sub bluraysup                                     # DVD → Blu-Ray (.idx auto-detected)
+seconv movie.mkv dost                                          # MKV PGS → DOST (per track)
+seconv movie.ts fcpimage                                       # DVB-sub → FCP image XML (per PID)
+```
+
 ### Templates / replacements
 | Option | Description |
 |---|---|
 | `--multiple-replace:<path.xml>` | SE MultipleSearchAndReplaceGroups XML |
 | `--custom-format:<path.xml>` | SE CustomFormatItem XML (with `--format customtext`) |
-| `--settings:<path.json>` | JSON settings file overriding libse defaults |
+| `--settings:<path.json>` | JSON settings file overriding libse defaults (seconv-specific schema — **not** the SE 5 GUI's `Settings.json`) |
 | `--profile:<name>` | Named overlay from settings file's `profiles` map |
+
+> ⚠️ **`--settings:` is not the SE 5 GUI's `Settings.json`.** seconv accepts a
+> small, libse-shaped schema with three top-level keys: `general`, `tools`, and
+> `removeTextForHearingImpaired`. Property names follow the **libse** spelling,
+> e.g. `RemoveIfAllUppercase` — *not* the GUI's `IsRemoveTextUppercaseLineOn`.
+> The GUI's `Settings.json` is a much larger, GUI-specific dump and can't be
+> consumed directly.
+>
+> Minimal example: removing speaker labels on all-uppercase lines.
+>
+> ```json
+> {
+>   "removeTextForHearingImpaired": {
+>     "RemoveIfAllUppercase": true
+>   }
+> }
+> ```
+>
+> ```bash
+> seconv movie.srt subrip --settings:./hi.json --remove-text-for-hi
+> ```
+>
+> The full list of supported keys lives in `src/seconv/Core/SeConvSettings.cs`.
 
 ### Verbosity
 | Option | Description |
 |---|---|
 | `--quiet` / `-q` | Suppress per-file progress; only print the final summary |
-| `--verbose` / `-v` | Print extra diagnostic information |
+| `--verbose` / `-v` | Print extra diagnostic information (incl. full `Exception.ToString()` with stack traces on errors; without it, the message chain is still walked so wrapper exceptions like `TypeInitializationException` surface their root cause) |
 | `--json` | Emit per-file results as JSON to stdout (suppresses Spectre output) |
 
 ## Operations (boolean flags)
@@ -162,6 +238,18 @@ Applied in a fixed, sensible order regardless of CLI order:
 `--FixCommonErrors` (no value) runs all 38 rules. Pass `--FixCommonErrorsRules:<list>`
 to pick a subset — supplying the option implies `--FixCommonErrors`.
 
+A handful of rules are **language-conditional** and only run in the default
+"all rules" pass when the auto-detected language matches. The GUI's Fix Common
+Errors window has the same gating:
+
+- `FixAloneLowercaseIToUppercaseI` — only on `en`
+- `FixDanishLetterI` — only on `da`
+- `FixSpanishInvertedQuestionAndExclamationMarks` — only on `es`
+- `FixTurkishAnsiToUnicode` — only on `tr`
+
+You can still opt in on any content by naming the rule explicitly in
+`--FixCommonErrorsRules` (e.g. `--FixCommonErrorsRules:FixSpanishInvertedQuestionAndExclamationMarks`).
+
 ```bash
 seconv movie.srt subrip --FixCommonErrors                              # all rules
 seconv movie.srt subrip --FixCommonErrorsRules:FixCommas,FixMissingSpaces
@@ -174,16 +262,20 @@ and OCR engine setup that seconv doesn't carry.
 
 ## Output format aliases
 
+All aliases below are case-insensitive and accepted by `--format` / the positional
+argument. Only the spellings shown in the table are recognised — variants that
+aren't listed (e.g. `plain-text`, `custom-text`) won't resolve.
+
 ```
-srt / subrip                      ass / assa                      ssa
-vtt / webvtt                      smi / sami                      sbv
-pac                               unipac / pacunicode             ebu / ebustl / stl
-cavena / cavena890                cheetahcaption                  capmakerplus
-ayato
-bluraysup / sup                   vobsub                          bdnxml / bdn-xml
-dost                              fcpimage                        dcinemainterop
-dcinemasmpte2014                  imageswithtimecode
-plaintext / text / txt            customtext / customtextformat
+srt / subrip                       ass / assa                       ssa
+vtt / webvtt                       smi / sami                       sbv
+pac                                unipac / pacunicode              ebu / ebustl / stl
+cavena / cavena890                 cheetah / cheetahcaption         capmaker / capmakerplus
+ayato                              vobsub                           bluraysup / sup
+bdnxml / bdn-xml                   dost / dostimage                 fcp / fcpimage
+dcinemainterop / dcinema-interop   dcinemasmpte2014 / dcinema-smpte
+imageswithtimecode / imagesintc    webvttthumbnail / webvtt-thumbnail / vttthumb
+plaintext / text / txt             customtext / customtextformat
 ```
 
 ## Exit codes

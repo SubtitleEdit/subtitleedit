@@ -191,6 +191,55 @@ public class UndoRedoManagerTests
     }
 
     [Fact]
+    public void Undo_WhenLiveHashUnrecorded_SnapshotsLiveOntoRedoStack()
+    {
+        // Regression for #11280 — when the user undoes between polling ticks,
+        // the live state has changes that aren't yet in the undo stack. Those
+        // changes used to be discarded silently (the comment said "we can't
+        // snapshot it here"), which is why users couldn't redo a quick
+        // text-edit + waveform-drag combo. Now the live state is captured onto
+        // redo before stepping back.
+        var client = new FakeClient { Hash = 99 };  // live hash != any in undo stack
+        var manager = new UndoRedoManager();
+        manager.SetupChangeDetection(client);
+        manager.Do(MakeItem("state-a", 1));
+        manager.Do(MakeItem("state-b", 2));
+
+        var result = manager.Undo();
+
+        Assert.NotNull(result);
+        Assert.Equal(2, result.Hash);            // stepped back to state-b
+        Assert.Equal(1, manager.RedoCount);      // live state was snapshotted onto redo
+        Assert.Equal("Unrecorded changes", manager.RedoList[0].Description);
+    }
+
+    [Fact]
+    public void Undo_WhenLiveHashUnrecorded_ClearsStaleRedoBeforeSnapshot()
+    {
+        // The unrecorded edit diverges from any prior redo timeline (same
+        // semantic as a regular Do() clearing redo). If we left stale redo
+        // entries in place, the user could redo into a future that's
+        // incoherent with the live state they just diverged from.
+        var client = new FakeClient { Hash = 2 };
+        var manager = new UndoRedoManager();
+        manager.SetupChangeDetection(client);
+        manager.Do(MakeItem("state-a", 1));
+        manager.Do(MakeItem("state-b", 2));
+        manager.Undo(); // pops state-b onto redo. UndoList=[state-a], RedoList=[state-b]
+        Assert.Equal(1, manager.RedoCount);
+
+        // Now simulate an unrecorded edit — live hash diverges from top of undo.
+        client.Hash = 99;
+
+        manager.Undo();
+
+        // Stale state-b entry on redo should be gone; replaced by the live snapshot.
+        Assert.Equal(1, manager.RedoCount);
+        Assert.Equal("Unrecorded changes", manager.RedoList[0].Description);
+        Assert.Equal(99, manager.RedoList[0].Hash);
+    }
+
+    [Fact]
     public void Undo_ReturnsNull_WhenOnlyBaselineExistsWithMatchingHash()
     {
         var client = new FakeClient { Hash = 1 };
@@ -453,5 +502,32 @@ public class UndoRedoManagerTests
 
         Assert.Equal(0, manager.UndoCount);
         Assert.Equal(0, manager.RedoCount);
+    }
+
+    // -----------------------------------------------------------------------
+    // UndoRedoItem.Clone
+    // -----------------------------------------------------------------------
+
+    [Fact]
+    public void Clone_PreservesCreatedTimestamp()
+    {
+        // Regression: Clone used to overwrite Created with DateTime.Now via the
+        // constructor, so every Undo/Redo round-trip restamped the entry as
+        // "created now" — surprising for any UI/log that displays Created and
+        // breaks chronological ordering of the undo history.
+        var originalCreated = new DateTime(2020, 1, 15, 12, 30, 45, DateTimeKind.Utc);
+        var original = new UndoRedoItem("test", [], 1, null, [], 0, 0)
+        {
+            Created = originalCreated,
+        };
+
+        var clone = UndoRedoItem.Clone(original);
+
+        Assert.NotNull(clone);
+        Assert.Equal(originalCreated, clone.Created);
+        // Sanity: hash and description copied too (so the test exercises Clone
+        // generally, not just the Created field).
+        Assert.Equal(original.Hash, clone.Hash);
+        Assert.Equal(original.Description, clone.Description);
     }
 }

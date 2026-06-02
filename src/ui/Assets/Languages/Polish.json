@@ -1,7 +1,7 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.0.0-beta33",
-  "translatedBy": "Adam Malich - 28.05.2026",
+  "version": "v5.0.0-rc1",
+  "translatedBy": "Adam Malich - 30.05.2026",
   "cultureName": "pl-PL",
   "general": {
     "abort": "Przerwij",
@@ -21,7 +21,7 @@
     "alignment": "Wyrównanie",
     "alignmentDotDotDot": "Wyrównanie...",
     "alignmentX": "Ustaw wyrównanie \"{0}\" dla wybranych linii",
-    "all": "Wszystkie",
+    "all": "Wszystko",
     "allFiles": "Wszystkie pliki",
     "alphaAdjustment": "Dostosowanie alfa",
     "alphaThreshold": "Próg alfa",
@@ -105,6 +105,9 @@
     "column": "Kolumna",
     "consoleLog": "Dziennik konsoli",
     "contentAlignment": "Wyrównanie treści",
+    "continueFindTitle": "Kontynuować wyszukiwanie?",
+    "searchItemNotFoundContinueFromTop": "Nie znaleziono szukanego elementu.\nCzy chcesz zacząć od początku dokumentu i przeprowadzić wyszukiwanie jeszcze raz?",
+    "searchItemNotFoundContinueFromBottom": "Nie znaleziono szukanego elementu.\nCzy chcesz zacząć od końca dokumentu i przeprowadzić wyszukiwanie jeszcze raz?",
     "conversionCancelledByUser": "Konwersja anulowana przez użytkownika",
     "convert": "Konwertuj",
     "converted": "Przekonwertowane",
@@ -761,7 +764,7 @@
       "adjustDurations": "_Dostosuj czasy trwania...",
       "applyDurationLimits": "Zastosuj _limity czasu trwania...",
       "batchConvert": "_Konwersja wsadowa...",
-      "beautifyTimeCodes": "Ulepszanie kodów czasowych...",
+      "beautifyTimeCodes": "Ulepsz kody czasowe...",
       "bridgeGaps": "Zmostkuj o_dstępy...",
       "applyMinGap": "Zastosuj minimalny _odstęp między napisami...",
       "changeCasing": "_Zmień pisownię...",
@@ -841,7 +844,8 @@
       "setLayer": "Ustaw warstwę...",
       "filterLayersForDisplayDotDotDot": "Warstwy filtrów do wyświetlania...",
       "toggleSelectSubtitleWhilePlayingCurrentlyOn": "WŁ/WYŁ wybór napisów podczas odtwarzania (obecnie: WŁ)",
-      "toggleSelectSubtitleWhilePlayingCurrentlyOff": "WŁ/WYŁ wybór napisów podczas odtwarzania (obecnie: WYŁ)"
+      "toggleSelectSubtitleWhilePlayingCurrentlyOff": "WŁ/WYŁ wybór napisów podczas odtwarzania (obecnie: WYŁ)",
+      "selectSubtitleWhilePlaying": "Zaznacz napisy podczas odtwarzania"
     },
     "toolbar": {
       "newHint": "Rozpocznij nowy plik napisów {0}",
@@ -2265,7 +2269,7 @@
       "colorDurationTooLong": "Koloruj czas trwania, jeśli jest zbyt długi",
       "colorTextTooLong": "Koloruj tekst, jeśli jest zbyt długi",
       "colorTextTooWide": "Koloruj tekst, jeśli jest zbyt szeroki (w pikselach)",
-      "colorTextTooManyLines": "Koloruj tekst, jeśli jest więcej niż 2 linie",
+      "colorTextTooManyLines": "Koloruj tekst, jeśli są więcej niż 2 linie",
       "colorOverlap": "Koloruj nakładające się kody czasowe",
       "colorGapTooShort": "Koloruj odstępy, jeśli są zbyt krótkie",
       "errorBackgroundColor": "Kolor tła błędu",
@@ -2315,6 +2319,7 @@
       "showToolbarHelp": "Pokaż ikonę \"Pomoc\"",
       "showToolbarEncoding": "Pokaż kodowanie",
       "showToolbarFrameRate": "Pokaż liczbę klatek na sekundę",
+      "showPluginsMenu": "Pokaż menu \"Wtyczki\"",
       "proxyAddress": "Adres serwera proxy",
       "username": "Nazwa użytkownika",
       "password": "Hasło",
@@ -2380,6 +2385,10 @@
       "waveformRightClickSelectsSubtitle": "Wybierz napisy prawym przyciskiem",
       "waveformPauseOnSingleClick": "Wstrzymaj pojedynczym kliknięciem",
       "waveformDrawStyle": "Styl rysowania przebiegu fali",
+      "waveformExtractAudioFormat": "Format wyodrębnianego audio",
+      "waveformExtractAudioSampleRate": "Częstotliwość próbkowania wyodrębnianego audio",
+      "waveformExtractAudioSampleRateOriginal": "Oryginał (zachowaj źródło)",
+      "waveformExtractAudioBitRate": "Przepływność wyodrębnianego audio (MP3/M4A)",
       "vlcWidRendering": "libVLC - renderowanie Native Window ID",
       "subtitleGridEnterKeyAction": "Siatka napisów – działanie klawisza Enter",
       "subtitleSingleClickAction": "Siatka napisów – działanie pojedynczego kliknięcia",
@@ -2399,6 +2408,7 @@
       "waveformParagraphBackgroundColor": "Kolor tła napisów na przebiegu fali",
       "waveformParagraphSelectedBackgroundColor": "Kolor tła wybranego napisu na przebiegu fali",
       "waveformAllowOverlap": "Zezwalaj na nakładanie się (podczas przenoszenia/zmiany rozmiaru)",
+      "waveformSetVideoPositionOnMoveStartEnd": "Ustaw pozycję wideo podczas przesuwania początku/końca",
       "saveAsBehaviorUseSubtitleVideoFilename": "Użyj nazwy pliku napisów/wideo",
       "saveAsBehaviorUseVideoSubtitleFilename": "Użyj nazwy pliku wideo/napisów",
       "saveAsBehaviorUseVideoFileName": "Użyj nazwy pliku wideo",
@@ -2415,7 +2425,6 @@
       "multipleReplaceShowDotDotDotButtons": "Wielokrotne zastąpienie: pokaż menu kontekstowe przycisków",
       "gridFocusTextboxAfterInsertNew": "Siatka: aktywuj pole tekstowe po wprowadzeniu nowego napisu",
       "textToSpeechPromptMergeContinuationLines": "Zamiana tekstu na mowę: monit o połączenie linii kontynuacyjnych",
-      "speechToTextPromptMergeContinuationLines": "Zamiana mowy na tekst: monit o połączenie linii kontynuacyjnych",
       "useFocusedButtonBackgroundColor": "Użyj koloru tła przycisku w stanie aktywnym",
       "focusedButtonBackgroundColor": "Kolor tła przycisku w stanie aktywnym",
       "forceCrLfOnSave": "Wymuś CR+LF przy zapisywaniu (pliki napisów tekstowych)",
@@ -2720,7 +2729,11 @@
       "moveStartOneFrameBack": "Przesuń początek o jedną klatkę do tyłu",
       "moveStartOneFrameForward": "Przesuń początek o jedną klatkę do przodu",
       "moveEndOneFrameBack": "Przesuń koniec o jedną klatkę do tyłu",
-      "moveEndOneFrameForward": "Przesuń koniec o jedną klatkę do przodu"
+      "moveEndOneFrameForward": "Przesuń koniec o jedną klatkę do przodu",
+      "moveStartOneFrameBackKeepGapPrev": "Przesuń początek o jedną klatkę do tyłu (zachowaj odstęp od poprzedniego, jeśli jest blisko)",
+      "moveStartOneFrameForwardKeepGapPrev": "Przesuń początek o jedną klatkę do przodu (zachowaj odstęp od poprzedniego, jeśli jest blisko)",
+      "moveEndOneFrameBackKeepGapNext": "Przesuń koniec o jedną klatkę do tyłu (zachowaj odstęp do następnego, jeśli jest blisko)",
+      "moveEndOneFrameForwardKeepGapNext": "Przesuń koniec o jedną klatkę do przodu (zachowaj odstęp do następnego, jeśli jest blisko)"
     },
     "wordLists": {
       "title": "Listy słów",
@@ -2738,7 +2751,7 @@
     }
   },
   "plugins": {
-    "title": "Wtyczki",
+    "title": "_Wtyczki",
     "managePlugins": "Zarządzaj wtyczkami...",
     "noPluginsInstalled": "Nie zainstalowano żadnych wtyczek",
     "getPluginsOnline": "Pobierz wtyczki online...",
@@ -3074,12 +3087,12 @@
     "title": "O programie Subtitle Edit",
     "translatedBy": "Przetłumaczył: {0}",
     "licenseText": "Subtitle Edit to darmowe oprogramowanie na licencji MIT.",
-    "descriptionTextBeta": "Subtitle Edit 5 beta to wersja rozwojowa naszej nadchodzącej dużej aktualizacji.\nCiągle udoskonalamy nowe narzędzia i będziemy wdzięczni za pomoc w ich testowaniu.\nProsimy o przesyłanie opinii, abyśmy mogli stworzyć jak najlepszą wersję końcową.\n\nDziękujemy za przynależność do społeczności Subtitle Edit! :)",
+    "descriptionTextBeta": "Subtitle Edit 5 to wersja testowa naszej nadchodzącej dużej aktualizacji.\nWłaśnie dopracowujemy nowe narzędzia i będziemy wdzięczni za pomoc w ich testowaniu.\nProsimy o przesyłanie opinii, abyśmy mogli stworzyć jak najlepszą wersję końcową.\n\nDziękujemy za przynależność do społeczności Subtitle Edit! :)",
     "issueTrackingAndSourceCode": "Śledzenie błędów i kod źródłowy: ",
-    "gitHub": "Github",
+    "gitHub": "GitHub",
     "donate": "Wesprzyj nas: ",
     "payPal": "PayPal",
-    "gitHubSponsor": "Github sponsor",
+    "gitHubSponsor": "GitHub sponsor",
     "or": " lub "
   }
 }

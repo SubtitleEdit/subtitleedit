@@ -1855,6 +1855,68 @@ public static class UiUtil
         return label;
     }
 
+    /// <summary>
+    /// Creates a label bound to a (possibly long) file name or path. The displayed text
+    /// is truncated in the middle with an ellipsis so the start and the file name stay
+    /// visible, the width is capped so a long path can't force a fixed-size window to grow,
+    /// and the full value is shown as a tooltip.
+    /// </summary>
+    internal static Label MakeFilePathLabel(object viewModel, string fullPathPropertyPath, int maxLength = 50, int maxWidth = 400)
+    {
+        var label = new Label
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            MaxWidth = maxWidth,
+            DataContext = viewModel,
+        };
+
+        label.Bind(Label.ContentProperty, new Binding
+        {
+            Path = fullPathPropertyPath,
+            Mode = BindingMode.OneWay,
+            Converter = new MiddleEllipsisConverter(),
+            ConverterParameter = maxLength,
+        });
+
+        label.Bind(ToolTip.TipProperty, new Binding
+        {
+            Path = fullPathPropertyPath,
+            Mode = BindingMode.OneWay,
+            Converter = new NullOrEmptyToNullConverter(),
+        });
+
+        return label;
+    }
+
+    /// <summary>
+    /// Binds a text block (e.g. a link) to a (possibly long) file name or path. The displayed
+    /// text is truncated in the middle with an ellipsis so the start and the file name stay
+    /// visible, the width is capped so a long path can't force a fixed-size window to grow,
+    /// and the full value is shown as a tooltip.
+    /// </summary>
+    internal static TextBlock WithFilePathText(this TextBlock control, object viewModel, string fullPathPropertyPath, int maxLength = 50, int maxWidth = 400)
+    {
+        control.MaxWidth = maxWidth;
+        control.DataContext = viewModel;
+
+        control.Bind(TextBlock.TextProperty, new Binding
+        {
+            Path = fullPathPropertyPath,
+            Mode = BindingMode.OneWay,
+            Converter = new MiddleEllipsisConverter(),
+            ConverterParameter = maxLength,
+        });
+
+        control.Bind(ToolTip.TipProperty, new Binding
+        {
+            Path = fullPathPropertyPath,
+            Mode = BindingMode.OneWay,
+            Converter = new NullOrEmptyToNullConverter(),
+        });
+
+        return control;
+    }
+
     internal static RadioButton MakeRadioButton(string text, object viewModel, string isCheckedPropertyPath)
     {
         return MakeRadioButton(text, viewModel, isCheckedPropertyPath, null);

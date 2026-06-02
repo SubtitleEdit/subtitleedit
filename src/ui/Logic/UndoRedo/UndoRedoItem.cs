@@ -56,6 +56,12 @@ public class UndoRedoItem
             SelectedEncodingDisplayName = item.SelectedEncodingDisplayName,
             SubtitleHeader = item.SubtitleHeader,
             SubtitleFooter = item.SubtitleFooter,
+            // Preserve the original timestamp — every Clone() used to overwrite
+            // Created with DateTime.Now via the constructor, so any UI that
+            // displays Created (or any logic that relies on the chronological
+            // order) would see undo history dates marching forward on each
+            // Undo/Redo round-trip.
+            Created = item.Created,
         };
     }
 }

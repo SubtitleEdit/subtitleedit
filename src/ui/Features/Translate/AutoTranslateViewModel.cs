@@ -1855,7 +1855,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
 
         if (!string.IsNullOrEmpty(Configuration.Settings.Tools.GoogleTranslateLastSourceLanguage) &&
-            Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage.StartsWith(defaultSourceLanguageCode) &&
+            Configuration.Settings.Tools.GoogleTranslateLastSourceLanguage.StartsWith(defaultSourceLanguageCode) &&
             sourceLanguages.Any(p => p.Code == Configuration.Settings.Tools.GoogleTranslateLastSourceLanguage))
         {
             return Configuration.Settings.Tools.GoogleTranslateLastSourceLanguage;

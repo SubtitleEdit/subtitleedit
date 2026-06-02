@@ -48,8 +48,12 @@ public class ContainerLoaderTest : IDisposable
     }
 
     [Fact]
-    public async Task ConvertAsync_MkvWithImageTracks_SkipsAndReportsZeroSuccess()
+    public async Task ConvertAsync_MkvWithImageTracks_OcrsPgsAndSkipsVobSub()
     {
+        // container_image.mkv has both a VobSub (S_VOBSUB) and a PGS (S_HDMV/PGS)
+        // image-subtitle track. Behaviour split:
+        //  - PGS: OCR'd via Tesseract to text → one .srt produced
+        //  - VobSub: warned-and-skipped (seconv has no VobSub OCR path yet)
         var input = Fixtures.Path("container_image.mkv");
         Assert.True(File.Exists(input), $"Fixture missing: {input}");
         var outputFolder = Path.Combine(_tempRoot, "out");
@@ -64,10 +68,10 @@ public class ContainerLoaderTest : IDisposable
             Overwrite = true,
         });
 
-        // No conversion happens (all tracks are image-codec) but no error either.
+        // The PGS track converts; the VobSub track is skipped (one success, no error).
         Assert.True(result.Success, string.Join("; ", result.Errors));
-        Assert.Equal(0, result.SuccessfulFiles);
-        Assert.Empty(Directory.GetFiles(outputFolder, "*.srt"));
+        Assert.Equal(1, result.SuccessfulFiles);
+        Assert.Single(Directory.GetFiles(outputFolder, "*.srt"));
     }
 
     [Fact]

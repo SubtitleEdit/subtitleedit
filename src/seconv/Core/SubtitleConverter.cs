@@ -22,6 +22,19 @@ internal class SubtitleConverter
                 return result;
             }
 
+            // DVD VOB inputs are handled as one batch — the subpicture stream spans every
+            // VTS_xx_*.VOB chunk of a title, so we extract them together. (One output pair
+            // per discovered subtitle stream / language — see ConvertVobBatchAsync.) The
+            // caller's pattern (e.g. "*.VOB") naturally selects all chunks of the title.
+            // GetFiles enumeration order isn't guaranteed and chunk order affects packet
+            // ordering and idx timestamps, so sort up front. DVD spec caps a VTS at 9
+            // chunks, so a plain ordinal sort puts VTS_xx_1..VTS_xx_9 in playback order.
+            if (inputFiles.All(f => f.EndsWith(".vob", StringComparison.OrdinalIgnoreCase)))
+            {
+                inputFiles.Sort(StringComparer.OrdinalIgnoreCase);
+                return await ConvertVobBatchAsync(inputFiles, options, result);
+            }
+
             // --output-filename only makes sense for a single input file (matches old SE)
             if (inputFiles.Count > 1 && !string.IsNullOrEmpty(options.OutputFilename))
             {
@@ -29,11 +42,26 @@ internal class SubtitleConverter
                 return result;
             }
 
+            // Image-to-image preserve path: if the user asks for an image-based target
+            // (.sup, .sub/.idx, BDN-XML, DOST, FCP, D-Cinema, ImagesWithTimeCode, WebVTT
+            // thumbnail) and the input is an image-based source (.sup, .sub+.idx, MKV PGS,
+            // TS DVB-sub), pass the source bitmaps straight through instead of OCR'ing them
+            // to text and re-rasterising at the CLI's default font. Detect once up front so
+            // the per-file loop below sees only text-eligible inputs.
+            var imageTargetHandler = ImageOutputWriter.TryCreateHandler(LibSEIntegration.NormalizeFormatName(options.Format));
+
             var fileIndex = 1;
             foreach (var inputFile in inputFiles)
             {
                 try
                 {
+                    if (imageTargetHandler is not null
+                        && await TryConvertImageToImageAsync(inputFile, options, result, fileIndex))
+                    {
+                        fileIndex++;
+                        continue;
+                    }
+
                     var tracks = ContainerSubtitleLoader.TryLoadTracks(inputFile, options);
                     if (tracks is null)
                     {
@@ -81,13 +109,14 @@ internal class SubtitleConverter
                 }
                 catch (Exception ex)
                 {
+                    var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
                     result.FailedFiles++;
-                    result.Errors.Add($"{Path.GetFileName(inputFile)}: {ex.Message}");
-                    result.Files.Add(new FileConversionResult(inputFile, null, false, ex.Message));
+                    result.Errors.Add($"{Path.GetFileName(inputFile)}: {msg}");
+                    result.Files.Add(new FileConversionResult(inputFile, null, false, msg));
 
                     if (!options.Quiet)
                     {
-                        AnsiConsole.MarkupLine($" [red]error: {ex.Message.EscapeMarkup()}[/]");
+                        AnsiConsole.MarkupLine($" [red]error: {msg.EscapeMarkup()}[/]");
                     }
                 }
 
@@ -96,10 +125,399 @@ internal class SubtitleConverter
         }
         catch (Exception ex)
         {
-            result.Errors.Add($"Conversion failed: {ex.Message}");
+            result.Errors.Add($"Conversion failed: {ErrorMessageFormatter.FormatForUser(ex, options.Verbose)}");
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// Extract the subpicture stream from one or more DVD .VOB files into a single
+    /// .sub + .idx pair. Issue #15 in subtitleedit-cli — VOBs are 1+ GB MPEG-PS
+    /// containers, so the regular text-loading path used to error with
+    /// "input file too large". This bypasses it.
+    /// </summary>
+    private async Task<ConversionResult> ConvertVobBatchAsync(List<string> vobFiles, ConversionOptions options, ConversionResult result)
+    {
+        if (!"vobsub".Equals(options.Format, StringComparison.OrdinalIgnoreCase))
+        {
+            result.Errors.Add(
+                "VOB input is currently only supported with target format 'VobSub'. "
+                + "Re-run with --format VobSub to extract subtitles to .sub + .idx; the GUI is still required for OCR to text.");
+            result.FailedFiles = vobFiles.Count;
+            return result;
+        }
+
+        // Derive output base name: --output-filename wins, otherwise use the first VOB's
+        // stem dropped one underscore-segment (so VTS_01_1.VOB becomes VTS_01.sub for the
+        // typical DVD layout). Falls back to the bare stem when there's no underscore.
+        string outputBase;
+        if (!string.IsNullOrEmpty(options.OutputFilename))
+        {
+            outputBase = options.OutputFilename;
+            // VobSubWriter derives the .idx path as Substring(0, length - 3) + "idx", so
+            // a user-supplied --output-filename without ".sub" (e.g. "movie" or "movie.txt")
+            // would produce a broken companion path like "vieidx" or "movie.tidx". Force
+            // the extension here so both .sub and .idx land next to each other.
+            if (!outputBase.EndsWith(".sub", StringComparison.OrdinalIgnoreCase))
+            {
+                outputBase = Path.ChangeExtension(outputBase, ".sub");
+            }
+        }
+        else
+        {
+            var first = vobFiles[0];
+            var stem = Path.GetFileNameWithoutExtension(first);
+            var lastUnderscore = stem.LastIndexOf('_');
+            if (lastUnderscore > 0 && int.TryParse(stem.AsSpan(lastUnderscore + 1), out _))
+            {
+                stem = stem[..lastUnderscore];
+            }
+            var outputFolder = string.IsNullOrEmpty(options.OutputFolder)
+                ? Path.GetDirectoryName(first) ?? Directory.GetCurrentDirectory()
+                : options.OutputFolder;
+            outputBase = Path.Combine(outputFolder, stem + ".sub");
+        }
+
+        // Overwrite check is best-effort against the base path. Multi-stream DVDs land
+        // additional outputs at <stem>.<n>.sub which we can't predict without parsing —
+        // those existing files will be overwritten silently. Acceptable for now since
+        // multi-stream DVDs are rare and the user opted into the batch by passing all VOBs.
+        if (!options.Overwrite)
+        {
+            var pair = new[] { outputBase, Path.ChangeExtension(outputBase, ".idx") };
+            foreach (var p in pair)
+            {
+                if (File.Exists(p))
+                {
+                    result.Errors.Add($"Output file already exists: {p}. Pass --overwrite to replace it.");
+                    result.FailedFiles = vobFiles.Count;
+                    return result;
+                }
+            }
+        }
+
+        if (!options.Quiet)
+        {
+            var label = vobFiles.Count == 1
+                ? Path.GetFileName(vobFiles[0])
+                : $"{vobFiles.Count} VOB files";
+            AnsiConsole.Markup($"[dim]vob:[/] [cyan]{label.EscapeMarkup()}[/] [dim]->[/] [green]{outputBase.EscapeMarkup()}[/]...");
+        }
+
+        try
+        {
+            // IsPal — there's no single reliable auto-detect from VOB alone (would need
+            // IFO parsing). Default to PAL to match the GUI's batch converter. Future
+            // work: add --vob-pal/--vob-ntsc and/or read VIDEO_TS.IFO.
+            var outputs = VobSubExtractor.Extract(vobFiles, outputBase, isPal: true);
+            result.SuccessfulFiles = vobFiles.Count;
+            // Report the first stream's output path against each input VOB. With multiple
+            // streams there's no clean 1:1 mapping back to inputs, but the OutputFile slot
+            // is meant as a hint for the user — they'll see the full list in the summary.
+            var primaryOutput = outputs[0].Path;
+            foreach (var f in vobFiles)
+            {
+                result.Files.Add(new FileConversionResult(f, primaryOutput, true, null));
+            }
+            if (!options.Quiet)
+            {
+                if (outputs.Count == 1)
+                {
+                    AnsiConsole.MarkupLine($" [green]done ({outputs[0].Written} subtitle(s)).[/]");
+                }
+                else
+                {
+                    var totalWritten = outputs.Sum(o => o.Written);
+                    AnsiConsole.MarkupLine($" [green]done ({totalWritten} subtitle(s) across {outputs.Count} streams).[/]");
+                    foreach (var o in outputs)
+                    {
+                        AnsiConsole.MarkupLine($"  [dim]stream 0x{o.StreamId:X2}:[/] [green]{o.Path.EscapeMarkup()}[/] ({o.Written})");
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
+            result.FailedFiles = vobFiles.Count;
+            result.Errors.Add($"VOB extraction failed: {msg}");
+            foreach (var f in vobFiles)
+            {
+                result.Files.Add(new FileConversionResult(f, null, false, msg));
+            }
+            if (!options.Quiet)
+            {
+                AnsiConsole.MarkupLine($" [red]error: {msg.EscapeMarkup()}[/]");
+            }
+        }
+
+        await Task.CompletedTask;
+        return result;
+    }
+
+    /// <summary>
+    /// Image-to-image conversion: when both source and target are image-based, parse the
+    /// source's bitmaps directly and feed them into the image output handler — no OCR, no
+    /// re-rasterise at Arial 50pt. Supports .sup, .sub+.idx, MKV PGS, and TS DVB-sub on
+    /// input. Returns true if the input was handled (recorded in <paramref name="result"/>),
+    /// false if it should fall through to the OCR / text pipeline.
+    /// </summary>
+    private async Task<bool> TryConvertImageToImageAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex)
+    {
+        var ext = Path.GetExtension(inputFile).ToLowerInvariant();
+
+        if (ext == ".sup")
+        {
+            return await PassThroughSingleStreamAsync(inputFile, options, result, fileIndex,
+                () => BitmapSubtitleLoader.LoadBluRaySup(inputFile));
+        }
+
+        if (ext == ".sub")
+        {
+            // Treat .sub as VobSub input only when an .idx companion exists — otherwise
+            // (e.g. a text MicroDVD .sub) leave it for the text loader to detect via IsMine.
+            var idxPath = Path.ChangeExtension(inputFile, ".idx");
+            if (File.Exists(idxPath))
+            {
+                // IsPal: default to PAL to match VobSubExtractor. The .idx "size:" field
+                // could disambiguate per-file, but a wrong guess only affects timing scale,
+                // not bitmap content.
+                return await PassThroughSingleStreamAsync(inputFile, options, result, fileIndex,
+                    () => BitmapSubtitleLoader.LoadVobSub(inputFile, idxPath, isPal: true));
+            }
+            return false;
+        }
+
+        if (ext is ".mkv" or ".mks")
+        {
+            return await PassThroughMatroskaPgsAsync(inputFile, options, result, fileIndex);
+        }
+
+        if (ext is ".ts" or ".m2ts" or ".mts")
+        {
+            return await PassThroughTransportStreamDvbAsync(inputFile, options, result, fileIndex);
+        }
+
+        return false;
+    }
+
+    private async Task<bool> PassThroughSingleStreamAsync(
+        string inputFile,
+        ConversionOptions options,
+        ConversionResult result,
+        int fileIndex,
+        Func<IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem>> load)
+    {
+        var outputFile = ResolveOutputFileName(inputFile, options);
+        if (!options.Quiet)
+        {
+            AnsiConsole.Markup($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile).EscapeMarkup()}[/] [dim](img→img)→[/] [green]{outputFile.EscapeMarkup()}[/]...");
+        }
+
+        IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem>? items = null;
+        try
+        {
+            items = load();
+            WritePreservedBitmaps(items, outputFile, options);
+            result.SuccessfulFiles++;
+            result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
+            if (!options.Quiet)
+            {
+                AnsiConsole.MarkupLine($" [green]done ({items.Count} bitmap(s)).[/]");
+            }
+        }
+        catch (Exception ex)
+        {
+            var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
+            result.FailedFiles++;
+            result.Errors.Add($"{Path.GetFileName(inputFile)}: {msg}");
+            result.Files.Add(new FileConversionResult(inputFile, null, false, msg));
+            if (!options.Quiet)
+            {
+                AnsiConsole.MarkupLine($" [red]error: {msg.EscapeMarkup()}[/]");
+            }
+        }
+        finally
+        {
+            if (items is not null)
+            {
+                foreach (var item in items)
+                {
+                    item.Dispose();
+                }
+            }
+        }
+
+        await Task.CompletedTask;
+        return true;
+    }
+
+    private async Task<bool> PassThroughMatroskaPgsAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex)
+    {
+        using var matroska = new Nikse.SubtitleEdit.Core.ContainerFormats.Matroska.MatroskaFile(inputFile);
+        if (!matroska.IsValid)
+        {
+            // Not really an MKV — let the regular container loader / text loader try.
+            return false;
+        }
+
+        var pgsTracks = matroska.GetTracks(true)
+            .Where(t => t.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
+            .Where(t => !options.ForcedOnly || t.IsForced)
+            .Where(t => options.TrackNumbers.Count == 0 || options.TrackNumbers.Contains(t.TrackNumber))
+            .ToList();
+
+        if (pgsTracks.Count == 0)
+        {
+            // MKV has no PGS tracks usable for image-to-image; fall through so the regular
+            // container loader can handle text tracks / OCR-friendly tracks.
+            return false;
+        }
+
+        if (pgsTracks.Count > 1 && !string.IsNullOrEmpty(options.OutputFilename))
+        {
+            throw new InvalidOperationException(
+                "--output-filename can only target a single track. Use --track-number to select one.");
+        }
+
+        foreach (var track in pgsTracks)
+        {
+            var outputFile = ResolveOutputFileName(
+                inputFile, options, ContainerSubtitleLoader.SanitizeLang(track.Language), track.TrackNumber);
+
+            if (!options.Quiet)
+            {
+                var trackLabel = $"#{track.TrackNumber} ";
+                AnsiConsole.Markup($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile).EscapeMarkup()}[/] [yellow]{trackLabel}[/][dim](PGS img→img)→[/] [green]{outputFile.EscapeMarkup()}[/]...");
+            }
+
+            IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem>? items = null;
+            try
+            {
+                items = BitmapSubtitleLoader.LoadMatroskaPgs(matroska, track);
+                WritePreservedBitmaps(items, outputFile, options);
+                result.SuccessfulFiles++;
+                result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
+                if (!options.Quiet)
+                {
+                    AnsiConsole.MarkupLine($" [green]done ({items.Count} bitmap(s)).[/]");
+                }
+            }
+            catch (Exception ex)
+            {
+                var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
+                result.FailedFiles++;
+                result.Errors.Add($"{Path.GetFileName(inputFile)} track #{track.TrackNumber}: {msg}");
+                result.Files.Add(new FileConversionResult(inputFile, null, false, msg));
+                if (!options.Quiet)
+                {
+                    AnsiConsole.MarkupLine($" [red]error: {msg.EscapeMarkup()}[/]");
+                }
+            }
+            finally
+            {
+                if (items is not null)
+                {
+                    foreach (var item in items)
+                    {
+                        item.Dispose();
+                    }
+                }
+            }
+        }
+
+        await Task.CompletedTask;
+        return true;
+    }
+
+    private async Task<bool> PassThroughTransportStreamDvbAsync(string inputFile, ConversionOptions options, ConversionResult result, int fileIndex)
+    {
+        // --teletext-only means "skip DVB-sub". The regular container path
+        // (ContainerSubtitleLoader.LoadTransportStream) honors this by gating its DVB-sub
+        // load on !options.TeletextOnly; this preserve path has to do the same or the
+        // flag is bypassed whenever the target is an image format.
+        if (options.TeletextOnly)
+        {
+            await Task.CompletedTask;
+            return false;
+        }
+
+        var streams = BitmapSubtitleLoader.LoadTransportStreamDvbSub(inputFile);
+        if (streams.Count == 0)
+        {
+            // No DVB-sub PIDs found; let the regular container loader handle teletext / etc.
+            return false;
+        }
+
+        if (streams.Count > 1 && !string.IsNullOrEmpty(options.OutputFilename))
+        {
+            throw new InvalidOperationException(
+                "--output-filename can only target a single DVB-sub PID. Found "
+                + $"{streams.Count} PIDs in the transport stream.");
+        }
+
+        foreach (var (items, pid) in streams)
+        {
+            // PID is the natural per-stream identifier. ResolveOutputFileName only embeds
+            // languageSuffix into the filename stem (trackNumber is only used as the
+            // de-duplication fallback for overwrite collisions), so pass the PID *as* the
+            // language suffix to keep each PID's output stably named — otherwise multiple
+            // PIDs would collide and only differ by an opaque "_2", "_3" rotation.
+            var outputFile = ResolveOutputFileName(inputFile, options, languageSuffix: $"dvb_pid{pid}", trackNumber: pid);
+
+            if (!options.Quiet)
+            {
+                AnsiConsole.Markup($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile).EscapeMarkup()}[/] [yellow]PID {pid} [/][dim](DVB img→img)→[/] [green]{outputFile.EscapeMarkup()}[/]...");
+            }
+
+            try
+            {
+                WritePreservedBitmaps(items, outputFile, options);
+                result.SuccessfulFiles++;
+                result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
+                if (!options.Quiet)
+                {
+                    AnsiConsole.MarkupLine($" [green]done ({items.Count} bitmap(s)).[/]");
+                }
+            }
+            catch (Exception ex)
+            {
+                var msg = ErrorMessageFormatter.FormatForUser(ex, options.Verbose);
+                result.FailedFiles++;
+                result.Errors.Add($"{Path.GetFileName(inputFile)} PID {pid}: {msg}");
+                result.Files.Add(new FileConversionResult(inputFile, null, false, msg));
+                if (!options.Quiet)
+                {
+                    AnsiConsole.MarkupLine($" [red]error: {msg.EscapeMarkup()}[/]");
+                }
+            }
+            finally
+            {
+                foreach (var item in items)
+                {
+                    item.Dispose();
+                }
+            }
+        }
+
+        await Task.CompletedTask;
+        return true;
+    }
+
+    private static void WritePreservedBitmaps(
+        IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem> items,
+        string outputFile,
+        ConversionOptions options)
+    {
+        var handler = ImageOutputWriter.TryCreateHandler(LibSEIntegration.NormalizeFormatName(options.Format))
+            ?? throw new InvalidOperationException($"No image handler for format '{options.Format}'");
+        var outputDir = Path.GetDirectoryName(outputFile);
+        if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+        {
+            Directory.CreateDirectory(outputDir);
+        }
+        ImageOutputWriter.WritePreservedBitmaps(items, outputFile, handler, options);
     }
 
     private List<string> GetInputFiles(ConversionOptions options)
@@ -253,7 +671,11 @@ internal class SubtitleConverter
 
         if (options.Operations.Count > 0)
         {
-            LibSEIntegration.ApplyOperations(subtitle, options.Operations, options.FixCommonErrorsRules);
+            LibSEIntegration.ApplyOperations(
+                subtitle,
+                options.Operations,
+                options.FixCommonErrorsRules,
+                options.FixCommonErrorsExplicitlyNamedRules);
         }
 
         if (options.BridgeGapsMaxMs.HasValue && options.BridgeGapsMaxMs.Value > 0)
@@ -375,6 +797,14 @@ internal record class ConversionOptions
     /// Resolve via <see cref="FixCommonErrorsRunner.ResolveRuleIds"/>.
     /// </summary>
     public IReadOnlyList<string> FixCommonErrorsRules { get; init; } = [];
+
+    /// <summary>
+    /// Rules the user named by hand in <c>--FixCommonErrorsRules</c>. Used to bypass
+    /// language gating for explicitly-requested rules. Populate via
+    /// <see cref="FixCommonErrorsRunner.ParseExplicitlyNamedRules"/>. Empty means
+    /// "implicit all-rules pass" (gates stay active).
+    /// </summary>
+    public IReadOnlyList<string> FixCommonErrorsExplicitlyNamedRules { get; init; } = [];
     public int? DeleteFirst { get; init; }
     public int? DeleteLast { get; init; }
     public string? DeleteContains { get; init; }
