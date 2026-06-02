@@ -789,13 +789,15 @@ public class BurnInWindow : Window
     private static Grid MakeProgressView(BurnInViewModel vm)
     {
         var progressBar = UiUtil.MakeProgressBar();
-        progressBar.Margin = new Thickness(0, 0, 5, 0);
+        progressBar.Margin = new Thickness(0, 4, 5, 0);
+        progressBar.VerticalAlignment = VerticalAlignment.Top;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
         progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
 
         var statusText = new TextBlock
         {
-            Margin = new Thickness(5, 20, 0, 0),
+            Margin = new Thickness(5, 18, 0, 0),
+            VerticalAlignment = VerticalAlignment.Top,
         };
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
         statusText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsGenerating)));
