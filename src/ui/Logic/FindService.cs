@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Logic.Config;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -402,6 +403,7 @@ public partial class FindService : IFindService
 
     private (bool replaced, string newText, int replacementCount) ReplaceWithRegex(string line, string searchText, string replaceText, int startIndex, int maxReplacements)
     {
+        replaceText = RegexUtils.FixNewLine(replaceText);
         try
         {
             var regex = new Regex(searchText);
