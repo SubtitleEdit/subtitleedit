@@ -2581,7 +2581,6 @@ public partial class OcrViewModel : ObservableObject
                         if (runOnceChar != null)
                         {
                             matches.Add(new NOcrChar { Text = runOnceChar.Text, ImageSplitterItem = splitterItem });
-                            _runOnceChars.Clear();
                             index++;
                             continue;
                         }
@@ -2996,7 +2995,6 @@ public partial class OcrViewModel : ObservableObject
                         if (runOnceChar != null)
                         {
                             matches.Add(new BinaryOcrMatcher.CompareMatch(runOnceChar.Text, false, 0, null));
-                            _runOnceChars.Clear();
                             index++;
                             continue;
                         }
