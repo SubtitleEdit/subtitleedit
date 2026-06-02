@@ -1,8 +1,11 @@
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System.Collections;
 
 namespace Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 
@@ -156,6 +159,17 @@ public class SplitBreakLongLinesWindow : Window
                 },
             },
         };
+
+        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
+            {
+                var target = e.Key == Key.Home ? items[0] : items[^1];
+                dataGrid.SelectedItem = target;
+                dataGrid.ScrollIntoView(target, null);
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
 
         grid.Add(labelFixesAvailable, 0);
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);

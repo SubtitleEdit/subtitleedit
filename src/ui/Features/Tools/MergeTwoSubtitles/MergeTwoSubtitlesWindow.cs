@@ -1,8 +1,11 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using System.Collections;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -169,6 +172,16 @@ public class MergeTwoSubtitlesWindow : Window
         };
         dataGrid.Bind(DataGrid.ItemsSourceProperty, new Binding(itemsPath) { Source = vm });
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(selectedItemPath) { Source = vm });
+        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
+            {
+                var target = e.Key == Key.Home ? items[0] : items[^1];
+                dataGrid.SelectedItem = target;
+                dataGrid.ScrollIntoView(target, null);
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
 
         var headerPanel = new StackPanel
         {

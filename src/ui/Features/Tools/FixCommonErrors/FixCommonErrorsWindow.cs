@@ -8,6 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.Media;
+using System.Collections;
 using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
@@ -128,6 +129,13 @@ public class FixCommonErrorsWindow : Window
             if (e.Key == Key.Space && rulesGrid.SelectedItem is FixRuleDisplayItem selectedItem)
             {
                 selectedItem.IsSelected = !selectedItem.IsSelected;
+                e.Handled = true;
+            }
+            else if (e.Key is Key.Home or Key.End && rulesGrid.ItemsSource is IList items && items.Count > 0)
+            {
+                var target = e.Key == Key.Home ? items[0] : items[^1];
+                rulesGrid.SelectedItem = target;
+                rulesGrid.ScrollIntoView(target, null);
                 e.Handled = true;
             }
         }, RoutingStrategies.Tunnel);
@@ -341,6 +349,13 @@ public class FixCommonErrorsWindow : Window
                 selectedItem.IsSelected = !selectedItem.IsSelected;
                 e.Handled = true;
             }
+            else if (e.Key is Key.Home or Key.End && dataGridFixes.ItemsSource is IList items && items.Count > 0)
+            {
+                var target = e.Key == Key.Home ? items[0] : items[^1];
+                dataGridFixes.SelectedItem = target;
+                dataGridFixes.ScrollIntoView(target, null);
+                e.Handled = true;
+            }
         }, RoutingStrategies.Tunnel);
         dataGridFixes.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => dataGridFixes.Focus());
 
@@ -460,6 +475,16 @@ public class FixCommonErrorsWindow : Window
         };
         dataGridSubtitles.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedParagraph)));
         _vm.GridSubtitles = dataGridSubtitles;
+        dataGridSubtitles.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key is Key.Home or Key.End && dataGridSubtitles.ItemsSource is IList items && items.Count > 0)
+            {
+                var target = e.Key == Key.Home ? items[0] : items[^1];
+                dataGridSubtitles.SelectedItem = target;
+                dataGridSubtitles.ScrollIntoView(target, null);
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
 
         var gridCurrentSubtbtitle = MakeStep2EditPanel();
 

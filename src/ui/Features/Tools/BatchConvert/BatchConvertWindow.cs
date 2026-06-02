@@ -8,6 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.Media;
+using System.Collections;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -188,6 +189,16 @@ public class BatchConvertWindow : Window
             },
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedBatchItem)) { Source = vm });
+        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
+            {
+                var target = e.Key == Key.Home ? items[0] : items[^1];
+                dataGrid.SelectedItem = target;
+                dataGrid.ScrollIntoView(target, null);
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
 
         var comboBoxSubtitleFormat = UiUtil.MakeComboBox(vm.TargetFormats, vm, nameof(vm.SelectedTargetFormat));
         comboBoxSubtitleFormat.SelectionChanged += (_, _) => vm.ComboBoxSubtitleFormatChanged();
@@ -398,6 +409,13 @@ public class BatchConvertWindow : Window
             if (e.Key == Key.Space && dataGrid.SelectedItem is BatchConvertFunction selectedItem)
             {
                 selectedItem.IsSelected = !selectedItem.IsSelected;
+                e.Handled = true;
+            }
+            else if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
+            {
+                var target = e.Key == Key.Home ? items[0] : items[^1];
+                dataGrid.SelectedItem = target;
+                dataGrid.ScrollIntoView(target, null);
                 e.Handled = true;
             }
         }, RoutingStrategies.Tunnel);

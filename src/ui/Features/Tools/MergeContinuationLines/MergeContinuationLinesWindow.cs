@@ -8,6 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.Media;
+using System.Collections;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -199,6 +200,13 @@ public class MergeContinuationLinesWindow : Window
             if (e.Key == Key.Space && dataGrid.SelectedItem is MergeContinuationLinesCandidate selectedItem)
             {
                 selectedItem.IsSelected = !selectedItem.IsSelected;
+                e.Handled = true;
+            }
+            else if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
+            {
+                var target = e.Key == Key.Home ? items[0] : items[^1];
+                dataGrid.SelectedItem = target;
+                dataGrid.ScrollIntoView(target, null);
                 e.Handled = true;
             }
         }, RoutingStrategies.Tunnel);
