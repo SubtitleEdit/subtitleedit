@@ -919,10 +919,11 @@ public class OcrWindow : Window
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.Width = double.NaN;
         progressBar.HorizontalAlignment = HorizontalAlignment.Stretch;
+        progressBar.VerticalAlignment = VerticalAlignment.Top;
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
         progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm });
 
-        var statusText = new TextBlock().WithMarginTop(22);
+        var statusText = new TextBlock().WithMarginTop(14).WithAlignmentTop();
         statusText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.ProgressText)));
         statusText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm });
 
