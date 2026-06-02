@@ -9420,7 +9420,8 @@ public partial class MainViewModel :
                 selectedText = EditTextBox.SelectedText;
             }
 
-            if (string.IsNullOrEmpty(selectedText) && !string.IsNullOrEmpty(_findService.SearchText))
+            if ((string.IsNullOrEmpty(selectedText) || selectedText == _findService.CurrentTextFound)
+                && !string.IsNullOrEmpty(_findService.SearchText))
             {
                 selectedText = _findService.SearchText;
             }
@@ -9739,7 +9740,8 @@ public partial class MainViewModel :
                 selectedText = EditTextBox.SelectedText;
             }
 
-            if (string.IsNullOrEmpty(selectedText) && !string.IsNullOrEmpty(_findService.SearchText))
+            if ((string.IsNullOrEmpty(selectedText) || selectedText == _findService.CurrentTextFound)
+                && !string.IsNullOrEmpty(_findService.SearchText))
             {
                 selectedText = _findService.SearchText;
             }
