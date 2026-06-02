@@ -621,9 +621,10 @@ public class SsaStylesWindow : Window
         {
             [!Image.SourceProperty] = new Binding(nameof(vm.ImagePreview)),
             DataContext = vm,
-            HorizontalAlignment = HorizontalAlignment.Left,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Top,
-            Stretch = Stretch.None, // Prevents stretching of the image
+            Stretch = Stretch.Uniform, // Scale the preview frame to fit while keeping aspect ratio
+            MinHeight = 240,
         };
 
         grid.Add(label, 0);

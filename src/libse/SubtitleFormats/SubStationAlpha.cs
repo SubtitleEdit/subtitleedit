@@ -555,7 +555,10 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             }
                             else if (i == indexStyle)
                             {
-                                style = splitLine[i];
+                                // A leading '*' is the old SSA "marked"/"this is the used style"
+                                // convention (e.g. "*Default"); strip it so the name matches the
+                                // styles defined in [V4 Styles]. (#11342)
+                                style = splitLine[i].Trim().TrimStart('*');
                             }
                             else if (i == indexMarginL)
                             {
