@@ -1,7 +1,5 @@
 Subtitle Edit Changelog
 
-Subtitle Edit Changelog
-
 4.0.16 (2nd June 2026)
 * IMPROVED:
    * Update Portuguese translation - thx Hugo Carvalho, Blackspirits
