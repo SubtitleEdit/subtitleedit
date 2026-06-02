@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.AutoTranslate;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -32,6 +33,12 @@ public class SeAutoTranslate
     public string MicrosoftTranslatorCategory { get; set; }
     public decimal RequestMaxBytes { get; set; }
     public decimal RequestDelaySeconds { get; set; }
+
+    /// <summary>
+    /// Line-merge strategy per translation engine, keyed by engine name.
+    /// A missing entry means <see cref="TranslateStrategy.Default"/>.
+    /// </summary>
+    public Dictionary<string, string> EngineStrategies { get; set; } = new();
     public int CopyPasteMaxBlockSize { get; set; }
     public string CopyPasteLineSeparator { get; set; }
     public string OpenRouterUrl { get; set; }
@@ -182,5 +189,12 @@ public class SeAutoTranslate
         CrispAsrModel = string.Empty;
         LaraApiId = string.Empty;
         LaraApiSecret = string.Empty;
+    }
+
+    public bool IsTranslateEachLineSeparately(string engineName)
+    {
+        return !string.IsNullOrEmpty(engineName) &&
+               EngineStrategies.TryGetValue(engineName, out var strategy) &&
+               strategy == nameof(TranslateStrategy.TranslateEachLineSeparately);
     }
 }

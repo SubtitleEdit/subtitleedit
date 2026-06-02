@@ -1216,8 +1216,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                 start = Rows.IndexOf(selectedItem);
             }
 
-            var forceSingleLineMode = Configuration.Settings.Tools.AutoTranslateStrategy ==
-                                      TranslateStrategy.TranslateEachLineSeparately.ToString() ||
+            var forceSingleLineMode = Se.Settings.AutoTranslate.IsTranslateEachLineSeparately(translator.Name) ||
                                       translator.Name ==
                                       NoLanguageLeftBehindApi.StaticName || // NLLB seems to miss some text...
                                       translator.Name == NoLanguageLeftBehindServe.StaticName ||

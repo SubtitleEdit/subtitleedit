@@ -97,6 +97,10 @@ public partial class TranslateSettingsViewModel : ObservableObject
 
         Se.Settings.AutoTranslate.RequestDelaySeconds = ServerDelaySeconds ?? 0;
         Se.Settings.AutoTranslate.RequestMaxBytes = MaxBytesRequest ?? 0;
+        Se.Settings.AutoTranslate.EngineStrategies[AutoTranslator.Name] =
+            SelectedMergeOptions == Se.Language.Translate.TranslateEachLineSeparately
+                ? nameof(TranslateStrategy.TranslateEachLineSeparately)
+                : nameof(TranslateStrategy.Default);
         var translate = AutoTranslator as IAutoTranslator;
         if (translate != null)
         {
@@ -171,7 +175,9 @@ public partial class TranslateSettingsViewModel : ObservableObject
             Se.Language.General.Default,
             Se.Language.Translate.TranslateEachLineSeparately,
         };
-        SelectedMergeOptions = MergeOptions[0];
+        SelectedMergeOptions = Se.Settings.AutoTranslate.IsTranslateEachLineSeparately(AutoTranslator.Name)
+            ? MergeOptions[1]
+            : MergeOptions[0];
 
         ServerDelaySeconds = Se.Settings.AutoTranslate.RequestDelaySeconds;
         MaxBytesRequest = Se.Settings.AutoTranslate.RequestMaxBytes;
