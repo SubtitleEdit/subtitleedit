@@ -47,7 +47,7 @@ public partial class FindService : IFindService
             return -1;
         }
 
-        SearchText = searchText;
+        SearchText = searchText.Replace("\r\n", "\\n").Replace("\n", "\\n").Replace("\r", "\\n");
         _textLines = textLines;
         AddToSearchHistory(searchText);
 
@@ -98,7 +98,7 @@ public partial class FindService : IFindService
             return -1;
         }
 
-        SearchText = searchText;
+        SearchText = searchText.Replace("\r\n", "\\n").Replace("\n", "\\n").Replace("\r", "\\n");
         _textLines = textLines;
         AddToSearchHistory(searchText);
 
@@ -183,7 +183,7 @@ public partial class FindService : IFindService
             return -1;
         }
 
-        SearchText = searchText;
+        SearchText = searchText.Replace("\r\n", "\\n").Replace("\n", "\\n").Replace("\r", "\\n");
         _textLines = textLines;
         AddToSearchHistory(searchText);
 
