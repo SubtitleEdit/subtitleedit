@@ -94,6 +94,27 @@ public static class MultipleReplaceLoader
             return 0;
         }
 
+        // Pre-compile regex rules once (not per-paragraph). Use RegexOptions.Multiline so
+        // ^/$ anchors match at every line boundary inside a multi-line subtitle, matching
+        // the UI's behaviour (MultipleReplaceViewModel compiles with Compiled | Multiline).
+        // A rule with an invalid pattern is dropped here so it's skipped entirely.
+        var compiledRegex = new Dictionary<Rule, Regex>();
+        foreach (var rule in rules)
+        {
+            if (!string.Equals(rule.SearchType, SearchTypeRegularExpression, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+            try
+            {
+                compiledRegex[rule] = new Regex(rule.FindWhat, RegexOptions.Compiled | RegexOptions.Multiline);
+            }
+            catch
+            {
+                // Bad regex — leave it out so it's skipped during replacement.
+            }
+        }
+
         var modified = 0;
         foreach (var paragraph in subtitle.Paragraphs)
         {
@@ -106,14 +127,9 @@ public static class MultipleReplaceLoader
                 }
                 else if (string.Equals(rule.SearchType, SearchTypeRegularExpression, StringComparison.OrdinalIgnoreCase))
                 {
-                    try
+                    if (compiledRegex.TryGetValue(rule, out var regex))
                     {
-                        var regex = new Regex(rule.FindWhat);
                         newText = RegexUtils.ReplaceNewLineSafe(regex, newText, rule.ReplaceWith);
-                    }
-                    catch
-                    {
-                        // Bad regex — skip this rule for this paragraph
                     }
                 }
                 else // Normal — case-insensitive whole-string replace

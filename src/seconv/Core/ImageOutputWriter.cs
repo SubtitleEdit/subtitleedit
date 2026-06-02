@@ -59,6 +59,7 @@ internal static class ImageOutputWriter
         var firstParam = BuildParameter(subtitle.Paragraphs[0], 0, screenWidth, screenHeight, options);
         firstParam.Bitmap = ImageRenderer.GenerateBitmap(firstParam);
         handler.WriteHeader(filePath, firstParam);
+        firstParam.Bitmap?.Dispose();
 
         for (var i = 0; i < subtitle.Paragraphs.Count; i++)
         {
