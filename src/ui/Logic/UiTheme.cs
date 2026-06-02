@@ -119,6 +119,18 @@ public static class UiTheme
     public const double MinScale = 0.5;
     public const double MaxScale = 2.0;
 
+    /// <summary>
+    /// Returns the logical content of a window, unwrapping the
+    /// <see cref="LayoutTransformControl"/> that <see cref="ApplyScaleToWindow"/>
+    /// uses to host scaled content.
+    /// </summary>
+    public static Control? GetUnscaledContent(Window window)
+    {
+        return window.Content is LayoutTransformControl ltc
+            ? ltc.Child as Control
+            : window.Content as Control;
+    }
+
     public static void ApplyScaleToWindow(Window window)
     {
         var factor = Se.Settings.Appearance.LayoutScale;
