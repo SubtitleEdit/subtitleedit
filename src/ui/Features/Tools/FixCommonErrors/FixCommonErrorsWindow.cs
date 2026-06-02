@@ -148,14 +148,14 @@ public class FixCommonErrorsWindow : Window
             .WithIconLeft("fa-solid fa-arrow-left")
             .BindIsVisible(vm, nameof(vm.Step2IsVisible));
 
-        var buttonApplyFixes = UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.ApplyFixesAndClose, vm.OkCommand)
+        var buttonDone = UiUtil.MakeButton(Se.Language.General.Done, vm.OkCommand)
             .BindIsVisible(vm, nameof(vm.Step2IsVisible));
-        buttonApplyFixes.IsDefault = true;
+        buttonDone.IsDefault = true;
 
         var buttonPanelRight = UiUtil.MakeButtonBar(
             buttonBackToFixList,
             buttonToApplyFixes,
-            buttonApplyFixes,
+            buttonDone,
             UiUtil.MakeButtonCancel(vm.CancelCommand)
         );
 
@@ -204,6 +204,15 @@ public class FixCommonErrorsWindow : Window
         grid.Children.Add(buttonPanelRules);
         Grid.SetRow(buttonPanelRules, 2);
         Grid.SetColumn(buttonPanelRules, 0);
+
+        var labelFixesApplied = UiUtil.MakeTextBlock(string.Empty);
+        labelFixesApplied.Bind(TextBlock.TextProperty, new Binding(nameof(vm.FixesAppliedText)));
+        labelFixesApplied.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
+        labelFixesApplied.HorizontalAlignment = HorizontalAlignment.Left;
+        labelFixesApplied.VerticalAlignment = VerticalAlignment.Center;
+        grid.Children.Add(labelFixesApplied);
+        Grid.SetRow(labelFixesApplied, 2);
+        Grid.SetColumn(labelFixesApplied, 0);
 
         grid.Children.Add(buttonPanelRight);
         Grid.SetRow(buttonPanelRight, 2);
