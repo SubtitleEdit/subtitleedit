@@ -281,6 +281,13 @@
   
   <ItemGroup>
     <ProjectReference Include="..\libse\LibSE.csproj" />
+    <!-- Build-order dependency only: ensures UpdateAssemblyInfo.exe exists before the
+         InvokeBuildHelpers pre-build target runs. Not linked into the executable. -->
+    <ProjectReference Include="..\UpdateAssemblyInfo\UpdateAssemblyInfo.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>false</Private>
+      <UndefineProperties>TargetFramework;RuntimeIdentifier;Platform;PlatformTarget</UndefineProperties>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <HunspellAssemblies Include="Hunspellx64.dll">

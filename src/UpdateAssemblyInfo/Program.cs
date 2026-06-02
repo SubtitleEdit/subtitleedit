@@ -268,9 +268,14 @@ namespace UpdateAssemblyInfo
             {
                 if (!LongGitTagRegex.IsMatch(clrTags.Result) && !ShortGitTagRegex.IsMatch(clrTags.Result))
                 {
-                    throw new FormatException("Invalid Git version tag: '{clrTags.Result}' (major.minor.maintenance-build expected)");
+                    // 'main' has moved on to a version scheme this (SE4 legacy) tool doesn't recognize
+                    // (e.g. SE5 'v5.0.0-rc1'); treat as no main version info instead of failing the build.
+                    latestRepositoryVersion = new VersionInfo();
                 }
-                latestRepositoryVersion = new VersionInfo(clrTags.Result, clrHash.Result);
+                else
+                {
+                    latestRepositoryVersion = new VersionInfo(clrTags.Result, clrHash.Result);
+                }
             }
             else
             {
