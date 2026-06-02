@@ -87,11 +87,14 @@ internal sealed class TesseractOcrEngine : IOcrEngine
             };
             using var proc = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start tesseract process.");
+            // Drain stderr concurrently — Tesseract emits warnings to stderr, and reading
+            // stdout to completion while stderr fills the pipe buffer would deadlock.
+            var stderrTask = proc.StandardError.ReadToEndAsync();
             var stdout = proc.StandardOutput.ReadToEnd();
             proc.WaitForExit();
             if (proc.ExitCode != 0)
             {
-                var err = proc.StandardError.ReadToEnd();
+                var err = stderrTask.GetAwaiter().GetResult();
                 throw new InvalidOperationException($"Tesseract exited with code {proc.ExitCode}: {err}");
             }
             return stdout.Trim();

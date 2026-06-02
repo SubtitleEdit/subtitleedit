@@ -80,11 +80,14 @@ internal sealed class PaddleOcrEngine : IOcrEngine
             };
             using var proc = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start paddleocr process.");
+            // Drain stderr concurrently — paddleocr is chatty on stderr, and reading stdout
+            // to completion while stderr fills the pipe buffer would deadlock.
+            var stderrTask = proc.StandardError.ReadToEndAsync();
             var stdout = proc.StandardOutput.ReadToEnd();
             proc.WaitForExit();
             if (proc.ExitCode != 0)
             {
-                var err = proc.StandardError.ReadToEnd();
+                var err = stderrTask.GetAwaiter().GetResult();
                 throw new InvalidOperationException($"paddleocr exited with code {proc.ExitCode}: {err}");
             }
             return ParseStdout(stdout);

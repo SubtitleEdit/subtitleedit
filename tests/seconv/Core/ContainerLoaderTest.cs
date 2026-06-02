@@ -54,6 +54,14 @@ public class ContainerLoaderTest : IDisposable
         // image-subtitle track. Behaviour split:
         //  - PGS: OCR'd via Tesseract to text → one .srt produced
         //  - VobSub: warned-and-skipped (seconv has no VobSub OCR path yet)
+        //
+        // PGS OCR shells out to the Tesseract binary, which seconv does not bundle.
+        // Skip (don't fail) when it isn't installed so the suite stays green on
+        // machines/CI without Tesseract on PATH.
+        Assert.SkipWhen(
+            TesseractOcrEngine.Detect() is null,
+            "Tesseract is not installed on PATH; PGS OCR cannot run.");
+
         var input = Fixtures.Path("container_image.mkv");
         Assert.True(File.Exists(input), $"Fixture missing: {input}");
         var outputFolder = Path.Combine(_tempRoot, "out");
