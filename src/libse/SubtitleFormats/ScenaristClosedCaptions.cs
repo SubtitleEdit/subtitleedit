@@ -966,8 +966,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
+            // Row-code first byte: low 7 bits in 0x10-0x17 (parity-stripped 10-17), plus the
+            // odd-parity forms that differ (11->91, 12->92, 14->94, 17->97).
             var firstByte = code.Substring(0, 2);
-            var isRowCode = firstByte == "10" || firstByte == "13" || firstByte == "15" || firstByte == "16" ||
+            var isRowCode = firstByte == "10" || firstByte == "11" || firstByte == "12" || firstByte == "13" ||
+                            firstByte == "14" || firstByte == "15" || firstByte == "16" || firstByte == "17" ||
                             firstByte == "91" || firstByte == "92" || firstByte == "94" || firstByte == "97";
             var isPositionByte = "4567cdef".IndexOf(code[2]) >= 0;
             return isRowCode && isPositionByte;

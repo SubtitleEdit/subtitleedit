@@ -82,4 +82,19 @@ public class ScenaristClosedCaptionsTest
         Assert.DoesNotContain("amigosN", subtitle.Paragraphs[0].Text);
         Assert.DoesNotContain(":n", subtitle.Paragraphs[0].Text);
     }
+
+    [Fact]
+    public void KeepsLongCaptionWithParityStrippedPositioningCode()
+    {
+        // PAC row codes also appear parity-stripped (11/12/14/17, e.g. 1140) in some files. Such a
+        // row must be recognized as positioned caption text and kept even when its single decoded
+        // line exceeds 32 characters - not mistaken for a raw 608 data row and dropped.
+        var aaaa = string.Concat(Enumerable.Repeat("c1c1 ", 20)); // 40 x 'A'
+        var subtitle = LoadScc(
+            $"00:00:25:00\t94ae 94ae 9420 9420 1140 1140 {aaaa}942f 942f",
+            "00:45:36:04\t942c 942c");
+
+        Assert.Single(subtitle.Paragraphs);
+        Assert.Equal(new string('A', 40), HtmlUtil.RemoveHtmlTags(subtitle.Paragraphs[0].Text, true));
+    }
 }
