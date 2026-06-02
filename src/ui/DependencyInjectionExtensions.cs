@@ -272,6 +272,8 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<AssaStylePickerViewModel>();
         collection.AddTransient<AssaStylesViewModel>();
         collection.AddTransient<SsaStylesViewModel>();
+        collection.AddTransient<SsaPropertiesViewModel>();
+        collection.AddTransient<SsaAttachmentsViewModel>();
         collection.AddTransient<AssaTagHistoryViewModel>();
         collection.AddTransient<SpeechToTextViewModel>();
         collection.AddTransient<SpeechToTextEngineSettingsViewModel>();

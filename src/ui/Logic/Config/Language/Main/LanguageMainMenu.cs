@@ -65,6 +65,7 @@ public class LanguageMainMenu
     public string MergeTwoSubtitles { get; set; }
 
     public string AssaTools { get; set; }
+    public string SsaTools { get; set; }
     public string AssaProgressBar { get; set; }
     public string AssaChangeResolution { get; set; }
     public string AssaGenerateBackground { get; set; }
@@ -197,6 +198,7 @@ public class LanguageMainMenu
         MergeTwoSubtitles = "Merge two subtitles...";
 
         AssaTools = "_ASSA tools";
+        SsaTools = "_SSA tools";
         AssaChangeResolution = "Change _resolution...";
         AssaGenerateBackground = "Generate background _boxes...";
         AssaProgressBar = "Generate _progress bar...";

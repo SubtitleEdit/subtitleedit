@@ -1118,6 +1118,48 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private async Task ShowSsaProperties()
+    {
+        if (Window == null || !IsFormatSsa)
+        {
+            return;
+        }
+
+        var result = await ShowDialogAsync<SsaPropertiesWindow, SsaPropertiesViewModel>(vm =>
+        {
+            vm.Initialize(_subtitle, SelectedSubtitleFormat, _subtitleFileName ?? string.Empty,
+                _videoFileName ?? string.Empty);
+        });
+
+        if (result.OkPressed)
+        {
+            _subtitle.Header = result.Header;
+            RefreshSubtitlePreview();
+        }
+    }
+
+    [RelayCommand]
+    private async Task ShowSsaAttachments()
+    {
+        if (Window == null || !IsFormatSsa)
+        {
+            return;
+        }
+
+        var result = await ShowDialogAsync<SsaAttachmentsWindow, SsaAttachmentsViewModel>(vm =>
+        {
+            vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat, _subtitleFileName ?? string.Empty);
+        });
+
+        if (result.OkPressed)
+        {
+            _subtitle.Header = result.Header;
+            _subtitle.Footer = result.Footer;
+            RefreshSubtitlePreview();
+        }
+    }
+
+    [RelayCommand]
     private async Task ShowAssaDraw()
     {
         if (Window == null || !IsFormatAssa)

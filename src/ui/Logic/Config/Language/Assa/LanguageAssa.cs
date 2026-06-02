@@ -88,6 +88,9 @@ public class LanguageAssa
     public string FontsAndGraphics { get; set; }
     public string WrapStyle { get; set; }
     public string BorderAndShadowScaling { get; set; }
+    public string Collisions { get; set; }
+    public string PlayDepth { get; set; }
+    public string Timer { get; set; }
     public string OriginalScript { get; set; }
     public string Graphics { get; set; }
     public string CopyToStorageStyles { get; set; }
@@ -288,6 +291,9 @@ public class LanguageAssa
         FontsAndGraphics = "Fonts and graphics";
         WrapStyle = "Wrap style";
         BorderAndShadowScaling = "Border and shadow scaling";
+        Collisions = "Collisions";
+        PlayDepth = "Play depth";
+        Timer = "Timer";
         OriginalScript = "Original script";
         Graphics = "Graphics";
         CopyToStorageStyles = "Copy to storage styles";
