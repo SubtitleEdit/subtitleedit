@@ -194,7 +194,10 @@ namespace Nikse.SubtitleEdit
                         if (System.IO.File.Exists(filePath))
                         {
                             FileOpenedViaActivation = true;
-                            if (lifetime.MainWindow?.Content is MainView mainView)
+                            var mainView = lifetime.MainWindow == null
+                                ? null
+                                : UiTheme.GetUnscaledContent(lifetime.MainWindow) as MainView;
+                            if (mainView != null)
                             {
                                 Dispatcher.UIThread.Post(async () =>
                                 {
@@ -232,9 +235,16 @@ namespace Nikse.SubtitleEdit
             };
 
             var mainView = new MainView();
-            lifetime.MainWindow.Content = mainView;
 
-            // Restore window position BEFORE setting content and showing
+            // Always host MainView inside a LayoutTransformControl, even at scale 1.0.
+            // SetCurrentTheme() runs before this window exists, so the saved UI scale is
+            // applied here at creation. Pre-wrapping also means later scale changes only
+            // update the transform instead of swapping window.Content, which would
+            // reparent the video player's native HWND and freeze the UI.
+            lifetime.MainWindow.Content = new LayoutTransformControl { Child = mainView };
+            UiTheme.ApplyScaleToWindow(lifetime.MainWindow);
+
+            // Restore window position before showing
             if (Se.Settings.General.RememberPositionAndSize)
             {
                 UiUtil.RestoreWindowPosition(lifetime.MainWindow);
