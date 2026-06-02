@@ -4,8 +4,11 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Threading;
 using Avalonia.Media;
+using System.Collections;
 using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
@@ -90,6 +93,7 @@ public class FixCommonErrorsWindow : Window
                             Padding = new Thickness(4),
                             Child = new CheckBox
                             {
+                                Focusable = false,
                                 [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixRuleDisplayItem.IsSelected)),
                                 HorizontalAlignment = HorizontalAlignment.Center
                             }
@@ -120,13 +124,22 @@ public class FixCommonErrorsWindow : Window
             },
         };
         rulesGrid.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
-        rulesGrid.CellPointerPressed += (sender, e) =>
+        rulesGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
-            if (e.Column is DataGridCheckBoxColumn column && e.Row.DataContext is FixRuleDisplayItem item)
+            if (e.Key == Key.Space && rulesGrid.SelectedItem is FixRuleDisplayItem selectedItem)
             {
-                item.IsSelected = !item.IsSelected;
+                selectedItem.IsSelected = !selectedItem.IsSelected;
+                e.Handled = true;
             }
-        };
+            else if (e.Key is Key.Home or Key.End && rulesGrid.ItemsSource is IList items && items.Count > 0)
+            {
+                var target = e.Key == Key.Home ? items[0] : items[^1];
+                rulesGrid.SelectedItem = target;
+                rulesGrid.ScrollIntoView(target, null);
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
+        rulesGrid.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => rulesGrid.Focus());
 
         var step2Grid = MakeStep2Grid();
         step2Grid.Bind(IsVisibleProperty, new Binding(nameof(_vm.Step2IsVisible)));
@@ -273,6 +286,7 @@ public class FixCommonErrorsWindow : Window
                             Padding = new Thickness(4),
                             Child = new CheckBox
                             {
+                                Focusable = false,
                                 [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixDisplayItem.IsSelected)),
                                 HorizontalAlignment = HorizontalAlignment.Center
                             }
@@ -337,6 +351,22 @@ public class FixCommonErrorsWindow : Window
         };
         dataGridFixes.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
         dataGridFixes.SelectionChanged += DataGridFixes_SelectionChanged;
+        dataGridFixes.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key == Key.Space && dataGridFixes.SelectedItem is FixDisplayItem selectedItem)
+            {
+                selectedItem.IsSelected = !selectedItem.IsSelected;
+                e.Handled = true;
+            }
+            else if (e.Key is Key.Home or Key.End && dataGridFixes.ItemsSource is IList items && items.Count > 0)
+            {
+                var target = e.Key == Key.Home ? items[0] : items[^1];
+                dataGridFixes.SelectedItem = target;
+                dataGridFixes.ScrollIntoView(target, null);
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
+        dataGridFixes.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => dataGridFixes.Focus());
 
         var leftButtons = new StackPanel
         {
@@ -454,6 +484,16 @@ public class FixCommonErrorsWindow : Window
         };
         dataGridSubtitles.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedParagraph)));
         _vm.GridSubtitles = dataGridSubtitles;
+        dataGridSubtitles.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key is Key.Home or Key.End && dataGridSubtitles.ItemsSource is IList items && items.Count > 0)
+            {
+                var target = e.Key == Key.Home ? items[0] : items[^1];
+                dataGridSubtitles.SelectedItem = target;
+                dataGridSubtitles.ScrollIntoView(target, null);
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
 
         var gridCurrentSubtbtitle = MakeStep2EditPanel();
 

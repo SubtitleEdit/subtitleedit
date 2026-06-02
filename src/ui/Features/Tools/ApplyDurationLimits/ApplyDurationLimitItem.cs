@@ -1,10 +1,11 @@
-﻿using Nikse.SubtitleEdit.Features.Main;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Nikse.SubtitleEdit.Features.Main;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ApplyDurationLimits;
 
-public class ApplyDurationLimitItem
+public partial class ApplyDurationLimitItem : ObservableObject
 {
-    public bool Apply { get; set; }
+    [ObservableProperty] private bool _apply;
     public string Name { get; set; }
     public int Number { get; set; }
     public string Fix { get; set; }

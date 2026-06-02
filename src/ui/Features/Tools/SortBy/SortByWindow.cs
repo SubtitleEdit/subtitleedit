@@ -2,7 +2,10 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
+using System.Collections;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Tools.BridgeGaps;
 using Nikse.SubtitleEdit.Logic;
@@ -220,7 +223,16 @@ public class SortByWindow : Window
 
         dataGridSubtitle.Bind(DataGrid.ItemsSourceProperty, new Binding(nameof(SortByViewModel.Subtitles)) { Mode = BindingMode.TwoWay });
         dataGridSubtitle.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(SortByViewModel.SelectedSubtitle)) { Mode = BindingMode.TwoWay });
-
+        dataGridSubtitle.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key is Key.Home or Key.End && dataGridSubtitle.ItemsSource is IList items && items.Count > 0)
+            {
+                var target = e.Key == Key.Home ? items[0] : items[^1];
+                dataGridSubtitle.SelectedItem = target;
+                dataGridSubtitle.ScrollIntoView(target, null);
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
 
         return UiUtil.MakeBorderForControlNoPadding(dataGridSubtitle);
     }

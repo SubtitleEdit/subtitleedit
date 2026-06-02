@@ -2,8 +2,12 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Threading;
 using Avalonia.Media;
+using System.Collections;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -160,6 +164,7 @@ public class ConvertActorsWindow : Window
                     CellTemplate = new FuncDataTemplate<ConvertActorsDisplayItem>((_, _) =>
                         new CheckBox
                         {
+                            Focusable = false,
                             HorizontalAlignment = HorizontalAlignment.Center,
                             VerticalAlignment = VerticalAlignment.Center,
                             [!CheckBox.IsCheckedProperty] = new Binding(nameof(ConvertActorsDisplayItem.IsChecked)) { Mode = BindingMode.TwoWay },
@@ -227,6 +232,22 @@ public class ConvertActorsWindow : Window
                 },
             },
         };
+        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key == Key.Space && dataGrid.SelectedItem is ConvertActorsDisplayItem selectedItem)
+            {
+                selectedItem.IsChecked = !selectedItem.IsChecked;
+                e.Handled = true;
+            }
+            else if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
+            {
+                var target = e.Key == Key.Home ? items[0] : items[^1];
+                dataGrid.SelectedItem = target;
+                dataGrid.ScrollIntoView(target, null);
+                e.Handled = true;
+            }
+        }, RoutingStrategies.Tunnel);
+        dataGrid.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => dataGrid.Focus());
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);
     }

@@ -1,9 +1,11 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
-public class RemoveItem 
+
+public partial class RemoveItem : ObservableObject
 {
-    public bool Apply { get; set; }
+    [ObservableProperty] private bool _apply;
     public int Index { get; set; }
     public int IndexDisplay { get; set; }
     public string Before { get; set; }

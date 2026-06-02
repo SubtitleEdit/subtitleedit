@@ -1,11 +1,12 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.NetflixQualityCheck;
 
 namespace Nikse.SubtitleEdit.Features.Tools.FixNetflixErrors;
 
-public class FixNetflixErrorsItem
+public partial class FixNetflixErrorsItem : ObservableObject
 {
-    public bool Apply { get; set; }
+    [ObservableProperty] private bool _apply;
     public int Index { get; set; }
     public int IndexDisplay { get; set; }
     public string Before { get; set; }
