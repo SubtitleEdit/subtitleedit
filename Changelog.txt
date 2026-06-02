@@ -1,5 +1,19 @@
 Subtitle Edit Changelog
 
+Subtitle Edit Changelog
+
+4.0.16 (2nd June 2026)
+* IMPROVED:
+   * Update Portuguese translation - thx Hugo Carvalho, Blackspirits
+   * Update Persian translation - thx Majid
+   * Add "Suggested Fix" column to Netflix quality-check CSV report - thx OmrSi
+   * Update yt-dlp to 2026.03.17 (fixes youtube)
+   * Warn instead of blocking when an auto-translate prompt is very long
+* FIXED:
+   * Fix download of Hunspell spell-check dictionaries (now from LibreOffice/dictionaries)
+   * Fix extract audio for selected lines in SMPTE - thx OmrSi
+
+
 4.0.15 (6th February 2026)
 * NEW
    * Add Central Kurdish (Sorani) support to Gemini translation
