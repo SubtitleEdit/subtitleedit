@@ -146,23 +146,18 @@ public class PreProcessingSettings
         {
             var pixel = srcPixels[i];
 
-            // Extract RGB components
+            var a = (pixel >> 24) & 0xFF;
+            if (a == 0)
+            {
+                dstPixels[i] = 0x00000000;
+                continue;
+            }
+
             var r = (pixel >> 16) & 0xFF;
             var g = (pixel >> 8) & 0xFF;
             var b = pixel & 0xFF;
-
-            // Calculate brightness (same formula as grayscale conversion)
             var brightness = (byte)(0.299 * r + 0.587 * g + 0.114 * b);
-
-            // If brightness is above threshold, make it white; otherwise transparent
-            if (brightness > threshold)
-            {
-                dstPixels[i] = 0xFFFFFFFF; // White with full alpha
-            }
-            else
-            {
-                dstPixels[i] = 0x00000000; // Transparent
-            }
+            dstPixels[i] = brightness > threshold ? 0xFFFFFFFF : 0x00000000;
         }
 
         return result;

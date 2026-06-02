@@ -1572,7 +1572,8 @@ public partial class OcrViewModel : ObservableObject
                 _preProcessingSettings.CropTransparentColors ||
                 _preProcessingSettings.InverseColors ||
                 _preProcessingSettings.Binarize ||
-                _preProcessingSettings.RemoveBorders;
+                _preProcessingSettings.RemoveBorders ||
+                _preProcessingSettings.ToOneColor;
         });
     }
 
