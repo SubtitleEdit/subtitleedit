@@ -284,6 +284,8 @@ public partial class FindService : IFindService
             return;
         }
 
+        searchText = searchText.Replace("\r\n", "\\n").Replace("\n", "\\n").Replace("\r", "\\n");
+
         // Remove if already exists to move it to top
         _searchHistory.Remove(searchText);
 

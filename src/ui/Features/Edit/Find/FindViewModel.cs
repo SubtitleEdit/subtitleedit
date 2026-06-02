@@ -158,7 +158,7 @@ public partial class FindViewModel : ObservableObject
         SearchHistory.Clear();
         foreach (var item in findService.SearchHistory)
         {
-            SearchHistory.Add(item);
+            SearchHistory.Add(item.Replace("\r\n", "\\n").Replace("\n", "\\n").Replace("\r", "\\n"));
         }
     }
 }
