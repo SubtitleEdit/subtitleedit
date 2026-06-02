@@ -921,6 +921,28 @@ public static class InitMenu
         });
 
         menu.Items.Add(menuItemAssaTools);
+
+        var menuItemSsaTools = new MenuItem
+        {
+            Header = l.SsaTools,
+            [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.IsFormatSsa)),
+        };
+        menuItemSsaTools.Items.Add(new MenuItem
+        {
+            Header = l.AssaStyles,
+            Command = vm.ShowSsaStylesCommand,
+        });
+        menuItemSsaTools.Items.Add(new MenuItem
+        {
+            Header = l.AssaProperties,
+            Command = vm.ShowSsaPropertiesCommand,
+        });
+        menuItemSsaTools.Items.Add(new MenuItem
+        {
+            Header = l.AssaAttachments,
+            Command = vm.ShowSsaAttachmentsCommand,
+        });
+        menu.Items.Add(menuItemSsaTools);
     }
 
     public static void UpdateRecentFiles(MainViewModel vm)

@@ -334,6 +334,32 @@ public static class InitToolbar
         stackPanelLeft.Children.Add(new Button
         {
             Content = MakeImage("AssaProperties"),
+            Command = vm.ShowSsaPropertiesCommand,
+            Background = Brushes.Transparent,
+            [AutomationProperties.NameProperty] = languageHints.AssaPropertiesHint,
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaPropertiesHint, shortcuts, nameof(vm.ShowSsaPropertiesCommand)),
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatSsa))
+            {
+                Source = vm,
+            },
+        });
+
+        stackPanelLeft.Children.Add(new Button
+        {
+            Content = MakeImage("AssaAttachments"),
+            Command = vm.ShowSsaAttachmentsCommand,
+            Background = Brushes.Transparent,
+            [AutomationProperties.NameProperty] = languageHints.AssaAttachmentsHint,
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaAttachmentsHint, shortcuts, nameof(vm.ShowSsaAttachmentsCommand)),
+            [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatSsa))
+            {
+                Source = vm,
+            },
+        });
+
+        stackPanelLeft.Children.Add(new Button
+        {
+            Content = MakeImage("AssaProperties"),
             Command = vm.ShowAssaPropertiesCommand,
             Background = Brushes.Transparent,
             [AutomationProperties.NameProperty] = languageHints.AssaPropertiesHint,
