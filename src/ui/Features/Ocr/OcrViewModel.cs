@@ -3212,8 +3212,9 @@ public partial class OcrViewModel : ObservableObject
             _ocrFixEngine.IsLoaded() && DoFixOcrErrors)
         {
             result.OcrFixLineResult = _ocrFixEngine.FixOcrErrors(i, item, DoTryToGuessUnknownWords);
-            var alignment = GetAlignment(item);
-            result.ResultText = alignment.AlignmentAdded ? alignment.Text : result.OcrFixLineResult.GetText();
+            var correctedText = result.OcrFixLineResult.GetText();
+            var alignment = GetAlignment(item, correctedText);
+            result.ResultText = alignment.AlignmentAdded ? alignment.Text : correctedText;
 
             if (!string.IsNullOrEmpty(result.OcrFixLineResult.ReplacementUsed.From))
             {
@@ -3245,12 +3246,11 @@ public partial class OcrViewModel : ObservableObject
 
     private void SetText(int i, OcrSubtitleItem item, OcrFixLineResultTemp resultTemp)
     {
-        var alignment = GetAlignment(item);
-
         if (SelectedDictionary != null &&
             SelectedDictionary.Name != GetDictionaryNameNone() &&
             _ocrFixEngine.IsLoaded() && DoFixOcrErrors)
         {
+            var alignment = GetAlignment(item, resultTemp.ResultText);
             var text = alignment.AlignmentAdded ? alignment.Text : resultTemp.ResultText;
 
             Dispatcher.UIThread.Post(() =>
@@ -3262,6 +3262,7 @@ public partial class OcrViewModel : ObservableObject
         }
         else
         {
+            var alignment = GetAlignment(item);
             var text = alignment.Text;
 
             Dispatcher.UIThread.Post(() =>
@@ -3305,8 +3306,9 @@ public partial class OcrViewModel : ObservableObject
             _ocrFixEngine.IsLoaded() && DoFixOcrErrors)
         {
             var result = _ocrFixEngine.FixOcrErrors(i, item, DoTryToGuessUnknownWords);
-            var alignment = GetAlignment(item);
-            var resultText = alignment.AlignmentAdded ? alignment.Text : result.GetText();
+            var correctedText = result.GetText();
+            var alignment = GetAlignment(item, correctedText);
+            var resultText = alignment.AlignmentAdded ? alignment.Text : correctedText;
 
             Dispatcher.UIThread.Post(() =>
             {
@@ -4403,12 +4405,14 @@ public partial class OcrViewModel : ObservableObject
         }
     }
 
-    private (string Text, bool AlignmentAdded) GetAlignment(OcrSubtitleItem item)
+    private (string Text, bool AlignmentAdded) GetAlignment(OcrSubtitleItem item, string? correctedText = null)
     {
         if (!HasCaptureAlignment) // Repurposed for ASSA position capture
         {
             return (item.Text, false);
         }
+
+        var textToUse = correctedText ?? item.Text;
 
         try
         {
@@ -4427,8 +4431,8 @@ public partial class OcrViewModel : ObservableObject
             if (imageHeightRatio > 0.33)
             {
                 // Try to split lines and set alignment for each line
-                var lines = item.Text.Trim().SplitToLines();
-                if (lines.Count > 1 && item.Text.Length < 40)
+                var lines = textToUse.Trim().SplitToLines();
+                if (lines.Count > 1 && textToUse.Length < 40)
                 {
                     // Similar logic to RunGoogleLensOcr method
                     var nbmp = new NikseBitmap2(bitmap);
@@ -4472,7 +4476,7 @@ public partial class OcrViewModel : ObservableObject
 
             // Map to ASSA alignment positions (An1-An9)
             var assaPosition = GetAssaPositionFromScreen(relativeX, relativeY);
-            return ($"{{\\{assaPosition}}}{item.Text}", true);
+            return ($"{{\\{assaPosition}}}{textToUse}", true);
         }
         catch
         {
