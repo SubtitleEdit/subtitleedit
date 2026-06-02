@@ -839,6 +839,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var parts = payload.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                     var text = GetSccText(payload, ref _errorCount);
 
+                    // Reject rows that are raw CEA-608 data words rendered as text instead of
+                    // valid captions (#11341). Real caption text is positioned with a Preamble
+                    // Address Code and is at most 32 columns wide, so a row with no PAC that
+                    // decodes to an over-long line is garbage and must not be emitted as a cue.
+                    if (!string.IsNullOrWhiteSpace(text) && !HasPreambleAddressCode(parts) && AnyLineTooLong(text))
+                    {
+                        _errorCount++;
+                        text = string.Empty;
+                    }
+
                     if (!string.IsNullOrWhiteSpace(text))
                     {
                         loadedText = text;
@@ -917,6 +927,55 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
+        // CEA-608 allows a maximum of 32 characters per line.
+        private const int MaxCharactersPerLine = 32;
+
+        private static bool AnyLineTooLong(string text)
+        {
+            foreach (var line in text.SplitToLines())
+            {
+                if (HtmlUtil.RemoveHtmlTags(line, true).Length > MaxCharactersPerLine)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool HasPreambleAddressCode(IEnumerable<string> parts)
+        {
+            foreach (var part in parts)
+            {
+                if (IsPreambleAddressCode(part))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // A CEA-608 Preamble Address Code (PAC) positions the caption cursor. Its first byte is
+        // one of the channel-1 row codes and its second byte is a position/data byte (high nibble
+        // 4-7 or c-f). This is how valid caption text is distinguished from a run of raw data words.
+        private static bool IsPreambleAddressCode(string code)
+        {
+            if (code.Length != 4)
+            {
+                return false;
+            }
+
+            // Row-code first byte: low 7 bits in 0x10-0x17 (parity-stripped 10-17), plus the
+            // odd-parity forms that differ (11->91, 12->92, 14->94, 17->97).
+            var firstByte = code.Substring(0, 2);
+            var isRowCode = firstByte == "10" || firstByte == "11" || firstByte == "12" || firstByte == "13" ||
+                            firstByte == "14" || firstByte == "15" || firstByte == "16" || firstByte == "17" ||
+                            firstByte == "91" || firstByte == "92" || firstByte == "94" || firstByte == "97";
+            var isPositionByte = "4567cdef".IndexOf(code[2]) >= 0;
+            return isRowCode && isPositionByte;
+        }
+
         public static string GetSccText(string s, ref int errorCount)
         {
             int y = 0;
@@ -934,7 +993,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string part = parts[k];
                 if (part.Length == 4)
                 {
-                    if (part != "94ae" && part != "9420" && part != "94ad" && part != "9426" && part != "946e" && part != "91ce" && part != "13ce" && part != "9425" && part != "9429")
+                    // Note: 946e/91ce/13ce are Preamble Address Codes; they are handled as line
+                    // breaks further below (see IsPreambleAddressCode) instead of being skipped. (#9803)
+                    if (part != "94ae" && part != "9420" && part != "94ad" && part != "9426" && part != "9425" && part != "9429")
                     {
 
                         // skewed apostrophe "’"
@@ -1136,6 +1197,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     }
                                     break;
                                 default:
+                                    if (IsPreambleAddressCode(part))
+                                    {
+                                        // Unrecognized Preamble Address Code: it repositions the
+                                        // cursor onto a new row, so emit a line break instead of
+                                        // decoding its bytes as stray letters (e.g. "n"/"N"). (#9803)
+                                        if (sb.Length > 0 && !sb.ToString().EndsWith(Environment.NewLine, StringComparison.Ordinal))
+                                        {
+                                            sb.AppendLine();
+                                        }
+
+                                        break;
+                                    }
+
                                     var result = GetLetterFromCode(part);
                                     if (result == null)
                                     {
