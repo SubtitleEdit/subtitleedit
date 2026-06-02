@@ -231,7 +231,11 @@ public class ColorPickerWindow : Window
         var hexTextBox = new TextBox
         {
             Margin = new Thickness(0, 10, 0, 0),
-            MinWidth = 150,
+            // 8 chars (AARRGGBB) when an alpha channel is shown, otherwise 6 chars (RRGGBB)
+            MaxLength = vm.ShowAlpha ? 8 : 6,
+            MinWidth = vm.ShowAlpha ? 95 : 75,
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Left,
         };
         hexTextBox.Bind(TextBox.TextProperty, new Binding
         {
