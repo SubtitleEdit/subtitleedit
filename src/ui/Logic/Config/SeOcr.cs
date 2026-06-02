@@ -70,7 +70,7 @@ public class SeOcr
         BinaryOcrPixelsAreSpace = 12;
         BinaryOcrMaxErrorPercent = 7.5;
 
-        OllamaModels = new List<string> { "llama3.2-vision", "llava-phi3", "moondream", "minicpm-v" };
+        OllamaModels = ["glm-ocr"];
         OllamaLanguage = "English";
         OllamaModel = OllamaModels.First();
         OllamaUrl = "http://localhost:11434/api/chat/";
