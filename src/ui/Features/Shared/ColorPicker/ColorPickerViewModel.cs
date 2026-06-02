@@ -152,8 +152,16 @@ public partial class ColorPickerViewModel : ObservableObject
 
     private void UpdateHexColor()
     {
-        HexColor = SelectedColor.FromColorToHex(true).TrimStart('#');
+        // Only include the alpha byte (AARRGGBB) when an alpha/opacity channel is shown;
+        // otherwise the hex is a plain 6-char RRGGBB value. (#11342 follow-up)
+        HexColor = SelectedColor.FromColorToHex(ShowAlpha).TrimStart('#');
         OnPropertyChanged(nameof(HexColor));
+    }
+
+    partial void OnShowAlphaChanged(bool value)
+    {
+        // ShowAlpha is set after Initialize(), so refresh the hex to match the channel count.
+        UpdateHexColor();
     }
 
     private void LoadSettings()
