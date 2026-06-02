@@ -706,7 +706,7 @@ public partial class SsaStylesViewModel : ObservableObject
 
         var text = "This is a test";
 
-        var fontSize = (float)style.FontSize;
+        var fontSize = (float)style.FontSize * 0.75f; // render a little smaller in the preview
         var libAssFontName = FontHelper.GetSkiaFontNameFromLibAssaFontName(style.FontName);
         SKBitmap bitmap;
 
@@ -722,7 +722,10 @@ public partial class SsaStylesViewModel : ObservableObject
                 style.ColorOutline.ToSKColor(),
                 style.ColorOutline.ToSKColor(),
                 0,
-                (float)style.ShadowWidth);
+                (float)style.ShadowWidth,
+                isItalic: style.Italic,
+                isUnderline: style.Underline,
+                isStrikeout: style.Strikeout);
 
             if (style.ShadowWidth > 0)
             {
@@ -744,7 +747,10 @@ public partial class SsaStylesViewModel : ObservableObject
                 (float)style.OutlineWidth,
                 0,
                 1.0f,
-                (int)Math.Round(style.ShadowWidth));
+                (int)Math.Round(style.ShadowWidth),
+                isItalic: style.Italic,
+                isUnderline: style.Underline,
+                isStrikeout: style.Strikeout);
         }
         else // FontBoxType.None
         {
@@ -758,10 +764,28 @@ public partial class SsaStylesViewModel : ObservableObject
                 style.ColorShadow.ToSKColor(),
                 SKColors.Transparent,
                 (float)style.OutlineWidth,
-                (float)style.ShadowWidth);
+                (float)style.ShadowWidth,
+                isItalic: style.Italic,
+                isUnderline: style.Underline,
+                isStrikeout: style.Strikeout);
         }
 
-        ImagePreview = bitmap.ToAvaloniaBitmap();
+        var frame = TextToImageGenerator.ComposeOnPreviewFrame(bitmap, GetAlignment(style), style.MarginLeft, style.MarginRight, style.MarginVertical);
+        ImagePreview = frame.ToAvaloniaBitmap();
+    }
+
+    private static int GetAlignment(StyleDisplay style)
+    {
+        if (style.AlignmentAn1) return 1;
+        if (style.AlignmentAn2) return 2;
+        if (style.AlignmentAn3) return 3;
+        if (style.AlignmentAn4) return 4;
+        if (style.AlignmentAn5) return 5;
+        if (style.AlignmentAn6) return 6;
+        if (style.AlignmentAn7) return 7;
+        if (style.AlignmentAn8) return 8;
+        if (style.AlignmentAn9) return 9;
+        return 2;
     }
 
     internal void FileStylesChanged(object? sender, SelectionChangedEventArgs e)
