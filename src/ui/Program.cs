@@ -244,7 +244,7 @@ namespace Nikse.SubtitleEdit
             lifetime.MainWindow.Content = new LayoutTransformControl { Child = mainView };
             UiTheme.ApplyScaleToWindow(lifetime.MainWindow);
 
-            // Restore window position BEFORE setting content and showing
+            // Restore window position before showing
             if (Se.Settings.General.RememberPositionAndSize)
             {
                 UiUtil.RestoreWindowPosition(lifetime.MainWindow);
