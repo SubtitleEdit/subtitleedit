@@ -20,8 +20,7 @@ public class DoAutoTranslate
         {
             translator.Initialize();
             var start = 0;
-            var forceSingleLineMode = Configuration.Settings.Tools.AutoTranslateStrategy ==
-                                      nameof(TranslateStrategy.TranslateEachLineSeparately) ||
+            var forceSingleLineMode = Se.Settings.AutoTranslate.IsTranslateEachLineSeparately(translator.Name) ||
                                       translator.Name ==
                                       NoLanguageLeftBehindApi.StaticName || // NLLB seems to miss some text...
                                       translator.Name == NoLanguageLeftBehindServe.StaticName ||
