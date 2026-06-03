@@ -225,7 +225,9 @@ public partial class FindService : IFindService
             _textLines[result.lineIndex] = replacedText.newText;
             CurrentLineNumber = result.lineIndex;
             CurrentTextIndex = result.textIndex;
-            CurrentTextFound = replaceText ?? string.Empty;
+            CurrentTextFound = CurrentFindMode == FindMode.RegularExpression
+                ? RegexUtils.FixNewLine(replaceText ?? string.Empty)
+                : replaceText ?? string.Empty;
             return result.lineIndex;
         }
 
