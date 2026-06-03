@@ -47,7 +47,7 @@ public partial class FindService : IFindService
             return -1;
         }
 
-        SearchText = searchText.Replace("\r\n", "\\n").Replace("\n", "\\n").Replace("\r", "\\n");
+        SearchText = RegexUtils.EscapeNewLines(searchText);
         _textLines = textLines;
         AddToSearchHistory(searchText);
 
@@ -98,7 +98,7 @@ public partial class FindService : IFindService
             return -1;
         }
 
-        SearchText = searchText.Replace("\r\n", "\\n").Replace("\n", "\\n").Replace("\r", "\\n");
+        SearchText = RegexUtils.EscapeNewLines(searchText);
         _textLines = textLines;
         AddToSearchHistory(searchText);
 
@@ -183,7 +183,7 @@ public partial class FindService : IFindService
             return -1;
         }
 
-        SearchText = searchText.Replace("\r\n", "\\n").Replace("\n", "\\n").Replace("\r", "\\n");
+        SearchText = RegexUtils.EscapeNewLines(searchText);
         _textLines = textLines;
         AddToSearchHistory(searchText);
 
@@ -286,7 +286,7 @@ public partial class FindService : IFindService
             return;
         }
 
-        searchText = searchText.Replace("\r\n", "\\n").Replace("\n", "\\n").Replace("\r", "\\n");
+        searchText = RegexUtils.EscapeNewLines(searchText);
 
         // Remove if already exists to move it to top
         _searchHistory.Remove(searchText);

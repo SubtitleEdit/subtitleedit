@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
@@ -158,7 +159,7 @@ public partial class FindViewModel : ObservableObject
         SearchHistory.Clear();
         foreach (var item in findService.SearchHistory)
         {
-            SearchHistory.Add(item.Replace("\r\n", "\\n").Replace("\n", "\\n").Replace("\r", "\\n"));
+            SearchHistory.Add(RegexUtils.EscapeNewLines(item));
         }
     }
 }
