@@ -148,6 +148,7 @@ public class LanguageSettings
     public string WaveformBackgroundColor { get; set; }
     public string WaveformSelectedColor { get; set; }
     public string DownloadFfmpeg { get; set; }
+    public string FixCommonErrorsSkipStep1 { get; set; }
 
     // Toolbar
     public string ShowToolbarNew { get; set; }
@@ -163,7 +164,6 @@ public class LanguageSettings
     public string ShowToolbarVisualSync { get; set; }
     public string ShowToolbarBeautifyTimeCodes { get; set; }
     public string ShowToolbarBurnIn { get; set; }
-    public string FixCommonErrorsSkipStep1 { get; set; }
     public string ShowToolbarSettings { get; set; }
     public string ShowToolbarLayout { get; set; }
     public string ShowToolbarHelp { get; set; }
@@ -452,6 +452,7 @@ public class LanguageSettings
         WaveformBackgroundColor = "Waveform background color";
         WaveformSelectedColor = "Waveform selected color";
         DownloadFfmpeg = "Download ffmpeg";
+        FixCommonErrorsSkipStep1 = "Fix common errors: skip step 1 (choose fixes)";
 
         // Toolbar
         ShowToolbarNew = "Show new icon";
@@ -467,7 +468,6 @@ public class LanguageSettings
         ShowToolbarVisualSync = "Show visual sync icon";
         ShowToolbarBeautifyTimeCodes = "Show beautify time codes icon";
         ShowToolbarBurnIn = "Show burn-in icon";
-        FixCommonErrorsSkipStep1 = "Fix common errors: skip step 1 (choose fixes)";
         ShowToolbarSettings = "Show settings icon";
         ShowToolbarLayout = "Show layout icon";
         ShowToolbarHelp = "Show help icon";
