@@ -9421,7 +9421,7 @@ public partial class MainViewModel :
                 selectedText = EditTextBox.SelectedText;
             }
 
-            if ((string.IsNullOrEmpty(selectedText) || selectedText == _findService.CurrentTextFound)
+            if ((string.IsNullOrEmpty(selectedText) || string.Equals(selectedText, _findService.CurrentTextFound, _findService.CurrentFindMode == FindMode.CaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                 && !string.IsNullOrEmpty(_findService.SearchText))
             {
                 selectedText = _findService.SearchText;
@@ -9741,7 +9741,7 @@ public partial class MainViewModel :
                 selectedText = EditTextBox.SelectedText;
             }
 
-            if ((string.IsNullOrEmpty(selectedText) || selectedText == _findService.CurrentTextFound)
+            if ((string.IsNullOrEmpty(selectedText) || string.Equals(selectedText, _findService.CurrentTextFound, _findService.CurrentFindMode == FindMode.CaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                 && !string.IsNullOrEmpty(_findService.SearchText))
             {
                 selectedText = _findService.SearchText;
