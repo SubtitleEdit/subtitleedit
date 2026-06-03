@@ -2018,8 +2018,15 @@ public partial class SettingsViewModel : ObservableObject
 
     private static List<string> GetWaveformAndSpecgtrogramFiles()
     {
-        var files = Directory.GetFiles(Se.WaveformsFolder, "*.wav").ToList();
-        files.AddRange(Directory.GetFiles(Se.SpectrogramsFolder, "*.spectrogram", SearchOption.AllDirectories));
+        var files = new List<string>();
+        if (Directory.Exists(Se.WaveformsFolder))
+        {
+            files.AddRange(Directory.GetFiles(Se.WaveformsFolder, "*.wav"));
+        }
+        if (Directory.Exists(Se.SpectrogramsFolder))
+        {
+            files.AddRange(Directory.GetFiles(Se.SpectrogramsFolder, "*.spectrogram", SearchOption.AllDirectories));
+        }
         return files;
     }
 
