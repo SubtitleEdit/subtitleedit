@@ -389,6 +389,7 @@ public partial class OcrViewModel : ObservableObject
         var result = await _windowService.ShowDialogAsync<PickFontNameWindow, PickFontNameViewModel>(Window, vm =>
         {
             vm.Initialize(true, true);
+            vm.SelectedFontName = TextBoxFontFamily.Name;
             vm.FontSize = TextBoxFontSize;
             vm.IsFontBold = TextBoxFontWeight == FontWeight.Bold;
         });
