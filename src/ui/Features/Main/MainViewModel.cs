@@ -9814,9 +9814,15 @@ public partial class MainViewModel :
                 var selectedText = EditTextBox.SelectedText;
                 if (!string.IsNullOrEmpty(savedCurrentTextFound) && selectedText == savedCurrentTextFound)
                 {
-                    EditTextBox.SelectedText = result.FindMode == FindMode.RegularExpression
-                        ? RegexUtils.FixNewLine(result.ReplaceText)
-                        : result.ReplaceText;
+                    if (result.FindMode == FindMode.RegularExpression)
+                    {
+                        var fixedReplaceText = RegexUtils.FixNewLine(result.ReplaceText);
+                        EditTextBox.SelectedText = new Regex(result.SearchText).Replace(savedCurrentTextFound, fixedReplaceText);
+                    }
+                    else
+                    {
+                        EditTextBox.SelectedText = result.ReplaceText;
+                    }
                     subs[currentLineIndex] = EditTextBox.Text; // reflect replacement so FindNext won't re-match here
                 }
 
