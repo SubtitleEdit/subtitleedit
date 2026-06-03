@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -277,12 +276,6 @@ public class SpellCheckWindow : Window
             Background = new SolidColorBrush(Colors.Transparent),
         };
         listBoxSuggestions.DoubleTapped += vm.ListBoxSuggestionsDoubleTapped;
-        listBoxSuggestions.ItemTemplate = new FuncDataTemplate<SpellCheckSuggestionItem>((item, _) =>
-        {
-            var tb = new TextBlock { Text = item?.ToString() };
-            tb.Bind(TextBlock.FontFamilyProperty, new Binding(nameof(vm.TextBoxFontFamily)) { Source = vm, Mode = BindingMode.OneWay });
-            return tb;
-        });
 
         var scrollViewSuggestions = new ScrollViewer
         {

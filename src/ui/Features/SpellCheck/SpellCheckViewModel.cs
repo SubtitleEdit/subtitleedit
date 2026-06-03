@@ -29,14 +29,8 @@ public partial class SpellCheckViewModel : ObservableObject
     [ObservableProperty] private string _statusText;
     [ObservableProperty] private ObservableCollection<SpellCheckDictionaryDisplay> _dictionaries;
     [ObservableProperty] private SpellCheckDictionaryDisplay? _selectedDictionary;
-    [ObservableProperty] private ObservableCollection<SpellCheckSuggestionItem> _suggestions;
-    [ObservableProperty] private SpellCheckSuggestionItem? _selectedSuggestion;
-
-    public FontFamily TextBoxFontFamily { get; } =
-        !string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName)
-            ? new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName)
-            : FontFamily.Default;
-
+    [ObservableProperty] private ObservableCollection<string> _suggestions;
+    [ObservableProperty] private string _selectedSuggestion;
     [ObservableProperty] private bool _areSuggestionsAvailable;
     [ObservableProperty] private bool _isPrompting;
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _paragraphs;
@@ -79,8 +73,8 @@ public partial class SpellCheckViewModel : ObservableObject
         WordNotFoundOriginal = string.Empty;
         Dictionaries = new ObservableCollection<SpellCheckDictionaryDisplay>();
         SelectedDictionary = new SpellCheckDictionaryDisplay();
-        Suggestions = new ObservableCollection<SpellCheckSuggestionItem>();
-        SelectedSuggestion = null;
+        Suggestions = new ObservableCollection<string>();
+        SelectedSuggestion = string.Empty;
         PanelWholeText = new StackPanel();
         TextBoxWordNotFound = new TextBox();
         StatusText = string.Empty;
@@ -398,8 +392,8 @@ public partial class SpellCheckViewModel : ObservableObject
             return;
         }
 
-        _spellCheckManager.ChangeWord(WordNotFoundOriginal, SelectedSuggestion!.Text, _currentSpellCheckWord, SelectedParagraph);
-        ShowStatus(string.Format(Se.Language.SpellCheck.UseSuggestionX, SelectedSuggestion.Text));
+        _spellCheckManager.ChangeWord(WordNotFoundOriginal, SelectedSuggestion, _currentSpellCheckWord, SelectedParagraph);
+        ShowStatus(string.Format(Se.Language.SpellCheck.UseSuggestionX, SelectedSuggestion));
         DoSpellCheck();
     }
 
@@ -411,8 +405,8 @@ public partial class SpellCheckViewModel : ObservableObject
             return;
         }
 
-        _spellCheckManager.ChangeAllWord(WordNotFoundOriginal, SelectedSuggestion!.Text, _currentSpellCheckWord, SelectedParagraph);
-        ShowStatus(string.Format(Se.Language.SpellCheck.UseSuggestionXAlways, SelectedSuggestion.Text));
+        _spellCheckManager.ChangeAllWord(WordNotFoundOriginal, SelectedSuggestion, _currentSpellCheckWord, SelectedParagraph);
+        ShowStatus(string.Format(Se.Language.SpellCheck.UseSuggestionXAlways, SelectedSuggestion));
         DoSpellCheck();
     }
 
@@ -474,13 +468,13 @@ public partial class SpellCheckViewModel : ObservableObject
             Suggestions.Clear();
             foreach (var suggestion in suggestions)
             {
-                Suggestions.Add(new SpellCheckSuggestionItem(suggestion));
+                Suggestions.Add(suggestion);
             }
 
             AreSuggestionsAvailable = true;
             if (suggestions.Count > 0)
             {
-                SelectedSuggestion = new SpellCheckSuggestionItem(suggestions[0]);
+                SelectedSuggestion = suggestions[0];
             }
 
             var lineIndex = Paragraphs.IndexOf(results[0].Paragraph) + 1;
