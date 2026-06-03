@@ -368,6 +368,27 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             if (Se.Settings.Appearance.ShowHints)
             {
                 ToolTip.SetTip(sliderPosition, Se.Language.General.VideoPosition);
+
+                // Show the hovered timestamp in the tooltip (frame/HH:MM:SS:FF vs ms format is
+                // already handled by ToShortDisplayString via UseTimeFormatHHMMSSFF).
+                // Avalonia's Slider centers the thumb on the value point, so the effective
+                // value-range track is narrower than the slider by one thumb width — we have
+                // to match that mapping or the hint reads later than the actual click target.
+                const double thumbWidth = 14.0;
+                sliderPosition.AddHandler(PointerMovedEvent, (_, e) =>
+                {
+                    var available = sliderPosition.Bounds.Width - thumbWidth;
+                    if (available <= 0 || Duration <= 0)
+                    {
+                        return;
+                    }
+
+                    var x = e.GetPosition(sliderPosition).X - thumbWidth / 2;
+                    var ratio = Math.Clamp(x / available, 0.0, 1.0);
+                    var hovered = sliderPosition.Minimum + ratio * (sliderPosition.Maximum - sliderPosition.Minimum);
+                    var offsetSec = Se.Settings.General.CurrentVideoOffsetInMs / 1000.0;
+                    ToolTip.SetTip(sliderPosition, TimeCode.FromSeconds(hovered + offsetSec).ToShortDisplayString());
+                });
             }
             sliderPosition.TemplateApplied += (s, e) =>
             {
