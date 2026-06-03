@@ -878,6 +878,7 @@ public class OcrWindow : Window
             }
         });
 
+        ScrollViewer.SetHorizontalScrollBarVisibility(listBox, ScrollBarVisibility.Auto);
         listBox.SelectionChanged += (s, e) => vm.AllFixesTapped();
         listBox.Tapped += (s, e) => vm.AllFixesTapped();
 

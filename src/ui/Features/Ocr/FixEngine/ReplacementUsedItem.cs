@@ -22,6 +22,8 @@ public class ReplacementUsedItem
 
     public override string ToString()
     {
-        return $"#{LineIndex + 1}: {From} -> {To}";
+        var from = From.Replace("\r\n", "↵").Replace("\n", "↵");
+        var to = To.Replace("\r\n", "↵").Replace("\n", "↵");
+        return $"#{LineIndex + 1}: {from} → {to}";
     }
 }
