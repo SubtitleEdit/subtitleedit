@@ -3805,16 +3805,6 @@ public partial class OcrViewModel : ObservableObject
             e.Handled = true; // prevent further handling if needed
             DeleteSelectedLines();
         }
-        else if (e.Key == Key.Home)
-        {
-            e.Handled = true; // prevent further handling if needed
-            SelectAndScrollToRow(0);
-        }
-        else if (e.Key == Key.End)
-        {
-            e.Handled = true; // prevent further handling if needed
-            SelectAndScrollToRow(OcrSubtitleItems.Count - 1);
-        }
         else if (e.Key == Key.I && e.KeyModifiers == (KeyModifiers.Control | KeyModifiers.Shift))
         {
             e.Handled = true;
