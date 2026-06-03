@@ -159,7 +159,7 @@ public partial class ReplaceViewModel : ObservableObject
         _findResult = mainViewModel;
         if (!string.IsNullOrEmpty(selectedText))
         {
-            SearchText = selectedText;
+            SearchText = RegexUtils.EscapeNewLines(selectedText);
         }
 
         SearchHistory.Clear();

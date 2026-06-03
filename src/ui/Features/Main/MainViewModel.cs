@@ -9784,6 +9784,7 @@ public partial class MainViewModel :
         {
             var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
             var subs = Subtitles.Select(p => p.Text).ToList();
+            var savedCurrentTextFound = _findService.CurrentTextFound;
             _findService.Initialize(subs, SelectedSubtitleIndex ?? 0, result.WholeWord, result.FindMode);
 
             var idx = -1;
@@ -9811,7 +9812,7 @@ public partial class MainViewModel :
             else // replace requested
             {
                 var selectedText = EditTextBox.SelectedText;
-                if (selectedText == _findService.CurrentTextFound)
+                if (selectedText == savedCurrentTextFound)
                 {
                     EditTextBox.SelectedText = result.FindMode == FindMode.RegularExpression
                         ? RegexUtils.FixNewLine(result.ReplaceText)
