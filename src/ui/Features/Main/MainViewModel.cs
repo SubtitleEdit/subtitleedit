@@ -12242,11 +12242,14 @@ public partial class MainViewModel :
 
         RunWithoutChangeDetection(() =>
         {
+            var preIndex = SelectedSubtitleIndex ?? 0;
+
             var undoRedoObject = _undoRedoManager.Undo()!;
             if (undoRedoObject?.Subtitles == null)
                 return;
 
             RestoreUndoRedoState(undoRedoObject);
+            RestoreSelectionToPreviousIndex(preIndex);
             ShowUndoStatus();
         });
     }
@@ -12284,6 +12287,8 @@ public partial class MainViewModel :
 
         RunWithoutChangeDetection(() =>
         {
+            var preIndex = SelectedSubtitleIndex ?? 0;
+
             var undoRedoObject = _undoRedoManager.Redo();
             if (undoRedoObject?.Subtitles == null)
             {
@@ -12291,8 +12296,19 @@ public partial class MainViewModel :
             }
 
             RestoreUndoRedoState(undoRedoObject);
+            RestoreSelectionToPreviousIndex(preIndex);
             ShowRedoStatus();
         });
+    }
+
+    private void RestoreSelectionToPreviousIndex(int preIndex)
+    {
+        if (Subtitles.Count == 0)
+        {
+            return;
+        }
+
+        SelectAndScrollToRow(Math.Clamp(preIndex, 0, Subtitles.Count - 1));
     }
 
     public UndoRedoItem MakeUndoRedoObject(string description)
