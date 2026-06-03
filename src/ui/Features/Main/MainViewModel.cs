@@ -9812,7 +9812,7 @@ public partial class MainViewModel :
             else // replace requested
             {
                 var selectedText = EditTextBox.SelectedText;
-                if (selectedText == savedCurrentTextFound)
+                if (!string.IsNullOrEmpty(savedCurrentTextFound) && selectedText == savedCurrentTextFound)
                 {
                     EditTextBox.SelectedText = result.FindMode == FindMode.RegularExpression
                         ? RegexUtils.FixNewLine(result.ReplaceText)
