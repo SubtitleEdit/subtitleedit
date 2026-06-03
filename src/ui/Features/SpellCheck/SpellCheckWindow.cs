@@ -116,6 +116,8 @@ public class SpellCheckWindow : Window
             Width = double.NaN,
         };
         vm.TextBoxWordNotFound = textBoxWord;
+        if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
+            textBoxWord.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
 
         var buttonChange = new Button
         {
@@ -274,6 +276,8 @@ public class SpellCheckWindow : Window
             Background = new SolidColorBrush(Colors.Transparent),
         };
         listBoxSuggestions.DoubleTapped += vm.ListBoxSuggestionsDoubleTapped;
+        if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
+            listBoxSuggestions.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
 
         var scrollViewSuggestions = new ScrollViewer
         {

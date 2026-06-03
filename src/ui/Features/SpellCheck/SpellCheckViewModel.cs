@@ -491,24 +491,34 @@ public partial class SpellCheckViewModel : ObservableObject
     private void HighLightCurrentWord(SpellCheckWord word, SubtitleLineViewModel paragraph)
     {
         var textBlock = new TextBlock();
+        var fontName = Se.Settings.Appearance.SubtitleTextBoxAndGridFontName;
+        if (!string.IsNullOrEmpty(fontName))
+            textBlock.FontFamily = new FontFamily(fontName);
         var idx = word.Index;
         if (idx > 0)
         {
-            var text = paragraph.Text.Substring(0, idx);
-            textBlock.Inlines!.Add(new Run(text));
+            var run = new Run(paragraph.Text.Substring(0, idx));
+            if (!string.IsNullOrEmpty(fontName))
+                run.FontFamily = new FontFamily(fontName);
+            textBlock.Inlines!.Add(run);
         }
 
-        textBlock.Inlines!.Add(new Run
+        var highlightRun = new Run
         {
             Text = word.Text,
             FontWeight = FontWeight.Bold,
             Foreground = Brushes.Red
-        });
+        };
+        if (!string.IsNullOrEmpty(fontName))
+            highlightRun.FontFamily = new FontFamily(fontName);
+        textBlock.Inlines!.Add(highlightRun);
 
         if (idx + word.Text.Length < paragraph.Text.Length)
         {
-            var text = paragraph.Text.Substring(idx + word.Text.Length);
-            textBlock.Inlines!.Add(new Run(text));
+            var run = new Run(paragraph.Text.Substring(idx + word.Text.Length));
+            if (!string.IsNullOrEmpty(fontName))
+                run.FontFamily = new FontFamily(fontName);
+            textBlock.Inlines!.Add(run);
         }
 
         PanelWholeText.Children.Clear();
