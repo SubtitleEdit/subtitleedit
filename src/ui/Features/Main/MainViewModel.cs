@@ -12444,11 +12444,12 @@ public partial class MainViewModel :
         }
         catch (Exception ex)
         {
-            // Font resolution can throw on minimal Linux installs that ship without fontconfig
-            // -discoverable fonts (Avalonia's `Could not create glyphTypeface` — see issue #11355).
-            // Program.cs registers Inter as the default to make this nearly unreachable, but
-            // surviving any future font edge case is cheap insurance — falling back to an
-            // approximate width keeps startup alive instead of taking the whole app down.
+            // Font resolution can throw on minimal Linux installs that ship without
+            // fontconfig-discoverable fonts (Avalonia's `Could not create glyphTypeface` —
+            // see issue #11355). Program.cs registers Inter as the default to make this
+            // nearly unreachable, but surviving any future font edge case is cheap
+            // insurance — falling back to an approximate width keeps startup alive
+            // instead of taking the whole app down.
             Se.LogError(ex, "MeasureShowHideColumnWidth: font measurement failed; using approximate width");
             return Math.Ceiling(sample.Length * fontSize * 0.6) + cellPadding + textBlockMargin + safetyBuffer;
         }
