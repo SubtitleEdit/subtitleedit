@@ -3939,7 +3939,13 @@ public partial class OcrViewModel : ObservableObject
             {
                 SelectedOcrSubtitleItem = OcrSubtitleItems[indexToScroll];
                 SubtitleGrid.SelectedIndex = indexToScroll;
-                SubtitleGrid.ScrollIntoView(OcrSubtitleItems[indexToScroll], null);
+
+                // Post ScrollIntoView as a second background task so it runs after
+                // the DataGrid has processed the selection change and updated its layout.
+                var item = OcrSubtitleItems[indexToScroll];
+                Dispatcher.UIThread.Post(
+                    () => SubtitleGrid.ScrollIntoView(item, null),
+                    DispatcherPriority.Background);
             }
         }, DispatcherPriority.Background);
     }
