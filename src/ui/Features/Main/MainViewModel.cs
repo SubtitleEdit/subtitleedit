@@ -146,6 +146,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 using Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using static Nikse.SubtitleEdit.Logic.FindService;
 using Nikse.SubtitleEdit.Logic.Config.Language;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Initializers;
@@ -9420,7 +9421,8 @@ public partial class MainViewModel :
                 selectedText = EditTextBox.SelectedText;
             }
 
-            if (string.IsNullOrEmpty(selectedText) && !string.IsNullOrEmpty(_findService.SearchText))
+            if ((string.IsNullOrEmpty(selectedText) || string.Equals(selectedText, _findService.CurrentTextFound, _findService.CurrentFindMode == FindMode.CaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                && !string.IsNullOrEmpty(_findService.SearchText))
             {
                 selectedText = _findService.SearchText;
             }
@@ -9739,7 +9741,8 @@ public partial class MainViewModel :
                 selectedText = EditTextBox.SelectedText;
             }
 
-            if (string.IsNullOrEmpty(selectedText) && !string.IsNullOrEmpty(_findService.SearchText))
+            if ((string.IsNullOrEmpty(selectedText) || string.Equals(selectedText, _findService.CurrentTextFound, _findService.CurrentFindMode == FindMode.CaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                && !string.IsNullOrEmpty(_findService.SearchText))
             {
                 selectedText = _findService.SearchText;
             }
@@ -9781,6 +9784,7 @@ public partial class MainViewModel :
         {
             var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
             var subs = Subtitles.Select(p => p.Text).ToList();
+            var savedCurrentTextFound = _findService.CurrentTextFound;
             _findService.Initialize(subs, SelectedSubtitleIndex ?? 0, result.WholeWord, result.FindMode);
 
             var idx = -1;
@@ -9808,9 +9812,29 @@ public partial class MainViewModel :
             else // replace requested
             {
                 var selectedText = EditTextBox.SelectedText;
-                if (selectedText == result.SearchText)
+                if (!string.IsNullOrEmpty(savedCurrentTextFound) && selectedText == savedCurrentTextFound)
                 {
-                    EditTextBox.SelectedText = result.ReplaceText;
+                    if (result.FindMode == FindMode.RegularExpression)
+                    {
+                        try
+                        {
+                            var fixedReplaceText = RegexUtils.FixNewLine(result.ReplaceText);
+                            var regex = new Regex(result.SearchText);
+                            var match = regex.Match(EditTextBox.Text, EditTextBox.SelectionStart);
+                            if (match.Success && match.Index == EditTextBox.SelectionStart)
+                            {
+                                EditTextBox.Text = regex.Replace(EditTextBox.Text, fixedReplaceText, 1, EditTextBox.SelectionStart);
+                            }
+                        }
+                        catch (ArgumentException)
+                        {
+                            // Invalid regex pattern - skip replacement
+                        }
+                    }
+                    else
+                    {
+                        EditTextBox.SelectedText = result.ReplaceText;
+                    }
                     subs[currentLineIndex] = EditTextBox.Text; // reflect replacement so FindNext won't re-match here
                 }
 
@@ -11540,29 +11564,21 @@ public partial class MainViewModel :
     private void MoveLastWordFromFirstLineDownCurrentSubtitle()
     {
         var s = SelectedSubtitle;
-        if (s == null)
+        if (s == null || string.IsNullOrWhiteSpace(s.Text))
         {
             return;
         }
 
-        var lines = s.Text.SplitToLines();
-        if (!string.IsNullOrWhiteSpace(s.Text) && lines.Count == 1)
-        {
-            lines.Add(string.Empty);
-        }
-
+        var lines = NormalizeToTwoLines(s.Text);
         if (lines.Count != 2)
         {
             return;
         }
 
-        var currentText = lines[0].Trim();
-        var nextText = lines[1].Trim();
-
-        var upDown = new MoveWordUpDown(currentText, nextText);
+        var upDown = new MoveWordUpDown(lines[0].Trim(), lines[1].Trim());
         upDown.MoveWordDown();
 
-        s.Text = upDown.S1 + Environment.NewLine + upDown.S2;
+        s.Text = JoinAndCapAtTwoLines(upDown.S1, upDown.S2);
 
         _updateAudioVisualizer = true;
     }
@@ -11571,31 +11587,50 @@ public partial class MainViewModel :
     private void MoveFirstWordFromNextLineUpCurrentSubtitle()
     {
         var s = SelectedSubtitle;
-        if (s == null)
+        if (s == null || string.IsNullOrWhiteSpace(s.Text))
         {
             return;
         }
 
-        var lines = s.Text.SplitToLines();
-        if (!string.IsNullOrWhiteSpace(s.Text) && lines.Count == 1)
-        {
-            lines.Add(string.Empty);
-        }
-
+        var lines = NormalizeToTwoLines(s.Text);
         if (lines.Count != 2)
         {
             return;
         }
 
-        var currentText = lines[0].Trim();
-        var nextText = lines[1].Trim();
-
-        var upDown = new MoveWordUpDown(currentText, nextText);
+        var upDown = new MoveWordUpDown(lines[0].Trim(), lines[1].Trim());
         upDown.MoveWordUp();
 
-        s.Text = upDown.S1 + Environment.NewLine + upDown.S2;
+        s.Text = JoinAndCapAtTwoLines(upDown.S1, upDown.S2);
 
         _updateAudioVisualizer = true;
+    }
+
+    private static List<string> NormalizeToTwoLines(string text)
+    {
+        var lines = text.SplitToLines();
+        if (lines.Count > 2)
+        {
+            lines = Utilities.AutoBreakLine(Utilities.UnbreakLine(text)).SplitToLines();
+        }
+
+        if (lines.Count == 1)
+        {
+            lines.Add(string.Empty);
+        }
+
+        return lines;
+    }
+
+    private static string JoinAndCapAtTwoLines(string s1, string s2)
+    {
+        var result = s1 + Environment.NewLine + s2;
+        if (result.SplitToLines().Count > 2)
+        {
+            result = Utilities.AutoBreakLine(Utilities.UnbreakLine(result));
+        }
+
+        return result;
     }
 
     [RelayCommand]
@@ -12231,11 +12266,14 @@ public partial class MainViewModel :
 
         RunWithoutChangeDetection(() =>
         {
+            var preIndex = SelectedSubtitleIndex ?? 0;
+
             var undoRedoObject = _undoRedoManager.Undo()!;
             if (undoRedoObject?.Subtitles == null)
                 return;
 
             RestoreUndoRedoState(undoRedoObject);
+            RestoreSelectionToPreviousIndex(preIndex);
             ShowUndoStatus();
         });
     }
@@ -12273,6 +12311,8 @@ public partial class MainViewModel :
 
         RunWithoutChangeDetection(() =>
         {
+            var preIndex = SelectedSubtitleIndex ?? 0;
+
             var undoRedoObject = _undoRedoManager.Redo();
             if (undoRedoObject?.Subtitles == null)
             {
@@ -12280,8 +12320,19 @@ public partial class MainViewModel :
             }
 
             RestoreUndoRedoState(undoRedoObject);
+            RestoreSelectionToPreviousIndex(preIndex);
             ShowRedoStatus();
         });
+    }
+
+    private void RestoreSelectionToPreviousIndex(int preIndex)
+    {
+        if (Subtitles.Count == 0)
+        {
+            return;
+        }
+
+        SelectAndScrollToRow(Math.Clamp(preIndex, 0, Subtitles.Count - 1));
     }
 
     public UndoRedoItem MakeUndoRedoObject(string description)
@@ -12394,23 +12445,38 @@ public partial class MainViewModel :
             sample = "-" + sample;
         }
 
-        var fontFamily = SubtitleGrid.FontFamily ?? FontFamily.Default;
-        var typeface = new Typeface(fontFamily);
         var fontSize = SubtitleGrid.FontSize > 0 ? SubtitleGrid.FontSize : Se.Settings.Appearance.SubtitleGridFontSize;
-
-        var formattedText = new FormattedText(
-            sample,
-            CultureInfo.CurrentCulture,
-            FlowDirection.LeftToRight,
-            typeface,
-            fontSize,
-            Brushes.Black);
-
         var cellPadding = Se.Settings.Appearance.GridCompactMode ? 0 : 8; // cell theme: 4 left + 4 right
         const int textBlockMargin = 8; // Avalonia DataGridTextColumn wraps text in TextBlock with Margin=Thickness(4)
         // Scale safety buffer with font size: gridline + sort indicator chrome + sub-pixel rounding grows with size.
         var safetyBuffer = Math.Max(10.0, fontSize);
-        return Math.Ceiling(formattedText.Width) + cellPadding + textBlockMargin + safetyBuffer;
+
+        try
+        {
+            var fontFamily = SubtitleGrid.FontFamily ?? FontFamily.Default;
+            var typeface = new Typeface(fontFamily);
+
+            var formattedText = new FormattedText(
+                sample,
+                CultureInfo.CurrentCulture,
+                FlowDirection.LeftToRight,
+                typeface,
+                fontSize,
+                Brushes.Black);
+
+            return Math.Ceiling(formattedText.Width) + cellPadding + textBlockMargin + safetyBuffer;
+        }
+        catch (Exception ex)
+        {
+            // Font resolution can throw on minimal Linux installs that ship without
+            // fontconfig-discoverable fonts (Avalonia's `Could not create glyphTypeface` —
+            // see issue #11355). Program.cs registers Inter as the default to make this
+            // nearly unreachable, but surviving any future font edge case is cheap
+            // insurance — falling back to an approximate width keeps startup alive
+            // instead of taking the whole app down.
+            Se.LogError(ex, "MeasureShowHideColumnWidth: font measurement failed; using approximate width");
+            return Math.Ceiling(sample.Length * fontSize * 0.6) + cellPadding + textBlockMargin + safetyBuffer;
+        }
     }
 
     private void SelectAllRows()

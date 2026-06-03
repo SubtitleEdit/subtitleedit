@@ -2,11 +2,47 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-rc2 (TBD)
+v5.0.0-rc2 (3rd June 2026)
 
+* Update WhisperCpp to v1.8.5
+* Add engine update button to Auto-translate window
+* Add "Text to speech..." to subtitle grid context menu (#10941)
+* Add SSA Properties and Attachments windows + toolbar/menu items
+* Add Space/Home/End keyboard navigation in tool-window data grids - thx mjuhasz
+* Redesign Fix Common Errors Step 2 button flow and add fixes-applied counter - thx mjuhasz
+* Auto-translate: remember line-merge strategy per engine
+* Cache Regex and HTML stripping in three hot paths (performance)
 * Update Inno Setup installer Italian translation - thx bovirus
+* Update Italian translation - thx bovirus
 * Update Polish translation - thx potplayer-fanpack
 * Update Japanese translation - thx hisui3393
+* Update Turkish translation - thx bilimiyorum
+* Update Portuguese translation - thx Blackspirits
+* Update Korean translation - thx 12si27
+* Include LICENSE in release packages (#11278)
+* Fix #11275: "Adjust timings" always re-checked in Speech-to-text post-processing
+* Fix OpenAI-compatible STT for "Speech to text selected lines" - thx dkakaie
+* Fix #11307: highlight Duration column on CPS-too-high
+* Fix #11305: align waveform window with restored video position
+* Fix #11314: TextSplitResult crash on headless Linux
+* Fix operator-precedence and locale-code bugs
+* Fix image-export alignment and override-position bugs
+* Fix #11280: tighter undo capture + restore redo for unrecorded changes
+* Fix UndoRedoManager deadlock vector, Dispose race, and clone-timestamp bug
+* Fix ColorTextTooLong incorrectly triggering on CPS violations - thx mjuhasz
+* Fix #11327: window overflow with long video file paths
+* Fix UI scale not applied at startup and freeze on scale change
+* Fix OCR window progress bar / status text overlap
+* Fix progress bar / status text overlap in video generation windows
+* Fix SCC import: reject raw CEA-608 data rows and decode PAC line breaks
+* Fix #9803: SCC import italics and byte-misaligned musical notes
+* Fix #11342: SSA style editor *Default style recognition and style preview
+* Fix color picker: hex is 6 chars (RRGGBB) when there is no alpha channel
+* Fix SSA / ASSA style window preview box height and font scaling
+* Fix #11308: move last/first word up/down no longer leaves subtitles stuck at 3 lines
+* Fix #11308: merge selected lines auto-breaks the result to respect the 2-line limit
+* Fix #11308: undo/redo keeps the grid at the cursor row instead of jumping to the snapshot's saved row
+* Fix Google TTS voice listing crash when a parsed voice name is shorter than 5 characters
 
 -----------------------------------------------------------------------------------------------------
 

@@ -1609,8 +1609,9 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         {
             foreach (var rule in category.Rules.Where(p => p.Active && !string.IsNullOrEmpty(p.Find)))
             {
-                var findWhat = RegexUtils.FixNewLine(rule.Find);
-                var replaceWith = RegexUtils.FixNewLine(rule.ReplaceWith);
+                var isRegex = rule.Type.ToString() == ReplaceExpression.SearchTypeRegularExpression;
+                var findWhat = isRegex ? RegexUtils.FixNewLine(rule.Find) : rule.Find;
+                var replaceWith = isRegex ? RegexUtils.FixNewLine(rule.ReplaceWith) : rule.ReplaceWith;
 
                 var mpi = new ReplaceExpression(findWhat, replaceWith, rule.Type.ToString(), category.Name + ": " + rule.Description);
                 replaceExpressions.Add(mpi);

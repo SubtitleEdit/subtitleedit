@@ -212,7 +212,7 @@ namespace Nikse.SubtitleEdit.Logic
                     .Replace(" " + Environment.NewLine, string.Empty)
                     .Replace(Environment.NewLine, string.Empty);
             }
-            else if (breakMode == BreakMode.KeepBreaks)
+            else if (breakMode != BreakMode.KeepBreaks)
             {
                 text = Utilities.AutoBreakLine(text, inputSubtitle.AutoDetectGoogleLanguage());
             }
@@ -234,7 +234,7 @@ namespace Nikse.SubtitleEdit.Logic
                         .Replace(" " + Environment.NewLine, string.Empty)
                         .Replace(Environment.NewLine, string.Empty);
                 }
-                else if (breakMode == BreakMode.KeepBreaks)
+                else if (breakMode != BreakMode.KeepBreaks)
                 {
                     originalText = Utilities.AutoBreakLine(originalText, inputSubtitle.AutoDetectGoogleLanguage());
                 }

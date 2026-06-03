@@ -37,8 +37,8 @@ public class MergeManagerTests
 
         // Assert
         Assert.Single(subtitles);
-        Assert.Equal($"Translated one{Environment.NewLine}Translated two", subtitles[0].Text);
-        Assert.Equal($"Original one{Environment.NewLine}Original two", subtitles[0].OriginalText);
+        Assert.Equal("Translated one Translated two", subtitles[0].Text);
+        Assert.Equal("Original one Original two", subtitles[0].OriginalText);
     }
 
     [Fact]

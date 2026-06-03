@@ -624,7 +624,8 @@ public class AssaStylesWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Top,
             Stretch = Stretch.Uniform, // Scale the preview frame to fit while keeping aspect ratio
-            MinHeight = 240,
+            MinHeight = 150,
+            MaxHeight = 220,
         };
 
         grid.Add(label, 0);

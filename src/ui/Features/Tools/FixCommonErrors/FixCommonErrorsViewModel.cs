@@ -294,6 +294,17 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         }
     }
 
+    partial void OnSelectedLanguageChanged(LanguageDisplayItem? value)
+    {
+        // Language drives which OCR-fix list, names list, and per-language rules are loaded;
+        // without this sync a user picking e.g. Croatian after auto-detect chose English would
+        // still get the English replacements (GH #10940).
+        if (value != null)
+        {
+            Language = value.Code.TwoLetterISOLanguageName;
+        }
+    }
+
     private void SelectedParagraph_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(SubtitleLineViewModel.Text) &&

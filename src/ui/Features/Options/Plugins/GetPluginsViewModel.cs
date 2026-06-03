@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Plugins;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
@@ -27,6 +28,13 @@ public partial class GetPluginsViewModel : ObservableObject
     private readonly IPluginDownloadService _downloadService;
     private readonly IPluginCatalog _pluginCatalog;
     private CancellationTokenSource? _cancellationTokenSource;
+    // Per-install CTSs so concurrent Install clicks each keep their own cancel
+    // handle. The single _cancellationTokenSource pattern below was overwritten
+    // by every new Install, orphaning the previous one — clicking Cancel could
+    // then only cancel the most recent install. CancelDownload / Close iterate
+    // both this list and _cancellationTokenSource so a single "Cancel" stops
+    // everything in flight.
+    private readonly List<CancellationTokenSource> _activeInstalls = new();
 
     public GetPluginsViewModel(IPluginDownloadService downloadService, IPluginCatalog pluginCatalog)
     {
@@ -90,9 +98,10 @@ public partial class GetPluginsViewModel : ObservableObject
             return;
         }
 
-        // Create the cancellation source BEFORE flipping IsBusy so the cancel button
+        // Create a per-install CTS BEFORE flipping IsBusy so the cancel button
         // always has a token to cancel from the moment it becomes visible.
-        _cancellationTokenSource = new CancellationTokenSource();
+        var cts = new CancellationTokenSource();
+        _activeInstalls.Add(cts);
         item.DownloadProgress = 0;
         var previousStatus = item.StatusText;
         item.IsBusy = true;
@@ -104,7 +113,7 @@ public partial class GetPluginsViewModel : ObservableObject
 
         try
         {
-            await _downloadService.InstallAsync(item.Entry, progress, _cancellationTokenSource.Token);
+            await _downloadService.InstallAsync(item.Entry, progress, cts.Token);
             InstalledAnything = true;
 
             var match = _pluginCatalog.GetPlugins().FirstOrDefault(p =>
@@ -125,6 +134,8 @@ public partial class GetPluginsViewModel : ObservableObject
         }
         finally
         {
+            _activeInstalls.Remove(cts);
+            cts.Dispose();
             item.IsBusy = false;
         }
     }
@@ -132,14 +143,31 @@ public partial class GetPluginsViewModel : ObservableObject
     [RelayCommand]
     private void CancelDownload()
     {
-        _cancellationTokenSource?.Cancel();
+        CancelAllInFlight();
     }
 
     [RelayCommand]
     private void Close()
     {
-        _cancellationTokenSource?.Cancel();
+        CancelAllInFlight();
         Window?.Close();
+    }
+
+    private void CancelAllInFlight()
+    {
+        _cancellationTokenSource?.Cancel();
+        foreach (var cts in _activeInstalls.ToList())
+        {
+            try
+            {
+                cts.Cancel();
+            }
+            catch (ObjectDisposedException)
+            {
+                // The install finished and disposed its CTS between our snapshot
+                // and the Cancel call — nothing to cancel, just move on.
+            }
+        }
     }
 
     internal void OnKeyDown(KeyEventArgs e)

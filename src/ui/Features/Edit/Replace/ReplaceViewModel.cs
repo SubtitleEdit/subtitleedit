@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Edit.Find;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
@@ -158,13 +159,13 @@ public partial class ReplaceViewModel : ObservableObject
         _findResult = mainViewModel;
         if (!string.IsNullOrEmpty(selectedText))
         {
-            SearchText = selectedText;
+            SearchText = RegexUtils.EscapeNewLines(selectedText);
         }
 
         SearchHistory.Clear();
         foreach (var item in findService.SearchHistory)
         {
-            SearchHistory.Add(item);
+            SearchHistory.Add(RegexUtils.EscapeNewLines(item));
         }
     }
 
