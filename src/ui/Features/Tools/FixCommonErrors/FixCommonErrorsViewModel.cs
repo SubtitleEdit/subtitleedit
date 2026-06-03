@@ -116,7 +116,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
         if (Se.Settings.Tools.FixCommonErrors.SkipStep1)
         {
-            ToApplyFixes();
+            ShowStep2();
         }
     }
 
@@ -203,18 +203,21 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         Step1IsVisible = true;
     }
 
-    [RelayCommand]
-    private void ToApplyFixes()
+    private void ShowStep2()
     {
         Step1IsVisible = false;
         Step2IsVisible = true;
-
-        SaveProfiles();
         _oldSelectedLanguage = SelectedLanguage!;
-
         _totalFixes = 0;
         FixesAppliedText = string.Empty;
         RefreshFixes();
+    }
+
+    [RelayCommand]
+    private void ToApplyFixes()
+    {
+        SaveProfiles();
+        ShowStep2();
     }
 
     [RelayCommand]
