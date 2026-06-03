@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -279,10 +280,9 @@ public class SpellCheckWindow : Window
         listBoxSuggestions.DoubleTapped += vm.ListBoxSuggestionsDoubleTapped;
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
         {
-            listBoxSuggestions.Styles.Add(new Style(x => x.OfType<TextBlock>())
-            {
-                Setters = { new Setter(TextBlock.FontFamilyProperty, new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName)) }
-            });
+            var fontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+            listBoxSuggestions.ItemTemplate = new FuncDataTemplate<string>((item, _) =>
+                new TextBlock { Text = item, FontFamily = fontFamily });
         }
 
         var scrollViewSuggestions = new ScrollViewer
