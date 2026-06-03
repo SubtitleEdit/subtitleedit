@@ -17,6 +17,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -706,7 +707,9 @@ public partial class SsaStylesViewModel : ObservableObject
 
         var text = "This is a test";
 
-        var fontSize = (float)style.FontSize * 0.75f; // render a little smaller in the preview
+        // Scale the rendered font size to the preview canvas height (~360px) the same way
+        // libass scales fonts against PlayResY. Default to 288 (libass default) when missing.
+        var fontSize = (float)style.FontSize * 360f / GetPlayResY(_subtitle.Header);
         var libAssFontName = FontHelper.GetSkiaFontNameFromLibAssaFontName(style.FontName);
         SKBitmap bitmap;
 
@@ -772,6 +775,22 @@ public partial class SsaStylesViewModel : ObservableObject
 
         var frame = TextToImageGenerator.ComposeOnPreviewFrame(bitmap, GetAlignment(style), style.MarginLeft, style.MarginRight, style.MarginVertical);
         ImagePreview = frame.ToAvaloniaBitmap();
+    }
+
+    private static int GetPlayResY(string? header)
+    {
+        if (string.IsNullOrEmpty(header))
+        {
+            return 288;
+        }
+
+        var value = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResY", "[Script Info]", header);
+        if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var y) && y > 0)
+        {
+            return y;
+        }
+
+        return 288;
     }
 
     private static int GetAlignment(StyleDisplay style)
