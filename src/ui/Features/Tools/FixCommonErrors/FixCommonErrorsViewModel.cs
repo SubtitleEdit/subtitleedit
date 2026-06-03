@@ -112,7 +112,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
         InitStep1(languageCode, subtitle);
         LoadProfiles();
-        SelectedProfile = Profiles.FirstOrDefault(p => p.Name == Se.Settings.Tools.FixCommonErrors.LastProfileName) ?? Profiles.FirstOrDefault() ?? Profiles.FirstOrDefault();
+        SelectedProfile = Profiles.FirstOrDefault(p => p.Name == Se.Settings.Tools.FixCommonErrors.LastProfileName) ?? Profiles.FirstOrDefault();
 
         if (Se.Settings.Tools.FixCommonErrors.SkipStep1 && SelectedProfile != null)
         {
