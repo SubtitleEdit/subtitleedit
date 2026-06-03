@@ -146,6 +146,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 using Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using static Nikse.SubtitleEdit.Logic.FindService;
 using Nikse.SubtitleEdit.Logic.Config.Language;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Initializers;
@@ -9810,9 +9811,11 @@ public partial class MainViewModel :
             else // replace requested
             {
                 var selectedText = EditTextBox.SelectedText;
-                if (selectedText == result.SearchText)
+                if (selectedText == _findService.CurrentTextFound)
                 {
-                    EditTextBox.SelectedText = result.ReplaceText;
+                    EditTextBox.SelectedText = result.FindMode == FindMode.RegularExpression
+                        ? RegexUtils.FixNewLine(result.ReplaceText)
+                        : result.ReplaceText;
                     subs[currentLineIndex] = EditTextBox.Text; // reflect replacement so FindNext won't re-match here
                 }
 
