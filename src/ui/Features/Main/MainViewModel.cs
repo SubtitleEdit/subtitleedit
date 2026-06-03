@@ -11540,29 +11540,21 @@ public partial class MainViewModel :
     private void MoveLastWordFromFirstLineDownCurrentSubtitle()
     {
         var s = SelectedSubtitle;
-        if (s == null)
+        if (s == null || string.IsNullOrWhiteSpace(s.Text))
         {
             return;
         }
 
-        var lines = s.Text.SplitToLines();
-        if (!string.IsNullOrWhiteSpace(s.Text) && lines.Count == 1)
-        {
-            lines.Add(string.Empty);
-        }
-
+        var lines = NormalizeToTwoLines(s.Text);
         if (lines.Count != 2)
         {
             return;
         }
 
-        var currentText = lines[0].Trim();
-        var nextText = lines[1].Trim();
-
-        var upDown = new MoveWordUpDown(currentText, nextText);
+        var upDown = new MoveWordUpDown(lines[0].Trim(), lines[1].Trim());
         upDown.MoveWordDown();
 
-        s.Text = upDown.S1 + Environment.NewLine + upDown.S2;
+        s.Text = JoinAndCapAtTwoLines(upDown.S1, upDown.S2);
 
         _updateAudioVisualizer = true;
     }
@@ -11571,31 +11563,50 @@ public partial class MainViewModel :
     private void MoveFirstWordFromNextLineUpCurrentSubtitle()
     {
         var s = SelectedSubtitle;
-        if (s == null)
+        if (s == null || string.IsNullOrWhiteSpace(s.Text))
         {
             return;
         }
 
-        var lines = s.Text.SplitToLines();
-        if (!string.IsNullOrWhiteSpace(s.Text) && lines.Count == 1)
-        {
-            lines.Add(string.Empty);
-        }
-
+        var lines = NormalizeToTwoLines(s.Text);
         if (lines.Count != 2)
         {
             return;
         }
 
-        var currentText = lines[0].Trim();
-        var nextText = lines[1].Trim();
-
-        var upDown = new MoveWordUpDown(currentText, nextText);
+        var upDown = new MoveWordUpDown(lines[0].Trim(), lines[1].Trim());
         upDown.MoveWordUp();
 
-        s.Text = upDown.S1 + Environment.NewLine + upDown.S2;
+        s.Text = JoinAndCapAtTwoLines(upDown.S1, upDown.S2);
 
         _updateAudioVisualizer = true;
+    }
+
+    private static List<string> NormalizeToTwoLines(string text)
+    {
+        var lines = text.SplitToLines();
+        if (lines.Count > 2)
+        {
+            lines = Utilities.AutoBreakLine(Utilities.UnbreakLine(text)).SplitToLines();
+        }
+
+        if (lines.Count == 1)
+        {
+            lines.Add(string.Empty);
+        }
+
+        return lines;
+    }
+
+    private static string JoinAndCapAtTwoLines(string s1, string s2)
+    {
+        var result = s1 + Environment.NewLine + s2;
+        if (result.SplitToLines().Count > 2)
+        {
+            result = Utilities.AutoBreakLine(Utilities.UnbreakLine(result));
+        }
+
+        return result;
     }
 
     [RelayCommand]
