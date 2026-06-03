@@ -1,7 +1,9 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Layout;
+using System.Collections;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -103,6 +105,16 @@ public class FindDoubleWordsWindow : Window
         dataGrid.SelectionChanged += vm.GridSelectionChanged;
         dataGrid.DoubleTapped += (s, e) => vm.GoToCommand.Execute(null);
         dataGrid.KeyDown += (s, e) => vm.GridKeyDown(e);
+        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
+            {
+                var target = e.Key == Key.Home ? items[0] : items[^1];
+                dataGrid.SelectedItem = target;
+                dataGrid.ScrollIntoView(target, null);
+                e.Handled = true;
+            }
+        }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);
     }

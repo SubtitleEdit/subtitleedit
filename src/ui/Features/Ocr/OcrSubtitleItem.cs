@@ -1,9 +1,11 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
 using System;
 
@@ -111,7 +113,13 @@ public partial class OcrSubtitleItem : ObservableObject
 
     public TextBlock CreateFormattedText()
     {
-        return FixResult?.GetFormattedText() ?? new TextBlock { Text = Text };
+        if (FixResult != null)
+            return FixResult.GetFormattedText();
+
+        var tb = new TextBlock { Text = Text };
+        if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
+            tb.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+        return tb;
     }
 
     public OcrSubtitleItem(IOcrSubtitle ocrSubtitle, int index)

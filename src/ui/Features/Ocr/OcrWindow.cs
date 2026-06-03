@@ -8,11 +8,13 @@ using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Styling;
+using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 using Optris.Icons.Avalonia;
 using System;
+using System.Collections;
 using System.ComponentModel;
 using MenuItem = Avalonia.Controls.MenuItem;
 
@@ -457,6 +459,16 @@ public class OcrWindow : Window
         };
         dataGridSubtitle.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedOcrSubtitleItem)) { Source = vm });
         dataGridSubtitle.KeyDown += vm.SubtitleGridKeyDown;
+        dataGridSubtitle.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key is Key.Home or Key.End && dataGridSubtitle.ItemsSource is IList items && items.Count > 0)
+            {
+                var target = e.Key == Key.Home ? items[0] : items[^1];
+                dataGridSubtitle.SelectedItem = target;
+                dataGridSubtitle.ScrollIntoView(target, null);
+                e.Handled = true;
+            }
+        }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         dataGridSubtitle.DoubleTapped += (s, e) => vm.SubtitleGridDoubleTapped();
         dataGridSubtitle.AddHandler(InputElement.PointerPressedEvent, vm.DataGridSubtitleMacPointerPressed, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         dataGridSubtitle.AddHandler(InputElement.PointerReleasedEvent, vm.DataGridSubtitleMacPointerReleased, Avalonia.Interactivity.RoutingStrategies.Tunnel);
@@ -780,6 +792,12 @@ public class OcrWindow : Window
             }
         });
 
+        listBox.ItemTemplate = new FuncDataTemplate<UnknownWordItem>((item, _) =>
+        {
+            var tb = new TextBlock { Text = item?.ToString() };
+            tb.Bind(TextBlock.FontFamilyProperty, new Binding(nameof(vm.TextBoxFontFamily)) { Source = vm, Mode = BindingMode.OneWay });
+            return tb;
+        });
         listBox.SelectionChanged += (s, e) => vm.UnknownWordSelectionChanged();
         listBox.Tapped += (s, e) => vm.UnknownWordSelectionTapped();
         listBox.KeyDown += (s, e) => vm.UnknownWordListKeyDown(e);
@@ -867,6 +885,14 @@ public class OcrWindow : Window
             }
         });
 
+        listBox.ItemTemplate = new FuncDataTemplate<ReplacementUsedItem>((item, _) =>
+        {
+            var tb = new TextBlock { Text = item?.ToString() };
+            tb.Bind(TextBlock.FontFamilyProperty, new Binding(nameof(vm.TextBoxFontFamily)) { Source = vm, Mode = BindingMode.OneWay });
+            return tb;
+        });
+        ScrollViewer.SetHorizontalScrollBarVisibility(listBox, ScrollBarVisibility.Auto);
+        listBox.SelectionChanged += (s, e) => vm.AllFixesTapped();
         listBox.Tapped += (s, e) => vm.AllFixesTapped();
 
         grid.Add(listBox, 0, 0);
@@ -907,6 +933,13 @@ public class OcrWindow : Window
                 new Setter(ListBoxItem.MarginProperty, new Thickness(0)),
             }
         });
+        listBox.ItemTemplate = new FuncDataTemplate<GuessUsedItem>((item, _) =>
+        {
+            var tb = new TextBlock { Text = item?.ToString() };
+            tb.Bind(TextBlock.FontFamilyProperty, new Binding(nameof(vm.TextBoxFontFamily)) { Source = vm, Mode = BindingMode.OneWay });
+            return tb;
+        });
+        listBox.SelectionChanged += (s, e) => vm.GuessUsedTapped();
         listBox.Tapped += (s, e) => vm.GuessUsedTapped();
 
         grid.Add(listBox, 0, 0);

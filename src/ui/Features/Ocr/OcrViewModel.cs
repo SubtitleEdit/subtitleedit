@@ -157,6 +157,11 @@ public partial class OcrViewModel : ObservableObject
     private readonly IBinaryOcrMatcher _binaryOcrMatcher;
     private PreProcessingSettings? _preProcessingSettings;
     private bool _isCtrlDown;
+    private bool _textBoxFontIsCustom;
+    // Saved font name kept so a custom font that is temporarily unresolvable
+    // (e.g. user uninstalled the font; FontFamily ctor throws on load) still
+    // round-trips on save instead of being clobbered by the default font name.
+    private string _textBoxFontNamePersisted = string.Empty;
     private CancellationTokenSource _cancellationTokenSource;
     private NOcrDb? _nOcrDb;
     private BinaryOcrDb? _nOcrFallbackBinaryOcrDb;
@@ -223,9 +228,11 @@ public partial class OcrViewModel : ObservableObject
         _nOcrAddHistoryManager = new NOcrAddHistoryManager();
         _binaryOcrAddHistoryManager = new BinaryOcrAddHistoryManager();
         _cancellationTokenSource = new CancellationTokenSource();
-        TextBoxFontFamily = new FontFamily(FontHelper.GetSystemFonts().First());
-        TextBoxFontSize = 14;
-        TextBoxFontWeight = FontWeight.Regular;
+        TextBoxFontFamily = !string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName)
+            ? new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName)
+            : FontFamily.Default;
+        TextBoxFontSize = (decimal)Se.Settings.Appearance.SubtitleTextBoxFontSize;
+        TextBoxFontWeight = Se.Settings.Appearance.SubtitleTextBoxFontBold ? FontWeight.Bold : FontWeight.Regular;
         UnknownWordsRemoveCurrentText = string.Empty;
         NOcrBinaryOcrFallbackDatabase = string.Empty;
         BinaryOcrNOcrFallbackDatabase = string.Empty;
@@ -263,19 +270,14 @@ public partial class OcrViewModel : ObservableObject
             SelectedGoogleVisionLanguage = GoogleVisionLanguages.FirstOrDefault(p => p.Code == ocr.GoogleVisionLanguage);
             SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == Se.Settings.Ocr.PaddleOcrLastLanguage) ?? PaddleOcrLanguages.First();
             SelectedGoogleLensLanguage = GoogleLensLanguages.FirstOrDefault(p => p.Code == Se.Settings.Ocr.GoogleLensOcrLastLanguage) ?? GoogleLensLanguages.First();
-            TextBoxFontSize = ocr.TextBoxFontSize;
-            if (Se.Settings.Ocr.TextBoxFontBold)
+            if (!string.IsNullOrEmpty(ocr.TextBoxFontName))
             {
-                TextBoxFontWeight = FontWeight.Bold;
-            }
-
-            try
-            {
-                TextBoxFontFamily = new FontFamily(ocr.TextBoxFontName);
-            }
-            catch
-            {
-                // ignored
+                _textBoxFontIsCustom = true;
+                _textBoxFontNamePersisted = ocr.TextBoxFontName;
+                TextBoxFontSize = ocr.TextBoxFontSize;
+                TextBoxFontWeight = ocr.TextBoxFontBold ? FontWeight.Bold : FontWeight.Regular;
+                try { TextBoxFontFamily = new FontFamily(ocr.TextBoxFontName); }
+                catch { /* ignored */ }
             }
 
             DoFixOcrErrors = ocr.DoFixOcrErrors;
@@ -316,9 +318,18 @@ public partial class OcrViewModel : ObservableObject
         ocr.CaptureAssaPosition = HasCaptureAlignment;
         ocr.NOcrBinaryOcrFallbackDatabase = NOcrBinaryOcrFallbackDatabase ?? string.Empty;
         ocr.BinaryOcrNOcrFallbackDatabase = BinaryOcrNOcrFallbackDatabase ?? string.Empty;
-        ocr.TextBoxFontSize = TextBoxFontSize;
-        ocr.TextBoxFontBold = TextBoxFontWeight == FontWeight.Bold;
-        ocr.TextBoxFontName = TextBoxFontFamily.Name;
+        if (_textBoxFontIsCustom)
+        {
+            ocr.TextBoxFontSize = TextBoxFontSize;
+            ocr.TextBoxFontBold = TextBoxFontWeight == FontWeight.Bold;
+            ocr.TextBoxFontName = string.IsNullOrEmpty(_textBoxFontNamePersisted)
+                ? TextBoxFontFamily.Name
+                : _textBoxFontNamePersisted;
+        }
+        else
+        {
+            ocr.TextBoxFontName = string.Empty;
+        }
 
         if (SelectedDictionary != null)
         {
@@ -385,6 +396,7 @@ public partial class OcrViewModel : ObservableObject
         var result = await _windowService.ShowDialogAsync<PickFontNameWindow, PickFontNameViewModel>(Window, vm =>
         {
             vm.Initialize(true, true);
+            vm.SelectedFontName = TextBoxFontFamily.Name;
             vm.FontSize = TextBoxFontSize;
             vm.IsFontBold = TextBoxFontWeight == FontWeight.Bold;
         });
@@ -396,6 +408,8 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        _textBoxFontIsCustom = true;
+        _textBoxFontNamePersisted = result.SelectedFontName;
         TextBoxFontFamily = new FontFamily(result.SelectedFontName);
         TextBoxFontSize = result.FontSize;
         TextBoxFontWeight = result.IsFontBold ? FontWeight.Bold : FontWeight.Regular;
@@ -3805,16 +3819,6 @@ public partial class OcrViewModel : ObservableObject
             e.Handled = true; // prevent further handling if needed
             DeleteSelectedLines();
         }
-        else if (e.Key == Key.Home)
-        {
-            e.Handled = true; // prevent further handling if needed
-            SelectAndScrollToRow(0);
-        }
-        else if (e.Key == Key.End)
-        {
-            e.Handled = true; // prevent further handling if needed
-            SelectAndScrollToRow(OcrSubtitleItems.Count - 1);
-        }
         else if (e.Key == Key.I && e.KeyModifiers == (KeyModifiers.Control | KeyModifiers.Shift))
         {
             e.Handled = true;
@@ -3943,7 +3947,13 @@ public partial class OcrViewModel : ObservableObject
             {
                 SelectedOcrSubtitleItem = OcrSubtitleItems[indexToScroll];
                 SubtitleGrid.SelectedIndex = indexToScroll;
-                SubtitleGrid.ScrollIntoView(OcrSubtitleItems[indexToScroll], null);
+
+                // Post ScrollIntoView as a second background task so it runs after
+                // the DataGrid has processed the selection change and updated its layout.
+                var item = OcrSubtitleItems[indexToScroll];
+                Dispatcher.UIThread.Post(
+                    () => SubtitleGrid.ScrollIntoView(item, null),
+                    DispatcherPriority.Background);
             }
         }, DispatcherPriority.Background);
     }
@@ -4297,6 +4307,7 @@ public partial class OcrViewModel : ObservableObject
             UnknownWordsRemoveCurrentText = string.Format(
                 Se.Language.Ocr.RemoveXFromUnknownWordsList,
                 SelectedUnknownWord?.Word.FixedWord);
+            UnknownWordSelectionTapped();
         }
         else
         {

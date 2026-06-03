@@ -52,6 +52,8 @@ public class ShowImageWindow : Window
 
 
         var label = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.Text)).WithFontSize(30).WithMarginTop(20).WithAlignmentCenter();
+        if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
+            label.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonPanel = UiUtil.MakeButtonBar(buttonOk);

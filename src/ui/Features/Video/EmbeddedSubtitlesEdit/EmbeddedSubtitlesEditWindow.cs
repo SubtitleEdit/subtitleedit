@@ -2,8 +2,10 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Styling;
+using System.Collections;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -165,6 +167,16 @@ public class EmbeddedSubtitlesEditWindow : Window
         dataGridTracks.Bind(DataGrid.ItemsSourceProperty, new Binding(nameof(vm.Tracks)) { Source = vm });
         dataGridTracks.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedTrck)) { Source = vm });
         dataGridTracks.KeyDown += (s, e) => vm.OnTracksGridKeyDown(e);
+        dataGridTracks.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key is Key.Home or Key.End && dataGridTracks.ItemsSource is IList items && items.Count > 0)
+            {
+                var target = e.Key == Key.Home ? items[0] : items[^1];
+                dataGridTracks.SelectedItem = target;
+                dataGridTracks.ScrollIntoView(target, null);
+                e.Handled = true;
+            }
+        }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         dataGridTracks.DoubleTapped += (s, e) => vm.EditCommand.Execute(null);
         vm.TracksGrid = dataGridTracks;
 
