@@ -157,6 +157,7 @@ public partial class OcrViewModel : ObservableObject
     private readonly IBinaryOcrMatcher _binaryOcrMatcher;
     private PreProcessingSettings? _preProcessingSettings;
     private bool _isCtrlDown;
+    private bool _textBoxFontIsCustom;
     private CancellationTokenSource _cancellationTokenSource;
     private NOcrDb? _nOcrDb;
     private BinaryOcrDb? _nOcrFallbackBinaryOcrDb;
@@ -223,9 +224,11 @@ public partial class OcrViewModel : ObservableObject
         _nOcrAddHistoryManager = new NOcrAddHistoryManager();
         _binaryOcrAddHistoryManager = new BinaryOcrAddHistoryManager();
         _cancellationTokenSource = new CancellationTokenSource();
-        TextBoxFontFamily = new FontFamily(FontHelper.GetSystemFonts().First());
-        TextBoxFontSize = 14;
-        TextBoxFontWeight = FontWeight.Regular;
+        TextBoxFontFamily = !string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName)
+            ? new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName)
+            : FontFamily.Default;
+        TextBoxFontSize = (decimal)Se.Settings.Appearance.SubtitleTextBoxFontSize;
+        TextBoxFontWeight = Se.Settings.Appearance.SubtitleTextBoxFontBold ? FontWeight.Bold : FontWeight.Regular;
         UnknownWordsRemoveCurrentText = string.Empty;
         NOcrBinaryOcrFallbackDatabase = string.Empty;
         BinaryOcrNOcrFallbackDatabase = string.Empty;
@@ -263,19 +266,13 @@ public partial class OcrViewModel : ObservableObject
             SelectedGoogleVisionLanguage = GoogleVisionLanguages.FirstOrDefault(p => p.Code == ocr.GoogleVisionLanguage);
             SelectedPaddleOcrLanguage = PaddleOcrLanguages.FirstOrDefault(p => p.Code == Se.Settings.Ocr.PaddleOcrLastLanguage) ?? PaddleOcrLanguages.First();
             SelectedGoogleLensLanguage = GoogleLensLanguages.FirstOrDefault(p => p.Code == Se.Settings.Ocr.GoogleLensOcrLastLanguage) ?? GoogleLensLanguages.First();
-            TextBoxFontSize = ocr.TextBoxFontSize;
-            if (Se.Settings.Ocr.TextBoxFontBold)
+            if (!string.IsNullOrEmpty(ocr.TextBoxFontName))
             {
-                TextBoxFontWeight = FontWeight.Bold;
-            }
-
-            try
-            {
-                TextBoxFontFamily = new FontFamily(ocr.TextBoxFontName);
-            }
-            catch
-            {
-                // ignored
+                _textBoxFontIsCustom = true;
+                TextBoxFontSize = ocr.TextBoxFontSize;
+                TextBoxFontWeight = ocr.TextBoxFontBold ? FontWeight.Bold : FontWeight.Regular;
+                try { TextBoxFontFamily = new FontFamily(ocr.TextBoxFontName); }
+                catch { /* ignored */ }
             }
 
             DoFixOcrErrors = ocr.DoFixOcrErrors;
@@ -316,9 +313,16 @@ public partial class OcrViewModel : ObservableObject
         ocr.CaptureAssaPosition = HasCaptureAlignment;
         ocr.NOcrBinaryOcrFallbackDatabase = NOcrBinaryOcrFallbackDatabase ?? string.Empty;
         ocr.BinaryOcrNOcrFallbackDatabase = BinaryOcrNOcrFallbackDatabase ?? string.Empty;
-        ocr.TextBoxFontSize = TextBoxFontSize;
-        ocr.TextBoxFontBold = TextBoxFontWeight == FontWeight.Bold;
-        ocr.TextBoxFontName = TextBoxFontFamily.Name;
+        if (_textBoxFontIsCustom)
+        {
+            ocr.TextBoxFontSize = TextBoxFontSize;
+            ocr.TextBoxFontBold = TextBoxFontWeight == FontWeight.Bold;
+            ocr.TextBoxFontName = TextBoxFontFamily.Name;
+        }
+        else
+        {
+            ocr.TextBoxFontName = string.Empty;
+        }
 
         if (SelectedDictionary != null)
         {
@@ -396,6 +400,7 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        _textBoxFontIsCustom = true;
         TextBoxFontFamily = new FontFamily(result.SelectedFontName);
         TextBoxFontSize = result.FontSize;
         TextBoxFontWeight = result.IsFontBold ? FontWeight.Bold : FontWeight.Regular;
