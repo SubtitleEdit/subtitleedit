@@ -12421,23 +12421,38 @@ public partial class MainViewModel :
             sample = "-" + sample;
         }
 
-        var fontFamily = SubtitleGrid.FontFamily ?? FontFamily.Default;
-        var typeface = new Typeface(fontFamily);
         var fontSize = SubtitleGrid.FontSize > 0 ? SubtitleGrid.FontSize : Se.Settings.Appearance.SubtitleGridFontSize;
-
-        var formattedText = new FormattedText(
-            sample,
-            CultureInfo.CurrentCulture,
-            FlowDirection.LeftToRight,
-            typeface,
-            fontSize,
-            Brushes.Black);
-
         var cellPadding = Se.Settings.Appearance.GridCompactMode ? 0 : 8; // cell theme: 4 left + 4 right
         const int textBlockMargin = 8; // Avalonia DataGridTextColumn wraps text in TextBlock with Margin=Thickness(4)
         // Scale safety buffer with font size: gridline + sort indicator chrome + sub-pixel rounding grows with size.
         var safetyBuffer = Math.Max(10.0, fontSize);
-        return Math.Ceiling(formattedText.Width) + cellPadding + textBlockMargin + safetyBuffer;
+
+        try
+        {
+            var fontFamily = SubtitleGrid.FontFamily ?? FontFamily.Default;
+            var typeface = new Typeface(fontFamily);
+
+            var formattedText = new FormattedText(
+                sample,
+                CultureInfo.CurrentCulture,
+                FlowDirection.LeftToRight,
+                typeface,
+                fontSize,
+                Brushes.Black);
+
+            return Math.Ceiling(formattedText.Width) + cellPadding + textBlockMargin + safetyBuffer;
+        }
+        catch (Exception ex)
+        {
+            // Font resolution can throw on minimal Linux installs that ship without
+            // fontconfig-discoverable fonts (Avalonia's `Could not create glyphTypeface` —
+            // see issue #11355). Program.cs registers Inter as the default to make this
+            // nearly unreachable, but surviving any future font edge case is cheap
+            // insurance — falling back to an approximate width keeps startup alive
+            // instead of taking the whole app down.
+            Se.LogError(ex, "MeasureShowHideColumnWidth: font measurement failed; using approximate width");
+            return Math.Ceiling(sample.Length * fontSize * 0.6) + cellPadding + textBlockMargin + safetyBuffer;
+        }
     }
 
     private void SelectAllRows()
