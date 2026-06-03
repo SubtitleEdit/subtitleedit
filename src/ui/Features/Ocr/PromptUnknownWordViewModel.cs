@@ -8,6 +8,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -68,6 +69,9 @@ public partial class PromptUnknownWordViewModel : ObservableObject
     private void HighLightCurrentWord(UnknownWordItem word)
     {
         var textBlock = new TextBlock();
+        var fontName = Se.Settings.Appearance.SubtitleTextBoxAndGridFontName;
+        if (!string.IsNullOrEmpty(fontName))
+            textBlock.FontFamily = new FontFamily(fontName);
         var idx = word.Word.WordIndex;
         var paragraph = word.Result.GetText();
         var w = word.Word.FixedWord;
@@ -78,7 +82,10 @@ public partial class PromptUnknownWordViewModel : ObservableObject
             if (idx < 0)
             {
                 // still not found - just show the whole text without highlighting
-                textBlock.Inlines!.Add(new Run(paragraph));
+                var run = new Run(paragraph);
+                if (!string.IsNullOrEmpty(fontName))
+                    run.FontFamily = new FontFamily(fontName);
+                textBlock.Inlines!.Add(run);
                 PanelWholeText.Children.Clear();
                 PanelWholeText.Children.Add(textBlock);
                 return;
@@ -87,21 +94,28 @@ public partial class PromptUnknownWordViewModel : ObservableObject
 
         if (idx > 0)
         {
-            var text = paragraph.Substring(0, idx);
-            textBlock.Inlines!.Add(new Run(text));
+            var run = new Run(paragraph.Substring(0, idx));
+            if (!string.IsNullOrEmpty(fontName))
+                run.FontFamily = new FontFamily(fontName);
+            textBlock.Inlines!.Add(run);
         }
 
-        textBlock.Inlines!.Add(new Run
+        var highlightRun = new Run
         {
             Text = w,
             FontWeight = FontWeight.Bold,
             Foreground = Brushes.Red
-        });
+        };
+        if (!string.IsNullOrEmpty(fontName))
+            highlightRun.FontFamily = new FontFamily(fontName);
+        textBlock.Inlines!.Add(highlightRun);
 
         if (idx + w.Length < paragraph.Length)
         {
-            var text = paragraph.Substring(idx + w.Length);
-            textBlock.Inlines!.Add(new Run(text));
+            var run = new Run(paragraph.Substring(idx + w.Length));
+            if (!string.IsNullOrEmpty(fontName))
+                run.FontFamily = new FontFamily(fontName);
+            textBlock.Inlines!.Add(run);
         }
 
         PanelWholeText.Children.Clear();

@@ -8,6 +8,7 @@ using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Styling;
+using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -791,7 +792,12 @@ public class OcrWindow : Window
             }
         });
 
-        listBox.Bind(FontFamilyProperty, new Binding(nameof(vm.TextBoxFontFamily)) { Mode = BindingMode.OneWay });
+        listBox.ItemTemplate = new FuncDataTemplate<UnknownWordItem>((item, _) =>
+        {
+            var tb = new TextBlock { Text = item?.ToString() };
+            tb.Bind(TextBlock.FontFamilyProperty, new Binding(nameof(vm.TextBoxFontFamily)) { Source = vm, Mode = BindingMode.OneWay });
+            return tb;
+        });
         listBox.SelectionChanged += (s, e) => vm.UnknownWordSelectionChanged();
         listBox.Tapped += (s, e) => vm.UnknownWordSelectionTapped();
         listBox.KeyDown += (s, e) => vm.UnknownWordListKeyDown(e);
@@ -879,7 +885,12 @@ public class OcrWindow : Window
             }
         });
 
-        listBox.Bind(FontFamilyProperty, new Binding(nameof(vm.TextBoxFontFamily)) { Mode = BindingMode.OneWay });
+        listBox.ItemTemplate = new FuncDataTemplate<ReplacementUsedItem>((item, _) =>
+        {
+            var tb = new TextBlock { Text = item?.ToString() };
+            tb.Bind(TextBlock.FontFamilyProperty, new Binding(nameof(vm.TextBoxFontFamily)) { Source = vm, Mode = BindingMode.OneWay });
+            return tb;
+        });
         ScrollViewer.SetHorizontalScrollBarVisibility(listBox, ScrollBarVisibility.Auto);
         listBox.SelectionChanged += (s, e) => vm.AllFixesTapped();
         listBox.Tapped += (s, e) => vm.AllFixesTapped();
@@ -922,7 +933,12 @@ public class OcrWindow : Window
                 new Setter(ListBoxItem.MarginProperty, new Thickness(0)),
             }
         });
-        listBox.Bind(FontFamilyProperty, new Binding(nameof(vm.TextBoxFontFamily)) { Mode = BindingMode.OneWay });
+        listBox.ItemTemplate = new FuncDataTemplate<GuessUsedItem>((item, _) =>
+        {
+            var tb = new TextBlock { Text = item?.ToString() };
+            tb.Bind(TextBlock.FontFamilyProperty, new Binding(nameof(vm.TextBoxFontFamily)) { Source = vm, Mode = BindingMode.OneWay });
+            return tb;
+        });
         listBox.SelectionChanged += (s, e) => vm.GuessUsedTapped();
         listBox.Tapped += (s, e) => vm.GuessUsedTapped();
 
