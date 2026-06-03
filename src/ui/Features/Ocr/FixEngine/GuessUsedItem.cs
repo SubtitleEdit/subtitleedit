@@ -24,6 +24,6 @@ public class GuessUsedItem
     {
         var from = From.Replace("\r\n", "↵").Replace("\n", "↵");
         var to = To.Replace("\r\n", "↵").Replace("\n", "↵");
-        return $"#{LineIndex}: {from} → {to}";
+        return $"#{LineIndex + 1}: {from} → {to}";
     }
 }

@@ -158,6 +158,10 @@ public partial class OcrViewModel : ObservableObject
     private PreProcessingSettings? _preProcessingSettings;
     private bool _isCtrlDown;
     private bool _textBoxFontIsCustom;
+    // Saved font name kept so a custom font that is temporarily unresolvable
+    // (e.g. user uninstalled the font; FontFamily ctor throws on load) still
+    // round-trips on save instead of being clobbered by the default font name.
+    private string _textBoxFontNamePersisted = string.Empty;
     private CancellationTokenSource _cancellationTokenSource;
     private NOcrDb? _nOcrDb;
     private BinaryOcrDb? _nOcrFallbackBinaryOcrDb;
@@ -269,6 +273,7 @@ public partial class OcrViewModel : ObservableObject
             if (!string.IsNullOrEmpty(ocr.TextBoxFontName))
             {
                 _textBoxFontIsCustom = true;
+                _textBoxFontNamePersisted = ocr.TextBoxFontName;
                 TextBoxFontSize = ocr.TextBoxFontSize;
                 TextBoxFontWeight = ocr.TextBoxFontBold ? FontWeight.Bold : FontWeight.Regular;
                 try { TextBoxFontFamily = new FontFamily(ocr.TextBoxFontName); }
@@ -317,7 +322,9 @@ public partial class OcrViewModel : ObservableObject
         {
             ocr.TextBoxFontSize = TextBoxFontSize;
             ocr.TextBoxFontBold = TextBoxFontWeight == FontWeight.Bold;
-            ocr.TextBoxFontName = TextBoxFontFamily.Name;
+            ocr.TextBoxFontName = string.IsNullOrEmpty(_textBoxFontNamePersisted)
+                ? TextBoxFontFamily.Name
+                : _textBoxFontNamePersisted;
         }
         else
         {
@@ -402,6 +409,7 @@ public partial class OcrViewModel : ObservableObject
         }
 
         _textBoxFontIsCustom = true;
+        _textBoxFontNamePersisted = result.SelectedFontName;
         TextBoxFontFamily = new FontFamily(result.SelectedFontName);
         TextBoxFontSize = result.FontSize;
         TextBoxFontWeight = result.IsFontBold ? FontWeight.Bold : FontWeight.Regular;
