@@ -146,6 +146,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 using Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using static Nikse.SubtitleEdit.Logic.FindService;
 using Nikse.SubtitleEdit.Logic.Config.Language;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Initializers;
@@ -9420,7 +9421,8 @@ public partial class MainViewModel :
                 selectedText = EditTextBox.SelectedText;
             }
 
-            if (string.IsNullOrEmpty(selectedText) && !string.IsNullOrEmpty(_findService.SearchText))
+            if ((string.IsNullOrEmpty(selectedText) || string.Equals(selectedText, _findService.CurrentTextFound, _findService.CurrentFindMode == FindMode.CaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                && !string.IsNullOrEmpty(_findService.SearchText))
             {
                 selectedText = _findService.SearchText;
             }
@@ -9739,7 +9741,8 @@ public partial class MainViewModel :
                 selectedText = EditTextBox.SelectedText;
             }
 
-            if (string.IsNullOrEmpty(selectedText) && !string.IsNullOrEmpty(_findService.SearchText))
+            if ((string.IsNullOrEmpty(selectedText) || string.Equals(selectedText, _findService.CurrentTextFound, _findService.CurrentFindMode == FindMode.CaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                && !string.IsNullOrEmpty(_findService.SearchText))
             {
                 selectedText = _findService.SearchText;
             }
@@ -9781,6 +9784,7 @@ public partial class MainViewModel :
         {
             var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
             var subs = Subtitles.Select(p => p.Text).ToList();
+            var savedCurrentTextFound = _findService.CurrentTextFound;
             _findService.Initialize(subs, SelectedSubtitleIndex ?? 0, result.WholeWord, result.FindMode);
 
             var idx = -1;
@@ -9808,9 +9812,29 @@ public partial class MainViewModel :
             else // replace requested
             {
                 var selectedText = EditTextBox.SelectedText;
-                if (selectedText == result.SearchText)
+                if (!string.IsNullOrEmpty(savedCurrentTextFound) && selectedText == savedCurrentTextFound)
                 {
-                    EditTextBox.SelectedText = result.ReplaceText;
+                    if (result.FindMode == FindMode.RegularExpression)
+                    {
+                        try
+                        {
+                            var fixedReplaceText = RegexUtils.FixNewLine(result.ReplaceText);
+                            var regex = new Regex(result.SearchText);
+                            var match = regex.Match(EditTextBox.Text, EditTextBox.SelectionStart);
+                            if (match.Success && match.Index == EditTextBox.SelectionStart)
+                            {
+                                EditTextBox.Text = regex.Replace(EditTextBox.Text, fixedReplaceText, 1, EditTextBox.SelectionStart);
+                            }
+                        }
+                        catch (ArgumentException)
+                        {
+                            // Invalid regex pattern - skip replacement
+                        }
+                    }
+                    else
+                    {
+                        EditTextBox.SelectedText = result.ReplaceText;
+                    }
                     subs[currentLineIndex] = EditTextBox.Text; // reflect replacement so FindNext won't re-match here
                 }
 

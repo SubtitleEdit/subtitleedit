@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Logic.Config;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -46,7 +47,7 @@ public partial class FindService : IFindService
             return -1;
         }
 
-        SearchText = searchText;
+        SearchText = RegexUtils.EscapeNewLines(searchText);
         _textLines = textLines;
         AddToSearchHistory(searchText);
 
@@ -97,7 +98,7 @@ public partial class FindService : IFindService
             return -1;
         }
 
-        SearchText = searchText;
+        SearchText = RegexUtils.EscapeNewLines(searchText);
         _textLines = textLines;
         AddToSearchHistory(searchText);
 
@@ -182,7 +183,7 @@ public partial class FindService : IFindService
             return -1;
         }
 
-        SearchText = searchText;
+        SearchText = RegexUtils.EscapeNewLines(searchText);
         _textLines = textLines;
         AddToSearchHistory(searchText);
 
@@ -224,7 +225,9 @@ public partial class FindService : IFindService
             _textLines[result.lineIndex] = replacedText.newText;
             CurrentLineNumber = result.lineIndex;
             CurrentTextIndex = result.textIndex;
-            CurrentTextFound = replaceText ?? string.Empty;
+            CurrentTextFound = CurrentFindMode == FindMode.RegularExpression
+                ? RegexUtils.FixNewLine(replaceText ?? string.Empty)
+                : replaceText ?? string.Empty;
             return result.lineIndex;
         }
 
@@ -282,6 +285,8 @@ public partial class FindService : IFindService
         {
             return;
         }
+
+        searchText = RegexUtils.EscapeNewLines(searchText);
 
         // Remove if already exists to move it to top
         _searchHistory.Remove(searchText);
@@ -402,6 +407,7 @@ public partial class FindService : IFindService
 
     private (bool replaced, string newText, int replacementCount) ReplaceWithRegex(string line, string searchText, string replaceText, int startIndex, int maxReplacements)
     {
+        replaceText = RegexUtils.FixNewLine(replaceText);
         try
         {
             var regex = new Regex(searchText);

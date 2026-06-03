@@ -213,6 +213,13 @@ namespace Nikse.SubtitleEdit.Core.Common
             return pattern.Replace("\\r\\n", Environment.NewLine).Replace("\\n", Environment.NewLine);
         }
 
+        public static string EscapeNewLines(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+            return text.Replace("\r\n", "\\n").Replace("\n", "\\n").Replace("\r", "\\n");
+        }
+
         /// <summary>
         /// Performs replace on regular expression. Line breaks are converted to just "\n" during the replace
         /// and line breaks are returned as Environment.NewLine.

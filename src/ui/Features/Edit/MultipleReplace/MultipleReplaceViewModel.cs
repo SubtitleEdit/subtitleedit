@@ -1188,8 +1188,9 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 var findWhat = rule.Find;
                 if (!string.IsNullOrEmpty(findWhat)) // allow space or spaces
                 {
-                    var replaceWith = RegexUtils.FixNewLine(rule.ReplaceWith);
-                    findWhat = RegexUtils.FixNewLine(findWhat);
+                    var isRegex = rule.SearchType == ReplaceExpression.SearchTypeRegularExpression;
+                    var replaceWith = isRegex ? RegexUtils.FixNewLine(rule.ReplaceWith) : rule.ReplaceWith;
+                    findWhat = isRegex ? RegexUtils.FixNewLine(findWhat) : findWhat;
                     if (group.SubNodes != null)
                     {
                         var ruleInfo = string.IsNullOrEmpty(rule.Description)
