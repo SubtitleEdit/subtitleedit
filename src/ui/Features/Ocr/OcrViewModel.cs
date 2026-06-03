@@ -4287,6 +4287,7 @@ public partial class OcrViewModel : ObservableObject
             UnknownWordsRemoveCurrentText = string.Format(
                 Se.Language.Ocr.RemoveXFromUnknownWordsList,
                 SelectedUnknownWord?.Word.FixedWord);
+            UnknownWordSelectionTapped();
         }
         else
         {

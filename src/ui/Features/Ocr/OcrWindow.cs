@@ -878,6 +878,7 @@ public class OcrWindow : Window
             }
         });
 
+        listBox.SelectionChanged += (s, e) => vm.AllFixesTapped();
         listBox.Tapped += (s, e) => vm.AllFixesTapped();
 
         grid.Add(listBox, 0, 0);
@@ -918,6 +919,7 @@ public class OcrWindow : Window
                 new Setter(ListBoxItem.MarginProperty, new Thickness(0)),
             }
         });
+        listBox.SelectionChanged += (s, e) => vm.GuessUsedTapped();
         listBox.Tapped += (s, e) => vm.GuessUsedTapped();
 
         grid.Add(listBox, 0, 0);
