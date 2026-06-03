@@ -791,6 +791,7 @@ public class OcrWindow : Window
             }
         });
 
+        listBox.Bind(FontFamilyProperty, new Binding(nameof(vm.TextBoxFontFamily)) { Mode = BindingMode.OneWay });
         listBox.SelectionChanged += (s, e) => vm.UnknownWordSelectionChanged();
         listBox.Tapped += (s, e) => vm.UnknownWordSelectionTapped();
         listBox.KeyDown += (s, e) => vm.UnknownWordListKeyDown(e);
@@ -878,6 +879,7 @@ public class OcrWindow : Window
             }
         });
 
+        listBox.Bind(FontFamilyProperty, new Binding(nameof(vm.TextBoxFontFamily)) { Mode = BindingMode.OneWay });
         ScrollViewer.SetHorizontalScrollBarVisibility(listBox, ScrollBarVisibility.Auto);
         listBox.SelectionChanged += (s, e) => vm.AllFixesTapped();
         listBox.Tapped += (s, e) => vm.AllFixesTapped();
@@ -920,6 +922,7 @@ public class OcrWindow : Window
                 new Setter(ListBoxItem.MarginProperty, new Thickness(0)),
             }
         });
+        listBox.Bind(FontFamilyProperty, new Binding(nameof(vm.TextBoxFontFamily)) { Mode = BindingMode.OneWay });
         listBox.SelectionChanged += (s, e) => vm.GuessUsedTapped();
         listBox.Tapped += (s, e) => vm.GuessUsedTapped();
 
