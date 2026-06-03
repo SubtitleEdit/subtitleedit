@@ -5,7 +5,6 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -278,12 +277,12 @@ public class SpellCheckWindow : Window
             Background = new SolidColorBrush(Colors.Transparent),
         };
         listBoxSuggestions.DoubleTapped += vm.ListBoxSuggestionsDoubleTapped;
-        if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
+        listBoxSuggestions.ItemTemplate = new FuncDataTemplate<SpellCheckSuggestionItem>((item, _) =>
         {
-            var fontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
-            listBoxSuggestions.ItemTemplate = new FuncDataTemplate<string>((item, _) =>
-                new TextBlock { Text = item, FontFamily = fontFamily });
-        }
+            var tb = new TextBlock { Text = item?.ToString() };
+            tb.Bind(TextBlock.FontFamilyProperty, new Binding(nameof(vm.TextBoxFontFamily)) { Source = vm, Mode = BindingMode.OneWay });
+            return tb;
+        });
 
         var scrollViewSuggestions = new ScrollViewer
         {
