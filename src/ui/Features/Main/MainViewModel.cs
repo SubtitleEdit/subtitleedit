@@ -9816,8 +9816,20 @@ public partial class MainViewModel :
                 {
                     if (result.FindMode == FindMode.RegularExpression)
                     {
-                        var fixedReplaceText = RegexUtils.FixNewLine(result.ReplaceText);
-                        EditTextBox.SelectedText = new Regex(result.SearchText).Replace(savedCurrentTextFound, fixedReplaceText);
+                        try
+                        {
+                            var fixedReplaceText = RegexUtils.FixNewLine(result.ReplaceText);
+                            var regex = new Regex(result.SearchText);
+                            var match = regex.Match(EditTextBox.Text, EditTextBox.SelectionStart);
+                            if (match.Success && match.Index == EditTextBox.SelectionStart)
+                            {
+                                EditTextBox.Text = regex.Replace(EditTextBox.Text, fixedReplaceText, 1, EditTextBox.SelectionStart);
+                            }
+                        }
+                        catch (ArgumentException)
+                        {
+                            // Invalid regex pattern - skip replacement
+                        }
                     }
                     else
                     {
