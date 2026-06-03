@@ -70,7 +70,11 @@ public class GoogleSpeech : ITtsEngine
         foreach (var item in arr)
         {
             var name = parser.GetFirstObject(item, "name");
-            var languageCode = name.Substring(0,5);
+            if (string.IsNullOrEmpty(name) || name.Length < 5)
+            {
+                continue;
+            }
+            var languageCode = name.Substring(0, 5);
             var ssmlGender = parser.GetFirstObject(item, "ssmlGender");
             var naturalSampleRateHertz = parser.GetFirstObject(item, "naturalSampleRateHertz");
 
