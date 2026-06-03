@@ -56,6 +56,13 @@ namespace Nikse.SubtitleEdit
                 // Build and configure the app
                 var appBuilder = AppBuilder.Configure<Application>()
                     .UsePlatformDetect()
+                    // Register the embedded Inter font as the default. Avalonia v12's font manager
+                    // throws "Could not create glyphTypeface. Font family: $Default" at startup on
+                    // minimal Linux installs that ship without fontconfig-discoverable fonts
+                    // (e.g. Debian 13 trixie base — issue #11355). With Inter registered, FontFamily.Default
+                    // resolves to the embedded font when no system font is available; healthy systems
+                    // still pick up their own fonts for explicit family names.
+                    .WithInterFont()
                     .With(new X11PlatformOptions
                     {
                         RenderingMode = new[] { X11RenderingMode.Glx, X11RenderingMode.Egl }
