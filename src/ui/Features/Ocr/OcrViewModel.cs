@@ -3250,8 +3250,7 @@ public partial class OcrViewModel : ObservableObject
             SelectedDictionary.Name != GetDictionaryNameNone() &&
             _ocrFixEngine.IsLoaded() && DoFixOcrErrors)
         {
-            var alignment = GetAlignment(item, resultTemp.ResultText);
-            var text = alignment.AlignmentAdded ? alignment.Text : resultTemp.ResultText;
+            var text = resultTemp.ResultText;
 
             Dispatcher.UIThread.Post(() =>
             {
