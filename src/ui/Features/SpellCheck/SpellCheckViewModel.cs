@@ -24,8 +24,16 @@ public partial class SpellCheckViewModel : ObservableObject
 {
     [ObservableProperty] private string _lineText;
     [ObservableProperty] private string _wholeText;
-    [ObservableProperty] private string _currentWord;
-    [ObservableProperty] private string _wordNotFoundOriginal;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ChangeWordCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ChangeWordAllCommand))]
+    private string _currentWord;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ChangeWordCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ChangeWordAllCommand))]
+    private string _wordNotFoundOriginal;
     [ObservableProperty] private string _statusText;
     [ObservableProperty] private ObservableCollection<SpellCheckDictionaryDisplay> _dictionaries;
     [ObservableProperty] private SpellCheckDictionaryDisplay? _selectedDictionary;
@@ -290,10 +298,12 @@ public partial class SpellCheckViewModel : ObservableObject
         DoSpellCheck();
     }
 
-    [RelayCommand]
+    private bool CanChangeWord() => !string.IsNullOrWhiteSpace(CurrentWord) && WordNotFoundOriginal != CurrentWord;
+
+    [RelayCommand(CanExecute = nameof(CanChangeWord))]
     private void ChangeWord()
     {
-        if (string.IsNullOrWhiteSpace(CurrentWord) || WordNotFoundOriginal == CurrentWord || SelectedParagraph == null)
+        if (SelectedParagraph == null)
         {
             Dispatcher.UIThread.Invoke(() => { TextBoxWordNotFound.Focus(); });
             return;
@@ -304,11 +314,11 @@ public partial class SpellCheckViewModel : ObservableObject
         DoSpellCheck();
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanChangeWord))]
     private void ChangeWordAll()
     {
         var selectedParagraph = SelectedParagraph;
-        if (string.IsNullOrWhiteSpace(CurrentWord) || WordNotFoundOriginal == CurrentWord || selectedParagraph == null)
+        if (selectedParagraph == null)
         {
             Dispatcher.UIThread.Invoke(() => { TextBoxWordNotFound.Focus(); });
             return;
