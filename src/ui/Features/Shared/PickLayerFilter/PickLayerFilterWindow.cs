@@ -3,8 +3,10 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using System.Collections;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -145,6 +147,16 @@ public class PickLayerFilterWindow : Window
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedLayer)));
         vm.LayerGrid = dataGrid;
         dataGrid.KeyDown += (s, e) => vm.LayerGridKeyDown(e);
+        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
+        {
+            if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
+            {
+                var target = e.Key == Key.Home ? items[0] : items[^1];
+                dataGrid.SelectedItem = target;
+                dataGrid.ScrollIntoView(target, null);
+                e.Handled = true;
+            }
+        }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);
     }
