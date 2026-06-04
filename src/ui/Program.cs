@@ -24,6 +24,7 @@ namespace Nikse.SubtitleEdit
         private const string AppName = "Subtitle Edit";
 
         public static string? PendingFileToOpen { get; set; }
+        public static string? PendingVideoToOpen { get; set; }
         public static bool FileOpenedViaActivation { get; set; }
 
         [STAThread]
@@ -257,14 +258,50 @@ namespace Nikse.SubtitleEdit
                 UiUtil.RestoreWindowPosition(lifetime.MainWindow);
             }
 
-            lifetime.Startup += (_, e) =>
+            lifetime.Startup += (_, e) => ParseStartupArgs(e.Args);
+        }
+
+        // Accepts the first existing positional path as the subtitle file and any of
+        // /video:<path>, --video:<path>, or --video <path> for the video file.
+        // /video: is the legacy Subtitle Edit syntax kept for backwards compatibility
+        // with existing user scripts (see discussion #11380).
+        private static void ParseStartupArgs(string[] args)
+        {
+            string? subtitle = null;
+            string? video = null;
+
+            for (var i = 0; i < args.Length; i++)
             {
-                if (e.Args.Length > 0 && System.IO.File.Exists(e.Args[0]))
+                var a = args[i];
+                if (a.StartsWith("/video:", StringComparison.OrdinalIgnoreCase))
                 {
-                    PendingFileToOpen = e.Args[0];
-                    FileOpenedViaActivation = true;
+                    video = a.Substring("/video:".Length);
                 }
-            };
+                else if (a.StartsWith("--video:", StringComparison.OrdinalIgnoreCase))
+                {
+                    video = a.Substring("--video:".Length);
+                }
+                else if (a.Equals("--video", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
+                {
+                    video = args[++i];
+                }
+                else if (subtitle == null && System.IO.File.Exists(a))
+                {
+                    subtitle = a;
+                }
+            }
+
+            if (subtitle != null)
+            {
+                PendingFileToOpen = subtitle;
+                FileOpenedViaActivation = true;
+            }
+
+            if (!string.IsNullOrEmpty(video) && System.IO.File.Exists(video))
+            {
+                PendingVideoToOpen = video;
+                FileOpenedViaActivation = true;
+            }
         }
 
         private static bool HasBatchConvertUiArg(string[] args)

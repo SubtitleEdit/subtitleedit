@@ -14876,7 +14876,8 @@ public partial class MainViewModel :
             AudioVisualizer.IsReadOnly = LockTimeCodes;
         }
 
-        if (Program.FileOpenedViaActivation && !string.IsNullOrEmpty(Program.PendingFileToOpen))
+        if (Program.FileOpenedViaActivation &&
+            (!string.IsNullOrEmpty(Program.PendingFileToOpen) || !string.IsNullOrEmpty(Program.PendingVideoToOpen)))
         {
             Dispatcher.UIThread.Post(async void () =>
             {
@@ -14891,8 +14892,19 @@ public partial class MainViewModel :
                 }
 
                 await Task.Delay(100);
-                await SubtitleOpen(Program.PendingFileToOpen);
+                var hasCliVideo = !string.IsNullOrEmpty(Program.PendingVideoToOpen);
+                if (!string.IsNullOrEmpty(Program.PendingFileToOpen))
+                {
+                    // skipLoadVideo when a CLI video is given so SubtitleOpen does not
+                    // auto-guess and load a different one before we open the explicit path.
+                    await SubtitleOpen(Program.PendingFileToOpen, skipLoadVideo: hasCliVideo);
+                }
+                if (hasCliVideo && File.Exists(Program.PendingVideoToOpen!))
+                {
+                    await VideoOpenFile(Program.PendingVideoToOpen!);
+                }
                 Program.PendingFileToOpen = null;
+                Program.PendingVideoToOpen = null;
             });
         }
         else if (Se.Settings.File.OpenLastFileOnStart)
