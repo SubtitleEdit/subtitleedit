@@ -649,6 +649,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         public List<MatroskaSubtitle> GetSubtitle(int trackNumber, LoadMatroskaCallback progressCallback)
         {
+            // Cache: GetSubtitle is called multiple times per UI flow (preview, OCR).
+            // Reuse the previously parsed list when the track matches.
+            if (_subtitleRipTrackNumber == trackNumber && _subtitleRip.Count > 0)
+            {
+                return _subtitleRip;
+            }
+
             _subtitleRip.Clear();
             _subtitleRipTrackNumber = trackNumber;
             ReadSegmentCluster(progressCallback);
