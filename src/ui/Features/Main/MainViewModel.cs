@@ -10556,6 +10556,7 @@ public partial class MainViewModel :
             control!.Position = _fullScreenVideoPlayerControl.Position;
             control!.Volume = _fullScreenVideoPlayerControl.Volume;
             _fullScreenVideoPlayerControl = null;
+            Dispatcher.UIThread.Post(() => SubtitleGrid.Focus());
         }, toggleKeys, showMediaInfoKeys, showMediaInformationOwnedBy);
         fullScreenWindow.Show(Window!);
         _shortcutManager.ClearKeys();
