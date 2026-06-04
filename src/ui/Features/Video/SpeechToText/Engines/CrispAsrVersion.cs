@@ -9,11 +9,11 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 /// <summary>
 /// Cached <c>crispasr --version</c> probe. Used by the speech-to-text engine settings
 /// dialog and by Chatterbox / Qwen3 (CrispASR) TTS settings to show the user which
-/// CrispASR runtime they have installed. <c>crispasr --version</c> on v0.6.11 prints
+/// CrispASR runtime they have installed. <c>crispasr --version</c> on v0.6.12 prints
 /// something like:
 ///
 ///   <c>=== build info ===</c>
-///   <c>  version       : 0.6.11</c>
+///   <c>  version       : 0.6.12</c>
 ///   <c>  git sha       : 9dfb1490</c>
 ///   <c>  git date      : 2026-05-26T23:28:31+02:00</c>
 ///   <c>  ...</c>
@@ -30,8 +30,8 @@ public static class CrispAsrVersion
     private static DateTime _cachedExeMtimeUtc;
     private static string? _cachedVersion;
 
-    // Matches either `version : 0.6.11` (structured --version output) or
-    // `crispasr 0.6.11` (legacy single-line banner).
+    // Matches either `version : 0.6.12` (structured --version output) or
+    // `crispasr 0.6.12` (legacy single-line banner).
     private static readonly Regex VersionRegex = new(
         @"(?:^\s*version\s*:\s*|\bcrispasr\s+)([\w.\-+]+)",
         RegexOptions.IgnoreCase | RegexOptions.Multiline);

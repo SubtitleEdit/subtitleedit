@@ -21,11 +21,13 @@ public class CrispAsrDownloadService : ICrispAsrDownloadService
 {
     private readonly HttpClient _httpClient;
 
-    private const string WindowsCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.11/crispasr-windows-x86_64-cuda.zip";
-    private const string WindowsVulkanUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.11/crispasr-windows-x86_64-vulkan.zip";
-    private const string WindowsCpuUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.11/crispasr-windows-x86_64-cpu.zip";
-    private const string WindowsCpuLegacyUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.11/crispasr-windows-x86_64-cpu-legacy.zip";
-    private const string MacUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.11/crispasr-macos.tar.gz";
+    private const string WindowsCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.12/crispasr-windows-x86_64-cuda.zip";
+    private const string WindowsVulkanUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.12/crispasr-windows-x86_64-vulkan.zip";
+    private const string WindowsCpuUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.12/crispasr-windows-x86_64-cpu.zip";
+    private const string WindowsCpuLegacyUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.12/crispasr-windows-x86_64-cpu-legacy.zip";
+    private const string MacUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.12/crispasr-macos.tar.gz";
+    // v0.6.12 dropped the standalone Linux CLI archives (only libcrispasr-linux-* remain),
+    // so Linux stays pinned to v0.6.11 until upstream ships CLI builds again.
     private const string LinuxUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.11/crispasr-linux-x86_64.tar.gz";
     private const string LinuxCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.11/crispasr-linux-x86_64-cuda.tar.gz";
     private const string LinuxArmUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.6.11/crispasr-linux-arm64.tar.gz";

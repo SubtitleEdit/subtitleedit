@@ -166,6 +166,41 @@ Root: HKCU; Subkey: "Software\RegisteredApplications"; ValueType: string; ValueN
 
 
 [Code]
+function NetCore10InRegistryView(const RootKey: Integer; const Arch: String): Boolean;
+var
+  Names: TArrayOfString;
+  I: Integer;
+  KeyPath: String;
+begin
+  Result := False;
+  // The .NET host records every installed shared framework here as value names
+  // (e.g. "10.0.0" = 1), regardless of install folder or PATH.
+  KeyPath := 'SOFTWARE\dotnet\Setup\InstalledVersions\' + Arch + '\sharedfx\Microsoft.NETCore.App';
+  if RegGetValueNames(RootKey, KeyPath, Names) then
+  begin
+    for I := 0 to GetArrayLength(Names) - 1 do
+    begin
+      // Match "10." but not "100." (Copy of the first three chars).
+      if Copy(Names[I], 1, 3) = '10.' then
+      begin
+        Result := True;
+        Exit;
+      end;
+    end;
+  end;
+end;
+
+function IsDotNet10InRegistry(): Boolean;
+begin
+  // x64/arm64 runtimes land in the 64-bit registry view, x86 in the 32-bit view.
+  // This is location- and PATH-independent, so it survives per-user / winget
+  // installs and the elevated-installer-can't-see-the-user-PATH case.
+  Result :=
+    NetCore10InRegistryView(HKLM64, 'x64') or
+    NetCore10InRegistryView(HKLM64, 'arm64') or
+    NetCore10InRegistryView(HKLM32, 'x86');
+end;
+
 function IsDotNet10Installed(): Boolean;
 var
   FindRec: TFindRec;
@@ -174,9 +209,16 @@ var
   Output: AnsiString;
   TmpFile: String;
 begin
+  // Primary check: the registry entries the .NET installer writes.
+  if IsDotNet10InRegistry() then
+  begin
+    Result := True;
+    Exit;
+  end;
+
   Result := False;
 
-  // Primary check: look for a 10.x folder in the default install location
+  // Fallback 1: look for a 10.x folder in the default install location
   RuntimePath := ExpandConstant('{pf}\dotnet\shared\Microsoft.NETCore.App\');
   if FindFirst(RuntimePath + '10.*', FindRec) then
   begin
@@ -196,7 +238,7 @@ begin
   if Result then
     Exit;
 
-  // Fallback: run "dotnet --list-runtimes" for non-default install locations
+  // Fallback 2: run "dotnet --list-runtimes" for non-default install locations
   TmpFile := ExpandConstant('{tmp}\dotnet_runtimes.txt');
   if Exec('cmd.exe', '/C dotnet --list-runtimes > "' + TmpFile + '" 2>&1',
           '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
@@ -210,7 +252,7 @@ begin
   end;
 
   if not Result then
-    Log('No .NET 10.x runtime found (checked folder + dotnet CLI)');
+    Log('No .NET 10.x runtime found (checked registry + folder + dotnet CLI)');
 end;
 
 
