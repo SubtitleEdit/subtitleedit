@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Nikse.SubtitleEdit.Features.Ocr;
 
@@ -223,9 +224,9 @@ public partial class PromptUnknownWordViewModel : ObservableObject
     }
 
     [RelayCommand(CanExecute = nameof(CanActOnWord))]
-    private void GoogleIt()
+    private async Task GoogleIt()
     {
-
+        await Window!.Launcher.LaunchUriAsync(new Uri("https://www.google.com/search?q=" + HttpUtility.UrlEncode(Word)));
     }
 
     [RelayCommand]
