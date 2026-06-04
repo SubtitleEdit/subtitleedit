@@ -77,7 +77,7 @@ The subtitle grid shows all subtitle lines in a table format. Each row represent
 - **Click** a row to select it and load its text into the text editor
 - **Ctrl+Click** to add/remove rows from a multi-selection
 - **Shift+Click** to select a range
-- **Double-click** a cell to edit inline
+- **Double-click** a row to go to that subtitle's video position (behavior configurable in Options → Settings)
 - **Right-click** for a context menu
 
 **Keyboard:**
