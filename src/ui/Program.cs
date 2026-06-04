@@ -170,6 +170,23 @@ namespace Nikse.SubtitleEdit
             {
                 UiUtil.SetFontName(Se.Settings.Appearance.FontName);
             }
+
+            // Suppress tooltips on windows that are not active. By default
+            // Avalonia opens tooltips on hover regardless of whether the owning
+            // window is foregrounded — on macOS this lets toolbar hints from
+            // SE leak in front of other apps the user is currently working in.
+            // Cancel any tooltip that tries to open on a control whose top-level
+            // Window isn't active. Also covers our own child windows: when a
+            // dialog is open the inactive main window stops showing hints.
+            ToolTip.IsOpenProperty.Changed.AddClassHandler<Control>((control, e) =>
+            {
+                if (e.NewValue is true
+                    && TopLevel.GetTopLevel(control) is Window window
+                    && !window.IsActive)
+                {
+                    ToolTip.SetIsOpen(control, false);
+                }
+            });
         }
 
         private static void SetupNativeMenu(Application app, ClassicDesktopStyleApplicationLifetime lifetime)
