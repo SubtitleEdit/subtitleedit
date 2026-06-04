@@ -10798,47 +10798,68 @@ public partial class MainViewModel :
             return;
         }
 
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
-        if (selectedItems.Count == 0)
+        var selectedSet = new HashSet<SubtitleLineViewModel>(
+            SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>());
+        if (selectedSet.Count == 0)
         {
             return;
         }
 
-        // Snapshot the lowest selected index — that's where we'll splice the
-        // result back in. Resolve before showing the dialog because the
-        // selection may change while it's open.
-        var insertAt = Subtitles.IndexOf(selectedItems[0]);
-        foreach (var s in selectedItems)
+        // Capture the selected lines in their grid order — that's what the
+        // dialog operates on. Also note where the first selected item lives,
+        // because that's where the (possibly larger) fixed result will be
+        // spliced in.
+        var selectedInOrder = new List<SubtitleLineViewModel>();
+        var insertAt = -1;
+        for (var i = 0; i < Subtitles.Count; i++)
         {
-            var idx = Subtitles.IndexOf(s);
-            if (idx >= 0 && idx < insertAt)
+            if (selectedSet.Contains(Subtitles[i]))
             {
-                insertAt = idx;
+                if (insertAt < 0)
+                {
+                    insertAt = i;
+                }
+                selectedInOrder.Add(Subtitles[i]);
             }
         }
 
+        if (selectedInOrder.Count == 0 || insertAt < 0)
+        {
+            return;
+        }
+
         var result = await ShowDialogAsync<SplitBreakLongLinesWindow, SplitBreakLongLinesViewModel>(
-            vm => { vm.Initialize(selectedItems); });
+            vm => { vm.Initialize(selectedInOrder); });
 
         if (!result.OkPressed || result.AllSubtitlesFixed.Count == 0)
         {
             return;
         }
 
-        // Replace the selected lines (by reference) with the fixed result. Splits
-        // can produce more lines than the input; non-contiguous selections will
-        // be compacted together at insertAt.
-        foreach (var s in selectedItems)
+        // Rebuild Subtitles: keep unselected items in their original order,
+        // and splice the dialog's result in where the first selected item was.
+        // Non-contiguous selections are compacted together at insertAt.
+        var newSubtitles = new List<SubtitleLineViewModel>(Subtitles.Count - selectedInOrder.Count + result.AllSubtitlesFixed.Count);
+        var spliced = false;
+        for (var i = 0; i < Subtitles.Count; i++)
         {
-            Subtitles.Remove(s);
+            var s = Subtitles[i];
+            if (selectedSet.Contains(s))
+            {
+                if (!spliced)
+                {
+                    newSubtitles.AddRange(result.AllSubtitlesFixed);
+                    spliced = true;
+                }
+            }
+            else
+            {
+                newSubtitles.Add(s);
+            }
         }
 
-        insertAt = Math.Min(insertAt, Subtitles.Count);
-        for (var i = 0; i < result.AllSubtitlesFixed.Count; i++)
-        {
-            Subtitles.Insert(insertAt + i, result.AllSubtitlesFixed[i]);
-        }
-
+        Subtitles.Clear();
+        Subtitles.AddRange(newSubtitles);
         Renumber();
         SelectAndScrollToRow(insertAt);
         _updateAudioVisualizer = true;
