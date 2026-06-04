@@ -704,7 +704,6 @@ public class FixCommonErrorsWindow : Window
             _dataGridFixes.SelectedItems.Add(fixes[i]);
         }
 
-        _vm.SelectedFix = fixes[_fixesShiftCurrentIndex];
         _fixesSelectionChangedSkip = false;
 
         _dataGridFixes.ScrollIntoView(fixes[_fixesShiftCurrentIndex], null);
