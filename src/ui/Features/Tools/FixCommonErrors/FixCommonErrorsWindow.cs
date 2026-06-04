@@ -286,7 +286,7 @@ public class FixCommonErrorsWindow : Window
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
                     {
-                        return new Border
+                        var border = new Border
                         {
                             Background = Brushes.Transparent, // Prevents highlighting
                             Padding = new Thickness(4),
@@ -297,6 +297,11 @@ public class FixCommonErrorsWindow : Window
                                 HorizontalAlignment = HorizontalAlignment.Center
                             }
                         };
+                        border.AddHandler(
+                            PointerPressedEvent,
+                            (_, _) => { if (_dataGridFixes != null) _dataGridFixes.SelectedItem = item; },
+                            handledEventsToo: true);
+                        return border;
                     }),
                     Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
                 },
@@ -617,7 +622,7 @@ public class FixCommonErrorsWindow : Window
         _fixesShiftAnchorIndex = -1;
         _fixesShiftCurrentIndex = -1;
 
-        if (_dataGridFixes?.SelectedItem is FixDisplayItem fixDisplayItem)
+        if (e.AddedItems.Count > 0 && _dataGridFixes?.SelectedItem is FixDisplayItem fixDisplayItem)
         {
             _vm.SelectAndScrollTo(fixDisplayItem);
         }
@@ -699,6 +704,7 @@ public class FixCommonErrorsWindow : Window
             _dataGridFixes.SelectedItems.Add(fixes[i]);
         }
 
+        _vm.SelectedFix = fixes[_fixesShiftCurrentIndex];
         _fixesSelectionChangedSkip = false;
 
         _dataGridFixes.ScrollIntoView(fixes[_fixesShiftCurrentIndex], null);
