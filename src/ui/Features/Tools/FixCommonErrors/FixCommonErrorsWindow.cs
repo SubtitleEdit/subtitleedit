@@ -8,7 +8,10 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.Media;
+using Avalonia.VisualTree;
+using System;
 using System.Collections;
+using System.Linq;
 using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
@@ -21,7 +24,10 @@ public class FixCommonErrorsWindow : Window
 {
     private readonly FixCommonErrorsViewModel _vm;
     private FixRuleDisplayItem? _lastClickedFixRule;
-    private FixDisplayItem? _lastClickedFix;
+    private DataGrid? _dataGridFixes;
+    private int _fixesShiftAnchorIndex = -1;
+    private int _fixesShiftCurrentIndex = -1;
+    private bool _fixesSelectionChangedSkip;
 
     public FixCommonErrorsWindow(FixCommonErrorsViewModel vm)
     {
@@ -263,7 +269,7 @@ public class FixCommonErrorsWindow : Window
         var dataGridFixes = new DataGrid
         {
             AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
+            SelectionMode = DataGridSelectionMode.Extended,
             CanUserResizeColumns = true,
             CanUserSortColumns = true,
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -280,7 +286,7 @@ public class FixCommonErrorsWindow : Window
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
                     {
-                        var border = new Border
+                        return new Border
                         {
                             Background = Brushes.Transparent, // Prevents highlighting
                             Padding = new Thickness(4),
@@ -291,11 +297,6 @@ public class FixCommonErrorsWindow : Window
                                 HorizontalAlignment = HorizontalAlignment.Center
                             }
                         };
-                        border.AddHandler(
-                            PointerPressedEvent,
-                            (_, e) => OnFixPointerPressed(item, e),
-                            handledEventsToo: true);
-                        return border;
                     }),
                     Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
                 },
@@ -349,21 +350,46 @@ public class FixCommonErrorsWindow : Window
                 },
             },
         };
+        _dataGridFixes = dataGridFixes;
         dataGridFixes.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
         dataGridFixes.SelectionChanged += DataGridFixes_SelectionChanged;
         dataGridFixes.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
-            if (e.Key == Key.Space && dataGridFixes.SelectedItem is FixDisplayItem selectedItem)
+            var isShift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+
+            if (e.Key == Key.Space)
             {
-                selectedItem.IsSelected = !selectedItem.IsSelected;
+                ToggleFixesCheckboxForSelectedRows();
                 e.Handled = true;
             }
-            else if (e.Key is Key.Home or Key.End && dataGridFixes.ItemsSource is IList items && items.Count > 0)
+            else if (isShift && e.Key is Key.Up or Key.Down or Key.PageUp or Key.PageDown or Key.Home or Key.End)
             {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
+                var direction = e.Key switch
+                {
+                    Key.Up => -1,
+                    Key.Down => 1,
+                    Key.PageUp => -GetFixesGridPageSize(),
+                    Key.PageDown => GetFixesGridPageSize(),
+                    Key.Home => -_vm.Fixes.Count,
+                    Key.End => _vm.Fixes.Count,
+                    _ => 0
+                };
+                HandleFixesShiftArrowSelection(direction);
+                e.Handled = true;
+            }
+            else if (e.Key is Key.Home or Key.End && _vm.Fixes.Count > 0)
+            {
+                _fixesShiftAnchorIndex = -1;
+                _fixesShiftCurrentIndex = -1;
+                var target = e.Key == Key.Home ? _vm.Fixes[0] : _vm.Fixes[^1];
                 dataGridFixes.SelectedItem = target;
                 dataGridFixes.ScrollIntoView(target, null);
                 e.Handled = true;
+            }
+            else if (e.Key is Key.Up or Key.Down)
+            {
+                _fixesShiftAnchorIndex = -1;
+                _fixesShiftCurrentIndex = -1;
             }
         }, RoutingStrategies.Tunnel);
         dataGridFixes.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => dataGridFixes.Focus());
@@ -583,7 +609,15 @@ public class FixCommonErrorsWindow : Window
 
     private void DataGridFixes_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (e.AddedItems.Count == 1 && e.AddedItems[0] is FixDisplayItem fixDisplayItem)
+        if (_fixesSelectionChangedSkip)
+        {
+            return;
+        }
+
+        _fixesShiftAnchorIndex = -1;
+        _fixesShiftCurrentIndex = -1;
+
+        if (_dataGridFixes?.SelectedItem is FixDisplayItem fixDisplayItem)
         {
             _vm.SelectAndScrollTo(fixDisplayItem);
         }
@@ -625,32 +659,92 @@ public class FixCommonErrorsWindow : Window
         _lastClickedFixRule = item;
     }
 
-    private void OnFixPointerPressed(FixDisplayItem item, PointerPressedEventArgs e)
+    private void HandleFixesShiftArrowSelection(int direction)
     {
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Shift) &&
-            _lastClickedFix != null &&
-            _lastClickedFix != item)
+        var fixes = _vm.Fixes;
+        if (fixes.Count == 0 || _dataGridFixes == null)
         {
-            var fixes = _vm.Fixes;
-            var lastIdx = fixes.IndexOf(_lastClickedFix);
-            var currIdx = fixes.IndexOf(item);
-            if (lastIdx >= 0 && currIdx >= 0)
-            {
-                var newValue = !item.IsSelected;
-                var min = lastIdx < currIdx ? lastIdx : currIdx;
-                var max = lastIdx > currIdx ? lastIdx : currIdx;
-                for (var i = min; i <= max; i++)
-                {
-                    if (i == currIdx)
-                    {
-                        continue;
-                    }
-
-                    fixes[i].IsSelected = newValue;
-                }
-            }
+            return;
         }
 
-        _lastClickedFix = item;
+        if (_fixesShiftAnchorIndex < 0)
+        {
+            var anchor = _dataGridFixes.SelectedItems.Count > 0
+                ? fixes.IndexOf((FixDisplayItem)_dataGridFixes.SelectedItems[0]!)
+                : -1;
+            if (anchor < 0)
+            {
+                return;
+            }
+
+            _fixesShiftAnchorIndex = anchor;
+            _fixesShiftCurrentIndex = anchor;
+        }
+
+        var newCurrent = Math.Clamp(_fixesShiftCurrentIndex + direction, 0, fixes.Count - 1);
+        if (newCurrent == _fixesShiftCurrentIndex)
+        {
+            return;
+        }
+
+        _fixesShiftCurrentIndex = newCurrent;
+
+        var startIdx = Math.Min(_fixesShiftAnchorIndex, _fixesShiftCurrentIndex);
+        var endIdx = Math.Max(_fixesShiftAnchorIndex, _fixesShiftCurrentIndex);
+
+        _fixesSelectionChangedSkip = true;
+        _dataGridFixes.SelectedItems.Clear();
+        for (var i = startIdx; i <= endIdx; i++)
+        {
+            _dataGridFixes.SelectedItems.Add(fixes[i]);
+        }
+
+        _fixesSelectionChangedSkip = false;
+
+        _dataGridFixes.ScrollIntoView(fixes[_fixesShiftCurrentIndex], null);
+        _vm.SelectAndScrollTo(fixes[_fixesShiftCurrentIndex]);
+    }
+
+    private void ToggleFixesCheckboxForSelectedRows()
+    {
+        if (_dataGridFixes == null)
+        {
+            return;
+        }
+
+        var selected = _dataGridFixes.SelectedItems.OfType<FixDisplayItem>().ToList();
+        if (selected.Count == 0)
+        {
+            return;
+        }
+
+        var allChecked = selected.All(f => f.IsSelected);
+        var newValue = !allChecked;
+        foreach (var fix in selected)
+        {
+            fix.IsSelected = newValue;
+        }
+    }
+
+    private int GetFixesGridPageSize()
+    {
+        if (_dataGridFixes == null)
+        {
+            return 10;
+        }
+
+        var rowsPresenter = _dataGridFixes.GetVisualDescendants()
+            .OfType<DataGridRowsPresenter>()
+            .FirstOrDefault();
+        var rowHeight = _dataGridFixes.RowHeight;
+        if (rowsPresenter != null && rowsPresenter.Bounds.Height > 0 && !double.IsNaN(rowHeight) && rowHeight > 0)
+        {
+            return Math.Max(1, (int)Math.Ceiling(rowsPresenter.Bounds.Height / rowHeight) - 1);
+        }
+
+        var visibleRows = _dataGridFixes.GetVisualDescendants()
+            .OfType<DataGridRow>()
+            .Count(r => r.IsVisible && r.Bounds.Height > 0);
+        return Math.Max(1, visibleRows - 1);
     }
 }
