@@ -522,6 +522,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         OnPropertyChanged(nameof(CpsBackgroundBrush));
         OnPropertyChanged(nameof(WpmBackgroundBrush));
         OnPropertyChanged(nameof(GapBackgroundBrush));
+        OnPropertyChanged(nameof(PixelWidth));
     }
 
     /// <summary>Updates all display properties from a fixed <see cref="Paragraph"/> in-place.</summary>
