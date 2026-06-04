@@ -8,10 +8,8 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.Media;
-using Avalonia.VisualTree;
 using System;
 using System.Collections;
-using System.Linq;
 using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
@@ -24,10 +22,6 @@ public class FixCommonErrorsWindow : Window
 {
     private readonly FixCommonErrorsViewModel _vm;
     private FixRuleDisplayItem? _lastClickedFixRule;
-    private DataGrid? _dataGridFixes;
-    private int _fixesShiftAnchorIndex = -1;
-    private int _fixesShiftCurrentIndex = -1;
-    private bool _fixesSelectionChangedSkip;
 
     public FixCommonErrorsWindow(FixCommonErrorsViewModel vm)
     {
@@ -130,22 +124,8 @@ public class FixCommonErrorsWindow : Window
             },
         };
         rulesGrid.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
-        rulesGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key == Key.Space && rulesGrid.SelectedItem is FixRuleDisplayItem selectedItem)
-            {
-                selectedItem.IsSelected = !selectedItem.IsSelected;
-                e.Handled = true;
-            }
-            else if (e.Key is Key.Home or Key.End && rulesGrid.ItemsSource is IList items && items.Count > 0)
-            {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                rulesGrid.SelectedItem = target;
-                rulesGrid.ScrollIntoView(target, null);
-                e.Handled = true;
-            }
-        }, RoutingStrategies.Tunnel);
-        rulesGrid.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => rulesGrid.Focus());
+        new DataGridCheckboxMultiSelect<FixRuleDisplayItem>(rulesGrid,
+            item => item.IsSelected, (item, v) => item.IsSelected = v);
 
         var step2Grid = MakeStep2Grid();
         step2Grid.Bind(IsVisibleProperty, new Binding(nameof(_vm.Step2IsVisible)));
@@ -350,49 +330,10 @@ public class FixCommonErrorsWindow : Window
                 },
             },
         };
-        _dataGridFixes = dataGridFixes;
         dataGridFixes.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
-        dataGridFixes.SelectionChanged += DataGridFixes_SelectionChanged;
-        dataGridFixes.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            var isShift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
-
-            if (e.Key == Key.Space)
-            {
-                ToggleFixesCheckboxForSelectedRows();
-                e.Handled = true;
-            }
-            else if (isShift && e.Key is Key.Up or Key.Down or Key.PageUp or Key.PageDown or Key.Home or Key.End)
-            {
-                var direction = e.Key switch
-                {
-                    Key.Up => -1,
-                    Key.Down => 1,
-                    Key.PageUp => -GetFixesGridPageSize(),
-                    Key.PageDown => GetFixesGridPageSize(),
-                    Key.Home => -_vm.Fixes.Count,
-                    Key.End => _vm.Fixes.Count,
-                    _ => 0
-                };
-                HandleFixesShiftArrowSelection(direction);
-                e.Handled = true;
-            }
-            else if (e.Key is Key.Home or Key.End && _vm.Fixes.Count > 0)
-            {
-                _fixesShiftAnchorIndex = -1;
-                _fixesShiftCurrentIndex = -1;
-                var target = e.Key == Key.Home ? _vm.Fixes[0] : _vm.Fixes[^1];
-                dataGridFixes.SelectedItem = target;
-                dataGridFixes.ScrollIntoView(target, null);
-                e.Handled = true;
-            }
-            else if (e.Key is Key.Up or Key.Down)
-            {
-                _fixesShiftAnchorIndex = -1;
-                _fixesShiftCurrentIndex = -1;
-            }
-        }, RoutingStrategies.Tunnel);
-        dataGridFixes.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => dataGridFixes.Focus());
+        new DataGridCheckboxMultiSelect<FixDisplayItem>(dataGridFixes,
+            item => item.IsSelected, (item, v) => item.IsSelected = v,
+            onFocusedItemChanged: item => _vm.SelectAndScrollTo(item));
 
         var leftButtons = new StackPanel
         {
@@ -607,22 +548,6 @@ public class FixCommonErrorsWindow : Window
         return grid;
     }
 
-    private void DataGridFixes_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (_fixesSelectionChangedSkip)
-        {
-            return;
-        }
-
-        _fixesShiftAnchorIndex = -1;
-        _fixesShiftCurrentIndex = -1;
-
-        if (e.AddedItems.Count > 0 && _dataGridFixes?.SelectedItem is FixDisplayItem fixDisplayItem)
-        {
-            _vm.SelectAndScrollTo(fixDisplayItem);
-        }
-    }
-
     protected override void OnKeyDown(KeyEventArgs e)
     {
         base.OnKeyDown(e);
@@ -659,92 +584,4 @@ public class FixCommonErrorsWindow : Window
         _lastClickedFixRule = item;
     }
 
-    private void HandleFixesShiftArrowSelection(int direction)
-    {
-        var fixes = _vm.Fixes;
-        if (fixes.Count == 0 || _dataGridFixes == null)
-        {
-            return;
-        }
-
-        if (_fixesShiftAnchorIndex < 0)
-        {
-            var anchor = _dataGridFixes.SelectedItems.Count > 0
-                ? fixes.IndexOf((FixDisplayItem)_dataGridFixes.SelectedItems[0]!)
-                : -1;
-            if (anchor < 0)
-            {
-                return;
-            }
-
-            _fixesShiftAnchorIndex = anchor;
-            _fixesShiftCurrentIndex = anchor;
-        }
-
-        var newCurrent = Math.Clamp(_fixesShiftCurrentIndex + direction, 0, fixes.Count - 1);
-        if (newCurrent == _fixesShiftCurrentIndex)
-        {
-            return;
-        }
-
-        _fixesShiftCurrentIndex = newCurrent;
-
-        var startIdx = Math.Min(_fixesShiftAnchorIndex, _fixesShiftCurrentIndex);
-        var endIdx = Math.Max(_fixesShiftAnchorIndex, _fixesShiftCurrentIndex);
-
-        _fixesSelectionChangedSkip = true;
-        _dataGridFixes.SelectedItems.Clear();
-        for (var i = startIdx; i <= endIdx; i++)
-        {
-            _dataGridFixes.SelectedItems.Add(fixes[i]);
-        }
-
-        _fixesSelectionChangedSkip = false;
-
-        _dataGridFixes.ScrollIntoView(fixes[_fixesShiftCurrentIndex], null);
-        _vm.SelectAndScrollTo(fixes[_fixesShiftCurrentIndex]);
-    }
-
-    private void ToggleFixesCheckboxForSelectedRows()
-    {
-        if (_dataGridFixes == null)
-        {
-            return;
-        }
-
-        var selected = _dataGridFixes.SelectedItems.OfType<FixDisplayItem>().ToList();
-        if (selected.Count == 0)
-        {
-            return;
-        }
-
-        var allChecked = selected.All(f => f.IsSelected);
-        var newValue = !allChecked;
-        foreach (var fix in selected)
-        {
-            fix.IsSelected = newValue;
-        }
-    }
-
-    private int GetFixesGridPageSize()
-    {
-        if (_dataGridFixes == null)
-        {
-            return 10;
-        }
-
-        var rowsPresenter = _dataGridFixes.GetVisualDescendants()
-            .OfType<DataGridRowsPresenter>()
-            .FirstOrDefault();
-        var rowHeight = _dataGridFixes.RowHeight;
-        if (rowsPresenter != null && rowsPresenter.Bounds.Height > 0 && !double.IsNaN(rowHeight) && rowHeight > 0)
-        {
-            return Math.Max(1, (int)Math.Ceiling(rowsPresenter.Bounds.Height / rowHeight) - 1);
-        }
-
-        var visibleRows = _dataGridFixes.GetVisualDescendants()
-            .OfType<DataGridRow>()
-            .Count(r => r.IsVisible && r.Bounds.Height > 0);
-        return Math.Max(1, visibleRows - 1);
-    }
 }
