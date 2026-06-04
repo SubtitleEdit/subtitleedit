@@ -338,6 +338,7 @@ public class AudioVisualizer : Control
     private double _originalDurationSeconds;
     private double _originalPreviousEndSeconds;
     private double _originalNextStartSeconds;
+    private bool _preventNextTap;
     private long _audioVisualizerLastScroll;
     private SubtitleLineViewModel? _cachedHitParagraph;
     private bool _cachedIsNearLeftEdge;
@@ -499,6 +500,12 @@ public class AudioVisualizer : Control
         if (OperatingSystem.IsMacOS())
         {
             _isCtrlDown = _isMetaDown;
+        }
+
+        if (_preventNextTap)
+        {
+            _preventNextTap = false;
+            return;
         }
 
         var point = e.GetPosition(this);
@@ -799,6 +806,18 @@ public class AudioVisualizer : Control
             return;
         }
 
+        if (_interactionMode is
+            InteractionMode.Moving or
+            InteractionMode.ResizingLeft or
+            InteractionMode.ResizingRight or
+            InteractionMode.ResizingLeftOr or
+            InteractionMode.ResizingRightOr or
+            InteractionMode.ResizeLeftAnd or
+            InteractionMode.ResizeRightAnd)
+        {
+            _preventNextTap = true;
+        }
+
         _interactionMode = InteractionMode.None;
         _activeParagraph = null;
 
@@ -813,6 +832,7 @@ public class AudioVisualizer : Control
         _isMetaDown = e.KeyModifiers.HasFlag(KeyModifiers.Meta);
 
         _lastPointerPressed = Environment.TickCount64;
+        _preventNextTap = false;
         e.Handled = true;
         var point = e.GetPosition(this);
         _startPointerPosition = point;
