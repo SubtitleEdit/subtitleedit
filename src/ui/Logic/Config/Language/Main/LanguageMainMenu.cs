@@ -54,6 +54,7 @@ public class LanguageMainMenu
     public string MergeLinesWithSameText { get; set; }
     public string MergeLinesWithSameTimeCodes { get; set; }
     public string SplitBreakLongLines { get; set; }
+    public string EvenlyDistributeLines { get; set; }
     public string MergeShortLines { get; set; }
     public string MergeContinuationLines { get; set; }
     public string SnapAllTimesToFrames { get; set; }
@@ -182,6 +183,7 @@ public class LanguageMainMenu
         MergeLinesWithSameText = "_Merge lines with same text...";
         MergeLinesWithSameTimeCodes = "Merge lines with same time codes...";
         SplitBreakLongLines = "Split/rebalance long lines...";
+        EvenlyDistributeLines = "Evenly distribute lines (by CPS)";
         MergeShortLines = "Merge short lines...";
         MergeContinuationLines = "Merge continuation lines...";
         SnapAllTimesToFrames = "Snap all times to frames";

@@ -119,6 +119,7 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject
                         var fixDescription = $"'{beforePreview}' → '{afterPreview}'";
                         var fixItem = new SplitBreakLongLinesItem(Se.Language.Tools.SplitBreakLongLines.RebalanceLongLine, index + 1, fixDescription, item);
                         Fixes.Add(fixItem);
+                        item.Text = rebalancedText;
                     }
                 }
             }

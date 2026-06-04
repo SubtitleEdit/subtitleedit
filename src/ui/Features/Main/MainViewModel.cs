@@ -10736,6 +10736,137 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void EvenlyDistributeSelectedLines()
+    {
+        // Port of SE4's "Evenly distribute lines" (ToolStripMenuItemEvenlyDistributeLinesClick).
+        // Distributes the duration spanning the first..last selected paragraphs
+        // proportionally to each paragraph's CPS character count, packing them
+        // back-to-back with the configured minimum gap between them.
+        var selectedItems = SubtitleGrid.SelectedItems
+            .Cast<SubtitleLineViewModel>()
+            .OrderBy(p => Subtitles.IndexOf(p))
+            .ToList();
+
+        if (selectedItems.Count < 2)
+        {
+            return;
+        }
+
+        var first = selectedItems[0];
+        var last = selectedItems[selectedItems.Count - 1];
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        var totalDurationMs = last.EndTime.TotalMilliseconds - first.StartTime.TotalMilliseconds;
+        var totalDurationWithGapsMs = totalDurationMs - gapMs * (selectedItems.Count - 1);
+
+        if (totalDurationWithGapsMs <= 0)
+        {
+            return;
+        }
+
+        decimal totalLength = 0;
+        foreach (var p in selectedItems)
+        {
+            totalLength += p.Text.CountCharacters(true);
+        }
+
+        if (totalLength <= 0)
+        {
+            return;
+        }
+
+        var previousEndMs = first.StartTime.TotalMilliseconds - gapMs;
+        foreach (var p in selectedItems)
+        {
+            var ratio = p.Text.CountCharacters(true) / totalLength;
+            var newDurationMs = (double)ratio * totalDurationWithGapsMs;
+            var newStartMs = previousEndMs + gapMs;
+            p.StartTime = TimeSpan.FromMilliseconds(newStartMs);
+            p.EndTime = TimeSpan.FromMilliseconds(newStartMs + newDurationMs);
+            previousEndMs = p.EndTime.TotalMilliseconds;
+        }
+
+        _updateAudioVisualizer = true;
+        RefreshSubtitlePreview();
+        ShowStatus(string.Format(Se.Language.Main.NumberOfLinesEvenlyDistributedX, selectedItems.Count));
+    }
+
+    [RelayCommand]
+    private async Task ShowToolsSplitBreakLongLinesSelectedLines()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var selectedSet = new HashSet<SubtitleLineViewModel>(
+            SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>());
+        if (selectedSet.Count == 0)
+        {
+            return;
+        }
+
+        // Capture the selected lines in their grid order — that's what the
+        // dialog operates on. Also note where the first selected item lives,
+        // because that's where the (possibly larger) fixed result will be
+        // spliced in.
+        var selectedInOrder = new List<SubtitleLineViewModel>();
+        var insertAt = -1;
+        for (var i = 0; i < Subtitles.Count; i++)
+        {
+            if (selectedSet.Contains(Subtitles[i]))
+            {
+                if (insertAt < 0)
+                {
+                    insertAt = i;
+                }
+                selectedInOrder.Add(Subtitles[i]);
+            }
+        }
+
+        if (selectedInOrder.Count == 0 || insertAt < 0)
+        {
+            return;
+        }
+
+        var result = await ShowDialogAsync<SplitBreakLongLinesWindow, SplitBreakLongLinesViewModel>(
+            vm => { vm.Initialize(selectedInOrder); });
+
+        if (!result.OkPressed || result.AllSubtitlesFixed.Count == 0)
+        {
+            return;
+        }
+
+        // Rebuild Subtitles: keep unselected items in their original order,
+        // and splice the dialog's result in where the first selected item was.
+        // Non-contiguous selections are compacted together at insertAt.
+        var newSubtitles = new List<SubtitleLineViewModel>(Subtitles.Count - selectedInOrder.Count + result.AllSubtitlesFixed.Count);
+        var spliced = false;
+        for (var i = 0; i < Subtitles.Count; i++)
+        {
+            var s = Subtitles[i];
+            if (selectedSet.Contains(s))
+            {
+                if (!spliced)
+                {
+                    newSubtitles.AddRange(result.AllSubtitlesFixed);
+                    spliced = true;
+                }
+            }
+            else
+            {
+                newSubtitles.Add(s);
+            }
+        }
+
+        Subtitles.Clear();
+        Subtitles.AddRange(newSubtitles);
+        Renumber();
+        SelectAndScrollToRow(insertAt);
+        _updateAudioVisualizer = true;
+        RefreshSubtitlePreview();
+    }
+
+    [RelayCommand]
     private void Split()
     {
         SplitSelectedLine(false, false);

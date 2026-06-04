@@ -911,6 +911,33 @@ public static partial class InitListViewAndEditBox
                     Command = vm.MultipleReplaceSelectedLinesCommand,
                     DataContext = vm,
                 },
+                new Separator { DataContext = vm },
+                new MenuItem
+                {
+                    Header = Se.Language.General.Unbreak,
+                    Command = vm.UnbreakCommand,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.General.AutoBreak,
+                    Command = vm.AutoBreakCommand,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Main.Menu.SplitBreakLongLines,
+                    Command = vm.ShowToolsSplitBreakLongLinesSelectedLinesCommand,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Main.Menu.EvenlyDistributeLines,
+                    Command = vm.EvenlyDistributeSelectedLinesCommand,
+                    DataContext = vm,
+                    [!Visual.IsVisibleProperty] = new Binding(nameof(vm.HasMultipleLinesSelected)),
+                },
+                new Separator { DataContext = vm },
                 new MenuItem
                 {
                     Header = Se.Language.Main.Menu.FillSelectedLinesWithClipboard,
