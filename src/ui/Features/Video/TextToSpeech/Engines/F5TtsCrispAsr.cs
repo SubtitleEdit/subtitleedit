@@ -104,9 +104,15 @@ public class F5TtsCrispAsr : ITtsEngine
         }
     }
 
+    // F5-TTS is CPU-only in CrispASR 0.6.12 (no Metal/CUDA backend) and runs a fixed 32-step
+    // Euler ODE through a 22-layer DiT plus the Vocos vocoder — there's no flag to reduce
+    // steps. On Mac CPU one short utterance routinely takes 3-8 minutes, so a 5-minute
+    // HttpClient timeout (the default we use for other CrispASR TTS engines) fires before the
+    // synth completes and looks like a hang. 30 minutes gives generous headroom; users can
+    // always cancel from the GeneratingAudioWindow if they're done waiting.
     private static readonly HttpClient HttpClient = new()
     {
-        Timeout = TimeSpan.FromMinutes(5),
+        Timeout = TimeSpan.FromMinutes(30),
     };
     private static readonly SemaphoreSlim ServerLock = new(1, 1);
     private static Process? _serverProcess;
