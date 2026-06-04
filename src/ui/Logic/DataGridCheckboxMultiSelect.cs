@@ -20,12 +20,14 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
     private int _shiftCurrentIndex = -1;
     private bool _selectionChangedSkip;
 
+    // The caller does not need to store the returned instance.
+    // Event subscriptions on dataGrid keep it alive for the lifetime of the grid.
     public DataGridCheckboxMultiSelect(
         DataGrid dataGrid,
         Func<TItem, bool> getChecked,
         Action<TItem, bool> setChecked,
         Func<TItem, bool>? canToggle = null,
-        Action<TItem>? onFocusedItemChanged = null)
+        Action<TItem?>? onFocusedItemChanged = null)
     {
         _grid = dataGrid;
         _getChecked = getChecked;
@@ -47,10 +49,7 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
             _shiftAnchorIndex = -1;
             _shiftCurrentIndex = -1;
 
-            if (onFocusedItemChanged != null && e.AddedItems.Count > 0 && dataGrid.SelectedItem is TItem item)
-            {
-                onFocusedItemChanged(item);
-            }
+            onFocusedItemChanged?.Invoke(dataGrid.SelectedItem as TItem);
         };
     }
 
@@ -118,8 +117,8 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
 
         if (_shiftAnchorIndex < 0)
         {
-            var anchor = _grid.SelectedItems.Count > 0
-                ? items.IndexOf(_grid.SelectedItems[0])
+            var anchor = _grid.SelectedItem != null
+                ? items.IndexOf(_grid.SelectedItem)
                 : -1;
             if (anchor < 0)
             {

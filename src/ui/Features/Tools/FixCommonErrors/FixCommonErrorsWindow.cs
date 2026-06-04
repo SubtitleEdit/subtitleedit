@@ -249,7 +249,6 @@ public class FixCommonErrorsWindow : Window
         var dataGridFixes = new DataGrid
         {
             AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Extended,
             CanUserResizeColumns = true,
             CanUserSortColumns = true,
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -333,7 +332,7 @@ public class FixCommonErrorsWindow : Window
         dataGridFixes.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
         new DataGridCheckboxMultiSelect<FixDisplayItem>(dataGridFixes,
             item => item.IsSelected, (item, v) => item.IsSelected = v,
-            onFocusedItemChanged: item => _vm.SelectAndScrollTo(item));
+            onFocusedItemChanged: item => { if (item != null) _vm.SelectAndScrollTo(item); });
 
         var leftButtons = new StackPanel
         {
