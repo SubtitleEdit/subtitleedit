@@ -44,6 +44,7 @@ public class LanguageMain
     public string LineXTimingChanged { get; set; }
     public string LoadingWaveInfoFromCache { get; set; }
     public string NoTextInClipboard { get; set; }
+    public string NumberOfLinesEvenlyDistributedX { get; set; }
     public string OneLineCopiedFromOriginal { get; set; }
     public string OneLineMerged { get; set; }
     public string OneLineSwitched { get; set; }
@@ -152,6 +153,7 @@ public class LanguageMain
         LineXTimingChanged = "Line {0}: Timing changed";
         LoadingWaveInfoFromCache = "Loading wave info from cache...";
         NoTextInClipboard = "No text in clipboard";
+        NumberOfLinesEvenlyDistributedX = "Evenly distributed {0} lines";
         OneLineCopiedFromOriginal = "One line copied from original subtitle";
         OneLineMerged = "One line merged";
         OneLineSwitched = "One line switched";

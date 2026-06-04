@@ -10736,6 +10736,116 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void EvenlyDistributeSelectedLines()
+    {
+        // Port of SE4's "Evenly distribute lines" (ToolStripMenuItemEvenlyDistributeLinesClick).
+        // Distributes the duration spanning the first..last selected paragraphs
+        // proportionally to each paragraph's CPS character count, packing them
+        // back-to-back with the configured minimum gap between them.
+        var selectedItems = SubtitleGrid.SelectedItems
+            .Cast<SubtitleLineViewModel>()
+            .OrderBy(p => Subtitles.IndexOf(p))
+            .ToList();
+
+        if (selectedItems.Count < 2)
+        {
+            return;
+        }
+
+        var first = selectedItems[0];
+        var last = selectedItems[selectedItems.Count - 1];
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        var totalDurationMs = last.EndTime.TotalMilliseconds - first.StartTime.TotalMilliseconds;
+        var totalDurationWithGapsMs = totalDurationMs - gapMs * (selectedItems.Count - 1);
+
+        if (totalDurationWithGapsMs <= 0)
+        {
+            return;
+        }
+
+        decimal totalLength = 0;
+        foreach (var p in selectedItems)
+        {
+            totalLength += p.Text.CountCharacters(true);
+        }
+
+        if (totalLength <= 0)
+        {
+            return;
+        }
+
+        var previousEndMs = first.StartTime.TotalMilliseconds - gapMs;
+        foreach (var p in selectedItems)
+        {
+            var ratio = p.Text.CountCharacters(true) / totalLength;
+            var newDurationMs = (double)ratio * totalDurationWithGapsMs;
+            var newStartMs = previousEndMs + gapMs;
+            p.StartTime = TimeSpan.FromMilliseconds(newStartMs);
+            p.EndTime = TimeSpan.FromMilliseconds(newStartMs + newDurationMs);
+            previousEndMs = p.EndTime.TotalMilliseconds;
+        }
+
+        _updateAudioVisualizer = true;
+        RefreshSubtitlePreview();
+        ShowStatus(string.Format(Se.Language.Main.NumberOfLinesEvenlyDistributedX, selectedItems.Count));
+    }
+
+    [RelayCommand]
+    private async Task ShowToolsSplitBreakLongLinesSelectedLines()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        // Snapshot the lowest selected index — that's where we'll splice the
+        // result back in. Resolve before showing the dialog because the
+        // selection may change while it's open.
+        var insertAt = Subtitles.IndexOf(selectedItems[0]);
+        foreach (var s in selectedItems)
+        {
+            var idx = Subtitles.IndexOf(s);
+            if (idx >= 0 && idx < insertAt)
+            {
+                insertAt = idx;
+            }
+        }
+
+        var result = await ShowDialogAsync<SplitBreakLongLinesWindow, SplitBreakLongLinesViewModel>(
+            vm => { vm.Initialize(selectedItems); });
+
+        if (!result.OkPressed || result.AllSubtitlesFixed.Count == 0)
+        {
+            return;
+        }
+
+        // Replace the selected lines (by reference) with the fixed result. Splits
+        // can produce more lines than the input; non-contiguous selections will
+        // be compacted together at insertAt.
+        foreach (var s in selectedItems)
+        {
+            Subtitles.Remove(s);
+        }
+
+        insertAt = Math.Min(insertAt, Subtitles.Count);
+        for (var i = 0; i < result.AllSubtitlesFixed.Count; i++)
+        {
+            Subtitles.Insert(insertAt + i, result.AllSubtitlesFixed[i]);
+        }
+
+        Renumber();
+        SelectAndScrollToRow(insertAt);
+        _updateAudioVisualizer = true;
+        RefreshSubtitlePreview();
+    }
+
+    [RelayCommand]
     private void Split()
     {
         SplitSelectedLine(false, false);
