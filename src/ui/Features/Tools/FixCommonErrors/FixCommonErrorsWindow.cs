@@ -286,7 +286,7 @@ public class FixCommonErrorsWindow : Window
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
                     {
-                        var border = new Border
+                        return new Border
                         {
                             Background = Brushes.Transparent, // Prevents highlighting
                             Padding = new Thickness(4),
@@ -297,11 +297,6 @@ public class FixCommonErrorsWindow : Window
                                 HorizontalAlignment = HorizontalAlignment.Center
                             }
                         };
-                        border.AddHandler(
-                            PointerPressedEvent,
-                            (_, _) => { if (_dataGridFixes != null) _dataGridFixes.SelectedItem = item; },
-                            handledEventsToo: true);
-                        return border;
                     }),
                     Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
                 },
