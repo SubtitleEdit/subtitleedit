@@ -146,9 +146,11 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
         try
         {
             _grid.SelectedItems.Clear();
+            _grid.SelectedItems.Add(items[_shiftCurrentIndex]);
             for (var i = startIdx; i <= endIdx; i++)
             {
-                _grid.SelectedItems.Add(items[i]);
+                if (i != _shiftCurrentIndex)
+                    _grid.SelectedItems.Add(items[i]);
             }
         }
         finally
