@@ -145,13 +145,12 @@ public static class DownloadHashManager
     {
         // SHA-256 of every GGUF the cosyvoice3-tts backend needs. We stage all of them in
         // CrispAsr/models/ rather than letting crispasr --auto-download them, so each has a
-        // verified hash. Hashes are HF LFS oid from the tree API.
+        // verified hash. Hashes are HF LFS oid from the tree API. Companions are F16-only —
+        // crispasr 0.6.12's sibling discovery is hardcoded to those filenames.
         public const string LlmQ4K = "CosyVoice3CrispAsr.LlmQ4K";
         public const string LlmF16 = "CosyVoice3CrispAsr.LlmF16";
-        public const string FlowQ8_0 = "CosyVoice3CrispAsr.FlowQ8_0";
         public const string FlowF16 = "CosyVoice3CrispAsr.FlowF16";
         public const string HiftF16 = "CosyVoice3CrispAsr.HiftF16";
-        public const string S3TokQ4K = "CosyVoice3CrispAsr.S3TokQ4K";
         public const string S3TokF16 = "CosyVoice3CrispAsr.S3TokF16";
         public const string CampPlusF16 = "CosyVoice3CrispAsr.CampPlusF16";
         public const string VoicesGguf = "CosyVoice3CrispAsr.VoicesGguf";
@@ -662,10 +661,6 @@ public static class DownloadHashManager
             {
                 "f13149e1f695d79dcc707de45b3df58ccaf2ab7eba1dad4168ae2c778efe4e67", // cosyvoice3-llm-f16.gguf
             },
-            [CosyVoice3CrispAsr.FlowQ8_0] = new[]
-            {
-                "ab264405ca243baf9aa2f2f26959d213d3e3ca9fb204db2a0b582ed2ca243d86", // cosyvoice3-flow-q8_0.gguf
-            },
             [CosyVoice3CrispAsr.FlowF16] = new[]
             {
                 "689566f06437567f764bfb50d3c06461c79bab97914ab8889b735e35498bd5f6", // cosyvoice3-flow-f16.gguf
@@ -673,10 +668,6 @@ public static class DownloadHashManager
             [CosyVoice3CrispAsr.HiftF16] = new[]
             {
                 "6df249e52901714f30f9bb163ff47cedfa56f6df3385567b657610eeb8b8cfd3", // cosyvoice3-hift-f16.gguf
-            },
-            [CosyVoice3CrispAsr.S3TokQ4K] = new[]
-            {
-                "0fb0b43516487dff1b52623e7fcbe44b5d27b2df68a5a61d7f4f05012d0a36ca", // cosyvoice3-s3tok-q4_k.gguf
             },
             [CosyVoice3CrispAsr.S3TokF16] = new[]
             {

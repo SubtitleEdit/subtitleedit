@@ -27,9 +27,12 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 ///
 /// The backend needs ALL of LLM + flow + hift + s3tok + campplus + voices co-located. crispasr's
 /// <c>--auto-download</c> only fetches companions when <c>-m auto</c> is also passed, so we stage every
-/// file ourselves in <c>CrispAsr/models/</c> and crispasr finds them as siblings of the LLM. The
-/// per-quant combos pair Q4_K LLM with Q8_0 flow / Q4_K s3tok (HF-recommended "minimum viable" combo,
-/// ~921 MB) or F16 LLM with F16 flow / F16 s3tok (~2.5 GB).
+/// file ourselves in <c>CrispAsr/models/</c> and crispasr finds them as siblings of the LLM.
+///
+/// Sibling discovery in CrispASR 0.6.12 looks for the F16 companion filenames specifically
+/// (<c>cosyvoice3-flow-f16.gguf</c>, <c>cosyvoice3-s3tok-f16.gguf</c>) — passing the Q8_0 / Q4_K
+/// variants instead trips a "no flow GGUF found" startup error even with --codec-model. Both quants
+/// therefore share the F16 companions; only the LLM differs (Q4_K ~1.6 GB total, F16 ~2.5 GB).
 ///
 /// When the user picks a baked preset, <c>--voice &lt;preset_name&gt;</c> is passed at server startup.
 /// When the user picks an imported WAV, <c>--voice /path/to/ref.wav --ref-text "transcription"</c>
@@ -57,18 +60,16 @@ public class CosyVoice3CrispAsr : ITtsEngine
     public bool HasModel => true;
     public bool HasKeyFile => false;
 
-    // Two LLM quants — Q4_K is the lightweight default (~921 MB total), F16 the reference (~2.5 GB).
+    // Two LLM quants — Q4_K is the lightweight default (~1.6 GB total), F16 the reference (~2.5 GB).
     // The label total covers every required companion (flow / hift / s3tok / campplus / voices).
-    public const string ModelKeyQ4K = "Q4_K (~921 MB total)";
+    public const string ModelKeyQ4K = "Q4_K (~1.6 GB total)";
     public const string ModelKeyF16 = "F16 (~2.5 GB total)";
     public const string DefaultModelKey = ModelKeyQ4K;
 
     public const string LlmQ4KFileName = "cosyvoice3-llm-q4_k.gguf";
     public const string LlmF16FileName = "cosyvoice3-llm-f16.gguf";
-    public const string FlowQ8_0FileName = "cosyvoice3-flow-q8_0.gguf";
     public const string FlowF16FileName = "cosyvoice3-flow-f16.gguf";
     public const string HiftF16FileName = "cosyvoice3-hift-f16.gguf";
-    public const string S3TokQ4KFileName = "cosyvoice3-s3tok-q4_k.gguf";
     public const string S3TokF16FileName = "cosyvoice3-s3tok-f16.gguf";
     public const string CampPlusF16FileName = "cosyvoice3-campplus-f16.gguf";
     public const string VoicesGgufFileName = "cosyvoice3-voices.gguf";
@@ -77,28 +78,17 @@ public class CosyVoice3CrispAsr : ITtsEngine
 
     /// <summary>
     /// All filenames that must be present in <see cref="GetSetModelsFolder"/> for the chosen
-    /// quant. Listed in this order so the download dialog progresses through them deterministically.
+    /// quant. Both quants share the F16 companion set — only the LLM differs. Listed in this
+    /// order so the download dialog progresses through them deterministically.
     /// </summary>
-    public static string[] GetRequiredFileNames(string? modelKey) => ResolveModelKey(modelKey) switch
+    public static string[] GetRequiredFileNames(string? modelKey) => new[]
     {
-        ModelKeyF16 => new[]
-        {
-            LlmF16FileName,
-            FlowF16FileName,
-            HiftF16FileName,
-            S3TokF16FileName,
-            CampPlusF16FileName,
-            VoicesGgufFileName,
-        },
-        _ => new[]
-        {
-            LlmQ4KFileName,
-            FlowQ8_0FileName,
-            HiftF16FileName,
-            S3TokQ4KFileName,
-            CampPlusF16FileName,
-            VoicesGgufFileName,
-        },
+        ResolveModelKey(modelKey) == ModelKeyF16 ? LlmF16FileName : LlmQ4KFileName,
+        FlowF16FileName,
+        HiftF16FileName,
+        S3TokF16FileName,
+        CampPlusF16FileName,
+        VoicesGgufFileName,
     };
 
     // Preset voice names baked into cosyvoice3-voices.gguf. Reading these dynamically would require
@@ -123,10 +113,8 @@ public class CosyVoice3CrispAsr : ITtsEngine
     {
         [LlmQ4KFileName] = 383891200L,
         [LlmF16FileName] = 1289653952L,
-        [FlowQ8_0FileName] = 360751936L,
         [FlowF16FileName] = 665140992L,
         [HiftF16FileName] = 41601888L,
-        [S3TokQ4KFileName] = 145258240L,
         [S3TokF16FileName] = 484406944L,
         [CampPlusF16FileName] = 14153600L,
         [VoicesGgufFileName] = 665472L,

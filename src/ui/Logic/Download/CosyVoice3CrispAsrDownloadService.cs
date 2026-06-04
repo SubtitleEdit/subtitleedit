@@ -30,10 +30,8 @@ public class CosyVoice3CrispAsrDownloadService : ICosyVoice3CrispAsrDownloadServ
     {
         [CosyVoice3CrispAsr.LlmQ4KFileName] = RepoBase + CosyVoice3CrispAsr.LlmQ4KFileName,
         [CosyVoice3CrispAsr.LlmF16FileName] = RepoBase + CosyVoice3CrispAsr.LlmF16FileName,
-        [CosyVoice3CrispAsr.FlowQ8_0FileName] = RepoBase + CosyVoice3CrispAsr.FlowQ8_0FileName,
         [CosyVoice3CrispAsr.FlowF16FileName] = RepoBase + CosyVoice3CrispAsr.FlowF16FileName,
         [CosyVoice3CrispAsr.HiftF16FileName] = RepoBase + CosyVoice3CrispAsr.HiftF16FileName,
-        [CosyVoice3CrispAsr.S3TokQ4KFileName] = RepoBase + CosyVoice3CrispAsr.S3TokQ4KFileName,
         [CosyVoice3CrispAsr.S3TokF16FileName] = RepoBase + CosyVoice3CrispAsr.S3TokF16FileName,
         [CosyVoice3CrispAsr.CampPlusF16FileName] = RepoBase + CosyVoice3CrispAsr.CampPlusF16FileName,
         [CosyVoice3CrispAsr.VoicesGgufFileName] = RepoBase + CosyVoice3CrispAsr.VoicesGgufFileName,
@@ -105,14 +103,10 @@ public class CosyVoice3CrispAsrDownloadService : ICosyVoice3CrispAsrDownloadServ
             return DownloadHashManager.CosyVoice3CrispAsr.LlmQ4K;
         if (string.Equals(fileName, CosyVoice3CrispAsr.LlmF16FileName, StringComparison.OrdinalIgnoreCase))
             return DownloadHashManager.CosyVoice3CrispAsr.LlmF16;
-        if (string.Equals(fileName, CosyVoice3CrispAsr.FlowQ8_0FileName, StringComparison.OrdinalIgnoreCase))
-            return DownloadHashManager.CosyVoice3CrispAsr.FlowQ8_0;
         if (string.Equals(fileName, CosyVoice3CrispAsr.FlowF16FileName, StringComparison.OrdinalIgnoreCase))
             return DownloadHashManager.CosyVoice3CrispAsr.FlowF16;
         if (string.Equals(fileName, CosyVoice3CrispAsr.HiftF16FileName, StringComparison.OrdinalIgnoreCase))
             return DownloadHashManager.CosyVoice3CrispAsr.HiftF16;
-        if (string.Equals(fileName, CosyVoice3CrispAsr.S3TokQ4KFileName, StringComparison.OrdinalIgnoreCase))
-            return DownloadHashManager.CosyVoice3CrispAsr.S3TokQ4K;
         if (string.Equals(fileName, CosyVoice3CrispAsr.S3TokF16FileName, StringComparison.OrdinalIgnoreCase))
             return DownloadHashManager.CosyVoice3CrispAsr.S3TokF16;
         if (string.Equals(fileName, CosyVoice3CrispAsr.CampPlusF16FileName, StringComparison.OrdinalIgnoreCase))
