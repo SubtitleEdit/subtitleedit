@@ -61,7 +61,10 @@ public sealed class UndoRedoManager : IUndoRedoManager
             var currentHash = _undoRedoClient?.GetFastHash() ?? 0;
             lock (_lock)
             {
-                if (_undoList.Count == 0) return false;
+                if (_undoList.Count == 0)
+                {
+                    return false;
+                }
                 return _undoList.Last().Hash != currentHash || _undoList.Count > 1;
             }
         }
@@ -114,7 +117,10 @@ public sealed class UndoRedoManager : IUndoRedoManager
                 throw new InvalidOperationException(
                     "Call SetupChangeDetection() before StartChangeDetection().");
 
-            if (_isChangeDetectionActive) return;
+            if (_isChangeDetectionActive)
+            {
+                return;
+            }
             _isChangeDetectionActive = true;
             _changeDetectionTimer.Change(_detectionInterval, _detectionInterval);
         }
@@ -124,7 +130,10 @@ public sealed class UndoRedoManager : IUndoRedoManager
     {
         lock (_lock)
         {
-            if (!_isChangeDetectionActive) return;
+            if (!_isChangeDetectionActive)
+            {
+                return;
+            }
             _isChangeDetectionActive = false;
             _changeDetectionTimer?.Change(
                 Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
@@ -147,7 +156,9 @@ public sealed class UndoRedoManager : IUndoRedoManager
         _redoList.Clear();
 
         if (_undoList.Count > MaxUndoItems)
+        {
             _undoList.RemoveAt(0);
+        }
     }
 
     public UndoRedoItem? Undo()
@@ -208,7 +219,10 @@ public sealed class UndoRedoManager : IUndoRedoManager
     {
         lock (_lock)
         {
-            if (_redoList.Count == 0) return null;
+            if (_redoList.Count == 0)
+            {
+                return null;
+            }
 
             var item = PopLast(_redoList);
 
@@ -216,7 +230,9 @@ public sealed class UndoRedoManager : IUndoRedoManager
             // redo for new user actions, redo should preserve remaining entries).
             _undoList.Add(UndoRedoItem.Clone(item)!);
             if (_undoList.Count > MaxUndoItems)
+            {
                 _undoList.RemoveAt(0);
+            }
 
             return UndoRedoItem.Clone(item);
         }
@@ -336,14 +352,26 @@ public sealed class UndoRedoManager : IUndoRedoManager
                 Math.Abs(o.EndTime.TotalMilliseconds - n.EndTime.TotalMilliseconds) > 0.5;
             var bookmarkChanged = o.Bookmark != n.Bookmark;
 
-            if (!textChanged && !timingChanged && !bookmarkChanged) continue;
+            if (!textChanged && !timingChanged && !bookmarkChanged)
+            {
+                continue;
+            }
 
             changedLines.Add(i + 1);
-            if (textChanged) textChanges++;
-            if (timingChanged) timingChanges++;
+            if (textChanged)
+            {
+                textChanges++;
+            }
+            if (timingChanged)
+            {
+                timingChanges++;
+            }
         }
 
-        if (changedLines.Count == 0) return false;
+        if (changedLines.Count == 0)
+        {
+            return false;
+        }
 
         next.Description = changedLines.Count switch
         {
@@ -386,8 +414,14 @@ public sealed class UndoRedoManager : IUndoRedoManager
     private static string FormatChangeTypes(int textChanges, int timingChanges)
     {
         var parts = new List<string>(2);
-        if (textChanges > 0) parts.Add($"{textChanges} text");
-        if (timingChanges > 0) parts.Add($"{timingChanges} timing");
+        if (textChanges > 0)
+        {
+            parts.Add($"{textChanges} text");
+        }
+        if (timingChanges > 0)
+        {
+            parts.Add($"{timingChanges} timing");
+        }
         return string.Join(" and ", parts);
     }
 
@@ -416,7 +450,10 @@ public sealed class UndoRedoManager : IUndoRedoManager
             _redoList.Clear();
         }
 
-        if (wasActive) StartChangeDetection();
+        if (wasActive)
+        {
+            StartChangeDetection();
+        }
     }
 
     public void Dispose()
@@ -442,7 +479,9 @@ public sealed class UndoRedoManager : IUndoRedoManager
     private static void PushIfNew(List<UndoRedoItem> stack, UndoRedoItem item)
     {
         if (stack.LastOrDefault()?.Hash != item.Hash)
+        {
             stack.Add(UndoRedoItem.Clone(item)!);
+        }
     }
 
     private static UndoRedoItem PopLast(List<UndoRedoItem> list)

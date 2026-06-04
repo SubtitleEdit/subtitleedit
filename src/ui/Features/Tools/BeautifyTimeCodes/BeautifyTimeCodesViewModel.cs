@@ -202,8 +202,14 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
             ChangeNotes = string.Empty;
             CanGoPrevious = false;
             CanGoNext = false;
-            if (AudioVisualizerOriginal != null) AudioVisualizerOriginal.AllSelectedParagraphs = new List<SubtitleLineViewModel>();
-            if (AudioVisualizerBeautified != null) AudioVisualizerBeautified.AllSelectedParagraphs = new List<SubtitleLineViewModel>();
+            if (AudioVisualizerOriginal != null)
+            {
+                AudioVisualizerOriginal.AllSelectedParagraphs = new List<SubtitleLineViewModel>();
+            }
+            if (AudioVisualizerBeautified != null)
+            {
+                AudioVisualizerBeautified.AllSelectedParagraphs = new List<SubtitleLineViewModel>();
+            }
             return;
         }
 
@@ -259,7 +265,10 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         var endDeltaMs = beautified.EndTime.TotalMilliseconds - original.EndTime.TotalMilliseconds;
         if (Math.Abs(endDeltaMs) > 0.5)
         {
-            if (sb.Length > 6) sb.Append("    ");
+            if (sb.Length > 6)
+            {
+                sb.Append("    ");
+            }
             sb.Append(Se.Language.General.EndTime).Append(": ")
               .Append(FormatTime(original.EndTime))
               .Append(" → ")
@@ -312,7 +321,10 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         }
 
         var snap = DetectShotChangeSnap(beautified.StartTime, isOutCue: false);
-        if (snap != null) return snap;
+        if (snap != null)
+        {
+            return snap;
+        }
 
         // Min-gap-to-previous: new start equals previous end + min-gap
         if (prev != null)
@@ -337,7 +349,10 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         }
 
         var snap = DetectShotChangeSnap(beautified.EndTime, isOutCue: true);
-        if (snap != null) return snap;
+        if (snap != null)
+        {
+            return snap;
+        }
 
         if (next != null)
         {
@@ -427,7 +442,10 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
 
     private void CenterVisualizerOn(Controls.AudioVisualizerControl.AudioVisualizer? av, double seconds)
     {
-        if (av == null) return;
+        if (av == null)
+        {
+            return;
+        }
 
         var peaks = av.WavePeaks;
         if (peaks == null || av.Bounds.Width <= 0 || av.ZoomFactor <= 0)

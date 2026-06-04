@@ -46,7 +46,10 @@ public class AdvancedEffectHearts : IAdvancedEffectDisplay
     public List<SubtitleLineViewModel> ApplyEffect(string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
-        if (subtitles.Count == 0) return result;
+        if (subtitles.Count == 0)
+        {
+            return result;
+        }
 
         int w = width > 0 ? width : 1280;
         int h = height > 0 ? height : 720;
@@ -92,7 +95,10 @@ public class AdvancedEffectHearts : IAdvancedEffectDisplay
                 const double preRollMs = 700;
                 double heartStartOffset = launchMs - preRollMs;
                 double actualDur = durationMs - heartStartOffset;
-                if (actualDur < 600) continue;
+                if (actualDur < 600)
+                {
+                    continue;
+                }
 
                 var heart = new SubtitleLineViewModel(sub, generateNewId: true);
                 heart.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(heartStartOffset));

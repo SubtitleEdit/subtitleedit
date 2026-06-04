@@ -1871,7 +1871,9 @@ public partial class MainViewModel :
         Se.Settings.File.RecentFiles.Clear();
         InitMenu.UpdateRecentFiles(this);
         if (OperatingSystem.IsMacOS())
+        {
             Layout.InitNativeMacMenu.UpdateRecentFiles(this);
+        }
         _shortcutManager.ClearKeys();
     }
 
@@ -3604,8 +3606,14 @@ public partial class MainViewModel :
         foreach (var idx in indices)
         {
             var insertAt = idx + delta;
-            if (insertAt < 0) insertAt = 0;
-            if (insertAt > texts.Count) insertAt = texts.Count;
+            if (insertAt < 0)
+            {
+                insertAt = 0;
+            }
+            if (insertAt > texts.Count)
+            {
+                insertAt = texts.Count;
+            }
             texts.Insert(insertAt, string.Empty);
             delta++;
         }
@@ -4891,7 +4899,9 @@ public partial class MainViewModel :
         await ShowDialogAsync<PluginManagerWindow, PluginManagerViewModel>(vm => vm.Initialize());
         Layout.InitMenu.UpdatePluginsMenu(this);
         if (OperatingSystem.IsMacOS())
+        {
             Layout.InitNativeMacMenu.UpdatePluginsMenu(this);
+        }
     }
 
     [RelayCommand]
@@ -7835,7 +7845,9 @@ public partial class MainViewModel :
         await ShowDialogAsync<ShortcutsWindow, ShortcutsViewModel>(vm => { vm.LoadShortCuts(this); });
         ReloadShortcuts();
         if (OperatingSystem.IsMacOS())
+        {
             Layout.InitNativeMacMenu.UpdateShortcuts(this);
+        }
     }
 
     [RelayCommand]
@@ -8272,7 +8284,9 @@ public partial class MainViewModel :
         // reload current layout
         InitMenu.Make(this);
         if (OperatingSystem.IsMacOS())
+        {
             Layout.InitNativeMacMenu.Rebuild(this);
+        }
         SetLayout(Se.Settings.General.LayoutNumber);
 
         if (Toolbar is Border toolbarBorder)
@@ -9716,7 +9730,10 @@ public partial class MainViewModel :
 
     private async Task<MessageBoxResult> ShowWrapAroundDialog(string message)
     {
-        if (Window == null) return MessageBoxResult.No;
+        if (Window == null)
+        {
+            return MessageBoxResult.No;
+        }
         var findWin = _findViewModel?.Window;
         var replaceWin = _replaceViewModel?.Window;
         var dialogWindow = (findWin?.IsVisible == true ? findWin : null)
@@ -12537,7 +12554,9 @@ public partial class MainViewModel :
 
             var undoRedoObject = _undoRedoManager.Undo()!;
             if (undoRedoObject?.Subtitles == null)
+            {
                 return;
+            }
 
             RestoreUndoRedoState(undoRedoObject);
             RestoreSelectionToPreviousIndex(preIndex);
@@ -14926,7 +14945,9 @@ public partial class MainViewModel :
         {
             InitMenu.UpdateRecentFiles(this);
             if (OperatingSystem.IsMacOS())
+            {
                 Layout.InitNativeMacMenu.UpdateRecentFiles(this);
+            }
         }
     }
 
@@ -15102,7 +15123,9 @@ public partial class MainViewModel :
     internal void OnLoaded()
     {
         if (OperatingSystem.IsMacOS())
+        {
             Layout.InitNativeMacMenu.Sync(this);
+        }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && string.IsNullOrEmpty(Se.Settings.General.LibMpvPath))
         {
@@ -15575,7 +15598,9 @@ public partial class MainViewModel :
                         IsAudioTracksVisible = false;
                         AudioTraksMenuItem.Items.Clear();
                         if (OperatingSystem.IsMacOS())
+                        {
                             Layout.InitNativeMacMenu.UpdateAudioTracksMenu(this, [], null);
+                        }
                     });
                     return;
                 }
@@ -15628,7 +15653,9 @@ public partial class MainViewModel :
 
                     IsAudioTracksVisible = AudioTraksMenuItem.Items.Count > 1;
                     if (OperatingSystem.IsMacOS())
+                    {
                         Layout.InitNativeMacMenu.UpdateAudioTracksMenu(this, audioTracks, _audioTrack);
+                    }
                 });
             }
         }

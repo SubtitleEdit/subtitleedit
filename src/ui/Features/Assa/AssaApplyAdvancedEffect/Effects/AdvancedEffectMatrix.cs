@@ -32,7 +32,10 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
     public List<SubtitleLineViewModel> ApplyEffect(string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
-        if (subtitles.Count == 0) return result;
+        if (subtitles.Count == 0)
+        {
+            return result;
+        }
 
         var rng = new Random(subtitles[0].Text.GetHashCode());
 
@@ -62,12 +65,18 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
                 for (int j = 0; j < streamLen; j++)
                 {
                     double charStartMs = streamStart + j * interval;
-                    if (charStartMs >= totalVideoMs) break;
+                    if (charStartMs >= totalVideoMs)
+                    {
+                        break;
+                    }
 
                     var entry = new SubtitleLineViewModel();
                     entry.StartTime = globalStart.Add(TimeSpan.FromMilliseconds(charStartMs));
                     entry.EndTime = entry.StartTime.Add(TimeSpan.FromMilliseconds(fallDur));
-                    if (entry.StartTime >= globalEnd) continue;
+                    if (entry.StartTime >= globalEnd)
+                    {
+                        continue;
+                    }
 
                     char ch = MatrixPool[rng.Next(MatrixPool.Length)];
 
@@ -146,7 +155,10 @@ public class AdvancedEffectMatrix : IAdvancedEffectDisplay
                 int colIdx = Math.Min(startCol + i, cols - 1);
                 int charX = colIdx * colW + colW / 2;
 
-                if (chars[i] == ' ') continue;
+                if (chars[i] == ' ')
+                {
+                    continue;
+                }
 
                 double revealFrac = visibleCount > 1
                     ? revealFracStart + (revealFracEnd - revealFracStart) * visIdx / (visibleCount - 1)

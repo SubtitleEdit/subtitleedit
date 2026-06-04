@@ -777,15 +777,42 @@ public partial class AssaDrawViewModel : ObservableObject
     private static string GetColorName(Color color)
     {
         // Create a readable color name based on RGB values
-        if (color is { R: 255, G: 255, B: 255 }) return "White";
-        if (color.R == 0 && color is { G: 0, B: 0 }) return "Black";
-        if (color is { R: 255, G: 0, B: 0 }) return "Red";
-        if (color is { R: 0, G: 255, B: 0 }) return "Green";
-        if (color is { R: 0, G: 0, B: 255 }) return "Blue";
-        if (color is { R: 255, G: 255, B: 0 }) return "Yellow";
-        if (color is { R: 255, G: 0, B: 255 }) return "Magenta";
-        if (color is { R: 0, G: 255, B: 255 }) return "Cyan";
-        if (color is { R: 255, G: 165, B: 0 }) return "Orange";
+        if (color is { R: 255, G: 255, B: 255 })
+        {
+            return "White";
+        }
+        if (color.R == 0 && color is { G: 0, B: 0 })
+        {
+            return "Black";
+        }
+        if (color is { R: 255, G: 0, B: 0 })
+        {
+            return "Red";
+        }
+        if (color is { R: 0, G: 255, B: 0 })
+        {
+            return "Green";
+        }
+        if (color is { R: 0, G: 0, B: 255 })
+        {
+            return "Blue";
+        }
+        if (color is { R: 255, G: 255, B: 0 })
+        {
+            return "Yellow";
+        }
+        if (color is { R: 255, G: 0, B: 255 })
+        {
+            return "Magenta";
+        }
+        if (color is { R: 0, G: 255, B: 255 })
+        {
+            return "Cyan";
+        }
+        if (color is { R: 255, G: 165, B: 0 })
+        {
+            return "Orange";
+        }
         
         // For other colors, use hex representation
         return $"{color.R:X2}{color.G:X2}{color.B:X2}";
@@ -979,11 +1006,15 @@ public partial class AssaDrawViewModel : ObservableObject
         // Read resolution from header
         var playResX = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResX", "[Script Info]", subtitle.Header);
         if (int.TryParse(playResX, out var width) && width >= 125 && width <= 4096)
+        {
             CanvasWidth = width;
+        }
 
         var playResY = AdvancedSubStationAlpha.GetTagValueFromHeader("PlayResY", "[Script Info]", subtitle.Header);
         if (int.TryParse(playResY, out var height) && height >= 125 && height <= 4096)
+        {
             CanvasHeight = height;
+        }
 
         var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(subtitle.Header);
 
@@ -993,7 +1024,10 @@ public partial class AssaDrawViewModel : ObservableObject
             if (!string.IsNullOrEmpty(paragraph.Extra))
             {
                 var style = styles.FirstOrDefault(s => s.Name.Equals(paragraph.Extra, StringComparison.OrdinalIgnoreCase));
-                if (style != null) color = style.Primary.ToAvaloniaColor();
+                if (style != null)
+                {
+                    color = style.Primary.ToAvaloniaColor();
+                }
             }
 
             // Handle iclip

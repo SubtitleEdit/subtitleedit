@@ -18,7 +18,10 @@ public class AdvancedEffectRain : IAdvancedEffectDisplay
     public List<SubtitleLineViewModel> ApplyEffect(string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
-        if (subtitles.Count == 0) return result;
+        if (subtitles.Count == 0)
+        {
+            return result;
+        }
 
         Random rng = new Random(subtitles[0].Text.GetHashCode());
 
@@ -75,7 +78,10 @@ public class AdvancedEffectRain : IAdvancedEffectDisplay
                 drop.StartTime = globalStart.Add(TimeSpan.FromMilliseconds(currentTimeMs));
                 drop.EndTime = drop.StartTime.Add(TimeSpan.FromMilliseconds(fallDuration));
 
-                if (drop.StartTime >= globalEnd) break;
+                if (drop.StartTime >= globalEnd)
+                {
+                    break;
+                }
 
                 int startX = rng.Next(-100, screenWidth + 100);
                 int endX = startX + rng.Next(15, 40);

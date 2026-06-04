@@ -20,7 +20,10 @@ public class AdvancedEffectStarfield : IAdvancedEffectDisplay
     public List<SubtitleLineViewModel> ApplyEffect(string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
-        if (subtitles.Count == 0) return result;
+        if (subtitles.Count == 0)
+        {
+            return result;
+        }
 
         Random rng = new Random(subtitles[0].Text.GetHashCode());
 

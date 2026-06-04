@@ -1303,7 +1303,10 @@ public partial class SpeechToTextViewModel : ObservableObject
                 // accumulating up to N×23 MB of WAV in temp for long runs. The
                 // entry stays in _filesToDelete for the outer sweep as a
                 // safety net in case Delete throws here.
-                try { if (File.Exists(chunkPath)) File.Delete(chunkPath); } catch { /* swept later */ }
+                try { if (File.Exists(chunkPath))
+                {
+                    File.Delete(chunkPath);
+                } } catch { /* swept later */ }
             }
         }
     }

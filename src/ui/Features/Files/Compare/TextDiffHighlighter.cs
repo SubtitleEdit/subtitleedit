@@ -34,14 +34,18 @@ public static class TextDiffHighlighter
     private static IBrush GetForegroundAddedColor()
     {
         if (UiTheme.IsDarkThemeEnabled())
+        {
             return new SolidColorBrush(Color.FromRgb(100, 255, 100));
+        }
         return new SolidColorBrush(Color.FromRgb(27, 94, 32));
     }
 
     private static IBrush GetBackAddedColor()
     {
         if (UiTheme.IsDarkThemeEnabled())
+        {
             return new SolidColorBrush(Color.FromRgb(30, 80, 30));
+        }
         return new SolidColorBrush(Color.FromRgb(200, 250, 205));
     }
 
@@ -119,10 +123,14 @@ public static class TextDiffHighlighter
         var after = new TextBlock { TextWrapping = TextWrapping.Wrap };
 
         if (before.Inlines == null || after.Inlines == null)
+        {
             return (before, after);
+        }
 
         if (string.IsNullOrEmpty(text1) && string.IsNullOrEmpty(text2))
+        {
             return (before, after);
+        }
 
         if (string.IsNullOrEmpty(text1))
         {
@@ -281,11 +289,17 @@ public static class TextDiffHighlighter
             // Build LCS table for unused parts
             for (int i = 0; i < s1.Length; i++)
             {
-                if (used1[i]) continue;
+                if (used1[i])
+                {
+                    continue;
+                }
 
                 for (int j = 0; j < s2.Length; j++)
                 {
-                    if (used2[j]) continue;
+                    if (used2[j])
+                    {
+                        continue;
+                    }
 
                     int len = 0;
                     while (i + len < s1.Length && j + len < s2.Length &&

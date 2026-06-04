@@ -36,7 +36,9 @@ public class AdvancedEffectWordSpacing : IAdvancedEffectDisplay
     private string ProcessTextWithSpacing(string text)
     {
         if (string.IsNullOrEmpty(text))
+        {
             return text;
+        }
 
         var result = new StringBuilder();
         bool insideTags = false;

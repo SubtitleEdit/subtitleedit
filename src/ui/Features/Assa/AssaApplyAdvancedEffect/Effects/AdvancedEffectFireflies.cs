@@ -26,7 +26,10 @@ public class AdvancedEffectFireflies : IAdvancedEffectDisplay
     public List<SubtitleLineViewModel> ApplyEffect(string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
-        if (subtitles.Count == 0) return result;
+        if (subtitles.Count == 0)
+        {
+            return result;
+        }
 
         Random rng = new Random(subtitles[0].Text.GetHashCode());
 
@@ -75,7 +78,10 @@ public class AdvancedEffectFireflies : IAdvancedEffectDisplay
                 fly.StartTime = globalStart.Add(TimeSpan.FromMilliseconds(currentTimeMs));
                 fly.EndTime = fly.StartTime.Add(TimeSpan.FromMilliseconds(flightDuration));
 
-                if (fly.StartTime >= globalEnd) break;
+                if (fly.StartTime >= globalEnd)
+                {
+                    break;
+                }
 
                 // Organic drift: move to a nearby random position
                 int startX = rng.Next(40, w - 40);

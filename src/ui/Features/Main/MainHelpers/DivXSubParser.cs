@@ -74,7 +74,10 @@ public static class DivXSubParser
         xSub = null;
         Span<byte> header = stackalloc byte[26 + 14 + 12]; // Timecode + Metadata + Colors
 
-        if (stream.Read(header) < header.Length) return false;
+        if (stream.Read(header) < header.Length)
+        {
+            return false;
+        }
 
         string timeCode = Encoding.ASCII.GetString(header.Slice(0, 25));
 

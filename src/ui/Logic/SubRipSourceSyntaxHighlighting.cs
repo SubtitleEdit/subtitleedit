@@ -246,7 +246,9 @@ public partial class SubRipSourceSyntaxHighlighting : DocumentColorizingTransfor
                     // Find element name end
                     var elementStart = i + 1;
                     if (elementStart < lineText.Length && lineText[elementStart] == '/')
+                    {
                         elementStart++;
+                    }
 
                     var elementEnd = elementStart;
                     while (elementEnd < lineText.Length && !char.IsWhiteSpace(lineText[elementEnd]) &&
@@ -321,9 +323,13 @@ public partial class SubRipSourceSyntaxHighlighting : DocumentColorizingTransfor
                     var valueStart = i;
                     var valueEnd = lineText.IndexOf(quoteChar, i + 1);
                     if (valueEnd == -1)
+                    {
                         valueEnd = lineText.Length;
+                    }
                     else
+                    {
                         valueEnd++;
+                    }
 
                     // Color the quotes
                     ChangeLinePart(lineStartOffset + valueStart, lineStartOffset + valueStart + 1, element =>

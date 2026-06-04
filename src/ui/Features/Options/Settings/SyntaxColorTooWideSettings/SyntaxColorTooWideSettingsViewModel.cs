@@ -140,9 +140,13 @@ public partial class SyntaxColorTooWideSettingsViewModel : ObservableObject
         {
             using var p = new SKPaint { Color = new SKColor(50, 220, 50), StrokeWidth = 2, IsAntialias = false };
             if (safeLeft >= 0 && safeLeft <= bitmapWidth)
+            {
                 canvas.DrawLine(safeLeft, 0, safeLeft, previewHeight, p);
+            }
             if (safeRight >= 0 && safeRight <= bitmapWidth)
+            {
                 canvas.DrawLine(safeRight, 0, safeRight, previewHeight, p);
+            }
         }
 
         // Outer box border

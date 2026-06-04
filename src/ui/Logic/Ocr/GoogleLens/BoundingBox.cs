@@ -15,10 +15,14 @@ public class BoundingBox
     public BoundingBox(double[] box, int[] imageDimensions)
     {
         if (box == null || box.Length != 4)
+        {
             throw new ArgumentException("Bounding box array [centerPerX, centerPerY, perWidth, perHeight] not set or invalid");
+        }
         
         if (imageDimensions == null || imageDimensions.Length != 2)
+        {
             throw new ArgumentException("Image dimensions [width, height] not set or invalid");
+        }
 
         _imageDimensions = imageDimensions;
         CenterPerX = box[0];

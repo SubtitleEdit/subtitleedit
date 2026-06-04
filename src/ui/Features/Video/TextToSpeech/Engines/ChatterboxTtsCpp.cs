@@ -664,7 +664,10 @@ public class ChatterboxTtsCpp : ITtsEngine
 
     private static void HookProcessExitOnce()
     {
-        if (_processExitHooked) return;
+        if (_processExitHooked)
+        {
+            return;
+        }
         _processExitHooked = true;
         AppDomain.CurrentDomain.ProcessExit += (_, _) => StopServerInternal();
     }
@@ -683,7 +686,10 @@ public class ChatterboxTtsCpp : ITtsEngine
         _serverPort = 0;
         _serverModelKey = null;
         _serverLaunchCommand = null;
-        if (p == null) return;
+        if (p == null)
+        {
+            return;
+        }
         try
         {
             if (!p.HasExited)

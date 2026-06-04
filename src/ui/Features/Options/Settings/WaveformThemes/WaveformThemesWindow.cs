@@ -161,7 +161,10 @@ public class WaveformThemesWindow : Window
 
         button.Click += async (_, _) =>
         {
-            if (TopLevel.GetTopLevel(button) is not Window window) return;
+            if (TopLevel.GetTopLevel(button) is not Window window)
+            {
+                return;
+            }
 
             var propInfo = typeof(WaveformThemesViewModel).GetProperty(propertyName);
             var currentColor = propInfo?.GetValue(vm) is Color c ? c : Colors.White;

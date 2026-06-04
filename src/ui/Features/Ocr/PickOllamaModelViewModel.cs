@@ -170,7 +170,9 @@ public partial class PickOllamaModelViewModel : ObservableObject
     public static string GetBaseUrl(string url)
     {
         if (string.IsNullOrEmpty(url))
+        {
             return string.Empty;
+        }
 
         try
         {

@@ -29,7 +29,9 @@ public static class SkColorExtensions
     public static SKColor FromHex(this string hex)
     {
         if (string.IsNullOrWhiteSpace(hex))
+        {
             throw new ArgumentException("Invalid hex string.");
+        }
 
         hex = hex.TrimStart('#');
 

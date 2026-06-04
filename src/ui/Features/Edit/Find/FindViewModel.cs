@@ -71,7 +71,10 @@ public partial class FindViewModel : ObservableObject
         FindNextPressed = false;
         FindPreviousPressed = true;
         SaveSettings();
-        if (_findResult != null) await _findResult.HandleFindResult(this);
+        if (_findResult != null)
+        {
+            await _findResult.HandleFindResult(this);
+        }
     }
 
     [RelayCommand]
@@ -81,7 +84,10 @@ public partial class FindViewModel : ObservableObject
         FindNextPressed = true;
         FindPreviousPressed = false;
         SaveSettings();
-        if (_findResult != null) await _findResult.HandleFindResult(this);
+        if (_findResult != null)
+        {
+            await _findResult.HandleFindResult(this);
+        }
     }
 
     [RelayCommand]

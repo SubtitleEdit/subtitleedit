@@ -620,8 +620,22 @@ public class WavePeakGenerator2 : IDisposable
 
                         float pos = 0, neg = 0;
 
-                        if (v1 < 0) neg += v1; else pos += v1;
-                        if (v2 < 0) neg += v2; else pos += v2;
+                        if (v1 < 0)
+                        {
+                            neg += v1;
+                        }
+                        else
+                        {
+                            pos += v1;
+                        }
+                        if (v2 < 0)
+                        {
+                            neg += v2;
+                        }
+                        else
+                        {
+                            pos += v2;
+                        }
 
                         chunkSamples[chunkSampleOffset++] = neg * sampleAndChannelScale;
                         chunkSamples[chunkSampleOffset++] = pos * sampleAndChannelScale;

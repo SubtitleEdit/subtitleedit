@@ -123,7 +123,9 @@ public class BinaryOcrInspectWindow : Window
         vm.TextBoxNew = UiUtil.MakeTextBox(100, vm, nameof(vm.NewText))
             .WithBindEnabled(nameof(vm.IsEditControlsEnabled));
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
+        {
             vm.TextBoxNew.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+        }
 
         var image = new Image
         {

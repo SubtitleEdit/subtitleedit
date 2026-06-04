@@ -364,12 +364,16 @@ public static class InitNativeMacMenu
     public static void Rebuild(MainViewModel vm)
     {
         if (_root == null || _window == null)
+        {
             return;
+        }
         _root.Items.Clear();
         MakeStructure(_root, _window);
         NativeMenu.SetMenu(_window, _root);
         if (Application.Current != null)
+        {
             SetupAppMenu(Application.Current);
+        }
         Sync(vm);
     }
 
@@ -380,7 +384,9 @@ public static class InitNativeMacMenu
     public static void Sync(MainViewModel vm)
     {
         if (_handler != null && _vm != null)
+        {
             _vm.PropertyChanged -= _handler;
+        }
 
         _vm = vm;
 
@@ -402,18 +408,31 @@ public static class InitNativeMacMenu
             item.Header = getHeader(vm);
 
         if (_pluginsItem != null)
+        {
             _pluginsItem.IsEnabled = Se.Settings.Appearance.ShowPluginsMenu;
+        }
 
         _handler = (s, e) =>
         {
             if (s is not MainViewModel v2 || e.PropertyName is null)
+            {
                 return;
+            }
             foreach (var (item, isVisible, props) in _visibilities)
-                if (props.Contains(e.PropertyName)) item.IsVisible = isVisible(v2);
+                if (props.Contains(e.PropertyName))
+                {
+                    item.IsVisible = isVisible(v2);
+                }
             foreach (var (item, isChecked, props) in _toggles)
-                if (props.Contains(e.PropertyName)) item.IsChecked = isChecked(v2);
+                if (props.Contains(e.PropertyName))
+                {
+                    item.IsChecked = isChecked(v2);
+                }
             foreach (var (item, getHeader, props) in _dynamicHeaders)
-                if (props.Contains(e.PropertyName)) item.Header = getHeader(v2);
+                if (props.Contains(e.PropertyName))
+                {
+                    item.Header = getHeader(v2);
+                }
         };
         vm.PropertyChanged += _handler;
 
@@ -426,7 +445,9 @@ public static class InitNativeMacMenu
     public static void UpdateRecentFiles(MainViewModel vm)
     {
         if (vm.NativeMenuReopen?.Menu is not NativeMenu menu)
+        {
             return;
+        }
 
         menu.Items.Clear();
 
@@ -437,7 +458,9 @@ public static class InitNativeMacMenu
         vm.NativeMenuReopen.IsEnabled = files.Count > 0;
 
         if (files.Count == 0)
+        {
             return;
+        }
 
         foreach (var file in files)
         {
@@ -450,7 +473,9 @@ public static class InitNativeMacMenu
                     : file.SubtitleFileNameOriginal;
             }
             if (header.Length > 80)
+            {
                 header = "…" + header[^77..];
+            }
 
             var recentItem = new NativeMenuItem(header);
             var captured = file;
@@ -467,7 +492,9 @@ public static class InitNativeMacMenu
     public static void UpdatePluginsMenu(MainViewModel vm)
     {
         if (vm.NativeMenuPlugins?.Menu is not NativeMenu menu)
+        {
             return;
+        }
 
         menu.Items.Clear();
 
@@ -500,7 +527,9 @@ public static class InitNativeMacMenu
     public static void UpdateAudioTracksMenu(MainViewModel vm, IList<AudioTrackInfo> tracks, AudioTrackInfo? current)
     {
         if (vm.NativeMenuAudioTracks?.Menu is not NativeMenu menu)
+        {
             return;
+        }
 
         menu.Items.Clear();
 
@@ -513,7 +542,9 @@ public static class InitNativeMacMenu
                 trackName += string.IsNullOrEmpty(lang?.EnglishName) ? $" - {track.Language}" : $" - {lang.EnglishName}";
             }
             if (!string.IsNullOrEmpty(track.Title))
+            {
                 trackName += $" - {track.Title}";
+            }
 
             var item = new NativeMenuItem(trackName);
             item.ToggleType = MenuItemToggleType.CheckBox;
@@ -538,7 +569,10 @@ public static class InitNativeMacMenu
     private static NativeMenuItem Item(string? header, Func<MainViewModel, IRelayCommand> getCmd)
     {
         var item = new NativeMenuItem(header ?? string.Empty);
-        item.Click += (_, _) => { var v = GetVm(); if (v != null) getCmd(v).Execute(null); };
+        item.Click += (_, _) => { var v = GetVm(); if (v != null)
+        {
+            getCmd(v).Execute(null);
+        } };
         _gestureItems.Add((getCmd, item));
         return item;
     }
@@ -556,7 +590,10 @@ public static class InitNativeMacMenu
     {
         var item = new NativeMenuItem(header ?? string.Empty);
         item.ToggleType = MenuItemToggleType.CheckBox;
-        item.Click += (_, _) => { var v = GetVm(); if (v != null) getCmd(v).Execute(null); };
+        item.Click += (_, _) => { var v = GetVm(); if (v != null)
+        {
+            getCmd(v).Execute(null);
+        } };
         _toggles.Add((item, isChecked, propertyNames));
         _gestureItems.Add((getCmd, item));
         return item;
@@ -567,7 +604,9 @@ public static class InitNativeMacMenu
         foreach (var sc in shortcuts)
         {
             if (ReferenceEquals(sc.Action, command))
+            {
                 return InitMenu.ToKeyGesture(sc);
+            }
         }
         return null;
     }

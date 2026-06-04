@@ -168,8 +168,14 @@ public class SplitManager : ISplitManager
                 if (total > 0)
                 {
                     startFactor = (double)firstTextLen / total;
-                    if (startFactor < 0.25) startFactor = 0.25;
-                    if (startFactor > 0.75) startFactor = 0.75;
+                    if (startFactor < 0.25)
+                    {
+                        startFactor = 0.25;
+                    }
+                    if (startFactor > 0.75)
+                    {
+                        startFactor = 0.75;
+                    }
                 }
             }
 
@@ -376,7 +382,10 @@ public class SplitManager : ISplitManager
         while ((idx = text.IndexOf(prefix, idx, StringComparison.OrdinalIgnoreCase)) >= 0)
         {
             var end = text.IndexOf('>', idx);
-            if (end < 0) break;
+            if (end < 0)
+            {
+                break;
+            }
             openTags.Add((idx, text.Substring(idx, end - idx + 1)));
             idx = end + 1;
         }
@@ -442,16 +451,25 @@ public class SplitManager : ISplitManager
             idx += prefix.Length;
         }
 
-        if (lastIdx < 0) return null;
+        if (lastIdx < 0)
+        {
+            return null;
+        }
 
         var blockStart = text.LastIndexOf('{', lastIdx);
         var blockEnd = text.IndexOf('}', lastIdx);
-        if (blockStart < 0 || blockEnd < 0) return null;
+        if (blockStart < 0 || blockEnd < 0)
+        {
+            return null;
+        }
 
         // Extract only the specific tag from within the block
         var tagStart = lastIdx;
         var tagEnd = text.IndexOf('}', tagStart);
-        if (tagEnd < 0) return null;
+        if (tagEnd < 0)
+        {
+            return null;
+        }
 
         return "{" + text.Substring(tagStart, tagEnd - tagStart + 1);
     }

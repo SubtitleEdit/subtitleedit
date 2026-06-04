@@ -80,7 +80,10 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
             var newSub = new SubtitleLineViewModel(sub, generateNewId: true);
             string posTags = ExtractPositionalTags(sub.Text);
             var sb = new StringBuilder();
-            if (!string.IsNullOrEmpty(posTags)) sb.Append(posTags);
+            if (!string.IsNullOrEmpty(posTags))
+            {
+                sb.Append(posTags);
+            }
 
             // Inactive tags now explicitly set \1c to InactiveWordColor so color resets after active word.
             string inactiveTags = $"{{\\alpha&H{(255 -InactiveWordColor.A):X2}&\\1c{ToAssColor(InactiveWordColor)}\\bord0\\shad0\\blur0\\fscx100\\fscy100}}";
@@ -98,7 +101,9 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
                 var (before, active, after) = parsed.Value;
 
                 if (!string.IsNullOrEmpty(before))
+                {
                     sb.Append(inactiveTags).Append(before);
+                }
 
                 // Build active tag depending on ApplyGlow
                 string activeTag;
@@ -118,7 +123,9 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
                 sb.Append(activeTag).Append(active);
 
                 if (!string.IsNullOrEmpty(after))
+                {
                     sb.Append(inactiveTags).Append(after);
+                }
             }
 
             newSub.Text = sb.ToString();
@@ -135,7 +142,10 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
     {
         // Remove SSA tags for tokenization and normalize newlines.
         var cleanText = Utilities.RemoveSsaTags(sub.Text);
-        if (string.IsNullOrWhiteSpace(cleanText)) return null;
+        if (string.IsNullOrWhiteSpace(cleanText))
+        {
+            return null;
+        }
         cleanText = cleanText.Replace("\r\n", "\n").Replace("\r", "\n");
 
         // Tokenize into runs of non-whitespace (words/punctuation) and whitespace (spaces/newlines)
@@ -145,7 +155,10 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
 
         // Count words (non-whitespace tokens)
         var wordCount = tokens.Count(t => !string.IsNullOrWhiteSpace(t));
-        if (wordCount == 0) return null;
+        if (wordCount == 0)
+        {
+            return null;
+        }
 
         var totalMs = sub.Duration.TotalMilliseconds;
         var msPerWord = totalMs / wordCount;
@@ -182,7 +195,10 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
 
             // Build text for this word index
             var sb = new StringBuilder();
-            if (!string.IsNullOrEmpty(posTags)) sb.Append(posTags);
+            if (!string.IsNullOrEmpty(posTags))
+            {
+                sb.Append(posTags);
+            }
 
             string? currentColor = null;
             int localWordCounter = 0;
@@ -249,30 +265,50 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
     private static string ExtractPositionalTags(string text)
     {
         var firstBlock = System.Text.RegularExpressions.Regex.Match(text, @"^\{([^}]*)\}");
-        if (!firstBlock.Success) return string.Empty;
+        if (!firstBlock.Success)
+        {
+            return string.Empty;
+        }
         string inner = firstBlock.Groups[1].Value;
         var sb = new StringBuilder("{");
         var anM = System.Text.RegularExpressions.Regex.Match(inner, @"\\an\d");
-        if (anM.Success) sb.Append(anM.Value);
+        if (anM.Success)
+        {
+            sb.Append(anM.Value);
+        }
         var posM = System.Text.RegularExpressions.Regex.Match(inner, @"\\pos\([^)]+\)");
-        if (posM.Success) sb.Append(posM.Value);
+        if (posM.Success)
+        {
+            sb.Append(posM.Value);
+        }
         var moveM = System.Text.RegularExpressions.Regex.Match(inner, @"\\move\([^)]+\)");
-        if (moveM.Success) sb.Append(moveM.Value);
+        if (moveM.Success)
+        {
+            sb.Append(moveM.Value);
+        }
         sb.Append("}");
         return sb.Length > 2 ? sb.ToString() : string.Empty;
     }
 
     private static (string Before, string Active, string After)? ParseActiveWord(string text)
     {
-        if (string.IsNullOrEmpty(text)) return null;
+        if (string.IsNullOrEmpty(text))
+        {
+            return null;
+        }
         var segments = BuildSegments(text);
-        if (segments.Count == 0) return null;
+        if (segments.Count == 0)
+        {
+            return null;
+        }
 
         // Strategy 1: explicit underline {\u1}
         for (int i = 0; i < segments.Count; i++)
             if (System.Text.RegularExpressions.Regex.IsMatch(segments[i].Tags, @"\\u1")
                 && !string.IsNullOrWhiteSpace(segments[i].Text))
+            {
                 return BuildResult(segments, i);
+            }
 
         // Strategy 2: least-common \1c color is the highlight
         var colorCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
@@ -282,17 +318,26 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
             if (m.Success)
             {
                 string c = m.Groups[1].Value.ToUpperInvariant();
-                if (!colorCounts.TryGetValue(c, out int cnt)) cnt = 0;
+                if (!colorCounts.TryGetValue(c, out int cnt))
+                {
+                    cnt = 0;
+                }
                 colorCounts[c] = cnt + 1;
             }
         }
-        if (colorCounts.Count == 0) return null;
+        if (colorCounts.Count == 0)
+        {
+            return null;
+        }
 
         string highlightColor;
         if (colorCounts.Count == 1)
         {
             var singleColor = colorCounts.Keys.First();
-            if (!IsColorfulAssColor(singleColor)) return null;
+            if (!IsColorfulAssColor(singleColor))
+            {
+                return null;
+            }
             highlightColor = singleColor;
         }
         else
@@ -309,7 +354,9 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
             if (m.Success
                 && m.Groups[1].Value.Equals(highlightColor, StringComparison.OrdinalIgnoreCase)
                 && !string.IsNullOrWhiteSpace(segments[i].Text))
+            {
                 return BuildResult(segments, i);
+            }
         }
         return null;
     }
@@ -336,7 +383,10 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
             while (pos < text.Length && text[pos] == '{')
             {
                 int end = text.IndexOf('}', pos);
-                if (end < 0) break;
+                if (end < 0)
+                {
+                    break;
+                }
                 tags.Append(text, pos, end - pos + 1);
                 pos = end + 1;
             }
@@ -344,7 +394,9 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
             while (pos < text.Length && text[pos] != '{') pos++;
             string plainText = text[textStart..pos];
             if (tags.Length > 0 || !string.IsNullOrEmpty(plainText))
+            {
                 result.Add((tags.ToString(), plainText));
+            }
         }
         return result;
     }
@@ -352,7 +404,10 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
     private static bool IsColorfulAssColor(string assColor)
     {
         string hex = assColor.Replace("&", "").Replace("H", "").ToUpperInvariant();
-        if (hex.Length != 6) return false;
+        if (hex.Length != 6)
+        {
+            return false;
+        }
         int b = Convert.ToInt32(hex[0..2], 16);
         int g = Convert.ToInt32(hex[2..4], 16);
         int r = Convert.ToInt32(hex[4..6], 16);

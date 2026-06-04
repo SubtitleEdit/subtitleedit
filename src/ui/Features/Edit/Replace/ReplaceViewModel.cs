@@ -65,7 +65,10 @@ public partial class ReplaceViewModel : ObservableObject
         ReplaceAllPressed = false;
         FindNextPressed = false;
         SaveSettings();
-        if (_findResult != null) await _findResult.HandleReplaceResult(this);
+        if (_findResult != null)
+        {
+            await _findResult.HandleReplaceResult(this);
+        }
     }
 
     [RelayCommand]
@@ -75,7 +78,10 @@ public partial class ReplaceViewModel : ObservableObject
         ReplaceAllPressed = true;
         FindNextPressed = false;
         SaveSettings();
-        if (_findResult != null) await _findResult.HandleReplaceResult(this);
+        if (_findResult != null)
+        {
+            await _findResult.HandleReplaceResult(this);
+        }
     }
 
     [RelayCommand]
@@ -85,7 +91,10 @@ public partial class ReplaceViewModel : ObservableObject
         ReplaceAllPressed = false;
         FindNextPressed = true;
         SaveSettings();
-        if (_findResult != null) await _findResult.HandleReplaceResult(this);
+        if (_findResult != null)
+        {
+            await _findResult.HandleReplaceResult(this);
+        }
     }
 
     [RelayCommand]

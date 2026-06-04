@@ -423,7 +423,9 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
         _currentSubtitleFileName = fileName;
 
         if (_mediaPlayer == IntPtr.Zero || _libvlc_media_player_add_slave == null)
+        {
             return;
+        }
 
         // --- HYBRID LOGIC ---
         // If we've added more than 100 slaves, the track list is getting messy.
@@ -475,7 +477,10 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
     private int GetHighestSpuId()
     {
         IntPtr pTrackList = _libvlc_video_get_spu_description?.Invoke(_mediaPlayer) ?? IntPtr.Zero;
-        if (pTrackList == IntPtr.Zero) return -1;
+        if (pTrackList == IntPtr.Zero)
+        {
+            return -1;
+        }
 
         int highestId = -1;
         IntPtr pCurrent = pTrackList;
@@ -483,7 +488,10 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
         while (pCurrent != IntPtr.Zero)
         {
             var track = Marshal.PtrToStructure<TrackDescription>(pCurrent);
-            if (track.Id > highestId) highestId = track.Id;
+            if (track.Id > highestId)
+            {
+                highestId = track.Id;
+            }
             pCurrent = track.PNext;
         }
 
@@ -509,7 +517,10 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
         // Add the sub fresh (it will now be ID 1 again)
         await SubAdd(subFileName);
 
-        if (wasPlaying) Play();
+        if (wasPlaying)
+        {
+            Play();
+        }
     }
 
     private static string PathToUri(string path)
@@ -525,7 +536,10 @@ public sealed class LibVlcDynamicPlayer : IDisposable, IVideoPlayer
 
     public void SubRemove()
     {
-        if (_mediaPlayer == IntPtr.Zero || _libvlc_video_set_spu == null) return;
+        if (_mediaPlayer == IntPtr.Zero || _libvlc_video_set_spu == null)
+        {
+            return;
+        }
 
         // -1 disables subtitle rendering
         _libvlc_video_set_spu(_mediaPlayer, -1);

@@ -277,38 +277,65 @@ public partial class BeautifyTimeCodesProfileViewModel : ObservableObject
     // Enforce greenZone >= redZone (matches SE4 ValidateZones())
     partial void OnInCuesLeftRedZoneChanged(int value)
     {
-        if (InCuesLeftGreenZone < value) InCuesLeftGreenZone = value;
+        if (InCuesLeftGreenZone < value)
+        {
+            InCuesLeftGreenZone = value;
+        }
     }
     partial void OnInCuesRightRedZoneChanged(int value)
     {
-        if (InCuesRightGreenZone < value) InCuesRightGreenZone = value;
+        if (InCuesRightGreenZone < value)
+        {
+            InCuesRightGreenZone = value;
+        }
     }
     partial void OnOutCuesLeftRedZoneChanged(int value)
     {
-        if (OutCuesLeftGreenZone < value) OutCuesLeftGreenZone = value;
+        if (OutCuesLeftGreenZone < value)
+        {
+            OutCuesLeftGreenZone = value;
+        }
     }
     partial void OnOutCuesRightRedZoneChanged(int value)
     {
-        if (OutCuesRightGreenZone < value) OutCuesRightGreenZone = value;
+        if (OutCuesRightGreenZone < value)
+        {
+            OutCuesRightGreenZone = value;
+        }
     }
     partial void OnConnectedLeftRedZoneChanged(int value)
     {
-        if (ConnectedLeftGreenZone < value) ConnectedLeftGreenZone = value;
+        if (ConnectedLeftGreenZone < value)
+        {
+            ConnectedLeftGreenZone = value;
+        }
     }
     partial void OnConnectedRightRedZoneChanged(int value)
     {
-        if (ConnectedRightGreenZone < value) ConnectedRightGreenZone = value;
+        if (ConnectedRightGreenZone < value)
+        {
+            ConnectedRightGreenZone = value;
+        }
     }
     partial void OnChainingGeneralLeftRedZoneChanged(int value)
     {
-        if (ChainingGeneralLeftGreenZone < value) ChainingGeneralLeftGreenZone = value;
+        if (ChainingGeneralLeftGreenZone < value)
+        {
+            ChainingGeneralLeftGreenZone = value;
+        }
     }
     partial void OnChainingInOnShotLeftRedZoneChanged(int value)
     {
-        if (ChainingInOnShotLeftGreenZone < value) ChainingInOnShotLeftGreenZone = value;
+        if (ChainingInOnShotLeftGreenZone < value)
+        {
+            ChainingInOnShotLeftGreenZone = value;
+        }
     }
     partial void OnChainingOutOnShotRightRedZoneChanged(int value)
     {
-        if (ChainingOutOnShotRightGreenZone < value) ChainingOutOnShotRightGreenZone = value;
+        if (ChainingOutOnShotRightGreenZone < value)
+        {
+            ChainingOutOnShotRightGreenZone = value;
+        }
     }
 }

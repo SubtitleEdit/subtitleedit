@@ -1292,11 +1292,26 @@ public partial class ReviewSpeechViewModel : ObservableObject
         }
 
         var parts = new List<string>();
-        if (IsReal(SelectedOmniVoiceGender)) parts.Add(SelectedOmniVoiceGender);
-        if (IsReal(SelectedOmniVoiceAge)) parts.Add(SelectedOmniVoiceAge);
-        if (IsReal(SelectedOmniVoicePitch)) parts.Add(SelectedOmniVoicePitch);
-        if (IsReal(SelectedOmniVoiceAccent)) parts.Add(SelectedOmniVoiceAccent);
-        if (OmniVoiceWhisper) parts.Add(OmniVoiceTtsCpp.InstructionWhisper);
+        if (IsReal(SelectedOmniVoiceGender))
+        {
+            parts.Add(SelectedOmniVoiceGender);
+        }
+        if (IsReal(SelectedOmniVoiceAge))
+        {
+            parts.Add(SelectedOmniVoiceAge);
+        }
+        if (IsReal(SelectedOmniVoicePitch))
+        {
+            parts.Add(SelectedOmniVoicePitch);
+        }
+        if (IsReal(SelectedOmniVoiceAccent))
+        {
+            parts.Add(SelectedOmniVoiceAccent);
+        }
+        if (OmniVoiceWhisper)
+        {
+            parts.Add(OmniVoiceTtsCpp.InstructionWhisper);
+        }
         Instruction = string.Join(", ", parts);
     }
 
@@ -1387,7 +1402,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
         // window close.
         foreach (var f in _tempAudioFiles)
         {
-            try { if (File.Exists(f)) File.Delete(f); } catch { /* ignore */ }
+            try { if (File.Exists(f))
+            {
+                File.Delete(f);
+            } } catch { /* ignore */ }
         }
         _tempAudioFiles.Clear();
 

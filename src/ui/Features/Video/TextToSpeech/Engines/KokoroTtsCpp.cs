@@ -197,7 +197,10 @@ public class KokoroTtsCpp : ITtsEngine
                         foreach (var item in arr.EnumerateArray())
                         {
                             var s = item.GetString();
-                            if (!string.IsNullOrEmpty(s)) names.Add(s);
+                            if (!string.IsNullOrEmpty(s))
+                            {
+                                names.Add(s);
+                            }
                         }
                         if (names.Count > 0)
                         {
@@ -415,7 +418,10 @@ public class KokoroTtsCpp : ITtsEngine
 
     private static void HookProcessExitOnce()
     {
-        if (_processExitHooked) return;
+        if (_processExitHooked)
+        {
+            return;
+        }
         _processExitHooked = true;
         AppDomain.CurrentDomain.ProcessExit += (_, _) => StopServerInternal();
     }
@@ -425,7 +431,10 @@ public class KokoroTtsCpp : ITtsEngine
         var p = _serverProcess;
         _serverProcess = null;
         _serverPort = 0;
-        if (p == null) return;
+        if (p == null)
+        {
+            return;
+        }
         try
         {
             if (!p.HasExited)
