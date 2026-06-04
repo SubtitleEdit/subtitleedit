@@ -96,6 +96,7 @@ public class LanguageMainMenu
     public string SetVideoOffset { get; set; }
     public string UpdateVideoOffsetX { get; set; }
     public string SmpteTiming { get; set; }
+    public string WaveformToolbar { get; set; }
     public string GenerateBurnIn { get; set; }
     public string GenerateTransparent { get; set; }
     public string GenerateImportShotChanges { get; set; }
@@ -235,6 +236,7 @@ public class LanguageMainMenu
         SetVideoOffset = "Set video offset...";
         UpdateVideoOffsetX = "Update video offset from {0}...";
         SmpteTiming = "SMPTE timing (non-integer frame rate)";
+        WaveformToolbar = "Waveform toolbar";
         GenerateBurnIn = "Generate video with _burned-in subtitles...";
         GenerateTransparent = "_Generate transparent video with subtitles...";
 

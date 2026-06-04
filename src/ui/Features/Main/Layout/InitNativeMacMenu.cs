@@ -278,7 +278,7 @@ public static class InitNativeMacMenu
             Item(Clean(lVideo.ReEncodeVideoForBetterSubtitlingDotDotDot), v => v.VideoReEncodeCommand),
             Item(Clean(lVideo.CutVideoDotDotDot), v => v.VideoCutCommand),
         };
-        videoMoreList.Add(Toggle(Clean(Se.Language.Options.Shortcuts.ToggleWaveformToolbar), v => v.ToggleIsWaveformToolbarVisibleCommand,
+        videoMoreList.Add(Toggle(Clean(l.WaveformToolbar), v => v.ToggleIsWaveformToolbarVisibleCommand,
             v => v.IsWaveformToolbarVisible, nameof(MainViewModel.IsWaveformToolbarVisible)));
 
         // Seed with the default header (matches MainViewModel.SetVideoOffsetText's initial value)

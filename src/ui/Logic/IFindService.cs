@@ -16,7 +16,6 @@ public interface IFindService
     void Initialize(List<string> textLines, int currentLineIndex, bool wholeWord, FindMode findMode);
     int FindNext(string searchText, List<string> textLines, int currentLineIndex, int startTextIndex);
     int FindPrevious(string searchText, List<string> textLines, int currentLineIndex, int startTextIndex);
-    int ReplaceNext(string searchText, string replaceText, List<string> textLines, int startLineIndex, int startTextIndex);
     int ReplaceAll(string searchText, string replaceText);
     int Count(string searchText);
     List<(int LineIndex, int TextIndex, string FoundText)> FindAll(string searchText);

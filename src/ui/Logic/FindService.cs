@@ -175,65 +175,6 @@ public partial class FindService : IFindService
         return results;
     }
 
-    public int ReplaceNext(string searchText, string replaceText, List<string> textLines, int startLineIndex, int startTextIndex)
-    {
-        if (string.IsNullOrEmpty(searchText) || textLines == null || textLines.Count == 0)
-        {
-            ResetSearchState();
-            return -1;
-        }
-
-        SearchText = RegexUtils.EscapeNewLines(searchText);
-        _textLines = textLines;
-        AddToSearchHistory(searchText);
-
-        if (startLineIndex < 0)
-        {
-            startLineIndex = 0;
-            startTextIndex = 0;
-        }
-        else
-        {
-            if (startLineIndex >= _textLines.Count)
-            {
-                return NotFound();
-            }
-
-            // If we've reached the end of current line, move to next line
-            if (startTextIndex >= _textLines[startLineIndex].Length)
-            {
-                startLineIndex++;
-                startTextIndex = 0;
-            }
-
-            if (startLineIndex >= _textLines.Count)
-            {
-                return NotFound();
-            }
-        }
-
-        var result = FindInList(searchText, startLineIndex, startTextIndex);
-        if (result.lineIndex == -1)
-        {
-            return NotFound();
-        }
-
-        // Perform the replacement
-        var replacedText = ReplaceInLine(_textLines[result.lineIndex], searchText, replaceText, result.textIndex, 1);
-        if (replacedText.replaced)
-        {
-            _textLines[result.lineIndex] = replacedText.newText;
-            CurrentLineNumber = result.lineIndex;
-            CurrentTextIndex = result.textIndex;
-            CurrentTextFound = CurrentFindMode == FindMode.RegularExpression
-                ? RegexUtils.FixNewLine(replaceText ?? string.Empty)
-                : replaceText ?? string.Empty;
-            return result.lineIndex;
-        }
-
-        return NotFound();
-    }
-
     public int ReplaceAll(string searchText, string replaceText)
     {
         if (string.IsNullOrEmpty(searchText) || _textLines.Count == 0)
