@@ -21,7 +21,6 @@ namespace Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 public class FixCommonErrorsWindow : Window
 {
     private readonly FixCommonErrorsViewModel _vm;
-    private FixRuleDisplayItem? _lastClickedFixRule;
 
     public FixCommonErrorsWindow(FixCommonErrorsViewModel vm)
     {
@@ -87,7 +86,7 @@ public class FixCommonErrorsWindow : Window
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     CellTemplate = new FuncDataTemplate<FixRuleDisplayItem>((item, _) =>
                     {
-                        var border = new Border
+                        return new Border
                         {
                             Background = Brushes.Transparent, // Prevents highlighting
                             Padding = new Thickness(4),
@@ -98,11 +97,6 @@ public class FixCommonErrorsWindow : Window
                                 HorizontalAlignment = HorizontalAlignment.Center
                             }
                         };
-                        border.AddHandler(
-                            PointerPressedEvent,
-                            (_, e) => OnFixRulePointerPressed(item, e),
-                            handledEventsToo: true);
-                        return border;
                     }),
                     Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
                 },
@@ -551,36 +545,6 @@ public class FixCommonErrorsWindow : Window
     {
         base.OnKeyDown(e);
         _vm.OnKeyDown(e);
-    }
-
-    private void OnFixRulePointerPressed(FixRuleDisplayItem item, PointerPressedEventArgs e)
-    {
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Shift) &&
-            _lastClickedFixRule != null &&
-            _lastClickedFixRule != item &&
-            _vm.SelectedProfile is { } profile)
-        {
-            var rules = profile.FixRules;
-            var lastIdx = rules.IndexOf(_lastClickedFixRule);
-            var currIdx = rules.IndexOf(item);
-            if (lastIdx >= 0 && currIdx >= 0)
-            {
-                var newValue = !item.IsSelected; // CheckBox will toggle the current item to this on release
-                var min = lastIdx < currIdx ? lastIdx : currIdx;
-                var max = lastIdx > currIdx ? lastIdx : currIdx;
-                for (var i = min; i <= max; i++)
-                {
-                    if (i == currIdx)
-                    {
-                        continue;
-                    }
-
-                    rules[i].IsSelected = newValue;
-                }
-            }
-        }
-
-        _lastClickedFixRule = item;
     }
 
 }
