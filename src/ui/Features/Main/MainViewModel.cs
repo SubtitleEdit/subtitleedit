@@ -5645,6 +5645,11 @@ public partial class MainViewModel :
             _insertService.InsertInCorrectPosition(Subtitles, line);
         }
 
+        if (newLines.Count > 0 || deleteLines.Count > 0)
+        {
+            Renumber();
+        }
+
         _updateAudioVisualizer = true;
         return true;
     }
@@ -8374,6 +8379,11 @@ public partial class MainViewModel :
             _insertService.InsertInCorrectPosition(Subtitles, newSubtitle);
         }
 
+        if (newSubtitles.Count > 0)
+        {
+            Renumber();
+        }
+
         _shortcutManager.ClearKeys();
     }
 
@@ -10915,6 +10925,7 @@ public partial class MainViewModel :
         _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
         AudioVisualizer.NewSelectionParagraph = null;
         SelectAndScrollToSubtitle(newParagraph);
+        Renumber();
         FocusEditTextBox();
         _updateAudioVisualizer = true;
     }
@@ -10935,6 +10946,7 @@ public partial class MainViewModel :
         AudioVisualizer.NewSelectionParagraph = null;
         SubtitleGrid.SelectedItem = newParagraph;
         SubtitleGrid.ScrollIntoView(newParagraph, null);
+        Renumber();
         _updateAudioVisualizer = true;
 
         await SpeechToTextSelectedLines();
@@ -11039,6 +11051,7 @@ public partial class MainViewModel :
 
         AudioVisualizer.NewSelectionParagraph = null;
         SelectAndScrollToSubtitle(newParagraph);
+        Renumber();
         FocusEditTextBox();
         _updateAudioVisualizer = true;
     }
@@ -11080,6 +11093,7 @@ public partial class MainViewModel :
 
         AudioVisualizer.NewSelectionParagraph = null;
         SelectAndScrollToSubtitle(newParagraph);
+        Renumber();
         _updateAudioVisualizer = true;
     }
 
