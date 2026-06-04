@@ -126,6 +126,10 @@ public class TextToSpeechWindow : Window
                 return StatusDots.From(engine.IsInstalled(null).Result, VibeVoiceCrispAsr.GetEngineUpdateStatus());
             case IndexTtsCrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, IndexTtsCrispAsr.GetEngineUpdateStatus());
+            case CosyVoice3CrispAsr:
+                return StatusDots.From(engine.IsInstalled(null).Result, CosyVoice3CrispAsr.GetEngineUpdateStatus());
+            case F5TtsCrispAsr:
+                return StatusDots.From(engine.IsInstalled(null).Result, F5TtsCrispAsr.GetEngineUpdateStatus());
             case OmniVoiceTtsCpp:
                 return StatusDots.From(engine.IsInstalled(null).Result, OmniVoiceTtsCpp.GetEngineUpdateStatus());
             case ChatterboxTtsCpp:
@@ -161,6 +165,12 @@ public class TextToSpeechWindow : Window
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             IndexTtsCrispAsr => IndexTtsCrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            CosyVoice3CrispAsr => CosyVoice3CrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            F5TtsCrispAsr => F5TtsCrispAsr.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             ChatterboxTtsCpp => ChatterboxTtsCpp.AreModelsInstalled(modelKey)

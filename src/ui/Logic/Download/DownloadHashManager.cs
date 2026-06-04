@@ -141,6 +141,27 @@ public static class DownloadHashManager
         public const string Codec = "IndexTtsCrispAsr.Codec";
     }
 
+    public static class CosyVoice3CrispAsr
+    {
+        // SHA-256 of every GGUF the cosyvoice3-tts backend needs. We stage all of them in
+        // CrispAsr/models/ rather than letting crispasr --auto-download them, so each has a
+        // verified hash. Hashes are HF LFS oid from the tree API. Companions are F16-only —
+        // crispasr 0.6.12's sibling discovery is hardcoded to those filenames.
+        public const string LlmQ4K = "CosyVoice3CrispAsr.LlmQ4K";
+        public const string LlmF16 = "CosyVoice3CrispAsr.LlmF16";
+        public const string FlowF16 = "CosyVoice3CrispAsr.FlowF16";
+        public const string HiftF16 = "CosyVoice3CrispAsr.HiftF16";
+        public const string S3TokF16 = "CosyVoice3CrispAsr.S3TokF16";
+        public const string CampPlusF16 = "CosyVoice3CrispAsr.CampPlusF16";
+        public const string VoicesGguf = "CosyVoice3CrispAsr.VoicesGguf";
+    }
+
+    public static class F5TtsCrispAsr
+    {
+        // SHA-256 of the F16 talker (single GGUF — Vocos vocoder is bundled in).
+        public const string TalkerF16 = "F5TtsCrispAsr.TalkerF16";
+    }
+
     public static class KokoroTtsCpp
     {
         // Hashes of the release archive (.zip) - same role as OmniVoice's set. Index 0 must match
@@ -627,6 +648,44 @@ public static class DownloadHashManager
             [IndexTtsCrispAsr.Codec] = new[]
             {
                 "fcba9a322d80ef318da8a17c01e8a5e7f299ccdf881c62a43abf62cb3c104268", // indextts-bigvgan.gguf
+            },
+
+            // CosyVoice3 (CrispASR) — cstr/cosyvoice3-0.5b-2512-GGUF on HuggingFace.
+            // Hashes are HF LFS oid (= SHA-256) pulled from the tree API. Every file is staged
+            // by SE, so each gets an integrity check.
+            [CosyVoice3CrispAsr.LlmQ4K] = new[]
+            {
+                "33d899490108bce896c3448bca40ebd994daa125ce0b118e6267f6b84fc09530", // cosyvoice3-llm-q4_k.gguf
+            },
+            [CosyVoice3CrispAsr.LlmF16] = new[]
+            {
+                "f13149e1f695d79dcc707de45b3df58ccaf2ab7eba1dad4168ae2c778efe4e67", // cosyvoice3-llm-f16.gguf
+            },
+            [CosyVoice3CrispAsr.FlowF16] = new[]
+            {
+                "689566f06437567f764bfb50d3c06461c79bab97914ab8889b735e35498bd5f6", // cosyvoice3-flow-f16.gguf
+            },
+            [CosyVoice3CrispAsr.HiftF16] = new[]
+            {
+                "6df249e52901714f30f9bb163ff47cedfa56f6df3385567b657610eeb8b8cfd3", // cosyvoice3-hift-f16.gguf
+            },
+            [CosyVoice3CrispAsr.S3TokF16] = new[]
+            {
+                "12d6b5761e9d2efbc905f8b5ddecc6dc34371c928fbbe30cf52d900c0fb27f7e", // cosyvoice3-s3tok-f16.gguf
+            },
+            [CosyVoice3CrispAsr.CampPlusF16] = new[]
+            {
+                "f3243551ace3dd0cc73844e2edfd94feea89d2668dad79bcfc9f5800b376c334", // cosyvoice3-campplus-f16.gguf
+            },
+            [CosyVoice3CrispAsr.VoicesGguf] = new[]
+            {
+                "73b5cac894d8e715d418d0228d2878ad6e836a809ccb85799ff08ae5f63ac6a2", // cosyvoice3-voices.gguf
+            },
+
+            // F5-TTS (CrispASR) — cstr/f5-tts-GGUF on HuggingFace.
+            [F5TtsCrispAsr.TalkerF16] = new[]
+            {
+                "25a4d273048dad072774ff139cf19b96fe442bebda8392c08009d73256cf1e81", // f5-tts-v1-base-f16.gguf
             },
 
             // Kokoro TTS — https://github.com/niksedk/kokoro.cpp/releases

@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
@@ -24,6 +25,8 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VibeVoiceCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CosyVoice3CrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.F5TtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceSettings;
@@ -199,8 +202,42 @@ public partial class TextToSpeechViewModel : ObservableObject
             // CrispASR's VibeVoice backend ships a higher-quality build.
             // new VibeVoiceCrispAsr(),
             new IndexTtsCrispAsr(),
+            // F5-TTS (CrispASR) hidden: CrispASR 0.6.12 has no GPU backend for f5-tts, so
+            // synthesis runs the fixed 32-step Euler ODE through a 22-layer DiT + Vocos on
+            // CPU only. That's 3-8 minutes per short utterance on Mac CPU — unusable for the
+            // typical TTS-from-subtitles workflow. Engine + download service + settings dialog
+            // are kept so this is a one-line re-enable when upstream CrispASR adds Metal/CUDA
+            // support or exposes an --ode-steps flag.
+            // new F5TtsCrispAsr(),
             new ChatterboxTtsCpp(),
         ];
+
+        // CosyVoice3 (CrispASR) is gated on platforms where CrispASR has a runtime: the
+        // upstream v0.6.12 release ships Windows + macOS builds but no Linux build (see commit
+        // 53a739e6f "Update to CrispASR v0.6.12 (no linux)"). Hiding the engine on Linux
+        // avoids a confusing "Download CrispASR" prompt that can't actually succeed there.
+        if (!OperatingSystem.IsLinux())
+        {
+            // Insert immediately after IndexTtsCrispAsr to keep the CrispASR engines grouped
+            // visually in the engine combo.
+            var indexTtsIndex = -1;
+            for (var i = 0; i < Engines.Count; i++)
+            {
+                if (Engines[i] is IndexTtsCrispAsr)
+                {
+                    indexTtsIndex = i;
+                    break;
+                }
+            }
+            if (indexTtsIndex >= 0)
+            {
+                Engines.Insert(indexTtsIndex + 1, new CosyVoice3CrispAsr());
+            }
+            else
+            {
+                Engines.Add(new CosyVoice3CrispAsr());
+            }
+        }
 
         if (!OperatingSystem.IsMacOS())
         {
@@ -332,6 +369,14 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is IndexTtsCrispAsr)
         {
             Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrModel = SelectedModel ?? IndexTtsCrispAsr.DefaultModelKey;
+        }
+        else if (SelectedEngine is CosyVoice3CrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrModel = SelectedModel ?? CosyVoice3CrispAsr.DefaultModelKey;
+        }
+        else if (SelectedEngine is F5TtsCrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.F5TtsCrispAsrModel = SelectedModel ?? F5TtsCrispAsr.DefaultModelKey;
         }
         else if (SelectedEngine is OmniVoiceTtsCpp)
         {
@@ -467,6 +512,119 @@ public partial class TextToSpeechViewModel : ObservableObject
     partial void OnSelectedVoiceChanged(Voice? value)
     {
         UpdateOmniVoicePickerState();
+        // Fire-and-forget: when the user picks a CosyVoice3 or F5-TTS clone voice that has
+        // no .txt sidecar, immediately prompt for the transcription. Writes the sidecar and
+        // refreshes the voice list so the engine picks up the new RefText on the next synth.
+        // Without this the user only sees the failure at Generate time with a confusing
+        // "add a .txt sidecar" message, which is hard to act on inside the SE UI.
+        _ = EnsureClonedVoiceRefTextAsync(value);
+    }
+
+    private bool _isPromptingForRefText;
+
+    private async Task EnsureClonedVoiceRefTextAsync(Voice? voice)
+    {
+        if (_isPromptingForRefText || Window == null || voice == null)
+        {
+            return;
+        }
+
+        // CosyVoice3 requires ref-text (server fails outright). F5-TTS recommends it strongly
+        // (cloning falls back to a generic voice without it). Both prompt the same way.
+        string? wavPath = null;
+        bool isCosyVoice3 = false;
+        if (voice.EngineVoice is CosyVoice3Voice cosy && !string.IsNullOrEmpty(cosy.FilePath) && string.IsNullOrEmpty(cosy.RefText))
+        {
+            wavPath = cosy.FilePath;
+            isCosyVoice3 = true;
+        }
+        else if (voice.EngineVoice is F5TtsVoice f5 && !string.IsNullOrEmpty(f5.FilePath))
+        {
+            var existing = TryReadRefTextSibling(f5.FilePath);
+            if (string.IsNullOrEmpty(existing))
+            {
+                wavPath = f5.FilePath;
+            }
+        }
+
+        if (string.IsNullOrEmpty(wavPath))
+        {
+            return;
+        }
+
+        _isPromptingForRefText = true;
+        try
+        {
+            var audioFileName = wavPath;
+            var result = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window, vm =>
+            {
+                vm.Initialize(
+                    Se.Language.Video.TextToSpeech.VoiceCloneTranscriptTitle,
+                    string.Empty,
+                    500,
+                    150);
+                vm.ConfigureExtraButton(
+                    Se.Language.Video.TextToSpeech.UseSpeechToTextDotDotDot,
+                    () => RunSpeechToTextForRefTextAsync(audioFileName));
+            });
+
+            if (!result.OkPressed || string.IsNullOrWhiteSpace(result.Text))
+            {
+                return;
+            }
+
+            var written = isCosyVoice3
+                ? CosyVoice3CrispAsr.TryWriteRefTextSidecar(wavPath, result.Text)
+                : F5TtsCrispAsr.TryWriteRefTextSidecar(wavPath, result.Text);
+
+            if (!written || SelectedEngine == null)
+            {
+                return;
+            }
+
+            // Re-pull the voice list so the picked entry now carries RefText and the engine's
+            // (model, voice, refText) cache key on the running server picks up the change.
+            await RefreshVoices(SelectedEngine);
+        }
+        finally
+        {
+            _isPromptingForRefText = false;
+        }
+    }
+
+    private static string? TryReadRefTextSibling(string wavPath)
+    {
+        try
+        {
+            var sidecar = Path.ChangeExtension(wavPath, ".txt");
+            return File.Exists(sidecar) ? File.ReadAllText(sidecar).Trim() : null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private async Task<string?> RunSpeechToTextForRefTextAsync(string audioFileName)
+    {
+        if (Window == null)
+        {
+            return null;
+        }
+
+        var sttResult = await _windowService.ShowDialogAsync<SpeechToTextWindow, SpeechToTextViewModel>(Window, vm =>
+        {
+            vm.Initialize(audioFileName, -1);
+        });
+
+        if (!sttResult.OkPressed || sttResult.TranscribedSubtitle == null || sttResult.TranscribedSubtitle.Paragraphs.Count == 0)
+        {
+            return null;
+        }
+
+        return string.Join(' ', sttResult.TranscribedSubtitle.Paragraphs
+            .Select(p => p.Text?.Replace('\n', ' ').Replace('\r', ' ').Trim())
+            .Where(t => !string.IsNullOrWhiteSpace(t)));
     }
 
     private static ObservableCollection<string> BuildKeywordOptions(string[] keywords)
@@ -859,6 +1017,14 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is IndexTtsCrispAsr)
         {
             await _windowService.ShowDialogAsync<IndexTtsCrispAsrSettingsWindow, IndexTtsCrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
+        }
+        else if (SelectedEngine is CosyVoice3CrispAsr)
+        {
+            await _windowService.ShowDialogAsync<CosyVoice3CrispAsrSettingsWindow, CosyVoice3CrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
+        }
+        else if (SelectedEngine is F5TtsCrispAsr)
+        {
+            await _windowService.ShowDialogAsync<F5TtsCrispAsrSettingsWindow, F5TtsCrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
         }
         else if (SelectedEngine is KokoroTtsCpp)
         {
@@ -1503,6 +1669,82 @@ public partial class TextToSpeechViewModel : ObservableObject
 
                 var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadIndexTtsCrispAsrModels(indexModelKey));
                 if (!dlResult.OkPressed || !IndexTtsCrispAsr.AreModelsInstalled(indexModelKey))
+                {
+                    return false;
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await RefreshVoices(engine);
+                });
+                return true;
+            }
+
+            return true;
+        }
+
+        if (engine is CosyVoice3CrispAsr)
+        {
+            if (!await TtsVoiceInstaller.EnsureCrispAsrForCosyVoice3(Window, _windowService, forceRedownload: false))
+            {
+                return false;
+            }
+
+            var cosyModelKey = CosyVoice3CrispAsr.ResolveModelKey(SelectedModel);
+            if (!CosyVoice3CrispAsr.AreModelsInstalled(cosyModelKey))
+            {
+                var answer = await MessageBox.Show(
+                    Window,
+                    "Download CosyVoice3 (CrispASR) models?",
+                    $"{Environment.NewLine}\"CosyVoice3 (CrispASR)\" ({cosyModelKey}) requires LLM + flow + hift + s3tok + campplus + voice-bank GGUFs (all sized into the total above).{Environment.NewLine}{Environment.NewLine}Download models?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadCosyVoice3CrispAsrModels(cosyModelKey));
+                if (!dlResult.OkPressed || !CosyVoice3CrispAsr.AreModelsInstalled(cosyModelKey))
+                {
+                    return false;
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await RefreshVoices(engine);
+                });
+                return true;
+            }
+
+            return true;
+        }
+
+        if (engine is F5TtsCrispAsr)
+        {
+            if (!await TtsVoiceInstaller.EnsureCrispAsrForF5Tts(Window, _windowService, forceRedownload: false))
+            {
+                return false;
+            }
+
+            var f5ModelKey = F5TtsCrispAsr.ResolveModelKey(SelectedModel);
+            if (!F5TtsCrispAsr.AreModelsInstalled(f5ModelKey))
+            {
+                var answer = await MessageBox.Show(
+                    Window,
+                    "Download F5-TTS (CrispASR) model?",
+                    $"{Environment.NewLine}\"F5-TTS (CrispASR)\" ({f5ModelKey}) requires a model.{Environment.NewLine}{Environment.NewLine}Download model?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadF5TtsCrispAsrModels(f5ModelKey));
+                if (!dlResult.OkPressed || !F5TtsCrispAsr.AreModelsInstalled(f5ModelKey))
                 {
                     return false;
                 }
@@ -2631,6 +2873,24 @@ public partial class TextToSpeechViewModel : ObservableObject
             else if (SelectedEngine is IndexTtsCrispAsr)
             {
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.IndexTtsCrispAsrModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+            }
+            else if (SelectedEngine is CosyVoice3CrispAsr)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+            }
+            else if (SelectedEngine is F5TtsCrispAsr)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.F5TtsCrispAsrModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
                     SelectedModel = Models.FirstOrDefault();
