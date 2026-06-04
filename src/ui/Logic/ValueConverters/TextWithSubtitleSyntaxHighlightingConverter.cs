@@ -321,7 +321,13 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
         // No formatting (default)
         var inlines = new InlineCollection();
-        inlines.Add(new Run(str));
+        var parts = str.Split('\n');
+        for (var idx = 0; idx < parts.Length; idx++)
+        {
+            var part = parts[idx].TrimEnd('\r');
+            if (idx > 0) inlines.Add(new LineBreak());
+            if (part.Length > 0) inlines.Add(new Run(part));
+        }
         return SpellCheckLines(inlines);
     }
 
@@ -711,7 +717,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             // Handle line breaks
             if (c == '\n' || (c == '\r' && c2 == '\n'))
             {
-                inlines.Add(new Run(Environment.NewLine));
+                inlines.Add(new LineBreak());
                 i += c == '\r' ? 2 : 1;
                 continue;
             }
@@ -865,7 +871,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             // Handle line breaks
             if (c == '\n' || (c == '\r' && c2 == '\n'))
             {
-                inlines.Add(new Run(Environment.NewLine));
+                inlines.Add(new LineBreak());
                 i += c == '\r' ? 2 : 1;
                 continue;
             }
