@@ -476,7 +476,9 @@ public class MultipleReplaceWindow : Window
 
                 var iconLabel = new Label { Padding = new Thickness(0, 0, 2, 0), VerticalAlignment = VerticalAlignment.Center };
                 if (hit.RuleTreeNode != null)
+                {
                     Attached.SetIcon(iconLabel, hit.RuleTreeNode.IconName);
+                }
 
                 var findBlock = new TextBlock
                 {

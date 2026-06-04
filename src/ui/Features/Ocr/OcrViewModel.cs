@@ -4569,7 +4569,10 @@ public partial class OcrViewModel : ObservableObject
                 var startY = i * lineHeight;
                 var endY = Math.Min(startY + lineHeight, height);
 
-                if (startY >= height) break;
+                if (startY >= height)
+                {
+                    break;
+                }
 
                 // Check if this region has text content (simplified detection)
                 if (HasTextInRegion(bitmap, 0, startY, width, endY - startY))

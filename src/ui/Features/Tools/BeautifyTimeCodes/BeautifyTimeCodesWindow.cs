@@ -81,11 +81,17 @@ public class BeautifyTimeCodesWindow : Window
         avOriginal.PropertyChanged += (s, e) =>
         {
             if (e.Property.Name == "StartPositionSeconds")
+            {
                 avBeautified.StartPositionSeconds = avOriginal.StartPositionSeconds;
+            }
             else if (e.Property.Name == "ZoomFactor")
+            {
                 avBeautified.ZoomFactor = avOriginal.ZoomFactor;
+            }
             else if (e.Property.Name == "VerticalZoomFactor")
+            {
                 avBeautified.VerticalZoomFactor = avOriginal.VerticalZoomFactor;
+            }
         };
 
         var grid = new Grid

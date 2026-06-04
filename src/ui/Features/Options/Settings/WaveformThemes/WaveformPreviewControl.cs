@@ -42,7 +42,10 @@ public class WaveformPreviewControl : Control
     {
         var width = Bounds.Width;
         var height = Bounds.Height;
-        if (width <= 0 || height <= 0) return;
+        if (width <= 0 || height <= 0)
+        {
+            return;
+        }
 
         var boundsRect = new Rect(0, 0, width, height);
         using var _ = context.PushClip(boundsRect);
@@ -89,8 +92,14 @@ public class WaveformPreviewControl : Control
             // Clamp
             yMax = Math.Max(0, Math.Min(height, yMax));
             yMin = Math.Max(0, Math.Min(height, yMin));
-            if (yMin < yMax) (yMin, yMax) = (yMax, yMin);
-            if (yMin - yMax < 1) yMin = yMax + 1;
+            if (yMin < yMax)
+            {
+                (yMin, yMax) = (yMax, yMin);
+            }
+            if (yMin - yMax < 1)
+            {
+                yMin = yMax + 1;
+            }
 
             // Use selected color inside the paragraph overlay region
             var isInParagraph = x >= pLeft && x <= pRight;

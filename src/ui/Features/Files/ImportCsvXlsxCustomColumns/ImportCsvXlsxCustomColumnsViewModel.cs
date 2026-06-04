@@ -460,17 +460,41 @@ public partial class ImportCsvXlsxCustomColumnsViewModel : ObservableObject
     private static CsvColumnRole GuessRoleFromHeader(string headerName)
     {
         var name = headerName.Trim();
-        if (StartHeaderNames.Contains(name)) return CsvColumnRole.Start;
-        if (EndHeaderNames.Contains(name)) return CsvColumnRole.End;
-        if (DurationHeaderNames.Contains(name)) return CsvColumnRole.Duration;
-        if (TextHeaderNames.Contains(name)) return CsvColumnRole.Text;
-        if (CharacterHeaderNames.Contains(name)) return CsvColumnRole.Character;
+        if (StartHeaderNames.Contains(name))
+        {
+            return CsvColumnRole.Start;
+        }
+        if (EndHeaderNames.Contains(name))
+        {
+            return CsvColumnRole.End;
+        }
+        if (DurationHeaderNames.Contains(name))
+        {
+            return CsvColumnRole.Duration;
+        }
+        if (TextHeaderNames.Contains(name))
+        {
+            return CsvColumnRole.Text;
+        }
+        if (CharacterHeaderNames.Contains(name))
+        {
+            return CsvColumnRole.Character;
+        }
 
         // Loose ms-suffixed matches (e.g., "startMs", "endMillis").
         var compact = name.Replace(" ", string.Empty).Replace("_", string.Empty).ToLowerInvariant();
-        if (compact.StartsWith("start") || compact.StartsWith("from")) return CsvColumnRole.Start;
-        if (compact.StartsWith("end") || compact.StartsWith("to") || compact.StartsWith("stop")) return CsvColumnRole.End;
-        if (compact.StartsWith("duration") || compact.StartsWith("dur")) return CsvColumnRole.Duration;
+        if (compact.StartsWith("start") || compact.StartsWith("from"))
+        {
+            return CsvColumnRole.Start;
+        }
+        if (compact.StartsWith("end") || compact.StartsWith("to") || compact.StartsWith("stop"))
+        {
+            return CsvColumnRole.End;
+        }
+        if (compact.StartsWith("duration") || compact.StartsWith("dur"))
+        {
+            return CsvColumnRole.Duration;
+        }
         return CsvColumnRole.None;
     }
 

@@ -17,7 +17,10 @@ public class AdvancedEffectStarWarsScroll : IAdvancedEffectDisplay
     public List<SubtitleLineViewModel> ApplyEffect(string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
-        if (subtitles.Count == 0) return result;
+        if (subtitles.Count == 0)
+        {
+            return result;
+        }
 
         int screenWidth = width > 0 ? width : 1356;
         int screenHeight = height > 0 ? height : 678;
@@ -37,7 +40,10 @@ public class AdvancedEffectStarWarsScroll : IAdvancedEffectDisplay
         {
             string processedText = sub.Text.Replace("\\N", "\n").Replace("\\n", "\n");
             var clean = Utilities.RemoveSsaTags(processedText);
-            if (string.IsNullOrWhiteSpace(clean)) continue;
+            if (string.IsNullOrWhiteSpace(clean))
+            {
+                continue;
+            }
 
             var lines = clean.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -46,7 +52,10 @@ public class AdvancedEffectStarWarsScroll : IAdvancedEffectDisplay
                 var charLine = new SubtitleLineViewModel(sub, generateNewId: true);
 
                 double startTimeMs = sub.StartTime.TotalMilliseconds - leadTimeMs;
-                if (startTimeMs < 0) startTimeMs = 0;
+                if (startTimeMs < 0)
+                {
+                    startTimeMs = 0;
+                }
 
                 charLine.StartTime = TimeSpan.FromMilliseconds(startTimeMs);
                 // We give it an extra 2 seconds of life to ensure the fade finishes

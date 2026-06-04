@@ -31,7 +31,10 @@ internal static class FileTypeAssociationsHelper
             using (var userChoice = Registry.CurrentUser.OpenSubKey($@"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\{ext}\UserChoice"))
             {
                 var progIdValue = userChoice?.GetValue("Progid") as string;
-                if (progIdValue == progId) return true;
+                if (progIdValue == progId)
+                {
+                    return true;
+                }
             }
 
             // 2. Fallback: Check the old-school Software\Classes
@@ -114,7 +117,9 @@ internal static class FileTypeAssociationsHelper
             if (extKey != null)
             {
                 if (extKey.GetValue("")?.ToString() == progId)
+                {
                     extKey.DeleteValue("");
+                }
 
                 using (var openWith = extKey.OpenSubKey("OpenWithProgids", true))
                 {

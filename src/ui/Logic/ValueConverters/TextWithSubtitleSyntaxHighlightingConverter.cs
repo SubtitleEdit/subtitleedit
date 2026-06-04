@@ -453,19 +453,29 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         // Use IsSet() to only copy properties that were explicitly set locally,
         // not inherited/resolved values - this preserves the inheritance chain
         if (template.IsSet(TextElement.ForegroundProperty))
+        {
             run.Foreground = template.Foreground;
+        }
 
         if (template.IsSet(TextElement.FontStyleProperty))
+        {
             run.FontStyle = template.FontStyle;
+        }
 
         if (template.IsSet(TextElement.FontWeightProperty))
+        {
             run.FontWeight = template.FontWeight;
+        }
 
         if (template.IsSet(TextElement.FontFamilyProperty))
+        {
             run.FontFamily = template.FontFamily;
+        }
 
         if (template.IsSet(TextElement.FontSizeProperty))
+        {
             run.FontSize = template.FontSize;
+        }
 
         if (template.IsSet(Inline.TextDecorationsProperty) &&
             template.TextDecorations != null && template.TextDecorations.Count > 0)
@@ -1256,7 +1266,9 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             }
 
             if (i >= attributesPart.Length)
+            {
                 break;
+            }
 
             // Read attribute name
             var attrStart = i;

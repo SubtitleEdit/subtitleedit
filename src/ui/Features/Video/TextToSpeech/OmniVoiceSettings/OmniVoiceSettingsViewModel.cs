@@ -145,8 +145,14 @@ public partial class OmniVoiceSettingsViewModel : ObservableObject
             }
         }
 
-        if (File.Exists(Path.Combine(folder, "ggml-cuda.dll"))) return "Windows x64 (CUDA)";
-        if (File.Exists(Path.Combine(folder, "ggml-vulkan.dll"))) return "Windows x64 (Vulkan)";
+        if (File.Exists(Path.Combine(folder, "ggml-cuda.dll")))
+        {
+            return "Windows x64 (CUDA)";
+        }
+        if (File.Exists(Path.Combine(folder, "ggml-vulkan.dll")))
+        {
+            return "Windows x64 (Vulkan)";
+        }
         return "Windows x64 (CPU)";
     }
 

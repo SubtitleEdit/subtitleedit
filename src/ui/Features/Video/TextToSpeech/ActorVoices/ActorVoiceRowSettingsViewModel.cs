@@ -138,11 +138,26 @@ public partial class ActorVoiceRowSettingsViewModel : ObservableObject
     private string BuildOmniVoiceInstruction()
     {
         var parts = new List<string>();
-        if (IsReal(SelectedOmniVoiceGender)) parts.Add(SelectedOmniVoiceGender);
-        if (IsReal(SelectedOmniVoiceAge)) parts.Add(SelectedOmniVoiceAge);
-        if (IsReal(SelectedOmniVoicePitch)) parts.Add(SelectedOmniVoicePitch);
-        if (IsReal(SelectedOmniVoiceAccent)) parts.Add(SelectedOmniVoiceAccent);
-        if (OmniVoiceWhisper) parts.Add(OmniVoiceTtsCpp.InstructionWhisper);
+        if (IsReal(SelectedOmniVoiceGender))
+        {
+            parts.Add(SelectedOmniVoiceGender);
+        }
+        if (IsReal(SelectedOmniVoiceAge))
+        {
+            parts.Add(SelectedOmniVoiceAge);
+        }
+        if (IsReal(SelectedOmniVoicePitch))
+        {
+            parts.Add(SelectedOmniVoicePitch);
+        }
+        if (IsReal(SelectedOmniVoiceAccent))
+        {
+            parts.Add(SelectedOmniVoiceAccent);
+        }
+        if (OmniVoiceWhisper)
+        {
+            parts.Add(OmniVoiceTtsCpp.InstructionWhisper);
+        }
         return string.Join(", ", parts);
     }
 

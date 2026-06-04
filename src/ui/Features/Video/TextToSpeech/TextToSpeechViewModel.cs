@@ -652,11 +652,26 @@ public partial class TextToSpeechViewModel : ObservableObject
     private string BuildOmniVoiceInstruction()
     {
         var parts = new List<string>();
-        if (IsRealOmniVoiceKeyword(SelectedOmniVoiceGender)) parts.Add(SelectedOmniVoiceGender);
-        if (IsRealOmniVoiceKeyword(SelectedOmniVoiceAge)) parts.Add(SelectedOmniVoiceAge);
-        if (IsRealOmniVoiceKeyword(SelectedOmniVoicePitch)) parts.Add(SelectedOmniVoicePitch);
-        if (IsRealOmniVoiceKeyword(SelectedOmniVoiceAccent)) parts.Add(SelectedOmniVoiceAccent);
-        if (OmniVoiceWhisper) parts.Add(OmniVoiceTtsCpp.InstructionWhisper);
+        if (IsRealOmniVoiceKeyword(SelectedOmniVoiceGender))
+        {
+            parts.Add(SelectedOmniVoiceGender);
+        }
+        if (IsRealOmniVoiceKeyword(SelectedOmniVoiceAge))
+        {
+            parts.Add(SelectedOmniVoiceAge);
+        }
+        if (IsRealOmniVoiceKeyword(SelectedOmniVoicePitch))
+        {
+            parts.Add(SelectedOmniVoicePitch);
+        }
+        if (IsRealOmniVoiceKeyword(SelectedOmniVoiceAccent))
+        {
+            parts.Add(SelectedOmniVoiceAccent);
+        }
+        if (OmniVoiceWhisper)
+        {
+            parts.Add(OmniVoiceTtsCpp.InstructionWhisper);
+        }
         return string.Join(", ", parts);
     }
 
@@ -870,10 +885,22 @@ public partial class TextToSpeechViewModel : ObservableObject
     /// </summary>
     private static void StopOtherCrispAsrServers(ITtsEngine? keepAlive)
     {
-        if (keepAlive is not Qwen3TtsCrispAsr) Qwen3TtsCrispAsr.StopServer();
-        if (keepAlive is not VibeVoiceCrispAsr) VibeVoiceCrispAsr.StopServer();
-        if (keepAlive is not IndexTtsCrispAsr) IndexTtsCrispAsr.StopServer();
-        if (keepAlive is not ChatterboxTtsCpp) ChatterboxTtsCpp.StopServer();
+        if (keepAlive is not Qwen3TtsCrispAsr)
+        {
+            Qwen3TtsCrispAsr.StopServer();
+        }
+        if (keepAlive is not VibeVoiceCrispAsr)
+        {
+            VibeVoiceCrispAsr.StopServer();
+        }
+        if (keepAlive is not IndexTtsCrispAsr)
+        {
+            IndexTtsCrispAsr.StopServer();
+        }
+        if (keepAlive is not ChatterboxTtsCpp)
+        {
+            ChatterboxTtsCpp.StopServer();
+        }
     }
 
     private static void StopAllCrispAsrServers() => StopOtherCrispAsrServers(null);

@@ -47,19 +47,28 @@ public partial class WaveformToolbarItemsViewModel : ObservableObject
 
     partial void OnSelectedFontSizeChanged(int value)
     {
-        if (_updatingFromSelection || SelectedToolbarItem == null) return;
+        if (_updatingFromSelection || SelectedToolbarItem == null)
+        {
+            return;
+        }
         SelectedToolbarItem.FontSize = value;
     }
 
     partial void OnSelectedLeftMarginChanged(int value)
     {
-        if (_updatingFromSelection || SelectedToolbarItem == null) return;
+        if (_updatingFromSelection || SelectedToolbarItem == null)
+        {
+            return;
+        }
         SelectedToolbarItem.LeftMargin = value;
     }
 
     partial void OnSelectedRightMarginChanged(int value)
     {
-        if (_updatingFromSelection || SelectedToolbarItem == null) return;
+        if (_updatingFromSelection || SelectedToolbarItem == null)
+        {
+            return;
+        }
         SelectedToolbarItem.RightMargin = value;
     }
 

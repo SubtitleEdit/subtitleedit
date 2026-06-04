@@ -549,7 +549,9 @@ public partial class SubtitleLineViewModel : ObservableObject
     internal void UpdateFrom(SubtitleLineViewModel src)
     {
         if (src.Paragraph != null)
+        {
             Paragraph = src.Paragraph;
+        }
         Text = src.Text;
         Actor = src.Actor;
         Style = src.Style;

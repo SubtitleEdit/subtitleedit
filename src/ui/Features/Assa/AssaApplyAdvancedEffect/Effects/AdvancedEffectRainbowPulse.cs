@@ -28,9 +28,13 @@ public class AdvancedEffectRainbowPulse : IAdvancedEffectDisplay
             foreach (System.Text.RegularExpressions.Match m in matches)
             {
                 if (m.Value.StartsWith("{"))
+                {
                     fullParts.Add((m.Value, true));
+                }
                 else
+                {
                     fullParts.Add((m.Value, false));
+                }
             }
 
             // 2. Map every visible character to its position in the full string
@@ -53,7 +57,10 @@ public class AdvancedEffectRainbowPulse : IAdvancedEffectDisplay
             for (int i = 0; i < visibleChars.Count; i++)
             {
                 var target = visibleChars[i];
-                if (char.IsWhiteSpace(target.Character)) continue;
+                if (char.IsWhiteSpace(target.Character))
+                {
+                    continue;
+                }
 
                 var charLine = new SubtitleLineViewModel(sub, generateNewId: true);
 

@@ -91,7 +91,10 @@ public partial class WaveformThemesViewModel : ObservableObject
 
     partial void OnSelectedThemeChanged(WaveformThemeDisplay? value)
     {
-        if (value == null) return;
+        if (value == null)
+        {
+            return;
+        }
 
         TextColor = value.TextColor;
         WaveformColor = value.WaveformColor;
@@ -109,7 +112,10 @@ public partial class WaveformThemesViewModel : ObservableObject
     [RelayCommand]
     private async Task SaveAsCustomTheme()
     {
-        if (Window == null) return;
+        if (Window == null)
+        {
+            return;
+        }
 
         _customThemeCount++;
         var vm = new PromptTextBoxViewModel();
@@ -159,10 +165,16 @@ public partial class WaveformThemesViewModel : ObservableObject
     [RelayCommand]
     private async Task LoadTheme()
     {
-        if (Window == null) return;
+        if (Window == null)
+        {
+            return;
+        }
 
         var topLevel = TopLevel.GetTopLevel(Window);
-        if (topLevel == null) return;
+        if (topLevel == null)
+        {
+            return;
+        }
 
         var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
@@ -177,10 +189,16 @@ public partial class WaveformThemesViewModel : ObservableObject
             },
         });
 
-        if (files.Count == 0) return;
+        if (files.Count == 0)
+        {
+            return;
+        }
 
         var path = files[0].Path.LocalPath;
-        if (!File.Exists(path)) return;
+        if (!File.Exists(path))
+        {
+            return;
+        }
 
         try
         {
@@ -189,7 +207,10 @@ public partial class WaveformThemesViewModel : ObservableObject
             {
                 PropertyNameCaseInsensitive = true,
             });
-            if (dto == null) return;
+            if (dto == null)
+            {
+                return;
+            }
 
             var theme = dto.ToThemeDisplay(Path.GetFileNameWithoutExtension(path));
             Themes.Add(theme);
@@ -204,10 +225,16 @@ public partial class WaveformThemesViewModel : ObservableObject
     [RelayCommand]
     private async Task ExportTheme()
     {
-        if (Window == null) return;
+        if (Window == null)
+        {
+            return;
+        }
 
         var topLevel = TopLevel.GetTopLevel(Window);
-        if (topLevel == null) return;
+        if (topLevel == null)
+        {
+            return;
+        }
 
         var suggestedName = (SelectedTheme?.Name ?? "custom").Replace(' ', '_');
 
@@ -225,7 +252,10 @@ public partial class WaveformThemesViewModel : ObservableObject
             },
         });
 
-        if (file == null) return;
+        if (file == null)
+        {
+            return;
+        }
 
         var dto = WaveformThemeDto.FromColors(
             name: SelectedTheme?.Name ?? suggestedName,

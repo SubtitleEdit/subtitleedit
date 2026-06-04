@@ -261,7 +261,10 @@ public class IndexTtsCrispAsr : ITtsEngine
                 catch (Exception ex)
                 {
                     Se.LogError(ex, $"IndexTTS (CrispASR): resample seed '{src}' failed; falling back to plain copy");
-                    try { if (!File.Exists(dest)) File.Copy(src, dest); } catch { }
+                    try { if (!File.Exists(dest))
+                    {
+                        File.Copy(src, dest);
+                    } } catch { }
                 }
             }
         }
@@ -684,7 +687,10 @@ public class IndexTtsCrispAsr : ITtsEngine
 
     private static void HookProcessExitOnce()
     {
-        if (_processExitHooked) return;
+        if (_processExitHooked)
+        {
+            return;
+        }
         _processExitHooked = true;
         AppDomain.CurrentDomain.ProcessExit += (_, _) => StopServerInternal();
     }
@@ -704,7 +710,10 @@ public class IndexTtsCrispAsr : ITtsEngine
         _serverLaunchCommand = null;
         _serverVoicePath = null;
         _serverModelKey = null;
-        if (p == null) return;
+        if (p == null)
+        {
+            return;
+        }
         try
         {
             if (!p.HasExited)

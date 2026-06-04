@@ -720,7 +720,10 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
                 // Voices are optional — log and close with success.
                 var ex = _downloadTaskVibeVoiceCrispAsrVoices.Exception?.InnerException ?? _downloadTaskVibeVoiceCrispAsrVoices.Exception;
-                if (ex != null) Se.LogError(ex);
+                if (ex != null)
+                {
+                    Se.LogError(ex);
+                }
                 OkPressed = true;
                 Close();
             }
@@ -801,7 +804,10 @@ public partial class DownloadTtsViewModel : ObservableObject
                     return;
                 }
                 var ex = _downloadTaskIndexTtsCrispAsrVoices.Exception?.InnerException ?? _downloadTaskIndexTtsCrispAsrVoices.Exception;
-                if (ex != null) Se.LogError(ex);
+                if (ex != null)
+                {
+                    Se.LogError(ex);
+                }
                 OkPressed = true;
                 Close();
             }
@@ -887,7 +893,10 @@ public partial class DownloadTtsViewModel : ObservableObject
                     return;
                 }
                 var ex = _downloadTaskCosyVoice3CrispAsrVoices.Exception?.InnerException ?? _downloadTaskCosyVoice3CrispAsrVoices.Exception;
-                if (ex != null) Se.LogError(ex);
+                if (ex != null)
+                {
+                    Se.LogError(ex);
+                }
                 OkPressed = true;
                 Close();
             }
@@ -970,7 +979,10 @@ public partial class DownloadTtsViewModel : ObservableObject
                     return;
                 }
                 var ex = _downloadTaskF5TtsCrispAsrVoices.Exception?.InnerException ?? _downloadTaskF5TtsCrispAsrVoices.Exception;
-                if (ex != null) Se.LogError(ex);
+                if (ex != null)
+                {
+                    Se.LogError(ex);
+                }
                 OkPressed = true;
                 Close();
             }

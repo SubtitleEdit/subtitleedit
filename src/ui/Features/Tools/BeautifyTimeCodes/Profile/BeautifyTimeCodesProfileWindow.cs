@@ -407,10 +407,22 @@ public class BeautifyTimeCodesProfileWindow : Window
         };
 
         var nudFields = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
-        if (leftGreenPath != null) nudFields.Children.Add(MakeFrameNud(leftGreenPath));
-        if (leftRedPath != null) nudFields.Children.Add(MakeFrameNud(leftRedPath));
-        if (rightRedPath != null) nudFields.Children.Add(MakeFrameNud(rightRedPath));
-        if (rightGreenPath != null) nudFields.Children.Add(MakeFrameNud(rightGreenPath));
+        if (leftGreenPath != null)
+        {
+            nudFields.Children.Add(MakeFrameNud(leftGreenPath));
+        }
+        if (leftRedPath != null)
+        {
+            nudFields.Children.Add(MakeFrameNud(leftRedPath));
+        }
+        if (rightRedPath != null)
+        {
+            nudFields.Children.Add(MakeFrameNud(rightRedPath));
+        }
+        if (rightGreenPath != null)
+        {
+            nudFields.Children.Add(MakeFrameNud(rightGreenPath));
+        }
         nudFields.Bind(IsEnabledProperty, new Binding(useZonesPath) { Source = _vm });
         var zonesRow = new StackPanel
         {
@@ -563,8 +575,14 @@ public class BeautifyTimeCodesProfileWindow : Window
     {
         public object? Convert(object? value, System.Type targetType, object? parameter, CultureInfo culture)
         {
-            if (value is int i && parameter is int p) return i == p;
-            if (value is int i2 && int.TryParse(parameter?.ToString(), out var pi)) return i2 == pi;
+            if (value is int i && parameter is int p)
+            {
+                return i == p;
+            }
+            if (value is int i2 && int.TryParse(parameter?.ToString(), out var pi))
+            {
+                return i2 == pi;
+            }
             return false;
         }
 

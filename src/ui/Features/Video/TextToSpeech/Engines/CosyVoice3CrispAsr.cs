@@ -298,7 +298,10 @@ public class CosyVoice3CrispAsr : ITtsEngine
                     catch (Exception ex)
                     {
                         Se.LogError(ex, $"CosyVoice3 (CrispASR): resample seed '{src}' failed; falling back to plain copy");
-                        try { if (!File.Exists(dest)) File.Copy(src, dest); } catch { }
+                        try { if (!File.Exists(dest))
+                        {
+                            File.Copy(src, dest);
+                        } } catch { }
                     }
                 }
 
@@ -764,7 +767,10 @@ public class CosyVoice3CrispAsr : ITtsEngine
 
     private static void HookProcessExitOnce()
     {
-        if (_processExitHooked) return;
+        if (_processExitHooked)
+        {
+            return;
+        }
         _processExitHooked = true;
         AppDomain.CurrentDomain.ProcessExit += (_, _) => StopServerInternal();
     }
@@ -780,7 +786,10 @@ public class CosyVoice3CrispAsr : ITtsEngine
         _serverModelKey = null;
         _serverVoiceArg = null;
         _serverRefText = null;
-        if (p == null) return;
+        if (p == null)
+        {
+            return;
+        }
         try
         {
             if (!p.HasExited)

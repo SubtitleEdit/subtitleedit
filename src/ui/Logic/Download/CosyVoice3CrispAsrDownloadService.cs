@@ -106,19 +106,33 @@ public class CosyVoice3CrispAsrDownloadService : ICosyVoice3CrispAsrDownloadServ
     private static string? GetHashKey(string fileName)
     {
         if (string.Equals(fileName, CosyVoice3CrispAsr.LlmQ4KFileName, StringComparison.OrdinalIgnoreCase))
+        {
             return DownloadHashManager.CosyVoice3CrispAsr.LlmQ4K;
+        }
         if (string.Equals(fileName, CosyVoice3CrispAsr.LlmF16FileName, StringComparison.OrdinalIgnoreCase))
+        {
             return DownloadHashManager.CosyVoice3CrispAsr.LlmF16;
+        }
         if (string.Equals(fileName, CosyVoice3CrispAsr.FlowF16FileName, StringComparison.OrdinalIgnoreCase))
+        {
             return DownloadHashManager.CosyVoice3CrispAsr.FlowF16;
+        }
         if (string.Equals(fileName, CosyVoice3CrispAsr.HiftF16FileName, StringComparison.OrdinalIgnoreCase))
+        {
             return DownloadHashManager.CosyVoice3CrispAsr.HiftF16;
+        }
         if (string.Equals(fileName, CosyVoice3CrispAsr.S3TokF16FileName, StringComparison.OrdinalIgnoreCase))
+        {
             return DownloadHashManager.CosyVoice3CrispAsr.S3TokF16;
+        }
         if (string.Equals(fileName, CosyVoice3CrispAsr.CampPlusF16FileName, StringComparison.OrdinalIgnoreCase))
+        {
             return DownloadHashManager.CosyVoice3CrispAsr.CampPlusF16;
+        }
         if (string.Equals(fileName, CosyVoice3CrispAsr.VoicesGgufFileName, StringComparison.OrdinalIgnoreCase))
+        {
             return DownloadHashManager.CosyVoice3CrispAsr.VoicesGguf;
+        }
         return null;
     }
 

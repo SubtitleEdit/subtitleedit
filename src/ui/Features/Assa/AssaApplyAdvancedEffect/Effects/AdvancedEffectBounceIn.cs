@@ -45,7 +45,9 @@ public class AdvancedEffectBounceIn : IAdvancedEffectDisplay
             for (int i = 0; i < chars.Length; i++)
             {
                 if (chars[i] == ' ' || chars[i] == '\n')
+                {
                     continue;
+                }
 
                 var line = new SubtitleLineViewModel(sub, generateNewId: true);
                 line.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(i * staggerMs));

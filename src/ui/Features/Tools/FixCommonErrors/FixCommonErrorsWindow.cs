@@ -326,7 +326,10 @@ public class FixCommonErrorsWindow : Window
         dataGridFixes.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
         new DataGridCheckboxMultiSelect<FixDisplayItem>(dataGridFixes,
             item => item.IsSelected, (item, v) => item.IsSelected = v,
-            onFocusedItemChanged: item => { if (item != null) _vm.SelectAndScrollTo(item); });
+            onFocusedItemChanged: item => { if (item != null)
+            {
+                _vm.SelectAndScrollTo(item);
+            } });
 
         var leftButtons = new StackPanel
         {

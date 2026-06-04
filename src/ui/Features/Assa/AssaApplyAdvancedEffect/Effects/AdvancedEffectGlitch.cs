@@ -22,7 +22,10 @@ public class AdvancedEffectGlitch : IAdvancedEffectDisplay
     public List<SubtitleLineViewModel> ApplyEffect(string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
-        if (subtitles.Count == 0) return result;
+        if (subtitles.Count == 0)
+        {
+            return result;
+        }
 
         int w = width > 0 ? width : 1280;
         int h = height > 0 ? height : 720;
@@ -46,7 +49,10 @@ public class AdvancedEffectGlitch : IAdvancedEffectDisplay
             for (double t = 0; t < totalMs;)
             {
                 int frameDur = (int)Math.Min(rng.Next(60, 350), totalMs - t);
-                if (frameDur <= 0) break;
+                if (frameDur <= 0)
+                {
+                    break;
+                }
 
                 var frame = new SubtitleLineViewModel(sub, generateNewId: true);
                 frame.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(t));
@@ -70,7 +76,10 @@ public class AdvancedEffectGlitch : IAdvancedEffectDisplay
 
                 var startTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(glitchStartMs));
                 var endTime = startTime.Add(TimeSpan.FromMilliseconds(glitchDurMs));
-                if (endTime > sub.EndTime) continue;
+                if (endTime > sub.EndTime)
+                {
+                    continue;
+                }
 
                 var glitch = new SubtitleLineViewModel(sub, generateNewId: true);
                 glitch.StartTime = startTime;

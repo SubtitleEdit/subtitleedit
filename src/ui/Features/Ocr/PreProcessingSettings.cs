@@ -74,10 +74,22 @@ public class PreProcessingSettings
 
                 if (alpha > 0) // Non-transparent pixel
                 {
-                    if (x < left) left = x;
-                    if (x > right) right = x;
-                    if (y < top) top = y;
-                    if (y > bottom) bottom = y;
+                    if (x < left)
+                    {
+                        left = x;
+                    }
+                    if (x > right)
+                    {
+                        right = x;
+                    }
+                    if (y < top)
+                    {
+                        top = y;
+                    }
+                    if (y > bottom)
+                    {
+                        bottom = y;
+                    }
                 }
             }
         }
@@ -228,10 +240,16 @@ public class PreProcessingSettings
         for (var i = 0; i < 256; i++)
         {
             wB += histogram[i];
-            if (wB == 0) continue;
+            if (wB == 0)
+            {
+                continue;
+            }
 
             wF = totalPixels - wB;
-            if (wF == 0) break;
+            if (wF == 0)
+            {
+                break;
+            }
 
             sumB += i * histogram[i];
             float mB = sumB / wB;

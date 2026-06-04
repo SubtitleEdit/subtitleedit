@@ -103,7 +103,10 @@ public class ColorWheelControl : Control
 
         // Calculate angle in degrees (0-360)
         var angle = Math.Atan2(dy, dx) * 180 / Math.PI;
-        if (angle < 0) angle += 360;
+        if (angle < 0)
+        {
+            angle += 360;
+        }
 
         // Convert to HSV
         var hue = (int)(angle / 360 * 255);
@@ -165,7 +168,10 @@ public class ColorWheelControl : Control
         var width = (int)Bounds.Width;
         var height = (int)Bounds.Height;
 
-        if (width <= 0 || height <= 0) return;
+        if (width <= 0 || height <= 0)
+        {
+            return;
+        }
 
         _wheelBitmap?.Dispose();
         _wheelBitmap = new SKBitmap(width, height);
@@ -188,7 +194,10 @@ public class ColorWheelControl : Control
                 if (distance <= radius)
                 {
                     var angle = Math.Atan2(dy, dx) * 180 / Math.PI;
-                    if (angle < 0) angle += 360;
+                    if (angle < 0)
+                    {
+                        angle += 360;
+                    }
 
                     var hue = (float)angle;
                     var saturation = (float)(distance / radius * 100);
@@ -224,7 +233,10 @@ public class ColorWheelControl : Control
         public void Render(ImmediateDrawingContext context)
         {
             var leaseFeature = context.TryGetFeature<ISkiaSharpApiLeaseFeature>();
-            if (leaseFeature == null || _bitmap == null) return;
+            if (leaseFeature == null || _bitmap == null)
+            {
+                return;
+            }
 
             using var lease = leaseFeature.Lease();
             var canvas = lease.SkCanvas;
@@ -306,15 +318,24 @@ public class ColorWheelControl : Control
         {
             s = delta / max;
             if (Math.Abs(r - max) < 0.01)
+            {
                 h = (g - b) / delta;
+            }
             else if (Math.Abs(g - max) < 0.01)
+            {
                 h = 2 + (b - r) / delta;
+            }
             else
+            {
                 h = 4 + (r - g) / delta;
+            }
         }
 
         h *= 60;
-        if (h < 0) h += 360;
+        if (h < 0)
+        {
+            h += 360;
+        }
 
         return ((int)(h / 360 * 255), (int)(s * 255), (int)(v * 255));
     }

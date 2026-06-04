@@ -40,7 +40,10 @@ public class AdvancedEffectWave : IAdvancedEffectDisplay
             for (int i = 0; i < visibleChars.Count; i++)
             {
                 var target = visibleChars[i];
-                if (char.IsWhiteSpace(target.Character)) continue;
+                if (char.IsWhiteSpace(target.Character))
+                {
+                    continue;
+                }
 
                 var charLine = new SubtitleLineViewModel(sub, generateNewId: true);
 
@@ -62,7 +65,10 @@ public class AdvancedEffectWave : IAdvancedEffectDisplay
                 var finalString = new System.Text.StringBuilder();
                 for (int p = 0; p < fullParts.Count; p++)
                 {
-                    if (fullParts[p].IsTag) finalString.Append(fullParts[p].Content);
+                    if (fullParts[p].IsTag)
+                    {
+                        finalString.Append(fullParts[p].Content);
+                    }
                     else if (p == target.PartIndex)
                     {
                         string partText = fullParts[p].Content;
@@ -71,7 +77,10 @@ public class AdvancedEffectWave : IAdvancedEffectDisplay
                                    .Append(@"{\alpha&H00&" + waveTransforms + "}").Append(target.Character)
                                    .Append(@"{\alpha&HFF&}").Append(partText.Substring(target.CharIndex + 1));
                     }
-                    else finalString.Append(@"{\alpha&HFF&}").Append(fullParts[p].Content);
+                    else
+                    {
+                        finalString.Append(@"{\alpha&HFF&}").Append(fullParts[p].Content);
+                    }
                 }
 
                 charLine.Text = finalString.ToString();

@@ -51,7 +51,10 @@ public class AdvancedEffectConfetti : IAdvancedEffectDisplay
     public List<SubtitleLineViewModel> ApplyEffect(string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
-        if (subtitles.Count == 0) return result;
+        if (subtitles.Count == 0)
+        {
+            return result;
+        }
 
         int w = width > 0 ? width : 1280;
         int h = height > 0 ? height : 720;
@@ -128,14 +131,20 @@ public class AdvancedEffectConfetti : IAdvancedEffectDisplay
                 for (; oi < origins.Length - 1; oi++)
                 {
                     cumulative += origins[oi].Weight;
-                    if (roll < cumulative) break;
+                    if (roll < cumulative)
+                    {
+                        break;
+                    }
                 }
                 var (bx, by, aMin, aMax, _) = origins[oi];
 
                 // Staggered launch: most pieces fire in first 250 ms, a few trail up to 450 ms
                 double delay = Math.Pow(rng.NextDouble(), 1.6) * 450;
                 double pieceDur = durationMs - delay;
-                if (pieceDur < 300) continue;
+                if (pieceDur < 300)
+                {
+                    continue;
+                }
 
                 var piece = new SubtitleLineViewModel(sub, generateNewId: true);
                 piece.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(delay));

@@ -90,8 +90,14 @@ public class IndeterminateProgressHelper : IDisposable
 
     private static double EaseInOutCubic(double x)
     {
-        if (x <= 0) return 0;
-        if (x >= 1) return 1;
+        if (x <= 0)
+        {
+            return 0;
+        }
+        if (x >= 1)
+        {
+            return 1;
+        }
         return x < 0.5 ? 4 * x * x * x : 1 - Math.Pow(-2 * x + 2, 3) / 2;
     }
 

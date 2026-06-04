@@ -305,7 +305,10 @@ public class LensCore
 
     protected void SetCookies(IEnumerable<string> combinedCookieHeader)
     {
-        if (combinedCookieHeader == null) return;
+        if (combinedCookieHeader == null)
+        {
+            return;
+        }
 
         try
         {
@@ -328,7 +331,10 @@ public class LensCore
     {
         var parts = cookieHeader.Split(';');
         var cookieParts = parts[0].Split('=', 2);
-        if (cookieParts.Length != 2) return null;
+        if (cookieParts.Length != 2)
+        {
+            return null;
+        }
 
         var cookie = new Cookie
         {

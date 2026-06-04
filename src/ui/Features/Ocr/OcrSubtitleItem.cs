@@ -114,11 +114,15 @@ public partial class OcrSubtitleItem : ObservableObject
     public TextBlock CreateFormattedText()
     {
         if (FixResult != null)
+        {
             return FixResult.GetFormattedText();
+        }
 
         var tb = new TextBlock { Text = Text };
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
+        {
             tb.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+        }
         return tb;
     }
 

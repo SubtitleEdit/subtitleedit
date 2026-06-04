@@ -95,7 +95,9 @@ public partial class PromptUnknownWordViewModel : ObservableObject
         var textBlock = new TextBlock();
         var fontName = Se.Settings.Appearance.SubtitleTextBoxAndGridFontName;
         if (!string.IsNullOrEmpty(fontName))
+        {
             textBlock.FontFamily = new FontFamily(fontName);
+        }
         var idx = word.Word.WordIndex;
         var paragraph = word.Result.GetText();
         var w = word.Word.FixedWord;
@@ -108,7 +110,9 @@ public partial class PromptUnknownWordViewModel : ObservableObject
                 // still not found - just show the whole text without highlighting
                 var run = new Run(paragraph);
                 if (!string.IsNullOrEmpty(fontName))
+                {
                     run.FontFamily = new FontFamily(fontName);
+                }
                 textBlock.Inlines!.Add(run);
                 PanelWholeText.Children.Clear();
                 PanelWholeText.Children.Add(textBlock);
@@ -120,7 +124,9 @@ public partial class PromptUnknownWordViewModel : ObservableObject
         {
             var run = new Run(paragraph.Substring(0, idx));
             if (!string.IsNullOrEmpty(fontName))
+            {
                 run.FontFamily = new FontFamily(fontName);
+            }
             textBlock.Inlines!.Add(run);
         }
 
@@ -131,14 +137,18 @@ public partial class PromptUnknownWordViewModel : ObservableObject
             Foreground = Brushes.Red
         };
         if (!string.IsNullOrEmpty(fontName))
+        {
             highlightRun.FontFamily = new FontFamily(fontName);
+        }
         textBlock.Inlines!.Add(highlightRun);
 
         if (idx + w.Length < paragraph.Length)
         {
             var run = new Run(paragraph.Substring(idx + w.Length));
             if (!string.IsNullOrEmpty(fontName))
+            {
                 run.FontFamily = new FontFamily(fontName);
+            }
             textBlock.Inlines!.Add(run);
         }
 

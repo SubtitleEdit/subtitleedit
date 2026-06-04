@@ -123,7 +123,9 @@ public class NOcrDbEditWindow : Window
 
         vm.TextBoxItem = UiUtil.MakeTextBox(100, vm, nameof(vm.ItemText));
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
+        {
             vm.TextBoxItem.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+        }
 
         var panelCurrent = new StackPanel
         {

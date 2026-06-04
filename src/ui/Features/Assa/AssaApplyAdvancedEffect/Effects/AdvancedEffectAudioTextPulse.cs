@@ -24,7 +24,10 @@ public class AdvancedEffectAudioTextPulse : IAdvancedEffectDisplay
         string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
     {
         var result = new List<SubtitleLineViewModel>();
-        if (subtitles.Count == 0) return result;
+        if (subtitles.Count == 0)
+        {
+            return result;
+        }
 
         const int frameMs = 50; // 20 fps
 
@@ -44,7 +47,10 @@ public class AdvancedEffectAudioTextPulse : IAdvancedEffectDisplay
             double localPeak = ComputeLocalPeak(wavePeaks,
                 sub.StartTime.TotalSeconds - 1.0,
                 sub.EndTime.TotalSeconds + 1.0);
-            if (localPeak <= 0) localPeak = 1;
+            if (localPeak <= 0)
+            {
+                localPeak = 1;
+            }
 
             for (double t = 0; t < durationMs; t += frameMs)
             {
@@ -62,11 +68,26 @@ public class AdvancedEffectAudioTextPulse : IAdvancedEffectDisplay
 
                 // Glow colour ramp — same green→yellow→orange→red scale (ASS BGR)
                 string glowColor;
-                if (amp > 0.85) glowColor = "&H0000FF&"; // red
-                else if (amp > 0.70) glowColor = "&H0066FF&"; // orange
-                else if (amp > 0.55) glowColor = "&H00FFFF&"; // yellow
-                else if (amp > 0.35) glowColor = "&H00FF00&"; // bright green
-                else glowColor = "&H007800&"; // dark green (quiet)
+                if (amp > 0.85)
+                {
+                    glowColor = "&H0000FF&";
+                } // red
+                else if (amp > 0.70)
+                {
+                    glowColor = "&H0066FF&";
+                } // orange
+                else if (amp > 0.55)
+                {
+                    glowColor = "&H00FFFF&";
+                } // yellow
+                else if (amp > 0.35)
+                {
+                    glowColor = "&H00FF00&";
+                } // bright green
+                else
+                {
+                    glowColor = "&H007800&";
+                } // dark green (quiet)
 
                 var frame = new SubtitleLineViewModel(sub, generateNewId: true);
                 frame.StartTime = sub.StartTime.Add(TimeSpan.FromMilliseconds(t));
@@ -82,12 +103,18 @@ public class AdvancedEffectAudioTextPulse : IAdvancedEffectDisplay
     private static double GetAverageAmplitude(
         WavePeakData2? wavePeaks, double centerSec, double windowSec, double localPeak)
     {
-        if (wavePeaks == null || localPeak <= 0) return 0;
+        if (wavePeaks == null || localPeak <= 0)
+        {
+            return 0;
+        }
         double half = windowSec / 2.0;
         int start = Math.Max(0, (int)((centerSec - half) * wavePeaks.SampleRate));
         int end = Math.Min(wavePeaks.Peaks.Count - 1,
                                 (int)((centerSec + half) * wavePeaks.SampleRate));
-        if (start > end) return 0;
+        if (start > end)
+        {
+            return 0;
+        }
         long sum = 0;
         for (int i = start; i <= end; i++)
             sum += wavePeaks.Peaks[i].Abs;
@@ -97,14 +124,20 @@ public class AdvancedEffectAudioTextPulse : IAdvancedEffectDisplay
     private static double ComputeLocalPeak(
         WavePeakData2? wavePeaks, double startSec, double endSec)
     {
-        if (wavePeaks == null) return 1;
+        if (wavePeaks == null)
+        {
+            return 1;
+        }
         int start = Math.Max(0, (int)(startSec * wavePeaks.SampleRate));
         int end = Math.Min(wavePeaks.Peaks.Count - 1, (int)(endSec * wavePeaks.SampleRate));
         int peak = 0;
         for (int i = start; i <= end; i++)
         {
             int abs = wavePeaks.Peaks[i].Abs;
-            if (abs > peak) peak = abs;
+            if (abs > peak)
+            {
+                peak = abs;
+            }
         }
         return peak > 0 ? peak : Math.Max(1, wavePeaks.HighestPeak);
     }

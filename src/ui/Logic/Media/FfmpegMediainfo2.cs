@@ -220,8 +220,14 @@ public class FfmpegMediaInfo2
 
         using (var process = GetFFmpegProcess(videoFileName))
         {
-            process.OutputDataReceived += (_, args) => { if (args.Data != null) sb.AppendLine(args.Data); };
-            process.ErrorDataReceived += (_, args) => { if (args.Data != null) sb.AppendLine(args.Data); };
+            process.OutputDataReceived += (_, args) => { if (args.Data != null)
+            {
+                sb.AppendLine(args.Data);
+            } };
+            process.ErrorDataReceived += (_, args) => { if (args.Data != null)
+            {
+                sb.AppendLine(args.Data);
+            } };
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
 

@@ -97,7 +97,9 @@ public class PromptUnknownWordWindow : Window
             .WithHeight(88)
             .WithBindIsVisible(nameof(vm.DoEditWholeText));
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
+        {
             vm.TextBoxWholeText.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+        }
 
         vm.PanelWholeText.Width = double.NaN;
         vm.PanelWholeText.HorizontalAlignment = HorizontalAlignment.Left;
@@ -171,7 +173,9 @@ public class PromptUnknownWordWindow : Window
             .WithBindEnabled(nameof(vm.DoEditWholeText), new InverseBooleanConverter())
             .Bind(TextBox.TextProperty, new Binding(nameof(vm.Word)) { Mode = BindingMode.TwoWay });
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
+        {
             vm.TextBoxWord.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+        }
         var buttonChangeAll = UiUtil.MakeButton(Se.Language.General.ChangeAll, vm.ChangeAllCommand)
             .WithHorizontalAlignmentStretch()
             .WithBindIsVisible(nameof(vm.DoEditWholeText), new InverseBooleanConverter());

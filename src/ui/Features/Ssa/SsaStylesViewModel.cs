@@ -795,15 +795,42 @@ public partial class SsaStylesViewModel : ObservableObject
 
     private static int GetAlignment(StyleDisplay style)
     {
-        if (style.AlignmentAn1) return 1;
-        if (style.AlignmentAn2) return 2;
-        if (style.AlignmentAn3) return 3;
-        if (style.AlignmentAn4) return 4;
-        if (style.AlignmentAn5) return 5;
-        if (style.AlignmentAn6) return 6;
-        if (style.AlignmentAn7) return 7;
-        if (style.AlignmentAn8) return 8;
-        if (style.AlignmentAn9) return 9;
+        if (style.AlignmentAn1)
+        {
+            return 1;
+        }
+        if (style.AlignmentAn2)
+        {
+            return 2;
+        }
+        if (style.AlignmentAn3)
+        {
+            return 3;
+        }
+        if (style.AlignmentAn4)
+        {
+            return 4;
+        }
+        if (style.AlignmentAn5)
+        {
+            return 5;
+        }
+        if (style.AlignmentAn6)
+        {
+            return 6;
+        }
+        if (style.AlignmentAn7)
+        {
+            return 7;
+        }
+        if (style.AlignmentAn8)
+        {
+            return 8;
+        }
+        if (style.AlignmentAn9)
+        {
+            return 9;
+        }
         return 2;
     }
 

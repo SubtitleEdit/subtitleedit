@@ -117,7 +117,9 @@ public class SpellCheckWindow : Window
         };
         vm.TextBoxWordNotFound = textBoxWord;
         if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
+        {
             textBoxWord.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+        }
 
         var buttonChange = new Button
         {
