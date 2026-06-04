@@ -59,6 +59,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private Task? _downloadTaskIndexTtsCrispAsrModels;
     private Task? _downloadTaskIndexTtsCrispAsrVoices;
     private Task? _downloadTaskCosyVoice3CrispAsrModels;
+    private Task? _downloadTaskCosyVoice3CrispAsrVoices;
     private Task? _downloadTaskF5TtsCrispAsrModels;
     private Task? _downloadTaskF5TtsCrispAsrVoices;
     private Task? _downloadTaskOmniVoice;
@@ -88,6 +89,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private readonly MemoryStream _downloadStreamQwen3TtsCrispAsrVoices;
     private readonly MemoryStream _downloadStreamVibeVoiceCrispAsrVoices;
     private readonly MemoryStream _downloadStreamIndexTtsCrispAsrVoices;
+    private readonly MemoryStream _downloadStreamCosyVoice3CrispAsrVoices;
     private readonly MemoryStream _downloadStreamF5TtsCrispAsrVoices;
     private readonly MemoryStream _downloadStreamOmniVoice;
     private readonly MemoryStream _downloadStreamOmniVoices;
@@ -130,6 +132,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         _downloadStreamQwen3TtsCrispAsrVoices = new MemoryStream();
         _downloadStreamVibeVoiceCrispAsrVoices = new MemoryStream();
         _downloadStreamIndexTtsCrispAsrVoices = new MemoryStream();
+        _downloadStreamCosyVoice3CrispAsrVoices = new MemoryStream();
         _downloadStreamF5TtsCrispAsrVoices = new MemoryStream();
         _downloadStreamOmniVoice = new MemoryStream();
         _downloadStreamOmniVoices = new MemoryStream();
@@ -803,15 +806,39 @@ public partial class DownloadTtsViewModel : ObservableObject
                 Close();
             }
 
-            // CosyVoice3 has no separate voices download — the voice bank ships inside
-            // cosyvoice3-voices.gguf (~665 KB) which crispasr --auto-download pulls on first
-            // synth. Once the LLM model finishes, we're done.
+            // CosyVoice3 supports both baked presets (in cosyvoice3-voices.gguf, fetched by
+            // crispasr --auto-download) AND zero-shot cloning from user-supplied WAVs. After
+            // the LLM downloads, chain the qwen3-tts.cpp voice pack ZIP so the user has the
+            // shared reference voices available without a second manual download step. The
+            // baked presets are always usable regardless of this step.
             if (_downloadTaskCosyVoice3CrispAsrModels is { IsCompleted: true })
             {
                 _timer.Stop();
                 _downloadTaskCosyVoice3CrispAsrModels = null;
-                OkPressed = true;
-                Close();
+
+                var voicesFolder = CosyVoice3CrispAsr.GetSetVoicesFolder();
+                var voicesAlreadyInstalled = Directory.Exists(voicesFolder)
+                    && Directory.EnumerateFiles(voicesFolder, "*.wav").Any();
+                if (voicesAlreadyInstalled)
+                {
+                    OkPressed = true;
+                    Close();
+                    return;
+                }
+
+                TitleText = "Downloading CosyVoice3 (CrispASR) voices";
+                ProgressValue = 0;
+                ProgressText = Se.Language.General.StartingDotDotDot;
+                var voicesProgress = new Progress<float>(number =>
+                {
+                    var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+                    var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+                    ProgressValue = percentage;
+                    ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+                });
+                _downloadTaskCosyVoice3CrispAsrVoices = _qwen3TtsCppDownloadService.DownloadVoices(
+                    _downloadStreamCosyVoice3CrispAsrVoices, voicesProgress, _cancellationTokenSource.Token);
+                _timer.Start();
             }
             else if (_downloadTaskCosyVoice3CrispAsrModels is { IsFaulted: true })
             {
@@ -827,6 +854,42 @@ public partial class DownloadTtsViewModel : ObservableObject
                     ProgressText = "Download failed";
                     Error = ex?.Message ?? "Unknown error";
                 }
+            }
+
+            if (_downloadTaskCosyVoice3CrispAsrVoices is { IsCompleted: true })
+            {
+                _timer.Stop();
+                if (_downloadStreamCosyVoice3CrispAsrVoices.Length > 0)
+                {
+                    var voicesFolder = CosyVoice3CrispAsr.GetSetVoicesFolder();
+                    try
+                    {
+                        _downloadStreamCosyVoice3CrispAsrVoices.Position = 0;
+                        _zipUnpacker.UnpackZipStream(_downloadStreamCosyVoice3CrispAsrVoices, voicesFolder, string.Empty, false, new List<string>(), null);
+                        ResampleVoicesTo16kHz(voicesFolder);
+                    }
+                    catch (Exception ex)
+                    {
+                        Se.LogError(ex);
+                    }
+                    _downloadStreamCosyVoice3CrispAsrVoices.Dispose();
+                }
+                OkPressed = true;
+                Close();
+            }
+            else if (_downloadTaskCosyVoice3CrispAsrVoices is { IsFaulted: true })
+            {
+                _timer.Stop();
+                if (_cancellationTokenSource.IsCancellationRequested)
+                {
+                    ProgressText = "Download canceled";
+                    Close();
+                    return;
+                }
+                var ex = _downloadTaskCosyVoice3CrispAsrVoices.Exception?.InnerException ?? _downloadTaskCosyVoice3CrispAsrVoices.Exception;
+                if (ex != null) Se.LogError(ex);
+                OkPressed = true;
+                Close();
             }
 
             // F5-TTS mirrors IndexTTS: model first, then a voices ZIP from the shared
@@ -1199,6 +1262,49 @@ public partial class DownloadTtsViewModel : ObservableObject
                 // or threw during the rename. Without this an accumulating set of *.24k.wav
                 // temp files would slowly clutter the voices folder and bloat .zip / sync
                 // backups.
+                if (!consumed && File.Exists(temp))
+                {
+                    try { File.Delete(temp); } catch { /* leave it; not worth retrying */ }
+                }
+            }
+        }
+    }
+
+    // Same shape as ResampleVoicesTo24kHz but targets 16 kHz — CosyVoice3's s3tok speech
+    // tokenizer expects 16 kHz mono and resamples internally on every synth call otherwise.
+    // Best-effort per file: on ffmpeg failure we leave the original WAV in place.
+    private static void ResampleVoicesTo16kHz(string folder)
+    {
+        if (!Directory.Exists(folder))
+        {
+            return;
+        }
+
+        foreach (var wav in Directory.GetFiles(folder, "*.wav"))
+        {
+            var temp = wav + ".16k.wav";
+            var consumed = false;
+            try
+            {
+                var ffmpeg = FfmpegGenerator.ConvertToMono16kHzWav(wav, temp);
+                if (!ffmpeg.Start())
+                {
+                    continue;
+                }
+                ffmpeg.WaitForExit();
+                if (File.Exists(temp) && new FileInfo(temp).Length > 0)
+                {
+                    File.Delete(wav);
+                    File.Move(temp, wav);
+                    consumed = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Se.LogError(ex, $"Resample voice to 16 kHz failed for '{wav}'; leaving original in place");
+            }
+            finally
+            {
                 if (!consumed && File.Exists(temp))
                 {
                     try { File.Delete(temp); } catch { /* leave it; not worth retrying */ }

@@ -104,6 +104,7 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnSpacing = 12,
             RowSpacing = 10,
@@ -133,10 +134,19 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
         };
         grid.Add(presetsText, 3, 1);
 
-        grid.Add(MakeLabel(Se.Language.General.Speed), 4, 0);
-        grid.Add(MakeSpeedPanel(), 4, 1);
+        grid.Add(MakeLabel("Voices"), 4, 0);
+        var voicesText = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            FontWeight = FontWeight.SemiBold,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.VoicesLabel)),
+        };
+        grid.Add(voicesText, 4, 1);
 
-        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 5, 0);
+        grid.Add(MakeLabel(Se.Language.General.Speed), 5, 0);
+        grid.Add(MakeSpeedPanel(), 5, 1);
+
+        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 6, 0);
         var folderText = new TextBox
         {
             IsReadOnly = true,
@@ -148,7 +158,7 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
             FontSize = 12,
             [!TextBox.TextProperty] = new Binding(nameof(vm.ModelsFolder)),
         };
-        grid.Add(folderText, 5, 1);
+        grid.Add(folderText, 6, 1);
 
         return new Border
         {
@@ -213,13 +223,14 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
     private static Grid BuildActions(CosyVoice3CrispAsrSettingsViewModel vm)
     {
         var openModelsFolder = UiUtil.MakeButton(Se.Language.General.OpenContainingFolder, vm.OpenModelsFolderCommand).WithIconLeft(IconNames.FolderOpen);
+        var openVoicesFolder = UiUtil.MakeButton("Voices folder", vm.OpenVoicesFolderCommand).WithIconLeft(IconNames.FolderOpen);
         var close = UiUtil.MakeButton(Se.Language.General.Close, vm.OkCommand);
 
         var leftPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 8,
-            Children = { openModelsFolder },
+            Children = { openModelsFolder, openVoicesFolder },
         };
 
         var rightPanel = new StackPanel

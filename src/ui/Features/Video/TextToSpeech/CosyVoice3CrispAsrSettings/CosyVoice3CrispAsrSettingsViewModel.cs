@@ -38,6 +38,7 @@ public partial class CosyVoice3CrispAsrSettingsViewModel : ObservableObject
     [ObservableProperty] private IBrush _llmF16Brush = Grey();
 
     [ObservableProperty] private string _presetsLabel = string.Empty;
+    [ObservableProperty] private string _voicesLabel = string.Empty;
 
     [ObservableProperty] private double _speed = 1.0;
 
@@ -50,6 +51,7 @@ public partial class CosyVoice3CrispAsrSettingsViewModel : ObservableObject
     }
 
     [ObservableProperty] private string _modelsFolder = string.Empty;
+    [ObservableProperty] private string _voicesFolder = string.Empty;
     [ObservableProperty] private bool _isEngineInstalled;
 
     public Window? Window { get; set; }
@@ -64,6 +66,7 @@ public partial class CosyVoice3CrispAsrSettingsViewModel : ObservableObject
     public void Initialize()
     {
         ModelsFolder = CosyVoice3CrispAsr.GetSetModelsFolder();
+        VoicesFolder = CosyVoice3CrispAsr.GetSetVoicesFolder();
         Speed = Math.Clamp(Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrSpeed, 0.25, 4.0);
         PresetsLabel = $"{CosyVoice3CrispAsr.Presets.Length} baked presets (zero-shot + FLEURS en/de/zh/ja/fr/es/ko)";
         Refresh();
@@ -131,6 +134,20 @@ public partial class CosyVoice3CrispAsrSettingsViewModel : ObservableObject
             IsEngineInstalled,
             label => LlmF16Label = label,
             brush => LlmF16Brush = brush);
+
+        try
+        {
+            var wavCount = Directory.Exists(VoicesFolder)
+                ? Directory.GetFiles(VoicesFolder, "*.wav").Length
+                : 0;
+            VoicesLabel = wavCount == 0
+                ? "No cloned voices imported (baked presets always available)"
+                : (wavCount == 1 ? "1 voice imported" : $"{wavCount} voices imported");
+        }
+        catch
+        {
+            VoicesLabel = string.Empty;
+        }
     }
 
     private static void ApplyModelStatus(bool fileInstalled, bool engineInstalled, Action<string> setLabel, Action<IBrush> setBrush)
@@ -176,6 +193,24 @@ public partial class CosyVoice3CrispAsrSettingsViewModel : ObservableObject
         try
         {
             await _folderHelper.OpenFolder(Window, ModelsFolder);
+        }
+        catch
+        {
+            // best-effort UX
+        }
+    }
+
+    [RelayCommand]
+    private async Task OpenVoicesFolder()
+    {
+        if (Window == null || string.IsNullOrEmpty(VoicesFolder))
+        {
+            return;
+        }
+
+        try
+        {
+            await _folderHelper.OpenFolder(Window, VoicesFolder);
         }
         catch
         {

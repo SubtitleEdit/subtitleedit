@@ -3,10 +3,12 @@ using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
+using Nikse.SubtitleEdit.Logic.Media;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
@@ -19,10 +21,14 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 
 /// <summary>
 /// Alibaba CosyVoice3 0.5B (Dec 2025 release) run through the CrispASR runtime. LLM + flow-matching DiT
-/// + HiFT vocoder architecture with 9 languages and 18 Mandarin dialects. Unlike VibeVoice/IndexTTS which
-/// clone from a user-supplied reference WAV, CosyVoice3 uses a BAKED-IN voice bank shipped in
-/// <c>cosyvoice3-voices.gguf</c> (~665 KB). The user picks a preset name (e.g. "fleurs-en", "zero_shot");
-/// crispasr loads the voice bank at server startup via the <c>--voice &lt;name&gt;</c> flag.
+/// + HiFT vocoder architecture with 9 languages and 18 Mandarin dialects. Supports BOTH baked-in voice
+/// presets (8 entries in <c>cosyvoice3-voices.gguf</c>) AND zero-shot cloning from a user-supplied 16 kHz
+/// mono reference WAV. The s3tok speech tokenizer and CAMPPlus speaker encoder companion files do the
+/// cloning; crispasr's --auto-download pulls them on first synth alongside the voice bank.
+///
+/// When the user picks a baked preset, <c>--voice &lt;preset_name&gt;</c> is passed at server startup.
+/// When the user picks an imported WAV, <c>--voice /path/to/ref.wav --ref-text "transcription"</c>
+/// is passed — both must be in place for cloning to work (no transcription → noisy output).
 ///
 /// The repo on Hugging Face (cstr/cosyvoice3-0.5b-2512-GGUF) ships ~5 companion files:
 ///   - LLM           : cosyvoice3-llm-{q4_k,f16}.gguf  (we manage this)
@@ -134,9 +140,11 @@ public class CosyVoice3CrispAsr : ITtsEngine
     private static int _serverPort;
     private static string? _serverLaunchCommand;
     private static string? _serverModelKey;
-    // CosyVoice3 takes the active preset via --voice at startup (like IndexTTS), so a preset
-    // change requires teardown + restart. Tracked here so a no-op restart is avoided.
-    private static string? _serverPreset;
+    // CosyVoice3 takes the active voice via --voice at startup (either a preset name or a
+    // reference WAV path). For cloned voices --ref-text is also baked in at startup. Any
+    // change to either triggers a teardown + restart — same trade-off IndexTTS made.
+    private static string? _serverVoiceArg;
+    private static string? _serverRefText;
     private static bool _processExitHooked;
     private static readonly StringBuilder _serverLog = new();
 
@@ -195,6 +203,88 @@ public class CosyVoice3CrispAsr : ITtsEngine
         return modelsFolder;
     }
 
+    public static string GetSetVoicesFolder()
+    {
+        var voicesFolder = Path.Combine(GetSetFolder(), "voices");
+        if (!Directory.Exists(voicesFolder))
+        {
+            Directory.CreateDirectory(voicesFolder);
+        }
+
+        SeedVoicesFromQwen3TtsCppIfEmpty(voicesFolder);
+        return voicesFolder;
+    }
+
+    private static bool _voiceSeedAttempted;
+
+    /// <summary>
+    /// One-time best-effort seed of WAV reference voices from qwen3-tts.cpp's voices folder.
+    /// CosyVoice3 clones at 16 kHz mono and requires a transcription sidecar, same shape as
+    /// Qwen3 CustomVoice — so we resample to 16 kHz on seed and copy the .txt sidecar too.
+    /// </summary>
+    private static void SeedVoicesFromQwen3TtsCppIfEmpty(string voicesFolder)
+    {
+        if (_voiceSeedAttempted)
+        {
+            return;
+        }
+        _voiceSeedAttempted = true;
+
+        try
+        {
+            if (Directory.EnumerateFiles(voicesFolder, "*.wav").Any())
+            {
+                return;
+            }
+
+            var sourceFolder = Qwen3TtsCpp.GetSetVoicesFolder();
+            if (!Directory.Exists(sourceFolder) || !Directory.EnumerateFiles(sourceFolder, "*.wav").Any())
+            {
+                return;
+            }
+
+            foreach (var src in Directory.GetFiles(sourceFolder, "*.wav"))
+            {
+                var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
+
+                if (!File.Exists(dest))
+                {
+                    try
+                    {
+                        var ffmpeg = FfmpegGenerator.ConvertToMono16kHzWav(src, dest);
+                        if (!ffmpeg.Start())
+                        {
+                            File.Copy(src, dest);
+                        }
+                        else
+                        {
+                            ffmpeg.WaitForExit();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Se.LogError(ex, $"CosyVoice3 (CrispASR): resample seed '{src}' failed; falling back to plain copy");
+                        try { if (!File.Exists(dest)) File.Copy(src, dest); } catch { }
+                    }
+                }
+
+                var sidecar = Path.ChangeExtension(src, ".txt");
+                if (File.Exists(sidecar))
+                {
+                    var sidecarDest = Path.ChangeExtension(dest, ".txt");
+                    if (!File.Exists(sidecarDest))
+                    {
+                        try { File.Copy(sidecar, sidecarDest); } catch { }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "CosyVoice3 (CrispASR): voice seeding from qwen3-tts.cpp folder failed");
+        }
+    }
+
     public static string GetLlmPath(string? modelKey = null) =>
         Path.Combine(GetSetModelsFolder(), GetLlmFileName(modelKey));
 
@@ -238,11 +328,40 @@ public class CosyVoice3CrispAsr : ITtsEngine
     public Task<Voice[]> GetVoices(string language)
     {
         var result = new List<Voice>();
+
+        // Baked-in presets come first so the combo opens on a working default. Imported WAVs
+        // (zero-shot clones) follow — they need a .txt sidecar with the transcription or the
+        // server returns noise.
         foreach (var (display, preset) in Presets)
         {
             result.Add(new Voice(new CosyVoice3Voice(display, preset)));
         }
+
+        var voicesFolder = GetSetVoicesFolder();
+        if (Directory.Exists(voicesFolder))
+        {
+            foreach (var file in Directory.GetFiles(voicesFolder, "*.wav"))
+            {
+                var name = Path.GetFileNameWithoutExtension(file).Replace('_', ' ');
+                var refText = TryReadRefText(file);
+                result.Add(new Voice(new CosyVoice3Voice(name, file, refText)));
+            }
+        }
+
         return Task.FromResult(result.ToArray());
+    }
+
+    private static string TryReadRefText(string wavPath)
+    {
+        try
+        {
+            var sidecar = Path.ChangeExtension(wavPath, ".txt");
+            return File.Exists(sidecar) ? File.ReadAllText(sidecar).Trim() : string.Empty;
+        }
+        catch
+        {
+            return string.Empty;
+        }
     }
 
     public bool IsVoiceInstalled(Voice voice) => true;
@@ -270,14 +389,28 @@ public class CosyVoice3CrispAsr : ITtsEngine
             throw new ArgumentException("Voice is not a CosyVoice3Voice");
         }
 
-        if (string.IsNullOrEmpty(cosyVoice.Preset))
+        // Either Preset OR FilePath must be set. Preset wins if both are populated (defensive
+        // — shouldn't happen with the constructors but guards against future drift).
+        var voiceArg = !string.IsNullOrEmpty(cosyVoice.Preset) ? cosyVoice.Preset : cosyVoice.FilePath;
+        if (string.IsNullOrEmpty(voiceArg))
         {
             throw new InvalidOperationException(
-                "CosyVoice3 (CrispASR) requires a preset. Pick one of the FLEURS-* voices or zero_shot.");
+                "CosyVoice3 (CrispASR) requires a preset or an imported reference WAV. "
+                + "Pick one of the baked presets (zero_shot / fleurs-*) or import a 16 kHz mono "
+                + "reference WAV with an adjacent .txt transcription sidecar.");
+        }
+
+        var isClone = string.IsNullOrEmpty(cosyVoice.Preset);
+        if (isClone && string.IsNullOrEmpty(cosyVoice.RefText))
+        {
+            throw new InvalidOperationException(
+                $"CosyVoice3 (CrispASR) zero-shot cloning requires a transcription. "
+                + $"Add a .txt sidecar next to '{Path.GetFileName(cosyVoice.FilePath)}' with the "
+                + "spoken text of the reference WAV.");
         }
 
         var modelKey = ResolveModelKey(model);
-        await EnsureServerRunningAsync(modelKey, cosyVoice.Preset, cancellationToken);
+        await EnsureServerRunningAsync(modelKey, voiceArg, cosyVoice.RefText, cancellationToken);
 
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
 
@@ -286,13 +419,21 @@ public class CosyVoice3CrispAsr : ITtsEngine
         {
             ["input"] = text,
             ["response_format"] = "wav",
-            ["voice"] = cosyVoice.Preset,
+            ["voice"] = voiceArg,
             ["speed"] = speed,
         };
+        if (isClone)
+        {
+            // ref_text mirrors the F5-TTS payload guess. CosyVoice3's voice + ref_text are
+            // baked at server startup (see EnsureServerRunningAsync) so this field is mostly
+            // informational, but we send it for logging + future server versions that read it
+            // per-request.
+            payload["ref_text"] = cosyVoice.RefText;
+        }
 
         var body = JsonSerializer.Serialize(payload);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-        Se.WriteToolsLog($"CosyVoice3 (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (preset={cosyVoice.Preset}, textLen={text.Length})");
+        Se.WriteToolsLog($"CosyVoice3 (CrispASR): POST {ServerBaseUrl}/v1/audio/speech (voice={cosyVoice}, clone={isClone}, refTextLen={cosyVoice.RefText.Length}, textLen={text.Length})");
 
         HttpResponseMessage response;
         try
@@ -309,7 +450,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
                 StopServerInternal();
             }
 
-            var failMsg = $"CosyVoice3 (CrispASR) request failed — Preset: {cosyVoice.Preset}, Text: {text}, "
+            var failMsg = $"CosyVoice3 (CrispASR) request failed — Voice: {cosyVoice}, Text: {text}, "
                 + $"RequestJson: {body}, ServerExited: {died}, ServerLog: {serverLog}"
                 + LaunchCmdSuffix(launchCommand);
             Se.LogError(ex, failMsg);
@@ -332,7 +473,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
                 var serverLog = SnapshotServerLog();
                 var launchCommand = _serverLaunchCommand;
                 var errMsg = $"CosyVoice3 (CrispASR) server error {(int)response.StatusCode} {response.StatusCode} — "
-                    + $"Preset: {cosyVoice.Preset}, Text: {text}, RequestJson: {body}, "
+                    + $"Voice: {cosyVoice}, Text: {text}, RequestJson: {body}, "
                     + $"ResponseBody: {errorBody}, ServerLog: {serverLog}"
                     + LaunchCmdSuffix(launchCommand);
                 Se.LogError(errMsg);
@@ -383,11 +524,18 @@ public class CosyVoice3CrispAsr : ITtsEngine
         }
     }
 
-    private static async Task EnsureServerRunningAsync(string modelKey, string preset, CancellationToken ct)
+    private static async Task EnsureServerRunningAsync(string modelKey, string voiceArg, string refText, CancellationToken ct)
     {
-        if (_serverProcess is { HasExited: false } && _serverPort != 0
+        // Server is keyed by (model, voice, ref-text) since all three are baked in at process
+        // start. A switch from preset → clone, clone → different clone, or refText edit all
+        // require a fresh server.
+        bool MatchesCurrent() =>
+            _serverProcess is { HasExited: false } && _serverPort != 0
             && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase)
-            && string.Equals(_serverPreset, preset, StringComparison.OrdinalIgnoreCase))
+            && string.Equals(_serverVoiceArg, voiceArg, StringComparison.OrdinalIgnoreCase)
+            && string.Equals(_serverRefText, refText, StringComparison.Ordinal);
+
+        if (MatchesCurrent())
         {
             return;
         }
@@ -395,9 +543,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
         await ServerLock.WaitAsync(ct);
         try
         {
-            if (_serverProcess is { HasExited: false } && _serverPort != 0
-                && string.Equals(_serverModelKey, modelKey, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(_serverPreset, preset, StringComparison.OrdinalIgnoreCase))
+            if (MatchesCurrent())
             {
                 return;
             }
@@ -444,10 +590,23 @@ public class CosyVoice3CrispAsr : ITtsEngine
             psi.ArgumentList.Add("127.0.0.1");
             psi.ArgumentList.Add("--port");
             psi.ArgumentList.Add(port.ToString());
-            // Preset is baked in at startup (like IndexTTS's --voice). Changing presets means
-            // teardown + restart of the server — handled by the (modelKey, preset) cache key.
+
+            // --voice-dir lets the server resolve relative WAV filenames against our voices
+            // folder. Doesn't hurt for preset-based voices (the preset name short-circuits the
+            // filesystem lookup).
+            psi.ArgumentList.Add("--voice-dir");
+            psi.ArgumentList.Add(GetSetVoicesFolder());
+
+            // Voice arg is either a baked preset name ("zero_shot", "fleurs-en", ...) or an
+            // absolute path to an imported reference WAV. For WAV clones --ref-text carries
+            // the spoken transcription; required by the s3tok speech tokenizer.
             psi.ArgumentList.Add("--voice");
-            psi.ArgumentList.Add(preset);
+            psi.ArgumentList.Add(voiceArg);
+            if (!string.IsNullOrEmpty(refText))
+            {
+                psi.ArgumentList.Add("--ref-text");
+                psi.ArgumentList.Add(refText);
+            }
 
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start crispasr (cosyvoice3-tts)");
@@ -473,7 +632,8 @@ public class CosyVoice3CrispAsr : ITtsEngine
             _serverProcess = process;
             _serverPort = port;
             _serverModelKey = modelKey;
-            _serverPreset = preset;
+            _serverVoiceArg = voiceArg;
+            _serverRefText = refText;
             HookProcessExitOnce();
 
             // First-run auto-download (~745 MB minimum, ~2.5 GB for F16) needs a generous timeout.
@@ -490,7 +650,8 @@ public class CosyVoice3CrispAsr : ITtsEngine
                     _serverPort = 0;
                     _serverLaunchCommand = null;
                     _serverModelKey = null;
-                    _serverPreset = null;
+                    _serverVoiceArg = null;
+                    _serverRefText = null;
                     throw new InvalidOperationException(
                         $"crispasr (cosyvoice3-tts) exited during startup (code {exitCode}). Output: {tail}"
                         + LaunchCmdSuffix(exitedLaunchCommand));
@@ -569,7 +730,8 @@ public class CosyVoice3CrispAsr : ITtsEngine
         _serverPort = 0;
         _serverLaunchCommand = null;
         _serverModelKey = null;
-        _serverPreset = null;
+        _serverVoiceArg = null;
+        _serverRefText = null;
         if (p == null) return;
         try
         {
@@ -589,8 +751,79 @@ public class CosyVoice3CrispAsr : ITtsEngine
         }
     }
 
-    // CosyVoice3 uses baked-in voice presets shipped in cosyvoice3-voices.gguf; there's no
-    // user-supplied reference WAV to import. Stay false so the UI hides the "Import voice"
-    // affordance for this engine.
-    public bool ImportVoice(string fileName) => false;
+    private static string GetUniqueDestinationFileName(string folder, string baseName)
+    {
+        var candidate = Path.Combine(folder, baseName + ".wav");
+        if (!File.Exists(candidate))
+        {
+            return candidate;
+        }
+
+        var number = 1;
+        do
+        {
+            candidate = Path.Combine(folder, $"{baseName}_{number}.wav");
+            number++;
+        } while (File.Exists(candidate));
+
+        return candidate;
+    }
+
+    public bool ImportVoice(string fileName)
+    {
+        if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
+        {
+            return false;
+        }
+
+        var voicesFolder = GetSetVoicesFolder();
+        var baseName = Path.GetFileNameWithoutExtension(fileName);
+        var destinationFileName = GetUniqueDestinationFileName(voicesFolder, baseName);
+
+        // CosyVoice3's s3tok speech tokenizer expects 16 kHz mono — resample on import so the
+        // server doesn't have to upsample / convert on every synth call.
+        try
+        {
+            var process = FfmpegGenerator.ConvertToMono16kHzWav(fileName, destinationFileName);
+            if (!process.Start())
+            {
+                return false;
+            }
+
+            process.WaitForExit();
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "CosyVoice3 (CrispASR) voice import failed (ffmpeg conversion).");
+            return false;
+        }
+
+        if (!File.Exists(destinationFileName))
+        {
+            return false;
+        }
+
+        // Zero-shot cloning requires an accurate transcription. If the source had a .txt
+        // sidecar (same basename), copy it alongside the imported WAV. Best-effort — the WAV
+        // alone is unusable for cloning (Speak surfaces a clear error in that case), but the
+        // import itself succeeds so the user can add the sidecar manually after the fact.
+        try
+        {
+            var sourceSidecar = Path.ChangeExtension(fileName, ".txt");
+            if (File.Exists(sourceSidecar))
+            {
+                var destSidecar = Path.ChangeExtension(destinationFileName, ".txt");
+                if (!File.Exists(destSidecar))
+                {
+                    File.Copy(sourceSidecar, destSidecar);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "CosyVoice3 (CrispASR) voice import: failed to copy .txt sidecar");
+        }
+
+        return true;
+    }
 }
