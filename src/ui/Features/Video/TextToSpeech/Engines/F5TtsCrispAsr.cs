@@ -55,11 +55,12 @@ public class F5TtsCrispAsr : ITtsEngine
 
     public const string BackendName = "f5-tts";
 
-    // TODO: confirm whether F5-TTS in CrispASR 0.6.12 reads voice/ref-text from the request
-    // payload (like VibeVoice/Qwen3) or only from startup CLI flags (like IndexTTS 0.6.11).
-    // If the per-request approach silently ignores the field, flip this to true and the
-    // server will be (re)started whenever the voice changes — same trade-off IndexTTS made.
-    private static readonly bool UseStartupVoiceFlags = false;
+    // Confirmed against CrispASR 0.6.12: the f5-tts backend ignores the per-request `voice`
+    // field and only reads the reference audio from the startup --voice flag (the server log
+    // shows `ref_T=0 duration=0` and an "empty audio" 500 otherwise). Same upstream behaviour
+    // as IndexTTS 0.6.11 — server gets torn down and restarted when the voice or ref-text
+    // changes, keyed by (model, voice, ref-text) below.
+    private static readonly bool UseStartupVoiceFlags = true;
 
     // Exact byte size from the HF tree API (cstr/f5-tts-GGUF). Same truncation guard as the
     // other CrispASR TTS engines — a partial file would crash the loader on startup.
