@@ -150,15 +150,14 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
             {
                 _grid.SelectedItems.Add(items[i]);
             }
-            _grid.SelectedItem = items[_shiftCurrentIndex];
         }
         finally
         {
             _selectionChangedSkip = false;
         }
 
-        _onFocusedItemChanged?.Invoke(_grid.SelectedItem as TItem);
-        _grid.ScrollIntoView(_grid.SelectedItem, null);
+        _onFocusedItemChanged?.Invoke(items[_shiftCurrentIndex] as TItem);
+        _grid.ScrollIntoView(items[_shiftCurrentIndex], null);
     }
 
     private void ToggleCheckboxForSelectedRows()
