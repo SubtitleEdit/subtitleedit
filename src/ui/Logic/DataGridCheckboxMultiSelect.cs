@@ -16,6 +16,7 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
     private readonly Func<TItem, bool> _getChecked;
     private readonly Action<TItem, bool> _setChecked;
     private readonly Func<TItem, bool>? _canToggle;
+    private readonly Action<TItem?>? _onFocusedItemChanged;
     private int _shiftAnchorIndex = -1;
     private int _shiftCurrentIndex = -1;
     private bool _selectionChangedSkip;
@@ -33,6 +34,7 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
         _getChecked = getChecked;
         _setChecked = setChecked;
         _canToggle = canToggle;
+        _onFocusedItemChanged = onFocusedItemChanged;
 
         dataGrid.SelectionMode = DataGridSelectionMode.Extended;
 
@@ -49,7 +51,7 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
             _shiftAnchorIndex = -1;
             _shiftCurrentIndex = -1;
 
-            onFocusedItemChanged?.Invoke(dataGrid.SelectedItem as TItem);
+            _onFocusedItemChanged?.Invoke(dataGrid.SelectedItem as TItem);
         };
     }
 
@@ -141,15 +143,22 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
         var endIdx = Math.Max(_shiftAnchorIndex, _shiftCurrentIndex);
 
         _selectionChangedSkip = true;
-        _grid.SelectedItems.Clear();
-        for (var i = startIdx; i <= endIdx; i++)
+        try
         {
-            _grid.SelectedItems.Add(items[i]);
+            _grid.SelectedItems.Clear();
+            for (var i = startIdx; i <= endIdx; i++)
+            {
+                _grid.SelectedItems.Add(items[i]);
+            }
+            _grid.SelectedItem = items[_shiftCurrentIndex];
+        }
+        finally
+        {
+            _selectionChangedSkip = false;
         }
 
-        _selectionChangedSkip = false;
-
-        _grid.ScrollIntoView(items[_shiftCurrentIndex], null);
+        _onFocusedItemChanged?.Invoke(_grid.SelectedItem as TItem);
+        _grid.ScrollIntoView(_grid.SelectedItem, null);
     }
 
     private void ToggleCheckboxForSelectedRows()
