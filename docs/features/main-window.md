@@ -328,18 +328,15 @@ Subtitle Edit accepts a few command-line arguments at startup, useful for deskto
 | Argument | Description |
 |----------|-------------|
 | *(positional)* | Subtitle file to open. The first existing path on the command line is treated as the subtitle file. |
-| `/video:<path>` | Open the given video file alongside the subtitle. This is the legacy Subtitle Edit 4.x syntax, kept for backwards compatibility with existing scripts. |
-| `--video:<path>` | Same as `/video:` but in POSIX style. |
-| `--video <path>` | Same as `--video:`, with a space separator. |
-| `/batchconvertui` *(alias: `--batchconvertui`)* | Launch directly into the standalone **Batch Convert** window instead of the full editor. |
+| `/video:<path>` | Open the given video file alongside the subtitle. |
+| `/batchconvertui` | Launch directly into the standalone **Batch Convert** window instead of the full editor. |
 
-The video file is always loaded when supplied via a CLI flag, even if **Options → Settings → Video → Auto-open** is disabled — a flag on the command line is treated as an explicit instruction.
+The video file is always loaded when supplied via `/video:`, even if **Options → Settings → Video → Auto-open** is disabled — a flag on the command line is treated as an explicit instruction.
 
 Examples (Windows shell):
 
 ```
 SubtitleEdit.exe movie.srt /video:movie.mkv
-SubtitleEdit.exe movie.srt --video:movie.mkv
 SubtitleEdit.exe /batchconvertui
 ```
 
