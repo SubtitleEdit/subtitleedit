@@ -21,16 +21,35 @@ public partial class PromptUnknownWordViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _suggestions;
     [ObservableProperty] private string _selectedSuggestion;
     [ObservableProperty] private string? _text;
-    [ObservableProperty] private string _wholeText;
-    [ObservableProperty] private string _word;
-    [ObservableProperty] private bool _doEditWholeText;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ChangeOnceCommand))]
+    private string _wholeText;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ChangeAllCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ChangeOnceCommand))]
+    [NotifyCanExecuteChangedFor(nameof(GoogleItCommand))]
+    [NotifyCanExecuteChangedFor(nameof(AddToNamesListCommand))]
+    [NotifyCanExecuteChangedFor(nameof(AddToUserDictionaryCommand))]
+    private string _word;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ChangeAllCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ChangeOnceCommand))]
+    private bool _doEditWholeText;
+
     [ObservableProperty] private bool _areSuggestionsEnabled;
+    [ObservableProperty] private string _editButtonLabel;
 
     public StackPanel PanelWholeText { get; set; }
     public TextBox TextBoxWholeText { get; set; }
     public TextBox TextBoxWord { get; set; }
     public Bitmap? Bitmap { get; set; }
     public Window? Window { get; set; }
+
+    private string _wordOriginal = string.Empty;
+    private string _wholeTextOriginal = string.Empty;
 
     public bool ChangeAllPressed { get; private set; }
     public bool ChangeOncePressed { get; private set; }
@@ -51,13 +70,17 @@ public partial class PromptUnknownWordViewModel : ObservableObject
         Text = string.Empty;
         WholeText = string.Empty;
         Word = string.Empty;
+        EditButtonLabel = string.Empty;
     }
 
     public void Initialize(Bitmap bitmap, string wholeText, UnknownWordItem word, List<string> suggestions)
     {
         Bitmap = bitmap;
+        _wholeTextOriginal = wholeText;
         WholeText = wholeText;
+        _wordOriginal = word.Word.FixedWord;
         Word = word.Word.FixedWord;
+        EditButtonLabel = Se.Language.Ocr.EditWholeText;
         Suggestions.AddRange(suggestions);
 
         Dispatcher.UIThread.Invoke(() =>
@@ -122,6 +145,19 @@ public partial class PromptUnknownWordViewModel : ObservableObject
         PanelWholeText.Children.Add(textBlock);
     }
 
+    partial void OnDoEditWholeTextChanged(bool value)
+    {
+        EditButtonLabel = value ? Se.Language.Ocr.EditWordOnly : Se.Language.Ocr.EditWholeText;
+    }
+
+    private bool CanChangeAll() => !DoEditWholeText && !string.IsNullOrWhiteSpace(Word) && Word != _wordOriginal;
+
+    private bool CanChangeOnce() => DoEditWholeText
+        ? WholeText != _wholeTextOriginal
+        : !string.IsNullOrWhiteSpace(Word) && Word != _wordOriginal;
+
+    private bool CanActOnWord() => !string.IsNullOrWhiteSpace(Word);
+
     [RelayCommand]
     private void EditWholeText()
     {
@@ -148,18 +184,23 @@ public partial class PromptUnknownWordViewModel : ObservableObject
     [RelayCommand]
     private void SuggestionUseAlways()
     {
+        if (string.IsNullOrEmpty(SelectedSuggestion))
+        {
+            return;
+        }
+
         Word = SelectedSuggestion;
         ChangeAll();
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanChangeAll))]
     private void ChangeAll()
     {
         ChangeAllPressed = true;
         Window?.Close();
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanChangeOnce))]
     private void ChangeOnce()
     {
         if (DoEditWholeText)
@@ -181,7 +222,7 @@ public partial class PromptUnknownWordViewModel : ObservableObject
         Window?.Close();
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanActOnWord))]
     private void GoogleIt()
     {
 
@@ -194,14 +235,14 @@ public partial class PromptUnknownWordViewModel : ObservableObject
         Window?.Close();
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanActOnWord))]
     private void AddToNamesList()
     {
         AddToNamesListPressed = true;
         Window?.Close();
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanActOnWord))]
     private void AddToUserDictionary()
     {
         AddToUserDictionaryPressed = true;

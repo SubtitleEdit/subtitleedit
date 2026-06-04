@@ -124,8 +124,8 @@ public class PromptUnknownWordWindow : Window
 
         var buttonEditWholeText = new ToggleButton
         {
-            Content = Se.Language.Ocr.EditWholeText,
             DataContext = vm,
+            [!ContentControl.ContentProperty] = new Binding(nameof(vm.EditButtonLabel)),
             [!ToggleButton.IsCheckedProperty] = new Binding(nameof(vm.DoEditWholeText)) { Mode = BindingMode.TwoWay },
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(3, 0, 0, 0),
@@ -147,12 +147,12 @@ public class PromptUnknownWordWindow : Window
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -174,24 +174,23 @@ public class PromptUnknownWordWindow : Window
             vm.TextBoxWord.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         var buttonChangeAll = UiUtil.MakeButton(Se.Language.General.ChangeAll, vm.ChangeAllCommand)
             .WithHorizontalAlignmentStretch()
-            .WithBindEnabled(nameof(vm.DoEditWholeText), new InverseBooleanConverter());
+            .WithBindIsVisible(nameof(vm.DoEditWholeText), new InverseBooleanConverter());
         var buttonChangeOnce = UiUtil.MakeButton(Se.Language.General.ChangeOnce, vm.ChangeOnceCommand)
             .WithHorizontalAlignmentStretch();
         var buttonSkipOne = UiUtil.MakeButton(Se.Language.General.SkipOnce, vm.SkipOnceCommand)
-            .WithHorizontalAlignmentStretch()
-            .WithBindEnabled(nameof(vm.DoEditWholeText), new InverseBooleanConverter());
+            .WithHorizontalAlignmentStretch();
         var buttonGoogleIt = UiUtil.MakeButton(Se.Language.General.GoogleIt, vm.GoogleItCommand)
             .WithHorizontalAlignmentStretch()
-            .WithBindEnabled(nameof(vm.DoEditWholeText), new InverseBooleanConverter());
+            .WithBindIsVisible(nameof(vm.DoEditWholeText), new InverseBooleanConverter());
         var buttonSkipAll = UiUtil.MakeButton(Se.Language.General.SkipAll, vm.SkipAllCommand)
             .WithHorizontalAlignmentStretch()
-            .WithBindEnabled(nameof(vm.DoEditWholeText), new InverseBooleanConverter());
+            .WithBindIsVisible(nameof(vm.DoEditWholeText), new InverseBooleanConverter());
         var buttonAddToNameList = UiUtil.MakeButton(Se.Language.General.AddToNamesListCaseSensitive, vm.AddToNamesListCommand)
             .WithHorizontalAlignmentStretch()
-            .WithBindEnabled(nameof(vm.DoEditWholeText), new InverseBooleanConverter());
+            .WithBindIsVisible(nameof(vm.DoEditWholeText), new InverseBooleanConverter());
         var buttonAddToUserDictionary = UiUtil.MakeButton(Se.Language.General.AddToUserDictionary, vm.AddToUserDictionaryCommand)
             .WithHorizontalAlignmentStretch()
-            .WithBindEnabled(nameof(vm.DoEditWholeText), new InverseBooleanConverter());
+            .WithBindIsVisible(nameof(vm.DoEditWholeText), new InverseBooleanConverter());
 
         grid.Add(vm.TextBoxWord, 0, 0, 1, 2);
         grid.Add(buttonChangeAll, 1, 0, 1, 2);
