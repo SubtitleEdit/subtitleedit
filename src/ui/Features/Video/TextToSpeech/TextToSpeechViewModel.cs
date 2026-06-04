@@ -212,31 +212,24 @@ public partial class TextToSpeechViewModel : ObservableObject
             new ChatterboxTtsCpp(),
         ];
 
-        // CosyVoice3 (CrispASR) is gated on platforms where CrispASR has a runtime: the
-        // upstream v0.6.12 release ships Windows + macOS builds but no Linux build (see commit
-        // 53a739e6f "Update to CrispASR v0.6.12 (no linux)"). Hiding the engine on Linux
-        // avoids a confusing "Download CrispASR" prompt that can't actually succeed there.
-        if (!OperatingSystem.IsLinux())
+        // Insert CosyVoice3 (CrispASR) immediately after IndexTtsCrispAsr to keep the
+        // CrispASR engines grouped visually in the engine combo.
+        var indexTtsIndex = -1;
+        for (var i = 0; i < Engines.Count; i++)
         {
-            // Insert immediately after IndexTtsCrispAsr to keep the CrispASR engines grouped
-            // visually in the engine combo.
-            var indexTtsIndex = -1;
-            for (var i = 0; i < Engines.Count; i++)
+            if (Engines[i] is IndexTtsCrispAsr)
             {
-                if (Engines[i] is IndexTtsCrispAsr)
-                {
-                    indexTtsIndex = i;
-                    break;
-                }
+                indexTtsIndex = i;
+                break;
             }
-            if (indexTtsIndex >= 0)
-            {
-                Engines.Insert(indexTtsIndex + 1, new CosyVoice3CrispAsr());
-            }
-            else
-            {
-                Engines.Add(new CosyVoice3CrispAsr());
-            }
+        }
+        if (indexTtsIndex >= 0)
+        {
+            Engines.Insert(indexTtsIndex + 1, new CosyVoice3CrispAsr());
+        }
+        else
+        {
+            Engines.Add(new CosyVoice3CrispAsr());
         }
 
         if (!OperatingSystem.IsMacOS())
