@@ -202,10 +202,42 @@ public partial class TextToSpeechViewModel : ObservableObject
             // CrispASR's VibeVoice backend ships a higher-quality build.
             // new VibeVoiceCrispAsr(),
             new IndexTtsCrispAsr(),
-            new CosyVoice3CrispAsr(),
-            new F5TtsCrispAsr(),
+            // F5-TTS (CrispASR) hidden: CrispASR 0.6.12 has no GPU backend for f5-tts, so
+            // synthesis runs the fixed 32-step Euler ODE through a 22-layer DiT + Vocos on
+            // CPU only. That's 3-8 minutes per short utterance on Mac CPU — unusable for the
+            // typical TTS-from-subtitles workflow. Engine + download service + settings dialog
+            // are kept so this is a one-line re-enable when upstream CrispASR adds Metal/CUDA
+            // support or exposes an --ode-steps flag.
+            // new F5TtsCrispAsr(),
             new ChatterboxTtsCpp(),
         ];
+
+        // CosyVoice3 (CrispASR) is gated on platforms where CrispASR has a runtime: the
+        // upstream v0.6.12 release ships Windows + macOS builds but no Linux build (see commit
+        // 53a739e6f "Update to CrispASR v0.6.12 (no linux)"). Hiding the engine on Linux
+        // avoids a confusing "Download CrispASR" prompt that can't actually succeed there.
+        if (!OperatingSystem.IsLinux())
+        {
+            // Insert immediately after IndexTtsCrispAsr to keep the CrispASR engines grouped
+            // visually in the engine combo.
+            var indexTtsIndex = -1;
+            for (var i = 0; i < Engines.Count; i++)
+            {
+                if (Engines[i] is IndexTtsCrispAsr)
+                {
+                    indexTtsIndex = i;
+                    break;
+                }
+            }
+            if (indexTtsIndex >= 0)
+            {
+                Engines.Insert(indexTtsIndex + 1, new CosyVoice3CrispAsr());
+            }
+            else
+            {
+                Engines.Add(new CosyVoice3CrispAsr());
+            }
+        }
 
         if (!OperatingSystem.IsMacOS())
         {
