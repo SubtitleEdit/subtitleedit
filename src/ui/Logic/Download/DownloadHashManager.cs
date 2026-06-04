@@ -141,6 +141,20 @@ public static class DownloadHashManager
         public const string Codec = "IndexTtsCrispAsr.Codec";
     }
 
+    public static class CosyVoice3CrispAsr
+    {
+        // SHA-256 of the LLM GGUF (two quants). Companion files (flow/hift/s3tok/campplus/voices)
+        // are not staged by SE — they're fetched by crispasr --auto-download and not verified here.
+        public const string LlmQ4K = "CosyVoice3CrispAsr.LlmQ4K";
+        public const string LlmF16 = "CosyVoice3CrispAsr.LlmF16";
+    }
+
+    public static class F5TtsCrispAsr
+    {
+        // SHA-256 of the F16 talker (single GGUF — Vocos vocoder is bundled in).
+        public const string TalkerF16 = "F5TtsCrispAsr.TalkerF16";
+    }
+
     public static class KokoroTtsCpp
     {
         // Hashes of the release archive (.zip) - same role as OmniVoice's set. Index 0 must match
@@ -627,6 +641,23 @@ public static class DownloadHashManager
             [IndexTtsCrispAsr.Codec] = new[]
             {
                 "fcba9a322d80ef318da8a17c01e8a5e7f299ccdf881c62a43abf62cb3c104268", // indextts-bigvgan.gguf
+            },
+
+            // CosyVoice3 (CrispASR) — cstr/cosyvoice3-0.5b-2512-GGUF on HuggingFace.
+            // Hashes are HF LFS oid (= SHA-256) pulled from the tree API.
+            [CosyVoice3CrispAsr.LlmQ4K] = new[]
+            {
+                "33d899490108bce896c3448bca40ebd994daa125ce0b118e6267f6b84fc09530", // cosyvoice3-llm-q4_k.gguf
+            },
+            [CosyVoice3CrispAsr.LlmF16] = new[]
+            {
+                "f13149e1f695d79dcc707de45b3df58ccaf2ab7eba1dad4168ae2c778efe4e67", // cosyvoice3-llm-f16.gguf
+            },
+
+            // F5-TTS (CrispASR) — cstr/f5-tts-GGUF on HuggingFace.
+            [F5TtsCrispAsr.TalkerF16] = new[]
+            {
+                "25a4d273048dad072774ff139cf19b96fe442bebda8392c08009d73256cf1e81", // f5-tts-v1-base-f16.gguf
             },
 
             // Kokoro TTS — https://github.com/niksedk/kokoro.cpp/releases

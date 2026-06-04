@@ -94,6 +94,27 @@ public static class TtsVoiceInstaller
             minVersionNote: null);
 
     /// <summary>
+    /// Ensures the CrispASR runtime that CosyVoice3 (CrispASR) runs on is installed.
+    /// The cosyvoice3-tts backend ships in CrispASR v0.6.12+; companion GGUFs (flow / hift /
+    /// s3tok / campplus / voices) are auto-downloaded by crispasr on first run.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForCosyVoice3(Window? window, IWindowService windowService, bool forceRedownload)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload,
+            engineDisplayName: "CosyVoice3 (CrispASR)",
+            extraCapabilityCheck: null,
+            minVersionNote: "v0.6.12 or newer");
+
+    /// <summary>
+    /// Ensures the CrispASR runtime that F5-TTS (CrispASR) runs on is installed.
+    /// The f5-tts backend ships in CrispASR v0.6.12+.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForF5Tts(Window? window, IWindowService windowService, bool forceRedownload)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload,
+            engineDisplayName: "F5-TTS (CrispASR)",
+            extraCapabilityCheck: null,
+            minVersionNote: "v0.6.12 or newer");
+
+    /// <summary>
     /// Shared CrispASR install/update flow used by all TTS engines that sit on the
     /// CrispASR runtime. Prompts refer to <paramref name="engineDisplayName"/> so users
     /// see the right engine name. <paramref name="extraCapabilityCheck"/> lets the caller
