@@ -769,7 +769,15 @@ public class CosyVoice3CrispAsr : ITtsEngine
         return candidate;
     }
 
-    public bool ImportVoice(string fileName)
+    public bool ImportVoice(string fileName) => ImportVoice(fileName, string.Empty);
+
+    /// <summary>
+    /// Imports <paramref name="fileName"/> as a CosyVoice3 zero-shot reference voice. When
+    /// <paramref name="transcript"/> is non-empty it's written to the destination .txt sidecar
+    /// directly (the s3tok tokenizer requires it). When empty, falls back to copying any .txt
+    /// sidecar that already lives next to the source WAV.
+    /// </summary>
+    public bool ImportVoice(string fileName, string transcript)
     {
         if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
         {
@@ -803,17 +811,20 @@ public class CosyVoice3CrispAsr : ITtsEngine
             return false;
         }
 
-        // Zero-shot cloning requires an accurate transcription. If the source had a .txt
-        // sidecar (same basename), copy it alongside the imported WAV. Best-effort — the WAV
-        // alone is unusable for cloning (Speak surfaces a clear error in that case), but the
-        // import itself succeeds so the user can add the sidecar manually after the fact.
+        // Zero-shot cloning requires an accurate transcription. Caller-supplied transcript
+        // wins; otherwise fall back to a sibling .txt next to the source WAV. Either way the
+        // sidecar gets written to the destination folder so the engine can read it back later.
         try
         {
-            var sourceSidecar = Path.ChangeExtension(fileName, ".txt");
-            if (File.Exists(sourceSidecar))
+            var destSidecar = Path.ChangeExtension(destinationFileName, ".txt");
+            if (!string.IsNullOrWhiteSpace(transcript))
             {
-                var destSidecar = Path.ChangeExtension(destinationFileName, ".txt");
-                if (!File.Exists(destSidecar))
+                File.WriteAllText(destSidecar, transcript.Trim());
+            }
+            else
+            {
+                var sourceSidecar = Path.ChangeExtension(fileName, ".txt");
+                if (File.Exists(sourceSidecar) && !File.Exists(destSidecar))
                 {
                     File.Copy(sourceSidecar, destSidecar);
                 }
@@ -821,9 +832,35 @@ public class CosyVoice3CrispAsr : ITtsEngine
         }
         catch (Exception ex)
         {
-            Se.LogError(ex, "CosyVoice3 (CrispASR) voice import: failed to copy .txt sidecar");
+            Se.LogError(ex, "CosyVoice3 (CrispASR) voice import: failed to write .txt sidecar");
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// Writes <paramref name="transcript"/> to <c>&lt;voice&gt;.txt</c> next to the supplied
+    /// voice WAV inside the voices folder. Used to retro-fit a transcription onto a voice
+    /// that was already imported (or seeded from the qwen3-tts.cpp pack) without going through
+    /// a full re-import. Returns false on IO failure.
+    /// </summary>
+    public static bool TryWriteRefTextSidecar(string voiceWavPath, string transcript)
+    {
+        if (string.IsNullOrEmpty(voiceWavPath) || string.IsNullOrWhiteSpace(transcript))
+        {
+            return false;
+        }
+
+        try
+        {
+            var sidecar = Path.ChangeExtension(voiceWavPath, ".txt");
+            File.WriteAllText(sidecar, transcript.Trim());
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, $"CosyVoice3 (CrispASR): failed to write ref-text sidecar for '{voiceWavPath}'");
+            return false;
+        }
     }
 }

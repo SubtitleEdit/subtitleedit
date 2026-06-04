@@ -719,7 +719,15 @@ public class F5TtsCrispAsr : ITtsEngine
         return candidate;
     }
 
-    public bool ImportVoice(string fileName)
+    public bool ImportVoice(string fileName) => ImportVoice(fileName, string.Empty);
+
+    /// <summary>
+    /// Imports <paramref name="fileName"/> as an F5-TTS reference voice. When
+    /// <paramref name="transcript"/> is non-empty it's written to the destination .txt sidecar
+    /// directly (improves cloning quality significantly). When empty, falls back to copying
+    /// any .txt sidecar that already lives next to the source WAV.
+    /// </summary>
+    public bool ImportVoice(string fileName, string transcript)
     {
         if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
         {
@@ -752,17 +760,19 @@ public class F5TtsCrispAsr : ITtsEngine
             return false;
         }
 
-        // Voice cloning quality depends on an accurate transcription. If the source had a .txt
-        // sidecar (same basename), copy it alongside the imported WAV under the de-duplicated
-        // destination name. Best-effort — the WAV still loads without a sidecar (cloning quality
-        // is just lower).
+        // Voice cloning quality depends on an accurate transcription. Caller-supplied
+        // transcript wins; otherwise fall back to a sibling .txt next to the source WAV.
         try
         {
-            var sourceSidecar = Path.ChangeExtension(fileName, ".txt");
-            if (File.Exists(sourceSidecar))
+            var destSidecar = Path.ChangeExtension(destinationFileName, ".txt");
+            if (!string.IsNullOrWhiteSpace(transcript))
             {
-                var destSidecar = Path.ChangeExtension(destinationFileName, ".txt");
-                if (!File.Exists(destSidecar))
+                File.WriteAllText(destSidecar, transcript.Trim());
+            }
+            else
+            {
+                var sourceSidecar = Path.ChangeExtension(fileName, ".txt");
+                if (File.Exists(sourceSidecar) && !File.Exists(destSidecar))
                 {
                     File.Copy(sourceSidecar, destSidecar);
                 }
@@ -770,9 +780,35 @@ public class F5TtsCrispAsr : ITtsEngine
         }
         catch (Exception ex)
         {
-            Se.LogError(ex, "F5-TTS (CrispASR) voice import: failed to copy .txt sidecar");
+            Se.LogError(ex, "F5-TTS (CrispASR) voice import: failed to write .txt sidecar");
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// Writes <paramref name="transcript"/> to <c>&lt;voice&gt;.txt</c> next to the supplied
+    /// voice WAV inside the voices folder. Used to retro-fit a transcription onto a voice
+    /// that was already imported (or seeded from the qwen3-tts.cpp pack) without going through
+    /// a full re-import.
+    /// </summary>
+    public static bool TryWriteRefTextSidecar(string voiceWavPath, string transcript)
+    {
+        if (string.IsNullOrEmpty(voiceWavPath) || string.IsNullOrWhiteSpace(transcript))
+        {
+            return false;
+        }
+
+        try
+        {
+            var sidecar = Path.ChangeExtension(voiceWavPath, ".txt");
+            File.WriteAllText(sidecar, transcript.Trim());
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, $"F5-TTS (CrispASR): failed to write ref-text sidecar for '{voiceWavPath}'");
+            return false;
+        }
     }
 }

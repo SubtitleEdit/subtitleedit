@@ -107,6 +107,58 @@ public partial class VoiceSettingsViewModel : ObservableObject
 
             ok = omniEngine.ImportVoice(fileName, transcript);
         }
+        else if (_engine is CosyVoice3CrispAsr cosyEngine)
+        {
+            // CosyVoice3's s3tok speech tokenizer REQUIRES a transcript at synth time — without
+            // it the server fails outright. Always prompt (matching OmniVoice's flow), with the
+            // sibling-text autofill so existing .txt sidecars don't force a re-type.
+            var transcript = TryReadSiblingTranscript(fileName) ?? string.Empty;
+            var audioFileName = fileName;
+            var result = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window!, vm =>
+            {
+                vm.Initialize(
+                    Se.Language.Video.TextToSpeech.VoiceCloneTranscriptTitle,
+                    transcript,
+                    500,
+                    150);
+                vm.ConfigureExtraButton(
+                    Se.Language.Video.TextToSpeech.UseSpeechToTextDotDotDot,
+                    () => RunSpeechToTextAsync(audioFileName));
+            });
+
+            if (!result.OkPressed || string.IsNullOrWhiteSpace(result.Text))
+            {
+                return;
+            }
+
+            ok = cosyEngine.ImportVoice(fileName, result.Text.Trim());
+        }
+        else if (_engine is F5TtsCrispAsr f5Engine)
+        {
+            // F5-TTS cloning quality depends sharply on an accurate transcription. Not strictly
+            // required by the server, but synthesis with no ref-text falls back to a generic
+            // voice, so prompt the same way as CosyVoice3.
+            var transcript = TryReadSiblingTranscript(fileName) ?? string.Empty;
+            var audioFileName = fileName;
+            var result = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window!, vm =>
+            {
+                vm.Initialize(
+                    Se.Language.Video.TextToSpeech.VoiceCloneTranscriptTitle,
+                    transcript,
+                    500,
+                    150);
+                vm.ConfigureExtraButton(
+                    Se.Language.Video.TextToSpeech.UseSpeechToTextDotDotDot,
+                    () => RunSpeechToTextAsync(audioFileName));
+            });
+
+            if (!result.OkPressed || string.IsNullOrWhiteSpace(result.Text))
+            {
+                return;
+            }
+
+            ok = f5Engine.ImportVoice(fileName, result.Text.Trim());
+        }
         else
         {
             ok = _engine.ImportVoice(fileName);
@@ -259,6 +311,8 @@ public partial class VoiceSettingsViewModel : ObservableObject
                                || engine.GetType() == typeof(Qwen3TtsCrispAsr)
                                || engine.GetType() == typeof(VibeVoiceCrispAsr)
                                || engine.GetType() == typeof(IndexTtsCrispAsr)
+                               || engine.GetType() == typeof(CosyVoice3CrispAsr)
+                               || engine.GetType() == typeof(F5TtsCrispAsr)
                                || engine.GetType() == typeof(ChatterboxTtsCpp)
                                || engine.GetType() == typeof(OmniVoiceTtsCpp);
     }

@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
@@ -479,6 +480,119 @@ public partial class TextToSpeechViewModel : ObservableObject
     partial void OnSelectedVoiceChanged(Voice? value)
     {
         UpdateOmniVoicePickerState();
+        // Fire-and-forget: when the user picks a CosyVoice3 or F5-TTS clone voice that has
+        // no .txt sidecar, immediately prompt for the transcription. Writes the sidecar and
+        // refreshes the voice list so the engine picks up the new RefText on the next synth.
+        // Without this the user only sees the failure at Generate time with a confusing
+        // "add a .txt sidecar" message, which is hard to act on inside the SE UI.
+        _ = EnsureClonedVoiceRefTextAsync(value);
+    }
+
+    private bool _isPromptingForRefText;
+
+    private async Task EnsureClonedVoiceRefTextAsync(Voice? voice)
+    {
+        if (_isPromptingForRefText || Window == null || voice == null)
+        {
+            return;
+        }
+
+        // CosyVoice3 requires ref-text (server fails outright). F5-TTS recommends it strongly
+        // (cloning falls back to a generic voice without it). Both prompt the same way.
+        string? wavPath = null;
+        bool isCosyVoice3 = false;
+        if (voice.EngineVoice is CosyVoice3Voice cosy && !string.IsNullOrEmpty(cosy.FilePath) && string.IsNullOrEmpty(cosy.RefText))
+        {
+            wavPath = cosy.FilePath;
+            isCosyVoice3 = true;
+        }
+        else if (voice.EngineVoice is F5TtsVoice f5 && !string.IsNullOrEmpty(f5.FilePath))
+        {
+            var existing = TryReadRefTextSibling(f5.FilePath);
+            if (string.IsNullOrEmpty(existing))
+            {
+                wavPath = f5.FilePath;
+            }
+        }
+
+        if (string.IsNullOrEmpty(wavPath))
+        {
+            return;
+        }
+
+        _isPromptingForRefText = true;
+        try
+        {
+            var audioFileName = wavPath;
+            var result = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window, vm =>
+            {
+                vm.Initialize(
+                    Se.Language.Video.TextToSpeech.VoiceCloneTranscriptTitle,
+                    string.Empty,
+                    500,
+                    150);
+                vm.ConfigureExtraButton(
+                    Se.Language.Video.TextToSpeech.UseSpeechToTextDotDotDot,
+                    () => RunSpeechToTextForRefTextAsync(audioFileName));
+            });
+
+            if (!result.OkPressed || string.IsNullOrWhiteSpace(result.Text))
+            {
+                return;
+            }
+
+            var written = isCosyVoice3
+                ? CosyVoice3CrispAsr.TryWriteRefTextSidecar(wavPath, result.Text)
+                : F5TtsCrispAsr.TryWriteRefTextSidecar(wavPath, result.Text);
+
+            if (!written || SelectedEngine == null)
+            {
+                return;
+            }
+
+            // Re-pull the voice list so the picked entry now carries RefText and the engine's
+            // (model, voice, refText) cache key on the running server picks up the change.
+            await RefreshVoices(SelectedEngine);
+        }
+        finally
+        {
+            _isPromptingForRefText = false;
+        }
+    }
+
+    private static string? TryReadRefTextSibling(string wavPath)
+    {
+        try
+        {
+            var sidecar = Path.ChangeExtension(wavPath, ".txt");
+            return File.Exists(sidecar) ? File.ReadAllText(sidecar).Trim() : null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private async Task<string?> RunSpeechToTextForRefTextAsync(string audioFileName)
+    {
+        if (Window == null)
+        {
+            return null;
+        }
+
+        var sttResult = await _windowService.ShowDialogAsync<SpeechToTextWindow, SpeechToTextViewModel>(Window, vm =>
+        {
+            vm.Initialize(audioFileName, -1);
+        });
+
+        if (!sttResult.OkPressed || sttResult.TranscribedSubtitle == null || sttResult.TranscribedSubtitle.Paragraphs.Count == 0)
+        {
+            return null;
+        }
+
+        return string.Join(' ', sttResult.TranscribedSubtitle.Paragraphs
+            .Select(p => p.Text?.Replace('\n', ' ').Replace('\r', ' ').Trim())
+            .Where(t => !string.IsNullOrWhiteSpace(t)));
     }
 
     private static ObservableCollection<string> BuildKeywordOptions(string[] keywords)
