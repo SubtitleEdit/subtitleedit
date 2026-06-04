@@ -1695,8 +1695,8 @@ public partial class TextToSpeechViewModel : ObservableObject
             {
                 var answer = await MessageBox.Show(
                     Window,
-                    "Download CosyVoice3 (CrispASR) model?",
-                    $"{Environment.NewLine}\"CosyVoice3 (CrispASR)\" ({cosyModelKey}) requires a model.{Environment.NewLine}{Environment.NewLine}Companion files (flow/hift/s3tok/campplus/voices, ~360 MB extra) are fetched automatically on first synth.{Environment.NewLine}{Environment.NewLine}Download model?",
+                    "Download CosyVoice3 (CrispASR) models?",
+                    $"{Environment.NewLine}\"CosyVoice3 (CrispASR)\" ({cosyModelKey}) requires LLM + flow + hift + s3tok + campplus + voice-bank GGUFs (all sized into the total above).{Environment.NewLine}{Environment.NewLine}Download models?",
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 

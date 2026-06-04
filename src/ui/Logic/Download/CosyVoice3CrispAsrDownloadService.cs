@@ -44,6 +44,12 @@ public class CosyVoice3CrispAsrDownloadService : ICosyVoice3CrispAsrDownloadServ
 
     public async Task DownloadModels(string modelsFolder, string modelKey, IProgress<float>? progress, Action<string>? titleProgress, CancellationToken cancellationToken)
     {
+        // modelsFolder is intentionally ignored — destinations are derived from
+        // CosyVoice3CrispAsr.GetSetModelsFolder() so cache-seed adoption and SE-managed downloads
+        // converge on the same canonical location. The parameter stays on the interface for
+        // symmetry with the other CrispASR TTS download services.
+        _ = modelsFolder;
+
         var required = CosyVoice3CrispAsr.GetRequiredFileNames(modelKey);
 
         // Seed any matching files already in crispasr's --auto-download cache before deciding

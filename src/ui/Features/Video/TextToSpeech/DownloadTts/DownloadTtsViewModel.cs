@@ -806,11 +806,11 @@ public partial class DownloadTtsViewModel : ObservableObject
                 Close();
             }
 
-            // CosyVoice3 supports both baked presets (in cosyvoice3-voices.gguf, fetched by
-            // crispasr --auto-download) AND zero-shot cloning from user-supplied WAVs. After
-            // the LLM downloads, chain the qwen3-tts.cpp voice pack ZIP so the user has the
-            // shared reference voices available without a second manual download step. The
-            // baked presets are always usable regardless of this step.
+            // CosyVoice3 supports both baked presets (8 voices in cosyvoice3-voices.gguf, which
+            // CosyVoice3CrispAsrDownloadService stages with the rest of the bundle) AND zero-shot
+            // cloning from user-supplied 16 kHz WAVs. After the model bundle finishes, chain the
+            // qwen3-tts.cpp voice pack ZIP so the user has the shared reference WAVs available
+            // without a second manual download step. Baked presets work regardless of this step.
             if (_downloadTaskCosyVoice3CrispAsrModels is { IsCompleted: true })
             {
                 _timer.Stop();
@@ -1694,6 +1694,8 @@ public partial class DownloadTtsViewModel : ObservableObject
         DisposeQuietly(_downloadStreamQwen3TtsCrispAsrVoices);
         DisposeQuietly(_downloadStreamVibeVoiceCrispAsrVoices);
         DisposeQuietly(_downloadStreamIndexTtsCrispAsrVoices);
+        DisposeQuietly(_downloadStreamCosyVoice3CrispAsrVoices);
+        DisposeQuietly(_downloadStreamF5TtsCrispAsrVoices);
         DisposeQuietly(_downloadStreamOmniVoice);
         DisposeQuietly(_downloadStreamOmniVoices);
 

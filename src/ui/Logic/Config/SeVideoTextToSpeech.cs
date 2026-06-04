@@ -113,7 +113,7 @@ public class SeVideoTextToSpeech
         VibeVoiceCrispAsrSpeed = 1.1;
         IndexTtsCrispAsrModel = "Q8_0 (~870 MB)";
         IndexTtsCrispAsrSpeed = 1.0;
-        CosyVoice3CrispAsrModel = "Q4_K (~745 MB total)";
+        CosyVoice3CrispAsrModel = "Q4_K (~1.6 GB total)";
         CosyVoice3CrispAsrSpeed = 1.0;
         F5TtsCrispAsrModel = "F16 (~953 MB)";
         F5TtsCrispAsrSpeed = 1.0;

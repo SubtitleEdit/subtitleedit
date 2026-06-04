@@ -36,6 +36,12 @@ public class F5TtsCrispAsrDownloadService : IF5TtsCrispAsrDownloadService
 
     public async Task DownloadModels(string modelsFolder, string modelKey, IProgress<float>? progress, Action<string>? titleProgress, CancellationToken cancellationToken)
     {
+        // modelsFolder is intentionally ignored — the destination path is derived from
+        // F5TtsCrispAsr.GetTalkerPath so SE-managed callers and crispasr's own --auto-download
+        // cache adoption end up at the same canonical location. The parameter stays on the
+        // interface for symmetry with the other CrispASR TTS download services.
+        _ = modelsFolder;
+
         var talkerFileName = F5TtsCrispAsr.GetTalkerFileName(modelKey);
         var talkerPath = F5TtsCrispAsr.GetTalkerPath(modelKey);
 

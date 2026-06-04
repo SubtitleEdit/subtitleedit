@@ -25,9 +25,11 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// presets (8 entries in <c>cosyvoice3-voices.gguf</c>) AND zero-shot cloning from a user-supplied 16 kHz
 /// mono reference WAV (the s3tok speech tokenizer + CAMPPlus speaker encoder do the cloning).
 ///
-/// The backend needs ALL of LLM + flow + hift + s3tok + campplus + voices co-located. crispasr's
-/// <c>--auto-download</c> only fetches companions when <c>-m auto</c> is also passed, so we stage every
-/// file ourselves in <c>CrispAsr/models/</c> and crispasr finds them as siblings of the LLM.
+/// The backend needs ALL of LLM + flow + hift + s3tok + campplus + voices co-located as siblings of
+/// the LLM. <see cref="Nikse.SubtitleEdit.Logic.Download.CosyVoice3CrispAsrDownloadService"/> stages
+/// every required GGUF into <c>CrispAsr/models/</c> with size + SHA-256 verification before first
+/// synth — crispasr's own <c>--auto-download</c> only fires when <c>-m auto</c> is passed, which is
+/// the slower fallback we keep for the case where any required file is missing at startup.
 ///
 /// Sibling discovery in CrispASR 0.6.12 looks for the F16 companion filenames specifically
 /// (<c>cosyvoice3-flow-f16.gguf</c>, <c>cosyvoice3-s3tok-f16.gguf</c>) — passing the Q8_0 / Q4_K

@@ -95,8 +95,10 @@ public static class TtsVoiceInstaller
 
     /// <summary>
     /// Ensures the CrispASR runtime that CosyVoice3 (CrispASR) runs on is installed.
-    /// The cosyvoice3-tts backend ships in CrispASR v0.6.12+; companion GGUFs (flow / hift /
-    /// s3tok / campplus / voices) are auto-downloaded by crispasr on first run.
+    /// The cosyvoice3-tts backend ships in CrispASR v0.6.12+; every required GGUF (LLM + flow
+    /// + hift + s3tok + campplus + voice-bank) is staged into SE's CrispAsr/models folder by
+    /// <see cref="Nikse.SubtitleEdit.Logic.Download.CosyVoice3CrispAsrDownloadService"/> with
+    /// hash verification before first synth.
     /// </summary>
     public static Task<bool> EnsureCrispAsrForCosyVoice3(Window? window, IWindowService windowService, bool forceRedownload)
         => EnsureCrispAsrAsync(window, windowService, forceRedownload,
