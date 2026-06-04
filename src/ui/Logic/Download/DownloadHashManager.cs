@@ -296,7 +296,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.Linux] = new[]
             {
-                "1fdca9e9f239519be3f339b899b5bf390d6d25428fec55470f8932f7df10c92e", // v0.6.11 (current download URL)
+                "f196afbf8f38618d8b98001d43c43bbfe3c4c7f3a6c2bd5a3dac64e073c861f0", // v0.6.12 (current download URL)
+                "1fdca9e9f239519be3f339b899b5bf390d6d25428fec55470f8932f7df10c92e", // v0.6.11
                 "b2e3a20866ef282dbe08cf9c98491efd3396bffd6b688d0c13626593b83d3b0f", // v0.6.10
                 "7d2642301b7185f6e18a219da8b9e363ce0972f9331f51eb91a6af530c16d484", // v0.6.9
                 "da3ea0675168a3c7396858ffe9c483a401e581ae3bb080f8825a5e0cbc8b5589", // v0.6.8
@@ -313,7 +314,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.LinuxCuda] = new[]
             {
-                "b1b772fd5d17c6ab288830a7afc07cffc448951fd9b673f73f77686c563302b3", // v0.6.11 (current download URL)
+                "ed9feb7a5f57083cccb9abb06c7cbecba84501c992e440a989ecb20858f5fe24", // v0.6.12 (current download URL)
+                "b1b772fd5d17c6ab288830a7afc07cffc448951fd9b673f73f77686c563302b3", // v0.6.11
                 "76223ab25faaf03be98afd9c934932e29bb527f32642123395435d47e3089228", // v0.6.10
                 "870c37ef44afc8d63f216c192719c9cc5291493eeac43d2709d64fe5c826cecb", // v0.6.9
                 "9a493e0f19421e3b73307a48113dd18c326756dfe751bd3a9bc4bc8d049137d1", // v0.6.8
@@ -321,7 +323,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.LinuxArm] = new[]
             {
-                "8a8edb05d25ba793bcba90c528332ae17ef9324d689aa3ffd7c9dda48262bdbb", // v0.6.11 (current download URL)
+                "bb8f462fc6082a90c209e13405a38f9c08a7c9c216aaa51688a4b05b16e109da", // v0.6.12 (current download URL)
+                "8a8edb05d25ba793bcba90c528332ae17ef9324d689aa3ffd7c9dda48262bdbb", // v0.6.11
                 "f8b6e6f080dc5bd227b39417a48d525de3962c85519fa40debc1aec4e0251bfa", // v0.6.10
                 "b3dacccb8d16afb88a7c426edbeefaa6c8bee0f6bc5a5e6493fb4616c2ec32d1", // v0.6.9 (first SE-tracked Linux ARM64 build)
             },
@@ -376,7 +379,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.LinuxExecutable] = new[]
             {
-                "1ab580b274f2614c52462d2b5883ac62be11871db9926436d9915c1adbc99ed9", // v0.6.11 (current download URL)
+                "c266cdaaa19acae0efdd7db3c1cefec3013d3bc3d376080f2923ba28517605b2", // v0.6.12 (current download URL)
+                "1ab580b274f2614c52462d2b5883ac62be11871db9926436d9915c1adbc99ed9", // v0.6.11
                 "334e25029a409a340ec0727c88328fc53ffaa45af75fc42e59a47ace75232654", // v0.6.10
                 "ee374d16df3fedf900b694f28f8b9500b415798444635ea8b967796dcfc2a1ee", // v0.6.9
                 "6d2ae10f068cd152f2f0d49cb4de0fca39d7085a9b71e0ef2f514ded06e47627", // v0.6.8
@@ -411,7 +415,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.LinuxCudaExecutable] = new[]
             {
-                "f5e36703104feead8bc51953c29dae372e27848e135fff5d973c8c456a8cd31b", // v0.6.11 (current download URL)
+                "59c3b50ae6ae5fa6f2cac4f7c7581c464a716d877a76f413cb913205e02ef74f", // v0.6.12 (current download URL)
+                "f5e36703104feead8bc51953c29dae372e27848e135fff5d973c8c456a8cd31b", // v0.6.11
                 "308c45c232f9d6e7f96840f43ceb786c5ff159b7e9de22af4485444d54a65e4a", // v0.6.10
                 "6ae31308ff2856a42bc13de16470e95c5cc03a26ee117e3386005364ee384c75", // v0.6.9
                 "363864a0f41e7f61a930c8f070e1b1357dc9b86063f747b719651890b446d0a7", // v0.6.8
@@ -419,7 +424,8 @@ public static class DownloadHashManager
             },
             [CrispAsr.LinuxArmExecutable] = new[]
             {
-                "051c3f6fa9ccabc8cd8d914d6a9504c6e559e7d4e6634bc93fc9bc1a51293538", // v0.6.11 (current download URL)
+                "b20341886758536748f1cda560b74245d1a262b6fe178a7b975276f8bcb65705", // v0.6.12 (current download URL)
+                "051c3f6fa9ccabc8cd8d914d6a9504c6e559e7d4e6634bc93fc9bc1a51293538", // v0.6.11
                 "b6eefd3d111d138000c3e04e83976358e80fdb72e9555bf20a7267d17bf21fe3", // v0.6.10
                 "865b215977eb67035af8cd51bf17a657de5a69c8d076fa287652d27e69bac8c0", // v0.6.9 (first SE-tracked Linux ARM64 build)
             },
