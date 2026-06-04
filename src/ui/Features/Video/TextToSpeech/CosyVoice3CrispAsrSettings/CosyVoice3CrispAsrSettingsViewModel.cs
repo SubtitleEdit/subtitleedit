@@ -31,11 +31,11 @@ public partial class CosyVoice3CrispAsrSettingsViewModel : ObservableObject
     [ObservableProperty] private IBrush _engineBrush = Grey();
     [ObservableProperty] private string _engineDownloadButtonText = string.Empty;
 
-    [ObservableProperty] private string _llmQ4KLabel = string.Empty;
-    [ObservableProperty] private IBrush _llmQ4KBrush = Grey();
+    [ObservableProperty] private string _q4KBundleLabel = string.Empty;
+    [ObservableProperty] private IBrush _q4KBundleBrush = Grey();
 
-    [ObservableProperty] private string _llmF16Label = string.Empty;
-    [ObservableProperty] private IBrush _llmF16Brush = Grey();
+    [ObservableProperty] private string _f16BundleLabel = string.Empty;
+    [ObservableProperty] private IBrush _f16BundleBrush = Grey();
 
     [ObservableProperty] private string _presetsLabel = string.Empty;
     [ObservableProperty] private string _voicesLabel = string.Empty;
@@ -123,17 +123,19 @@ public partial class CosyVoice3CrispAsrSettingsViewModel : ObservableObject
             });
         }
 
+        // CosyVoice3 needs 6 files per quant — the status row reports the bundle as a whole
+        // (green only when every file is present + correct-sized).
         ApplyModelStatus(
             CosyVoice3CrispAsr.AreModelsInstalled(CosyVoice3CrispAsr.ModelKeyQ4K),
             IsEngineInstalled,
-            label => LlmQ4KLabel = label,
-            brush => LlmQ4KBrush = brush);
+            label => Q4KBundleLabel = label,
+            brush => Q4KBundleBrush = brush);
 
         ApplyModelStatus(
             CosyVoice3CrispAsr.AreModelsInstalled(CosyVoice3CrispAsr.ModelKeyF16),
             IsEngineInstalled,
-            label => LlmF16Label = label,
-            brush => LlmF16Brush = brush);
+            label => F16BundleLabel = label,
+            brush => F16BundleBrush = brush);
 
         try
         {

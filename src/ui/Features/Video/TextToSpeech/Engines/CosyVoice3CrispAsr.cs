@@ -23,8 +23,13 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// Alibaba CosyVoice3 0.5B (Dec 2025 release) run through the CrispASR runtime. LLM + flow-matching DiT
 /// + HiFT vocoder architecture with 9 languages and 18 Mandarin dialects. Supports BOTH baked-in voice
 /// presets (8 entries in <c>cosyvoice3-voices.gguf</c>) AND zero-shot cloning from a user-supplied 16 kHz
-/// mono reference WAV. The s3tok speech tokenizer and CAMPPlus speaker encoder companion files do the
-/// cloning; crispasr's --auto-download pulls them on first synth alongside the voice bank.
+/// mono reference WAV (the s3tok speech tokenizer + CAMPPlus speaker encoder do the cloning).
+///
+/// The backend needs ALL of LLM + flow + hift + s3tok + campplus + voices co-located. crispasr's
+/// <c>--auto-download</c> only fetches companions when <c>-m auto</c> is also passed, so we stage every
+/// file ourselves in <c>CrispAsr/models/</c> and crispasr finds them as siblings of the LLM. The
+/// per-quant combos pair Q4_K LLM with Q8_0 flow / Q4_K s3tok (HF-recommended "minimum viable" combo,
+/// ~921 MB) or F16 LLM with F16 flow / F16 s3tok (~2.5 GB).
 ///
 /// When the user picks a baked preset, <c>--voice &lt;preset_name&gt;</c> is passed at server startup.
 /// When the user picks an imported WAV, <c>--voice /path/to/ref.wav --ref-text "transcription"</c>
@@ -52,17 +57,49 @@ public class CosyVoice3CrispAsr : ITtsEngine
     public bool HasModel => true;
     public bool HasKeyFile => false;
 
-    // Two LLM quants — Q4_K is the lightweight default (~384 MB), F16 the reference (~1.29 GB).
-    // The flow/hift/s3tok/campplus/voices companion files (~360-665 MB) are fetched by crispasr
-    // --auto-download on first run; we don't stage them ourselves yet.
-    public const string ModelKeyQ4K = "Q4_K (~745 MB total)";
+    // Two LLM quants — Q4_K is the lightweight default (~921 MB total), F16 the reference (~2.5 GB).
+    // The label total covers every required companion (flow / hift / s3tok / campplus / voices).
+    public const string ModelKeyQ4K = "Q4_K (~921 MB total)";
     public const string ModelKeyF16 = "F16 (~2.5 GB total)";
     public const string DefaultModelKey = ModelKeyQ4K;
 
     public const string LlmQ4KFileName = "cosyvoice3-llm-q4_k.gguf";
     public const string LlmF16FileName = "cosyvoice3-llm-f16.gguf";
+    public const string FlowQ8_0FileName = "cosyvoice3-flow-q8_0.gguf";
+    public const string FlowF16FileName = "cosyvoice3-flow-f16.gguf";
+    public const string HiftF16FileName = "cosyvoice3-hift-f16.gguf";
+    public const string S3TokQ4KFileName = "cosyvoice3-s3tok-q4_k.gguf";
+    public const string S3TokF16FileName = "cosyvoice3-s3tok-f16.gguf";
+    public const string CampPlusF16FileName = "cosyvoice3-campplus-f16.gguf";
+    public const string VoicesGgufFileName = "cosyvoice3-voices.gguf";
 
     public const string BackendName = "cosyvoice3-tts";
+
+    /// <summary>
+    /// All filenames that must be present in <see cref="GetSetModelsFolder"/> for the chosen
+    /// quant. Listed in this order so the download dialog progresses through them deterministically.
+    /// </summary>
+    public static string[] GetRequiredFileNames(string? modelKey) => ResolveModelKey(modelKey) switch
+    {
+        ModelKeyF16 => new[]
+        {
+            LlmF16FileName,
+            FlowF16FileName,
+            HiftF16FileName,
+            S3TokF16FileName,
+            CampPlusF16FileName,
+            VoicesGgufFileName,
+        },
+        _ => new[]
+        {
+            LlmQ4KFileName,
+            FlowQ8_0FileName,
+            HiftF16FileName,
+            S3TokQ4KFileName,
+            CampPlusF16FileName,
+            VoicesGgufFileName,
+        },
+    };
 
     // Preset voice names baked into cosyvoice3-voices.gguf. Reading these dynamically would require
     // either a running server (/v1/voices) or parsing the voices GGUF, neither of which is worth the
@@ -86,6 +123,13 @@ public class CosyVoice3CrispAsr : ITtsEngine
     {
         [LlmQ4KFileName] = 383891200L,
         [LlmF16FileName] = 1289653952L,
+        [FlowQ8_0FileName] = 360751936L,
+        [FlowF16FileName] = 665140992L,
+        [HiftF16FileName] = 41601888L,
+        [S3TokQ4KFileName] = 145258240L,
+        [S3TokF16FileName] = 484406944L,
+        [CampPlusF16FileName] = 14153600L,
+        [VoicesGgufFileName] = 665472L,
     };
 
     public static string ResolveModelKey(string? modelKey)
@@ -322,8 +366,18 @@ public class CosyVoice3CrispAsr : ITtsEngine
         }
     }
 
-    public static bool AreModelsInstalled(string? modelKey = null) =>
-        IsValidLocalModelFile(GetLlmPath(modelKey), GetLlmFileName(modelKey));
+    public static bool AreModelsInstalled(string? modelKey = null)
+    {
+        var modelsFolder = GetSetModelsFolder();
+        foreach (var name in GetRequiredFileNames(modelKey))
+        {
+            if (!IsValidLocalModelFile(Path.Combine(modelsFolder, name), name))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
     public Task<Voice[]> GetVoices(string language)
     {
@@ -560,12 +614,15 @@ public class CosyVoice3CrispAsr : ITtsEngine
                     "CrispASR executable not found. Install CrispASR via Video → Audio to text first.", exe);
             }
 
-            // LLM is the only file we stage locally. Flow / HiFT / S3 tokenizer / CAMPPlus /
-            // voices.gguf are fetched by crispasr --auto-download into ~/.cache/crispasr/ on
-            // first run. Always pass --auto-download so a missing companion never bricks startup.
+            // crispasr's cosyvoice3-tts backend needs LLM + flow + hift + s3tok + campplus +
+            // voices co-located as siblings of the LLM. We stage every file via SE's download
+            // service into CrispAsr/models/, so when all are present we don't need
+            // --auto-download. If any required file is missing, fall back to -m auto +
+            // --auto-download which makes crispasr fetch the whole bundle into its own cache
+            // (slower, no SE progress bar — happens silently behind the synth call).
             var llmFileName = GetLlmFileName(modelKey);
             var llmPath = GetLlmPath(modelKey);
-            var hasLocalLlm = IsValidLocalModelFile(llmPath, llmFileName);
+            var allLocal = AreModelsInstalled(modelKey);
 
             var port = FindFreeLoopbackPort();
             var psi = new ProcessStartInfo
@@ -581,11 +638,11 @@ public class CosyVoice3CrispAsr : ITtsEngine
             psi.ArgumentList.Add("--backend");
             psi.ArgumentList.Add(BackendName);
             psi.ArgumentList.Add("-m");
-            psi.ArgumentList.Add(hasLocalLlm ? llmPath : "auto");
-            // CosyVoice3 needs ~5 companion files alongside the LLM. We don't stage them, so
-            // --auto-download is always required to pull whichever ones aren't already in the
-            // crispasr cache. Idempotent when everything is present.
-            psi.ArgumentList.Add("--auto-download");
+            psi.ArgumentList.Add(allLocal ? llmPath : "auto");
+            if (!allLocal)
+            {
+                psi.ArgumentList.Add("--auto-download");
+            }
             psi.ArgumentList.Add("--host");
             psi.ArgumentList.Add("127.0.0.1");
             psi.ArgumentList.Add("--port");
@@ -636,8 +693,9 @@ public class CosyVoice3CrispAsr : ITtsEngine
             _serverRefText = refText;
             HookProcessExitOnce();
 
-            // First-run auto-download (~745 MB minimum, ~2.5 GB for F16) needs a generous timeout.
-            var deadline = DateTime.UtcNow.AddMinutes(hasLocalLlm ? 10 : 30);
+            // Local startup is fast; first-run --auto-download (~921 MB minimum, ~2.5 GB for F16)
+            // needs a generous timeout for the silent companion fetch behind -m auto.
+            var deadline = DateTime.UtcNow.AddMinutes(allLocal ? 5 : 30);
             while (DateTime.UtcNow < deadline)
             {
                 ct.ThrowIfCancellationRequested();
@@ -667,7 +725,7 @@ public class CosyVoice3CrispAsr : ITtsEngine
             var timeoutLaunchCommand = _serverLaunchCommand;
             StopServerInternal();
             throw new TimeoutException(
-                $"crispasr (cosyvoice3-tts) did not report healthy within {(hasLocalLlm ? 10 : 30)} minutes. Last output: {lastOutput}"
+                $"crispasr (cosyvoice3-tts) did not report healthy within {(allLocal ? 5 : 30)} minutes. Last output: {lastOutput}"
                 + LaunchCmdSuffix(timeoutLaunchCommand));
         }
         finally

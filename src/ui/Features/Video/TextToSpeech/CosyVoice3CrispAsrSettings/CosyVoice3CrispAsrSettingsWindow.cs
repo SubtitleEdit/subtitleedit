@@ -119,11 +119,11 @@ public class CosyVoice3CrispAsrSettingsWindow : Window
         enginePanel.Children.Add(engineButton);
         grid.Add(enginePanel, 0, 1);
 
-        grid.Add(MakeLabel("LLM " + CosyVoice3CrispAsr.ModelKeyQ4K), 1, 0);
-        grid.Add(MakeStatusPanel(nameof(vm.LlmQ4KBrush), nameof(vm.LlmQ4KLabel)), 1, 1);
+        grid.Add(MakeLabel(CosyVoice3CrispAsr.ModelKeyQ4K), 1, 0);
+        grid.Add(MakeStatusPanel(nameof(vm.Q4KBundleBrush), nameof(vm.Q4KBundleLabel)), 1, 1);
 
-        grid.Add(MakeLabel("LLM " + CosyVoice3CrispAsr.ModelKeyF16), 2, 0);
-        grid.Add(MakeStatusPanel(nameof(vm.LlmF16Brush), nameof(vm.LlmF16Label)), 2, 1);
+        grid.Add(MakeLabel(CosyVoice3CrispAsr.ModelKeyF16), 2, 0);
+        grid.Add(MakeStatusPanel(nameof(vm.F16BundleBrush), nameof(vm.F16BundleLabel)), 2, 1);
 
         grid.Add(MakeLabel("Presets"), 3, 0);
         var presetsText = new TextBlock

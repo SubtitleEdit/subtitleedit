@@ -14,22 +14,29 @@ public interface ICosyVoice3CrispAsrDownloadService
 }
 
 /// <summary>
-/// Downloads the CosyVoice3 LLM GGUF (Q4_K ~384 MB or F16 ~1.29 GB) into SE's CrispASR/models
-/// folder. Companion files (flow / hift / s3tok / campplus / voices, ~360-665 MB combined) are
-/// left to crispasr's --auto-download — see <see cref="CosyVoice3CrispAsr"/> for why we don't
-/// stage them ourselves. Same .part + size-check pattern as VibeVoice/IndexTTS download services
-/// so an interrupted download can't leave a truncated file at the real path.
+/// Downloads every GGUF the cosyvoice3-tts backend needs (LLM + flow + hift + s3tok + campplus
+/// + voices) into SE's CrispASR/models folder. crispasr looks for the companions as siblings of
+/// the LLM at server startup; staging them ourselves means the user gets a single SE progress
+/// dialog instead of crispasr's silent --auto-download. Same .part + size-check + optional
+/// SHA-256 verify pattern as VibeVoice/IndexTTS.
 /// </summary>
 public class CosyVoice3CrispAsrDownloadService : ICosyVoice3CrispAsrDownloadService
 {
+    private const string RepoBase = "https://huggingface.co/cstr/cosyvoice3-0.5b-2512-GGUF/resolve/main/";
+
     private readonly HttpClient _httpClient;
 
     private static readonly Dictionary<string, string> ModelUrls = new(StringComparer.OrdinalIgnoreCase)
     {
-        [CosyVoice3CrispAsr.LlmQ4KFileName] =
-            "https://huggingface.co/cstr/cosyvoice3-0.5b-2512-GGUF/resolve/main/cosyvoice3-llm-q4_k.gguf",
-        [CosyVoice3CrispAsr.LlmF16FileName] =
-            "https://huggingface.co/cstr/cosyvoice3-0.5b-2512-GGUF/resolve/main/cosyvoice3-llm-f16.gguf",
+        [CosyVoice3CrispAsr.LlmQ4KFileName] = RepoBase + CosyVoice3CrispAsr.LlmQ4KFileName,
+        [CosyVoice3CrispAsr.LlmF16FileName] = RepoBase + CosyVoice3CrispAsr.LlmF16FileName,
+        [CosyVoice3CrispAsr.FlowQ8_0FileName] = RepoBase + CosyVoice3CrispAsr.FlowQ8_0FileName,
+        [CosyVoice3CrispAsr.FlowF16FileName] = RepoBase + CosyVoice3CrispAsr.FlowF16FileName,
+        [CosyVoice3CrispAsr.HiftF16FileName] = RepoBase + CosyVoice3CrispAsr.HiftF16FileName,
+        [CosyVoice3CrispAsr.S3TokQ4KFileName] = RepoBase + CosyVoice3CrispAsr.S3TokQ4KFileName,
+        [CosyVoice3CrispAsr.S3TokF16FileName] = RepoBase + CosyVoice3CrispAsr.S3TokF16FileName,
+        [CosyVoice3CrispAsr.CampPlusF16FileName] = RepoBase + CosyVoice3CrispAsr.CampPlusF16FileName,
+        [CosyVoice3CrispAsr.VoicesGgufFileName] = RepoBase + CosyVoice3CrispAsr.VoicesGgufFileName,
     };
 
     public CosyVoice3CrispAsrDownloadService(HttpClient httpClient)
@@ -39,22 +46,41 @@ public class CosyVoice3CrispAsrDownloadService : ICosyVoice3CrispAsrDownloadServ
 
     public async Task DownloadModels(string modelsFolder, string modelKey, IProgress<float>? progress, Action<string>? titleProgress, CancellationToken cancellationToken)
     {
-        var llmFileName = CosyVoice3CrispAsr.GetLlmFileName(modelKey);
-        var llmPath = CosyVoice3CrispAsr.GetLlmPath(modelKey);
+        var required = CosyVoice3CrispAsr.GetRequiredFileNames(modelKey);
 
+        // Seed any matching files already in crispasr's --auto-download cache before deciding
+        // what to fetch — saves a re-download for users who tried CosyVoice3 via raw crispasr
+        // before the SE integration.
         await Task.Run(() =>
         {
-            CosyVoice3CrispAsr.TrySeedModelFromCrispAsrCache(llmFileName, llmPath);
-            EnsureRemovedIfInvalid(llmPath, llmFileName);
+            foreach (var fileName in required)
+            {
+                var dest = Path.Combine(modelsFolder, fileName);
+                CosyVoice3CrispAsr.TrySeedModelFromCrispAsrCache(fileName, dest);
+                EnsureRemovedIfInvalid(dest, fileName);
+            }
         }, cancellationToken);
 
-        if (CosyVoice3CrispAsr.IsValidLocalModelFile(llmPath, llmFileName))
+        // Count missing files for the "(n/total)" title prefix. Doing this after the seed pass
+        // so the user doesn't see "1/6" right before the seeder turns 5 of them into hits.
+        var missing = new List<string>();
+        foreach (var fileName in required)
         {
-            return;
+            var dest = Path.Combine(modelsFolder, fileName);
+            if (!CosyVoice3CrispAsr.IsValidLocalModelFile(dest, fileName))
+            {
+                missing.Add(fileName);
+            }
         }
 
-        titleProgress?.Invoke($"Downloading CosyVoice3 (CrispASR) model: {llmFileName}");
-        await DownloadAndVerify(llmPath, llmFileName, progress, cancellationToken);
+        var step = 0;
+        foreach (var fileName in missing)
+        {
+            step++;
+            titleProgress?.Invoke($"Downloading CosyVoice3 (CrispASR) models ({step}/{missing.Count}): {fileName}");
+            var dest = Path.Combine(modelsFolder, fileName);
+            await DownloadAndVerify(dest, fileName, progress, cancellationToken);
+        }
     }
 
     private async Task DownloadAndVerify(string finalPath, string fileName, IProgress<float>? progress, CancellationToken cancellationToken)
@@ -76,13 +102,23 @@ public class CosyVoice3CrispAsrDownloadService : ICosyVoice3CrispAsrDownloadServ
     private static string? GetHashKey(string fileName)
     {
         if (string.Equals(fileName, CosyVoice3CrispAsr.LlmQ4KFileName, StringComparison.OrdinalIgnoreCase))
-        {
             return DownloadHashManager.CosyVoice3CrispAsr.LlmQ4K;
-        }
         if (string.Equals(fileName, CosyVoice3CrispAsr.LlmF16FileName, StringComparison.OrdinalIgnoreCase))
-        {
             return DownloadHashManager.CosyVoice3CrispAsr.LlmF16;
-        }
+        if (string.Equals(fileName, CosyVoice3CrispAsr.FlowQ8_0FileName, StringComparison.OrdinalIgnoreCase))
+            return DownloadHashManager.CosyVoice3CrispAsr.FlowQ8_0;
+        if (string.Equals(fileName, CosyVoice3CrispAsr.FlowF16FileName, StringComparison.OrdinalIgnoreCase))
+            return DownloadHashManager.CosyVoice3CrispAsr.FlowF16;
+        if (string.Equals(fileName, CosyVoice3CrispAsr.HiftF16FileName, StringComparison.OrdinalIgnoreCase))
+            return DownloadHashManager.CosyVoice3CrispAsr.HiftF16;
+        if (string.Equals(fileName, CosyVoice3CrispAsr.S3TokQ4KFileName, StringComparison.OrdinalIgnoreCase))
+            return DownloadHashManager.CosyVoice3CrispAsr.S3TokQ4K;
+        if (string.Equals(fileName, CosyVoice3CrispAsr.S3TokF16FileName, StringComparison.OrdinalIgnoreCase))
+            return DownloadHashManager.CosyVoice3CrispAsr.S3TokF16;
+        if (string.Equals(fileName, CosyVoice3CrispAsr.CampPlusF16FileName, StringComparison.OrdinalIgnoreCase))
+            return DownloadHashManager.CosyVoice3CrispAsr.CampPlusF16;
+        if (string.Equals(fileName, CosyVoice3CrispAsr.VoicesGgufFileName, StringComparison.OrdinalIgnoreCase))
+            return DownloadHashManager.CosyVoice3CrispAsr.VoicesGguf;
         return null;
     }
 
