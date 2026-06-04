@@ -434,6 +434,10 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             "white", "lime", "cyan", "red", "yellow", "magenta", "blue", "black", "green",
             "bg_white", "bg_lime", "bg_cyan", "bg_red", "bg_yellow", "bg_magenta", "bg_blue", "bg_black", "bg_green",
+
+            // not so standard
+            "textWhite", "textLime", "textCyan", "textRed", "textYellow", "textMagenta", "textBlue", "textBlack", "textGreen",
+            "text_white", "text_lime", "text_cyan", "text_red", "text_yellow", "text_magenta", "text_blue", "text_black", "text_green",
         };
 
         public static string RemoveDefaultColorClasses(string input)
