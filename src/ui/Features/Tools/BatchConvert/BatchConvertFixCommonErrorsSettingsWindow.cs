@@ -8,7 +8,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.Media;
-using System.Collections;
 using Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -114,22 +113,8 @@ public class BatchConvertFixCommonErrorsSettingsWindow : Window
                 },
             },
         };
-        rulesGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key == Key.Space && rulesGrid.SelectedItem is FixRuleDisplayItem selectedItem)
-            {
-                selectedItem.IsSelected = !selectedItem.IsSelected;
-                e.Handled = true;
-            }
-            else if (e.Key is Key.Home or Key.End && rulesGrid.ItemsSource is IList items && items.Count > 0)
-            {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                rulesGrid.SelectedItem = target;
-                rulesGrid.ScrollIntoView(target, null);
-                e.Handled = true;
-            }
-        }, RoutingStrategies.Tunnel);
-        rulesGrid.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => rulesGrid.Focus());
+        new DataGridCheckboxMultiSelect<FixRuleDisplayItem>(rulesGrid,
+            item => item.IsSelected, (item, v) => item.IsSelected = v);
 
         return UiUtil.MakeBorderForControl(rulesGrid);
     }

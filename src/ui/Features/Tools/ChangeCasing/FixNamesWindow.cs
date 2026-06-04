@@ -7,7 +7,6 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
-using System.Collections;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -145,22 +144,8 @@ public class FixNamesWindow : Window
             IsReadOnly = true,
         });
 
-        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key == Key.Space && dataGrid.SelectedItem is FixNameItem selectedItem)
-            {
-                selectedItem.IsChecked = !selectedItem.IsChecked;
-                e.Handled = true;
-            }
-            else if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
-            {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
-                e.Handled = true;
-            }
-        }, RoutingStrategies.Tunnel);
-        dataGrid.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => dataGrid.Focus());
+        new DataGridCheckboxMultiSelect<FixNameItem>(dataGrid,
+            item => item.IsChecked, (item, v) => item.IsChecked = v);
 
         var flyout = new MenuFlyout();
         flyout.Items.Add(new MenuItem { Header = Se.Language.General.SelectAll, Command = vm.NamesSelectAllCommand });
@@ -227,22 +212,8 @@ public class FixNamesWindow : Window
             IsReadOnly = true
         });
 
-        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key == Key.Space && dataGrid.SelectedItem is FixNameHitItem selectedItem)
-            {
-                selectedItem.IsEnabled = !selectedItem.IsEnabled;
-                e.Handled = true;
-            }
-            else if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
-            {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
-                e.Handled = true;
-            }
-        }, RoutingStrategies.Tunnel);
-        dataGrid.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => dataGrid.Focus());
+        new DataGridCheckboxMultiSelect<FixNameHitItem>(dataGrid,
+            item => item.IsEnabled, (item, v) => item.IsEnabled = v);
 
         var flyout = new MenuFlyout();
         flyout.Items.Add(new MenuItem { Header = Se.Language.General.SelectAll, Command = vm.HitsSelectAllCommand });

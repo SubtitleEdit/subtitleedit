@@ -183,22 +183,8 @@ public class ApplyDurationLimitsWindow : Window
                 },
             },
         };
-        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key == Key.Space && dataGrid.SelectedItem is ApplyDurationLimitItem selectedItem)
-            {
-                selectedItem.Apply = !selectedItem.Apply;
-                e.Handled = true;
-            }
-            else if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
-            {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
-                e.Handled = true;
-            }
-        }, RoutingStrategies.Tunnel);
-        dataGrid.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => dataGrid.Focus());
+        new DataGridCheckboxMultiSelect<ApplyDurationLimitItem>(dataGrid,
+            item => item.Apply, (item, v) => item.Apply = v);
 
         grid.Add(labelFixesAvailable, 0);
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);

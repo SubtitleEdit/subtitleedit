@@ -403,23 +403,9 @@ public class BatchConvertWindow : Window
             },
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedBatchFunction)) { Source = vm });
-        dataGrid.SelectionChanged += (_, _) => vm.SelectedFunctionChanged();
-        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key == Key.Space && dataGrid.SelectedItem is BatchConvertFunction selectedItem)
-            {
-                selectedItem.IsSelected = !selectedItem.IsSelected;
-                e.Handled = true;
-            }
-            else if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
-            {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
-                e.Handled = true;
-            }
-        }, RoutingStrategies.Tunnel);
-        dataGrid.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => dataGrid.Focus());
+        new DataGridCheckboxMultiSelect<BatchConvertFunction>(dataGrid,
+            item => item.IsSelected, (item, v) => item.IsSelected = v,
+            onFocusedItemChanged: _ => vm.SelectedFunctionChanged());
         UiUtil.AttachMacContextFlyoutHandler(dataGrid);
 
         return UiUtil.MakeBorderForControl(dataGrid);

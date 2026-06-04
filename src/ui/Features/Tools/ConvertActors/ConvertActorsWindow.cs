@@ -7,7 +7,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.Media;
-using System.Collections;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -232,22 +231,8 @@ public class ConvertActorsWindow : Window
                 },
             },
         };
-        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key == Key.Space && dataGrid.SelectedItem is ConvertActorsDisplayItem selectedItem)
-            {
-                selectedItem.IsChecked = !selectedItem.IsChecked;
-                e.Handled = true;
-            }
-            else if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
-            {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
-                e.Handled = true;
-            }
-        }, RoutingStrategies.Tunnel);
-        dataGrid.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => dataGrid.Focus());
+        new DataGridCheckboxMultiSelect<ConvertActorsDisplayItem>(dataGrid,
+            item => item.IsChecked, (item, v) => item.IsChecked = v);
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);
     }

@@ -8,7 +8,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.Media;
-using System.Collections;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -137,22 +136,8 @@ public class FixNetflixErrorsWindow : Window
             IsReadOnly = true,
             Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
         });
-        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key == Key.Space && dataGrid.SelectedItem is NetflixCheckDisplayItem selectedItem)
-            {
-                selectedItem.IsSelected = !selectedItem.IsSelected;
-                e.Handled = true;
-            }
-            else if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
-            {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
-                e.Handled = true;
-            }
-        }, RoutingStrategies.Tunnel);
-        dataGrid.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => dataGrid.Focus());
+        new DataGridCheckboxMultiSelect<NetflixCheckDisplayItem>(dataGrid,
+            item => item.IsSelected, (item, v) => item.IsSelected = v);
 
         var grid = new Grid
         {
@@ -246,22 +231,9 @@ public class FixNetflixErrorsWindow : Window
             },
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
-        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key == Key.Space && dataGrid.SelectedItem is FixNetflixErrorsItem selectedItem && selectedItem.CanBeFixed)
-            {
-                selectedItem.Apply = !selectedItem.Apply;
-                e.Handled = true;
-            }
-            else if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
-            {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
-                e.Handled = true;
-            }
-        }, RoutingStrategies.Tunnel);
-        dataGrid.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => dataGrid.Focus());
+        new DataGridCheckboxMultiSelect<FixNetflixErrorsItem>(dataGrid,
+            item => item.Apply, (item, v) => item.Apply = v,
+            canToggle: item => item.CanBeFixed);
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);
     }

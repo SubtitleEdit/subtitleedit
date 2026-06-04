@@ -8,6 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.Media;
+using System;
 using System.Collections;
 using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Features.Main;
@@ -20,8 +21,6 @@ namespace Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 public class FixCommonErrorsWindow : Window
 {
     private readonly FixCommonErrorsViewModel _vm;
-    private FixRuleDisplayItem? _lastClickedFixRule;
-    private FixDisplayItem? _lastClickedFix;
 
     public FixCommonErrorsWindow(FixCommonErrorsViewModel vm)
     {
@@ -87,7 +86,7 @@ public class FixCommonErrorsWindow : Window
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     CellTemplate = new FuncDataTemplate<FixRuleDisplayItem>((item, _) =>
                     {
-                        var border = new Border
+                        return new Border
                         {
                             Background = Brushes.Transparent, // Prevents highlighting
                             Padding = new Thickness(4),
@@ -98,11 +97,6 @@ public class FixCommonErrorsWindow : Window
                                 HorizontalAlignment = HorizontalAlignment.Center
                             }
                         };
-                        border.AddHandler(
-                            PointerPressedEvent,
-                            (_, e) => OnFixRulePointerPressed(item, e),
-                            handledEventsToo: true);
-                        return border;
                     }),
                     Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
                 },
@@ -124,22 +118,8 @@ public class FixCommonErrorsWindow : Window
             },
         };
         rulesGrid.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
-        rulesGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key == Key.Space && rulesGrid.SelectedItem is FixRuleDisplayItem selectedItem)
-            {
-                selectedItem.IsSelected = !selectedItem.IsSelected;
-                e.Handled = true;
-            }
-            else if (e.Key is Key.Home or Key.End && rulesGrid.ItemsSource is IList items && items.Count > 0)
-            {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                rulesGrid.SelectedItem = target;
-                rulesGrid.ScrollIntoView(target, null);
-                e.Handled = true;
-            }
-        }, RoutingStrategies.Tunnel);
-        rulesGrid.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => rulesGrid.Focus());
+        new DataGridCheckboxMultiSelect<FixRuleDisplayItem>(rulesGrid,
+            item => item.IsSelected, (item, v) => item.IsSelected = v);
 
         var step2Grid = MakeStep2Grid();
         step2Grid.Bind(IsVisibleProperty, new Binding(nameof(_vm.Step2IsVisible)));
@@ -263,7 +243,6 @@ public class FixCommonErrorsWindow : Window
         var dataGridFixes = new DataGrid
         {
             AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Single,
             CanUserResizeColumns = true,
             CanUserSortColumns = true,
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -280,7 +259,7 @@ public class FixCommonErrorsWindow : Window
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
                     {
-                        var border = new Border
+                        return new Border
                         {
                             Background = Brushes.Transparent, // Prevents highlighting
                             Padding = new Thickness(4),
@@ -291,11 +270,6 @@ public class FixCommonErrorsWindow : Window
                                 HorizontalAlignment = HorizontalAlignment.Center
                             }
                         };
-                        border.AddHandler(
-                            PointerPressedEvent,
-                            (_, e) => OnFixPointerPressed(item, e),
-                            handledEventsToo: true);
-                        return border;
                     }),
                     Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
                 },
@@ -350,23 +324,9 @@ public class FixCommonErrorsWindow : Window
             },
         };
         dataGridFixes.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
-        dataGridFixes.SelectionChanged += DataGridFixes_SelectionChanged;
-        dataGridFixes.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key == Key.Space && dataGridFixes.SelectedItem is FixDisplayItem selectedItem)
-            {
-                selectedItem.IsSelected = !selectedItem.IsSelected;
-                e.Handled = true;
-            }
-            else if (e.Key is Key.Home or Key.End && dataGridFixes.ItemsSource is IList items && items.Count > 0)
-            {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGridFixes.SelectedItem = target;
-                dataGridFixes.ScrollIntoView(target, null);
-                e.Handled = true;
-            }
-        }, RoutingStrategies.Tunnel);
-        dataGridFixes.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => dataGridFixes.Focus());
+        new DataGridCheckboxMultiSelect<FixDisplayItem>(dataGridFixes,
+            item => item.IsSelected, (item, v) => item.IsSelected = v,
+            onFocusedItemChanged: item => { if (item != null) _vm.SelectAndScrollTo(item); });
 
         var leftButtons = new StackPanel
         {
@@ -581,76 +541,10 @@ public class FixCommonErrorsWindow : Window
         return grid;
     }
 
-    private void DataGridFixes_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (e.AddedItems.Count == 1 && e.AddedItems[0] is FixDisplayItem fixDisplayItem)
-        {
-            _vm.SelectAndScrollTo(fixDisplayItem);
-        }
-    }
-
     protected override void OnKeyDown(KeyEventArgs e)
     {
         base.OnKeyDown(e);
         _vm.OnKeyDown(e);
     }
 
-    private void OnFixRulePointerPressed(FixRuleDisplayItem item, PointerPressedEventArgs e)
-    {
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Shift) &&
-            _lastClickedFixRule != null &&
-            _lastClickedFixRule != item &&
-            _vm.SelectedProfile is { } profile)
-        {
-            var rules = profile.FixRules;
-            var lastIdx = rules.IndexOf(_lastClickedFixRule);
-            var currIdx = rules.IndexOf(item);
-            if (lastIdx >= 0 && currIdx >= 0)
-            {
-                var newValue = !item.IsSelected; // CheckBox will toggle the current item to this on release
-                var min = lastIdx < currIdx ? lastIdx : currIdx;
-                var max = lastIdx > currIdx ? lastIdx : currIdx;
-                for (var i = min; i <= max; i++)
-                {
-                    if (i == currIdx)
-                    {
-                        continue;
-                    }
-
-                    rules[i].IsSelected = newValue;
-                }
-            }
-        }
-
-        _lastClickedFixRule = item;
-    }
-
-    private void OnFixPointerPressed(FixDisplayItem item, PointerPressedEventArgs e)
-    {
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Shift) &&
-            _lastClickedFix != null &&
-            _lastClickedFix != item)
-        {
-            var fixes = _vm.Fixes;
-            var lastIdx = fixes.IndexOf(_lastClickedFix);
-            var currIdx = fixes.IndexOf(item);
-            if (lastIdx >= 0 && currIdx >= 0)
-            {
-                var newValue = !item.IsSelected;
-                var min = lastIdx < currIdx ? lastIdx : currIdx;
-                var max = lastIdx > currIdx ? lastIdx : currIdx;
-                for (var i = min; i <= max; i++)
-                {
-                    if (i == currIdx)
-                    {
-                        continue;
-                    }
-
-                    fixes[i].IsSelected = newValue;
-                }
-            }
-        }
-
-        _lastClickedFix = item;
-    }
 }
