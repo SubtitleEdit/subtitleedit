@@ -2738,7 +2738,7 @@ public partial class OcrViewModel : ObservableObject
                         }
                         else if (result.SkipAllPressed)
                         {
-                            _ocrFixEngine.SkipAll(result.Word);
+                            _ocrFixEngine.SkipAll(unknownWord.Word.FixedWord);
                         }
                         else if (result.AddToNamesListPressed)
                         {
@@ -3118,7 +3118,7 @@ public partial class OcrViewModel : ObservableObject
                         }
                         else if (result.SkipAllPressed)
                         {
-                            _ocrFixEngine.SkipAll(result.Word);
+                            _ocrFixEngine.SkipAll(unknownWord.Word.FixedWord);
                         }
                         else if (result.AddToNamesListPressed)
                         {
@@ -3452,7 +3452,7 @@ public partial class OcrViewModel : ObservableObject
                             }
                             else if (result.SkipAllPressed)
                             {
-                                _ocrFixEngine.SkipAll(result.Word);
+                                _ocrFixEngine.SkipAll(unknownWord.Word.FixedWord);
                             }
                             else if (result.AddToNamesListPressed)
                             {
