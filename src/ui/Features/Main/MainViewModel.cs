@@ -10551,13 +10551,20 @@ public partial class MainViewModel :
                     vm => vm.Initialize(fileName, mediaInfo));
             });
         };
+
+        // Forward user-configured video shortcuts into the fullscreen window so
+        // that e.g. "Right = 1 sec forward" works there too (issue #11392). The
+        // commands themselves operate on GetVideoPlayerControl() which returns
+        // _fullScreenVideoPlayerControl while fullscreen is open.
+        var extraBindings = BuildFullScreenShortcutBindings();
+
         var fullScreenWindow = new FullScreenVideoWindow(_fullScreenVideoPlayerControl, _videoFileName, _subtitleFileName ?? string.Empty, position, volume, () =>
         {
             control!.Position = _fullScreenVideoPlayerControl.Position;
             control!.Volume = _fullScreenVideoPlayerControl.Volume;
             _fullScreenVideoPlayerControl = null;
             Dispatcher.UIThread.Post(() => SubtitleGrid.Focus());
-        }, toggleKeys, showMediaInfoKeys, showMediaInformationOwnedBy);
+        }, toggleKeys, showMediaInfoKeys, showMediaInformationOwnedBy, extraBindings);
         fullScreenWindow.Show(Window!);
         _shortcutManager.ClearKeys();
 
@@ -10577,6 +10584,48 @@ public partial class MainViewModel :
         }
 
         RefreshSubtitlePreview();
+    }
+
+    private List<(string name, List<string> keys, IRelayCommand command)> BuildFullScreenShortcutBindings()
+    {
+        // Commands that should be honored while the fullscreen video window is
+        // active. Volume up/down are intentionally not listed — there are no
+        // Volume RelayCommands in the view model, so the fullscreen window's
+        // hardcoded Up/Down fallback is the only keyboard volume control.
+        var commands = new (string Name, IRelayCommand Command)[]
+        {
+            (nameof(Video100MsBackCommand),         Video100MsBackCommand),
+            (nameof(Video100MsForwardCommand),      Video100MsForwardCommand),
+            (nameof(Video500MsBackCommand),         Video500MsBackCommand),
+            (nameof(Video500MsForwardCommand),      Video500MsForwardCommand),
+            (nameof(VideoOneSecondBackCommand),     VideoOneSecondBackCommand),
+            (nameof(VideoOneSecondForwardCommand),  VideoOneSecondForwardCommand),
+            (nameof(VideoOneFrameBackCommand),      VideoOneFrameBackCommand),
+            (nameof(VideoOneFrameForwardCommand),   VideoOneFrameForwardCommand),
+            (nameof(VideoMoveCustom1BackCommand),   VideoMoveCustom1BackCommand),
+            (nameof(VideoMoveCustom1ForwardCommand),VideoMoveCustom1ForwardCommand),
+            (nameof(VideoMoveCustom2BackCommand),   VideoMoveCustom2BackCommand),
+            (nameof(VideoMoveCustom2ForwardCommand),VideoMoveCustom2ForwardCommand),
+            (nameof(PlayCommand),                   PlayCommand),
+            (nameof(PauseCommand),                  PauseCommand),
+            (nameof(TogglePlayPauseCommand),        TogglePlayPauseCommand),
+            (nameof(TogglePlayPause2Command),       TogglePlayPause2Command),
+            (nameof(VideoToggleBrightnessCommand),  VideoToggleBrightnessCommand),
+        };
+
+        var bindings = new List<(string name, List<string> keys, IRelayCommand command)>(commands.Length);
+        foreach (var (name, command) in commands)
+        {
+            var keys = Se.Settings.Shortcuts.FirstOrDefault(s => s.ActionName == name)?.Keys;
+            if (keys == null || keys.Count == 0)
+            {
+                continue;
+            }
+
+            bindings.Add((name, keys, command));
+        }
+
+        return bindings;
     }
 
     [RelayCommand]

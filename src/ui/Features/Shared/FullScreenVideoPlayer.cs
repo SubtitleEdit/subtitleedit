@@ -26,7 +26,8 @@ public class FullScreenVideoWindow : Window
         Action onClose,
         List<string>? toggleShortcutKeys = null,
         List<string>? showMediaInformationKeys = null,
-        Action<Window>? showMediaInformation = null)
+        Action<Window>? showMediaInformation = null,
+        IReadOnlyList<(string name, List<string> keys, IRelayCommand command)>? extraBindings = null)
     {
         WindowState = WindowState.FullScreen;
         WindowDecorations = WindowDecorations.None;
@@ -62,6 +63,28 @@ public class FullScreenVideoWindow : Window
                 showMediaInformationKeys,
                 ShortcutCategory.General,
                 new RelayCommand(() => showMediaInformation(this))));
+        }
+
+        // Honor the user-configured video shortcuts (jump back/forward, play/pause,
+        // brightness, etc.) by registering them on the local shortcut manager.
+        // The commands themselves come from the main view model and operate on
+        // the fullscreen player because GetVideoPlayerControl() returns it while
+        // fullscreen is open.
+        if (extraBindings != null)
+        {
+            foreach (var (name, keys, command) in extraBindings)
+            {
+                if (keys == null || keys.Count == 0)
+                {
+                    continue;
+                }
+
+                shortcutManager.RegisterShortcut(new ShortCut(
+                    nameof(FullScreenVideoWindow) + "_" + name,
+                    keys,
+                    ShortcutCategory.General,
+                    command));
+            }
         }
 
         // Poll for actual cursor position using platform APIs
@@ -104,53 +127,56 @@ public class FullScreenVideoWindow : Window
 
         KeyDown += (_, e) =>
         {
-            if (e.Key == Key.Escape)
+            // Window-management keys always win — Esc/F11 must close the
+            // fullscreen window regardless of user shortcut bindings.
+            if (e.Key == Key.Escape || e.Key == Key.F11)
             {
                 e.Handled = true;
                 Close();
-            }
-            else if (e.Key == Key.F11)
-            {
-                e.Handled = true;
-                Close();
-            }
-            else if (e.Key == Key.Space)
-            {
-                e.Handled = true;
-                videoPlayer.TogglePlayPause();
-            }
-            else if (e.Key == Key.Right)
-            {
-                e.Handled = true;
-                videoPlayer.Position += 2;
-            }
-            else if (e.Key == Key.Left)
-            {
-                e.Handled = true;
-                videoPlayer.Position -= 2;
-            }
-            else if (e.Key == Key.Up && e.KeyModifiers == KeyModifiers.None)
-            {
-                e.Handled = true;
-                videoPlayer.Volume += 2;
-            }
-            else if (e.Key == Key.Down && e.KeyModifiers == KeyModifiers.None)
-            {
-                e.Handled = true;
-                videoPlayer.Volume -= 2;
-            }
-            else
-            {
-                shortcutManager.OnKeyPressed(this, e);
-                var command = shortcutManager.CheckShortcuts(e, ShortcutCategory.General.ToString());
-                if (command != null)
-                {
-                    e.Handled = true;
-                    command.Execute(null);
-                }
+                videoPlayer.NotifyUserActivity();
+                return;
             }
 
-            // Also notify on any key press
+            // User-configured shortcuts win over hardcoded defaults. Without
+            // this, a user with "1 sec forward" bound to Right would still get
+            // a hardcoded 2-second jump (issue #11392).
+            shortcutManager.OnKeyPressed(this, e);
+            var command = shortcutManager.CheckShortcuts(e, ShortcutCategory.General.ToString());
+            if (command != null)
+            {
+                e.Handled = true;
+                command.Execute(null);
+                videoPlayer.NotifyUserActivity();
+                return;
+            }
+
+            // Fallbacks for keys the user hasn't bound to anything.
+            // Volume Up/Down stay here because there are no Volume RelayCommands
+            // in the main view model — these are the only way to control volume
+            // from the keyboard in fullscreen.
+            switch (e.Key)
+            {
+                case Key.Space:
+                    videoPlayer.TogglePlayPause();
+                    break;
+                case Key.Right:
+                    videoPlayer.Position += 2;
+                    break;
+                case Key.Left:
+                    videoPlayer.Position -= 2;
+                    break;
+                case Key.Up when e.KeyModifiers == KeyModifiers.None:
+                    videoPlayer.Volume += 2;
+                    break;
+                case Key.Down when e.KeyModifiers == KeyModifiers.None:
+                    videoPlayer.Volume -= 2;
+                    break;
+                default:
+                    videoPlayer.NotifyUserActivity();
+                    return;
+            }
+
+            e.Handled = true;
             videoPlayer.NotifyUserActivity();
         };
 
