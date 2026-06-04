@@ -899,13 +899,6 @@ public partial class SettingsViewModel : ObservableObject
         WriteToolsLog = Se.Settings.Tools.WriteToolsLog;
     }
 
-    private bool GetToolbarVisible(SeWaveformToolbarItemType type)
-    {
-        return Se.Settings.Waveform.ToolbarItems
-            .First(p => p.Type == type)
-            .IsVisible;
-    }
-
     // Display label <-> stored extension for the waveform "Extract audio" format.
     // ExtractAudioFormatOrder fixes the dropdown order (and thus the default at index 0);
     // a Dictionary's enumeration order is not contractually guaranteed.

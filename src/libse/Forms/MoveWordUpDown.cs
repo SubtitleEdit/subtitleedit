@@ -394,23 +394,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
             S2 = AutoBreakIfNeeded(S2);
         }
 
-        private static bool IsPartOfFontTag(string s, int i)
-        {
-            var indexOfFontTag = s.Substring(0, i).LastIndexOf("<font ", StringComparison.OrdinalIgnoreCase);
-            if (indexOfFontTag < 0)
-            {
-                return false;
-            }
-
-            var indexOfEndFontTag = s.IndexOf(">", indexOfFontTag, StringComparison.Ordinal);
-            if (indexOfEndFontTag < 0)
-            {
-                return false;
-            }
-
-            return i >= indexOfFontTag && i <= indexOfEndFontTag;
-        }
-
         private static string RemoveEmptyTags(string s)
         {
             var noTags = HtmlUtil.RemoveHtmlTags(s, true);
@@ -423,61 +406,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 .Replace("<i></i>", string.Empty)
                 .Replace("<u></u>", string.Empty)
                 .Replace("<b></b>", string.Empty);
-        }
-
-        private static string AddWordBefore(string word, string input)
-        {
-            var pre = string.Empty;
-            var s = input;
-            if (s.StartsWith("{\\") && s.Contains("}"))
-            {
-                var idx = s.IndexOf('}');
-                pre = s.Substring(0, idx + 1);
-                s = s.Remove(0, idx + 1);
-            }
-            var arr = s.SplitToLines();
-            if (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) && (s.EndsWith("</i>", StringComparison.OrdinalIgnoreCase) || arr[0].EndsWith("</i>", StringComparison.OrdinalIgnoreCase)))
-            {
-                return pre + s.Insert(3, word.Trim() + " ").Trim();
-            }
-            if (s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) && (s.EndsWith("</b>", StringComparison.OrdinalIgnoreCase) || arr[0].EndsWith("</b>", StringComparison.OrdinalIgnoreCase)))
-            {
-                return pre + s.Insert(3, word.Trim() + " ").Trim();
-            }
-            if (s.StartsWith("<u>", StringComparison.OrdinalIgnoreCase) && (s.EndsWith("</u>", StringComparison.OrdinalIgnoreCase) || arr[0].EndsWith("</u>", StringComparison.OrdinalIgnoreCase)))
-            {
-                return pre + s.Insert(3, word.Trim() + " ").Trim();
-            }
-            if (s.StartsWith("<font", StringComparison.OrdinalIgnoreCase) && s.Contains(">") && s.Contains("</font>", StringComparison.OrdinalIgnoreCase))
-            {
-                var endIdx = s.IndexOf('>');
-                return pre + s.Insert(endIdx + 1, word.Trim() + " ").Trim();
-            }
-
-            return pre + (word.Trim() + " " + s.Trim()).Trim();
-        }
-
-        private static string AddWordAfter(string word, string s)
-        {
-            var arr = s.SplitToLines();
-            if (s.EndsWith("</i>", StringComparison.OrdinalIgnoreCase) && (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) || arr[arr.Count - 1].StartsWith("<i>", StringComparison.OrdinalIgnoreCase)))
-            {
-                return s.Insert(s.Length - 4, " " + word.Trim()).Trim();
-            }
-            if (s.EndsWith("</b>", StringComparison.OrdinalIgnoreCase) && (s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) || arr[arr.Count - 1].StartsWith("<b>", StringComparison.OrdinalIgnoreCase)))
-            {
-                return s.Insert(s.Length - 4, " " + word.Trim()).Trim();
-            }
-            if (s.EndsWith("</u>", StringComparison.OrdinalIgnoreCase) && (s.StartsWith("<u>", StringComparison.OrdinalIgnoreCase) || arr[arr.Count - 1].StartsWith("<u>", StringComparison.OrdinalIgnoreCase)))
-            {
-                return s.Insert(s.Length - 4, " " + word.Trim()).Trim();
-            }
-            if (s.EndsWith("</font>", StringComparison.OrdinalIgnoreCase) && s.Contains("<font", StringComparison.OrdinalIgnoreCase))
-            {
-                return s.Insert(s.Length - 7, " " + word.Trim()).Trim();
-            }
-
-            return (s.Trim() + " " + word.Trim()).Trim();
         }
 
         private static string AutoBreakIfNeeded(string s)

@@ -398,17 +398,6 @@ public class BinaryOcrMatcher : IBinaryOcrMatcher
         return lowercaseHeight;
     }
 
-    private int GetLastBinOcrUppercaseHeight()
-    {
-        var uppercaseHeight = 35;
-        if (_ocrUppercaseHeightsTotalCount > 5)
-        {
-            uppercaseHeight = (int)Math.Round((double)_ocrUppercaseHeightsTotal / _ocrUppercaseHeightsTotalCount);
-        }
-
-        return uppercaseHeight;
-    }
-
     private static void FindBestMatch(ref int index, ref int smallestDifference, out BinaryOcrBitmap? hit, NikseBitmap2 target, BinaryOcrDb binOcrDb, BinaryOcrBitmap bob, double maxDiff)
     {
         hit = null;
