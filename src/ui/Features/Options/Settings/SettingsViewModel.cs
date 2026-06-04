@@ -177,6 +177,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showToolbarVisualSync;
     [ObservableProperty] private bool _showToolbarBeautifyTimeCodes;
     [ObservableProperty] private bool _showToolbarBurnIn;
+    [ObservableProperty] private bool _fixCommonErrorsSkipStep1;
     [ObservableProperty] private bool _showToolbarSettings;
     [ObservableProperty] private bool _showToolbarLayout;
     [ObservableProperty] private bool _showToolbarHelp;
@@ -686,6 +687,7 @@ public partial class SettingsViewModel : ObservableObject
         GridFocusTextboxAfterInsertNew = Se.Settings.Tools.GridFocusTextboxAfterInsertNew;
         TextToSpeechPromptMergeContinuationLines = Se.Settings.Tools.TextToSpeechPromptMergeContinuationLines;
         OpenAiCompatibleSttAutoTranscribeOnAudioSelection = Se.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection;
+        FixCommonErrorsSkipStep1 = Se.Settings.Tools.FixCommonErrors.SkipStep1;
 
         SelectedTheme = MapThemeToTranslation(appearance.Theme);
         SelectedIconTheme = IconThemes.FirstOrDefault(p => p == appearance.IconTheme) ?? IconThemes.First();
@@ -1365,6 +1367,7 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Tools.MultipleReplaceShowDotDotDotButtons = MultipleReplaceShowDotDotDotButtons;
         Se.Settings.Tools.GridFocusTextboxAfterInsertNew = GridFocusTextboxAfterInsertNew;
         Se.Settings.Tools.TextToSpeechPromptMergeContinuationLines = TextToSpeechPromptMergeContinuationLines;
+        Se.Settings.Tools.FixCommonErrors.SkipStep1 = FixCommonErrorsSkipStep1;
         Se.Settings.Tools.WriteToolsLog = WriteToolsLog;
         Se.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection = OpenAiCompatibleSttAutoTranscribeOnAudioSelection;
 

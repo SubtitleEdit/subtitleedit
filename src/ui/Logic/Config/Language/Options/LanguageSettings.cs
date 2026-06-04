@@ -148,6 +148,7 @@ public class LanguageSettings
     public string WaveformBackgroundColor { get; set; }
     public string WaveformSelectedColor { get; set; }
     public string DownloadFfmpeg { get; set; }
+    public string FixCommonErrorsSkipStep1 { get; set; }
 
     // Toolbar
     public string ShowToolbarNew { get; set; }
@@ -451,6 +452,7 @@ public class LanguageSettings
         WaveformBackgroundColor = "Waveform background color";
         WaveformSelectedColor = "Waveform selected color";
         DownloadFfmpeg = "Download ffmpeg";
+        FixCommonErrorsSkipStep1 = "Fix common errors: skip step 1 (choose fixes)";
 
         // Toolbar
         ShowToolbarNew = "Show new icon";

@@ -112,7 +112,12 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
         InitStep1(languageCode, subtitle);
         LoadProfiles();
-        SelectedProfile = Profiles.FirstOrDefault(p => p.Name == Se.Settings.Tools.FixCommonErrors.LastProfileName) ?? Profiles.FirstOrDefault() ?? Profiles.FirstOrDefault();
+        SelectedProfile = Profiles.FirstOrDefault(p => p.Name == Se.Settings.Tools.FixCommonErrors.LastProfileName) ?? Profiles.FirstOrDefault();
+
+        if (Se.Settings.Tools.FixCommonErrors.SkipStep1 && SelectedProfile != null)
+        {
+            ShowStep2();
+        }
     }
 
     private void SaveProfiles()
@@ -198,18 +203,21 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         Step1IsVisible = true;
     }
 
-    [RelayCommand]
-    private void ToApplyFixes()
+    private void ShowStep2()
     {
         Step1IsVisible = false;
         Step2IsVisible = true;
-
-        SaveProfiles();
         _oldSelectedLanguage = SelectedLanguage!;
-
         _totalFixes = 0;
         FixesAppliedText = string.Empty;
         RefreshFixes();
+    }
+
+    [RelayCommand]
+    private void ToApplyFixes()
+    {
+        SaveProfiles();
+        ShowStep2();
     }
 
     [RelayCommand]
