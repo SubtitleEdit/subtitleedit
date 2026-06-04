@@ -9800,7 +9800,18 @@ public partial class MainViewModel :
                 var fixedReplaceText = RegexUtils.FixNewLine(result.ReplaceText);
                 var regex = new Regex(result.SearchText);
                 var match = regex.Match(line, matchIndex);
-                if (!match.Success || match.Index != matchIndex)
+
+                // Bail unless the match starts exactly at the recorded index AND
+                // the matched text is what we found before. The value check
+                // guards against (a) the subtitle being edited between Find and
+                // Replace and the new line happening to produce a different
+                // match of the same length at the same offset, and (b) any
+                // CRLF/LF-normalization drift between the FindService (which
+                // normalizes line endings) and the un-normalized line we're
+                // re-matching here.
+                if (!match.Success
+                    || match.Index != matchIndex
+                    || !string.Equals(match.Value, matchText, StringComparison.Ordinal))
                 {
                     newLine = line;
                     return null;
