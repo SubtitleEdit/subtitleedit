@@ -9791,6 +9791,60 @@ public partial class MainViewModel :
         _shortcutManager.ClearKeys();
     }
 
+    private static int? TryBuildReplacement(string line, int matchIndex, string matchText, ReplaceViewModel result, out string newLine)
+    {
+        if (result.FindMode == FindMode.RegularExpression)
+        {
+            try
+            {
+                var fixedReplaceText = RegexUtils.FixNewLine(result.ReplaceText);
+                var regex = new Regex(result.SearchText);
+                var match = regex.Match(line, matchIndex);
+
+                // Bail unless the match starts exactly at the recorded index AND
+                // the matched text is what we found before. The value check
+                // guards against (a) the subtitle being edited between Find and
+                // Replace and the new line happening to produce a different
+                // match of the same length at the same offset, and (b) any
+                // CRLF/LF-normalization drift between the FindService (which
+                // normalizes line endings) and the un-normalized line we're
+                // re-matching here.
+                if (!match.Success
+                    || match.Index != matchIndex
+                    || !string.Equals(match.Value, matchText, StringComparison.Ordinal))
+                {
+                    newLine = line;
+                    return null;
+                }
+
+                var replaced = match.Result(fixedReplaceText);
+                newLine = line.Substring(0, matchIndex) + replaced + line.Substring(matchIndex + match.Length);
+                return replaced.Length;
+            }
+            catch (ArgumentException)
+            {
+                newLine = line;
+                return null;
+            }
+        }
+
+        // Verify the matched slice is still at the recorded position before
+        // mutating — the line may have been edited since the find ran.
+        var actualAtMatch = line.Substring(matchIndex, matchText.Length);
+        var comparison = result.FindMode == FindMode.CaseSensitive
+            ? StringComparison.Ordinal
+            : StringComparison.OrdinalIgnoreCase;
+        if (!string.Equals(actualAtMatch, matchText, comparison))
+        {
+            newLine = line;
+            return null;
+        }
+
+        var replacement = result.ReplaceText ?? string.Empty;
+        newLine = line.Substring(0, matchIndex) + replacement + line.Substring(matchIndex + matchText.Length);
+        return replacement.Length;
+    }
+
     public async Task HandleReplaceResult(ReplaceViewModel result)
     {
         result.ResultFound = false;
@@ -9805,7 +9859,16 @@ public partial class MainViewModel :
         {
             var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
             var subs = Subtitles.Select(p => p.Text).ToList();
-            var savedCurrentTextFound = _findService.CurrentTextFound;
+
+            // Save the previous find result before Initialize wipes it. The
+            // replace path uses these — not the EditTextBox selection — to
+            // know which match to replace, so that focus changes, line-ending
+            // normalization, or async TextBox updates can't break the replace
+            // step (issue #11388).
+            var savedFoundLine = _findService.CurrentLineNumber;
+            var savedFoundIndex = _findService.CurrentTextIndex;
+            var savedFoundText = _findService.CurrentTextFound;
+
             _findService.Initialize(subs, SelectedSubtitleIndex ?? 0, result.WholeWord, result.FindMode);
 
             var idx = -1;
@@ -9832,34 +9895,32 @@ public partial class MainViewModel :
             }
             else // replace requested
             {
-                var selectedText = EditTextBox.SelectedText;
-                if (!string.IsNullOrEmpty(savedCurrentTextFound) && selectedText == savedCurrentTextFound)
+                var nextStartIndex = EditTextBox.SelectionEnd;
+                var nextStartLine = currentLineIndex;
+
+                if (savedFoundLine >= 0
+                    && savedFoundLine < subs.Count
+                    && savedFoundIndex >= 0
+                    && !string.IsNullOrEmpty(savedFoundText))
                 {
-                    if (result.FindMode == FindMode.RegularExpression)
+                    var line = subs[savedFoundLine];
+                    if (savedFoundIndex + savedFoundText.Length <= line.Length)
                     {
-                        try
+                        var replaced = TryBuildReplacement(line, savedFoundIndex, savedFoundText, result, out var newLine);
+                        if (replaced.HasValue)
                         {
-                            var fixedReplaceText = RegexUtils.FixNewLine(result.ReplaceText);
-                            var regex = new Regex(result.SearchText);
-                            var match = regex.Match(EditTextBox.Text, EditTextBox.SelectionStart);
-                            if (match.Success && match.Index == EditTextBox.SelectionStart)
+                            subs[savedFoundLine] = newLine;
+                            if (savedFoundLine < Subtitles.Count)
                             {
-                                EditTextBox.Text = regex.Replace(EditTextBox.Text, fixedReplaceText, 1, EditTextBox.SelectionStart);
+                                Subtitles[savedFoundLine].Text = newLine;
                             }
-                        }
-                        catch (ArgumentException)
-                        {
-                            // Invalid regex pattern - skip replacement
+                            nextStartLine = savedFoundLine;
+                            nextStartIndex = savedFoundIndex + replaced.Value;
                         }
                     }
-                    else
-                    {
-                        EditTextBox.SelectedText = result.ReplaceText;
-                    }
-                    subs[currentLineIndex] = EditTextBox.Text; // reflect replacement so FindNext won't re-match here
                 }
 
-                idx = _findService.FindNext(result.SearchText, subs, currentLineIndex, EditTextBox.SelectionEnd);
+                idx = _findService.FindNext(result.SearchText, subs, nextStartLine, nextStartIndex);
             }
 
             if (idx < 0)
