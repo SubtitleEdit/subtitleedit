@@ -7781,6 +7781,17 @@ public partial class MainViewModel :
         SetLibSeSettings();
         SubtitleLineViewModel.ErrorColor = Se.Settings.General.ErrorColor.FromHexToColor();
 
+        // Settings that feed into CPS / line-length / colour calculations
+        // (CpsLineLengthStrategy, SubtitleLineMaximumLength, the various
+        // Color* toggles, ErrorColor, etc.) just changed. The grid binds to
+        // computed properties on each row, but nothing on the rows themselves
+        // changed, so without an explicit notification the cells keep showing
+        // the previous values until the user edits a row (issue #11379).
+        foreach (var row in Subtitles)
+        {
+            row.RefreshAfterSettingsChanged();
+        }
+
         var selectedSubtitleFormatName = SelectedSubtitleFormat.Name;
         SubtitleFormats.Clear();
         foreach (var format in SubtitleFormatHelper.GetSubtitleFormatsWithFavoritesAtTop())
@@ -17327,7 +17338,7 @@ public partial class MainViewModel :
                     .WithPadding(2));
             }
 
-            var lineLength = lines[i].Length;
+            var lineLength = (int)lines[i].CountCharacters(false);
             var tb = UiUtil.MakeTextBlock(lineLength.ToString(CultureInfo.InvariantCulture))
                 .WithFontSize(12)
                 .WithPadding(2);

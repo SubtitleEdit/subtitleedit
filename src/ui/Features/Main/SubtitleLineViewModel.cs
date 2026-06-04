@@ -261,7 +261,7 @@ public partial class SubtitleLineViewModel : ObservableObject
 
                 foreach (var line in stripped.SplitToLines())
                 {
-                    if (line.Length > Se.Settings.General.SubtitleLineMaximumLength)
+                    if (line.CountCharacters(false) > Se.Settings.General.SubtitleLineMaximumLength)
                     {
                         return _errorBrush;
                     }
@@ -502,6 +502,27 @@ public partial class SubtitleLineViewModel : ObservableObject
     public void RefreshText()
     {
         OnPropertyChanged(nameof(Text));
+    }
+
+    /// <summary>
+    /// Raises change notifications for properties whose values depend on
+    /// <see cref="Se.Settings"/> (CPS strategy, line-length limit, colour
+    /// toggles, error colour, etc.). The grid's per-cell bindings cache the
+    /// last value, so when a setting changes mid-session the rows keep
+    /// showing stale CPS numbers and stale error highlights until something
+    /// on the row itself changes. Call this once per row after
+    /// <see cref="Se.Settings"/> is updated.
+    /// </summary>
+    public void RefreshAfterSettingsChanged()
+    {
+        OnPropertyChanged(nameof(CharactersPerSecond));
+        OnPropertyChanged(nameof(WordsPerMinute));
+        OnPropertyChanged(nameof(TextBackgroundBrush));
+        OnPropertyChanged(nameof(DurationBackgroundBrush));
+        OnPropertyChanged(nameof(CpsBackgroundBrush));
+        OnPropertyChanged(nameof(WpmBackgroundBrush));
+        OnPropertyChanged(nameof(GapBackgroundBrush));
+        OnPropertyChanged(nameof(PixelWidth));
     }
 
     /// <summary>Updates all display properties from a fixed <see cref="Paragraph"/> in-place.</summary>
