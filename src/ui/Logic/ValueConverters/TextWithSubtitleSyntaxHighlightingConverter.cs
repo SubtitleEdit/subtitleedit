@@ -321,12 +321,13 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
         // No formatting (default)
         var inlines = new InlineCollection();
-        var parts = str.Split('\n');
-        for (var idx = 0; idx < parts.Length; idx++)
+        var firstLine = true;
+        foreach (var line in str.SplitToLines())
         {
-            var part = parts[idx].TrimEnd('\r');
-            if (idx > 0) inlines.Add(new LineBreak());
-            if (part.Length > 0) inlines.Add(new Run(part));
+            if (line.Length == 0) continue;
+            if (!firstLine) inlines.Add(new LineBreak());
+            inlines.Add(new Run(line));
+            firstLine = false;
         }
         return SpellCheckLines(inlines);
     }
@@ -715,12 +716,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             }
 
             // Handle line breaks
-            if (c == '\n' || (c == '\r' && c2 == '\n'))
-            {
-                inlines.Add(new LineBreak());
-                i += c == '\r' ? 2 : 1;
-                continue;
-            }
+            if (AppendLineBreak(inlines, c, c2, ref i)) continue;
 
             // Regular text - add character by character until we hit special markup
             var textStart = i;
@@ -869,12 +865,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             }
 
             // Handle line breaks
-            if (c == '\n' || (c == '\r' && c2 == '\n'))
-            {
-                inlines.Add(new LineBreak());
-                i += c == '\r' ? 2 : 1;
-                continue;
-            }
+            if (AppendLineBreak(inlines, c, c2, ref i)) continue;
 
             // Regular text - collect characters until we hit special markup
             var textStart = i;
@@ -1353,6 +1344,15 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 }
             }
         }
+    }
+
+    private static bool AppendLineBreak(InlineCollection inlines, char c, char c2, ref int i)
+    {
+        if (c != '\n' && !(c == '\r' && c2 == '\n'))
+            return false;
+        inlines.Add(new LineBreak());
+        i += c == '\r' ? 2 : 1;
+        return true;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
