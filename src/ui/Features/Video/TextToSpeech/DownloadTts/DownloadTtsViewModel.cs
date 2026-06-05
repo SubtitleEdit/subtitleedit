@@ -94,7 +94,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private readonly MemoryStream _downloadStreamOmniVoice;
     private readonly MemoryStream _downloadStreamOmniVoices;
     private readonly IZipUnpacker _zipUnpacker;
-    private readonly object _lock = new();
+    private readonly Lock _lock = new();
     private string _modelFileName;
     private string _configFileName;
 

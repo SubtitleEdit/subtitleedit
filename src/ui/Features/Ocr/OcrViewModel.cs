@@ -173,7 +173,7 @@ public partial class OcrViewModel : ObservableObject
     private readonly NOcrAddHistoryManager _nOcrAddHistoryManager;
     private readonly BinaryOcrAddHistoryManager _binaryOcrAddHistoryManager;
     private int _pendingScrollIndex = -1;
-    private readonly object _scrollLock = new object();
+    private readonly Lock _scrollLock = new();
 
     public OcrViewModel(
         INOcrCaseFixer nOcrCaseFixer,

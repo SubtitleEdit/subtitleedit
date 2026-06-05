@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
@@ -25,7 +26,7 @@ public static class CrispAsrVersion
 {
     // Path -> (mtime, version). Cache invalidates when the binary on disk changes
     // (re-download / update) so we don't show a stale version after an update.
-    private static readonly object _cacheLock = new();
+    private static readonly Lock CacheLock = new();
     private static string? _cachedExePath;
     private static DateTime _cachedExeMtimeUtc;
     private static string? _cachedVersion;
@@ -59,7 +60,7 @@ public static class CrispAsrVersion
             return null;
         }
 
-        lock (_cacheLock)
+        lock (CacheLock)
         {
             if (_cachedExePath == exePath && _cachedExeMtimeUtc == mtime)
             {
@@ -69,7 +70,7 @@ public static class CrispAsrVersion
 
         var version = Probe(exePath);
 
-        lock (_cacheLock)
+        lock (CacheLock)
         {
             _cachedExePath = exePath;
             _cachedExeMtimeUtc = mtime;
