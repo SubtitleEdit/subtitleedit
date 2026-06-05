@@ -17194,10 +17194,20 @@ public partial class MainViewModel :
                     var endIdx = Math.Max(anchor, rowIndex);
 
                     _subtitleGridSelectionChangedSkip = true;
-                    SubtitleGrid.SelectedItems.Clear();
-                    for (var i = startIdx; i <= endIdx; i++)
-                        SubtitleGrid.SelectedItems.Add(Subtitles[i]);
-                    _subtitleGridSelectionChangedSkip = false;
+                    try
+                    {
+                        SubtitleGrid.SelectedItems.Clear();
+                        SubtitleGrid.SelectedItems.Add(Subtitles[rowIndex]);
+                        for (var i = startIdx; i <= endIdx; i++)
+                        {
+                            if (i != rowIndex)
+                                SubtitleGrid.SelectedItems.Add(Subtitles[i]);
+                        }
+                    }
+                    finally
+                    {
+                        _subtitleGridSelectionChangedSkip = false;
+                    }
 
                     SubtitleGrid.ScrollIntoView(Subtitles[rowIndex], null);
                     SubtitleGridSelectionChanged();

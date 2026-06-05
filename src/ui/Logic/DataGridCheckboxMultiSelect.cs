@@ -109,20 +109,26 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
             var endIdx = Math.Max(anchor, rowIndex);
 
             _selectionChangedSkip = true;
-            _grid.SelectedItems.Clear();
-            _grid.SelectedItems.Add(items[_shiftCurrentIndex]);
-            for (var i = startIdx; i <= endIdx; i++)
+            try
             {
-                if (i != _shiftCurrentIndex)
-                    _grid.SelectedItems.Add(items[i]);
+                _grid.SelectedItems.Clear();
+                _grid.SelectedItems.Add(items[_shiftCurrentIndex]);
+                for (var i = startIdx; i <= endIdx; i++)
+                {
+                    if (i != _shiftCurrentIndex)
+                        _grid.SelectedItems.Add(items[i]);
+                }
             }
-            _selectionChangedSkip = false;
+            finally
+            {
+                _selectionChangedSkip = false;
+            }
 
             _grid.ScrollIntoView(items[rowIndex], null);
             _onFocusedItemChanged?.Invoke(items[rowIndex] as TItem);
             e.Handled = true;
         }
-        else if (!isShift && rowIndex >= 0)
+        else if (!isShift && !e.KeyModifiers.HasFlag(KeyModifiers.Control) && rowIndex >= 0)
         {
             _shiftAnchorIndex = rowIndex;
             _shiftCurrentIndex = rowIndex;
