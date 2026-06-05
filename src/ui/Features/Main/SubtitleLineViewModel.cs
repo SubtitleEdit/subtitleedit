@@ -127,7 +127,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         Id = Guid.TryParse(paragraph.Id, out var guid) ? guid : Guid.NewGuid();
         Paragraph = paragraph;
 
-        if (subtitleFormat is AdvancedSubStationAlpha)
+        if (subtitleFormat is AdvancedSubStationAlpha or SubStationAlpha)
         {
             Style = paragraph.Extra;
         }
@@ -149,7 +149,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             Bookmark = Bookmark,
         };
 
-        if (subtitleFormat != null && subtitleFormat is AdvancedSubStationAlpha)
+        if (subtitleFormat is AdvancedSubStationAlpha or SubStationAlpha)
         {
             p.Extra = Style;
         }
@@ -173,7 +173,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             Bookmark = Bookmark,
         };
 
-        if (subtitleFormat != null && subtitleFormat is AdvancedSubStationAlpha)
+        if (subtitleFormat is AdvancedSubStationAlpha or SubStationAlpha)
         {
             p.Extra = Style;
         }
@@ -534,7 +534,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         Style = p.Style;
         Layer = p.Layer;
         Extra = p.Extra;
-        if (subtitleFormat is AdvancedSubStationAlpha)
+        if (subtitleFormat is AdvancedSubStationAlpha or SubStationAlpha)
         {
             Style = p.Extra;
         }
