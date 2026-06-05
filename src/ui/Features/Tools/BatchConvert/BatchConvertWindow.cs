@@ -143,7 +143,6 @@ public class BatchConvertWindow : Window
         var dataGrid = new DataGrid
         {
             AutoGenerateColumns = false,
-            SelectionMode = DataGridSelectionMode.Extended,
             CanUserResizeColumns = true,
             CanUserSortColumns = true,
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -190,16 +189,7 @@ public class BatchConvertWindow : Window
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedBatchItem)) { Source = vm });
         vm.FileGrid = dataGrid;
-        dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
-        {
-            if (e.Key is Key.Home or Key.End && dataGrid.ItemsSource is IList items && items.Count > 0)
-            {
-                var target = e.Key == Key.Home ? items[0] : items[^1];
-                dataGrid.SelectedItem = target;
-                dataGrid.ScrollIntoView(target, null);
-                e.Handled = true;
-            }
-        }, RoutingStrategies.Tunnel);
+        new DataGridCheckboxMultiSelect<BatchConvertItem>(dataGrid, onFocusedItemChanged: item => vm.SelectedBatchItem = item);
 
         var comboBoxSubtitleFormat = UiUtil.MakeComboBox(vm.TargetFormats, vm, nameof(vm.SelectedTargetFormat));
         comboBoxSubtitleFormat.SelectionChanged += (_, _) => vm.ComboBoxSubtitleFormatChanged();
