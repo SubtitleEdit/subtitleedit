@@ -135,22 +135,31 @@ public partial class BinaryEditViewModel : ObservableObject
     partial void OnSelectedSubtitleChanged(BinarySubtitleItem? value)
     {
         UpdateOverlayPosition();
-        UpdateStatusText();
     }
 
-    private void UpdateStatusText()
+    internal void SubtitleGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (SelectedSubtitle == null)
+        RefreshStatusText();
+    }
+
+    private void RefreshStatusText()
+    {
+        var selectedCount = SubtitleGrid?.SelectedItems?.Count ?? 0;
+        if (selectedCount == 0)
         {
             StatusText = $"0/{Subtitles.Count}";
             CurrentPositionAndSize = string.Empty;
         }
-        else
+        else if (selectedCount == 1 && SelectedSubtitle != null)
         {
-            var index = Subtitles.IndexOf(SelectedSubtitle);
-            StatusText = $"{index + 1}/{Subtitles.Count}";
+            StatusText = $"{Subtitles.IndexOf(SelectedSubtitle) + 1}/{Subtitles.Count}";
             CurrentPositionAndSize = string.Format(Se.Language.General.PositionX, $"{SelectedSubtitle.X},{SelectedSubtitle.Y}") + Environment.NewLine +
                                      string.Format(Se.Language.General.SizeX, $"{SelectedSubtitle.Bitmap?.Size.Width}x{SelectedSubtitle.Bitmap?.Size.Height}");
+        }
+        else
+        {
+            StatusText = string.Format(Se.Language.Main.XLinesSelectedOfY, selectedCount, Subtitles.Count);
+            CurrentPositionAndSize = string.Empty;
         }
     }
 
@@ -443,7 +452,7 @@ public partial class BinaryEditViewModel : ObservableObject
             SelectAndScrollToRow(0);
             ScreenWidth = Subtitles[0].ScreenSize.Width;
             ScreenHeight = Subtitles[0].ScreenSize.Height;
-            UpdateStatusText();
+            RefreshStatusText();
             Window.Title = string.Format(Se.Language.Tools.ImageBasedEdit.EditImagedBaseSubtitleX, fileName);
         }
 
@@ -1301,7 +1310,7 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         UpdateOverlayPosition();
-        UpdateStatusText();
+        RefreshStatusText();
     }
 
     [RelayCommand]
@@ -1625,7 +1634,7 @@ public partial class BinaryEditViewModel : ObservableObject
             selectedItem.Bitmap = skBitmap.ToAvaloniaBitmap();
 
             UpdateOverlayPosition();
-            UpdateStatusText();
+            RefreshStatusText();
         }
         catch (Exception ex)
         {
@@ -1661,7 +1670,7 @@ public partial class BinaryEditViewModel : ObservableObject
 
             // Update the overlay
             UpdateOverlayPosition();
-            UpdateStatusText();
+            RefreshStatusText();
 
             // Clean up
             result.ResultBitmap.Dispose();
@@ -1722,7 +1731,7 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         Renumber();
-        UpdateStatusText();
+        RefreshStatusText();
     }
 
     public void OnKeyDown(KeyEventArgs e)
@@ -1880,7 +1889,7 @@ public partial class BinaryEditViewModel : ObservableObject
                 item.Bitmap?.Dispose();
             }
 
-            UpdateStatusText();
+            RefreshStatusText();
 
             return;
         });

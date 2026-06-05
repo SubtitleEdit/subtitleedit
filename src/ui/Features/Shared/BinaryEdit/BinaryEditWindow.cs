@@ -398,6 +398,7 @@ public class BinaryEditWindow : Window
         menuItemInsertSubtitle.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsInsertSubtitleVisible)));
 
         vm.SubtitleGrid = dataGrid;
+        dataGrid.SelectionChanged += vm.SubtitleGridSelectionChanged;
 
         var dataGridBorder = UiUtil.MakeBorderForControlNoPadding(dataGrid);
         dataGridBorder.Margin = new Thickness(0, 0, 0, 5);
