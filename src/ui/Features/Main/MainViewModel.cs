@@ -17215,10 +17215,15 @@ public partial class MainViewModel :
                     return;
                 }
             }
-            else
+            else if (!_subtitleGridIsControlPressed || rowIndex < 0)
             {
                 _shiftSelectAnchorIndex = -1;
                 _shiftSelectCurrentIndex = -1;
+            }
+            else if (_shiftSelectAnchorIndex >= 0)
+            {
+                // Ctrl+click on a row: preserve the existing anchor, suppress SelectionChanged reset
+                _mouseClickSetAnchor = true;
             }
 
             if (_subtitleGridIsLeftClick && !_subtitleGridIsControlPressed && rowIndex >= 0)

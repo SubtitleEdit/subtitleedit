@@ -134,6 +134,11 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
             _shiftCurrentIndex = rowIndex;
             _mouseClickSetAnchor = true;
         }
+        else if (!isShift && e.KeyModifiers.HasFlag(KeyModifiers.Control) && _shiftAnchorIndex >= 0)
+        {
+            // Ctrl+click on a row: preserve the existing anchor, suppress SelectionChanged reset
+            _mouseClickSetAnchor = true;
+        }
         else if (!isShift)
         {
             _shiftAnchorIndex = -1;
