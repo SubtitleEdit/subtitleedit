@@ -16923,11 +16923,12 @@ public partial class MainViewModel :
 
             if (IsTextInputFocused())
             {
-                // Bare Left/Right are fundamental caret navigation in any text
-                // input — never override them with shortcuts even when
+                // Bare and Ctrl+Left/Right are fundamental caret navigation in any
+                // text input — never override them with shortcuts even when
                 // "allow single-letter shortcuts in text box" is on (#11357).
                 if ((keyEventArgs.Key == Key.Left || keyEventArgs.Key == Key.Right)
-                    && keyEventArgs.KeyModifiers == KeyModifiers.None)
+                    && (keyEventArgs.KeyModifiers == KeyModifiers.None
+                        || keyEventArgs.KeyModifiers == KeyModifiers.Control))
                 {
                     return;
                 }
