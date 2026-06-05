@@ -14,9 +14,9 @@
 
 ; Version constants — updated by installer/WindowsInno/update-version.ps1
 
-#define app_ver              "5.0.0"
-#define app_ver_suffix       "beta4"
-#define app_ver_full         "5.0.0.4"
+#define app_ver         "5.0.0"
+#define app_ver_suffix  ""
+#define app_ver_full    "5.0.0.0"
 
 ; Shows "5.0.0 beta4" when suffix is set, plain "5.0.0" for release builds
 #define app_ver_display app_ver_suffix != "" ? app_ver + " " + app_ver_suffix : app_ver

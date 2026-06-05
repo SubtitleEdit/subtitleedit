@@ -2,6 +2,16 @@
 Subtitle Edit Changelog
 
 
+v5.0.0 (5th June 2026)
+
+* Update Polish translation - thx potplayer-fanpack
+* Fix #11357: also ignore Ctrl+Left/Right word-jump navigation while a text box is focused
+* Fix #11422: "Check for updates" download button opened two browser tabs
+* Fix OCR Change All not replacing current item in BinaryImageCompare mode
+* Fix shift-click and Shift+arrow selection in subtitle/batch-convert/OCR grids - thx mjuhasz
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-rc3 (5th June 2026)
 
 * Add multi-select to Batch Convert file grid (#11407) - thx sharazy

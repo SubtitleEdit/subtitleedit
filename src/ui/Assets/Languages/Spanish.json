@@ -1,8 +1,8 @@
-﻿{
+{
   "Title": "Subtitle Edit",
   "TranslatedBy": "Gemini",
   "CultureName": "es-ES",
-  "Version": "v5.0.0-rc1",
+  "version": "v5.0.0",
   "General": {
     "Abort": "Abortar",
     "Actor": "Actor",
