@@ -1798,9 +1798,9 @@ public partial class BinaryEditViewModel : ObservableObject
 
         if (string.IsNullOrEmpty(_loadFileName))
         {
-            if (_initialSelectedIndex >= 0 && Subtitles.Count > 0)
+            if (Subtitles.Count > 0)
             {
-                SelectAndScrollToRow(_initialSelectedIndex);
+                SelectAndScrollToRow(Math.Max(0, _initialSelectedIndex));
             }
             return;
         }
