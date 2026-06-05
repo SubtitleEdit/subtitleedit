@@ -13,8 +13,8 @@ namespace Nikse.SubtitleEdit.Logic;
 public class DataGridCheckboxMultiSelect<TItem> where TItem : class
 {
     private readonly DataGrid _grid;
-    private readonly Func<TItem, bool> _getChecked;
-    private readonly Action<TItem, bool> _setChecked;
+    private readonly Func<TItem, bool>? _getChecked;
+    private readonly Action<TItem, bool>? _setChecked;
     private readonly Func<TItem, bool>? _canToggle;
     private readonly Action<TItem?>? _onFocusedItemChanged;
     private int _shiftAnchorIndex = -1;
@@ -24,10 +24,11 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
 
     // The caller does not need to store the returned instance.
     // Event subscriptions on dataGrid keep it alive for the lifetime of the grid.
+    // Pass getChecked/setChecked as null for non-checkbox grids (shift-select only, Space key is a no-op).
     public DataGridCheckboxMultiSelect(
         DataGrid dataGrid,
-        Func<TItem, bool> getChecked,
-        Action<TItem, bool> setChecked,
+        Func<TItem, bool>? getChecked = null,
+        Action<TItem, bool>? setChecked = null,
         Func<TItem, bool>? canToggle = null,
         Action<TItem?>? onFocusedItemChanged = null)
     {
@@ -243,6 +244,9 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
 
     private void ToggleCheckboxForSelectedRows()
     {
+        if (_getChecked == null || _setChecked == null)
+            return;
+
         var selected = _grid.SelectedItems.OfType<TItem>().ToList();
         if (selected.Count == 0)
         {

@@ -399,6 +399,10 @@ public class BinaryEditWindow : Window
 
         vm.SubtitleGrid = dataGrid;
         dataGrid.SelectionChanged += vm.SubtitleGridSelectionChanged;
+        new DataGridCheckboxMultiSelect<BinarySubtitleItem>(
+            dataGrid,
+            item => item.IsForced,
+            (item, v) => item.IsForced = v);
 
         var dataGridBorder = UiUtil.MakeBorderForControlNoPadding(dataGrid);
         dataGridBorder.Margin = new Thickness(0, 0, 0, 5);

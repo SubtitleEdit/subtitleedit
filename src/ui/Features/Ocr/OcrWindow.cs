@@ -461,7 +461,7 @@ public class OcrWindow : Window
         dataGridSubtitle.KeyDown += vm.SubtitleGridKeyDown;
         dataGridSubtitle.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
-            if (e.Key is Key.Home or Key.End && dataGridSubtitle.ItemsSource is IList items && items.Count > 0)
+            if (e.Key is Key.Home or Key.End && !e.KeyModifiers.HasFlag(KeyModifiers.Shift) && dataGridSubtitle.ItemsSource is IList items && items.Count > 0)
             {
                 var target = e.Key == Key.Home ? items[0] : items[^1];
                 dataGridSubtitle.SelectedItem = target;
@@ -474,6 +474,7 @@ public class OcrWindow : Window
         dataGridSubtitle.AddHandler(InputElement.PointerReleasedEvent, vm.DataGridSubtitleMacPointerReleased, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         dataGridSubtitle.SelectionChanged += vm.SubtitleGridSelectionChanged;
         vm.SubtitleGrid = dataGridSubtitle;
+        new DataGridCheckboxMultiSelect<OcrSubtitleItem>(dataGridSubtitle);
 
         // Create a Flyout for the DataGrid
         var flyout = new MenuFlyout();
