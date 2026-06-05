@@ -17158,6 +17158,9 @@ public partial class MainViewModel :
             _subtitleGridIsLeftClick = props.IsLeftButtonPressed;
             _subtitleGridIsRightClick = props.IsRightButtonPressed;
             _subtitleGridIsControlPressed = e.KeyModifiers.HasFlag(KeyModifiers.Control);
+            // On macOS, Cmd (Meta) is the multi-select modifier; Ctrl triggers the context menu instead
+            var isMultiSelectModifier = _subtitleGridIsControlPressed
+                || (OperatingSystem.IsMacOS() && e.KeyModifiers.HasFlag(KeyModifiers.Meta));
 
             var hitTest = SubtitleGrid.InputHitTest(e.GetPosition(SubtitleGrid));
             var current = hitTest as Control;
@@ -17215,18 +17218,18 @@ public partial class MainViewModel :
                     return;
                 }
             }
-            else if (!_subtitleGridIsControlPressed || rowIndex < 0)
+            else if (!isMultiSelectModifier || rowIndex < 0)
             {
                 _shiftSelectAnchorIndex = -1;
                 _shiftSelectCurrentIndex = -1;
             }
             else if (_shiftSelectAnchorIndex >= 0)
             {
-                // Ctrl+click on a row: preserve the existing anchor, suppress SelectionChanged reset
+                // Ctrl/Cmd+click on a row: preserve the existing anchor, suppress SelectionChanged reset
                 _mouseClickSetAnchor = true;
             }
 
-            if (_subtitleGridIsLeftClick && !_subtitleGridIsControlPressed && rowIndex >= 0)
+            if (_subtitleGridIsLeftClick && !isMultiSelectModifier && rowIndex >= 0)
             {
                 _shiftSelectAnchorIndex = rowIndex;
                 _shiftSelectCurrentIndex = rowIndex;

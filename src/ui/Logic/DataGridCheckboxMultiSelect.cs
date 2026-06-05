@@ -94,6 +94,9 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
             return;
 
         var isShift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+        // On macOS, Cmd (Meta) is the multi-select modifier
+        var isCtrl = e.KeyModifiers.HasFlag(KeyModifiers.Control)
+            || (OperatingSystem.IsMacOS() && e.KeyModifiers.HasFlag(KeyModifiers.Meta));
         var rowIndex = GetRowIndexFromPoint(e.GetPosition(_grid));
 
         if (isShift && rowIndex >= 0)
@@ -135,15 +138,15 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
             _onFocusedItemChanged?.Invoke(items[rowIndex] as TItem);
             e.Handled = true;
         }
-        else if (!isShift && !e.KeyModifiers.HasFlag(KeyModifiers.Control) && rowIndex >= 0)
+        else if (!isShift && !isCtrl && rowIndex >= 0)
         {
             _shiftAnchorIndex = rowIndex;
             _shiftCurrentIndex = rowIndex;
             _mouseClickSetAnchor = true;
         }
-        else if (!isShift && e.KeyModifiers.HasFlag(KeyModifiers.Control) && _shiftAnchorIndex >= 0)
+        else if (!isShift && isCtrl && _shiftAnchorIndex >= 0)
         {
-            // Ctrl+click on a row: preserve the existing anchor, suppress SelectionChanged reset
+            // Ctrl/Cmd+click on a row: preserve the existing anchor, suppress SelectionChanged reset
             _mouseClickSetAnchor = true;
         }
         else if (!isShift)
