@@ -86,6 +86,7 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private string _llamaCppOcrServerButtonText;
     [ObservableProperty] private string _progressText;
     [ObservableProperty] private double _progressValue;
+    [ObservableProperty] private string _selectionStatus;
     [ObservableProperty] private Bitmap? _currentImageSource;
     [ObservableProperty] private string _currentBitmapInfo;
     [ObservableProperty] private string _currentText;
@@ -206,6 +207,7 @@ public partial class OcrViewModel : ObservableObject
         CurrentBitmapInfo = string.Empty;
         CurrentText = string.Empty;
         ProgressText = string.Empty;
+        SelectionStatus = string.Empty;
         OllamaModel = string.Empty;
         OllamaUrl = string.Empty;
         LlamaCppUrl = string.Empty;
@@ -4195,6 +4197,24 @@ public partial class OcrViewModel : ObservableObject
     {
         ShowContextMenu = OcrSubtitleItems.Count > 0;
         HasMultipleLinesSelected = SubtitleGrid != null && SubtitleGrid.SelectedItems.Count > 1;
+    }
+
+    internal void SubtitleGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        var selectedCount = SubtitleGrid?.SelectedItems?.Count ?? 0;
+        if (selectedCount == 0)
+        {
+            SelectionStatus = string.Empty;
+        }
+        else if (selectedCount == 1)
+        {
+            var index = SubtitleGrid?.SelectedIndex ?? -1;
+            SelectionStatus = index >= 0 ? $"{index + 1}/{OcrSubtitleItems.Count}" : $"1/{OcrSubtitleItems.Count}";
+        }
+        else
+        {
+            SelectionStatus = string.Format(Se.Language.Main.XLinesSelectedOfY, selectedCount, OcrSubtitleItems.Count);
+        }
     }
 
     [RelayCommand]
