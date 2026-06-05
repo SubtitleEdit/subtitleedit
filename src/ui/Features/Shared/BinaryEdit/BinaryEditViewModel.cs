@@ -63,6 +63,7 @@ public partial class BinaryEditViewModel : ObservableObject
     private readonly IBluRayHelper _bluRayHelper;
 
     private string _loadFileName = string.Empty;
+    private int _initialSelectedIndex = -1;
 
     public BinaryEditViewModel(IFileHelper fileHelper, IWindowService windowService, IFolderHelper folderHelper, IShortcutManager shortcutManager, IBluRayHelper bluRayHelper)
     {
@@ -77,9 +78,10 @@ public partial class BinaryEditViewModel : ObservableObject
         CurrentPositionAndSize = string.Empty;
     }
 
-    public void Initialize(string fileName, IOcrSubtitle? subtitle)
+    public void Initialize(string fileName, IOcrSubtitle? subtitle, int selectedIndex = 0)
     {
         _loadFileName = fileName;
+        _initialSelectedIndex = selectedIndex;
 
         if (subtitle != null && string.IsNullOrEmpty(fileName) && subtitle.Count > 0)
         {
@@ -97,13 +99,14 @@ public partial class BinaryEditViewModel : ObservableObject
         }
     }
 
-    public void Initialize(IList<OcrSubtitleItem> ocrSubtitleItems)
+    public void Initialize(IList<OcrSubtitleItem> ocrSubtitleItems, int selectedIndex = 0)
     {
         if (ocrSubtitleItems == null || ocrSubtitleItems.Count == 0)
         {
             return;
         }
 
+        _initialSelectedIndex = selectedIndex;
         var screenSize = ocrSubtitleItems[0].GetScreenSize();
         ScreenWidth = screenSize.Width;
         ScreenHeight = screenSize.Height;
@@ -139,13 +142,13 @@ public partial class BinaryEditViewModel : ObservableObject
     {
         if (SelectedSubtitle == null)
         {
-            StatusText = string.Format(Se.Language.General.XSubtitles, Subtitles.Count);
+            StatusText = string.Empty;
             CurrentPositionAndSize = string.Empty;
         }
         else
         {
             var index = Subtitles.IndexOf(SelectedSubtitle);
-            StatusText = string.Format(Se.Language.General.SubtitleXOfY, index + 1, Subtitles.Count);
+            StatusText = $"{index + 1}/{Subtitles.Count}";
             CurrentPositionAndSize = string.Format(Se.Language.General.PositionX, $"{SelectedSubtitle.X},{SelectedSubtitle.Y}") + Environment.NewLine +
                                      string.Format(Se.Language.General.SizeX, $"{SelectedSubtitle.Bitmap?.Size.Width}x{SelectedSubtitle.Bitmap?.Size.Height}");
         }
@@ -1782,6 +1785,10 @@ public partial class BinaryEditViewModel : ObservableObject
 
         if (string.IsNullOrEmpty(_loadFileName))
         {
+            if (_initialSelectedIndex >= 0 && Subtitles.Count > 0)
+            {
+                SelectAndScrollToRow(_initialSelectedIndex);
+            }
             return;
         }
 

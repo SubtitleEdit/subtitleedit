@@ -472,6 +472,7 @@ public class OcrWindow : Window
         dataGridSubtitle.DoubleTapped += (s, e) => vm.SubtitleGridDoubleTapped();
         dataGridSubtitle.AddHandler(InputElement.PointerPressedEvent, vm.DataGridSubtitleMacPointerPressed, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         dataGridSubtitle.AddHandler(InputElement.PointerReleasedEvent, vm.DataGridSubtitleMacPointerReleased, Avalonia.Interactivity.RoutingStrategies.Tunnel);
+        dataGridSubtitle.SelectionChanged += vm.SubtitleGridSelectionChanged;
         vm.SubtitleGrid = dataGridSubtitle;
 
         // Create a Flyout for the DataGrid
@@ -998,8 +999,18 @@ public class OcrWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
+        var subtitleCountText = new TextBlock
+        {
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(5, 0, 0, 0),
+        };
+        subtitleCountText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.StatusTextRight)));
+        subtitleCountText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm, Converter = new InverseBooleanConverter() });
+
         grid.Add(progressBar, 0, 0);
         grid.Add(statusText, 0, 0);
+        grid.Add(subtitleCountText, 0, 0);
         grid.Add(buttonStart, 0, 1);
         grid.Add(buttonPause, 0, 2);
         grid.Add(buttonInspect, 0, 3);

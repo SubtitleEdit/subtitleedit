@@ -86,6 +86,7 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private string _llamaCppOcrServerButtonText;
     [ObservableProperty] private string _progressText;
     [ObservableProperty] private double _progressValue;
+    [ObservableProperty] private string _statusTextRight;
     [ObservableProperty] private Bitmap? _currentImageSource;
     [ObservableProperty] private string _currentBitmapInfo;
     [ObservableProperty] private string _currentText;
@@ -206,6 +207,7 @@ public partial class OcrViewModel : ObservableObject
         CurrentBitmapInfo = string.Empty;
         CurrentText = string.Empty;
         ProgressText = string.Empty;
+        StatusTextRight = string.Empty;
         OllamaModel = string.Empty;
         OllamaUrl = string.Empty;
         LlamaCppUrl = string.Empty;
@@ -573,7 +575,8 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<BinaryEditWindow, BinaryEditViewModel>(Window, vm => { vm.Initialize(string.Empty, _ocrSubtitle); });
+        var selectedIndex = SelectedOcrSubtitleItem != null ? OcrSubtitleItems.IndexOf(SelectedOcrSubtitleItem) : 0;
+        var result = await _windowService.ShowDialogAsync<BinaryEditWindow, BinaryEditViewModel>(Window, vm => { vm.Initialize(string.Empty, _ocrSubtitle, selectedIndex); });
         _isCtrlDown = false;
     }
 
@@ -585,8 +588,9 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
+        var selectedIndex = SelectedOcrSubtitleItem != null ? OcrSubtitleItems.IndexOf(SelectedOcrSubtitleItem) : 0;
         var items = OcrSubtitleItems.ToList();
-        await _windowService.ShowDialogAsync<BinaryEditWindow, BinaryEditViewModel>(Window, vm => { vm.Initialize(items); });
+        await _windowService.ShowDialogAsync<BinaryEditWindow, BinaryEditViewModel>(Window, vm => { vm.Initialize(items, selectedIndex); });
         _isCtrlDown = false;
     }
 
@@ -4195,6 +4199,23 @@ public partial class OcrViewModel : ObservableObject
     {
         ShowContextMenu = OcrSubtitleItems.Count > 0;
         HasMultipleLinesSelected = SubtitleGrid != null && SubtitleGrid.SelectedItems.Count > 1;
+    }
+
+    internal void SubtitleGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        var selectedCount = SubtitleGrid?.SelectedItems?.Count ?? 0;
+        if (selectedCount == 0)
+        {
+            StatusTextRight = string.Empty;
+        }
+        else if (selectedCount == 1 && SelectedOcrSubtitleItem != null)
+        {
+            StatusTextRight = $"{OcrSubtitleItems.IndexOf(SelectedOcrSubtitleItem) + 1}/{OcrSubtitleItems.Count}";
+        }
+        else
+        {
+            StatusTextRight = string.Format(Se.Language.Main.XLinesSelectedOfY, selectedCount, OcrSubtitleItems.Count);
+        }
     }
 
     [RelayCommand]
