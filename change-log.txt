@@ -2,7 +2,7 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-rc3 (TBD)
+v5.0.0-rc3 (5th June 2026)
 
 * Add multi-select to Batch Convert file grid (#11407) - thx sharazy
 * Add multi-select to Fix Common Errors fix list - thx mjuhasz
