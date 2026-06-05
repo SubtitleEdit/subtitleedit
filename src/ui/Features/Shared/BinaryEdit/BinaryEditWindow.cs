@@ -422,7 +422,8 @@ public class BinaryEditWindow : Window
                     Child = new CheckBox
                     {
                         [!ToggleButton.IsCheckedProperty] = new Binding(nameof(BinarySubtitleItem.IsForced)),
-                        HorizontalAlignment = HorizontalAlignment.Center
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        Focusable = false
                     }
                 }),
         });
