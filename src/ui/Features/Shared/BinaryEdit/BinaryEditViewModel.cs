@@ -63,7 +63,6 @@ public partial class BinaryEditViewModel : ObservableObject
     private readonly IBluRayHelper _bluRayHelper;
 
     private string _loadFileName = string.Empty;
-    private int _initialSelectedIndex = -1;
 
     public BinaryEditViewModel(IFileHelper fileHelper, IWindowService windowService, IFolderHelper folderHelper, IShortcutManager shortcutManager, IBluRayHelper bluRayHelper)
     {
@@ -78,10 +77,9 @@ public partial class BinaryEditViewModel : ObservableObject
         CurrentPositionAndSize = string.Empty;
     }
 
-    public void Initialize(string fileName, IOcrSubtitle? subtitle, int selectedIndex = -1)
+    public void Initialize(string fileName, IOcrSubtitle? subtitle)
     {
         _loadFileName = fileName;
-        _initialSelectedIndex = selectedIndex;
 
         if (subtitle != null && string.IsNullOrEmpty(fileName) && subtitle.Count > 0)
         {
@@ -99,14 +97,13 @@ public partial class BinaryEditViewModel : ObservableObject
         }
     }
 
-    public void Initialize(IList<OcrSubtitleItem> ocrSubtitleItems, int selectedIndex = -1)
+    public void Initialize(IList<OcrSubtitleItem> ocrSubtitleItems)
     {
         if (ocrSubtitleItems == null || ocrSubtitleItems.Count == 0)
         {
             return;
         }
 
-        _initialSelectedIndex = selectedIndex;
         var screenSize = ocrSubtitleItems[0].GetScreenSize();
         ScreenWidth = screenSize.Width;
         ScreenHeight = screenSize.Height;
@@ -1800,7 +1797,7 @@ public partial class BinaryEditViewModel : ObservableObject
         {
             if (Subtitles.Count > 0)
             {
-                SelectAndScrollToRow(Math.Max(0, _initialSelectedIndex));
+                SelectAndScrollToRow(0);
             }
             return;
         }
