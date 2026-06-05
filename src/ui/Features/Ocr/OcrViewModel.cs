@@ -575,9 +575,7 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
-        var selectedIndex = SelectedOcrSubtitleItem != null ? OcrSubtitleItems.IndexOf(SelectedOcrSubtitleItem) : 0;
-        var selectedIndices = SubtitleGrid?.SelectedItems?.Cast<OcrSubtitleItem>().Select(i => OcrSubtitleItems.IndexOf(i)).Where(i => i >= 0).ToList();
-        var result = await _windowService.ShowDialogAsync<BinaryEditWindow, BinaryEditViewModel>(Window, vm => { vm.Initialize(string.Empty, _ocrSubtitle, selectedIndex, selectedIndices); });
+        var result = await _windowService.ShowDialogAsync<BinaryEditWindow, BinaryEditViewModel>(Window, vm => { vm.Initialize(string.Empty, _ocrSubtitle); });
         _isCtrlDown = false;
     }
 
@@ -589,10 +587,8 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
-        var selectedIndex = SelectedOcrSubtitleItem != null ? OcrSubtitleItems.IndexOf(SelectedOcrSubtitleItem) : 0;
-        var selectedIndices = SubtitleGrid?.SelectedItems?.Cast<OcrSubtitleItem>().Select(i => OcrSubtitleItems.IndexOf(i)).Where(i => i >= 0).ToList();
         var items = OcrSubtitleItems.ToList();
-        await _windowService.ShowDialogAsync<BinaryEditWindow, BinaryEditViewModel>(Window, vm => { vm.Initialize(items, selectedIndex, selectedIndices); });
+        await _windowService.ShowDialogAsync<BinaryEditWindow, BinaryEditViewModel>(Window, vm => { vm.Initialize(items); });
         _isCtrlDown = false;
     }
 
