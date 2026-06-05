@@ -185,7 +185,7 @@ public partial class MainViewModel :
     IApplyAssaStyles,
     IApplySsaStyles
 {
-    [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _subtitles;
+    [ObservableProperty] private RangeObservableCollection<SubtitleLineViewModel> _subtitles;
     [ObservableProperty] private SubtitleLineViewModel? _selectedSubtitle;
     private List<SubtitleLineViewModel>? _selectedSubtitles;
     [ObservableProperty] private int? _selectedSubtitleIndex;
@@ -7016,10 +7016,7 @@ public partial class MainViewModel :
         if (result.OkPressed)
         {
             Subtitles.Clear();
-            foreach (var p in result.Paragraphs)
-            {
-                Subtitles.Add(p.Subtitle);
-            }
+            Subtitles.AddRange(result.Paragraphs.Select(p => p.Subtitle));
 
             SelectAndScrollToRow(0);
         }
@@ -7093,10 +7090,7 @@ public partial class MainViewModel :
         if (result.OkPressed)
         {
             Subtitles.Clear();
-            foreach (var p in result.SyncedSubtitles)
-            {
-                Subtitles.Add(p);
-            }
+            Subtitles.AddRange(result.SyncedSubtitles);
 
             SelectAndScrollToRow(0);
         }
@@ -7125,10 +7119,7 @@ public partial class MainViewModel :
         if (result.OkPressed)
         {
             Subtitles.Clear();
-            foreach (var p in result.SyncedSubtitles)
-            {
-                Subtitles.Add(p);
-            }
+            Subtitles.AddRange(result.SyncedSubtitles);
 
             SelectAndScrollToRow(0);
         }
@@ -8060,10 +8051,7 @@ public partial class MainViewModel :
 
         var sortedSubtitles = Subtitles.OrderBy(p => p.StartTime).ToList();
         Subtitles.Clear();
-        foreach (var s in sortedSubtitles)
-        {
-            Subtitles.Add(s);
-        }
+        Subtitles.AddRange(sortedSubtitles);
 
         Renumber();
 
@@ -8091,10 +8079,7 @@ public partial class MainViewModel :
 
         var sortedSubtitles = Subtitles.OrderBy(p => p.EndTime).ToList();
         Subtitles.Clear();
-        foreach (var s in sortedSubtitles)
-        {
-            Subtitles.Add(s);
-        }
+        Subtitles.AddRange(sortedSubtitles);
 
         Renumber();
 
@@ -8122,10 +8107,7 @@ public partial class MainViewModel :
 
         var sortedSubtitles = Subtitles.OrderBy(p => p.Number).ToList();
         Subtitles.Clear();
-        foreach (var s in sortedSubtitles)
-        {
-            Subtitles.Add(s);
-        }
+        Subtitles.AddRange(sortedSubtitles);
 
         Renumber();
 
@@ -8161,10 +8143,7 @@ public partial class MainViewModel :
         {
             var selectedSubtitle = SelectedSubtitle;
             Subtitles.Clear();
-            foreach (var s in result.Subtitles)
-            {
-                Subtitles.Add(s);
-            }
+            Subtitles.AddRange(result.Subtitles);
 
             Renumber();
 
@@ -12670,10 +12649,7 @@ public partial class MainViewModel :
     private void RestoreUndoRedoState(UndoRedoItem undoRedoObject)
     {
         Subtitles.Clear();
-        foreach (var p in undoRedoObject.Subtitles)
-        {
-            Subtitles.Add(p);
-        }
+        Subtitles.AddRange(undoRedoObject.Subtitles);
 
         _subtitleFileName = undoRedoObject.SubtitleFileName;
         if (!string.IsNullOrEmpty(undoRedoObject.SelectedEncodingDisplayName))
@@ -17733,6 +17709,22 @@ public partial class MainViewModel :
     private void OnSubtitlesCollectionChangedForMpv(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         _mpvPreviewDirty = true;
+
+        // AddRange (and Clear) raise a single Reset with no NewItems/OldItems,
+        // so re-attach our per-row listener to every current row. Detaching
+        // first keeps each row subscribed exactly once; unsubscribing from a
+        // row we are not subscribed to is a no-op.
+        if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
+        {
+            foreach (var item in Subtitles)
+            {
+                item.PropertyChanged -= OnSubtitleItemChangedForMpv;
+                item.PropertyChanged += OnSubtitleItemChangedForMpv;
+            }
+
+            return;
+        }
+
         if (e.NewItems != null)
             foreach (SubtitleLineViewModel item in e.NewItems)
                 item.PropertyChanged += OnSubtitleItemChangedForMpv;

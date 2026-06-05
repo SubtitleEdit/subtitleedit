@@ -500,6 +500,13 @@ namespace Nikse.SubtitleEdit.Core.Common
                     i++;
                 }
 
+                // Nothing was stripped (e.g. a stray '<' that is not a known tag);
+                // return the original instead of allocating an identical copy.
+                if (arrayIndex == span.Length)
+                {
+                    return s;
+                }
+
                 return new string(buffer.Slice(0, arrayIndex));
             }
             finally
@@ -559,15 +566,19 @@ namespace Nikse.SubtitleEdit.Core.Common
                 if (endIdx != -1) { length = endIdx + 1; return true; }
             }
 
-            // Complex whitespace variants
-            string[] longTags = { "</font>", "< /font>", "</ font>" };
-            foreach (var tag in longTags)
+            // Closing font tag and its malformed whitespace variants. Checked
+            // directly (interned literals, no per-call array, no loop) - reached
+            // for every </font> in a styled file, so it is on the hot path.
+            if (slice.StartsWith("</font>".AsSpan(), StringComparison.OrdinalIgnoreCase))
             {
-                if (slice.StartsWith(tag, StringComparison.OrdinalIgnoreCase))
-                {
-                    length = tag.Length;
-                    return true;
-                }
+                length = 7;
+                return true;
+            }
+            if (slice.StartsWith("< /font>".AsSpan(), StringComparison.OrdinalIgnoreCase) ||
+                slice.StartsWith("</ font>".AsSpan(), StringComparison.OrdinalIgnoreCase))
+            {
+                length = 8;
+                return true;
             }
 
             return false;
