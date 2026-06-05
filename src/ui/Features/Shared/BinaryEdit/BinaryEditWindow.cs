@@ -555,7 +555,7 @@ public class BinaryEditWindow : Window
 
         controlsPanel.Children.Add(firstRowPanel);
 
-        // Second row - X, Y, Buttons
+        // Second row - X, Y, Screen Width, Screen Height (all geometry together)
         var secondRowPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -610,38 +610,6 @@ public class BinaryEditWindow : Window
         yPanel.Children.Add(yUpDown);
         secondRowPanel.Children.Add(yPanel);
 
-        // Buttons
-        var buttonsPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 5,
-            VerticalAlignment = VerticalAlignment.Bottom,
-        };
-
-        var exportImageButton = UiUtil.MakeButton(vm.ExportImageCommand, IconNames.Export);
-        ToolTip.SetTip(exportImageButton, Se.Language.General.Export);
-        buttonsPanel.Children.Add(exportImageButton);
-
-        var importImageButton = UiUtil.MakeButton(vm.ImportImageCommand, IconNames.Import);
-        ToolTip.SetTip(importImageButton, Se.Language.General.Import);
-        buttonsPanel.Children.Add(importImageButton);
-
-        var setTextButton = UiUtil.MakeButton(vm.SetTextCommand, IconNames.NewText);
-        ToolTip.SetTip(setTextButton, Se.Language.Tools.ImageBasedEdit.SetTextForSubtitle);
-        buttonsPanel.Children.Add(setTextButton);
-
-        secondRowPanel.Children.Add(buttonsPanel);
-
-        controlsPanel.Children.Add(secondRowPanel);
-
-        // Third row - Screen Width, Screen Height
-        var thirdRowPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 10,
-            Margin = new Thickness(0, 10, 0, 0),
-        };
-
         // Screen Width
         var screenWidthPanel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 5 };
         screenWidthPanel.Children.Add(new TextBlock
@@ -664,7 +632,7 @@ public class BinaryEditWindow : Window
             },
         };
         screenWidthPanel.Children.Add(screenWidthUpDown);
-        thirdRowPanel.Children.Add(screenWidthPanel);
+        secondRowPanel.Children.Add(screenWidthPanel);
 
         // Screen Height
         var screenHeightPanel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 5 };
@@ -688,7 +656,33 @@ public class BinaryEditWindow : Window
             },
         };
         screenHeightPanel.Children.Add(screenHeightUpDown);
-        thirdRowPanel.Children.Add(screenHeightPanel);
+        secondRowPanel.Children.Add(screenHeightPanel);
+
+        controlsPanel.Children.Add(secondRowPanel);
+
+        // Third row - Actions: Export/Import (file I/O) grouped separately from Set Text (conversion)
+        var thirdRowPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 12,
+            Margin = new Thickness(0, 10, 0, 0),
+        };
+
+        var fileIoPanel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 5 };
+
+        var exportImageButton = UiUtil.MakeButton(vm.ExportImageCommand, IconNames.Export);
+        ToolTip.SetTip(exportImageButton, Se.Language.General.Export);
+        fileIoPanel.Children.Add(exportImageButton);
+
+        var importImageButton = UiUtil.MakeButton(vm.ImportImageCommand, IconNames.Import);
+        ToolTip.SetTip(importImageButton, Se.Language.General.Import);
+        fileIoPanel.Children.Add(importImageButton);
+
+        thirdRowPanel.Children.Add(fileIoPanel);
+
+        var setTextButton = UiUtil.MakeButton(vm.SetTextCommand, IconNames.NewText);
+        ToolTip.SetTip(setTextButton, Se.Language.Tools.ImageBasedEdit.SetTextForSubtitle);
+        thirdRowPanel.Children.Add(setTextButton);
 
         controlsPanel.Children.Add(thirdRowPanel);
 
