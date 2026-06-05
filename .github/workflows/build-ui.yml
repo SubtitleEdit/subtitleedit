@@ -671,6 +671,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    outputs:
+      release_tag: ${{ steps.tag.outputs.tag }}
     
     steps:
       - uses: actions/checkout@v5
@@ -753,3 +755,13 @@ jobs:
             ./release-assets/SubtitleEdit-Linux-x64.tar.gz
             ./release-assets/SubtitleEdit-Linux-ARM64.tar.gz
             ./release-assets/SubtitleEdit-linux-x64.flatpak
+
+  call-seconv:
+    needs: [create-release]
+    uses: ./.github/workflows/build-seconv.yml
+    with:
+      build_configuration: ${{ inputs.build_configuration }}
+      create_release: true
+      is_prerelease: ${{ inputs.is_prerelease }}
+      release_tag: ${{ needs.create-release.outputs.release_tag }}
+    secrets: inherit
