@@ -14,6 +14,7 @@ v5.0.0-rc3 (TBD)
 * Restore /video: command-line argument for opening a video with the subtitle
 * Update WhisperCpp to v1.8.6
 * Update CrispASR to v0.6.12
+* Add Hungarian translation - thx Zityi
 * Update Turkish translation - thx bilimiyorum
 * Update Russian translation - thx jekovcar
 * Update Bulgarian translation - thx jekovcar

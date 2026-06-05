@@ -70,6 +70,7 @@
 		<None Remove="Assets\Languages\English.json" />
 		<None Remove="Assets\Languages\French.json" />
 		<None Remove="Assets\Languages\German.json" />
+		<None Remove="Assets\Languages\Hungarian.json" />
 		<None Remove="Assets\Languages\Italian.json" />
 		<None Remove="Assets\Languages\Japanese.json" />
 		<None Remove="Assets\Languages\Macedonian.json" />
@@ -109,6 +110,7 @@
 		<AvaloniaResource Include="Assets\Languages\French.json" />
 		<AvaloniaResource Include="Assets\Languages\German.json" />
 		<AvaloniaResource Include="Assets\Languages\ChineseSimplified.json" />
+		<AvaloniaResource Include="Assets\Languages\Hungarian.json" />
 		<AvaloniaResource Include="Assets\Languages\Italian.json" />
 		<AvaloniaResource Include="Assets\Languages\Japanese.json" />
 		<AvaloniaResource Include="Assets\Languages\Macedonian.json" />
