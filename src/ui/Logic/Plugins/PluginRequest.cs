@@ -20,7 +20,21 @@ public class PluginRequest
     /// <summary>A scratch directory the plugin may use; deleted by Subtitle Edit after the run.</summary>
     public string TempDirectory { get; set; } = string.Empty;
 
+    /// <summary>
+    /// A persistent, writable directory private to this plugin (keyed by plugin name).
+    /// Unlike <see cref="TempDirectory"/> it survives between runs, and unlike the plugin's
+    /// install folder it is not touched when the plugin is updated/reinstalled. Use it for
+    /// caches, downloaded models, dictionaries, etc. Subtitle Edit creates it before the run.
+    /// </summary>
+    public string PluginDataDirectory { get; set; } = string.Empty;
+
     public PluginSubtitle Subtitle { get; set; } = new();
+
+    /// <summary>
+    /// Display name of the encoding the subtitle file was loaded with, e.g. "UTF-8 with BOM".
+    /// Empty when unknown. Lets a plugin preserve the original encoding when relevant.
+    /// </summary>
+    public string SubtitleEncoding { get; set; } = string.Empty;
 
     /// <summary>Zero-based indices of the lines selected in the grid (empty if none).</summary>
     public List<int> SelectedIndices { get; set; } = new();
@@ -31,6 +45,9 @@ public class PluginRequest
 
     /// <summary>Total duration of the video in seconds. Null when no video is loaded.</summary>
     public double? VideoDurationSeconds { get; set; }
+
+    /// <summary>Current player position (playhead) in seconds. Null when no video is loaded.</summary>
+    public double? VideoPositionSeconds { get; set; }
 
     /// <summary>Video frame width in pixels. Null when no video is loaded.</summary>
     public int? VideoWidth { get; set; }
