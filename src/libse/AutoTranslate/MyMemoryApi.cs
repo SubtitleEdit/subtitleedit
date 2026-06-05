@@ -200,7 +200,10 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         private static TranslationPair MakeLanguage(string code, string name)
         {
-            var twoLetterIsoName = code.Remove(0, code.Length - 2).ToLowerInvariant();
+            // The code is an RFC3066 locale ("af-ZA"), so the language tag is the
+            // part before the dash. Taking the last two chars instead would yield
+            // the country (e.g. "rm-RO" -> "ro" = Romanian, "ja-JP" -> "jp").
+            var twoLetterIsoName = code.Split('-')[0].ToLowerInvariant();
             return new TranslationPair(name, code, twoLetterIsoName);
         }
 

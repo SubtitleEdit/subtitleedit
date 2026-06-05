@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 "nl",
                 "pl",
                 "pt",
-                "ru",
+                "ro",
                 "ru",
                 "sk",
                 "sv",

@@ -181,6 +181,18 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                     return "vie";
                 case "id":
                     return "id";
+                case "da":
+                    return "dan";
+                case "fi":
+                    return "fin";
+                case "sv":
+                    return "swe";
+                case "ro":
+                    return "rom";
+                case "et":
+                    return "est";
+                case "sl":
+                    return "slo";
                 default:
                     return code;
             }
