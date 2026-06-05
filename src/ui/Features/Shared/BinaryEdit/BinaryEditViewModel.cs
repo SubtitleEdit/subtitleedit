@@ -78,7 +78,7 @@ public partial class BinaryEditViewModel : ObservableObject
         CurrentPositionAndSize = string.Empty;
     }
 
-    public void Initialize(string fileName, IOcrSubtitle? subtitle, int selectedIndex = 0)
+    public void Initialize(string fileName, IOcrSubtitle? subtitle, int selectedIndex = -1)
     {
         _loadFileName = fileName;
         _initialSelectedIndex = selectedIndex;
@@ -99,7 +99,7 @@ public partial class BinaryEditViewModel : ObservableObject
         }
     }
 
-    public void Initialize(IList<OcrSubtitleItem> ocrSubtitleItems, int selectedIndex = 0)
+    public void Initialize(IList<OcrSubtitleItem> ocrSubtitleItems, int selectedIndex = -1)
     {
         if (ocrSubtitleItems == null || ocrSubtitleItems.Count == 0)
         {
@@ -142,7 +142,7 @@ public partial class BinaryEditViewModel : ObservableObject
     {
         if (SelectedSubtitle == null)
         {
-            StatusText = string.Empty;
+            StatusText = $"0/{Subtitles.Count}";
             CurrentPositionAndSize = string.Empty;
         }
         else
