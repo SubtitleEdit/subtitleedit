@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         }
                         else if (next.Text.Replace("<i>", string.Empty).TrimStart().TrimStart('-').TrimStart().StartsWith('"') &&
                                  next.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith('"') &&
-                                 Utilities.CountTagInText(next.Text, '"') == 2)
+                                 Utilities.CountTagInText(next.Text, '"') % 2 == 0)
                         {
                             next = null; // seems to have valid quotes, so no spanning
                         }
