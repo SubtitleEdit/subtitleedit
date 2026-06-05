@@ -2675,7 +2675,7 @@ public partial class MainViewModel :
         {
             _subtitleFileName = string.Empty;
             ResetSubtitle();
-            Subtitles.AddRange(ocrResult.OcredSubtitle);
+            ReplaceSubtitles(ocrResult.OcredSubtitle);
             SelectAndScrollToRow(0);
         }
     }
@@ -13191,7 +13191,7 @@ public partial class MainViewModel :
                     _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) +
                                         SelectedSubtitleFormat.Extension;
                     _subtitle.Renumber();
-                    Subtitles.AddRange(_subtitle.Paragraphs.Select(p =>
+                    ReplaceSubtitles(_subtitle.Paragraphs.Select(p =>
                         new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
                     ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
                     SelectAndScrollToRow(0);
@@ -13792,7 +13792,7 @@ public partial class MainViewModel :
             ResetSubtitle();
             _subtitle = new Subtitle(tsParser.TeletextSubtitlesLookup.First().Value.First().Value);
             _subtitle.Renumber();
-            Subtitles.AddRange(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
+            ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
             SelectAndScrollToRow(0);
             if (Se.Settings.General.AutoOpenVideo)
             {
@@ -13880,7 +13880,7 @@ public partial class MainViewModel :
                 _subtitle.Renumber();
                 _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) +
                                     SelectedSubtitleFormat.Extension;
-                Subtitles.AddRange(
+                ReplaceSubtitles(
                     _subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
                 _converted = true;
                 ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
@@ -13910,7 +13910,7 @@ public partial class MainViewModel :
                 _subtitle.Renumber();
                 _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) +
                                     SelectedSubtitleFormat.Extension;
-                Subtitles.AddRange(
+                ReplaceSubtitles(
                     _subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
                 _converted = true;
                 ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
