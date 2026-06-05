@@ -5,7 +5,6 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Optris.Icons.Avalonia;
 
 namespace Nikse.SubtitleEdit.Features.Help.CheckForUpdates;
 
@@ -31,28 +30,12 @@ public class CheckForUpdatesWindow : Window
         };
         statusLabel.Bind(TextBlock.TextProperty, new Binding(nameof(vm.StatusText)));
 
-        var downloadIcon = new Label
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 4, 0),
-            Padding = new Thickness(0),
-            Foreground = UiUtil.MakeLinkForeground(),
-            Cursor = new Cursor(StandardCursorType.Hand),
-        };
-        Attached.SetIcon(downloadIcon, IconNames.Download);
-        downloadIcon.PointerPressed += (_, _) => vm.OpenDownloadPageCommand.Execute(null);
-
-        var downloadLink = UiUtil.MakeLink(Se.Language.Help.CheckForUpdatesDownloadNewVersion, vm.OpenDownloadPageCommand);
-        downloadLink.DataContext = vm;
-
-        var downloadPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 0, 0, 4),
-            DataContext = vm,
-            Children = { downloadIcon, downloadLink },
-        };
-        downloadPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsDownloadLinkVisible)));
+        var downloadButton = UiUtil.MakeButton(Se.Language.Help.CheckForUpdatesDownloadNewVersion, vm.OpenDownloadPageCommand)
+            .WithIconLeft(IconNames.Download);
+        downloadButton.HorizontalAlignment = HorizontalAlignment.Left;
+        downloadButton.Margin = new Thickness(0, 0, 0, 4);
+        downloadButton.DataContext = vm;
+        downloadButton.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsDownloadLinkVisible)));
 
         var changeLogBox = new TextBox
         {
@@ -82,7 +65,7 @@ public class CheckForUpdatesWindow : Window
         };
 
         grid.Add(statusLabel, 0);
-        grid.Add(downloadPanel, 1);
+        grid.Add(downloadButton, 1);
         grid.Add(changeLogBox, 2);
         grid.Add(panelButtons, 3);
 
