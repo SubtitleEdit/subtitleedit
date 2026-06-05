@@ -220,6 +220,7 @@ public partial class BatchConvertViewModel : ObservableObject
     [ObservableProperty] private bool _sortByDescending;
 
     public Window? Window { get; set; }
+    public DataGrid FileGrid { get; set; } = new();
 
     public bool OkPressed { get; private set; }
     public ScrollViewer FunctionContainer { get; internal set; }
@@ -1572,8 +1573,13 @@ public partial class BatchConvertViewModel : ObservableObject
     [RelayCommand]
     private async Task RemoveSelectedFiles()
     {
-        var selected = SelectedBatchItem;
-        if (selected == null || Window == null)
+        if (Window == null)
+        {
+            return;
+        }
+
+        var selectedItems = FileGrid.SelectedItems.Cast<BatchConvertItem>().ToList();
+        if (selectedItems.Count == 0)
         {
             return;
         }
@@ -1593,8 +1599,13 @@ public partial class BatchConvertViewModel : ObservableObject
             }
         }
 
-        var idx = BatchItems.IndexOf(selected);
-        BatchItems.Remove(selected);
+        var idx = selectedItems.Min(item => BatchItems.IndexOf(item));
+        foreach (var item in selectedItems)
+        {
+            BatchItems.Remove(item);
+            _allBatchItems.Remove(item);
+        }
+
         if (BatchItems.Count > 0)
         {
             if (idx >= BatchItems.Count)
@@ -1604,8 +1615,6 @@ public partial class BatchConvertViewModel : ObservableObject
 
             SelectedBatchItem = BatchItems[idx];
         }
-
-        _allBatchItems.Remove(selected);
 
         MakeBatchItemsInfo();
     }
@@ -2328,8 +2337,8 @@ public partial class BatchConvertViewModel : ObservableObject
 
     internal void FileGridContextMenuOpening()
     {
-        IsRemoveVisible = SelectedBatchItem != null;
-        IsOpenContainingFolderVisible = SelectedBatchItem != null;
+        IsRemoveVisible = FileGrid.SelectedItems.Count > 0;
+        IsOpenContainingFolderVisible = FileGrid.SelectedItems.Count == 1;
     }
 
     internal void ComboBoxSubtitleFormatPointerPressed(object? sender, PointerPressedEventArgs e)
