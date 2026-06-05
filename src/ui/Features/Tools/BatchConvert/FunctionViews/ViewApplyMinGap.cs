@@ -11,7 +11,7 @@ public static class ViewApplyMinGap
     {
         var labelHeader = new Label
         {
-            Content = Se.Language.General.ChangeSpeed,
+            Content = Se.Language.Tools.ApplyMinGaps.Title,
             VerticalAlignment = VerticalAlignment.Center,
             FontWeight = Avalonia.Media.FontWeight.Bold
         };
