@@ -65,7 +65,14 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
         };
     }
 
-    private IList? GetItems() => _grid.ItemsSource as IList;
+    private IList? GetItems()
+    {
+        // CollectionView returns items in the grid's current display order (respecting sort/filter),
+        // unlike ItemsSource which is always in the original insertion order.
+        if (_grid.CollectionView is IList sortedList)
+            return sortedList;
+        return _grid.ItemsSource as IList;
+    }
 
     private int GetRowIndexFromPoint(Avalonia.Point position)
     {
