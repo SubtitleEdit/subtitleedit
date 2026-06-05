@@ -719,7 +719,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
             // Regular text - add character by character until we hit special markup
             var textStart = i;
-            while (i < str.Length && str[i] != '<' && str[i] != '{' && str[i] != '\r' && str[i] != '\n')
+            while (i < str.Length && str[i] != '<' && str[i] != '{' && str[i] != '\r' && str[i] != '\n' && str[i] != '\u2028')
             {
                 i++;
             }
@@ -876,7 +876,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 var ch = str[i];
 
                 // Check for special characters that require immediate handling
-                if (ch == '<' || ch == '\r' || ch == '\n')
+                if (ch == '<' || ch == '\r' || ch == '\n' || ch == '\u2028')
                 {
                     break;
                 }
@@ -1347,7 +1347,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
     private static bool AppendLineBreak(InlineCollection inlines, char c, char c2, ref int i)
     {
-        if (c != '\n' && c != '\r')
+        if (c != '\n' && c != '\r' && c != '\u2028')
             return false;
         inlines.Add(new LineBreak());
         i += c == '\r' && c2 == '\n' ? 2 : 1;
