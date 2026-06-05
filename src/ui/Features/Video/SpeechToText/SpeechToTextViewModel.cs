@@ -365,7 +365,8 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         foreach (var opt in newOptions)
         {
-            opt.Display = BuildAlignerDisplay(opt, crispEngine);
+            opt.IsInstalled = IsAlignerInstalled(opt, crispEngine);
+            opt.Display = opt.BaseDisplay;
         }
 
         ForcedAligners.Clear();
@@ -391,38 +392,18 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
     }
 
-    private static string BuildAlignerDisplay(ForcedAlignerOption option, ICrispAsrEngine? crispEngine)
+    // Whether the aligner GGUF is already on disk for the given engine. A partial/aborted
+    // download leaves a tiny stub behind, so require a plausible model size (> 10 MB) before
+    // treating it as installed.
+    private static bool IsAlignerInstalled(ForcedAlignerOption option, ICrispAsrEngine? crispEngine)
     {
-        if (option.IsBuiltIn || string.IsNullOrEmpty(option.FileName))
+        if (option.IsBuiltIn || string.IsNullOrEmpty(option.FileName) || crispEngine is not CrispAsrEngineBase baseEngine)
         {
-            return option.BaseDisplay;
+            return false;
         }
 
-        var installed = false;
-        if (crispEngine is CrispAsrEngineBase baseEngine)
-        {
-            var path = baseEngine.GetModelForCmdLine(option.FileName);
-            if (File.Exists(path) && new FileInfo(path).Length > 10_000_000)
-            {
-                installed = true;
-            }
-        }
-
-        var size = string.IsNullOrEmpty(option.Size) ? string.Empty : option.Size;
-        if (installed && !string.IsNullOrEmpty(size))
-        {
-            return $"{option.BaseDisplay} ({size})";
-        }
-        if (installed)
-        {
-            return option.BaseDisplay;
-        }
-        if (!string.IsNullOrEmpty(size))
-        {
-            return $"{option.BaseDisplay} ({size}, not installed)";
-        }
-
-        return $"{option.BaseDisplay} (not installed)";
+        var path = baseEngine.GetModelForCmdLine(option.FileName);
+        return File.Exists(path) && new FileInfo(path).Length > 10_000_000;
     }
 
     private void UpdateWhisperCppBackendUi()
@@ -2379,13 +2360,26 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         preSelected ??= displays[0];
 
+        DownloadSpeechToTextModelsViewModel? downloadViewModel = null;
         await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
             Window, viewModel =>
             {
+                downloadViewModel = viewModel;
                 viewModel.SetModels(displays, engine, preSelected);
             });
 
         UpdateForcedAlignerUi();
+
+        // After a successful download, switch the combo to the model that was just downloaded
+        // instead of leaving it on the engine's default aligner.
+        if (downloadViewModel is { OkPressed: true, SelectedModel.Model.Name: { } downloadedFileName })
+        {
+            var downloaded = ForcedAligners.FirstOrDefault(a => a.FileName == downloadedFileName);
+            if (downloaded != null)
+            {
+                SelectedForcedAligner = downloaded;
+            }
+        }
     }
 
     private static string GetForcedAlignerPath(ICrispAsrEngine crispEngine, ForcedAlignerOption aligner)
