@@ -324,9 +324,8 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         var firstLine = true;
         foreach (var line in str.SplitToLines())
         {
-            if (line.Length == 0) continue;
             if (!firstLine) inlines.Add(new LineBreak());
-            inlines.Add(new Run(line));
+            if (line.Length > 0) inlines.Add(new Run(line));
             firstLine = false;
         }
         return SpellCheckLines(inlines);
@@ -1348,10 +1347,10 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
     private static bool AppendLineBreak(InlineCollection inlines, char c, char c2, ref int i)
     {
-        if (c != '\n' && !(c == '\r' && c2 == '\n'))
+        if (c != '\n' && c != '\r')
             return false;
         inlines.Add(new LineBreak());
-        i += c == '\r' ? 2 : 1;
+        i += c == '\r' && c2 == '\n' ? 2 : 1;
         return true;
     }
 
