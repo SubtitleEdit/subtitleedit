@@ -10,24 +10,23 @@ using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Features.Tools.MergeContinuationLines;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ActorVoices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.AdvancedTtsSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ChatterboxTtsSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CosyVoice3CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.DownloadTts;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.EncodingSettings;
-using Nikse.SubtitleEdit.Features.Video.SpeechToText;
-using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ChatterboxTtsSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.F5TtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceSettings;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsCrispAsrSettings;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VibeVoiceCrispAsrSettings;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CosyVoice3CrispAsrSettings;
-using Nikse.SubtitleEdit.Features.Video.TextToSpeech.F5TtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VibeVoiceCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Voices;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoiceSettings;
 using Nikse.SubtitleEdit.Logic;
@@ -37,8 +36,8 @@ using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -190,25 +189,30 @@ public partial class TextToSpeechViewModel : ObservableObject
             new GoogleSpeech(ttsDownloadService),
             new KokoroTtsCpp(),
             new OmniVoiceTtsCpp(),
+            
             // CrispASR-based engines grouped at the bottom: both share the same heavy CrispASR
             // runtime download (~hundreds of MB) and are typically picked together, so we group
             // them last so the lighter cloud/local engines surface first in the list.
             // Qwen3TtsCpp hidden: talker produces scrambled noise on 1.7B —
             // use Qwen3TtsCrispAsr until upstream qwen3-tts.cpp is fixed.
             new Qwen3TtsCrispAsr(),
+            
             // VibeVoiceCrispAsr hidden: output quality is unusable in practice even after
             // bumping the post-synth speed knob (#11223). The engine class + download service +
             // settings dialog are kept so this becomes a one-line re-enable when upstream
             // CrispASR's VibeVoice backend ships a higher-quality build.
             // new VibeVoiceCrispAsr(),
+            
             new IndexTtsCrispAsr(),
+            
             // F5-TTS (CrispASR) hidden: CrispASR 0.6.12 has no GPU backend for f5-tts, so
             // synthesis runs the fixed 32-step Euler ODE through a 22-layer DiT + Vocos on
             // CPU only. That's 3-8 minutes per short utterance on Mac CPU — unusable for the
             // typical TTS-from-subtitles workflow. Engine + download service + settings dialog
             // are kept so this is a one-line re-enable when upstream CrispASR adds Metal/CUDA
             // support or exposes an --ode-steps flag.
-            // new F5TtsCrispAsr(),
+            //new F5TtsCrispAsr(),
+            
             new ChatterboxTtsCpp(),
         ];
 

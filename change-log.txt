@@ -2,6 +2,40 @@
 Subtitle Edit Changelog
 
 
+v5.0.0-rc3 (TBD)
+
+* Add multi-select to Batch Convert file grid (#11407) - thx sharazy
+* Add multi-select to Fix Common Errors fix list - thx mjuhasz
+* Add Unbreak, Auto-break, Split/rebalance and Evenly distribute to the Selected Lines menu
+* Add CosyVoice text-to-speech engines (CrispASR)
+* Add hovered-position tooltip to the video player slider
+* Add download-status dots to the Speech to text forced aligner list + auto-select after download
+* Add "Skip step 1" setting to Fix Common Errors - thx mjuhasz
+* Restore /video: command-line argument for opening a video with the subtitle
+* Update WhisperCpp to v1.8.6
+* Update CrispASR to v0.6.12
+* Update Turkish translation - thx bilimiyorum
+* Update Russian translation - thx jekovcar
+* Update Bulgarian translation - thx jekovcar
+* Update Czech translation - thx Matěj
+* Update Korean translation - thx 12si27
+* Fix #10940: sync Fix Common Errors language dropdown to the Language field
+* Fix #11355: startup crash on Debian 13 (no system fonts)
+* Fix #11357: bare Left/Right arrow keys hijacked while a text box is focused
+* Fix #11379: CPS line-length strategy not updating the grid until restart
+* Fix #11388: Replace & find next silently skipping the current match
+* Fix #11392: honor user video shortcuts in the fullscreen video window
+* Fix #11393: restore focus to the subtitle grid after exiting fullscreen video
+* Fix waveform Alt+drag producing overlapping subtitles - thx mjuhasz
+* Fix missing renumber after inserting subtitles from the waveform
+* Fix spell check Change / Change all enabled before the word is edited
+* Fix OCR / spell check window font handling - thx mjuhasz
+* Fix macOS native menu toggle item labels - thx mjuhasz
+* Fix regex Replace & Find Next newline handling - thx mjuhasz
+* Reduce redundant Matroska cluster scanning (#11374, performance)
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-rc2 (3rd June 2026)
 
 * Update WhisperCpp to v1.8.5
