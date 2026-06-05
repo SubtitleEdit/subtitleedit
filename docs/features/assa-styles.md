@@ -15,6 +15,8 @@ Manage Advanced SubStation Alpha (ASS/SSA) subtitle styles, including file style
 5. Use the preview area to see how your style looks.
 6. Click **OK** to apply changes.
 
+> **Important:** Only **File Styles** affect the current subtitle. **Storage Styles** are a personal template library that lives outside any subtitle file — editing one (or creating a new one) and clicking **OK** will *not* change how your subtitle looks. To apply a storage style to the current subtitle, first copy it into the file styles (select it in the right panel and use **Copy to file styles**), then make sure your subtitle lines use that style name. See [Storage Styles](#storage-styles) below.
+
 ## Features
 
 ### File Styles
@@ -24,8 +26,10 @@ Manage Advanced SubStation Alpha (ASS/SSA) subtitle styles, including file style
 
 ### Storage Styles
 - Maintain a library of reusable styles separate from any subtitle file.
+- Storage styles are **templates only** — they are saved with your settings and reused across subtitles, but they do not belong to the current subtitle and do not change its appearance on their own.
+- **To apply a storage style to the current subtitle:** select it in the right panel, choose **Copy to file styles**, then assign that style to the relevant subtitle lines.
 - Copy styles between file and storage.
-- Set a style as the default for new subtitles.
+- Set a style as the default for new subtitles (this only affects newly created/converted subtitles, not the current one).
 
 ### Style Properties
 - **Font:** Name, size, bold, italic, underline, strikeout.
