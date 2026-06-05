@@ -64,6 +64,7 @@ public partial class BinaryEditViewModel : ObservableObject
 
     private string _loadFileName = string.Empty;
     private int _initialSelectedIndex = -1;
+    private IList<int> _initialSelectedIndices = Array.Empty<int>();
 
     public BinaryEditViewModel(IFileHelper fileHelper, IWindowService windowService, IFolderHelper folderHelper, IShortcutManager shortcutManager, IBluRayHelper bluRayHelper)
     {
@@ -78,10 +79,11 @@ public partial class BinaryEditViewModel : ObservableObject
         CurrentPositionAndSize = string.Empty;
     }
 
-    public void Initialize(string fileName, IOcrSubtitle? subtitle, int selectedIndex = -1)
+    public void Initialize(string fileName, IOcrSubtitle? subtitle, int selectedIndex = -1, IList<int>? selectedIndices = null)
     {
         _loadFileName = fileName;
         _initialSelectedIndex = selectedIndex;
+        _initialSelectedIndices = selectedIndices ?? Array.Empty<int>();
 
         if (subtitle != null && string.IsNullOrEmpty(fileName) && subtitle.Count > 0)
         {
@@ -99,7 +101,7 @@ public partial class BinaryEditViewModel : ObservableObject
         }
     }
 
-    public void Initialize(IList<OcrSubtitleItem> ocrSubtitleItems, int selectedIndex = -1)
+    public void Initialize(IList<OcrSubtitleItem> ocrSubtitleItems, int selectedIndex = -1, IList<int>? selectedIndices = null)
     {
         if (ocrSubtitleItems == null || ocrSubtitleItems.Count == 0)
         {
@@ -107,6 +109,7 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         _initialSelectedIndex = selectedIndex;
+        _initialSelectedIndices = selectedIndices ?? Array.Empty<int>();
         var screenSize = ocrSubtitleItems[0].GetScreenSize();
         ScreenWidth = screenSize.Width;
         ScreenHeight = screenSize.Height;
@@ -150,11 +153,15 @@ public partial class BinaryEditViewModel : ObservableObject
             StatusText = $"0/{Subtitles.Count}";
             CurrentPositionAndSize = string.Empty;
         }
-        else if (selectedCount == 1 && SelectedSubtitle != null)
+        else if (selectedCount == 1)
         {
-            StatusText = $"{Subtitles.IndexOf(SelectedSubtitle) + 1}/{Subtitles.Count}";
-            CurrentPositionAndSize = string.Format(Se.Language.General.PositionX, $"{SelectedSubtitle.X},{SelectedSubtitle.Y}") + Environment.NewLine +
-                                     string.Format(Se.Language.General.SizeX, $"{SelectedSubtitle.Bitmap?.Size.Width}x{SelectedSubtitle.Bitmap?.Size.Height}");
+            var index = SubtitleGrid?.SelectedIndex ?? -1;
+            var item = SubtitleGrid?.SelectedItem as BinarySubtitleItem;
+            StatusText = index >= 0 ? $"{index + 1}/{Subtitles.Count}" : $"1/{Subtitles.Count}";
+            CurrentPositionAndSize = item != null
+                ? string.Format(Se.Language.General.PositionX, $"{item.X},{item.Y}") + Environment.NewLine +
+                  string.Format(Se.Language.General.SizeX, $"{item.Bitmap?.Size.Width}x{item.Bitmap?.Size.Height}")
+                : string.Empty;
         }
         else
         {
@@ -1794,7 +1801,11 @@ public partial class BinaryEditViewModel : ObservableObject
 
         if (string.IsNullOrEmpty(_loadFileName))
         {
-            if (_initialSelectedIndex >= 0 && Subtitles.Count > 0)
+            if (_initialSelectedIndices.Count > 0 && Subtitles.Count > 0)
+            {
+                SelectAndScrollToRows(_initialSelectedIndices);
+            }
+            else if (_initialSelectedIndex >= 0 && Subtitles.Count > 0)
             {
                 SelectAndScrollToRow(_initialSelectedIndex);
             }
@@ -1822,6 +1833,29 @@ public partial class BinaryEditViewModel : ObservableObject
             }
 
             SubtitleGrid.ScrollIntoView(SubtitleGrid.SelectedItem, null);
+        });
+    }
+
+    private void SelectAndScrollToRows(IList<int> indices)
+    {
+        if (indices.Count == 0 || SubtitleGrid == null)
+        {
+            return;
+        }
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            SubtitleGrid.SelectedItems.Clear();
+            foreach (var i in indices.Where(i => i >= 0 && i < Subtitles.Count))
+            {
+                SubtitleGrid.SelectedItems.Add(Subtitles[i]);
+            }
+
+            var first = indices.Where(i => i >= 0 && i < Subtitles.Count).DefaultIfEmpty(-1).Min();
+            if (first >= 0)
+            {
+                SubtitleGrid.ScrollIntoView(Subtitles[first], null);
+            }
         });
     }
 
