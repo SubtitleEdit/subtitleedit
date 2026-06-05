@@ -31,7 +31,7 @@ public class CheckForUpdatesWindow : Window
         statusLabel.Bind(TextBlock.TextProperty, new Binding(nameof(vm.StatusText)));
 
         var downloadButton = UiUtil.MakeButton(Se.Language.Help.CheckForUpdatesDownloadNewVersion, vm.OpenDownloadPageCommand)
-            .WithIconLeft(IconNames.Download);
+            .WithIconLeft(IconNames.Web);
         downloadButton.HorizontalAlignment = HorizontalAlignment.Left;
         downloadButton.Margin = new Thickness(0, 0, 0, 4);
         downloadButton.DataContext = vm;
