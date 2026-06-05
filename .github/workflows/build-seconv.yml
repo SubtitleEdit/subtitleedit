@@ -27,6 +27,25 @@ on:
         default: ''
         type: string
 
+  workflow_call:
+    inputs:
+      build_configuration:
+        required: true
+        default: 'Release'
+        type: string
+      create_release:
+        required: true
+        default: true
+        type: boolean
+      is_prerelease:
+        required: true
+        default: true
+        type: boolean
+      release_tag:
+        required: false
+        default: ''
+        type: string
+
 jobs:
   build-windows:
     runs-on: windows-latest
