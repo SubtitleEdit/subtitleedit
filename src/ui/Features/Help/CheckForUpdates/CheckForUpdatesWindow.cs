@@ -32,7 +32,6 @@ public class CheckForUpdatesWindow : Window
         var downloadLink = UiUtil.MakeLink(Se.Language.Help.CheckForUpdatesDownloadNewVersion, vm.OpenDownloadPageCommand);
         downloadLink.Margin = new Thickness(0, 0, 0, 4);
         downloadLink.DataContext = vm;
-        downloadLink.PointerPressed += (_, _) => vm.OpenDownloadPageCommand.Execute(null);
         downloadLink.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsDownloadLinkVisible)));
 
         var changeLogBox = new TextBox
