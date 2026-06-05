@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
+using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -29,11 +30,12 @@ public class CheckForUpdatesWindow : Window
         };
         statusLabel.Bind(TextBlock.TextProperty, new Binding(nameof(vm.StatusText)));
 
-        var downloadLink = UiUtil.MakeLink(Se.Language.Help.CheckForUpdatesDownloadNewVersion, vm.OpenDownloadPageCommand);
-        downloadLink.Margin = new Thickness(0, 0, 0, 4);
-        downloadLink.DataContext = vm;
-        downloadLink.PointerPressed += (_, _) => vm.OpenDownloadPageCommand.Execute(null);
-        downloadLink.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsDownloadLinkVisible)));
+        var downloadButton = UiUtil.MakeButton(Se.Language.Help.CheckForUpdatesDownloadNewVersion, vm.OpenDownloadPageCommand)
+            .WithIconLeft(IconNames.Web);
+        downloadButton.HorizontalAlignment = HorizontalAlignment.Left;
+        downloadButton.Margin = new Thickness(0, 0, 0, 4);
+        downloadButton.DataContext = vm;
+        downloadButton.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.IsDownloadLinkVisible)));
 
         var changeLogBox = new TextBox
         {
@@ -63,7 +65,7 @@ public class CheckForUpdatesWindow : Window
         };
 
         grid.Add(statusLabel, 0);
-        grid.Add(downloadLink, 1);
+        grid.Add(downloadButton, 1);
         grid.Add(changeLogBox, 2);
         grid.Add(panelButtons, 3);
 
