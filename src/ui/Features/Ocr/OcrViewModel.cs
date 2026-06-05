@@ -3112,6 +3112,7 @@ public partial class OcrViewModel : ObservableObject
                         }
                         else if (result.ChangeAllPressed)
                         {
+                            ChangeWord(item, unknownWord, result.Word);
                             _ocrFixEngine.ChangeAll(unknownWord.Word.Word, result.Word);
                         }
                         else if (result.SkipOncePressed)
