@@ -321,7 +321,21 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
         // No formatting (default)
         var inlines = new InlineCollection();
-        inlines.Add(new Run(str));
+        var firstLine = true;
+        foreach (var line in str.SplitToLines())
+        {
+            if (!firstLine)
+            {
+                inlines.Add(new LineBreak());
+            }
+
+            if (line.Length > 0)
+            {
+                inlines.Add(new Run(line));
+            }
+
+            firstLine = false;
+        }
         return SpellCheckLines(inlines);
     }
 
@@ -719,16 +733,14 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             }
 
             // Handle line breaks
-            if (c == '\n' || (c == '\r' && c2 == '\n'))
+            if (AppendLineBreak(inlines, c, c2, ref i))
             {
-                inlines.Add(new Run(Environment.NewLine));
-                i += c == '\r' ? 2 : 1;
                 continue;
             }
 
             // Regular text - add character by character until we hit special markup
             var textStart = i;
-            while (i < str.Length && str[i] != '<' && str[i] != '{' && str[i] != '\r' && str[i] != '\n')
+            while (i < str.Length && str[i] != '<' && str[i] != '{' && str[i] != '\r' && str[i] != '\n' && str[i] != '\u2028')
             {
                 i++;
             }
@@ -873,10 +885,8 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             }
 
             // Handle line breaks
-            if (c == '\n' || (c == '\r' && c2 == '\n'))
+            if (AppendLineBreak(inlines, c, c2, ref i))
             {
-                inlines.Add(new Run(Environment.NewLine));
-                i += c == '\r' ? 2 : 1;
                 continue;
             }
 
@@ -890,7 +900,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 var ch = str[i];
 
                 // Check for special characters that require immediate handling
-                if (ch == '<' || ch == '\r' || ch == '\n')
+                if (ch == '<' || ch == '\r' || ch == '\n' || ch == '\u2028')
                 {
                     break;
                 }
@@ -1359,6 +1369,18 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
                 }
             }
         }
+    }
+
+    private static bool AppendLineBreak(InlineCollection inlines, char c, char c2, ref int i)
+    {
+        if (c != '\n' && c != '\r' && c != '\u2028')
+        {
+            return false;
+        }
+
+        inlines.Add(new LineBreak());
+        i += c == '\r' && c2 == '\n' ? 2 : 1;
+        return true;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
