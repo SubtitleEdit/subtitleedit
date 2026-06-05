@@ -118,6 +118,9 @@ public class Se
     public static string ShotChangesFolder => Path.Combine(DataFolder, "ShotChanges");
     public static string PluginsFolder => Path.Combine(DataFolder, "Plugins");
 
+    /// <summary>Root for persistent per-plugin data folders; not scanned for plugins (no manifest).</summary>
+    public static string PluginsDataFolder => Path.Combine(PluginsFolder, "Data");
+
     public static string OcrFolder => Path.Combine(DataFolder, "OCR");
     public static string TranslationFolder => Path.Combine(DataFolder, "Languages");
     public static string PaddleOcrFolder => Path.Combine(OcrFolder, "PaddleOCR3-1");

@@ -4814,8 +4814,11 @@ public partial class MainViewModel :
             settingsVersion = storedVersion;
         }
 
+        var videoPositionSeconds = _videoFileName != null ? GetVideoPlayerControl()?.Position : null;
+
         return new PluginRequest
         {
+            PluginDataDirectory = GetPluginDataDirectory(plugin),
             Subtitle = new PluginSubtitle
             {
                 Format = format.Name,
@@ -4823,10 +4826,12 @@ public partial class MainViewModel :
                 Native = subtitle.ToText(format),
                 SubRip = subtitle.ToText(new Nikse.SubtitleEdit.Core.SubtitleFormats.SubRip()),
             },
+            SubtitleEncoding = SelectedEncoding?.DisplayName ?? string.Empty,
             SelectedIndices = selectedIndices,
             VideoFileName = _videoFileName ?? string.Empty,
             FrameRate = frameRate,
             VideoDurationSeconds = _mediaInfo?.Duration?.TotalSeconds,
+            VideoPositionSeconds = videoPositionSeconds,
             VideoWidth = _mediaInfo?.Dimension.Width,
             VideoHeight = _mediaInfo?.Dimension.Height,
             UiLanguage = Se.Settings.General.Language ?? string.Empty,
@@ -4836,6 +4841,30 @@ public partial class MainViewModel :
             Settings = settings,
             SettingsVersion = settingsVersion,
         };
+    }
+
+    // Persistent, writable folder private to a plugin, keyed by its (sanitized) manifest name -
+    // the same identity used to persist plugin settings. Lives under Plugins/Data so it survives
+    // plugin updates (which replace the install folder). Created here so the plugin can rely on it.
+    private static string GetPluginDataDirectory(InstalledPlugin plugin)
+    {
+        var name = plugin.Manifest.Name;
+        foreach (var c in Path.GetInvalidFileNameChars())
+        {
+            name = name.Replace(c, '_');
+        }
+
+        var path = Path.Combine(Se.PluginsDataFolder, name);
+        try
+        {
+            Directory.CreateDirectory(path);
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Could not create plugin data directory: " + path);
+        }
+
+        return path;
     }
 
     private async Task<bool> ApplyPluginSubtitle(InstalledPlugin plugin, PluginResponse response)

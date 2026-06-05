@@ -154,16 +154,19 @@ launched as `dotnet <entry> <requestFilePath>`.
   "requestType": "run",
   "responseFilePath": "C:\\Users\\...\\Temp\\SubtitleEditPlugins\\<id>\\response.json",
   "tempDirectory": "C:\\Users\\...\\Temp\\SubtitleEditPlugins\\<id>",
+  "pluginDataDirectory": "C:\\Users\\...\\Subtitle Edit\\Plugins\\Data\\Uppercase Selected Lines",
   "subtitle": {
     "format": "Advanced Sub Station Alpha",
     "fileName": "C:\\videos\\episode01.ass",
     "native": "[Script Info]\n...full subtitle in its original format...",
     "subRip": "1\n00:00:01,000 --> 00:00:03,000\nHello world\n\n..."
   },
+  "subtitleEncoding": "UTF-8 with BOM",
   "selectedIndices": [3, 4, 5],
   "videoFileName": "C:\\videos\\episode01.mkv",
   "frameRate": 23.976,
   "videoDurationSeconds": 1432.5,
+  "videoPositionSeconds": 142.0,
   "videoWidth": 1920,
   "videoHeight": 1080,
   "uiLanguage": "English",
@@ -186,6 +189,13 @@ launched as `dotnet <entry> <requestFilePath>`.
 - `subtitle.native` is the subtitle serialized in its **original format**;
   `subtitle.subRip` is the **same content as SubRip (.srt)** — use whichever is
   easier for your plugin.
+- `subtitleEncoding` is the display name of the encoding the file was loaded with
+  (e.g. `UTF-8 with BOM`). Empty when unknown / on older SE versions.
+- `pluginDataDirectory` is a **persistent, writable folder private to your plugin**
+  (under `Plugins/Data/<plugin name>`). Unlike `tempDirectory` it survives between
+  runs, and unlike your install folder it is **not** wiped when the plugin is
+  updated — use it for caches, downloaded models, dictionaries, etc. Subtitle Edit
+  creates it before the run. May be empty on older SE versions.
 - `selectedIndices` are zero-based line indices selected in the grid (empty if none).
 - `settings` is whatever JSON your plugin returned in its previous response;
   it is `null` on first run. Use it to persist plugin-private settings.
@@ -193,8 +203,9 @@ launched as `dotnet <entry> <requestFilePath>`.
   its previous response, handed back unchanged. Use it to migrate or reset old
   settings when you change your own schema. Null on first run, and on older SE
   versions that don't track it.
-- `videoDurationSeconds`, `videoWidth`, `videoHeight` describe the loaded video.
-  Null when no video is loaded (or on older SE versions). Saves you from
+- `videoDurationSeconds`, `videoPositionSeconds`, `videoWidth`, `videoHeight`
+  describe the loaded video; `videoPositionSeconds` is the current playhead
+  position. Null when no video is loaded (or on older SE versions). Saves you from
   re-opening the video file just to read these.
 - `theme` and `uiLanguage` let your plugin's own UI match Subtitle Edit.
 - `themeColors` carries the active theme's colors as `#AARRGGBB` hex strings so
