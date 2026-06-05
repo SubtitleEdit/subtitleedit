@@ -144,7 +144,7 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
             _shiftCurrentIndex = rowIndex;
             _mouseClickSetAnchor = true;
         }
-        else if (!isShift && isCtrl && _shiftAnchorIndex >= 0)
+        else if (!isShift && isCtrl && rowIndex >= 0 && _shiftAnchorIndex >= 0)
         {
             // Ctrl/Cmd+click on a row: preserve the existing anchor, suppress SelectionChanged reset
             _mouseClickSetAnchor = true;

@@ -17223,7 +17223,7 @@ public partial class MainViewModel :
                 _shiftSelectAnchorIndex = -1;
                 _shiftSelectCurrentIndex = -1;
             }
-            else if (_shiftSelectAnchorIndex >= 0)
+            else if (_subtitleGridIsLeftClick && _shiftSelectAnchorIndex >= 0)
             {
                 // Ctrl/Cmd+click on a row: preserve the existing anchor, suppress SelectionChanged reset
                 _mouseClickSetAnchor = true;

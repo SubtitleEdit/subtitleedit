@@ -189,7 +189,7 @@ public class BatchConvertWindow : Window
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedBatchItem)) { Source = vm });
         vm.FileGrid = dataGrid;
-        new DataGridCheckboxMultiSelect<BatchConvertItem>(dataGrid, onFocusedItemChanged: item => vm.SelectedBatchItem = item);
+        new DataGridCheckboxMultiSelect<BatchConvertItem>(dataGrid);
 
         var comboBoxSubtitleFormat = UiUtil.MakeComboBox(vm.TargetFormats, vm, nameof(vm.SelectedTargetFormat));
         comboBoxSubtitleFormat.SelectionChanged += (_, _) => vm.ComboBoxSubtitleFormatChanged();
