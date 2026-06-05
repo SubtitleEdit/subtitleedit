@@ -112,6 +112,7 @@ public class SpeechToTextWindow : Window
             .WithMinWidth(220)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
             .WithMarginTop(10);
+        comboForcedAligner.ItemTemplate = MakeForcedAlignerItemTemplate();
         var buttonForcedAlignerDownload = UiUtil.MakeButtonBrowse(vm.DownloadForcedAlignerCommand)
             .WithMarginTop(10)
             .WithMarginLeft(5)
@@ -741,5 +742,21 @@ public class SpeechToTextWindow : Window
             model => model.Engine.IsModelInstalled(model.Model)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled);
+    }
+
+    // Forced-aligner combo item template: same dot + download-size treatment as the model combo.
+    // The built-in aligner needs no download, so it gets no dot or size; downloadable aligners show
+    // green (on disk) or grey (not downloaded yet). Install state is snapshotted on each option by
+    // the view model when it rebuilds the list.
+    private static FuncDataTemplate<ForcedAlignerOption> MakeForcedAlignerItemTemplate()
+    {
+        return StatusDots.ComboItemTemplate<ForcedAlignerOption>(
+            aligner => aligner.BaseDisplay,
+            aligner => aligner.IsBuiltIn ? null : aligner.Size,
+            aligner => aligner.IsBuiltIn
+                ? DownloadDotStatus.None
+                : aligner.IsInstalled
+                    ? DownloadDotStatus.UpToDate
+                    : DownloadDotStatus.NotInstalled);
     }
 }

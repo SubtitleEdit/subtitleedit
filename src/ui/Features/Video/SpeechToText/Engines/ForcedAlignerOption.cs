@@ -33,6 +33,13 @@ public class ForcedAlignerOption
     public string Url { get; }
     public string Size { get; }
 
+    /// <summary>
+    /// Whether this aligner's GGUF is present on disk for the current engine.
+    /// Set by the view model when it (re)builds the combo so each row's status
+    /// dot can be rendered without re-hitting the file system per row.
+    /// </summary>
+    public bool IsInstalled { get; set; }
+
     public bool IsBuiltIn => Choice == BuiltInChoice;
 
     public ForcedAlignerOption(string display, string choice, string fileName, string url, string size)
