@@ -17132,6 +17132,7 @@ public partial class MainViewModel :
     private int _dragSelectLastIndex = -1;
     private int _shiftSelectAnchorIndex = -1;
     private int _shiftSelectCurrentIndex = -1;
+    private bool _mouseClickSetAnchor;
     private int _dragSelectAutoScrollDirection;
     private int _dragSelectAutoScrollStep = 1;
     private bool _dragSelectHasMoved;
@@ -17149,8 +17150,6 @@ public partial class MainViewModel :
         _dragSelectStartIndex = -1;
         _dragSelectLastIndex = -1;
         _dragSelectHasMoved = false;
-        _shiftSelectAnchorIndex = -1;
-        _shiftSelectCurrentIndex = -1;
         IsSubtitleGridFlyoutHeaderVisible = false;
 
         if (sender is Control { ContextFlyout: not null } control)
@@ -17168,20 +17167,57 @@ public partial class MainViewModel :
                 {
                     IsSubtitleGridFlyoutHeaderVisible = true;
                     IsMergeWithNextOrPreviousVisible = false;
+                    _shiftSelectAnchorIndex = -1;
+                    _shiftSelectCurrentIndex = -1;
                     return;
                 }
 
                 current = current.Parent as Control;
             }
 
-            if (_subtitleGridIsLeftClick && !_subtitleGridIsControlPressed)
+            var isShiftPressed = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+            var rowIndex = GetDataGridRowIndexFromPoint(e.GetPosition(SubtitleGrid));
+
+            if (_subtitleGridIsLeftClick && isShiftPressed && rowIndex >= 0)
             {
-                var rowIndex = GetDataGridRowIndexFromPoint(e.GetPosition(SubtitleGrid));
-                if (rowIndex >= 0)
+                var anchor = _shiftSelectAnchorIndex >= 0
+                    ? _shiftSelectAnchorIndex
+                    : (SubtitleGrid.SelectedItem is SubtitleLineViewModel sel
+                        ? Subtitles.IndexOf(sel) : -1);
+
+                if (anchor >= 0)
                 {
-                    _dragSelectStartIndex = rowIndex;
-                    _dragSelectLastIndex = rowIndex;
+                    _shiftSelectAnchorIndex = anchor;
+                    _shiftSelectCurrentIndex = rowIndex;
+
+                    var startIdx = Math.Min(anchor, rowIndex);
+                    var endIdx = Math.Max(anchor, rowIndex);
+
+                    _subtitleGridSelectionChangedSkip = true;
+                    SubtitleGrid.SelectedItems.Clear();
+                    for (var i = startIdx; i <= endIdx; i++)
+                        SubtitleGrid.SelectedItems.Add(Subtitles[i]);
+                    _subtitleGridSelectionChangedSkip = false;
+
+                    SubtitleGrid.ScrollIntoView(Subtitles[rowIndex], null);
+                    SubtitleGridSelectionChanged();
+                    e.Handled = true;
+                    return;
                 }
+            }
+            else
+            {
+                _shiftSelectAnchorIndex = -1;
+                _shiftSelectCurrentIndex = -1;
+            }
+
+            if (_subtitleGridIsLeftClick && !_subtitleGridIsControlPressed && rowIndex >= 0)
+            {
+                _shiftSelectAnchorIndex = rowIndex;
+                _shiftSelectCurrentIndex = rowIndex;
+                _mouseClickSetAnchor = true;
+                _dragSelectStartIndex = rowIndex;
+                _dragSelectLastIndex = rowIndex;
             }
         }
     }
@@ -17482,14 +17518,20 @@ public partial class MainViewModel :
             return;
         }
 
-        // Any user-driven selection change that isn't our own shift-arrow manipulation
-        // (HandleShiftArrowSelection sets _subtitleGridSelectionChangedSkip and short-circuits
-        // above) obsoletes the shift-select anchor. Plain Up/Down already clear it in the
-        // key handler, but PageUp/PageDown, mouse clicks, Home/End, programmatic jumps,
-        // etc. all land here and must reset the anchor so the next Shift+Down starts from
-        // the current row instead of resuming an old range.
-        _shiftSelectAnchorIndex = -1;
-        _shiftSelectCurrentIndex = -1;
+        // Any user-driven selection change that isn't our own shift-arrow or shift-click
+        // manipulation obsoletes the shift-select anchor. Plain Up/Down already clear it in
+        // the key handler, but PageUp/PageDown, Home/End, programmatic jumps, etc. all land
+        // here and must reset it. Exception: a plain mouse click sets _mouseClickSetAnchor so
+        // we preserve the anchor through the DataGrid's own SelectionChanged for that click.
+        if (_mouseClickSetAnchor)
+        {
+            _mouseClickSetAnchor = false;
+        }
+        else
+        {
+            _shiftSelectAnchorIndex = -1;
+            _shiftSelectCurrentIndex = -1;
+        }
 
         var selectedItems = SubtitleGrid.SelectedItems;
 

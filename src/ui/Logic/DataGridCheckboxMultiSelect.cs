@@ -20,6 +20,7 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
     private int _shiftAnchorIndex = -1;
     private int _shiftCurrentIndex = -1;
     private bool _selectionChangedSkip;
+    private bool _mouseClickSetAnchor;
 
     // The caller does not need to store the returned instance.
     // Event subscriptions on dataGrid keep it alive for the lifetime of the grid.
@@ -39,6 +40,7 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
         dataGrid.SelectionMode = DataGridSelectionMode.Extended;
 
         dataGrid.AddHandler(InputElement.KeyDownEvent, OnKeyDown, RoutingStrategies.Tunnel);
+        dataGrid.AddHandler(InputElement.PointerPressedEvent, OnPointerPressed, RoutingStrategies.Tunnel);
         dataGrid.PointerReleased += (_, _) => Dispatcher.UIThread.Post(() => dataGrid.Focus());
 
         dataGrid.SelectionChanged += (_, e) =>
@@ -48,14 +50,89 @@ public class DataGridCheckboxMultiSelect<TItem> where TItem : class
                 return;
             }
 
-            _shiftAnchorIndex = -1;
-            _shiftCurrentIndex = -1;
+            if (_mouseClickSetAnchor)
+            {
+                _mouseClickSetAnchor = false;
+            }
+            else
+            {
+                _shiftAnchorIndex = -1;
+                _shiftCurrentIndex = -1;
+            }
 
             _onFocusedItemChanged?.Invoke(dataGrid.SelectedItem as TItem);
         };
     }
 
     private IList? GetItems() => _grid.ItemsSource as IList;
+
+    private int GetRowIndexFromPoint(Avalonia.Point position)
+    {
+        var hitTest = _grid.InputHitTest(position);
+        var current = hitTest as Control;
+        while (current != null)
+        {
+            if (current is DataGridRow row)
+                return row.Index;
+            current = current.Parent as Control;
+        }
+        return -1;
+    }
+
+    private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        var props = e.GetCurrentPoint(_grid).Properties;
+        if (!props.IsLeftButtonPressed)
+            return;
+
+        var isShift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+        var rowIndex = GetRowIndexFromPoint(e.GetPosition(_grid));
+
+        if (isShift && rowIndex >= 0)
+        {
+            var items = GetItems();
+            if (items == null)
+                return;
+
+            var anchor = _shiftAnchorIndex >= 0
+                ? _shiftAnchorIndex
+                : (_grid.SelectedItem != null ? items.IndexOf(_grid.SelectedItem) : -1);
+
+            if (anchor < 0)
+                return;
+
+            _shiftAnchorIndex = anchor;
+            _shiftCurrentIndex = rowIndex;
+
+            var startIdx = Math.Min(anchor, rowIndex);
+            var endIdx = Math.Max(anchor, rowIndex);
+
+            _selectionChangedSkip = true;
+            _grid.SelectedItems.Clear();
+            _grid.SelectedItems.Add(items[_shiftCurrentIndex]);
+            for (var i = startIdx; i <= endIdx; i++)
+            {
+                if (i != _shiftCurrentIndex)
+                    _grid.SelectedItems.Add(items[i]);
+            }
+            _selectionChangedSkip = false;
+
+            _grid.ScrollIntoView(items[rowIndex], null);
+            _onFocusedItemChanged?.Invoke(items[rowIndex] as TItem);
+            e.Handled = true;
+        }
+        else if (!isShift && rowIndex >= 0)
+        {
+            _shiftAnchorIndex = rowIndex;
+            _shiftCurrentIndex = rowIndex;
+            _mouseClickSetAnchor = true;
+        }
+        else if (!isShift)
+        {
+            _shiftAnchorIndex = -1;
+            _shiftCurrentIndex = -1;
+        }
+    }
 
     private void OnKeyDown(object? sender, KeyEventArgs e)
     {
