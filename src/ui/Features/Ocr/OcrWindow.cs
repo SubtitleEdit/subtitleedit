@@ -1005,7 +1005,7 @@ public class OcrWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(5, 0, 0, 0),
         };
-        subtitleCountText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.StatusTextRight)) { Source = vm });
+        subtitleCountText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.SelectionStatus)) { Source = vm });
         subtitleCountText.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.IsOcrRunning)) { Source = vm, Converter = new InverseBooleanConverter() });
 
         grid.Add(progressBar, 0, 0);
