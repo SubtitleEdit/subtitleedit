@@ -2675,7 +2675,7 @@ public partial class MainViewModel :
         {
             _subtitleFileName = string.Empty;
             ResetSubtitle();
-            Subtitles.AddRange(ocrResult.OcredSubtitle);
+            ReplaceSubtitles(ocrResult.OcredSubtitle);
             SelectAndScrollToRow(0);
         }
     }
@@ -4170,8 +4170,7 @@ public partial class MainViewModel :
             RunWithoutChangeDetection(() =>
             {
                 var idx = SelectedSubtitleIndex;
-                Subtitles.Clear();
-                Subtitles.AddRange(result.AllSubtitlesFixed);
+                ReplaceSubtitles(result.AllSubtitlesFixed);
                 SelectAndScrollToRow(idx ?? 0);
                 _updateAudioVisualizer = true;
             });
@@ -4259,8 +4258,7 @@ public partial class MainViewModel :
             return;
         }
 
-        Subtitles.Clear();
-        Subtitles.AddRange(result.ResultSubtitles.Select(p => new SubtitleLineViewModel(p)));
+        ReplaceSubtitles(result.ResultSubtitles.Select(p => new SubtitleLineViewModel(p)));
         Renumber();
         SelectAndScrollToRow(0);
     }
@@ -4289,8 +4287,7 @@ public partial class MainViewModel :
             return;
         }
 
-        Subtitles.Clear();
-        Subtitles.AddRange(result.ResultSubtitles.Select(p => new SubtitleLineViewModel(p)));
+        ReplaceSubtitles(result.ResultSubtitles.Select(p => new SubtitleLineViewModel(p)));
         Renumber();
         SelectAndScrollToRow(0);
     }
@@ -4522,8 +4519,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
-            Subtitles.Clear();
-            Subtitles.AddRange(result.Subtitles.Select(p => new SubtitleLineViewModel(p.SubtitleLineViewModel)));
+            ReplaceSubtitles(result.Subtitles.Select(p => new SubtitleLineViewModel(p.SubtitleLineViewModel)));
             SelectAndScrollToRow(0);
             _updateAudioVisualizer = true;
         }
@@ -4548,8 +4544,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
-            Subtitles.Clear();
-            Subtitles.AddRange(result.FixedSubtitles);
+            ReplaceSubtitles(result.FixedSubtitles);
             SelectAndScrollToRow(0);
             _updateAudioVisualizer = true;
         }
@@ -5034,8 +5029,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed && result.AllSubtitlesFixed.Count > 0)
         {
-            Subtitles.Clear();
-            Subtitles.AddRange(result.AllSubtitlesFixed);
+            ReplaceSubtitles(result.AllSubtitlesFixed);
             SelectAndScrollToRow(0);
             _updateAudioVisualizer = true;
             RefreshSubtitlePreview();
@@ -5061,8 +5055,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
-            Subtitles.Clear();
-            Subtitles.AddRange(result.AllSubtitlesFixed);
+            ReplaceSubtitles(result.AllSubtitlesFixed);
             SelectAndScrollToRow(0);
             _updateAudioVisualizer = true;
             RefreshSubtitlePreview();
@@ -5143,8 +5136,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
-            Subtitles.Clear();
-            Subtitles.AddRange(result.AllSubtitlesFixed);
+            ReplaceSubtitles(result.AllSubtitlesFixed);
             SelectAndScrollToRow(0);
             _updateAudioVisualizer = true;
             RefreshSubtitlePreview();
@@ -5170,8 +5162,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
-            Subtitles.Clear();
-            Subtitles.AddRange(
+            ReplaceSubtitles(
                 result.FixedSubtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
             SelectAndScrollToRow(0);
         }
@@ -7015,11 +7006,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
-            Subtitles.Clear();
-            foreach (var p in result.Paragraphs)
-            {
-                Subtitles.Add(p.Subtitle);
-            }
+            ReplaceSubtitles(result.Paragraphs.Select(p => p.Subtitle));
 
             SelectAndScrollToRow(0);
         }
@@ -7092,11 +7079,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
-            Subtitles.Clear();
-            foreach (var p in result.SyncedSubtitles)
-            {
-                Subtitles.Add(p);
-            }
+            ReplaceSubtitles(result.SyncedSubtitles);
 
             SelectAndScrollToRow(0);
         }
@@ -7124,11 +7107,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
-            Subtitles.Clear();
-            foreach (var p in result.SyncedSubtitles)
-            {
-                Subtitles.Add(p);
-            }
+            ReplaceSubtitles(result.SyncedSubtitles);
 
             SelectAndScrollToRow(0);
         }
@@ -8059,11 +8038,7 @@ public partial class MainViewModel :
         var selected = SelectedSubtitle;
 
         var sortedSubtitles = Subtitles.OrderBy(p => p.StartTime).ToList();
-        Subtitles.Clear();
-        foreach (var s in sortedSubtitles)
-        {
-            Subtitles.Add(s);
-        }
+        ReplaceSubtitles(sortedSubtitles);
 
         Renumber();
 
@@ -8090,11 +8065,7 @@ public partial class MainViewModel :
         var selected = SelectedSubtitle;
 
         var sortedSubtitles = Subtitles.OrderBy(p => p.EndTime).ToList();
-        Subtitles.Clear();
-        foreach (var s in sortedSubtitles)
-        {
-            Subtitles.Add(s);
-        }
+        ReplaceSubtitles(sortedSubtitles);
 
         Renumber();
 
@@ -8121,11 +8092,7 @@ public partial class MainViewModel :
         var selected = SelectedSubtitle;
 
         var sortedSubtitles = Subtitles.OrderBy(p => p.Number).ToList();
-        Subtitles.Clear();
-        foreach (var s in sortedSubtitles)
-        {
-            Subtitles.Add(s);
-        }
+        ReplaceSubtitles(sortedSubtitles);
 
         Renumber();
 
@@ -8160,11 +8127,7 @@ public partial class MainViewModel :
         if (result.OkPressed)
         {
             var selectedSubtitle = SelectedSubtitle;
-            Subtitles.Clear();
-            foreach (var s in result.Subtitles)
-            {
-                Subtitles.Add(s);
-            }
+            ReplaceSubtitles(result.Subtitles);
 
             Renumber();
 
@@ -10904,8 +10867,7 @@ public partial class MainViewModel :
             }
         }
 
-        Subtitles.Clear();
-        Subtitles.AddRange(newSubtitles);
+        ReplaceSubtitles(newSubtitles);
         Renumber();
         SelectAndScrollToRow(insertAt);
         _updateAudioVisualizer = true;
@@ -12669,11 +12631,7 @@ public partial class MainViewModel :
 
     private void RestoreUndoRedoState(UndoRedoItem undoRedoObject)
     {
-        Subtitles.Clear();
-        foreach (var p in undoRedoObject.Subtitles)
-        {
-            Subtitles.Add(p);
-        }
+        ReplaceSubtitles(undoRedoObject.Subtitles);
 
         _subtitleFileName = undoRedoObject.SubtitleFileName;
         if (!string.IsNullOrEmpty(undoRedoObject.SelectedEncodingDisplayName))
@@ -13139,8 +13097,7 @@ public partial class MainViewModel :
                         {
                             _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                             _converted = true;
-                            Subtitles.Clear();
-                            Subtitles.AddRange(result.OcredSubtitle);
+                            ReplaceSubtitles(result.OcredSubtitle);
                             SelectAndScrollToRow(0);
                         }
                     });
@@ -13234,7 +13191,7 @@ public partial class MainViewModel :
                     _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) +
                                         SelectedSubtitleFormat.Extension;
                     _subtitle.Renumber();
-                    Subtitles.AddRange(_subtitle.Paragraphs.Select(p =>
+                    ReplaceSubtitles(_subtitle.Paragraphs.Select(p =>
                         new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
                     ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
                     SelectAndScrollToRow(0);
@@ -13645,8 +13602,7 @@ public partial class MainViewModel :
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 _converted = true;
                 _subtitle.Paragraphs.Clear();
-                Subtitles.Clear();
-                Subtitles.AddRange(result.OcredSubtitle);
+                ReplaceSubtitles(result.OcredSubtitle);
                 Renumber();
                 ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
                 SelectAndScrollToRow(0);
@@ -13689,8 +13645,7 @@ public partial class MainViewModel :
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 _converted = true;
                 _subtitle.Paragraphs.Clear();
-                Subtitles.Clear();
-                Subtitles.AddRange(result.OcredSubtitle);
+                ReplaceSubtitles(result.OcredSubtitle);
                 Renumber();
                 ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
                 SelectAndScrollToRow(0);
@@ -13710,8 +13665,7 @@ public partial class MainViewModel :
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 _converted = true;
                 _subtitle.Paragraphs.Clear();
-                Subtitles.Clear();
-                Subtitles.AddRange(result.OcredSubtitle);
+                ReplaceSubtitles(result.OcredSubtitle);
                 Renumber();
                 ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
                 SelectAndScrollToRow(0);
@@ -13731,8 +13685,7 @@ public partial class MainViewModel :
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 _converted = true;
                 _subtitle.Paragraphs.Clear();
-                Subtitles.Clear();
-                Subtitles.AddRange(result.OcredSubtitle);
+                ReplaceSubtitles(result.OcredSubtitle);
                 Renumber();
                 ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
                 SelectAndScrollToRow(0);
@@ -13785,8 +13738,7 @@ public partial class MainViewModel :
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 _converted = true;
                 _subtitle.Paragraphs.Clear();
-                Subtitles.Clear();
-                Subtitles.AddRange(result.OcredSubtitle);
+                ReplaceSubtitles(result.OcredSubtitle);
                 Renumber();
                 ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
                 SelectAndScrollToRow(0);
@@ -13840,7 +13792,7 @@ public partial class MainViewModel :
             ResetSubtitle();
             _subtitle = new Subtitle(tsParser.TeletextSubtitlesLookup.First().Value.First().Value);
             _subtitle.Renumber();
-            Subtitles.AddRange(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
+            ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
             SelectAndScrollToRow(0);
             if (Se.Settings.General.AutoOpenVideo)
             {
@@ -13891,8 +13843,7 @@ public partial class MainViewModel :
             if (result.OkPressed)
             {
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
-                Subtitles.Clear();
-                Subtitles.AddRange(result.OcredSubtitle);
+                ReplaceSubtitles(result.OcredSubtitle);
                 SelectAndScrollToRow(0);
             }
         });
@@ -13929,7 +13880,7 @@ public partial class MainViewModel :
                 _subtitle.Renumber();
                 _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) +
                                     SelectedSubtitleFormat.Extension;
-                Subtitles.AddRange(
+                ReplaceSubtitles(
                     _subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
                 _converted = true;
                 ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
@@ -13959,7 +13910,7 @@ public partial class MainViewModel :
                 _subtitle.Renumber();
                 _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) +
                                     SelectedSubtitleFormat.Extension;
-                Subtitles.AddRange(
+                ReplaceSubtitles(
                     _subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
                 _converted = true;
                 ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
@@ -14013,8 +13964,7 @@ public partial class MainViewModel :
                     ResetSubtitle();
                     _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                     _converted = true;
-                    Subtitles.Clear();
-                    Subtitles.AddRange(result.OcredSubtitle);
+                    ReplaceSubtitles(result.OcredSubtitle);
                     Renumber();
                     ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
                     SelectAndScrollToRow(0);
@@ -14028,8 +13978,7 @@ public partial class MainViewModel :
             _converted = true;
             _subtitle.Paragraphs.Clear();
             _subtitle.Paragraphs.AddRange(mp4SubtitleTrack.Mdia.Minf.Stbl.GetParagraphs());
-            Subtitles.Clear();
-            Subtitles.AddRange(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
+            ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
             Renumber();
             ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
             SelectAndScrollToRow(0);
@@ -14162,8 +14111,7 @@ public partial class MainViewModel :
                 {
                     _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                     _converted = true;
-                    Subtitles.Clear();
-                    Subtitles.AddRange(result.OcredSubtitle);
+                    ReplaceSubtitles(result.OcredSubtitle);
                     Renumber();
                     SelectAndScrollToRow(0);
                 }
@@ -14193,8 +14141,7 @@ public partial class MainViewModel :
         ResetSubtitle(format);
         _subtitle = subtitle;
         _subtitle.Renumber();
-        Subtitles.Clear();
-        Subtitles.AddRange(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
+        ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
         _converted = true;
 
         return true;
@@ -14295,8 +14242,7 @@ public partial class MainViewModel :
             {
                 ResetSubtitle();
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
-                Subtitles.Clear();
-                Subtitles.AddRange(result.OcredSubtitle);
+                ReplaceSubtitles(result.OcredSubtitle);
                 Renumber();
                 SelectAndScrollToRow(0);
                 ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
@@ -14362,8 +14308,7 @@ public partial class MainViewModel :
             if (result.OkPressed)
             {
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
-                Subtitles.Clear();
-                Subtitles.AddRange(result.OcredSubtitle);
+                ReplaceSubtitles(result.OcredSubtitle);
                 SelectAndScrollToRow(0);
             }
         });
@@ -14391,8 +14336,7 @@ public partial class MainViewModel :
         _converted = true;
         ShowStatus(Se.Language.Main.SubtitleImportedFromMatroskaFile);
         _subtitle.Renumber();
-        Subtitles.Clear();
-        Subtitles.AddRange(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
+        ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
 
 
         if (matroska.Path.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) ||
@@ -14462,13 +14406,42 @@ public partial class MainViewModel :
         {
             _subtitleFileName = Path.GetFileNameWithoutExtension(vobSubFileName);
             _converted = true;
-            Subtitles.Clear();
-            Subtitles.AddRange(result.OcredSubtitle);
+            ReplaceSubtitles(result.OcredSubtitle);
             SelectAndScrollToRow(0);
             return true;
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Replaces every row in the subtitle grid in one shot. The grid's
+    /// ItemsSource is detached during the fill so the bound Avalonia DataGrid
+    /// rebuilds once instead of reacting to each per-item CollectionChanged
+    /// notification (O(n) layout passes for an n-line subtitle). This mirrors
+    /// what <see cref="SetSubtitles(Subtitle, Subtitle?)"/> already does; the
+    /// per-item events are still raised, so consumers like the mpv-preview row
+    /// wiring keep seeing every added row.
+    /// </summary>
+    private void ReplaceSubtitles(IEnumerable<SubtitleLineViewModel> items)
+    {
+        // Materialize first: callers may pass a lazy query over Subtitles itself.
+        var list = items as IReadOnlyList<SubtitleLineViewModel> ?? items.ToList();
+
+        var grid = SubtitleGrid;
+        var detach = grid != null && ReferenceEquals(grid.ItemsSource, Subtitles);
+        if (detach)
+        {
+            grid!.ItemsSource = null;
+        }
+
+        Subtitles.Clear();
+        Subtitles.AddRange(list);
+
+        if (detach)
+        {
+            grid!.ItemsSource = Subtitles;
+        }
     }
 
     private void SetSubtitles(Subtitle subtitle, Subtitle? subtitleOriginal = null)
