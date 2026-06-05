@@ -324,8 +324,16 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         var firstLine = true;
         foreach (var line in str.SplitToLines())
         {
-            if (!firstLine) inlines.Add(new LineBreak());
-            if (line.Length > 0) inlines.Add(new Run(line));
+            if (!firstLine)
+            {
+                inlines.Add(new LineBreak());
+            }
+
+            if (line.Length > 0)
+            {
+                inlines.Add(new Run(line));
+            }
+
             firstLine = false;
         }
         return SpellCheckLines(inlines);
@@ -715,7 +723,10 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             }
 
             // Handle line breaks
-            if (AppendLineBreak(inlines, c, c2, ref i)) continue;
+            if (AppendLineBreak(inlines, c, c2, ref i))
+            {
+                continue;
+            }
 
             // Regular text - add character by character until we hit special markup
             var textStart = i;
@@ -864,7 +875,10 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             }
 
             // Handle line breaks
-            if (AppendLineBreak(inlines, c, c2, ref i)) continue;
+            if (AppendLineBreak(inlines, c, c2, ref i))
+            {
+                continue;
+            }
 
             // Regular text - collect characters until we hit special markup
             var textStart = i;
@@ -1348,7 +1362,10 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
     private static bool AppendLineBreak(InlineCollection inlines, char c, char c2, ref int i)
     {
         if (c != '\n' && c != '\r' && c != '\u2028')
+        {
             return false;
+        }
+
         inlines.Add(new LineBreak());
         i += c == '\r' && c2 == '\n' ? 2 : 1;
         return true;
