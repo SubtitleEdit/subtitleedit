@@ -511,7 +511,7 @@ public class BinaryEditWindow : Window
     private static Grid MakeControls(BinaryEditViewModel vm)
     {
         // 7-column × 6-row Grid: Show/Duration | gap | X/Y/Pos | gap | SW/SH | spacer(*) | icon buttons
-        var grid = new Grid { Margin = new Thickness(0, 10, 0, 0), MinWidth = 600 };
+        var grid = new Grid { Margin = new Thickness(0, 10, 0, 0), MinWidth = 600 }; // pre-load fallback; overridden dynamically in Loaded
         grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
         grid.ColumnDefinitions.Add(new ColumnDefinition(15, GridUnitType.Pixel));
         grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
