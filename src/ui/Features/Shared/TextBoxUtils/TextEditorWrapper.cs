@@ -74,6 +74,9 @@ public class TextEditorWrapper : ITextBoxWrapper
 
     public void Select(int start, int length)
     {
+        // AvaloniaEdit's SelectionStart setter calls Select(value, currentSelectionLength),
+        // which throws if value + currentSelectionLength > DocumentLength. Clear first.
+        _textEditor.SelectionLength = 0;
         _textEditor.SelectionStart = start;
         _textEditor.SelectionLength = length;
     }

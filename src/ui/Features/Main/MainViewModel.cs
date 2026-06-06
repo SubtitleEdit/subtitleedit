@@ -9568,9 +9568,7 @@ public partial class MainViewModel :
                     EditTextBox.Text = subtitle.Text;
                 }
 
-                EditTextBox.CaretIndex = _findService.CurrentTextIndex;
-                EditTextBox.SelectionStart = _findService.CurrentTextIndex;
-                EditTextBox.SelectionEnd = _findService.CurrentTextIndex + _findService.CurrentTextFound.Length;
+                EditTextBox.Select(_findService.CurrentTextIndex, _findService.CurrentTextFound.Length);
             });
         }
     }
@@ -9631,17 +9629,12 @@ public partial class MainViewModel :
 
             ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
 
-            // The text-box may still be empty if the SelectedItem binding hasn't propagated
-            // yet by the time this dispatcher post runs; fall back to writing the text
-            // ourselves so the selection range below lands on real characters.
-            if (EditTextBox.Text == string.Empty)
+            if (EditTextBox.Text != subtitle.Text)
             {
                 EditTextBox.Text = subtitle.Text;
             }
 
-            EditTextBox.CaretIndex = foundIndex;
-            EditTextBox.SelectionStart = foundIndex;
-            EditTextBox.SelectionEnd = foundIndex + foundText.Length;
+            EditTextBox.Select(foundIndex, foundText.Length);
         });
 
         FocusEditTextBox();
@@ -9703,17 +9696,12 @@ public partial class MainViewModel :
 
             ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
 
-            // The text-box may still be empty if the SelectedItem binding hasn't propagated
-            // yet by the time this dispatcher post runs; fall back to writing the text
-            // ourselves so the selection range below lands on real characters.
-            if (EditTextBox.Text == string.Empty)
+            if (EditTextBox.Text != subtitle.Text)
             {
                 EditTextBox.Text = subtitle.Text;
             }
 
-            EditTextBox.CaretIndex = foundIndex;
-            EditTextBox.SelectionStart = foundIndex;
-            EditTextBox.SelectionEnd = foundIndex + foundText.Length;
+            EditTextBox.Select(foundIndex, foundText.Length);
         });
 
         FocusEditTextBox();
