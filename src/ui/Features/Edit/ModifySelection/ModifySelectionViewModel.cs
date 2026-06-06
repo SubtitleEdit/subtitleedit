@@ -128,6 +128,14 @@ public partial class ModifySelectionViewModel : ObservableObject
             Se.Settings.Edit.ModifySelectionMode = "new";
         }
 
+        if (SelectedRule != null)
+        {
+            Se.Settings.Edit.ModifySelectionRule = SelectedRule.RuleType.ToString();
+            Se.Settings.Edit.ModifySelectionText = SelectedRule.Text;
+            Se.Settings.Edit.ModifySelectionMatchCase = SelectedRule.MatchCase;
+            Se.Settings.Edit.ModifySelectionNumber = SelectedRule.Number;
+        }
+
         Se.SaveSettings();
     }
 
@@ -171,13 +179,38 @@ public partial class ModifySelectionViewModel : ObservableObject
             Rules.Add(rule);
         }
 
-        SelectedRule = Rules.First();
+        SelectedRule = GetSavedRuleOrDefault();
 
         _previewTimer.Start();
     }
 
     internal void OnRuleChanged()
     {
-        _isDirty = true;        
+        _isDirty = true;
+    }
+
+    // Restore the rule type, text, match-case and number last used (persisted across
+    // restarts, like SE 4), falling back to the first rule when nothing is saved (#11429).
+    private ModifySelectionRule GetSavedRuleOrDefault()
+    {
+        var savedRuleType = Se.Settings.Edit.ModifySelectionRule;
+        var rule = Rules.FirstOrDefault(r => r.RuleType.ToString() == savedRuleType) ?? Rules.First();
+
+        if (rule.HasText)
+        {
+            rule.Text = Se.Settings.Edit.ModifySelectionText ?? string.Empty;
+        }
+
+        if (rule.HasMatchCase)
+        {
+            rule.MatchCase = Se.Settings.Edit.ModifySelectionMatchCase;
+        }
+
+        if (rule.HasNumber)
+        {
+            rule.Number = Se.Settings.Edit.ModifySelectionNumber;
+        }
+
+        return rule;
     }
 }
