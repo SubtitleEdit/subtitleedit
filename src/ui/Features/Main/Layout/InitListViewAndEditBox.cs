@@ -134,7 +134,17 @@ public static partial class InitListViewAndEditBox
             var altColorHex = isDark
                 ? Se.Settings.Appearance.GridAlternatingRowColorDark
                 : Se.Settings.Appearance.GridAlternatingRowColor;
-            alternatingRowBrush = new SolidColorBrush(altColorHex.FromHexToColor());
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(altColorHex))
+                {
+                    alternatingRowBrush = new SolidColorBrush(altColorHex.FromHexToColor());
+                }
+            }
+            catch
+            {
+                alternatingRowBrush = null;
+            }
         }
 
         // Set up data binding for row visibility based on IsHidden property
