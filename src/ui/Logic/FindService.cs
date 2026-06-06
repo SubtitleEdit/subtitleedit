@@ -563,11 +563,22 @@ public partial class FindService : IFindService
             var searchLine = line.Substring(0, Math.Min(startIndex + 1, line.Length));
             var originalLength = searchLine.Length;
             searchLine = NormalizeLineEndingsForRegex(searchLine, out var indexMap);
-            var matches = Regex.Matches(searchLine, searchText);
 
-            if (matches.Count > 0)
+            // Advance by 1 after each match so overlapping matches are found
+            // (e.g. two long lines sharing the \n between them).
+            var regex = new Regex(searchText);
+            Match? lastMatch = null;
+            var pos = 0;
+            while (pos < searchLine.Length)
             {
-                var lastMatch = matches[matches.Count - 1];
+                var m = regex.Match(searchLine, pos);
+                if (!m.Success) break;
+                lastMatch = m;
+                pos = m.Index + 1;
+            }
+
+            if (lastMatch != null)
+            {
                 return (true, MapNormalizedIndex(indexMap, lastMatch.Index, originalLength), lastMatch.Value);
             }
         }
