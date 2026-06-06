@@ -100,7 +100,7 @@ public partial class BinaryResizeImagesViewModel : ObservableObject
         var resizedBitmap = ResizeBitmap(originalBitmap, newWidth, newHeight);
         PreviewBitmap = resizedBitmap.ToAvaloniaBitmap();
         
-        ImageSizeText = $"Original: {_originalWidth} × {_originalHeight} px\nNew: {newWidth} × {newHeight} px";
+        ImageSizeText = $"Original: {_originalWidth} Ã— {_originalHeight} px\nNew: {newWidth} Ã— {newHeight} px";
     }
 
     public void ApplyResize()
