@@ -1,7 +1,7 @@
-{
+﻿{
   "title": "Subtitle Edit",
   "version": "v5.0.0",
-  "translatedBy": "Adam Malich - 5.06.2026",
+  "translatedBy": "Adam Malich - 6.06.2026",
   "cultureName": "pl-PL",
   "general": {
     "abort": "Przerwij",
@@ -3095,7 +3095,7 @@
     "title": "O programie Subtitle Edit",
     "translatedBy": "Przetłumaczył: {0}",
     "licenseText": "Subtitle Edit to darmowe oprogramowanie na licencji MIT.",
-    "descriptionText": "Subtitle Edit is a free and open source editor for subtitle files, available on Windows, macOS, and Linux.\nIt supports 300+ subtitle formats, OCR, speech recognition, AI translation, and much more.\n\nThank you for being part of the Subtitle Edit community! :)",
+    "descriptionText": "Subtitle Edit to darmowy i otwarto źródłowy edytor plików napisów, dostępny na systemy Windows, macOS i Linux.\nObsługuje ponad 300 formatów napisów, rozpoznawanie tekstu (OCR), rozpoznawanie mowy, tłumaczenie oparte na sztucznej inteligencji i wiele innych funkcji.\n\nDziękujemy za przynależność do społeczności Subtitle Edit! :)",
     "issueTrackingAndSourceCode": "Śledzenie błędów i kod źródłowy: ",
     "gitHub": "GitHub",
     "donate": "Wesprzyj nas: ",
