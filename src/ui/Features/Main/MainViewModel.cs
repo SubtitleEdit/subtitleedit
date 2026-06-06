@@ -9964,9 +9964,7 @@ public partial class MainViewModel :
                     EditTextBox.Text = subtitle.Text;
                 }
 
-                EditTextBox.CaretIndex = foundIndex;
-                EditTextBox.SelectionStart = foundIndex;
-                EditTextBox.SelectionEnd = foundIndex + foundText.Length;
+                EditTextBox.Select(foundIndex, foundText.Length);
 
                 ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
             });
