@@ -2711,63 +2711,8 @@ public partial class OcrViewModel : ObservableObject
 
             if (DoPromptForUnknownWords && ocrFixResultTemp.UnknownWords.Count > 0)
             {
-                var tcs = new TaskCompletionSource<bool>();
-                Dispatcher.UIThread.Post(async () =>
-                {
-                    foreach (var unknownWord in ocrFixResultTemp.UnknownWords)
-                    {
-                        var suggestions = _ocrFixEngine.GetSpellCheckSuggestions(unknownWord.Word.FixedWord);
-                        var result = await _windowService.ShowDialogAsync<PromptUnknownWordWindow, PromptUnknownWordViewModel>(Window!,
-                            vm => { vm.Initialize(item.GetBitmap(), item.Text, unknownWord, suggestions); });
-
-                        if (result.ChangeWholeTextPressed)
-                        {
-                            item.Text = result.WholeText;
-                            break;
-                        }
-                        else if (result.ChangeOncePressed)
-                        {
-                            ChangeWord(item, unknownWord, result.Word);
-                        }
-                        else if (result.ChangeAllPressed)
-                        {
-                            ChangeWord(item, unknownWord, result.Word);
-                            _ocrFixEngine.ChangeAll(unknownWord.Word.Word, result.Word);
-                        }
-                        else if (result.SkipOncePressed)
-                        {
-                            // do nothing
-                        }
-                        else if (result.SkipAllPressed)
-                        {
-                            _ocrFixEngine.SkipAll(unknownWord.Word.FixedWord);
-                        }
-                        else if (result.AddToNamesListPressed)
-                        {
-                            _ocrFixEngine.AddName(result.Word);
-                        }
-                        else if (result.AddToUserDictionaryPressed)
-                        {
-                            if (SelectedDictionary != null)
-                            {
-                                UserWordsHelper.AddToUserDictionary(result.Word, SelectedDictionary.GetFiveLetterLanguageName() ?? "en_US");
-                            }
-
-                            _ocrFixEngine.ReloadNames();
-                        }
-                        else
-                        {
-                            await _cancellationTokenSource.CancelAsync();
-                            IsOcrRunning = false;
-                            break;
-                        }
-                    }
-
-                    RefreshSpellCheckColoring(i, item);
-                    tcs.SetResult(true);
-                });
-                await tcs.Task;
-                if (!IsOcrRunning)
+                var keepRunning = await PromptForUnknownWordsAsync(i, item);
+                if (!keepRunning)
                 {
                     _isCtrlDown = false;
                     return;
@@ -3092,63 +3037,8 @@ public partial class OcrViewModel : ObservableObject
 
             if (DoPromptForUnknownWords && unknownWords.Count > 0)
             {
-                var tcs = new TaskCompletionSource<bool>();
-                Dispatcher.UIThread.Post(async void () =>
-                {
-                    foreach (var unknownWord in unknownWords)
-                    {
-                        var suggestions = _ocrFixEngine.GetSpellCheckSuggestions(unknownWord.Word.FixedWord);
-                        var result = await _windowService.ShowDialogAsync<PromptUnknownWordWindow, PromptUnknownWordViewModel>(Window!,
-                            vm => { vm.Initialize(item.GetBitmap(), item.Text, unknownWord, suggestions); });
-
-                        if (result.ChangeWholeTextPressed)
-                        {
-                            item.Text = result.WholeText;
-                            break;
-                        }
-                        else if (result.ChangeOncePressed)
-                        {
-                            ChangeWord(item, unknownWord, result.Word);
-                        }
-                        else if (result.ChangeAllPressed)
-                        {
-                            ChangeWord(item, unknownWord, result.Word);
-                            _ocrFixEngine.ChangeAll(unknownWord.Word.Word, result.Word);
-                        }
-                        else if (result.SkipOncePressed)
-                        {
-                            // do nothing
-                        }
-                        else if (result.SkipAllPressed)
-                        {
-                            _ocrFixEngine.SkipAll(unknownWord.Word.FixedWord);
-                        }
-                        else if (result.AddToNamesListPressed)
-                        {
-                            _ocrFixEngine.AddName(result.Word);
-                        }
-                        else if (result.AddToUserDictionaryPressed)
-                        {
-                            if (SelectedDictionary != null)
-                            {
-                                UserWordsHelper.AddToUserDictionary(result.Word, SelectedDictionary.GetFiveLetterLanguageName() ?? "en_US");
-                            }
-
-                            _ocrFixEngine.ReloadNames();
-                        }
-                        else
-                        {
-                            _cancellationTokenSource.Cancel();
-                            IsOcrRunning = false;
-                            break;
-                        }
-                    }
-
-                    RefreshSpellCheckColoring(i, item);
-                    tcs.SetResult(true);
-                });
-                await tcs.Task;
-                if (!IsOcrRunning)
+                var keepRunning = await PromptForUnknownWordsAsync(i, item);
+                if (!keepRunning)
                 {
                     return;
                 }
@@ -3167,6 +3057,174 @@ public partial class OcrViewModel : ObservableObject
 
         var updatedResult = _ocrFixEngine.FixOcrErrors(lineIndex, item, DoTryToGuessUnknownWords);
         item.FixResult = updatedResult;
+    }
+
+    private List<UnknownWordItem> GetUnknownWordItems(OcrSubtitleItem item, OcrFixLineResult result)
+    {
+        var unknownWords = new List<UnknownWordItem>();
+        foreach (var word in result.Words)
+        {
+            if (word.IsSpellCheckedOk == false)
+            {
+                unknownWords.Add(new UnknownWordItem(item, result, word));
+            }
+        }
+
+        return unknownWords;
+    }
+
+    private UnknownWordItem? GetNextUnknownWord(int lineIndex, OcrSubtitleItem item, HashSet<string> skipOnceWords, HashSet<string> skipAllWords)
+    {
+        if (!_ocrFixEngine.IsLoaded() ||
+            SelectedDictionary == null ||
+            SelectedDictionary.Name == GetDictionaryNameNone() ||
+            !DoFixOcrErrors)
+        {
+            return null;
+        }
+
+        var updatedResult = _ocrFixEngine.FixOcrErrors(lineIndex, item, DoTryToGuessUnknownWords);
+        item.FixResult = updatedResult;
+
+        foreach (var unknownWord in GetUnknownWordItems(item, updatedResult))
+        {
+            if (!skipOnceWords.Contains(GetUnknownWordKey(unknownWord)) &&
+                !GetUnknownWordSkipForms(unknownWord).Any(skipAllWords.Contains))
+            {
+                return unknownWord;
+            }
+        }
+
+        return null;
+    }
+
+    private static string GetUnknownWordKey(UnknownWordItem unknownWord)
+    {
+        return $"{unknownWord.Word.WordIndex}|{unknownWord.Word.Word}|{unknownWord.Word.FixedWord}";
+    }
+
+    private static List<string> GetUnknownWordSkipForms(UnknownWordItem unknownWord)
+    {
+        var words = new HashSet<string>(StringComparer.Ordinal);
+
+        AddSkipForm(words, unknownWord.Word.Word);
+        AddSkipForm(words, unknownWord.Word.FixedWord);
+
+        return words.ToList();
+    }
+
+    private static void AddSkipForm(HashSet<string> words, string? word)
+    {
+        if (string.IsNullOrWhiteSpace(word))
+        {
+            return;
+        }
+
+        words.Add(word);
+
+        var trimmedQuotes = word.Trim('\'');
+        if (!string.IsNullOrWhiteSpace(trimmedQuotes))
+        {
+            words.Add(trimmedQuotes);
+        }
+
+        var trimmedHyphen = word.Trim('-');
+        if (!string.IsNullOrWhiteSpace(trimmedHyphen))
+        {
+            words.Add(trimmedHyphen);
+        }
+
+        var trimmed = word.Trim('\'', '"', '-');
+        if (!string.IsNullOrWhiteSpace(trimmed))
+        {
+            words.Add(trimmed);
+        }
+    }
+
+    private async Task<bool> PromptForUnknownWordsAsync(int lineIndex, OcrSubtitleItem item)
+    {
+        var tcs = new TaskCompletionSource<bool>();
+        Dispatcher.UIThread.Post(async () =>
+        {
+            var skipOnceWords = new HashSet<string>();
+            var skipAllWords = new HashSet<string>(StringComparer.Ordinal);
+
+            while (true)
+            {
+                var unknownWord = GetNextUnknownWord(lineIndex, item, skipOnceWords, skipAllWords);
+                if (unknownWord == null)
+                {
+                    break;
+                }
+
+                var suggestions = _ocrFixEngine.GetSpellCheckSuggestions(unknownWord.Word.FixedWord);
+                var result = await _windowService.ShowDialogAsync<PromptUnknownWordWindow, PromptUnknownWordViewModel>(Window!,
+                    vm => { vm.Initialize(item.GetBitmap(), item.Text, unknownWord, suggestions); });
+
+                if (result.ChangeWholeTextPressed)
+                {
+                    item.Text = result.WholeText;
+                    break;
+                }
+
+                if (result.ChangeOncePressed)
+                {
+                    ChangeWord(item, unknownWord, result.Word);
+                    continue;
+                }
+
+                if (result.ChangeAllPressed)
+                {
+                    ChangeWord(item, unknownWord, result.Word);
+                    _ocrFixEngine.ChangeAll(unknownWord.Word.Word, result.Word);
+                    continue;
+                }
+
+                if (result.SkipOncePressed)
+                {
+                    skipOnceWords.Add(GetUnknownWordKey(unknownWord));
+                    continue;
+                }
+
+                if (result.SkipAllPressed)
+                {
+                    foreach (var word in GetUnknownWordSkipForms(unknownWord))
+                    {
+                        skipAllWords.Add(word);
+                        _ocrFixEngine.SkipAll(word);
+                    }
+
+                    continue;
+                }
+
+                if (result.AddToNamesListPressed)
+                {
+                    _ocrFixEngine.AddName(result.Word);
+                    continue;
+                }
+
+                if (result.AddToUserDictionaryPressed)
+                {
+                    if (SelectedDictionary != null)
+                    {
+                        UserWordsHelper.AddToUserDictionary(result.Word, SelectedDictionary.GetFiveLetterLanguageName() ?? "en_US");
+                    }
+
+                    _ocrFixEngine.ReloadNames();
+                    continue;
+                }
+
+                await _cancellationTokenSource.CancelAsync();
+                IsOcrRunning = false;
+                break;
+            }
+
+            RefreshSpellCheckColoring(lineIndex, item);
+            tcs.SetResult(true);
+        });
+
+        await tcs.Task;
+        return IsOcrRunning;
     }
 
     private static void ChangeWord(OcrSubtitleItem item, UnknownWordItem unknownWord, string word)
@@ -3249,12 +3307,11 @@ public partial class OcrViewModel : ObservableObject
                 {
                     result.Guesses.Add(new GuessUsedItem(word.Word, word.FixedWord, i));
                 }
+            }
 
-                if (word.IsSpellCheckedOk == false)
-                {
-                    var unknownWordItem = new UnknownWordItem(item, result.OcrFixLineResult, word);
-                    result.UnknownWords.Add(unknownWordItem);
-                }
+            foreach (var unknownWordItem in GetUnknownWordItems(item, result.OcrFixLineResult))
+            {
+                result.UnknownWords.Add(unknownWordItem);
             }
         }
 
@@ -3350,12 +3407,12 @@ public partial class OcrViewModel : ObservableObject
                     AllGuesses.Add(new GuessUsedItem(word.Word, word.FixedWord, i));
                 }
 
-                if (word.IsSpellCheckedOk == false)
-                {
-                    var unknownWordItem = new UnknownWordItem(item, result, word);
-                    UnknownWords.Add(unknownWordItem);
-                    unknownWords.Add(unknownWordItem);
-                }
+            }
+
+            foreach (var unknownWordItem in GetUnknownWordItems(item, result))
+            {
+                UnknownWords.Add(unknownWordItem);
+                unknownWords.Add(unknownWordItem);
             }
         }
         else
@@ -3426,63 +3483,8 @@ public partial class OcrViewModel : ObservableObject
 
                 if (DoPromptForUnknownWords && unknownWords.Count > 0)
                 {
-                    var tcs = new TaskCompletionSource<bool>();
-                    Dispatcher.UIThread.Post(async () =>
-                    {
-                        foreach (var unknownWord in unknownWords)
-                        {
-                            var suggestions = _ocrFixEngine.GetSpellCheckSuggestions(unknownWord.Word.FixedWord);
-                            var result = await _windowService.ShowDialogAsync<PromptUnknownWordWindow, PromptUnknownWordViewModel>(Window!,
-                                vm => { vm.Initialize(item.GetBitmap(), item.Text, unknownWord, suggestions); });
-
-                            if (result.ChangeWholeTextPressed)
-                            {
-                                item.Text = result.WholeText;
-                                break;
-                            }
-                            else if (result.ChangeOncePressed)
-                            {
-                                ChangeWord(item, unknownWord, result.Word);
-                            }
-                            else if (result.ChangeAllPressed)
-                            {
-                                ChangeWord(item, unknownWord, result.Word);
-                                _ocrFixEngine.ChangeAll(unknownWord.Word.Word, result.Word);
-                            }
-                            else if (result.SkipOncePressed)
-                            {
-                                // do nothing
-                            }
-                            else if (result.SkipAllPressed)
-                            {
-                                _ocrFixEngine.SkipAll(unknownWord.Word.FixedWord);
-                            }
-                            else if (result.AddToNamesListPressed)
-                            {
-                                _ocrFixEngine.AddName(result.Word);
-                            }
-                            else if (result.AddToUserDictionaryPressed)
-                            {
-                                if (SelectedDictionary != null)
-                                {
-                                    UserWordsHelper.AddToUserDictionary(result.Word, SelectedDictionary.GetFiveLetterLanguageName() ?? "en_US");
-                                }
-
-                                _ocrFixEngine.ReloadNames();
-                            }
-                            else
-                            {
-                                _cancellationTokenSource.Cancel();
-                                IsOcrRunning = false;
-                                break;
-                            }
-                        }
-
-                        RefreshSpellCheckColoring(i, item);
-                        tcs.SetResult(true);
-                    });
-                    await tcs.Task;
-                    if (!IsOcrRunning)
+                    var keepRunning = await PromptForUnknownWordsAsync(i, item);
+                    if (!keepRunning)
                     {
                         return;
                     }

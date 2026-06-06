@@ -285,6 +285,11 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
                 isWordCorrect = true;
             }
 
+            if (!isWordCorrect && _wordSkipList.Contains(result))
+            {
+                isWordCorrect = true;
+            }
+
             if (!isWordCorrect && _spellCheckWordLists.HasUserWord(result))
             {
                 isWordCorrect = true;
@@ -521,4 +526,3 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         return names;
     }
 }
-
