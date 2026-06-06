@@ -136,7 +136,10 @@ public partial class ModifySelectionViewModel : ObservableObject
             Se.Settings.Edit.ModifySelectionRule = SelectedRule.RuleType.ToString();
             Se.Settings.Edit.ModifySelectionText = SelectedRule.Text;
             Se.Settings.Edit.ModifySelectionMatchCase = SelectedRule.MatchCase;
-            Se.Settings.Edit.ModifySelectionNumber = SelectedRule.Number;
+            if (SelectedRule.HasNumber)
+            {
+                Se.Settings.Edit.ModifySelectionNumber = SelectedRule.Number;
+            }
         }
 
         Se.SaveSettings();

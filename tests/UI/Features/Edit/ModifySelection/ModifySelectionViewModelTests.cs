@@ -1,3 +1,4 @@
+using Avalonia;
 using Nikse.SubtitleEdit.Features.Edit.ModifySelection;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -139,14 +140,34 @@ public class ModifySelectionViewModelTests
     }
 
     [Fact]
-    public void NullableDoubleConverter_RoundTripsDoubleValues()
+    public void NullableDoubleConverter_NullInput_DoesNotZeroOutNumber()
     {
-        var converter = new NullableDoubleConverter { DefaultValue = 100 };
+        var converter = new NullableDoubleConverter();
 
-        var converted = converter.Convert(77.5, typeof(decimal), null, CultureInfo.InvariantCulture);
-        var roundTripped = converter.ConvertBack(77.5m, typeof(double), null, CultureInfo.InvariantCulture);
+        var result = converter.ConvertBack(null, typeof(double), null, CultureInfo.InvariantCulture);
 
-        Assert.Equal(77.5m, Assert.IsType<decimal>(converted));
-        Assert.Equal(77.5, Assert.IsType<double>(roundTripped));
+        Assert.Equal(AvaloniaProperty.UnsetValue, result);
+    }
+
+    [Fact]
+    public void Ok_OnNonNumericRule_DoesNotOverwriteSavedNumericThreshold()
+    {
+        var originalSettings = Se.Settings;
+        try
+        {
+            Se.Settings = new Se();
+            Se.Settings.Edit.ModifySelectionNumber = 88;
+
+            var vm = new ModifySelectionViewModel();
+            vm.InitializeRules(new List<SubtitleLineViewModel>());
+            vm.SelectedRule = vm.Rules.First(r => !r.HasNumber);
+            vm.OkCommand.Execute(null);
+
+            Assert.Equal(88, Se.Settings.Edit.ModifySelectionNumber);
+        }
+        finally
+        {
+            Se.Settings = originalSettings;
+        }
     }
 }

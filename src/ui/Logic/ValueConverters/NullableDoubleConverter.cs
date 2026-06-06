@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Data.Converters;
 using System;
 using System.Globalization;
@@ -45,6 +46,6 @@ public class NullableDoubleConverter : IValueConverter
             return (double)intValue;
         }
 
-        return DefaultValue;
+        return AvaloniaProperty.UnsetValue;
     }
 }
