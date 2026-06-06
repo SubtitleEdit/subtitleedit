@@ -137,18 +137,16 @@ public class SpeechToTextWindow : Window
             .WithMarginTop(10)
             .BindIsVisible(vm, nameof(vm.IsLanguageSelectionVisible));
 
-        var labelModel = UiUtil.MakeTextBlock(Se.Language.General.Model).WithMarginBottom(20).WithMarginTop(10)
+        var labelModel = UiUtil.MakeTextBlock(Se.Language.General.Model).WithMarginTop(10)
             .BindIsVisible(vm, nameof(vm.IsModelSelectionVisible));
         var comboModel = UiUtil.MakeComboBox(vm.Models, vm, nameof(vm.SelectedModel))
             .WithMinWidth(220)
-            .WithMarginBottom(20)
             .WithMarginTop(10)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
             .BindIsVisible(vm, nameof(vm.IsModelSelectionVisible));
         comboModel.ItemTemplate = MakeModelItemTemplate();
 
         var buttonModelDownload = UiUtil.MakeButtonBrowse(vm.DownloadModelCommand)
-            .WithMarginBottom(20)
             .WithMarginTop(10)
             .WithMarginLeft(5)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
@@ -167,8 +165,10 @@ public class SpeechToTextWindow : Window
         };
 
         var labelTranslateToEnglish = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.TranslateToEnglish)
+            .WithMarginTop(20)
             .BindIsVisible(vm, nameof(vm.IsTranslateVisible));
         var checkTranslateToEnglish = UiUtil.MakeCheckBox(vm, nameof(vm.DoTranslateToEnglish))
+            .WithMarginTop(20)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
             .BindIsVisible(vm, nameof(vm.IsTranslateVisible));
 
@@ -341,9 +341,9 @@ public class SpeechToTextWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // 1: Console log (right) — Star fills remaining
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 2: Engine
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 3: Backend
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 4: Forced aligner
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 5: Language
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 6: Model
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 4: Language
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 5: Model
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 6: Forced aligner
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 7: OpenAI STT - Endpoint URL
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 8: OpenAI STT - API Key
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 9: OpenAI STT - Model
@@ -416,16 +416,16 @@ public class SpeechToTextWindow : Window
         grid.Add(comboCrispAsrBackend, row, 1);
         row++;
 
-        grid.Add(labelForcedAligner, row, 0);
-        grid.Add(panelForcedAlignerControls, row, 1);
-        row++;
-
         grid.Add(labelLanguage, row, 0);
         grid.Add(comboLanguage, row, 1);
         row++;
 
         grid.Add(labelModel, row, 0);
         grid.Add(panelModelControls, row, 1);
+        row++;
+
+        grid.Add(labelForcedAligner, row, 0);
+        grid.Add(panelForcedAlignerControls, row, 1);
         row++;
 
         foreach (var (label, control) in openAiRows)
