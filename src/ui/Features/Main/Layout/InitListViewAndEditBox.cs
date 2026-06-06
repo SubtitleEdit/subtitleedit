@@ -127,7 +127,7 @@ public static partial class InitListViewAndEditBox
         var booleanAndConverter = BooleanAndConverter.Instance;
 
         // Optional alternating row background (hidden setting, no UI yet)
-        IBrush alternatingRowBrush = null;
+        IBrush? alternatingRowBrush = null;
         if (Se.Settings.Appearance.GridAlternatingRows)
         {
             var isDark = Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
