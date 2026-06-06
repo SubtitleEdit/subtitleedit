@@ -1,0 +1,6 @@
+
+🐉 Fun-ASR Nano
+
+Type: Speech-LLM (70-block SANM encoder + Qwen3-0.6B AR decoder)
+Focus: 🎯 ASR with native punctuation, 5 languages
+Languages: Mandarin, Cantonese, English, Japanese, Korean
