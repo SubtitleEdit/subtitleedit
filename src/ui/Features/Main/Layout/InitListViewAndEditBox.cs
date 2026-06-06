@@ -138,6 +138,7 @@ public static partial class InitListViewAndEditBox
         vm.SubtitleGrid.Columns.Add(new DataGridTemplateColumn
         {
             Header = Se.Language.General.NumberSymbol,
+            Tag = SubtitleGridColumnKeys.Number,
             Width = new DataGridLength(50),
             MinWidth = 40,
             CellTheme = UiUtil.DataGridNoBorderCellTheme,
@@ -164,6 +165,7 @@ public static partial class InitListViewAndEditBox
         var startColumn = new DataGridTextColumn
         {
             Header = Se.Language.General.Show,
+            Tag = SubtitleGridColumnKeys.Start,
             Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
             Width = new DataGridLength(120),
             MinWidth = 100,
@@ -179,6 +181,7 @@ public static partial class InitListViewAndEditBox
         var hideColumn = new DataGridTextColumn
         {
             Header = Se.Language.General.Hide,
+            Tag = SubtitleGridColumnKeys.End,
             Binding = new Binding(nameof(SubtitleLineViewModel.EndTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
             Width = new DataGridLength(120),
             MinWidth = 100,
@@ -194,6 +197,7 @@ public static partial class InitListViewAndEditBox
         var columnDuration = new DataGridTemplateColumn
         {
             Header = Se.Language.General.Duration,
+            Tag = SubtitleGridColumnKeys.Duration,
             Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
             MinWidth = 60,
             CellTheme = UiUtil.DataGridNoBorderCellTheme,
@@ -226,6 +230,7 @@ public static partial class InitListViewAndEditBox
         vm.SubtitleGrid.Columns.Add(new DataGridTemplateColumn
         {
             Header = Se.Language.General.Text,
+            Tag = SubtitleGridColumnKeys.Text,
             Width = new DataGridLength(1, DataGridLengthUnitType.Star),
             MinWidth = 100,
             CellTheme = UiUtil.DataGridNoBorderCellTheme,
@@ -257,6 +262,7 @@ public static partial class InitListViewAndEditBox
         var originalColumn = new DataGridTemplateColumn
         {
             Header = Se.Language.General.OriginalText,
+            Tag = SubtitleGridColumnKeys.OriginalText,
             Width = new DataGridLength(1, DataGridLengthUnitType.Star), // Stretch text column
             MinWidth = 100,
             CellTheme = UiUtil.DataGridNoBorderCellTheme,
@@ -293,6 +299,7 @@ public static partial class InitListViewAndEditBox
         var styleColumn = new DataGridTextColumn
         {
             Header = Se.Language.General.Style,
+            Tag = SubtitleGridColumnKeys.Style,
             Binding = new Binding(nameof(SubtitleLineViewModel.Style)),
             Width = new DataGridLength(120),
             CellTheme = UiUtil.DataGridNoBorderCellTheme,
@@ -313,6 +320,7 @@ public static partial class InitListViewAndEditBox
         var columnGap = new DataGridTemplateColumn
         {
             Header = Se.Language.General.Gap,
+            Tag = SubtitleGridColumnKeys.Gap,
             Width = new DataGridLength(100),
             CellTheme = UiUtil.DataGridNoBorderCellTheme,
             CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) =>
@@ -344,6 +352,7 @@ public static partial class InitListViewAndEditBox
         var actorColumn = new DataGridTextColumn
         {
             Header = Se.Language.General.Actor,
+            Tag = SubtitleGridColumnKeys.Actor,
             Binding = new Binding(nameof(SubtitleLineViewModel.Actor)) { Mode = BindingMode.OneWay },
             Width = new DataGridLength(120),
             CellTheme = UiUtil.DataGridNoBorderCellTheme,
@@ -358,6 +367,7 @@ public static partial class InitListViewAndEditBox
         var cpsColumn = new DataGridTemplateColumn
         {
             Header = Se.Language.General.Cps,
+            Tag = SubtitleGridColumnKeys.Cps,
             Width = new DataGridLength(100),
             CellTheme = UiUtil.DataGridNoBorderCellTheme,
             CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) =>
@@ -389,6 +399,7 @@ public static partial class InitListViewAndEditBox
         var wpmColumn = new DataGridTemplateColumn
         {
             Header = Se.Language.General.Wpm,
+            Tag = SubtitleGridColumnKeys.Wpm,
             Width = new DataGridLength(100),
             CellTheme = UiUtil.DataGridNoBorderCellTheme,
             CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) =>
@@ -420,6 +431,7 @@ public static partial class InitListViewAndEditBox
         var pixelWidthColumn = new DataGridTemplateColumn
         {
             Header = Se.Language.General.PixelWidth,
+            Tag = SubtitleGridColumnKeys.PixelWidth,
             Width = new DataGridLength(100),
             CellTheme = UiUtil.DataGridNoBorderCellTheme,
             CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) =>
@@ -443,6 +455,7 @@ public static partial class InitListViewAndEditBox
         var layerColumn = new DataGridTextColumn
         {
             Header = Se.Language.General.Layer,
+            Tag = SubtitleGridColumnKeys.Layer,
             Binding = new Binding(nameof(SubtitleLineViewModel.Layer)),
             Width = new DataGridLength(23),
             CellTheme = UiUtil.DataGridNoBorderCellTheme,
@@ -453,6 +466,8 @@ public static partial class InitListViewAndEditBox
             Mode = BindingMode.OneWay,
             Source = vm,
         });
+
+        RestoreSubtitleGridColumnWidths(vm.SubtitleGrid);
 
         vm.SubtitleGrid.DataContext = vm.Subtitles;
         vm.SubtitleGrid.SelectionChanged += vm.SubtitleGrid_SelectionChanged;
@@ -1523,6 +1538,69 @@ public static partial class InitListViewAndEditBox
         vm.EditTextBoxBindingCoordinator = coordinator;
 
         return mainGrid;
+    }
+
+    // Stable keys (DataGridColumn.Tag) used to snapshot/restore subtitle grid column
+    // widths across restarts. Headers are localized, so they can't be used as keys (#11415).
+    internal static class SubtitleGridColumnKeys
+    {
+        public const string Number = "Number";
+        public const string Start = "Start";
+        public const string End = "End";
+        public const string Duration = "Duration";
+        public const string Text = "Text";
+        public const string OriginalText = "OriginalText";
+        public const string Style = "Style";
+        public const string Gap = "Gap";
+        public const string Actor = "Actor";
+        public const string Cps = "Cps";
+        public const string Wpm = "Wpm";
+        public const string PixelWidth = "PixelWidth";
+        public const string Layer = "Layer";
+    }
+
+    // The stretchy text columns keep filling the window, so their width is never stored.
+    private static bool IsStretchyColumn(string key)
+        => key == SubtitleGridColumnKeys.Text || key == SubtitleGridColumnKeys.OriginalText;
+
+    private static void RestoreSubtitleGridColumnWidths(DataGrid grid)
+    {
+        var saved = Se.Settings.General.SubtitleGridColumnWidths;
+        if (saved == null || saved.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var column in grid.Columns)
+        {
+            if (column.Tag is string key
+                && !IsStretchyColumn(key)
+                && saved.TryGetValue(key, out var width)
+                && width > 0)
+            {
+                column.Width = new DataGridLength(width, DataGridLengthUnitType.Pixel);
+            }
+        }
+    }
+
+    // Snapshot the current (actual) width of each fixed column so it can be restored on
+    // the next launch. Called on exit. Hidden columns report ActualWidth 0 and are skipped,
+    // keeping their previously stored width.
+    public static void SaveSubtitleGridColumnWidths(DataGrid? grid)
+    {
+        if (grid == null)
+        {
+            return;
+        }
+
+        var widths = Se.Settings.General.SubtitleGridColumnWidths ??= new();
+        foreach (var column in grid.Columns)
+        {
+            if (column.Tag is string key && !IsStretchyColumn(key) && column.ActualWidth > 0)
+            {
+                widths[key] = column.ActualWidth;
+            }
+        }
     }
 
     private static Avalonia.Controls.Control MakeTextBox(MainViewModel vm)

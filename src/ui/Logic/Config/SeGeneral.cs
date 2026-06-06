@@ -105,6 +105,12 @@ public class SeGeneral
     public bool ShowColumnWpm { get; set; }
     public bool ShowColumnPixelWidth { get; set; }
     public bool ShowColumnLayer { get; set; }
+
+    // Subtitle grid column widths (pixels) keyed by column key (DataGridColumn.Tag),
+    // snapshotted on exit and restored on startup. The stretchy Text/OriginalText
+    // columns are intentionally not stored so they keep filling the window (#11415).
+    public Dictionary<string, double> SubtitleGridColumnWidths { get; set; } = new();
+
     public bool SelectCurrentSubtitleWhilePlaying { get; set; }
     public bool WriteAn2Tag { get; set; }
     public bool AutoTrimWhiteSpace { get; set; }

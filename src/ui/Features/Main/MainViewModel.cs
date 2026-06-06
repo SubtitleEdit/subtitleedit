@@ -14999,6 +14999,7 @@ public partial class MainViewModel :
             Se.Settings.General.ShowColumnCps = ShowColumnCps;
             Se.Settings.General.ShowColumnWpm = ShowColumnWpm;
             Se.Settings.General.ShowColumnLayer = ShowColumnLayer;
+            Layout.InitListViewAndEditBox.SaveSubtitleGridColumnWidths(SubtitleGrid);
             Se.Settings.General.SelectCurrentSubtitleWhilePlaying = SelectCurrentSubtitleWhilePlaying;
             Se.Settings.Waveform.ShowToolbar = IsWaveformToolbarVisible;
             Se.Settings.Waveform.CenterVideoPosition = WaveformCenter;
