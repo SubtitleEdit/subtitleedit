@@ -79,7 +79,7 @@ public class TextEditorWrapper : ITextBoxWrapper
         _textEditor.SelectionLength = 0;
         _textEditor.SelectionStart = start;
         _textEditor.SelectionLength = length;
-        _textEditor.CaretOffset = start;
+        _textEditor.CaretOffset = start + length;
     }
 
     public int CaretIndex
