@@ -3,6 +3,7 @@ using Avalonia.OpenGL;
 using Avalonia.OpenGL.Controls;
 using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 
@@ -19,7 +20,7 @@ public class LibVlcDynamicOpenGlControl : OpenGlControlBase
     private int _videoWidth;
     private int _videoHeight;
     private uint _textureId;
-    private readonly object _bufferLock = new object();
+    private readonly Lock _bufferLock = new();
 
     // OpenGL function delegates
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]

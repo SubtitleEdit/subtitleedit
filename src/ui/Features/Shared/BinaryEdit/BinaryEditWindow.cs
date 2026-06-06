@@ -5,6 +5,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using System;
 using System.Collections;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Features.Main.Layout;
@@ -42,6 +43,10 @@ public class BinaryEditWindow : Window
 
         // Top menu bar
         var menu = MakeTopMenu(vm);
+        if (OperatingSystem.IsMacOS())
+        {
+            menu.IsVisible = false;
+        }
         mainGrid.Add(menu, 0);
 
         // Content area (grid + video)
@@ -109,7 +114,14 @@ public class BinaryEditWindow : Window
         Content = mainGrid;
         AddHandler(KeyDownEvent, (_, args) => vm.OnKeyDown(args), handledEventsToo: true);
         AddHandler(KeyUpEvent, (_, args) => vm.OnKeyUp(args), handledEventsToo: true);
-        Loaded += (_, _) => vm.Loaded();
+        Loaded += (_, _) =>
+        {
+            if (OperatingSystem.IsMacOS())
+            {
+                InitNativeMacMenuBinaryEdit.Setup(this, vm);
+            }
+            vm.Loaded();
+        };
         Closing += (_, _) => vm.Closing();
     }
 

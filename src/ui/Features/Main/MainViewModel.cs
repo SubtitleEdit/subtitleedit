@@ -335,7 +335,7 @@ public partial class MainViewModel :
     private PlaySelectionItem? _playSelectionItem;
     private int _pendingScrollIndex = -1;
     private SubtitleLineViewModel? _pendingScrollSubtitle = null;
-    private readonly object _scrollLock = new object();
+    private readonly Lock _scrollLock = new();
     private bool _changingFormatProgrammatically;
     private bool _formatChangedByUser;
     private SubtitleFormat? _formatChangedFrom;

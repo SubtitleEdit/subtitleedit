@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 public class OpenAiSttService
 {
     private static HttpClient? _sharedHttpClient;
-    private static readonly object _sharedHttpClientLock = new();
+    private static readonly Lock SharedHttpClientLock = new();
 
     /// <summary>
     /// Shared HttpClient for the OpenAI Compatible STT service. Created once,
@@ -36,7 +36,7 @@ public class OpenAiSttService
                 return _sharedHttpClient;
             }
 
-            lock (_sharedHttpClientLock)
+            lock (SharedHttpClientLock)
             {
                 if (_sharedHttpClient == null)
                 {

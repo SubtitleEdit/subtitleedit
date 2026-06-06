@@ -342,7 +342,7 @@ public class YtDlpDownloadService : IYtDlpDownloadService
         progress.Report(clamped);
     }
 
-    private static readonly object _versionCheckCacheLock = new();
+    private static readonly Lock VersionCheckCacheLock = new();
     private static bool? _cachedIsOutdated;
 
     public static async Task<bool> IsInstalledVersionOutdated(CancellationToken cancellationToken, bool forceRefresh = false)
@@ -351,7 +351,7 @@ public class YtDlpDownloadService : IYtDlpDownloadService
 
         if (!forceRefresh)
         {
-            lock (_versionCheckCacheLock)
+            lock (VersionCheckCacheLock)
             {
                 if (_cachedIsOutdated is { } cached)
                 {
@@ -385,7 +385,7 @@ public class YtDlpDownloadService : IYtDlpDownloadService
             result = IsVersionOutdated(installedVersion);
         }
 
-        lock (_versionCheckCacheLock)
+        lock (VersionCheckCacheLock)
         {
             _cachedIsOutdated = result;
         }
@@ -395,7 +395,7 @@ public class YtDlpDownloadService : IYtDlpDownloadService
 
     public static void InvalidateInstalledVersionCache()
     {
-        lock (_versionCheckCacheLock)
+        lock (VersionCheckCacheLock)
         {
             _cachedIsOutdated = null;
         }
