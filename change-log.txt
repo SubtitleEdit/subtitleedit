@@ -2,7 +2,7 @@
 Subtitle Edit Changelog
 
 
-v5.0.0 (5th June 2026)
+v5.0.0 (TBD)
 
 * Update Polish translation - thx potplayer-fanpack
 * Fix #11357: also ignore Ctrl+Left/Right word-jump navigation while a text box is focused
