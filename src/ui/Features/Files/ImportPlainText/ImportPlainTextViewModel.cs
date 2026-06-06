@@ -45,7 +45,7 @@ public partial class ImportPlainTextViewModel : ObservableObject
     private static readonly List<string> TextFilePatterns = TextFileExtensions.Select(e => "*" + e).ToList();
     private bool _dirty;
     private TaskCompletionSource? _previewFlushed;
-    private readonly object _previewFlushLock = new();
+    private readonly System.Threading.Lock _previewFlushLock = new();
     private readonly System.Timers.Timer _timerUpdatePreview;
 
     public ImportPlainTextViewModel(IFileHelper fileHelper, IWindowService windowService)

@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 
 namespace Nikse.SubtitleEdit.Features.Tools.ChangeCasing;
 
@@ -39,7 +40,7 @@ public partial class FixNamesViewModel : ObservableObject
     private string _oldNames;
     private readonly System.Timers.Timer _previewTimer;
     private bool _loading;
-    private readonly object _lock = new object();
+    private readonly Lock _lock = new();
 
     public FixNamesViewModel()
     {

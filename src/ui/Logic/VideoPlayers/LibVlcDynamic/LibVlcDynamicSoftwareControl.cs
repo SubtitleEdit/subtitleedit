@@ -5,6 +5,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using System;
+using System.Threading;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 
@@ -18,7 +19,7 @@ public class LibVlcDynamicSoftwareControl : Control
     private LibVlcDynamicPlayer? _vlcPlayer;
     private WriteableBitmap? _renderTarget;
     private bool _isInitialized;
-    private readonly object _frameLock = new object();
+    private readonly Lock _frameLock = new();
     private IntPtr _frameBuffer = IntPtr.Zero;
     private int _frameWidth;
     private int _frameHeight;
