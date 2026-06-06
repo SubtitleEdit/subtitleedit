@@ -8701,7 +8701,7 @@ public partial class MainViewModel :
         var prev = idx > 0 ? Subtitles[idx - 1] : null;
         var prevGapMs = 0.0;
         var prevIsClose = false;
-        var oneFrameMsStart = Math.Abs(FramesToMilliseconds(1));
+        var oneFrameMsStart = FramesToMilliseconds(1);
         if (keepGapPrevIfClose && prev != null
             && prev.EndTime.TotalMilliseconds <= s.StartTime.TotalMilliseconds
             && prev.EndTime.TotalMilliseconds + gapMs + oneFrameMsStart >= s.StartTime.TotalMilliseconds)
@@ -8753,7 +8753,7 @@ public partial class MainViewModel :
         var next = idx >= 0 && idx + 1 < Subtitles.Count ? Subtitles[idx + 1] : null;
         var nextGapMs = 0.0;
         var nextIsClose = false;
-        var oneFrameMsEnd = Math.Abs(FramesToMilliseconds(1));
+        var oneFrameMsEnd = FramesToMilliseconds(1);
         if (keepGapNextIfClose && next != null
             && s.EndTime.TotalMilliseconds <= next.StartTime.TotalMilliseconds
             && s.EndTime.TotalMilliseconds + gapMs + oneFrameMsEnd >= next.StartTime.TotalMilliseconds)
