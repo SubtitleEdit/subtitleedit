@@ -61,11 +61,6 @@ public partial class BinaryOcrDbEditViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
-        if (string.IsNullOrWhiteSpace(DatabaseName))
-        {
-            return;
-        }
-
         OkPressed = true;
         Close();
     }
@@ -176,6 +171,7 @@ public partial class BinaryOcrDbEditViewModel : ObservableObject
 
     internal void Initialize(string imageCompareName)
     {
+        DatabaseName = imageCompareName;
         _binaryImageCompareDatabase = new BinaryOcrDb(Path.Combine(Se.OcrFolder, imageCompareName + BinaryOcrDb.Extension), true);
         var allImages = _binaryImageCompareDatabase.AllCompareImages;
         var characters = allImages.Where(c => !string.IsNullOrWhiteSpace(c.Text))
@@ -194,7 +190,7 @@ public partial class BinaryOcrDbEditViewModel : ObservableObject
         SelectedCharacter = characters.FirstOrDefault();
         CharactersChanged();
 
-        Title = string.Format(Se.Language.Ocr.EditNOcrDatabaseXWithYItems, imageCompareName, allImages.Count);
+        Title = $"{Se.Language.Ocr.EditBinaryOcrDatabase}: {Path.GetFileNameWithoutExtension(imageCompareName)} ({allImages.Count:#,###,##0})";
     }
 
     internal void CharactersChanged(object? sender, SelectionChangedEventArgs e)

@@ -12,7 +12,7 @@ public class BinaryOcrDbEditWindow : Window
 {
     public BinaryOcrDbEditWindow(BinaryOcrDbEditViewModel vm)
     {
-        Title = Se.Language.Ocr.EditNOcrDatabase;
+        Title = Se.Language.Ocr.EditBinaryOcrDatabase;
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
         CanResize = true;
@@ -135,6 +135,7 @@ public class BinaryOcrDbEditWindow : Window
         {
             BorderBrush = UiUtil.GetBorderBrush(),
             BorderThickness = new Thickness(1),
+            Background = new SolidColorBrush(Colors.LightGray),
             Padding = new Thickness(5),
             Child = image,
             HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
