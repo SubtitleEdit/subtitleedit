@@ -135,7 +135,6 @@ public class BinaryOcrDbEditWindow : Window
         {
             BorderBrush = UiUtil.GetBorderBrush(),
             BorderThickness = new Thickness(1),
-            Background = new SolidColorBrush(Colors.LightGray),
             Padding = new Thickness(5),
             Child = image,
             HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,

@@ -190,7 +190,7 @@ public partial class BinaryOcrDbEditViewModel : ObservableObject
         SelectedCharacter = characters.FirstOrDefault();
         CharactersChanged();
 
-        Title = $"{Se.Language.Ocr.EditBinaryOcrDatabase}: {Path.GetFileNameWithoutExtension(imageCompareName)} ({allImages.Count:#,###,##0})";
+        Title = $"{Se.Language.Ocr.EditBinaryOcrDatabase}: {Path.GetFileNameWithoutExtension(imageCompareName)} ({allImages.Count:N0})";
     }
 
     internal void CharactersChanged(object? sender, SelectionChangedEventArgs e)
