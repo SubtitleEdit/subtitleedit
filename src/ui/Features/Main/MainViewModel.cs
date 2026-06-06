@@ -8701,9 +8701,10 @@ public partial class MainViewModel :
         var prev = idx > 0 ? Subtitles[idx - 1] : null;
         var prevGapMs = 0.0;
         var prevIsClose = false;
+        var oneFrameMsStart = FramesToMilliseconds(1);
         if (keepGapPrevIfClose && prev != null
             && prev.EndTime.TotalMilliseconds <= s.StartTime.TotalMilliseconds
-            && prev.EndTime.TotalMilliseconds + gapMs >= s.StartTime.TotalMilliseconds)
+            && prev.EndTime.TotalMilliseconds + gapMs + oneFrameMsStart >= s.StartTime.TotalMilliseconds)
         {
             prevIsClose = true;
             prevGapMs = s.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds;
@@ -8752,9 +8753,10 @@ public partial class MainViewModel :
         var next = idx >= 0 && idx + 1 < Subtitles.Count ? Subtitles[idx + 1] : null;
         var nextGapMs = 0.0;
         var nextIsClose = false;
+        var oneFrameMsEnd = FramesToMilliseconds(1);
         if (keepGapNextIfClose && next != null
             && s.EndTime.TotalMilliseconds <= next.StartTime.TotalMilliseconds
-            && s.EndTime.TotalMilliseconds + gapMs >= next.StartTime.TotalMilliseconds)
+            && s.EndTime.TotalMilliseconds + gapMs + oneFrameMsEnd >= next.StartTime.TotalMilliseconds)
         {
             nextIsClose = true;
             nextGapMs = next.StartTime.TotalMilliseconds - s.EndTime.TotalMilliseconds;
