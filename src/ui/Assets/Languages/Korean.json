@@ -3095,7 +3095,7 @@
     "title": "자막 편집 정보",
     "translatedBy": "번역: {0}",
     "licenseText": "Subtitle Edit은 MIT 라이선스에 따라 배포되는 무료 소프트웨어입니다.",
-    "descriptionText": "Subtitle Edit is a free and open source editor for subtitle files, available on Windows, macOS, and Linux.\nIt supports 300+ subtitle formats, OCR, speech recognition, AI translation, and much more.\n\nThank you for being part of the Subtitle Edit community! :)",
+    "descriptionText": "Subtitle Edit은 Windows, macOS 및 Linux에서 쓸 수 있는 오픈 소스 자막 편집기입니다.\n300개 이상의 자막 포맷 지원, OCR, 음성 인식, AI 번역 등 다양한 기능을 제공합니다.\n\nSubtitle Edit 커뮤니티의 일원이 되어 주셔서 감사합니다! :)",
     "issueTrackingAndSourceCode": "이슈 추적 및 소스 코드 : ",
     "gitHub": "Github",
     "donate": "후원 : ",
