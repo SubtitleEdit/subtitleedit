@@ -17,7 +17,7 @@ public partial class AboutViewModel : ObservableObject
     public string TitleText => $"Subtitle Edit {Se.Version}";
     public string TranslatedBy => string.Format(Se.Language.About.TranslatedBy, Se.Language.TranslatedBy);
     public string LicenseText => Se.Language.About.LicenseText;
-    public string DescriptionText => string.Join(Environment.NewLine, Se.Language.About.DescriptionTextBeta.SplitToLines());
+    public string DescriptionText => string.Join(Environment.NewLine, Se.Language.About.DescriptionText.SplitToLines());
 
     [RelayCommand]
     private async Task OpenGitHub()

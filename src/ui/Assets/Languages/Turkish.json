@@ -3095,7 +3095,7 @@
     "title": "Subtitle Edit Hakkında",
     "translatedBy": "Türkçeye çeviren: {0}",
     "licenseText": "Subtitle Edit, MIT lisansı altında ücretsiz bir yazılımdır.",
-    "descriptionTextBeta": "Subtitle Edit 5, yaklaşmakta olan büyük sürümümüz için bir aday sürümdür (RC).\nYeni araçlar üzerinde son rötuşları yapıyoruz ve test aşamasındaki yardımınız için teşekkür ederiz.\nMümkün olan en iyi son sürümünü sağlamamıza yardımcı olmak için lütfen geri bildirimlerinizi paylaşın.\n\nSubtitle Edit topluluğunun bir parçası olduğunuz için teşekkürler! :)",
+    "descriptionText": "Subtitle Edit is a free and open source editor for subtitle files, available on Windows, macOS, and Linux.\nIt supports 300+ subtitle formats, OCR, speech recognition, AI translation, and much more.\n\nThank you for being part of the Subtitle Edit community! :)",
     "issueTrackingAndSourceCode": "Hata takibi ve kaynak kod: ",
     "gitHub": "GitHub",
     "donate": "Bağış yap: ",

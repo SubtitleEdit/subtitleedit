@@ -1,4 +1,4 @@
-﻿{
+{
   "title": "Уредување на титлови",
   "version": null,
   "translatedBy": "Кирил Жежоски",
@@ -2809,7 +2809,7 @@
     "title": "За Subtitle Edit",
     "translatedBy": "Преведено од: {0}",
     "licenseText": "Subtitle Edit е слободен софтвер под лиценца MIT.",
-    "descriptionTextBeta": "Subtitle Edit 5 beta е развоенска верзија на нашето идно големо издание.\nАктивно ги усовршуваме новите алатки и ви благодариме за помошта во тестирањето.\nВе молиме споделете вашите коментари за да ни помогнете да осигуриме најдобрата конечна верзија.\n\nВи благодариме што сте дел од заедницата на Subtitle Edit! :)",
+    "descriptionText": "Subtitle Edit is a free and open source editor for subtitle files, available on Windows, macOS, and Linux.\nIt supports 300+ subtitle formats, OCR, speech recognition, AI translation, and much more.\n\nThank you for being part of the Subtitle Edit community! :)",
     "issueTrackingAndSourceCode": "Следење на проблеми и изворен код: ",
     "gitHub": "Github",
     "donate": "Донирај: ",

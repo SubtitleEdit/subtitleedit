@@ -2585,7 +2585,7 @@
     "title": "Despre Subtite Edit",
     "translatedBy": "Tradus de: {0}",
     "licenseText": "Subtitle Edit este un software gratuit sub licența MIT.",
-    "descriptionTextBeta": "Subtitle Edit 5 beta este o versiune de dezvoltare a viitoarei noastre versiuni majore.\n",
+    "descriptionText": "Subtitle Edit is a free and open source editor for subtitle files, available on Windows, macOS, and Linux.\nIt supports 300+ subtitle formats, OCR, speech recognition, AI translation, and much more.\n\nThank you for being part of the Subtitle Edit community! :)",
     "issueTrackingAndSourceCode": "Urmărirea problemelor și codul sursă: ",
     "gitHub": "Github",
     "donate": "Dona: ",

@@ -3087,7 +3087,7 @@
     "title": "O programu Subtitle Edit",
     "translatedBy": "Přeložil: {0}",
     "licenseText": "Subtitle Edit je svobodný software pod licencí MIT.",
-    "descriptionTextBeta": "Subtitle Edit 5 je testovací verze naší připravované velké aktualizace.\nPrávě dokončujeme práce na nových nástrojích a vážíme si vaší pomoci při jejich testování.\nPodělte se s námi prosím o svoji zpětnou vazbu, abychom mohli zajistit co nejlepší finální verzi.\n\nDěkujeme, že jste součástí komunity Subtitle Editu! :)",
+    "descriptionText": "Subtitle Edit is a free and open source editor for subtitle files, available on Windows, macOS, and Linux.\nIt supports 300+ subtitle formats, OCR, speech recognition, AI translation, and much more.\n\nThank you for being part of the Subtitle Edit community! :)",
     "issueTrackingAndSourceCode": "Sledování chyb a zdrojový kód: ",
     "gitHub": "GitHub",
     "donate": "Podpořte nás: ",

@@ -3095,7 +3095,7 @@
     "title": "À propos de Subtitle Edit",
     "translatedBy": "Traduit par : {0}",
     "licenseText": "Subtitle Edit est un logiciel libre sous licence MIT.",
-    "descriptionTextBeta": "Subtitle Edit 5 est une version candidate de notre prochaine version majeure.\nNous mettons la dernière main aux nouveaux outils et apprécions votre aide pour les tests.\nN'hésitez pas à partager vos commentaires pour nous aider à garantir la meilleure version finale possible.\n\nMerci de faire partie de la communauté Subtitle Edit ! :)",
+    "descriptionText": "Subtitle Edit is a free and open source editor for subtitle files, available on Windows, macOS, and Linux.\nIt supports 300+ subtitle formats, OCR, speech recognition, AI translation, and much more.\n\nThank you for being part of the Subtitle Edit community! :)",
     "issueTrackingAndSourceCode": "Suivi des problèmes et code source : ",
     "gitHub": "GitHub",
     "donate": "Faire un don : ",

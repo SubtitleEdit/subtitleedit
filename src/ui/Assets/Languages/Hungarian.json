@@ -3087,7 +3087,7 @@
     "title": "A Subtitle Edit névjegye",
     "translatedBy": "Fordító: {0}",
     "licenseText": "A Subtitle Edit az MIT licenc alatt kiadott szabad szoftver.",
-    "descriptionTextBeta": "A Subtitle Edit 5 a következő nagyobb verziónk kiadásra jelölt változata.\nMár az utolsó simításokat végezzük az új eszközökön, és nagyra értékeljük a segítséget a tesztelésben.\nKérjük, ossza meg visszajelzéseit, hogy a lehető legjobb végleges verziót biztosíthassuk.\n\nKöszönjük, hogy tagja a Subtitle Edit közösségnek! :)",
+    "descriptionText": "Subtitle Edit is a free and open source editor for subtitle files, available on Windows, macOS, and Linux.\nIt supports 300+ subtitle formats, OCR, speech recognition, AI translation, and much more.\n\nThank you for being part of the Subtitle Edit community! :)",
     "issueTrackingAndSourceCode": "Hibakövetés és forráskód: ",
     "gitHub": "GitHub",
     "donate": "Adomány: ",

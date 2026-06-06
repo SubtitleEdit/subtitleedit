@@ -3087,7 +3087,7 @@
     "title": "About Subtite Edit",
     "translatedBy": "翻訳者: {0}",
     "licenseText": "Subtitle Edit は MIT ライセンスに基づくフリーソフトウェアです",
-    "descriptionTextBeta": "Subtitle Edit 5 beta は、近日リリース予定のメジャーバージョンの開発版です。\n新しいツールを積極的に改良しており、テストにご協力いただけると幸いです。\n最高の最終バージョンをお届けできるよう、ぜひフィードバックをお寄せください。\n\nSubtitle Edit コミュニティにご参加いただきありがとうございます! :)",
+    "descriptionText": "Subtitle Edit is a free and open source editor for subtitle files, available on Windows, macOS, and Linux.\nIt supports 300+ subtitle formats, OCR, speech recognition, AI translation, and much more.\n\nThank you for being part of the Subtitle Edit community! :)",
     "issueTrackingAndSourceCode": "課題追跡とソースコード: ",
     "gitHub": "Github",
     "donate": "開発者への支援: ",

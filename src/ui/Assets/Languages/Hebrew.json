@@ -1,4 +1,4 @@
-﻿{
+{
   "title": "עברית",
   "version": null,
   "translatedBy": "Antigravity & cdtauman",
@@ -2912,7 +2912,7 @@
     "title": "אודות Subtitle Edit",
     "translatedBy": "תורגם על ידי: {0}",
     "licenseText": "Subtitle Edit היא תוכנה חופשית תחת רישיון MIT.",
-    "descriptionTextBeta": "Subtitle Edit 5 beta היא גרסת פיתוח של הגרסה הראשית הבאה שלנו.\nאנו משפרים את הכלים החדשים באופן פעיל ומעריכים את עזרתך בבדיקה.\nנא לשתף את המשוב שלך כדי לעזור לנו להבטיח את הגרסה הסופית הטובה ביותר.\n\nתודה רבה על היותך חלק מקהילת Subtitle Edit! :)",
+    "descriptionText": "Subtitle Edit is a free and open source editor for subtitle files, available on Windows, macOS, and Linux.\nIt supports 300+ subtitle formats, OCR, speech recognition, AI translation, and much more.\n\nThank you for being part of the Subtitle Edit community! :)",
     "issueTrackingAndSourceCode": "מעקב אחר תקלות וקוד מקור: ",
     "gitHub": "GitHub",
     "donate": "תרומה: ",
