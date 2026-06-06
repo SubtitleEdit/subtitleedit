@@ -788,10 +788,47 @@ public static class ShortcutsMain
             new(nameof(vm.GoToNextErrorCommand), [nameof(Avalonia.Input.Key.F8)], ShortcutCategory.SubtitleGrid),
             new(nameof(vm.ShowSpellCheckCommand), ["Alt", nameof(Avalonia.Input.Key.F7)], ShortcutCategory.SubtitleGrid),
             new(nameof(vm.ShowToolsChangeCasingCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.C)], ShortcutCategory.General),
+            new(nameof(vm.ShowToolsFixCommonErrorsCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.F)], ShortcutCategory.General),
+            new(nameof(vm.ShowToolsBatchConvertCommand), [cmd, nameof(Avalonia.Input.Key.B)], ShortcutCategory.General),
             new(nameof(vm.ShowToolsRemoveTextForHearingImpairedCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.H)], ShortcutCategory.General),
             new(nameof(vm.ShowSyncAdjustAllTimesCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.A)], ShortcutCategory.General),
             new(nameof(vm.WaveformPasteFromClipboardCommand), [cmd, nameof(Avalonia.Input.Key.V)], ShortcutCategory.Waveform),
             new(nameof(vm.FillSelectedLinesWithClipboardCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.V)], ShortcutCategory.SubtitleGrid),
+
+            // Tools / dialogs (V4 defaults)
+            new(nameof(vm.CommandFileSaveAsCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.S)], ShortcutCategory.General),
+            new(nameof(vm.MergeSelectedLinesCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.M)], ShortcutCategory.General),
+            new(nameof(vm.ShowAutoTranslateCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.G)], ShortcutCategory.General),
+            new(nameof(vm.ShowPointSyncCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.P)], ShortcutCategory.General),
+            new(nameof(vm.ShowFindDoubleWordsCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.D)], ShortcutCategory.General),
+            new(nameof(vm.ShowAddToNameListCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.L)], ShortcutCategory.General),
+            new(nameof(vm.RightToLeftToggleCommand), [cmd, "Shift", "Alt", nameof(Avalonia.Input.Key.R)], ShortcutCategory.General),
+
+            // Timing / creation (V4 defaults)
+            new(nameof(vm.WaveformSetStartCommand), [nameof(Avalonia.Input.Key.F11)], ShortcutCategory.General),
+            new(nameof(vm.WaveformSetEndCommand), [nameof(Avalonia.Input.Key.F12)], ShortcutCategory.General),
+            new(nameof(vm.WaveformSetEndAndGoToNextCommand), [nameof(Avalonia.Input.Key.F10)], ShortcutCategory.General),
+            new(nameof(vm.InsertLineAfterCommand), ["Alt", nameof(Avalonia.Input.Key.Insert)], ShortcutCategory.General),
+            new(nameof(vm.InsertLineBeforeCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.Insert)], ShortcutCategory.General),
+            new(nameof(vm.AutoBreakCommand), [cmd, nameof(Avalonia.Input.Key.R)], ShortcutCategory.General),
+            new(nameof(vm.PlaySelectedLinesWithoutLoopCommand), [nameof(Avalonia.Input.Key.F5)], ShortcutCategory.General),
+            new(nameof(vm.ExtendSelectedToNextCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.E)], ShortcutCategory.General),
+            new(nameof(vm.ExtendSelectedToPreviousCommand), ["Alt", "Shift", nameof(Avalonia.Input.Key.E)], ShortcutCategory.General),
+
+            // Text casing / split (V4 defaults)
+            new(nameof(vm.SelectionToLowerCommand), [cmd, nameof(Avalonia.Input.Key.U)], ShortcutCategory.General),
+            new(nameof(vm.SelectionToUpperCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.U)], ShortcutCategory.General),
+            new(nameof(vm.ToggleCasingCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.F3)], ShortcutCategory.General),
+            new(nameof(vm.SplitAtTextBoxCursorPositionCommand), [cmd, "Alt", nameof(Avalonia.Input.Key.V)], ShortcutCategory.General),
+
+            // Video / waveform / navigation (V4 defaults)
+            new(nameof(vm.FocusSelectedLineCommand), [cmd, nameof(Avalonia.Input.Key.L)], ShortcutCategory.General),
+            new(nameof(vm.Video500MsBackCommand), ["Alt", nameof(Avalonia.Input.Key.Left)], ShortcutCategory.General),
+            new(nameof(vm.Video500MsForwardCommand), ["Alt", nameof(Avalonia.Input.Key.Right)], ShortcutCategory.General),
+            new(nameof(vm.VideoFullScreenCommand), ["Alt", nameof(Avalonia.Input.Key.Return)], ShortcutCategory.General),
+            new(nameof(vm.WaveformVerticalZoomInCommand), ["Shift", nameof(Avalonia.Input.Key.Add)], ShortcutCategory.General),
+            new(nameof(vm.WaveformVerticalZoomOutCommand), ["Shift", nameof(Avalonia.Input.Key.Subtract)], ShortcutCategory.General),
+            new(nameof(vm.PauseCommand), [cmd, "Alt", nameof(Avalonia.Input.Key.P)], ShortcutCategory.General),
         ];
     }
 
