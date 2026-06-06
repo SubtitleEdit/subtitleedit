@@ -11,6 +11,7 @@ public class LanguageImageBasedEdit
     public string CropImages { get; set; }
     public string ImportTimeCodes { get; set; }
     public string SetTextForSubtitle { get; set; }
+    public string SetText { get; set; }
     public string ScreenWidth { get; set; }
     public string ScreenHeight { get; set; }
     public string AlphaThresholdInfo { get; set; }
@@ -36,6 +37,7 @@ public class LanguageImageBasedEdit
         CropImages = "Crop images";
         ImportTimeCodes = "Import time codes...";
         SetTextForSubtitle = "Set text for subtitle";
+        SetText = "Set text";
         ScreenWidth = "Screen width";
         ScreenHeight = "Screen height";
         AlphaThresholdInfo = "Pixels with alpha below threshold become fully transparent";
