@@ -9591,7 +9591,7 @@ public partial class MainViewModel :
         var subs = Subtitles.Select(p => p.Text).ToList();
         var currentLineIndex = Subtitles.IndexOf(selectedSubtitle);
         var currentCharIndex = EditTextBox.CaretIndex;
-        var idx = _findService.FindNext(_findService.SearchText, subs, currentLineIndex, currentCharIndex + 1);
+        var idx = _findService.FindNext(_findService.SearchText, subs, currentLineIndex, currentCharIndex);
 
         if (idx < 0)
         {
