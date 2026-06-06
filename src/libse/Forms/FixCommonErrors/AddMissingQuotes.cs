@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             // seems to have valid quotes, so no spanning
                             prev.Text.Replace("<i>", string.Empty).TrimStart().TrimStart('-').TrimStart().StartsWith('"') &&
                             prev.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith('"') &&
-                            Utilities.CountTagInText(prev.Text, '"') == 2)
+                            Utilities.CountTagInText(prev.Text, '"') % 2 == 0)
                         {
                             prev = null;
                         }
