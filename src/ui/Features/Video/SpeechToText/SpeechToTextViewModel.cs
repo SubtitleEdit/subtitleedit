@@ -380,9 +380,11 @@ public partial class SpeechToTextViewModel : ObservableObject
             return;
         }
 
+        // Fun-ASR is a CJK/Korean-focused speech-LLM; Canary CTC only aligns English/European,
+        // so prefer the multilingual Qwen3 aligner (like Qwen3/Mega) which covers its languages.
         var preferredChoice = hasNative
             ? ForcedAlignerOption.BuiltInChoice
-            : (crispEngine is CrispAsrQwen3 or CrispAsrMega ? ForcedAlignerOption.Qwen3Choice : ForcedAlignerOption.CanaryCtcChoice);
+            : (crispEngine is CrispAsrQwen3 or CrispAsrMega or CrispAsrFunAsrNano ? ForcedAlignerOption.Qwen3Choice : ForcedAlignerOption.CanaryCtcChoice);
 
         var match = ForcedAligners.FirstOrDefault(p => p.Choice == preferredChoice)
                     ?? ForcedAligners.FirstOrDefault();
