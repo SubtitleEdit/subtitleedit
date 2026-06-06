@@ -126,6 +126,17 @@ public static partial class InitListViewAndEditBox
         var booleanToGridLengthConverter = new BooleanToGridLengthConverter();
         var booleanAndConverter = BooleanAndConverter.Instance;
 
+        // Optional alternating row background (hidden setting, no UI yet)
+        IBrush alternatingRowBrush = null;
+        if (Se.Settings.Appearance.GridAlternatingRows)
+        {
+            var isDark = Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
+            var altColorHex = isDark
+                ? Se.Settings.Appearance.GridAlternatingRowColorDark
+                : Se.Settings.Appearance.GridAlternatingRowColor;
+            alternatingRowBrush = new SolidColorBrush(altColorHex.FromHexToColor());
+        }
+
         // Set up data binding for row visibility based on IsHidden property
         vm.SubtitleGrid.LoadingRow += (sender, e) =>
         {
@@ -133,6 +144,13 @@ public static partial class InitListViewAndEditBox
             {
                 Converter = inverseBooleanConverter
             });
+
+            // Tint every other row. Rows are recycled on scroll, so LoadingRow re-fires with the
+            // updated index. Selection still wins because :selected overrides BackgroundRectangle.Fill.
+            if (alternatingRowBrush != null)
+            {
+                e.Row.Background = e.Row.GetIndex() % 2 == 1 ? alternatingRowBrush : Brushes.Transparent;
+            }
         };
 
         vm.SubtitleGrid.Columns.Add(new DataGridTemplateColumn
