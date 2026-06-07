@@ -32,6 +32,7 @@ public class CrispAsrEngine : CrispAsrEngineBase
             new CrispAsrMega(),
             new CrispAsrOmni(),
             new CrispAsrKyutai(),
+            new CrispAsrSenseVoice(),
         };
 
         SelectedBackend = _backends[0];
