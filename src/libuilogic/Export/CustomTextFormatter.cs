@@ -235,7 +235,7 @@ public static class CustomTextFormatter
             .Replace("ff", $"{SubtitleFormat.MillisecondsToFrames(timeCode.TotalMilliseconds):00}")
             .Replace("h", $"{Math.Abs(timeCode.Hours)}")
             .Replace("m", $"{Math.Abs(timeCode.Minutes)}")
-            .Replace("f", $"{SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds)}");
+            .Replace("f", $"{SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds):00}");
     }
 
     internal static string GetParagraph(string template, string start, string end, string text, string originalText, int number, string actor, TimeCode duration, string gap, string timeCodeTemplate, Paragraph p, string videoFileName)
