@@ -107,11 +107,7 @@ public static class UiTheme
     {
         if (Se.Settings.Appearance.Theme == ThemeNameSystem && Application.Current != null)
         {
-            RemoveLighterDark();
-            if (Application.Current.ActualThemeVariant == ThemeVariant.Dark)
-            {
-                ApplyLighterDark();
-            }
+            SetCurrentTheme();
         }
     }
 
