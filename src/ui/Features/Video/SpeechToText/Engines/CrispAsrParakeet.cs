@@ -84,6 +84,42 @@ public class CrispAsrParakeet : CrispAsrEngineBase
                     "https://huggingface.co/cstr/parakeet-tdt-0.6b-ja-GGUF/resolve/main/parakeet-tdt-0.6b-ja.gguf",
                 ],
             },
+            new WhisperModel
+            {
+                Name = "parakeet-rnnt-0.6b-q4_k.gguf",
+                Size = "468 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-rnnt-0.6b-GGUF/resolve/main/parakeet-rnnt-0.6b-q4_k.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "parakeet-rnnt-0.6b-f16.gguf",
+                Size = "1.24 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-rnnt-0.6b-GGUF/resolve/main/parakeet-rnnt-0.6b-f16.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "parakeet-rnnt-1.1b-q4_k.gguf",
+                Size = "808 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-rnnt-1.1b-GGUF/resolve/main/parakeet-rnnt-1.1b-q4_k.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "parakeet-rnnt-1.1b-f16.gguf",
+                Size = "2.14 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-rnnt-1.1b-GGUF/resolve/main/parakeet-rnnt-1.1b-f16.gguf",
+                ],
+            },
        };
 
     public override string Extension => string.Empty;

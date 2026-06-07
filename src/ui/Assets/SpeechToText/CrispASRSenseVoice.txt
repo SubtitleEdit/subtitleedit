@@ -1,0 +1,7 @@
+
+🎙️ SenseVoice-Small
+
+Type: Encoder-only CTC ASR (non-autoregressive, ~15× faster than Whisper-Large)
+Focus: 🎯 Chinese, Cantonese, English, Japanese and Korean
+Extras: native language ID, emotion and audio-event tags in a single pass
+
