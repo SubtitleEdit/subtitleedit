@@ -12,7 +12,7 @@ public class BinaryOcrDbEditWindow : Window
 {
     public BinaryOcrDbEditWindow(BinaryOcrDbEditViewModel vm)
     {
-        Title = Se.Language.Ocr.EditNOcrDatabase;
+        Title = Se.Language.Ocr.EditBinaryOcrDatabase;
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
         CanResize = true;
