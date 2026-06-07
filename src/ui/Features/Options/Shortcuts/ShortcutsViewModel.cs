@@ -489,10 +489,19 @@ public partial class ShortcutsViewModel : ObservableObject
             }
         }
 
+        var previouslyAssigned = new HashSet<string>(
+            Se.Settings.Shortcuts.Select(s => s.ActionName), StringComparer.Ordinal);
+
         var shortcuts = new List<SeShortCut>();
         foreach (var shortcut in _allShortcuts)
         {
-            if (shortcut != null && !IsEmpty(shortcut))
+            if (shortcut == null) continue;
+
+            if (!IsEmpty(shortcut))
+            {
+                shortcuts.Add(new SeShortCut(shortcut));
+            }
+            else if (previouslyAssigned.Contains(shortcut.Name))
             {
                 shortcuts.Add(new SeShortCut(shortcut));
             }
