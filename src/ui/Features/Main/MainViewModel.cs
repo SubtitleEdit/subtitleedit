@@ -7484,13 +7484,33 @@ public partial class MainViewModel :
             return;
         }
 
+        var lines = Subtitles.OrderBy(p => p.StartTime).ToList();
         var viewModel = await ShowDialogAsync<BeautifyTimeCodesWindow, BeautifyTimeCodesViewModel>(
-            vm => { vm.Initialize(Subtitles.ToList(), AudioVisualizer, _videoFileName); });
+            vm => { vm.Initialize(lines, AudioVisualizer, _videoFileName); });
 
         if (!viewModel.OkPressed)
         {
             return;
         }
+
+        // Beautify preserves paragraph count and start-time ordering, so map results
+        // back onto the live grid rows by start-time order.
+        var beautified = viewModel.GetBeautifiedSubtitles()
+            .OrderBy(p => p.StartTime)
+            .ToList();
+        if (beautified.Count != lines.Count)
+        {
+            return;
+        }
+
+        for (var i = 0; i < beautified.Count; i++)
+        {
+            lines[i].StartTime = beautified[i].StartTime;
+            lines[i].EndTime = beautified[i].EndTime;
+            lines[i].UpdateDuration();
+        }
+
+        _updateAudioVisualizer = true;
     }
 
     [RelayCommand]
