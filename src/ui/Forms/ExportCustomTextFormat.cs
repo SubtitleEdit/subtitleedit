@@ -270,7 +270,7 @@ namespace Nikse.SubtitleEdit.Forms
                 .Replace("ff", $"{SubtitleFormat.MillisecondsToFrames(timeCode.TotalMilliseconds):00}")
                 .Replace("h", $"{Math.Abs(timeCode.Hours)}")
                 .Replace("m", $"{Math.Abs(timeCode.Minutes)}")
-                .Replace("f", $"{SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds)}");
+                .Replace("f", $"{SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds):00}");
         }
 
         private void InsertTag(object sender, EventArgs e)
