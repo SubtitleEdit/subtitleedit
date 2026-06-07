@@ -497,11 +497,7 @@ public partial class ShortcutsViewModel : ObservableObject
         {
             if (shortcut == null) continue;
 
-            if (!IsEmpty(shortcut))
-            {
-                shortcuts.Add(new SeShortCut(shortcut));
-            }
-            else if (previouslyAssigned.Contains(shortcut.Name))
+            if (!IsEmpty(shortcut) || previouslyAssigned.Contains(shortcut.Name))
             {
                 shortcuts.Add(new SeShortCut(shortcut));
             }
