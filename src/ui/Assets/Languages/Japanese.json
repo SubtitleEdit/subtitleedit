@@ -724,7 +724,11 @@
     "transcriptionProgressServerFormat": "サーバー: {0}",
     "transcriptionProgressModelFormat": "モデル: {0}",
     "transcriptionProgressReceivedSegmentsFormat": "受信セグメント数 ({0})",
-    "transcriptionProgressModelAuto": "(自動)"
+    "transcriptionProgressModelAuto": "(自動)",
+    "generatingAudioFile": "オーディオファイルを生成中...",
+    "imageBasedSubtitles": "画像ベースの字幕",
+    "lineHeight": "行の高さ",
+    "snapSelectedLinesEndToPreviousShotChange": "選択行の終了位置を前のショットチェンジへスナップ"
       },
   "main": {
     "menu": {
@@ -997,7 +1001,8 @@
     "downloadFfmpegTitle": "FFmpegをダウンロードしますか？",
     "downloadFfmpegQuestion": "オンライン動画再生や一部の動画編集機能にはFFmpegが必要です。\n\n今すぐダウンロードしますか？",
     "selectCurrentSubtitleWhilePlayingOn": "再生中に現在の字幕を選択: オン",
-    "selectCurrentSubtitleWhilePlayingOff": "再生中に現在の字幕を選択: オフ"
+    "selectCurrentSubtitleWhilePlayingOff": "再生中に現在の字幕を選択: オフ",
+    "snappedXTimesToFrames": "{0}個のタイムコードを{1:0.###} fpsでフレームへスナップしました"
   },
   "file": {
   "ebuSaveOptions": {
@@ -1085,7 +1090,8 @@
     "gapMs": "間隔（ms）",
     "useFixedDuration": "固定長を使用",
     "fixedDurationMs": "固定長（ms）",
-    "alignViaWhisper": "Whisperでタイムコードを整列..."
+    "alignViaWhisper": "Whisperでタイムコードを整列...",
+    "alignViaSpeechToText": "「音声からテキストへ」でタイムコードを揃える..."
     },
     "export": {
     "exportImagesProfiles": "画像書き出しプロファイル",
@@ -1907,7 +1913,8 @@
       "changeUnderlineToColor": "下線の色を変更",
       "engineSettings": "Speech-to-text エンジン設定",
       "engineSettingsSubtitle": "Speech-to-text エンジン",
-      "backendAndUpdateStatus": "バックエンドと更新状態"
+      "backendAndUpdateStatus": "バックエンドと更新状態",
+      "downloadingSpeechToTextEngine": "音声認識エンジンをダウンロード中"
           },
     "textToSpeech": {
       "title": "音声合成",
@@ -2455,7 +2462,8 @@
       "waveformColorTheme": "カラーテーマ:",
       "waveformSaveAsCustomTheme": "カスタムテーマとして保存...",
       "waveformLoadThemeDotDotDot": "テーマを読み込み...",
-      "waveformExportThemeDotDotDot": "テーマをエクスポート..."
+      "waveformExportThemeDotDotDot": "テーマをエクスポート...",
+      "searchSettingsDotDotDot": "設定を検索..."
     },
     "shortcuts": {
       "title": "ショートカット",
@@ -3092,15 +3100,15 @@
     "overrideTagsHistory": "タグ履歴を上書き"
   },
   "about": {
-    "title": "About Subtite Edit",
+    "title": "About Subtitle Edit",
     "translatedBy": "翻訳者: {0}",
     "licenseText": "Subtitle Edit は MIT ライセンスに基づくフリーソフトウェアです",
-    "descriptionTextBeta": "Subtitle Edit 5 beta は、近日リリース予定のメジャーバージョンの開発版です。\n新しいツールを積極的に改良しており、テストにご協力いただけると幸いです。\n最高の最終バージョンをお届けできるよう、ぜひフィードバックをお寄せください。\n\nSubtitle Edit コミュニティにご参加いただきありがとうございます! :)",
     "issueTrackingAndSourceCode": "課題追跡とソースコード: ",
     "gitHub": "Github",
     "donate": "開発者への支援: ",
     "payPal": "PayPal",
     "gitHubSponsor": "Github sponsor",
-    "or": " or "
+    "or": " or ",
+    "descriptionText": "Subtitle Edit は字幕ファイル用の無料でオープンソースのエディターで、Windows、macOS、Linux で利用できます。\n300以上の字幕フォーマット、OCR、音声認識、AI翻訳など、さまざまな機能に対応しています。\n\nSubtitle Edit コミュニティの一員になっていただき、ありがとうございます！ :)"
   }
 }

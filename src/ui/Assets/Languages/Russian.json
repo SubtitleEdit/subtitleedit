@@ -847,7 +847,8 @@
       "filterLayersForDisplayDotDotDot": "Фильтры для отображения...",
       "toggleSelectSubtitleWhilePlayingCurrentlyOn": "Включить/выключить субтитры во время воспроизведения (в данный момент: включено)",
       "toggleSelectSubtitleWhilePlayingCurrentlyOff": "Отключить/включить выбор субтитров во время воспроизведения (в данный момент: выключено)",
-      "selectSubtitleWhilePlaying": "Выберите субтитры во время воспроизведения"
+      "selectSubtitleWhilePlaying": "Выберите субтитры во время воспроизведения",
+      "evenlyDistributeLines": "Равномерно распределить строки (по CPS)"
     },
     "toolbar": {
       "newHint": "Создать новый файл субтитров {0}",
@@ -995,7 +996,8 @@
     "downloadFfmpegTitle": "Скачать FFmpeg?",
     "downloadFfmpegQuestion": "FFmpeg необходим для воспроизведения онлайн-видео и для некоторых функций видеомонтажа.\n\nСкачать FFmpeg прямо сейчас?",
     "selectCurrentSubtitleWhilePlayingOn": "Выбрать текущие субтитры во время воспроизведения: ВКЛ",
-    "selectCurrentSubtitleWhilePlayingOff": "Выбрать текущие субтитры во время воспроизведения: ВЫКЛ"
+    "selectCurrentSubtitleWhilePlayingOff": "Выбрать текущие субтитры во время воспроизведения: ВЫКЛ",
+    "numberOfLinesEvenlyDistributedX": "Равномерно распределено строк: {0}"
   },
   "file": {
     "ebuSaveOptions": {

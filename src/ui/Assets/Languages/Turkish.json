@@ -724,7 +724,9 @@
     "transcriptionProgressServerFormat": "Sunucu: {0}",
     "transcriptionProgressModelFormat": "Model: {0}",
     "transcriptionProgressReceivedSegmentsFormat": "Alınan Segmentler ({0})",
-    "transcriptionProgressModelAuto": "(otomatik)"
+    "transcriptionProgressModelAuto": "(otomatik)",
+    "generatingAudioFile": "Ses dosyası oluşturuluyor...",
+    "volume": "Ses düzeyi"
   },
   "main": {
     "menu": {
@@ -1086,7 +1088,8 @@
       "gapMs": "Boşluk (ms)",
       "useFixedDuration": "Sabit süre kullan",
       "fixedDurationMs": "Sabit süre (ms)",
-      "alignViaWhisper": "Zaman kodlarını Whisper ile hizala..."
+      "alignViaWhisper": "Zaman kodlarını Whisper ile hizala...",
+      "alignViaSpeechToText": "Zaman kodlarını \"Sesten metne\" ile hizala..."
     },
     "export": {
       "exportImagesProfiles": "Resim dışa aktarma profilleri",
@@ -1183,7 +1186,8 @@
       "openAutoBackupFolder": "Otomatik yedek klasörünü aç",
       "restoreAutoBackupFile": "Otomatik yedek dosyasını geri yükle",
       "deleteAllSubtitleBackups": "Tüm alt yazı yedek dosyalarını silmek istiyor musunuz?",
-      "deleteAll": "Tümünü sil"
+      "deleteAll": "Tümünü sil",
+      "restoreXFromY": "\"{0}\" dosyasını {1} tarihinden geri yüklemek istiyor musunuz?"
     },
     "propertiesDCinema": {
       "title": "D-Cinema SMPTE Özellikleri",
@@ -2456,7 +2460,9 @@
       "waveformColorTheme": "Renk teması:",
       "waveformSaveAsCustomTheme": "Özel tema olarak kaydet...",
       "waveformLoadThemeDotDotDot": "Tema yükle...",
-      "waveformExportThemeDotDotDot": "Temayı dışa aktar..."
+      "waveformExportThemeDotDotDot": "Temayı dışa aktar...",
+      "searchSettingsDotDotDot": "Ayarlarda ara...",
+      "promptBeforeDelete": "Silmeden önce onayla"
     },
     "shortcuts": {
       "title": "Kısayollar",

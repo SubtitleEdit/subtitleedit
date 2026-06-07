@@ -3099,7 +3099,7 @@
     "OverrideTagsHistory": "Historial etiquetas anulación"
   },
   "About": {
-    "Title": "Acerca de Subtite Edit",
+    "Title": "Acerca de Subtitle Edit",
     "TranslatedBy": "Traducido por: {0}",
     "LicenseText": "Subtitle Edit es software libre bajo la licencia MIT.",
     "descriptionText": "Subtitle Edit is a free and open source editor for subtitle files, available on Windows, macOS, and Linux.\nIt supports 300+ subtitle formats, OCR, speech recognition, AI translation, and much more.\n\nThank you for being part of the Subtitle Edit community! :)",

@@ -1,4 +1,4 @@
-﻿{
+{
   "title": "Subtitle Edit",
   "version": "v5.0.0-rc2",
   "translatedBy": "Matěj Fouma",
@@ -3095,12 +3095,12 @@
     "title": "O programu Subtitle Edit",
     "translatedBy": "Přeložil: {0}",
     "licenseText": "Subtitle Edit je svobodný software pod licencí MIT.",
-    "descriptionTextBeta": "Subtitle Edit 5 je testovací verze naší připravované velké aktualizace.\nPrávě dokončujeme práce na nových nástrojích a vážíme si vaší pomoci při jejich testování.\nPodělte se s námi prosím o svoji zpětnou vazbu, abychom mohli zajistit co nejlepší finální verzi.\n\nDěkujeme, že jste součástí komunity Subtitle Editu! :)",
     "issueTrackingAndSourceCode": "Sledování chyb a zdrojový kód: ",
     "gitHub": "GitHub",
     "donate": "Podpořte nás: ",
     "payPal": "PayPal",
     "gitHubSponsor": "GitHub sponsor",
-    "or": " nebo "
+    "or": " nebo ",
+    "descriptionText": "Subtitle Edit je svobodný editor titulkových souborů s otevřeným zdrojovým kódem, dostupný pro Windows, macOS a Linux.\nPodporuje více než 300 formátů titulků, OCR, rozpoznávání řeči, překlad pomocí AI a mnoho dalšího.\n\nDěkujeme, že jste součástí komunity Subtitle Edit! :)"
   }
 }
