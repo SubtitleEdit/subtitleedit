@@ -47,8 +47,8 @@ public class LanguageModifySelection
         DurationGreaterThan = "Duration in ms >";
         CpsLessThan = "CPS <";
         CpsGreaterThan = "CPS >";
-        LengthLessThan = "Length <";
-        LengthGreaterThan = "Length >";
+        LengthLessThan = "Single line max length <";
+        LengthGreaterThan = "Single line max length >";
         PixelLengthGreaterThan = "Pixel length >";
         GapGreaterThan = "Gap in ms >";
         GapLessThan = "Gap in ms <";
