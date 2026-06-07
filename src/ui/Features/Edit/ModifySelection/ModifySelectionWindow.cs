@@ -87,7 +87,7 @@ public class ModifySelectionWindow : Window
             VerticalAlignment = VerticalAlignment.Top,
         };
 
-        var comboBoxRules = UiUtil.MakeComboBox(vm.Rules, vm, nameof(vm.SelectedRule)).WithWidth(175).WithTopAlignment();
+        var comboBoxRules = UiUtil.MakeComboBox(vm.Rules, vm, nameof(vm.SelectedRule)).WithWidth(230).WithTopAlignment();
         comboBoxRules.SelectionChanged += (sender, args) => vm.OnRuleChanged();
 
         textBoxRuleText = UiUtil.MakeTextBox(150, vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.Text));
