@@ -7494,6 +7494,50 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private async Task ShowBeautifyTimeCodesSelectedLines()
+    {
+        if (Window == null || AudioVisualizer == null || string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>()
+            .OrderBy(p => p.StartTime)
+            .ToList();
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        var viewModel = await ShowDialogAsync<BeautifyTimeCodesWindow, BeautifyTimeCodesViewModel>(
+            vm => { vm.Initialize(selectedItems, AudioVisualizer, _videoFileName); });
+
+        if (!viewModel.OkPressed)
+        {
+            return;
+        }
+
+        // Beautify preserves paragraph count and start-time ordering, so map results
+        // back onto the live grid rows by start-time order.
+        var beautified = viewModel.GetBeautifiedSubtitles()
+            .OrderBy(p => p.StartTime)
+            .ToList();
+        if (beautified.Count != selectedItems.Count)
+        {
+            return;
+        }
+
+        for (var i = 0; i < beautified.Count; i++)
+        {
+            selectedItems[i].StartTime = beautified[i].StartTime;
+            selectedItems[i].EndTime = beautified[i].EndTime;
+            selectedItems[i].UpdateDuration();
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
     private async Task FixCommonErrorsSelectedLines()
     {
         var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();

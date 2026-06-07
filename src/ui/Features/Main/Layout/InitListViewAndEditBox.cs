@@ -957,7 +957,7 @@ public static partial class InitListViewAndEditBox
                 new MenuItem
                 {
                     Header = Se.Language.Main.Menu.BeautifyTimeCodes,
-                    Command = vm.ShowBeautifyTimeCodesCommand,
+                    Command = vm.ShowBeautifyTimeCodesSelectedLinesCommand,
                     DataContext = vm,
                 },
                 new Separator { DataContext = vm },
