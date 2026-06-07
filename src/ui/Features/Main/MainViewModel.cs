@@ -1722,7 +1722,6 @@ public partial class MainViewModel :
         var fileName = await _fileHelper.PickOpenSubtitleFile(Window!, Se.Language.General.OpenSubtitleFileTitle, lastOpenedFilePath: _subtitleFileName);
         if (!string.IsNullOrEmpty(fileName))
         {
-            VideoCloseFile();
             await SubtitleOpen(fileName);
         }
 
@@ -1823,7 +1822,6 @@ public partial class MainViewModel :
                 return;
             }
 
-            VideoCloseFile();
             await SubtitleOpen(recentFile.SubtitleFileName, recentFile.VideoFileName, recentFile.SelectedLine, desiredAudioTrackId: recentFile.AudioTrack);
 
             if (!string.IsNullOrEmpty(recentFile.SubtitleFileNameOriginal) &&
@@ -13154,6 +13152,7 @@ public partial class MainViewModel :
 
                         if (result.OkPressed)
                         {
+                            VideoCloseFile();
                             _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                             _converted = true;
                             ReplaceSubtitles(result.OcredSubtitle);
@@ -13246,6 +13245,7 @@ public partial class MainViewModel :
                         return;
                     }
 
+                    VideoCloseFile();
                     ResetSubtitle();
                     _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) +
                                         SelectedSubtitleFormat.Extension;
@@ -13266,6 +13266,7 @@ public partial class MainViewModel :
                 var f = new MacCaption10();
                 if (f.IsMine(lines, fileName))
                 {
+                    VideoCloseFile();
                     ResetSubtitle();
                     f.LoadSubtitle(_subtitle, lines, fileName);
                     SetSubtitles(_subtitle);
@@ -13475,6 +13476,11 @@ public partial class MainViewModel :
                 }
             }
 
+            if (!skipLoadVideo)
+            {
+                VideoCloseFile();
+            }
+
             ResetSubtitle();
 
             AudioVisualizer?.StartPositionSeconds = 0;
@@ -13657,6 +13663,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
+                VideoCloseFile();
                 ResetSubtitle();
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 _converted = true;
@@ -13700,6 +13707,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
+                VideoCloseFile();
                 ResetSubtitle();
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 _converted = true;
@@ -13720,6 +13728,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
+                VideoCloseFile();
                 ResetSubtitle();
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 _converted = true;
@@ -13740,6 +13749,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
+                VideoCloseFile();
                 ResetSubtitle();
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 _converted = true;
@@ -13793,6 +13803,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
+                VideoCloseFile();
                 ResetSubtitle();
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 _converted = true;
@@ -13848,12 +13859,13 @@ public partial class MainViewModel :
         if (tsParser.SubtitlePacketIds.Count == 0 && tsParser.TeletextSubtitlesLookup.Count == 1 &&
             tsParser.TeletextSubtitlesLookup.First().Value.Count == 1)
         {
+            VideoCloseFile();
             ResetSubtitle();
             _subtitle = new Subtitle(tsParser.TeletextSubtitlesLookup.First().Value.First().Value);
             _subtitle.Renumber();
             ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
             SelectAndScrollToRow(0);
-            if (Se.Settings.General.AutoOpenVideo)
+            if (Se.Settings.Video.AutoOpen)
             {
                 await VideoOpenFile(fileName);
             }
@@ -13870,12 +13882,13 @@ public partial class MainViewModel :
 
             if (result.OkPressed && result.SelectedTrack != null && result.SelectedTrack.IsTeletext)
             {
+                VideoCloseFile();
                 ResetSubtitle();
                 SelectAndScrollToRow(0);
                 SetSubtitles(result.TeletextSubtitle);
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
                 _converted = true;
-                if (Se.Settings.General.AutoOpenVideo)
+                if (Se.Settings.Video.AutoOpen)
                 {
                     await VideoOpenFile(fileName);
                 }
@@ -13901,6 +13914,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
+                VideoCloseFile();
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 ReplaceSubtitles(result.OcredSubtitle);
                 SelectAndScrollToRow(0);
@@ -13932,6 +13946,7 @@ public partial class MainViewModel :
         {
             if (mp4Parser.VttcSubtitle?.Paragraphs.Count > 0)
             {
+                VideoCloseFile();
                 ResetSubtitle();
                 SetSubtitleFormat(SubtitleFormats.FirstOrDefault(p => p.Name == new WebVTT().Name) ??
                                   SelectedSubtitleFormat);
@@ -13945,7 +13960,7 @@ public partial class MainViewModel :
                 ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
                 SelectAndScrollToRow(0);
 
-                if (Se.Settings.General.AutoOpenVideo && mp4Parser.GetVideoTracks().Count > 0)
+                if (Se.Settings.Video.AutoOpen && mp4Parser.GetVideoTracks().Count > 0)
                 {
                     await VideoOpenFile(fileName);
                 }
@@ -13964,6 +13979,7 @@ public partial class MainViewModel :
 
             if (captionsFromH264 != null)
             {
+                VideoCloseFile();
                 ResetSubtitle();
                 _subtitle = captionsFromH264;
                 _subtitle.Renumber();
@@ -13975,7 +13991,7 @@ public partial class MainViewModel :
                 ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
                 SelectAndScrollToRow(0);
 
-                if (Se.Settings.General.AutoOpenVideo && mp4Parser.GetVideoTracks().Count > 0)
+                if (Se.Settings.Video.AutoOpen && mp4Parser.GetVideoTracks().Count > 0)
                 {
                     await VideoOpenFile(fileName);
                 }
@@ -13987,7 +14003,7 @@ public partial class MainViewModel :
         {
             LoadMp4Subtitle(fileName, mp4SubtitleTracks[0]);
 
-            if (Se.Settings.General.AutoOpenVideo && mp4Parser.GetVideoTracks().Count > 0)
+            if (Se.Settings.Video.AutoOpen && mp4Parser.GetVideoTracks().Count > 0)
             {
                 await VideoOpenFile(fileName);
             }
@@ -14020,6 +14036,7 @@ public partial class MainViewModel :
 
                 if (result.OkPressed)
                 {
+                    VideoCloseFile();
                     ResetSubtitle();
                     _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                     _converted = true;
@@ -14032,6 +14049,7 @@ public partial class MainViewModel :
         }
         else
         {
+            VideoCloseFile();
             ResetSubtitle();
             _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
             _converted = true;
@@ -14082,15 +14100,18 @@ public partial class MainViewModel :
                 {
                     if (await LoadMatroskaSubtitle(result.SelectedMatroskaTrack, matroska, fileName))
                     {
-                        _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
-                        _converted = true;
-                        SelectAndScrollToRow(0);
-
-                        if (Se.Settings.General.AutoOpenVideo)
+                        if (!IsImageSubtitleTrack(result.SelectedMatroskaTrack))
                         {
-                            if (fileName.EndsWith("mkv", StringComparison.OrdinalIgnoreCase))
+                            _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
+                            _converted = true;
+                            SelectAndScrollToRow(0);
+
+                            if (Se.Settings.Video.AutoOpen)
                             {
-                                await VideoOpenFile(fileName);
+                                if (fileName.EndsWith("mkv", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    await VideoOpenFile(fileName);
+                                }
                             }
                         }
                     }
@@ -14104,7 +14125,7 @@ public partial class MainViewModel :
             var ext = Path.GetExtension(matroska.Path).ToLowerInvariant();
             if (await LoadMatroskaSubtitle(subtitleList[0], matroska, fileName))
             {
-                if (Se.Settings.General.AutoOpenVideo)
+                if (Se.Settings.Video.AutoOpen && !IsImageSubtitleTrack(subtitleList[0]))
                 {
                     if (ext == ".mkv")
                     {
@@ -14144,6 +14165,11 @@ public partial class MainViewModel :
                         }
                     }
                 }
+                else
+                {
+                    // Image track data was fully extracted before the OCR dialog was posted, so matroska is safe to dispose now.
+                    matroska.Dispose();
+                }
             }
             else
             {
@@ -14168,11 +14194,16 @@ public partial class MainViewModel :
 
                 if (result.OkPressed)
                 {
+                    VideoCloseFile();
                     _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                     _converted = true;
                     ReplaceSubtitles(result.OcredSubtitle);
                     Renumber();
                     SelectAndScrollToRow(0);
+                    if (Se.Settings.Video.AutoOpen && fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+                    {
+                        await VideoOpenFile(fileName);
+                    }
                 }
             });
 
@@ -14197,6 +14228,7 @@ public partial class MainViewModel :
         var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, null);
         var subtitle = new Subtitle();
         var format = Utilities.LoadMatroskaTextSubtitle(matroskaSubtitleInfo, matroska, sub, subtitle);
+        VideoCloseFile();
         ResetSubtitle(format);
         _subtitle = subtitle;
         _subtitle.Renumber();
@@ -14205,6 +14237,11 @@ public partial class MainViewModel :
 
         return true;
     }
+
+    private static bool IsImageSubtitleTrack(MatroskaTrackInfo track) =>
+        track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase) ||
+        track.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase) ||
+        track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase);
 
     private bool LoadDvbFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, string fileName)
     {
@@ -14299,12 +14336,17 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
+                VideoCloseFile();
                 ResetSubtitle();
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 ReplaceSubtitles(result.OcredSubtitle);
                 Renumber();
                 SelectAndScrollToRow(0);
                 ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
+                if (Se.Settings.Video.AutoOpen && fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+                {
+                    await VideoOpenFile(fileName);
+                }
             }
         });
 
@@ -14366,9 +14408,14 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
+                VideoCloseFile();
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 ReplaceSubtitles(result.OcredSubtitle);
                 SelectAndScrollToRow(0);
+                if (Se.Settings.Video.AutoOpen && fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+                {
+                    await VideoOpenFile(fileName);
+                }
             }
         });
 
@@ -14385,6 +14432,7 @@ public partial class MainViewModel :
         ShowStatus(Se.Language.Main.ParsingMatroskaFile);
         var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, MatroskaProgress);
 
+        VideoCloseFile();
         _subtitle.Paragraphs.Clear();
         Utilities.LoadMatroskaTextSubtitle(matroskaSubtitleInfo, matroska, sub, _subtitle);
         Utilities.ParseMatroskaTextSt(matroskaSubtitleInfo, sub, _subtitle);
@@ -14463,6 +14511,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
+            VideoCloseFile();
             _subtitleFileName = Path.GetFileNameWithoutExtension(vobSubFileName);
             _converted = true;
             ReplaceSubtitles(result.OcredSubtitle);
