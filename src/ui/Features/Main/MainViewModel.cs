@@ -13796,7 +13796,7 @@ public partial class MainViewModel :
             _subtitle.Renumber();
             ReplaceSubtitles(_subtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
             SelectAndScrollToRow(0);
-            if (Se.Settings.General.AutoOpenVideo)
+            if (Se.Settings.Video.AutoOpen)
             {
                 await VideoOpenFile(fileName);
             }
@@ -13819,7 +13819,7 @@ public partial class MainViewModel :
                 SetSubtitles(result.TeletextSubtitle);
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName) + SelectedSubtitleFormat.Extension;
                 _converted = true;
-                if (Se.Settings.General.AutoOpenVideo)
+                if (Se.Settings.Video.AutoOpen)
                 {
                     await VideoOpenFile(fileName);
                 }
@@ -13891,7 +13891,7 @@ public partial class MainViewModel :
                 ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
                 SelectAndScrollToRow(0);
 
-                if (Se.Settings.General.AutoOpenVideo && mp4Parser.GetVideoTracks().Count > 0)
+                if (Se.Settings.Video.AutoOpen && mp4Parser.GetVideoTracks().Count > 0)
                 {
                     await VideoOpenFile(fileName);
                 }
@@ -13922,7 +13922,7 @@ public partial class MainViewModel :
                 ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
                 SelectAndScrollToRow(0);
 
-                if (Se.Settings.General.AutoOpenVideo && mp4Parser.GetVideoTracks().Count > 0)
+                if (Se.Settings.Video.AutoOpen && mp4Parser.GetVideoTracks().Count > 0)
                 {
                     await VideoOpenFile(fileName);
                 }
@@ -13934,7 +13934,7 @@ public partial class MainViewModel :
         {
             LoadMp4Subtitle(fileName, mp4SubtitleTracks[0]);
 
-            if (Se.Settings.General.AutoOpenVideo && mp4Parser.GetVideoTracks().Count > 0)
+            if (Se.Settings.Video.AutoOpen && mp4Parser.GetVideoTracks().Count > 0)
             {
                 await VideoOpenFile(fileName);
             }
@@ -14037,7 +14037,7 @@ public partial class MainViewModel :
                             _converted = true;
                             SelectAndScrollToRow(0);
 
-                            if (Se.Settings.General.AutoOpenVideo)
+                            if (Se.Settings.Video.AutoOpen)
                             {
                                 if (fileName.EndsWith("mkv", StringComparison.OrdinalIgnoreCase))
                                 {
@@ -14056,7 +14056,7 @@ public partial class MainViewModel :
             var ext = Path.GetExtension(matroska.Path).ToLowerInvariant();
             if (await LoadMatroskaSubtitle(subtitleList[0], matroska, fileName))
             {
-                if (Se.Settings.General.AutoOpenVideo && !IsImageSubtitleTrack(subtitleList[0]))
+                if (Se.Settings.Video.AutoOpen && !IsImageSubtitleTrack(subtitleList[0]))
                 {
                     if (ext == ".mkv")
                     {

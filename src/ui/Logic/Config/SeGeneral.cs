@@ -94,7 +94,7 @@ public class SeGeneral
     public string FfmpegPath { get; set; }
     public bool FfmpegUseCenterChannelOnly { get; set; }
     public string LibMpvPath { get; set; }
-    public bool AutoOpenVideo { get; set; }
+
     public bool ShowColumnStartTime { get; set; }
     public bool ShowColumnEndTime { get; set; }
     public bool ShowColumnGap { get; set; }
@@ -213,7 +213,6 @@ public class SeGeneral
 
         FfmpegPath = string.Empty;
         LibMpvPath = string.Empty;
-        AutoOpenVideo = true;
 
         ShowColumnStartTime = true;
         ShowColumnEndTime = true;
