@@ -477,9 +477,9 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         var videoFileName = TryGetVideoFileName(fileName);
-        if (!string.IsNullOrEmpty(videoFileName) && VideoPlayerControl != null)
+        if (ShouldAutoOpenMatchingVideo(Se.Settings.Video.AutoOpen, videoFileName) && VideoPlayerControl != null)
         {
-            await VideoPlayerControl.Open(videoFileName);
+            await VideoPlayerControl.Open(videoFileName!);
         }
     }
 
@@ -1510,6 +1510,16 @@ public partial class BinaryEditViewModel : ObservableObject
         await VideoPlayerControl.Open(videoFileName);
     }
 
+    internal void VideoPlayerAreaPointerPressed()
+    {
+        if (VideoPlayerControl == null || !ShouldOpenVideoPickerOnSurfaceClick(VideoPlayerControl.VideoPlayer.FileName))
+        {
+            return;
+        }
+
+        Dispatcher.UIThread.Post(() => OpenVideoCommand.Execute(null));
+    }
+
     [RelayCommand]
     private void ToggleCurrentSubtitleWhilePlaying()
     {
@@ -1875,6 +1885,16 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         return -1;
+    }
+
+    internal static bool ShouldAutoOpenMatchingVideo(bool autoOpenVideo, string? videoFileName)
+    {
+        return autoOpenVideo && !string.IsNullOrEmpty(videoFileName);
+    }
+
+    internal static bool ShouldOpenVideoPickerOnSurfaceClick(string? videoFileName)
+    {
+        return string.IsNullOrEmpty(videoFileName);
     }
 
     private void SelectAndScrollToRow(int index)

@@ -657,6 +657,9 @@ public class BinaryEditWindow : Window
     {
         var vp = InitVideoPlayer.MakeVideoPlayer();
         vp.FullScreenIsVisible = false;
+        vp.Volume = Se.Settings.Video.Volume;
+        vp.VolumeChanged += v => { Se.Settings.Video.Volume = v; };
+        vp.SurfacePointerPressed += (_, _) => vm.VideoPlayerAreaPointerPressed();
 
         // Create a grid to hold the video player and overlay image
         var videoGrid = new Grid

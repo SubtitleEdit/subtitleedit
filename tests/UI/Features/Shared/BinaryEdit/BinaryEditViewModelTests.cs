@@ -35,6 +35,25 @@ public class BinaryEditViewModelTests
     }
 
     [Fact]
+    public void ShouldAutoOpenMatchingVideo_RequiresSettingAndMatchingPath()
+    {
+        Assert.True(BinaryEditViewModel.ShouldAutoOpenMatchingVideo(true, "video.mkv"));
+        Assert.False(BinaryEditViewModel.ShouldAutoOpenMatchingVideo(false, "video.mkv"));
+        Assert.False(BinaryEditViewModel.ShouldAutoOpenMatchingVideo(true, string.Empty));
+    }
+
+    [Theory]
+    [InlineData(null, true)]
+    [InlineData("", true)]
+    [InlineData("video.mkv", false)]
+    public void ShouldOpenVideoPickerOnSurfaceClick_OnlyWhenNoVideoIsLoaded(string? fileName, bool expected)
+    {
+        var result = BinaryEditViewModel.ShouldOpenVideoPickerOnSurfaceClick(fileName);
+
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
     public void SeTools_BinaryEditSelectCurrentSubtitleWhilePlaying_DefaultsToFalse()
     {
         var settings = new SeTools();
