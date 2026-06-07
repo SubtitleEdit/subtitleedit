@@ -845,7 +845,10 @@
       "filterLayersForDisplayDotDotDot": "Rétegek szűrése a megjelenítéshez...",
       "toggleSelectSubtitleWhilePlayingCurrentlyOn": "Felirat kijelölésének váltása lejátszás közben (jelenleg: be)",
       "toggleSelectSubtitleWhilePlayingCurrentlyOff": "Felirat kijelölésének váltása lejátszás közben (jelenleg: ki)",
-      "selectSubtitleWhilePlaying": "Felirat kijelölése lejátszás közben"
+      "selectSubtitleWhilePlaying": "Felirat kijelölése lejátszás közben",
+      "evenlyDistributeLines": "Sorok egyenletes elosztása (CPS szerint)",
+      "ssaTools": "_SSA eszközök",
+      "waveformToolbar": "Hullámforma eszköztár"
     },
     "toolbar": {
       "newHint": "Új feliratfájl indítása {0}",
@@ -993,7 +996,8 @@
     "downloadFfmpegTitle": "Letölti az FFmpeg-et?",
     "downloadFfmpegQuestion": "Az FFmpeg az online videók lejátszásához és néhány videószerkesztési funkcióhoz szükséges.\n\nLetölti az FFmpeg-et most?",
     "selectCurrentSubtitleWhilePlayingOn": "Aktuális felirat kijelölése lejátszás közben: BE",
-    "selectCurrentSubtitleWhilePlayingOff": "Aktuális felirat kijelölése lejátszás közben: KI"
+    "selectCurrentSubtitleWhilePlayingOff": "Aktuális felirat kijelölése lejátszás közben: KI",
+    "numberOfLinesEvenlyDistributedX": "{0} sor egyenletesen elosztva"
   },
   "file": {
     "ebuSaveOptions": {
@@ -2450,7 +2454,8 @@
       "waveformColorTheme": "Színtéma:",
       "waveformSaveAsCustomTheme": "Mentés egyéni témaként...",
       "waveformLoadThemeDotDotDot": "Téma betöltése...",
-      "waveformExportThemeDotDotDot": "Téma exportálása..."
+      "waveformExportThemeDotDotDot": "Téma exportálása...",
+      "fixCommonErrorsSkipStep1": "Gyakori hibák javítása: 1. lépés kihagyása (javítások kiválasztása)"
     },
     "shortcuts": {
       "title": "Gyorsbillentyűk",
@@ -3081,7 +3086,10 @@
     "advancedEffectSlideInRightDescription": "A szöveg beúszik a képernyőn kívülről jobbról, megáll, majd jobbra távozik",
     "advancedEffectFadeInOut": "Áttűnés be/ki",
     "advancedEffectFadeInOutDescription": "A szöveg felerősödik az elején és elhalványul az egyes feliratok végén",
-    "overrideTagsHistory": "Címkeelőzmények felülírása"
+    "overrideTagsHistory": "Címkeelőzmények felülírása",
+    "collisions": "Ütközések",
+    "playDepth": "Lejátszási mélység",
+    "timer": "Időzítő"
   },
   "about": {
     "title": "A Subtitle Edit névjegye",

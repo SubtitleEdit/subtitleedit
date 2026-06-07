@@ -845,7 +845,10 @@
       "filterLayersForDisplayDotDotDot": "Filtrar camadas para visualização...",
       "toggleSelectSubtitleWhilePlayingCurrentlyOn": "Selecionar legenda ao reproduzir (ativado)",
       "toggleSelectSubtitleWhilePlayingCurrentlyOff": "Selecionar legenda ao reproduzir (desativado)",
-      "selectSubtitleWhilePlaying": "Selecionar legenda ao reproduzir"
+      "selectSubtitleWhilePlaying": "Selecionar legenda ao reproduzir",
+      "evenlyDistributeLines": "Distribuir linhas uniformemente (por CPS)",
+      "ssaTools": "Ferramentas _SSA",
+      "waveformToolbar": "Barra de ferramentas da forma de onda"
     },
     "toolbar": {
       "newHint": "Iniciar um novo ficheiro de legendas {0}",
@@ -993,7 +996,8 @@
     "downloadFfmpegTitle": "Descarregar o FFmpeg?",
     "downloadFfmpegQuestion": "O FFmpeg é necessário para reproduzir vídeos online e para algumas funcionalidades de edição de vídeo.\n\nDescarregar o FFmpeg agora?",
     "selectCurrentSubtitleWhilePlayingOn": "Selecionar a legenda atual durante a reprodução: SIM",
-    "selectCurrentSubtitleWhilePlayingOff": "Selecionar a legenda atual durante a reprodução: NÃO"
+    "selectCurrentSubtitleWhilePlayingOff": "Selecionar a legenda atual durante a reprodução: NÃO",
+    "numberOfLinesEvenlyDistributedX": "{0} linhas distribuídas uniformemente"
   },
   "file": {
     "ebuSaveOptions": {
@@ -2450,7 +2454,8 @@
       "waveformColorTheme": "Tema de cores:",
       "waveformSaveAsCustomTheme": "Guardar como tema personalizado...",
       "waveformLoadThemeDotDotDot": "Carregar tema...",
-      "waveformExportThemeDotDotDot": "Exportar tema..."
+      "waveformExportThemeDotDotDot": "Exportar tema...",
+      "fixCommonErrorsSkipStep1": "Corrigir erros comuns: saltar passo 1 (escolher correções)"
     },
     "shortcuts": {
       "title": "Atalhos",
@@ -3081,7 +3086,10 @@
     "advancedEffectSlideInRightDescription": "O texto desliza a partir de fora do ecrã pela direita, mantém-se e sai novamente para a direita",
     "advancedEffectFadeInOut": "Fade in/out",
     "advancedEffectFadeInOutDescription": "O texto aparece gradualmente no início e desaparece no final de cada legenda",
-    "overrideTagsHistory": "Histórico de etiquetas de substituição"
+    "overrideTagsHistory": "Histórico de etiquetas de substituição",
+    "collisions": "Colisões",
+    "playDepth": "Profundidade de reprodução",
+    "timer": "Temporizador"
   },
   "about": {
     "title": "Acerca do Subtitle Edit",
