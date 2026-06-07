@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit;
+using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
 
 namespace UITests.Features.Shared.BinaryEdit;
@@ -31,5 +32,13 @@ public class BinaryEditViewModelTests
         var result = BinaryEditViewModel.FindActiveSubtitleIndex(subtitles, TimeSpan.FromSeconds(3));
 
         Assert.Equal(-1, result);
+    }
+
+    [Fact]
+    public void SeTools_BinaryEditSelectCurrentSubtitleWhilePlaying_DefaultsToFalse()
+    {
+        var settings = new SeTools();
+
+        Assert.False(settings.BinEditSelectCurrentSubtitleWhilePlaying);
     }
 }

@@ -300,6 +300,21 @@ public class BinaryEditWindow : Window
                     Command = vm.OpenVideoCommand,
                     Icon = new Icon { Value = IconNames.Play },
                 },
+                new MenuItem
+                {
+                    Header = l.ToggleSelectSubtitleWhilePlayingCurrentlyOn,
+                    Command = vm.ToggleCurrentSubtitleWhilePlayingCommand,
+                    [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.SelectCurrentSubtitleWhilePlaying)),
+                },
+                new MenuItem
+                {
+                    Header = l.ToggleSelectSubtitleWhilePlayingCurrentlyOff,
+                    Command = vm.ToggleCurrentSubtitleWhilePlayingCommand,
+                    [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.SelectCurrentSubtitleWhilePlaying))
+                    {
+                        Converter = new InverseBooleanConverter(),
+                    },
+                },
             },
         });
 

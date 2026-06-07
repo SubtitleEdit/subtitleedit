@@ -37,6 +37,7 @@ public partial class BinaryEditViewModel : ObservableObject
     [ObservableProperty] private string _fileName;
     [ObservableProperty] private BinarySubtitleItem? _selectedSubtitle;
     [ObservableProperty] private BinarySubtitleItem? _displayedSubtitle;
+    [ObservableProperty] private bool _selectCurrentSubtitleWhilePlaying;
     [ObservableProperty] private int _screenWidth;
     [ObservableProperty] private int _screenHeight;
     [ObservableProperty] private string _statusText;
@@ -74,6 +75,7 @@ public partial class BinaryEditViewModel : ObservableObject
         _shortcutManager = shortcutManager;
         _bluRayHelper = bluRayHelper;
         _fileName = string.Empty;
+        _selectCurrentSubtitleWhilePlaying = Se.Settings.Tools.BinEditSelectCurrentSubtitleWhilePlaying;
         Subtitles = new ObservableCollection<BinarySubtitleItem>();
         StatusText = string.Empty;
         CurrentPositionAndSize = string.Empty;
@@ -133,13 +135,22 @@ public partial class BinaryEditViewModel : ObservableObject
 
     partial void OnSelectedSubtitleChanged(BinarySubtitleItem? value)
     {
-        DisplayedSubtitle = value;
+        if (VideoPlayerControl?.IsPlaying != true)
+        {
+            DisplayedSubtitle = value;
+        }
+
         UpdateOverlayPosition();
     }
 
     partial void OnDisplayedSubtitleChanged(BinarySubtitleItem? value)
     {
         UpdateOverlayPosition();
+    }
+
+    partial void OnSelectCurrentSubtitleWhilePlayingChanged(bool value)
+    {
+        Se.Settings.Tools.BinEditSelectCurrentSubtitleWhilePlaying = value;
     }
 
     internal void SubtitleGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -1500,6 +1511,12 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void ToggleCurrentSubtitleWhilePlaying()
+    {
+        SelectCurrentSubtitleWhilePlaying = !SelectCurrentSubtitleWhilePlaying;
+    }
+
+    [RelayCommand]
     private async Task Settings()
     {
         if (Window == null)
@@ -1832,14 +1849,18 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         var subtitle = Subtitles[subtitleIndex];
-        if (_lastPlaybackSubtitleIndex == subtitleIndex && ReferenceEquals(DisplayedSubtitle, subtitle))
+        if (_lastPlaybackSubtitleIndex != subtitleIndex || !ReferenceEquals(DisplayedSubtitle, subtitle))
         {
-            return;
+            _lastPlaybackSubtitleIndex = subtitleIndex;
+            DisplayedSubtitle = subtitle;
         }
 
-        _lastPlaybackSubtitleIndex = subtitleIndex;
-        DisplayedSubtitle = subtitle;
-        SelectAndScrollToRow(subtitleIndex);
+        if (SelectCurrentSubtitleWhilePlaying &&
+            VideoPlayerControl?.IsPlaying == true &&
+            SubtitleGrid?.SelectedIndex != subtitleIndex)
+        {
+            SelectAndScrollToRow(subtitleIndex);
+        }
     }
 
     internal static int FindActiveSubtitleIndex(IReadOnlyList<BinarySubtitleItem> subtitles, TimeSpan position)

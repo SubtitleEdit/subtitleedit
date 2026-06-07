@@ -76,6 +76,7 @@ public class SeTools
     public string BinEditBackgroundColor { get; set; }
     public decimal BinEditOutlineWidth { get; set; }
     public decimal BinEditShadowWidth { get; set; }
+    public bool BinEditSelectCurrentSubtitleWhilePlaying { get; set; }
 
     public string ImportTextSplitting { get; set; }
     public string ImportTextSplittingLineMode { get; set; }

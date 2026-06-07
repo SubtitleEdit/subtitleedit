@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic.Config;
+using System.ComponentModel;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit;
 
@@ -51,6 +52,29 @@ public static class InitNativeMacMenuBinaryEdit
         // Video menu
         var videoMenu = new NativeMenu();
         Add(videoMenu, l.OpenVideo, vm.OpenVideoCommand);
+        var selectSubtitleWhilePlayingItem = new NativeMenuItem(Clean(l.SelectSubtitleWhilePlaying))
+        {
+            ToggleType = MenuItemToggleType.CheckBox,
+            IsChecked = vm.SelectCurrentSubtitleWhilePlaying,
+        };
+        selectSubtitleWhilePlayingItem.Click += (_, _) => vm.ToggleCurrentSubtitleWhilePlayingCommand.Execute(null);
+        PropertyChangedEventHandler? handler = null;
+        handler = (_, e) =>
+        {
+            if (e.PropertyName == nameof(BinaryEditViewModel.SelectCurrentSubtitleWhilePlaying))
+            {
+                selectSubtitleWhilePlayingItem.IsChecked = vm.SelectCurrentSubtitleWhilePlaying;
+            }
+        };
+        vm.PropertyChanged += handler;
+        window.Closed += (_, _) =>
+        {
+            if (handler != null)
+            {
+                vm.PropertyChanged -= handler;
+            }
+        };
+        videoMenu.Items.Add(selectSubtitleWhilePlayingItem);
         root.Items.Add(new NativeMenuItem(Clean(l.Video)) { Menu = videoMenu });
 
         // Options menu
