@@ -1717,7 +1717,6 @@ public partial class MainViewModel :
         var fileName = await _fileHelper.PickOpenSubtitleFile(Window!, Se.Language.General.OpenSubtitleFileTitle, lastOpenedFilePath: _subtitleFileName);
         if (!string.IsNullOrEmpty(fileName))
         {
-            VideoCloseFile();
             await SubtitleOpen(fileName);
         }
 
@@ -1818,7 +1817,6 @@ public partial class MainViewModel :
                 return;
             }
 
-            VideoCloseFile();
             await SubtitleOpen(recentFile.SubtitleFileName, recentFile.VideoFileName, recentFile.SelectedLine, desiredAudioTrackId: recentFile.AudioTrack);
 
             if (!string.IsNullOrEmpty(recentFile.SubtitleFileNameOriginal) &&
@@ -13404,6 +13402,11 @@ public partial class MainViewModel :
                     await MessageBox.Show(Window!, Se.Language.General.Error, message, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
+            }
+
+            if (!skipLoadVideo)
+            {
+                VideoCloseFile();
             }
 
             ResetSubtitle();
