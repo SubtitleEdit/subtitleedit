@@ -101,6 +101,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.SubtitleMaximumWordsPerMinute = (double)RulesProfiles[idx].SubtitleMaximumWordsPerMinute;
             Configuration.Settings.General.CpsLineLengthStrategy = RulesProfiles[idx].CpsLineLengthStrategy;
             Configuration.Settings.General.MergeLinesShorterThan = RulesProfiles[idx].MergeLinesShorterThan;
+            Configuration.Settings.General.DialogStyle = RulesProfiles[idx].DialogStyle;
+            Configuration.Settings.General.ContinuationStyle = RulesProfiles[idx].ContinuationStyle;
             DialogResult = DialogResult.OK;
         }
 
