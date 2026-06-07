@@ -162,6 +162,15 @@ public static class DownloadHashManager
         public const string TalkerF16 = "F5TtsCrispAsr.TalkerF16";
     }
 
+    public static class VoxCPM2CrispAsr
+    {
+        // SHA-256 of each GGUF the voxcpm2-tts backend needs: the two main quants and the small
+        // shared voxcpm2-ref.gguf companion. Hashes are the HF LFS oid from the tree API.
+        public const string ModelQ4K = "VoxCPM2CrispAsr.ModelQ4K";
+        public const string ModelF16 = "VoxCPM2CrispAsr.ModelF16";
+        public const string Ref = "VoxCPM2CrispAsr.Ref";
+    }
+
     public static class KokoroTtsCpp
     {
         // Hashes of the release archive (.zip) - same role as OmniVoice's set. Index 0 must match
@@ -710,6 +719,20 @@ public static class DownloadHashManager
             [F5TtsCrispAsr.TalkerF16] = new[]
             {
                 "25a4d273048dad072774ff139cf19b96fe442bebda8392c08009d73256cf1e81", // f5-tts-v1-base-f16.gguf
+            },
+
+            // VoxCPM2 (CrispASR) — cstr/voxcpm2-GGUF on HuggingFace.
+            [VoxCPM2CrispAsr.ModelQ4K] = new[]
+            {
+                "502efe74f6a59c370b3abf5a3fcfd7c3955ca6c167b411c8aee3977e9e46c079", // voxcpm2-q4_k.gguf
+            },
+            [VoxCPM2CrispAsr.ModelF16] = new[]
+            {
+                "08a11148711ca5df89795f0b8c3e8c17ee3aa81982598c1b90f86d52480e4381", // voxcpm2-f16.gguf
+            },
+            [VoxCPM2CrispAsr.Ref] = new[]
+            {
+                "9b024ef9a109075aa8ac7219c097a1b1b1bed23d3230b33a902e162c2c10c5f8", // voxcpm2-ref.gguf
             },
 
             // Kokoro TTS — https://github.com/niksedk/kokoro.cpp/releases

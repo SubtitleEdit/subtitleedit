@@ -20,6 +20,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ElevenLabsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.EncodingSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.F5TtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoxCPM2CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceSettings;
@@ -212,7 +213,11 @@ public partial class TextToSpeechViewModel : ObservableObject
             // are kept so this is a one-line re-enable when upstream CrispASR adds Metal/CUDA
             // support or exposes an --ode-steps flag.
             //new F5TtsCrispAsr(),
-            
+
+            // VoxCPM2 (CrispASR) — unlike f5-tts, the voxcpm2-tts backend has Metal/CUDA in
+            // CrispASR v0.7.0, so synthesis is fast enough for the TTS-from-subtitles workflow.
+            new VoxCPM2CrispAsr(),
+
             new ChatterboxTtsCpp(),
         ];
 
@@ -375,6 +380,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             Se.Settings.Video.TextToSpeech.F5TtsCrispAsrModel = SelectedModel ?? F5TtsCrispAsr.DefaultModelKey;
         }
+        else if (SelectedEngine is VoxCPM2CrispAsr)
+        {
+            Se.Settings.Video.TextToSpeech.VoxCPM2CrispAsrModel = SelectedModel ?? VoxCPM2CrispAsr.DefaultModelKey;
+        }
         else if (SelectedEngine is OmniVoiceTtsCpp)
         {
             Se.Settings.Video.TextToSpeech.OmniVoiceTtsCppInstruction = (Instruction ?? string.Empty).Trim();
@@ -530,6 +539,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         // (cloning falls back to a generic voice without it). Both prompt the same way.
         string? wavPath = null;
         bool isCosyVoice3 = false;
+        bool isVoxCPM2 = false;
         if (voice.EngineVoice is CosyVoice3Voice cosy && !string.IsNullOrEmpty(cosy.FilePath) && string.IsNullOrEmpty(cosy.RefText))
         {
             wavPath = cosy.FilePath;
@@ -541,6 +551,15 @@ public partial class TextToSpeechViewModel : ObservableObject
             if (string.IsNullOrEmpty(existing))
             {
                 wavPath = f5.FilePath;
+            }
+        }
+        else if (voice.EngineVoice is VoxCPM2Voice vox && !string.IsNullOrEmpty(vox.FilePath))
+        {
+            var existing = TryReadRefTextSibling(vox.FilePath);
+            if (string.IsNullOrEmpty(existing))
+            {
+                wavPath = vox.FilePath;
+                isVoxCPM2 = true;
             }
         }
 
@@ -570,9 +589,19 @@ public partial class TextToSpeechViewModel : ObservableObject
                 return;
             }
 
-            var written = isCosyVoice3
-                ? CosyVoice3CrispAsr.TryWriteRefTextSidecar(wavPath, result.Text)
-                : F5TtsCrispAsr.TryWriteRefTextSidecar(wavPath, result.Text);
+            bool written;
+            if (isCosyVoice3)
+            {
+                written = CosyVoice3CrispAsr.TryWriteRefTextSidecar(wavPath, result.Text);
+            }
+            else if (isVoxCPM2)
+            {
+                written = VoxCPM2CrispAsr.TryWriteRefTextSidecar(wavPath, result.Text);
+            }
+            else
+            {
+                written = F5TtsCrispAsr.TryWriteRefTextSidecar(wavPath, result.Text);
+            }
 
             if (!written || SelectedEngine == null)
             {
@@ -905,6 +934,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             ChatterboxTtsCpp.StopServer();
         }
+        if (keepAlive is not VoxCPM2CrispAsr)
+        {
+            VoxCPM2CrispAsr.StopServer();
+        }
     }
 
     private static void StopAllCrispAsrServers() => StopOtherCrispAsrServers(null);
@@ -1049,6 +1082,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is F5TtsCrispAsr)
         {
             await _windowService.ShowDialogAsync<F5TtsCrispAsrSettingsWindow, F5TtsCrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
+        }
+        else if (SelectedEngine is VoxCPM2CrispAsr)
+        {
+            await _windowService.ShowDialogAsync<VoxCPM2CrispAsrSettingsWindow, VoxCPM2CrispAsrSettingsViewModel>(Window!, vm => vm.Initialize());
         }
         else if (SelectedEngine is KokoroTtsCpp)
         {
@@ -1769,6 +1806,44 @@ public partial class TextToSpeechViewModel : ObservableObject
 
                 var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadF5TtsCrispAsrModels(f5ModelKey));
                 if (!dlResult.OkPressed || !F5TtsCrispAsr.AreModelsInstalled(f5ModelKey))
+                {
+                    return false;
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await RefreshVoices(engine);
+                });
+                return true;
+            }
+
+            return true;
+        }
+
+        if (engine is VoxCPM2CrispAsr)
+        {
+            if (!await TtsVoiceInstaller.EnsureCrispAsrForVoxCPM2(Window, _windowService, forceRedownload: false))
+            {
+                return false;
+            }
+
+            var voxModelKey = VoxCPM2CrispAsr.ResolveModelKey(SelectedModel);
+            if (!VoxCPM2CrispAsr.AreModelsInstalled(voxModelKey))
+            {
+                var answer = await MessageBox.Show(
+                    Window,
+                    "Download VoxCPM2 (CrispASR) model?",
+                    $"{Environment.NewLine}\"VoxCPM2 (CrispASR)\" ({voxModelKey}) requires a model.{Environment.NewLine}{Environment.NewLine}Download model?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadVoxCPM2CrispAsrModels(voxModelKey));
+                if (!dlResult.OkPressed || !VoxCPM2CrispAsr.AreModelsInstalled(voxModelKey))
                 {
                     return false;
                 }
@@ -2906,6 +2981,15 @@ public partial class TextToSpeechViewModel : ObservableObject
             else if (SelectedEngine is CosyVoice3CrispAsr)
             {
                 SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.CosyVoice3CrispAsrModel);
+                if (string.IsNullOrEmpty(SelectedModel))
+                {
+                    SelectedModel = Models.FirstOrDefault();
+                }
+                IsEngineSettingsVisible = true;
+            }
+            else if (SelectedEngine is VoxCPM2CrispAsr)
+            {
+                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.VoxCPM2CrispAsrModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
                     SelectedModel = Models.FirstOrDefault();

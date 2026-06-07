@@ -159,6 +159,28 @@ public partial class VoiceSettingsViewModel : ObservableObject
 
             ok = f5Engine.ImportVoice(fileName, result.Text.Trim());
         }
+        else if (_engine is VoxCPM2CrispAsr voxEngine)
+        {
+            // VoxCPM2 clones zero-shot from audio alone; a transcription (ref-text) is optional
+            // but improves quality, so prompt like F5-TTS while allowing an empty answer.
+            var transcript = TryReadSiblingTranscript(fileName) ?? string.Empty;
+            var audioFileName = fileName;
+            var result = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window!, vm =>
+            {
+                vm.Initialize(
+                    Se.Language.Video.TextToSpeech.VoiceCloneTranscriptTitle,
+                    transcript,
+                    500,
+                    150);
+                vm.ConfigureExtraButton(
+                    Se.Language.Video.TextToSpeech.UseSpeechToTextDotDotDot,
+                    () => RunSpeechToTextAsync(audioFileName));
+            });
+
+            ok = result.OkPressed
+                ? voxEngine.ImportVoice(fileName, (result.Text ?? string.Empty).Trim())
+                : voxEngine.ImportVoice(fileName);
+        }
         else
         {
             ok = _engine.ImportVoice(fileName);
@@ -313,6 +335,7 @@ public partial class VoiceSettingsViewModel : ObservableObject
                                || engine.GetType() == typeof(IndexTtsCrispAsr)
                                || engine.GetType() == typeof(CosyVoice3CrispAsr)
                                || engine.GetType() == typeof(F5TtsCrispAsr)
+                               || engine.GetType() == typeof(VoxCPM2CrispAsr)
                                || engine.GetType() == typeof(ChatterboxTtsCpp)
                                || engine.GetType() == typeof(OmniVoiceTtsCpp);
     }

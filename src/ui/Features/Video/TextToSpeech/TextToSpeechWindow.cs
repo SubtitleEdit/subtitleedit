@@ -130,6 +130,8 @@ public class TextToSpeechWindow : Window
                 return StatusDots.From(engine.IsInstalled(null).Result, CosyVoice3CrispAsr.GetEngineUpdateStatus());
             case F5TtsCrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, F5TtsCrispAsr.GetEngineUpdateStatus());
+            case VoxCPM2CrispAsr:
+                return StatusDots.From(engine.IsInstalled(null).Result, VoxCPM2CrispAsr.GetEngineUpdateStatus());
             case OmniVoiceTtsCpp:
                 return StatusDots.From(engine.IsInstalled(null).Result, OmniVoiceTtsCpp.GetEngineUpdateStatus());
             case ChatterboxTtsCpp:
@@ -171,6 +173,9 @@ public class TextToSpeechWindow : Window
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             F5TtsCrispAsr => F5TtsCrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            VoxCPM2CrispAsr => VoxCPM2CrispAsr.AreModelsInstalled(modelKey)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             ChatterboxTtsCpp => ChatterboxTtsCpp.AreModelsInstalled(modelKey)
