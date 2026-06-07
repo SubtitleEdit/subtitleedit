@@ -14031,15 +14031,18 @@ public partial class MainViewModel :
                 {
                     if (await LoadMatroskaSubtitle(result.SelectedMatroskaTrack, matroska, fileName))
                     {
-                        _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
-                        _converted = true;
-                        SelectAndScrollToRow(0);
-
-                        if (Se.Settings.General.AutoOpenVideo && !IsImageSubtitleTrack(result.SelectedMatroskaTrack))
+                        if (!IsImageSubtitleTrack(result.SelectedMatroskaTrack))
                         {
-                            if (fileName.EndsWith("mkv", StringComparison.OrdinalIgnoreCase))
+                            _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
+                            _converted = true;
+                            SelectAndScrollToRow(0);
+
+                            if (Se.Settings.General.AutoOpenVideo)
                             {
-                                await VideoOpenFile(fileName);
+                                if (fileName.EndsWith("mkv", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    await VideoOpenFile(fileName);
+                                }
                             }
                         }
                     }
