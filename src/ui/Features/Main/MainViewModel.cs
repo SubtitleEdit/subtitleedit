@@ -1506,6 +1506,11 @@ public partial class MainViewModel :
                            Encodings[0];
         _subtitleFileName = string.Empty;
         _subtitle = new Subtitle();
+        if (SelectedSubtitleFormat is AdvancedSubStationAlpha)
+        {
+            AssaStyleStorageHelper.ApplyDefaultStorageStyle(_subtitle);
+        }
+
         _changeSubtitleHash = GetFastHash();
 
         _subtitleFileNameOriginal = string.Empty;
@@ -18099,8 +18104,24 @@ public partial class MainViewModel :
         _updateAudioVisualizer = true;
     }
 
+    /// <summary>
+    /// Sets the style of a newly created ASSA paragraph to the default ASSA storage style (if any).
+    /// Used by insert paths that bypass <see cref="IInsertService"/> (e.g. typing the first line or
+    /// inserting from a waveform selection).
+    /// </summary>
+    private void SetDefaultAssaStyleForNewParagraph(SubtitleLineViewModel newParagraph)
+    {
+        if (SelectedSubtitleFormat is not AdvancedSubStationAlpha)
+        {
+            return;
+        }
+
+        newParagraph.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(_subtitle);
+    }
+
     public void AudioVisualizerOnNewSelectionInsert(object sender, ParagraphEventArgs e)
     {
+        SetDefaultAssaStyleForNewParagraph(e.Paragraph);
         var index = _insertService.InsertInCorrectPosition(Subtitles, e.Paragraph);
         SelectAndScrollToRow(index);
         Renumber();
@@ -18957,7 +18978,11 @@ public partial class MainViewModel :
                 Number = 1
             };
 
-            if (SelectedSubtitleFormat is AdvancedSubStationAlpha or SubStationAlpha)
+            if (SelectedSubtitleFormat is AdvancedSubStationAlpha)
+            {
+                newSubtitle.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(_subtitle);
+            }
+            else if (SelectedSubtitleFormat is SubStationAlpha)
             {
                 if (string.IsNullOrEmpty(_subtitle.Header))
                 {
@@ -19040,6 +19065,11 @@ public partial class MainViewModel :
                     else if (oldFormat is AdvancedSubStationAlpha && string.IsNullOrEmpty(_subtitle.Header))
                     {
                         _subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
+                    }
+                    else if (oldFormat is not AdvancedSubStationAlpha)
+                    {
+                        // converting from a format without ASSA styles - use the default style from the storage styles (if any)
+                        AssaStyleStorageHelper.ApplyDefaultStorageStyle(_subtitle);
                     }
 
                     SetAssaResolution(true);

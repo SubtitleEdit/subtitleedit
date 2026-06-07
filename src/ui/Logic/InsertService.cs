@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
@@ -280,6 +281,9 @@ public class InsertService : IInsertService
                     newParagraph.Extra = c.Extra;
                     newParagraph.Actor = c.Actor;
                 }
+
+                // use the first style from the file, or the default ASSA storage style for a new file
+                newParagraph.Style = AssaStyleStorageHelper.GetStyleNameForNewParagraph(subtitle);
             }
         }
     }
