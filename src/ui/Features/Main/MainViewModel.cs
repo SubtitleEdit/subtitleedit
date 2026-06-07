@@ -14098,6 +14098,7 @@ public partial class MainViewModel :
                 }
                 else
                 {
+                    // Image track data was fully extracted before the OCR dialog was posted, so matroska is safe to dispose now.
                     matroska.Dispose();
                 }
             }
