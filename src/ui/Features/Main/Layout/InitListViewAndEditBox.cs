@@ -954,6 +954,12 @@ public static partial class InitListViewAndEditBox
                     Command = vm.MultipleReplaceSelectedLinesCommand,
                     DataContext = vm,
                 },
+                new MenuItem
+                {
+                    Header = Se.Language.Main.Menu.BeautifyTimeCodes,
+                    Command = vm.ShowBeautifyTimeCodesCommand,
+                    DataContext = vm,
+                },
                 new Separator { DataContext = vm },
                 new MenuItem
                 {
