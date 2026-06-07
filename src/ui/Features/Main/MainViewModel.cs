@@ -14130,7 +14130,7 @@ public partial class MainViewModel :
                     ReplaceSubtitles(result.OcredSubtitle);
                     Renumber();
                     SelectAndScrollToRow(0);
-                    if (Se.Settings.General.AutoOpenVideo && fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+                    if (Se.Settings.Video.AutoOpen && fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
                     {
                         await VideoOpenFile(fileName);
                     }
@@ -14273,7 +14273,7 @@ public partial class MainViewModel :
                 Renumber();
                 SelectAndScrollToRow(0);
                 ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
-                if (Se.Settings.General.AutoOpenVideo && fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+                if (Se.Settings.Video.AutoOpen && fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
                 {
                     await VideoOpenFile(fileName);
                 }
@@ -14342,7 +14342,7 @@ public partial class MainViewModel :
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 ReplaceSubtitles(result.OcredSubtitle);
                 SelectAndScrollToRow(0);
-                if (Se.Settings.General.AutoOpenVideo && fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+                if (Se.Settings.Video.AutoOpen && fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
                 {
                     await VideoOpenFile(fileName);
                 }
