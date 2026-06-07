@@ -5499,6 +5499,8 @@ public partial class MainViewModel :
             Se.Settings.General.ContinuationStyle = p.ContinuationStyle.ToString();
             Se.Settings.General.CpsLineLengthStrategy = p.CpsLineLengthStrategy;
 
+            SetLibSeSettings();
+
             ShowStatus(string.Format(Se.Language.Main.RuleProfileIsX, p.Name));
         }
     }
