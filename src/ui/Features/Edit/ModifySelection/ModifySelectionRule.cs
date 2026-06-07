@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Features.Main;
+﻿using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
@@ -347,10 +348,10 @@ public class ModifySelectionRule
                 return item.CharactersPerSecond > Number;
 
             case RuleType.LengthLessThan:
-                return (text?.Length ?? 0) < (int)Number;
+                return Utilities.GetMaxLineLength(text) < (int)Number;
 
             case RuleType.LengthGreaterThan:
-                return (text?.Length ?? 0) > (int)Number;
+                return Utilities.GetMaxLineLength(text) > (int)Number;
 
             case RuleType.PixelWidthLengthGreaterThan:
                 return item.PixelWidth > (int)Number;
