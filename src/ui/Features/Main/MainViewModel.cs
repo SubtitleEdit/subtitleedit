@@ -13083,6 +13083,7 @@ public partial class MainViewModel :
 
                         if (result.OkPressed)
                         {
+                            VideoCloseFile();
                             _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                             _converted = true;
                             ReplaceSubtitles(result.OcredSubtitle);
@@ -13175,6 +13176,7 @@ public partial class MainViewModel :
                         return;
                     }
 
+                    VideoCloseFile();
                     ResetSubtitle();
                     _subtitleFileName = Utilities.GetPathAndFileNameWithoutExtension(fileName) +
                                         SelectedSubtitleFormat.Extension;
@@ -13195,6 +13197,7 @@ public partial class MainViewModel :
                 var f = new MacCaption10();
                 if (f.IsMine(lines, fileName))
                 {
+                    VideoCloseFile();
                     ResetSubtitle();
                     f.LoadSubtitle(_subtitle, lines, fileName);
                     SetSubtitles(_subtitle);
@@ -13591,6 +13594,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
+                VideoCloseFile();
                 ResetSubtitle();
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 _converted = true;
@@ -13634,6 +13638,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
+                VideoCloseFile();
                 ResetSubtitle();
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 _converted = true;
@@ -13654,6 +13659,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
+                VideoCloseFile();
                 ResetSubtitle();
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 _converted = true;
@@ -13674,6 +13680,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
+                VideoCloseFile();
                 ResetSubtitle();
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 _converted = true;
@@ -13727,6 +13734,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
+                VideoCloseFile();
                 ResetSubtitle();
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 _converted = true;
@@ -13782,6 +13790,7 @@ public partial class MainViewModel :
         if (tsParser.SubtitlePacketIds.Count == 0 && tsParser.TeletextSubtitlesLookup.Count == 1 &&
             tsParser.TeletextSubtitlesLookup.First().Value.Count == 1)
         {
+            VideoCloseFile();
             ResetSubtitle();
             _subtitle = new Subtitle(tsParser.TeletextSubtitlesLookup.First().Value.First().Value);
             _subtitle.Renumber();
@@ -13804,6 +13813,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed && result.SelectedTrack != null && result.SelectedTrack.IsTeletext)
             {
+                VideoCloseFile();
                 ResetSubtitle();
                 SelectAndScrollToRow(0);
                 SetSubtitles(result.TeletextSubtitle);
@@ -13835,6 +13845,7 @@ public partial class MainViewModel :
 
             if (result.OkPressed)
             {
+                VideoCloseFile();
                 _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                 ReplaceSubtitles(result.OcredSubtitle);
                 SelectAndScrollToRow(0);
@@ -13866,6 +13877,7 @@ public partial class MainViewModel :
         {
             if (mp4Parser.VttcSubtitle?.Paragraphs.Count > 0)
             {
+                VideoCloseFile();
                 ResetSubtitle();
                 SetSubtitleFormat(SubtitleFormats.FirstOrDefault(p => p.Name == new WebVTT().Name) ??
                                   SelectedSubtitleFormat);
@@ -13898,6 +13910,7 @@ public partial class MainViewModel :
 
             if (captionsFromH264 != null)
             {
+                VideoCloseFile();
                 ResetSubtitle();
                 _subtitle = captionsFromH264;
                 _subtitle.Renumber();
@@ -13954,6 +13967,7 @@ public partial class MainViewModel :
 
                 if (result.OkPressed)
                 {
+                    VideoCloseFile();
                     ResetSubtitle();
                     _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
                     _converted = true;
@@ -13966,6 +13980,7 @@ public partial class MainViewModel :
         }
         else
         {
+            VideoCloseFile();
             ResetSubtitle();
             _subtitleFileName = Path.GetFileNameWithoutExtension(fileName);
             _converted = true;
@@ -14397,6 +14412,7 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
+            VideoCloseFile();
             _subtitleFileName = Path.GetFileNameWithoutExtension(vobSubFileName);
             _converted = true;
             ReplaceSubtitles(result.OcredSubtitle);
