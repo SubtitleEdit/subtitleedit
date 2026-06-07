@@ -8,6 +8,7 @@ using Avalonia.Media;
 using System;
 using System.Collections;
 using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -670,11 +671,11 @@ public class BinaryEditWindow : Window
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top,
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand),
-            [!Visual.IsVisibleProperty] = new Binding($"{nameof(vm.SelectedSubtitle)}.{nameof(BinarySubtitleItem.Bitmap)}")
+            [!Visual.IsVisibleProperty] = new Binding($"{nameof(vm.DisplayedSubtitle)}.{nameof(BinarySubtitleItem.Bitmap)}")
             {
                 Converter = new NotNullConverter()
             },
-            [!Image.SourceProperty] = new Binding($"{nameof(vm.SelectedSubtitle)}.{nameof(BinarySubtitleItem.Bitmap)}"),
+            [!Image.SourceProperty] = new Binding($"{nameof(vm.DisplayedSubtitle)}.{nameof(BinarySubtitleItem.Bitmap)}"),
         };
 
         videoGrid.Children.Add(overlayImage);
@@ -685,6 +686,13 @@ public class BinaryEditWindow : Window
 
         // Update position when video player size changes
         vp.SizeChanged += (_, _) => vm.UpdateOverlayPosition();
+        vp.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == VideoPlayerControl.PositionProperty)
+            {
+                vm.OnVideoPositionChanged(vp.Position);
+            }
+        };
 
         // Implement mouse dragging for overlay image
         Point? dragStartPoint = null;
