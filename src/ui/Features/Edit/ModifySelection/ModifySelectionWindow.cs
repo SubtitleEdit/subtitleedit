@@ -94,7 +94,13 @@ public class ModifySelectionWindow : Window
         textBoxRuleText.BindIsVisible(vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.HasText));
         textBoxRuleText.TextChanged += (sender, args) => vm.OnRuleChanged();
 
-        var numericUpDownRuleNumber = UiUtil.MakeNumericUpDownInt(0, 10000, 100, 150, vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.Number));
+        var numericUpDownRuleNumber = UiUtil.MakeNumericUpDownInt(0, 10000, 0, 150, vm);
+        numericUpDownRuleNumber.Bind(NumericUpDown.ValueProperty, new Binding
+        {
+            Path = nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.Number),
+            Mode = BindingMode.TwoWay,
+            Converter = new NullableDoubleConverter(),
+        });
         numericUpDownRuleNumber.BindIsVisible(vm, nameof(vm.SelectedRule) + "." + nameof(vm.SelectedRule.HasNumber));
         numericUpDownRuleNumber.ValueChanged += (sender, args) => vm.OnRuleChanged();
 

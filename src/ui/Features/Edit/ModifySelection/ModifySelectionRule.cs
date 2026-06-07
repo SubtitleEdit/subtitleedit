@@ -154,8 +154,8 @@ public class ModifySelectionRule
                 HasNumber = true,
                 NumberMinValue = 0,
                 NumberMaxValue = 200,
-                DefaultValue = 42,
-                Number = 42,
+                DefaultValue = Se.Settings.General.SubtitleLineMaximumLength,
+                Number = Se.Settings.General.SubtitleLineMaximumLength,
             },
             new()
             {
@@ -164,8 +164,8 @@ public class ModifySelectionRule
                 HasNumber = true,
                 NumberMinValue = 0,
                 NumberMaxValue = 200,
-                DefaultValue = 42,
-                Number = 42,
+                DefaultValue = Se.Settings.General.SubtitleLineMaximumLength,
+                Number = Se.Settings.General.SubtitleLineMaximumLength,
             },
             new()
             {
