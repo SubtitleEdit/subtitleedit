@@ -88,6 +88,19 @@ public partial class BinarySubtitleItem : ObservableObject
         OcrSubtitleIndex = -1;
     }
 
+    internal BinarySubtitleItem(TimeSpan startTime, TimeSpan endTime)
+    {
+        _startTime = startTime;
+        _endTime = endTime;
+        _duration = endTime - startTime;
+        _screenWidth = 1920;
+        _screenHeight = 1080;
+        Number = 0;
+        IsForced = false;
+        Text = string.Empty;
+        OcrSubtitleIndex = -1;
+    }
+
     public int OcrSubtitleIndex { get; set; }
     public int Number { get; set; }
     public string Text { get; set; }

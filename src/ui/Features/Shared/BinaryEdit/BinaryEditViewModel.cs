@@ -36,6 +36,8 @@ public partial class BinaryEditViewModel : ObservableObject
 {
     [ObservableProperty] private string _fileName;
     [ObservableProperty] private BinarySubtitleItem? _selectedSubtitle;
+    [ObservableProperty] private BinarySubtitleItem? _displayedSubtitle;
+    [ObservableProperty] private bool _selectCurrentSubtitleWhilePlaying;
     [ObservableProperty] private int _screenWidth;
     [ObservableProperty] private int _screenHeight;
     [ObservableProperty] private string _statusText;
@@ -63,6 +65,7 @@ public partial class BinaryEditViewModel : ObservableObject
     private readonly IBluRayHelper _bluRayHelper;
 
     private string _loadFileName = string.Empty;
+    private int _lastPlaybackSubtitleIndex = -2;
 
     public BinaryEditViewModel(IFileHelper fileHelper, IWindowService windowService, IFolderHelper folderHelper, IShortcutManager shortcutManager, IBluRayHelper bluRayHelper)
     {
@@ -72,6 +75,7 @@ public partial class BinaryEditViewModel : ObservableObject
         _shortcutManager = shortcutManager;
         _bluRayHelper = bluRayHelper;
         _fileName = string.Empty;
+        _selectCurrentSubtitleWhilePlaying = Se.Settings.Tools.BinEditSelectCurrentSubtitleWhilePlaying;
         Subtitles = new ObservableCollection<BinarySubtitleItem>();
         StatusText = string.Empty;
         CurrentPositionAndSize = string.Empty;
@@ -131,7 +135,22 @@ public partial class BinaryEditViewModel : ObservableObject
 
     partial void OnSelectedSubtitleChanged(BinarySubtitleItem? value)
     {
+        if (VideoPlayerControl?.IsPlaying != true)
+        {
+            DisplayedSubtitle = value;
+        }
+
         UpdateOverlayPosition();
+    }
+
+    partial void OnDisplayedSubtitleChanged(BinarySubtitleItem? value)
+    {
+        UpdateOverlayPosition();
+    }
+
+    partial void OnSelectCurrentSubtitleWhilePlayingChanged(bool value)
+    {
+        Se.Settings.Tools.BinEditSelectCurrentSubtitleWhilePlaying = value;
     }
 
     internal void SubtitleGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -242,13 +261,13 @@ public partial class BinaryEditViewModel : ObservableObject
         VideoContentBorder.Margin = new Avalonia.Thickness(rectX, rectY, 0, 0);
 
         // Update subtitle overlay
-        if (SubtitleOverlayImage == null || SelectedSubtitle == null || SelectedSubtitle.Bitmap == null)
+        if (SubtitleOverlayImage == null || DisplayedSubtitle == null || DisplayedSubtitle.Bitmap == null)
         {
             return;
         }
 
-        var subtitleScreenWidth = SelectedSubtitle.ScreenSize.Width;
-        var subtitleScreenHeight = SelectedSubtitle.ScreenSize.Height;
+        var subtitleScreenWidth = DisplayedSubtitle.ScreenSize.Width;
+        var subtitleScreenHeight = DisplayedSubtitle.ScreenSize.Height;
 
         if (subtitleScreenWidth <= 0 || subtitleScreenHeight <= 0)
         {
@@ -260,14 +279,14 @@ public partial class BinaryEditViewModel : ObservableObject
         var scaleY = rectHeight / subtitleScreenHeight;
 
         // Get original bitmap dimensions and set scaled size on image
-        var bitmapWidth = SelectedSubtitle.Bitmap.Size.Width;
-        var bitmapHeight = SelectedSubtitle.Bitmap.Size.Height;
+        var bitmapWidth = DisplayedSubtitle.Bitmap.Size.Width;
+        var bitmapHeight = DisplayedSubtitle.Bitmap.Size.Height;
         SubtitleOverlayImage.Width = bitmapWidth * scaleX;
         SubtitleOverlayImage.Height = bitmapHeight * scaleY;
 
         // Position: rectangle position + scaled subtitle position
-        var overlayX = rectX + (SelectedSubtitle.X * scaleX);
-        var overlayY = rectY + (SelectedSubtitle.Y * scaleY);
+        var overlayX = rectX + (DisplayedSubtitle.X * scaleX);
+        var overlayY = rectY + (DisplayedSubtitle.Y * scaleY);
         SubtitleOverlayImage.Margin = new Avalonia.Thickness(overlayX, overlayY, 0, 0);
     }
 
@@ -458,9 +477,9 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         var videoFileName = TryGetVideoFileName(fileName);
-        if (!string.IsNullOrEmpty(videoFileName) && VideoPlayerControl != null)
+        if (ShouldAutoOpenMatchingVideo(Se.Settings.Video.AutoOpen, videoFileName) && VideoPlayerControl != null)
         {
-            await VideoPlayerControl.Open(videoFileName);
+            await VideoPlayerControl.Open(videoFileName!);
         }
     }
 
@@ -1491,6 +1510,22 @@ public partial class BinaryEditViewModel : ObservableObject
         await VideoPlayerControl.Open(videoFileName);
     }
 
+    internal void VideoPlayerAreaPointerPressed()
+    {
+        if (VideoPlayerControl == null || !ShouldOpenVideoPickerOnSurfaceClick(VideoPlayerControl.VideoPlayer.FileName))
+        {
+            return;
+        }
+
+        Dispatcher.UIThread.Post(() => OpenVideoCommand.Execute(null));
+    }
+
+    [RelayCommand]
+    private void ToggleCurrentSubtitleWhilePlaying()
+    {
+        SelectCurrentSubtitleWhilePlaying = !SelectCurrentSubtitleWhilePlaying;
+    }
+
     [RelayCommand]
     private async Task Settings()
     {
@@ -1808,6 +1843,60 @@ public partial class BinaryEditViewModel : ObservableObject
         });
     }
 
+    internal void OnVideoPositionChanged(double positionSeconds)
+    {
+        var subtitleIndex = FindActiveSubtitleIndex(Subtitles, TimeSpan.FromSeconds(positionSeconds));
+        if (subtitleIndex < 0)
+        {
+            if (_lastPlaybackSubtitleIndex == -1 && DisplayedSubtitle == null)
+            {
+                return;
+            }
+
+            _lastPlaybackSubtitleIndex = -1;
+            DisplayedSubtitle = null;
+            return;
+        }
+
+        var subtitle = Subtitles[subtitleIndex];
+        if (_lastPlaybackSubtitleIndex != subtitleIndex || !ReferenceEquals(DisplayedSubtitle, subtitle))
+        {
+            _lastPlaybackSubtitleIndex = subtitleIndex;
+            DisplayedSubtitle = subtitle;
+        }
+
+        if (SelectCurrentSubtitleWhilePlaying &&
+            VideoPlayerControl?.IsPlaying == true &&
+            SubtitleGrid?.SelectedIndex != subtitleIndex)
+        {
+            SelectAndScrollToRow(subtitleIndex);
+        }
+    }
+
+    internal static int FindActiveSubtitleIndex(IReadOnlyList<BinarySubtitleItem> subtitles, TimeSpan position)
+    {
+        for (var i = 0; i < subtitles.Count; i++)
+        {
+            var subtitle = subtitles[i];
+            if (subtitle.StartTime <= position && position < subtitle.EndTime)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    internal static bool ShouldAutoOpenMatchingVideo(bool autoOpenVideo, string? videoFileName)
+    {
+        return autoOpenVideo && !string.IsNullOrEmpty(videoFileName);
+    }
+
+    internal static bool ShouldOpenVideoPickerOnSurfaceClick(string? videoFileName)
+    {
+        return string.IsNullOrEmpty(videoFileName);
+    }
+
     private void SelectAndScrollToRow(int index)
     {
         if (index < 0 || SubtitleGrid == null)
@@ -1919,4 +2008,3 @@ public partial class BinaryEditViewModel : ObservableObject
         vp.Position = item.StartTime.TotalSeconds;
     }
 }
-
