@@ -1234,6 +1234,32 @@ public partial class BurnInViewModel : ObservableObject
         UseSourceFolderVisible = !settings.UseOutputFolder;
         UseSourceResolution = settings.UseSourceResolution;
 
+        FontMarginHorizontal = (int)settings.NonAssaMarginHorizontal;
+        FontMarginVertical = (int)settings.NonAssaMarginVertical;
+        SelectedFontBoxType = FontBoxTypes.FirstOrDefault(p => (int)p.BoxType == settings.NonAssaBoxType) ?? FontBoxTypes[0];
+
+        SelectedVideoEncoding = VideoEncodings.FirstOrDefault(p => p.Codec == settings.Encoding) ?? VideoEncodings[0];
+        SelectedVideoPixelFormat = VideoPixelFormats.FirstOrDefault(p => p.Codec == settings.PixelFormat) ?? VideoPixelFormats[0];
+        FillPreset(SelectedVideoEncoding.Codec);
+        FillCrf(SelectedVideoEncoding.Codec);
+        if (!string.IsNullOrEmpty(settings.Preset) && VideoPresets.Contains(settings.Preset))
+        {
+            SelectedVideoPreset = settings.Preset;
+        }
+        if (!string.IsNullOrEmpty(settings.Crf) && VideoCrf.Contains(settings.Crf))
+        {
+            SelectedVideoCrf = settings.Crf;
+        }
+
+        SelectedAudioEncoding = AudioEncodings.Contains(settings.AudioEncoding) ? settings.AudioEncoding : AudioEncodings[0];
+        AudioIsStereo = settings.AudioForceStereo;
+        SelectedAudioSampleRate = AudioSampleRates.FirstOrDefault(p => p.Replace("Hz", string.Empty).Trim() == settings.AudioSampleRate) ?? AudioSampleRates[1];
+        SelectedAudioBitRate = AudioBitRates.Contains(settings.AudioBitRate) ? settings.AudioBitRate : AudioBitRates[2];
+
+        UseTargetFileSize = settings.TargetFileSize;
+        TargetFileSize = settings.TargetFileSizeMb;
+        PromptForFfmpegParameters = settings.PromptFfmpegParameters;
+
         var effectsAsStringArray = settings.Effects?.Split(',') ?? [];
         _selectedEffects = BurnInEffectItem.List().Where(p => effectsAsStringArray.Contains(p.Name)).ToList();
         DisplayEffect = string.Join(", ", _selectedEffects.Select(p => p.Name));
@@ -1254,6 +1280,23 @@ public partial class BurnInViewModel : ObservableObject
         settings.NonAssaFixRtlUnicode = FontFixRtl;
         settings.NonAssaAlignment = SelectedFontAlignment.Code;
         settings.UseSourceResolution = UseSourceResolution;
+        settings.NonAssaMarginHorizontal = FontMarginHorizontal ?? 0;
+        settings.NonAssaMarginVertical = FontMarginVertical ?? 0;
+        settings.NonAssaBoxType = (int)SelectedFontBoxType.BoxType;
+
+        settings.Encoding = SelectedVideoEncoding.Codec;
+        settings.Preset = SelectedVideoPreset ?? string.Empty;
+        settings.Crf = SelectedVideoCrf ?? string.Empty;
+        settings.PixelFormat = SelectedVideoPixelFormat?.Codec ?? string.Empty;
+
+        settings.AudioEncoding = SelectedAudioEncoding;
+        settings.AudioForceStereo = AudioIsStereo;
+        settings.AudioSampleRate = SelectedAudioSampleRate.Replace("Hz", string.Empty).Trim();
+        settings.AudioBitRate = SelectedAudioBitRate;
+
+        settings.TargetFileSize = UseTargetFileSize;
+        settings.TargetFileSizeMb = TargetFileSize ?? 0;
+        settings.PromptFfmpegParameters = PromptForFfmpegParameters;
 
         settings.Effects = string.Join(",", _selectedEffects.Select(p => p.Name).Distinct());
 
@@ -1443,6 +1486,7 @@ public partial class BurnInViewModel : ObservableObject
     private void FillPreset(string videoCodec)
     {
         VideoPresetText = "Preset";
+        var previousPreset = SelectedVideoPreset;
         SelectedVideoPreset = null;
 
         var items = new List<string>
@@ -1578,7 +1622,11 @@ public partial class BurnInViewModel : ObservableObject
 
         VideoPresets.Clear();
         VideoPresets.AddRange(items);
-        if (VideoPresets.Contains(defaultItem))
+        if (!string.IsNullOrEmpty(previousPreset) && VideoPresets.Contains(previousPreset))
+        {
+            SelectedVideoPreset = previousPreset;
+        }
+        else if (VideoPresets.Contains(defaultItem))
         {
             SelectedVideoPreset = defaultItem;
         }
@@ -1586,6 +1634,7 @@ public partial class BurnInViewModel : ObservableObject
 
     public void FillCrf(string videoCodec)
     {
+        var previousCrf = SelectedVideoCrf;
         SelectedVideoCrf = null;
         VideoCrfText = "CRF";
         VideoCrfHint = string.Empty;
@@ -1668,6 +1717,11 @@ public partial class BurnInViewModel : ObservableObject
             VideoCrf.Clear();
             VideoCrf.AddRange(items);
             SelectedVideoCrf = "23";
+        }
+
+        if (!string.IsNullOrWhiteSpace(previousCrf) && VideoCrf.Contains(previousCrf))
+        {
+            SelectedVideoCrf = previousCrf;
         }
     }
 

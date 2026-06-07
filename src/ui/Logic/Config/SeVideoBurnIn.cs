@@ -18,7 +18,11 @@ public class SeVideoBurnIn
     public string AudioEncoding { get; set; }
     public bool AudioForceStereo { get; set; }
     public string AudioSampleRate { get; set; }
+    public string AudioBitRate { get; set; }
     public bool TargetFileSize { get; set; }
+    public int TargetFileSizeMb { get; set; }
+    public bool PromptFfmpegParameters { get; set; }
+    public int NonAssaBoxType { get; set; }
     public bool NonAssaBox { get; set; }
     public bool GenTransparentVideoNonAssaBox { get; set; }
     public bool GenTransparentVideoNonAssaBoxPerLine { get; set; }
@@ -55,6 +59,8 @@ public class SeVideoBurnIn
         AudioEncoding = "copy";
         AudioForceStereo = true;
         AudioSampleRate = "48000";
+        AudioBitRate = "128k";
+        TargetFileSizeMb = 100;
         FontBold = true;
         OutlineWidth = 6;
         ShadowWidth = 3;
