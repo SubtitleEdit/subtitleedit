@@ -117,6 +117,16 @@ public static class TtsVoiceInstaller
             minVersionNote: "v0.6.12 or newer");
 
     /// <summary>
+    /// Ensures the CrispASR runtime that VoxCPM2 (CrispASR) runs on is installed.
+    /// The voxcpm2-tts backend ships in CrispASR v0.7.0+.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForVoxCPM2(Window? window, IWindowService windowService, bool forceRedownload)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload,
+            engineDisplayName: "VoxCPM2 (CrispASR)",
+            extraCapabilityCheck: null,
+            minVersionNote: "v0.7.0 or newer");
+
+    /// <summary>
     /// Shared CrispASR install/update flow used by all TTS engines that sit on the
     /// CrispASR runtime. Prompts refer to <paramref name="engineDisplayName"/> so users
     /// see the right engine name. <paramref name="extraCapabilityCheck"/> lets the caller

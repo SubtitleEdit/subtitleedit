@@ -40,6 +40,8 @@ public class SeVideoTextToSpeech
     public double CosyVoice3CrispAsrSpeed { get; set; }
     public string F5TtsCrispAsrModel { get; set; }
     public double F5TtsCrispAsrSpeed { get; set; }
+    public string VoxCPM2CrispAsrModel { get; set; }
+    public double VoxCPM2CrispAsrSpeed { get; set; }
     public string OmniVoiceTtsCppVulkanPath { get; set; }
     public string OmniVoiceTtsCppInstruction { get; set; }
     public string ChatterboxModel { get; set; }
@@ -117,6 +119,8 @@ public class SeVideoTextToSpeech
         CosyVoice3CrispAsrSpeed = 1.0;
         F5TtsCrispAsrModel = "F16 (~953 MB)";
         F5TtsCrispAsrSpeed = 1.0;
+        VoxCPM2CrispAsrModel = "Q4_K (~1.7 GB)";
+        VoxCPM2CrispAsrSpeed = 1.0;
         OmniVoiceTtsCppVulkanPath = string.Empty;
         OmniVoiceTtsCppInstruction = string.Empty;
         ChatterboxModel = "Base";

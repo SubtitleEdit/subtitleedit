@@ -149,6 +149,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VibeVoiceCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.CosyVoice3CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.F5TtsCrispAsrSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoxCPM2CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.EngineSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.EncodingSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
@@ -246,6 +247,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClient<IIndexTtsCrispAsrDownloadService, IndexTtsCrispAsrDownloadService>();
         collection.AddHttpClient<ICosyVoice3CrispAsrDownloadService, CosyVoice3CrispAsrDownloadService>();
         collection.AddHttpClient<IF5TtsCrispAsrDownloadService, F5TtsCrispAsrDownloadService>();
+        collection.AddHttpClient<IVoxCPM2CrispAsrDownloadService, VoxCPM2CrispAsrDownloadService>();
         collection.AddHttpClient<IKokoroTtsCppDownloadService, KokoroTtsCppDownloadService>();
         collection.AddHttpClient<IChatterboxTtsCppDownloadService, ChatterboxTtsCppDownloadService>();
         collection.AddHttpClient<IOmniVoiceDownloadService, OmniVoiceDownloadService>();
@@ -408,6 +410,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<IndexTtsCrispAsrSettingsViewModel>();
         collection.AddTransient<CosyVoice3CrispAsrSettingsViewModel>();
         collection.AddTransient<F5TtsCrispAsrSettingsViewModel>();
+        collection.AddTransient<VoxCPM2CrispAsrSettingsViewModel>();
         collection.AddTransient<KokoroTtsSettingsViewModel>();
         collection.AddTransient<ChatterboxTtsSettingsViewModel>();
         collection.AddTransient<OpenFromUrlViewModel>();
