@@ -1546,6 +1546,12 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void CloseVideo()
+    {
+        VideoPlayerControl?.Close();
+    }
+
+    [RelayCommand]
     private void ToggleCurrentSubtitleWhilePlaying()
     {
         SelectCurrentSubtitleWhilePlaying = !SelectCurrentSubtitleWhilePlaying;

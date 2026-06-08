@@ -302,6 +302,11 @@ public class BinaryEditWindow : Window
                 },
                 new MenuItem
                 {
+                    Header = l.CloseVideoFile,
+                    Command = vm.CloseVideoCommand,
+                },
+                new MenuItem
+                {
                     Header = l.ToggleSelectSubtitleWhilePlayingCurrentlyOn,
                     Command = vm.ToggleCurrentSubtitleWhilePlayingCommand,
                     [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.SelectCurrentSubtitleWhilePlaying)),
