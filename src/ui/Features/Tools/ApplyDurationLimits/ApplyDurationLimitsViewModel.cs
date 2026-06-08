@@ -113,7 +113,7 @@ public partial class ApplyDurationLimitsViewModel : ObservableObject
 
                     if (item.Duration.TotalMilliseconds < minMs && FixMinDurationMs)
                     {
-                        var newEndTime = TimeSpan.FromMilliseconds(item.EndTime.TotalMilliseconds + minMs);
+                        var newEndTime = TimeSpan.FromMilliseconds(item.StartTime.TotalMilliseconds + minMs);
                         Update(item, newEndTime);
                         fixCount++;
                     }
