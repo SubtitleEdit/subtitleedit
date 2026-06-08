@@ -2009,6 +2009,7 @@ public partial class BinaryEditViewModel : ObservableObject
                 item.Bitmap?.Dispose();
             }
 
+            Renumber();
             RefreshStatusText();
 
             return;
