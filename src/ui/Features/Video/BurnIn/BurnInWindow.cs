@@ -221,7 +221,7 @@ public class BurnInWindow : Window
 
         var labelLogo = UiUtil.MakeLabel(Se.Language.General.Logo);
         var buttonLogo = UiUtil.MakeButtonBrowse(vm.ShowLogoCommand);
-        var labelLogoInfo = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.DisplayEffect)).WithMarginRight(3);
+        var labelLogoInfo = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.LogoInfo)).WithMarginRight(3);
         var panelLogo = new StackPanel
         {
             Orientation = Orientation.Horizontal,
