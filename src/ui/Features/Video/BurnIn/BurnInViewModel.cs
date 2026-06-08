@@ -641,11 +641,11 @@ public partial class BurnInViewModel : ObservableObject
         if (IsCutActive && !preview)
         {
             var start = CutFrom;
-            cutStart = $"-ss {start.Hours:00}:{start.Minutes:00}:{start.Seconds:00}";
+            cutStart = $"-ss {(int)start.TotalHours:00}:{start.Minutes:00}:{start.Seconds:00}.{start.Milliseconds:000}";
 
             var end = CutTo;
             var duration = end - start;
-            cutEnd = $"-t {duration.Hours:00}:{duration.Minutes:00}:{duration.Seconds:00}";
+            cutEnd = $"-t {(int)duration.TotalHours:00}:{duration.Minutes:00}:{duration.Seconds:00}.{duration.Milliseconds:000}";
         }
 
         var ffmpegParameters = FfmpegGenerator.GenerateHardcodedVideoFile(
@@ -1243,7 +1243,7 @@ public partial class BurnInViewModel : ObservableObject
         FontFixRtl = settings.NonAssaFixRtlUnicode;
         SelectedFontAlignment = FontAlignments.First(p => p.Code == settings.NonAssaAlignment);
         OutputFolder = settings.OutputFolder;
-        UseOutputFolderVisible = settings.UseSourceResolution;
+        UseOutputFolderVisible = settings.UseOutputFolder;
         UseSourceFolderVisible = !settings.UseOutputFolder;
         UseSourceResolution = settings.UseSourceResolution;
 
@@ -1743,7 +1743,8 @@ public partial class BurnInViewModel : ObservableObject
         if (Se.Settings.Video.BurnIn.UseOutputFolder &&
             string.IsNullOrWhiteSpace(Se.Settings.Video.BurnIn.OutputFolder))
         {
-            Se.Settings.Video.BurnIn.UseOutputFolder = true;
+            // Output-folder mode is on but no folder is configured - fall back to the source folder.
+            Se.Settings.Video.BurnIn.UseOutputFolder = false;
         }
 
         UseSourceFolderVisible = !Se.Settings.Video.BurnIn.UseOutputFolder;
