@@ -2230,7 +2230,7 @@ public partial class SettingsViewModel : ObservableObject
         {
             var g = new SeGeneral();
 
-            Se.Settings.General.ColorDurationTooLong = Se.Settings.General.ColorDurationTooLong;
+            Se.Settings.General.ColorDurationTooLong = g.ColorDurationTooLong;
             Se.Settings.General.ColorDurationTooShort = g.ColorDurationTooShort;
             Se.Settings.General.ColorTextTooLong = g.ColorTextTooLong;
             Se.Settings.General.ColorTextTooWide = g.ColorTextTooWide;

@@ -120,6 +120,10 @@ public class ContinuationSettingsSyncTests
         var savedCustomContinuationStyleGapSuffixReplaceComma = settings.CustomContinuationStyleGapSuffixReplaceComma;
         var savedCustomContinuationStyleGapPrefix = settings.CustomContinuationStyleGapPrefix;
         var savedCustomContinuationStyleGapPrefixAddSpace = settings.CustomContinuationStyleGapPrefixAddSpace;
+        var savedFixContinuationStyleUncheckInsertsAllCaps = settings.FixContinuationStyleUncheckInsertsAllCaps;
+        var savedFixContinuationStyleUncheckInsertsItalic = settings.FixContinuationStyleUncheckInsertsItalic;
+        var savedFixContinuationStyleUncheckInsertsLowercase = settings.FixContinuationStyleUncheckInsertsLowercase;
+        var savedFixContinuationStyleHideContinuationCandidatesWithoutName = settings.FixContinuationStyleHideContinuationCandidatesWithoutName;
         var savedFixContinuationStyleIgnoreLyrics = settings.FixContinuationStyleIgnoreLyrics;
 
         try
@@ -161,6 +165,10 @@ public class ContinuationSettingsSyncTests
             settings.CustomContinuationStyleGapSuffixReplaceComma = savedCustomContinuationStyleGapSuffixReplaceComma;
             settings.CustomContinuationStyleGapPrefix = savedCustomContinuationStyleGapPrefix;
             settings.CustomContinuationStyleGapPrefixAddSpace = savedCustomContinuationStyleGapPrefixAddSpace;
+            settings.FixContinuationStyleUncheckInsertsAllCaps = savedFixContinuationStyleUncheckInsertsAllCaps;
+            settings.FixContinuationStyleUncheckInsertsItalic = savedFixContinuationStyleUncheckInsertsItalic;
+            settings.FixContinuationStyleUncheckInsertsLowercase = savedFixContinuationStyleUncheckInsertsLowercase;
+            settings.FixContinuationStyleHideContinuationCandidatesWithoutName = savedFixContinuationStyleHideContinuationCandidatesWithoutName;
             settings.FixContinuationStyleIgnoreLyrics = savedFixContinuationStyleIgnoreLyrics;
         }
     }

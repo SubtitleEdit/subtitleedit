@@ -44,6 +44,13 @@ public class FixContinuationStyleSettingsWindow : Window
             Se.Language.Options.Settings.EditContinuationStyleCustom,
             vm.ShowEditCustomContinuationStyleCommand).WithLeftAlignment();
 
+        var noteCustomContinuationStyle = new TextBlock
+        {
+            Text = Se.Language.Options.Settings.CustomContinuationStyleNote,
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+            Foreground = UiUtil.GetBorderBrush(),
+        };
+
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
@@ -62,6 +69,7 @@ public class FixContinuationStyleSettingsWindow : Window
                 checkBoxIgnoreLyrics,
                 panelPause.WithMarginTop(12),
                 buttonEditCustomStyle.WithMarginTop(12),
+                noteCustomContinuationStyle,
                 panelButtons.WithMarginTop(12),
             }
         };
