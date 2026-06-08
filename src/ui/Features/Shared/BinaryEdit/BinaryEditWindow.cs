@@ -658,7 +658,16 @@ public class BinaryEditWindow : Window
         // Row 4: gap between second controls row and position label
         grid.Add(new TextBlock { Margin = new Thickness(0, 6, 0, 2) }, 4, 0);
 
-        // Row 5: Position/Size label
+        // Row 5: Forced checkbox (Col 0), Position/Size label (Col 2)
+        var forcedCheckBox = new CheckBox
+        {
+            Content = Se.Language.General.Forced,
+            VerticalAlignment = VerticalAlignment.Center,
+            DataContext = vm,
+            [!ToggleButton.IsCheckedProperty] = new Binding($"{nameof(vm.SelectedSubtitle)}.{nameof(BinarySubtitleItem.IsForced)}") { Mode = BindingMode.TwoWay },
+        };
+        grid.Add(forcedCheckBox, 5, 0);
+
         var posLabel = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.CurrentPositionAndSize));
         posLabel.VerticalAlignment = VerticalAlignment.Center;
         grid.Add(posLabel, 5, 2);
