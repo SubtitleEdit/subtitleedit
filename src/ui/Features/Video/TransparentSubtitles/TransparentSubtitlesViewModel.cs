@@ -437,7 +437,8 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
     private async Task<Process?> GetFfmpegProcess(BurnInJobItem jobItem)
     {
         var ts = TimeSpan.FromSeconds(jobItem.TotalSeconds);
-        var timeCode = string.Format($"{ts.Hours:00}\\\\:{ts.Minutes:00}\\\\:{ts.Seconds:00}");
+        // Use total hours so durations >= 24h are not silently wrapped by TimeSpan.Hours.
+        var timeCode = $"{(int)ts.TotalHours:00}\\\\:{ts.Minutes:00}\\\\:{ts.Seconds:00}";
 
         var ffmpegParameters = FfmpegGenerator.GenerateTransparentVideoFile(
             jobItem.AssaSubtitleFileName,
@@ -663,7 +664,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX",
             "PlayResX: " + (VideoWidth ?? 1920).ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
         sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY",
-            "PlayResY: " + (VideoHeight ?? 1920).ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
+            "PlayResY: " + (VideoHeight ?? 1080).ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
     }
 
     private string MakeOutputFileName(string videoFileName)
@@ -682,7 +683,15 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         var i = 2;
         while (File.Exists(fileName))
         {
-            fileName = Path.Combine(Se.Settings.Video.BurnIn.OutputFolder, $"{nameNoExt}{suffix}_{i}{ext}");
+            if (Se.Settings.Video.BurnIn.UseOutputFolder && !string.IsNullOrEmpty(Se.Settings.Video.BurnIn.OutputFolder))
+            {
+                fileName = Path.Combine(Se.Settings.Video.BurnIn.OutputFolder, $"{nameNoExt}{suffix}_{i}{ext}");
+            }
+            else
+            {
+                fileName = Path.Combine(Path.GetDirectoryName(videoFileName) ?? Path.GetTempPath(), $"{nameNoExt}{suffix}_{i}{ext}");
+            }
+
             i++;
         }
 
@@ -946,7 +955,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         FontFixRtl = settings.NonAssaFixRtlUnicode;
         SelectedFontAlignment = FontAlignments.First(p => p.Code == settings.NonAssaAlignment);
         OutputFolder = settings.OutputFolder;
-        UseOutputFolderVisible = settings.UseSourceResolution;
+        UseOutputFolderVisible = settings.UseOutputFolder;
         UseSourceFolderVisible = !settings.UseOutputFolder;
         UseSourceResolution = settings.UseSourceResolution;
 
@@ -1047,7 +1056,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         }
 
         var assa = Path.ChangeExtension(fileName, ".ass");
-        if (File.Exists(srt))
+        if (File.Exists(assa))
         {
             return assa;
         }
@@ -1077,15 +1086,19 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
 
     private void UpdateOutputProperties()
     {
-        if (Se.Settings.Video.Transparent.UseOutputFolder &&
-            string.IsNullOrWhiteSpace(Se.Settings.Video.Transparent.OutputFolder))
+        // Use the BurnIn output-folder settings: the "Output properties" dialog
+        // (BurnInSettingsWindow) and MakeOutputFileName both read/write BurnIn.*,
+        // so the UI must read the same store or it would show a stale/empty folder.
+        if (Se.Settings.Video.BurnIn.UseOutputFolder &&
+            string.IsNullOrWhiteSpace(Se.Settings.Video.BurnIn.OutputFolder))
         {
-            Se.Settings.Video.Transparent.UseOutputFolder = true;
+            // Output-folder mode is on but no folder is configured - fall back to the source folder.
+            Se.Settings.Video.BurnIn.UseOutputFolder = false;
         }
 
-        UseSourceFolderVisible = !Se.Settings.Video.Transparent.UseOutputFolder;
-        UseOutputFolderVisible = Se.Settings.Video.Transparent.UseOutputFolder;
-        OutputFolder = Se.Settings.Video.Transparent.OutputFolder;
+        UseSourceFolderVisible = !Se.Settings.Video.BurnIn.UseOutputFolder;
+        UseOutputFolderVisible = Se.Settings.Video.BurnIn.UseOutputFolder;
+        OutputFolder = Se.Settings.Video.BurnIn.OutputFolder;
     }
 
     public void BoxTypeChanged(object? sender, SelectionChangedEventArgs e)

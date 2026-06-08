@@ -1452,7 +1452,7 @@ public partial class BurnInViewModel : ObservableObject
         }
 
         var assa = Path.ChangeExtension(fileName, ".ass");
-        if (File.Exists(srt))
+        if (File.Exists(assa))
         {
             return assa;
         }
