@@ -65,6 +65,7 @@ public class LanguageTextToSpeech
     public string Qwen3TtsSettings { get; set; }
     public string KokoroTtsSettings { get; set; }
     public string ChatterboxTtsSettings { get; set; }
+    public string PiperSettings { get; set; }
     public string VoiceInstruction { get; set; }
     public string VoiceInstructionHint { get; set; }
     public string VoiceGender { get; set; }
@@ -154,6 +155,7 @@ public class LanguageTextToSpeech
         Qwen3TtsSettings = "Qwen3 TTS settings";
         KokoroTtsSettings = "Kokoro TTS settings";
         ChatterboxTtsSettings = "Chatterbox TTS settings";
+        PiperSettings = "Piper settings";
         VoiceInstruction = "Voice design";
         VoiceInstructionHint = "Optional - e.g. \"Speak in a calm and friendly tone\"";
         VoiceGender = "Gender";

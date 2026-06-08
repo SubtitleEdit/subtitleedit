@@ -23,6 +23,7 @@ using Nikse.SubtitleEdit.Features.Video.TextToSpeech.F5TtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.VoxCPM2CrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.IndexTtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.KokoroTtsSettings;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.PiperSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.OmniVoiceSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsCrispAsrSettings;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Qwen3TtsSettings;
@@ -1094,6 +1095,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (SelectedEngine is ChatterboxTtsCpp)
         {
             await _windowService.ShowDialogAsync<ChatterboxTtsSettingsWindow, ChatterboxTtsSettingsViewModel>(Window!, vm => vm.Initialize());
+        }
+        else if (SelectedEngine is Piper)
+        {
+            await _windowService.ShowDialogAsync<PiperSettingsWindow, PiperSettingsViewModel>(Window!, vm => vm.Initialize());
         }
         else
         {
@@ -3015,6 +3020,10 @@ public partial class TextToSpeechViewModel : ObservableObject
                 IsEngineSettingsVisible = true;
             }
             else if (SelectedEngine is OmniVoiceTtsCpp)
+            {
+                IsEngineSettingsVisible = true;
+            }
+            else if (SelectedEngine is Piper)
             {
                 IsEngineSettingsVisible = true;
             }
