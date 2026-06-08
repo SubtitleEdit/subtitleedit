@@ -628,6 +628,7 @@ public partial class SettingsViewModel : ObservableObject
         UnbreakLinesShorterThan = general.UnbreakLinesShorterThan;
         DialogStyle = DialogStyles.FirstOrDefault(p => p.Code == general.DialogStyle) ?? DialogStyles.First();
         ContinuationStyle = ContinuationStyles.FirstOrDefault(p => p.Code == general.ContinuationStyle) ?? ContinuationStyles.First();
+        IsEditCustomContinuationStyleVisible = ContinuationStyle.Code == nameof(Core.Enums.ContinuationStyle.Custom);
         CpsLineLengthStrategy = CpsLineLengthStrategies.FirstOrDefault(p => p.Code == general.CpsLineLengthStrategy) ?? CpsLineLengthStrategies.First();
 
         UseFrameMode = general.UseFrameMode;
