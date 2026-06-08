@@ -49,6 +49,8 @@ public class OcrSubtitleImageParameter : IOcrSubtitle
         return ocrSubtitleItems;
     }
 
+    public bool GetIsForced(int index) => false;
+
     public SKPointI GetPosition(int index)
     {
         if (index < 0 || index >= _imageParameterList.Count)

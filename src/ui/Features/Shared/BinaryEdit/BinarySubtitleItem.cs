@@ -29,7 +29,7 @@ public partial class BinarySubtitleItem : ObservableObject
         }
 
         Number = item.Number;
-        IsForced = false; // OcrSubtitleItem does not expose forced flag; default to false
+        IsForced = item.IsForced;
         Text = item.Text;
 
         // Store times as TimeSpan for use with TimeCodeUpDown and SecondsUpDown controls

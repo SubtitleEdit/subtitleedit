@@ -44,6 +44,8 @@ public class OcrSubtitleDivX : IOcrSubtitle
         return ocrSubtitleItems;
     }
 
+    public bool GetIsForced(int index) => false;
+
     public SKPointI GetPosition(int index)
     {
         return new SKPointI(-1, -1);

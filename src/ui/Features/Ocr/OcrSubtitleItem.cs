@@ -88,6 +88,8 @@ public partial class OcrSubtitleItem : ObservableObject
         return cropped.ToAvaloniaBitmap();
     }
 
+    public bool IsForced => _ocrSubtitle.GetIsForced(_index);
+
     public SKPointI GetPosition()
     {
         return _ocrSubtitle.GetPosition(_index);

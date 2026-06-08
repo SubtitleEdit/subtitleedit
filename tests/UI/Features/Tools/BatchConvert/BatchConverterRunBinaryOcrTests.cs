@@ -93,6 +93,7 @@ public class BatchConverterRunBinaryOcrTests
         public TimeSpan GetStartTime(int index) => TimeSpan.FromSeconds(index + 1);
         public TimeSpan GetEndTime(int index) => TimeSpan.FromSeconds(index + 1) + TimeSpan.FromMilliseconds(500);
         public List<OcrSubtitleItem> MakeOcrSubtitleItems() => new();
+        public bool GetIsForced(int index) => false;
         public SKPointI GetPosition(int index) => new(-1, -1);
         public SKSizeI GetScreenSize(int index) => new(-1, -1);
     }

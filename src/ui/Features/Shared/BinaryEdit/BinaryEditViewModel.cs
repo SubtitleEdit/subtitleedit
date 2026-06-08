@@ -1628,6 +1628,36 @@ public partial class BinaryEditViewModel : ObservableObject
         }
     }
 
+    [RelayCommand]
+    private void SelectForcedLines()
+    {
+        if (SubtitleGrid == null)
+        {
+            return;
+        }
+
+        SubtitleGrid.SelectedItems.Clear();
+        foreach (var item in Subtitles.Where(s => s.IsForced))
+        {
+            SubtitleGrid.SelectedItems.Add(item);
+        }
+    }
+
+    [RelayCommand]
+    private void SelectNonForcedLines()
+    {
+        if (SubtitleGrid == null)
+        {
+            return;
+        }
+
+        SubtitleGrid.SelectedItems.Clear();
+        foreach (var item in Subtitles.Where(s => !s.IsForced))
+        {
+            SubtitleGrid.SelectedItems.Add(item);
+        }
+    }
+
     private void Renumber()
     {
         for (int i = 0; i < Subtitles.Count; i++)

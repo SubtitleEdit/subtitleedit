@@ -423,6 +423,22 @@ public class BinaryEditWindow : Window
         flyout.Items.Add(menuItemToggleForced);
         menuItemToggleForced.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsToggleForcedVisible)));
 
+        var menuItemSelectForcedLines = new MenuItem
+        {
+            Header = Se.Language.General.SelectForcedLines,
+            DataContext = vm,
+            Command = vm.SelectForcedLinesCommand,
+        };
+        flyout.Items.Add(menuItemSelectForcedLines);
+
+        var menuItemSelectNonForcedLines = new MenuItem
+        {
+            Header = Se.Language.General.SelectNonForcedLines,
+            DataContext = vm,
+            Command = vm.SelectNonForcedLinesCommand,
+        };
+        flyout.Items.Add(menuItemSelectNonForcedLines);
+
         var separatorInsertSubtitle = new Separator() { DataContext = vm };
         flyout.Items.Add(separatorInsertSubtitle);
         separatorInsertSubtitle.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsInsertSubtitleVisible)));
