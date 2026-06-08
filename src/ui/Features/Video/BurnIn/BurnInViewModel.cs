@@ -6,13 +6,16 @@ using Avalonia.Skia;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -117,6 +120,14 @@ public partial class BurnInViewModel : ObservableObject
     private string _inputVideoFileName;
     private List<BurnInEffectItem> _selectedEffects;
 
+    public VideoPlayerControl? VideoPlayerControl { get; set; }
+    private LibMpvDynamicPlayer? _mpvPreviewPlayer;
+    private VideoPlayerControl? _fullScreenVideoPlayerControl;
+    private DispatcherTimer? _previewTimer;
+    private string _oldPreviewAssa = string.Empty;
+    private readonly string _tempPreviewAssaFileName;
+    private bool _isPreviewSubtitleLoaded;
+
     private readonly IWindowService _windowService;
     private readonly IFolderHelper _folderHelper;
     private readonly IFileHelper _fileHelper;
@@ -126,6 +137,8 @@ public partial class BurnInViewModel : ObservableObject
         _folderHelper = folderHelper;
         _fileHelper = fileHelper;
         _windowService = windowService;
+
+        _tempPreviewAssaFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".ass");
 
         FontNames = new ObservableCollection<string>(FontHelper.GetLibAssaFonts());
         SelectedFontName = FontNames.FirstOrDefault(p => p == Se.Settings.Video.BurnIn.FontName) ?? FontNames[0];
@@ -763,7 +776,7 @@ public partial class BurnInViewModel : ObservableObject
                 }
             }
 
-            SetStyleForNonAssa(subtitle);
+            SetStyleForNonAssa(subtitle, jobItem.Width, jobItem.Height);
         }
 
         var assa = new AdvancedSubStationAlpha();
@@ -772,11 +785,11 @@ public partial class BurnInViewModel : ObservableObject
         return assaFileName;
     }
 
-    private void SetStyleForNonAssa(Subtitle sub)
+    private void SetStyleForNonAssa(Subtitle sub, int width, int height)
     {
         sub.Header = AdvancedSubStationAlpha.DefaultHeader;
         var style = AdvancedSubStationAlpha.GetSsaStyle("Default", sub.Header);
-        style.FontSize = CalculateFontSize(JobItems[_jobItemIndex].Width, JobItems[_jobItemIndex].Height, FontFactor ?? 0);
+        style.FontSize = CalculateFontSize(width, height, FontFactor ?? 0);
         style.Bold = FontIsBold;
         style.FontName = SelectedFontName;
         style.Background = FontShadowColor.ToSKColor();
@@ -806,9 +819,9 @@ public partial class BurnInViewModel : ObservableObject
             AdvancedSubStationAlpha.GetHeaderAndStylesFromAdvancedSubStationAlpha(sub.Header,
                 new List<SsaStyle> { style });
         sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResX",
-            "PlayResX: " + (VideoWidth ?? 1920).ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
+            "PlayResX: " + width.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
         sub.Header = AdvancedSubStationAlpha.AddTagToHeader("PlayResY",
-            "PlayResY: " + (VideoHeight ?? 1024).ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
+            "PlayResY: " + height.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
     }
 
     private static string MakeOutputFileName(string videoFileName)
@@ -1989,9 +2002,204 @@ public partial class BurnInViewModel : ObservableObject
 
     internal void Loaded()
     {
-        Dispatcher.UIThread.Post(() =>
+        Dispatcher.UIThread.Post(LoadVideoPreview);
+    }
+
+    /// <summary>
+    /// Builds the ASSA text for the live preview from the current style/effect settings.
+    /// This mirrors <see cref="MakeAssa"/> but is independent of the burn-in job pipeline
+    /// so it can run while the user is still tweaking settings.
+    /// </summary>
+    private string? GeneratePreviewAssaText()
+    {
+        if (_subtitle.Paragraphs.Count == 0)
         {
-            UpdateNonAssaPreview();
+            return null;
+        }
+
+        var width = VideoWidth ?? _mediaInfo?.Dimension.Width ?? 1920;
+        var height = VideoHeight ?? _mediaInfo?.Dimension.Height ?? 1080;
+
+        var subtitle = new Subtitle(_subtitle, false);
+        var isAssa = _subtitleFormat is { Name: AdvancedSubStationAlpha.NameOfFormat };
+        if (!isAssa)
+        {
+            foreach (var s in subtitle.Paragraphs)
+            {
+                foreach (var effect in _selectedEffects)
+                {
+                    var fontSize = CalculateFontSize(width, height, FontFactor ?? 0);
+                    var durationMs = (int)s.Duration.TotalMilliseconds;
+                    s.Text = effect.ApplyEffect(s.Text, width, height, fontSize, durationMs);
+                }
+            }
+
+            SetStyleForNonAssa(subtitle, width, height);
+        }
+
+        var assa = new AdvancedSubStationAlpha();
+        return assa.ToText(subtitle, string.Empty);
+    }
+
+    private async void LoadVideoPreview()
+    {
+        if (VideoPlayerControl == null ||
+            string.IsNullOrWhiteSpace(VideoFileName) ||
+            !File.Exists(VideoFileName))
+        {
+            return;
+        }
+
+        try
+        {
+            await VideoPlayerControl.Open(VideoFileName);
+            await VideoPlayerControl.WaitForPlayersReadyAsync();
+            SetActivePreviewPlayer(VideoPlayerControl.VideoPlayer as LibMpvDynamicPlayer, alreadyHasSubtitle: false);
+
+            // Seek to the first subtitle so the user immediately sees styled text.
+            if (_subtitle.Paragraphs.Count > 0)
+            {
+                VideoPlayerControl.SetPosition(_subtitle.Paragraphs[0].StartTime.TotalSeconds + 0.05);
+            }
+
+            StartPreviewTimer();
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Failed to start burn-in video preview");
+        }
+    }
+
+    private void StartPreviewTimer()
+    {
+        _previewTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(500) };
+        _previewTimer.Tick += (_, _) =>
+        {
+            if (_mpvPreviewPlayer == null || _loading)
+            {
+                return;
+            }
+
+            string? assaText;
+            try
+            {
+                assaText = GeneratePreviewAssaText();
+            }
+            catch
+            {
+                return; // ignore transient errors while the user is editing settings
+            }
+
+            if (string.IsNullOrEmpty(assaText) || assaText == _oldPreviewAssa)
+            {
+                return;
+            }
+
+            _oldPreviewAssa = assaText;
+            File.WriteAllText(_tempPreviewAssaFileName, assaText);
+            if (!_isPreviewSubtitleLoaded)
+            {
+                _isPreviewSubtitleLoaded = true;
+                _mpvPreviewPlayer.SubAdd(_tempPreviewAssaFileName);
+            }
+            else
+            {
+                _mpvPreviewPlayer.SubReload();
+            }
+        };
+        _previewTimer.Start();
+    }
+
+    /// <summary>
+    /// Points the live-preview timer at a specific mpv player (the embedded one or the
+    /// fullscreen one). Forces a refresh on the next tick so the styled subtitle is
+    /// (re)applied to the now-active player.
+    /// </summary>
+    private void SetActivePreviewPlayer(LibMpvDynamicPlayer? mpv, bool alreadyHasSubtitle)
+    {
+        _mpvPreviewPlayer = mpv;
+        _isPreviewSubtitleLoaded = alreadyHasSubtitle;
+        _oldPreviewAssa = string.Empty;
+    }
+
+    [RelayCommand]
+    private void PreviewFullScreen()
+    {
+        var control = VideoPlayerControl;
+        if (control == null || control.IsFullScreen ||
+            string.IsNullOrWhiteSpace(VideoFileName) || !File.Exists(VideoFileName) ||
+            _fullScreenVideoPlayerControl != null)
+        {
+            return;
+        }
+
+        control.VideoPlayer.Pause();
+        var position = control.Position;
+        var volume = control.Volume;
+
+        // Mirror the main window: use a separate fullscreen player rather than
+        // reparenting the embedded one (avoids airspace/reparent issues).
+        _fullScreenVideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
+        _fullScreenVideoPlayerControl.IsFullScreen = true;
+
+        var fullScreenWindow = new FullScreenVideoWindow(
+            _fullScreenVideoPlayerControl,
+            VideoFileName,
+            string.Empty,
+            position,
+            volume,
+            () =>
+            {
+                var fs = _fullScreenVideoPlayerControl;
+                _fullScreenVideoPlayerControl = null;
+                if (fs != null)
+                {
+                    control.SetPosition(fs.Position);
+                }
+
+                // The embedded player kept its file + subtitle loaded, so reload (not re-add).
+                SetActivePreviewPlayer(control.VideoPlayer as LibMpvDynamicPlayer, alreadyHasSubtitle: true);
+            });
+        fullScreenWindow.Show(Window!);
+
+        // Once the fullscreen player has opened the file, route the preview to it so
+        // style/effect changes keep updating live while fullscreen.
+        var fsControl = _fullScreenVideoPlayerControl;
+        Dispatcher.UIThread.Post(async () =>
+        {
+            await fsControl.WaitForPlayersReadyAsync();
+            if (_fullScreenVideoPlayerControl == fsControl) // still fullscreen (not closed in the meantime)
+            {
+                SetActivePreviewPlayer(fsControl.VideoPlayer as LibMpvDynamicPlayer, alreadyHasSubtitle: false);
+            }
         });
+    }
+
+    public void CleanupPreview()
+    {
+        _previewTimer?.Stop();
+        _previewTimer = null;
+        _mpvPreviewPlayer = null;
+
+        try
+        {
+            VideoPlayerControl?.Close();
+        }
+        catch
+        {
+            // ignore
+        }
+
+        try
+        {
+            if (File.Exists(_tempPreviewAssaFileName))
+            {
+                File.Delete(_tempPreviewAssaFileName);
+            }
+        }
+        catch
+        {
+            // ignore
+        }
     }
 }
