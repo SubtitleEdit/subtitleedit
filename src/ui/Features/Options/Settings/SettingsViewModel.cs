@@ -155,6 +155,11 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _gridFocusTextboxAfterInsertNew;
     [ObservableProperty] private bool _textToSpeechPromptMergeContinuationLines;
     [ObservableProperty] private bool _openAiCompatibleSttAutoTranscribeOnAudioSelection;
+    [ObservableProperty] private bool _fixContinuationStyleUncheckInsertsAllCaps;
+    [ObservableProperty] private bool _fixContinuationStyleUncheckInsertsItalic;
+    [ObservableProperty] private bool _fixContinuationStyleUncheckInsertsLowercase;
+    [ObservableProperty] private bool _fixContinuationStyleHideContinuationCandidatesWithoutName;
+    [ObservableProperty] private bool _fixContinuationStyleIgnoreLyrics;
 
     [ObservableProperty] private ObservableCollection<string> _spellCheckEngines;
     [ObservableProperty] private string _selectedSpellCheckEngine;
@@ -689,6 +694,11 @@ public partial class SettingsViewModel : ObservableObject
         TextToSpeechPromptMergeContinuationLines = Se.Settings.Tools.TextToSpeechPromptMergeContinuationLines;
         OpenAiCompatibleSttAutoTranscribeOnAudioSelection = Se.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection;
         FixCommonErrorsSkipStep1 = Se.Settings.Tools.FixCommonErrors.SkipStep1;
+        FixContinuationStyleUncheckInsertsAllCaps = general.FixContinuationStyleUncheckInsertsAllCaps;
+        FixContinuationStyleUncheckInsertsItalic = general.FixContinuationStyleUncheckInsertsItalic;
+        FixContinuationStyleUncheckInsertsLowercase = general.FixContinuationStyleUncheckInsertsLowercase;
+        FixContinuationStyleHideContinuationCandidatesWithoutName = general.FixContinuationStyleHideContinuationCandidatesWithoutName;
+        FixContinuationStyleIgnoreLyrics = general.FixContinuationStyleIgnoreLyrics;
 
         SelectedTheme = MapThemeToTranslation(appearance.Theme);
         SelectedIconTheme = IconThemes.FirstOrDefault(p => p == appearance.IconTheme) ?? IconThemes.First();
@@ -1364,6 +1374,11 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Tools.FixCommonErrors.SkipStep1 = FixCommonErrorsSkipStep1;
         Se.Settings.Tools.WriteToolsLog = WriteToolsLog;
         Se.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection = OpenAiCompatibleSttAutoTranscribeOnAudioSelection;
+        general.FixContinuationStyleUncheckInsertsAllCaps = FixContinuationStyleUncheckInsertsAllCaps;
+        general.FixContinuationStyleUncheckInsertsItalic = FixContinuationStyleUncheckInsertsItalic;
+        general.FixContinuationStyleUncheckInsertsLowercase = FixContinuationStyleUncheckInsertsLowercase;
+        general.FixContinuationStyleHideContinuationCandidatesWithoutName = FixContinuationStyleHideContinuationCandidatesWithoutName;
+        general.FixContinuationStyleIgnoreLyrics = FixContinuationStyleIgnoreLyrics;
 
         appearance.Theme = MapThemeFromTranslation(SelectedTheme);
         appearance.IconTheme = SelectedIconTheme;
@@ -2362,20 +2377,55 @@ public partial class SettingsViewModel : ObservableObject
             return;
         }
 
-        _customContinuationStyleSuffix = result.SelectedSuffix;
-        _customContinuationStyleSuffixApplyIfComma = result.SelectedSuffixesProcessIfEndWithComma;
-        _customContinuationStyleSuffixAddSpace = result.SelectedSuffixesAddSpace;
-        _customContinuationStyleSuffixReplaceComma = result.SelectedSuffixesRemoveComma;
-        _customContinuationStylePrefix = result.SelectedPrefix;
-        _customContinuationStylePrefixAddSpace = result.SelectedPrefixAddSpace;
-        _customContinuationStyleUseDifferentStyleGap = result.UseSpecialStyleAfterLongGaps;
-        _continuationPause = result.LongGapMs;
-        _customContinuationStyleGapSuffix = result.SelectedLongGapSuffix;
-        _customContinuationStyleGapSuffixApplyIfComma = result.SelectedLongGapSuffixesProcessIfEndWithComma;
-        _customContinuationStyleGapSuffixAddSpace = result.SelectedLongGapSuffixesAddSpace;
-        _customContinuationStyleGapSuffixReplaceComma = result.SelectedLongGapSuffixesRemoveComma;
-        _customContinuationStyleGapPrefix = result.SelectedLongGapPrefix;
-        _customContinuationStyleGapPrefixAddSpace = result.SelectedLongGapPrefixAddSpace;
+        ApplyCustomContinuationStyle(result);
+
+        RuleValueChanged();
+    }
+
+    [RelayCommand]
+    private async Task ShowEditFixContinuationStyleSettings()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService
+            .ShowDialogAsync<FixContinuationStyleSettingsWindow, FixContinuationStyleSettingsViewModel>(Window, vm =>
+            {
+                vm.Initialize(
+                    FixContinuationStyleUncheckInsertsAllCaps,
+                    FixContinuationStyleUncheckInsertsItalic,
+                    FixContinuationStyleUncheckInsertsLowercase,
+                    FixContinuationStyleHideContinuationCandidatesWithoutName,
+                    FixContinuationStyleIgnoreLyrics,
+                    _continuationPause,
+                    _customContinuationStyleSuffix,
+                    _customContinuationStyleSuffixApplyIfComma,
+                    _customContinuationStyleSuffixAddSpace,
+                    _customContinuationStyleSuffixReplaceComma,
+                    _customContinuationStylePrefix,
+                    _customContinuationStylePrefixAddSpace,
+                    _customContinuationStyleUseDifferentStyleGap,
+                    _customContinuationStyleGapSuffix,
+                    _customContinuationStyleGapSuffixApplyIfComma,
+                    _customContinuationStyleGapSuffixAddSpace,
+                    _customContinuationStyleGapSuffixReplaceComma,
+                    _customContinuationStyleGapPrefix,
+                    _customContinuationStyleGapPrefixAddSpace);
+            });
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        FixContinuationStyleUncheckInsertsAllCaps = result.FixContinuationStyleUncheckInsertsAllCaps;
+        FixContinuationStyleUncheckInsertsItalic = result.FixContinuationStyleUncheckInsertsItalic;
+        FixContinuationStyleUncheckInsertsLowercase = result.FixContinuationStyleUncheckInsertsLowercase;
+        FixContinuationStyleHideContinuationCandidatesWithoutName = result.FixContinuationStyleHideContinuationCandidatesWithoutName;
+        FixContinuationStyleIgnoreLyrics = result.FixContinuationStyleIgnoreLyrics;
+        ApplyFixContinuationStyleSettings(result);
 
         RuleValueChanged();
     }
@@ -2526,5 +2576,41 @@ public partial class SettingsViewModel : ObservableObject
     internal void OnClosing(object? sender, WindowClosingEventArgs e)
     {
         UiUtil.SaveWindowPosition(Window);
+    }
+
+    private void ApplyFixContinuationStyleSettings(FixContinuationStyleSettingsViewModel result)
+    {
+        _continuationPause = result.ContinuationPause;
+        _customContinuationStyleSuffix = result.CustomContinuationStyleSuffix;
+        _customContinuationStyleSuffixApplyIfComma = result.CustomContinuationStyleSuffixApplyIfComma;
+        _customContinuationStyleSuffixAddSpace = result.CustomContinuationStyleSuffixAddSpace;
+        _customContinuationStyleSuffixReplaceComma = result.CustomContinuationStyleSuffixReplaceComma;
+        _customContinuationStylePrefix = result.CustomContinuationStylePrefix;
+        _customContinuationStylePrefixAddSpace = result.CustomContinuationStylePrefixAddSpace;
+        _customContinuationStyleUseDifferentStyleGap = result.CustomContinuationStyleUseDifferentStyleGap;
+        _customContinuationStyleGapSuffix = result.CustomContinuationStyleGapSuffix;
+        _customContinuationStyleGapSuffixApplyIfComma = result.CustomContinuationStyleGapSuffixApplyIfComma;
+        _customContinuationStyleGapSuffixAddSpace = result.CustomContinuationStyleGapSuffixAddSpace;
+        _customContinuationStyleGapSuffixReplaceComma = result.CustomContinuationStyleGapSuffixReplaceComma;
+        _customContinuationStyleGapPrefix = result.CustomContinuationStyleGapPrefix;
+        _customContinuationStyleGapPrefixAddSpace = result.CustomContinuationStyleGapPrefixAddSpace;
+    }
+
+    private void ApplyCustomContinuationStyle(CustomContinuationStyleViewModel result)
+    {
+        _customContinuationStyleSuffix = result.SelectedSuffix;
+        _customContinuationStyleSuffixApplyIfComma = result.SelectedSuffixesProcessIfEndWithComma;
+        _customContinuationStyleSuffixAddSpace = result.SelectedSuffixesAddSpace;
+        _customContinuationStyleSuffixReplaceComma = result.SelectedSuffixesRemoveComma;
+        _customContinuationStylePrefix = result.SelectedPrefix;
+        _customContinuationStylePrefixAddSpace = result.SelectedPrefixAddSpace;
+        _customContinuationStyleUseDifferentStyleGap = result.UseSpecialStyleAfterLongGaps;
+        _continuationPause = result.LongGapMs;
+        _customContinuationStyleGapSuffix = result.SelectedLongGapSuffix;
+        _customContinuationStyleGapSuffixApplyIfComma = result.SelectedLongGapSuffixesProcessIfEndWithComma;
+        _customContinuationStyleGapSuffixAddSpace = result.SelectedLongGapSuffixesAddSpace;
+        _customContinuationStyleGapSuffixReplaceComma = result.SelectedLongGapSuffixesRemoveComma;
+        _customContinuationStyleGapPrefix = result.SelectedLongGapPrefix;
+        _customContinuationStyleGapPrefixAddSpace = result.SelectedLongGapPrefixAddSpace;
     }
 }

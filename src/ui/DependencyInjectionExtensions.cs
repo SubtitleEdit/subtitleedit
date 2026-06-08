@@ -328,6 +328,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<CopyPasteTranslateBlockViewModel>();
         collection.AddTransient<CopyPasteTranslateViewModel>();
         collection.AddTransient<CustomContinuationStyleViewModel>();
+        collection.AddTransient<FixContinuationStyleSettingsViewModel>();
         collection.AddTransient<CutVideoViewModel>();
         collection.AddTransient<DCinemaSmptePropertiesViewModel>();
         collection.AddTransient<DownloadFfmpegViewModel>();

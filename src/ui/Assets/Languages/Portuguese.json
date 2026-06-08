@@ -2455,7 +2455,15 @@
       "waveformSaveAsCustomTheme": "Guardar como tema personalizado...",
       "waveformLoadThemeDotDotDot": "Carregar tema...",
       "waveformExportThemeDotDotDot": "Exportar tema...",
-      "fixCommonErrorsSkipStep1": "Corrigir erros comuns: saltar passo 1 (escolher correções)"
+      "fixCommonErrorsSkipStep1": "Corrigir erros comuns: saltar passo 1 (escolher correções)",
+      "editFixContinuationStyleSettings": "Edit settings for fixing continuation style",
+      "fixContinuationStyleSettings": "Settings for fixing continuation style",
+      "uncheckInsertsAllCaps": "Detect and uncheck single titles in all-caps (for example: NO ENTRY)",
+      "uncheckInsertsItalic": "Detect and uncheck italic single titles, or lyrics",
+      "uncheckInsertsLowercase": "Detect and uncheck single titles, or lyrics, in lowercase",
+      "hideContinuationCandidatesWithoutName": "Hide unlikely continuation sentences",
+      "ignoreLyrics": "Ignore lyrics between music symbols",
+      "continuationPause": "Pause threshold"
     },
     "shortcuts": {
       "title": "Atalhos",

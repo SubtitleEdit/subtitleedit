@@ -149,6 +149,14 @@ public class LanguageSettings
     public string WaveformSelectedColor { get; set; }
     public string DownloadFfmpeg { get; set; }
     public string FixCommonErrorsSkipStep1 { get; set; }
+    public string EditFixContinuationStyleSettings { get; set; }
+    public string FixContinuationStyleSettings { get; set; }
+    public string UncheckInsertsAllCaps { get; set; }
+    public string UncheckInsertsItalic { get; set; }
+    public string UncheckInsertsLowercase { get; set; }
+    public string HideContinuationCandidatesWithoutName { get; set; }
+    public string IgnoreLyrics { get; set; }
+    public string ContinuationPause { get; set; }
 
     // Toolbar
     public string ShowToolbarNew { get; set; }
@@ -453,6 +461,14 @@ public class LanguageSettings
         WaveformSelectedColor = "Waveform selected color";
         DownloadFfmpeg = "Download ffmpeg";
         FixCommonErrorsSkipStep1 = "Fix common errors: skip step 1 (choose fixes)";
+        EditFixContinuationStyleSettings = "Edit settings for fixing continuation style";
+        FixContinuationStyleSettings = "Settings for fixing continuation style";
+        UncheckInsertsAllCaps = "Detect and uncheck single titles in all-caps (for example: NO ENTRY)";
+        UncheckInsertsItalic = "Detect and uncheck italic single titles, or lyrics";
+        UncheckInsertsLowercase = "Detect and uncheck single titles, or lyrics, in lowercase";
+        HideContinuationCandidatesWithoutName = "Hide unlikely continuation sentences";
+        IgnoreLyrics = "Ignore lyrics between music symbols";
+        ContinuationPause = "Pause threshold";
 
         // Toolbar
         ShowToolbarNew = "Show new icon";

@@ -604,6 +604,8 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.GridFocusTextboxAfterInsertNew, nameof(_vm.GridFocusTextboxAfterInsertNew)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextToSpeechPromptMergeContinuationLines, nameof(_vm.TextToSpeechPromptMergeContinuationLines)),
             MakeCheckboxSetting(Se.Language.Options.Settings.FixCommonErrorsSkipStep1, nameof(_vm.FixCommonErrorsSkipStep1)),
+            new SettingsItem(Se.Language.Options.Settings.EditFixContinuationStyleSettings,
+                () => UiUtil.MakeButton(Se.Language.General.EditDotDotDot, _vm.ShowEditFixContinuationStyleSettingsCommand)),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.Appearance,
