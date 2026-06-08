@@ -134,7 +134,7 @@ public class BinaryEditWindow : Window
             }
             vm.Loaded();
         };
-        Closing += (_, _) => vm.Closing();
+        Closing += vm.OnClosing;
     }
 
     private static Menu MakeTopMenu(BinaryEditViewModel vm)

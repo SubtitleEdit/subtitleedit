@@ -25,6 +25,8 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -66,6 +68,8 @@ public partial class BinaryEditViewModel : ObservableObject
 
     private string _loadFileName = string.Empty;
     private int _lastPlaybackSubtitleIndex = -2;
+    private bool _isDirty;
+    private bool _dirtyTrackingActive;
 
     public BinaryEditViewModel(IFileHelper fileHelper, IWindowService windowService, IFolderHelper folderHelper, IShortcutManager shortcutManager, IBluRayHelper bluRayHelper)
     {
@@ -305,6 +309,7 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         await DoFileOpen(fileName);
+        _isDirty = false;
     }
 
     [RelayCommand]
@@ -855,6 +860,7 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         exportHandler.WriteFooter();
+        _isDirty = false;
         return true;
     }
 
@@ -1836,18 +1842,46 @@ public partial class BinaryEditViewModel : ObservableObject
         _shortcutManager.OnKeyReleased(this, e);
     }
 
-    public void Closing()
+    internal async void OnClosing(object? sender, WindowClosingEventArgs e)
+    {
+        if (_isDirty && Window != null)
+        {
+            e.Cancel = true;
+            try
+            {
+                var result = await MessageBox.Show(
+                    Window,
+                    "Unexported changes",
+                    "You have unexported changes. Close and discard them?",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result != MessageBoxResult.Yes)
+                    return;
+
+                Window.Closing -= OnClosing;
+                PerformCleanup();
+                Window.Close();
+            }
+            catch (Exception ex)
+            {
+                Se.LogError(ex, "BinaryEditViewModel.OnClosing");
+                Window.Closing -= OnClosing;
+                PerformCleanup();
+                Window.Close();
+            }
+            return;
+        }
+
+        PerformCleanup();
+    }
+
+    private void PerformCleanup()
     {
         if (VideoPlayerControl == null)
-        {
             return;
-        }
-
         if (string.IsNullOrWhiteSpace(VideoPlayerControl.VideoPlayer.FileName))
-        {
             return;
-        }
-
         VideoPlayerControl.VideoPlayer.CloseFile();
         UiUtil.SaveWindowPosition(Window);
     }
@@ -1864,13 +1898,38 @@ public partial class BinaryEditViewModel : ObservableObject
             {
                 SelectAndScrollToRow(0);
             }
+            EnableDirtyTracking();
             return;
         }
 
         Dispatcher.UIThread.InvokeAsync(async () =>
         {
             await DoFileOpen(_loadFileName);
+            EnableDirtyTracking();
+            _isDirty = false;
         });
+    }
+
+    private void EnableDirtyTracking()
+    {
+        if (_dirtyTrackingActive) return;
+        _dirtyTrackingActive = true;
+        Subtitles.CollectionChanged += OnSubtitlesCollectionChanged;
+        foreach (var item in Subtitles)
+            item.PropertyChanged += OnSubtitleItemPropertyChanged;
+    }
+
+    private void OnSubtitlesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.NewItems != null)
+            foreach (BinarySubtitleItem item in e.NewItems)
+                item.PropertyChanged += OnSubtitleItemPropertyChanged;
+        _isDirty = true;
+    }
+
+    private void OnSubtitleItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        _isDirty = true;
     }
 
     internal void OnVideoPositionChanged(double positionSeconds)
