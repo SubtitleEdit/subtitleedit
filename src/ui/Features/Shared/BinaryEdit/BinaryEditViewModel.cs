@@ -1946,6 +1946,9 @@ public partial class BinaryEditViewModel : ObservableObject
 
     private void OnSubtitlesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
+        if (e.OldItems != null)
+            foreach (BinarySubtitleItem item in e.OldItems)
+                item.PropertyChanged -= OnSubtitleItemPropertyChanged;
         if (e.NewItems != null)
             foreach (BinarySubtitleItem item in e.NewItems)
                 item.PropertyChanged += OnSubtitleItemPropertyChanged;
