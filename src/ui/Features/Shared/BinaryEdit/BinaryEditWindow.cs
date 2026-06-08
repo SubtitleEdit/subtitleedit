@@ -134,7 +134,7 @@ public class BinaryEditWindow : Window
             }
             vm.Loaded();
         };
-        Closing += (_, _) => vm.Closing();
+        Closing += vm.OnClosing;
     }
 
     private static Menu MakeTopMenu(BinaryEditViewModel vm)
@@ -302,6 +302,11 @@ public class BinaryEditWindow : Window
                 },
                 new MenuItem
                 {
+                    Header = l.CloseVideoFile,
+                    Command = vm.CloseVideoCommand,
+                },
+                new MenuItem
+                {
                     Header = l.ToggleSelectSubtitleWhilePlayingCurrentlyOn,
                     Command = vm.ToggleCurrentSubtitleWhilePlayingCommand,
                     [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.SelectCurrentSubtitleWhilePlaying)),
@@ -422,6 +427,22 @@ public class BinaryEditWindow : Window
         };
         flyout.Items.Add(menuItemToggleForced);
         menuItemToggleForced.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsToggleForcedVisible)));
+
+        var menuItemSelectForcedLines = new MenuItem
+        {
+            Header = Se.Language.General.SelectForcedLines,
+            DataContext = vm,
+            Command = vm.SelectForcedLinesCommand,
+        };
+        flyout.Items.Add(menuItemSelectForcedLines);
+
+        var menuItemSelectNonForcedLines = new MenuItem
+        {
+            Header = Se.Language.General.SelectNonForcedLines,
+            DataContext = vm,
+            Command = vm.SelectNonForcedLinesCommand,
+        };
+        flyout.Items.Add(menuItemSelectNonForcedLines);
 
         var separatorInsertSubtitle = new Separator() { DataContext = vm };
         flyout.Items.Add(separatorInsertSubtitle);
@@ -642,7 +663,16 @@ public class BinaryEditWindow : Window
         // Row 4: gap between second controls row and position label
         grid.Add(new TextBlock { Margin = new Thickness(0, 6, 0, 2) }, 4, 0);
 
-        // Row 5: Position/Size label
+        // Row 5: Forced checkbox (Col 0), Position/Size label (Col 2)
+        var forcedCheckBox = new CheckBox
+        {
+            Content = Se.Language.General.Forced,
+            VerticalAlignment = VerticalAlignment.Center,
+            DataContext = vm,
+            [!ToggleButton.IsCheckedProperty] = new Binding($"{nameof(vm.SelectedSubtitle)}.{nameof(BinarySubtitleItem.IsForced)}") { Mode = BindingMode.TwoWay },
+        };
+        grid.Add(forcedCheckBox, 5, 0);
+
         var posLabel = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.CurrentPositionAndSize));
         posLabel.VerticalAlignment = VerticalAlignment.Center;
         grid.Add(posLabel, 5, 2);

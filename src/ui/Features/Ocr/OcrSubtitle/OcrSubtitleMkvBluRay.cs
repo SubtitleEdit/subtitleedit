@@ -50,6 +50,16 @@ public class OcrSubtitleMkvBluRay : IOcrSubtitle
         return ocrSubtitleItems;
     }
 
+    public bool GetIsForced(int index)
+    {
+        if (index < 0 || index >= Count)
+        {
+            return false;
+        }
+
+        return _pcsDataList[index].IsForced;
+    }
+
     public SKPointI GetPosition(int index)
     {
         var position = _pcsDataList[index].GetPosition();

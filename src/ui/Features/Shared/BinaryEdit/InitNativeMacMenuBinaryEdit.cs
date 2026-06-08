@@ -52,6 +52,7 @@ public static class InitNativeMacMenuBinaryEdit
         // Video menu
         var videoMenu = new NativeMenu();
         Add(videoMenu, l.OpenVideo, vm.OpenVideoCommand);
+        Add(videoMenu, l.CloseVideoFile, vm.CloseVideoCommand);
         var selectSubtitleWhilePlayingItem = new NativeMenuItem(Clean(l.SelectSubtitleWhilePlaying))
         {
             ToggleType = MenuItemToggleType.CheckBox,

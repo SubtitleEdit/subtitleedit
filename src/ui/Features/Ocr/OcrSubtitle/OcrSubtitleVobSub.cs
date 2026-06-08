@@ -62,6 +62,16 @@ public class OcrSubtitleVobSub : IOcrSubtitle
         return ocrSubtitleItems;
     }
 
+    public bool GetIsForced(int index)
+    {
+        if (index < 0 || index >= _vobSubMergedPack.Count)
+        {
+            return false;
+        }
+
+        return _vobSubMergedPack[index].IsForced;
+    }
+
     public SubPicture? GetSubPicture(int index)
     {
         if (index < 0 || index >= _vobSubMergedPack.Count)

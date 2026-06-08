@@ -11,6 +11,7 @@ public interface IOcrSubtitle
     TimeSpan GetStartTime(int index);
     TimeSpan GetEndTime(int index);
     List<OcrSubtitleItem> MakeOcrSubtitleItems();
+    bool GetIsForced(int index);
     SKPointI GetPosition(int index);
     SKSizeI GetScreenSize(int index);
 }

@@ -275,6 +275,16 @@ public class OcrSubtitleBdn : IOcrSubtitle
     }
 
 
+    public bool GetIsForced(int index)
+    {
+        if (index < 0 || index >= _bdnXmlSubtitle.Paragraphs.Count)
+        {
+            return false;
+        }
+
+        return _bdnXmlSubtitle.Paragraphs[index].Forced;
+    }
+
     public TimeSpan GetStartTime(int index)
     {
         return _bdnXmlSubtitle.Paragraphs[index].StartTime.TimeSpan;

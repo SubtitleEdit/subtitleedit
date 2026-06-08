@@ -42,6 +42,16 @@ public class OcrSubtitleIBinaryParagraph : IOcrSubtitle
         return ocrSubtitleItems;
     }
 
+    public bool GetIsForced(int index)
+    {
+        if (index < 0 || index >= _list.Count)
+        {
+            return false;
+        }
+
+        return _list[index].IsForced;
+    }
+
     public SKPointI GetPosition(int index)
     {
         var position = _list[index].GetPosition();

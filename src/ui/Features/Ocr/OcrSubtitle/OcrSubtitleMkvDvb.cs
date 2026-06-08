@@ -49,9 +49,11 @@ public class OcrSubtitleMkvDvb : IOcrSubtitle
         return ocrSubtitleItems;
     }
 
+    public bool GetIsForced(int index) => false;
+
     public SKPointI GetPosition(int index)
     {
-        var position = _subtitleImages[index].GetPosition();    
+        var position = _subtitleImages[index].GetPosition();
         return new SKPointI(position.Left, position.Top);
     }
 

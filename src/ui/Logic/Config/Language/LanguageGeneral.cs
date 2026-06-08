@@ -476,7 +476,9 @@ public class LanguageGeneral
     public string Seconds { get; set; }
     public string SelectAll { get; set; }
     public string SelectFilesToConvert { get; set; }
+    public string SelectForcedLines { get; set; }
     public string SelectNone { get; set; }
+    public string SelectNonForcedLines { get; set; }
     public string SelectSaveFolder { get; set; }
     public string SelectSubtitle { get; set; }
     public string SelectedAFolderToSaveTo { get; set; }
@@ -1200,7 +1202,9 @@ public class LanguageGeneral
         Seconds = "Seconds";
         SelectAll = "Select all";
         SelectFilesToConvert = "Select files to convert";
+        SelectForcedLines = "Select forced lines";
         SelectNone = "Select none";
+        SelectNonForcedLines = "Select non-forced lines";
         SelectSaveFolder = "Select a folder to save to";
         SelectSubtitle = "Select subtitle";
         SelectedAFolderToSaveTo = "Selected a folder to save to";

@@ -46,6 +46,16 @@ public class OcrSubtitleTransportStream : IOcrSubtitle
         return ocrSubtitleItems;
     }
 
+    public bool GetIsForced(int index)
+    {
+        if (index < 0 || index >= _subtitles.Count)
+        {
+            return false;
+        }
+
+        return _subtitles[index].IsForced;
+    }
+
     public SKPointI GetPosition(int index)
     {
         var position = _subtitles[index].GetPosition();
