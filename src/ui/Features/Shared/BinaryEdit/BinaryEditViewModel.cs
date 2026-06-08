@@ -811,6 +811,25 @@ public partial class BinaryEditViewModel : ObservableObject
         await DoExport(new ExportHandlerFcp(), string.Empty, false);
     }
 
+    private string GetSuggestedExportFileName(string extension)
+    {
+        if (string.IsNullOrEmpty(_loadFileName))
+        {
+            return "export";
+        }
+
+        var dir = Path.GetDirectoryName(_loadFileName) ?? string.Empty;
+        var stem = Path.GetFileNameWithoutExtension(_loadFileName);
+        var suggested = Path.Combine(dir, stem + extension);
+
+        if (string.Equals(suggested, _loadFileName, StringComparison.OrdinalIgnoreCase))
+        {
+            suggested = Path.Combine(dir, stem + "_export" + extension);
+        }
+
+        return suggested;
+    }
+
     private async Task<bool> DoExport(IExportHandler exportHandler, string extension, bool isTargetFile = true)
     {
         if (Window == null)
@@ -826,7 +845,7 @@ public partial class BinaryEditViewModel : ObservableObject
         var fileOrFolderName = string.Empty;
         if (isTargetFile)
         {
-            fileOrFolderName = await _fileHelper.PickSaveFile(Window, extension, "export", Se.Language.General.SaveFileAsTitle);
+            fileOrFolderName = await _fileHelper.PickSaveFile(Window, extension, GetSuggestedExportFileName(extension), Se.Language.General.SaveFileAsTitle);
         }
         else
         {
