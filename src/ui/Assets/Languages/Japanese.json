@@ -2385,6 +2385,7 @@
       "processIfEndsWithComma": ", で終わる字幕だけ 特別扱いする",
       "removeComma": "カンマを削除する",
       "editContinuationStyleCustom": "カスタム継続スタイルを編集する",
+      "customContinuationStyleNote": "Note: The custom continuation style is shared across profiles.",
       "longGapThreshold": "長い間隔のしきい値 (ms)",
       "afterLongGap": "長い間隔の後:",
       "resetSyntaxColoring": "構文の色付けをリセットする",

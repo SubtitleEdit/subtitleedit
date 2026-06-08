@@ -2378,6 +2378,7 @@
       "processIfEndsWithComma": "Process if ends with comma",
       "removeComma": "Remove comma",
       "editContinuationStyleCustom": "Edit custom continuation style",
+      "customContinuationStyleNote": "Note: The custom continuation style is shared across profiles.",
       "longGapThreshold": "Long gap threshold (ms)",
       "afterLongGap": "After long gap:",
       "resetSyntaxColoring": "Reset syntax coloring",

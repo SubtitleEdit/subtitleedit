@@ -79,6 +79,7 @@ public class CustomContinuationStyleWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
             },
             ColumnDefinitions =
@@ -142,6 +143,13 @@ public class CustomContinuationStyleWindow : Window
         var checkBoxLongSuffixRemoveComma = UiUtil.MakeCheckBox(Se.Language.Options.Settings.RemoveComma, vm, nameof(vm.SelectedLongGapSuffixesRemoveComma))
             .WithBindEnabled(nameof(vm.UseSpecialStyleAfterLongGaps));
         checkBoxLongSuffixRemoveComma.IsCheckedChanged += (s, e) => vm.StyleChanged();
+        var noteCustomContinuationStyle = new TextBlock
+        {
+            Text = Se.Language.Options.Settings.CustomContinuationStyleNote,
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+            Margin = new Thickness(0, 10, 0, 0),
+            Foreground = UiUtil.GetBorderBrush(),
+        };
 
         var splitButtonLoad = new SplitButton
         {
@@ -229,8 +237,9 @@ public class CustomContinuationStyleWindow : Window
         grid.Add(checkBoxLongSuffixProcessIfEndWithComma, 10, 1);
         grid.Add(checkBoxLongSuffixAddSpace, 11, 1);
         grid.Add(checkBoxLongSuffixRemoveComma, 12, 1);
+        grid.Add(noteCustomContinuationStyle, 13, 0, 1, 2);
 
-        grid.Add(splitButtonLoad, 13, 0);
+        grid.Add(splitButtonLoad, 14, 0);
 
         return UiUtil.MakeBorderForControl(grid);
     }

@@ -2380,6 +2380,7 @@
       "ProcessIfEndsWithComma": "Behandle hvis slutter med komma",
       "RemoveComma": "Fjern komma",
       "EditContinuationStyleCustom": "Rediger egendefinert fortsettelsesstil",
+      "CustomContinuationStyleNote": "Note: The custom continuation style is shared across profiles.",
       "LongGapThreshold": "Terskel for lang mellomrom (ms)",
       "AfterLongGap": "Etter langt mellomrom:",
       "ResetSyntaxColoring": "Tilbakestill syntaksfarging",

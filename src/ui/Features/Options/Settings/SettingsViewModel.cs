@@ -2143,78 +2143,102 @@ public partial class SettingsViewModel : ObservableObject
         }
         else
         {
-            if (result.ResetRecentFiles)
-            {
-                Se.Settings.File.RecentFiles = new List<RecentFile>();
-            }
-
-            if (result.ResetWindowPositionAndSize)
-            {
-                Se.Settings.General.WindowPositions = new List<SeWindowPosition>();
-            }
-
-            if (result.ResetShortcuts)
-            {
-                Se.Settings.Shortcuts = new List<SeShortCut>();
-            }
-
-            if (result.ResetMultipleReplaceRules)
-            {
-                Se.Settings.Edit.MultipleReplace = new SeEditMultipleReplace();
-            }
-
-            if (result.ResetRules)
-            {
-                var g = new SeGeneral();
-                Se.Settings.General.Profiles = g.Profiles;
-                Se.Settings.General.CurrentProfile = g.CurrentProfile;
-                Se.Settings.General.SubtitleLineMaximumLength = g.SubtitleLineMaximumLength;
-                Se.Settings.General.SubtitleOptimalCharactersPerSeconds = g.SubtitleOptimalCharactersPerSeconds;
-                Se.Settings.General.SubtitleMaximumCharactersPerSeconds = g.SubtitleMaximumCharactersPerSeconds;
-                Se.Settings.General.SubtitleMaximumWordsPerMinute = g.SubtitleMaximumWordsPerMinute;
-                Se.Settings.General.SubtitleMinimumDisplayMilliseconds = g.SubtitleMinimumDisplayMilliseconds;
-                Se.Settings.General.SubtitleMaximumDisplayMilliseconds = g.SubtitleMaximumDisplayMilliseconds;
-                Se.Settings.General.MinimumBetweenLines = g.MinimumBetweenLines;
-                Se.Settings.General.MaxNumberOfLines = g.MaxNumberOfLines;
-                Se.Settings.General.UnbreakLinesShorterThan = g.UnbreakLinesShorterThan;
-                Se.Settings.General.DialogStyle = g.DialogStyle;
-                Se.Settings.General.ContinuationStyle = g.ContinuationStyle;
-                Se.Settings.General.CpsLineLengthStrategy = g.CpsLineLengthStrategy;
-            }
-
-            if (result.ResetAppearance)
-            {
-                Se.Settings.Appearance = new SeAppearance();
-            }
-
-            if (result.ResetAutoTranslate)
-            {
-                Se.Settings.AutoTranslate = new SeAutoTranslate();
-            }
-
-            if (result.ResetWaveform)
-            {
-                Se.Settings.Waveform = new SeWaveform();
-            }
-
-            if (result.ResetSyntaxColoring)
-            {
-                var g = new SeGeneral();
-
-                Se.Settings.General.ColorDurationTooLong = Se.Settings.General.ColorDurationTooLong;
-                Se.Settings.General.ColorDurationTooShort = g.ColorDurationTooShort;
-                Se.Settings.General.ColorTextTooLong = g.ColorTextTooLong;
-                Se.Settings.General.ColorTextTooWide = g.ColorTextTooWide;
-                Se.Settings.General.ColorTextTooManyLines = g.ColorTextTooManyLines;
-                Se.Settings.General.ColorTimeCodeOverlap = g.ColorTimeCodeOverlap;
-                Se.Settings.General.ColorGapTooShort = g.ColorGapTooShort;
-                Se.Settings.General.ErrorColor = g.ErrorColor;
-            }
+            ApplyResetSelections(result);
         }
 
         Se.SaveSettings();
         OkPressed = true;
         Window?.Close();
+    }
+
+    private static void ApplyResetSelections(SettingsResetViewModel result)
+    {
+        if (result.ResetRecentFiles)
+        {
+            Se.Settings.File.RecentFiles = new List<RecentFile>();
+        }
+
+        if (result.ResetWindowPositionAndSize)
+        {
+            Se.Settings.General.WindowPositions = new List<SeWindowPosition>();
+        }
+
+        if (result.ResetShortcuts)
+        {
+            Se.Settings.Shortcuts = new List<SeShortCut>();
+        }
+
+        if (result.ResetMultipleReplaceRules)
+        {
+            Se.Settings.Edit.MultipleReplace = new SeEditMultipleReplace();
+        }
+
+        if (result.ResetRules)
+        {
+            var g = new SeGeneral();
+            Se.Settings.General.Profiles = g.Profiles;
+            Se.Settings.General.CurrentProfile = g.CurrentProfile;
+            Se.Settings.General.SubtitleLineMaximumLength = g.SubtitleLineMaximumLength;
+            Se.Settings.General.SubtitleOptimalCharactersPerSeconds = g.SubtitleOptimalCharactersPerSeconds;
+            Se.Settings.General.SubtitleMaximumCharactersPerSeconds = g.SubtitleMaximumCharactersPerSeconds;
+            Se.Settings.General.SubtitleMaximumWordsPerMinute = g.SubtitleMaximumWordsPerMinute;
+            Se.Settings.General.SubtitleMinimumDisplayMilliseconds = g.SubtitleMinimumDisplayMilliseconds;
+            Se.Settings.General.SubtitleMaximumDisplayMilliseconds = g.SubtitleMaximumDisplayMilliseconds;
+            Se.Settings.General.MinimumBetweenLines = g.MinimumBetweenLines;
+            Se.Settings.General.MaxNumberOfLines = g.MaxNumberOfLines;
+            Se.Settings.General.UnbreakLinesShorterThan = g.UnbreakLinesShorterThan;
+            Se.Settings.General.DialogStyle = g.DialogStyle;
+            Se.Settings.General.ContinuationStyle = g.ContinuationStyle;
+            Se.Settings.General.CpsLineLengthStrategy = g.CpsLineLengthStrategy;
+            Se.Settings.General.ContinuationPause = g.ContinuationPause;
+            Se.Settings.General.CustomContinuationStyleSuffix = g.CustomContinuationStyleSuffix;
+            Se.Settings.General.CustomContinuationStyleSuffixApplyIfComma = g.CustomContinuationStyleSuffixApplyIfComma;
+            Se.Settings.General.CustomContinuationStyleSuffixAddSpace = g.CustomContinuationStyleSuffixAddSpace;
+            Se.Settings.General.CustomContinuationStyleSuffixReplaceComma = g.CustomContinuationStyleSuffixReplaceComma;
+            Se.Settings.General.CustomContinuationStylePrefix = g.CustomContinuationStylePrefix;
+            Se.Settings.General.CustomContinuationStylePrefixAddSpace = g.CustomContinuationStylePrefixAddSpace;
+            Se.Settings.General.CustomContinuationStyleUseDifferentStyleGap = g.CustomContinuationStyleUseDifferentStyleGap;
+            Se.Settings.General.CustomContinuationStyleGapSuffix = g.CustomContinuationStyleGapSuffix;
+            Se.Settings.General.CustomContinuationStyleGapSuffixApplyIfComma = g.CustomContinuationStyleGapSuffixApplyIfComma;
+            Se.Settings.General.CustomContinuationStyleGapSuffixAddSpace = g.CustomContinuationStyleGapSuffixAddSpace;
+            Se.Settings.General.CustomContinuationStyleGapSuffixReplaceComma = g.CustomContinuationStyleGapSuffixReplaceComma;
+            Se.Settings.General.CustomContinuationStyleGapPrefix = g.CustomContinuationStyleGapPrefix;
+            Se.Settings.General.CustomContinuationStyleGapPrefixAddSpace = g.CustomContinuationStyleGapPrefixAddSpace;
+            Se.Settings.General.FixContinuationStyleUncheckInsertsAllCaps = g.FixContinuationStyleUncheckInsertsAllCaps;
+            Se.Settings.General.FixContinuationStyleUncheckInsertsItalic = g.FixContinuationStyleUncheckInsertsItalic;
+            Se.Settings.General.FixContinuationStyleUncheckInsertsLowercase = g.FixContinuationStyleUncheckInsertsLowercase;
+            Se.Settings.General.FixContinuationStyleHideContinuationCandidatesWithoutName = g.FixContinuationStyleHideContinuationCandidatesWithoutName;
+            Se.Settings.General.FixContinuationStyleIgnoreLyrics = g.FixContinuationStyleIgnoreLyrics;
+        }
+
+        if (result.ResetAppearance)
+        {
+            Se.Settings.Appearance = new SeAppearance();
+        }
+
+        if (result.ResetAutoTranslate)
+        {
+            Se.Settings.AutoTranslate = new SeAutoTranslate();
+        }
+
+        if (result.ResetWaveform)
+        {
+            Se.Settings.Waveform = new SeWaveform();
+        }
+
+        if (result.ResetSyntaxColoring)
+        {
+            var g = new SeGeneral();
+
+            Se.Settings.General.ColorDurationTooLong = Se.Settings.General.ColorDurationTooLong;
+            Se.Settings.General.ColorDurationTooShort = g.ColorDurationTooShort;
+            Se.Settings.General.ColorTextTooLong = g.ColorTextTooLong;
+            Se.Settings.General.ColorTextTooWide = g.ColorTextTooWide;
+            Se.Settings.General.ColorTextTooManyLines = g.ColorTextTooManyLines;
+            Se.Settings.General.ColorTimeCodeOverlap = g.ColorTimeCodeOverlap;
+            Se.Settings.General.ColorGapTooShort = g.ColorGapTooShort;
+            Se.Settings.General.ErrorColor = g.ErrorColor;
+        }
     }
 
     [RelayCommand]
