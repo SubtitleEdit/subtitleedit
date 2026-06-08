@@ -76,7 +76,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         var wordsToIgnore = new List<string>();
 
         var replacedLine = ReplaceLineFixes(index, item, wordsToIgnore);
-        var splitLine = SplitLine(replacedLine, item, index);
+        var splitLine = SplitLine(replacedLine, index);
         if (replacedLine != item.Text)
         {
             splitLine.ReplacementUsed = new ReplacementUsedItem(item.Text, replacedLine, index);
@@ -123,7 +123,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         return replacedLine;
     }
 
-    private OcrFixLineResult SplitLine(string line, OcrSubtitleItem p, int index)
+    internal static OcrFixLineResult SplitLine(string line, int index)
     {
         var result = new OcrFixLineResult
         {
@@ -209,6 +209,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             }
             // Everything else is special characters
             var specialCharStart = i;
+            i++; // consume at least one char so a stray '<' (no matching '>') cannot cause an infinite loop
             while (i < line.Length &&
                    !char.IsLetterOrDigit(line[i]) &&
                    !char.IsWhiteSpace(line[i]) &&
