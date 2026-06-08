@@ -471,8 +471,8 @@ public class BinaryEditWindow : Window
         dataGrid.Columns.Add(new DataGridTemplateColumn
         {
             Header = Se.Language.General.Forced,
-            Width = new DataGridLength(60),
-            MinWidth = 50,
+            Width = new DataGridLength(90),
+            MinWidth = 80,
             CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
             CellTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<BinarySubtitleItem>((_, _) =>
                 new Border
@@ -501,8 +501,8 @@ public class BinaryEditWindow : Window
         dataGrid.Columns.Add(new DataGridTextColumn
         {
             Header = Se.Language.General.Show,
-            Width = new DataGridLength(120),
-            MinWidth = 100,
+            Width = new DataGridLength(105),
+            MinWidth = 90,
             IsReadOnly = true,
             Binding = new Binding(nameof(BinarySubtitleItem.StartTime)) { Converter = new TimeSpanToDisplayFullConverter() },
             CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
@@ -511,8 +511,8 @@ public class BinaryEditWindow : Window
         dataGrid.Columns.Add(new DataGridTextColumn
         {
             Header = Se.Language.General.Duration,
-            Width = new DataGridLength(80),
-            MinWidth = 60,
+            Width = new DataGridLength(90),
+            MinWidth = 70,
             IsReadOnly = true,
             Binding = new Binding(nameof(BinarySubtitleItem.Duration)) { Converter = new TimeSpanToDisplayShortConverter() },
             CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
@@ -663,19 +663,14 @@ public class BinaryEditWindow : Window
         // Row 4: gap between second controls row and position label
         grid.Add(new TextBlock { Margin = new Thickness(0, 6, 0, 2) }, 4, 0);
 
-        // Row 5: Forced checkbox (Col 0), Position/Size label (Col 2)
-        var forcedCheckBox = new CheckBox
-        {
-            Content = Se.Language.General.Forced,
-            VerticalAlignment = VerticalAlignment.Center,
-            DataContext = vm,
-            [!ToggleButton.IsCheckedProperty] = new Binding($"{nameof(vm.SelectedSubtitle)}.{nameof(BinarySubtitleItem.IsForced)}") { Mode = BindingMode.TwoWay },
-        };
-        grid.Add(forcedCheckBox, 5, 0);
+        // Row 5: Position label (Col 2, under X/Y), Size label (Col 4, under screen width/height) — forced flag lives only in the grid column
+        var positionLabel = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.CurrentPosition));
+        positionLabel.VerticalAlignment = VerticalAlignment.Center;
+        grid.Add(positionLabel, 5, 2);
 
-        var posLabel = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.CurrentPositionAndSize));
-        posLabel.VerticalAlignment = VerticalAlignment.Center;
-        grid.Add(posLabel, 5, 2);
+        var sizeLabel = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.CurrentSize));
+        sizeLabel.VerticalAlignment = VerticalAlignment.Center;
+        grid.Add(sizeLabel, 5, 4);
 
         xUpDown.ValueChanged += (_, _) => vm.UpdateOverlayPosition();
         yUpDown.ValueChanged += (_, _) => vm.UpdateOverlayPosition();
