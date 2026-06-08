@@ -147,6 +147,7 @@ using Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using static Nikse.SubtitleEdit.Logic.FindService;
+using Nikse.SubtitleEdit.Core.Settings;
 using Nikse.SubtitleEdit.Logic.Config.Language;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Initializers;
@@ -657,25 +658,7 @@ public partial class MainViewModel :
 
     private static void SetLibSeSettings()
     {
-        Configuration.Settings.General.SubtitleLineMaximumLength = Se.Settings.General.SubtitleLineMaximumLength;
-        Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds = Se.Settings.General.SubtitleMaximumCharactersPerSeconds;
-        Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds = Se.Settings.General.SubtitleOptimalCharactersPerSeconds;
-        Configuration.Settings.General.SubtitleMaximumWordsPerMinute = Se.Settings.General.SubtitleMaximumWordsPerMinute;
-        Configuration.Settings.General.MinimumMillisecondsBetweenLines = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
-        Configuration.Settings.General.MaxNumberOfLines = Se.Settings.General.MaxNumberOfLines;
-        Configuration.Settings.General.MergeLinesShorterThan = Se.Settings.General.UnbreakLinesShorterThan;
-
-        if (Enum.TryParse<Core.Enums.DialogType>(Se.Settings.General.DialogStyle, out var dt))
-        {
-            Configuration.Settings.General.DialogStyle = dt;
-        }
-
-        if (Enum.TryParse<Core.Enums.ContinuationStyle>(Se.Settings.General.ContinuationStyle, out var cs))
-        {
-            Configuration.Settings.General.ContinuationStyle = cs;
-        }
-
-        Configuration.Settings.General.CpsLineLengthStrategy = Se.Settings.General.CpsLineLengthStrategy;
+        ApplyGeneralSettingsToLibSe(Se.Settings.General, Configuration.Settings.General);
 
         TimedTextImscRosetta.LineHeight = Se.Settings.Formats.RosettaLineHeight;
         TimedTextImscRosetta.FontSize = Se.Settings.Formats.RosettaFontSize;
@@ -717,6 +700,48 @@ public partial class MainViewModel :
         {
             Se.Settings.General.FfmpegPath = DownloadFfmpegViewModel.GetFfmpegFileName();
         }
+    }
+
+    internal static void ApplyGeneralSettingsToLibSe(SeGeneral source, GeneralSettings target)
+    {
+        target.SubtitleLineMaximumLength = source.SubtitleLineMaximumLength;
+        target.SubtitleMaximumCharactersPerSeconds = source.SubtitleMaximumCharactersPerSeconds;
+        target.SubtitleOptimalCharactersPerSeconds = source.SubtitleOptimalCharactersPerSeconds;
+        target.SubtitleMaximumWordsPerMinute = source.SubtitleMaximumWordsPerMinute;
+        target.MinimumMillisecondsBetweenLines = source.MinimumBetweenLines.GetMilliseconds();
+        target.MaxNumberOfLines = source.MaxNumberOfLines;
+        target.MergeLinesShorterThan = source.UnbreakLinesShorterThan;
+        target.ContinuationPause = source.ContinuationPause;
+        target.CustomContinuationStyleSuffix = source.CustomContinuationStyleSuffix;
+        target.CustomContinuationStyleSuffixApplyIfComma = source.CustomContinuationStyleSuffixApplyIfComma;
+        target.CustomContinuationStyleSuffixAddSpace = source.CustomContinuationStyleSuffixAddSpace;
+        target.CustomContinuationStyleSuffixReplaceComma = source.CustomContinuationStyleSuffixReplaceComma;
+        target.CustomContinuationStylePrefix = source.CustomContinuationStylePrefix;
+        target.CustomContinuationStylePrefixAddSpace = source.CustomContinuationStylePrefixAddSpace;
+        target.CustomContinuationStyleUseDifferentStyleGap = source.CustomContinuationStyleUseDifferentStyleGap;
+        target.CustomContinuationStyleGapSuffix = source.CustomContinuationStyleGapSuffix;
+        target.CustomContinuationStyleGapSuffixApplyIfComma = source.CustomContinuationStyleGapSuffixApplyIfComma;
+        target.CustomContinuationStyleGapSuffixAddSpace = source.CustomContinuationStyleGapSuffixAddSpace;
+        target.CustomContinuationStyleGapSuffixReplaceComma = source.CustomContinuationStyleGapSuffixReplaceComma;
+        target.CustomContinuationStyleGapPrefix = source.CustomContinuationStyleGapPrefix;
+        target.CustomContinuationStyleGapPrefixAddSpace = source.CustomContinuationStyleGapPrefixAddSpace;
+        target.FixContinuationStyleUncheckInsertsAllCaps = source.FixContinuationStyleUncheckInsertsAllCaps;
+        target.FixContinuationStyleUncheckInsertsItalic = source.FixContinuationStyleUncheckInsertsItalic;
+        target.FixContinuationStyleUncheckInsertsLowercase = source.FixContinuationStyleUncheckInsertsLowercase;
+        target.FixContinuationStyleHideContinuationCandidatesWithoutName = source.FixContinuationStyleHideContinuationCandidatesWithoutName;
+        target.FixContinuationStyleIgnoreLyrics = source.FixContinuationStyleIgnoreLyrics;
+
+        if (Enum.TryParse<Core.Enums.DialogType>(source.DialogStyle, out var dialogStyle))
+        {
+            target.DialogStyle = dialogStyle;
+        }
+
+        if (Enum.TryParse<Core.Enums.ContinuationStyle>(source.ContinuationStyle, out var continuationStyle))
+        {
+            target.ContinuationStyle = continuationStyle;
+        }
+
+        target.CpsLineLengthStrategy = source.CpsLineLengthStrategy;
     }
 
     private void InitializeLibMpv()
