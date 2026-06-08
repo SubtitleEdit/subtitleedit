@@ -6,6 +6,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
@@ -15,8 +16,11 @@ namespace Nikse.SubtitleEdit.Features.Video.BurnIn;
 
 public class BurnInWindow : Window
 {
+    private readonly BurnInViewModel _vm;
+
     public BurnInWindow(BurnInViewModel vm)
     {
+        _vm = vm;
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Video.BurnIn.Title;
         SizeToContent = SizeToContent.WidthAndHeight;
@@ -108,6 +112,12 @@ public class BurnInWindow : Window
         Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
         Loaded += (_, _) => vm.Loaded();
         KeyDown += (_, e) => vm.OnKeyDown(e);
+    }
+
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        base.OnClosing(e);
+        _vm.CleanupPreview();
     }
 
     private static Border MakeSubtitlesView(BurnInViewModel vm)
@@ -432,7 +442,8 @@ public class BurnInWindow : Window
     {
         var checkBoxCut = UiUtil.MakeCheckBox(Se.Language.Video.BurnIn.Cut, vm, nameof(vm.IsCutActive));
 
-        var buttonCutFrom = UiUtil.MakeButtonBrowse(vm.BrowseCutFromCommand).WithMarginTop(10).WithRightAlignment();
+        var buttonCutFrom = UiUtil.MakeButtonBrowse(vm.BrowseCutFromCommand);
+        buttonCutFrom.VerticalAlignment = VerticalAlignment.Center;
         var labelFromTime = UiUtil.MakeLabel(Se.Language.Video.BurnIn.FromTime);
         var timeUpDownFrom = new TimeCodeUpDown
         {
@@ -441,7 +452,8 @@ public class BurnInWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
         };
 
-        var buttonCutTo = UiUtil.MakeButtonBrowse(vm.BrowseCutToCommand).WithMarginTop(10).WithRightAlignment();
+        var buttonCutTo = UiUtil.MakeButtonBrowse(vm.BrowseCutToCommand);
+        buttonCutTo.VerticalAlignment = VerticalAlignment.Center;
         var labelToTime = UiUtil.MakeLabel(Se.Language.Video.BurnIn.ToTime);
         var timeUpDownTo = new TimeCodeUpDown
         {
@@ -457,11 +469,10 @@ public class BurnInWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
@@ -473,13 +484,13 @@ public class BurnInWindow : Window
 
         grid.Add(checkBoxCut, 0, 0);
 
-        grid.Add(buttonCutFrom, 1, 1);
-        grid.Add(labelFromTime, 2, 0);
-        grid.Add(timeUpDownFrom, 2, 1);
+        grid.Add(labelFromTime, 1, 0);
+        grid.Add(timeUpDownFrom, 1, 1);
+        grid.Add(buttonCutFrom, 1, 2);
 
-        grid.Add(buttonCutTo, 3, 1);
-        grid.Add(labelToTime, 4, 0);
-        grid.Add(timeUpDownTo, 4, 1);
+        grid.Add(labelToTime, 2, 0);
+        grid.Add(timeUpDownTo, 2, 1);
+        grid.Add(buttonCutTo, 2, 2);
 
         return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
     }
@@ -489,25 +500,16 @@ public class BurnInWindow : Window
 
         var labelPreview = UiUtil.MakeLabel(Se.Language.General.Preview);
 
-        var image = new Image
-        {
-            [!Image.SourceProperty] = new Binding(nameof(vm.ImagePreview)),
-            DataContext = vm,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment = VerticalAlignment.Top,
-            Stretch = Stretch.None, // Prevents stretching of the image
-        };
-
-        var scrollViewer = new ScrollViewer
-        {
-            Content = image,
-            HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
-            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Width = 420,
-            Height = double.NaN,
-        };
+        // Live preview: the loaded video plays in an embedded mpv player while the
+        // current style/effects are generated as an ASSA subtitle and rendered on top
+        // via libass (sub-add/sub-reload) - see BurnInViewModel.LoadVideoPreview.
+        vm.VideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
+        vm.VideoPlayerControl.FullScreenIsVisible = true;
+        vm.VideoPlayerControl.FullScreenCommand = vm.PreviewFullScreenCommand;
+        vm.VideoPlayerControl.Width = 480;
+        vm.VideoPlayerControl.Height = 270;
+        vm.VideoPlayerControl.HorizontalAlignment = HorizontalAlignment.Left;
+        vm.VideoPlayerControl.VerticalAlignment = VerticalAlignment.Top;
 
         var grid = new Grid
         {
@@ -527,7 +529,7 @@ public class BurnInWindow : Window
         };
 
         grid.Add(labelPreview, 0, 0);
-        grid.Add(scrollViewer, 1, 0);
+        grid.Add(vm.VideoPlayerControl, 1, 0);
 
         return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
     }
