@@ -297,12 +297,88 @@ public class BatchConvertWindow : Window
         dropHost.ContextFlyout = flyout;
         UiUtil.AttachMacContextFlyoutHandler(dropHost);
 
-        grid.Add(dropHost, 0, 0);
+        // Layer a "please wait" overlay on top of the file grid for while files are being added
+        var fileGridContainer = new Panel
+        {
+            Children =
+            {
+                dropHost,
+                MakeBusyOverlay(vm),
+            }
+        };
+
+        grid.Add(fileGridContainer, 0, 0);
         grid.Add(panelFileControls, 1, 0);
         grid.Add(panelFilter, 2, 0);
 
         var border = UiUtil.MakeBorderForControlNoPadding(grid);
         return border;
+    }
+
+    private static Border MakeBusyOverlay(BatchConvertViewModel vm)
+    {
+        var isDark = Application.Current?.ActualThemeVariant == Avalonia.Styling.ThemeVariant.Dark;
+        var cardBackground = new SolidColorBrush(isDark ? UiUtil.GetDarkThemeBackgroundColor() : Colors.White);
+
+        var fileNameLabel = new TextBlock
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            MaxWidth = 360,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            Opacity = 0.8,
+            Margin = new Thickness(0, 6, 0, 0),
+        };
+        fileNameLabel.Bind(TextBlock.TextProperty, new Binding(nameof(vm.AddingFilesStatus)) { Source = vm });
+
+        var progressBar = new ProgressBar
+        {
+            Minimum = 0,
+            Width = 220,
+            Height = 6,
+            Margin = new Thickness(0, 12, 0, 0),
+        };
+        progressBar.Bind(ProgressBar.MaximumProperty, new Binding(nameof(vm.AddingFilesProgressMax)) { Source = vm });
+        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.AddingFilesProgressValue)) { Source = vm });
+
+        var cancelButton = UiUtil.MakeButtonCancel(vm.CancelAddFilesCommand);
+        cancelButton.HorizontalAlignment = HorizontalAlignment.Center;
+        cancelButton.Margin = new Thickness(0, 16, 0, 0);
+
+        var card = new Border
+        {
+            Background = cardBackground,
+            BorderBrush = UiUtil.GetBorderBrush(),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(8),
+            Padding = new Thickness(30, 22),
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Child = new StackPanel
+            {
+                Orientation = Orientation.Vertical,
+                Children =
+                {
+                    new TextBlock
+                    {
+                        Text = Se.Language.General.PleaseWait,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                    },
+                    fileNameLabel,
+                    progressBar,
+                    cancelButton,
+                }
+            }
+        };
+
+        var overlay = new Border
+        {
+            Background = new SolidColorBrush(Colors.Black, 0.35),
+            IsVisible = false,
+            Child = card,
+        };
+        overlay.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsAddingFiles)) { Source = vm });
+
+        return overlay;
     }
 
     private static Grid MakeOutputPropertiesGrid(BatchConvertViewModel vm)

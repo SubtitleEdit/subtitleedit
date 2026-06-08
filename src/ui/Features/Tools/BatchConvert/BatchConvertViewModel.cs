@@ -58,6 +58,10 @@ public partial class BatchConvertViewModel : ObservableObject
     [ObservableProperty] private BatchConvertFunction? _selectedBatchFunction;
     [ObservableProperty] private bool _isProgressVisible;
     [ObservableProperty] private bool _isConverting;
+    [ObservableProperty] private bool _isAddingFiles;
+    [ObservableProperty] private string _addingFilesStatus;
+    [ObservableProperty] private double _addingFilesProgressValue;
+    [ObservableProperty] private double _addingFilesProgressMax;
     [ObservableProperty] private bool _areControlsEnabled;
     [ObservableProperty] private string _outputFolderLabel;
     [ObservableProperty] private string _outputFolderLinkLabel;
@@ -238,6 +242,7 @@ public partial class BatchConvertViewModel : ObservableObject
     private readonly IBatchConvertItemSplitter _batchConvertItemSplitter;
     private CancellationToken _cancellationToken;
     private CancellationTokenSource _cancellationTokenSource;
+    private CancellationTokenSource _addFilesCancellationTokenSource = new();
     private List<string> _encodings;
     private List<string> _targetFormatsWithSettings;
 
@@ -286,6 +291,7 @@ public partial class BatchConvertViewModel : ObservableObject
 
         DeleteLineNumbers = new ObservableCollection<int>();
         BatchItemsInfo = string.Empty;
+        AddingFilesStatus = string.Empty;
         ProgressText = string.Empty;
         ActionsSelected = string.Empty;
         DeleteLinesContains = string.Empty;
@@ -415,29 +421,40 @@ public partial class BatchConvertViewModel : ObservableObject
     private void UpdateFilteredFiles()
     {
         BatchItems.Clear();
+        foreach (var item in _allBatchItems)
+        {
+            if (PassesFilter(item))
+            {
+                BatchItems.Add(item);
+            }
+        }
+    }
+
+    private bool PassesFilter(BatchConvertItem item)
+    {
         if (SelectedFilterItem == Se.Language.Tools.BatchConvert.FileNameContainsDotDotDot && !string.IsNullOrEmpty(FilterText))
         {
-            foreach (var item in _allBatchItems)
-            {
-                if (item.FileName.Contains(FilterText, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BatchItems.Add(item);
-                }
-            }
+            return item.FileName.Contains(FilterText, StringComparison.InvariantCultureIgnoreCase);
         }
-        else if (SelectedFilterItem == Se.Language.Tools.BatchConvert.TrackLanguageContainsDotDotDot && !string.IsNullOrEmpty(FilterText))
+
+        if (SelectedFilterItem == Se.Language.Tools.BatchConvert.TrackLanguageContainsDotDotDot && !string.IsNullOrEmpty(FilterText))
         {
-            foreach (var item in _allBatchItems)
-            {
-                if (item.Format.Contains(FilterText, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BatchItems.Add(item);
-                }
-            }
+            return item.Format.Contains(FilterText, StringComparison.InvariantCultureIgnoreCase);
         }
-        else
+
+        return true;
+    }
+
+    // Appends just-parsed items to the visible grid (respecting the active filter) so files show
+    // up incrementally as they load. Must run on the UI thread.
+    private void AddFilteredItems(IEnumerable<BatchConvertItem> items)
+    {
+        foreach (var item in items)
         {
-            BatchItems.AddRange(_allBatchItems);
+            if (PassesFilter(item))
+            {
+                BatchItems.Add(item);
+            }
         }
     }
 
@@ -1350,17 +1367,54 @@ public partial class BatchConvertViewModel : ObservableObject
             return;
         }
 
-        foreach (var fileName in fileNames)
-        {
-            bool flowControl = AddFile(fileName);
-            if (!flowControl)
-            {
-                continue;
-            }
-        }
+        await AddFilesAsync(fileNames);
+    }
 
-        MakeBatchItemsInfo();
-        _isFilesDirty = true;
+    [RelayCommand]
+    private void CancelAddFiles()
+    {
+        _addFilesCancellationTokenSource.Cancel();
+    }
+
+    private async Task AddFilesAsync(IReadOnlyList<string> fileNames)
+    {
+        // Parsing can be slow (probing/loading each file), so do it off the UI thread and post
+        // each file's result back so rows appear incrementally. Only show the "please wait"
+        // overlay (with current file name + cancel) when adding more than one file.
+        _addFilesCancellationTokenSource = new CancellationTokenSource();
+        var token = _addFilesCancellationTokenSource.Token;
+        AddingFilesProgressMax = fileNames.Count;
+        AddingFilesProgressValue = 0;
+        IsAddingFiles = fileNames.Count > 1;
+
+        await Task.Run(() =>
+        {
+            lock (_addFileLock)
+            {
+                var number = 0;
+                foreach (var fileName in fileNames)
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        break;
+                    }
+
+                    number++;
+                    var current = number;
+                    Dispatcher.UIThread.Post(() => AddingFilesStatus = string.Format("{0}/{1}: {2}", current, fileNames.Count, Path.GetFileName(fileName)));
+                    var added = AddFile(fileName);
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        AddFilteredItems(added);
+                        AddingFilesProgressValue = current;
+                        MakeBatchItemsInfo();
+                    });
+                }
+            }
+        });
+
+        IsAddingFiles = false;
+        AddingFilesStatus = string.Empty;
     }
 
     [RelayCommand]
@@ -1386,8 +1440,12 @@ public partial class BatchConvertViewModel : ObservableObject
         }
     }
 
-    private bool AddFile(string fileName)
+    // Parses a file and appends the resulting item(s) to _allBatchItems only (no UI-bound
+    // collection touched), so it is safe to call from a background thread. Returns the items
+    // added for this file; callers add them to the visible BatchItems on the UI thread.
+    private List<BatchConvertItem> AddFile(string fileName)
     {
+        var added = new List<BatchConvertItem>();
         var ext = Path.GetExtension(fileName).ToLowerInvariant();
         var fileInfo = new FileInfo(fileName);
 
@@ -1437,8 +1495,8 @@ public partial class BatchConvertViewModel : ObservableObject
                             var matroskaBatchItem = new BatchConvertItem(fileName, fileInfo.Length, format, subtitle);
                             matroskaBatchItem.LanguageCode = track.Language;
                             matroskaBatchItem.TrackNumber = track.TrackNumber.ToString(CultureInfo.InvariantCulture);
-                            BatchItems.Add(matroskaBatchItem);
                             _allBatchItems.Add(matroskaBatchItem);
+                            added.Add(matroskaBatchItem);
                         }
                     }
 
@@ -1447,7 +1505,7 @@ public partial class BatchConvertViewModel : ObservableObject
                         format = "No subtitle tracks";
                     }
 
-                    return false;
+                    return added;
                 }
             }
         }
@@ -1462,8 +1520,8 @@ public partial class BatchConvertViewModel : ObservableObject
                 mp4Files.Add(name);
                 var mp4BatchItem = new BatchConvertItem(fileName, fileInfo.Length, name, subtitle);
                 mp4BatchItem.LanguageCode = mp4Parser.VttcLanguage;
-                BatchItems.Add(mp4BatchItem);
                 _allBatchItems.Add(mp4BatchItem);
+                added.Add(mp4BatchItem);
             }
 
             foreach (var track in mp4SubtitleTracks)
@@ -1474,8 +1532,8 @@ public partial class BatchConvertViewModel : ObservableObject
                     mp4Files.Add(name);
                     var mp4BatchItem = new BatchConvertItem(fileName, fileInfo.Length, name, subtitle);
                     mp4BatchItem.LanguageCode = track.Mdia.Mdhd.Iso639ThreeLetterCode ?? track.Mdia.Mdhd.LanguageString;
-                    BatchItems.Add(mp4BatchItem);
                     _allBatchItems.Add(mp4BatchItem);
+                    added.Add(mp4BatchItem);
                 }
             }
 
@@ -1484,16 +1542,16 @@ public partial class BatchConvertViewModel : ObservableObject
                 format = "No subtitle tracks";
             }
 
-            return false;
+            return added;
         }
         else if ((ext == ".ts" || ext == ".m2ts" || ext == ".mts" || ext == ".mpg" || ext == ".mpeg") &&
                  (FileUtil.IsTransportStream(fileName) || FileUtil.IsM2TransportStream(fileName)))
         {
             format = "Transport Stream";
             var tsBatchItem = new BatchConvertItem(fileName, fileInfo.Length, format, subtitle);
-            BatchItems.Add(tsBatchItem);
             _allBatchItems.Add(tsBatchItem);
-            return false;
+            added.Add(tsBatchItem);
+            return added;
         }
 
         if (format == Se.Language.General.Unknown && fileInfo.Length < 20_000_000)
@@ -1530,9 +1588,9 @@ public partial class BatchConvertViewModel : ObservableObject
         }
 
         var batchItem = new BatchConvertItem(fileName, fileInfo.Length, format, subtitle);
-        BatchItems.Add(batchItem);
         _allBatchItems.Add(batchItem);
-        return true;
+        added.Add(batchItem);
+        return added;
     }
 
     private static string MakeMkvTrackInfoString(MatroskaTrackInfo track)
@@ -2070,29 +2128,22 @@ public partial class BatchConvertViewModel : ObservableObject
         }
 
         var files = e.DataTransfer.TryGetFiles();
-        if (files != null)
+        if (files == null)
         {
-            Task.Run(() =>
-            {
-                foreach (var file in files)
-                {
-                    var path = file.Path?.LocalPath;
-                    if (path != null && File.Exists(path))
-                    {
-                        Dispatcher.UIThread.Post(() =>
-                        {
-                            lock (_addFileLock)
-                            {
-                                AddFile(path);
-                                MakeBatchItemsInfo();
-                            }
-                        });
-                    }
-                }
-
-                _isFilesDirty = true;
-            });
+            return;
         }
+
+        var paths = files
+            .Select(f => f.Path?.LocalPath)
+            .Where(p => p != null && File.Exists(p))
+            .Select(p => p!)
+            .ToList();
+        if (paths.Count == 0)
+        {
+            return;
+        }
+
+        _ = AddFilesAsync(paths);
     }
 
     partial void OnSelectedCrispAsrModelChanged(SpeechToTextModelDisplay? value)
