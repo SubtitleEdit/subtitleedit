@@ -17037,7 +17037,10 @@ public partial class MainViewModel :
                 // "allow single-letter shortcuts in text box" is on (#11357).
                 if ((keyEventArgs.Key == Key.Left || keyEventArgs.Key == Key.Right)
                     && (keyEventArgs.KeyModifiers == KeyModifiers.None
-                        || keyEventArgs.KeyModifiers == KeyModifiers.Control))
+                        || keyEventArgs.KeyModifiers == KeyModifiers.Control
+                        || (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                            && (keyEventArgs.KeyModifiers == KeyModifiers.Alt
+                                || keyEventArgs.KeyModifiers == (KeyModifiers.Shift | KeyModifiers.Alt)))))
                 {
                     return;
                 }
