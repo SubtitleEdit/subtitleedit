@@ -43,7 +43,8 @@ public partial class BinaryEditViewModel : ObservableObject
     [ObservableProperty] private int _screenWidth;
     [ObservableProperty] private int _screenHeight;
     [ObservableProperty] private string _statusText;
-    [ObservableProperty] private string _currentPositionAndSize;
+    [ObservableProperty] private string _currentPosition;
+    [ObservableProperty] private string _currentSize;
     [ObservableProperty] private bool _isDeleteVisible;
     [ObservableProperty] private bool _isInsertBeforeVisible;
     [ObservableProperty] private bool _isInsertAfterVisible;
@@ -82,7 +83,8 @@ public partial class BinaryEditViewModel : ObservableObject
         _selectCurrentSubtitleWhilePlaying = Se.Settings.Tools.BinEditSelectCurrentSubtitleWhilePlaying;
         Subtitles = new ObservableCollection<BinarySubtitleItem>();
         StatusText = string.Empty;
-        CurrentPositionAndSize = string.Empty;
+        CurrentPosition = string.Empty;
+        CurrentSize = string.Empty;
     }
 
     public void Initialize(string fileName, IOcrSubtitle? subtitle)
@@ -168,22 +170,26 @@ public partial class BinaryEditViewModel : ObservableObject
         if (selectedCount == 0)
         {
             StatusText = $"0/{Subtitles.Count}";
-            CurrentPositionAndSize = string.Empty;
+            CurrentPosition = string.Empty;
+            CurrentSize = string.Empty;
         }
         else if (selectedCount == 1)
         {
             var index = SubtitleGrid?.SelectedIndex ?? -1;
             var item = SubtitleGrid?.SelectedItem as BinarySubtitleItem;
             StatusText = index >= 0 ? $"{index + 1}/{Subtitles.Count}" : $"1/{Subtitles.Count}";
-            CurrentPositionAndSize = item != null
-                ? string.Format(Se.Language.General.PositionX, $"{item.X},{item.Y}") + Environment.NewLine +
-                  string.Format(Se.Language.General.SizeX, $"{item.Bitmap?.Size.Width}x{item.Bitmap?.Size.Height}")
+            CurrentPosition = item != null
+                ? string.Format(Se.Language.General.PositionX, $"{item.X},{item.Y}")
+                : string.Empty;
+            CurrentSize = item != null
+                ? string.Format(Se.Language.General.SizeX, $"{item.Bitmap?.Size.Width}x{item.Bitmap?.Size.Height}")
                 : string.Empty;
         }
         else
         {
             StatusText = string.Format(Se.Language.Main.XLinesSelectedOfY, selectedCount, Subtitles.Count);
-            CurrentPositionAndSize = string.Empty;
+            CurrentPosition = string.Empty;
+            CurrentSize = string.Empty;
         }
     }
 
