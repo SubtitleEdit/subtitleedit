@@ -267,6 +267,10 @@ public static class TextDiffHighlighter
                     middleCommon1.Add((commonStart + pos1, length));
                     middleCommon2.Add((commonStart + pos2, length));
                 }
+
+                // middleCommon1 is sorted by pos1 (text1 positions); sort middleCommon2 by its own positions
+                // so BuildDiffRuns can process text2 in forward order
+                middleCommon2.Sort((a, b) => a.start.CompareTo(b.start));
             }
         }
 
