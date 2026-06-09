@@ -289,6 +289,45 @@ public class Se
         UpdateLibSeSettings();
     }
 
+    /// <summary>
+    /// Loads the UI translation named in <see cref="Settings"/>.General.Language into the global
+    /// <see cref="Language"/>. Must run before the main window is built: on macOS the native menu
+    /// bar is constructed at startup and reads <see cref="Language"/> directly, so the translation
+    /// has to be in place by then or the menu bar renders in English (issue #11505). English — or a
+    /// missing/unreadable translation file — leaves the built-in English defaults untouched.
+    /// </summary>
+    public static void LoadLanguage()
+    {
+        Settings.General.Language ??= "English";
+        if (Settings.General.Language == "English")
+        {
+            return;
+        }
+
+        try
+        {
+            var jsonFileName = Path.Combine(TranslationFolder, Settings.General.Language + ".json");
+            if (!System.IO.File.Exists(jsonFileName))
+            {
+                return;
+            }
+
+            var json = System.IO.File.ReadAllText(jsonFileName, Encoding.UTF8);
+            var language = JsonSerializer.Deserialize<SeLanguage>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+            });
+            if (language != null)
+            {
+                Language = language;
+            }
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Failed to load UI language");
+        }
+    }
+
     private static void SetDefaultValues()
     {
         if (Settings.Tools == null)

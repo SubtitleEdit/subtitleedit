@@ -8,9 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.Config.Language;
 using System;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Main;
@@ -50,24 +48,9 @@ public class MainView : ViewBase
             };
         }
 
-        // load language
-        Se.Settings.General.Language = Se.Settings.General.Language ?? "English"; // default to English if not set
-        if (Se.Settings.General.Language != "English")
-        {
-            var jsonFileName = System.IO.Path.Combine(Se.TranslationFolder, Se.Settings.General.Language + ".json");
-            if (System.IO.File.Exists(jsonFileName))
-            {
-                var json = System.IO.File.ReadAllText(jsonFileName, Encoding.UTF8);
-                var language = System.Text.Json.JsonSerializer.Deserialize<SeLanguage>(json, new System.Text.Json.JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true,
-                });
-                if (language != null)
-                {
-                    Se.Language = language;
-                }
-            }
-        }
+        // Load language (normally already loaded in Program.Main before the window is built; this
+        // is a no-op safety net for windows created via other entry points).
+        Se.LoadLanguage();
 
         var root = new DockPanel();
 
