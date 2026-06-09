@@ -432,6 +432,10 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             // by importing a WAV into SE, which is the act being attested here. VoiceDesign (no
             // FilePath) does not clone, so it doesn't need this.
             payload["consent_attestation"] = "I have the speaker's consent, or it is my own voice.";
+            // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
+            // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA
+            // provenance metadata stay embedded regardless (defaults to true server-side).
+            payload["spoken_disclaimer"] = false;
         }
         if (!string.IsNullOrEmpty(instruction))
         {
