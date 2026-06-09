@@ -24,6 +24,7 @@ public class LanguageSettingsShortcuts
     public string GeneralMergeSelectedLinesAndAutoBreak { get; set; }
     public string GeneralMergeSelectedLinesAndUnbreak { get; set; }
     public string GeneralMergeSelectedLinesAndUnbreakCjk { get; set; }
+    public string GeneralUnbreakNoSpaceCjk { get; set; }
     public string GeneralMergeSelectedLinesOnlyFirstText { get; set; }
     public string GeneralMergeSelectedLinesBilingual { get; set; }
     public string GeneralMergeWithPreviousBilingual { get; set; }
@@ -317,6 +318,7 @@ public class LanguageSettingsShortcuts
         GeneralMergeSelectedLinesAndAutoBreak = "Merge selected lines and auto-break";
         GeneralMergeSelectedLinesAndUnbreak = "Merge selected lines and unbreak";
         GeneralMergeSelectedLinesAndUnbreakCjk = "Merge selected lines and unbreak CJK";
+        GeneralUnbreakNoSpaceCjk = "Unbreak without space (CJK)";
         GeneralMergeSelectedLinesOnlyFirstText = "Merge selected lines only first text";
         GeneralMergeSelectedLinesBilingual = "Merge selected lines bilingual";
         GeneralMergeWithPreviousBilingual = "Merge with previous bilingual";
