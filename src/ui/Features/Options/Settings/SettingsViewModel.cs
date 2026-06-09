@@ -366,7 +366,7 @@ public partial class SettingsViewModel : ObservableObject
         SelectedIconTheme = IconThemes[0];
 
         FontNames = new ObservableCollection<string>(FontHelper.GetSystemFonts());
-        FontNames.Insert(0, "Default");
+        FontNames.Insert(0, OperatingSystem.IsMacOS() ? "System Font" : "Default");
         SelectedFontName = FontNames.First();
 
         ScrollView = new ScrollViewer();
@@ -671,7 +671,17 @@ public partial class SettingsViewModel : ObservableObject
         SelectedIconTheme = IconThemes.FirstOrDefault(p => p == appearance.IconTheme) ?? IconThemes.First();
         MatchIconColorToDarkTheme = appearance.MatchIconColorToDarkTheme;
         LayoutScale = (int)Math.Round(appearance.LayoutScale * 100.0, MidpointRounding.AwayFromZero);
-        SelectedFontName = FontNames.FirstOrDefault(p => p == appearance.FontName) ?? FontNames.First();
+        if (OperatingSystem.IsMacOS())
+        {
+            SelectedFontName = appearance.FontName is ".AppleSystemUIFont" or "Default"
+                               || FontNames.All(p => p != appearance.FontName)
+                ? "System Font"
+                : appearance.FontName;
+        }
+        else
+        {
+            SelectedFontName = FontNames.FirstOrDefault(p => p == appearance.FontName) ?? FontNames.First();
+        }
         ShowToolbarNew = appearance.ToolbarShowFileNew;
         ShowToolbarOpen = appearance.ToolbarShowFileOpen;
         ShowToolbarVideoFileOpen = appearance.ToolbarShowVideoFileOpen;
@@ -1333,9 +1343,18 @@ public partial class SettingsViewModel : ObservableObject
         appearance.IconTheme = SelectedIconTheme;
         appearance.MatchIconColorToDarkTheme = MatchIconColorToDarkTheme;
         appearance.LayoutScale = LayoutScale / 100.0;
-        appearance.FontName = SelectedFontName == FontNames.First()
-            ? new Label().FontFamily.Name
-            : SelectedFontName;
+        if (OperatingSystem.IsMacOS())
+        {
+            appearance.FontName = SelectedFontName == "System Font"
+                ? ".AppleSystemUIFont"
+                : SelectedFontName;
+        }
+        else
+        {
+            appearance.FontName = SelectedFontName == "Default"
+                ? new Label().FontFamily.Name
+                : SelectedFontName;
+        }
         appearance.ToolbarShowFileNew = ShowToolbarNew;
         appearance.ToolbarShowFileOpen = ShowToolbarOpen;
         appearance.ToolbarShowVideoFileOpen = ShowToolbarVideoFileOpen;
