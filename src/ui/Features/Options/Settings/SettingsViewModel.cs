@@ -308,6 +308,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _existsToolsLogFile;
     [ObservableProperty] private bool _existsSettingsFile;
     [ObservableProperty] private bool _writeToolsLog;
+    [ObservableProperty] private string _musicSymbol = string.Empty;
+    [ObservableProperty] private string _musicSymbolReplace = string.Empty;
 
     private CustomContinuationStyle _editCustomContinuationStyle = new();
 
@@ -668,6 +670,8 @@ public partial class SettingsViewModel : ObservableObject
         TextToSpeechPromptMergeContinuationLines = Se.Settings.Tools.TextToSpeechPromptMergeContinuationLines;
         OpenAiCompatibleSttAutoTranscribeOnAudioSelection = Se.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection;
         FixCommonErrorsSkipStep1 = Se.Settings.Tools.FixCommonErrors.SkipStep1;
+        MusicSymbol = Se.Settings.Tools.MusicSymbol;
+        MusicSymbolReplace = Se.Settings.Tools.MusicSymbolReplace;
 
         SelectedTheme = MapThemeToTranslation(appearance.Theme);
         SelectedIconTheme = IconThemes.FirstOrDefault(p => p == appearance.IconTheme) ?? IconThemes.First();
@@ -1342,6 +1346,8 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Tools.FixCommonErrors.SkipStep1 = FixCommonErrorsSkipStep1;
         Se.Settings.Tools.WriteToolsLog = WriteToolsLog;
         Se.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection = OpenAiCompatibleSttAutoTranscribeOnAudioSelection;
+        Se.Settings.Tools.MusicSymbol = MusicSymbol;
+        Se.Settings.Tools.MusicSymbolReplace = MusicSymbolReplace;
 
         appearance.Theme = MapThemeFromTranslation(SelectedTheme);
         appearance.IconTheme = SelectedIconTheme;

@@ -281,6 +281,8 @@ public class LanguageSettings
     public string SpeechToTextSelectedLinesPromptFirstTimeOnly { get; set; }
     public string MultipleReplaceShowDotDotDotButtons { get; set; }
     public string GridFocusTextboxAfterInsertNew { get; set; }
+    public string MusicSymbol { get; set; }
+    public string MusicSymbolsToReplace { get; set; }
     public string TextToSpeechPromptMergeContinuationLines { get; set; }
     public string UseFocusedButtonBackgroundColor { get; set; }
     public string FocusedButtonBackgroundColor { get; set; }
@@ -585,6 +587,8 @@ public class LanguageSettings
         SpeechToTextSelectedLinesPromptFirstTimeOnly = "Speech to text: selected lines, prompt for language/engine first time only";
         MultipleReplaceShowDotDotDotButtons = "Multiple replace: show context menu buttons";
         GridFocusTextboxAfterInsertNew = "Grid: focus text box after insert new subtitle";
+        MusicSymbol = "Music symbol";
+        MusicSymbolsToReplace = "Music symbols to replace (separated by comma)";
         TextToSpeechPromptMergeContinuationLines = "Text to speech: prompt to merge continuation lines";
         UseFocusedButtonBackgroundColor = "Use focused button background color";
         FocusedButtonBackgroundColor = "Focused button background color";

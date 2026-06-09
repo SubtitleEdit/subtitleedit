@@ -62,6 +62,8 @@ public class SeTools
     public bool SplitRebalanceLongLinesSplit { get; set; }
     public bool SplitRebalanceLongLinesRebalance { get; set; }
     public string UnicodeSymbolsToInsert { get; set; }
+    public string MusicSymbol { get; set; }
+    public string MusicSymbolReplace { get; set; }
 
     public int BinEditLeftMargin { get; set; }
     public int BinEditTopMargin { get; set; }
@@ -160,6 +162,10 @@ public class SeTools
         SplitRebalanceLongLinesRebalance = true;
         SplitOddLinesAction = nameof(SplitOddLinesActionType.Smart);
         UnicodeSymbolsToInsert = "♪;♫;—;…;°;∙;©;®;☺;☹;♥;☮;☯;Σ;∞;≡;⇒;π";
+        MusicSymbol = "♪";
+        MusicSymbolReplace = "â™ª,â™," + // ♪ + ♫ in UTF-8 opened as ANSI
+                             "<s M/>,<s m/>," + // music symbols by subtitle creator
+                             "#,*,¶"; // common music symbols
 
         BinEditLeftMargin = 10;
         BinEditTopMargin = 10;
