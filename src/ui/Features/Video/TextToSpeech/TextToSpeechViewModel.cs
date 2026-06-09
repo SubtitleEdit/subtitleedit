@@ -81,6 +81,7 @@ public partial class TextToSpeechViewModel : ObservableObject
     [ObservableProperty] private bool _isGenerating;
     [ObservableProperty] private bool _isNotGenerating;
     [ObservableProperty] private bool _isEngineSettingsVisible;
+    [ObservableProperty] private bool _isModelDownloadVisible;
     [ObservableProperty] private string _progressText;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private double _progressOpacity;
@@ -752,6 +753,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         IsGenerating = false;
         IsNotGenerating = true;
         IsEngineSettingsVisible = false;
+        IsModelDownloadVisible = false;
         ProgressText = string.Empty;
         ProgressValue = 0.0;
         _waveFolder = waveFolder;
@@ -1108,6 +1110,163 @@ public partial class TextToSpeechViewModel : ObservableObject
         // An engine may have been (re)downloaded inside its settings dialog - re-check the
         // install-status dots in the engine and model combos.
         RefreshDownloadDots?.Invoke();
+    }
+
+    // Downloads the selected engine's currently selected model up front, instead of waiting for
+    // the user to click "Generate speech from text". Reuses IsEngineInstalled - the same path
+    // Generate/Test use - so the runtime and the model are fetched (with the usual size prompts)
+    // and no download logic is duplicated. Only shown for local per-model engines via
+    // IsModelDownloadVisible.
+    [RelayCommand]
+    private async Task DownloadModel()
+    {
+        var engine = SelectedEngine;
+        if (engine == null || Window == null)
+        {
+            return;
+        }
+
+        // Already present? The combo's green dot already says so, and IsEngineInstalled would
+        // just return true with no visible feedback - so offer a re-download instead (e.g. to
+        // repair a corrupted or partial download).
+        if (IsSelectedModelInstalled())
+        {
+            var sizeText = GetModelDownloadSizeText(engine, SelectedModel);
+            var sizeSuffix = string.IsNullOrEmpty(sizeText) ? string.Empty : $" ({sizeText})";
+            var answer = await MessageBox.Show(
+                Window,
+                string.Format(Se.Language.General.ReDownloadX, SelectedModel),
+                $"{Environment.NewLine}\"{SelectedModel}\" is already downloaded.{sizeSuffix}{Environment.NewLine}{Environment.NewLine}Re-download it?",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+
+            if (answer == MessageBoxResult.Yes)
+            {
+                await RedownloadSelectedModel(engine);
+                RefreshDownloadDots?.Invoke();
+            }
+
+            return;
+        }
+
+        await IsEngineInstalled(engine);
+        RefreshDownloadDots?.Invoke();
+    }
+
+    // Re-fetches the selected model's files (overwriting what's on disk) via the per-engine model
+    // download dialog. The StartDownload*Models calls download unconditionally - unlike
+    // IsEngineInstalled, which skips already-installed models - so this is the path for repairing
+    // or refreshing a model the user already has.
+    private async Task RedownloadSelectedModel(ITtsEngine engine)
+    {
+        switch (engine)
+        {
+            case Qwen3TtsCpp:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadQwen3TtsModels(Qwen3TtsCpp.ResolveModelKey(SelectedModel)));
+                break;
+            case Qwen3TtsCrispAsr:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadQwen3TtsCrispAsrModels(Qwen3TtsCrispAsr.ResolveModelKey(SelectedModel)));
+                break;
+            case VibeVoiceCrispAsr:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadVibeVoiceCrispAsrModels(VibeVoiceCrispAsr.ResolveModelKey(SelectedModel)));
+                break;
+            case IndexTtsCrispAsr:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadIndexTtsCrispAsrModels(IndexTtsCrispAsr.ResolveModelKey(SelectedModel)));
+                break;
+            case CosyVoice3CrispAsr:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadCosyVoice3CrispAsrModels(CosyVoice3CrispAsr.ResolveModelKey(SelectedModel)));
+                break;
+            case F5TtsCrispAsr:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadF5TtsCrispAsrModels(F5TtsCrispAsr.ResolveModelKey(SelectedModel)));
+                break;
+            case VoxCPM2CrispAsr:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadVoxCPM2CrispAsrModels(VoxCPM2CrispAsr.ResolveModelKey(SelectedModel)));
+                break;
+            case ChatterboxTtsCpp:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadChatterboxModels(ChatterboxTtsCpp.ResolveModelKey(SelectedModel)));
+                break;
+        }
+    }
+
+    private bool IsSelectedModelInstalled()
+    {
+        return GetModelDotStatus(SelectedEngine, SelectedModel) == DownloadDotStatus.UpToDate;
+    }
+
+    // Approximate on-disk download size for a per-model engine's model key, e.g. "~1.6 GB".
+    // Single source of truth for the size shown in the model combo and the download-confirmation
+    // prompts in IsEngineInstalled. Returns string.Empty when the engine has no per-model
+    // download, or when the model key already embeds its size in the label (VibeVoice / IndexTTS
+    // keys read like "Q8_0 (~2.8 GB)").
+    public string GetModelDownloadSizeText(ITtsEngine? engine, string? modelKey)
+    {
+        if (engine == null || string.IsNullOrEmpty(modelKey))
+        {
+            return string.Empty;
+        }
+
+        return engine switch
+        {
+            Qwen3TtsCpp => Qwen3TtsCpp.ResolveModelKey(modelKey) switch
+            {
+                Qwen3TtsCpp.ModelKey17BBase => "~2.7 GB",
+                Qwen3TtsCpp.ModelKey17BVoiceDesign => "~2.8 GB",
+                _ => "~1.6 GB",
+            },
+            // Both keys ship the same ~358 MB 12 Hz codec; the talker is ~2 GB regardless.
+            Qwen3TtsCrispAsr => "~2.4 GB",
+            ChatterboxTtsCpp => ChatterboxTtsCpp.ResolveModelKey(modelKey) == ChatterboxTtsCpp.ModelKeyTurbo
+                ? "~1 GB"
+                : "~990 MB",
+            _ => string.Empty,
+        };
+    }
+
+    // Display text for a model combo entry: the model key plus its approximate download size when
+    // known (e.g. "1.7B  (~1.6 GB)"), so the cost is visible before downloading.
+    public string GetModelDisplayText(string modelKey)
+    {
+        var size = GetModelDownloadSizeText(SelectedEngine, modelKey);
+        return string.IsNullOrEmpty(size) ? modelKey : $"{modelKey}  ({size})";
+    }
+
+    // Install-status dot for a model in the model combo. Local engines (Qwen3, Chatterbox, ...)
+    // get a green/grey dot per model; cloud engines (ElevenLabs, Mistral) have nothing to install.
+    public DownloadDotStatus GetModelDotStatus(ITtsEngine? engine, string? modelKey)
+    {
+        if (string.IsNullOrEmpty(modelKey))
+        {
+            return DownloadDotStatus.None;
+        }
+
+        return engine switch
+        {
+            Qwen3TtsCpp => Qwen3TtsCpp.IsModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            Qwen3TtsCrispAsr => Qwen3TtsCrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            VibeVoiceCrispAsr => VibeVoiceCrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            IndexTtsCrispAsr => IndexTtsCrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            CosyVoice3CrispAsr => CosyVoice3CrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            F5TtsCrispAsr => F5TtsCrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            VoxCPM2CrispAsr => VoxCPM2CrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            ChatterboxTtsCpp => ChatterboxTtsCpp.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            _ => DownloadDotStatus.None,
+        };
     }
 
     [RelayCommand]
@@ -1601,12 +1760,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             var qwen3ModelKey = Qwen3TtsCpp.ResolveModelKey(SelectedModel);
             if (!Qwen3TtsCpp.IsModelsInstalled(qwen3ModelKey))
             {
-                var sizeText = qwen3ModelKey switch
-                {
-                    Qwen3TtsCpp.ModelKey17BBase => "~2.7 GB",
-                    Qwen3TtsCpp.ModelKey17BVoiceDesign => "~2.8 GB",
-                    _ => "~1.6 GB",
-                };
+                var sizeText = GetModelDownloadSizeText(engine, SelectedModel);
                 var answer = await MessageBox.Show(
                     Window,
                     "Download Qwen3 TTS models?",
@@ -1637,8 +1791,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             var crispAsrModelKey = Qwen3TtsCrispAsr.ResolveModelKey(SelectedModel);
             if (!Qwen3TtsCrispAsr.AreModelsInstalled(crispAsrModelKey))
             {
-                // Both keys ship the same ~358 MB 12 Hz codec; the talker is ~2 GB regardless.
-                const string sizeText = "~2.4 GB";
+                var sizeText = GetModelDownloadSizeText(engine, SelectedModel);
                 var answer = await MessageBox.Show(
                     Window,
                     "Download Qwen3 TTS (CrispASR) models?",
@@ -1922,7 +2075,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             var chatterboxModelKey = ChatterboxTtsCpp.ResolveModelKey(SelectedModel);
             if (!ChatterboxTtsCpp.AreModelsInstalled(chatterboxModelKey))
             {
-                var sizeText = chatterboxModelKey == ChatterboxTtsCpp.ModelKeyTurbo ? "~1 GB" : "~990 MB";
+                var sizeText = GetModelDownloadSizeText(engine, SelectedModel);
                 var answer = await MessageBox.Show(
                     Window,
                     "Download Chatterbox TTS models?",
@@ -2851,6 +3004,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         Dispatcher.UIThread.PostSafe(async () =>
         {
             IsEngineSettingsVisible = false;
+            IsModelDownloadVisible = false;
             var voices = await engine.GetVoices(SelectedLanguage?.Code ?? string.Empty);
             Voices.Clear();
             foreach (var vo in voices)
@@ -2955,6 +3109,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     SelectedModel = Models.FirstOrDefault();
                 }
                 IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
             }
             else if (SelectedEngine is Qwen3TtsCrispAsr)
             {
@@ -2964,6 +3119,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     SelectedModel = Models.FirstOrDefault();
                 }
                 IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
             }
             else if (SelectedEngine is VibeVoiceCrispAsr)
             {
@@ -2973,6 +3129,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     SelectedModel = Models.FirstOrDefault();
                 }
                 IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
             }
             else if (SelectedEngine is IndexTtsCrispAsr)
             {
@@ -2982,6 +3139,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     SelectedModel = Models.FirstOrDefault();
                 }
                 IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
             }
             else if (SelectedEngine is CosyVoice3CrispAsr)
             {
@@ -2991,6 +3149,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     SelectedModel = Models.FirstOrDefault();
                 }
                 IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
             }
             else if (SelectedEngine is VoxCPM2CrispAsr)
             {
@@ -3000,6 +3159,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     SelectedModel = Models.FirstOrDefault();
                 }
                 IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
             }
             else if (SelectedEngine is F5TtsCrispAsr)
             {
@@ -3009,6 +3169,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     SelectedModel = Models.FirstOrDefault();
                 }
                 IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
             }
             else if (SelectedEngine is ChatterboxTtsCpp)
             {
@@ -3018,6 +3179,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     SelectedModel = Models.FirstOrDefault();
                 }
                 IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
             }
             else if (SelectedEngine is OmniVoiceTtsCpp)
             {

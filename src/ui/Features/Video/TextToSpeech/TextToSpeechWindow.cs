@@ -151,46 +151,14 @@ public class TextToSpeechWindow : Window
             GetTtsEngineDotStatus);
     }
 
-    // Install-status dot for a model in the model combo. Local engines (Qwen3, Chatterbox) get
-    // a green/grey dot per model; cloud engines (ElevenLabs, Mistral) have nothing to install.
-    private static DownloadDotStatus GetTtsModelDotStatus(ITtsEngine? engine, string modelKey)
-    {
-        return engine switch
-        {
-            Qwen3TtsCpp => Qwen3TtsCpp.IsModelsInstalled(modelKey)
-                ? DownloadDotStatus.UpToDate
-                : DownloadDotStatus.NotInstalled,
-            Qwen3TtsCrispAsr => Qwen3TtsCrispAsr.AreModelsInstalled(modelKey)
-                ? DownloadDotStatus.UpToDate
-                : DownloadDotStatus.NotInstalled,
-            VibeVoiceCrispAsr => VibeVoiceCrispAsr.AreModelsInstalled(modelKey)
-                ? DownloadDotStatus.UpToDate
-                : DownloadDotStatus.NotInstalled,
-            IndexTtsCrispAsr => IndexTtsCrispAsr.AreModelsInstalled(modelKey)
-                ? DownloadDotStatus.UpToDate
-                : DownloadDotStatus.NotInstalled,
-            CosyVoice3CrispAsr => CosyVoice3CrispAsr.AreModelsInstalled(modelKey)
-                ? DownloadDotStatus.UpToDate
-                : DownloadDotStatus.NotInstalled,
-            F5TtsCrispAsr => F5TtsCrispAsr.AreModelsInstalled(modelKey)
-                ? DownloadDotStatus.UpToDate
-                : DownloadDotStatus.NotInstalled,
-            VoxCPM2CrispAsr => VoxCPM2CrispAsr.AreModelsInstalled(modelKey)
-                ? DownloadDotStatus.UpToDate
-                : DownloadDotStatus.NotInstalled,
-            ChatterboxTtsCpp => ChatterboxTtsCpp.AreModelsInstalled(modelKey)
-                ? DownloadDotStatus.UpToDate
-                : DownloadDotStatus.NotInstalled,
-            _ => DownloadDotStatus.None,
-        };
-    }
-
     private static FuncDataTemplate<string> BuildModelItemTemplate(TextToSpeechViewModel vm)
     {
+        // Install-status dot + per-model download size both come from the view model, which owns
+        // the single source of truth for model install state and sizes.
         return StatusDots.ComboItemTemplate<string>(
-            modelKey => modelKey,
+            modelKey => vm.GetModelDisplayText(modelKey),
             _ => null,
-            modelKey => GetTtsModelDotStatus(vm.SelectedEngine, modelKey));
+            modelKey => vm.GetModelDotStatus(vm.SelectedEngine, modelKey));
     }
 
     // Rebuilds the engine and model combo item templates so the install-status dots are
@@ -266,6 +234,12 @@ public class TextToSpeechWindow : Window
         var comboBoxModels = UiUtil.MakeComboBox(vm.Models, vm, nameof(vm.SelectedModel)).WithWidth(controlMinWidth);
         comboBoxModels.ItemTemplate = BuildModelItemTemplate(vm);
         _comboBoxModels = comboBoxModels;
+
+        var buttonDownloadModel = UiUtil.MakeButton(vm.DownloadModelCommand, IconNames.Download)
+            .WithMarginLeft(5)
+            .WithBindIsVisible(nameof(vm.IsModelDownloadVisible));
+        ToolTip.SetTip(buttonDownloadModel, Se.Language.General.Download);
+
         var panelModel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -278,6 +252,7 @@ public class TextToSpeechWindow : Window
                     MinWidth = labelMinWidth,
                 },
                 comboBoxModels,
+                buttonDownloadModel,
             },
             [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.HasModel)) { Mode = BindingMode.OneWay },
         };
