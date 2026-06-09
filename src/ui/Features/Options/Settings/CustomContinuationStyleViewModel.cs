@@ -45,7 +45,7 @@ public partial class CustomContinuationStyleViewModel : ObservableObject
         {
             string.Empty,
             "...",
-            "…",
+            "ï¿½",
             "..",
             "-",
         });
@@ -78,39 +78,45 @@ public partial class CustomContinuationStyleViewModel : ObservableObject
 
     }
 
-    public void Initialize(
-        int continuationPause,
-        string customContinuationStyleSuffix,
-        bool customContinuationStyleSuffixApplyIfComma,
-        bool customContinuationStyleSuffixAddSpace,
-        bool customContinuationStyleSuffixReplaceComma,
-        string customContinuationStylePrefix,
-        bool customContinuationStylePrefixAddSpace,
-        bool customContinuationStyleUseDifferentStyleGap,
-        string customContinuationStyleGapSuffix,
-        bool customContinuationStyleGapSuffixApplyIfComma,
-        bool customContinuationStyleGapSuffixAddSpace,
-        bool customContinuationStyleGapSuffixReplaceComma,
-        string customContinuationStyleGapPrefix,
-        bool customContinuationStyleGapPrefixAddSpace
-        )
+    public void Initialize(CustomContinuationStyle style)
     {
-        SelectedPrefix = customContinuationStylePrefix;
-        SelectedPrefixAddSpace = customContinuationStylePrefixAddSpace;
-        SelectedSuffix = customContinuationStyleSuffix;
-        SelectedSuffixesProcessIfEndWithComma = customContinuationStyleSuffixApplyIfComma;
-        SelectedSuffixesAddSpace = customContinuationStyleSuffixAddSpace;
-        SelectedSuffixesRemoveComma = customContinuationStyleSuffixReplaceComma;
-        UseSpecialStyleAfterLongGaps = customContinuationStyleUseDifferentStyleGap;
-        LongGapMs = continuationPause;
-        SelectedLongGapPrefix = customContinuationStyleGapPrefix;
-        SelectedLongGapPrefixAddSpace = customContinuationStyleGapPrefixAddSpace;
-        SelectedLongGapSuffix = customContinuationStyleGapSuffix;
-        SelectedLongGapSuffixesProcessIfEndWithComma = customContinuationStyleGapSuffixApplyIfComma;
-        SelectedLongGapSuffixesAddSpace = customContinuationStyleGapSuffixAddSpace;
-        SelectedLongGapSuffixesRemoveComma = customContinuationStyleGapSuffixReplaceComma;
+        SelectedPrefix = style.Prefix;
+        SelectedPrefixAddSpace = style.PrefixAddSpace;
+        SelectedSuffix = style.Suffix;
+        SelectedSuffixesProcessIfEndWithComma = style.SuffixApplyIfComma;
+        SelectedSuffixesAddSpace = style.SuffixAddSpace;
+        SelectedSuffixesRemoveComma = style.SuffixReplaceComma;
+        UseSpecialStyleAfterLongGaps = style.UseDifferentStyleGap;
+        LongGapMs = style.Pause;
+        SelectedLongGapPrefix = style.GapPrefix;
+        SelectedLongGapPrefixAddSpace = style.GapPrefixAddSpace;
+        SelectedLongGapSuffix = style.GapSuffix;
+        SelectedLongGapSuffixesProcessIfEndWithComma = style.GapSuffixApplyIfComma;
+        SelectedLongGapSuffixesAddSpace = style.GapSuffixAddSpace;
+        SelectedLongGapSuffixesRemoveComma = style.GapSuffixReplaceComma;
 
         _previewTimer.Start();
+    }
+
+    public CustomContinuationStyle GetResult()
+    {
+        return new CustomContinuationStyle
+        {
+            Prefix = SelectedPrefix ?? string.Empty,
+            PrefixAddSpace = SelectedPrefixAddSpace,
+            Suffix = SelectedSuffix ?? string.Empty,
+            SuffixApplyIfComma = SelectedSuffixesProcessIfEndWithComma,
+            SuffixAddSpace = SelectedSuffixesAddSpace,
+            SuffixReplaceComma = SelectedSuffixesRemoveComma,
+            UseDifferentStyleGap = UseSpecialStyleAfterLongGaps,
+            Pause = LongGapMs,
+            GapPrefix = SelectedLongGapPrefix ?? string.Empty,
+            GapPrefixAddSpace = SelectedLongGapPrefixAddSpace,
+            GapSuffix = SelectedLongGapSuffix ?? string.Empty,
+            GapSuffixApplyIfComma = SelectedLongGapSuffixesProcessIfEndWithComma,
+            GapSuffixAddSpace = SelectedLongGapSuffixesAddSpace,
+            GapSuffixReplaceComma = SelectedLongGapSuffixesRemoveComma,
+        };
     }
 
     [RelayCommand]

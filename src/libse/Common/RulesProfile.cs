@@ -23,12 +23,14 @@ namespace Nikse.SubtitleEdit.Core.Common
         public int MergeLinesShorterThan { get; set; }
         public DialogType DialogStyle { get; set; }
         public ContinuationStyle ContinuationStyle { get; set; }
+        public CustomContinuationStyle CustomContinuationStyle { get; set; }
 
         public RulesProfile()
         {
             //Id = Guid.NewGuid();
             DialogStyle = DialogType.DashBothLinesWithSpace;
             ContinuationStyle = ContinuationStyle.NoneLeadingTrailingDots;
+            CustomContinuationStyle = new CustomContinuationStyle();
         }
 
         public RulesProfile(RulesProfile profile)
@@ -47,6 +49,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             MergeLinesShorterThan = profile.MergeLinesShorterThan;
             DialogStyle = profile.DialogStyle;
             ContinuationStyle = profile.ContinuationStyle;
+            CustomContinuationStyle = new CustomContinuationStyle(profile.CustomContinuationStyle);
         }
 
         public static string Serialize(List<RulesProfile> profiles)

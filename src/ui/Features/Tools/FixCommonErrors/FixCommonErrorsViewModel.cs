@@ -365,8 +365,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     {
         FixedSubtitle = new Subtitle(subtitle, false);
 
-        Configuration.Settings.General.ContinuationStyle =
-            Enum.Parse<ContinuationStyle>(Se.Settings.General.ContinuationStyle);
+        Se.ApplyContinuationStyleToLibSe();
 
         _allFixRules = MakeDefaultRules();
 

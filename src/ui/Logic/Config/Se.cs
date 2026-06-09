@@ -321,6 +321,24 @@ public class Se
             Settings.General = new();
         }
 
+        // Custom continuation style is a nested object; an old settings file (or hand edit)
+        // may omit it, so guard against null before the libse bridge dereferences it.
+        if (Settings.General.CustomContinuationStyle == null)
+        {
+            Settings.General.CustomContinuationStyle = new();
+        }
+
+        if (Settings.General.Profiles != null)
+        {
+            foreach (var profile in Settings.General.Profiles)
+            {
+                if (profile.CustomContinuationStyle == null)
+                {
+                    profile.CustomContinuationStyle = new();
+                }
+            }
+        }
+
         if (Settings.Synchronization == null)
         {
             Settings.Synchronization = new();
@@ -498,6 +516,24 @@ public class Se
         {
             try { ss.CurrentDCinemaFontEffectColor = dc.CurrentDCinemaFontEffectColor.FromHex(); } catch { }
         }
+    }
+
+    /// <summary>
+    /// Copies the active rule profile's continuation style (incl. the custom-style fields and
+    /// pause) from <see cref="Settings"/> into the libse <see cref="Configuration.Settings"/> that
+    /// the fix/merge engines read. Without this the "Custom" continuation style falls back to
+    /// libse defaults.
+    /// </summary>
+    public static void ApplyContinuationStyleToLibSe()
+    {
+        var g = Settings.General;
+
+        if (Enum.TryParse<Core.Enums.ContinuationStyle>(g.ContinuationStyle, out var cs))
+        {
+            Configuration.Settings.General.ContinuationStyle = cs;
+        }
+
+        (g.CustomContinuationStyle ?? new CustomContinuationStyle()).ApplyToGeneralSettings(Configuration.Settings.General);
     }
 
     public static string GetErrorLogFilePath()

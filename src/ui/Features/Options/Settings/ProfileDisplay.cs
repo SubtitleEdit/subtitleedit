@@ -25,6 +25,8 @@ public partial class ProfileDisplay : ObservableObject
     [ObservableProperty] private CpsLineLengthStrategyDisplay _cpsLineLengthStrategy;
     [ObservableProperty] private bool _isSelected;
 
+    public CustomContinuationStyle CustomContinuationStyle { get; set; }
+
     public ProfileDisplay()
     {
         Name = string.Empty;
@@ -40,6 +42,7 @@ public partial class ProfileDisplay : ObservableObject
         DialogStyle = DialogStyleDisplay.List().First();
         ContinuationStyle = ContinuationStyleDisplay.List().First();
         CpsLineLengthStrategy = CpsLineLengthStrategyDisplay.List().First();
+        CustomContinuationStyle = new CustomContinuationStyle();
     }
 
     public ProfileDisplay(ProfileDisplay other)
@@ -57,10 +60,11 @@ public partial class ProfileDisplay : ObservableObject
         DialogStyle = new DialogStyleDisplay(other.DialogStyle ?? DialogStyleDisplay.List().First());
         ContinuationStyle = new ContinuationStyleDisplay(other.ContinuationStyle ?? ContinuationStyleDisplay.List().First());
         CpsLineLengthStrategy = new CpsLineLengthStrategyDisplay(other.CpsLineLengthStrategy ?? CpsLineLengthStrategyDisplay.List().First());
+        CustomContinuationStyle = new CustomContinuationStyle(other.CustomContinuationStyle);
     }
 
     public ProfileDisplay(
-        RulesProfile other, 
+        RulesProfile other,
         List<DialogStyleDisplay> dialogStyles,
         List<ContinuationStyleDisplay> continuationStyles,
         List<CpsLineLengthStrategyDisplay> cpsLineLengthStrategies)
@@ -78,6 +82,7 @@ public partial class ProfileDisplay : ObservableObject
         DialogStyle = dialogStyles.FirstOrDefault(p=>p.Code == other.DialogStyle.ToString()) ?? dialogStyles.First();
         ContinuationStyle = continuationStyles.FirstOrDefault(p=>p.Code == other.ContinuationStyle.ToString()) ?? continuationStyles.First();
         CpsLineLengthStrategy = cpsLineLengthStrategies.FirstOrDefault(p=>p.Code == other.CpsLineLengthStrategy.ToString()) ?? cpsLineLengthStrategies.First();
+        CustomContinuationStyle = new CustomContinuationStyle(other.CustomContinuationStyle);
     }
 
     public RulesProfile ToRulesProfile()
@@ -98,6 +103,7 @@ public partial class ProfileDisplay : ObservableObject
             DialogStyle = Enum.Parse<DialogType>(DialogStyle.Code),
             ContinuationStyle = Enum.Parse<ContinuationStyle>(ContinuationStyle.Code),
             CpsLineLengthStrategy = CpsLineLengthStrategy.Code,
+            CustomContinuationStyle = new CustomContinuationStyle(CustomContinuationStyle),
         };
     }
 
