@@ -8878,6 +8878,18 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void MergeSelectedLinesAndUnbreak()
+    {
+        MergeLinesSelected(MergeManager.BreakMode.Unbreak);
+    }
+
+    [RelayCommand]
+    private void MergeSelectedLinesAndUnbreakCjk()
+    {
+        MergeLinesSelected(MergeManager.BreakMode.UnbreakNoSpace);
+    }
+
+    [RelayCommand]
     private void ToggleCasing()
     {
         if (IsSubtitleGridFocused())
@@ -10778,6 +10790,32 @@ public partial class MainViewModel :
         foreach (var s in selectedItems)
         {
             s.Text = Utilities.UnbreakLine(s.Text);
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
+    private void UnbreakNoSpace()
+    {
+        // Unbreak without joining with a space - intended for CJK text where
+        // words are not space-separated (SE 4's "Unbreak without space (CJK)").
+        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var s in selectedItems)
+        {
+            // Normalize line endings first so \r-only breaks don't leak through,
+            // then drop the break together with any spaces around it - same
+            // normalization as MergeManager.BreakMode.UnbreakNoSpace.
+            var text = s.Text.Replace("\r\n", "\n").Replace("\r", "\n");
+            s.Text = text.Replace(" \n ", string.Empty)
+                .Replace("\n ", string.Empty)
+                .Replace(" \n", string.Empty)
+                .Replace("\n", string.Empty);
         }
 
         _updateAudioVisualizer = true;
@@ -16429,19 +16467,19 @@ public partial class MainViewModel :
         }
     }
 
-    private void MergeLinesSelected()
+    private void MergeLinesSelected(MergeManager.BreakMode breakMode = MergeManager.BreakMode.Normal)
     {
         var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
-        var selectedItem = SelectedSubtitle;
-        if (selectedItems.Count == 0 || selectedItem == null)
+        if (selectedItems.Count == 0 || SelectedSubtitle == null)
         {
             return;
         }
 
-        var index = Subtitles.IndexOf(selectedItem);
+        // The merged line always lands at the lowest selected index, so keep the
+        // selection there regardless of the order the rows were clicked in.
+        var index = selectedItems.Min(item => Subtitles.IndexOf(item));
 
-        _mergeManager.MergeSelectedLines(Subtitles,
-            SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList());
+        _mergeManager.MergeSelectedLines(Subtitles, selectedItems, breakMode: breakMode);
 
         SelectAndScrollToRow(index);
         Renumber();

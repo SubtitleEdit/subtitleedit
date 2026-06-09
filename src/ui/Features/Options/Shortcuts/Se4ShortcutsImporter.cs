@@ -204,6 +204,10 @@ public static class Se4ShortcutsImporter
         ["MainTextBoxSelectionToUpper"] = nameof(MainViewModel.SelectionToUpperCommand),
         ["MainTextBoxAutoBreak"] = nameof(MainViewModel.AutoBreakCommand),
         ["MainTextBoxUnbreak"] = nameof(MainViewModel.UnbreakCommand),
+        // SE 4 serializes this element with a typo ("Unbrek"); also accept the
+        // corrected spelling in case it is ever fixed upstream.
+        ["MainTextBoxUnbrekNoSpace"] = nameof(MainViewModel.UnbreakNoSpaceCommand),
+        ["MainTextBoxUnbreakNoSpace"] = nameof(MainViewModel.UnbreakNoSpaceCommand),
         ["MainTextBoxInsertUnicodeSymbol"] = nameof(MainViewModel.TextBoxInsertUnicodeSymbolCommand),
 
         // Create / adjust
@@ -298,6 +302,10 @@ public static class Se4ShortcutsImporter
         ["GeneralFocusTextBox"] = nameof(MainViewModel.FocusTextBoxCommand),
         ["GeneralCycleAudioTrack"] = nameof(MainViewModel.ToggleAudioTracksCommand),
         ["GeneralMergeSelectedLines"] = nameof(MainViewModel.MergeSelectedLinesCommand),
+        ["GeneralMergeSelectedLinesAndUnbreak"] = nameof(MainViewModel.MergeSelectedLinesAndUnbreakCommand),
+        ["GeneralMergeSelectedLinesAndUnbreakCjk"] = nameof(MainViewModel.MergeSelectedLinesAndUnbreakCjkCommand),
+        // SE 4 used "...NoSpace" before renaming the action to "...Cjk"; map both.
+        ["GeneralMergeSelectedLinesAndUnbreakNoSpace"] = nameof(MainViewModel.MergeSelectedLinesAndUnbreakCjkCommand),
         ["GeneralMergeSelectedLinesBilingual"] = nameof(MainViewModel.MergeSelectedLinesBilingualCommand),
         ["GeneralMergeOriginalAndTranslation"] = nameof(MainViewModel.MergeOriginalIntoTranslationSelectedLinesCommand),
         ["GeneralMergeWithNext"] = nameof(MainViewModel.MergeWithLineAfterCommand),
