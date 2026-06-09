@@ -39,6 +39,17 @@ namespace Nikse.SubtitleEdit
                     Se.LogError(exception ?? new Exception(), "Unhandled AppDomain Exception");
                 };
 
+                // UI-thread exception handling. Avalonia routes exceptions thrown from
+                // command/event handlers (e.g. a key binding) here, not through
+                // AppDomain.UnhandledException - so without this they could crash the app
+                // with nothing written to error-log.txt (see issue #11515). Log it and mark
+                // it handled so the app stays alive and the user gets a stack trace.
+                Dispatcher.UIThread.UnhandledException += (sender, e) =>
+                {
+                    Se.LogError(e.Exception, "Unhandled UI thread exception");
+                    e.Handled = true;
+                };
+
                 // Setup application lifetime
                 var lifetime = new ClassicDesktopStyleApplicationLifetime
                 {
