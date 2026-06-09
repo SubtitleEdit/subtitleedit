@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit
                 // it handled so the app stays alive and the user gets a stack trace.
                 Dispatcher.UIThread.UnhandledException += (sender, e) =>
                 {
-                    Se.LogError(e.Exception, "Unhandled UI thread Exception");
+                    Se.LogError(e.Exception, "Unhandled UI thread exception");
                     e.Handled = true;
                 };
 
