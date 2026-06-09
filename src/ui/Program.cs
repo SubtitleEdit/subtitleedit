@@ -54,6 +54,10 @@ namespace Nikse.SubtitleEdit
                 // Load settings
                 Se.LoadSettings();
 
+                // Load the UI translation before any window or the macOS native menu bar is built,
+                // so the menu bar isn't constructed with the default English strings (issue #11505).
+                Se.LoadLanguage();
+
                 // Build and configure the app
                 var appBuilder = AppBuilder.Configure<Application>()
                     .UsePlatformDetect()

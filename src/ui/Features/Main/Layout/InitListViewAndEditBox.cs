@@ -159,7 +159,7 @@ public static partial class InitListViewAndEditBox
             // updated index. Selection still wins because :selected overrides BackgroundRectangle.Fill.
             if (alternatingRowBrush != null)
             {
-                e.Row.Background = e.Row.GetIndex() % 2 == 1 ? alternatingRowBrush : Brushes.Transparent;
+                e.Row.Background = e.Row.Index % 2 == 1 ? alternatingRowBrush : Brushes.Transparent;
             }
         };
 
