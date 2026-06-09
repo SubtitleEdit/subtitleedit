@@ -14,11 +14,24 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             var fixAction = Language.FixDialogsOnOneLine;
             var noOfFixes = 0;
+            var dialogHelper = new DialogSplitMerge
+            {
+                DialogStyle = Configuration.Settings.General.DialogStyle,
+                TwoLetterLanguageCode = callbacks.Language,
+                ContinuationStyle = Configuration.Settings.General.ContinuationStyle
+            };
             for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
                 var oldText = p.Text;
                 var text = Helper.FixDialogsOnOneLine(oldText, callbacks.Language);
+                if (oldText != text)
+                {
+                    // The split keeps the existing dashes as-is ("-David"); make them match the
+                    // user's dialog style so e.g. "- David" is produced in a single run (issue #11521).
+                    text = dialogHelper.FixSpaces(text);
+                }
+
                 if (oldText != text && callbacks.AllowFix(p, fixAction))
                 {
                     p.Text = text;
