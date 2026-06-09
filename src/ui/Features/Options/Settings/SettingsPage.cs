@@ -607,6 +607,10 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.GridFocusTextboxAfterInsertNew, nameof(_vm.GridFocusTextboxAfterInsertNew)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextToSpeechPromptMergeContinuationLines, nameof(_vm.TextToSpeechPromptMergeContinuationLines)),
             MakeCheckboxSetting(Se.Language.Options.Settings.FixCommonErrorsSkipStep1, nameof(_vm.FixCommonErrorsSkipStep1)),
+            new SettingsItem(Se.Language.Options.Settings.MusicSymbol,
+                () => UiUtil.MakeTextBox(120, _vm, nameof(_vm.MusicSymbol))),
+            new SettingsItem(Se.Language.Options.Settings.MusicSymbolsToReplace,
+                () => UiUtil.MakeTextBox(300, _vm, nameof(_vm.MusicSymbolReplace))),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.General.Appearance,

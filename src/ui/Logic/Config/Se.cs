@@ -528,6 +528,9 @@ public class Se
         Configuration.Settings.Tools.ImportTextDurationAuto = Settings.Tools.ImportTextDurationAuto;
         Configuration.Settings.Tools.ImportTextFixedDuration = Settings.Tools.ImportTextFixedDuration;
 
+        Configuration.Settings.Tools.MusicSymbol = Settings.Tools.MusicSymbol;
+        Configuration.Settings.Tools.MusicSymbolReplace = Settings.Tools.MusicSymbolReplace;
+
         var dc = Settings.File.DCinemaSmpte;
         var ss = Configuration.Settings.SubtitleSettings;
         ss.DCinemaAutoGenerateSubtitleId = dc.DCinemaAutoGenerateSubtitleId;
