@@ -10808,7 +10808,14 @@ public partial class MainViewModel :
 
         foreach (var s in selectedItems)
         {
-            s.Text = s.Text.Replace(Environment.NewLine, string.Empty).Replace("\n", string.Empty);
+            // Normalize line endings first so \r-only breaks don't leak through,
+            // then drop the break together with any spaces around it - same
+            // normalization as MergeManager.BreakMode.UnbreakNoSpace.
+            var text = s.Text.Replace("\r\n", "\n").Replace("\r", "\n");
+            s.Text = text.Replace(" \n ", string.Empty)
+                .Replace("\n ", string.Empty)
+                .Replace(" \n", string.Empty)
+                .Replace("\n", string.Empty);
         }
 
         _updateAudioVisualizer = true;
