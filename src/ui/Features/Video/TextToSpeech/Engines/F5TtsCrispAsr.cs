@@ -374,6 +374,10 @@ public class F5TtsCrispAsr : ITtsEngine
             ["response_format"] = "wav",
             ["voice"] = f5Voice.FilePath,
             ["speed"] = speed,
+            // F5-TTS gates voice cloning behind a consent attestation (CrispASR v0.7.0 returns
+            // HTTP 400 consent_required without it). The user supplies their own reference voice
+            // by importing a WAV into SE, which is the act being attested here.
+            ["consent_attestation"] = "I have the speaker's consent, or it is my own voice.",
         };
         if (!string.IsNullOrEmpty(refText))
         {
