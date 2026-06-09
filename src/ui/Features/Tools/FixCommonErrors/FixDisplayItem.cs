@@ -5,7 +5,11 @@ namespace Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 
 public partial class FixDisplayItem : ObservableObject
 {
+    // Internal identifier used to preserve selection/apply behavior for fixes that share the
+    // same visible label but must remain distinct entries.
     [ObservableProperty] private string _action;
+
+    [ObservableProperty] private string _actionDisplay;
 
     [ObservableProperty] private string _before;
 
@@ -21,6 +25,7 @@ public partial class FixDisplayItem : ObservableObject
         Paragraph = p;
         Number = number;
         Action = action;
+        ActionDisplay = FixActionKey.GetDisplay(action);
         Before = before;
         After = after;
         IsSelected = isChecked;

@@ -9,6 +9,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixContinuationStyle : IFixCommonError
     {
+        private const string SuffixVariant = "suffix";
+        private const string PrefixVariant = "prefix";
+
         public static class Language
         {
             public static string FixUnnecessaryLeadingDots { get; set; } = "Remove unnecessary leading dots";
@@ -21,6 +24,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var fixCount = 0;
+            var suffixActionKey = FixActionKey.Create(FixAction, SuffixVariant);
+            var prefixActionKey = FixActionKey.Create(FixAction, PrefixVariant);
 
             var isLanguageWithoutCaseDistinction = ContinuationUtilities.IsLanguageWithoutCaseDistinction(callbacks.Language);
 
@@ -165,7 +170,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         var newText = ContinuationUtilities.AddSuffixIfNeeded(oldTextWithoutSuffix, _continuationProfile, gap, addComma);
 
                         // Commit if changed
-                        if (oldText != newText && callbacks.AllowFix(p, FixAction))
+                        if (oldText != newText && callbacks.AllowFix(p, suffixActionKey))
                         {
                             // Convert back for Arabic
                             if (callbacks.Language == "ar")
@@ -180,7 +185,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             }
 
                             fixCount++;
-                            callbacks.AddFixToListView(p, FixAction, oldText, newText, isChecked);
+                            callbacks.AddFixToListView(p, suffixActionKey, oldText, newText, isChecked);
                         }
 
 
@@ -190,7 +195,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         var newTextNext = ContinuationUtilities.AddPrefixIfNeeded(oldTextNextWithoutPrefix, _continuationProfile, gap);
 
                         // Commit if changed
-                        if (oldTextNext != newTextNext && callbacks.AllowFix(pNext, FixAction + " "))
+                        if (oldTextNext != newTextNext && callbacks.AllowFix(pNext, prefixActionKey))
                         {
                             // Convert back for Arabic
                             if (callbacks.Language == "ar")
@@ -205,7 +210,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             }
 
                             fixCount++;
-                            callbacks.AddFixToListView(pNext, FixAction + " ", oldTextNext, newTextNext, isChecked);
+                            callbacks.AddFixToListView(pNext, prefixActionKey, oldTextNext, newTextNext, isChecked);
                         }
                     }
                 }

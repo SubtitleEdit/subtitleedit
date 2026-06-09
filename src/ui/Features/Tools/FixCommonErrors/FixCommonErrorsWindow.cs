@@ -284,7 +284,7 @@ public class FixCommonErrorsWindow : Window
                 {
                     Header = Se.Language.Tools.FixCommonErrors.Action,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(FixDisplayItem.Action)),
+                    Binding = new Binding(nameof(FixDisplayItem.ActionDisplay)),
                     IsReadOnly = true,
                 },
                 new DataGridTemplateColumn
