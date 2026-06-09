@@ -280,6 +280,15 @@ public partial class SubtitleLineViewModel : ObservableObject
                 }
             }
 
+            if (Se.Settings.General.ColorTextTooManyLines)
+            {
+                stripped ??= HtmlUtil.RemoveHtmlTags(Text, true);
+                if (stripped.SplitToLines().Count > Se.Settings.General.MaxNumberOfLines)
+                {
+                    return _errorBrush;
+                }
+            }
+
             return _transparentBrush;
         }
     }
@@ -346,7 +355,7 @@ public partial class SubtitleLineViewModel : ObservableObject
     {
         get
         {
-            if (Se.Settings.General.ColorDurationTooLong &&
+            if (Se.Settings.General.ColorCharactersPerSecond &&
                 CharactersPerSecond > Se.Settings.General.SubtitleMaximumCharactersPerSeconds)
             {
                 return _errorBrush;
@@ -360,7 +369,7 @@ public partial class SubtitleLineViewModel : ObservableObject
     {
         get
         {
-            if (Se.Settings.General.ColorDurationTooLong &&
+            if (Se.Settings.General.ColorWordsPerMinute &&
                 WordsPerMinute > Se.Settings.General.SubtitleMaximumWordsPerMinute)
             {
                 return _errorBrush;
