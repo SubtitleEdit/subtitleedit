@@ -307,20 +307,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _existsSettingsFile;
     [ObservableProperty] private bool _writeToolsLog;
 
-    private int _continuationPause;
-    private string _customContinuationStyleSuffix;
-    private bool _customContinuationStyleSuffixApplyIfComma;
-    private bool _customContinuationStyleSuffixAddSpace;
-    private bool _customContinuationStyleSuffixReplaceComma;
-    private string _customContinuationStylePrefix;
-    private bool _customContinuationStylePrefixAddSpace;
-    private bool _customContinuationStyleUseDifferentStyleGap;
-    private string _customContinuationStyleGapSuffix;
-    private bool _customContinuationStyleGapSuffixApplyIfComma;
-    private bool _customContinuationStyleGapSuffixAddSpace;
-    private bool _customContinuationStyleGapSuffixReplaceComma;
-    private string _customContinuationStyleGapPrefix;
-    private bool _customContinuationStyleGapPrefixAddSpace;
+    private CustomContinuationStyle _editCustomContinuationStyle = new();
 
     public ObservableCollection<FileTypeAssociationViewModel> FileTypeAssociations { get; set; } = new()
     {
@@ -556,18 +543,7 @@ public partial class SettingsViewModel : ObservableObject
 
         _profilesForEdit = new List<ProfileDisplay>();
 
-        _customContinuationStyleGapPrefix = string.Empty;
-        _customContinuationStyleGapPrefixAddSpace = false;
-        _customContinuationStyleGapSuffix = string.Empty;
-        _customContinuationStyleGapSuffixAddSpace = false;
-        _customContinuationStyleGapSuffixApplyIfComma = false;
-        _customContinuationStyleGapSuffixReplaceComma = false;
-        _customContinuationStylePrefix = string.Empty;
-        _customContinuationStylePrefixAddSpace = false;
-        _customContinuationStyleSuffix = string.Empty;
-        _customContinuationStyleSuffixAddSpace = false;
-        _customContinuationStyleSuffixApplyIfComma = false;
-        _customContinuationStyleSuffixReplaceComma = false;
+        _editCustomContinuationStyle = new CustomContinuationStyle();
 
         LoadSettings();
     }
@@ -594,7 +570,8 @@ public partial class SettingsViewModel : ObservableObject
                 UnbreakLinesShorterThan = profile.MergeLinesShorterThan,
                 DialogStyle = DialogStyles.FirstOrDefault(p => p.Code == profile.DialogStyle.ToString()) ?? DialogStyles.First(),
                 ContinuationStyle = ContinuationStyles.FirstOrDefault(p => p.Code == profile.ContinuationStyle.ToString()) ?? ContinuationStyles.First(),
-                CpsLineLengthStrategy = CpsLineLengthStrategies.FirstOrDefault(p => p.Code == profile.CpsLineLengthStrategy) ?? CpsLineLengthStrategies.First()
+                CpsLineLengthStrategy = CpsLineLengthStrategies.FirstOrDefault(p => p.Code == profile.CpsLineLengthStrategy) ?? CpsLineLengthStrategies.First(),
+                CustomContinuationStyle = new CustomContinuationStyle(profile.CustomContinuationStyle)
             };
             _profilesForEdit.Add(pd);
         }
@@ -628,6 +605,7 @@ public partial class SettingsViewModel : ObservableObject
         UnbreakLinesShorterThan = general.UnbreakLinesShorterThan;
         DialogStyle = DialogStyles.FirstOrDefault(p => p.Code == general.DialogStyle) ?? DialogStyles.First();
         ContinuationStyle = ContinuationStyles.FirstOrDefault(p => p.Code == general.ContinuationStyle) ?? ContinuationStyles.First();
+        IsEditCustomContinuationStyleVisible = ContinuationStyle?.Code == nameof(Core.Enums.ContinuationStyle.Custom);
         CpsLineLengthStrategy = CpsLineLengthStrategies.FirstOrDefault(p => p.Code == general.CpsLineLengthStrategy) ?? CpsLineLengthStrategies.First();
 
         UseFrameMode = general.UseFrameMode;
@@ -846,20 +824,7 @@ public partial class SettingsViewModel : ObservableObject
         ColorGapTooShort = general.ColorGapTooShort;
         ErrorColor = general.ErrorColor.FromHexToColor();
 
-        _customContinuationStyleSuffix = general.CustomContinuationStyleSuffix;
-        _customContinuationStyleSuffixApplyIfComma = general.CustomContinuationStyleSuffixApplyIfComma;
-        _customContinuationStyleSuffixAddSpace = general.CustomContinuationStyleSuffixAddSpace;
-        _customContinuationStyleSuffixReplaceComma = general.CustomContinuationStyleSuffixReplaceComma;
-        _customContinuationStylePrefix = general.CustomContinuationStylePrefix;
-        _customContinuationStylePrefixAddSpace = general.CustomContinuationStylePrefixAddSpace;
-        _customContinuationStyleUseDifferentStyleGap = general.CustomContinuationStyleUseDifferentStyleGap;
-        _continuationPause = general.ContinuationPause;
-        _customContinuationStyleGapSuffix = general.CustomContinuationStyleGapSuffix;
-        _customContinuationStyleGapSuffixApplyIfComma = general.CustomContinuationStyleGapSuffixApplyIfComma;
-        _customContinuationStyleGapSuffixAddSpace = general.CustomContinuationStyleGapSuffixAddSpace;
-        _customContinuationStyleGapSuffixReplaceComma = general.CustomContinuationStyleGapSuffixReplaceComma;
-        _customContinuationStyleGapPrefix = general.CustomContinuationStyleGapPrefix;
-        _customContinuationStyleGapPrefixAddSpace = general.CustomContinuationStyleGapPrefixAddSpace;
+        _editCustomContinuationStyle = new CustomContinuationStyle(general.CustomContinuationStyle);
 
         var video = Se.Settings.Video;
         var videoPlayer = VideoPlayers.FirstOrDefault(p => p.Code.Equals(video.VideoPlayer, StringComparison.OrdinalIgnoreCase));
@@ -1509,20 +1474,7 @@ public partial class SettingsViewModel : ObservableObject
         general.ColorGapTooShort = ColorGapTooShort;
         general.ErrorColor = ErrorColor.FromColorToHex();
 
-        general.CustomContinuationStyleSuffix = _customContinuationStyleSuffix;
-        general.CustomContinuationStyleSuffixApplyIfComma = _customContinuationStyleSuffixApplyIfComma;
-        general.CustomContinuationStyleSuffixAddSpace = _customContinuationStyleSuffixAddSpace;
-        general.CustomContinuationStyleSuffixReplaceComma = _customContinuationStyleSuffixReplaceComma;
-        general.CustomContinuationStylePrefix = _customContinuationStylePrefix;
-        general.CustomContinuationStylePrefixAddSpace = _customContinuationStylePrefixAddSpace;
-        general.CustomContinuationStyleUseDifferentStyleGap = _customContinuationStyleUseDifferentStyleGap;
-        general.ContinuationPause = _continuationPause;
-        general.CustomContinuationStyleGapSuffix = _customContinuationStyleGapSuffix;
-        general.CustomContinuationStyleGapSuffixApplyIfComma = _customContinuationStyleGapSuffixApplyIfComma;
-        general.CustomContinuationStyleGapSuffixAddSpace = _customContinuationStyleGapSuffixAddSpace;
-        general.CustomContinuationStyleGapSuffixReplaceComma = _customContinuationStyleGapSuffixReplaceComma;
-        general.CustomContinuationStyleGapPrefix = _customContinuationStyleGapPrefix;
-        general.CustomContinuationStyleGapPrefixAddSpace = _customContinuationStyleGapPrefixAddSpace;
+        general.CustomContinuationStyle = new CustomContinuationStyle(_editCustomContinuationStyle);
 
         video.VideoPlayer = SelectedVideoPlayer.Code;
         video.ShowStopButton = ShowStopButton;
@@ -1563,7 +1515,8 @@ public partial class SettingsViewModel : ObservableObject
                 MergeLinesShorterThan = profile.UnbreakLinesShorterThan ?? general.UnbreakLinesShorterThan,
                 DialogStyle = Enum.Parse<DialogType>(profile.DialogStyle.Code),
                 ContinuationStyle = Enum.TryParse<ContinuationStyle>(profile.ContinuationStyle.Code, out var cs) ? cs : Core.Enums.ContinuationStyle.None,
-                CpsLineLengthStrategy = profile.CpsLineLengthStrategy.Code
+                CpsLineLengthStrategy = profile.CpsLineLengthStrategy.Code,
+                CustomContinuationStyle = new CustomContinuationStyle(profile.CustomContinuationStyle)
             };
             general.Profiles.Add(p);
         }
@@ -2164,6 +2117,8 @@ public partial class SettingsViewModel : ObservableObject
                 Se.Settings.General.DialogStyle = g.DialogStyle;
                 Se.Settings.General.ContinuationStyle = g.ContinuationStyle;
                 Se.Settings.General.CpsLineLengthStrategy = g.CpsLineLengthStrategy;
+
+                Se.Settings.General.CustomContinuationStyle = new CustomContinuationStyle(g.CustomContinuationStyle);
             }
 
             if (result.ResetAppearance)
@@ -2185,7 +2140,7 @@ public partial class SettingsViewModel : ObservableObject
             {
                 var g = new SeGeneral();
 
-                Se.Settings.General.ColorDurationTooLong = Se.Settings.General.ColorDurationTooLong;
+                Se.Settings.General.ColorDurationTooLong = g.ColorDurationTooLong;
                 Se.Settings.General.ColorDurationTooShort = g.ColorDurationTooShort;
                 Se.Settings.General.ColorTextTooLong = g.ColorTextTooLong;
                 Se.Settings.General.ColorTextTooWide = g.ColorTextTooWide;
@@ -2339,21 +2294,7 @@ public partial class SettingsViewModel : ObservableObject
         var result = await _windowService
             .ShowDialogAsync<CustomContinuationStyleWindow, CustomContinuationStyleViewModel>(Window, vm =>
             {
-                vm.Initialize(
-                    _continuationPause,
-                    _customContinuationStyleSuffix,
-                    _customContinuationStyleSuffixApplyIfComma,
-                    _customContinuationStyleSuffixAddSpace,
-                    _customContinuationStyleSuffixReplaceComma,
-                    _customContinuationStylePrefix,
-                    _customContinuationStylePrefixAddSpace,
-                    _customContinuationStyleUseDifferentStyleGap,
-                    _customContinuationStyleGapSuffix,
-                    _customContinuationStyleGapSuffixApplyIfComma,
-                    _customContinuationStyleGapSuffixAddSpace,
-                    _customContinuationStyleGapSuffixReplaceComma,
-                    _customContinuationStyleGapPrefix,
-                    _customContinuationStyleGapPrefixAddSpace);
+                vm.Initialize(_editCustomContinuationStyle);
             });
 
         if (!result.OkPressed)
@@ -2361,20 +2302,7 @@ public partial class SettingsViewModel : ObservableObject
             return;
         }
 
-        _customContinuationStyleSuffix = result.SelectedSuffix;
-        _customContinuationStyleSuffixApplyIfComma = result.SelectedSuffixesProcessIfEndWithComma;
-        _customContinuationStyleSuffixAddSpace = result.SelectedSuffixesAddSpace;
-        _customContinuationStyleSuffixReplaceComma = result.SelectedSuffixesRemoveComma;
-        _customContinuationStylePrefix = result.SelectedPrefix;
-        _customContinuationStylePrefixAddSpace = result.SelectedPrefixAddSpace;
-        _customContinuationStyleUseDifferentStyleGap = result.UseSpecialStyleAfterLongGaps;
-        _continuationPause = result.LongGapMs;
-        _customContinuationStyleGapSuffix = result.SelectedLongGapSuffix;
-        _customContinuationStyleGapSuffixApplyIfComma = result.SelectedLongGapSuffixesProcessIfEndWithComma;
-        _customContinuationStyleGapSuffixAddSpace = result.SelectedLongGapSuffixesAddSpace;
-        _customContinuationStyleGapSuffixReplaceComma = result.SelectedLongGapSuffixesRemoveComma;
-        _customContinuationStyleGapPrefix = result.SelectedLongGapPrefix;
-        _customContinuationStyleGapPrefixAddSpace = result.SelectedLongGapPrefixAddSpace;
+        _editCustomContinuationStyle = result.GetResult();
 
         RuleValueChanged();
     }
@@ -2465,6 +2393,9 @@ public partial class SettingsViewModel : ObservableObject
             DialogStyle = profile.DialogStyle;
             ContinuationStyle = profile.ContinuationStyle;
             CpsLineLengthStrategy = profile.CpsLineLengthStrategy;
+
+            _editCustomContinuationStyle = new CustomContinuationStyle(profile.CustomContinuationStyle);
+            IsEditCustomContinuationStyleVisible = ContinuationStyle?.Code == nameof(Core.Enums.ContinuationStyle.Custom);
         }
         finally
         {
@@ -2497,6 +2428,8 @@ public partial class SettingsViewModel : ObservableObject
         profileItem.DialogStyle = DialogStyle;
         profileItem.ContinuationStyle = ContinuationStyle;
         profileItem.CpsLineLengthStrategy = CpsLineLengthStrategy;
+
+        profileItem.CustomContinuationStyle = new CustomContinuationStyle(_editCustomContinuationStyle);
     }
 
     internal void ContinuationStyleChanged()

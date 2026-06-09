@@ -1,4 +1,4 @@
-﻿using System;
+using Nikse.SubtitleEdit.Core.Common;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -22,6 +22,7 @@ namespace Nikse.SubtitleEdit.Features.Options.Settings
             public string SubtitleOptimalCharactersPerSeconds { get; set; } = string.Empty;
             public string DialogStyle { get; set; } = string.Empty;
             public string ContinuationStyle { get; set; } = string.Empty;
+            public CustomContinuationStyle? CustomContinuationStyle { get; set; }
         }
 
         public ProfileImportExport()
@@ -46,7 +47,8 @@ namespace Nikse.SubtitleEdit.Features.Options.Settings
                     SubtitleMinimumDisplayMilliseconds = profile.MinDurationMs.HasValue ? profile.MinDurationMs.Value.ToString(CultureInfo.InvariantCulture) : "500",
                     SubtitleOptimalCharactersPerSeconds = profile.OptimalCharsPerSec.HasValue ? profile.OptimalCharsPerSec.Value.ToString(CultureInfo.InvariantCulture) : "20",
                     DialogStyle = profile.DialogStyle?.Code ?? string.Empty,
-                    ContinuationStyle = profile.ContinuationStyle?.Code ?? string.Empty
+                    ContinuationStyle = profile.ContinuationStyle?.Code ?? string.Empty,
+                    CustomContinuationStyle = new CustomContinuationStyle(profile.CustomContinuationStyle)
                 };
                 Profiles.Add(item);
             }
@@ -73,8 +75,12 @@ namespace Nikse.SubtitleEdit.Features.Options.Settings
                     MinDurationMs = int.Parse(item.SubtitleMinimumDisplayMilliseconds, CultureInfo.InvariantCulture),
                     OptimalCharsPerSec = int.Parse(item.SubtitleOptimalCharactersPerSeconds, CultureInfo.InvariantCulture),
                     DialogStyle = DialogStyleDisplay.List().FirstOrDefault(p => p.Code == item.DialogStyle) ?? DialogStyleDisplay.List().First(),
-                    ContinuationStyle = ContinuationStyleDisplay.List().FirstOrDefault(p => p.Code == item.ContinuationStyle) ?? ContinuationStyleDisplay.List().First()
+                    ContinuationStyle = ContinuationStyleDisplay.List().FirstOrDefault(p => p.Code == item.ContinuationStyle) ?? ContinuationStyleDisplay.List().First(),
+                    CustomContinuationStyle = item.CustomContinuationStyle != null
+                        ? new CustomContinuationStyle(item.CustomContinuationStyle)
+                        : new CustomContinuationStyle()
                 };
+
                 list.Add(profile);
             }
             return list;

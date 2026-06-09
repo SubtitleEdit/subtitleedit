@@ -670,10 +670,7 @@ public partial class MainViewModel :
             Configuration.Settings.General.DialogStyle = dt;
         }
 
-        if (Enum.TryParse<Core.Enums.ContinuationStyle>(Se.Settings.General.ContinuationStyle, out var cs))
-        {
-            Configuration.Settings.General.ContinuationStyle = cs;
-        }
+        Se.ApplyContinuationStyleToLibSe();
 
         Configuration.Settings.General.CpsLineLengthStrategy = Se.Settings.General.CpsLineLengthStrategy;
 
@@ -5501,6 +5498,8 @@ public partial class MainViewModel :
             Se.Settings.General.DialogStyle = p.DialogStyle.ToString();
             Se.Settings.General.ContinuationStyle = p.ContinuationStyle.ToString();
             Se.Settings.General.CpsLineLengthStrategy = p.CpsLineLengthStrategy;
+
+            Se.Settings.General.CustomContinuationStyle = new CustomContinuationStyle(p.CustomContinuationStyle);
 
             SetLibSeSettings();
 

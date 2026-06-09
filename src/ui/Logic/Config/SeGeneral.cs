@@ -28,20 +28,7 @@ public class SeGeneral
     public string ContinuationStyle { get; set; }
     public string CpsLineLengthStrategy { get; set; }
 
-    public int ContinuationPause { get; set; }
-    public string CustomContinuationStyleSuffix { get; set; }
-    public bool CustomContinuationStyleSuffixApplyIfComma { get; set; }
-    public bool CustomContinuationStyleSuffixAddSpace { get; set; }
-    public bool CustomContinuationStyleSuffixReplaceComma { get; set; }
-    public string CustomContinuationStylePrefix { get; set; }
-    public bool CustomContinuationStylePrefixAddSpace { get; set; }
-    public bool CustomContinuationStyleUseDifferentStyleGap { get; set; }
-    public string CustomContinuationStyleGapSuffix { get; set; }
-    public bool CustomContinuationStyleGapSuffixApplyIfComma { get; set; }
-    public bool CustomContinuationStyleGapSuffixAddSpace { get; set; }
-    public bool CustomContinuationStyleGapSuffixReplaceComma { get; set; }
-    public string CustomContinuationStyleGapPrefix { get; set; }
-    public bool CustomContinuationStyleGapPrefixAddSpace { get; set; }
+    public CustomContinuationStyle CustomContinuationStyle { get; set; }
     public bool FixContinuationStyleUncheckInsertsAllCaps { get; set; }
     public bool FixContinuationStyleUncheckInsertsItalic { get; set; }
     public bool FixContinuationStyleUncheckInsertsLowercase { get; set; }
@@ -135,20 +122,7 @@ public class SeGeneral
         DialogStyle = DialogType.DashBothLinesWithSpace.ToString();
         CpsLineLengthStrategy = nameof(CalcAll);
         ContinuationStyle = Core.Enums.ContinuationStyle.None.ToString();
-        ContinuationPause = 300;
-        CustomContinuationStyleSuffix = "";
-        CustomContinuationStyleSuffixApplyIfComma = false;
-        CustomContinuationStyleSuffixAddSpace = false;
-        CustomContinuationStyleSuffixReplaceComma = false;
-        CustomContinuationStylePrefix = "";
-        CustomContinuationStylePrefixAddSpace = false;
-        CustomContinuationStyleUseDifferentStyleGap = true;
-        CustomContinuationStyleGapSuffix = "...";
-        CustomContinuationStyleGapSuffixApplyIfComma = true;
-        CustomContinuationStyleGapSuffixAddSpace = false;
-        CustomContinuationStyleGapSuffixReplaceComma = true;
-        CustomContinuationStyleGapPrefix = "...";
-        CustomContinuationStyleGapPrefixAddSpace = false;
+        CustomContinuationStyle = new CustomContinuationStyle();
         FixContinuationStyleUncheckInsertsAllCaps = true;
         FixContinuationStyleUncheckInsertsItalic = true;
         FixContinuationStyleUncheckInsertsLowercase = true;
