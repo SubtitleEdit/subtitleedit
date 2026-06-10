@@ -338,13 +338,11 @@ public partial class SubtitleLineViewModel : ObservableObject
     {
         get
         {
-            if ((Se.Settings.General.ColorDurationTooShort && Duration.TotalMilliseconds < Se.Settings.General.SubtitleMinimumDisplayMilliseconds) ||
-                (Se.Settings.General.ColorDurationTooLong && Duration.TotalMilliseconds > Se.Settings.General.SubtitleMaximumDisplayMilliseconds) ||
-                // CPS too high == the duration is too short for this much text. SE4 lit up
-                // the Duration column for this case and users (issue #11307) rely on it
-                // being visible there, not just in the CPS column. Reuse the same gate
-                // setting so users who turn duration colouring off get a uniform behaviour.
-                (Se.Settings.General.ColorDurationTooLong && CharactersPerSecond > Se.Settings.General.SubtitleMaximumCharactersPerSeconds))
+            var general = Se.Settings.General;
+            if ((general.ColorDurationTooShort && Duration.TotalMilliseconds < general.SubtitleMinimumDisplayMilliseconds) ||
+                (general.ColorDurationTooLong && Duration.TotalMilliseconds > general.SubtitleMaximumDisplayMilliseconds) ||
+                // SE4 fallback: when the CPS column is hidden, surface CPS-too-high on the Duration cell instead
+                (!general.ShowColumnCps && general.ColorDurationTooShort && CharactersPerSecond > general.SubtitleMaximumCharactersPerSeconds))
             {
                 return _errorBrush;
             }

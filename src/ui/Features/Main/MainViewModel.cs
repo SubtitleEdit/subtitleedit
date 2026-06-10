@@ -8423,6 +8423,16 @@ public partial class MainViewModel :
         Se.Settings.General.ShowColumnCps = !Se.Settings.General.ShowColumnCps;
         ShowColumnCps = Se.Settings.General.ShowColumnCps;
         AutoFitColumns();
+        // AutoFitColumns() calls UpdateLayout() repeatedly, which settles the visual tree
+        // before our property-change notifications can render. Post the refresh so it runs
+        // after the layout pass, letting Avalonia pick up the new brush values.
+        Dispatcher.UIThread.Post(() =>
+        {
+            foreach (var row in Subtitles)
+            {
+                row.RefreshAfterSettingsChanged();
+            }
+        });
     }
 
     [RelayCommand]
