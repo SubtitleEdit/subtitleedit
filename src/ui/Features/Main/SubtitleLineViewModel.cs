@@ -342,7 +342,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             if ((general.ColorDurationTooShort && Duration.TotalMilliseconds < general.SubtitleMinimumDisplayMilliseconds) ||
                 (general.ColorDurationTooLong && Duration.TotalMilliseconds > general.SubtitleMaximumDisplayMilliseconds) ||
                 // SE4 fallback: when the CPS column is hidden, surface CPS-too-high on the Duration cell instead
-                (!general.ShowColumnCps && general.ColorDurationTooShort && CharactersPerSecond > general.SubtitleMaximumCharactersPerSeconds))
+                (!general.ShowColumnCps && general.ColorCharactersPerSecond && CharactersPerSecond > general.SubtitleMaximumCharactersPerSeconds))
             {
                 return _errorBrush;
             }
