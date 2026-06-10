@@ -6,7 +6,6 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
-using Avalonia.Threading;
 using Avalonia.Media;
 using System;
 using System.Collections;
@@ -393,6 +392,7 @@ public class FixCommonErrorsWindow : Window
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
+        var syntaxHighlightingConverter = new TextWithSubtitleSyntaxHighlightingConverter();
         var dataGridSubtitles = new DataGrid
         {
             AutoGenerateColumns = false,
@@ -405,6 +405,8 @@ public class FixCommonErrorsWindow : Window
             Height = double.NaN,
             DataContext = _vm,
             ItemsSource = _vm.Paragraphs,
+            FontSize = Se.Settings.Appearance.SubtitleGridFontSize,
+            Margin = new Thickness(Se.Settings.Appearance.GridCompactMode ? 0 : 2),
             Columns =
             {
                 new DataGridTextColumn
@@ -414,34 +416,88 @@ public class FixCommonErrorsWindow : Window
                     IsReadOnly = true,
                     CellTheme = UiUtil.DataGridNoBorderCellTheme,
                 },
-                new DataGridTextColumn
+                new DataGridTemplateColumn
                 {
                     Header = Se.Language.General.Show,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
                     CellTheme = UiUtil.DataGridNoBorderCellTheme,
+                    IsReadOnly = true,
+                    CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((_, _) =>
+                    {
+                        var border = new Border
+                        {
+                            Padding = new Thickness(4, 2),
+                            [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.StartTimeBackgroundBrush)),
+                        };
+                        border.Child = new TextBlock
+                        {
+                            VerticalAlignment = VerticalAlignment.Center,
+                            [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter },
+                        };
+                        return border;
+                    }),
                 },
-                new DataGridTextColumn
+                new DataGridTemplateColumn
                 {
                     Header = Se.Language.General.Hide,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.EndTime)) { Converter = fullTimeConverter },
-                    IsReadOnly = true,
                     CellTheme = UiUtil.DataGridNoBorderCellTheme,
+                    IsReadOnly = true,
+                    CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((_, _) =>
+                    {
+                        var border = new Border
+                        {
+                            Padding = new Thickness(4, 2),
+                            [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.EndTimeBackgroundBrush)),
+                        };
+                        border.Child = new TextBlock
+                        {
+                            VerticalAlignment = VerticalAlignment.Center,
+                            [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.EndTime)) { Converter = fullTimeConverter },
+                        };
+                        return border;
+                    }),
                 },
-                new DataGridTextColumn
+                new DataGridTemplateColumn
                 {
                     Header = Se.Language.General.Duration,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.Duration)) { Converter = shortTimeConverter },
-                    IsReadOnly = true,
                     CellTheme = UiUtil.DataGridNoBorderCellTheme,
+                    IsReadOnly = true,
+                    CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((_, _) =>
+                        new Border
+                        {
+                            Padding = new Thickness(4, 2),
+                            [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.DurationBackgroundBrush)),
+                            Child = new TextBlock
+                            {
+                                VerticalAlignment = VerticalAlignment.Center,
+                                [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.Duration)) { Converter = shortTimeConverter },
+                            },
+                        }),
                 },
-                new DataGridTextColumn
+                new DataGridTemplateColumn
                 {
                     Header = Se.Language.General.Text,
-                    Binding = new Binding(nameof(SubtitleLineViewModel.Text)),
-                    IsReadOnly = true,
                     CellTheme = UiUtil.DataGridNoBorderCellTheme,
+                    IsReadOnly = true,
                     Width = new DataGridLength(1, DataGridLengthUnitType.Star),
+                    CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((_, _) =>
+                    {
+                        var textBlock = new TextBlock
+                        {
+                            VerticalAlignment = VerticalAlignment.Center,
+                            TextWrapping = TextWrapping.NoWrap,
+                            [!TextBlock.InlinesProperty] = new Binding(nameof(SubtitleLineViewModel.Text)) { Converter = syntaxHighlightingConverter },
+                        };
+                        if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
+                        {
+                            textBlock.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+                        }
+                        return new Border
+                        {
+                            Padding = new Thickness(4, 2),
+                            [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.TextBackgroundBrush)),
+                            Child = textBlock,
+                        };
+                    }),
                 },
             },
         };
@@ -499,24 +555,13 @@ public class FixCommonErrorsWindow : Window
 
     private Grid MakeStep2EditPanel()
     {
-        var grid = new Grid
+        var textEditGrid = new Grid
         {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            RowSpacing = 2,
-            Margin = new Thickness(4),
+            RowDefinitions = new RowDefinitions("*,Auto"),
+            Margin = new Thickness(10),
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
-
-        var labelText = UiUtil.MakeTextBlock(Se.Language.General.Text);
 
         var textBox = new TextBox
         {
@@ -526,22 +571,41 @@ public class FixCommonErrorsWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
             MinHeight = 60,
+            FontSize = Se.Settings.Appearance.SubtitleTextBoxFontSize,
+            FontWeight = Se.Settings.Appearance.SubtitleTextBoxFontBold ? FontWeight.Bold : FontWeight.Normal,
             [!TextBox.TextProperty] = new Binding($"{nameof(_vm.SelectedParagraph)}.{nameof(SubtitleLineViewModel.Text)}")
             {
                 Mode = BindingMode.TwoWay,
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
             },
         };
+        if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
+        {
+            textBox.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
+        }
+        textEditGrid.Add(textBox, 0, 0);
 
-        grid.Children.Add(labelText);
-        Grid.SetRow(labelText, 0);
-        Grid.SetColumn(labelText, 0);
+        var panelSingleLineLengths = new StackPanel
+        {
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top,
+            Orientation = Orientation.Horizontal,
+        };
+        _vm.PanelSingleLineLengths = panelSingleLineLengths;
+        textEditGrid.Add(panelSingleLineLengths, 1, 0);
 
-        grid.Children.Add(textBox);
-        Grid.SetRow(textBox, 1);
-        Grid.SetColumn(textBox, 0);
+        var totalLengthLabel = new TextBlock
+        {
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Top,
+            FontSize = 12,
+            Padding = new Thickness(2),
+        };
+        totalLengthLabel.Bind(TextBlock.TextProperty, new Binding(nameof(_vm.EditTextTotalLength)) { Source = _vm });
+        totalLengthLabel.Bind(TextBlock.BackgroundProperty, new Binding(nameof(_vm.EditTextTotalLengthBackground)) { Source = _vm });
+        textEditGrid.Add(totalLengthLabel, 1, 0);
 
-        return grid;
+        return textEditGrid;
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

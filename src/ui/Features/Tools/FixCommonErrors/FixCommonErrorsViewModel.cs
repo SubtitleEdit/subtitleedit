@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
@@ -38,6 +39,10 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     [ObservableProperty] private bool _step2IsVisible;
     [ObservableProperty] private string _step2Title;
     [ObservableProperty] private string _fixesAppliedText = string.Empty;
+    [ObservableProperty] private string _editTextTotalLength = string.Empty;
+    [ObservableProperty] private IBrush _editTextTotalLengthBackground = Brushes.Transparent;
+
+    public StackPanel? PanelSingleLineLengths { get; set; }
 
     public Window? Window { get; set; }
 
@@ -299,6 +304,13 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         if (newValue != null)
         {
             newValue.PropertyChanged += SelectedParagraph_PropertyChanged;
+            UpdateSubtitleTextInfo(newValue);
+        }
+        else
+        {
+            EditTextTotalLength = string.Empty;
+            EditTextTotalLengthBackground = Brushes.Transparent;
+            PanelSingleLineLengths?.Children.Clear();
         }
     }
 
@@ -315,12 +327,30 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
     private void SelectedParagraph_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(SubtitleLineViewModel.Text) &&
-            sender is SubtitleLineViewModel vm &&
-            vm.Paragraph != null)
+        if (sender is not SubtitleLineViewModel vm || vm.Paragraph == null)
+        {
+            return;
+        }
+
+        if (e.PropertyName == nameof(SubtitleLineViewModel.Text))
         {
             vm.Paragraph.Text = vm.Text;
+            UpdateSubtitleTextInfo(vm);
         }
+    }
+
+    private void UpdateGaps()
+    {
+        try { SubtitleTextInfoHelper.UpdateGaps(Paragraphs); }
+        catch { }
+    }
+
+    private void UpdateSubtitleTextInfo(SubtitleLineViewModel item)
+    {
+        if (PanelSingleLineLengths == null) return;
+        var info = SubtitleTextInfoHelper.PopulateLineLengthsAndTotal(item.Text ?? string.Empty, PanelSingleLineLengths);
+        EditTextTotalLength = info.TotalText;
+        EditTextTotalLengthBackground = info.TotalBackground;
     }
 
     private void RefreshFixes()
@@ -357,6 +387,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
         Paragraphs.Clear();
         Paragraphs.AddRange(FixedSubtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, _subtitleFormat)));
+        UpdateGaps();
 
         Step2Title = string.Format(Se.Language.Tools.FixCommonErrors.FixCommonOcrErrorsStep2FixesFoundX, Fixes.Count);
     }
