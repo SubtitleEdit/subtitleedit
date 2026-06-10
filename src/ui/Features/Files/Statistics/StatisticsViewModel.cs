@@ -354,7 +354,7 @@ https://github.com/SubtitleEdit/subtitleedit
         {
             sb.AppendLine(string.Format(_l.GapMinimum, gapMinimum) + " (" + GetIndicesWithGap(gapMinimum) + ")");
             sb.AppendLine(string.Format(_l.GapMaximum, gapMaximum) + " (" + GetIndicesWithGap(gapMaximum) + ")");
-            sb.AppendLine(string.Format(_l.GapAverage, gapTotal / _subtitle.Paragraphs.Count - 1));
+            sb.AppendLine(string.Format(_l.GapAverage, gapTotal / (_subtitle.Paragraphs.Count - 1)));
             sb.AppendLine();
             sb.AppendLine(string.Format(_l.GapExceedingMinimum, Configuration.Settings.General.MinimumMillisecondsBetweenLines, belowMinimumGapCount, ((double)belowMinimumGapCount / _subtitle.Paragraphs.Count) * 100.0));
             sb.AppendLine();
