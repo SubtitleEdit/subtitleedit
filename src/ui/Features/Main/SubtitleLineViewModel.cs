@@ -49,6 +49,9 @@ public partial class SubtitleLineViewModel : ObservableObject
     private double _gap;
 
     [ObservableProperty]
+    private double _previousGap;
+
+    [ObservableProperty]
     private bool _isHidden;
 
     public Paragraph? Paragraph { get; set; }
@@ -338,7 +341,6 @@ public partial class SubtitleLineViewModel : ObservableObject
             var general = Se.Settings.General;
             if ((general.ColorDurationTooShort && Duration.TotalMilliseconds < general.SubtitleMinimumDisplayMilliseconds) ||
                 (general.ColorDurationTooLong && Duration.TotalMilliseconds > general.SubtitleMaximumDisplayMilliseconds) ||
-                (general.ColorTimeCodeOverlap && Gap < 0) ||
                 // SE4 fallback: when the CPS column is hidden, surface CPS-too-high on the Duration cell instead
                 (!general.ShowColumnCps && general.ColorDurationTooShort && CharactersPerSecond > general.SubtitleMaximumCharactersPerSeconds))
             {
@@ -348,6 +350,12 @@ public partial class SubtitleLineViewModel : ObservableObject
             return _transparentBrush;
         }
     }
+
+    public IBrush EndTimeBackgroundBrush =>
+        Se.Settings.General.ColorTimeCodeOverlap && Gap < 0 ? _errorBrush : _transparentBrush;
+
+    public IBrush StartTimeBackgroundBrush =>
+        Se.Settings.General.ColorTimeCodeOverlap && PreviousGap < 0 ? _errorBrush : _transparentBrush;
 
     public IBrush CpsBackgroundBrush
     {
@@ -386,6 +394,12 @@ public partial class SubtitleLineViewModel : ObservableObject
 
         OnPropertyChanged(nameof(GapBackgroundBrush));
         OnPropertyChanged(nameof(DurationBackgroundBrush));
+        OnPropertyChanged(nameof(EndTimeBackgroundBrush));
+    }
+
+    partial void OnPreviousGapChanged(double value)
+    {
+        OnPropertyChanged(nameof(StartTimeBackgroundBrush));
     }
 
     public IBrush GapBackgroundBrush

@@ -10224,54 +10224,68 @@ public partial class MainViewModel :
 
         if (result.OkPressed && result.Subtitles.Count > 0)
         {
-            if (result.SelectionNew)
+            // Work out the final selection up front with O(1) membership tests
+            // (newSelection / current are HashSets, not List.Contains), keeping
+            // Subtitles order.
+            var newSelection = new HashSet<SubtitleLineViewModel>(result.Selection);
+            var current = new HashSet<SubtitleLineViewModel>(
+                SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>());
+
+            List<SubtitleLineViewModel> finalSelection;
+            if (result.SelectionAdd)
             {
-                SubtitleGrid.SelectedItems.Clear();
-                SelectedSubtitleIndex = null;
-                SelectedSubtitle = null;
-                foreach (var item in Subtitles)
-                {
-                    if (result.Selection.Contains(item))
-                    {
-                        SubtitleGrid.SelectedItems.Add(item);
-                    }
-                }
-            }
-            else if (result.SelectionAdd)
-            {
-                foreach (var item in Subtitles)
-                {
-                    if (result.Selection.Contains(item) && !SubtitleGrid.SelectedItems.Contains(item))
-                    {
-                        SubtitleGrid.SelectedItems.Add(item);
-                    }
-                }
+                finalSelection = Subtitles.Where(s => current.Contains(s) || newSelection.Contains(s)).ToList();
             }
             else if (result.SelectionSubtract)
             {
-                foreach (var item in Subtitles)
-                {
-                    if (result.Selection.Contains(item) && SubtitleGrid.SelectedItems.Contains(item))
-                    {
-                        SubtitleGrid.SelectedItems.Remove(item);
-                    }
-                }
+                finalSelection = Subtitles.Where(s => current.Contains(s) && !newSelection.Contains(s)).ToList();
             }
             else if (result.SelectionIntersect)
             {
-                var oldSelectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
-                SubtitleGrid.SelectedItems.Clear();
-                foreach (var item in Subtitles)
-                {
-                    if (result.Selection.Contains(item) && oldSelectedItems.Contains(item))
-                    {
-                        SubtitleGrid.SelectedItems.Add(item);
-                    }
-                }
+                finalSelection = Subtitles.Where(s => current.Contains(s) && newSelection.Contains(s)).ToList();
             }
+            else // SelectionNew
+            {
+                finalSelection = Subtitles.Where(s => newSelection.Contains(s)).ToList();
+            }
+
+            ApplyGridSelection(finalSelection);
         }
 
         _updateAudioVisualizer = true;
+    }
+
+    // Replaces the subtitle grid selection with the given rows. Adding many items to
+    // a realized DataGrid's SelectedItems is O(n) visual work per row, so a large
+    // selection (e.g. Modify Selection matching most of a 1500-line file) hangs the
+    // UI (#11529). Detaching ItemsSource de-realizes the rows, so the SelectedItems
+    // mutations only touch the grid's internal selection table; a single layout pass
+    // re-realizes and paints the selection after we reattach. SelectedItems.Add
+    // requires an attached source, so we reattach before selecting.
+    private void ApplyGridSelection(IReadOnlyList<SubtitleLineViewModel> items)
+    {
+        _subtitleGridSelectionChangedSkip = true;
+        var itemsSource = SubtitleGrid.ItemsSource;
+        try
+        {
+            // Null first to force a real change (so the rows are dropped) even though
+            // we reattach the same collection instance.
+            SubtitleGrid.ItemsSource = null;
+            SubtitleGrid.ItemsSource = itemsSource;
+
+            SubtitleGrid.SelectedItems.Clear();
+            foreach (var item in items)
+            {
+                SubtitleGrid.SelectedItems.Add(item);
+            }
+        }
+        finally
+        {
+            SelectedSubtitle = items.Count > 0 ? items[0] : null;
+            SelectedSubtitleIndex = SelectedSubtitle != null ? Subtitles.IndexOf(SelectedSubtitle) : null;
+            _subtitleGridSelectionChangedSkip = false;
+            SubtitleGridSelectionChanged();
+        }
     }
 
     [RelayCommand]
@@ -12872,18 +12886,9 @@ public partial class MainViewModel :
         var selectedItems =
             new HashSet<SubtitleLineViewModel>(SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>());
 
-        _subtitleGridSelectionChangedSkip = true;
-        SubtitleGrid.SelectedItems.Clear();
-        foreach (var item in Subtitles)
-        {
-            if (!selectedItems.Contains(item))
-            {
-                SubtitleGrid.SelectedItems.Add(item);
-            }
-        }
-
-        _subtitleGridSelectionChangedSkip = false;
-        SubtitleGridSelectionChanged();
+        // Inverting a small selection on a large file selects almost every row, so
+        // apply via the detach/reattach helper to avoid the per-row hang (#11529).
+        ApplyGridSelection(Subtitles.Where(s => !selectedItems.Contains(s)).ToList());
     }
 
     private void SelectAndScrollToRow(int index)
@@ -18224,11 +18229,14 @@ public partial class MainViewModel :
 
             var hasLayers = _visibleLayers != null && Se.Settings.Assa.HideLayersFromSubtitleGrid;
 
+            Subtitles[0].PreviousGap = double.MaxValue;
+
             for (var i = 0; i < Subtitles.Count - 1; i++)
             {
                 var p = Subtitles[i];
                 var next = Subtitles[i + 1];
                 p.Gap = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
+                next.PreviousGap = p.Gap;
 
                 p.IsHidden = hasLayers && !_visibleLayers!.Contains(p.Layer);
             }

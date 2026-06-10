@@ -69,17 +69,22 @@ public partial class ModifySelectionViewModel : ObservableObject
             return;
         }
 
+        // Swap the bound collection in one assignment rather than adding matches
+        // one-by-one: each ObservableCollection.Add fires a CollectionChanged
+        // notification (and grid re-layout), which makes a large result set
+        // (e.g. "Contains space" on a 1500-line file) crawl.
         Dispatcher.UIThread.Post(() =>
         {
-            Subtitles.Clear();
+            var matches = new List<PreviewItem>();
             foreach (var item in _allSubtitles)
             {
                 if (rule.IsMatch(item))
                 {
-                    var previewItem = new PreviewItem(item.Number, true, item.StartTime, item.Duration, item.Text, item);
-                    Subtitles.Add(previewItem);
+                    matches.Add(new PreviewItem(item.Number, true, item.StartTime, item.Duration, item.Text, item));
                 }
             }
+
+            Subtitles = new ObservableCollection<PreviewItem>(matches);
         });
     }
 

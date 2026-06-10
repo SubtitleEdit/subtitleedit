@@ -51,7 +51,7 @@ public partial class StatisticsViewModel : ObservableObject
     public Window? Window { get; internal set; }
     public bool OkPressed { get; private set; }
 
-    public IFileHelper _fileHelper;
+    private readonly IFileHelper _fileHelper;
 
     private Subtitle _subtitle;
     private SubtitleFormat _format;
@@ -191,8 +191,9 @@ https://github.com/SubtitleEdit/subtitleedit
         var aboveMaximumLineWidthCount = 0;
         var belowMinimumGapCount = 0;
 
-        foreach (var p in _subtitle.Paragraphs)
+        for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
         {
+            var p = _subtitle.Paragraphs[index];
             allText.Append(p.Text);
 
             var len = GetLineLength(p);
@@ -215,7 +216,7 @@ https://github.com/SubtitleEdit/subtitleedit
             maximumWpm = Math.Max(wpm, maximumWpm);
             totalWpm += wpm;
 
-            var next = _subtitle.GetParagraphOrDefault(_subtitle.GetIndex(p) + 1);
+            var next = _subtitle.GetParagraphOrDefault(index + 1);
             if (next != null)
             {
                 var gap = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
@@ -265,12 +266,11 @@ https://github.com/SubtitleEdit/subtitleedit
                 totalSingleLines++;
             }
 
-            var cps = p.GetCharactersPerSecond();
-            if (cps > Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds)
+            if (charsSec > Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds)
             {
                 aboveOptimalCpsCount++;
             }
-            if (cps > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+            if (charsSec > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
             {
                 aboveMaximumCpsCount++;
             }
@@ -354,7 +354,7 @@ https://github.com/SubtitleEdit/subtitleedit
         {
             sb.AppendLine(string.Format(_l.GapMinimum, gapMinimum) + " (" + GetIndicesWithGap(gapMinimum) + ")");
             sb.AppendLine(string.Format(_l.GapMaximum, gapMaximum) + " (" + GetIndicesWithGap(gapMaximum) + ")");
-            sb.AppendLine(string.Format(_l.GapAverage, gapTotal / _subtitle.Paragraphs.Count - 1));
+            sb.AppendLine(string.Format(_l.GapAverage, gapTotal / (_subtitle.Paragraphs.Count - 1)));
             sb.AppendLine();
             sb.AppendLine(string.Format(_l.GapExceedingMinimum, Configuration.Settings.General.MinimumMillisecondsBetweenLines, belowMinimumGapCount, ((double)belowMinimumGapCount / _subtitle.Paragraphs.Count) * 100.0));
             sb.AppendLine();
@@ -441,7 +441,7 @@ https://github.com/SubtitleEdit/subtitleedit
         return string.Join(", ", indices);
     }
 
-    private string GetIndicesWithGap(double cps)
+    private string GetIndicesWithGap(double gapMilliseconds)
     {
         var indices = new List<string>();
         for (var i = 0; i < _subtitle.Paragraphs.Count - 1; i++)
@@ -449,7 +449,7 @@ https://github.com/SubtitleEdit/subtitleedit
             var p = _subtitle.Paragraphs[i];
             var next = _subtitle.Paragraphs[i + 1];
             var gap = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
-            if (Math.Abs(gap - cps) < 0.01)
+            if (Math.Abs(gap - gapMilliseconds) < 0.01)
             {
                 if (indices.Count >= NumberOfLinesToShow)
                 {
@@ -625,6 +625,7 @@ https://github.com/SubtitleEdit/subtitleedit
     {
         var hashtable = new Dictionary<string, int>(new StingOrdinalComparer());
 
+        _totalWords = 0;
         foreach (Paragraph p in _subtitle.Paragraphs)
         {
             MostUsedWordsAdd(hashtable, p.Text);
