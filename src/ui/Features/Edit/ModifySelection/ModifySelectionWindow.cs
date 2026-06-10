@@ -224,7 +224,6 @@ public class ModifySelectionWindow : Window
             Width = double.NaN,
             Height = double.NaN,
             DataContext = vm,
-            ItemsSource = vm.Subtitles,
             Columns =
             {
                 new DataGridTemplateColumn
@@ -275,6 +274,10 @@ public class ModifySelectionWindow : Window
                 },
             },
         };
+
+        // Bind ItemsSource to the property (rather than assigning the instance once)
+        // so the grid follows the collection when the view model swaps it on preview.
+        dataGrid.Bind(DataGrid.ItemsSourceProperty, new Binding(nameof(vm.Subtitles)) { Source = vm });
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);
     }
