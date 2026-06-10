@@ -625,6 +625,7 @@ https://github.com/SubtitleEdit/subtitleedit
     {
         var hashtable = new Dictionary<string, int>(new StingOrdinalComparer());
 
+        _totalWords = 0;
         foreach (Paragraph p in _subtitle.Paragraphs)
         {
             MostUsedWordsAdd(hashtable, p.Text);
