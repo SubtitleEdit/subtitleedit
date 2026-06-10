@@ -4,6 +4,7 @@ Subtitle Edit Changelog
 
 v5.0.0 (TBD)
 
+* Update CrispASR to v0.7.1
 * Update Polish translation - thx potplayer-fanpack
 * Fix #11357: also ignore Ctrl+Left/Right word-jump navigation while a text box is focused
 * Fix #11422: "Check for updates" download button opened two browser tabs
