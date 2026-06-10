@@ -8423,6 +8423,10 @@ public partial class MainViewModel :
         Se.Settings.General.ShowColumnCps = !Se.Settings.General.ShowColumnCps;
         ShowColumnCps = Se.Settings.General.ShowColumnCps;
         AutoFitColumns();
+        foreach (var row in Subtitles)
+        {
+            row.RefreshAfterSettingsChanged();
+        }
     }
 
     [RelayCommand]
