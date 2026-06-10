@@ -266,12 +266,11 @@ https://github.com/SubtitleEdit/subtitleedit
                 totalSingleLines++;
             }
 
-            var cps = p.GetCharactersPerSecond();
-            if (cps > Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds)
+            if (charsSec > Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds)
             {
                 aboveOptimalCpsCount++;
             }
-            if (cps > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+            if (charsSec > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
             {
                 aboveMaximumCpsCount++;
             }
@@ -442,7 +441,7 @@ https://github.com/SubtitleEdit/subtitleedit
         return string.Join(", ", indices);
     }
 
-    private string GetIndicesWithGap(double cps)
+    private string GetIndicesWithGap(double gapMilliseconds)
     {
         var indices = new List<string>();
         for (var i = 0; i < _subtitle.Paragraphs.Count - 1; i++)
@@ -450,7 +449,7 @@ https://github.com/SubtitleEdit/subtitleedit
             var p = _subtitle.Paragraphs[i];
             var next = _subtitle.Paragraphs[i + 1];
             var gap = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
-            if (Math.Abs(gap - cps) < 0.01)
+            if (Math.Abs(gap - gapMilliseconds) < 0.01)
             {
                 if (indices.Count >= NumberOfLinesToShow)
                 {
