@@ -10245,37 +10245,57 @@ public partial class MainViewModel :
         _updateAudioVisualizer = true;
     }
 
-    // Replaces the subtitle grid selection with the given rows. Adding many items to
-    // a realized DataGrid's SelectedItems is O(n) visual work per row, so a large
-    // selection (e.g. Modify Selection matching most of a 1500-line file) hangs the
-    // UI (#11529). Detaching ItemsSource de-realizes the rows, so the SelectedItems
-    // mutations only touch the grid's internal selection table; a single layout pass
-    // re-realizes and paints the selection after we reattach. SelectedItems.Add
-    // requires an attached source, so we reattach before selecting.
-    private void ApplyGridSelection(IReadOnlyList<SubtitleLineViewModel> items)
+    // Above this many rows, applying a selection by adding to a realized DataGrid's
+    // SelectedItems one row at a time becomes O(n) visual work per row and hangs the
+    // UI (#11529). At/below it the in-place path is kept so small, frequent selections
+    // (a 2-10 row shift-click) don't pay the detach/reattach scroll-reset cost.
+    private const int GridSelectionDetachThreshold = 200;
+
+    // Brackets a SubtitleGrid.SelectedItems mutation: suppresses the per-row
+    // selection-changed handler, and when <paramref name="detach"/> is set, detaches
+    // ItemsSource (null then reattach) so the grid drops its realized rows before the
+    // mutation - the adds then only touch the grid's internal selection table and a
+    // single layout pass repaints afterwards. Does not raise SubtitleGridSelectionChanged;
+    // callers do that after any scroll handling. SelectedItems.Add needs an attached
+    // source, so we reattach before <paramref name="fill"/> runs.
+    private void BatchGridSelection(bool detach, System.Action fill)
     {
+        var wasSkipping = _subtitleGridSelectionChangedSkip;
         _subtitleGridSelectionChangedSkip = true;
         var itemsSource = SubtitleGrid.ItemsSource;
         try
         {
-            // Null first to force a real change (so the rows are dropped) even though
-            // we reattach the same collection instance.
-            SubtitleGrid.ItemsSource = null;
-            SubtitleGrid.ItemsSource = itemsSource;
+            if (detach)
+            {
+                SubtitleGrid.ItemsSource = null;
+                SubtitleGrid.ItemsSource = itemsSource;
+            }
 
+            fill();
+        }
+        finally
+        {
+            _subtitleGridSelectionChangedSkip = wasSkipping;
+        }
+    }
+
+    // Replaces the subtitle grid selection with the given rows, detaching ItemsSource
+    // for large selections so it doesn't hang (#11529).
+    private void ApplyGridSelection(IReadOnlyList<SubtitleLineViewModel> items)
+    {
+        BatchGridSelection(items.Count > GridSelectionDetachThreshold, () =>
+        {
             SubtitleGrid.SelectedItems.Clear();
             foreach (var item in items)
             {
                 SubtitleGrid.SelectedItems.Add(item);
             }
-        }
-        finally
-        {
+
             SelectedSubtitle = items.Count > 0 ? items[0] : null;
             SelectedSubtitleIndex = SelectedSubtitle != null ? Subtitles.IndexOf(SelectedSubtitle) : null;
-            _subtitleGridSelectionChangedSkip = false;
-            SubtitleGridSelectionChanged();
-        }
+        });
+
+        SubtitleGridSelectionChanged();
     }
 
     [RelayCommand]
@@ -17258,6 +17278,7 @@ public partial class MainViewModel :
     private bool _subtitleGridIsControlPressed = false;
     private int _dragSelectStartIndex = -1;
     private int _dragSelectLastIndex = -1;
+    private int _dragSelectAppliedIndex = -1;
     private int _shiftSelectAnchorIndex = -1;
     private int _shiftSelectCurrentIndex = -1;
     private bool _mouseClickSetAnchor;
@@ -17277,6 +17298,7 @@ public partial class MainViewModel :
         _subtitleGridIsRightClick = false;
         _dragSelectStartIndex = -1;
         _dragSelectLastIndex = -1;
+        _dragSelectAppliedIndex = -1;
         _dragSelectHasMoved = false;
         IsSubtitleGridFlyoutHeaderVisible = false;
 
@@ -17324,8 +17346,7 @@ public partial class MainViewModel :
                     var startIdx = Math.Min(anchor, rowIndex);
                     var endIdx = Math.Max(anchor, rowIndex);
 
-                    _subtitleGridSelectionChangedSkip = true;
-                    try
+                    BatchGridSelection(endIdx - startIdx + 1 > GridSelectionDetachThreshold, () =>
                     {
                         SubtitleGrid.SelectedItems.Clear();
                         SubtitleGrid.SelectedItems.Add(Subtitles[rowIndex]);
@@ -17334,11 +17355,7 @@ public partial class MainViewModel :
                             if (i != rowIndex)
                                 SubtitleGrid.SelectedItems.Add(Subtitles[i]);
                         }
-                    }
-                    finally
-                    {
-                        _subtitleGridSelectionChangedSkip = false;
-                    }
+                    });
 
                     SubtitleGrid.ScrollIntoView(Subtitles[rowIndex], null);
                     SubtitleGridSelectionChanged();
@@ -17379,6 +17396,7 @@ public partial class MainViewModel :
         StopSubtitleGridDragSelectAutoScroll();
         _dragSelectStartIndex = -1;
         _dragSelectLastIndex = -1;
+        _dragSelectAppliedIndex = -1;
         _dragSelectHasMoved = false;
 
         SubtitleGrid.SelectedItem = Subtitles[rowIndex];
@@ -17453,22 +17471,59 @@ public partial class MainViewModel :
             return;
         }
 
+        var firstMove = !_dragSelectHasMoved;
         _dragSelectHasMoved = true;
 
-        var startIdx = Math.Min(_dragSelectStartIndex, currentIndex);
-        var endIdx = Math.Max(_dragSelectStartIndex, currentIndex);
+        var anchor = _dragSelectStartIndex;
+        var newLo = Math.Min(anchor, currentIndex);
+        var newHi = Math.Max(anchor, currentIndex);
 
         _subtitleGridSelectionChangedSkip = true;
-        SubtitleGrid.SelectedItems.Clear();
-        for (var i = startIdx; i <= endIdx; i++)
+        try
         {
-            if (i < Subtitles.Count)
+            if (firstMove || _dragSelectAppliedIndex < 0)
             {
-                SubtitleGrid.SelectedItems.Add(Subtitles[i]);
+                // First move: the prior selection state isn't known, so set the whole
+                // range authoritatively (detaching for a very large initial range).
+                BatchGridSelection(newHi - newLo + 1 > GridSelectionDetachThreshold, () =>
+                {
+                    SubtitleGrid.SelectedItems.Clear();
+                    for (var i = newLo; i <= newHi; i++)
+                    {
+                        SubtitleGrid.SelectedItems.Add(Subtitles[i]);
+                    }
+                });
+            }
+            else
+            {
+                // Subsequent moves only touch the rows whose membership changed since
+                // the last applied endpoint, so dragging across a large range never
+                // rebuilds the whole selection (and we don't detach mid-drag, which
+                // would disrupt the active pointer capture).
+                var prevLo = Math.Min(anchor, _dragSelectAppliedIndex);
+                var prevHi = Math.Max(anchor, _dragSelectAppliedIndex);
+                for (var i = prevLo; i <= prevHi; i++)
+                {
+                    if (i < newLo || i > newHi)
+                    {
+                        SubtitleGrid.SelectedItems.Remove(Subtitles[i]);
+                    }
+                }
+
+                for (var i = newLo; i <= newHi; i++)
+                {
+                    if (i < prevLo || i > prevHi)
+                    {
+                        SubtitleGrid.SelectedItems.Add(Subtitles[i]);
+                    }
+                }
             }
         }
-
-        _subtitleGridSelectionChangedSkip = false;
+        finally
+        {
+            _dragSelectAppliedIndex = currentIndex;
+            _subtitleGridSelectionChangedSkip = false;
+        }
 
         SubtitleGridSelectionChanged();
     }
@@ -17505,14 +17560,16 @@ public partial class MainViewModel :
         var startIdx = Math.Min(_shiftSelectAnchorIndex, _shiftSelectCurrentIndex);
         var endIdx = Math.Max(_shiftSelectAnchorIndex, _shiftSelectCurrentIndex);
 
-        _subtitleGridSelectionChangedSkip = true;
-        SubtitleGrid.SelectedItems.Clear();
-        for (var i = startIdx; i <= endIdx; i++)
+        // Shift+Ctrl+Home/End can extend the selection across the whole file in one
+        // keypress, so detach for large ranges to avoid the per-row hang (#11529).
+        BatchGridSelection(endIdx - startIdx + 1 > GridSelectionDetachThreshold, () =>
         {
-            SubtitleGrid.SelectedItems.Add(Subtitles[i]);
-        }
-
-        _subtitleGridSelectionChangedSkip = false;
+            SubtitleGrid.SelectedItems.Clear();
+            for (var i = startIdx; i <= endIdx; i++)
+            {
+                SubtitleGrid.SelectedItems.Add(Subtitles[i]);
+            }
+        });
 
         SubtitleGrid.ScrollIntoView(Subtitles[_shiftSelectCurrentIndex], null);
         SubtitleGridSelectionChanged();
@@ -17654,6 +17711,7 @@ public partial class MainViewModel :
         e.Pointer.Capture(null);
         _dragSelectStartIndex = -1;
         _dragSelectLastIndex = -1;
+        _dragSelectAppliedIndex = -1;
         _dragSelectAutoScrollDirection = 0;
     }
 
