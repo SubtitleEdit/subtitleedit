@@ -1668,28 +1668,32 @@ public partial class BinaryEditViewModel : ObservableObject
     [RelayCommand]
     private void SelectForcedLines()
     {
-        if (SubtitleGrid == null)
-        {
-            return;
-        }
-
-        SubtitleGrid.SelectedItems.Clear();
-        foreach (var item in Subtitles.Where(s => s.IsForced))
-        {
-            SubtitleGrid.SelectedItems.Add(item);
-        }
+        ApplyGridSelection(Subtitles.Where(s => s.IsForced).ToList());
     }
 
     [RelayCommand]
     private void SelectNonForcedLines()
+    {
+        ApplyGridSelection(Subtitles.Where(s => !s.IsForced).ToList());
+    }
+
+    // Adding many rows to a realized DataGrid's SelectedItems is O(n) visual work per
+    // row, so selecting all forced/non-forced lines on a large file hangs (#11529).
+    // Detaching ItemsSource de-realizes the rows so the adds only touch the grid's
+    // internal selection table; a single layout pass repaints after we reattach.
+    private void ApplyGridSelection(IReadOnlyList<BinarySubtitleItem> items)
     {
         if (SubtitleGrid == null)
         {
             return;
         }
 
+        var itemsSource = SubtitleGrid.ItemsSource;
+        SubtitleGrid.ItemsSource = null;
+        SubtitleGrid.ItemsSource = itemsSource;
+
         SubtitleGrid.SelectedItems.Clear();
-        foreach (var item in Subtitles.Where(s => !s.IsForced))
+        foreach (var item in items)
         {
             SubtitleGrid.SelectedItems.Add(item);
         }
