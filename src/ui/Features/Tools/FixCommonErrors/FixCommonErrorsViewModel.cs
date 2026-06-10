@@ -386,7 +386,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         }
 
         Paragraphs.Clear();
-        Paragraphs.AddRange(FixedSubtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, _subtitleFormat)));
+        Paragraphs.AddRange(FixedSubtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, _subtitleFormat) { IsCpsColumnVisible = false }));
         UpdateGaps();
 
         Step2Title = string.Format(Se.Language.Tools.FixCommonErrors.FixCommonOcrErrorsStep2FixesFoundX, Fixes.Count);
