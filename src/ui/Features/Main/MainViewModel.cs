@@ -12876,18 +12876,9 @@ public partial class MainViewModel :
         var selectedItems =
             new HashSet<SubtitleLineViewModel>(SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>());
 
-        _subtitleGridSelectionChangedSkip = true;
-        SubtitleGrid.SelectedItems.Clear();
-        foreach (var item in Subtitles)
-        {
-            if (!selectedItems.Contains(item))
-            {
-                SubtitleGrid.SelectedItems.Add(item);
-            }
-        }
-
-        _subtitleGridSelectionChangedSkip = false;
-        SubtitleGridSelectionChanged();
+        // Inverting a small selection on a large file selects almost every row, so
+        // apply via the detach/reattach helper to avoid the per-row hang (#11529).
+        ApplyGridSelection(Subtitles.Where(s => !selectedItems.Contains(s)).ToList());
     }
 
     private void SelectAndScrollToRow(int index)
