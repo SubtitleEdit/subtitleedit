@@ -191,8 +191,9 @@ https://github.com/SubtitleEdit/subtitleedit
         var aboveMaximumLineWidthCount = 0;
         var belowMinimumGapCount = 0;
 
-        foreach (var p in _subtitle.Paragraphs)
+        for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
         {
+            var p = _subtitle.Paragraphs[index];
             allText.Append(p.Text);
 
             var len = GetLineLength(p);
@@ -215,7 +216,7 @@ https://github.com/SubtitleEdit/subtitleedit
             maximumWpm = Math.Max(wpm, maximumWpm);
             totalWpm += wpm;
 
-            var next = _subtitle.GetParagraphOrDefault(_subtitle.GetIndex(p) + 1);
+            var next = _subtitle.GetParagraphOrDefault(index + 1);
             if (next != null)
             {
                 var gap = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
