@@ -49,6 +49,9 @@ public partial class SubtitleLineViewModel : ObservableObject
     private double _gap;
 
     [ObservableProperty]
+    private double _previousGap;
+
+    [ObservableProperty]
     private bool _isHidden;
 
     public Paragraph? Paragraph { get; set; }
@@ -337,7 +340,6 @@ public partial class SubtitleLineViewModel : ObservableObject
         {
             if ((Se.Settings.General.ColorDurationTooShort && Duration.TotalMilliseconds < Se.Settings.General.SubtitleMinimumDisplayMilliseconds) ||
                 (Se.Settings.General.ColorDurationTooLong && Duration.TotalMilliseconds > Se.Settings.General.SubtitleMaximumDisplayMilliseconds) ||
-                (Se.Settings.General.ColorTimeCodeOverlap && Gap < 0) ||
                 // CPS too high == the duration is too short for this much text. SE4 lit up
                 // the Duration column for this case and users (issue #11307) rely on it
                 // being visible there, not just in the CPS column. Reuse the same gate
@@ -350,6 +352,12 @@ public partial class SubtitleLineViewModel : ObservableObject
             return _transparentBrush;
         }
     }
+
+    public IBrush EndTimeBackgroundBrush =>
+        Se.Settings.General.ColorTimeCodeOverlap && Gap < 0 ? _errorBrush : _transparentBrush;
+
+    public IBrush StartTimeBackgroundBrush =>
+        Se.Settings.General.ColorTimeCodeOverlap && PreviousGap < 0 ? _errorBrush : _transparentBrush;
 
     public IBrush CpsBackgroundBrush
     {
@@ -388,6 +396,12 @@ public partial class SubtitleLineViewModel : ObservableObject
 
         OnPropertyChanged(nameof(GapBackgroundBrush));
         OnPropertyChanged(nameof(DurationBackgroundBrush));
+        OnPropertyChanged(nameof(EndTimeBackgroundBrush));
+    }
+
+    partial void OnPreviousGapChanged(double value)
+    {
+        OnPropertyChanged(nameof(StartTimeBackgroundBrush));
     }
 
     public IBrush GapBackgroundBrush

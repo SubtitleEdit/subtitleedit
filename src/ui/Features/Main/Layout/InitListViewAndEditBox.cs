@@ -190,14 +190,28 @@ public static partial class InitListViewAndEditBox
                 })
         });
 
-        var startColumn = new DataGridTextColumn
+        var startColumn = new DataGridTemplateColumn
         {
             Header = Se.Language.General.Show,
             Tag = SubtitleGridColumnKeys.Start,
-            Binding = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
             Width = new DataGridLength(120),
             MinWidth = 100,
             CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) =>
+            {
+                var border = new Border
+                {
+                    Padding = new Thickness(4, 2),
+                    [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.StartTimeBackgroundBrush)),
+                };
+                var textBlock = new TextBlock
+                {
+                    VerticalAlignment = VerticalAlignment.Center,
+                    [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.StartTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
+                };
+                border.Child = textBlock;
+                return border;
+            }),
         };
         vm.SubtitleGrid.Columns.Add(startColumn);
         startColumn.Bind(DataGridColumn.IsVisibleProperty, new Binding(nameof(vm.ShowColumnStartTime))
@@ -206,14 +220,28 @@ public static partial class InitListViewAndEditBox
             Source = vm
         });
 
-        var hideColumn = new DataGridTextColumn
+        var hideColumn = new DataGridTemplateColumn
         {
             Header = Se.Language.General.Hide,
             Tag = SubtitleGridColumnKeys.End,
-            Binding = new Binding(nameof(SubtitleLineViewModel.EndTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
             Width = new DataGridLength(120),
             MinWidth = 100,
             CellTheme = UiUtil.DataGridNoBorderCellTheme,
+            CellTemplate = new FuncDataTemplate<SubtitleLineViewModel>((value, nameScope) =>
+            {
+                var border = new Border
+                {
+                    Padding = new Thickness(4, 2),
+                    [!Border.BackgroundProperty] = new Binding(nameof(SubtitleLineViewModel.EndTimeBackgroundBrush)),
+                };
+                var textBlock = new TextBlock
+                {
+                    VerticalAlignment = VerticalAlignment.Center,
+                    [!TextBlock.TextProperty] = new Binding(nameof(SubtitleLineViewModel.EndTime)) { Converter = fullTimeConverter, Mode = BindingMode.OneWay },
+                };
+                border.Child = textBlock;
+                return border;
+            }),
         };
         vm.SubtitleGrid.Columns.Add(hideColumn);
         hideColumn.Bind(DataGridColumn.IsVisibleProperty, new Binding(nameof(vm.ShowColumnEndTime))
