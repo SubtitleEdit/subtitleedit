@@ -10214,50 +10214,66 @@ public partial class MainViewModel :
 
         if (result.OkPressed && result.Subtitles.Count > 0)
         {
-            if (result.SelectionNew)
+            // O(1) membership tests instead of List.Contains, and suppress the
+            // per-item selection-changed handler (which updates the text box,
+            // waveform and video position) so it fires once at the end rather
+            // than once per added row - otherwise applying a large selection
+            // hangs the UI (#11529).
+            var newSelection = new HashSet<SubtitleLineViewModel>(result.Selection);
+
+            _subtitleGridSelectionChangedSkip = true;
+            try
             {
-                SubtitleGrid.SelectedItems.Clear();
-                SelectedSubtitleIndex = null;
-                SelectedSubtitle = null;
-                foreach (var item in Subtitles)
+                if (result.SelectionNew)
                 {
-                    if (result.Selection.Contains(item))
+                    SubtitleGrid.SelectedItems.Clear();
+                    SelectedSubtitleIndex = null;
+                    SelectedSubtitle = null;
+                    foreach (var item in Subtitles)
                     {
-                        SubtitleGrid.SelectedItems.Add(item);
+                        if (newSelection.Contains(item))
+                        {
+                            SubtitleGrid.SelectedItems.Add(item);
+                        }
                     }
                 }
-            }
-            else if (result.SelectionAdd)
-            {
-                foreach (var item in Subtitles)
+                else if (result.SelectionAdd)
                 {
-                    if (result.Selection.Contains(item) && !SubtitleGrid.SelectedItems.Contains(item))
+                    var current = new HashSet<SubtitleLineViewModel>(
+                        SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>());
+                    foreach (var item in Subtitles)
                     {
-                        SubtitleGrid.SelectedItems.Add(item);
+                        if (newSelection.Contains(item) && current.Add(item))
+                        {
+                            SubtitleGrid.SelectedItems.Add(item);
+                        }
                     }
                 }
-            }
-            else if (result.SelectionSubtract)
-            {
-                foreach (var item in Subtitles)
+                else if (result.SelectionSubtract)
                 {
-                    if (result.Selection.Contains(item) && SubtitleGrid.SelectedItems.Contains(item))
+                    foreach (var item in newSelection)
                     {
                         SubtitleGrid.SelectedItems.Remove(item);
                     }
                 }
-            }
-            else if (result.SelectionIntersect)
-            {
-                var oldSelectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
-                SubtitleGrid.SelectedItems.Clear();
-                foreach (var item in Subtitles)
+                else if (result.SelectionIntersect)
                 {
-                    if (result.Selection.Contains(item) && oldSelectedItems.Contains(item))
+                    var oldSelectedItems = new HashSet<SubtitleLineViewModel>(
+                        SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>());
+                    SubtitleGrid.SelectedItems.Clear();
+                    foreach (var item in Subtitles)
                     {
-                        SubtitleGrid.SelectedItems.Add(item);
+                        if (newSelection.Contains(item) && oldSelectedItems.Contains(item))
+                        {
+                            SubtitleGrid.SelectedItems.Add(item);
+                        }
                     }
                 }
+            }
+            finally
+            {
+                _subtitleGridSelectionChangedSkip = false;
+                SubtitleGridSelectionChanged();
             }
         }
 
