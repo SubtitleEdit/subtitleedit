@@ -95,7 +95,7 @@ public class SeAppearance
         DarkModeForegroundColor = new Color(255, 220, 220, 220).FromColorToHex();
         UseFocusedButtonBackgroundColor = true;
         FocusedButtonBackgroundColor = new Color(99, 30, 144, 255).FromColorToHex();
-        BookmarkColor = Colors.Gold.FromColorToHex();
+        BookmarkColor = Color.Parse("#C07800").FromColorToHex();
         GridCompactMode = true;
         ShowLayer = true;
         ShowUpDownStartTime = true;
