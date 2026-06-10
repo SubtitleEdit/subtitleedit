@@ -51,7 +51,7 @@ public partial class StatisticsViewModel : ObservableObject
     public Window? Window { get; internal set; }
     public bool OkPressed { get; private set; }
 
-    public IFileHelper _fileHelper;
+    private readonly IFileHelper _fileHelper;
 
     private Subtitle _subtitle;
     private SubtitleFormat _format;
