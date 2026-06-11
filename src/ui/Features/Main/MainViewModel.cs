@@ -11420,6 +11420,19 @@ public partial class MainViewModel :
         });
     }
 
+    private void FocusSubtitleGrid()
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (AudioVisualizer != null && AudioVisualizer.IsFocused)
+            {
+                AudioVisualizer.SkipNextPointerEntered = true;
+            }
+
+            SubtitleGrid.Focus();
+        });
+    }
+
     [RelayCommand]
     private void WaveformInsertAtPositionAndFocusTextBox()
     {
@@ -12060,12 +12073,7 @@ public partial class MainViewModel :
         }
         else
         {
-            if (AudioVisualizer.IsFocused)
-            {
-                AudioVisualizer.SkipNextPointerEntered = true;
-            }
-
-            SubtitleGrid.Focus();
+            FocusSubtitleGrid();
         }
 
         _updateAudioVisualizer = true;
