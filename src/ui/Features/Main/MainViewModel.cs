@@ -17572,7 +17572,8 @@ public partial class MainViewModel :
 
         // Shift+Ctrl+Home/End can extend the selection across the whole file in one
         // keypress, so detach for large ranges to avoid the per-row hang (#11529).
-        BatchGridSelection(endIdx - startIdx + 1 > GridSelectionDetachThreshold, () =>
+        var detach = endIdx - startIdx + 1 > GridSelectionDetachThreshold;
+        BatchGridSelection(detach, () =>
         {
             SubtitleGrid.SelectedItems.Clear();
             for (var i = startIdx; i <= endIdx; i++)
@@ -17581,7 +17582,24 @@ public partial class MainViewModel :
             }
         });
 
-        SubtitleGrid.ScrollIntoView(Subtitles[_shiftSelectCurrentIndex], null);
+        var scrollTarget = _shiftSelectCurrentIndex;
+        if (detach)
+        {
+            // After detach/reattach, rows aren't realized until the layout pass fires,
+            // so ScrollIntoView fails silently when called synchronously here.
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (scrollTarget < Subtitles.Count)
+                {
+                    SubtitleGrid.ScrollIntoView(Subtitles[scrollTarget], null);
+                }
+            }, DispatcherPriority.Background);
+        }
+        else
+        {
+            SubtitleGrid.ScrollIntoView(Subtitles[scrollTarget], null);
+        }
+
         SubtitleGridSelectionChanged();
     }
 
