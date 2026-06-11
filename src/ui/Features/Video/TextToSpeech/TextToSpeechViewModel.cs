@@ -220,6 +220,8 @@ public partial class TextToSpeechViewModel : ObservableObject
             // CrispASR v0.7.0, so synthesis is fast enough for the TTS-from-subtitles workflow.
             new VoxCPM2CrispAsr(),
 
+            new ZonosTtsCrispAsr(),
+
             new ChatterboxTtsCpp(),
         ];
 
@@ -941,6 +943,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             VoxCPM2CrispAsr.StopServer();
         }
+        if (keepAlive is not ZonosTtsCrispAsr)
+        {
+            ZonosTtsCrispAsr.StopServer();
+        }
     }
 
     private static void StopAllCrispAsrServers() => StopOtherCrispAsrServers(null);
@@ -1182,6 +1188,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             case VoxCPM2CrispAsr:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadVoxCPM2CrispAsrModels(VoxCPM2CrispAsr.ResolveModelKey(SelectedModel)));
                 break;
+            case ZonosTtsCrispAsr:
+                await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadZonosTtsCrispAsrModels());
+                break;
             case ChatterboxTtsCpp:
                 await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadChatterboxModels(ChatterboxTtsCpp.ResolveModelKey(SelectedModel)));
                 break;
@@ -1260,6 +1269,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             VoxCPM2CrispAsr => VoxCPM2CrispAsr.AreModelsInstalled(modelKey)
+                ? DownloadDotStatus.UpToDate
+                : DownloadDotStatus.NotInstalled,
+            ZonosTtsCrispAsr => ZonosTtsCrispAsr.AreModelsInstalled()
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled,
             ChatterboxTtsCpp => ChatterboxTtsCpp.AreModelsInstalled(modelKey)
@@ -1888,6 +1900,43 @@ public partial class TextToSpeechViewModel : ObservableObject
 
                 var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadIndexTtsCrispAsrModels(indexModelKey));
                 if (!dlResult.OkPressed || !IndexTtsCrispAsr.AreModelsInstalled(indexModelKey))
+                {
+                    return false;
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    await RefreshVoices(engine);
+                });
+                return true;
+            }
+
+            return true;
+        }
+
+        if (engine is ZonosTtsCrispAsr)
+        {
+            if (!await TtsVoiceInstaller.EnsureCrispAsrForZonos(Window, _windowService, forceRedownload: false))
+            {
+                return false;
+            }
+
+            if (!ZonosTtsCrispAsr.AreModelsInstalled())
+            {
+                var answer = await MessageBox.Show(
+                    Window,
+                    "Download Zonos TTS (CrispASR) models?",
+                    $"{Environment.NewLine}\"Zonos TTS (CrispASR)\" requires the Zonos transformer + DAC codec (~1.8 GB).{Environment.NewLine}{Environment.NewLine}Download models?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                var dlResult = await _windowService.ShowDialogAsync<DownloadTtsWindow, DownloadTtsViewModel>(Window!, vm => vm.StartDownloadZonosTtsCrispAsrModels());
+                if (!dlResult.OkPressed || !ZonosTtsCrispAsr.AreModelsInstalled())
                 {
                     return false;
                 }
@@ -3169,6 +3218,12 @@ public partial class TextToSpeechViewModel : ObservableObject
                     SelectedModel = Models.FirstOrDefault();
                 }
                 IsEngineSettingsVisible = true;
+                IsModelDownloadVisible = true;
+            }
+            else if (SelectedEngine is ZonosTtsCrispAsr)
+            {
+                // Minimal engine: single fixed quant (no model dropdown) and no settings
+                // dialog. Show only the model-download button so the user can fetch the GGUFs.
                 IsModelDownloadVisible = true;
             }
             else if (SelectedEngine is ChatterboxTtsCpp)

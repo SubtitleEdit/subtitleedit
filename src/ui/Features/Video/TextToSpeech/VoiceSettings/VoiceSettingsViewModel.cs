@@ -336,6 +336,7 @@ public partial class VoiceSettingsViewModel : ObservableObject
                                || engine.GetType() == typeof(CosyVoice3CrispAsr)
                                || engine.GetType() == typeof(F5TtsCrispAsr)
                                || engine.GetType() == typeof(VoxCPM2CrispAsr)
+                               || engine.GetType() == typeof(ZonosTtsCrispAsr)
                                || engine.GetType() == typeof(ChatterboxTtsCpp)
                                || engine.GetType() == typeof(OmniVoiceTtsCpp);
     }

@@ -94,6 +94,19 @@ public static class TtsVoiceInstaller
             minVersionNote: null);
 
     /// <summary>
+    /// Ensures the CrispASR runtime that Zonos TTS (CrispASR) runs on is installed.
+    /// The zonos-tts backend's GGUFs (transformer + DAC codec) are staged into SE's
+    /// CrispAsr/models folder by
+    /// <see cref="Nikse.SubtitleEdit.Logic.Download.ZonosTtsCrispAsrDownloadService"/> with
+    /// hash verification before first synth.
+    /// </summary>
+    public static Task<bool> EnsureCrispAsrForZonos(Window? window, IWindowService windowService, bool forceRedownload)
+        => EnsureCrispAsrAsync(window, windowService, forceRedownload,
+            engineDisplayName: "Zonos TTS (CrispASR)",
+            extraCapabilityCheck: null,
+            minVersionNote: null);
+
+    /// <summary>
     /// Ensures the CrispASR runtime that CosyVoice3 (CrispASR) runs on is installed.
     /// The cosyvoice3-tts backend ships in CrispASR v0.6.12+; every required GGUF (LLM + flow
     /// + hift + s3tok + campplus + voice-bank) is staged into SE's CrispAsr/models folder by
