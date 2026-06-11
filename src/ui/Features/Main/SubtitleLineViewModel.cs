@@ -631,7 +631,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         }
 
         var cpsRounded = Math.Round(CharactersPerSecond, 2, MidpointRounding.AwayFromZero);
-        if (cpsRounded > general.SubtitleMaximumCharactersPerSeconds && Se.Settings.General.ColorDurationTooShort)
+        if (cpsRounded > general.SubtitleMaximumCharactersPerSeconds && Se.Settings.General.ColorCharactersPerSecond)
         {
             errors.AppendLine("Cps: " + cpsRounded + " > " + general.SubtitleMaximumCharactersPerSeconds);
         }

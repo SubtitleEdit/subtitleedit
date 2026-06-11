@@ -43,7 +43,7 @@ internal static class SubtitleTextInfoHelper
 
         var cps = GetCharactersPerSecond(text, item.StartTime, item.EndTime);
         cpsText = string.Format(Se.Language.Main.CharactersPerSecond, $"{cps:0.0}");
-        cpsBackground = colorTextTooLong && cps > maxCps ? _errorBrush : _transparentBrush;
+        cpsBackground = Se.Settings.General.ColorCharactersPerSecond && cps > maxCps ? _errorBrush : _transparentBrush;
         totalText = info.TotalText;
         totalBackground = info.TotalBackground;
     }

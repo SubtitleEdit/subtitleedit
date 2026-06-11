@@ -17935,7 +17935,7 @@ public partial class MainViewModel :
         EditTextCharactersPerSecondOriginal = string.Format(Se.Language.Main.CharactersPerSecond, $"{cps:0.0}");
         EditTextTotalLengthOriginal = string.Format(Se.Language.Main.TotalCharacters, totalLength);
 
-        EditTextCharactersPerSecondBackgroundOriginal = Se.Settings.General.ColorTextTooLong &&
+        EditTextCharactersPerSecondBackgroundOriginal = Se.Settings.General.ColorCharactersPerSecond &&
                                                         cps > Se.Settings.General.SubtitleMaximumCharactersPerSeconds
             ? _errorBrush
             : _transparentBrush;

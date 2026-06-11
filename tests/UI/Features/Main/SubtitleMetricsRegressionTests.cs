@@ -35,6 +35,37 @@ public class SubtitleMetricsRegressionTests
     }
 
     [Fact]
+    public void CpsError_IsGatedOnColorCharactersPerSecond_NotColorDurationTooShort()
+    {
+        var originalSettings = Se.Settings;
+        try
+        {
+            Se.Settings = new Se();
+            Se.Settings.General.SubtitleMaximumCharactersPerSeconds = 1;
+            Se.Settings.General.ColorCharactersPerSecond = true;
+            Se.Settings.General.ColorDurationTooShort = false;
+
+            var vm = new SubtitleLineViewModel
+            {
+                Text = "Hello world",
+                StartTime = TimeSpan.Zero,
+                EndTime = TimeSpan.FromSeconds(1),
+            };
+
+            Assert.Contains("Cps:", vm.GetErrors(null, null), StringComparison.Ordinal);
+
+            Se.Settings.General.ColorCharactersPerSecond = false;
+            Se.Settings.General.ColorDurationTooShort = true;
+
+            Assert.DoesNotContain("Cps:", vm.GetErrors(null, null), StringComparison.Ordinal);
+        }
+        finally
+        {
+            Se.Settings = originalSettings;
+        }
+    }
+
+    [Fact]
     public void StrategyAwareLineLength_IsConsistentBetweenHighlightAndErrors()
     {
         var originalSettings = Se.Settings;
