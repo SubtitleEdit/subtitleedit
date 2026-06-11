@@ -1,5 +1,6 @@
 ﻿﻿using Avalonia.Controls;
 using Avalonia.Controls.Documents;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using System;
@@ -62,8 +63,8 @@ public static class TextDiffHighlighter
 
     public static (TextBlock left, TextBlock right) Compare(string text1, string text2)
     {
-        var left = new TextBlock { TextWrapping = TextWrapping.Wrap };
-        var right = new TextBlock { TextWrapping = TextWrapping.Wrap };
+        var left = new TextBlock { TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
+        var right = new TextBlock { TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
 
         if (left.Inlines == null || right.Inlines == null)
         {
@@ -119,8 +120,8 @@ public static class TextDiffHighlighter
 
     public static (TextBlock before, TextBlock after) CompareReplacement(string text1, string text2)
     {
-        var before = new TextBlock { TextWrapping = TextWrapping.Wrap };
-        var after = new TextBlock { TextWrapping = TextWrapping.Wrap };
+        var before = new TextBlock { TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
+        var after = new TextBlock { TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
 
         if (before.Inlines == null || after.Inlines == null)
         {
