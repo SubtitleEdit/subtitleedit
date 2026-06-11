@@ -2,7 +2,7 @@
 Subtitle Edit Changelog
 
 
-v5.0.0-rc4 (TBD)
+v5.0.0-rc4 (11th of June 2026)
 
 * Add Zonos TTS text-to-speech engine (CrispASR)
 * Add VoxCPM2 text-to-speech engine (CrispASR)
