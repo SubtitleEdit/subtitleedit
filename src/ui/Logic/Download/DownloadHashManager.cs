@@ -141,6 +141,14 @@ public static class DownloadHashManager
         public const string Codec = "IndexTtsCrispAsr.Codec";
     }
 
+    public static class ZonosTtsCrispAsr
+    {
+        // SHA-256 of the Zonos-v0.1 transformer (Q8_0) and the shared DAC 44 kHz codec.
+        // Pulled from cstr's HF tree API (lfs.oid).
+        public const string TalkerQ8_0 = "ZonosTtsCrispAsr.TalkerQ8_0";
+        public const string Codec = "ZonosTtsCrispAsr.Codec";
+    }
+
     public static class CosyVoice3CrispAsr
     {
         // SHA-256 of every GGUF the cosyvoice3-tts backend needs. We stage all of them in
@@ -697,6 +705,17 @@ public static class DownloadHashManager
             [IndexTtsCrispAsr.Codec] = new[]
             {
                 "fcba9a322d80ef318da8a17c01e8a5e7f299ccdf881c62a43abf62cb3c104268", // indextts-bigvgan.gguf
+            },
+
+            // Zonos TTS (CrispASR) — cstr/zonos-v0.1-transformer-GGUF + cstr/dac-44khz-GGUF.
+            // Hashes are HF LFS oid (= SHA-256) pulled from the tree API.
+            [ZonosTtsCrispAsr.TalkerQ8_0] = new[]
+            {
+                "6aea47e0ffac9cc1e4910ec8f4dff94dbf52379d903c43048f1adbc9587a0846", // zonos-v0.1-transformer-q8_0.gguf
+            },
+            [ZonosTtsCrispAsr.Codec] = new[]
+            {
+                "6f62c6dbb26fd69f0634db3c7f044464cfbd9a5b8806eb621f8be7034d869a3e", // dac-44khz-f16.gguf
             },
 
             // CosyVoice3 (CrispASR) — cstr/cosyvoice3-0.5b-2512-GGUF on HuggingFace.
