@@ -118,6 +118,7 @@ public static partial class InitListViewAndEditBox
         var doubleRoundedConverter = new DoubleToOneDecimalConverter();
         var cpsWmpConverter = new DoubleToOneDecimalHideMaxConverter();
         var notNullConverter = new NotNullConverter();
+        var nullToOpacityConverter = new NullToOpacityConverter();
         var syntaxHighlightingConverter = new TextWithSubtitleSyntaxHighlightingConverter();
         vm.SubtitleDataGridSyntaxHighlighting = syntaxHighlightingConverter;
         var gapConverter = new DoubleToDisplayShortConverter();
@@ -183,7 +184,8 @@ public static partial class InitListViewAndEditBox
                             Value = IconNames.Bookmark,
                             Foreground = new SolidColorBrush(Se.Settings.Appearance.BookmarkColor.FromHexToColor()),
                             VerticalAlignment = VerticalAlignment.Center,
-                            [!Visual.IsVisibleProperty] = new Binding(nameof(SubtitleLineViewModel.Bookmark)) { Converter = notNullConverter },
+                            IsHitTestVisible = false,
+                            [!Visual.OpacityProperty] = new Binding(nameof(SubtitleLineViewModel.Bookmark)) { Converter = nullToOpacityConverter },
                          },
                          UiUtil.MakeLabel().WithBindText(value, new Binding(nameof(SubtitleLineViewModel.Number)))
                     }
