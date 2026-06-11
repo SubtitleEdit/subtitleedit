@@ -2,14 +2,62 @@
 Subtitle Edit Changelog
 
 
-v5.0.0 (TBD)
+v5.0.0-rc4 (TBD)
 
+* Add Zonos TTS text-to-speech engine (CrispASR)
+* Add VoxCPM2 text-to-speech engine (CrispASR)
+* Add model-download button with per-model download size to Text to speech
+* Add settings window for the Piper text-to-speech engine
+* Add Parakeet RNNT models and SenseVoice-Small speech recognition (CrispASR)
+* Add Music Symbol settings to Fix Common Errors
+* Add live video preview to the burn-in window - thx MbuguaDavid
+* Add "Beautify time codes..." to the subtitle grid context menu
+* Add CJK unbreak actions
+* Add French installer translation - thx Need74
+* Add forced-flag support and dirty-state tracking to binary edit - thx mjuhasz
+* Show a progress overlay while adding files in Batch Convert
+* Use default ASSA storage style for new/converted subtitles
+* Make bookmark add/toggle shortcuts work from the text editor - thx mjuhasz
+* Use the system font (SF Pro) as the default UI font on macOS - thx mjuhasz
+* Send consent attestation when voice cloning (CrispASR/Chatterbox)
+* Persist burn-in encoding settings between sessions
 * Update CrispASR to v0.7.1
 * Update Polish translation - thx potplayer-fanpack
-* Fix #11357: also ignore Ctrl+Left/Right word-jump navigation while a text box is focused
-* Fix #11422: "Check for updates" download button opened two browser tabs
+* Update Russian translation - thx jekovcar
+* Update Turkish translation - thx bilimiyorum
+* Fix #11357: also ignore Ctrl+Left/Right word-jump navigation while a text box is focused - thx GrampaWildWilly
+* Fix #11422: "Check for updates" download button opened two browser tabs - thx nms42
+* Fix #11479: OCR hang/out-of-memory on a stray "<" - thx wulf357
+* Fix #11505: macOS menu bar reverting to English after restart - thx Mimikaki
+* Fix #11515: crash when deleting; log unhandled UI-thread exceptions - thx OldMan-Jakob
+* Fix #11529: hang when Modify Selection returns a large number of lines - thx ChocOranger
 * Fix OCR Change All not replacing current item in BinaryImageCompare mode
+* Fix OCR unknown-word prompt flow (Skip All / Skip Once) - thx mjuhasz
 * Fix shift-click and Shift+arrow selection in subtitle/batch-convert/OCR grids - thx mjuhasz
+* Fix Shift+End scrolling to top after a large-range selection - thx mjuhasz
+* Fix toggle focus between subtitle grid and waveform - thx mjuhasz
+* Fix grid coloring to honor too-many-lines and add independent CPS/WPM toggles
+* Color Show/Hide cells red on overlap - thx mjuhasz
+* Color Duration red for high CPS only when the CPS column is hidden - thx mjuhasz
+* Improve Fix Common Errors inline editor and grid consistency - thx mjuhasz
+* Fix continuation action sorting in Fix Common Errors - thx mjuhasz
+* Fix wrong "After" preview (doubled text) in Fix Common Errors - thx mjuhasz
+* Fix custom continuation style not reaching the engine; store it per profile
+* Fix corrupted ellipsis character in the custom continuation style dropdown - thx mjuhasz
+* Fix several burn-in bugs (output folder, cut precision, logo label)
+* Fix transparent-video output-folder and subtitle-detect bugs
+* Fix min-duration for the last subtitle in Apply duration limits
+* Fix Option+Arrow word navigation in the edit box on macOS - thx mjuhasz
+* Fix bookmark icon misaligning subtitle grid row numbers - thx mjuhasz
+* Change default bookmark color to dark amber for light-theme readability - thx mjuhasz
+* Fix cleared shortcuts being re-added from defaults on next startup - thx mjuhasz
+* Fix incomplete UI refresh when the system theme switches dark to light - thx mjuhasz
+* Fix Modify Selection length rules to use the longest visible line - thx mjuhasz
+* Fix video state when opening image-based subtitle formats - thx mjuhasz
+* Align binary-edit video player behavior with the main window - thx mjuhasz
+* Fix vertical text alignment in diff grid cells - thx mjuhasz
+* Unify the error log filename to error-log.txt
+* Statistics: fix gap-average calculation - thx ivandrofly
 
 -----------------------------------------------------------------------------------------------------
 
