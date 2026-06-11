@@ -494,6 +494,7 @@ public partial class MainViewModel :
         AudioTraksMenuItem = new MenuItem();
         SubtitleDataGridSyntaxHighlighting = new TextWithSubtitleSyntaxHighlightingConverter();
         Toolbar = new Border();
+        UiTheme.SystemThemeChangedCallback = RebuildToolbar;
         ButtonWaveformPlay = new Button();
         _subtitle = new Subtitle();
         _subtitleOriginal = new Subtitle();
@@ -7721,16 +7722,8 @@ public partial class MainViewModel :
         }
     }
 
-    public void ApplySettings()
+    private void RebuildToolbar()
     {
-        UiUtil.SetFontName(Se.Settings.Appearance.FontName);
-        UiTheme.SetCurrentTheme();
-
-        if (ToolbarTopSeparator != null)
-        {
-            ToolbarTopSeparator.IsVisible = Se.Settings.Appearance.ShowHorizontalLineAboveToolbar;
-        }
-
         if (Toolbar is Border toolbarBorder)
         {
             var tb = InitToolbar.Make(this);
@@ -7741,6 +7734,19 @@ public partial class MainViewModel :
                 toolbarBorder.Child = grid;
             }
         }
+    }
+
+    public void ApplySettings()
+    {
+        UiUtil.SetFontName(Se.Settings.Appearance.FontName);
+        UiTheme.SetCurrentTheme();
+
+        if (ToolbarTopSeparator != null)
+        {
+            ToolbarTopSeparator.IsVisible = Se.Settings.Appearance.ShowHorizontalLineAboveToolbar;
+        }
+
+        RebuildToolbar();
 
         MenuPlugins.IsVisible = Se.Settings.Appearance.ShowPluginsMenu;
 
@@ -8349,16 +8355,7 @@ public partial class MainViewModel :
         }
         SetLayout(Se.Settings.General.LayoutNumber);
 
-        if (Toolbar is Border toolbarBorder)
-        {
-            var tb = InitToolbar.Make(this);
-            if (tb is Border newToolbarBorder)
-            {
-                var grid = newToolbarBorder.Child;
-                newToolbarBorder.Child = null;
-                toolbarBorder.Child = grid;
-            }
-        }
+        RebuildToolbar();
 
         ReloadShortcuts();
     }

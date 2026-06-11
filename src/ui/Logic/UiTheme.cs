@@ -103,11 +103,14 @@ public static class UiTheme
         ApplyLayoutScaleToAllWindows();
     }
 
+    public static Action? SystemThemeChangedCallback { get; set; }
+
     private static void OnActualThemeVariantChanged(object? sender, EventArgs e)
     {
         if (Se.Settings.Appearance.Theme == ThemeNameSystem && Application.Current != null)
         {
             SetCurrentTheme();
+            SystemThemeChangedCallback?.Invoke();
         }
     }
 
