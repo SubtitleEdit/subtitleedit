@@ -224,7 +224,7 @@ public partial class SubtitleLineViewModel : ObservableObject
                 return 999.0;
             }
 
-            return (double)HtmlUtil.RemoveHtmlTags(Text, true).CountCharacters(forCps: true) / Duration.TotalSeconds;
+            return SubtitleTextInfoHelper.GetCharactersPerSecond(Text, StartTime, EndTime);
         }
     }
 
@@ -261,11 +261,11 @@ public partial class SubtitleLineViewModel : ObservableObject
 
             if (Se.Settings.General.ColorTextTooLong)
             {
-                stripped = HtmlUtil.RemoveHtmlTags(Text, true);
+                stripped = SubtitleTextInfoHelper.StripHtml(Text);
 
                 foreach (var line in stripped.SplitToLines())
                 {
-                    if (line.CountCharacters(false) > Se.Settings.General.SubtitleLineMaximumLength)
+                    if (SubtitleTextInfoHelper.GetLineLength(line) > Se.Settings.General.SubtitleLineMaximumLength)
                     {
                         return _errorBrush;
                     }
@@ -274,7 +274,7 @@ public partial class SubtitleLineViewModel : ObservableObject
 
             if (Se.Settings.General.ColorTextTooWide)
             {
-                stripped ??= HtmlUtil.RemoveHtmlTags(Text, true);
+                stripped ??= SubtitleTextInfoHelper.StripHtml(Text);
                 foreach (var line in stripped.SplitToLines())
                 {
                     if (CalculatePixelWidth(line) > Se.Settings.General.ColorTextTooWidePixels)
@@ -286,7 +286,7 @@ public partial class SubtitleLineViewModel : ObservableObject
 
             if (Se.Settings.General.ColorTextTooManyLines)
             {
-                stripped ??= HtmlUtil.RemoveHtmlTags(Text, true);
+                stripped ??= SubtitleTextInfoHelper.StripHtml(Text);
                 if (stripped.SplitToLines().Count > Se.Settings.General.MaxNumberOfLines)
                 {
                     return _errorBrush;
@@ -613,7 +613,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             return 999;
         }
 
-        return (double)Text.CountCharacters(true) / Duration.TotalSeconds;
+        return SubtitleTextInfoHelper.GetCharactersPerSecond(Text, StartTime, EndTime);
     }
 
     public string GetErrors(SubtitleLineViewModel? prev, SubtitleLineViewModel? next)
@@ -621,7 +621,8 @@ public partial class SubtitleLineViewModel : ObservableObject
         var errors = new StringBuilder();
 
         var general = Se.Settings.General;
-        var lines = Text.SplitToLines();
+        var strippedText = SubtitleTextInfoHelper.StripHtml(Text);
+        var lines = strippedText.SplitToLines();
         var lineCount = lines.Count;
 
         if (lineCount > general.MaxNumberOfLines && Se.Settings.General.ColorTextTooManyLines)
@@ -655,17 +656,17 @@ public partial class SubtitleLineViewModel : ObservableObject
         {
             foreach (var line in lines)
             {
-                if (line.Length > general.SubtitleLineMaximumLength)
+                var lineLength = SubtitleTextInfoHelper.GetLineLength(line);
+                if (lineLength > general.SubtitleLineMaximumLength)
                 {
-
-                    errors.AppendLine("Max line length: " + line.Length + " > " + general.SubtitleLineMaximumLength);
+                    errors.AppendLine("Max line length: " + lineLength + " > " + general.SubtitleLineMaximumLength);
                 }
             }
         }
 
         if (Se.Settings.General.ColorTextTooWide)
         {
-            foreach (var line in HtmlUtil.RemoveHtmlTags(Text, true).SplitToLines())
+            foreach (var line in lines)
             {
                 var pixelWidth = CalculatePixelWidth(line);
                 if (pixelWidth > general.ColorTextTooWidePixels)

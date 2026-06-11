@@ -41,7 +41,7 @@ internal static class SubtitleTextInfoHelper
         var colorTextTooLong = Se.Settings.General.ColorTextTooLong;
         var maxCps = Se.Settings.General.SubtitleMaximumCharactersPerSeconds;
 
-        var cps = GetCharactersPerSecond(info.TotalLength, item);
+        var cps = GetCharactersPerSecond(text, item.StartTime, item.EndTime);
         cpsText = string.Format(Se.Language.Main.CharactersPerSecond, $"{cps:0.0}");
         cpsBackground = colorTextTooLong && cps > maxCps ? _errorBrush : _transparentBrush;
         totalText = info.TotalText;
@@ -53,8 +53,8 @@ internal static class SubtitleTextInfoHelper
         var colorTextTooLong = Se.Settings.General.ColorTextTooLong;
         var maxLineLength = Se.Settings.General.SubtitleLineMaximumLength;
 
-        var cleanText = HtmlUtil.RemoveHtmlTags(text, true);
-        var totalLength = (double)cleanText.CountCharacters(false);
+        var cleanText = StripHtml(text);
+        var totalLength = GetTotalLength(cleanText);
         var lines = cleanText.SplitToLines();
         var lineCount = lines.Count;
 
@@ -67,7 +67,7 @@ internal static class SubtitleTextInfoHelper
                 children.Add(UiUtil.MakeTextBlock("/").WithFontSize(12).WithPadding(2));
             }
 
-            var lineLength = (int)lines[i].CountCharacters(false);
+            var lineLength = GetLineLength(lines[i]);
             var tb = UiUtil.MakeTextBlock(lineLength.ToString(CultureInfo.InvariantCulture)).WithFontSize(12).WithPadding(2);
             if (colorTextTooLong && lineLength > maxLineLength)
             {
@@ -103,10 +103,24 @@ internal static class SubtitleTextInfoHelper
         items[items.Count - 1].Gap = double.MaxValue;
     }
 
-    private static double GetCharactersPerSecond(double totalLength, SubtitleLineViewModel item)
+    internal static string StripHtml(string text)
+        => HtmlUtil.RemoveHtmlTags(text, true);
+
+    internal static double GetTotalLength(string text)
+        => (double)text.CountCharacters(false);
+
+    internal static int GetLineLength(string line)
+        => (int)line.CountCharacters(false);
+
+    internal static double GetCharactersPerSecond(string text, TimeSpan startTime, TimeSpan endTime)
     {
-        var duration = item.EndTime.TotalMilliseconds - item.StartTime.TotalMilliseconds;
-        return duration > 0.001 ? totalLength / (duration / 1000.0) : 0.0;
+        var duration = endTime.TotalMilliseconds - startTime.TotalMilliseconds;
+        if (duration <= 0.001)
+        {
+            return 0.0;
+        }
+
+        return (double)StripHtml(text).CountCharacters(forCps: true) / (duration / 1000.0);
     }
 
     internal sealed record TextTotalInfo(double TotalLength, string TotalText, IBrush TotalBackground);

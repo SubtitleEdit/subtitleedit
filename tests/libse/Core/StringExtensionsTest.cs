@@ -289,6 +289,16 @@ public class StringExtensionsTest
     }
 
     [Fact]
+    public void CountLetters7NoSpaceOrPunctuationCpsOnly()
+    {
+        const string input = "A, B";
+        var calc = CalcFactory.MakeCalculator(nameof(CalcNoSpaceOrPunctuationCpsOnly));
+
+        Assert.Equal(2, calc.CountCharacters(input, true));
+        Assert.Equal(4, calc.CountCharacters(input, false));
+    }
+
+    [Fact]
     public void ToggleCasing1()
     {
         var input = "how are you";
