@@ -59,6 +59,7 @@ public partial class SubtitleLineViewModel : ObservableObject
     public string Language { get; set; }
     public string Region { get; set; }
     public Guid Id { get; set; }
+    public bool IsCpsColumnVisible { get; set; } = true;
     public bool IsDefault => Text == string.Empty && Number == 0 && Duration == TimeSpan.Zero && StartTime == TimeSpan.Zero;
 
 
@@ -342,7 +343,7 @@ public partial class SubtitleLineViewModel : ObservableObject
             if ((general.ColorDurationTooShort && Duration.TotalMilliseconds < general.SubtitleMinimumDisplayMilliseconds) ||
                 (general.ColorDurationTooLong && Duration.TotalMilliseconds > general.SubtitleMaximumDisplayMilliseconds) ||
                 // SE4 fallback: when the CPS column is hidden, surface CPS-too-high on the Duration cell instead
-                (!general.ShowColumnCps && general.ColorCharactersPerSecond && CharactersPerSecond > general.SubtitleMaximumCharactersPerSeconds))
+                ((!general.ShowColumnCps || !IsCpsColumnVisible) && general.ColorCharactersPerSecond && CharactersPerSecond > general.SubtitleMaximumCharactersPerSeconds))
             {
                 return _errorBrush;
             }

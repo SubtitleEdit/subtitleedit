@@ -7823,6 +7823,7 @@ public partial class MainViewModel :
 
         _errorColor = Se.Settings.General.ErrorColor.FromHexToColor();
         _errorBrush = new SolidColorBrush(_errorColor);
+        SubtitleTextInfoHelper.RefreshErrorBrush();
         if (AreVideoControlsUndocked)
         {
             VideoUndockControls();
@@ -17858,78 +17859,15 @@ public partial class MainViewModel :
 
     private void MakeSubtitleTextInfo(string text, SubtitleLineViewModel item)
     {
-        if (_subtitleGridSelectionChangedSkip)
-        {
-            return;
-        }
-
-        text ??= string.Empty;
-
-        // Cache settings and frequently accessed values
-        var colorTextTooLong = Se.Settings.General.ColorTextTooLong;
-        var maxLineLength = Se.Settings.General.SubtitleLineMaximumLength;
-        var maxCps = Se.Settings.General.SubtitleMaximumCharactersPerSeconds;
-
-        // Remove HTML tags once
-        var cleanText = HtmlUtil.RemoveHtmlTags(text, true);
-        var totalLength = (double)cleanText.CountCharacters(false);
-
-        // Calculate CPS once using cached values
-        var duration = item.EndTime.TotalMilliseconds - item.StartTime.TotalMilliseconds;
-        var cps = duration > 0.001 ? totalLength / (duration / 1000.0) : 0.0;
-
-        // Split lines once and cache count
-        var lines = cleanText.SplitToLines();
-        var lineCount = lines.Count;
-
-        // Pre-allocate panel children capacity: label + (lines + separators)
-        var childrenCapacity = 1 + lineCount + Math.Max(0, lineCount - 1);
-        var children = new List<Control>(childrenCapacity);
-
-        // Add header label
-        children.Add(UiUtil.MakeTextBlock(Se.Language.Main.SingleLineLength)
-            .WithFontSize(12)
-            .WithPadding(2));
-
-        // Process lines with minimal allocations
-        for (var i = 0; i < lineCount; i++)
-        {
-            if (i > 0)
-            {
-                children.Add(UiUtil.MakeTextBlock("/")
-                    .WithFontSize(12)
-                    .WithPadding(2));
-            }
-
-            var lineLength = (int)lines[i].CountCharacters(false);
-            var tb = UiUtil.MakeTextBlock(lineLength.ToString(CultureInfo.InvariantCulture))
-                .WithFontSize(12)
-                .WithPadding(2);
-
-            if (colorTextTooLong && lineLength > maxLineLength)
-            {
-                tb.Background = _errorBrush;
-            }
-
-            children.Add(tb);
-        }
-
-        // Batch update to minimize layout recalculations
-        PanelSingleLineLengths.Children.Clear();
-        PanelSingleLineLengths.Children.AddRange(children);
-
-        // Update CPS display with formatted string
-        EditTextCharactersPerSecond = string.Format(Se.Language.Main.CharactersPerSecond, $"{cps:0.0}");
-        EditTextTotalLength = string.Format(Se.Language.Main.TotalCharacters, totalLength);
-
-        // Use cached brush instances
-        EditTextCharactersPerSecondBackground = colorTextTooLong && cps > maxCps
-            ? _errorBrush
-            : _transparentBrush;
-
-        EditTextTotalLengthBackground = colorTextTooLong && totalLength > maxLineLength * lineCount
-            ? _errorBrush
-            : _transparentBrush;
+        if (_subtitleGridSelectionChangedSkip) return;
+        SubtitleTextInfoHelper.Populate(
+            text ?? string.Empty, item, PanelSingleLineLengths,
+            out var cpsText, out var cpsBg,
+            out var totalText, out var totalBg);
+        EditTextCharactersPerSecond = cpsText;
+        EditTextCharactersPerSecondBackground = cpsBg;
+        EditTextTotalLength = totalText;
+        EditTextTotalLengthBackground = totalBg;
     }
 
     private void MakeSubtitleTextInfoOriginal(string text, SubtitleLineViewModel item)
@@ -18280,28 +18218,12 @@ public partial class MainViewModel :
     {
         try
         {
-            if (Subtitles.Count == 0)
-            {
-                return;
-            }
+            SubtitleTextInfoHelper.UpdateGaps(Subtitles);
 
             var hasLayers = _visibleLayers != null && Se.Settings.Assa.HideLayersFromSubtitleGrid;
-
-            Subtitles[0].PreviousGap = double.MaxValue;
-
-            for (var i = 0; i < Subtitles.Count - 1; i++)
-            {
-                var p = Subtitles[i];
-                var next = Subtitles[i + 1];
-                p.Gap = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
-                next.PreviousGap = p.Gap;
-
-                p.IsHidden = hasLayers && !_visibleLayers!.Contains(p.Layer);
-            }
-
-            Subtitles[Subtitles.Count - 1].Gap = double.MaxValue;
-            Subtitles[Subtitles.Count - 1].IsHidden = hasLayers && !_visibleLayers!.Contains(Subtitles.Last().Layer);
-            ;
+            if (!hasLayers) return;
+            foreach (var p in Subtitles)
+                p.IsHidden = !_visibleLayers!.Contains(p.Layer);
         }
         catch
         {
