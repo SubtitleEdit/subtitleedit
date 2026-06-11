@@ -31,11 +31,15 @@ public class BookmarksListWindow : Window
         var buttonCancel = UiUtil.MakeButtonDone(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonGoTo, buttonClear, buttonCancel);
 
+        var labelCount = new TextBlock { HorizontalAlignment = HorizontalAlignment.Left };
+        labelCount.Bind(TextBlock.TextProperty, new Binding(nameof(vm.CountText)) { Source = vm });
+
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
@@ -50,7 +54,8 @@ public class BookmarksListWindow : Window
         };
 
         grid.Add(MakeBookmarkGridView(vm), 0);
-        grid.Add(panelButtons, 1);
+        grid.Add(labelCount, 1);
+        grid.Add(panelButtons, 2);
 
         Content = grid;
 
