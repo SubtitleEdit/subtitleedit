@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 //00:50:34:22 -> 00:50:39:13
                 //Ich muss dafür sorgen,
                 //dass die Epsteins weiterleben
-                sb.AppendLine(string.Format(writeFormat, p.StartTime.ToHHMMSSFF(), p.EndTime.ToHHMMSSFF(), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text, true)));
+                sb.AppendLine(string.Format(writeFormat, p.StartTime.ToString(TimeFormatter.HhMmSsFf), p.EndTime.ToString(TimeFormatter.HhMmSsFf), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text, true)));
             }
             return sb.ToString();
         }

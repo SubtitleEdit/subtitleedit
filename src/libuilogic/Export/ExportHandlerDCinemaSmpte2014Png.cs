@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
 using Nikse.SubtitleEdit.Core.Common;
 using System.Globalization;
 using System.Text;
@@ -96,7 +97,7 @@ public class ExportHandlerDCinemaSmpte2014Png : IExportHandler
         }
 
         _sb.AppendLine("<Subtitle SpotNumber=\"" + _imagesSavedCount + "\" FadeUpTime=\"" + "00:00:00:00" + "\" FadeDownTime=\"" + "00:00:00:00" + "\" TimeIn=\"" +
-                      new TimeCode(param.StartTime).ToHHMMSSFF() + "\" TimeOut=\"" + new TimeCode( param.EndTime).ToHHMMSSFF() + "\">");
+                      new TimeCode(param.StartTime).ToString(TimeFormatter.HhMmSsFf) + "\" TimeOut=\"" + new TimeCode( param.EndTime).ToString(TimeFormatter.HhMmSsFf) + "\">");
         // if (param.Depth3D == 0)
         {
             _sb.AppendLine("<Image Vposition=\"" + vPos + "\" Hposition=\"" + hPos + "\" Valign=\"" + verticalAlignment + "\" Halign=\"" + horizontalAlignment + "\">urn:uuid:" +

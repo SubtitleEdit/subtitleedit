@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -48,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string MakeTimeCode(TimeCode timeCode)
         {
-            return timeCode.ToHHMMSSPeriodFF();
+            return timeCode.ToString(TimeFormatter.HhMmSsPeriodFf);
         }
 
         private static TimeCode DecodeTimeCode(string timeCode)

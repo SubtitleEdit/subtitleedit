@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -42,7 +43,7 @@ WB,GDMX,1:33,4x3
             int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine($"     {count}:  {p.StartTime.ToHHMMSSPeriodFF()}  {p.EndTime.ToHHMMSSPeriodFF()}  {p.Duration.Seconds:00}.{MillisecondsToFrames(p.Duration.Milliseconds):00}  {p.Text.Length}");
+                sb.AppendLine($"     {count}:  {p.StartTime.ToString(TimeFormatter.HhMmSsPeriodFf)}  {p.EndTime.ToString(TimeFormatter.HhMmSsPeriodFf)}  {p.Duration.Seconds:00}.{MillisecondsToFrames(p.Duration.Milliseconds):00}  {p.Text.Length}");
                 foreach (var line in EncodeText(p.Text).SplitToLines())
                 {
                     sb.AppendLine("        " + line);

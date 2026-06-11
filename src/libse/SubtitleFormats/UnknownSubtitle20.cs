@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -43,7 +44,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 // line 1
                 sb.Append(string.Empty.PadLeft(5, ' '));
-                sb.Append(p.StartTime.ToHHMMSSFF());
+                sb.Append(p.StartTime.ToString(TimeFormatter.HhMmSsFf));
                 sb.Append(string.Empty.PadLeft(5, ' '));
                 sb.Append(number.ToString("D4"));
                 sb.Append(string.Empty.PadLeft(12, ' '));
@@ -51,7 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 //line 2
                 sb.Append(string.Empty.PadLeft(5, ' '));
-                sb.Append(p.EndTime.ToHHMMSSFF());
+                sb.Append(p.EndTime.ToString(TimeFormatter.HhMmSsFf));
                 sb.Append(string.Empty.PadLeft(5, ' '));
                 sb.Append((number2 / 7 + 1).ToString("D3"));
                 sb.Append('-');

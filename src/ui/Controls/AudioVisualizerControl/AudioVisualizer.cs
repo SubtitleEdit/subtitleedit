@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -1800,7 +1801,7 @@ public class AudioVisualizer : Control
             seconds = seconds + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0;
         }
 
-        return new TimeCode(seconds * 1000.0).ToShortStringHHMMSSFF();
+        return new TimeCode(seconds * 1000.0).ToString(TimeFormatter.ShortHhMmSsFf);
     }
 
     private readonly Pen _paintTimeLine = new Pen(Brushes.Gray, 1);

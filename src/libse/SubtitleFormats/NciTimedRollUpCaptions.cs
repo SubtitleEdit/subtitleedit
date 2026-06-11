@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -49,12 +50,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = text.Replace("'", "'\u0012\u0029");
                     text = "\u0014" + "\u0025" + "\u0014" + "\u002d" + text;
                 }
-                sb.AppendLine(p.StartTime.ToHHMMSSFF() + "\r\n" + text);
+                sb.AppendLine(p.StartTime.ToString(TimeFormatter.HhMmSsFf) + "\r\n" + text);
 
                 Paragraph next = subtitle.GetParagraphOrDefault(index + 1);
                 if (next == null || next.StartTime.TotalMilliseconds > p.StartTime.TotalMilliseconds + MaxDurationMs)
                 {
-                    sb.AppendLine(p.EndTime.ToHHMMSSFF() + "\r\n\u0014\u002C");
+                    sb.AppendLine(p.EndTime.ToString(TimeFormatter.HhMmSsFf) + "\r\n\u0014\u002C");
                 }
             }
             return sb.ToString().Trim();

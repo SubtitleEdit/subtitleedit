@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -84,11 +85,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Attributes.Append(attrNumber);
 
             var attrInCue = xml.CreateAttribute("incue");
-            attrInCue.Value = p.StartTime.ToHHMMSSFF();
+            attrInCue.Value = p.StartTime.ToString(TimeFormatter.HhMmSsFf);
             subtitle.Attributes.Append(attrInCue);
 
             var attrOutCue = xml.CreateAttribute("outcue");
-            attrOutCue.Value = p.EndTime.ToHHMMSSFF();
+            attrOutCue.Value = p.EndTime.ToString(TimeFormatter.HhMmSsFf);
             subtitle.Attributes.Append(attrOutCue);
 
             XmlNode rows = xml.CreateElement("Rows");

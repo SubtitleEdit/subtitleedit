@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
 using Avalonia.Data.Converters;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -16,7 +17,7 @@ public class DoubleToDisplayShortConverter : IValueConverter
         {
             if (Se.Settings.General.UseFrameMode)
             {
-                return new TimeCode(ms).ToShortStringHHMMSSFF();
+                return new TimeCode(ms).ToString(TimeFormatter.ShortHhMmSsFf);
             }
 
             return new TimeCode(ms).ToShortString();

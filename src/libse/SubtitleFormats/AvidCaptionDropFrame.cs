@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const string writeFormat = "{0} {1}{2}{3}{2}";
             foreach (var p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format(writeFormat, p.StartTime.ToHHMMSSFFDropFrame(), EncodeEndTimeCode(p.EndTime), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text, true)));
+                sb.AppendLine(string.Format(writeFormat, p.StartTime.ToString(TimeFormatter.HhMmSsFfDropFrame), EncodeEndTimeCode(p.EndTime), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text, true)));
                 //00:50:34:22 00:50:39:13
                 //Ich muss dafür sorgen,
                 //dass die Epsteins weiterleben
@@ -50,7 +51,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             else
             {
-                return time.ToHHMMSSFFDropFrame();
+                return time.ToString(TimeFormatter.HhMmSsFfDropFrame);
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Text.RegularExpressions;
 
@@ -20,7 +21,7 @@ public class NetflixCheckWhiteSpace : INetflixQualityChecker
 
     private static void AddWhiteSpaceWarning(Paragraph p, NetflixQualityController report, string issue, int pos)
     {
-        string timeCode = p.StartTime.ToHHMMSSFF();
+        string timeCode = p.StartTime.ToString(TimeFormatter.HhMmSsFf);
         string context = NetflixQualityController.StringContext(p.Text, pos, 6);
         string comment = string.Format(Se.Language.Tools.NetflixCheckAndFix.WhiteSpaceCheckForXReport, issue, pos);
 

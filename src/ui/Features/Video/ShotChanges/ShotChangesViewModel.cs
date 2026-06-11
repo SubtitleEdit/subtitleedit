@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
@@ -390,7 +391,7 @@ public partial class ShotChangesViewModel : ObservableObject
                         }
 
                         var ts = new TimeSpan(0, Convert.ToInt32(timeParts[0]), Convert.ToInt32(timeParts[1]), Convert.ToInt32(timeParts[2]), Convert.ToInt32(timeParts[3]));
-                        sb.AppendLine(new TimeCode(ts).ToShortStringHHMMSSFF());
+                        sb.AppendLine(new TimeCode(ts).ToString(TimeFormatter.ShortHhMmSsFf));
                     }
                 }
             }
@@ -451,7 +452,7 @@ public partial class ShotChangesViewModel : ObservableObject
             var sb = new StringBuilder();
             foreach (var ms in list.OrderBy(p => p))
             {
-                sb.AppendLine(new TimeCode(ms).ToShortStringHHMMSSFF());
+                sb.AppendLine(new TimeCode(ms).ToString(TimeFormatter.ShortHhMmSsFf));
             }
 
             return sb.ToString();

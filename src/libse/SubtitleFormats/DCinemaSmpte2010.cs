@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -207,11 +208,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     subNode.Attributes.Append(id);
 
                     var fadeUpTime = xml.CreateAttribute("FadeUpTime");
-                    fadeUpTime.InnerText = new TimeCode(FramesToMilliseconds(Configuration.Settings.SubtitleSettings.DCinemaFadeUpTime)).ToHHMMSSFF();
+                    fadeUpTime.InnerText = new TimeCode(FramesToMilliseconds(Configuration.Settings.SubtitleSettings.DCinemaFadeUpTime)).ToString(TimeFormatter.HhMmSsFf);
                     subNode.Attributes.Append(fadeUpTime);
 
                     var fadeDownTime = xml.CreateAttribute("FadeDownTime");
-                    fadeDownTime.InnerText = new TimeCode(FramesToMilliseconds(Configuration.Settings.SubtitleSettings.DCinemaFadeDownTime)).ToHHMMSSFF();
+                    fadeDownTime.InnerText = new TimeCode(FramesToMilliseconds(Configuration.Settings.SubtitleSettings.DCinemaFadeDownTime)).ToString(TimeFormatter.HhMmSsFf);
                     subNode.Attributes.Append(fadeDownTime);
 
                     var start = xml.CreateAttribute("TimeIn");

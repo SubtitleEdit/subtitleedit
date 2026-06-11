@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -80,7 +81,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var text = string.IsNullOrEmpty(p.Text) ? string.Empty : "\"" + p.Text.Replace("\"", "\"\"").Replace(Environment.NewLine, "\n") + "\"";
                 var actor = string.IsNullOrEmpty(p.Actor) ? string.Empty : "\"" + p.Actor.Replace(",", " ").Replace("\"", string.Empty) + "\"";
-                sb.AppendLine(string.Format(LineFormat, ",", actor, p.StartTime.ToHHMMSSFF(), p.EndTime.ToHHMMSSFF(), text));
+                sb.AppendLine(string.Format(LineFormat, ",", actor, p.StartTime.ToString(TimeFormatter.HhMmSsFf), p.EndTime.ToString(TimeFormatter.HhMmSsFf), text));
             }
             return sb.ToString().Trim();
         }

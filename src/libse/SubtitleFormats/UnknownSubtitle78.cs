@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -137,15 +138,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 lastTimeCode = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].StartTime;
             }
             string today = DateTime.Now.ToString("YYYY-mm-DD");
-            xml.LoadXml(xmpTemplate.Replace('\'', '"').Replace("[YYYY-MM-DD]", today).Replace("[TIME_CODE_FIRST]", firstTimeCode.ToHHMMSSFF()).Replace("[TIME_CODE_LAST]", lastTimeCode.ToHHMMSSFF()));
+            xml.LoadXml(xmpTemplate.Replace('\'', '"').Replace("[YYYY-MM-DD]", today).Replace("[TIME_CODE_FIRST]", firstTimeCode.ToString(TimeFormatter.HhMmSsFf)).Replace("[TIME_CODE_LAST]", lastTimeCode.ToString(TimeFormatter.HhMmSsFf)));
 
             var paragraphInsertNode = xml.DocumentElement.SelectSingleNode("TextSection");
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("TextScreen");
                 paragraph.InnerXml = paragraphTemplate;
-                paragraph.SelectSingleNode("TimeCodeIn").InnerText = p.StartTime.ToHHMMSSFF();
-                paragraph.SelectSingleNode("TimeCodeOut").InnerText = p.EndTime.ToHHMMSSFF();
+                paragraph.SelectSingleNode("TimeCodeIn").InnerText = p.StartTime.ToString(TimeFormatter.HhMmSsFf);
+                paragraph.SelectSingleNode("TimeCodeOut").InnerText = p.EndTime.ToString(TimeFormatter.HhMmSsFf);
                 var textBlockNodes = paragraph.SelectNodes("TextBlock");
                 textBlockNodes[0].SelectSingleNode("String").InnerText = p.Text;
                 paragraphInsertNode.AppendChild(paragraph);

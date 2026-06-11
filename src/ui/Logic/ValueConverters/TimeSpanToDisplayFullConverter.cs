@@ -1,4 +1,5 @@
-﻿using Avalonia.Data.Converters;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Avalonia.Data.Converters;
 using System;
 using System.Globalization;
 using Nikse.SubtitleEdit.Core.Common;
@@ -22,7 +23,7 @@ public class TimeSpanToDisplayFullConverter : IValueConverter
 
             if (Se.Settings.General.UseFrameMode)
             {
-                var resultFrames = new TimeCode(ts).ToHHMMSSFF();
+                var resultFrames = new TimeCode(ts).ToString(TimeFormatter.HhMmSsFf);
                 return resultFrames;
             }
 

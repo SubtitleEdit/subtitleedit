@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -459,7 +460,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (Se.Settings.General.UseFrameMode)
             {
-                return tc.ToHHMMSSFF();
+                return tc.ToString(TimeFormatter.HhMmSsFf);
             }
 
             return tc.ToString();

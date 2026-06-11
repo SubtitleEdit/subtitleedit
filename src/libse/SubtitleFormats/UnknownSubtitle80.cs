@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -72,7 +73,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return "[" + time.ToHHMMSSFF().Remove(8, 1).Insert(8, ".") + "]";
+            return "[" + time.ToString(TimeFormatter.HhMmSsFf).Remove(8, 1).Insert(8, ".") + "]";
         }
 
     }

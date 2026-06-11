@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTime(TimeCode timeCode)
         {
-            return "[" + timeCode.ToHHMMSS() + "]";
+            return "[" + timeCode.ToString(TimeFormatter.HhMmSs) + "]";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -82,7 +83,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 XmlNodeList list = stItem.SelectNodes("StTextList/StText");
                 list[0].InnerText = p.Text;
-                list[2].InnerText = p.StartTime.ToHHMMSSFF();
+                list[2].InnerText = p.StartTime.ToString(TimeFormatter.HhMmSsFf);
                 trackNode.AppendChild(stItem);
                 number++;
 

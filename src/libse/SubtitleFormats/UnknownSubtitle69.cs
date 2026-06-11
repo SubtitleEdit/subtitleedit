@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -28,8 +29,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string text = HtmlUtil.RemoveHtmlTags(p.Text, true);
-                string start = p.StartTime.ToHHMMSSFF();
-                string end = p.EndTime.ToHHMMSSFF();
+                string start = p.StartTime.ToString(TimeFormatter.HhMmSsFf);
+                string end = p.EndTime.ToString(TimeFormatter.HhMmSsFf);
                 string duration = $"{p.Duration.Seconds:00}:{MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds):00}";
                 const string readability = "011";
                 const string interval = "06:14";

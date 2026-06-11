@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -33,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var p = subtitle.Paragraphs[index++];
                 var lis = (int)Math.Round(MillisecondsToFrames(p.DurationTotalMilliseconds) / 2.0);
-                sb.AppendLine(string.Format(format, index, p.StartTime.ToHHMMSSFF(), p.EndTime.ToHHMMSSFF(), p.Duration.ToSSFF(), lis, p.Text.Length, p.Text));
+                sb.AppendLine(string.Format(format, index, p.StartTime.ToString(TimeFormatter.HhMmSsFf), p.EndTime.ToString(TimeFormatter.HhMmSsFf), p.Duration.ToString(TimeFormatter.SsFf), lis, p.Text.Length, p.Text));
             }
             return sb.ToString().ToRtf();
         }

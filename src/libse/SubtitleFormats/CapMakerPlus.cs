@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static void WriteTime(Stream stream, TimeCode timeCode)
         {
             stream.WriteByte(0xb);
-            var buffer = Encoding.ASCII.GetBytes(timeCode.ToHHMMSSFF());
+            var buffer = Encoding.ASCII.GetBytes(timeCode.ToString(TimeFormatter.HhMmSsFf));
             stream.Write(buffer, 0, buffer.Length);
         }
 

@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -253,7 +254,7 @@ public partial class ExportPlainTextViewModel : ObservableObject
         {
             "hh:mm:ss,zzz" => tc.ToString(false),
             "hh:mm:ss.zzz" => tc.ToString().Replace(',', '.'),
-            "hh:mm:ss:ff" => tc.ToHHMMSSFF(),
+            "hh:mm:ss:ff" => tc.ToString(TimeFormatter.HhMmSsFf),
             _ => tc.ToString()
         };
     }

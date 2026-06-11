@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,7 +93,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = "}" + text;
                 }
 
-                sb.AppendLine($"{text}{Environment.NewLine}{p.StartTime.ToHHMMSSPeriodFF().Replace(".", ":")}\\{p.EndTime.ToHHMMSSPeriodFF().Replace(".", ":")}");
+                sb.AppendLine($"{text}{Environment.NewLine}{p.StartTime.ToString(TimeFormatter.HhMmSsPeriodFf).Replace(".", ":")}\\{p.EndTime.ToString(TimeFormatter.HhMmSsPeriodFf).Replace(".", ":")}");
             }
 
             var last = subtitle.Paragraphs.Last();
@@ -105,7 +106,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var endTime = new TimeCode(last.EndTime.TotalMilliseconds + 1000.0) { Milliseconds = 0 };
                 sb.AppendLine("*END*");
-                sb.AppendLine($"{endTime.ToHHMMSSPeriodFF()}\\{endTime.ToHHMMSSPeriodFF()}");
+                sb.AppendLine($"{endTime.ToString(TimeFormatter.HhMmSsPeriodFf)}\\{endTime.ToString(TimeFormatter.HhMmSsPeriodFf)}");
             }
 
             sb.AppendLine(@"*CODE*");

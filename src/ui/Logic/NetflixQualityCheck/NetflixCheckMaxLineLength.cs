@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -35,7 +36,7 @@ public class NetflixCheckMaxLineLength : INetflixQualityChecker
                         if (CalculateJapaneseLength(text) > 11)
                         {
                             var comment = Se.Language.Tools.NetflixCheckAndFix.SingleVerticalLineLengthMax11;
-                            controller.AddRecord(p, p.StartTime.ToHHMMSSFF(), line.Length.ToString(CultureInfo.InvariantCulture), comment, false);
+                            controller.AddRecord(p, p.StartTime.ToString(TimeFormatter.HhMmSsFf), line.Length.ToString(CultureInfo.InvariantCulture), comment, false);
                         }
                     }
                     else // Horizontal subtitles - Maximum 13 full-width characters per line
@@ -43,7 +44,7 @@ public class NetflixCheckMaxLineLength : INetflixQualityChecker
                         if (CalculateJapaneseLength(text) > 13)
                         {
                             var comment = Se.Language.Tools.NetflixCheckAndFix.SingleHorizontalLineLengthMax13;
-                            controller.AddRecord(p, p.StartTime.ToHHMMSSFF(), line.Length.ToString(CultureInfo.InvariantCulture), comment);
+                            controller.AddRecord(p, p.StartTime.ToString(TimeFormatter.HhMmSsFf), line.Length.ToString(CultureInfo.InvariantCulture), comment);
                         }
                     }
                 }

@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -159,8 +160,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string nodeName = "Data" + count++;
                 XmlNode paragraph = xml.CreateElement(nodeName);
                 paragraph.InnerXml = paragraphTemplate;
-                paragraph.SelectSingleNode("In").InnerText = p.StartTime.ToHHMMSSFF();
-                paragraph.SelectSingleNode("Out").InnerText = p.EndTime.ToHHMMSSFF();
+                paragraph.SelectSingleNode("In").InnerText = p.StartTime.ToString(TimeFormatter.HhMmSsFf);
+                paragraph.SelectSingleNode("Out").InnerText = p.EndTime.ToString(TimeFormatter.HhMmSsFf);
                 paragraph.SelectSingleNode("Fields/Field1/Data").InnerText = string.Join("|", p.Text.SplitToLines());
                 paragraphInsertNode.AppendChild(paragraph);
             }

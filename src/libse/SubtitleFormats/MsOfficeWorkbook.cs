@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -119,8 +120,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var height = xml.CreateAttribute("ss:Height", NamespaceSpreadsheet);
             height.InnerText = "30";
             row.Attributes.Append(height);
-            MakeCell(xml, row, p.StartTime.ToHHMMSSFF());
-            MakeCell(xml, row, p.EndTime.ToHHMMSSFF());
+            MakeCell(xml, row, p.StartTime.ToString(TimeFormatter.HhMmSsFf));
+            MakeCell(xml, row, p.EndTime.ToString(TimeFormatter.HhMmSsFf));
             MakeCell(xml, row, HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, "\n"), true));
             MakeCell(xml, row, string.Empty);
             MakeCell(xml, row, string.Empty);

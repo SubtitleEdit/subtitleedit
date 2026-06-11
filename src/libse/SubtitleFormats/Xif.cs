@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -102,7 +103,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var globalFileInfoNode = xml.DocumentElement.SelectSingleNode("FileHeader/GlobalFileInfo");
             globalFileInfoNode.Attributes["ProgrammeName"].InnerText = title;
             globalFileInfoNode.Attributes["ProgrammeTitle"].InnerText = title;
-            globalFileInfoNode.Attributes["StopTime"].InnerText = lastTimeCode.ToHHMMSSFF();
+            globalFileInfoNode.Attributes["StopTime"].InnerText = lastTimeCode.ToString(TimeFormatter.HhMmSsFf);
             globalFileInfoNode.Attributes["NumberOfCaptions"].InnerText = subtitle.Paragraphs.Count.ToString(CultureInfo.InvariantCulture);
 
             var fileBodyNode = xml.DocumentElement.SelectSingleNode("FileBody");
@@ -110,8 +111,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 XmlNode content = xml.CreateElement("ContentBlock");
                 content.InnerXml = paragraphTemplate;
-                content.SelectSingleNode("ContentBlock/ThreadedObject/TimingObject/TimeIn").Attributes["value"].InnerText = p.StartTime.ToHHMMSSFF();
-                content.SelectSingleNode("ContentBlock/ThreadedObject/TimingObject/TimeOut").Attributes["value"].InnerText = p.EndTime.ToHHMMSSFF();
+                content.SelectSingleNode("ContentBlock/ThreadedObject/TimingObject/TimeIn").Attributes["value"].InnerText = p.StartTime.ToString(TimeFormatter.HhMmSsFf);
+                content.SelectSingleNode("ContentBlock/ThreadedObject/TimingObject/TimeOut").Attributes["value"].InnerText = p.EndTime.ToString(TimeFormatter.HhMmSsFf);
 
                 var paragraphNode = content.SelectSingleNode("ContentBlock/ThreadedObject/Content/SubtitleText/Paragraph");
                 var lines = HtmlUtil.RemoveHtmlTags(p.Text, true).SplitToLines();

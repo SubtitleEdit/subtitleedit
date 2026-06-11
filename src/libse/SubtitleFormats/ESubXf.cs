@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -64,11 +65,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var paragraph = xml.CreateElement("subtitle", NameSpaceUri);
 
                 var start = xml.CreateAttribute("display");
-                start.InnerText = p.StartTime.ToHHMMSSFF();
+                start.InnerText = p.StartTime.ToString(TimeFormatter.HhMmSsFf);
                 paragraph.Attributes.Append(start);
 
                 var end = xml.CreateAttribute("clear");
-                end.InnerText = p.EndTime.ToHHMMSSFF();
+                end.InnerText = p.EndTime.ToString(TimeFormatter.HhMmSsFf);
                 paragraph.Attributes.Append(end);
 
                 var hRegion = xml.CreateElement("hregion", NameSpaceUri);

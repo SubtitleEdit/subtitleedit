@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using System.Collections.Generic;
 using System.Text;
@@ -16,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string MakeTimeCode(TimeCode tc)
         {
-            return tc.ToHHMMSSFF();
+            return tc.ToString(TimeFormatter.HhMmSsFf);
         }
 
         public override string ToText(Subtitle subtitle, string title)

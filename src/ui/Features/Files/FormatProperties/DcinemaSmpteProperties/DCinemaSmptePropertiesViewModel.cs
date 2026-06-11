@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -342,7 +343,7 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
                 if (double.TryParse(importer.StartTime, out var startTimeMs))
                 {
                     var timeCode = new TimeCode(startTimeMs);
-                    StartTime = timeCode.ToHHMMSSFF();
+                    StartTime = timeCode.ToString(TimeFormatter.HhMmSsFf);
                 }
 
                 FontId = importer.FontId ?? "theFontId";

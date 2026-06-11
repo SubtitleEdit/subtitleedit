@@ -1,4 +1,5 @@
-﻿using Avalonia.Platform;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Avalonia.Platform;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Compression;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -75,7 +76,7 @@ public class NetflixCheckGlyph : INetflixQualityChecker
 
                 if (!allowedGlyphsSet.Contains(curCodepoint))
                 {
-                    var timeCode = paragraph.StartTime.ToHHMMSSFF();
+                    var timeCode = paragraph.StartTime.ToString(TimeFormatter.HhMmSsFf);
                     var context = NetflixQualityController.StringContext(paragraph.Text, pos, 6);
                     var comment = string.Format(Se.Language.Tools.NetflixCheckAndFix.GlyphCheckReport, $"U+{curCodepoint:X}", actualPos);
 

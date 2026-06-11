@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Common;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Nikse.SubtitleEdit.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -27,8 +28,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string.Format(
                         LineFormat,
                         (index + 1).ToString(CultureInfo.InvariantCulture),
-                        p.StartTime.ToHHMMSSFF(),
-                        p.EndTime.ToHHMMSSFF(),
+                        p.StartTime.ToString(TimeFormatter.HhMmSsFf),
+                        p.EndTime.ToString(TimeFormatter.HhMmSsFf),
                         actor,
                         text,
                         bool.TryParse(p.Effect, out var s) ? s.ToString().ToUpperInvariant() : "False"));

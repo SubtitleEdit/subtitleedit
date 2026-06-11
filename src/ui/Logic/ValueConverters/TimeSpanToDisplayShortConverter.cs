@@ -1,4 +1,5 @@
-﻿using Avalonia.Data.Converters;
+﻿using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
+using Avalonia.Data.Converters;
 using System;
 using System.Globalization;
 using Nikse.SubtitleEdit.Core.Common;
@@ -17,7 +18,7 @@ public class TimeSpanToDisplayShortConverter : IValueConverter
         {
             if (Se.Settings.General.UseFrameMode)
             {
-                return new TimeCode(ts).ToShortStringHHMMSSFF();
+                return new TimeCode(ts).ToString(TimeFormatter.ShortHhMmSsFf);
             }
 
             var result = new TimeCode(ts).ToShortString();

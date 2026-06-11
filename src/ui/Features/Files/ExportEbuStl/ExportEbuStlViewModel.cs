@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Core.Common.TimeFormatters;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
@@ -347,7 +348,7 @@ public partial class ExportEbuStlViewModel : ObservableObject
 
         var timeCodeStatus = SelectedTimeCodeStatus ?? TimeCodeStatusList.Last();
         _header.TimeCodeStatus = TimeCodeStatusList.IndexOf(timeCodeStatus).ToString(CultureInfo.InvariantCulture);
-        _header.TimeCodeStartOfProgramme = new TimeCode(StartOfProgramme).ToHHMMSSFF().RemoveChar(':');
+        _header.TimeCodeStartOfProgramme = new TimeCode(StartOfProgramme).ToString(TimeFormatter.HhMmSsFf).RemoveChar(':');
 
         _header.RevisionNumber = SelectedRevisionNumber?.ToString("00") ?? "00";
         _header.MaximumNumberOfDisplayableCharactersInAnyTextRow = SelectedMaxCharactersPerRow?.ToString("00") ?? "00";
