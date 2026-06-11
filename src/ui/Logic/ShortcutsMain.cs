@@ -430,8 +430,8 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.DoAlignmentAn7Command, nameof(vm.DoAlignmentAn7Command), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.DoAlignmentAn8Command, nameof(vm.DoAlignmentAn8Command), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.DoAlignmentAn9Command, nameof(vm.DoAlignmentAn9Command), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.AddOrEditBookmarkCommand, nameof(vm.AddOrEditBookmarkCommand), ShortcutCategory.SubtitleGrid);
-        AddShortcut(shortcuts, vm.ToggleBookmarkSelectedLinesNoTextCommand, nameof(vm.ToggleBookmarkSelectedLinesNoTextCommand), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.AddOrEditBookmarkCommand, nameof(vm.AddOrEditBookmarkCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ToggleBookmarkSelectedLinesNoTextCommand, nameof(vm.ToggleBookmarkSelectedLinesNoTextCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.CopyTextFromOriginalToTranslationCommand, nameof(vm.CopyTextFromOriginalToTranslationCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.SwitchOriginalAndTranslationTextSelectedLinesCommand, nameof(vm.SwitchOriginalAndTranslationTextSelectedLinesCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.MergeOriginalIntoTranslationSelectedLinesCommand, nameof(vm.MergeOriginalIntoTranslationSelectedLinesCommand), ShortcutCategory.SubtitleGrid);
