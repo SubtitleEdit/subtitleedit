@@ -8062,11 +8062,23 @@ public partial class MainViewModel :
             if (Subtitles[i].Bookmark != null)
             {
                 SelectAndScrollToSubtitle(Subtitles[i]);
+                SeekVideoToSubtitleStart(Subtitles[i]);
                 return;
             }
         }
 
         ShowStatus(Se.Language.General.NoBookmarksFound);
+    }
+
+    // Move the video to a line's start, like SE 4's bookmark navigation did. No-op when no
+    // video is loaded. Used by "go to next/previous bookmark" and the Reopen flow.
+    private void SeekVideoToSubtitleStart(SubtitleLineViewModel subtitle)
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp != null)
+        {
+            vp.Position = subtitle.StartTime.TotalSeconds;
+        }
     }
 
     [RelayCommand]
@@ -8089,6 +8101,7 @@ public partial class MainViewModel :
             if (Subtitles[i].Bookmark != null)
             {
                 SelectAndScrollToSubtitle(Subtitles[i]);
+                SeekVideoToSubtitleStart(Subtitles[i]);
                 return;
             }
         }
