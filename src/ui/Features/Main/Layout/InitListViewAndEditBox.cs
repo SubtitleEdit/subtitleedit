@@ -545,8 +545,10 @@ public static partial class InitListViewAndEditBox
             Source = vm,
         };
 
-        Grid.SetRow(dropHost, 0);
-        mainGrid.Children.Add(dropHost);
+        var dropHostBorder = UiUtil.MakeBorderForControlNoPadding(dropHost);
+        dropHostBorder.Margin = new Thickness(UiUtil.SplitterWidthOrHeight, UiUtil.SplitterWidthOrHeight, UiUtil.SplitterWidthOrHeight, 0);
+        Grid.SetRow(dropHostBorder, 0);
+        mainGrid.Children.Add(dropHostBorder);
 
         // Create a Flyout for the DataGrid
         var flyout = new MenuFlyout();
@@ -1583,8 +1585,10 @@ public static partial class InitListViewAndEditBox
         Grid.SetColumn(textEditGrid, 1);
         editGrid.Children.Add(textEditGrid);
 
-        Grid.SetRow(editGrid, 1);
-        mainGrid.Children.Add(editGrid);
+        var editGridBorder = UiUtil.MakeBorderForControlNoPadding(editGrid);
+        editGridBorder.Margin = new Thickness(UiUtil.SplitterWidthOrHeight, UiUtil.SplitterWidthOrHeight, UiUtil.SplitterWidthOrHeight, 0);
+        Grid.SetRow(editGridBorder, 1);
+        mainGrid.Children.Add(editGridBorder);
 
 
         textEditGrid.ColumnDefinitions[1].Bind(ColumnDefinition.WidthProperty, new Binding(nameof(vm.ShowColumnOriginalText))

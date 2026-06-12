@@ -221,24 +221,6 @@ public class FixCommonErrorsWindow : Window
     private Grid MakeStep2Grid()
     {
         // top
-        var gridFixes = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 0,
-            RowSpacing = 0,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-        };
-
         var dataGridFixes = new DataGrid
         {
             AutoGenerateColumns = false,
@@ -362,34 +344,9 @@ public class FixCommonErrorsWindow : Window
         buttonBarFixes.Add(leftButtons, 0, 0);
         buttonBarFixes.Add(rightButtons, 0, 1);
 
-        gridFixes.Children.Add(dataGridFixes);
-        Grid.SetRow(dataGridFixes, 0);
-        Grid.SetColumn(dataGridFixes, 0);
-
-        gridFixes.Children.Add(buttonBarFixes);
-        Grid.SetRow(buttonBarFixes, 1);
-        Grid.SetColumn(buttonBarFixes, 0);
-
-        var borderFixes = UiUtil.MakeBorderForControlNoPadding(gridFixes).WithMarginBottom(5);
+        var borderFixes = UiUtil.MakeBorderForControlNoPadding(dataGridFixes).WithMarginBottom(5);
 
         // bottom
-        var gridSubtitles = new Grid
-        {
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-            },
-            ColumnSpacing = 10,
-            RowSpacing = 10,
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-        };
-
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
         var syntaxHighlightingConverter = new TextWithSubtitleSyntaxHighlightingConverter();
@@ -516,22 +473,16 @@ public class FixCommonErrorsWindow : Window
 
         var gridCurrentSubtbtitle = MakeStep2EditPanel();
 
-        gridSubtitles.Children.Add(dataGridSubtitles);
-        Grid.SetRow(dataGridSubtitles, 0);
-        Grid.SetColumn(dataGridSubtitles, 0);
-
-        gridSubtitles.Children.Add(gridCurrentSubtbtitle);
-        Grid.SetRow(gridCurrentSubtbtitle, 1);
-        Grid.SetColumn(gridCurrentSubtbtitle, 0);
-
-        var borderSubtitles = UiUtil.MakeBorderForControlNoPadding(gridSubtitles);
+        var borderSubtitles = UiUtil.MakeBorderForControlNoPadding(dataGridSubtitles).WithMarginBottom(5);
 
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -542,13 +493,10 @@ public class FixCommonErrorsWindow : Window
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
-        grid.Children.Add(borderFixes);
-        Grid.SetRow(borderFixes, 0);
-        Grid.SetColumn(borderFixes, 0);
-
-        grid.Children.Add(borderSubtitles);
-        Grid.SetRow(borderSubtitles, 1);
-        Grid.SetColumn(borderSubtitles, 0);
+        grid.Add(borderFixes, 0, 0);
+        grid.Add(buttonBarFixes, 1, 0);
+        grid.Add(borderSubtitles, 2, 0);
+        grid.Add(gridCurrentSubtbtitle, 3, 0);
 
         return grid;
     }
@@ -558,9 +506,9 @@ public class FixCommonErrorsWindow : Window
         var textEditGrid = new Grid
         {
             RowDefinitions = new RowDefinitions("*,Auto"),
-            Margin = new Thickness(10),
-            Width = double.NaN,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Margin = new Thickness(0, 5, 0, 5),
+            Width = 500,
+            HorizontalAlignment = HorizontalAlignment.Left,
         };
 
         var textBox = new TextBox
