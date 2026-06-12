@@ -94,10 +94,6 @@ public static partial class InitListViewAndEditBox
             HorizontalGridLinesBrush = UiUtil.GetBorderBrush(),
             FontSize = Se.Settings.Appearance.SubtitleGridFontSize,
         };
-        if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
-        {
-            vm.SubtitleGrid.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
-        }
 
         // hack to make drag and drop work on the DataGrid - also on empty rows
         var dropHost = new Border
