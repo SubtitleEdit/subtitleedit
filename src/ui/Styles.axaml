@@ -5,6 +5,9 @@
         <x:Double x:Key="DataGridRowSelectedUnfocusedBackgroundOpacity">0.2</x:Double>
         <StaticResource x:Key="DataGridRowSelectedHoveredBackgroundOpacity" ResourceKey="DataGridRowSelectedBackgroundOpacity"/>
         <x:Double x:Key="DataGridRowSelectedHoveredUnfocusedBackgroundOpacity">0.2</x:Double>
+        <SolidColorBrush x:Key="ListBoxItemSelectedUnfocusedBackgroundBrush"
+                         Color="{DynamicResource SystemAccentColor}"
+                         Opacity="0.2"/>
     </Styles.Resources>
     <Style Selector="DataGridCell:focus /template/ Grid#FocusVisual">
         <Setter Property="IsVisible" Value="False"/>
@@ -22,5 +25,20 @@
     <Style Selector="DataGrid:focus-within DataGridRow:selected:pointerover /template/ Rectangle#BackgroundRectangle">
         <Setter Property="Fill" Value="{DynamicResource DataGridRowSelectedBackgroundBrush}"/>
         <Setter Property="Opacity" Value="{DynamicResource DataGridRowSelectedBackgroundOpacity}"/>
+    </Style>
+    <Style Selector="ListBoxItem:not(:selected):pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="Transparent"/>
+    </Style>
+    <Style Selector="ListBox:focus-within ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListAccentLowBrush}"/>
+    </Style>
+    <Style Selector="ListBox:focus-within ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListAccentLowBrush}"/>
+    </Style>
+    <Style Selector="ListBox:not(:focus-within) ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource ListBoxItemSelectedUnfocusedBackgroundBrush}"/>
+    </Style>
+    <Style Selector="ListBox:not(:focus-within) ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource ListBoxItemSelectedUnfocusedBackgroundBrush}"/>
     </Style>
 </Styles>
