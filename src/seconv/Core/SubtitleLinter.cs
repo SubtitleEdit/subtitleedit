@@ -71,7 +71,7 @@ internal static class SubtitleLinter
             }
 
             // Duration checks
-            var durMs = p.DurationTotalMilliseconds;
+            var durMs = p.Duration.TotalMilliseconds;
             if (durMs < 0)
             {
                 issues.Add(new LintIssue

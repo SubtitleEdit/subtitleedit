@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     maxDisplayTime = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                 }
 
-                double displayTime = p.DurationTotalMilliseconds;
+                double displayTime = p.Duration.TotalMilliseconds;
 
                 bool allowFix = callbacks.AllowFix(p, Language.FixLongDisplayTime);
                 if (allowFix && displayTime > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)

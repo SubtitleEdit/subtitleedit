@@ -44,7 +44,7 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
             {
                 index++;
                 var text = HtmlUtil.RemoveHtmlTags(p.Text, true);
-                sb.AppendLine(string.Format(writeFormat, index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), GetMaxCharsForDuration(p.DurationTotalSeconds) + "c", Environment.NewLine, text));
+                sb.AppendLine(string.Format(writeFormat, index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), GetMaxCharsForDuration(p.Duration.TotalSeconds) + "c", Environment.NewLine, text));
                 sb.AppendLine();
                 if (!text.Contains(Environment.NewLine))
                 {

@@ -846,7 +846,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         }
 
         var mediaInfo = FfmpegMediaInfo.Parse(currentFile);
-        if (mediaInfo.Duration.TotalMilliseconds <= p.DurationTotalMilliseconds + addDuration)
+        if (mediaInfo.Duration.TotalMilliseconds <= p.Duration.TotalMilliseconds + addDuration)
         {
             return new TtsStepResult
             {
@@ -861,7 +861,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             };
         }
 
-        var divisor = (decimal)(p.DurationTotalMilliseconds + addDuration);
+        var divisor = (decimal)(p.Duration.TotalMilliseconds + addDuration);
         if (divisor <= 0)
         {
             return new TtsStepResult

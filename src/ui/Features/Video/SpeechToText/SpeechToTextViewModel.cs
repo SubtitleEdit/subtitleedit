@@ -1303,10 +1303,10 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             var paragraph = subtitle.Paragraphs[i];
             if (i > 0 &&
-                paragraph.DurationTotalMilliseconds < 5 && paragraph.DurationTotalMilliseconds > -20 && paragraph.StartTime.TotalMilliseconds > 20)
+                paragraph.Duration.TotalMilliseconds < 5 && paragraph.Duration.TotalMilliseconds > -20 && paragraph.StartTime.TotalMilliseconds > 20)
             {
                 var prev = subtitle.Paragraphs[i - 1];
-                if (prev.DurationTotalMilliseconds < 50)
+                if (prev.Duration.TotalMilliseconds < 50)
                 {
                     continue;
                 }

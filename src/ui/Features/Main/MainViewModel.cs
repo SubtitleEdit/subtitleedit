@@ -14358,10 +14358,10 @@ public partial class MainViewModel :
                 if (pes == null && subtitle.Paragraphs.Count > 0)
                 {
                     var last = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
-                    if (last.DurationTotalMilliseconds < 100)
+                    if (last.Duration.TotalMilliseconds < 100)
                     {
                         last.EndTime.TotalMilliseconds = msub.Start;
-                        if (last.DurationTotalMilliseconds >
+                        if (last.Duration.TotalMilliseconds >
                             Se.Settings.General.SubtitleMaximumDisplayMilliseconds)
                         {
                             last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + 3000;
@@ -14389,7 +14389,7 @@ public partial class MainViewModel :
         for (var index = 0; index < subtitle.Paragraphs.Count; index++)
         {
             var p = subtitle.Paragraphs[index];
-            if (p.DurationTotalMilliseconds < 200)
+            if (p.Duration.TotalMilliseconds < 200)
             {
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 3000;
             }

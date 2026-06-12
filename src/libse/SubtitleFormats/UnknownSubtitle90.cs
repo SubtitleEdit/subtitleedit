@@ -32,6 +32,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return time.TotalSeconds;
         }
 
+        private static double EncodeTimeCode(TimeSpan timeSpan)
+        {
+            return timeSpan.TotalSeconds;
+        }
+
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;

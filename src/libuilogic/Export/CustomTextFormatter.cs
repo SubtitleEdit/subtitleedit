@@ -238,10 +238,10 @@ public static class CustomTextFormatter
             .Replace("f", $"{SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds):00}");
     }
 
-    internal static string GetParagraph(string template, string start, string end, string text, string originalText, int number, string actor, TimeCode duration, string gap, string timeCodeTemplate, Paragraph p, string videoFileName)
+    internal static string GetParagraph(string template, string start, string end, string text, string originalText, int number, string actor, TimeSpan duration, string gap, string timeCodeTemplate, Paragraph p, string videoFileName)
     {
         var cps = p.GetCharactersPerSecond();
-        var d = duration.ToString();
+        var d = duration.ToString(false);
         if (timeCodeTemplate == "ff" || timeCodeTemplate == "f")
         {
             d = SubtitleFormat.MillisecondsToFrames(duration.TotalMilliseconds).ToString(CultureInfo.InvariantCulture);

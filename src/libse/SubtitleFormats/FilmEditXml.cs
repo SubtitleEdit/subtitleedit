@@ -101,9 +101,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return ToUtf8XmlString(xml);
         }
 
-        private static string EncodeDuration(TimeCode timeCode)
+        private static string EncodeDuration(TimeSpan timeSpan)
         {
-            return $"{timeCode.Seconds:00}:{MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds):00}";
+            return $"{timeSpan.Seconds:00}:{MillisecondsToFramesMaxFrameRate(timeSpan.Milliseconds):00}";
         }
 
         private static string EncodeTimeCode(TimeCode timeCode)

@@ -25,16 +25,16 @@ public class NetflixCheckMinDuration : INetflixQualityChecker
 
             if (controller.Language == "ja")
             {
-                if (p.DurationTotalMilliseconds < 500)
+                if (p.Duration.TotalMilliseconds < 500)
                 {
                     string comment = Se.Language.Tools.NetflixCheckAndFix.MinimumDurationJapanese;
-                    controller.AddRecord(p, p.StartTime.ToString(TimeFormatter.HhMmSsFf), p.DurationTotalSeconds.ToString(CultureInfo.InvariantCulture), comment);
+                    controller.AddRecord(p, p.StartTime.ToString(TimeFormatter.HhMmSsFf), p.Duration.TotalSeconds.ToString(CultureInfo.InvariantCulture), comment);
                 }
                 continue;
             }
 
             var next = subtitle.GetParagraphOrDefault(index + 1);
-            if (p.DurationTotalMilliseconds < 833 && !p.StartTime.IsMaxTime)
+            if (p.Duration.TotalMilliseconds < 833 && !p.StartTime.IsMaxTime)
             {
                 Paragraph? fixedParagraph = null;
                 var canBeFixed = false;

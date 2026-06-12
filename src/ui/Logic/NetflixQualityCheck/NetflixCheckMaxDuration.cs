@@ -19,7 +19,7 @@ public class NetflixCheckMaxDuration : INetflixQualityChecker
     {
         foreach (Paragraph p in subtitle.Paragraphs)
         {
-            if (p.DurationTotalMilliseconds > 7000)
+            if (p.Duration.TotalMilliseconds > 7000)
             {
                 var fixedParagraph = new Paragraph(p, false);
                 fixedParagraph.EndTime.TotalMilliseconds = fixedParagraph.StartTime.TotalMilliseconds + 7000;

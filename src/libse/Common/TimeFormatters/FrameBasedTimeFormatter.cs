@@ -9,21 +9,20 @@ namespace Nikse.SubtitleEdit.Core.Common.TimeFormatters
     /// </summary>
     public abstract class FrameBasedTimeFormatter : ITimeFormatter
     {
-        public string Format(TimeCode timeCode)
+        public string Format(TimeSpan timeSpan)
         {
-            var ts = timeCode.TimeSpan;
-            var frames = Math.Round(ts.Milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
+            var frames = Math.Round(timeSpan.Milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
             string s;
             if (frames >= Configuration.Settings.General.CurrentFrameRate - 0.001)
             {
-                s = FormatTime(ts.Add(new TimeSpan(0, 0, 1)), 0);
+                s = FormatTime(timeSpan.Add(new TimeSpan(0, 0, 1)), 0);
             }
             else
             {
-                s = FormatTime(ts, SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
+                s = FormatTime(timeSpan, SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeSpan.Milliseconds));
             }
 
-            return TimeCode.PrefixSign(s, timeCode.TotalMilliseconds);
+            return TimeCode.PrefixSign(s, timeSpan.TotalMilliseconds);
         }
 
         protected abstract string FormatTime(TimeSpan ts, int frames);

@@ -9,15 +9,14 @@ namespace Nikse.SubtitleEdit.Core.Common.TimeFormatters
     /// </summary>
     public class SsFfTimeFormatter : ITimeFormatter
     {
-        public string Format(TimeCode timeCode)
+        public string Format(TimeSpan timeSpan)
         {
-            var ts = timeCode.TimeSpan;
-            var frames = Math.Round(ts.Milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
+            var frames = Math.Round(timeSpan.Milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
             var s = frames >= Configuration.Settings.General.CurrentFrameRate - 0.001
-                ? $"{ts.Seconds + 1:00}:{0:00}"
-                : $"{ts.Seconds:00}:{SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds):00}";
+                ? $"{timeSpan.Seconds + 1:00}:{0:00}"
+                : $"{timeSpan.Seconds:00}:{SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeSpan.Milliseconds):00}";
 
-            return TimeCode.PrefixSign(s, timeCode.TotalMilliseconds);
+            return TimeCode.PrefixSign(s, timeSpan.TotalMilliseconds);
         }
     }
 }

@@ -62,7 +62,7 @@ public static class SpeechToTextTimingFixer
             var pctHere = FindPercentage(startPos - 0.05, startPos + 0.05, wavePeaks);
             if (Math.Abs(pctHere - (-1)) < 0.01)
             {
-                if (p.DurationTotalMilliseconds < minDurationMs)
+                if (p.Duration.TotalMilliseconds < minDurationMs)
                 {
                     s.Paragraphs[index] = oldP;
                 }
@@ -79,7 +79,7 @@ public static class SpeechToTextTimingFixer
                     var pct = FindPercentage(startPosBack - 0.05, startPosBack + 0.05, wavePeaks);
                     if (Math.Abs(pct - (-1)) < 0.01)
                     {
-                        if (p.DurationTotalMilliseconds < minDurationMs)
+                        if (p.Duration.TotalMilliseconds < minDurationMs)
                         {
                             s.Paragraphs[index] = oldP;
                         }
@@ -87,7 +87,7 @@ public static class SpeechToTextTimingFixer
                         return s;
                     }
 
-                    if (pct < percentageMax + 1 && p.DurationTotalSeconds < 5)
+                    if (pct < percentageMax + 1 && p.Duration.TotalSeconds < 5)
                     {
                         startPosBack -= 0.025;
                         var pct2 = FindPercentage(startPosBack - 0.05, startPosBack + 0.05, wavePeaks);
@@ -128,7 +128,7 @@ public static class SpeechToTextTimingFixer
                     var pctF = FindPercentage(startPosForward - 0.05, startPosForward + 0.05, wavePeaks);
                     if (Math.Abs(pctF - (-1)) < 0.01)
                     {
-                        if (p.DurationTotalMilliseconds < minDurationMs)
+                        if (p.Duration.TotalMilliseconds < minDurationMs)
                         {
                             s.Paragraphs[index] = oldP;
                         }
@@ -161,7 +161,7 @@ public static class SpeechToTextTimingFixer
             pctHere = FindPercentage(startPos - 0.05, startPos + 0.05, wavePeaks);
             if (Math.Abs(pctHere - (-1)) < 0.01)
             {
-                if (p.DurationTotalMilliseconds < minDurationMs)
+                if (p.Duration.TotalMilliseconds < minDurationMs)
                 {
                     s.Paragraphs[index] = oldP;
                 }
@@ -177,7 +177,7 @@ public static class SpeechToTextTimingFixer
                     pctHere = FindPercentage(startPosForward - 0.05, startPosForward + 0.05, wavePeaks);
                     if (Math.Abs(pctHere - (-1)) < 0.01)
                     {
-                        if (p.DurationTotalMilliseconds < 1000)
+                        if (p.Duration.TotalMilliseconds < 1000)
                         {
                             s.Paragraphs[index] = oldP;
                         }
@@ -210,7 +210,7 @@ public static class SpeechToTextTimingFixer
                 }
             }
 
-            if (p.DurationTotalMilliseconds < minDurationMs)
+            if (p.Duration.TotalMilliseconds < minDurationMs)
             {
                 s.Paragraphs[index] = oldP;
             }
@@ -225,7 +225,7 @@ public static class SpeechToTextTimingFixer
 
         foreach (var p in s.Paragraphs)
         {
-            if (p.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+            if (p.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
             {
                 p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
             }

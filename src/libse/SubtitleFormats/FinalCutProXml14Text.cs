@@ -88,9 +88,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     generatorNode.Attributes["offset"].Value = FinalCutProXml15.GetFrameTime(p.StartTime);
                 }
 
-                if (IsNearleWholeNumber(p.DurationTotalSeconds))
+                if (IsNearleWholeNumber(p.Duration.TotalSeconds))
                 {
-                    generatorNode.Attributes["duration"].Value = Convert.ToInt64(p.DurationTotalSeconds) + "s";
+                    generatorNode.Attributes["duration"].Value = Convert.ToInt64(p.Duration.TotalSeconds) + "s";
                 }
                 else
                 {

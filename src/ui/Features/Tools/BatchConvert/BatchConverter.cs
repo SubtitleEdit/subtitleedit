@@ -463,10 +463,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 if (pes == null && subtitle.Paragraphs.Count > 0)
                 {
                     var last = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
-                    if (last.DurationTotalMilliseconds < 100)
+                    if (last.Duration.TotalMilliseconds < 100)
                     {
                         last.EndTime.TotalMilliseconds = msub.Start;
-                        if (last.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                        if (last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                         {
                             last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + 3000;
                         }
@@ -494,7 +494,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         for (var index = 0; index < subtitle.Paragraphs.Count; index++)
         {
             var p = subtitle.Paragraphs[index];
-            if (p.DurationTotalMilliseconds < 200)
+            if (p.Duration.TotalMilliseconds < 200)
             {
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 3000;
             }

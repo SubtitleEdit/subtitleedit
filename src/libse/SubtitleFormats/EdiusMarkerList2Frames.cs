@@ -44,6 +44,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return timeCode.ToString(TimeFormatter.HhMmSsFf);
         }
 
+        private static string EncodeTimeCode(TimeSpan timeSpan)
+        {
+            return timeSpan.ToString(TimeFormatter.HhMmSsFf);
+        }
+
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;

@@ -2811,7 +2811,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 }
 
                 // If audio already fits after silence removal/compression, no time-stretching needed
-                if (mediaInfo.Duration.TotalMilliseconds <= p.DurationTotalMilliseconds + addDuration)
+                if (mediaInfo.Duration.TotalMilliseconds <= p.Duration.TotalMilliseconds + addDuration)
                 {
                     resultList.Add(new TtsStepResult
                     {
@@ -2827,7 +2827,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                     continue;
                 }
 
-                var divisor = (decimal)(p.DurationTotalMilliseconds + addDuration);
+                var divisor = (decimal)(p.Duration.TotalMilliseconds + addDuration);
                 if (divisor <= 0)
                 {
                     resultList.Add(new TtsStepResult

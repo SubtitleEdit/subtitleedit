@@ -147,7 +147,7 @@ public partial class PickTsTrackViewModel : ObservableObject
                     Number = p.Number,
                     Show = p.StartTime.TimeSpan,
                     Hide = p.EndTime.TimeSpan,
-                    Duration = p.Duration.TimeSpan,
+                    Duration = p.Duration,
                     Text = p.Text,
                 };
                 Rows.Add(cue);

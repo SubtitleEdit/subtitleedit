@@ -323,12 +323,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static double CalcDurationToMove(Paragraph oldCurrent, Paragraph current, Paragraph next)
         {
-            if (current.DurationTotalMilliseconds < 0 || next.DurationTotalMilliseconds < 0)
+            if (current.Duration.TotalMilliseconds < 0 || next.Duration.TotalMilliseconds < 0)
             {
                 return 0;
             }
 
-            var totalDuration = current.DurationTotalMilliseconds + next.DurationTotalMilliseconds;
+            var totalDuration = current.Duration.TotalMilliseconds + next.Duration.TotalMilliseconds;
             var totalChars = current.Text.Length + next.Text.Length;
             var durChar = totalDuration / totalChars;
 

@@ -1,3 +1,5 @@
+using System;
+
 namespace Nikse.SubtitleEdit.Core.Common.TimeFormatters
 {
     /// <summary>
@@ -7,9 +9,9 @@ namespace Nikse.SubtitleEdit.Core.Common.TimeFormatters
     {
         private static readonly HhMmSsFfTimeFormatter LongFormatter = new HhMmSsFfTimeFormatter();
 
-        public string Format(TimeCode timeCode)
+        public string Format(TimeSpan timeSpan)
         {
-            var s = LongFormatter.Format(timeCode);
+            var s = LongFormatter.Format(timeSpan);
             var pre = string.Empty;
             if (s.StartsWith('-'))
             {

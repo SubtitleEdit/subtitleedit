@@ -101,10 +101,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         internal static string ConvertToTimeString(TimeCode time)
         {
-            return ConvertToTimeString(time, Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat);
+            return ConvertToTimeString(time.TimeSpan);
+        }
+
+        internal static string ConvertToTimeString(TimeSpan timeSpan)
+        {
+            return ConvertToTimeString(timeSpan, Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat);
         }
 
         internal static string ConvertToTimeString(TimeCode time, string timeCodeFormat)
+        {
+            return ConvertToTimeString(time.TimeSpan, timeCodeFormat);
+        }
+
+        internal static string ConvertToTimeString(TimeSpan timeSpan, string timeCodeFormat)
         {
             timeCodeFormat = timeCodeFormat.Trim().ToLowerInvariant();
             if (timeCodeFormat == "source" && !string.IsNullOrWhiteSpace(Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource))
@@ -112,23 +122,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource.Trim().ToLowerInvariant();
             }
 
+            var hours = timeSpan.Hours + timeSpan.Days * 24;
             switch (timeCodeFormat)
             {
                 case "source":
                 case "seconds":
-                    return string.Format(CultureInfo.InvariantCulture, "{0:0.0##}s", time.TotalSeconds);
+                    return string.Format(CultureInfo.InvariantCulture, "{0:0.0##}s", timeSpan.TotalSeconds);
                 case "milliseconds":
-                    return string.Format(CultureInfo.InvariantCulture, "{0}ms", time.TotalMilliseconds);
+                    return string.Format(CultureInfo.InvariantCulture, "{0}ms", timeSpan.TotalMilliseconds);
                 case "ticks":
-                    return string.Format(CultureInfo.InvariantCulture, "{0}t", TimeSpan.FromMilliseconds(time.TotalMilliseconds).Ticks);
+                    return string.Format(CultureInfo.InvariantCulture, "{0}t", timeSpan.Ticks);
                 case "hh:mm:ss.ms":
-                    return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}.{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
+                    return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}.{3:000}", hours, timeSpan.Minutes, timeSpan.Seconds, timeSpan.Milliseconds);
                 case "hh:mm:ss.ms-two-digits":
-                    return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, (int)Math.Round(time.Milliseconds / 10.0));
+                    return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}.{3:00}", hours, timeSpan.Minutes, timeSpan.Seconds, (int)Math.Round(timeSpan.Milliseconds / 10.0));
                 case "hh:mm:ss,ms":
-                    return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00},{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
+                    return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00},{3:000}", hours, timeSpan.Minutes, timeSpan.Seconds, timeSpan.Milliseconds);
                 default:
-                    return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+                    return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}:{3:00}", hours, timeSpan.Minutes, timeSpan.Seconds, MillisecondsToFramesMaxFrameRate(timeSpan.Milliseconds));
             }
         }
 

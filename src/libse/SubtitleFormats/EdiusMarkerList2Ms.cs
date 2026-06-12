@@ -43,6 +43,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return timeCode.ToString(false).Replace(',', ':');
         }
 
+        private static string EncodeTimeCode(TimeSpan timeSpan)
+        {
+            return timeSpan.ToString(false).Replace(',', ':');
+        }
+
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;

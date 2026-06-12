@@ -71,7 +71,7 @@ public static class BatchStatics
                 maximumLineLength = Math.Max(len, maximumLineLength);
                 totalLineLength += len;
 
-                var duration = p.DurationTotalMilliseconds;
+                var duration = p.Duration.TotalMilliseconds;
                 minimumDuration = Math.Min(duration, minimumDuration);
                 maximumDuration = Math.Max(duration, maximumDuration);
                 totalDuration += duration;
@@ -152,12 +152,12 @@ public static class BatchStatics
                     aboveMaximumWpmCount++;
                 }
 
-                if (p.DurationTotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                if (p.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 {
                     belowMinimumDurationCount++;
                 }
 
-                if (p.DurationTotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                if (p.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
                     aboveMaximumDurationCount++;
                 }

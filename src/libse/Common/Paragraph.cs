@@ -3,7 +3,7 @@ using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 
 namespace Nikse.SubtitleEdit.Core.Common
 {
-    public class Paragraph 
+    public class Paragraph
     {
         public int Number { get; set; }
 
@@ -13,9 +13,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public TimeCode EndTime { get; set; }
 
-        public TimeCode Duration => new TimeCode(EndTime.TotalMilliseconds - StartTime.TotalMilliseconds);
-        public double DurationTotalMilliseconds => EndTime.TotalMilliseconds - StartTime.TotalMilliseconds;
-        public double DurationTotalSeconds => (EndTime.TotalMilliseconds - StartTime.TotalMilliseconds) / TimeCode.BaseUnit;
+        public TimeSpan Duration => TimeSpan.FromMilliseconds(EndTime.TotalMilliseconds - StartTime.TotalMilliseconds);
 
         public bool Forced { get; set; }
 
@@ -121,28 +119,28 @@ namespace Nikse.SubtitleEdit.Core.Common
                     return 0;
                 }
 
-                return 60.0 / DurationTotalSeconds * Text.CountWords();
+                return 60.0 / Duration.TotalSeconds * Text.CountWords();
             }
         }
 
         public double GetCharactersPerSecond()
         {
-            if (DurationTotalMilliseconds < 1)
+            if (Duration.TotalMilliseconds < 1)
             {
                 return 999;
             }
 
-            return (double)Text.CountCharacters(true) / DurationTotalSeconds;
+            return (double)Text.CountCharacters(true) / Duration.TotalSeconds;
         }
 
         public double GetCharactersPerSecond(ICalcLength calc)
         {
-            if (DurationTotalMilliseconds < 1)
+            if (Duration.TotalMilliseconds < 1)
             {
                 return 999;
             }
 
-            return (double)calc.CountCharacters(Text, true) / DurationTotalSeconds;
+            return (double)calc.CountCharacters(Text, true) / Duration.TotalSeconds;
         }
     }
 }

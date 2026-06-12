@@ -161,52 +161,11 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public override string ToString() => ToString(false);
 
-        public string ToString(bool localize)
-        {
-            var ts = TimeSpan;
-            var decimalSeparator = localize ? CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator : ",";
-            var s = $"{ts.Hours + ts.Days * 24:00}:{ts.Minutes:00}:{ts.Seconds:00}{decimalSeparator}{ts.Milliseconds:000}";
+        public string ToString(bool localize) => TimeSpan.ToString(localize);
 
-            return PrefixSign(s);
-        }
+        public string ToShortString(bool localize = false) => TimeSpan.ToShortString(localize);
 
-        public string ToShortString(bool localize = false)
-        {
-            var ts = TimeSpan;
-            var decimalSeparator = localize ? CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator : ",";
-            string s;
-            if (ts.Minutes == 0 && ts.Hours == 0 && ts.Days == 0)
-            {
-                s = $"{ts.Seconds:0}{decimalSeparator}{ts.Milliseconds:000}";
-
-                if (s == $"0{decimalSeparator}000")
-                {
-                    return s; // no sign
-                }
-            }
-            else if (ts.Hours == 0 && ts.Days == 0)
-            {
-                s = $"{ts.Minutes:0}:{ts.Seconds:00}{decimalSeparator}{ts.Milliseconds:000}";
-
-                if (s == $"0:00{decimalSeparator}000")
-                {
-                    return s; // no sign
-                }
-            }
-            else
-            {
-                s = $"{ts.Hours + ts.Days * 24:0}:{ts.Minutes:00}:{ts.Seconds:00}{decimalSeparator}{ts.Milliseconds:000}";
-
-                if (s == $"0:00:00{decimalSeparator}000")
-                {
-                    return s; // no sign
-                }
-            }
-
-            return PrefixSign(s);
-        }
-
-        public string ToString(ITimeFormatter formatter) => formatter.Format(this);
+        public string ToString(ITimeFormatter formatter) => formatter.Format(TimeSpan);
 
         internal static string PrefixSign(string time, double totalMilliseconds) => totalMilliseconds >= 0 ? time : $"-{time.RemoveChar('-')}";
 
