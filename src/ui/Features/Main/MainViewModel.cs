@@ -17287,7 +17287,10 @@ public partial class MainViewModel :
                 }
             }
 
-            if (EditTextBox.IsFocused)
+            // Route SubtitleGridAndTextBox shortcuts when either edit box is focused — the
+            // original/translation box should behave the same as the normal one (e.g. so
+            // "Toggle dialog dashes" works in whichever text box has focus, like SE 4).
+            if (EditTextBox.IsFocused || EditTextBoxOriginal.IsFocused)
             {
                 var relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, ShortcutCategory.SubtitleGridAndTextBox.ToString());
                 if (relayCommand != null)
