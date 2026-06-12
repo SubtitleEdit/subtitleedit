@@ -9171,7 +9171,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("LastColorPickerColor6", ToHtml(settings.General.LastColorPickerColor6));
                 xmlWriter.WriteElementString("LastColorPickerColor7", ToHtml(settings.General.LastColorPickerColor7));
                 xmlWriter.WriteElementString("DarkThemeBackColor", ToHtml(settings.General.DarkThemeBackColor));
-                xmlWriter.WriteElementString("DarkThemeBackColor", ToHtml(settings.General.DarkThemeSelectedBackgroundColor));
+                xmlWriter.WriteElementString("DarkThemeSelectedBackgroundColor", ToHtml(settings.General.DarkThemeSelectedBackgroundColor));
                 xmlWriter.WriteElementString("DarkThemeForeColor", ToHtml(settings.General.DarkThemeForeColor));
                 xmlWriter.WriteElementString("DarkThemeDisabledColor", ToHtml(settings.General.DarkThemeDisabledColor));
                 xmlWriter.WriteElementString("ToolbarIconTheme", settings.General.ToolbarIconTheme);
