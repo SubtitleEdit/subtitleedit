@@ -1,7 +1,7 @@
 {
   "title": "Subtitle Edit",
   "version": "v5.0.0",
-  "translatedBy": "Utku Gogus; Son güncelleme: Ahmet Murat Özhan (30.05.2026)",
+  "translatedBy": "Utku Gogus; Son güncelleme: Ahmet Murat Özhan (12.06.2026)",
   "cultureName": "tr-TR",
   "general": {
     "abort": "İptal",
@@ -476,7 +476,9 @@
     "seconds": "Saniye",
     "selectAll": "Tümünü seç",
     "selectFilesToConvert": "Dönüştürülecek dosyaları seç",
+	"selectForcedLines": "Zorunlu satırları seç",
     "selectNone": "Hiçbirini seçme",
+	"selectNonForcedLines": "Zorunlu olmayan satırları seç",
     "selectSaveFolder": "Kaydetmek için bir klasör seçin",
     "selectSubtitle": "Alt yazı seç",
     "selectedAFolderToSaveTo": "Kaydetmek için bir klasör seçildi",
@@ -724,9 +726,7 @@
     "transcriptionProgressServerFormat": "Sunucu: {0}",
     "transcriptionProgressModelFormat": "Model: {0}",
     "transcriptionProgressReceivedSegmentsFormat": "Alınan Segmentler ({0})",
-    "transcriptionProgressModelAuto": "(otomatik)",
-    "generatingAudioFile": "Ses dosyası oluşturuluyor...",
-    "volume": "Ses düzeyi"
+    "transcriptionProgressModelAuto": "(otomatik)"
   },
   "main": {
     "menu": {
@@ -1063,7 +1063,7 @@
       "subtitleWithManuallyChosenEncodingDotDotDot": "_Elle seçilmiş kodlamalı alt yazı...",
       "titleImportImages": "Resimleri içe aktar",
       "importFileLabel": "İçe aktarılacak resimleri seçin (dosya adlarında zaman kodları desteklenir)",
-      "importFilesInfo": "Zaman kodlu dosya adlarını kullanın:\r\nbaslangic_SS_DD_SN_MMM__bitis_SS_DD_SN_MMM[_indeks].uzanti\r\n\r\nÖrnekler:\r\n0_00_01_042__0_00_03_919_0001.png\r\n0_00_01_042__0_00_03_919.png\r\n\r\nKurallar:\r\n• Başlangıç ve bitiş zamanları için SS_DD_SN_MMM\r\n• Çift alt çizgi başlangıç/bitişi ayırır\r\n• Bitiş zamanından sonra isteğe bağlı indeks",
+      "importFilesInfo": "Zaman kodlu dosya adlarını kullanın:\nbaslangic_SS_DD_SN_MMM__bitis_SS_DD_SN_MMM[_indeks].uzanti\n\nÖrnekler:\n0_00_01_042__0_00_03_919_0001.png\n0_00_01_042__0_00_03_919.png\n\nKurallar:\n• Başlangıç ve bitiş zamanları için SS_DD_SN_MMM\n• Çift alt çizgi başlangıç/bitişi ayırır\n• Bitiş zamanından sonra isteğe bağlı indeks",
       "formattingDotDotDot": "Biçimlendirme...",
       "imagedBasedSubtitleForEditDotDotDot": "Düzenleme için resim tabanlı alt yazı...",
       "imagedBasedSubtitleForOcrDotDotDot": "OCR için resim tabanlı alt yazı...",
@@ -1088,8 +1088,7 @@
       "gapMs": "Boşluk (ms)",
       "useFixedDuration": "Sabit süre kullan",
       "fixedDurationMs": "Sabit süre (ms)",
-      "alignViaWhisper": "Zaman kodlarını Whisper ile hizala...",
-      "alignViaSpeechToText": "Zaman kodlarını \"Sesten metne\" ile hizala..."
+      "alignViaWhisper": "Zaman kodlarını Whisper ile hizala..."
     },
     "export": {
       "exportImagesProfiles": "Resim dışa aktarma profilleri",
@@ -1186,8 +1185,7 @@
       "openAutoBackupFolder": "Otomatik yedek klasörünü aç",
       "restoreAutoBackupFile": "Otomatik yedek dosyasını geri yükle",
       "deleteAllSubtitleBackups": "Tüm alt yazı yedek dosyalarını silmek istiyor musunuz?",
-      "deleteAll": "Tümünü sil",
-      "restoreXFromY": "\"{0}\" dosyasını {1} tarihinden geri yüklemek istiyor musunuz?"
+      "deleteAll": "Tümünü sil"
     },
     "propertiesDCinema": {
       "title": "D-Cinema SMPTE Özellikleri",
@@ -1252,8 +1250,8 @@
       "durationGreaterThan": "Milisaniye cinsinden süre >",
       "cpsLessThan": "Kar/sn <",
       "cpsGreaterThan": "Kar/sn >",
-      "lengthLessThan": "Uzunluk <",
-      "lengthGreaterThan": "Uzunluk >",
+      "lengthLessThan": "Tek satır maksimum uzunluğu <",
+      "lengthGreaterThan": "Tek satır maksimum uzunluğu >",
       "pixelLengthGreaterThan": "Piksel uzunluğu >",
       "gapLessThan": "Milisaniye cinsinden boşluk <",
       "gapGreaterThan": "Milisaniye cinsinden boşluk >",
@@ -1755,6 +1753,7 @@
       "cropImages": "Resimleri kırp",
       "importTimeCodes": "Zaman kodlarını içe aktar...",
       "setTextForSubtitle": "Alt yazı için metin ayarla",
+	  "setText": "Metni ayarla",
       "screenWidth": "Ekran genişliği",
       "screenHeight": "Ekran yüksekliği",
       "alphaThresholdInfo": "Alfa değeri eşiğin altındaki pikseller tam şeffaf olur",
@@ -1964,16 +1963,17 @@
       "edgeTtsPitchDescription": "Edge-TTS için ses perdesi (pitch) ayarı; örn. varsayılan için \"+10Hz\", \"-5Hz\" veya \"+0Hz\".",
       "edgeTtsVolume": "Edge-TTS ses düzeyi",
       "edgeTtsVolumeDescription": "Edge-TTS için ses düzeyi ayarı; örn. varsayılan için \"+20%\", \"-10%\" veya \"+0%\".",
-      "downloadPiperPrompt": "\"Metinden sese\" özelliği Piper gerektirir.\r\n\r\nPiper indirilip kullanılsın mı?",
+      "downloadPiperPrompt": "\"Metinden sese\" özelliği Piper gerektirir.\n\nPiper indirilip kullanılsın mı?",
       "omniVoiceTtsSettings": "OmniVoice TTS ayarları",
       "reDownloadOmniVoiceTts": "OmniVoice TTS'yi yeniden indir",
-      "selectTheBuildToDownload": "\r\nİndirilecek sürümü (build) seçin:",
-      "downloadTheLatestOmniVoiceTtsPrompt": "\r\nEn son OmniVoice TTS sürümü şimdi indirilsin mı?",
+      "selectTheBuildToDownload": "\nİndirilecek sürümü (build) seçin:",
+      "downloadTheLatestOmniVoiceTtsPrompt": "\nEn son OmniVoice TTS sürümü şimdi indirilsin mı?",
       "vulkanRuntimeMayBeRequired": "Vulkan çalışma zamanı gerekli olabilir",
-      "vulkanRuntimeNotDetectedMessage": "Vulkan sürümü, Vulkan çalışma zamanına (vulkan-1.dll) ihtiyaç duyar. Bu dosya genellikle güncel GPU sürücüleriyle birlikte gelir ancak algılanamadı.\r\n\r\nŞu adresten yükleyebilirsiniz:\r\n{0}\r\n\r\nYine de Vulkan ile devam etmek istiyor musunuz?",
+      "vulkanRuntimeNotDetectedMessage": "Vulkan sürümü, Vulkan çalışma zamanına (vulkan-1.dll) ihtiyaç duyar. Bu dosya genellikle güncel GPU sürücüleriyle birlikte gelir ancak algılanamadı.\n\nŞu adresten yükleyebilirsiniz:\n{0}\n\nYine de Vulkan ile devam etmek istiyor musunuz?",
       "qwen3TtsSettings": "Qwen3 TTS ayarları",
       "kokoroTtsSettings": "Kokoro TTS ayarları",
       "chatterboxTtsSettings": "Chatterbox TTS ayarları",
+	  "piperSettings": "Piper ayarları",
       "voiceInstruction": "Ses tasarımı (Karakterizasyon)",
       "voiceInstructionHint": "İsteğe bağlı - örn. \"Sakin ve dost canlısı bir tonda konuş\"",
       "voiceGender": "Cinsiyet",
@@ -1996,7 +1996,7 @@
       "noActorsFoundMessage": "Hiçbir aktör bulunamadı. Önce alt yazı satırlarındaki \"Aktör\" alanını doldurun.",
       "noWebVttVoicesFoundMessage": "WebVTT dosyasında hiçbir <v Ad> (ses) etiketi bulunamadı.",
       "mergeContinuationLinesPromptTitle": "Ardışık satırlar birleştirilsin mi?",
-      "mergeContinuationLinesPromptMessage": "Bazı satırlar, birden fazla alt yazıya bölünmüş tek bir cümle gibi görünüyor.\r\n\r\nSes üretiminden önce bunları birleştirmek, TTS motorunun her bir düşünceyi tek bir nefes grubu olarak seslendirmesini sağlar ve bu da genellikle daha doğal duyulur.\r\n\r\nBirleştirmeleri şimdi gözden geçirip uygulamak ister misiniz?"
+      "mergeContinuationLinesPromptMessage": "Bazı satırlar, birden fazla alt yazıya bölünmüş tek bir cümle gibi görünüyor.\n\nSes üretiminden önce bunları birleştirmek, TTS motorunun her bir düşünceyi tek bir nefes grubu olarak seslendirmesini sağlar ve bu da genellikle daha doğal duyulur.\n\nBirleştirmeleri şimdi gözden geçirip uygulamak ister misiniz?"
     },
     "shotChanges": {
       "titleGenerateOrImport": "Sahne değişimlerini oluştur/içe aktar",
@@ -2069,11 +2069,11 @@
     "pickOnlineSubtitleNoneFound": "Bu bağlantı için alt yazı bulunamadı.",
     "toggleCurrentSubtitleWhilePlaying": "Oynatma sırasında mevcut alt yazıyı aç/kapat",
     "onlyMkvCanSupportEmbeddedSubtitleEditing": "Gömülü alt yazıların düzenlenmesi yalnızca Matroska (.mkv, .webm) dosyalarında desteklenmektedir.",
-    "reEncodeInfo": "Videoyu yeniden kodlamak alt yazı oluşturma işlemini daha akıcı hale getirebilir:\r\n• Daha düşük çözünürlük (yüksek çözünürlükler alt yazı işlemlerini yavaşlatır)\r\n• Videoyu H.264 + yuv420p olarak yeniden kodlamak uyumluluğu artırır\r\n• Hızlı kare arama için optimize edilmiştir",
+    "reEncodeInfo": "Videoyu yeniden kodlamak alt yazı oluşturma işlemini daha akıcı hale getirebilir:\n• Daha düşük çözünürlük (yüksek çözünürlükler alt yazı işlemlerini yavaşlatır)\n• Videoyu H.264 + yuv420p olarak yeniden kodlamak uyumluluğu artırır\n• Hızlı kare arama için optimize edilmiştir",
     "reEncodeGeneratingVideoX": "Video oluşturuluyor... %{0}     {1}",
     "reEncodeGeneratingVideoXofY": "Video {0}/{1} oluşturuluyor... %{2}     {3}",
     "reEncodeUnableToGenerateVideo": "Video oluşturulamadı",
-    "reEncodeOutputVideoFileNotGenerated": "Çıkış video dosyası oluşturulamadı: {0}\r\nParametreler: {1}",
+    "reEncodeOutputVideoFileNotGenerated": "Çıkış video dosyası oluşturulamadı: {0}\nParametreler: {1}",
     "reEncodeGeneratingDone": "Oluşturma işlemi tamamlandı",
     "reEncodeGeneratedFilesX": "Oluşturulan dosyalar ({0}):",
     "reEncodeFfmpegParameters": "ffmpeg parametreleri"
@@ -2278,6 +2278,8 @@
       "colorTextTooLong": "Metin çok uzunsa renklendir",
       "colorTextTooWide": "Metin çok genişse renklendir (piksel)",
       "colorTextTooManyLines": "2 satırdan fazlaysa renklendir",
+	  "colorCharactersPerSecond": "Çok yüksekse saniyeyi/karakteri renklendir",
+	  "colorWordsPerMinute": "Çok yüksekse dakikayı/kelimeyi renklendir",
       "colorOverlap": "Zaman kodu çakışmasını renklendir",
       "colorGapTooShort": "Boşluk çok kısaysa renklendir",
       "errorBackgroundColor": "Hata arka plan rengi",
@@ -2433,8 +2435,9 @@
       "speechToTextSelectedLinesPromptFirstTimeOnly": "Sesten metne: Seçili satırlar için dil/motor tercihini yalnızca ilk seferde sor",
       "multipleReplaceShowDotDotDotButtons": "Çoklu değiştir: Bağlam menüsü butonlarını göster",
       "gridFocusTextboxAfterInsertNew": "Izgara: Yeni alt yazı ekledikten sonra metin kutusuna odaklan",
+	  "musicSymbol": "Müzik sembolü",
+	  "musicSymbolsToReplace": "Değiştirilecek müzik sembolleri (virgülle ayrılmış)",
       "textToSpeechPromptMergeContinuationLines": "Metinden sese: Devam eden satırları birleştirmek için sor",
-      
       "useFocusedButtonBackgroundColor": "Odaklanmış buton arka plan rengini kullan",
       "focusedButtonBackgroundColor": "Odaklanmış buton arka plan rengi",
       "forceCrLfOnSave": "Kaydederken CR+LF zorla (metin al yazı dosyaları)",
@@ -2460,9 +2463,7 @@
       "waveformColorTheme": "Renk teması:",
       "waveformSaveAsCustomTheme": "Özel tema olarak kaydet...",
       "waveformLoadThemeDotDotDot": "Tema yükle...",
-      "waveformExportThemeDotDotDot": "Temayı dışa aktar...",
-      "searchSettingsDotDotDot": "Ayarlarda ara...",
-      "promptBeforeDelete": "Silmeden önce onayla"
+      "waveformExportThemeDotDotDot": "Temayı dışa aktar..."
     },
     "shortcuts": {
       "title": "Kısayollar",
@@ -2482,6 +2483,7 @@
       "generalMergeSelectedLinesAndAutoBreak": "Seçili satırları birleştir ve otomatik böl",
       "generalMergeSelectedLinesAndUnbreak": "Seçili satırları birleştir ve tek satır yap",
       "generalMergeSelectedLinesAndUnbreakCjk": "Seçili satırları birleştir ve tek satır yap (CJK)",
+	  "generalUnbreakNoSpaceCjk": "Boşluksuz birleştir (CJK)",
       "generalMergeSelectedLinesOnlyFirstText": "Seçili satırları birleştir (sadece ilk metin)",
       "generalMergeSelectedLinesBilingual": "Seçili satırları iki dilli birleştir",
       "generalMergeWithPreviousBilingual": "Öncekiyle iki dilli birleştir",
