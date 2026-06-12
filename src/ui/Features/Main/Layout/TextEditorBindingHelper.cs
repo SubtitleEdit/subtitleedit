@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -8,6 +9,11 @@ namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
 public class TextEditorBindingHelper
 {
+    private static readonly Thickness DefaultBorderThickness = new(1);
+    private static readonly Thickness FocusedBorderThickness = new(2);
+    private static readonly Thickness DefaultBorderPadding = new(1);
+    private static readonly Thickness FocusedBorderPadding = new(0);
+
     private readonly MainViewModel _vm;
     private readonly TextEditor _textEditor;
     private readonly TextEditorWrapper _wrapper;
@@ -72,23 +78,32 @@ public class TextEditorBindingHelper
 
     private void OnTextEditorLoaded(object? sender, RoutedEventArgs e)
     {
+        _textEditor.FocusAdorner = null;
         var textArea = _textEditor.TextArea;
         if (textArea != null)
         {
+            textArea.FocusAdorner = null;
             textArea.GotFocus += OnTextAreaGotFocus;
             textArea.LostFocus += OnTextAreaLostFocus;
         }
+
+        _textEditorBorder.BorderThickness = DefaultBorderThickness;
+        _textEditorBorder.Padding = DefaultBorderPadding;
     }
 
     private void OnTextAreaGotFocus(object? sender, RoutedEventArgs e)
     {
         _textEditorBorder.BorderBrush = _focusedBorderBrush;
+        _textEditorBorder.BorderThickness = FocusedBorderThickness;
+        _textEditorBorder.Padding = FocusedBorderPadding;
         _wrapper.HasFocus = true;
     }
 
     private void OnTextAreaLostFocus(object? sender, RoutedEventArgs e)
     {
         _textEditorBorder.BorderBrush = _defaultBorderBrush;
+        _textEditorBorder.BorderThickness = DefaultBorderThickness;
+        _textEditorBorder.Padding = DefaultBorderPadding;
         _wrapper.HasFocus = false;
     }
 
