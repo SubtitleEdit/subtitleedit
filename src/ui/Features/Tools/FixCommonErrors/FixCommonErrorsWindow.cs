@@ -27,7 +27,7 @@ public class FixCommonErrorsWindow : Window
         Title = Se.Language.Tools.FixCommonErrors.Title;
         Width = 1024;
         Height = 720;
-        MinWidth = 800;
+        MinWidth = 920;
         MinHeight = 600;
         CanResize = true;
 
@@ -45,9 +45,32 @@ public class FixCommonErrorsWindow : Window
         var labelStep2 = new Label
         {
             VerticalAlignment = VerticalAlignment.Center,
+            Padding = new Thickness(0),
         };
         labelStep2.Bind(Label.ContentProperty, new Binding(nameof(vm.Step2Title)));
-        labelStep2.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
+
+        var labelFixesApplied = UiUtil.MakeTextBlock(string.Empty);
+        labelFixesApplied.Bind(TextBlock.TextProperty, new Binding(nameof(vm.FixesAppliedText)));
+        labelFixesApplied.VerticalAlignment = VerticalAlignment.Center;
+
+        var appliedPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Margin = new Thickness(12, 0, 0, 0),
+            Children = { UiUtil.MakeVerticalSeparator(1, 0.4, new Thickness(0, 4, 12, 4)), labelFixesApplied },
+        };
+        appliedPanel.Bind(IsVisibleProperty, new Binding(nameof(vm.FixesAppliedText))
+        {
+            Converter = new Avalonia.Data.Converters.FuncValueConverter<string?, bool>(s => !string.IsNullOrEmpty(s))
+        });
+
+        var step2HeaderPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { labelStep2, appliedPanel },
+        };
+        step2HeaderPanel.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
 
         var textBoxSearch = UiUtil.MakeTextBox(250, vm, nameof(vm.SearchText)).WithMarginRight(25);
         textBoxSearch.PlaceholderText = Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot;
@@ -120,8 +143,6 @@ public class FixCommonErrorsWindow : Window
         new DataGridCheckboxMultiSelect<FixRuleDisplayItem>(rulesGrid,
             item => item.IsSelected, (item, v) => item.IsSelected = v);
 
-        var step2Grid = MakeStep2Grid();
-        step2Grid.Bind(IsVisibleProperty, new Binding(nameof(_vm.Step2IsVisible)));
         var comboProfile = UiUtil.MakeComboBox(vm.Profiles, vm, nameof(vm.SelectedProfile));
         var buttonPanelRules = UiUtil.MakeButtonBar(
             UiUtil.MakeButton(Se.Language.General.SelectAll, vm.RulesSelectAllCommand),
@@ -137,19 +158,24 @@ public class FixCommonErrorsWindow : Window
             .BindIsVisible(vm, nameof(vm.Step1IsVisible));
 
         var buttonBackToFixList = UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.BackToFixList, vm.BackToFixListCommand)
-            .WithIconLeft("fa-solid fa-arrow-left")
-            .BindIsVisible(vm, nameof(vm.Step2IsVisible));
+            .WithIconLeft("fa-solid fa-arrow-left");
 
-        var buttonDone = UiUtil.MakeButton(Se.Language.General.Done, vm.OkCommand)
-            .BindIsVisible(vm, nameof(vm.Step2IsVisible));
+        var buttonDone = UiUtil.MakeButton(Se.Language.General.Done, vm.OkCommand);
         buttonDone.IsDefault = true;
 
-        var buttonPanelRight = UiUtil.MakeButtonBar(
+        var step2NavButtons = UiUtil.MakeButtonBar(
             buttonBackToFixList,
-            buttonToApplyFixes,
             buttonDone,
             UiUtil.MakeButtonCancel(vm.CancelCommand)
         );
+
+        var buttonPanelRight = UiUtil.MakeButtonBar(
+            buttonToApplyFixes,
+            UiUtil.MakeButtonCancel(vm.CancelCommand)
+        ).BindIsVisible(vm, nameof(vm.Step1IsVisible));
+
+        var step2Grid = MakeStep2Grid(step2NavButtons);
+        step2Grid.Bind(IsVisibleProperty, new Binding(nameof(_vm.Step2IsVisible)));
 
         var grid = new Grid
         {
@@ -174,9 +200,9 @@ public class FixCommonErrorsWindow : Window
         grid.Children.Add(labelStep1);
         Grid.SetRow(labelStep1, 0);
         Grid.SetColumn(labelStep1, 0);
-        grid.Children.Add(labelStep2);
-        Grid.SetRow(labelStep2, 0);
-        Grid.SetColumn(labelStep2, 0);
+        grid.Children.Add(step2HeaderPanel);
+        Grid.SetRow(step2HeaderPanel, 0);
+        Grid.SetColumn(step2HeaderPanel, 0);
 
         grid.Children.Add(panelTopRight);
         Grid.SetRow(panelTopRight, 0);
@@ -197,15 +223,6 @@ public class FixCommonErrorsWindow : Window
         Grid.SetRow(buttonPanelRules, 2);
         Grid.SetColumn(buttonPanelRules, 0);
 
-        var labelFixesApplied = UiUtil.MakeTextBlock(string.Empty);
-        labelFixesApplied.Bind(TextBlock.TextProperty, new Binding(nameof(vm.FixesAppliedText)));
-        labelFixesApplied.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
-        labelFixesApplied.HorizontalAlignment = HorizontalAlignment.Left;
-        labelFixesApplied.VerticalAlignment = VerticalAlignment.Center;
-        grid.Children.Add(labelFixesApplied);
-        Grid.SetRow(labelFixesApplied, 2);
-        Grid.SetColumn(labelFixesApplied, 0);
-
         grid.Children.Add(buttonPanelRight);
         Grid.SetRow(buttonPanelRight, 2);
         Grid.SetColumn(buttonPanelRight, 1);
@@ -218,7 +235,7 @@ public class FixCommonErrorsWindow : Window
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
     }
 
-    private Grid MakeStep2Grid()
+    private Grid MakeStep2Grid(Control navButtons)
     {
         // top
         var dataGridFixes = new DataGrid
@@ -479,9 +496,9 @@ public class FixCommonErrorsWindow : Window
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 80 },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star), MinHeight = 80 },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
@@ -493,10 +510,24 @@ public class FixCommonErrorsWindow : Window
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+
+        var bottomRow = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+            },
+        };
+        navButtons.VerticalAlignment = VerticalAlignment.Bottom;
+        bottomRow.Add(gridCurrentSubtbtitle, 0, 0);
+        bottomRow.Add(navButtons, 0, 2);
+
         grid.Add(borderFixes, 0, 0);
         grid.Add(buttonBarFixes, 1, 0);
         grid.Add(borderSubtitles, 2, 0);
-        grid.Add(gridCurrentSubtbtitle, 3, 0);
+        grid.Add(bottomRow, 3, 0);
 
         return grid;
     }
