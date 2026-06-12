@@ -369,8 +369,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             {
                 ToolTip.SetTip(sliderPosition, Se.Language.General.VideoPosition);
 
-                // Show the hovered timestamp in the tooltip (frame/HH:MM:SS:FF vs ms format is
-                // already handled by ToShortDisplayString via UseTimeFormatHHMMSSFF).
+                // Show the hovered timestamp in the tooltip (frame/HH:MM:SS:FF vs ms format
+                // is already handled by ToDisplayString via UseTimeFormatHHMMSSFF).
                 // Avalonia's Slider centers the thumb on the value point, so the effective
                 // value-range track is narrower than the slider by one thumb width — we have
                 // to match that mapping or the hint reads later than the actual click target.
@@ -387,7 +387,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                     var ratio = Math.Clamp(x / available, 0.0, 1.0);
                     var hovered = sliderPosition.Minimum + ratio * (sliderPosition.Maximum - sliderPosition.Minimum);
                     var offsetSec = Se.Settings.General.CurrentVideoOffsetInMs / 1000.0;
-                    ToolTip.SetTip(sliderPosition, TimeCode.FromSeconds(hovered + offsetSec).ToShortDisplayString());
+                    ToolTip.SetTip(sliderPosition, TimeCode.FromSeconds(hovered + offsetSec).ToDisplayString());
                 });
             }
             sliderPosition.TemplateApplied += (s, e) =>
@@ -809,18 +809,18 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                     if (left > 0.001)
                     {
                         ProgressText =
-                            $"-{TimeCode.FromSeconds(left).ToShortDisplayString()}{postFix}";
+                            $"-{TimeCode.FromSeconds(left).ToDisplayString()}{postFix}";
                     }
                     else
                     {
                         ProgressText =
-                            $"{TimeCode.FromSeconds(0).ToShortDisplayString()}{postFix}";
+                            $"{TimeCode.FromSeconds(0).ToDisplayString()}{postFix}";
                     }
                 }
                 else
                 {
                     ProgressText =
-                        $"{TimeCode.FromSeconds(pos + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToShortDisplayString()} / {TimeCode.FromSeconds(Duration + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToShortDisplayString()}{postFix}";
+                        $"{TimeCode.FromSeconds(pos + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToDisplayString()} / {TimeCode.FromSeconds(Duration + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToDisplayString()}{postFix}";
                 }
             };
             _positionTimer.Start();
