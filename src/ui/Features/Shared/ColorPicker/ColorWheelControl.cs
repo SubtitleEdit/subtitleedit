@@ -1,10 +1,12 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
+using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
 using System;
 
@@ -39,6 +41,10 @@ public class ColorWheelControl : Control
         Width = 200;
         Height = 200;
         ClipToBounds = true;
+
+        // Custom-drawn control with no automation peer of its own; give it a name
+        // so screen readers can announce it (issue #11553).
+        AutomationProperties.SetName(this, Se.Language.General.Color);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

@@ -1,6 +1,8 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 
@@ -33,6 +35,10 @@ public class WaveformPreviewControl : Control
     {
         _vm = vm;
         _peaks = GenerateSyntheticPeaks(SampleCount);
+
+        // Custom-drawn control with no automation peer of its own; give it a name so
+        // screen readers announce it instead of an unlabeled element (issue #11553).
+        AutomationProperties.SetName(this, Se.Language.General.Preview);
 
         // Repaint whenever any color on the view-model changes
         _vm.PropertyChanged += (_, _) => InvalidateVisual();

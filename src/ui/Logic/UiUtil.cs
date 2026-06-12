@@ -1,5 +1,7 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
@@ -1989,6 +1991,8 @@ public static class UiUtil
             e.Handled = true;
         });
 
+        ForwardAutomationNameToInnerTextBox(control);
+
         return control;
     }
 
@@ -2028,6 +2032,7 @@ public static class UiUtil
         }
 
         MakeNumeriUpDownMouseWheelHandler(control);
+        ForwardAutomationNameToInnerTextBox(control);
 
         return control;
     }
@@ -2066,6 +2071,7 @@ public static class UiUtil
         }
 
         MakeNumeriUpDownMouseWheelHandler(control);
+        ForwardAutomationNameToInnerTextBox(control);
 
         return control;
     }
@@ -2105,6 +2111,7 @@ public static class UiUtil
         }
 
         MakeNumeriUpDownMouseWheelHandler(control);
+        ForwardAutomationNameToInnerTextBox(control);
 
         return control;
     }
@@ -2118,6 +2125,21 @@ public static class UiUtil
                                         control.Maximum);
             e.Handled = true;
         });
+    }
+
+    /// <summary>
+    /// Forwards the accessible name set on a <see cref="NumericUpDown"/> to its inner
+    /// PART_TextBox. The text box is the element that actually receives keyboard focus,
+    /// so without this a screen reader would announce the focused field with no name
+    /// (issue #11553). Callers just set <c>AutomationProperties.Name</c> on the control.
+    /// </summary>
+    private static void ForwardAutomationNameToInnerTextBox(NumericUpDown control)
+    {
+        control.TemplateApplied += (_, e) =>
+        {
+            var textBox = e.NameScope.Find<TextBox>("PART_TextBox");
+            textBox?.Bind(AutomationProperties.NameProperty, control.GetObservable(AutomationProperties.NameProperty));
+        };
     }
 
     public static Label WithBindText(this Label control, object viewModel, string contentPropertyPath)

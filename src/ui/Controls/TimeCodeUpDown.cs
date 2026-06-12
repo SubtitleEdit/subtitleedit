@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -94,6 +95,11 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _textBuffer = FormatTime(Value);
                 _textBox.Text = _textBuffer;
+
+                // The inner text box is the element that actually receives keyboard focus,
+                // so the accessible name set on this control must be forwarded to it for
+                // screen readers to announce it (e.g. "Start time") instead of just the value.
+                _textBox.Bind(AutomationProperties.NameProperty, this.GetObservable(AutomationProperties.NameProperty));
 
                 _textBox.AddHandler(TextInputEvent, OnTextInput, RoutingStrategies.Tunnel);
                 _textBox.AddHandler(KeyDownEvent, OnTextBoxKeyDown, RoutingStrategies.Tunnel);
