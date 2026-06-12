@@ -40,10 +40,14 @@ public class ShortcutManagerTests
     [InlineData(Key.NumPad0, PhysicalKey.NumPad0, "NumPad0")]
     [InlineData(Key.NumPad9, PhysicalKey.NumPad9, "NumPad9")]
     [InlineData(Key.Decimal, PhysicalKey.NumPadDecimal, "NumPadDecimal")]
-    [InlineData(Key.Add, PhysicalKey.NumPadAdd, "NumPadAdd")]
-    [InlineData(Key.Subtract, PhysicalKey.NumPadSubtract, "NumPadSubtract")]
-    [InlineData(Key.Divide, PhysicalKey.NumPadDivide, "NumPadDivide")]
-    [InlineData(Key.Multiply, PhysicalKey.NumPadMultiply, "NumPadMultiply")]
+    // Numpad arithmetic operators (+ - * /) intentionally keep their bare Key names:
+    // they're unaffected by NumLock and have no main-keyboard equivalent, and prefixing
+    // them would break matching against the Avalonia Key names used by default shortcuts
+    // (e.g. Shift+Add waveform zoom). See ShortcutManager.GetShortcutKeyName.
+    [InlineData(Key.Add, PhysicalKey.NumPadAdd, "Add")]
+    [InlineData(Key.Subtract, PhysicalKey.NumPadSubtract, "Subtract")]
+    [InlineData(Key.Divide, PhysicalKey.NumPadDivide, "Divide")]
+    [InlineData(Key.Multiply, PhysicalKey.NumPadMultiply, "Multiply")]
     // Main-keyboard keys keep their plain names
     [InlineData(Key.Delete, PhysicalKey.Delete, "Delete")]
     [InlineData(Key.Home, PhysicalKey.Home, "Home")]
