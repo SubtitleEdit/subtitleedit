@@ -120,7 +120,7 @@ public class FindWindow : Window
         {
             Orientation = Orientation.Vertical,
             HorizontalAlignment = HorizontalAlignment.Left,
-            Margin = new Thickness(0, 0, 50, 0),
+            VerticalAlignment = VerticalAlignment.Top,
             Children =
             {
                 buttonFindNext,
@@ -140,8 +140,8 @@ public class FindWindow : Window
             },
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
             Margin = UiUtil.MakeWindowMargin(),
             ColumnSpacing = 10,
