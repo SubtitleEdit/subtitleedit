@@ -18,6 +18,7 @@ public partial class BookmarksListViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _subtitles;
     [ObservableProperty] private SubtitleLineViewModel? _selectedSubtitle;
     [ObservableProperty] private bool _hasBookmarks;
+    [ObservableProperty] private string _countText = string.Empty;
 
     public Window? Window { get; set; }
 
@@ -26,7 +27,11 @@ public partial class BookmarksListViewModel : ObservableObject
     public BookmarksListViewModel()
     {
         Subtitles = new ObservableCollection<SubtitleLineViewModel>();
+        Subtitles.CollectionChanged += (_, _) => UpdateCountText();
     }
+
+    private void UpdateCountText() =>
+        CountText = $"{Se.Language.General.Count}: {Subtitles.Count}";
 
     [RelayCommand]
     private async Task Clear()
@@ -124,6 +129,7 @@ public partial class BookmarksListViewModel : ObservableObject
         }
 
         HasBookmarks = SelectedSubtitle != null;
+        UpdateCountText();
     }
 
     internal void GridSelectionChanged(object? sender, SelectionChangedEventArgs e)
