@@ -1,4 +1,11 @@
-﻿<Styles xmlns="https://github.com/avaloniaui">
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Styles.Resources>
+        <SolidColorBrush x:Key="DataGridRowHoveredBackgroundColor" Color="Transparent"/>
+        <x:Double x:Key="DataGridRowSelectedUnfocusedBackgroundOpacity">0.2</x:Double>
+        <StaticResource x:Key="DataGridRowSelectedHoveredBackgroundOpacity" ResourceKey="DataGridRowSelectedBackgroundOpacity"/>
+        <x:Double x:Key="DataGridRowSelectedHoveredUnfocusedBackgroundOpacity">0.2</x:Double>
+    </Styles.Resources>
     <Style Selector="DataGridCell:focus /template/ Grid#FocusVisual">
         <Setter Property="IsVisible" Value="False"/>
     </Style>
@@ -8,14 +15,11 @@
     <Style Selector="DataGridColumnHeader:pointerover /template/ Grid#PART_ColumnHeaderRoot">
         <Setter Property="Background" Value="Transparent"/>
     </Style>
-    <Style Selector="DataGridRow:not(:selected):pointerover /template/ Rectangle#BackgroundRectangle">
-        <Setter Property="Fill" Value="Transparent"/>
+    <Style Selector="DataGrid:focus-within DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+        <Setter Property="Fill" Value="{DynamicResource DataGridRowSelectedBackgroundBrush}"/>
+        <Setter Property="Opacity" Value="{DynamicResource DataGridRowSelectedBackgroundOpacity}"/>
     </Style>
-    <Style Selector="DataGridRow:selected:pointerover /template/ Rectangle#BackgroundRectangle">
-        <Setter Property="Fill" Value="{DynamicResource DataGridRowSelectedUnfocusedBackgroundBrush}"/>
-        <Setter Property="Opacity" Value="{DynamicResource DataGridRowSelectedUnfocusedBackgroundOpacity}"/>
-    </Style>
-    <Style Selector="DataGridRow:selected:pointerover:focus /template/ Rectangle#BackgroundRectangle">
+    <Style Selector="DataGrid:focus-within DataGridRow:selected:pointerover /template/ Rectangle#BackgroundRectangle">
         <Setter Property="Fill" Value="{DynamicResource DataGridRowSelectedBackgroundBrush}"/>
         <Setter Property="Opacity" Value="{DynamicResource DataGridRowSelectedBackgroundOpacity}"/>
     </Style>
