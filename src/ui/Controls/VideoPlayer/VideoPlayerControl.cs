@@ -474,8 +474,9 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 _videoPlayerInstance.Volume = e.NewValue;
                 VolumeChanged?.Invoke(e.NewValue);
                 SetVolumeIcon(e.NewValue < 0.0001);
-            };
 
+                ToolTip.SetTip(sliderVolume, $"{Se.Language.General.Volume} {sliderVolume.Value:0}%");
+            };
 
             _gridProgress.Children.Add(sliderVolume);
             Grid.SetColumn(sliderVolume, 3);
