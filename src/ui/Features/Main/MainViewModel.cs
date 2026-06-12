@@ -5710,7 +5710,7 @@ public partial class MainViewModel :
     {
         if (PlayerSelectedLines(false))
         {
-            AudioVisualizer?.Focus();
+            FocusAudioVisualizer();
         }
     }
 
@@ -5719,7 +5719,7 @@ public partial class MainViewModel :
     {
         if (PlayerSelectedLines(true))
         {
-            AudioVisualizer?.Focus();
+            FocusAudioVisualizer();
         }
     }
 
@@ -11415,10 +11415,26 @@ public partial class MainViewModel :
                 AudioVisualizer.SkipNextPointerEntered = true;
             }
 
+            ActivateWindow(Window);
             EditTextBox.Focus();
             Task.Delay(10);
             EditTextBox.Focus();
         });
+    }
+
+    private static void ActivateWindow(Window? window)
+    {
+        if (window == null)
+        {
+            return;
+        }
+
+        if (window.WindowState == WindowState.Minimized)
+        {
+            window.WindowState = WindowState.Normal;
+        }
+
+        window.Activate();
     }
 
     private void FocusSubtitleGrid()
@@ -11430,7 +11446,22 @@ public partial class MainViewModel :
                 AudioVisualizer.SkipNextPointerEntered = true;
             }
 
+            ActivateWindow(Window);
             SubtitleGrid.Focus();
+        });
+    }
+
+    private void FocusAudioVisualizer()
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (AudioVisualizer == null)
+            {
+                return;
+            }
+
+            ActivateWindow(TopLevel.GetTopLevel(AudioVisualizer) as Window);
+            AudioVisualizer.Focus();
         });
     }
 
@@ -12070,7 +12101,7 @@ public partial class MainViewModel :
 
         if (IsSubtitleGridFocused())
         {
-            AudioVisualizer.Focus();
+            FocusAudioVisualizer();
         }
         else
         {
@@ -12094,12 +12125,7 @@ public partial class MainViewModel :
         }
         else if (EditTextBox.IsFocused)
         {
-            if (AudioVisualizer.IsFocused)
-            {
-                AudioVisualizer.SkipNextPointerEntered = true;
-            }
-
-            AudioVisualizer.Focus();
+            FocusAudioVisualizer();
         }
 
         _updateAudioVisualizer = true;
