@@ -38,7 +38,6 @@ internal static class SubtitleTextInfoHelper
         out IBrush totalBackground)
     {
         var info = PopulateLineLengthsAndTotal(text, panel);
-        var colorTextTooLong = Se.Settings.General.ColorTextTooLong;
         var maxCps = Se.Settings.General.SubtitleMaximumCharactersPerSeconds;
 
         var cps = GetCharactersPerSecond(text, item.StartTime, item.EndTime);

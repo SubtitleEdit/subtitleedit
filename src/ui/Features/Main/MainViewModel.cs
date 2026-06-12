@@ -1834,7 +1834,7 @@ public partial class MainViewModel :
                 if (vp != null && s != null)
                 {
                     vp.Position = s.StartTime.TotalSeconds;
-                    Dispatcher.UIThread.Post(() => { vp.Position = SelectedSubtitle.StartTime.TotalSeconds; });
+                    Dispatcher.UIThread.Post(() => { vp.Position = s.StartTime.TotalSeconds; });
                     CenterAudioVisualizerOnCurrentVideoPosition();
                 }
             }
