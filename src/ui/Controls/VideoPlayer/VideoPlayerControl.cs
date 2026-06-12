@@ -802,6 +802,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
                 SetPositionDisplayOnly(pos);
 
+                var fullDuration = TimeCode.FromSeconds(Duration + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToDisplayString();
                 if (VideoPlayerDisplayTimeLeft)
                 {
                     var left = Duration - pos;
@@ -809,18 +810,18 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                     if (left > 0.001)
                     {
                         ProgressText =
-                            $"-{TimeCode.FromSeconds(left).ToDisplayString()}{postFix}";
+                            $"-{TimeCode.FromSeconds(left).ToDisplayString()} / {fullDuration}{postFix}";
                     }
                     else
                     {
                         ProgressText =
-                            $"{TimeCode.FromSeconds(0).ToDisplayString()}{postFix}";
+                            $"{TimeCode.FromSeconds(0).ToDisplayString()} / {fullDuration}{postFix}";
                     }
                 }
                 else
                 {
                     ProgressText =
-                        $"{TimeCode.FromSeconds(pos + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToDisplayString()} / {TimeCode.FromSeconds(Duration + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToDisplayString()}{postFix}";
+                        $"{TimeCode.FromSeconds(pos + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToDisplayString()} / {fullDuration}{postFix}";
                 }
             };
             _positionTimer.Start();
