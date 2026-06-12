@@ -17900,13 +17900,11 @@ public partial class MainViewModel :
     {
         text ??= string.Empty;
 
-        text = HtmlUtil.RemoveHtmlTags(text, true);
-        var totalLength = text.CountCharacters(false);
-        var cps = new Paragraph(text, item.StartTime.TotalMilliseconds, item.EndTime.TotalMilliseconds)
-            .GetCharactersPerSecond();
+        text = SubtitleTextInfoHelper.StripHtml(text);
+        var totalLength = SubtitleTextInfoHelper.GetTotalLength(text);
+        var cps = SubtitleTextInfoHelper.GetCharactersPerSecond(text, item.StartTime, item.EndTime);
 
         var lines = text.SplitToLines();
-        var lineLenghts = new List<string>(lines);
         PanelSingleLineLengthsOriginal.Children.Clear();
         PanelSingleLineLengthsOriginal.Children.Add(UiUtil.MakeTextBlock(Se.Language.Main.SingleLineLength)
             .WithFontSize(12)
@@ -17923,9 +17921,10 @@ public partial class MainViewModel :
                 PanelSingleLineLengthsOriginal.Children.Add(UiUtil.MakeTextBlock("/").WithFontSize(12).WithPadding(2));
             }
 
-            var tb = UiUtil.MakeTextBlock(lineLenghts[i].Length.ToString(CultureInfo.InvariantCulture)).WithFontSize(12).WithPadding(2);
+            var lineLength = SubtitleTextInfoHelper.GetLineLength(lines[i]);
+            var tb = UiUtil.MakeTextBlock(lineLength.ToString(CultureInfo.InvariantCulture)).WithFontSize(12).WithPadding(2);
             if (Se.Settings.General.ColorTextTooLong &&
-                lineLenghts[i].Length > Se.Settings.General.SubtitleLineMaximumLength)
+                lineLength > Se.Settings.General.SubtitleLineMaximumLength)
             {
                 tb.Background = _errorBrush;
             }
@@ -17936,7 +17935,7 @@ public partial class MainViewModel :
         EditTextCharactersPerSecondOriginal = string.Format(Se.Language.Main.CharactersPerSecond, $"{cps:0.0}");
         EditTextTotalLengthOriginal = string.Format(Se.Language.Main.TotalCharacters, totalLength);
 
-        EditTextCharactersPerSecondBackgroundOriginal = Se.Settings.General.ColorTextTooLong &&
+        EditTextCharactersPerSecondBackgroundOriginal = Se.Settings.General.ColorCharactersPerSecond &&
                                                         cps > Se.Settings.General.SubtitleMaximumCharactersPerSeconds
             ? _errorBrush
             : _transparentBrush;
