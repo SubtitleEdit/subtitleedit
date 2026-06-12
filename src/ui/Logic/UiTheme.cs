@@ -129,6 +129,11 @@ public static class UiTheme
 
     public static void ApplyScaleToWindow(Window window)
     {
+        // Keep the OS-drawn title bar in sync with the app theme. Piggybacks on the universal
+        // per-window hook so it covers both window-open (every caller does ApplyScaleToWindow)
+        // and theme switches (ApplyLayoutScaleToAllWindows re-runs this for every open window).
+        ApplyTitleBarTheme(window);
+
         var factor = Se.Settings.Appearance.LayoutScale;
 
         if (window.Content is LayoutTransformControl ltc)
@@ -153,6 +158,39 @@ public static class UiTheme
                 LayoutTransform = new ScaleTransform(factor, factor)
             };
         }
+    }
+
+    /// <summary>
+    /// Applies the Windows immersive dark-mode title bar to <paramref name="window"/> based on the
+    /// current theme. The native window handle only exists once the window is shown, so when it
+    /// isn't ready yet (e.g. ShowDialog applies chrome before the window opens) this defers to the
+    /// window's Opened event. No-op on non-Windows platforms.
+    /// </summary>
+    public static void ApplyTitleBarTheme(Window window)
+    {
+        if (window == null || !OperatingSystem.IsWindows())
+        {
+            return;
+        }
+
+        var handle = window.TryGetPlatformHandle();
+        if (handle != null && handle.Handle != IntPtr.Zero)
+        {
+            Platform.Windows.WindowsDarkMode.Apply(handle.Handle, IsDarkThemeEnabled());
+            return;
+        }
+
+        void OnOpened(object? sender, EventArgs e)
+        {
+            window.Opened -= OnOpened;
+            var openedHandle = window.TryGetPlatformHandle();
+            if (openedHandle != null)
+            {
+                Platform.Windows.WindowsDarkMode.Apply(openedHandle.Handle, IsDarkThemeEnabled());
+            }
+        }
+
+        window.Opened += OnOpened;
     }
 
     public static void ApplyLayoutScaleToAllWindows()

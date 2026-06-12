@@ -100,6 +100,19 @@ public class ShortcutManager : IShortcutManager
     {
         if (IsNumPadPhysicalKey(physicalKey))
         {
+            // The four arithmetic operators (+ - * /) are unaffected by NumLock and have no
+            // main-keyboard Key equivalent, so their plain Key name ("Add"/"Subtract"/
+            // "Multiply"/"Divide") is already unambiguous. Prefixing them ("NumPadAdd") only
+            // breaks matching against the Avalonia Key names used by the default shortcuts
+            // (e.g. Shift+Add waveform zoom), the shortcut-picker dropdown, and SE 4 import.
+            // Everything else on the numpad (digits, Decimal, Enter) DOES need the prefix to
+            // stay distinct across NumLock states and from the main Enter key.
+            if (physicalKey is PhysicalKey.NumPadAdd or PhysicalKey.NumPadSubtract or
+                PhysicalKey.NumPadMultiply or PhysicalKey.NumPadDivide)
+            {
+                return key.ToString();
+            }
+
             var keyName = key.ToString();
             return keyName.StartsWith("NumPad", StringComparison.Ordinal)
                 ? keyName
@@ -147,6 +160,14 @@ public class ShortcutManager : IShortcutManager
         ["OemPlus"] = "Equal",
         ["OemBackslash"] = "IntlBackslash",
         ["Oem102"] = "IntlBackslash",
+
+        // Numpad arithmetic operators were briefly emitted with a "NumPad" prefix
+        // (RC builds), which didn't match the bare Avalonia Key names used elsewhere.
+        // Migrate any such stored tokens back onto the bare names now produced again.
+        ["NumPadAdd"] = "Add",
+        ["NumPadSubtract"] = "Subtract",
+        ["NumPadMultiply"] = "Multiply",
+        ["NumPadDivide"] = "Divide",
     };
 
     public static void MigrateLegacyOemKeys(List<string> keys)

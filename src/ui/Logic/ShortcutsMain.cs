@@ -627,7 +627,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.MergeWithLineAfterKeepBreaksCommand, nameof(vm.MergeWithLineAfterKeepBreaksCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MergeWithLineBeforeAsDialogCommand, nameof(vm.MergeWithLineBeforeAsDialogCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MergeWithLineAfterAsDialogCommand, nameof(vm.MergeWithLineAfterAsDialogCommand), ShortcutCategory.General);
-        AddShortcut(shortcuts, vm.ToggleDialogDashesCommand, nameof(vm.ToggleDialogDashesCommand), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.ToggleDialogDashesCommand, nameof(vm.ToggleDialogDashesCommand), ShortcutCategory.SubtitleGridAndTextBox);
         AddShortcut(shortcuts, vm.MoveStartOneFrameBackCommand, nameof(vm.MoveStartOneFrameBackCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveStartOneFrameForwardCommand, nameof(vm.MoveStartOneFrameForwardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.MoveEndOneFrameBackCommand, nameof(vm.MoveEndOneFrameBackCommand), ShortcutCategory.General);

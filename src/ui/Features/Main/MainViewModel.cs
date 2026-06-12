@@ -1821,6 +1821,23 @@ public partial class MainViewModel :
 
             await SubtitleOpen(recentFile.SubtitleFileName, recentFile.VideoFileName, recentFile.SelectedLine, desiredAudioTrackId: recentFile.AudioTrack);
 
+            // Seek the video to the restored line, like SE 4 did — otherwise Reopen leaves it
+            // at 0:00. Mirrors the startup file-restore path: the video opens asynchronously, so
+            // wait for the players to be ready before seeking, then re-apply after layout settles.
+            var vp = GetVideoPlayerControl();
+            if (!string.IsNullOrEmpty(_videoFileName) && SelectedSubtitle != null && vp != null)
+            {
+                await vp.WaitForPlayersReadyAsync();
+                await Task.Delay(200);
+                var s = SelectedSubtitle;
+                if (vp != null && s != null)
+                {
+                    vp.Position = s.StartTime.TotalSeconds;
+                    Dispatcher.UIThread.Post(() => { vp.Position = SelectedSubtitle.StartTime.TotalSeconds; });
+                    CenterAudioVisualizerOnCurrentVideoPosition();
+                }
+            }
+
             if (!string.IsNullOrEmpty(recentFile.SubtitleFileNameOriginal) &&
                 File.Exists(recentFile.SubtitleFileNameOriginal))
             {
@@ -8062,11 +8079,23 @@ public partial class MainViewModel :
             if (Subtitles[i].Bookmark != null)
             {
                 SelectAndScrollToSubtitle(Subtitles[i]);
+                SeekVideoToSubtitleStart(Subtitles[i]);
                 return;
             }
         }
 
         ShowStatus(Se.Language.General.NoBookmarksFound);
+    }
+
+    // Move the video to a line's start, like SE 4's bookmark navigation did. No-op when no
+    // video is loaded. Used by "go to next/previous bookmark" and the Reopen flow.
+    private void SeekVideoToSubtitleStart(SubtitleLineViewModel subtitle)
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp != null)
+        {
+            vp.Position = subtitle.StartTime.TotalSeconds;
+        }
     }
 
     [RelayCommand]
@@ -8089,6 +8118,7 @@ public partial class MainViewModel :
             if (Subtitles[i].Bookmark != null)
             {
                 SelectAndScrollToSubtitle(Subtitles[i]);
+                SeekVideoToSubtitleStart(Subtitles[i]);
                 return;
             }
         }
@@ -15641,7 +15671,12 @@ public partial class MainViewModel :
         var trackNumber = _audioTrack?.FfIndex ?? -1;
         var peakWaveFileName = WavePeakGenerator2.GetPeakWaveFileName(videoFileName, trackNumber);
         var spectrogramFileName = WavePeakGenerator2.SpectrogramDrawer.GetSpectrogramFileName(videoFileName, trackNumber);
-        if (!File.Exists(peakWaveFileName) || (Se.Settings.Waveform.GenerateSpectrogram && !File.Exists(spectrogramFileName)))
+        var needToGenerate = !File.Exists(peakWaveFileName) || (Se.Settings.Waveform.GenerateSpectrogram && !File.Exists(spectrogramFileName));
+
+        // Hidden setting: when WaveformAutoGenerate is off, never kick off ffmpeg extraction on
+        // video open. Cached peaks still load via the branch below, so existing waveforms keep
+        // showing; the user generates new ones on demand.
+        if (needToGenerate && Se.Settings.Waveform.WaveformAutoGenerate)
         {
             if (FfmpegHelper.IsFfmpegInstalled())
             {
@@ -15661,7 +15696,7 @@ public partial class MainViewModel :
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
         }
-        else
+        else if (File.Exists(peakWaveFileName))
         {
             ShowStatus(Se.Language.Main.LoadingWaveInfoFromCache);
             var wavePeaks = WavePeakData2.FromDisk(peakWaveFileName);
@@ -17257,7 +17292,10 @@ public partial class MainViewModel :
                 }
             }
 
-            if (EditTextBox.IsFocused)
+            // Route SubtitleGridAndTextBox shortcuts when either edit box is focused — the
+            // original/translation box should behave the same as the normal one (e.g. so
+            // "Toggle dialog dashes" works in whichever text box has focus, like SE 4).
+            if (EditTextBox.IsFocused || EditTextBoxOriginal.IsFocused)
             {
                 var relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, ShortcutCategory.SubtitleGridAndTextBox.ToString());
                 if (relayCommand != null)

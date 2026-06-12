@@ -8,6 +8,7 @@ using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
@@ -204,10 +205,22 @@ public class FullScreenVideoWindow : Window
 
             await videoPlayer.Open(videoFileName);
             await videoPlayer.WaitForPlayersReadyAsync();
+
+            // The freshly opened player starts at 0:00; seek back to where the user was. The seek
+            // doesn't reliably stick right after the player reports ready — it can leave fullscreen
+            // sitting at the beginning, most visibly when paused on an empty stretch of the timeline
+            // where nothing else re-seeks afterwards. Settle briefly and re-apply, the same pattern
+            // used by the startup file-restore and Reopen paths.
+            await Task.Delay(200);
             videoPlayer.VideoPlayer.Pause();
             videoPlayer.VideoPlayer.Position = position;
             videoPlayer.Position = position;
             videoPlayer.Volume = volume;
+            Dispatcher.UIThread.Post(() =>
+            {
+                videoPlayer.VideoPlayer.Position = position;
+                videoPlayer.Position = position;
+            });
         };
     }
 }
