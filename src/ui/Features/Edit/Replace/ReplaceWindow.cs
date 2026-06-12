@@ -39,7 +39,7 @@ public class ReplaceWindow : Window
         {
             Content = Se.Language.Edit.Find.WholeWord,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 10),
+            Margin = new Thickness(0, 0, 0, 3),
             [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.WholeWord)) { Mode = BindingMode.TwoWay }
         };
 
@@ -47,7 +47,7 @@ public class ReplaceWindow : Window
         {
             Orientation = Orientation.Vertical,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 10),
+            Margin = new Thickness(0, 0, 0, 3),
             Children =
             {
                 textBoxFind,
@@ -88,7 +88,6 @@ public class ReplaceWindow : Window
         {
             Content = Se.Language.Edit.Find.CaseSensitive,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 3),
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
             {
                 Converter = valueConverter,
@@ -101,7 +100,6 @@ public class ReplaceWindow : Window
         {
             Content = Se.Language.Edit.Find.CaseInsensitive,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 3),
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
             {
                 Converter = valueConverter,
@@ -114,7 +112,6 @@ public class ReplaceWindow : Window
         {
             Content = Se.Language.General.RegularExpression,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 3),
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
             {
                 Converter = valueConverter,
@@ -127,7 +124,7 @@ public class ReplaceWindow : Window
         {
             Orientation = Orientation.Vertical,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 10),
+            Spacing = 0,
             Children =
             {
                 radioButtonNormal,

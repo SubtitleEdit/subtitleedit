@@ -38,17 +38,16 @@ public class FindWindow : Window
         {
             Content = Se.Language.Edit.Find.WholeWord,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 10),
+            Margin = new Thickness(0, 0, 0, 3),
             [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.WholeWord)) { Mode = BindingMode.TwoWay }
         };
-        
+
         var valueConverter = new FindModeValueConverter();
 
         var radioButtonCaseSensitive = new RadioButton
         {
             Content = Se.Language.Edit.Find.CaseSensitive,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 3),
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
             {
                 Converter = valueConverter,
@@ -61,7 +60,6 @@ public class FindWindow : Window
         {
             Content = Se.Language.Edit.Find.CaseInsensitive,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 3),
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
             {
                 Converter = valueConverter,
@@ -74,7 +72,6 @@ public class FindWindow : Window
         {
             Content = Se.Language.General.RegularExpression,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(10, 0, 0, 3),
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FindMode))
             {
                 Converter = valueConverter,
@@ -87,7 +84,7 @@ public class FindWindow : Window
         {
             Orientation = Orientation.Vertical,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 10),
+            Spacing = 0,
             Children =
             {
                 radioButtonCaseSensitive,
