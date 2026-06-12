@@ -1,5 +1,6 @@
 using System;
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -1099,6 +1100,7 @@ public static partial class InitListViewAndEditBox
         {
             DataContext = vm,
             UseVideoOffset = true,
+            [AutomationProperties.NameProperty] = Se.Language.General.StartTime,
         };
         var startTimeBindingName = nameof(vm.SelectedSubtitle) + "." + (Se.Settings.Appearance.ShowUpDownEndTime
             ? nameof(SubtitleLineViewModel.StartTimeOnly)
@@ -1134,6 +1136,7 @@ public static partial class InitListViewAndEditBox
         var endCodeUpDown = new TimeCodeUpDown
         {
             DataContext = vm,
+            [AutomationProperties.NameProperty] = Se.Language.General.EndTime,
             [!TimeCodeUpDown.ValueProperty] = new Binding($"{nameof(vm.SelectedSubtitle)}.{nameof(SubtitleLineViewModel.EndTime)}")
             {
                 Mode = BindingMode.TwoWay,
@@ -1164,6 +1167,7 @@ public static partial class InitListViewAndEditBox
         var durationUpDown = new SecondsUpDown
         {
             DataContext = vm,
+            [AutomationProperties.NameProperty] = Se.Language.General.Duration,
             [!SecondsUpDown.ValueProperty] = new Binding($"{nameof(vm.SelectedSubtitle)}.{nameof(SubtitleLineViewModel.Duration)}")
             {
                 Mode = BindingMode.TwoWay,
@@ -1195,6 +1199,7 @@ public static partial class InitListViewAndEditBox
         }.WithBindVisible(vm, nameof(vm.ShowUpDownLabels));
         panelLayer.Children.Add(labelLayer);
         var upDownLayer = UiUtil.MakeNumericUpDownInt(int.MinValue, int.MaxValue, 0, double.NaN, vm, $"{nameof(vm.SelectedSubtitle)}.{nameof(SubtitleLineViewModel.Layer)}");
+        AutomationProperties.SetName(upDownLayer, Se.Language.General.Layer);
         upDownLayer.HorizontalAlignment = HorizontalAlignment.Stretch;
         if (!vm.ShowUpDownLabels && Se.Settings.Appearance.ShowHints)
         {
@@ -1691,6 +1696,7 @@ public static partial class InitListViewAndEditBox
                 FontWeight = Se.Settings.Appearance.SubtitleTextBoxFontBold ? FontWeight.Bold : FontWeight.Normal,
                 IsUndoEnabled = false,
                 ClearSelectionOnLostFocus = false,
+                [AutomationProperties.NameProperty] = Se.Language.General.Text,
             };
             if (Se.Settings.Appearance.SubtitleTextBoxCenterText)
             {
@@ -1763,6 +1769,11 @@ public static partial class InitListViewAndEditBox
             Focusable = true,
             Padding = new Thickness(6, 4, 4, 4),
         };
+
+        // Expose an accessible name for screen readers. The TextArea is the element
+        // that actually receives keyboard focus, so it needs the name too.
+        AutomationProperties.SetName(textEditor, Se.Language.General.Text);
+        AutomationProperties.SetName(textEditor.TextArea, Se.Language.General.Text);
 
         // Add syntax highlighting transformer
         textEditor.TextArea.TextView.LineTransformers.Add(new SubtitleSyntaxHighlighting());

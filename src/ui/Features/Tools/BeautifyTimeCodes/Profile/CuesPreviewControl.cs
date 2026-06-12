@@ -1,8 +1,10 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Globalization;
 
@@ -51,6 +53,10 @@ public sealed class CuesPreviewControl : Control
         Height = 70;
         HorizontalAlignment = HorizontalAlignment.Stretch;
         ClipToBounds = true;
+
+        // Custom-drawn control with no automation peer of its own; give it a name so
+        // screen readers announce it instead of an unlabeled element (issue #11553).
+        AutomationProperties.SetName(this, Se.Language.General.Preview);
     }
 
     public override void Render(DrawingContext context)

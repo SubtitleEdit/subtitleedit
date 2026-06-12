@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -142,6 +143,12 @@ public class SecondsUpDown : TemplatedControl
         if (_textBox != null)
         {
             _textBox.Text = FormatTime(Value);
+
+            // The inner text box is the element that actually receives keyboard focus,
+            // so the accessible name set on this control must be forwarded to it for
+            // screen readers to announce it (e.g. "Duration") instead of just the value.
+            _textBox.Bind(AutomationProperties.NameProperty, this.GetObservable(AutomationProperties.NameProperty));
+
             _textBox.KeyDown += OnTextBoxKeyDown;
             _textBox.LostFocus += (_, _) => ParseAndUpdate();
             _textBox.PointerWheelChanged += (_, args) =>
