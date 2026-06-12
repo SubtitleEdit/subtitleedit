@@ -1821,6 +1821,23 @@ public partial class MainViewModel :
 
             await SubtitleOpen(recentFile.SubtitleFileName, recentFile.VideoFileName, recentFile.SelectedLine, desiredAudioTrackId: recentFile.AudioTrack);
 
+            // Seek the video to the restored line, like SE 4 did — otherwise Reopen leaves it
+            // at 0:00. Mirrors the startup file-restore path: the video opens asynchronously, so
+            // wait for the players to be ready before seeking, then re-apply after layout settles.
+            var vp = GetVideoPlayerControl();
+            if (!string.IsNullOrEmpty(_videoFileName) && SelectedSubtitle != null && vp != null)
+            {
+                await vp.WaitForPlayersReadyAsync();
+                await Task.Delay(200);
+                var s = SelectedSubtitle;
+                if (vp != null && s != null)
+                {
+                    vp.Position = s.StartTime.TotalSeconds;
+                    Dispatcher.UIThread.Post(() => { vp.Position = SelectedSubtitle.StartTime.TotalSeconds; });
+                    CenterAudioVisualizerOnCurrentVideoPosition();
+                }
+            }
+
             if (!string.IsNullOrEmpty(recentFile.SubtitleFileNameOriginal) &&
                 File.Exists(recentFile.SubtitleFileNameOriginal))
             {
