@@ -44,6 +44,12 @@ public class SeWaveform
     public double SeekSilenceMaxVolume { get; set; }
     public bool SeekSilenceSeekForward { get; set; }
     public bool GenerateSpectrogram { get; set; }
+
+    // Hidden setting (Settings.json only, no UI yet): when false, the waveform/peaks are not
+    // generated automatically when a video is opened. Cached peaks still load, so previously
+    // generated waveforms keep showing; new ones are only made on demand. Defaults to true.
+    public bool WaveformAutoGenerate { get; set; }
+
     public string SpectrogramStyle { get; set; }
     public string WaveformDrawStyle { get; set; }
     public string LastDisplayMode { get; set; }
@@ -114,6 +120,7 @@ public class SeWaveform
         SeekSilenceMinDurationSeconds = 0.3;
         SeekSilenceMaxVolume = 0.1;
         WaveformMinimumSampleRate = 126;
+        WaveformAutoGenerate = true;
 
         ExtractAudioFormat = "wav";
         ExtractAudioSampleRate = 0; // keep source sample rate

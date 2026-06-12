@@ -15671,7 +15671,12 @@ public partial class MainViewModel :
         var trackNumber = _audioTrack?.FfIndex ?? -1;
         var peakWaveFileName = WavePeakGenerator2.GetPeakWaveFileName(videoFileName, trackNumber);
         var spectrogramFileName = WavePeakGenerator2.SpectrogramDrawer.GetSpectrogramFileName(videoFileName, trackNumber);
-        if (!File.Exists(peakWaveFileName) || (Se.Settings.Waveform.GenerateSpectrogram && !File.Exists(spectrogramFileName)))
+        var needToGenerate = !File.Exists(peakWaveFileName) || (Se.Settings.Waveform.GenerateSpectrogram && !File.Exists(spectrogramFileName));
+
+        // Hidden setting: when WaveformAutoGenerate is off, never kick off ffmpeg extraction on
+        // video open. Cached peaks still load via the branch below, so existing waveforms keep
+        // showing; the user generates new ones on demand.
+        if (needToGenerate && Se.Settings.Waveform.WaveformAutoGenerate)
         {
             if (FfmpegHelper.IsFfmpegInstalled())
             {
@@ -15691,7 +15696,7 @@ public partial class MainViewModel :
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
         }
-        else
+        else if (File.Exists(peakWaveFileName))
         {
             ShowStatus(Se.Language.Main.LoadingWaveInfoFromCache);
             var wavePeaks = WavePeakData2.FromDisk(peakWaveFileName);
