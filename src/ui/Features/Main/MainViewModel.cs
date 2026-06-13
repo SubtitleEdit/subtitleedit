@@ -9683,7 +9683,7 @@ public partial class MainViewModel :
                 SubtitleGrid.SelectedItem = subtitle;
                 SubtitleGrid.ScrollIntoView(subtitle, null);
 
-                ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, _findService.CurrentTextFound, _findService.CurrentLineNumber + 1, _findService.CurrentTextIndex + 1));
+                ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, _findService.CurrentTextFound.Replace("\r\n", "·").Replace("\n", "·"), _findService.CurrentLineNumber + 1, _findService.CurrentTextIndex + 1));
 
                 if (EditTextBox.Text != subtitle.Text)
                 {
@@ -9749,7 +9749,7 @@ public partial class MainViewModel :
             SubtitleGrid.SelectedItem = subtitle;
             SubtitleGrid.ScrollIntoView(subtitle, null);
 
-            ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
+            ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText.Replace("\r\n", "·").Replace("\n", "·"), foundLine + 1, foundIndex + 1));
 
             if (EditTextBox.Text != subtitle.Text)
             {
@@ -9816,7 +9816,7 @@ public partial class MainViewModel :
             SubtitleGrid.SelectedItem = subtitle;
             SubtitleGrid.ScrollIntoView(subtitle, null);
 
-            ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
+            ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText.Replace("\r\n", "·").Replace("\n", "·"), foundLine + 1, foundIndex + 1));
 
             if (EditTextBox.Text != subtitle.Text)
             {
@@ -10088,7 +10088,7 @@ public partial class MainViewModel :
 
                 EditTextBox.Select(foundIndex, foundText.Length);
 
-                ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText, foundLine + 1, foundIndex + 1));
+                ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText.Replace("\r\n", "·").Replace("\n", "·"), foundLine + 1, foundIndex + 1));
             });
         }
     }
