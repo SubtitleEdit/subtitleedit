@@ -172,6 +172,8 @@
     "extendSelectedLinesToPreviousShotChange": "Extend selected lines to previous shot change (or previous subtitle)",
     "extendSelectedToNext": "Extend selected to next",
     "extendSelectedToPrevious": "Extend selected to previous",
+    "extendPreviousEndToSelectedStart": "Extend previous line's end to selected's start",
+    "extendNextStartToSelectedEnd": "Extend next line's start to selected's end",
     "extractingAudioClips": "Extracting audio clips...",
     "exitFullScreen": "Exit full screen",
     "fade": "Fade",

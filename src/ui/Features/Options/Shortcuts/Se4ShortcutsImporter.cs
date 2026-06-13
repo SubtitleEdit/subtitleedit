@@ -225,6 +225,8 @@ public static class Se4ShortcutsImporter
         ["MainSetEndAndStartNextAfterGap"] = nameof(MainViewModel.WaveformSetEndAndStartOfNextAfterGapCommand),
         ["MainAdjustExtendToNextSubtitle"] = nameof(MainViewModel.ExtendSelectedToNextCommand),
         ["MainAdjustExtendToPreviousSubtitle"] = nameof(MainViewModel.ExtendSelectedToPreviousCommand),
+        ["MainAdjustExtendPreviousLineEndToCurrentStart"] = nameof(MainViewModel.ExtendPreviousEndToSelectedStartCommand),
+        ["MainAdjustExtendNextLineStartToCurrentEnd"] = nameof(MainViewModel.ExtendNextStartToSelectedEndCommand),
         ["MainAdjustExtendToNextShotChange"] = nameof(MainViewModel.ExtendSelectedLinesToNextShotChangeOrNextSubtitleCommand),
         ["MainAdjustExtendToPreviousShotChange"] = nameof(MainViewModel.ExtendSelectedLinesToPreviousShotChangeCommand),
         ["MainAdjustSelected100MsBack"] = nameof(MainViewModel.Video100MsBackCommand),
