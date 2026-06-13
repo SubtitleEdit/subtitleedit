@@ -1998,7 +1998,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 return defaultColor;
             }
-            var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
+            // f starts at 'start' within s, so offset f-relative index back into s
+            var colorStart = start + f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
             if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
             {
                 end = s.IndexOf('"', colorStart + " color=".Length + 1);
