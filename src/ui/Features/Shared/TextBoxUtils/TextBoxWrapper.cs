@@ -53,7 +53,6 @@ public class TextBoxWrapper : ITextBoxWrapper
     {
         _textBox.SelectionStart = start;
         _textBox.SelectionEnd = start + length;
-        _textBox.CaretIndex = start + length;
     }
 
     public int CaretIndex
