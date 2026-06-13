@@ -485,8 +485,9 @@ public partial class TextToSpeechViewModel : ObservableObject
         UpdateVoiceLock();
 
         // Qwen3 (CrispASR) returns a different voice list per model — VoiceDesign exposes
-        // "Default", CustomVoice only shows imported WAVs since it can't synthesise without
-        // a reference. Persist the model change first so GetVoices reads the new value, then
+        // "Default", CustomVoice exposes the nine fixed built-in speakers, and Voice clone
+        // lists the imported reference WAVs. Persist the model change first so GetVoices reads
+        // the new value, then
         // re-pull the voice list. Wrap the fire-and-forget in a try/catch so any throw doesn't
         // surface later as an unobserved task exception; the worst case is the combo keeps
         // showing the old voice list.

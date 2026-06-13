@@ -118,6 +118,7 @@ public static class DownloadHashManager
         // each key holds a single hash rather than a release-pinned list.
         public const string VoiceDesignTalker = "Qwen3TtsCrispAsr.VoiceDesignTalker";
         public const string CustomVoiceTalker = "Qwen3TtsCrispAsr.CustomVoiceTalker";
+        public const string BaseTalker = "Qwen3TtsCrispAsr.BaseTalker";
         public const string Codec = "Qwen3TtsCrispAsr.Codec";
     }
 
@@ -667,6 +668,11 @@ public static class DownloadHashManager
             [Qwen3TtsCrispAsr.VoiceDesignTalker] = new[]
             {
                 "ce9c6d69146891f7854ac46be3bf4e40f803fbebbfe7cdbd12ae3a4b24777295", // qwen3-tts-12hz-1.7b-voicedesign-q8_0.gguf
+            },
+            // HF LFS oid (= SHA-256) for cstr/qwen3-tts-1.7b-base-GGUF.
+            [Qwen3TtsCrispAsr.BaseTalker] = new[]
+            {
+                "bbb93ab1f4a3f771f94fc6f68404b2b969bdf3b14c6303473dbf64c63011520d", // qwen3-tts-12hz-1.7b-base-q8_0.gguf
             },
             [Qwen3TtsCrispAsr.Codec] = new[]
             {

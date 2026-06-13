@@ -41,6 +41,9 @@ public partial class Qwen3TtsCrispAsrSettingsViewModel : ObservableObject
     [ObservableProperty] private string _customVoiceTalkerLabel = string.Empty;
     [ObservableProperty] private IBrush _customVoiceTalkerBrush = Grey();
 
+    [ObservableProperty] private string _cloneTalkerLabel = string.Empty;
+    [ObservableProperty] private IBrush _cloneTalkerBrush = Grey();
+
     [ObservableProperty] private string _codecLabel = string.Empty;
     [ObservableProperty] private IBrush _codecBrush = Grey();
 
@@ -134,6 +137,11 @@ public partial class Qwen3TtsCrispAsrSettingsViewModel : ObservableObject
         ApplyModelStatus(File.Exists(customVoicePath), IsEngineInstalled,
             label => CustomVoiceTalkerLabel = label,
             brush => CustomVoiceTalkerBrush = brush);
+
+        var clonePath = Qwen3TtsCrispAsr.GetTalkerPath(Qwen3TtsCrispAsr.ModelKeyClone);
+        ApplyModelStatus(File.Exists(clonePath), IsEngineInstalled,
+            label => CloneTalkerLabel = label,
+            brush => CloneTalkerBrush = brush);
 
         var codecPath = Qwen3TtsCrispAsr.GetCodecPath();
         ApplyModelStatus(File.Exists(codecPath), IsEngineInstalled,
