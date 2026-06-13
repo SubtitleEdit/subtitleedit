@@ -512,6 +512,8 @@ public partial class MainViewModel :
 
         Encodings = new ObservableCollection<TextEncoding>(EncodingHelper.GetEncodings());
         SelectedEncoding = Encodings.FirstOrDefault(p => p.DisplayName == Se.Settings.General.DefaultEncoding) ?? Encodings[0];
+        _changeSubtitleHash = GetFastHash();
+        _changeSubtitleHashOriginal = GetFastHashOriginal();
 
         FrameRates = new ObservableCollection<string>
         {
