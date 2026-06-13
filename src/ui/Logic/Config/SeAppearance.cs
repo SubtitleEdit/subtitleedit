@@ -19,6 +19,13 @@ public class SeAppearance
     public double SubtitleGridFontSize { get; set; }
     public bool SubtitleGridTextSingleLine { get; set; }
     public string SubtitleGridTextSingleLineSeparator { get; set; }
+
+    /// <summary>
+    /// How the subtitle grid Text/Original columns render so the visible text adapts to the
+    /// window size: "Clip" (default, current behaviour), "Wrap" or "Ellipsis". Stored as the
+    /// <see cref="Features.Options.Settings.SubtitleGridTextDisplayMode"/> name.
+    /// </summary>
+    public string SubtitleGridTextDisplay { get; set; }
     public double SubtitleTextBoxFontSize { get; set; }
     public string SubtitleTextBoxAndGridFontName { get; set; }
     public bool SubtitleTextBoxFontBold { get; set; }
@@ -89,6 +96,7 @@ public class SeAppearance
         SubtitleTextBoxAndGridFontName = "Default";
         SubtitleGridFontSize = 13d;
         SubtitleGridTextSingleLineSeparator = " ⏎ "; // "<br />";
+        SubtitleGridTextDisplay = nameof(Features.Options.Settings.SubtitleGridTextDisplayMode.Clip);
         SubtitleTextBoxFontSize = 15d;
         SubtitleTextBoxFontBold = true;
         SubtitleTextBoxColorTags = true;
