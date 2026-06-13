@@ -505,7 +505,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                             }
                         }
                     }
-                    if (sanitizedLines[0].StartsWith('♪') && sanitizedLines[0].EndsWith('♪') || sanitizedLines[1].StartsWith('♪') && sanitizedLines[0].EndsWith('♪'))
+                    if (sanitizedLines[0].StartsWith('♪') && sanitizedLines[0].EndsWith('♪') || sanitizedLines[1].StartsWith('♪') && sanitizedLines[1].EndsWith('♪'))
                     {
                         return input;
                     }
