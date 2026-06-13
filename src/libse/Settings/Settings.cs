@@ -8551,7 +8551,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                     shortcuts.MainTextBoxUnbreak = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainTextBoxUnbrekNoSpace");
+                subNode = node.SelectSingleNode("MainTextBoxUnbreakNoSpace");
                 if (subNode != null)
                 {
                     shortcuts.MainTextBoxUnbreakNoSpace = subNode.InnerText;
@@ -10513,7 +10513,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             textWriter.WriteElementString("MainTextBoxBreakAtPositionAndGoToNext", shortcuts.MainTextBoxBreakAtPositionAndGoToNext);
             textWriter.WriteElementString("MainTextBoxUnbreak", shortcuts.MainTextBoxUnbreak);
             textWriter.WriteElementString("MainTextBoxRecord", shortcuts.MainTextBoxRecord);
-            textWriter.WriteElementString("MainTextBoxUnbrekNoSpace", shortcuts.MainTextBoxUnbreakNoSpace);
+            textWriter.WriteElementString("MainTextBoxUnbreakNoSpace", shortcuts.MainTextBoxUnbreakNoSpace);
             textWriter.WriteElementString("MainTextBoxAssaIntellisense", shortcuts.MainTextBoxAssaIntellisense);
             textWriter.WriteElementString("MainTextBoxAssaRemoveTag", shortcuts.MainTextBoxAssaRemoveTag);
             textWriter.WriteElementString("MainTextBoxInsertUnicodeSymbol", shortcuts.MainTextBoxInsertUnicodeSymbol);
