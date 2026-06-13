@@ -25,6 +25,12 @@ public partial class BurnInJobItem : ObservableObject
     public double TotalSeconds { get; set; }
     public string VideoBitRate { get; set; }
 
+    /// <summary>
+    /// Input has audio but no video stream (e.g. karaoke from a .wav + .ass), so the
+    /// subtitles are burned onto a generated black canvas at the chosen resolution.
+    /// </summary>
+    public bool InputIsAudioOnly { get; set; }
+
     [ObservableProperty] private string _size;
 
     [ObservableProperty] private string _status;

@@ -261,8 +261,14 @@ public partial class BurnInViewModel : ObservableObject
                 _mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
                 Dispatcher.UIThread.Post(() =>
                 {
-                    VideoWidth = _mediaInfo.Dimension.Width;
-                    VideoHeight = _mediaInfo.Dimension.Height;
+                    // Audio-only files have no video stream (0x0) - keep the configured
+                    // resolution instead of overwriting the fields with zeros (issue #11570).
+                    if (_mediaInfo.Dimension.Width > 0 && _mediaInfo.Dimension.Height > 0)
+                    {
+                        VideoWidth = _mediaInfo.Dimension.Width;
+                        VideoHeight = _mediaInfo.Dimension.Height;
+                    }
+
                     UseSourceResolution = false;
                 });
             });
@@ -453,8 +459,23 @@ public partial class BurnInViewModel : ObservableObject
         var mediaInfo = FfmpegMediaInfo.Parse(jobItem.InputVideoFileName);
         jobItem.TotalFrames = mediaInfo.GetTotalFrames();
         jobItem.TotalSeconds = mediaInfo.Duration.TotalSeconds;
-        jobItem.Width = mediaInfo.Dimension.Width;
-        jobItem.Height = mediaInfo.Dimension.Height;
+        if (mediaInfo.Dimension.Width > 0 && mediaInfo.Dimension.Height > 0)
+        {
+            jobItem.Width = mediaInfo.Dimension.Width;
+            jobItem.Height = mediaInfo.Dimension.Height;
+        }
+        else
+        {
+            // No video stream to read a resolution from - keep the resolution chosen in the
+            // UI and burn the subtitles onto a generated black canvas (issue #11570).
+            jobItem.InputIsAudioOnly = mediaInfo.Tracks.Any(p => p.TrackType == FfmpegTrackType.Audio) &&
+                                       !mediaInfo.Tracks.Any(p => p.TrackType == FfmpegTrackType.Video);
+            if (jobItem.InputIsAudioOnly)
+            {
+                // The black canvas is generated at 25 fps, so derive the frame count for progress.
+                jobItem.TotalFrames = (long)Math.Round(jobItem.TotalSeconds * 25.0);
+            }
+        }
         jobItem.UseTargetFileSize = UseTargetFileSize;
         jobItem.TargetFileSize = UseTargetFileSize ? TargetFileSize ?? 0 : 0;
         jobItem.AssaSubtitleFileName = MakeAssa(jobItem.SubtitleFileName);
@@ -668,7 +689,8 @@ public partial class BurnInViewModel : ObservableObject
             cutStart,
             cutEnd,
             audioCutTracks,
-            BurnInLogo);
+            BurnInLogo,
+            jobItem.InputIsAudioOnly);
 
         if (PromptForFfmpegParameters)
         {
@@ -735,10 +757,13 @@ public partial class BurnInViewModel : ObservableObject
         }
 
         _mediaInfo = FfmpegMediaInfo2.Parse(VideoFileName);
-        VideoWidth = _mediaInfo.Dimension.Width;
-        VideoHeight = _mediaInfo.Dimension.Height;
+        if (_mediaInfo.Dimension.Width > 0 && _mediaInfo.Dimension.Height > 0)
+        {
+            VideoWidth = _mediaInfo.Dimension.Width;
+            VideoHeight = _mediaInfo.Dimension.Height;
+        }
 
-        var jobItem = new BurnInJobItem(VideoFileName, _mediaInfo.Dimension.Width, _mediaInfo.Dimension.Height)
+        var jobItem = new BurnInJobItem(VideoFileName, VideoWidth ?? 0, VideoHeight ?? 0)
         {
             InputVideoFileName = VideoFileName,
             OutputVideoFileName = outputVideoFileName,

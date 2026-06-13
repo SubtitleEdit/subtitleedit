@@ -68,7 +68,7 @@ public class FfmpegGenerator
     /// <summary>
     /// Generate ffmpeg parameters for a video with a burned-in Advanced Sub Station Alpha subtitle.
     /// </summary>
-    public static string GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string pixelFormat, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, string? cutStart = null, string? cutEnd = null, string audioCutTrack = "", Features.Video.BurnIn.BurnInLogo? burnInLogo = null)
+    public static string GenerateHardcodedVideoFile(string inputVideoFileName, string assaSubtitleFileName, string outputVideoFileName, int width, int height, string videoEncoding, string preset, string pixelFormat, string crf, string audioEncoding, bool forceStereo, string sampleRate, string tune, string audioBitRate, string pass, string twoPassBitRate, string? cutStart = null, string? cutEnd = null, string audioCutTrack = "", Features.Video.BurnIn.BurnInLogo? burnInLogo = null, bool inputIsAudioOnly = false)
     {
         if (width % 2 == 1)
         {
@@ -213,6 +213,21 @@ public class FfmpegGenerator
             cutEnd = " ";
         }
 
+        // Audio-only input (e.g. karaoke from an audio + subtitle file) has no video stream to
+        // burn subtitles into, so synthesize a black canvas at the requested resolution and stop
+        // encoding when the audio ends (the lavfi color source runs forever).
+        var canvasInput = string.Empty;
+        var shortestParameter = string.Empty;
+        var mainVideoStream = "[0:v]";
+        var logoVideoStream = "[1:v]";
+        if (inputIsAudioOnly)
+        {
+            canvasInput = $" -f lavfi -i color=c=black:s={width}x{height}:r=25";
+            shortestParameter = " -shortest";
+            mainVideoStream = "[1:v]";
+            logoVideoStream = "[2:v]";
+        }
+
         // Add logo overlay if specified
         var logoInput = string.Empty;
         var filterParameter = $"-vf \"scale={width}:{height},ass={Path.GetFileName(assaSubtitleFileName)}\"";
@@ -226,18 +241,18 @@ public class FfmpegGenerator
             var sizePercent = burnInLogo.Size.ToString(CultureInfo.InvariantCulture);
 
             // Build filter_complex for video with logo overlay
-            // 1. Scale main video and apply subtitles
+            // 1. Scale main video (or the generated canvas for audio-only input) and apply subtitles
             // 2. Scale logo by size percentage and apply alpha transparency
             // 3. Overlay logo at specified X, Y position
-            var filterComplex = $"[0:v]scale={width}:{height},ass={Path.GetFileName(assaSubtitleFileName)}[withsubs];" +
-                               $"[1:v]scale=iw*{sizePercent}/100:ih*{sizePercent}/100,format=rgba,colorchannelmixer=aa={alphaValue}[logo];" +
+            var filterComplex = $"{mainVideoStream}scale={width}:{height},ass={Path.GetFileName(assaSubtitleFileName)}[withsubs];" +
+                               $"{logoVideoStream}scale=iw*{sizePercent}/100:ih*{sizePercent}/100,format=rgba,colorchannelmixer=aa={alphaValue}[logo];" +
                                $"[withsubs][logo]overlay={burnInLogo.X}:{burnInLogo.Y}";
 
             filterParameter = $"-filter_complex \"{filterComplex}\"";
         }
 
         return
-            $"{cutStart}-i \"{inputVideoFileName}\"{logoInput}{cutEnd} {filterParameter} -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {pixelFormat} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart {outputVideoFileName}";
+            $"{cutStart}-i \"{inputVideoFileName}\"{canvasInput}{logoInput}{cutEnd} {filterParameter} -g 30 -bf 2 -s {width}x{height} {videoEncodingSettings} {passSettings} {presetSettings} {crfSettings} {pixelFormat} {audioSettings}{tuneParameter} -use_editlist 0 -movflags +faststart{shortestParameter} {outputVideoFileName}";
     }
 
     private static Process GetFFmpegProcess(string imageFileName, string outputFileName, int videoWidth, int videoHeight, int seconds, decimal frameRate, bool addTimeCode = false, string addTimeColor = "white")
