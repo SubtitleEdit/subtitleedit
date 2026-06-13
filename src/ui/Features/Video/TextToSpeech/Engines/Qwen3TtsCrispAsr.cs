@@ -266,12 +266,15 @@ public class Qwen3TtsCrispAsr : ITtsEngine
     private static bool _voiceSeedAttempted;
 
     /// <summary>
-    /// One-time best-effort copy of WAV reference voices from the existing qwen3-tts.cpp
-    /// engine's voices folder. The same files work for both engines (just 24 kHz mono
-    /// reference audio with optional .txt sidecars), so users who already downloaded the
-    /// qwen3-tts.cpp voice pack get them for free here without a second ~10 MB download.
-    /// Users who never installed qwen3-tts.cpp get voices.zip pulled by the
-    /// DownloadTtsViewModel flow that chains after model download.
+    /// One-time best-effort seeding of reference voices from the existing qwen3-tts.cpp engine's
+    /// voices folder, so users who already have that voice pack get the WAVs here for free. The
+    /// Base (Voice clone) backend strictly requires a 24 kHz mono reference, so each WAV is
+    /// resampled on the way in rather than plain-copied (the qwen3-tts.cpp pack ships 22.05/48 kHz
+    /// clips). The .txt sidecars in that pack are Wikimedia attribution blurbs, NOT spoken
+    /// transcriptions — feeding them as ref-text produces runaway, off-voice output — so they are
+    /// deliberately NOT copied. Cloning a seeded voice prompts for the real transcript via the
+    /// Speak pre-check / re-import flow. Users who never installed qwen3-tts.cpp get voices.zip
+    /// pulled by the DownloadTtsViewModel flow that chains after model download.
     /// </summary>
     private static void SeedVoicesFromQwen3TtsCppIfEmpty(string voicesFolder)
     {
@@ -297,21 +300,23 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             foreach (var src in Directory.GetFiles(sourceFolder, "*.wav"))
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
-                if (!File.Exists(dest))
+                if (File.Exists(dest))
                 {
-                    File.Copy(src, dest);
+                    continue;
                 }
 
-                // Copy the matching .txt sidecar too (CrispASR uses it as the reference
-                // transcription for CustomVoice cloning).
-                var sidecar = Path.ChangeExtension(src, ".txt");
-                if (File.Exists(sidecar))
+                try
                 {
-                    var sidecarDest = Path.ChangeExtension(dest, ".txt");
-                    if (!File.Exists(sidecarDest))
+                    // Resample to 24 kHz mono — the Base backend rejects any other rate.
+                    var process = FfmpegGenerator.ConvertToMono24kHzWav(src, dest);
+                    if (process.Start())
                     {
-                        File.Copy(sidecar, sidecarDest);
+                        process.WaitForExit();
                     }
+                }
+                catch (Exception ex)
+                {
+                    Se.LogError(ex, $"Qwen3 TTS (CrispASR): failed to resample seeded voice {Path.GetFileName(src)}");
                 }
             }
         }
