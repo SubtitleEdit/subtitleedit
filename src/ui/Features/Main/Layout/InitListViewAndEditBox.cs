@@ -1762,7 +1762,6 @@ public static partial class InitListViewAndEditBox
             Height = 92,
             FontSize = Se.Settings.Appearance.SubtitleTextBoxFontSize,
             FontWeight = Se.Settings.Appearance.SubtitleTextBoxFontBold ? FontWeight.Bold : FontWeight.Normal,
-            WordWrap = true,
             ShowLineNumbers = false,
             HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
             VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
@@ -1782,6 +1781,10 @@ public static partial class InitListViewAndEditBox
         {
             textEditor.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
+
+        // Enable word wrap after the editor is otherwise configured so AvaloniaEdit
+        // can apply its built-in "wrap disables horizontal scrolling" behavior.
+        textEditor.WordWrap = true;
 
         return textEditor;
     }
