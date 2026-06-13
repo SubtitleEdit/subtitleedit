@@ -8551,7 +8551,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                     shortcuts.MainTextBoxUnbreak = subNode.InnerText;
                 }
 
-                subNode = node.SelectSingleNode("MainTextBoxUnbrekNoSpace");
+                subNode = node.SelectSingleNode("MainTextBoxUnbreakNoSpace");
                 if (subNode != null)
                 {
                     shortcuts.MainTextBoxUnbreakNoSpace = subNode.InnerText;
@@ -9171,7 +9171,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
                 xmlWriter.WriteElementString("LastColorPickerColor6", ToHtml(settings.General.LastColorPickerColor6));
                 xmlWriter.WriteElementString("LastColorPickerColor7", ToHtml(settings.General.LastColorPickerColor7));
                 xmlWriter.WriteElementString("DarkThemeBackColor", ToHtml(settings.General.DarkThemeBackColor));
-                xmlWriter.WriteElementString("DarkThemeBackColor", ToHtml(settings.General.DarkThemeSelectedBackgroundColor));
+                xmlWriter.WriteElementString("DarkThemeSelectedBackgroundColor", ToHtml(settings.General.DarkThemeSelectedBackgroundColor));
                 xmlWriter.WriteElementString("DarkThemeForeColor", ToHtml(settings.General.DarkThemeForeColor));
                 xmlWriter.WriteElementString("DarkThemeDisabledColor", ToHtml(settings.General.DarkThemeDisabledColor));
                 xmlWriter.WriteElementString("ToolbarIconTheme", settings.General.ToolbarIconTheme);
@@ -10513,7 +10513,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             textWriter.WriteElementString("MainTextBoxBreakAtPositionAndGoToNext", shortcuts.MainTextBoxBreakAtPositionAndGoToNext);
             textWriter.WriteElementString("MainTextBoxUnbreak", shortcuts.MainTextBoxUnbreak);
             textWriter.WriteElementString("MainTextBoxRecord", shortcuts.MainTextBoxRecord);
-            textWriter.WriteElementString("MainTextBoxUnbrekNoSpace", shortcuts.MainTextBoxUnbreakNoSpace);
+            textWriter.WriteElementString("MainTextBoxUnbreakNoSpace", shortcuts.MainTextBoxUnbreakNoSpace);
             textWriter.WriteElementString("MainTextBoxAssaIntellisense", shortcuts.MainTextBoxAssaIntellisense);
             textWriter.WriteElementString("MainTextBoxAssaRemoveTag", shortcuts.MainTextBoxAssaRemoveTag);
             textWriter.WriteElementString("MainTextBoxInsertUnicodeSymbol", shortcuts.MainTextBoxInsertUnicodeSymbol);
