@@ -1607,6 +1607,17 @@ public static class UiUtil
         };
     }
 
+    public static bool IsScrollBarSource(RoutedEventArgs e)
+    {
+        var current = e.Source as Control;
+        while (current != null)
+        {
+            if (current is ScrollBar) return true;
+            current = current.Parent as Control;
+        }
+        return false;
+    }
+
     public static T BindIsVisible<T>(this T control, object vm, string visibilityPropertyPath) where T : Visual
     {
         control.DataContext = vm;

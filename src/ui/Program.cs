@@ -180,6 +180,9 @@ namespace Nikse.SubtitleEdit
                 UiUtil.RegisterWindowsSystemMenuClassHandler();
             }
 
+            // Apply scrollbar visibility based on OS preference
+            UiTheme.ApplyScrollBarStyle();
+
             // Set custom font
             if (Application.Current != null && !string.IsNullOrEmpty(Se.Settings.Appearance.FontName))
             {

@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -117,6 +118,7 @@ public partial class ShotChangeListViewModel : ObservableObject
 
     internal void OnShotChangeGridDoubleTapped(object? sender, TappedEventArgs e)
     {
+        if (UiUtil.IsScrollBarSource(e)) return;
         Dispatcher.UIThread.Invoke(() =>
         {
             GoTo();

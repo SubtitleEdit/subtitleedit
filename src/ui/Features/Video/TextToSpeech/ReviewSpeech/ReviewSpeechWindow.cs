@@ -208,7 +208,7 @@ public class ReviewSpeechWindow : Window
                 },
             },
         };
-        dataGrid.DoubleTapped += (s, e) => vm.DataGridDoubleClicked();
+        dataGrid.DoubleTapped += (s, e) => { if (!UiUtil.IsScrollBarSource(e)) vm.DataGridDoubleClicked(); };
         vm.LineGrid = dataGrid;
 
         var textBox = new TextBox
