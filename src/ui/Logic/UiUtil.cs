@@ -166,6 +166,18 @@ public static class UiUtil
         return new SolidColorBrush(Colors.Black, 0.5);
     }
 
+    public static IBrush GetAccentBrush()
+    {
+        var app = Application.Current;
+        if (app != null)
+        {
+            app.TryGetResource("SystemAccentColor", app.ActualThemeVariant, out var resource);
+            if (resource is Color color)
+                return new SolidColorBrush(color);
+        }
+        return new SolidColorBrush(Colors.DodgerBlue);
+    }
+
     public static Color GetBorderColor()
     {
         var color = Colors.Black;

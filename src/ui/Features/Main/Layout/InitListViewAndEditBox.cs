@@ -1719,7 +1719,7 @@ public static partial class InitListViewAndEditBox
         var textEditor = MakeTextEditor();
 
         var defaultBorderBrush = UiUtil.GetBorderBrush();
-        var focusedBorderBrush = new SolidColorBrush(Colors.DodgerBlue);
+        var focusedBorderBrush = UiUtil.GetAccentBrush();
 
         var textEditorBorder = new Border
         {
@@ -1826,7 +1826,7 @@ public static partial class InitListViewAndEditBox
         var textEditor = MakeTextEditor();
 
         var defaultBorderBrush = UiUtil.GetBorderBrush();
-        var focusedBorderBrush = new SolidColorBrush(Colors.DodgerBlue);
+        var focusedBorderBrush = UiUtil.GetAccentBrush();
 
         var textEditorBorder = new Border
         {
