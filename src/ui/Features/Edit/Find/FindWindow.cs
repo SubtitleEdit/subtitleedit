@@ -153,8 +153,8 @@ public class FindWindow : Window
 
         Content = grid;
 
-        Activated += delegate 
-        { 
+        Opened += delegate
+        {
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
             {
                 textBoxFind.GetVisualDescendants()
@@ -162,7 +162,7 @@ public class FindWindow : Window
                            .FirstOrDefault()?
                            .Focus();
             });
-        }; // hack to make OnKeyDown work
+        };
         AddHandler(KeyDownEvent, vm.OnKeyDown, RoutingStrategies.Tunnel);
         Closing += (_, _) => vm.SaveSettings();
     }
