@@ -22,8 +22,8 @@ public class GuessUsedItem
 
     public override string ToString()
     {
-        var from = From.Replace("\r\n", "↵").Replace("\n", "↵");
-        var to = To.Replace("\r\n", "↵").Replace("\n", "↵");
+        var from = From.Replace("\r\n", "·").Replace("\n", "·");
+        var to = To.Replace("\r\n", "·").Replace("\n", "·");
         return $"#{LineIndex + 1}: {from} → {to}";
     }
 }

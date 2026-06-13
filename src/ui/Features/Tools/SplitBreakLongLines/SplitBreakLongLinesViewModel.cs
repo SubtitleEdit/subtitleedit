@@ -114,8 +114,8 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject
                     if (rebalancedText != item.Text)
                     {
                         rebalanceCount++;
-                        var beforePreview = GetTextPreview(item.Text.Replace("\r\n", " ↵ ").Replace("\n", " ↵ "), 60);
-                        var afterPreview = GetTextPreview(rebalancedText.Replace("\r\n", " ↵ ").Replace("\n", " ↵ "), 60);
+                        var beforePreview = GetTextPreview(item.Text.Replace("\r\n", " · ").Replace("\n", " · "), 60);
+                        var afterPreview = GetTextPreview(rebalancedText.Replace("\r\n", " · ").Replace("\n", " · "), 60);
                         var fixDescription = $"'{beforePreview}' → '{afterPreview}'";
                         var fixItem = new SplitBreakLongLinesItem(Se.Language.Tools.SplitBreakLongLines.RebalanceLongLine, index + 1, fixDescription, item);
                         Fixes.Add(fixItem);
