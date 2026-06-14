@@ -1,22 +1,25 @@
 <words>
-  <word>a</word>
   <word>ª</word>
-  <word>à</word>
   <word>abébia</word>
   <word>acróstica</word>
   <word>acufeno</word>
   <word>adeusinho</word>
-  <word>airbnb</word>
   <word>alien</word>
   <word>almiscarado</word>
   <word>amaciador</word>
   <word>anestesiologista</word>
   <word>anestesistas</word>
   <word>animalzinho</word>
+  <word>anime</word>
+  <word>animé</word>
+  <word>animes</word>
+  <word>animés</word>
   <word>anquinhas</word>
   <word>ansiolítico</word>
   <word>ansiolíticos</word>
   <word>antigravidade</word>
+  <word>app</word>
+  <word>apps</word>
   <word>armagedão</word>
   <word>arquiduquesa</word>
   <word>aspirinas</word>
@@ -31,7 +34,6 @@
   <word>bacano</word>
   <word>bacanos</word>
   <word>bacitracina</word>
-  <word>bacon</word>
   <word>balaústro</word>
   <word>banquisa</word>
   <word>básquete</word>
@@ -50,10 +52,13 @@
   <word>boazona</word>
   <word>bófias</word>
   <word>bólingue</word>
-  <word>bonapartista</word>
-  <word>bonapartistas</word>
   <word>borragem</word>
+  <word>brownie</word>
+  <word>brownies</word>
   <word>buldogues</word>
+  <word>burnout</word>
+  <word>burrito</word>
+  <word>burritos</word>
   <word>cabrãozinho</word>
   <word>cabrazinha</word>
   <word>cabrões</word>
@@ -63,9 +68,11 @@
   <word>calminha</word>
   <word>camandro</word>
   <word>canábis</word>
+  <word>cancelável</word>
   <word>cantonês</word>
   <word>cantonesas</word>
   <word>capô</word>
+  <word>cappuccino</word>
   <word>caralho</word>
   <word>carinha</word>
   <word>carrosséis</word>
@@ -75,16 +82,18 @@
   <word>centopeias</word>
   <word>certinho</word>
   <word>cetamina</word>
+  <word>chatbot</word>
+  <word>chatbots</word>
   <word>chefão</word>
   <word>chiba</word>
   <word>chibar</word>
   <word>chibos</word>
   <word>chinesinha</word>
   <word>chinocas</word>
-  <word>chungcheong</word>
   <word>churro</word>
   <word>cigarrinho</word>
   <word>cirurgiã</word>
+  <word>cisgénero</word>
   <word>cistite</word>
   <word>clipe</word>
   <word>clitorianos</word>
@@ -97,16 +106,23 @@
   <word>contrainterrogatório</word>
   <word>contramedidas</word>
   <word>contranatura</word>
-  <word>copacabana</word>
+  <word>cookie</word>
+  <word>cookies</word>
   <word>coquinho</word>
+  <word>cosplay</word>
   <word>coxinhas</word>
   <word>creatina</word>
   <word>crédula</word>
+  <word>cringe</word>
   <word>criptomoeda</word>
   <word>criptomoedas</word>
   <word>crocantes</word>
   <word>cunhadinha</word>
+  <word>cupcake</word>
+  <word>cupcakes</word>
   <word>d'água</word>
+  <word>deepfake</word>
+  <word>deepfakes</word>
   <word>dentinho</word>
   <word>descambam</word>
   <word>descambar</word>
@@ -126,13 +142,13 @@
   <word>doidinha</word>
   <word>dónute</word>
   <word>dónutes</word>
+  <word>dorama</word>
+  <word>doramas</word>
   <word>dossiê</word>
   <word>drogar</word>
   <word>drogaste</word>
   <word>drone</word>
   <word>drones</word>
-  <word>e</word>
-  <word>é</word>
   <word>ébola</word>
   <word>eclusas</word>
   <word>ecossustentabilidade</word>
@@ -140,6 +156,12 @@
   <word>egomaníaco</word>
   <word>ei</word>
   <word>elfos</word>
+  <word>emoji</word>
+  <word>emojis</word>
+  <word>emoticon</word>
+  <word>emoticons</word>
+  <word>empoderamento</word>
+  <word>endometriose</word>
   <word>engatatão</word>
   <word>engatatões</word>
   <word>engodos</word>
@@ -159,6 +181,7 @@
   <word>espoletou</word>
   <word>esporra</word>
   <word>espraiar</word>
+  <word>espresso</word>
   <word>estremeção</word>
   <word>estrogénio</word>
   <word>estuporzinho</word>
@@ -168,15 +191,16 @@
   <word>extracorporal</word>
   <word>extracurriculares</word>
   <word>extrovertida</word>
+  <word>falafel</word>
   <word>fanfarrões</word>
   <word>fantasmagórica</word>
   <word>farsi</word>
   <word>fatela</word>
-  <word>fautoriza</word>
   <word>fentanil</word>
   <word>feromonas</word>
   <word>ferrenhamente</word>
   <word>fetiches</word>
+  <word>fibromialgia</word>
   <word>flertar</word>
   <word>foda</word>
   <word>fodam</word>
@@ -193,6 +217,9 @@
   <word>fraldário</word>
   <word>framboesas</word>
   <word>frasquinho</word>
+  <word>gamer</word>
+  <word>gamers</word>
+  <word>gaming</word>
   <word>gangster</word>
   <word>gângster</word>
   <word>gângsteres</word>
@@ -201,20 +228,21 @@
   <word>gangues</word>
   <word>gargarejar</word>
   <word>gascão</word>
+  <word>gaslighting</word>
   <word>gelataria</word>
   <word>geniozinho</word>
   <word>geriátrico</word>
+  <word>ghosting</word>
   <word>gin</word>
   <word>giraças</word>
   <word>glaceadas</word>
-  <word>goseong</word>
   <word>gratinado</word>
   <word>guinéus</word>
   <word>guito</word>
-  <word>gwanggyosan</word>
-  <word>gyeongsang</word>
+  <word>gyoza</word>
   <word>hámster</word>
-  <word>hanyang</word>
+  <word>hashtag</word>
+  <word>hashtags</word>
   <word>hedonísticos</word>
   <word>hessianos</word>
   <word>heteronormativa</word>
@@ -254,29 +282,45 @@
   <word>jihad</word>
   <word>joguinho</word>
   <word>joguinhos</word>
-  <word>joseon</word>
   <word>kamikaze</word>
+  <word>k-drama</word>
+  <word>k-dramas</word>
+  <word>kebab</word>
+  <word>kebabs</word>
+  <word>kimchi</word>
+  <word>kombucha</word>
+  <word>k-pop</word>
   <word>kryptonite</word>
   <word>lamúrias</word>
+  <word>laptop</word>
+  <word>laptops</word>
+  <word>latte</word>
   <word>láudano</word>
   <word>lidocaína</word>
   <word>litigiosas</word>
+  <word>livestream</word>
+  <word>livestreams</word>
   <word>localizador</word>
   <word>localizável</word>
+  <word>login</word>
+  <word>logout</word>
   <word>luzinha</word>
+  <word>macchiato</word>
   <word>machete</word>
   <word>macrodados</word>
   <word>madame</word>
   <word>mademoiselle</word>
   <word>malandreco</word>
   <word>malvisto</word>
+  <word>malware</word>
   <word>mamãzinha</word>
+  <word>mansplaining</word>
   <word>maquete</word>
   <word>marada</word>
   <word>maradas</word>
   <word>marado</word>
-  <word>marraquexe</word>
   <word>mastectomia</word>
+  <word>matcha</word>
   <word>mauzão</word>
   <word>mauzões</word>
   <word>mazinha</word>
@@ -291,27 +335,34 @@
   <word>metanfetaminas</word>
   <word>metaverso</word>
   <word>metilenodioximetanfetamina</word>
+  <word>microplástico</word>
+  <word>microplásticos</word>
   <word>milhentos</word>
   <word>minimercado</word>
   <word>minutinho</word>
   <word>miso</word>
   <word>mocado</word>
+  <word>mochi</word>
   <word>modéstias</word>
   <word>modus</word>
   <word>moedinha</word>
-  <word>mogadíscio</word>
   <word>monsieur</word>
-  <word>motivacionais</word>
-  <word>motivacional</word>
   <word>motosserras</word>
+  <word>muffin</word>
+  <word>muffins</word>
+  <word>não-binária</word>
+  <word>não-binário</word>
   <word>natrão</word>
   <word>naturopata</word>
-  <word>nebrasca</word>
+  <word>neurodivergente</word>
+  <word>neurodivergentes</word>
+  <word>neurodiversidade</word>
   <word>noctilucentes</word>
   <word>norovírus</word>
-  <word>o</word>
+  <word>nudes</word>
   <word>obituário</word>
   <word>obituários</word>
+  <word>offline</word>
   <word>ok</word>
   <word>olhitos</word>
   <word>operandi</word>
@@ -320,6 +371,7 @@
   <word>paintball</word>
   <word>palanquim</word>
   <word>palatinado</word>
+  <word>pansexualidade</word>
   <word>parabenizamos</word>
   <word>páreo</word>
   <word>parsec</word>
@@ -330,15 +382,22 @@
   <word>períclase</word>
   <word>perjúrios</word>
   <word>pestezinha</word>
+  <word>phishing</word>
   <word>piça</word>
   <word>pinar</word>
   <word>pinasses</word>
   <word>pinei</word>
-  <word>piorio</word>
   <word>pita</word>
   <word>píxeis</word>
   <word>playboy</word>
+  <word>playlist</word>
+  <word>playlists</word>
   <word>pleitear</word>
+  <word>podcast</word>
+  <word>podcasts</word>
+  <word>poliamor</word>
+  <word>poliamorosa</word>
+  <word>poliamoroso</word>
   <word>póquer</word>
   <word>porno</word>
   <word>potranca</word>
@@ -354,17 +413,19 @@
   <word>punheteiros</word>
   <word>puta</word>
   <word>putas</word>
-  <word>pyeongyang</word>
   <word>quecas</word>
+  <word>queer</word>
   <word>quelação</word>
   <word>queques</word>
   <word>quetamina</word>
+  <word>quinoa</word>
   <word>quipá</word>
   <word>rabiscos</word>
   <word>rafeiros</word>
   <word>ramen</word>
   <word>rancidez</word>
   <word>rançosas</word>
+  <word>ransomware</word>
   <word>rapidinha</word>
   <word>rapper</word>
   <word>rastreador</word>
@@ -381,26 +442,42 @@
   <word>rufiãozinho</word>
   <word>rulote</word>
   <word>sacaninha</word>
-  <word>sacheon</word>
   <word>sálvia</word>
+  <word>sashimi</word>
   <word>satirista</word>
-  <word>seal</word>
-  <word>seals</word>
+  <word>screenshot</word>
+  <word>screenshots</word>
   <word>sedição</word>
   <word>selfie</word>
   <word>sexismo</word>
   <word>sexista</word>
   <word>sexistas</word>
+  <word>sexting</word>
   <word>sexy</word>
+  <word>shawarma</word>
   <word>sinalizador</word>
   <word>sinalizadores</word>
   <word>sininho</word>
   <word>sinusal</word>
+  <word>smartphone</word>
+  <word>smartphones</word>
+  <word>smoothie</word>
+  <word>smoothies</word>
   <word>snifar</word>
   <word>sociopata</word>
   <word>sociopatas</word>
   <word>sociopolítica</word>
+  <word>sororidade</word>
   <word>sossegadinho</word>
+  <word>spoiler</word>
+  <word>spoilerar</word>
+  <word>spoilers</word>
+  <word>stalkear</word>
+  <word>stalker</word>
+  <word>stalkers</word>
+  <word>streamer</word>
+  <word>streamers</word>
+  <word>streaming</word>
   <word>stressante</word>
   <word>strip</word>
   <word>stripper</word>
@@ -409,22 +486,29 @@
   <word>superpoder</word>
   <word>superpoderosos</word>
   <word>supervilão</word>
+  <word>tablet</word>
+  <word>tablets</word>
   <word>taiwanês</word>
   <word>tartaruguinha</word>
   <word>taser</word>
   <word>teleconferência</word>
   <word>tempinho</word>
+  <word>tempura</word>
   <word>tequila</word>
   <word>terráqueos</word>
   <word>tiramisu</word>
+  <word>tofu</word>
   <word>tontinha</word>
   <word>toquezinho</word>
   <word>totó</word>
   <word>totós</word>
+  <word>transgénero</word>
   <word>transpacífica</word>
   <word>traquitana</word>
   <word>travertino</word>
   <word>tríceps</word>
+  <word>username</word>
+  <word>usernames</word>
   <word>vaginas</word>
   <word>vampira</word>
   <word>vandalizado</word>
@@ -436,5 +520,11 @@
   <word>vip</word>
   <word>vividamente</word>
   <word>vivinho</word>
+  <word>wasabi</word>
+  <word>webcam</word>
+  <word>webcams</word>
+  <word>website</word>
+  <word>websites</word>
+  <word>wi-fi</word>
   <word>zombie</word>
 </words>
