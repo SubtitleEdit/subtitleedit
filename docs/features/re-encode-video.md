@@ -1,6 +1,6 @@
 # Re-encode Video
 
-Re-encode a video file with different resolution, frame rate, or container format using FFmpeg.
+Re-encode a video file with a different frame rate or container format using FFmpeg.
 
 - **Menu:** Video → Re-encode video...
 - **Shortcut:** Configurable

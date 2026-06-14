@@ -72,10 +72,8 @@ Use [Embedded Subtitles](embedded-subtitles.md) to add, remove, preview, and edi
 ## Supported Video Players
 
 Configure the video player backend in **Options → Settings → Video player**:
-- **libmpv - OpenGL** — Recommended for best format support (default)
-- **libmpv - Native Window ID rendering** — Alternative mpv rendering mode (not available on macOS)
-- **libmpv - Software rendering (slow)** — Fallback mpv mode without hardware acceleration
-- **libVLC - Native Window ID rendering** — VLC backend (Windows and Linux only)
+- **libmpv** — Recommended for best format support (default). The render mode can be set to **Auto**, **Native**, **OpenGL**, or **Software (slow)**.
+- **libVLC** — Alternative backend (Windows and Linux only).
 
 ## Video Info
 

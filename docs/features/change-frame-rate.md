@@ -2,7 +2,7 @@
 
 Convert subtitle timings from one frame rate to another.
 
-- **Menu:** Sync → Change frame rate...
+- **Menu:** Synchronization → Change frame rate...
 
 <!-- Screenshot: Change frame rate window -->
 ![Change Frame Rate](../screenshots/change-frame-rate.png)

@@ -2,7 +2,7 @@
 
 Find and fix repeated/double words in subtitle text (e.g., "the the").
 
-- **Menu:** Spell check → Find double words
+- **Menu:** Spell check → Find double words...
 - **Shortcut:** Configurable
 
 <!-- Screenshot: Find double words window -->

@@ -2,7 +2,7 @@
 
 Adjust subtitle timings for videos with different playback speeds.
 
-- **Menu:** Sync → Change speed...
+- **Menu:** Synchronization → Change speed...
 
 <!-- Screenshot: Change speed window -->
 ![Change Speed](../screenshots/change-speed.png)

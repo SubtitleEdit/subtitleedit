@@ -2,7 +2,7 @@
 
 Subtitle Edit can convert image-based subtitle formats to text using OCR.
 
-- **Menu:** File → Import → Imaged-based subtitle for OCR...
+- **Menu:** File → Import → Image-based subtitle for OCR...
 
 <!-- Screenshot: OCR window -->
 ![OCR Window](../screenshots/ocr.png)
