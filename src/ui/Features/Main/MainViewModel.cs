@@ -9907,6 +9907,7 @@ public partial class MainViewModel :
             if (!string.IsNullOrEmpty(findSearchText))
             {
                 vm.SearchText = findSearchText;
+                vm.FocusReplaceOnOpen = true;
             }
             if (findMode.HasValue)
             {
