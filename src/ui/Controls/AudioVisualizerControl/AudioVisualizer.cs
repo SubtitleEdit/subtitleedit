@@ -1958,13 +1958,38 @@ public class AudioVisualizer : Control
             waveformHeight = renderCtx.WaveformHeight;
         }
 
-        if (WaveformDrawStyle == WaveformDrawStyle.Classic)
+        // Rebuild the cached geometry only when the view actually changed; otherwise (e.g. the
+        // cursor moved) just replay the existing draw ops. See _waveformCacheDraws.
+        var key = BuildWaveformCacheKey(waveformHeight, ref renderCtx);
+        if (!_waveformCacheValid || !ReferenceEquals(_waveformCachePeaks, WavePeaks) || !key.Equals(_waveformCacheKey))
         {
-            DrawWaveFormClassic(context, waveformHeight, ref renderCtx);
+            _waveformCacheDraws.Clear();
+            if (WaveformDrawStyle == WaveformDrawStyle.Classic)
+            {
+                BuildWaveFormClassic(waveformHeight, ref renderCtx);
+            }
+            else
+            {
+                BuildWaveFormFancy(waveformHeight, ref renderCtx);
+            }
+
+            _waveformCacheKey = key;
+            _waveformCachePeaks = WavePeaks;
+            _waveformCacheValid = true;
         }
-        else
+
+        // The fancy style draws a center line; it depends only on width/height (already in the
+        // key) so it's cheap to draw live each render rather than caching it.
+        if (WaveformDrawStyle != WaveformDrawStyle.Classic)
         {
-            DrawWaveFormFancy(context, waveformHeight, ref renderCtx);
+            var halfWaveformHeight = waveformHeight / 2;
+            context.DrawLine(_centerLinePen, new Point(0, halfWaveformHeight), new Point(renderCtx.Width, halfWaveformHeight));
+        }
+
+        for (var i = 0; i < _waveformCacheDraws.Count; i++)
+        {
+            var draw = _waveformCacheDraws[i];
+            context.DrawGeometry(null, draw.Pen, draw.Geometry);
         }
     }
 
@@ -2025,7 +2050,7 @@ public class AudioVisualizer : Control
     private readonly Dictionary<int, FancyBatch> _fancyBatches = new(64);
     private readonly List<int> _fancyBatchKeysInUse = new(64);
 
-    private void DrawWaveFormFancy(DrawingContext context, double waveformHeight, ref RenderContext renderCtx)
+    private void BuildWaveFormFancy(double waveformHeight, ref RenderContext renderCtx)
     {
         _isSelectedHelper.Reset(AllSelectedParagraphs, renderCtx.SampleRate);
         var isSelectedHelper = _isSelectedHelper;
@@ -2042,9 +2067,6 @@ public class AudioVisualizer : Control
         var peaks = WavePeaks.AsSpan();
         var peaksCount = peaks.Length;
         var highestPeak = renderCtx.HighestPeak;
-
-        // Draw center line first
-        context.DrawLine(_centerLinePen, new Point(0, halfWaveformHeight), new Point(renderCtx.Width, halfWaveformHeight));
 
         // Calculate the threshold for color transitions (as a fraction of the highest peak)
         var lowThreshold = highestPeak * 0.3;
@@ -2169,35 +2191,18 @@ public class AudioVisualizer : Control
             }
         }
 
-        // One DrawGeometry per pen, instead of two DrawLines per column.
+        // One cached geometry per pen, instead of two DrawLines per column.
         // The gradient brush bounds become the entire waveform area instead of each
         // individual line, so the gradient fades across the waveform vertically rather
         // than per column.
         for (var i = 0; i < keysInUse.Count; i++)
         {
             var batch = batches[keysInUse[i]];
-            var lines = batch.Lines;
-            if (lines.Count == 0)
-            {
-                continue;
-            }
-
-            var geom = new StreamGeometry();
-            using (var gctx = geom.Open())
-            {
-                for (var j = 0; j < lines.Count; j++)
-                {
-                    var l = lines[j];
-                    gctx.BeginFigure(new Point(l.X, l.YMax), false);
-                    gctx.LineTo(new Point(l.X, l.YMin));
-                    gctx.EndFigure(false);
-                }
-            }
-            context.DrawGeometry(null, batch.Pen, geom);
+            AddLineBatchToCache(batch.Pen, batch.Lines);
         }
     }
 
-    private void DrawWaveFormClassic(DrawingContext context, double waveformHeight, ref RenderContext renderCtx)
+    private void BuildWaveFormClassic(double waveformHeight, ref RenderContext renderCtx)
     {
         _isSelectedHelper.Reset(AllSelectedParagraphs, renderCtx.SampleRate);
         var isSelectedHelper = _isSelectedHelper;
@@ -2262,13 +2267,137 @@ public class AudioVisualizer : Control
             }
         }
 
-        DrawVerticalLineBatch(context, _paintWaveform, unselectedLines);
-        DrawVerticalLineBatch(context, _paintPenSelected, selectedLines);
+        AddLineBatchToCache(_paintWaveform, unselectedLines);
+        AddLineBatchToCache(_paintPenSelected, selectedLines);
     }
 
     // Pooled buffers for the classic waveform's two pens.
     private readonly List<FancyLine> _classicUnselectedLines = new(2048);
     private readonly List<FancyLine> _classicSelectedLines = new(2048);
+
+    // Cached waveform draw ops. Building the waveform is a per-pixel CPU loop that allocates
+    // geometry every render; doing it on every cursor tick (CurrentVideoPositionSeconds has
+    // AffectsRender) made playback stutter, worst over loud audio (extra glow geometry). We
+    // build the geometry once per view-state and just replay the draw calls while only the
+    // cursor moves. The key captures everything that changes the waveform pixels, so any real
+    // change (scroll, zoom, resize, selection, peaks, colors, style) rebuilds automatically.
+    private readonly List<(IPen Pen, Geometry Geometry)> _waveformCacheDraws = new(64);
+    private WaveformCacheKey _waveformCacheKey;
+    private bool _waveformCacheValid;
+    private object? _waveformCachePeaks;
+
+    private readonly struct WaveformCacheKey : IEquatable<WaveformCacheKey>
+    {
+        public readonly int Width;
+        public readonly double Height;
+        public readonly double WaveformHeight;
+        public readonly double StartPositionSeconds;
+        public readonly double ZoomFactor;
+        public readonly double VerticalZoomFactor;
+        public readonly double HighestPeak;
+        public readonly int SampleRate;
+        public readonly int DisplayMode;
+        public readonly int DrawStyle;
+        public readonly uint ColorMain;
+        public readonly uint ColorSelected;
+        public readonly uint ColorHigh;
+        public readonly int SelectionCount;
+        public readonly long SelectionHash;
+
+        public WaveformCacheKey(int width, double height, double waveformHeight, double startPositionSeconds,
+            double zoomFactor, double verticalZoomFactor, double highestPeak, int sampleRate, int displayMode,
+            int drawStyle, uint colorMain, uint colorSelected, uint colorHigh, int selectionCount, long selectionHash)
+        {
+            Width = width;
+            Height = height;
+            WaveformHeight = waveformHeight;
+            StartPositionSeconds = startPositionSeconds;
+            ZoomFactor = zoomFactor;
+            VerticalZoomFactor = verticalZoomFactor;
+            HighestPeak = highestPeak;
+            SampleRate = sampleRate;
+            DisplayMode = displayMode;
+            DrawStyle = drawStyle;
+            ColorMain = colorMain;
+            ColorSelected = colorSelected;
+            ColorHigh = colorHigh;
+            SelectionCount = selectionCount;
+            SelectionHash = selectionHash;
+        }
+
+        public bool Equals(WaveformCacheKey other) =>
+            Width == other.Width &&
+            Height.Equals(other.Height) &&
+            WaveformHeight.Equals(other.WaveformHeight) &&
+            StartPositionSeconds.Equals(other.StartPositionSeconds) &&
+            ZoomFactor.Equals(other.ZoomFactor) &&
+            VerticalZoomFactor.Equals(other.VerticalZoomFactor) &&
+            HighestPeak.Equals(other.HighestPeak) &&
+            SampleRate == other.SampleRate &&
+            DisplayMode == other.DisplayMode &&
+            DrawStyle == other.DrawStyle &&
+            ColorMain == other.ColorMain &&
+            ColorSelected == other.ColorSelected &&
+            ColorHigh == other.ColorHigh &&
+            SelectionCount == other.SelectionCount &&
+            SelectionHash == other.SelectionHash;
+
+        public override bool Equals(object? obj) => obj is WaveformCacheKey other && Equals(other);
+        public override int GetHashCode() => 0; // unused; cache does an exact Equals comparison
+    }
+
+    private static uint ToKeyColor(Color c) => ((uint)c.A << 24) | ((uint)c.R << 16) | ((uint)c.G << 8) | c.B;
+
+    private WaveformCacheKey BuildWaveformCacheKey(double waveformHeight, ref RenderContext renderCtx)
+    {
+        long selectionHash = 17;
+        var selection = AllSelectedParagraphs;
+        for (var i = 0; i < selection.Count; i++)
+        {
+            var p = selection[i];
+            selectionHash = selectionHash * 31 + p.StartTime.Ticks;
+            selectionHash = selectionHash * 31 + p.EndTime.Ticks;
+        }
+
+        return new WaveformCacheKey(
+            (int)Math.Ceiling(renderCtx.Width),
+            renderCtx.Height,
+            waveformHeight,
+            renderCtx.StartPositionSeconds,
+            renderCtx.ZoomFactor,
+            renderCtx.VerticalZoomFactor,
+            renderCtx.HighestPeak,
+            renderCtx.SampleRate,
+            (int)_displayMode,
+            (int)WaveformDrawStyle,
+            ToKeyColor(WaveformColor),
+            ToKeyColor(WaveformSelectedColor),
+            ToKeyColor(WaveformFancyHighColor),
+            selection.Count,
+            selectionHash);
+    }
+
+    private void AddLineBatchToCache(IPen pen, List<FancyLine> lines)
+    {
+        if (lines.Count == 0)
+        {
+            return;
+        }
+
+        var geom = new StreamGeometry();
+        using (var gctx = geom.Open())
+        {
+            for (var i = 0; i < lines.Count; i++)
+            {
+                var l = lines[i];
+                gctx.BeginFigure(new Point(l.X, l.YMax), false);
+                gctx.LineTo(new Point(l.X, l.YMin));
+                gctx.EndFigure(false);
+            }
+        }
+
+        _waveformCacheDraws.Add((pen, geom));
+    }
 
     private static void DrawVerticalLineBatch(DrawingContext context, IPen pen, List<FancyLine> lines)
     {
@@ -2306,6 +2435,56 @@ public class AudioVisualizer : Control
         }
     }
 
+    // Subtitle text is otherwise re-shaped on every frame. At 60 fps the FormattedText shaping
+    // plus RemoveHtmlTags (regex) and SplitToLines for each visible paragraph churns enough
+    // short-lived garbage to trigger GC pauses, which show up as the cursor briefly freezing and
+    // then jumping. Cache the prepared text and the shaped FormattedText; both are cleared in
+    // ResetCache() when the waveform font/colors change.
+    private readonly Dictionary<string, FormattedText> _paragraphFormattedTextCache = new(512);
+    private readonly Dictionary<string, (List<string> Lines, string Unwrapped)> _paragraphTextCache = new(512);
+
+    private FormattedText GetCachedParagraphText(string text)
+    {
+        if (!_paragraphFormattedTextCache.TryGetValue(text, out var formatted))
+        {
+            if (_paragraphFormattedTextCache.Count > 8000)
+            {
+                _paragraphFormattedTextCache.Clear();
+            }
+
+            formatted = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+                _typeface, _fontSize, _paintText);
+            _paragraphFormattedTextCache[text] = formatted;
+        }
+
+        return formatted;
+    }
+
+    private (List<string> Lines, string Unwrapped) GetPreparedParagraphText(string rawText)
+    {
+        if (!_paragraphTextCache.TryGetValue(rawText, out var prepared))
+        {
+            var text = HtmlUtil.RemoveHtmlTags(rawText, true);
+            if (text.Length > 200)
+            {
+                text = text.Substring(0, 100).TrimEnd() + "...";
+            }
+
+            var lines = text.SplitToLines();
+            var unwrapped = string.Join("  ", lines);
+            prepared = (lines, unwrapped);
+
+            if (_paragraphTextCache.Count > 8000)
+            {
+                _paragraphTextCache.Clear();
+            }
+
+            _paragraphTextCache[rawText] = prepared;
+        }
+
+        return prepared;
+    }
+
     private void DrawParagraph(SubtitleLineViewModel paragraph, DrawingContext context, ref RenderContext renderCtx)
     {
         var currentRegionLeft = SecondsToXPositionOptimized(paragraph.StartTime.TotalSeconds - renderCtx.StartPositionSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
@@ -2327,32 +2506,24 @@ public class AudioVisualizer : Control
         context.DrawLine(_paintLeft, new Point(currentRegionLeft, 0), new Point(currentRegionLeft, height));
         context.DrawLine(_paintRight, new Point(currentRegionRight - 1, 0), new Point(currentRegionRight - 1, height));
 
-        // Draw clipped text
-        var text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
-        if (text.Length > 200)
-        {
-            text = text.Substring(0, 100).TrimEnd() + "...";
-        }
+        // Draw clipped text (prepared text + shaped FormattedText are cached; see GetCachedParagraphText)
+        var prepared = GetPreparedParagraphText(paragraph.Text);
 
         var textBounds = new Rect(currentRegionLeft + 1, 0, currentRegionWidth - 3, height);
 
         using (context.PushClip(textBounds))
         {
-            var arr = text.SplitToLines();
             if (Se.Settings.Waveform.WaveformUnwrapText)
             {
-                text = string.Join("  ", arr);
-                var formattedText = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-                    _typeface, _fontSize, _paintText);
+                var formattedText = GetCachedParagraphText(prepared.Unwrapped);
                 context.DrawText(formattedText, new Point(currentRegionLeft + 3, 14));
             }
             else
             {
                 double addY = 0;
-                foreach (var line in arr)
+                foreach (var line in prepared.Lines)
                 {
-                    var formattedText = new FormattedText(line, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-                        _typeface, _fontSize, _paintText);
+                    var formattedText = GetCachedParagraphText(line);
                     context.DrawText(formattedText, new Point(currentRegionLeft + 3, 14 + addY));
                     addY += formattedText.Height;
                 }
@@ -2405,8 +2576,7 @@ public class AudioVisualizer : Control
                 // the frame form ("00:00:02:12") without an explicit branch here.
                 var durationText = new TimeCode(paragraph.Duration.TotalMilliseconds).ToShortDisplayString();
                 var withDuration = $"#{paragraph.Number}  {durationText}";
-                var probe = new FormattedText(withDuration, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-                    _typeface, _fontSize, _paintText);
+                var probe = GetCachedParagraphText(withDuration);
 
                 baseLine = probe.Width >= availableWidth
                     ? $"#{paragraph.Number}"
@@ -2431,22 +2601,19 @@ public class AudioVisualizer : Control
 
         if (baseLine != null)
         {
-            var baseText = new FormattedText(baseLine, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-                _typeface, _fontSize, _paintText);
+            var baseText = GetCachedParagraphText(baseLine);
             var baseY = bottomY - baseText.Height;
             context.DrawText(baseText, new Point(x, baseY));
 
             if (cpsLine != null)
             {
-                var cpsText = new FormattedText(cpsLine, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-                    _typeface, _fontSize, _paintText);
+                var cpsText = GetCachedParagraphText(cpsLine);
                 context.DrawText(cpsText, new Point(x, baseY - cpsText.Height));
             }
         }
         else if (cpsLine != null)
         {
-            var cpsText = new FormattedText(cpsLine, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-                _typeface, _fontSize, _paintText);
+            var cpsText = GetCachedParagraphText(cpsLine);
             context.DrawText(cpsText, new Point(x, bottomY - cpsText.Height));
         }
     }
@@ -3173,6 +3340,9 @@ public class AudioVisualizer : Control
         _fancyWaveformGlowPenCache.Clear();
         _fancyWaveformGradientCache.Clear();
         _timeLineTextCache.Clear();
+        _paragraphFormattedTextCache.Clear();
+        _paragraphTextCache.Clear();
+        _waveformCacheValid = false;
 
         _paintText = new SolidColorBrush(Se.Settings.Waveform.WaveformTextColor.FromHexToColor());
         _typeface = new Typeface(UiUtil.GetDefaultFontName(), FontStyle.Normal, Se.Settings.Waveform.WaveformTextFontBold ? FontWeight.Bold : FontWeight.Normal);
