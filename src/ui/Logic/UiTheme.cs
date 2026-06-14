@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Primitives;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -11,6 +12,7 @@ using AvaloniaEdit;
 using AvaloniaEdit.Editing;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Logic;
 
@@ -250,6 +252,75 @@ public static class UiTheme
         _layoutScaleMenuStyle = styles;
         Application.Current.Styles.Add(styles);
     }
+
+    private static Styles? _scrollBarStyle;
+    private static bool _scrollBarAllowAutoHide;
+    private static bool _dataGridScrollBarHandlerRegistered;
+
+    /// <summary>
+    /// Applies scrollbar visibility styles based on the OS preference.
+    /// On macOS, reads "Show scroll bars" system setting. When set to "Always",
+    /// forces always-expanded scrollbars. ListBox/ScrollViewer scrollbars respond to
+    /// AllowAutoHide=false via the style system. DataGrid sets AllowAutoHide=true on
+    /// its scrollbars at LocalValue priority in OnApplyTemplate, so a class handler on
+    /// Control.LoadedEvent overrides it at LocalValue priority after the fact.
+    /// Designed to be called once at startup. The LoadedEvent handler reads
+    /// _scrollBarAllowAutoHide dynamically, so a second call would update the field
+    /// and affect future DataGrid loads — but already-open DataGrids would not update.
+    /// </summary>
+    public static void ApplyScrollBarStyle()
+    {
+        if (Application.Current == null)
+            return;
+
+        if (_scrollBarStyle != null)
+        {
+            Application.Current.Styles.Remove(_scrollBarStyle);
+            _scrollBarStyle = null;
+        }
+
+        var allowAutoHide = false;
+        if (OperatingSystem.IsMacOS())
+        {
+            var pref = MacHelper.GetShowScrollBarsPreference();
+            allowAutoHide = pref != "Always";
+        }
+
+        _scrollBarAllowAutoHide = allowAutoHide;
+
+        _scrollBarStyle = new Styles
+        {
+            new Style(x => x.OfType<ScrollViewer>())
+            {
+                Setters = { new Setter(ScrollViewer.AllowAutoHideProperty, allowAutoHide) }
+            },
+            new Style(x => x.OfType<Avalonia.Controls.Primitives.ScrollBar>())
+            {
+                Setters = { new Setter(Avalonia.Controls.Primitives.ScrollBar.AllowAutoHideProperty, allowAutoHide) }
+            },
+        };
+
+        if (!_dataGridScrollBarHandlerRegistered)
+        {
+            _dataGridScrollBarHandlerRegistered = true;
+            // DataGrid.OnApplyTemplate sets AllowAutoHide=true on its internal scrollbars at
+            // LocalValue priority (0), which no style can override. By hooking Loaded (which
+            // fires after OnApplyTemplate), we set AllowAutoHide at LocalValue priority too —
+            // overriding the DataGrid's value. This causes UpdateIsExpandedState() to run and
+            // set IsExpanded accordingly, which makes the Fluent [IsExpanded=True] style apply
+            // the full expanded appearance (correct thumb size, color, visible arrows).
+            Control.LoadedEvent.AddClassHandler<DataGrid>((dg, _) =>
+            {
+                foreach (var sb in dg.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.ScrollBar>())
+                {
+                    sb.AllowAutoHide = _scrollBarAllowAutoHide;
+                }
+            });
+        }
+
+        Application.Current.Styles.Add(_scrollBarStyle);
+    }
+
 
     /// <summary>
     /// Walk all open windows, find Menu, ContextMenu, and MenuFlyout instances,

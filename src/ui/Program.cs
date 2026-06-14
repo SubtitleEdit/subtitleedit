@@ -180,6 +180,25 @@ namespace Nikse.SubtitleEdit
                 UiUtil.RegisterWindowsSystemMenuClassHandler();
             }
 
+            // Apply scrollbar visibility based on OS preference
+            UiTheme.ApplyScrollBarStyle();
+
+            // Prevent scrollbar double-tap from triggering DataGrid/ListBox actions globally
+            DataGrid.DoubleTappedEvent.AddClassHandler<DataGrid>((_, e) =>
+            {
+                if (UiUtil.IsScrollBarSource(e))
+                {
+                    e.Handled = true;
+                }
+            });
+            ListBox.DoubleTappedEvent.AddClassHandler<ListBox>((_, e) =>
+            {
+                if (UiUtil.IsScrollBarSource(e))
+                {
+                    e.Handled = true;
+                }
+            });
+
             // Set custom font
             if (Application.Current != null && !string.IsNullOrEmpty(Se.Settings.Appearance.FontName))
             {

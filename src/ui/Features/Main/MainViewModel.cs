@@ -17456,6 +17456,11 @@ public partial class MainViewModel :
                     return;
                 }
 
+                if (current is ScrollBar)
+                {
+                    return;
+                }
+
                 current = current.Parent as Control;
             }
 
@@ -17857,7 +17862,10 @@ public partial class MainViewModel :
     private void EndSubtitleGridDragSelect(PointerEventArgs e)
     {
         StopSubtitleGridDragSelectAutoScroll();
-        e.Pointer.Capture(null);
+        if (_dragSelectStartIndex >= 0)
+        {
+            e.Pointer.Capture(null);
+        }
         _dragSelectStartIndex = -1;
         _dragSelectLastIndex = -1;
         _dragSelectAppliedIndex = -1;

@@ -5,6 +5,36 @@ namespace Nikse.SubtitleEdit.Logic;
 
 public class MacHelper
 {
+    /// <summary>
+    /// Returns the macOS "Show scroll bars" system preference:
+    /// "Always", "WhenScrolling", or "Automatic". Returns null on error.
+    /// </summary>
+    public static string? GetShowScrollBarsPreference()
+    {
+        try
+        {
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "/usr/bin/defaults",
+                    Arguments = "read -g AppleShowScrollBars",
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                }
+            };
+            process.Start();
+            var output = process.StandardOutput.ReadToEnd().Trim();
+            process.WaitForExit();
+            return output.Length > 0 ? output : null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     public static bool MakeExecutable(string filePath)
     {
         var process = new Process
