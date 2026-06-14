@@ -1,61 +1,117 @@
-﻿<NoBreakAfterList>
+<?xml version="1.0" encoding="utf-8"?>
+<NoBreakAfterList>
+  <Item>a</Item>
+  <Item>à</Item>
+  <Item>ao</Item>
+  <Item>aos</Item>
+  <Item>Art.</Item>
+  <Item>art.</Item>
+  <Item>Arts.</Item>
+  <Item>arts.</Item>
+  <Item>as</Item>
+  <Item>às</Item>
+  <Item>Cap.</Item>
+  <Item>cap.</Item>
+  <Item>Caps.</Item>
+  <Item>caps.</Item>
+  <Item>Cf.</Item>
+  <Item>cf.</Item>
   <Item>D.</Item>
   <Item>D.ª</Item>
   <Item>decr.</Item>
   <Item>Dr</Item>
-  <Item>Dr.</Item>
   <Item>DR.</Item>
-  <Item>dr.ª</Item>
+  <Item>Dr.</Item>
   <Item>Dr.ª</Item>
-  <Item>Dra.</Item>
+  <Item>dr.ª</Item>
+  <Item>Dra</Item>
   <Item>DRA.</Item>
-  <Item>eng.</Item>
+  <Item>Dra.</Item>
+  <Item>Ed.</Item>
+  <Item>ed.</Item>
   <Item>Eng.</Item>
-  <Item>exmo.</Item>
+  <Item>eng.</Item>
+  <Item>Eng.ª</Item>
+  <Item>eng.ª</Item>
+  <Item>Eng.º</Item>
+  <Item>eng.º</Item>
+  <Item>etc.</Item>
+  <Item>Exma.</Item>
+  <Item>exma.</Item>
   <Item>Exmo.</Item>
-  <Item>frei</Item>
+  <Item>exmo.</Item>
+  <Item>Fig.</Item>
+  <Item>fig.</Item>
+  <Item>Fr.</Item>
+  <Item>fr.</Item>
   <Item>Frei</Item>
-  <Item>gov.</Item>
+  <Item>frei</Item>
   <Item>Gov.</Item>
+  <Item>gov.</Item>
   <Item>gram.</Item>
-  <Item>jr.</Item>
   <Item>Jr.</Item>
+  <Item>jr.</Item>
   <Item>Miss</Item>
-  <Item>mna.</Item>
+  <Item>Mlle.</Item>
+  <Item>Mme.</Item>
   <Item>Mna.</Item>
-  <Item>mno.</Item>
+  <Item>mna.</Item>
   <Item>Mno.</Item>
-  <Item>mr.</Item>
+  <Item>mno.</Item>
   <Item>Mr.</Item>
-  <Item>mrs.</Item>
+  <Item>mr.</Item>
   <Item>Mrs.</Item>
-  <Item>P.</Item>
-  <Item>pe.</Item>
-  <Item>Pe.</Item>
-  <Item>prof.</Item>
-  <Item>Prof.</Item>
-  <Item>prof.ª</Item>
-  <Item>Prof.ª</Item>
-  <Item>Santa</Item>
-  <Item>Santo</Item>
-  <Item>Sr</Item>
-  <Item>sr.</Item>
-  <Item>Sr.</Item>
-  <Item>sr.ª</Item>
-  <Item>Sr.ª</Item>
-  <Item>sra.</Item>
-  <Item>Sra.</Item>
-  <Item>srs.</Item>
-  <Item>Srs.</Item>
-  <Item>St.</Item>
-  <Item>vol.</Item>
-  <Item>vols.</Item>
-  <Item>a</Item>
-  <Item>as</Item>
+  <Item>mrs.</Item>
+  <Item>Ms.</Item>
+  <Item>ms.</Item>
+  <Item>N.º</Item>
+  <Item>n.º</Item>
+  <Item>Nº</Item>
+  <Item>nº</Item>
   <Item>o</Item>
   <Item>os</Item>
+  <Item>P.</Item>
+  <Item>Pág.</Item>
+  <Item>pág.</Item>
+  <Item>Págs.</Item>
+  <Item>págs.</Item>
+  <Item>Pe.</Item>
+  <Item>pe.</Item>
+  <Item>Prof.</Item>
+  <Item>prof.</Item>
+  <Item>Prof.ª</Item>
+  <Item>prof.ª</Item>
+  <Item>Ref.</Item>
+  <Item>ref.</Item>
+  <Item>Refs.</Item>
+  <Item>refs.</Item>
+  <Item>Santa</Item>
+  <Item>Santo</Item>
+  <Item>São</Item>
+  <Item>Séc.</Item>
+  <Item>séc.</Item>
+  <Item>Sécs.</Item>
+  <Item>sécs.</Item>
+  <Item>Sr</Item>
+  <Item>Sr.</Item>
+  <Item>sr.</Item>
+  <Item>Sr.ª</Item>
+  <Item>sr.ª</Item>
+  <Item>Sra.</Item>
+  <Item>sra.</Item>
+  <Item>Srs.</Item>
+  <Item>srs.</Item>
+  <Item>Srta.</Item>
+  <Item>srta.</Item>
+  <Item>St.</Item>
+  <Item>Sta.</Item>
+  <Item>Sto.</Item>
   <Item>um</Item>
   <Item>uma</Item>
-  <Item>uns</Item>
   <Item>umas</Item>
+  <Item>uns</Item>
+  <Item>vol.</Item>
+  <Item>vols.</Item>
+  <Item>Vs.</Item>
+  <Item>vs.</Item>
 </NoBreakAfterList>
