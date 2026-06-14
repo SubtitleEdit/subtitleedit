@@ -2,14 +2,30 @@
 <!-- This list contains names with specific casing - and specific to Portuguese (Portugal) only -->
 <names>
   <blacklist />
+  <name>2 Chainz</name>
+  <name>2 Pac</name>
+  <name>2Pac</name>
+  <name>6ix9ine</name>
+  <name>7-Eleven</name>
+  <name>Aaliyah</name>
   <name>Aarão</name>
+  <name>Aaron</name>
+  <name>Abbie</name>
+  <name>Abby</name>
   <name>Abdénago</name>
+  <name>Abdul</name>
+  <name>Abdullah</name>
+  <name>Abe</name>
+  <name>Abed</name>
   <name>Abedenego</name>
   <name>Abeilard</name>
   <name>Abeilarde</name>
   <name>Abelâmio</name>
   <name>Abelardo</name>
   <name>Abelino</name>
+  <name>Abigaëlle</name>
+  <name>Abigail</name>
+  <name>Abigaïl</name>
   <name>Abimael</name>
   <name>Abissail</name>
   <name>Abna</name>
@@ -33,18 +49,24 @@
   <name>Adália</name>
   <name>Adalsindo</name>
   <name>Adalsino</name>
+  <name>Adam</name>
   <name>Adamantino</name>
   <name>Adamastor</name>
   <name>Adamo</name>
   <name>Adarico</name>
   <name>Adárico</name>
   <name>Adário</name>
+  <name>Addams</name>
+  <name>Addison</name>
+  <name>Adele</name>
+  <name>Adèle</name>
   <name>Adelindo</name>
   <name>Adelmo</name>
   <name>Ademar</name>
   <name>Adeodato</name>
   <name>Adércio</name>
   <name>Adério</name>
+  <name>Adidas</name>
   <name>Adiel</name>
   <name>Ádila</name>
   <name>Adilar</name>
@@ -60,6 +82,7 @@
   <name>Admiro</name>
   <name>Admisia</name>
   <name>Adner</name>
+  <name>Adolf</name>
   <name>Adonai</name>
   <name>Adonias</name>
   <name>Adonilo</name>
@@ -69,8 +92,11 @@
   <name>Adorino</name>
   <name>Adosinda</name>
   <name>Adria</name>
+  <name>Adrian</name>
   <name>Adriane</name>
+  <name>Adrianna</name>
   <name>Adriano</name>
+  <name>Adrienne</name>
   <name>Adrilete</name>
   <name>Adrualdo</name>
   <name>Adruzilo</name>
@@ -93,11 +119,14 @@
   <name>Africana</name>
   <name>Africano</name>
   <name>Ágata</name>
+  <name>Agatha</name>
   <name>Agda</name>
   <name>Agenor</name>
   <name>Agna</name>
   <name>Agnello</name>
   <name>Agnelo</name>
+  <name>Agnes</name>
+  <name>Agnès</name>
   <name>Agonia</name>
   <name>Agostília</name>
   <name>Agostinho</name>
@@ -105,8 +134,12 @@
   <name>Águeda</name>
   <name>Aguiar</name>
   <name>Aguinaldo</name>
+  <name>Ahmad</name>
+  <name>Ahmed</name>
   <name>Aiala</name>
+  <name>Aidan</name>
   <name>Aidé</name>
+  <name>Aiden</name>
   <name>Aidi</name>
   <name>Aila</name>
   <name>Aileda</name>
@@ -119,6 +152,7 @@
   <name>Airiza</name>
   <name>Airtom</name>
   <name>Airton</name>
+  <name>Aisha</name>
   <name>Aita</name>
   <name>Aitor</name>
   <name>Aixa</name>
@@ -126,12 +160,16 @@
   <name>Aladino</name>
   <name>Alaíde</name>
   <name>Alaim</name>
+  <name>Alain</name>
   <name>Alamiro</name>
+  <name>Alan</name>
   <name>Alana</name>
   <name>Alanis</name>
+  <name>Alanis Morissette</name>
   <name>Alanna</name>
   <name>Alano</name>
   <name>Alão</name>
+  <name>Alastair</name>
   <name>Alba</name>
   <name>Albânia</name>
   <name>Albano</name>
@@ -155,15 +193,21 @@
   <name>Alder</name>
   <name>Aldónio</name>
   <name>Aldora</name>
+  <name>Alec</name>
   <name>Alecsandro</name>
   <name>Alegria</name>
   <name>Aleixa</name>
   <name>Alejandra</name>
+  <name>Alejandro</name>
+  <name>Aleksander</name>
   <name>Alemanha</name>
   <name>Alencar</name>
   <name>Alésia</name>
   <name>Aleta</name>
   <name>Aleu</name>
+  <name>Alex</name>
+  <name>Alexa</name>
+  <name>Alexander</name>
   <name>Alexander Issaiévich Soljenítsin</name>
   <name>Alexander Soljenítsin</name>
   <name>Alexandrino</name>
@@ -171,9 +215,11 @@
   <name>Aléxia</name>
   <name>Alexina</name>
   <name>Aléxio</name>
+  <name>Alexis</name>
   <name>Aléxis</name>
   <name>Alexsandro</name>
   <name>Alfeu</name>
+  <name>Alfred</name>
   <name>Alfreda</name>
   <name>Alfredina</name>
   <name>Algarinho</name>
@@ -181,6 +227,7 @@
   <name>Algy</name>
   <name>Ália</name>
   <name>Aliça</name>
+  <name>Alicia</name>
   <name>Alícia</name>
   <name>Aliçon</name>
   <name>Alida</name>
@@ -192,6 +239,7 @@
   <name>Alírio</name>
   <name>Alisande</name>
   <name>Alisia</name>
+  <name>Alison</name>
   <name>Álison</name>
   <name>Alissandra</name>
   <name>Alissandro</name>
@@ -202,7 +250,9 @@
   <name>Alívio</name>
   <name>Alix</name>
   <name>Aljocolo</name>
+  <name>Allan</name>
   <name>Allessandro</name>
+  <name>Allison</name>
   <name>Almada</name>
   <name>Almara</name>
   <name>Almecinda</name>
@@ -250,6 +300,7 @@
   <name>Amado</name>
   <name>Amador</name>
   <name>Amael</name>
+  <name>Amanda</name>
   <name>Amandina</name>
   <name>Amar</name>
   <name>Amaral</name>
@@ -265,8 +316,11 @@
   <name>Amávia</name>
   <name>Amavilde</name>
   <name>Ambar</name>
+  <name>Amber</name>
   <name>Ameet</name>
+  <name>Amelia</name>
   <name>Amélia</name>
+  <name>Amélie</name>
   <name>Amelina</name>
   <name>Amena</name>
   <name>América</name>
@@ -288,9 +342,10 @@
   <name>Amorzinda</name>
   <name>Amós</name>
   <name>Amparo</name>
+  <name>Amy</name>
+  <name>Ana-Clara</name>
   <name>Anabel</name>
   <name>Anabela</name>
-  <name>Ana-Clara</name>
   <name>Anael</name>
   <name>Anaíce</name>
   <name>Anaíde</name>
@@ -305,6 +360,7 @@
   <name>Anaisa</name>
   <name>Anaísa</name>
   <name>Anaiza</name>
+  <name>Anakin</name>
   <name>Analaura</name>
   <name>Analdina</name>
   <name>Anali</name>
@@ -325,12 +381,17 @@
   <name>Ananias</name>
   <name>Anarelina</name>
   <name>Anarolina</name>
+  <name>Anastasia</name>
   <name>Anatércia</name>
   <name>Anatilde</name>
   <name>Âncora</name>
   <name>Andere</name>
+  <name>Anderson</name>
+  <name>Andorra</name>
   <name>Andraja</name>
+  <name>Andre</name>
   <name>André</name>
+  <name>Andrea</name>
   <name>Andrei</name>
   <name>Andreia</name>
   <name>Andreias</name>
@@ -343,6 +404,7 @@
   <name>Andressa</name>
   <name>Andrete</name>
   <name>Andreti</name>
+  <name>Andrew</name>
   <name>Andreza</name>
   <name>Andria</name>
   <name>Ândria</name>
@@ -352,15 +414,20 @@
   <name>Andro</name>
   <name>Anésia</name>
   <name>Anete</name>
+  <name>Angela</name>
+  <name>Angela Merkel</name>
   <name>Ângeles</name>
   <name>Angélica</name>
   <name>Angélico</name>
   <name>Angelin</name>
+  <name>Angelina</name>
   <name>Angelique</name>
   <name>Angelita</name>
   <name>Ângelo</name>
+  <name>Angola</name>
   <name>Angra</name>
   <name>Anguila</name>
+  <name>Angus</name>
   <name>Ani</name>
   <name>Ânia</name>
   <name>Aniana</name>
@@ -380,6 +447,10 @@
   <name>Anísia</name>
   <name>Anísio</name>
   <name>Anissa</name>
+  <name>Anna</name>
+  <name>Anne</name>
+  <name>Annie</name>
+  <name>Annika</name>
   <name>Anolido</name>
   <name>Anorindo</name>
   <name>Anouchka</name>
@@ -391,16 +462,19 @@
   <name>Antelmo</name>
   <name>Antera</name>
   <name>Antero</name>
+  <name>Anthony</name>
   <name>Antíbio</name>
   <name>Antígua e Barbuda</name>
   <name>Antineia</name>
   <name>Antoinette</name>
+  <name>Anton</name>
   <name>Antonela</name>
   <name>Antonelli</name>
   <name>Antonelo</name>
   <name>Antoni</name>
   <name>Antonieta</name>
   <name>Antonina</name>
+  <name>Antonio</name>
   <name>Antonita</name>
   <name>Anunciação</name>
   <name>Anunciada</name>
@@ -408,6 +482,7 @@
   <name>Anusca</name>
   <name>Anuschka</name>
   <name>Anuska</name>
+  <name>Anya</name>
   <name>Aparecida</name>
   <name>Aparício</name>
   <name>Ápio</name>
@@ -457,8 +532,10 @@
   <name>Arian</name>
   <name>Ariana</name>
   <name>Ariane</name>
+  <name>Arianna</name>
   <name>Arícia</name>
   <name>Aricina</name>
+  <name>Ariel</name>
   <name>Ariele</name>
   <name>Arien</name>
   <name>Aries</name>
@@ -482,6 +559,7 @@
   <name>Arménia</name>
   <name>Arménio</name>
   <name>Armor</name>
+  <name>Armstrong</name>
   <name>Arneles</name>
   <name>Arom</name>
   <name>Árpia</name>
@@ -491,13 +569,18 @@
   <name>Arsénio</name>
   <name>Artemisa</name>
   <name>Artemísia</name>
+  <name>Arthur</name>
+  <name>Aruba</name>
   <name>Aruna</name>
   <name>Ary</name>
+  <name>Arya</name>
   <name>Ascenso</name>
   <name>Asélio</name>
   <name>Asenath</name>
   <name>Áser</name>
   <name>Ashanti</name>
+  <name>Ashley</name>
+  <name>Ashton</name>
   <name>Ásia</name>
   <name>Ásia Central</name>
   <name>Ásia Meridional</name>
@@ -510,6 +593,7 @@
   <name>Assunção</name>
   <name>Assunta</name>
   <name>Astral</name>
+  <name>Astrid</name>
   <name>Astride</name>
   <name>Ataíde</name>
   <name>Atanásio</name>
@@ -529,6 +613,7 @@
   <name>Audenim</name>
   <name>Audeta</name>
   <name>Audete</name>
+  <name>Audrey</name>
   <name>Audria</name>
   <name>Augustos</name>
   <name>Aulani</name>
@@ -546,20 +631,24 @@
   <name>Aurízia</name>
   <name>Ausenda</name>
   <name>Ausendo</name>
+  <name>Austin</name>
   <name>Australásia</name>
   <name>Austrália</name>
   <name>Austrelino</name>
   <name>Áustria</name>
   <name>Auta</name>
   <name>Auxília</name>
+  <name>Ava</name>
   <name>Avani</name>
   <name>Avantino</name>
   <name>Ave</name>
   <name>Avelar</name>
   <name>Avelino</name>
   <name>Aventino</name>
+  <name>Avery</name>
   <name>Ávila</name>
   <name>Aviz</name>
+  <name>Axel</name>
   <name>Ayala</name>
   <name>Ayer</name>
   <name>Ayla</name>
@@ -567,9 +656,10 @@
   <name>Azélio</name>
   <name>Azerbaijão</name>
   <name>Azuil</name>
+  <name>Baamas</name>
   <name>Babilónia</name>
   <name>Baguandas</name>
-  <name>Barém</name>
+  <name>Bahamas</name>
   <name>Bajula</name>
   <name>Baki</name>
   <name>Baldemar</name>
@@ -578,15 +668,21 @@
   <name>Balsemina</name>
   <name>Baltasar</name>
   <name>Baltazar</name>
+  <name>Bangladesh</name>
   <name>Baptista</name>
   <name>Baqui</name>
   <name>Barac</name>
+  <name>Barack</name>
   <name>Barão</name>
   <name>Barão de Münchhausen</name>
+  <name>Barbados</name>
+  <name>Barbara</name>
   <name>Bárbara</name>
+  <name>Barbie</name>
   <name>Bárbora</name>
   <name>Barbosa</name>
   <name>Barcino</name>
+  <name>Barém</name>
   <name>Barriane</name>
   <name>Bartolina</name>
   <name>Bartolomeu</name>
@@ -596,11 +692,14 @@
   <name>Bassani</name>
   <name>Bassarme</name>
   <name>Bastião</name>
+  <name>Batman</name>
   <name>Bauduino</name>
   <name>Beanina</name>
+  <name>Beatrice</name>
   <name>Beatriz</name>
   <name>Bebiana</name>
   <name>Bebiano</name>
+  <name>Beckham</name>
   <name>Begonha</name>
   <name>Beladora</name>
   <name>Belani</name>
@@ -617,19 +716,22 @@
   <name>Belisa</name>
   <name>Belisanda</name>
   <name>Belíssima</name>
+  <name>Belize</name>
+  <name>Bella</name>
   <name>Belma</name>
   <name>Belzinda</name>
+  <name>Ben-Hur</name>
   <name>Bendavid</name>
   <name>Benedita</name>
   <name>Benevenuto</name>
   <name>Beneza</name>
   <name>Benfica</name>
-  <name>Ben-Hur</name>
   <name>Benícia</name>
   <name>Benício</name>
   <name>Benigna</name>
   <name>Benilde</name>
   <name>Benildo</name>
+  <name>Benim</name>
   <name>Benita</name>
   <name>Benjamim</name>
   <name>Benjamina</name>
@@ -669,6 +771,7 @@
   <name>Betsabé</name>
   <name>Betsabeia</name>
   <name>Betsabeth</name>
+  <name>Beyoncé</name>
   <name>Bhavika</name>
   <name>Bia</name>
   <name>Biana</name>
@@ -683,6 +786,8 @@
   <name>Bijal</name>
   <name>Bil</name>
   <name>Bila</name>
+  <name>Billie</name>
+  <name>Billy</name>
   <name>Bina</name>
   <name>Bino</name>
   <name>Binta</name>
@@ -698,6 +803,8 @@
   <name>Bluete</name>
   <name>Boanerges</name>
   <name>Boavida</name>
+  <name>Bob</name>
+  <name>Bobby</name>
   <name>Bolena</name>
   <name>Bolívia</name>
   <name>Bonança</name>
@@ -707,8 +814,10 @@
   <name>Bósnia</name>
   <name>Bósnia e Herzegovina</name>
   <name>Botsuana</name>
+  <name>Brad</name>
   <name>Brandão</name>
   <name>Brandelina</name>
+  <name>Brandon</name>
   <name>Brás</name>
   <name>Brásia</name>
   <name>Brasil</name>
@@ -719,8 +828,10 @@
   <name>Brázia</name>
   <name>Brelca</name>
   <name>Brena</name>
+  <name>Brenda</name>
   <name>Brénea</name>
   <name>Breno</name>
+  <name>Brian</name>
   <name>Briano</name>
   <name>Brícia</name>
   <name>Brida</name>
@@ -736,15 +847,21 @@
   <name>Brita</name>
   <name>Britânia</name>
   <name>Brites</name>
+  <name>Britney</name>
   <name>Brito</name>
   <name>Brizelinda</name>
   <name>Brizida</name>
   <name>Bruna</name>
+  <name>Brunei</name>
   <name>Brúnel</name>
   <name>Brunilde</name>
+  <name>Bryan</name>
   <name>Buanami</name>
+  <name>Buffy</name>
   <name>Bulgária</name>
+  <name>Burger King</name>
   <name>Burquina Faso</name>
+  <name>Burundi</name>
   <name>Butão</name>
   <name>Cabo Verde</name>
   <name>Cácia</name>
@@ -773,8 +890,10 @@
   <name>Camboja</name>
   <name>Câmea</name>
   <name>Camélia</name>
+  <name>Cameron</name>
   <name>Camila</name>
   <name>Camões</name>
+  <name>Campbell</name>
   <name>Canadá</name>
   <name>Cândido</name>
   <name>Candinho</name>
@@ -784,6 +903,7 @@
   <name>Capilupi</name>
   <name>Cardia</name>
   <name>Cárdia</name>
+  <name>Cardiff</name>
   <name>Cardinal</name>
   <name>Cardo</name>
   <name>Carel</name>
@@ -825,6 +945,7 @@
   <name>Carola</name>
   <name>Carónia</name>
   <name>Carrene</name>
+  <name>Carrie</name>
   <name>Carsta</name>
   <name>Cassandra</name>
   <name>Cássia</name>
@@ -875,6 +996,7 @@
   <name>Celide</name>
   <name>Celina</name>
   <name>Celinda</name>
+  <name>Céline</name>
   <name>Celinia</name>
   <name>Celino</name>
   <name>Célio</name>
@@ -898,7 +1020,7 @@
   <name>Cesário</name>
   <name>Césaro</name>
   <name>Céser</name>
-  <name>Ceuta e Melilla</name>
+  <name>Ceuta e Melilha</name>
   <name>Chade</name>
   <name>Chambel</name>
   <name>Chandlier</name>
@@ -908,9 +1030,11 @@
   <name>Charifa</name>
   <name>Charlene</name>
   <name>Charli</name>
+  <name>Charlie</name>
   <name>Cheila</name>
   <name>Cheldecarlo</name>
   <name>Cheldoncarlo</name>
+  <name>Chelsea</name>
   <name>Chema</name>
   <name>Chenoa</name>
   <name>Chéquia</name>
@@ -918,11 +1042,15 @@
   <name>Chianda</name>
   <name>Chiara</name>
   <name>Chila</name>
+  <name>Chile</name>
   <name>Chimene</name>
+  <name>China</name>
   <name>Chipre</name>
   <name>Chloé</name>
+  <name>Chris</name>
   <name>Chrisna</name>
   <name>Christiana</name>
+  <name>Churchill</name>
   <name>Cibele</name>
   <name>Cícero</name>
   <name>Cicínia</name>
@@ -944,6 +1072,7 @@
   <name>Cinderela</name>
   <name>Cindi</name>
   <name>Cíndia</name>
+  <name>Cindy</name>
   <name>Cinira</name>
   <name>Cinthía</name>
   <name>Cíntia</name>
@@ -1004,17 +1133,21 @@
   <name>Clídio</name>
   <name>Clife</name>
   <name>Climénia</name>
+  <name>Clint</name>
   <name>Clívia</name>
   <name>Clober</name>
   <name>Cloe</name>
   <name>Cloé</name>
   <name>Clorinda</name>
   <name>Clóvis</name>
+  <name>Coca-Cola</name>
   <name>Coimbra</name>
   <name>Colete</name>
+  <name>Colin</name>
   <name>Colino</name>
   <name>Colômbia</name>
   <name>Comores</name>
+  <name>Conan</name>
   <name>Conceição</name>
   <name>Concha</name>
   <name>Conchita</name>
@@ -1044,6 +1177,7 @@
   <name>Cosette</name>
   <name>Cosme</name>
   <name>Costa do Marfim</name>
+  <name>Costa Rica</name>
   <name>Cremilda</name>
   <name>Cremilde</name>
   <name>Creolando</name>
@@ -1076,11 +1210,14 @@
   <name>Cristolinda</name>
   <name>Cristóvão</name>
   <name>Croácia</name>
+  <name>Cuba</name>
   <name>Curaçao</name>
+  <name>Curaçau</name>
   <name>Curri</name>
   <name>Curry</name>
   <name>Cursino</name>
-  <name>D'</name>
+  <name>D'Artagnan</name>
+  <name>D’Artagnan</name>
   <name>Dacilde</name>
   <name>Dácio</name>
   <name>Dádiva</name>
@@ -1140,6 +1277,7 @@
   <name>Darnel</name>
   <name>Darnela</name>
   <name>Dart</name>
+  <name>Darth Vader</name>
   <name>Darvin</name>
   <name>Daulina</name>
   <name>Daurante</name>
@@ -1298,6 +1436,7 @@
   <name>Dirla</name>
   <name>Dirque</name>
   <name>Disa</name>
+  <name>Disney</name>
   <name>Distefano</name>
   <name>Distéfano</name>
   <name>Ditza</name>
@@ -1334,6 +1473,7 @@
   <name>Domingues</name>
   <name>Dominiana</name>
   <name>Dominica</name>
+  <name>Domínica</name>
   <name>Domínico</name>
   <name>Dominik</name>
   <name>Domitila</name>
@@ -1369,6 +1509,7 @@
   <name>Dositeu</name>
   <name>Dostoiévski</name>
   <name>Douda</name>
+  <name>Dracula</name>
   <name>Drago</name>
   <name>Drumond</name>
   <name>Druscila</name>
@@ -1389,6 +1530,7 @@
   <name>Dulcite</name>
   <name>Duldínia</name>
   <name>Dúlia</name>
+  <name>Dumbledore</name>
   <name>Dunária</name>
   <name>Dúnia</name>
   <name>Dúnio</name>
@@ -1397,6 +1539,7 @@
   <name>Durique</name>
   <name>Durval</name>
   <name>Durvalino</name>
+  <name>Dustin</name>
   <name>Duter</name>
   <name>Duval</name>
   <name>Dúval</name>
@@ -1458,6 +1601,7 @@
   <name>Egito</name>
   <name>Eglantina</name>
   <name>Ehola</name>
+  <name>El Salvador</name>
   <name>Eládio</name>
   <name>Elba</name>
   <name>Elberto</name>
@@ -1518,6 +1662,7 @@
   <name>Elisiário</name>
   <name>Elita</name>
   <name>Elizabete</name>
+  <name>Elizabeth</name>
   <name>Elli</name>
   <name>Elma</name>
   <name>Elmano</name>
@@ -1547,6 +1692,7 @@
   <name>Elva</name>
   <name>Elvina</name>
   <name>Elvino</name>
+  <name>Elvis</name>
   <name>Ely</name>
   <name>Elza</name>
   <name>Elzeário</name>
@@ -1634,6 +1780,7 @@
   <name>Espírito</name>
   <name>Essuatíni</name>
   <name>Estados Unidos</name>
+  <name>Estados Unidos da América</name>
   <name>Estaline</name>
   <name>Estanislau</name>
   <name>Estéfana</name>
@@ -1717,6 +1864,7 @@
   <name>Fabrício</name>
   <name>Fabrízia</name>
   <name>Fabrizida</name>
+  <name>Facebook</name>
   <name>Fafe</name>
   <name>Falcão</name>
   <name>Fani</name>
@@ -1854,6 +2002,7 @@
   <name>Gamaniel</name>
   <name>Gâmbia</name>
   <name>Gana</name>
+  <name>Gandalf</name>
   <name>Gandi</name>
   <name>Gaori</name>
   <name>Gardel</name>
@@ -1910,6 +2059,7 @@
   <name>Giani</name>
   <name>Gianluca</name>
   <name>Gião</name>
+  <name>Gibraltar</name>
   <name>Gideão</name>
   <name>Gil</name>
   <name>Gilbério</name>
@@ -1982,6 +2132,7 @@
   <name>Gregória</name>
   <name>Gregório</name>
   <name>Greice</name>
+  <name>Grenada</name>
   <name>Greta</name>
   <name>Grimanesa</name>
   <name>Grisando</name>
@@ -1989,10 +2140,13 @@
   <name>Guadalupe</name>
   <name>Gualdim</name>
   <name>Gualter</name>
+  <name>Guame</name>
   <name>Guarani</name>
+  <name>Guatemala</name>
   <name>Gueir</name>
   <name>Guendolina</name>
   <name>Guendoline</name>
+  <name>Guernesey</name>
   <name>Gui</name>
   <name>Guiana</name>
   <name>Guiana Francesa</name>
@@ -2005,8 +2159,8 @@
   <name>Guimar</name>
   <name>Guimiliano</name>
   <name>Guiné</name>
-  <name>Guiné Equatorial</name>
   <name>Guiné-Bissau</name>
+  <name>Guiné Equatorial</name>
   <name>Guiome</name>
   <name>Guislena</name>
   <name>Guislene</name>
@@ -2025,11 +2179,13 @@
   <name>Haidé</name>
   <name>Haiden</name>
   <name>Hailé</name>
+  <name>Haiti</name>
   <name>Hálea</name>
   <name>Hália</name>
   <name>Haraldo</name>
   <name>Hari</name>
   <name>Haroldo</name>
+  <name>Harry</name>
   <name>Hashmukh</name>
   <name>Havanessa</name>
   <name>Havaneza</name>
@@ -2097,6 +2253,7 @@
   <name>Herménia</name>
   <name>Hermes</name>
   <name>Hermínia</name>
+  <name>Hermione</name>
   <name>Hermitério</name>
   <name>Hernâni</name>
   <name>Hernany</name>
@@ -2126,6 +2283,7 @@
   <name>Hirondino</name>
   <name>Hitilde</name>
   <name>Hoctror</name>
+  <name>Hogwarts</name>
   <name>Holden</name>
   <name>Hólger</name>
   <name>Homero</name>
@@ -2207,30 +2365,32 @@
   <name>Ildete</name>
   <name>Ildo</name>
   <name>Ilha Bouvet</name>
-  <name>Ilha Christmas</name>
   <name>Ilha de Ascensão</name>
   <name>Ilha de Clipperton</name>
   <name>Ilha de Man</name>
+  <name>Ilha do Natal</name>
+  <name>Ilha Heard e Ilhas McDonald</name>
   <name>Ilha Norfolk</name>
-  <name>Ilhas Aland</name>
+  <name>Ilhas Åland</name>
+  <name>Ilhas Caimão</name>
   <name>Ilhas Canárias</name>
-  <name>Ilhas Cayman</name>
   <name>Ilhas Cocos</name>
   <name>Ilhas Cook</name>
+  <name>Ilhas dos Cocos (Keeling)</name>
   <name>Ilhas Falkland</name>
-  <name>Ilhas Faroe</name>
+  <name>Ilhas Faroé</name>
   <name>Ilhas Geórgia do Sul e Sandwich do Sul</name>
-  <name>Ilhas Heard e McDonald</name>
   <name>Ilhas Keeling</name>
   <name>Ilhas Malvinas</name>
   <name>Ilhas Marianas do Norte</name>
   <name>Ilhas Marshall</name>
-  <name>Ilhas Menores Distantes dos EUA</name>
+  <name>Ilhas Menores Afastadas dos EUA</name>
   <name>Ilhas Pitcairn</name>
   <name>Ilhas Salomão</name>
   <name>Ilhas Turcas e Caicos</name>
   <name>Ilhas Virgens Americanas</name>
   <name>Ilhas Virgens Britânicas</name>
+  <name>Ilhas Virgens dos EUA</name>
   <name>Iliana</name>
   <name>Iliatam</name>
   <name>Ilibertino</name>
@@ -2287,6 +2447,7 @@
   <name>Injai</name>
   <name>Inma</name>
   <name>Inoi</name>
+  <name>Instagram</name>
   <name>Inzelino</name>
   <name>Io</name>
   <name>Iô</name>
@@ -2301,11 +2462,11 @@
   <name>Ione</name>
   <name>Iono</name>
   <name>Ioque</name>
-  <name>Irão</name>
   <name>Iracema</name>
   <name>Iradima</name>
   <name>Iráis</name>
   <name>Iraldo</name>
+  <name>Irão</name>
   <name>Iraque</name>
   <name>Irca</name>
   <name>Ircília</name>
@@ -2367,6 +2528,7 @@
   <name>Isolete</name>
   <name>Isolina</name>
   <name>Isolino</name>
+  <name>Israel</name>
   <name>Issacar</name>
   <name>Itaca</name>
   <name>Itália</name>
@@ -2432,6 +2594,7 @@
   <name>Jalma</name>
   <name>Jalmira</name>
   <name>Jalon</name>
+  <name>Jamaica</name>
   <name>Jamila</name>
   <name>Jamília</name>
   <name>Jamim</name>
@@ -2454,9 +2617,9 @@
   <name>Januário</name>
   <name>Japão</name>
   <name>Jaque</name>
+  <name>Jaque-line</name>
   <name>Jaquelina</name>
   <name>Jaqueline</name>
-  <name>Jaque-line</name>
   <name>Jaquelino</name>
   <name>Jaques</name>
   <name>Jarbas</name>
@@ -2488,6 +2651,7 @@
   <name>Jeovane</name>
   <name>Jerôme</name>
   <name>Jerónimo</name>
+  <name>Jersey</name>
   <name>Jerson</name>
   <name>Jerusa</name>
   <name>Jessé</name>
@@ -2633,13 +2797,17 @@
   <name>Kildare</name>
   <name>Kimbo</name>
   <name>Kínia</name>
+  <name>Kiribati</name>
   <name>Kírio</name>
+  <name>Kirk</name>
+  <name>Koweit</name>
   <name>Krunal</name>
   <name>Kuwait</name>
   <name>Kwacha</name>
   <name>Kwai</name>
   <name>Kwar</name>
   <name>Kyara</name>
+  <name>La-Salete</name>
   <name>Lacerda</name>
   <name>Lacínia</name>
   <name>Lael</name>
@@ -2662,10 +2830,10 @@
   <name>Lanea</name>
   <name>Lania</name>
   <name>Lano</name>
+  <name>Laos</name>
   <name>Larcher</name>
   <name>Larisa</name>
   <name>Laro</name>
-  <name>La-Salete</name>
   <name>Lasha</name>
   <name>Lassalete</name>
   <name>Lau</name>
@@ -2703,10 +2871,10 @@
   <name>Leda</name>
   <name>Ledice</name>
   <name>Leeyang</name>
+  <name>Lei-Li</name>
   <name>Leicely</name>
   <name>Leila</name>
   <name>Leilane</name>
-  <name>Lei-Li</name>
   <name>Leina</name>
   <name>Lela</name>
   <name>Lélia</name>
@@ -2724,6 +2892,7 @@
   <name>Lenira</name>
   <name>Lenise</name>
   <name>Lenlson</name>
+  <name>Lennon</name>
   <name>Lenon</name>
   <name>Leo Tolstói</name>
   <name>Leoberto</name>
@@ -2799,6 +2968,7 @@
   <name>Lidomar</name>
   <name>Lidório</name>
   <name>Liduína</name>
+  <name>Liechtenstein</name>
   <name>Liedson</name>
   <name>Liete</name>
   <name>Liev Nikoláievich Tolstói</name>
@@ -2834,6 +3004,7 @@
   <name>Lineu</name>
   <name>Línia</name>
   <name>Linita</name>
+  <name>LinkedIn</name>
   <name>Lino</name>
   <name>Línton</name>
   <name>Lintone</name>
@@ -2987,9 +3158,10 @@
   <name>Mabília</name>
   <name>Macati</name>
   <name>Macau, RAE da China</name>
-  <name>Macedônia do Norte</name>
+  <name>Macedónia do Norte</name>
   <name>Maciel</name>
   <name>Maciela</name>
+  <name>Madagáscar</name>
   <name>Madai</name>
   <name>Madail</name>
   <name>Madalena</name>
@@ -3026,6 +3198,7 @@
   <name>Maik</name>
   <name>Maike</name>
   <name>Maila</name>
+  <name>Maiote</name>
   <name>Maique</name>
   <name>Mair</name>
   <name>Maira</name>
@@ -3042,7 +3215,9 @@
   <name>Maldonado</name>
   <name>Malena</name>
   <name>Malessa</name>
+  <name>Mali</name>
   <name>Malisa</name>
+  <name>Malta</name>
   <name>Malvina</name>
   <name>Mamede</name>
   <name>Mamia</name>
@@ -3178,6 +3353,7 @@
   <name>Marto</name>
   <name>Marucas</name>
   <name>Marvão</name>
+  <name>Marvel</name>
   <name>Marvi</name>
   <name>Márvia</name>
   <name>Márvio</name>
@@ -3332,13 +3508,17 @@
   <name>Mogli</name>
   <name>Moira</name>
   <name>Moisés</name>
+  <name>Moldávia</name>
+  <name>Moldova</name>
   <name>Mónaco</name>
   <name>Monalisa</name>
   <name>Mongólia</name>
   <name>Mónia</name>
   <name>Mónica</name>
   <name>Moniz</name>
+  <name>Monserrate</name>
   <name>Montemar</name>
+  <name>Montenegro</name>
   <name>Montiel</name>
   <name>Moraima</name>
   <name>Moreno</name>
@@ -3447,6 +3627,7 @@
   <name>Natilde</name>
   <name>Natilia</name>
   <name>Natividade</name>
+  <name>Nauru</name>
   <name>Nausica</name>
   <name>Nautília</name>
   <name>Navilde</name>
@@ -3507,6 +3688,7 @@
   <name>Neóteles</name>
   <name>Neotera</name>
   <name>Neotero</name>
+  <name>Nepal</name>
   <name>Neptuno</name>
   <name>Nércia</name>
   <name>Nereida</name>
@@ -3516,6 +3698,7 @@
   <name>Nery</name>
   <name>Nésia</name>
   <name>Nestor</name>
+  <name>Netflix</name>
   <name>Neuda</name>
   <name>Neusa</name>
   <name>Neutel</name>
@@ -3550,6 +3733,7 @@
   <name>Níger</name>
   <name>Nigéria</name>
   <name>Nihit</name>
+  <name>Nike</name>
   <name>Nikita</name>
   <name>Nil</name>
   <name>Nila</name>
@@ -3568,6 +3752,7 @@
   <name>Nilza</name>
   <name>Ninfa</name>
   <name>Nino</name>
+  <name>Nintendo</name>
   <name>Niobe</name>
   <name>Niotélia</name>
   <name>Nircia</name>
@@ -3581,6 +3766,7 @@
   <name>Nísio</name>
   <name>Nita</name>
   <name>Niucha</name>
+  <name>Niuê</name>
   <name>Niusa</name>
   <name>Niúsa</name>
   <name>Nivalda</name>
@@ -3644,6 +3830,7 @@
   <name>Núrio</name>
   <name>Nurja</name>
   <name>Nusa</name>
+  <name>Obama</name>
   <name>Obdúlia</name>
   <name>Obe</name>
   <name>Oceana</name>
@@ -3750,6 +3937,7 @@
   <name>Pádua</name>
   <name>Países Baixos</name>
   <name>Países Baixos Caribenhos</name>
+  <name>Palau</name>
   <name>Paleologo</name>
   <name>Palestina</name>
   <name>Paliologo</name>
@@ -3794,11 +3982,13 @@
   <name>Peniel</name>
   <name>Pepe</name>
   <name>Pépio</name>
+  <name>Pepsi</name>
   <name>Peres</name>
   <name>Perla</name>
   <name>Perolina</name>
   <name>Persilia</name>
   <name>Persília</name>
+  <name>Peru</name>
   <name>Peta</name>
   <name>Pétala</name>
   <name>Petiz</name>
@@ -3824,12 +4014,13 @@
   <name>Poliana</name>
   <name>Polinésia</name>
   <name>Polinésia Francesa</name>
-  <name>Polônia</name>
+  <name>Polónia</name>
   <name>Pompeu</name>
   <name>Porciana</name>
   <name>Porfírio</name>
   <name>Porto Rico</name>
   <name>Portocarreiro</name>
+  <name>Portugal</name>
   <name>Pósser</name>
   <name>Pracídio</name>
   <name>Prado</name>
@@ -3924,6 +4115,7 @@
   <name>Rebeca</name>
   <name>Reboredo</name>
   <name>Recrino</name>
+  <name>Reddit</name>
   <name>Reduzindo</name>
   <name>Região da Micronésia</name>
   <name>Reginaldo</name>
@@ -3949,11 +4141,13 @@
   <name>Renato</name>
   <name>René</name>
   <name>República Centro-Africana</name>
+  <name>República Checa</name>
+  <name>República da Moldávia</name>
+  <name>República da Moldova</name>
   <name>República Democrática de Timor-Leste</name>
   <name>República Democrática do Congo</name>
   <name>República do Congo</name>
   <name>República Dominicana</name>
-  <name>República Checa</name>
   <name>Requerino</name>
   <name>Resende</name>
   <name>Ressano</name>
@@ -4016,7 +4210,7 @@
   <name>Romea</name>
   <name>Romeia</name>
   <name>Romel</name>
-  <name>Romênia</name>
+  <name>Roménia</name>
   <name>Romero</name>
   <name>Romeu</name>
   <name>Romina</name>
@@ -4151,10 +4345,12 @@
   <name>Samir</name>
   <name>Samiro</name>
   <name>Sâmnio</name>
+  <name>Samoa</name>
   <name>Samoa Americana</name>
   <name>Samoel</name>
   <name>Samora</name>
   <name>Sampsa</name>
+  <name>Samsung</name>
   <name>San Marino</name>
   <name>Sana</name>
   <name>Sancha</name>
@@ -4183,8 +4379,12 @@
   <name>Santelmo</name>
   <name>Santo</name>
   <name>São Bartolomeu</name>
+  <name>São Cristóvão e Neves</name>
   <name>São Cristóvão e Névis</name>
+  <name>São Marinho</name>
   <name>São Martinho</name>
+  <name>São Martinho (Saint-Martin)</name>
+  <name>São Martinho (Sint Maarten)</name>
   <name>São Pedro e Miquelão</name>
   <name>São Tomé e Príncipe</name>
   <name>São Vicente e Granadinas</name>
@@ -4237,6 +4437,7 @@
   <name>Sémio</name>
   <name>Semíramis</name>
   <name>Sena</name>
+  <name>Senegal</name>
   <name>Sénia</name>
   <name>Sénio</name>
   <name>Seno</name>
@@ -4265,6 +4466,7 @@
   <name>Sheilon</name>
   <name>Sheinaz</name>
   <name>Shema</name>
+  <name>Sherlock</name>
   <name>Sião</name>
   <name>Sibila</name>
   <name>Siça</name>
@@ -4342,6 +4544,7 @@
   <name>Sonete</name>
   <name>Sónia</name>
   <name>Sonim</name>
+  <name>Sony</name>
   <name>Soraia</name>
   <name>Soraya</name>
   <name>Sorel</name>
@@ -4350,6 +4553,8 @@
   <name>Soter</name>
   <name>Sotero</name>
   <name>Sousa</name>
+  <name>Spotify</name>
+  <name>Sri Lanka</name>
   <name>Staël</name>
   <name>Staviani</name>
   <name>Stéfanie</name>
@@ -4388,6 +4593,7 @@
   <name>Surendralal</name>
   <name>Suri</name>
   <name>Suria</name>
+  <name>Suriname</name>
   <name>Susana</name>
   <name>Susane</name>
   <name>Susano</name>
@@ -4409,7 +4615,6 @@
   <name>Taciano</name>
   <name>Tácio</name>
   <name>Tadeu</name>
-  <name>Tajiquistão</name>
   <name>Tágio</name>
   <name>Taievo</name>
   <name>Taiki</name>
@@ -4423,6 +4628,8 @@
   <name>Taísa</name>
   <name>Taísia</name>
   <name>Taíssa</name>
+  <name>Taiwan</name>
+  <name>Tajiquistão</name>
   <name>Talia</name>
   <name>Tálio</name>
   <name>Talita</name>
@@ -4479,9 +4686,11 @@
   <name>Terezina</name>
   <name>Terezinha</name>
   <name>Território Britânico do Oceano Índico</name>
+  <name>Territórios Austrais Franceses</name>
   <name>Territórios Franceses do Sul</name>
-  <name>Territórios palestinos</name>
+  <name>Territórios palestinianos</name>
   <name>Terroso</name>
+  <name>Tesla</name>
   <name>Thais</name>
   <name>Tházia</name>
   <name>Theara</name>
@@ -4496,6 +4705,7 @@
   <name>Tieres</name>
   <name>Tierri</name>
   <name>Tifany</name>
+  <name>TikTok</name>
   <name>Tilak</name>
   <name>Tília</name>
   <name>Timmo</name>
@@ -4512,12 +4722,15 @@
   <name>Tiziana</name>
   <name>Tó</name>
   <name>Togarma</name>
+  <name>Togo</name>
   <name>Tolstói</name>
   <name>Tom</name>
   <name>Tomás</name>
   <name>Tomaz</name>
   <name>Tomé</name>
+  <name>Tonga</name>
   <name>Tonicha</name>
+  <name>Toquelau</name>
   <name>Torcato</name>
   <name>Tordis</name>
   <name>Torgal</name>
@@ -4531,6 +4744,7 @@
   <name>Trindade</name>
   <name>Trindade e Tobago</name>
   <name>Trinidad e Tobago</name>
+  <name>Trinidade e Tobago</name>
   <name>Tristão</name>
   <name>Tristão da Cunha</name>
   <name>Tude</name>
@@ -4540,10 +4754,13 @@
   <name>Turgo</name>
   <name>Turquemenistão</name>
   <name>Turquia</name>
+  <name>Tuvalu</name>
+  <name>Twitter</name>
   <name>Ubaldo</name>
   <name>Ucrânia</name>
   <name>Uda</name>
   <name>Udo</name>
+  <name>Uganda</name>
   <name>Ugo</name>
   <name>Ulema</name>
   <name>Ulice</name>
@@ -4570,6 +4787,7 @@
   <name>Úrsula</name>
   <name>Uruguai</name>
   <name>Urvalina</name>
+  <name>Usbequistão</name>
   <name>Uter</name>
   <name>Uzbequistão</name>
   <name>Uziel</name>
@@ -4613,6 +4831,7 @@
   <name>Vanise</name>
   <name>Vanisse</name>
   <name>Vanízia</name>
+  <name>Vanuatu</name>
   <name>Vanusa</name>
   <name>Vanussa</name>
   <name>Vanuza</name>
@@ -4636,6 +4855,7 @@
   <name>Vêndel</name>
   <name>Veneranda</name>
   <name>Veneza</name>
+  <name>Venezuela</name>
   <name>Vénia</name>
   <name>Venina</name>
   <name>Ventura</name>
@@ -4717,6 +4937,7 @@
   <name>Vivina</name>
   <name>Vladimiro</name>
   <name>Vladino</name>
+  <name>Voldemort</name>
   <name>Waísa</name>
   <name>Waíse</name>
   <name>Waldemar</name>
@@ -4729,6 +4950,7 @@
   <name>Xana</name>
   <name>Xania</name>
   <name>Xavi</name>
+  <name>Xbox</name>
   <name>Xénia</name>
   <name>Xénio</name>
   <name>Xenoa</name>
@@ -4753,6 +4975,7 @@
   <name>Yodhin</name>
   <name>Yola</name>
   <name>Yolanda</name>
+  <name>YouTube</name>
   <name>Ysémia</name>
   <name>Yulius</name>
   <name>Yuran</name>
@@ -4776,6 +4999,7 @@
   <name>Zé</name>
   <name>Zeca</name>
   <name>Zeida</name>
+  <name>Zelda</name>
   <name>Zélia</name>
   <name>Zelinda</name>
   <name>Zélio</name>
@@ -4792,7 +5016,7 @@
   <name>Zilda</name>
   <name>Zília</name>
   <name>Zilma</name>
-  <name>Zimbábue</name>
+  <name>Zimbabué</name>
   <name>Zina</name>
   <name>Zinaida</name>
   <name>Zíngara</name>
