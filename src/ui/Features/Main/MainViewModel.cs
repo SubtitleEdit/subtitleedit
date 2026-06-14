@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -9577,8 +9578,19 @@ public partial class MainViewModel :
             }
 
             vm.InitializeFindData(_findService, subs, selectedText, this);
+            window.AddHandler(InputElement.KeyDownEvent, _shortcutManager.OnKeyPressed, RoutingStrategies.Tunnel);
+            window.AddHandler(InputElement.KeyUpEvent, _shortcutManager.OnKeyReleased, RoutingStrategies.Bubble);
+            window.KeyDown += (_, e) =>
+            {
+                var cmd = _shortcutManager.CheckShortcuts(e, ShortcutCategory.General.ToString());
+                if (ReferenceEquals(cmd, ShowReplaceCommand))
+                {
+                    ShowReplace();
+                }
+            };
             window.Closed += (_, _) =>
             {
+                _shortcutManager.ClearKeys();
                 if (_findClosingProgrammatically)
                 {
                     _findClosingProgrammatically = false;
@@ -9853,6 +9865,10 @@ public partial class MainViewModel :
             return;
         }
 
+        var findSearchText = _findViewModel?.SearchText;
+        var findMode = _findViewModel?.FindMode;
+        var findWholeWord = _findViewModel?.WholeWord;
+
         if (_findViewModel != null)
         {
             _findClosingProgrammatically = true;
@@ -9888,6 +9904,15 @@ public partial class MainViewModel :
             }
 
             vm.InitializeFindData(_findService, subs, selectedText, this);
+            if (!string.IsNullOrEmpty(findSearchText))
+            {
+                vm.SearchText = findSearchText;
+            }
+            if (findMode.HasValue)
+            {
+                vm.FindMode = findMode.Value;
+                vm.WholeWord = findWholeWord!.Value;
+            }
             window.Closed += (_, _) =>
             {
                 if (_replaceClosingProgrammatically)
