@@ -264,6 +264,9 @@ public static class UiTheme
     /// AllowAutoHide=false via the style system. DataGrid sets AllowAutoHide=true on
     /// its scrollbars at LocalValue priority in OnApplyTemplate, so a class handler on
     /// Control.LoadedEvent overrides it at LocalValue priority after the fact.
+    /// Designed to be called once at startup. The LoadedEvent handler reads
+    /// _scrollBarAllowAutoHide dynamically, so a second call would update the field
+    /// and affect future DataGrid loads — but already-open DataGrids would not update.
     /// </summary>
     public static void ApplyScrollBarStyle()
     {

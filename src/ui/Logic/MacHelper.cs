@@ -20,7 +20,6 @@ public class MacHelper
                     FileName = "/usr/bin/defaults",
                     Arguments = "read -g AppleShowScrollBars",
                     RedirectStandardOutput = true,
-                    RedirectStandardError = true,
                     UseShellExecute = false,
                     CreateNoWindow = true,
                 }
