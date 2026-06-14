@@ -13691,6 +13691,13 @@ public partial class MainViewModel :
                 {
                     await VideoOpenFile(videoFileName, desiredAudioTrackId);
                 }
+                else if (TryGetRecentVideoFileName(fileName, out var recentVideoFileName))
+                {
+                    // Honor the media this subtitle was last opened with - e.g. an audio-only
+                    // project keeps its .wav instead of grabbing a later burned-in .mp4 of the
+                    // same name that FindVideoFileName would otherwise prefer (issue #11612).
+                    await VideoOpenFile(recentVideoFileName, desiredAudioTrackId);
+                }
                 else if (FindVideoFileName.TryFindVideoFileName(fileName, out videoFileName))
                 {
                     await VideoOpenFile(videoFileName, desiredAudioTrackId);
@@ -15186,6 +15193,28 @@ public partial class MainViewModel :
 
         AddToRecentFiles(true);
         return true;
+    }
+
+    // Looks up the media file this subtitle was last opened with from the recent-files list.
+    // Returns true only when a remembered video/audio file is recorded and still exists on disk.
+    private static bool TryGetRecentVideoFileName(string subtitleFileName, out string videoFileName)
+    {
+        videoFileName = string.Empty;
+        if (string.IsNullOrEmpty(subtitleFileName))
+        {
+            return false;
+        }
+
+        var recentFile = Se.Settings.File.RecentFiles
+            .FirstOrDefault(rf => string.Equals(rf.SubtitleFileName, subtitleFileName, StringComparison.OrdinalIgnoreCase));
+
+        if (recentFile != null && !string.IsNullOrEmpty(recentFile.VideoFileName) && File.Exists(recentFile.VideoFileName))
+        {
+            videoFileName = recentFile.VideoFileName;
+            return true;
+        }
+
+        return false;
     }
 
     private void AddToRecentFiles(bool updateMenu)
