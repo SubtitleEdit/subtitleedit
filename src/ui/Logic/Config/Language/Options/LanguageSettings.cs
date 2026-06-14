@@ -168,6 +168,7 @@ public class LanguageSettings
     public string ShowToolbarBurnIn { get; set; }
     public string ShowToolbarSettings { get; set; }
     public string ShowToolbarLayout { get; set; }
+    public string ShowToolbarSourceView { get; set; }
     public string ShowToolbarHelp { get; set; }
     public string ShowToolbarEncoding { get; set; }
     public string ShowToolbarFrameRate { get; set; }
@@ -476,6 +477,7 @@ public class LanguageSettings
         ShowToolbarBurnIn = "Show burn-in icon";
         ShowToolbarSettings = "Show settings icon";
         ShowToolbarLayout = "Show layout icon";
+        ShowToolbarSourceView = "Show source view icon";
         ShowToolbarHelp = "Show help icon";
         ShowToolbarEncoding = "Show encoding";
         ShowToolbarFrameRate = "Show frame rate";

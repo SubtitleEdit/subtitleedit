@@ -17,6 +17,7 @@ public class LanguageMainToolbar
     public string BurnInHint { get; set; }
     public string SettingsHint { get; set; }
     public string LayoutHint { get; set; }
+    public string SourceViewHint { get; set; }
     public string HelpHint { get; set; }
     public string AutoBreakHint { get; set; }
     public string UnbreakHint { get; set; }
@@ -43,6 +44,7 @@ public class LanguageMainToolbar
         BurnInHint = "Burn subtitles into a video file {0}";
         SettingsHint = "Adjust program settings and preferences {0}";
         LayoutHint = "Change toolbar and panel layout {0}";
+        SourceViewHint = "Toggle source view {0}";
         HelpHint = "Open help website {0}";
         AutoBreakHint = "Automatically break long lines {0}";
         UnbreakHint = "Merge multi-line subtitles into one line {0}";

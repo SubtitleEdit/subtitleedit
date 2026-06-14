@@ -51,6 +51,7 @@ public class SeAppearance
     public bool ToolbarShowBurnIn { get; set; }
     public bool ToolbarShowSettings { get; set; }
     public bool ToolbarShowLayout { get; set; }
+    public bool ToolbarShowSourceView { get; set; }
     public bool ToolbarShowHelp { get; set; }
     public bool ToolbarShowEncoding { get; set; }
     public bool ToolbarShowFrameRate { get; set; }
@@ -118,6 +119,7 @@ public class SeAppearance
         ToolbarShowBurnIn = false;
         ToolbarShowSettings = true;
         ToolbarShowLayout = true;
+        ToolbarShowSourceView = true;
         ToolbarShowHelp = true;
         ToolbarShowEncoding = false;
         ShowPluginsMenu = false;

@@ -180,6 +180,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _fixCommonErrorsSkipStep1;
     [ObservableProperty] private bool _showToolbarSettings;
     [ObservableProperty] private bool _showToolbarLayout;
+    [ObservableProperty] private bool _showToolbarSourceView;
     [ObservableProperty] private bool _showToolbarHelp;
     [ObservableProperty] private bool _showToolbarEncoding;
     [ObservableProperty] private bool _showToolbarFrameRate;
@@ -703,6 +704,7 @@ public partial class SettingsViewModel : ObservableObject
         ShowToolbarBurnIn = appearance.ToolbarShowBurnIn;
         ShowToolbarSettings = appearance.ToolbarShowSettings;
         ShowToolbarLayout = appearance.ToolbarShowLayout;
+        ShowToolbarSourceView = appearance.ToolbarShowSourceView;
         ShowToolbarHelp = appearance.ToolbarShowHelp;
         ShowToolbarEncoding = appearance.ToolbarShowEncoding;
         ShowToolbarFrameRate = appearance.ToolbarShowFrameRate;
@@ -1380,6 +1382,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.ToolbarShowBurnIn = ShowToolbarBurnIn;
         appearance.ToolbarShowSettings = ShowToolbarSettings;
         appearance.ToolbarShowLayout = ShowToolbarLayout;
+        appearance.ToolbarShowSourceView = ShowToolbarSourceView;
         appearance.ToolbarShowHelp = ShowToolbarHelp;
         appearance.ToolbarShowEncoding = ShowToolbarEncoding;
         appearance.ToolbarShowFrameRate = ShowToolbarFrameRate;
