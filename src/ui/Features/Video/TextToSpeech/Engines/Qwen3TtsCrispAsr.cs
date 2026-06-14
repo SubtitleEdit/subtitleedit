@@ -24,10 +24,14 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
 /// comparison engine since CrispASR's qwen3-tts backends emit EOS reliably on short prompts
 /// where qwen3-tts.cpp 0.6B doesn't (see PR investigation notes from May 2026).
 ///
-/// Two CrispASR sub-backends are wired up:
+/// Three CrispASR sub-backends are wired up, one per model key:
 ///  - qwen3-tts-1.7b-voicedesign — VoiceDesign model, requires an `instructions` field
 ///    per request (free-text voice description, e.g. "a calm female voice").
-///  - qwen3-tts-1.7b-customvoice — voice cloning, takes a reference WAV + transcription.
+///  - qwen3-tts-1.7b-customvoice — picks one of nine fixed speakers baked into the GGUF by
+///    name (e.g. "vivian"); does NOT clone and ignores any reference WAV.
+///  - qwen3-tts-1.7b-base — runtime ICL voice cloning from an imported reference WAV plus its
+///    transcript (the <name>.txt sidecar the backend auto-loads as ref-text). This is the
+///    model the "1.7B Voice clone" key maps to.
 ///
 /// The 1.7B VoiceDesign talker GGUF is the same file the qwen3-tts.cpp engine uses (cstr's
 /// upload, new tensor names). The CrispASR-style codec/tokenizer GGUF is a different file
@@ -46,11 +50,25 @@ public class Qwen3TtsCrispAsr : ITtsEngine
 
     public const string ModelKeyVoiceDesign = "1.7B VoiceDesign";
     public const string ModelKeyCustomVoice = "1.7B CustomVoice";
+    public const string ModelKeyClone = "1.7B Voice clone";
     public const string DefaultModelKey = ModelKeyVoiceDesign;
 
     public const string VoiceDesignTalkerFileName = "qwen3-tts-12hz-1.7b-voicedesign-q8_0.gguf";
     public const string CustomVoiceTalkerFileName = "qwen3-tts-12hz-1.7b-customvoice-q8_0.gguf";
+    public const string BaseTalkerFileName = "qwen3-tts-12hz-1.7b-base-q8_0.gguf";
     public const string CodecFileName = "qwen3-tts-tokenizer-12hz.gguf";
+
+    /// <summary>
+    /// The nine fixed speakers baked into the CustomVoice talker GGUF, in the order the model
+    /// exposes them (first entry, <c>aiden</c>, is the backend's default when none is picked).
+    /// CustomVoice selects one of these by name via the request's <c>voice</c> field — it does
+    /// NOT clone from a reference WAV (that is what <see cref="ModelKeyClone"/> / the Base
+    /// backend does). Names must match the GGUF metadata exactly; they are sent verbatim.
+    /// </summary>
+    public static readonly string[] CustomVoiceSpeakers =
+    {
+        "aiden", "dylan", "eric", "ono_anna", "ryan", "serena", "sohee", "uncle_fu", "vivian",
+    };
 
     // Exact byte size of each GGUF on cstr's HuggingFace repos (X-Linked-Size). Used to reject
     // truncated files that crispasr's own --auto-download may have left behind in ~/.cache/crispasr/
@@ -64,6 +82,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
     {
         [VoiceDesignTalkerFileName] = 2042225536L,
         [CustomVoiceTalkerFileName] = 2042225952L,
+        [BaseTalkerFileName] = 2066258176L,
         [CodecFileName] = 358453280L,
     };
 
@@ -97,33 +116,57 @@ public class Qwen3TtsCrispAsr : ITtsEngine
 
     public static string ResolveModelKey(string? modelKey)
     {
-        if (string.IsNullOrEmpty(modelKey))
-        {
-            var saved = Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrModel;
-            return string.IsNullOrEmpty(saved) ? DefaultModelKey : saved;
-        }
+        var key = string.IsNullOrEmpty(modelKey)
+            ? Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrModel
+            : modelKey;
 
-        return modelKey == ModelKeyCustomVoice ? ModelKeyCustomVoice : ModelKeyVoiceDesign;
+        if (key == ModelKeyCustomVoice)
+        {
+            return ModelKeyCustomVoice;
+        }
+        if (key == ModelKeyClone)
+        {
+            return ModelKeyClone;
+        }
+        return ModelKeyVoiceDesign;
     }
 
     public static string GetTalkerFileName(string? modelKey) =>
-        ResolveModelKey(modelKey) == ModelKeyCustomVoice ? CustomVoiceTalkerFileName : VoiceDesignTalkerFileName;
+        ResolveModelKey(modelKey) switch
+        {
+            ModelKeyCustomVoice => CustomVoiceTalkerFileName,
+            ModelKeyClone => BaseTalkerFileName,
+            _ => VoiceDesignTalkerFileName,
+        };
 
     /// <summary>
-    /// CrispASR sub-backend name matching <paramref name="modelKey"/>.
-    /// VoiceDesign → qwen3-tts-1.7b-voicedesign, CustomVoice → qwen3-tts-1.7b-customvoice.
+    /// CrispASR sub-backend name matching <paramref name="modelKey"/>:
+    /// VoiceDesign → qwen3-tts-1.7b-voicedesign, CustomVoice → qwen3-tts-1.7b-customvoice,
+    /// Voice clone → qwen3-tts-1.7b-base (the ICL voice-cloning backend).
     /// </summary>
     public static string GetBackendName(string? modelKey) =>
-        ResolveModelKey(modelKey) == ModelKeyCustomVoice
-            ? "qwen3-tts-1.7b-customvoice"
-            : "qwen3-tts-1.7b-voicedesign";
+        ResolveModelKey(modelKey) switch
+        {
+            ModelKeyCustomVoice => "qwen3-tts-1.7b-customvoice",
+            ModelKeyClone => "qwen3-tts-1.7b-base",
+            _ => "qwen3-tts-1.7b-voicedesign",
+        };
 
     /// <summary>
     /// True when the resolved model is the instruction-tuned VoiceDesign variant. Only this
-    /// model honours the voice instruction; CustomVoice ignores it and uses voice cloning.
+    /// model honours the voice instruction; CustomVoice picks a fixed speaker and the Base
+    /// (Voice clone) model clones from a reference WAV.
     /// </summary>
     public static bool IsVoiceDesignModel(string? modelKey) =>
         ResolveModelKey(modelKey) == ModelKeyVoiceDesign;
+
+    /// <summary>
+    /// True when the resolved model is the Base talker used for runtime voice cloning. This is
+    /// the only model that consumes an imported reference WAV (plus its <c>.txt</c> transcript);
+    /// CustomVoice and VoiceDesign ignore imported voices.
+    /// </summary>
+    public static bool IsCloneModel(string? modelKey) =>
+        ResolveModelKey(modelKey) == ModelKeyClone;
 
     private static readonly HttpClient HttpClient = new()
     {
@@ -223,12 +266,15 @@ public class Qwen3TtsCrispAsr : ITtsEngine
     private static bool _voiceSeedAttempted;
 
     /// <summary>
-    /// One-time best-effort copy of WAV reference voices from the existing qwen3-tts.cpp
-    /// engine's voices folder. The same files work for both engines (just 24 kHz mono
-    /// reference audio with optional .txt sidecars), so users who already downloaded the
-    /// qwen3-tts.cpp voice pack get them for free here without a second ~10 MB download.
-    /// Users who never installed qwen3-tts.cpp get voices.zip pulled by the
-    /// DownloadTtsViewModel flow that chains after model download.
+    /// One-time best-effort seeding of reference voices from the existing qwen3-tts.cpp engine's
+    /// voices folder, so users who already have that voice pack get the WAVs here for free. The
+    /// Base (Voice clone) backend strictly requires a 24 kHz mono reference, so each WAV is
+    /// resampled on the way in rather than plain-copied (the qwen3-tts.cpp pack ships 22.05/48 kHz
+    /// clips). The .txt sidecars in that pack are Wikimedia attribution blurbs, NOT spoken
+    /// transcriptions — feeding them as ref-text produces runaway, off-voice output — so they are
+    /// deliberately NOT copied. Cloning a seeded voice prompts for the real transcript via the
+    /// Speak pre-check / re-import flow. Users who never installed qwen3-tts.cpp get voices.zip
+    /// pulled by the DownloadTtsViewModel flow that chains after model download.
     /// </summary>
     private static void SeedVoicesFromQwen3TtsCppIfEmpty(string voicesFolder)
     {
@@ -254,21 +300,23 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             foreach (var src in Directory.GetFiles(sourceFolder, "*.wav"))
             {
                 var dest = Path.Combine(voicesFolder, Path.GetFileName(src));
-                if (!File.Exists(dest))
+                if (File.Exists(dest))
                 {
-                    File.Copy(src, dest);
+                    continue;
                 }
 
-                // Copy the matching .txt sidecar too (CrispASR uses it as the reference
-                // transcription for CustomVoice cloning).
-                var sidecar = Path.ChangeExtension(src, ".txt");
-                if (File.Exists(sidecar))
+                try
                 {
-                    var sidecarDest = Path.ChangeExtension(dest, ".txt");
-                    if (!File.Exists(sidecarDest))
+                    // Resample to 24 kHz mono — the Base backend rejects any other rate.
+                    var process = FfmpegGenerator.ConvertToMono24kHzWav(src, dest);
+                    if (process.Start())
                     {
-                        File.Copy(sidecar, sidecarDest);
+                        process.WaitForExit();
                     }
+                }
+                catch (Exception ex)
+                {
+                    Se.LogError(ex, $"Qwen3 TTS (CrispASR): failed to resample seeded voice {Path.GetFileName(src)}");
                 }
             }
         }
@@ -343,16 +391,32 @@ public class Qwen3TtsCrispAsr : ITtsEngine
     public Task<Voice[]> GetVoices(string language)
     {
         var result = new List<Voice>();
-
-        // VoiceDesign has a baked default voice (the instruction string drives the rest).
-        // CustomVoice is pure voice cloning and refuses requests without a reference WAV,
-        // so don't offer a "Default" entry there — the user must import a voice first.
         var modelKey = ResolveModelKey(Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrModel);
+
         if (modelKey == ModelKeyVoiceDesign)
         {
+            // VoiceDesign has no speaker encoder — the instruction string drives the voice, so
+            // a single "Default" entry is all the combo needs.
             result.Add(new Voice(new Qwen3TtsVoice("Default", string.Empty)));
+            return Task.FromResult(result.ToArray());
         }
 
+        if (modelKey == ModelKeyCustomVoice)
+        {
+            // CustomVoice picks one of the fixed speakers baked into the GGUF, selected by name.
+            // The on-disk reference WAVs in the voices folder belong to the Voice clone (Base)
+            // model, not here — sending a WAV path to CustomVoice just makes the backend fall
+            // back to its first speaker. FilePath stays empty: Speak sends Voice (the name).
+            foreach (var speaker in CustomVoiceSpeakers)
+            {
+                result.Add(new Voice(new Qwen3TtsVoice(speaker, string.Empty)));
+            }
+            return Task.FromResult(result.ToArray());
+        }
+
+        // Voice clone (Base): list the imported reference WAVs. Voice cloning refuses requests
+        // without a reference, so there is no "Default" entry — the user must import a voice
+        // (with its transcript) first.
         var voicesFolder = GetSetVoicesFolder();
         if (Directory.Exists(voicesFolder))
         {
@@ -370,7 +434,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
 
     public Task<string[]> GetRegions() => Task.FromResult(Array.Empty<string>());
 
-    public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyVoiceDesign, ModelKeyCustomVoice });
+    public Task<string[]> GetModels() => Task.FromResult(new[] { ModelKeyVoiceDesign, ModelKeyCustomVoice, ModelKeyClone });
 
     public Task<TtsLanguage[]> GetLanguages(Voice voice, string? model) => Task.FromResult(Array.Empty<TtsLanguage>());
 
@@ -393,15 +457,27 @@ public class Qwen3TtsCrispAsr : ITtsEngine
 
         var modelKey = ResolveModelKey(model);
 
-        // CustomVoice does voice cloning and rejects requests without a `voice` field.
-        // Surface a clear up-front error instead of letting the backend return 500.
-        if (modelKey == ModelKeyCustomVoice && string.IsNullOrEmpty(qwen3Voice.FilePath))
+        // Voice clone (Base) needs a reference WAV plus its transcript. The backend resolves the
+        // bare voice name against --voice-dir and auto-loads the matching <name>.txt as ref-text;
+        // without that transcript it returns "ref-text not set" (HTTP 500). Surface both gaps
+        // up-front with an actionable message instead of an opaque server error.
+        if (modelKey == ModelKeyClone)
         {
-            throw new InvalidOperationException(
-                "Qwen3 TTS (CrispASR) CustomVoice requires a reference voice WAV. "
-                + "Import one via the voice settings, then pick it in the voice combo. "
-                + "Reference WAV should be 24 kHz mono; an adjacent .txt file with the "
-                + "spoken transcription is required for best cloning quality.");
+            if (string.IsNullOrEmpty(qwen3Voice.FilePath))
+            {
+                throw new InvalidOperationException(
+                    "Qwen3 TTS (CrispASR) voice cloning requires a reference voice. "
+                    + "Import one via the voice settings (you'll be asked for its transcript), "
+                    + "then pick it in the voice combo.");
+            }
+
+            var transcriptPath = Path.ChangeExtension(qwen3Voice.FilePath, ".txt");
+            if (!File.Exists(transcriptPath) || string.IsNullOrWhiteSpace(File.ReadAllText(transcriptPath)))
+            {
+                throw new InvalidOperationException(
+                    $"Qwen3 TTS (CrispASR) voice cloning needs the spoken transcription of '{qwen3Voice.Voice}'. "
+                    + "Re-import the voice and enter the exact words spoken in the reference WAV.");
+            }
         }
 
         await EnsureServerRunningAsync(modelKey, cancellationToken);
@@ -412,33 +488,39 @@ public class Qwen3TtsCrispAsr : ITtsEngine
         // regardless of which Qwen3 engine they're testing with.
         var instruction = Se.Settings.Video.TextToSpeech.Qwen3TtsCppInstruction ?? string.Empty;
 
-        // OpenAI-compatible /v1/audio/speech payload. CrispASR's qwen3-tts backends look at:
-        //   - `input`             — the text to synthesise
-        //   - `response_format`   — "wav"
-        //   - `voice`             — absolute WAV path or filename in --voice-dir
-        //                           (required for CustomVoice; ignored by VoiceDesign)
-        //   - `instructions`      — free-text style/voice description
-        //                           (required for VoiceDesign; ignored by CustomVoice)
+        // OpenAI-compatible /v1/audio/speech payload. The crispasr backend interprets `voice`
+        // differently per model (see crispasr_backend_qwen3_tts.cpp):
+        //   - Voice clone (Base): `voice` is a BARE name (no path, no extension) resolved against
+        //     --voice-dir to <name>.wav + the auto-loaded <name>.txt transcript. Sending the
+        //     absolute path instead skips the sidecar load and fails — so send the basename only.
+        //   - CustomVoice: `voice` is a fixed SPEAKER NAME (e.g. "vivian"); a .wav value would
+        //     make the backend silently fall back to its first speaker.
+        //   - VoiceDesign: ignores `voice`; the voice comes from `instructions`.
         var payload = new Dictionary<string, object>
         {
             ["input"] = inputText,
             ["response_format"] = "wav",
         };
-        if (!string.IsNullOrEmpty(qwen3Voice.FilePath))
+        if (modelKey == ModelKeyClone && !string.IsNullOrEmpty(qwen3Voice.FilePath))
         {
-            payload["voice"] = qwen3Voice.FilePath;
-            // CustomVoice cloning is gated behind a consent attestation (CrispASR v0.7.0 returns
-            // HTTP 400 consent_required without it). The user supplies their own reference voice
-            // by importing a WAV into SE, which is the act being attested here. VoiceDesign (no
-            // FilePath) does not clone, so it doesn't need this.
+            payload["voice"] = Path.GetFileNameWithoutExtension(qwen3Voice.FilePath);
+            // The reference is the user's own imported WAV — attest consent so the request also
+            // works against CrispASR builds that gate cloning on it.
             payload["consent_attestation"] = "I have the speaker's consent, or it is my own voice.";
             // Skip the audible AI-disclosure prefix CrispASR otherwise prepends to cloned audio;
             // SE surfaces the AI-generated nature in its UI. The inaudible watermark + C2PA
             // provenance metadata stay embedded regardless (defaults to true server-side).
             payload["spoken_disclaimer"] = false;
         }
-        if (!string.IsNullOrEmpty(instruction))
+        else if (modelKey == ModelKeyCustomVoice && !string.IsNullOrEmpty(qwen3Voice.Voice))
         {
+            payload["voice"] = qwen3Voice.Voice;
+        }
+
+        if (modelKey != ModelKeyClone && !string.IsNullOrEmpty(instruction))
+        {
+            // VoiceDesign treats this as the voice description; CustomVoice as optional style.
+            // The Base clone model has no instruct path, so don't send it there.
             payload["instructions"] = instruction;
         }
         else if (modelKey == ModelKeyVoiceDesign)
@@ -777,7 +859,16 @@ public class Qwen3TtsCrispAsr : ITtsEngine
         return candidate;
     }
 
-    public bool ImportVoice(string fileName)
+    public bool ImportVoice(string fileName) => ImportVoiceInternal(fileName, null);
+
+    /// <summary>
+    /// Imports a reference voice for the Base (Voice clone) model, writing the supplied
+    /// <paramref name="transcript"/> as the <c>.txt</c> sidecar the backend needs as ref-text.
+    /// Used by the voice-settings dialog, which prompts for the transcription on import.
+    /// </summary>
+    public bool ImportVoice(string fileName, string transcript) => ImportVoiceInternal(fileName, transcript);
+
+    private bool ImportVoiceInternal(string fileName, string? transcript)
     {
         if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
         {
@@ -788,9 +879,9 @@ public class Qwen3TtsCrispAsr : ITtsEngine
         var baseName = Path.GetFileNameWithoutExtension(fileName);
         var destinationFileName = GetUniqueDestinationFileName(voicesFolder, baseName);
 
-        // CrispASR's qwen3-tts CustomVoice backend expects a 24 kHz mono reference WAV.
-        // Always resample on import via ffmpeg so the saved file is in the right shape
-        // regardless of what the user picked.
+        // CrispASR's qwen3-tts backend expects a 24 kHz mono reference WAV. Always resample on
+        // import via ffmpeg so the saved file is in the right shape regardless of what the user
+        // picked.
         try
         {
             var process = FfmpegGenerator.ConvertToMono24kHzWav(fileName, destinationFileName);
@@ -812,16 +903,20 @@ public class Qwen3TtsCrispAsr : ITtsEngine
             return false;
         }
 
-        // CustomVoice voice cloning expects a matching .txt sidecar holding the spoken
-        // transcription of the reference WAV. If the source had one (same basename, .txt),
-        // copy it alongside the imported WAV under the de-duplicated destination name.
+        // Voice cloning needs a matching .txt sidecar holding the spoken transcription of the
+        // reference WAV (the backend auto-loads it as ref-text). Prefer the transcript the user
+        // typed in the import dialog; fall back to copying a sibling .txt next to the source.
         try
         {
-            var sourceSidecar = Path.ChangeExtension(fileName, ".txt");
-            if (File.Exists(sourceSidecar))
+            var destSidecar = Path.ChangeExtension(destinationFileName, ".txt");
+            if (!string.IsNullOrWhiteSpace(transcript))
             {
-                var destSidecar = Path.ChangeExtension(destinationFileName, ".txt");
-                if (!File.Exists(destSidecar))
+                File.WriteAllText(destSidecar, transcript.Trim());
+            }
+            else
+            {
+                var sourceSidecar = Path.ChangeExtension(fileName, ".txt");
+                if (File.Exists(sourceSidecar) && !File.Exists(destSidecar))
                 {
                     File.Copy(sourceSidecar, destSidecar);
                 }
@@ -829,10 +924,9 @@ public class Qwen3TtsCrispAsr : ITtsEngine
         }
         catch (Exception ex)
         {
-            // Sidecar copy is best-effort — log and continue. The imported WAV alone is
-            // still usable; CustomVoice quality drops without the transcription but it
-            // doesn't fail outright.
-            Se.LogError(ex, "Qwen3 TTS (CrispASR) voice import: failed to copy .txt sidecar");
+            // Sidecar write is best-effort — log and continue. The imported WAV is still saved;
+            // Speak surfaces a clear error if the transcript is missing when cloning.
+            Se.LogError(ex, "Qwen3 TTS (CrispASR) voice import: failed to write .txt sidecar");
         }
 
         return true;

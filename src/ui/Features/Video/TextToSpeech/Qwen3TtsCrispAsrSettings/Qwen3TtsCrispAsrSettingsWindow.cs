@@ -104,6 +104,7 @@ public class Qwen3TtsCrispAsrSettingsWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnSpacing = 12,
             RowSpacing = 10,
@@ -124,19 +125,22 @@ public class Qwen3TtsCrispAsrSettingsWindow : Window
         grid.Add(MakeLabel("1.7B CustomVoice"), 2, 0);
         grid.Add(MakeStatusPanel(nameof(vm.CustomVoiceTalkerBrush), nameof(vm.CustomVoiceTalkerLabel)), 2, 1);
 
-        grid.Add(MakeLabel("Codec (12 Hz)"), 3, 0);
-        grid.Add(MakeStatusPanel(nameof(vm.CodecBrush), nameof(vm.CodecLabel)), 3, 1);
+        grid.Add(MakeLabel("1.7B Voice clone"), 3, 0);
+        grid.Add(MakeStatusPanel(nameof(vm.CloneTalkerBrush), nameof(vm.CloneTalkerLabel)), 3, 1);
 
-        grid.Add(MakeLabel("Voices"), 4, 0);
+        grid.Add(MakeLabel("Codec (12 Hz)"), 4, 0);
+        grid.Add(MakeStatusPanel(nameof(vm.CodecBrush), nameof(vm.CodecLabel)), 4, 1);
+
+        grid.Add(MakeLabel("Voices"), 5, 0);
         var voicesText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
             FontWeight = FontWeight.SemiBold,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.VoicesLabel)),
         };
-        grid.Add(voicesText, 4, 1);
+        grid.Add(voicesText, 5, 1);
 
-        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 5, 0);
+        grid.Add(MakeLabel(Se.Language.General.InstallFolder), 6, 0);
         var folderText = new TextBox
         {
             IsReadOnly = true,
@@ -148,7 +152,7 @@ public class Qwen3TtsCrispAsrSettingsWindow : Window
             FontSize = 12,
             [!TextBox.TextProperty] = new Binding(nameof(vm.ModelsFolder)),
         };
-        grid.Add(folderText, 5, 1);
+        grid.Add(folderText, 6, 1);
 
         return new Border
         {

@@ -19,9 +19,10 @@ public interface IQwen3TtsCrispAsrDownloadService
 /// ~/.cache/crispasr/. Keeping models inside SE's data folder means uninstalling SE removes them,
 /// portable installs stay self-contained, and the engine settings dialog can report accurate sizes.
 ///
-/// Three files are tracked:
+/// Talker GGUFs are tracked per model, sharing one codec:
 ///  - VoiceDesign talker  : qwen3-tts-12hz-1.7b-voicedesign-q8_0.gguf (cstr's HF upload)
 ///  - CustomVoice talker  : qwen3-tts-12hz-1.7b-customvoice-q8_0.gguf (cstr's HF upload)
+///  - Base talker (clone) : qwen3-tts-12hz-1.7b-base-q8_0.gguf (cstr's HF upload)
 ///  - 12 Hz codec/tokenizer: qwen3-tts-tokenizer-12hz.gguf (distinct from qwen3-tts.cpp's q8_0 tokenizer)
 ///
 /// If a file already lives in ~/.cache/crispasr/ from an earlier crispasr auto-download the engine's
@@ -38,6 +39,8 @@ public class Qwen3TtsCrispAsrDownloadService : IQwen3TtsCrispAsrDownloadService
             "https://huggingface.co/cstr/qwen3-tts-1.7b-voicedesign-GGUF/resolve/main/qwen3-tts-12hz-1.7b-voicedesign-q8_0.gguf",
         [Qwen3TtsCrispAsr.CustomVoiceTalkerFileName] =
             "https://huggingface.co/cstr/qwen3-tts-1.7b-customvoice-GGUF/resolve/main/qwen3-tts-12hz-1.7b-customvoice-q8_0.gguf",
+        [Qwen3TtsCrispAsr.BaseTalkerFileName] =
+            "https://huggingface.co/cstr/qwen3-tts-1.7b-base-GGUF/resolve/main/qwen3-tts-12hz-1.7b-base-q8_0.gguf",
         [Qwen3TtsCrispAsr.CodecFileName] =
             "https://huggingface.co/cstr/qwen3-tts-tokenizer-12hz-GGUF/resolve/main/qwen3-tts-tokenizer-12hz.gguf",
     };
@@ -131,6 +134,10 @@ public class Qwen3TtsCrispAsrDownloadService : IQwen3TtsCrispAsrDownloadService
         if (string.Equals(fileName, Qwen3TtsCrispAsr.CustomVoiceTalkerFileName, StringComparison.OrdinalIgnoreCase))
         {
             return DownloadHashManager.Qwen3TtsCrispAsr.CustomVoiceTalker;
+        }
+        if (string.Equals(fileName, Qwen3TtsCrispAsr.BaseTalkerFileName, StringComparison.OrdinalIgnoreCase))
+        {
+            return DownloadHashManager.Qwen3TtsCrispAsr.BaseTalker;
         }
         if (string.Equals(fileName, Qwen3TtsCrispAsr.CodecFileName, StringComparison.OrdinalIgnoreCase))
         {
