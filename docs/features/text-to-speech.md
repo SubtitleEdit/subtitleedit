@@ -29,7 +29,7 @@ Generate speech audio from subtitle text using various TTS engines.
 - **GoogleSpeech** — Google cloud TTS (requires key file)
 - **Kokoro TTS** — Local downloadable Kokoro TTS server and models
 - **OmniVoice TTS** — Local CPU TTS with voice cloning and many languages
-- **Qwen3 TTS (CrispASR)** — Local Qwen3 TTS running through the CrispASR runtime (VoiceDesign and CustomVoice 1.7B models)
+- **Qwen3 TTS (CrispASR)** — Local Qwen3 TTS running through the CrispASR runtime (VoiceDesign, CustomVoice, and Voice clone 1.7B models)
 - **Chatterbox TTS (CrispASR)** — Chatterbox TTS via the CrispASR runtime, with voice cloning (Base or Turbo model)
 
 Local downloadable engines are installed into the Subtitle Edit data folder when you accept the download prompt.
@@ -49,9 +49,10 @@ Some engines require additional configuration:
 
 Qwen3 TTS runs through the CrispASR runtime and shares the `CrispASR/models` directory with the speech-to-text Crisp ASR engines.
 
-- Available model choices are **1.7B VoiceDesign** (uses a free-text voice instruction) and **1.7B CustomVoice** (voice cloning from a reference WAV).
+- Available model choices are **1.7B VoiceDesign** (uses a free-text voice instruction), **1.7B CustomVoice** (nine built-in speakers selected by name), and **1.7B Voice clone** (clones an imported reference WAV).
 - Subtitle Edit downloads the engine and the selected talker + codec/tokenizer GGUFs on first use.
-- Imported reference WAV voices appear in the voice dropdown.
+- Imported reference WAV voices appear in the voice dropdown for the **Voice clone** model. Each imported voice needs a transcript of what is spoken in the WAV, and the reference audio is resampled to 24 kHz mono (required by the clone model).
+- **Voice cloning can be slow**, especially the first time you synthesize after starting the engine — the model's compute kernels are compiled on first use, so the first clip can take a while (minutes on some machines); subsequent clips are much faster.
 
 ### Chatterbox TTS (CrispASR)
 
