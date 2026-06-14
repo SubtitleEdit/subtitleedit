@@ -2,7 +2,7 @@
 
 Translate subtitles by copying text blocks for translation in an external tool, then pasting back the results.
 
-- **Menu:** Auto translate → Copy/paste translate...
+- **Menu:** Translate → Auto-translate via copy-paste...
 - **Shortcut:** Configurable
 
 <!-- Screenshot: Copy/paste translate window -->
@@ -10,7 +10,7 @@ Translate subtitles by copying text blocks for translation in an external tool, 
 
 ## How to Use
 
-1. Open **Auto translate → Copy/paste translate...**
+1. Open **Translate → Auto-translate via copy-paste...**
 2. Set the **Max block size** — maximum block size in characters
 3. Set the **Line separator** — character(s) used between subtitle lines in the copied text
 4. Click **Translate** to start; the next block of subtitle text is copied to the clipboard

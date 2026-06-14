@@ -2,7 +2,7 @@
 
 Automatically translate subtitles using various translation engines and AI services.
 
-- **Menu:** Auto translate → Auto translate...
+- **Menu:** Translate → Auto-translate...
 - **Shortcut:** Configurable
 
 <!-- Screenshot: Auto translate window -->
@@ -10,7 +10,7 @@ Automatically translate subtitles using various translation engines and AI servi
 
 ## How to Use
 
-1. Open **Auto translate → Auto translate...**
+1. Open **Translate → Auto-translate...**
 2. Select a translation engine
 3. Select the source and target languages
 4. Click **Translate** to start

@@ -58,4 +58,4 @@ See also: [Shortcuts Settings](../features/shortcuts.md)
 | Ctrl+Alt+Shift+D | Open data folder |
 | Ctrl+Alt+Shift+L | Save language file |
 
-> **Note:** Most actions (Save As, Insert before/after, Bold, Underline, shot-change snapping/extending, green-zone in/out cues, video skip-back/forward, etc.) ship without a default key. Open **Options** → **Shortcuts** to assign them, or use **Import from SE 4.x** to bring over a familiar set.
+> **Note:** Several actions (Bold, Underline, shot-change snapping/extending, green-zone in/out cues, etc.) ship without a default key. Open **Options** → **Shortcuts** to assign them, or use **Import from SE 4.x** to bring over a familiar set.

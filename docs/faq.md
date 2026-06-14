@@ -3,7 +3,7 @@
 ## General
 
 ### What is Subtitle Edit?
-Subtitle Edit is a free, open-source subtitle editor. It supports 300+ subtitle formats and provides tools for creating, editing, synchronizing, translating, and converting subtitles.
+Subtitle Edit is a free, open-source subtitle editor. It supports 380+ subtitle formats and provides tools for creating, editing, synchronizing, translating, and converting subtitles.
 
 ### Is Subtitle Edit free?
 Yes. Subtitle Edit is released under the MIT license. It is completely free with no ads or limitations.
@@ -25,7 +25,7 @@ Please open an issue on the [GitHub repository](https://github.com/SubtitleEdit/
 ## File Operations
 
 ### What subtitle formats are supported?
-Subtitle Edit supports over 300 subtitle formats including SubRip (.srt), WebVTT (.vtt), Advanced SubStation Alpha (.ass), SubStation Alpha (.ssa), MicroDVD, SAMI, and many more. See [Supported Formats](reference/supported-formats.md) for the full list.
+Subtitle Edit supports over 380 subtitle formats including SubRip (.srt), WebVTT (.vtt), Advanced SubStation Alpha (.ass), SubStation Alpha (.ssa), MicroDVD, SAMI, and many more. See [Supported Formats](reference/supported-formats.md) for the full list.
 
 ### How do I convert between subtitle formats?
 1. Open the subtitle file via **File → Open**
@@ -56,7 +56,7 @@ If you have problems with a video, try **Video → More → Re-encode video for 
 ### How do I generate a waveform?
 Open a video file, and Subtitle Edit will generate a waveform automatically if FFmpeg is installed.
 
-To generate enable spectrogram go to **Options → Settings**.
+To enable the spectrogram, go to **Options → Settings**.
 
 
 ### Where do I get FFmpeg?

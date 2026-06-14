@@ -8,7 +8,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. It allows you t
 
 ## Key Features
 
-- **Create and edit** subtitles in 300+ formats
+- **Create and edit** subtitles in 380+ formats
 - **Synchronize** subtitles to video with visual tools
 - **Speech to Text** — transcribe audio using Whisper, Qwen3 ASR, Crisp ASR, and other local/cloud engines
 - **Text to Speech** — generate audio from subtitle text

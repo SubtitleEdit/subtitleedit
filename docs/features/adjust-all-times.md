@@ -2,7 +2,7 @@
 
 Shift all subtitle timings by a fixed amount.
 
-- **Menu:** Sync → Adjust all times...
+- **Menu:** Synchronization → Adjust all times...
 
 <!-- Screenshot: Adjust all times window -->
 ![Adjust All Times](../screenshots/adjust-all-times.png)

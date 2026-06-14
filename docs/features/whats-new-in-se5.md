@@ -1,6 +1,6 @@
 # What's New in Subtitle Edit 5
 
-Subtitle Edit 5 is the Avalonia-based, cross-platform version of Subtitle Edit. It keeps the familiar subtitle editing workflow from the Windows Forms version, but many feature were expanded.
+Subtitle Edit 5 is the Avalonia-based, cross-platform version of Subtitle Edit. It keeps the familiar subtitle editing workflow from the Windows Forms version, but many features were expanded.
 
 ## Application Platform
 
@@ -65,7 +65,7 @@ Text to speech now includes more local and cloud engines:
 - Mistral TTS.
 - Qwen3 TTS with downloadable local server builds and models.
 - Kokoro TTS with downloadable local server builds and models.
-- OmniVoice TTS with CUDA and Metal builds with downloadable local server builds and models.
+- OmniVoice TTS - a local CPU engine (many languages, voice cloning) with downloadable models.
 - Review audio clips, regenerate individual lines, keep regeneration history, and export generated clips with metadata.
 
 See [Text to Speech](text-to-speech.md) for details.
