@@ -153,16 +153,15 @@ public class FindWindow : Window
 
         Content = grid;
 
-        Opened += delegate
+        vm.FocusSearchBox = () => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {
-            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
-            {
-                textBoxFind.GetVisualDescendants()
-                           .OfType<TextBox>()
-                           .FirstOrDefault()?
-                           .Focus();
-            });
-        };
+            textBoxFind.GetVisualDescendants()
+                       .OfType<TextBox>()
+                       .FirstOrDefault()?
+                       .Focus();
+        });
+
+        Opened += delegate { vm.FocusSearchBox(); };
         AddHandler(KeyDownEvent, vm.OnKeyDown, RoutingStrategies.Tunnel);
         Closing += (_, _) => vm.SaveSettings();
     }
