@@ -119,7 +119,7 @@ public class SeAppearance
         ToolbarShowBurnIn = false;
         ToolbarShowSettings = true;
         ToolbarShowLayout = true;
-        ToolbarShowSourceView = true;
+        ToolbarShowSourceView = false;
         ToolbarShowHelp = true;
         ToolbarShowEncoding = false;
         ShowPluginsMenu = false;

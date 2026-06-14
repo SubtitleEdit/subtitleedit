@@ -278,8 +278,8 @@ public static class InitToolbar
                 Content = MakeImage("SourceView"),
                 Command = vm.ShowSourceViewCommand,
                 Background = Brushes.Transparent,
-                [AutomationProperties.NameProperty] = languageHints.SourceViewHint,
-                [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SourceViewHint, shortcuts, nameof(vm.ShowSourceViewCommand)),
+                [AutomationProperties.NameProperty] = Se.Language.Options.Shortcuts.SourceView,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(Se.Language.Options.Shortcuts.SourceView + " {0}", shortcuts, nameof(vm.ShowSourceViewCommand)),
             });
             isLastSeparator = false;
         }
