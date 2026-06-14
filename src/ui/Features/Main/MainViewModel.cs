@@ -18412,9 +18412,12 @@ public partial class MainViewModel :
         // is what makes the line glide smoothly instead of stepping at 20 fps.
         // Priority matters: the mpv video control posts its frame requests at DispatcherPriority.Render,
         // and a DispatcherTimer defaults to the much lower Background priority. While the video pipeline
-        // is busy (e.g. the decode burst right after a seek) those high-priority posts starved the cursor
-        // timer for 100-800 ms, which is the stutter. Run the cursor timer at Render so it competes fairly.
-        _cursorTimer = new DispatcherTimer(DispatcherPriority.Render) { Interval = TimeSpan.FromMilliseconds(16) };
+        // is busy (e.g. the decode burst right after pressing play) those posts starved the cursor timer
+        // for 100-800 ms (a stutter), and merely matching Render still let a burst delay it via FIFO,
+        // leaving the play-start lag-then-rush. Running at Normal (above Render) keeps the cursor timer
+        // firing on time through the burst so the line glides smoothly. Its per-tick work is ~0.2 ms, so
+        // it doesn't disturb video rendering.
+        _cursorTimer = new DispatcherTimer(DispatcherPriority.Normal) { Interval = TimeSpan.FromMilliseconds(16) };
         _cursorTimer.Tick += (s, e) =>
         {
             var vp = GetVideoPlayerControl();
