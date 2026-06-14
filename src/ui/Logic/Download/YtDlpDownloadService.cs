@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,7 +43,7 @@ public sealed record DownloadedSubtitleInfo(string FilePath, string LanguageCode
 public class YtDlpDownloadService : IYtDlpDownloadService
 {
     private readonly HttpClient _httpClient;
-    internal const string CurrentVersion = "2026.03.17";
+    internal const string CurrentVersion = "2026.06.09";
     // First-run extraction of the self-extracting yt-dlp bundle (especially
     // yt-dlp_macos) routinely needs more than 5s on slower disks; bumped to 15s
     // so the timeout doesn't masquerade as "version unknown / outdated".
@@ -51,6 +52,30 @@ public class YtDlpDownloadService : IYtDlpDownloadService
     private const string LinuxUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/" + CurrentVersion + "/yt-dlp_linux";
     private const string LinuxArmUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/" + CurrentVersion + "/yt-dlp_linux_aarch64";
     private const string MacUrl = "https://github.com/yt-dlp/yt-dlp/releases/download/" + CurrentVersion + "/yt-dlp_macos";
+
+    // Official SHA-256 checksums copied verbatim from each release's
+    // SHA2-256SUMS file (https://github.com/yt-dlp/yt-dlp/releases). Keyed by
+    // version then by asset file name. The previous version is retained
+    // alongside the current one so a binary already on disk can be validated
+    // regardless of which of the two it is, not just freshly downloaded ones.
+    internal static readonly IReadOnlyDictionary<string, IReadOnlyDictionary<string, string>> KnownSha256 =
+        new Dictionary<string, IReadOnlyDictionary<string, string>>(StringComparer.Ordinal)
+        {
+            ["2026.03.17"] = new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["yt-dlp.exe"] = "3db811b366b2da47337d2fcfdfe5bbd9a258dad3f350c54974f005df115a1545",
+                ["yt-dlp_linux"] = "c2b0189f581fe4a2ddd41954f1bcb7d327db04b07ed0dea97e4f1b3e09b5dd8e",
+                ["yt-dlp_linux_aarch64"] = "6bfa19736181da9e2e066f9c767da2f24fdcc5e148fa5034d1feb09132f89ad5",
+                ["yt-dlp_macos"] = "e80c47b3ce712acee51d5e3d4eace2d181b44d38f1942c3a32e3c7ff53cd9ed5",
+            },
+            ["2026.06.09"] = new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["yt-dlp.exe"] = "3a48cb955d55c8821b60ccbdbbc6f61bc958f2f3d3b7ad5eaf3d83a543293a27",
+                ["yt-dlp_linux"] = "bf8aac79b72287a6d2043074415132558b43743a8f9461a22b0141e90f16ce66",
+                ["yt-dlp_linux_aarch64"] = "cabd246445bdfde0eda0dfe68bbe90354be83f3fdbbf077df11a2ea55f41cdbd",
+                ["yt-dlp_macos"] = "b82c3626952e6c14eaf654cc565866775ffd0b9ffb7021628ac59b42c2f4f244",
+            },
+        };
 
     public YtDlpDownloadService(HttpClient httpClient)
     {
@@ -100,7 +125,56 @@ public class YtDlpDownloadService : IYtDlpDownloadService
 
     public async Task DownloadYtDlp(IProgress<float>? progress, CancellationToken cancellationToken)
     {
-        await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(), GetFullFileName(), progress, cancellationToken);
+        var fileName = GetFullFileName();
+        await DownloadHelper.DownloadFileAsync(_httpClient, GetUrl(), fileName, progress, cancellationToken);
+        await VerifyChecksumAsync(fileName, CurrentVersion, cancellationToken);
+    }
+
+    /// <summary>
+    /// Verifies <paramref name="filePath"/> against the official SHA-256
+    /// checksum for <paramref name="version"/>. A tampered, truncated, or
+    /// otherwise corrupt download is deleted and surfaced as an error instead
+    /// of being executed. If no checksum is on record for the asset, this is a
+    /// no-op — we don't block on data we don't have.
+    /// </summary>
+    internal static async Task VerifyChecksumAsync(string filePath, string version, CancellationToken cancellationToken)
+    {
+        var assetName = Path.GetFileName(filePath);
+        if (!KnownSha256.TryGetValue(version, out var byAsset) ||
+            !byAsset.TryGetValue(assetName, out var expected))
+        {
+            return;
+        }
+
+        var actual = await ComputeSha256Async(filePath, cancellationToken);
+        if (!string.Equals(actual, expected, StringComparison.OrdinalIgnoreCase))
+        {
+            TryDeleteFile(filePath);
+            throw new InvalidOperationException(
+                $"Downloaded yt-dlp ({assetName}) failed SHA-256 verification — expected {expected}, got {actual}. The file has been removed.");
+        }
+    }
+
+    internal static async Task<string> ComputeSha256Async(string filePath, CancellationToken cancellationToken)
+    {
+        await using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        var hash = await SHA256.HashDataAsync(stream, cancellationToken);
+        return Convert.ToHexString(hash).ToLowerInvariant();
+    }
+
+    private static void TryDeleteFile(string filePath)
+    {
+        try
+        {
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
+        catch
+        {
+            // Best-effort cleanup; a leftover bad file is re-checked on next download.
+        }
     }
 
     private static readonly Regex PercentageRegex = new(@"(?<pct>\d+(?:\.\d+)?)\s*%", RegexOptions.Compiled);
