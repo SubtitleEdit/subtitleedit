@@ -62,6 +62,8 @@ public partial class BurnInViewModel : ObservableObject
     [ObservableProperty] private VideoEncodingItem _selectedVideoEncoding;
     [ObservableProperty] private ObservableCollection<PixelFormatItem> _videoPixelFormats;
     [ObservableProperty] private PixelFormatItem? _selectedVideoPixelFormat;
+    [ObservableProperty] private ObservableCollection<string> _videoExtensions;
+    [ObservableProperty] private string _selectedVideoExtension;
     [ObservableProperty] private ObservableCollection<string> _videoPresets;
     [ObservableProperty] private string? _selectedVideoPreset;
     [ObservableProperty] private string _videoPresetText;
@@ -207,6 +209,14 @@ public partial class BurnInViewModel : ObservableObject
         SelectedVideoEncoding = VideoEncodings[0];
 
         VideoCrf = new ObservableCollection<string>();
+
+        VideoExtensions = new ObservableCollection<string>
+        {
+            ".mkv",
+            ".mp4",
+            ".mov",
+        };
+        SelectedVideoExtension = VideoExtensions[0];
 
         JobItems = new ObservableCollection<BurnInJobItem>();
 
@@ -849,14 +859,10 @@ public partial class BurnInViewModel : ObservableObject
             "PlayResY: " + height.ToString(CultureInfo.InvariantCulture), "[Script Info]", sub.Header);
     }
 
-    private static string MakeOutputFileName(string videoFileName)
+    private string MakeOutputFileName(string videoFileName)
     {
         var nameNoExt = Path.GetFileNameWithoutExtension(videoFileName);
-        var ext = Path.GetExtension(videoFileName).ToLowerInvariant();
-        if (ext != ".mp4" && ext != ".mkv")
-        {
-            ext = ".mkv";
-        }
+        var ext = VideoExtensions.Contains(SelectedVideoExtension) ? SelectedVideoExtension : ".mkv";
 
         var suffix = Se.Settings.Video.BurnIn.BurnInSuffix;
         var fileName = Path.Combine(Path.GetDirectoryName(videoFileName)!, nameNoExt + suffix + ext);
@@ -1180,11 +1186,7 @@ public partial class BurnInViewModel : ObservableObject
         {
             var nameNoExt = Path.GetFileNameWithoutExtension(VideoFileName);
             var path = Path.GetDirectoryName(VideoFileName) ?? string.Empty;
-            var ext = Path.GetExtension(VideoFileName).ToLowerInvariant();
-            if (ext != ".mp4" && ext != ".mkv")
-            {
-                ext = ".mkv";
-            }
+            var ext = VideoExtensions.Contains(SelectedVideoExtension) ? SelectedVideoExtension : ".mkv";
 
             var suggestedFileName = Path.Combine(path, nameNoExt + ext);
             var i = 2;
@@ -1194,7 +1196,13 @@ public partial class BurnInViewModel : ObservableObject
                 i++;
             }
 
-            var outputVideoFileName = await _fileHelper.PickSaveFile(Window!, ext, suggestedFileName, Se.Language.General.SaveVideoAsVideoTitle);
+            // Offer all supported containers in the "Save as type" dropdown, with the selected one first (the default).
+            var fileTypes = VideoExtensions
+                .OrderByDescending(p => p == ext)
+                .Select(p => (p.TrimStart('.'), p))
+                .ToList();
+
+            var outputVideoFileName = await _fileHelper.PickSaveFile(Window!, fileTypes, suggestedFileName, Se.Language.General.SaveVideoAsVideoTitle);
             if (string.IsNullOrEmpty(outputVideoFileName))
             {
                 return;
@@ -1294,6 +1302,8 @@ public partial class BurnInViewModel : ObservableObject
         SelectedAudioSampleRate = AudioSampleRates.FirstOrDefault(p => p.Replace("Hz", string.Empty).Trim() == settings.AudioSampleRate) ?? AudioSampleRates[1];
         SelectedAudioBitRate = AudioBitRates.Contains(settings.AudioBitRate) ? settings.AudioBitRate : AudioBitRates[2];
 
+        SelectedVideoExtension = VideoExtensions.Contains(settings.OutputExtension) ? settings.OutputExtension : VideoExtensions[0];
+
         UseTargetFileSize = settings.TargetFileSize;
         TargetFileSize = settings.TargetFileSizeMb;
         PromptForFfmpegParameters = settings.PromptFfmpegParameters;
@@ -1331,6 +1341,8 @@ public partial class BurnInViewModel : ObservableObject
         settings.AudioForceStereo = AudioIsStereo;
         settings.AudioSampleRate = SelectedAudioSampleRate.Replace("Hz", string.Empty).Trim();
         settings.AudioBitRate = SelectedAudioBitRate;
+
+        settings.OutputExtension = SelectedVideoExtension;
 
         settings.TargetFileSize = UseTargetFileSize;
         settings.TargetFileSizeMb = TargetFileSize ?? 0;

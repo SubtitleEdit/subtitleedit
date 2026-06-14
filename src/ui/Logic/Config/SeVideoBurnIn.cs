@@ -43,6 +43,7 @@ public class SeVideoBurnIn
     public string OutputFolder { get; set; }
     public string BurnInSuffix { get; set; }
     public bool UseSourceResolution { get; set; }
+    public string OutputExtension { get; set; }
     public string Effects { get; set; }
 
     public SeVideoBurnIn()
@@ -73,6 +74,7 @@ public class SeVideoBurnIn
         EmbedOutputReplace = "embed" + Environment.NewLine + "SoftSub" + Environment.NewLine + "SoftSubbed";
         BurnInSuffix = "_new";
         GenTransparentVideoExtension = ".mkv";
+        OutputExtension = ".mkv";
         NonAssaAlignment = "2";
         Effects = string.Empty;
     }

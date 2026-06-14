@@ -393,14 +393,13 @@ public class BurnInWindow : Window
         var labelPixelFormat = UiUtil.MakeLabel(Se.Language.Video.BurnIn.PixelFormat);
         var comboBoxPixelFormat = UiUtil.MakeComboBox(vm.VideoPixelFormats, vm, nameof(vm.SelectedVideoPixelFormat));
 
+        var labelVideoExtension = UiUtil.MakeLabel(Se.Language.General.VideoExtension);
+        var comboBoxVideoExtension = UiUtil.MakeComboBox(vm.VideoExtensions, vm, nameof(vm.SelectedVideoExtension));
+
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -434,6 +433,9 @@ public class BurnInWindow : Window
 
         grid.Add(labelPixelFormat, 4, 0);
         grid.Add(comboBoxPixelFormat, 4, 1);
+
+        grid.Add(labelVideoExtension, 5, 0);
+        grid.Add(comboBoxVideoExtension, 5, 1);
 
         return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
     }
