@@ -2,6 +2,27 @@
 Subtitle Edit Changelog
 
 
+v5.0.0 (TBD)
+
+Subtitle Edit 5 is a major release: a rewrite on the cross-platform Avalonia UI.
+Highlights since the 4.x line:
+
+* Cross-platform: native Windows, Linux, and macOS (macOS is new in SE 5)
+* New Avalonia UI - High-DPI aware, follows the system light/dark theme
+* Searchable settings
+* Show formatting (italic/bold/color/etc.) directly in the subtitle grid
+* New tools: Change formatting, Merge two subtitles, Beautify time codes (live with dual waveform preview)
+* Video: Re-encode, Cut video, and burn-in with a logo/watermark
+* Visual Sync now shows a waveform; more waveform/spectrogram customization with runtime spectrogram style switching
+* Many new speech-to-text engines (Qwen3 ASR, Crisp ASR variants, forced aligners, ...)
+* Many new text-to-speech engines (Edge-TTS, Mistral, Qwen3, Kokoro, OmniVoice, Zonos, VoxCPM2, Piper, ...)
+* Local, downloadable auto-translate engines (server-managed llama.cpp with TranslateGemma, CrispASR MADLAD)
+* New ASSA tools: Apply advanced effects (animations), hide layers, and grid filtering/search
+* New subtitle formats: IMSC-Rosetta Timed Text and custom-column CSV/XLSX import
+* "seconv" headless command line converter now ships from the main repo with a polished terminal UI and --json mode
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-rc4 (11th of June 2026)
 
 * Add Zonos TTS text-to-speech engine (CrispASR)
