@@ -74,6 +74,15 @@ public static class UiTheme
             {
                 ApplyLighterDark();
             }
+            else
+            {
+                // When the OS switches dark→light, RequestedThemeVariant stays at Default so
+                // Avalonia's full theme re-evaluation is not triggered. AvaloniaEdit's TextArea
+                // caret renderer then falls into a stale state, retaining the bright brush from
+                // the now-removed dark style. Push an explicit black CaretBrush via a style so
+                // a clean property-changed notification fires and the caret renders correctly.
+                ApplyLightThemeCaretFix();
+            }
 
             // Subscribe to theme changes
             Application.Current.ActualThemeVariantChanged += OnActualThemeVariantChanged;
@@ -617,6 +626,21 @@ public static class UiTheme
             Application.Current!.Styles.Remove(_lighterDarkStyle);
             _lighterDarkStyle = null;
         }
+    }
+
+    private static void ApplyLightThemeCaretFix()
+    {
+        _lighterDarkStyle = new Styles
+        {
+            new Style(x => x.OfType<TextArea>())
+            {
+                Setters =
+                {
+                    new Setter(TextArea.CaretBrushProperty, new SolidColorBrush(Colors.Black)),
+                }
+            },
+        };
+        Application.Current!.Styles.Add(_lighterDarkStyle);
     }
 
     private static void ApplyWindowsClassicGray()
