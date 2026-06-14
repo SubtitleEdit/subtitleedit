@@ -215,7 +215,10 @@ public class ReplaceWindow : Window
                 }
                 else
                 {
-                    vm.FocusSearchBox();
+                    textBoxFind.GetVisualDescendants()
+                               .OfType<TextBox>()
+                               .FirstOrDefault()?
+                               .Focus();
                 }
             });
         };
