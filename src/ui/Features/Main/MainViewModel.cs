@@ -8535,6 +8535,14 @@ public partial class MainViewModel :
     [RelayCommand]
     private void InsertLineBefore()
     {
+        // Prefer the exact range the user dragged on the waveform, so the new line follows the
+        // mouse selection instead of a fixed default duration (and stays decoupled from the
+        // moving playback cursor). Falls back to the normal grid insert when there's no selection.
+        if (TryInsertWaveformSelection())
+        {
+            return;
+        }
+
         RunWithoutChangeDetection(() =>
         {
             InsertBeforeSelectedItem();
@@ -8549,6 +8557,12 @@ public partial class MainViewModel :
     [RelayCommand]
     private void InsertLineAfter()
     {
+        // See InsertLineBefore: a waveform mouse selection wins over the default-duration insert.
+        if (TryInsertWaveformSelection())
+        {
+            return;
+        }
+
         RunWithoutChangeDetection(() =>
         {
             InsertAfterSelectedItem();
@@ -8558,6 +8572,37 @@ public partial class MainViewModel :
         {
             FocusEditTextBox();
         }
+    }
+
+    /// <summary>
+    /// If the user has dragged a new-subtitle selection on the waveform, insert a line spanning
+    /// exactly that selection and return true; otherwise return false so the caller does its
+    /// normal insert. This keeps line creation tied to the mouse selection rather than the
+    /// continuously-moving playback position.
+    /// </summary>
+    private bool TryInsertWaveformSelection()
+    {
+        var newParagraph = AudioVisualizer?.NewSelectionParagraph;
+        if (newParagraph == null)
+        {
+            return false;
+        }
+
+        RunWithoutChangeDetection(() =>
+        {
+            _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+            AudioVisualizer!.NewSelectionParagraph = null;
+            SelectAndScrollToSubtitle(newParagraph);
+            Renumber();
+            _updateAudioVisualizer = true;
+        });
+
+        if (Se.Settings.Tools.GridFocusTextboxAfterInsertNew)
+        {
+            FocusEditTextBox();
+        }
+
+        return true;
     }
 
     [RelayCommand]
