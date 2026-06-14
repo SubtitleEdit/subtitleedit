@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 if (double.TryParse(displayFileSize.Replace("bytes", string.Empty).Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture, out var n))
                 {
-                    return (int)Math.Round(n);
+                    return (long)Math.Round(n);
                 }
             }
 
@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 if (double.TryParse(displayFileSize.Replace("kb", string.Empty).Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture, out var n))
                 {
-                    return (int)Math.Round(n * 1024);
+                    return (long)Math.Round(n * 1024);
                 }
             }
 
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 if (double.TryParse(displayFileSize.Replace("mb", string.Empty).Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture, out var n))
                 {
-                    return (int)Math.Round(n * 1024 * 1024);
+                    return (long)Math.Round(n * 1024 * 1024);
                 }
             }
 
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 if (double.TryParse(displayFileSize.Replace("gb", string.Empty).Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture, out var n))
                 {
-                    return (int)Math.Round(n * 1024 * 1024 * 1024);
+                    return (long)Math.Round(n * 1024.0 * 1024.0 * 1024.0);
                 }
             }
 
@@ -505,7 +505,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                             }
                         }
                     }
-                    if (sanitizedLines[0].StartsWith('♪') && sanitizedLines[0].EndsWith('♪') || sanitizedLines[1].StartsWith('♪') && sanitizedLines[0].EndsWith('♪'))
+                    if (sanitizedLines[0].StartsWith('♪') && sanitizedLines[0].EndsWith('♪') || sanitizedLines[1].StartsWith('♪') && sanitizedLines[1].EndsWith('♪'))
                     {
                         return input;
                     }
@@ -1998,7 +1998,8 @@ namespace Nikse.SubtitleEdit.Core.Common
             {
                 return defaultColor;
             }
-            var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
+            // f starts at 'start' within s, so offset f-relative index back into s
+            var colorStart = start + f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
             if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
             {
                 end = s.IndexOf('"', colorStart + " color=".Length + 1);
