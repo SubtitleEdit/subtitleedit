@@ -391,6 +391,7 @@ public class LanguageGeneral
     public string Percent { get; set; }
     public string PickLayer { get; set; }
     public string PickOllamaModel { get; set; }
+    public string LlamaCppUseRemoteServer { get; set; }
     public string PickOutputFolder { get; set; }
     public string PickResolutionFromCurrentVideo { get; set; }
     public string PickResolutionFromVideoDotDotDot { get; set; }
@@ -1117,6 +1118,7 @@ public class LanguageGeneral
         Percent = "Percent";
         PickLayer = "Set layer";
         PickOllamaModel = "Pick Ollama model";
+        LlamaCppUseRemoteServer = "Use external server (URL)";
         PickOutputFolder = "Pick output folder";
         PickResolutionFromCurrentVideo = "Pick resolution from current video";
         PickResolutionFromVideoDotDotDot = "Pick resolution from video...";

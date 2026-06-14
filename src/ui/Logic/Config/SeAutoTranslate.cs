@@ -22,6 +22,12 @@ public class SeAutoTranslate
     public string LlamaCppApiUrl { get; set; }
     public string LlamaCppModel { get; set; }
     public string LlamaCppPrompt { get; set; }
+
+    /// <summary>
+    /// When true, connect to an external/remote llama.cpp server at <see cref="LlamaCppApiUrl"/>
+    /// (e.g. a GPU box) instead of downloading a model and managing a local server (#11584).
+    /// </summary>
+    public bool LlamaCppUseRemoteServer { get; set; }
     public string GroqUrl { get; set; }
     public string GroqPrompt { get; set; }
     public string GroqApiKey { get; set; }
