@@ -181,7 +181,7 @@ public class EmbeddedSubtitlesEditMp4Window : Window
                 e.Handled = true;
             }
         }, Avalonia.Interactivity.RoutingStrategies.Tunnel);
-        dataGridTracks.DoubleTapped += (s, e) => { if (!UiUtil.IsScrollBarSource(e)) vm.EditCommand.Execute(null); };
+        dataGridTracks.DoubleTapped += (s, e) => vm.EditCommand.Execute(null);
         vm.TracksGrid = dataGridTracks;
 
         var buttonAdd = new SplitButton

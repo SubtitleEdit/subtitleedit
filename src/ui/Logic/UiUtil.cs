@@ -1612,7 +1612,10 @@ public static class UiUtil
         var current = e.Source as Control;
         while (current != null)
         {
-            if (current is ScrollBar) return true;
+            if (current is ScrollBar)
+            {
+                return true;
+            }
             current = current.Parent as Control;
         }
         return false;

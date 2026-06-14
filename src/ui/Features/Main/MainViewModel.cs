@@ -17814,7 +17814,9 @@ public partial class MainViewModel :
     {
         StopSubtitleGridDragSelectAutoScroll();
         if (_dragSelectStartIndex >= 0)
+        {
             e.Pointer.Capture(null);
+        }
         _dragSelectStartIndex = -1;
         _dragSelectLastIndex = -1;
         _dragSelectAppliedIndex = -1;

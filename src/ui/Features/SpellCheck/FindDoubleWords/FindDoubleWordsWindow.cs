@@ -103,7 +103,7 @@ public class FindDoubleWordsWindow : Window
             Mode = BindingMode.TwoWay
         });
         dataGrid.SelectionChanged += vm.GridSelectionChanged;
-        dataGrid.DoubleTapped += (s, e) => { if (!UiUtil.IsScrollBarSource(e)) vm.GoToCommand.Execute(null); };
+        dataGrid.DoubleTapped += (s, e) => vm.GoToCommand.Execute(null);
         dataGrid.KeyDown += (s, e) => vm.GridKeyDown(e);
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {

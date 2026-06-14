@@ -2,10 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Shapes;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml.Styling;
-using Avalonia.Threading;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -15,7 +12,6 @@ using AvaloniaEdit;
 using AvaloniaEdit.Editing;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Nikse.SubtitleEdit.Logic;
@@ -258,6 +254,7 @@ public static class UiTheme
     }
 
     private static Styles? _scrollBarStyle;
+    private static bool _scrollBarAllowAutoHide;
     private static bool _dataGridScrollBarHandlerRegistered;
 
     /// <summary>
@@ -286,6 +283,8 @@ public static class UiTheme
             allowAutoHide = pref != "Always";
         }
 
+        _scrollBarAllowAutoHide = allowAutoHide;
+
         _scrollBarStyle = new Styles
         {
             new Style(x => x.OfType<ScrollViewer>())
@@ -298,19 +297,21 @@ public static class UiTheme
             },
         };
 
-        if (!allowAutoHide && !_dataGridScrollBarHandlerRegistered)
+        if (!_dataGridScrollBarHandlerRegistered)
         {
             _dataGridScrollBarHandlerRegistered = true;
             // DataGrid.OnApplyTemplate sets AllowAutoHide=true on its internal scrollbars at
             // LocalValue priority (0), which no style can override. By hooking Loaded (which
-            // fires after OnApplyTemplate), we set AllowAutoHide=false at LocalValue priority
-            // too — overriding the DataGrid's value. This causes UpdateIsExpandedState() to
-            // run and set IsExpanded=true, which makes the Fluent [IsExpanded=True] style
-            // apply the full expanded appearance (correct thumb size, color, visible arrows).
+            // fires after OnApplyTemplate), we set AllowAutoHide at LocalValue priority too —
+            // overriding the DataGrid's value. This causes UpdateIsExpandedState() to run and
+            // set IsExpanded accordingly, which makes the Fluent [IsExpanded=True] style apply
+            // the full expanded appearance (correct thumb size, color, visible arrows).
             Control.LoadedEvent.AddClassHandler<DataGrid>((dg, _) =>
             {
                 foreach (var sb in dg.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.ScrollBar>())
-                    sb.AllowAutoHide = false;
+                {
+                    sb.AllowAutoHide = _scrollBarAllowAutoHide;
+                }
             });
         }
 

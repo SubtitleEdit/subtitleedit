@@ -1123,7 +1123,6 @@ public partial class ShortcutsViewModel : ObservableObject
 
     internal void ShortcutsDataGridDoubleTapped(object? sender, TappedEventArgs e)
     {
-        if (UiUtil.IsScrollBarSource(e)) return;
         _ = ShowGetKey();
     }
 
