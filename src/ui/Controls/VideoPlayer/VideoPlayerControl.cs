@@ -366,6 +366,15 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 Margin = new Thickness(2, 0, 0, 0),
                 [AutomationProperties.NameProperty] = Se.Language.General.VideoPosition,
             };
+
+            // Right-click the position slider to jump to / copy the current video position
+            // (SE4 parity for the old "Video position" control).
+            var goToPositionItem = new Avalonia.Controls.MenuItem { Header = Se.Language.Options.Shortcuts.GeneralGoToVideoPosition };
+            goToPositionItem.Click += (_, _) => GoToPositionRequested?.Invoke();
+            var copyPositionItem = new Avalonia.Controls.MenuItem { Header = Se.Language.General.Copy };
+            copyPositionItem.Click += (_, _) => CopyPositionRequested?.Invoke();
+            sliderPosition.ContextFlyout = new MenuFlyout { Items = { goToPositionItem, copyPositionItem } };
+
             if (Se.Settings.Appearance.ShowHints)
             {
                 ToolTip.SetTip(sliderPosition, Se.Language.General.VideoPosition);
@@ -685,6 +694,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
         public event Action<double>? UserSeeked;
         public event Action<double>? VolumeChanged;
         public event Action? ToggleDisplayProgressTextModeRequested;
+        public event Action? GoToPositionRequested;
+        public event Action? CopyPositionRequested;
         public event Action<PointerPressedEventArgs>? VideoFileNamePointerPressed;
 
         public void SetPlayPauseIcon(bool isPlaying)

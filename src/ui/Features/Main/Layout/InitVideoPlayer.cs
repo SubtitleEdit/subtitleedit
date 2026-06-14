@@ -79,6 +79,8 @@ public static class InitVideoPlayer
         control.VideoFileNamePointerPressed += vm.VideoPlayerControlPointerPressed;
         control.SurfacePointerPressed += (_, _) => vm.VideoPlayerAreaPointerPressed();
         control.UserSeeked += vm.OnVideoPlayerUserSeeked;
+        control.GoToPositionRequested += () => vm.ShowGoToVideoPositionCommand.Execute(null);
+        control.CopyPositionRequested += () => vm.CopyVideoPositionCommand.Execute(null);
 
         Grid.SetRow(control, 0);
         mainGrid.Children.Add(control);

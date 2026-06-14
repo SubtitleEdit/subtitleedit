@@ -5632,6 +5632,21 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private async Task CopyVideoPosition()
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null || Window == null || string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        // Copy the current position as a timecode, applying the same video offset the player
+        // shows. SE4 parity: the old "Video position" control let you copy the current position.
+        var seconds = vp.Position + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0;
+        await ClipboardHelper.SetTextAsync(Window, TimeCode.FromSeconds(seconds).ToDisplayString());
+    }
+
+    [RelayCommand]
     private void ToggleIsWaveformToolbarVisible()
     {
         IsWaveformToolbarVisible = !IsWaveformToolbarVisible;
