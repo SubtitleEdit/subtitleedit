@@ -19658,6 +19658,14 @@ public partial class MainViewModel :
 
     internal void AudioVisualizerOnPrimarySingleClicked(object sender, ParagraphNullableEventArgs e)
     {
+        // No media loaded yet: clicking the empty waveform offers to open a video or audio file,
+        // restoring the older behaviour where the empty waveform was an entry point for opening media.
+        if (string.IsNullOrEmpty(_videoFileName))
+        {
+            _ = CommandVideoOpen();
+            return;
+        }
+
         var vp = GetVideoPlayerControl();
         if (vp == null || string.IsNullOrEmpty(_videoFileName) || AudioVisualizer == null)
         {
