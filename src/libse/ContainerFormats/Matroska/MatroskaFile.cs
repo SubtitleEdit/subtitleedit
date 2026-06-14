@@ -18,8 +18,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         private double _frameRate;
         private string _videoCodecId;
 
-        private int _subtitleRipTrackNumber;
-        private readonly List<MatroskaSubtitle> _subtitleRip = new List<MatroskaSubtitle>();
+        private readonly Dictionary<int, List<MatroskaSubtitle>> _subtitleRipByTrackNumber = new Dictionary<int, List<MatroskaSubtitle>>();
+        private HashSet<int> _subtitleTrackNumbers;
+        private bool _subtitleRipLoaded;
         private List<MatroskaTrackInfo> _tracks;
         private List<MatroskaChapter> _chapters;
 
@@ -558,11 +559,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         ReadBlockGroupElement(element, clusterTimeCode);
                         break;
                     case ElementId.SimpleBlock:
-                        var subtitle = ReadSubtitleBlock(element, clusterTimeCode);
-                        if (subtitle != null)
-                        {
-                            _subtitleRip.Add(subtitle);
-                        }
+                        AddSubtitleBlock(ReadSubtitleBlock(element, clusterTimeCode));
                         break;
                     default:
                         _stream.Seek(element.DataSize, SeekOrigin.Current);
@@ -581,12 +578,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 switch (element.Id)
                 {
                     case ElementId.Block:
-                        subtitle = ReadSubtitleBlock(element, clusterTimeCode);
-                        if (subtitle == null)
-                        {
-                            return;
-                        }
-                        _subtitleRip.Add(subtitle);
+                        var subtitleBlock = ReadSubtitleBlock(element, clusterTimeCode);
+                        subtitle = subtitleBlock?.Subtitle;
+                        AddSubtitleBlock(subtitleBlock);
                         break;
                     case ElementId.BlockDuration:
                         var duration = ReadUIntAsLong(element.DataSize);
@@ -602,10 +596,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             }
         }
 
-        private MatroskaSubtitle ReadSubtitleBlock(Element blockElement, long clusterTimeCode)
+        private MatroskaSubtitleBlock ReadSubtitleBlock(Element blockElement, long clusterTimeCode)
         {
             var trackNumber = (int)ReadVariableLengthUInt();
-            if (trackNumber != _subtitleRipTrackNumber)
+            if (!IsSubtitleTrackNumber(trackNumber))
             {
                 _stream.Seek(blockElement.EndPosition, SeekOrigin.Begin);
                 return null;
@@ -644,22 +638,68 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             var data = new byte[dataLength];
             _stream.Read(data, 0, dataLength);
 
-            return new MatroskaSubtitle(data, (long)Math.Round(GetTimeScaledToMilliseconds(clusterTimeCode + timeCode)));
+            var subtitle = new MatroskaSubtitle(data, (long)Math.Round(GetTimeScaledToMilliseconds(clusterTimeCode + timeCode)));
+            return new MatroskaSubtitleBlock(trackNumber, subtitle);
         }
 
         public List<MatroskaSubtitle> GetSubtitle(int trackNumber, LoadMatroskaCallback progressCallback)
         {
-            // Cache: GetSubtitle is called multiple times per UI flow (preview, OCR).
-            // Reuse the previously parsed list when the track matches.
-            if (_subtitleRipTrackNumber == trackNumber && _subtitleRip.Count > 0)
+            if (!_subtitleRipLoaded)
             {
-                return _subtitleRip;
+                EnsureSubtitleTrackNumbers();
+                _subtitleRipByTrackNumber.Clear();
+                ReadSegmentCluster(progressCallback);
+                _subtitleRipLoaded = true;
             }
 
-            _subtitleRip.Clear();
-            _subtitleRipTrackNumber = trackNumber;
-            ReadSegmentCluster(progressCallback);
-            return _subtitleRip;
+            return _subtitleRipByTrackNumber.TryGetValue(trackNumber, out var subtitles)
+                ? subtitles
+                : new List<MatroskaSubtitle>();
+        }
+
+        private bool IsSubtitleTrackNumber(int trackNumber)
+        {
+            EnsureSubtitleTrackNumbers();
+            return _subtitleTrackNumbers.Contains(trackNumber);
+        }
+
+        private void EnsureSubtitleTrackNumbers()
+        {
+            if (_subtitleTrackNumbers == null)
+            {
+                ReadSegmentInfoAndTracks();
+                _subtitleTrackNumbers = new HashSet<int>(
+                    _tracks?.Where(p => p.IsSubtitle).Select(p => p.TrackNumber) ?? Enumerable.Empty<int>());
+            }
+        }
+
+        private void AddSubtitleBlock(MatroskaSubtitleBlock subtitleBlock)
+        {
+            if (subtitleBlock == null)
+            {
+                return;
+            }
+
+            if (!_subtitleRipByTrackNumber.TryGetValue(subtitleBlock.TrackNumber, out var subtitles))
+            {
+                subtitles = new List<MatroskaSubtitle>();
+                _subtitleRipByTrackNumber.Add(subtitleBlock.TrackNumber, subtitles);
+            }
+
+            subtitles.Add(subtitleBlock.Subtitle);
+        }
+
+        private sealed class MatroskaSubtitleBlock
+        {
+            public MatroskaSubtitleBlock(int trackNumber, MatroskaSubtitle subtitle)
+            {
+                TrackNumber = trackNumber;
+                Subtitle = subtitle;
+            }
+
+            public int TrackNumber { get; }
+
+            public MatroskaSubtitle Subtitle { get; }
         }
 
         public void Dispose() => Dispose(true);

@@ -154,9 +154,8 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
         else if (trackInfo.CodecId == MatroskaTrackType.TextSt && subtitles != null && _matroskaFile != null)
         {
             var subtitle = new Subtitle();
-            var sub = _matroskaFile.GetSubtitle(trackInfo.TrackNumber, null);
-            Utilities.LoadMatroskaTextSubtitle(trackInfo, _matroskaFile, sub, subtitle);
-            Utilities.ParseMatroskaTextSt(trackInfo, sub, subtitle);
+            Utilities.LoadMatroskaTextSubtitle(trackInfo, _matroskaFile, subtitles, subtitle);
+            Utilities.ParseMatroskaTextSt(trackInfo, subtitles, subtitle);
             await WriteTextSubtitleFile(Window, trackInfo, subtitles, new SubRip());
         }
         else
@@ -261,9 +260,8 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
         else if (trackInfo.CodecId == MatroskaTrackType.TextSt && subtitles != null && _matroskaFile != null)
         {
             var subtitle = new Subtitle();
-            var sub = _matroskaFile.GetSubtitle(trackInfo.TrackNumber, null);
-            Utilities.LoadMatroskaTextSubtitle(trackInfo, _matroskaFile, sub, subtitle);
-            Utilities.ParseMatroskaTextSt(trackInfo, sub, subtitle);
+            Utilities.LoadMatroskaTextSubtitle(trackInfo, _matroskaFile, subtitles, subtitle);
+            Utilities.ParseMatroskaTextSt(trackInfo, subtitles, subtitle);
 
             for (var i = 0; i < 20 && i < subtitle.Paragraphs.Count; i++)
             {
