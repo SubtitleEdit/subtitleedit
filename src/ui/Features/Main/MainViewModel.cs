@@ -333,8 +333,13 @@ public partial class MainViewModel :
     private double _playheadLastRealSeconds = -1;
     private long _playheadLastTimestamp; // Stopwatch ticks; high-resolution so per-tick advance is even
     private bool _playheadValid;
+    private double? _playheadSeekTarget; // pin the cursor here until mpv's reported position arrives
+    private long _playheadSeekTargetTs;
+    private const double PlayheadSeekArriveToleranceSeconds = 0.15;
+    private const double PlayheadSeekPinTimeoutMs = 600;
     private const double PlayheadResyncThresholdSeconds = 0.5; // drift beyond this = real discontinuity -> snap
     private const double PlayheadDriftCorrection = 0.1; // gentle pull toward mpv when its clock is live
+    private const double PlayheadMaxForwardStepSeconds = 0.05; // cap one tick's advance so a starved tick can't lurch
     private CancellationTokenSource _videoOpenTokenSource;
     private readonly HashSet<string> _waveformsBeingGenerated = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lock _waveformsBeingGeneratedLock = new();
@@ -18122,12 +18127,48 @@ public partial class MainViewModel :
         }
 
         var nowTimestamp = Stopwatch.GetTimestamp();
+
+        // A fresh user seek (e.g. clicking the waveform) is pinned to the clicked position: mpv
+        // applies the pause+seek asynchronously, so for ~100-200 ms vp.VideoPlayer.Position still
+        // reports the old spot. Hold the target until mpv's reported position actually arrives (or a
+        // short timeout), so the cursor jumps to the click instantly instead of lagging then snapping.
+        if (_playheadSeekTarget.HasValue)
+        {
+            var target = _playheadSeekTarget.Value;
+            var arrived = Math.Abs(rawPosition - target) < PlayheadSeekArriveToleranceSeconds;
+            var timedOut = (nowTimestamp - _playheadSeekTargetTs) * 1000.0 / Stopwatch.Frequency > PlayheadSeekPinTimeoutMs;
+            if (!arrived && !timedOut)
+            {
+                _playheadLastRealSeconds = rawPosition;
+                _playheadLastTimestamp = nowTimestamp;
+                _playheadEstimateSeconds = target;
+                return target;
+            }
+
+            // mpv has arrived (or we gave up waiting): resume normal tracking from the real position.
+            _playheadSeekTarget = null;
+            _playheadEstimateSeconds = rawPosition;
+            _playheadValid = true;
+            _playheadLastRealSeconds = rawPosition;
+            _playheadLastTimestamp = nowTimestamp;
+            return rawPosition;
+        }
+
         if (vp.IsPlaying && _playheadValid && _playheadLastRealSeconds >= 0)
         {
             var elapsedSeconds = (nowTimestamp - _playheadLastTimestamp) / (double)Stopwatch.Frequency;
-            if (elapsedSeconds < 0 || elapsedSeconds > 1.0)
+            if (elapsedSeconds < 0)
             {
-                elapsedSeconds = 0; // clock glitch / app was suspended: don't lurch forward
+                elapsedSeconds = 0; // clock glitch
+            }
+            else if (elapsedSeconds > PlayheadMaxForwardStepSeconds)
+            {
+                // The cursor timer was starved (e.g. the mpv decode burst right after pressing play) or
+                // the app was suspended. Advancing by the whole missed span would make the cursor visibly
+                // rush forward and overshoot, since mpv hasn't actually played that far yet. Cap the step
+                // so the cursor keeps gliding smoothly; drift correction (or a snap, for a big gap)
+                // reconciles with mpv's real clock over the next few frames.
+                elapsedSeconds = PlayheadMaxForwardStepSeconds;
             }
 
             var speed = vp.VideoPlayer.Speed;
@@ -18163,6 +18204,23 @@ public partial class MainViewModel :
         _playheadLastRealSeconds = rawPosition;
         _playheadLastTimestamp = nowTimestamp;
         return _playheadEstimateSeconds;
+    }
+
+    // Called when the user seeks via the waveform: show the clicked position on the cursor
+    // immediately and pin it there until mpv's clock catches up (see UpdatePlayheadEstimate).
+    private void PinPlayheadTo(double targetSeconds)
+    {
+        _playheadSeekTarget = targetSeconds;
+        _playheadSeekTargetTs = Stopwatch.GetTimestamp();
+        _playheadEstimateSeconds = targetSeconds;
+        _playheadValid = true;
+        _playheadLastRealSeconds = targetSeconds;
+        _playheadLastTimestamp = _playheadSeekTargetTs;
+
+        if (AudioVisualizer != null)
+        {
+            AudioVisualizer.CurrentVideoPositionSeconds = targetSeconds;
+        }
     }
 
     private void StartTimers()
@@ -18781,6 +18839,7 @@ public partial class MainViewModel :
         newPosition = Math.Min(vp.Duration, newPosition);
 
         vp.Position = newPosition;
+        PinPlayheadTo(newPosition);
 
         _updateAudioVisualizer = true;
     }
@@ -19859,6 +19918,7 @@ public partial class MainViewModel :
                     break;
             }
 
+            PinPlayheadTo(e.Seconds);
             _updateAudioVisualizer = true;
         }
     }
