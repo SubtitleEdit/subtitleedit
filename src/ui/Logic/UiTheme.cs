@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Logic;
 
 public static class UiTheme
 {
-    private static IStyle? _lighterDarkStyle;
+    private static IStyle? _themeOverrideStyle;
     private static IStyle? _layoutScaleMenuStyle;
     private static ResourceDictionary? _resourceOverrides;
     private static object? _themeChangeSubscription;
@@ -405,7 +405,7 @@ public static class UiTheme
         };
         Application.Current.Resources.MergedDictionaries.Add(_resourceOverrides);
 
-        _lighterDarkStyle = new Styles
+        _themeOverrideStyle = new Styles
         {
             // TextBox
             new Style(x => x.OfType<TextBox>())
@@ -610,7 +610,7 @@ public static class UiTheme
             },
         };
 
-        Application.Current.Styles.Add(_lighterDarkStyle);
+        Application.Current.Styles.Add(_themeOverrideStyle);
     }
 
     private static void RemoveLighterDark()
@@ -621,26 +621,26 @@ public static class UiTheme
             _resourceOverrides = null;
         }
 
-        if (_lighterDarkStyle != null)
+        if (_themeOverrideStyle != null)
         {
-            Application.Current!.Styles.Remove(_lighterDarkStyle);
-            _lighterDarkStyle = null;
+            Application.Current!.Styles.Remove(_themeOverrideStyle);
+            _themeOverrideStyle = null;
         }
     }
 
     private static void ApplyLightThemeCaretFix()
     {
-        _lighterDarkStyle = new Styles
+        _themeOverrideStyle = new Styles
         {
             new Style(x => x.OfType<TextArea>())
             {
                 Setters =
                 {
-                    new Setter(TextArea.CaretBrushProperty, new SolidColorBrush(Colors.Black)),
+                    new Setter(TextArea.CaretBrushProperty, Brushes.Black),
                 }
             },
         };
-        Application.Current!.Styles.Add(_lighterDarkStyle);
+        Application.Current!.Styles.Add(_themeOverrideStyle);
     }
 
     private static void ApplyWindowsClassicGray()
@@ -657,7 +657,7 @@ public static class UiTheme
         var headerColor = Color.FromRgb(192, 192, 192); // Classic silver header
         var inputColor = Color.FromRgb(255, 255, 250); // Slightly off-white (ivory) for input controls
 
-        _lighterDarkStyle = new Styles
+        _themeOverrideStyle = new Styles
         {
             // Window background
             new Style(x => x.OfType<Window>())
@@ -757,7 +757,7 @@ public static class UiTheme
             },
         };
 
-        Application.Current.Styles.Add(_lighterDarkStyle);
+        Application.Current.Styles.Add(_themeOverrideStyle);
     }
 
     private static void ApplyPastel()
@@ -775,7 +775,7 @@ public static class UiTheme
         var lightPurple = Color.FromRgb(245, 240, 255); // Lavender
         var borderColor = Color.FromRgb(200, 180, 200); // Soft lavender border
 
-        _lighterDarkStyle = new Styles
+        _themeOverrideStyle = new Styles
         {
             // Window background with soft lavender
             new Style(x => x.OfType<Window>())
@@ -871,7 +871,7 @@ public static class UiTheme
             },
         };
 
-        Application.Current.Styles.Add(_lighterDarkStyle);
+        Application.Current.Styles.Add(_themeOverrideStyle);
     }
 
     private static Color GetDarkThemeBackgroundColor()
