@@ -5814,7 +5814,19 @@ public partial class MainViewModel :
             }
         }
 
-        var result = await ShowDialogAsync<OpenFromUrlWindow, OpenFromUrlViewModel>();
+        var result = await ShowDialogAsync<OpenFromUrlWindow, OpenFromUrlViewModel>(vm =>
+        {
+            // Reuse the existing install/update prompt for the window's manual
+            // "Download yt-dlp" button. Pick the message by current install state
+            // and own the dialogs off the URL window so they nest correctly.
+            vm.DownloadOrUpdateYtDlpRequested = () =>
+            {
+                var message = File.Exists(YtDlpDownloadService.GetFullFileName())
+                    ? Se.Language.Main.YoutubeDlOutdatedDownloadNow
+                    : Se.Language.Main.YoutubeDlNotInstalledDownloadNow;
+                return PromptToDownloadYtDlp(message, vm.Window);
+            };
+        });
 
         if (!result.OkPressed || result.SelectedMode is null)
         {
@@ -5944,9 +5956,10 @@ public partial class MainViewModel :
     /// outdated-upgrade path — the download didn't take and the old binary is
     /// still on disk.
     /// </summary>
-    private async Task<bool> PromptToDownloadYtDlp(string message)
+    private async Task<bool> PromptToDownloadYtDlp(string message, Window? owner = null)
     {
-        var download = await MessageBox.Show(Window!, Se.Language.General.Information,
+        owner ??= Window!;
+        var download = await MessageBox.Show(owner, Se.Language.General.Information,
             message,
             MessageBoxButtons.YesNo, MessageBoxIcon.Information);
         if (download != MessageBoxResult.Yes)
@@ -5954,7 +5967,7 @@ public partial class MainViewModel :
             return false;
         }
 
-        await ShowDialogAsync<DownloadYtDlpWindow, DownloadYtDlpViewModel>();
+        await ShowDialogAsync<DownloadYtDlpWindow, DownloadYtDlpViewModel>(owner: owner);
         if (!File.Exists(YtDlpDownloadService.GetFullFileName()))
         {
             return false;
@@ -12600,12 +12613,12 @@ public partial class MainViewModel :
     }
 
     private async Task<TViewModel> ShowDialogAsync<TWindow, TViewModel>(
-        Action<TViewModel>? configureViewModel = null, Action<TWindow>? configureWindow = null)
+        Action<TViewModel>? configureViewModel = null, Action<TWindow>? configureWindow = null, Window? owner = null)
         where TWindow : Window
         where TViewModel : class
     {
         GetVideoPlayerControl()?.VideoPlayer.Pause();
-        var result = await _windowService.ShowDialogAsync<TWindow, TViewModel>(Window!, configureViewModel, configureWindow);
+        var result = await _windowService.ShowDialogAsync<TWindow, TViewModel>(owner ?? Window!, configureViewModel, configureWindow);
         _shortcutManager.ClearKeys();
         return result;
     }
