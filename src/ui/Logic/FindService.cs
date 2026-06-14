@@ -425,7 +425,7 @@ public partial class FindService : IFindService
 
     private (bool replaced, string newText, int replacementCount) ReplaceWholeWordWithStringComparison(string line, string searchText, string replaceText, int startIndex, int maxReplacements, StringComparison comparison)
     {
-        var pattern = $@"\b{Regex.Escape(searchText)}\b";
+        var pattern = BuildWholeWordPattern(searchText);
         var options = comparison == StringComparison.OrdinalIgnoreCase ? RegexOptions.IgnoreCase : RegexOptions.None;
 
         try
@@ -465,13 +465,21 @@ public partial class FindService : IFindService
         }
     }
 
+    private static string BuildWholeWordPattern(string searchText)
+    {
+        var escaped = Regex.Escape(searchText);
+        var prefix = searchText.Length > 0 && (char.IsLetterOrDigit(searchText[0]) || searchText[0] == '_') ? @"\b" : @"(?<!\w)";
+        var suffix = searchText.Length > 0 && (char.IsLetterOrDigit(searchText[searchText.Length - 1]) || searchText[searchText.Length - 1] == '_') ? @"\b" : @"(?!\w)";
+        return $"{prefix}{escaped}{suffix}";
+    }
+
     private (bool found, int index, string foundText) FindWithStringComparison(string line, string searchText, StringComparison comparison, int startIndex)
     {
         var searchLine = startIndex > 0 ? line.Substring(startIndex) : line;
 
         if (WholeWord)
         {
-            var pattern = $@"\b{Regex.Escape(searchText)}\b";
+            var pattern = BuildWholeWordPattern(searchText);
             var options = comparison == StringComparison.OrdinalIgnoreCase ? RegexOptions.IgnoreCase : RegexOptions.None;
 
             try
@@ -505,7 +513,7 @@ public partial class FindService : IFindService
 
         if (WholeWord)
         {
-            var pattern = $@"\b{Regex.Escape(searchText)}\b";
+            var pattern = BuildWholeWordPattern(searchText);
             var options = comparison == StringComparison.OrdinalIgnoreCase ? RegexOptions.IgnoreCase : RegexOptions.None;
 
             try
@@ -650,7 +658,7 @@ public partial class FindService : IFindService
 
                 if (WholeWord)
                 {
-                    var pattern = $@"\b{Regex.Escape(searchText)}\b";
+                    var pattern = BuildWholeWordPattern(searchText);
                     var options = CurrentFindMode == FindMode.CaseInsensitive ? RegexOptions.IgnoreCase : RegexOptions.None;
 
                     try
