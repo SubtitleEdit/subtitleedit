@@ -3258,8 +3258,7 @@ public partial class OcrViewModel : ObservableObject
         else
         {
             // fallback, try to find the word in text using regex using word boundary 
-            var pattern = @"\b" + Regex.Escape(unknownWord.Word.FixedWord) + @"\b";
-            var regex = new Regex(pattern);
+            var regex = new Regex(RegexUtils.BuildWholeWordPattern(unknownWord.Word.FixedWord));
             var match = regex.Match(item.Text);
             if (match.Success)
             {

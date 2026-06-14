@@ -181,6 +181,14 @@ namespace Nikse.SubtitleEdit.Core.Common
             return new Regex(@"\b" + s + @"\b", RegexOptions.Compiled);
         }
 
+        public static string BuildWholeWordPattern(string searchText)
+        {
+            var escaped = Regex.Escape(searchText);
+            var prefix = searchText.Length > 0 && (char.IsLetterOrDigit(searchText[0]) || searchText[0] == '_') ? @"\b" : @"(?<!\w)";
+            var suffix = searchText.Length > 0 && (char.IsLetterOrDigit(searchText[searchText.Length - 1]) || searchText[searchText.Length - 1] == '_') ? @"\b" : @"(?!\w)";
+            return $"{prefix}{escaped}{suffix}";
+        }
+
         public static string GetRegExGroup(string pattern)
         {
             var start = pattern.IndexOf("(?<", StringComparison.Ordinal);
