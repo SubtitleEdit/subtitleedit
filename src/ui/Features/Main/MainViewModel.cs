@@ -813,13 +813,20 @@ public partial class MainViewModel :
 
         if (vm.OkPressed && vm.SelectedLayout != null && vm.SelectedLayout != Se.Settings.General.LayoutNumber)
         {
-            if (AreVideoControlsUndocked)
+            // Defer to a fresh dispatcher cycle: SetLayout rebuilds the layout, which destroys and
+            // recreates the video player control (a native Win32 HWND on Windows with mpv-wid/VLC).
+            // Doing that inside the ShowDialog continuation races the modal dialog's teardown and can
+            // leave the main window disabled - a full UI freeze (#11585; same cause and fix as #10815).
+            Dispatcher.UIThread.Post(() =>
             {
-                VideoRedockControls();
-            }
+                if (AreVideoControlsUndocked)
+                {
+                    VideoRedockControls();
+                }
 
-            SetLayout(vm.SelectedLayout.Value);
-            AutoFitColumns();
+                SetLayout(vm.SelectedLayout.Value);
+                AutoFitColumns();
+            });
         }
     }
 
