@@ -18299,11 +18299,12 @@ public partial class MainViewModel :
 
                 if (WaveformCenter && isPlaying)
                 {
-                    // calculate the center position based on the waveform width
+                    // The center-mode scroll position is driven smoothly by the 60 fps cursor timer (see
+                    // the _cursorTimer tick); here we only refresh the paragraph list. Pass the current
+                    // start/position so this 50 ms tick doesn't fight the cursor timer's scroll.
                     if (av != null)
                     {
-                        var waveformHalfSeconds = (av.EndPositionSeconds - av.StartPositionSeconds) / 2.0;
-                        av.SetPosition(Math.Max(0, mediaPlayerSeconds - waveformHalfSeconds), subtitle, mediaPlayerSeconds,
+                        av.SetPosition(av.StartPositionSeconds, subtitle, av.CurrentVideoPositionSeconds,
                             firstSelectedIndex, _selectedSubtitles ?? []);
                     }
                 }
@@ -18429,7 +18430,17 @@ public partial class MainViewModel :
             var av = AudioVisualizer;
             if (av != null)
             {
-                av.CurrentVideoPositionSeconds = UpdatePlayheadEstimate(vp);
+                var est = UpdatePlayheadEstimate(vp);
+                av.CurrentVideoPositionSeconds = est;
+
+                // In "center waveform on current position" mode the waveform scrolls to keep the cursor
+                // centered. Drive that scroll here at ~60 fps, in lockstep with the cursor, so it glides
+                // smoothly instead of jumping in 20 fps steps from the heavy 50 ms timer.
+                if (WaveformCenter && vp.IsPlaying && av.WavePeaks != null)
+                {
+                    var halfSeconds = (av.EndPositionSeconds - av.StartPositionSeconds) / 2.0;
+                    av.StartPositionSeconds = Math.Max(0, est - halfSeconds);
+                }
             }
         };
         _cursorTimer.Start();
