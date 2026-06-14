@@ -4,6 +4,8 @@
   "CultureName": "sv-SE",
   "version": "v5.0.0",
   "General": {
+    "SelectNonForcedLines": "Markera icke-tvingade rader",
+    "SelectForcedLines": "Markera tvingade rader",
     "Abort": "Avbryt",
     "Actor": "Skådespelare",
     "Actors": "Skådespelare",
@@ -1753,6 +1755,7 @@
       "MaximumXCharactersPerSecond": "Maximalt {0} tecken per sekund"
     },
     "ImageBasedEdit": {
+      "SetText": "Sätt text",
       "EditImagedBaseSubtitle": "Redigera bildbaserad undertext",
       "EditImagedBaseSubtitleX": "Redigera bildbaserad undertext: {0}",
       "ResizeImagesDotDotDot": "Ändra storlek på bilder...",
@@ -1977,6 +1980,7 @@
       "BackendAndUpdateStatus": "Backend och uppdateringsstatus"
     },
     "TextToSpeech": {
+      "PiperSettings": "Piper-inställningar",
       "Title": "Text till tal",
       "TextToSpeechEngine": "Text-till-tal-motor",
       "ReviewAudioSegments": "TTS - Granska ljudsegment",
@@ -2171,6 +2175,10 @@
   },
   "Options": {
     "Settings": {
+      "MusicSymbolsToReplace": "Musiksymboler att ersätta (separerade med komma)",
+      "MusicSymbol": "Musiksymbol",
+      "ColorWordsPerMinute": "Färglägg ord/min om för högt",
+      "ColorCharactersPerSecond": "Färglägg tecken/sek om för högt",
       "DialogStyle": "Dialogstil",
       "DialogStyleDashSecondLineWithoutSpace": "Bindestreck andra raden utan mellanslag",
       "DialogStyleDashSecondLineWithSpace": "Bindestreck andra raden med mellanslag",
@@ -2459,6 +2467,7 @@
       "WaveformExportThemeDotDotDot": "Exportera tema..."
     },
     "Shortcuts": {
+      "GeneralUnbreakNoSpaceCjk": "Slå ihop utan mellanslag (CJK)",
       "Title": "Kortkommandon",
       "SearchShortcuts": "Sök kortkommandon...",
       "Filter": "Filter",

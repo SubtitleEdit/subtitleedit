@@ -4,6 +4,8 @@
   "translatedBy": "Hugo Carvalho (hugok79) e Filipe Mota (BlackSpirits)\nE-mail: hugokarvalho@hotmail.com / blackspirits@gmail.com\nAntigo tradutor: Marco Barbosa (moob)",
   "cultureName": "pt-PT",
   "general": {
+    "selectNonForcedLines": "Selecionar linhas não forçadas",
+    "selectForcedLines": "Selecionar linhas forçadas",
     "abort": "Cancelar",
     "actor": "Ator",
     "actors": "Atores",
@@ -1742,6 +1744,7 @@
       "maximumXCharactersPerSecond": "Máximo de {0} caracteres por segundo"
     },
     "imageBasedEdit": {
+      "setText": "Definir texto",
       "editImagedBaseSubtitle": "Editar",
       "editImagedBaseSubtitleX": "Editar legenda baseada em imagem: {0}",
       "resizeImagesDotDotDot": "Redimensionar imagens...",
@@ -1910,6 +1913,7 @@
       "backendAndUpdateStatus": "Back-end e estado da atualização"
     },
     "textToSpeech": {
+      "piperSettings": "Definições do Piper",
       "title": "Texto para voz",
       "textToSpeechEngine": "Motor de conversão de texto em fala",
       "reviewAudioSegments": "TTS - Analisar segmentos de áudio",
@@ -2170,6 +2174,10 @@
   },
   "options": {
     "settings": {
+      "musicSymbolsToReplace": "Símbolos musicais a substituir (separados por vírgulas)",
+      "musicSymbol": "Símbolo musical",
+      "colorWordsPerMinute": "Colorir palavras/min se muito alto",
+      "colorCharactersPerSecond": "Colorir caracteres/seg se muito alto",
       "dialogStyle": "Estilo de diálogo",
       "dialogStyleDashSecondLineWithoutSpace": "Travessão apenas na segunda linha sem espaço",
       "dialogStyleDashSecondLineWithSpace": "Travessão apenas na segunda linha com espaço",
@@ -2458,6 +2466,7 @@
       "fixCommonErrorsSkipStep1": "Corrigir erros comuns: saltar passo 1 (escolher correções)"
     },
     "shortcuts": {
+      "generalUnbreakNoSpaceCjk": "Desquebrar sem espaço (CJK)",
       "title": "Atalhos",
       "searchShortcuts": "Atalhos de pesquisa...",
       "filter": "Filtro",

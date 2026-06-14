@@ -4,6 +4,8 @@
   "translatedBy": "翻译: wuwufei | FeiXJ | Leon Cheung | larsenlouis | VK | nkh0472 | 蒙太奇字幕组（MontageSubs）",
   "cultureName": "zh-Hans",
   "general": {
+    "selectNonForcedLines": "选择非强制行",
+    "selectForcedLines": "选择强制行",
     "abort": "中止",
     "actor": "角色",
     "actors": "演员",
@@ -1698,6 +1700,7 @@
       "maximumXCharactersPerSecond": "每秒最大 {0} 个字符"
     },
     "imageBasedEdit": {
+      "setText": "设置文本",
       "editImagedBaseSubtitle": "编辑基于图像的字幕",
       "editImagedBaseSubtitleX": "编辑基于图像的字幕: {0}",
       "resizeImagesDotDotDot": "调整图像大小...",
@@ -1914,6 +1917,7 @@
       "backendAndUpdateStatus": "后端与更新状态"
     },
     "textToSpeech": {
+      "piperSettings": "Piper 设置",
       "title": "文本转语音",
       "textToSpeechEngine": "文本转语音引擎",
       "reviewAudioSegments": "TTS - 审查音频片段",
@@ -2174,6 +2178,10 @@
   },
   "options": {
     "settings": {
+      "musicSymbolsToReplace": "要替换的音乐符号（用逗号分隔）",
+      "musicSymbol": "音乐符号",
+      "colorWordsPerMinute": "词/分过高时着色",
+      "colorCharactersPerSecond": "字符/秒过高时着色",
       "dialogStyle": "对话样式",
       "dialogStyleDashSecondLineWithoutSpace": "为第二行添加连字符, 不带空格",
       "dialogStyleDashSecondLineWithSpace": "为第二行添加连字符, 并带空格",
@@ -2464,6 +2472,7 @@
       "textToSpeechPromptMergeContinuationLines": "文本转语音: 提示合并延续行"
     },
     "shortcuts": {
+      "generalUnbreakNoSpaceCjk": "取消断行且不带空格（CJK）",
       "title": "快捷键",
       "searchShortcuts": "搜索快捷键...",
       "filter": "筛选",

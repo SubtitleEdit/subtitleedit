@@ -4,6 +4,8 @@
   "CultureName": "es-ES",
   "version": "v5.0.0",
   "General": {
+    "SelectNonForcedLines": "Seleccionar líneas no forzadas",
+    "SelectForcedLines": "Seleccionar líneas forzadas",
     "Abort": "Abortar",
     "Actor": "Actor",
     "Actors": "Actores",
@@ -1756,6 +1758,7 @@
       "MaximumXCharactersPerSecond": "Máximo {0} caracteres por segundo"
     },
     "ImageBasedEdit": {
+      "SetText": "Establecer texto",
       "EditImagedBaseSubtitle": "Editar subtítulo basado en imagen",
       "EditImagedBaseSubtitleX": "Editar subtítulo basado en imagen: {0}",
       "ResizeImagesDotDotDot": "Redimensionar imágenes...",
@@ -1981,6 +1984,7 @@
       "BackendAndUpdateStatus": "Estado del backend y de la actualización"
     },
     "TextToSpeech": {
+      "PiperSettings": "Ajustes de Piper",
       "Title": "Texto a voz",
       "TextToSpeechEngine": "Motor de texto a voz",
       "ReviewAudioSegments": "TTS - Revisar segmentos de audio",
@@ -2175,6 +2179,10 @@
   },
   "Options": {
     "Settings": {
+      "MusicSymbolsToReplace": "Símbolos musicales a reemplazar (separados por comas)",
+      "MusicSymbol": "Símbolo musical",
+      "ColorWordsPerMinute": "Colorear palabras/min si es muy alto",
+      "ColorCharactersPerSecond": "Colorear caracteres/seg si es muy alto",
       "DialogStyle": "Estilo de diálogo",
       "DialogStyleDashSecondLineWithoutSpace": "Guion segunda línea sin espacio",
       "DialogStyleDashSecondLineWithSpace": "Guion segunda línea con espacio",
@@ -2465,6 +2473,7 @@
       "WaveformExportThemeDotDotDot": "Exportar tema..."
     },
     "Shortcuts": {
+      "GeneralUnbreakNoSpaceCjk": "Unir sin espacio (CJK)",
       "Title": "Atajos de teclado",
       "SearchShortcuts": "Buscar atajos...",
       "Filter": "Filtro",

@@ -4,6 +4,8 @@
   "translatedBy": "Кирил Жежоски",
   "cultureName": "mk-MK",
   "general": {
+    "selectNonForcedLines": "Избери неприсилни линии",
+    "selectForcedLines": "Избери присилни линии",
     "abort": "Прекини",
     "actor": "Актер",
     "actors": "Актери",
@@ -1703,6 +1705,7 @@
       "maximumXCharactersPerSecond": "Максимум {0} карактери во секунда"
     },
     "imageBasedEdit": {
+      "setText": "Постави текст",
       "editImagedBaseSubtitle": "Уреди титула базиран на слика",
       "editImagedBaseSubtitleX": "Уреди титула базиран на слика: {0}",
       "resizeImagesDotDotDot": "Промени големина на слики...",
@@ -1918,6 +1921,7 @@
       "backendAndUpdateStatus": "Позадина и статус на ажурирање"
     },
     "textToSpeech": {
+      "piperSettings": "Поставки за Piper",
       "title": "Текст во говор",
       "textToSpeechEngine": "Енџин за текст-во-говор",
       "reviewAudioSegments": "ТТС - Преглед на аудио сегменти",
@@ -2178,6 +2182,10 @@
   },
   "options": {
     "settings": {
+      "musicSymbolsToReplace": "Музички симболи за замена (одделени со запирка)",
+      "musicSymbol": "Музички симбол",
+      "colorWordsPerMinute": "Обои збори/мин ако е превисоко",
+      "colorCharactersPerSecond": "Обои знаци/сек ако е превисоко",
       "dialogStyle": "Стил на дијалог",
       "dialogStyleDashSecondLineWithoutSpace": "Трка втора линија без простор",
       "dialogStyleDashSecondLineWithSpace": "Трка втора линија со простор",
@@ -2466,6 +2474,7 @@
       "textToSpeechPromptMergeContinuationLines": "Текст во говор: побарај спојување на линии за продолжување"
     },
     "shortcuts": {
+      "generalUnbreakNoSpaceCjk": "Отстрани прелом без празно место (CJK)",
       "title": "Прекратници",
       "searchShortcuts": "Пребарај прекратници...",
       "filter": "Филтер",

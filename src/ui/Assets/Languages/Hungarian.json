@@ -4,6 +4,8 @@
   "translatedBy": "Zityi's Translator Te@m",
   "cultureName": "hu-HU",
   "general": {
+    "selectNonForcedLines": "Nem kényszerített sorok kijelölése",
+    "selectForcedLines": "Kényszerített sorok kijelölése",
     "abort": "Megszakítás",
     "actor": "Szereplő",
     "actors": "Szereplők",
@@ -1742,6 +1744,7 @@
       "maximumXCharactersPerSecond": "Maximum {0} karakter másodpercenként"
     },
     "imageBasedEdit": {
+      "setText": "Szöveg beállítása",
       "editImagedBaseSubtitle": "Képalapú felirat szerkesztése",
       "editImagedBaseSubtitleX": "Képalapú felirat szerkesztése: {0}",
       "resizeImagesDotDotDot": "Képek átméretezése...",
@@ -1910,6 +1913,7 @@
       "backendAndUpdateStatus": "Háttérprogram és frissítési állapot"
     },
     "textToSpeech": {
+      "piperSettings": "Piper beállításai",
       "title": "Szövegfelolvasás",
       "textToSpeechEngine": "Szövegfelolvasó motor",
       "reviewAudioSegments": "TTS - Hangszegmensek ellenőrzése",
@@ -2170,6 +2174,10 @@
   },
   "options": {
     "settings": {
+      "musicSymbolsToReplace": "Lecserélendő zenei szimbólumok (vesszővel elválasztva)",
+      "musicSymbol": "Zenei szimbólum",
+      "colorWordsPerMinute": "Szó/perc színezése, ha túl magas",
+      "colorCharactersPerSecond": "Karakter/mp színezése, ha túl magas",
       "dialogStyle": "Párbeszéd stílusa",
       "dialogStyleDashSecondLineWithoutSpace": "Második sor gondolatjellel, szóköz nélkül",
       "dialogStyleDashSecondLineWithSpace": "Második sor gondolatjellel és szóközzel",
@@ -2458,6 +2466,7 @@
       "fixCommonErrorsSkipStep1": "Gyakori hibák javítása: 1. lépés kihagyása (javítások kiválasztása)"
     },
     "shortcuts": {
+      "generalUnbreakNoSpaceCjk": "Összekapcsolás szóköz nélkül (CJK)",
       "title": "Gyorsbillentyűk",
       "searchShortcuts": "Billentyűparancsok keresése...",
       "filter": "Szűrő",

@@ -4,6 +4,8 @@
   "translatedBy": "LibreTranslate",
   "cultureName": "fi-FI",
   "general": {
+    "selectNonForcedLines": "Valitse ei-pakotetut rivit",
+    "selectForcedLines": "Valitse pakotetut rivit",
     "abort": "Keskeytä",
     "actor": "Näyttelijä",
     "actors": "Näyttelijät",
@@ -1704,6 +1706,7 @@
       "maximumXCharactersPerSecond": "Enintään {0} merkkiä sekunnissa"
     },
     "imageBasedEdit": {
+      "setText": "Aseta teksti",
       "editImagedBaseSubtitle": "Muokkaa kuvapohjaista tekstitystä",
       "editImagedBaseSubtitleX": "Muokkaa kuvapohjaista tekstitystä: {0}",
       "resizeImagesDotDotDot": "Muuta kuvien kokoa...",
@@ -1925,6 +1928,7 @@
       "backendAndUpdateStatus": "Taustaohjelman ja päivityksen tila"
     },
     "textToSpeech": {
+      "piperSettings": "Piper-asetukset",
       "title": "Teksti puheeksi",
       "textToSpeechEngine": "Teksti puheeksi -moottori",
       "reviewAudioSegments": "TTS - Tarkista äänisegmentit",
@@ -2185,6 +2189,10 @@
   },
   "options": {
     "settings": {
+      "musicSymbolsToReplace": "Korvattavat musiikkisymbolit (pilkuilla erotettuina)",
+      "musicSymbol": "Musiikkisymboli",
+      "colorWordsPerMinute": "Väritä sanaa/min, jos liian suuri",
+      "colorCharactersPerSecond": "Väritä merkkiä/s, jos liian suuri",
       "dialogStyle": "Valintaikkunan tyyli",
       "dialogStyleDashSecondLineWithoutSpace": "Toisen rivin viiva ilman välilyöntiä",
       "dialogStyleDashSecondLineWithSpace": "Toisen rivin viiva välilyönnillä",
@@ -2474,6 +2482,7 @@
       "textToSpeechPromptMergeContinuationLines": "Puhe tekstiksi: kysy jatkorivien yhdistämistä"
     },
     "shortcuts": {
+      "generalUnbreakNoSpaceCjk": "Poista rivinvaihto ilman välilyöntiä (CJK)",
       "title": "Pikakuvakkeet",
       "searchShortcuts": "Hae pikakuvakkeita...",
       "filter": "Suodata",

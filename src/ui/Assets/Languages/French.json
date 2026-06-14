@@ -4,6 +4,8 @@
   "translatedBy": "Traduction de Pierre le Lidgeu. (1st DRAFT V5, Jan, 09 2026)",
   "cultureName": "fr-FR",
   "general": {
+    "selectNonForcedLines": "Sélectionner les lignes non forcées",
+    "selectForcedLines": "Sélectionner les lignes forcées",
     "abort": "Interrompre",
     "actor": "Acteur",
     "actors": "Acteurs",
@@ -1752,6 +1754,7 @@
       "maximumXCharactersPerSecond": "Maximum {0} caract\u00E8res par seconde"
     },
     "imageBasedEdit": {
+      "setText": "Définir le texte",
       "editImagedBaseSubtitle": "Modifier les sous-titres basés sur des images",
       "editImagedBaseSubtitleX": "Modifier le sous-titre basé sur une image\u00A0:\u00A0{0}",
       "resizeImagesDotDotDot": "Redimensionner les images...",
@@ -1976,6 +1979,7 @@
       "backendAndUpdateStatus": "Statut du backend et des mises \u00E0 jour"
     },
     "textToSpeech": {
+      "piperSettings": "Paramètres Piper",
       "title": "Texte vers parole ('TTS')",
       "textToSpeechEngine": "Moteur texte vers parole",
       "reviewAudioSegments": "TTS - Réviser les segments audio",
@@ -2170,6 +2174,10 @@
   },
   "options": {
     "settings": {
+      "musicSymbolsToReplace": "Symboles musicaux à remplacer (séparés par des virgules)",
+      "musicSymbol": "Symbole musical",
+      "colorWordsPerMinute": "Colorer les mots/min si trop élevé",
+      "colorCharactersPerSecond": "Colorer les caractères/sec si trop élevé",
       "dialogStyle": "Style du dialogue",
       "dialogStyleDashSecondLineWithoutSpace": "Tiret seul seconde ligne",
       "dialogStyleDashSecondLineWithSpace": "Tiret+espace seconde ligne",
@@ -2458,6 +2466,7 @@
       "waveformExportThemeDotDotDot": "Exporter un th\u00E8me\u2026"
     },
     "shortcuts": {
+      "generalUnbreakNoSpaceCjk": "Réunir sans espace (CJK)",
       "title": "Raccourcis",
       "searchShortcuts": "Cherche les raccourcis…",
       "filter": "Filtre",

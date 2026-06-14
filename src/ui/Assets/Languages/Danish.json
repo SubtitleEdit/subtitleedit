@@ -4,6 +4,8 @@
   "CultureName": "da-DK",
   "version": "v5.0.0",
   "General": {
+    "SelectNonForcedLines": "Vælg ikke-tvungne linjer",
+    "SelectForcedLines": "Vælg tvungne linjer",
     "Abort": "Afbryd",
     "Actor": "Skuespiller",
     "Actors": "Skuespillere",
@@ -1753,6 +1755,7 @@
       "MaximumXCharactersPerSecond": "Maksimalt {0} tegn pr. sekund"
     },
     "ImageBasedEdit": {
+      "SetText": "Indstil tekst",
       "EditImagedBaseSubtitle": "Rediger billedbaseret undertekst",
       "EditImagedBaseSubtitleX": "Rediger billedbaseret undertekst: {0}",
       "ResizeImagesDotDotDot": "Ændr størrelse på billeder...",
@@ -1977,6 +1980,7 @@
       "BackendAndUpdateStatus": "Backend og opdateringsstatus"
     },
     "TextToSpeech": {
+      "PiperSettings": "Piper-indstillinger",
       "Title": "Tekst til tale",
       "TextToSpeechEngine": "Tekst til tale-motor",
       "ReviewAudioSegments": "TTS - Gennemgå lydsegmenter",
@@ -2171,6 +2175,10 @@
   },
   "Options": {
     "Settings": {
+      "MusicSymbolsToReplace": "Musiksymboler der skal erstattes (adskilt af komma)",
+      "MusicSymbol": "Musiksymbol",
+      "ColorWordsPerMinute": "Farvelæg ord/min hvis for højt",
+      "ColorCharactersPerSecond": "Farvelæg tegn/sek hvis for højt",
       "DialogStyle": "Dialogstil",
       "DialogStyleDashSecondLineWithoutSpace": "Dash second line without space",
       "DialogStyleDashSecondLineWithSpace": "Dash second line with space",
@@ -2459,6 +2467,7 @@
       "WaveformExportThemeDotDotDot": "Eksporter tema..."
     },
     "Shortcuts": {
+      "GeneralUnbreakNoSpaceCjk": "Fjern linjeskift uden mellemrum (CJK)",
       "Title": "Shortcuts",
       "SearchShortcuts": "Search shortcuts...",
       "Filter": "Filter",

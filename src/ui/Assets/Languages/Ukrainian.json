@@ -4,6 +4,8 @@
   "translatedBy": "Kilo Code",
   "cultureName": "uk-UA",
   "general": {
+    "selectNonForcedLines": "Вибрати непримусові рядки",
+    "selectForcedLines": "Вибрати примусові рядки",
     "abort": "Перервати",
     "actor": "Актор",
     "actors": "Актори",
@@ -1680,6 +1682,7 @@
       "maximumXCharactersPerSecond": "Максимум {0} символів на секунду"
     },
     "imageBasedEdit": {
+      "setText": "Встановити текст",
       "editImagedBaseSubtitle": "Редагувати субтитри на основі зображень",
       "editImagedBaseSubtitleX": "Редагувати субтитри на основі зображень: {0}",
       "resizeImagesDotDotDot": "Змінити розмір зображень...",
@@ -1915,6 +1918,7 @@
       "backendAndUpdateStatus": "Стан бекенду та оновлення"
     },
     "textToSpeech": {
+      "piperSettings": "Налаштування Piper",
       "title": "Синтез мовлення",
       "textToSpeechEngine": "Двигун синтезу мовлення",
       "reviewAudioSegments": "TTS - Переглянути аудіо сегменти",
@@ -2176,6 +2180,10 @@
   },
   "options": {
     "settings": {
+      "musicSymbolsToReplace": "Музичні символи для заміни (розділені комою)",
+      "musicSymbol": "Музичний символ",
+      "colorWordsPerMinute": "Підсвічувати слів/хв, якщо завелико",
+      "colorCharactersPerSecond": "Підсвічувати символів/с, якщо завелико",
       "dialogStyle": "Стиль діалогу",
       "dialogStyleDashSecondLineWithoutSpace": "Тире другого рядка без пробілу",
       "dialogStyleDashSecondLineWithSpace": "Тире другого рядка з пробілом",
@@ -2467,6 +2475,7 @@
       "waveformExportThemeDotDotDot": "Експортувати тему..."
     },
     "shortcuts": {
+      "generalUnbreakNoSpaceCjk": "Об'єднати без пробілу (CJK)",
       "title": "Ярлики",
       "searchShortcuts": "Пошук ярликів...",
       "filter": "Фільтр",

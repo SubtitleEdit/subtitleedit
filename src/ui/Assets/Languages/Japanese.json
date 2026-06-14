@@ -4,6 +4,8 @@
   "translatedBy": "",
   "cultureName": "jp-JP",
   "general": {
+    "selectNonForcedLines": "非強制行を選択",
+    "selectForcedLines": "強制行を選択",
     "abort": "中止",
     "actor": "CAST",
     "actors": "CAST",
@@ -1748,6 +1750,7 @@
       "maximumXCharactersPerSecond": "最大{0}文字/秒"
     },
     "imageBasedEdit": {
+      "setText": "テキストを設定",
       "editImagedBaseSubtitle": "画像字幕を編集",
       "editImagedBaseSubtitleX": "画像字幕を編集: {0}",
       "resizeImagesDotDotDot": "画像サイズを変更...",
@@ -1917,6 +1920,7 @@
       "downloadingSpeechToTextEngine": "音声認識エンジンをダウンロード中"
     },
     "textToSpeech": {
+      "piperSettings": "Piper の設定",
       "title": "音声合成",
       "textToSpeechEngine": "音声合成エンジン",
       "reviewAudioSegments": "TTS - 音声セグメントの確認",
@@ -2177,6 +2181,10 @@
   },
   "options": {
     "settings": {
+      "musicSymbolsToReplace": "置換する音楽記号（カンマ区切り）",
+      "musicSymbol": "音楽記号",
+      "colorWordsPerMinute": "単語数/分が高すぎる場合に色付け",
+      "colorCharactersPerSecond": "文字数/秒が高すぎる場合に色付け",
       "dialogStyle": "ダイアログの表示スタイル",
       "dialogStyleDashSecondLineWithoutSpace": "２行目をスペースなし 破線で表示",
       "dialogStyleDashSecondLineWithSpace": "２行目をスペースあり 破線で表示",
@@ -2466,6 +2474,7 @@
       "searchSettingsDotDotDot": "設定を検索..."
     },
     "shortcuts": {
+      "generalUnbreakNoSpaceCjk": "スペースなしで改行解除（CJK）",
       "title": "ショートカット",
       "searchShortcuts": "ショートカットを検索",
       "filter": "フィルター",

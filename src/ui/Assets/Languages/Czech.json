@@ -4,6 +4,8 @@
   "translatedBy": "Matěj Fouma",
   "cultureName": "cs-CZ",
   "general": {
+    "selectNonForcedLines": "Vybrat nevynucené řádky",
+    "selectForcedLines": "Vybrat vynucené řádky",
     "abort": "Přerušit",
     "actor": "Herec",
     "actors": "Herci",
@@ -1742,6 +1744,7 @@
       "maximumXCharactersPerSecond": "Maximálně {0} znaků za sekundu"
     },
     "imageBasedEdit": {
+      "setText": "Nastavit text",
       "editImagedBaseSubtitle": "Upravit titulky založené na obrázcích",
       "editImagedBaseSubtitleX": "Upravit titulky založené na obrázcích: {0}",
       "resizeImagesDotDotDot": "Změnit velikost obrázků…",
@@ -1910,6 +1913,7 @@
       "backendAndUpdateStatus": "Stav backendu a aktualizací"
     },
     "textToSpeech": {
+      "piperSettings": "Nastavení Piper",
       "title": "Převod textu na řeč",
       "textToSpeechEngine": "Modul převodu textu na řeč",
       "reviewAudioSegments": "TTS – Zkontrolovat segmenty audia",
@@ -2170,6 +2174,10 @@
   },
   "options": {
     "settings": {
+      "musicSymbolsToReplace": "Hudební symboly k nahrazení (oddělené čárkou)",
+      "musicSymbol": "Hudební symbol",
+      "colorWordsPerMinute": "Obarvit slova/min, pokud je příliš vysoké",
+      "colorCharactersPerSecond": "Obarvit znaky/s, pokud je příliš vysoké",
       "dialogStyle": "Styl dialogu",
       "dialogStyleDashSecondLineWithoutSpace": "Pomlčka bez mezery v druhém řádku",
       "dialogStyleDashSecondLineWithSpace": "Pomlčka s mezerou v druhém řádku",
@@ -2458,6 +2466,7 @@
       "waveformExportThemeDotDotDot": "Exportovat téma…"
     },
     "shortcuts": {
+      "generalUnbreakNoSpaceCjk": "Zrušit zalomení bez mezery (CJK)",
       "title": "Klávesové zkratky",
       "searchShortcuts": "Vyhledat zkratky…",
       "filter": "Filtr",

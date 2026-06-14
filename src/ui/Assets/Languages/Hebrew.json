@@ -4,6 +4,8 @@
   "translatedBy": "Antigravity & cdtauman",
   "cultureName": "he-IL",
   "general": {
+    "selectNonForcedLines": "בחר שורות לא כפויות",
+    "selectForcedLines": "בחר שורות כפויות",
     "abort": "הפסק",
     "actor": "שחקן",
     "actors": "שחקנים",
@@ -1696,6 +1698,7 @@
       "maximumXCharactersPerSecond": "מקסימום {0} תווים לשנייה"
     },
     "imageBasedEdit": {
+      "setText": "קבע טקסט",
       "editImagedBaseSubtitle": "עריכת כתוביות מבוססות תמונה",
       "editImagedBaseSubtitleX": "עריכת כתוביות מבוססות תמונה: {0}",
       "resizeImagesDotDotDot": "שנה גודל תמונות...",
@@ -1911,6 +1914,7 @@
       "backendAndUpdateStatus": "מצב מנוע ועדקונים"
     },
     "textToSpeech": {
+      "piperSettings": "הגדרות Piper",
       "title": "טקסט לדיבור",
       "textToSpeechEngine": "מנוע טקסט לדיבור",
       "reviewAudioSegments": "TTS - סקור מקטעי שמע",
@@ -2171,6 +2175,10 @@
   },
   "options": {
     "settings": {
+      "musicSymbolsToReplace": "סמלי מוזיקה להחלפה (מופרדים בפסיק)",
+      "musicSymbol": "סמל מוזיקלי",
+      "colorWordsPerMinute": "צבע מילים/דקה אם גבוה מדי",
+      "colorCharactersPerSecond": "צבע תווים/שנייה אם גבוה מדי",
       "dialogStyle": "סגנון דו-שיח",
       "dialogStyleDashSecondLineWithoutSpace": "מקף בשורה השנייה ללא רווח",
       "dialogStyleDashSecondLineWithSpace": "מקף בשורה השנייה עם רווח",
@@ -2459,6 +2467,7 @@
       "textToSpeechPromptMergeContinuationLines": "טקסט לדיבור: בקש למזג שורות המשך"
     },
     "shortcuts": {
+      "generalUnbreakNoSpaceCjk": "בטל מעבר שורה ללא רווח (CJK)",
       "title": "קיצורי דרך",
       "searchShortcuts": "חפש קיצורי דרך...",
       "filter": "מסנן",

@@ -4,6 +4,8 @@
   "translatedBy": "",
   "cultureName": "bg-BG",
   "general": {
+    "selectNonForcedLines": "Избор на непринудени редове",
+    "selectForcedLines": "Избор на принудени редове",
     "abort": "Прекрати",
     "actor": "Актьор",
     "actors": "Актьори",
@@ -1742,6 +1744,7 @@
       "maximumXCharactersPerSecond": "Максимум {0} знака в секунда"
     },
     "imageBasedEdit": {
+      "setText": "Задаване на текст",
       "editImagedBaseSubtitle": "Редактиране на субтитри, базирани на изображения",
       "editImagedBaseSubtitleX": "Редактиране на субтитри, базирани на изображения: {0}",
       "resizeImagesDotDotDot": "Преоразмеряване на изображения...",
@@ -1910,6 +1913,7 @@
       "backendAndUpdateStatus": "Състояние на бекенд и актуализации"
     },
     "textToSpeech": {
+      "piperSettings": "Настройки на Piper",
       "title": "Текст в реч",
       "textToSpeechEngine": "Механизъм за текст в реч",
       "reviewAudioSegments": "TTS - Преглед на аудио сегменти",
@@ -2170,6 +2174,10 @@
   },
   "options": {
     "settings": {
+      "musicSymbolsToReplace": "Музикални символи за замяна (разделени със запетая)",
+      "musicSymbol": "Музикален символ",
+      "colorWordsPerMinute": "Оцветяване на думи/мин при твърде висока стойност",
+      "colorCharactersPerSecond": "Оцветяване на знаци/сек при твърде висока стойност",
       "dialogStyle": "Стил на диалоговия прозорец",
       "dialogStyleDashSecondLineWithoutSpace": "Тире на втория ред без интервал",
       "dialogStyleDashSecondLineWithSpace": "Тире на втория ред с интервал",
@@ -2458,6 +2466,7 @@
       "waveformExportThemeDotDotDot": "Експортиране на тема..."
     },
     "shortcuts": {
+      "generalUnbreakNoSpaceCjk": "Премахване на прекъсването без интервал (CJK)",
       "title": "Преки пътища",
       "searchShortcuts": "Търсене на преки пътища...",
       "filter": "Филтър",

@@ -4,6 +4,8 @@
   "translatedBy": "",
   "cultureName": "ru-RU",
   "general": {
+    "selectNonForcedLines": "Выделить непринудительные строки",
+    "selectForcedLines": "Выделить принудительные строки",
     "abort": "Отмена",
     "actor": "Актер",
     "actors": "Актеры",
@@ -1742,6 +1744,7 @@
       "maximumXCharactersPerSecond": "Максимальное количество символов в секунду: {0}"
     },
     "imageBasedEdit": {
+      "setText": "Задать текст",
       "editImagedBaseSubtitle": "Редактировать субтитры на основе изображений",
       "editImagedBaseSubtitleX": "Редактировать субтитры на основе изображений: {0}",
       "resizeImagesDotDotDot": "Изменить размер изображений...",
@@ -1910,6 +1913,7 @@
       "backendAndUpdateStatus": "Бэкенд и обновление статуса"
     },
     "textToSpeech": {
+      "piperSettings": "Настройки Piper",
       "title": "Преобразование текста в речь",
       "textToSpeechEngine": "механизм преобразования текста в речь",
       "reviewAudioSegments": "TTS - Обзор аудиофрагментов",
@@ -2170,6 +2174,10 @@
   },
   "options": {
     "settings": {
+      "musicSymbolsToReplace": "Музыкальные символы для замены (через запятую)",
+      "musicSymbol": "Музыкальный символ",
+      "colorWordsPerMinute": "Окрашивать слова/мин, если слишком высоко",
+      "colorCharactersPerSecond": "Окрашивать символы/сек, если слишком высоко",
       "dialogStyle": "Стиль диалога",
       "dialogStyleDashSecondLineWithoutSpace": "Прочерк во второй строке без пробела",
       "dialogStyleDashSecondLineWithSpace": "Прочерк второй строки пробелом",
@@ -2458,6 +2466,7 @@
       "waveformExportThemeDotDotDot": "Экспорт темы..."
     },
     "shortcuts": {
+      "generalUnbreakNoSpaceCjk": "Объединить без пробела (CJK)",
       "title": "Ярлыки",
       "searchShortcuts": "Поисковые ярлыки...",
       "filter": "Фильтр",
@@ -3092,6 +3101,7 @@
     "overrideTagsHistory": "Переопределить историю тегов"
   },
   "about": {
+    "descriptionText": "Subtitle Edit — это бесплатный редактор файлов субтитров с открытым исходным кодом, доступный для Windows, macOS и Linux.\nОн поддерживает более 300 форматов субтитров, распознавание текста (OCR), распознавание речи, перевод с помощью ИИ и многое другое.\n\nСпасибо, что вы часть сообщества Subtitle Edit! :)",
     "title": "О Subtitle Edit",
     "translatedBy": "Переведено: jekovcar {0}",
     "licenseText": "Subtitle Edit — это свободное программное обеспечение, распространяемое под лицензией MIT.",

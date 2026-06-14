@@ -4,6 +4,8 @@
   "TranslatedBy": "\u00DCbersetzt von Christoph Kitsche. \u00DCberarbeitet von Netspark und Stephan Lenhart.",
   "CultureName": "de-DE",
   "General": {
+    "SelectNonForcedLines": "Nicht erzwungene Zeilen ausw\u00E4hlen",
+    "SelectForcedLines": "Erzwungene Zeilen ausw\u00E4hlen",
     "Abort": "Abbrechen",
     "Actor": "Darsteller",
     "Actors": "Darsteller",
@@ -1750,6 +1752,7 @@
       "inverseSelection": "Auswahl umkehren"
     },
     "imageBasedEdit": {
+      "setText": "Text festlegen",
       "editImagedBaseSubtitle": "Bildbasierten Untertitel bearbeiten",
       "editImagedBaseSubtitleX": "Bildbasierten Untertitel bearbeiten: {0}",
       "resizeImagesDotDotDot": "Bildgr\u00F6\u00DFe \u00E4ndern...",
@@ -1937,6 +1940,7 @@
       "backendAndUpdateStatus": "Backend- und Update-Status"
     },
     "TextToSpeech": {
+      "PiperSettings": "Piper-Einstellungen",
       "Title": "Text-to-Speech",
       "TextToSpeechEngine": "Text-to-Speech-Engine",
       "ReviewAudioSegments": "TTS \u2013 Audiosegmente \u00FCberpr\u00FCfen",
@@ -2177,6 +2181,10 @@
   },
   "Options": {
     "Settings": {
+      "MusicSymbolsToReplace": "Zu ersetzende Musiksymbole (getrennt durch Komma)",
+      "MusicSymbol": "Musiksymbol",
+      "ColorWordsPerMinute": "W\u00F6rter/Min. einf\u00E4rben, wenn zu hoch",
+      "ColorCharactersPerSecond": "Zeichen/Sek. einf\u00E4rben, wenn zu hoch",
       "DialogStyle": "Dialogstil",
       "DialogStyleDashSecondLineWithoutSpace": "Zweite Zeile ohne Leerzeichen stricheln",
       "DialogStyleDashSecondLineWithSpace": "Zweite Zeile mit Leerzeichen stricheln",
@@ -2474,6 +2482,7 @@
       "waveformExportThemeDotDotDot": "Theme exportieren..."
     },
     "Shortcuts": {
+      "GeneralUnbreakNoSpaceCjk": "Ohne Leerzeichen aufheben (CJK)",
       "Title": "Tastenkombinationen",
       "SearchShortcuts": "Tastenkombinationen durchsuchen...",
       "Filter": "Filter",

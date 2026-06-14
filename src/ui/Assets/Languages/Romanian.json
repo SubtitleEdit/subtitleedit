@@ -4,6 +4,8 @@
   "translatedBy": "zildan v1 05.04.26",
   "cultureName": "ro-RO",
   "general": {
+    "selectNonForcedLines": "Selectați liniile neforțate",
+    "selectForcedLines": "Selectați liniile forțate",
     "abort": "Renunță",
     "actor": "Actor",
     "actors": "Actori",
@@ -1680,6 +1682,7 @@
       "maximumXCharactersPerSecond": "Maximum {0} caractere pe secundă"
     },
     "imageBasedEdit": {
+      "setText": "Setați textul",
       "editImagedBaseSubtitle": "Editați subtitrarea bazată pe imagini",
       "editImagedBaseSubtitleX": "Editați subtitrarea bazată pe imagini: {0}",
       "resizeImagesDotDotDot": "Redimensionați imaginile...",
@@ -1915,6 +1918,7 @@
       "backendAndUpdateStatus": "Starea backend-ului și a actualizării"
     },
     "textToSpeech": {
+      "piperSettings": "Setări Piper",
       "title": "Text în vorbire",
       "textToSpeechEngine": "Motor text în vorbire",
       "reviewAudioSegments": "TTS - Examinați segmentele audio",
@@ -2175,6 +2179,10 @@
   },
   "options": {
     "settings": {
+      "musicSymbolsToReplace": "Simboluri muzicale de înlocuit (separate prin virgulă)",
+      "musicSymbol": "Simbol muzical",
+      "colorWordsPerMinute": "Colorați cuvinte/min dacă e prea mare",
+      "colorCharactersPerSecond": "Colorați caractere/sec dacă e prea mare",
       "dialogStyle": "Stilul dialogului",
       "dialogStyleDashSecondLineWithoutSpace": "Tranzați a doua linie fără spațiu",
       "dialogStyleDashSecondLineWithSpace": "Tranzați a doua linie cu spațiu",
@@ -2465,6 +2473,7 @@
       "waveformExportThemeDotDotDot": "Exportați tema..."
     },
     "shortcuts": {
+      "generalUnbreakNoSpaceCjk": "Desfaceți fără spațiu (CJK)",
       "title": "Comenzi rapide",
       "searchShortcuts": "Căutați comenzi rapide...",
       "filter": "Filtra",

@@ -4,6 +4,8 @@
   "translatedBy": "Utku Gogus; Son güncelleme: Ahmet Murat Özhan (12.06.2026)",
   "cultureName": "tr-TR",
   "general": {
+    "volume": "Ses düzeyi",
+    "generatingAudioFile": "Ses dosyası oluşturuluyor...",
     "abort": "İptal",
     "actor": "Aktör",
     "actors": "Aktörler",
@@ -1049,6 +1051,7 @@
       "discSequenceNumber": "Disk sıra numarası"
     },
     "import": {
+      "alignViaSpeechToText": "Zaman kodlarını \"Konuşmadan metne\" ile hizala...",
       "importTimeCodes": "Zaman kodlarını içe aktar...",
       "plainTextDotDotDot": "Düz metin...",
       "titleImportPlainText": "Düz metin içe aktar",
@@ -1181,6 +1184,7 @@
       "codePage": "Kod sayfası"
     },
     "restoreAutoBackup": {
+      "restoreXFromY": "\"{0}\" dosyasını {1} tarihinden geri yüklemek ister misiniz?",
       "title": "Otomatik yedekten geri yükle",
       "openAutoBackupFolder": "Otomatik yedek klasörünü aç",
       "restoreAutoBackupFile": "Otomatik yedek dosyasını geri yükle",
@@ -2174,6 +2178,8 @@
   },
   "options": {
     "settings": {
+      "searchSettingsDotDotDot": "Ayarlarda ara...",
+      "promptBeforeDelete": "Silmeden önce sor",
       "dialogStyle": "Diyalog stili",
       "dialogStyleDashSecondLineWithoutSpace": "İkinci satırda boşluksuz tire",
       "dialogStyleDashSecondLineWithSpace": "İkinci satırda boşluklu tire",
