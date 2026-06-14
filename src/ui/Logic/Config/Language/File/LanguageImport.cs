@@ -65,8 +65,8 @@ Rules:
 • HH_MM_SS_MMM for start and end times
 • Double underscore separates start/end
 • Optional index after end time";
-        ImagedBasedSubtitleForEditDotDotDot = "Imaged-based subtitle for edit...";
-        ImagedBasedSubtitleForOcrDotDotDot = "Imaged-based subtitle for OCR...";
+        ImagedBasedSubtitleForEditDotDotDot = "Image-based subtitle for edit...";
+        ImagedBasedSubtitleForOcrDotDotDot = "Image-based subtitle for OCR...";
         SplitTextAt = "Split text at";
         BlankLines = "Blank lines";
         OneLineIsOneSubtitle = "One line is one subtitle";
