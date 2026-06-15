@@ -138,11 +138,6 @@ public partial class FindService : IFindService
         return CurrentLineNumber;
     }
 
-    public int Count(string searchText)
-    {
-        return Count(searchText, _textLines, WholeWord, CurrentFindMode);
-    }
-
     public int Count(string searchText, IReadOnlyList<string> textLines, bool wholeWord, FindMode findMode)
     {
         if (string.IsNullOrEmpty(searchText) || textLines == null || textLines.Count == 0)
