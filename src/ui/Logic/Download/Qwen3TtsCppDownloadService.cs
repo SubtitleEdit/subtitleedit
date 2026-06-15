@@ -49,7 +49,9 @@ public class Qwen3TtsCppDownloadService : IQwen3TtsCppDownloadService
         ["qwen3-tts-12hz-1.7b-voicedesign-q8_0.gguf"] = "https://huggingface.co/cstr/qwen3-tts-1.7b-voicedesign-GGUF/resolve/main/qwen3-tts-12hz-1.7b-voicedesign-q8_0.gguf",
     };
 
-    private const string VoicesUrl = "https://github.com/SubtitleEdit/support-files/releases/download/qwen3-tts-cpp-2026-4/voices.zip";
+    // -5 ships real spoken transcriptions (.txt ref-text) for every voice; -4 had only Wikimedia
+    // attribution blurbs, which the Qwen3 (CrispASR) Voice-clone backend can't use as ref-text.
+    private const string VoicesUrl = "https://github.com/SubtitleEdit/support-files/releases/download/qwen3-tts-cpp-2026-5/voices.zip";
 
     public Qwen3TtsCppDownloadService(HttpClient httpClient)
     {
