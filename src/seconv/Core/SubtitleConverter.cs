@@ -143,7 +143,7 @@ internal class SubtitleConverter
         {
             result.Errors.Add(
                 "VOB input is currently only supported with target format 'VobSub'. "
-                + "Re-run with --format VobSub to extract subtitles to .sub + .idx; the GUI is still required for OCR to text.");
+                + "Re-run with --format VobSub to extract subtitles to .sub + .idx, then convert that .sub to a text format (e.g. seconv movie.sub subrip) to OCR it.");
             result.FailedFiles = vobFiles.Count;
             return result;
         }
@@ -275,11 +275,21 @@ internal class SubtitleConverter
 
         if (ext == ".sub")
         {
-            // Treat .sub as VobSub input only when an .idx companion exists — otherwise
-            // (e.g. a text MicroDVD .sub) leave it for the text loader to detect via IsMine.
+            // Treat .sub as VobSub input when an .idx companion exists, or when the .sub is a
+            // binary VobSub stream even without one (read directly, default palette). A text
+            // MicroDVD .sub starts with text, not the MPEG pack header, so it's left for the
+            // text loader to detect via IsMine.
             var idxPath = Path.ChangeExtension(inputFile, ".idx");
-            if (File.Exists(idxPath))
+            var hasIdx = File.Exists(idxPath);
+            if (hasIdx || BitmapSubtitleLoader.IsBinaryVobSub(inputFile))
             {
+                if (!hasIdx && !options.Quiet)
+                {
+                    AnsiConsole.MarkupLine(
+                        $"[yellow]Note: VobSub '.sub' has no '.idx' companion ({Path.GetFileName(idxPath).EscapeMarkup()}); "
+                        + "reading timing from the stream and using a default color palette.[/]");
+                }
+
                 // IsPal: default to PAL to match VobSubExtractor. The .idx "size:" field
                 // could disambiguate per-file, but a wrong guess only affects timing scale,
                 // not bitmap content.
@@ -837,6 +847,15 @@ internal record class ConversionOptions
 
     /// <summary>Path to a <c>.nocr</c> database file (required when <c>OcrEngine == "nocr"</c>).</summary>
     public string? OcrDb { get; init; }
+
+    /// <summary>
+    /// When true, image-based sources (Blu-Ray <c>.sup</c>, VobSub <c>.sub</c>+<c>.idx</c>,
+    /// MKV PGS/VobSub, MP4 VobSub, TS DVB-sub) are converted to a text format keeping only
+    /// their time codes — OCR is skipped entirely and each entry's text is left empty. No
+    /// OCR engine is created, so this works without Tesseract/Paddle/etc. installed. Ignored
+    /// for text inputs and image output targets.
+    /// </summary>
+    public bool TimeCodesOnly { get; init; }
 
     /// <summary>Ollama API endpoint (default <c>http://localhost:11434/api/chat</c>).</summary>
     public string? OllamaUrl { get; init; }

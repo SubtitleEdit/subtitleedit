@@ -42,6 +42,7 @@ internal static class HelpDisplay
         ShowParameter("--ocr-engine:<engine>", "OCR engine: tesseract | nocr | binaryocr | ollama | paddle");
         ShowParameter("--ocr-language:<lang>", "Language for OCR (e.g. eng, deu, spa)");
         ShowParameter("--ocr-db:<path>", ".nocr (--ocr-engine=nocr) or .db (--ocr-engine=binaryocr)");
+        ShowParameter("--time-codes-only", "Image sources (.sup/VobSub/PGS/DVB) -> text with time codes only; skips OCR");
         ShowParameter("--ollama-url:<url>", "Ollama API endpoint (default: http://localhost:11434/api/chat)");
         ShowParameter("--ollama-model:<model>", "Ollama vision model (default: llama3.2-vision)");
         ShowParameter("--multiple-replace:<path.xml>", "SE MultipleSearchAndReplaceGroups XML applied per paragraph");
@@ -110,6 +111,9 @@ internal static class HelpDisplay
         ShowExample(
             "seconv movie.sup subrip --ocr-engine:nocr --ocr-db:Latin.nocr",
             "OCR a Blu-Ray .sup using nOCR");
+        ShowExample(
+            "seconv movie.sup subrip --time-codes-only",
+            "Extract only the time codes from a .sup (no OCR; empty text)");
         ShowExample(
             "seconv subs.srt customtext --custom-format:my-template.xml",
             "Render via a custom text format template");

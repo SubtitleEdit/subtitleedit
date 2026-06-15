@@ -48,38 +48,43 @@ public class ContainerLoaderTest : IDisposable
     }
 
     [Fact]
-    public async Task ConvertAsync_MkvWithImageTracks_OcrsPgsAndSkipsVobSub()
+    public async Task ConvertAsync_MkvWithImageTracks_TimeCodesOnly_ProducesBothTracks()
     {
         // container_image.mkv has both a VobSub (S_VOBSUB) and a PGS (S_HDMV/PGS)
-        // image-subtitle track. Behaviour split:
-        //  - PGS: OCR'd via Tesseract to text → one .srt produced
-        //  - VobSub: warned-and-skipped (seconv has no VobSub OCR path yet)
-        //
-        // PGS OCR shells out to the Tesseract binary, which seconv does not bundle.
-        // Skip (don't fail) when it isn't installed so the suite stays green on
-        // machines/CI without Tesseract on PATH.
-        Assert.SkipWhen(
-            TesseractOcrEngine.Detect() is null,
-            "Tesseract is not installed on PATH; PGS OCR cannot run.");
-
+        // image-subtitle track. With --time-codes-only both are decoded for timing and
+        // emitted as text (empty text), no OCR engine required — so this runs everywhere,
+        // and proves the VobSub-in-MKV path is wired (it used to be warned-and-skipped).
         var input = Fixtures.Path("container_image.mkv");
         Assert.True(File.Exists(input), $"Fixture missing: {input}");
         var outputFolder = Path.Combine(_tempRoot, "out");
         Directory.CreateDirectory(outputFolder);
 
         var converter = new SubtitleConverter();
+        // Overwrite=false so the two same-language ("und") tracks get distinct names via the
+        // track-number disambiguation (movie.und.srt + movie.#N.und.srt) instead of one
+        // clobbering the other.
         var result = await converter.ConvertAsync(new ConversionOptions
         {
             Patterns = [input],
             Format = "SubRip",
             OutputFolder = outputFolder,
-            Overwrite = true,
+            Overwrite = false,
+            TimeCodesOnly = true,
         });
 
-        // The PGS track converts; the VobSub track is skipped (one success, no error).
+        // Both image tracks (PGS + VobSub) convert: two successes, two .srt outputs.
         Assert.True(result.Success, string.Join("; ", result.Errors));
-        Assert.Equal(1, result.SuccessfulFiles);
-        Assert.Single(Directory.GetFiles(outputFolder, "*.srt"));
+        Assert.Equal(2, result.SuccessfulFiles);
+        var outputs = Directory.GetFiles(outputFolder, "*.srt");
+        Assert.Equal(2, outputs.Length);
+
+        // Every output carries time codes but no recognised text (no letters leaked in).
+        foreach (var f in outputs)
+        {
+            var content = await File.ReadAllTextAsync(f, TestContext.Current.CancellationToken);
+            Assert.Contains("-->", content);
+            Assert.DoesNotContain(content, c => char.IsLetter(c));
+        }
     }
 
     [Fact]

@@ -1,6 +1,7 @@
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using SkiaSharp;
 using Spectre.Console;
@@ -16,7 +17,9 @@ namespace SeConv.Core;
 internal static class ImageOcrLoader
 {
     /// <summary>
-    /// Blu-Ray .sup → text via Tesseract.
+    /// Blu-Ray .sup → text via the configured OCR engine. When
+    /// <see cref="ConversionOptions.TimeCodesOnly"/> is set, OCR is skipped entirely and
+    /// each entry keeps its timing with empty text — no OCR engine is even created.
     /// </summary>
     public static Subtitle LoadBluRaySup(string filePath, ConversionOptions options)
     {
@@ -27,13 +30,20 @@ internal static class ImageOcrLoader
             throw new InvalidOperationException($"No Blu-Ray sup subtitles found in: {filePath}");
         }
 
+        if (options.TimeCodesOnly)
+        {
+            AnsiConsole.MarkupLine($"[dim]Extracting time codes from {pcsList.Count} Blu-Ray sup image(s) (no OCR)...[/]");
+            return PcsListToSubtitle(pcsList, null);
+        }
+
         using var ocr = OcrEngineFactory.Create(options);
         AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {pcsList.Count} Blu-Ray sup image(s)...[/]");
-        return OcrPcsList(pcsList, ocr);
+        return PcsListToSubtitle(pcsList, ocr);
     }
 
     /// <summary>
-    /// MKV PGS track (S_HDMV/PGS) → text via the configured OCR engine.
+    /// MKV PGS track (S_HDMV/PGS) → text via the configured OCR engine, or time codes only
+    /// when <see cref="ConversionOptions.TimeCodesOnly"/> is set.
     /// </summary>
     public static Subtitle LoadMatroskaPgs(MatroskaFile matroska, MatroskaTrackInfo track, ConversionOptions options)
     {
@@ -42,15 +52,23 @@ internal static class ImageOcrLoader
         {
             throw new InvalidOperationException($"No PGS subtitles in MKV track #{track.TrackNumber}.");
         }
+
+        if (options.TimeCodesOnly)
+        {
+            AnsiConsole.MarkupLine($"[dim]Extracting time codes from {pcsList.Count} MKV PGS image(s) (track #{track.TrackNumber}, no OCR)...[/]");
+            return PcsListToSubtitle(pcsList, null);
+        }
+
         using var ocr = OcrEngineFactory.Create(options);
         AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {pcsList.Count} MKV PGS image(s) (track #{track.TrackNumber})...[/]");
-        return OcrPcsList(pcsList, ocr);
+        return PcsListToSubtitle(pcsList, ocr);
     }
 
     /// <summary>
-    /// Transport stream DVB-sub → text via Tesseract. Returns one Subtitle per packet ID
-    /// that has subtitles. Teletext PIDs are not handled here (they're already text;
-    /// see <see cref="ContainerSubtitleLoader"/>).
+    /// Transport stream DVB-sub → text via the configured OCR engine, or time codes only
+    /// when <see cref="ConversionOptions.TimeCodesOnly"/> is set. Returns one Subtitle per
+    /// packet ID that has subtitles. Teletext PIDs are not handled here (they're already
+    /// text; see <see cref="ContainerSubtitleLoader"/>).
     /// </summary>
     public static List<(Subtitle Subtitle, int PacketId)> LoadTransportStreamDvbSub(string filePath, ConversionOptions options)
     {
@@ -63,48 +81,146 @@ internal static class ImageOcrLoader
             return results;
         }
 
-        using var ocr = OcrEngineFactory.Create(options);
-
-        foreach (var pid in parser.SubtitlePacketIds)
+        // Time-codes-only needs no recognition, so don't create (or require) an OCR engine.
+        IOcrEngine? ocr = options.TimeCodesOnly ? null : OcrEngineFactory.Create(options);
+        try
         {
-            var dvbSubtitles = parser.GetDvbSubtitles(pid);
-            if (dvbSubtitles.Count == 0)
+            foreach (var pid in parser.SubtitlePacketIds)
             {
-                continue;
-            }
-
-            AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {dvbSubtitles.Count} DVB-sub image(s) (PID {pid})...[/]");
-            var subtitle = new Subtitle();
-            foreach (var dvb in dvbSubtitles)
-            {
-                var bitmap = dvb.GetBitmap();
-                if (bitmap is null)
+                var dvbSubtitles = parser.GetDvbSubtitles(pid);
+                if (dvbSubtitles.Count == 0)
                 {
                     continue;
                 }
-                try
+
+                AnsiConsole.MarkupLine(ocr is null
+                    ? $"[dim]Extracting time codes from {dvbSubtitles.Count} DVB-sub image(s) (PID {pid}, no OCR)...[/]"
+                    : $"[dim]Running {ocr.Name} OCR on {dvbSubtitles.Count} DVB-sub image(s) (PID {pid})...[/]");
+                var subtitle = new Subtitle();
+                foreach (var dvb in dvbSubtitles)
                 {
-                    var text = ocr.Recognize(bitmap);
-                    if (!string.IsNullOrWhiteSpace(text))
+                    var bitmap = dvb.GetBitmap();
+                    if (bitmap is null)
                     {
-                        subtitle.Paragraphs.Add(new LibSeParagraph(text, (double)dvb.StartMilliseconds, (double)dvb.EndMilliseconds));
+                        continue;
+                    }
+                    try
+                    {
+                        // ocr == null → time-codes-only: keep the entry with empty text.
+                        var text = ocr is null ? string.Empty : ocr.Recognize(bitmap);
+                        if (ocr is null || !string.IsNullOrWhiteSpace(text))
+                        {
+                            subtitle.Paragraphs.Add(new LibSeParagraph(text, (double)dvb.StartMilliseconds, (double)dvb.EndMilliseconds));
+                        }
+                    }
+                    finally
+                    {
+                        bitmap.Dispose();
                     }
                 }
-                finally
+                subtitle.Renumber();
+                if (subtitle.Paragraphs.Count > 0)
                 {
-                    bitmap.Dispose();
+                    results.Add((subtitle, pid));
                 }
             }
-            subtitle.Renumber();
-            if (subtitle.Paragraphs.Count > 0)
-            {
-                results.Add((subtitle, pid));
-            }
+        }
+        finally
+        {
+            ocr?.Dispose();
         }
         return results;
     }
 
-    private static Subtitle OcrPcsList(List<BluRaySupParser.PcsData> pcsList, IOcrEngine ocr)
+    /// <summary>
+    /// VobSub <c>.sub</c> + <c>.idx</c> pair → text via the configured OCR engine, or time
+    /// codes only when <see cref="ConversionOptions.TimeCodesOnly"/> is set.
+    /// </summary>
+    public static Subtitle LoadVobSub(string subPath, string idxPath, ConversionOptions options)
+    {
+        // IsPal default mirrors BitmapSubtitleLoader / VobSubExtractor — a wrong guess only
+        // affects timing scale, which doesn't matter for OCR/time-code extraction.
+        var items = BitmapSubtitleLoader.LoadVobSub(subPath, idxPath, isPal: true);
+        return OcrBitmapItems(items, options, $"{items.Count} VobSub image(s)");
+    }
+
+    /// <summary>
+    /// VobSub MKV track (<c>S_VOBSUB</c>) → text via the configured OCR engine, or time
+    /// codes only when <see cref="ConversionOptions.TimeCodesOnly"/> is set.
+    /// </summary>
+    public static Subtitle LoadMatroskaVobSub(MatroskaFile matroska, MatroskaTrackInfo track, ConversionOptions options)
+    {
+        var items = BitmapSubtitleLoader.LoadMatroskaVobSub(matroska, track);
+        return OcrBitmapItems(items, options, $"{items.Count} MKV VobSub image(s) (track #{track.TrackNumber})");
+    }
+
+    /// <summary>
+    /// VobSub MP4 track (handler <c>subp</c>) → text via the configured OCR engine, or time
+    /// codes only when <see cref="ConversionOptions.TimeCodesOnly"/> is set.
+    /// </summary>
+    public static Subtitle LoadMp4VobSub(Trak track, ConversionOptions options)
+    {
+        var items = BitmapSubtitleLoader.LoadMp4VobSub(track);
+        return OcrBitmapItems(items, options, $"{items.Count} MP4 VobSub image(s)");
+    }
+
+    /// <summary>
+    /// Shared driver for the VobSub sources: recognises each pre-decoded bitmap to text
+    /// (or keeps timing with empty text in time-codes-only mode), disposing the bitmaps
+    /// afterwards. The OCR engine is only created when recognition is actually needed.
+    /// </summary>
+    private static Subtitle OcrBitmapItems(
+        IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem> items, ConversionOptions options, string what)
+    {
+        try
+        {
+            if (options.TimeCodesOnly)
+            {
+                AnsiConsole.MarkupLine($"[dim]Extracting time codes from {what} (no OCR)...[/]");
+                return BitmapItemsToSubtitle(items, null);
+            }
+
+            using var ocr = OcrEngineFactory.Create(options);
+            AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {what}...[/]");
+            return BitmapItemsToSubtitle(items, ocr);
+        }
+        finally
+        {
+            foreach (var item in items)
+            {
+                item.Dispose();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Turns pre-decoded bitmap events into a Subtitle. <paramref name="ocr"/> null =
+    /// time-codes-only (empty text kept); non-null = recognise each bitmap and drop blanks.
+    /// </summary>
+    private static Subtitle BitmapItemsToSubtitle(
+        IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem> items, IOcrEngine? ocr)
+    {
+        var subtitle = new Subtitle();
+        foreach (var item in items)
+        {
+            var text = ocr is null ? string.Empty : ocr.Recognize(item.Bitmap);
+            if (ocr is null || !string.IsNullOrWhiteSpace(text))
+            {
+                subtitle.Paragraphs.Add(new LibSeParagraph(
+                    text, item.StartTime.TotalMilliseconds, item.EndTime.TotalMilliseconds));
+            }
+        }
+        subtitle.Renumber();
+        return subtitle;
+    }
+
+    /// <summary>
+    /// Turns a PCS list into a Subtitle. When <paramref name="ocr"/> is non-null each
+    /// bitmap is recognised to text; when it's null (time-codes-only mode) every entry is
+    /// kept with empty text so the output carries timing but no recognised characters.
+    /// Entries whose bitmap is null (e.g. clear-screen commands) are skipped in both modes.
+    /// </summary>
+    private static Subtitle PcsListToSubtitle(List<BluRaySupParser.PcsData> pcsList, IOcrEngine? ocr)
     {
         var subtitle = new Subtitle();
 
@@ -117,8 +233,8 @@ internal static class ImageOcrLoader
             }
             try
             {
-                var text = ocr.Recognize(bitmap);
-                if (!string.IsNullOrWhiteSpace(text))
+                var text = ocr is null ? string.Empty : ocr.Recognize(bitmap);
+                if (ocr is null || !string.IsNullOrWhiteSpace(text))
                 {
                     subtitle.Paragraphs.Add(new LibSeParagraph(text, pcs.StartTime / 90.0, pcs.EndTime / 90.0));
                 }

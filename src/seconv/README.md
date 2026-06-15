@@ -8,7 +8,8 @@ operations, and OCR engines as the desktop UI — without an Avalonia / GUI depe
 
 - 380+ subtitle formats (text, binary, image-based)
 - Container input: Matroska (.mkv/.mks), MP4, MCC, MXF, transport stream teletext
-- OCR pipelines for image-based sources (Blu-Ray .sup, MKV PGS, DVB-sub)
+- OCR pipelines for image-based sources (Blu-Ray .sup, VobSub .sub/.idx, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub)
+- Time-codes-only extraction (`--time-codes-only`): timing without OCR for any of the above
 - Five OCR engines: Tesseract subprocess, nOCR (built-in), BinaryOCR (built-in), Ollama (HTTP), PaddleOCR subprocess
 - Image-based output: Blu-Ray sup, BDN-XML, DOST, FCP, D-Cinema interop / SMPTE 2014, images-with-time-code, WebVTT thumbnails
 - Image-to-image conversion (preserve source bitmaps, no OCR): Blu-Ray .sup, VobSub .sub/.idx, MKV PGS, TS DVB-sub → any image output format
@@ -45,6 +46,10 @@ seconv movie.sup subrip --ocr-engine:tesseract --ocr-language:eng  # OCR a Blu-R
 seconv movie.sup subrip --ocr-engine:nocr --ocr-db:Latin.nocr  # OCR via nOCR
 seconv movie.sup subrip --ocr-engine:binaryocr --ocr-db:Latin.db # OCR via BinaryOCR
 seconv movie.sup subrip --ocr-engine:ollama --ollama-model:llama3.2-vision
+seconv movie.sub subrip --ocr-engine:tesseract --ocr-language:eng  # OCR a VobSub .sub (.idx auto-detected)
+seconv movie.mkv subrip --ocr-engine:nocr --ocr-db:Latin.nocr  # OCR MKV PGS/VobSub tracks
+seconv movie.sup subrip --time-codes-only                      # time codes only, no OCR
+seconv movie.sub subrip --time-codes-only                      # VobSub time codes only, no OCR
 
 seconv subs.srt bluraysup --resolution:1920x1080               # render text → Blu-Ray sup
 seconv subs.srt bdnxml --resolution:1920x1080                  # render text → BDN-XML
@@ -151,6 +156,7 @@ already has and only repair true overlaps.
 | `--ocr-db:<path>` | OCR database file: `.nocr` for `nocr`, `.db` for `binaryocr` (required for both) |
 | `--ollama-url:<url>` | Default `http://localhost:11434/api/chat` |
 | `--ollama-model:<model>` | Default `llama3.2-vision` |
+| `--time-codes-only` | Image sources (`.sup`, VobSub `.sub`/`.idx`, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub) → text with time codes only and empty text; **skips OCR** (no OCR engine required) |
 
 > **OCR database files are not bundled with `seconv`.** The `nocr` and `binaryocr` engines
 > need a `.nocr` or `.db` file passed via `--ocr-db`. Sources:
@@ -169,7 +175,7 @@ and re-rasterising at the CLI's default font. Routing is automatic — no flag n
 | Input | Detection | Outputs |
 |---|---|---|
 | `.sup` | extension | any image format |
-| `.sub` (VobSub) | `.idx` companion next to it | any image format |
+| `.sub` (VobSub) | `.idx` companion next to it, or a binary VobSub stream (read with a default palette) | any image format |
 | `.mkv` / `.mks` | `S_HDMV/PGS` track present | any image format (one output per track) |
 | `.ts` / `.m2ts` / `.mts` | DVB-sub PID present | any image format (one output per PID) |
 

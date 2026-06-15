@@ -86,6 +86,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Path to a .nocr file (--ocr-engine=nocr) or .db file (--ocr-engine=binaryocr)")]
         public string? OcrDb { get; init; }
 
+        [CommandOption("--time-codes-only|--timecodesonly")]
+        [Description("For image-based sources (.sup, VobSub .sub/.idx, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub): output time codes only with empty text; skips OCR (no OCR engine required)")]
+        public bool TimeCodesOnly { get; init; }
+
         [CommandOption("--ollama-url")]
         [Description("Ollama API endpoint (default: http://localhost:11434/api/chat)")]
         public string? OllamaUrl { get; init; }
@@ -449,6 +453,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 OcrEngine = string.IsNullOrWhiteSpace(settings.OcrEngine) ? "tesseract" : settings.OcrEngine,
                 OcrLanguage = settings.OcrLanguage ?? "eng",
                 OcrDb = settings.OcrDb,
+                TimeCodesOnly = settings.TimeCodesOnly,
                 OllamaUrl = settings.OllamaUrl,
                 OllamaModel = settings.OllamaModel,
                 TeletextOnly = settings.TeletextOnly,

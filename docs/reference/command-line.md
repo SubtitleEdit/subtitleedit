@@ -164,6 +164,7 @@ If two tracks share a language, the track number is added: `movie.#3.eng.srt`.
 | `--ocr-db:<path>` | OCR database file: `.nocr` for `nocr`, `.db` for `binaryocr` (required for both) |
 | `--ollama-url:<url>` | Default `http://localhost:11434/api/chat` |
 | `--ollama-model:<model>` | Default `llama3.2-vision` |
+| `--time-codes-only` | Image sources (`.sup`, VobSub `.sub`/`.idx`, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub) → text format with time codes only and empty text. **Skips OCR entirely** — no OCR engine required. Ignored for text inputs and image output targets. |
 
 > **OCR database files are not bundled with `seconv`.** The `nocr` and `binaryocr` engines need a `.nocr` or `.db` file passed via `--ocr-db`. Sources:
 >
@@ -183,11 +184,18 @@ seconv movie.sup subrip --ocr-engine:nocr --ocr-db:"C:\Users\me\AppData\Roaming\
 # BinaryOCR
 seconv movie.sup subrip --ocr-engine:binaryocr --ocr-db:"C:\Users\me\AppData\Roaming\Subtitle Edit\Ocr\Latin.db"
 
-# MKV with image (PGS) tracks — OCR runs automatically
+# MKV with image (PGS or VobSub) tracks — OCR runs automatically
 seconv movie.mkv subrip --ocr-engine:tesseract --ocr-language:eng
+
+# VobSub .sub + .idx pair — the .idx companion is auto-detected
+seconv movie.sub subrip --ocr-engine:tesseract --ocr-language:eng
 
 # Transport-stream teletext (no OCR needed)
 seconv broadcast.ts subrip
+
+# Time codes only — extract timing with no OCR (empty text); works for any image source
+seconv movie.sup subrip --time-codes-only
+seconv movie.sub subrip --time-codes-only
 ```
 
 ### Templates / replacements
