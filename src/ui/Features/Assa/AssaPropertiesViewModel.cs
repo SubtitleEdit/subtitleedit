@@ -78,6 +78,7 @@ public partial class AssaPropertiesViewModel : ObservableObject
 
     private void UpdateHeader()
     {
+        UpdateTag("Title", ScriptTitle, string.IsNullOrWhiteSpace(ScriptTitle));
         UpdateTag("Original Script", OriginalScript, string.IsNullOrWhiteSpace(OriginalScript));
         UpdateTag("Original Translation", Translation, string.IsNullOrWhiteSpace(Translation));
         UpdateTag("Original Editing", Editing, string.IsNullOrWhiteSpace(Editing));
