@@ -148,10 +148,26 @@ public partial class FindService : IFindService
         int count = 0;
         for (int i = 0; i < _textLines.Count; i++)
         {
-            count += CountMatchesInLine(_textLines[i], searchText);
+            count += CountMatchesInLine(_textLines[i], searchText, WholeWord, CurrentFindMode);
         }
 
         return count;
+    }
+
+    public int Count(string searchText, IReadOnlyList<string> textLines, bool wholeWord, FindMode findMode)
+    {
+        if (string.IsNullOrEmpty(searchText) || textLines == null || textLines.Count == 0)
+        {
+            return 0;
+        }
+
+        var total = 0;
+        foreach (var line in textLines)
+        {
+            total += CountMatchesInLine(line, searchText, wholeWord, findMode);
+        }
+
+        return total;
     }
 
     public List<(int LineIndex, int TextIndex, string FoundText)> FindAll(string searchText)
@@ -165,7 +181,7 @@ public partial class FindService : IFindService
 
         for (int lineIndex = 0; lineIndex < _textLines.Count; lineIndex++)
         {
-            var matches = GetAllMatchesInLine(_textLines[lineIndex], searchText);
+            var matches = GetAllMatchesInLine(_textLines[lineIndex], searchText, WholeWord, CurrentFindMode);
             foreach (var match in matches)
             {
                 results.Add((lineIndex, match.Index, match.Value));
@@ -590,14 +606,14 @@ public partial class FindService : IFindService
         return (false, -1, string.Empty);
     }
 
-    private int CountMatchesInLine(string line, string searchText)
+    private int CountMatchesInLine(string line, string searchText, bool wholeWord, FindMode findMode)
     {
         if (string.IsNullOrEmpty(line))
         {
             return 0;
         }
 
-        switch (CurrentFindMode)
+        switch (findMode)
         {
             case FindMode.RegularExpression:
                 try
@@ -611,12 +627,12 @@ public partial class FindService : IFindService
                 }
 
             default:
-                var matches = GetAllMatchesInLine(line, searchText);
+                var matches = GetAllMatchesInLine(line, searchText, wholeWord, findMode);
                 return matches.Count;
         }
     }
 
-    private List<FindMatch> GetAllMatchesInLine(string line, string searchText)
+    private List<FindMatch> GetAllMatchesInLine(string line, string searchText, bool wholeWord, FindMode findMode)
     {
         var matches = new List<FindMatch>();
 
@@ -625,7 +641,7 @@ public partial class FindService : IFindService
             return matches;
         }
 
-        switch (CurrentFindMode)
+        switch (findMode)
         {
             case FindMode.RegularExpression:
                 try
@@ -644,14 +660,14 @@ public partial class FindService : IFindService
                 break;
 
             default:
-                var comparison = CurrentFindMode == FindMode.CaseSensitive
+                var comparison = findMode == FindMode.CaseSensitive
                     ? StringComparison.Ordinal
                     : StringComparison.OrdinalIgnoreCase;
 
-                if (WholeWord)
+                if (wholeWord)
                 {
                     var pattern = RegexUtils.BuildWholeWordPattern(searchText);
-                    var options = CurrentFindMode == FindMode.CaseInsensitive ? RegexOptions.IgnoreCase : RegexOptions.None;
+                    var options = findMode == FindMode.CaseInsensitive ? RegexOptions.IgnoreCase : RegexOptions.None;
 
                     try
                     {

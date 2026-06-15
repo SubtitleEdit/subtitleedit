@@ -111,18 +111,7 @@ public partial class ReplaceViewModel : ObservableObject
             return;
         }
 
-        // Preserve the last-found position so a Replace pressed after Count still
-        // knows which occurrence to replace (Initialize wipes it via ResetSearchState).
-        var savedLine  = _findService.CurrentLineNumber;
-        var savedIndex = _findService.CurrentTextIndex;
-        var savedText  = _findService.CurrentTextFound;
-
-        _findService.Initialize(_subs, 0, WholeWord, FindMode);
-        var count = _findService.Count(SearchText);
-
-        _findService.CurrentLineNumber = savedLine;
-        _findService.CurrentTextIndex  = savedIndex;
-        _findService.CurrentTextFound  = savedText;
+        var count = _findService.Count(SearchText, _subs, WholeWord, FindMode);
 
         if (count <= 0)
         {
