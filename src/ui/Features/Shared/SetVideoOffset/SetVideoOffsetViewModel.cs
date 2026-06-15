@@ -42,7 +42,7 @@ public partial class SetVideoOffsetViewModel : ObservableObject
             return;
         }
 
-        Se.Settings.General.CurrentVideoOffsetInMs = (int)Math.Round(TimeOffset.Value.TotalMilliseconds, MidpointRounding.AwayFromZero);
+        Se.Settings.General.CurrentVideoOffsetInMs = (long)Math.Round(TimeOffset.Value.TotalMilliseconds, MidpointRounding.AwayFromZero);
         OkPressed = true;
         Window?.Close();
     }

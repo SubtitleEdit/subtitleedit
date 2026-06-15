@@ -6087,6 +6087,8 @@ public partial class MainViewModel :
             return;
         }
 
+        var oldOffsetMs = Se.Settings.General.CurrentVideoOffsetInMs;
+
         var result = await ShowDialogAsync<SetVideoOffsetWindow, SetVideoOffsetViewModel>();
 
         if (result.ResetPressed)
@@ -6111,14 +6113,23 @@ public partial class MainViewModel :
                 offset = offset - TimeSpan.FromSeconds(vp.Position);
             }
 
-            Se.Settings.General.CurrentVideoOffsetInMs = (int)Math.Round(offset.TotalMilliseconds, MidpointRounding.AwayFromZero);
+            Se.Settings.General.CurrentVideoOffsetInMs = (long)Math.Round(offset.TotalMilliseconds, MidpointRounding.AwayFromZero);
         }
 
-        if (result.KeepTimeCodes)
+        // The video offset is a non-destructive display offset (see TimeSpanToDisplayFullConverter):
+        // the listview shows "time code + offset" while the underlying time codes stay untouched.
+        // "Keep existing time codes" therefore leaves the time codes alone. When it is NOT checked,
+        // we bake the offset change into the time codes so the displayed values stay the same.
+        if (!result.KeepTimeCodes)
         {
-            foreach (var s in Subtitles)
+            var delta = TimeSpan.FromMilliseconds(Se.Settings.General.CurrentVideoOffsetInMs - oldOffsetMs);
+            if (delta != TimeSpan.Zero)
             {
-                s.StartTime = s.StartTime - offset;
+                foreach (var s in Subtitles)
+                {
+                    s.StartTime -= delta;
+                    s.EndTime -= delta;
+                }
             }
         }
 
