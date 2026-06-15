@@ -9946,9 +9946,10 @@ public partial class MainViewModel :
             return;
         }
 
-        var findSearchText = _findViewModel?.SearchText;
-        var findMode = _findViewModel?.FindMode;
-        var findWholeWord = _findViewModel?.WholeWord;
+        var activeFindVm = _findViewModel?.Window?.IsVisible == true ? _findViewModel : null;
+        var findSearchText = activeFindVm?.SearchText;
+        var findMode = activeFindVm?.FindMode;
+        var findWholeWord = activeFindVm?.WholeWord;
 
         if (_findViewModel != null)
         {
