@@ -204,7 +204,9 @@ public class AudioVisualizer : Control
     public double ShotChangeSnapSeconds { get; set; } = 0.05;
     public WaveformDrawStyle WaveformDrawStyle { get; set; } = WaveformDrawStyle.Classic;
 
-    public bool SnapToShotChanges { get; set; } = true;
+    // Reads the user setting directly (like SnapToFrames) so the "Snap to shot changes"
+    // checkbox actually takes effect, and does so live without re-wiring at every call site.
+    public bool SnapToShotChanges => Se.Settings.Waveform.SnapToShotChanges;
     public bool FocusOnMouseOver { get; set; } = true;
     public int WaveformHeightPercentage { get; set; } = 50;
     public Color WaveformFancyHighColor { get; set; } = Colors.Orange;
