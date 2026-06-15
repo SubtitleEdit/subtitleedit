@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -26,7 +27,9 @@ public partial class ReplaceViewModel : ObservableObject
     public partial FindMode FindMode { get; set; }
     
     public Window? Window { get; set; }
+    public Action? FocusSearchBox { get; set; }
 
+    public bool FocusReplaceOnOpen { get; set; }
     public bool FindNextPressed { get; private set; }
     public bool ReplacePressed { get; private set; }
     public bool ReplaceAllPressed { get; private set; }

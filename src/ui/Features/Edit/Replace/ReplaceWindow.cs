@@ -197,14 +197,29 @@ public class ReplaceWindow : Window
 
         Content = grid;
 
+        vm.FocusSearchBox = () => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            textBoxFind.GetVisualDescendants()
+                       .OfType<TextBox>()
+                       .FirstOrDefault()?
+                       .Focus();
+        });
+
         Opened += delegate
         {
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
             {
-                textBoxFind.GetVisualDescendants()
-                           .OfType<TextBox>()
-                           .FirstOrDefault()?
-                           .Focus();
+                if (vm.FocusReplaceOnOpen)
+                {
+                    textBoxReplace.Focus();
+                }
+                else
+                {
+                    textBoxFind.GetVisualDescendants()
+                               .OfType<TextBox>()
+                               .FirstOrDefault()?
+                               .Focus();
+                }
             });
         };
         AddHandler(KeyDownEvent, vm.OnKeyDown, RoutingStrategies.Tunnel);

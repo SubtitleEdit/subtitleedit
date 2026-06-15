@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -9574,6 +9575,7 @@ public partial class MainViewModel :
             _findPreviousFocus = Window?.FocusManager?.GetFocusedElement() as Control;
             _findViewModel.ResultFound = false;
             _findViewModel.Window.Activate();
+            _findViewModel.FocusSearchBox?.Invoke();
             return;
         }
 
@@ -9597,8 +9599,25 @@ public partial class MainViewModel :
             }
 
             vm.InitializeFindData(_findService, subs, selectedText, this);
+            window.AddHandler(InputElement.KeyDownEvent, _shortcutManager.OnKeyPressed, RoutingStrategies.Tunnel);
+            window.AddHandler(InputElement.KeyUpEvent, _shortcutManager.OnKeyReleased, RoutingStrategies.Bubble);
+            window.KeyDown += (_, e) =>
+            {
+                var cmd = _shortcutManager.CheckShortcuts(e, ShortcutCategory.General.ToString());
+                if (ReferenceEquals(cmd, ShowReplaceCommand))
+                {
+                    e.Handled = true;
+                    ShowReplace();
+                }
+                else if (ReferenceEquals(cmd, ShowFindCommand))
+                {
+                    e.Handled = true;
+                    vm.FocusSearchBox?.Invoke();
+                }
+            };
             window.Closed += (_, _) =>
             {
+                _shortcutManager.ClearKeys();
                 if (_findClosingProgrammatically)
                 {
                     _findClosingProgrammatically = false;
@@ -9873,6 +9892,10 @@ public partial class MainViewModel :
             return;
         }
 
+        var findSearchText = _findViewModel?.SearchText;
+        var findMode = _findViewModel?.FindMode;
+        var findWholeWord = _findViewModel?.WholeWord;
+
         if (_findViewModel != null)
         {
             _findClosingProgrammatically = true;
@@ -9885,6 +9908,7 @@ public partial class MainViewModel :
             _replacePreviousFocus = Window?.FocusManager?.GetFocusedElement() as Control;
             _replaceViewModel.ResultFound = false;
             _replaceViewModel.Window.Activate();
+            _replaceViewModel.FocusSearchBox?.Invoke();
             return;
         }
 
@@ -9908,8 +9932,30 @@ public partial class MainViewModel :
             }
 
             vm.InitializeFindData(_findService, subs, selectedText, this);
+            if (!string.IsNullOrEmpty(findSearchText))
+            {
+                vm.SearchText = findSearchText;
+                vm.FocusReplaceOnOpen = true;
+            }
+            if (findMode.HasValue)
+            {
+                vm.FindMode = findMode.Value;
+                vm.WholeWord = findWholeWord!.Value;
+            }
+            window.AddHandler(InputElement.KeyDownEvent, _shortcutManager.OnKeyPressed, RoutingStrategies.Tunnel);
+            window.AddHandler(InputElement.KeyUpEvent, _shortcutManager.OnKeyReleased, RoutingStrategies.Bubble);
+            window.KeyDown += (_, e) =>
+            {
+                var cmd = _shortcutManager.CheckShortcuts(e, ShortcutCategory.General.ToString());
+                if (ReferenceEquals(cmd, ShowReplaceCommand))
+                {
+                    e.Handled = true;
+                    vm.FocusSearchBox?.Invoke();
+                }
+            };
             window.Closed += (_, _) =>
             {
+                _shortcutManager.ClearKeys();
                 if (_replaceClosingProgrammatically)
                 {
                     _replaceClosingProgrammatically = false;
