@@ -4,8 +4,6 @@
   "translatedBy": "",
   "cultureName": "jp-JP",
   "general": {
-    "selectNonForcedLines": "非強制行を選択",
-    "selectForcedLines": "強制行を選択",
     "abort": "中止",
     "actor": "CAST",
     "actors": "CAST",
@@ -478,7 +476,9 @@
     "seconds": "秒",
     "selectAll": "すべて選択",
     "selectFilesToConvert": "変換するファイルを選択",
+    "selectForcedLines": "外国語のある行だけの選択",
     "selectNone": "選択なし",
+    "selectNonForcedLines": "外国語の無い行だけの選択",
     "selectSaveFolder": "保存先のフォルダを選択",
     "selectSubtitle": "字幕を選択",
     "selectedAFolderToSaveTo": "保存先のフォルダが選択されました",
@@ -726,11 +726,7 @@
     "transcriptionProgressServerFormat": "サーバー: {0}",
     "transcriptionProgressModelFormat": "モデル: {0}",
     "transcriptionProgressReceivedSegmentsFormat": "受信セグメント数 ({0})",
-    "transcriptionProgressModelAuto": "(自動)",
-    "generatingAudioFile": "オーディオファイルを生成中...",
-    "imageBasedSubtitles": "画像ベースの字幕",
-    "lineHeight": "行の高さ",
-    "snapSelectedLinesEndToPreviousShotChange": "選択行の終了位置を前のショットチェンジへスナップ"
+    "transcriptionProgressModelAuto": "(自動)"
   },
   "main": {
     "menu": {
@@ -988,14 +984,14 @@
     "colorHint": "選択行に色を適用",
     "removeFormattingHint": "選択行の書式を削除",
     "assaResolutionResamplerDone": "ASS解像度を変更しました",
+    "snappedXTimesToFrames": "{0} 個のタイムコードを {1:0.###} fps のフレームへスナップしました",
     "languageFileSavedToX": "言語ファイルを{0}に保存しました",
     "fileExportedInFormatXToY": "{0}形式で{1}にエクスポートしました",
     "fileExportedInFormatXToFileY": "「{0}」形式でファイル「{1}」にエクスポートしました",
-    "fileExportedInFormatXToFileY": "ファイルを \"{0}\" 形式で \"{1}\" に書き出しました",
     "fixedXLines": "{0}行を修正",
     "transcriptionCompletedWithXLines": "{0}行で文字起こし完了",
-    "replacedXOccurrences": "{0}件置換",
     "openSubtitleFileX": "字幕ファイル「{0}」を開きますか？",
+    "replacedXOccurrences": "{0} 件置換しました",
     "ffmpegDownloadedAndInstalledToX": "FFmpegをダウンロードし、{0}にインストールしました",
     "nothingToSave": "保存する内容はありません",
     "nothingToSaveOriginal": "保存する内容はありません（元データ）",
@@ -1003,8 +999,7 @@
     "downloadFfmpegTitle": "FFmpegをダウンロードしますか？",
     "downloadFfmpegQuestion": "オンライン動画再生や一部の動画編集機能にはFFmpegが必要です。\n\n今すぐダウンロードしますか？",
     "selectCurrentSubtitleWhilePlayingOn": "再生中に現在の字幕を選択: オン",
-    "selectCurrentSubtitleWhilePlayingOff": "再生中に現在の字幕を選択: オフ",
-    "snappedXTimesToFrames": "{0}個のタイムコードを{1:0.###} fpsでフレームへスナップしました"
+    "selectCurrentSubtitleWhilePlayingOff": "再生中に現在の字幕を選択: オフ"
   },
   "file": {
     "ebuSaveOptions": {
@@ -1092,7 +1087,6 @@
       "gapMs": "間隔（ms）",
       "useFixedDuration": "固定長を使用",
       "fixedDurationMs": "固定長（ms）",
-      "alignViaWhisper": "Whisperでタイムコードを整列...",
       "alignViaSpeechToText": "「音声からテキストへ」でタイムコードを揃える..."
     },
     "export": {
@@ -1414,8 +1408,8 @@
       "fixDoubleDashExample": "'Whoa-- um yeah!' -> 'Whoa... um yeah!'",
       "fixDoubleGreaterThanExample": "'>> Robert: Sup dude!' -> 'Robert: Sup dude!'",
       "fixEllipsesStartExample": "'... and then we' -> 'and then we'",
-      "fixMissingOpenBracketExample": "'clanks] Look out!' -> '[clanks] Look out!'",
-      "fixMusicNotationExample": "'âTª sweet dreams are' -> '♫ sweet dreams are'",
+      "fixMissingOpenBracketExample": "例: 'clanks] Look out!' → '[clanks] Look out!'",
+      "fixMusicNotationExample": "例: 'â™ª sweet dreams are' → '♫ sweet dreams are'",
       "numberOfImportantLogMessages": "{0}件の重要なログメッセージ",
       "fixedOkXY": "修正完了 - '{0}': {1}",
       "fixOcrErrorExample": "D0n't -> Don't",
@@ -1750,7 +1744,6 @@
       "maximumXCharactersPerSecond": "最大{0}文字/秒"
     },
     "imageBasedEdit": {
-      "setText": "テキストを設定",
       "editImagedBaseSubtitle": "画像字幕を編集",
       "editImagedBaseSubtitleX": "画像字幕を編集: {0}",
       "resizeImagesDotDotDot": "画像サイズを変更...",
@@ -1916,11 +1909,9 @@
       "changeUnderlineToColor": "下線の色を変更",
       "engineSettings": "Speech-to-text エンジン設定",
       "engineSettingsSubtitle": "Speech-to-text エンジン",
-      "backendAndUpdateStatus": "バックエンドと更新状態",
-      "downloadingSpeechToTextEngine": "音声認識エンジンをダウンロード中"
+      "backendAndUpdateStatus": "バックエンドと更新状態"
     },
     "textToSpeech": {
-      "piperSettings": "Piper の設定",
       "title": "音声合成",
       "textToSpeechEngine": "音声合成エンジン",
       "reviewAudioSegments": "TTS - 音声セグメントの確認",
@@ -1981,6 +1972,7 @@
       "qwen3TtsSettings": "Qwen3 TTS 設定",
       "kokoroTtsSettings": "Kokoro TTS 設定",
       "chatterboxTtsSettings": "Chatterbox TTS 設定",
+      "piperSettings": "Piper 設定",
       "voiceInstruction": "音声デザイン",
       "voiceInstructionHint": "任意 - 例: \"穏やかで親しみやすい口調で話す\"",
       "voiceGender": "性別",
@@ -2181,10 +2173,6 @@
   },
   "options": {
     "settings": {
-      "musicSymbolsToReplace": "置換する音楽記号（カンマ区切り）",
-      "musicSymbol": "音楽記号",
-      "colorWordsPerMinute": "単語数/分が高すぎる場合に色付け",
-      "colorCharactersPerSecond": "文字数/秒が高すぎる場合に色付け",
       "dialogStyle": "ダイアログの表示スタイル",
       "dialogStyleDashSecondLineWithoutSpace": "２行目をスペースなし 破線で表示",
       "dialogStyleDashSecondLineWithSpace": "２行目をスペースあり 破線で表示",
@@ -2289,6 +2277,8 @@
       "colorTextTooLong": "テキストの色が長すぎる場合",
       "colorTextTooWide": "テキストの色が幅が広すぎる場合（ピクセル）",
       "colorTextTooManyLines": "テキストの行数が2行を超える場合",
+      "colorCharactersPerSecond": "文字/秒 (CPS) 超過時に色付け",
+      "colorWordsPerMinute": "単語/分 (WPM) 超過時に色付け",
       "colorOverlap": "タイムコードの色が重なる場合",
       "colorGapTooShort": "色の差が短すぎる場合の色",
       "errorBackgroundColor": "エラー時の背景色",
@@ -2444,6 +2434,8 @@
       "speechToTextSelectedLinesPromptFirstTimeOnly": "音声認識：言語/エンジンの選択は 初回のみ",
       "multipleReplaceShowDotDotDotButtons": "複数置換：コンテキストメニューボタンを表示",
       "gridFocusTextboxAfterInsertNew": "グリッド：新しい字幕を挿入した後 テキスト欄をアクティブに",
+      "musicSymbol": "音楽記号",
+      "musicSymbolsToReplace": "置換対象の音符記号 (カンマ区切り)",
       "textToSpeechPromptMergeContinuationLines": "音声合成: 継続行結合を確認",
       "useFocusedButtonBackgroundColor": "フォーカスされた背景色のボタンを使用",
       "focusedButtonBackgroundColor": "フォーカスされた背景色のボタン",
@@ -2470,11 +2462,9 @@
       "waveformColorTheme": "カラーテーマ:",
       "waveformSaveAsCustomTheme": "カスタムテーマとして保存...",
       "waveformLoadThemeDotDotDot": "テーマを読み込み...",
-      "waveformExportThemeDotDotDot": "テーマをエクスポート...",
-      "searchSettingsDotDotDot": "設定を検索..."
+      "waveformExportThemeDotDotDot": "テーマをエクスポート..."
     },
     "shortcuts": {
-      "generalUnbreakNoSpaceCjk": "スペースなしで改行解除（CJK）",
       "title": "ショートカット",
       "searchShortcuts": "ショートカットを検索",
       "filter": "フィルター",
@@ -2493,6 +2483,7 @@
       "generalMergeSelectedLinesAndUnbreak": "選択した行を結合して改行を解除",
       "generalMergeSelectedLinesAndUnbreakCjk": "選択した行の結合に不自然な改行をしない",
       "generalMergeSelectedLinesOnlyFirstText": "選択した行の最初のテキストのみを結合",
+      "generalMergeSelectedLinesOnlyFirstText": "選択行を結合する際は最初のテキストのみ使用",
       "generalMergeSelectedLinesBilingual": "選択した行を複数言語で結合",
       "generalMergeWithPreviousBilingual": "前の複数言語と結合",
       "generalMergeWithNextBilingual": "次の複数言語と結合",
