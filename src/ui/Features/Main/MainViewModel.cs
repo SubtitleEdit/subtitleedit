@@ -8952,6 +8952,28 @@ public partial class MainViewModel :
         return (int)Math.Round(frames * 1000.0 / frameRate, MidpointRounding.AwayFromZero);
     }
 
+    /// <summary>
+    /// Snaps a video position (in seconds) to the nearest frame boundary when "Snap to frames"
+    /// is enabled, so the playhead lands exactly on a frame. Returns the value unchanged when the
+    /// setting is off or no usable frame rate is available.
+    /// </summary>
+    private static double SnapSecondsToFrame(double seconds)
+    {
+        if (!Se.Settings.Waveform.SnapToFrames)
+        {
+            return seconds;
+        }
+
+        var frameRate = Se.Settings.General.CurrentFrameRate;
+        if (frameRate < 1)
+        {
+            return seconds;
+        }
+
+        var frameDur = 1.0 / frameRate;
+        return Math.Round(seconds / frameDur, MidpointRounding.AwayFromZero) * frameDur;
+    }
+
     [RelayCommand]
     private void MergeSelectedLines()
     {
@@ -12338,6 +12360,11 @@ public partial class MainViewModel :
     [RelayCommand]
     private void VideoOneFrameBack()
     {
+        if (TryStepVideoFrameSnapped(forward: false))
+        {
+            return;
+        }
+
         var vp = GetVideoPlayerControl();
         if (vp != null && vp.VideoPlayer is LibMpvDynamicPlayer mpv)
         {
@@ -12358,6 +12385,11 @@ public partial class MainViewModel :
     [RelayCommand]
     private void VideoOneFrameForward()
     {
+        if (TryStepVideoFrameSnapped(forward: true))
+        {
+            return;
+        }
+
         var vp = GetVideoPlayerControl();
         if (vp != null && vp.VideoPlayer is LibMpvDynamicPlayer mpv)
         {
@@ -12373,6 +12405,40 @@ public partial class MainViewModel :
         }
 
         MoveVideoPositionMs(40);
+    }
+
+    /// <summary>
+    /// When "Snap to frames" is on, steps the playhead to the previous/next frame boundary on the
+    /// project frame grid (so stepping stays frame-aligned even from an off-grid position). Returns
+    /// false when snapping is off or no usable frame rate is available, leaving the default
+    /// (player-native) frame step in charge.
+    /// </summary>
+    private bool TryStepVideoFrameSnapped(bool forward)
+    {
+        if (!Se.Settings.Waveform.SnapToFrames)
+        {
+            return false;
+        }
+
+        var fps = Se.Settings.General.CurrentFrameRate;
+        if (fps < 1)
+        {
+            return false;
+        }
+
+        var vp = GetVideoPlayerControl();
+        if (vp == null || string.IsNullOrEmpty(_videoFileName) || AudioVisualizer == null)
+        {
+            return false;
+        }
+
+        var frameDur = 1.0 / fps;
+        var currentFrame = vp.Position / frameDur;
+        var targetFrame = forward
+            ? Math.Floor(currentFrame + 1e-6) + 1
+            : Math.Ceiling(currentFrame - 1e-6) - 1;
+        SetVideoPositionSeconds(targetFrame * frameDur);
+        return true;
     }
 
     [RelayCommand]
@@ -12757,7 +12823,17 @@ public partial class MainViewModel :
             return;
         }
 
-        var newPosition = vp.Position + (ms / 1000.0);
+        SetVideoPositionSeconds(vp.Position + (ms / 1000.0));
+    }
+
+    private void SetVideoPositionSeconds(double newPosition)
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null || string.IsNullOrEmpty(_videoFileName) || AudioVisualizer == null)
+        {
+            return;
+        }
+
         if (newPosition < 0)
         {
             newPosition = 0;
@@ -19980,11 +20056,13 @@ public partial class MainViewModel :
 
         if (Enum.TryParse<WaveformSingleClickActionType>(Se.Settings.Waveform.SingleClickAction, out var action))
         {
+            // Land the playhead on a frame boundary when "Snap to frames" is on.
+            var seconds = SnapSecondsToFrame(e.Seconds);
             switch (action)
             {
                 case WaveformSingleClickActionType.SetVideoPositionAndPauseAndSelectSubtitle:
                     vp.VideoPlayer.Pause();
-                    vp.Position = e.Seconds;
+                    vp.Position = seconds;
                     if (e.Paragraph != null)
                     {
                         var p1 = Subtitles.FirstOrDefault(p => p.Id == e.Paragraph.Id);
@@ -19997,37 +20075,37 @@ public partial class MainViewModel :
                     break;
                 case WaveformSingleClickActionType.SetVideopositionAndPauseAndSelectSubtitleAndCenter:
                     vp.VideoPlayer.Pause();
-                    vp.Position = e.Seconds;
+                    vp.Position = seconds;
                     if (e.Paragraph != null)
                     {
                         var p2 = Subtitles.FirstOrDefault(p => p.Id == e.Paragraph.Id);
                         if (p2 != null)
                         {
                             SelectAndScrollToSubtitle(p2);
-                            AudioVisualizer.CenterOnPosition(e.Seconds);
+                            AudioVisualizer.CenterOnPosition(seconds);
                         }
                     }
 
                     break;
                 case WaveformSingleClickActionType.SetVideoPositionAndPause:
                     vp.VideoPlayer.Pause();
-                    vp.Position = e.Seconds;
+                    vp.Position = seconds;
                     break;
                 case WaveformSingleClickActionType.SetVideopositionAndPauseAndCenter:
                     vp.VideoPlayer.Pause();
-                    vp.Position = e.Seconds;
+                    vp.Position = seconds;
                     if (e.Paragraph != null)
                     {
-                        AudioVisualizer.CenterOnPosition(e.Seconds);
+                        AudioVisualizer.CenterOnPosition(seconds);
                     }
 
                     break;
                 case WaveformSingleClickActionType.SetVideoposition:
-                    vp.Position = e.Seconds;
+                    vp.Position = seconds;
                     break;
             }
 
-            PinPlayheadTo(e.Seconds);
+            PinPlayheadTo(seconds);
             _updateAudioVisualizer = true;
         }
     }
