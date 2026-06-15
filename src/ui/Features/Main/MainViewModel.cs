@@ -323,6 +323,27 @@ public partial class MainViewModel :
     private readonly List<SubtitleLineViewModel> _waveformSubtitleBuffer = new();
     private DispatcherTimer _positionTimer = new();
     private DispatcherTimer _slowTimer = new();
+    private DispatcherTimer _cursorTimer = new(); // ~60 fps; drives only the waveform/video playhead cursor
+
+    // Playhead interpolation state. When mpv resumes after a paused seek its time-pos stalls
+    // for ~one audio-buffer interval (~200 ms) and then resyncs forward, which makes the
+    // waveform/video cursor freeze and then jump. While playing we advance the cursor on a
+    // wall clock and continuously reconcile it with mpv's real position so motion starts
+    // immediately and stays smooth. See _positionTimer.Tick.
+    private double _playheadEstimateSeconds;
+    private double _playheadLastRealSeconds = -1;
+    private long _playheadLastTimestamp; // Stopwatch ticks; high-resolution so per-tick advance is even
+    private bool _playheadValid;
+    private double? _playheadSeekTarget; // pin the cursor here until mpv's reported position arrives
+    private long _playheadSeekTargetTs;
+    private const double PlayheadSeekArriveToleranceSeconds = 0.15;
+    private const double PlayheadSeekPinTimeoutMs = 600;
+    private const double PlayheadResyncThresholdSeconds = 0.5; // drift beyond this = real discontinuity -> snap
+    private const double PlayheadDriftCorrection = 0.05; // gentle pull toward mpv when its clock is live
+    private const double PlayheadMaxCorrectionFraction = 0.2; // cap catch-up to ~1.2x speed (vs the forward step)
+    private const double PlayheadMaxForwardStepSeconds = 0.05; // cap one tick's advance so a starved tick can't lurch
+    private const double PlayheadFreezeHoldSeconds = 0.12; // if mpv's clock hasn't moved this long, it's frozen: hold
+    private long _playheadLastRawChangeTs; // when mpv's reported position last changed
     private CancellationTokenSource _videoOpenTokenSource;
     private readonly HashSet<string> _waveformsBeingGenerated = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lock _waveformsBeingGeneratedLock = new();
@@ -15427,6 +15448,7 @@ public partial class MainViewModel :
     private void CleanUp()
     {
         _positionTimer.Stop();
+        _cursorTimer.Stop();
         _slowTimer.Stop();
 
         if (_findViewModel != null)
@@ -18136,6 +18158,140 @@ public partial class MainViewModel :
         }
     }
 
+    // Advances the interpolated playhead toward the player's real position and returns it.
+    // Called from the high-frequency _cursorTimer so the cursor moves at ~60 fps. mpv's time-pos
+    // stalls (and then jumps forward) for ~200 ms after resuming from a paused seek; rather than
+    // drive the cursor straight off it we advance on a high-resolution wall clock at the current
+    // playback speed and reconcile: snap on a large discontinuity (user seek / loop / EOF), gently
+    // correct small drift only while mpv's clock is actually moving, and otherwise trust the wall
+    // clock so the line keeps gliding through the resume gap. Elapsed time uses Stopwatch
+    // (sub-microsecond) not Environment.TickCount64 (~15 ms on Windows), whose coarse steps would
+    // make the cursor advance unevenly.
+    private double UpdatePlayheadEstimate(VideoPlayerControl vp)
+    {
+        var rawPosition = vp.VideoPlayer.Position;
+        if (IsSmpteTimingEnabled)
+        {
+            rawPosition = rawPosition * 1000.0 / 1001.0;
+        }
+
+        var nowTimestamp = Stopwatch.GetTimestamp();
+
+        // A fresh user seek (e.g. clicking the waveform) is pinned to the clicked position: mpv
+        // applies the pause+seek asynchronously, so for ~100-200 ms vp.VideoPlayer.Position still
+        // reports the old spot. Hold the target until mpv's reported position actually arrives (or a
+        // short timeout), so the cursor jumps to the click instantly instead of lagging then snapping.
+        if (_playheadSeekTarget.HasValue)
+        {
+            var target = _playheadSeekTarget.Value;
+            var arrived = Math.Abs(rawPosition - target) < PlayheadSeekArriveToleranceSeconds;
+            var timedOut = (nowTimestamp - _playheadSeekTargetTs) * 1000.0 / Stopwatch.Frequency > PlayheadSeekPinTimeoutMs;
+            if (!arrived && !timedOut)
+            {
+                _playheadLastRealSeconds = rawPosition;
+                _playheadLastTimestamp = nowTimestamp;
+                _playheadEstimateSeconds = target;
+                return target;
+            }
+
+            // mpv has arrived (or we gave up waiting): resume normal tracking from the real position.
+            _playheadSeekTarget = null;
+            _playheadEstimateSeconds = rawPosition;
+            _playheadValid = true;
+            _playheadLastRealSeconds = rawPosition;
+            _playheadLastTimestamp = nowTimestamp;
+            return rawPosition;
+        }
+
+        if (vp.IsPlaying && _playheadValid && _playheadLastRealSeconds >= 0)
+        {
+            var elapsedSeconds = (nowTimestamp - _playheadLastTimestamp) / (double)Stopwatch.Frequency;
+            if (elapsedSeconds < 0)
+            {
+                elapsedSeconds = 0; // clock glitch
+            }
+            else if (elapsedSeconds > PlayheadMaxForwardStepSeconds)
+            {
+                // The cursor timer was starved (e.g. the mpv decode burst right after pressing play) or
+                // the app was suspended. Advancing by the whole missed span would make the cursor visibly
+                // rush forward and overshoot, since mpv hasn't actually played that far yet. Cap the step
+                // so the cursor keeps gliding smoothly; drift correction (or a snap, for a big gap)
+                // reconciles with mpv's real clock over the next few frames.
+                elapsedSeconds = PlayheadMaxForwardStepSeconds;
+            }
+
+            var speed = vp.VideoPlayer.Speed;
+            if (speed <= 0)
+            {
+                speed = 1.0;
+            }
+
+            var rawChanged = Math.Abs(rawPosition - _playheadLastRealSeconds) > 0.0005;
+            if (rawChanged)
+            {
+                _playheadLastRawChangeTs = nowTimestamp;
+            }
+
+            var rawFrozenSeconds = (nowTimestamp - _playheadLastRawChangeTs) / (double)Stopwatch.Frequency;
+
+            // Only extrapolate while mpv's clock is actually advancing. After a paused seek mpv's
+            // time-pos (and the video) freezes for ~400 ms while it re-primes, then resumes at 1x from
+            // the same spot. Extrapolating through that freeze races the cursor ahead of the still-frozen
+            // frame and then forces a visible sub-1x crawl to resync. Holding while frozen and gliding
+            // once mpv resumes is seamless, since it resumes from where the cursor is held.
+            if (rawFrozenSeconds < PlayheadFreezeHoldSeconds)
+            {
+                _playheadEstimateSeconds += elapsedSeconds * speed;
+            }
+
+            var drift = rawPosition - _playheadEstimateSeconds;
+            if (Math.Abs(drift) > PlayheadResyncThresholdSeconds)
+            {
+                _playheadEstimateSeconds = rawPosition;
+            }
+            else if (rawChanged && drift > 0)
+            {
+                // Only ever nudge forward to close a lag (e.g. after a starved tick); never pull the
+                // cursor backward, which is what showed up as the sub-1x "slow" after the rush. Cap the
+                // per-tick correction so the catch-up tops out around ~1.2x.
+                var correction = drift * PlayheadDriftCorrection;
+                var maxCorrection = elapsedSeconds * speed * PlayheadMaxCorrectionFraction;
+                if (correction > maxCorrection)
+                {
+                    correction = maxCorrection;
+                }
+
+                _playheadEstimateSeconds += correction;
+            }
+        }
+        else
+        {
+            _playheadEstimateSeconds = rawPosition;
+            _playheadValid = true;
+        }
+
+        _playheadLastRealSeconds = rawPosition;
+        _playheadLastTimestamp = nowTimestamp;
+        return _playheadEstimateSeconds;
+    }
+
+    // Called when the user seeks via the waveform: show the clicked position on the cursor
+    // immediately and pin it there until mpv's clock catches up (see UpdatePlayheadEstimate).
+    private void PinPlayheadTo(double targetSeconds)
+    {
+        _playheadSeekTarget = targetSeconds;
+        _playheadSeekTargetTs = Stopwatch.GetTimestamp();
+        _playheadEstimateSeconds = targetSeconds;
+        _playheadValid = true;
+        _playheadLastRealSeconds = targetSeconds;
+        _playheadLastTimestamp = _playheadSeekTargetTs;
+
+        if (AudioVisualizer != null)
+        {
+            AudioVisualizer.CurrentVideoPositionSeconds = targetSeconds;
+        }
+    }
+
     private void StartTimers()
     {
         Subtitles.CollectionChanged += OnSubtitlesCollectionChangedForMpv;
@@ -18195,16 +18351,16 @@ public partial class MainViewModel :
                 }
                 subtitle.Sort((a, b) => a.StartTime.Ticks.CompareTo(b.StartTime.Ticks));
 
-                var mediaPlayerSeconds = vp.Position;
+                // The playhead cursor is interpolated and applied by the dedicated high-frequency
+                // _cursorTimer (see UpdatePlayheadEstimate) so it moves at ~60 fps instead of this
+                // heavy 50 ms timer's rate. Here we just read the latest estimate for the centering /
+                // selection / play-selection logic below; we don't advance it or set the cursor.
+                var mediaPlayerSeconds = _playheadEstimateSeconds;
+
                 var startPos = mediaPlayerSeconds - 0.01;
                 if (startPos < 0)
                 {
                     startPos = 0;
-                }
-
-                if (av != null)
-                {
-                    av.CurrentVideoPositionSeconds = vp.Position;
                 }
 
                 var isPlaying = vp.IsPlaying;
@@ -18212,11 +18368,12 @@ public partial class MainViewModel :
 
                 if (WaveformCenter && isPlaying)
                 {
-                    // calculate the center position based on the waveform width
+                    // The center-mode scroll position is driven smoothly by the 60 fps cursor timer (see
+                    // the _cursorTimer tick); here we only refresh the paragraph list. Pass the current
+                    // start/position so this 50 ms tick doesn't fight the cursor timer's scroll.
                     if (av != null)
                     {
-                        var waveformHalfSeconds = (av.EndPositionSeconds - av.StartPositionSeconds) / 2.0;
-                        av.SetPosition(Math.Max(0, mediaPlayerSeconds - waveformHalfSeconds), subtitle, mediaPlayerSeconds,
+                        av.SetPosition(av.StartPositionSeconds, subtitle, av.CurrentVideoPositionSeconds,
                             firstSelectedIndex, _selectedSubtitles ?? []);
                     }
                 }
@@ -18317,6 +18474,50 @@ public partial class MainViewModel :
             }
         };
         _positionTimer.Start();
+
+        // Dedicated high-frequency cursor timer (~60 fps). It only advances the interpolated
+        // playhead and updates the waveform/video cursor position, which is cheap now that the
+        // waveform geometry is cached. The heavy per-tick work (subtitle buffer, centering,
+        // selection, paragraph reload) stays on the 50 ms _positionTimer above. Splitting them
+        // is what makes the line glide smoothly instead of stepping at 20 fps.
+        // Priority matters: the mpv video control posts its frame requests at DispatcherPriority.Render,
+        // and a DispatcherTimer defaults to the much lower Background priority. While the video pipeline
+        // is busy (e.g. the decode burst right after pressing play) those posts starved the cursor timer
+        // for 100-800 ms (a stutter), and merely matching Render still let a burst delay it via FIFO,
+        // leaving the play-start lag-then-rush. Running at Normal (above Render) keeps the cursor timer
+        // firing on time through the burst so the line glides smoothly. Its per-tick work is ~0.2 ms, so
+        // it doesn't disturb video rendering.
+        _cursorTimer = new DispatcherTimer(DispatcherPriority.Normal) { Interval = TimeSpan.FromMilliseconds(16) };
+        _cursorTimer.Tick += (s, e) =>
+        {
+            var vp = GetVideoPlayerControl();
+            if (vp == null || string.IsNullOrEmpty(_videoFileName))
+            {
+                return;
+            }
+
+            // Always advance the estimate: the 50 ms _positionTimer reads _playheadEstimateSeconds as
+            // its source of truth (SelectCurrentSubtitleWhilePlaying, play-selection end detection, the
+            // auto-scroll branches), and some layouts have a video player but no waveform. Only the
+            // visual updates below need the AudioVisualizer.
+            var est = UpdatePlayheadEstimate(vp);
+
+            var av = AudioVisualizer;
+            if (av != null)
+            {
+                av.CurrentVideoPositionSeconds = est;
+
+                // In "center waveform on current position" mode the waveform scrolls to keep the cursor
+                // centered. Drive that scroll here at ~60 fps, in lockstep with the cursor, so it glides
+                // smoothly instead of jumping in 20 fps steps from the heavy 50 ms timer.
+                if (WaveformCenter && vp.IsPlaying && av.WavePeaks != null)
+                {
+                    var halfSeconds = (av.EndPositionSeconds - av.StartPositionSeconds) / 2.0;
+                    av.StartPositionSeconds = Math.Max(0, est - halfSeconds);
+                }
+            }
+        };
+        _cursorTimer.Start();
 
         _slowTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(400) };
         _slowTimer.Tick += (s, e) =>
@@ -18726,6 +18927,7 @@ public partial class MainViewModel :
         newPosition = Math.Min(vp.Duration, newPosition);
 
         vp.Position = newPosition;
+        PinPlayheadTo(newPosition);
 
         _updateAudioVisualizer = true;
     }
@@ -19804,6 +20006,7 @@ public partial class MainViewModel :
                     break;
             }
 
+            PinPlayheadTo(e.Seconds);
             _updateAudioVisualizer = true;
         }
     }
