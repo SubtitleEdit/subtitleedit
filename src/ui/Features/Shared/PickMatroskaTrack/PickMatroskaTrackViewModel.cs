@@ -28,6 +28,7 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<MatroskaTrackInfoDisplay> _tracks;
     [ObservableProperty] private MatroskaTrackInfoDisplay? _selectedTrack;
     [ObservableProperty] private ObservableCollection<MatroskaSubtitleCueDisplay> _rows;
+    [ObservableProperty] private string _subtitleCountText;
 
     public Window? Window { get; set; }
     public DataGrid TracksGrid { get; set; }
@@ -49,6 +50,7 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
         Tracks = new ObservableCollection<MatroskaTrackInfoDisplay>();
         TracksGrid = new DataGrid();
         WindowTitle = string.Empty;
+        SubtitleCountText = string.Empty;
         Rows = new ObservableCollection<MatroskaSubtitleCueDisplay>();
         _matroskaTracks = new List<MatroskaTrackInfo>();
         _fileName = string.Empty;
@@ -219,31 +221,34 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
         var selectedTrack = SelectedTrack;
         if (selectedTrack == null || selectedTrack.MatroskaTrackInfo == null)
         {
+            SubtitleCountText = string.Empty;
             return false;
         }
 
         Rows.Clear();
+        var count = 0;
         var trackInfo = selectedTrack.MatroskaTrackInfo!;
         var subtitles = _matroskaFile?.GetSubtitle(trackInfo.TrackNumber, null);
         if (trackInfo.CodecId == MatroskaTrackType.SubRip && subtitles != null)
         {
-            AddTextContent(trackInfo, subtitles, new SubRip());
+            count = AddTextContent(trackInfo, subtitles, new SubRip());
         }
         else if (trackInfo.CodecId is MatroskaTrackType.SubStationAlpha or MatroskaTrackType.SubStationAlpha2 && subtitles != null)
         {
-            AddTextContent(trackInfo, subtitles, new SubStationAlpha());
+            count = AddTextContent(trackInfo, subtitles, new SubStationAlpha());
         }
         else if (trackInfo.CodecId is MatroskaTrackType.AdvancedSubStationAlpha or MatroskaTrackType.AdvancedSubStationAlpha2 && subtitles != null)
         {
-            AddTextContent(trackInfo, subtitles, new AdvancedSubStationAlpha());
+            count = AddTextContent(trackInfo, subtitles, new AdvancedSubStationAlpha());
         }
         else if (trackInfo.CodecId is MatroskaTrackType.WebVTT or MatroskaTrackType.WebVTT2 && subtitles != null)
         {
-            AddTextContent(trackInfo, subtitles, new WebVTT());
+            count = AddTextContent(trackInfo, subtitles, new WebVTT());
         }
         else if (trackInfo.CodecId == MatroskaTrackType.BluRay && subtitles != null && _matroskaFile != null)
         {
             var pcsData = BluRaySupParser.ParseBluRaySupFromMatroska(trackInfo, _matroskaFile);
+            count = pcsData.Count;
             for (var i = 0; i < 20 && i < pcsData.Count; i++)
             {
                 var item = pcsData[i];
@@ -265,6 +270,7 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
             Utilities.LoadMatroskaTextSubtitle(trackInfo, _matroskaFile, sub, subtitle);
             Utilities.ParseMatroskaTextSt(trackInfo, sub, subtitle);
 
+            count = subtitle.Paragraphs.Count;
             for (var i = 0; i < 20 && i < subtitle.Paragraphs.Count; i++)
             {
                 var item = subtitle.Paragraphs[i];
@@ -279,10 +285,11 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
             }
         }
 
+        SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, count);
         return true;
     }
 
-    private void AddTextContent(MatroskaTrackInfo trackInfo, List<MatroskaSubtitle> subtitles, SubtitleFormat format)
+    private int AddTextContent(MatroskaTrackInfo trackInfo, List<MatroskaSubtitle> subtitles, SubtitleFormat format)
     {
         var sub = new Subtitle();
         Utilities.LoadMatroskaTextSubtitle(trackInfo, _matroskaFile, subtitles, sub);
@@ -299,6 +306,8 @@ public partial class PickMatroskaTrackViewModel : ObservableObject
             };
             Rows.Add(cue);
         }
+
+        return sub.Paragraphs.Count;
     }
 
     internal void SelectAndScrollToRow(int index)

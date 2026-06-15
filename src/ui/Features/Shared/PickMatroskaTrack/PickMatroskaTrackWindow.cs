@@ -33,11 +33,14 @@ public class PickMatroskaTrackWindow : Window
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonExport, buttonOk, buttonCancel);
 
+        var labelSubtitleCount = UiUtil.MakeLabel(new Binding(nameof(vm.SubtitleCountText)));
+
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
@@ -53,7 +56,8 @@ public class PickMatroskaTrackWindow : Window
 
         grid.Add(tracksView, 0);
         grid.Add(subtitleView, 0, 1);
-        grid.Add(panelButtons, 1, 0, 1, 2);
+        grid.Add(labelSubtitleCount, 1, 1);
+        grid.Add(panelButtons, 2, 0, 1, 2);
 
         Content = grid;
 

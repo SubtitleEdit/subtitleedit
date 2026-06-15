@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<Mp4TrackInfoDisplay> _tracks;
     [ObservableProperty] private Mp4TrackInfoDisplay? _selectedTrack;
     [ObservableProperty] private ObservableCollection<Mp4SubtitleCueDisplay> _rows;
+    [ObservableProperty] private string _subtitleCountText;
 
     public Window? Window { get; set; }
     public DataGrid TracksGrid { get; set; }
@@ -31,6 +33,7 @@ public partial class PickMp4TrackViewModel : ObservableObject
         Tracks = new ObservableCollection<Mp4TrackInfoDisplay>();
         TracksGrid = new DataGrid();
         WindowTitle = string.Empty;
+        SubtitleCountText = string.Empty;
         Rows = new ObservableCollection<Mp4SubtitleCueDisplay>();
         _mp4Tracks = new List<Trak>();
     }
@@ -103,12 +106,14 @@ public partial class PickMp4TrackViewModel : ObservableObject
         var selectedTrack = SelectedTrack;
         if (selectedTrack == null || selectedTrack.Track == null)
         {
+            SubtitleCountText = string.Empty;
             return false;
         }
 
         Rows.Clear();
         var trackinfo = selectedTrack.Track!;
         var subtitles = trackinfo.Mdia.Minf.Stbl.GetParagraphs();
+        SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitles.Count);
         var i = 0;
         foreach (var item in subtitles)
         {

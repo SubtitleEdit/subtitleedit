@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -18,6 +19,7 @@ public partial class PickTsTrackViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<TsTrackInfoDisplay> _tracks;
     [ObservableProperty] private TsTrackInfoDisplay? _selectedTrack;
     [ObservableProperty] private ObservableCollection<TsSubtitleCueDisplay> _rows;
+    [ObservableProperty] private string _subtitleCountText;
 
     public Window? Window { get; set; }
     public DataGrid TracksGrid { get; set; }
@@ -33,6 +35,7 @@ public partial class PickTsTrackViewModel : ObservableObject
         Tracks = new ObservableCollection<TsTrackInfoDisplay>();
         TracksGrid = new DataGrid();
         WindowTitle = string.Empty;
+        SubtitleCountText = string.Empty;
         Rows = new ObservableCollection<TsSubtitleCueDisplay>();
         TeletextSubtitle = new Subtitle();
     }
@@ -130,6 +133,7 @@ public partial class PickTsTrackViewModel : ObservableObject
         var selectedTrack = SelectedTrack;
         if (selectedTrack == null || _tsParser == null)
         {
+            SubtitleCountText = string.Empty;
             return false;
         }
 
@@ -137,9 +141,10 @@ public partial class PickTsTrackViewModel : ObservableObject
 
         if (selectedTrack.IsTeletext)
         {
-           var subtitle = new Subtitle(selectedTrack.Teletext);          
+           var subtitle = new Subtitle(selectedTrack.Teletext);
             subtitle.Renumber();
             TeletextSubtitle = subtitle;
+            SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitle.Paragraphs.Count);
             foreach (var p in subtitle.Paragraphs.Take(20))
             {
                 var cue = new TsSubtitleCueDisplay()
@@ -157,6 +162,7 @@ public partial class PickTsTrackViewModel : ObservableObject
         }
 
         var subtitles = _tsParser.GetDvbSubtitles(selectedTrack.TrackNumber);
+        SubtitleCountText = string.Format(Se.Language.File.Import.NumberOfSubtitlesX, subtitles.Count);
         for (var i = 0; i < 20 && i < subtitles.Count; i++)
         {
             var item = subtitles[i];
