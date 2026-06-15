@@ -694,7 +694,7 @@ public partial class FindService : IFindService
                         }
 
                         matches.Add(new FindMatch(index, searchText));
-                        startIndex = index + 1;
+                        startIndex = index + Math.Max(1, searchText.Length);
                     }
                 }
                 break;
