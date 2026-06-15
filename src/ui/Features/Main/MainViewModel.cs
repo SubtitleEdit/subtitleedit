@@ -10034,12 +10034,22 @@ public partial class MainViewModel :
             }
         }
 
-        // Verify the matched slice is still at the recorded position before
-        // mutating — the line may have been edited since the find ran.
-        var actualAtMatch = line.Substring(matchIndex, matchText.Length);
         var comparison = result.FindMode == FindMode.CaseSensitive
             ? StringComparison.Ordinal
             : StringComparison.OrdinalIgnoreCase;
+
+        // Bail if the search text changed since the last Find — the saved match
+        // no longer corresponds to the current query (mirrors the regex path above,
+        // which re-runs the regex against the current SearchText and bails on mismatch).
+        if (!string.Equals(matchText, result.SearchText, comparison))
+        {
+            newLine = line;
+            return null;
+        }
+
+        // Verify the matched slice is still at the recorded position before
+        // mutating — the line may have been edited since the find ran.
+        var actualAtMatch = line.Substring(matchIndex, matchText.Length);
         if (!string.Equals(actualAtMatch, matchText, comparison))
         {
             newLine = line;

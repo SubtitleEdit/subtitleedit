@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Logic;
+using System.Collections.Generic;
 
 namespace UITests.Logic;
 
@@ -11,7 +12,7 @@ public class FindServiceTests
         var service = new FindService();
         service.Initialize([text], 0, false, FindService.FindMode.RegularExpression);
 
-        Assert.Equal(2, service.Count(@"(?m)-$"));
+        Assert.Equal(2, service.Count(@"(?m)-$", [text], false, FindService.FindMode.RegularExpression));
 
         var matches = service.FindAll(@"(?m)-$");
         Assert.Equal(2, matches.Count);
@@ -69,5 +70,22 @@ public class FindServiceTests
         idx = service.FindPrevious(pattern, [text], 0, service.CurrentTextIndex - 1);
         Assert.Equal(0, idx);
         Assert.Equal(0, service.CurrentTextIndex);
+    }
+
+    [Fact]
+    public void Count_DoesNotResetFindPosition()
+    {
+        var lines = new List<string> { "hello world", "hello again" };
+        var service = new FindService();
+        service.Initialize(lines, 0, false, FindService.FindMode.CaseInsensitive);
+        service.FindNext("hello", lines, 0, 0);
+
+        var lineBeforeCount = service.CurrentLineNumber;
+        var indexBeforeCount = service.CurrentTextIndex;
+
+        service.Count("hello", lines, false, FindService.FindMode.CaseInsensitive);
+
+        Assert.Equal(lineBeforeCount, service.CurrentLineNumber);
+        Assert.Equal(indexBeforeCount, service.CurrentTextIndex);
     }
 }

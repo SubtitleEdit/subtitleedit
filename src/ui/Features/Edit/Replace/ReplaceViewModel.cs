@@ -111,9 +111,7 @@ public partial class ReplaceViewModel : ObservableObject
             return;
         }
 
-        _findService.Initialize(_subs, 0, WholeWord, FindMode);
-
-        var count = _findService.Count(SearchText);
+        var count = _findService.Count(SearchText, _subs, WholeWord, FindMode);
 
         if (count <= 0)
         {
