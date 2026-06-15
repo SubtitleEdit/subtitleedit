@@ -18,8 +18,8 @@ public class LanguageImport
     public string ImportFileLabel { get; set; }
     public string ImportFilesInfo { get; set; }
     public string FormattingDotDotDot { get; set; }
-    public string ImagedBasedSubtitleForEditDotDotDot { get;  set; }
-    public string ImagedBasedSubtitleForOcrDotDotDot { get;  set; }
+    public string ImageBasedSubtitleForEditDotDotDot { get;  set; }
+    public string ImageBasedSubtitleForOcrDotDotDot { get;  set; }
     public string SplitTextAt { get; set; }
     public string BlankLines { get; set; }
     public string OneLineIsOneSubtitle { get; set; }
@@ -65,8 +65,8 @@ Rules:
 • HH_MM_SS_MMM for start and end times
 • Double underscore separates start/end
 • Optional index after end time";
-        ImagedBasedSubtitleForEditDotDotDot = "Image-based subtitle for edit...";
-        ImagedBasedSubtitleForOcrDotDotDot = "Image-based subtitle for OCR...";
+        ImageBasedSubtitleForEditDotDotDot = "Image-based subtitle for edit...";
+        ImageBasedSubtitleForOcrDotDotDot = "Image-based subtitle for OCR...";
         SplitTextAt = "Split text at";
         BlankLines = "Blank lines";
         OneLineIsOneSubtitle = "One line is one subtitle";
