@@ -425,7 +425,7 @@ public partial class FindService : IFindService
 
     private (bool replaced, string newText, int replacementCount) ReplaceWholeWordWithStringComparison(string line, string searchText, string replaceText, int startIndex, int maxReplacements, StringComparison comparison)
     {
-        var pattern = $@"\b{Regex.Escape(searchText)}\b";
+        var pattern = RegexUtils.BuildWholeWordPattern(searchText);
         var options = comparison == StringComparison.OrdinalIgnoreCase ? RegexOptions.IgnoreCase : RegexOptions.None;
 
         try
@@ -471,7 +471,7 @@ public partial class FindService : IFindService
 
         if (WholeWord)
         {
-            var pattern = $@"\b{Regex.Escape(searchText)}\b";
+            var pattern = RegexUtils.BuildWholeWordPattern(searchText);
             var options = comparison == StringComparison.OrdinalIgnoreCase ? RegexOptions.IgnoreCase : RegexOptions.None;
 
             try
@@ -505,7 +505,7 @@ public partial class FindService : IFindService
 
         if (WholeWord)
         {
-            var pattern = $@"\b{Regex.Escape(searchText)}\b";
+            var pattern = RegexUtils.BuildWholeWordPattern(searchText);
             var options = comparison == StringComparison.OrdinalIgnoreCase ? RegexOptions.IgnoreCase : RegexOptions.None;
 
             try
@@ -650,7 +650,7 @@ public partial class FindService : IFindService
 
                 if (WholeWord)
                 {
-                    var pattern = $@"\b{Regex.Escape(searchText)}\b";
+                    var pattern = RegexUtils.BuildWholeWordPattern(searchText);
                     var options = CurrentFindMode == FindMode.CaseInsensitive ? RegexOptions.IgnoreCase : RegexOptions.None;
 
                     try
