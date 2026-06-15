@@ -103,9 +103,18 @@ public partial class FindViewModel : ObservableObject
             return;
         }
 
-        _findService.Initialize(_subs, 0, WholeWord, FindMode);
+        // Preserve the last-found position so it survives the Initialize/ResetSearchState
+        // call below (relevant when the Find dialog is open alongside a Replace dialog).
+        var savedLine  = _findService.CurrentLineNumber;
+        var savedIndex = _findService.CurrentTextIndex;
+        var savedText  = _findService.CurrentTextFound;
 
+        _findService.Initialize(_subs, 0, WholeWord, FindMode);
         var count = _findService.Count(SearchText);
+
+        _findService.CurrentLineNumber = savedLine;
+        _findService.CurrentTextIndex  = savedIndex;
+        _findService.CurrentTextFound  = savedText;
 
         if (count <= 0)
         {
