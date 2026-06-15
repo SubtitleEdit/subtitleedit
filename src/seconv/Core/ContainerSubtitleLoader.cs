@@ -61,6 +61,31 @@ internal static class ContainerSubtitleLoader
             return LoadBluRaySup(filePath, options);
         }
 
+        if (ext == ".sub")
+        {
+            var idxPath = Path.ChangeExtension(filePath, ".idx");
+            if (File.Exists(idxPath))
+            {
+                return LoadVobSub(filePath, idxPath, options);
+            }
+
+            // No .idx companion. A binary VobSub .sub can still be read — the MPEG-PS packets
+            // carry their own PTS timing and a default palette is used — so read it (with a
+            // note) rather than letting it fall through to the MicroDVD text loader, which
+            // would misparse the binary and surface a confusing "no subtitles found" error. A
+            // genuine text MicroDVD .sub starts with text, not the MPEG pack header, so it
+            // returns null here and is handled by the text loader.
+            if (BitmapSubtitleLoader.IsBinaryVobSub(filePath))
+            {
+                AnsiConsole.MarkupLine(
+                    $"[yellow]Note: VobSub '.sub' has no '.idx' companion ({Path.GetFileName(idxPath).EscapeMarkup()}); "
+                    + "reading timing from the stream and using a default color palette.[/]");
+                return LoadVobSub(filePath, idxPath, options);
+            }
+
+            return null;
+        }
+
         if (ext is ".ts" or ".m2ts" or ".mts")
         {
             return LoadTransportStream(filePath, options);
@@ -223,7 +248,18 @@ internal static class ContainerSubtitleLoader
 
             if (track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
             {
-                AnsiConsole.MarkupLine($"[yellow]Warning: skipping VobSub MKV track #{track.TrackNumber} — VobSub OCR not yet supported in seconv. Use Subtitle Edit (UI) for now.[/]");
+                try
+                {
+                    var vobSub = ImageOcrLoader.LoadMatroskaVobSub(matroska, track, options);
+                    if (vobSub.Paragraphs.Count > 0)
+                    {
+                        tracks.Add(new LoadedTrack(vobSub, new SubRip(), SanitizeLang(track.Language), track.TrackNumber));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AnsiConsole.MarkupLine($"[yellow]Warning: VobSub OCR failed on MKV track #{track.TrackNumber}: {ex.Message.EscapeMarkup()}[/]");
+                }
                 continue;
             }
 
@@ -269,7 +305,19 @@ internal static class ContainerSubtitleLoader
             }
             if (trak.Mdia.IsVobSubSubtitle)
             {
-                AnsiConsole.MarkupLine($"[yellow]Warning: skipping VobSub MP4 track #{trackId} — OCR is not yet supported.[/]");
+                try
+                {
+                    var vobSub = ImageOcrLoader.LoadMp4VobSub(trak, options);
+                    if (vobSub.Paragraphs.Count > 0)
+                    {
+                        var vobLang = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(vobSub) ?? string.Empty;
+                        tracks.Add(new LoadedTrack(vobSub, new SubRip(), vobLang, trackId));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AnsiConsole.MarkupLine($"[yellow]Warning: VobSub OCR failed on MP4 track #{trackId}: {ex.Message.EscapeMarkup()}[/]");
+                }
                 continue;
             }
 
@@ -311,6 +359,16 @@ internal static class ContainerSubtitleLoader
         if (subtitle.Paragraphs.Count == 0)
         {
             throw new InvalidOperationException($"No subtitles recognised in Blu-Ray sup file: {filePath}");
+        }
+        return [new LoadedTrack(subtitle, new SubRip(), string.Empty, null)];
+    }
+
+    private static List<LoadedTrack> LoadVobSub(string subPath, string idxPath, ConversionOptions options)
+    {
+        var subtitle = ImageOcrLoader.LoadVobSub(subPath, idxPath, options);
+        if (subtitle.Paragraphs.Count == 0)
+        {
+            throw new InvalidOperationException($"No subtitles recognised in VobSub file: {subPath}");
         }
         return [new LoadedTrack(subtitle, new SubRip(), string.Empty, null)];
     }

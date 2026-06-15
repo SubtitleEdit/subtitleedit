@@ -23,6 +23,13 @@ Highlights since the 4.x line:
 
 -----------------------------------------------------------------------------------------------------
 
+v5.0.0-rc5 (TBD)
+
+* seconv: OCR VobSub subtitles (.sub/.idx, VobSub-in-MKV, VobSub-in-MP4) to text formats
+* seconv: add --time-codes-only to extract time codes from image-based subtitles (.sup/VobSub/PGS/DVB-sub) without OCR
+
+-----------------------------------------------------------------------------------------------------
+
 v5.0.0-rc4 (11th of June 2026)
 
 * Add Zonos TTS text-to-speech engine (CrispASR)

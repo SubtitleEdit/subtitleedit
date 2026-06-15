@@ -1,6 +1,7 @@
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
 using SkiaSharp;
@@ -63,22 +64,19 @@ internal static class BitmapSubtitleLoader
     }
 
     /// <summary>
-    /// VobSub <c>.sub</c> + <c>.idx</c> pair → bitmap events. Uses
-    /// <see cref="VobSubParser.OpenSubIdx"/> so the .idx provides timing + palette
-    /// and the .sub provides the subpicture stream payload. The VobSub spec doesn't
-    /// store a screen size in the index file, so we bake in the DVD-standard frame
-    /// sizes (720x576 PAL, 720x480 NTSC) — otherwise the output writer would fall
-    /// back to <c>--resolution</c> / 1920x1080, which is wrong metadata for DVD
-    /// sources.
+    /// VobSub <c>.sub</c> (+ optional <c>.idx</c>) → bitmap events. Uses
+    /// <see cref="VobSubParser.OpenSubIdx"/>, which uses the .idx for timing + palette when
+    /// present and otherwise parses the .sub's MPEG-PS stream directly (stream PTS timing +
+    /// a default palette). The VobSub spec doesn't store a screen size in the index file, so
+    /// we bake in the DVD-standard frame sizes (720x576 PAL, 720x480 NTSC) — otherwise the
+    /// output writer would fall back to <c>--resolution</c> / 1920x1080, which is wrong
+    /// metadata for DVD sources.
     /// </summary>
     public static IReadOnlyList<BitmapSubtitleItem> LoadVobSub(string subPath, string idxPath, bool isPal)
     {
-        if (!File.Exists(idxPath))
-        {
-            throw new InvalidOperationException($"VobSub .idx companion not found at: {idxPath}");
-        }
-
         var parser = new VobSubParser(isPal);
+        // OpenSubIdx falls back to parsing the .sub stream directly when the .idx is missing,
+        // so an absent companion is not fatal — see IsBinaryVobSub for the caller's gate.
         parser.OpenSubIdx(subPath, idxPath);
         var packs = parser.MergeVobSubPacks();
         if (packs.Count == 0)
@@ -98,6 +96,111 @@ internal static class BitmapSubtitleLoader
                 continue;
             }
             items.Add(new BitmapSubtitleItem(pack.StartTimeCode, pack.EndTimeCode, bmp, screenWidth, screenHeight));
+        }
+        return items;
+    }
+
+    /// <summary>
+    /// True if the file begins with an MPEG-2 pack header (<c>00 00 01 BA</c>), i.e. it's a
+    /// binary VobSub subpicture stream rather than a text MicroDVD <c>.sub</c>. Used to decide
+    /// whether a <c>.sub</c> without an <c>.idx</c> companion is a VobSub (read it directly,
+    /// with a warning) or a plain text subtitle (fall through to the text loader).
+    /// </summary>
+    public static bool IsBinaryVobSub(string filePath)
+    {
+        try
+        {
+            var header = new byte[4];
+            using var fs = File.OpenRead(filePath);
+            return fs.Read(header, 0, 4) == 4 && VobSubParser.IsMpeg2PackHeader(header);
+        }
+        catch
+        {
+            // I/O race / permissions — let the text loader try rather than hard-failing here.
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// VobSub track inside an MKV (<c>S_VOBSUB</c>) → bitmap events. The subpicture packets
+    /// live in the Matroska blocks; the per-pack timing comes from the block Start/End (not
+    /// the SubPicture's own delay, which only applies to standalone <c>.sub</c>+<c>.idx</c>).
+    /// Mirrors the desktop batch converter's <c>LoadVobSubFromMatroska</c>; the palette is
+    /// left to <see cref="SubPicture"/>'s default, matching the GUI's OCR path.
+    /// </summary>
+    public static IReadOnlyList<BitmapSubtitleItem> LoadMatroskaVobSub(MatroskaFile matroska, MatroskaTrackInfo track)
+    {
+        if (track.ContentEncodingType == 1)
+        {
+            throw new InvalidOperationException(
+                $"VobSub MKV track #{track.TrackNumber} is compressed (content encoding 1), which isn't supported.");
+        }
+
+        var sub = matroska.GetSubtitle(track.TrackNumber, null);
+        var packs = new List<VobSubMergedPack>(sub.Count);
+        foreach (var p in sub)
+        {
+            packs.Add(new VobSubMergedPack(p.GetData(track), TimeSpan.FromMilliseconds(p.Start), 32, null)
+            {
+                EndTime = TimeSpan.FromMilliseconds(p.End),
+            });
+
+            // Fix overlapping time codes (some Handbrake versions emit them) by clamping the
+            // previous pack's end to just before this one's start.
+            if (packs.Count > 1 && packs[^2].EndTime > packs[^1].StartTime)
+            {
+                packs[^2].EndTime = TimeSpan.FromMilliseconds(packs[^1].StartTime.TotalMilliseconds - 1);
+            }
+        }
+
+        var items = new List<BitmapSubtitleItem>(packs.Count);
+        foreach (var pack in packs)
+        {
+            var bmp = pack.GetBitmap();
+            if (bmp is null)
+            {
+                continue;
+            }
+            // Use the block-derived Start/End (TimeSpan), not StartTimeCode/EndTimeCode which
+            // are based on the SubPicture delay and only correct for .sub+.idx sources.
+            items.Add(new BitmapSubtitleItem(
+                new TimeCode(pack.StartTime.TotalMilliseconds),
+                new TimeCode(pack.EndTime.TotalMilliseconds),
+                bmp));
+        }
+        if (items.Count == 0)
+        {
+            throw new InvalidOperationException($"No VobSub subtitles in MKV track #{track.TrackNumber}.");
+        }
+        return items;
+    }
+
+    /// <summary>
+    /// VobSub track inside an MP4 (handler type <c>subp</c>, e.g. produced by MP4Box) →
+    /// bitmap events. The decoded subpictures and their timing are parsed by libse's
+    /// <see cref="Stbl"/>; index <c>i</c> of <c>SubPictures</c> lines up with paragraph
+    /// <c>i</c>. Mirrors the desktop <c>OcrSubtitleMp4VobSub</c> (palette left to default).
+    /// </summary>
+    public static IReadOnlyList<BitmapSubtitleItem> LoadMp4VobSub(Trak track)
+    {
+        var paragraphs = track.Mdia.Minf.Stbl.GetParagraphs();
+        var subPictures = track.Mdia.Minf.Stbl.SubPictures;
+        var count = Math.Min(paragraphs.Count, subPictures.Count);
+
+        var items = new List<BitmapSubtitleItem>(count);
+        for (var i = 0; i < count; i++)
+        {
+            var bmp = subPictures[i].GetBitmap(
+                null, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false);
+            if (bmp is null)
+            {
+                continue;
+            }
+            items.Add(new BitmapSubtitleItem(paragraphs[i].StartTime, paragraphs[i].EndTime, bmp));
+        }
+        if (items.Count == 0)
+        {
+            throw new InvalidOperationException("No VobSub subpictures found in MP4 track.");
         }
         return items;
     }
