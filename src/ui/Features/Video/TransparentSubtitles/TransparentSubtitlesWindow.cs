@@ -5,6 +5,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Threading;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Logic;
@@ -22,7 +23,7 @@ public class TransparentSubtitlesWindow : Window
         UiUtil.InitializeWindow(this, GetType().Name);
         Title = Se.Language.Video.VideoTransparent.Title;
         SizeToContent = SizeToContent.WidthAndHeight;
-        CanResize = false;
+        CanResize = true;
 
         _vm = vm;
         vm.Window = this;
@@ -30,6 +31,14 @@ public class TransparentSubtitlesWindow : Window
 
         var subtitleSettingsView = MakeSubtitlesView(vm);
         var videoSettingsView = MakeVideoSettingsView(vm);
+        // Keep the left column (subtitle + video settings) together and top-aligned so the extra
+        // vertical space goes to the preview instead of opening a gap between the two boxes.
+        var leftPanel = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            VerticalAlignment = VerticalAlignment.Top,
+            Children = { subtitleSettingsView, videoSettingsView },
+        };
         var cutView = MakeCutView(vm);
         var previewView = MakePreviewView(vm);
         var batchView = MakeBatchView(vm);
@@ -69,40 +78,86 @@ public class TransparentSubtitlesWindow : Window
             UiUtil.MakeButtonCancel(vm.CancelCommand)
         );
 
+        // The preview column grows in single mode; the batch column grows in batch mode
+        // (toggled in UpdateGrowAreas). The preview/batch row is a star row so the preview
+        // (single mode) and the batch list (batch mode) also grow vertically.
+        var previewColumn = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
+        var batchColumn = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) };
+
         var grid = new Grid
         {
             RowDefinitions =
             {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // subtitle settings (lower) + preview
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // cut
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // preview + batch list
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // video info
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // progress bar
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // buttons
             },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) }, // subtitle/video settings
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) }, // cut/preview/video info
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }, // batch mode
+                previewColumn, // cut/preview/video info
+                batchColumn, // batch mode
             },
             Margin = UiUtil.MakeWindowMargin(),
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(subtitleSettingsView, 0, 0, 2, 1);
-        grid.Add(videoSettingsView, 2, 0);
+        grid.Add(leftPanel, 0, 0, 3, 1);
         grid.Add(cutView, 0, 1);
         grid.Add(previewView, 1, 1);
-        grid.Add(batchView, 0, 3, 3, 1);
         grid.Add(videoInfoView, 2, 1);
-        grid.Add(progressView, 4, 0, 1, 3);
-        grid.Add(buttonPanel, 5, 0, 1, 3);
+        grid.Add(batchView, 0, 3, 3, 1);
+        grid.Add(progressView, 3, 0, 1, 3);
+        grid.Add(buttonPanel, 4, 0, 1, 3);
 
         Content = grid;
 
+        void UpdateGrowAreas()
+        {
+            // Steer extra space to whichever area is in use: the preview (single mode) or the batch list (batch mode).
+            previewColumn.Width = new GridLength(1, vm.IsBatchMode ? GridUnitType.Auto : GridUnitType.Star);
+            batchColumn.Width = new GridLength(1, vm.IsBatchMode ? GridUnitType.Star : GridUnitType.Auto);
+        }
+
+        vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(vm.IsBatchMode))
+            {
+                UpdateGrowAreas();
+                LockMinimumToContentSize(); // batch mode needs more width; re-fit and re-lock the minimum
+            }
+        };
+        UpdateGrowAreas();
+
         Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+
+        Opened += (_, _) => LockMinimumToContentSize();
+    }
+
+    private void LockMinimumToContentSize()
+    {
+        // Re-fit the window to the current mode's content (single mode is narrower; batch mode
+        // needs more width for the file list), then lock that size in as the new minimum while
+        // still allowing the user to enlarge the window further.
+        MinWidth = 0;
+        MinHeight = 0;
+        SizeToContent = SizeToContent.WidthAndHeight;
+        Dispatcher.UIThread.Post(() =>
+        {
+            var width = ClientSize.Width;
+            var height = ClientSize.Height;
+            SizeToContent = SizeToContent.Manual;
+            if (width > 0 && height > 0)
+            {
+                MinWidth = width;
+                MinHeight = height;
+                Width = width;
+                Height = height;
+            }
+        }, DispatcherPriority.Loaded);
     }
 
     private static Border MakeSubtitlesView(TransparentSubtitlesViewModel vm)
@@ -420,7 +475,7 @@ public class TransparentSubtitlesWindow : Window
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
-            Width = 300,
+            MinWidth = 300,
             Height = double.NaN,
         };
 
@@ -429,11 +484,11 @@ public class TransparentSubtitlesWindow : Window
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }, // preview grows
             },
             ColumnDefinitions =
             {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
             },
             ColumnSpacing = 5,
             RowSpacing = 5,
