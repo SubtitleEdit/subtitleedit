@@ -140,18 +140,7 @@ public partial class FindService : IFindService
 
     public int Count(string searchText)
     {
-        if (string.IsNullOrEmpty(searchText) || _textLines.Count == 0)
-        {
-            return 0;
-        }
-
-        int count = 0;
-        for (int i = 0; i < _textLines.Count; i++)
-        {
-            count += CountMatchesInLine(_textLines[i], searchText, WholeWord, CurrentFindMode);
-        }
-
-        return count;
+        return Count(searchText, _textLines, WholeWord, CurrentFindMode);
     }
 
     public int Count(string searchText, IReadOnlyList<string> textLines, bool wholeWord, FindMode findMode)
@@ -618,7 +607,7 @@ public partial class FindService : IFindService
             case FindMode.RegularExpression:
                 try
                 {
-                    var searchLine = NormalizeLineEndingsForRegex(line, out _);
+                    var searchLine = NormalizeLineEndingsForRegex(line);
                     return Regex.Matches(searchLine, searchText).Count;
                 }
                 catch (ArgumentException)
@@ -706,6 +695,33 @@ public partial class FindService : IFindService
     private static int MapNormalizedIndex(List<int> indexMap, int normalizedIndex, int originalLength)
     {
         return normalizedIndex < indexMap.Count ? indexMap[normalizedIndex] : originalLength;
+    }
+
+    private static string NormalizeLineEndingsForRegex(string line)
+    {
+        if (!line.Contains('\r'))
+        {
+            return line;
+        }
+
+        var normalized = new StringBuilder(line.Length);
+        for (var i = 0; i < line.Length; i++)
+        {
+            if (line[i] == '\r')
+            {
+                normalized.Append('\n');
+                if (i + 1 < line.Length && line[i + 1] == '\n')
+                {
+                    i++;
+                }
+            }
+            else
+            {
+                normalized.Append(line[i]);
+            }
+        }
+
+        return normalized.ToString();
     }
 
     private static string NormalizeLineEndingsForRegex(string line, out List<int> indexMap)
