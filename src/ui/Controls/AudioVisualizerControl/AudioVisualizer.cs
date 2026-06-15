@@ -2214,7 +2214,7 @@ public class AudioVisualizer : Control
             return;
         }
 
-        // See DrawWaveFormFancy: skip IList<T> interface dispatch in the per-pixel loop.
+        // See BuildWaveFormFancy: skip IList<T> interface dispatch in the per-pixel loop.
         var peaks = WavePeaks.AsSpan();
         var peaksCount = peaks.Length;
 

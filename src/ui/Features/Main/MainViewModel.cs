@@ -18427,10 +18427,15 @@ public partial class MainViewModel :
                 return;
             }
 
+            // Always advance the estimate: the 50 ms _positionTimer reads _playheadEstimateSeconds as
+            // its source of truth (SelectCurrentSubtitleWhilePlaying, play-selection end detection, the
+            // auto-scroll branches), and some layouts have a video player but no waveform. Only the
+            // visual updates below need the AudioVisualizer.
+            var est = UpdatePlayheadEstimate(vp);
+
             var av = AudioVisualizer;
             if (av != null)
             {
-                var est = UpdatePlayheadEstimate(vp);
                 av.CurrentVideoPositionSeconds = est;
 
                 // In "center waveform on current position" mode the waveform scrolls to keep the cursor
