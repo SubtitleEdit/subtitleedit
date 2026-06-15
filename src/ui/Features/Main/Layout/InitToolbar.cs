@@ -271,6 +271,19 @@ public static class InitToolbar
             isLastSeparator = false;
         }
 
+        if (appearance.ToolbarShowSourceView)
+        {
+            stackPanelLeft.Children.Add(new Button
+            {
+                Content = MakeImage("SourceView"),
+                Command = vm.ShowSourceViewCommand,
+                Background = Brushes.Transparent,
+                [AutomationProperties.NameProperty] = Se.Language.Options.Shortcuts.SourceView,
+                [ToolTip.TipProperty] = UiUtil.MakeToolTip(Se.Language.Options.Shortcuts.SourceView + " {0}", shortcuts, nameof(vm.ShowSourceViewCommand)),
+            });
+            isLastSeparator = false;
+        }
+
         if (appearance.ToolbarShowHelp)
         {
             if (!isLastSeparator)
