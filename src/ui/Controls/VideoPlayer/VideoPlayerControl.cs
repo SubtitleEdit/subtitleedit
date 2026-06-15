@@ -489,6 +489,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 HorizontalAlignment = HorizontalAlignment.Center,
                 FontSize = 12,
                 FontWeight = FontWeight.Bold,
+                FontFeatures = FontFeatureCollection.Parse("tnum"),
             };
             progressText.Bind(TextBlock.TextProperty, this.GetObservable(ProgressTextProperty));
             _gridProgress.Children.Add(progressText);
@@ -822,7 +823,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 else
                 {
                     ProgressText =
-                        $"{TimeCode.FromSeconds(pos + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToDisplayString()} / {fullDuration}{postFix}";
+                        $" {TimeCode.FromSeconds(pos + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0).ToDisplayString()} / {fullDuration}{postFix}";
                 }
             };
             _positionTimer.Start();
