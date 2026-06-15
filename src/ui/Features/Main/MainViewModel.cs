@@ -338,8 +338,11 @@ public partial class MainViewModel :
     private const double PlayheadSeekArriveToleranceSeconds = 0.15;
     private const double PlayheadSeekPinTimeoutMs = 600;
     private const double PlayheadResyncThresholdSeconds = 0.5; // drift beyond this = real discontinuity -> snap
-    private const double PlayheadDriftCorrection = 0.1; // gentle pull toward mpv when its clock is live
+    private const double PlayheadDriftCorrection = 0.05; // gentle pull toward mpv when its clock is live
+    private const double PlayheadMaxCorrectionFraction = 0.2; // cap catch-up to ~1.2x speed (vs the forward step)
     private const double PlayheadMaxForwardStepSeconds = 0.05; // cap one tick's advance so a starved tick can't lurch
+    private const double PlayheadFreezeHoldSeconds = 0.12; // if mpv's clock hasn't moved this long, it's frozen: hold
+    private long _playheadLastRawChangeTs; // when mpv's reported position last changed
     private CancellationTokenSource _videoOpenTokenSource;
     private readonly HashSet<string> _waveformsBeingGenerated = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lock _waveformsBeingGeneratedLock = new();
@@ -18177,21 +18180,41 @@ public partial class MainViewModel :
                 speed = 1.0;
             }
 
-            var forwardStep = elapsedSeconds * speed;
-            _playheadEstimateSeconds += forwardStep;
+            var rawChanged = Math.Abs(rawPosition - _playheadLastRealSeconds) > 0.0005;
+            if (rawChanged)
+            {
+                _playheadLastRawChangeTs = nowTimestamp;
+            }
+
+            var rawFrozenSeconds = (nowTimestamp - _playheadLastRawChangeTs) / (double)Stopwatch.Frequency;
+
+            // Only extrapolate while mpv's clock is actually advancing. After a paused seek mpv's
+            // time-pos (and the video) freezes for ~400 ms while it re-primes, then resumes at 1x from
+            // the same spot. Extrapolating through that freeze races the cursor ahead of the still-frozen
+            // frame and then forces a visible sub-1x crawl to resync. Holding while frozen and gliding
+            // once mpv resumes is seamless, since it resumes from where the cursor is held.
+            if (rawFrozenSeconds < PlayheadFreezeHoldSeconds)
+            {
+                _playheadEstimateSeconds += elapsedSeconds * speed;
+            }
 
             var drift = rawPosition - _playheadEstimateSeconds;
             if (Math.Abs(drift) > PlayheadResyncThresholdSeconds)
             {
                 _playheadEstimateSeconds = rawPosition;
             }
-            else if (rawPosition > _playheadLastRealSeconds + 0.0005)
+            else if (rawChanged && drift > 0)
             {
-                // Correct a fraction of the drift, but never by more than the forward step so the
-                // cursor can't visibly reverse or jump while chasing mpv's chunky updates.
+                // Only ever nudge forward to close a lag (e.g. after a starved tick); never pull the
+                // cursor backward, which is what showed up as the sub-1x "slow" after the rush. Cap the
+                // per-tick correction so the catch-up tops out around ~1.2x.
                 var correction = drift * PlayheadDriftCorrection;
-                var maxCorrection = forwardStep * 0.5;
-                correction = Math.Clamp(correction, -maxCorrection, maxCorrection);
+                var maxCorrection = elapsedSeconds * speed * PlayheadMaxCorrectionFraction;
+                if (correction > maxCorrection)
+                {
+                    correction = maxCorrection;
+                }
+
                 _playheadEstimateSeconds += correction;
             }
         }
