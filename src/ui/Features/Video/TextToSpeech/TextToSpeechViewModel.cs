@@ -545,6 +545,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         string? wavPath = null;
         bool isCosyVoice3 = false;
         bool isVoxCPM2 = false;
+        bool isQwen3Clone = false;
         if (voice.EngineVoice is CosyVoice3Voice cosy && !string.IsNullOrEmpty(cosy.FilePath) && string.IsNullOrEmpty(cosy.RefText))
         {
             wavPath = cosy.FilePath;
@@ -567,6 +568,18 @@ public partial class TextToSpeechViewModel : ObservableObject
                 isVoxCPM2 = true;
             }
         }
+        else if (voice.EngineVoice is Voices.Qwen3TtsVoice qwen3 && !string.IsNullOrEmpty(qwen3.FilePath))
+        {
+            // Only the Voice clone (Base) model carries a FilePath; CustomVoice/VoiceDesign leave
+            // it empty, so this never fires for them. A usable transcript may already exist —
+            // imported by the user, or filled from the OmniVoice pack by NormalizeVoiceTranscripts.
+            var existing = Qwen3TtsCrispAsr.TryReadUsableTranscript(qwen3.FilePath);
+            if (string.IsNullOrEmpty(existing))
+            {
+                wavPath = qwen3.FilePath;
+                isQwen3Clone = true;
+            }
+        }
 
         if (string.IsNullOrEmpty(wavPath))
         {
@@ -577,11 +590,20 @@ public partial class TextToSpeechViewModel : ObservableObject
         try
         {
             var audioFileName = wavPath;
+            // Qwen3 (CrispASR) clone: auto-run Whisper first so the user rarely has to type the
+            // transcript (the sibling engines keep their type-or-click-STT prompt). The result is
+            // still shown for a quick review/correction since clone quality is sensitive to it.
+            var initialText = string.Empty;
+            if (isQwen3Clone)
+            {
+                initialText = await RunSpeechToTextForRefTextAsync(audioFileName) ?? string.Empty;
+            }
+
             var result = await _windowService.ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(Window, vm =>
             {
                 vm.Initialize(
                     Se.Language.Video.TextToSpeech.VoiceCloneTranscriptTitle,
-                    string.Empty,
+                    initialText,
                     500,
                     150);
                 vm.ConfigureExtraButton(
@@ -602,6 +624,10 @@ public partial class TextToSpeechViewModel : ObservableObject
             else if (isVoxCPM2)
             {
                 written = VoxCPM2CrispAsr.TryWriteRefTextSidecar(wavPath, result.Text);
+            }
+            else if (isQwen3Clone)
+            {
+                written = Qwen3TtsCrispAsr.TryWriteRefTextSidecar(wavPath, result.Text);
             }
             else
             {

@@ -690,7 +690,8 @@ public static class DownloadHashManager
             },
             [Qwen3TtsCpp.Voices] = new[]
             {
-                "ace389f8326e23dc65c22c081d13efb28b9ee5a78e8586bc259d1148f7346e05", // qwen3-tts-cpp-2026-4 (current download URL)
+                "8935dcb18c71fe261e95c0e7c8e4f6cbca153c76109bb946ba4dfe1f115fcada", // qwen3-tts-cpp-2026-5 (current download URL) — voices.zip with real transcripts
+                "ace389f8326e23dc65c22c081d13efb28b9ee5a78e8586bc259d1148f7346e05", // qwen3-tts-cpp-2026-4
             },
 
             // Qwen3 TTS (CrispASR): CustomVoiceTalker is intentionally absent — its hash hasn't

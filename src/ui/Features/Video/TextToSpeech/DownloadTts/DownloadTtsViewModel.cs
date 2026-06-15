@@ -618,6 +618,12 @@ public partial class DownloadTtsViewModel : ObservableObject
                     {
                         _downloadStreamQwen3TtsCrispAsrVoices.Position = 0;
                         _zipUnpacker.UnpackZipStream(_downloadStreamQwen3TtsCrispAsrVoices, voicesFolder, string.Empty, false, new List<string>(), null);
+                        // The pack ships attribution-blurb .txt files, not spoken transcriptions.
+                        // Drop those (the Base backend would load them as ref-text → off-voice
+                        // output) and fill real transcripts from the OmniVoice pack where it has
+                        // the same voice. Runs here explicitly since the normalize-once pass in
+                        // GetSetVoicesFolder above fires before this extraction.
+                        Qwen3TtsCrispAsr.NormalizeVoiceTranscripts(voicesFolder);
                         WriteInstalledHashSidecar(voicesFolder, _downloadStreamQwen3TtsCrispAsrVoices, DownloadHashManager.Qwen3TtsCpp.Voices);
                     }
                     catch (Exception ex)

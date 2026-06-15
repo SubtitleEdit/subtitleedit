@@ -260,10 +260,12 @@ public class Qwen3TtsCrispAsr : ITtsEngine
         }
 
         SeedVoicesFromQwen3TtsCppIfEmpty(voicesFolder);
+        NormalizeVoiceTranscriptsOnce(voicesFolder);
         return voicesFolder;
     }
 
     private static bool _voiceSeedAttempted;
+    private static bool _voiceTranscriptsNormalized;
 
     /// <summary>
     /// One-time best-effort seeding of reference voices from the existing qwen3-tts.cpp engine's
@@ -324,6 +326,154 @@ public class Qwen3TtsCrispAsr : ITtsEngine
         {
             Se.LogError(ex, "Qwen3 TTS (CrispASR): voice seeding from qwen3-tts.cpp folder failed");
         }
+    }
+
+    private static void NormalizeVoiceTranscriptsOnce(string voicesFolder)
+    {
+        if (_voiceTranscriptsNormalized)
+        {
+            return;
+        }
+        _voiceTranscriptsNormalized = true;
+        NormalizeVoiceTranscripts(voicesFolder);
+    }
+
+    /// <summary>
+    /// Brings the ref-text sidecars in <paramref name="voicesFolder"/> into the shape the Base
+    /// backend needs. Two clean-ups, per reference WAV:
+    ///  - Drop attribution-blurb <c>.txt</c> files: the qwen3-tts.cpp / voices.zip pack ships
+    ///    Wikimedia/Creative-Commons blurbs next to its named clips, NOT spoken transcriptions.
+    ///    The backend would happily load such a blurb as ref-text and produce runaway, off-voice
+    ///    output, so a blurb is treated as "no transcript" and removed.
+    ///  - Fill in a missing transcription from the sibling OmniVoice pack when it ships the same
+    ///    generic reference WAV (female_06.wav, male_03.wav, …) WITH a real transcript — a correct
+    ///    ref-text for free, no Whisper, no prompt.
+    /// Voices still left without a transcript afterwards are handled lazily at voice-selection /
+    /// import / synth time. Best-effort: an IO error on one file is logged and skipped.
+    /// </summary>
+    public static void NormalizeVoiceTranscripts(string voicesFolder)
+    {
+        if (!Directory.Exists(voicesFolder))
+        {
+            return;
+        }
+
+        foreach (var wav in Directory.GetFiles(voicesFolder, "*.wav"))
+        {
+            try
+            {
+                var sidecar = Path.ChangeExtension(wav, ".txt");
+                if (File.Exists(sidecar))
+                {
+                    var text = File.ReadAllText(sidecar).Trim();
+                    if (!string.IsNullOrWhiteSpace(text) && !LooksLikeAttributionBlurb(text))
+                    {
+                        continue; // already carries a usable transcription
+                    }
+
+                    // Empty or an attribution blurb — remove so it is never used as ref-text.
+                    File.Delete(sidecar);
+                }
+
+                var reuse = FindReusableTranscript(wav);
+                if (!string.IsNullOrWhiteSpace(reuse))
+                {
+                    File.WriteAllText(sidecar, reuse);
+                }
+            }
+            catch (Exception ex)
+            {
+                Se.LogError(ex, $"Qwen3 TTS (CrispASR): failed to normalize transcript for '{wav}'");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Best-effort lookup of a real spoken transcription for a bundled reference voice from the
+    /// sibling OmniVoice voice pack, which ships the same generic reference WAVs WITH real
+    /// transcripts. Matched by file name; returns null when OmniVoice isn't installed or has no
+    /// matching usable transcript.
+    /// </summary>
+    public static string? FindReusableTranscript(string wavPath)
+    {
+        try
+        {
+            var omniVoicesFolder = OmniVoiceTtsCpp.GetSetVoicesFolder();
+            var candidate = Path.Combine(omniVoicesFolder, Path.GetFileName(wavPath));
+            return File.Exists(candidate) ? TryReadUsableTranscript(candidate) : null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Returns the usable spoken transcription stored in the <c>.txt</c> sidecar next to
+    /// <paramref name="wavPath"/>, or null when there is none — a missing file, whitespace, or an
+    /// attribution blurb (see <see cref="LooksLikeAttributionBlurb"/>) all count as "no transcript".
+    /// </summary>
+    public static string? TryReadUsableTranscript(string wavPath)
+    {
+        try
+        {
+            var sidecar = Path.ChangeExtension(wavPath, ".txt");
+            if (!File.Exists(sidecar))
+            {
+                return null;
+            }
+
+            var text = File.ReadAllText(sidecar).Trim();
+            return string.IsNullOrWhiteSpace(text) || LooksLikeAttributionBlurb(text) ? null : text;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Writes <paramref name="transcript"/> as the <c>.txt</c> ref-text sidecar next to a
+    /// reference WAV (the Base backend auto-loads it as ref-text). Mirrors the sibling clone
+    /// engines' <c>TryWriteRefTextSidecar</c> so the auto-fill flows can share one shape.
+    /// </summary>
+    public static bool TryWriteRefTextSidecar(string voiceWavPath, string transcript)
+    {
+        if (string.IsNullOrEmpty(voiceWavPath) || string.IsNullOrWhiteSpace(transcript))
+        {
+            return false;
+        }
+
+        try
+        {
+            var sidecar = Path.ChangeExtension(voiceWavPath, ".txt");
+            File.WriteAllText(sidecar, transcript.Trim());
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, $"Qwen3 TTS (CrispASR): failed to write ref-text sidecar for '{voiceWavPath}'");
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// True when <paramref name="text"/> looks like the Wikimedia / Creative-Commons attribution
+    /// blurb that ships in the qwen3-tts.cpp voice pack's <c>.txt</c> sidecars rather than an
+    /// actual spoken transcription. Feeding such a blurb as ref-text yields runaway, off-voice
+    /// output, so it is treated as "no transcript" wherever a real ref-text is required.
+    /// </summary>
+    public static bool LooksLikeAttributionBlurb(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return false;
+        }
+
+        return text.Contains("commons.wikimedia.org", StringComparison.OrdinalIgnoreCase)
+            || text.Contains("creativecommons.org", StringComparison.OrdinalIgnoreCase)
+            || text.Contains("This file is licensed", StringComparison.OrdinalIgnoreCase)
+            || text.Contains("Downsampled to", StringComparison.OrdinalIgnoreCase);
     }
 
     public static string GetTalkerPath(string? modelKey = null) =>
@@ -471,8 +621,7 @@ public class Qwen3TtsCrispAsr : ITtsEngine
                     + "then pick it in the voice combo.");
             }
 
-            var transcriptPath = Path.ChangeExtension(qwen3Voice.FilePath, ".txt");
-            if (!File.Exists(transcriptPath) || string.IsNullOrWhiteSpace(File.ReadAllText(transcriptPath)))
+            if (string.IsNullOrWhiteSpace(TryReadUsableTranscript(qwen3Voice.FilePath)))
             {
                 throw new InvalidOperationException(
                     $"Qwen3 TTS (CrispASR) voice cloning needs the spoken transcription of '{qwen3Voice.Voice}'. "
