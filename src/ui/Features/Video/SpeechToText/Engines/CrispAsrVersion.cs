@@ -10,15 +10,19 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 /// <summary>
 /// Cached <c>crispasr --version</c> probe. Used by the speech-to-text engine settings
 /// dialog and by Chatterbox / Qwen3 (CrispASR) TTS settings to show the user which
-/// CrispASR runtime they have installed. <c>crispasr --version</c> on v0.6.12 prints
+/// CrispASR runtime they have installed. <c>crispasr --version</c> on v0.7.2 prints
 /// something like:
 ///
 ///   <c>=== build info ===</c>
-///   <c>  version       : 0.6.12</c>
-///   <c>  git sha       : 9dfb1490</c>
-///   <c>  git date      : 2026-05-26T23:28:31+02:00</c>
+///   <c>  version       : 0.7.1</c>
+///   <c>  git sha       : b50a8f33</c>
+///   <c>  git date      : 2026-06-15T04:26:48Z</c>
+///   <c>  build type    : Release</c>
+///   <c>  ggml backends : cpu,metal,blas</c>
 ///   <c>  ...</c>
 ///
+/// (Note: the embedded <c>version</c> field can lag the release tag — the v0.7.2
+/// archives still self-report 0.7.1 — so we parse whatever the binary prints.)
 /// Older releases printed a single banner line like
 /// <c>crispasr 0.6.7 (git ..., Release) [backends: ...]</c>; we accept either form.
 /// </summary>
@@ -31,8 +35,8 @@ public static class CrispAsrVersion
     private static DateTime _cachedExeMtimeUtc;
     private static string? _cachedVersion;
 
-    // Matches either `version : 0.6.12` (structured --version output) or
-    // `crispasr 0.6.12` (legacy single-line banner).
+    // Matches either `version : 0.7.1` (structured --version output) or
+    // `crispasr 0.7.1` (legacy single-line banner).
     private static readonly Regex VersionRegex = new(
         @"(?:^\s*version\s*:\s*|\bcrispasr\s+)([\w.\-+]+)",
         RegexOptions.IgnoreCase | RegexOptions.Multiline);
