@@ -153,12 +153,12 @@ public static class InitMenu
                         new Separator(),
                         new MenuItem
                         {
-                            Header = Se.Language.File.Import.ImagedBasedSubtitleForOcrDotDotDot,
+                            Header = Se.Language.File.Import.ImageBasedSubtitleForOcrDotDotDot,
                             Command = vm.ImportImageSubtitleForOcrCommand,
                         },
                         new MenuItem
                         {
-                            Header = Se.Language.File.Import.ImagedBasedSubtitleForEditDotDotDot,
+                            Header = Se.Language.File.Import.ImageBasedSubtitleForEditDotDotDot,
                             Command = vm.ImportImageSubtitleForEditCommand,
                         },
                         new MenuItem

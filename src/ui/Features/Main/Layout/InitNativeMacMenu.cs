@@ -138,8 +138,8 @@ public static class InitNativeMacMenu
         var importItems = new NativeMenu();
         importItems.Items.Add(Item(Clean(lImport.SubtitleWithManuallyChosenEncodingDotDotDot), v => v.ShowImportSubtitleWithManuallyChosenEncodingCommand));
         importItems.Items.Add(new NativeMenuItemSeparator());
-        importItems.Items.Add(Item(Clean(lImport.ImagedBasedSubtitleForOcrDotDotDot), v => v.ImportImageSubtitleForOcrCommand));
-        importItems.Items.Add(Item(Clean(lImport.ImagedBasedSubtitleForEditDotDotDot), v => v.ImportImageSubtitleForEditCommand));
+        importItems.Items.Add(Item(Clean(lImport.ImageBasedSubtitleForOcrDotDotDot), v => v.ImportImageSubtitleForOcrCommand));
+        importItems.Items.Add(Item(Clean(lImport.ImageBasedSubtitleForEditDotDotDot), v => v.ImportImageSubtitleForEditCommand));
         importItems.Items.Add(Item(Clean(lImport.ImagesForOcrDotDotDot), v => v.ImportImagesCommand));
         importItems.Items.Add(Item(Clean(lImport.PlainTextDotDotDot), v => v.ImportPlainTextCommand));
         importItems.Items.Add(Item(Clean(lImport.CsvXlsxCustomColumnsDotDotDot), v => v.ImportCsvXlsxCustomColumnsCommand));
