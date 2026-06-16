@@ -220,6 +220,15 @@ public partial class DownloadVideoFromUrlViewModel : ObservableObject
 
     private void OnTimerElapsed(object? sender, ElapsedEventArgs e)
     {
+        // System.Timers.Timer raises Elapsed on a thread-pool thread, but this handler
+        // writes observable properties bound to the UI (StatusText/Error) and closes the
+        // window. Touching those off the UI thread can throw "call from invalid thread" or
+        // leave the UI in an inconsistent state, so marshal the whole tick to the UI thread.
+        Dispatcher.UIThread.Post(HandleTimerTick);
+    }
+
+    private void HandleTimerTick()
+    {
         lock (_lockObj)
         {
             if (_done || _downloadTask is null)
@@ -305,15 +314,13 @@ public partial class DownloadVideoFromUrlViewModel : ObservableObject
 
     private void Close()
     {
-        Dispatcher.UIThread.Post(() =>
+        // Always invoked on the UI thread (HandleTimerTick / CommandCancel).
+        if (!string.IsNullOrEmpty(Error))
         {
-            if (!string.IsNullOrEmpty(Error))
-            {
-                return; // keep window open so the user can read the error
-            }
+            return; // keep window open so the user can read the error
+        }
 
-            Window?.Close();
-        });
+        Window?.Close();
     }
 
     internal void OnKeyDown(KeyEventArgs e)
