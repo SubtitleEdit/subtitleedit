@@ -1155,8 +1155,11 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                 return;
             }
 
-            // Clamp volume between 0 and 100
-            var clampedVolume = Math.Max(0, Math.Min(100, value));
+            // Clamp volume between 0 and the player maximum. mpv's default
+            // volume-max is 130, matching MaxVolume, so values above 100 boost
+            // (amplify) the audio. Clamping to 100 here meant the upper part of
+            // the volume slider (100..130) did nothing.
+            var clampedVolume = Math.Max(0, Math.Min(MaxVolume, value));
             var err = DoMpvCommand("set", "volume", clampedVolume.ToString(CultureInfo.InvariantCulture));
             //if (err < 0)
             //{
