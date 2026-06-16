@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCodesMiddle = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCodesShort = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
+        private static readonly Regex RegexShortArrow = new Regex(@"-->\s*", RegexOptions.Compiled);
 
         public static readonly Dictionary<string, SKColor> DefaultColorClasses = new Dictionary<string, SKColor>
         {
@@ -257,7 +258,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 if (isTimeCode && RegexTimeCodesShort.IsMatch(s))
                 {
-                    s = "00:" + s.Replace("--> ", "--> 00:");
+                    // Both sides lack the hour part. Prefix the end time via the arrow
+                    // (regardless of spacing) and the start time via concatenation.
+                    s = "00:" + RegexShortArrow.Replace(s, "--> 00:", 1);
                 }
 
                 if (isNextTimeCode && Utilities.IsNumber(s) && p?.Text.Length > 0)
