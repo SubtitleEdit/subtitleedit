@@ -29,6 +29,26 @@ public class MpvReloader : IMpvReloader
     {
         if (subtitle.Paragraphs.Count == 0 && subtitleSecondary == null)
         {
+            // All subtitles were deleted - remove any previously loaded subtitle from mpv,
+            // otherwise the last shown lines stay visible on the video.
+            if (!string.IsNullOrEmpty(_mpvTextFileName) || !string.IsNullOrEmpty(_mpvTextOld))
+            {
+                try
+                {
+                    mpvContext.SubRemove();
+                }
+                catch (Exception exception)
+                {
+                    Se.LogError(exception);
+                }
+
+                DeleteTempMpvFileName();
+                _mpvTextFileName = null;
+                _mpvTextOld = string.Empty;
+                _mpvSubOldHash = -1;
+                _subtitlePrev = null;
+            }
+
             return;
         }
 
