@@ -440,32 +440,35 @@ public partial class SubtitleLineViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Sets the start time and shifts the end time by the same amount, preserving
-    /// the line's duration ("drag the whole line"). This is what the start-time
-    /// editor uses when no separate end-time editor is shown. Plain
-    /// <see cref="StartTime"/> assignment, by contrast, keeps the end fixed.
+    /// Binding target for the start-time editor in "keep duration" mode (used when
+    /// no separate end-time editor is shown). Programmatic callers should use
+    /// <see cref="SetStartTimeKeepDuration"/> so the side effect reads as an action.
     /// </summary>
     public TimeSpan StartTimeKeepDuration
     {
         get => StartTime;
         set
         {
-            if (StartTime == value)
+            if (StartTime == value || _skipUpdate)
             {
                 return;
             }
 
-            if (_skipUpdate)
-            {
-                return;
-            }
-
-            // Move the whole line: shift the end by the same delta so the visible
-            // span is preserved. Use SetTimes so start/end are applied atomically
-            // (no transient start > end exposed to the bound editor controls).
-            SetTimes(value, value + (EndTime - StartTime));
+            SetStartTimeKeepDuration(value);
             OnPropertyChanged();
         }
+    }
+
+    /// <summary>
+    /// Sets the start time and shifts the end time by the same amount, preserving
+    /// the line's duration ("move the whole line"). Plain <see cref="StartTime"/>
+    /// assignment and <see cref="SetStartTimeOnly"/>, by contrast, keep the end fixed.
+    /// </summary>
+    internal void SetStartTimeKeepDuration(TimeSpan timeSpan)
+    {
+        // SetTimes applies start/end atomically (no transient start > end exposed
+        // to the bound editor controls); the span comes from the live times.
+        SetTimes(timeSpan, timeSpan + (EndTime - StartTime));
     }
 
     partial void OnStartTimeChanged(TimeSpan value)

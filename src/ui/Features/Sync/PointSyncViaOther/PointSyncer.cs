@@ -66,7 +66,7 @@ public static class PointSyncer
         for (var i = 0; i < result.Count; i++)
         {
             // Shift the whole line by the constant offset (start and end together).
-            result[i].StartTimeKeepDuration = result[i].StartTime.Add(diff);
+            result[i].SetStartTimeKeepDuration(result[i].StartTime.Add(diff));
         }
     }
 

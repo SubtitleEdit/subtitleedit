@@ -35,11 +35,11 @@ public class SubtitleLineViewModelTimeTests
     }
 
     [Fact]
-    public void StartTimeKeepDuration_ShiftsEndByTheSameAmount()
+    public void SetStartTimeKeepDuration_ShiftsEndByTheSameAmount()
     {
         var line = NewLine(1000, 3000);
 
-        line.StartTimeKeepDuration = TimeSpan.FromMilliseconds(1500);
+        line.SetStartTimeKeepDuration(TimeSpan.FromMilliseconds(1500));
 
         Assert.Equal(1500, line.StartTime.TotalMilliseconds, 3);
         Assert.Equal(3500, line.EndTime.TotalMilliseconds, 3); // moved by +500
@@ -47,14 +47,28 @@ public class SubtitleLineViewModelTimeTests
     }
 
     [Fact]
-    public void StartTimeKeepDuration_NegativeShift_PreservesDuration()
+    public void SetStartTimeKeepDuration_NegativeShift_PreservesDuration()
     {
         var line = NewLine(5000, 7000);
 
-        line.StartTimeKeepDuration = TimeSpan.FromMilliseconds(2000);
+        line.SetStartTimeKeepDuration(TimeSpan.FromMilliseconds(2000));
 
         Assert.Equal(2000, line.StartTime.TotalMilliseconds, 3);
         Assert.Equal(4000, line.EndTime.TotalMilliseconds, 3);
+        Assert.Equal(2000, line.Duration.TotalMilliseconds, 3);
+    }
+
+    [Fact]
+    public void StartTimeKeepDurationProperty_DelegatesToMethod()
+    {
+        // The property exists for the start-time editor binding; assigning it
+        // must behave the same as SetStartTimeKeepDuration (move the whole line).
+        var line = NewLine(1000, 3000);
+
+        line.StartTimeKeepDuration = TimeSpan.FromMilliseconds(1500);
+
+        Assert.Equal(1500, line.StartTime.TotalMilliseconds, 3);
+        Assert.Equal(3500, line.EndTime.TotalMilliseconds, 3);
         Assert.Equal(2000, line.Duration.TotalMilliseconds, 3);
     }
 }
