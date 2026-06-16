@@ -2979,7 +2979,7 @@ public partial class MainViewModel :
         {
             var newParagraph = new SubtitleLineViewModel(p, SelectedSubtitleFormat);
             var offset = p.StartTime.TotalMilliseconds - firstStartTime;
-            newParagraph.StartTime = TimeSpan.FromMilliseconds(videoPosition * 1000 + offset);
+            newParagraph.StartTimeKeepDuration = TimeSpan.FromMilliseconds(videoPosition * 1000 + offset);
 
             _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
         }
@@ -5700,7 +5700,7 @@ public partial class MainViewModel :
                     foreach (var p in transcribedLine.Transcription.Paragraphs)
                     {
                         var newLine = new SubtitleLineViewModel(p, SelectedSubtitleFormat);
-                        newLine.StartTime = selectedLine.StartTime + p.StartTime.TimeSpan;
+                        newLine.StartTimeKeepDuration = selectedLine.StartTime + p.StartTime.TimeSpan;
                         newLines.Add(newLine);
                     }
                 }
@@ -16654,7 +16654,7 @@ public partial class MainViewModel :
                 var timeToShift = nextLine.StartTime - firstLine.StartTime;
                 for (var i = indexOfNext; i < Subtitles.Count; i++)
                 {
-                    Subtitles[i].StartTime = Subtitles[i].StartTime - timeToShift;
+                    Subtitles[i].StartTimeKeepDuration = Subtitles[i].StartTime - timeToShift;
                 }
 
                 nextLine.SetStartTimeOnly(firstLine.StartTime);

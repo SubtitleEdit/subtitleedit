@@ -1098,9 +1098,12 @@ public static partial class InitListViewAndEditBox
             UseVideoOffset = true,
             [AutomationProperties.NameProperty] = Se.Language.General.StartTime,
         };
+        // With a separate end-time editor, moving start should keep the end fixed
+        // (StartTimeOnly). Without one, moving start drags the whole line keeping
+        // its duration (StartTimeKeepDuration).
         var startTimeBindingName = nameof(vm.SelectedSubtitle) + "." + (Se.Settings.Appearance.ShowUpDownEndTime
             ? nameof(SubtitleLineViewModel.StartTimeOnly)
-            : nameof(SubtitleLineViewModel.StartTime));
+            : nameof(SubtitleLineViewModel.StartTimeKeepDuration));
         timeCodeUpDown[!TimeCodeUpDown.ValueProperty] = new Binding(startTimeBindingName)
         {
             Mode = BindingMode.TwoWay,

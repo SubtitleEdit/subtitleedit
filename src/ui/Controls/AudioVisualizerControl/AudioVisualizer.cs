@@ -573,7 +573,7 @@ public class AudioVisualizer : Control
             var seconds = RelativeXPositionToSeconds(point.X);
             if (firstSelected != null)
             {
-                firstSelected.StartTime = TimeSpan.FromSeconds(seconds);
+                firstSelected.StartTimeKeepDuration = TimeSpan.FromSeconds(seconds);
                 e.Handled = true;
                 InvalidateVisual();
                 return;

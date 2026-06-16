@@ -439,17 +439,52 @@ public partial class SubtitleLineViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Sets the start time and shifts the end time by the same amount, preserving
+    /// the line's duration ("drag the whole line"). This is what the start-time
+    /// editor uses when no separate end-time editor is shown. Plain
+    /// <see cref="StartTime"/> assignment, by contrast, keeps the end fixed.
+    /// </summary>
+    public TimeSpan StartTimeKeepDuration
+    {
+        get => StartTime;
+        set
+        {
+            if (StartTime == value)
+            {
+                return;
+            }
+
+            if (_skipUpdate)
+            {
+                return;
+            }
+
+            _skipUpdate = true;
+            var duration = Duration;
+            StartTime = value;
+            EndTime = value + duration;
+            _skipUpdate = false;
+
+            UpdateDuration();
+            OnPropertyChanged();
+        }
+    }
+
     partial void OnStartTimeChanged(TimeSpan value)
     {
         OnPropertyChanged(nameof(StartTimeOnly));
+        OnPropertyChanged(nameof(StartTimeKeepDuration));
 
         if (_skipUpdate)
         {
             return;
         }
 
+        // Plain, safe default: move the start and recompute duration, leaving the
+        // end time fixed. To move the whole line keeping its duration, assign
+        // StartTimeKeepDuration instead.
         _skipUpdate = true;
-        EndTime = value + Duration;
         UpdateDuration();
         _skipUpdate = false;
     }

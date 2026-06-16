@@ -65,7 +65,8 @@ public static class PointSyncer
         var diff = syncPoint.RightStartTime - syncPoint.LeftStartTime;
         for (var i = 0; i < result.Count; i++)
         {
-            result[i].StartTime = result[i].StartTime.Add(diff);
+            // Shift the whole line by the constant offset (start and end together).
+            result[i].StartTimeKeepDuration = result[i].StartTime.Add(diff);
         }
     }
 
