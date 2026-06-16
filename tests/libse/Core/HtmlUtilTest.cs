@@ -90,4 +90,24 @@ public class HtmlUtilTest
         Assert.Equal("<i>foobar?</i>" + Environment.NewLine + "<i>foobar?</i>", HtmlUtil.FixInvalidItalicTags(s));
     }
 
+    [Fact]
+    public void EncodeNumericEncodesNonAsciiBmpChar()
+    {
+        Assert.Equal("Hi&#229;", HtmlUtil.EncodeNumeric("Hiå")); // å
+    }
+
+    [Fact]
+    public void EncodeNumericLeavesAsciiUntouched()
+    {
+        Assert.Equal("abc", HtmlUtil.EncodeNumeric("abc"));
+    }
+
+    [Fact]
+    public void EncodeNumericEncodesSurrogatePairAsSingleCodePoint()
+    {
+        // U+1F600 (😀) is a surrogate pair in UTF-16; it must encode as one
+        // code point reference, not two lone-surrogate references.
+        Assert.Equal("&#128512;", HtmlUtil.EncodeNumeric("😀"));
+    }
+
 }

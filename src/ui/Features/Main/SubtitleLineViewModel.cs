@@ -620,8 +620,12 @@ public partial class SubtitleLineViewModel : ObservableObject
             return;
         }
 
-        SetStartTimeOnly(TimeSpan.FromMilliseconds(StartTime.TotalMilliseconds * factor + adjustmentInSeconds * TimeCode.BaseUnit));
-        EndTime = TimeSpan.FromMilliseconds(EndTime.TotalMilliseconds * factor + adjustmentInSeconds * TimeCode.BaseUnit);
+        // Set both times atomically via SetTimes; updating start then end
+        // separately can briefly expose start > end to the bound editor
+        // controls, which clamp the negative duration and corrupt the end time.
+        var newStart = TimeSpan.FromMilliseconds(StartTime.TotalMilliseconds * factor + adjustmentInSeconds * TimeCode.BaseUnit);
+        var newEnd = TimeSpan.FromMilliseconds(EndTime.TotalMilliseconds * factor + adjustmentInSeconds * TimeCode.BaseUnit);
+        SetTimes(newStart, newEnd);
     }
 
     internal double GetCharactersPerSecond()
