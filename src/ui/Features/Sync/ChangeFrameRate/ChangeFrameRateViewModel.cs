@@ -157,8 +157,9 @@ public partial class ChangeFrameRateViewModel : ObservableObject
         double ratio = fromFrameRate / toFrameRate;
         foreach (var line in subtitles)
         {
-            line.SetStartTimeOnly(TimeSpan.FromMilliseconds(line.StartTime.TotalMilliseconds * ratio));
-            line.EndTime = TimeSpan.FromMilliseconds(line.EndTime.TotalMilliseconds * ratio);
+            line.SetTimes(
+                TimeSpan.FromMilliseconds(line.StartTime.TotalMilliseconds * ratio),
+                TimeSpan.FromMilliseconds(line.EndTime.TotalMilliseconds * ratio));
         }
     }
 }

@@ -86,8 +86,10 @@ public partial class ChangeSpeedViewModel : ObservableObject
     {
         foreach (var subtitle in subtitles)
         {
-            subtitle.SetStartTimeOnly(TimeSpan.FromMilliseconds(subtitle.StartTime.TotalMilliseconds * (100.0 / speedPercent)));
-            subtitle.EndTime = TimeSpan.FromMilliseconds(subtitle.EndTime.TotalMilliseconds * (100.0 / speedPercent));
+            var factor = 100.0 / speedPercent;
+            subtitle.SetTimes(
+                TimeSpan.FromMilliseconds(subtitle.StartTime.TotalMilliseconds * factor),
+                TimeSpan.FromMilliseconds(subtitle.EndTime.TotalMilliseconds * factor));
         }
     }
 }

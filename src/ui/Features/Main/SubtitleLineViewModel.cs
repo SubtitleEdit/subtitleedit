@@ -595,6 +595,24 @@ public partial class SubtitleLineViewModel : ObservableObject
         UpdateDuration();
     }
 
+    /// <summary>
+    /// Sets start and end time together without ever publishing an invalid
+    /// intermediate state (e.g. start &gt; end / negative duration). Updating
+    /// the two times separately can briefly expose such a state to the live
+    /// editor controls bound to the selected line; the duration up/down clamps
+    /// the negative value and writes it back, corrupting the end time. Suppress
+    /// notifications while both values are assigned, then recompute duration once.
+    /// </summary>
+    internal void SetTimes(TimeSpan startTime, TimeSpan endTime)
+    {
+        _skipUpdate = true;
+        StartTime = startTime;
+        EndTime = endTime;
+        _skipUpdate = false;
+
+        UpdateDuration();
+    }
+
     internal void Adjust(double factor, double adjustmentInSeconds)
     {
         if (StartTime.IsMaxTime())
