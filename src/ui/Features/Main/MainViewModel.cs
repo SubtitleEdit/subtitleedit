@@ -5862,12 +5862,18 @@ public partial class MainViewModel :
         }
 
         // Now that the user has committed to a URL, see whether the background
-        // version check came back "outdated" — and only then interrupt with the
-        // upgrade prompt. The check is almost always finished by this point, but
-        // we await it to be safe.
+        // version check came back "outdated". It has almost always finished by this
+        // point, but if not, show a brief "Please wait..." so the app doesn't look
+        // frozen while `yt-dlp --version` is still running.
+        var isOutdated = false;
         if (outdatedCheckTask is not null)
         {
-            bool isOutdated;
+            PleaseWaitViewModel? pleaseWaitVm = null;
+            if (!outdatedCheckTask.IsCompleted)
+            {
+                pleaseWaitVm = _windowService.ShowWindow<PleaseWaitWindow, PleaseWaitViewModel>(Window!);
+            }
+
             try
             {
                 isOutdated = await outdatedCheckTask;
@@ -5878,12 +5884,18 @@ public partial class MainViewModel :
                 // its own error on the next yt-dlp invocation.
                 isOutdated = false;
             }
-
-            if (isOutdated &&
-                !await PromptToDownloadYtDlp(Se.Language.Main.YoutubeDlOutdatedDownloadNow))
+            finally
             {
-                return;
+                pleaseWaitVm?.Close();
             }
+        }
+
+        // If a newer yt-dlp is available, offer the upgrade — but open the video
+        // regardless of the user's choice. The installed binary still works, so a
+        // declined or failed update must not abort the open.
+        if (isOutdated)
+        {
+            await PromptToDownloadYtDlp(Se.Language.Main.YoutubeDlOutdatedDownloadNow);
         }
 
         switch (result.SelectedMode.Value)
@@ -5944,6 +5956,19 @@ public partial class MainViewModel :
     /// </summary>
     private async Task ShowPickerAndLoadAsync(IReadOnlyList<DownloadedSubtitleInfo> subtitles)
     {
+        if (subtitles.Count == 0)
+        {
+            return;
+        }
+
+        // With a single track there's nothing to choose — load it directly instead
+        // of making the user confirm a one-row picker.
+        if (subtitles.Count == 1)
+        {
+            await SubtitleOpen(subtitles[0].FilePath, skipLoadVideo: true);
+            return;
+        }
+
         var pickerResult = await ShowDialogAsync<PickOnlineSubtitleWindow, PickOnlineSubtitleViewModel>(
             vm => { vm.Initialize(subtitles); });
 

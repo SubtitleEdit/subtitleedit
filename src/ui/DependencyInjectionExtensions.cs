@@ -344,6 +344,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<DownloadSpeechToTextEngineViewModel>();
         collection.AddTransient<DownloadSpeechToTextModelsViewModel>();
         collection.AddTransient<DownloadYtDlpViewModel>();
+        collection.AddTransient<PleaseWaitViewModel>();
         collection.AddTransient<EditCategoryViewModel>();
         collection.AddTransient<EditCustomTextFormatViewModel>();
         collection.AddTransient<EditEmbeddedTrackViewModel>();

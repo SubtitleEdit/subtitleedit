@@ -1,13 +1,14 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Config;
 
-namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
+namespace Nikse.SubtitleEdit.Features.Shared;
 
-public class GeneratingAudioWindow : Window
+public class PleaseWaitWindow : Window
 {
-    public GeneratingAudioWindow(GeneratingAudioViewModel vm)
+    public PleaseWaitWindow(PleaseWaitViewModel vm)
     {
         vm.Window = this;
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -19,27 +20,27 @@ public class GeneratingAudioWindow : Window
         Width = 360;
         SizeToContent = SizeToContent.Height;
         CanResize = false;
+        ShowInTaskbar = false;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
         DataContext = vm;
 
         var titleText = new TextBlock
         {
-            Text = Se.Language.General.PleaseWait,
             FontSize = 18,
             HorizontalAlignment = HorizontalAlignment.Center,
-            Margin = new Avalonia.Thickness(0, 0, 0, 8),
+            TextAlignment = Avalonia.Media.TextAlignment.Center,
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+            Margin = new Thickness(0, 0, 0, 8),
         };
+        titleText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.StatusText)));
 
         var progressBar = new ProgressBar
         {
             IsIndeterminate = true,
-            MinWidth = 300,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
             Height = 8,
         };
-
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var buttonBar = UiUtil.MakeButtonBar(buttonCancel);
 
         Content = new StackPanel
         {
@@ -49,13 +50,7 @@ public class GeneratingAudioWindow : Window
             {
                 titleText,
                 progressBar,
-                buttonBar,
             }
-        };
-
-        Loaded += delegate
-        {
-            buttonCancel.Focus();
         };
     }
 }
