@@ -363,13 +363,23 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             var encoded = new StringBuilder(source.Length);
-            foreach (var ch in source)
+            for (var i = 0; i < source.Length; i++)
             {
+                var ch = source[i];
                 if (ch == ' ')
                 {
                     encoded.Append("&#");
                     encoded.Append(160); // &nbsp;
                     encoded.Append(';');
+                }
+                else if (char.IsHighSurrogate(ch) && i + 1 < source.Length && char.IsLowSurrogate(source[i + 1]))
+                {
+                    // Emit the full code point, not the two surrogate halves separately
+                    // (a numeric reference to a lone surrogate is invalid and won't round-trip).
+                    encoded.Append("&#");
+                    encoded.Append(char.ConvertToUtf32(ch, source[i + 1]));
+                    encoded.Append(';');
+                    i++;
                 }
                 else if (ch > 127 || ch == '<' || ch == '>' || ch == '"' || ch == '&' || ch == '\'')
                 {
