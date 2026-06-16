@@ -130,6 +130,7 @@ public partial class SubtitleLineViewModel : ObservableObject
         UpdateDuration();
         Id = Guid.TryParse(paragraph.Id, out var guid) ? guid : Guid.NewGuid();
         Paragraph = paragraph;
+        Bookmark = paragraph.Bookmark;
 
         if (subtitleFormat is AdvancedSubStationAlpha or SubStationAlpha)
         {
