@@ -439,17 +439,52 @@ public partial class SubtitleLineViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Binding target for the start-time editor in "keep duration" mode (used when
+    /// no separate end-time editor is shown). Programmatic callers should use
+    /// <see cref="SetStartTimeKeepDuration"/> so the side effect reads as an action.
+    /// </summary>
+    public TimeSpan StartTimeKeepDuration
+    {
+        get => StartTime;
+        set
+        {
+            if (StartTime == value || _skipUpdate)
+            {
+                return;
+            }
+
+            SetStartTimeKeepDuration(value);
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// Sets the start time and shifts the end time by the same amount, preserving
+    /// the line's duration ("move the whole line"). Plain <see cref="StartTime"/>
+    /// assignment and <see cref="SetStartTimeOnly"/>, by contrast, keep the end fixed.
+    /// </summary>
+    internal void SetStartTimeKeepDuration(TimeSpan timeSpan)
+    {
+        // SetTimes applies start/end atomically (no transient start > end exposed
+        // to the bound editor controls); the span comes from the live times.
+        SetTimes(timeSpan, timeSpan + (EndTime - StartTime));
+    }
+
     partial void OnStartTimeChanged(TimeSpan value)
     {
         OnPropertyChanged(nameof(StartTimeOnly));
+        OnPropertyChanged(nameof(StartTimeKeepDuration));
 
         if (_skipUpdate)
         {
             return;
         }
 
+        // Plain, safe default: move the start and recompute duration, leaving the
+        // end time fixed. To move the whole line keeping its duration, assign
+        // StartTimeKeepDuration instead.
         _skipUpdate = true;
-        EndTime = value + Duration;
         UpdateDuration();
         _skipUpdate = false;
     }

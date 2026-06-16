@@ -2979,7 +2979,7 @@ public partial class MainViewModel :
         {
             var newParagraph = new SubtitleLineViewModel(p, SelectedSubtitleFormat);
             var offset = p.StartTime.TotalMilliseconds - firstStartTime;
-            newParagraph.StartTime = TimeSpan.FromMilliseconds(videoPosition * 1000 + offset);
+            newParagraph.SetStartTimeKeepDuration(TimeSpan.FromMilliseconds(videoPosition * 1000 + offset));
 
             _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
         }
@@ -5700,7 +5700,7 @@ public partial class MainViewModel :
                     foreach (var p in transcribedLine.Transcription.Paragraphs)
                     {
                         var newLine = new SubtitleLineViewModel(p, SelectedSubtitleFormat);
-                        newLine.StartTime = selectedLine.StartTime + p.StartTime.TimeSpan;
+                        newLine.SetStartTimeKeepDuration(selectedLine.StartTime + p.StartTime.TimeSpan);
                         newLines.Add(newLine);
                     }
                 }
@@ -11777,7 +11777,7 @@ public partial class MainViewModel :
             for (var i = index; i < Subtitles.Count; i++)
             {
                 var subtitle = Subtitles[i];
-                subtitle.StartTime += difference;
+                subtitle.SetStartTimeKeepDuration(subtitle.StartTime + difference);
             }
 
             _updateAudioVisualizer = true;
@@ -11816,7 +11816,7 @@ public partial class MainViewModel :
             for (var i = index; i < Subtitles.Count; i++)
             {
                 var subtitle = Subtitles[i];
-                subtitle.StartTime += difference;
+                subtitle.SetStartTimeKeepDuration(subtitle.StartTime + difference);
             }
 
             _updateAudioVisualizer = true;
@@ -16657,7 +16657,7 @@ public partial class MainViewModel :
                 var timeToShift = nextLine.StartTime - firstLine.StartTime;
                 for (var i = indexOfNext; i < Subtitles.Count; i++)
                 {
-                    Subtitles[i].StartTime = Subtitles[i].StartTime - timeToShift;
+                    Subtitles[i].SetStartTimeKeepDuration(Subtitles[i].StartTime - timeToShift);
                 }
 
                 nextLine.SetStartTimeOnly(firstLine.StartTime);
@@ -19297,7 +19297,7 @@ public partial class MainViewModel :
         {
             foreach (SubtitleLineViewModel p in SubtitleGrid.SelectedItems)
             {
-                p.StartTime += adjustment;
+                p.SetStartTimeKeepDuration(p.StartTime + adjustment);
                 p.UpdateDuration();
             }
         }
@@ -19311,7 +19311,7 @@ public partial class MainViewModel :
                 for (var i = firstSelectedIndex; i < Subtitles.Count; i++)
                 {
                     var p = Subtitles[i];
-                    p.StartTime += adjustment;
+                    p.SetStartTimeKeepDuration(p.StartTime + adjustment);
                     p.UpdateDuration();
                 }
             }
@@ -19320,7 +19320,7 @@ public partial class MainViewModel :
         {
             foreach (var p in Subtitles)
             {
-                p.StartTime += adjustment;
+                p.SetStartTimeKeepDuration(p.StartTime + adjustment);
                 p.UpdateDuration();
             }
         }
@@ -20205,7 +20205,7 @@ public partial class MainViewModel :
             for (var i = index; i < Subtitles.Count; i++)
             {
                 var subtitle = Subtitles[i];
-                subtitle.StartTime += difference;
+                subtitle.SetStartTimeKeepDuration(subtitle.StartTime + difference);
             }
 
             _updateAudioVisualizer = true;
