@@ -11777,7 +11777,7 @@ public partial class MainViewModel :
             for (var i = index; i < Subtitles.Count; i++)
             {
                 var subtitle = Subtitles[i];
-                subtitle.StartTime += difference;
+                subtitle.StartTimeKeepDuration = subtitle.StartTime + difference;
             }
 
             _updateAudioVisualizer = true;
@@ -11816,7 +11816,7 @@ public partial class MainViewModel :
             for (var i = index; i < Subtitles.Count; i++)
             {
                 var subtitle = Subtitles[i];
-                subtitle.StartTime += difference;
+                subtitle.StartTimeKeepDuration = subtitle.StartTime + difference;
             }
 
             _updateAudioVisualizer = true;
@@ -19294,7 +19294,7 @@ public partial class MainViewModel :
         {
             foreach (SubtitleLineViewModel p in SubtitleGrid.SelectedItems)
             {
-                p.StartTime += adjustment;
+                p.StartTimeKeepDuration = p.StartTime + adjustment;
                 p.UpdateDuration();
             }
         }
@@ -19308,7 +19308,7 @@ public partial class MainViewModel :
                 for (var i = firstSelectedIndex; i < Subtitles.Count; i++)
                 {
                     var p = Subtitles[i];
-                    p.StartTime += adjustment;
+                    p.StartTimeKeepDuration = p.StartTime + adjustment;
                     p.UpdateDuration();
                 }
             }
@@ -19317,7 +19317,7 @@ public partial class MainViewModel :
         {
             foreach (var p in Subtitles)
             {
-                p.StartTime += adjustment;
+                p.StartTimeKeepDuration = p.StartTime + adjustment;
                 p.UpdateDuration();
             }
         }
@@ -20202,7 +20202,7 @@ public partial class MainViewModel :
             for (var i = index; i < Subtitles.Count; i++)
             {
                 var subtitle = Subtitles[i];
-                subtitle.StartTime += difference;
+                subtitle.StartTimeKeepDuration = subtitle.StartTime + difference;
             }
 
             _updateAudioVisualizer = true;

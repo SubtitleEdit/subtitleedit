@@ -460,13 +460,10 @@ public partial class SubtitleLineViewModel : ObservableObject
                 return;
             }
 
-            _skipUpdate = true;
-            var duration = Duration;
-            StartTime = value;
-            EndTime = value + duration;
-            _skipUpdate = false;
-
-            UpdateDuration();
+            // Move the whole line: shift the end by the same delta so the visible
+            // span is preserved. Use SetTimes so start/end are applied atomically
+            // (no transient start > end exposed to the bound editor controls).
+            SetTimes(value, value + (EndTime - StartTime));
             OnPropertyChanged();
         }
     }
