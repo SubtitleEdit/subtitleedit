@@ -163,7 +163,7 @@ public class SeTools
         SplitOddLinesAction = nameof(SplitOddLinesActionType.Smart);
         UnicodeSymbolsToInsert = "♪;♫;—;…;°;∙;©;®;☺;☹;♥;☮;☯;Σ;∞;≡;⇒;π";
         MusicSymbol = "♪";
-        MusicSymbolReplace = "â™ª,â™," + // ♪ + ♫ in UTF-8 opened as ANSI
+        MusicSymbolReplace = "â™ª,â™«," + // ♪ + ♫ in UTF-8 opened as ANSI
                              "<s M/>,<s m/>," + // music symbols by subtitle creator
                              "#,*,¶"; // common music symbols
 
