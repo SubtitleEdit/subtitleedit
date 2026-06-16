@@ -37,8 +37,8 @@ public partial class ChangeFrameRateViewModel : ObservableObject
         FromFrameRates = new ObservableCollection<double>(StandardFrameRates);
         ToFrameRates = new ObservableCollection<double>(StandardFrameRates);
 
-        SelectedFromFrameRate = FromFrameRates[0];
-        SelectedToFrameRate = ToFrameRates[0];
+        SelectedFromFrameRate = GetClosestFrameRate(FromFrameRates, Se.Settings.Synchronization.ChangeFrameRateFrom);
+        SelectedToFrameRate = GetClosestFrameRate(ToFrameRates, Se.Settings.Synchronization.ChangeFrameRateTo);
     }
 
     public void Initialize(string? videoFileName, FfmpegMediaInfo2? mediaInfo)
@@ -123,6 +123,10 @@ public partial class ChangeFrameRateViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
+        Se.Settings.Synchronization.ChangeFrameRateFrom = SelectedFromFrameRate;
+        Se.Settings.Synchronization.ChangeFrameRateTo = SelectedToFrameRate;
+        Se.SaveSettings();
+
         OkPressed = true;
         Window?.Close();
     }
