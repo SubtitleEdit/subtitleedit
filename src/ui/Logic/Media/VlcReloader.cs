@@ -248,6 +248,7 @@ public class VlcReloader : IVlcReloader
 
     public void Reset()
     {
+        DeleteTempMpvFileName();
         _mpvTextFileName = null;
         _mpvTextFileExtension = null;
         _mpvTextOld = string.Empty;

@@ -16605,13 +16605,16 @@ public partial class MainViewModel :
         }
 
         _subtitleGridSelectionChangedSkip = true;
-        var idx = Subtitles.IndexOf(selectedItems.First());
         _undoRedoManager.StopChangeDetection();
 
         var sortedIndices = selectedItems
             .Select(item => Subtitles.IndexOf(item))
             .OrderBy(i => i)
             .ToList();
+
+        // Anchor on the lowest selected index, not selectedItems.First() (which is the
+        // first-clicked row and can differ from row order on an out-of-order selection).
+        var idx = sortedIndices.FirstOrDefault();
 
         var firstLine = Subtitles.GetOrNull(sortedIndices.FirstOrDefault());
 
