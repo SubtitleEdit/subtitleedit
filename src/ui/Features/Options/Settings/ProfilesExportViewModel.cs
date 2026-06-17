@@ -44,7 +44,7 @@ public partial class ProfilesExportViewModel : ObservableObject
             return;
         }   
 
-        if (Profiles.Where(p=>p.IsSelected).Count() == 0)
+        if (!Profiles.Any(p => p.IsSelected))
         {
             await MessageBox.Show(
                 Window!,
