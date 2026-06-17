@@ -75,32 +75,42 @@ public class TesseractOcr
         {
             await File.WriteAllBytesAsync(tempImage, oneColorBitmap.ToPngArray(), cancellationToken);
 
-            // --tessdata-dir must come before any configfile argument (Tesseract requirement).
-            // Use -c inline variables instead of the "hocr" configfile so the tessdata directory
-            // is not required to contain a configs/ subdirectory (user-downloaded language packs
-            // typically don't include the bundled config files).
-            using var process = new Process
+            // Use -c inline variables instead of the "hocr" configfile — avoids requiring a
+            // configs/ subdirectory in the tessdata folder (user-downloaded packs don't include it).
+            var psi = new ProcessStartInfo
             {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = _executablePath,
-                    Arguments = $"\"{tempImage}\" \"{tempTextFileName}\" --tessdata-dir \"{tessDataFolder}\" -l {language} --psm 6 --oem 3 -c tessedit_create_hocr=1 -c tessedit_create_txt=0",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true,
-                    WorkingDirectory = Se.TesseractFolder
-                },
+                FileName = _executablePath,
+                UseShellExecute = false,
+                RedirectStandardOutput = false, // output goes to temp .hocr file, not stdout
+                RedirectStandardError = true,
+                CreateNoWindow = true,
             };
+            psi.ArgumentList.Add(tempImage);
+            psi.ArgumentList.Add(tempTextFileName);
+            psi.ArgumentList.Add("--tessdata-dir");
+            psi.ArgumentList.Add(tessDataFolder);
+            psi.ArgumentList.Add("-l");
+            psi.ArgumentList.Add(language);
+            psi.ArgumentList.Add("--psm");
+            psi.ArgumentList.Add("6");
+            psi.ArgumentList.Add("--oem");
+            psi.ArgumentList.Add("3");
+            psi.ArgumentList.Add("-c");
+            psi.ArgumentList.Add("tessedit_create_hocr=1");
+            psi.ArgumentList.Add("-c");
+            psi.ArgumentList.Add("tessedit_create_txt=0");
 
 #pragma warning disable CA1416 // Validate platform compatibility
+            using var process = new Process { StartInfo = psi };
             process.Start();
 #pragma warning restore CA1416 // Validate platform compatibility
+
+            var stderrTask = process.StandardError.ReadToEndAsync(cancellationToken);
             await process.WaitForExitAsync(cancellationToken);
 
             if (process.ExitCode != 0)
             {
-                Error = await process.StandardError.ReadToEndAsync(cancellationToken);
+                Error = await stderrTask;
                 return string.Empty;
             }
         }
