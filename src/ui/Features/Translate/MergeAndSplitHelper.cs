@@ -819,8 +819,8 @@ public static partial class MergeAndSplitHelper
             candidate.Score = CalculateCandidateScore(candidate, maxCps, maxLineLength);
         }
 
-        // Return the candidate with the highest score
-        return candidates.OrderByDescending(c => c.Score).First();
+        // Return the candidate with the highest score (caller guarantees candidates is non-empty)
+        return candidates.MaxBy(c => c.Score)!;
     }
 
     private static double CalculateCandidateScore(SplitCandidate candidate, double maxCps, int maxLineLength)
