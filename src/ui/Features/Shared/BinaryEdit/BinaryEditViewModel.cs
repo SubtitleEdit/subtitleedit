@@ -1438,8 +1438,10 @@ public partial class BinaryEditViewModel : ObservableObject
                 foreach (var idx in selectedIndices)
                 {
                     var s = Subtitles[idx];
-                    s.StartTime = TimeSpan.FromMilliseconds(s.StartTime.TotalMilliseconds * ratio);
-                    s.EndTime = TimeSpan.FromMilliseconds(s.EndTime.TotalMilliseconds * ratio);
+                    var newStart = TimeSpan.FromMilliseconds(s.StartTime.TotalMilliseconds * ratio);
+                    var newEnd = TimeSpan.FromMilliseconds(s.EndTime.TotalMilliseconds * ratio);
+                    s.StartTime = newStart;
+                    s.EndTime = newEnd;
                 }
 
                 appliedToSelected = true;
@@ -1451,8 +1453,10 @@ public partial class BinaryEditViewModel : ObservableObject
             // Apply to all subtitles
             foreach (var s in Subtitles)
             {
-                s.StartTime = TimeSpan.FromMilliseconds(s.StartTime.TotalMilliseconds * ratio);
-                s.EndTime = TimeSpan.FromMilliseconds(s.EndTime.TotalMilliseconds * ratio);
+                var newStart = TimeSpan.FromMilliseconds(s.StartTime.TotalMilliseconds * ratio);
+                var newEnd = TimeSpan.FromMilliseconds(s.EndTime.TotalMilliseconds * ratio);
+                s.StartTime = newStart;
+                s.EndTime = newEnd;
             }
         }
     }
