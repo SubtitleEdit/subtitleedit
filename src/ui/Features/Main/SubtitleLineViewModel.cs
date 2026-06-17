@@ -58,6 +58,13 @@ public partial class SubtitleLineViewModel : ObservableObject
     public string Extra { get; set; }
     public string Language { get; set; }
     public string Region { get; set; }
+    public string Effect { get; set; }
+    public bool IsComment { get; set; }
+    public string MarginL { get; set; }
+    public string MarginR { get; set; }
+    public string MarginV { get; set; }
+    public bool NewSection { get; set; }
+    public bool Forced { get; set; }
     public Guid Id { get; set; }
     public bool IsCpsColumnVisible { get; set; } = true;
     public bool IsDefault => Text == string.Empty && Number == 0 && Duration == TimeSpan.Zero && StartTime == TimeSpan.Zero;
@@ -84,6 +91,10 @@ public partial class SubtitleLineViewModel : ObservableObject
         Extra = string.Empty;
         Language = string.Empty;
         Region = string.Empty;
+        Effect = string.Empty;
+        MarginL = string.Empty;
+        MarginR = string.Empty;
+        MarginV = string.Empty;
         Style = string.Empty;
         Actor = string.Empty;
         Layer = 0;
@@ -104,6 +115,13 @@ public partial class SubtitleLineViewModel : ObservableObject
         Layer = p.Layer;
         Number = p.Number;
         Extra = p.Extra;
+        Effect = p.Effect;
+        IsComment = p.IsComment;
+        MarginL = p.MarginL;
+        MarginR = p.MarginR;
+        MarginV = p.MarginV;
+        NewSection = p.NewSection;
+        Forced = p.Forced;
         Bookmark = p.Bookmark;
 
         Id = generateNewId ? Guid.NewGuid() : p.Id;
@@ -121,6 +139,13 @@ public partial class SubtitleLineViewModel : ObservableObject
         Extra = paragraph.Extra;
         Language = paragraph.Language;
         Region = paragraph.Region;
+        Effect = paragraph.Effect;
+        IsComment = paragraph.IsComment;
+        MarginL = paragraph.MarginL;
+        MarginR = paragraph.MarginR;
+        MarginV = paragraph.MarginV;
+        NewSection = paragraph.NewSection;
+        Forced = paragraph.Forced;
         Style = paragraph.Style;
         Actor = paragraph.Actor;
         Layer = paragraph.Layer;
@@ -150,6 +175,13 @@ public partial class SubtitleLineViewModel : ObservableObject
             Style = Style,
             Language = Language,
             Region = Region,
+            Effect = Effect,
+            IsComment = IsComment,
+            MarginL = MarginL,
+            MarginR = MarginR,
+            MarginV = MarginV,
+            NewSection = NewSection,
+            Forced = Forced,
             Layer = Layer,
             Bookmark = Bookmark,
         };
@@ -174,6 +206,13 @@ public partial class SubtitleLineViewModel : ObservableObject
             Style = Style,
             Language = Language,
             Region = Region,
+            Effect = Effect,
+            IsComment = IsComment,
+            MarginL = MarginL,
+            MarginR = MarginR,
+            MarginV = MarginV,
+            NewSection = NewSection,
+            Forced = Forced,
             Layer = Layer,
             Bookmark = Bookmark,
         };
@@ -592,6 +631,16 @@ public partial class SubtitleLineViewModel : ObservableObject
         Style = p.Style;
         Layer = p.Layer;
         Extra = p.Extra;
+        Language = p.Language;
+        Region = p.Region;
+        Effect = p.Effect;
+        IsComment = p.IsComment;
+        MarginL = p.MarginL;
+        MarginR = p.MarginR;
+        MarginV = p.MarginV;
+        NewSection = p.NewSection;
+        Forced = p.Forced;
+        Bookmark = p.Bookmark;
         if (subtitleFormat is AdvancedSubStationAlpha or SubStationAlpha)
         {
             Style = p.Extra;
@@ -615,6 +664,16 @@ public partial class SubtitleLineViewModel : ObservableObject
         Style = src.Style;
         Layer = src.Layer;
         Extra = src.Extra;
+        Language = src.Language;
+        Region = src.Region;
+        Effect = src.Effect;
+        IsComment = src.IsComment;
+        MarginL = src.MarginL;
+        MarginR = src.MarginR;
+        MarginV = src.MarginV;
+        NewSection = src.NewSection;
+        Forced = src.Forced;
+        Bookmark = src.Bookmark;
         _skipUpdate = true;
         StartTime = src.StartTime;
         EndTime = src.EndTime;
