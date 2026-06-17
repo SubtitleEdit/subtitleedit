@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Sync.ChangeFrameRate;
 using System.Collections.ObjectModel;
@@ -17,7 +18,8 @@ public class ChangeFrameRateViewModelTests
         // libse Subtitle.ChangeFrameRate, which scales by oldFrameRate / newFrameRate.
         var ratio = ChangeFrameRateViewModel.GetFrameRateRatio(from, to);
 
-        Assert.Equal(from / to, ratio);
+        var expected = SubtitleFormat.GetFrameForCalculation(from) / SubtitleFormat.GetFrameForCalculation(to);
+        Assert.Equal(expected, ratio);
     }
 
     [Fact]

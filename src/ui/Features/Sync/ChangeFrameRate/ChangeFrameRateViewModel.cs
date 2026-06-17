@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -164,7 +165,7 @@ public partial class ChangeFrameRateViewModel : ObservableObject
     /// </summary>
     internal static double GetFrameRateRatio(double fromFrameRate, double toFrameRate)
     {
-        return fromFrameRate / toFrameRate;
+        return SubtitleFormat.GetFrameForCalculation(fromFrameRate) / SubtitleFormat.GetFrameForCalculation(toFrameRate);
     }
 
     internal static void ChangeFrameRate(ObservableCollection<SubtitleLineViewModel> subtitles, double fromFrameRate, double toFrameRate)
