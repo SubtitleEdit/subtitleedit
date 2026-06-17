@@ -18170,6 +18170,7 @@ public partial class MainViewModel :
         EditTextBox.ClearSelection();
         EditTextBoxOriginal.ClearSelection();
         ResetPlaySelection();
+        _updateAudioVisualizer = true;
 
         if (selectedItems == null || selectedItems.Count == 0)
         {
