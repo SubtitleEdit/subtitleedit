@@ -31,7 +31,7 @@ Shortcuts are organized into the following categories:
 2. Check the desired modifier keys: **Ctrl**, **Alt**, **Shift**, **Win**
 3. Select the key from the dropdown
 4. The shortcut is applied immediately in the list
-5. **Double-click** a command to open the key capture dialog, which lets you press the desired key combination directly
+5. Alternatively, **double-click a command in the list** to open the key capture dialog, then press the desired key combination directly
 
 ## Configurable Commands
 
