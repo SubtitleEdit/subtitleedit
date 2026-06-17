@@ -14,6 +14,8 @@ public class LanguageSettingsShortcuts
     public string CategorySubtitleGrid { get; set; }
     public string CategoryWaveform { get; set; }
 
+    public string GeneralSetupLikeSe4 { get; set; }
+
     public string GeneralMergeSelectedLines { get; set; }
     public string GeneralMergeWithPrevious { get; set; }
     public string GeneralMergeWithNext { get; set; }
@@ -308,6 +310,7 @@ public class LanguageSettingsShortcuts
         CategorySubtitleGrid = "Subtitle list view";
         CategoryWaveform = "Waveform";
 
+        GeneralSetupLikeSe4 = "Set up like Subtitle Edit 4 (theme, shortcuts, replace rules)";
         GeneralMergeSelectedLines = "Merge selected lines";
         GeneralMergeWithPrevious = "Merge with previous";
         GeneralMergeWithNext = "Merge with next";

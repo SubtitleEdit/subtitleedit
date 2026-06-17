@@ -8478,6 +8478,52 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private async Task SetupLikeSe4()
+    {
+        if (Window != null)
+        {
+            var confirm = await MessageBox.Show(Window, "Set up like Subtitle Edit 4",
+                "This will import Subtitle Edit 4 shortcuts and replace rules and apply the Subtitle Edit 4 theme, toolbar and waveform look." + Environment.NewLine + Environment.NewLine +
+                "Continue?",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
+
+        var result = Logic.Se4Setup.Se4SetupApplier.Apply(this);
+
+        // ApplySettings re-applies the theme + toolbar icons, pushes the new
+        // waveform colors to the live control and reloads the shortcuts.
+        ApplySettings();
+
+        if (Window == null)
+        {
+            return;
+        }
+
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine(result.SettingsXmlFound
+            ? string.Format("Imported settings from Subtitle Edit 4:\r\n{0}", result.SettingsXmlPath)
+            : "No Subtitle Edit 4 Settings.xml found - applied Subtitle Edit 4 default values.");
+        sb.AppendLine();
+        sb.AppendLine(string.Format("Shortcuts added/updated: {0}", result.ShortcutsImported));
+        if (result.ShortcutsSkipped > 0)
+        {
+            sb.AppendLine(string.Format("Shortcuts skipped (no match): {0}", result.ShortcutsSkipped));
+        }
+
+        sb.AppendLine(string.Format("Replace rules added: {0} (in {1} new categories)",
+            result.ReplaceRulesAdded, result.ReplaceCategoriesAdded));
+        sb.AppendLine();
+        sb.AppendLine("Theme, toolbar icons and waveform set to the Subtitle Edit 4 look.");
+
+        await MessageBox.Show(Window, "Set up like Subtitle Edit 4", sb.ToString(),
+            MessageBoxButtons.OK, MessageBoxIcon.Information);
+    }
+
+    [RelayCommand]
     private void ToggleShowColumnStartTime()
     {
         Se.Settings.General.ShowColumnStartTime = !Se.Settings.General.ShowColumnStartTime;

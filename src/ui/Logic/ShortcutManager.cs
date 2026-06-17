@@ -178,6 +178,13 @@ public class ShortcutManager : IShortcutManager
             {
                 keys[i] = modern;
             }
+            else if (keys[i].Length == 1 && keys[i][0] >= '0' && keys[i][0] <= '9')
+            {
+                // A bare top-row digit ("4") never matches at runtime: Avalonia's
+                // Key.ToString() reports it as "D4". Normalize so old/imported
+                // bindings line up with the dispatched key name.
+                keys[i] = "D" + keys[i];
+            }
         }
     }
 
