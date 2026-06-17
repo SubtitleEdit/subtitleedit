@@ -453,7 +453,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 var indexes = new List<int>();
                 for (var i = 0; i <= word.Length - letter.Length; i++)
                 {
-                    if (word.Substring(i).StartsWith(letter, StringComparison.Ordinal))
+                    if (word.AsSpan(i).StartsWith(letter, StringComparison.Ordinal))
                     {
                         if (i == word.Length - letter.Length && !_partialWordReplaceList[letter].Contains(' '))
                         {
@@ -767,8 +767,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 {
                     if (word[match.Index + 1] == 'I' || word[match.Index + 1] == '1')
                     {
-                        var doFix = word[match.Index + 1] != 'I' && match.Index >= 1 && word.Substring(match.Index - 1).StartsWith("Mc", StringComparison.Ordinal);
-                        if (word[match.Index + 1] == 'I' && match.Index >= 2 && word.Substring(match.Index - 2).StartsWith("Mac", StringComparison.Ordinal))
+                        var doFix = word[match.Index + 1] != 'I' && match.Index >= 1 && word.AsSpan(match.Index - 1).StartsWith("Mc", StringComparison.Ordinal);
+                        if (word[match.Index + 1] == 'I' && match.Index >= 2 && word.AsSpan(match.Index - 2).StartsWith("Mac", StringComparison.Ordinal))
                         {
                             doFix = false;
                         }

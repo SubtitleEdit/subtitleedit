@@ -91,10 +91,10 @@ namespace Nikse.SubtitleEdit.Logic
 
                 var ch = input[index];
 
-                if (!tagOn && isAssa && ch == '\\'
-                           && (input.Substring(index).StartsWith("\\N")
-                               || input.Substring(index).StartsWith("\\n")
-                               || input.Substring(index).StartsWith("\\h")))
+                if (!tagOn && isAssa && ch == '\\' && index + 1 < input.Length
+                           && (input[index + 1] == 'N'
+                               || input[index + 1] == 'n'
+                               || input[index + 1] == 'h'))
                 {
                     tags.Add(new KeyValuePair<int, string>(index, input.Substring(index, 2)));
                     skipNext = true;
