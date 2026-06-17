@@ -24,6 +24,9 @@ public partial class ChangeFrameRateViewModel : ObservableObject
 
     private static readonly List<double> StandardFrameRates = new List<double> { 23.976, 24, 25, 29.97, 30, 50, 59.94, 60 };
 
+    private double _autoFromRate = double.NaN;
+    private double _autoToRate = double.NaN;
+
     private IFileHelper _fileHelper;
 
     public Window? Window { get; set; }
@@ -34,11 +37,14 @@ public partial class ChangeFrameRateViewModel : ObservableObject
     {
         _fileHelper = fileHelper;
 
-        FromFrameRates = new ObservableCollection<double>(StandardFrameRates);
-        ToFrameRates = new ObservableCollection<double>(StandardFrameRates);
+        var savedFrom = Se.Settings.Synchronization.ChangeFrameRateFrom;
+        var savedTo = Se.Settings.Synchronization.ChangeFrameRateTo;
 
-        SelectedFromFrameRate = GetClosestFrameRate(FromFrameRates, Se.Settings.Synchronization.ChangeFrameRateFrom);
-        SelectedToFrameRate = GetClosestFrameRate(ToFrameRates, Se.Settings.Synchronization.ChangeFrameRateTo);
+        FromFrameRates = new ObservableCollection<double>(StandardFrameRates.Append(savedFrom).Distinct().OrderBy(r => r));
+        ToFrameRates = new ObservableCollection<double>(StandardFrameRates.Append(savedTo).Distinct().OrderBy(r => r));
+
+        SelectedFromFrameRate = GetClosestFrameRate(FromFrameRates, savedFrom);
+        SelectedToFrameRate = GetClosestFrameRate(ToFrameRates, savedTo);
     }
 
     public void Initialize(string? videoFileName, FfmpegMediaInfo2? mediaInfo)
@@ -49,23 +55,24 @@ public partial class ChangeFrameRateViewModel : ObservableObject
         }
 
         var detectedRate = (double)mediaInfo.FramesRate;
-        var ratesWithDetected = StandardFrameRates.Append(detectedRate).Distinct().OrderBy(r => r).ToArray();
 
-        FromFrameRates = new ObservableCollection<double>(ratesWithDetected);
-        ToFrameRates = new ObservableCollection<double>(ratesWithDetected);
+        FromFrameRates = new ObservableCollection<double>(FromFrameRates.Append(detectedRate).Distinct().OrderBy(r => r));
+        ToFrameRates = new ObservableCollection<double>(ToFrameRates.Append(detectedRate).Distinct().OrderBy(r => r));
 
         SelectedToFrameRate = GetClosestFrameRate(ToFrameRates, detectedRate);
 
         var preferredFromRate = Math.Abs(SelectedToFrameRate - 25.0) < 0.01 ? 23.976 : 25.0;
         SelectedFromFrameRate = GetClosestFrameRate(FromFrameRates, preferredFromRate);
+
+        _autoToRate = SelectedToFrameRate;
+        _autoFromRate = SelectedFromFrameRate;
     }
 
     [RelayCommand]
     private void SwitchFrameRates()
     {
-        var temp = SelectedFromFrameRate;
-        SelectedFromFrameRate = SelectedToFrameRate;
-        SelectedToFrameRate = temp;
+        (FromFrameRates, ToFrameRates) = (ToFrameRates, FromFrameRates);
+        (SelectedFromFrameRate, SelectedToFrameRate) = (SelectedToFrameRate, SelectedFromFrameRate);
     }
 
     [RelayCommand]
@@ -123,8 +130,10 @@ public partial class ChangeFrameRateViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
-        Se.Settings.Synchronization.ChangeFrameRateFrom = SelectedFromFrameRate;
-        Se.Settings.Synchronization.ChangeFrameRateTo = SelectedToFrameRate;
+        if (double.IsNaN(_autoFromRate) || Math.Abs(SelectedFromFrameRate - _autoFromRate) > 0.001)
+            Se.Settings.Synchronization.ChangeFrameRateFrom = SelectedFromFrameRate;
+        if (double.IsNaN(_autoToRate) || Math.Abs(SelectedToFrameRate - _autoToRate) > 0.001)
+            Se.Settings.Synchronization.ChangeFrameRateTo = SelectedToFrameRate;
         Se.SaveSettings();
 
         OkPressed = true;

@@ -24,11 +24,11 @@ public class ChangeFrameRateWindow : Window
 
         var comboFromFrameRate = new ComboBox
         {
-            ItemsSource = vm.FromFrameRates,
-            SelectedValue = vm.SelectedFromFrameRate,
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 90,
-        }.WithBindSelected(nameof(vm.SelectedFromFrameRate));
+        }
+        .WithBindItemsSource(nameof(vm.FromFrameRates))
+        .WithBindSelected(nameof(vm.SelectedFromFrameRate));
 
         var buttonFromFrameRate = UiUtil.MakeButtonBrowse(vm.BrowseFromFrameRateCommand);
 
@@ -42,11 +42,11 @@ public class ChangeFrameRateWindow : Window
 
         var comboToFrameRate = new ComboBox
         {
-            ItemsSource = vm.ToFrameRates,
-            SelectedValue = vm.SelectedToFrameRate,
             VerticalAlignment = VerticalAlignment.Center,
             MinWidth = 90,
-        }.WithBindSelected(nameof(vm.SelectedToFrameRate));
+        }
+        .WithBindItemsSource(nameof(vm.ToFrameRates))
+        .WithBindSelected(nameof(vm.SelectedToFrameRate));
 
         var buttonToFrameRate = UiUtil.MakeButtonBrowse(vm.BrowseToFrameRateCommand);
 

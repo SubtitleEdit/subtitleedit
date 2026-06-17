@@ -1266,6 +1266,16 @@ public static class UiUtil
         return control;
     }
 
+    public static ComboBox WithBindItemsSource(this ComboBox control, string itemsSourcePropertyBinding)
+    {
+        control.Bind(ItemsControl.ItemsSourceProperty, new Binding
+        {
+            Path = itemsSourcePropertyBinding,
+        });
+
+        return control;
+    }
+
     public static TextBlock WithMargin(this TextBlock control, int margin)
     {
         control.Margin = new Thickness(margin);
