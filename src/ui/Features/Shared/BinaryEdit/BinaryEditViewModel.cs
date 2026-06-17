@@ -1435,25 +1435,14 @@ public partial class BinaryEditViewModel : ObservableObject
 
             if (selectedIndices.Count > 0)
             {
-                foreach (var idx in selectedIndices)
-                {
-                    var s = Subtitles[idx];
-                    s.StartTime = TimeSpan.FromMilliseconds(s.StartTime.TotalMilliseconds * ratio);
-                    s.EndTime = TimeSpan.FromMilliseconds(s.EndTime.TotalMilliseconds * ratio);
-                }
-
+                ScaleBinarySubtitleTimes(selectedIndices.Select(i => Subtitles[i]), ratio);
                 appliedToSelected = true;
             }
         }
 
         if (!appliedToSelected)
         {
-            // Apply to all subtitles
-            foreach (var s in Subtitles)
-            {
-                s.StartTime = TimeSpan.FromMilliseconds(s.StartTime.TotalMilliseconds * ratio);
-                s.EndTime = TimeSpan.FromMilliseconds(s.EndTime.TotalMilliseconds * ratio);
-            }
+            ScaleBinarySubtitleTimes(Subtitles, ratio);
         }
     }
 
@@ -1493,24 +1482,14 @@ public partial class BinaryEditViewModel : ObservableObject
 
             if (selectedIndices.Count > 0)
             {
-                foreach (var idx in selectedIndices)
-                {
-                    var s = Subtitles[idx];
-                    s.StartTime = TimeSpan.FromMilliseconds(s.StartTime.TotalMilliseconds * factor);
-                    s.EndTime = TimeSpan.FromMilliseconds(s.EndTime.TotalMilliseconds * factor);
-                }
-
+                ScaleBinarySubtitleTimes(selectedIndices.Select(i => Subtitles[i]), factor);
                 appliedToSelected = true;
             }
         }
 
         if (!appliedToSelected)
         {
-            foreach (var s in Subtitles)
-            {
-                s.StartTime = TimeSpan.FromMilliseconds(s.StartTime.TotalMilliseconds * factor);
-                s.EndTime = TimeSpan.FromMilliseconds(s.EndTime.TotalMilliseconds * factor);
-            }
+            ScaleBinarySubtitleTimes(Subtitles, factor);
         }
     }
 
@@ -2022,6 +2001,17 @@ public partial class BinaryEditViewModel : ObservableObject
     internal static bool ShouldOpenVideoPickerOnSurfaceClick(string? videoFileName)
     {
         return string.IsNullOrEmpty(videoFileName);
+    }
+
+    internal static void ScaleBinarySubtitleTimes(IEnumerable<BinarySubtitleItem> subtitles, double factor)
+    {
+        foreach (var s in subtitles)
+        {
+            var newStart = TimeSpan.FromMilliseconds(s.StartTime.TotalMilliseconds * factor);
+            var newEnd = TimeSpan.FromMilliseconds(s.EndTime.TotalMilliseconds * factor);
+            s.StartTime = newStart;
+            s.EndTime = newEnd;
+        }
     }
 
     private void SelectAndScrollToRow(int index)
