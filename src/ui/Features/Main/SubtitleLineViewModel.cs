@@ -225,6 +225,13 @@ public partial class SubtitleLineViewModel : ObservableObject
         return p;
     }
 
+    // Memoized inputs for PixelWidth (text shaping via SkiaSharp is expensive and the
+    // getter is re-evaluated on every grid cell repaint).
+    private string? _pixelWidthText;
+    private string? _pixelWidthFontName;
+    private int _pixelWidthFontSize;
+    private int _pixelWidthValue;
+
     public int PixelWidth
     {
         get
@@ -232,6 +239,13 @@ public partial class SubtitleLineViewModel : ObservableObject
             if (!Se.Settings.General.ShowColumnPixelWidth && !Se.Settings.General.ColorTextTooWide)
             {
                 return 0;
+            }
+
+            var fontName = Se.Settings.General.ColorTextTooWideFontName;
+            var fontSize = Se.Settings.General.ColorTextTooWideFontSize;
+            if (_pixelWidthText == Text && _pixelWidthFontName == fontName && _pixelWidthFontSize == fontSize)
+            {
+                return _pixelWidthValue;
             }
 
             var text = HtmlUtil.RemoveHtmlTags(Text, true);
@@ -246,9 +260,21 @@ public partial class SubtitleLineViewModel : ObservableObject
                 }
             }
 
+            _pixelWidthText = Text;
+            _pixelWidthFontName = fontName;
+            _pixelWidthFontSize = fontSize;
+            _pixelWidthValue = maxWidth;
             return maxWidth;
         }
     }
+
+    // Memoized inputs for CharactersPerSecond. The grid hits this getter several times per
+    // row repaint (CPS cell text, CpsBackgroundBrush, DurationBackgroundBrush) and the
+    // underlying calculation is not free. Keyed on the actual inputs so it self-invalidates.
+    private string? _cpsText;
+    private TimeSpan _cpsStart;
+    private TimeSpan _cpsEnd;
+    private double _cpsValue;
 
     public double CharactersPerSecond
     {
@@ -264,7 +290,16 @@ public partial class SubtitleLineViewModel : ObservableObject
                 return 999.0;
             }
 
-            return SubtitleTextInfoHelper.GetCharactersPerSecond(Text, StartTime, EndTime);
+            if (_cpsText == Text && _cpsStart == StartTime && _cpsEnd == EndTime)
+            {
+                return _cpsValue;
+            }
+
+            _cpsValue = SubtitleTextInfoHelper.GetCharactersPerSecond(Text, StartTime, EndTime);
+            _cpsText = Text;
+            _cpsStart = StartTime;
+            _cpsEnd = EndTime;
+            return _cpsValue;
         }
     }
 
