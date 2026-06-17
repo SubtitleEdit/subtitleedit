@@ -60,4 +60,4 @@ Subtitle Edit supports a wide range of subtitle formats for reading and writing.
 | MPEG | .mpeg |
 | Blu-ray Transport Stream | .m2ts |
 
-> **Note:** Subtitle Edit ships with parsers/writers for 380+ text-based formats, plus a handful of binary and image-based ones. The format is auto-detected when you open a file.
+> **Note:** Subtitle Edit ships with parsers/writers for 380+ subtitle formats, including text, binary, and image-based ones. The format is auto-detected when you open a file.

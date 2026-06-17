@@ -111,7 +111,7 @@ Double-clicking a rule also opens the **Edit rule** dialog.
 | `Escape` | Close the window |
 | `F1` | Open help |
 
-The expand/collapse buttons (`+` / `−`) above the tree expand or collapse all categories at once (`Ctrl++` / `Ctrl+-`).
+The expand/collapse buttons (`+` / `−`) above the tree expand or collapse all categories at once (`Ctrl+Shift++` / `Ctrl+Shift+-`).
 
 ### Import / Export
 

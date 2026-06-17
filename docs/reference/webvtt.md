@@ -4,7 +4,7 @@ WebVTT (file extension `.vtt`) is a modern subtitle format designed for HTML5 vi
 
 ## Overview
 
-WebVTT (Web Video Text Tracks) was developed by the W3C (World Wide Web Consortium) as the official subtitle format for HTML5 video. It's based on SubRip (SRT) but with significant enhancements for web-based video playback.
+WebVTT (Web Video Text Tracks) began at the WHATWG and was standardized by the W3C (World Wide Web Consortium) as the official subtitle format for HTML5 video. It's based on SubRip (SRT) but with significant enhancements for web-based video playback.
 
 **Key Features:**
 - Official W3C standard with [complete specification](https://www.w3.org/TR/webvtt1/)
@@ -178,7 +178,7 @@ Apply CSS classes for styling:
 
 **Predefined color classes:**
 - `white`, `lime`, `cyan`, `red`, `yellow`
-- `magenta`, `blue`, `black`, `green`
+- `magenta`, `blue`, `black`
 
 ### Ruby Text
 

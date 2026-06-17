@@ -221,11 +221,11 @@ This is {\1c&HFF0000&}blue text
 - `&HCC&` — 80% transparent
 - `&HFF&` — Fully transparent (invisible)
 
-**Example:** `{\alpha&HCC\1a&H00}Transparent box with visible text`
+**Example:** `{\alpha&HCC&\1a&H00&}Transparent box with visible text`
 
 ![Alpha 1 example](../screenshots/assa/alpha-1.png)
 
-**Example:** `{\an7\alpha&HCC}Watermark`
+**Example:** `{\an7\alpha&HCC&}Watermark`
 
 ![Alpha 2 example](../screenshots/assa/alpha-2.png)
 
@@ -458,7 +458,7 @@ This is {\1c&HFF0000&}blue text
 ## Drawing Tags
 
 - `\p<level>` — Set drawing mode (0=text, 1-4=drawing with different precision levels)
-- Drawing commands use vector graphics: `m` (move), `l` (line), `b` (cubic Bézier curve), `s` (cubic B-spline), `c` (close spline), `n` (close B-spline)
+- Drawing commands use vector graphics: `m` (move), `l` (line), `b` (cubic Bézier curve), `s` (cubic B-spline), `c` (close spline)
 
 **Drawing precision levels:**
 - `\p0` — Text mode (normal)
@@ -600,15 +600,12 @@ This draws a square.
 ## Notes
 
 - Override tags are case-sensitive (`\B1` will not work, must be `\b1`)
-- Some tags only work with certain renderers
-- Complex animations and effects may impact playback performance
-- Always test with your target player to ensure compatibility
 - Unrecognized text within override blocks is silently ignored
 - Mixing comments and override tags in the same block is not recommended
 
 ## See Also
 
 - [ASSA Styles](../features/assa-styles.md) — Managing ASS/SSA styles
-- [ASSA Apply Custom Override Tags](../features/assa-override-tags.md) — Applying override tags in Subtitle Edit
+- [ASSA Apply Override Tags](../features/assa-override-tags.md) — Applying override tags in Subtitle Edit
 - [ASSA Draw](../features/assa-draw.md) — Vector drawing tool
 - [ASSA Set Position](../features/assa-set-position.md) — Positioning subtitles
