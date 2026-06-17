@@ -1414,7 +1414,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var ratio = result.SelectedFromFrameRate / result.SelectedToFrameRate;
+        var ratio = ChangeFrameRateViewModel.GetFrameRateRatio(result.SelectedFromFrameRate, result.SelectedToFrameRate);
 
         // If there are selected items in the grid, apply only to them
         var appliedToSelected = false;

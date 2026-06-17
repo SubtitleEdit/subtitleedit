@@ -156,9 +156,20 @@ public partial class ChangeFrameRateViewModel : ObservableObject
         return frameRates.MinBy(r => Math.Abs(r - target));
     }
 
+    /// <summary>
+    /// Scaling ratio applied to time codes when changing frame rate.
+    /// Always <c>from / to</c> - a higher target frame rate makes time codes earlier.
+    /// Shared so every change-frame-rate path (text and binary) stays consistent with
+    /// libse's <see cref="Nikse.SubtitleEdit.Core.Common.Subtitle.ChangeFrameRate"/>.
+    /// </summary>
+    internal static double GetFrameRateRatio(double fromFrameRate, double toFrameRate)
+    {
+        return fromFrameRate / toFrameRate;
+    }
+
     internal static void ChangeFrameRate(ObservableCollection<SubtitleLineViewModel> subtitles, double fromFrameRate, double toFrameRate)
     {
-        double ratio = fromFrameRate / toFrameRate;
+        double ratio = GetFrameRateRatio(fromFrameRate, toFrameRate);
         foreach (var line in subtitles)
         {
             line.SetTimes(
