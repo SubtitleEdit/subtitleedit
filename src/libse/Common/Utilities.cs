@@ -747,95 +747,68 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             // Fast check: if no tags or backslashes, return immediately
-            var firstBrace = input.IndexOf('{');
-            var firstSlash = input.IndexOf('\\');
-            if (firstBrace == -1 && firstSlash == -1) return input;
+            if (input.AsSpan().IndexOfAny('{', '\\') == -1)
+            {
+                return input;
+            }
 
-            // Use a pooled buffer to avoid allocations
-            char[] rented = ArrayPool<char>.Shared.Rent(input.Length * 2);
+            // Single forward pass. The previous version re-scanned the remainder with
+            // IndexOf('{') and IndexOf('\\') on every iteration, which degrades to O(n^2)
+            // on slash-heavy input (e.g. many \h / \N and no braces). Copy non-tag
+            // characters directly and only branch when we actually hit '{' or '\'.
+            // Output is never longer than the input ('\n'->NewLine is 2->NewLine.Length,
+            // '\h'->space is 2->1, tags are removed), so input.Length (+small margin) fits.
+            char[] rented = ArrayPool<char>.Shared.Rent(input.Length + 2);
             try
             {
                 var writeIdx = 0;
-                var currentIdx = 0;
+                var i = 0;
+                var len = input.Length;
 
-                while (currentIdx < input.Length)
+                while (i < len)
                 {
-                    // Find the next interesting character
-                    var nextBrace = input.IndexOf('{', currentIdx);
-                    var nextSlash = input.IndexOf('\\', currentIdx);
-
-                    // Determine which one comes first
-                    var nextInterest = -1;
-                    if (nextBrace != -1 && nextSlash != -1)
-                    {
-                        nextInterest = Math.Min(nextBrace, nextSlash);
-                    }
-                    else if (nextBrace != -1)
-                    {
-                        nextInterest = nextBrace;
-                    }
-                    else if (nextSlash != -1)
-                    {
-                        nextInterest = nextSlash;
-                    }
-
-                    // If no more tags/slashes, copy the rest and break
-                    if (nextInterest == -1)
-                    {
-                        int remaining = input.Length - currentIdx;
-                        input.CopyTo(currentIdx, rented, writeIdx, remaining);
-                        writeIdx += remaining;
-                        break;
-                    }
-
-                    // Copy the clean text up to the point of interest
-                    var cleanLength = nextInterest - currentIdx;
-                    if (cleanLength > 0)
-                    {
-                        input.CopyTo(currentIdx, rented, writeIdx, cleanLength);
-                        writeIdx += cleanLength;
-                    }
-
-                    currentIdx = nextInterest;
+                    var c = input[i];
 
                     // Handle Tag {
-                    if (input[currentIdx] == '{')
+                    if (c == '{')
                     {
-                        var closingBrace = input.IndexOf('}', currentIdx + 1);
+                        var closingBrace = input.IndexOf('}', i + 1);
                         if (closingBrace != -1)
                         {
-                            ReadOnlySpan<char> tagContent = input.AsSpan(currentIdx, closingBrace - currentIdx + 1);
-                            if (tagContent.StartsWith("{\\") || tagContent.StartsWith("{Kara Effector"))
+                            // {\...} (the common case) or {Kara Effector...}
+                            if (input[i + 1] == '\\' ||
+                                input.AsSpan(i, closingBrace - i + 1).StartsWith("{Kara Effector".AsSpan()))
                             {
-                                currentIdx = closingBrace + 1;
+                                i = closingBrace + 1;
                                 continue;
                             }
                         }
                     }
                     // Handle Escape \
-                    else if (input[currentIdx] == '\\' && currentIdx + 1 < input.Length)
+                    else if (c == '\\' && i + 1 < len)
                     {
-                        char next = input[currentIdx + 1];
+                        char next = input[i + 1];
                         if (next == 'n' || next == 'N')
                         {
-                            foreach (char c in Environment.NewLine)
+                            foreach (char nl in Environment.NewLine)
                             {
-                                rented[writeIdx++] = c;
+                                rented[writeIdx++] = nl;
                             }
 
-                            currentIdx += 2;
+                            i += 2;
                             continue;
                         }
                         if (next == 'h')
                         {
                             rented[writeIdx++] = ' ';
-                            currentIdx += 2;
+                            i += 2;
                             continue;
                         }
                     }
 
                     // If it wasn't a tag we care about, copy the char and move on
-                    rented[writeIdx++] = input[currentIdx++];
+                    rented[writeIdx++] = c;
+                    i++;
                 }
 
                 var result = new string(rented, 0, writeIdx);
