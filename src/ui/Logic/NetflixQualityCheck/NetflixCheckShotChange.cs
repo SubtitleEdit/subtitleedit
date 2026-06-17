@@ -48,11 +48,16 @@ public class NetflixCheckShotChange : INetflixQualityChecker
             var fixedParagraph = new Paragraph(p, false);
             string comment = string.Empty;
 
-            List<double> previousStartShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000) < SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds)).ToList();
-            List<double> nextStartShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000) > SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds)).ToList();
-            List<double> previousEndShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000) < SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds)).ToList();
-            List<double> nextEndShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000) > SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds)).ToList();
-            var onShotChange = shotChanges.FirstOrDefault(x => SubtitleFormat.MillisecondsToFrames(x * 1000) == SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds));
+            // These frame values are invariant across all shot changes - compute once per paragraph
+            // instead of recomputing inside every Where/FirstOrDefault predicate.
+            var startFrame = SubtitleFormat.MillisecondsToFrames(p.StartTime.TotalMilliseconds);
+            var endFrame = SubtitleFormat.MillisecondsToFrames(p.EndTime.TotalMilliseconds);
+
+            List<double> previousStartShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000) < startFrame).ToList();
+            List<double> nextStartShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000) > startFrame).ToList();
+            List<double> previousEndShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000) < endFrame).ToList();
+            List<double> nextEndShotChanges = shotChanges.Where(x => SubtitleFormat.MillisecondsToFrames(x * 1000) > endFrame).ToList();
+            var onShotChange = shotChanges.FirstOrDefault(x => SubtitleFormat.MillisecondsToFrames(x * 1000) == endFrame);
 
             if (previousStartShotChanges.Count > 0)
             {
