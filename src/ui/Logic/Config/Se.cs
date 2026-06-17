@@ -169,41 +169,7 @@ public class Se
 
     private static string ResolveTesseractModelFolder()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            return Path.Combine(TesseractFolder, "tessdata");
-        }
-
-        var folders = new List<string>();
-
-        if (Directory.Exists("/opt/homebrew/Cellar/tesseract-lang"))
-        {
-            foreach (var folder in Directory.EnumerateDirectories("/opt/homebrew/Cellar/tesseract-lang"))
-            {
-                folders.Add(Path.Combine(folder, "share/tessdata"));
-            }
-        }
-
-        if (Directory.Exists("/usr/share/tesseract-ocr"))
-        {
-            foreach (var folder in Directory.EnumerateDirectories("/usr/share/tesseract-ocr"))
-            {
-                folders.Add(Path.Combine(folder, "tessdata"));
-            }
-        }
-
-        folders.Add("/usr/share/tessdata");
-        folders.Add("/opt/homebrew/share/tessdata/");
-
-        foreach (var folder in folders)
-        {
-            if (Directory.Exists(folder))
-            {
-                return folder;
-            }
-        }
-
-        return Path.Combine(TesseractFolder, "tessdata");
+        return Path.Combine(DataFolder, "Tesseract550", "tessdata");
     }
 
     public void InitializeMainShortcuts(MainViewModel vm)

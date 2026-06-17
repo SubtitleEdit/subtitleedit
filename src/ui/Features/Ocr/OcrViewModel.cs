@@ -3467,6 +3467,7 @@ public partial class OcrViewModel : ObservableObject
     {
         var tesseractOcr = new TesseractOcr();
         var language = SelectedTesseractDictionaryItem?.Code ?? "eng";
+        var tessDataFolder = Se.TesseractModelFolder;
 
         _ = Task.Run(async () =>
         {
@@ -3483,7 +3484,7 @@ public partial class OcrViewModel : ObservableObject
                 var item = OcrSubtitleItems[i];
                 var bitmap = item.GetSkBitmap();
 
-                var text = await tesseractOcr.Ocr(bitmap, language, cancellationToken);
+                var text = await tesseractOcr.Ocr(bitmap, language, tessDataFolder, cancellationToken);
                 item.Text = text;
 
                 var unknownWords = OcrFixLineAndSetText(i, item);
@@ -3801,14 +3802,7 @@ public partial class OcrViewModel : ObservableObject
             }
 
             var dictionary = allDictionaries.FirstOrDefault(p => p.Code == name);
-            if (dictionary != null)
-            {
-                items.Add(dictionary);
-            }
-            else
-            {
-                items.Add(new TesseractDictionary { Code = name, Name = name, Url = string.Empty });
-            }
+            items.Add(dictionary ?? new TesseractDictionary { Code = name, Name = name, Url = string.Empty });
         }
 
         TesseractDictionaryItems.AddRange(items.OrderBy(p => p.ToString()));

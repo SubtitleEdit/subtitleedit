@@ -664,7 +664,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             var pct = (i + 1) * 100 / imageSubtitles.Count;
             item.Status = string.Format(Se.Language.General.OcrPercentX, pct);
             var bitmap = imageSubtitles.GetBitmap(i);
-            var text = await tesseractOcr.Ocr(bitmap, language, cancellationToken);
+            var text = await tesseractOcr.Ocr(bitmap, language, Se.TesseractModelFolder, cancellationToken);
             var p = new Paragraph(text, imageSubtitles.GetStartTime(i).TotalMilliseconds, imageSubtitles.GetEndTime(i).TotalMilliseconds);
             item.Subtitle.Paragraphs.Add(p);
 

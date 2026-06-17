@@ -55,7 +55,7 @@ public class TesseractOcr
         return "tesseract";
     }
 
-    public async Task<string> Ocr(SKBitmap bitmap, string language, CancellationToken cancellationToken)
+    public async Task<string> Ocr(SKBitmap bitmap, string language, string tessDataFolder, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(_executablePath))
         {
@@ -75,12 +75,16 @@ public class TesseractOcr
         {
             await File.WriteAllBytesAsync(tempImage, oneColorBitmap.ToPngArray(), cancellationToken);
 
+            // --tessdata-dir must come before any configfile argument (Tesseract requirement).
+            // Use -c inline variables instead of the "hocr" configfile so the tessdata directory
+            // is not required to contain a configs/ subdirectory (user-downloaded language packs
+            // typically don't include the bundled config files).
             using var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = _executablePath,
-                    Arguments = $"\"{tempImage}\" \"{tempTextFileName}\" -l {language} --psm 6 --oem 3 hocr --tessdata-dir \"{Se.TesseractModelFolder}\"",
+                    Arguments = $"\"{tempImage}\" \"{tempTextFileName}\" --tessdata-dir \"{tessDataFolder}\" -l {language} --psm 6 --oem 3 -c tessedit_create_hocr=1 -c tessedit_create_txt=0",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
