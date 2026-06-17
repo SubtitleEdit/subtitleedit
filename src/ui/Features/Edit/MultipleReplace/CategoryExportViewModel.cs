@@ -43,7 +43,7 @@ public partial class CategoryExportViewModel : ObservableObject
             return;
         }
 
-        if (Enumerable.Where<RuleTreeNode>(Rules, p => p.IsSelected).Count() == 0)
+        if (!Rules.Any(p => p.IsSelected))
         {
             await MessageBox.Show(
                 Window!,

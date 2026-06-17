@@ -361,7 +361,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
                 }
 
                 var autoSplitGuesses = UnknownWordGuesser.CreateGuessesFromLetters(result, _threeLetterIsoLanguageName);
-                if (autoSplitGuesses.Count() > 0)
+                if (autoSplitGuesses.Any())
                 {
                     guesses.AddRange(autoSplitGuesses);
                 }

@@ -67,7 +67,7 @@ public partial class JoinSubtitlesViewModel : ObservableObject
         }
 
         var fileNames = await _fileHelper.PickOpenSubtitleFiles(Window, Se.Language.General.OpenSubtitleFileTitle, false);
-        if (fileNames.Count() == 0)
+        if (!fileNames.Any())
         {
             return;
         }

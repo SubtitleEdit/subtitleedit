@@ -25,6 +25,9 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
     public string Description => Se.Language.Assa.AdvancedEffectFancyKaraokeDescription;
     public bool UsesAudio => false;
 
+    private static readonly Regex UnderlineTagRegex = new(@"\\u1", RegexOptions.Compiled);
+    private static readonly Regex PrimaryColorTagRegex = new(@"\\1?c(&H[0-9A-Fa-f]{6}&)", RegexOptions.Compiled);
+
     /// <summary>
     /// When true, ignore explicit active-word markup and auto-sequence whole words
     /// (one subtitle per word, timing = duration / wordCount).
@@ -304,7 +307,7 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
 
         // Strategy 1: explicit underline {\u1}
         for (int i = 0; i < segments.Count; i++)
-            if (System.Text.RegularExpressions.Regex.IsMatch(segments[i].Tags, @"\\u1")
+            if (UnderlineTagRegex.IsMatch(segments[i].Tags)
                 && !string.IsNullOrWhiteSpace(segments[i].Text))
             {
                 return BuildResult(segments, i);
@@ -314,7 +317,7 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
         var colorCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         foreach (var (tags, _) in segments)
         {
-            var m = System.Text.RegularExpressions.Regex.Match(tags, @"\\1?c(&H[0-9A-Fa-f]{6}&)");
+            var m = PrimaryColorTagRegex.Match(tags);
             if (m.Success)
             {
                 string c = m.Groups[1].Value.ToUpperInvariant();
@@ -350,7 +353,7 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
 
         for (int i = 0; i < segments.Count; i++)
         {
-            var m = System.Text.RegularExpressions.Regex.Match(segments[i].Tags, @"\\1?c(&H[0-9A-Fa-f]{6}&)");
+            var m = PrimaryColorTagRegex.Match(segments[i].Tags);
             if (m.Success
                 && m.Groups[1].Value.Equals(highlightColor, StringComparison.OrdinalIgnoreCase)
                 && !string.IsNullOrWhiteSpace(segments[i].Text))

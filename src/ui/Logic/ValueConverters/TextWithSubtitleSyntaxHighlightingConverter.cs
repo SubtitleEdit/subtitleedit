@@ -24,6 +24,12 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
     private static readonly Color ValuesColor = Color.FromRgb(206, 145, 120);    // Soft orange/peach - attribute values / ASS tag values
     private static readonly Color StyleColor = Color.FromRgb(156, 220, 254);     // Light cyan - CSS property values
 
+    // Pre-compiled <font> attribute patterns (reused across every grid-row render)
+    private static readonly TimeSpan RegexTimeout = TimeSpan.FromMilliseconds(100);
+    private static readonly Regex FontColorRegex = new(@"color\s*=\s*[""']?([^""'\s>]+)[""']?", RegexOptions.IgnoreCase | RegexOptions.Compiled, RegexTimeout);
+    private static readonly Regex FontFaceRegex = new(@"face\s*=\s*[""']?([^""'>]+)[""']?", RegexOptions.IgnoreCase | RegexOptions.Compiled, RegexTimeout);
+    private static readonly Regex FontSizeRegex = new(@"size\s*=\s*[""']?(\d+)[""']?", RegexOptions.IgnoreCase | RegexOptions.Compiled, RegexTimeout);
+
     // Reuse brushes instead of creating new ones each time
     private static readonly SolidColorBrush ElementBrush = new(ElementColor);
     private static readonly SolidColorBrush AttributeBrush = new(AttributeColor);
@@ -989,11 +995,8 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
 
         try
         {
-            // Use regex with timeout to prevent hanging
-            var timeout = TimeSpan.FromMilliseconds(100);
-
             // Parse color attribute
-            var colorMatch = Regex.Match(tagContent, @"color\s*=\s*[""']?([^""'\s>]+)[""']?", RegexOptions.IgnoreCase, timeout);
+            var colorMatch = FontColorRegex.Match(tagContent);
             if (colorMatch.Success)
             {
                 var colorValue = colorMatch.Groups[1].Value;
@@ -1012,7 +1015,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             }
 
             // Parse face (font name) attribute
-            var faceMatch = Regex.Match(tagContent, @"face\s*=\s*[""']?([^""'>]+)[""']?", RegexOptions.IgnoreCase, timeout);
+            var faceMatch = FontFaceRegex.Match(tagContent);
             if (faceMatch.Success)
             {
                 var fontName = faceMatch.Groups[1].Value.Trim();
@@ -1023,7 +1026,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             }
 
             // Parse size attribute
-            var sizeMatch = Regex.Match(tagContent, @"size\s*=\s*[""']?(\d+)[""']?", RegexOptions.IgnoreCase, timeout);
+            var sizeMatch = FontSizeRegex.Match(tagContent);
             if (sizeMatch.Success && double.TryParse(sizeMatch.Groups[1].Value, out var size))
             {
                 state.FontSize = size;
