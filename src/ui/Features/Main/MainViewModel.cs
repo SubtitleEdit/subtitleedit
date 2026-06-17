@@ -8480,6 +8480,18 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task SetupLikeSe4()
     {
+        if (Window != null)
+        {
+            var confirm = await MessageBox.Show(Window, "Set up like Subtitle Edit 4",
+                "This will import Subtitle Edit 4 shortcuts and replace rules and apply the Subtitle Edit 4 theme, toolbar and waveform look." + Environment.NewLine + Environment.NewLine +
+                "Continue?",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
+
         var result = Logic.Se4Setup.Se4SetupApplier.Apply(this);
 
         // ApplySettings re-applies the theme + toolbar icons, pushes the new

@@ -8,6 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Styling;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -507,6 +508,22 @@ public static class InitToolbar
 
         grid.Add(stackPanelLeft, 0, 0);
         grid.Add(stackPanelRight, 0, 1);
+
+        // SE 4 drew toolbar icons as flat, borderless buttons. The Classic theme's
+        // global Button style (UiTheme.ApplyWindowsClassicGray) adds a 1px border to
+        // every button; this style is scoped to the toolbar grid so it strips the
+        // border from the toolbar buttons only - buttons elsewhere keep their border.
+        if (UiTheme.ThemeName == UiTheme.ThemeNameClassic)
+        {
+            grid.Styles.Add(new Style(x => x.OfType<Button>())
+            {
+                Setters =
+                {
+                    new Setter(Button.BorderThicknessProperty, new Thickness(0)),
+                    new Setter(Button.BorderBrushProperty, Brushes.Transparent),
+                },
+            });
+        }
 
         return grid;
     }

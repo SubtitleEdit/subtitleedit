@@ -365,6 +365,11 @@ public class AudioVisualizer : Control
     private InteractionMode _interactionMode = InteractionMode.None;
 
     public readonly double ResizeMargin = 5.0; // Margin for resizing paragraphs
+
+    // Horizontal pixels the pointer must travel between press and release before an
+    // interaction counts as a real drag (move/resize). Below this it is a plain
+    // click, so the follow-up Tapped (select/seek) must NOT be suppressed.
+    private const double ClickDragSlopPixels = 3.0;
     public bool IsScrolling => (Environment.TickCount64 - _audioVisualizerLastScroll) < 100;
 
     public class PositionEventArgs : EventArgs
@@ -817,7 +822,15 @@ public class AudioVisualizer : Control
             InteractionMode.ResizeLeftAnd or
             InteractionMode.ResizeRightAnd)
         {
-            _preventNextTap = true;
+            // Only suppress the follow-up Tapped (which selects/seeks) when the pointer
+            // actually dragged. A plain click that merely started within ResizeMargin of a
+            // paragraph edge is tagged as a resize on press but never moves; without this
+            // guard _preventNextTap would swallow OnTapped and the paragraph would not get
+            // selected (clicking near a boundary sometimes did not select).
+            if (Math.Abs(pos.X - _startPointerPosition.X) > ClickDragSlopPixels)
+            {
+                _preventNextTap = true;
+            }
         }
 
         _interactionMode = InteractionMode.None;

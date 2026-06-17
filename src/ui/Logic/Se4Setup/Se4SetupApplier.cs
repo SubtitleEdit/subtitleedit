@@ -42,6 +42,7 @@ public static class Se4SetupApplier
         ApplyShortcuts(vm, settingsXmlPath, result);
         ApplyReplaceRules(settingsXmlPath, result);
         ApplyClassicTheme();
+        ApplyToolbarAndEditBox();
         ApplyWaveformColors();
 
         Se.SaveSettings();
@@ -134,28 +135,43 @@ public static class Se4SetupApplier
         Se.Settings.Appearance.IconTheme = UiTheme.ThemeNameClassic;
     }
 
+    // SE 4 toolbar/edit-box differences: SE 4 showed the encoding selector in the
+    // toolbar and had no dedicated "Italic" button above the text box (formatting
+    // was applied via the context menu / shortcut instead).
+    private static void ApplyToolbarAndEditBox()
+    {
+        Se.Settings.Appearance.ToolbarShowEncoding = true;
+        Se.Settings.Appearance.TextBoxShowButtonItalic = false;
+    }
+
     // The SE 4 waveform look, taken from the classic AudioVisualizer defaults
     // (se4-legacy branch): a green-yellow waveform on black that turns red for
-    // the selected subtitle, lime-green paragraph edges, grey text, grid lines
-    // on and the "Classic" (non-fancy) draw style.
+    // the selected subtitle, a green start marker and red end marker on each
+    // paragraph, grey text, grid lines on and the "Classic" (non-fancy) draw style.
     private static void ApplyWaveformColors()
     {
         var w = Se.Settings.Waveform;
 
         // SE 4: Color = GreenYellow, SelectedColor = Red (the selected subtitle's
         // waveform line is drawn in this colour), BackgroundColor = Black,
-        // TextColor = Gray, ParagraphColor = LimeGreen.
+        // TextColor = Gray.
         w.WaveformColor = Colors.GreenYellow.FromColorToHex();
         w.WaveformSelectedColor = Colors.Red.FromColorToHex();
         w.WaveformBackgroundColor = Colors.Black.FromColorToHex();
         w.WaveformTextColor = Colors.Gray.FromColorToHex();
         w.WaveformCursorColor = Colors.Cyan.FromColorToHex();
         w.WaveformShotChangeColor = Colors.AntiqueWhite.FromColorToHex();
+
+        // SE 4 drew the paragraph start marker (left) green and the end marker
+        // (right) red.
         w.WaveformParagraphLeftColor = Color.FromArgb(180, 50, 205, 50).FromColorToHex();
-        w.WaveformParagraphRightColor = Color.FromArgb(180, 50, 205, 50).FromColorToHex();
+        w.WaveformParagraphRightColor = Color.FromArgb(180, 255, 0, 0).FromColorToHex();
         w.WaveformFancyHighColor = Colors.Orange.FromColorToHex();
+
+        // SE 4 did not tint the paragraph background differently when selected -
+        // keep the selected background identical to the normal one.
         w.ParagraphBackground = Color.FromArgb(90, 70, 70, 70).FromColorToHex();
-        w.ParagraphSelectedBackground = Color.FromArgb(90, 120, 0, 0).FromColorToHex();
+        w.ParagraphSelectedBackground = Color.FromArgb(90, 70, 70, 70).FromColorToHex();
 
         // SE 4 drew classic (non-fancy) waveforms with vertical grid lines.
         w.DrawGridLines = true;
