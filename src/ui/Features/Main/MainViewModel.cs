@@ -18222,7 +18222,7 @@ public partial class MainViewModel :
         }
 
         var idx = Subtitles.IndexOf(item);
-        StatusTextRight = $"{idx + 1}/{Subtitles.Count}";
+        StatusTextRight = $"{(idx + 1):N0}/{Subtitles.Count:N0}";
         if (item == SelectedSubtitle && item.Text == EditText)
         {
             return;
