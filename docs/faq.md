@@ -95,13 +95,13 @@ See [Speech to Text](features/speech-to-text.md) for details.
 ## Synchronization
 
 ### How do I fix subtitle timing that is off by a constant amount?
-Use **Sync → Adjust all times...** and enter the offset in milliseconds.
+Use **Synchronization → Adjust all times...** and enter the offset in milliseconds.
 
 ### How do I sync subtitles that drift over time?
-Use **Sync → Visual sync...** or **Sync → Point sync...** to synchronize at multiple points.
+Use **Synchronization → Visual sync...** or **Synchronization → Point sync...** to synchronize at multiple points.
 
 ### How do I convert subtitles between different frame rates?
-Use **Sync → Change frame rate...** and select the source and target frame rates.
+Use **Synchronization → Change frame rate...** and select the source and target frame rates.
 
 ---
 
@@ -141,7 +141,7 @@ During spell check, click **Add to dictionary** to add a word. You can also mana
 ASSA (Advanced SubStation Alpha) is a subtitle format that supports rich styling including fonts, colors, positioning, animations, and more. It is widely used in anime fansubbing and professional workflows.
 
 ### How do I edit ASSA styles?
-Go to **ASSA → Styles...** to create and edit subtitle styles with fonts, colors, borders, shadows, and alignment.
+Go to **ASSA tools → Styles...** to create and edit subtitle styles with fonts, colors, borders, shadows, and alignment.
 
 ---
 

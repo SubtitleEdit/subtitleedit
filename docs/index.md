@@ -41,6 +41,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 - [Join Subtitles](features/join-subtitles.md) — Join multiple subtitle files
 - [Sort By](features/sort-by.md) — Sort subtitles by various criteria
 - [Remove Text for Hearing Impaired](features/remove-text-hi.md) — Remove HI annotations
+- [Command Line (seconv)](features/seconv.md) — Headless converter for scripts and bulk conversion (see also the [full reference](reference/command-line.md))
 
 ### Synchronization
 - [Adjust All Times](features/adjust-all-times.md) — Shift all timings

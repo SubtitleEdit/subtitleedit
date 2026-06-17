@@ -2,7 +2,7 @@
 
 Synchronize subtitles visually by matching two points in the video.
 
-- **Menu:** Sync → Visual sync...
+- **Menu:** Synchronization → Visual sync...
 
 <!-- Screenshot: Visual sync window -->
 ![Visual Sync](../screenshots/visual-sync.png)

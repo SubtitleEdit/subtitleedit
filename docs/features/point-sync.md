@@ -2,7 +2,7 @@
 
 Synchronize subtitles using multiple reference points.
 
-- **Menu:** Sync → Point sync...
+- **Menu:** Synchronization → Point sync...
 
 <!-- Screenshot: Point sync window -->
 ![Point Sync](../screenshots/point-sync.png)

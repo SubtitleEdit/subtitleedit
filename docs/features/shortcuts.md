@@ -76,5 +76,3 @@ This is useful for sharing shortcut configurations between machines or team memb
 |-----|--------|
 | Escape | Close shortcuts window |
 | F1 | Open help |
-
-Double-clicking a command opens the key capture dialog, allowing you to press the desired key combination directly.

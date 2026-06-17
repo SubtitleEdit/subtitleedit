@@ -20,6 +20,7 @@ See also: [Shortcuts Settings](../features/shortcuts.md)
 | Ctrl+Shift+R | Multiple replace |
 | Ctrl+G | Go to line number |
 | Ctrl+Shift+B | Add or edit bookmark |
+| Ctrl+4 | Set up like Subtitle Edit 4 (classic theme, icons, waveform, replace rules and shortcuts) |
 | Alt+Up | Go to previous line |
 | Alt+Down | Go to next line |
 | F1 | Show help |

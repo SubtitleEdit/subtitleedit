@@ -2,7 +2,7 @@
 
 Synchronize a subtitle file using another subtitle file as reference.
 
-- **Menu:** Sync → Point sync via other subtitle...
+- **Menu:** Synchronization → Point sync via other subtitle...
 
 <!-- Screenshot: Point sync via other window -->
 ![Point Sync Via Other](../screenshots/point-sync-via-other.png)
