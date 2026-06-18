@@ -2667,7 +2667,9 @@ namespace Nikse.SubtitleEdit.Core.Common
             subtitle.Paragraphs.Clear();
 
             var isSsa = false;
+            var isVtt = false;
             SubtitleFormat format = new SubRip();
+            var codecId = matroskaSubtitleInfo.CodecId ?? string.Empty;
             var codecPrivate = matroskaSubtitleInfo.GetCodecPrivate();
             if (codecPrivate.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
             {
@@ -2682,8 +2684,28 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 isSsa = true;
             }
+            else if (codecId.StartsWith("S_TEXT/WEBVTT", StringComparison.OrdinalIgnoreCase) ||
+                    codecId.StartsWith("D_WEBVTT", StringComparison.OrdinalIgnoreCase))
+            {
+                format = new WebVTT();
+                isVtt = true;
+            }
 
-            if (isSsa)
+            if (isVtt)
+            {
+                var hasCueHeader = codecId.StartsWith("D_WEBVTT", StringComparison.OrdinalIgnoreCase);
+                foreach (var p in sub)
+                {
+                    var text = p.GetText(matroskaSubtitleInfo);
+                    if (hasCueHeader)
+                    {
+                        text = RemoveMatroskaWebVttCueHeader(text);
+                    }
+
+                    subtitle.Paragraphs.Add(new Paragraph(text, p.Start, p.End));
+                }
+            }
+            else if (isSsa)
             {
                 foreach (var p in LoadMatroskaSSA(matroskaSubtitleInfo, matroska.Path, format, sub).Paragraphs)
                 {
@@ -2755,6 +2777,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             subtitle.Renumber();
             return format;
+        }
+
+        private static string RemoveMatroskaWebVttCueHeader(string text)
+        {
+            var lines = text.SplitToLines();
+            return lines.Count <= 2 ? string.Empty : string.Join(Environment.NewLine, lines.Skip(2));
         }
 
         public static void ParseMatroskaTextSt(MatroskaTrackInfo trackInfo, List<MatroskaSubtitle> subtitleLines, Subtitle subtitle)
