@@ -90,6 +90,16 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         _subtitleFormats = SubtitleFormatHelper.GetSubtitleFormatsWithFavoritesAtTop();
     }
 
+    /// <summary>
+    /// True when the batch item's format string identifies an embedded MP4 subtitle track.
+    /// The scanner stores the picked track in the format string (e.g. "MP4/WebVTT - eng" or
+    /// "MP4/#0 text - eng"), so the converter must match on that prefix - not the bare "MP4".
+    /// </summary>
+    public static bool IsMp4SubtitleFormat(string? format)
+    {
+        return format != null && format.StartsWith("MP4/", StringComparison.Ordinal);
+    }
+
     public async Task Convert(BatchConvertItem item, CancellationToken cancellationToken)
     {
         if (_subtitleFormats.Count == 0)
@@ -225,7 +235,7 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 imageSubtitle = item.ImageSubtitle as IOcrSubtitle;
             }
         }
-        else if (item.Format == "MP4" &&
+        else if (IsMp4SubtitleFormat(item.Format) &&
                  (item.FileName.EndsWith(".mp4") || item.FileName.EndsWith(".m4v") || item.FileName.EndsWith(".m4s")))
         {
             var mp4Files = new List<string>();
