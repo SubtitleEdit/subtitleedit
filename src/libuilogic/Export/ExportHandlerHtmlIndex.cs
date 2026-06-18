@@ -42,22 +42,38 @@ public class ExportHandlerHtmlIndex : IExportHandler
         var filePath = Path.Combine(_folderName, imageFileName);
         File.WriteAllBytes(filePath, param.Bitmap.ToPngArray());
 
-        var start = param.StartTime.ToString(@"hh\:mm\:ss\,fff");
-        var end = param.EndTime.ToString(@"hh\:mm\:ss\,fff");
+        var start = FormatTime(param.StartTime);
+        var end = FormatTime(param.EndTime);
         _html.AppendFormat("#{0}:{1}-->{2}<div style='text-align:center'><img src='{3}' />",
             _count, start, end, imageFileName);
 
         if (!string.IsNullOrEmpty(param.Text))
         {
-            var text = WebUtility.HtmlEncode(param.Text
-                    .Replace("<i>", "@1__").Replace("</i>", "@2__"))
-                .Replace("@1__", "<i>").Replace("@2__", "</i>")
-                .Replace(Environment.NewLine, "<br />");
+            var text = EncodeText(param.Text);
             _html.Append("<br /><div style='font-size:22px; background-color:#F5F5F5'>")
                 .Append(text).Append("</div>");
         }
 
         _html.AppendLine("</div><br /><hr />");
+    }
+
+    private static string FormatTime(TimeSpan t) =>
+        $"{(int)t.TotalHours:00}:{t.Minutes:00}:{t.Seconds:00},{t.Milliseconds:000}";
+
+    private static string EncodeText(string text)
+    {
+        // Protect known inline tags with control-char sentinels before HTML-encoding.
+        // Control chars \x01/\x02 cannot appear in subtitle text, eliminating sentinel collisions.
+        var s = text
+            .Replace("<i>", "\x01i\x02").Replace("</i>", "\x01/i\x02")
+            .Replace("<b>", "\x01b\x02").Replace("</b>", "\x01/b\x02")
+            .Replace("<u>", "\x01u\x02").Replace("</u>", "\x01/u\x02");
+
+        return WebUtility.HtmlEncode(s)
+            .Replace("\x01i\x02", "<i>").Replace("\x01/i\x02", "</i>")
+            .Replace("\x01b\x02", "<b>").Replace("\x01/b\x02", "</b>")
+            .Replace("\x01u\x02", "<u>").Replace("\x01/u\x02", "</u>")
+            .Replace(Environment.NewLine, "<br />");
     }
 
     public void WriteFooter()
