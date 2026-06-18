@@ -71,7 +71,7 @@ public class ExportHandlerHtmlIndex : IExportHandler
             .Replace("\x01i\x02", "<i>").Replace("\x01/i\x02", "</i>")
             .Replace("\x01b\x02", "<b>").Replace("\x01/b\x02", "</b>")
             .Replace("\x01u\x02", "<u>").Replace("\x01/u\x02", "</u>")
-            .Replace(Environment.NewLine, "<br />");
+            .Replace("\r\n", "<br />").Replace("\n", "<br />");
     }
 
     public void WriteFooter()
