@@ -7,6 +7,7 @@ public enum ExportImageType
     DCinemaPng,
     Dost,
     Fcp,
+    HtmlIndex,
     ImagesWithTimeCode,
     VobSub,
     WebVttThumbnail

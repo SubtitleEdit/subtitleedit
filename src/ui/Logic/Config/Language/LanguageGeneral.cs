@@ -251,6 +251,7 @@ public class LanguageGeneral
     public string ImageSaved { get; set; }
     public string ImageBasedSubtitles { get; set; }
     public string Images { get; set; }
+    public string ImagesWithHtmlIndex { get; set; }
     public string ImagesWithTimeCode { get; set; }
     public string Import { get; set; }
     public string ImportDotDotDot { get; set; }
@@ -977,6 +978,7 @@ public class LanguageGeneral
         ImageSaved = "Image saved";
         ImageBasedSubtitles = "Image-based subtitles";
         Images = "Images";
+        ImagesWithHtmlIndex = "Images with HTML index";
         ImagesWithTimeCode = "Images with time code";
         Import = "Import";
         ImportDotDotDot = "Import...";

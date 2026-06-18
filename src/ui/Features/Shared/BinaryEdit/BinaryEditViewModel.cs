@@ -794,6 +794,12 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task ExportHtmlIndex()
+    {
+        await DoExport(new ExportHandlerHtmlIndex(), string.Empty, false);
+    }
+
+    [RelayCommand]
     private async Task ExportImagesWithTimeCode()
     {
         await DoExport(new ExportHandlerImagesWithTimeCode(), string.Empty, false);
