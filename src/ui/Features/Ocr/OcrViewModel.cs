@@ -314,6 +314,7 @@ public partial class OcrViewModel : ObservableObject
         ocr.GoogleVisionApiKey = GoogleVisionApiKey;
         ocr.MistralApiKey = MistralApiKey;
         ocr.GoogleVisionLanguage = SelectedGoogleVisionLanguage?.Code ?? "en";
+        ocr.TesseractLastLanguage = SelectedTesseractDictionaryItem?.Code ?? "eng";
         ocr.DoFixOcrErrors = DoFixOcrErrors;
         ocr.DoPromptForUnknownWords = DoPromptForUnknownWords;
         ocr.DoTryToGuessUnknownWords = DoTryToGuessUnknownWords;
@@ -4142,7 +4143,8 @@ public partial class OcrViewModel : ObservableObject
             LoadActiveTesseractDictionaries();
             if (SelectedTesseractDictionaryItem == null)
             {
-                SelectedTesseractDictionaryItem = TesseractDictionaryItems.FirstOrDefault(p => p.Code == "eng") ??
+                SelectedTesseractDictionaryItem = TesseractDictionaryItems.FirstOrDefault(p => p.Code == Se.Settings.Ocr.TesseractLastLanguage) ??
+                                                  TesseractDictionaryItems.FirstOrDefault(p => p.Code == "eng") ??
                                                   TesseractDictionaryItems.FirstOrDefault();
             }
         }
