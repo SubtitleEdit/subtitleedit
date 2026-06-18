@@ -12629,8 +12629,30 @@ public partial class MainViewModel :
             return;
         }
 
+        // Remember where the first cut line was so we can re-select a row afterwards.
+        // Leaving the grid with a dangling/empty selection crashes for some users.
+        var idx = Subtitles.IndexOf(selectedItems[0]);
+
         await SubtitleGridCopyPasteHelper.Cut(Window, Subtitles, selectedItems, SelectedSubtitleFormat, _subtitle);
         Renumber();
+
+        if (Subtitles.Count == 0)
+        {
+            // Everything was cut: clear the stale selection so the grid and the
+            // waveform highlight don't keep pointing at the removed lines.
+            SubtitleGrid.SelectedItem = null;
+            SubtitleGridSelectionChanged();
+        }
+        else
+        {
+            if (idx >= Subtitles.Count)
+            {
+                idx = Subtitles.Count - 1;
+            }
+
+            SelectAndScrollToRow(idx);
+        }
+
         _updateAudioVisualizer = true;
         _shortcutManager.ClearKeys();
     }
