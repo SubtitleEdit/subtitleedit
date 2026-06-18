@@ -22,7 +22,12 @@ jobs:
       - name: Set up .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
+          # Must match the runtime the flatpak org.freedesktop.Sdk.Extension.dotnet10//24.08
+          # extension ships. A floating '10.0.x' resolves to the newest patch on the runner
+          # (e.g. SDK 10.0.109 → runtime 10.0.9), which then mismatches the older runtime
+          # packs the flatpak SDK pins, breaking the offline restore (NU1102). SDK 10.0.108
+          # provides runtime 10.0.8. Bump this when the flathub extension updates.
+          dotnet-version: '10.0.108'
 
       - name: Regenerate nuget-sources.json
         run: bash installer/flatpak/generate-nuget-sources.sh
