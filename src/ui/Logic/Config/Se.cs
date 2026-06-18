@@ -151,6 +151,7 @@ public class Se
         folders.Add("/usr/bin");
         folders.Add("/opt/homebrew/bin");
         folders.Add("/opt/local/bin");
+        folders.Add("/app/bin"); // bundled into the Flatpak sandbox (issue #11646)
 
         foreach (var folder in folders)
         {
@@ -175,6 +176,9 @@ public class Se
         }
 
         var folders = new List<string>();
+
+        // Bundled location inside the Flatpak sandbox (issue #11646); harmless elsewhere.
+        folders.Add("/app/share/tessdata");
 
         if (Directory.Exists("/opt/homebrew/Cellar/tesseract-lang"))
         {
