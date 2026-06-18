@@ -55,7 +55,7 @@ public class TesseractOcr
         return "tesseract";
     }
 
-    public async Task<string> Ocr(SKBitmap bitmap, string language, CancellationToken cancellationToken)
+    public async Task<string> Ocr(SKBitmap bitmap, string language, string tessDataFolder, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(_executablePath))
         {
@@ -75,28 +75,51 @@ public class TesseractOcr
         {
             await File.WriteAllBytesAsync(tempImage, oneColorBitmap.ToPngArray(), cancellationToken);
 
-            using var process = new Process
+            // Use -c inline variables instead of the "hocr" configfile — avoids requiring a
+            // configs/ subdirectory in the tessdata folder (user-downloaded packs don't include it).
+            var psi = new ProcessStartInfo
             {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = _executablePath,
-                    Arguments = $"\"{tempImage}\" \"{tempTextFileName}\" -l {language} --psm 6 --oem 3 hocr --tessdata-dir \"{Se.TesseractModelFolder}\"",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true,
-                    WorkingDirectory = Se.TesseractFolder
-                },
+                FileName = _executablePath,
+                UseShellExecute = false,
+                RedirectStandardOutput = false, // output goes to temp .hocr file, not stdout
+                RedirectStandardError = true,
+                CreateNoWindow = true,
             };
+            psi.ArgumentList.Add(tempImage);
+            psi.ArgumentList.Add(tempTextFileName);
+            psi.ArgumentList.Add("--tessdata-dir");
+            psi.ArgumentList.Add(tessDataFolder);
+            psi.ArgumentList.Add("-l");
+            psi.ArgumentList.Add(language);
+            psi.ArgumentList.Add("--psm");
+            psi.ArgumentList.Add("6");
+            psi.ArgumentList.Add("--oem");
+            psi.ArgumentList.Add("3");
+            psi.ArgumentList.Add("-c");
+            psi.ArgumentList.Add("tessedit_create_hocr=1");
+            psi.ArgumentList.Add("-c");
+            psi.ArgumentList.Add("tessedit_create_txt=0");
 
 #pragma warning disable CA1416 // Validate platform compatibility
+            using var process = new Process { StartInfo = psi };
             process.Start();
 #pragma warning restore CA1416 // Validate platform compatibility
-            await process.WaitForExitAsync(cancellationToken);
 
+            var stderrTask = process.StandardError.ReadToEndAsync(CancellationToken.None);
+            try
+            {
+                await process.WaitForExitAsync(cancellationToken);
+            }
+            catch
+            {
+                process.Kill();
+                throw;
+            }
+
+            var stderr = await stderrTask;
             if (process.ExitCode != 0)
             {
-                Error = await process.StandardError.ReadToEndAsync(cancellationToken);
+                Error = stderr;
                 return string.Empty;
             }
         }
@@ -136,7 +159,6 @@ public class TesseractOcr
             {
                 File.Delete(tempTextFileName + ".html");
                 File.Delete(tempTextFileName + ".hocr");
-                File.Delete(tempTextFileName);
             }
             catch
             {
@@ -150,9 +172,9 @@ public class TesseractOcr
         var sb = new StringBuilder();
         var lineStart = html.IndexOf("<span class='ocr_line'", StringComparison.InvariantCulture);
         var alternateLineStart = html.IndexOf("<span class='ocr_header'", StringComparison.InvariantCulture);
-        if (alternateLineStart > 0)
+        if (alternateLineStart > 0 && (lineStart < 0 || alternateLineStart < lineStart))
         {
-            lineStart = Math.Min(lineStart, alternateLineStart);
+            lineStart = alternateLineStart;
         }
 
         while (lineStart > 0)
