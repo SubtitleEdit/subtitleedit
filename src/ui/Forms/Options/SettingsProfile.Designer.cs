@@ -178,6 +178,7 @@
             this.comboBoxCpsLineLenCalc.Size = new System.Drawing.Size(174, 23);
             this.comboBoxCpsLineLenCalc.TabIndex = 197;
             this.comboBoxCpsLineLenCalc.UsePopupWindow = false;
+            this.comboBoxCpsLineLenCalc.SelectedIndexChanged += new System.EventHandler(this.UiElementChanged);
             // 
             // buttonEditCustomContinuationStyle
             // 
