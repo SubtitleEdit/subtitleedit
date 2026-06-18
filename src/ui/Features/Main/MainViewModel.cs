@@ -12794,35 +12794,55 @@ public partial class MainViewModel :
         });
     }
 
-    [RelayCommand]
-    private void SetActor1() => SetActorForSelectedLines(Se.Settings.Actor1);
+    /// <summary>
+    /// The distinct actors present in the current subtitle, sorted alphabetically.
+    /// The SetActorX shortcuts and the context menu both index into this list, so
+    /// shortcut "1" sets the first actor, "2" the second, etc.
+    /// </summary>
+    private List<string> GetActorsInSubtitle()
+    {
+        return Subtitles.Select(p => p.Actor).Where(p => !string.IsNullOrEmpty(p))
+            .DistinctBy(p => p).OrderBy(p => p).ToList();
+    }
+
+    private void SetActorByIndex(int index)
+    {
+        var actors = GetActorsInSubtitle();
+        if (index >= 0 && index < actors.Count)
+        {
+            SetActorForSelectedLines(actors[index]);
+        }
+    }
 
     [RelayCommand]
-    private void SetActor2() => SetActorForSelectedLines(Se.Settings.Actor2);
+    private void SetActor1() => SetActorByIndex(0);
 
     [RelayCommand]
-    private void SetActor3() => SetActorForSelectedLines(Se.Settings.Actor3);
+    private void SetActor2() => SetActorByIndex(1);
 
     [RelayCommand]
-    private void SetActor4() => SetActorForSelectedLines(Se.Settings.Actor4);
+    private void SetActor3() => SetActorByIndex(2);
 
     [RelayCommand]
-    private void SetActor5() => SetActorForSelectedLines(Se.Settings.Actor5);
+    private void SetActor4() => SetActorByIndex(3);
 
     [RelayCommand]
-    private void SetActor6() => SetActorForSelectedLines(Se.Settings.Actor6);
+    private void SetActor5() => SetActorByIndex(4);
 
     [RelayCommand]
-    private void SetActor7() => SetActorForSelectedLines(Se.Settings.Actor7);
+    private void SetActor6() => SetActorByIndex(5);
 
     [RelayCommand]
-    private void SetActor8() => SetActorForSelectedLines(Se.Settings.Actor8);
+    private void SetActor7() => SetActorByIndex(6);
 
     [RelayCommand]
-    private void SetActor9() => SetActorForSelectedLines(Se.Settings.Actor9);
+    private void SetActor8() => SetActorByIndex(7);
 
     [RelayCommand]
-    private void SetActor10() => SetActorForSelectedLines(Se.Settings.Actor10);
+    private void SetActor9() => SetActorByIndex(8);
+
+    [RelayCommand]
+    private void SetActor10() => SetActorByIndex(9);
 
     [RelayCommand]
     private async Task SetNewActor()
@@ -17188,15 +17208,33 @@ public partial class MainViewModel :
                 });
 
                 MenuItemActors.Items.Clear();
-                foreach (var actor in Subtitles.Select(p => p.Actor).Where(p => !string.IsNullOrEmpty(p))
-                             .DistinctBy(p => p).OrderBy(p => p))
+                var actorsInSubtitle = GetActorsInSubtitle();
+                var actorCommands = new IRelayCommand[]
                 {
-                    MenuItemActors.Items.Add(new MenuItem
+                    SetActor1Command, SetActor2Command, SetActor3Command, SetActor4Command, SetActor5Command,
+                    SetActor6Command, SetActor7Command, SetActor8Command, SetActor9Command, SetActor10Command,
+                };
+                var usedShortcuts = ShortcutsMain.GetUsedShortcuts(this);
+                for (var i = 0; i < actorsInSubtitle.Count; i++)
+                {
+                    var menuItem = new MenuItem
                     {
-                        Header = actor,
+                        Header = actorsInSubtitle[i],
                         Command = SetActorForSelectedLinesCommand,
-                        CommandParameter = actor,
-                    });
+                        CommandParameter = actorsInSubtitle[i],
+                    };
+
+                    // Surface the matching SetActorX shortcut (1-based, first 10 actors) next to the name.
+                    if (i < actorCommands.Length)
+                    {
+                        var shortcut = usedShortcuts.FirstOrDefault(s => ReferenceEquals(s.Action, actorCommands[i]));
+                        if (shortcut != null)
+                        {
+                            menuItem.InputGesture = InitMenu.ToKeyGesture(shortcut);
+                        }
+                    }
+
+                    MenuItemActors.Items.Add(menuItem);
                 }
 
                 if (MenuItemActors.Items.Count > 0)
