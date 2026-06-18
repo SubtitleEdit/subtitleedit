@@ -68,6 +68,7 @@ public partial class BinaryEditViewModel : ObservableObject
     private readonly IBluRayHelper _bluRayHelper;
 
     private string _loadFileName = string.Empty;
+    private string _sourceFileName = string.Empty;
     private int _lastPlaybackSubtitleIndex = -2;
     private bool _isDirty;
     private bool _dirtyTrackingActive;
@@ -90,6 +91,7 @@ public partial class BinaryEditViewModel : ObservableObject
     public void Initialize(string fileName, IOcrSubtitle? subtitle)
     {
         _loadFileName = fileName;
+        _sourceFileName = fileName;
 
         if (subtitle != null && string.IsNullOrEmpty(fileName) && subtitle.Count > 0)
         {
@@ -107,12 +109,14 @@ public partial class BinaryEditViewModel : ObservableObject
         }
     }
 
-    public void Initialize(IList<OcrSubtitleItem> ocrSubtitleItems)
+    public void Initialize(IList<OcrSubtitleItem> ocrSubtitleItems, string sourceFileName = "")
     {
         if (ocrSubtitleItems == null || ocrSubtitleItems.Count == 0)
         {
             return;
         }
+
+        _sourceFileName = sourceFileName;
 
         var screenSize = ocrSubtitleItems[0].GetScreenSize();
         ScreenWidth = screenSize.Width;
@@ -825,18 +829,19 @@ public partial class BinaryEditViewModel : ObservableObject
 
     private string GetSuggestedExportFileName(string extension)
     {
-        if (string.IsNullOrEmpty(_loadFileName))
+        if (string.IsNullOrEmpty(_sourceFileName))
         {
             return "export";
         }
 
-        var dir = Path.GetDirectoryName(_loadFileName) ?? string.Empty;
-        var stem = Path.GetFileNameWithoutExtension(_loadFileName);
-        var suggested = Path.Combine(dir, stem + extension);
+        var dir = Path.GetDirectoryName(_sourceFileName) ?? string.Empty;
+        var stem = Path.GetFileNameWithoutExtension(_sourceFileName);
+        var suggested = Path.Combine(dir, stem);
 
-        if (string.Equals(suggested, _loadFileName, StringComparison.OrdinalIgnoreCase))
+        // collision: stem+extension would overwrite the source file
+        if (string.Equals(suggested + extension, _sourceFileName, StringComparison.OrdinalIgnoreCase))
         {
-            suggested = Path.Combine(dir, stem + "_export" + extension);
+            suggested = Path.Combine(dir, stem + "_export");
         }
 
         return suggested;
