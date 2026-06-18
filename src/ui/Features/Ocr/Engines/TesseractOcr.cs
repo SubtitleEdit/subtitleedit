@@ -105,12 +105,21 @@ public class TesseractOcr
             process.Start();
 #pragma warning restore CA1416 // Validate platform compatibility
 
-            var stderrTask = process.StandardError.ReadToEndAsync(cancellationToken);
-            await process.WaitForExitAsync(cancellationToken);
+            var stderrTask = process.StandardError.ReadToEndAsync(CancellationToken.None);
+            try
+            {
+                await process.WaitForExitAsync(cancellationToken);
+            }
+            catch
+            {
+                process.Kill();
+                throw;
+            }
 
+            var stderr = await stderrTask;
             if (process.ExitCode != 0)
             {
-                Error = await stderrTask;
+                Error = stderr;
                 return string.Empty;
             }
         }
@@ -150,7 +159,6 @@ public class TesseractOcr
             {
                 File.Delete(tempTextFileName + ".html");
                 File.Delete(tempTextFileName + ".hocr");
-                File.Delete(tempTextFileName);
             }
             catch
             {
@@ -164,9 +172,9 @@ public class TesseractOcr
         var sb = new StringBuilder();
         var lineStart = html.IndexOf("<span class='ocr_line'", StringComparison.InvariantCulture);
         var alternateLineStart = html.IndexOf("<span class='ocr_header'", StringComparison.InvariantCulture);
-        if (alternateLineStart > 0)
+        if (alternateLineStart > 0 && (lineStart < 0 || alternateLineStart < lineStart))
         {
-            lineStart = Math.Min(lineStart, alternateLineStart);
+            lineStart = alternateLineStart;
         }
 
         while (lineStart > 0)
