@@ -266,6 +266,58 @@ modules:
         tag: v0.41.0
         commit: 41f6a645068483470267271e1d09966ca3b9f413
 
+  # --- Tesseract OCR (bundled into the sandbox; see issue #11646) ---
+  #
+  # The sandbox has its own /usr, so a Tesseract installed on the host
+  # (e.g. `apt install tesseract-ocr`) is invisible to the Flatpak. We build
+  # Leptonica + Tesseract into /app/bin/tesseract — the path that
+  # TesseractOcr.GetExecutablePath() already probes — and ship the English
+  # language model so OCR works out of the box.
+
+  - name: leptonica
+    buildsystem: cmake-ninja
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DBUILD_SHARED_LIBS=ON
+      - -DBUILD_PROG=OFF
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+      - /lib/cmake
+    sources:
+      - type: archive
+        url: https://github.com/DanBloomberg/leptonica/releases/download/1.85.0/leptonica-1.85.0.tar.gz
+        sha256: 3745ae3bf271a6801a2292eead83ac926e3a9bc1bf622e9cd4dd0f3786e17205
+
+  - name: tesseract
+    buildsystem: cmake-ninja
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DBUILD_SHARED_LIBS=ON
+      - -DBUILD_TRAINING_TOOLS=OFF
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+      - /lib/cmake
+    sources:
+      - type: archive
+        url: https://github.com/tesseract-ocr/tesseract/archive/refs/tags/5.5.1.tar.gz
+        sha256: a7a3f2a7420cb6a6a94d80c24163e183cf1d2f1bed2df3bbc397c81808a57237
+
+  # English language model, pre-downloaded so OCR works out of the box.
+  # The standard tessdata model is used (not tessdata_fast/best) because SE runs
+  # Tesseract with `--oem 3`, which needs both the legacy and LSTM data.
+  - name: tessdata-eng
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 eng.traineddata /app/share/tessdata/eng.traineddata
+    sources:
+      - type: file
+        url: https://github.com/tesseract-ocr/tessdata/raw/4.1.0/eng.traineddata
+        sha256: daa0c97d651c19fba3b25e81317cd697e9908c8208090c94c3905381c23fc047
+
   # --- SubtitleEdit application ---
 
   - name: subtitleedit

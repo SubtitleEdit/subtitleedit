@@ -151,6 +151,7 @@ public class Se
         folders.Add("/usr/bin");
         folders.Add("/opt/homebrew/bin");
         folders.Add("/opt/local/bin");
+        folders.Add("/app/bin"); // bundled into the Flatpak sandbox (issue #11646)
 
         foreach (var folder in folders)
         {
@@ -169,7 +170,36 @@ public class Se
 
     private static string ResolveTesseractModelFolder()
     {
-        return Path.Combine(DataFolder, "Tesseract550", "tessdata");
+        var modelFolder = Path.Combine(DataFolder, "Tesseract550", "tessdata");
+        SeedBundledTesseractModels(modelFolder);
+        return modelFolder;
+    }
+
+    // In the Flatpak sandbox the English model is bundled read-only at
+    // /app/share/tessdata (issue #11646). Copy it into the writable model folder
+    // on first use so OCR works out of the box; additional languages are still
+    // downloaded into the same folder by DownloadTesseractModelViewModel.
+    private static void SeedBundledTesseractModels(string modelFolder)
+    {
+        const string bundledEng = "/app/share/tessdata/eng.traineddata";
+        if (!System.IO.File.Exists(bundledEng))
+        {
+            return;
+        }
+
+        try
+        {
+            var target = Path.Combine(modelFolder, "eng.traineddata");
+            if (!System.IO.File.Exists(target))
+            {
+                Directory.CreateDirectory(modelFolder);
+                System.IO.File.Copy(bundledEng, target);
+            }
+        }
+        catch (Exception ex)
+        {
+            SeLogger.Error("Error seeding bundled Tesseract model: " + ex.Message);
+        }
     }
 
     public void InitializeMainShortcuts(MainViewModel vm)
