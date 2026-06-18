@@ -1,10 +1,34 @@
+using System.Text;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using SkiaSharp;
 
 namespace LibSETests.Common;
 
 public class UtilitiesTest
 {
+    // WebVTT tracks in a Matroska container must be loaded as WebVTT, not SubRip.
+    // MakeMKV (codec id "D_WEBVTT/*") prepends "<cue identifier>\n<cue settings>\n" to each
+    // block, which previously leaked into the subtitle text (issue #11680).
+    [Fact]
+    public void LoadMatroskaTextSubtitle_WebVtt_DetectsFormatAndStripsCueHeader()
+    {
+        var track = new MatroskaTrackInfo { CodecId = "D_WEBVTT/SUBTITLES", IsSubtitle = true };
+        var sub = new List<MatroskaSubtitle>
+        {
+            new MatroskaSubtitle(Encoding.UTF8.GetBytes("1\n\n[TENSE MUSIC]"), 160, 1000),
+            new MatroskaSubtitle(Encoding.UTF8.GetBytes("\nalign:middle line:90%\nHello there.\nSecond line."), 3320, 1680),
+        };
+        var subtitle = new Subtitle();
+
+        var format = Utilities.LoadMatroskaTextSubtitle(track, null, sub, subtitle);
+
+        Assert.Equal("WebVTT", format.Name);
+        Assert.Equal(2, subtitle.Paragraphs.Count);
+        Assert.Equal("[TENSE MUSIC]", subtitle.Paragraphs[0].Text);
+        Assert.Equal("Hello there." + Environment.NewLine + "Second line.", subtitle.Paragraphs[1].Text);
+    }
+
     // DisplayFileSizeToBytes used to cast each result to int, so any value >= 2 GB
     // (and large mb inputs) overflowed to a negative/garbage number. The method
     // returns long, so the result must survive past int.MaxValue.
