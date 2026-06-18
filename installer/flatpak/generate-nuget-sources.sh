@@ -90,11 +90,26 @@ else
     TMPDIR_PKGS="$(mktemp -d)"
     trap 'rm -rf "$TMPDIR_PKGS"' EXIT
 
+    # Pin the shared-framework packs (Microsoft.NETCore.App / AspNetCore.App /
+    # host) to the runtime version that matches the active SDK's feature band:
+    # SDK 10.0.1NN ships runtime 10.0.NN (e.g. 10.0.108 -> 10.0.8). Without this,
+    # a self-contained restore rolls the runtime packs forward to the newest patch
+    # on nuget.org, which then mismatches the (often older) runtime the flatpak
+    # dotnet10 extension pins. The offline restore inside the sandbox demands an
+    # exact match, so the drift breaks the build with NU1102. Deriving from the
+    # SDK keeps the runner and the flatpak build in lockstep via the workflow's
+    # setup-dotnet pin — bump that pin and this follows automatically.
+    SDK_VERSION="$(dotnet --version)"
+    SDK_PATCH="${SDK_VERSION##*.}"
+    RUNTIME_FRAMEWORK_VERSION="${SDK_VERSION%.*}.$((10#$SDK_PATCH % 100))"
+    echo "Pinning RuntimeFrameworkVersion=$RUNTIME_FRAMEWORK_VERSION (from SDK $SDK_VERSION)"
+
     echo "Restoring for linux-x64..."
     dotnet restore "$PROJECT_PATH" \
         --packages "$TMPDIR_PKGS" \
         --runtime linux-x64 \
         -p:SelfContained=true \
+        -p:RuntimeFrameworkVersion="$RUNTIME_FRAMEWORK_VERSION" \
         --verbosity quiet
 
     echo "Restoring for linux-arm64..."
@@ -102,6 +117,7 @@ else
         --packages "$TMPDIR_PKGS" \
         --runtime linux-arm64 \
         -p:SelfContained=true \
+        -p:RuntimeFrameworkVersion="$RUNTIME_FRAMEWORK_VERSION" \
         --verbosity quiet
 
     echo "Building $OUTPUT from restored packages..."
@@ -209,6 +225,15 @@ for src in data:
         if entry:
             added.append(entry)
         break
+
+# netstandard2.1 reference assemblies (LibSE targets netstandard2.1). The system
+# SDK used by the fallback path resolves these from its bundled packs without
+# downloading, so they never get captured here — but the flatpak SDK needs them
+# from the offline feed, otherwise restore fails with NU1101. The version is tied
+# to the netstandard version (2.1.0), not the .NET runtime, so it is fixed.
+entry = nuget_entry("netstandard.library.ref", "2.1.0")
+if entry:
+    added.append(entry)
 
 if added:
     data.extend(added)
