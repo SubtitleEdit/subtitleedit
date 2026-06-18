@@ -12604,7 +12604,7 @@ public partial class MainViewModel :
             return;
         }
 
-        next.SetStartTimeOnly(TimeSpan.FromMilliseconds(s.EndTime.TotalMilliseconds + Se.Settings.General.MinimumBetweenLines.GetMilliseconds()));
+        next.StartTime = TimeSpan.FromMilliseconds(s.EndTime.TotalMilliseconds + Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
         _updateAudioVisualizer = true;
     }
 
