@@ -170,44 +170,36 @@ public class Se
 
     private static string ResolveTesseractModelFolder()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        var modelFolder = Path.Combine(DataFolder, "Tesseract550", "tessdata");
+        SeedBundledTesseractModels(modelFolder);
+        return modelFolder;
+    }
+
+    // In the Flatpak sandbox the English model is bundled read-only at
+    // /app/share/tessdata (issue #11646). Copy it into the writable model folder
+    // on first use so OCR works out of the box; additional languages are still
+    // downloaded into the same folder by DownloadTesseractModelViewModel.
+    private static void SeedBundledTesseractModels(string modelFolder)
+    {
+        const string bundledEng = "/app/share/tessdata/eng.traineddata";
+        if (!System.IO.File.Exists(bundledEng))
         {
-            return Path.Combine(TesseractFolder, "tessdata");
+            return;
         }
 
-        var folders = new List<string>();
-
-        // Bundled location inside the Flatpak sandbox (issue #11646); harmless elsewhere.
-        folders.Add("/app/share/tessdata");
-
-        if (Directory.Exists("/opt/homebrew/Cellar/tesseract-lang"))
+        try
         {
-            foreach (var folder in Directory.EnumerateDirectories("/opt/homebrew/Cellar/tesseract-lang"))
+            var target = Path.Combine(modelFolder, "eng.traineddata");
+            if (!System.IO.File.Exists(target))
             {
-                folders.Add(Path.Combine(folder, "share/tessdata"));
+                Directory.CreateDirectory(modelFolder);
+                System.IO.File.Copy(bundledEng, target);
             }
         }
-
-        if (Directory.Exists("/usr/share/tesseract-ocr"))
+        catch (Exception ex)
         {
-            foreach (var folder in Directory.EnumerateDirectories("/usr/share/tesseract-ocr"))
-            {
-                folders.Add(Path.Combine(folder, "tessdata"));
-            }
+            SeLogger.Error("Error seeding bundled Tesseract model: " + ex.Message);
         }
-
-        folders.Add("/usr/share/tessdata");
-        folders.Add("/opt/homebrew/share/tessdata/");
-
-        foreach (var folder in folders)
-        {
-            if (Directory.Exists(folder))
-            {
-                return folder;
-            }
-        }
-
-        return Path.Combine(TesseractFolder, "tessdata");
     }
 
     public void InitializeMainShortcuts(MainViewModel vm)

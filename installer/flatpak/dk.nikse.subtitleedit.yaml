@@ -29,8 +29,6 @@ finish-args:
   - --socket=pulseaudio
   # .NET single-file bundle extraction directory (persistent cache)
   - --env=DOTNET_BUNDLE_EXTRACT_BASE_DIR=/var/cache/.net
-  # Where the bundled Tesseract finds its language models (issue #11646)
-  - --env=TESSDATA_PREFIX=/app/share/tessdata
 
 cleanup:
   - '*.la'

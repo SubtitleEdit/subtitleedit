@@ -314,6 +314,7 @@ public partial class OcrViewModel : ObservableObject
         ocr.GoogleVisionApiKey = GoogleVisionApiKey;
         ocr.MistralApiKey = MistralApiKey;
         ocr.GoogleVisionLanguage = SelectedGoogleVisionLanguage?.Code ?? "en";
+        ocr.TesseractLastLanguage = SelectedTesseractDictionaryItem?.Code ?? "eng";
         ocr.DoFixOcrErrors = DoFixOcrErrors;
         ocr.DoPromptForUnknownWords = DoPromptForUnknownWords;
         ocr.DoTryToGuessUnknownWords = DoTryToGuessUnknownWords;
@@ -3467,6 +3468,7 @@ public partial class OcrViewModel : ObservableObject
     {
         var tesseractOcr = new TesseractOcr();
         var language = SelectedTesseractDictionaryItem?.Code ?? "eng";
+        var tessDataFolder = Se.TesseractModelFolder;
 
         _ = Task.Run(async () =>
         {
@@ -3483,7 +3485,7 @@ public partial class OcrViewModel : ObservableObject
                 var item = OcrSubtitleItems[i];
                 var bitmap = item.GetSkBitmap();
 
-                var text = await tesseractOcr.Ocr(bitmap, language, cancellationToken);
+                var text = await tesseractOcr.Ocr(bitmap, language, tessDataFolder, cancellationToken);
                 item.Text = text;
 
                 var unknownWords = OcrFixLineAndSetText(i, item);
@@ -3801,14 +3803,7 @@ public partial class OcrViewModel : ObservableObject
             }
 
             var dictionary = allDictionaries.FirstOrDefault(p => p.Code == name);
-            if (dictionary != null)
-            {
-                items.Add(dictionary);
-            }
-            else
-            {
-                items.Add(new TesseractDictionary { Code = name, Name = name, Url = string.Empty });
-            }
+            items.Add(dictionary ?? new TesseractDictionary { Code = name, Name = name, Url = string.Empty });
         }
 
         TesseractDictionaryItems.AddRange(items.OrderBy(p => p.ToString()));
@@ -4148,7 +4143,8 @@ public partial class OcrViewModel : ObservableObject
             LoadActiveTesseractDictionaries();
             if (SelectedTesseractDictionaryItem == null)
             {
-                SelectedTesseractDictionaryItem = TesseractDictionaryItems.FirstOrDefault(p => p.Code == "eng") ??
+                SelectedTesseractDictionaryItem = TesseractDictionaryItems.FirstOrDefault(p => p.Code == Se.Settings.Ocr.TesseractLastLanguage) ??
+                                                  TesseractDictionaryItems.FirstOrDefault(p => p.Code == "eng") ??
                                                   TesseractDictionaryItems.FirstOrDefault();
             }
         }
