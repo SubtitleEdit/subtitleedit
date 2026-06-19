@@ -222,6 +222,23 @@ seconv movie.ts fcpimage                                       # DVB-sub → FCP
 >
 > The full list of supported keys lives in `src/seconv/Core/SeConvSettings.cs`.
 
+### Plain text output (`--format plaintext`)
+| Option | Description |
+|---|---|
+| `--plaintext-merge` | Merge all subtitles into one space-separated block (no blank lines) |
+| `--plaintext-unbreak` | Unbreak each subtitle, joining its lines into one |
+| `--plaintext-no-blank-line` | Do not put a blank line between subtitles (default keeps it) |
+
+HTML/styling tags are always stripped. `--plaintext-merge` takes precedence over
+`--plaintext-unbreak` and `--plaintext-no-blank-line`.
+
+```bash
+seconv movie.srt plaintext                              # one entry per blank-line-separated block
+seconv movie.srt plaintext --plaintext-no-blank-line    # one entry per line, no blank lines
+seconv movie.srt plaintext --plaintext-unbreak          # collapse multi-line entries
+seconv movie.srt plaintext --plaintext-merge            # everything on a single line
+```
+
 ### Verbosity
 | Option | Description |
 |---|---|

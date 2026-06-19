@@ -867,6 +867,15 @@ internal record class ConversionOptions
     public bool SkipTeletext { get; init; }
     public int? TeletextOnlyPage { get; init; }
 
+    /// <summary>Plain text output: merge every paragraph into one space-separated block (no blank lines).</summary>
+    public bool PlainTextMerge { get; init; }
+
+    /// <summary>Plain text output: unbreak each paragraph, joining its lines into one.</summary>
+    public bool PlainTextUnbreak { get; init; }
+
+    /// <summary>Plain text output: emit a blank line between consecutive paragraphs. Default true (legacy behaviour).</summary>
+    public bool PlainTextLineBetweenSubtitles { get; init; } = true;
+
     public bool Quiet { get; init; }
     public bool Verbose { get; init; }
 }

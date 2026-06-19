@@ -74,6 +74,18 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Path to a Subtitle Edit custom-format XML file (used with --format customtext)")]
         public string? CustomFormat { get; init; }
 
+        [CommandOption("--plaintext-merge|--plaintextmerge")]
+        [Description("Plain text output: merge all subtitles into one space-separated block (no blank lines)")]
+        public bool PlainTextMerge { get; init; }
+
+        [CommandOption("--plaintext-unbreak|--plaintextunbreak")]
+        [Description("Plain text output: unbreak each subtitle, joining its lines into one")]
+        public bool PlainTextUnbreak { get; init; }
+
+        [CommandOption("--plaintext-no-blank-line|--plaintextnoblankline")]
+        [Description("Plain text output: do not put a blank line between subtitles (default keeps it)")]
+        public bool PlainTextNoBlankLine { get; init; }
+
         [CommandOption("--ocr-engine|--ocrengine")]
         [Description("OCR engine: tesseract | nocr | binaryocr | ollama | paddle (default: tesseract)")]
         public string? OcrEngine { get; init; }
@@ -448,6 +460,9 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 EbuHeaderFile = settings.EbuHeaderFile,
                 MultipleReplaceFile = settings.MultipleReplace,
                 CustomFormatFile = settings.CustomFormat,
+                PlainTextMerge = settings.PlainTextMerge,
+                PlainTextUnbreak = settings.PlainTextUnbreak,
+                PlainTextLineBetweenSubtitles = !settings.PlainTextNoBlankLine,
                 TrackNumbers = ParseTrackNumbers(settings.TrackNumber),
                 ForcedOnly = settings.ForcedOnly,
                 OcrEngine = string.IsNullOrWhiteSpace(settings.OcrEngine) ? "tesseract" : settings.OcrEngine,

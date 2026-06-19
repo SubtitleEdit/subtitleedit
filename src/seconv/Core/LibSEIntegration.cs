@@ -310,7 +310,7 @@ internal static class LibSEIntegration
             return;
         }
 
-        // Plain text output — strip HTML, one paragraph per group separated by blank lines
+        // Plain text output — strip HTML; optional merge/unbreak and blank-line control
         if (formatName.Replace(" ", "").Equals("PlainText", StringComparison.OrdinalIgnoreCase))
         {
             var outputDirPlain = Path.GetDirectoryName(filePath);
@@ -318,18 +318,43 @@ internal static class LibSEIntegration
             {
                 Directory.CreateDirectory(outputDirPlain);
             }
-            var sb = new StringBuilder();
-            foreach (var p in subtitle.Paragraphs)
-            {
-                if (sb.Length > 0)
-                {
-                    sb.AppendLine();
-                }
-                sb.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text, true));
-            }
+
             var plainEncoding = string.IsNullOrWhiteSpace(encodingName)
                 ? new UTF8Encoding(true)
                 : GetEncoding(encodingName);
+
+            // Merge: collapse every paragraph into a single space-separated block.
+            if (options?.PlainTextMerge == true)
+            {
+                var parts = new List<string>();
+                foreach (var p in subtitle.Paragraphs)
+                {
+                    var text = HtmlUtil.RemoveHtmlTags(p.Text, true).Replace(Environment.NewLine, " ").Trim();
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        parts.Add(text);
+                    }
+                }
+                File.WriteAllText(filePath, string.Join(" ", parts), plainEncoding);
+                return;
+            }
+
+            var unbreak = options?.PlainTextUnbreak == true;
+            var blankLineBetween = options?.PlainTextLineBetweenSubtitles ?? true;
+            var sb = new StringBuilder();
+            foreach (var p in subtitle.Paragraphs)
+            {
+                var text = HtmlUtil.RemoveHtmlTags(p.Text, true);
+                if (unbreak)
+                {
+                    text = Utilities.UnbreakLine(text.Replace(Environment.NewLine, " "));
+                }
+                if (sb.Length > 0 && blankLineBetween)
+                {
+                    sb.AppendLine();
+                }
+                sb.AppendLine(text);
+            }
             File.WriteAllText(filePath, sb.ToString(), plainEncoding);
             return;
         }
