@@ -16078,6 +16078,15 @@ public partial class MainViewModel :
             }
         }
 
+        // Persist the media association as soon as the file opens so reopening this subtitle
+        // reloads the same video/audio even if the app is force-quit before OnClosing runs.
+        // Guarded by a known subtitle name so opening media without a subtitle doesn't create
+        // a blank recent entry. AddToRecentFiles itself no-ops while still loading.
+        if (!string.IsNullOrEmpty(_subtitleFileName))
+        {
+            AddToRecentFiles(false);
+        }
+
         var _ = Task.Run(() =>
         {
             Dispatcher.UIThread.Post(() => LoadWaveformAndSpectrogram(videoFileName));
