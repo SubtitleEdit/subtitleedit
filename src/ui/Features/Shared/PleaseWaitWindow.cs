@@ -38,9 +38,13 @@ public class PleaseWaitWindow : Window
         var progressBar = new ProgressBar
         {
             IsIndeterminate = true,
+            Minimum = 0,
+            Maximum = 100,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             Height = 8,
         };
+        progressBar.Bind(ProgressBar.IsIndeterminateProperty, new Binding(nameof(vm.IsIndeterminate)));
+        progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
 
         Content = new StackPanel
         {
