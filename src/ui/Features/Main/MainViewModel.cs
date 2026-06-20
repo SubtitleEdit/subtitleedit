@@ -15203,22 +15203,38 @@ public partial class MainViewModel :
         return true;
     }
 
-    private async Task<bool> SaveSubtitle()
+    private async Task<bool> SaveSubtitle(bool isAutoSave = false)
     {
         if (Subtitles == null || !Subtitles.Any())
         {
-            ShowStatus(Se.Language.Main.NothingToSave);
+            if (!isAutoSave)
+            {
+                ShowStatus(Se.Language.Main.NothingToSave);
+            }
+
             return false;
         }
 
         if (string.IsNullOrEmpty(_subtitleFileName) || _converted)
         {
+            // Auto-save must never pop a "Save as" dialog - silently skip until the user picks a file.
+            if (isAutoSave)
+            {
+                return false;
+            }
+
             var result = await SaveSubtitleAs();
             return result;
         }
 
         if (_lastOpenSaveFormat == null || _lastOpenSaveFormat.Name != SelectedSubtitleFormat.Name)
         {
+            // Saving in a different format goes through "Save as"; do not trigger that automatically.
+            if (isAutoSave)
+            {
+                return false;
+            }
+
             var result = await SaveSubtitleAs();
             return result;
         }
@@ -15257,6 +15273,13 @@ public partial class MainViewModel :
         catch (Exception ex)
         {
             var message = string.Format(Se.Language.General.CouldNotSaveFileXErrorY, _subtitleFileName, ex.Message);
+            if (isAutoSave)
+            {
+                // Don't spam modal error dialogs on a timer; surface it in the status bar instead.
+                ShowStatus(message);
+                return false;
+            }
+
             await MessageBox.Show(Window!, Se.Language.General.Error, message, MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return false;
@@ -15270,16 +15293,25 @@ public partial class MainViewModel :
         return true;
     }
 
-    private async Task<bool> SaveSubtitleOriginal()
+    private async Task<bool> SaveSubtitleOriginal(bool isAutoSave = false)
     {
         if (Subtitles == null || !Subtitles.Any())
         {
-            ShowStatus(Se.Language.Main.NothingToSaveOriginal);
+            if (!isAutoSave)
+            {
+                ShowStatus(Se.Language.Main.NothingToSaveOriginal);
+            }
+
             return false;
         }
 
         if (string.IsNullOrEmpty(_subtitleFileNameOriginal))
         {
+            if (isAutoSave)
+            {
+                return false;
+            }
+
             return await SaveSubtitleOriginalAs();
         }
 
@@ -15304,6 +15336,12 @@ public partial class MainViewModel :
         catch (Exception ex)
         {
             var message = string.Format(Se.Language.General.CouldNotSaveFileXErrorY, _subtitleFileNameOriginal, ex.Message);
+            if (isAutoSave)
+            {
+                ShowStatus(message);
+                return false;
+            }
+
             await MessageBox.Show(Window!, Se.Language.General.Error, message, MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return false;
@@ -18824,6 +18862,7 @@ public partial class MainViewModel :
         {
             UpdateTitleStatus();
             UpdateGaps();
+            AutoSaveTick();
 
             var vp = GetVideoPlayerControl();
             if (!_mpvPreviewDirty || vp == null)
@@ -18861,6 +18900,86 @@ public partial class MainViewModel :
             }
         };
         _slowTimer.Start();
+    }
+
+    // Auto-save (saves the actual open file) state. Debounced: we only write once edits have
+    // settled so we don't hammer the disk while the user is typing.
+    private int _autoSaveSettleHash = -1;
+    private DateTime _autoSaveLastChangeUtc = DateTime.MinValue;
+    private bool _autoSaveInProgress;
+    private const double AutoSaveIdleSeconds = 1.5;
+
+    private async void AutoSaveTick()
+    {
+        if (!Se.Settings.General.AutoSave || _autoSaveInProgress)
+        {
+            return;
+        }
+
+        // Only auto-save real, already-named files in their current format. Anything that would
+        // open a "Save as" dialog (untitled, converted, format change) is left to the user.
+        if (IsEmpty ||
+            string.IsNullOrEmpty(_subtitleFileName) ||
+            _converted ||
+            _lastOpenSaveFormat == null ||
+            _lastOpenSaveFormat.Name != SelectedSubtitleFormat.Name)
+        {
+            return;
+        }
+
+        var currentHash = GetFastHash();
+        var originalHash = ShowColumnOriginalText ? GetFastHashOriginal() : 0;
+        var originalDirty = ShowColumnOriginalText &&
+                            !string.IsNullOrEmpty(_subtitleFileNameOriginal) &&
+                            _changeSubtitleHashOriginal != originalHash;
+        var mainDirty = currentHash != _changeSubtitleHash;
+
+        if (!mainDirty && !originalDirty)
+        {
+            return;
+        }
+
+        // Debounce: restart the idle window whenever either column keeps changing.
+        var settleHash = HashCode.Combine(currentHash, originalHash);
+        if (settleHash != _autoSaveSettleHash)
+        {
+            _autoSaveSettleHash = settleHash;
+            _autoSaveLastChangeUtc = DateTime.UtcNow;
+            return;
+        }
+
+        if ((DateTime.UtcNow - _autoSaveLastChangeUtc).TotalSeconds < AutoSaveIdleSeconds)
+        {
+            return;
+        }
+
+        _autoSaveInProgress = true;
+        try
+        {
+            var saved = false;
+            if (mainDirty)
+            {
+                saved |= await SaveSubtitle(isAutoSave: true);
+            }
+
+            if (originalDirty)
+            {
+                saved |= await SaveSubtitleOriginal(isAutoSave: true);
+            }
+
+            if (saved && !string.IsNullOrEmpty(_subtitleFileName))
+            {
+                ShowStatus(string.Format(Se.Language.General.SavedChangesToX, _subtitleFileName));
+            }
+        }
+        catch
+        {
+            // Auto-save runs on a timer; never let a failure bubble up as an unhandled async-void exception.
+        }
+        finally
+        {
+            _autoSaveInProgress = false;
+        }
     }
 
     private void UpdateTitleStatus()

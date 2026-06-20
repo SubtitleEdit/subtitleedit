@@ -108,6 +108,7 @@ public partial class SettingsViewModel : ObservableObject
         ? Se.Language.Options.Settings.MinGapFrames
         : Se.Language.Options.Settings.MinGapMs;
     [ObservableProperty] private bool _textBoxLimitNewLines;
+    [ObservableProperty] private bool _autoSave;
     [ObservableProperty] private bool _autoBackupOn;
     [ObservableProperty] private int? _autoBackupIntervalMinutes;
     [ObservableProperty] private int? _autoBackupDeleteAfterDays;
@@ -620,6 +621,7 @@ public partial class SettingsViewModel : ObservableObject
         LockTimeCodes = general.LockTimeCodes;
         RememberPositionAndSize = general.RememberPositionAndSize;
         OpenLastFileOnStart = Se.Settings.File.OpenLastFileOnStart;
+        AutoSave = general.AutoSave;
         AutoBackupOn = general.AutoBackupOn;
         AutoBackupIntervalMinutes = general.AutoBackupIntervalMinutes;
         AutoBackupDeleteAfterDays = general.AutoBackupDeleteAfterDays;
@@ -1311,6 +1313,7 @@ public partial class SettingsViewModel : ObservableObject
         general.LockTimeCodes = LockTimeCodes;
         general.RememberPositionAndSize = RememberPositionAndSize;
         Se.Settings.File.OpenLastFileOnStart = OpenLastFileOnStart;
+        general.AutoSave = AutoSave;
         general.AutoBackupOn = AutoBackupOn;
         general.AutoBackupIntervalMinutes = AutoBackupIntervalMinutes ?? general.AutoBackupIntervalMinutes;
         general.AutoBackupDeleteAfterDays = AutoBackupDeleteAfterDays ?? general.AutoBackupDeleteAfterDays;
