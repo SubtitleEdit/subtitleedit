@@ -11360,7 +11360,7 @@ public partial class MainViewModel :
     private void TextBoxBold()
     {
         var tb = EditTextBox;
-        ToggleTextBoxTag(tb, "b", "b1", "b0");
+        ToggleTextBoxTag(tb, "b");
         _updateAudioVisualizer = true;
     }
 
@@ -11368,7 +11368,7 @@ public partial class MainViewModel :
     private void TextBoxItalic()
     {
         var tb = EditTextBox;
-        ToggleTextBoxTag(tb, "i", "i1", "i0");
+        ToggleTextBoxTag(tb, "i");
         _updateAudioVisualizer = true;
     }
 
@@ -11376,7 +11376,7 @@ public partial class MainViewModel :
     private void TextBoxUnderline()
     {
         var tb = EditTextBox;
-        ToggleTextBoxTag(tb, "u", "u1", "u0");
+        ToggleTextBoxTag(tb, "u");
         _updateAudioVisualizer = true;
     }
 
@@ -13443,71 +13443,104 @@ public partial class MainViewModel :
         }, DispatcherPriority.Background);
     }
 
-    private bool ToggleTextBoxTag(ITextBoxWrapper tb, string htmlTag, string assaOn, string assaOff)
+    private bool ToggleTextBoxTag(ITextBoxWrapper tb, string tag)
     {
         if (tb == null || tb.Text == null)
         {
             return false;
         }
 
+        var isAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
         var selectionStart = Math.Min(tb.SelectionStart, tb.SelectionEnd);
         var selectionEnd = Math.Max(tb.SelectionStart, tb.SelectionEnd);
         var selectionLength = selectionEnd - selectionStart;
 
-        var isAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
+        // No text selected - toggle the whole line (or just the current dialog line).
         if (selectionLength == 0)
         {
-            if (isAssa)
+            var text = tb.Text;
+            var lines = text.SplitToLines();
+
+            // Find the line where the caret is currently located (do not count wrapped lines).
+            var numberOfNewLines = 0;
+            for (var i = 0; i < selectionStart && i < text.Length; i++)
             {
-                if (tb.Text.Contains("{\\" + assaOn + "}"))
+                if (text[i] == '\n')
                 {
-                    tb.Text = tb.Text.Replace("{\\" + assaOn + "}", string.Empty)
-                        .Replace("{\\" + assaOff + "}", string.Empty);
+                    numberOfNewLines++;
                 }
-                else
-                {
-                    tb.Text = "{\\" + assaOn + "}" + tb.Text + "{\\" + assaOff + "}";
-                }
+            }
+
+            var selectedLineIdx = Math.Min(numberOfNewLines, lines.Count - 1);
+            var selectedLine = lines[selectedLineIdx];
+
+            // When the caret is on a dialog line ("- ..."), only toggle that line so the
+            // other speaker's line keeps its formatting.
+            var isDialog = selectedLine.StartsWith('-') ||
+                           selectedLine.StartsWith("<" + tag + ">-", StringComparison.OrdinalIgnoreCase);
+
+            var textLen = text.Length;
+            if (isDialog)
+            {
+                lines[selectedLineIdx] = HtmlUtil.ToggleTag(selectedLine, tag, false, isAssa);
+                text = string.Join(Environment.NewLine, lines);
             }
             else
             {
-                if (tb.Text.Contains("<" + htmlTag + ">"))
-                {
-                    tb.Text = HtmlUtil.RemoveOpenCloseTags(tb.Text, htmlTag);
-                }
-                else
-                {
-                    tb.Text = "<" + htmlTag + ">" + tb.Text + "</" + htmlTag + ">";
-                }
+                text = HtmlUtil.ToggleTag(text, tag, false, isAssa);
             }
+
+            tb.Text = text;
+
+            // Keep the caret next to where it was, shifting by the length of the opening
+            // tag inserted before it: "<i>" (3) for HTML, "{\i1}" (5) for ASSA.
+            var openTagLength = isAssa ? tag.Length + 4 : tag.Length + 2;
+            var newCaret = textLen > text.Length
+                ? Math.Max(selectionStart - openTagLength, 0)
+                : selectionStart + openTagLength;
+            Dispatcher.UIThread.Post(() =>
+            {
+                tb.Focus();
+                tb.SelectionStart = newCaret;
+                tb.SelectionEnd = newCaret;
+            });
         }
         else
         {
+            // Move leading/trailing white-space (spaces and new-lines) outside the tag so
+            // " 'word'" becomes " <i>'word'</i>" instead of "<i> 'word'</i>".
+            var pre = string.Empty;
+            var post = string.Empty;
             var selectedText = tb.Text.Substring(selectionStart, selectionLength);
+            while (selectedText.EndsWith(' ') || selectedText.EndsWith(Environment.NewLine, StringComparison.Ordinal) ||
+                   selectedText.StartsWith(' ') || selectedText.StartsWith(Environment.NewLine, StringComparison.Ordinal))
+            {
+                if (selectedText.EndsWith(' '))
+                {
+                    post = " " + post;
+                    selectedText = selectedText.Remove(selectedText.Length - 1);
+                }
 
-            if (isAssa)
-            {
-                if (selectedText.Contains("{\\" + assaOn + "}"))
+                if (selectedText.EndsWith(Environment.NewLine, StringComparison.Ordinal))
                 {
-                    selectedText = selectedText.Replace("{\\" + assaOn + "}", string.Empty)
-                        .Replace("{\\" + assaOff + "}", string.Empty);
+                    post = Environment.NewLine + post;
+                    selectedText = selectedText.Remove(selectedText.Length - Environment.NewLine.Length);
                 }
-                else
+
+                if (selectedText.StartsWith(' '))
                 {
-                    selectedText = "{\\" + assaOn + "}" + selectedText + "{\\" + assaOff + "}";
+                    pre += " ";
+                    selectedText = selectedText.Remove(0, 1);
                 }
-            }
-            else
-            {
-                if (selectedText.Contains("<" + htmlTag + ">"))
+
+                if (selectedText.StartsWith(Environment.NewLine, StringComparison.Ordinal))
                 {
-                    selectedText = HtmlUtil.RemoveOpenCloseTags(selectedText, htmlTag);
-                }
-                else
-                {
-                    selectedText = "<" + htmlTag + ">" + selectedText + "</" + htmlTag + ">";
+                    pre += Environment.NewLine;
+                    selectedText = selectedText.Remove(0, Environment.NewLine.Length);
                 }
             }
+
+            selectedText = pre + HtmlUtil.ToggleTag(selectedText, tag, false, isAssa) + post;
 
             tb.Text = tb.Text
                 .Remove(selectionStart, selectionLength)
