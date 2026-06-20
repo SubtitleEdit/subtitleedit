@@ -14653,12 +14653,12 @@ public partial class MainViewModel :
 
         if (matroskaSubtitleInfo.CodecId.Equals("S_HDMV/TEXTST", StringComparison.OrdinalIgnoreCase))
         {
-            return LoadTextSTFromMatroska(matroskaSubtitleInfo, matroska);
+            return await LoadTextSTFromMatroska(matroskaSubtitleInfo, matroska);
         }
 
         if (matroskaSubtitleInfo.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase))
         {
-            return LoadDvbFromMatroska(matroskaSubtitleInfo, matroska, fileName);
+            return await LoadDvbFromMatroska(matroskaSubtitleInfo, matroska, fileName);
         }
 
         if (matroskaSubtitleInfo.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
@@ -14666,7 +14666,7 @@ public partial class MainViewModel :
             return await LoadVobSubFromMatroska(matroskaSubtitleInfo, matroska, fileName);
         }
 
-        var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, null);
+        var sub = await ExtractMatroskaSubtitleAsync(matroska, matroskaSubtitleInfo.TrackNumber);
         var subtitle = new Subtitle();
         var format = Utilities.LoadMatroskaTextSubtitle(matroskaSubtitleInfo, matroska, sub, subtitle);
         VideoCloseFile();
@@ -14684,10 +14684,10 @@ public partial class MainViewModel :
         track.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase) ||
         track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase);
 
-    private bool LoadDvbFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, string fileName)
+    private async Task<bool> LoadDvbFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, string fileName)
     {
         ShowStatus(Se.Language.Main.ParsingMatroskaFile);
-        var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, MatroskaProgress);
+        var sub = await ExtractMatroskaSubtitleAsync(matroska, matroskaSubtitleInfo.TrackNumber);
 
         _subtitle.Paragraphs.Clear();
         var subtitleImages = new List<DvbSubPes>();
@@ -14805,7 +14805,7 @@ public partial class MainViewModel :
             return false;
         }
 
-        var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, MatroskaProgress);
+        var sub = await ExtractMatroskaSubtitleAsync(matroska, matroskaSubtitleInfo.TrackNumber);
         _subtitle.Paragraphs.Clear();
 
         List<VobSubMergedPack> mergedVobSubPacks = [];
@@ -14863,15 +14863,49 @@ public partial class MainViewModel :
         return false;
     }
 
-    private void MatroskaProgress(long position, long total)
+    // Files smaller than this parse fast enough that a progress window would only
+    // flash; above it the extraction can take long enough to warrant feedback.
+    private const long MatroskaProgressWindowMinFileSize = 25 * 1024 * 1024; // 25 MB
+
+    /// <summary>
+    /// Extracts a Matroska track's blocks on a background thread so the UI stays
+    /// responsive, showing a determinate "Please wait..." window with percentage
+    /// progress for large files. Must be called on the UI thread.
+    /// </summary>
+    private async Task<List<MatroskaSubtitle>> ExtractMatroskaSubtitleAsync(MatroskaFile matroska, int trackNumber)
     {
-        // UpdateProgress(position, total, _language.ParsingMatroskaFile);
+        PleaseWaitViewModel? pleaseWaitVm = null;
+        long fileSize = 0;
+        try
+        {
+            fileSize = new FileInfo(matroska.Path).Length;
+        }
+        catch
+        {
+            // ignore - just means no size-based gating
+        }
+
+        if (fileSize >= MatroskaProgressWindowMinFileSize)
+        {
+            pleaseWaitVm = _windowService.ShowWindow<PleaseWaitWindow, PleaseWaitViewModel>(Window!);
+            pleaseWaitVm.StatusText = Se.Language.Main.ParsingMatroskaFile;
+        }
+
+        try
+        {
+            var vm = pleaseWaitVm;
+            return await Task.Run(() => matroska.GetSubtitle(trackNumber, (pos, total) => vm?.ReportProgress(pos, total)));
+        }
+        finally
+        {
+            pleaseWaitVm?.Close();
+        }
     }
 
-    private bool LoadTextSTFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska)
+    private async Task<bool> LoadTextSTFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska)
     {
         ShowStatus(Se.Language.Main.ParsingMatroskaFile);
-        var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, MatroskaProgress);
+        var sub = await ExtractMatroskaSubtitleAsync(matroska, matroskaSubtitleInfo.TrackNumber);
 
         VideoCloseFile();
         _subtitle.Paragraphs.Clear();
