@@ -13492,8 +13492,12 @@ public partial class MainViewModel :
 
             tb.Text = text;
 
-            // Keep the caret next to where it was; tag length is 3 for <i>/<b>/<u>.
-            var newCaret = textLen > text.Length ? Math.Max(selectionStart - 3, 0) : selectionStart + 3;
+            // Keep the caret next to where it was, shifting by the length of the opening
+            // tag inserted before it: "<i>" (3) for HTML, "{\i1}" (5) for ASSA.
+            var openTagLength = isAssa ? tag.Length + 4 : tag.Length + 2;
+            var newCaret = textLen > text.Length
+                ? Math.Max(selectionStart - openTagLength, 0)
+                : selectionStart + openTagLength;
             Dispatcher.UIThread.Post(() =>
             {
                 tb.Focus();
