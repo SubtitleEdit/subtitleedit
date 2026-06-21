@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Features.Files.ExportCustomTextFormat;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -40,6 +41,23 @@ public class SeFile
 
     public void AddToRecentFiles(string subtitleFileName, string subtitleFileNameOriginal, string videoFileName, int selectedLine, string encoding, long VideoOffsetInMs, bool videoIsSmpte, int audioTrack)
     {
+        var existing = RecentFiles.FirstOrDefault(rf =>
+            rf.SubtitleFileName == subtitleFileName && rf.SubtitleFileNameOriginal == subtitleFileNameOriginal);
+
+        // Don't erase the media this subtitle was last opened with: if no video/audio is
+        // currently loaded, inherit the remembered one (and its track/offset) so reopening the
+        // subtitle reloads the same media, like SE4. A real media path always overwrites.
+        if (string.IsNullOrEmpty(videoFileName) && existing != null && !string.IsNullOrEmpty(existing.VideoFileName))
+        {
+            videoFileName = existing.VideoFileName;
+            VideoOffsetInMs = existing.VideoOffsetInMs;
+            videoIsSmpte = existing.VideoIsSmpte;
+            if (audioTrack < 0)
+            {
+                audioTrack = existing.AudioTrack;
+            }
+        }
+
         RecentFiles.RemoveAll(rf => rf.SubtitleFileName == subtitleFileName && rf.SubtitleFileNameOriginal == subtitleFileNameOriginal);
 
         RecentFiles.Insert(0, new RecentFile
