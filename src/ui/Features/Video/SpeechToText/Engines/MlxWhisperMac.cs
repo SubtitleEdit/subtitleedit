@@ -44,6 +44,10 @@ public class MlxWhisperMac : ISpeechToTextEngine
 
     private static bool? _isMlxWhisperInstalled;
 
+    // The python3 interpreter that can actually "import mlx_whisper". Resolved during the install
+    // check and reused for transcription so both use the same Python (see GetExecutable).
+    private static string? _resolvedPython;
+
     public List<WhisperLanguage> Languages => WhisperLanguage.Languages.OrderBy(p => p.Name).ToList();
 
     // Built explicitly (not filtered from the CTranslate2 list, which has no turbo entry). large-v3-turbo
@@ -81,11 +85,30 @@ public class MlxWhisperMac : ISpeechToTextEngine
             return _isMlxWhisperInstalled.Value;
         }
 
+        // mlx-whisper is almost never installed into Homebrew's Python (it is "externally managed",
+        // PEP 668), so checking a single fixed interpreter wrongly reports "not installed". Probe each
+        // candidate and pick the first one that can import the package; remember it for transcription.
+        foreach (var python in GetPythonCandidates())
+        {
+            if (CanImportMlxWhisper(python))
+            {
+                _resolvedPython = python;
+                _isMlxWhisperInstalled = true;
+                return true;
+            }
+        }
+
+        _isMlxWhisperInstalled = false;
+        return false;
+    }
+
+    private static bool CanImportMlxWhisper(string python)
+    {
         try
         {
             using var process = new Process
             {
-                StartInfo = new ProcessStartInfo(GetExecutable(), "-c \"import mlx_whisper\"")
+                StartInfo = new ProcessStartInfo(python, "-c \"import mlx_whisper\"")
                 {
                     WindowStyle = ProcessWindowStyle.Hidden,
                     CreateNoWindow = true,
@@ -100,19 +123,57 @@ public class MlxWhisperMac : ISpeechToTextEngine
             if (!process.WaitForExit(10_000))
             {
                 process.Kill(true);
-                _isMlxWhisperInstalled = false;
                 return false;
             }
 #pragma warning restore CA1416
 
-            _isMlxWhisperInstalled = process.ExitCode == 0;
+            return process.ExitCode == 0;
         }
         catch
         {
-            _isMlxWhisperInstalled = false;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// The python3 interpreters to probe for mlx-whisper, in priority order: Homebrew, python.org
+    /// framework builds (newest first), pyenv, the system Python, and finally PATH resolution.
+    /// </summary>
+    private static IEnumerable<string> GetPythonCandidates()
+    {
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var candidates = new List<string>();
+
+        void Add(string path)
+        {
+            if (!string.IsNullOrEmpty(path) && seen.Add(path))
+            {
+                candidates.Add(path);
+            }
         }
 
-        return _isMlxWhisperInstalled.Value;
+        Add("/opt/homebrew/bin/python3");
+        Add("/usr/local/bin/python3");
+
+        const string frameworkDir = "/Library/Frameworks/Python.framework/Versions";
+        if (Directory.Exists(frameworkDir))
+        {
+            foreach (var versionDir in Directory.GetDirectories(frameworkDir).OrderByDescending(p => p))
+            {
+                Add(Path.Combine(versionDir, "bin", "python3"));
+            }
+        }
+
+        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        if (!string.IsNullOrEmpty(home))
+        {
+            Add(Path.Combine(home, ".pyenv", "shims", "python3"));
+        }
+
+        Add("/usr/bin/python3");
+        Add("python3"); // resolved via PATH
+
+        return candidates.Where(p => p == "python3" || File.Exists(p));
     }
 
     public override string ToString()
@@ -145,26 +206,23 @@ public class MlxWhisperMac : ISpeechToTextEngine
 
     public string GetExecutable()
     {
-        // The engine drives the mlx-whisper *library* through python3 (see the class summary),
-        // so the executable is the Python interpreter. Probe the usual macOS install locations
-        // (Homebrew on Apple Silicon, Homebrew/python.org on Intel, the system Python) and fall
-        // back to PATH resolution.
-        var candidates = new[]
+        // The engine drives the mlx-whisper *library* through python3 (see the class summary), so the
+        // executable is the Python interpreter. Prefer the interpreter that actually has mlx-whisper
+        // importable (resolved during the install check) so detection and transcription stay in sync.
+        if (_resolvedPython != null)
         {
-            "/opt/homebrew/bin/python3",
-            "/usr/local/bin/python3",
-            "/usr/bin/python3",
-        };
-
-        foreach (var candidate in candidates)
-        {
-            if (File.Exists(candidate))
-            {
-                return candidate;
-            }
+            return _resolvedPython;
         }
 
-        return "python3"; // resolved via PATH
+        IsEngineInstalled();
+        if (_resolvedPython != null)
+        {
+            return _resolvedPython;
+        }
+
+        // Not installed in any probed interpreter; return a sensible default so the "pip3 install
+        // mlx-whisper" guidance points at a real interpreter.
+        return GetPythonCandidates().FirstOrDefault() ?? "python3";
     }
 
     /// <summary>

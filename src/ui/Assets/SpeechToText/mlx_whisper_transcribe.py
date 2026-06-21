@@ -40,6 +40,73 @@ def fmt_short(seconds):
     return f"{minutes:02d}:{secs:02d}.{millis:03d}"
 
 
+def ensure_model_downloaded(repo):
+    """Pre-download the MLX model so the first run shows progress instead of looking frozen.
+
+    mlx-whisper downloads the model from Hugging Face on first use. Unauthenticated downloads
+    are throttled and the 1+ GB weights file can take minutes; the host only sees newline-
+    terminated stdout, while Hugging Face's tqdm bars update with carriage returns, so without
+    this step a first run looks stalled. We fetch the snapshot up front and print our own
+    percent-progress lines the host can display. A local model path needs no download.
+    """
+    if not repo or os.path.isdir(repo) or "/" not in repo:
+        return
+
+    try:
+        from huggingface_hub import snapshot_download
+    except Exception:
+        return  # mlx-whisper will handle the download itself.
+
+    try:
+        from tqdm.auto import tqdm as _base_tqdm
+    except Exception:
+        try:
+            from tqdm import tqdm as _base_tqdm
+        except Exception:
+            _base_tqdm = None
+
+    tqdm_class = None
+    if _base_tqdm is not None:
+        class _LineTqdm(_base_tqdm):
+            # Emit a newline-terminated "<file> NN%" line (only on percent change) so the host
+            # shows live download progress, while the base class keeps its normal stderr bar.
+            def __init__(self, *a, **k):
+                self._last_pct = -1
+                super().__init__(*a, **k)
+
+            def _emit(self):
+                total = self.total or 0
+                if total <= 0:
+                    return
+                pct = int(self.n * 100 / total)
+                if pct == self._last_pct:
+                    return
+                self._last_pct = pct
+                label = (self.desc or "Downloading model").strip().rstrip(":") or "Downloading model"
+                print(f"{label}: {pct}%", flush=True)
+
+            def update(self, n=1):
+                ret = super().update(n)
+                self._emit()
+                return ret
+
+            def close(self):
+                self._emit()
+                return super().close()
+
+        tqdm_class = _LineTqdm
+
+    print(f"Downloading model '{repo}' from Hugging Face (first use; this can take a while)...",
+          flush=True)
+    try:
+        snapshot_download(repo_id=repo, tqdm_class=tqdm_class)
+        print("Model download complete.", flush=True)
+    except Exception as e:
+        # Not fatal: fall through and let mlx-whisper try its own download path.
+        print(f"warning: model pre-download failed ({e}); letting mlx-whisper download it",
+              file=sys.stderr, flush=True)
+
+
 def load_wav_as_array(path):
     """Read a PCM WAV directly into a 16 kHz mono float32 array.
 
@@ -124,6 +191,8 @@ def main():
         except Exception as e:
             print(f"warning: direct WAV load failed ({e}); falling back to ffmpeg path",
                   file=sys.stderr, flush=True)
+
+    ensure_model_downloaded(args.model)
 
     print(f"Loading MLX Whisper model '{args.model}' (Apple GPU/Neural Engine)...", flush=True)
     result = mlx_whisper.transcribe(
