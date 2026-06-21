@@ -220,6 +220,10 @@
 		<AvaloniaResource Include="Assets\about3.png" />
 		<None Remove="Assets\SpeechToText\WhisperCTranslate2.txt" />
 		<AvaloniaResource Include="Assets\SpeechToText\WhisperCTranslate2.txt" />
+		<None Remove="Assets\SpeechToText\MlxWhisperMac.txt" />
+		<AvaloniaResource Include="Assets\SpeechToText\MlxWhisperMac.txt" />
+		<None Remove="Assets\SpeechToText\mlx_whisper_transcribe.py" />
+		<AvaloniaResource Include="Assets\SpeechToText\mlx_whisper_transcribe.py" />
 		<None Remove="Assets\Languages\Korean.json" />
 		<AvaloniaResource Include="Assets\Languages\Korean.json" />
 		<None Remove="Assets\Languages\Finnish.json" />

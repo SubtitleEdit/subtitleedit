@@ -10,6 +10,7 @@
         public const string WhisperX = "WhisperX";
         public const string ConstMe = "Const-me";
         public const string CTranslate2 = "CTranslate2";
+        public const string MlxWhisperMac = "MLX Whisper Mac";
         public const string StableTs = "stable-ts";
         public const string PurfviewFasterWhisperXxl = "Purfview's Faster-Whisper-XXL";
         public const string ChatLlm = "Chat LLM";

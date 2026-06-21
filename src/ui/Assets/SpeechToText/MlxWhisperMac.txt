@@ -1,0 +1,22 @@
+MLX Whisper Mac runs Apple's "mlx-whisper" Python library via python3.
+
+Requirements
+- An Apple Silicon Mac (M1 or newer).
+- Install once:  pip3 install mlx-whisper
+
+Why use it
+MLX runs Whisper on the Apple GPU and Neural Engine via Apple's MLX framework,
+so on M-series Macs it is typically much faster than the CPU-only
+"Faster Whisper Mac" engine, at the same accuracy.
+
+Models
+tiny, base, small, medium, large-v2, large-v3, large-v3-turbo. These are
+MLX-format Whisper weights hosted on Hugging Face (the mlx-community org) and are
+downloaded automatically on first use.
+
+Tip: large-v3-turbo is multilingual and the best speed/quality pick.
+
+Advanced
+The "command line parameters" box is passed through to the helper script. You can
+also type a full Hugging Face repo id as the model (anything containing "/") to use
+a custom MLX Whisper model.
