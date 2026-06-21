@@ -9845,7 +9845,7 @@ public partial class MainViewModel :
 
                 SubtitleGrid.SelectedIndex = idx;
                 SubtitleGrid.SelectedItem = subtitle;
-                SubtitleGrid.ScrollIntoView(subtitle, null);
+                SelectAndScrollToRow(idx);
 
                 ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, _findService.CurrentTextFound.Replace("\r\n", "·").Replace("\n", "·"), _findService.CurrentLineNumber + 1, _findService.CurrentTextIndex + 1));
 
@@ -9911,7 +9911,7 @@ public partial class MainViewModel :
 
             SubtitleGrid.SelectedIndex = idx;
             SubtitleGrid.SelectedItem = subtitle;
-            SubtitleGrid.ScrollIntoView(subtitle, null);
+            SelectAndScrollToRow(idx);
 
             ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText.Replace("\r\n", "·").Replace("\n", "·"), foundLine + 1, foundIndex + 1));
 
@@ -9978,7 +9978,7 @@ public partial class MainViewModel :
 
             SubtitleGrid.SelectedIndex = idx;
             SubtitleGrid.SelectedItem = subtitle;
-            SubtitleGrid.ScrollIntoView(subtitle, null);
+            SelectAndScrollToRow(idx);
 
             ShowStatus(string.Format(Se.Language.General.FoundXInLineYZ, foundText.Replace("\r\n", "·").Replace("\n", "·"), foundLine + 1, foundIndex + 1));
 
@@ -10279,7 +10279,7 @@ public partial class MainViewModel :
 
                 SubtitleGrid.SelectedIndex = idx;
                 SubtitleGrid.SelectedItem = subtitle;
-                SubtitleGrid.ScrollIntoView(subtitle, null);
+                SelectAndScrollToRow(idx);
 
                 // The text-box binding may not have propagated yet by the time this dispatcher
                 // post runs; ensure it shows the target subtitle's text before selecting.
