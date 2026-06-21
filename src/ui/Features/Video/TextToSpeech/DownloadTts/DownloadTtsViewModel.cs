@@ -584,9 +584,10 @@ public partial class DownloadTtsViewModel : ObservableObject
                     ProgressValue = percentage;
                     ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
                 });
-                // Same voices.zip as qwen3-tts.cpp (24 kHz mono WAV + .txt sidecars,
-                // identical format). Reuse the Qwen3 TTS .cpp download service rather
-                // than adding a second copy of the URL/hash.
+                // Same voices.zip as qwen3-tts.cpp (22.05 kHz WAV + .txt sidecars). Reuse
+                // the Qwen3 TTS .cpp download service rather than adding a second copy of the
+                // URL/hash; the WAVs are resampled to 24 kHz after extraction below since the
+                // CrispASR qwen3-tts backend rejects any other rate.
                 _downloadTaskQwen3TtsCrispAsrVoices = _qwen3TtsCppDownloadService.DownloadVoices(
                     _downloadStreamQwen3TtsCrispAsrVoices, voicesProgress, _cancellationTokenSource.Token);
                 _timer.Start();
@@ -618,6 +619,10 @@ public partial class DownloadTtsViewModel : ObservableObject
                     {
                         _downloadStreamQwen3TtsCrispAsrVoices.Position = 0;
                         _zipUnpacker.UnpackZipStream(_downloadStreamQwen3TtsCrispAsrVoices, voicesFolder, string.Empty, false, new List<string>(), null);
+                        // The pack ships 22.05 kHz WAVs but the qwen3-tts backend strictly
+                        // requires 24 kHz (otherwise it drops the voice prompt and returns
+                        // empty audio), so bring every reference WAV up to 24 kHz mono.
+                        ResampleVoicesTo24kHz(voicesFolder);
                         // The pack ships attribution-blurb .txt files, not spoken transcriptions.
                         // Drop those (the Base backend would load them as ref-text → off-voice
                         // output) and fill real transcripts from the OmniVoice pack where it has

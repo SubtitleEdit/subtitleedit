@@ -260,11 +260,13 @@ public class Qwen3TtsCrispAsr : ITtsEngine
         }
 
         SeedVoicesFromQwen3TtsCppIfEmpty(voicesFolder);
+        NormalizeVoiceSampleRatesOnce(voicesFolder);
         NormalizeVoiceTranscriptsOnce(voicesFolder);
         return voicesFolder;
     }
 
     private static bool _voiceSeedAttempted;
+    private static bool _voiceSampleRatesNormalized;
     private static bool _voiceTranscriptsNormalized;
 
     /// <summary>
@@ -336,6 +338,116 @@ public class Qwen3TtsCrispAsr : ITtsEngine
         }
         _voiceTranscriptsNormalized = true;
         NormalizeVoiceTranscripts(voicesFolder);
+    }
+
+    /// <summary>
+    /// One-time, per-session pass that resamples any reference WAV in <paramref name="voicesFolder"/>
+    /// that is not already 24 kHz to 24 kHz mono in place. The qwen3-tts backend strictly rejects a
+    /// voice prompt at any other rate (logs "voice prompt must be 24kHz, got NNNNN Hz") and then
+    /// returns empty audio, so a voice pack at another rate — the shared voices.zip ships 22.05 kHz
+    /// clips — must be brought up to 24 kHz before the server reads it from --voice-dir. Files that
+    /// are already 24 kHz (or whose header we cannot parse) are left untouched so we never re-encode
+    /// on every launch. Best-effort per file: an ffmpeg failure leaves the original in place.
+    /// </summary>
+    private static void NormalizeVoiceSampleRatesOnce(string voicesFolder)
+    {
+        if (_voiceSampleRatesNormalized)
+        {
+            return;
+        }
+        _voiceSampleRatesNormalized = true;
+
+        if (!Directory.Exists(voicesFolder))
+        {
+            return;
+        }
+
+        foreach (var wav in Directory.GetFiles(voicesFolder, "*.wav"))
+        {
+            if (TryGetWavSampleRate(wav) is null or 24000)
+            {
+                continue; // unparseable header (leave for synth-time handling) or already correct
+            }
+
+            var temp = wav + ".24k.wav";
+            var consumed = false;
+            try
+            {
+                var process = FfmpegGenerator.ConvertToMono24kHzWav(wav, temp);
+                if (!process.Start())
+                {
+                    continue;
+                }
+
+                process.WaitForExit();
+                if (File.Exists(temp) && new FileInfo(temp).Length > 0)
+                {
+                    File.Delete(wav);
+                    File.Move(temp, wav);
+                    consumed = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Se.LogError(ex, $"Qwen3 TTS (CrispASR): failed to resample voice '{wav}' to 24 kHz");
+            }
+            finally
+            {
+                if (!consumed && File.Exists(temp))
+                {
+                    try { File.Delete(temp); } catch { /* leave it; not worth retrying */ }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Reads the sample rate (Hz) from a PCM WAV header by walking RIFF chunks to the <c>fmt </c>
+    /// chunk, or null if the file is not a WAV we can parse. Cheap header-only read — no decode.
+    /// </summary>
+    private static int? TryGetWavSampleRate(string fileName)
+    {
+        try
+        {
+            using var fs = File.OpenRead(fileName);
+            using var br = new BinaryReader(fs);
+            if (fs.Length < 12 ||
+                Encoding.ASCII.GetString(br.ReadBytes(4)) != "RIFF")
+            {
+                return null;
+            }
+
+            br.ReadInt32(); // overall RIFF size
+            if (Encoding.ASCII.GetString(br.ReadBytes(4)) != "WAVE")
+            {
+                return null;
+            }
+
+            while (fs.Position + 8 <= fs.Length)
+            {
+                var chunkId = Encoding.ASCII.GetString(br.ReadBytes(4));
+                var chunkSize = br.ReadInt32();
+                if (chunkId == "fmt ")
+                {
+                    br.ReadInt16(); // audio format
+                    br.ReadInt16(); // channels
+                    return br.ReadInt32(); // sample rate (little-endian)
+                }
+
+                if (chunkSize < 0 || fs.Position + chunkSize > fs.Length)
+                {
+                    return null;
+                }
+
+                fs.Position += chunkSize + (chunkSize & 1); // chunks are word-aligned
+            }
+        }
+        catch
+        {
+            return null;
+        }
+
+        return null;
     }
 
     /// <summary>
