@@ -1,4 +1,4 @@
-MLX Whisper Mac runs Apple's "mlx-whisper" Python library via python3.
+MLX Whisper runs Apple's "mlx-whisper" Python library via python3.
 
 Requirements
 - An Apple Silicon Mac (M1 or newer).
