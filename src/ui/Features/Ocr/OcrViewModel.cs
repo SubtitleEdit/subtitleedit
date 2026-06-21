@@ -2214,6 +2214,7 @@ public partial class OcrViewModel : ObservableObject
             }
         }
 
+        var uiStopwatch = System.Diagnostics.Stopwatch.StartNew();
         var ocrProgress = new Progress<PaddleOcrBatchProgress>(p =>
         {
             if (cancellationToken.IsCancellationRequested)
@@ -2239,7 +2240,10 @@ public partial class OcrViewModel : ObservableObject
                 }
 
                 item.Text = p.Text;
+                var fixStart = uiStopwatch.Elapsed;
                 OcrFixLineAndSetText(number, item);
+                Se.WriteToolsLog(
+                    $"Paddle OCR UI line {currentItemNumber} (index {number}) shown at {uiStopwatch.Elapsed.TotalSeconds:F1}s, fix took {(uiStopwatch.Elapsed - fixStart).TotalMilliseconds:F0} ms");
             }
         });
 
@@ -2248,6 +2252,11 @@ public partial class OcrViewModel : ObservableObject
             try
             {
                 await ocrEngine.OcrBatch(engineType, batchImages, language, mode, ocrProgress, cancellationToken);
+
+                if (!string.IsNullOrEmpty(ocrEngine.Error) && !cancellationToken.IsCancellationRequested)
+                {
+                    ShowPaddleOcrError(engineType, ocrEngine.Error);
+                }
             }
             catch (Exception exception)
             {
@@ -2257,6 +2266,38 @@ public partial class OcrViewModel : ObservableObject
             {
                 IsOcrRunning = false;
             }
+        });
+    }
+
+    private void ShowPaddleOcrError(OcrEngineType engineType, string error)
+    {
+        var message = error;
+
+        // The "paddleocr" pip package needs the "paddlepaddle" backend installed separately.
+        if (engineType == OcrEngineType.PaddleOcrPython &&
+            error.Contains("No module named 'paddle'", StringComparison.OrdinalIgnoreCase))
+        {
+            message = "Paddle OCR Python is missing the \"paddlepaddle\" backend." + Environment.NewLine +
+                      Environment.NewLine +
+                      "Install it into the SAME Python that has \"paddleocr\":" + Environment.NewLine +
+                      "    python -m pip install --upgrade paddlepaddle" + Environment.NewLine +
+                      Environment.NewLine +
+                      "Note: paddlepaddle may not have a wheel for the very latest Python yet" + Environment.NewLine +
+                      "(e.g. 3.14) - if the install fails, use a Python 3.11/3.12/3.13 environment." + Environment.NewLine +
+                      "For a CUDA GPU build, see https://www.paddlepaddle.org.cn/en/install" + Environment.NewLine +
+                      Environment.NewLine +
+                      "Details:" + Environment.NewLine +
+                      error;
+        }
+
+        Dispatcher.UIThread.Post(async void () =>
+        {
+            await MessageBox.Show(
+                Window!,
+                Se.Language.General.Error,
+                message,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
         });
     }
 
