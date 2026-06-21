@@ -555,6 +555,18 @@ public class ChatterboxTtsCpp : ITtsEngine
                             + "Delete them and try again so they re-download. Original output: " + tail
                             + LaunchCmdSuffix(exitedLaunchCommand));
                     }
+                    if (LooksLikeChatterboxTurboTokenizerMismatch(tail))
+                    {
+                        throw new InvalidOperationException(
+                            "Chatterbox TTS \"Turbo\" is not compatible with this version of CrispASR. "
+                            + "The upstream chatterbox-turbo model embeds a 50257-token tokenizer but "
+                            + "declares a text vocab size of 50276, and CrispASR 0.8.0+ rejects the "
+                            + "mismatch. Switch to the \"Base\" Chatterbox model, which works. Fixing "
+                            + "Turbo needs an upstream re-converted GGUF — see "
+                            + "https://github.com/CrispStrobe/CrispASR/issues."
+                            + Environment.NewLine + Environment.NewLine + tail
+                            + LaunchCmdSuffix(exitedLaunchCommand));
+                    }
                     if (LooksLikeChatterboxTurboStartupCrash(modelKey, tail))
                     {
                         throw new InvalidOperationException(
@@ -619,6 +631,22 @@ public class ChatterboxTtsCpp : ITtsEngine
         return output.Contains("required tensor", StringComparison.Ordinal)
             || output.Contains("failed to bind", StringComparison.Ordinal)
             || output.Contains("ggml_uncaught_exception", StringComparison.Ordinal);
+    }
+
+    private static bool LooksLikeChatterboxTurboTokenizerMismatch(string output)
+    {
+        // CrispASR 0.8.0 added a strict tokenizer/vocab consistency check. The upstream
+        // chatterbox-turbo GGUF (cstr/chatterbox-turbo-GGUF) embeds a 50257-token GPT-2
+        // tokenizer but declares text_vocab_size=50276, so 0.8.0 refuses to load it:
+        //   chatterbox: tokenizer/model vocab mismatch: tokenizer has 50257 tokens,
+        //               T3 text_vocab_size=50276. Re-convert with the tokenizer paired ...
+        //   crispasr[chatterbox]: failed to load T3 model '...-turbo-t3-...gguf'
+        // 0.7.x didn't validate this, so the same file loaded (silently mismatched). The
+        // Base model is internally consistent (704 == 704) and is unaffected, so this is
+        // always a "use Base" situation until the turbo GGUF is re-converted upstream.
+        return output.Contains("tokenizer/model vocab mismatch", StringComparison.Ordinal)
+            || (output.Contains("text_vocab_size", StringComparison.Ordinal)
+                && output.Contains("Re-convert with the tokenizer", StringComparison.Ordinal));
     }
 
     private static bool LooksLikeChatterboxTurboStartupCrash(string modelKey, string output)
