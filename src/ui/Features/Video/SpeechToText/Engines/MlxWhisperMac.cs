@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 /// </summary>
 public class MlxWhisperMac : ISpeechToTextEngine
 {
-    public static string StaticName => "MLX Whisper Mac";
+    public static string StaticName => "MLX Whisper";
     public string Name => StaticName;
     public string Choice => WhisperChoice.MlxWhisperMac;
     public string Url => "https://github.com/ml-explore/mlx-examples/tree/main/whisper";
@@ -278,7 +278,7 @@ public class MlxWhisperMac : ISpeechToTextEngine
         }
         catch
         {
-            return "MLX Whisper Mac runs Apple's \"mlx-whisper\" Python library via python3.\n\n" +
+            return "MLX Whisper runs Apple's \"mlx-whisper\" Python library via python3.\n\n" +
                    "Install it with: pip3 install mlx-whisper\n\n" +
                    "Requires an Apple Silicon Mac. MLX runs Whisper on the GPU / Neural Engine, so it is\n" +
                    "typically much faster than the CPU-only Faster Whisper Mac engine.\n\n" +
