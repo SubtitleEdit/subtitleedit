@@ -198,6 +198,14 @@ public partial class SpeechToTextViewModel : ObservableObject
             Engines.Add(new WhisperEngineCTranslate2());
         }
 
+        // MLX Whisper runs Whisper on the Apple GPU / Neural Engine and is arm64-only, so offer it
+        // only on Apple Silicon.
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) &&
+            RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+        {
+            Engines.Add(new MlxWhisperMac());
+        }
+
         Engines.Add(new WhisperEngineOpenAi());
 
         // Add OpenAI Compatible STT engine (available on all platforms)
@@ -2440,6 +2448,16 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             if (!engine.IsEngineInstalled())
             {
+                if (engine is MlxWhisperMac)
+                {
+                    // pip-managed engine - Subtitle Edit cannot download it.
+                    await MessageBox.Show(
+                        Window!,
+                        $"{engine.Name} not found",
+                        "mlx-whisper not found - install it with: pip3 install mlx-whisper");
+                    return;
+                }
+
                 if (engine is ICrispAsrEngine && Configuration.IsRunningOnWindows)
                 {
                     var answer = await MessageBox.Show(
@@ -3212,6 +3230,71 @@ public partial class SpeechToTextViewModel : ObservableObject
             return p;
         }
 
+        if (engine is MlxWhisperMac mlxWhisperMac)
+        {
+            // mlx-whisper is a library, not a CLI, so we run a bundled helper script via python3.
+            // It writes "<audio-basename>.srt" into the audio's folder, which GetResultFromSrt then
+            // picks up. MLX runs Whisper on the Apple GPU / Neural Engine.
+            var python = mlxWhisperMac.GetExecutable();
+            var scriptPath = mlxWhisperMac.GetTranscribeScript();
+            var outputDir = Path.GetDirectoryName(waveFileName) ?? string.Empty;
+
+            var mlxLanguage = language;
+            if (mlxLanguage.Equals("english", StringComparison.OrdinalIgnoreCase))
+            {
+                mlxLanguage = "en";
+            }
+
+            var languagePart = !string.IsNullOrWhiteSpace(mlxLanguage) &&
+                               !mlxLanguage.Equals("auto", StringComparison.OrdinalIgnoreCase)
+                ? $" --language {mlxLanguage}"
+                : string.Empty;
+            var taskPart = translate ? " --task translate" : string.Empty;
+            var mlxExtraArgs = engine.CommandLineParameter;
+            var extraPart = string.IsNullOrWhiteSpace(mlxExtraArgs) ? string.Empty : " " + mlxExtraArgs.Trim();
+
+            var mlxParameters =
+                $"\"{scriptPath}\" --audio \"{waveFileName}\" --model {mlxWhisperMac.GetModelForCmdLine(model)} " +
+                $"--output-format srt --output-dir \"{outputDir}\"{languagePart}{taskPart}{extraPart}";
+
+            Se.WriteToolsLog($"{python} {mlxParameters}");
+
+            var mlxProcess = new Process
+            {
+                StartInfo = new ProcessStartInfo(python, mlxParameters)
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                }
+            };
+
+            mlxProcess.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
+            mlxProcess.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
+
+            if (dataReceivedHandler != null)
+            {
+                mlxProcess.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+                mlxProcess.StartInfo.StandardErrorEncoding = Encoding.UTF8;
+                mlxProcess.StartInfo.RedirectStandardOutput = true;
+                mlxProcess.StartInfo.RedirectStandardError = true;
+                mlxProcess.OutputDataReceived += dataReceivedHandler;
+                mlxProcess.ErrorDataReceived += dataReceivedHandler;
+            }
+
+#pragma warning disable CA1416
+            mlxProcess.Start();
+#pragma warning restore CA1416
+
+            if (dataReceivedHandler != null)
+            {
+                mlxProcess.BeginOutputReadLine();
+                mlxProcess.BeginErrorReadLine();
+            }
+
+            return mlxProcess;
+        }
+
         var settings = Se.Settings.Tools.AudioToText;
         var args = engine.CommandLineParameter;
         var cppVulkanDevice = string.Empty;
@@ -3786,6 +3869,14 @@ public partial class SpeechToTextViewModel : ObservableObject
         // It opens a dialog with the installed backend, status and Re-download — which is
         // also the answer to issue #11022 (switch backend after the initial install).
         IsEngineSettingsButtonVisible = canDownload && isInstalled && IsSettingsCapable(engine);
+
+        if (engine is MlxWhisperMac && !isInstalled)
+        {
+            // pip-managed engine - Subtitle Edit cannot download it, so show install help instead.
+            EngineDownloadHint = "mlx-whisper not found - install it with: pip3 install mlx-whisper";
+            IsEngineDownloadButtonVisible = false;
+            return;
+        }
 
         if (!canDownload || isInstalled)
         {
