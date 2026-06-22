@@ -1248,7 +1248,7 @@ public partial class BatchConvertViewModel : ObservableObject
 
         var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
         {
-            vm.Initialize(ssaStyles.Select(p => new StyleDisplay(p)).ToList(), Se.Language.General.Ok, false);
+            vm.Initialize(Se.Language.General.Styles, ssaStyles.Select(p => new StyleDisplay(p)).ToList(), Se.Language.General.Ok, false);
         });
 
         if (!result.OkPressed || result.SelectedStyle == null)

@@ -52,10 +52,11 @@ public partial class AssaStylePickerViewModel : ObservableObject
         });
     }
 
-    public void Initialize(List<StyleDisplay> styles, string buttonAcceptText, bool showUsageCount)
+    public void Initialize(string title, List<StyleDisplay> styles, string buttonAcceptText, bool showUsageCount)
     {
+        Title = title;
         Styles.AddRange(styles);
-        
+
         if (Styles.Count > 0)
         {
             SelectedStyle = Styles[0];

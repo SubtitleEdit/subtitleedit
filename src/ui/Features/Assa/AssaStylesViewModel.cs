@@ -142,7 +142,7 @@ public partial class AssaStylesViewModel : ObservableObject
 
         var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
         {
-            vm.Initialize(ssaStyles.Select(p => new StyleDisplay(p) { IsSelected = true, Name = MakeUniqueName(p.Name, FileStyles) }).ToList(), Se.Language.General.Import, false);
+            vm.Initialize(Se.Language.General.Import, ssaStyles.Select(p => new StyleDisplay(p) { IsSelected = true, Name = MakeUniqueName(p.Name, FileStyles) }).ToList(), Se.Language.General.Import, false);
         });
 
         var selectedStyles = result.Styles.Where(p => p.IsSelected).ToList();
@@ -359,7 +359,7 @@ public partial class AssaStylesViewModel : ObservableObject
         var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
         {
             var styles = ssaStyles.Select(p => new StyleDisplay(p)).ToList();
-            vm.Initialize(styles, Se.Language.General.Ok, true);
+            vm.Initialize(Se.Language.Assa.TakeUsagesFromDotDotDot, styles, Se.Language.General.Ok, true);
         });
 
         var selectedStyles = result.Styles.Where(p => p.IsSelected).ToList();
@@ -399,7 +399,7 @@ public partial class AssaStylesViewModel : ObservableObject
 
         var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
         {
-            vm.Initialize(ssaStyles.Select(p => new StyleDisplay(p) { IsSelected = true, Name = MakeUniqueName(p.Name, StorageStyles) }).ToList(), Se.Language.General.Import, false);
+            vm.Initialize(Se.Language.General.Import, ssaStyles.Select(p => new StyleDisplay(p) { IsSelected = true, Name = MakeUniqueName(p.Name, StorageStyles) }).ToList(), Se.Language.General.Import, false);
         });
 
         var selectedStyles = result.Styles.Where(p => p.IsSelected).ToList();
