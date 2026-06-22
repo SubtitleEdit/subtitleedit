@@ -10,13 +10,13 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 /// <summary>
 /// Cached <c>crispasr --version</c> probe. Used by the speech-to-text engine settings
 /// dialog and by Chatterbox / Qwen3 (CrispASR) TTS settings to show the user which
-/// CrispASR runtime they have installed. <c>crispasr --version</c> on v0.8.0 prints
+/// CrispASR runtime they have installed. <c>crispasr --version</c> on v0.8.1 prints
 /// something like:
 ///
 ///   <c>=== build info ===</c>
-///   <c>  version       : 0.8.0</c>
-///   <c>  git sha       : a2c997fd</c>
-///   <c>  git date      : 2026-06-21T15:59:52Z</c>
+///   <c>  version       : 0.8.1</c>
+///   <c>  git sha       : 25b8e568</c>
+///   <c>  git date      : 2026-06-21T23:16:50Z</c>
 ///   <c>  build type    : Release</c>
 ///   <c>  ggml backends : cpu,metal,blas</c>
 ///   <c>  ...</c>
