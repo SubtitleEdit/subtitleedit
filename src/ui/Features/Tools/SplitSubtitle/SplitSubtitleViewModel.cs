@@ -88,6 +88,19 @@ public partial class SplitSubtitleViewModel : ObservableObject
         PartsMax = subtitle.Paragraphs.Count;
         _subtitleFileName = fileName;
         _subtitle = subtitle;
+
+        // Default the output to the source subtitle's own folder - that's where users splitting a
+        // file for translation expect the parts to land. Falls back to the loaded/Desktop folder
+        // for untitled subtitles.
+        if (!string.IsNullOrEmpty(fileName))
+        {
+            var folder = Path.GetDirectoryName(fileName);
+            if (!string.IsNullOrEmpty(folder) && Directory.Exists(folder))
+            {
+                OutputFolder = folder;
+            }
+        }
+
         _timerUpdatePreview.Start();
         SetDirty();
     }
@@ -173,12 +186,11 @@ public partial class SplitSubtitleViewModel : ObservableObject
 
         SaveSettings();
 
-        // Save parts
-        foreach (var part in _parts)
+        // Save parts. _parts and SplitItems are built together in UpdateSplit, so they stay aligned.
+        for (var i = 0; i < _parts.Count; i++)
         {
-            var text = part.ToText(SelectedSubtitleFormat);
-            var splitItem = SplitItems[_parts.IndexOf(part)];
-            var fileName = Path.Combine(OutputFolder, splitItem.FileName);
+            var text = _parts[i].ToText(SelectedSubtitleFormat);
+            var fileName = Path.Combine(OutputFolder, SplitItems[i].FileName);
             await File.WriteAllTextAsync(fileName, text, SelectedEncoding.Encoding ?? Encoding.UTF8);
         }
 
@@ -247,129 +259,34 @@ public partial class SplitSubtitleViewModel : ObservableObject
             NumberOfEqualParts = 1;
         }
 
+        var mode = SplitByCharacters
+            ? SubtitleSplitter.SplitMode.Characters
+            : SplitByTime
+                ? SubtitleSplitter.SplitMode.Time
+                : SubtitleSplitter.SplitMode.Lines;
+
+        // Build the parts and the preview rows from the same source, so the displayed part count
+        // always matches the number of files written on OK.
+        _parts = SubtitleSplitter.Split(_subtitle, NumberOfEqualParts, mode);
+
         Dispatcher.UIThread.Post(() =>
         {
             SplitItems.Clear();
-            var startNumber = 0;
-            if (SplitByLines)
+            for (var i = 0; i < _parts.Count; i++)
             {
-                var partSize = (int)(_subtitle.Paragraphs.Count / NumberOfEqualParts);
-                for (var i = 0; i < NumberOfEqualParts; i++)
+                var part = _parts[i];
+                var size = 0;
+                foreach (var p in part.Paragraphs)
                 {
-                    var noOfLines = partSize;
-                    if (i == NumberOfEqualParts - 1)
-                    {
-                        noOfLines = (int)(_subtitle.Paragraphs.Count - (NumberOfEqualParts - 1) * partSize);
-                    }
-
-                    var temp = new Subtitle { Header = _subtitle.Header };
-                    var size = 0;
-                    for (var number = 0; number < noOfLines; number++)
-                    {
-                        var p = _subtitle.Paragraphs[startNumber + number];
-                        temp.Paragraphs.Add(new Paragraph(p));
-                        size += HtmlUtil.RemoveHtmlTags(p.Text, true).Length;
-                    }
-                    startNumber += noOfLines;
-                    _parts.Add(temp);
-
-                    var item = new SplitDisplayItem()
-                    {
-                        Lines = noOfLines,
-                        Characters = size,
-                        FileName = fileNameNoExt + ".Part" + (i + 1) + format.Extension
-                    };
-                    SplitItems.Add(item);
-                }
-            }
-            else if (SplitByCharacters)
-            {
-                var totalNumberOfCharacters = 0;
-                foreach (var p in _subtitle.Paragraphs)
-                {
-                    totalNumberOfCharacters += HtmlUtil.RemoveHtmlTags(p.Text, true).Length;
+                    size += HtmlUtil.RemoveHtmlTags(p.Text, true).Length;
                 }
 
-                var partSize = (int)(totalNumberOfCharacters / NumberOfEqualParts);
-                var nextLimit = partSize;
-                var currentSize = 0;
-                var temp = new Subtitle { Header = _subtitle.Header };
-                for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
+                SplitItems.Add(new SplitDisplayItem()
                 {
-                    var p = _subtitle.Paragraphs[i];
-                    var size = HtmlUtil.RemoveHtmlTags(p.Text, true).Length;
-                    if (currentSize + size > nextLimit + 4 && _parts.Count < NumberOfEqualParts - 1)
-                    {
-                        _parts.Add(temp);
-
-                        var item = new SplitDisplayItem()
-                        {
-                            Lines = temp.Paragraphs.Count,
-                            Characters = currentSize,
-                            FileName = fileNameNoExt + ".Part" + (SplitItems.Count + 1) + format.Extension
-                        };
-                        SplitItems.Add(item);
-
-                        currentSize = size;
-                        temp = new Subtitle { Header = _subtitle.Header };
-                        temp.Paragraphs.Add(new Paragraph(p));
-                    }
-                    else
-                    {
-                        currentSize += size;
-                        temp.Paragraphs.Add(new Paragraph(p));
-                    }
-                }
-
-                var lastItem = new SplitDisplayItem()
-                {
-                    Lines = temp.Paragraphs.Count,
-                    Characters = currentSize,
-                    FileName = fileNameNoExt + ".Part" + (SplitItems.Count + 1) + format.Extension
-                };
-                SplitItems.Add(lastItem);
-            }
-            else if (SplitByTime)
-            {
-                var startMs = _subtitle.Paragraphs[0].StartTime.TotalMilliseconds;
-                var endMs = _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds;
-                var partSize = (endMs - startMs) / (double)NumberOfEqualParts;
-                var nextLimit = startMs + partSize;
-                var currentSize = 0;
-                var temp = new Subtitle { Header = _subtitle.Header };
-                for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
-                {
-                    var p = _subtitle.Paragraphs[i];
-                    var size = HtmlUtil.RemoveHtmlTags(p.Text, true).Replace("\r\n", "\n").Length;
-                    if (p.StartTime.TotalMilliseconds > nextLimit - 10 && _parts.Count < NumberOfEqualParts - 1)
-                    {
-                        _parts.Add(temp);
-                        var item = new SplitDisplayItem()
-                        {
-                            Lines = temp.Paragraphs.Count,
-                            Characters = currentSize,
-                            FileName = fileNameNoExt + ".Part" + (SplitItems.Count + 1) + format.Extension
-                        };
-                        SplitItems.Add(item);
-                        temp = new Subtitle { Header = _subtitle.Header };
-                        temp.Paragraphs.Add(new Paragraph(p));
-                        nextLimit += partSize;
-                        currentSize = 0;
-                    }
-                    else
-                    {
-                        currentSize += size;
-                        temp.Paragraphs.Add(new Paragraph(p));
-                    }
-                }
-
-                var lastItem = new SplitDisplayItem()
-                {
-                    Lines = temp.Paragraphs.Count,
-                    Characters = currentSize,
-                    FileName = fileNameNoExt + ".Part" + (SplitItems.Count + 1) + format.Extension
-                };
-                SplitItems.Add(lastItem);
+                    Lines = part.Paragraphs.Count,
+                    Characters = size,
+                    FileName = fileNameNoExt + ".Part" + (i + 1) + format.Extension
+                });
             }
         });
     }
