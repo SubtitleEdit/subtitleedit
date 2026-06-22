@@ -31,17 +31,17 @@ public class NetflixCheckTextForHiUseBrackets : INetflixQualityChecker
             {
                 newText = "[" + newText.Substring(1, newText.Length - 2) + "]";
             }
-            else if (newText.StartsWith("{", StringComparison.Ordinal) && newText.EndsWith("}", StringComparison.Ordinal))
+            else if (newText.StartsWith("{", StringComparison.Ordinal) && newText.EndsWith("}", StringComparison.Ordinal) && !IsAssaOverride(newText))
             {
                 newText = "[" + newText.Substring(1, newText.Length - 2) + "]";
             }
             else if (arr.Count == 2 && arr[0].StartsWith("-", StringComparison.Ordinal) && arr[1].StartsWith("-", StringComparison.Ordinal))
             {
-                if ((arr[0].StartsWith("-(", StringComparison.Ordinal) && arr[0].EndsWith(")", StringComparison.Ordinal)) || (arr[0].StartsWith("-{", StringComparison.Ordinal) && arr[0].EndsWith("}", StringComparison.Ordinal)))
+                if ((arr[0].StartsWith("-(", StringComparison.Ordinal) && arr[0].EndsWith(")", StringComparison.Ordinal)) || (arr[0].StartsWith("-{", StringComparison.Ordinal) && arr[0].EndsWith("}", StringComparison.Ordinal) && !IsAssaOverride(arr[0].Substring(1))))
                 {
                     arr[0] = "-[" + newText.Substring(2, newText.Length - 3) + "]";
                 }
-                if ((arr[1].StartsWith("-(", StringComparison.Ordinal) && arr[1].EndsWith(")", StringComparison.Ordinal)) || (arr[1].StartsWith("-{", StringComparison.Ordinal) && arr[1].EndsWith("}", StringComparison.Ordinal)))
+                if ((arr[1].StartsWith("-(", StringComparison.Ordinal) && arr[1].EndsWith(")", StringComparison.Ordinal)) || (arr[1].StartsWith("-{", StringComparison.Ordinal) && arr[1].EndsWith("}", StringComparison.Ordinal) && !IsAssaOverride(arr[1].Substring(1))))
                 {
                     arr[1] = "-[" + arr[1].Substring(2, arr[1].Length - 3) + "]";
                 }
@@ -57,4 +57,10 @@ public class NetflixCheckTextForHiUseBrackets : INetflixQualityChecker
         }
     }
 
+    /// <summary>
+    /// True when the braced text is an ASS/SSA override block (e.g. <c>{\i1\a6}...</c>) rather
+    /// than a hearing-impaired speaker ID / sound effect in braces. Converting such a block to
+    /// square brackets would corrupt the override codes (issue #11720), so it must be skipped.
+    /// </summary>
+    private static bool IsAssaOverride(string text) => text.StartsWith("{\\", StringComparison.Ordinal);
 }
