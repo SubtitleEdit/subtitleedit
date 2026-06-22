@@ -2115,15 +2115,73 @@ public partial class SpeechToTextViewModel : ObservableObject
             crispVariant = linuxAnswer;
         }
 
+        var qwen3UseVulkan = false;
+        if (engine is Qwen3AsrCppEngine && Qwen3AsrCppDownloadService.IsVulkanBuildAvailable())
+        {
+            var pick = await PromptQwen3AsrGpuAsync(engine.Name);
+            if (pick == null)
+            {
+                return;
+            }
+
+            qwen3UseVulkan = pick.Value;
+        }
+
         await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
             Window, viewModel =>
             {
                 viewModel.Engine = engine;
                 viewModel.CrispAsrWindowsVariant = crispVariant;
+                viewModel.Qwen3AsrUseVulkan = qwen3UseVulkan;
                 viewModel.StartDownload();
             });
 
         RefreshEngineCombo?.Invoke();
+    }
+
+    /// <summary>
+    /// Qwen3 ASR build prompt (win64 / linux-x64, where a Vulkan build exists): CPU vs GPU (Vulkan).
+    /// Returns true for the Vulkan build, false for CPU, or null when the user cancels.
+    /// </summary>
+    private async Task<bool?> PromptQwen3AsrGpuAsync(string engineName)
+    {
+        var answer = await MessageBox.Show(
+            Window!,
+            $"Download {engineName}?",
+            $"{Environment.NewLine}\"{engineName}\" requires downloading the engine.{Environment.NewLine}{Environment.NewLine}Select a version to download:",
+            MessageBoxButtons.Cancel,
+            MessageBoxIcon.Question,
+            "CPU",
+            "GPU (Vulkan)");
+
+        if (answer == MessageBoxResult.None || answer == MessageBoxResult.Cancel)
+        {
+            return null;
+        }
+
+        var useVulkan = answer == MessageBoxResult.Custom2;
+        if (useVulkan && !VulkanHelper.IsInstalled())
+        {
+            var vulkanAnswer = await MessageBox.Show(
+                Window!,
+                "Vulkan may be required",
+                $"The GPU (Vulkan) build needs a Vulkan-capable GPU and runtime.{Environment.NewLine}{Environment.NewLine}You can get the Vulkan SDK from:{Environment.NewLine}https://vulkan.lunarg.com/sdk/home{Environment.NewLine}{Environment.NewLine}Continue with the GPU download?",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+
+            if (vulkanAnswer == MessageBoxResult.No)
+            {
+                UiUtil.OpenUrl("https://vulkan.lunarg.com/sdk/home");
+                return null;
+            }
+
+            if (vulkanAnswer != MessageBoxResult.Yes)
+            {
+                return null;
+            }
+        }
+
+        return useVulkan;
     }
 
     /// <summary>
@@ -2564,22 +2622,38 @@ public partial class SpeechToTextViewModel : ObservableObject
                 }
                 else
                 {
-                    var answer = await MessageBox.Show(
-                        Window!,
-                        $"Download {engine.Name}?",
-                        $"Download and use {engine.Name}?",
-                        MessageBoxButtons.YesNoCancel,
-                        MessageBoxIcon.Question);
-
-                    if (answer != MessageBoxResult.Yes)
+                    var qwen3UseVulkan = false;
+                    if (engine is Qwen3AsrCppEngine && Qwen3AsrCppDownloadService.IsVulkanBuildAvailable())
                     {
-                        return;
+                        // Qwen3 ASR has a Vulkan (GPU) build on win64/linux-x64 — let the user choose.
+                        var pick = await PromptQwen3AsrGpuAsync(engine.Name);
+                        if (pick == null)
+                        {
+                            return;
+                        }
+
+                        qwen3UseVulkan = pick.Value;
+                    }
+                    else
+                    {
+                        var answer = await MessageBox.Show(
+                            Window!,
+                            $"Download {engine.Name}?",
+                            $"Download and use {engine.Name}?",
+                            MessageBoxButtons.YesNoCancel,
+                            MessageBoxIcon.Question);
+
+                        if (answer != MessageBoxResult.Yes)
+                        {
+                            return;
+                        }
                     }
 
                     var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
                         Window!, viewModel =>
                         {
                             viewModel.Engine = engine;
+                            viewModel.Qwen3AsrUseVulkan = qwen3UseVulkan;
                             viewModel.StartDownload();
                         });
 

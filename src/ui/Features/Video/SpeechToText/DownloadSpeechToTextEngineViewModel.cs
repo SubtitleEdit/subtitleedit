@@ -40,6 +40,12 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
     /// </summary>
     public string CrispAsrWindowsVariant { get; set; } = "vulkan";
 
+    /// <summary>
+    /// When true, download the Vulkan (GPU) build of Qwen3 ASR CPP instead of the CPU build.
+    /// Only honoured on platforms that have a Vulkan build (win64, linux-x64).
+    /// </summary>
+    public bool Qwen3AsrUseVulkan { get; set; }
+
     private readonly IWhisperDownloadService _whisperDownloadService;
     private readonly IChatLlmDownloadService _chatLlmDownloadService;
     private readonly IQwen3AsrCppDownloadService _qwen3AsrCppDownloadService;
@@ -465,7 +471,7 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
         else if (Engine is Qwen3AsrCppEngine)
         {
             var dir = Engine.GetAndCreateWhisperFolder();
-            _downloadTask = _qwen3AsrCppDownloadService.DownloadEngine(_downloadStream, downloadProgress, _cancellationTokenSource.Token);
+            _downloadTask = _qwen3AsrCppDownloadService.DownloadEngine(_downloadStream, downloadProgress, _cancellationTokenSource.Token, Qwen3AsrUseVulkan);
         }
         else if (Engine is ICrispAsrEngine)
         {
