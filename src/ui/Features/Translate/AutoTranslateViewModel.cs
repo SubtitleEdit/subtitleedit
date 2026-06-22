@@ -92,6 +92,8 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private LlamaCppModelDisplay? _selectedLlamaCppModel;
     [ObservableProperty] private bool _llamaCppModelComboIsVisible;
     [ObservableProperty] private bool _llamaCppButtonsAreVisible;
+    [ObservableProperty] private bool _llamaCppRemoteToggleIsVisible;
+    [ObservableProperty] private bool _llamaCppUseRemoteServer;
     [ObservableProperty] private string _llamaCppServerButtonText = "Start server";
     [ObservableProperty] private string _llamaCppDownloadButtonText = string.Empty;
     [ObservableProperty] private string _crispAsrDownloadButtonText = string.Empty;
@@ -107,6 +109,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     private Subtitle _subtitle = new Subtitle();
     private int _translationProgressIndex;
     private bool _llamaCppUpdatePromptShown;
+    private bool _suppressLlamaCppRemoteToggle;
     private readonly IWindowService _windowService;
     private readonly IFolderHelper _folderHelper;
 
@@ -318,8 +321,18 @@ public partial class AutoTranslateViewModel : ObservableObject
             Configuration.Settings.Tools.LmStudioModel = apiModel.Trim();
         }
 
-        // llama.cpp is server-managed: the API URL is set by LlamaCppServerManager and the
-        // model is persisted via OnSelectedLlamaCppModelChanged, so nothing to save here.
+        if (engineType == typeof(LlamaCppTranslate))
+        {
+            Se.Settings.AutoTranslate.LlamaCppUseRemoteServer = LlamaCppUseRemoteServer;
+            if (LlamaCppUseRemoteServer)
+            {
+                // Remote mode: persist the user-entered endpoint.
+                Configuration.Settings.Tools.LlamaCppApiUrl = apiUrl.Trim();
+                Se.Settings.AutoTranslate.LlamaCppApiUrl = apiUrl.Trim();
+            }
+            // Local mode stays server-managed: the API URL is set by LlamaCppServerManager and the
+            // model is persisted via OnSelectedLlamaCppModelChanged, so nothing else to save here.
+        }
 
         if (engineType == typeof(OllamaTranslate))
         {
@@ -1164,10 +1177,18 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         _cancellationTokenSource = new CancellationTokenSource();
 
-        if (engineType == typeof(LlamaCppTranslate) && !await EnsureLlamaCppReady())
+        if (engineType == typeof(LlamaCppTranslate))
         {
-            IsProgressEnabled = false;
-            return false;
+            if (Se.Settings.AutoTranslate.LlamaCppUseRemoteServer)
+            {
+                // Remote server: use the configured endpoint directly, skip local server management.
+                Configuration.Settings.Tools.LlamaCppApiUrl = (ApiUrlText ?? string.Empty).Trim();
+            }
+            else if (!await EnsureLlamaCppReady())
+            {
+                IsProgressEnabled = false;
+                return false;
+            }
         }
 
         _translationInProgress = true;
@@ -1456,6 +1477,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         SelectedCrispAsrModel = null;
         LlamaCppModelComboIsVisible = false;
         LlamaCppButtonsAreVisible = false;
+        LlamaCppRemoteToggleIsVisible = false;
         LlamaCppModels.Clear();
         SelectedLlamaCppModel = null;
         ModelText = string.Empty;
@@ -1629,6 +1651,30 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         if (engineType == typeof(LlamaCppTranslate))
         {
+            // The remote toggle is always available for llama.cpp; its current value decides
+            // whether we show the local model/server controls or a plain API URL field (#11584).
+            LlamaCppRemoteToggleIsVisible = true;
+            _suppressLlamaCppRemoteToggle = true;
+            LlamaCppUseRemoteServer = Se.Settings.AutoTranslate.LlamaCppUseRemoteServer;
+            _suppressLlamaCppRemoteToggle = false;
+
+            if (LlamaCppUseRemoteServer)
+            {
+                // Remote/external server: just edit the URL (the llama.cpp server is OpenAI-compatible,
+                // same as the LM Studio engine). No local download or server management.
+                if (string.IsNullOrEmpty(Se.Settings.AutoTranslate.LlamaCppApiUrl))
+                {
+                    Se.Settings.AutoTranslate.LlamaCppApiUrl = "http://localhost:8080/v1/chat/completions";
+                }
+
+                FillUrls(new List<string>
+                {
+                    Se.Settings.AutoTranslate.LlamaCppApiUrl.TrimEnd('/'),
+                });
+
+                return;
+            }
+
             LlamaCppModelComboIsVisible = true;
             LlamaCppButtonsAreVisible = true;
             var savedModelName = Path.GetFileName(Se.Settings.AutoTranslate.LlamaCppModel ?? string.Empty);
@@ -1830,6 +1876,23 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
 
         throw new Exception($"Engine {translator.Name} not handled!");
+    }
+
+    partial void OnLlamaCppUseRemoteServerChanged(bool value)
+    {
+        // Ignore the programmatic assignment made while SetAutoTranslatorEngine builds the panel.
+        if (_suppressLlamaCppRemoteToggle)
+        {
+            return;
+        }
+
+        Se.Settings.AutoTranslate.LlamaCppUseRemoteServer = value;
+
+        // Swap the llama.cpp panel between the local model/server controls and the remote URL field.
+        if (SelectedAutoTranslator is LlamaCppTranslate)
+        {
+            SetAutoTranslatorEngine(SelectedAutoTranslator);
+        }
     }
 
     private void FillUrls(List<string> urls)
