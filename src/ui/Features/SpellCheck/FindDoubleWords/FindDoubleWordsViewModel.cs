@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Nikse.SubtitleEdit.Logic;
 using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -46,6 +47,11 @@ public partial class FindDoubleWordsViewModel : ObservableObject
         {
             e.Handled = true;
             Window?.Close();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/find-double-words");
         }
     }
 

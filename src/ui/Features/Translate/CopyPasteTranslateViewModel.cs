@@ -185,5 +185,10 @@ public partial class CopyPasteTranslateViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/copy-paste-translate");
+        }
     }
 }
