@@ -15237,27 +15237,48 @@ public partial class MainViewModel :
         return true;
     }
 
-    private async Task<bool> SaveSubtitle()
+    private async Task<bool> SaveSubtitle(bool isAutoSave = false)
     {
         if (Subtitles == null || !Subtitles.Any())
         {
-            ShowStatus(Se.Language.Main.NothingToSave);
+            if (!isAutoSave)
+            {
+                ShowStatus(Se.Language.Main.NothingToSave);
+            }
+
             return false;
         }
 
         if (string.IsNullOrEmpty(_subtitleFileName) || _converted)
         {
+            // Auto-save must never pop a "Save as" dialog - silently skip until the user picks a file.
+            if (isAutoSave)
+            {
+                return false;
+            }
+
             var result = await SaveSubtitleAs();
             return result;
         }
 
         if (_lastOpenSaveFormat == null || _lastOpenSaveFormat.Name != SelectedSubtitleFormat.Name)
         {
+            // Saving in a different format goes through "Save as"; do not trigger that automatically.
+            if (isAutoSave)
+            {
+                return false;
+            }
+
             var result = await SaveSubtitleAs();
             return result;
         }
 
-        AutoTrimWhiteSpaces();
+        // Auto-save writes exactly what is on screen. AutoTrimWhiteSpaces() mutates the grid text,
+        // which is fine for an explicit Ctrl+S but surprising for a background timer save - so skip it.
+        if (!isAutoSave)
+        {
+            AutoTrimWhiteSpaces();
+        }
 
         var text = GetUpdateSubtitle(true).ToText(SelectedSubtitleFormat);
 
@@ -15291,6 +15312,13 @@ public partial class MainViewModel :
         catch (Exception ex)
         {
             var message = string.Format(Se.Language.General.CouldNotSaveFileXErrorY, _subtitleFileName, ex.Message);
+            if (isAutoSave)
+            {
+                // Don't spam modal error dialogs on a timer; surface it in the status bar instead.
+                ShowStatus(message);
+                return false;
+            }
+
             await MessageBox.Show(Window!, Se.Language.General.Error, message, MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return false;
@@ -15304,16 +15332,25 @@ public partial class MainViewModel :
         return true;
     }
 
-    private async Task<bool> SaveSubtitleOriginal()
+    private async Task<bool> SaveSubtitleOriginal(bool isAutoSave = false)
     {
         if (Subtitles == null || !Subtitles.Any())
         {
-            ShowStatus(Se.Language.Main.NothingToSaveOriginal);
+            if (!isAutoSave)
+            {
+                ShowStatus(Se.Language.Main.NothingToSaveOriginal);
+            }
+
             return false;
         }
 
         if (string.IsNullOrEmpty(_subtitleFileNameOriginal))
         {
+            if (isAutoSave)
+            {
+                return false;
+            }
+
             return await SaveSubtitleOriginalAs();
         }
 
@@ -15338,6 +15375,12 @@ public partial class MainViewModel :
         catch (Exception ex)
         {
             var message = string.Format(Se.Language.General.CouldNotSaveFileXErrorY, _subtitleFileNameOriginal, ex.Message);
+            if (isAutoSave)
+            {
+                ShowStatus(message);
+                return false;
+            }
+
             await MessageBox.Show(Window!, Se.Language.General.Error, message, MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return false;
@@ -18865,8 +18908,14 @@ public partial class MainViewModel :
         _slowTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(400) };
         _slowTimer.Tick += (s, e) =>
         {
-            UpdateTitleStatus();
+            // GetFastHash()/GetFastHashOriginal() are O(n) over all lines. Compute them once per tick
+            // and share with both the title dirty-star and auto-save so auto-save adds no extra passes.
+            var mainHash = GetFastHash();
+            var originalHash = ShowColumnOriginalText ? GetFastHashOriginal() : 0;
+
+            UpdateTitleStatus(mainHash, originalHash);
             UpdateGaps();
+            AutoSaveTick(mainHash, originalHash);
 
             var vp = GetVideoPlayerControl();
             if (!_mpvPreviewDirty || vp == null)
@@ -18906,7 +18955,90 @@ public partial class MainViewModel :
         _slowTimer.Start();
     }
 
-    private void UpdateTitleStatus()
+    // Auto-save (saves the actual open file) state. Debounced: we only write once edits have
+    // settled so we don't hammer the disk while the user is typing.
+    //
+    // Deliberate trade-off: when enabled this writes straight back to the open file(s) on disk, so
+    // edits are persisted without an explicit Ctrl+S and there is no "discard changes?" prompt on
+    // close - the same data-loss model SE4's auto-save had. It is off by default and only ever
+    // overwrites the already-open file in its current format (never a Save-as).
+    private int _autoSaveSettleHash = -1;
+    private DateTime _autoSaveLastChangeUtc = DateTime.MinValue;
+    private bool _autoSaveInProgress;
+    private const double AutoSaveIdleSeconds = 1.5;
+
+    private async void AutoSaveTick(int mainHash, int originalHash)
+    {
+        if (!Se.Settings.General.AutoSave || _autoSaveInProgress)
+        {
+            return;
+        }
+
+        // Only auto-save real, already-named files in their current format. Anything that would
+        // open a "Save as" dialog (untitled, converted, format change) is left to the user.
+        if (IsEmpty ||
+            string.IsNullOrEmpty(_subtitleFileName) ||
+            _converted ||
+            _lastOpenSaveFormat == null ||
+            _lastOpenSaveFormat.Name != SelectedSubtitleFormat.Name)
+        {
+            return;
+        }
+
+        var originalDirty = ShowColumnOriginalText &&
+                            !string.IsNullOrEmpty(_subtitleFileNameOriginal) &&
+                            _changeSubtitleHashOriginal != originalHash;
+        var mainDirty = mainHash != _changeSubtitleHash;
+
+        var now = DateTime.UtcNow;
+        var settleHash = HashCode.Combine(mainHash, originalHash);
+        var action = AutoSaveDebounce.Decide(
+            mainDirty, originalDirty, settleHash, _autoSaveSettleHash, _autoSaveLastChangeUtc, now, AutoSaveIdleSeconds);
+
+        if (action == AutoSaveDebounce.Action.Arm)
+        {
+            // Edits are still landing - restart the idle window and wait for things to settle.
+            _autoSaveSettleHash = settleHash;
+            _autoSaveLastChangeUtc = now;
+            return;
+        }
+
+        if (action != AutoSaveDebounce.Action.Save)
+        {
+            return;
+        }
+
+        _autoSaveInProgress = true;
+        try
+        {
+            var mainSaved = mainDirty && await SaveSubtitle(isAutoSave: true);
+            var originalSaved = originalDirty && await SaveSubtitleOriginal(isAutoSave: true);
+
+            // Report the file(s) actually written, not always the main file name.
+            if (mainSaved && originalSaved)
+            {
+                ShowStatus(string.Format(Se.Language.General.SavedChangesToXAndY, _subtitleFileName, _subtitleFileNameOriginal));
+            }
+            else if (mainSaved)
+            {
+                ShowStatus(string.Format(Se.Language.General.SavedChangesToX, _subtitleFileName));
+            }
+            else if (originalSaved)
+            {
+                ShowStatus(string.Format(Se.Language.General.SavedChangesToX, _subtitleFileNameOriginal));
+            }
+        }
+        catch
+        {
+            // Auto-save runs on a timer; never let a failure bubble up as an unhandled async-void exception.
+        }
+        finally
+        {
+            _autoSaveInProgress = false;
+        }
+    }
+
+    private void UpdateTitleStatus(int mainHash, int originalHash)
     {
         var text = Se.Language.General.Untitled;
         if (!string.IsNullOrEmpty(_subtitleFileName))
@@ -18920,7 +19052,7 @@ public partial class MainViewModel :
         {
             text += " + ";
 
-            if (_changeSubtitleHashOriginal != GetFastHashOriginal())
+            if (_changeSubtitleHashOriginal != originalHash)
             {
                 text += "*";
             }
@@ -18938,7 +19070,7 @@ public partial class MainViewModel :
         }
 
         text = text + " - " + Se.Language.Title + " " + Se.Version;
-        if (_changeSubtitleHash != GetFastHash())
+        if (_changeSubtitleHash != mainHash)
         {
             text = "*" + text;
         }
