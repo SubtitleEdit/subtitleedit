@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
+using Nikse.SubtitleEdit.Logic;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -596,6 +597,11 @@ public partial class SplitBreakLongLinesViewModel : ObservableObject
         {
             e.Handled = true;
             Window?.Close();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/split-break-long-lines");
         }
     }
 

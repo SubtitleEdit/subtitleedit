@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
+using Nikse.SubtitleEdit.Logic;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -846,6 +847,11 @@ public partial class CompareViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             Close();
+        }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/compare");
         }
     }
 

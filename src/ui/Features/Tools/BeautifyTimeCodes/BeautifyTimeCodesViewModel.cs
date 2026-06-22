@@ -635,6 +635,11 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
             e.Handled = true;
             Cancel();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/beautify-time-codes");
+        }
     }
 
     public void Dispose()

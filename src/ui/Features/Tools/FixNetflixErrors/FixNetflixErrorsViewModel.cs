@@ -312,7 +312,7 @@ public partial class FixNetflixErrorsViewModel : ObservableObject
         else if (UiUtil.IsHelp(e))
         {
             e.Handled = true;
-            UiUtil.ShowHelp("features/fix-common-errors");
+            UiUtil.ShowHelp("features/netflix-errors");
         }
     }
 
