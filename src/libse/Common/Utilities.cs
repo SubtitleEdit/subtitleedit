@@ -25,6 +25,34 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         public static readonly char[] NewLineChars = { '\r', '\n' };
 
+        /// <summary>
+        /// French typography puts a space before <c>! ? : ;</c>. Inserts that space where a
+        /// letter is immediately followed by one of those marks (e.g. <c>"Quoi?"</c> -> <c>"Quoi ?"</c>).
+        /// A non-letter before the mark (digit, existing space, etc.) is left untouched, so
+        /// time codes like <c>12:30</c> are not changed.
+        /// </summary>
+        public static string AddSpaceBeforeFrenchPunctuation(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return text;
+            }
+
+            var newText = text;
+            var j = 1;
+            while (j < newText.Length)
+            {
+                if ("!?:;".Contains(newText[j]) && char.IsLetter(newText[j - 1]))
+                {
+                    newText = newText.Insert(j++, " ");
+                }
+
+                j++;
+            }
+
+            return newText;
+        }
+
         private static readonly Regex NumberSeparatorNumberRegEx = new Regex(@"\b\d+[\.:;] \d+\b", RegexOptions.Compiled);
         private static readonly Regex RegexIsNumber = new Regex("^\\d+$", RegexOptions.Compiled);
         private static readonly Regex RegexIsEpisodeNumber = new Regex("^\\d+x\\d+$", RegexOptions.Compiled);

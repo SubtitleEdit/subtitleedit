@@ -75,4 +75,28 @@ public class UtilitiesTest
 
         Assert.Equal(new SKColor(255, 0, 0), result);
     }
+
+    // French typography: a space before ! ? : ; — applied to French OCR output (issue #11702).
+    [Theory]
+    [InlineData("Quoi?", "Quoi ?")]
+    [InlineData("Bonjour!", "Bonjour !")]
+    [InlineData("Paul:", "Paul :")]
+    [InlineData("fin;", "fin ;")]
+    [InlineData("J'arrive. Tu viens?", "J'arrive. Tu viens ?")]
+    [InlineData("Quoi? Vraiment?", "Quoi ? Vraiment ?")]
+    public void AddSpaceBeforeFrenchPunctuation_InsertsSpace(string input, string expected)
+    {
+        Assert.Equal(expected, Utilities.AddSpaceBeforeFrenchPunctuation(input));
+    }
+
+    [Theory]
+    [InlineData("Déjà vu ?")]        // already spaced
+    [InlineData("12:30")]            // digit before colon (time code) — untouched
+    [InlineData("Vraiment ?!")]      // mark after a mark, not a letter — untouched
+    [InlineData("")]
+    [InlineData("Hello")]
+    public void AddSpaceBeforeFrenchPunctuation_LeavesOthersUnchanged(string input)
+    {
+        Assert.Equal(input, Utilities.AddSpaceBeforeFrenchPunctuation(input));
+    }
 }

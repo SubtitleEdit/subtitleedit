@@ -371,16 +371,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                 if (callbacks.Language == "fr") // special rules for French
                 {
-                    var newText = p.Text;
-                    var j = 1;
-                    while (j < newText.Length)
-                    {
-                        if (@"!?:;".Contains(newText[j]) && char.IsLetter(newText[j - 1]))
-                        {
-                            newText = newText.Insert(j++, " ");
-                        }
-                        j++;
-                    }
+                    var newText = Utilities.AddSpaceBeforeFrenchPunctuation(p.Text);
                     if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                     {
                         missingSpaces++;
