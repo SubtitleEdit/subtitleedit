@@ -89,7 +89,7 @@ public class SeAppearance
         SubtitleTextBoxLiveSpellCheck = false;
         SubtitleGridFormattingType = (int)SubtitleGridFormattingTypes.ShowFormatting;
         GridLinesAppearance = DataGridGridLinesVisibility.None.ToString();
-        GridAlternatingRows = false;
+        GridAlternatingRows = true;
         GridAlternatingRowColor = new Color(255, 245, 245, 245).FromColorToHex();
         GridAlternatingRowColorDark = new Color(255, 45, 45, 45).FromColorToHex();
         DarkModeBackgroundColor = new Color(255, 33, 33, 33).FromColorToHex();

@@ -124,7 +124,7 @@ public static partial class InitListViewAndEditBox
         var booleanToGridLengthConverter = new BooleanToGridLengthConverter();
         var booleanAndConverter = BooleanAndConverter.Instance;
 
-        // Optional alternating row background (hidden setting, no UI yet)
+        // Optional alternating row background (Options > Settings > Appearance)
         IBrush? alternatingRowBrush = null;
         if (Se.Settings.Appearance.GridAlternatingRows)
         {
