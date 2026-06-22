@@ -79,12 +79,15 @@ Subtitle Edit 5 adds local, downloadable auto-translate engines that run entirel
 
 See [Auto-translate](auto-translate.md) for the full engine list and workflow.
 
-## OCR and Batch Conversion
+## Batch conversion
 
-- Batch Convert can use Binary OCR and can auto-detect several nOCR/Binary OCR settings.
-- PaddleOCR, Ollama OCR, Mistral OCR, Google Lens, Google Vision, and Llama.cpp OCR are available in the OCR workflow.
+- **OCR while converting** — Batch Convert can turn image-based subtitles into text-based formats in bulk, using nOCR, Binary OCR, Tesseract, Ollama, or PaddleOCR. Language and pixels-are-space settings can be auto-detected for nOCR/Binary OCR, so converting many files with similar fonts needs far less manual setup.
+- **Local auto-translate in the queue** — the new local engines (server-managed llama.cpp / TranslateGemma and CrispASR MADLAD) can be applied directly as a batch conversion step, fully offline.
+- **More chainable functions** — including the new *Change formatting* (add/remove italic, bold, underline, etc.) alongside the existing fixes, replacements, casing, time-code, gap, merge, and split operations.
+- **Speech-to-text batch mode** — transcribe many media files at once and save the results next to the source files.
+- **Optimized MKV parsing** — reading subtitle tracks from Matroska (`.mkv`) files is significantly faster, speeding up batch jobs that extract subtitles from many video containers.
 
-See [OCR](ocr.md), [Batch Convert](batch-convert.md), and [Command Line (seconv)](../reference/command-line.md).
+See [Batch Convert](batch-convert.md), [OCR](ocr.md), and [Command Line (seconv)](../reference/command-line.md).
 
 ## ASSA Tools
 
