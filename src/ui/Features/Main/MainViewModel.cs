@@ -15239,7 +15239,12 @@ public partial class MainViewModel :
             return result;
         }
 
-        AutoTrimWhiteSpaces();
+        // Auto-save writes exactly what is on screen. AutoTrimWhiteSpaces() mutates the grid text,
+        // which is fine for an explicit Ctrl+S but surprising for a background timer save - so skip it.
+        if (!isAutoSave)
+        {
+            AutoTrimWhiteSpaces();
+        }
 
         var text = GetUpdateSubtitle(true).ToText(SelectedSubtitleFormat);
 
@@ -18860,9 +18865,14 @@ public partial class MainViewModel :
         _slowTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(400) };
         _slowTimer.Tick += (s, e) =>
         {
-            UpdateTitleStatus();
+            // GetFastHash()/GetFastHashOriginal() are O(n) over all lines. Compute them once per tick
+            // and share with both the title dirty-star and auto-save so auto-save adds no extra passes.
+            var mainHash = GetFastHash();
+            var originalHash = ShowColumnOriginalText ? GetFastHashOriginal() : 0;
+
+            UpdateTitleStatus(mainHash, originalHash);
             UpdateGaps();
-            AutoSaveTick();
+            AutoSaveTick(mainHash, originalHash);
 
             var vp = GetVideoPlayerControl();
             if (!_mpvPreviewDirty || vp == null)
@@ -18904,12 +18914,17 @@ public partial class MainViewModel :
 
     // Auto-save (saves the actual open file) state. Debounced: we only write once edits have
     // settled so we don't hammer the disk while the user is typing.
+    //
+    // Deliberate trade-off: when enabled this writes straight back to the open file(s) on disk, so
+    // edits are persisted without an explicit Ctrl+S and there is no "discard changes?" prompt on
+    // close - the same data-loss model SE4's auto-save had. It is off by default and only ever
+    // overwrites the already-open file in its current format (never a Save-as).
     private int _autoSaveSettleHash = -1;
     private DateTime _autoSaveLastChangeUtc = DateTime.MinValue;
     private bool _autoSaveInProgress;
     private const double AutoSaveIdleSeconds = 1.5;
 
-    private async void AutoSaveTick()
+    private async void AutoSaveTick(int mainHash, int originalHash)
     {
         if (!Se.Settings.General.AutoSave || _autoSaveInProgress)
         {
@@ -18927,28 +18942,25 @@ public partial class MainViewModel :
             return;
         }
 
-        var currentHash = GetFastHash();
-        var originalHash = ShowColumnOriginalText ? GetFastHashOriginal() : 0;
         var originalDirty = ShowColumnOriginalText &&
                             !string.IsNullOrEmpty(_subtitleFileNameOriginal) &&
                             _changeSubtitleHashOriginal != originalHash;
-        var mainDirty = currentHash != _changeSubtitleHash;
+        var mainDirty = mainHash != _changeSubtitleHash;
 
-        if (!mainDirty && !originalDirty)
-        {
-            return;
-        }
+        var now = DateTime.UtcNow;
+        var settleHash = HashCode.Combine(mainHash, originalHash);
+        var action = AutoSaveDebounce.Decide(
+            mainDirty, originalDirty, settleHash, _autoSaveSettleHash, _autoSaveLastChangeUtc, now, AutoSaveIdleSeconds);
 
-        // Debounce: restart the idle window whenever either column keeps changing.
-        var settleHash = HashCode.Combine(currentHash, originalHash);
-        if (settleHash != _autoSaveSettleHash)
+        if (action == AutoSaveDebounce.Action.Arm)
         {
+            // Edits are still landing - restart the idle window and wait for things to settle.
             _autoSaveSettleHash = settleHash;
-            _autoSaveLastChangeUtc = DateTime.UtcNow;
+            _autoSaveLastChangeUtc = now;
             return;
         }
 
-        if ((DateTime.UtcNow - _autoSaveLastChangeUtc).TotalSeconds < AutoSaveIdleSeconds)
+        if (action != AutoSaveDebounce.Action.Save)
         {
             return;
         }
@@ -18956,20 +18968,21 @@ public partial class MainViewModel :
         _autoSaveInProgress = true;
         try
         {
-            var saved = false;
-            if (mainDirty)
-            {
-                saved |= await SaveSubtitle(isAutoSave: true);
-            }
+            var mainSaved = mainDirty && await SaveSubtitle(isAutoSave: true);
+            var originalSaved = originalDirty && await SaveSubtitleOriginal(isAutoSave: true);
 
-            if (originalDirty)
+            // Report the file(s) actually written, not always the main file name.
+            if (mainSaved && originalSaved)
             {
-                saved |= await SaveSubtitleOriginal(isAutoSave: true);
+                ShowStatus(string.Format(Se.Language.General.SavedChangesToXAndY, _subtitleFileName, _subtitleFileNameOriginal));
             }
-
-            if (saved && !string.IsNullOrEmpty(_subtitleFileName))
+            else if (mainSaved)
             {
                 ShowStatus(string.Format(Se.Language.General.SavedChangesToX, _subtitleFileName));
+            }
+            else if (originalSaved)
+            {
+                ShowStatus(string.Format(Se.Language.General.SavedChangesToX, _subtitleFileNameOriginal));
             }
         }
         catch
@@ -18982,7 +18995,7 @@ public partial class MainViewModel :
         }
     }
 
-    private void UpdateTitleStatus()
+    private void UpdateTitleStatus(int mainHash, int originalHash)
     {
         var text = Se.Language.General.Untitled;
         if (!string.IsNullOrEmpty(_subtitleFileName))
@@ -18996,7 +19009,7 @@ public partial class MainViewModel :
         {
             text += " + ";
 
-            if (_changeSubtitleHashOriginal != GetFastHashOriginal())
+            if (_changeSubtitleHashOriginal != originalHash)
             {
                 text += "*";
             }
@@ -19014,7 +19027,7 @@ public partial class MainViewModel :
         }
 
         text = text + " - " + Se.Language.Title + " " + Se.Version;
-        if (_changeSubtitleHash != GetFastHash())
+        if (_changeSubtitleHash != mainHash)
         {
             text = "*" + text;
         }
