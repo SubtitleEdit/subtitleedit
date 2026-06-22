@@ -823,13 +823,14 @@ public partial class SpeechToTextViewModel : ObservableObject
             return;
         }
 
+        var rawJson = string.Empty;
         try
         {
-            var jsonText = File.ReadAllText(jsonPath);
+            rawJson = File.ReadAllText(jsonPath);
             // qwen3-asr-cli can write raw control chars (e.g. a literal newline) inside JSON
             // string values, which strict System.Text.Json rejects ("'0x0A' is invalid within a
             // JSON string"). Escape those so a result is still produced (issue #11717).
-            jsonText = JsonRepair.EscapeControlCharsInStrings(jsonText);
+            var jsonText = JsonRepair.EscapeControlCharsInStrings(rawJson);
             var jsonDoc = JsonDocument.Parse(jsonText);
             var words = jsonDoc.RootElement.GetProperty("words");
 
@@ -900,6 +901,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         catch (Exception ex)
         {
             Se.LogError(ex, $"Failed to read Qwen3 ASR CPP output JSON '{jsonPath}'");
+            // Persist the offending output so the failure is diagnosable — the temp .json is
+            // deleted below, so logging its raw content here is the only record (issue #11717).
+            Se.WriteToolsLog($"Qwen3 ASR CPP output JSON failed to parse ({ex.Message}):{Environment.NewLine}{rawJson}");
             Dispatcher.UIThread.Invoke<Task>(async () =>
             {
                 LogToConsole($"Speech to text ({settings.WhisperChoice}) failed: {ex.Message}{Environment.NewLine}");
