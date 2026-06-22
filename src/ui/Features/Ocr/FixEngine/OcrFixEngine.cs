@@ -32,6 +32,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
     private string[] _wordSplitList;
     private SpellCheckWordLists _spellCheckWordLists;
     private string _threeLetterIsoLanguageName;
+    private string _twoLetterIsoLanguageName = string.Empty;
     private Subtitle _subtitle;
     private List<OcrSubtitleItem> _subtitles;
     private HashSet<string> _wordSkipList = new HashSet<string>();
@@ -58,6 +59,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
     {
         _isLoaded = true;
         var twoLetterIsoLanguageName = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(threeLetterIsoLanguageName);
+        _twoLetterIsoLanguageName = twoLetterIsoLanguageName;
         _spellCheckManager.Initialize(spellCheckDictionary.DictionaryFileName, twoLetterIsoLanguageName);
 
         _fiveLetterName = Path.GetFileNameWithoutExtension(spellCheckDictionary.DictionaryFileName);
@@ -120,6 +122,15 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
     {
         var spelledOK = IsSpelledCorrect(item.Text);
         var replacedLine = _ocrFixReplaceList.FixOcrErrorViaLineReplaceList(item.Text, _subtitle, index, _spellCheckManager, wordsToIgnore, spelledOK);
+
+        // French typography wants a space before ! ? : ; — Tesseract often returns it glued to the
+        // word ("Quoi?"). Apply the same normalization Fix-Common-Errors uses, so OCR output is
+        // French-correct without a separate pass (issue #11702).
+        if (_twoLetterIsoLanguageName == "fr")
+        {
+            replacedLine = Utilities.AddSpaceBeforeFrenchPunctuation(replacedLine);
+        }
+
         return replacedLine;
     }
 
