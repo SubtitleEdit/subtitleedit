@@ -172,6 +172,8 @@ public class LanguageGeneral
     public string ExtendSelectedLinesToPreviousShotChange { get; set; }
     public string ExtendSelectedToNext { get; set; }
     public string ExtendSelectedToPrevious { get; set; }
+    public string ExtendPreviousEndToSelectedStart { get; set; }
+    public string ExtendNextStartToSelectedEnd { get; set; }
     public string ExtractingAudioClips { get; set; }
     public string ExitFullScreen { get; set; }
     public string Fade { get; set; }
@@ -898,6 +900,8 @@ public class LanguageGeneral
         ExtendSelectedLinesToPreviousShotChange = "Extend selected lines to previous shot change (or previous subtitle)";
         ExtendSelectedToNext = "Extend selected to next";
         ExtendSelectedToPrevious = "Extend selected to previous";
+        ExtendPreviousEndToSelectedStart = "Extend previous line's end to selected's start";
+        ExtendNextStartToSelectedEnd = "Extend next line's start to selected's end";
         ExtractingAudioClips = "Extracting audio clips...";
         ExitFullScreen = "Exit full screen";
         Fade = "Fade";

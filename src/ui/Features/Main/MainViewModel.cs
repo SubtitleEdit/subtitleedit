@@ -12568,9 +12568,43 @@ public partial class MainViewModel :
             return;
         }
 
-        ;
         s.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds -
                                               Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
+    private void ExtendPreviousEndToSelectedStart()
+    {
+        var s = SelectedSubtitle;
+        var idx = SelectedSubtitleIndex;
+        if (s == null || idx == null || idx == 0 || LockTimeCodes)
+        {
+            return;
+        }
+
+        var prev = Subtitles[idx.Value - 1];
+        prev.EndTime = TimeSpan.FromMilliseconds(s.StartTime.TotalMilliseconds - Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
+    private void ExtendNextStartToSelectedEnd()
+    {
+        var s = SelectedSubtitle;
+        var idx = SelectedSubtitleIndex;
+        if (s == null || idx == null || idx >= Subtitles.Count - 1 || LockTimeCodes)
+        {
+            return;
+        }
+
+        var next = Subtitles.GetOrNull(idx.Value + 1);
+        if (next == null)
+        {
+            return;
+        }
+
+        next.StartTime = TimeSpan.FromMilliseconds(s.EndTime.TotalMilliseconds + Se.Settings.General.MinimumBetweenLines.GetMilliseconds());
         _updateAudioVisualizer = true;
     }
 
