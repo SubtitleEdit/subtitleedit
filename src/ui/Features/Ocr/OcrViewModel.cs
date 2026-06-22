@@ -577,7 +577,14 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<BinaryEditWindow, BinaryEditViewModel>(Window, vm => { vm.Initialize(_sourceFileName, _ocrSubtitle); });
+        if (OcrSubtitleItems.Count > 0)
+        {
+            await _windowService.ShowDialogAsync<BinaryEditWindow, BinaryEditViewModel>(Window, vm => { vm.Initialize(OcrSubtitleItems.ToList(), _sourceFileName); });
+        }
+        else
+        {
+            await _windowService.ShowDialogAsync<BinaryEditWindow, BinaryEditViewModel>(Window, vm => { vm.Initialize(_sourceFileName, _ocrSubtitle); });
+        }
         _isCtrlDown = false;
     }
 

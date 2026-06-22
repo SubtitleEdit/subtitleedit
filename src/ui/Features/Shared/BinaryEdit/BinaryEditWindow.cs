@@ -185,6 +185,11 @@ public class BinaryEditWindow : Window
                         },
                         new MenuItem
                         {
+                            Header = Se.Language.General.ImagesWithHtmlIndex,
+                            Command = vm.ExportHtmlIndexCommand,
+                        },
+                        new MenuItem
+                        {
                             Header = Se.Language.General.ImagesWithTimeCode,
                             Command = vm.ExportImagesWithTimeCodeCommand,
                         },
