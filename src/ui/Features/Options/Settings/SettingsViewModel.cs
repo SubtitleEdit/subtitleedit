@@ -294,6 +294,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _textBoxCenterText;
     [ObservableProperty] private bool _showButtonHints;
     [ObservableProperty] private bool _gridCompactMode;
+    [ObservableProperty] private bool _gridAlternatingRows;
     [ObservableProperty] private bool _showAssaLayer;
     [ObservableProperty] private bool _showHorizontalLineAboveToolbar;
     [ObservableProperty] private ObservableCollection<GridLinesVisibilityDisplay> _gridLinesVisibilities;
@@ -303,6 +304,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _useFocusedButtonBackgroundColor;
     [ObservableProperty] private Color _focusedButtonBackgroundColor;
     [ObservableProperty] private Color _bookmarkColor;
+    [ObservableProperty] private Color _gridAlternatingRowColor;
+    [ObservableProperty] private Color _gridAlternatingRowColorDark;
     [ObservableProperty] private bool _isEditCustomContinuationStyleVisible;
     [ObservableProperty] private bool _isMpvChosen;
 
@@ -728,6 +731,7 @@ public partial class SettingsViewModel : ObservableObject
         TextBoxButtonShowRemoveFormatting = appearance.TextBoxShowButtonRemoveFormatting;
         ShowButtonHints = appearance.ShowHints;
         GridCompactMode = appearance.GridCompactMode;
+        GridAlternatingRows = appearance.GridAlternatingRows;
         ShowAssaLayer = appearance.ShowLayer;
         ShowHorizontalLineAboveToolbar = appearance.ShowHorizontalLineAboveToolbar;
         SelectedGridLinesVisibility = GridLinesVisibilities.FirstOrDefault(p => p.Type.ToString() == appearance.GridLinesAppearance) ?? GridLinesVisibilities[0];
@@ -736,6 +740,8 @@ public partial class SettingsViewModel : ObservableObject
         UseFocusedButtonBackgroundColor = appearance.UseFocusedButtonBackgroundColor;
         FocusedButtonBackgroundColor = appearance.FocusedButtonBackgroundColor.FromHexToColor();
         BookmarkColor = appearance.BookmarkColor.FromHexToColor();
+        GridAlternatingRowColor = appearance.GridAlternatingRowColor.FromHexToColor();
+        GridAlternatingRowColorDark = appearance.GridAlternatingRowColorDark.FromHexToColor();
         ShowUpDownStartTime = appearance.ShowUpDownStartTime;
         ShowUpDownEndTime = appearance.ShowUpDownEndTime;
         ShowUpDownDuration = appearance.ShowUpDownDuration;
@@ -1411,11 +1417,14 @@ public partial class SettingsViewModel : ObservableObject
         appearance.UseFocusedButtonBackgroundColor = UseFocusedButtonBackgroundColor;
         appearance.FocusedButtonBackgroundColor = FocusedButtonBackgroundColor.FromColorToHex();
         appearance.BookmarkColor = BookmarkColor.FromColorToHex();
+        appearance.GridAlternatingRowColor = GridAlternatingRowColor.FromColorToHex();
+        appearance.GridAlternatingRowColorDark = GridAlternatingRowColorDark.FromColorToHex();
         appearance.ShowUpDownStartTime = ShowUpDownStartTime;
         appearance.ShowUpDownEndTime = ShowUpDownEndTime;
         appearance.ShowUpDownDuration = ShowUpDownDuration;
         appearance.ShowUpDownLabels = ShowUpDownLabels;
         appearance.GridCompactMode = GridCompactMode;
+        appearance.GridAlternatingRows = GridAlternatingRows;
         appearance.GridLinesAppearance = SelectedGridLinesVisibility.Type.ToString();
         appearance.ShowLayer = ShowAssaLayer;
         appearance.ShowHorizontalLineAboveToolbar = ShowHorizontalLineAboveToolbar;
