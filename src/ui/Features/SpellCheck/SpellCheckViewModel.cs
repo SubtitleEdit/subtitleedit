@@ -104,6 +104,11 @@ public partial class SpellCheckViewModel : ObservableObject
 
     internal void OnDictionaryChanged()
     {
+        if (SelectedDictionary == null)
+        {
+            return;
+        }
+
         if (_spellCheckManager.WordSpellChecker != null)
         {
             if (Dictionaries.Count > 0)
@@ -116,6 +121,48 @@ public partial class SpellCheckViewModel : ObservableObject
                 }
             }
         }
+        else if (!string.IsNullOrEmpty(SelectedDictionary.DictionaryFileName))
+        {
+            // Hunspell provider: actually load the newly selected dictionary so switching
+            // dialect (e.g. British -> American) mid-session takes effect immediately.
+            // Previously this branch did nothing for Hunspell, so the spell checker kept
+            // using the dictionary it started with until the next run (issue #11731).
+            _spellCheckManager.Initialize(
+                SelectedDictionary.DictionaryFileName,
+                SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(SelectedDictionary));
+        }
+
+        ReCheckCurrentWordAfterDictionaryChange();
+    }
+
+    /// <summary>
+    /// Re-evaluates the word currently shown after the dictionary is switched mid-session.
+    /// If the word is now valid in the new dictionary the check advances to the next
+    /// misspelling; otherwise the suggestion list is refreshed for the new dictionary.
+    /// No-op until a check is underway and a flagged word is on screen.
+    /// </summary>
+    private void ReCheckCurrentWordAfterDictionaryChange()
+    {
+        if (_lastSpellCheckResult == null || SelectedParagraph == null || string.IsNullOrEmpty(WordNotFoundOriginal))
+        {
+            return;
+        }
+
+        if (_spellCheckManager.IsWordCorrect(_currentSpellCheckWord, SelectedParagraph.Text))
+        {
+            DoSpellCheck();
+            return;
+        }
+
+        var suggestions = _spellCheckManager.GetSuggestions(WordNotFoundOriginal);
+        Suggestions.Clear();
+        foreach (var suggestion in suggestions)
+        {
+            Suggestions.Add(suggestion);
+        }
+
+        AreSuggestionsAvailable = true;
+        SelectedSuggestion = suggestions.Count > 0 ? suggestions[0] : string.Empty;
     }
 
     private void LoadDictionaries()
