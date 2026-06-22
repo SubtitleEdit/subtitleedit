@@ -16,9 +16,14 @@ public class Qwen3AsrCppDownloadService : IQwen3AsrCppDownloadService
 {
     private readonly HttpClient _httpClient;
 
-    private const string WindowsUrl = "https://github.com/SubtitleEdit/support-files/releases/download/qwen3-asr-cpp-2026-3/qwen3-asr-cpp-win64.zip";
-    private const string MacArmUrl = "https://github.com/SubtitleEdit/support-files/releases/download/qwen3-asr-cpp-2026-3/qwen3-asr-cpp-mac.zip";
-    private const string LinuxUrl = "https://github.com/SubtitleEdit/support-files/releases/download/qwen3-asr-cpp-2026-3/qwen3-asr-cpp-linux.zip";
+    // Built by https://github.com/niksedk/qwen3-asr.cpp (.github/workflows/release.yml) — these
+    // are the binaries with the JSON word-truncation fix (issue #11717).
+    private const string ReleaseUrlBase = "https://github.com/niksedk/qwen3-asr.cpp/releases/download/v0.1.1/";
+    private const string WindowsUrl = ReleaseUrlBase + "qwen3-asr-cpp-win64.zip";
+    private const string MacArmUrl = ReleaseUrlBase + "qwen3-asr-cpp-mac.zip";
+    private const string MacX64Url = ReleaseUrlBase + "qwen3-asr-cpp-mac-x64.zip";
+    private const string LinuxUrl = ReleaseUrlBase + "qwen3-asr-cpp-linux.zip";
+    private const string LinuxArm64Url = ReleaseUrlBase + "qwen3-asr-cpp-linux-arm64.zip";
 
     public Qwen3AsrCppDownloadService(HttpClient httpClient)
     {
@@ -39,17 +44,12 @@ public class Qwen3AsrCppDownloadService : IQwen3AsrCppDownloadService
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
-            {
-                throw new PlatformNotSupportedException("Qwen3 ASR is not available for Linux ARM64.");
-            }
-
-            return LinuxUrl;
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? LinuxArm64Url : LinuxUrl;
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            return MacArmUrl;
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? MacArmUrl : MacX64Url;
         }
 
         throw new PlatformNotSupportedException();
