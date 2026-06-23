@@ -444,6 +444,7 @@ public class LanguageGeneral
     public string RemoveItalic { get; set; }
     public string RemoveRightToLeftUnicodeTags { get; set; }
     public string RemoveSelectedFile { get; set; }
+    public string RemoveSelectedFilesX { get; set; }
     public string RemoveStyling { get; set; }
     public string RemoveTextForHearingImpaired { get; set; }
     public string RemoveUnderline { get; set; }
@@ -1174,6 +1175,7 @@ public class LanguageGeneral
         RemoveItalic = "Remove italic";
         RemoveRightToLeftUnicodeTags = "Remove RTL Unicode tags";
         RemoveSelectedFile = "Remove selected file?";
+        RemoveSelectedFilesX = "Remove {0} selected files?";
         RemoveStyling = "Remove styling";
         RemoveTextForHearingImpaired = "Remove text for hearing impaired";
         RemoveUnderline = "Remove underline";

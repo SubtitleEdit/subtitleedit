@@ -1644,10 +1644,14 @@ public partial class BatchConvertViewModel : ObservableObject
 
         if (Se.Settings.General.PromptBeforeDelete)
         {
+            var message = selectedItems.Count > 1
+                ? string.Format(Se.Language.General.RemoveSelectedFilesX, selectedItems.Count)
+                : Se.Language.General.RemoveSelectedFile;
+
             var result = await MessageBox.Show(
                 Window,
                 Se.Language.General.Remove,
-                Se.Language.General.RemoveSelectedFile,
+                message,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
