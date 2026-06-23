@@ -852,7 +852,7 @@ public class FfmpegGenerator
             using (var canvas = new SKCanvas(skBitmap))
             {
                 UiUtil.DrawCheckerboardBackground(canvas, width, height);
-                canvas.DrawBitmap(skBitmap, 0, 0);
+                canvas.DrawBitmap(skBitmap, 0, 0, SKSamplingOptions.Default);
             }
 
             using (var resizedBitmap = ResizeBitmap(skBitmap, width, height))
@@ -887,7 +887,7 @@ public class FfmpegGenerator
             {
                 paint.IsAntialias = true;
                 var destRect = new SKRect(0, 0, width, height);
-                canvas.DrawBitmap(originalBitmap, destRect, paint);
+                canvas.DrawBitmap(originalBitmap, destRect, SKSamplingOptions.Default, paint);
             }
         }
 

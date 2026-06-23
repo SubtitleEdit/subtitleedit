@@ -625,16 +625,16 @@ public partial class MergeTwoSubtitlesViewModel : ObservableObject
                 {
                     for (var s = 1; s <= (int)shadowWidth; s++)
                     {
-                        canvas.DrawText(line, x + s, y + s, font, shadowPaint);
+                        canvas.DrawText(line, x + s, y + s, SKTextAlign.Left, font, shadowPaint);
                     }
                 }
 
                 if (outlinePaint != null)
                 {
-                    canvas.DrawText(line, x, y, font, outlinePaint);
+                    canvas.DrawText(line, x, y, SKTextAlign.Left, font, outlinePaint);
                 }
 
-                canvas.DrawText(line, x, y, font, fillPaint);
+                canvas.DrawText(line, x, y, SKTextAlign.Left, font, fillPaint);
             }
         }
         finally

@@ -66,7 +66,7 @@ public class TextSplitter
                 var lineBitmap = new SKBitmap(image.Width, lineHeight);
                 using (var canvas = new SKCanvas(lineBitmap))
                 {
-                    canvas.DrawBitmap(image, new SKRect(0, lineStart, image.Width, y), new SKRect(0, 0, image.Width, lineHeight));
+                    canvas.DrawBitmap(image, new SKRect(0, lineStart, image.Width, y), new SKRect(0, 0, image.Width, lineHeight), SKSamplingOptions.Default);
                 }
                 lines.Add(lineBitmap);
             }
@@ -131,7 +131,7 @@ public class TextSplitter
                     var letterBitmap = new SKBitmap(letterWidth + whitespaceThreshold, lineBitmap.Height);
                     using (var canvas = new SKCanvas(letterBitmap))
                     {
-                        canvas.DrawBitmap(lineBitmap, new SKRect(letterStart - whitespaceThreshold, 0, x + whitespaceThreshold, lineBitmap.Height), new SKRect(0, 0, letterWidth + whitespaceThreshold, lineBitmap.Height));
+                        canvas.DrawBitmap(lineBitmap, new SKRect(letterStart - whitespaceThreshold, 0, x + whitespaceThreshold, lineBitmap.Height), new SKRect(0, 0, letterWidth + whitespaceThreshold, lineBitmap.Height), SKSamplingOptions.Default);
                     }
 
                     // Add the letter with its original coordinates
@@ -154,7 +154,7 @@ public class TextSplitter
             var letterBitmap = new SKBitmap(letterWidth + whitespaceThreshold, lineBitmap.Height);
             using (var canvas = new SKCanvas(letterBitmap))
             {
-                canvas.DrawBitmap(lineBitmap, new SKRect(letterStart - whitespaceThreshold, 0, lineBitmap.Width, lineBitmap.Height), new SKRect(0, 0, letterWidth + whitespaceThreshold, lineBitmap.Height));
+                canvas.DrawBitmap(lineBitmap, new SKRect(letterStart - whitespaceThreshold, 0, lineBitmap.Width, lineBitmap.Height), new SKRect(0, 0, letterWidth + whitespaceThreshold, lineBitmap.Height), SKSamplingOptions.Default);
             }
 
             letters.Add(new LetterBitmap

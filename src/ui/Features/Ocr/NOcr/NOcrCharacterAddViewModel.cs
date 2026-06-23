@@ -259,7 +259,7 @@ public partial class NOcrCharacterAddViewModel : ObservableObject
         {
             var sourceRect = new SKRect(0, linesToRemove, original.Width, original.Height);
             var destRect = new SKRect(0, 0, original.Width, newHeight);
-            canvas.DrawBitmap(original, sourceRect, destRect);
+            canvas.DrawBitmap(original, sourceRect, destRect, SKSamplingOptions.Default);
         }
 
         return newBitmap;

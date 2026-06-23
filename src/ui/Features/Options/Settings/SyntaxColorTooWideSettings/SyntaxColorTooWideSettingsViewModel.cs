@@ -133,7 +133,7 @@ public partial class SyntaxColorTooWideSettingsViewModel : ObservableObject
         var metrics = skFont.Metrics;
         var textY = previewHeight / 2f - (metrics.Ascent + metrics.Descent) / 2f;
         using var textPaint = new SKPaint { Color = SKColors.White, IsAntialias = true };
-        canvas.DrawText(SampleText, textX, textY, skFont, textPaint);
+        canvas.DrawText(SampleText, textX, textY, SKTextAlign.Left, skFont, textPaint);
 
         // Green limit lines (left and right edges of safe area)
         if (greenLineX > 0)

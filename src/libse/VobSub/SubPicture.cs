@@ -415,7 +415,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             var target = new SKBitmap(rect.Width, rect.Height, source.ColorType, source.AlphaType);
             using (var canvas = new SKCanvas(target))
             {
-                canvas.DrawBitmap(source, rect, new SKRect(0, 0, rect.Width, rect.Height));
+                canvas.DrawBitmap(source, rect, new SKRect(0, 0, rect.Width, rect.Height), SKSamplingOptions.Default);
             }
 
             return target;

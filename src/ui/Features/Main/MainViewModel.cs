@@ -19805,8 +19805,7 @@ public partial class MainViewModel :
             var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
             if (selectedItems.Count > 0)
             {
-                var first = selectedItems.MinBy(p => Subtitles.IndexOf(p));
-                var firstSelectedIndex = Subtitles.IndexOf(first);
+                var firstSelectedIndex = selectedItems.Min(p => Subtitles.IndexOf(p));
                 for (var i = firstSelectedIndex; i < Subtitles.Count; i++)
                 {
                     var p = Subtitles[i];
