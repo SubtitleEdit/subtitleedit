@@ -753,6 +753,11 @@ public static partial class InitListViewAndEditBox
         insertLineMenuItem.Command = vm.InsertLineAtEndCommand;
         flyout.Items.Add(insertLineMenuItem);
 
+        var insertSubtitleFileAfterLineMenuItem = new MenuItem { Header = Se.Language.General.InsertSubtitleAfterCurrentLine, DataContext = vm };
+        insertSubtitleFileAfterLineMenuItem.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsInsertSubtitleFileAfterLineVisible)));
+        insertSubtitleFileAfterLineMenuItem.Command = vm.InsertSubtitleFileAfterThisLineCommand;
+        flyout.Items.Add(insertSubtitleFileAfterLineMenuItem);
+
         var copyOriginal = new MenuItem { Header = Se.Language.Main.CopyTextFromOriginalToCurrent, Command = vm.ColumnCopyTextFromOriginalToCurrentCommand };
         copyOriginal.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.ShowColumnOriginalText)));
 
