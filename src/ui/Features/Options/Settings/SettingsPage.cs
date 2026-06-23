@@ -602,6 +602,7 @@ public class SettingsPage : UserControl
                     Mode = BindingMode.TwoWay,
                 }
             }),
+            MakeCheckboxSetting(Se.Language.Options.Settings.SpellCheckEnglishTreatInApostropheAsIng, nameof(_vm.SpellCheckEnglishTreatInApostropheAsIng)),
             MakeCheckboxSetting(Se.Language.Options.Settings.OcrUseWordSplitList, nameof(_vm.OcrUseWordSplitList)),
             MakeCheckboxSetting(Se.Language.Options.Settings.SpeechToTextSelectedLinesPromptFirstTimeOnly, nameof(_vm.SpeechToTextSelectedLinesPromptFistTimeOnly)),
             MakeCheckboxSetting(Se.Language.Options.Settings.MultipleReplaceShowDotDotDotButtons, nameof(_vm.MultipleReplaceShowDotDotDotButtons)),

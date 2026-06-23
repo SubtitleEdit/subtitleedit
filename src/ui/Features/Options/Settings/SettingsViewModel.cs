@@ -313,6 +313,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _isMpvChosen;
 
     [ObservableProperty] private bool _existsErrorLogFile;
+    [ObservableProperty] private bool _spellCheckEnglishTreatInApostropheAsIng;
     [ObservableProperty] private bool _existsToolsLogFile;
     [ObservableProperty] private bool _existsSettingsFile;
     [ObservableProperty] private bool _writeToolsLog;
@@ -668,6 +669,7 @@ public partial class SettingsViewModel : ObservableObject
         }
 
         AllowSingleLetterShortcutsInTextbox = Se.Settings.Tools.AllowSingleLetterShortcutsInTextbox;
+        SpellCheckEnglishTreatInApostropheAsIng = Se.Settings.Tools.SpellCheckEnglishTreatInApostropheAsIng;
         GoToLineNumberAlsoSetVideoPosition = Se.Settings.Tools.GoToLineNumberAlsoSetVideoPosition;
         AdjustAllTimesRememberLineSelectionChoice = Se.Settings.Synchronization.AdjustAllTimesRememberLineSelectionChoice;
         SelectedSplitOddNumberOfLinesAction = MapFromSplitOddActionToLanguageCode(Se.Settings.Tools.SplitOddLinesAction);
@@ -1351,6 +1353,7 @@ public partial class SettingsViewModel : ObservableObject
         general.FavoriteSubtitleFormats = sbFavorites.ToString().TrimEnd(';');
 
         Se.Settings.Tools.AllowSingleLetterShortcutsInTextbox = AllowSingleLetterShortcutsInTextbox;
+        Se.Settings.Tools.SpellCheckEnglishTreatInApostropheAsIng = SpellCheckEnglishTreatInApostropheAsIng;
         Se.Settings.Tools.GoToLineNumberAlsoSetVideoPosition = GoToLineNumberAlsoSetVideoPosition;
         Se.Settings.Synchronization.AdjustAllTimesRememberLineSelectionChoice = AdjustAllTimesRememberLineSelectionChoice;
         Se.Settings.Tools.SplitOddLinesAction = MapFromSplitOddActionTranslationToCode(SelectedSplitOddNumberOfLinesAction);
