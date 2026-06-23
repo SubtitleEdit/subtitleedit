@@ -735,10 +735,10 @@ jobs:
             - **Linux x64 (Flatpak):** [SubtitleEdit-linux-x64.flatpak](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/SubtitleEdit-linux-x64.flatpak)
       
             ### Installation
-            1. Read and fix requirements, please see [System Requirements](https://github.com/niksedk/subtitleedit-avalonia#system-requirements)
+            1. Read and fix requirements, please see [System Requirements](https://github.com/SubtitleEdit/subtitleedit#-system-requirements)
             2. Download the appropriate package for your platform
             3. Extract the archive (or use installer if available)
-            4. Run the executable (on macOS, the app is unsigned - see [System Requirements](https://github.com/niksedk/subtitleedit-avalonia#system-requirements) for how to allow it).
+            4. Run the executable (on macOS, the app is unsigned - see [System Requirements](https://github.com/SubtitleEdit/subtitleedit#-system-requirements) for how to allow it).
       
             ### Change Log
             See the full [Change Log](https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/refs/heads/main/change-log.txt) for details.
