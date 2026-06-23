@@ -17635,6 +17635,26 @@ public partial class MainViewModel :
         Key.F24,
     };
 
+    /// <summary>
+    /// Moves keyboard focus to the first top-level item of the main menu bar, so the menu can be
+    /// opened and navigated with the keyboard / a screen reader (F10, #11745). No-op on platforms
+    /// that use the native menu (macOS), where <see cref="Menu"/> has no items.
+    /// </summary>
+    private bool TryFocusMainMenu()
+    {
+        if (Menu == null || Menu.Items.Count == 0)
+        {
+            return false;
+        }
+
+        if (Menu.Items[0] is MenuItem firstItem)
+        {
+            return firstItem.Focus(NavigationMethod.Tab);
+        }
+
+        return false;
+    }
+
     internal void OnKeyDownHandler(object? sender, KeyEventArgs keyEventArgs)
     {
         lock (_onKeyDownHandlerLock)
@@ -17664,6 +17684,14 @@ public partial class MainViewModel :
             // This allows option backspace on mac to delete the previous word
             if (TryHandleMacOptionBackspace(keyEventArgs))
             {
+                return;
+            }
+
+            // F10 moves keyboard focus into the main menu bar (standard Windows behavior), so the
+            // menu can be reached and read with a screen reader without a mouse (#11745).
+            if (k == Key.F10 && keyEventArgs.KeyModifiers == KeyModifiers.None && TryFocusMainMenu())
+            {
+                keyEventArgs.Handled = true;
                 return;
             }
 
