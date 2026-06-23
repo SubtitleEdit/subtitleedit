@@ -18,6 +18,10 @@ public interface ISpellCheckManager
     void ChangeAllWord(string fromWord, string toWord, SpellCheckWord spellCheckWord, SubtitleLineViewModel p);
     void AddToNames(string currentWord);
     void AdToUserDictionary(string currentWord);
+    void RemoveIgnoreWord(string word);
+    void RemoveChangeAllWord(string fromWord);
+    void RemoveFromNames(string word);
+    void RemoveFromUserDictionary(string word);
     List<SpellCheckDictionaryDisplay> GetDictionaryLanguages(string dictionaryFolder);
     List<string> GetSuggestions(string word);
     WordSpellCheck? WordSpellChecker { get; set; }

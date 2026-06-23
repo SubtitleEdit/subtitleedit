@@ -31,6 +31,8 @@ public class LanguageSpellCheck
     public string PickSpellCheckDictionaryDotDotDot { get; set; }
     public string ChooseSpellCheckDictionary { get; set; }
     public string PickLiveSpellCheckDictionary { get; set; }
+    public string UndoX { get; set; }
+    public string EditWholeText { get; set; }
 
     public LanguageSpellCheck()
     {
@@ -61,5 +63,7 @@ public class LanguageSpellCheck
         PickSpellCheckDictionaryDotDotDot = "Choose spell check dictionary...";
         ChooseSpellCheckDictionary = "Choose spell check dictionary";
         PickLiveSpellCheckDictionary = "Pick live spell check dictionary";
+        UndoX = "Undo: {0}";
+        EditWholeText = "Edit whole text";
     }
 }
