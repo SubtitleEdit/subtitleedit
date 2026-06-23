@@ -220,6 +220,7 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _isSubtitleGridDataMenuVisible;
     [ObservableProperty] private bool _isMergeWithNextOrPreviousVisible;
     [ObservableProperty] private bool _isInsertLineNoSelectionVisible;
+    [ObservableProperty] private bool _isInsertSubtitleFileAfterLineVisible;
     [ObservableProperty] private bool _showColumnOriginalText;
     [ObservableProperty] private bool _showColumnStartTime;
     [ObservableProperty] private bool _showColumnEndTime;
@@ -2990,6 +2991,47 @@ public partial class MainViewModel :
             var offset = p.StartTime.TotalMilliseconds - firstStartTime;
             newParagraph.SetStartTimeKeepDuration(TimeSpan.FromMilliseconds(videoPosition * 1000 + offset));
 
+            _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+        }
+
+        Renumber();
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
+    private async Task InsertSubtitleFileAfterThisLine()
+    {
+        var selectedItem = SelectedSubtitle;
+        if (Window == null || selectedItem == null)
+        {
+            return;
+        }
+
+        var fileName = await _fileHelper.PickOpenSubtitleFile(Window, Se.Language.General.OpenSubtitleFileTitle, false);
+        if (string.IsNullOrEmpty(fileName))
+        {
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        var subtitle = Subtitle.Parse(fileName);
+        if (subtitle == null || subtitle.Paragraphs.Count <= 0)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, Se.Language.General.UnknownSubtitleFormat,
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        // Shift the inserted lines so the first one starts 1 second after the selected (last) line,
+        // mirroring the binary-edit "insert subtitle after current line" behaviour and avoiding overlap.
+        var oldLastTime = selectedItem.EndTime.TotalMilliseconds;
+        var newFirstTime = subtitle.Paragraphs[0].StartTime.TotalMilliseconds;
+        var timeOffset = oldLastTime - newFirstTime + 1000;
+        foreach (var p in subtitle.Paragraphs)
+        {
+            var newParagraph = new SubtitleLineViewModel(p, SelectedSubtitleFormat);
+            newParagraph.SetStartTimeKeepDuration(TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds + timeOffset));
             _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
         }
 
@@ -17355,6 +17397,7 @@ public partial class MainViewModel :
             IsSubtitleGridDataMenuVisible = false;
             IsMergeWithNextOrPreviousVisible = false;
             IsInsertLineNoSelectionVisible = false;
+            IsInsertSubtitleFileAfterLineVisible = false;
             MenuItemExtendToLineBefore.IsVisible = false;
             MenuItemExtendToLineAfter.IsVisible = false;
         }
@@ -17363,12 +17406,15 @@ public partial class MainViewModel :
             IsSubtitleGridDataMenuVisible = false;
             IsMergeWithNextOrPreviousVisible = false;
             IsInsertLineNoSelectionVisible = true;
+            IsInsertSubtitleFileAfterLineVisible = false;
         }
         else
         {
             IsSubtitleGridDataMenuVisible = true;
             IsMergeWithNextOrPreviousVisible = SubtitleGrid.SelectedItems.Count == 1;
             IsInsertLineNoSelectionVisible = false;
+            // Only on the last line, single selection — like SE4's "insert subtitle file after this line".
+            IsInsertSubtitleFileAfterLineVisible = SubtitleGrid.SelectedItems.Count == 1 && idx == count - 1;
 
             if (IsFormatAssa || IsFormatSsa)
             {
