@@ -4,8 +4,6 @@
   "translatedBy": "",
   "cultureName": "bg-BG",
   "general": {
-    "selectNonForcedLines": "Избор на непринудени редове",
-    "selectForcedLines": "Избор на принудени редове",
     "abort": "Прекрати",
     "actor": "Актьор",
     "actors": "Актьори",
@@ -267,7 +265,7 @@
     "insertSubtitleAfterCurrentLine": "Вмъкни субтитри след текущия ред...",
     "insertSubtitleFileAtVideoPositionDotDotDot": "Вмъкни файл със субтитри на позиция видео...",
     "inspectAdditions": "Провери допълненията...",
-    "installFolder": "Инсталиране на папка",
+    "installFolder": "Инсталиране",
     "invertSelection": "Инвертирай селекцията",
     "isDefault": "По подразбиране",
     "italic": "Курсив",
@@ -478,7 +476,9 @@
     "seconds": "Секунди",
     "selectAll": "Избери всички",
     "selectFilesToConvert": "Изберете файлове за конвертиране",
+    "selectForcedLines": "Форсиран избор на редове",
     "selectNone": "Не избери нищо",
+    "selectNonForcedLines": "Не Форсиран избор на редове",
     "selectSaveFolder": "Изберете папка, в която да запазите",
     "selectSubtitle": "Изберете субтитри",
     "selectedAFolderToSaveTo": "Избрана е папка за запазване",
@@ -777,6 +777,7 @@
       "mergeLinesWithSameText": "_Сливане на редове с еднакъв текст...",
       "mergeLinesWithSameTimeCodes": "Обединява редове с еднакви времекодове...",
       "splitBreakLongLines": "Разделяне/пребалансиране на дълги редове...",
+      "evenlyDistributeLines": "Равномерно разпределение редове (по CPS)",
       "mergeShortLines": "Обединяване на къси редове...",
       "mergeContinuationLines": "Обединяване на редове за продължаване...",
       "snapAllTimesToFrames": "Закрепи всички времена към кадрите",
@@ -849,8 +850,7 @@
       "filterLayersForDisplayDotDotDot": "Филтриране на слоеве за показване...",
       "toggleSelectSubtitleWhilePlayingCurrentlyOn": "Превключване на избора на субтитри по време на възпроизвеждане (в момента: включено)",
       "toggleSelectSubtitleWhilePlayingCurrentlyOff": "Превключване на избора на субтитри по време на възпроизвеждане (в момента: изключено)",
-      "selectSubtitleWhilePlaying": "Избор на субтитри по време на възпроизвеждане",
-      "evenlyDistributeLines": "Равномерно разпределяне на редовете (по Символи/сек)"
+      "selectSubtitleWhilePlaying": "Избор на субтитри по време на възпроизвеждане"
     },
     "toolbar": {
       "newHint": "Започни нов файл със субтитри {0}",
@@ -932,6 +932,7 @@
     "lineXTimingChanged": "Ред {0}: Времето е променено",
     "loadingWaveInfoFromCache": "Зареждане на информация за вълната от кеша...",
     "noTextInClipboard": "Няма текст в клипборда",
+    "numberOfLinesEvenlyDistributedX": "Равномерно разпределени {0} реда",
     "oneLineCopiedFromOriginal": "Един ред, копиран от оригиналния субтитър",
     "oneLineMerged": "Един ред е обединен",
     "oneLineSwitched": "Един превключен ред",
@@ -998,8 +999,7 @@
     "downloadFfmpegTitle": "Да се изтегли FFmpeg?",
     "downloadFfmpegQuestion": "FFmpeg е необходим за възпроизвеждане на онлайн видеоклипове и за някои функции за редактиране на видео.\n\nДа изтегли ли FFmpeg сега?",
     "selectCurrentSubtitleWhilePlayingOn": "Избор на текущ субтитър при възпроизвеждане: ВКЛ",
-    "selectCurrentSubtitleWhilePlayingOff": "Избор на текущ субтитър при възпроизвеждане: ИЗКЛ",
-    "numberOfLinesEvenlyDistributedX": "Равномерно разпределени {0} реда"
+    "selectCurrentSubtitleWhilePlayingOff": "Избор на текущ субтитър при възпроизвеждане: ИЗКЛ"
   },
   "file": {
     "ebuSaveOptions": {
@@ -1744,7 +1744,6 @@
       "maximumXCharactersPerSecond": "Максимум {0} знака в секунда"
     },
     "imageBasedEdit": {
-      "setText": "Задаване на текст",
       "editImagedBaseSubtitle": "Редактиране на субтитри, базирани на изображения",
       "editImagedBaseSubtitleX": "Редактиране на субтитри, базирани на изображения: {0}",
       "resizeImagesDotDotDot": "Преоразмеряване на изображения...",
@@ -1754,6 +1753,7 @@
       "cropImages": "Изрязване на изображения",
       "importTimeCodes": "Импортиране на времеви кодове...",
       "setTextForSubtitle": "Задаване на текст за субтитри",
+      "setText": "Задай текст",
       "screenWidth": "Ширина на екрана",
       "screenHeight": "Височина на екрана",
       "alphaThresholdInfo": "Пикселите с алфа под прага стават напълно прозрачни",
@@ -1913,7 +1913,6 @@
       "backendAndUpdateStatus": "Състояние на бекенд и актуализации"
     },
     "textToSpeech": {
-      "piperSettings": "Настройки на Piper",
       "title": "Текст в реч",
       "textToSpeechEngine": "Механизъм за текст в реч",
       "reviewAudioSegments": "TTS - Преглед на аудио сегменти",
@@ -1974,6 +1973,7 @@
       "qwen3TtsSettings": "Настройки на Qwen3 за синтез на говор",
       "kokoroTtsSettings": "Настройки на Кокоро за синтез на говор",
       "chatterboxTtsSettings": "Настройки на Chatterbox за синтез на говор",
+      "piperSettings": "Piper Настройки",
       "voiceInstruction": "Гласови инструкции",
       "voiceInstructionHint": "По избор - например „Говорете със спокоен и приятелски тон“",
       "voiceGender": "Пол",
@@ -2174,10 +2174,6 @@
   },
   "options": {
     "settings": {
-      "musicSymbolsToReplace": "Музикални символи за замяна (разделени със запетая)",
-      "musicSymbol": "Музикален символ",
-      "colorWordsPerMinute": "Оцветяване на думи/мин при твърде висока стойност",
-      "colorCharactersPerSecond": "Оцветяване на знаци/сек при твърде висока стойност",
       "dialogStyle": "Стил на диалоговия прозорец",
       "dialogStyleDashSecondLineWithoutSpace": "Тире на втория ред без интервал",
       "dialogStyleDashSecondLineWithSpace": "Тире на втория ред с интервал",
@@ -2282,6 +2278,8 @@
       "colorTextTooLong": "Оцвети текста, ако е твърде дълъг",
       "colorTextTooWide": "Оцвети текста, ако е твърде широк (пиксели)",
       "colorTextTooManyLines": "Оцвети текста, ако е повече от 2 реда",
+      "colorCharactersPerSecond": "Оцветени символи/сек, ако са твърде много",
+      "colorWordsPerMinute": "Оцветени думи/мин, ако е твърде много",
       "colorOverlap": "Припокриване на цветния времеви код",
       "colorGapTooShort": "Оцвети, ако разстоянието е твърде късо",
       "errorBackgroundColor": "Цвят на фона на грешката",
@@ -2437,6 +2435,8 @@
       "speechToTextSelectedLinesPromptFirstTimeOnly": "Реч към текст: избрани редове, подкана за език/енджийн само при първия път",
       "multipleReplaceShowDotDotDotButtons": "Множествена замяна: показване на бутони от контекстното меню",
       "gridFocusTextboxAfterInsertNew": "Мрежа: фокус върху текстовото поле след вмъкване на нов субтитър",
+      "musicSymbol": "Музикален символ",
+      "musicSymbolsToReplace": "Музикални символи за заместване (разделени със запетая)",
       "textToSpeechPromptMergeContinuationLines": "Текст към реч: подкана за сливане на редове за продължаване",
       "useFocusedButtonBackgroundColor": "Използвай цвета на фона на фокусирания бутон",
       "focusedButtonBackgroundColor": "Цвят на фона на фокусирания бутон",
@@ -2466,7 +2466,6 @@
       "waveformExportThemeDotDotDot": "Експортиране на тема..."
     },
     "shortcuts": {
-      "generalUnbreakNoSpaceCjk": "Премахване на прекъсването без интервал (CJK)",
       "title": "Преки пътища",
       "searchShortcuts": "Търсене на преки пътища...",
       "filter": "Филтър",
@@ -2484,6 +2483,7 @@
       "generalMergeSelectedLinesAndAutoBreak": "Обедини избраните редове и автоматично прекъсни",
       "generalMergeSelectedLinesAndUnbreak": "Обедини избраните редове и премахни прекъсването",
       "generalMergeSelectedLinesAndUnbreakCjk": "Обедини избраните редове и възстанови прекъсване CJK",
+      "generalUnbreakNoSpaceCjk": "Не разделяй без интервал (CJK)",
       "generalMergeSelectedLinesOnlyFirstText": "Обедини избраните редове само на първия текст",
       "generalMergeSelectedLinesBilingual": "Обедини избраните двуезични редове",
       "generalMergeWithPreviousBilingual": "Сливане с предишния двуезичен",
@@ -3104,7 +3104,7 @@
     "title": "Относно Subtitle Edit",
     "translatedBy": "Преведено от: jekovcar",
     "licenseText": "Subtitle Edit е безплатен софтуер под лиценза на MIT.",
-    "descriptionText": "Subtitle Edit is a free and open source editor for subtitle files, available on Windows, macOS, and Linux.\nIt supports 300+ subtitle formats, OCR, speech recognition, AI translation, and much more.\n\nThank you for being part of the Subtitle Edit community! :)",
+    "descriptionText": "Subtitle Edit е безплатен редактор с отворен код за субтитри, наличен в Windows, macOS и Linux.\nПоддържа 300+ формата субтитри, OCR, разпознаване на реч, AI превод и много други.\n\nБлагодарим, че сте от общността за редактиране на субтитри! :)",
     "issueTrackingAndSourceCode": "Проследяване на проблеми и изходен код: ",
     "gitHub": "Github",
     "donate": "Дарете: ",
