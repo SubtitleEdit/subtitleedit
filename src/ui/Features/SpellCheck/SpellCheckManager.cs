@@ -33,6 +33,7 @@ public class SpellCheckManager : ISpellCheckManager, IDoSpell
     private SpellCheckWordLists? _spellCheckWordLists;
     private readonly List<string> _skipAllList;
     private readonly Dictionary<string, string> _changeAllDictionary;
+    private string _twoLetterLanguageCode = string.Empty;
 
     public SpellCheckManager()
     {
@@ -79,6 +80,7 @@ public class SpellCheckManager : ISpellCheckManager, IDoSpell
     public bool Initialize(string dictionaryFile, string twoLetterLanguageCode)
     {
         _skipAllList.Clear();
+        _twoLetterLanguageCode = twoLetterLanguageCode ?? string.Empty;
 
         if (!File.Exists(dictionaryFile))
         {
@@ -319,10 +321,45 @@ public class SpellCheckManager : ISpellCheckManager, IDoSpell
 
         if (WordSpellChecker != null)
         {
-            return WordSpellChecker.DoSpell(word);
+            if (WordSpellChecker.DoSpell(word))
+            {
+                return true;
+            }
+        }
+        else if (_hunspellWeCantSpell != null && _hunspellWeCantSpell.Check(word))
+        {
+            return true;
         }
 
-        return _hunspellWeCantSpell != null && _hunspellWeCantSpell.Check(word);
+        return IsEnglishInApostropheActuallyIng(word);
+    }
+
+    /// <summary>
+    /// English-only convenience rule: words spelled with a dropped "g" such as
+    /// "runnin'" or "doin'" are accepted as if they ended in "ing" ("running", "doing").
+    /// Controlled by the Tools setting "Treat words ending in 'in'' as 'ing'".
+    /// </summary>
+    private bool IsEnglishInApostropheActuallyIng(string word)
+    {
+        if (!Se.Settings.Tools.SpellCheckEnglishTreatInApostropheAsIng)
+        {
+            return false;
+        }
+
+        if (!_twoLetterLanguageCode.StartsWith("en", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        if (word.Length > 3 &&
+            word.EndsWith("in'", StringComparison.OrdinalIgnoreCase) &&
+            char.IsLetter(word[word.Length - 4]))
+        {
+            // drop the trailing apostrophe and append "g": "runnin'" -> "running"
+            return DoSpell(word.Substring(0, word.Length - 1) + "g");
+        }
+
+        return false;
     }
 
     public bool IsWordCorrect(SpellCheckWord spellCheckWord, string text)
@@ -417,7 +454,7 @@ public class SpellCheckManager : ISpellCheckManager, IDoSpell
             return true;
         }
 
-        var isCorrect = DoSpell(word);
+        var isCorrect = DoSpell(word) || IsEnglishInApostropheActuallyIng(word);
 
         if (_changeAllDictionary.ContainsKey(word) && NotSameSpecialEnding(words[wordIndex], _changeAllDictionary[word], text))
         {
