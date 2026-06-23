@@ -394,6 +394,7 @@
     "percent": "Percent",
     "pickLayer": "Set layer",
     "pickOllamaModel": "Pick Ollama model",
+    "llamaCppUseRemoteServer": "Use external server (URL)",
     "pickOutputFolder": "Pick output folder",
     "pickResolutionFromCurrentVideo": "Pick resolution from current video",
     "pickResolutionFromVideoDotDotDot": "Pick resolution from video...",
@@ -443,6 +444,7 @@
     "removeItalic": "Remove italic",
     "removeRightToLeftUnicodeTags": "Remove RTL Unicode tags",
     "removeSelectedFile": "Remove selected file?",
+    "removeSelectedFilesX": "Remove {0} selected files?",
     "removeStyling": "Remove styling",
     "removeTextForHearingImpaired": "Remove text for hearing impaired",
     "removeUnderline": "Remove underline",
@@ -877,7 +879,10 @@
       "assaStylesHint": "Advanced Sub Station Alpha styles",
       "assaPropertiesHint": "Advanced Sub Station Alpha properties",
       "assaAttachmentsHint": "Advanced Sub Station Alpha attachments",
-      "assaDrawHint": "Advanced Sub Station Alpha draw shapes"
+      "assaDrawHint": "Advanced Sub Station Alpha draw shapes",
+      "ssaStylesHint": "Sub Station Alpha styles",
+      "ssaPropertiesHint": "Sub Station Alpha properties",
+      "ssaAttachmentsHint": "Sub Station Alpha attachments"
     },
     "waveform": {
       "playPauseHint": "Play / Pause {0}",
@@ -1827,7 +1832,9 @@
     "ignoreAllX": "Ignore all '{0}'",
     "pickSpellCheckDictionaryDotDotDot": "Choose spell check dictionary...",
     "chooseSpellCheckDictionary": "Choose spell check dictionary",
-    "pickLiveSpellCheckDictionary": "Pick live spell check dictionary"
+    "pickLiveSpellCheckDictionary": "Pick live spell check dictionary",
+    "undoX": "Undo: {0}",
+    "editWholeText": "Edit whole text"
   },
   "video": {
     "burnIn": {
@@ -2246,6 +2253,9 @@
       "showUpDownLabels": "Show labels for up/down controls (Show/Hide/Duration)",
       "showButtonHints": "Show button hints",
       "gridCompactMode": "Use compact mode for grids",
+      "gridAlternatingRows": "Use alternating row colors in grid",
+      "gridAlternatingRowColor": "Alternating row color (light theme)",
+      "gridAlternatingRowColorDark": "Alternating row color (dark theme)",
       "uiFont": "UI font",
       "theme": "Theme",
       "iconTheme": "Icon theme",
@@ -2270,6 +2280,7 @@
       "promptBeforeDelete": "Prompt before delete",
       "rememberPositionAndSize": "Remember window position and size",
       "openLastFileOnStart": "Open last recent file on start",
+      "autoSave": "Auto-save (save the open file while editing)",
       "autoBackupOn": "Auto-backup",
       "autoBackupIntervalMinutes": "Auto-backup interval (minutes)",
       "autoBackupDeleteAfterDays": "Auto-backup retention (days)",
@@ -2476,6 +2487,7 @@
       "categorySubtitleGridAndTextBox": "Subtitle list view & text box",
       "categorySubtitleGrid": "Subtitle list view",
       "categoryWaveform": "Waveform",
+      "generalSetupLikeSe4": "Set up like Subtitle Edit 4 (theme, shortcuts, replace rules)",
       "generalMergeSelectedLines": "Merge selected lines",
       "generalMergeWithPrevious": "Merge with previous",
       "generalMergeWithNext": "Merge with next",
@@ -2485,7 +2497,7 @@
       "generalMergeWithNextAndAutoBreak": "Merge with next and auto-break",
       "generalMergeSelectedLinesAndAutoBreak": "Merge selected lines and auto-break",
       "generalMergeSelectedLinesAndUnbreak": "Merge selected lines and unbreak",
-      "generalMergeSelectedLinesAndUnbreakCjk": "Merge selected lines and unbreak CJK",
+      "generalMergeSelectedLinesAndUnbreakCjk": "Merge selected lines and unbreak without space (CJK)",
       "generalUnbreakNoSpaceCjk": "Unbreak without space (CJK)",
       "generalMergeSelectedLinesOnlyFirstText": "Merge selected lines only first text",
       "generalMergeSelectedLinesBilingual": "Merge selected lines bilingual",
