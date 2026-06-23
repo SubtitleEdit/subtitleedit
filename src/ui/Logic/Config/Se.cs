@@ -464,6 +464,17 @@ public class Se
         Configuration.Settings.General.UseDarkTheme = Settings.Appearance.Theme == "Dark";
         Configuration.Settings.General.UseTimeFormatHHMMSSFF = Settings.General.UseFrameMode;
 
+        Configuration.Settings.Proxy.ProxyAddress = Settings.General.ProxyAddress ?? string.Empty;
+        Configuration.Settings.Proxy.UserName = Settings.General.ProxyUserName ?? string.Empty;
+        if (!string.IsNullOrEmpty(Settings.General.ProxyPassword))
+        {
+            Configuration.Settings.Proxy.EncodePassword(Settings.General.ProxyPassword);
+        }
+        else
+        {
+            Configuration.Settings.Proxy.Password = null;
+        }
+
         var stt = Settings.Tools.AudioToText;
         Configuration.Settings.Tools.WhisperChoice = stt.WhisperChoice;
         Configuration.Settings.Tools.WhisperIgnoreVersion = stt.WhisperIgnoreVersion;

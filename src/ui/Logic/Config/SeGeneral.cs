@@ -85,6 +85,10 @@ public class SeGeneral
     public bool FfmpegUseCenterChannelOnly { get; set; }
     public string LibMpvPath { get; set; }
 
+    public string ProxyAddress { get; set; }
+    public string ProxyUserName { get; set; }
+    public string ProxyPassword { get; set; }
+
     public bool ShowColumnStartTime { get; set; }
     public bool ShowColumnEndTime { get; set; }
     public bool ShowColumnGap { get; set; }

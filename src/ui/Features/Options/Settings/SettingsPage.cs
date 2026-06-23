@@ -714,9 +714,9 @@ public class SettingsPage : UserControl
 
         sections.Add(new SettingsSection(Se.Language.Options.Settings.Network,
         [
-            new SettingsItem(Se.Language.Options.Settings.ProxyAddress, () => new TextBox { Width = 250 }),
-            new SettingsItem(Se.Language.Options.Settings.Username, () => new TextBox { Width = 250 }),
-            new SettingsItem(Se.Language.Options.Settings.Password, () => new TextBox { Width = 250 }),
+            new SettingsItem(Se.Language.Options.Settings.ProxyAddress, () => UiUtil.MakeTextBox(250, _vm, nameof(_vm.ProxyAddress))),
+            new SettingsItem(Se.Language.Options.Settings.Username, () => UiUtil.MakeTextBox(250, _vm, nameof(_vm.ProxyUserName))),
+            new SettingsItem(Se.Language.Options.Settings.Password, () => UiUtil.MakeTextBox(250, _vm, nameof(_vm.ProxyPassword))),
         ]));
 
         if (OperatingSystem.IsWindows())
