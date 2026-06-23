@@ -925,6 +925,55 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void PlayNextAndStop()
+    {
+        PlayNextParagraph(false);
+    }
+
+    [RelayCommand]
+    private void PlayNextAndLoop()
+    {
+        PlayNextParagraph(true);
+    }
+
+    // Plays the paragraph after the current selection (or after the video position when nothing is
+    // selected), selects it, and either stops at its end (loop=false) or repeats it (loop=true) via
+    // the _playSelectionItem handled in the player position-changed loop.
+    private void PlayNextParagraph(bool loop)
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null)
+        {
+            return;
+        }
+
+        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
+        SubtitleLineViewModel? next;
+        if (selectedItems.Count > 0)
+        {
+            var currentIndex = Subtitles.IndexOf(selectedItems.Last());
+            next = currentIndex >= 0 && currentIndex < Subtitles.Count - 1
+                ? Subtitles[currentIndex + 1]
+                : null;
+        }
+        else
+        {
+            next = Subtitles.FirstOrDefault(s => s.StartTime.TotalSeconds >= vp.Position);
+        }
+
+        if (next == null)
+        {
+            return;
+        }
+
+        vp.VideoPlayer.Pause();
+        SelectAndScrollToSubtitle(next);
+        vp.Position = next.StartTime.TotalSeconds;
+        _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { next }, next.EndTime, loop);
+        vp.VideoPlayer.Play();
+    }
+
+    [RelayCommand]
     private void Pause()
     {
         var vp = GetVideoPlayerControl();

@@ -404,6 +404,8 @@
     "play": "Play",
     "playFromStartOfVideo": "Play from start of video",
     "playNext": "Play next",
+    "playNextAndStop": "Play next (and stop)",
+    "playNextAndLoop": "Play next (and loop)",
     "playSelectedLines": "Play selected lines",
     "playSelectedLinesWithLoop": "Play selected lines with loop",
     "playSelectedLinesAndFocusWaveform": "Play selected lines and focus waveform",
