@@ -239,6 +239,9 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _isLibVlcDownloadVisible;
     [ObservableProperty] private string _ffmpegPath;
     [ObservableProperty] private string _ffmpegStatus;
+    [ObservableProperty] private string _proxyAddress;
+    [ObservableProperty] private string _proxyUserName;
+    [ObservableProperty] private string _proxyPassword;
     [ObservableProperty] private int _waveformTextFontSize;
     [ObservableProperty] private bool _waveformTextFontBold;
     [ObservableProperty] private Color _waveformTextColor;
@@ -880,6 +883,9 @@ public partial class SettingsViewModel : ObservableObject
 
         FfmpegPath = Se.Settings.General.FfmpegPath;
         LibMpvPath = Se.Settings.General.LibMpvPath;
+        ProxyAddress = Se.Settings.General.ProxyAddress ?? string.Empty;
+        ProxyUserName = Se.Settings.General.ProxyUserName ?? string.Empty;
+        ProxyPassword = Se.Settings.General.ProxyPassword ?? string.Empty;
         SetFfmpegStatus();
         SetLibMpvStatus();
         SetLibVlcStatus();
@@ -1542,6 +1548,9 @@ public partial class SettingsViewModel : ObservableObject
 
         general.FfmpegPath = FfmpegPath;
         general.LibMpvPath = LibMpvPath;
+        general.ProxyAddress = ProxyAddress;
+        general.ProxyUserName = ProxyUserName;
+        general.ProxyPassword = ProxyPassword;
 
         general.CurrentProfile = SelectedProfile;
         general.Profiles.Clear();
