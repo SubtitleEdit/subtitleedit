@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
@@ -43,6 +44,8 @@ public partial class SpellCheckViewModel : ObservableObject
     [ObservableProperty] private bool _isPrompting;
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _paragraphs;
     [ObservableProperty] private SubtitleLineViewModel? _selectedParagraph;
+    [ObservableProperty] private bool _isUndoVisible;
+    [ObservableProperty] private string _undoText;
 
     public Window? Window { get; set; }
     public int TotalChangedWords { get; set; }
@@ -59,6 +62,7 @@ public partial class SpellCheckViewModel : ObservableObject
     private SpellCheckWord _currentSpellCheckWord;
     private SpellCheckResult? _lastSpellCheckResult;
     private System.Timers.Timer? _statusTimer;
+    private readonly List<SpellCheckUndoItem> _undoList = new();
 
     public SpellCheckViewModel(ISpellCheckManager spellCheckManager, IWindowService windowService)
     {
@@ -86,6 +90,7 @@ public partial class SpellCheckViewModel : ObservableObject
         PanelWholeText = new StackPanel();
         TextBoxWordNotFound = new TextBox();
         StatusText = string.Empty;
+        UndoText = string.Empty;
         Paragraphs = new ObservableCollection<SubtitleLineViewModel>();
         _currentSpellCheckWord = new SpellCheckWord();
 
@@ -341,6 +346,7 @@ public partial class SpellCheckViewModel : ObservableObject
             return;
         }
 
+        PushUndo(Se.Language.SpellCheck.EditWholeText, SpellCheckUndoAction.ChangeWholeText, string.Empty);
         selectedParagraph.Text = result.WholeText;
         DoSpellCheck();
     }
@@ -356,8 +362,10 @@ public partial class SpellCheckViewModel : ObservableObject
             return;
         }
 
+        var status = string.Format(Se.Language.SpellCheck.ChangeWordFromXToY, WordNotFoundOriginal, CurrentWord);
+        PushUndo(status, SpellCheckUndoAction.Change, WordNotFoundOriginal);
         _spellCheckManager.ChangeWord(WordNotFoundOriginal, CurrentWord, _currentSpellCheckWord, SelectedParagraph!);
-        ShowStatus(string.Format(Se.Language.SpellCheck.ChangeWordFromXToY, WordNotFoundOriginal, CurrentWord));
+        ShowStatus(status);
         DoSpellCheck();
     }
 
@@ -371,23 +379,29 @@ public partial class SpellCheckViewModel : ObservableObject
             return;
         }
 
+        var status = string.Format(Se.Language.SpellCheck.ChangeAllWordsFromXToY, WordNotFoundOriginal, CurrentWord);
+        PushUndo(status, SpellCheckUndoAction.ChangeAll, WordNotFoundOriginal);
         _spellCheckManager.ChangeAllWord(WordNotFoundOriginal, CurrentWord, _currentSpellCheckWord, selectedParagraph);
-        ShowStatus(string.Format(Se.Language.SpellCheck.ChangeAllWordsFromXToY, WordNotFoundOriginal, CurrentWord));
+        ShowStatus(status);
         DoSpellCheck();
     }
 
     [RelayCommand]
     private void SkipWord()
     {
-        ShowStatus(string.Format(Se.Language.SpellCheck.IgnoreWordXOnce, WordNotFoundOriginal));
+        var status = string.Format(Se.Language.SpellCheck.IgnoreWordXOnce, WordNotFoundOriginal);
+        PushUndo(status, SpellCheckUndoAction.SkipOnce, WordNotFoundOriginal);
+        ShowStatus(status);
         DoSpellCheck();
     }
 
     [RelayCommand]
     private void SkipWordAll()
     {
+        var status = string.Format(Se.Language.SpellCheck.IgnoreWordXAlways, WordNotFoundOriginal);
+        PushUndo(status, SpellCheckUndoAction.SkipAll, WordNotFoundOriginal);
         _spellCheckManager.AddIgnoreWord(WordNotFoundOriginal);
-        ShowStatus(string.Format(Se.Language.SpellCheck.IgnoreWordXAlways, WordNotFoundOriginal));
+        ShowStatus(status);
         DoSpellCheck();
     }
 
@@ -400,8 +414,10 @@ public partial class SpellCheckViewModel : ObservableObject
             return;
         }
 
+        var status = string.Format(Se.Language.SpellCheck.WordXAddedToNamesList, CurrentWord);
+        PushUndo(status, SpellCheckUndoAction.AddToNames, CurrentWord);
         _spellCheckManager.AddToNames(CurrentWord);
-        ShowStatus(string.Format(Se.Language.SpellCheck.WordXAddedToNamesList, CurrentWord));
+        ShowStatus(status);
         DoSpellCheck();
     }
 
@@ -414,8 +430,10 @@ public partial class SpellCheckViewModel : ObservableObject
             return;
         }
 
+        var status = string.Format(Se.Language.SpellCheck.WordXAddedToUserDictionary, CurrentWord);
+        PushUndo(status, SpellCheckUndoAction.AddToDictionary, CurrentWord);
         _spellCheckManager.AdToUserDictionary(CurrentWord);
-        ShowStatus(string.Format(Se.Language.SpellCheck.WordXAddedToUserDictionary, CurrentWord));
+        ShowStatus(status);
         DoSpellCheck();
     }
 
@@ -449,8 +467,10 @@ public partial class SpellCheckViewModel : ObservableObject
             return;
         }
 
+        var status = string.Format(Se.Language.SpellCheck.UseSuggestionX, SelectedSuggestion);
+        PushUndo(status, SpellCheckUndoAction.Change, WordNotFoundOriginal);
         _spellCheckManager.ChangeWord(WordNotFoundOriginal, SelectedSuggestion, _currentSpellCheckWord, SelectedParagraph);
-        ShowStatus(string.Format(Se.Language.SpellCheck.UseSuggestionX, SelectedSuggestion));
+        ShowStatus(status);
         DoSpellCheck();
     }
 
@@ -462,8 +482,10 @@ public partial class SpellCheckViewModel : ObservableObject
             return;
         }
 
+        var status = string.Format(Se.Language.SpellCheck.UseSuggestionXAlways, SelectedSuggestion);
+        PushUndo(status, SpellCheckUndoAction.ChangeAll, WordNotFoundOriginal);
         _spellCheckManager.ChangeAllWord(WordNotFoundOriginal, SelectedSuggestion, _currentSpellCheckWord, SelectedParagraph);
-        ShowStatus(string.Format(Se.Language.SpellCheck.UseSuggestionXAlways, SelectedSuggestion));
+        ShowStatus(status);
         DoSpellCheck();
     }
 
@@ -490,6 +512,88 @@ public partial class SpellCheckViewModel : ObservableObject
             e.Handled = true;
             UiUtil.ShowHelp("features/spell-check");
         }
+    }
+
+    private bool CanUndo() => _undoList.Count > 0;
+
+    private void PushUndo(string description, SpellCheckUndoAction action, string actionWord)
+    {
+        _undoList.Add(new SpellCheckUndoItem
+        {
+            Description = description,
+            Action = action,
+            ActionWord = actionWord,
+            NoOfChangedWords = _spellCheckManager.NoOfChangedWords,
+            NoOfSkippedWords = _spellCheckManager.NoOfSkippedWords,
+            ParagraphTexts = Paragraphs.Select(p => (p, p.Text)).ToList(),
+
+            // Re-scan from just before the acted-on word so it is shown again after undo.
+            ResumeFrom = _lastSpellCheckResult == null
+                ? null
+                : new SpellCheckResult
+                {
+                    LineIndex = _lastSpellCheckResult.LineIndex,
+                    WordIndex = _lastSpellCheckResult.WordIndex - 1,
+                },
+        });
+
+        UndoText = string.Format(Se.Language.SpellCheck.UndoX, description);
+        IsUndoVisible = true;
+        UndoCommand.NotifyCanExecuteChanged();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanUndo))]
+    private void Undo()
+    {
+        if (_undoList.Count == 0)
+        {
+            return;
+        }
+
+        var item = _undoList[^1];
+        _undoList.RemoveAt(_undoList.Count - 1);
+
+        // Restore the text of every line as it was before the action (covers Change, ChangeAll and
+        // its silent cascade, and Edit-whole-text).
+        foreach (var (paragraph, text) in item.ParagraphTexts)
+        {
+            paragraph.Text = text;
+        }
+
+        // Reverse word-list / change-all dictionary mutations.
+        switch (item.Action)
+        {
+            case SpellCheckUndoAction.SkipAll:
+                _spellCheckManager.RemoveIgnoreWord(item.ActionWord);
+                break;
+            case SpellCheckUndoAction.ChangeAll:
+                _spellCheckManager.RemoveChangeAllWord(item.ActionWord);
+                break;
+            case SpellCheckUndoAction.AddToNames:
+                _spellCheckManager.RemoveFromNames(item.ActionWord);
+                break;
+            case SpellCheckUndoAction.AddToDictionary:
+                _spellCheckManager.RemoveFromUserDictionary(item.ActionWord);
+                break;
+        }
+
+        // Restore counters and the scan position, then re-check so the word reappears.
+        _spellCheckManager.NoOfChangedWords = item.NoOfChangedWords;
+        _spellCheckManager.NoOfSkippedWords = item.NoOfSkippedWords;
+        _lastSpellCheckResult = item.ResumeFrom;
+
+        if (_undoList.Count > 0)
+        {
+            UndoText = string.Format(Se.Language.SpellCheck.UndoX, _undoList[^1].Description);
+        }
+        else
+        {
+            IsUndoVisible = false;
+            UndoText = string.Empty;
+        }
+
+        UndoCommand.NotifyCanExecuteChanged();
+        DoSpellCheck();
     }
 
     private void DoSpellCheck()

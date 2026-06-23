@@ -181,6 +181,17 @@ public class SpellCheckWindow : Window
             Margin = new Thickness(0, 5, 0, 0),
         };
 
+        var buttonUndo = new Button
+        {
+            [!Button.ContentProperty] = new Binding(nameof(SpellCheckViewModel.UndoText)) { Mode = BindingMode.OneWay },
+            [!Button.CommandProperty] = new Binding(nameof(SpellCheckViewModel.UndoCommand)) { Mode = BindingMode.OneWay },
+            [!Visual.IsVisibleProperty] = new Binding(nameof(SpellCheckViewModel.IsUndoVisible)) { Mode = BindingMode.OneWay },
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            HorizontalContentAlignment = HorizontalAlignment.Center,
+            Margin = new Thickness(0, 5, 0, 0),
+        };
+
         var buttonGoogleSearch = new Button
         {
             Content = Se.Language.General.GoogleIt,
@@ -223,6 +234,7 @@ public class SpellCheckWindow : Window
         grid.Add(buttonSkipAll, 3, 1);
         grid.Add(buttonAddToNames, 4, 0, 1, 2);
         grid.Add(buttonAddToDictionary, 5, 0, 1, 2);
+        grid.Add(buttonUndo, 6, 0, 1, 2);
         grid.Add(buttonGoogleSearch, 7, 0, 1, 2);
 
         return grid;

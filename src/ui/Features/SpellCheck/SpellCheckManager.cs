@@ -259,6 +259,47 @@ public class SpellCheckManager : ISpellCheckManager, IDoSpell
         _spellCheckWordLists?.AddUserWord(word);
     }
 
+    /// <summary>
+    /// Reverses <see cref="AddIgnoreWord"/> by removing the word and the case variants it added.
+    /// Used by spell-check Undo. Counters are restored separately from a snapshot.
+    /// </summary>
+    public void RemoveIgnoreWord(string word)
+    {
+        if (string.IsNullOrWhiteSpace(word))
+        {
+            return;
+        }
+
+        _skipAllList.Remove(word);
+        _skipAllList.Remove(word.ToLowerInvariant());
+        _skipAllList.Remove(word.ToUpperInvariant());
+        if (word.Length > 1)
+        {
+            _skipAllList.Remove(char.ToUpperInvariant(word[0]) + word[1..].ToLowerInvariant());
+        }
+    }
+
+    public void RemoveChangeAllWord(string fromWord)
+    {
+        if (string.IsNullOrEmpty(fromWord))
+        {
+            return;
+        }
+
+        _changeAllDictionary.Remove(fromWord);
+        _spellCheckWordLists?.UseAlwaysListRemove(fromWord);
+    }
+
+    public void RemoveFromNames(string word)
+    {
+        _spellCheckWordLists?.RemoveName(word);
+    }
+
+    public void RemoveFromUserDictionary(string word)
+    {
+        _spellCheckWordLists?.RemoveUserWord(word);
+    }
+
     private static readonly HashSet<string> _allowedTokens = new HashSet<string>
     {
         "&", "—", "–", "…"
