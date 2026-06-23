@@ -95,10 +95,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     isPrevEndOfLine = true;
                 }
 
-                if ((!text.StartsWith("www.", StringComparison.Ordinal) && !text.StartsWith("http:", StringComparison.Ordinal) && !text.StartsWith("https:", StringComparison.Ordinal)) &&
-                    (char.IsLower(firstLetter) || Helper.IsTurkishLittleI(firstLetter, encoding, language)) &&
-                    !char.IsDigit(firstLetter) &&
-                    isPrevEndOfLine)
+                var isUrl = text.StartsWith("www.", StringComparison.Ordinal) || text.StartsWith("http:", StringComparison.Ordinal) || text.StartsWith("https:", StringComparison.Ordinal);
+                // Dutch additionally acts on a leading apostrophe contraction ('s morgens), where
+                // 'firstLetter' is an apostrophe rather than a lowercase letter.
+                if (!isUrl && !char.IsDigit(firstLetter) && isPrevEndOfLine &&
+                    (char.IsLower(firstLetter) || Helper.IsTurkishLittleI(firstLetter, encoding, language) || DutchCasing.IsDutch(language)))
                 {
                     bool isMatchInKnowAbbreviations = language == "en" &&
                         (prevText.EndsWith(" o.r.", StringComparison.Ordinal) ||
@@ -107,7 +108,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                     if (!isMatchInKnowAbbreviations)
                     {
-                        if (Helper.IsTurkishLittleI(firstLetter, encoding, language))
+                        if (DutchCasing.IsDutch(language))
+                        {
+                            // Handles 's/'t/etc. contractions (capitalize the next word) and the IJ digraph.
+                            p.Text = pre + DutchCasing.FixSentenceStart(text);
+                        }
+                        else if (Helper.IsTurkishLittleI(firstLetter, encoding, language))
                         {
                             p.Text = pre + Helper.GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
                         }
@@ -174,10 +180,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     char firstLetter = text[0];
                     string prevText = HtmlUtil.RemoveHtmlTags(arr[0]);
                     bool isPrevEndOfLine = Helper.IsPreviousTextEndOfParagraph(prevText);
-                    if ((!text.StartsWith("www.", StringComparison.Ordinal) && !text.StartsWith("http:", StringComparison.Ordinal) && !text.StartsWith("https:", StringComparison.Ordinal)) &&
-                        (char.IsLower(firstLetter) || Helper.IsTurkishLittleI(firstLetter, encoding, language)) &&
+                    var isUrl = text.StartsWith("www.", StringComparison.Ordinal) || text.StartsWith("http:", StringComparison.Ordinal) || text.StartsWith("https:", StringComparison.Ordinal);
+                    if (!isUrl &&
                         !prevText.EndsWith("...", StringComparison.Ordinal) &&
-                        isPrevEndOfLine)
+                        isPrevEndOfLine &&
+                        (char.IsLower(firstLetter) || Helper.IsTurkishLittleI(firstLetter, encoding, language) || DutchCasing.IsDutch(language)))
                     {
                         bool isMatchInKnowAbbreviations = language == "en" &&
                             (prevText.EndsWith(" o.r.", StringComparison.Ordinal) ||
@@ -186,7 +193,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                         if (!isMatchInKnowAbbreviations)
                         {
-                            if (Helper.IsTurkishLittleI(firstLetter, encoding, language))
+                            if (DutchCasing.IsDutch(language))
+                            {
+                                text = pre + DutchCasing.FixSentenceStart(text);
+                            }
+                            else if (Helper.IsTurkishLittleI(firstLetter, encoding, language))
                             {
                                 text = pre + Helper.GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
                             }
@@ -302,7 +313,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                     else if (st.StrippedText.Length > 0 && st.StrippedText[0] != char.ToUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.Contains("..."))
                     {
-                        text = st.Pre + char.ToUpper(st.StrippedText[0]) + st.StrippedText.Substring(1) + st.Post;
+                        // DutchCasing.CapitalizeFirstLetter applies the IJ digraph rule for "nl"; for
+                        // other languages it is equivalent to char.ToUpper on the first letter.
+                        var capitalized = DutchCasing.IsDutch(language)
+                            ? DutchCasing.CapitalizeFirstLetter(st.StrippedText)
+                            : char.ToUpper(st.StrippedText[0]) + st.StrippedText.Substring(1);
+                        text = st.Pre + capitalized + st.Post;
                         p.Text = p.Text.Remove(indexOfNewLine + len).Insert(indexOfNewLine + len, text);
                     }
                 }
