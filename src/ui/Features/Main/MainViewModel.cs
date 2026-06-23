@@ -920,6 +920,7 @@ public partial class MainViewModel :
         }
 
         vp.Position = next.StartTime.TotalSeconds;
+        PinPlayheadTo(next.StartTime.TotalSeconds);
         SelectAndScrollToSubtitle(next);
         vp.VideoPlayer.Play();
     }
@@ -969,6 +970,7 @@ public partial class MainViewModel :
         vp.VideoPlayer.Pause();
         SelectAndScrollToSubtitle(next);
         vp.Position = next.StartTime.TotalSeconds;
+        PinPlayheadTo(next.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { next }, next.EndTime, loop);
         vp.VideoPlayer.Play();
     }
