@@ -968,7 +968,12 @@ public partial class MainViewModel :
         }
 
         vp.VideoPlayer.Pause();
-        SelectAndScrollToSubtitle(next);
+        // Select synchronously rather than via SelectAndScrollToSubtitle (which posts the selection
+        // to the dispatcher): the grid's SelectionChanged handler calls ResetPlaySelection, so a
+        // deferred selection would null _playSelectionItem *after* we set it and break stop/loop.
+        // Mirror RepeatNextLine — change selection first, then assign _playSelectionItem.
+        SubtitleGrid.SelectedItem = next;
+        SubtitleGrid.ScrollIntoView(next, null);
         vp.Position = next.StartTime.TotalSeconds;
         PinPlayheadTo(next.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { next }, next.EndTime, loop);
