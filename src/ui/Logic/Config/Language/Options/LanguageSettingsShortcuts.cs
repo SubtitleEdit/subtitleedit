@@ -320,7 +320,7 @@ public class LanguageSettingsShortcuts
         GeneralMergeWithNextAndAutoBreak = "Merge with next and auto-break";
         GeneralMergeSelectedLinesAndAutoBreak = "Merge selected lines and auto-break";
         GeneralMergeSelectedLinesAndUnbreak = "Merge selected lines and unbreak";
-        GeneralMergeSelectedLinesAndUnbreakCjk = "Merge selected lines and unbreak CJK";
+        GeneralMergeSelectedLinesAndUnbreakCjk = "Merge selected lines and unbreak without space (CJK)";
         GeneralUnbreakNoSpaceCjk = "Unbreak without space (CJK)";
         GeneralMergeSelectedLinesOnlyFirstText = "Merge selected lines only first text";
         GeneralMergeSelectedLinesBilingual = "Merge selected lines bilingual";
