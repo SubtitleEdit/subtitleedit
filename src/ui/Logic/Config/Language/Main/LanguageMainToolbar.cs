@@ -24,6 +24,9 @@ public class LanguageMainToolbar
     public string AssaPropertiesHint { get; set; }
     public string AssaAttachmentsHint { get; set; }
     public string AssaDrawHint { get; set; }
+    public string SsaStylesHint { get; set; }
+    public string SsaPropertiesHint { get; set; }
+    public string SsaAttachmentsHint { get; set; }
 
 
     public LanguageMainToolbar()
@@ -50,5 +53,8 @@ public class LanguageMainToolbar
         AssaPropertiesHint = "Advanced Sub Station Alpha properties";
         AssaAttachmentsHint = "Advanced Sub Station Alpha attachments";
         AssaDrawHint = "Advanced Sub Station Alpha draw shapes";
+        SsaStylesHint = "Sub Station Alpha styles";
+        SsaPropertiesHint = "Sub Station Alpha properties";
+        SsaAttachmentsHint = "Sub Station Alpha attachments";
     }
 }
