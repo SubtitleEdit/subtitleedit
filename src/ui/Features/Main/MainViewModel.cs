@@ -5844,6 +5844,7 @@ public partial class MainViewModel :
         vp.VideoPlayer.Pause();
         var p = selectedItems.First();
         vp.Position = p.StartTime.TotalSeconds;
+        PinPlayheadTo(p.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem(selectedItems, p.EndTime, loop);
         vp.VideoPlayer.Play();
 
@@ -10663,6 +10664,7 @@ public partial class MainViewModel :
         var p = Subtitles[currentIndex - 1];
         SubtitleGrid.SelectedItem = p;
         vp.Position = p.StartTime.TotalSeconds;
+        PinPlayheadTo(p.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { p }, p.EndTime, true);
         vp.VideoPlayer.Play();
     }
@@ -10687,6 +10689,7 @@ public partial class MainViewModel :
         var p = Subtitles[currentIndex + 1];
         SubtitleGrid.SelectedItem = p;
         vp.Position = p.StartTime.TotalSeconds;
+        PinPlayheadTo(p.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { p }, p.EndTime, true);
         vp.VideoPlayer.Play();
     }
