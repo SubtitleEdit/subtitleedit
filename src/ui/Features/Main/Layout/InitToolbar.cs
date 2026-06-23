@@ -337,8 +337,8 @@ public static class InitToolbar
             Content = MakeImage("AssaStyle"),
             Command = vm.ShowSsaStylesCommand,
             Background = Brushes.Transparent,
-            [AutomationProperties.NameProperty] = languageHints.AssaStylesHint,
-            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaStylesHint, shortcuts, nameof(vm.ShowSsaStylesCommand)),
+            [AutomationProperties.NameProperty] = languageHints.SsaStylesHint,
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SsaStylesHint, shortcuts, nameof(vm.ShowSsaStylesCommand)),
             [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatSsa))
             {
                 Source = vm,
@@ -350,8 +350,8 @@ public static class InitToolbar
             Content = MakeImage("AssaProperties"),
             Command = vm.ShowSsaPropertiesCommand,
             Background = Brushes.Transparent,
-            [AutomationProperties.NameProperty] = languageHints.AssaPropertiesHint,
-            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaPropertiesHint, shortcuts, nameof(vm.ShowSsaPropertiesCommand)),
+            [AutomationProperties.NameProperty] = languageHints.SsaPropertiesHint,
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SsaPropertiesHint, shortcuts, nameof(vm.ShowSsaPropertiesCommand)),
             [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatSsa))
             {
                 Source = vm,
@@ -363,8 +363,8 @@ public static class InitToolbar
             Content = MakeImage("AssaAttachments"),
             Command = vm.ShowSsaAttachmentsCommand,
             Background = Brushes.Transparent,
-            [AutomationProperties.NameProperty] = languageHints.AssaAttachmentsHint,
-            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.AssaAttachmentsHint, shortcuts, nameof(vm.ShowSsaAttachmentsCommand)),
+            [AutomationProperties.NameProperty] = languageHints.SsaAttachmentsHint,
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SsaAttachmentsHint, shortcuts, nameof(vm.ShowSsaAttachmentsCommand)),
             [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsFormatSsa))
             {
                 Source = vm,
