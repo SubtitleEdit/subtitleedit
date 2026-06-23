@@ -1,7 +1,7 @@
 ﻿{
   "title": "Subtitle Edit",
   "version": "v5.0.0",
-  "translatedBy": "Adam Malich - 12.06.2026",
+  "translatedBy": "Adam Malich - 23.06.2026",
   "cultureName": "pl-PL",
   "general": {
     "abort": "Przerwij",
@@ -172,6 +172,8 @@
     "extendSelectedLinesToPreviousShotChange": "Rozciągnij zaznaczone linie do poprzedniej zmiany ujęcia (lub poprzedniego napisu)",
     "extendSelectedToNext": "Rozciągnij zaznaczone do następnego",
     "extendSelectedToPrevious": "Rozciągnij zaznaczone do poprzedniego",
+    "extendPreviousEndToSelectedStart": "Rozciągnij koniec poprzedniego wiersza do początku zaznaczonego",
+    "extendNextStartToSelectedEnd": "Rozciągnij początek następnego wiersza do końca zaznaczonego",
     "extractingAudioClips": "Wyodrębnianie klipów audio...",
     "exitFullScreen": "Wyjdź z pełnego ekranu",
     "fade": "Zanikanie",
@@ -251,6 +253,7 @@
     "imageSaved": "Obraz zapisany",
     "imageBasedSubtitles": "Napisy oparte na obrazach",
     "images": "Obrazy",
+    "imagesWithHtmlIndex": "Obrazy z indeksem HTML",
     "imagesWithTimeCode": "Obrazy z kodem czasowym",
     "import": "Importuj",
     "importDotDotDot": "Importuj...",
@@ -1064,8 +1067,8 @@
       "importFileLabel": "Wybierz obrazy do importu (obsługiwane są kody czasowe w nazwach plików)",
       "importFilesInfo": "Użyj nazw plików z kodami czasowymi:\nstart_HH_MM_SS_MMM__end_HH_MM_SS_MMM[_index].ext\n\nPrzykłady:\n0_00_01_042__0_00_03_919_0001.png\n0_00_01_042__0_00_03_919.png\n\nReguły:\n• HH_MM_SS_MMM dla czasów rozpoczęcia i zakończenia\n• Podwójny znak podkreślenia oddziela początek/koniec\n• Opcjonalny indeks po czasie zakończenia",
       "formattingDotDotDot": "Formatowanie...",
-      "imageBasedSubtitleForEditDotDotDot": "Napisy oparte na obrazach do edycji...",
-      "imageBasedSubtitleForOcrDotDotDot": "Napisy oparte na obrazach do OCR...",
+      "imageBaseSubtitleForEditDotDotDot": "Napisy oparte na obrazach do edycji...",
+      "imageBaseSubtitleForOcrDotDotDot": "Napisy oparte na obrazach do OCR...",
       "splitTextAt": "Podziel tekst na",
       "blankLines": "Puste linie",
       "oneLineIsOneSubtitle": "Jedna linia to jeden napis",
@@ -3112,4 +3115,4 @@
     "gitHubSponsor": "GitHub sponsor",
     "or": " lub "
   }
-}
+}
