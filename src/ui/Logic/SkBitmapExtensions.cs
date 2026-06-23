@@ -23,7 +23,7 @@ internal static class SkBitmapExtensions
 
         paint.ColorFilter = SKColorFilter.CreateColorMatrix(colorMatrix);
 
-        canvas.DrawBitmap(bitmap, 0, 0, paint);
+        canvas.DrawBitmap(bitmap, 0, 0, SKSamplingOptions.Default, paint);
 
         return bitmap;
     }
@@ -264,7 +264,7 @@ internal static class SkBitmapExtensions
         var skBitmap = new SKBitmap(image.Width, image.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
         using (var canvas = new SKCanvas(skBitmap))
         {
-            canvas.DrawImage(image, 0, 0);
+            canvas.DrawImage(image, 0, 0, SKSamplingOptions.Default);
         }
 
         return skBitmap;

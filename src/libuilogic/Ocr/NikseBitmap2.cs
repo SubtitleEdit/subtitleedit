@@ -93,7 +93,7 @@ public class NikseBitmap2
             convertedBitmap = new SKBitmap(inputBitmap.Width, inputBitmap.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
             using (var canvas = new SKCanvas(convertedBitmap))
             {
-                canvas.DrawBitmap(inputBitmap, 0, 0);
+                canvas.DrawBitmap(inputBitmap, 0, 0, SKSamplingOptions.Default);
             }
             inputBitmap = convertedBitmap;
             needsDisposal = true;

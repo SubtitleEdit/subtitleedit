@@ -44,7 +44,7 @@ public partial class ImageBasedPreviewViewModel : ObservableObject
         using (var canvas = new SKCanvas(skBitmap))
         {
             UiUtil.DrawCheckerboardBackground(canvas, width, height);
-            canvas.DrawBitmap(bitmap, x, y);
+            canvas.DrawBitmap(bitmap, x, y, SKSamplingOptions.Default);
         }
 
         BitmapPreview = skBitmap.ToAvaloniaBitmap();

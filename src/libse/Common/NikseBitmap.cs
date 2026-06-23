@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var newBitmap = new SKBitmap(info);
                 using (var canvas = new SKCanvas(newBitmap))
                 {
-                    canvas.DrawBitmap(inputBitmap, 0, 0);
+                    canvas.DrawBitmap(inputBitmap, 0, 0, SKSamplingOptions.Default);
                 }
                 inputBitmap = newBitmap;
                 createdNewBitmap = true;

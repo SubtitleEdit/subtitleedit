@@ -195,7 +195,7 @@ public static class ClipboardHelper
                 // Ensure we have BGRA format
                 using var bgraBitmap = new SkiaSharp.SKBitmap(width, height, SkiaSharp.SKColorType.Bgra8888, SkiaSharp.SKAlphaType.Premul);
                 using var canvas = new SkiaSharp.SKCanvas(bgraBitmap);
-                canvas.DrawBitmap(skBitmap, 0, 0);
+                canvas.DrawBitmap(skBitmap, 0, 0, SkiaSharp.SKSamplingOptions.Default);
                 canvas.Flush();
 
                 var pixels = bgraBitmap.Bytes;

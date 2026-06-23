@@ -142,7 +142,7 @@ public partial class PickFontNameViewModel : ObservableObject
         {
             if (!string.IsNullOrEmpty(line))
             {
-                canvas.DrawText(line, 12, y, font, paint);
+                canvas.DrawText(line, 12, y, SKTextAlign.Left, font, paint);
             }
             y += font.Size + 5; // Line spacing using font.Size instead of paint.TextSize
         }

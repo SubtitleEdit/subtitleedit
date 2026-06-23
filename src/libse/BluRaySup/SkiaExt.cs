@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             using (SKCanvas canvas = new SKCanvas(newBitmap))
             {
                 canvas.Clear(SKColors.Transparent); // Fill the new bitmap with transparent color
-                canvas.DrawBitmap(bitmap, marginLeft, marginTop); // Draw the original bitmap at the correct position
+                canvas.DrawBitmap(bitmap, marginLeft, marginTop, SKSamplingOptions.Default); // Draw the original bitmap at the correct position
             }
 
             return newBitmap;
@@ -225,7 +225,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             {
                 SKRect sourceRect = new SKRect(left, top, right + 1, bottom + 1);
                 SKRect destRect = new SKRect(0, 0, newWidth, newHeight);
-                canvas.DrawBitmap(bitmap, sourceRect, destRect);
+                canvas.DrawBitmap(bitmap, sourceRect, destRect, SKSamplingOptions.Default);
             }
 
             return new TrimResult

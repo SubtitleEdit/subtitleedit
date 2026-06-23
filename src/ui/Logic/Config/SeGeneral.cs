@@ -197,6 +197,10 @@ public class SeGeneral
         FfmpegPath = string.Empty;
         LibMpvPath = string.Empty;
 
+        ProxyAddress = string.Empty;
+        ProxyUserName = string.Empty;
+        ProxyPassword = string.Empty;
+
         ShowColumnStartTime = true;
         ShowColumnEndTime = true;
         ShowColumnGap = false;

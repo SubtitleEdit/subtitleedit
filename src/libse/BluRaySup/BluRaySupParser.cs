@@ -348,7 +348,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                             var offset = new BluRayPoint(PcsObjects[ioIndex].Origin.X - r.Location.X, PcsObjects[ioIndex].Origin.Y - r.Location.Y);
                             using (var singleBmp = SupDecoder.DecodeImage(PcsObjects[ioIndex], BitmapObjects[ioIndex], PaletteInfos))
                             {
-                                canvas.DrawBitmap(singleBmp, offset.X, offset.Y);
+                                canvas.DrawBitmap(singleBmp, offset.X, offset.Y, SKSamplingOptions.Default);
                             }
                         }
                     }

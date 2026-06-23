@@ -239,9 +239,9 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _isLibVlcDownloadVisible;
     [ObservableProperty] private string _ffmpegPath;
     [ObservableProperty] private string _ffmpegStatus;
-    [ObservableProperty] private string _proxyAddress;
-    [ObservableProperty] private string _proxyUserName;
-    [ObservableProperty] private string _proxyPassword;
+    [ObservableProperty] private string _proxyAddress = string.Empty;
+    [ObservableProperty] private string _proxyUserName = string.Empty;
+    [ObservableProperty] private string _proxyPassword = string.Empty;
     [ObservableProperty] private int _waveformTextFontSize;
     [ObservableProperty] private bool _waveformTextFontBold;
     [ObservableProperty] private Color _waveformTextColor;
