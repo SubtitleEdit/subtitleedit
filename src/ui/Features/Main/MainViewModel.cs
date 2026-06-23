@@ -737,7 +737,16 @@ public partial class MainViewModel :
         var ffmpegFileName = DownloadFfmpegViewModel.GetFfmpegFileName();
         if (!string.IsNullOrEmpty(ffmpegFileName) && File.Exists(ffmpegFileName))
         {
-            Se.Settings.General.FfmpegPath = DownloadFfmpegViewModel.GetFfmpegFileName();
+            FfmpegHelper.SetFfmpegPath(ffmpegFileName);
+            return;
+        }
+
+        // Fall back to an ffmpeg already on the system PATH (e.g. after a failed download), so SE
+        // does not get stuck on actions that need ffmpeg on the next start - issue #11760.
+        var systemFfmpeg = FfmpegHelper.GetSystemFfmpegPath();
+        if (!string.IsNullOrEmpty(systemFfmpeg))
+        {
+            FfmpegHelper.SetFfmpegPath(systemFfmpeg);
         }
     }
 
@@ -13030,13 +13039,21 @@ public partial class MainViewModel :
 
         if (File.Exists(DownloadFfmpegViewModel.GetFfmpegFileName()))
         {
-            Se.Settings.General.FfmpegPath = DownloadFfmpegViewModel.GetFfmpegFileName();
+            FfmpegHelper.SetFfmpegPath(DownloadFfmpegViewModel.GetFfmpegFileName());
+            return true;
+        }
+
+        // Use an ffmpeg on the system PATH before prompting to (re)download - issue #11760.
+        var systemFfmpeg = FfmpegHelper.GetSystemFfmpegPath();
+        if (!string.IsNullOrEmpty(systemFfmpeg))
+        {
+            FfmpegHelper.SetFfmpegPath(systemFfmpeg);
             return true;
         }
 
         if (!OperatingSystem.IsWindows() && File.Exists("/usr/local/bin/ffmpeg"))
         {
-            Se.Settings.General.FfmpegPath = "/usr/local/bin/ffmpeg";
+            FfmpegHelper.SetFfmpegPath("/usr/local/bin/ffmpeg");
             return true;
         }
 
@@ -13057,7 +13074,7 @@ public partial class MainViewModel :
             var result = await ShowDialogAsync<DownloadFfmpegWindow, DownloadFfmpegViewModel>();
             if (!string.IsNullOrEmpty(result.FfmpegFileName))
             {
-                Se.Settings.General.FfmpegPath = result.FfmpegFileName;
+                FfmpegHelper.SetFfmpegPath(result.FfmpegFileName);
                 ShowStatus(string.Format(Se.Language.Main.FfmpegDownloadedAndInstalledToX, result.FfmpegFileName));
                 return true;
             }
