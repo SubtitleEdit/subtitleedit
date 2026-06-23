@@ -1,7 +1,7 @@
 {
   "Title": "SubtitleEdit",
   "Version": "v5.0.0",
-  "TranslatedBy": "v. 14.06.2026 di bovirus",
+  "TranslatedBy": "v. 23.06.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -172,6 +172,8 @@
     "ExtendSelectedLinesToPreviousShotChange": "Estendi righe selezionate al cambio scena precedente (o al sottotitolo precedente)",
     "ExtendSelectedToNext": "Estendi selezionato al successivo",
     "ExtendSelectedToPrevious": "Estendi selezionato al precedente",
+    "ExtendPreviousEndToSelectedStart": "Estendi la fine della riga precedente all'inizio della selezione",
+    "ExtendNextStartToSelectedEnd": "Estendi l'inizio della riga successiva fino alla fine della riga selezionata",
     "ExtractingAudioClips": "Estrazione clip audio...",
     "ExitFullScreen": "Esci dallo schermo intero",
     "Fade": "Dissolvenza",
@@ -251,6 +253,7 @@
     "ImageSaved": "Immagine salvata",
     "ImageBasedSubtitles": "Sottotitoli basati su immagini",
     "Images": "Immagini",
+    "ImagesWithHtmlIndex": "Immagini con indice HTML",
     "ImagesWithTimeCode": "Immagini con codice temporale",
     "Import": "Importa",
     "ImportDotDotDot": "Importa...",
@@ -391,6 +394,7 @@
     "Percent": "Percentuale",
     "PickLayer": "Imposta livello",
     "PickOllamaModel": "Scegli modello Ollama",
+    "LlamaCppUseRemoteServer": "Usa server esterno (URL)",
     "PickOutputFolder": "Scegli cartella destinazione",
     "PickResolutionFromCurrentVideo": "Scegli risoluzione dal video attuale",
     "PickResolutionFromVideoDotDotDot": "Scegli risoluzione video...",
@@ -440,6 +444,7 @@
     "RemoveItalic": "Rimuovi corsivo",
     "RemoveRightToLeftUnicodeTags": "Rimuovi tag Unicode RTL",
     "RemoveSelectedFile": "Vuoi rimuovere il file selezionato?",
+    "RemoveSelectedFilesX": "Vuoi rimuovere {0} file selezionati?",
     "RemoveStyling": "Rimuovi stile",
     "RemoveTextForHearingImpaired": "Rimuovi il testo per i non udenti",
     "RemoveUnderline": "Rimuovi sottolineatura",
@@ -980,7 +985,10 @@
       "AssaStylesHint": "Stili ASSA (Advanced Sub Station Alpha)",
       "AssaPropertiesHint": "Proprietà ASSA (Advanced Sub Station Alpha)",
       "AssaAttachmentsHint": "Allegati ASSA (Advanced Sub Station Alpha)",
-      "AssaDrawHint": "Disegno forme ASSA (Advanced Sub Station Alpha)"
+      "AssaDrawHint": "Disegno forme ASSA (Advanced Sub Station Alpha)",
+      "SsaStylesHint": "Stili Sub Station Alpha",
+      "SsaPropertiesHint": "Proprietà Sub Station Alpha",
+      "SsaAttachmentsHint": "Allegati Sub Station Alpha"
     },
     "Waveform": {
       "PlayPauseHint": "Riproduci/pausa {0}",
@@ -1824,7 +1832,9 @@
     "IgnoreAllX": "Ignora tutti i '{0}'",
     "PickSpellCheckDictionaryDotDotDot": "Scegli il dizionario per il controllo ortografico...",
     "ChooseSpellCheckDictionary": "Scegli il dizionario per il controllo ortografico",
-    "PickLiveSpellCheckDictionary": "Scegli dizionario controllo ortografico in tempo reale"
+    "PickLiveSpellCheckDictionary": "Scegli dizionario controllo ortografico in tempo reale",
+    "UndoX": "Annulla operazione: {0}",
+    "EditWholeText": "Modifica intero testo"
   },
   "Video": {
     "GoToVideoPosition": "Vai alla posizione video",
@@ -2243,6 +2253,9 @@
       "ShowUpDownLabels": "Visualizza etichette per i controlli su/giù (visualizza/nascondi/durata)",
       "ShowButtonHints": "Visualizza suggerimenti pulsanti",
       "GridCompactMode": "Usa modalità compatta per le griglie",
+      "GridAlternatingRows": "Nella griglia usa colori riga alternati",
+      "GridAlternatingRowColor": "Colore riga alternato (tema chiaro)",
+      "GridAlternatingRowColorDark": "Colore riga alternato (tema scuro)",
       "UiFont": "Font interfaccia utente",
       "Theme": "Tema",
       "IconTheme": "Tema icona",
@@ -2267,6 +2280,7 @@
       "PromptBeforeDelete": "Chiedi conferma prima dell'eliminazione",
       "RememberPositionAndSize": "Ricorda posizione/dimensioni finestra",
       "OpenLastFileOnStart": "All'avvio apri il file più recente",
+      "AutoSave": "Salvataggio automatico (salva il file aperto durante la modifica)",
       "AutoBackupOn": "Backup automatico",
       "AutoBackupIntervalMinutes": "Intervallo backup automatico (minuti)",
       "AutoBackupDeleteAfterDays": "Conservazione backup automatico (giorni)",
@@ -2473,6 +2487,7 @@
       "CategorySubtitleGridAndTextBox": "Visualizzazione elenco sottotitoli e casella testo",
       "CategorySubtitleGrid": "Visualizzazione elenco sottotitoli",
       "CategoryWaveform": "Forma d'onda",
+      "GeneralSetupLikeSe4": "Configurato come Subtitle Edit 4 (tema, scorciatoie, regole sostituzione)",
       "GeneralMergeSelectedLines": "Unisci righe selezionate",
       "GeneralMergeWithPrevious": "Unisci con precedente",
       "GeneralMergeWithNext": "Unisci con successiva",
