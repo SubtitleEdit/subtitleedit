@@ -404,6 +404,8 @@ public class LanguageGeneral
     public string Play { get; set; }
     public string PlayFromStartOfVideo { get; set; }
     public string PlayNext { get; set; }
+    public string PlayNextAndStop { get; set; }
+    public string PlayNextAndLoop { get; set; }
     public string PlaySelectedLines { get; set; }
     public string PlaySelectedLinesWithLoop { get; set; }
     public string PlaySelectedLinesAndFocusWaveform { get; set; }
@@ -1135,6 +1137,8 @@ public class LanguageGeneral
         Play = "Play";
         PlayFromStartOfVideo = "Play from start of video";
         PlayNext = "Play next";
+        PlayNextAndStop = "Play next (and stop)";
+        PlayNextAndLoop = "Play next (and loop)";
         PlaySelectedLines = "Play selected lines";
         PlaySelectedLinesWithLoop = "Play selected lines with loop";
         PlaySelectedLinesAndFocusWaveform = "Play selected lines and focus waveform";

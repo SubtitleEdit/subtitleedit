@@ -920,7 +920,63 @@ public partial class MainViewModel :
         }
 
         vp.Position = next.StartTime.TotalSeconds;
+        PinPlayheadTo(next.StartTime.TotalSeconds);
         SelectAndScrollToSubtitle(next);
+        vp.VideoPlayer.Play();
+    }
+
+    [RelayCommand]
+    private void PlayNextAndStop()
+    {
+        PlayNextParagraph(false);
+    }
+
+    [RelayCommand]
+    private void PlayNextAndLoop()
+    {
+        PlayNextParagraph(true);
+    }
+
+    // Plays the paragraph after the current selection (or after the video position when nothing is
+    // selected), selects it, and either stops at its end (loop=false) or repeats it (loop=true) via
+    // the _playSelectionItem handled in the player position-changed loop.
+    private void PlayNextParagraph(bool loop)
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null)
+        {
+            return;
+        }
+
+        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
+        SubtitleLineViewModel? next;
+        if (selectedItems.Count > 0)
+        {
+            var currentIndex = Subtitles.IndexOf(selectedItems.Last());
+            next = currentIndex >= 0 && currentIndex < Subtitles.Count - 1
+                ? Subtitles[currentIndex + 1]
+                : null;
+        }
+        else
+        {
+            next = Subtitles.FirstOrDefault(s => s.StartTime.TotalSeconds >= vp.Position);
+        }
+
+        if (next == null)
+        {
+            return;
+        }
+
+        vp.VideoPlayer.Pause();
+        // Select synchronously rather than via SelectAndScrollToSubtitle (which posts the selection
+        // to the dispatcher): the grid's SelectionChanged handler calls ResetPlaySelection, so a
+        // deferred selection would null _playSelectionItem *after* we set it and break stop/loop.
+        // Mirror RepeatNextLine — change selection first, then assign _playSelectionItem.
+        SubtitleGrid.SelectedItem = next;
+        SubtitleGrid.ScrollIntoView(next, null);
+        vp.Position = next.StartTime.TotalSeconds;
+        PinPlayheadTo(next.StartTime.TotalSeconds);
+        _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { next }, next.EndTime, loop);
         vp.VideoPlayer.Play();
     }
 
@@ -5793,6 +5849,7 @@ public partial class MainViewModel :
         vp.VideoPlayer.Pause();
         var p = selectedItems.First();
         vp.Position = p.StartTime.TotalSeconds;
+        PinPlayheadTo(p.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem(selectedItems, p.EndTime, loop);
         vp.VideoPlayer.Play();
 
@@ -10612,6 +10669,7 @@ public partial class MainViewModel :
         var p = Subtitles[currentIndex - 1];
         SubtitleGrid.SelectedItem = p;
         vp.Position = p.StartTime.TotalSeconds;
+        PinPlayheadTo(p.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { p }, p.EndTime, true);
         vp.VideoPlayer.Play();
     }
@@ -10636,6 +10694,7 @@ public partial class MainViewModel :
         var p = Subtitles[currentIndex + 1];
         SubtitleGrid.SelectedItem = p;
         vp.Position = p.StartTime.TotalSeconds;
+        PinPlayheadTo(p.StartTime.TotalSeconds);
         _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { p }, p.EndTime, true);
         vp.VideoPlayer.Play();
     }
