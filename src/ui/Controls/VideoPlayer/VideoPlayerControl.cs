@@ -516,6 +516,8 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 FontWeight = FontWeight.Bold,
                 Opacity = 0.6,
                 TextAlignment = TextAlignment.Right,
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                MaxLines = 1,
             };
             _gridProgress.Add(_textBlockVideoFileName, 0, 1, 1, 3);
             _textBlockVideoFileName.PointerPressed += (_, e) => { VideoFileNamePointerPressed?.Invoke(e); };
@@ -729,12 +731,22 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 StartAutoHideControls();
             }
 
+            _textBlockVideoFileName.Text = ShortenVideoFileName(videoFileName);
+        }
+
+        // Keep the displayed name short so it doesn't grow leftward into the
+        // centered position/duration text. The TextTrimming ellipsis on the
+        // text block is a further guard for narrow player widths.
+        private static string ShortenVideoFileName(string videoFileName)
+        {
             var shortName = System.IO.Path.GetFileName(videoFileName);
-            if (shortName.Length > 55)
+            const int maxLength = 35;
+            if (shortName.Length > maxLength)
             {
-                shortName = "..." + shortName[^50..];
+                shortName = "..." + shortName[^(maxLength - 3)..];
             }
-            _textBlockVideoFileName.Text = shortName;
+
+            return shortName;
         }
 
         internal void Close()
