@@ -1753,6 +1753,36 @@ public partial class MainViewModel :
         _shortcutManager.ClearKeys();
     }
 
+    // SE4 parity (GeneralToggleTranslationMode): toggle the side-by-side original/translation view.
+    // Off -> hide the original column; on with an original already loaded -> re-show it without
+    // re-prompting; on with nothing loaded -> open an original subtitle file.
+    [RelayCommand]
+    private async Task ToggleTranslationMode()
+    {
+        if (Subtitles.Count == 0)
+        {
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        if (ShowColumnOriginalText)
+        {
+            ShowColumnOriginalText = false;
+            AutoFitColumns();
+        }
+        else if (_subtitleOriginal != null && _subtitleOriginal.Paragraphs.Count > 0)
+        {
+            ShowColumnOriginalText = true;
+            AutoFitColumns();
+        }
+        else
+        {
+            await FileOpenOriginal();
+        }
+
+        _shortcutManager.ClearKeys();
+    }
+
     [RelayCommand]
     private async Task FileCloseTranslation()
     {
