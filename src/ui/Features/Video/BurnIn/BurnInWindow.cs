@@ -793,9 +793,10 @@ public class BurnInWindow : Window
 
         // "Match source video size" derives the target from each input file's own size (works per-file
         // in batch mode); when on, the fixed-MB field is irrelevant and is disabled.
-        var checkBoxMatchSource = UiUtil.MakeCheckBox(Se.Language.Video.BurnIn.MatchSourceVideoSize, vm, nameof(vm.MatchSourceVideoSize));
+        var checkBoxMatchSource = UiUtil.MakeCheckBox(Se.Language.Video.BurnIn.MatchSourceVideoSize, vm, nameof(vm.MatchSourceVideoSize))
+            .WithMarginLeft(10);
 
-        var labelTargetFileSize = UiUtil.MakeLabel(Se.Language.Video.BurnIn.FileSizeMb);
+        var labelTargetFileSize = UiUtil.MakeLabel(Se.Language.Video.BurnIn.FileSizeMb).WithMarginLeft(10);
         var numericUpDownTargetFileSize = UiUtil.MakeNumericUpDownInt(1, 1000_000_000, 0, 150, vm, nameof(vm.TargetFileSize));
         numericUpDownTargetFileSize.ValueChanged += vm.NumericUpDownTargetFileSizeChanged;
         numericUpDownTargetFileSize.Bind(NumericUpDown.IsEnabledProperty, new Binding(nameof(vm.MatchSourceVideoSize)) { Converter = new InverseBooleanConverter() });
