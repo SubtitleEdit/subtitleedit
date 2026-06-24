@@ -21,6 +21,7 @@ public class SeVideoBurnIn
     public string AudioBitRate { get; set; }
     public bool TargetFileSize { get; set; }
     public int TargetFileSizeMb { get; set; }
+    public bool TargetFileSizeMatchSource { get; set; }
     public bool PromptFfmpegParameters { get; set; }
     public int NonAssaBoxType { get; set; }
     public bool NonAssaBox { get; set; }
@@ -62,6 +63,7 @@ public class SeVideoBurnIn
         AudioSampleRate = "48000";
         AudioBitRate = "128k";
         TargetFileSizeMb = 100;
+        TargetFileSizeMatchSource = true;
         FontBold = true;
         OutlineWidth = 6;
         ShadowWidth = 3;

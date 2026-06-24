@@ -15,6 +15,7 @@ public class LanguageBurnIn
     public string TargetFileName { get; set; }
     public string TargetFileSize { get; set; }
     public string FileSizeMb { get; set; }
+    public string MatchSourceVideoSize { get; set; }
     public string PassX { get; set; }
     public string Encoding { get; set; }
     public string BitRate { get; set; }
@@ -61,6 +62,7 @@ public class LanguageBurnIn
         TargetFileName = "Target file name: {0}";
         TargetFileSize = "Target file size (requires 2 pass encoding)";
         FileSizeMb = "File size in MB";
+        MatchSourceVideoSize = "Match source video size";
         PassX = "Pass {0}";
         Encoding = "Encoding";
         BitRate = "Bit rate";
