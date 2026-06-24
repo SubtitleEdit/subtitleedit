@@ -273,6 +273,11 @@ public class OcrWindow : Window
                     .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
                 UiUtil.MakeBrowseButton(vm.PickTesseractModelCommand).BindIsVisible(vm, nameof(vm.IsTesseractVisible))
                     .BindIsEnabled(vm, nameof(vm.IsOcrRunning), new InverseBooleanConverter()),
+                UiUtil.MakeLabel<OcrViewModel>(Se.Language.Ocr.TesseractEngineMode, vm => vm.IsTesseractVisible)
+                    .WithMarginLeft(10),
+                UiUtil.MakeComboBox(vm.TesseractEngineModes, vm, nameof(vm.SelectedTesseractEngineMode),
+                        nameof(vm.IsTesseractVisible))
+                    .BindIsEnabled(vm, nameof(OcrViewModel.IsOcrRunning), new InverseBooleanConverter()),
 
                 // Ollama settings
                 UiUtil.MakeLabel<OcrViewModel>(Se.Language.General.Language, vm => vm.IsOllamaVisible),

@@ -55,7 +55,7 @@ public class TesseractOcr
         return "tesseract";
     }
 
-    public async Task<string> Ocr(SKBitmap bitmap, string language, string tessDataFolder, CancellationToken cancellationToken)
+    public async Task<string> Ocr(SKBitmap bitmap, string language, string tessDataFolder, CancellationToken cancellationToken, int engineMode = 3)
     {
         if (string.IsNullOrEmpty(_executablePath))
         {
@@ -94,7 +94,7 @@ public class TesseractOcr
             psi.ArgumentList.Add("--psm");
             psi.ArgumentList.Add("6");
             psi.ArgumentList.Add("--oem");
-            psi.ArgumentList.Add("3");
+            psi.ArgumentList.Add(engineMode.ToString(System.Globalization.CultureInfo.InvariantCulture));
             psi.ArgumentList.Add("-c");
             psi.ArgumentList.Add("tessedit_create_hocr=1");
             psi.ArgumentList.Add("-c");

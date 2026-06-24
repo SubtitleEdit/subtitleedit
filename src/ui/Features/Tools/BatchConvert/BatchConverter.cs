@@ -668,13 +668,14 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
     {
         var tesseractOcr = new TesseractOcr();
         var language = string.IsNullOrEmpty(Se.Settings.Tools.BatchConvert.TesseractLanguage) ? "eng" : Se.Settings.Tools.BatchConvert.TesseractLanguage;
+        var engineMode = Se.Settings.Tools.BatchConvert.TesseractEngineMode;
         item.Subtitle = new Subtitle();
         for (var i = 0; i < imageSubtitles.Count; i++)
         {
             var pct = (i + 1) * 100 / imageSubtitles.Count;
             item.Status = string.Format(Se.Language.General.OcrPercentX, pct);
             var bitmap = imageSubtitles.GetBitmap(i);
-            var text = await tesseractOcr.Ocr(bitmap, language, Se.TesseractModelFolder, cancellationToken);
+            var text = await tesseractOcr.Ocr(bitmap, language, Se.TesseractModelFolder, cancellationToken, engineMode);
             var p = new Paragraph(text, imageSubtitles.GetStartTime(i).TotalMilliseconds, imageSubtitles.GetEndTime(i).TotalMilliseconds);
             item.Subtitle.Paragraphs.Add(p);
 

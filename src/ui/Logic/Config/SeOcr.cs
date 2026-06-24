@@ -34,6 +34,7 @@ public class SeOcr
     public string PaddleOcrMode { get; set; }
     public string PaddleOcrLastLanguage { get; set; }
     public string TesseractLastLanguage { get; set; }
+    public int TesseractEngineMode { get; set; }
     public string GoogleVisionOcrLastLanguage { get; set; }
     public string GoogleLensOcrLastLanguage { get; set; }
     public bool DoTryToGuessUnknownWords { get; set; }
@@ -87,6 +88,7 @@ public class SeOcr
         PaddleOcrMode = "mobile";
         PaddleOcrLastLanguage = "en";
         TesseractLastLanguage = "eng";
+        TesseractEngineMode = 3; // Default, based on what is available (tesseract --oem)
 
         GoogleVisionOcrLastLanguage = "en";
         GoogleLensOcrLastLanguage = "en";
