@@ -313,6 +313,7 @@ public static class Se4ShortcutsImporter
         ["GeneralMergeSelectedLinesAndUnbreakNoSpace"] = nameof(MainViewModel.MergeSelectedLinesAndUnbreakCjkCommand),
         ["GeneralMergeSelectedLinesBilingual"] = nameof(MainViewModel.MergeSelectedLinesBilingualCommand),
         ["GeneralMergeOriginalAndTranslation"] = nameof(MainViewModel.MergeOriginalIntoTranslationSelectedLinesCommand),
+        ["GeneralToggleTranslationMode"] = nameof(MainViewModel.ToggleTranslationModeCommand),
         ["GeneralMergeWithNext"] = nameof(MainViewModel.MergeWithLineAfterCommand),
         ["GeneralMergeWithPrevious"] = nameof(MainViewModel.MergeWithLineBeforeCommand),
         ["GeneralApplyAssaOverrideTags"] = nameof(MainViewModel.ShowAssaApplyCustomOverrideTagsCommand),

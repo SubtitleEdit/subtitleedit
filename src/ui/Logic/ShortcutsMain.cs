@@ -104,6 +104,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.CommandFileOpenKeepVideoCommand), Se.Language.Options.Shortcuts.FileOpenKeepVideo },
         { nameof(MainViewModel.FileOpenOriginalCommand), Se.Language.Options.Shortcuts.FileOpenOriginal },
         { nameof(MainViewModel.FileCloseOriginalCommand), Se.Language.Options.Shortcuts.FileCloseOriginal },
+        { nameof(MainViewModel.ToggleTranslationModeCommand), Se.Language.Options.Shortcuts.GeneralToggleTranslationMode },
         { nameof(MainViewModel.FileCloseTranslationCommand), Se.Language.Options.Shortcuts.FileCloseTranslation },
         { nameof(MainViewModel.CommandExitCommand), Se.Language.Options.Shortcuts.FileExit },
         { nameof(MainViewModel.CommandFileNewCommand), Se.Language.Options.Shortcuts.FileNew },
@@ -465,6 +466,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.CommandFileOpenKeepVideoCommand, nameof(vm.CommandFileOpenKeepVideoCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.FileOpenOriginalCommand, nameof(vm.FileOpenOriginalCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.FileCloseOriginalCommand, nameof(vm.FileCloseOriginalCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ToggleTranslationModeCommand, nameof(vm.ToggleTranslationModeCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.FileCloseTranslationCommand, nameof(vm.FileCloseTranslationCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ExportBluRaySupCommand, nameof(vm.ExportBluRaySupCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowExportCustomTextFormatCommand, nameof(vm.ShowExportCustomTextFormatCommand), ShortcutCategory.General);
@@ -829,6 +831,7 @@ public static class ShortcutsMain
             new(nameof(vm.AutoBreakCommand), [cmd, nameof(Avalonia.Input.Key.R)], ShortcutCategory.General),
             new(nameof(vm.PlaySelectedLinesWithoutLoopCommand), [nameof(Avalonia.Input.Key.F5)], ShortcutCategory.General),
             new(nameof(vm.ExtendSelectedToNextCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.E)], ShortcutCategory.General),
+            new(nameof(vm.ToggleTranslationModeCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.O)], ShortcutCategory.General),
             new(nameof(vm.ExtendSelectedToPreviousCommand), ["Alt", "Shift", nameof(Avalonia.Input.Key.E)], ShortcutCategory.General),
 
             // Text casing / split (V4 defaults)
