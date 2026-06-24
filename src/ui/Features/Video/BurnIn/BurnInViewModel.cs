@@ -265,7 +265,12 @@ public partial class BurnInViewModel : ObservableObject
         if (fileExists)
         {
             SingleMode();
-            VideoFileSize = Utilities.FormatBytesToDisplayFileSize(new FileInfo(videoFileName).Length);
+            var fileLengthInBytes = new FileInfo(videoFileName).Length;
+            VideoFileSize = Utilities.FormatBytesToDisplayFileSize(fileLengthInBytes);
+
+            // Default the target file size to the original file's size, so enabling
+            // "use target file size" roughly preserves the source size by default.
+            TargetFileSize = Math.Max(1, (int)Math.Round(fileLengthInBytes / (1024.0 * 1024.0)));
             _ = Task.Run(() =>
             {
                 _mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
