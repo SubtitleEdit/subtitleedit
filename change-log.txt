@@ -38,6 +38,7 @@ v5.1.0 (TDB)
 * Update Bulgarian translation - thx jekovcar
 * Update Polish translation
 
+-----------------------------------------------------------------------------------------------------
 
 v5.0.0 (22nd June 2026)
 
