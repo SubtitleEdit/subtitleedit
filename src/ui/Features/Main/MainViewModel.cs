@@ -1701,6 +1701,14 @@ public partial class MainViewModel :
             }
         }
 
+        if (Subtitles.Count == 0 && subtitle.Paragraphs.Count > 0)
+        {
+            // Nothing loaded yet: scaffold a blank translation from the original so the user
+            // can start translating from scratch, instead of reporting a line-count mismatch.
+            ImportOriginalIntoEmptySubtitle(fileName, subtitle);
+            return true;
+        }
+
         if (subtitle.Paragraphs.Count == Subtitles.Count)
         {
             ImportOriginalSubtitle(selectedIndex, fileName, subtitle);
@@ -1743,6 +1751,25 @@ public partial class MainViewModel :
         AutoFitColumns();
         SelectAndScrollToRow(selectedIndex);
         AddToRecentFiles(true);
+    }
+
+    /// <summary>
+    /// Opening an original subtitle while nothing is loaded: scaffold a blank translation that
+    /// mirrors the original's timing/structure (one empty line per original line) and show the
+    /// original text in the side-by-side column, so the user can start translating from scratch.
+    /// </summary>
+    private void ImportOriginalIntoEmptySubtitle(string fileName, Subtitle original)
+    {
+        _subtitle = new Subtitle();
+        foreach (var p in original.Paragraphs)
+        {
+            _subtitle.Paragraphs.Add(new Paragraph(p) { Text = string.Empty });
+        }
+
+        SetSubtitles(_subtitle);
+        _changeSubtitleHash = GetFastHash();
+
+        ImportOriginalSubtitle(0, fileName, original);
     }
 
     [RelayCommand]
