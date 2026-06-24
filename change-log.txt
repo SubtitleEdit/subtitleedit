@@ -1,6 +1,43 @@
 
 Subtitle Edit Changelog
 
+v5.1.0 (TDB)
+
+* Add auto-save of the open subtitle file (Options > General) - thx muaz978
+* Add remote/external llama.cpp server (URL) option to auto-translate - thx muaz978
+* Add HTML index export to binary edit - thx mjuhasz
+* Add "Toggle translation mode" command/shortcut (SE4 parity)
+* Add "Play next (and stop)" and "Play next (and loop)" shortcuts
+* Add "Treat words ending in 'in'' as 'ing'" spell check setting
+* Add Undo button to spell check (SE4 parity)
+* Add grid context menu "insert subtitle after current line" on the last line
+* Add grid alternating-row coloring option to Appearance settings
+* Add a couple of "Extend" shortcuts from SE4 - thx OmrSi
+* Bridge more SE4 shortcuts in the SE4 settings importer
+* Open original subtitle into an empty subtitle as a blank translation
+* Drag a multi-line selection in the waveform to shift all time codes together
+* Spell check can continue from the current line and wrap around (SE4 parity)
+* F10 focuses the main menu for keyboard/screen-reader access
+* Restore horizontal grid lines in the waveform
+* Improve Dutch casing rules ('s/'t contractions and IJ digraph)
+* Batch convert: pluralize the remove-files confirmation for multi-select
+* Use ffmpeg from the system PATH (v7+) when the download fails
+* Update CrispASR to v0.8.3
+* Update whisper.cpp to v1.9.1
+* Fix "Save as" to ASS using Arial instead of the configured default style
+* Fix proxy settings not being saved - thx baoyu0
+* Fix Split tool dropping the last part; default output to the source folder
+* Fix SSA toolbar hints showing "Advanced Sub Station Alpha"
+* Fix missing window title on the ASSA/SSA style picker
+* Fix found/selected grid row not always being fully scrolled into view
+* Align the CJK merge shortcut label with SE4 wording
+* Localize "Set up like Subtitle Edit 4" dialog strings
+* Update Italian translation - thx bovirus
+* Update Korean translation - thx 12si27
+* Update Russian translation - thx jekovcar
+* Update Bulgarian translation - thx jekovcar
+* Update Polish translation
+
 
 v5.0.0 (22nd June 2026)
 
