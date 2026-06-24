@@ -8,6 +8,7 @@ v5.1.0 (TBD)
 * Add HTML index export to binary edit - thx mjuhasz
 * Add "Toggle translation mode" command/shortcut (SE4 parity)
 * Add "Play next (and stop)" and "Play next (and loop)" shortcuts
+* Add "Play previous (and stop)" and "Play previous (and loop)" shortcuts
 * Add "Treat words ending in 'in'' as 'ing'" spell check setting
 * Add Undo button to spell check (SE4 parity)
 * Add grid context menu "insert subtitle after current line" on the last line
@@ -32,6 +33,13 @@ v5.1.0 (TBD)
 * Fix found/selected grid row not always being fully scrolled into view
 * Align the CJK merge shortcut label with SE4 wording
 * Localize "Set up like Subtitle Edit 4" dialog strings
+* Add an assignable "Waveform insert new selection" shortcut (SE4 parity)
+* Add a Tesseract OCR engine-mode setting (SE4 parity)
+* Add accessible names to the waveform toolbar controls for screen readers
+* Burn-in: default the target file size to the source video size, and add per-file target size in batch mode
+* Extend Dutch casing contractions to apply after a colon and a mid-paragraph period
+* Fix OCR word colors and subtitle-image background contrast in light mode
+* Shorten and resize a long video file name in the player so it no longer overlaps the position info
 * Update Italian translation - thx bovirus
 * Update Korean translation - thx 12si27
 * Update Russian translation - thx jekovcar
