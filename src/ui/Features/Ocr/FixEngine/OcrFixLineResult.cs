@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
 
@@ -41,8 +42,11 @@ public class OcrFixLineResult
             textBlock.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
 
-        var errorColor = errorBrush ?? Brushes.LightPink;
-        var normalColor = normalBrush ?? Brushes.LightGreen;
+        // LightPink/LightGreen read well on a dark grid but wash out on a light background,
+        // so use darker, higher-contrast variants in non-dark themes.
+        var isDark = UiTheme.IsDarkThemeEnabled();
+        var errorColor = errorBrush ?? (isDark ? Brushes.LightPink : new SolidColorBrush(Color.FromRgb(0xC0, 0x00, 0x00)));
+        var normalColor = normalBrush ?? (isDark ? Brushes.LightGreen : new SolidColorBrush(Color.FromRgb(0x00, 0x80, 0x00)));
 
         if (textBlock.Inlines != null)
         {
