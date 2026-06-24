@@ -675,6 +675,26 @@ public class InitWaveform
         };
         flyoutMore.Items.Add(menuItemHideControls);
 
+        // The waveform toolbar buttons only contain an icon, so their automation peer would
+        // otherwise expose the icon control's type name ("Optris...Icon") as the accessible name -
+        // useless to a screen reader. Give each one a real name, reusing the localized hint strings
+        // (same concise form ToolbarItemDisplay uses). The buttons are already keyboard-focusable.
+        void SetAccessibleName(Control control, string hint) =>
+            AutomationProperties.SetName(control, string.Format(hint, string.Empty).TrimEnd());
+
+        SetAccessibleName(buttonPlay, languageHints.PlayPauseHint);
+        SetAccessibleName(buttonPlaySelectedLines, languageHints.PlaySelectionHint);
+        SetAccessibleName(buttonPlaySelectedLinesRepeat, languageHints.PlaySelectedRepeatHint);
+        SetAccessibleName(buttonPlayNext, languageHints.PlayNextHint);
+        SetAccessibleName(buttonNew, languageHints.NewHint);
+        SetAccessibleName(buttonSetStartAndOffsetTheRest, languageHints.SetStartAndOffsetTheRestHint);
+        SetAccessibleName(buttonSetStart, languageHints.SetStartHint);
+        SetAccessibleName(buttonSetEnd, languageHints.SetEndHint);
+        SetAccessibleName(buttonRemoveBlankLines, languageHints.RemoveBlankLines);
+        SetAccessibleName(toggleButtonAutoSelectOnPlay, languageHints.SelectCurrentLineWhilePlayingHint);
+        SetAccessibleName(toggleButtonCenter, languageHints.CenterWaveformHint);
+        AutomationProperties.SetName(buttonMore, Se.Language.General.More);
+
         var sortableButtons = MakeCustomSortableButtons(
             settings,
             buttonPlay,
