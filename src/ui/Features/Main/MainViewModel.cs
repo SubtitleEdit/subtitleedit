@@ -13459,8 +13459,82 @@ public partial class MainViewModel :
                 {
                     CenterSelectedRowInSubtitleGrid(itemToScroll);
                 }
+                else
+                {
+                    EnsureRowFullyVisibleInSubtitleGrid(itemToScroll);
+                }
             }
         });
+    }
+
+    // Avalonia's DataGrid.ScrollIntoView often leaves the target only partially visible -
+    // clipped at the bottom edge, or a row or two below the fold - because its viewport
+    // estimate is wrong with the variable-height subtitle rows (issue #11723). After the
+    // built-in scroll (which realizes the target row), measure that row against the actual
+    // rows-presenter viewport and nudge the vertical scrollbar by exactly how far it pokes
+    // out, so it ends up fully on screen. This is the non-centering counterpart to
+    // CenterSelectedRowInSubtitleGrid and uses the same deterministic scrollbar approach.
+    private void EnsureRowFullyVisibleInSubtitleGrid(SubtitleLineViewModel item)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            var row = SubtitleGrid.GetVisualDescendants().OfType<DataGridRow>()
+                .FirstOrDefault(r => ReferenceEquals(r.DataContext, item));
+            if (row == null || row.Bounds.Height <= 0)
+            {
+                return;
+            }
+
+            var rowsPresenter = SubtitleGrid.GetVisualDescendants().OfType<DataGridRowsPresenter>().FirstOrDefault();
+            if (rowsPresenter == null || rowsPresenter.Bounds.Height <= 0)
+            {
+                return;
+            }
+
+            var verticalScrollBar = SubtitleGrid.GetVisualDescendants().OfType<ScrollBar>()
+                .FirstOrDefault(sb => sb.Orientation == Orientation.Vertical);
+            if (verticalScrollBar == null)
+            {
+                return;
+            }
+
+            // row.Bounds is relative to the rows presenter, so these are viewport coordinates.
+            var rowTop = row.Bounds.Y;
+            var rowBottom = row.Bounds.Y + row.Bounds.Height;
+            double delta;
+            if (rowBottom > rowsPresenter.Bounds.Height)
+            {
+                delta = rowBottom - rowsPresenter.Bounds.Height; // pokes out the bottom -> scroll down
+            }
+            else if (rowTop < 0)
+            {
+                delta = rowTop; // pokes out the top -> scroll up (negative)
+            }
+            else
+            {
+                return; // already fully visible
+            }
+
+            if (Math.Abs(delta) < 1)
+            {
+                return;
+            }
+
+            var newValue = Math.Max(0, Math.Min(verticalScrollBar.Value + delta, verticalScrollBar.Maximum));
+            if (Math.Abs(newValue - verticalScrollBar.Value) < 0.5)
+            {
+                return;
+            }
+
+            verticalScrollBar.Value = newValue;
+
+            // Avalonia's DataGrid hooks the scrollbar's Scroll event (not ValueChanged) to
+            // update the visible rows; invoke the internal handler via reflection.
+            var processVerticalScroll = typeof(DataGrid).GetMethod(
+                "ProcessVerticalScroll",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            processVerticalScroll?.Invoke(SubtitleGrid, new object[] { ScrollEventType.EndScroll });
+        }, DispatcherPriority.Loaded);
     }
 
     private void CenterSelectedRowInSubtitleGrid(SubtitleLineViewModel itemToCenter)
