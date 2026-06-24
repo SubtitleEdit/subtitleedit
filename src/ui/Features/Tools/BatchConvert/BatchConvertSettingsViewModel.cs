@@ -35,6 +35,8 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
 
     [ObservableProperty] private ObservableCollection<TesseractDictionary> _tesseractDictionaryItems;
     [ObservableProperty] private TesseractDictionary? _selectedTesseractDictionaryItem;
+    [ObservableProperty] private ObservableCollection<TesseractEngineModeItem> _tesseractEngineModes;
+    [ObservableProperty] private TesseractEngineModeItem? _selectedTesseractEngineMode;
 
     [ObservableProperty] private ObservableCollection<OcrLanguage2> _paddleOcrLanguages;
     [ObservableProperty] private OcrLanguage2? _selectedPaddleOcrLanguage;
@@ -97,6 +99,9 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
 
         PaddleOcrLanguages = new ObservableCollection<OcrLanguage2>(PaddleOcr.GetLanguages().OrderBy(p => p.ToString()));
         TesseractDictionaryItems = new ObservableCollection<TesseractDictionary>();
+        TesseractEngineModes = new ObservableCollection<TesseractEngineModeItem>(TesseractEngineModeItem.List());
+        SelectedTesseractEngineMode = TesseractEngineModes.FirstOrDefault(p => p.Oem == Se.Settings.Tools.BatchConvert.TesseractEngineMode)
+                                      ?? TesseractEngineModes.Last();
         BinaryOcrDatabases = new ObservableCollection<string>(BinaryOcrDb.GetDatabases(Se.OcrFolder));
         NOcrDatabases = new ObservableCollection<string>(NOcrDb.GetDatabases(Se.OcrFolder).OrderBy(p => p));
         NOcrFallbackBinaryOcrDatabases = new ObservableCollection<string> { Se.Language.Ocr.NOcrBinaryOcrFallbackNone };
@@ -180,6 +185,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         if (ocrEngine == "Tesseract")
         {
             Se.Settings.Tools.BatchConvert.TesseractLanguage = SelectedTesseractDictionaryItem?.Code ?? "eng";
+            Se.Settings.Tools.BatchConvert.TesseractEngineMode = SelectedTesseractEngineMode?.Oem ?? 3;
         }
 
         if (ocrEngine == "PaddleOCR")

@@ -11,6 +11,11 @@ public class LanguageOcr
     public string PauseOcr { get; set; }
     public string InspectLine { get; set; }
     public string OcrEngine { get; set; }
+    public string TesseractEngineMode { get; set; }
+    public string TesseractEngineModeLegacy { get; set; }
+    public string TesseractEngineModeNeural { get; set; }
+    public string TesseractEngineModeBoth { get; set; }
+    public string TesseractEngineModeDefault { get; set; }
     public string Database { get; set; }
     public string MaxWrongPixels { get; set; }
     public string MaxErrorPct { get; set; }
@@ -114,6 +119,11 @@ public class LanguageOcr
         PauseOcr = "Pause OCR";
         InspectLine = "Inspect line...";
         OcrEngine = "OCR Engine";
+        TesseractEngineMode = "Engine mode";
+        TesseractEngineModeLegacy = "Original Tesseract only (can detect italic)";
+        TesseractEngineModeNeural = "Neural nets LSTM only";
+        TesseractEngineModeBoth = "Tesseract + LSTM";
+        TesseractEngineModeDefault = "Default, based on what is available";
         Database = "Database";
         MaxWrongPixels = "Max wrong pixels";
         MaxErrorPct = "Max error %";

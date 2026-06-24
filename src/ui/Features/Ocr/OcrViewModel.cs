@@ -78,6 +78,8 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private string? _selectedOllamaLanguage;
     [ObservableProperty] private ObservableCollection<TesseractDictionary> _tesseractDictionaryItems;
     [ObservableProperty] private TesseractDictionary? _selectedTesseractDictionaryItem;
+    [ObservableProperty] private ObservableCollection<TesseractEngineModeItem> _tesseractEngineModes;
+    [ObservableProperty] private TesseractEngineModeItem? _selectedTesseractEngineMode;
     [ObservableProperty] private string _ollamaModel;
     [ObservableProperty] private string _ollamaUrl;
     [ObservableProperty] private string _llamaCppUrl;
@@ -215,6 +217,9 @@ public partial class OcrViewModel : ObservableObject
         LlamaCppOcrModels = new ObservableCollection<LlamaCppModelDisplay>();
         LlamaCppOcrServerButtonText = "Start server";
         TesseractDictionaryItems = new ObservableCollection<TesseractDictionary>();
+        TesseractEngineModes = new ObservableCollection<TesseractEngineModeItem>(TesseractEngineModeItem.List());
+        SelectedTesseractEngineMode = TesseractEngineModes.FirstOrDefault(p => p.Oem == Se.Settings.Ocr.TesseractEngineMode)
+                                      ?? TesseractEngineModes.Last();
         GoogleVisionApiKey = string.Empty;
         MistralApiKey = string.Empty;
         GoogleVisionLanguages = new ObservableCollection<OcrLanguage>(GoogleVisionOcr.GetLanguages().OrderBy(p => p.ToString()));
@@ -315,6 +320,7 @@ public partial class OcrViewModel : ObservableObject
         ocr.MistralApiKey = MistralApiKey;
         ocr.GoogleVisionLanguage = SelectedGoogleVisionLanguage?.Code ?? "en";
         ocr.TesseractLastLanguage = SelectedTesseractDictionaryItem?.Code ?? "eng";
+        ocr.TesseractEngineMode = SelectedTesseractEngineMode?.Oem ?? 3;
         ocr.DoFixOcrErrors = DoFixOcrErrors;
         ocr.DoPromptForUnknownWords = DoPromptForUnknownWords;
         ocr.DoTryToGuessUnknownWords = DoTryToGuessUnknownWords;
@@ -3517,6 +3523,7 @@ public partial class OcrViewModel : ObservableObject
         var tesseractOcr = new TesseractOcr();
         var language = SelectedTesseractDictionaryItem?.Code ?? "eng";
         var tessDataFolder = Se.TesseractModelFolder;
+        var engineMode = SelectedTesseractEngineMode?.Oem ?? 3;
 
         _ = Task.Run(async () =>
         {
@@ -3533,7 +3540,7 @@ public partial class OcrViewModel : ObservableObject
                 var item = OcrSubtitleItems[i];
                 var bitmap = item.GetSkBitmap();
 
-                var text = await tesseractOcr.Ocr(bitmap, language, tessDataFolder, cancellationToken);
+                var text = await tesseractOcr.Ocr(bitmap, language, tessDataFolder, cancellationToken, engineMode);
                 item.Text = text;
 
                 var unknownWords = OcrFixLineAndSetText(i, item);

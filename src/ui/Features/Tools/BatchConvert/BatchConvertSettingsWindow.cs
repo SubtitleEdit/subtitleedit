@@ -78,6 +78,9 @@ public class BatchConvertSettingsWindow : Window
         var labelBinaryOcrDatabase = UiUtil.MakeLabel(Se.Language.Ocr.Database).WithBindVisible(vm, nameof(vm.IsBinaryOcrVisible)).WithMarginLeft(10);
         var comboBoxTesseractLanguages = UiUtil.MakeComboBox(vm.TesseractDictionaryItems, vm, nameof(vm.SelectedTesseractDictionaryItem))
             .WithBindVisible(nameof(vm.IsTesseractOcrVisible));
+        var labelTesseractEngineMode = UiUtil.MakeLabel(Se.Language.Ocr.TesseractEngineMode).WithBindVisible(vm, nameof(vm.IsTesseractOcrVisible)).WithMarginLeft(10);
+        var comboBoxTesseractEngineMode = UiUtil.MakeComboBox(vm.TesseractEngineModes, vm, nameof(vm.SelectedTesseractEngineMode))
+            .WithBindVisible(nameof(vm.IsTesseractOcrVisible));
         var comboBoxPaddleLanguages = UiUtil.MakeComboBox(vm.PaddleOcrLanguages, vm, nameof(vm.SelectedPaddleOcrLanguage))
             .WithBindVisible(nameof(vm.IsPaddleOCrVisible));
         var comboBoxBinaryOcrDatabases = UiUtil.MakeComboBox(vm.BinaryOcrDatabases, vm, nameof(vm.SelectedBinaryOcrDatabase))
@@ -99,7 +102,7 @@ public class BatchConvertSettingsWindow : Window
         {
             Orientation = Orientation.Horizontal,
             Margin = new Avalonia.Thickness(0, 30, 0, 0),
-            Children = { labelOcrEngine, comboBoxOcrEngine, labelOcLanguage, comboBoxTesseractLanguages, comboBoxPaddleLanguages, labelBinaryOcrDatabase, comboBoxBinaryOcrDatabases, labelBinaryOcrFallback, comboBoxBinaryOcrFallback, labelNOcrDatabase, comboBoxNOcrDatabases, labelNOcrFallback, comboBoxNOcrFallback, labelOllamaModel, comboBoxOllamaModels, buttonOllamaModelBrowse }
+            Children = { labelOcrEngine, comboBoxOcrEngine, labelOcLanguage, comboBoxTesseractLanguages, labelTesseractEngineMode, comboBoxTesseractEngineMode, comboBoxPaddleLanguages, labelBinaryOcrDatabase, comboBoxBinaryOcrDatabases, labelBinaryOcrFallback, comboBoxBinaryOcrFallback, labelNOcrDatabase, comboBoxNOcrDatabases, labelNOcrFallback, comboBoxNOcrFallback, labelOllamaModel, comboBoxOllamaModels, buttonOllamaModelBrowse }
         };
         comboBoxOcrEngine.SelectionChanged += (s, e) => vm.OnOcrEngineChanged();
 
