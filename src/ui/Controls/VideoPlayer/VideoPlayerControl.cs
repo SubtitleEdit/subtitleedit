@@ -104,6 +104,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         private readonly TextBlock _textBlockVideoFileName;
         private readonly TextBlock _textBlockPlayerName;
+        private readonly TextBlock _textBlockProgress;
 
         public ICommand PlayCommand
         {
@@ -491,6 +492,7 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 FontWeight = FontWeight.Bold,
                 FontFeatures = FontFeatureCollection.Parse("tnum"),
             };
+            _textBlockProgress = progressText;
             progressText.Bind(TextBlock.TextProperty, this.GetObservable(ProgressTextProperty));
             _gridProgress.Children.Add(progressText);
             Grid.SetColumn(progressText, 1);
@@ -516,11 +518,17 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 FontWeight = FontWeight.Bold,
                 Opacity = 0.6,
                 TextAlignment = TextAlignment.Right,
-                TextTrimming = TextTrimming.CharacterEllipsis,
+                // Trim from the start so the file extension stays visible (e.g. "…movie.mkv").
+                TextTrimming = TextTrimming.PrefixCharacterEllipsis,
                 MaxLines = 1,
             };
             _gridProgress.Add(_textBlockVideoFileName, 0, 1, 1, 3);
             _textBlockVideoFileName.PointerPressed += (_, e) => { VideoFileNamePointerPressed?.Invoke(e); };
+
+            // Resize the file-name label with the window: cap its width to the space to the
+            // right of the centered position/duration text so it fills what's available
+            // without overlapping that text.
+            _gridProgress.SizeChanged += (_, _) => UpdateVideoFileNameMaxWidth();
 
             Content = mainGrid;
 
@@ -731,22 +739,31 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
                 StartAutoHideControls();
             }
 
-            _textBlockVideoFileName.Text = ShortenVideoFileName(videoFileName);
+            _textBlockVideoFileName.Text = System.IO.Path.GetFileName(videoFileName);
+            UpdateVideoFileNameMaxWidth();
         }
 
-        // Keep the displayed name short so it doesn't grow leftward into the
-        // centered position/duration text. The TextTrimming ellipsis on the
-        // text block is a further guard for narrow player widths.
-        private static string ShortenVideoFileName(string videoFileName)
+        // Cap the file-name label to the width available to the right of the centered
+        // position/duration text. The label is right-aligned, so this lets it fill the
+        // free space and grow/shrink with the window while its PrefixCharacterEllipsis
+        // trims the start when the name is too long to fit.
+        private void UpdateVideoFileNameMaxWidth()
         {
-            var shortName = System.IO.Path.GetFileName(videoFileName);
-            const int maxLength = 35;
-            if (shortName.Length > maxLength)
+            var gridWidth = _gridProgress.Bounds.Width;
+            if (gridWidth <= 0)
             {
-                shortName = "..." + shortName[^(maxLength - 3)..];
+                return;
             }
 
-            return shortName;
+            // Right edge of the centered progress text (falls back to the grid center
+            // before that text has been laid out).
+            var progressRight = _textBlockProgress.Bounds.Width > 0
+                ? _textBlockProgress.Bounds.Right
+                : gridWidth / 2;
+
+            const double gap = 8;
+            var available = gridWidth - progressRight - gap;
+            _textBlockVideoFileName.MaxWidth = available > 20 ? available : 20;
         }
 
         internal void Close()
