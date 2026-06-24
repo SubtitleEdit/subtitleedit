@@ -1,7 +1,7 @@
 ﻿{
   "title": "Subtitle Edit",
   "version": "v5.0.0",
-  "translatedBy": "Adam Malich - 23.06.2026",
+  "translatedBy": "Adam Malich - 24.06.2026",
   "cultureName": "pl-PL",
   "general": {
     "abort": "Przerwij",
@@ -394,6 +394,7 @@
     "percent": "Procenty",
     "pickLayer": "Ustaw warstwę",
     "pickOllamaModel": "Wybierz model Ollama",
+    "llamaCppUseRemoteServer": "Użyj zewnętrznego serwera (URL)",
     "pickOutputFolder": "Wybierz folder wyjściowy",
     "pickResolutionFromCurrentVideo": "Wybierz rozdzielczość z bieżącego wideo",
     "pickResolutionFromVideoDotDotDot": "Wybierz rozdzielczość z wideo...",
@@ -403,6 +404,8 @@
     "play": "Odtwórz",
     "playFromStartOfVideo": "Odtwórz od początku wideo",
     "playNext": "Odtwórz następny",
+    "playNextAndStop": "Odtwórz następny (i zatrzymaj)",
+    "playNextAndLoop": "Odtwórz następny (i zapętl)",
     "playSelectedLines": "Odtwórz wybrane linie",
     "playSelectedLinesWithLoop": "Odtwórz wybrane linie w pętli",
     "playSelectedLinesAndFocusWaveform": "Odtwórz wybrane linie i skup się na przebiegu fali",
@@ -443,6 +446,7 @@
     "removeItalic": "Usuń kursywę",
     "removeRightToLeftUnicodeTags": "Usuń tagi Unicode PDL",
     "removeSelectedFile": "Usunąć wybrany plik?",
+    "removeSelectedFilesX": "Usunąć {0} wybrane pliki?",
     "removeStyling": "Usuń stylizację",
     "removeTextForHearingImpaired": "Usuń tekst dla osób niedosłyszących",
     "removeUnderline": "Usuń podkreślenie",
@@ -501,6 +505,7 @@
     "setOutCueToClosestShotChangeRightGreenZone": "Ustaw sygnał wyjściowy na najbliższą zmianę ujęcia (przesuń do prawej zielonej strefy)",
     "setStart": "Ustaw początek",
     "setStartAndOffsetTheRest": "Ustaw początek i przesuń resztę",
+    "setUpLikeSubtitleEdit4": "Konfiguracja podobna do Subtitle Edit 4 (motyw, skróty klawiszowe, reguły zastępowania)",
     "setVideoOffset": "Ustaw przesunięcie wideo",
     "settings": "Ustawienia",
     "shadow": "Cień",
@@ -877,7 +882,10 @@
       "assaStylesHint": "Style Advanced Sub Station Alpha",
       "assaPropertiesHint": "Właściwości Advanced Sub Station Alpha",
       "assaAttachmentsHint": "Załączniki Advanced Sub Station Alpha",
-      "assaDrawHint": "Rysowanie kształtów Advanced Sub Station Alpha"
+      "assaDrawHint": "Rysowanie kształtów Advanced Sub Station Alpha",
+      "ssaStylesHint": "Style Sub Station Alpha",
+      "ssaPropertiesHint": "Właściwości Sub Station Alpha",
+      "ssaAttachmentsHint": "Załączniki Sub Station Alpha"
     },
     "waveform": {
       "playPauseHint": "Odtwarzaj / Wstrzymaj {0}",
@@ -1002,7 +1010,14 @@
     "downloadFfmpegTitle": "Pobrać FFmpeg?",
     "downloadFfmpegQuestion": "FFmpeg jest wymagany do odtwarzania wideo online i niektórych funkcji edycji wideo.\n\nPobrać teraz FFmpeg?",
     "selectCurrentSubtitleWhilePlayingOn": "Zaznacz bieżące napisy podczas odtwarzania: WŁ.",
-    "selectCurrentSubtitleWhilePlayingOff": "Zaznacz bieżące napisy podczas odtwarzania: WYŁ."
+    "selectCurrentSubtitleWhilePlayingOff": "Zaznacz bieżące napisy podczas odtwarzania: WYŁ.",
+    "setUpLikeSe4Question": "Spowoduje to zaimportowanie skrótów klawiszowych, zastąpienie reguł oraz zastosowanie motywu, paska narzędzi i wyglądu przebiegu fali programu Subtitle Edit 4.\n\nKontynuować?",
+    "setUpLikeSe4ImportedSettingsX": "Zaimportowano ustawienia z Subtitle Edit 4:\n{0}",
+    "setUpLikeSe4NoSettingsXmlFound": "Nie znaleziono pliku Subtitle Edit 4 Settings.xml — zastosowano domyślne wartości Subtitle Edit 4.",
+    "setUpLikeSe4ShortcutsAddedX": "Dodano/zaktualizowano skróty: {0}",
+    "setUpLikeSe4ShortcutsSkippedX": "Pominięte skróty (brak dopasowania): {0}",
+    "setUpLikeSe4ReplaceRulesAddedXY": "Dodano zasady zastępowania: {0} (w {1} nowych kategoriach)",
+    "setUpLikeSe4ThemeSet": "Motyw, ikony paska narzędzi i przebieg fali ustawiono na wygląd Subtitle Edit 4."
   },
   "file": {
     "ebuSaveOptions": {
@@ -1065,7 +1080,7 @@
       "subtitleWithManuallyChosenEncodingDotDotDot": "_Napisy z ręcznie wybranym kodowaniem...",
       "titleImportImages": "Importuj obrazy",
       "importFileLabel": "Wybierz obrazy do importu (obsługiwane są kody czasowe w nazwach plików)",
-      "importFilesInfo": "Użyj nazw plików z kodami czasowymi:\nstart_HH_MM_SS_MMM__end_HH_MM_SS_MMM[_index].ext\n\nPrzykłady:\n0_00_01_042__0_00_03_919_0001.png\n0_00_01_042__0_00_03_919.png\n\nReguły:\n• HH_MM_SS_MMM dla czasów rozpoczęcia i zakończenia\n• Podwójny znak podkreślenia oddziela początek/koniec\n• Opcjonalny indeks po czasie zakończenia",
+      "importFilesInfo": "Użyj nazw plików z kodami czasowymi:\r\nstart_HH_MM_SS_MMM__end_HH_MM_SS_MMM[_index].ext\r\n\r\nPrzykłady:\r\n0_00_01_042__0_00_03_919_0001.png\r\n0_00_01_042__0_00_03_919.png\r\n\r\nReguły:\r\n• HH_MM_SS_MMM dla czasów rozpoczęcia i zakończenia\r\n• Podwójny znak podkreślenia oddziela początek/koniec\r\n• Opcjonalny indeks po czasie zakończenia",
       "formattingDotDotDot": "Formatowanie...",
       "imageBaseSubtitleForEditDotDotDot": "Napisy oparte na obrazach do edycji...",
       "imageBaseSubtitleForOcrDotDotDot": "Napisy oparte na obrazach do OCR...",
@@ -1827,7 +1842,9 @@
     "ignoreAllX": "Ignoruj wszystko '{0}'",
     "pickSpellCheckDictionaryDotDotDot": "Wybierz słownik sprawdzania pisowni...",
     "chooseSpellCheckDictionary": "Wybierz słownik sprawdzania pisowni",
-    "pickLiveSpellCheckDictionary": "Wybierz słownik z funkcją sprawdzania pisowni w czasie rzeczywistym"
+    "pickLiveSpellCheckDictionary": "Wybierz słownik z funkcją sprawdzania pisowni w czasie rzeczywistym",
+    "undoX": "Cofnij: {0}",
+    "editWholeText": "Edytuj cały tekst"
   },
   "video": {
     "burnIn": {
@@ -1966,13 +1983,13 @@
       "edgeTtsPitchDescription": "Regulacja wysokości dźwięku dla Edge-TTS, np. \"+10Hz\", \"-5Hz\", lub \"+0Hz\" jako wartość domyślną.",
       "edgeTtsVolume": "Głośność Edge-TTS",
       "edgeTtsVolumeDescription": "Dostosowanie głośności dla Edge-TTS, np. \"+20%\", \"-10%\", lub \"+0%\" jako wartość domyślną.",
-      "downloadPiperPrompt": "Funkcja \"Zamiana mowy na tekst\" wymaga aplikacji Piper.\n\nChcesz pobrać i używać Piper?",
+      "downloadPiperPrompt": "Funkcja \"Zamiana mowy na tekst\" wymaga aplikacji Piper.\r\n\r\nChcesz pobrać i używać Piper?",
       "omniVoiceTtsSettings": "Ustawienia OmniVoice TTS",
       "reDownloadOmniVoiceTts": "Pobierz ponownie OmniVoice TTS",
       "selectTheBuildToDownload": "\r\nWybierz kompilację do pobrania:",
-      "downloadTheLatestOmniVoiceTtsPrompt": "\nChcesz teraz pobrać najnowszą wersję OmniVoice TTS?",
+      "downloadTheLatestOmniVoiceTtsPrompt": "\r\nChcesz teraz pobrać najnowszą wersję OmniVoice TTS?",
       "vulkanRuntimeMayBeRequired": "Może być wymagane środowisko uruchomieniowe Vulkan",
-      "vulkanRuntimeNotDetectedMessage": "Kompilacja Vulkan wymaga środowiska uruchomieniowego Vulkan (vulkan-1.dll). Zazwyczaj jest dostarczany z aktualnymi sterownikami GPU, ale nie został wykryty.\n\nZainstaluj z:\n{0}\n\nCzy mimo wszystko chcesz kontynuować korzystanie z Vulkan?",
+      "vulkanRuntimeNotDetectedMessage": "Kompilacja Vulkan wymaga środowiska uruchomieniowego Vulkan (vulkan-1.dll). Zazwyczaj jest dostarczany z aktualnymi sterownikami GPU, ale nie został wykryty.\r\n\r\nZainstaluj z:\r\n{0}\r\n\r\nCzy mimo wszystko chcesz kontynuować korzystanie z Vulkan?",
       "qwen3TtsSettings": "Ustawienia Qwen3 TTS",
       "kokoroTtsSettings": "Ustawienia Kokoro TTS",
       "chatterboxTtsSettings": "Ustawienia Chatterbox TTS",
@@ -1999,7 +2016,7 @@
       "noActorsFoundMessage": "Nie znaleziono aktorów. Najpierw ustaw pole 'Aktor' w wierszach napisów.",
       "noWebVttVoicesFoundMessage": "Nie znaleziono głosów <v Name> w pliku WebVTT.",
       "mergeContinuationLinesPromptTitle": "Połączyć linie kontynuacji?",
-      "mergeContinuationLinesPromptMessage": "Niektóre linie sprawiają wrażenie pojedynczych zdań podzielonych na kilka napisów.\n\nPołączenie ich przed wygenerowaniem pozwala silnikowi TTS wymawiać każdą myśl jako jedną grupę oddechową, co zazwyczaj brzmi bardziej naturalnie.\n\nPrzejrzeć i zastosować połączenia teraz?"
+      "mergeContinuationLinesPromptMessage": "Niektóre linie sprawiają wrażenie pojedynczych zdań podzielonych na kilka napisów.\r\n\r\nPołączenie ich przed wygenerowaniem pozwala silnikowi TTS wymawiać każdą myśl jako jedną grupę oddechową, co zazwyczaj brzmi bardziej naturalnie.\r\n\r\nPrzejrzeć i zastosować połączenia teraz?"
     },
     "shotChanges": {
       "titleGenerateOrImport": "Generuj/Importuj zmiany ujęcia",
@@ -2072,11 +2089,11 @@
     "pickOnlineSubtitleNoneFound": "Nie znaleziono napisów dla tego adresu URL.",
     "toggleCurrentSubtitleWhilePlaying": "Włącz/wyłącz zaznaczanie bieżących napisów podczas odtwarzania",
     "onlyMkvCanSupportEmbeddedSubtitleEditing": "Edytować napisy osadzone można wyłącznie w plikach Matroska (.mkv, .webm).",
-    "reEncodeInfo": "Ponowne kodowanie może sprawić, że napisy będą bardziej płynne:\n• Niższa rozdzielczość (wysokie rozdzielczości spowalniają wyświetlanie napisów)\n• Ponowne zakodowanie wideo do formatu H.264 + yuv420p zwiększy jego kompatybilność\n• Zoptymalizowane pod kątem szybkiego wyszukiwania",
+    "reEncodeInfo": "Ponowne kodowanie może sprawić, że napisy będą bardziej płynne:\r\n• Niższa rozdzielczość (wysokie rozdzielczości spowalniają wyświetlanie napisów)\r\n• Ponowne zakodowanie wideo do formatu H.264 + yuv420p zwiększy jego kompatybilność\r\n• Zoptymalizowane pod kątem szybkiego wyszukiwania",
     "reEncodeGeneratingVideoX": "Generowanie wideo... {0}%     {1}",
     "reEncodeGeneratingVideoXofY": "Generowanie wideo {0}/{1}... {2}%     {3}",
     "reEncodeUnableToGenerateVideo": "Nie można wygenerować wideo",
-    "reEncodeOutputVideoFileNotGenerated": "Nie wygenerowano pliku wideo wyjściowego: {0}\nParametry: {1}",
+    "reEncodeOutputVideoFileNotGenerated": "Nie wygenerowano pliku wideo wyjściowego: {0}\r\nParametry: {1}",
     "reEncodeGeneratingDone": "Generowanie zakończone",
     "reEncodeGeneratedFilesX": "Wygenerowane pliki ({0}):",
     "reEncodeFfmpegParameters": "Parametry ffmpeg"
@@ -2246,6 +2263,9 @@
       "showUpDownLabels": "Pokaż etykiety dla kontrolek góra/dół (Pokaż/Ukryj/Czas trwania)",
       "showButtonHints": "Pokaż podpowiedzi przycisków",
       "gridCompactMode": "Użyj trybu kompaktowego dla siatek",
+      "gridAlternatingRows": "Użyj naprzemiennych kolorów wierszy w siatce",
+      "gridAlternatingRowColor": "Naprzemienny kolor wiersza (jasny motyw)",
+      "gridAlternatingRowColorDark": "Naprzemienny kolor wiersza (ciemny motyw)",
       "uiFont": "Czcionka interfejsu",
       "theme": "Motyw",
       "iconTheme": "Motyw ikon",
@@ -2270,6 +2290,7 @@
       "promptBeforeDelete": "Pytaj przed usunięciem",
       "rememberPositionAndSize": "Zapamiętaj położenie i rozmiar okna",
       "openLastFileOnStart": "Otwórz ostatni otwierany plik przy uruchomieniu",
+      "autoSave": "Automatyczne zapisywanie (zapisywanie otwartego pliku podczas edycji)",
       "autoBackupOn": "Automatyczna kopia zapasowa",
       "autoBackupIntervalMinutes": "Interwał automatycznego tworzenia kopii zapasowej (minuty)",
       "autoBackupDeleteAfterDays": "Czas przechowywania automatycznej kopii zapasowej (dni)",
@@ -2347,6 +2368,7 @@
       "downloadMpv": "Pobierz mpv",
       "downloadVlc": "Pobierz VLC",
       "allowSingleLetterShortcutsInTextbox": "Zezwalaj na jednoliterowe skróty w polu tekstowym",
+      "spellCheckEnglishTreatInApostropheAsIng": "Sprawdzanie pisowni: słowa kończące się na 'in' traktuj jako 'ing' (tylko język angielski)",
       "goToLineNumberSetsVideoPosition": "Opcja \"Przejdź do numeru linii\" ustawia również pozycję wideo",
       "adjustAllTimesRememberLineSelectionChoice": "Dostosuj wszystkie czasy, zapamiętaj wybór linii",
       "filesAndLogs": "Pliki i dzienniki",
@@ -2476,6 +2498,7 @@
       "categorySubtitleGridAndTextBox": "Widok listy napisów & pola tekstowego",
       "categorySubtitleGrid": "Widok listy napisów",
       "categoryWaveform": "Przebieg fali",
+      "generalSetupLikeSe4": "Konfiguracja podobna do Subtitle Edit 4 (motyw, skróty klawiszowe, reguły zastępowania)",
       "generalMergeSelectedLines": "Połącz zaznaczone linie",
       "generalMergeWithPrevious": "Połącz z poprzednią",
       "generalMergeWithNext": "Połącz z następną",
@@ -2485,7 +2508,7 @@
       "generalMergeWithNextAndAutoBreak": "Połącz z następną i automatycznie przełam",
       "generalMergeSelectedLinesAndAutoBreak": "Połącz wybrane linie i automatycznie przełam",
       "generalMergeSelectedLinesAndUnbreak": "Połącz wybrane linie i usuń łamanie",
-      "generalMergeSelectedLinesAndUnbreakCjk": "Połącz wybrane linie i usuń łamanie CJK",
+      "generalMergeSelectedLinesAndUnbreakCjk": "Połącz wybrane linie i usuń łamanie bez spacji (CJK)",
       "generalUnbreakNoSpaceCjk": "Usuń łamanie linii bez spacji (CJK)",
       "generalMergeSelectedLinesOnlyFirstText": "Połącz wybrane linie tylko z pierwszym tekstem",
       "generalMergeSelectedLinesBilingual": "Połącz wybrane linie dwujęzyczne",
