@@ -840,7 +840,9 @@ public class BurnInWindow : Window
         grid.Add(panelTargetFileSize, 2, 1);
 
         // Visible in batch mode too, so each file can target its own source size (issue #11802).
+        // MarginBottom(5) matches every other settings box so the borders line up across columns.
         return UiUtil.MakeBorderForControl(grid)
+            .WithMarginBottom(5)
             .WithMarginRight(5);
     }
 
@@ -876,6 +878,7 @@ public class BurnInWindow : Window
 
         return UiUtil.MakeBorderForControl(grid)
             .WithBindIsVisible(nameof(vm.IsBatchMode), new InverseBooleanConverter())
+            .WithMarginBottom(5)
             .WithMarginRight(5);
     }
 
