@@ -60,8 +60,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         {
                             // slice from k index
                             var textFromK = text.Substring(k);
-                            
-                            if (CanCapitalize(textFromK, callbacks) && !isTurkish)
+
+                            if (DutchCasing.IsDutch(callbacks.Language) && DutchCasing.StartsWithContraction(textFromK))
+                            {
+                                // "Hij zei: 's morgens" -> "'s Morgens": keep the contraction lowercase
+                                // and capitalize the following word instead of the apostrophe letter.
+                                text = text.Substring(0, k) + DutchCasing.FixSentenceStart(textFromK);
+                            }
+                            else if (CanCapitalize(textFromK, callbacks) && !isTurkish)
                             {
                                 text = text.Substring(0, k) + textFromK.CapitalizeFirstLetter();
                             }

@@ -62,4 +62,26 @@ public class DutchCasingTest
     {
         Assert.Equal(expected, DutchCasing.IsDutch(language!));
     }
+
+    // --- StartsWithContraction ---
+
+    [Theory]
+    [InlineData("'s morgens", true)]
+    [InlineData("'S morgens", true)]   // wrongly capitalized contraction is still a contraction
+    [InlineData("'t kind", true)]
+    [InlineData("'n appel", true)]
+    [InlineData("'k weet", true)]
+    [InlineData("'m geven", true)]
+    [InlineData("'r naam", true)]
+    [InlineData("'x morgens", false)]  // not a contraction letter
+    [InlineData("'smorgens", false)]   // no space after the contraction
+    [InlineData("'Hallo' zei hij", false)] // opening quote, not a contraction
+    [InlineData("morgens", false)]
+    [InlineData("'s", false)]          // too short
+    [InlineData("", false)]
+    [InlineData(null, false)]
+    public void StartsWithContraction(string? input, bool expected)
+    {
+        Assert.Equal(expected, DutchCasing.StartsWithContraction(input!));
+    }
 }
