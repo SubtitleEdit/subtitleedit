@@ -72,8 +72,21 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (start + 3 < text.Length && (text[start + 1] == ' ') && !IsAbbreviation(text, start, callbacks))
                         {
                             var textBefore = text.Substring(0, start + 1);
-                            var subText = new StrippableText(text.Substring(start + 2));
-                            text = text.Substring(0, start + 2) + subText.CombineWithPrePost(ToUpperFirstLetter(textBefore, subText.StrippedText, callbacks));
+                            var afterText = text.Substring(start + 2);
+                            if (DutchCasing.IsDutch(callbacks.Language) &&
+                                DutchCasing.StartsWithContraction(afterText) &&
+                                !textBefore.EndsWith("...", System.StringComparison.Ordinal))
+                            {
+                                // "Het regelt. 's morgens..." -> keep "'s" lowercase and capitalize the next
+                                // word. Handle it before StrippableText strips the leading apostrophe into Pre
+                                // (which would otherwise uppercase the contraction letter: "'S morgens").
+                                text = text.Substring(0, start + 2) + DutchCasing.FixSentenceStart(afterText);
+                            }
+                            else
+                            {
+                                var subText = new StrippableText(afterText);
+                                text = text.Substring(0, start + 2) + subText.CombineWithPrePost(ToUpperFirstLetter(textBefore, subText.StrippedText, callbacks));
+                            }
                         }
 
                         start += 3;

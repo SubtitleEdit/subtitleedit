@@ -43,6 +43,20 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <summary>
+        /// Returns true when <paramref name="text"/> begins with a Dutch apostrophe contraction
+        /// ('s, 't, 'n, 'k, 'm, 'r) followed by a space - i.e. a sentence-initial contraction whose
+        /// apostrophe-letter must stay lowercase while the next word takes the capital.
+        /// </summary>
+        public static bool StartsWithContraction(string text)
+        {
+            return text != null &&
+                   text.Length > 3 &&
+                   Array.IndexOf(Apostrophes, text[0]) >= 0 &&
+                   ContractionLetters.IndexOf(char.ToLowerInvariant(text[1])) >= 0 &&
+                   text[2] == ' ';
+        }
+
+        /// <summary>
         /// Applies Dutch sentence-start casing to <paramref name="text"/>, which must begin at the
         /// first character to consider (a leading apostrophe contraction is allowed; leading tags and
         /// other punctuation must already be stripped by the caller). Handles 's/'t/etc. contractions
@@ -59,10 +73,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             // "'s morgens" / "'S morgens" -> "'s Morgens": keep the contraction lowercase and move
             // the capital to the following word. A leading apostrophe that is NOT one of these
             // contractions (e.g. an opening quote) falls through to normal capitalization.
-            if (text.Length > 3 &&
-                Array.IndexOf(Apostrophes, text[0]) >= 0 &&
-                ContractionLetters.IndexOf(char.ToLowerInvariant(text[1])) >= 0 &&
-                text[2] == ' ')
+            if (StartsWithContraction(text))
             {
                 var contraction = text[0] + char.ToLowerInvariant(text[1]).ToString();
                 return contraction + " " + CapitalizeFirstLetter(text.Substring(3));
