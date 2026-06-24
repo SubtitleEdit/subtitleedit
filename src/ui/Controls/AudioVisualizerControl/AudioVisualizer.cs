@@ -1932,12 +1932,19 @@ public class AudioVisualizer : Control
         var width = renderCtx.Width;
         var height = renderCtx.Height;
 
+        // Pixel spacing between adjacent vertical lines; reused for the horizontal lines so the
+        // grid stays square, matching the look users are familiar with from SE4.
+        double stepPixels;
+
         if (renderCtx.SampleRate == 0)
         {
-            for (var i = 0; i < width; i += 10)
+            stepPixels = 10;
+            for (var i = 0d; i < width; i += stepPixels)
             {
                 context.DrawLine(_paintGridLines, new Point(i, 0), new Point(i, height));
             }
+
+            DrawHorizontalGridLines(context, width, height, stepPixels);
             return;
         }
 
@@ -1951,6 +1958,7 @@ public class AudioVisualizer : Control
             }
 
             var framesPerStep = PickFramesPerStep(pixelsPerFrame, minPixelGap: 8);
+            stepPixels = framesPerStep * pixelsPerFrame;
 
             // First frame boundary (absolute frame index) at-or-before the visible start.
             // Compute the start frame in integer space — Math.Floor in double space can land
@@ -1986,6 +1994,7 @@ public class AudioVisualizer : Control
                 ? 0.1d
                 : // a pixel is 0.1 second
                 1.0d; // a pixel is 1.0 second
+            stepPixels = interval * renderCtx.SampleRate * renderCtx.ZoomFactor;
 
             while (xPosition < width)
             {
@@ -1993,6 +2002,21 @@ public class AudioVisualizer : Control
                 seconds += interval;
                 xPosition = SecondsToXPositionOptimized(seconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
             }
+        }
+
+        DrawHorizontalGridLines(context, width, height, stepPixels);
+    }
+
+    private void DrawHorizontalGridLines(DrawingContext context, double width, double height, double stepPixels)
+    {
+        if (stepPixels < 1)
+        {
+            return;
+        }
+
+        for (var y = stepPixels; y < height; y += stepPixels)
+        {
+            context.DrawLine(_paintGridLines, new Point(0, y), new Point(width, y));
         }
     }
 
