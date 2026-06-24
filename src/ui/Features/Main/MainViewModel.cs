@@ -5574,7 +5574,12 @@ public partial class MainViewModel :
         if (result.OkPressed)
         {
             _currentSpellCheckDictionary = result.SelectedDictionary;
+        }
 
+        // Show the summary when the run finished or when the user closed early after making
+        // changes/skips, so the "X changed, Y skipped" result is never silently lost.
+        if (result.OkPressed || result.TotalChangedWords > 0 || result.TotalSkippedWords > 0)
+        {
             var msg = string.Format(
                 Se.Language.Main.SpellCheckResult,
                 result.TotalChangedWords,

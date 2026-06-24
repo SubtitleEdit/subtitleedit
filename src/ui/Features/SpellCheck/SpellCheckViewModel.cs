@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.SpellCheck.EditWholeText;
 using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
 using Nikse.SubtitleEdit.Logic;
@@ -63,6 +64,14 @@ public partial class SpellCheckViewModel : ObservableObject
     private SpellCheckResult? _lastSpellCheckResult;
     private System.Timers.Timer? _statusTimer;
     private readonly List<SpellCheckUndoItem> _undoList = new();
+
+    // Where this run started scanning (0 = top). When the user chooses to start at the
+    // current line, the scan runs to the end and then offers to wrap back to the top;
+    // _stopBeforeLineIndex bounds that wrapped pass to the lines above the start so it
+    // does not re-check the part already covered. _hasWrapped guards against re-prompting.
+    private int _scanStartLineIndex;
+    private int? _stopBeforeLineIndex;
+    private bool _hasWrapped;
 
     public SpellCheckViewModel(ISpellCheckManager spellCheckManager, IWindowService windowService)
     {
@@ -232,7 +241,61 @@ public partial class SpellCheckViewModel : ObservableObject
         Paragraphs.Clear();
         Paragraphs.AddRange(paragraphs);
         SetLanguage(dictionaryFileName);
-        Dispatcher.UIThread.Post(DoSpellCheck, DispatcherPriority.Background);
+
+        // Posted to run after the window exists (Window is assigned in the window ctor),
+        // so the "continue from current line?" prompt and the close hook have an owner.
+        Dispatcher.UIThread.Post(() => _ = StartSpellCheckAsync(selectedSubtitleIndex), DispatcherPriority.Background);
+    }
+
+    /// <summary>
+    /// Decides where the scan begins. When a line other than the first is selected, the user
+    /// is asked whether to continue from that line or start from the top (SE4 parity); Cancel
+    /// closes the dialog without checking. The chosen start line is remembered so the scan can
+    /// later offer to wrap back to the top.
+    /// </summary>
+    private async Task StartSpellCheckAsync(int? selectedSubtitleIndex)
+    {
+        // Make sure a summary of changes is reported even when the user closes early (Esc / X),
+        // not only when the run completes or "Done" is pressed.
+        if (Window != null)
+        {
+            Window.Closing += (_, _) => CaptureTotals();
+        }
+
+        var startLine = 0;
+        if (Window != null && selectedSubtitleIndex is int idx && idx > 0 && idx < Paragraphs.Count)
+        {
+            var answer = await MessageBox.Show(
+                Window,
+                Se.Language.SpellCheck.SpellCheck,
+                Se.Language.SpellCheck.ContinueFromCurrentLine,
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+
+            if (answer == MessageBoxResult.Cancel || answer == MessageBoxResult.None)
+            {
+                Dispatcher.UIThread.Invoke(() => Window?.Close());
+                return;
+            }
+
+            if (answer == MessageBoxResult.Yes)
+            {
+                startLine = idx;
+            }
+        }
+
+        _scanStartLineIndex = startLine;
+        _lastSpellCheckResult = startLine > 0
+            ? new SpellCheckResult { LineIndex = startLine, WordIndex = -1 }
+            : null;
+
+        DoSpellCheck();
+    }
+
+    private void CaptureTotals()
+    {
+        TotalChangedWords = _spellCheckManager.NoOfChangedWords;
+        TotalSkippedWords = _spellCheckManager.NoOfSkippedWords;
     }
 
     private void SetLanguage(string? dictionaryFileName)
@@ -370,13 +433,28 @@ public partial class SpellCheckViewModel : ObservableObject
     }
 
     [RelayCommand(CanExecute = nameof(CanChangeWord))]
-    private void ChangeWordAll()
+    private async Task ChangeWordAll()
     {
         var selectedParagraph = SelectedParagraph;
         if (selectedParagraph == null)
         {
             Dispatcher.UIThread.Invoke(() => { TextBoxWordNotFound.Focus(); });
             return;
+        }
+
+        if (Window != null)
+        {
+            var answer = await MessageBox.Show(
+                Window,
+                Se.Language.SpellCheck.SpellCheck,
+                string.Format(Se.Language.SpellCheck.ChangeAllConfirmX, WordNotFoundOriginal, CurrentWord),
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
         }
 
         var status = string.Format(Se.Language.SpellCheck.ChangeAllWordsFromXToY, WordNotFoundOriginal, CurrentWord);
@@ -614,7 +692,7 @@ public partial class SpellCheckViewModel : ObservableObject
             return;
         }
 
-        var results = _spellCheckManager.CheckSpelling(Paragraphs, _lastSpellCheckResult);
+        var results = _spellCheckManager.CheckSpelling(Paragraphs, _lastSpellCheckResult, _stopBeforeLineIndex);
         if (results.Count > 0)
         {
             WordNotFoundOriginal = results[0].Word.Text;
@@ -642,6 +720,33 @@ public partial class SpellCheckViewModel : ObservableObject
             LineText = string.Format(Se.Language.SpellCheck.LineXofY, lineIndex, Paragraphs.Count);
 
             _focusSubtitleLine?.GoToAndFocusLine(SelectedParagraph);
+        }
+        else if (_scanStartLineIndex > 0 && !_hasWrapped)
+        {
+            // Reached the end after starting mid-list: offer to wrap back and check the top part.
+            Dispatcher.UIThread.Post(async () =>
+            {
+                var answer = Window == null
+                    ? MessageBoxResult.No
+                    : await MessageBox.Show(
+                        Window,
+                        Se.Language.SpellCheck.SpellCheck,
+                        Se.Language.SpellCheck.ContinueFromTop,
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question);
+
+                if (answer == MessageBoxResult.Yes)
+                {
+                    _hasWrapped = true;
+                    _stopBeforeLineIndex = _scanStartLineIndex;
+                    _lastSpellCheckResult = null;
+                    DoSpellCheck();
+                }
+                else
+                {
+                    Ok();
+                }
+            }, DispatcherPriority.Background);
         }
         else
         {
