@@ -56,6 +56,32 @@ public static class AssaStyleStorageHelper
     }
 
     /// <summary>
+    /// Applies the default ASSA storage style when a subtitle is about to be saved/converted to a
+    /// target format, but only when the conversion would otherwise lose the user's default style:
+    /// the target must be Advanced SubStation Alpha and the subtitle must not already carry ASSA
+    /// styles (e.g. it came from SRT). Without this, a "Save as" to ASS from a style-less format
+    /// falls back to the hard-coded Arial default instead of the configured default style
+    /// (issue #11788). No-op for other target formats, for subtitles that already have a
+    /// [V4+ Styles] header, or when no default storage style is configured.
+    /// </summary>
+    /// <returns>True if the default storage style was applied; otherwise false.</returns>
+    public static bool ApplyDefaultStorageStyleForFormatConversion(Subtitle subtitle, SubtitleFormat format)
+    {
+        if (subtitle == null || format is not AdvancedSubStationAlpha)
+        {
+            return false;
+        }
+
+        if (!string.IsNullOrEmpty(subtitle.Header) &&
+            subtitle.Header.Contains("[V4+ Styles]", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return ApplyDefaultStorageStyle(subtitle);
+    }
+
+    /// <summary>
     /// Applies the default ASSA storage style (if any) to a subtitle that is about to use the
     /// Advanced SubStation Alpha format - used when creating a new subtitle or converting to ASSA
     /// from a format without ASSA styles. The default storage style becomes the only style in the

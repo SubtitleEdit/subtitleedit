@@ -15767,6 +15767,12 @@ public partial class MainViewModel :
         _converted = false;
         _lastOpenSaveFormat = saveAsResult.SubtitleFormat;
         SetSubtitleFormat(saveAsResult.SubtitleFormat);
+
+        // SetSubtitleFormat changes the format programmatically, which bypasses the format-change
+        // handler that would inject the default ASSA style. Apply it here so a "Save as" to ASS
+        // from a style-less format (e.g. SRT) uses the configured default style, not Arial (#11788).
+        AssaStyleStorageHelper.ApplyDefaultStorageStyleForFormatConversion(_subtitle, saveAsResult.SubtitleFormat);
+
         var result = await SaveSubtitle();
         AddToRecentFiles(true);
         return result;
