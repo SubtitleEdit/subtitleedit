@@ -791,9 +791,14 @@ public class BurnInWindow : Window
         var checkBoxUseTargetFileSize = UiUtil.MakeCheckBox(Se.Language.Video.BurnIn.TargetFileSize, vm, nameof(vm.UseTargetFileSize));
         checkBoxUseTargetFileSize.IsCheckedChanged += (_, _) => vm.CheckBoxTargetFileChanged();
 
+        // "Match source video size" derives the target from each input file's own size (works per-file
+        // in batch mode); when on, the fixed-MB field is irrelevant and is disabled.
+        var checkBoxMatchSource = UiUtil.MakeCheckBox(Se.Language.Video.BurnIn.MatchSourceVideoSize, vm, nameof(vm.MatchSourceVideoSize));
+
         var labelTargetFileSize = UiUtil.MakeLabel(Se.Language.Video.BurnIn.FileSizeMb);
         var numericUpDownTargetFileSize = UiUtil.MakeNumericUpDownInt(1, 1000_000_000, 0, 150, vm, nameof(vm.TargetFileSize));
         numericUpDownTargetFileSize.ValueChanged += vm.NumericUpDownTargetFileSizeChanged;
+        numericUpDownTargetFileSize.Bind(NumericUpDown.IsEnabledProperty, new Binding(nameof(vm.MatchSourceVideoSize)) { Converter = new InverseBooleanConverter() });
         var labelVideoBitRate = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.TargetVideoBitRateInfo));
         labelVideoBitRate.FontSize = 10;
         labelVideoBitRate.Opacity = 0.7;
@@ -815,6 +820,7 @@ public class BurnInWindow : Window
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -828,11 +834,12 @@ public class BurnInWindow : Window
         };
 
         grid.Add(checkBoxUseTargetFileSize, 0, 0, 1, 2);
-        grid.Add(labelTargetFileSize, 1, 0);
-        grid.Add(panelTargetFileSize, 1, 1);
+        grid.Add(checkBoxMatchSource, 1, 0, 1, 2);
+        grid.Add(labelTargetFileSize, 2, 0);
+        grid.Add(panelTargetFileSize, 2, 1);
 
+        // Visible in batch mode too, so each file can target its own source size (issue #11802).
         return UiUtil.MakeBorderForControl(grid)
-            .WithBindIsVisible(nameof(vm.IsBatchMode), new InverseBooleanConverter())
             .WithMarginRight(5);
     }
 

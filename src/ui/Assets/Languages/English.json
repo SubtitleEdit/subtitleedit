@@ -1861,6 +1861,7 @@
       "targetFileName": "Target file name: {0}",
       "targetFileSize": "Target file size (requires 2 pass encoding)",
       "fileSizeMb": "File size in MB",
+      "matchSourceVideoSize": "Match source video size",
       "passX": "Pass {0}",
       "encoding": "Encoding",
       "bitRate": "Bit rate",

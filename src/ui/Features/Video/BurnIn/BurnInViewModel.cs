@@ -87,6 +87,7 @@ public partial class BurnInViewModel : ObservableObject
     [ObservableProperty] private TimeSpan _cutTo;
     [ObservableProperty] private bool _useTargetFileSize;
     [ObservableProperty] private int? _targetFileSize;
+    [ObservableProperty] private bool _matchSourceVideoSize;
     [ObservableProperty] private string _progressText;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private ObservableCollection<BurnInJobItem> _jobItems;
@@ -265,12 +266,7 @@ public partial class BurnInViewModel : ObservableObject
         if (fileExists)
         {
             SingleMode();
-            var fileLengthInBytes = new FileInfo(videoFileName).Length;
-            VideoFileSize = Utilities.FormatBytesToDisplayFileSize(fileLengthInBytes);
-
-            // Default the target file size to the original file's size, so enabling
-            // "use target file size" roughly preserves the source size by default.
-            TargetFileSize = Math.Max(1, (int)Math.Round(fileLengthInBytes / (1024.0 * 1024.0)));
+            VideoFileSize = Utilities.FormatBytesToDisplayFileSize(new FileInfo(videoFileName).Length);
             _ = Task.Run(() =>
             {
                 _mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
@@ -492,7 +488,12 @@ public partial class BurnInViewModel : ObservableObject
             }
         }
         jobItem.UseTargetFileSize = UseTargetFileSize;
-        jobItem.TargetFileSize = UseTargetFileSize ? TargetFileSize ?? 0 : 0;
+        // Resolve the per-file target (MB): "match source" derives it from each input file's own
+        // size (so a batch of differently-sized videos keeps each output near its source), otherwise
+        // the fixed value from the UI is used for every file.
+        jobItem.TargetFileSize = UseTargetFileSize
+            ? (MatchSourceVideoSize ? GetSourceFileSizeInMb(jobItem.InputVideoFileName) : TargetFileSize ?? 0)
+            : 0;
         jobItem.AssaSubtitleFileName = MakeAssa(jobItem.SubtitleFileName);
         jobItem.Status = Se.Language.General.Generating;
         if (IsBatchMode)
@@ -564,9 +565,23 @@ public partial class BurnInViewModel : ObservableObject
         return true;
     }
 
+    // Source file size in whole MB (>= 1), used when "match source video size" is enabled.
+    private static long GetSourceFileSizeInMb(string videoFileName)
+    {
+        try
+        {
+            var bytes = new FileInfo(videoFileName).Length;
+            return Math.Max(1, (long)Math.Round(bytes / (1024.0 * 1024.0)));
+        }
+        catch
+        {
+            return 0;
+        }
+    }
+
     private int GetVideoBitRate(BurnInJobItem item)
     {
-        if (TargetFileSize == null)
+        if (item.TargetFileSize < 1)
         {
             return 0;
         }
@@ -578,7 +593,7 @@ public partial class BurnInViewModel : ObservableObject
         }
 
         // (MiB * 8192 [converts MiB to kBit]) / video seconds = kBit/s total bitrate
-        var bitRate = (int)Math.Round(((double)TargetFileSize - audioMb) * 8192.0 / item.TotalSeconds);
+        var bitRate = (int)Math.Round(((double)item.TargetFileSize - audioMb) * 8192.0 / item.TotalSeconds);
         if (SelectedAudioEncoding != "copy" && !string.IsNullOrWhiteSpace(SelectedAudioBitRate))
         {
             var audioBitRate = int.Parse(SelectedAudioBitRate.RemoveChar('k').TrimEnd());
@@ -1311,6 +1326,7 @@ public partial class BurnInViewModel : ObservableObject
 
         UseTargetFileSize = settings.TargetFileSize;
         TargetFileSize = settings.TargetFileSizeMb;
+        MatchSourceVideoSize = settings.TargetFileSizeMatchSource;
         PromptForFfmpegParameters = settings.PromptFfmpegParameters;
 
         var effectsAsStringArray = settings.Effects?.Split(',') ?? [];
@@ -1351,6 +1367,7 @@ public partial class BurnInViewModel : ObservableObject
 
         settings.TargetFileSize = UseTargetFileSize;
         settings.TargetFileSizeMb = TargetFileSize ?? 0;
+        settings.TargetFileSizeMatchSource = MatchSourceVideoSize;
         settings.PromptFfmpegParameters = PromptForFfmpegParameters;
 
         settings.Effects = string.Join(",", _selectedEffects.Select(p => p.Name).Distinct());
@@ -1963,7 +1980,9 @@ public partial class BurnInViewModel : ObservableObject
 
     private int GetVideoBitRate()
     {
-        if (TargetFileSize == null || TargetFileSize < 1)
+        // In "match source" mode the preview uses the loaded file's own size; otherwise the fixed MB.
+        var targetMb = MatchSourceVideoSize ? GetSourceFileSizeInMb(VideoFileName) : TargetFileSize ?? 0;
+        if (targetMb < 1)
         {
             return 0;
         }
@@ -1980,7 +1999,7 @@ public partial class BurnInViewModel : ObservableObject
         }
 
         // (MiB * 8192 [converts MiB to kBit]) / video seconds = kBit/s total bitrate
-        var bitRate = (int)Math.Round(((double)TargetFileSize - audioMb) * 8192.0 / _mediaInfo.Duration.TotalSeconds);
+        var bitRate = (int)Math.Round(((double)targetMb - audioMb) * 8192.0 / _mediaInfo.Duration.TotalSeconds);
         if (SelectedAudioEncoding != "copy" && !string.IsNullOrWhiteSpace(SelectedAudioBitRate))
         {
             var audioBitRate = int.Parse(SelectedAudioBitRate.RemoveChar('k').TrimEnd());
@@ -1995,7 +2014,8 @@ public partial class BurnInViewModel : ObservableObject
     {
         TargetVideoBitRateInfo = string.Empty;
 
-        if (!UseTargetFileSize || _mediaInfo == null || TargetFileSize == null || TargetFileSize < 1)
+        if (!UseTargetFileSize || _mediaInfo == null ||
+            (!MatchSourceVideoSize && (TargetFileSize == null || TargetFileSize < 1)))
         {
             return;
         }
@@ -2039,6 +2059,11 @@ public partial class BurnInViewModel : ObservableObject
     }
 
     internal void CheckBoxTargetFileChanged()
+    {
+        CalculateTargetFileBitRate();
+    }
+
+    partial void OnMatchSourceVideoSizeChanged(bool value)
     {
         CalculateTargetFileBitRate();
     }
