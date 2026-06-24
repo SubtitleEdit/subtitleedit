@@ -340,6 +340,11 @@ public class AudioVisualizer : Control
     private double _originalDurationSeconds;
     private double _originalPreviousEndSeconds;
     private double _originalNextStartSeconds;
+
+    // Snapshot of every selected paragraph's start/duration captured when a bulk
+    // (multi-selection) move starts, so the whole block can be shifted by one delta.
+    private readonly List<(SubtitleLineViewModel Paragraph, double StartSeconds, double DurationSeconds)> _selectionMoveSnapshot = new();
+
     private bool _preventNextTap;
     private long _audioVisualizerLastScroll;
     private SubtitleLineViewModel? _cachedHitParagraph;
@@ -353,6 +358,7 @@ public class AudioVisualizer : Control
     {
         None,
         Moving,
+        MovingSelection,
         ResizingLeft,
         ResizingLeftOr,
         ResizingRight,
@@ -766,7 +772,7 @@ public class AudioVisualizer : Control
             return;
         }
 
-        if (_interactionMode == InteractionMode.Moving)
+        if (_interactionMode is InteractionMode.Moving or InteractionMode.MovingSelection)
         {
             // click on paragraph, but with no move
             var ms = Environment.TickCount64 - _lastPointerPressed;
@@ -815,6 +821,7 @@ public class AudioVisualizer : Control
 
         if (_interactionMode is
             InteractionMode.Moving or
+            InteractionMode.MovingSelection or
             InteractionMode.ResizingLeft or
             InteractionMode.ResizingRight or
             InteractionMode.ResizingLeftOr or
@@ -835,6 +842,7 @@ public class AudioVisualizer : Control
 
         _interactionMode = InteractionMode.None;
         _activeParagraph = null;
+        _selectionMoveSnapshot.Clear();
 
         InvalidateVisual();
     }
@@ -965,7 +973,22 @@ public class AudioVisualizer : Control
                 return;
             }
 
-            _interactionMode = InteractionMode.Moving;
+            // A plain drag on a line that is part of a multi-selection shifts the whole
+            // selection together (SE4 parity for bulk time-offset in the waveform).
+            if (AllSelectedParagraphs is { Count: > 1 } && AllSelectedParagraphs.Contains(p))
+            {
+                _selectionMoveSnapshot.Clear();
+                foreach (var selected in AllSelectedParagraphs)
+                {
+                    _selectionMoveSnapshot.Add((selected, selected.StartTime.TotalSeconds, selected.Duration.TotalSeconds));
+                }
+
+                _interactionMode = InteractionMode.MovingSelection;
+            }
+            else
+            {
+                _interactionMode = InteractionMode.Moving;
+            }
         }
     }
 
@@ -1157,6 +1180,37 @@ public class AudioVisualizer : Control
                     _activeParagraph.EndTime = TimeSpan.FromSeconds(newStart + _originalDurationSeconds);
                 }
                 break;
+            case InteractionMode.MovingSelection:
+            {
+                // Shift every selected paragraph by the same delta. Snap is anchored on the
+                // grabbed line so relative spacing is preserved, and the delta is clamped so
+                // the earliest selected line never moves before zero. Overlap with unselected
+                // neighbours is allowed - the user is repositioning the block as a whole.
+                var shift = SnapToFrame(_originalStartSeconds + deltaSeconds - StartPositionSeconds) - _originalStartSeconds;
+
+                var minOriginalStart = double.MaxValue;
+                foreach (var item in _selectionMoveSnapshot)
+                {
+                    if (item.StartSeconds < minOriginalStart)
+                    {
+                        minOriginalStart = item.StartSeconds;
+                    }
+                }
+
+                if (minOriginalStart + shift < 0)
+                {
+                    shift = -minOriginalStart;
+                }
+
+                foreach (var item in _selectionMoveSnapshot)
+                {
+                    var start = item.StartSeconds + shift;
+                    item.Paragraph.StartTime = TimeSpan.FromSeconds(start);
+                    item.Paragraph.EndTime = TimeSpan.FromSeconds(start + item.DurationSeconds);
+                }
+
+                break;
+            }
             case InteractionMode.ResizeLeftAnd:
                 newStart = _originalStartSeconds + deltaSeconds - StartPositionSeconds;
                 var newPrevEnd = _originalPreviousEndSeconds + deltaSeconds - StartPositionSeconds;
