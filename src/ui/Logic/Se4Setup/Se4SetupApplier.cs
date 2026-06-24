@@ -168,10 +168,10 @@ public static class Se4SetupApplier
         w.WaveformParagraphRightColor = Color.FromArgb(180, 255, 0, 0).FromColorToHex();
         w.WaveformFancyHighColor = Colors.Orange.FromColorToHex();
 
-        // SE 4 did not tint the paragraph background differently when selected -
-        // keep the selected background identical to the normal one.
+        // SE 4 used a dark gray paragraph background; make the selected paragraph a
+        // little lighter so the active subtitle stands out.
         w.ParagraphBackground = Color.FromArgb(90, 70, 70, 70).FromColorToHex();
-        w.ParagraphSelectedBackground = Color.FromArgb(90, 70, 70, 70).FromColorToHex();
+        w.ParagraphSelectedBackground = Color.FromArgb(90, 100, 100, 100).FromColorToHex();
 
         // SE 4 drew classic (non-fancy) waveforms with vertical grid lines.
         w.DrawGridLines = true;
