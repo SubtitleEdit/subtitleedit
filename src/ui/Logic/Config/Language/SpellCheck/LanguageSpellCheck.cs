@@ -33,6 +33,8 @@ public class LanguageSpellCheck
     public string PickLiveSpellCheckDictionary { get; set; }
     public string UndoX { get; set; }
     public string EditWholeText { get; set; }
+    public string ContinueFromCurrentLine { get; set; }
+    public string ContinueFromTop { get; set; }
 
     public LanguageSpellCheck()
     {
@@ -65,5 +67,7 @@ public class LanguageSpellCheck
         PickLiveSpellCheckDictionary = "Pick live spell check dictionary";
         UndoX = "Undo: {0}";
         EditWholeText = "Edit whole text";
+        ContinueFromCurrentLine = "Continue spell check from the current line?\n\nYes = continue from the current line\nNo = start from the beginning";
+        ContinueFromTop = "Spell check reached the end of the subtitle.\n\nContinue from the top?";
     }
 }

@@ -113,7 +113,7 @@ public class SpellCheckManager : ISpellCheckManager, IDoSpell
         return true;
     }
 
-    public List<SpellCheckResult> CheckSpelling(ObservableCollection<SubtitleLineViewModel> subtitles, SpellCheckResult? startFrom = null)
+    public List<SpellCheckResult> CheckSpelling(ObservableCollection<SubtitleLineViewModel> subtitles, SpellCheckResult? startFrom = null, int? stopBeforeLineIndex = null)
     {
         var results = new List<SpellCheckResult>();
 
@@ -124,7 +124,12 @@ public class SpellCheckManager : ISpellCheckManager, IDoSpell
             startWordIndex++;
         }
 
-        for (var lineIndex = startLineIndex; lineIndex < subtitles.Count; lineIndex++)
+        // When wrapping back to the top, scan only the lines above where this run started.
+        var endLineIndex = stopBeforeLineIndex.HasValue
+            ? Math.Min(stopBeforeLineIndex.Value, subtitles.Count)
+            : subtitles.Count;
+
+        for (var lineIndex = startLineIndex; lineIndex < endLineIndex; lineIndex++)
         {
             var p = subtitles[lineIndex];
             var words = SpellCheckWordLists.Split(p.Text);
