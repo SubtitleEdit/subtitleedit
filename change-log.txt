@@ -1,7 +1,7 @@
 
 Subtitle Edit Changelog
 
-v5.1.0 (TDB)
+v5.1.0 (TBD)
 
 * Add auto-save of the open subtitle file (Options > General) - thx muaz978
 * Add remote/external llama.cpp server (URL) option to auto-translate - thx muaz978
