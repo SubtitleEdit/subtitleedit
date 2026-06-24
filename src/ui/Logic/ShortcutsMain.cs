@@ -203,6 +203,9 @@ public static class ShortcutsMain
         { nameof(MainViewModel.PlayNextCommand), Se.Language.General.PlayNext },
         { nameof(MainViewModel.PlayNextAndStopCommand), Se.Language.General.PlayNextAndStop },
         { nameof(MainViewModel.PlayNextAndLoopCommand), Se.Language.General.PlayNextAndLoop },
+        { nameof(MainViewModel.PlayPreviousCommand), Se.Language.General.PlayPrevious },
+        { nameof(MainViewModel.PlayPreviousAndStopCommand), Se.Language.General.PlayPreviousAndStop },
+        { nameof(MainViewModel.PlayPreviousAndLoopCommand), Se.Language.General.PlayPreviousAndLoop },
         { nameof(MainViewModel.PauseCommand), Se.Language.General.Pause },
         { nameof(MainViewModel.TogglePlayPauseCommand), Se.Language.Options.Shortcuts.TogglePlayPause },
         { nameof(MainViewModel.TogglePlayPause2Command), Se.Language.Options.Shortcuts.TogglePlayPause },
@@ -494,6 +497,9 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.PlayNextCommand, nameof(vm.PlayNextCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.PlayNextAndStopCommand, nameof(vm.PlayNextAndStopCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.PlayNextAndLoopCommand, nameof(vm.PlayNextAndLoopCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.PlayPreviousCommand, nameof(vm.PlayPreviousCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.PlayPreviousAndStopCommand, nameof(vm.PlayPreviousAndStopCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.PlayPreviousAndLoopCommand, nameof(vm.PlayPreviousAndLoopCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.PauseCommand, nameof(vm.PauseCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.TogglePlayPauseCommand, nameof(vm.TogglePlayPauseCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.TogglePlayPause2Command, nameof(vm.TogglePlayPause2Command), ShortcutCategory.General);

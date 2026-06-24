@@ -406,6 +406,9 @@ public class LanguageGeneral
     public string PlayNext { get; set; }
     public string PlayNextAndStop { get; set; }
     public string PlayNextAndLoop { get; set; }
+    public string PlayPrevious { get; set; }
+    public string PlayPreviousAndStop { get; set; }
+    public string PlayPreviousAndLoop { get; set; }
     public string PlaySelectedLines { get; set; }
     public string PlaySelectedLinesWithLoop { get; set; }
     public string PlaySelectedLinesAndFocusWaveform { get; set; }
@@ -1140,6 +1143,9 @@ public class LanguageGeneral
         PlayNext = "Play next";
         PlayNextAndStop = "Play next (and stop)";
         PlayNextAndLoop = "Play next (and loop)";
+        PlayPrevious = "Play previous";
+        PlayPreviousAndStop = "Play previous (and stop)";
+        PlayPreviousAndLoop = "Play previous (and loop)";
         PlaySelectedLines = "Play selected lines";
         PlaySelectedLinesWithLoop = "Play selected lines with loop";
         PlaySelectedLinesAndFocusWaveform = "Play selected lines and focus waveform";
