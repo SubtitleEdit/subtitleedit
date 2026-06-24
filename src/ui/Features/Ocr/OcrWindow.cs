@@ -423,7 +423,17 @@ public class OcrWindow : Window
                             };
                             image.Bind(Image.MaxHeightProperty, new Binding(nameof(vm.ImageMaxHeight)) { Source = vm });
                             image.Bind(Image.MaxWidthProperty, new Binding(nameof(vm.ImageMaxWidth)) { Source = vm });
-                            stackPanel.Children.Add(image);
+
+                            // Subtitle bitmaps are usually light text on a transparent background, which
+                            // is invisible on a light grid - give them a dark backdrop so they show.
+                            var imageContainer = new Border
+                            {
+                                Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.FromRgb(0x2D, 0x2D, 0x30)),
+                                CornerRadius = new CornerRadius(3),
+                                Padding = new Thickness(3),
+                                Child = image,
+                            };
+                            stackPanel.Children.Add(imageContainer);
                         }
 
                         return stackPanel;
