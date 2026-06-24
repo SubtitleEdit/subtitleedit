@@ -2728,6 +2728,7 @@
       "showMediaInformation": "Show media information",
       "chooseSubtitleFormat": "Choose subtitle format",
       "trimWhitespaceSelectedLines": "Trim whitespace (selected lines)",
+      "waveformInsertNewSelection": "Waveform insert new selection",
       "waveformHorizontalZoomInCommand": "Waveform horizontal zoom in",
       "waveformHorizontalZoomOutCommand": "Waveform horizontal zoom out",
       "waveformVerticalZoomInCommand": "Waveform vertical zoom in",
