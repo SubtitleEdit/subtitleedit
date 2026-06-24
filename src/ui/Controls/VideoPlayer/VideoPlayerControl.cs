@@ -527,8 +527,11 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
             // Resize the file-name label with the window: cap its width to the space to the
             // right of the centered position/duration text so it fills what's available
-            // without overlapping that text.
+            // without overlapping that text. Recompute both when the controls grow/shrink
+            // (window resize) and when the progress text changes size — the latter covers
+            // startup, where the progress text is still empty when the grid is first laid out.
             _gridProgress.SizeChanged += (_, _) => UpdateVideoFileNameMaxWidth();
+            _textBlockProgress.SizeChanged += (_, _) => UpdateVideoFileNameMaxWidth();
 
             Content = mainGrid;
 
