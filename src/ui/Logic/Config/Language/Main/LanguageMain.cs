@@ -112,6 +112,13 @@ public class LanguageMain
     public string DownloadFfmpegQuestion { get; set; }
     public string SelectCurrentSubtitleWhilePlayingOn  { get; set; }
     public string SelectCurrentSubtitleWhilePlayingOff  { get; set; }
+    public string SetUpLikeSe4Question { get; set; }
+    public string SetUpLikeSe4ImportedSettingsX { get; set; }
+    public string SetUpLikeSe4NoSettingsXmlFound { get; set; }
+    public string SetUpLikeSe4ShortcutsAddedX { get; set; }
+    public string SetUpLikeSe4ShortcutsSkippedX { get; set; }
+    public string SetUpLikeSe4ReplaceRulesAddedXY { get; set; }
+    public string SetUpLikeSe4ThemeSet { get; set; }
 
     public LanguageMain()
     {
@@ -221,5 +228,12 @@ public class LanguageMain
         DownloadFfmpegQuestion = "FFmpeg is required for playing online videos and for some video editing features.\n\nDownload FFmpeg now?";
         SelectCurrentSubtitleWhilePlayingOn = "Select current subtitle while playing: ON";
         SelectCurrentSubtitleWhilePlayingOff = "Select current subtitle while playing: OFF";
+        SetUpLikeSe4Question = "This will import Subtitle Edit 4 shortcuts and replace rules and apply the Subtitle Edit 4 theme, toolbar and waveform look.\n\nContinue?";
+        SetUpLikeSe4ImportedSettingsX = "Imported settings from Subtitle Edit 4:\n{0}";
+        SetUpLikeSe4NoSettingsXmlFound = "No Subtitle Edit 4 Settings.xml found - applied Subtitle Edit 4 default values.";
+        SetUpLikeSe4ShortcutsAddedX = "Shortcuts added/updated: {0}";
+        SetUpLikeSe4ShortcutsSkippedX = "Shortcuts skipped (no match): {0}";
+        SetUpLikeSe4ReplaceRulesAddedXY = "Replace rules added: {0} (in {1} new categories)";
+        SetUpLikeSe4ThemeSet = "Theme, toolbar icons and waveform set to the Subtitle Edit 4 look.";
     }
 }

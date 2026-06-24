@@ -8590,9 +8590,8 @@ public partial class MainViewModel :
     {
         if (Window != null)
         {
-            var confirm = await MessageBox.Show(Window, "Set up like Subtitle Edit 4",
-                "This will import Subtitle Edit 4 shortcuts and replace rules and apply the Subtitle Edit 4 theme, toolbar and waveform look." + Environment.NewLine + Environment.NewLine +
-                "Continue?",
+            var confirm = await MessageBox.Show(Window, Se.Language.General.SetUpLikeSubtitleEdit4,
+                Se.Language.Main.SetUpLikeSe4Question,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm != MessageBoxResult.Yes)
             {
@@ -8613,21 +8612,21 @@ public partial class MainViewModel :
 
         var sb = new System.Text.StringBuilder();
         sb.AppendLine(result.SettingsXmlFound
-            ? string.Format("Imported settings from Subtitle Edit 4:\r\n{0}", result.SettingsXmlPath)
-            : "No Subtitle Edit 4 Settings.xml found - applied Subtitle Edit 4 default values.");
+            ? string.Format(Se.Language.Main.SetUpLikeSe4ImportedSettingsX, result.SettingsXmlPath)
+            : Se.Language.Main.SetUpLikeSe4NoSettingsXmlFound);
         sb.AppendLine();
-        sb.AppendLine(string.Format("Shortcuts added/updated: {0}", result.ShortcutsImported));
+        sb.AppendLine(string.Format(Se.Language.Main.SetUpLikeSe4ShortcutsAddedX, result.ShortcutsImported));
         if (result.ShortcutsSkipped > 0)
         {
-            sb.AppendLine(string.Format("Shortcuts skipped (no match): {0}", result.ShortcutsSkipped));
+            sb.AppendLine(string.Format(Se.Language.Main.SetUpLikeSe4ShortcutsSkippedX, result.ShortcutsSkipped));
         }
 
-        sb.AppendLine(string.Format("Replace rules added: {0} (in {1} new categories)",
+        sb.AppendLine(string.Format(Se.Language.Main.SetUpLikeSe4ReplaceRulesAddedXY,
             result.ReplaceRulesAdded, result.ReplaceCategoriesAdded));
         sb.AppendLine();
-        sb.AppendLine("Theme, toolbar icons and waveform set to the Subtitle Edit 4 look.");
+        sb.AppendLine(Se.Language.Main.SetUpLikeSe4ThemeSet);
 
-        await MessageBox.Show(Window, "Set up like Subtitle Edit 4", sb.ToString(),
+        await MessageBox.Show(Window, Se.Language.General.SetUpLikeSubtitleEdit4, sb.ToString(),
             MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 

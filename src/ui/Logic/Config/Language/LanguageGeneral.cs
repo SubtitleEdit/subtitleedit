@@ -505,6 +505,7 @@ public class LanguageGeneral
     public string SetOutCueToClosestShotChangeRightGreenZone { get; set; }
     public string SetStart { get; set; }
     public string SetStartAndOffsetTheRest { get; set; }
+    public string SetUpLikeSubtitleEdit4 { get; set; }
     public string SetVideoOffset { get; set; }
     public string Settings { get; set; }
     public string Shadow { get; set; }
@@ -1238,6 +1239,7 @@ public class LanguageGeneral
         SetOutCueToClosestShotChangeRightGreenZone = "Set out-cue to closest shot change (snap to right green zone)";
         SetStart = "Set start";
         SetStartAndOffsetTheRest = "Set start and offset the rest";
+        SetUpLikeSubtitleEdit4 = "Set up like Subtitle Edit 4 (theme, shortcuts, replace rules)";
         SetVideoOffset = "Set video offset";
         Settings = "Settings";
         Shadow = "Shadow";
