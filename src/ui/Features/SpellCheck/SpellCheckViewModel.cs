@@ -433,28 +433,13 @@ public partial class SpellCheckViewModel : ObservableObject
     }
 
     [RelayCommand(CanExecute = nameof(CanChangeWord))]
-    private async Task ChangeWordAll()
+    private void ChangeWordAll()
     {
         var selectedParagraph = SelectedParagraph;
         if (selectedParagraph == null)
         {
             Dispatcher.UIThread.Invoke(() => { TextBoxWordNotFound.Focus(); });
             return;
-        }
-
-        if (Window != null)
-        {
-            var answer = await MessageBox.Show(
-                Window,
-                Se.Language.SpellCheck.SpellCheck,
-                string.Format(Se.Language.SpellCheck.ChangeAllConfirmX, WordNotFoundOriginal, CurrentWord),
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
-
-            if (answer != MessageBoxResult.Yes)
-            {
-                return;
-            }
         }
 
         var status = string.Format(Se.Language.SpellCheck.ChangeAllWordsFromXToY, WordNotFoundOriginal, CurrentWord);

@@ -35,7 +35,6 @@ public class LanguageSpellCheck
     public string EditWholeText { get; set; }
     public string ContinueFromCurrentLine { get; set; }
     public string ContinueFromTop { get; set; }
-    public string ChangeAllConfirmX { get; set; }
 
     public LanguageSpellCheck()
     {
@@ -70,6 +69,5 @@ public class LanguageSpellCheck
         EditWholeText = "Edit whole text";
         ContinueFromCurrentLine = "Continue spell check from the current line?\n\nYes = continue from the current line\nNo = start from the beginning";
         ContinueFromTop = "Spell check reached the end of the subtitle.\n\nContinue from the top?";
-        ChangeAllConfirmX = "Change all occurrences of '{0}' to '{1}'?";
     }
 }
