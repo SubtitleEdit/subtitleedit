@@ -3575,12 +3575,14 @@ public partial class OcrViewModel : ObservableObject
 
                 // Tesseract exited cleanly but every line came back empty — that is almost never the
                 // intent, so tell the user instead of leaving a grid full of blank lines.
-                if (processedCount > 1 && !producedAnyText && !cancellationToken.IsCancellationRequested)
+                if (processedCount >= 1 && !producedAnyText && !cancellationToken.IsCancellationRequested)
                 {
                     await ShowTesseractErrorAsync(
-                        "Tesseract returned no text for any of the " + processedCount + " lines." + Environment.NewLine +
+                        "Tesseract returned no text for " +
+                        (processedCount == 1 ? "the line." : "any of the " + processedCount + " lines.") + Environment.NewLine +
                         "The subtitle images may not suit Tesseract (e.g. coloured text), or the selected language (" +
-                        language + ") may be wrong. Try another OCR engine or language.");
+                        language + ") may be wrong. Try another OCR engine or language." + Environment.NewLine +
+                        "Enable Options > Tools > write tools log for details.");
                 }
             }
             catch (OperationCanceledException)

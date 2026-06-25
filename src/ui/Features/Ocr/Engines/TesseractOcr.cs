@@ -71,6 +71,25 @@ public class TesseractOcr
         var tempImage = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
         var tempTextFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
 
+        // When the tools log is on, record what Tesseract is actually fed: how much "ink" survived
+        // the black/white preprocessing (0% means the text was blanked, e.g. coloured subtitles) and
+        // a copy of the exact image, so blank output can be diagnosed without guessing.
+        if (Se.Settings.Tools.WriteToolsLog)
+        {
+            var inkPercent = GetInkPercent(nbmp);
+            Se.WriteToolsLog($"Tesseract OCR: input {oneColorBitmap.Width}x{oneColorBitmap.Height}, ink={inkPercent:0.0}% (0% = preprocessing blanked the text), lang={language}, oem={engineMode}");
+            try
+            {
+                var debugCopy = Path.Combine(Path.GetDirectoryName(Se.GetToolsLogFilePath()) ?? Path.GetTempPath(), "tesseract-input.png");
+                await File.WriteAllBytesAsync(debugCopy, oneColorBitmap.ToPngArray(), cancellationToken);
+                Se.WriteToolsLog($"Tesseract OCR: saved preprocessed image to {debugCopy}");
+            }
+            catch
+            {
+                // ignore debug-save failures
+            }
+        }
+
         try
         {
             await File.WriteAllBytesAsync(tempImage, oneColorBitmap.ToPngArray(), cancellationToken);
@@ -128,9 +147,17 @@ public class TesseractOcr
             }
 
             var stderr = await stderrTask;
+            if (Se.Settings.Tools.WriteToolsLog)
+            {
+                Se.WriteToolsLog($"Tesseract OCR: exit={process.ExitCode}" +
+                                 (string.IsNullOrWhiteSpace(stderr) ? string.Empty : " stderr=" + stderr.Trim()));
+            }
+
             if (process.ExitCode != 0)
             {
-                Error = stderr;
+                Error = string.IsNullOrWhiteSpace(stderr)
+                    ? $"Tesseract exited with code {process.ExitCode}."
+                    : stderr.Trim();
                 return string.Empty;
             }
         }
@@ -176,6 +203,32 @@ public class TesseractOcr
                 // Ignore cleanup errors
             }
         }
+    }
+
+    // Percentage of dark "ink" pixels in the preprocessed (black-on-white) image. ~0% means the
+    // black/white conversion blanked the text (e.g. coloured subtitles), which yields empty OCR.
+    private static double GetInkPercent(NikseBitmap nbmp)
+    {
+        long total = (long)nbmp.Width * nbmp.Height;
+        if (total == 0)
+        {
+            return 0;
+        }
+
+        long ink = 0;
+        for (var y = 0; y < nbmp.Height; y++)
+        {
+            for (var x = 0; x < nbmp.Width; x++)
+            {
+                var c = nbmp.GetPixel(x, y);
+                if (c.Alpha > 0 && c.Red < 128 && c.Green < 128 && c.Blue < 128)
+                {
+                    ink++;
+                }
+            }
+        }
+
+        return ink * 100.0 / total;
     }
 
     private static string ParseHOcr(string html)
