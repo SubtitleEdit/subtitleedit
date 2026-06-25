@@ -222,7 +222,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         SelectedEngine = Engines[0];
 
-        Languages = new ObservableCollection<WhisperLanguage>(SelectedEngine.Languages);
+        Languages = new ObservableCollection<WhisperLanguage>(GetEngineLanguages(GetEffectiveSelectedEngine()));
         SelectedLanguage = PickDefaultLanguage(Languages);
 
         Models = new ObservableCollection<SpeechToTextModelDisplay>();
@@ -339,6 +339,35 @@ public partial class SpeechToTextViewModel : ObservableObject
             CrispAsrEngine crispAsrEngine => crispAsrEngine.SelectedBackend,
             _ => SelectedEngine,
         };
+    }
+
+    // The mainstream Whisper engines that can auto-detect the spoken language
+    // (useful for files with mixed languages). See issue #11848.
+    private static bool EngineSupportsAutoLanguageDetection(ISpeechToTextEngine engine)
+    {
+        return engine.Choice is WhisperChoice.Cpp
+            or WhisperChoice.CppCuBlas
+            or WhisperChoice.CppVulkan
+            or WhisperChoice.CppCuBlasLib
+            or WhisperChoice.ConstMe
+            or WhisperChoice.PurfviewFasterWhisperXxl
+            or WhisperChoice.CTranslate2
+            or WhisperChoice.OpenAi;
+    }
+
+    // Builds the language dropdown for an engine, prepending an "Auto detect" entry
+    // (code "auto") for engines that support automatic language detection.
+    private static IEnumerable<WhisperLanguage> GetEngineLanguages(ISpeechToTextEngine engine)
+    {
+        if (EngineSupportsAutoLanguageDetection(engine))
+        {
+            yield return new WhisperLanguage("auto", "Auto detect");
+        }
+
+        foreach (var language in engine.Languages)
+        {
+            yield return language;
+        }
     }
 
     private static bool IsTranslateAvailable(ISpeechToTextEngine engine)
@@ -3460,8 +3489,22 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         var w = engine.GetExecutable();
         var m = engine.GetModelForCmdLine(model);
+
+        // Automatic language detection (#11848). whisper.cpp/Const-me accept the literal
+        // "auto" (their default is "en", so the flag is required). The faster-whisper based
+        // engines (Purfview, CTranslate2) and OpenAI reject "auto" but auto-detect when no
+        // --language is given, so the flag is omitted there.
+        var languageArg = $"--language {language} ";
+        if (language.Equals("auto", StringComparison.OrdinalIgnoreCase))
+        {
+            languageArg = settings.WhisperChoice is WhisperChoice.Cpp or WhisperChoice.CppCuBlas
+                or WhisperChoice.CppVulkan or WhisperChoice.CppCuBlasLib or WhisperChoice.ConstMe
+                ? "--language auto "
+                : string.Empty;
+        }
+
         var parameters =
-            $"--language {language} --model \"{m}\" {outputSrt}{translateToEnglish}{args} \"{waveFileName}\"{postParams}";
+            $"{languageArg}--model \"{m}\" {outputSrt}{translateToEnglish}{args} \"{waveFileName}\"{postParams}";
 
         if (engine is WhisperEngineCTranslate2)
         {
@@ -3908,7 +3951,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         UpdateBackendSelectionUi();
 
         Languages.Clear();
-        foreach (var l in engine.Languages)
+        foreach (var l in GetEngineLanguages(engine))
         {
             Languages.Add(l);
         }
