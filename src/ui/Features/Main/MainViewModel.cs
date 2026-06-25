@@ -9414,6 +9414,24 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void ToggleLinesBoldOrSelectedText()
+    {
+        var selectedItems = _selectedSubtitles?.ToList() ?? [];
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        if (selectedItems.Count == 1 && EditTextBox.SelectedText.Length > 0)
+        {
+            TextBoxBold();
+            return;
+        }
+
+        ToggleBold();
+    }
+
+    [RelayCommand]
     private async Task ShowAlignmentPicker()
     {
         var selected = SelectedSubtitle;
