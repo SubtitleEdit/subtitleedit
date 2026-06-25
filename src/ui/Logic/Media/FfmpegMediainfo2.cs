@@ -175,9 +175,10 @@ public class FfmpegMediaInfo2
     }
 
     /// <summary>
-    /// Rounded to nearest known frame rate if close.
+    /// Snaps a reported frame rate to the closest known frame rate when it is very close,
+    /// e.g. ffmpeg's two-decimal "23.98"/"29.97" become the canonical 23.976/29.97.
     /// </summary>
-    private static decimal NormalizeFrameRate(double frameRate)
+    internal static decimal NormalizeFrameRate(double frameRate)
     {
         // Common video frame rates (including NTSC variants)
         double[] knownRates =
@@ -185,18 +186,28 @@ public class FfmpegMediaInfo2
             23.976, 24.0, 25.0, 29.97, 30.0, 48.0, 50.0, 59.94, 60.0, 120.0
         };
 
-        for (double tolerance = 0.05; tolerance < 2; tolerance += 0.5)
+        // Pick the CLOSEST known rate rather than the first one within a tolerance window.
+        // 24.0 is only 0.024 from 23.976 (and 30.0 only 0.03 from 29.97), so the old
+        // order-dependent "first within 0.05" check wrongly collapsed 24 -> 23.976 and
+        // 30 -> 29.97 (issue #11847).
+        var closest = knownRates[0];
+        var smallestDiff = double.MaxValue;
+        foreach (var known in knownRates)
         {
-            foreach (var known in knownRates)
+            var diff = Math.Abs(frameRate - known);
+            if (diff < smallestDiff)
             {
-                if (Math.Abs(frameRate - known) < tolerance)
-                {
-                    return (decimal)known;
-                }
+                smallestDiff = diff;
+                closest = known;
             }
         }
 
-        // Not close to any known frame rate, return as-is
+        // Only snap when genuinely close to a known rate; otherwise keep the exact value.
+        if (smallestDiff < 0.06)
+        {
+            return (decimal)closest;
+        }
+
         return (decimal)frameRate;
     }
 
