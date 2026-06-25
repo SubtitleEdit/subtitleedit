@@ -71,14 +71,21 @@ namespace Nikse.SubtitleEdit
 
                 // Build and configure the app
                 var appBuilder = AppBuilder.Configure<Application>()
-                    .UsePlatformDetect()
-                    // Register the embedded Inter font as the default. Avalonia v12's font manager
-                    // throws "Could not create glyphTypeface. Font family: $Default" at startup on
-                    // minimal Linux installs that ship without fontconfig-discoverable fonts
-                    // (e.g. Debian 13 trixie base — issue #11355). With Inter registered, FontFamily.Default
-                    // resolves to the embedded font when no system font is available; healthy systems
-                    // still pick up their own fonts for explicit family names.
-                    .WithInterFont()
+                    .UsePlatformDetect();
+
+                // Register the embedded Inter font as the default ONLY on Linux. Avalonia v12's font
+                // manager throws "Could not create glyphTypeface. Font family: $Default" at startup on
+                // minimal Linux installs that ship without fontconfig-discoverable fonts
+                // (e.g. Debian 13 trixie base — issue #11355). Forcing Inter as the default on macOS and
+                // Windows, however, overrides the system font and its CJK fallback, so Korean/Japanese/
+                // Chinese UI text renders as boxes (Inter has no CJK glyphs). Those platforms always have
+                // system fonts with proper fallback, so let them use the system default there.
+                if (OperatingSystem.IsLinux())
+                {
+                    appBuilder = appBuilder.WithInterFont();
+                }
+
+                appBuilder = appBuilder
                     .With(new X11PlatformOptions
                     {
                         RenderingMode = new[] { X11RenderingMode.Glx, X11RenderingMode.Egl }
