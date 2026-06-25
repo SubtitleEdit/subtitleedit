@@ -311,11 +311,11 @@ public partial class ExportEbuStlViewModel : ObservableObject
         {
             _header.DisplayStandardCode = "0";
         }
-        if (SelectedDisplayStandardCode != null && SelectedDisplayStandardCode.StartsWith("1"))
+        else if (SelectedDisplayStandardCode != null && SelectedDisplayStandardCode.StartsWith("1"))
         {
             _header.DisplayStandardCode = "1";
         }
-        if (SelectedDisplayStandardCode != null && SelectedDisplayStandardCode.StartsWith("2"))
+        else if (SelectedDisplayStandardCode != null && SelectedDisplayStandardCode.StartsWith("2"))
         {
             _header.DisplayStandardCode = "2";
         }
