@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -14,7 +15,9 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Media;
 using SkiaSharp;
 using System;
+using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Assa.AssaSetPosition;
@@ -36,6 +39,11 @@ public partial class AssaSetPositionViewModel : ObservableObject
     [ObservableProperty] private Bitmap _screenshotOverlayText;
     [ObservableProperty] private Bitmap _screenshot;
     [ObservableProperty] private string _screenshotOverlayPosiion;
+    [ObservableProperty] private decimal _rotation;
+
+    private static readonly Regex FrzRegex = new(@"\\frz\(?(-?\d+(\.\d+)?)\)?", RegexOptions.Compiled);
+
+    public decimal ResultRotation => Rotation;
 
     private Subtitle _subtitle = new();
     private bool _isLeftAligned = false;
@@ -110,9 +118,23 @@ public partial class AssaSetPositionViewModel : ObservableObject
         }
     }
 
+    partial void OnRotationChanged(decimal value)
+    {
+        if (VideoGrid != null && ScreenshotOverlayImage != null && ScreenshotImage != null)
+        {
+            UpdateOverlayPosition();
+        }
+    }
+
     public void Initialize(Subtitle subtitle, SubtitleLineViewModel line, string? videoFileName, int? videoWidth, int? videoHeight)
     {
         _subtitle = new Subtitle(subtitle, false);
+
+        var frzMatch = FrzRegex.Match(line.Text ?? string.Empty);
+        if (frzMatch.Success && decimal.TryParse(frzMatch.Groups[1].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out var frz))
+        {
+            Rotation = frz;
+        }
 
         var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(subtitle.Header);
         var style = styles.FirstOrDefault(s => s.Name.Equals(line.Style, StringComparison.OrdinalIgnoreCase));
@@ -186,7 +208,7 @@ public partial class AssaSetPositionViewModel : ObservableObject
 
         if (string.IsNullOrEmpty(videoFileName))
         {
-            Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetHeight, TargetHeight);
+            Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
             return;
         }
 
@@ -199,12 +221,12 @@ public partial class AssaSetPositionViewModel : ObservableObject
             }
             catch
             {
-                Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetHeight, TargetHeight);
+                Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
             }
         }
         else
         {
-            Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetHeight, TargetHeight);
+            Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
         }
     }
 
@@ -299,6 +321,12 @@ public partial class AssaSetPositionViewModel : ObservableObject
             0,
             0);
 
-        ScreenshotOverlayPosiion = $"X: {ScreenshotX}, Y: {ScreenshotY}";
+        // ASSA \frz rotates counter-clockwise; Avalonia RotateTransform is clockwise, so negate.
+        ScreenshotOverlayImage.RenderTransformOrigin = RelativePoint.Center;
+        ScreenshotOverlayImage.RenderTransform = new RotateTransform(-(double)Rotation);
+
+        ScreenshotOverlayPosiion = Rotation == 0
+            ? $"X: {ScreenshotX}, Y: {ScreenshotY}"
+            : $"X: {ScreenshotX}, Y: {ScreenshotY}, {Rotation}°";
     }
 }

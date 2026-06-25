@@ -1535,14 +1535,21 @@ public partial class MainViewModel :
 
         var x = result.ResultX;
         var y = result.ResultY;
-        selectedItem.Text = $"{{\\pos({x},{y})}}" + RemovePositionTags(selectedItem.Text);
+        var tags = $"\\pos({x},{y})";
+        if (result.ResultRotation != 0)
+        {
+            tags += "\\frz" + result.ResultRotation.ToString(CultureInfo.InvariantCulture);
+        }
+
+        selectedItem.Text = "{" + tags + "}" + RemovePositionTags(selectedItem.Text);
         RefreshSubtitlePreview();
     }
 
     private static string RemovePositionTags(string text)
     {
-        string result = Regex.Replace(text, @"\\pos\(\d+,\d+\)", string.Empty).Replace("{}", string.Empty);
-        return result;
+        string result = Regex.Replace(text, @"\\pos\(\d+,\d+\)", string.Empty);
+        result = Regex.Replace(result, @"\\frz\(?-?\d+(\.\d+)?\)?", string.Empty);
+        return result.Replace("{}", string.Empty);
     }
 
     [RelayCommand]
