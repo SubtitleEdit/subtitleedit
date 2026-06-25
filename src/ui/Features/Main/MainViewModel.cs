@@ -18019,6 +18019,50 @@ public partial class MainViewModel :
         return false;
     }
 
+    /// <summary>
+    /// True when keyboard focus is on the main menu itself or one of its items (including items in
+    /// an open drop-down, which live in a popup). Used to let the menu own arrow/Enter/Escape keys
+    /// instead of the shortcut manager while it is being navigated (#11745).
+    /// </summary>
+    private bool IsMainMenuFocused()
+    {
+        if (Menu == null)
+        {
+            return false;
+        }
+
+        var focusedElement = Window?.FocusManager?.GetFocusedElement();
+        if (focusedElement == null)
+        {
+            return false;
+        }
+
+        // A focused MenuItem belongs to a menu/flyout being navigated; let it keep the keys.
+        // (Drop-down items are hosted in a popup, so a visual-parent walk to Menu would miss them.)
+        if (focusedElement is MenuItem)
+        {
+            return true;
+        }
+
+        if (ReferenceEquals(focusedElement, Menu))
+        {
+            return true;
+        }
+
+        var parent = (focusedElement as Avalonia.Visual)?.GetVisualParent();
+        while (parent != null)
+        {
+            if (ReferenceEquals(parent, Menu))
+            {
+                return true;
+            }
+
+            parent = parent.GetVisualParent();
+        }
+
+        return false;
+    }
+
     internal void OnKeyDownHandler(object? sender, KeyEventArgs keyEventArgs)
     {
         lock (_onKeyDownHandlerLock)
@@ -18056,6 +18100,15 @@ public partial class MainViewModel :
             if (k == Key.F10 && keyEventArgs.KeyModifiers == KeyModifiers.None && TryFocusMainMenu())
             {
                 keyEventArgs.Handled = true;
+                return;
+            }
+
+            // When the main menu has keyboard focus (opened via F10 or Alt), let it handle its own
+            // arrow/Enter/Escape navigation instead of consuming those keys as shortcuts. The window
+            // key handler tunnels (runs before the focused menu item), so without this the shortcut
+            // manager would eat Left/Right etc. and menu navigation would never work (#11745).
+            if (IsMainMenuFocused())
+            {
                 return;
             }
 
