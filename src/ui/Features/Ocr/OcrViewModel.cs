@@ -3561,7 +3561,7 @@ public partial class OcrViewModel : ObservableObject
 
     private void RunOllamaOcr(List<int> selectedIndices, CancellationToken cancellationToken)
     {
-        var ollamaOcr = new OllamaOcr();
+        var ollamaOcr = new OllamaOcr(Se.Settings.Ocr.OllamaOcrTimeoutMinutes);
 
         _ = Task.Run(async () =>
         {
