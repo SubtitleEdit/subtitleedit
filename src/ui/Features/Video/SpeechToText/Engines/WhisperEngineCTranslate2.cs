@@ -94,6 +94,16 @@ public class WhisperEngineCTranslate2 : ISpeechToTextEngine
         return modelFileName;
     }
 
+    public bool SupportsCustomModels => true;
+
+    public bool CustomModelIsFolder => true;
+
+    public string ImportCustomModel(string sourcePath)
+    {
+        // CTranslate2 shares Purfview's "_models" folder and faster-whisper folder layout.
+        return WhisperEnginePurfviewFasterWhisperXxl.ImportFasterWhisperFolderModel(sourcePath, GetAndCreateWhisperModelFolder(null));
+    }
+
     public async Task<string> GetHelpText()
     {
         var assetName = $"{StaticName.Replace(" ", string.Empty)}.txt";

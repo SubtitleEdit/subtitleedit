@@ -30,6 +30,27 @@ public interface ISpeechToTextEngine
     string GetExecutable();
     string GetExecutableFileName() => Path.GetFileName(GetExecutable());
     bool IsModelInstalled(WhisperModel model);
+
+    /// <summary>
+    /// True when the user can add their own model to this engine's model folder and have
+    /// it picked up automatically (whisper.cpp, Purfview Faster-Whisper-XXL, CTranslate2).
+    /// </summary>
+    bool SupportsCustomModels => false;
+
+    /// <summary>
+    /// True when a custom model is a folder (containing model.bin), false when it is a
+    /// single file (e.g. a whisper.cpp ggml .bin). Controls whether the UI shows a folder
+    /// or a file picker. Only meaningful when <see cref="SupportsCustomModels"/> is true.
+    /// </summary>
+    bool CustomModelIsFolder => false;
+
+    /// <summary>
+    /// Copies a user-provided custom model (a file or a folder, per <see cref="CustomModelIsFolder"/>)
+    /// into this engine's model folder, validating it, and returns the resulting model display
+    /// name. Throws with a user-facing message when the source is not a valid model.
+    /// </summary>
+    string ImportCustomModel(string sourcePath) => throw new System.NotSupportedException();
+
     string GetModelForCmdLine(string modelName);
     Task<string> GetHelpText();
     string GetWhisperModelDownloadFileName(WhisperModel whisperModel, string url);

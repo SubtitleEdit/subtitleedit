@@ -18,6 +18,8 @@ public class LanguageAudioToText
     public string WhisperXxlSingleWords { get; set; }
     public string WhisperXxlHighlightWord { get; set; }
     public string SelectModel { get; set; }
+    public string AddCustomModelDotDotDot { get; set; }
+    public string CustomModelHelp { get; set; }
     public string ViewToolsLogFile { get; set; }
     public string ReDownloadX { get; set; }
     public string DownloadX { get; set; }
@@ -55,6 +57,8 @@ public class LanguageAudioToText
         WhisperXxlSingleWords = "Single words";
         WhisperXxlHighlightWord = "Highlight word";
         SelectModel = "Select model";
+        AddCustomModelDotDotDot = "Add custom model...";
+        CustomModelHelp = "You can use your own model: pick the model file (whisper.cpp ggml '.bin') or model folder (faster-whisper folder with a 'model.bin' inside). It is copied to the models folder and added to the list above.";
         ViewToolsLogFile = "View tools log file";
         ReDownloadX = "Re-download {0}";
         DownloadX = "Download {0}";

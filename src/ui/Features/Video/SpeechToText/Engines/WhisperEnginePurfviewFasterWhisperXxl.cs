@@ -127,6 +127,67 @@ public class WhisperEnginePurfviewFasterWhisperXxl : ISpeechToTextEngine
         return modelName;
     }
 
+    public bool SupportsCustomModels => true;
+
+    public bool CustomModelIsFolder => true;
+
+    public string ImportCustomModel(string sourcePath)
+    {
+        return ImportFasterWhisperFolderModel(sourcePath, GetAndCreateWhisperModelFolder(null));
+    }
+
+    /// <summary>
+    /// Validates and copies a faster-whisper model folder (containing model.bin) into the
+    /// shared "_models" folder. The destination is normalized to "faster-whisper-&lt;name&gt;" so
+    /// both this engine and the CTranslate2 engine (which builds its --model path as
+    /// "_models/faster-whisper-&lt;name&gt;") resolve it. Returns the display name (without prefix).
+    /// </summary>
+    internal static string ImportFasterWhisperFolderModel(string sourceDir, string modelsFolder)
+    {
+        if (!Directory.Exists(sourceDir))
+        {
+            throw new DirectoryNotFoundException("Model folder not found: " + sourceDir);
+        }
+
+        var modelBin = Path.Combine(sourceDir, "model.bin");
+        if (!File.Exists(modelBin))
+        {
+            throw new Exception("A faster-whisper model folder must contain a 'model.bin' file.");
+        }
+
+        if (new FileInfo(modelBin).Length < 10_000_000)
+        {
+            throw new Exception("The 'model.bin' file is too small (must be at least 10 MB) - is it really a faster-whisper model?");
+        }
+
+        var sourceName = Path.GetFileName(sourceDir.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+        var baseName = sourceName;
+        if (baseName.StartsWith("faster-whisper-", StringComparison.OrdinalIgnoreCase))
+        {
+            baseName = baseName.Substring("faster-whisper-".Length);
+        }
+
+        var destFolder = Path.Combine(modelsFolder, "faster-whisper-" + baseName);
+        CopyDirectory(sourceDir, destFolder);
+
+        return baseName;
+    }
+
+    private static void CopyDirectory(string sourceDir, string destDir)
+    {
+        Directory.CreateDirectory(destDir);
+
+        foreach (var file in Directory.GetFiles(sourceDir))
+        {
+            File.Copy(file, Path.Combine(destDir, Path.GetFileName(file)), true);
+        }
+
+        foreach (var subDir in Directory.GetDirectories(sourceDir))
+        {
+            CopyDirectory(subDir, Path.Combine(destDir, Path.GetFileName(subDir)));
+        }
+    }
+
     public override string ToString()
     {
         return Name;

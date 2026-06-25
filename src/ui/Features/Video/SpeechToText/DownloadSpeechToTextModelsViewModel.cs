@@ -10,11 +10,13 @@ using System.Threading.Tasks;
 using System.Timers;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Download;
@@ -35,6 +37,7 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
     [ObservableProperty] private string _progressFileName;
     [ObservableProperty] private string _error;
     [ObservableProperty] bool _downloadIsEnabled;
+    [ObservableProperty] private bool _supportsCustomModels;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; internal set; }
@@ -76,6 +79,7 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
     public void SetModels(ObservableCollection<SpeechToTextModelDisplay> models, ISpeechToTextEngine whisperEngine, SpeechToTextModelDisplay? whisperModel)
     {
         _whisperEngine = whisperEngine;
+        SupportsCustomModels = whisperEngine.SupportsCustomModels;
 
         foreach (var model in models)
         {
@@ -235,6 +239,88 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
 
         var folder = _whisperEngine.GetAndCreateWhisperModelFolder(SelectedModel?.Model);
         await _folderHelper.OpenFolder(Window!, folder);
+    }
+
+    [RelayCommand]
+    private async Task AddCustomModel()
+    {
+        if (_whisperEngine is not { SupportsCustomModels: true } engine || Window == null)
+        {
+            return;
+        }
+
+        try
+        {
+            string? sourcePath;
+            if (engine.CustomModelIsFolder)
+            {
+                var folders = await Window.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+                {
+                    Title = Se.Language.Video.AudioToText.SelectModel,
+                    AllowMultiple = false,
+                });
+                sourcePath = folders.Count > 0 ? folders[0].Path.LocalPath : null;
+            }
+            else
+            {
+                var files = await Window.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+                {
+                    Title = Se.Language.Video.AudioToText.SelectModel,
+                    AllowMultiple = false,
+                    FileTypeFilter = new List<FilePickerFileType>
+                    {
+                        new FilePickerFileType("Whisper model (*.bin)")
+                        {
+                            Patterns = new List<string> { "*.bin" },
+                        },
+                    },
+                });
+                sourcePath = files.Count > 0 ? files[0].Path.LocalPath : null;
+            }
+
+            if (string.IsNullOrEmpty(sourcePath))
+            {
+                return;
+            }
+
+            var newName = engine.ImportCustomModel(sourcePath);
+            ReloadModels(newName);
+        }
+        catch (Exception ex)
+        {
+            Error = ex.Message;
+            await MessageBox.Show(Window, "Error", ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private void ReloadModels(string? selectName)
+    {
+        if (_whisperEngine == null)
+        {
+            return;
+        }
+
+        Models.Clear();
+        SpeechToTextModelDisplay? toSelect = null;
+        foreach (var model in _whisperEngine.Models)
+        {
+            var display = new SpeechToTextModelDisplay
+            {
+                Model = model,
+                Engine = _whisperEngine,
+            };
+            Models.Add(display);
+
+            if (selectName != null && model.Name.Equals(selectName, StringComparison.OrdinalIgnoreCase))
+            {
+                toSelect = display;
+            }
+        }
+
+        if (toSelect != null)
+        {
+            SelectedModel = toSelect;
+        }
     }
 
     [RelayCommand]
