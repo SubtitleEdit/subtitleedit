@@ -1517,7 +1517,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     break;
                 }
 
-                text = text.Remove(start, end - start + 1);
+                // 'end' is the start index of endTag; remove through the whole end tag, not
+                // just its first character, so multi-character custom tags (e.g. "<<"/">>",
+                // "<i>"/"</i>") are fully stripped instead of leaving the trailing characters.
+                text = text.Remove(start, end - start + endTag.Length);
                 if (start > 3 && text.Length - start > 1 &&
                     text[start] == ':' && text[start - 1] == ' ' && ".?!".Contains(text[start - 2]))
                 {
