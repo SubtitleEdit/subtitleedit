@@ -2169,10 +2169,15 @@ public class AudioVisualizer : Control
         var verticalZoomFactor = renderCtx.VerticalZoomFactor;
         var startSample = renderCtx.StartPositionSeconds * renderCtx.SampleRate;
         var samplesPerPixel = renderCtx.SampleRate / div;
+        var yScaleHalf = verticalZoomFactor / highestPeak * halfWaveformHeight;
 
         // Calculate the threshold for color transitions (as a fraction of the highest peak)
         var lowThreshold = highestPeak * 0.3;
         var mediumThreshold = highestPeak * 0.6;
+        // Reciprocals of the (loop-invariant) blend ranges, so the per-pixel colour math multiplies
+        // instead of dividing.
+        var invMediumMinusLow = 1.0 / (mediumThreshold - lowThreshold);
+        var invHighMinusMedium = 1.0 / (highestPeak - mediumThreshold);
 
         // Reset pooled batches for this render
         var batches = _fancyBatches;
@@ -2201,8 +2206,8 @@ public class AudioVisualizer : Control
             var max = peak0.Max * pos0Weight + peak1.Max * pos1Weight;
             var min = peak0.Min * pos0Weight + peak1.Min * pos1Weight;
 
-            var yMax = CalculateYOptimized(max, halfWaveformHeight, highestPeak, verticalZoomFactor, height);
-            var yMin = CalculateYOptimized(min, halfWaveformHeight, highestPeak, verticalZoomFactor, height);
+            var yMax = CalculateYOptimized(max, halfWaveformHeight, yScaleHalf, height);
+            var yMin = CalculateYOptimized(min, halfWaveformHeight, yScaleHalf, height);
 
             if (yMin < yMax)
             {
@@ -2240,7 +2245,7 @@ public class AudioVisualizer : Control
             else if (amplitude < mediumThreshold)
             {
                 // Medium amplitude - blend from base to high color
-                var blend = (amplitude - lowThreshold) / (mediumThreshold - lowThreshold);
+                var blend = (amplitude - lowThreshold) * invMediumMinusLow;
                 var highColor = WaveformFancyHighColor;
                 var r = (byte)(baseColor.R + blend * (highColor.R - baseColor.R));
                 var g = (byte)(baseColor.G + blend * (highColor.G - baseColor.G));
@@ -2253,7 +2258,7 @@ public class AudioVisualizer : Control
             else
             {
                 // High amplitude - use high color with increased opacity
-                var blend = Math.Min(1.0, (amplitude - mediumThreshold) / (highestPeak - mediumThreshold));
+                var blend = Math.Min(1.0, (amplitude - mediumThreshold) * invHighMinusMedium);
                 var highColor = WaveformFancyHighColor;
                 var a = (byte)Math.Min(255, highColor.A + blend * (255 - highColor.A));
                 color = Color.FromArgb(a, highColor.R, highColor.G, highColor.B);
@@ -2276,7 +2281,7 @@ public class AudioVisualizer : Control
             // Add subtle glow for higher amplitudes
             if (amplitude > mediumThreshold)
             {
-                var glowAlpha = (byte)(50 * ((amplitude - mediumThreshold) / (highestPeak - mediumThreshold)));
+                var glowAlpha = (byte)(50 * ((amplitude - mediumThreshold) * invHighMinusMedium));
                 var glowColor = Color.FromArgb(glowAlpha, color.R, color.G, color.B);
                 // Quantize glow alpha to 5 steps for caching
                 var glowKey = 1000 + colorKey * 10 + (glowAlpha / 10);
@@ -2328,6 +2333,7 @@ public class AudioVisualizer : Control
         var verticalZoomFactor = renderCtx.VerticalZoomFactor;
         var startSample = renderCtx.StartPositionSeconds * renderCtx.SampleRate;
         var samplesPerPixel = renderCtx.SampleRate / div;
+        var yScaleHalf = verticalZoomFactor / highestPeak * halfWaveformHeight;
 
         var unselectedLines = _classicUnselectedLines;
         var selectedLines = _classicSelectedLines;
@@ -2352,8 +2358,8 @@ public class AudioVisualizer : Control
             var max = peak0.Max * pos0Weight + peak1.Max * pos1Weight;
             var min = peak0.Min * pos0Weight + peak1.Min * pos1Weight;
 
-            var yMax = CalculateYOptimized(max, halfWaveformHeight, highestPeak, verticalZoomFactor, height);
-            var yMin = CalculateYOptimized(min, halfWaveformHeight, highestPeak, verticalZoomFactor, height);
+            var yMax = CalculateYOptimized(max, halfWaveformHeight, yScaleHalf, height);
+            var yMin = CalculateYOptimized(min, halfWaveformHeight, yScaleHalf, height);
 
             // Ensure yMin is below yMax and both are within bounds
             if (yMin < yMax)
@@ -2822,14 +2828,11 @@ public class AudioVisualizer : Control
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static double CalculateYOptimized(double value, double halfWaveformHeight, double highestPeak, double verticalZoomFactor, double boundsHeight)
+    // yScaleHalf folds the loop-invariant verticalZoomFactor / highestPeak * halfWaveformHeight into
+    // one factor the caller computes once, so the per-pixel call is a single multiply (no division).
+    private static double CalculateYOptimized(double value, double halfWaveformHeight, double yScaleHalf, double boundsHeight)
     {
-        // Normalize the value to the control's height
-        var normalizedValue = value / highestPeak * verticalZoomFactor;
-        var yOffset = normalizedValue * halfWaveformHeight;
-
-        // Ensure Y stays within bounds
-        var y = halfWaveformHeight - yOffset;
+        var y = halfWaveformHeight - value * yScaleHalf;
         return Math.Max(0, Math.Min(boundsHeight, y));
     }
 
