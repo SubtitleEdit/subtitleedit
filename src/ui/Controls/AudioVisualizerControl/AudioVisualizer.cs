@@ -1750,43 +1750,49 @@ public class AudioVisualizer : Control
             return;
         }
 
-        var seconds = Math.Ceiling(renderCtx.StartPositionSeconds) - renderCtx.StartPositionSeconds;
-        var position = SecondsToXPositionOptimized(seconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
+        // Hoist loop-invariants: renderCtx is a ref struct, and n (pixels per second) was being
+        // recomputed every iteration. With sampleRate != 0 guaranteed above, SecondsToXPositionOptimized
+        // reduces to Math.Round(seconds * n), so inline it.
+        var startPosSeconds = renderCtx.StartPositionSeconds;
+        var n = renderCtx.ZoomFactor * renderCtx.SampleRate;
         var imageHeight = renderCtx.Height;
         var width = renderCtx.Width;
+
+        var seconds = Math.Ceiling(startPosSeconds) - startPosSeconds;
+        var position = (int)Math.Round(seconds * n, MidpointRounding.AwayFromZero);
 
         var majorTicks = _timeLineMajorTicks;
         var minorTicks = _timeLineMinorTicks;
         majorTicks.Clear();
         minorTicks.Clear();
 
+        var drawMinor = n > 64;
+
         // Collect ticks first; draw text directly with cached FormattedText (single
         // DrawText call per label is fine — the per-frame cost was the FormattedText
         // allocation, not the DrawText call).
         while (position < width)
         {
-            var n = renderCtx.ZoomFactor * renderCtx.SampleRate;
-
-            if (n > 38 || (int)Math.Round(renderCtx.StartPositionSeconds + seconds) % 5 == 0)
+            if (n > 38 || (int)Math.Round(startPosSeconds + seconds) % 5 == 0)
             {
                 majorTicks.Add(new FancyLine(position, imageHeight - 10, imageHeight));
 
-                var timeText = GetDisplayTime(renderCtx.StartPositionSeconds + seconds);
+                var timeText = GetDisplayTime(startPosSeconds + seconds);
                 var formattedText = GetCachedTimeLineText(timeText);
                 var textY = Math.Max(0, imageHeight - formattedText.Height - 2);
                 context.DrawText(formattedText, new Point(position + 2, textY));
             }
 
             seconds += 0.5;
-            position = SecondsToXPositionOptimized(seconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
+            position = (int)Math.Round(seconds * n, MidpointRounding.AwayFromZero);
 
-            if (n > 64)
+            if (drawMinor)
             {
                 minorTicks.Add(new FancyLine(position, imageHeight - 5, imageHeight));
             }
 
             seconds += 0.5;
-            position = SecondsToXPositionOptimized(seconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
+            position = (int)Math.Round(seconds * n, MidpointRounding.AwayFromZero);
         }
 
         DrawVerticalLineBatch(context, _paintTimeLine, majorTicks);
@@ -1824,11 +1830,17 @@ public class AudioVisualizer : Control
             startFrame = 0;
         }
 
+        // The x position is linear in the frame index: x = absFrame * pixelsPerFrame -
+        // startPixelOffset. Precompute the invariants so each tick is a multiply-subtract instead of
+        // a per-tick division + SecondsToXPositionOptimized call (which re-reads the ref-struct
+        // renderCtx fields). invFps is only needed for the visible labels' time value.
+        var startPixelOffset = renderCtx.StartPositionSeconds * renderCtx.SampleRate * renderCtx.ZoomFactor;
+        var invFps = 1.0 / fps;
+
         var firstAbsFrame = startFrame - startFrame % majorStepFrames;
         for (var absFrame = firstAbsFrame; ; absFrame += majorStepFrames)
         {
-            var relSeconds = absFrame / fps - renderCtx.StartPositionSeconds;
-            var xPosition = SecondsToXPositionOptimized(relSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
+            var xPosition = (int)Math.Round(absFrame * pixelsPerFrame - startPixelOffset, MidpointRounding.AwayFromZero);
             if (xPosition >= width)
             {
                 break;
@@ -1838,7 +1850,7 @@ public class AudioVisualizer : Control
             {
                 majorTicks.Add(new FancyLine(xPosition, imageHeight - 10, imageHeight));
 
-                var timeText = GetFrameDisplayTime(absFrame / fps);
+                var timeText = GetFrameDisplayTime(absFrame * invFps);
                 var formattedText = GetCachedTimeLineText(timeText);
                 var textY = Math.Max(0, imageHeight - formattedText.Height - 2);
                 context.DrawText(formattedText, new Point(xPosition + 2, textY));
@@ -1846,8 +1858,7 @@ public class AudioVisualizer : Control
 
             if (minorStepFrames > 0)
             {
-                var minorRelSeconds = (absFrame + minorStepFrames) / fps - renderCtx.StartPositionSeconds;
-                var minorX = SecondsToXPositionOptimized(minorRelSeconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
+                var minorX = (int)Math.Round((absFrame + minorStepFrames) * pixelsPerFrame - startPixelOffset, MidpointRounding.AwayFromZero);
                 if (minorX >= 0 && minorX < width)
                 {
                     minorTicks.Add(new FancyLine(minorX, imageHeight - 5, imageHeight));
