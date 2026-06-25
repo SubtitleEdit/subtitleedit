@@ -836,7 +836,7 @@ public static class ShortcutsMain
             new(nameof(vm.WaveformSetEndAndGoToNextCommand), [nameof(Avalonia.Input.Key.F10)], ShortcutCategory.General),
             new(nameof(vm.InsertLineAfterCommand), ["Alt", nameof(Avalonia.Input.Key.Insert)], ShortcutCategory.General),
             new(nameof(vm.InsertLineBeforeCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.Insert)], ShortcutCategory.General),
-            new(nameof(vm.AutoBreakCommand), [cmd, nameof(Avalonia.Input.Key.R)], ShortcutCategory.General),
+            new(nameof(vm.AutoBreakCommand), [cmd, "Alt", nameof(Avalonia.Input.Key.B)], ShortcutCategory.General),
             new(nameof(vm.PlaySelectedLinesWithoutLoopCommand), [nameof(Avalonia.Input.Key.F5)], ShortcutCategory.General),
             new(nameof(vm.ExtendSelectedToNextCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.E)], ShortcutCategory.General),
             new(nameof(vm.ToggleTranslationModeCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.O)], ShortcutCategory.General),
