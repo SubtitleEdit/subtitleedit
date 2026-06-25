@@ -254,6 +254,8 @@ public static class ShortcutsMain
         { nameof(MainViewModel.WaveformSetStartCommand),  Se.Language.General.SetStart },
         { nameof(MainViewModel.WaveformSetEndCommand),  Se.Language.General.SetEnd },
         { nameof(MainViewModel.WaveformSetEndAndGoToNextCommand),  Se.Language.General.SetEndAndGoToNext },
+        { nameof(MainViewModel.WaveformSetEndAddNewAndGoToNewCommand),  Se.Language.General.SetEndAddNewAndGoToNew },
+        { nameof(MainViewModel.WaveformSetEndAddNewAndGoToNewNoFocusTextBoxCommand),  Se.Language.General.SetEndAddNewAndGoToNewNoFocusTextBox },
         { nameof(MainViewModel.DoWaveformCenterCommand),  Se.Language.General.WaveformCenterOnVideoPosition },
         { nameof(MainViewModel.ToggleShotChangesAtVideoPositionCommand),  Se.Language.General.ToggleShotChangesAtVideoPosition },
         { nameof(MainViewModel.GoToPreviousShotChangeCommand),  Se.Language.General.GoToPreviousShotChange },
@@ -605,6 +607,8 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.WaveformSetStartCommand, nameof(vm.WaveformSetStartCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.WaveformSetEndCommand, nameof(vm.WaveformSetEndCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.WaveformSetEndAndGoToNextCommand, nameof(vm.WaveformSetEndAndGoToNextCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.WaveformSetEndAddNewAndGoToNewCommand, nameof(vm.WaveformSetEndAddNewAndGoToNewCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.WaveformSetEndAddNewAndGoToNewNoFocusTextBoxCommand, nameof(vm.WaveformSetEndAddNewAndGoToNewNoFocusTextBoxCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.DoWaveformCenterCommand, nameof(vm.DoWaveformCenterCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.WaveformSetEndAndStartOfNextAfterGapCommand, nameof(vm.WaveformSetEndAndStartOfNextAfterGapCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.WaveformSetEndAndStartOfNextAfterGapAndGoToNextCommand, nameof(vm.WaveformSetEndAndStartOfNextAfterGapAndGoToNextCommand), ShortcutCategory.General);

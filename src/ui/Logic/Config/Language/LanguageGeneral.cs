@@ -500,6 +500,8 @@ public class LanguageGeneral
     public string SessionKeyGenerate { get; set; }
     public string SetEnd { get; set; }
     public string SetEndAndGoToNext { get; set; }
+    public string SetEndAddNewAndGoToNew { get; set; }
+    public string SetEndAddNewAndGoToNewNoFocusTextBox { get; set; }
     public string SetEndAndOffsetTheRest { get; set; }
     public string SetFontDotDotDot { get; set; }
     public string SetInCueToClosestShotChangeLeftGreenZone { get; set; }
@@ -1237,6 +1239,8 @@ public class LanguageGeneral
         SessionKeyGenerate = "Generate new key";
         SetEnd = "Set end";
         SetEndAndGoToNext = "Set end and go to next";
+        SetEndAddNewAndGoToNew = "Set end, add new and go to new";
+        SetEndAddNewAndGoToNewNoFocusTextBox = "Set end, add new and go to new (no focus text box)";
         SetEndAndOffsetTheRest = "Set end and offset the rest";
         SetFontDotDotDot = "Set font...";
         SetInCueToClosestShotChangeLeftGreenZone = "Set in-cue to closest shot change (snap to left green zone)";
