@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Video.EmbeddedSubtitlesEdit;
+using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -320,14 +321,38 @@ public class FfmpegGenerator
             vfMatrix = $"-vf colormatrix={colorMatrix}";
         }
 
+        // Fast path: input seeking ("-ss" before "-i"). For some containers/codecs this can land
+        // between keyframes and produce no frame, so fall back to accurate output seeking.
+        var stderr = RunFfmpegScreenShot($"-y -ss {timeCode} -i \"{inputFileName}\" {vfMatrix} -frames:v 1 -c:v png \"{outputFileName}\"");
+        if (HasFrame(outputFileName))
+        {
+            return outputFileName;
+        }
+
+        var stderr2 = RunFfmpegScreenShot($"-y -i \"{inputFileName}\" -ss {timeCode} {vfMatrix} -frames:v 1 -c:v png \"{outputFileName}\"");
+        if (HasFrame(outputFileName))
+        {
+            return outputFileName;
+        }
+
+        Se.LogError("FfmpegGenerator.GetScreenShot: no frame extracted from \"" + inputFileName +
+                    "\" at " + timeCode + Environment.NewLine +
+                    "input-seek: " + stderr + Environment.NewLine +
+                    "output-seek: " + stderr2);
+        return outputFileName;
+    }
+
+    private static string RunFfmpegScreenShot(string arguments)
+    {
         var process = new Process
         {
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-ss {timeCode} -i \"{inputFileName}\" {vfMatrix} -frames:v 1 -c:v png \"{outputFileName}\"",
+                Arguments = arguments,
                 UseShellExecute = false,
-                CreateNoWindow = true
+                CreateNoWindow = true,
+                RedirectStandardError = true,
             }
         };
 
@@ -335,8 +360,14 @@ public class FfmpegGenerator
         _ = process.Start();
 #pragma warning restore CA1416
 
+        var stderr = process.StandardError.ReadToEnd();
         process.WaitForExit();
-        return outputFileName;
+        return stderr;
+    }
+
+    private static bool HasFrame(string fileName)
+    {
+        return File.Exists(fileName) && new FileInfo(fileName).Length > 0;
     }
 
     internal static string? GetScreenShotWithSubtitle(Subtitle previewSubtitle, int width, int height)

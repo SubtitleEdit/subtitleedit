@@ -147,7 +147,25 @@ public class AssaSetPositionWindow : Window
         // Position buttons
         var buttonCenterHorizontally = UiUtil.MakeButton(Se.Language.General.CenterHorizontally, vm.CenterHorizontallyCommand);
         var buttonCenterVertically = UiUtil.MakeButton(Se.Language.General.CenterVertically, vm.CenterVerticallyCommand);
-        var panelPositionButtons = UiUtil.MakeButtonBar(buttonCenterHorizontally, buttonCenterVertically).WithAlignmentLeft();
+
+        var labelRotation = UiUtil.MakeLabel(Se.Language.Assa.Rotation);
+        var numericRotation = new NumericUpDown
+        {
+            Width = 110,
+            Minimum = -360,
+            Maximum = 360,
+            Increment = 1,
+            FormatString = "F0",
+            VerticalAlignment = VerticalAlignment.Center,
+            DataContext = vm,
+            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.Rotation)) { Mode = BindingMode.TwoWay },
+        };
+
+        var panelPositionButtons = UiUtil.MakeButtonBar(
+            buttonCenterHorizontally,
+            buttonCenterVertically,
+            labelRotation,
+            numericRotation).WithAlignmentLeft();
 
         // Buttons
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
