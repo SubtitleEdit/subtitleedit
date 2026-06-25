@@ -1,0 +1,375 @@
+app-id: dk.nikse.subtitleedit
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.dotnet10
+command: SubtitleEdit
+
+# Make the dotnet10 SDK tools available to every module at build time
+build-options:
+  append-path: /usr/lib/sdk/dotnet10/bin
+  append-ld-library-path: /app/lib:/usr/lib/sdk/dotnet10/lib
+  no-debuginfo: true
+  env:
+    PKG_CONFIG_PATH: /app/lib/pkgconfig:/app/share/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig:/usr/lib/sdk/dotnet10/lib/pkgconfig
+
+finish-args:
+  # Display
+  - --share=ipc
+  - --socket=wayland
+  - --socket=x11
+  # Hardware acceleration
+  - --device=dri
+  # File access (subtitle files are typically in the home directory)
+  - --filesystem=home
+  # Network (optional online services: translation, TTS, speech-to-text, etc.)
+  - --share=network
+  # Audio (video playback via mpv)
+  - --socket=pulseaudio
+  # .NET single-file bundle extraction directory (persistent cache)
+  - --env=DOTNET_BUNDLE_EXTRACT_BASE_DIR=/var/cache/.net
+
+cleanup:
+  - '*.la'
+  - '*.a'
+
+modules:
+  # --- libmpv dependencies ---
+
+  - name: harfbuzz
+    buildsystem: meson
+    config-opts:
+      - -Ddocs=disabled
+      - -Dtests=disabled
+      - -Dintrospection=disabled
+      - -Dutilities=disabled
+      - -Dfreetype=enabled
+      - -Dglib=disabled
+      - -Dgobject=disabled
+      - -Dcairo=disabled
+      - -Dicu=disabled
+      - -Dgraphite2=disabled
+      - -Dc_link_args=-lstdc++
+    cleanup:
+      - /bin
+      - /include
+      - /lib/cmake
+      - /lib/libharfbuzz-subset.so*
+      - /lib/pkgconfig/harfbuzz-subset.pc
+      - /share
+    sources:
+      - type: git
+        url: https://github.com/harfbuzz/harfbuzz.git
+        tag: 8.3.1
+        commit: 985366b8b2a4e7e07413af918612334d6764a287
+
+  - name: libass
+    config-opts:
+      - --disable-static
+      - --enable-asm
+      - --enable-fontconfig
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: git
+        url: https://github.com/libass/libass.git
+        tag: 0.17.4
+        commit: bbb3c7f1570a4a021e52683f3fbdf74fe492ae84
+
+  - name: uchardet
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DBUILD_STATIC=0
+      - -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    cleanup:
+      - /bin
+      - /include
+      - /lib/pkgconfig
+      - /share/man
+    sources:
+      - type: archive
+        url: https://www.freedesktop.org/software/uchardet/releases/uchardet-0.0.8.tar.xz
+        sha256: e97a60cfc00a1c147a674b097bb1422abd9fa78a2d9ce3f3fdcc2e78a34ac5f0
+
+  - name: libplacebo
+    buildsystem: meson
+    config-opts:
+      - -Dvulkan=enabled
+      - -Dshaderc=enabled
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: git
+        url: https://github.com/haasn/libplacebo.git
+        tag: v7.360.1
+        commit: cee9b076f2c63104ccfd497fa79c39a867293ec4
+
+  - name: rubberband
+    buildsystem: meson
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: git
+        url: https://github.com/breakfastquay/rubberband.git
+        tag: v4.0.0
+        commit: 1d95888bec3ae0a17c0c4af791810d5a63f6bc35
+
+  - name: mujs
+    no-autogen: true
+    make-args:
+      - release
+    make-install-args:
+      - prefix=/app
+      - install-shared
+    cleanup:
+      - /bin
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: git
+        url: https://codeberg.org/ccxvii/mujs.git
+        tag: 1.3.8
+        commit: 307f18c4216420f2f56e22d8e7040baa39a6304a
+      - type: file
+        url: https://www.unicode.org/Public/16.0.0/ucd/UnicodeData.txt
+        sha256: ff58e5823bd095166564a006e47d111130813dcf8bf234ef79fa51a870edb48f
+      - type: file
+        url: https://www.unicode.org/Public/16.0.0/ucd/SpecialCasing.txt
+        sha256: 8d5de354eef79f2395a54c9c7dcebbaf3d30fc962d0f85611ea97aa973a0c451
+
+  # --- x264 encoder (needed for burn-in, blank video generation) ---
+
+  - name: x264
+    config-opts:
+      - --disable-cli
+      - --enable-shared
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: git
+        url: https://code.videolan.org/videolan/x264.git
+        commit: 0480cb05fa188d37ae87e8f4fd8f1aea3711f7ee
+
+  # --- ffmpeg with rubberband + x264 + libass (overrides platform ffmpeg) ---
+
+  - name: ffmpeg
+    config-opts:
+      - --disable-debug
+      - --disable-doc
+      - --disable-static
+      - --enable-shared
+      - --enable-gnutls
+      - --enable-gpl
+      - --enable-version3
+      - --enable-libass
+      - --enable-libdav1d
+      - --enable-libfreetype
+      - --enable-libmp3lame
+      - --enable-libopus
+      - --enable-librubberband
+      - --enable-libtheora
+      - --enable-libv4l2
+      - --enable-libvorbis
+      - --enable-libvpx
+      - --enable-libwebp
+      - --enable-libx264
+      - --enable-libxml2
+      - --enable-vulkan
+      - --enable-encoder=png
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+      - /share/ffmpeg/examples
+    sources:
+      - type: git
+        url: https://github.com/FFmpeg/FFmpeg.git
+        tag: n7.1.2
+        commit: 7003a8c4544b780eb0ab5c02ac4ad89d2132f2a2
+
+  - name: libXpresent
+    buildsystem: autotools
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: git
+        url: https://gitlab.freedesktop.org/xorg/lib/libxpresent.git
+        tag: libXpresent-1.0.2
+        commit: 4d92149372461bf575e8a09b1064a2884c38c3aa
+
+  - name: hwdata
+    buildsystem: autotools
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: archive
+        url: https://github.com/vcrhonek/hwdata/archive/refs/tags/v0.394.tar.gz
+        sha256: b7c3fd7214a3b7c49d2661db127a712dc11cffd1799f793947aa1cb20aaf3298
+
+  - name: libdisplay-info
+    buildsystem: meson
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+    sources:
+      - type: archive
+        url: https://gitlab.freedesktop.org/emersion/libdisplay-info/-/archive/0.2.0/libdisplay-info-0.2.0.tar.gz
+        sha256: f7331fcaf5527251b84c8fb84238d06cd2f458422ce950c80e86c72927aa8c2b
+
+  # --- libmpv (video player library, no standalone player binary needed) ---
+
+  - name: libmpv
+    buildsystem: meson
+    config-opts:
+      - -Dlibmpv=true
+      - -Dcplayer=false
+      - -Dbuild-date=false
+      - -Dmanpage-build=disabled
+      - -Dalsa=disabled
+      - -Djavascript=enabled
+      - -Dlua=disabled
+      - -Dpulse=enabled
+      - -Duchardet=enabled
+      - -Dvulkan=enabled
+      - -Dwayland=enabled
+      - -Dx11=enabled
+      - -Ddrm=enabled
+      - -Degl=enabled
+      - -Degl-drm=enabled
+      - -Degl-wayland=enabled
+      - -Degl-x11=enabled
+      - -Dgl=enabled
+      - -Dgl-x11=enabled
+      - -Dplain-gl=enabled
+      - -Dvaapi=enabled
+      - -Dvdpau=enabled
+      - -Drubberband=enabled
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+      - /share/applications
+      - /share/bash-completion
+      - /share/doc
+      - /share/icons
+      - /share/man
+      - /share/zsh
+    sources:
+      - type: git
+        url: https://github.com/mpv-player/mpv.git
+        tag: v0.41.0
+        commit: 41f6a645068483470267271e1d09966ca3b9f413
+
+  # --- Tesseract OCR (bundled into the sandbox; see issue #11646) ---
+  #
+  # The sandbox has its own /usr, so a Tesseract installed on the host
+  # (e.g. `apt install tesseract-ocr`) is invisible to the Flatpak. We build
+  # Leptonica + Tesseract into /app/bin/tesseract — the path that
+  # TesseractOcr.GetExecutablePath() already probes — and ship the English
+  # language model so OCR works out of the box.
+
+  - name: leptonica
+    buildsystem: cmake-ninja
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DBUILD_SHARED_LIBS=ON
+      - -DBUILD_PROG=OFF
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+      - /lib/cmake
+    sources:
+      - type: archive
+        url: https://github.com/DanBloomberg/leptonica/releases/download/1.85.0/leptonica-1.85.0.tar.gz
+        sha256: 3745ae3bf271a6801a2292eead83ac926e3a9bc1bf622e9cd4dd0f3786e17205
+
+  - name: tesseract
+    buildsystem: cmake-ninja
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DBUILD_SHARED_LIBS=ON
+      - -DBUILD_TRAINING_TOOLS=OFF
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+      - /lib/cmake
+    sources:
+      - type: archive
+        url: https://github.com/tesseract-ocr/tesseract/archive/refs/tags/5.5.1.tar.gz
+        sha256: a7a3f2a7420cb6a6a94d80c24163e183cf1d2f1bed2df3bbc397c81808a57237
+
+  # English language model, pre-downloaded so OCR works out of the box.
+  # The standard tessdata model is used (not tessdata_fast/best) because SE runs
+  # Tesseract with `--oem 3`, which needs both the legacy and LSTM data.
+  - name: tessdata-eng
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 eng.traineddata /app/share/tessdata/eng.traineddata
+    sources:
+      - type: file
+        url: https://github.com/tesseract-ocr/tessdata/raw/4.1.0/eng.traineddata
+        sha256: daa0c97d651c19fba3b25e81317cd697e9908c8208090c94c3905381c23fc047
+
+  # --- SubtitleEdit application ---
+
+  - name: subtitleedit
+    buildsystem: simple
+    # Select the correct RID per host architecture
+    build-options:
+      arch:
+        x86_64:
+          env:
+            RUNTIME: linux-x64
+        aarch64:
+          env:
+            RUNTIME: linux-arm64
+    build-commands:
+      # Build and publish from source using the pre-fetched NuGet packages.
+      # --source points to the directory where flatpak-builder staged the .nupkg
+      # files from nuget-sources.json (dest: nuget-sources by default).
+      - |
+        . /usr/lib/sdk/dotnet10/enable.sh
+        dotnet publish src/ui/UI.csproj \
+          --configuration Release \
+          --runtime "$RUNTIME" \
+          --self-contained true \
+          -p:PublishSingleFile=true \
+          -p:RestoreLockedMode=false \
+          -p:DebugSymbols=false \
+          -p:DebugType=none \
+          --source /run/build/subtitleedit/nuget-sources \
+          -o /app/bin
+
+      # Desktop entry
+      - install -Dm644 installer/flatpak/dk.nikse.subtitleedit.desktop /app/share/applications/dk.nikse.subtitleedit.desktop
+
+      # AppStream metainfo
+      - install -Dm644 installer/flatpak/dk.nikse.subtitleedit.metainfo.xml /app/share/metainfo/dk.nikse.subtitleedit.metainfo.xml
+
+      # Icon (256x256 PNG from the source tree)
+      - install -Dm644 src/ui/Assets/SE.png /app/share/icons/hicolor/256x256/apps/dk.nikse.subtitleedit.png
+
+      # MIT license — distribute the project's terms alongside the app (issue #11278).
+      - install -Dm644 LICENSE /app/share/licenses/dk.nikse.subtitleedit/LICENSE
+
+    sources:
+      # Flathub builds from the public repository at a pinned release tag + commit
+      # (not a local checkout). Bump tag + commit on every release, and regenerate
+      # nuget-sources.json for that commit (installer/flatpak/generate-nuget-sources.sh).
+      - type: git
+        url: https://github.com/SubtitleEdit/subtitleedit.git
+        tag: v5.0.0
+        commit: a44ffa7025b59f424aa8a5a7ee250ea85c4c1361
+
+      # NuGet packages pre-fetched for the offline build. flatpak-builder expands this
+      # JSON array and downloads every package into the nuget-sources/ directory before
+      # the build starts. MUST be regenerated for the pinned commit above.
+      - nuget-sources.json
