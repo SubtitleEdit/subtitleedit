@@ -31,6 +31,10 @@ v5.1.0 (TBD)
 * Fix SSA toolbar hints showing "Advanced Sub Station Alpha"
 * Fix missing window title on the ASSA/SSA style picker
 * Fix found/selected grid row not always being fully scrolled into view
+* Fix Bold shortcut bolding the whole line instead of the selected words
+* Fix profile editor not showing/saving the chars/sec and words/min values
+* Make "Merge continuation lines" work with CJK text (treat like English)
+* Change the default "Auto-break text" shortcut from Ctrl+R to Ctrl+Alt+B
 * Align the CJK merge shortcut label with SE4 wording
 * Localize "Set up like Subtitle Edit 4" dialog strings
 * Add an assignable "Waveform insert new selection" shortcut (SE4 parity)
