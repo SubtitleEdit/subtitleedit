@@ -9744,23 +9744,13 @@ public partial class MainViewModel :
         }
 
         var first = selectedItems.First();
-        var haveSurround = first.Text.StartsWith(surroundLeft) && first.Text.EndsWith(surroundRight);
+        first.Text = Utilities.ToggleSymbols(surroundLeft, first.Text, surroundRight, out var added);
 
-        // add toggle functionality
-        foreach (var item in selectedItems)
+        foreach (var item in selectedItems.Skip(1))
         {
-            if (haveSurround)
-            {
-                if (item.Text.StartsWith(surroundLeft) && item.Text.EndsWith(surroundRight))
-                {
-                    item.Text = item.Text.Substring(surroundLeft.Length,
-                        item.Text.Length - surroundLeft.Length - surroundRight.Length);
-                }
-            }
-            else
-            {
-                item.Text = surroundLeft + item.Text + surroundRight;
-            }
+            item.Text = added
+                ? Utilities.AddSymbols(surroundLeft, item.Text, surroundRight)
+                : Utilities.RemoveSymbols(surroundLeft, item.Text, surroundRight);
         }
 
         _updateAudioVisualizer = true;
