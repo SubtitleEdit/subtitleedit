@@ -3527,36 +3527,94 @@ public partial class OcrViewModel : ObservableObject
 
         _ = Task.Run(async () =>
         {
-            for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
+            var processedCount = 0;
+            var producedAnyText = false;
+            try
             {
-                var i = selectedIndices[processedIndex];
-                if (cancellationToken.IsCancellationRequested)
+                for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
                 {
-                    return;
-                }
-
-                UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
-
-                var item = OcrSubtitleItems[i];
-                var bitmap = item.GetSkBitmap();
-
-                var text = await tesseractOcr.Ocr(bitmap, language, tessDataFolder, cancellationToken, engineMode);
-                item.Text = text;
-
-                var unknownWords = OcrFixLineAndSetText(i, item);
-
-                if (DoPromptForUnknownWords && unknownWords.Count > 0)
-                {
-                    var keepRunning = await PromptForUnknownWordsAsync(i, item);
-                    if (!keepRunning)
+                    var i = selectedIndices[processedIndex];
+                    if (cancellationToken.IsCancellationRequested)
                     {
                         return;
                     }
+
+                    UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
+
+                    var item = OcrSubtitleItems[i];
+                    var bitmap = item.GetSkBitmap();
+
+                    var text = await tesseractOcr.Ocr(bitmap, language, tessDataFolder, cancellationToken, engineMode);
+
+                    // Surface a real Tesseract failure instead of silently filling the grid with blank lines.
+                    if (string.IsNullOrEmpty(text) && !string.IsNullOrEmpty(tesseractOcr.Error))
+                    {
+                        await ShowTesseractErrorAsync(tesseractOcr.Error);
+                        return;
+                    }
+
+                    processedCount++;
+                    if (!string.IsNullOrWhiteSpace(text))
+                    {
+                        producedAnyText = true;
+                    }
+
+                    item.Text = text;
+
+                    var unknownWords = OcrFixLineAndSetText(i, item);
+
+                    if (DoPromptForUnknownWords && unknownWords.Count > 0)
+                    {
+                        var keepRunning = await PromptForUnknownWordsAsync(i, item);
+                        if (!keepRunning)
+                        {
+                            return;
+                        }
+                    }
+                }
+
+                // Tesseract exited cleanly but every line came back empty — that is almost never the
+                // intent, so tell the user instead of leaving a grid full of blank lines.
+                if (processedCount >= 1 && !producedAnyText && !cancellationToken.IsCancellationRequested)
+                {
+                    await ShowTesseractErrorAsync(
+                        "Tesseract returned no text for " +
+                        (processedCount == 1 ? "the line." : "any of the " + processedCount + " lines.") + Environment.NewLine +
+                        "The subtitle images may not suit Tesseract (e.g. coloured text), or the selected language (" +
+                        language + ") may be wrong. Try another OCR engine or language." + Environment.NewLine +
+                        "Enable Options > Tools > write tools log for details.");
                 }
             }
-
-            PauseOcr();
+            catch (OperationCanceledException)
+            {
+                // Cancelled by the user.
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "Error running Tesseract OCR");
+                await ShowTesseractErrorAsync(tesseractOcr.Error is { Length: > 0 } e ? e : ex.Message);
+            }
+            finally
+            {
+                PauseOcr();
+            }
         });
+    }
+
+    private async Task ShowTesseractErrorAsync(string error)
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        await Dispatcher.UIThread.InvokeAsync(async () =>
+            await MessageBox.Show(
+                Window!,
+                Se.Language.General.Error,
+                "Tesseract OCR failed:" + Environment.NewLine + Environment.NewLine + error,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error));
     }
 
     private void RunOllamaOcr(List<int> selectedIndices, CancellationToken cancellationToken)

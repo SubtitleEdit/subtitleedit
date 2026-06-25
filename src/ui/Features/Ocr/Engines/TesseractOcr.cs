@@ -62,14 +62,34 @@ public class TesseractOcr
             _executablePath = GetExecutablePath();
         }
 
-        // Preprocess image: make black and white (black text on white background)
+        // Preprocess image: binarize to black text on white. Keys on brightness so coloured text
+        // (e.g. yellow) is kept rather than blanked the way the blue-only MakeOneColor did.
         var nbmp = new NikseBitmap(bitmap);
-        nbmp.MakeOneColor(SKColors.Black);
-        nbmp.ReplaceTransparentWith(SKColors.White);
+        nbmp.MakeBlackAndWhiteForOcr();
         using var oneColorBitmap = nbmp.GetBitmap();
 
         var tempImage = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
         var tempTextFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+
+        // When the tools log is on, record what Tesseract is actually fed: how much "ink" survived
+        // the black/white preprocessing (0% means the text was blanked, e.g. coloured subtitles) and
+        // a copy of the exact image, so blank output can be diagnosed without guessing.
+        if (Se.Settings.Tools.WriteToolsLog)
+        {
+            var inkPercent = GetInkPercent(nbmp);
+            Se.WriteToolsLog($"Tesseract OCR: input {oneColorBitmap.Width}x{oneColorBitmap.Height}, ink={inkPercent:0.0}% (0% = preprocessing blanked the text), lang={language}, oem={engineMode}");
+            try
+            {
+                var logDir = Path.GetDirectoryName(Se.GetToolsLogFilePath()) ?? Path.GetTempPath();
+                var debugCopy = Path.Combine(logDir, "tesseract-input.png");
+                await File.WriteAllBytesAsync(debugCopy, oneColorBitmap.ToPngArray(), cancellationToken);
+                Se.WriteToolsLog($"Tesseract OCR: saved preprocessed image to {debugCopy}");
+            }
+            catch
+            {
+                // ignore debug-save failures
+            }
+        }
 
         try
         {
@@ -102,7 +122,18 @@ public class TesseractOcr
 
 #pragma warning disable CA1416 // Validate platform compatibility
             using var process = new Process { StartInfo = psi };
-            process.Start();
+            try
+            {
+                process.Start();
+            }
+            catch (System.ComponentModel.Win32Exception ex)
+            {
+                Error = $"Could not start Tesseract at \"{_executablePath}\": {ex.Message}." +
+                        (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                            ? string.Empty
+                            : " Make sure Tesseract is installed (e.g. \"brew install tesseract\" on macOS, \"apt install tesseract-ocr\" on Linux).");
+                return string.Empty;
+            }
 #pragma warning restore CA1416 // Validate platform compatibility
 
             var stderrTask = process.StandardError.ReadToEndAsync(CancellationToken.None);
@@ -117,9 +148,17 @@ public class TesseractOcr
             }
 
             var stderr = await stderrTask;
+            if (Se.Settings.Tools.WriteToolsLog)
+            {
+                Se.WriteToolsLog($"Tesseract OCR: exit={process.ExitCode}" +
+                                 (string.IsNullOrWhiteSpace(stderr) ? string.Empty : " stderr=" + stderr.Trim()));
+            }
+
             if (process.ExitCode != 0)
             {
-                Error = stderr;
+                Error = string.IsNullOrWhiteSpace(stderr)
+                    ? $"Tesseract exited with code {process.ExitCode}."
+                    : stderr.Trim();
                 return string.Empty;
             }
         }
@@ -165,6 +204,32 @@ public class TesseractOcr
                 // Ignore cleanup errors
             }
         }
+    }
+
+    // Percentage of dark "ink" pixels in the preprocessed (black-on-white) image. ~0% means the
+    // black/white conversion blanked the text (e.g. coloured subtitles), which yields empty OCR.
+    private static double GetInkPercent(NikseBitmap nbmp)
+    {
+        long total = (long)nbmp.Width * nbmp.Height;
+        if (total == 0)
+        {
+            return 0;
+        }
+
+        long ink = 0;
+        for (var y = 0; y < nbmp.Height; y++)
+        {
+            for (var x = 0; x < nbmp.Width; x++)
+            {
+                var c = nbmp.GetPixel(x, y);
+                if (c.Alpha > 0 && c.Red < 128 && c.Green < 128 && c.Blue < 128)
+                {
+                    ink++;
+                }
+            }
+        }
+
+        return ink * 100.0 / total;
     }
 
     private static string ParseHOcr(string html)

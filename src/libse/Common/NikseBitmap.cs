@@ -189,6 +189,26 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
         }
 
+        /// <summary>
+        /// Binarizes the image for OCR: bright, sufficiently opaque pixels (the subtitle text)
+        /// become black, everything else becomes white. Keys on overall brightness (the max of the
+        /// R/G/B channels) rather than a single channel, so coloured text such as yellow or red is
+        /// kept instead of being dropped — unlike <see cref="MakeOneColor"/>, which only looks at
+        /// the blue channel and blanks low-blue text.
+        /// </summary>
+        public void MakeBlackAndWhiteForOcr(int brightnessThreshold = 90, int alphaThreshold = 100)
+        {
+            var black = new byte[] { 0, 0, 0, 255 };
+            var white = new byte[] { 255, 255, 255, 255 };
+            for (int i = 0; i < _bitmapData.Length; i += 4)
+            {
+                // _bitmapData is BGRA: [i]=blue, [i+1]=green, [i+2]=red, [i+3]=alpha.
+                var brightness = Math.Max(_bitmapData[i], Math.Max(_bitmapData[i + 1], _bitmapData[i + 2]));
+                var isText = _bitmapData[i + 3] >= alphaThreshold && brightness >= brightnessThreshold;
+                Buffer.BlockCopy(isText ? black : white, 0, _bitmapData, i, 4);
+            }
+        }
+
         private static SKColor GetOutlineColor(SKColor borderColor)
         {
             if (borderColor.Red + borderColor.Green + borderColor.Blue < 30)
