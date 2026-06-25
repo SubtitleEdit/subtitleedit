@@ -126,6 +126,33 @@ public class WhisperEngineCpp : ISpeechToTextEngine
         return modelFileName;
     }
 
+    public bool SupportsCustomModels => true;
+
+    public bool CustomModelIsFolder => false;
+
+    public string ImportCustomModel(string sourcePath)
+    {
+        if (!File.Exists(sourcePath))
+        {
+            throw new FileNotFoundException("Model file not found.", sourcePath);
+        }
+
+        if (!sourcePath.EndsWith(".bin", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new Exception("A whisper.cpp model must be a ggml '.bin' file.");
+        }
+
+        if (new FileInfo(sourcePath).Length < 10_000_000)
+        {
+            throw new Exception("The model file is too small (must be at least 10 MB) - is it really a whisper.cpp model?");
+        }
+
+        var destination = Path.Combine(GetAndCreateWhisperModelFolder(null), Path.GetFileName(sourcePath));
+        File.Copy(sourcePath, destination, true);
+
+        return Path.GetFileNameWithoutExtension(destination);
+    }
+
     public async Task<string> GetHelpText()
     {
         var assetName = $"{StaticName.Replace(" ", string.Empty)}.txt";

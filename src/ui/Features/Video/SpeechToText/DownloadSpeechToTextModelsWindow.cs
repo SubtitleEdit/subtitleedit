@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Avalonia.Styling;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -43,6 +44,9 @@ public class DownloadSpeechToTextModelsWindow : Window
         };
         Attached.SetIcon(buttonOpenFolder, "fa-solid fa-folder-open");
 
+        var buttonAddCustomModel = UiUtil.MakeButton(Se.Language.Video.AudioToText.AddCustomModelDotDotDot, vm.AddCustomModelCommand);
+        buttonAddCustomModel.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.SupportsCustomModels)));
+
         var panelModelButtons = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -51,9 +55,21 @@ public class DownloadSpeechToTextModelsWindow : Window
             Children =
             {
                 buttonDownload,
-                buttonOpenFolder
+                buttonOpenFolder,
+                buttonAddCustomModel
             }
         };
+
+        var labelCustomModelHelp = new TextBlock
+        {
+            Text = Se.Language.Video.AudioToText.CustomModelHelp,
+            TextWrapping = TextWrapping.Wrap,
+            Opacity = 0.6,
+            MaxWidth = 460,
+            Margin = new Thickness(0, 6, 0, 0),
+            HorizontalAlignment = HorizontalAlignment.Left,
+        };
+        labelCustomModelHelp.Bind(TextBlock.IsVisibleProperty, new Binding(nameof(vm.SupportsCustomModels)));
 
 
         var progressBar = UiUtil.MakeProgressBar();
@@ -94,7 +110,7 @@ public class DownloadSpeechToTextModelsWindow : Window
         var grid = new Grid
         {
             ColumnDefinitions = new ColumnDefinitions("Auto, *"),
-            RowDefinitions = new RowDefinitions("Auto, Auto, Auto, Auto"),
+            RowDefinitions = new RowDefinitions("Auto, Auto, Auto, Auto, Auto"),
             Margin = UiUtil.MakeWindowMargin(),
         };
 
@@ -112,6 +128,12 @@ public class DownloadSpeechToTextModelsWindow : Window
         grid.Children.Add(panelModelButtons);
         Grid.SetRow(panelModelButtons, row);
         Grid.SetColumn(panelModelButtons, 1);
+        row++;
+
+        grid.Children.Add(labelCustomModelHelp);
+        Grid.SetColumnSpan(labelCustomModelHelp, 2);
+        Grid.SetRow(labelCustomModelHelp, row);
+        Grid.SetColumn(labelCustomModelHelp, 0);
         row++;
 
         grid.Children.Add(panelStatus);
