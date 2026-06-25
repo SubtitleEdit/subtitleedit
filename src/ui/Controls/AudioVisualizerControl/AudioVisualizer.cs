@@ -2161,6 +2161,15 @@ public class AudioVisualizer : Control
         var peaksCount = peaks.Length;
         var highestPeak = renderCtx.HighestPeak;
 
+        // Hoist loop-invariant RenderContext fields into locals: it is a ref struct, so the JIT
+        // cannot cache these reads across the loop. Also turn the per-pixel sample position into a
+        // multiply (startSample + x * samplesPerPixel) instead of a division (x / div).
+        var width = renderCtx.Width;
+        var height = renderCtx.Height;
+        var verticalZoomFactor = renderCtx.VerticalZoomFactor;
+        var startSample = renderCtx.StartPositionSeconds * renderCtx.SampleRate;
+        var samplesPerPixel = renderCtx.SampleRate / div;
+
         // Calculate the threshold for color transitions (as a fraction of the highest peak)
         var lowThreshold = highestPeak * 0.3;
         var mediumThreshold = highestPeak * 0.6;
@@ -2174,9 +2183,9 @@ public class AudioVisualizer : Control
         }
         keysInUse.Clear();
 
-        for (var x = 0; x < renderCtx.Width; x++)
+        for (var x = 0; x < width; x++)
         {
-            var pos = (renderCtx.StartPositionSeconds + x / div) * renderCtx.SampleRate;
+            var pos = startSample + x * samplesPerPixel;
             var pos0 = (int)pos;
             var pos1 = pos0 + 1;
 
@@ -2192,8 +2201,8 @@ public class AudioVisualizer : Control
             var max = peak0.Max * pos0Weight + peak1.Max * pos1Weight;
             var min = peak0.Min * pos0Weight + peak1.Min * pos1Weight;
 
-            var yMax = CalculateYOptimized(max, halfWaveformHeight, renderCtx.HighestPeak, renderCtx.VerticalZoomFactor, renderCtx.Height);
-            var yMin = CalculateYOptimized(min, halfWaveformHeight, renderCtx.HighestPeak, renderCtx.VerticalZoomFactor, renderCtx.Height);
+            var yMax = CalculateYOptimized(max, halfWaveformHeight, highestPeak, verticalZoomFactor, height);
+            var yMin = CalculateYOptimized(min, halfWaveformHeight, highestPeak, verticalZoomFactor, height);
 
             if (yMin < yMax)
             {
@@ -2311,14 +2320,23 @@ public class AudioVisualizer : Control
         var peaks = WavePeaks.AsSpan();
         var peaksCount = peaks.Length;
 
+        // Hoist loop-invariant RenderContext fields (it is a ref struct) and replace the per-pixel
+        // division for the sample position with a multiply. See BuildWaveFormFancy.
+        var width = renderCtx.Width;
+        var height = renderCtx.Height;
+        var highestPeak = renderCtx.HighestPeak;
+        var verticalZoomFactor = renderCtx.VerticalZoomFactor;
+        var startSample = renderCtx.StartPositionSeconds * renderCtx.SampleRate;
+        var samplesPerPixel = renderCtx.SampleRate / div;
+
         var unselectedLines = _classicUnselectedLines;
         var selectedLines = _classicSelectedLines;
         unselectedLines.Clear();
         selectedLines.Clear();
 
-        for (var x = 0; x < renderCtx.Width; x++)
+        for (var x = 0; x < width; x++)
         {
-            var pos = (renderCtx.StartPositionSeconds + x / div) * renderCtx.SampleRate;
+            var pos = startSample + x * samplesPerPixel;
             var pos0 = (int)pos;
             var pos1 = pos0 + 1;
 
@@ -2334,8 +2352,8 @@ public class AudioVisualizer : Control
             var max = peak0.Max * pos0Weight + peak1.Max * pos1Weight;
             var min = peak0.Min * pos0Weight + peak1.Min * pos1Weight;
 
-            var yMax = CalculateYOptimized(max, halfWaveformHeight, renderCtx.HighestPeak, renderCtx.VerticalZoomFactor, renderCtx.Height);
-            var yMin = CalculateYOptimized(min, halfWaveformHeight, renderCtx.HighestPeak, renderCtx.VerticalZoomFactor, renderCtx.Height);
+            var yMax = CalculateYOptimized(max, halfWaveformHeight, highestPeak, verticalZoomFactor, height);
+            var yMin = CalculateYOptimized(min, halfWaveformHeight, highestPeak, verticalZoomFactor, height);
 
             // Ensure yMin is below yMax and both are within bounds
             if (yMin < yMax)
