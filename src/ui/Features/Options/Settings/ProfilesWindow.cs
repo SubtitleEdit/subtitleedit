@@ -179,13 +179,13 @@ public class ProfilesWindow : Window
         var numericUpDownSingleLineMaxLength = UiUtil.MakeNumericUpDownInt(0, 1000, 43, 150, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.SingleLineMaxLength));
 
         var labelOptimalCharsPerSec = UiUtil.MakeLabel(Se.Language.Options.Settings.OptimalCharsPerSec);
-        var numericUpDownOptimalCharsPerSec = UiUtil.MakeNumericUpDownInt(0, 1000, 43, 150, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.OptimalCharsPerSec));
+        var numericUpDownOptimalCharsPerSec = UiUtil.MakeNumericUpDownDouble(0, 1000, 43, 150, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.OptimalCharsPerSec));
 
         var labelMaxCharsPerSec = UiUtil.MakeLabel(Se.Language.General.MaxCharactersPerSecond);
-        var numericUpDownMaxCharsPerSec = UiUtil.MakeNumericUpDownInt(0, 1000, 43, 150, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.MaxCharsPerSec));
+        var numericUpDownMaxCharsPerSec = UiUtil.MakeNumericUpDownDouble(0, 1000, 43, 150, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.MaxCharsPerSec));
 
         var labelMaxWordsPerMin = UiUtil.MakeLabel(Se.Language.Options.Settings.MaxWordsPerMin);
-        var numericUpDownMaxWordsPerMin = UiUtil.MakeNumericUpDownInt(0, 1000, 43, 150, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.MaxWordsPerMin));
+        var numericUpDownMaxWordsPerMin = UiUtil.MakeNumericUpDownDouble(0, 1000, 43, 150, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.MaxWordsPerMin));
 
         var labelMinDurationMs = UiUtil.MakeLabel(Se.Language.Options.Settings.MinDurationMs);
         var numericUpDownMinDurationMs = UiUtil.MakeNumericUpDownInt(0, 10000, 43, 150, vm, nameof(vm.SelectedProfile) + "." + nameof(ProfileDisplay.MinDurationMs));
