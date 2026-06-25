@@ -88,7 +88,9 @@ namespace Nikse.SubtitleEdit
                     // back to system fonts from a forced embedded default - so name the common Linux
                     // CJK families explicitly. fontconfig resolves whichever of these is installed
                     // (normal desktops ship Noto Sans CJK); minimal installs have no CJK font at all,
-                    // so CJK can't render there regardless.
+                    // so CJK can't render there regardless. The non-CJK-suffixed Noto families and the
+                    // Nanum/WenQuanYi entries cover distros that ship a region-specific Korean/Chinese
+                    // font instead of the full Noto Sans CJK pack.
                     appBuilder = appBuilder
                         .WithInterFont()
                         .With(new FontManagerOptions
@@ -99,7 +101,14 @@ namespace Nikse.SubtitleEdit
                                 new FontFallback { FontFamily = new FontFamily("Noto Sans CJK KR") },
                                 new FontFallback { FontFamily = new FontFamily("Noto Sans CJK JP") },
                                 new FontFallback { FontFamily = new FontFamily("Noto Sans CJK TC") },
+                                new FontFallback { FontFamily = new FontFamily("Noto Sans KR") },
+                                new FontFallback { FontFamily = new FontFamily("Noto Sans JP") },
+                                new FontFallback { FontFamily = new FontFamily("Noto Sans SC") },
+                                new FontFallback { FontFamily = new FontFamily("NanumGothic") },
+                                new FontFallback { FontFamily = new FontFamily("Nanum Gothic") },
+                                new FontFallback { FontFamily = new FontFamily("UnDotum") },
                                 new FontFallback { FontFamily = new FontFamily("WenQuanYi Zen Hei") },
+                                new FontFallback { FontFamily = new FontFamily("WenQuanYi Micro Hei") },
                             }
                         });
                 }
