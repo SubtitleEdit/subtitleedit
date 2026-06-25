@@ -31,38 +31,31 @@ public class MergeContinuationLinesHelperTests
     }
 
     [Fact]
-    public void Detect_MixedScriptFileDetectedAsJapanese_StillMergesEnglishBody()
+    public void Detect_CjkContinuationLines_MergeLikeEnglish()
     {
-        // Regression for issue #11267: a few Japanese lines at the top make the
-        // whole-file language detection return "ja", which previously suppressed
-        // the entire feature ("No continuation candidates found"). CJK must be
-        // skipped per line so the English continuation lines still merge.
+        // Issue #11806: CJK lines must be treated just like English. A CJK line that
+        // does not end in sentence-final punctuation is an unfinished sentence and
+        // should merge with the next line.
         var subtitles = new List<SubtitleLineViewModel>
         {
-            MakeSubtitle("はよう", 0.62, 0.70),
-            MakeSubtitle("はな", 0.81, 0.98),
-            MakeSubtitle("an", 1.02, 1.13),
-            MakeSubtitle("illusion,", 1.16, 1.74),
-            MakeSubtitle("an", 1.80, 1.90),
-            MakeSubtitle("echo", 1.92, 2.10),
+            MakeSubtitle("これは", 0.62, 0.70),
+            MakeSubtitle("ペンです", 0.81, 0.98),
         };
 
         var candidates = MergeContinuationLinesHelper.Detect(subtitles, "ja", maxGapMs: 500, maxTotalLength: 200);
 
         Assert.NotEmpty(candidates);
-        // None of the produced candidates should start from a CJK (Japanese) line.
-        Assert.DoesNotContain(candidates, c => c.Text1.Contains("はよう") || c.Text1.Contains("はな"));
     }
 
     [Fact]
-    public void Detect_CjkLines_AreSkipped()
+    public void Detect_CjkSentenceEndingWithIdeographicFullStop_NotMerged()
     {
-        // Pure CJK continuation lines remain noise-free: ending in a CJK character
-        // is not treated as an English-style "unfinished sentence".
+        // The ideographic full stop "。" ends a sentence, so the line is not a
+        // continuation and must not be offered as a merge candidate.
         var subtitles = new List<SubtitleLineViewModel>
         {
-            MakeSubtitle("はよう", 0.62, 0.70),
-            MakeSubtitle("はな", 0.81, 0.98),
+            MakeSubtitle("これはペンです。", 0.62, 0.70),
+            MakeSubtitle("そうですか", 0.81, 0.98),
         };
 
         var candidates = MergeContinuationLinesHelper.Detect(subtitles, "ja", maxGapMs: 500, maxTotalLength: 200);

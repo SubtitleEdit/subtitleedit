@@ -891,10 +891,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
 
         var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
-        if (MergeContinuationLinesHelper.IsLanguageSkipped(language))
-        {
-            return;
-        }
 
         var format = _subtitle.OriginalFormat ?? new SubRip();
         var viewModels = _subtitle.Paragraphs
