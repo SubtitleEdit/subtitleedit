@@ -10095,6 +10095,7 @@ public partial class MainViewModel :
                     ? Se.Language.General.SearchItemNotFoundContinueFromTop
                     : Se.Language.General.SearchItemNotFoundContinueFromBottom;
                 var answer = await ShowWrapAroundDialog(message);
+                _shortcutManager.ClearKeys();
                 if (answer != MessageBoxResult.Yes)
                 {
                     ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
@@ -10532,6 +10533,7 @@ public partial class MainViewModel :
             if (idx < 0)
             {
                 var answer = await ShowWrapAroundDialog(Se.Language.General.SearchItemNotFoundContinueFromTop);
+                _shortcutManager.ClearKeys();
                 if (answer != MessageBoxResult.Yes)
                 {
                     ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
