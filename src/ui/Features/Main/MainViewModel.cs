@@ -9986,7 +9986,7 @@ public partial class MainViewModel :
             vm.InitializeFindData(_findService, subs, selectedText, this);
             window.AddHandler(InputElement.KeyDownEvent, _shortcutManager.OnKeyPressed, RoutingStrategies.Tunnel);
             window.AddHandler(InputElement.KeyUpEvent, _shortcutManager.OnKeyReleased, RoutingStrategies.Bubble);
-            window.KeyDown += (_, e) =>
+            window.KeyDown += async (_, e) =>
             {
                 var cmd = _shortcutManager.CheckShortcuts(e, ShortcutCategory.General.ToString());
                 if (ReferenceEquals(cmd, ShowReplaceCommand))
@@ -9998,6 +9998,16 @@ public partial class MainViewModel :
                 {
                     e.Handled = true;
                     vm.FocusSearchBox?.Invoke();
+                }
+                else if (ReferenceEquals(cmd, FindNextCommand))
+                {
+                    e.Handled = true;
+                    await vm.FindNextCommand.ExecuteAsync(null);
+                }
+                else if (ReferenceEquals(cmd, FindPreviousCommand))
+                {
+                    e.Handled = true;
+                    await vm.FindPreviousCommand.ExecuteAsync(null);
                 }
             };
             window.Closed += (_, _) =>
@@ -10075,6 +10085,7 @@ public partial class MainViewModel :
                     ? Se.Language.General.SearchItemNotFoundContinueFromTop
                     : Se.Language.General.SearchItemNotFoundContinueFromBottom;
                 var answer = await ShowWrapAroundDialog(message);
+                _shortcutManager.ClearKeys();
                 if (answer != MessageBoxResult.Yes)
                 {
                     ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
@@ -10330,13 +10341,18 @@ public partial class MainViewModel :
             }
             window.AddHandler(InputElement.KeyDownEvent, _shortcutManager.OnKeyPressed, RoutingStrategies.Tunnel);
             window.AddHandler(InputElement.KeyUpEvent, _shortcutManager.OnKeyReleased, RoutingStrategies.Bubble);
-            window.KeyDown += (_, e) =>
+            window.KeyDown += async (_, e) =>
             {
                 var cmd = _shortcutManager.CheckShortcuts(e, ShortcutCategory.General.ToString());
                 if (ReferenceEquals(cmd, ShowReplaceCommand))
                 {
                     e.Handled = true;
                     vm.FocusSearchBox?.Invoke();
+                }
+                else if (ReferenceEquals(cmd, FindNextCommand))
+                {
+                    e.Handled = true;
+                    await vm.FindNextCommand.ExecuteAsync(null);
                 }
             };
             window.Closed += (_, _) =>
@@ -10507,6 +10523,7 @@ public partial class MainViewModel :
             if (idx < 0)
             {
                 var answer = await ShowWrapAroundDialog(Se.Language.General.SearchItemNotFoundContinueFromTop);
+                _shortcutManager.ClearKeys();
                 if (answer != MessageBoxResult.Yes)
                 {
                     ShowStatus(string.Format(Se.Language.General.XNotFound, _findService.SearchText));
