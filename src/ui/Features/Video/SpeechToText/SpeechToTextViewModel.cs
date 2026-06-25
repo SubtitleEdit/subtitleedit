@@ -343,8 +343,6 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     // The mainstream Whisper engines that can auto-detect the spoken language
     // (useful for files with mixed languages). See issue #11848.
-    // CTranslate2 is intentionally excluded: auto-detect does not work reliably
-    // through SE's CTranslate2 pipeline (--model_directory rewrite + detection output).
     private static bool EngineSupportsAutoLanguageDetection(ISpeechToTextEngine engine)
     {
         return engine.Choice is WhisperChoice.Cpp
@@ -353,6 +351,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             or WhisperChoice.CppCuBlasLib
             or WhisperChoice.ConstMe
             or WhisperChoice.PurfviewFasterWhisperXxl
+            or WhisperChoice.CTranslate2
             or WhisperChoice.OpenAi;
     }
 
@@ -3492,10 +3491,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         var m = engine.GetModelForCmdLine(model);
 
         // Automatic language detection (#11848). whisper.cpp/Const-me accept the literal
-        // "auto" (their default is "en", so the flag is required). Purfview Faster-Whisper
-        // and OpenAI reject "auto" but auto-detect when no --language is given, so the flag
-        // is omitted there. (CTranslate2 is not offered an auto option - see
-        // EngineSupportsAutoLanguageDetection.)
+        // "auto" (their default is "en", so the flag is required). The faster-whisper based
+        // engines (Purfview, CTranslate2) and OpenAI reject "auto" but auto-detect when no
+        // --language is given, so the flag is omitted there.
         var languageArg = $"--language {language} ";
         if (language.Equals("auto", StringComparison.OrdinalIgnoreCase))
         {
