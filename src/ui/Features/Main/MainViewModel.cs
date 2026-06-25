@@ -9996,7 +9996,7 @@ public partial class MainViewModel :
             vm.InitializeFindData(_findService, subs, selectedText, this);
             window.AddHandler(InputElement.KeyDownEvent, _shortcutManager.OnKeyPressed, RoutingStrategies.Tunnel);
             window.AddHandler(InputElement.KeyUpEvent, _shortcutManager.OnKeyReleased, RoutingStrategies.Bubble);
-            window.KeyDown += (_, e) =>
+            window.KeyDown += async (_, e) =>
             {
                 var cmd = _shortcutManager.CheckShortcuts(e, ShortcutCategory.General.ToString());
                 if (ReferenceEquals(cmd, ShowReplaceCommand))
@@ -10008,6 +10008,16 @@ public partial class MainViewModel :
                 {
                     e.Handled = true;
                     vm.FocusSearchBox?.Invoke();
+                }
+                else if (ReferenceEquals(cmd, FindNextCommand))
+                {
+                    e.Handled = true;
+                    await vm.FindNextCommand.ExecuteAsync(null);
+                }
+                else if (ReferenceEquals(cmd, FindPreviousCommand))
+                {
+                    e.Handled = true;
+                    await vm.FindPreviousCommand.ExecuteAsync(null);
                 }
             };
             window.Closed += (_, _) =>
@@ -10340,13 +10350,18 @@ public partial class MainViewModel :
             }
             window.AddHandler(InputElement.KeyDownEvent, _shortcutManager.OnKeyPressed, RoutingStrategies.Tunnel);
             window.AddHandler(InputElement.KeyUpEvent, _shortcutManager.OnKeyReleased, RoutingStrategies.Bubble);
-            window.KeyDown += (_, e) =>
+            window.KeyDown += async (_, e) =>
             {
                 var cmd = _shortcutManager.CheckShortcuts(e, ShortcutCategory.General.ToString());
                 if (ReferenceEquals(cmd, ShowReplaceCommand))
                 {
                     e.Handled = true;
                     vm.FocusSearchBox?.Invoke();
+                }
+                else if (ReferenceEquals(cmd, FindNextCommand))
+                {
+                    e.Handled = true;
+                    await vm.FindNextCommand.ExecuteAsync(null);
                 }
             };
             window.Closed += (_, _) =>
