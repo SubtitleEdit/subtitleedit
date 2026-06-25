@@ -12239,6 +12239,66 @@ public partial class MainViewModel :
         _updateAudioVisualizer = true;
     }
 
+    [RelayCommand]
+    private void WaveformSetEndAddNewAndGoToNew()
+    {
+        SetEndAddNewAndGoToNew(focusTextBox: true);
+    }
+
+    [RelayCommand]
+    private void WaveformSetEndAddNewAndGoToNewNoFocusTextBox()
+    {
+        SetEndAddNewAndGoToNew(focusTextBox: false);
+    }
+
+    // Sets the end of the current subtitle to the playhead, inserts a new empty subtitle just after
+    // it, and selects that new subtitle (issue #9788). The "no focus" variant leaves keyboard focus
+    // where it is instead of jumping into the text box, for waveform/keyboard-driven workflows.
+    private void SetEndAddNewAndGoToNew(bool focusTextBox)
+    {
+        var s = SelectedSubtitle;
+        var vp = GetVideoPlayerControl();
+        if (s == null || vp == null || AudioVisualizer == null || LockTimeCodes)
+        {
+            return;
+        }
+
+        var videoPositionSeconds = vp.Position;
+        var gapMs = Se.Settings.General.MinimumBetweenLines.GetMilliseconds();
+        if (videoPositionSeconds < s.StartTime.TotalSeconds + gapMs / 1000.0)
+        {
+            return;
+        }
+
+        s.EndTime = TimeSpan.FromSeconds(videoPositionSeconds);
+
+        var startMs = videoPositionSeconds * 1000.0 + gapMs;
+        var endMs = startMs + Se.Settings.General.NewEmptyDefaultMs;
+        var newParagraph = new SubtitleLineViewModel(new Paragraph(string.Empty, startMs, endMs), SelectedSubtitleFormat);
+
+        RunWithoutChangeDetection(() =>
+        {
+            var idx = _insertService.InsertInCorrectPosition(Subtitles, newParagraph);
+            var next = Subtitles.GetOrNull(idx + 1);
+            if (next != null &&
+                next.StartTime.TotalMilliseconds < endMs &&
+                next.StartTime.TotalMilliseconds > newParagraph.StartTime.TotalMilliseconds + 200)
+            {
+                newParagraph.EndTime = TimeSpan.FromMilliseconds(next.StartTime.TotalMilliseconds - gapMs);
+            }
+        });
+
+        AudioVisualizer.NewSelectionParagraph = null;
+        SelectAndScrollToSubtitle(newParagraph);
+        Renumber();
+        if (focusTextBox)
+        {
+            FocusEditTextBox();
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
 
     [RelayCommand]
     private void WaveformSetEndAndStartOfNextAfterGap()
