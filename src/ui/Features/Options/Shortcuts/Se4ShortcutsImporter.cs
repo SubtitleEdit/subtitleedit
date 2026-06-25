@@ -138,7 +138,7 @@ public static class Se4ShortcutsImporter
 
         // List view
         ["MainListViewItalic"] = nameof(MainViewModel.ToggleLinesItalicOrSelectedTextCommand),
-        ["MainListViewBold"] = nameof(MainViewModel.ToggleLinesBoldCommand),
+        ["MainListViewBold"] = nameof(MainViewModel.ToggleLinesBoldOrSelectedTextCommand),
         ["MainListViewAlignment"] = nameof(MainViewModel.ShowAlignmentPickerCommand),
         ["MainListViewAlignmentN1"] = nameof(MainViewModel.DoAlignmentAn1Command),
         ["MainListViewAlignmentN2"] = nameof(MainViewModel.DoAlignmentAn2Command),
