@@ -5,66 +5,64 @@ namespace UITests.Features.Ocr.Engines;
 
 public class OllamaOcrTests
 {
+    private const string Prompt =
+        "You are an OCR engine. The language is English. Output only the exact text visible in the image, nothing else. Separate two lines with a single newline.";
+
     [Fact]
-    public void CollapseRepetition_SingleLineRepeated_CollapsesToOne()
+    public void CleanOcrText_SingleCorrectLine_Unchanged()
+    {
+        var text = "- Henry, we're here. - We're here.";
+
+        Assert.Equal(text, OllamaOcr.CleanOcrText(text, Prompt));
+    }
+
+    [Fact]
+    public void CleanOcrText_TwoCorrectLines_Unchanged()
+    {
+        var text = "Henry, are you there?" + Environment.NewLine + "We're coming for you.";
+
+        Assert.Equal(text, OllamaOcr.CleanOcrText(text, Prompt));
+    }
+
+    [Fact]
+    public void CleanOcrText_RepeatedLine_KeepsFirst()
     {
         var line = "- Henry, we're here. - We're here.";
         var looped = string.Join(Environment.NewLine, System.Linq.Enumerable.Repeat(line, 100));
 
-        var result = OllamaOcr.CollapseRepetition(looped);
-
-        Assert.Equal(line, result);
+        Assert.Equal(line, OllamaOcr.CleanOcrText(looped, Prompt));
     }
 
     [Fact]
-    public void CollapseRepetition_TwoLineCycleRepeated_CollapsesToOneCycle()
+    public void CleanOcrText_TwoLineCycleRepeated_KeepsOneCycle()
     {
-        var block = "- Henry, we're here." + Environment.NewLine + "- We're here.";
-        var looped = string.Join(Environment.NewLine, System.Linq.Enumerable.Repeat(block, 30));
+        var a = "Henry, are you there?";
+        var b = "We're coming for you.";
+        var looped = string.Join(Environment.NewLine, a, b, a, b, a, b, a, b);
 
-        var result = OllamaOcr.CollapseRepetition(looped);
-
-        Assert.Equal(block, result);
+        Assert.Equal(a + Environment.NewLine + b, OllamaOcr.CleanOcrText(looped, Prompt));
     }
 
     [Fact]
-    public void CollapseRepetition_DominantLineWithTrailingVariants_CollapsesToDominant()
+    public void CleanOcrText_MarkdownFenceAfterText_Stripped()
     {
-        // Mirrors a real bounded loop: the correct line repeated many times, then a couple of
-        // OCR spacing variants and a truncated tail (from the token cap).
-        var line = "- Henry, we're here. - We're here.";
-        var lines = new System.Collections.Generic.List<string>();
-        for (var i = 0; i < 27; i++)
-        {
-            lines.Add(line);
-        }
-        lines.Add("- Henry,we're here. - We're here.");
-        lines.Add("- Henry, we're here. - We're");
+        var text = "Henry, are you there?" + Environment.NewLine +
+                   "We're coming for you." + Environment.NewLine +
+                   "```markdown" + Environment.NewLine +
+                   "Henry, are you there?";
 
-        var result = OllamaOcr.CollapseRepetition(string.Join(Environment.NewLine, lines));
-
-        Assert.Equal(line, result);
+        Assert.Equal("Henry, are you there?" + Environment.NewLine + "We're coming for you.",
+            OllamaOcr.CleanOcrText(text, Prompt));
     }
 
     [Fact]
-    public void CollapseRepetition_NormalTwoLineText_LeftUnchanged()
+    public void CleanOcrText_PromptEchoAfterText_Stripped()
     {
-        var text = "- Henry, we're here." + Environment.NewLine + "- We're here.";
+        var text = "Henry, are you there?" + Environment.NewLine +
+                   "We're coming for you." + Environment.NewLine +
+                   Prompt;
 
-        var result = OllamaOcr.CollapseRepetition(text);
-
-        Assert.Equal(text, result);
-    }
-
-    [Fact]
-    public void CollapseRepetition_RepeatedWordWithinDialog_NotCollapsed()
-    {
-        // A real (non-looping) subtitle that happens to repeat a short phrase a couple of times
-        // must not be touched.
-        var text = "Run, run, run!" + Environment.NewLine + "Don't stop now.";
-
-        var result = OllamaOcr.CollapseRepetition(text);
-
-        Assert.Equal(text, result);
+        Assert.Equal("Henry, are you there?" + Environment.NewLine + "We're coming for you.",
+            OllamaOcr.CleanOcrText(text, Prompt));
     }
 }

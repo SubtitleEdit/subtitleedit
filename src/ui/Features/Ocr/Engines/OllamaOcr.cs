@@ -16,11 +16,11 @@ namespace Nikse.SubtitleEdit.Features.Ocr.Engines;
 
 public class OllamaOcr
 {
-    // OCR of a single subtitle frame is short, so cap generation and discourage repetition.
-    // Vision models otherwise tend to loop ("- Henry, we're here." x100), which both produces
-    // garbage and makes each line take a very long time (#ollama-ocr-looping).
-    private const int MaxTokens = 500;
-    private const double RepeatPenalty = 1.3;
+    // glm-ocr and similar are "thinking" models that, left unchecked, emit reasoning, markdown
+    // fences and the same line over and over. We disable thinking, use a strict prompt, cap the
+    // tokens (a subtitle frame is short) and discourage repetition. Tuned against local glm-ocr.
+    private const int MaxTokens = 96;
+    private const double RepeatPenalty = 1.1;
 
     private readonly HttpClient _httpClient;
 
@@ -49,8 +49,10 @@ public class OllamaOcr
             var optionsJson = "\"options\": { \"temperature\": 0, \"repeat_penalty\": " +
                               RepeatPenalty.ToString(System.Globalization.CultureInfo.InvariantCulture) +
                               ", \"num_predict\": " + MaxTokens + " }, ";
-            var prompt = string.Format("Act as a precise OCR engine. Transcribe every line of text from this image exactly as it appears. The language is {0}. Maintain the vertical order. Use a single '\\n' to separate each line. Do not skip any text. Output only the transcribed text", language);
-            var input = "{ " + modelJson + optionsJson + "  \"messages\": [ { \"role\": \"user\", \"content\": \"" + prompt + "\", \"images\": [ \"" + base64Image + "\"] } ], \"stream\": false }";
+            var prompt = string.Format("You are an OCR engine. The language is {0}. Output only the exact text visible in the image, nothing else. Separate two lines with a single newline.", language);
+            // "think": false disables the model's chain-of-thought (glm-ocr is a thinking model),
+            // which is the main source of the "way too much text" output.
+            var input = "{ " + modelJson + optionsJson + " \"think\": false, \"messages\": [ { \"role\": \"user\", \"content\": \"" + prompt + "\", \"images\": [ \"" + base64Image + "\"] } ], \"stream\": false }";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
@@ -83,8 +85,9 @@ public class OllamaOcr
             // sanitize
             resultText = resultText.Trim();
             resultText = resultText.Replace("\\n", Environment.NewLine);
-            // Defensively collapse runaway repetition the model may still emit within the token cap.
-            resultText = CollapseRepetition(resultText);
+            // Strip any trailing garbage the model still appends after the real text (repeated
+            // lines, ``` fences, an echo of the prompt) — the transcription is always first.
+            resultText = CleanOcrText(resultText, prompt);
             resultText = resultText.Replace(" ,", ",");
             resultText = resultText.Replace(" .", ".");
             resultText = resultText.Replace(" !", "!");
@@ -111,63 +114,46 @@ public class OllamaOcr
     }
 
     /// <summary>
-    /// Collapses runaway repetition from a looping vision model. OCR of a single subtitle frame is
-    /// short, so when the output is the same short block of lines repeated many times (e.g.
-    /// "- Henry, we're here." x100) it is a generation loop, not real text — reduce it to one block.
-    /// Conservative: only triggers when the whole output is a cycle of 1-4 lines repeated 3+ times.
+    /// Keeps only the real transcription. glm-ocr (and similar) reliably emit the correct text
+    /// first and then append garbage — repeated lines, a ``` markdown fence, or an echo of the
+    /// prompt. A subtitle frame is at most a few short lines, so stop at the first line that is a
+    /// duplicate, a code fence, or the start of the prompt, and never keep more than 4 lines.
     /// </summary>
-    internal static string CollapseRepetition(string text)
+    internal static string CleanOcrText(string text, string prompt)
     {
         if (string.IsNullOrEmpty(text))
         {
             return text;
         }
 
-        var lines = text.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n')
-            .Select(l => l.Trim())
-            .Where(l => l.Length > 0)
-            .ToList();
+        var promptPrefix = prompt != null && prompt.Length >= 15 ? prompt.Substring(0, 15) : prompt ?? string.Empty;
+        var kept = new List<string>();
+        var seen = new HashSet<string>(StringComparer.Ordinal);
 
-        if (lines.Count < 6)
+        foreach (var raw in text.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n'))
         {
-            return text; // too short to be a runaway loop
-        }
-
-        // A loop starts by repeating its leading block. The cycle length is the distance to the
-        // first reoccurrence of the first line; require the leading line to recur several times so
-        // we don't touch genuine (short, varied) OCR output.
-        var first = lines[0];
-        if (lines.Count(l => l == first) < 3)
-        {
-            return text;
-        }
-
-        var cycle = lines.FindIndex(1, l => l == first);
-        if (cycle < 1 || cycle > 4)
-        {
-            return text;
-        }
-
-        var block = lines.Take(cycle).ToList();
-        var consecutiveRepeats = 0;
-        for (var i = 0; i + cycle <= lines.Count; i += cycle)
-        {
-            if (Enumerable.Range(0, cycle).All(k => lines[i + k] == block[k]))
+            var line = raw.Trim();
+            if (line.Length == 0)
             {
-                consecutiveRepeats++;
+                continue;
             }
-            else
+
+            if (line.StartsWith("```", StringComparison.Ordinal) ||
+                (promptPrefix.Length > 0 && line.StartsWith(promptPrefix, StringComparison.OrdinalIgnoreCase)) ||
+                seen.Contains(line))
+            {
+                break;
+            }
+
+            seen.Add(line);
+            kept.Add(line);
+            if (kept.Count >= 4)
             {
                 break;
             }
         }
 
-        if (consecutiveRepeats < 3)
-        {
-            return text;
-        }
-
-        return string.Join(Environment.NewLine, block);
+        return kept.Count == 0 ? text : string.Join(Environment.NewLine, kept);
     }
 
     public SKBitmap PreprocessImage(SKBitmap source)
