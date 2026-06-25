@@ -102,7 +102,18 @@ public class TesseractOcr
 
 #pragma warning disable CA1416 // Validate platform compatibility
             using var process = new Process { StartInfo = psi };
-            process.Start();
+            try
+            {
+                process.Start();
+            }
+            catch (System.ComponentModel.Win32Exception ex)
+            {
+                Error = $"Could not start Tesseract at \"{_executablePath}\": {ex.Message}." +
+                        (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                            ? string.Empty
+                            : " Make sure Tesseract is installed (e.g. \"brew install tesseract\" on macOS, \"apt install tesseract-ocr\" on Linux).");
+                return string.Empty;
+            }
 #pragma warning restore CA1416 // Validate platform compatibility
 
             var stderrTask = process.StandardError.ReadToEndAsync(CancellationToken.None);
