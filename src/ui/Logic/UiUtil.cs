@@ -2032,6 +2032,57 @@ public static class UiUtil
         return control;
     }
 
+    // Like MakeNumericUpDownInt but for double-typed (double?) view-model properties.
+    // Uses NullableDoubleConverter so the actual value round-trips; NullableIntConverter
+    // would fall back to its DefaultValue whenever the source is a double (not an int).
+    public static NumericUpDown MakeNumericUpDownDouble(int min, int max, double defaultValue, double width, object viewModel,
+        string? propertyValuePath = null, string? propertyIsVisiblePath = null)
+    {
+        var control = new NumericUpDown
+        {
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            DataContext = viewModel,
+            Minimum = min,
+            Maximum = max,
+            Width = width,
+            Increment = 1,
+            FormatString = "F0",
+            Foreground = GetTextColor(),
+        };
+
+        if (propertyValuePath != null)
+        {
+            control.Bind(NumericUpDown.ValueProperty, new Binding
+            {
+                Path = propertyValuePath,
+                Mode = BindingMode.TwoWay,
+                Converter = new NullableDoubleConverter { DefaultValue = defaultValue },
+            });
+        }
+
+        if (propertyIsVisiblePath != null)
+        {
+            control.Bind(NumericUpDown.IsVisibleProperty, new Binding
+            {
+                Path = propertyIsVisiblePath,
+                Mode = BindingMode.TwoWay,
+            });
+        }
+
+        control.AddHandler(InputElement.PointerWheelChangedEvent, (s, e) =>
+        {
+            control.Value = Math.Clamp((control.Value ?? 0) + (e.Delta.Y > 0 ? control.Increment : -control.Increment),
+                                        control.Minimum,
+                                        control.Maximum);
+            e.Handled = true;
+        });
+
+        ForwardAutomationNameToInnerTextBox(control);
+
+        return control;
+    }
+
     public static NumericUpDown MakeNumericUpDownTwoDecimals(decimal min, decimal max, double width, object viewModel,
         string? propertyValuePath = null, string? propertyIsVisiblePath = null, decimal defaultValue = 0)
     {
