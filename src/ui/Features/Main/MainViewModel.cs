@@ -11121,6 +11121,28 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void VideoPlayFromJustBeforeText()
+    {
+        var s = SelectedSubtitle;
+        var vp = GetVideoPlayerControl();
+        if (s == null || vp == null)
+        {
+            return;
+        }
+
+        // Start playback a little before the subtitle's start so the lead-in is
+        // visible; clamp to the start when it is right at the beginning.
+        var startSeconds = s.StartTime.TotalSeconds;
+        var position = startSeconds > 1 ? startSeconds - 0.5 : startSeconds;
+
+        vp.VideoPlayer.Pause();
+        vp.Position = position;
+        PinPlayheadTo(position);
+        vp.VideoPlayer.Play();
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
     private void RemoveBlankLines()
     {
         var blankLines = Subtitles.Where(s => string.IsNullOrWhiteSpace(s.Text)).ToList();
