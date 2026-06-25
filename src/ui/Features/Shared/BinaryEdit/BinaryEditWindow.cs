@@ -44,6 +44,7 @@ public class BinaryEditWindow : Window
 
         // Top menu bar
         var menu = MakeTopMenu(vm);
+        vm.Menu = menu;
         if (OperatingSystem.IsMacOS())
         {
             menu.IsVisible = false;

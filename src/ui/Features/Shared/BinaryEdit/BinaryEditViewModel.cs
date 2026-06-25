@@ -54,6 +54,7 @@ public partial class BinaryEditViewModel : ObservableObject
     public IOcrSubtitle? OcrSubtitle { get; set; }
 
     public Window? Window { get; set; }
+    public Menu? Menu { get; set; }
     public DataGrid? SubtitleGrid { get; set; }
     public VideoPlayerControl? VideoPlayerControl { get; set; }
     public Image? SubtitleOverlayImage { get; set; }
@@ -1833,6 +1834,23 @@ public partial class BinaryEditViewModel : ObservableObject
 
     public void OnKeyDown(KeyEventArgs e)
     {
+        // F10 moves keyboard focus into the menu bar (standard Windows behavior) so it can be
+        // reached and read without a mouse (#11745).
+        if (e.Key == Key.F10 && e.KeyModifiers == KeyModifiers.None && TryFocusMenu())
+        {
+            e.Handled = true;
+            return;
+        }
+
+        // While the menu has keyboard focus, let it own its own navigation keys. The window key
+        // handler runs even on keys the menu already handled (handledEventsToo: true), so without
+        // this Escape would close the whole window instead of the menu, and arrow/Enter would be
+        // consumed as shortcuts, breaking menu navigation (#11745).
+        if (IsMenuFocused())
+        {
+            return;
+        }
+
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
@@ -1865,6 +1883,31 @@ public partial class BinaryEditViewModel : ObservableObject
     public void OnKeyUp(KeyEventArgs e)
     {
         _shortcutManager.OnKeyReleased(this, e);
+    }
+
+    /// <summary>
+    /// Moves keyboard focus to the first top-level menu item so the menu can be opened and
+    /// navigated with the keyboard / a screen reader (F10, #11745). No-op when the menu is hidden
+    /// (macOS uses the native menu).
+    /// </summary>
+    private bool TryFocusMenu()
+    {
+        if (Menu == null || !Menu.IsVisible || Menu.Items.Count == 0)
+        {
+            return false;
+        }
+
+        return Menu.Items[0] is MenuItem firstItem && firstItem.Focus(NavigationMethod.Tab);
+    }
+
+    /// <summary>
+    /// True when keyboard focus is on the menu or one of its items (top-level or an open drop-down),
+    /// so the menu can own arrow/Enter/Escape keys instead of the shortcut manager (#11745).
+    /// </summary>
+    private bool IsMenuFocused()
+    {
+        var focusedElement = Window?.FocusManager?.GetFocusedElement();
+        return focusedElement is MenuItem || (Menu != null && ReferenceEquals(focusedElement, Menu));
     }
 
     internal async void OnClosing(object? sender, WindowClosingEventArgs e)
