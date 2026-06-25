@@ -12183,6 +12183,37 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void WaveformSetStartAndKeepDuration()
+    {
+        var s = SelectedSubtitle;
+        var vp = GetVideoPlayerControl();
+        if (s == null || vp == null || LockTimeCodes)
+        {
+            return;
+        }
+
+        // Unlike WaveformSetStart, the end moves with the start (duration is
+        // preserved), so there is no start/end collision to guard against.
+        var videoPositionSeconds = vp.Position;
+
+        var isAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
+        if (isAssa)
+        {
+            var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+            foreach (var item in selectedItems)
+            {
+                item.SetStartTimeKeepDuration(TimeSpan.FromSeconds(videoPositionSeconds));
+            }
+        }
+        else
+        {
+            s.SetStartTimeKeepDuration(TimeSpan.FromSeconds(videoPositionSeconds));
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
     private void WaveformSetEnd()
     {
         var s = SelectedSubtitle;
@@ -12630,6 +12661,88 @@ public partial class MainViewModel :
         upDown.MoveWordUp();
 
         s.Text = JoinAndCapAtTwoLines(upDown.S1, upDown.S2);
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
+    private void MoveTextFromCursorToNextAndGoToNext()
+    {
+        MoveTextFromCursorToNext(play: false);
+    }
+
+    [RelayCommand]
+    private void MoveTextFromCursorToNextAndGoToNextAndPlay()
+    {
+        MoveTextFromCursorToNext(play: true);
+    }
+
+    private void MoveTextFromCursorToNext(bool play)
+    {
+        var s = SelectedSubtitle;
+        if (s == null)
+        {
+            return;
+        }
+
+        var index = Subtitles.IndexOf(s);
+        if (index < 0)
+        {
+            return;
+        }
+
+        // Operate on whichever text box has focus (original when the original column
+        // is focused, otherwise the main/translation text).
+        var isOriginal = EditTextBoxOriginal.IsFocused;
+        var textBox = isOriginal ? EditTextBoxOriginal : EditTextBox;
+        var currentText = (isOriginal ? s.OriginalText : s.Text) ?? string.Empty;
+
+        // Split the current line at the caret: the text before the cursor stays,
+        // the text after the cursor is prepended to the next subtitle.
+        var caret = Math.Clamp(textBox.SelectionStart, 0, currentText.Length);
+        var textBefore = currentText.Substring(0, caret).Trim();
+        var textAfter = currentText.Substring(caret).Trim();
+
+        var next = Subtitles.GetOrNull(index + 1);
+        if (next == null)
+        {
+            RunWithoutChangeDetection(() =>
+            {
+                _insertService.InsertAfter(SelectedSubtitleFormat, _subtitle, Subtitles, index, string.Empty);
+                Renumber();
+                _updateAudioVisualizer = true;
+            });
+
+            next = Subtitles.GetOrNull(index + 1);
+            if (next == null)
+            {
+                return;
+            }
+        }
+
+        if (isOriginal)
+        {
+            s.OriginalText = textBefore;
+            next.OriginalText = (textAfter + Environment.NewLine + (next.OriginalText ?? string.Empty).Trim()).Trim();
+        }
+        else
+        {
+            s.Text = textBefore;
+            next.Text = (textAfter + Environment.NewLine + next.Text.Trim()).Trim();
+        }
+
+        SelectAndScrollToRow(index + 1);
+
+        if (play)
+        {
+            var vp = GetVideoPlayerControl();
+            if (vp != null)
+            {
+                vp.Position = next.StartTime.TotalSeconds;
+                PinPlayheadTo(next.StartTime.TotalSeconds);
+                vp.VideoPlayer.Play();
+            }
+        }
 
         _updateAudioVisualizer = true;
     }

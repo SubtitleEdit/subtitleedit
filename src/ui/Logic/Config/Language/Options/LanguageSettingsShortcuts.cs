@@ -140,6 +140,8 @@ public class LanguageSettingsShortcuts
     public string MoveLastWordToNextSubtitle { get; set; }
     public string MoveLastWordFromFirstLineDownCurrentSubtitle { get; set; }
     public string MoveFirstWordFromNextLineUpCurrentSubtitle { get; set; }
+    public string MoveTextFromCursorToNextAndGoToNext { get; set; }
+    public string MoveTextFromCursorToNextAndGoToNextAndPlay { get; set; }
     public string ToggleFocusGridAndWaveform { get; set; }
     public string ToggleFocusTextBoxAndWaveform { get; set; }
     public string ToggleFocusTextBoxAndGrid { get; set; }
@@ -440,6 +442,8 @@ public class LanguageSettingsShortcuts
         MoveLastWordToNextSubtitle = "Move last word to next subtitle";
         MoveLastWordFromFirstLineDownCurrentSubtitle = "Move last word from first line down (current subtitle)";
         MoveFirstWordFromNextLineUpCurrentSubtitle = "Move first word from next line up (current subtitle)";
+        MoveTextFromCursorToNextAndGoToNext = "Move text after cursor position to next subtitle and go to next";
+        MoveTextFromCursorToNextAndGoToNextAndPlay = "Move text after cursor position to next subtitle, go to next and play";
         ToggleFocusGridAndWaveform = "Toggle focus between subtitle grid and waveform/spectrogram";
         ToggleFocusTextBoxAndWaveform = "Toggle focus between text box and waveform/spectrogram";
         ToggleFocusTextBoxAndGrid = "Toggle focus between text box and subtitle grid";
