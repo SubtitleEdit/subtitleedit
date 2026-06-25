@@ -128,6 +128,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private string _audioFileName = string.Empty;
     private int _audioTrackNumber;
     private readonly List<string> _filesToDelete = new();
+    private string? _sttTempFolder;
     private readonly ConcurrentQueue<string> _outputText = new();
     private long _startTicks = 0;
     private double _endSeconds;
@@ -1249,7 +1250,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             cancellationToken.ThrowIfCancellationRequested();
 
             var boundary = boundaries[i];
-            var chunkPath = Path.Combine(Path.GetTempPath(), $"se-stt-chunk-{Guid.NewGuid()}{extension}");
+            var chunkPath = Path.Combine(GetSttTempFolder(), $"se-stt-chunk-{Guid.NewGuid()}{extension}");
             // Register before extraction so a throw mid-extract still drains
             // the (possibly partial) file via the outer _filesToDelete sweep.
             _filesToDelete.Add(chunkPath);
@@ -1989,6 +1990,23 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Returns the dedicated temp subfolder for the current speech-to-text run,
+    /// creating it on first use. The extracted audio (and any chunk files) live
+    /// here so the whole folder - including engine output and stray .tmp files
+    /// written next to the input - can be removed in one go (#11837).
+    /// </summary>
+    private string GetSttTempFolder()
+    {
+        if (string.IsNullOrEmpty(_sttTempFolder))
+        {
+            _sttTempFolder = Path.Combine(Path.GetTempPath(), "se-stt-" + Guid.NewGuid());
+            Directory.CreateDirectory(_sttTempFolder);
+        }
+
+        return _sttTempFolder;
+    }
+
     public void DeleteTempFiles()
     {
         foreach (var file in _filesToDelete)
@@ -2004,6 +2022,23 @@ public partial class SpeechToTextViewModel : ObservableObject
             {
                 // ignore
             }
+        }
+
+        if (!string.IsNullOrEmpty(_sttTempFolder))
+        {
+            try
+            {
+                if (Directory.Exists(_sttTempFolder))
+                {
+                    Directory.Delete(_sttTempFolder, true);
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+
+            _sttTempFolder = null;
         }
     }
 
@@ -3571,7 +3606,11 @@ public partial class SpeechToTextViewModel : ObservableObject
             ? OpenAiCompatibleSttAudioFormat
             : "wav";
         var extension = OpenAiSttService.GetFileExtensionForFormat(sttAudioFormat);
-        _audioFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + "." + extension);
+        // Place the extracted audio in a dedicated per-run subfolder. Engines like
+        // Purfview Faster-Whisper-XXL write their output (.srt/.ass) and intermediate
+        // (.tmp) files next to the input, so keeping the input isolated lets us delete
+        // the whole folder afterwards and leave no leftovers in the temp directory (#11837).
+        _audioFileName = Path.Combine(GetSttTempFolder(), Guid.NewGuid() + "." + extension);
         _filesToDelete.Add(_audioFileName);
         _audioExtractProcess = GetFfmpegProcess(videoFileName, audioTrackNumber, _audioFileName, sttAudioFormat);
         if (_audioExtractProcess == null)
