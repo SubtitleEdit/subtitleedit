@@ -2,6 +2,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml.Styling;
+using Avalonia.Media;
+using Avalonia.Media.Fonts;
 using Avalonia.Styling;
 using Avalonia.Themes.Fluent;
 using Avalonia.Threading;
@@ -82,7 +84,24 @@ namespace Nikse.SubtitleEdit
                 // system fonts with proper fallback, so let them use the system default there.
                 if (OperatingSystem.IsLinux())
                 {
-                    appBuilder = appBuilder.WithInterFont();
+                    // Inter is the default here, but it has no CJK glyphs and Avalonia does not fall
+                    // back to system fonts from a forced embedded default - so name the common Linux
+                    // CJK families explicitly. fontconfig resolves whichever of these is installed
+                    // (normal desktops ship Noto Sans CJK); minimal installs have no CJK font at all,
+                    // so CJK can't render there regardless.
+                    appBuilder = appBuilder
+                        .WithInterFont()
+                        .With(new FontManagerOptions
+                        {
+                            FontFallbacks = new[]
+                            {
+                                new FontFallback { FontFamily = new FontFamily("Noto Sans CJK SC") },
+                                new FontFallback { FontFamily = new FontFamily("Noto Sans CJK KR") },
+                                new FontFallback { FontFamily = new FontFamily("Noto Sans CJK JP") },
+                                new FontFallback { FontFamily = new FontFamily("Noto Sans CJK TC") },
+                                new FontFallback { FontFamily = new FontFamily("WenQuanYi Zen Hei") },
+                            }
+                        });
                 }
 
                 appBuilder = appBuilder
