@@ -3155,9 +3155,10 @@ namespace Nikse.SubtitleEdit.Core.Common
                         return true;
                     }
 
+                    var lastChar = s[s.Length - 1];
                     var isLineContinuation = s.EndsWith("...", StringComparison.Ordinal) ||
                                               (AllLetters + "…,-$%").Contains(s.Substring(s.Length - 1)) ||
-                                              CalcCjk.IsCjk(s[s.Length - 1]);
+                                              (CalcCjk.IsCjk(lastChar) && !IsCjkSentenceEnding(lastChar));
 
                     if (s.EndsWith('♪') || nextText.StartsWith('♪'))
                     {
@@ -3178,6 +3179,27 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// CJK sentence-final punctuation. A line ending in one of these is a complete
+        /// sentence rather than a continuation, e.g. the ideographic full stop "。".
+        /// Needed because <see cref="CalcCjk.IsCjk"/> treats CJK punctuation as CJK,
+        /// which would otherwise make every "。"-terminated line look like a continuation.
+        /// </summary>
+        private static bool IsCjkSentenceEnding(char c)
+        {
+            switch (c)
+            {
+                case '。': // U+3002 ideographic full stop
+                case '．': // U+FF0E fullwidth full stop
+                case '｡': // U+FF61 halfwidth ideographic full stop
+                case '！': // U+FF01 fullwidth exclamation mark
+                case '？': // U+FF1F fullwidth question mark
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         public static string GetPathAndFileNameWithoutExtension(string fileName)
