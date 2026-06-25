@@ -403,6 +403,7 @@ public class LanguageGeneral
     public string PickVideoPosition { get; set; }
     public string Play { get; set; }
     public string PlayFromStartOfVideo { get; set; }
+    public string PlayFromJustBeforeText { get; set; }
     public string PlayNext { get; set; }
     public string PlayNextAndStop { get; set; }
     public string PlayNextAndLoop { get; set; }
@@ -1143,6 +1144,7 @@ public class LanguageGeneral
         PickVideoPosition = "Pick video position";
         Play = "Play";
         PlayFromStartOfVideo = "Play from start of video";
+        PlayFromJustBeforeText = "Play from just before text";
         PlayNext = "Play next";
         PlayNextAndStop = "Play next (and stop)";
         PlayNextAndLoop = "Play next (and loop)";

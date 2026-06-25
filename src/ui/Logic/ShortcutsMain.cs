@@ -377,6 +377,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.WaveformPasteFromClipboardCommand), Se.Language.General.WaveformPasteFromClipboard },
         { nameof(MainViewModel.FocusSelectedLineCommand), Se.Language.General.FocusSelectedLine },
         { nameof(MainViewModel.PlayFromStartOfVideoCommand), Se.Language.General.PlayFromStartOfVideo },
+        { nameof(MainViewModel.VideoPlayFromJustBeforeTextCommand), Se.Language.General.PlayFromJustBeforeText },
         { nameof(MainViewModel.RemoveBlankLinesCommand), Se.Language.General.RemoveBlankLines },
         { nameof(MainViewModel.InsertSubtitleAtVideoPositionSetEndAtKeyUpCommand), Se.Language.General.NewSubtitleStartKeyDownSetEndKeyUp },
         { nameof(MainViewModel.SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNextCommand), Se.Language.General.SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext },
@@ -727,6 +728,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.WaveformPasteFromClipboardCommand, nameof(vm.WaveformPasteFromClipboardCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.FocusSelectedLineCommand, nameof(vm.FocusSelectedLineCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.PlayFromStartOfVideoCommand, nameof(vm.PlayFromStartOfVideoCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.VideoPlayFromJustBeforeTextCommand, nameof(vm.VideoPlayFromJustBeforeTextCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.RemoveBlankLinesCommand, nameof(vm.RemoveBlankLinesCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.InsertSubtitleAtVideoPositionSetEndAtKeyUpCommand, nameof(vm.InsertSubtitleAtVideoPositionSetEndAtKeyUpCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNextCommand, nameof(vm.SetSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNextCommand), ShortcutCategory.General);

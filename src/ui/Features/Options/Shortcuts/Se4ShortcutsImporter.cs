@@ -120,6 +120,7 @@ public static class Se4ShortcutsImporter
         ["MainVideoToggleBrightness"] = nameof(MainViewModel.VideoToggleBrightnessCommand),
         ["MainVideoToggleVideoControls"] = nameof(MainViewModel.VideoUndockControlsCommand),
         ["MainVideoPlayFromBeginning"] = nameof(MainViewModel.PlayFromStartOfVideoCommand),
+        ["MainVideoPlayFromJustBefore"] = nameof(MainViewModel.VideoPlayFromJustBeforeTextCommand),
         ["MainVideoPlaySelectedLines"] = nameof(MainViewModel.PlaySelectedLinesWithoutLoopCommand),
         ["MainVideoLoopSelectedLines"] = nameof(MainViewModel.PlaySelectedLinesWithLoopCommand),
         ["MainVideoReset"] = nameof(MainViewModel.ResetWaveformZoomAndSpeedCommand),
