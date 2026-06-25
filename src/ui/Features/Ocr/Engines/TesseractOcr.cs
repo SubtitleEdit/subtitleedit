@@ -62,10 +62,10 @@ public class TesseractOcr
             _executablePath = GetExecutablePath();
         }
 
-        // Preprocess image: make black and white (black text on white background)
+        // Preprocess image: binarize to black text on white. Keys on brightness so coloured text
+        // (e.g. yellow) is kept rather than blanked the way the blue-only MakeOneColor did.
         var nbmp = new NikseBitmap(bitmap);
-        nbmp.MakeOneColor(SKColors.Black);
-        nbmp.ReplaceTransparentWith(SKColors.White);
+        nbmp.MakeBlackAndWhiteForOcr();
         using var oneColorBitmap = nbmp.GetBitmap();
 
         var tempImage = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
@@ -80,7 +80,8 @@ public class TesseractOcr
             Se.WriteToolsLog($"Tesseract OCR: input {oneColorBitmap.Width}x{oneColorBitmap.Height}, ink={inkPercent:0.0}% (0% = preprocessing blanked the text), lang={language}, oem={engineMode}");
             try
             {
-                var debugCopy = Path.Combine(Path.GetDirectoryName(Se.GetToolsLogFilePath()) ?? Path.GetTempPath(), "tesseract-input.png");
+                var logDir = Path.GetDirectoryName(Se.GetToolsLogFilePath()) ?? Path.GetTempPath();
+                var debugCopy = Path.Combine(logDir, "tesseract-input.png");
                 await File.WriteAllBytesAsync(debugCopy, oneColorBitmap.ToPngArray(), cancellationToken);
                 Se.WriteToolsLog($"Tesseract OCR: saved preprocessed image to {debugCopy}");
             }
