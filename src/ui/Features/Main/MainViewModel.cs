@@ -16806,28 +16806,17 @@ public partial class MainViewModel :
         var spectrogramFileName = WavePeakGenerator2.SpectrogramDrawer.GetSpectrogramFileName(videoFileName, trackNumber);
         var needToGenerate = !File.Exists(peakWaveFileName) || (Se.Settings.Waveform.GenerateSpectrogram && !File.Exists(spectrogramFileName));
 
-        // Hidden setting: when WaveformAutoGenerate is off, never kick off ffmpeg extraction on
-        // video open. Cached peaks still load via the branch below, so existing waveforms keep
-        // showing; the user generates new ones on demand.
+        if (AudioVisualizer != null)
+        {
+            AudioVisualizer.ClickToGenerateText = Se.Language.Main.ClickToGenerateWaveform;
+        }
+
+        // When WaveformAutoGenerate is off, never kick off ffmpeg extraction on video open.
+        // Cached peaks still load via the branch below, so existing waveforms keep showing;
+        // the user generates new ones on demand by clicking the empty waveform.
         if (needToGenerate && Se.Settings.Waveform.WaveformAutoGenerate)
         {
-            if (FfmpegHelper.IsFfmpegInstalled())
-            {
-                lock (_waveformsBeingGeneratedLock)
-                {
-                    if (!_waveformsBeingGenerated.Add(peakWaveFileName))
-                    {
-                        return; // already generating for this peak-wave file
-                    }
-                }
-
-                var tempWaveFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.wav");
-                var process = WaveFileExtractor.GetCommandLineProcess(videoFileName, trackNumber, tempWaveFileName,
-                    Configuration.Settings.General.VlcWaveTranscodeSettings, out _);
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Task.Run(async () => { await ExtractWaveformAndSpectrogramAndShotChanges(process, tempWaveFileName, peakWaveFileName, spectrogramFileName, videoFileName); });
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            }
+            StartWaveformExtraction(videoFileName, trackNumber, peakWaveFileName, spectrogramFileName);
         }
         else if (File.Exists(peakWaveFileName))
         {
@@ -16838,6 +16827,7 @@ public partial class MainViewModel :
                 Dispatcher.UIThread.Post(() =>
                 {
                     AudioVisualizer.WavePeaks = wavePeaks;
+                    AudioVisualizer.ShowClickToGenerateHint = false;
 
                     if (IsSmpteTimingEnabled)
                     {
@@ -16869,6 +16859,60 @@ public partial class MainViewModel :
                 });
             }
         }
+        else if (AudioVisualizer != null)
+        {
+            // No cached waveform and auto-generate is off: show the click-to-generate hint.
+            Dispatcher.UIThread.Post(() =>
+            {
+                AudioVisualizer.ShowClickToGenerateHint = true;
+                AudioVisualizer.InvalidateVisual();
+            });
+        }
+    }
+
+    // Kicks off ffmpeg waveform/spectrogram extraction (no-op if ffmpeg is missing or a
+    // generation for this peak file is already running). Shared by the auto-on-open path
+    // and the on-demand "click the empty waveform" path.
+    private void StartWaveformExtraction(string videoFileName, int trackNumber, string peakWaveFileName, string spectrogramFileName)
+    {
+        if (!FfmpegHelper.IsFfmpegInstalled())
+        {
+            return;
+        }
+
+        lock (_waveformsBeingGeneratedLock)
+        {
+            if (!_waveformsBeingGenerated.Add(peakWaveFileName))
+            {
+                return; // already generating for this peak-wave file
+            }
+        }
+
+        if (AudioVisualizer != null)
+        {
+            AudioVisualizer.ShowClickToGenerateHint = false;
+        }
+
+        var tempWaveFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.wav");
+        var process = WaveFileExtractor.GetCommandLineProcess(videoFileName, trackNumber, tempWaveFileName,
+            Configuration.Settings.General.VlcWaveTranscodeSettings, out _);
+#pragma warning disable CS4014 // fire-and-forget; extraction posts results back to the UI thread
+        Task.Run(async () => { await ExtractWaveformAndSpectrogramAndShotChanges(process, tempWaveFileName, peakWaveFileName, spectrogramFileName, videoFileName); });
+#pragma warning restore CS4014
+    }
+
+    // Handler for clicking the empty waveform when auto-generate is off.
+    internal void AudioVisualizerOnGenerateWaveformRequested(object? sender, EventArgs e)
+    {
+        if (string.IsNullOrEmpty(_videoFileName))
+        {
+            return;
+        }
+
+        var trackNumber = _audioTrack?.FfIndex ?? -1;
+        var peakWaveFileName = WavePeakGenerator2.GetPeakWaveFileName(_videoFileName, trackNumber);
+        var spectrogramFileName = WavePeakGenerator2.SpectrogramDrawer.GetSpectrogramFileName(_videoFileName, trackNumber);
+        StartWaveformExtraction(_videoFileName, trackNumber, peakWaveFileName, spectrogramFileName);
     }
 
     private void GetMediaInformation(string videoFileName)

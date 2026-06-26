@@ -108,6 +108,7 @@ public class InitWaveform
             vm.AudioVisualizer.PointerReleased += vm.ControlMacPointerReleased;
             vm.AudioVisualizer.OnSelectRequested += vm.AudioVisualizerSelectRequested;
             vm.AudioVisualizer.OnSetStartAndOffsetTheRest += vm.AudioVisualizerSetStartAndOffsetTheRest;
+            vm.AudioVisualizer.OnGenerateWaveformRequested += vm.AudioVisualizerOnGenerateWaveformRequested;
 
             // Create a Flyout for the DataGrid
             var flyout = new MenuFlyout();

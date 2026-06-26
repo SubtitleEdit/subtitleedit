@@ -43,6 +43,7 @@ public class LanguageMain
     public string LineXTextChangedFromYToZ { get; set; }
     public string LineXTimingChanged { get; set; }
     public string LoadingWaveInfoFromCache { get; set; }
+    public string ClickToGenerateWaveform { get; set; }
     public string NoTextInClipboard { get; set; }
     public string NumberOfLinesEvenlyDistributedX { get; set; }
     public string OneLineCopiedFromOriginal { get; set; }
@@ -159,6 +160,7 @@ public class LanguageMain
         LineXTextChangedFromYToZ = "Line {0}: Text changed from \"{1}\" to \"{2}\"";
         LineXTimingChanged = "Line {0}: Timing changed";
         LoadingWaveInfoFromCache = "Loading wave info from cache...";
+        ClickToGenerateWaveform = "Click to generate waveform";
         NoTextInClipboard = "No text in clipboard";
         NumberOfLinesEvenlyDistributedX = "Evenly distributed {0} lines";
         OneLineCopiedFromOriginal = "One line copied from original subtitle";
