@@ -142,6 +142,11 @@ public static class Se4SetupApplier
     {
         Se.Settings.Appearance.ToolbarShowEncoding = true;
         Se.Settings.Appearance.TextBoxShowButtonItalic = false;
+
+        // SE 4 showed each subtitle on a single grid row with line breaks rendered as
+        // "<br />" (Settings.General.ListViewLineSeparatorString default). Match that.
+        Se.Settings.Appearance.SubtitleGridTextSingleLine = true;
+        Se.Settings.Appearance.SubtitleGridTextSingleLineSeparator = "<br />";
     }
 
     // The SE 4 waveform look, taken from the classic AudioVisualizer defaults

@@ -620,6 +620,12 @@ public partial class SubtitleLineViewModel : ObservableObject
         OnPropertyChanged(nameof(WpmBackgroundBrush));
         OnPropertyChanged(nameof(GapBackgroundBrush));
         OnPropertyChanged(nameof(PixelWidth));
+
+        // The grid Text/OriginalText columns render through a converter that honors the
+        // "single line" + separator appearance settings, so re-notify them too; otherwise
+        // toggling single-line (or applying the SE4 look) wouldn't refresh the grid live.
+        OnPropertyChanged(nameof(Text));
+        OnPropertyChanged(nameof(OriginalText));
     }
 
     /// <summary>Updates all display properties from a fixed <see cref="Paragraph"/> in-place.</summary>
