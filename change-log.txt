@@ -14,6 +14,7 @@ v5.1.0-beta2 (TBD)
 * Fix "Change speed" radio buttons disabled/not respected in the main window
 * Binary edit: wire up "Change speed", respect the selected-lines radio, and always apply "Change frame rate" to all lines
 * Binary edit: keep the grid scroll position after "Adjust all times" and "Change speed"
+* Spell check: show the source image (Blu-ray sup) for the current line, loadable via right-click (SE4 parity) - thx fraternl
 
 -----------------------------------------------------------------------------------------------------
 

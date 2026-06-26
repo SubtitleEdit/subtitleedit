@@ -71,6 +71,7 @@ public class SpellCheckWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },  // source image (#11719)
             },
             ColumnDefinitions =
             {
@@ -93,6 +94,35 @@ public class SpellCheckWindow : Window
 
         grid.Add(labelDictionary, 0, 1);
         grid.Add(panelSuggestions, 1, 1, 2);
+
+        // Source image (e.g. Blu-ray .sup) of the current line, shown when the user has
+        // attached it via the context menu (#11719). Right-clicking anywhere offers "Load
+        // source image..." (SE4 parity).
+        var loadSourceImageMenu = new ContextMenu
+        {
+            ItemsSource = new[]
+            {
+                new MenuItem
+                {
+                    Header = Se.Language.SpellCheck.LoadSourceImage,
+                    Command = vm.LoadSourceImageCommand,
+                },
+            },
+        };
+        borderWholeText.ContextMenu = loadSourceImageMenu;
+
+        var sourceImage = new Image
+        {
+            Stretch = Stretch.Uniform,
+            MaxHeight = 140,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Margin = new Thickness(0, 8, 0, 0),
+            [!Image.SourceProperty] = new Binding(nameof(SpellCheckViewModel.SourceImage)),
+        };
+        var sourceImageBorder = UiUtil.MakeBorderForControl(sourceImage);
+        sourceImageBorder.ContextMenu = loadSourceImageMenu;
+        sourceImageBorder.Bind(Visual.IsVisibleProperty, new Binding(nameof(SpellCheckViewModel.HasSourceImage)));
+        grid.Add(sourceImageBorder, 4, 0, 2);
 
         Content = grid;
 
