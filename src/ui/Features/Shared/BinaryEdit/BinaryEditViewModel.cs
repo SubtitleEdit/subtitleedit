@@ -1409,6 +1409,14 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         result.AdjustTimes(Subtitles.ToList(), selectedIndices.Count > 0 ? selectedIndices : null);
+
+        if (SubtitleGrid != null)
+        {
+            var currentIndex = SubtitleGrid.SelectedIndex;
+            SubtitleGrid.ItemsSource = null;
+            SubtitleGrid.ItemsSource = Subtitles;
+            SubtitleGrid.SelectedIndex = currentIndex;
+        }
     }
 
     [RelayCommand]
