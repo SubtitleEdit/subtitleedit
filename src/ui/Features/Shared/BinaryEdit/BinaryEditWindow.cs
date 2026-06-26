@@ -497,7 +497,7 @@ public class BinaryEditWindow : Window
         dataGrid.Columns.Add(new DataGridTextColumn
         {
             Header = Se.Language.General.NumberSymbol,
-            Width = new DataGridLength(50),
+            Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
             MinWidth = 40,
             IsReadOnly = true,
             Binding = new Binding(nameof(BinarySubtitleItem.Number)),
@@ -507,8 +507,8 @@ public class BinaryEditWindow : Window
         dataGrid.Columns.Add(new DataGridTextColumn
         {
             Header = Se.Language.General.Show,
-            Width = new DataGridLength(105),
-            MinWidth = 90,
+            Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+            MinWidth = 100,
             IsReadOnly = true,
             Binding = new Binding(nameof(BinarySubtitleItem.StartTime)) { Converter = new TimeSpanToDisplayFullConverter() },
             CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
@@ -517,8 +517,8 @@ public class BinaryEditWindow : Window
         dataGrid.Columns.Add(new DataGridTextColumn
         {
             Header = Se.Language.General.Duration,
-            Width = new DataGridLength(90),
-            MinWidth = 70,
+            Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+            MinWidth = 60,
             IsReadOnly = true,
             Binding = new Binding(nameof(BinarySubtitleItem.Duration)) { Converter = new TimeSpanToDisplayShortConverter() },
             CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
