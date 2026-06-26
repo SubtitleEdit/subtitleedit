@@ -69,6 +69,7 @@ public partial class ChangeSpeedViewModel : ObservableObject
     internal void Initialize(ObservableCollection<SubtitleLineViewModel> subtitles)
     {
         _subtitles = subtitles;
+        IsSelectionAvailable = true;
     }
 
     internal void Initialize(bool isSelectionAvailable, Action<double, bool, bool, bool> binaryApplyCallback)
