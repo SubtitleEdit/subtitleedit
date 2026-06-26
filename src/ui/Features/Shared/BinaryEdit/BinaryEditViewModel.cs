@@ -1446,35 +1446,7 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         var ratio = ChangeFrameRateViewModel.GetFrameRateRatio(result.SelectedFromFrameRate, result.SelectedToFrameRate);
-
-        // If there are selected items in the grid, apply only to them
-        var appliedToSelected = false;
-        if (SubtitleGrid?.SelectedItems != null && SubtitleGrid.SelectedItems.Count > 0)
-        {
-            var selectedIndices = new List<int>();
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    var index = Subtitles.IndexOf(binaryItem);
-                    if (index >= 0)
-                    {
-                        selectedIndices.Add(index);
-                    }
-                }
-            }
-
-            if (selectedIndices.Count > 0)
-            {
-                ScaleBinarySubtitleTimes(selectedIndices.Select(i => Subtitles[i]), ratio);
-                appliedToSelected = true;
-            }
-        }
-
-        if (!appliedToSelected)
-        {
-            ScaleBinarySubtitleTimes(Subtitles, ratio);
-        }
+        ScaleBinarySubtitleTimes(Subtitles, ratio);
     }
 
     [RelayCommand]
