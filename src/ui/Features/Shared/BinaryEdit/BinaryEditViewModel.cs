@@ -1401,23 +1401,20 @@ public partial class BinaryEditViewModel : ObservableObject
             }
         }
 
-        var result = await _windowService.ShowDialogAsync<BinaryAdjustAllTimesWindow, BinaryAdjustAllTimesViewModel>(
-            Window, vm => vm.Initialize(selectedIndices.Count));
-
-        if (!result.OkPressed)
+        var capturedIndex = SubtitleGrid?.SelectedIndex ?? -1;
+        void RefreshGrid()
         {
-            return;
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (SubtitleGrid == null) return;
+                SubtitleGrid.ItemsSource = null;
+                SubtitleGrid.ItemsSource = Subtitles;
+                SubtitleGrid.SelectedIndex = capturedIndex;
+            });
         }
 
-        result.AdjustTimes(Subtitles.ToList(), selectedIndices.Count > 0 ? selectedIndices : null);
-
-        if (SubtitleGrid != null)
-        {
-            var currentIndex = SubtitleGrid.SelectedIndex;
-            SubtitleGrid.ItemsSource = null;
-            SubtitleGrid.ItemsSource = Subtitles;
-            SubtitleGrid.SelectedIndex = currentIndex;
-        }
+        await _windowService.ShowDialogAsync<BinaryAdjustAllTimesWindow, BinaryAdjustAllTimesViewModel>(
+            Window, vm => vm.Initialize(Subtitles, selectedIndices, RefreshGrid));
     }
 
     [RelayCommand]
