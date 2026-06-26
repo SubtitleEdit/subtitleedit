@@ -31,7 +31,7 @@ public class PluginRunner : IPluginRunner
 
             await using (var requestStream = File.Create(requestPath))
             {
-                JsonSerializer.Serialize(requestStream, request, PluginJsonContext.Default.PluginRequest);
+                await JsonSerializer.SerializeAsync(requestStream, request, PluginJsonContext.Default.PluginRequest, cancellationToken);
             }
 
             var startInfo = new ProcessStartInfo
