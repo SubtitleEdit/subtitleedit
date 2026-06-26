@@ -1,7 +1,7 @@
 
 Subtitle Edit Changelog
 
-v5.1.0-beta1 (TBD)
+v5.1.0-beta1 (26th June 2026)
 
 * Add auto-save of the open subtitle file (Options > General) - thx muaz978
 * Add remote/external llama.cpp server (URL) option to auto-translate - thx muaz978
@@ -69,7 +69,7 @@ v5.1.0-beta1 (TBD)
 * Update Korean translation - thx 12si27
 * Update Russian translation - thx jekovcar
 * Update Bulgarian translation - thx jekovcar
-* Update Polish translation
+* Update Polish translation - thx potplayer-fanpack
 
 -----------------------------------------------------------------------------------------------------
 
