@@ -18,6 +18,7 @@ public partial class ChangeSpeedViewModel : ObservableObject
     [ObservableProperty] private bool _isSelectionAvailable;
 
     private ObservableCollection<SubtitleLineViewModel>? _subtitles;
+    private Action<double, bool, bool, bool>? _binaryApplyCallback;
 
     public Window? Window { get; set; }
     
@@ -50,12 +51,12 @@ public partial class ChangeSpeedViewModel : ObservableObject
     [RelayCommand]
     private void Apply()
     {
-        if (_subtitles == null)
+        if (_subtitles != null)
         {
+            ChangeSpeed(_subtitles, SpeedPercent);
             return;
         }
-
-        ChangeSpeed(_subtitles, SpeedPercent);
+        _binaryApplyCallback?.Invoke(SpeedPercent, AdjustAll, AdjustSelectedLines, AdjustSelectedLinesAndForward);
     }
 
     [RelayCommand]                   
@@ -69,13 +70,14 @@ public partial class ChangeSpeedViewModel : ObservableObject
         _subtitles = subtitles;
     }
 
-    internal void Initialize(bool isSelectionAvailable)
+    internal void Initialize(bool isSelectionAvailable, Action<double, bool, bool, bool> binaryApplyCallback)
     {
         IsSelectionAvailable = isSelectionAvailable;
         if (!isSelectionAvailable)
         {
             AdjustAll = true;
         }
+        _binaryApplyCallback = binaryApplyCallback;
     }
 
     internal void OnKeyDown(KeyEventArgs e)

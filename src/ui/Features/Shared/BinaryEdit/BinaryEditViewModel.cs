@@ -1473,29 +1473,51 @@ public partial class BinaryEditViewModel : ObservableObject
             }
         }
 
-        var result = await _windowService.ShowDialogAsync<ChangeSpeedWindow, ChangeSpeedViewModel>(Window, vm => { vm.Initialize(selectedIndices.Count > 0); });
+        selectedIndices.Sort();
+
+        var selectedItems = selectedIndices.Count > 0
+            ? selectedIndices.Select(i => Subtitles[i]).ToList()
+            : null;
+
+        void RefreshGrid()
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (SubtitleGrid == null) return;
+                if (selectedItems != null)
+                {
+                    ApplyGridSelection(selectedItems);
+                }
+                else
+                {
+                    var idx = SubtitleGrid.SelectedIndex;
+                    SubtitleGrid.ItemsSource = null;
+                    SubtitleGrid.ItemsSource = Subtitles;
+                    SubtitleGrid.SelectedIndex = idx;
+                }
+            });
+        }
+
+        void ApplySpeed(double speed, bool all, bool selected, bool selectedAndForward)
+        {
+            var factor = 100.0 / speed;
+            if (selectedAndForward && selectedIndices.Count > 0)
+                ScaleBinarySubtitleTimes(Subtitles.Skip(selectedIndices[0]), factor);
+            else if (selected && selectedIndices.Count > 0)
+                ScaleBinarySubtitleTimes(selectedIndices.Select(i => Subtitles[i]), factor);
+            else
+                ScaleBinarySubtitleTimes(Subtitles, factor);
+            RefreshGrid();
+        }
+
+        var result = await _windowService.ShowDialogAsync<ChangeSpeedWindow, ChangeSpeedViewModel>(Window, vm => { vm.Initialize(selectedIndices.Count > 0, ApplySpeed); });
 
         if (!result.OkPressed)
         {
             return;
         }
 
-        // result.SpeedPercent is percentage; factor is 100 / percent as used elsewhere
-        var factor = 100.0 / result.SpeedPercent;
-
-        if (result.AdjustSelectedLinesAndForward && selectedIndices.Count > 0)
-        {
-            var firstIndex = selectedIndices.Min();
-            ScaleBinarySubtitleTimes(Subtitles.Skip(firstIndex), factor);
-        }
-        else if (result.AdjustSelectedLines && selectedIndices.Count > 0)
-        {
-            ScaleBinarySubtitleTimes(selectedIndices.Select(i => Subtitles[i]), factor);
-        }
-        else
-        {
-            ScaleBinarySubtitleTimes(Subtitles, factor);
-        }
+        ApplySpeed(result.SpeedPercent, result.AdjustAll, result.AdjustSelectedLines, result.AdjustSelectedLinesAndForward);
     }
 
     [RelayCommand]
