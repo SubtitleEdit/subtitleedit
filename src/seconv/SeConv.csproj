@@ -17,6 +17,18 @@
   <ItemGroup>
     <PackageReference Include="Spectre.Console" Version="0.57.1" />
     <PackageReference Include="Spectre.Console.Cli" Version="0.55.0" />
+
+    <!--
+      seconv uses SkiaSharp (FixCommonErrors pixel-width measurement, image output) and
+      SkiaSharp.HarfBuzz (image text shaping) via libse / libuilogic. The base SkiaSharp /
+      HarfBuzzSharp packages bundle the macOS/Windows natives but NOT Linux, so the Linux
+      publish shipped without libSkiaSharp.so / libHarfBuzzSharp.so and crashed with
+      DllNotFoundException (issue #11872). Reference the Linux native assets explicitly
+      (only deployed for the linux RID). HarfBuzz native is pinned to the managed wrapper
+      version 14.2.0 to avoid an ABI mismatch (cf. issue #11864).
+    -->
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="4.148.0" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="14.2.0" />
   </ItemGroup>
 
   <ItemGroup>
