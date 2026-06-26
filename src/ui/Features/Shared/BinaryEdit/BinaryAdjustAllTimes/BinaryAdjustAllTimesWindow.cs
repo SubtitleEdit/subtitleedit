@@ -22,25 +22,17 @@ public class BinaryAdjustAllTimesWindow : Window
         var label = new Label
         {
             Content = Se.Language.General.Adjustment,
+            Padding = new Thickness(0),
         };
 
         var timeCodeUpDown = new TimeCodeUpDown
         {
             DataContext = vm,
+            Margin = new Thickness(0, 0, 0, 10),
             [!TimeCodeUpDown.ValueProperty] = new Binding(nameof(vm.Adjustment))
             {
                 Mode = BindingMode.TwoWay,
             }
-        };
-
-        var panelAdjustment = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Children =
-            {
-                label,
-                timeCodeUpDown,
-            },
         };
 
         var panelRadioButtons = new StackPanel
@@ -76,10 +68,11 @@ public class BinaryAdjustAllTimesWindow : Window
         };
 
         var buttonShowEarlier = UiUtil.MakeButton(Se.Language.Sync.ShowEarlier, vm.ShowEarlierCommand)
-            .WithLeftAlignment()
-            .WithMargin(0, 0, 0, 10);
+            .WithMinWidth(110);
+        buttonShowEarlier.Margin = new Thickness(0, 0, 0, 10);
+
         var buttonShowLater = UiUtil.MakeButton(Se.Language.Sync.ShowLater, vm.ShowLaterCommand)
-            .WithLeftAlignment();
+            .WithMinWidth(110);
 
         var panelShowButtons = new StackPanel
         {
@@ -101,6 +94,7 @@ public class BinaryAdjustAllTimesWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -113,11 +107,12 @@ public class BinaryAdjustAllTimesWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(panelAdjustment, 0, 0);
-        grid.Add(panelRadioButtons, 1, 0);
-        grid.Add(totalAdjustmentLabel, 2, 0);
-        grid.Add(panelShowButtons, 0, 1, 2, 1);
-        grid.Add(buttonOk, 2, 1);
+        grid.Add(label, 0, 0);
+        grid.Add(timeCodeUpDown, 1, 0);
+        grid.Add(panelRadioButtons, 2, 0);
+        grid.Add(totalAdjustmentLabel, 3, 0);
+        grid.Add(panelShowButtons, 1, 1, 2, 1);
+        grid.Add(buttonOk, 3, 1);
 
         Content = grid;
 
