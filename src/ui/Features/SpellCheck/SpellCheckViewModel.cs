@@ -5,6 +5,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -258,8 +259,11 @@ public partial class SpellCheckViewModel : ObservableObject
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenFile(
-            Window, Se.Language.SpellCheck.LoadSourceImage, "Blu-ray sup", ".sup", "VobSub", ".sub");
+        var fileNames = await _fileHelper.PickOpenFiles(
+            Window, Se.Language.SpellCheck.LoadSourceImage,
+            "Image based subtitles", new List<string> { "*.sup", "*.sub", "*.idx", "*.xml" },
+            string.Empty, new List<string>());
+        var fileName = fileNames.FirstOrDefault();
         if (string.IsNullOrEmpty(fileName))
         {
             return;
@@ -301,6 +305,20 @@ public partial class SpellCheckViewModel : ObservableObject
                 vobSubParser.OpenSubIdx(subFileName, idxFileName);
                 var packs = vobSubParser.MergeVobSubPacks();
                 return packs.Count > 0 ? new OcrSubtitleVobSub(packs, vobSubParser.IdxPalette) : null;
+
+            case ".xml":
+                var bdnLines = System.IO.File.ReadAllLines(fileName).ToList();
+                var bdn = new BdnXml();
+                if (!bdn.IsMine(bdnLines, fileName))
+                {
+                    return null;
+                }
+
+                var bdnSubtitle = new Subtitle();
+                bdn.LoadSubtitle(bdnSubtitle, bdnLines, fileName);
+                return bdnSubtitle.Paragraphs.Count > 0
+                    ? new OcrSubtitleBdn(bdnSubtitle, fileName, isSon: false)
+                    : null;
 
             default:
                 return null;
