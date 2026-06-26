@@ -1384,14 +1384,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<BinaryAdjustAllTimesWindow, BinaryAdjustAllTimesViewModel>(Window, vm => { });
-
-        if (!result.OkPressed)
-        {
-            return;
-        }
-
-        // Get selected indices from the grid
+        // Snapshot selection before the dialog opens so focus shift cannot clear it
         var selectedIndices = new List<int>();
         if (SubtitleGrid?.SelectedItems != null)
         {
@@ -1406,6 +1399,14 @@ public partial class BinaryEditViewModel : ObservableObject
                     }
                 }
             }
+        }
+
+        var result = await _windowService.ShowDialogAsync<BinaryAdjustAllTimesWindow, BinaryAdjustAllTimesViewModel>(
+            Window, vm => vm.Initialize(selectedIndices.Count));
+
+        if (!result.OkPressed)
+        {
+            return;
         }
 
         result.AdjustTimes(Subtitles.ToList(), selectedIndices.Count > 0 ? selectedIndices : null);

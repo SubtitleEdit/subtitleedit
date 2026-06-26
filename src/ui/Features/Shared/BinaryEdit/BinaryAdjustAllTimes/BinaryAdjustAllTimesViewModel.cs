@@ -15,6 +15,7 @@ public partial class BinaryAdjustAllTimesViewModel : ObservableObject
     [ObservableProperty] private bool _adjustAll;
     [ObservableProperty] private bool _adjustSelectedLines;
     [ObservableProperty] private bool _adjustSelectedLinesAndForward;
+    [ObservableProperty] private bool _isSelectionAvailable;
     [ObservableProperty] private string _totalAdjustmentInfo;
 
     private double _totalAdjustment;
@@ -26,6 +27,15 @@ public partial class BinaryAdjustAllTimesViewModel : ObservableObject
     {
         TotalAdjustmentInfo = string.Empty;
         LoadSettings();
+    }
+
+    public void Initialize(int selectedCount)
+    {
+        IsSelectionAvailable = selectedCount > 0;
+        if (!IsSelectionAvailable)
+        {
+            AdjustAll = true;
+        }
     }
 
     private void LoadSettings()
@@ -97,7 +107,6 @@ public partial class BinaryAdjustAllTimesViewModel : ObservableObject
 
         if (AdjustSelectedLinesAndForward && selectedIndices != null && selectedIndices.Count > 0)
         {
-            // Get the first selected index and all indices from there forward
             var firstIndex = selectedIndices[0];
             for (int i = firstIndex; i < subtitles.Count; i++)
             {
@@ -108,13 +117,17 @@ public partial class BinaryAdjustAllTimesViewModel : ObservableObject
         {
             indicesToProcess.AddRange(selectedIndices);
         }
-        else
+        else if (AdjustAll)
         {
-            // Adjust all
             for (int i = 0; i < subtitles.Count; i++)
             {
                 indicesToProcess.Add(i);
             }
+        }
+        else
+        {
+            // "Selected" mode active but no indices available — do nothing
+            return;
         }
 
         var adjustmentMs = _totalAdjustment * 1000.0;
