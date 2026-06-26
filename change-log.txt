@@ -23,7 +23,7 @@ v5.1.0 (TBD)
 * Improve Dutch casing rules ('s/'t contractions and IJ digraph)
 * Batch convert: pluralize the remove-files confirmation for multi-select
 * Use ffmpeg from the system PATH (v7+) when the download fails
-* Update CrispASR to v0.8.3
+* Update CrispASR to v0.8.4
 * Update whisper.cpp to v1.9.1
 * Fix "Save as" to ASS using Arial instead of the configured default style
 * Fix proxy settings not being saved - thx baoyu0
@@ -44,6 +44,25 @@ v5.1.0 (TBD)
 * Extend Dutch casing contractions to apply after a colon and a mid-paragraph period
 * Fix OCR word colors and subtitle-image background contrast in light mode
 * Shorten and resize a long video file name in the player so it no longer overlaps the position info
+* Add "Play from just before text" video shortcut (SE4 parity)
+* Add "Move text after cursor position to next subtitle and go to next" (and a "...and play" variant) shortcuts (SE4 parity)
+* Add "Set start and keep duration" shortcut (SE4 parity)
+* Add "Set end, add new and go to new" shortcuts (SE4 parity)
+* Add "Auto detect" language for the standard Whisper engines
+* Add an "Add custom model" GUI for the Whisper engines
+* Make the waveform "Toolbar items" settings row findable in search
+* Binary edit: F10 focuses the menu and menu keys no longer close the window
+* Improve CJK UI text rendering and font fallbacks on Linux
+* Optimize waveform/spectrogram drawing
+* Clean up speech-to-text temp files via a per-run subfolder
+* Fix 24 fps being read as 23.976 (and 30 as 29.97)
+* Fix Find Next/Previous shortcuts while the Find/Replace window is open
+* Fix "Surround with" placing symbols outside formatting tags
+* Fix EBU STL export writing a blank Display Standard Code
+* Fix multi-character custom tags in "Remove text for hearing impaired"
+* Fix Tesseract OCR blanking coloured (non-white) text, and surface OCR errors instead of blank lines
+* Fix Ollama OCR runaway repetition / hang
+* Fix ASSA "Set position" frame grab and rotation, and the blank preview
 * Update Italian translation - thx bovirus
 * Update Korean translation - thx 12si27
 * Update Russian translation - thx jekovcar
