@@ -2323,6 +2323,7 @@
       "waveformCenterVideoPosition": "Center video position",
       "waveformShowToolbar": "Show toolbar",
       "waveformShowToolbarEdit": "Edit toolbar...",
+      "waveformShowToolbarEditLabel": "Waveform/spectrogram toolbar",
       "waveformSpectrogramCombinedWaveformHeight": "Waveform/spectrogram combined, waveform height %",
       "showWaveformToolbarPlay": "Toolbar: show play button",
       "showWaveformToolbarRepeat": "Toolbar: show repeat button",
