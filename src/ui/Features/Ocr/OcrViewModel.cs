@@ -358,7 +358,7 @@ public partial class OcrViewModel : ObservableObject
             Name = GetDictionaryNameNone(),
             DictionaryFileName = string.Empty,
         });
-        Dictionaries.AddRange(spellCheckLanguages);
+        Dictionaries.AddRange(LanguageFavoritesHelper.Order(spellCheckLanguages, d => SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(d)));
         if (Dictionaries.Count > 0)
         {
             if (!string.IsNullOrEmpty(Se.Settings.Ocr.LastLanguageDictionaryFile))

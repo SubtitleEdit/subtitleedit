@@ -109,11 +109,17 @@ public partial class WordListsViewModel : ObservableObject
             // English is the default selected language
             Languages.Clear();
             Se.Settings.Options.LastLanguage = Se.Settings.Options.LastLanguage ?? "en_US";
+            var languageItems = new List<LanguageItem>();
             for (var index = 0; index < cultures.Count; index++)
             {
                 var ci = cultures[index];
                 var cultureCode = ci.Name.Replace('-', '_');
-                Languages.Add(new LanguageItem(ci.EnglishName, ci.TwoLetterISOLanguageName, cultureCode));
+                languageItems.Add(new LanguageItem(ci.EnglishName, ci.TwoLetterISOLanguageName, cultureCode));
+            }
+
+            foreach (var item in LanguageFavoritesHelper.Order(languageItems, l => l.TwoLetterISOLanguageName))
+            {
+                Languages.Add(item);
             }
         }
     }

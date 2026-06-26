@@ -97,7 +97,8 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             languages.Add(new LanguageDisplayItem(ci, ci.EnglishName));
         }
 
-        Languages = new ObservableCollection<LanguageDisplayItem>(languages.OrderBy(p => p.ToString()));
+        Languages = new ObservableCollection<LanguageDisplayItem>(
+            LanguageFavoritesHelper.Order(languages.OrderBy(p => p.ToString()), p => p.Code.TwoLetterISOLanguageName));
 
         var languageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
         Language = languageCode;

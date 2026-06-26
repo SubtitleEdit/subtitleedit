@@ -42,6 +42,7 @@ public class SeGeneral
     public string DefaultSubtitleFormat { get; set; }
     public string DefaultSaveAsFormat { get; set; }
     public string FavoriteSubtitleFormats { get; set; }
+    public string FavoriteLanguages { get; set; }
     public string DefaultEncoding { get; set; }
     public string SubtitleEnterKeyAction { get; set; }
     public string SubtitleSingleClickAction { get; set; }
@@ -177,6 +178,7 @@ public class SeGeneral
         AutoBackupDeleteAfterDays = 90;
         DefaultSaveAsFormat = new SubRip().FriendlyName;
         FavoriteSubtitleFormats = new SubRip().FriendlyName + ";" + new AdvancedSubStationAlpha().FriendlyName;
+        FavoriteLanguages = string.Empty;
         CpsLineLengthStrategy = nameof(CalcAll);
         RememberPositionAndSize = true;
 
