@@ -457,7 +457,7 @@ public class SettingsPage : UserControl
             MakeNumericSettingInt(Se.Language.Options.Settings.WaveformSpectrogramCombinedWaveformHeight, nameof(_vm.WaveformSpectrogramCombinedWaveformHeight), 10, 90),
 
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformShowToolbar, nameof(_vm.WaveformShowToolbar)),
-            new SettingsItem(string.Empty,
+            new SettingsItem(Se.Language.Options.Settings.WaveformShowToolbarEditLabel,
                 () => UiUtil.MakeButton(Se.Language.Options.Settings.WaveformShowToolbarEdit, _vm.EditWaveformToolbarPropertiesCommand)),
 
             new SettingsItem(Se.Language.Options.Settings.WaveformSingleClickAction, () => new ComboBox

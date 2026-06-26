@@ -130,6 +130,7 @@ public class LanguageSettings
     public string WaveformCenterVideoPosition { get; set; }
     public string WaveformShowToolbar { get; set; }
     public string WaveformShowToolbarEdit { get; set; }
+    public string WaveformShowToolbarEditLabel { get; set; }
     public string WaveformSpectrogramCombinedWaveformHeight { get; set; }
     public string ShowWaveformToolbarPlay { get; set; }
     public string ShowWaveformToolbarRepeat { get; set; }
@@ -443,6 +444,7 @@ public class LanguageSettings
         WaveformCenterVideoPosition = "Center video position";
         WaveformShowToolbar = "Show toolbar";
         WaveformShowToolbarEdit = "Edit toolbar...";
+        WaveformShowToolbarEditLabel = "Toolbar items";
         WaveformSpectrogramCombinedWaveformHeight = "Waveform/spectrogram combined, waveform height %";
         ShowWaveformToolbarPlay = "Toolbar: show play button";
         ShowWaveformToolbarRepeat = "Toolbar: show repeat button";
