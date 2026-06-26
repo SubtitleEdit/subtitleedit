@@ -52,7 +52,7 @@ public class LanguageSpellCheck
         XOfYNamesImported = "{0} of {1} names imported (the rest may already exist).";
         NoDictionariesFound = "No dictionaries found";
         WordNotFound = "Word not found";
-        LoadSourceImage = "Load source image (Blu-ray sup)...";
+        LoadSourceImage = "Show source images too...";
         LineXofY = "Spell checker - line {0} of {1}";
         ChangeWordFromXToY = "Change word from '{0}' to '{1}'";
         ChangeAllWordsFromXToY = "Change all words from '{0}' to '{1}'";

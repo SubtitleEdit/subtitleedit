@@ -61,7 +61,11 @@ public class SpellCheckWindow : Window
         var panelSuggestions = MakeSuggestions(vm);
 
         var buttonDone = UiUtil.MakeButtonDone(vm.OkCommand).WithLeftAlignment();
-        var panelButtonsOk = UiUtil.MakeButtonBar(buttonDone);
+        // Icon button left of "Done" to attach/show the source image(s) — a context menu
+        // alone isn't reliable on macOS (panels without a background aren't hit-tested).
+        var buttonLoadSourceImage = UiUtil.MakeButton(vm.LoadSourceImageCommand, IconNames.Image);
+        ToolTip.SetTip(buttonLoadSourceImage, Se.Language.SpellCheck.LoadSourceImage);
+        var panelButtonsOk = UiUtil.MakeButtonBar(buttonLoadSourceImage, buttonDone);
 
         var grid = new Grid
         {
@@ -96,9 +100,17 @@ public class SpellCheckWindow : Window
         grid.Add(panelSuggestions, 1, 1, 2);
 
         // Source image (e.g. Blu-ray .sup) of the current line, shown when the user has
-        // attached it via the context menu (#11719). Right-clicking anywhere offers "Load
-        // source image..." (SE4 parity).
-        var loadSourceImageMenu = new ContextMenu
+        // attached it (#11719) via the image button (left of Done) or by right-clicking the image.
+        var sourceImage = new Image
+        {
+            Stretch = Stretch.Uniform,
+            MaxHeight = 140,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Margin = new Thickness(0, 8, 0, 0),
+            [!Image.SourceProperty] = new Binding(nameof(SpellCheckViewModel.SourceImage)),
+        };
+        var sourceImageBorder = UiUtil.MakeBorderForControl(sourceImage);
+        sourceImageBorder.ContextMenu = new ContextMenu
         {
             ItemsSource = new[]
             {
@@ -109,18 +121,6 @@ public class SpellCheckWindow : Window
                 },
             },
         };
-        borderWholeText.ContextMenu = loadSourceImageMenu;
-
-        var sourceImage = new Image
-        {
-            Stretch = Stretch.Uniform,
-            MaxHeight = 140,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            Margin = new Thickness(0, 8, 0, 0),
-            [!Image.SourceProperty] = new Binding(nameof(SpellCheckViewModel.SourceImage)),
-        };
-        var sourceImageBorder = UiUtil.MakeBorderForControl(sourceImage);
-        sourceImageBorder.ContextMenu = loadSourceImageMenu;
         sourceImageBorder.Bind(Visual.IsVisibleProperty, new Binding(nameof(SpellCheckViewModel.HasSourceImage)));
         grid.Add(sourceImageBorder, 4, 0, 2);
 

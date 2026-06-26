@@ -5,6 +5,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -258,7 +259,7 @@ public partial class SpellCheckViewModel : ObservableObject
         }
 
         var fileName = await _fileHelper.PickOpenFile(
-            Window, Se.Language.SpellCheck.LoadSourceImage, "Blu-ray sup", ".sup");
+            Window, Se.Language.SpellCheck.LoadSourceImage, "Blu-ray sup", ".sup", "VobSub", ".sub");
         if (string.IsNullOrEmpty(fileName))
         {
             return;
@@ -266,20 +267,43 @@ public partial class SpellCheckViewModel : ObservableObject
 
         try
         {
-            var log = new System.Text.StringBuilder();
-            var pcsList = BluRaySupParser.ParseBluRaySup(fileName, log);
-            if (pcsList.Count == 0)
+            var source = LoadImageSource(fileName);
+            if (source == null || source.Count == 0)
             {
                 return;
             }
 
-            _ocrSourceImages = new OcrSubtitleBluRay(pcsList);
+            _ocrSourceImages = source;
             HasSourceImage = true;
             UpdateSourceImage();
         }
         catch
         {
             // Bad/unsupported file: leave the panel as-is.
+        }
+    }
+
+    // Loads an image-based subtitle file into an IOcrSubtitle for the source-image preview.
+    private static IOcrSubtitle? LoadImageSource(string fileName)
+    {
+        var ext = System.IO.Path.GetExtension(fileName).ToLowerInvariant();
+        switch (ext)
+        {
+            case ".sup":
+                var pcsList = BluRaySupParser.ParseBluRaySup(fileName, new System.Text.StringBuilder());
+                return pcsList.Count > 0 ? new OcrSubtitleBluRay(pcsList) : null;
+
+            case ".sub":
+            case ".idx":
+                var vobSubParser = new VobSubParser(true);
+                var subFileName = System.IO.Path.ChangeExtension(fileName, ".sub");
+                var idxFileName = System.IO.Path.ChangeExtension(fileName, ".idx");
+                vobSubParser.OpenSubIdx(subFileName, idxFileName);
+                var packs = vobSubParser.MergeVobSubPacks();
+                return packs.Count > 0 ? new OcrSubtitleVobSub(packs, vobSubParser.IdxPalette) : null;
+
+            default:
+                return null;
         }
     }
 
