@@ -284,8 +284,10 @@ public partial class ColorPickerViewModel : ObservableObject
                     try
                     {
                         var color = clipboardText.FromHexToColor();
+                        _isUpdating = true;
                         SelectedColor = color;
                         UpdateFromColor(color);
+                        _isUpdating = false;
                     }
                     catch
                     {
