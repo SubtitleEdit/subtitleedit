@@ -61,6 +61,7 @@ using Nikse.SubtitleEdit.Features.Shared.AddToUserDictionary;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustAllTimes;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustAlpha;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustBrightness;
+using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustColor;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustDuration;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryApplyDurationLimits;
 using Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryResizeImages;
@@ -298,6 +299,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<BinaryAdjustAllTimesViewModel>();
         collection.AddTransient<BinaryAdjustAlphaViewModel>();
         collection.AddTransient<BinaryAdjustBrightnessViewModel>();
+        collection.AddTransient<BinaryAdjustColorViewModel>();
         collection.AddTransient<BinaryAdjustDurationViewModel>();
         collection.AddTransient<BinaryApplyDurationLimitsViewModel>();
         collection.AddTransient<BinaryEditViewModel>();

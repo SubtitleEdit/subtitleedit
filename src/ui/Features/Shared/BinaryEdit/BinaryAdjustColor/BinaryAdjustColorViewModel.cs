@@ -1,0 +1,154 @@
+using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
+using Nikse.SubtitleEdit.Logic;
+using SkiaSharp;
+using System;
+using System.Collections.Generic;
+
+namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustColor;
+
+public partial class BinaryAdjustColorViewModel : ObservableObject
+{
+    [ObservableProperty] private Color _selectedColor;
+    [ObservableProperty] private IBrush _colorSwatchBrush;
+    [ObservableProperty] private Bitmap? _previewBitmap;
+
+    public Window? Window { get; set; }
+    public bool OkPressed { get; private set; }
+
+    private readonly IWindowService _windowService;
+    private List<BinarySubtitleItem> _subtitles = new();
+
+    public BinaryAdjustColorViewModel(IWindowService windowService)
+    {
+        _windowService = windowService;
+        _selectedColor = Color.FromRgb(255, 255, 0);
+        _colorSwatchBrush = new SolidColorBrush(_selectedColor);
+    }
+
+    public void Initialize(List<BinarySubtitleItem> subtitles)
+    {
+        _subtitles = subtitles;
+        UpdatePreview();
+    }
+
+    partial void OnSelectedColorChanged(Color value)
+    {
+        ColorSwatchBrush = new SolidColorBrush(value);
+        UpdatePreview();
+    }
+
+    [RelayCommand]
+    private async System.Threading.Tasks.Task ChooseColor()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<ColorPickerWindow, ColorPickerViewModel>(
+            Window, vm => vm.Initialize(SelectedColor));
+
+        if (result.OkPressed)
+        {
+            SelectedColor = result.SelectedColor;
+        }
+    }
+
+    private void UpdatePreview()
+    {
+        if (_subtitles.Count == 0 || _subtitles[0].Bitmap == null)
+        {
+            return;
+        }
+
+        using var originalBitmap = _subtitles[0].Bitmap!.ToSkBitmap();
+        var coloredBitmap = ColorBitmap(originalBitmap, SelectedColor.R, SelectedColor.G, SelectedColor.B);
+        PreviewBitmap = coloredBitmap.ToAvaloniaBitmap();
+    }
+
+    public void ApplyAdjustments()
+    {
+        foreach (var subtitle in _subtitles)
+        {
+            if (subtitle.Bitmap == null)
+            {
+                continue;
+            }
+
+            using var originalBitmap = subtitle.Bitmap.ToSkBitmap();
+            var coloredBitmap = ColorBitmap(originalBitmap, SelectedColor.R, SelectedColor.G, SelectedColor.B);
+            subtitle.Bitmap = coloredBitmap.ToAvaloniaBitmap();
+        }
+    }
+
+    private static SKBitmap ColorBitmap(SKBitmap originalBitmap, byte r, byte g, byte b)
+    {
+        var redPercent = r * 100.0 / 255;
+        var greenPercent = g * 100.0 / 255;
+        var bluePercent = b * 100.0 / 255;
+
+        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height);
+
+        unsafe
+        {
+            var srcPixels = originalBitmap.GetPixels();
+            var dstPixels = adjustedBitmap.GetPixels();
+
+            for (int i = 0; i < originalBitmap.Width * originalBitmap.Height; i++)
+            {
+                var pixel = ((uint*)srcPixels)[i];
+
+                var a = (byte)((pixel >> 24) & 0xFF);
+                var pr = (byte)((pixel >> 16) & 0xFF);
+                var pg = (byte)((pixel >> 8) & 0xFF);
+                var pb = (byte)(pixel & 0xFF);
+
+                int total = pr + pg + pb;
+                if (total > 100 && a > 0)
+                {
+                    pr = (byte)Math.Min(255, redPercent * total / 100);
+                    pg = (byte)Math.Min(255, greenPercent * total / 100);
+                    pb = (byte)Math.Min(255, bluePercent * total / 100);
+                }
+
+                ((uint*)dstPixels)[i] = (uint)((a << 24) | (pr << 16) | (pg << 8) | pb);
+            }
+        }
+
+        return adjustedBitmap;
+    }
+
+    [RelayCommand]
+    private void Ok()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        ApplyAdjustments();
+        OkPressed = true;
+        Window.Close();
+    }
+
+    [RelayCommand]
+    private void Cancel()
+    {
+        Window?.Close();
+    }
+
+    internal void OnKeyDown(KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape)
+        {
+            e.Handled = true;
+            Window?.Close();
+        }
+    }
+}
