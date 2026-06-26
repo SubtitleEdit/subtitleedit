@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
@@ -23,12 +24,44 @@ public partial class BinaryAdjustColorViewModel : ObservableObject
 
     private readonly IWindowService _windowService;
     private List<BinarySubtitleItem> _subtitles = new();
+    private DispatcherTimer? _previewUpdateTimer;
+    private bool _isDirty;
 
     public BinaryAdjustColorViewModel(IWindowService windowService)
     {
         _windowService = windowService;
         _selectedColor = Color.FromRgb(255, 255, 0);
         _colorSwatchBrush = new SolidColorBrush(_selectedColor);
+        InitializeTimer();
+    }
+
+    private void InitializeTimer()
+    {
+        _previewUpdateTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(300)
+        };
+        _previewUpdateTimer.Tick += (_, _) =>
+        {
+            _previewUpdateTimer.Stop();
+            if (_isDirty)
+            {
+                _isDirty = false;
+                UpdatePreview();
+            }
+        };
+    }
+
+    private void SchedulePreviewUpdate()
+    {
+        if (_previewUpdateTimer == null)
+        {
+            return;
+        }
+
+        _isDirty = true;
+        _previewUpdateTimer.Stop();
+        _previewUpdateTimer.Start();
     }
 
     public void Initialize(List<BinarySubtitleItem> subtitles)
@@ -40,7 +73,7 @@ public partial class BinaryAdjustColorViewModel : ObservableObject
     partial void OnSelectedColorChanged(Color value)
     {
         ColorSwatchBrush = new SolidColorBrush(value);
-        UpdatePreview();
+        SchedulePreviewUpdate();
     }
 
     [RelayCommand]
