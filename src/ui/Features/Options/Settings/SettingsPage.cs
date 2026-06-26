@@ -453,6 +453,7 @@ public class SettingsPage : UserControl
         [
             new SettingsItem(Se.Language.Options.Settings.WaveformDrawStyle,
                 () => UiUtil.MakeComboBox(_vm.WaveformDrawStyles, _vm, nameof(_vm.SelectedWaveformDrawStyle))),
+            MakeCheckboxSetting(Se.Language.Options.Settings.WaveformAutoGenerate, nameof(_vm.WaveformAutoGenerate)),
             MakeCheckboxSetting(Se.Language.Options.Settings.WaveformGenerateSpectrogram, nameof(_vm.WaveformGenerateSpectrogram)),
             new SettingsItem(Se.Language.Options.Settings.WaveformSpectrogramMode,
                 () => UiUtil.MakeComboBox(_vm.WaveformSpectrogramStyles, _vm, nameof(_vm.SelectedWaveformSpectrogramStyle))),

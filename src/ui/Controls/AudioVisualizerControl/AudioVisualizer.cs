@@ -407,6 +407,17 @@ public class AudioVisualizer : Control
     public event ParagraphNullableEventHandler? OnPrimaryDoubleClicked;
     public event PositionEventHandler? OnSetStartAndOffsetTheRest;
 
+    /// <summary>Raised when the user clicks the empty waveform to generate it on demand
+    /// (shown only when auto-generate is off and there are no cached peaks).</summary>
+    public event EventHandler? OnGenerateWaveformRequested;
+
+    /// <summary>When true and there are no <see cref="WavePeaks"/>, a "click to generate"
+    /// hint is drawn and a click raises <see cref="OnGenerateWaveformRequested"/>.</summary>
+    public bool ShowClickToGenerateHint { get; set; }
+
+    /// <summary>Localized hint text drawn over the empty waveform (see <see cref="ShowClickToGenerateHint"/>).</summary>
+    public string ClickToGenerateText { get; set; } = string.Empty;
+
     public AudioVisualizer()
     {
         AllSelectedParagraphs = new List<SubtitleLineViewModel>();
@@ -859,6 +870,15 @@ public class AudioVisualizer : Control
         e.Handled = true;
         var point = e.GetPosition(this);
         _startPointerPosition = point;
+
+        // No waveform yet and auto-generate is off: a click generates it on demand.
+        if (WavePeaks == null && ShowClickToGenerateHint &&
+            e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            OnGenerateWaveformRequested?.Invoke(this, EventArgs.Empty);
+            return;
+        }
+
         if (IsReadOnly)
         {
             InvalidateVisual();
@@ -1657,6 +1677,18 @@ public class AudioVisualizer : Control
             DrawShotChanges(context, ref renderCtx);
             DrawCurrentVideoPosition(context, ref renderCtx);
             DrawNewParagraph(context, ref renderCtx);
+
+            if (WavePeaks == null && ShowClickToGenerateHint && !string.IsNullOrEmpty(ClickToGenerateText))
+            {
+                var hint = new FormattedText(
+                    ClickToGenerateText,
+                    CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight,
+                    Typeface.Default,
+                    14,
+                    Brushes.Gainsboro);
+                context.DrawText(hint, new Point((width - hint.Width) / 2, (height - hint.Height) / 2));
+            }
 
             if (IsFocused)
             {

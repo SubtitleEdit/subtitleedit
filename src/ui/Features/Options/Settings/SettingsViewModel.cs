@@ -227,6 +227,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _selectedWaveformDrawStyle;
 
     [ObservableProperty] private bool _waveformGenerateSpectrogram;
+    [ObservableProperty] private bool _waveformAutoGenerate;
     [ObservableProperty] private ObservableCollection<string> _waveformSpectrogramStyles;
     [ObservableProperty] private string _selectedWaveformSpectrogramStyle;
 
@@ -788,6 +789,7 @@ public partial class SettingsViewModel : ObservableObject
         }
 
         WaveformGenerateSpectrogram = Se.Settings.Waveform.GenerateSpectrogram;
+        WaveformAutoGenerate = Se.Settings.Waveform.WaveformAutoGenerate;
         if (Se.Settings.Waveform.SpectrogramStyle == SeSpectrogramStyle.Classic.ToString())
         {
             SelectedWaveformSpectrogramStyle = WaveformSpectrogramStyles[0];
@@ -1472,6 +1474,7 @@ public partial class SettingsViewModel : ObservableObject
         }
 
         Se.Settings.Waveform.GenerateSpectrogram = WaveformGenerateSpectrogram;
+        Se.Settings.Waveform.WaveformAutoGenerate = WaveformAutoGenerate;
         if (SelectedWaveformSpectrogramStyle == Se.Language.Waveform.SpectrogramClassic)
         {
             Se.Settings.Waveform.SpectrogramStyle = SeSpectrogramStyle.Classic.ToString();
