@@ -8,6 +8,12 @@ namespace SeConv.Commands;
 
 internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
 {
+    /// <summary>
+    /// The original process arguments, captured in Program.Main before Spectre parsing.
+    /// Used to recover operation order/repetition, which the bound settings discard.
+    /// </summary>
+    public static string[] RawArgs { get; set; } = [];
+
     public sealed class Settings : CommandSettings
     {
         [CommandArgument(0, "<pattern>")]
@@ -358,24 +364,35 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
             }
 
-            // Build operations list
-            var operations = new List<string>();
-            if (settings.ApplyDurationLimits) operations.Add("ApplyDurationLimits");
-            if (settings.BalanceLines) operations.Add("BalanceLines");
-            if (settings.BeautifyTimeCodes) operations.Add("BeautifyTimeCodes");
-            if (settings.ConvertColorsToDialog) operations.Add("ConvertColorsToDialog");
-            if (fceRequested) operations.Add("FixCommonErrors");
-            if (settings.FixRtlViaUnicodeChars) operations.Add("FixRtlViaUnicodeChars");
-            if (settings.MergeSameTexts) operations.Add("MergeSameTexts");
-            if (settings.MergeSameTimeCodes) operations.Add("MergeSameTimeCodes");
-            if (settings.MergeShortLines) operations.Add("MergeShortLines");
-            if (settings.RedoCasing) operations.Add("RedoCasing");
-            if (settings.RemoveFormatting) operations.Add("RemoveFormatting");
-            if (settings.RemoveLineBreaks) operations.Add("RemoveLineBreaks");
-            if (settings.RemoveTextForHI) operations.Add("RemoveTextForHI");
-            if (settings.RemoveUnicodeControlChars) operations.Add("RemoveUnicodeControlChars");
-            if (settings.ReverseRtlStartEnd) operations.Add("ReverseRtlStartEnd");
-            if (settings.SplitLongLines) operations.Add("SplitLongLines");
+            // Build operations list. Operations run in the order the user typed them and
+            // repeat for each occurrence (SE4 parity) - e.g. "--fix-common-errors" twice
+            // runs two FCE passes. Spectre collapses repeated flags, so the order/count is
+            // recovered from the raw args. Fall back to a fixed order if raw args are missing.
+            List<string> operations;
+            if (RawArgs.Length > 0)
+            {
+                operations = OperationOrderParser.BuildOperations(RawArgs, fceRequested);
+            }
+            else
+            {
+                operations = new List<string>();
+                if (settings.ApplyDurationLimits) operations.Add("ApplyDurationLimits");
+                if (settings.BalanceLines) operations.Add("BalanceLines");
+                if (settings.BeautifyTimeCodes) operations.Add("BeautifyTimeCodes");
+                if (settings.ConvertColorsToDialog) operations.Add("ConvertColorsToDialog");
+                if (fceRequested) operations.Add("FixCommonErrors");
+                if (settings.FixRtlViaUnicodeChars) operations.Add("FixRtlViaUnicodeChars");
+                if (settings.MergeSameTexts) operations.Add("MergeSameTexts");
+                if (settings.MergeSameTimeCodes) operations.Add("MergeSameTimeCodes");
+                if (settings.MergeShortLines) operations.Add("MergeShortLines");
+                if (settings.RedoCasing) operations.Add("RedoCasing");
+                if (settings.RemoveFormatting) operations.Add("RemoveFormatting");
+                if (settings.RemoveLineBreaks) operations.Add("RemoveLineBreaks");
+                if (settings.RemoveTextForHI) operations.Add("RemoveTextForHI");
+                if (settings.RemoveUnicodeControlChars) operations.Add("RemoveUnicodeControlChars");
+                if (settings.ReverseRtlStartEnd) operations.Add("ReverseRtlStartEnd");
+                if (settings.SplitLongLines) operations.Add("SplitLongLines");
+            }
 
             // Validate --change-speed (must be > 0; 100 means no change)
             if (settings.ChangeSpeed.HasValue && settings.ChangeSpeed.Value <= 0)

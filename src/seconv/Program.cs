@@ -70,6 +70,10 @@ internal class Program
             }
         }
 
+        // Capture the raw args so the convert command can recover operation order/repetition
+        // (Spectre collapses repeated flags and discards ordering).
+        ConvertCommand.RawArgs = args;
+
         // Set up Spectre.Console CLI with default command
         var app = new CommandApp<ConvertCommand>();
         app.Configure(config =>
