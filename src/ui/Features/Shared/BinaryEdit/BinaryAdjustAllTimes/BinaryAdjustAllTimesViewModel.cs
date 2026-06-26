@@ -24,7 +24,6 @@ public partial class BinaryAdjustAllTimesViewModel : ObservableObject
     private Action? _refreshGrid;
 
     public Window? Window { get; set; }
-    public bool OkPressed { get; private set; }
 
     public BinaryAdjustAllTimesViewModel()
     {
@@ -137,7 +136,6 @@ public partial class BinaryAdjustAllTimesViewModel : ObservableObject
     private void Ok()
     {
         SaveSettings();
-        OkPressed = true;
         Window?.Close();
     }
 
