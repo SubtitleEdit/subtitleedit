@@ -241,7 +241,7 @@ internal static class ContainerSubtitleLoader
                 }
                 catch (Exception ex)
                 {
-                    AnsiConsole.MarkupLine($"[yellow]Warning: PGS OCR failed on MKV track #{track.TrackNumber}: {ex.Message.EscapeMarkup()}[/]");
+                    AnsiConsole.MarkupLineInterpolated($"[yellow]Warning: PGS OCR failed on MKV track #{track.TrackNumber}: {ex.Message}[/]");
                 }
                 continue;
             }
@@ -258,7 +258,7 @@ internal static class ContainerSubtitleLoader
                 }
                 catch (Exception ex)
                 {
-                    AnsiConsole.MarkupLine($"[yellow]Warning: VobSub OCR failed on MKV track #{track.TrackNumber}: {ex.Message.EscapeMarkup()}[/]");
+                    AnsiConsole.MarkupLineInterpolated($"[yellow]Warning: VobSub OCR failed on MKV track #{track.TrackNumber}: {ex.Message}[/]");
                 }
                 continue;
             }
@@ -269,7 +269,7 @@ internal static class ContainerSubtitleLoader
             var format = Utilities.LoadMatroskaTextSubtitle(track, matroska, matroskaSubtitle, subtitle);
             if (subtitle.Paragraphs.Count == 0 || format == null)
             {
-                AnsiConsole.MarkupLine($"[yellow]Warning: track #{track.TrackNumber} produced no subtitles ({track.CodecId.EscapeMarkup()}).[/]");
+                AnsiConsole.MarkupLineInterpolated($"[yellow]Warning: track #{track.TrackNumber} produced no subtitles ({track.CodecId}).[/]");
                 continue;
             }
             subtitle.Renumber();
@@ -316,7 +316,7 @@ internal static class ContainerSubtitleLoader
                 }
                 catch (Exception ex)
                 {
-                    AnsiConsole.MarkupLine($"[yellow]Warning: VobSub OCR failed on MP4 track #{trackId}: {ex.Message.EscapeMarkup()}[/]");
+                    AnsiConsole.MarkupLineInterpolated($"[yellow]Warning: VobSub OCR failed on MP4 track #{trackId}: {ex.Message}[/]");
                 }
                 continue;
             }
@@ -416,7 +416,7 @@ internal static class ContainerSubtitleLoader
             }
             catch (Exception ex)
             {
-                AnsiConsole.MarkupLine($"[yellow]Warning: DVB-sub OCR failed: {ex.Message.EscapeMarkup()}[/]");
+                AnsiConsole.MarkupLineInterpolated($"[yellow]Warning: DVB-sub OCR failed: {ex.Message}[/]");
             }
         }
 

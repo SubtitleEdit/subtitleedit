@@ -98,4 +98,34 @@ public class SubtitleConverterTest : IDisposable
         var outputFiles = Directory.GetFiles(outputFolder, "*.ass");
         Assert.Equal(2, outputFiles.Length);
     }
+
+    [Fact]
+    public async Task ConvertAsync_PathWithSquareBrackets_DoesNotCrashOnMarkup()
+    {
+        // Regression for #11862: a path containing '[' or ']' (e.g. a release-group
+        // folder like "Title [1080p Bluray]") must not be parsed as Spectre.Console
+        // markup. Before the fix this threw "Could not find color or style '1080p'".
+        var bracketFolder = Path.Combine(_tempRoot, "Title [1080p Bluray]");
+        Directory.CreateDirectory(bracketFolder);
+        var inputFile = Path.Combine(bracketFolder, "input [v2].srt");
+        await File.WriteAllTextAsync(inputFile, SrtContent, TestContext.Current.CancellationToken);
+
+        var outputFolder = Path.Combine(bracketFolder, "out [done]");
+        Directory.CreateDirectory(outputFolder);
+
+        var options = new ConversionOptions
+        {
+            Patterns = [inputFile],
+            Format = "Advanced Sub Station Alpha",
+            OutputFolder = outputFolder,
+            Overwrite = true,
+        };
+
+        var converter = new SubtitleConverter();
+        var result = await converter.ConvertAsync(options);
+
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+        Assert.Equal(1, result.SuccessfulFiles);
+        Assert.Single(Directory.GetFiles(outputFolder, "*.ass"));
+    }
 }

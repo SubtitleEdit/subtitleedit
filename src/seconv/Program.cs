@@ -86,10 +86,10 @@ internal class Program
         }
         catch (Exception ex)
         {
-            AnsiConsole.MarkupLine($"[red]Fatal error: {ex.Message}[/]");
+            AnsiConsole.MarkupLineInterpolated($"[red]Fatal error: {ex.Message}[/]");
             if (ex.InnerException != null)
             {
-                AnsiConsole.MarkupLine($"[red]  {ex.InnerException.Message}[/]");
+                AnsiConsole.MarkupLineInterpolated($"[red]  {ex.InnerException.Message}[/]");
             }
             return 1;
         }
@@ -293,7 +293,7 @@ internal class Program
             }
             else
             {
-                AnsiConsole.MarkupLine($"[red]Error: {ex.Message.EscapeMarkup()}[/]");
+                AnsiConsole.MarkupLineInterpolated($"[red]Error: {ex.Message}[/]");
             }
             return 1;
         }

@@ -69,7 +69,7 @@ internal class SubtitleConverter
                         var outputFile = ResolveOutputFileName(inputFile, options);
                         if (!options.Quiet)
                         {
-                            AnsiConsole.Markup($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile)}[/] [dim]->[/] [green]{outputFile}[/]...");
+                            AnsiConsole.MarkupInterpolated($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile)}[/] [dim]->[/] [green]{outputFile}[/]...");
                         }
                         await ConvertFileAsync(inputFile, outputFile, options);
                         result.SuccessfulFiles++;
@@ -92,10 +92,10 @@ internal class SubtitleConverter
                         {
                             var outputFile = ResolveOutputFileName(inputFile, options, track.LanguageCode, track.TrackNumber);
                             var trackLabel = track.TrackNumber.HasValue ? $"#{track.TrackNumber.Value} " : string.Empty;
-                            var langLabel = string.IsNullOrEmpty(track.LanguageCode) ? string.Empty : $"[[{track.LanguageCode.EscapeMarkup()}]] ";
+                            var langLabel = string.IsNullOrEmpty(track.LanguageCode) ? string.Empty : $"[{track.LanguageCode}] ";
                             if (!options.Quiet)
                             {
-                                AnsiConsole.Markup($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile)}[/] [yellow]{trackLabel.EscapeMarkup()}[/][blue]{langLabel}[/][dim]->[/] [green]{outputFile}[/]...");
+                                AnsiConsole.MarkupInterpolated($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile)}[/] [yellow]{trackLabel}[/][blue]{langLabel}[/][dim]->[/] [green]{outputFile}[/]...");
                             }
                             await ConvertTrackAsync(track, outputFile, options);
                             result.SuccessfulFiles++;
@@ -116,7 +116,7 @@ internal class SubtitleConverter
 
                     if (!options.Quiet)
                     {
-                        AnsiConsole.MarkupLine($" [red]error: {msg.EscapeMarkup()}[/]");
+                        AnsiConsole.MarkupLineInterpolated($" [red]error: {msg}[/]");
                     }
                 }
 
@@ -202,7 +202,7 @@ internal class SubtitleConverter
             var label = vobFiles.Count == 1
                 ? Path.GetFileName(vobFiles[0])
                 : $"{vobFiles.Count} VOB files";
-            AnsiConsole.Markup($"[dim]vob:[/] [cyan]{label.EscapeMarkup()}[/] [dim]->[/] [green]{outputBase.EscapeMarkup()}[/]...");
+            AnsiConsole.MarkupInterpolated($"[dim]vob:[/] [cyan]{label}[/] [dim]->[/] [green]{outputBase}[/]...");
         }
 
         try
@@ -232,7 +232,7 @@ internal class SubtitleConverter
                     AnsiConsole.MarkupLine($" [green]done ({totalWritten} subtitle(s) across {outputs.Count} streams).[/]");
                     foreach (var o in outputs)
                     {
-                        AnsiConsole.MarkupLine($"  [dim]stream 0x{o.StreamId:X2}:[/] [green]{o.Path.EscapeMarkup()}[/] ({o.Written})");
+                        AnsiConsole.MarkupLineInterpolated($"  [dim]stream 0x{o.StreamId:X2}:[/] [green]{o.Path}[/] ({o.Written})");
                     }
                 }
             }
@@ -248,7 +248,7 @@ internal class SubtitleConverter
             }
             if (!options.Quiet)
             {
-                AnsiConsole.MarkupLine($" [red]error: {msg.EscapeMarkup()}[/]");
+                AnsiConsole.MarkupLineInterpolated($" [red]error: {msg}[/]");
             }
         }
 
@@ -322,7 +322,7 @@ internal class SubtitleConverter
         var outputFile = ResolveOutputFileName(inputFile, options);
         if (!options.Quiet)
         {
-            AnsiConsole.Markup($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile).EscapeMarkup()}[/] [dim](img→img)→[/] [green]{outputFile.EscapeMarkup()}[/]...");
+            AnsiConsole.MarkupInterpolated($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile)}[/] [dim](img→img)→[/] [green]{outputFile}[/]...");
         }
 
         IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem>? items = null;
@@ -345,7 +345,7 @@ internal class SubtitleConverter
             result.Files.Add(new FileConversionResult(inputFile, null, false, msg));
             if (!options.Quiet)
             {
-                AnsiConsole.MarkupLine($" [red]error: {msg.EscapeMarkup()}[/]");
+                AnsiConsole.MarkupLineInterpolated($" [red]error: {msg}[/]");
             }
         }
         finally
@@ -399,7 +399,7 @@ internal class SubtitleConverter
             if (!options.Quiet)
             {
                 var trackLabel = $"#{track.TrackNumber} ";
-                AnsiConsole.Markup($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile).EscapeMarkup()}[/] [yellow]{trackLabel}[/][dim](PGS img→img)→[/] [green]{outputFile.EscapeMarkup()}[/]...");
+                AnsiConsole.MarkupInterpolated($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile)}[/] [yellow]{trackLabel}[/][dim](PGS img→img)→[/] [green]{outputFile}[/]...");
             }
 
             IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem>? items = null;
@@ -422,7 +422,7 @@ internal class SubtitleConverter
                 result.Files.Add(new FileConversionResult(inputFile, null, false, msg));
                 if (!options.Quiet)
                 {
-                    AnsiConsole.MarkupLine($" [red]error: {msg.EscapeMarkup()}[/]");
+                    AnsiConsole.MarkupLineInterpolated($" [red]error: {msg}[/]");
                 }
             }
             finally
@@ -478,7 +478,7 @@ internal class SubtitleConverter
 
             if (!options.Quiet)
             {
-                AnsiConsole.Markup($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile).EscapeMarkup()}[/] [yellow]PID {pid} [/][dim](DVB img→img)→[/] [green]{outputFile.EscapeMarkup()}[/]...");
+                AnsiConsole.MarkupInterpolated($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile)}[/] [yellow]PID {pid} [/][dim](DVB img→img)→[/] [green]{outputFile}[/]...");
             }
 
             try
@@ -499,7 +499,7 @@ internal class SubtitleConverter
                 result.Files.Add(new FileConversionResult(inputFile, null, false, msg));
                 if (!options.Quiet)
                 {
-                    AnsiConsole.MarkupLine($" [red]error: {msg.EscapeMarkup()}[/]");
+                    AnsiConsole.MarkupLineInterpolated($" [red]error: {msg}[/]");
                 }
             }
             finally
