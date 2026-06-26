@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 
 namespace SeConv.Core;
 
@@ -79,6 +80,28 @@ internal sealed class SeConvSettings
                 s.General.CurrentFrameRate = g.CurrentFrameRate.Value;
             if (g.DefaultFrameRate.HasValue)
                 s.General.DefaultFrameRate = g.DefaultFrameRate.Value;
+
+            if (g.MinimumMillisecondsBetweenLines.HasValue)
+                s.General.MinimumMillisecondsBetweenLines = g.MinimumMillisecondsBetweenLines.Value;
+            if (g.MaxNumberOfLines.HasValue)
+                s.General.MaxNumberOfLines = g.MaxNumberOfLines.Value;
+            if (g.MergeLinesShorterThan.HasValue)
+                s.General.MergeLinesShorterThan = g.MergeLinesShorterThan.Value;
+            if (g.SubtitleMaximumCharactersPerSeconds.HasValue)
+                s.General.SubtitleMaximumCharactersPerSeconds = g.SubtitleMaximumCharactersPerSeconds.Value;
+            if (g.SubtitleOptimalCharactersPerSeconds.HasValue)
+                s.General.SubtitleOptimalCharactersPerSeconds = g.SubtitleOptimalCharactersPerSeconds.Value;
+            if (g.SubtitleMaximumWordsPerMinute.HasValue)
+                s.General.SubtitleMaximumWordsPerMinute = g.SubtitleMaximumWordsPerMinute.Value;
+
+            // Enums are carried as strings; parse case-insensitively and ignore bad values
+            // so a typo doesn't abort the whole settings load.
+            if (!string.IsNullOrWhiteSpace(g.DialogStyle)
+                && Enum.TryParse<DialogType>(g.DialogStyle, ignoreCase: true, out var dialogStyle))
+                s.General.DialogStyle = dialogStyle;
+            if (!string.IsNullOrWhiteSpace(g.ContinuationStyle)
+                && Enum.TryParse<ContinuationStyle>(g.ContinuationStyle, ignoreCase: true, out var continuationStyle))
+                s.General.ContinuationStyle = continuationStyle;
         }
 
         if (Tools is { } t)
@@ -119,6 +142,21 @@ internal sealed class SeConvSettings
         public int? SubtitleMaximumDisplayMilliseconds { get; set; }
         public double? CurrentFrameRate { get; set; }
         public double? DefaultFrameRate { get; set; }
+
+        // FixCommonErrors / split / merge profile values (issue #11874). These let a
+        // --settings JSON reproduce an SE4 profile so batch output matches.
+        public int? MinimumMillisecondsBetweenLines { get; set; }
+        public int? MaxNumberOfLines { get; set; }
+        public int? MergeLinesShorterThan { get; set; }
+        public double? SubtitleMaximumCharactersPerSeconds { get; set; }
+        public double? SubtitleOptimalCharactersPerSeconds { get; set; }
+        public double? SubtitleMaximumWordsPerMinute { get; set; }
+
+        // Enum-valued; carried as strings and parsed case-insensitively (see ApplyBaseSections).
+        // DialogStyle: DialogType, e.g. "DashBothLinesWithSpace".
+        // ContinuationStyle: ContinuationStyle, e.g. "NoneTrailingDots".
+        public string? DialogStyle { get; set; }
+        public string? ContinuationStyle { get; set; }
     }
 
     internal sealed class ToolsSection
