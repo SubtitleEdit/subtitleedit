@@ -42,6 +42,14 @@ public static class BinaryEditShortcuts
             string.Format(Se.Language.General.VideoCustom2BackX, Se.Settings.Video.MoveVideoPositionCustom2Back));
         AddShortcutIfExists(shortcuts, keys, nameof(vm.VideoMoveCustom2ForwardCommand), vm.VideoMoveCustom2ForwardCommand,
             string.Format(Se.Language.General.VideoCustom2ForwardX, Se.Settings.Video.MoveVideoPositionCustom2Forward));
+        AddShortcutIfExists(shortcuts, keys, nameof(vm.VideoMoveCustom3BackCommand), vm.VideoMoveCustom3BackCommand,
+            string.Format(Se.Language.General.VideoCustom3BackX, Se.Settings.Video.MoveVideoPositionCustom3Back));
+        AddShortcutIfExists(shortcuts, keys, nameof(vm.VideoMoveCustom3ForwardCommand), vm.VideoMoveCustom3ForwardCommand,
+            string.Format(Se.Language.General.VideoCustom3ForwardX, Se.Settings.Video.MoveVideoPositionCustom3Forward));
+        AddShortcutIfExists(shortcuts, keys, nameof(vm.VideoMoveCustom4BackCommand), vm.VideoMoveCustom4BackCommand,
+            string.Format(Se.Language.General.VideoCustom4BackX, Se.Settings.Video.MoveVideoPositionCustom4Back));
+        AddShortcutIfExists(shortcuts, keys, nameof(vm.VideoMoveCustom4ForwardCommand), vm.VideoMoveCustom4ForwardCommand,
+            string.Format(Se.Language.General.VideoCustom4ForwardX, Se.Settings.Video.MoveVideoPositionCustom4Forward));
 
         return shortcuts;
     }

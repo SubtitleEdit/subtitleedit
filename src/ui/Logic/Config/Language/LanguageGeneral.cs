@@ -656,6 +656,10 @@ public class LanguageGeneral
     public string VideoCustom1ForwardX { get; set; }
     public string VideoCustom2BackX { get; set; }
     public string VideoCustom2ForwardX { get; set; }
+    public string VideoCustom3BackX { get; set; }
+    public string VideoCustom3ForwardX { get; set; }
+    public string VideoCustom4BackX { get; set; }
+    public string VideoCustom4ForwardX { get; set; }
     public string VideoEncodingX { get; set; }
     public string VideoExtension { get; set; }
     public string VideoFile { get; set; }
@@ -1397,6 +1401,10 @@ public class LanguageGeneral
         VideoCustom1ForwardX = "Video, custom milliseconds ({0:#,###,##0}) forward, 1";
         VideoCustom2BackX = "Video, custom milliseconds ({0:#,###,##0}) back, 2";
         VideoCustom2ForwardX = "Video, custom milliseconds ({0:#,###,##0}) forward, 2";
+        VideoCustom3BackX = "Video, custom milliseconds ({0:#,###,##0}) back, 3";
+        VideoCustom3ForwardX = "Video, custom milliseconds ({0:#,###,##0}) forward, 3";
+        VideoCustom4BackX = "Video, custom milliseconds ({0:#,###,##0}) back, 4";
+        VideoCustom4ForwardX = "Video, custom milliseconds ({0:#,###,##0}) forward, 4";
         VideoEncodingX = "Video encoding: {0}";
         VideoExtension = "Video file extension";
         VideoFile = "Video file";

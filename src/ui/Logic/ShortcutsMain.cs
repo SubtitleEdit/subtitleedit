@@ -250,6 +250,10 @@ public static class ShortcutsMain
         { nameof(MainViewModel.VideoMoveCustom1ForwardCommand),  string.Format(Se.Language.General.VideoCustom1ForwardX, Se.Settings.Video.MoveVideoPositionCustom1Forward) },
         { nameof(MainViewModel.VideoMoveCustom2BackCommand),  string.Format(Se.Language.General.VideoCustom2BackX, Se.Settings.Video.MoveVideoPositionCustom2Back) },
         { nameof(MainViewModel.VideoMoveCustom2ForwardCommand),  string.Format(Se.Language.General.VideoCustom2ForwardX, Se.Settings.Video.MoveVideoPositionCustom2Forward) },
+        { nameof(MainViewModel.VideoMoveCustom3BackCommand),  string.Format(Se.Language.General.VideoCustom3BackX, Se.Settings.Video.MoveVideoPositionCustom3Back) },
+        { nameof(MainViewModel.VideoMoveCustom3ForwardCommand),  string.Format(Se.Language.General.VideoCustom3ForwardX, Se.Settings.Video.MoveVideoPositionCustom3Forward) },
+        { nameof(MainViewModel.VideoMoveCustom4BackCommand),  string.Format(Se.Language.General.VideoCustom4BackX, Se.Settings.Video.MoveVideoPositionCustom4Back) },
+        { nameof(MainViewModel.VideoMoveCustom4ForwardCommand),  string.Format(Se.Language.General.VideoCustom4ForwardX, Se.Settings.Video.MoveVideoPositionCustom4Forward) },
 
         { nameof(MainViewModel.WaveformSetStartAndOffsetTheRestCommand),  Se.Language.General.SetStartAndOffsetTheRest },
         { nameof(MainViewModel.WaveformSetEndAndOffsetTheRestCommand),  Se.Language.General.SetEndAndOffsetTheRest },
@@ -609,6 +613,10 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.VideoMoveCustom1ForwardCommand, nameof(vm.VideoMoveCustom1ForwardCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.VideoMoveCustom2BackCommand, nameof(vm.VideoMoveCustom2BackCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.VideoMoveCustom2ForwardCommand, nameof(vm.VideoMoveCustom2ForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.VideoMoveCustom3BackCommand, nameof(vm.VideoMoveCustom3BackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.VideoMoveCustom3ForwardCommand, nameof(vm.VideoMoveCustom3ForwardCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.VideoMoveCustom4BackCommand, nameof(vm.VideoMoveCustom4BackCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.VideoMoveCustom4ForwardCommand, nameof(vm.VideoMoveCustom4ForwardCommand), ShortcutCategory.General);
 
         AddShortcut(shortcuts, vm.WaveformSetStartAndOffsetTheRestCommand, nameof(vm.WaveformSetStartAndOffsetTheRestCommand), ShortcutCategory.Waveform);
         AddShortcut(shortcuts, vm.WaveformSetEndAndOffsetTheRestCommand, nameof(vm.WaveformSetEndAndOffsetTheRestCommand), ShortcutCategory.Waveform);
