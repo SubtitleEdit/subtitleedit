@@ -5,6 +5,8 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
@@ -18,6 +20,7 @@ using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.Logic.Ocr;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -67,6 +70,8 @@ public partial class SpellCheckViewModel : ObservableObject
     private readonly ISpellCheckManager _spellCheckManager;
     private readonly IWindowService _windowService;
     private readonly IFileHelper _fileHelper;
+    private readonly IBluRayHelper _bluRayHelper;
+    private readonly IOcrImageSourceHolder _ocrImageSourceHolder;
     private IFocusSubtitleLine? _focusSubtitleLine;
 
     // Optional source image (Blu-ray .sup) loaded via the context menu so the original
@@ -86,10 +91,12 @@ public partial class SpellCheckViewModel : ObservableObject
     private int? _stopBeforeLineIndex;
     private bool _hasWrapped;
 
-    public SpellCheckViewModel(ISpellCheckManager spellCheckManager, IWindowService windowService, IFileHelper fileHelper)
+    public SpellCheckViewModel(ISpellCheckManager spellCheckManager, IWindowService windowService, IFileHelper fileHelper, IBluRayHelper bluRayHelper, IOcrImageSourceHolder ocrImageSourceHolder)
     {
         _spellCheckManager = spellCheckManager;
         _fileHelper = fileHelper;
+        _bluRayHelper = bluRayHelper;
+        _ocrImageSourceHolder = ocrImageSourceHolder;
         if (Se.Settings.SpellCheck.SpellCheckProvider == SeSpellCheck.SpellCheckMsWord && WordSpellCheck.IsWordInstalled())
         {
             _spellCheckManager.WordSpellChecker = new WordSpellCheck();
@@ -261,7 +268,7 @@ public partial class SpellCheckViewModel : ObservableObject
 
         var fileNames = await _fileHelper.PickOpenFiles(
             Window, Se.Language.SpellCheck.LoadSourceImage,
-            "Image based subtitles", new List<string> { "*.sup", "*.sub", "*.idx", "*.xml" },
+            "Image based subtitles", new List<string> { "*.sup", "*.sub", "*.idx", "*.xml", "*.ts", "*.m2ts", "*.mts", "*.mkv", "*.mks" },
             string.Empty, new List<string>());
         var fileName = fileNames.FirstOrDefault();
         if (string.IsNullOrEmpty(fileName))
@@ -288,7 +295,7 @@ public partial class SpellCheckViewModel : ObservableObject
     }
 
     // Loads an image-based subtitle file into an IOcrSubtitle for the source-image preview.
-    private static IOcrSubtitle? LoadImageSource(string fileName)
+    private IOcrSubtitle? LoadImageSource(string fileName)
     {
         var ext = System.IO.Path.GetExtension(fileName).ToLowerInvariant();
         switch (ext)
@@ -319,6 +326,42 @@ public partial class SpellCheckViewModel : ObservableObject
                 return bdnSubtitle.Paragraphs.Count > 0
                     ? new OcrSubtitleBdn(bdnSubtitle, fileName, isSon: false)
                     : null;
+
+            case ".ts":
+            case ".m2ts":
+            case ".mts":
+                var tsParser = new TransportStreamParser();
+                tsParser.Parse(fileName, (_, _) => { });
+                if (tsParser.SubtitlePacketIds.Count == 0)
+                {
+                    return null;
+                }
+
+                var subtitles = tsParser.GetDvbSubtitles(tsParser.SubtitlePacketIds[0]);
+                return subtitles.Count > 0 ? new OcrSubtitleTransportStream(tsParser, subtitles, fileName) : null;
+
+            case ".mkv":
+            case ".mks":
+                using (var matroska = new MatroskaFile(fileName))
+                {
+                    if (!matroska.IsValid)
+                    {
+                        return null;
+                    }
+
+                    // Only Blu-ray (PGS) tracks are handled for manual load here; VobSub/DVB
+                    // tracks need the async Matroska extraction in the OCR window, and those
+                    // are covered automatically via the auto-attach path after OCR (#11719).
+                    var track = matroska.GetTracks(true)
+                        .FirstOrDefault(t => t.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase));
+                    if (track == null)
+                    {
+                        return null;
+                    }
+
+                    var pcsData = _bluRayHelper.LoadBluRaySubFromMatroska(track, matroska, out _);
+                    return pcsData.Count > 0 ? new OcrSubtitleMkvBluRay(track, pcsData) : null;
+                }
 
             default:
                 return null;
@@ -369,6 +412,15 @@ public partial class SpellCheckViewModel : ObservableObject
         Paragraphs.Clear();
         Paragraphs.AddRange(paragraphs);
         SetLanguage(dictionaryFileName);
+
+        // Auto-attach the image source from the most recent OCR session so the original
+        // bitmaps show up automatically when spell-checking OCR'd text - no manual load
+        // needed. Works for every format OCR can read (sup, VobSub, BDN, TS, MKV, ...) (#11719).
+        if (_ocrImageSourceHolder.Source is { Count: > 0 } ocrSource)
+        {
+            _ocrSourceImages = ocrSource;
+            HasSourceImage = true;
+        }
 
         // Posted to run after the window exists (Window is assigned in the window ctor),
         // so the "continue from current line?" prompt and the close hook have an owner.

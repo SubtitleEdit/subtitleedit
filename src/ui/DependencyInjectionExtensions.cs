@@ -165,6 +165,7 @@ using Nikse.SubtitleEdit.Logic.Initializers;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.Plugins;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
+using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr.GoogleLens;
 using Nikse.SubtitleEdit.Logic.UndoRedo;
 using AssaApplyCustomOverrideTagsViewModel = Nikse.SubtitleEdit.Features.Assa.AssaApplyCustomOverrideTags.AssaApplyCustomOverrideTagsViewModel;
@@ -197,6 +198,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<IBinaryOcrMatcher, BinaryOcrMatcher>();
         collection.AddSingleton<IFileHelper, FileHelper>();
         collection.AddSingleton<IFolderHelper, FolderHelper>();
+        collection.AddSingleton<IOcrImageSourceHolder, OcrImageSourceHolder>();
         collection.AddTransient<IAutoBackupService, AutoBackupService>();
         collection.AddTransient<IBatchConverter, BatchConverter>();
         collection.AddTransient<IBatchConvertItemSplitter, BatchConvertTransportStreamSplitter>();

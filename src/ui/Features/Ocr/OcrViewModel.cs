@@ -40,6 +40,7 @@ using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr.GoogleLens;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
@@ -159,6 +160,7 @@ public partial class OcrViewModel : ObservableObject
     private readonly ISpellCheckManager _spellCheckManager;
     private readonly IOcrFixEngine _ocrFixEngine;
     private readonly IBinaryOcrMatcher _binaryOcrMatcher;
+    private readonly IOcrImageSourceHolder _ocrImageSourceHolder;
     private PreProcessingSettings? _preProcessingSettings;
     private bool _isCtrlDown;
     private bool _textBoxFontIsCustom;
@@ -184,7 +186,8 @@ public partial class OcrViewModel : ObservableObject
         IFileHelper fileHelper,
         ISpellCheckManager spellCheckManager,
         IOcrFixEngine ocrFixEngine,
-        IBinaryOcrMatcher binaryOcrMatcher)
+        IBinaryOcrMatcher binaryOcrMatcher,
+        IOcrImageSourceHolder ocrImageSourceHolder)
     {
         _nOcrCaseFixer = nOcrCaseFixer;
         _windowService = windowService;
@@ -192,6 +195,7 @@ public partial class OcrViewModel : ObservableObject
         _spellCheckManager = spellCheckManager;
         _ocrFixEngine = ocrFixEngine;
         _binaryOcrMatcher = binaryOcrMatcher;
+        _ocrImageSourceHolder = ocrImageSourceHolder;
 
         Title = Se.Language.Ocr.Ocr;
         OcrEngines = new ObservableCollection<OcrEngineItem>(OcrEngineItem.GetOcrEngines());
@@ -1769,6 +1773,10 @@ public partial class OcrViewModel : ObservableObject
     private void Ok()
     {
         OkPressed = true;
+
+        // Remember the image source so spell check can show the original images (#11719)
+        _ocrImageSourceHolder.Source = _ocrSubtitle;
+        _ocrImageSourceHolder.FileName = _sourceFileName;
 
         OcredSubtitle.Clear();
         var number = 1;
