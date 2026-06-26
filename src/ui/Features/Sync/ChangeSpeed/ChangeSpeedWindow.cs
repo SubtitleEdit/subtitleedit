@@ -28,6 +28,7 @@ public class ChangeSpeedWindow : Window
         var numericUpDownSpeed = new NumericUpDown
         {
             Width = 150,
+            HorizontalAlignment = HorizontalAlignment.Left,
             Minimum = 0,
             Maximum = 1000,
             Increment = 0.1m,
@@ -40,7 +41,9 @@ public class ChangeSpeedWindow : Window
         };
 
         var buttonFromDropFrame = UiUtil.MakeButton(Se.Language.Sync.FromDropFrameValue, vm.SetFromDropFrameValueCommand);
+        buttonFromDropFrame.HorizontalAlignment = HorizontalAlignment.Stretch;
         var buttonToDropFrame = UiUtil.MakeButton(Se.Language.Sync.ToDropFrameValue, vm.SetToDropFrameValueCommand);
+        buttonToDropFrame.HorizontalAlignment = HorizontalAlignment.Stretch;
 
         var panelFromToButtons = new StackPanel
         {
