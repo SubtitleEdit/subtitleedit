@@ -11094,6 +11094,71 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void VideoGoToNextTimeCode()
+    {
+        GoToNearestTimeCode(forward: true);
+    }
+
+    [RelayCommand]
+    private void VideoGoToPreviousTimeCode()
+    {
+        GoToNearestTimeCode(forward: false);
+    }
+
+    // Moves the video playhead to the nearest subtitle cue boundary (any start or end
+    // time) before/after the current position, stepping through both starts and ends.
+    // Ports SE4's GoToNearestTimeCode. A 1 ms dead-zone keeps repeated presses advancing.
+    private void GoToNearestTimeCode(bool forward)
+    {
+        var vp = GetVideoPlayerControl();
+        if (vp == null)
+        {
+            return;
+        }
+
+        var positionMs = vp.Position * 1000.0;
+
+        SubtitleLineViewModel? found = null;
+        var foundSeconds = 0.0;
+        var bestDistance = double.MaxValue;
+
+        foreach (var s in Subtitles)
+        {
+            foreach (var timeMs in new[] { s.StartTime.TotalMilliseconds, s.EndTime.TotalMilliseconds })
+            {
+                if (timeMs >= TimeCode.MaxTimeTotalMilliseconds - 0.01)
+                {
+                    continue;
+                }
+
+                var onRequestedSide = forward ? timeMs > positionMs + 1 : timeMs < positionMs - 1;
+                if (!onRequestedSide)
+                {
+                    continue;
+                }
+
+                var distance = Math.Abs(timeMs - positionMs);
+                if (distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    found = s;
+                    foundSeconds = timeMs / 1000.0;
+                }
+            }
+        }
+
+        if (found == null)
+        {
+            return;
+        }
+
+        vp.Position = foundSeconds;
+        SelectAndScrollToRow(Subtitles.IndexOf(found));
+        AudioVisualizerCenterOnPositionIfNeeded(found, foundSeconds);
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
     private void FocusSelectedLine()
     {
         var idx = SelectedSubtitleIndex ?? -1;

@@ -127,6 +127,8 @@ public static class Se4ShortcutsImporter
         ["MainVideoGoToStartCurrent"] = nameof(MainViewModel.VideoSetPositionCurrentSubtitleStartCommand),
         ["MainVideoGoToPrevSubtitle"] = nameof(MainViewModel.GoToPreviousLineAndSetVideoPositionCommand),
         ["MainVideoGoToNextSubtitle"] = nameof(MainViewModel.GoToNextLineAndSetVideoPositionCommand),
+        ["MainVideoGoToPrevTimeCode"] = nameof(MainViewModel.VideoGoToPreviousTimeCodeCommand),
+        ["MainVideoGoToNextTimeCode"] = nameof(MainViewModel.VideoGoToNextTimeCodeCommand),
         ["MainVideoStop"] = nameof(MainViewModel.PauseCommand),
         ["MainVideoSelectNextSubtitle"] = nameof(MainViewModel.GoToNextLineCommand),
 

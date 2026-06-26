@@ -218,6 +218,8 @@ public static class ShortcutsMain
         { nameof(MainViewModel.GoToPreviousLineAndSetVideoPositionCommand), Se.Language.Options.Shortcuts.GoToPreviousLineAndSetVideoPosition },
         { nameof(MainViewModel.GoToPreviousLineFromVideoPositionCommand), Se.Language.Options.Shortcuts.GoToPreviousLineFromVideoPosition },
         { nameof(MainViewModel.GoToNextLineFromVideoPositionCommand), Se.Language.Options.Shortcuts.GoToNextLineFromVideoPosition },
+        { nameof(MainViewModel.VideoGoToPreviousTimeCodeCommand), Se.Language.Options.Shortcuts.VideoGoToPreviousTimeCode },
+        { nameof(MainViewModel.VideoGoToNextTimeCodeCommand), Se.Language.Options.Shortcuts.VideoGoToNextTimeCode },
 
         { nameof(MainViewModel.SaveLanguageFileCommand), Se.Language.Main.SaveLanguageFile },
 
@@ -525,6 +527,8 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.GoToNextLineAndSetVideoPositionCommand, nameof(vm.GoToNextLineAndSetVideoPositionCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.GoToPreviousLineFromVideoPositionCommand, nameof(vm.GoToPreviousLineFromVideoPositionCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.GoToNextLineFromVideoPositionCommand, nameof(vm.GoToNextLineFromVideoPositionCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.VideoGoToPreviousTimeCodeCommand, nameof(vm.VideoGoToPreviousTimeCodeCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.VideoGoToNextTimeCodeCommand, nameof(vm.VideoGoToNextTimeCodeCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SaveLanguageFileCommand, nameof(vm.SaveLanguageFileCommand), ShortcutCategory.General);
 
         AddShortcut(shortcuts, vm.UnbreakCommand, nameof(vm.UnbreakCommand), ShortcutCategory.General);
