@@ -265,7 +265,18 @@ Available template tokens: `{title}`, `{number}`, `{start}`, `{end}`, `{duration
 {
   "general": {
     "subtitleLineMaximumLength": 43,
-    "subtitleMaximumDisplayMilliseconds": 8000
+    "subtitleMinimumDisplayMilliseconds": 1000,
+    "subtitleMaximumDisplayMilliseconds": 8000,
+    "currentFrameRate": 23.976,
+    "defaultFrameRate": 23.976,
+    "minimumMillisecondsBetweenLines": 24,
+    "maxNumberOfLines": 2,
+    "mergeLinesShorterThan": 33,
+    "subtitleMaximumCharactersPerSeconds": 25.0,
+    "subtitleOptimalCharactersPerSeconds": 15.0,
+    "subtitleMaximumWordsPerMinute": 400.0,
+    "dialogStyle": "DashBothLinesWithSpace",
+    "continuationStyle": "None"
   },
   "removeTextForHearingImpaired": {
     "removeTextBeforeColon": true,
@@ -279,6 +290,8 @@ Available template tokens: `{title}`, `{number}`, `{start}`, `{end}`, `{duration
   }
 }
 ```
+
+The `general` section mirrors `Configuration.Settings.General`; any key left out keeps the libse default. The profile-shaping values (`minimumMillisecondsBetweenLines`, `maxNumberOfLines`, `mergeLinesShorterThan`, `subtitleMaximumCharactersPerSeconds`, `subtitleOptimalCharactersPerSeconds`, `subtitleMaximumWordsPerMinute`, `dialogStyle`, `continuationStyle`) feed Fix common errors and the split/merge operations, so set them to reproduce an SE4 profile. `dialogStyle` and `continuationStyle` take the enum names (case-insensitive): `dialogStyle` ∈ `DashBothLinesWithSpace`, `DashBothLinesWithoutSpace`, `DashSecondLineWithSpace`, `DashSecondLineWithoutSpace`; `continuationStyle` ∈ `None`, `NoneTrailingDots`, `NoneTrailingEllipsis`, `OnlyTrailingDots`, `LeadingTrailingDots`, `LeadingTrailingEllipsis`, `LeadingTrailingDash`, … (see the Fix common errors continuation styles).
 
 ```bash
 seconv *.srt subrip --settings:my.json --profile:broadcast --remove-text-for-hi

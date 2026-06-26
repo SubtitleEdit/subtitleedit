@@ -220,6 +220,25 @@ seconv movie.ts fcpimage                                       # DVB-sub → FCP
 > seconv movie.srt subrip --settings:./hi.json --remove-text-for-hi
 > ```
 >
+> The `general` section can carry the Fix-common-errors / split / merge profile
+> values so batch output matches an SE4 profile: `minimumMillisecondsBetweenLines`,
+> `maxNumberOfLines`, `mergeLinesShorterThan`, `subtitleMaximumCharactersPerSeconds`,
+> `subtitleOptimalCharactersPerSeconds`, `subtitleMaximumWordsPerMinute`,
+> `dialogStyle`, `continuationStyle` (the last two take enum names, case-insensitive),
+> alongside `subtitleLineMaximumLength`, `subtitleMinimumDisplayMilliseconds`,
+> `subtitleMaximumDisplayMilliseconds`, `currentFrameRate`, `defaultFrameRate`.
+>
+> ```json
+> {
+>   "general": {
+>     "minimumMillisecondsBetweenLines": 24,
+>     "maxNumberOfLines": 2,
+>     "subtitleMaximumCharactersPerSeconds": 25.0,
+>     "dialogStyle": "DashBothLinesWithSpace"
+>   }
+> }
+> ```
+>
 > The full list of supported keys lives in `src/seconv/Core/SeConvSettings.cs`.
 
 ### Plain text output (`--format plaintext`)

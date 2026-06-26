@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using SeConv.Core;
 using Xunit;
 
@@ -101,6 +102,50 @@ public class SeConvSettingsTest : IDisposable
         {
             Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds = savedMin;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjections = savedInterj;
+        }
+    }
+
+    [Fact]
+    public void ApplyToLibSe_AppliesProfileGeneralValues()
+    {
+        // Regression for #11874: the FixCommonErrors profile values must be mappable.
+        var g = Configuration.Settings.General;
+        var saved = (g.MinimumMillisecondsBetweenLines, g.MaxNumberOfLines, g.MergeLinesShorterThan,
+            g.SubtitleMaximumCharactersPerSeconds, g.SubtitleOptimalCharactersPerSeconds,
+            g.SubtitleMaximumWordsPerMinute, g.DialogStyle, g.ContinuationStyle);
+        try
+        {
+            var path = WriteSettings("""
+                {
+                  "general": {
+                    "minimumMillisecondsBetweenLines": 24,
+                    "maxNumberOfLines": 3,
+                    "mergeLinesShorterThan": 40,
+                    "subtitleMaximumCharactersPerSeconds": 20.5,
+                    "subtitleOptimalCharactersPerSeconds": 15.0,
+                    "subtitleMaximumWordsPerMinute": 240.0,
+                    "dialogStyle": "DashSecondLineWithSpace",
+                    "continuationStyle": "nonetrailingdots"
+                  }
+                }
+                """);
+
+            SeConvSettings.Load(path).ApplyToLibSe();
+
+            Assert.Equal(24, g.MinimumMillisecondsBetweenLines);
+            Assert.Equal(3, g.MaxNumberOfLines);
+            Assert.Equal(40, g.MergeLinesShorterThan);
+            Assert.Equal(20.5, g.SubtitleMaximumCharactersPerSeconds);
+            Assert.Equal(15.0, g.SubtitleOptimalCharactersPerSeconds);
+            Assert.Equal(240.0, g.SubtitleMaximumWordsPerMinute);
+            Assert.Equal(DialogType.DashSecondLineWithSpace, g.DialogStyle);
+            Assert.Equal(ContinuationStyle.NoneTrailingDots, g.ContinuationStyle); // case-insensitive parse
+        }
+        finally
+        {
+            (g.MinimumMillisecondsBetweenLines, g.MaxNumberOfLines, g.MergeLinesShorterThan,
+                g.SubtitleMaximumCharactersPerSeconds, g.SubtitleOptimalCharactersPerSeconds,
+                g.SubtitleMaximumWordsPerMinute, g.DialogStyle, g.ContinuationStyle) = saved;
         }
     }
 
