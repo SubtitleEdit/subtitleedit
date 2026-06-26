@@ -3,6 +3,22 @@ Subtitle Edit Changelog
 
 v5.1.0-beta2 (TBD)
 
+* Fix crash exporting Blu-ray sup on Linux (HarfBuzz native/managed version mismatch) - thx CannaraX
+* Fix "Join subtitles" by time codes not sorting the joined lines by time - thx han8mr8
+* seconv: run operations in the given order, repeating each occurrence (e.g. "--fix-common-errors" twice runs two passes) - thx Rouzax
+* seconv: bundle the Linux native libs (libSkiaSharp/libHarfBuzzSharp) so Fix common errors no longer crashes - thx Rouzax
+* seconv: expose the Fix-common-errors profile values (min gap, CPS, max lines, dialog/continuation style, ...) in --settings JSON - thx Rouzax
+* Add option to not auto-generate the waveform when opening a video (click the empty waveform to generate) - thx nugemon
+* "Set up like Subtitle Edit 4" now shows grid line breaks as "<br />" on a single row, like SE4 - thx bichitoxxx
+* Redesign the "Change speed" dialog to match the "Adjust all times" dialog
+* Fix "Change speed" radio buttons disabled/not respected in the main window
+* Binary edit: wire up "Change speed", respect the selected-lines radio, and always apply "Change frame rate" to all lines
+* Binary edit: keep the grid scroll position after "Adjust all times" and "Change speed"
+
+-----------------------------------------------------------------------------------------------------
+
+v5.1.0-beta1 (26th June 2026)
+
 * Add auto-save of the open subtitle file (Options > General) - thx muaz978
 * Add remote/external llama.cpp server (URL) option to auto-translate - thx muaz978
 * Add HTML index export to binary edit - thx mjuhasz
@@ -63,15 +79,8 @@ v5.1.0-beta2 (TBD)
 * Fix Tesseract OCR blanking colored (non-white) text, and surface OCR errors instead of blank lines
 * Fix Ollama OCR runaway repetition / hang
 * Fix ASSA "Set position" frame grab and rotation, and the blank preview - thx bichitoxxx
-* Fix crash exporting Blu-ray sup on Linux (HarfBuzz native/managed version mismatch) - thx CannaraX
-* Fix "Join subtitles" by time codes not sorting the joined lines by time - thx han8mr8
 * Add Traditional Chinese (zh-Hant) translation - thx love80312
 * Add Hebrew and Swedish whisper.cpp models for download - thx darnn
-* seconv: run operations in the given order, repeating each occurrence (e.g. "--fix-common-errors" twice runs two passes) - thx Rouzax
-* seconv: bundle the Linux native libs (libSkiaSharp/libHarfBuzzSharp) so Fix common errors no longer crashes - thx Rouzax
-* seconv: expose the Fix-common-errors profile values (min gap, CPS, max lines, dialog/continuation style, ...) in --settings JSON - thx Rouzax
-* Add option to not auto-generate the waveform when opening a video (click the empty waveform to generate) - thx nugemon
-* "Set up like Subtitle Edit 4" now shows grid line breaks as "<br />" on a single row, like SE4 - thx bichitoxxx
 * Update Italian translation - thx bovirus
 * Update Korean translation - thx 12si27
 * Update Russian translation - thx jekovcar
