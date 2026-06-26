@@ -1457,20 +1457,9 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<ChangeSpeedWindow, ChangeSpeedViewModel>(Window, vm => { });
-
-        if (!result.OkPressed)
+        var selectedIndices = new List<int>();
+        if (SubtitleGrid?.SelectedItems != null)
         {
-            return;
-        }
-
-        // result.SpeedPercent is percentage; factor is 100 / percent as used elsewhere
-        var factor = 100.0 / result.SpeedPercent;
-
-        var appliedToSelected = false;
-        if (SubtitleGrid?.SelectedItems != null && SubtitleGrid.SelectedItems.Count > 0)
-        {
-            var selectedIndices = new List<int>();
             foreach (var item in SubtitleGrid.SelectedItems)
             {
                 if (item is BinarySubtitleItem binaryItem)
@@ -1482,15 +1471,28 @@ public partial class BinaryEditViewModel : ObservableObject
                     }
                 }
             }
-
-            if (selectedIndices.Count > 0)
-            {
-                ScaleBinarySubtitleTimes(selectedIndices.Select(i => Subtitles[i]), factor);
-                appliedToSelected = true;
-            }
         }
 
-        if (!appliedToSelected)
+        var result = await _windowService.ShowDialogAsync<ChangeSpeedWindow, ChangeSpeedViewModel>(Window, vm => { vm.Initialize(selectedIndices.Count > 0); });
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        // result.SpeedPercent is percentage; factor is 100 / percent as used elsewhere
+        var factor = 100.0 / result.SpeedPercent;
+
+        if (result.AdjustSelectedLinesAndForward && selectedIndices.Count > 0)
+        {
+            var firstIndex = selectedIndices.Min();
+            ScaleBinarySubtitleTimes(Subtitles.Skip(firstIndex), factor);
+        }
+        else if (result.AdjustSelectedLines && selectedIndices.Count > 0)
+        {
+            ScaleBinarySubtitleTimes(selectedIndices.Select(i => Subtitles[i]), factor);
+        }
+        else
         {
             ScaleBinarySubtitleTimes(Subtitles, factor);
         }

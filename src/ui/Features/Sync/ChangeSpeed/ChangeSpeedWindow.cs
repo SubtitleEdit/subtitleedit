@@ -73,12 +73,14 @@ public class ChangeSpeedWindow : Window
                 new RadioButton
                 {
                     Content = Se.Language.Sync.AdjustSelectedLines,
-                    [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AdjustSelectedLines))
+                    [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AdjustSelectedLines)),
+                    [!RadioButton.IsEnabledProperty] = new Binding(nameof(vm.IsSelectionAvailable)),
                 },
                 new RadioButton
                 {
                     Content = Se.Language.Sync.AdjustSelectedLinesAndForward,
-                    [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AdjustSelectedLinesAndForward))
+                    [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AdjustSelectedLinesAndForward)),
+                    [!RadioButton.IsEnabledProperty] = new Binding(nameof(vm.IsSelectionAvailable)),
                 }
             },
         };

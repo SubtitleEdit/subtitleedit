@@ -15,6 +15,7 @@ public partial class ChangeSpeedViewModel : ObservableObject
     [ObservableProperty] private bool _adjustAll;
     [ObservableProperty] private bool _adjustSelectedLines;
     [ObservableProperty] private bool _adjustSelectedLinesAndForward;
+    [ObservableProperty] private bool _isSelectionAvailable;
 
     private ObservableCollection<SubtitleLineViewModel>? _subtitles;
 
@@ -64,8 +65,17 @@ public partial class ChangeSpeedViewModel : ObservableObject
     }
 
     internal void Initialize(ObservableCollection<SubtitleLineViewModel> subtitles)
-    { 
+    {
         _subtitles = subtitles;
+    }
+
+    internal void Initialize(bool isSelectionAvailable)
+    {
+        IsSelectionAvailable = isSelectionAvailable;
+        if (!isSelectionAvailable)
+        {
+            AdjustAll = true;
+        }
     }
 
     internal void OnKeyDown(KeyEventArgs e)
