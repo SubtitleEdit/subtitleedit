@@ -71,6 +71,7 @@ v5.1.0-beta1 (26th June 2026)
 * seconv: bundle the Linux native libs (libSkiaSharp/libHarfBuzzSharp) so Fix common errors no longer crashes - thx Rouzax
 * seconv: expose the Fix-common-errors profile values (min gap, CPS, max lines, dialog/continuation style, ...) in --settings JSON - thx Rouzax
 * Add option to not auto-generate the waveform when opening a video (click the empty waveform to generate) - thx nugemon
+* "Set up like Subtitle Edit 4" now shows grid line breaks as "<br />" on a single row, like SE4 - thx bichitoxxx
 * Update Italian translation - thx bovirus
 * Update Korean translation - thx 12si27
 * Update Russian translation - thx jekovcar
