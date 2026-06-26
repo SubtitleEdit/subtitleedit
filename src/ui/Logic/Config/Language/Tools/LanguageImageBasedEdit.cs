@@ -28,8 +28,8 @@ public class LanguageImageBasedEdit
 
     public LanguageImageBasedEdit()
     {
-        EditImagedBaseSubtitle = "Edit imaged-based subtitle";
-        EditImagedBaseSubtitleX = "Edit imaged-based subtitle: {0}";
+        EditImagedBaseSubtitle = "Edit image-based subtitle";
+        EditImagedBaseSubtitleX = "Edit image-based subtitle: {0}";
         ResizeImagesDotDotDot = "Resize images...";
         AdjustBrightnessDotDotDot = "Adjust brightness...";
         AdjustAlphaDotDotDot = "Adjust alpha...";
