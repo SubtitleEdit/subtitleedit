@@ -1401,15 +1401,28 @@ public partial class BinaryEditViewModel : ObservableObject
             }
         }
 
-        var capturedIndex = SubtitleGrid?.SelectedIndex ?? -1;
+        selectedIndices.Sort();
+
+        var selectedItems = selectedIndices.Count > 0
+            ? selectedIndices.Select(i => Subtitles[i]).ToList()
+            : null;
+
         void RefreshGrid()
         {
             Dispatcher.UIThread.Post(() =>
             {
                 if (SubtitleGrid == null) return;
-                SubtitleGrid.ItemsSource = null;
-                SubtitleGrid.ItemsSource = Subtitles;
-                SubtitleGrid.SelectedIndex = capturedIndex;
+                if (selectedItems != null)
+                {
+                    ApplyGridSelection(selectedItems);
+                }
+                else
+                {
+                    var idx = SubtitleGrid.SelectedIndex;
+                    SubtitleGrid.ItemsSource = null;
+                    SubtitleGrid.ItemsSource = Subtitles;
+                    SubtitleGrid.SelectedIndex = idx;
+                }
             });
         }
 
