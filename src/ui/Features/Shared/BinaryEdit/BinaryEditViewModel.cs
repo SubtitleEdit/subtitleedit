@@ -1,6 +1,8 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
@@ -61,6 +63,8 @@ public partial class BinaryEditViewModel : ObservableObject
     public Border? VideoContentBorder { get; set; }
     public bool OkPressed { get; private set; }
     public ObservableCollection<BinarySubtitleItem> Subtitles { get; set; }
+
+    private ScrollViewer? _subtitleGridScrollViewer;
 
     private readonly IFileHelper _fileHelper;
     private readonly IFolderHelper _folderHelper;
@@ -1414,15 +1418,9 @@ public partial class BinaryEditViewModel : ObservableObject
                 if (SubtitleGrid == null) return;
                 if (selectedItems != null)
                 {
-                    ApplyGridSelection(selectedItems);
+                    ApplyGridSelection(selectedItems, preserveScroll: true);
                 }
-                else
-                {
-                    var idx = SubtitleGrid.SelectedIndex;
-                    SubtitleGrid.ItemsSource = null;
-                    SubtitleGrid.ItemsSource = Subtitles;
-                    SubtitleGrid.SelectedIndex = idx;
-                }
+                // else: PropertyChanged handles display update; no refresh needed
             });
         }
 
@@ -1486,15 +1484,9 @@ public partial class BinaryEditViewModel : ObservableObject
                 if (SubtitleGrid == null) return;
                 if (selectedItems != null)
                 {
-                    ApplyGridSelection(selectedItems);
+                    ApplyGridSelection(selectedItems, preserveScroll: true);
                 }
-                else
-                {
-                    var idx = SubtitleGrid.SelectedIndex;
-                    SubtitleGrid.ItemsSource = null;
-                    SubtitleGrid.ItemsSource = Subtitles;
-                    SubtitleGrid.SelectedIndex = idx;
-                }
+                // else: PropertyChanged handles display update; no refresh needed
             });
         }
 
@@ -1674,24 +1666,33 @@ public partial class BinaryEditViewModel : ObservableObject
     [RelayCommand]
     private void SelectForcedLines()
     {
-        ApplyGridSelection(Subtitles.Where(s => s.IsForced).ToList());
+        ApplyGridSelection(Subtitles.Where(s => s.IsForced).ToList(), preserveScroll: true);
     }
 
     [RelayCommand]
     private void SelectNonForcedLines()
     {
-        ApplyGridSelection(Subtitles.Where(s => !s.IsForced).ToList());
+        ApplyGridSelection(Subtitles.Where(s => !s.IsForced).ToList(), preserveScroll: true);
     }
 
     // Adding many rows to a realized DataGrid's SelectedItems is O(n) visual work per
     // row, so selecting all forced/non-forced lines on a large file hangs (#11529).
     // Detaching ItemsSource de-realizes the rows so the adds only touch the grid's
     // internal selection table; a single layout pass repaints after we reattach.
-    private void ApplyGridSelection(IReadOnlyList<BinarySubtitleItem> items)
+    private void ApplyGridSelection(IReadOnlyList<BinarySubtitleItem> items, bool preserveScroll = false)
     {
         if (SubtitleGrid == null)
         {
             return;
+        }
+
+        ScrollViewer? scrollViewer = null;
+        Vector savedOffset = default;
+        if (preserveScroll)
+        {
+            _subtitleGridScrollViewer ??= SubtitleGrid.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+            scrollViewer = _subtitleGridScrollViewer;
+            savedOffset = scrollViewer?.Offset ?? default;
         }
 
         var itemsSource = SubtitleGrid.ItemsSource;
@@ -1702,6 +1703,13 @@ public partial class BinaryEditViewModel : ObservableObject
         foreach (var item in items)
         {
             SubtitleGrid.SelectedItems.Add(item);
+        }
+
+        if (preserveScroll && scrollViewer != null)
+        {
+            var offset = savedOffset;
+            var sv = scrollViewer;
+            Dispatcher.UIThread.Post(() => sv.Offset = offset, DispatcherPriority.Background);
         }
     }
 
