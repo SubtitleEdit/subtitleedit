@@ -93,7 +93,7 @@ public partial class BinaryAdjustColorViewModel : ObservableObject
         var greenPercent = g * 100.0 / 255;
         var bluePercent = b * 100.0 / 255;
 
-        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height);
+        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
 
         unsafe
         {
