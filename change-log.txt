@@ -64,6 +64,7 @@ v5.1.0-beta1 (26th June 2026)
 * Fix Ollama OCR runaway repetition / hang
 * Fix ASSA "Set position" frame grab and rotation, and the blank preview - thx bichitoxxx
 * Fix crash exporting Blu-ray sup on Linux (HarfBuzz native/managed version mismatch) - thx CannaraX
+* Fix "Join subtitles" by time codes not sorting the joined lines by time - thx han8mr8
 * Add Traditional Chinese (zh-Hant) translation - thx love80312
 * Add Hebrew and Swedish whisper.cpp models for download - thx darnn
 * seconv: run operations in the given order, repeating each occurrence (e.g. "--fix-common-errors" twice runs two passes) - thx Rouzax

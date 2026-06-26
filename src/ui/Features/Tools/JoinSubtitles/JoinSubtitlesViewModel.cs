@@ -5,6 +5,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -378,6 +379,14 @@ public partial class JoinSubtitlesViewModel : ObservableObject
                 p.EndTime.TotalMilliseconds += addMs;
                 JoinedSubtitle.Paragraphs.Add(p);
             }
+        }
+
+        // "Keep time codes" (join by time) must interleave paragraphs from all files in
+        // time order; otherwise files whose time codes overlap come out concatenated in
+        // file order, not sorted (issue #11881). Mirrors SE4's JoinSubtitles.
+        if (KeepTimeCodes)
+        {
+            JoinedSubtitle.Sort(SubtitleSortCriteria.StartTime);
         }
 
         JoinedSubtitle.Renumber();
