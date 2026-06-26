@@ -66,6 +66,7 @@ v5.1.0-beta1 (26th June 2026)
 * Add Traditional Chinese (zh-Hant) translation - thx love80312
 * Add Hebrew and Swedish whisper.cpp models for download - thx darnn
 * seconv: run operations in the given order, repeating each occurrence (e.g. "--fix-common-errors" twice runs two passes) - thx Rouzax
+* seconv: run Fix common errors to convergence (matching SE4), so a single pass no longer under-converges - thx Rouzax
 * Update Italian translation - thx bovirus
 * Update Korean translation - thx 12si27
 * Update Russian translation - thx jekovcar
