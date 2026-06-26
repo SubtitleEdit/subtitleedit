@@ -1,6 +1,8 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
@@ -61,6 +63,8 @@ public partial class BinaryEditViewModel : ObservableObject
     public Border? VideoContentBorder { get; set; }
     public bool OkPressed { get; private set; }
     public ObservableCollection<BinarySubtitleItem> Subtitles { get; set; }
+
+    private ScrollViewer? _subtitleGridScrollViewer;
 
     private readonly IFileHelper _fileHelper;
     private readonly IFolderHelper _folderHelper;
@@ -1411,18 +1415,10 @@ public partial class BinaryEditViewModel : ObservableObject
         {
             Dispatcher.UIThread.Post(() =>
             {
-                if (SubtitleGrid == null) return;
-                if (selectedItems != null)
-                {
-                    ApplyGridSelection(selectedItems);
-                }
-                else
-                {
-                    var idx = SubtitleGrid.SelectedIndex;
-                    SubtitleGrid.ItemsSource = null;
-                    SubtitleGrid.ItemsSource = Subtitles;
-                    SubtitleGrid.SelectedIndex = idx;
-                }
+                if (SubtitleGrid == null || selectedItems == null) return;
+                SubtitleGrid.SelectedItems.Clear();
+                foreach (var item in selectedItems)
+                    SubtitleGrid.SelectedItems.Add(item);
             });
         }
 
@@ -1446,35 +1442,7 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         var ratio = ChangeFrameRateViewModel.GetFrameRateRatio(result.SelectedFromFrameRate, result.SelectedToFrameRate);
-
-        // If there are selected items in the grid, apply only to them
-        var appliedToSelected = false;
-        if (SubtitleGrid?.SelectedItems != null && SubtitleGrid.SelectedItems.Count > 0)
-        {
-            var selectedIndices = new List<int>();
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    var index = Subtitles.IndexOf(binaryItem);
-                    if (index >= 0)
-                    {
-                        selectedIndices.Add(index);
-                    }
-                }
-            }
-
-            if (selectedIndices.Count > 0)
-            {
-                ScaleBinarySubtitleTimes(selectedIndices.Select(i => Subtitles[i]), ratio);
-                appliedToSelected = true;
-            }
-        }
-
-        if (!appliedToSelected)
-        {
-            ScaleBinarySubtitleTimes(Subtitles, ratio);
-        }
+        ScaleBinarySubtitleTimes(Subtitles, ratio);
     }
 
     [RelayCommand]
@@ -1485,20 +1453,9 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<ChangeSpeedWindow, ChangeSpeedViewModel>(Window, vm => { });
-
-        if (!result.OkPressed)
+        var selectedIndices = new List<int>();
+        if (SubtitleGrid?.SelectedItems != null)
         {
-            return;
-        }
-
-        // result.SpeedPercent is percentage; factor is 100 / percent as used elsewhere
-        var factor = 100.0 / result.SpeedPercent;
-
-        var appliedToSelected = false;
-        if (SubtitleGrid?.SelectedItems != null && SubtitleGrid.SelectedItems.Count > 0)
-        {
-            var selectedIndices = new List<int>();
             foreach (var item in SubtitleGrid.SelectedItems)
             {
                 if (item is BinarySubtitleItem binaryItem)
@@ -1510,18 +1467,45 @@ public partial class BinaryEditViewModel : ObservableObject
                     }
                 }
             }
-
-            if (selectedIndices.Count > 0)
-            {
-                ScaleBinarySubtitleTimes(selectedIndices.Select(i => Subtitles[i]), factor);
-                appliedToSelected = true;
-            }
         }
 
-        if (!appliedToSelected)
+        selectedIndices.Sort();
+
+        var selectedItems = selectedIndices.Count > 0
+            ? selectedIndices.Select(i => Subtitles[i]).ToList()
+            : null;
+
+        void RefreshGrid()
         {
-            ScaleBinarySubtitleTimes(Subtitles, factor);
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (SubtitleGrid == null || selectedItems == null) return;
+                SubtitleGrid.SelectedItems.Clear();
+                foreach (var item in selectedItems)
+                    SubtitleGrid.SelectedItems.Add(item);
+            });
         }
+
+        void ApplySpeed(double speed, bool all, bool selected, bool selectedAndForward)
+        {
+            var factor = 100.0 / speed;
+            if (selectedAndForward && selectedIndices.Count > 0)
+                ScaleBinarySubtitleTimes(Subtitles.Skip(selectedIndices[0]), factor);
+            else if (selected && selectedIndices.Count > 0)
+                ScaleBinarySubtitleTimes(selectedIndices.Select(i => Subtitles[i]), factor);
+            else
+                ScaleBinarySubtitleTimes(Subtitles, factor);
+            RefreshGrid();
+        }
+
+        var result = await _windowService.ShowDialogAsync<ChangeSpeedWindow, ChangeSpeedViewModel>(Window, vm => { vm.Initialize(selectedIndices.Count > 0, ApplySpeed); });
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        ApplySpeed(result.SpeedPercent, result.AdjustAll, result.AdjustSelectedLines, result.AdjustSelectedLinesAndForward);
     }
 
     [RelayCommand]
@@ -1678,24 +1662,33 @@ public partial class BinaryEditViewModel : ObservableObject
     [RelayCommand]
     private void SelectForcedLines()
     {
-        ApplyGridSelection(Subtitles.Where(s => s.IsForced).ToList());
+        ApplyGridSelection(Subtitles.Where(s => s.IsForced).ToList(), preserveScroll: true);
     }
 
     [RelayCommand]
     private void SelectNonForcedLines()
     {
-        ApplyGridSelection(Subtitles.Where(s => !s.IsForced).ToList());
+        ApplyGridSelection(Subtitles.Where(s => !s.IsForced).ToList(), preserveScroll: true);
     }
 
     // Adding many rows to a realized DataGrid's SelectedItems is O(n) visual work per
     // row, so selecting all forced/non-forced lines on a large file hangs (#11529).
     // Detaching ItemsSource de-realizes the rows so the adds only touch the grid's
     // internal selection table; a single layout pass repaints after we reattach.
-    private void ApplyGridSelection(IReadOnlyList<BinarySubtitleItem> items)
+    private void ApplyGridSelection(IReadOnlyList<BinarySubtitleItem> items, bool preserveScroll = false)
     {
         if (SubtitleGrid == null)
         {
             return;
+        }
+
+        ScrollViewer? scrollViewer = null;
+        Vector savedOffset = default;
+        if (preserveScroll)
+        {
+            _subtitleGridScrollViewer ??= SubtitleGrid.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault();
+            scrollViewer = _subtitleGridScrollViewer;
+            savedOffset = scrollViewer?.Offset ?? default;
         }
 
         var itemsSource = SubtitleGrid.ItemsSource;
@@ -1706,6 +1699,13 @@ public partial class BinaryEditViewModel : ObservableObject
         foreach (var item in items)
         {
             SubtitleGrid.SelectedItems.Add(item);
+        }
+
+        if (preserveScroll && scrollViewer != null)
+        {
+            var offset = savedOffset;
+            var sv = scrollViewer;
+            Dispatcher.UIThread.Post(() => sv.Offset = offset, DispatcherPriority.Background);
         }
     }
 

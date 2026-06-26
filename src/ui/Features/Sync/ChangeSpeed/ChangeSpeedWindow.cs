@@ -20,16 +20,15 @@ public class ChangeSpeedWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var label = new Label
+        var labelSpeed = new Label
         {
             Content = Se.Language.Sync.SpeedInPercentage,
-            VerticalAlignment = VerticalAlignment.Center,
         };
 
         var numericUpDownSpeed = new NumericUpDown
         {
             Width = 150,
-            Margin = new Thickness(0, 0, 10, 0),
+            HorizontalAlignment = HorizontalAlignment.Left,
             Minimum = 0,
             Maximum = 1000,
             Increment = 0.1m,
@@ -42,27 +41,26 @@ public class ChangeSpeedWindow : Window
         };
 
         var buttonFromDropFrame = UiUtil.MakeButton(Se.Language.Sync.FromDropFrameValue, vm.SetFromDropFrameValueCommand);
+        buttonFromDropFrame.HorizontalAlignment = HorizontalAlignment.Stretch;
         var buttonToDropFrame = UiUtil.MakeButton(Se.Language.Sync.ToDropFrameValue, vm.SetToDropFrameValueCommand);
+        buttonToDropFrame.HorizontalAlignment = HorizontalAlignment.Stretch;
 
-        var panelSpeed = new StackPanel
+        var panelFromToButtons = new StackPanel
         {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Margin = new Thickness(0, 0, 10, 0),
+            Orientation = Orientation.Vertical,
+            VerticalAlignment = VerticalAlignment.Top,
+            Spacing = 10,
             Children =
             {
-                label,
-                numericUpDownSpeed,
                 buttonFromDropFrame,
-                buttonToDropFrame
-            }
+                buttonToDropFrame,
+            },
         };
 
         var panelRadioButtons = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Margin = new Thickness(50, 10, 0, 0),
+            Spacing = 0,
             Children =
             {
                 new RadioButton
@@ -73,12 +71,14 @@ public class ChangeSpeedWindow : Window
                 new RadioButton
                 {
                     Content = Se.Language.Sync.AdjustSelectedLines,
-                    [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AdjustSelectedLines))
+                    [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AdjustSelectedLines)),
+                    [!RadioButton.IsEnabledProperty] = new Binding(nameof(vm.IsSelectionAvailable)),
                 },
                 new RadioButton
                 {
                     Content = Se.Language.Sync.AdjustSelectedLinesAndForward,
-                    [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AdjustSelectedLinesAndForward))
+                    [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AdjustSelectedLinesAndForward)),
+                    [!RadioButton.IsEnabledProperty] = new Binding(nameof(vm.IsSelectionAvailable)),
                 }
             },
         };
@@ -94,10 +94,12 @@ public class ChangeSpeedWindow : Window
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
             },
             ColumnDefinitions =
             {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
             Margin = UiUtil.MakeWindowMargin(),
@@ -107,9 +109,11 @@ public class ChangeSpeedWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(panelSpeed, 0);
-        grid.Add(panelRadioButtons, 1);
-        grid.Add(buttonPanel, 2);
+        grid.Add(labelSpeed,         0, 0);
+        grid.Add(numericUpDownSpeed, 1, 0);
+        grid.Add(panelFromToButtons, 1, 1, 2, 1);
+        grid.Add(panelRadioButtons,  2, 0);
+        grid.Add(buttonPanel,        3, 0, 1, 2);
 
         Content = grid;
 

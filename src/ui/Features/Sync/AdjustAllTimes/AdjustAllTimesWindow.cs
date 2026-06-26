@@ -28,31 +28,28 @@ public class AdjustAllTimesWindow : Window
             }
         };
 
-        var gridAdjustment = new Grid
-        {
-            ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
-            },
-            RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-            },
-            ColumnSpacing = 5,
-            RowSpacing = 5,
-        };
+        var buttonShowEarlier = UiUtil.MakeButton(Se.Language.Sync.ShowEarlier, vm.ShowEarlierCommand)
+            .WithMinWidth(110);
+        buttonShowEarlier.Margin = new Thickness(0, 0, 0, 10);
 
-        gridAdjustment.Add(timeCodeUpDown, 0, 1);
-        gridAdjustment.Add(UiUtil.MakeButton(Se.Language.Sync.ShowEarlier, vm.ShowEarlierCommand), 0, 2);
-        gridAdjustment.Add(UiUtil.MakeButton(Se.Language.Sync.ShowLater, vm.ShowLaterCommand), 0, 3);
+        var buttonShowLater = UiUtil.MakeButton(Se.Language.Sync.ShowLater, vm.ShowLaterCommand)
+            .WithMinWidth(110);
+
+        var panelShowButtons = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            VerticalAlignment = VerticalAlignment.Top,
+            Children =
+            {
+                buttonShowEarlier,
+                buttonShowLater,
+            },
+        };
 
         var panelRadioButtons = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Margin = new Thickness(10, 10, 0, 0),
+            Spacing = 0,
             Children =
             {
                 new RadioButton
@@ -76,20 +73,21 @@ public class AdjustAllTimesWindow : Window
         var buttonHelp = UiUtil.MakeButton(vm.ShowHelpCommand, IconNames.Help, Se.Language.Sync.AdjustAllShortcuts);
         var buttonOk = UiUtil.MakeButtonDone(vm.OkCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonHelp, buttonOk);
-        
+
         var labelStatus = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.StatusText));
-        
+
         var grid = new Grid
         {
             RowDefinitions =
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
             Margin = UiUtil.MakeWindowMargin(),
             ColumnSpacing = 10,
@@ -98,11 +96,11 @@ public class AdjustAllTimesWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(gridAdjustment, 0);
-        grid.Add(panelRadioButtons, 1);
-        grid.Add(labelStatus, 2);
-        grid.Add(panelButtons, 2);
-
+        grid.Add(timeCodeUpDown,    0, 0);
+        grid.Add(panelShowButtons,  0, 1, 2, 1);
+        grid.Add(panelRadioButtons, 1, 0);
+        grid.Add(labelStatus,       2, 0);
+        grid.Add(panelButtons,      2, 1);
 
         Content = grid;
 
