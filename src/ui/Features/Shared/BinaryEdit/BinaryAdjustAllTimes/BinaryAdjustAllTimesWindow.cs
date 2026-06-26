@@ -22,7 +22,6 @@ public class BinaryAdjustAllTimesWindow : Window
         var label = new Label
         {
             Content = Se.Language.General.Adjustment,
-            VerticalAlignment = VerticalAlignment.Center,
         };
 
         var timeCodeUpDown = new TimeCodeUpDown
@@ -36,28 +35,18 @@ public class BinaryAdjustAllTimesWindow : Window
 
         var panelAdjustment = new StackPanel
         {
-            Orientation = Orientation.Horizontal,
-            VerticalAlignment = VerticalAlignment.Center,
+            Orientation = Orientation.Vertical,
             Children =
             {
                 label,
                 timeCodeUpDown,
-                UiUtil.MakeButton(Se.Language.Sync.ShowEarlier, vm.ShowEarlierCommand).WithMarginLeft(15),
-                UiUtil.MakeButton(Se.Language.Sync.ShowLater, vm.ShowLaterCommand),
             },
-        };
-
-        var totalAdjustmentLabel = new TextBlock
-        {
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.TotalAdjustmentInfo)),
-            Margin = new Thickness(0, 10, 0, 0),
-            HorizontalAlignment = HorizontalAlignment.Center,
         };
 
         var panelRadioButtons = new StackPanel
         {
             Orientation = Orientation.Vertical,
-            Margin = new Thickness(50, 10, 0, 0),
+            Spacing = 0,
             Children =
             {
                 new RadioButton
@@ -68,19 +57,43 @@ public class BinaryAdjustAllTimesWindow : Window
                 new RadioButton
                 {
                     Content = Se.Language.Sync.AdjustSelectedLines,
-                    [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AdjustSelectedLines))
+                    [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AdjustSelectedLines)),
+                    [!RadioButton.IsEnabledProperty] = new Binding(nameof(vm.IsSelectionAvailable)),
                 },
                 new RadioButton
                 {
                     Content = Se.Language.Sync.AdjustSelectedLinesAndForward,
-                    [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AdjustSelectedLinesAndForward))
+                    [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AdjustSelectedLinesAndForward)),
+                    [!RadioButton.IsEnabledProperty] = new Binding(nameof(vm.IsSelectionAvailable)),
                 }
             },
         };
 
+        var totalAdjustmentLabel = new TextBlock
+        {
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.TotalAdjustmentInfo)),
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        var buttonShowEarlier = UiUtil.MakeButton(Se.Language.Sync.ShowEarlier, vm.ShowEarlierCommand)
+            .WithLeftAlignment()
+            .WithMargin(0, 0, 0, 10);
+        var buttonShowLater = UiUtil.MakeButton(Se.Language.Sync.ShowLater, vm.ShowLaterCommand)
+            .WithLeftAlignment();
+
+        var panelShowButtons = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            VerticalAlignment = VerticalAlignment.Top,
+            Children =
+            {
+                buttonShowEarlier,
+                buttonShowLater,
+            },
+        };
+
         var buttonOk = UiUtil.MakeButtonDone(vm.OkCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk);
-        
+
         var grid = new Grid
         {
             RowDefinitions =
@@ -88,23 +101,23 @@ public class BinaryAdjustAllTimesWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
             },
             ColumnDefinitions =
             {
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
             Margin = UiUtil.MakeWindowMargin(),
             ColumnSpacing = 10,
-            RowSpacing = 10,
             Width = double.NaN,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(panelAdjustment, 0);
-        grid.Add(totalAdjustmentLabel, 1);
-        grid.Add(panelRadioButtons, 2);
-        grid.Add(buttonPanel, 3);
+        grid.Add(panelAdjustment, 0, 0);
+        grid.Add(panelRadioButtons, 1, 0);
+        grid.Add(totalAdjustmentLabel, 2, 0);
+        grid.Add(panelShowButtons, 0, 1, 2, 1);
+        grid.Add(buttonOk, 2, 1);
 
         Content = grid;
 
@@ -112,4 +125,3 @@ public class BinaryAdjustAllTimesWindow : Window
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }
-
