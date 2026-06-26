@@ -267,6 +267,27 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 Size = "3.1 GB Norwegian",
                 Urls = new []{ "https://huggingface.co/NbAiLab/nb-whisper-large/resolve/main/ggml-model.bin" },
             },
+            new WhisperModel
+            {
+                Name = "large-v3-turbo.he",
+                Rename = true,
+                Size = "1.62 GB Hebrew",
+                Urls = new []{ "https://huggingface.co/ivrit-ai/whisper-large-v3-turbo-ggml/resolve/main/ggml-model.bin" },
+            },
+            new WhisperModel
+            {
+                Name = "medium.sv",
+                Rename = true,
+                Size = "1.53 GB Swedish",
+                Urls = new []{ "https://huggingface.co/KBLab/kb-whisper-medium/resolve/main/ggml-model.bin" },
+            },
+            new WhisperModel
+            {
+                Name = "large.sv",
+                Rename = true,
+                Size = "3.1 GB Swedish",
+                Urls = new []{ "https://huggingface.co/KBLab/kb-whisper-large/resolve/main/ggml-model.bin" },
+            },
         };
     }
 }
