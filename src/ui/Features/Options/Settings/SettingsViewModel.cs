@@ -20,6 +20,7 @@ using Nikse.SubtitleEdit.Features.Tools.BeautifyTimeCodes.Profile;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformThemes;
 using Nikse.SubtitleEdit.Features.Options.Settings.WaveformToolbarItems;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Shared.PickLanguage;
 using Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
@@ -121,6 +122,9 @@ public partial class SettingsViewModel : ObservableObject
 
     [ObservableProperty] private ObservableCollection<string> _favoriteSubtitleFormats;
     [ObservableProperty] private string? _selectedFavoriteSubtitleFormat;
+
+    [ObservableProperty] private ObservableCollection<PickLanguageDisplay> _favoriteLanguages;
+    [ObservableProperty] private PickLanguageDisplay? _selectedFavoriteLanguage;
 
     [ObservableProperty] private ObservableCollection<TextEncoding> _encodings;
     [ObservableProperty] private TextEncoding _defaultEncoding;
@@ -466,6 +470,7 @@ public partial class SettingsViewModel : ObservableObject
         DefaultSubtitleFormats = new ObservableCollection<string>(defaultSubtitleFormats);
         SaveSubtitleFormats = new ObservableCollection<string>(saveSubtitleFormats);
         FavoriteSubtitleFormats = new ObservableCollection<string>();
+        FavoriteLanguages = new ObservableCollection<PickLanguageDisplay>();
         SelectedDefaultSubtitleFormat = DefaultSubtitleFormats.First();
         SelectedSaveSubtitleFormat = SaveSubtitleFormats.First();
         Encodings = new ObservableCollection<TextEncoding>(EncodingHelper.GetEncodings());
@@ -666,6 +671,18 @@ public partial class SettingsViewModel : ObservableObject
                     FavoriteSubtitleFormats.Add(format);
                 }
             }
+        }
+
+        FavoriteLanguages.Clear();
+        foreach (var code in LanguageFavorites.ParseCodes(general.FavoriteLanguages))
+        {
+            var iso = Iso639Dash2LanguageCode.List.FirstOrDefault(l =>
+                string.Equals(l.TwoLetterCode, code, StringComparison.OrdinalIgnoreCase));
+            FavoriteLanguages.Add(new PickLanguageDisplay
+            {
+                Code = code,
+                Name = iso?.EnglishName ?? code,
+            });
         }
 
         AllowSingleLetterShortcutsInTextbox = Se.Settings.Tools.AllowSingleLetterShortcutsInTextbox;
@@ -1352,6 +1369,8 @@ public partial class SettingsViewModel : ObservableObject
         }
         general.FavoriteSubtitleFormats = sbFavorites.ToString().TrimEnd(';');
 
+        general.FavoriteLanguages = string.Join(";", FavoriteLanguages.Select(l => l.Code));
+
         Se.Settings.Tools.AllowSingleLetterShortcutsInTextbox = AllowSingleLetterShortcutsInTextbox;
         Se.Settings.Tools.SpellCheckEnglishTreatInApostropheAsIng = SpellCheckEnglishTreatInApostropheAsIng;
         Se.Settings.Tools.GoToLineNumberAlsoSetVideoPosition = GoToLineNumberAlsoSetVideoPosition;
@@ -1961,6 +1980,82 @@ public partial class SettingsViewModel : ObservableObject
                 var selectedItem = SelectedFavoriteSubtitleFormat;
                 FavoriteSubtitleFormats.Move(index, index + 1);
                 SelectedFavoriteSubtitleFormat = selectedItem;
+            }
+        }
+
+        await Task.CompletedTask;
+    }
+
+    [RelayCommand]
+    private async Task AddFavoriteLanguage()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var existingCodes = FavoriteLanguages.Select(l => l.Code).ToList();
+        var viewModel = await _windowService.ShowDialogAsync<PickLanguageWindow, PickLanguageViewModel>(
+            Window, vm => vm.Initialize(existingCodes));
+
+        if (viewModel.OkPressed && viewModel.SelectedLanguage != null)
+        {
+            var selected = viewModel.SelectedLanguage;
+            if (FavoriteLanguages.All(l => !string.Equals(l.Code, selected.Code, StringComparison.OrdinalIgnoreCase)))
+            {
+                FavoriteLanguages.Add(selected);
+                SelectedFavoriteLanguage = selected;
+            }
+        }
+    }
+
+    [RelayCommand]
+    private async Task RemoveFavoriteLanguage()
+    {
+        if (SelectedFavoriteLanguage != null && FavoriteLanguages.Contains(SelectedFavoriteLanguage))
+        {
+            var index = FavoriteLanguages.IndexOf(SelectedFavoriteLanguage);
+            FavoriteLanguages.Remove(SelectedFavoriteLanguage);
+
+            if (FavoriteLanguages.Count > 0)
+            {
+                SelectedFavoriteLanguage = index < FavoriteLanguages.Count
+                    ? FavoriteLanguages[index]
+                    : FavoriteLanguages[FavoriteLanguages.Count - 1];
+            }
+        }
+
+        await Task.CompletedTask;
+    }
+
+    [RelayCommand]
+    private async Task MoveUpFavoriteLanguage()
+    {
+        if (SelectedFavoriteLanguage != null && FavoriteLanguages.Contains(SelectedFavoriteLanguage))
+        {
+            var index = FavoriteLanguages.IndexOf(SelectedFavoriteLanguage);
+            if (index > 0)
+            {
+                var selectedItem = SelectedFavoriteLanguage;
+                FavoriteLanguages.Move(index, index - 1);
+                SelectedFavoriteLanguage = selectedItem;
+            }
+        }
+
+        await Task.CompletedTask;
+    }
+
+    [RelayCommand]
+    private async Task MoveDownFavoriteLanguage()
+    {
+        if (SelectedFavoriteLanguage != null && FavoriteLanguages.Contains(SelectedFavoriteLanguage))
+        {
+            var index = FavoriteLanguages.IndexOf(SelectedFavoriteLanguage);
+            if (index < FavoriteLanguages.Count - 1)
+            {
+                var selectedItem = SelectedFavoriteLanguage;
+                FavoriteLanguages.Move(index, index + 1);
+                SelectedFavoriteLanguage = selectedItem;
             }
         }
 

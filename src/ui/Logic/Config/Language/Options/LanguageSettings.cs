@@ -186,6 +186,7 @@ public class LanguageSettings
     public string DefaultFormat { get; set; }
     public string DefaultSaveAsFormat { get; set; }
     public string FavoriteSubtitleFormats { get; set; }
+    public string FavoriteLanguages { get; set; }
 
     public string ShowStopButton { get; set; }
     public string ShowFullscreenButton { get; set; }
@@ -510,6 +511,7 @@ public class LanguageSettings
         DefaultFormat = "Default format";
         DefaultSaveAsFormat = "Default \"Save as\" format";
         FavoriteSubtitleFormats = "Favorite subtitle formats";
+        FavoriteLanguages = "Favorite languages";
         FilesAndLogs = "Files and logs";
         ShowErrorLogFile = "Show error log file";
         ShowToolsLogFile = "Show tools log file";

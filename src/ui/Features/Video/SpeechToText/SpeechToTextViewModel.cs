@@ -359,15 +359,15 @@ public partial class SpeechToTextViewModel : ObservableObject
     // (code "auto") for engines that support automatic language detection.
     private static IEnumerable<WhisperLanguage> GetEngineLanguages(ISpeechToTextEngine engine)
     {
+        var result = new List<WhisperLanguage>();
         if (EngineSupportsAutoLanguageDetection(engine))
         {
-            yield return new WhisperLanguage("auto", "Auto detect");
+            result.Add(new WhisperLanguage("auto", "Auto detect"));
         }
 
-        foreach (var language in engine.Languages)
-        {
-            yield return language;
-        }
+        // Bubble the user's favorite languages to the top (the "Auto detect" entry stays first).
+        result.AddRange(LanguageFavoritesHelper.Order(engine.Languages, l => l.Code));
+        return result;
     }
 
     private static bool IsTranslateAvailable(ISpeechToTextEngine engine)

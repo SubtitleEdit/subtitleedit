@@ -213,7 +213,7 @@ public partial class SpellCheckViewModel : ObservableObject
 
         var spellCheckLanguages = _spellCheckManager.GetDictionaryLanguages(Se.DictionariesFolder);
         Dictionaries.Clear();
-        Dictionaries.AddRange(spellCheckLanguages);
+        Dictionaries.AddRange(LanguageFavoritesHelper.Order(spellCheckLanguages, d => SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(d)));
         if (Dictionaries.Count > 0)
         {
             if (!string.IsNullOrEmpty(Se.Settings.SpellCheck.LastLanguageDictionaryFile))

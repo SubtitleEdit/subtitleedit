@@ -528,7 +528,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             return;
         }
 
-        foreach (var language in autoTranslator.GetSupportedSourceLanguages())
+        foreach (var language in LanguageFavoritesHelper.Order(autoTranslator.GetSupportedSourceLanguages(), p => p.Code))
         {
             SourceLanguages.Add(language);
         }
@@ -577,7 +577,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             return;
         }
 
-        foreach (var language in autoTranslator.GetSupportedTargetLanguages())
+        foreach (var language in LanguageFavoritesHelper.Order(autoTranslator.GetSupportedTargetLanguages(), p => p.Code))
         {
             TargetLanguages.Add(language);
         }

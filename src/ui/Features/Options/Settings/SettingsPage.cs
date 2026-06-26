@@ -9,6 +9,7 @@ using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Features.Shared.PickLanguage;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Optris.Icons.Avalonia;
@@ -344,6 +345,7 @@ public class SettingsPage : UserControl
             }),
 
             new SettingsItem(Se.Language.Options.Settings.FavoriteSubtitleFormats, () => MakeFavoritesGrid(_vm)),
+            new SettingsItem(Se.Language.Options.Settings.FavoriteLanguages, () => MakeLanguageFavoritesGrid(_vm)),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.Options.Settings.SyntaxColoring,
@@ -810,6 +812,54 @@ public class SettingsPage : UserControl
         var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveFavoriteSubtitleFormatCommand).WithMinWidth(100);
         var buttonMoveUp = UiUtil.MakeButton(Se.Language.General.MoveUp, vm.MoveUpFavoriteSubtitleFormatCommand).WithMinWidth(100);
         var buttonMoveDown = UiUtil.MakeButton(Se.Language.General.MoveDown, vm.MoveDownFavoriteSubtitleFormatCommand).WithMinWidth(100);
+
+        var buttonStack = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 5,
+            Margin = new Thickness(5, 0, 0, 0),
+            Children = { buttonAdd, buttonRemove, buttonMoveUp, buttonMoveDown }
+        };
+
+        grid.Add(UiUtil.MakeBorderForControlNoPadding(listBox), 0, 0);
+        grid.Add(buttonStack, 0, 1);
+
+        return grid;
+    }
+
+    private Grid MakeLanguageFavoritesGrid(SettingsViewModel vm)
+    {
+        // Grid with list of favorite languages, with buttons to add/remove/move-up/move-down
+
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+            },
+            Margin = new Thickness(0, 5, 0, 0),
+        };
+
+        var listBox = new ListBox
+        {
+            DataContext = vm,
+            Height = 250,
+            Width = 250,
+            [!ItemsControl.ItemsSourceProperty] = new Binding(nameof(vm.FavoriteLanguages)),
+            [!SelectingItemsControl.SelectedItemProperty] = new Binding(nameof(vm.SelectedFavoriteLanguage)) { Mode = BindingMode.TwoWay },
+            ItemTemplate = new FuncDataTemplate<PickLanguageDisplay>((l, _) =>
+                new TextBlock { Text = l?.ToString() }, true)
+        };
+
+        var buttonAdd = UiUtil.MakeButton(Se.Language.General.Add, vm.AddFavoriteLanguageCommand).WithMinWidth(100);
+        var buttonRemove = UiUtil.MakeButton(Se.Language.General.Remove, vm.RemoveFavoriteLanguageCommand).WithMinWidth(100);
+        var buttonMoveUp = UiUtil.MakeButton(Se.Language.General.MoveUp, vm.MoveUpFavoriteLanguageCommand).WithMinWidth(100);
+        var buttonMoveDown = UiUtil.MakeButton(Se.Language.General.MoveDown, vm.MoveDownFavoriteLanguageCommand).WithMinWidth(100);
 
         var buttonStack = new StackPanel
         {
