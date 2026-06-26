@@ -215,6 +215,10 @@ public partial class ShortcutsViewModel : ObservableObject
         _configurableCommands.Add(vm.VideoMoveCustom1ForwardCommand);
         _configurableCommands.Add(vm.VideoMoveCustom2BackCommand);
         _configurableCommands.Add(vm.VideoMoveCustom2ForwardCommand);
+        _configurableCommands.Add(vm.VideoMoveCustom3BackCommand);
+        _configurableCommands.Add(vm.VideoMoveCustom3ForwardCommand);
+        _configurableCommands.Add(vm.VideoMoveCustom4BackCommand);
+        _configurableCommands.Add(vm.VideoMoveCustom4ForwardCommand);
         _configurableCommands.Add(vm.SetActor1Command);
         _configurableCommands.Add(vm.SetActor2Command);
         _configurableCommands.Add(vm.SetActor3Command);
@@ -770,6 +774,74 @@ public partial class ShortcutsViewModel : ObservableObject
                 if (flatNodeForward != null)
                 {
                     flatNodeForward.Title = string.Format(Se.Language.General.VideoCustom2ForwardX, Se.Settings.Video.MoveVideoPositionCustom2Forward);
+                }
+            }
+        }
+        else if (node.ShortCut.Action == MainViewModel.VideoMoveCustom3BackCommand)
+        {
+            var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
+            {
+                vm.Initialize(Se.Settings.Video.MoveVideoPositionCustom3Back);
+            });
+            if (result.OkPressed)
+            {
+                Se.Settings.Video.MoveVideoPositionCustom3Back = result.Milliseconds;
+
+                var flatNodeBack = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom3BackCommand);
+                if (flatNodeBack != null)
+                {
+                    flatNodeBack.Title = string.Format(Se.Language.General.VideoCustom3BackX, Se.Settings.Video.MoveVideoPositionCustom3Back);
+                }
+            }
+        }
+        else if (node.ShortCut.Action == MainViewModel.VideoMoveCustom3ForwardCommand)
+        {
+            var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
+            {
+                vm.Initialize(Se.Settings.Video.MoveVideoPositionCustom3Forward);
+            });
+            if (result.OkPressed)
+            {
+                Se.Settings.Video.MoveVideoPositionCustom3Forward = result.Milliseconds;
+
+                var flatNodeForward = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom3ForwardCommand);
+                if (flatNodeForward != null)
+                {
+                    flatNodeForward.Title = string.Format(Se.Language.General.VideoCustom3ForwardX, Se.Settings.Video.MoveVideoPositionCustom3Forward);
+                }
+            }
+        }
+        else if (node.ShortCut.Action == MainViewModel.VideoMoveCustom4BackCommand)
+        {
+            var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
+            {
+                vm.Initialize(Se.Settings.Video.MoveVideoPositionCustom4Back);
+            });
+            if (result.OkPressed)
+            {
+                Se.Settings.Video.MoveVideoPositionCustom4Back = result.Milliseconds;
+
+                var flatNodeBack = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom4BackCommand);
+                if (flatNodeBack != null)
+                {
+                    flatNodeBack.Title = string.Format(Se.Language.General.VideoCustom4BackX, Se.Settings.Video.MoveVideoPositionCustom4Back);
+                }
+            }
+        }
+        else if (node.ShortCut.Action == MainViewModel.VideoMoveCustom4ForwardCommand)
+        {
+            var result = await _windowService.ShowDialogAsync<PickMillisecondsWindow, PickMillisecondsViewModel>(Window, vm =>
+            {
+                vm.Initialize(Se.Settings.Video.MoveVideoPositionCustom4Forward);
+            });
+            if (result.OkPressed)
+            {
+                Se.Settings.Video.MoveVideoPositionCustom4Forward = result.Milliseconds;
+
+                var flatNodeForward = FlatNodes.FirstOrDefault(n => n?.ShortCut?.Action == MainViewModel.VideoMoveCustom4ForwardCommand);
+                if (flatNodeForward != null)
+                {
+                    flatNodeForward.Title = string.Format(Se.Language.General.VideoCustom4ForwardX, Se.Settings.Video.MoveVideoPositionCustom4Forward);
                 }
             }
         }

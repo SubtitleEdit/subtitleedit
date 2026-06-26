@@ -432,6 +432,30 @@ public partial class BinaryEditViewModel : ObservableObject
         MoveVideoPositionMs(Se.Settings.Video.MoveVideoPositionCustom2Forward);
     }
 
+    [RelayCommand]
+    private void VideoMoveCustom3Back()
+    {
+        MoveVideoPositionMs(-Se.Settings.Video.MoveVideoPositionCustom3Back);
+    }
+
+    [RelayCommand]
+    private void VideoMoveCustom3Forward()
+    {
+        MoveVideoPositionMs(Se.Settings.Video.MoveVideoPositionCustom3Forward);
+    }
+
+    [RelayCommand]
+    private void VideoMoveCustom4Back()
+    {
+        MoveVideoPositionMs(-Se.Settings.Video.MoveVideoPositionCustom4Back);
+    }
+
+    [RelayCommand]
+    private void VideoMoveCustom4Forward()
+    {
+        MoveVideoPositionMs(Se.Settings.Video.MoveVideoPositionCustom4Forward);
+    }
+
 
     private void MoveVideoPositionMs(int ms)
     {

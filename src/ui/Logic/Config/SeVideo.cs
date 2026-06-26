@@ -24,6 +24,10 @@ public class SeVideo
     public int MoveVideoPositionCustom1Forward { get; set; }
     public int MoveVideoPositionCustom2Back { get; set; }
     public int MoveVideoPositionCustom2Forward { get; set; }
+    public int MoveVideoPositionCustom3Back { get; set; }
+    public int MoveVideoPositionCustom3Forward { get; set; }
+    public int MoveVideoPositionCustom4Back { get; set; }
+    public int MoveVideoPositionCustom4Forward { get; set; }
 
     public string MpvPreviewFontName { get; set; }
     public int MpvPreviewFontSize { get; set; }
@@ -55,6 +59,10 @@ public class SeVideo
         MoveVideoPositionCustom1Forward = 2000; // 2 seconds
         MoveVideoPositionCustom2Back = 5000; // 5 seconds
         MoveVideoPositionCustom2Forward = 5000; // 5 seconds
+        MoveVideoPositionCustom3Back = 10000; // 10 seconds
+        MoveVideoPositionCustom3Forward = 10000; // 10 seconds
+        MoveVideoPositionCustom4Back = 30000; // 30 seconds
+        MoveVideoPositionCustom4Forward = 30000; // 30 seconds
 
         MpvPreviewFontName = "Arial";
         MpvPreviewFontSize = 20;

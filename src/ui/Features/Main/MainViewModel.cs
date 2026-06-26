@@ -11402,6 +11402,10 @@ public partial class MainViewModel :
             (nameof(VideoMoveCustom1ForwardCommand),VideoMoveCustom1ForwardCommand),
             (nameof(VideoMoveCustom2BackCommand),   VideoMoveCustom2BackCommand),
             (nameof(VideoMoveCustom2ForwardCommand),VideoMoveCustom2ForwardCommand),
+            (nameof(VideoMoveCustom3BackCommand),   VideoMoveCustom3BackCommand),
+            (nameof(VideoMoveCustom3ForwardCommand),VideoMoveCustom3ForwardCommand),
+            (nameof(VideoMoveCustom4BackCommand),   VideoMoveCustom4BackCommand),
+            (nameof(VideoMoveCustom4ForwardCommand),VideoMoveCustom4ForwardCommand),
             (nameof(PlayCommand),                   PlayCommand),
             (nameof(PauseCommand),                  PauseCommand),
             (nameof(TogglePlayPauseCommand),        TogglePlayPauseCommand),
@@ -13090,6 +13094,30 @@ public partial class MainViewModel :
     private void VideoMoveCustom2Forward()
     {
         MoveVideoPositionMs(Se.Settings.Video.MoveVideoPositionCustom2Forward);
+    }
+
+    [RelayCommand]
+    private void VideoMoveCustom3Back()
+    {
+        MoveVideoPositionMs(-Se.Settings.Video.MoveVideoPositionCustom3Back);
+    }
+
+    [RelayCommand]
+    private void VideoMoveCustom3Forward()
+    {
+        MoveVideoPositionMs(Se.Settings.Video.MoveVideoPositionCustom3Forward);
+    }
+
+    [RelayCommand]
+    private void VideoMoveCustom4Back()
+    {
+        MoveVideoPositionMs(-Se.Settings.Video.MoveVideoPositionCustom4Back);
+    }
+
+    [RelayCommand]
+    private void VideoMoveCustom4Forward()
+    {
+        MoveVideoPositionMs(Se.Settings.Video.MoveVideoPositionCustom4Forward);
     }
 
     [RelayCommand]
