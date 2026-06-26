@@ -339,7 +339,7 @@ public class ColorPickerWindow : Window
                     nameof(vm.LastColorPickerColor7) => vm.LastColorPickerColor7,
                     _ => Colors.White
                 };
-                vm.SelectedColor = color;
+                vm.SelectRecentColor(color);
             }
         };
 

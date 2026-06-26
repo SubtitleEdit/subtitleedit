@@ -128,6 +128,17 @@ public partial class ColorPickerViewModel : ObservableObject
         }
     }
 
+    public void SelectRecentColor(Color color)
+    {
+        if (!_isUpdating)
+        {
+            _isUpdating = true;
+            SelectedColor = color;
+            UpdateFromColor(color);
+            _isUpdating = false;
+        }
+    }
+
     private void UpdateColorFromRgb()
     {
         _isUpdating = true;
