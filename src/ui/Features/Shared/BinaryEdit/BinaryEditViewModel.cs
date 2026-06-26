@@ -1415,12 +1415,10 @@ public partial class BinaryEditViewModel : ObservableObject
         {
             Dispatcher.UIThread.Post(() =>
             {
-                if (SubtitleGrid == null) return;
-                if (selectedItems != null)
-                {
-                    ApplyGridSelection(selectedItems, preserveScroll: true);
-                }
-                // else: PropertyChanged handles display update; no refresh needed
+                if (SubtitleGrid == null || selectedItems == null) return;
+                SubtitleGrid.SelectedItems.Clear();
+                foreach (var item in selectedItems)
+                    SubtitleGrid.SelectedItems.Add(item);
             });
         }
 
@@ -1481,12 +1479,10 @@ public partial class BinaryEditViewModel : ObservableObject
         {
             Dispatcher.UIThread.Post(() =>
             {
-                if (SubtitleGrid == null) return;
-                if (selectedItems != null)
-                {
-                    ApplyGridSelection(selectedItems, preserveScroll: true);
-                }
-                // else: PropertyChanged handles display update; no refresh needed
+                if (SubtitleGrid == null || selectedItems == null) return;
+                SubtitleGrid.SelectedItems.Clear();
+                foreach (var item in selectedItems)
+                    SubtitleGrid.SelectedItems.Add(item);
             });
         }
 
