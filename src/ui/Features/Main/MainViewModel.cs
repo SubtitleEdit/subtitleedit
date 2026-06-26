@@ -152,6 +152,7 @@ using Nikse.SubtitleEdit.Logic.Config.Language;
 using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.Initializers;
 using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic.Platform.Windows;
 using Nikse.SubtitleEdit.Logic.Plugins;
 using Nikse.SubtitleEdit.Logic.UndoRedo;
@@ -373,6 +374,7 @@ public partial class MainViewModel :
     private readonly IAutoBackupService _autoBackupService;
     private readonly IUndoRedoManager _undoRedoManager;
     private readonly IBluRayHelper _bluRayHelper;
+    private readonly IOcrImageSourceHolder _ocrImageSourceHolder;
     private readonly IMpvReloader _mpvReloader;
     private readonly IVlcReloader _vlcReloader;
     private readonly IFindService _findService;
@@ -439,6 +441,7 @@ public partial class MainViewModel :
         IAutoBackupService autoBackupService,
         IUndoRedoManager undoRedoManager,
         IBluRayHelper bluRayHelper,
+        IOcrImageSourceHolder ocrImageSourceHolder,
         IMpvReloader mpvReloader,
         IVlcReloader vlcReloader,
         IFindService findService,
@@ -465,6 +468,7 @@ public partial class MainViewModel :
         _autoBackupService = autoBackupService;
         _undoRedoManager = undoRedoManager;
         _bluRayHelper = bluRayHelper;
+        _ocrImageSourceHolder = ocrImageSourceHolder;
         _mpvReloader = mpvReloader;
         _vlcReloader = vlcReloader;
         _findService = findService;
@@ -14240,6 +14244,12 @@ public partial class MainViewModel :
         {
             return;
         }
+
+        // Drop any image source kept from a previous OCR session; the image-import branches
+        // below re-populate it via the OCR window, while plain text subtitles leave it cleared
+        // so spell check does not show unrelated images (#11719).
+        _ocrImageSourceHolder.Source = null;
+        _ocrImageSourceHolder.FileName = null;
 
         var ext = Path.GetExtension(fileName);
         var fileSize = (long)0;

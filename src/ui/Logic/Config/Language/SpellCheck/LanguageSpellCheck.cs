@@ -17,6 +17,7 @@ public class LanguageSpellCheck
     public string XOfYNamesImported { get; set; }
     public string NoDictionariesFound { get; set; }
     public string WordNotFound { get; set; }
+    public string LoadSourceImage { get; set; }
     public string LineXofY { get; set; }
     public string ChangeWordFromXToY { get; set; }
     public string ChangeAllWordsFromXToY { get; set; }
@@ -51,6 +52,7 @@ public class LanguageSpellCheck
         XOfYNamesImported = "{0} of {1} names imported (the rest may already exist).";
         NoDictionariesFound = "No dictionaries found";
         WordNotFound = "Word not found";
+        LoadSourceImage = "Show source images too...";
         LineXofY = "Spell checker - line {0} of {1}";
         ChangeWordFromXToY = "Change word from '{0}' to '{1}'";
         ChangeAllWordsFromXToY = "Change all words from '{0}' to '{1}'";
