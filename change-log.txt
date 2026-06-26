@@ -1,7 +1,7 @@
 
 Subtitle Edit Changelog
 
-v5.1.0-beta1 (26th June 2026)
+v5.1.0-beta2 (TBD)
 
 * Add auto-save of the open subtitle file (Options > General) - thx muaz978
 * Add remote/external llama.cpp server (URL) option to auto-translate - thx muaz978
