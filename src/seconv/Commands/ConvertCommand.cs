@@ -326,7 +326,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
                 catch (Exception ex)
                 {
-                    AnsiConsole.MarkupLine($"[red]Error loading --settings file: {ex.Message.EscapeMarkup()}[/]");
+                    AnsiConsole.MarkupLineInterpolated($"[red]Error loading --settings file: {ex.Message}[/]");
                     return 1;
                 }
             }
@@ -353,7 +353,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
                 catch (ArgumentException ex)
                 {
-                    AnsiConsole.MarkupLine($"[red]Error: {ex.Message.EscapeMarkup()}[/]");
+                    AnsiConsole.MarkupLineInterpolated($"[red]Error: {ex.Message}[/]");
                     return 1;
                 }
             }
@@ -394,7 +394,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
                 catch (FormatException ex)
                 {
-                    AnsiConsole.MarkupLine($"[red]Error: {ex.Message.EscapeMarkup()}[/]");
+                    AnsiConsole.MarkupLineInterpolated($"[red]Error: {ex.Message}[/]");
                     return 1;
                 }
             }
@@ -409,7 +409,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
                 catch (FormatException ex)
                 {
-                    AnsiConsole.MarkupLine($"[red]Error: {ex.Message.EscapeMarkup()}[/]");
+                    AnsiConsole.MarkupLineInterpolated($"[red]Error: {ex.Message}[/]");
                     return 1;
                 }
             }
@@ -424,7 +424,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
                 catch (FormatException ex)
                 {
-                    AnsiConsole.MarkupLine($"[red]Error: {ex.Message.EscapeMarkup()}[/]");
+                    AnsiConsole.MarkupLineInterpolated($"[red]Error: {ex.Message}[/]");
                     return 1;
                 }
             }
@@ -565,7 +565,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                     AnsiConsole.MarkupLine("[red]Errors:[/]");
                     foreach (var error in result.Errors)
                     {
-                        AnsiConsole.MarkupLine($"  [red]•[/] {error.EscapeMarkup()}");
+                        AnsiConsole.MarkupLineInterpolated($"  [red]•[/] {error}");
                     }
                 }
 
@@ -582,10 +582,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             }
             else
             {
-                AnsiConsole.MarkupLine($"[red]Error: {ex.Message}[/]");
+                AnsiConsole.MarkupLineInterpolated($"[red]Error: {ex.Message}[/]");
                 if (ex.InnerException != null)
                 {
-                    AnsiConsole.MarkupLine($"[dim]{ex.InnerException.Message}[/]");
+                    AnsiConsole.MarkupLineInterpolated($"[dim]{ex.InnerException.Message}[/]");
                 }
             }
             return 1;

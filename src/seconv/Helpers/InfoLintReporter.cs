@@ -29,7 +29,7 @@ internal static class InfoLintReporter
             return;
         }
 
-        AnsiConsole.MarkupLine($"[bold cyan]{info.Path.EscapeMarkup()}[/]");
+        AnsiConsole.MarkupLineInterpolated($"[bold cyan]{info.Path}[/]");
         var table = new Table().Border(TableBorder.Rounded);
         table.AddColumn("[yellow]Field[/]");
         table.AddColumn("[green]Value[/]");
@@ -73,11 +73,11 @@ internal static class InfoLintReporter
         {
             if (report.IsClean)
             {
-                AnsiConsole.MarkupLine($"[green]✓[/] {report.Path.EscapeMarkup()} [dim](clean)[/]");
+                AnsiConsole.MarkupLineInterpolated($"[green]✓[/] {report.Path} [dim](clean)[/]");
                 continue;
             }
 
-            AnsiConsole.MarkupLine($"[yellow]⚠[/] {report.Path.EscapeMarkup()} [dim]({report.Issues.Count} issues)[/]");
+            AnsiConsole.MarkupLineInterpolated($"[yellow]⚠[/] {report.Path} [dim]({report.Issues.Count} issues)[/]");
             var table = new Table().Border(TableBorder.Minimal);
             table.AddColumn("[yellow]#[/]");
             table.AddColumn("[cyan]Type[/]");
