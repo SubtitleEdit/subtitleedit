@@ -7403,10 +7403,22 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await ShowDialogAsync<ChangeSpeedWindow, ChangeSpeedViewModel>(vm => { vm.Initialize(Subtitles); });
+        var selectedIndices = SubtitleGrid.SelectedItems
+            .Cast<SubtitleLineViewModel>()
+            .Select(x => Subtitles.IndexOf(x))
+            .Where(i => i >= 0)
+            .OrderBy(i => i)
+            .ToList();
+
+        var result = await ShowDialogAsync<ChangeSpeedWindow, ChangeSpeedViewModel>(vm => { vm.Initialize(Subtitles, selectedIndices); });
         if (result.OkPressed)
         {
-            ChangeSpeedViewModel.ChangeSpeed(Subtitles, result.SpeedPercent);
+            if (result.AdjustSelectedLinesAndForward && selectedIndices.Count > 0)
+                ChangeSpeedViewModel.ChangeSpeed(Subtitles.Skip(selectedIndices[0]), result.SpeedPercent);
+            else if (result.AdjustSelectedLines && selectedIndices.Count > 0)
+                ChangeSpeedViewModel.ChangeSpeed(selectedIndices.Select(i => Subtitles[i]), result.SpeedPercent);
+            else
+                ChangeSpeedViewModel.ChangeSpeed(Subtitles, result.SpeedPercent);
             _updateAudioVisualizer = true;
         }
     }

@@ -5,7 +5,9 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Sync.ChangeSpeed;
 
@@ -18,10 +20,11 @@ public partial class ChangeSpeedViewModel : ObservableObject
     [ObservableProperty] private bool _isSelectionAvailable;
 
     private ObservableCollection<SubtitleLineViewModel>? _subtitles;
+    private IList<int>? _selectedIndices;
     private Action<double, bool, bool, bool>? _binaryApplyCallback;
 
     public Window? Window { get; set; }
-    
+
     public bool OkPressed { get; private set; }
 
     public ChangeSpeedViewModel()
@@ -33,7 +36,7 @@ public partial class ChangeSpeedViewModel : ObservableObject
     [RelayCommand]
     private void SetFromDropFrameValue()
     {
-        SpeedPercent = 100.1001; 
+        SpeedPercent = 100.1001;
     }
 
     [RelayCommand]
@@ -54,22 +57,30 @@ public partial class ChangeSpeedViewModel : ObservableObject
     {
         if (_subtitles != null)
         {
-            ChangeSpeed(_subtitles, SpeedPercent);
+            if (AdjustSelectedLinesAndForward && _selectedIndices?.Count > 0)
+                ChangeSpeed(_subtitles.Skip(_selectedIndices[0]), SpeedPercent);
+            else if (AdjustSelectedLines && _selectedIndices?.Count > 0)
+                ChangeSpeed(_selectedIndices.Select(i => _subtitles[i]), SpeedPercent);
+            else
+                ChangeSpeed(_subtitles, SpeedPercent);
             return;
         }
         _binaryApplyCallback?.Invoke(SpeedPercent, AdjustAll, AdjustSelectedLines, AdjustSelectedLinesAndForward);
     }
 
-    [RelayCommand]                   
-    private void Cancel() 
+    [RelayCommand]
+    private void Cancel()
     {
         Window?.Close();
     }
 
-    internal void Initialize(ObservableCollection<SubtitleLineViewModel> subtitles)
+    internal void Initialize(ObservableCollection<SubtitleLineViewModel> subtitles, IList<int> selectedIndices)
     {
         _subtitles = subtitles;
-        IsSelectionAvailable = true;
+        _selectedIndices = selectedIndices;
+        IsSelectionAvailable = selectedIndices.Count > 0;
+        if (!IsSelectionAvailable)
+            AdjustAll = true;
     }
 
     internal void Initialize(bool isSelectionAvailable, Action<double, bool, bool, bool> binaryApplyCallback)
@@ -96,11 +107,11 @@ public partial class ChangeSpeedViewModel : ObservableObject
         }
     }
 
-    internal static void ChangeSpeed(ObservableCollection<SubtitleLineViewModel> subtitles, double speedPercent)
+    internal static void ChangeSpeed(IEnumerable<SubtitleLineViewModel> subtitles, double speedPercent)
     {
+        var factor = 100.0 / speedPercent;
         foreach (var subtitle in subtitles)
         {
-            var factor = 100.0 / speedPercent;
             subtitle.SetTimes(
                 TimeSpan.FromMilliseconds(subtitle.StartTime.TotalMilliseconds * factor),
                 TimeSpan.FromMilliseconds(subtitle.EndTime.TotalMilliseconds * factor));
