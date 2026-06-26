@@ -26,6 +26,7 @@ public partial class ChangeSpeedViewModel : ObservableObject
 
     public ChangeSpeedViewModel()
     {
+        SpeedPercent = 100.0;
         AdjustAll = true;
     }
 
