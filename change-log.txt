@@ -7,62 +7,64 @@ v5.1.0 (TBD)
 * Add remote/external llama.cpp server (URL) option to auto-translate - thx muaz978
 * Add HTML index export to binary edit - thx mjuhasz
 * Add "Toggle translation mode" command/shortcut (SE4 parity)
-* Add "Play next (and stop)" and "Play next (and loop)" shortcuts
+* Add "Play next (and stop)" and "Play next (and loop)" shortcuts - thx nguyenphuc2312
 * Add "Play previous (and stop)" and "Play previous (and loop)" shortcuts
-* Add "Treat words ending in 'in'' as 'ing'" spell check setting
+* Add "Treat words ending in 'in'' as 'ing'" spell check setting - thx RedSoxFan04
 * Add Undo button to spell check (SE4 parity)
 * Add grid context menu "insert subtitle after current line" on the last line
 * Add grid alternating-row coloring option to Appearance settings
 * Add a couple of "Extend" shortcuts from SE4 - thx OmrSi
 * Bridge more SE4 shortcuts in the SE4 settings importer
 * Open original subtitle into an empty subtitle as a blank translation
-* Drag a multi-line selection in the waveform to shift all time codes together
-* Spell check can continue from the current line and wrap around (SE4 parity)
-* F10 focuses the main menu for keyboard/screen-reader access
+* Drag a multi-line selection in the waveform to shift all time codes together - thx wuwufei
+* Spell check can continue from the current line and wrap around (SE4 parity) - thx p1nkyy
+* F10 focuses the main menu for keyboard/screen-reader access - thx kylesskim-sys
 * Restore horizontal grid lines in the waveform
 * Improve Dutch casing rules ('s/'t contractions and IJ digraph)
 * Batch convert: pluralize the remove-files confirmation for multi-select
 * Use ffmpeg from the system PATH (v7+) when the download fails
 * Update CrispASR to v0.8.4
 * Update whisper.cpp to v1.9.1
-* Fix "Save as" to ASS using Arial instead of the configured default style
+* Fix "Save as" to ASSA using Arial instead of the configured default style - thx korsosattila73
 * Fix proxy settings not being saved - thx baoyu0
 * Fix Split tool dropping the last part; default output to the source folder
 * Fix SSA toolbar hints showing "Advanced Sub Station Alpha"
 * Fix missing window title on the ASSA/SSA style picker
-* Fix found/selected grid row not always being fully scrolled into view
-* Fix Bold shortcut bolding the whole line instead of the selected words
-* Fix profile editor not showing/saving the chars/sec and words/min values
-* Make "Merge continuation lines" work with CJK text (treat like English)
+* Fix found/selected grid row not always being fully scrolled into view - thx subcor
+* Fix Bold shortcut bolding the whole line instead of the selected words - thx Khaztaroth
+* Fix profile editor not showing/saving the chars/sec and words/min values - thx Khaztaroth
+* Make "Merge continuation lines" work with CJK text (treat like English) - thx acc4github
 * Change the default "Auto-break text" shortcut from Ctrl+R to Ctrl+Alt+B
 * Align the CJK merge shortcut label with SE4 wording
 * Localize "Set up like Subtitle Edit 4" dialog strings
-* Add an assignable "Waveform insert new selection" shortcut (SE4 parity)
+* Add an assignable "Waveform insert new selection" shortcut (SE4 parity) - thx geroyannis
 * Add a Tesseract OCR engine-mode setting (SE4 parity)
 * Add accessible names to the waveform toolbar controls for screen readers
 * Burn-in: default the target file size to the source video size, and add per-file target size in batch mode
 * Extend Dutch casing contractions to apply after a colon and a mid-paragraph period
 * Fix OCR word colors and subtitle-image background contrast in light mode
 * Shorten and resize a long video file name in the player so it no longer overlaps the position info
-* Add "Play from just before text" video shortcut (SE4 parity)
-* Add "Move text after cursor position to next subtitle and go to next" (and a "...and play" variant) shortcuts (SE4 parity)
+* Add "Play from just before text" video shortcut (SE4 parity) - thx GordonLeekt
+* Add "Move text after cursor position to next subtitle and go to next" (and a "...and play" variant) shortcuts (SE4 parity) - thx kadrimarzouki
 * Add "Set start and keep duration" shortcut (SE4 parity)
-* Add "Set end, add new and go to new" shortcuts (SE4 parity)
-* Add "Auto detect" language for the standard Whisper engines
-* Add an "Add custom model" GUI for the Whisper engines
+* Add "Set end, add new and go to new" shortcuts (SE4 parity) - thx Estevarena
+* Add "Auto detect" language for the standard Whisper engines - thx l0uev4-lab
+* Add an "Add custom model" GUI for the Whisper engines - thx l0uev4-lab
 * Make the waveform "Toolbar items" settings row findable in search
-* Binary edit: F10 focuses the menu and menu keys no longer close the window
+* Binary edit: F10 focuses the menu and menu keys no longer close the window - thx kylesskim-sys
 * Improve CJK UI text rendering and font fallbacks on Linux
 * Optimize waveform/spectrogram drawing
-* Clean up speech-to-text temp files via a per-run subfolder
-* Fix 24 fps being read as 23.976 (and 30 as 29.97)
-* Fix Find Next/Previous shortcuts while the Find/Replace window is open
-* Fix "Surround with" placing symbols outside formatting tags
+* Clean up speech-to-text temp files via a per-run subfolder - thx l0uev4-lab
+* Fix 24 fps being read as 23.976 (and 30 as 29.97) - thx Larxen
+* Fix Find Next/Previous shortcuts while the Find/Replace window is open - thx mjuhasz
+* Fix "Surround with" placing symbols outside formatting tags - thx mjuhasz
 * Fix EBU STL export writing a blank Display Standard Code
-* Fix multi-character custom tags in "Remove text for hearing impaired"
-* Fix Tesseract OCR blanking coloured (non-white) text, and surface OCR errors instead of blank lines
+* Fix multi-character custom tags in "Remove text for hearing impaired" - thx l0uev4-lab
+* Fix Tesseract OCR blanking colored (non-white) text, and surface OCR errors instead of blank lines
 * Fix Ollama OCR runaway repetition / hang
-* Fix ASSA "Set position" frame grab and rotation, and the blank preview
+* Fix ASSA "Set position" frame grab and rotation, and the blank preview - thx bichitoxxx
+* Add Traditional Chinese (zh-Hant) translation - thx love80312
+* Add Hebrew and Swedish whisper.cpp models for download - thx darnn
 * Update Italian translation - thx bovirus
 * Update Korean translation - thx 12si27
 * Update Russian translation - thx jekovcar
