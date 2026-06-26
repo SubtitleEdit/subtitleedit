@@ -75,11 +75,13 @@ public static class ImageRenderer
 
         var segments = ParseTextWithStyling(text, fontColor);
 
-        // Create fonts
-        using var regularTypeface = SKTypeface.FromFamilyName(fontName, SKFontStyle.Normal);
-        using var boldTypeface = SKTypeface.FromFamilyName(fontName, SKFontStyle.Bold);
-        using var italicTypeface = SKTypeface.FromFamilyName(fontName, SKFontStyle.Italic);
-        using var boldItalicTypeface = SKTypeface.FromFamilyName(fontName, SKFontStyle.BoldItalic);
+        // Create fonts. SKTypeface.FromFamilyName can return null when the family is not
+        // found (and on some platforms when no default is available); fall back to the
+        // default typeface so we never hand a null typeface to SKFont / SKShaper.
+        using var regularTypeface = ResolveTypeface(fontName, SKFontStyle.Normal);
+        using var boldTypeface = ResolveTypeface(fontName, SKFontStyle.Bold);
+        using var italicTypeface = ResolveTypeface(fontName, SKFontStyle.Italic);
+        using var boldItalicTypeface = ResolveTypeface(fontName, SKFontStyle.BoldItalic);
 
         using var regularFont = new SKFont(ip.IsBold ? boldTypeface : regularTypeface, fontSize);
         using var boldFont = new SKFont(boldTypeface, fontSize);
@@ -130,6 +132,16 @@ public static class ImageRenderer
         //System.IO.File.WriteAllBytes(@"C:\temp\debug_with_margins.png", bitmapWithMargins.ToPngArray());
 
         return bitmapWithMargins;
+    }
+
+    // SKTypeface.FromFamilyName may return null when the requested family is missing.
+    // Passing a null typeface into SKFont / SKShaper risks a native crash, so fall back
+    // to the default typeface.
+    private static SKTypeface ResolveTypeface(string fontName, SKFontStyle style)
+    {
+        return SKTypeface.FromFamilyName(fontName, style)
+            ?? SKTypeface.FromFamilyName(null, style)
+            ?? SKTypeface.Default;
     }
 
     private static SKBitmap DrawBoxBehindText(
