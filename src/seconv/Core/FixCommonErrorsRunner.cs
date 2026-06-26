@@ -18,6 +18,10 @@ namespace SeConv.Core;
 /// </summary>
 internal static class FixCommonErrorsRunner
 {
+    // Upper bound on convergence passes (SE4 used a fixed 3); we loop until stable but
+    // never beyond this, to guard against a rule pair that oscillates forever.
+    private const int MaxPasses = 10;
+
     private static readonly IReadOnlyList<(string Id, Func<IFixCommonError> Factory)> Rules = BuildRules();
 
     public static IReadOnlyList<string> AvailableRuleIds { get; } =
@@ -89,6 +93,32 @@ internal static class FixCommonErrorsRunner
             Language = language,
         };
 
+        // Fix Common Errors is not idempotent in a single pass: one rule can create a
+        // condition another rule fixes on the next pass. SE4's batch converter ran the
+        // whole suite three times per /FixCommonErrors (issue #11873). Run to convergence
+        // here - repeat until a pass changes nothing, capped to avoid pathological loops.
+        var previousSnapshot = Snapshot(subtitle);
+        for (var pass = 0; pass < MaxPasses; pass++)
+        {
+            RunSinglePass(subtitle, wanted, explicitlyNamed, language, callbacks);
+
+            var snapshot = Snapshot(subtitle);
+            if (snapshot == previousSnapshot)
+            {
+                break;
+            }
+
+            previousSnapshot = snapshot;
+        }
+    }
+
+    private static void RunSinglePass(
+        Subtitle subtitle,
+        HashSet<string>? wanted,
+        HashSet<string>? explicitlyNamed,
+        string language,
+        EmptyFixCallback callbacks)
+    {
         foreach (var (id, factory) in Rules)
         {
             if (wanted != null && !wanted.Contains(id))
@@ -116,6 +146,21 @@ internal static class FixCommonErrorsRunner
                 // A rogue rule shouldn't kill the conversion. Skip and continue.
             }
         }
+    }
+
+    // A signature of the subtitle's timing + text, used to detect when a Fix Common
+    // Errors pass has stopped changing anything (convergence).
+    private static string Snapshot(Subtitle subtitle)
+    {
+        var sb = new System.Text.StringBuilder();
+        foreach (var p in subtitle.Paragraphs)
+        {
+            sb.Append(p.StartTime.TotalMilliseconds).Append('|')
+              .Append(p.EndTime.TotalMilliseconds).Append('|')
+              .Append(p.Text).Append('\n');
+        }
+
+        return sb.ToString();
     }
 
     /// <summary>

@@ -264,4 +264,38 @@ public class FixCommonErrorsRunnerTest
             new[] { "FixSpanishInvertedQuestionAndExclamationMarks", "FixCommas" },
             named);
     }
+
+    [Fact]
+    public void RunAll_RunsToConvergence_SecondRunMakesNoChange()
+    {
+        // Regression for #11873: FixCommonErrors must converge within a single call
+        // (SE4 ran the suite 3x). After one RunAll the result must be a fixed point, so
+        // a second RunAll changes nothing.
+        var sub = new Subtitle();
+        sub.Paragraphs.Add(new Paragraph("hello ,world  .", 0, 2000));
+        sub.Paragraphs.Add(new Paragraph(string.Empty, 2100, 2200));
+        sub.Paragraphs.Add(new Paragraph("this  is   a    test...", 3000, 6000));
+        sub.Renumber();
+
+        FixCommonErrorsRunner.RunAll(sub);
+        var afterFirst = Snapshot(sub);
+
+        FixCommonErrorsRunner.RunAll(sub);
+        var afterSecond = Snapshot(sub);
+
+        Assert.Equal(afterFirst, afterSecond);
+    }
+
+    private static string Snapshot(Subtitle subtitle)
+    {
+        var sb = new System.Text.StringBuilder();
+        foreach (var p in subtitle.Paragraphs)
+        {
+            sb.Append(p.StartTime.TotalMilliseconds).Append('|')
+              .Append(p.EndTime.TotalMilliseconds).Append('|')
+              .Append(p.Text).Append('\n');
+        }
+
+        return sb.ToString();
+    }
 }
