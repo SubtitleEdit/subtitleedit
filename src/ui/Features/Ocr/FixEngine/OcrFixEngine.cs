@@ -12,8 +12,8 @@ namespace Nikse.SubtitleEdit.Features.Ocr.FixEngine;
 
 public interface IOcrFixEngine
 {
-    void Initialize(List<OcrSubtitleItem> subtitles, string threeLetterIsoLanguageName, SpellCheckDictionaryDisplay spellCheckDictionary);
-    OcrFixLineResult FixOcrErrors(int index, OcrSubtitleItem item, bool doTryToGuessUnknownWords);
+    void Initialize(Subtitle subtitle, string threeLetterIsoLanguageName, SpellCheckDictionaryDisplay spellCheckDictionary);
+    OcrFixLineResult FixOcrErrors(int index, string text, bool doTryToGuessUnknownWords);
     void Unload();
     bool IsLoaded();
     List<string> GetSpellCheckSuggestions(string word);
@@ -34,7 +34,6 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
     private string _threeLetterIsoLanguageName;
     private string _twoLetterIsoLanguageName = string.Empty;
     private Subtitle _subtitle;
-    private List<OcrSubtitleItem> _subtitles;
     private HashSet<string> _wordSkipList = new HashSet<string>();
     private Dictionary<string, string> _changeAllDictionary;
 
@@ -46,7 +45,6 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         _wordSkipList = new HashSet<string>();
         _changeAllDictionary = new Dictionary<string, string>();
         _subtitle = new Subtitle();
-        _subtitles = new List<OcrSubtitleItem>();
         _threeLetterIsoLanguageName = string.Empty;
         _isLoaded = false;
         _ocrFixReplaceList = new OcrFixReplaceList2(string.Empty);
@@ -55,7 +53,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         _fiveLetterName = string.Empty;
     }
 
-    void IOcrFixEngine.Initialize(List<OcrSubtitleItem> subtitles, string threeLetterIsoLanguageName, SpellCheckDictionaryDisplay spellCheckDictionary)
+    void IOcrFixEngine.Initialize(Subtitle subtitle, string threeLetterIsoLanguageName, SpellCheckDictionaryDisplay spellCheckDictionary)
     {
         _isLoaded = true;
         var twoLetterIsoLanguageName = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(threeLetterIsoLanguageName);
@@ -64,24 +62,23 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
 
         _fiveLetterName = Path.GetFileNameWithoutExtension(spellCheckDictionary.DictionaryFileName);
 
-        _subtitles = subtitles;
         _threeLetterIsoLanguageName = threeLetterIsoLanguageName;
-        _subtitle = GetSubtitle(subtitles);
+        _subtitle = subtitle;
 
         var names = ReloadNames();
         _wordSplitList = StringWithoutSpaceSplitToWords.LoadWordSplitList(Se.DictionariesFolder, _threeLetterIsoLanguageName, names);
         _ocrFixReplaceList = OcrFixReplaceList2.FromLanguageId(_threeLetterIsoLanguageName);
     }
 
-    public OcrFixLineResult FixOcrErrors(int index, OcrSubtitleItem item, bool doTryToGuessUnknownWords)
+    public OcrFixLineResult FixOcrErrors(int index, string text, bool doTryToGuessUnknownWords)
     {
         var wordsToIgnore = new List<string>();
 
-        var replacedLine = ReplaceLineFixes(index, item, wordsToIgnore);
+        var replacedLine = ReplaceLineFixes(index, text, wordsToIgnore);
         var splitLine = SplitLine(replacedLine, index);
-        if (replacedLine != item.Text)
+        if (replacedLine != text)
         {
-            splitLine.ReplacementUsed = new ReplacementUsedItem(item.Text, replacedLine, index);
+            splitLine.ReplacementUsed = new ReplacementUsedItem(text, replacedLine, index);
         }
 
         for (var i = 0; i < splitLine.Words.Count; i++)
@@ -106,22 +103,10 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         return splitLine;
     }
 
-    public static Subtitle GetSubtitle(List<OcrSubtitleItem> subtitles)
+    private string ReplaceLineFixes(int index, string text, List<string> wordsToIgnore)
     {
-        var subtitle = new Subtitle();
-        foreach (var line in subtitles)
-        {
-            var p = new Paragraph(new TimeCode(line.StartTime), new TimeCode(line.EndTime), line.Text);
-            subtitle.Paragraphs.Add(p);
-        }
-
-        return subtitle;
-    }
-
-    private string ReplaceLineFixes(int index, OcrSubtitleItem item, List<string> wordsToIgnore)
-    {
-        var spelledOK = IsSpelledCorrect(item.Text);
-        var replacedLine = _ocrFixReplaceList.FixOcrErrorViaLineReplaceList(item.Text, _subtitle, index, _spellCheckManager, wordsToIgnore, spelledOK);
+        var spelledOK = IsSpelledCorrect(text);
+        var replacedLine = _ocrFixReplaceList.FixOcrErrorViaLineReplaceList(text, _subtitle, index, _spellCheckManager, wordsToIgnore, spelledOK);
 
         // French typography wants a space before ! ? : ; — Tesseract often returns it glued to the
         // word ("Quoi?"). Apply the same normalization Fix-Common-Errors uses, so OCR output is
@@ -440,7 +425,6 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         _changeAllDictionary = new Dictionary<string, string>();
         _isLoaded = false;
         _subtitle = new Subtitle();
-        _subtitles = new List<OcrSubtitleItem>();
         _threeLetterIsoLanguageName = string.Empty;
     }
 

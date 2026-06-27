@@ -1983,7 +1983,13 @@ public partial class OcrViewModel : ObservableObject
         if (SelectedDictionary != null && DoFixOcrErrors && SelectedDictionary.Name != GetDictionaryNameNone())
         {
             var threeLetterCode = SelectedDictionary.GetThreeLetterCode();
-            _ocrFixEngine.Initialize(OcrSubtitleItems.ToList(), threeLetterCode, SelectedDictionary);
+            var fixSubtitle = new Subtitle();
+            foreach (var ocrItem in OcrSubtitleItems)
+            {
+                fixSubtitle.Paragraphs.Add(new Paragraph(new TimeCode(ocrItem.StartTime), new TimeCode(ocrItem.EndTime), ocrItem.Text));
+            }
+
+            _ocrFixEngine.Initialize(fixSubtitle, threeLetterCode, SelectedDictionary);
         }
         else
         {
@@ -3119,7 +3125,7 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
-        var updatedResult = _ocrFixEngine.FixOcrErrors(lineIndex, item, DoTryToGuessUnknownWords);
+        var updatedResult = _ocrFixEngine.FixOcrErrors(lineIndex, item.Text, DoTryToGuessUnknownWords);
         item.FixResult = updatedResult;
     }
 
@@ -3147,7 +3153,7 @@ public partial class OcrViewModel : ObservableObject
             return null;
         }
 
-        var updatedResult = _ocrFixEngine.FixOcrErrors(lineIndex, item, DoTryToGuessUnknownWords);
+        var updatedResult = _ocrFixEngine.FixOcrErrors(lineIndex, item.Text, DoTryToGuessUnknownWords);
         item.FixResult = updatedResult;
 
         foreach (var unknownWord in GetUnknownWordItems(item, updatedResult))
@@ -3356,7 +3362,7 @@ public partial class OcrViewModel : ObservableObject
             SelectedDictionary.Name != GetDictionaryNameNone() &&
             _ocrFixEngine.IsLoaded() && DoFixOcrErrors)
         {
-            result.OcrFixLineResult = _ocrFixEngine.FixOcrErrors(i, item, DoTryToGuessUnknownWords);
+            result.OcrFixLineResult = _ocrFixEngine.FixOcrErrors(i, item.Text, DoTryToGuessUnknownWords);
             var correctedText = result.OcrFixLineResult.GetText();
             var alignment = GetAlignment(item, correctedText);
             result.ResultText = alignment.AlignmentAdded ? alignment.Text : correctedText;
@@ -3448,7 +3454,7 @@ public partial class OcrViewModel : ObservableObject
             SelectedDictionary.Name != GetDictionaryNameNone() &&
             _ocrFixEngine.IsLoaded() && DoFixOcrErrors)
         {
-            var result = _ocrFixEngine.FixOcrErrors(i, item, DoTryToGuessUnknownWords);
+            var result = _ocrFixEngine.FixOcrErrors(i, item.Text, DoTryToGuessUnknownWords);
             var correctedText = result.GetText();
             var alignment = GetAlignment(item, correctedText);
             var resultText = alignment.AlignmentAdded ? alignment.Text : correctedText;

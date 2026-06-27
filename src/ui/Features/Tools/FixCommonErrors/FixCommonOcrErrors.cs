@@ -31,9 +31,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 return;
             }
 
-            var ocrSubtitle = new OcrSubtitleDummy(subtitle);
-            var ocrSubtitles = ocrSubtitle.MakeOcrSubtitleItems();
-
             var spellCheckManager = new SpellCheckManager();
             var spellCheckers = spellCheckManager.GetDictionaryLanguages(Se.DictionariesFolder);
             var spellChecker = spellCheckers.FirstOrDefault(x => x.GetThreeLetterCode() == threeLetterCode);
@@ -42,16 +39,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 return;
             }
 
-            OcrFixEngine.Initialize(ocrSubtitles, threeLetterCode, spellChecker);
+            OcrFixEngine.Initialize(subtitle, threeLetterCode, spellChecker);
 
             var fixAction = Language.FixText;
             var fixCount = 0;
-            for (var i = 0; i < ocrSubtitles.Count; i++)
+            for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
-                var s = ocrSubtitles[i];
-                s.Text = p.Text;
-                var result = OcrFixEngine.FixOcrErrors(i, s, true);
+                var result = OcrFixEngine.FixOcrErrors(i, p.Text, true);
                 var text = result.GetText();
                 if (text != p.Text)
                 {
