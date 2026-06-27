@@ -65,6 +65,8 @@ public partial class BinaryEditViewModel : ObservableObject
     public ObservableCollection<BinarySubtitleItem> Subtitles { get; set; }
 
     private ScrollViewer? _subtitleGridScrollViewer;
+    private Control? _focusBeforeMenu;
+    private bool _altMenuTogglePending;
 
     private readonly IFileHelper _fileHelper;
     private readonly IFolderHelper _folderHelper;
@@ -1926,20 +1928,43 @@ public partial class BinaryEditViewModel : ObservableObject
 
     public void OnKeyDown(KeyEventArgs e)
     {
-        // F10 moves keyboard focus into the menu bar (standard Windows behavior) so it can be
-        // reached and read without a mouse (#11745).
-        if (e.Key == Key.F10 && e.KeyModifiers == KeyModifiers.None && TryFocusMenu())
+        // F10 toggles menu-bar activation (Windows standard): the first press moves keyboard focus
+        // into the menu bar, a second press deactivates it and restores the previous focus, so it can
+        // be reached and read without a mouse (#11745).
+        if (e.Key == Key.F10 && e.KeyModifiers == KeyModifiers.None)
         {
-            e.Handled = true;
-            return;
+            if (IsMenuFocused())
+            {
+                DeactivateMenu();
+                e.Handled = true;
+                return;
+            }
+
+            if (ActivateMenu())
+            {
+                e.Handled = true;
+                return;
+            }
         }
+
+        // Arm a "bare Alt" toggle so its release can activate/deactivate the menu bar (Windows
+        // standard). Any other key while Alt is held (e.g. the access key in Alt+F) cancels it; the
+        // toggle itself happens on key-up (OnKeyUp).
+        _altMenuTogglePending = e.Key is Key.LeftAlt or Key.RightAlt;
 
         // While the menu has keyboard focus, let it own its own navigation keys. The window key
         // handler runs even on keys the menu already handled (handledEventsToo: true), so without
-        // this Escape would close the whole window instead of the menu, and arrow/Enter would be
-        // consumed as shortcuts, breaking menu navigation (#11745).
+        // this arrow/Enter would be consumed as shortcuts, breaking menu navigation. Escape is
+        // handled here so that, once no drop-down is open, it fully deactivates the bar and restores
+        // focus instead of leaving it half-focused (and without closing the whole window) (#11745).
         if (IsMenuFocused())
         {
+            if (e.Key == Key.Escape && Menu is { IsOpen: false })
+            {
+                DeactivateMenu();
+                e.Handled = true;
+            }
+
             return;
         }
 
@@ -1974,6 +1999,23 @@ public partial class BinaryEditViewModel : ObservableObject
 
     public void OnKeyUp(KeyEventArgs e)
     {
+        // A bare Alt press+release toggles the menu bar (Windows standard). _altMenuTogglePending is
+        // cleared if any other key was pressed while Alt was held, or on a window task switch, so this
+        // fires only for Alt-alone (#11745).
+        if (e.Key is Key.LeftAlt or Key.RightAlt && _altMenuTogglePending)
+        {
+            _altMenuTogglePending = false;
+            if (IsMenuFocused())
+            {
+                DeactivateMenu();
+                e.Handled = true;
+            }
+            else if (ActivateMenu())
+            {
+                e.Handled = true;
+            }
+        }
+
         _shortcutManager.OnKeyReleased(this, e);
     }
 
@@ -1990,6 +2032,57 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         return Menu.Items[0] is MenuItem firstItem && firstItem.Focus(NavigationMethod.Tab);
+    }
+
+    /// <summary>
+    /// Activates the menu bar for keyboard navigation (Windows standard Alt/F10), remembering the
+    /// control that had focus so it can be restored on deactivation. Returns false when the menu is
+    /// hidden (macOS uses the native menu) (#11745).
+    /// </summary>
+    private bool ActivateMenu()
+    {
+        if (Menu == null || !Menu.IsVisible || Menu.Items.Count == 0)
+        {
+            return false;
+        }
+
+        _focusBeforeMenu = Window?.FocusManager?.GetFocusedElement() as Control;
+        return TryFocusMenu();
+    }
+
+    /// <summary>
+    /// Closes any open drop-down and fully deactivates the menu bar, restoring keyboard focus to the
+    /// control that was focused before activation (falling back to the subtitle grid). Mirrors the
+    /// Windows behavior where Alt/F10/Escape leave the menu and return to editing (#11745).
+    /// </summary>
+    private void DeactivateMenu()
+    {
+        Menu?.Close();
+        _altMenuTogglePending = false;
+
+        var restore = _focusBeforeMenu;
+        _focusBeforeMenu = null;
+
+        // Defer the focus change: closing the menu and moving focus from inside the key handler is
+        // racy, so let the current event finish first.
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (restore is { IsEffectivelyVisible: true } && restore.Focus())
+            {
+                return;
+            }
+
+            SubtitleGrid?.Focus();
+        });
+    }
+
+    /// <summary>
+    /// A task switch (e.g. Alt+Tab) must not leave a pending bare-Alt menu toggle armed; otherwise the
+    /// next Alt release after returning to the window would spuriously activate the menu bar (#11745).
+    /// </summary>
+    internal void OnWindowDeactivated(object? sender, EventArgs e)
+    {
+        _altMenuTogglePending = false;
     }
 
     /// <summary>
