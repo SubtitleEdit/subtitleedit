@@ -24,5 +24,5 @@ public interface ISpellCheckManager
     void RemoveFromUserDictionary(string word);
     List<SpellCheckDictionaryDisplay> GetDictionaryLanguages(string dictionaryFolder);
     List<string> GetSuggestions(string word);
-    WordSpellCheck? WordSpellChecker { get; set; }
+    IWordSpellChecker? WordSpellChecker { get; set; }
 }

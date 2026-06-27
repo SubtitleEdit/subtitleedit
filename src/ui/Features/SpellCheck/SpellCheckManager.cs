@@ -18,7 +18,7 @@ public class SpellCheckManager : ISpellCheckManager, IDoSpell
     public event SpellCheckWordChangedHandler? OnWordChanged;
     public int NoOfChangedWords { get; set; }
     public int NoOfSkippedWords { get; set; }
-    public WordSpellCheck? WordSpellChecker { get; set; }
+    public IWordSpellChecker? WordSpellChecker { get; set; }
 
     private static readonly Regex EmailRegex = new(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", RegexOptions.Compiled);
     private static readonly Regex UrlRegex = new(@"^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);

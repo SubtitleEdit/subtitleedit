@@ -6,9 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck;
 
-public record WordSpellCheckLanguage(string Name, int LanguageId);
-
-public sealed class WordSpellCheck : IDoSpell, IDisposable
+public sealed class WordSpellCheck : IWordSpellChecker, IDisposable
 {
     private dynamic? _wordApp;
     private dynamic? _managedDocument;
