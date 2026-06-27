@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
 using Nikse.SubtitleEdit.Features.SpellCheck;
-using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -203,7 +202,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         public static OcrFixReplaceList2 FromLanguageId(string languageId)
         {
-            return new OcrFixReplaceList2(Path.Combine(Se.DictionariesFolder, languageId + ReplaceListFileNamePostFix));
+            return new OcrFixReplaceList2(Path.Combine(SpellCheckConfig.DictionariesFolder(), languageId + ReplaceListFileNamePostFix));
         }
 
         private static Dictionary<string, string> LoadReplaceList(XmlDocument doc, string name)
@@ -307,7 +306,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return false;
         }
 
-        public string FixOcrErrorViaLineReplaceList(string input, Subtitle subtitle, int index, ISpellCheckManager spellCheckManager, List<string> wordsToIgnore, bool spelledOK)
+        public string FixOcrErrorViaLineReplaceList(string input, Subtitle subtitle, int index, ISpellChecker spellCheckManager, List<string> wordsToIgnore, bool spelledOK)
         {
             // Whole fromLine
             foreach (var from in _wholeLineReplaceList.Keys)

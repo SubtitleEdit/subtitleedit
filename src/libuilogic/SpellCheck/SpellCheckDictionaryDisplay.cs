@@ -203,13 +203,13 @@ public class SpellCheckDictionaryDisplay
         return threeLetterCode ?? "eng";
     }
 
-    internal string? GetFiveLetterLanguageName()
+    public string? GetFiveLetterLanguageName()
     {
         var fileName = Path.GetFileNameWithoutExtension(DictionaryFileName).Replace('-', '_');
         return GetFiveLetterLanguageName(fileName);
     }
 
-    internal static string? GetFiveLetterLanguageName(string fileName)
+    public static string? GetFiveLetterLanguageName(string fileName)
     {
         if (fileName == "es_ANY" || fileName == "es-ANY")
         {

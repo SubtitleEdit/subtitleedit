@@ -54,7 +54,6 @@
 		-->
 		<PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="14.2.0" />
 		<PackageReference Include="TagLibSharp" Version="2.3.0" />
-		<PackageReference Include="WeCantSpell.Hunspell" Version="7.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>

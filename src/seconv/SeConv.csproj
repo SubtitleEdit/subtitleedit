@@ -36,4 +36,12 @@
     <ProjectReference Include="..\libuilogic\LibUiLogic.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Bundle the dictionaries (Hunspell + *_OCRFixReplaceList.xml) so "Fix common OCR errors"
+         works out of the box (English) with no dictionary folder needed (#11744). -->
+    <EmbeddedResource Include="..\ui\Assets\Dictionaries.zip">
+      <LogicalName>SeConv.Dictionaries.zip</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

@@ -68,6 +68,7 @@ internal static class HelpDisplay
         ShowParameter("--delete-contains:<word>", "Delete entries containing specified word");
         ShowParameter("--fix-common-errors", "Fix common subtitle errors (all rules)");
         ShowParameter("--fix-common-errors-rules:<list>", "FCE rule IDs (csv); supports 'all,-RuleId'. List: seconv list-fce-rules");
+        ShowParameter("--dictionary-folder:<path>", "Hunspell dictionaries + *_OCRFixReplaceList.xml; enables the 'Fix common OCR errors' FCE pass");
         ShowParameter("--fix-rtl-via-unicode-chars", "Fix RTL via Unicode characters");
         ShowParameter("--merge-same-texts", "Merge entries with same text");
         ShowParameter("--merge-same-time-codes", "Merge entries with same time codes");

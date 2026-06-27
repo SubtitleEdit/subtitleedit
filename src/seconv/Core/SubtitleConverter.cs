@@ -681,6 +681,14 @@ internal class SubtitleConverter
 
         if (options.Operations.Count > 0)
         {
+            // Wire the shared spell-check / OCR-fix engine (libuilogic) to seconv's options so the
+            // "Fix common OCR errors" pass can run headless. Use --dictionary-folder when given, else
+            // fall back to the dictionaries bundled into seconv (English out of the box) (#11744).
+            Nikse.SubtitleEdit.Features.SpellCheck.SpellCheckConfig.DictionariesFolder = () =>
+                !string.IsNullOrEmpty(options.DictionaryFolder) ? options.DictionaryFolder : BundledDictionaries.GetFolder();
+            Nikse.SubtitleEdit.Features.SpellCheck.SpellCheckConfig.UseWordSplitList = () => true;
+            Nikse.SubtitleEdit.Features.SpellCheck.SpellCheckConfig.TreatInApostropheAsIng = () => false;
+
             LibSEIntegration.ApplyOperations(
                 subtitle,
                 options.Operations,
@@ -847,6 +855,9 @@ internal record class ConversionOptions
 
     /// <summary>Path to a <c>.nocr</c> database file (required when <c>OcrEngine == "nocr"</c>).</summary>
     public string? OcrDb { get; init; }
+
+    /// <summary>Folder with Hunspell dictionaries + *_OCRFixReplaceList.xml, enabling the "Fix common OCR errors" pass.</summary>
+    public string? DictionaryFolder { get; init; }
 
     /// <summary>
     /// When true, image-based sources (Blu-Ray <c>.sup</c>, VobSub <c>.sub</c>+<c>.idx</c>,

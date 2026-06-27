@@ -200,12 +200,6 @@
         "resolved": "2.3.0",
         "contentHash": "Qo4z6ZjnIfbR3Us1Za5M2vQ97OWZPmODvVmepxZ8XW0UIVLGdO2T63/N3b23kCcyiwuIe0TQvMEQG8wUCCD1mA=="
       },
-      "WeCantSpell.Hunspell": {
-        "type": "Direct",
-        "requested": "[7.0.1, )",
-        "resolved": "7.0.1",
-        "contentHash": "Ha0x66QWA+IPj2kJYoweA8MSnB1tymBW6kAIS6Kkj/U3SlMLCBPjDlUXzrrY1zJAxVItrGpFIXjkl3eEIYIE9A=="
-      },
       "Avalonia.Angle.Windows.Natives": {
         "type": "Transitive",
         "resolved": "2.1.27548.20260419",
@@ -600,6 +594,11 @@
         "resolved": "2.6.0",
         "contentHash": "YmmUcR9XKh3twmSjq6l0HD7qm7bj3X+gXCsdkWwpiuiB4wzGDJuCOneOQ3NvwQQEMqNeyVZOPO/EwFD4fuUoOQ=="
       },
+      "WeCantSpell.Hunspell": {
+        "type": "Transitive",
+        "resolved": "7.0.1",
+        "contentHash": "Ha0x66QWA+IPj2kJYoweA8MSnB1tymBW6kAIS6Kkj/U3SlMLCBPjDlUXzrrY1zJAxVItrGpFIXjkl3eEIYIE9A=="
+      },
       "libse": {
         "type": "Project",
         "dependencies": {
@@ -612,6 +611,7 @@
         "dependencies": {
           "CommunityToolkit.Mvvm": "[8.4.2, )",
           "SkiaSharp.HarfBuzz": "[4.148.0, )",
+          "WeCantSpell.Hunspell": "[7.0.1, )",
           "libse": "[1.0.0, )"
         }
       }

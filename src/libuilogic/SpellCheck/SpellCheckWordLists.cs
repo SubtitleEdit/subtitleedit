@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Interfaces;
-using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -39,7 +38,7 @@ public class SpellCheckWordLists
 
     public SpellCheckWordLists(string fiveLetterName, IDoSpell doSpell)
     {
-        _dictionaryFolder = Se.DictionariesFolder;
+        _dictionaryFolder = SpellCheckConfig.DictionariesFolder();
         _languageName = fiveLetterName ?? throw new NullReferenceException(nameof(fiveLetterName));
         _doSpell = doSpell ?? throw new NullReferenceException(nameof(doSpell));
         _nameList = new NameList(_dictionaryFolder, fiveLetterName, false, string.Empty);

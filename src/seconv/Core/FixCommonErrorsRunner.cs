@@ -1,6 +1,8 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.Interfaces;
+using Nikse.SubtitleEdit.Features.Ocr.FixEngine;
+using Nikse.SubtitleEdit.Features.SpellCheck;
 using SkiaSharp;
 
 namespace SeConv.Core;
@@ -13,8 +15,9 @@ namespace SeConv.Core;
 ///
 /// Rule IDs are stable string keys (matching the rule class name) so users can pass
 /// them via <c>--FixCommonErrorsRules</c>. Matching is case-insensitive.
-/// <c>FixCommonOcrErrors</c> is intentionally excluded — it requires UI-side
-/// spell-check / OCR engine setup that seconv lacks.
+/// <c>FixCommonOcrErrors</c> runs as a final pass when a dictionary folder is configured
+/// (<c>--dictionary-folder</c>), using the shared OCR-fix engine + Hunspell from libuilogic
+/// (#11744).
 /// </summary>
 internal static class FixCommonErrorsRunner
 {
@@ -22,10 +25,13 @@ internal static class FixCommonErrorsRunner
     // never beyond this, to guard against a rule pair that oscillates forever.
     private const int MaxPasses = 10;
 
+    // Pseudo-rule id for the OCR-fix pass (not an IFixCommonError; needs a dictionary + the engine).
+    internal const string OcrFixRuleId = "FixCommonOcrErrors";
+
     private static readonly IReadOnlyList<(string Id, Func<IFixCommonError> Factory)> Rules = BuildRules();
 
     public static IReadOnlyList<string> AvailableRuleIds { get; } =
-        Rules.Select(r => r.Id).ToArray();
+        Rules.Select(r => r.Id).Append(OcrFixRuleId).ToArray();
 
     /// <summary>
     /// Runs every available rule against the subtitle. Equivalent to
@@ -109,6 +115,56 @@ internal static class FixCommonErrorsRunner
             }
 
             previousSnapshot = snapshot;
+        }
+
+        // OCR-fix pass: deterministic rules above run first; this spell-check-driven pass runs last.
+        // It needs a dictionary folder (--dictionary-folder) and the OCR-fix engine, so it is gated
+        // separately from the IFixCommonError rule list. Runs as part of the full suite, or when the
+        // user names it explicitly (#11744).
+        if (wanted == null || wanted.Contains(OcrFixRuleId))
+        {
+            RunOcrFix(subtitle, language);
+        }
+    }
+
+    /// <summary>
+    /// Applies the OCR-fix engine (OCR replace lists + Hunspell spell-check guessing) to every line,
+    /// the headless equivalent of the GUI's "Fix common OCR errors". No-op when no dictionary folder
+    /// is configured or no Hunspell dictionary matches the detected language. (#11744)
+    /// </summary>
+    private static void RunOcrFix(Subtitle subtitle, string twoLetterLanguage)
+    {
+        var folder = SpellCheckConfig.DictionariesFolder();
+        if (string.IsNullOrEmpty(folder) || !System.IO.Directory.Exists(folder))
+        {
+            return;
+        }
+
+        var threeLetter = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(twoLetterLanguage);
+        if (string.IsNullOrEmpty(threeLetter))
+        {
+            return;
+        }
+
+        var spellChecker = new SpellChecker();
+        var dictionary = spellChecker.GetDictionaryLanguages(folder)
+            .FirstOrDefault(d => d.GetThreeLetterCode() == threeLetter);
+        if (dictionary == null)
+        {
+            return;
+        }
+
+        IOcrFixEngine engine = new OcrFixEngine(spellChecker);
+        engine.Initialize(subtitle, threeLetter, dictionary);
+
+        for (var i = 0; i < subtitle.Paragraphs.Count; i++)
+        {
+            var p = subtitle.Paragraphs[i];
+            var fixedText = engine.FixOcrErrors(i, p.Text, true).GetText();
+            if (fixedText != p.Text)
+            {
+                p.Text = fixedText;
+            }
         }
     }
 
