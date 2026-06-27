@@ -877,18 +877,45 @@ public partial class MainViewModel :
         Dispatcher.UIThread.Post(() => SubtitleGrid.Focus());
         RefreshSubtitlePreview();
 
-        if (savedAudioTrack != null && !string.IsNullOrEmpty(_videoFileName))
+        if (!string.IsNullOrEmpty(_videoFileName))
         {
             Dispatcher.UIThread.Post(async () =>
             {
                 var vp = GetVideoPlayerControl();
-                if (vp?.VideoPlayer is LibMpvDynamicPlayer mpv)
+                if (vp == null)
                 {
-                    await vp.WaitForPlayersReadyAsync();
+                    return;
+                }
+
+                await vp.WaitForPlayersReadyAsync();
+
+                // The rebuilt layout creates a fresh video player that starts at the default 1.0x, so
+                // re-apply the currently selected playback speed - otherwise it silently reverts to 1.0x
+                // after Options/layout changes even though the dropdown still shows the old value
+                // (discussion #11744).
+                ReapplyPlaybackSpeed();
+
+                if (savedAudioTrack != null && vp.VideoPlayer is LibMpvDynamicPlayer mpv)
+                {
                     mpv.SetAudioTrack(savedAudioTrack.Id);
                     var _ = Task.Run(LoadAudioTrackMenuItems);
                 }
             });
+        }
+    }
+
+    /// <summary>
+    /// Pushes the currently selected playback speed (<see cref="SelectedSpeed"/>, e.g. "2.0x") to the
+    /// video player. The speed is otherwise only sent to the player by the speed dropdown's
+    /// SelectionChanged event, so a recreated player (Options/layout rebuild) would stay at the default
+    /// 1.0x while the dropdown still shows the old value (discussion #11744).
+    /// </summary>
+    private void ReapplyPlaybackSpeed()
+    {
+        if (SelectedSpeed != null && SelectedSpeed.EndsWith("x", StringComparison.Ordinal) &&
+            double.TryParse(SelectedSpeed.Trim('x'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var speed))
+        {
+            GetVideoPlayerControl()?.SetSpeed(speed);
         }
     }
 
