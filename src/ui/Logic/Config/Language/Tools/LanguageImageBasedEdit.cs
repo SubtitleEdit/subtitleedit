@@ -27,6 +27,7 @@ public class LanguageImageBasedEdit
     public string ResizeImagesInfo { get; set; }
     public string AdjustColorDotDotDot { get; set; }
     public string AdjustColor { get; set; }
+    public string ColorAdjustmentInfo { get; set; }
 
     public LanguageImageBasedEdit()
     {
@@ -55,5 +56,6 @@ public class LanguageImageBasedEdit
         ResizeImagesInfo = "Enter the percentage to resize images.\nPreview updates automatically.";
         AdjustColorDotDotDot = "Adjust color...";
         AdjustColor = "Adjust color";
+        ColorAdjustmentInfo = "Click the color swatch to pick a color. Bright subtitle pixels shift toward the chosen hue; dark outlines and shadows are preserved.\nPreview shows the first selected subtitle.";
     }
 }
