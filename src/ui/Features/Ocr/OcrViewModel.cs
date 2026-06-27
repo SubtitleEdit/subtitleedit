@@ -394,7 +394,10 @@ public partial class OcrViewModel : ObservableObject
 
     private void AutoSelectDictionaryForOcrLanguage(string? languageCode)
     {
-        if (string.IsNullOrEmpty(languageCode) || Dictionaries.Count == 0)
+        // Dictionaries is null while the constructor is still running (the language combo boxes are
+        // populated before it is created), and the OCR-language setters fire this via OnChanged - so
+        // guard against null or it NREs in the ctor and the OCR window fails to open (#11907 follow-up).
+        if (string.IsNullOrEmpty(languageCode) || Dictionaries is null || Dictionaries.Count == 0)
         {
             return;
         }
