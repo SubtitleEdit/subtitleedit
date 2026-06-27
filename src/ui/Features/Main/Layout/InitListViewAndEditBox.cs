@@ -992,6 +992,12 @@ public static partial class InitListViewAndEditBox
                     Command = vm.ShowBeautifyTimeCodesSelectedLinesCommand,
                     DataContext = vm,
                 },
+                new MenuItem
+                {
+                    Header = Se.Language.Main.Menu.RemoveTextForHearingImpaired,
+                    Command = vm.RemoveTextForHearingImpairedSelectedLinesCommand,
+                    DataContext = vm,
+                },
                 new Separator { DataContext = vm },
                 new MenuItem
                 {
@@ -1054,6 +1060,13 @@ public static partial class InitListViewAndEditBox
                 {
                     Header = Se.Language.Main.Menu.Statistics,
                     Command = vm.StatisticsSelectedLinesCommand,
+                    DataContext = vm,
+                },
+                new Separator { DataContext = vm },
+                new MenuItem
+                {
+                    Header = Se.Language.Main.Menu.SaveAs,
+                    Command = vm.SaveSelectedLinesAsCommand,
                     DataContext = vm,
                 },
             }

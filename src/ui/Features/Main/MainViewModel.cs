@@ -8015,6 +8015,120 @@ public partial class MainViewModel :
         _updateAudioVisualizer = true;
     }
 
+    [RelayCommand]
+    private async Task RemoveTextForHearingImpairedSelectedLines()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        // Work on the selected lines in grid order.
+        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var ordered = Subtitles.Where(s => selectedItems.Contains(s)).ToList();
+        if (ordered.Count == 0)
+        {
+            return;
+        }
+
+        var result = await ShowDialogAsync<RemoveTextForHearingImpairedWindow, RemoveTextForHearingImpairedViewModel>(vm =>
+        {
+            var sub = new Subtitle();
+            foreach (var line in ordered)
+            {
+                sub.Paragraphs.Add(line.ToParagraph(SelectedSubtitleFormat));
+            }
+
+            vm.Initialize(sub);
+        });
+
+        if (!result.OkPressed)
+        {
+            _shortcutManager.ClearKeys();
+            return;
+        }
+
+        // The HI removal can drop lines that become empty, so the result is not 1:1 with the
+        // selection - replace the selected block with the fixed lines (inserted where it started).
+        var selectedIds = ordered.Select(s => s.Id).ToHashSet();
+        var firstIndex = Subtitles.IndexOf(ordered[0]);
+        var kept = Subtitles.Where(s => !selectedIds.Contains(s.Id)).ToList();
+        var insertPos = Math.Min(firstIndex, kept.Count);
+        kept.InsertRange(insertPos, result.FixedSubtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
+
+        ReplaceSubtitles(kept);
+        Renumber();
+        SelectAndScrollToRow(insertPos);
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
+    private async Task SaveSelectedLinesAs()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var ordered = Subtitles.Where(s => selectedItems.Contains(s)).ToList();
+        if (ordered.Count == 0)
+        {
+            return;
+        }
+
+        var subtitle = new Subtitle();
+        foreach (var line in ordered)
+        {
+            subtitle.Paragraphs.Add(line.ToParagraph(SelectedSubtitleFormat));
+        }
+
+        subtitle.Renumber();
+
+        var fileName = await _fileHelper.PickSaveSubtitleFile(
+            Window,
+            SelectedSubtitleFormat,
+            GetNewFileName(),
+            Se.Language.General.SaveFileAsTitle);
+
+        _shortcutManager.ClearKeys();
+
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return;
+        }
+
+        try
+        {
+            // Binary formats (EBU STL, PAC, ...) can't be written as text - use their binary writer.
+            if (SelectedSubtitleFormat is IBinaryPersistableSubtitle binaryFormat)
+            {
+                if (binaryFormat is Ebu)
+                {
+                    Ebu.EbuUiHelper ??= new UiEbuSaveHelper();
+                }
+
+                using var ms = new MemoryStream();
+                if (binaryFormat.Save(fileName, ms, subtitle, batchMode: true))
+                {
+                    await File.WriteAllBytesAsync(fileName, ms.ToArray());
+                }
+            }
+            else
+            {
+                await File.WriteAllTextAsync(fileName, subtitle.ToText(SelectedSubtitleFormat), new UTF8Encoding(true));
+            }
+
+            ShowStatus(string.Format(Se.Language.General.SavedChangesToX, fileName));
+        }
+        catch (Exception ex)
+        {
+            await MessageBox.Show(Window!, Se.Language.General.Error,
+                string.Format(Se.Language.General.CouldNotSaveFileXErrorY, fileName, ex.Message),
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
     private DataGrid _oldSubtitleGrid = new DataGrid();
     private ITextBoxWrapper _oldEditTextBox = new TextBoxWrapper(new TextBox());
     private bool _oldGenerateSpectrogram;
