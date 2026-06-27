@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustBrightness;
 
-public partial class BinaryAdjustBrightnessViewModel : ObservableObject
+public partial class BinaryAdjustBrightnessViewModel : ObservableObject, IDisposable
 {
     [ObservableProperty] private double _brightness;
     [ObservableProperty] private double _contrast;
@@ -113,9 +113,10 @@ public partial class BinaryAdjustBrightnessViewModel : ObservableObject
 
         var firstSubtitle = _subtitles[0];
         using var originalBitmap = firstSubtitle.Bitmap!.ToSkBitmap();
-        
-        var adjustedBitmap = AdjustBrightness(originalBitmap, (float)Brightness, (float)Contrast, (float)(Gamma / 100.0));
+        using var adjustedBitmap = AdjustBrightness(originalBitmap, (float)Brightness, (float)Contrast, (float)(Gamma / 100.0));
+        var old = PreviewBitmap;
         PreviewBitmap = adjustedBitmap.ToAvaloniaBitmap();
+        old?.Dispose();
     }
 
     public void ApplyAdjustments()
@@ -128,8 +129,10 @@ public partial class BinaryAdjustBrightnessViewModel : ObservableObject
             }
 
             using var originalBitmap = subtitle.Bitmap.ToSkBitmap();
-            var adjustedBitmap = AdjustBrightness(originalBitmap, (float)Brightness, (float)Contrast, (float)(Gamma / 100.0));
+            using var adjustedBitmap = AdjustBrightness(originalBitmap, (float)Brightness, (float)Contrast, (float)(Gamma / 100.0));
+            var old = subtitle.Bitmap;
             subtitle.Bitmap = adjustedBitmap.ToAvaloniaBitmap();
+            old?.Dispose();
         }
     }
 
@@ -223,5 +226,13 @@ public partial class BinaryAdjustBrightnessViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+    }
+
+    public void Dispose()
+    {
+        _previewUpdateTimer?.Stop();
+        var old = PreviewBitmap;
+        PreviewBitmap = null;
+        old?.Dispose();
     }
 }

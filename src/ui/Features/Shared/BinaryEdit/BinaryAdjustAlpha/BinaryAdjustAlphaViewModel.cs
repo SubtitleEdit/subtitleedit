@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustAlpha;
 
-public partial class BinaryAdjustAlphaViewModel : ObservableObject
+public partial class BinaryAdjustAlphaViewModel : ObservableObject, IDisposable
 {
     [ObservableProperty] private double _alphaAdjustment;
     [ObservableProperty] private double _transparencyThreshold;
@@ -105,13 +105,15 @@ public partial class BinaryAdjustAlphaViewModel : ObservableObject
 
         var firstSubtitle = _subtitles[0];
         using var originalBitmap = firstSubtitle.Bitmap!.ToSkBitmap();
-        
-        // Create checkered background
+
+        var oldBg = CheckeredBackgroundBitmap;
         CheckeredBackgroundBitmap = CreateCheckeredBackground(originalBitmap.Width, originalBitmap.Height);
-        
-        // Apply alpha adjustments
-        var adjustedBitmap = AdjustAlpha(originalBitmap, (float)AlphaAdjustment, (byte)TransparencyThreshold);
+        oldBg?.Dispose();
+
+        using var adjustedBitmap = AdjustAlpha(originalBitmap, (float)AlphaAdjustment, (byte)TransparencyThreshold);
+        var old = PreviewBitmap;
         PreviewBitmap = adjustedBitmap.ToAvaloniaBitmap();
+        old?.Dispose();
     }
 
     public void ApplyAdjustments()
@@ -124,8 +126,10 @@ public partial class BinaryAdjustAlphaViewModel : ObservableObject
             }
 
             using var originalBitmap = subtitle.Bitmap.ToSkBitmap();
-            var adjustedBitmap = AdjustAlpha(originalBitmap, (float)AlphaAdjustment, (byte)TransparencyThreshold);
+            using var adjustedBitmap = AdjustAlpha(originalBitmap, (float)AlphaAdjustment, (byte)TransparencyThreshold);
+            var old = subtitle.Bitmap;
             subtitle.Bitmap = adjustedBitmap.ToAvaloniaBitmap();
+            old?.Dispose();
         }
     }
 
@@ -184,7 +188,7 @@ public partial class BinaryAdjustAlphaViewModel : ObservableObject
     public static Bitmap CreateCheckeredBackground(int width, int height)
     {
         const int checkSize = 10;
-        var bitmap = new SKBitmap(width, height);
+        using var bitmap = new SKBitmap(width, height);
         
         using (var canvas = new SKCanvas(bitmap))
         {
@@ -232,5 +236,16 @@ public partial class BinaryAdjustAlphaViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+    }
+
+    public void Dispose()
+    {
+        _previewUpdateTimer?.Stop();
+        var oldPreview = PreviewBitmap;
+        PreviewBitmap = null;
+        oldPreview?.Dispose();
+        var oldBg = CheckeredBackgroundBitmap;
+        CheckeredBackgroundBitmap = null;
+        oldBg?.Dispose();
     }
 }

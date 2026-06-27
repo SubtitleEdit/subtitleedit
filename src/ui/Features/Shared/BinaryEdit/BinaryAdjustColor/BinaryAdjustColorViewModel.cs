@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustColor;
 
-public partial class BinaryAdjustColorViewModel : ObservableObject
+public partial class BinaryAdjustColorViewModel : ObservableObject, IDisposable
 {
     [ObservableProperty] private Color _selectedColor;
     [ObservableProperty] private IBrush _colorSwatchBrush;
@@ -102,8 +102,10 @@ public partial class BinaryAdjustColorViewModel : ObservableObject
         }
 
         using var originalBitmap = _subtitles[0].Bitmap!.ToSkBitmap();
-        var coloredBitmap = ColorBitmap(originalBitmap, SelectedColor.R, SelectedColor.G, SelectedColor.B);
+        using var coloredBitmap = ColorBitmap(originalBitmap, SelectedColor.R, SelectedColor.G, SelectedColor.B);
+        var old = PreviewBitmap;
         PreviewBitmap = coloredBitmap.ToAvaloniaBitmap();
+        old?.Dispose();
     }
 
     public void ApplyAdjustments()
@@ -116,8 +118,10 @@ public partial class BinaryAdjustColorViewModel : ObservableObject
             }
 
             using var originalBitmap = subtitle.Bitmap.ToSkBitmap();
-            var coloredBitmap = ColorBitmap(originalBitmap, SelectedColor.R, SelectedColor.G, SelectedColor.B);
+            using var coloredBitmap = ColorBitmap(originalBitmap, SelectedColor.R, SelectedColor.G, SelectedColor.B);
+            var old = subtitle.Bitmap;
             subtitle.Bitmap = coloredBitmap.ToAvaloniaBitmap();
+            old?.Dispose();
         }
     }
 
@@ -184,5 +188,13 @@ public partial class BinaryAdjustColorViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+    }
+
+    public void Dispose()
+    {
+        _previewUpdateTimer?.Stop();
+        var old = PreviewBitmap;
+        PreviewBitmap = null;
+        old?.Dispose();
     }
 }

@@ -1215,7 +1215,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<BinaryResizeImages.BinaryResizeImagesWindow, BinaryResizeImages.BinaryResizeImagesViewModel>(
+        using var result = await _windowService.ShowDialogAsync<BinaryResizeImages.BinaryResizeImagesWindow, BinaryResizeImages.BinaryResizeImagesViewModel>(
             Window, vm => vm.Initialize(itemsToResize));
 
         if (!result.OkPressed)
@@ -1267,7 +1267,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<BinaryAdjustBrightness.BinaryAdjustBrightnessWindow, BinaryAdjustBrightness.BinaryAdjustBrightnessViewModel>(
+        using var result = await _windowService.ShowDialogAsync<BinaryAdjustBrightness.BinaryAdjustBrightnessWindow, BinaryAdjustBrightness.BinaryAdjustBrightnessViewModel>(
             Window, vm => vm.Initialize(itemsToAdjust));
 
         if (!result.OkPressed)
@@ -1319,7 +1319,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<BinaryAdjustAlpha.BinaryAdjustAlphaWindow, BinaryAdjustAlpha.BinaryAdjustAlphaViewModel>(
+        using var result = await _windowService.ShowDialogAsync<BinaryAdjustAlpha.BinaryAdjustAlphaWindow, BinaryAdjustAlpha.BinaryAdjustAlphaViewModel>(
             Window, vm => vm.Initialize(itemsToAdjust));
 
         if (!result.OkPressed)
@@ -1369,7 +1369,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<BinaryAdjustColor.BinaryAdjustColorWindow, BinaryAdjustColor.BinaryAdjustColorViewModel>(
+        using var result = await _windowService.ShowDialogAsync<BinaryAdjustColor.BinaryAdjustColorWindow, BinaryAdjustColor.BinaryAdjustColorViewModel>(
             Window, vm => vm.Initialize(itemsToAdjust));
 
         if (!result.OkPressed)
@@ -1460,7 +1460,9 @@ public partial class BinaryEditViewModel : ObservableObject
 
             using var skBitmap = subtitle.Bitmap.ToSkBitmap();
             using var cropped = skBitmap.CropTransparentColors(out var offsetX, out var offsetY);
+            var old = subtitle.Bitmap;
             subtitle.Bitmap = cropped.ToAvaloniaBitmap();
+            old?.Dispose();
             subtitle.X += offsetX;
             subtitle.Y += offsetY;
         }
@@ -1845,7 +1847,9 @@ public partial class BinaryEditViewModel : ObservableObject
                 return;
             }
 
+            var old = selectedItem.Bitmap;
             selectedItem.Bitmap = skBitmap.ToAvaloniaBitmap();
+            old?.Dispose();
 
             UpdateOverlayPosition();
             RefreshStatusText();
