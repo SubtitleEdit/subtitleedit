@@ -48,7 +48,7 @@ public partial class BinaryAdjustAlphaViewModel : ObservableObject, IDisposable
         };
         _previewUpdateTimer.Tick += (_, _) =>
         {
-            _previewUpdateTimer.Stop();
+            _previewUpdateTimer?.Stop();
             if (_isDirty)
             {
                 _isDirty = false;
@@ -240,7 +240,9 @@ public partial class BinaryAdjustAlphaViewModel : ObservableObject, IDisposable
 
     public void Dispose()
     {
+        _isDirty = false;
         _previewUpdateTimer?.Stop();
+        _previewUpdateTimer = null;
         var oldPreview = PreviewBitmap;
         PreviewBitmap = null;
         oldPreview?.Dispose();

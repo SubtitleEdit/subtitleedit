@@ -44,7 +44,7 @@ public partial class BinaryAdjustColorViewModel : ObservableObject, IDisposable
         };
         _previewUpdateTimer.Tick += (_, _) =>
         {
-            _previewUpdateTimer.Stop();
+            _previewUpdateTimer?.Stop();
             if (_isDirty)
             {
                 _isDirty = false;
@@ -192,7 +192,9 @@ public partial class BinaryAdjustColorViewModel : ObservableObject, IDisposable
 
     public void Dispose()
     {
+        _isDirty = false;
         _previewUpdateTimer?.Stop();
+        _previewUpdateTimer = null;
         var old = PreviewBitmap;
         PreviewBitmap = null;
         old?.Dispose();

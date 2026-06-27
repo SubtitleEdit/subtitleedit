@@ -49,7 +49,7 @@ public partial class BinaryAdjustBrightnessViewModel : ObservableObject, IDispos
         };
         _previewUpdateTimer.Tick += (_, _) =>
         {
-            _previewUpdateTimer.Stop();
+            _previewUpdateTimer?.Stop();
             if (_isDirty)
             {
                 _isDirty = false;
@@ -230,7 +230,9 @@ public partial class BinaryAdjustBrightnessViewModel : ObservableObject, IDispos
 
     public void Dispose()
     {
+        _isDirty = false;
         _previewUpdateTimer?.Stop();
+        _previewUpdateTimer = null;
         var old = PreviewBitmap;
         PreviewBitmap = null;
         old?.Dispose();
