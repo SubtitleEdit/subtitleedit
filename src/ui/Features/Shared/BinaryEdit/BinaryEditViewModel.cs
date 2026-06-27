@@ -1275,10 +1275,15 @@ public partial class BinaryEditViewModel : ObservableObject
         // Refresh grid to show updated bitmaps
         if (SubtitleGrid != null)
         {
-            var currentIndex = SubtitleGrid.SelectedIndex;
-            SubtitleGrid.ItemsSource = null;
-            SubtitleGrid.ItemsSource = Subtitles;
-            SubtitleGrid.SelectedIndex = currentIndex;
+            if (selectedItems.Count > 0)
+                ApplyGridSelection(selectedItems);
+            else
+            {
+                var currentIndex = SubtitleGrid.SelectedIndex;
+                SubtitleGrid.ItemsSource = null;
+                SubtitleGrid.ItemsSource = Subtitles;
+                SubtitleGrid.SelectedIndex = currentIndex;
+            }
         }
 
         UpdateOverlayPosition();
@@ -1327,10 +1332,15 @@ public partial class BinaryEditViewModel : ObservableObject
         // Refresh grid to show updated bitmaps
         if (SubtitleGrid != null)
         {
-            var currentIndex = SubtitleGrid.SelectedIndex;
-            SubtitleGrid.ItemsSource = null;
-            SubtitleGrid.ItemsSource = Subtitles;
-            SubtitleGrid.SelectedIndex = currentIndex;
+            if (selectedItems.Count > 0)
+                ApplyGridSelection(selectedItems);
+            else
+            {
+                var currentIndex = SubtitleGrid.SelectedIndex;
+                SubtitleGrid.ItemsSource = null;
+                SubtitleGrid.ItemsSource = Subtitles;
+                SubtitleGrid.SelectedIndex = currentIndex;
+            }
         }
 
         UpdateOverlayPosition();
@@ -1376,10 +1386,15 @@ public partial class BinaryEditViewModel : ObservableObject
 
         if (SubtitleGrid != null)
         {
-            var currentIndex = SubtitleGrid.SelectedIndex;
-            SubtitleGrid.ItemsSource = null;
-            SubtitleGrid.ItemsSource = Subtitles;
-            SubtitleGrid.SelectedIndex = currentIndex;
+            if (selectedItems.Count > 0)
+                ApplyGridSelection(selectedItems);
+            else
+            {
+                var currentIndex = SubtitleGrid.SelectedIndex;
+                SubtitleGrid.ItemsSource = null;
+                SubtitleGrid.ItemsSource = Subtitles;
+                SubtitleGrid.SelectedIndex = currentIndex;
+            }
         }
 
         UpdateOverlayPosition();
