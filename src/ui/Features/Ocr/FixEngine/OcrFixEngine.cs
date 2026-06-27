@@ -2,7 +2,6 @@
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Features.SpellCheck;
-using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -66,7 +65,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         _subtitle = subtitle;
 
         var names = ReloadNames();
-        _wordSplitList = StringWithoutSpaceSplitToWords.LoadWordSplitList(Se.DictionariesFolder, _threeLetterIsoLanguageName, names);
+        _wordSplitList = StringWithoutSpaceSplitToWords.LoadWordSplitList(SpellCheckConfig.DictionariesFolder(), _threeLetterIsoLanguageName, names);
         _ocrFixReplaceList = OcrFixReplaceList2.FromLanguageId(_threeLetterIsoLanguageName);
     }
 
@@ -337,7 +336,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             {
                 var guesses = new List<string>();
 
-                if (w.Length > 4 && Se.Settings.Ocr.UseWordSplitList)
+                if (w.Length > 4 && SpellCheckConfig.UseWordSplitList())
                 {
                     if (_threeLetterIsoLanguageName == "eng" &&
                         w.EndsWith("in", StringComparison.Ordinal) &&
@@ -515,7 +514,7 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
         }
         catch (Exception exception)
         {
-            Se.LogError("Error loading names for OCR fix engine: " + exception.Message);
+            SpellCheckConfig.LogError("Error loading names for OCR fix engine: " + exception.Message);
             _spellCheckWordLists = new SpellCheckWordLists(string.Empty, this);
         }
         

@@ -67,6 +67,13 @@ namespace Nikse.SubtitleEdit
                 // Load settings
                 Se.LoadSettings();
 
+                // Wire the shared spell-check / OCR-fix engine (libuilogic) to the live UI settings so
+                // it reads the same values without depending on the UI's Se config type (#11744).
+                Nikse.SubtitleEdit.Features.SpellCheck.SpellCheckConfig.DictionariesFolder = () => Se.DictionariesFolder;
+                Nikse.SubtitleEdit.Features.SpellCheck.SpellCheckConfig.UseWordSplitList = () => Se.Settings.Ocr.UseWordSplitList;
+                Nikse.SubtitleEdit.Features.SpellCheck.SpellCheckConfig.TreatInApostropheAsIng = () => Se.Settings.Tools.SpellCheckEnglishTreatInApostropheAsIng;
+                Nikse.SubtitleEdit.Features.SpellCheck.SpellCheckConfig.LogError = msg => Se.LogError(msg);
+
                 // Load the UI translation before any window or the macOS native menu bar is built,
                 // so the menu bar isn't constructed with the default English strings (issue #11505).
                 Se.LoadLanguage();

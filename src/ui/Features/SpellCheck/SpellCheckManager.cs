@@ -1,6 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Features.Main;
-using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -105,7 +104,7 @@ public class SpellCheckManager : ISpellCheckManager, IDoSpell
             }
             catch (Exception exception)
             {
-                Se.LogError("Error loading names for SpellCheckManager: " + exception.Message);
+                SpellCheckConfig.LogError("Error loading names for SpellCheckManager: " + exception.Message);
                 _spellCheckWordLists = new SpellCheckWordLists(string.Empty, this);
             }
         }
@@ -346,7 +345,7 @@ public class SpellCheckManager : ISpellCheckManager, IDoSpell
     /// </summary>
     private bool IsEnglishInApostropheActuallyIng(string word)
     {
-        if (!Se.Settings.Tools.SpellCheckEnglishTreatInApostropheAsIng)
+        if (!SpellCheckConfig.TreatInApostropheAsIng())
         {
             return false;
         }
