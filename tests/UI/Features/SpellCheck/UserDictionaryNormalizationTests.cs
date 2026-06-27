@@ -17,6 +17,7 @@ public class UserDictionaryNormalizationTests : IDisposable
     private readonly string _nfdWord = HangulWord.Normalize(NormalizationForm.FormD);
 
     private readonly string _originalDictionariesFolder;
+    private readonly Func<string> _originalSpellCheckDictionariesFolder;
     private readonly string _tempDictionariesFolder;
 
     public UserDictionaryNormalizationTests()
@@ -24,11 +25,15 @@ public class UserDictionaryNormalizationTests : IDisposable
         // Redirect the dictionaries folder to an isolated temp dir so the real
         // user dictionary is not touched and pre-existing words don't leak in.
         _originalDictionariesFolder = Se.DictionariesFolder;
+        _originalSpellCheckDictionariesFolder = SpellCheckConfig.DictionariesFolder;
         _tempDictionariesFolder = Path.Combine(
             Path.GetTempPath(),
             "SeUserDictTest_" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(_tempDictionariesFolder);
         Se.DictionariesFolder = _tempDictionariesFolder;
+        // SpellCheckWordLists reads its folder from SpellCheckConfig (wired to Se in Program.cs at
+        // startup, which the tests don't run); point it at the same temp dir.
+        SpellCheckConfig.DictionariesFolder = () => _tempDictionariesFolder;
     }
 
     [Fact]
@@ -51,6 +56,7 @@ public class UserDictionaryNormalizationTests : IDisposable
     public void Dispose()
     {
         Se.DictionariesFolder = _originalDictionariesFolder;
+        SpellCheckConfig.DictionariesFolder = _originalSpellCheckDictionariesFolder;
         try
         {
             Directory.Delete(_tempDictionariesFolder, recursive: true);
