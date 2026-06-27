@@ -131,20 +131,20 @@ public partial class BinaryAdjustAlphaViewModel : ObservableObject
 
     private static SKBitmap AdjustAlpha(SKBitmap originalBitmap, float alphaAdjustment, byte transparencyThreshold)
     {
-        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height);
+        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
 
         unsafe
         {
             var originalPixels = originalBitmap.GetPixels();
             var adjustedPixels = adjustedBitmap.GetPixels();
-            
+
             for (int y = 0; y < originalBitmap.Height; y++)
             {
                 for (int x = 0; x < originalBitmap.Width; x++)
                 {
                     var index = y * originalBitmap.Width + x;
                     var pixel = ((uint*)originalPixels)[index];
-                    
+
                     var a = (byte)((pixel >> 24) & 0xFF);
                     var r = (byte)((pixel >> 16) & 0xFF);
                     var g = (byte)((pixel >> 8) & 0xFF);

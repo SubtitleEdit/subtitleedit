@@ -135,8 +135,8 @@ public partial class BinaryAdjustBrightnessViewModel : ObservableObject
 
     private static SKBitmap AdjustBrightness(SKBitmap originalBitmap, float brightness, float contrast, float gamma)
     {
-        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height);
-        
+        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+
         // Normalize values for calculations
         var brightnessAdjust = brightness; // -100 to 100
         var contrastAdjust = (contrast + 100) / 100.0f; // Convert -100 to 100 range to 0 to 2 multiplier
