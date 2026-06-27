@@ -377,9 +377,14 @@ public partial class SpellCheckViewModel : ObservableObject
     // by timecode, which survives merges/deletes better than a plain index).
     private void UpdateSourceImage()
     {
+        // Dispose the previously shown bitmap before replacing it; UpdateSourceImage runs on every
+        // line change during a spell-check pass, and both the Avalonia Bitmap and the SKBitmap hold
+        // unmanaged memory, so without this a long pass leaks one bitmap per line (#11719).
         if (_ocrSourceImages == null || SelectedParagraph == null || _ocrSourceImages.Count == 0)
         {
+            var previousEmpty = SourceImage;
             SourceImage = null;
+            previousEmpty?.Dispose();
             return;
         }
 
@@ -396,14 +401,18 @@ public partial class SpellCheckViewModel : ObservableObject
             }
         }
 
+        var previous = SourceImage;
         try
         {
-            SourceImage = _ocrSourceImages.GetBitmap(bestIndex).ToAvaloniaBitmap();
+            using var sourceBitmap = _ocrSourceImages.GetBitmap(bestIndex);
+            SourceImage = sourceBitmap.ToAvaloniaBitmap();
         }
         catch
         {
             SourceImage = null;
         }
+
+        previous?.Dispose();
     }
 
     public void Initialize(ObservableCollection<SubtitleLineViewModel> paragraphs, int? selectedSubtitleIndex, IFocusSubtitleLine focusSubtitleLine, string? dictionaryFileName)

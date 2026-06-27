@@ -1669,6 +1669,7 @@ public partial class MainViewModel :
 
         AddToRecentFiles(true);
         ResetSubtitle();
+        ClearOcrImageSource();
         VideoCloseFile();
         AddToRecentFiles(false);
     }
@@ -1684,7 +1685,18 @@ public partial class MainViewModel :
 
         AddToRecentFiles(true);
         ResetSubtitle();
+        ClearOcrImageSource();
         AddToRecentFiles(false);
+    }
+
+    // Drop any image source kept from a previous OCR session when starting a fresh subtitle, so spell
+    // check does not show unrelated images. This is intentionally NOT in ResetSubtitle(), which the OCR
+    // import flows call right before ReplaceSubtitles - clearing there would wipe the just-OCR'd source
+    // and break the spell-check auto-attach for image-based formats (#11719).
+    private void ClearOcrImageSource()
+    {
+        _ocrImageSourceHolder.Source = null;
+        _ocrImageSourceHolder.FileName = null;
     }
 
     private void ResetSubtitle(SubtitleFormat? format = null)
@@ -18519,6 +18531,13 @@ public partial class MainViewModel :
 
             _lastKeyPressedMs = ms;
 
+            // Arm a "bare Alt" toggle so its release can activate/deactivate the menu bar (Windows
+            // standard). This must run before the early-returns below so that any other key in an Alt
+            // chord (e.g. Space in Alt+Space, which opens the window system menu and returns early)
+            // clears it; the modifier check rejects AltGr (Ctrl+Alt) on international keyboards. The
+            // toggle itself happens on key-up (OnKeyUpHandler) (#11745).
+            _altMenuTogglePending = (k is Key.LeftAlt or Key.RightAlt) && keyEventArgs.KeyModifiers == KeyModifiers.Alt;
+
             if (UiUtil.TryHandleWindowSystemMenu(keyEventArgs, Window))
             {
                 return;
@@ -18554,11 +18573,6 @@ public partial class MainViewModel :
                     return;
                 }
             }
-
-            // Arm a "bare Alt" toggle so its release can activate/deactivate the menu bar (Windows
-            // standard). Any other key pressed while Alt is held (e.g. the access key in Alt+F) cancels
-            // it, so only Alt-alone toggles. The actual toggle happens on key-up (OnKeyUpHandler).
-            _altMenuTogglePending = k is Key.LeftAlt or Key.RightAlt;
 
             // When the main menu has keyboard focus (opened via F10 or Alt), let it own its arrow/Enter
             // navigation instead of consuming those keys as shortcuts. The window key handler tunnels
