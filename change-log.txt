@@ -14,11 +14,16 @@ v5.1.0-beta2 (TBD)
 * Fix "Change speed" radio buttons disabled/not respected in the main window - thx mjuhasz
 * Binary edit: wire up "Change speed", respect the selected-lines radio, and always apply "Change frame rate" to all lines - thx mjuhasz
 * Binary edit: keep the grid scroll position after "Adjust all times" and "Change speed" - thx mjuhasz
+* Binary edit: add "Adjust color" for selected lines in the image-based subtitle editor (Tools > Selected lines) - thx mjuhasz
 * Spell check: show the source image for the current line - auto-attached after OCR, or loaded via the image button left of Done (Blu-ray sup, VobSub, BDN XML, transport stream, Matroska) - thx fraternl
 * Add two more configurable "move video position custom" forward/back jumps (custom 3 and 4)
 * Main and binary-edit menu: Alt/F10 toggle menu activation and Escape deactivates it (Windows standard) - thx GrampaWildWilly
 * Update Polish translation - thx Adam Malich
 * Update Japanese translation - thx hisui3393
+* Update Italian translation - thx bovirus
+* Update Bulgarian translation - thx jekovcar
+* Update Russian translation - thx jekovcar
+* Use asynchronous JSON serialization in the plugin runner - thx ivandrofly
 * Fix video playback speed reverting to 1.0x after changing settings or layout - thx Hakunamatata67
 
 -----------------------------------------------------------------------------------------------------
