@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared.ColorPicker;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ public partial class BinaryAdjustColorViewModel : ObservableObject
     public BinaryAdjustColorViewModel(IWindowService windowService)
     {
         _windowService = windowService;
-        _selectedColor = Color.FromRgb(255, 255, 0);
+        _selectedColor = Se.Settings.Tools.LastColorPickerColor.FromHexToColor();
         _colorSwatchBrush = new SolidColorBrush(_selectedColor);
         InitializeTimer();
     }
