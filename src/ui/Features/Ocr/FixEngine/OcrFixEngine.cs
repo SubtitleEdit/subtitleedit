@@ -36,9 +36,9 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
     private HashSet<string> _wordSkipList = new HashSet<string>();
     private Dictionary<string, string> _changeAllDictionary;
 
-    private readonly ISpellCheckManager _spellCheckManager;
+    private readonly ISpellChecker _spellCheckManager;
 
-    public OcrFixEngine(ISpellCheckManager spellCheckManager)
+    public OcrFixEngine(ISpellChecker spellCheckManager)
     {
         _spellCheckManager = spellCheckManager;
         _wordSkipList = new HashSet<string>();

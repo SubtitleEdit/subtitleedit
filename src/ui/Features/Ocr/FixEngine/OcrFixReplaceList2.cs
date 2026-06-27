@@ -306,7 +306,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return false;
         }
 
-        public string FixOcrErrorViaLineReplaceList(string input, Subtitle subtitle, int index, ISpellCheckManager spellCheckManager, List<string> wordsToIgnore, bool spelledOK)
+        public string FixOcrErrorViaLineReplaceList(string input, Subtitle subtitle, int index, ISpellChecker spellCheckManager, List<string> wordsToIgnore, bool spelledOK)
         {
             // Whole fromLine
             foreach (var from in _wholeLineReplaceList.Keys)

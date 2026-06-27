@@ -226,6 +226,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<IPluginRunner, PluginRunner>();
         collection.AddTransient<IShortcutManager, ShortcutManager>();
         collection.AddTransient<ISpellCheckManager, SpellCheckManager>();
+        collection.AddTransient<ISpellChecker, SpellCheckManager>();
         collection.AddTransient<ISplitManager, SplitManager>();
         collection.AddTransient<ISubtitleFileService, SubtitleFileService>();
         collection.AddTransient<IThemeInitializer, ThemeInitializer>();

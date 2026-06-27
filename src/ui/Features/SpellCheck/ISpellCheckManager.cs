@@ -4,15 +4,13 @@ using System.Collections.ObjectModel;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck;
 
-public interface ISpellCheckManager
+public interface ISpellCheckManager : ISpellChecker
 {
     event SpellCheckManager.SpellCheckWordChangedHandler? OnWordChanged;
-    bool IsWordCorrect(string word);
     bool IsWordCorrect(SpellCheckWord word, string allText);
     List<SpellCheckResult> CheckSpelling(ObservableCollection<SubtitleLineViewModel> subtitles, SpellCheckResult? startFrom = null, int? stopBeforeLineIndex = null);
     int NoOfChangedWords { get; set; }
     int NoOfSkippedWords { get; set; }
-    bool Initialize(string dictionaryFile, string twoLetterLanguageCode);
     void AddIgnoreWord(string word);
     void ChangeWord(string fromWord, string toWord, SpellCheckWord spellCheckWord, SubtitleLineViewModel p);
     void ChangeAllWord(string fromWord, string toWord, SpellCheckWord spellCheckWord, SubtitleLineViewModel p);
@@ -23,6 +21,5 @@ public interface ISpellCheckManager
     void RemoveFromNames(string word);
     void RemoveFromUserDictionary(string word);
     List<SpellCheckDictionaryDisplay> GetDictionaryLanguages(string dictionaryFolder);
-    List<string> GetSuggestions(string word);
     IWordSpellChecker? WordSpellChecker { get; set; }
 }
