@@ -117,7 +117,7 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
 
         if (string.IsNullOrEmpty(videoFileName))
         {
-            Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetHeight, TargetHeight);
+            Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
             return;
         }
 
@@ -130,12 +130,12 @@ public partial class AssaImageColorPickerViewModel : ObservableObject
             }
             catch
             {
-                Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetHeight, TargetHeight);
+                Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
             }
         }
         else
         {
-            Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetHeight, TargetHeight);
+            Screenshot = BinaryAdjustAlphaViewModel.CreateCheckeredBackground(TargetWidth, TargetHeight);
         }
 
     }
