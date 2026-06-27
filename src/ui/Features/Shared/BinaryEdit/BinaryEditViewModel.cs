@@ -184,9 +184,6 @@ public partial class BinaryEditViewModel : ObservableObject
     internal void SubtitleGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         RefreshStatusText();
-        SelectedSubtitle = e.AddedItems?.Count > 0
-            ? e.AddedItems[0] as BinarySubtitleItem
-            : SubtitleGrid?.SelectedItem as BinarySubtitleItem;
     }
 
     private void RefreshStatusText()
