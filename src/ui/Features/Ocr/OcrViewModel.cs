@@ -384,6 +384,43 @@ public partial class OcrViewModel : ObservableObject
         return "[" + Se.Language.General.None + "]";
     }
 
+    // When the OCR language changes, point the spell-check dictionary at the matching installed
+    // dictionary (SE4 parity, #11907). No-op if none is installed, so the user's choice is kept
+    // when there's nothing to switch to.
+    partial void OnSelectedTesseractDictionaryItemChanged(TesseractDictionary? value) => AutoSelectDictionaryForOcrLanguage(value?.Code);
+    partial void OnSelectedPaddleOcrLanguageChanged(OcrLanguage2? value) => AutoSelectDictionaryForOcrLanguage(value?.Code);
+    partial void OnSelectedGoogleLensLanguageChanged(OcrLanguage2 value) => AutoSelectDictionaryForOcrLanguage(value?.Code);
+    partial void OnSelectedGoogleVisionLanguageChanged(OcrLanguage? value) => AutoSelectDictionaryForOcrLanguage(value?.Code);
+
+    private void AutoSelectDictionaryForOcrLanguage(string? languageCode)
+    {
+        if (string.IsNullOrEmpty(languageCode) || Dictionaries.Count == 0)
+        {
+            return;
+        }
+
+        // Normalize Tesseract-style script suffixes ("chi_sim", "srp_latn") to the base code.
+        var code = languageCode;
+        var underscore = code.IndexOf('_');
+        if (underscore > 0)
+        {
+            code = code.Substring(0, underscore);
+        }
+
+        var threeLetter = code.Length == 3 ? code : Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(code);
+        var twoLetter = code.Length == 2 ? code : Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(code);
+
+        var match = Dictionaries.FirstOrDefault(d =>
+            d.Name != GetDictionaryNameNone() &&
+            ((!string.IsNullOrEmpty(threeLetter) && d.GetThreeLetterCode() == threeLetter) ||
+             (!string.IsNullOrEmpty(twoLetter) && SpellCheckDictionaryDisplay.GetTwoLetterLanguageCode(d) == twoLetter)));
+
+        if (match != null && !ReferenceEquals(match, SelectedDictionary))
+        {
+            SelectedDictionary = match;
+        }
+    }
+
     private string? GetNOcrLanguageFileName()
     {
         if (SelectedNOcrDatabase == null)
