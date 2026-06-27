@@ -42,6 +42,7 @@ public class MainView : ViewBase
             }
 
             _vm.Window.Closing += _vm.OnClosing;
+            _vm.Window.Deactivated += _vm.OnWindowDeactivated;
             _vm.Window.Loaded += (_, _) =>
             {
                 _vm.OnLoaded();

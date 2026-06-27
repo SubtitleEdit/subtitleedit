@@ -292,6 +292,8 @@ public partial class MainViewModel :
     AudioVisualizerUndockedViewModel? _audioVisualizerUndockedViewModel;
     FindViewModel? _findViewModel;
     Control? _findPreviousFocus;
+    Control? _focusBeforeMainMenu;
+    bool _altMenuTogglePending;
     bool _findClosingProgrammatically;
     ReplaceViewModel? _replaceViewModel;
     Control? _replacePreviousFocus;
@@ -18381,6 +18383,57 @@ public partial class MainViewModel :
     }
 
     /// <summary>
+    /// Activates the main menu bar for keyboard navigation (Windows standard Alt/F10), remembering
+    /// the control that had focus so it can be restored on deactivation. Returns false on platforms
+    /// with a native menu (macOS), where the in-window <see cref="Menu"/> has no items (#11745).
+    /// </summary>
+    private bool ActivateMainMenu()
+    {
+        if (Menu == null || Menu.Items.Count == 0)
+        {
+            return false;
+        }
+
+        _focusBeforeMainMenu = Window?.FocusManager?.GetFocusedElement() as Control;
+        return TryFocusMainMenu();
+    }
+
+    /// <summary>
+    /// Closes any open drop-down and fully deactivates the main menu bar, restoring keyboard focus to
+    /// the control that was focused before activation (falling back to the subtitle grid). Mirrors the
+    /// Windows behavior where Alt/F10/Escape leave the menu and return to editing (#11745).
+    /// </summary>
+    private void DeactivateMainMenu()
+    {
+        Menu?.Close();
+        _altMenuTogglePending = false;
+
+        var restore = _focusBeforeMainMenu;
+        _focusBeforeMainMenu = null;
+
+        // Defer the focus change: closing the menu and moving focus from inside the key handler is
+        // racy, so let the current event finish first (same pattern as the find/replace focus restore).
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (restore is { IsEffectivelyVisible: true } && restore.Focus())
+            {
+                return;
+            }
+
+            SubtitleGrid?.Focus();
+        });
+    }
+
+    /// <summary>
+    /// A task switch (e.g. Alt+Tab) must not leave a pending bare-Alt menu toggle armed; otherwise the
+    /// next Alt release after returning to the window would spuriously activate the menu bar (#11745).
+    /// </summary>
+    internal void OnWindowDeactivated(object? sender, EventArgs e)
+    {
+        _altMenuTogglePending = false;
+    }
+
+    /// <summary>
     /// True when keyboard focus is on the main menu itself or one of its items (including items in
     /// an open drop-down, which live in a popup). Used to let the menu own arrow/Enter/Escape keys
     /// instead of the shortcut manager while it is being navigated (#11745).
@@ -18456,20 +18509,43 @@ public partial class MainViewModel :
                 return;
             }
 
-            // F10 moves keyboard focus into the main menu bar (standard Windows behavior), so the
-            // menu can be reached and read with a screen reader without a mouse (#11745).
-            if (k == Key.F10 && keyEventArgs.KeyModifiers == KeyModifiers.None && TryFocusMainMenu())
+            // F10 toggles main-menu activation (Windows standard): the first press moves keyboard focus
+            // into the menu bar, a second press deactivates it and restores the previous focus. This
+            // also lets the menu be reached and read with a screen reader without a mouse (#11745).
+            if (k == Key.F10 && keyEventArgs.KeyModifiers == KeyModifiers.None)
             {
-                keyEventArgs.Handled = true;
-                return;
+                if (IsMainMenuFocused())
+                {
+                    DeactivateMainMenu();
+                    keyEventArgs.Handled = true;
+                    return;
+                }
+
+                if (ActivateMainMenu())
+                {
+                    keyEventArgs.Handled = true;
+                    return;
+                }
             }
 
-            // When the main menu has keyboard focus (opened via F10 or Alt), let it handle its own
-            // arrow/Enter/Escape navigation instead of consuming those keys as shortcuts. The window
-            // key handler tunnels (runs before the focused menu item), so without this the shortcut
-            // manager would eat Left/Right etc. and menu navigation would never work (#11745).
+            // Arm a "bare Alt" toggle so its release can activate/deactivate the menu bar (Windows
+            // standard). Any other key pressed while Alt is held (e.g. the access key in Alt+F) cancels
+            // it, so only Alt-alone toggles. The actual toggle happens on key-up (OnKeyUpHandler).
+            _altMenuTogglePending = k is Key.LeftAlt or Key.RightAlt;
+
+            // When the main menu has keyboard focus (opened via F10 or Alt), let it own its arrow/Enter
+            // navigation instead of consuming those keys as shortcuts. The window key handler tunnels
+            // (runs before the focused menu item), so without this the shortcut manager would eat
+            // Left/Right etc. Escape is handled here so that, once no drop-down is open, it fully
+            // deactivates the bar and restores focus instead of leaving it half-focused (#11745).
             if (IsMainMenuFocused())
             {
+                if (k == Key.Escape && !Menu.IsOpen)
+                {
+                    DeactivateMainMenu();
+                    keyEventArgs.Handled = true;
+                }
+
                 return;
             }
 
@@ -18653,6 +18729,23 @@ public partial class MainViewModel :
 
     public void OnKeyUpHandler(object? sender, KeyEventArgs e)
     {
+        // A bare Alt press+release toggles the main menu bar (Windows standard). _altMenuTogglePending
+        // is cleared if any other key was pressed while Alt was held, or on a window task switch, so
+        // this fires only for Alt-alone (#11745).
+        if (e.Key is Key.LeftAlt or Key.RightAlt && _altMenuTogglePending)
+        {
+            _altMenuTogglePending = false;
+            if (IsMainMenuFocused())
+            {
+                DeactivateMainMenu();
+                e.Handled = true;
+            }
+            else if (ActivateMainMenu())
+            {
+                e.Handled = true;
+            }
+        }
+
         if (_setEndAtKeyUpLine != null)
         {
             _setEndAtKeyUpLine = null;
