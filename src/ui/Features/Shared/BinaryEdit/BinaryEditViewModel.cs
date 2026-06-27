@@ -152,12 +152,23 @@ public partial class BinaryEditViewModel : ObservableObject
 
     partial void OnSelectedSubtitleChanged(BinarySubtitleItem? value)
     {
-        if (VideoPlayerControl?.IsPlaying != true)
+        if (!IsVideoPlaying())
         {
             DisplayedSubtitle = value;
         }
 
         UpdateOverlayPosition();
+    }
+
+    private bool IsVideoPlaying()
+    {
+        var vp = VideoPlayerControl;
+        if (vp == null || string.IsNullOrEmpty(vp.VideoPlayer.FileName))
+        {
+            return false;
+        }
+
+        return vp.IsPlaying;
     }
 
     partial void OnDisplayedSubtitleChanged(BinarySubtitleItem? value)
@@ -173,6 +184,9 @@ public partial class BinaryEditViewModel : ObservableObject
     internal void SubtitleGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         RefreshStatusText();
+        SelectedSubtitle = e.AddedItems?.Count > 0
+            ? e.AddedItems[0] as BinarySubtitleItem
+            : SubtitleGrid?.SelectedItem as BinarySubtitleItem;
     }
 
     private void RefreshStatusText()
@@ -284,6 +298,10 @@ public partial class BinaryEditViewModel : ObservableObject
         // Update subtitle overlay
         if (SubtitleOverlayImage == null || DisplayedSubtitle == null || DisplayedSubtitle.Bitmap == null)
         {
+            if (SubtitleOverlayImage != null)
+            {
+                SubtitleOverlayImage.IsVisible = false;
+            }
             return;
         }
 
@@ -292,8 +310,12 @@ public partial class BinaryEditViewModel : ObservableObject
 
         if (subtitleScreenWidth <= 0 || subtitleScreenHeight <= 0)
         {
+            SubtitleOverlayImage.IsVisible = false;
             return;
         }
+
+        SubtitleOverlayImage.IsVisible = true;
+        SubtitleOverlayImage.Source = DisplayedSubtitle.Bitmap;
 
         // Calculate scale based on rectangle
         var scaleX = rectWidth / subtitleScreenWidth;

@@ -725,12 +725,8 @@ public class BinaryEditWindow : Window
             Stretch = Stretch.Fill,
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Top,
+            IsVisible = false,
             Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand),
-            [!Visual.IsVisibleProperty] = new Binding($"{nameof(vm.DisplayedSubtitle)}.{nameof(BinarySubtitleItem.Bitmap)}")
-            {
-                Converter = new NotNullConverter()
-            },
-            [!Image.SourceProperty] = new Binding($"{nameof(vm.DisplayedSubtitle)}.{nameof(BinarySubtitleItem.Bitmap)}"),
         };
 
         videoGrid.Children.Add(overlayImage);
