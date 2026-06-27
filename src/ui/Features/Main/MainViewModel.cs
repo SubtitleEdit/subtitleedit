@@ -1669,6 +1669,7 @@ public partial class MainViewModel :
 
         AddToRecentFiles(true);
         ResetSubtitle();
+        ClearOcrImageSource();
         VideoCloseFile();
         AddToRecentFiles(false);
     }
@@ -1684,7 +1685,18 @@ public partial class MainViewModel :
 
         AddToRecentFiles(true);
         ResetSubtitle();
+        ClearOcrImageSource();
         AddToRecentFiles(false);
+    }
+
+    // Drop any image source kept from a previous OCR session when starting a fresh subtitle, so spell
+    // check does not show unrelated images. This is intentionally NOT in ResetSubtitle(), which the OCR
+    // import flows call right before ReplaceSubtitles - clearing there would wipe the just-OCR'd source
+    // and break the spell-check auto-attach for image-based formats (#11719).
+    private void ClearOcrImageSource()
+    {
+        _ocrImageSourceHolder.Source = null;
+        _ocrImageSourceHolder.FileName = null;
     }
 
     private void ResetSubtitle(SubtitleFormat? format = null)
