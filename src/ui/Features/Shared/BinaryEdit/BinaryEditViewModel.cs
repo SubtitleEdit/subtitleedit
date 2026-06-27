@@ -1949,8 +1949,8 @@ public partial class BinaryEditViewModel : ObservableObject
 
         // Arm a "bare Alt" toggle so its release can activate/deactivate the menu bar (Windows
         // standard). Any other key while Alt is held (e.g. the access key in Alt+F) cancels it; the
-        // toggle itself happens on key-up (OnKeyUp).
-        _altMenuTogglePending = e.Key is Key.LeftAlt or Key.RightAlt;
+        // modifier check rejects AltGr (Ctrl+Alt). The toggle itself happens on key-up (OnKeyUp).
+        _altMenuTogglePending = (e.Key is Key.LeftAlt or Key.RightAlt) && e.KeyModifiers == KeyModifiers.Alt;
 
         // While the menu has keyboard focus, let it own its own navigation keys. The window key
         // handler runs even on keys the menu already handled (handledEventsToo: true), so without
@@ -1959,7 +1959,11 @@ public partial class BinaryEditViewModel : ObservableObject
         // focus instead of leaving it half-focused (and without closing the whole window) (#11745).
         if (IsMenuFocused())
         {
-            if (e.Key == Key.Escape && Menu is { IsOpen: false })
+            // Only deactivate when this Escape did not just close an open drop-down. The handler runs
+            // (handledEventsToo) after the focused MenuItem, which marks the event handled when it
+            // closes a submenu - so !e.Handled distinguishes "leave the bar" from "close the submenu",
+            // giving the two-stage Escape behavior instead of collapsing both in one press (#11745).
+            if (e.Key == Key.Escape && !e.Handled && Menu is { IsOpen: false })
             {
                 DeactivateMenu();
                 e.Handled = true;
