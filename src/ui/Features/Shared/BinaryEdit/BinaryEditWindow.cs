@@ -259,6 +259,11 @@ public class BinaryEditWindow : Window
                 },
                 new MenuItem
                 {
+                    Header = Se.Language.Tools.ImageBasedEdit.AdjustColorDotDotDot,
+                    Command = vm.AdjustColorCommand,
+                },
+                new MenuItem
+                {
                     Header =  Se.Language.Tools.ImageBasedEdit.CenterHorizontally,
                     Command = vm.CenterHorizontallyCommand,
                 },

@@ -186,6 +186,8 @@ internal static class SkBitmapExtensions
             int srcStride = skBitmap.RowBytes;
             int dstStride = lockedBitmap.RowBytes;
 
+            bool sourceIsPremul = skBitmap.AlphaType == SKAlphaType.Premul;
+
             unsafe
             {
                 byte* srcBase = (byte*)skBitmap.GetPixels();
@@ -209,6 +211,10 @@ internal static class SkBitmapExtensions
                         else if (a == 0)
                         {
                             dstRow[x] = 0; // Fully transparent
+                        }
+                        else if (sourceIsPremul)
+                        {
+                            dstRow[x] = pixel; // Already premultiplied, copy as-is
                         }
                         else
                         {

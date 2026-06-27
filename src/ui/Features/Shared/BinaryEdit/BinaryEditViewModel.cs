@@ -1316,6 +1316,55 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task AdjustColor()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var selectedItems = new List<BinarySubtitleItem>();
+        if (SubtitleGrid?.SelectedItems != null)
+        {
+            foreach (var item in SubtitleGrid.SelectedItems)
+            {
+                if (item is BinarySubtitleItem binaryItem)
+                {
+                    selectedItems.Add(binaryItem);
+                }
+            }
+        }
+
+        var itemsToAdjust = selectedItems.Count > 0 ? selectedItems : Subtitles.ToList();
+
+        if (itemsToAdjust.Count == 0)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Information,
+                "No subtitles to adjust.",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<BinaryAdjustColor.BinaryAdjustColorWindow, BinaryAdjustColor.BinaryAdjustColorViewModel>(
+            Window, vm => vm.Initialize(itemsToAdjust));
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        if (SubtitleGrid != null)
+        {
+            var currentIndex = SubtitleGrid.SelectedIndex;
+            SubtitleGrid.ItemsSource = null;
+            SubtitleGrid.ItemsSource = Subtitles;
+            SubtitleGrid.SelectedIndex = currentIndex;
+        }
+
+        UpdateOverlayPosition();
+    }
+
+    [RelayCommand]
     private void CenterHorizontally()
     {
         // Get selected subtitles

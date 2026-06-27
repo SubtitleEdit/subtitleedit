@@ -25,6 +25,8 @@ public class LanguageImageBasedEdit
     public string ResizeImages { get; set; }
     public string Percentage { get; set; }
     public string ResizeImagesInfo { get; set; }
+    public string AdjustColorDotDotDot { get; set; }
+    public string AdjustColor { get; set; }
 
     public LanguageImageBasedEdit()
     {
@@ -51,5 +53,7 @@ public class LanguageImageBasedEdit
         ResizeImages = "Resize images";
         Percentage = "Percentage";
         ResizeImagesInfo = "Enter the percentage to resize images.\nPreview updates automatically.";
+        AdjustColorDotDotDot = "Adjust color...";
+        AdjustColor = "Adjust color";
     }
 }
