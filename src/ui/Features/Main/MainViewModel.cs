@@ -15992,6 +15992,14 @@ public partial class MainViewModel :
             AutoTrimWhiteSpaces();
         }
 
+        // Binary formats (EBU STL, PAC, Cavena, ...) can't be written as text: their ToText() returns
+        // a stub (EBU's is literally "Not supported!", the 14-byte file in #11910). Persist them via
+        // their binary writer instead of WriteAllText.
+        if (SelectedSubtitleFormat is IBinaryPersistableSubtitle binaryFormat)
+        {
+            return await SaveBinarySubtitle(binaryFormat, isAutoSave);
+        }
+
         var text = GetUpdateSubtitle(true).ToText(SelectedSubtitleFormat);
 
         if (Se.Settings.General.ForceCrLfOnSave)
@@ -16033,6 +16041,53 @@ public partial class MainViewModel :
 
             await MessageBox.Show(Window!, Se.Language.General.Error, message, MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
+            return false;
+        }
+
+        _changeSubtitleHash = GetFastHash();
+        _lastOpenSaveFormat = SelectedSubtitleFormat;
+
+        new BookmarkPersistence(GetUpdateSubtitle(), _subtitleFileName).Save();
+
+        return true;
+    }
+
+    // Writes a binary subtitle format (e.g. EBU STL) via its IBinaryPersistableSubtitle writer,
+    // in batch mode so it re-uses the existing/auto-detected header without a dialog. Fixes the
+    // 14-byte invalid file produced when these formats went through the text save path (#11910).
+    private async Task<bool> SaveBinarySubtitle(IBinaryPersistableSubtitle binaryFormat, bool isAutoSave)
+    {
+        try
+        {
+            // EBU STL needs a UI helper to resolve its header; reuse the same one as File > Export.
+            if (binaryFormat is Ebu)
+            {
+                Ebu.EbuUiHelper ??= new UiEbuSaveHelper();
+            }
+
+            using var ms = new MemoryStream();
+            if (!binaryFormat.Save(_subtitleFileName, ms, GetUpdateSubtitle(true), batchMode: true))
+            {
+                if (!isAutoSave)
+                {
+                    ShowStatus(string.Format(Se.Language.General.CouldNotSaveFileXErrorY, _subtitleFileName, string.Empty));
+                }
+
+                return false;
+            }
+
+            await File.WriteAllBytesAsync(_subtitleFileName, ms.ToArray());
+        }
+        catch (Exception ex)
+        {
+            var message = string.Format(Se.Language.General.CouldNotSaveFileXErrorY, _subtitleFileName, ex.Message);
+            if (isAutoSave)
+            {
+                ShowStatus(message);
+                return false;
+            }
+
+            await MessageBox.Show(Window!, Se.Language.General.Error, message, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
