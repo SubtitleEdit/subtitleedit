@@ -60,8 +60,14 @@ public class BinaryAdjustColorWindow : Window
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 
-    private static Button MakeControlsPanel(BinaryAdjustColorViewModel vm)
+    private static StackPanel MakeControlsPanel(BinaryAdjustColorViewModel vm)
     {
+        var panel = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 10,
+        };
+
         var swatchButton = new Button
         {
             Height = 60,
@@ -76,7 +82,19 @@ public class BinaryAdjustColorWindow : Window
                 [!Border.BackgroundProperty] = new Binding(nameof(vm.ColorSwatchBrush)),
             },
         };
-        return swatchButton;
+        panel.Children.Add(swatchButton);
+
+        var infoText = new TextBlock
+        {
+            Text = Se.Language.Tools.ImageBasedEdit.ColorAdjustmentInfo,
+            TextWrapping = TextWrapping.Wrap,
+            Margin = new Thickness(0, 4, 0, 0),
+            FontSize = 11,
+            Foreground = Brushes.Gray,
+        };
+        panel.Children.Add(infoText);
+
+        return panel;
     }
 
     private static Border MakePreviewPanel(BinaryAdjustColorViewModel vm)

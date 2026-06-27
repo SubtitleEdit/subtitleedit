@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryResizeImages;
 
-public partial class BinaryResizeImagesViewModel : ObservableObject
+public partial class BinaryResizeImagesViewModel : ObservableObject, IDisposable
 {
     [ObservableProperty] private int _percentage;
     [ObservableProperty] private Bitmap? _previewBitmap;
@@ -45,7 +45,7 @@ public partial class BinaryResizeImagesViewModel : ObservableObject
         };
         _previewUpdateTimer.Tick += (_, _) =>
         {
-            _previewUpdateTimer.Stop();
+            _previewUpdateTimer?.Stop();
             if (_isDirty)
             {
                 _isDirty = false;
@@ -97,8 +97,10 @@ public partial class BinaryResizeImagesViewModel : ObservableObject
         var newWidth = (int)(originalBitmap.Width * Percentage / 100.0);
         var newHeight = (int)(originalBitmap.Height * Percentage / 100.0);
 
-        var resizedBitmap = ResizeBitmap(originalBitmap, newWidth, newHeight);
+        using var resizedBitmap = ResizeBitmap(originalBitmap, newWidth, newHeight);
+        var old = PreviewBitmap;
         PreviewBitmap = resizedBitmap.ToAvaloniaBitmap();
+        old?.Dispose();
         
         ImageSizeText = $"Original: {_originalWidth} × {_originalHeight} px\nNew: {newWidth} × {newHeight} px";
     }
@@ -117,8 +119,10 @@ public partial class BinaryResizeImagesViewModel : ObservableObject
             var newWidth = (int)(originalBitmap.Width * Percentage / 100.0);
             var newHeight = (int)(originalBitmap.Height * Percentage / 100.0);
 
-            var resizedBitmap = ResizeBitmap(originalBitmap, newWidth, newHeight);
+            using var resizedBitmap = ResizeBitmap(originalBitmap, newWidth, newHeight);
+            var old = subtitle.Bitmap;
             subtitle.Bitmap = resizedBitmap.ToAvaloniaBitmap();
+            old?.Dispose();
         }
     }
 
@@ -186,5 +190,15 @@ public partial class BinaryResizeImagesViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+    }
+
+    public void Dispose()
+    {
+        _isDirty = false;
+        _previewUpdateTimer?.Stop();
+        _previewUpdateTimer = null;
+        var old = PreviewBitmap;
+        PreviewBitmap = null;
+        old?.Dispose();
     }
 }

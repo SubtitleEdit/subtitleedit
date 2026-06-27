@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustBrightness;
 
-public partial class BinaryAdjustBrightnessViewModel : ObservableObject
+public partial class BinaryAdjustBrightnessViewModel : ObservableObject, IDisposable
 {
     [ObservableProperty] private double _brightness;
     [ObservableProperty] private double _contrast;
@@ -49,7 +49,7 @@ public partial class BinaryAdjustBrightnessViewModel : ObservableObject
         };
         _previewUpdateTimer.Tick += (_, _) =>
         {
-            _previewUpdateTimer.Stop();
+            _previewUpdateTimer?.Stop();
             if (_isDirty)
             {
                 _isDirty = false;
@@ -113,9 +113,10 @@ public partial class BinaryAdjustBrightnessViewModel : ObservableObject
 
         var firstSubtitle = _subtitles[0];
         using var originalBitmap = firstSubtitle.Bitmap!.ToSkBitmap();
-        
-        var adjustedBitmap = AdjustBrightness(originalBitmap, (float)Brightness, (float)Contrast, (float)(Gamma / 100.0));
+        using var adjustedBitmap = AdjustBrightness(originalBitmap, (float)Brightness, (float)Contrast, (float)(Gamma / 100.0));
+        var old = PreviewBitmap;
         PreviewBitmap = adjustedBitmap.ToAvaloniaBitmap();
+        old?.Dispose();
     }
 
     public void ApplyAdjustments()
@@ -128,15 +129,17 @@ public partial class BinaryAdjustBrightnessViewModel : ObservableObject
             }
 
             using var originalBitmap = subtitle.Bitmap.ToSkBitmap();
-            var adjustedBitmap = AdjustBrightness(originalBitmap, (float)Brightness, (float)Contrast, (float)(Gamma / 100.0));
+            using var adjustedBitmap = AdjustBrightness(originalBitmap, (float)Brightness, (float)Contrast, (float)(Gamma / 100.0));
+            var old = subtitle.Bitmap;
             subtitle.Bitmap = adjustedBitmap.ToAvaloniaBitmap();
+            old?.Dispose();
         }
     }
 
     private static SKBitmap AdjustBrightness(SKBitmap originalBitmap, float brightness, float contrast, float gamma)
     {
-        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height);
-        
+        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+
         // Normalize values for calculations
         var brightnessAdjust = brightness; // -100 to 100
         var contrastAdjust = (contrast + 100) / 100.0f; // Convert -100 to 100 range to 0 to 2 multiplier
@@ -223,5 +226,15 @@ public partial class BinaryAdjustBrightnessViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+    }
+
+    public void Dispose()
+    {
+        _isDirty = false;
+        _previewUpdateTimer?.Stop();
+        _previewUpdateTimer = null;
+        var old = PreviewBitmap;
+        PreviewBitmap = null;
+        old?.Dispose();
     }
 }

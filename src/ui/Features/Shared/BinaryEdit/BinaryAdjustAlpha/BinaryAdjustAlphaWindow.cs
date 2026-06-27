@@ -173,12 +173,7 @@ public class BinaryAdjustAlphaWindow : Window
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
         };
 
-        // Canvas with checkered background and image overlay
-        var canvas = new Canvas
-        {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
+        var grid = new Grid();
 
         var backgroundImage = new Image
         {
@@ -187,7 +182,7 @@ public class BinaryAdjustAlphaWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             [!Image.SourceProperty] = new Binding(nameof(vm.CheckeredBackgroundBitmap)),
         };
-        canvas.Children.Add(backgroundImage);
+        grid.Children.Add(backgroundImage);
 
         var previewImage = new Image
         {
@@ -196,9 +191,9 @@ public class BinaryAdjustAlphaWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             [!Image.SourceProperty] = new Binding(nameof(vm.PreviewBitmap)),
         };
-        canvas.Children.Add(previewImage);
+        grid.Children.Add(previewImage);
 
-        scrollViewer.Content = canvas;
+        scrollViewer.Content = grid;
 
         vm.PreviewImage = previewImage;
         vm.BackgroundImage = backgroundImage;

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Shared.BinaryEdit.BinaryAdjustAlpha;
 
-public partial class BinaryAdjustAlphaViewModel : ObservableObject
+public partial class BinaryAdjustAlphaViewModel : ObservableObject, IDisposable
 {
     [ObservableProperty] private double _alphaAdjustment;
     [ObservableProperty] private double _transparencyThreshold;
@@ -48,7 +48,7 @@ public partial class BinaryAdjustAlphaViewModel : ObservableObject
         };
         _previewUpdateTimer.Tick += (_, _) =>
         {
-            _previewUpdateTimer.Stop();
+            _previewUpdateTimer?.Stop();
             if (_isDirty)
             {
                 _isDirty = false;
@@ -105,13 +105,15 @@ public partial class BinaryAdjustAlphaViewModel : ObservableObject
 
         var firstSubtitle = _subtitles[0];
         using var originalBitmap = firstSubtitle.Bitmap!.ToSkBitmap();
-        
-        // Create checkered background
+
+        var oldBg = CheckeredBackgroundBitmap;
         CheckeredBackgroundBitmap = CreateCheckeredBackground(originalBitmap.Width, originalBitmap.Height);
-        
-        // Apply alpha adjustments
-        var adjustedBitmap = AdjustAlpha(originalBitmap, (float)AlphaAdjustment, (byte)TransparencyThreshold);
+        oldBg?.Dispose();
+
+        using var adjustedBitmap = AdjustAlpha(originalBitmap, (float)AlphaAdjustment, (byte)TransparencyThreshold);
+        var old = PreviewBitmap;
         PreviewBitmap = adjustedBitmap.ToAvaloniaBitmap();
+        old?.Dispose();
     }
 
     public void ApplyAdjustments()
@@ -124,27 +126,29 @@ public partial class BinaryAdjustAlphaViewModel : ObservableObject
             }
 
             using var originalBitmap = subtitle.Bitmap.ToSkBitmap();
-            var adjustedBitmap = AdjustAlpha(originalBitmap, (float)AlphaAdjustment, (byte)TransparencyThreshold);
+            using var adjustedBitmap = AdjustAlpha(originalBitmap, (float)AlphaAdjustment, (byte)TransparencyThreshold);
+            var old = subtitle.Bitmap;
             subtitle.Bitmap = adjustedBitmap.ToAvaloniaBitmap();
+            old?.Dispose();
         }
     }
 
     private static SKBitmap AdjustAlpha(SKBitmap originalBitmap, float alphaAdjustment, byte transparencyThreshold)
     {
-        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height);
+        var adjustedBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
 
         unsafe
         {
             var originalPixels = originalBitmap.GetPixels();
             var adjustedPixels = adjustedBitmap.GetPixels();
-            
+
             for (int y = 0; y < originalBitmap.Height; y++)
             {
                 for (int x = 0; x < originalBitmap.Width; x++)
                 {
                     var index = y * originalBitmap.Width + x;
                     var pixel = ((uint*)originalPixels)[index];
-                    
+
                     var a = (byte)((pixel >> 24) & 0xFF);
                     var r = (byte)((pixel >> 16) & 0xFF);
                     var g = (byte)((pixel >> 8) & 0xFF);
@@ -184,7 +188,7 @@ public partial class BinaryAdjustAlphaViewModel : ObservableObject
     public static Bitmap CreateCheckeredBackground(int width, int height)
     {
         const int checkSize = 10;
-        var bitmap = new SKBitmap(width, height);
+        using var bitmap = new SKBitmap(width, height);
         
         using (var canvas = new SKCanvas(bitmap))
         {
@@ -232,5 +236,18 @@ public partial class BinaryAdjustAlphaViewModel : ObservableObject
             e.Handled = true;
             Window?.Close();
         }
+    }
+
+    public void Dispose()
+    {
+        _isDirty = false;
+        _previewUpdateTimer?.Stop();
+        _previewUpdateTimer = null;
+        var oldPreview = PreviewBitmap;
+        PreviewBitmap = null;
+        oldPreview?.Dispose();
+        var oldBg = CheckeredBackgroundBitmap;
+        CheckeredBackgroundBitmap = null;
+        oldBg?.Dispose();
     }
 }

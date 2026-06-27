@@ -152,12 +152,23 @@ public partial class BinaryEditViewModel : ObservableObject
 
     partial void OnSelectedSubtitleChanged(BinarySubtitleItem? value)
     {
-        if (VideoPlayerControl?.IsPlaying != true)
+        if (!IsVideoPlaying())
         {
             DisplayedSubtitle = value;
         }
 
         UpdateOverlayPosition();
+    }
+
+    private bool IsVideoPlaying()
+    {
+        var vp = VideoPlayerControl;
+        if (vp == null || string.IsNullOrEmpty(vp.VideoPlayer.FileName))
+        {
+            return false;
+        }
+
+        return vp.IsPlaying;
     }
 
     partial void OnDisplayedSubtitleChanged(BinarySubtitleItem? value)
@@ -284,6 +295,10 @@ public partial class BinaryEditViewModel : ObservableObject
         // Update subtitle overlay
         if (SubtitleOverlayImage == null || DisplayedSubtitle == null || DisplayedSubtitle.Bitmap == null)
         {
+            if (SubtitleOverlayImage != null)
+            {
+                SubtitleOverlayImage.IsVisible = false;
+            }
             return;
         }
 
@@ -292,8 +307,12 @@ public partial class BinaryEditViewModel : ObservableObject
 
         if (subtitleScreenWidth <= 0 || subtitleScreenHeight <= 0)
         {
+            SubtitleOverlayImage.IsVisible = false;
             return;
         }
+
+        SubtitleOverlayImage.IsVisible = true;
+        SubtitleOverlayImage.Source = DisplayedSubtitle.Bitmap;
 
         // Calculate scale based on rectangle
         var scaleX = rectWidth / subtitleScreenWidth;
@@ -1193,7 +1212,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<BinaryResizeImages.BinaryResizeImagesWindow, BinaryResizeImages.BinaryResizeImagesViewModel>(
+        using var result = await _windowService.ShowDialogAsync<BinaryResizeImages.BinaryResizeImagesWindow, BinaryResizeImages.BinaryResizeImagesViewModel>(
             Window, vm => vm.Initialize(itemsToResize));
 
         if (!result.OkPressed)
@@ -1245,7 +1264,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<BinaryAdjustBrightness.BinaryAdjustBrightnessWindow, BinaryAdjustBrightness.BinaryAdjustBrightnessViewModel>(
+        using var result = await _windowService.ShowDialogAsync<BinaryAdjustBrightness.BinaryAdjustBrightnessWindow, BinaryAdjustBrightness.BinaryAdjustBrightnessViewModel>(
             Window, vm => vm.Initialize(itemsToAdjust));
 
         if (!result.OkPressed)
@@ -1256,10 +1275,15 @@ public partial class BinaryEditViewModel : ObservableObject
         // Refresh grid to show updated bitmaps
         if (SubtitleGrid != null)
         {
-            var currentIndex = SubtitleGrid.SelectedIndex;
-            SubtitleGrid.ItemsSource = null;
-            SubtitleGrid.ItemsSource = Subtitles;
-            SubtitleGrid.SelectedIndex = currentIndex;
+            if (selectedItems.Count > 0)
+                ApplyGridSelection(selectedItems);
+            else
+            {
+                var currentIndex = SubtitleGrid.SelectedIndex;
+                SubtitleGrid.ItemsSource = null;
+                SubtitleGrid.ItemsSource = Subtitles;
+                SubtitleGrid.SelectedIndex = currentIndex;
+            }
         }
 
         UpdateOverlayPosition();
@@ -1297,7 +1321,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<BinaryAdjustAlpha.BinaryAdjustAlphaWindow, BinaryAdjustAlpha.BinaryAdjustAlphaViewModel>(
+        using var result = await _windowService.ShowDialogAsync<BinaryAdjustAlpha.BinaryAdjustAlphaWindow, BinaryAdjustAlpha.BinaryAdjustAlphaViewModel>(
             Window, vm => vm.Initialize(itemsToAdjust));
 
         if (!result.OkPressed)
@@ -1308,10 +1332,15 @@ public partial class BinaryEditViewModel : ObservableObject
         // Refresh grid to show updated bitmaps
         if (SubtitleGrid != null)
         {
-            var currentIndex = SubtitleGrid.SelectedIndex;
-            SubtitleGrid.ItemsSource = null;
-            SubtitleGrid.ItemsSource = Subtitles;
-            SubtitleGrid.SelectedIndex = currentIndex;
+            if (selectedItems.Count > 0)
+                ApplyGridSelection(selectedItems);
+            else
+            {
+                var currentIndex = SubtitleGrid.SelectedIndex;
+                SubtitleGrid.ItemsSource = null;
+                SubtitleGrid.ItemsSource = Subtitles;
+                SubtitleGrid.SelectedIndex = currentIndex;
+            }
         }
 
         UpdateOverlayPosition();
@@ -1347,7 +1376,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<BinaryAdjustColor.BinaryAdjustColorWindow, BinaryAdjustColor.BinaryAdjustColorViewModel>(
+        using var result = await _windowService.ShowDialogAsync<BinaryAdjustColor.BinaryAdjustColorWindow, BinaryAdjustColor.BinaryAdjustColorViewModel>(
             Window, vm => vm.Initialize(itemsToAdjust));
 
         if (!result.OkPressed)
@@ -1357,10 +1386,15 @@ public partial class BinaryEditViewModel : ObservableObject
 
         if (SubtitleGrid != null)
         {
-            var currentIndex = SubtitleGrid.SelectedIndex;
-            SubtitleGrid.ItemsSource = null;
-            SubtitleGrid.ItemsSource = Subtitles;
-            SubtitleGrid.SelectedIndex = currentIndex;
+            if (selectedItems.Count > 0)
+                ApplyGridSelection(selectedItems);
+            else
+            {
+                var currentIndex = SubtitleGrid.SelectedIndex;
+                SubtitleGrid.ItemsSource = null;
+                SubtitleGrid.ItemsSource = Subtitles;
+                SubtitleGrid.SelectedIndex = currentIndex;
+            }
         }
 
         UpdateOverlayPosition();
@@ -1438,7 +1472,9 @@ public partial class BinaryEditViewModel : ObservableObject
 
             using var skBitmap = subtitle.Bitmap.ToSkBitmap();
             using var cropped = skBitmap.CropTransparentColors(out var offsetX, out var offsetY);
+            var old = subtitle.Bitmap;
             subtitle.Bitmap = cropped.ToAvaloniaBitmap();
+            old?.Dispose();
             subtitle.X += offsetX;
             subtitle.Y += offsetY;
         }
@@ -1815,7 +1851,7 @@ public partial class BinaryEditViewModel : ObservableObject
         try
         {
             using var stream = File.OpenRead(fileName);
-            var skBitmap = SkiaSharp.SKBitmap.Decode(stream);
+            using var skBitmap = SkiaSharp.SKBitmap.Decode(stream);
             if (skBitmap == null)
             {
                 await MessageBox.Show(Window, Se.Language.General.Error, "Unable to load image file.",
@@ -1823,7 +1859,9 @@ public partial class BinaryEditViewModel : ObservableObject
                 return;
             }
 
+            var old = selectedItem.Bitmap;
             selectedItem.Bitmap = skBitmap.ToAvaloniaBitmap();
+            old?.Dispose();
 
             UpdateOverlayPosition();
             RefreshStatusText();
