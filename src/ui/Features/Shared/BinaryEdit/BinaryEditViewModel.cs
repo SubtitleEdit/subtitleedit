@@ -1839,7 +1839,7 @@ public partial class BinaryEditViewModel : ObservableObject
         try
         {
             using var stream = File.OpenRead(fileName);
-            var skBitmap = SkiaSharp.SKBitmap.Decode(stream);
+            using var skBitmap = SkiaSharp.SKBitmap.Decode(stream);
             if (skBitmap == null)
             {
                 await MessageBox.Show(Window, Se.Language.General.Error, "Unable to load image file.",
