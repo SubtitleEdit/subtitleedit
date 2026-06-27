@@ -657,6 +657,7 @@ public class InitWaveform
         var buttonMore = new NonSpaceButton
         {
             Margin = new Thickness(settingMore.LeftMargin, 0, settingMore.RightMargin, 0),
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(Se.Language.General.More, shortcuts),
         };
         Attached.SetIcon(buttonMore, "fa-ellipsis-v");
 

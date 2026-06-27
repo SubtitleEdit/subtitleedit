@@ -95,6 +95,51 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 }
             }
 
+            foreach (var kp in LoadReplaceList(userDoc, "RemovedPartialWords"))
+            {
+                if (_partialWordReplaceList.ContainsKey(kp.Key))
+                {
+                    _partialWordReplaceList.Remove(kp.Key);
+                }
+            }
+            foreach (var kp in LoadReplaceList(userDoc, "PartialWords"))
+            {
+                if (!_partialWordReplaceList.ContainsKey(kp.Key))
+                {
+                    _partialWordReplaceList.Add(kp.Key, kp.Value);
+                }
+            }
+
+            foreach (var kp in LoadReplaceList(userDoc, "RemovedPartialWordsAlways"))
+            {
+                if (_partialWordAlwaysReplaceList.ContainsKey(kp.Key))
+                {
+                    _partialWordAlwaysReplaceList.Remove(kp.Key);
+                }
+            }
+            foreach (var kp in LoadReplaceList(userDoc, "PartialWordsAlways"))
+            {
+                if (!_partialWordAlwaysReplaceList.ContainsKey(kp.Key))
+                {
+                    _partialWordAlwaysReplaceList.Add(kp.Key, kp.Value);
+                }
+            }
+
+            foreach (var kp in LoadReplaceList(userDoc, "RemovedPartialLinesAlways"))
+            {
+                if (_partialLineAlwaysReplaceList.ContainsKey(kp.Key))
+                {
+                    _partialLineAlwaysReplaceList.Remove(kp.Key);
+                }
+            }
+            foreach (var kp in LoadReplaceList(userDoc, "PartialLinesAlways"))
+            {
+                if (!_partialLineAlwaysReplaceList.ContainsKey(kp.Key))
+                {
+                    _partialLineAlwaysReplaceList.Add(kp.Key, kp.Value);
+                }
+            }
+
             foreach (var kp in LoadReplaceList(userDoc, "RemovedBeginLines"))
             {
                 if (_beginLineReplaceList.ContainsKey(kp.Key))
