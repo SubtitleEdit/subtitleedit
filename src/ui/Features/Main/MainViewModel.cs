@@ -12054,7 +12054,7 @@ public partial class MainViewModel :
 
     private void FocusEditTextBox()
     {
-        Dispatcher.UIThread.Post(() =>
+        Dispatcher.UIThread.Post(async () =>
         {
             if (AudioVisualizer != null && AudioVisualizer.IsFocused)
             {
@@ -12063,7 +12063,7 @@ public partial class MainViewModel :
 
             ActivateWindow(Window);
             EditTextBox.Focus();
-            Task.Delay(10);
+            await Task.Delay(10);
             EditTextBox.Focus();
         });
     }
