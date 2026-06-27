@@ -2519,6 +2519,7 @@
       "categorySubtitleGridAndTextBox": "Subtitle list view & text box",
       "categorySubtitleGrid": "Subtitle list view",
       "categoryWaveform": "Waveform",
+      "categoryTextBox": "Text box",
       "generalSetupLikeSe4": "Set up like Subtitle Edit 4 (theme, shortcuts, replace rules)",
       "generalMergeSelectedLines": "Merge selected lines",
       "generalMergeWithPrevious": "Merge with previous",

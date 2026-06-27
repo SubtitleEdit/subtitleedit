@@ -18747,6 +18747,18 @@ public partial class MainViewModel :
             // "Toggle dialog dashes" works in whichever text box has focus, like SE 4).
             if (EditTextBox.IsFocused || EditTextBoxOriginal.IsFocused)
             {
+                // TextBox-category shortcuts (e.g. "Selection to lowercase" Ctrl+U, SE4 parity) are
+                // dispatched here - they were previously registered but never run (#11906). The native
+                // clipboard commands (Cut/Copy/Paste/Select all) are skipped so Avalonia's built-in
+                // handling keeps working on whichever text box is focused.
+                var textBoxCommand = _shortcutManager.CheckShortcuts(keyEventArgs, ShortcutCategory.TextBox.ToString());
+                if (textBoxCommand != null && !IsNativeTextBoxClipboardCommand(textBoxCommand))
+                {
+                    keyEventArgs.Handled = true;
+                    textBoxCommand.Execute(null);
+                    return;
+                }
+
                 var relayCommand = _shortcutManager.CheckShortcuts(keyEventArgs, ShortcutCategory.SubtitleGridAndTextBox.ToString());
                 if (relayCommand != null)
                 {
@@ -18767,6 +18779,17 @@ public partial class MainViewModel :
             }
         }
     }
+
+    // These TextBox-category commands duplicate Avalonia's built-in TextBox key handling and are
+    // hardcoded to the primary EditTextBox, so we let the focused control handle them natively
+    // instead of routing them through the shortcut manager (they remain for the right-click menu).
+    private bool IsNativeTextBoxClipboardCommand(IRelayCommand command) =>
+        ReferenceEquals(command, TextBoxCutCommand) ||
+        ReferenceEquals(command, TextBoxCut2Command) ||
+        ReferenceEquals(command, TextBoxCopyCommand) ||
+        ReferenceEquals(command, TextBoxPasteCommand) ||
+        ReferenceEquals(command, TextBoxSelectAllCommand) ||
+        ReferenceEquals(command, TextBoxDeleteSelectionCommand);
 
     public void OnKeyUpHandler(object? sender, KeyEventArgs e)
     {

@@ -239,6 +239,7 @@ public partial class ShortcutsViewModel : ObservableObject
             Se.Language.Options.Shortcuts.CategorySubtitleGridAndTextBox, searchText);
         AddShortcuts(ShortcutCategory.SubtitleGrid, Se.Language.Options.Shortcuts.CategorySubtitleGrid, searchText);
         AddShortcuts(ShortcutCategory.Waveform, Se.Language.Options.Shortcuts.CategoryWaveform, searchText);
+        AddShortcuts(ShortcutCategory.TextBox, Se.Language.Options.Shortcuts.CategoryTextBox, searchText);
     }
 
     private void AddShortcuts(ShortcutCategory category, string categoryName, string searchText)
