@@ -2177,10 +2177,7 @@ public partial class BinaryEditViewModel : ObservableObject
             var newIndex = selectedItem != null ? Subtitles.IndexOf(selectedItem) : -1;
             SubtitleGrid.ItemsSource = null;
             SubtitleGrid.ItemsSource = Subtitles;
-            if (newIndex >= 0)
-            {
-                SubtitleGrid.SelectedIndex = newIndex;
-            }
+            SelectAndScrollToRow(newIndex);
         }
         RefreshStatusText();
     }
