@@ -16422,6 +16422,20 @@ public partial class MainViewModel :
         _subtitle.FileName = saveAsResult.FileName;
         _converted = false;
         _lastOpenSaveFormat = saveAsResult.SubtitleFormat;
+
+        // When "Save as" targets a different format than the one currently loaded, convert the source
+        // format's native tags first - exactly like changing the format dropdown does. Without this,
+        // e.g. saving a WebVTT as SubRip kept the raw <c.color> class tags instead of <font color="...">
+        // (#11954). SaveSubtitle serializes from the grid, so push the converted text back into it.
+        var previousFormat = SelectedSubtitleFormat;
+        if (previousFormat != null && previousFormat.Name != saveAsResult.SubtitleFormat.Name)
+        {
+            _subtitle = GetUpdateSubtitle();
+            _subtitleOriginal = GetUpdateSubtitleOriginal();
+            previousFormat.RemoveNativeFormatting(_subtitle, saveAsResult.SubtitleFormat);
+            SetSubtitles(_subtitle, _subtitleOriginal);
+        }
+
         SetSubtitleFormat(saveAsResult.SubtitleFormat);
 
         // SetSubtitleFormat changes the format programmatically, which bypasses the format-change
