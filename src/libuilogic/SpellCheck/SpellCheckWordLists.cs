@@ -495,7 +495,32 @@ public class SpellCheckWordLists
         return _namesListUppercase.Contains(word) ||
                _namesListWithApostrophe.Contains(word) ||
                _nameList.IsInNamesMultiWordList(text, word) ||
-               _namesListUppercase.Contains(word);
+               IsPartOfKnownDashOrPeriodName(word, text);
+    }
+
+    /// <summary>
+    /// True when <paramref name="word"/> is a dash/period-delimited part of a known combined name or
+    /// word (e.g. "Soo" or "bin" of "Soo-bin") that actually appears in <paramref name="text"/>. The
+    /// spell-check tokenizer splits on '-' and '.', so without this a hyphenated name added to the
+    /// names list would be flagged part by part (#10126).
+    /// </summary>
+    private bool IsPartOfKnownDashOrPeriodName(string word, string text)
+    {
+        if (string.IsNullOrEmpty(word))
+        {
+            return false;
+        }
+
+        foreach (var combined in _wordsWithDashesOrPeriods)
+        {
+            var parts = combined.Split(PeriodAndDash, StringSplitOptions.RemoveEmptyEntries);
+            if (Array.IndexOf(parts, word) >= 0 && text.Contains(combined, StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public bool HasUserWord(string word)
