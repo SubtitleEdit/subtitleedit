@@ -26,6 +26,7 @@ public class LanguageGeneral
     public string AlphaAdjustment { get; set; }
     public string AlphaThreshold { get; set; }
     public string ApiKey { get; set; }
+    public string Formality { get; set; }
     public string ApiSecret { get; set; }
     public string Appearance { get; set; }
     public string Append { get; set; }
@@ -771,6 +772,7 @@ public class LanguageGeneral
         AlphaAdjustment = "Alpha adjustment";
         AlphaThreshold = "Alpha threshold";
         ApiKey = "API key";
+        Formality = "Formality";
         ApiSecret = "Secret";
         Appearance = "Appearance";
         Append = "Append";
