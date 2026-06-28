@@ -396,6 +396,72 @@ public partial class AssaStylesViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task FileReplaceWith()
+    {
+        var selectedItems = FileStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
+        if (Window == null || selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        var oldNames = selectedItems.Select(p => p.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        // Candidate targets: the other file styles, plus storage styles not already in the file.
+        var candidates = FileStyles.Where(p => !oldNames.Contains(p.Name)).ToList();
+        candidates.AddRange(StorageStyles.Where(s => FileStyles.All(f => !f.Name.Equals(s.Name, StringComparison.OrdinalIgnoreCase))));
+        if (candidates.Count == 0)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
+        {
+            var styles = candidates.Select(p => new StyleDisplay(p.ToSsaStyle())).ToList();
+            vm.Initialize(Se.Language.Assa.ReplaceStyleWithDotDotDot, styles, Se.Language.General.Ok, false);
+        });
+
+        var target = result.Styles.FirstOrDefault(p => p.IsSelected) ?? result.SelectedStyle;
+        if (!result.OkPressed || target == null)
+        {
+            return;
+        }
+
+        // If the target came from storage and isn't in the file yet, add it.
+        var targetInFile = FileStyles.FirstOrDefault(f => f.Name.Equals(target.Name, StringComparison.OrdinalIgnoreCase));
+        if (targetInFile == null)
+        {
+            targetInFile = new StyleDisplay(target.ToSsaStyle());
+            FileStyles.Add(targetInFile);
+        }
+
+        // Re-point every line that used one of the replaced styles to the target.
+        RepointParagraphsToStyle(_subtitle, oldNames, targetInFile.Name);
+
+        // Remove the replaced styles (but never the target itself).
+        foreach (var old in selectedItems.Where(s => !s.Name.Equals(targetInFile.Name, StringComparison.OrdinalIgnoreCase)))
+        {
+            FileStyles.Remove(old);
+        }
+
+        SelectedFileStyle = targetInFile;
+        CurrentStyle = targetInFile;
+        UpdateUsages();
+    }
+
+    // Re-points every paragraph that uses one of <paramref name="oldNames"/> (its style, via Extra,
+    // optionally prefixed with '*') to <paramref name="targetName"/>. Used by "Replace style with...".
+    internal static void RepointParagraphsToStyle(Subtitle subtitle, ISet<string> oldNames, string targetName)
+    {
+        foreach (var paragraph in subtitle.Paragraphs)
+        {
+            if (paragraph.Extra != null && oldNames.Contains(paragraph.Extra.TrimStart('*')))
+            {
+                paragraph.Extra = targetName;
+            }
+        }
+    }
+
+    [RelayCommand]
     private async Task StorageImport()
     {
         if (Window == null)

@@ -211,6 +211,15 @@ public class AssaStylesWindow : Window
         menuItemTakeUsagesFrom.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsTakeUsagesFromVisible)) { Source = vm });
         flyout.Items.Add(menuItemTakeUsagesFrom);
 
+        var menuItemReplaceWith = new MenuItem
+        {
+            Header = Se.Language.Assa.ReplaceStyleWithDotDotDot,
+            DataContext = vm,
+            Command = vm.FileReplaceWithCommand,
+        };
+        menuItemReplaceWith.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsFileStyleSelected)) { Source = vm });
+        flyout.Items.Add(menuItemReplaceWith);
+
         var buttonNew = UiUtil.MakeButton(vm.FileNewCommand, IconNames.Plus, Se.Language.General.New);
         var buttonRemove = UiUtil.MakeButton(vm.FileRemoveCommand, IconNames.Trash, Se.Language.General.Delete);
         var buttonDuplicate = UiUtil.MakeButton(vm.FilesDuplicateCommand, IconNames.Duplicate, Se.Language.General.Duplicate);

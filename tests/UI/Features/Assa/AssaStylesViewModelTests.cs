@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Headless.XUnit;
 using Microsoft.Extensions.DependencyInjection;
 using Nikse.SubtitleEdit;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Assa;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -9,6 +11,22 @@ namespace UITests.Features.Assa;
 
 public class AssaStylesViewModelTests
 {
+    [Fact]
+    public void RepointParagraphsToStyle_ReassignsOnlyMatchingStyles()
+    {
+        var subtitle = new Subtitle();
+        subtitle.Paragraphs.Add(new Paragraph("a", 0, 1000) { Extra = "Old1" });
+        subtitle.Paragraphs.Add(new Paragraph("b", 1000, 2000) { Extra = "*Old2" }); // '*' prefix
+        subtitle.Paragraphs.Add(new Paragraph("c", 2000, 3000) { Extra = "Keep" });
+
+        var oldNames = new HashSet<string>(System.StringComparer.OrdinalIgnoreCase) { "Old1", "Old2" };
+        AssaStylesViewModel.RepointParagraphsToStyle(subtitle, oldNames, "Target");
+
+        Assert.Equal("Target", subtitle.Paragraphs[0].Extra);
+        Assert.Equal("Target", subtitle.Paragraphs[1].Extra);
+        Assert.Equal("Keep", subtitle.Paragraphs[2].Extra);
+    }
+
     /// <summary>
     /// The AssaStylesViewModel constructor builds the storage-style category list and a filtered
     /// DataGridCollectionView over the stored styles (#11921). Resolving it from the real DI
