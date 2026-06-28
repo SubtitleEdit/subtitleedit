@@ -18635,6 +18635,14 @@ public partial class MainViewModel :
     internal void OnWindowDeactivated(object? sender, EventArgs e)
     {
         _altMenuTogglePending = false;
+
+        // A task switch (Alt+Tab) must also drop any active menu-bar state. Otherwise Avalonia leaves
+        // the access-key underlines / selection armed and they reappear when the window is re-activated,
+        // leaving the bar in a half-active "limbo" state (#11745 beta-2 feedback).
+        if (Menu is { IsOpen: true } || IsMainMenuFocused())
+        {
+            DeactivateMainMenu();
+        }
     }
 
     /// <summary>
@@ -18744,14 +18752,31 @@ public partial class MainViewModel :
             // (runs before the focused menu item), so without this the shortcut manager would eat
             // Left/Right etc. Escape is handled here so that, once no drop-down is open, it fully
             // deactivates the bar and restores focus instead of leaving it half-focused (#11745).
-            if (IsMainMenuFocused())
+            // Escape leaves the menu bar in two deterministic steps (Windows standard): if a drop-down
+            // is open, the first Escape closes it but keeps the bar active; the next Escape (nothing
+            // open) fully deactivates and restores focus. We also gate on Menu.IsOpen, because focus can
+            // briefly leave the menu right after a drop-down closes - relying on focus alone previously
+            // needed a third Escape to leave the bar (#11745 beta-2 feedback).
+            if (k == Key.Escape && keyEventArgs.KeyModifiers == KeyModifiers.None && (IsMainMenuFocused() || Menu.IsOpen))
             {
-                if (k == Key.Escape && !Menu.IsOpen)
+                if (Menu.IsOpen)
+                {
+                    Menu.Close();
+                    TryFocusMainMenu(); // keep the bar focused so the next Escape deactivates it
+                }
+                else
                 {
                     DeactivateMainMenu();
-                    keyEventArgs.Handled = true;
                 }
 
+                keyEventArgs.Handled = true;
+                return;
+            }
+
+            // While the menu bar owns keyboard focus, let it handle its own arrow/Enter navigation
+            // instead of consuming those keys as shortcuts.
+            if (IsMainMenuFocused())
+            {
                 return;
             }
 
