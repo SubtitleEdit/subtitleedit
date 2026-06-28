@@ -277,7 +277,7 @@ Applied in a fixed, sensible order regardless of CLI order:
 
 ### FixCommonErrors rule selection
 
-`--FixCommonErrors` (no value) runs all 38 rules. Pass `--FixCommonErrorsRules:<list>`
+`--FixCommonErrors` (no value) runs all 39 rules. Pass `--FixCommonErrorsRules:<list>`
 to pick a subset — supplying the option implies `--FixCommonErrors`.
 
 A handful of rules are **language-conditional** and only run in the default

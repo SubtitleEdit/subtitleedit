@@ -94,20 +94,27 @@ public static class MultipleReplaceLoader
             return 0;
         }
 
-        // Pre-compile regex rules once (not per-paragraph). Use RegexOptions.Multiline so
-        // ^/$ anchors match at every line boundary inside a multi-line subtitle, matching
-        // the UI's behaviour (MultipleReplaceViewModel compiles with Compiled | Multiline).
-        // A rule with an invalid pattern is dropped here so it's skipped entirely.
+        // Pre-compile rule patterns once (not per-paragraph):
+        //  - RegularExpression rules use the user pattern with RegexOptions.Multiline so ^/$
+        //    anchors match at every line boundary, matching the UI (MultipleReplaceViewModel
+        //    compiles with Compiled | Multiline).
+        //  - Normal (case-insensitive literal) rules compile an escaped, IgnoreCase pattern
+        //    so the per-paragraph loop no longer re-escapes and re-parses on every line.
+        // A rule with an invalid/empty pattern is left out here so it's skipped entirely.
         var compiledRegex = new Dictionary<Rule, Regex>();
         foreach (var rule in rules)
         {
-            if (!string.Equals(rule.SearchType, SearchTypeRegularExpression, StringComparison.OrdinalIgnoreCase))
-            {
-                continue;
-            }
             try
             {
-                compiledRegex[rule] = new Regex(rule.FindWhat, RegexOptions.Compiled | RegexOptions.Multiline);
+                if (string.Equals(rule.SearchType, SearchTypeRegularExpression, StringComparison.OrdinalIgnoreCase))
+                {
+                    compiledRegex[rule] = new Regex(rule.FindWhat, RegexOptions.Compiled | RegexOptions.Multiline);
+                }
+                else if (!string.Equals(rule.SearchType, SearchTypeCaseSensitive, StringComparison.OrdinalIgnoreCase)
+                         && !string.IsNullOrEmpty(rule.FindWhat))
+                {
+                    compiledRegex[rule] = new Regex(Regex.Escape(rule.FindWhat), RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                }
             }
             catch
             {
@@ -132,9 +139,13 @@ public static class MultipleReplaceLoader
                         newText = RegexUtils.ReplaceNewLineSafe(regex, newText, rule.ReplaceWith);
                     }
                 }
-                else // Normal — case-insensitive whole-string replace
+                else // Normal — case-insensitive literal replace (empty FindWhat = no-op, not compiled)
                 {
-                    newText = ReplaceCaseInsensitive(newText, rule.FindWhat, rule.ReplaceWith);
+                    if (compiledRegex.TryGetValue(rule, out var regex))
+                    {
+                        // Escape '$' so the replacement is treated literally (no $1/$& expansion).
+                        newText = regex.Replace(newText, rule.ReplaceWith.Replace("$", "$$"));
+                    }
                 }
             }
             if (newText != paragraph.Text)
@@ -145,14 +156,5 @@ public static class MultipleReplaceLoader
         }
 
         return modified;
-    }
-
-    private static string ReplaceCaseInsensitive(string source, string find, string replaceWith)
-    {
-        if (string.IsNullOrEmpty(find))
-        {
-            return source;
-        }
-        return Regex.Replace(source, Regex.Escape(find), replaceWith.Replace("$", "$$"), RegexOptions.IgnoreCase);
     }
 }

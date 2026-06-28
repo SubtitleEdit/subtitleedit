@@ -205,18 +205,31 @@ internal static class FixCommonErrorsRunner
     }
 
     // A signature of the subtitle's timing + text, used to detect when a Fix Common
-    // Errors pass has stopped changing anything (convergence).
-    private static string Snapshot(Subtitle subtitle)
+    // Errors pass has stopped changing anything (convergence). A 64-bit FNV-1a hash over
+    // the same fields - only compared against the previous pass within this run, so it
+    // avoids building (and discarding) a full-subtitle string on every pass.
+    private static long Snapshot(Subtitle subtitle)
     {
-        var sb = new System.Text.StringBuilder();
-        foreach (var p in subtitle.Paragraphs)
+        const long fnvPrime = 1099511628211L;
+        var hash = unchecked((long)14695981039346656037UL); // FNV offset basis
+        unchecked
         {
-            sb.Append(p.StartTime.TotalMilliseconds).Append('|')
-              .Append(p.EndTime.TotalMilliseconds).Append('|')
-              .Append(p.Text).Append('\n');
+            foreach (var p in subtitle.Paragraphs)
+            {
+                hash = (hash ^ BitConverter.DoubleToInt64Bits(p.StartTime.TotalMilliseconds)) * fnvPrime;
+                hash = (hash ^ BitConverter.DoubleToInt64Bits(p.EndTime.TotalMilliseconds)) * fnvPrime;
+
+                var text = p.Text ?? string.Empty;
+                foreach (var c in text)
+                {
+                    hash = (hash ^ c) * fnvPrime;
+                }
+
+                hash = (hash ^ '\n') * fnvPrime;
+            }
         }
 
-        return sb.ToString();
+        return hash;
     }
 
     /// <summary>
@@ -390,11 +403,16 @@ internal static class FixCommonErrorsRunner
     /// Pixel-width measurer for FixShortLinesPixelWidth. Mirrors UI's implementation:
     /// 14pt of the default Skia typeface. Headless contexts get the same numbers.
     /// </summary>
+    // Cached per thread: MeasurePixelWidth runs once per subtitle line, so building a new
+    // SKFont every call was wasteful - and the old code disposed SKTypeface.Default, which
+    // is a shared instance that must not be disposed. [ThreadStatic] keeps it safe even if
+    // conversions are ever run in parallel.
+    [ThreadStatic] private static SKFont? _pixelWidthFont;
+
     private static int MeasurePixelWidth(string text)
     {
-        using var typeface = SKTypeface.Default;
-        using var font = new SKFont(typeface, 14);
-        var width = font.MeasureText(text);
+        _pixelWidthFont ??= new SKFont(SKTypeface.Default, 14);
+        var width = _pixelWidthFont.MeasureText(text);
         return (int)Math.Round(width, MidpointRounding.AwayFromZero);
     }
 }
