@@ -25,7 +25,6 @@ public class BinaryApplyDurationLimitsWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -83,41 +82,11 @@ public class BinaryApplyDurationLimitsWindow : Window
         };
         grid.Add(maximumNumeric, 1, 1);
 
-        // Radio buttons panel
-        var radioPanel = new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Spacing = 5,
-            Margin = new Thickness(0, 10, 0, 0),
-        };
-
-        var applyToAllRadio = new RadioButton
-        {
-            Content = "Apply to all", // TODO: Add Se.Language.General.ApplyToAll
-            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.ApplyToAll))
-            {
-                Mode = BindingMode.TwoWay,
-            }
-        };
-        radioPanel.Children.Add(applyToAllRadio);
-
-        var applyToSelectedRadio = new RadioButton
-        {
-            Content = "Apply to selected lines", // TODO: Add Se.Language.General.ApplyToSelected
-            [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.ApplyToSelectedLines))
-            {
-                Mode = BindingMode.TwoWay,
-            }
-        };
-        radioPanel.Children.Add(applyToSelectedRadio);
-
-        grid.Add(radioPanel, 2, 0, 1, 2);
-
         // Button panel
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
-        grid.Add(buttonPanel, 3, 0, 1, 2);
+        grid.Add(buttonPanel, 2, 0, 1, 2);
 
         Content = grid;
 

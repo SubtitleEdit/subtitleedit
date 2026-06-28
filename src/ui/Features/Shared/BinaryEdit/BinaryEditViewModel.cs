@@ -1073,7 +1073,18 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Get selected indices from the grid
+        result.ApplyLimits(Subtitles.ToList(), null);
+    }
+
+    [RelayCommand]
+    private async Task ApplyDurationLimitsSelectedLines()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        // Snapshot selection before dialog opens — focus shift can clear grid selection
         var selectedIndices = new List<int>();
         if (SubtitleGrid?.SelectedItems != null)
         {
@@ -1088,6 +1099,13 @@ public partial class BinaryEditViewModel : ObservableObject
                     }
                 }
             }
+        }
+
+        var result = await _windowService.ShowDialogAsync<BinaryApplyDurationLimitsWindow, BinaryApplyDurationLimitsViewModel>(Window, vm => { });
+
+        if (!result.OkPressed)
+        {
+            return;
         }
 
         result.ApplyLimits(Subtitles.ToList(), selectedIndices.Count > 0 ? selectedIndices : null);
