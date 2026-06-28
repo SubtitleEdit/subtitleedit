@@ -67,6 +67,18 @@ public static class LlamaCppServerManager
         new LlamaCppModel("Qwen 3 8B (Q4_K_M)", "Qwen_Qwen3-8B-Q4_K_M.gguf", "4.7 GB",
             "https://huggingface.co/bartowski/Qwen_Qwen3-8B-GGUF/resolve/main/Qwen_Qwen3-8B-Q4_K_M.gguf",
             ChatTemplate: "chatml", NoJinja: true),
+
+        // Qwen 3.5 - newer Qwen generation. Same chatml + --no-jinja handling as Qwen 3 (bypasses the
+        // embedded thinking template so the output is clean translation). Kept to <= 8 GB.
+        new LlamaCppModel("Qwen 3.5 4B (Q4_K_M)", "Qwen_Qwen3.5-4B-Q4_K_M.gguf", "2.8 GB",
+            "https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q4_K_M.gguf",
+            ChatTemplate: "chatml", NoJinja: true),
+        new LlamaCppModel("Qwen 3.5 4B (Q8_0)", "Qwen_Qwen3.5-4B-Q8_0.gguf", "4.3 GB",
+            "https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q8_0.gguf",
+            ChatTemplate: "chatml", NoJinja: true),
+        new LlamaCppModel("Qwen 3.5 9B (Q4_K_M)", "Qwen_Qwen3.5-9B-Q4_K_M.gguf", "5.7 GB",
+            "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q4_K_M.gguf",
+            ChatTemplate: "chatml", NoJinja: true),
     };
 
     public static readonly IReadOnlyList<LlamaCppModel> OcrModels = new[]
