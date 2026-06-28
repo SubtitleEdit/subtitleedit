@@ -247,7 +247,7 @@ public class ColorWheelControl : Control
             using var lease = leaseFeature.Lease();
             var canvas = lease.SkCanvas;
 
-            canvas.DrawBitmap(_bitmap, 0, 0, SKSamplingOptions.Default);
+            canvas.DrawBitmap(_bitmap, 0, 0);
 
             // Draw selection indicator
             var paint = new SKPaint

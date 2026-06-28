@@ -232,7 +232,7 @@ public static class TextToImageGenerator
         x = Math.Max(0, Math.Min(x, frameWidth - textBitmap.Width));
         yy = Math.Max(0, Math.Min(yy, frameHeight - textBitmap.Height));
 
-        canvas.DrawBitmap(textBitmap, x, yy, SKSamplingOptions.Default);
+        canvas.DrawBitmap(textBitmap, x, yy);
         return frame;
     }
 
@@ -292,7 +292,7 @@ public static class TextToImageGenerator
         }
 
         // Draw the original bitmap
-        canvas.DrawBitmap(originalBitmap, 0, 0, SKSamplingOptions.Default);
+        canvas.DrawBitmap(originalBitmap, 0, 0);
 
         // Create a new bitmap from the surface
         using (var image = surface.Snapshot())

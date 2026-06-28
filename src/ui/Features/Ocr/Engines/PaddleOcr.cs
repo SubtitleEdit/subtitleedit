@@ -171,7 +171,7 @@ public partial class PaddleOcr
         if (workingBitmap != bitmap)
         {
             using var canvas = new SKCanvas(workingBitmap);
-            canvas.DrawBitmap(bitmap, 0, 0, SKSamplingOptions.Default);
+            canvas.DrawBitmap(bitmap, 0, 0);
         }
 
         // Get all pixels at once
@@ -770,7 +770,7 @@ public partial class PaddleOcr
             finalWidth - borderSize * 2, finalHeight - borderSize * 2, paint);
 
         // Draw original bitmap in center
-        canvas.DrawBitmap(source, totalBorder, totalBorder, SKSamplingOptions.Default);
+        canvas.DrawBitmap(source, totalBorder, totalBorder);
 
         return result;
     }
@@ -842,7 +842,7 @@ public partial class PaddleOcr
             canvas.Clear(borderColor);
 
             // Draw the original bitmap onto the canvas, offset by the border width
-            canvas.DrawBitmap(originalBitmap, borderWidth, borderWidth, SKSamplingOptions.Default);
+            canvas.DrawBitmap(originalBitmap, borderWidth, borderWidth);
         }
 
         return borderedBitmap;

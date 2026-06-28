@@ -84,7 +84,7 @@ internal sealed class OllamaOcrEngine : IOcrEngine
         canvas.Clear(SKColors.Black);
         var left = (side - source.Width) / 2f;
         var top = (side - source.Height) / 2f;
-        canvas.DrawBitmap(source, new SKRect(left, top, left + source.Width, top + source.Height), SKSamplingOptions.Default);
+        canvas.DrawBitmap(source, new SKRect(left, top, left + source.Width, top + source.Height));
         canvas.Flush();
         return square;
     }

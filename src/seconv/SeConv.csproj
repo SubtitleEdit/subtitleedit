@@ -27,8 +27,8 @@
       (only deployed for the linux RID). HarfBuzz native is pinned to the managed wrapper
       version 14.2.0 to avoid an ABI mismatch (cf. issue #11864).
     -->
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="4.148.0" />
-    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="14.2.0" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.4" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.5" />
   </ItemGroup>
 
   <ItemGroup>

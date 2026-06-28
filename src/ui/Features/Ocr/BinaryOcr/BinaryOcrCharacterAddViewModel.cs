@@ -210,7 +210,7 @@ public partial class BinaryOcrCharacterAddViewModel : ObservableObject
         {
             var sourceRect = new SKRect(0, linesToRemove, original.Width, original.Height);
             var destRect = new SKRect(0, 0, original.Width, newHeight);
-            canvas.DrawBitmap(original, sourceRect, destRect, SKSamplingOptions.Default);
+            canvas.DrawBitmap(original, sourceRect, destRect);
         }
 
         return newBitmap;

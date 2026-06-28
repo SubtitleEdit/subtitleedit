@@ -220,7 +220,7 @@ public static class ImageRenderer
         }
 
         // Draw the already-rendered text bitmap on top of the boxes, offset by padding
-        canvas.DrawBitmap(textBitmap, padLeft, padTop, SKSamplingOptions.Default);
+        canvas.DrawBitmap(textBitmap, padLeft, padTop);
         return result;
     }
 
