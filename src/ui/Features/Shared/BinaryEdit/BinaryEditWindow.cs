@@ -225,7 +225,7 @@ public class BinaryEditWindow : Window
         // Tools menu
         menu.Items.Add(new MenuItem
         {
-            Header = l.ToolsSelectedLines,
+            Header = l.Tools,
             Items =
             {
                 new MenuItem
