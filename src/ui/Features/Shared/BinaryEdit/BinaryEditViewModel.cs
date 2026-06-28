@@ -2164,6 +2164,7 @@ public partial class BinaryEditViewModel : ObservableObject
     [RelayCommand]
     private void SortByStartTime()
     {
+        var selectedItem = SelectedSubtitle;
         var sorted = Subtitles.OrderBy(s => s.StartTime).ToList();
         Subtitles.Clear();
         foreach (var item in sorted)
@@ -2171,6 +2172,17 @@ public partial class BinaryEditViewModel : ObservableObject
             Subtitles.Add(item);
         }
         Renumber();
+        if (SubtitleGrid != null)
+        {
+            var newIndex = selectedItem != null ? Subtitles.IndexOf(selectedItem) : -1;
+            SubtitleGrid.ItemsSource = null;
+            SubtitleGrid.ItemsSource = Subtitles;
+            if (newIndex >= 0)
+            {
+                SubtitleGrid.SelectedIndex = newIndex;
+            }
+        }
+        RefreshStatusText();
     }
 
     [RelayCommand]
