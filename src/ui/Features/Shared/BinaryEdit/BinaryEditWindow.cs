@@ -243,6 +243,11 @@ public class BinaryEditWindow : Window
                     Header = Se.Language.General.AlignmentDotDotDot,
                     Command = vm.AlignmentCommand,
                 },
+                new MenuItem
+                {
+                    Header =  Se.Language.Tools.ImageBasedEdit.CenterHorizontally,
+                    Command = vm.CenterHorizontallyCommand,
+                },
                 new Separator(),
                 new MenuItem
                 {
@@ -263,12 +268,6 @@ public class BinaryEditWindow : Window
                 {
                     Header = Se.Language.Tools.ImageBasedEdit.AdjustColorDotDotDot,
                     Command = vm.AdjustColorCommand,
-                },
-                new Separator(),
-                new MenuItem
-                {
-                    Header =  Se.Language.Tools.ImageBasedEdit.CenterHorizontally,
-                    Command = vm.CenterHorizontallyCommand,
                 },
                 new MenuItem
                 {
