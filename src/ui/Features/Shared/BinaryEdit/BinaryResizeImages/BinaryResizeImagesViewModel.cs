@@ -126,24 +126,13 @@ public partial class BinaryResizeImagesViewModel : ObservableObject, IDisposable
         }
     }
 
-    private SKBitmap ResizeBitmap(SKBitmap originalBitmap, int width, int height)
+    private static SKBitmap ResizeBitmap(SKBitmap originalBitmap, int width, int height)
     {
-        var resizedBitmap = new SKBitmap(width, height);
-        using (var canvas = new SKCanvas(resizedBitmap))
-        {
-            canvas.Clear(SKColors.Transparent);
-
-            var scale = SKMatrix.CreateScale((float)width / originalBitmap.Width,
-                                             (float)height / originalBitmap.Height);
-
-            using (var shader = SKShader.CreateBitmap(originalBitmap, SKShaderTileMode.Clamp, SKShaderTileMode.Clamp, scale))
-            using (var paint = new SKPaint())
-            {
-                paint.Shader = shader;
-                paint.IsAntialias = true;
-                canvas.DrawRect(new SKRect(0, 0, width, height), paint);
-            }
-        }
+        var resizedBitmap = new SKBitmap(width, height, originalBitmap.ColorType, originalBitmap.AlphaType);
+        using var canvas = new SKCanvas(resizedBitmap);
+        canvas.Clear(SKColors.Transparent);
+        using var paint = new SKPaint { FilterQuality = SKFilterQuality.High, IsAntialias = true };
+        canvas.DrawBitmap(originalBitmap, new SKRect(0, 0, width, height), paint);
         return resizedBitmap;
     }
 
