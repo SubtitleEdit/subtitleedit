@@ -38,6 +38,8 @@ internal static class OperationOrderParser
         "SplitLongLines",
     };
 
+    private static readonly char[] ValueSeparators = { ':', '=' };
+
     private static readonly Dictionary<string, string> ByNormalizedToken = BuildLookup();
 
     private static Dictionary<string, string> BuildLookup()
@@ -61,7 +63,7 @@ internal static class OperationOrderParser
     {
         var t = token.TrimStart('/', '-');
 
-        var cut = t.IndexOfAny(new[] { ':', '=' });
+        var cut = t.IndexOfAny(ValueSeparators);
         if (cut >= 0)
         {
             t = t.Substring(0, cut);

@@ -24,8 +24,9 @@
       HarfBuzzSharp packages bundle the macOS/Windows natives but NOT Linux, so the Linux
       publish shipped without libSkiaSharp.so / libHarfBuzzSharp.so and crashed with
       DllNotFoundException (issue #11872). Reference the Linux native assets explicitly
-      (only deployed for the linux RID). HarfBuzz native is pinned to the managed wrapper
-      version 14.2.0 to avoid an ABI mismatch (cf. issue #11864).
+      (only deployed for the linux RID), pinned to the same versions as the managed
+      SkiaSharp / HarfBuzzSharp wrappers that Avalonia pulls in (3.119.4 / 8.3.1.5) to
+      avoid a native/managed ABI mismatch (cf. issues #11864, #11931).
     -->
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.4" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.5" />

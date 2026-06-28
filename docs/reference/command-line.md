@@ -117,6 +117,9 @@ seconv lint *.srt --json             # CI-friendly: exit 1 on any issue
 | `--assa-style-file:<file>` | ASSA | Apply `[V4+ Styles]` block from another ASSA file |
 | `--pac-codepage:<page>` | PAC | Code page name (`Latin`, `Greek`, `Hebrew`, …) or numeric (0–12). See `seconv list-pac-codepages` |
 | `--ebu-header-file:<file>` | EBU STL | Reuse the GSI header block from an existing `.stl` file |
+| `--plaintext-merge` | Plain text (`txt`) | Merge all subtitles into one space-separated block (no blank lines). Takes precedence over the two options below |
+| `--plaintext-unbreak` | Plain text (`txt`) | Unbreak each subtitle, joining its lines into one |
+| `--plaintext-no-blank-line` | Plain text (`txt`) | Do not put a blank line between subtitles (default keeps it) |
 
 ### Containers / tracks
 
@@ -162,6 +165,7 @@ If two tracks share a language, the track number is added: `movie.#3.eng.srt`.
 | `--ocr-engine:<engine>` | `tesseract` (default) \| `nocr` \| `binaryocr` \| `ollama` \| `paddle` |
 | `--ocr-language:<lang>` | Tesseract: ISO 639-2 (`eng`, `deu`); Paddle: short (`en`); Ollama: human (`English`) |
 | `--ocr-db:<path>` | OCR database file: `.nocr` for `nocr`, `.db` for `binaryocr` (required for both) |
+| `--dictionary-folder:<path>` | Folder with Hunspell dictionaries + `*_OCRFixReplaceList.xml`; enables the "Fix common OCR errors" pass of `--fix-common-errors` (English is bundled, so this is only needed for other languages) |
 | `--ollama-url:<url>` | Default `http://localhost:11434/api/chat` |
 | `--ollama-model:<model>` | Default `llama3.2-vision` |
 | `--time-codes-only` | Image sources (`.sup`, VobSub `.sub`/`.idx`, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub) → text format with time codes only and empty text. **Skips OCR entirely** — no OCR engine required. Ignored for text inputs and image output targets. |
@@ -302,7 +306,7 @@ seconv *.srt subrip --settings:my.json --profile:broadcast --remove-text-for-hi
 | Option | Description |
 |---|---|
 | `--quiet` / `-q` | Suppress per-file progress and the parameters table; only print the final summary |
-| `--verbose` / `-v` | Reserved for diagnostic output (currently parsed but unused) |
+| `--verbose` / `-v` | Print extra diagnostic information, including full exception details (stack traces) on errors |
 | `--json` | Emit per-file results as JSON to stdout (suppresses Spectre output) |
 
 ## Operations
