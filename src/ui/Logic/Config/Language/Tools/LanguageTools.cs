@@ -34,6 +34,7 @@ public class LanguageTools
     public string FilterLayersHideFromSubtitleGrid { get; set; }
     public string FilterLayersHideFromVideoPreview { get; set; }
     public string PickSubtitleFormat { get; set; }
+    public string PickSubtitleFormatImageBasedNoPreview { get; set; }
     public string PickLayerTitle { get; set; }
     public string RecentColors { get; set; }
 
@@ -47,6 +48,7 @@ public class LanguageTools
         FilterLayersHideFromSubtitleGrid = "Hide from subtitle grid";
         FilterLayersHideFromVideoPreview = "Hide from video preview";
         PickSubtitleFormat = "Choose subtitle format";
+        PickSubtitleFormatImageBasedNoPreview = "Image-based subtitle format.\nBitmaps are generated during conversion - no text preview.";
         PickLayerTitle = "Set layer";
         RecentColors = "Recent colors";
     }

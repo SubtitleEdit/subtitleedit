@@ -15,6 +15,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickSubtitleFormat;
 
@@ -161,7 +162,7 @@ public partial class PickSubtitleFormatViewModel : ObservableObject
                 // placeholder for formats that have no text representation.
                 if (string.IsNullOrEmpty(extraPreview))
                 {
-                    ShowPlaceholderPreview("Image-based subtitle format.\nBitmaps are generated during conversion - no text preview.");
+                    ShowPlaceholderPreview(Se.Language.Tools.PickSubtitleFormatImageBasedNoPreview);
                 }
                 else
                 {
