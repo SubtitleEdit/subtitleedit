@@ -55,7 +55,7 @@ Speech-to-text batch mode can transcribe multiple media files and save the resul
 
 ## Settings
 
-- **Output format** — Choose from 300+ subtitle formats
+- **Output format** — Choose from 380+ subtitle formats
 - **Output folder** — Where converted files are saved
 - **Overwrite existing** — Whether to overwrite files
 - **Encoding** — Text encoding for output files
