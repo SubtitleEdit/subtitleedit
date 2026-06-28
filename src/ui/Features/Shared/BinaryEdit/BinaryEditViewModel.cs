@@ -2032,6 +2032,18 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
+        var suggestedOffset = Subtitles.Count > 0
+            ? Subtitles[^1].EndTime + TimeSpan.FromMilliseconds(1000)
+            : TimeSpan.Zero;
+
+        var settings = await _windowService.ShowDialogAsync<BinaryAppendSubtitle.BinaryAppendSubtitleWindow, BinaryAppendSubtitle.BinaryAppendSubtitleViewModel>(
+            Window, vm => vm.Initialize(suggestedOffset));
+
+        if (!settings.OkPressed)
+        {
+            return;
+        }
+
         var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.General.OpenSubtitleFileTitle, Se.Language.General.ImageBasedSubtitles, "*.sup;*.sub;*.ts;*.xml;*.mkv;*.mks", Se.Language.General.AllFiles, "*.*");
         if (string.IsNullOrEmpty(fileName))
         {
@@ -2052,19 +2064,19 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        double timeOffset = 0;
-        if (Subtitles.Count > 0)
-        {
-            var lastItem = Subtitles[^1];
-            var newFirstTime = ocrItems.First().StartTime.TotalMilliseconds;
-            timeOffset = lastItem.EndTime.TotalMilliseconds - newFirstTime + 1000;
-        }
-
         foreach (var ocrItem in ocrItems)
         {
             var newItem = new BinarySubtitleItem(ocrItem, -1);
-            newItem.StartTime = TimeSpan.FromMilliseconds(ocrItem.StartTime.TotalMilliseconds + timeOffset);
-            newItem.EndTime = TimeSpan.FromMilliseconds(ocrItem.EndTime.TotalMilliseconds + timeOffset);
+            if (settings.AppendTimeCodes)
+            {
+                newItem.StartTime = ocrItem.StartTime + settings.TimeOffset;
+                newItem.EndTime = ocrItem.EndTime + settings.TimeOffset;
+            }
+            else
+            {
+                newItem.StartTime = ocrItem.StartTime;
+                newItem.EndTime = ocrItem.EndTime;
+            }
             Subtitles.Add(newItem);
         }
 
