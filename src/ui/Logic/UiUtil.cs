@@ -377,8 +377,12 @@ public static class UiUtil
             HorizontalContentAlignment = HorizontalAlignment.Center,
             VerticalContentAlignment = VerticalAlignment.Center,
             Command = command,
-            [ToolTip.TipProperty] = hint,
         };
+
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(button, hint);
+        }
 
         Attached.SetIcon(button, iconName);
 
