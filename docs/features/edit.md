@@ -32,6 +32,8 @@ Options:
 - Whole word (checkbox)
 - Search type (radio buttons): Case sensitive, Case insensitive, or Regular expression
 
+> **Matching a line break with a regular expression:** use `\n` between the words on the two lines (for example `ear\ntwice`). `\r\n` and `\r` are accepted too and are treated the same as `\n`, so a rule works regardless of how it was written or which platform created it.
+
 <!-- Screenshot: Find window -->
 ![Find](../screenshots/find.png)
 
@@ -71,7 +73,7 @@ Each rule has one of three match types, shown as an icon in the tree:
 |---|---|
 | Case insensitive | Plain text match, ignores case |
 | Case sensitive | Plain text match, exact case |
-| Regular expression | Full .NET regex syntax |
+| Regular expression | Full .NET regex syntax. Use `\n` to match a line break between two lines (`\r\n` and `\r` are accepted too and treated as `\n`). |
 
 ### Managing categories
 

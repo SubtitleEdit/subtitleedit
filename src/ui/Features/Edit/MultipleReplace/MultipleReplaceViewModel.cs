@@ -1127,7 +1127,9 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 else if (item.SearchType == ReplaceExpression.SearchRegEx)
                 {
                     var r = _compiledRegExList[item.FindWhat];
-                    if (r.IsMatch(newText))
+                    // Match against line-feed-normalized text so a pattern's \n line break matches even
+                    // when the paragraph text uses \r\n (the pattern is FixNewLine'd to \n) (#11956).
+                    if (r.IsMatch(string.Join("\n", newText.SplitToLines())))
                     {
                         hit = true;
                         ruleInfo = string.IsNullOrEmpty(ruleInfo) ? item.RuleInfo : $"{ruleInfo} + {item.RuleInfo}";

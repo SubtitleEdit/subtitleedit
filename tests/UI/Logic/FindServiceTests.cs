@@ -5,6 +5,23 @@ namespace UITests.Logic;
 
 public class FindServiceTests
 {
+    // #11956: a regex with \r\n (or \n / \r) must match a line break in the (line-feed) subtitle
+    // text. Previously \r\n patterns matched nothing because the text uses \n.
+    [Theory]
+    [InlineData(@"ear\r\ntwice")]
+    [InlineData(@"ear\ntwice")]
+    [InlineData(@"ear\rtwice")]
+    public void Regex_NewLineEscapes_MatchAcrossLineBreak(string pattern)
+    {
+        var text = "Two drops in each ear\ntwice a day.";
+        var service = new FindService();
+        service.Initialize([text], 0, false, FindService.FindMode.RegularExpression);
+
+        Assert.Equal(0, service.FindNext(pattern, [text], 0, 0));
+        Assert.Equal(1, service.Count(pattern, [text], false, FindService.FindMode.RegularExpression));
+        Assert.Single(service.FindAll(pattern));
+    }
+
     [Fact]
     public void RegexMultilineEndAnchorMatchesCrLfLineEndings()
     {
