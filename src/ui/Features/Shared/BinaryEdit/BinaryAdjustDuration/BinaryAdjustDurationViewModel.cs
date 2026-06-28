@@ -16,7 +16,20 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
 {
     [ObservableProperty] private ObservableCollection<BinaryAdjustDurationDisplay> _adjustTypes;
     [ObservableProperty] private BinaryAdjustDurationDisplay _selectedAdjustType;
-    [ObservableProperty] private bool _showRecalculateNote;
+
+    private bool _recalculateUnavailable;
+
+    public bool IsRecalculateBlocked =>
+        _recalculateUnavailable && SelectedAdjustType?.Type == BinaryAdjustDurationType.Recalculate;
+
+    public bool ShowRecalculateControls =>
+        SelectedAdjustType?.Type == BinaryAdjustDurationType.Recalculate && !_recalculateUnavailable;
+
+    partial void OnSelectedAdjustTypeChanged(BinaryAdjustDurationDisplay value)
+    {
+        OnPropertyChanged(nameof(IsRecalculateBlocked));
+        OnPropertyChanged(nameof(ShowRecalculateControls));
+    }
 
     [ObservableProperty] private double _adjustSeconds;
     [ObservableProperty] private int _adjustPercent;
@@ -37,24 +50,12 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
 
     public void Initialize(IEnumerable<BinarySubtitleItem> itemsInScope)
     {
-        var anyMissingText = itemsInScope.Any(s => string.IsNullOrWhiteSpace(s.Text));
-        if (!anyMissingText)
+        _recalculateUnavailable = itemsInScope.Any(s => string.IsNullOrWhiteSpace(s.Text));
+        if (_recalculateUnavailable)
         {
-            return;
+            OnPropertyChanged(nameof(IsRecalculateBlocked));
+            OnPropertyChanged(nameof(ShowRecalculateControls));
         }
-
-        var recalculate = AdjustTypes.FirstOrDefault(t => t.Type == BinaryAdjustDurationType.Recalculate);
-        if (recalculate != null)
-        {
-            AdjustTypes.Remove(recalculate);
-        }
-
-        if (SelectedAdjustType.Type == BinaryAdjustDurationType.Recalculate)
-        {
-            SelectedAdjustType = AdjustTypes[0];
-        }
-
-        ShowRecalculateNote = true;
     }
 
     public void AdjustDuration(List<BinarySubtitleItem> subtitles, List<int>? selectedIndices = null)
@@ -215,6 +216,12 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
     [RelayCommand]
     private async Task Ok()
     {
+        if (IsRecalculateBlocked)
+        {
+            Window?.Close();
+            return;
+        }
+
         var msg = GetValidationError();
         if (!string.IsNullOrEmpty(msg))
         {

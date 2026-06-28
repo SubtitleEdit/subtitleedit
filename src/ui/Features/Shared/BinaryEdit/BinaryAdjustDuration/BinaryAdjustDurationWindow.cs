@@ -66,7 +66,7 @@ public class BinaryAdjustDurationWindow : Window
             TextWrapping = Avalonia.Media.TextWrapping.Wrap,
             MaxWidth = 380,
         };
-        labelRecalculateNote.Bind(IsVisibleProperty, new Binding(nameof(vm.ShowRecalculateNote)) { Source = vm });
+        labelRecalculateNote.Bind(IsVisibleProperty, new Binding(nameof(vm.IsRecalculateBlocked)) { Source = vm });
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
@@ -321,12 +321,7 @@ public class BinaryAdjustDurationWindow : Window
         Grid.SetColumn(numericUpDownOptimal, 1);
         Grid.SetRow(numericUpDownOptimal, 1);
 
-        grid.Bind(Grid.IsVisibleProperty, new Binding
-        {
-            Path = $"{nameof(vm.SelectedAdjustType)}.{nameof(BinaryAdjustDurationDisplay.IsRecalculateVisible)}",
-            Source = vm,
-            Mode = BindingMode.TwoWay,
-        });
+        grid.Bind(Grid.IsVisibleProperty, new Binding(nameof(vm.ShowRecalculateControls)) { Source = vm });
 
         return grid;
     }
