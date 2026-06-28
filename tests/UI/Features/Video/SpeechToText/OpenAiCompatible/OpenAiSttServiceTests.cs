@@ -216,8 +216,12 @@ public class OpenAiSttServiceTests
 
         var deltas = new List<string>();
         var reportedSegments = new List<OpenAiCompatibleSegment>();
-        var deltaProgress = new Progress<string>(d => deltas.Add(d));
-        var segmentProgress = new Progress<OpenAiCompatibleSegment>(s => reportedSegments.Add(s));
+        // Use a synchronous IProgress so callbacks run inline on the parse thread (the service reports
+        // synchronously while reading the stream). The BCL Progress<T> instead posts callbacks to a
+        // SynchronizationContext / the thread pool, which under full-suite parallelism either arrived
+        // late or raced on the (non-thread-safe) lists - making this test flaky.
+        var deltaProgress = new SyncProgress<string>(d => deltas.Add(d));
+        var segmentProgress = new SyncProgress<OpenAiCompatibleSegment>(s => reportedSegments.Add(s));
 
         var ct = TestContext.Current.CancellationToken;
         var wav = MakeTinyWav();
@@ -228,9 +232,7 @@ public class OpenAiSttServiceTests
             // Both deltas should be appended in order.
             Assert.Equal("Hello there", response.Text);
 
-            // Progress<T> marshals to a SynchronizationContext; in xunit the
-            // continuation is queued, so allow it to drain.
-            await WaitForAsync(() => deltas.Count >= 2 && reportedSegments.Count >= 1);
+            // Reported synchronously during TranscribeAsync, so the lists are complete on return.
             Assert.Equal(new[] { "Hello", " there" }, deltas);
 
             Assert.NotNull(response.Segments);
@@ -615,18 +617,15 @@ public class OpenAiSttServiceTests
         return resp;
     }
 
-    private static async Task WaitForAsync(Func<bool> predicate, int timeoutMs = 2000)
+    // Runs IProgress callbacks inline (no SynchronizationContext / thread-pool marshaling), so progress
+    // reported synchronously by the service is observed deterministically and without a data race.
+    private sealed class SyncProgress<T> : IProgress<T>
     {
-        var deadline = Environment.TickCount + timeoutMs;
-        while (Environment.TickCount < deadline)
-        {
-            if (predicate())
-            {
-                return;
-            }
+        private readonly Action<T> _onReport;
 
-            await Task.Delay(10);
-        }
+        public SyncProgress(Action<T> onReport) => _onReport = onReport;
+
+        public void Report(T value) => _onReport(value);
     }
 
     private sealed class StubHandler : HttpMessageHandler
