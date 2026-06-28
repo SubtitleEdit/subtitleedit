@@ -1012,7 +1012,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<BinaryAdjustDuration.BinaryAdjustDurationWindow, BinaryAdjustDuration.BinaryAdjustDurationViewModel>(Window, vm => { });
+        var result = await _windowService.ShowDialogAsync<BinaryAdjustDuration.BinaryAdjustDurationWindow, BinaryAdjustDuration.BinaryAdjustDurationViewModel>(Window, vm => vm.Initialize(Subtitles));
 
         if (!result.OkPressed)
         {
@@ -1047,7 +1047,11 @@ public partial class BinaryEditViewModel : ObservableObject
             }
         }
 
-        var result = await _windowService.ShowDialogAsync<BinaryAdjustDuration.BinaryAdjustDurationWindow, BinaryAdjustDuration.BinaryAdjustDurationViewModel>(Window, vm => { });
+        var itemsInScope = selectedIndices.Count > 0
+            ? selectedIndices.Select(i => Subtitles[i])
+            : Subtitles.AsEnumerable();
+
+        var result = await _windowService.ShowDialogAsync<BinaryAdjustDuration.BinaryAdjustDurationWindow, BinaryAdjustDuration.BinaryAdjustDurationViewModel>(Window, vm => vm.Initialize(itemsInScope));
 
         if (!result.OkPressed)
         {

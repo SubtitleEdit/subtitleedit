@@ -16,6 +16,7 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
 {
     [ObservableProperty] private ObservableCollection<BinaryAdjustDurationDisplay> _adjustTypes;
     [ObservableProperty] private BinaryAdjustDurationDisplay _selectedAdjustType;
+    [ObservableProperty] private bool _showRecalculateNote;
 
     [ObservableProperty] private double _adjustSeconds;
     [ObservableProperty] private int _adjustPercent;
@@ -32,6 +33,28 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
         _adjustTypes = new ObservableCollection<BinaryAdjustDurationDisplay>(BinaryAdjustDurationDisplay.ListAll());
         _selectedAdjustType = _adjustTypes[0];
         LoadSettings();
+    }
+
+    public void Initialize(IEnumerable<BinarySubtitleItem> itemsInScope)
+    {
+        var anyMissingText = itemsInScope.Any(s => string.IsNullOrWhiteSpace(s.Text));
+        if (!anyMissingText)
+        {
+            return;
+        }
+
+        var recalculate = AdjustTypes.FirstOrDefault(t => t.Type == BinaryAdjustDurationType.Recalculate);
+        if (recalculate != null)
+        {
+            AdjustTypes.Remove(recalculate);
+        }
+
+        if (SelectedAdjustType.Type == BinaryAdjustDurationType.Recalculate)
+        {
+            SelectedAdjustType = AdjustTypes[0];
+        }
+
+        ShowRecalculateNote = true;
     }
 
     public void AdjustDuration(List<BinarySubtitleItem> subtitles, List<int>? selectedIndices = null)

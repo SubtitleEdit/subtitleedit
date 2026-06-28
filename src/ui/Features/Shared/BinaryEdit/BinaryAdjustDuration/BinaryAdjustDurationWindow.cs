@@ -53,8 +53,20 @@ public class BinaryAdjustDurationWindow : Window
             VerticalAlignment = VerticalAlignment.Bottom,
             HorizontalAlignment = HorizontalAlignment.Left,
             Text = Se.Language.Tools.AdjustDurations.Note,
-            Margin = new Thickness(10, 25, 10, 15),
+            Margin = new Thickness(10, 25, 10, 5),
         };
+
+        var labelRecalculateNote = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Bottom,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Text = Se.Language.Tools.AdjustDurations.RecalculateRequiresOcrNote,
+            Margin = new Thickness(10, 0, 10, 15),
+            Foreground = Avalonia.Media.Brushes.OrangeRed,
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+            MaxWidth = 380,
+        };
+        labelRecalculateNote.Bind(IsVisibleProperty, new Binding(nameof(vm.ShowRecalculateNote)) { Source = vm });
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
@@ -66,6 +78,7 @@ public class BinaryAdjustDurationWindow : Window
             {
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
@@ -90,8 +103,9 @@ public class BinaryAdjustDurationWindow : Window
         grid.Add(panelRecalculate, 1, 0, 1, 2);
 
         grid.Add(labelInfo, 2, 0, 1, 2);
+        grid.Add(labelRecalculateNote, 3, 0, 1, 2);
 
-        grid.Add(panelButtons, 3, 0, 1, 2);
+        grid.Add(panelButtons, 4, 0, 1, 2);
 
         Content = grid;
 

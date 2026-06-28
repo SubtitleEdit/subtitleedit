@@ -16,6 +16,7 @@ public class LanguageAdjustDisplayDurations
     public string EnforceDurationLimits { get; set; }
     public string CheckShotChanges { get; set; }
     public string BatchCheckShotChanges { get; set; }
+    public string RecalculateRequiresOcrNote { get; set; }
 
     public LanguageAdjustDisplayDurations()
     {
@@ -33,5 +34,6 @@ public class LanguageAdjustDisplayDurations
         EnforceDurationLimits = "Enforce minimum and maximum duration";
         CheckShotChanges = "Don't extend past shot changes";
         BatchCheckShotChanges = "Respect shot changes (if available)";
+        RecalculateRequiresOcrNote = "Recalculate is unavailable — one or more subtitles have no OCR text. Run OCR first.";
     }
 }
