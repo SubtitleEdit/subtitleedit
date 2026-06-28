@@ -78,6 +78,14 @@ public class LanguageAssa
     public string StylesTitle { get; set; }
     public string StylesInFile { get; set; }
     public string StylesSaved { get; set; }
+    public string Category { get; set; }
+    public string AllCategories { get; set; }
+    public string DefaultCategory { get; set; }
+    public string NewCategory { get; set; }
+    public string RenameCategory { get; set; }
+    public string DeleteCategory { get; set; }
+    public string MoveToCategoryDotDotDot { get; set; }
+    public string DeleteCategoryQuestion { get; set; }
     public string StylesTitleX { get; set; }
     public string PropertiesTitleX { get; set; }
     public string AttachmentsTitleX { get; set; }
@@ -282,6 +290,14 @@ public class LanguageAssa
         StylesTitle = "Advanced Sub Station Alpha styles";
         StylesInFile = "Styles in file";
         StylesSaved = "Styles saved";
+        Category = "Category";
+        AllCategories = "[All]";
+        DefaultCategory = "Default";
+        NewCategory = "New category...";
+        RenameCategory = "Rename category...";
+        DeleteCategory = "Delete category";
+        MoveToCategoryDotDotDot = "Move to category...";
+        DeleteCategoryQuestion = "Delete category \"{0}\"? Styles in it will be moved to the default category.";
         StylesTitleX = "Styles - {0}";
         PropertiesTitleX = "Properties - {0}";
         AttachmentsTitleX = "Attachments - {0}";
