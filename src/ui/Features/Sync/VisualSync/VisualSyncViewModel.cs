@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -83,7 +84,8 @@ public partial class VisualSyncViewModel : ObservableObject
         List<SubtitleLineViewModel> paragraphs,
         string? videoFileName,
         string? subtitleFileName,
-        AudioVisualizer? audioVisualizer)
+        AudioVisualizer? audioVisualizer,
+        int audioTrackId = -1)
     {
         SetVideoInFo(videoFileName);
         Paragraphs = new ObservableCollection<SubtitleDisplayItem>(paragraphs.Select(p => new SubtitleDisplayItem(p)));
@@ -94,8 +96,7 @@ public partial class VisualSyncViewModel : ObservableObject
         {
             if (!string.IsNullOrEmpty(videoFileName))
             {
-                _ = VideoPlayerControlLeft.Open(videoFileName);
-                _ = VideoPlayerControlRight.Open(videoFileName);
+                _ = OpenPlayersAsync(videoFileName, audioTrackId);
             }
 
             if (audioVisualizer != null)
@@ -107,6 +108,30 @@ public partial class VisualSyncViewModel : ObservableObject
             StartTitleTimer();
             _updateAudioVisualizer = true;
         });
+    }
+
+    // Opens both preview players and, once each video is loaded, applies the audio track the user
+    // selected in the main window. Without this Visual Sync always played the default track (#11952).
+    private async Task OpenPlayersAsync(string videoFileName, int audioTrackId)
+    {
+        await Task.WhenAll(
+            VideoPlayerControlLeft.Open(videoFileName),
+            VideoPlayerControlRight.Open(videoFileName));
+
+        if (audioTrackId <= 0)
+        {
+            return;
+        }
+
+        if (VideoPlayerControlLeft.VideoPlayer is LibMpvDynamicPlayer mpvLeft)
+        {
+            mpvLeft.SetAudioTrack(audioTrackId);
+        }
+
+        if (VideoPlayerControlRight.VideoPlayer is LibMpvDynamicPlayer mpvRight)
+        {
+            mpvRight.SetAudioTrack(audioTrackId);
+        }
     }
 
     private void SetVideoInFo(string? videoFileName)
