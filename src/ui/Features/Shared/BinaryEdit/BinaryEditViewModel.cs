@@ -2162,6 +2162,18 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void SortByStartTime()
+    {
+        var sorted = Subtitles.OrderBy(s => s.StartTime).ToList();
+        Subtitles.Clear();
+        foreach (var item in sorted)
+        {
+            Subtitles.Add(item);
+        }
+        Renumber();
+    }
+
+    [RelayCommand]
     private async Task AppendSubtitle()
     {
         if (Window == null)

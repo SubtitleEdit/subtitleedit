@@ -289,6 +289,11 @@ public class BinaryEditWindow : Window
                 new Separator(),
                 new MenuItem
                 {
+                    Header = Se.Language.Tools.ImageBasedEdit.SortByStartTime,
+                    Command = vm.SortByStartTimeCommand,
+                },
+                new MenuItem
+                {
                     Header = Se.Language.Tools.ImageBasedEdit.AppendSubtitleDotDotDot,
                     Command = vm.AppendSubtitleCommand,
                 },
