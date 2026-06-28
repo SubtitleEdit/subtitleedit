@@ -230,22 +230,12 @@ public class BinaryEditWindow : Window
             {
                 new MenuItem
                 {
-                    Header = l.AdjustDurations,
-                    Command = vm.AdjustDurationsCommand,
-                },
-                new MenuItem
-                {
-                    Header = l.ApplyDurationLimits,
-                    Command = vm.ApplyDurationLimitsCommand,
-                },
-                new MenuItem
-                {
                     Header = Se.Language.General.AlignmentDotDotDot,
                     Command = vm.AlignmentCommand,
                 },
                 new MenuItem
                 {
-                    Header =  Se.Language.Tools.ImageBasedEdit.CenterHorizontally,
+                    Header = Se.Language.Tools.ImageBasedEdit.CenterHorizontally,
                     Command = vm.CenterHorizontallyCommand,
                 },
                 new Separator(),
@@ -256,12 +246,18 @@ public class BinaryEditWindow : Window
                 },
                 new MenuItem
                 {
+                    Header = Se.Language.Tools.ImageBasedEdit.CropImages,
+                    Command = vm.CropCommand,
+                },
+                new Separator(),
+                new MenuItem
+                {
                     Header = Se.Language.Tools.ImageBasedEdit.AdjustBrightnessDotDotDot,
                     Command = vm.AdjustBrightnessCommand,
                 },
                 new MenuItem
                 {
-                    Header =  Se.Language.Tools.ImageBasedEdit.AdjustAlphaDotDotDot,
+                    Header = Se.Language.Tools.ImageBasedEdit.AdjustAlphaDotDotDot,
                     Command = vm.AdjustAlphaCommand,
                 },
                 new MenuItem
@@ -269,10 +265,16 @@ public class BinaryEditWindow : Window
                     Header = Se.Language.Tools.ImageBasedEdit.AdjustColorDotDotDot,
                     Command = vm.AdjustColorCommand,
                 },
+                new Separator(),
                 new MenuItem
                 {
-                    Header =  Se.Language.Tools.ImageBasedEdit.CropImages,
-                    Command = vm.CropCommand,
+                    Header = l.AdjustDurations,
+                    Command = vm.AdjustDurationsCommand,
+                },
+                new MenuItem
+                {
+                    Header = l.ApplyDurationLimits,
+                    Command = vm.ApplyDurationLimitsCommand,
                 },
                 new Separator(),
                 new MenuItem
