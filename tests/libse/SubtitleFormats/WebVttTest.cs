@@ -141,4 +141,38 @@ public class WebVttTest
         Assert.Contains("<b>", converted7);
         Assert.Contains("#AB9216", converted7);
     }
+
+    // Covers the "Save as" conversion (#11954): saving a WebVTT to SubRip runs the source format's
+    // RemoveNativeFormatting, which must turn bare named color classes (no STYLE block) into
+    // <font color="..."> so players that don't understand <c.color> still show the color.
+    [Fact]
+    public void RemoveNativeFormatting_BareColorClass_ConvertsToFontColor()
+    {
+        var vtt = "WEBVTT\r\n\r\n00:00:01.000 --> 00:00:04.000\r\n<c.magenta>Hello</c> world";
+        var subtitle = LoadWebVttSubtitle(vtt);
+
+        Assert.Contains("<c.magenta>", subtitle.Paragraphs[0].Text);
+
+        new WebVTT().RemoveNativeFormatting(subtitle, new SubRip());
+        var converted = subtitle.Paragraphs[0].Text;
+
+        Assert.DoesNotContain("<c.", converted);
+        Assert.Contains("<font color=\"magenta\">", converted);
+        Assert.Contains("</font>", converted);
+        Assert.Contains("world", converted);
+    }
+
+    [Fact]
+    public void RemoveNativeFormatting_HexColorClass_ConvertsToFontColor()
+    {
+        var vtt = "WEBVTT\r\n\r\n00:00:01.000 --> 00:00:04.000\r\n<c.color008000>Green</c>";
+        var subtitle = LoadWebVttSubtitle(vtt);
+
+        new WebVTT().RemoveNativeFormatting(subtitle, new SubRip());
+        var converted = subtitle.Paragraphs[0].Text;
+
+        Assert.DoesNotContain("<c.", converted);
+        Assert.Contains("<font color=\"#008000\">", converted);
+        Assert.Contains("</font>", converted);
+    }
 }
