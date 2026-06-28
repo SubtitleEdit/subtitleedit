@@ -304,6 +304,9 @@ public class AutoTranslateWindow : Window
         settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.ApiKey, vm, null, nameof(vm.ApiKeyIsVisible)).WithMarginRight(5));
         settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ApiKeyText), nameof(vm.ApiKeyIsVisible)).WithMarginRight(15));
 
+        settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Formality, vm, null, nameof(vm.FormalityIsVisible)).WithMarginRight(5));
+        settingsPanel.Children.Add(UiUtil.MakeComboBox(vm.Formalities, vm, nameof(vm.SelectedFormality), nameof(vm.FormalityIsVisible)).WithWidth(220).WithMarginRight(15));
+
         var checkBoxLlamaCppRemote = UiUtil.MakeCheckBox(Se.Language.General.LlamaCppUseRemoteServer, vm, nameof(vm.LlamaCppUseRemoteServer)).WithMarginRight(15);
         checkBoxLlamaCppRemote.Bind(CheckBox.IsVisibleProperty, new Binding(nameof(vm.LlamaCppRemoteToggleIsVisible)));
         settingsPanel.Children.Add(checkBoxLlamaCppRemote);

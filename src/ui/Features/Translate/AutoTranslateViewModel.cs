@@ -91,6 +91,10 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<LlamaCppModelDisplay> _llamaCppModels = new();
     [ObservableProperty] private LlamaCppModelDisplay? _selectedLlamaCppModel;
     [ObservableProperty] private bool _llamaCppModelComboIsVisible;
+
+    [ObservableProperty] private ObservableCollection<DeepLFormalityItem> _formalities = new();
+    [ObservableProperty] private DeepLFormalityItem? _selectedFormality;
+    [ObservableProperty] private bool _formalityIsVisible;
     [ObservableProperty] private bool _llamaCppButtonsAreVisible;
     [ObservableProperty] private bool _llamaCppRemoteToggleIsVisible;
     [ObservableProperty] private bool _llamaCppUseRemoteServer;
@@ -160,6 +164,15 @@ public partial class AutoTranslateViewModel : ObservableObject
         };
         SelectedAutoTranslator = AutoTranslators[0];
         AutoTranslatorLinkText = SelectedAutoTranslator.Name;
+
+        Formalities = new ObservableCollection<DeepLFormalityItem>
+        {
+            new("default", "Default"),
+            new("more", "More formal"),
+            new("less", "Less formal"),
+            new("prefer_more", "More formal (fall back to default)"),
+            new("prefer_less", "Less formal (fall back to default)"),
+        };
 
         Rows = new ObservableCollection<TranslateRow>();
         IsTranslateEnabled = true;
@@ -1455,6 +1468,37 @@ public partial class AutoTranslateViewModel : ObservableObject
         UpdateTargetLanguages(translator);
     }
 
+    partial void OnSelectedTargetLanguageChanged(TranslationPair? value)
+    {
+        UpdateFormalityVisibility();
+    }
+
+    partial void OnSelectedFormalityChanged(DeepLFormalityItem? value)
+    {
+        var code = value?.Code ?? "default";
+        Configuration.Settings.Tools.AutoTranslateDeepLFormality = code;
+        Se.Settings.AutoTranslate.DeepLFormality = code;
+    }
+
+    // Formality only applies to DeepL, and only for target languages that support it
+    // (HasFormality - e.g. German/French/Spanish/Japanese..., but not English).
+    private void UpdateFormalityVisibility()
+    {
+        FormalityIsVisible = SelectedAutoTranslator is DeepLTranslate && SelectedTargetLanguage?.HasFormality == true;
+    }
+
+    private void LoadSelectedFormality()
+    {
+        var code = Configuration.Settings.Tools.AutoTranslateDeepLFormality;
+        if (string.IsNullOrWhiteSpace(code))
+        {
+            code = "default";
+        }
+
+        SelectedFormality = Formalities.FirstOrDefault(f => f.Code.Equals(code, StringComparison.OrdinalIgnoreCase))
+                            ?? Formalities.FirstOrDefault();
+    }
+
     private void SetAutoTranslatorEngine(IAutoTranslator translator)
     {
         SelectedAutoTranslator = translator;
@@ -1465,8 +1509,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         ApiUrlIsVisible = false;
         ApiUrlText = string.Empty;
         ButtonApiUrlIsVisible = false;
-        //LabelFormality.IsVisible = false;
-        //PickerFormality.IsVisible = false;
+        FormalityIsVisible = false;
         ModelIsVisible = false;
         ModelBrowseIsVisible = false;
         ButtonModelIsVisible = false;
@@ -1512,9 +1555,6 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         if (engineType == typeof(DeepLTranslate))
         {
-            //LabelFormality.IsVisible = true;
-            //PickerFormality.IsVisible = true;
-
             FillUrls(new List<string>
             {
                 Configuration.Settings.Tools.AutoTranslateDeepLUrl,
@@ -1524,7 +1564,8 @@ public partial class AutoTranslateViewModel : ObservableObject
             ApiKeyText = Configuration.Settings.Tools.AutoTranslateDeepLApiKey;
             ApiKeyIsVisible = true;
 
-            //SelectFormality();
+            LoadSelectedFormality();
+            UpdateFormalityVisibility();
 
             return;
         }
