@@ -243,6 +243,7 @@ public class BinaryEditWindow : Window
                     Header = Se.Language.General.AlignmentDotDotDot,
                     Command = vm.AlignmentCommand,
                 },
+                new Separator(),
                 new MenuItem
                 {
                     Header = Se.Language.Tools.ImageBasedEdit.ResizeImagesDotDotDot,
@@ -263,6 +264,7 @@ public class BinaryEditWindow : Window
                     Header = Se.Language.Tools.ImageBasedEdit.AdjustColorDotDotDot,
                     Command = vm.AdjustColorCommand,
                 },
+                new Separator(),
                 new MenuItem
                 {
                     Header =  Se.Language.Tools.ImageBasedEdit.CenterHorizontally,
@@ -506,9 +508,36 @@ public class BinaryEditWindow : Window
         };
         flyout.Items.Add(menuItemSelectNonForcedLines);
 
-        var separatorAdjustColor = new Separator() { DataContext = vm };
-        flyout.Items.Add(separatorAdjustColor);
-        separatorAdjustColor.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+        var separatorVisualOps = new Separator() { DataContext = vm };
+        flyout.Items.Add(separatorVisualOps);
+        separatorVisualOps.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+
+        var menuItemResizeImagesSelectedLines = new MenuItem
+        {
+            Header = Se.Language.Tools.ImageBasedEdit.ResizeImagesDotDotDot,
+            DataContext = vm,
+            Command = vm.ResizeImagesSelectedLinesCommand,
+        };
+        flyout.Items.Add(menuItemResizeImagesSelectedLines);
+        menuItemResizeImagesSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+
+        var menuItemAdjustBrightnessSelectedLines = new MenuItem
+        {
+            Header = Se.Language.Tools.ImageBasedEdit.AdjustBrightnessDotDotDot,
+            DataContext = vm,
+            Command = vm.AdjustBrightnessSelectedLinesCommand,
+        };
+        flyout.Items.Add(menuItemAdjustBrightnessSelectedLines);
+        menuItemAdjustBrightnessSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+
+        var menuItemAdjustAlphaSelectedLines = new MenuItem
+        {
+            Header = Se.Language.Tools.ImageBasedEdit.AdjustAlphaDotDotDot,
+            DataContext = vm,
+            Command = vm.AdjustAlphaSelectedLinesCommand,
+        };
+        flyout.Items.Add(menuItemAdjustAlphaSelectedLines);
+        menuItemAdjustAlphaSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
 
         var menuItemAdjustColorSelectedLines = new MenuItem
         {

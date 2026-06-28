@@ -36,10 +36,12 @@ public static class InitNativeMacMenuBinaryEdit
         Add(toolsMenu, l.AdjustDurations, vm.AdjustDurationsCommand);
         Add(toolsMenu, l.ApplyDurationLimits, vm.ApplyDurationLimitsCommand);
         Add(toolsMenu, Se.Language.General.AlignmentDotDotDot, vm.AlignmentCommand);
+        toolsMenu.Items.Add(new NativeMenuItemSeparator());
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.ResizeImagesDotDotDot, vm.ResizeImagesCommand);
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.AdjustBrightnessDotDotDot, vm.AdjustBrightnessCommand);
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.AdjustAlphaDotDotDot, vm.AdjustAlphaCommand);
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.AdjustColorDotDotDot, vm.AdjustColorCommand);
+        toolsMenu.Items.Add(new NativeMenuItemSeparator());
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.CenterHorizontally, vm.CenterHorizontallyCommand);
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.CropImages, vm.CropCommand);
         toolsMenu.Items.Add(new NativeMenuItemSeparator());
