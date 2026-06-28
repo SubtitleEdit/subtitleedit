@@ -1713,6 +1713,52 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task AdjustAllTimesSelectedLines()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        // Snapshot selection before the dialog opens so focus shift cannot clear it
+        var selectedIndices = new List<int>();
+        if (SubtitleGrid?.SelectedItems != null)
+        {
+            foreach (var item in SubtitleGrid.SelectedItems)
+            {
+                if (item is BinarySubtitleItem binaryItem)
+                {
+                    var index = Subtitles.IndexOf(binaryItem);
+                    if (index >= 0)
+                    {
+                        selectedIndices.Add(index);
+                    }
+                }
+            }
+        }
+
+        selectedIndices.Sort();
+
+        var selectedItems = selectedIndices.Count > 0
+            ? selectedIndices.Select(i => Subtitles[i]).ToList()
+            : null;
+
+        void RefreshGrid()
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (SubtitleGrid == null || selectedItems == null) return;
+                SubtitleGrid.SelectedItems.Clear();
+                foreach (var item in selectedItems)
+                    SubtitleGrid.SelectedItems.Add(item);
+            });
+        }
+
+        await _windowService.ShowDialogAsync<BinaryAdjustAllTimesWindow, BinaryAdjustAllTimesViewModel>(
+            Window, vm => vm.Initialize(Subtitles, selectedIndices, RefreshGrid, forceSelectedLines: true));
+    }
+
+    [RelayCommand]
     private async Task ChangeFrameRate()
     {
         if (Window == null)

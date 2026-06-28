@@ -577,6 +577,15 @@ public class BinaryEditWindow : Window
         flyout.Items.Add(menuItemApplyDurationLimits);
         menuItemApplyDurationLimits.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
 
+        var menuItemAdjustAllTimesSelectedLines = new MenuItem
+        {
+            Header = Se.Language.Sync.ShowEarlierLaterDotDotDot,
+            DataContext = vm,
+            Command = vm.AdjustAllTimesSelectedLinesCommand,
+        };
+        flyout.Items.Add(menuItemAdjustAllTimesSelectedLines);
+        menuItemAdjustAllTimesSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+
         var separatorDelete = new Separator() { DataContext = vm };
         flyout.Items.Add(separatorDelete);
         separatorDelete.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
