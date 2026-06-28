@@ -1733,7 +1733,7 @@ public class AudioVisualizer : Control
             // Draw part of the spectrogram image
             var sourceRect = new SKRect(x, 0, x + w, skBitmapCombined.Height);
             var destRect = new SKRect(offset, 0, offset + w, skBitmapCombined.Height);
-            skCanvas.DrawBitmap(_spectrogram.Images[imageIndex], sourceRect, destRect, SKSamplingOptions.Default);
+            skCanvas.DrawBitmap(_spectrogram.Images[imageIndex], sourceRect, destRect);
 
             offset += w;
             imageIndex++;

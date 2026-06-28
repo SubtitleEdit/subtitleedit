@@ -215,7 +215,7 @@ public partial class SetTextViewModel : ObservableObject
         using (var canvas = new SKCanvas(finalBitmap))
         {
             canvas.Clear(skBackgroundColor);
-            canvas.DrawBitmap(bitmapWithoutBox, 0, 0, SKSamplingOptions.Default);
+            canvas.DrawBitmap(bitmapWithoutBox, 0, 0);
         }
         bitmapWithoutBox.Dispose();
 

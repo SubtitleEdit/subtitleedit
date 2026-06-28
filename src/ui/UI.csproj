@@ -42,8 +42,8 @@
 		<PackageReference Include="Optris.Icons.Avalonia.FontAwesome" Version="12.0.7" />
 		<PackageReference Include="Optris.Icons.Avalonia.MaterialDesign" Version="12.0.7" />
 		<PackageReference Include="SharpCompress" Version="0.49.1" />
-		<PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="4.148.0" />
-		<PackageReference Include="SkiaSharp.HarfBuzz" Version="4.148.0" />
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.4" />
+		<PackageReference Include="SkiaSharp.HarfBuzz" Version="3.119.4" />
 		<!--
 		  Pin the Linux native HarfBuzz to match the managed HarfBuzzSharp (14.2.0) that
 		  SkiaSharp.HarfBuzz pulls in. Avalonia references HarfBuzzSharp.NativeAssets.Linux
@@ -52,7 +52,7 @@
 		  text shaper with "double free or corruption" on Linux (issue #11864). macOS/Windows
 		  already get the matching 14.2.0 native.
 		-->
-		<PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="14.2.0" />
+		<PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.5" />
 		<PackageReference Include="TagLibSharp" Version="2.3.0" />
 	</ItemGroup>
 

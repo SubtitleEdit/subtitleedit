@@ -110,7 +110,7 @@ public class PreProcessingSettings
         {
             var srcRect = new SKRect(left, top, right + 1, bottom + 1);
             var destinationRect = new SKRect(0, 0, cropWidth, cropHeight);
-            canvas.DrawBitmap(bitmap, srcRect, destinationRect, SKSamplingOptions.Default);
+            canvas.DrawBitmap(bitmap, srcRect, destinationRect);
         }
 
         return cropped;
@@ -190,7 +190,7 @@ public class PreProcessingSettings
         {
             var srcRect = new SKRect(borderSize, borderSize, bitmap.Width - borderSize, bitmap.Height - borderSize);
             var destinationRect = new SKRect(0, 0, width, height);
-            canvas.DrawBitmap(bitmap, srcRect, destinationRect, SKSamplingOptions.Default);
+            canvas.DrawBitmap(bitmap, srcRect, destinationRect);
         }
 
         return cropped;

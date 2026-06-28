@@ -471,7 +471,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                     if (odsImage != null)
                     {
                         var odsPoint = GetImagePosition(ods); // Assuming this returns an SKPoint or similar
-                        canvas.DrawBitmap(odsImage, odsPoint.X, odsPoint.Y, SKSamplingOptions.Default);
+                        canvas.DrawBitmap(odsImage, odsPoint.X, odsPoint.Y);
                     }
                 }
             }

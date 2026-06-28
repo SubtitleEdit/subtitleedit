@@ -137,7 +137,7 @@ public class OcrSubtitleBdn : IOcrSubtitle
                                 part = MakeTransparent(part);
                             }
 
-                            canvas.DrawBitmap(part, 0, y, SKSamplingOptions.Default);
+                            canvas.DrawBitmap(part, 0, y);
                             y += part.Height + 7;
 
                             // Dispose the temporary bitmap if it was made transparent
