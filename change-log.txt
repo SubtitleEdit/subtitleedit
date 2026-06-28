@@ -3,6 +3,21 @@ Subtitle Edit Changelog
 
 v5.1.0-beta2 (TBD)
 
+* Add ASSA style categories - group storage styles (e.g. per project) in the Styles window - thx bichitoxxx
+* ASSA styles: keep the "Set style" menu in style order instead of sorting alphabetically - thx bichitoxxx
+* Batch convert: honor the selected custom text format and add the image-based formats in the format picker
+* Add "Remove text for hearing impaired" and "Save as..." to the grid "Selected lines" menu
+* OCR: auto-select the spell-check dictionary from the OCR language (SE4 parity) - thx fraternl
+* OCR: use user OCR-fix replace lists (e.g. xxx_OCRFixReplaceList_User.xml) - thx fraternl
+* seconv: support "Fix common OCR errors" with bundled English dictionaries
+* Binary edit: correctness, resource-safety and selection fixes
+* Make icon-button tooltips honor the "Show hints" appearance setting
+* Fix text box selection shortcuts (e.g. "Selection to lowercase") being inactive and hidden - thx abc16361
+* Fix EBU STL Save/Save As writing an invalid 14-byte file - thx jancisefcik
+* Fix seconv failing to start due to a SkiaSharp native/managed version mismatch - thx pcspeak
+* Update Portuguese (Brazil) translation - thx igorruckert
+* Update Turkish translation - thx bilimiyorum
+* Update Korean translation - thx 12si27
 * Fix crash exporting Blu-ray sup on Linux (HarfBuzz native/managed version mismatch) - thx CannaraX
 * Fix "Join subtitles" by time codes not sorting the joined lines by time - thx han8mr8
 * seconv: run operations in the given order, repeating each occurrence (e.g. "--fix-common-errors" twice runs two passes) - thx Rouzax
