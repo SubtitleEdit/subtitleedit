@@ -3,6 +3,7 @@ Subtitle Edit Changelog
 
 v5.1.0-beta2 (TBD)
 
+* Update CrispASR to v0.8.5
 * Add ASSA style categories - group storage styles (e.g. per project) in the Styles window - thx bichitoxxx
 * ASSA styles: keep the "Set style" menu in style order instead of sorting alphabetically - thx bichitoxxx
 * Batch convert: honor the selected custom text format and add the image-based formats in the format picker
