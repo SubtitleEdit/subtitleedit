@@ -2148,6 +2148,14 @@ public partial class BinaryEditViewModel : ObservableObject
     internal void OnWindowDeactivated(object? sender, EventArgs e)
     {
         _altMenuTogglePending = false;
+
+        // A task switch (Alt+Tab) must also drop any active menu-bar state, otherwise Avalonia leaves
+        // the access-key underlines / selection armed and they reappear when the window is re-activated
+        // (#11745 beta-2 feedback).
+        if (Menu is { IsOpen: true } || IsMenuFocused())
+        {
+            DeactivateMenu();
+        }
     }
 
     /// <summary>
