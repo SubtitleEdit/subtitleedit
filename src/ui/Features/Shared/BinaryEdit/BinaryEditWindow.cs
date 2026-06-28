@@ -238,6 +238,16 @@ public class BinaryEditWindow : Window
                     Header = Se.Language.Tools.ImageBasedEdit.CenterHorizontally,
                     Command = vm.CenterHorizontallyCommand,
                 },
+                new MenuItem
+                {
+                    Header = Se.Language.Tools.ImageBasedEdit.TopAlignLines,
+                    Command = vm.TopAlignCommand,
+                },
+                new MenuItem
+                {
+                    Header = Se.Language.Tools.ImageBasedEdit.BottomAlignLines,
+                    Command = vm.BottomAlignCommand,
+                },
                 new Separator(),
                 new MenuItem
                 {
@@ -409,19 +419,6 @@ public class BinaryEditWindow : Window
         UiUtil.AttachMacContextFlyoutHandler(dataGrid);
         flyout.Opening += (_, _) => vm.OnContextMenuOpening();
 
-        var menuItemDelete = new MenuItem
-        {
-            Header = Se.Language.General.Delete,
-            DataContext = vm,
-            Command = vm.DeleteSectedLinesCommand,
-        };
-        flyout.Items.Add(menuItemDelete);
-        menuItemDelete.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
-
-        var separatorInsert = new Separator() { DataContext = vm };
-        flyout.Items.Add(separatorInsert);
-        separatorInsert.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsInsertBeforeVisible)));
-
         var menuItemInsertBefore = new MenuItem
         {
             Header = Se.Language.General.InsertBefore,
@@ -466,7 +463,7 @@ public class BinaryEditWindow : Window
         {
             Header = Se.Language.Tools.ImageBasedEdit.TopAlignLines,
             DataContext = vm,
-            Command = vm.TopAlignCommand,
+            Command = vm.TopAlignSelectedLinesCommand,
         };
         flyout.Items.Add(menuItemTopAlign);
         menuItemTopAlign.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
@@ -475,7 +472,7 @@ public class BinaryEditWindow : Window
         {
             Header = Se.Language.Tools.ImageBasedEdit.BottomAlignLines,
             DataContext = vm,
-            Command = vm.BottomAlignCommand,
+            Command = vm.BottomAlignSelectedLinesCommand,
         };
         flyout.Items.Add(menuItemBottomAlign);
         menuItemBottomAlign.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
@@ -521,6 +518,15 @@ public class BinaryEditWindow : Window
         };
         flyout.Items.Add(menuItemResizeImagesSelectedLines);
         menuItemResizeImagesSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+
+        var menuItemCropSelectedLines = new MenuItem
+        {
+            Header = Se.Language.Tools.ImageBasedEdit.CropImages,
+            DataContext = vm,
+            Command = vm.CropSelectedLinesCommand,
+        };
+        flyout.Items.Add(menuItemCropSelectedLines);
+        menuItemCropSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
 
         var menuItemAdjustBrightnessSelectedLines = new MenuItem
         {
@@ -570,6 +576,19 @@ public class BinaryEditWindow : Window
         };
         flyout.Items.Add(menuItemApplyDurationLimits);
         menuItemApplyDurationLimits.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+
+        var separatorDelete = new Separator() { DataContext = vm };
+        flyout.Items.Add(separatorDelete);
+        separatorDelete.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+
+        var menuItemDelete = new MenuItem
+        {
+            Header = Se.Language.General.Delete,
+            DataContext = vm,
+            Command = vm.DeleteSectedLinesCommand,
+        };
+        flyout.Items.Add(menuItemDelete);
+        menuItemDelete.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
 
         vm.SubtitleGrid = dataGrid;
         dataGrid.SelectionChanged += vm.SubtitleGridSelectionChanged;

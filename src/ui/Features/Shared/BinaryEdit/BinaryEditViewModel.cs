@@ -1560,20 +1560,21 @@ public partial class BinaryEditViewModel : ObservableObject
     [RelayCommand]
     private void TopAlign()
     {
-        var selectedItems = new List<BinarySubtitleItem>();
-        if (SubtitleGrid?.SelectedItems != null)
-        {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                    selectedItems.Add(binaryItem);
-            }
-        }
-
-        var itemsToAlign = selectedItems.Count > 0 ? selectedItems : Subtitles.ToList();
         var marginTop = Se.Settings.Tools.BinEditTopMargin;
-        foreach (var subtitle in itemsToAlign)
+        foreach (var subtitle in Subtitles)
             subtitle.Y = marginTop;
+
+        UpdateOverlayPosition();
+    }
+
+    [RelayCommand]
+    private void TopAlignSelectedLines()
+    {
+        var marginTop = Se.Settings.Tools.BinEditTopMargin;
+        if (SubtitleGrid?.SelectedItems == null) return;
+        foreach (var item in SubtitleGrid.SelectedItems)
+            if (item is BinarySubtitleItem subtitle)
+                subtitle.Y = marginTop;
 
         UpdateOverlayPosition();
     }
@@ -1581,23 +1582,25 @@ public partial class BinaryEditViewModel : ObservableObject
     [RelayCommand]
     private void BottomAlign()
     {
-        var selectedItems = new List<BinarySubtitleItem>();
-        if (SubtitleGrid?.SelectedItems != null)
+        var marginBottom = Se.Settings.Tools.BinEditBottomMargin;
+        foreach (var subtitle in Subtitles)
         {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                    selectedItems.Add(binaryItem);
-            }
+            if (subtitle.Bitmap == null) continue;
+            subtitle.Y = subtitle.ScreenSize.Height - (int)subtitle.Bitmap.Size.Height - marginBottom;
         }
 
-        var itemsToAlign = selectedItems.Count > 0 ? selectedItems : Subtitles.ToList();
+        UpdateOverlayPosition();
+    }
+
+    [RelayCommand]
+    private void BottomAlignSelectedLines()
+    {
         var marginBottom = Se.Settings.Tools.BinEditBottomMargin;
-        foreach (var subtitle in itemsToAlign)
+        if (SubtitleGrid?.SelectedItems == null) return;
+        foreach (var item in SubtitleGrid.SelectedItems)
         {
-            if (subtitle.Bitmap == null)
-                continue;
-            subtitle.Y = subtitle.ScreenSize.Height - (int)subtitle.Bitmap.Size.Height - marginBottom;
+            if (item is BinarySubtitleItem subtitle && subtitle.Bitmap != null)
+                subtitle.Y = subtitle.ScreenSize.Height - (int)subtitle.Bitmap.Size.Height - marginBottom;
         }
 
         UpdateOverlayPosition();
@@ -1606,34 +1609,12 @@ public partial class BinaryEditViewModel : ObservableObject
     [RelayCommand]
     private void Crop()
     {
-        // Get selected subtitles
-        var selectedItems = new List<BinarySubtitleItem>();
-        if (SubtitleGrid?.SelectedItems != null)
+        var itemsToCrop = Subtitles.ToList();
+        if (itemsToCrop.Count == 0) return;
+
+        foreach (var subtitle in itemsToCrop)
         {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    selectedItems.Add(binaryItem);
-                }
-            }
-        }
-
-        // If no selection, work on all subtitles
-        var itemsToResize = selectedItems.Count > 0 ? selectedItems : Subtitles.ToList();
-
-        if (itemsToResize.Count == 0)
-        {
-            return;
-        }
-
-        foreach (var subtitle in itemsToResize)
-        {
-            if (subtitle.Bitmap == null)
-            {
-                continue;
-            }
-
+            if (subtitle.Bitmap == null) continue;
             using var skBitmap = subtitle.Bitmap.ToSkBitmap();
             using var cropped = skBitmap.CropTransparentColors(out var offsetX, out var offsetY);
             var old = subtitle.Bitmap;
@@ -1651,6 +1632,36 @@ public partial class BinaryEditViewModel : ObservableObject
             SubtitleGrid.SelectedIndex = currentIndex;
         }
 
+        UpdateOverlayPosition();
+        RefreshStatusText();
+    }
+
+    [RelayCommand]
+    private void CropSelectedLines()
+    {
+        var selectedItems = new List<BinarySubtitleItem>();
+        if (SubtitleGrid?.SelectedItems != null)
+        {
+            foreach (var item in SubtitleGrid.SelectedItems)
+                if (item is BinarySubtitleItem binaryItem)
+                    selectedItems.Add(binaryItem);
+        }
+
+        if (selectedItems.Count == 0) return;
+
+        foreach (var subtitle in selectedItems)
+        {
+            if (subtitle.Bitmap == null) continue;
+            using var skBitmap = subtitle.Bitmap.ToSkBitmap();
+            using var cropped = skBitmap.CropTransparentColors(out var offsetX, out var offsetY);
+            var old = subtitle.Bitmap;
+            subtitle.Bitmap = cropped.ToAvaloniaBitmap();
+            old?.Dispose();
+            subtitle.X += offsetX;
+            subtitle.Y += offsetY;
+        }
+
+        ApplyGridSelection(selectedItems);
         UpdateOverlayPosition();
         RefreshStatusText();
     }

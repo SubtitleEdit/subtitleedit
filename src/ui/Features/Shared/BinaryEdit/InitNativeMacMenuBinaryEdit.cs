@@ -35,6 +35,8 @@ public static class InitNativeMacMenuBinaryEdit
         var toolsMenu = new NativeMenu();
         Add(toolsMenu, Se.Language.General.AlignmentDotDotDot, vm.AlignmentCommand);
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.CenterHorizontally, vm.CenterHorizontallyCommand);
+        Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.TopAlignLines, vm.TopAlignCommand);
+        Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.BottomAlignLines, vm.BottomAlignCommand);
         toolsMenu.Items.Add(new NativeMenuItemSeparator());
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.ResizeImagesDotDotDot, vm.ResizeImagesCommand);
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.CropImages, vm.CropCommand);
