@@ -1118,29 +1118,40 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Get selected subtitles
+        var result = await _windowService.ShowDialogAsync<PickAlignment.PickAlignmentWindow, PickAlignment.PickAlignmentViewModel>(
+            Window, vm => vm.Initialize(null, Subtitles.Count));
+
+        if (!result.OkPressed || string.IsNullOrEmpty(result.Alignment))
+        {
+            return;
+        }
+
+        ApplyAlignmentToSubtitles(Subtitles.ToList(), result.Alignment);
+    }
+
+    [RelayCommand]
+    private async Task AlignmentSelectedLines()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
         var selectedItems = new List<BinarySubtitleItem>();
         if (SubtitleGrid?.SelectedItems != null)
         {
             foreach (var item in SubtitleGrid.SelectedItems)
             {
                 if (item is BinarySubtitleItem binaryItem)
-                {
                     selectedItems.Add(binaryItem);
-                }
             }
         }
 
-        // If no selection, nothing to do
         if (selectedItems.Count == 0)
         {
-            await MessageBox.Show(Window, Se.Language.General.Information,
-                "Please select one or more subtitles to adjust alignment.",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
 
-        // Show alignment picker
         var result = await _windowService.ShowDialogAsync<PickAlignment.PickAlignmentWindow, PickAlignment.PickAlignmentViewModel>(
             Window, vm => vm.Initialize(null, selectedItems.Count));
 
@@ -1149,7 +1160,6 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Apply alignment to selected subtitles
         ApplyAlignmentToSubtitles(selectedItems, result.Alignment);
     }
 
@@ -1521,37 +1531,23 @@ public partial class BinaryEditViewModel : ObservableObject
     [RelayCommand]
     private void CenterHorizontally()
     {
-        // Get selected subtitles
-        var selectedItems = new List<BinarySubtitleItem>();
-        if (SubtitleGrid?.SelectedItems != null)
+        foreach (var subtitle in Subtitles)
         {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    selectedItems.Add(binaryItem);
-                }
-            }
+            if (subtitle.Bitmap == null) continue;
+            subtitle.X = (subtitle.ScreenSize.Width - (int)subtitle.Bitmap.Size.Width) / 2;
         }
 
-        // If no selection, work on all subtitles
-        var itemsToResize = selectedItems.Count > 0 ? selectedItems : Subtitles.ToList();
+        UpdateOverlayPosition();
+    }
 
-        if (itemsToResize.Count == 0)
+    [RelayCommand]
+    private void CenterHorizontallySelectedLines()
+    {
+        if (SubtitleGrid?.SelectedItems == null) return;
+        foreach (var item in SubtitleGrid.SelectedItems)
         {
-            return;
-        }
-
-        foreach (var subtitle in itemsToResize)
-        {
-            if (subtitle.Bitmap == null)
-            {
-                continue;
-            }
-
-            var screenWidth = subtitle.ScreenSize.Width;
-            var imageWidth = (int)subtitle.Bitmap.Size.Width;
-            subtitle.X = (screenWidth - imageWidth) / 2;
+            if (item is BinarySubtitleItem subtitle && subtitle.Bitmap != null)
+                subtitle.X = (subtitle.ScreenSize.Width - (int)subtitle.Bitmap.Size.Width) / 2;
         }
 
         UpdateOverlayPosition();

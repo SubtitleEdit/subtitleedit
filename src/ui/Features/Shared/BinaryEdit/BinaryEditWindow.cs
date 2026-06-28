@@ -445,7 +445,7 @@ public class BinaryEditWindow : Window
         {
             Header = Se.Language.General.AlignmentDotDotDot,
             DataContext = vm,
-            Command = vm.AlignmentCommand,
+            Command = vm.AlignmentSelectedLinesCommand,
         };
         flyout.Items.Add(menuItemAlign);
         menuItemAlign.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
@@ -454,7 +454,7 @@ public class BinaryEditWindow : Window
         {
             Header = Se.Language.Tools.ImageBasedEdit.CenterHorizontally,
             DataContext = vm,
-            Command = vm.CenterHorizontallyCommand,
+            Command = vm.CenterHorizontallySelectedLinesCommand,
         };
         flyout.Items.Add(menuItemCenterH);
         menuItemCenterH.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
