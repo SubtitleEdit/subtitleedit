@@ -1295,6 +1295,13 @@ public partial class BatchConvertViewModel : ObservableObject
 
             var result = await _windowService.ShowDialogAsync<ExportCustomTextFormatWindow, ExportCustomTextFormatViewModel>(Window,
                 vm => { vm.Initialize(subtitles, string.Empty, string.Empty, true); });
+
+            // Remember which custom format was chosen so batch convert uses it (not just the first one).
+            if (result.OkPressed && result.SelectedCustomFormat != null)
+            {
+                Se.Settings.Tools.BatchConvert.CustomTextFormatName = result.SelectedCustomFormat.Name;
+            }
+
             return;
         }
 
@@ -1425,19 +1432,63 @@ public partial class BatchConvertViewModel : ObservableObject
             return;
         }
 
+        var currentRealFormat = SubtitleFormat.AllSubtitleFormats.FirstOrDefault(p => p.Name == SelectedTargetFormat);
+        var extraFormats = BuildExtraFormatPickerEntries();
+
         var viewModel = await _windowService.ShowDialogAsync<PickSubtitleFormatWindow, PickSubtitleFormatViewModel>(Window, vm =>
         {
-            vm.Initialize(SubtitleFormat.AllSubtitleFormats.FirstOrDefault(p => p.Name == SelectedTargetFormat) ?? new SubRip(), new Subtitle());
+            vm.Initialize(currentRealFormat ?? new SubRip(), new Subtitle(), extraFormats,
+                currentRealFormat == null ? SelectedTargetFormat : null);
         });
 
         if (viewModel.OkPressed)
         {
-            var selectedFormat = viewModel.GetSelectedFormat();
-            if (selectedFormat != null && selectedFormat.Name != SelectedTargetFormat)
+            // Real formats round-trip through GetSelectedFormat().Name; the batch-only ones are only
+            // identified by their (display) name.
+            var selectedName = viewModel.GetSelectedFormat()?.Name ?? viewModel.SelectedSubtitleFormatName;
+            if (!string.IsNullOrEmpty(selectedName) && selectedName != SelectedTargetFormat)
             {
-                SelectedTargetFormat = selectedFormat.Name;
+                SelectedTargetFormat = selectedName;
             }
         }
+    }
+
+    // The batch-only output formats (image-based + plain/custom text) are not real SubtitleFormats, so
+    // they must be added to the format picker explicitly. Text formats get a real preview; image-based
+    // ones pass null (the picker shows a "no text preview" placeholder).
+    private static IReadOnlyList<PickSubtitleFormatExtraFormat> BuildExtraFormatPickerEntries()
+    {
+        var sample = new List<Paragraph>
+        {
+            new("Hello, World!", 1000, 3000),
+            new("This is a sample subtitle.", 3500, 6000),
+        };
+
+        var plainTextPreview = string.Join(Environment.NewLine + Environment.NewLine, sample.Select(p => p.Text));
+
+        string? customTextPreview = null;
+        var customFormats = Se.Settings.File.ExportCustomFormats.Select(c => new CustomFormatItem(c)).ToList();
+        var selectedCustom = customFormats.FirstOrDefault(c => c.Name == Se.Settings.Tools.BatchConvert.CustomTextFormatName)
+                             ?? customFormats.FirstOrDefault();
+        if (selectedCustom != null)
+        {
+            customTextPreview = Nikse.SubtitleEdit.UiLogic.Export.CustomTextFormatter.GenerateCustomText(
+                selectedCustom.ToTemplate(), sample, "Sample", string.Empty);
+        }
+
+        return new List<PickSubtitleFormatExtraFormat>
+        {
+            new(BatchConverter.FormatBluRaySup, null),
+            new(BatchConverter.FormatVobSub, null),
+            new(BatchConverter.FormatBdnXml, null),
+            new(BatchConverter.FormatDostImage, null),
+            new(BatchConverter.FormatFcpImage, null),
+            new(BatchConverter.FormatDCinemaInterop, null),
+            new(BatchConverter.FormatDCinemaSmpte2014, null),
+            new(BatchConverter.FormatImagesWithTimeCodesInFileName, null),
+            new(BatchConverter.FormatPlainText, plainTextPreview),
+            new(BatchConverter.FormatCustomTextFormat, customTextPreview),
+        };
     }
 
     // Parses a file and appends the resulting item(s) to _allBatchItems only (no UI-bound
@@ -2398,9 +2449,18 @@ public partial class BatchConvertViewModel : ObservableObject
 
     internal void ComboBoxSubtitleFormatPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        Dispatcher.UIThread.Post(async () =>
+        // Open the format picker on right-click (or Mac Ctrl+left-click), like the main window's
+        // format combo; a plain left-click still opens the normal dropdown.
+        var props = e.GetCurrentPoint(null).Properties;
+        var isMacCtrlLeftClick = OperatingSystem.IsMacOS()
+                                 && props.IsLeftButtonPressed
+                                 && e.KeyModifiers.HasFlag(KeyModifiers.Control)
+                                 && !e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+
+        if (props.IsRightButtonPressed || isMacCtrlLeftClick)
         {
-            await ShowSubtitleFormatPicker();
-        });
+            Dispatcher.UIThread.Post(async () => { await ShowSubtitleFormatPicker(); });
+            e.Handled = true;
+        }
     }
 }
