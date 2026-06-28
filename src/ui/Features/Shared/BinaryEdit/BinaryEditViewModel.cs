@@ -933,7 +933,10 @@ public partial class BinaryEditViewModel : ObservableObject
         exportHandler.WriteHeader(fileOrFolderName, imageParameter);
         for (var i = 0; i < Subtitles.Count; i++)
         {
-            imageParameter.Bitmap = Subtitles[i].Bitmap!.ToSkBitmap();
+            // ToSkBitmap allocates a new SKBitmap each call; dispose it per iteration so the
+            // export of a large file doesn't accumulate one undisposed native bitmap per line.
+            using var skBitmap = Subtitles[i].Bitmap!.ToSkBitmap();
+            imageParameter.Bitmap = skBitmap;
             imageParameter.Text = Subtitles[i].Text;
             imageParameter.StartTime = Subtitles[i].StartTime;
             imageParameter.EndTime = Subtitles[i].EndTime;
@@ -1704,7 +1707,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var skBitmap = selectedItem.Bitmap.ToSkBitmap();
+        using var skBitmap = selectedItem.Bitmap.ToSkBitmap();
         var pngBytes = skBitmap.ToPngArray();
         System.IO.File.WriteAllBytes(fileName, pngBytes);
     }
