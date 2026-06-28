@@ -431,6 +431,50 @@ public class BinaryEditWindow : Window
         flyout.Items.Add(menuItemInsertAfter);
         menuItemInsertAfter.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsInsertAfterVisible)));
 
+        var separatorAlignment = new Separator() { DataContext = vm };
+        flyout.Items.Add(separatorAlignment);
+        separatorAlignment.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+
+        var menuItemAlign = new MenuItem
+        {
+            Header = Se.Language.General.AlignmentDotDotDot,
+            DataContext = vm,
+            Command = vm.AlignmentCommand,
+        };
+        flyout.Items.Add(menuItemAlign);
+        menuItemAlign.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+
+        var menuItemCenterH = new MenuItem
+        {
+            Header = Se.Language.Tools.ImageBasedEdit.CenterHorizontally,
+            DataContext = vm,
+            Command = vm.CenterHorizontallyCommand,
+        };
+        flyout.Items.Add(menuItemCenterH);
+        menuItemCenterH.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+
+        var menuItemTopAlign = new MenuItem
+        {
+            Header = Se.Language.Tools.ImageBasedEdit.TopAlignLines,
+            DataContext = vm,
+            Command = vm.TopAlignCommand,
+        };
+        flyout.Items.Add(menuItemTopAlign);
+        menuItemTopAlign.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+
+        var menuItemBottomAlign = new MenuItem
+        {
+            Header = Se.Language.Tools.ImageBasedEdit.BottomAlignLines,
+            DataContext = vm,
+            Command = vm.BottomAlignCommand,
+        };
+        flyout.Items.Add(menuItemBottomAlign);
+        menuItemBottomAlign.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+
+        var separatorForced = new Separator() { DataContext = vm };
+        flyout.Items.Add(separatorForced);
+        separatorForced.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+
         var menuItemToggleForced = new MenuItem
         {
             Header = Se.Language.General.ToggleForced,

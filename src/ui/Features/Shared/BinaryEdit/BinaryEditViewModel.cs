@@ -1443,6 +1443,52 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void TopAlign()
+    {
+        var selectedItems = new List<BinarySubtitleItem>();
+        if (SubtitleGrid?.SelectedItems != null)
+        {
+            foreach (var item in SubtitleGrid.SelectedItems)
+            {
+                if (item is BinarySubtitleItem binaryItem)
+                    selectedItems.Add(binaryItem);
+            }
+        }
+
+        var itemsToAlign = selectedItems.Count > 0 ? selectedItems : Subtitles.ToList();
+        var marginTop = Se.Settings.Tools.BinEditTopMargin;
+        foreach (var subtitle in itemsToAlign)
+            subtitle.Y = marginTop;
+
+        UpdateOverlayPosition();
+    }
+
+    [RelayCommand]
+    private void BottomAlign()
+    {
+        var selectedItems = new List<BinarySubtitleItem>();
+        if (SubtitleGrid?.SelectedItems != null)
+        {
+            foreach (var item in SubtitleGrid.SelectedItems)
+            {
+                if (item is BinarySubtitleItem binaryItem)
+                    selectedItems.Add(binaryItem);
+            }
+        }
+
+        var itemsToAlign = selectedItems.Count > 0 ? selectedItems : Subtitles.ToList();
+        var marginBottom = Se.Settings.Tools.BinEditBottomMargin;
+        foreach (var subtitle in itemsToAlign)
+        {
+            if (subtitle.Bitmap == null)
+                continue;
+            subtitle.Y = subtitle.ScreenSize.Height - (int)subtitle.Bitmap.Size.Height - marginBottom;
+        }
+
+        UpdateOverlayPosition();
+    }
+
+    [RelayCommand]
     private void Crop()
     {
         // Get selected subtitles
