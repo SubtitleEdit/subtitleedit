@@ -29,6 +29,7 @@ public class SeAssaStyle
         UseOpaqueBox = style.BorderStyle.Style == BorderStyleType.OneBox;
         UseOpaqueBoxPerLine = style.BorderStyle.Style == BorderStyleType.BoxPerLine;
         IsDefault = style.IsDefault;
+        Category = style.Category;
     }
 
     public string Name { get; set; } = string.Empty;
@@ -56,6 +57,11 @@ public class SeAssaStyle
     public bool UseOpaqueBox { get; set; }
     public bool UseOpaqueBoxPerLine { get; set; }
     public bool IsDefault { get; set; }
+
+    /// <summary>
+    /// Optional category for grouping storage styles (e.g. per project). Empty = the default category.
+    /// </summary>
+    public string Category { get; set; } = string.Empty;
 
     public SeAssaStyle()
     {
