@@ -500,6 +500,19 @@ public class BinaryEditWindow : Window
         };
         flyout.Items.Add(menuItemSelectNonForcedLines);
 
+        var separatorDurations = new Separator() { DataContext = vm };
+        flyout.Items.Add(separatorDurations);
+        separatorDurations.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+
+        var menuItemAdjustDurations = new MenuItem
+        {
+            Header = Se.Language.Main.Menu.AdjustDurations,
+            DataContext = vm,
+            Command = vm.AdjustDurationsSelectedLinesCommand,
+        };
+        flyout.Items.Add(menuItemAdjustDurations);
+        menuItemAdjustDurations.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+
         var separatorInsertSubtitle = new Separator() { DataContext = vm };
         flyout.Items.Add(separatorInsertSubtitle);
         separatorInsertSubtitle.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsInsertSubtitleVisible)));

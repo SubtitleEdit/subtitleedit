@@ -1020,7 +1020,18 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Get selected indices from the grid
+        result.AdjustDuration(Subtitles.ToList(), null);
+    }
+
+    [RelayCommand]
+    private async Task AdjustDurationsSelectedLines()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        // Snapshot selection before dialog opens — focus shift can clear grid selection
         var selectedIndices = new List<int>();
         if (SubtitleGrid?.SelectedItems != null)
         {
@@ -1035,6 +1046,13 @@ public partial class BinaryEditViewModel : ObservableObject
                     }
                 }
             }
+        }
+
+        var result = await _windowService.ShowDialogAsync<BinaryAdjustDuration.BinaryAdjustDurationWindow, BinaryAdjustDuration.BinaryAdjustDurationViewModel>(Window, vm => { });
+
+        if (!result.OkPressed)
+        {
+            return;
         }
 
         result.AdjustDuration(Subtitles.ToList(), selectedIndices.Count > 0 ? selectedIndices : null);
