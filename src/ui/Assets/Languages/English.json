@@ -1824,6 +1824,7 @@
     "filterLayersHideFromSubtitleGrid": "Hide from subtitle grid",
     "filterLayersHideFromVideoPreview": "Hide from video preview",
     "pickSubtitleFormat": "Choose subtitle format",
+    "pickSubtitleFormatImageBasedNoPreview": "Image-based subtitle format.\nBitmaps are generated during conversion - no text preview.",
     "pickLayerTitle": "Set layer",
     "recentColors": "Recent colors"
   },

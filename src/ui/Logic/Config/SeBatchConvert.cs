@@ -8,6 +8,7 @@ public class SeBatchConvert
     public string OutputFolder { get; set; }
     public bool Overwrite { get; set; }
     public string TargetFormat { get; set; }
+    public string CustomTextFormatName { get; set; } = string.Empty;
     public string TargetEncoding { get; set; }
     public string OcrEngine { get; set; }
     public string TesseractLanguage { get; set; }

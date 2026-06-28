@@ -651,7 +651,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             subtitles.Add(sv);
         }
 
-        var selectedCustomFormat = customFormats.FirstOrDefault();
+        var customFormatName = Se.Settings.Tools.BatchConvert.CustomTextFormatName;
+        var selectedCustomFormat =
+            customFormats.FirstOrDefault(f => f.Name == customFormatName)
+            ?? customFormats.FirstOrDefault();
         if (selectedCustomFormat == null)
         {
             item.Status = string.Format(Se.Language.General.ErrorX, Se.Language.General.Error);

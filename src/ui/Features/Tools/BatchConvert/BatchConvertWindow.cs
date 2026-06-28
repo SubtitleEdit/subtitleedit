@@ -193,7 +193,12 @@ public class BatchConvertWindow : Window
 
         var comboBoxSubtitleFormat = UiUtil.MakeComboBox(vm.TargetFormats, vm, nameof(vm.SelectedTargetFormat));
         comboBoxSubtitleFormat.SelectionChanged += (_, _) => vm.ComboBoxSubtitleFormatChanged();
-        comboBoxSubtitleFormat.PointerPressed += vm.ComboBoxSubtitleFormatPointerPressed;
+        // Tunnel phase so right-click / Mac Ctrl+click opens the format picker before the ComboBox
+        // consumes the click to open its dropdown (matches the main window's format combo).
+        comboBoxSubtitleFormat.AddHandler(InputElement.PointerPressedEvent,
+            vm.ComboBoxSubtitleFormatPointerPressed,
+            RoutingStrategies.Tunnel,
+            handledEventsToo: true);
         comboBoxSubtitleFormat.Width = 240;
 
         var buttonTargetFormatSettings = UiUtil.MakeButton(vm.ShowTargetFormatSettingsCommand, IconNames.Settings)
