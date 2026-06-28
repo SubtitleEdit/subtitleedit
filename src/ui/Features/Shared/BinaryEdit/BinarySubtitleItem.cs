@@ -81,7 +81,10 @@ public partial class BinarySubtitleItem : ObservableObject
         _duration = item.Duration;
         _screenWidth = item.ScreenWidth;
         _screenHeight = item.ScreenHeight;
-        _bitmap = new SKBitmap(1, 1, true).ToAvaloniaBitmap();
+        using (var placeholder = new SKBitmap(1, 1, true))
+        {
+            _bitmap = placeholder.ToAvaloniaBitmap();
+        }
         Number = item.Number;
         IsForced = false;
         Text = string.Empty;
