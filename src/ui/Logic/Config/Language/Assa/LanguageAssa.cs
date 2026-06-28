@@ -105,6 +105,7 @@ public class LanguageAssa
     public string CopyToFileStyles { get; set; }
     public string SetStyleAsDefault { get; set; }
     public string TakeUsagesFromDotDotDot { get; set; }
+    public string ReplaceStyleWithDotDotDot { get; set; }
     public string NoAttachmentsFound { get; set; }
     public string DeleteStyleQuestion { get; set; }
     public string DeleteStylesQuestion { get; set; }
@@ -317,6 +318,7 @@ public class LanguageAssa
         CopyToFileStyles = "Copy to file styles";
         SetStyleAsDefault = "Set style as default";
         TakeUsagesFromDotDotDot = "Take usages from...";
+        ReplaceStyleWithDotDotDot = "Replace style with...";
         NoAttachmentsFound = "No attachments found in selected ASSA file.";
         DeleteStyleQuestion = "Delete style?";
         DeleteStylesQuestion = "Delete styles?";
