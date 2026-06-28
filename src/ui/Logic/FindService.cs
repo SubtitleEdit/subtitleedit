@@ -349,6 +349,7 @@ public partial class FindService : IFindService
     private (bool replaced, string newText, int replacementCount) ReplaceWithRegex(string line, string searchText, string replaceText, int startIndex, int maxReplacements)
     {
         replaceText = RegexUtils.FixNewLine(replaceText);
+        searchText = RegexUtils.FixNewLine(searchText); // \r\n / \r in the pattern -> \n to match the text (#11956)
         try
         {
             var regex = new Regex(searchText);
@@ -541,7 +542,7 @@ public partial class FindService : IFindService
             var searchLine = startIndex > 0 ? line.Substring(startIndex) : line;
             var originalLength = searchLine.Length;
             searchLine = NormalizeLineEndingsForRegex(searchLine, out var indexMap);
-            var match = Regex.Match(searchLine, searchText);
+            var match = Regex.Match(searchLine, RegexUtils.FixNewLine(searchText));
 
             if (match.Success)
             {
@@ -566,7 +567,7 @@ public partial class FindService : IFindService
 
             // Advance by 1 after each match so overlapping matches are found
             // (e.g. two long lines sharing the \n between them).
-            var regex = new Regex(searchText);
+            var regex = new Regex(RegexUtils.FixNewLine(searchText));
             Match? lastMatch = null;
             var pos = 0;
             while (pos < searchLine.Length)
@@ -603,7 +604,7 @@ public partial class FindService : IFindService
                 try
                 {
                     var searchLine = NormalizeLineEndingsForRegex(line);
-                    return Regex.Matches(searchLine, searchText).Count;
+                    return Regex.Matches(searchLine, RegexUtils.FixNewLine(searchText)).Count;
                 }
                 catch (ArgumentException)
                 {
@@ -631,7 +632,7 @@ public partial class FindService : IFindService
                 try
                 {
                     var searchLine = NormalizeLineEndingsForRegex(line, out var indexMap);
-                    var regexMatches = Regex.Matches(searchLine, searchText);
+                    var regexMatches = Regex.Matches(searchLine, RegexUtils.FixNewLine(searchText));
                     foreach (Match match in regexMatches)
                     {
                         matches.Add(new FindMatch(MapNormalizedIndex(indexMap, match.Index, line.Length), match.Value));

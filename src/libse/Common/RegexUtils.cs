@@ -208,8 +208,12 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <summary>
-        /// Changes "\\r\\n" and "\\n" to "\n", which hopefully makes it simpler for
-        /// the user who can use both "\\n" and "\\r\\n" for new line.
+        /// Normalizes the new-line escapes a user typed in a regular expression (<c>\r\n</c>, <c>\n</c>
+        /// or <c>\r</c>) to a single line-feed, so a rule matches regardless of which escape was typed
+        /// and regardless of the platform line-ending. Subtitle text is matched line-feed normalized too
+        /// (see <see cref="ReplaceNewLineSafe"/>), keeping the pattern and the text in sync. The previous
+        /// behavior expanded these to Environment.NewLine (CRLF on Windows), which no longer matched the
+        /// line-feed text used in v5, so cross-line regex rules silently stopped working (#11956).
         /// </summary>
         public static string FixNewLine(string pattern)
         {
@@ -218,7 +222,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return pattern;
             }
 
-            return pattern.Replace("\\r\\n", Environment.NewLine).Replace("\\n", Environment.NewLine);
+            return pattern.Replace("\\r\\n", "\n").Replace("\\n", "\n").Replace("\\r", "\n");
         }
 
         public static string EscapeNewLines(string text)
@@ -229,8 +233,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <summary>
-        /// Performs replace on regular expression. Line breaks are converted to just "\n" during the replace
-        /// and line breaks are returned as Environment.NewLine.
+        /// Performs replace on regular expression. Line breaks are normalized to "\n" for both the match
+        /// and the returned text, so the pattern and the text agree regardless of \n vs \r\n.
         /// </summary>
         /// <param name="regularExpression">Regular expression to perform replace on</param>
         /// <param name="text">Text perform replace on</param>
@@ -242,8 +246,8 @@ namespace Nikse.SubtitleEdit.Core.Common
         }
 
         /// <summary>
-        /// Performs replace on regular expression. Line breaks are converted to just "\n" during the replace
-        /// and line breaks are returned as Environment.NewLine.
+        /// Performs replace on regular expression. Line breaks are normalized to "\n" for both the match
+        /// and the returned text, so the pattern and the text agree regardless of \n vs \r\n.
         /// </summary>
         /// <param name="regularExpression">Regular expression to perform replace on</param>
         /// <param name="text">Text perform replace on</param>
@@ -253,13 +257,15 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <returns>Input string with regular expression replace applied</returns>
         public static string ReplaceNewLineSafe(Regex regularExpression, string text, string replaceWith, int count, int startIndex)
         {
-            text = regularExpression.Replace(string.Join(Environment.NewLine, text.SplitToLines()), replaceWith, count, startIndex);
-            return string.Join(Environment.NewLine, text.SplitToLines());
+            // Match/return with line-feed-normalized line breaks so a pattern's \n (see FixNewLine)
+            // matches regardless of whether the in-memory text uses \n or \r\n (#11956).
+            text = regularExpression.Replace(string.Join("\n", text.SplitToLines()), replaceWith, count, startIndex);
+            return string.Join("\n", text.SplitToLines());
         }
 
         public static int CountNewLineSafe(Regex regularExpression, string text)
         {
-            return regularExpression.Matches(string.Join(Environment.NewLine, text.SplitToLines())).Count;
+            return regularExpression.Matches(string.Join("\n", text.SplitToLines())).Count;
         }
     }
 }
