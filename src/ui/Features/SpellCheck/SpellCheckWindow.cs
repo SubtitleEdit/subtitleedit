@@ -248,7 +248,7 @@ public class SpellCheckWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // "Google it" row - without it the new Undo button (row 6) and Google it (row 7) overlap
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // extra row for the Undo button so "Google it" (row 6) and Undo (row 7) don't overlap
             },
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Top,
@@ -265,8 +265,8 @@ public class SpellCheckWindow : Window
         grid.Add(buttonSkipAll, 3, 1);
         grid.Add(buttonAddToNames, 4, 0, 1, 2);
         grid.Add(buttonAddToDictionary, 5, 0, 1, 2);
-        grid.Add(buttonUndo, 6, 0, 1, 2);
-        grid.Add(buttonGoogleSearch, 7, 0, 1, 2);
+        grid.Add(buttonGoogleSearch, 6, 0, 1, 2);
+        grid.Add(buttonUndo, 7, 0, 1, 2);
 
         return grid;
     }
