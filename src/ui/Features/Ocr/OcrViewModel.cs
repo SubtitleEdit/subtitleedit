@@ -2427,7 +2427,7 @@ public partial class OcrViewModel : ObservableObject
                 var lines = p.Text.Trim().SplitToLines();
                 if (lines.Count > 1 && p.Text.Length < 40)
                 {
-                    var bmp = item.GetSkBitmapClean();
+                    using var bmp = item.GetSkBitmapClean(); // fresh bitmap each call; dispose to avoid a native leak
                     var nbmp = new NikseBitmap2(bmp);
                     nbmp.MakeOneColor(SKColors.White);
                     var lineImages = NikseBitmapImageSplitter2.SplitToLinesTransparentOrBlack(nbmp);
@@ -2509,7 +2509,7 @@ public partial class OcrViewModel : ObservableObject
                 var lines = p.Text.Trim().SplitToLines();
                 if (lines.Count > 1 && p.Text.Length < 40)
                 {
-                    var bmp = item.GetSkBitmapClean();
+                    using var bmp = item.GetSkBitmapClean(); // fresh bitmap each call; dispose to avoid a native leak
                     var nbmp = new NikseBitmap2(bmp);
                     nbmp.MakeOneColor(SKColors.White);
                     var lineImages = NikseBitmapImageSplitter2.SplitToLinesTransparentOrBlack(nbmp);
@@ -4635,7 +4635,7 @@ public partial class OcrViewModel : ObservableObject
             // Get image position and screen dimensions
             var position = item.GetPosition();
             var screenSize = item.GetScreenSize();
-            var bitmap = item.GetSkBitmapClean();
+            using var bitmap = item.GetSkBitmapClean(); // fresh bitmap each call; dispose to avoid a native leak
 
             if (bitmap == null || screenSize.Width == 0 || screenSize.Height == 0)
             {
@@ -4753,14 +4753,16 @@ public partial class OcrViewModel : ObservableObject
 
     private List<OcrSubtitleItem> SplitImageToLines(OcrSubtitleItem item)
     {
-        if (!HasCaptureAlignment || item.GetSkBitmapClean() == null)
+        // (GetSkBitmapClean never returns null - it substitutes a 1x1 - so the old "== null"
+        //  check only allocated and leaked a native bitmap.)
+        if (!HasCaptureAlignment)
         {
             return new List<OcrSubtitleItem> { item };
         }
 
         try
         {
-            var bitmap = item.GetSkBitmapClean();
+            using var bitmap = item.GetSkBitmapClean(); // fresh bitmap each call; dispose to avoid a native leak
             var lines = new List<OcrSubtitleItem>();
 
             // Simple line detection: split image horizontally based on text regions
