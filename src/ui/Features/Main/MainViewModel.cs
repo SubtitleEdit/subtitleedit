@@ -7455,15 +7455,11 @@ public partial class MainViewModel :
             .OrderBy(i => i)
             .ToList();
 
+        // The dialog applies the change itself (idempotently, from a snapshot taken when it
+        // opened), so we must not re-apply here - doing so compounded the factor (Apply + OK).
         var result = await ShowDialogAsync<ChangeSpeedWindow, ChangeSpeedViewModel>(vm => { vm.Initialize(Subtitles, selectedIndices); });
         if (result.OkPressed)
         {
-            if (result.AdjustSelectedLinesAndForward && selectedIndices.Count > 0)
-                ChangeSpeedViewModel.ChangeSpeed(Subtitles.Skip(selectedIndices[0]), result.SpeedPercent);
-            else if (result.AdjustSelectedLines && selectedIndices.Count > 0)
-                ChangeSpeedViewModel.ChangeSpeed(selectedIndices.Select(i => Subtitles[i]), result.SpeedPercent);
-            else
-                ChangeSpeedViewModel.ChangeSpeed(Subtitles, result.SpeedPercent);
             _updateAudioVisualizer = true;
         }
     }

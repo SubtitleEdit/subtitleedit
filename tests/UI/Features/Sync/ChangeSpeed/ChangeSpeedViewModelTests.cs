@@ -1,11 +1,86 @@
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Sync.ChangeSpeed;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace UITests.Features.Sync.ChangeSpeed;
 
 public class ChangeSpeedViewModelTests
 {
+    private static ObservableCollection<SubtitleLineViewModel> OneLine()
+        => new()
+        {
+            new()
+            {
+                StartTime = TimeSpan.FromMilliseconds(1000),
+                EndTime = TimeSpan.FromMilliseconds(3000),
+            },
+        };
+
+    [Fact]
+    public void ApplyThenOk_DoesNotCompoundTheFactor()
+    {
+        // Regression (#bug-hunt): "Apply" then "Change"(OK) used to apply the factor twice
+        // (125% -> x0.8 -> x0.8 = x0.64). The dialog now recomputes from the original snapshot,
+        // so the result is the same as applying once.
+        var subtitles = OneLine();
+        var vm = new ChangeSpeedViewModel();
+        vm.Initialize(subtitles, new List<int>());
+        vm.SpeedPercent = 125.0;
+
+        vm.ApplyCommand.Execute(null);
+        vm.OkCommand.Execute(null);
+
+        Assert.Equal(800, subtitles[0].StartTime.TotalMilliseconds, 3);
+        Assert.Equal(2400, subtitles[0].EndTime.TotalMilliseconds, 3);
+        Assert.True(vm.OkPressed);
+    }
+
+    [Fact]
+    public void ApplyRepeatedly_IsIdempotent()
+    {
+        var subtitles = OneLine();
+        var vm = new ChangeSpeedViewModel();
+        vm.Initialize(subtitles, new List<int>());
+        vm.SpeedPercent = 125.0;
+
+        vm.ApplyCommand.Execute(null);
+        vm.ApplyCommand.Execute(null);
+        vm.ApplyCommand.Execute(null);
+
+        Assert.Equal(800, subtitles[0].StartTime.TotalMilliseconds, 3);
+        Assert.Equal(2400, subtitles[0].EndTime.TotalMilliseconds, 3);
+    }
+
+    [Fact]
+    public void Ok_WithoutApply_AppliesOnce()
+    {
+        var subtitles = OneLine();
+        var vm = new ChangeSpeedViewModel();
+        vm.Initialize(subtitles, new List<int>());
+        vm.SpeedPercent = 125.0;
+
+        vm.OkCommand.Execute(null);
+
+        Assert.Equal(800, subtitles[0].StartTime.TotalMilliseconds, 3);
+        Assert.Equal(2400, subtitles[0].EndTime.TotalMilliseconds, 3);
+    }
+
+    [Fact]
+    public void ZeroSpeed_IsIgnored_NoDivideByZero()
+    {
+        var subtitles = OneLine();
+        var vm = new ChangeSpeedViewModel();
+        vm.Initialize(subtitles, new List<int>());
+        vm.SpeedPercent = 0.0;
+
+        vm.OkCommand.Execute(null);
+
+        // Times unchanged (no Infinity/overflow).
+        Assert.Equal(1000, subtitles[0].StartTime.TotalMilliseconds, 3);
+        Assert.Equal(3000, subtitles[0].EndTime.TotalMilliseconds, 3);
+    }
+
     [Fact]
     public void ChangeSpeed_125Percent_ScalesAllLines()
     {

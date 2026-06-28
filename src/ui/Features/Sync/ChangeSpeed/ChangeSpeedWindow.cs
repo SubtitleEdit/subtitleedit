@@ -29,7 +29,7 @@ public class ChangeSpeedWindow : Window
         {
             Width = 150,
             HorizontalAlignment = HorizontalAlignment.Left,
-            Minimum = 0,
+            Minimum = 1, // a speed of 0% means a 100/0 factor (divide by zero / infinite times)
             Maximum = 1000,
             Increment = 0.1m,
             DataContext = vm,
