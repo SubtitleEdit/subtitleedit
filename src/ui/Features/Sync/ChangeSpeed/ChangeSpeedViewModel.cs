@@ -23,6 +23,11 @@ public partial class ChangeSpeedViewModel : ObservableObject
     private IList<int>? _selectedIndices;
     private Action<double, bool, bool, bool>? _binaryApplyCallback;
 
+    // Snapshot of the subtitle times when the dialog opened. Both "Apply" and "Change" (OK)
+    // recompute from this snapshot (original x factor), so applying repeatedly - e.g. Apply
+    // then Change - is idempotent and never compounds the factor.
+    private List<(double Start, double End)>? _originalTimes;
+
     public Window? Window { get; set; }
 
     public bool OkPressed { get; private set; }
@@ -49,23 +54,55 @@ public partial class ChangeSpeedViewModel : ObservableObject
     private void Ok()
     {
         OkPressed = true;
+        Apply(); // apply once; idempotent (recomputed from the original snapshot)
         Window?.Close();
     }
 
     [RelayCommand]
     private void Apply()
     {
-        if (_subtitles != null)
+        if (SpeedPercent <= 0)
         {
-            if (AdjustSelectedLinesAndForward && _selectedIndices?.Count > 0)
-                ChangeSpeed(_subtitles.Skip(_selectedIndices[0]), SpeedPercent);
-            else if (AdjustSelectedLines && _selectedIndices?.Count > 0)
-                ChangeSpeed(_selectedIndices.Select(i => _subtitles[i]), SpeedPercent);
-            else
-                ChangeSpeed(_subtitles, SpeedPercent);
             return;
         }
+
+        if (_subtitles != null)
+        {
+            ApplyToSubtitles();
+            return;
+        }
+
         _binaryApplyCallback?.Invoke(SpeedPercent, AdjustAll, AdjustSelectedLines, AdjustSelectedLinesAndForward);
+    }
+
+    private void ApplyToSubtitles()
+    {
+        if (_subtitles == null || _originalTimes == null)
+        {
+            return;
+        }
+
+        var factor = 100.0 / SpeedPercent;
+
+        IEnumerable<int> indices;
+        if (AdjustSelectedLinesAndForward && _selectedIndices?.Count > 0)
+            indices = Enumerable.Range(_selectedIndices[0], _subtitles.Count - _selectedIndices[0]);
+        else if (AdjustSelectedLines && _selectedIndices?.Count > 0)
+            indices = _selectedIndices;
+        else
+            indices = Enumerable.Range(0, _subtitles.Count);
+
+        foreach (var i in indices)
+        {
+            if (i < 0 || i >= _subtitles.Count || i >= _originalTimes.Count)
+            {
+                continue;
+            }
+
+            _subtitles[i].SetTimes(
+                TimeSpan.FromMilliseconds(_originalTimes[i].Start * factor),
+                TimeSpan.FromMilliseconds(_originalTimes[i].End * factor));
+        }
     }
 
     [RelayCommand]
@@ -78,19 +115,36 @@ public partial class ChangeSpeedViewModel : ObservableObject
     {
         _subtitles = subtitles;
         _selectedIndices = selectedIndices;
+        _originalTimes = subtitles
+            .Select(s => (s.StartTime.TotalMilliseconds, s.EndTime.TotalMilliseconds))
+            .ToList();
         IsSelectionAvailable = selectedIndices.Count > 0;
-        if (!IsSelectionAvailable)
-            AdjustAll = true;
+        SetDefaultScope(IsSelectionAvailable);
     }
 
     internal void Initialize(bool isSelectionAvailable, Action<double, bool, bool, bool> binaryApplyCallback)
     {
         IsSelectionAvailable = isSelectionAvailable;
-        if (!isSelectionAvailable)
+        SetDefaultScope(isSelectionAvailable);
+        _binaryApplyCallback = binaryApplyCallback;
+    }
+
+    // Default to "selected lines" when a selection is available (mirrors the Adjust all times
+    // dialog), otherwise "all lines".
+    private void SetDefaultScope(bool isSelectionAvailable)
+    {
+        if (isSelectionAvailable)
+        {
+            AdjustSelectedLines = true;
+            AdjustAll = false;
+            AdjustSelectedLinesAndForward = false;
+        }
+        else
         {
             AdjustAll = true;
+            AdjustSelectedLines = false;
+            AdjustSelectedLinesAndForward = false;
         }
-        _binaryApplyCallback = binaryApplyCallback;
     }
 
     internal void OnKeyDown(KeyEventArgs e)

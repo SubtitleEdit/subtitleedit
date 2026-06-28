@@ -1597,26 +1597,46 @@ public partial class BinaryEditViewModel : ObservableObject
             });
         }
 
+        // Snapshot the original times so Apply/Change recompute from them (idempotent) instead
+        // of compounding the factor when both Apply and Change (OK) are used.
+        var originalTimes = Subtitles.ToDictionary(
+            s => s,
+            s => (s.StartTime.TotalMilliseconds, s.EndTime.TotalMilliseconds));
+
+        void ApplyScaled(IEnumerable<BinarySubtitleItem> items, double factor)
+        {
+            foreach (var s in items)
+            {
+                if (!originalTimes.TryGetValue(s, out var o))
+                {
+                    continue;
+                }
+
+                s.StartTime = TimeSpan.FromMilliseconds(o.Item1 * factor);
+                s.EndTime = TimeSpan.FromMilliseconds(o.Item2 * factor);
+            }
+        }
+
         void ApplySpeed(double speed, bool all, bool selected, bool selectedAndForward)
         {
+            if (speed <= 0)
+            {
+                return;
+            }
+
             var factor = 100.0 / speed;
             if (selectedAndForward && selectedIndices.Count > 0)
-                ScaleBinarySubtitleTimes(Subtitles.Skip(selectedIndices[0]), factor);
+                ApplyScaled(Subtitles.Skip(selectedIndices[0]), factor);
             else if (selected && selectedIndices.Count > 0)
-                ScaleBinarySubtitleTimes(selectedIndices.Select(i => Subtitles[i]), factor);
+                ApplyScaled(selectedIndices.Select(i => Subtitles[i]), factor);
             else
-                ScaleBinarySubtitleTimes(Subtitles, factor);
+                ApplyScaled(Subtitles, factor);
             RefreshGrid();
         }
 
-        var result = await _windowService.ShowDialogAsync<ChangeSpeedWindow, ChangeSpeedViewModel>(Window, vm => { vm.Initialize(selectedIndices.Count > 0, ApplySpeed); });
-
-        if (!result.OkPressed)
-        {
-            return;
-        }
-
-        ApplySpeed(result.SpeedPercent, result.AdjustAll, result.AdjustSelectedLines, result.AdjustSelectedLinesAndForward);
+        // The dialog applies via this callback (on both Apply and Change/OK), so there is
+        // nothing to re-apply here - re-applying compounded the factor.
+        await _windowService.ShowDialogAsync<ChangeSpeedWindow, ChangeSpeedViewModel>(Window, vm => { vm.Initialize(selectedIndices.Count > 0, ApplySpeed); });
     }
 
     [RelayCommand]
