@@ -18294,8 +18294,8 @@ public partial class MainViewModel :
 
                 MenuItemStyles.Items.Clear();
                 var styles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(_subtitle.Header);
-                var stylesToAdd = styles.Select(p => p.Name).Where(p => !string.IsNullOrEmpty(p)).DistinctBy(p => p)
-                    .OrderBy(p => p);
+                // Keep styles in the order they are defined in the header (user-defined order), do not sort alphabetically (#11921)
+                var stylesToAdd = styles.Select(p => p.Name).Where(p => !string.IsNullOrEmpty(p)).DistinctBy(p => p);
                 foreach (var style in stylesToAdd)
                 {
                     MenuItemStyles.Items.Add(new MenuItem
