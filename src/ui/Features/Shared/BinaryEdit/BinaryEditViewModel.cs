@@ -2169,18 +2169,6 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var suggestedOffset = Subtitles.Count > 0
-            ? Subtitles[^1].EndTime + TimeSpan.FromMilliseconds(1000)
-            : TimeSpan.Zero;
-
-        var settings = await _windowService.ShowDialogAsync<BinaryAppendSubtitle.BinaryAppendSubtitleWindow, BinaryAppendSubtitle.BinaryAppendSubtitleViewModel>(
-            Window, vm => vm.Initialize(suggestedOffset));
-
-        if (!settings.OkPressed)
-        {
-            return;
-        }
-
         var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.General.OpenSubtitleFileTitle, Se.Language.General.ImageBasedSubtitles, "*.sup;*.sub;*.ts;*.xml;*.mkv;*.mks", Se.Language.General.AllFiles, "*.*");
         if (string.IsNullOrEmpty(fileName))
         {
@@ -2198,6 +2186,18 @@ public partial class BinaryEditViewModel : ObservableObject
         if (ocrItems.Count == 0)
         {
             await MessageBox.Show(Window, Se.Language.General.Error, "No subtitles found in the file.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        var suggestedOffset = Subtitles.Count > 0
+            ? Subtitles[^1].EndTime + TimeSpan.FromMilliseconds(1000)
+            : TimeSpan.Zero;
+
+        var settings = await _windowService.ShowDialogAsync<BinaryAppendSubtitle.BinaryAppendSubtitleWindow, BinaryAppendSubtitle.BinaryAppendSubtitleViewModel>(
+            Window, vm => vm.Initialize(suggestedOffset));
+
+        if (!settings.OkPressed)
+        {
             return;
         }
 
