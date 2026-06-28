@@ -663,6 +663,8 @@ public class SettingsPage : UserControl
                 () => UiUtil.MakeComboBox(_vm.FontNames, _vm, nameof(_vm.SubtitleTextBoxAndGridFontName))),
             MakeNumericSetting(Se.Language.Options.Settings.SubtitleGridFontSize, nameof(_vm.SubtitleGridFontSize)),
             MakeCheckboxSetting(Se.Language.Options.Settings.SubtitleGridTextSingleLine, nameof(_vm.SubtitleGridTextSingleLine)),
+            new SettingsItem(Se.Language.Options.Settings.SubtitleGridTextSingleLineSeparator,
+                () => UiUtil.MakeTextBox(150, _vm, nameof(_vm.SubtitleGridTextSingleLineSeparator))),
             new SettingsItem(Se.Language.Options.Settings.SubtitleGridShowFormatting, () => UiUtil.MakeComboBox(_vm.SubtitleGridFormattings, _vm, nameof(_vm.SubtitleGridFormatting))),
             MakeCheckboxSetting(Se.Language.Options.Settings.SubtitleGridLiveSpellCheck, nameof(_vm.SubtitleGridLiveSpellCheck)),
             MakeNumericSetting(Se.Language.Options.Settings.TextBoxFontSize, nameof(_vm.TextBoxFontSize)),

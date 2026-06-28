@@ -291,6 +291,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private string _selectedFontName;
     [ObservableProperty] private double _subtitleGridFontSize;
     [ObservableProperty] private bool _subtitleGridTextSingleLine;
+    [ObservableProperty] private string _subtitleGridTextSingleLineSeparator = string.Empty;
     [ObservableProperty] private ObservableCollection<string> _subtitleGridFormattings;
     [ObservableProperty] private string _subtitleGridFormatting;
     [ObservableProperty] private string _subtitleTextBoxAndGridFontName;
@@ -739,6 +740,7 @@ public partial class SettingsViewModel : ObservableObject
         ShowPluginsMenu = appearance.ShowPluginsMenu;
         SubtitleGridFontSize = appearance.SubtitleGridFontSize;
         SubtitleGridTextSingleLine = appearance.SubtitleGridTextSingleLine;
+        SubtitleGridTextSingleLineSeparator = appearance.SubtitleGridTextSingleLineSeparator;
         SubtitleGridFormatting = MapGridFormattingToText(appearance.SubtitleGridFormattingType);
         SubtitleGridLiveSpellCheck = appearance.SubtitleGridLiveSpellCheck;
         SubtitleTextBoxAndGridFontName = appearance.SubtitleTextBoxAndGridFontName;
@@ -1428,6 +1430,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.ShowPluginsMenu = ShowPluginsMenu;
         appearance.SubtitleGridFontSize = SubtitleGridFontSize;
         appearance.SubtitleGridTextSingleLine = SubtitleGridTextSingleLine;
+        appearance.SubtitleGridTextSingleLineSeparator = SubtitleGridTextSingleLineSeparator;
         appearance.SubtitleGridFormattingType = MapGridFormattingToCode(SubtitleGridFormatting);
         appearance.SubtitleGridLiveSpellCheck = SubtitleGridLiveSpellCheck;
         appearance.SubtitleTextBoxAndGridFontName = string.IsNullOrEmpty(SubtitleTextBoxAndGridFontName) ? new Label().FontFamily.Name : SubtitleTextBoxAndGridFontName;
