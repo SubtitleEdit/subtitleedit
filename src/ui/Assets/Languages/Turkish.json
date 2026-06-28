@@ -1,7 +1,7 @@
 {
   "title": "Subtitle Edit",
   "version": "v5.1.0-beta2",
-  "translatedBy": "Utku Gogus; Son güncelleme: Ahmet Murat Özhan (27.06.2026)",
+  "translatedBy": "Utku Gogus; Son güncelleme: Ahmet Murat Özhan (28.06.2026)",
   "cultureName": "tr-TR",
   "general": {
     "abort": "İptal",
@@ -1828,6 +1828,7 @@
     "filterLayersHideFromSubtitleGrid": "Alt yazı ızgarasında gizle",
     "filterLayersHideFromVideoPreview": "Video ön izlemesinde gizle",
     "pickSubtitleFormat": "Alt yazı formatı seçin",
+	"pickSubtitleFormatImageBasedNoPreview": "Resim tabanlı alt yazı biçimi.\nDönüştürme sırasında bit eşlemler (bitmap) oluşturulur; metin ön izlemesi yoktur.",
     "pickLayerTitle": "Katman ayarla",
     "recentColors": "Son kullanılan renkler"
   },
@@ -2525,6 +2526,7 @@
       "categorySubtitleGridAndTextBox": "Alt yazı listesi ve metin kutusu",
       "categorySubtitleGrid": "Alt yazı listesi",
       "categoryWaveform": "Ses dalgası",
+	  "categoryTextBox": "Metin kutusu",
 	  "generalSetupLikeSe4": "Subtitle Edit 4 gibi yapılandır (tema, kısayollar, değiştirme kuralları)",
       "generalMergeSelectedLines": "Seçili satırları birleştir",
       "generalMergeWithPrevious": "Öncekiyle birleştir",
