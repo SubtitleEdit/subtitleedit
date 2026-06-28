@@ -42,6 +42,8 @@ public static class InitNativeMacMenuBinaryEdit
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.AdjustColorDotDotDot, vm.AdjustColorCommand);
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.CenterHorizontally, vm.CenterHorizontallyCommand);
         Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.CropImages, vm.CropCommand);
+        toolsMenu.Items.Add(new NativeMenuItemSeparator());
+        Add(toolsMenu, Se.Language.Tools.ImageBasedEdit.AppendSubtitleDotDotDot, vm.AppendSubtitleCommand);
         root.Items.Add(new NativeMenuItem(Clean(l.Tools)) { Menu = toolsMenu });
 
         // Synchronization menu

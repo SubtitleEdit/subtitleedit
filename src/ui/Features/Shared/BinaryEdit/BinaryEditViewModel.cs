@@ -51,7 +51,6 @@ public partial class BinaryEditViewModel : ObservableObject
     [ObservableProperty] private bool _isInsertBeforeVisible;
     [ObservableProperty] private bool _isInsertAfterVisible;
     [ObservableProperty] private bool _isToggleForcedVisible;
-    [ObservableProperty] private bool _isInsertSubtitleVisible;
 
     public IOcrSubtitle? OcrSubtitle { get; set; }
 
@@ -2026,10 +2025,9 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task InsertSubtitle()
+    private async Task AppendSubtitle()
     {
-        var selectedItem = SelectedSubtitle;
-        if (Window == null || selectedItem == null)
+        if (Window == null)
         {
             return;
         }
@@ -2054,9 +2052,14 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var oldLastTime = selectedItem.EndTime.TotalMilliseconds;
-        var newFirstTime = ocrItems.First().StartTime.TotalMilliseconds;
-        var timeOffset = oldLastTime - newFirstTime + 1000;
+        double timeOffset = 0;
+        if (Subtitles.Count > 0)
+        {
+            var lastItem = Subtitles[^1];
+            var newFirstTime = ocrItems.First().StartTime.TotalMilliseconds;
+            timeOffset = lastItem.EndTime.TotalMilliseconds - newFirstTime + 1000;
+        }
+
         foreach (var ocrItem in ocrItems)
         {
             var newItem = new BinarySubtitleItem(ocrItem, -1);
@@ -2505,7 +2508,6 @@ public partial class BinaryEditViewModel : ObservableObject
         IsToggleForcedVisible = selectedCount > 0;
         IsInsertAfterVisible = selectedCount == 1;
         IsInsertBeforeVisible = selectedCount == 1;
-        IsInsertSubtitleVisible = selectedCount == 1 && selectedIndex == Subtitles.Count - 1;
     }
 
     internal void OnDataGridDoubleTapped(TappedEventArgs e)

@@ -273,6 +273,12 @@ public class BinaryEditWindow : Window
                     Header =  Se.Language.Tools.ImageBasedEdit.CropImages,
                     Command = vm.CropCommand,
                 },
+                new Separator(),
+                new MenuItem
+                {
+                    Header = Se.Language.Tools.ImageBasedEdit.AppendSubtitleDotDotDot,
+                    Command = vm.AppendSubtitleCommand,
+                },
             },
         });
 
@@ -521,19 +527,6 @@ public class BinaryEditWindow : Window
         };
         flyout.Items.Add(menuItemApplyDurationLimits);
         menuItemApplyDurationLimits.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
-
-        var separatorInsertSubtitle = new Separator() { DataContext = vm };
-        flyout.Items.Add(separatorInsertSubtitle);
-        separatorInsertSubtitle.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsInsertSubtitleVisible)));
-
-        var menuItemInsertSubtitle = new MenuItem
-        {
-            Header = Se.Language.General.InsertSubtitleAfterCurrentLine,
-            DataContext = vm,
-            Command = vm.InsertSubtitleCommand,
-        };
-        flyout.Items.Add(menuItemInsertSubtitle);
-        menuItemInsertSubtitle.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsInsertSubtitleVisible)));
 
         vm.SubtitleGrid = dataGrid;
         dataGrid.SelectionChanged += vm.SubtitleGridSelectionChanged;
