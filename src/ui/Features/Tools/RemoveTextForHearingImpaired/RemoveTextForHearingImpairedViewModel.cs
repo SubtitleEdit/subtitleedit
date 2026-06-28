@@ -68,6 +68,7 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
     [ObservableProperty] private RemoveItem? _selectedFix;
     [ObservableProperty] private string _fixText;
     [ObservableProperty] private bool _fixTextEnabled;
+    [ObservableProperty] private bool _isApplyVisible;
 
     public Window? Window { get; set; }
 
@@ -78,6 +79,7 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
     private RemoveTextForHI? _removeTextForHiLib;
     private readonly Timer _timer;
     private readonly IWindowService _windowService;
+    private Action<Subtitle>? _applyCallback;
 
     public RemoveTextForHearingImpairedViewModel(IWindowService windowService)
     {
@@ -97,7 +99,18 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
 
     public void Initialize(Subtitle subtitle)
     {
+        Initialize(subtitle, null);
+    }
+
+    /// <param name="applyCallback">
+    /// When set, an "Apply" button is shown that pushes the current fixes to the caller without
+    /// closing the window, so the user can run a pass, adjust options, and continue (SE4 parity, #11948).
+    /// </param>
+    public void Initialize(Subtitle subtitle, Action<Subtitle>? applyCallback)
+    {
         _subtitle = subtitle;
+        _applyCallback = applyCallback;
+        IsApplyVisible = applyCallback != null;
         LoadSettings();
         _removeTextForHiLib = new RemoveTextForHI(GetSettings(_subtitle));
     }
@@ -159,13 +172,11 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
         Se.SaveSettings();
     }
 
-    [RelayCommand]
-    private void Ok()
+    // Builds a subtitle with the currently-ticked fixes applied (empty results removed).
+    private Subtitle BuildFixedSubtitle()
     {
-        SaveSettings();
-        OkPressed = true;
-        FixedSubtitle = new Subtitle(_subtitle, false);
-        FixedSubtitle.Paragraphs.Clear();
+        var result = new Subtitle(_subtitle, false);
+        result.Paragraphs.Clear();
         for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
         {
             var p = _subtitle.Paragraphs[index];
@@ -175,12 +186,35 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
                 p.Text = fixedParagraph.After;
             }
 
-            FixedSubtitle.Paragraphs.Add(p);
+            result.Paragraphs.Add(p);
         }
 
-        FixedSubtitle.RemoveEmptyLines();
+        result.RemoveEmptyLines();
+        return result;
+    }
 
+    [RelayCommand]
+    private void Ok()
+    {
+        SaveSettings();
+        OkPressed = true;
+        FixedSubtitle = BuildFixedSubtitle();
         Window?.Close();
+    }
+
+    [RelayCommand]
+    private void Apply()
+    {
+        SaveSettings();
+
+        var applied = BuildFixedSubtitle();
+        _applyCallback?.Invoke(applied);
+
+        // Keep iterating against the applied result: re-base the working subtitle and refresh the
+        // preview so already-removed text isn't offered again (#11948).
+        _subtitle = new Subtitle(applied);
+        _removeTextForHiLib = new RemoveTextForHI(GetSettings(_subtitle));
+        GeneratePreview();
     }
 
     [RelayCommand]

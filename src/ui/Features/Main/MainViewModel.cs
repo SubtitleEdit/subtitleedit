@@ -5498,14 +5498,19 @@ public partial class MainViewModel :
             return;
         }
 
+        void ApplyToGrid(Subtitle applied)
+        {
+            ReplaceSubtitles(applied.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
+            SelectAndScrollToRow(0);
+            _updateAudioVisualizer = true;
+        }
+
         var result = await ShowDialogAsync<RemoveTextForHearingImpairedWindow, RemoveTextForHearingImpairedViewModel>(
-            vm => { vm.Initialize(GetUpdateSubtitle()); });
+            vm => { vm.Initialize(GetUpdateSubtitle(), ApplyToGrid); });
 
         if (result.OkPressed)
         {
-            ReplaceSubtitles(
-                result.FixedSubtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
-            SelectAndScrollToRow(0);
+            ApplyToGrid(result.FixedSubtitle);
         }
     }
 
