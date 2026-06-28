@@ -1392,19 +1392,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var selectedItems = new List<BinarySubtitleItem>();
-        if (SubtitleGrid?.SelectedItems != null)
-        {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    selectedItems.Add(binaryItem);
-                }
-            }
-        }
-
-        var itemsToAdjust = selectedItems.Count > 0 ? selectedItems : Subtitles.ToList();
+        var itemsToAdjust = Subtitles.ToList();
 
         if (itemsToAdjust.Count == 0)
         {
@@ -1424,17 +1412,50 @@ public partial class BinaryEditViewModel : ObservableObject
 
         if (SubtitleGrid != null)
         {
-            if (selectedItems.Count > 0)
-                ApplyGridSelection(selectedItems);
-            else
+            var currentIndex = SubtitleGrid.SelectedIndex;
+            SubtitleGrid.ItemsSource = null;
+            SubtitleGrid.ItemsSource = Subtitles;
+            SubtitleGrid.SelectedIndex = currentIndex;
+        }
+
+        UpdateOverlayPosition();
+    }
+
+    [RelayCommand]
+    private async Task AdjustColorSelectedLines()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        // Snapshot selection before dialog opens — focus shift can clear grid selection
+        var selectedItems = new List<BinarySubtitleItem>();
+        if (SubtitleGrid?.SelectedItems != null)
+        {
+            foreach (var item in SubtitleGrid.SelectedItems)
             {
-                var currentIndex = SubtitleGrid.SelectedIndex;
-                SubtitleGrid.ItemsSource = null;
-                SubtitleGrid.ItemsSource = Subtitles;
-                SubtitleGrid.SelectedIndex = currentIndex;
+                if (item is BinarySubtitleItem binaryItem)
+                {
+                    selectedItems.Add(binaryItem);
+                }
             }
         }
 
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        using var result = await _windowService.ShowDialogAsync<BinaryAdjustColor.BinaryAdjustColorWindow, BinaryAdjustColor.BinaryAdjustColorViewModel>(
+            Window, vm => vm.Initialize(selectedItems));
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        ApplyGridSelection(selectedItems);
         UpdateOverlayPosition();
     }
 

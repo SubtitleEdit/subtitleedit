@@ -506,6 +506,19 @@ public class BinaryEditWindow : Window
         };
         flyout.Items.Add(menuItemSelectNonForcedLines);
 
+        var separatorAdjustColor = new Separator() { DataContext = vm };
+        flyout.Items.Add(separatorAdjustColor);
+        separatorAdjustColor.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+
+        var menuItemAdjustColorSelectedLines = new MenuItem
+        {
+            Header = Se.Language.Tools.ImageBasedEdit.AdjustColorDotDotDot,
+            DataContext = vm,
+            Command = vm.AdjustColorSelectedLinesCommand,
+        };
+        flyout.Items.Add(menuItemAdjustColorSelectedLines);
+        menuItemAdjustColorSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+
         var separatorDurations = new Separator() { DataContext = vm };
         flyout.Items.Add(separatorDurations);
         separatorDurations.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
