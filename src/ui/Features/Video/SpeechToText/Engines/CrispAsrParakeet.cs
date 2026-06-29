@@ -14,7 +14,7 @@ public class CrispAsrParakeet : CrispAsrEngineBase
     public override string Url => "https://github.com/CrispStrobe/CrispASR";
     public override string BackendName => "parakeet";
     public override string DefaultLanguage => "en";
-    public override bool IncludeLanguage => false;
+    public override bool IncludeLanguage => true;
     public override bool HasNativeTimestamps => true;
 
     public override List<WhisperLanguage> Languages =>
