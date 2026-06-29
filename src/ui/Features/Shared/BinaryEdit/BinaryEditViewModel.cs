@@ -2561,7 +2561,6 @@ public partial class BinaryEditViewModel : ObservableObject
     internal void OnContextMenuOpening()
     {
         var selectedCount = SubtitleGrid?.SelectedItems?.Count ?? 0;
-        var selectedIndex = SubtitleGrid?.SelectedIndex ?? -1;
         HasSelection = selectedCount > 0;
         IsToggleForcedVisible = selectedCount > 0;
         IsInsertAfterVisible = selectedCount == 1;
