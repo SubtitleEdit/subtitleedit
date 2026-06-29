@@ -11203,14 +11203,32 @@ public partial class MainViewModel :
             return;
         }
 
-        // find first line after current video position with duration less than 10 seconds (to avoid jumping to very long lines like ASSA background effects)
-        var firstLineAfterPosition = Subtitles.FirstOrDefault(s => s.StartTime.TotalSeconds > vp.Position && s.Duration.TotalSeconds < 10);
-
-        if (firstLineAfterPosition == null)
+        // Select the immediately-following line. Only skip a line if it is a very long
+        // ASSA-style background effect (>= 10s) that overlaps the next line - ordinary long
+        // captions must not be skipped, which previously made navigation jump over several
+        // lines whenever one was >= 10 seconds (issue #11602).
+        SubtitleLineViewModel? firstLineAfterPosition = null;
+        for (var i = 0; i < Subtitles.Count; i++)
         {
-            // find first line after current video position regardless of duration
-            firstLineAfterPosition = Subtitles.FirstOrDefault(s => s.StartTime.TotalSeconds > vp.Position);
+            var s = Subtitles[i];
+            if (s.StartTime.TotalSeconds <= vp.Position)
+            {
+                continue;
+            }
+
+            var following = Subtitles.GetOrNull(i + 1);
+            var isBackgroundEffect = s.Duration.TotalSeconds >= 10 &&
+                                     following != null &&
+                                     following.StartTime.TotalSeconds < s.EndTime.TotalSeconds;
+            if (!isBackgroundEffect)
+            {
+                firstLineAfterPosition = s;
+                break;
+            }
         }
+
+        // Fallback: if every following line is a background effect, take the first one anyway.
+        firstLineAfterPosition ??= Subtitles.FirstOrDefault(s => s.StartTime.TotalSeconds > vp.Position);
 
         if (firstLineAfterPosition == null)
         {
@@ -11239,13 +11257,30 @@ public partial class MainViewModel :
             return;
         }
 
-        // find first line before current video position with duration less than 10 seconds (to avoid jumping to very long lines like ASSA background effects)
-        var firstLineBeforePosition = Subtitles.LastOrDefault(s => s.StartTime.TotalSeconds < vp.Position - 0.001 && s.Duration.TotalSeconds < 10);
-        if (firstLineBeforePosition == null)
+        // Select the immediately-preceding line. Only skip a line if it is a very long ASSA-style
+        // background effect (>= 10s) that overlaps the next line - ordinary long captions must not
+        // be skipped (issue #11602).
+        SubtitleLineViewModel? firstLineBeforePosition = null;
+        for (var i = Subtitles.Count - 1; i >= 0; i--)
         {
-            // find first line before current video position regardless of duration
-            firstLineBeforePosition = Subtitles.LastOrDefault(s => s.StartTime.TotalSeconds < vp.Position - 0.001);
+            var s = Subtitles[i];
+            if (s.StartTime.TotalSeconds >= vp.Position - 0.001)
+            {
+                continue;
+            }
+
+            var following = Subtitles.GetOrNull(i + 1);
+            var isBackgroundEffect = s.Duration.TotalSeconds >= 10 &&
+                                     following != null &&
+                                     following.StartTime.TotalSeconds < s.EndTime.TotalSeconds;
+            if (!isBackgroundEffect)
+            {
+                firstLineBeforePosition = s;
+                break;
+            }
         }
+
+        firstLineBeforePosition ??= Subtitles.LastOrDefault(s => s.StartTime.TotalSeconds < vp.Position - 0.001);
 
         if (firstLineBeforePosition == null)
         {
