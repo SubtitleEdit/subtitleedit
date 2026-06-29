@@ -10,7 +10,6 @@ public class BinaryAdjustDurationDisplay
     public bool IsPercentVisible { get; set; }
     public bool IsFixedVisible { get; set; }
     public bool IsRecalculateVisible { get; set; }
-    public bool IsEnabled { get; set; } = true;
 
     public BinaryAdjustDurationDisplay()
     {
