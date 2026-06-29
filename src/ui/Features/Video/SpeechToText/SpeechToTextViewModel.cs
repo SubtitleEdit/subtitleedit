@@ -932,8 +932,13 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             Se.LogError(ex, $"Failed to read Qwen3 ASR CPP output JSON '{jsonPath}'");
             // Persist the offending output so the failure is diagnosable — the temp .json is
-            // deleted below, so logging its raw content here is the only record (issue #11717).
-            Se.WriteToolsLog($"Qwen3 ASR CPP output JSON failed to parse ({ex.Message}):{Environment.NewLine}{rawJson}");
+            // deleted below, so logging its raw content here is the only record (issue #11717,
+            // #11375). Force the write: the "write tools log" setting is off by default, so without
+            // this the JSON that caused the parse error never reaches the user's bug report.
+            var loggedJson = string.IsNullOrEmpty(rawJson)
+                ? "<output JSON could not be read>"
+                : rawJson;
+            Se.WriteToolsLog($"Qwen3 ASR CPP output JSON failed to parse ({ex.Message}):{Environment.NewLine}{loggedJson}", true);
             Dispatcher.UIThread.Invoke<Task>(async () =>
             {
                 LogToConsole($"Speech to text ({settings.WhisperChoice}) failed: {ex.Message}{Environment.NewLine}");

@@ -15,7 +15,7 @@ public class Qwen3AsrCppEngine : ISpeechToTextEngine
     public static string StaticName => "Qwen3 ASR CPP";
     public string Name => StaticName;
     public string Choice => WhisperChoice.Qwen3AsrCpp;
-    public string Url => "https://github.com/woct0rdho/qwen3-asr.cpp";
+    public string Url => "https://github.com/niksedk/qwen3-asr.cpp";
 
     public List<WhisperLanguage> Languages
     {
