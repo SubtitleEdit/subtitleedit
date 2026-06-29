@@ -1550,6 +1550,19 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return text;
             }
 
+            var whitelist = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            if (Settings.UppercaseWhitelist != null)
+            {
+                foreach (var w in Settings.UppercaseWhitelist)
+                {
+                    var trimmedWord = w.Trim();
+                    if (trimmedWord.Length > 0)
+                    {
+                        whitelist.Add(trimmedWord);
+                    }
+                }
+            }
+
             var sb = new StringBuilder();
             char[] endTrimChars = { '.', '!', '?', ':' };
             char[] trimChars = { ' ', '-', '—' };
@@ -1559,7 +1572,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 if (lineNoHtml == lineNoHtml.ToUpperInvariant() && lineNoHtml != lineNoHtml.ToLowerInvariant())
                 {
                     var temp = lineNoHtml.TrimEnd(endTrimChars).Trim().Trim(trimChars);
-                    if (temp.Length == 1 || temp == "YES" || temp == "NO" || temp == "WHY" || temp == "HI" || temp == "OK")
+                    // Single-letter lines (e.g. "I") are always kept; otherwise keep only the
+                    // user-configurable whitelist words / acronyms (OK, TV, WWE, ...) - issue #11563.
+                    if (temp.Length == 1 || whitelist.Contains(temp))
                     {
                         sb.AppendLine(line);
                     }

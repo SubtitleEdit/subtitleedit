@@ -189,7 +189,22 @@ public class RemoveTextForHearingImpairedWindow : Window
     private static Border MakeUppercaseLineView(RemoveTextForHearingImpairedViewModel vm)
     {
         var comboBoxLineUppercase = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.IfLineIsUppercase, vm, nameof(vm.IsRemoveTextUppercaseLineOn));
-        return UiUtil.MakeBorderForControl(comboBoxLineUppercase).WithMarginBottom(5);
+        var textBoxWhitelist = UiUtil.MakeTextBox(160, vm, nameof(vm.UppercaseWhitelist)).WithMarginLeft(5);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(textBoxWhitelist, Se.Language.Tools.RemoveTextForHearingImpaired.KeepUppercaseWords);
+        }
+        var panel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children =
+            {
+                comboBoxLineUppercase,
+                textBoxWhitelist,
+            }
+        };
+
+        return UiUtil.MakeBorderForControl(panel).WithMarginBottom(5);
     }
 
     private static Border MakeLineContainsView(RemoveTextForHearingImpairedViewModel vm)

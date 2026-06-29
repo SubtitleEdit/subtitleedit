@@ -56,6 +56,7 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
     [ObservableProperty] private bool _isRemoveTextBeforeColonUppercaseOn;
     [ObservableProperty] private bool _isRemoveTextBeforeColonSeparateLineOn;
     [ObservableProperty] private bool _isRemoveTextUppercaseLineOn;
+    [ObservableProperty] private string _uppercaseWhitelist = string.Empty;
     [ObservableProperty] private bool _isRemoveTextContainsOn;
     [ObservableProperty] private string _textContains;
     [ObservableProperty] private bool _isRemoveOnlyMusicSymbolsOn;
@@ -132,6 +133,7 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
         IsRemoveTextBeforeColonSeparateLineOn = settings.IsRemoveTextBeforeColonSeparateLineOn;
 
         IsRemoveTextUppercaseLineOn = settings.IsRemoveTextUppercaseLineOn;
+        UppercaseWhitelist = settings.UppercaseWhitelist;
 
         IsRemoveTextContainsOn = settings.IsRemoveTextContainsOn;
         TextContains = settings.TextContains;
@@ -160,6 +162,7 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
         settings.IsRemoveTextBeforeColonSeparateLineOn = IsRemoveTextBeforeColonSeparateLineOn;
 
         settings.IsRemoveTextUppercaseLineOn = IsRemoveTextUppercaseLineOn;
+        settings.UppercaseWhitelist = UppercaseWhitelist;
 
         settings.IsRemoveTextContainsOn = IsRemoveTextContainsOn;
         settings.TextContains = TextContains;
@@ -314,10 +317,14 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
         var textContainsList = TextContains.Split([',', ';'], StringSplitOptions.RemoveEmptyEntries)
             .Select(p => p.Trim()).ToList();
 
+        var uppercaseWhitelist = (UppercaseWhitelist ?? string.Empty).Split([',', ';'], StringSplitOptions.RemoveEmptyEntries)
+            .Select(p => p.Trim()).Where(p => p.Length > 0).ToList();
+
         var settings = new RemoveTextForHISettings(subtitle)
         {
             OnlyIfInSeparateLine = IsOnlySeparateLine,
             RemoveIfAllUppercase = IsRemoveTextUppercaseLineOn,
+            UppercaseWhitelist = uppercaseWhitelist,
             RemoveTextBeforeColon = IsRemoveTextBeforeColonOn,
             RemoveTextBeforeColonOnlyUppercase = IsRemoveTextBeforeColonUppercaseOn,
             ColonSeparateLine = IsRemoveTextBeforeColonSeparateLineOn,

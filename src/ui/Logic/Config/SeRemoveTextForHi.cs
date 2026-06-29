@@ -26,6 +26,9 @@ public class SeRemoveTextForHi
 
     public bool IsRemoveTextUppercaseLineOn { get; set; }
 
+    // Comma-separated all-uppercase words kept by "remove if all uppercase" (issue #11563).
+    public string UppercaseWhitelist { get; set; }
+
     public bool IsRemoveTextContainsOn { get; set; }
     public string TextContains { get; set; }
 
@@ -46,6 +49,7 @@ public class SeRemoveTextForHi
         CustomStart = "?";
         CustomEnd = "?";
         TextContains = string.Empty;
+        UppercaseWhitelist = "YES, NO, WHY, HI, OK, TV";
 
         Interjections =
         [
