@@ -190,7 +190,10 @@ public class RemoveTextForHearingImpairedWindow : Window
     {
         var comboBoxLineUppercase = UiUtil.MakeCheckBox(Se.Language.Tools.RemoveTextForHearingImpaired.IfLineIsUppercase, vm, nameof(vm.IsRemoveTextUppercaseLineOn));
         var textBoxWhitelist = UiUtil.MakeTextBox(160, vm, nameof(vm.UppercaseWhitelist)).WithMarginLeft(5);
-        ToolTip.SetTip(textBoxWhitelist, Se.Language.Tools.RemoveTextForHearingImpaired.KeepUppercaseWords);
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            ToolTip.SetTip(textBoxWhitelist, Se.Language.Tools.RemoveTextForHearingImpaired.KeepUppercaseWords);
+        }
         var panel = new StackPanel
         {
             Orientation = Orientation.Horizontal,

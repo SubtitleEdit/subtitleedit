@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             RemoveTextBeforeColonOnlyIfUppercase = true;
             RemoveIfContainsText = "¶";
             RemoveIfOnlyMusicSymbols = true;
-            RemoveIfAllUppercaseWhitelist = "YES, NO, WHY, HI, OK, TV, OK.";
+            RemoveIfAllUppercaseWhitelist = "YES, NO, WHY, HI, OK, TV";
         }
     }
 }

@@ -49,7 +49,7 @@ public class SeRemoveTextForHi
         CustomStart = "?";
         CustomEnd = "?";
         TextContains = string.Empty;
-        UppercaseWhitelist = "YES, NO, WHY, HI, OK, TV, OK.";
+        UppercaseWhitelist = "YES, NO, WHY, HI, OK, TV";
 
         Interjections =
         [
