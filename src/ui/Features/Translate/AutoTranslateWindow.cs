@@ -315,7 +315,7 @@ public class AutoTranslateWindow : Window
         settingsPanel.Children.Add(UiUtil.MakeTextBox(200, vm, nameof(vm.ApiUrlText), nameof(vm.ApiUrlIsVisible)).WithMarginRight(15));
 
         settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Model, vm, null, nameof(vm.ModelIsVisible)).WithMarginRight(5));
-        settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ModelText), nameof(vm.ModelIsVisible)));
+        settingsPanel.Children.Add(UiUtil.MakeComboBoxEditable(double.NaN, vm.ApiModels, vm, nameof(vm.ModelText), nameof(vm.ModelIsVisible)));
         settingsPanel.Children.Add(UiUtil.MakeButtonBrowse(vm.BrowseModelCommand, nameof(vm.ModelBrowseIsVisible)).WithMarginLeft(5));
 
         settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Model, vm, null, nameof(vm.CrispAsrModelComboIsVisible)).WithMarginRight(5));

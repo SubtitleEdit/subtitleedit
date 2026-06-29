@@ -82,6 +82,7 @@ public partial class AutoTranslateViewModel : ObservableObject
     [ObservableProperty] private bool _modelIsVisible;
     [ObservableProperty] private bool _modelBrowseIsVisible;
     [ObservableProperty] private string _modelText;
+    [ObservableProperty] private ObservableCollection<string> _apiModels = new();
     [ObservableProperty] private bool _buttonModelIsVisible;
     [ObservableProperty] private bool _buttonDownloadIsVisible;
     [ObservableProperty] private ObservableCollection<SpeechToTextModelDisplay> _crispAsrModels = new();
@@ -108,7 +109,6 @@ public partial class AutoTranslateViewModel : ObservableObject
     private bool _translationInProgress = false;
     private bool _abort = false;
     private List<string> _apiUrls = new();
-    private List<string> _apiModels = new();
     private bool _onlyCurrentLine;
     private Subtitle _subtitle = new Subtitle();
     private int _translationProgressIndex;
@@ -1530,7 +1530,7 @@ public partial class AutoTranslateViewModel : ObservableObject
         ApiSecretIsVisible = false;
 
         _apiUrls.Clear();
-        _apiModels.Clear();
+        ApiModels.Clear();
 
         var engineType = translator.GetType();
 
@@ -1661,7 +1661,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             });
 
             ModelIsVisible = true;
-            _apiModels = ChatGptTranslate.Models.ToList();
+            SetApiModels(ChatGptTranslate.Models);
 
             if (string.IsNullOrWhiteSpace(Configuration.Settings.Tools.ChatGptModel))
             {
@@ -1745,7 +1745,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                 Se.Settings.AutoTranslate.OllamaUrl.TrimEnd('/'),
             });
 
-            _apiModels = Configuration.Settings.Tools.OllamaModels.Split(',').ToList();
+            SetApiModels(Configuration.Settings.Tools.OllamaModels.Split(','));
             ModelIsVisible = true;
             ButtonModelIsVisible = true;
             ModelText = Se.Settings.AutoTranslate.OllamaModel;
@@ -1763,7 +1763,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             ApiKeyText = Configuration.Settings.Tools.AnthropicApiKey;
             ApiKeyIsVisible = true;
 
-            _apiModels = AnthropicTranslate.Models.ToList();
+            SetApiModels(AnthropicTranslate.Models);
             ModelIsVisible = true;
             ButtonModelIsVisible = true;
             ModelText = Configuration.Settings.Tools.AnthropicApiModel;
@@ -1787,7 +1787,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             ApiKeyText = Configuration.Settings.Tools.PerplexityApiKey;
             ApiKeyIsVisible = true;
 
-            _apiModels = PerplexityTranslate.Models.ToList();
+            SetApiModels(PerplexityTranslate.Models);
             ModelIsVisible = true;
             ButtonModelIsVisible = true;
             ModelText = Configuration.Settings.Tools.PerplexityModel;
@@ -1805,10 +1805,10 @@ public partial class AutoTranslateViewModel : ObservableObject
             ApiKeyText = Configuration.Settings.Tools.GroqApiKey;
             ApiKeyIsVisible = true;
 
-            _apiModels = GroqTranslate.Models.ToList();
+            SetApiModels(GroqTranslate.Models);
             ModelIsVisible = true;
             ButtonModelIsVisible = true;
-            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.GroqModel) ? _apiModels[0] : Configuration.Settings.Tools.GroqModel;
+            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.GroqModel) ? ApiModels[0] : Configuration.Settings.Tools.GroqModel;
 
             return;
         }
@@ -1824,10 +1824,10 @@ public partial class AutoTranslateViewModel : ObservableObject
             ApiKeyText = Configuration.Settings.Tools.OpenRouterApiKey;
             ApiKeyIsVisible = true;
 
-            _apiModels = OpenRouterTranslate.Models.ToList();
+            SetApiModels(OpenRouterTranslate.Models);
             ModelIsVisible = true;
             ButtonModelIsVisible = true;
-            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.OpenRouterModel) ? _apiModels[0] : Configuration.Settings.Tools.OpenRouterModel;
+            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.OpenRouterModel) ? ApiModels[0] : Configuration.Settings.Tools.OpenRouterModel;
 
             return;
         }
@@ -1837,10 +1837,10 @@ public partial class AutoTranslateViewModel : ObservableObject
             ApiKeyText = Configuration.Settings.Tools.GeminiProApiKey;
             ApiKeyIsVisible = true;
 
-            _apiModels = GeminiTranslate.Models.ToList();
+            SetApiModels(GeminiTranslate.Models);
             ModelIsVisible = true;
             ButtonModelIsVisible = true;
-            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.GeminiModel) ? _apiModels[0] : Configuration.Settings.Tools.GeminiModel;
+            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.GeminiModel) ? ApiModels[0] : Configuration.Settings.Tools.GeminiModel;
 
             return;
         }
@@ -1855,10 +1855,10 @@ public partial class AutoTranslateViewModel : ObservableObject
             ApiKeyText = Configuration.Settings.Tools.NvidiaApiKey;
             ApiKeyIsVisible = true;
 
-            _apiModels = NvidiaTranslate.Models.ToList();
+            SetApiModels(NvidiaTranslate.Models);
             ModelIsVisible = true;
             ButtonModelIsVisible = true;
-            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.NvidiaModel) ? _apiModels[0] : Configuration.Settings.Tools.NvidiaModel;
+            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.NvidiaModel) ? ApiModels[0] : Configuration.Settings.Tools.NvidiaModel;
 
             return;
         }
@@ -1873,10 +1873,10 @@ public partial class AutoTranslateViewModel : ObservableObject
             ApiKeyText = Configuration.Settings.Tools.AutoTranslateMistralApiKey;
             ApiKeyIsVisible = true;
 
-            _apiModels = MistralTranslate.Models.ToList();
+            SetApiModels(MistralTranslate.Models);
             ModelIsVisible = true;
             ButtonModelIsVisible = true;
-            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateMistralModel) ? _apiModels[0] : Configuration.Settings.Tools.AutoTranslateMistralModel;
+            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.AutoTranslateMistralModel) ? ApiModels[0] : Configuration.Settings.Tools.AutoTranslateMistralModel;
 
             return;
         }
@@ -1891,10 +1891,10 @@ public partial class AutoTranslateViewModel : ObservableObject
             ApiKeyText = Configuration.Settings.Tools.DeepSeekApiKey;
             ApiKeyIsVisible = true;
 
-            _apiModels = DeepSeekTranslate.Models.ToList();
+            SetApiModels(DeepSeekTranslate.Models);
             ModelIsVisible = true;
             ButtonModelIsVisible = true;
-            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.DeepSeekModel) ? _apiModels[0] : Configuration.Settings.Tools.DeepSeekModel;
+            ModelText = string.IsNullOrEmpty(Configuration.Settings.Tools.DeepSeekModel) ? ApiModels[0] : Configuration.Settings.Tools.DeepSeekModel;
 
             return;
         }
@@ -1933,6 +1933,17 @@ public partial class AutoTranslateViewModel : ObservableObject
         if (SelectedAutoTranslator is LlamaCppTranslate)
         {
             SetAutoTranslatorEngine(SelectedAutoTranslator);
+        }
+    }
+
+    // Repopulates the model dropdown in place (keeping the same ObservableCollection instance the
+    // editable model combo is bound to) with the known models for the selected engine.
+    private void SetApiModels(IEnumerable<string> models)
+    {
+        ApiModels.Clear();
+        foreach (var model in models)
+        {
+            ApiModels.Add(model);
         }
     }
 

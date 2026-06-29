@@ -565,6 +565,50 @@ public static class UiUtil
         return MakeComboBox(sourceItems, viewModal, propertySelectedPath, null);
     }
 
+    /// <summary>
+    /// An editable ComboBox: the dropdown offers <paramref name="sourceItems"/> as suggestions while
+    /// the typed/selected value is bound (two-way) to <paramref name="propertyTextPath"/>. Used where a
+    /// free-text field should also present a list of known values (e.g. translator model names).
+    /// </summary>
+    public static ComboBox MakeComboBoxEditable(
+        double width,
+        ObservableCollection<string> sourceItems,
+        object viewModal,
+        string propertyTextPath,
+        string? propertyIsVisiblePath)
+    {
+        var comboBox = new ComboBox
+        {
+            // double.NaN lets the box auto-size to its content (the selected model name).
+            Width = width,
+            MinWidth = 150,
+            IsEditable = true,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalContentAlignment = HorizontalAlignment.Left,
+            VerticalContentAlignment = VerticalAlignment.Center,
+        };
+        comboBox.ItemsSource = sourceItems;
+        comboBox.DataContext = viewModal;
+
+        comboBox.Bind(ComboBox.TextProperty, new Binding
+        {
+            Path = propertyTextPath,
+            Mode = BindingMode.TwoWay,
+        });
+
+        if (propertyIsVisiblePath != null)
+        {
+            comboBox.Bind(ComboBox.IsVisibleProperty, new Binding
+            {
+                Path = propertyIsVisiblePath,
+                Mode = BindingMode.TwoWay,
+            });
+        }
+
+        return comboBox;
+    }
+
     public static TextBox MakeTextBox(double width, object viewModel, string propertyTextPath)
     {
         return MakeTextBox(width, viewModel, propertyTextPath, null);
