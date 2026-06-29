@@ -27,8 +27,9 @@ public class ModifySelectionWindow : Window
         DataContext = vm;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var buttonSaveAs = UiUtil.MakeButton(Se.Language.General.SaveFileAsTitle, vm.SaveAsCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonSaveAs, buttonCancel);
 
         var grid = new Grid
         {

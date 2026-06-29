@@ -3,11 +3,18 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
+using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Media;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Edit.ModifySelection;
 
@@ -34,9 +41,11 @@ public partial class ModifySelectionViewModel : ObservableObject
     private readonly Dictionary<RuleType, double> _ruleNumbers;
     private RuleType? _activeRuleType;
     private bool _isDirty;
+    private readonly IFileHelper _fileHelper;
 
-    public ModifySelectionViewModel()
+    public ModifySelectionViewModel(IFileHelper fileHelper)
     {
+        _fileHelper = fileHelper;
         Rules = new ObservableCollection<ModifySelectionRule>();
         Subtitles = new ObservableCollection<PreviewItem>();
         Selection = new List<SubtitleLineViewModel>();
@@ -170,6 +179,47 @@ public partial class ModifySelectionViewModel : ObservableObject
     private void Cancel()
     {
         Window?.Close();
+    }
+
+    // Export just the currently matched/checked lines to a new subtitle file, without changing the
+    // grid selection or closing the dialog (#11602).
+    [RelayCommand]
+    private async Task SaveAs()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var matched = Subtitles.Where(s => s.Apply).Select(s => s.Subtitle).ToList();
+        if (matched.Count == 0)
+        {
+            return;
+        }
+
+        var format = new SubRip();
+        var subtitle = new Subtitle();
+        foreach (var line in matched)
+        {
+            subtitle.Paragraphs.Add(line.ToParagraph(format));
+        }
+
+        subtitle.Renumber();
+
+        var fileName = await _fileHelper.PickSaveSubtitleFile(Window, format.Extension, "selection", Se.Language.General.SaveFileAsTitle);
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return;
+        }
+
+        try
+        {
+            await File.WriteAllTextAsync(fileName, format.ToText(subtitle, string.Empty), new UTF8Encoding(true));
+        }
+        catch (System.Exception ex)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, ex.Message);
+        }
     }
 
     internal void KeyDown(object? sender, KeyEventArgs e)
