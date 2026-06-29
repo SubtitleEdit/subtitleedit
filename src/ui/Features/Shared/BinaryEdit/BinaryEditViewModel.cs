@@ -1596,7 +1596,15 @@ public partial class BinaryEditViewModel : ObservableObject
     private async Task AdjustAllTimes() => await DoAdjustAllTimes();
 
     [RelayCommand]
-    private async Task AdjustAllTimesSelectedLines() => await DoAdjustAllTimes(forceSelectedLines: true);
+    private async Task AdjustAllTimesSelectedLines()
+    {
+        if (SubtitleGrid?.SelectedItems?.Count == 0)
+        {
+            return;
+        }
+
+        await DoAdjustAllTimes(forceSelectedLines: true);
+    }
 
     private async Task DoAdjustAllTimes(bool forceSelectedLines = false)
     {
