@@ -1,7 +1,7 @@
 {
   "Title": "SubtitleEdit",
   "Version": "v5.1.0-beta2",
-  "TranslatedBy": "v. 27.06.2026 di bovirus",
+  "TranslatedBy": "v. 29.06.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -26,6 +26,7 @@
     "AlphaAdjustment": "Regolazione alfa",
     "AlphaThreshold": "Soglia alfa",
     "ApiKey": "Chiave API",
+    "Formality": "Formalità",
     "ApiSecret": "Segreto",
     "Appearance": "Aspetto",
     "Append": "Aggiungi",
@@ -1337,6 +1338,7 @@
     "FilterLayersHideFromSubtitleGrid": "Nascondi dalla griglia sottotitoli",
     "FilterLayersHideFromVideoPreview": "Nascondi dall'anteprima video",
     "PickSubtitleFormat": "Scegli formato sottotitoli",
+    "PickSubtitleFormatImageBasedNoPreview": "Formato dei sottotitoli basato su immagini.\r\nLe bitmap vengono generate durante la conversione, nessuna anteprima testo.",
     "PickLayerTitle": "Imposta livello",
     "RecentColors": "Colori recenti",
     "FixCommonErrors": {
@@ -1806,7 +1808,10 @@
       "BrightnessAdjustmentInfo": "Regola i cursori per modificare luminosità, contrasto e gamma.\r\n\r\nL'anteprima si aggiorna automaticamente e visualizza il primo sottotitolo selezionato.",
       "ResizeImages": "Ridimensiona immagini",
       "Percentage": "Percentuale",
-      "ResizeImagesInfo": "Inserisci la percentuale per ridimensionare le immagini.\r\n\r\nGli aggiornamenti verranno visualizzati in tempo reale."
+      "ResizeImagesInfo": "Inserisci la percentuale per ridimensionare le immagini.\r\n\r\nGli aggiornamenti verranno visualizzati in tempo reale.",
+      "AdjustColorDotDotDot": "Regola colore...",
+      "AdjustColor": "Regola colore",
+      "ColorAdjustmentInfo": "Per scegliere un colore fai clic sul campione di colore .\r\nI pixel luminosi dei sottotitoli si spostano verso la tonalità scelta; i contorni scuri e le ombre sono preservati.\r\nL'anteprima visualizza il primo sottotitolo selezionato."
     },
     "RemoveTextForHearingImpaired": {
       "Title": "Rimuovi testo per non udenti",
@@ -2273,6 +2278,7 @@
       "SubtitleTextBoxAndGridFontName": "Font interfaccia utente nella casella di testo e nella griglia sottotitoli",
       "SubtitleGridFontSize": "Dimensione font nella griglia sottotitoli",
       "SubtitleGridTextSingleLine": "Visualizza testo sottotitoli nella griglia come riga singola",
+      "SubtitleGridTextSingleLineSeparator": "Separatore riga singola (ad esempio <br />)",
       "SubtitleGridLiveSpellCheck": "Controllo ortografico in tempo reale nella griglia sottotitoli",
       "SubtitleGridShowFormatting": "Visualizza testo formattato (HTML/ASSA) nella griglia sottotitoli",
       "ShowUpDownStartTime": "Visualizza il controllo su/giù per 'Visualizza'",
@@ -3036,6 +3042,14 @@
     "StylesTitle": "Stili ASSA",
     "StylesInFile": "Stili nel file",
     "StylesSaved": "Stili salvati",
+    "Category": "Categoria",
+    "AllCategories": "[Tutte]",
+    "DefaultCategory": "Predefinita",
+    "NewCategory": "Nuova categoria...",
+    "RenameCategory": "Rinomina categoria...",
+    "DeleteCategory": "Elimina categoria",
+    "MoveToCategoryDotDotDot": "Sposta nella categoria...",
+    "DeleteCategoryQuestion": "Vuoi eliminare la categoria \"{0}\"?\r\nGli stili al suo interno verranno spostati nella categoria predefinita.",
     "StylesTitleX": "Stili - {0}",
     "PropertiesTitleX": "Proprietà - {0}",
     "AttachmentsTitleX": "Allegati - {0}",
@@ -3055,6 +3069,7 @@
     "CopyToFileStyles": "Copia negli stili file",
     "SetStyleAsDefault": "Imposta stile come predefinito",
     "TakeUsagesFromDotDotDot": "Prendi usi da...",
+    "ReplaceStyleWithDotDotDot": "Sostituisci stile con...",
     "NoAttachmentsFound": "Nessun allegato trovato nel file ASSA selezionato.",
     "DeleteStyleQuestion": "Vuoi eliminare lo stile?",
     "DeleteStylesQuestion": "Vuoi eliminare gli stili?",
