@@ -13,6 +13,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static string EncodeJsonText(string text, string newLineCharacter = "<br />")
         {
+            // Normalize every line-break variant up front so a stray \n or \r (e.g. from a
+            // non-platform line ending) becomes the placeholder instead of being emitted as a
+            // raw control character, which would otherwise make the JSON body invalid.
+            text = text.Replace("\r\n", "\n").Replace('\r', '\n');
+
             var sb = new StringBuilder(text.Length);
             foreach (var c in text)
             {
@@ -24,12 +29,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     case '"':
                         sb.Append("\\\"");
                         break;
+                    case '\n':
+                        sb.Append(newLineCharacter);
+                        break;
+                    case '\t':
+                        sb.Append("\\t");
+                        break;
+                    case '\b':
+                        sb.Append("\\b");
+                        break;
+                    case '\f':
+                        sb.Append("\\f");
+                        break;
                     default:
-                        sb.Append(c);
+                        if (c < ' ')
+                        {
+                            // Any other control character (U+0000–U+001F) must be \u-escaped to be valid JSON.
+                            sb.Append("\\u");
+                            sb.Append(((int)c).ToString("x4"));
+                        }
+                        else
+                        {
+                            sb.Append(c);
+                        }
                         break;
                 }
             }
-            return sb.ToString().Replace(Environment.NewLine, newLineCharacter);
+
+            return sb.ToString();
         }
 
         public static string DecodeJsonText(string text)
@@ -77,6 +104,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         sb.Append(unescaped);
                         i += 5;
                         keepNext = false;
+                    }
+                    else if (i + 1 < text.Length)
+                    {
+                        var handled = true;
+                        switch (text[i + 1])
+                        {
+                            case 't': sb.Append('\t'); break;
+                            case 'b': sb.Append('\b'); break;
+                            case 'f': sb.Append('\f'); break;
+                            case 'n': sb.Append('\n'); break;
+                            case 'r': sb.Append('\r'); break;
+                            default: handled = false; break;
+                        }
+
+                        if (handled)
+                        {
+                            i++; // also consume the escaped letter
+                            keepNext = false;
+                        }
                     }
                 }
                 else
