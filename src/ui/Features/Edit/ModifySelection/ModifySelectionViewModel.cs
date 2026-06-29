@@ -43,6 +43,12 @@ public partial class ModifySelectionViewModel : ObservableObject
     private bool _isDirty;
     private readonly IFileHelper _fileHelper;
 
+    // Parameterless constructor used by the unit tests, which build the view model
+    // directly. Production resolves the IFileHelper-injected constructor via DI.
+    public ModifySelectionViewModel() : this(new FileHelper())
+    {
+    }
+
     public ModifySelectionViewModel(IFileHelper fileHelper)
     {
         _fileHelper = fileHelper;
