@@ -131,8 +131,8 @@ public partial class BinaryResizeImagesViewModel : ObservableObject, IDisposable
         var resizedBitmap = new SKBitmap(width, height, originalBitmap.ColorType, originalBitmap.AlphaType);
         using var canvas = new SKCanvas(resizedBitmap);
         canvas.Clear(SKColors.Transparent);
-        using var paint = new SKPaint { FilterQuality = SKFilterQuality.High, IsAntialias = true };
-        canvas.DrawBitmap(originalBitmap, new SKRect(0, 0, width, height), paint);
+        using var image = SKImage.FromBitmap(originalBitmap);
+        canvas.DrawImage(image, new SKRect(0, 0, width, height), new SKSamplingOptions(SKCubicResampler.Mitchell));
         return resizedBitmap;
     }
 
