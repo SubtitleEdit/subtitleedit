@@ -533,6 +533,8 @@ public class BinaryEditWindow : Window
         flyout.Items.Add(menuItemCropSelectedLines);
         menuItemCropSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
+        flyout.Items.Add(new Separator());
+
         var menuItemAdjustBrightnessSelectedLines = new MenuItem
         {
             Header = Se.Language.Tools.ImageBasedEdit.AdjustBrightnessDotDotDot,
