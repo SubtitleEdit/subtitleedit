@@ -597,7 +597,17 @@ public class Se
 
     public static void WriteToolsLog(string log)
     {
-        if (!Settings.Tools.WriteToolsLog)
+        WriteToolsLog(log, false);
+    }
+
+    /// <summary>
+    /// Writes an entry to the tools log. When <paramref name="force"/> is true the entry is written
+    /// even if the "write tools log" setting is off — use this for hard-failure diagnostics (e.g. an
+    /// engine produced output that could not be parsed) that must be available for a bug report.
+    /// </summary>
+    public static void WriteToolsLog(string log, bool force)
+    {
+        if (!force && !Settings.Tools.WriteToolsLog)
         {
             return;
         }
