@@ -444,7 +444,7 @@ public class BinaryEditWindow : Window
 
         var separatorAlignment = new Separator() { DataContext = vm };
         flyout.Items.Add(separatorAlignment);
-        separatorAlignment.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsInsertBeforeVisible)));
+        separatorAlignment.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         var menuItemAlign = new MenuItem
         {
