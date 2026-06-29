@@ -2140,6 +2140,8 @@ public partial class BinaryEditViewModel : ObservableObject
     {
         var selectedItem = SelectedSubtitle;
         var sorted = Subtitles.OrderBy(s => s.StartTime).ToList();
+        foreach (var item in sorted)
+            item.PropertyChanged -= OnSubtitleItemPropertyChanged;
         Subtitles.Clear();
         foreach (var item in sorted)
         {
