@@ -285,7 +285,7 @@ public class RemoveTextForHearingImpairedWindow : Window
         return UiUtil.MakeBorderForControl(grid);
     }
 
-    private Border MakeFixesView(RemoveTextForHearingImpairedViewModel vm)
+    private Grid MakeFixesView(RemoveTextForHearingImpairedViewModel vm)
     {
         var dataGrid = new DataGrid
         {
@@ -347,7 +347,29 @@ public class RemoveTextForHearingImpairedWindow : Window
         new DataGridCheckboxMultiSelect<RemoveItem>(dataGrid,
             item => item.Apply, (item, v) => item.Apply = v);
 
-        return UiUtil.MakeBorderForControl(dataGrid);
+        var labelLinesFound = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.LinesFoundText));
+
+        var grid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
+            RowSpacing = 5,
+            Width = double.NaN,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+        };
+
+        grid.Add(UiUtil.MakeBorderForControl(dataGrid), 0, 0);
+        grid.Add(labelLinesFound, 1, 0);
+
+        return grid;
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

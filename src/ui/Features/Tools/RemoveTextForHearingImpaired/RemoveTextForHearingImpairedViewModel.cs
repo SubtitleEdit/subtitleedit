@@ -70,6 +70,7 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
     [ObservableProperty] private string _fixText;
     [ObservableProperty] private bool _fixTextEnabled;
     [ObservableProperty] private bool _isApplyVisible;
+    [ObservableProperty] private string _linesFoundText;
 
     public Window? Window { get; set; }
 
@@ -92,6 +93,7 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
         Languages = new ObservableCollection<LanguageItem>(LanguageItem.GetAll());
         Fixes = new ObservableCollection<RemoveItem>();
         FixText = string.Empty;
+        LinesFoundText = string.Format(Se.Language.Tools.RemoveTextForHearingImpaired.LinesFoundX, 0);
         _timer = new Timer(500);
         _timer.Elapsed += TimerElapsed;
         FixedSubtitle = new Subtitle();
@@ -286,6 +288,8 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
             }
         }
 
+        LinesFoundText = string.Format(Se.Language.Tools.RemoveTextForHearingImpaired.LinesFoundX, newFixes.Count);
+
         if (newFixes.Count == Fixes.Count)
         {
             var same = true;
@@ -308,8 +312,6 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
 
         Fixes.Clear();
         Fixes.AddRange(newFixes);
-
-        //groupBoxLinesFound.Text = string.Format(_language.LinesFoundX, count);
     }
 
     public RemoveTextForHISettings GetSettings(Subtitle subtitle)
