@@ -1714,7 +1714,14 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         await _windowService.ShowDialogAsync<BinaryAdjustAllTimesWindow, BinaryAdjustAllTimesViewModel>(
-            Window, vm => vm.Initialize(Subtitles, selectedIndices, RefreshGrid, forceSelectedLines));
+            Window, vm =>
+            {
+                vm.Initialize(Subtitles, selectedIndices, RefreshGrid);
+                if (forceSelectedLines)
+                {
+                    vm.AdjustSelectedLines = true;
+                }
+            });
     }
 
     [RelayCommand]

@@ -31,7 +31,7 @@ public partial class BinaryAdjustAllTimesViewModel : ObservableObject
         LoadSettings();
     }
 
-    public void Initialize(IList<BinarySubtitleItem> subtitles, IList<int> selectedIndices, Action refreshGrid, bool forceSelectedLines = false)
+    public void Initialize(IList<BinarySubtitleItem> subtitles, IList<int> selectedIndices, Action refreshGrid)
     {
         _subtitles = subtitles;
         _selectedIndices = selectedIndices;
@@ -41,10 +41,6 @@ public partial class BinaryAdjustAllTimesViewModel : ObservableObject
         if (!IsSelectionAvailable)
         {
             AdjustAll = true;
-        }
-        else if (forceSelectedLines)
-        {
-            AdjustSelectedLines = true;
         }
     }
 
