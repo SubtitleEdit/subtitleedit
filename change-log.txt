@@ -1,6 +1,33 @@
 
 Subtitle Edit Changelog
 
+v5.1.0-beta3 (TBD)
+
+* Add DeepL formality picker (SE4 parity) - thx fraternl
+* Add ASSA "Replace style with..." (SE4 parity)
+* Add "Apply" button to "Remove text for hearing impaired" - thx fraternl
+* Remove text for hearing impaired: show count of lines found - thx bptrsn
+* Add editable whitelist for "Remove if all uppercase" - thx muaz978
+* Add a text box for the grid single-line separator (Settings) - thx bichitoxxx
+* Auto-translate (llama.cpp): add Qwen 3.5 and Aya Expanse models
+* Update llama.cpp to b9833
+* Waveform: block overlap when drag-creating a new selection - thx muaz978
+* Spell check: recognize hyphenated names from the names list - thx samdoesknow
+* Fix spell check flagging words wrapped in single quotes (e.g. 'Een) - thx fraternl
+* Fix dialogs (Settings etc.) opening behind undocked video/audio windows - thx GrampaWildWilly
+* Fix invalid JSON in AI translate request bodies - thx korsosattila73
+* Fix "go to next/previous subtitle from video position" skipping lines - thx muaz978
+* Fix stuck shortcut keys when the main window loses focus - thx muaz978
+* Fix regex \r\n / \n not matching line breaks in Find and Multiple replace - thx KaDeeKe
+* Fix "Save as" not converting source-format native tags when changing format - thx wjcarpenter
+* Fix Visual sync not honoring the selected audio track - thx zoltan-antal
+* Fix menu: Escape needing a 3rd press and stale menu state after Alt+Tab - thx kylesskim-sys
+* Use nameof for rule IDs in FixCommonErrorsRunner - thx ivandrofly
+* Update Turkish translation - thx bilimiyorum
+* Update Japanese translation - thx hisui3393
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-beta2 (28th of June 2026)
 
 * Update CrispASR to v0.8.5
