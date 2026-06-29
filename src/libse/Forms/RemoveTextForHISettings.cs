@@ -9,6 +9,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
     {
         public bool OnlyIfInSeparateLine { get; set; }
         public bool RemoveIfAllUppercase { get; set; }
+        public List<string> UppercaseWhitelist { get; set; }
         public bool RemoveTextBeforeColon { get; set; }
         public bool RemoveTextBeforeColonOnlyUppercase { get; set; }
         public bool ColonSeparateLine { get; set; }
@@ -30,6 +31,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
         {
             OnlyIfInSeparateLine = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeparateLines;
             RemoveIfAllUppercase = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase;
+            UppercaseWhitelist = new List<string>();
+            foreach (var item in (Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercaseWhitelist ?? string.Empty).Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                UppercaseWhitelist.Add(item.Trim());
+            }
             RemoveTextBeforeColon = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColon;
             RemoveTextBeforeColonOnlyUppercase = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase;
             ColonSeparateLine = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine;

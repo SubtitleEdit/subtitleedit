@@ -20,6 +20,13 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string RemoveIfContainsText { get; set; }
         public bool RemoveIfOnlyMusicSymbols { get; set; }
 
+        /// <summary>
+        /// Comma-separated all-uppercase words that should NOT be removed by "Remove if all uppercase"
+        /// (e.g. acronyms and short interjections like OK, TV, WWE). Single-letter lines (e.g. "I") are
+        /// always kept regardless of this list.
+        /// </summary>
+        public string RemoveIfAllUppercaseWhitelist { get; set; }
+
         public RemoveTextForHearingImpairedSettings()
         {
             RemoveTextBetweenBrackets = true;
@@ -33,6 +40,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             RemoveTextBeforeColonOnlyIfUppercase = true;
             RemoveIfContainsText = "¶";
             RemoveIfOnlyMusicSymbols = true;
+            RemoveIfAllUppercaseWhitelist = "YES, NO, WHY, HI, OK, TV, OK.";
         }
     }
 }
