@@ -1950,27 +1950,9 @@ public partial class MainViewModel :
         {
             var name = string.IsNullOrEmpty(_subtitleFileName) ? Se.Language.General.Untitled : _subtitleFileName;
             var promptText = string.Format(Se.Language.General.SaveChangesToX, name);
-            var dr = await MessageBox.Show(Window!, Se.Language.General.SaveChangesTitle, promptText,
-                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if (dr != MessageBoxResult.Yes && dr != MessageBoxResult.No)
+            if (!await PromptSaveChanges(promptText, SaveCurrentSubtitle))
             {
                 return;
-            }
-
-            if (dr == MessageBoxResult.Yes)
-            {
-                if (string.IsNullOrEmpty(_subtitleFileName))
-                {
-                    var saved = await SaveSubtitleAs();
-                    if (!saved)
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    await SaveSubtitle();
-                }
             }
         }
 
@@ -16025,29 +16007,9 @@ public partial class MainViewModel :
                 promptText = string.Format(Se.Language.General.SaveChangesToX, _subtitleFileName);
             }
 
-            var dr = await MessageBox.Show(Window!, Se.Language.General.SaveChangesTitle, promptText,
-                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if (dr != MessageBoxResult.Yes && dr != MessageBoxResult.No)
+            if (!await PromptSaveChanges(promptText, SaveCurrentSubtitle))
             {
                 return false;
-            }
-
-            if (dr == MessageBoxResult.No)
-            {
-                return true;
-            }
-
-            if (string.IsNullOrEmpty(_subtitleFileName))
-            {
-                var saved = await SaveSubtitleAs();
-                if (!saved)
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                await SaveSubtitle();
             }
         }
 
@@ -16070,32 +16032,56 @@ public partial class MainViewModel :
                 promptText = string.Format(Se.Language.General.SaveChangesToXOriginal, _subtitleFileNameOriginal);
             }
 
-            var dr = await MessageBox.Show(Window!, Se.Language.General.SaveChangesTitle, promptText,
-                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if (dr != MessageBoxResult.Yes && dr != MessageBoxResult.No)
+            if (!await PromptSaveChanges(promptText, SaveCurrentSubtitleOriginal))
             {
                 return false;
             }
-
-            if (dr == MessageBoxResult.No)
-            {
-                return true;
-            }
-
-            if (string.IsNullOrEmpty(_subtitleFileNameOriginal))
-            {
-                var saved = await SaveSubtitleOriginalAs();
-                if (!saved)
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                await SaveSubtitleOriginal();
-            }
         }
 
+        return true;
+    }
+
+    /// <summary>
+    /// Shows the standard Yes/No/Cancel "Save changes?" prompt and returns whether the caller may
+    /// proceed. "No" discards and proceeds; "Yes" runs <paramref name="save"/> and proceeds only if
+    /// it succeeds; Cancel - or dismissing the dialog via the title bar, which returns
+    /// <see cref="MessageBoxResult.None"/> - aborts. (#11985)
+    /// </summary>
+    private async Task<bool> PromptSaveChanges(string promptText, Func<Task<bool>> save)
+    {
+        var dr = await MessageBox.Show(Window!, Se.Language.General.SaveChangesTitle, promptText,
+            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+        if (dr == MessageBoxResult.Yes)
+        {
+            return await save();
+        }
+
+        return dr == MessageBoxResult.No;
+    }
+
+    // Saves the current subtitle, prompting for a file name first when it is still untitled.
+    // Returns false if the save (or the "save as" file picker) was cancelled.
+    private async Task<bool> SaveCurrentSubtitle()
+    {
+        if (string.IsNullOrEmpty(_subtitleFileName))
+        {
+            return await SaveSubtitleAs();
+        }
+
+        await SaveSubtitle();
+        return true;
+    }
+
+    // As SaveCurrentSubtitle, but for the original (translation source) subtitle.
+    private async Task<bool> SaveCurrentSubtitleOriginal()
+    {
+        if (string.IsNullOrEmpty(_subtitleFileNameOriginal))
+        {
+            return await SaveSubtitleOriginalAs();
+        }
+
+        await SaveSubtitleOriginal();
         return true;
     }
 
@@ -16696,22 +16682,11 @@ public partial class MainViewModel :
             // always progresses.
             try
             {
-                var result = await MessageBox.Show(
-                    Window,
-                    Se.Language.General.SaveChangesTitle,
-                    Se.Language.General.SaveChangesMessage,
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Question);
-
-                if (result != MessageBoxResult.Yes && result != MessageBoxResult.No)
+                if (!await PromptSaveChanges(Se.Language.General.SaveChangesMessage,
+                        async () => { await SaveSubtitle(); return true; }))
                 {
                     // Stay cancelled - window won't close
                     return;
-                }
-
-                if (result == MessageBoxResult.Yes)
-                {
-                    await SaveSubtitle();
                 }
 
                 CleanUp();
@@ -21085,21 +21060,10 @@ public partial class MainViewModel :
 
         e.Cancel = true;
 
-        var result = await MessageBox.Show(
-            Window,
-            Se.Language.General.SaveChangesTitle,
-            Se.Language.General.SaveChangesMessage,
-            MessageBoxButtons.YesNoCancel,
-            MessageBoxIcon.Question);
-
-        if (result != MessageBoxResult.Yes && result != MessageBoxResult.No)
+        if (!await PromptSaveChanges(Se.Language.General.SaveChangesMessage,
+                async () => { await SaveSubtitle(); return true; }))
         {
             return;
-        }
-
-        if (result == MessageBoxResult.Yes)
-        {
-            await SaveSubtitle();
         }
 
         Window.Closing -= OnWindowClosing;
