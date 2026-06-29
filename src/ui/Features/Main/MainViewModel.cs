@@ -19169,6 +19169,13 @@ public partial class MainViewModel :
     public void SubtitleGrid_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         StopSubtitleGridDragSelectAutoScroll();
+        if (e.ClickCount <= 1)
+        {
+            // Fresh click sequence: clear any triple-click marker that a previous
+            // sequence may have left set (self-heals if the third Tapped was missed).
+            _pendingTripleClickFocus = false;
+        }
+
         _subtitleGridIsControlPressed = false;
         _subtitleGridIsLeftClick = false;
         _subtitleGridIsRightClick = false;
@@ -19211,6 +19218,18 @@ public partial class MainViewModel :
 
             var isShiftPressed = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
             var rowIndex = GetDataGridRowIndexFromPoint(e.GetPosition(SubtitleGrid));
+
+            // Triple-click a row: focus the edit text box without moving the video
+            // position (#11602). The third click would otherwise re-fire the
+            // single-click action as a plain Tapped, so cancel the pending
+            // single-click and mark the upcoming third Tapped as focus-only.
+            if (e.ClickCount >= 3 && _subtitleGridIsLeftClick && rowIndex >= 0 && rowIndex < Subtitles.Count)
+            {
+                _singleTapCancellationTokenSource?.Cancel();
+                _pendingTripleClickFocus = true;
+                SubtitleGrid.SelectedItem = Subtitles[rowIndex];
+                return;
+            }
 
             if (_subtitleGridIsLeftClick && isShiftPressed && rowIndex >= 0)
             {
@@ -20754,6 +20773,16 @@ public partial class MainViewModel :
     internal void OnSubtitleGridDoubleTapped(object? sender, TappedEventArgs e)
     {
         _singleTapCancellationTokenSource?.Cancel();
+
+        // Should the third click of a triple-click arrive as a DoubleTapped rather
+        // than a Tapped, honour the focus-only marker instead of seeking (#11602).
+        if (_pendingTripleClickFocus)
+        {
+            _pendingTripleClickFocus = false;
+            FocusEditTextBox();
+            return;
+        }
+
         OnSubtitleGridDoubleTapped(sender);
     }
 
@@ -20854,9 +20883,21 @@ public partial class MainViewModel :
     }
 
     private CancellationTokenSource? _singleTapCancellationTokenSource;
+    private bool _pendingTripleClickFocus;
 
     internal async void OnSubtitleGridSingleTapped(object? sender, TappedEventArgs e)
     {
+        // A triple-click marks this tap (the third) for "focus text box only" and
+        // must not run the configured single-click action (which would seek). See
+        // SubtitleGrid_PointerPressed (#11602).
+        if (_pendingTripleClickFocus)
+        {
+            _pendingTripleClickFocus = false;
+            _singleTapCancellationTokenSource?.Cancel();
+            FocusEditTextBox();
+            return;
+        }
+
         _singleTapCancellationTokenSource?.Cancel();
         var cts = _singleTapCancellationTokenSource = new CancellationTokenSource();
 
