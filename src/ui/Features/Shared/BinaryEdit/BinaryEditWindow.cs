@@ -453,7 +453,7 @@ public class BinaryEditWindow : Window
             Command = vm.AlignmentSelectedLinesCommand,
         };
         flyout.Items.Add(menuItemAlign);
-        menuItemAlign.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+        menuItemAlign.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         var menuItemCenterH = new MenuItem
         {
@@ -462,7 +462,7 @@ public class BinaryEditWindow : Window
             Command = vm.CenterHorizontallySelectedLinesCommand,
         };
         flyout.Items.Add(menuItemCenterH);
-        menuItemCenterH.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+        menuItemCenterH.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         var menuItemTopAlign = new MenuItem
         {
@@ -471,7 +471,7 @@ public class BinaryEditWindow : Window
             Command = vm.TopAlignSelectedLinesCommand,
         };
         flyout.Items.Add(menuItemTopAlign);
-        menuItemTopAlign.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+        menuItemTopAlign.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         var menuItemBottomAlign = new MenuItem
         {
@@ -480,11 +480,11 @@ public class BinaryEditWindow : Window
             Command = vm.BottomAlignSelectedLinesCommand,
         };
         flyout.Items.Add(menuItemBottomAlign);
-        menuItemBottomAlign.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+        menuItemBottomAlign.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         var separatorForced = new Separator() { DataContext = vm };
         flyout.Items.Add(separatorForced);
-        separatorForced.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+        separatorForced.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         var menuItemToggleForced = new MenuItem
         {
@@ -513,7 +513,7 @@ public class BinaryEditWindow : Window
 
         var separatorVisualOps = new Separator() { DataContext = vm };
         flyout.Items.Add(separatorVisualOps);
-        separatorVisualOps.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+        separatorVisualOps.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         var menuItemResizeImagesSelectedLines = new MenuItem
         {
@@ -522,7 +522,7 @@ public class BinaryEditWindow : Window
             Command = vm.ResizeImagesSelectedLinesCommand,
         };
         flyout.Items.Add(menuItemResizeImagesSelectedLines);
-        menuItemResizeImagesSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+        menuItemResizeImagesSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         var menuItemCropSelectedLines = new MenuItem
         {
@@ -531,7 +531,7 @@ public class BinaryEditWindow : Window
             Command = vm.CropSelectedLinesCommand,
         };
         flyout.Items.Add(menuItemCropSelectedLines);
-        menuItemCropSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+        menuItemCropSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         var menuItemAdjustBrightnessSelectedLines = new MenuItem
         {
@@ -540,7 +540,7 @@ public class BinaryEditWindow : Window
             Command = vm.AdjustBrightnessSelectedLinesCommand,
         };
         flyout.Items.Add(menuItemAdjustBrightnessSelectedLines);
-        menuItemAdjustBrightnessSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+        menuItemAdjustBrightnessSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         var menuItemAdjustAlphaSelectedLines = new MenuItem
         {
@@ -549,7 +549,7 @@ public class BinaryEditWindow : Window
             Command = vm.AdjustAlphaSelectedLinesCommand,
         };
         flyout.Items.Add(menuItemAdjustAlphaSelectedLines);
-        menuItemAdjustAlphaSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+        menuItemAdjustAlphaSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         var menuItemAdjustColorSelectedLines = new MenuItem
         {
@@ -558,11 +558,11 @@ public class BinaryEditWindow : Window
             Command = vm.AdjustColorSelectedLinesCommand,
         };
         flyout.Items.Add(menuItemAdjustColorSelectedLines);
-        menuItemAdjustColorSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+        menuItemAdjustColorSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         var separatorDurations = new Separator() { DataContext = vm };
         flyout.Items.Add(separatorDurations);
-        separatorDurations.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+        separatorDurations.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         var menuItemAdjustDurations = new MenuItem
         {
@@ -571,7 +571,7 @@ public class BinaryEditWindow : Window
             Command = vm.AdjustDurationsSelectedLinesCommand,
         };
         flyout.Items.Add(menuItemAdjustDurations);
-        menuItemAdjustDurations.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+        menuItemAdjustDurations.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         var menuItemApplyDurationLimits = new MenuItem
         {
@@ -580,7 +580,7 @@ public class BinaryEditWindow : Window
             Command = vm.ApplyDurationLimitsSelectedLinesCommand,
         };
         flyout.Items.Add(menuItemApplyDurationLimits);
-        menuItemApplyDurationLimits.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+        menuItemApplyDurationLimits.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         var menuItemAdjustAllTimesSelectedLines = new MenuItem
         {
@@ -589,11 +589,11 @@ public class BinaryEditWindow : Window
             Command = vm.AdjustAllTimesSelectedLinesCommand,
         };
         flyout.Items.Add(menuItemAdjustAllTimesSelectedLines);
-        menuItemAdjustAllTimesSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+        menuItemAdjustAllTimesSelectedLines.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         var separatorDelete = new Separator() { DataContext = vm };
         flyout.Items.Add(separatorDelete);
-        separatorDelete.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+        separatorDelete.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         var menuItemDelete = new MenuItem
         {
@@ -602,7 +602,7 @@ public class BinaryEditWindow : Window
             Command = vm.DeleteSectedLinesCommand,
         };
         flyout.Items.Add(menuItemDelete);
-        menuItemDelete.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.IsDeleteVisible)));
+        menuItemDelete.Bind(MenuItem.IsVisibleProperty, new Binding(nameof(vm.HasSelection)));
 
         vm.SubtitleGrid = dataGrid;
         dataGrid.SelectionChanged += vm.SubtitleGridSelectionChanged;

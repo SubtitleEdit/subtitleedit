@@ -47,7 +47,7 @@ public partial class BinaryEditViewModel : ObservableObject
     [ObservableProperty] private string _statusText;
     [ObservableProperty] private string _currentPosition;
     [ObservableProperty] private string _currentSize;
-    [ObservableProperty] private bool _isDeleteVisible;
+    [ObservableProperty] private bool _hasSelection;
     [ObservableProperty] private bool _isInsertBeforeVisible;
     [ObservableProperty] private bool _isInsertAfterVisible;
     [ObservableProperty] private bool _isToggleForcedVisible;
@@ -2674,7 +2674,7 @@ public partial class BinaryEditViewModel : ObservableObject
     {
         var selectedCount = SubtitleGrid?.SelectedItems?.Count ?? 0;
         var selectedIndex = SubtitleGrid?.SelectedIndex ?? -1;
-        IsDeleteVisible = selectedCount > 0;
+        HasSelection = selectedCount > 0;
         IsToggleForcedVisible = selectedCount > 0;
         IsInsertAfterVisible = selectedCount == 1;
         IsInsertBeforeVisible = selectedCount == 1;
