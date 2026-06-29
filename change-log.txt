@@ -23,9 +23,13 @@ v5.1.0-beta3 (TBD)
 * Fix Visual sync not honoring the selected audio track - thx zoltan-antal
 * Fix menu: Escape needing a 3rd press and stale menu state after Alt+Tab - thx kylesskim-sys
 * Fix CrispASR Parakeet ignoring the selected language - thx sergechaly
+* Fix Qwen3 ASR (CPP) failing with "'0x0D' is invalid within a JSON string" - thx ProFire
+* Fix unsaved-changes prompt treating a dismissed dialog (close/Escape) as a choice - thx pdjdev
 * Use nameof for rule IDs in FixCommonErrorsRunner - thx ivandrofly
 * Update Turkish translation - thx bilimiyorum
 * Update Japanese translation - thx hisui3393
+* Update Italian translation - thx bovirus
+* Update Korean translation - thx 12si27
 
 -----------------------------------------------------------------------------------------------------
 
@@ -47,7 +51,6 @@ v5.1.0-beta2 (28th of June 2026)
 * Update Portuguese (Brazil) translation - thx igorruckert
 * Update Turkish translation - thx bilimiyorum
 * Update Korean translation - thx 12si27
-* Fix crash exporting Blu-ray sup on Linux (HarfBuzz native/managed version mismatch) - thx CannaraX
 * Fix "Join subtitles" by time codes not sorting the joined lines by time - thx han8mr8
 * seconv: run operations in the given order, repeating each occurrence (e.g. "--fix-common-errors" twice runs two passes) - thx Rouzax
 * seconv: bundle the Linux native libs (libSkiaSharp/libHarfBuzzSharp) so Fix common errors no longer crashes - thx Rouzax
