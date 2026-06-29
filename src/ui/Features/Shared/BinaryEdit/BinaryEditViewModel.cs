@@ -1047,9 +1047,12 @@ public partial class BinaryEditViewModel : ObservableObject
             }
         }
 
-        var itemsInScope = selectedIndices.Count > 0
-            ? selectedIndices.Select(i => Subtitles[i])
-            : Subtitles.AsEnumerable();
+        if (selectedIndices.Count == 0)
+        {
+            return;
+        }
+
+        var itemsInScope = selectedIndices.Select(i => Subtitles[i]);
 
         var result = await _windowService.ShowDialogAsync<BinaryAdjustDuration.BinaryAdjustDurationWindow, BinaryAdjustDuration.BinaryAdjustDurationViewModel>(Window, vm => vm.Initialize(itemsInScope));
 
@@ -1058,7 +1061,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        result.AdjustDuration(Subtitles.ToList(), selectedIndices.Count > 0 ? selectedIndices : null);
+        result.AdjustDuration(Subtitles.ToList(), selectedIndices);
     }
 
     [RelayCommand]
@@ -1104,6 +1107,11 @@ public partial class BinaryEditViewModel : ObservableObject
             }
         }
 
+        if (selectedIndices.Count == 0)
+        {
+            return;
+        }
+
         var result = await _windowService.ShowDialogAsync<BinaryApplyDurationLimitsWindow, BinaryApplyDurationLimitsViewModel>(Window, vm => { });
 
         if (!result.OkPressed)
@@ -1111,7 +1119,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        result.ApplyLimits(Subtitles.ToList(), selectedIndices.Count > 0 ? selectedIndices : null);
+        result.ApplyLimits(Subtitles.ToList(), selectedIndices);
     }
 
     [RelayCommand]
