@@ -18827,6 +18827,193 @@ public partial class MainViewModel :
         return false;
     }
 
+    // Make word / line caret navigation move in the visually-correct direction when the focused edit
+    // box holds right-to-left text. Avalonia/AvaloniaEdit move whole words by logical offset, which is
+    // inverted for RTL. Returns true (and marks the event handled) only when it acted, so left-to-right
+    // text keeps native navigation. Works for both edit-box implementations via ITextBoxWrapper.
+    //
+    // Modifiers follow the platform's standard caret-navigation keys (Shift only extends the selection):
+    //   word: Ctrl+Left/Right everywhere; Option(Alt)+Left/Right on macOS.
+    //   line: Command(Meta)+Left/Right on macOS (move to the visual start/end of the line).
+    //   bare Left/Right: only to collapse an existing selection to its visually-correct edge.
+    private bool TryHandleRightToLeftCaretNavigation(KeyEventArgs e)
+    {
+        var key = e.Key;
+        if (key != Key.Left && key != Key.Right)
+        {
+            return false;
+        }
+
+        var isMac = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+        var navModifiers = e.KeyModifiers & ~KeyModifiers.Shift;
+        var isWordNav = navModifiers == KeyModifiers.Control || (isMac && navModifiers == KeyModifiers.Alt);
+        var isLineNav = isMac && navModifiers == KeyModifiers.Meta;
+        var isBareArrow = e.KeyModifiers == KeyModifiers.None;
+        if (!isWordNav && !isLineNav && !isBareArrow)
+        {
+            return false;
+        }
+
+        var box = EditTextBox is { IsFocused: true } ? EditTextBox
+            : EditTextBoxOriginal is { IsFocused: true } ? EditTextBoxOriginal
+            : null;
+        if (box == null)
+        {
+            return false;
+        }
+
+        var text = box.Text ?? string.Empty;
+
+        // Bare Left/Right: only intervene to collapse an existing selection to the visually-correct edge.
+        // With no selection, single-character movement is already bidi-correct, so leave it to the editor.
+        if (isBareArrow)
+        {
+            if (box.SelectionLength <= 0)
+            {
+                return false;
+            }
+
+            var caretNow = Math.Clamp(box.CaretIndex, 0, text.Length);
+            if (!IsRightToLeftAtCaret(text, caretNow))
+            {
+                return false; // left-to-right selection keeps native behaviour
+            }
+
+            // Visual edges in RTL: the left edge is the higher logical offset (SelectionEnd), the right
+            // edge the lower (SelectionStart). Capture before clearing, since clearing resets them.
+            var edge = key == Key.Left ? box.SelectionEnd : box.SelectionStart;
+            box.ClearSelection();
+            box.CaretIndex = Math.Clamp(edge, 0, text.Length);
+            _rtlSelectionAnchor = -1;
+            _rtlSelectionCaret = -1;
+            e.Handled = true;
+            return true;
+        }
+
+        var shift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
+
+        // While extending a selection, navigate from the moving end we tracked ourselves. AvaloniaEdit
+        // relocates the caret of a programmatic selection back to its anchor between key presses, so
+        // box.CaretIndex would otherwise recompute the same word every time and the selection wouldn't grow.
+        var continuingSelection = shift && _rtlSelectionAnchor >= 0 && box.SelectionLength > 0;
+        var from = Math.Clamp(continuingSelection ? _rtlSelectionCaret : box.CaretIndex, 0, text.Length);
+
+        if (!IsRightToLeftAtCaret(text, from))
+        {
+            _rtlSelectionAnchor = -1;
+            _rtlSelectionCaret = -1;
+            return false; // left-to-right text keeps native navigation
+        }
+
+        int target;
+        if (isLineNav)
+        {
+            // Visual line ends: Left -> the visual-left end (logical end in RTL); Right -> visual-right end.
+            target = key == Key.Left ? CurrentLineEnd(text, from) : CurrentLineStart(text, from);
+        }
+        else
+        {
+            // Word: Left moves visually left (== logical forward in RTL); Right moves visually right.
+            target = NextWordBoundary(text, from, forward: key == Key.Left);
+        }
+
+        if (shift)
+        {
+            var anchor = Math.Clamp(continuingSelection ? _rtlSelectionAnchor : from, 0, text.Length);
+            box.Select(Math.Min(anchor, target), Math.Abs(target - anchor));
+            _rtlSelectionAnchor = anchor;
+            _rtlSelectionCaret = target; // remember the moving end ourselves
+        }
+        else
+        {
+            box.ClearSelection();
+            box.CaretIndex = target;
+            _rtlSelectionAnchor = -1;
+            _rtlSelectionCaret = -1;
+        }
+
+        e.Handled = true;
+        return true;
+    }
+
+    // Fixed end of an in-progress Shift selection, and the moving end we last set. We track these
+    // ourselves because AvaloniaEdit relocates the caret of a programmatic selection back to its anchor
+    // between key presses, so reading the position back from the control breaks growing the selection.
+    private int _rtlSelectionAnchor = -1;
+    private int _rtlSelectionCaret = -1;
+
+    // RTL by content: check the caret's line first (so a mixed multi-line box is handled per line),
+    // then fall back to the whole box when the line has no strong-directional letter.
+    private static bool IsRightToLeftAtCaret(string text, int caret)
+    {
+        var lineStart = CurrentLineStart(text, caret);
+        var lineEnd = CurrentLineEnd(text, caret);
+        for (var i = lineStart; i < lineEnd; i++)
+        {
+            if (IsRightToLeftLetter(text[i]))
+            {
+                return true;
+            }
+        }
+
+        foreach (var c in text)
+        {
+            if (IsRightToLeftLetter(c))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Strong right-to-left scripts: Hebrew, Arabic (+ Supplement / Extended-A) and the Arabic
+    // presentation forms. Covers Arabic, Farsi and Urdu, which all use the Arabic block.
+    private static bool IsRightToLeftLetter(char c)
+    {
+        int u = c;
+        return (u >= 0x0590 && u <= 0x05FF) || // Hebrew
+               (u >= 0x0600 && u <= 0x06FF) || // Arabic
+               (u >= 0x0750 && u <= 0x077F) || // Arabic Supplement
+               (u >= 0x08A0 && u <= 0x08FF) || // Arabic Extended-A
+               (u >= 0xFB50 && u <= 0xFDFF) || // Arabic Presentation Forms-A
+               (u >= 0xFE70 && u <= 0xFEFF);   // Arabic Presentation Forms-B
+    }
+
+    private static bool IsWordSeparator(char c) => char.IsWhiteSpace(c) || char.IsPunctuation(c) || char.IsSymbol(c);
+
+    // Mirrors the usual "Ctrl+Arrow" word stop: forward stops at the start of the next word,
+    // backward stops at the start of the current/previous word.
+    private static int NextWordBoundary(string text, int index, bool forward)
+    {
+        if (forward)
+        {
+            var i = index;
+            while (i < text.Length && !IsWordSeparator(text[i])) i++;
+            while (i < text.Length && IsWordSeparator(text[i])) i++;
+            return i;
+        }
+
+        var j = index;
+        while (j > 0 && IsWordSeparator(text[j - 1])) j--;
+        while (j > 0 && !IsWordSeparator(text[j - 1])) j--;
+        return j;
+    }
+
+    private static int CurrentLineStart(string text, int index)
+    {
+        var i = index;
+        while (i > 0 && text[i - 1] != '\n' && text[i - 1] != '\r') i--;
+        return i;
+    }
+
+    private static int CurrentLineEnd(string text, int index)
+    {
+        var i = index;
+        while (i < text.Length && text[i] != '\n' && text[i] != '\r') i++;
+        return i;
+    }
+
     internal void OnKeyDownHandler(object? sender, KeyEventArgs keyEventArgs)
     {
         lock (_onKeyDownHandlerLock)
@@ -18926,6 +19113,15 @@ public partial class MainViewModel :
 
             if (IsTextInputFocused())
             {
+                // Right-to-left subtitles need visually-correct word / line caret movement:
+                // Avalonia (and AvaloniaEdit) move whole words by logical offset, which runs
+                // backwards for RTL text. Handle it here, where Handled reliably pre-empts the
+                // editor's built-in navigation (same path used for the Return-key limiter below).
+                if (TryHandleRightToLeftCaretNavigation(keyEventArgs))
+                {
+                    return;
+                }
+
                 // Bare and Ctrl+Left/Right are fundamental caret navigation in any
                 // text input — never override them with shortcuts even when
                 // "allow single-letter shortcuts in text box" is on (#11357).
