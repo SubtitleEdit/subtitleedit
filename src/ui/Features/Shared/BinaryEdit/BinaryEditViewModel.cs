@@ -2188,6 +2188,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
+        var firstAppendedIndex = Subtitles.Count;
         foreach (var ocrItem in ocrItems)
         {
             var newItem = new BinarySubtitleItem(ocrItem, -1);
@@ -2205,6 +2206,7 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         Renumber();
+        SelectAndScrollToRow(firstAppendedIndex);
         RefreshStatusText();
     }
 
