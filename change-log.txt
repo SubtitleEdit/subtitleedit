@@ -25,6 +25,7 @@ v5.1.0-beta3 (TBD)
 * Fix CrispASR Parakeet ignoring the selected language - thx sergechaly
 * Fix Qwen3 ASR (CPP) failing with "'0x0D' is invalid within a JSON string" - thx ProFire
 * Fix unsaved-changes prompt treating a dismissed dialog (close/Escape) as a choice - thx pdjdev
+* Fix Blu-ray sup export crash on Linux (HarfBuzz symbol clash) - thx CannaraX
 * Use nameof for rule IDs in FixCommonErrorsRunner - thx ivandrofly
 * Update Turkish translation - thx bilimiyorum
 * Update Japanese translation - thx hisui3393
