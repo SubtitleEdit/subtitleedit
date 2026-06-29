@@ -18655,6 +18655,13 @@ public partial class MainViewModel :
     {
         _altMenuTogglePending = false;
 
+        // Drop any held-key state when focus leaves the window. A modal dialog (e.g. the
+        // "Save changes?" prompt that Ctrl+O raises on a changed file) steals focus, so the KeyUp
+        // for the held keys never reaches the main window and they stay "stuck down". That left
+        // every shortcut afterwards (Ctrl+I, Find, Replace, ...) unable to match until the set was
+        // cleared by some other action (issue #11548).
+        _shortcutManager.ClearKeys();
+
         // A task switch (Alt+Tab) must also drop any active menu-bar state. Otherwise Avalonia leaves
         // the access-key underlines / selection armed and they reappear when the window is re-activated,
         // leaving the bar in a half-active "limbo" state (#11745 beta-2 feedback).
