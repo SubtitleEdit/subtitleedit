@@ -1638,6 +1638,8 @@ public partial class BinaryEditViewModel : ObservableObject
                 vm.Initialize(Subtitles, selectedIndices, RefreshGrid);
                 if (forceSelectedLines)
                 {
+                    vm.AdjustAll = false;
+                    vm.AdjustSelectedLinesAndForward = false;
                     vm.AdjustSelectedLines = true;
                 }
             });
