@@ -1056,6 +1056,40 @@ public class AudioVisualizer : Control
         if (_interactionMode == InteractionMode.New && newP != null && properties.IsLeftButtonPressed)
         {
             var seconds = RelativeXPositionToSeconds(point.X);
+
+            // Block overlap with neighbouring subtitles by default, like SE4 and the resize/move
+            // path: keep the dragged selection inside the empty gap around its anchor. Holding Shift
+            // or enabling "allow overlap" in settings bypasses the clamp.
+            if (!_isShiftDown && !Se.Settings.Waveform.AllowOverlap)
+            {
+                var lowerBound = 0.0;
+                var upperBound = double.MaxValue;
+                foreach (var p in _displayableParagraphs)
+                {
+                    if (p == newP)
+                    {
+                        continue;
+                    }
+
+                    var pEnd = p.EndTime.TotalSeconds;
+                    var pStart = p.StartTime.TotalSeconds;
+                    if (pEnd <= _newSelectionSeconds && pEnd + MinGapSeconds > lowerBound)
+                    {
+                        lowerBound = pEnd + MinGapSeconds;
+                    }
+
+                    if (pStart >= _newSelectionSeconds && pStart - MinGapSeconds < upperBound)
+                    {
+                        upperBound = pStart - MinGapSeconds;
+                    }
+                }
+
+                if (upperBound >= lowerBound)
+                {
+                    seconds = Math.Clamp(seconds, lowerBound, upperBound);
+                }
+            }
+
             if (seconds > _newSelectionSeconds)
             {
                 newP.StartTime = TimeSpan.FromSeconds(_newSelectionSeconds);
