@@ -155,6 +155,21 @@ public class SpellCheckManager : SpellChecker, ISpellCheckManager
 
         var isCorrect = DoSpell(word) || IsEnglishInApostropheActuallyIng(word);
 
+        // A word wrapped in single quotes used as quotation marks (e.g. 'Een ridder ...') keeps the
+        // leading/trailing apostrophe attached during splitting, so retry without them. The apostrophe
+        // is not a split char because it is part of contractions like 'n / don't. (#11975)
+        if (!isCorrect)
+        {
+            var trimmed = word.Trim('\'');
+            if (trimmed.Length > 0 && trimmed != word &&
+                (DoSpell(trimmed) ||
+                 IsName(trimmed, text) ||
+                 (WordLists != null && WordLists.HasUserWord(trimmed))))
+            {
+                isCorrect = true;
+            }
+        }
+
         if (ChangeAllDictionary.ContainsKey(word) && NotSameSpecialEnding(words[wordIndex], ChangeAllDictionary[word], text))
         {
             ChangeWord(word, ChangeAllDictionary[word], words[wordIndex], p);
