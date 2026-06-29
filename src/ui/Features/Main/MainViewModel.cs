@@ -1952,7 +1952,7 @@ public partial class MainViewModel :
             var promptText = string.Format(Se.Language.General.SaveChangesToX, name);
             var dr = await MessageBox.Show(Window!, Se.Language.General.SaveChangesTitle, promptText,
                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if (dr == MessageBoxResult.Cancel || dr == MessageBoxResult.None)
+            if (dr != MessageBoxResult.Yes && dr != MessageBoxResult.No)
             {
                 return;
             }
@@ -16027,7 +16027,7 @@ public partial class MainViewModel :
 
             var dr = await MessageBox.Show(Window!, Se.Language.General.SaveChangesTitle, promptText,
                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if (dr == MessageBoxResult.Cancel || dr == MessageBoxResult.None)
+            if (dr != MessageBoxResult.Yes && dr != MessageBoxResult.No)
             {
                 return false;
             }
@@ -16072,7 +16072,7 @@ public partial class MainViewModel :
 
             var dr = await MessageBox.Show(Window!, Se.Language.General.SaveChangesTitle, promptText,
                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if (dr == MessageBoxResult.Cancel || dr == MessageBoxResult.None)
+            if (dr != MessageBoxResult.Yes && dr != MessageBoxResult.No)
             {
                 return false;
             }
@@ -16703,7 +16703,7 @@ public partial class MainViewModel :
                     MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question);
 
-                if (result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
+                if (result != MessageBoxResult.Yes && result != MessageBoxResult.No)
                 {
                     // Stay cancelled - window won't close
                     return;
@@ -21092,7 +21092,7 @@ public partial class MainViewModel :
             MessageBoxButtons.YesNoCancel,
             MessageBoxIcon.Question);
 
-        if (result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
+        if (result != MessageBoxResult.Yes && result != MessageBoxResult.No)
         {
             return;
         }
