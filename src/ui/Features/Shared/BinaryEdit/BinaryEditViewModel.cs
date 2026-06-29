@@ -1030,22 +1030,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Snapshot selection before dialog opens — focus shift can clear grid selection
-        var selectedIndices = new List<int>();
-        if (SubtitleGrid?.SelectedItems != null)
-        {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    var index = Subtitles.IndexOf(binaryItem);
-                    if (index >= 0)
-                    {
-                        selectedIndices.Add(index);
-                    }
-                }
-            }
-        }
+        var selectedIndices = GetSelectedIndices();
 
         if (selectedIndices.Count == 0)
         {
@@ -1090,22 +1075,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Snapshot selection before dialog opens — focus shift can clear grid selection
-        var selectedIndices = new List<int>();
-        if (SubtitleGrid?.SelectedItems != null)
-        {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    var index = Subtitles.IndexOf(binaryItem);
-                    if (index >= 0)
-                    {
-                        selectedIndices.Add(index);
-                    }
-                }
-            }
-        }
+        var selectedIndices = GetSelectedIndices();
 
         if (selectedIndices.Count == 0)
         {
@@ -1149,15 +1119,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var selectedItems = new List<BinarySubtitleItem>();
-        if (SubtitleGrid?.SelectedItems != null)
-        {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                    selectedItems.Add(binaryItem);
-            }
-        }
+        var selectedItems = GetSelectedItems();
 
         if (selectedItems.Count == 0)
         {
@@ -1285,18 +1247,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Snapshot selection before dialog opens — focus shift can clear grid selection
-        var selectedItems = new List<BinarySubtitleItem>();
-        if (SubtitleGrid?.SelectedItems != null)
-        {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    selectedItems.Add(binaryItem);
-                }
-            }
-        }
+        var selectedItems = GetSelectedItems();
 
         if (selectedItems.Count == 0)
         {
@@ -1360,18 +1311,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Snapshot selection before dialog opens — focus shift can clear grid selection
-        var selectedItems = new List<BinarySubtitleItem>();
-        if (SubtitleGrid?.SelectedItems != null)
-        {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    selectedItems.Add(binaryItem);
-                }
-            }
-        }
+        var selectedItems = GetSelectedItems();
 
         if (selectedItems.Count == 0)
         {
@@ -1435,18 +1375,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Snapshot selection before dialog opens — focus shift can clear grid selection
-        var selectedItems = new List<BinarySubtitleItem>();
-        if (SubtitleGrid?.SelectedItems != null)
-        {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    selectedItems.Add(binaryItem);
-                }
-            }
-        }
+        var selectedItems = GetSelectedItems();
 
         if (selectedItems.Count == 0)
         {
@@ -1510,18 +1439,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Snapshot selection before dialog opens — focus shift can clear grid selection
-        var selectedItems = new List<BinarySubtitleItem>();
-        if (SubtitleGrid?.SelectedItems != null)
-        {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    selectedItems.Add(binaryItem);
-                }
-            }
-        }
+        var selectedItems = GetSelectedItems();
 
         if (selectedItems.Count == 0)
         {
@@ -1687,22 +1605,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Snapshot selection before the dialog opens so focus shift cannot clear it
-        var selectedIndices = new List<int>();
-        if (SubtitleGrid?.SelectedItems != null)
-        {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    var index = Subtitles.IndexOf(binaryItem);
-                    if (index >= 0)
-                    {
-                        selectedIndices.Add(index);
-                    }
-                }
-            }
-        }
+        var selectedIndices = GetSelectedIndices();
 
         selectedIndices.Sort();
 
@@ -1978,7 +1881,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<BinarySubtitleItem>().ToList();
+        var selectedItems = GetSelectedItems();
         foreach (var item in selectedItems)
         {
             item.IsForced = !item.IsForced;
@@ -1996,6 +1899,13 @@ public partial class BinaryEditViewModel : ObservableObject
     {
         ApplyGridSelection(Subtitles.Where(s => !s.IsForced).ToList(), preserveScroll: true);
     }
+
+    // Captured before any await so focus shift cannot clear the grid selection.
+    private List<BinarySubtitleItem> GetSelectedItems() =>
+        SubtitleGrid?.SelectedItems?.Cast<BinarySubtitleItem>().ToList() ?? [];
+
+    private List<int> GetSelectedIndices() =>
+        GetSelectedItems().Select(item => Subtitles.IndexOf(item)).Where(i => i >= 0).ToList();
 
     // Adding many rows to a realized DataGrid's SelectedItems is O(n) visual work per
     // row, so selecting all forced/non-forced lines on a large file hangs (#11529).
