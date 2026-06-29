@@ -21,7 +21,7 @@ public class BinaryAppendSubtitleWindow : Window
 
         var radioAppend = new RadioButton
         {
-            Content = Se.Language.Tools.JoinSubtitles.AppendTimeCodes,
+            Content = Se.Language.Tools.ImageBasedEdit.ShiftTimeCodes,
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AppendTimeCodes)) { Mode = BindingMode.TwoWay },
             Margin = new Thickness(0, 0, 0, 4),
         };

@@ -2187,7 +2187,7 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         var suggestedOffset = Subtitles.Count > 0
-            ? Subtitles[^1].EndTime + TimeSpan.FromMilliseconds(1000)
+            ? Subtitles[^1].EndTime
             : TimeSpan.Zero;
 
         var settings = await _windowService.ShowDialogAsync<BinaryAppendSubtitle.BinaryAppendSubtitleWindow, BinaryAppendSubtitle.BinaryAppendSubtitleViewModel>(
