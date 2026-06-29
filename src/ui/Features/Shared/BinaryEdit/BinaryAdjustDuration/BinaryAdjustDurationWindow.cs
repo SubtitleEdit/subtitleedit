@@ -55,6 +55,7 @@ public class BinaryAdjustDurationWindow : Window
             Text = Se.Language.Tools.AdjustDurations.Note,
             Margin = new Thickness(10, 25, 10, 5),
         };
+        labelInfo.Bind(IsVisibleProperty, new Binding(nameof(vm.ShowAdjustNote)) { Source = vm });
 
         var labelRecalculateNote = new TextBlock
         {

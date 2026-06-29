@@ -25,10 +25,14 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
     public bool ShowRecalculateControls =>
         SelectedAdjustType?.Type == BinaryAdjustDurationType.Recalculate && !_recalculateUnavailable;
 
+    public bool ShowAdjustNote => !IsRecalculateBlocked;
+
     partial void OnSelectedAdjustTypeChanged(BinaryAdjustDurationDisplay value)
     {
         OnPropertyChanged(nameof(IsRecalculateBlocked));
         OnPropertyChanged(nameof(ShowRecalculateControls));
+        OnPropertyChanged(nameof(ShowAdjustNote));
+        OkCommand.NotifyCanExecuteChanged();
     }
 
     [ObservableProperty] private double _adjustSeconds;
@@ -55,6 +59,8 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
         {
             OnPropertyChanged(nameof(IsRecalculateBlocked));
             OnPropertyChanged(nameof(ShowRecalculateControls));
+            OnPropertyChanged(nameof(ShowAdjustNote));
+            OkCommand.NotifyCanExecuteChanged();
         }
     }
 
@@ -213,15 +219,11 @@ public partial class BinaryAdjustDurationViewModel : ObservableObject
         Se.SaveSettings();
     }
 
-    [RelayCommand]
+    private bool CanOk() => !IsRecalculateBlocked;
+
+    [RelayCommand(CanExecute = nameof(CanOk))]
     private async Task Ok()
     {
-        if (IsRecalculateBlocked)
-        {
-            Window?.Close();
-            return;
-        }
-
         var msg = GetValidationError();
         if (!string.IsNullOrEmpty(msg))
         {
