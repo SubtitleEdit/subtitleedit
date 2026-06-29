@@ -70,6 +70,69 @@ public class AdjustAllTimesWindow : Window
             },
         };
 
+        // Independent extend: grow each line's duration by moving the start earlier
+        // and/or the end later, leaving the opposite edge fixed. Uses the same All /
+        // Selected / Selected-and-forward scope as the show earlier/later buttons above.
+        var timeCodeExtendStart = new TimeCodeUpDown
+        {
+            DataContext = vm,
+            [!TimeCodeUpDown.ValueProperty] = new Binding(nameof(vm.ExtendStartEarlier))
+            {
+                Mode = BindingMode.TwoWay,
+            }
+        };
+
+        var timeCodeExtendEnd = new TimeCodeUpDown
+        {
+            DataContext = vm,
+            [!TimeCodeUpDown.ValueProperty] = new Binding(nameof(vm.ExtendEndLater))
+            {
+                Mode = BindingMode.TwoWay,
+            }
+        };
+
+        var rowExtendStart = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 10,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                new Label { Content = Se.Language.Sync.ExtendStartEarlier, Width = 120 },
+                timeCodeExtendStart,
+            },
+        };
+
+        var rowExtendEnd = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 10,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                new Label { Content = Se.Language.Sync.ExtendEndLater, Width = 120 },
+                timeCodeExtendEnd,
+            },
+        };
+
+        var buttonExtend = UiUtil.MakeButton(Se.Language.Sync.Extend, vm.ExtendCommand)
+            .WithMinWidth(110);
+
+        var panelExtend = new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Spacing = 10,
+            Children =
+            {
+                new Label { Content = Se.Language.Sync.ExtendDuration },
+                rowExtendStart,
+                rowExtendEnd,
+                buttonExtend,
+            },
+        };
+
+        var borderExtend = UiUtil.MakeBorderForControl(panelExtend);
+
         var buttonHelp = UiUtil.MakeButton(vm.ShowHelpCommand, IconNames.Help, Se.Language.Sync.AdjustAllShortcuts);
         var buttonOk = UiUtil.MakeButtonDone(vm.OkCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonHelp, buttonOk);
@@ -80,6 +143,7 @@ public class AdjustAllTimesWindow : Window
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -99,8 +163,9 @@ public class AdjustAllTimesWindow : Window
         grid.Add(timeCodeUpDown,    0, 0);
         grid.Add(panelShowButtons,  0, 1, 2, 1);
         grid.Add(panelRadioButtons, 1, 0);
-        grid.Add(labelStatus,       2, 0);
-        grid.Add(panelButtons,      2, 1);
+        grid.Add(borderExtend,      2, 0, 1, 2);
+        grid.Add(labelStatus,       3, 0);
+        grid.Add(panelButtons,      3, 1);
 
         Content = grid;
 

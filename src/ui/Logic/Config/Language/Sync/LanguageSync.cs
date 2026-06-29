@@ -24,6 +24,11 @@ public class LanguageSync
     public string AdjustAllTimes { get; set; }
     public string ShowEarlier { get; set; }
     public string ShowLater { get; set; }
+    public string ExtendDuration { get; set; }
+    public string ExtendStartEarlier { get; set; }
+    public string ExtendEndLater { get; set; }
+    public string Extend { get; set; }
+    public string ExtendedStartEndX { get; set; }
     public string ChangeFrameRate { get; set; }
     public string SetSyncPoint { get; set; }
     public string SyncPoints { get; set; }
@@ -58,6 +63,11 @@ public class LanguageSync
         AdjustAllTimes = "Adjust all times (show earlier/later)";
         ShowEarlier = "Show earlier";
         ShowLater = "Show later";
+        ExtendDuration = "Extend duration (independent start/end)";
+        ExtendStartEarlier = "Start earlier by";
+        ExtendEndLater = "End later by";
+        Extend = "Extend";
+        ExtendedStartEndX = "Extended start by {0}, end by {1}";
         ChangeFrameRate = "Change frame rate";
         SetSyncPoint = "Set sync point";
         SyncPoints = "Sync points";

@@ -21002,6 +21002,53 @@ public partial class MainViewModel :
         _updateAudioVisualizer = true;
     }
 
+    public void ExtendStartEndTimes(TimeSpan extendStartEarlier, TimeSpan extendEndLater, bool adjustAll,
+        bool adjustSelectedLines, bool adjustSelectedLinesAndForward)
+    {
+        if (extendStartEarlier <= TimeSpan.Zero && extendEndLater <= TimeSpan.Zero)
+        {
+            return;
+        }
+
+        List<SubtitleLineViewModel> targets;
+        if (adjustSelectedLines)
+        {
+            targets = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        }
+        else if (adjustSelectedLinesAndForward)
+        {
+            var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+            if (selectedItems.Count == 0)
+            {
+                return;
+            }
+
+            var firstSelectedIndex = selectedItems.Min(p => Subtitles.IndexOf(p));
+            targets = Subtitles.Skip(firstSelectedIndex).ToList();
+        }
+        else
+        {
+            targets = Subtitles.ToList();
+        }
+
+        foreach (var p in targets)
+        {
+            // Extend start earlier keeps the end fixed; extend end later keeps the
+            // start fixed. Both grow the line's duration. SetTimes applies both ends
+            // atomically and recomputes duration.
+            var newStart = extendStartEarlier > TimeSpan.Zero ? p.StartTime - extendStartEarlier : p.StartTime;
+            var newEnd = extendEndLater > TimeSpan.Zero ? p.EndTime + extendEndLater : p.EndTime;
+            if (newStart < TimeSpan.Zero)
+            {
+                newStart = TimeSpan.Zero;
+            }
+
+            p.SetTimes(newStart, newEnd);
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
 
     internal void DurationChanged()
     {

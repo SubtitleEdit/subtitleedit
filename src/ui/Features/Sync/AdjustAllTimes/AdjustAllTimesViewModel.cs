@@ -14,6 +14,8 @@ namespace Nikse.SubtitleEdit.Features.Sync.AdjustAllTimes;
 public partial class AdjustAllTimesViewModel : ObservableObject
 {
     [ObservableProperty] private TimeSpan _adjustment;
+    [ObservableProperty] private TimeSpan _extendStartEarlier;
+    [ObservableProperty] private TimeSpan _extendEndLater;
     [ObservableProperty] private bool _adjustAll;
     [ObservableProperty] private bool _adjustSelectedLines;
     [ObservableProperty] private bool _adjustSelectedLinesAndForward;
@@ -58,6 +60,8 @@ public partial class AdjustAllTimesViewModel : ObservableObject
     private void LoadSettings()
     {
         Adjustment = TimeSpan.FromSeconds(Se.Settings.Synchronization.AdjustAllTimes.Seconds);
+        ExtendStartEarlier = TimeSpan.FromSeconds(Se.Settings.Synchronization.AdjustAllTimes.ExtendStartSeconds);
+        ExtendEndLater = TimeSpan.FromSeconds(Se.Settings.Synchronization.AdjustAllTimes.ExtendEndSeconds);
         if (Se.Settings.Synchronization.AdjustAllTimes.IsSelectedLinesAndForwardSelected)
         {
             AdjustSelectedLinesAndForward = true;
@@ -75,6 +79,8 @@ public partial class AdjustAllTimesViewModel : ObservableObject
     private void SaveSettings()
     {
         Se.Settings.Synchronization.AdjustAllTimes.Seconds = Adjustment.TotalSeconds;
+        Se.Settings.Synchronization.AdjustAllTimes.ExtendStartSeconds = ExtendStartEarlier.TotalSeconds;
+        Se.Settings.Synchronization.AdjustAllTimes.ExtendEndSeconds = ExtendEndLater.TotalSeconds;
         Se.Settings.Synchronization.AdjustAllTimes.IsSelectedLinesAndForwardSelected = AdjustSelectedLinesAndForward;
         Se.Settings.Synchronization.AdjustAllTimes.IsSelectedLinesSelected = AdjustSelectedLines;
         Se.Settings.Synchronization.AdjustAllTimes.IsAllSelected = AdjustAll;
@@ -118,6 +124,28 @@ public partial class AdjustAllTimesViewModel : ObservableObject
         ShowStatus(string.Format(Se.Language.Sync.TotalAdjustmentX, new TimeCode(_totalAdjustment).ToShortDisplayString()));
         _isNegativeAdjustment = false;
         Apply();
+    }
+
+    [RelayCommand]
+    private void Extend()
+    {
+        if (ExtendStartEarlier <= TimeSpan.Zero && ExtendEndLater <= TimeSpan.Zero)
+        {
+            return;
+        }
+
+        SaveSettings();
+        _adjustCallback?.ExtendStartEndTimes(
+            ExtendStartEarlier,
+            ExtendEndLater,
+            AdjustAll,
+            AdjustSelectedLines,
+            AdjustSelectedLinesAndForward);
+
+        ShowStatus(string.Format(
+            Se.Language.Sync.ExtendedStartEndX,
+            new TimeCode(ExtendStartEarlier).ToShortDisplayString(),
+            new TimeCode(ExtendEndLater).ToShortDisplayString()));
     }
 
     [RelayCommand]
