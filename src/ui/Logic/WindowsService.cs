@@ -158,6 +158,11 @@ namespace Nikse.SubtitleEdit.Logic
             ApplyRightToLeftSettings(window);
             UiTheme.ApplyScaleToWindow(window);
 
+            // Keep the dialog above undocked tool windows (audio visualizer / video player), which
+            // float on top of the main window via the same helper. Without this the dialog opens
+            // behind them in undocked mode. (#11971)
+            KeepTopmostWhileOwnerActive(window, owner);
+
             await window.ShowDialog(owner);
 
             return window;
@@ -187,8 +192,13 @@ namespace Nikse.SubtitleEdit.Logic
             ApplyRightToLeftSettings(window);
             UiTheme.ApplyScaleToWindow(window);
 
+            // Keep the dialog above undocked tool windows (audio visualizer / video player), which
+            // float on top of the main window via the same helper. Without this the dialog opens
+            // behind them in undocked mode. (#11971)
+            KeepTopmostWhileOwnerActive(window, owner);
+
             await window.ShowDialog(owner);
-            
+
             return viewModel;
         }
 
