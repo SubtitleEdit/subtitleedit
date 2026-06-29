@@ -212,7 +212,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         // Add OpenAI Compatible STT engine (available on all platforms)
         Engines.Add(new OpenAiCompatibleSttEngine());
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ||
+            RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ||
+            RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             //Engines.Add(new ChatLlmCppEngine());
             Engines.Add(new Qwen3AsrCppEngine());
