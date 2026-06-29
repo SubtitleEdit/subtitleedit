@@ -18,6 +18,7 @@ public class LanguageRemoveTextForHearingImpaired
     public string IfLineContains { get; set; }
     public string IfLineOnlyContainsMusicSymbols { get; set; }
     public string RemoveInterjections { get; set; }
+    public string LinesFoundX { get; set; }
 
     public LanguageRemoveTextForHearingImpaired()
     {
@@ -37,5 +38,6 @@ public class LanguageRemoveTextForHearingImpaired
         IfLineContains = "If line contains";
         IfLineOnlyContainsMusicSymbols = "If line only contains music symbols";
         RemoveInterjections = "Remove interjections";
+        LinesFoundX = "Lines found: {0}";
     }
 }
