@@ -32,6 +32,10 @@ namespace Nikse.SubtitleEdit
         [STAThread]
         public static void Main(string[] args)
         {
+            // Must run before any SkiaSharp.HarfBuzz use so the bundled libHarfBuzzSharp
+            // deep-binds its own hb_* symbols and doesn't crash the export shaper on Linux (#11864).
+            Nikse.SubtitleEdit.UiLogic.HarfBuzzNativeFix.Apply();
+
             try
             {
                 // Global exception handling
