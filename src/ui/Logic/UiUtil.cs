@@ -570,8 +570,9 @@ public static class UiUtil
     /// the typed/selected value is bound (two-way) to <paramref name="propertyTextPath"/>. Used where a
     /// free-text field should also present a list of known values (e.g. translator model names).
     /// </summary>
+    /// <param name="minWidth">Lower bound on the auto-sized width so short values don't collapse.</param>
     public static ComboBox MakeComboBoxEditable(
-        double width,
+        double minWidth,
         ObservableCollection<string> sourceItems,
         object viewModal,
         string propertyTextPath,
@@ -579,9 +580,7 @@ public static class UiUtil
     {
         var comboBox = new ComboBox
         {
-            // double.NaN lets the box auto-size to its content (the selected model name).
-            Width = width,
-            MinWidth = 150,
+            MinWidth = minWidth,
             IsEditable = true,
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
@@ -606,7 +605,56 @@ public static class UiUtil
             });
         }
 
+        AutoSizeEditableComboBoxWidth(comboBox, sourceItems);
         return comboBox;
+    }
+
+    // The Fluent ComboBox template hosts its text in a star-sized grid column, so inside a finite-width
+    // parent (e.g. a WrapPanel) a Width="Auto" box stretches to fill the row instead of fitting its text.
+    // To get a true fit-to-content box we measure the items and the current value ourselves and pin the
+    // width, re-measuring whenever the value, the item list, or the resolved font changes.
+    private static void AutoSizeEditableComboBoxWidth(ComboBox comboBox, ObservableCollection<string> sourceItems)
+    {
+        // Glyph column (32) + the editable text box paddings/caret; keeps the value from being clipped.
+        const double chromeWidth = 56;
+        var measurer = new TextBlock();
+
+        void UpdateWidth()
+        {
+            measurer.FontFamily = comboBox.FontFamily;
+            measurer.FontSize = comboBox.FontSize;
+            measurer.FontStyle = comboBox.FontStyle;
+            measurer.FontWeight = comboBox.FontWeight;
+
+            var widest = 0.0;
+            foreach (var item in sourceItems)
+            {
+                widest = Math.Max(widest, MeasureTextWidth(measurer, item));
+            }
+
+            widest = Math.Max(widest, MeasureTextWidth(measurer, comboBox.Text));
+            comboBox.Width = widest + chromeWidth;
+        }
+
+        sourceItems.CollectionChanged += (_, _) => UpdateWidth();
+        comboBox.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == ComboBox.TextProperty)
+            {
+                UpdateWidth();
+            }
+        };
+
+        // Font values are only resolved once the box is in the visual tree; measure then for accuracy.
+        comboBox.AttachedToVisualTree += (_, _) => UpdateWidth();
+        UpdateWidth();
+    }
+
+    private static double MeasureTextWidth(TextBlock measurer, string? text)
+    {
+        measurer.Text = text ?? string.Empty;
+        measurer.Measure(Size.Infinity);
+        return measurer.DesiredSize.Width;
     }
 
     public static TextBox MakeTextBox(double width, object viewModel, string propertyTextPath)
