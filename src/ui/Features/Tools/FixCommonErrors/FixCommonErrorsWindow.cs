@@ -7,6 +7,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Threading;
 using System;
 using System.Collections;
 using Nikse.SubtitleEdit.Features.Files.Compare;
@@ -20,6 +21,7 @@ namespace Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 public class FixCommonErrorsWindow : Window
 {
     private readonly FixCommonErrorsViewModel _vm;
+    private Button? _buttonApplySelectedFixes;
 
     public FixCommonErrorsWindow(FixCommonErrorsViewModel vm)
     {
@@ -142,7 +144,6 @@ public class FixCommonErrorsWindow : Window
 
         var buttonDone = UiUtil.MakeButton(Se.Language.General.Done, vm.OkCommand)
             .BindIsVisible(vm, nameof(vm.Step2IsVisible));
-        buttonDone.IsDefault = true;
 
         var buttonPanelRight = UiUtil.MakeButtonBar(
             buttonBackToFixList,
@@ -212,7 +213,54 @@ public class FixCommonErrorsWindow : Window
 
         Content = grid;
 
-        Activated += delegate { Focus(); }; // hack to make OnKeyDown work
+        // Make Enter trigger - and put focus on - the current step's primary button, so the keyboard
+        // flow works without a manual click: step 1 -> "Go to apply fixes", step 2 -> "Apply selected
+        // fixes" (the repeated apply+re-scan action, not "Done"/close). Focusing a button (instead of
+        // the window) still lets the window's OnKeyDown fire, as key events bubble up. (#12029)
+        void FocusStepButton()
+        {
+            var step2 = vm.Step2IsVisible;
+            buttonToApplyFixes.IsDefault = !step2;
+            buttonDone.IsDefault = false;
+            if (_buttonApplySelectedFixes != null)
+            {
+                _buttonApplySelectedFixes.IsDefault = step2;
+            }
+
+            Control? target = step2 ? _buttonApplySelectedFixes : buttonToApplyFixes;
+            if (target != null)
+            {
+                Dispatcher.UIThread.Post(() => target.Focus());
+            }
+        }
+
+        vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName is nameof(vm.Step1IsVisible) or nameof(vm.Step2IsVisible))
+            {
+                FocusStepButton();
+            }
+            else if (e.PropertyName == nameof(vm.FixesAppliedText) && vm.Step2IsVisible && !string.IsNullOrEmpty(vm.FixesAppliedText))
+            {
+                // After "Apply selected fixes": if nothing is left to fix, move focus/default to
+                // "Done" so the next Return finishes; otherwise keep it on "Apply selected fixes"
+                // for another round (matches SE4). (#12029)
+                var done = vm.Fixes.Count == 0;
+                buttonDone.IsDefault = done;
+                if (_buttonApplySelectedFixes != null)
+                {
+                    _buttonApplySelectedFixes.IsDefault = !done;
+                }
+
+                Control? target = done ? buttonDone : _buttonApplySelectedFixes;
+                if (target != null)
+                {
+                    Dispatcher.UIThread.Post(() => target.Focus());
+                }
+            }
+        };
+
+        Activated += delegate { FocusStepButton(); };
 
         Closing += delegate { UiUtil.SaveWindowPosition(this); };
         Loaded += delegate { UiUtil.RestoreWindowPosition(this); };
@@ -348,7 +396,8 @@ public class FixCommonErrorsWindow : Window
             Spacing = 0,
         };
         rightButtons.Children.Add(UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.RefreshFixes, _vm.DoRefreshFixesCommand));
-        rightButtons.Children.Add(UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.ApplySelectedFixes, _vm.DoApplyFixesCommand));
+        _buttonApplySelectedFixes = UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.ApplySelectedFixes, _vm.DoApplyFixesCommand);
+        rightButtons.Children.Add(_buttonApplySelectedFixes);
 
         var buttonBarFixes = new Grid
         {

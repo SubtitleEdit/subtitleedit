@@ -43,6 +43,10 @@ public partial class MultipleReplaceViewModel : ObservableObject
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
     public Subtitle FixedSubtitle { get; private set; }
+
+    // Invoked by the re-usable "Apply" button: applies the checked replacements to the document
+    // (subtitle, number applied) without closing the window, so several rounds can be run (#12029).
+    public Action<Subtitle, int>? OnApply { get; set; }
     public int TotalReplaced { get; private set; }
 
     private readonly IWindowService _windowService;
@@ -257,6 +261,21 @@ public partial class MultipleReplaceViewModel : ObservableObject
         UndoUnchecked();
         OkPressed = true;
         Window?.Close();
+    }
+
+    [RelayCommand]
+    private void Apply()
+    {
+        GeneratePreview();
+        UndoUnchecked();
+
+        // Apply the currently checked replacements to the document, then make the result the new
+        // working subtitle so the next round operates on the already-fixed text - without closing
+        // the window (Subtitle Edit 4 had this re-usable "Apply" button - #12029).
+        OnApply?.Invoke(new Subtitle(FixedSubtitle), Fixes.Count(f => f.Apply));
+        _subtitle = new Subtitle(FixedSubtitle);
+        _dirty = true;
+        GeneratePreview();
     }
 
     private void UndoUnchecked()
