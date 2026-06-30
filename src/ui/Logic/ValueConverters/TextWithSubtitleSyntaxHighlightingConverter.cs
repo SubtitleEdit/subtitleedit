@@ -294,19 +294,6 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             return new InlineCollection();
         }
 
-        if (Se.Settings.Appearance.SubtitleGridTextSingleLine)
-        {
-            var separator = Se.Settings.Appearance.SubtitleGridTextSingleLineSeparator;
-            if (string.IsNullOrEmpty(separator))
-            {
-                separator = " ";
-            }
-
-            str = str
-                .Replace("\r\n", separator)
-                .Replace("\n", separator);
-        }
-
         // Truncate long strings for performance
         if (str.Length > 200)
         {
@@ -332,7 +319,7 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
         {
             if (!firstLine)
             {
-                inlines.Add(new LineBreak());
+                AppendLineSeparator(inlines);
             }
 
             if (line.Length > 0)
@@ -1381,9 +1368,28 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             return false;
         }
 
-        inlines.Add(new LineBreak());
+        AppendLineSeparator(inlines);
         i += c == '\r' && c2 == '\n' ? 2 : 1;
         return true;
+    }
+
+    private static void AppendLineSeparator(InlineCollection inlines)
+    {
+        if (Se.Settings.Appearance.SubtitleGridTextSingleLine)
+        {
+            var separator = Se.Settings.Appearance.SubtitleGridTextSingleLineSeparator;
+            if (string.IsNullOrEmpty(separator))
+            {
+                separator = " ";
+            }
+
+            // Add the separator as literal text so markup-like separators (e.g. "<br />")
+            // are shown verbatim instead of being parsed away by the formatter.
+            inlines.Add(new Run(separator));
+            return;
+        }
+
+        inlines.Add(new LineBreak());
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
