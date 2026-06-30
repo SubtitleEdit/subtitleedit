@@ -1,7 +1,7 @@
 
 Subtitle Edit Changelog
 
-v5.1.0-beta3 (TBD)
+v5.1.0-beta3 (30th of June 2026)
 
 * Add DeepL formality picker (SE4 parity) - thx fraternl
 * Add ASSA "Replace style with..." (SE4 parity)
@@ -30,6 +30,8 @@ v5.1.0-beta3 (TBD)
 * Fix Qwen3 ASR (CPP) failing with "'0x0D' is invalid within a JSON string" - thx ProFire
 * Fix unsaved-changes prompt treating a dismissed dialog (close/Escape) as a choice - thx pdjdev
 * Fix Blu-ray sup export crash on Linux (HarfBuzz symbol clash) - thx CannaraX
+* Fix umlaut diacritics (Ä/Ö/Ü) clipped in the OCR window on macOS - thx Bastians-Bits
+* Fix VLC not loading from a path with non-ASCII characters (e.g. Chinese) - thx StandAloof
 * Use nameof for rule IDs in FixCommonErrorsRunner - thx ivandrofly
 * Update Turkish translation - thx bilimiyorum
 * Update Japanese translation - thx hisui3393
