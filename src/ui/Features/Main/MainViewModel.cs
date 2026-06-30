@@ -18847,6 +18847,7 @@ public partial class MainViewModel :
                             && (keyEventArgs.KeyModifiers == KeyModifiers.Alt
                                 || keyEventArgs.KeyModifiers == (KeyModifiers.Shift | KeyModifiers.Alt)))))
                 {
+                    _shortcutManager.ClearKeys();
                     return;
                 }
 

@@ -1,11 +1,15 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using AvaloniaEdit;
+using AvaloniaEdit.Document;
+using AvaloniaEdit.Editing;
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
 
@@ -17,6 +21,7 @@ public class TextEditorWrapper : ITextBoxWrapper
     private readonly SubtitleTextAlignmentTransformer _alignmentTransformer;
     private EventHandler? _alignmentUpdateHandler;
     private TextAlignment _currentAlignment = TextAlignment.Left;
+    private int? _wordNavAnchor;
 
     public bool HasFocus { get; set; }
 
@@ -40,6 +45,111 @@ public class TextEditorWrapper : ITextBoxWrapper
                 UpdateAlignmentTransform();
             }
         };
+
+        // Fix Option+Right/Left (Alt on macOS) word navigation to match standard TextBox behavior:
+        // AvaloniaEdit moves to start of next word; macOS convention is end of current word.
+        _textEditor.TextArea.AddHandler(
+            InputElement.KeyDownEvent,
+            OnTextAreaKeyDown,
+            RoutingStrategies.Tunnel);
+    }
+
+    private void OnTextAreaKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (sender is not TextArea textArea)
+            return;
+
+        var isAlt = (e.KeyModifiers & KeyModifiers.Alt) != 0;
+        var isCtrl = (e.KeyModifiers & KeyModifiers.Control) != 0;
+        var isShift = (e.KeyModifiers & KeyModifiers.Shift) != 0;
+
+        // Only apply on macOS: Option+Arrow is the word navigation key there.
+        // On Windows/Linux, Ctrl+Arrow is used and AvaloniaEdit's default behavior
+        // already matches the platform convention.
+        if (!isAlt || isCtrl || (e.Key != Key.Right && e.Key != Key.Left) || !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            return;
+
+        var document = textArea.Document;
+        var caretOffset = textArea.Caret.Offset;
+
+        var newOffset = e.Key == Key.Right
+            ? GetWordRightOffset(document, caretOffset)
+            : GetWordLeftOffset(document, caretOffset);
+
+        if (isShift)
+        {
+            // Initialise or reset the anchor: on first Shift+Option press, or whenever
+            // the selection was cleared externally (click, non-Shift move) since last time.
+            if (_wordNavAnchor == null || textArea.Selection.IsEmpty)
+                _wordNavAnchor = caretOffset;
+
+            textArea.Caret.Offset = newOffset;
+            textArea.Selection = Selection.Create(textArea, _wordNavAnchor.Value, newOffset);
+        }
+        else
+        {
+            _wordNavAnchor = null;
+            textArea.Caret.Offset = newOffset;
+            textArea.Selection = Selection.Create(textArea, newOffset, newOffset);
+        }
+
+        e.Handled = true;
+    }
+
+    private static bool IsWordChar(char c) => char.IsLetterOrDigit(c) || c == '_';
+    private static bool IsNonNewlineWhiteSpace(char c) => c != '\n' && char.IsWhiteSpace(c);
+
+    private static int GetWordRightOffset(TextDocument document, int offset)
+    {
+        var length = document.TextLength;
+        if (offset >= length)
+            return length;
+
+        // Skip non-newline whitespace (spaces, tabs)
+        while (offset < length && IsNonNewlineWhiteSpace(document.GetCharAt(offset)))
+            offset++;
+
+        if (offset >= length)
+            return length;
+
+        // A newline is its own stop — consume it and land at start of next line
+        if (document.GetCharAt(offset) == '\n')
+            return offset + 1;
+
+        // Skip a contiguous run of the same character category (alphanumeric vs punctuation)
+        var wordChar = IsWordChar(document.GetCharAt(offset));
+        while (offset < length
+               && !char.IsWhiteSpace(document.GetCharAt(offset))
+               && IsWordChar(document.GetCharAt(offset)) == wordChar)
+            offset++;
+
+        return offset;
+    }
+
+    private static int GetWordLeftOffset(TextDocument document, int offset)
+    {
+        if (offset <= 0)
+            return 0;
+
+        // Skip non-newline whitespace backward
+        while (offset > 0 && IsNonNewlineWhiteSpace(document.GetCharAt(offset - 1)))
+            offset--;
+
+        if (offset == 0)
+            return 0;
+
+        // A newline is its own stop — consume it and land at end of previous line
+        if (document.GetCharAt(offset - 1) == '\n')
+            return offset - 1;
+
+        // Skip a contiguous run of the same character category backward
+        var wordChar = IsWordChar(document.GetCharAt(offset - 1));
+        while (offset > 0
+               && !char.IsWhiteSpace(document.GetCharAt(offset - 1))
+               && IsWordChar(document.GetCharAt(offset - 1)) == wordChar)
+            offset--;
+
+        return offset;
     }
 
     public string Text
