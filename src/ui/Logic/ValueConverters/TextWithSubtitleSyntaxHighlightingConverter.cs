@@ -1384,8 +1384,10 @@ public class TextWithSubtitleSyntaxHighlightingConverter : IValueConverter
             }
 
             // Add the separator as literal text so markup-like separators (e.g. "<br />")
-            // are shown verbatim instead of being parsed away by the formatter.
-            inlines.Add(new Run(separator));
+            // are shown verbatim instead of being parsed away by the formatter. Render it in the
+            // soft blue accent (AttributeBrush) - a mid-tone that reads on both light and dark
+            // themes - so the separator stands out clearly from the actual subtitle text.
+            inlines.Add(new Run(separator) { Foreground = AttributeBrush });
             return;
         }
 
