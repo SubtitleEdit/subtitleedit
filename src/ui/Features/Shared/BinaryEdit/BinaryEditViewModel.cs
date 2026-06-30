@@ -2188,8 +2188,11 @@ public partial class BinaryEditViewModel : ObservableObject
 
         if (e.Key == Key.Escape)
         {
-            e.Handled = true;
-            Cancel();
+            if (!e.Handled && Window?.OwnedWindows.Count == 0)
+            {
+                e.Handled = true;
+                Cancel();
+            }
             return;
         }
 
