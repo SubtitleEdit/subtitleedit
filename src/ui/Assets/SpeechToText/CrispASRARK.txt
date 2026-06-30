@@ -1,0 +1,7 @@
+
+🏹 ARK-ASR-3B  (⚠️ experimental / work-in-progress)
+
+Type: Whisper-large-v3 encoder (partial RoPE) + Qwen2.5-3B LM decoder
+Focus: 🌍 Multilingual transcription (19 languages)
+Note: large model (3.5 - 7.5 GB); word timestamps via a forced aligner (-am)
+
