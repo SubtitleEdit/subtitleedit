@@ -115,7 +115,9 @@ internal static class NativeMethods
     [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
     internal static extern IntPtr LoadLibraryW(string dllToLoad);
 
-    [DllImport("kernel32.dll", SetLastError = true)]
+    // Unicode (LoadLibraryExW) so paths with non-ASCII characters (e.g. Chinese user/install
+    // folders) are passed through correctly - the ANSI variant mangles them and the load fails (#12001).
+    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
     internal static extern IntPtr LoadLibraryEx(string lpFileName, IntPtr hReservedNull, uint dwFlags);
 
     [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Ansi)]
@@ -125,7 +127,9 @@ internal static class NativeMethods
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static extern bool FreeLibrary(IntPtr hModule);
 
-    [DllImport("kernel32.dll", SetLastError = true)]
+    // Unicode (SetDllDirectoryW) so a non-ASCII dependency directory (e.g. a Chinese path) is set
+    // correctly; the ANSI variant mangles it so libvlccore.dll / plugins are not found (#12001).
+    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static extern bool SetDllDirectory(string lpPathName);
 
@@ -217,8 +221,9 @@ internal static class NativeMethods
 
                 if (handle == IntPtr.Zero)
                 {
-                    // Fall back to regular LoadLibrary
-                    handle = LoadLibrary(fileName);
+                    // Fall back to a plain load - use the Unicode variant so non-ASCII paths
+                    // (e.g. Chinese folders) are not mangled by ANSI marshalling (#12001).
+                    handle = LoadLibraryW(fileName);
                 }
 
                 if (handle == IntPtr.Zero)
