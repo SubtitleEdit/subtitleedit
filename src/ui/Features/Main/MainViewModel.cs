@@ -18628,7 +18628,14 @@ public partial class MainViewModel :
         }
 
         _focusBeforeMainMenu = Window?.FocusManager?.GetFocusedElement() as Control;
-        return TryFocusMainMenu();
+
+        // Defer focusing the menu bar: when this runs from a key handler (bare Alt key-up, F10),
+        // Avalonia's own access-key handler also processes the same key and resets focus afterwards,
+        // which undid a synchronous focus here - so bare Alt showed the access-key underlines but
+        // never actually activated the bar. Let the current key event finish first, mirroring the
+        // deferred focus restore in DeactivateMainMenu (#11745).
+        Dispatcher.UIThread.Post(() => TryFocusMainMenu());
+        return true;
     }
 
     /// <summary>
