@@ -248,6 +248,14 @@ public class GoogleLensOcr
             return;
         }
 
+        // The chrome-lens tool prints transient status lines to stdout while retrying a failed
+        // request (e.g. "Server error 502: Retrying 1/3..."). These are diagnostics, not OCR text,
+        // so keep them out of the subtitle. (#12016)
+        if (Regex.IsMatch(line, @"Retrying \d+\s*/\s*\d+", RegexOptions.IgnoreCase))
+        {
+            return;
+        }
+
         results[fileName] += line + Environment.NewLine;
     }
 
