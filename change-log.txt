@@ -9,8 +9,10 @@ v5.1.0-beta3 (TBD)
 * Remove text for hearing impaired: show count of lines found - thx bptrsn
 * Add editable whitelist for "Remove if all uppercase" - thx muaz978
 * Add a text box for the grid single-line separator (Settings) - thx bichitoxxx
+* Show the grid single-line separator in a distinct color
 * Auto-translate (llama.cpp): add Qwen 3.5 and Aya Expanse models
 * Enable Qwen3 ASR CPP speech-to-text on macOS
+* Add CrispASR ARK-ASR speech-to-text backend
 * Update CrispASR to v0.8.6
 * Update llama.cpp to b9833
 * Waveform: block overlap when drag-creating a new selection - thx muaz978
