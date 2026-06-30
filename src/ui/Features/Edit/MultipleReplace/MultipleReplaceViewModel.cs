@@ -499,27 +499,31 @@ public partial class MultipleReplaceViewModel : ObservableObject
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.Options.Settings.OpenRuleFile, "Replace rules", ".template");
+        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.Options.Settings.OpenRuleFile, "Replace rules", ".template", "CSV (comma separated)", ".csv");
         if (string.IsNullOrEmpty(fileName))
         {
             return;
         }
 
-        // import from json
+        // import from json, SE4 xml or csv
         List<RuleTreeNode>? imported = null;
         try
         {
-            var jsonOrXml = System.IO.File.ReadAllText(fileName);
+            var content = System.IO.File.ReadAllText(fileName);
 
-            CategoryImportExportItem? temp = null;
+            CategoryImportExportItem? temp;
 
-            if (jsonOrXml.Contains("<MultipleSearchAndReplaceList>"))
+            if (fileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
             {
-                temp = Se4XmlImporter.ImportFromXml(jsonOrXml);
+                temp = CsvImporter.Import(content);
+            }
+            else if (content.Contains("<MultipleSearchAndReplaceList>"))
+            {
+                temp = Se4XmlImporter.ImportFromXml(content);
             }
             else
             {
-                temp = JsonSerializer.Deserialize<CategoryImportExportItem>(jsonOrXml, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                temp = JsonSerializer.Deserialize<CategoryImportExportItem>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             }
 
             if (temp == null)
@@ -587,7 +591,11 @@ public partial class MultipleReplaceViewModel : ObservableObject
             return;
         }
 
-        var fileName = await _fileHelper.PickSaveFile(Window, ".template", "SE_Replace_Rules", Se.Language.Options.Settings.SaveRuleProfilesFile);
+        var fileName = await _fileHelper.PickSaveFile(
+            Window,
+            new[] { ("Replace rules", ".template"), ("CSV (comma separated)", ".csv") },
+            "SE_Replace_Rules",
+            Se.Language.Options.Settings.SaveRuleProfilesFile);
         if (string.IsNullOrEmpty(fileName))
         {
             return;
@@ -600,8 +608,16 @@ public partial class MultipleReplaceViewModel : ObservableObject
         }
 
         var export = new CategoryImportExportItem(toExport);
-        var json = JsonSerializer.Serialize(export, new JsonSerializerOptions { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-        System.IO.File.WriteAllText(fileName, json);
+        if (fileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+        {
+            // UTF-8 with BOM so Excel opens non-ASCII rules correctly.
+            System.IO.File.WriteAllText(fileName, CsvExporter.Export(export), new System.Text.UTF8Encoding(true));
+        }
+        else
+        {
+            var json = JsonSerializer.Serialize(export, new JsonSerializerOptions { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            System.IO.File.WriteAllText(fileName, json);
+        }
 
         _ = await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window,
             vm =>

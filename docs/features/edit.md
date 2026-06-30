@@ -84,8 +84,8 @@ Right-click a category node to open its context menu:
 - **New rule** — add a rule to this category
 - **Move up / Move down** — reorder categories
 - **Delete** — remove the category and all its rules
-- **Import** — load rules from a `.template` file (JSON or legacy SE4 XML)
-- **Export** — save selected categories to a `.template` file
+- **Import** — load rules from a `.template` file (JSON or legacy SE4 XML) or a `.csv` file
+- **Export** — save selected categories to a `.template` (JSON) or `.csv` file
 
 ### Managing rules
 
@@ -118,6 +118,33 @@ The expand/collapse buttons (`+` / `−`) above the tree expand or collapse all 
 ### Import / Export
 
 Rule sets are stored as JSON `.template` files and can be shared across installations. The export dialog lets you choose which categories to include. SE4-format XML files can also be imported.
+
+Rules can also be exported to and imported from **CSV** (choose the `.csv` type in the export/import dialog), which is convenient for editing rules in a spreadsheet or sharing them as a simple table.
+
+The CSV has one row per rule with this header:
+
+```csv
+Category,Find,ReplaceWith,Description,Active,Type
+```
+
+| Column | Description |
+|---|---|
+| `Category` | Category the rule belongs to (rules with the same name are grouped; empty becomes `Default`) |
+| `Find` | Text or pattern to search for |
+| `ReplaceWith` | Replacement text (may be empty) |
+| `Description` | Optional note |
+| `Active` | `true` or `false` — whether the rule is enabled |
+| `Type` | `CaseInsensitive`, `CaseSensitive`, or `RegularExpression` |
+
+Values are quoted per RFC 4180, so `Find`/`ReplaceWith` may contain commas, double quotes (written as `""`) and line breaks. The header row is optional on import; unknown `Type` values fall back to `CaseInsensitive`. Files are written as UTF-8 (with BOM) so non-ASCII rules open correctly in spreadsheet apps.
+
+Example:
+
+```csv
+Category,Find,ReplaceWith,Description,Active,Type
+General,"hello, world","say ""hi""",greeting,true,CaseInsensitive
+Regex,\d+,#,strip numbers,true,RegularExpression
+```
 
 ## Modify Selection
 
