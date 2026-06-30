@@ -58,8 +58,10 @@ public class MultipleReplaceWindow : Window
         };
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        var buttonApply = UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyCommand);
         var panelButtons = UiUtil.MakeButtonBar(
             buttonOk,
+            buttonApply,
             UiUtil.MakeButtonCancel(vm.CancelCommand)
         );
 

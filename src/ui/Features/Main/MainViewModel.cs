@@ -10741,7 +10741,18 @@ public partial class MainViewModel :
         }
 
         var result =
-            await ShowDialogAsync<MultipleReplaceWindow, MultipleReplaceViewModel>(vm => { vm.Initialize(GetUpdateSubtitle()); });
+            await ShowDialogAsync<MultipleReplaceWindow, MultipleReplaceViewModel>(vm =>
+            {
+                vm.Initialize(GetUpdateSubtitle());
+
+                // "Apply" applies the replacements live without closing, so several rounds can be run (#12029).
+                vm.OnApply = (fixedSubtitle, count) =>
+                {
+                    SetSubtitles(fixedSubtitle);
+                    SelectAndScrollToRow(0);
+                    ShowStatus(string.Format(Se.Language.Main.ReplacedXOccurrences, count));
+                };
+            });
 
         if (result.OkPressed)
         {
@@ -15471,6 +15482,10 @@ public partial class MainViewModel :
                                     await VideoOpenFile(fileName);
                                 }
                             }
+
+                            // Put keyboard focus on the grid so shortcuts (e.g. Ctrl+S) work right
+                            // away after an "Open with" mkv extract, without a manual click (#12029).
+                            Dispatcher.UIThread.Post(() => SubtitleGrid.Focus());
                         }
                     }
                 }
@@ -15527,6 +15542,12 @@ public partial class MainViewModel :
                 {
                     // Image track data was fully extracted before the OCR dialog was posted, so matroska is safe to dispose now.
                     matroska.Dispose();
+                }
+
+                if (!IsImageSubtitleTrack(subtitleList[0]))
+                {
+                    // Focus the grid so shortcuts (e.g. Ctrl+S) work immediately after the extract (#12029).
+                    Dispatcher.UIThread.Post(() => SubtitleGrid.Focus());
                 }
             }
             else
