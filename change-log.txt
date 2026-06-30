@@ -1,6 +1,20 @@
 
 Subtitle Edit Changelog
 
+v5.1.0-beta4 (TBD)
+
+* Add CSV import/export to Multiple replace - thx faon-92
+* Add a re-usable "Apply" button to Multiple replace (SE4 parity) - thx KaDeeKe
+* Add a "New" button to the Fix common errors rule profiles window - thx MbuguaDavid
+* Spell check: show a completion summary (changed/skipped/correct/names/added) with a "do not show again" option (SE4 parity) - thx cyberbrix
+* Fix common errors: restore the keyboard flow so Return advances and applies fixes (SE4 parity) - thx KaDeeKe
+* Focus the subtitle grid after extracting a subtitle from an mkv, so Ctrl+S works right away - thx KaDeeKe
+* Fix icon-button hints not showing in dialogs on macOS
+* Fix Google Lens OCR including server retry messages in the OCR text - thx LurkingNinja
+* Fix bare Alt not activating the main menu bar on Windows
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-beta3 (30th of June 2026)
 
 * Add DeepL formality picker (SE4 parity) - thx fraternl
