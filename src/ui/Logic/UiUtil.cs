@@ -404,14 +404,51 @@ public static class UiUtil
             Command = command,
         };
 
-        if (Se.Settings.Appearance.ShowHints)
-        {
-            ToolTip.SetTip(button, hint);
-        }
-
         Attached.SetIcon(button, iconName);
 
+        if (Se.Settings.Appearance.ShowHints)
+        {
+            AttachHoverTooltip(button, hint);
+        }
+
         return button;
+    }
+
+    // On macOS, Avalonia's built-in ToolTip hover service does not open on hover inside modal
+    // dialogs - the popup itself works (a forced ToolTip.IsOpen renders it, and the pointer-over
+    // state is detected), but the hover trigger never fires, so icon-button hints were invisible in
+    // every dialog. Windows/Linux work fine and keep the native behaviour; on macOS we drive the
+    // tooltip ourselves: open it after a short hover and close it when the pointer leaves. (#12013)
+    public static void AttachHoverTooltip(Control control, string hint)
+    {
+        ToolTip.SetTip(control, hint);
+
+        if (!OperatingSystem.IsMacOS())
+        {
+            return; // native ToolTip hover service works on Windows/Linux
+        }
+
+        System.Threading.CancellationTokenSource? hoverCts = null;
+
+        control.PointerEntered += (_, _) =>
+        {
+            hoverCts?.Cancel();
+            hoverCts = new System.Threading.CancellationTokenSource();
+            var token = hoverCts.Token;
+            DispatcherTimer.RunOnce(() =>
+            {
+                if (!token.IsCancellationRequested && control.IsPointerOver)
+                {
+                    ToolTip.SetIsOpen(control, true);
+                }
+            }, TimeSpan.FromMilliseconds(400));
+        };
+
+        control.PointerExited += (_, _) =>
+        {
+            hoverCts?.Cancel();
+            ToolTip.SetIsOpen(control, false);
+        };
     }
 
 
