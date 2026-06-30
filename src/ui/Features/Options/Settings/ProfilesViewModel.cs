@@ -178,6 +178,36 @@ public partial class ProfilesViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void New()
+    {
+        // Start from the built-in "Default" profile (or any existing one) so the new profile has
+        // sensible rule values to tweak; fall back to a blank profile if the list is empty.
+        var template = Profiles.FirstOrDefault(p => p.Name == "Default") ?? Profiles.FirstOrDefault();
+        var newProfile = template != null ? new ProfileDisplay(template) : new ProfileDisplay();
+        newProfile.Name = GetUniqueProfileName(Se.Language.General.NewProfile);
+        Profiles.Add(newProfile);
+        SelectedProfile = newProfile;
+    }
+
+    private string GetUniqueProfileName(string baseName)
+    {
+        if (string.IsNullOrWhiteSpace(baseName))
+        {
+            baseName = "New profile";
+        }
+
+        var name = baseName;
+        var i = 1;
+        while (Profiles.Any(p => p.Name == name))
+        {
+            i++;
+            name = $"{baseName} {i}";
+        }
+
+        return name;
+    }
+
+    [RelayCommand]
     private void Copy()
     {
         if (SelectedProfile == null)
