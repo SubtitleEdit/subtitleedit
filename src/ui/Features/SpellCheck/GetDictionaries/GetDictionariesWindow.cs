@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
-using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
@@ -103,7 +102,8 @@ public class GetDictionariesWindow : Window
             MinHeight = 32,
             MaxWidth = ContentWidth,
             Opacity = 0.85,
-            [!TextBlock.TextProperty] = new Binding(nameof(vm.Description)),
+            [!TextBox.DataContextProperty] = new Binding(nameof(vm.SelectedDictionary)),
+            [!TextBlock.TextProperty] = new Binding(nameof(GetSpellCheckDictionaryDisplay.Description)),
         };
 
         var folder = new TextBox
