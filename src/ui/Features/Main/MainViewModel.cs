@@ -5722,17 +5722,23 @@ public partial class MainViewModel :
         // changes/skips, so the "X changed, Y skipped" result is never silently lost.
         if (result.OkPressed || result.TotalChangedWords > 0 || result.TotalSkippedWords > 0)
         {
-            var msg = string.Format(
-                Se.Language.Main.SpellCheckResult,
-                result.TotalChangedWords,
-                result.TotalSkippedWords);
-
-            await MessageBox.Show(
-                Window,
-                Se.Language.SpellCheck.SpellCheck,
-                msg,
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            if (Se.Settings.SpellCheck.ShowCompletedMessage)
+            {
+                await ShowDialogAsync<SpellCheckCompletedWindow, SpellCheckCompletedViewModel>(
+                    vm => vm.Initialize(
+                        result.TotalChangedWords,
+                        result.TotalSkippedWords,
+                        result.TotalCorrectWords,
+                        result.TotalNames,
+                        result.TotalAddedWords));
+            }
+            else
+            {
+                // Dialog suppressed via "do not show again" - still surface the result in the status bar.
+                ShowStatus(Se.Language.SpellCheck.SpellCheckCompleted + " - " +
+                    string.Format(Se.Language.SpellCheck.ChangedWordsX, result.TotalChangedWords) + ", " +
+                    string.Format(Se.Language.SpellCheck.SkippedWordsX, result.TotalSkippedWords));
+            }
         }
     }
 

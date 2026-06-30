@@ -480,6 +480,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<SortByViewModel>();
         collection.AddTransient<SourceViewViewModel>();
         collection.AddTransient<SpellCheckViewModel>();
+        collection.AddTransient<SpellCheckCompletedViewModel>();
         collection.AddTransient<SplitBreakLongLinesViewModel>();
         collection.AddTransient<SplitSubtitleViewModel>();
         collection.AddTransient<StatisticsViewModel>();
