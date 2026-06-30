@@ -117,7 +117,9 @@ public partial class OcrSubtitleItem : ObservableObject
     {
         if (FixResult != null)
         {
-            return FixResult.GetFormattedText();
+            var formatted = FixResult.GetFormattedText();
+            UiUtil.FixMacDiacriticClipping(formatted);
+            return formatted;
         }
 
         var tb = new TextBlock { Text = Text };
@@ -125,6 +127,8 @@ public partial class OcrSubtitleItem : ObservableObject
         {
             tb.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
+
+        UiUtil.FixMacDiacriticClipping(tb);
         return tb;
     }
 

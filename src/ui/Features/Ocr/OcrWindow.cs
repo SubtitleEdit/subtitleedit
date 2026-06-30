@@ -643,6 +643,7 @@ public class OcrWindow : Window
         textBoxText.Bind(FontFamilyProperty, new Binding(nameof(vm.TextBoxFontFamily)) { Mode = BindingMode.TwoWay });
         textBoxText.Bind(FontSizeProperty, new Binding(nameof(vm.TextBoxFontSize)) { Mode = BindingMode.TwoWay });
         textBoxText.Bind(TextBox.FontWeightProperty, new Binding(nameof(vm.TextBoxFontWeight)) { Mode = BindingMode.TwoWay });
+        UiUtil.FixMacDiacriticClipping(textBoxText);
 
         // Create a Flyout for the TextBox
         var flyout = new MenuFlyout();
