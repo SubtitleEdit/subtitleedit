@@ -8,6 +8,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
 
@@ -122,7 +123,7 @@ public class GetDictionariesWindow : Window
         grid.Add(combo, 0, 1);
 
         grid.Add(MakeLabel(Se.Language.General.Status), 1, 0);
-        grid.Add(MakeStatusPanel(nameof(vm.SelectedStatusBrush), nameof(vm.SelectedStatusText)), 1, 1);
+        grid.Add(MakeStatusPanel(nameof(vm.SelectedStatusText)), 1, 1);
 
         grid.Add(MakeLabel(Se.Language.General.Description), 2, 0);
         grid.Add(description, 2, 1);
@@ -208,7 +209,10 @@ public class GetDictionariesWindow : Window
                 Width = 10,
                 Height = 10,
                 VerticalAlignment = VerticalAlignment.Center,
-                [!Shape.FillProperty] = new Binding(nameof(GetSpellCheckDictionaryDisplay.StatusBrush)),
+                [!Shape.FillProperty] = new Binding(nameof(GetSpellCheckDictionaryDisplay.IsInstalled))
+                {
+                    Converter = new BooleanToBrushConverter(),
+                },
             };
 
             var text = new TextBlock
@@ -225,15 +229,19 @@ public class GetDictionariesWindow : Window
             };
         }, true);
     }
-
-    private static StackPanel MakeStatusPanel(string brushBindingPath, string textBindingPath)
+    
+    private static StackPanel MakeStatusPanel(string textBindingPath)
     {
         var dot = new Ellipse
         {
             Width = 10,
             Height = 10,
             VerticalAlignment = VerticalAlignment.Center,
-            [!Shape.FillProperty] = new Binding(brushBindingPath),
+            [!Shape.FillProperty] = new Binding(nameof(GetDictionariesViewModel.SelectedDictionary) + "." +
+                nameof(GetSpellCheckDictionaryDisplay.IsInstalled))
+            {
+                Converter = new BooleanToBrushConverter(),
+            },
         };
 
         var text = new TextBlock
