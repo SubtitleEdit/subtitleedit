@@ -17,6 +17,9 @@ public class SpellCheckManager : SpellChecker, ISpellCheckManager
     public delegate void SpellCheckWordChangedHandler(object sender, SpellCheckWordChangedEvent e);
     public event SpellCheckWordChangedHandler? OnWordChanged;
     public int NoOfChangedWords { get; set; }
+    public int NoOfCorrectWords { get; set; }
+    public int NoOfNames { get; set; }
+    public int NoOfAddedWords { get; set; }
 
     private SpellCheckResult? _currentResult;
 
@@ -135,6 +138,7 @@ public class SpellCheckManager : SpellChecker, ISpellCheckManager
 
         if (IsName(word, text))
         {
+            NoOfNames++;
             return true;
         }
 
@@ -180,6 +184,11 @@ public class SpellCheckManager : SpellChecker, ISpellCheckManager
         {
             ChangeWord(word, ChangeAllDictionary[word] + word.Remove(0, word.TrimEnd('\'').Length), words[wordIndex], p);
             return true;
+        }
+
+        if (isCorrect)
+        {
+            NoOfCorrectWords++;
         }
 
         return isCorrect;

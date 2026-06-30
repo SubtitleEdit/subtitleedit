@@ -32,7 +32,7 @@ public static class InitToolbar
 
     private static string _imagePath = string.Empty;
 
-    private static Grid CreateToolbar(MainViewModel vm)
+    private static void EnsureImagePath()
     {
         _imagePath = Path.Combine(Se.ThemesFolder, UiTheme.ThemeName);
         if (!Directory.Exists(_imagePath))
@@ -48,6 +48,11 @@ public static class InitToolbar
                 _imagePath = path;
             }
         }
+    }
+
+    private static Grid CreateToolbar(MainViewModel vm)
+    {
+        EnsureImagePath();
 
         var stackPanelLeft = new StackPanel
         {
@@ -528,8 +533,15 @@ public static class InitToolbar
         return grid;
     }
 
-    private static Image MakeImage(string image)
+    // Public so other windows (e.g. the spell-check completed dialog) can reuse the exact same
+    // themed/recolored toolbar icons. EnsureImagePath keeps it usable before the toolbar is built.
+    public static Image MakeImage(string image)
     {
+        if (string.IsNullOrEmpty(_imagePath))
+        {
+            EnsureImagePath();
+        }
+
         return new Image
         {
             Source = MakeOneColor(Path.Combine(_imagePath, image + ".png")),

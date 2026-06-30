@@ -11,6 +11,9 @@ public interface ISpellCheckManager : ISpellChecker
     List<SpellCheckResult> CheckSpelling(ObservableCollection<SubtitleLineViewModel> subtitles, SpellCheckResult? startFrom = null, int? stopBeforeLineIndex = null);
     int NoOfChangedWords { get; set; }
     int NoOfSkippedWords { get; set; }
+    int NoOfCorrectWords { get; set; }
+    int NoOfNames { get; set; }
+    int NoOfAddedWords { get; set; }
     void AddIgnoreWord(string word);
     void ChangeWord(string fromWord, string toWord, SpellCheckWord spellCheckWord, SubtitleLineViewModel p);
     void ChangeAllWord(string fromWord, string toWord, SpellCheckWord spellCheckWord, SubtitleLineViewModel p);

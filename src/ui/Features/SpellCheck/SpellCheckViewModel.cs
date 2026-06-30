@@ -62,6 +62,9 @@ public partial class SpellCheckViewModel : ObservableObject
     public Window? Window { get; set; }
     public int TotalChangedWords { get; set; }
     public int TotalSkippedWords { get; set; }
+    public int TotalCorrectWords { get; set; }
+    public int TotalNames { get; set; }
+    public int TotalAddedWords { get; set; }
 
     public bool OkPressed { get; private set; }
     public StackPanel PanelWholeText { get; internal set; }
@@ -485,6 +488,9 @@ public partial class SpellCheckViewModel : ObservableObject
     {
         TotalChangedWords = _spellCheckManager.NoOfChangedWords;
         TotalSkippedWords = _spellCheckManager.NoOfSkippedWords;
+        TotalCorrectWords = _spellCheckManager.NoOfCorrectWords;
+        TotalNames = _spellCheckManager.NoOfNames;
+        TotalAddedWords = _spellCheckManager.NoOfAddedWords;
     }
 
     private void SetLanguage(string? dictionaryFileName)
@@ -669,6 +675,7 @@ public partial class SpellCheckViewModel : ObservableObject
         var status = string.Format(Se.Language.SpellCheck.WordXAddedToNamesList, CurrentWord);
         PushUndo(status, SpellCheckUndoAction.AddToNames, CurrentWord);
         _spellCheckManager.AddToNames(CurrentWord);
+        _spellCheckManager.NoOfNames++;
         ShowStatus(status);
         DoSpellCheck();
     }
@@ -685,6 +692,7 @@ public partial class SpellCheckViewModel : ObservableObject
         var status = string.Format(Se.Language.SpellCheck.WordXAddedToUserDictionary, CurrentWord);
         PushUndo(status, SpellCheckUndoAction.AddToDictionary, CurrentWord);
         _spellCheckManager.AdToUserDictionary(CurrentWord);
+        _spellCheckManager.NoOfAddedWords++;
         ShowStatus(status);
         DoSpellCheck();
     }
@@ -746,6 +754,9 @@ public partial class SpellCheckViewModel : ObservableObject
     {
         TotalChangedWords = _spellCheckManager.NoOfChangedWords;
         TotalSkippedWords = _spellCheckManager.NoOfSkippedWords;
+        TotalCorrectWords = _spellCheckManager.NoOfCorrectWords;
+        TotalNames = _spellCheckManager.NoOfNames;
+        TotalAddedWords = _spellCheckManager.NoOfAddedWords;
         OkPressed = true;
         Se.Settings.SpellCheck.LastLanguageDictionaryName = SelectedDictionary?.Name;
         Se.Settings.SpellCheck.LastLanguageDictionaryFile = SelectedDictionary?.DictionaryFileName;
@@ -777,6 +788,9 @@ public partial class SpellCheckViewModel : ObservableObject
             ActionWord = actionWord,
             NoOfChangedWords = _spellCheckManager.NoOfChangedWords,
             NoOfSkippedWords = _spellCheckManager.NoOfSkippedWords,
+            NoOfCorrectWords = _spellCheckManager.NoOfCorrectWords,
+            NoOfNames = _spellCheckManager.NoOfNames,
+            NoOfAddedWords = _spellCheckManager.NoOfAddedWords,
             ParagraphTexts = Paragraphs.Select(p => (p, p.Text)).ToList(),
 
             // Re-scan from just before the acted-on word so it is shown again after undo.
@@ -832,6 +846,9 @@ public partial class SpellCheckViewModel : ObservableObject
         // Restore counters and the scan position, then re-check so the word reappears.
         _spellCheckManager.NoOfChangedWords = item.NoOfChangedWords;
         _spellCheckManager.NoOfSkippedWords = item.NoOfSkippedWords;
+        _spellCheckManager.NoOfCorrectWords = item.NoOfCorrectWords;
+        _spellCheckManager.NoOfNames = item.NoOfNames;
+        _spellCheckManager.NoOfAddedWords = item.NoOfAddedWords;
         _lastSpellCheckResult = item.ResumeFrom;
 
         if (_undoList.Count > 0)

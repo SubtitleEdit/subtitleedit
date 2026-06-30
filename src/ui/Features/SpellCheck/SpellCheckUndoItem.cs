@@ -27,6 +27,9 @@ public class SpellCheckUndoItem
     public string ActionWord { get; set; } = string.Empty;
     public int NoOfChangedWords { get; set; }
     public int NoOfSkippedWords { get; set; }
+    public int NoOfCorrectWords { get; set; }
+    public int NoOfNames { get; set; }
+    public int NoOfAddedWords { get; set; }
     public List<(SubtitleLineViewModel Paragraph, string Text)> ParagraphTexts { get; set; } = new();
     public SpellCheckResult? ResumeFrom { get; set; }
 }

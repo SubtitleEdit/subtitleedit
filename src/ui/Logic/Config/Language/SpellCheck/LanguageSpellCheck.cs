@@ -36,6 +36,13 @@ public class LanguageSpellCheck
     public string EditWholeText { get; set; }
     public string ContinueFromCurrentLine { get; set; }
     public string ContinueFromTop { get; set; }
+    public string SpellCheckCompleted { get; set; }
+    public string ChangedWordsX { get; set; }
+    public string SkippedWordsX { get; set; }
+    public string CorrectWordsX { get; set; }
+    public string NamesX { get; set; }
+    public string AddedToDictionaryX { get; set; }
+    public string DoNotShowThisAgain { get; set; }
 
     public LanguageSpellCheck()
     {
@@ -71,5 +78,12 @@ public class LanguageSpellCheck
         EditWholeText = "Edit whole text";
         ContinueFromCurrentLine = "Continue spell check from the current line?\n\nYes = continue from the current line\nNo = start from the beginning";
         ContinueFromTop = "Spell check reached the end of the subtitle.\n\nContinue from the top?";
+        SpellCheckCompleted = "Spell check completed";
+        ChangedWordsX = "Changed words: {0}";
+        SkippedWordsX = "Skipped words: {0}";
+        CorrectWordsX = "Correct words: {0}";
+        NamesX = "Names: {0}";
+        AddedToDictionaryX = "Added to dictionary: {0}";
+        DoNotShowThisAgain = "Do not show this message again";
     }
 }
