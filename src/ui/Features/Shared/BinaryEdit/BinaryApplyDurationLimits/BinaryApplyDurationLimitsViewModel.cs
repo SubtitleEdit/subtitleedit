@@ -13,8 +13,6 @@ public partial class BinaryApplyDurationLimitsViewModel : ObservableObject
 {
     [ObservableProperty] private int _minimumDurationMs;
     [ObservableProperty] private int _maximumDurationMs;
-    [ObservableProperty] private bool _applyToAll;
-    [ObservableProperty] private bool _applyToSelectedLines;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -28,7 +26,6 @@ public partial class BinaryApplyDurationLimitsViewModel : ObservableObject
     {
         MinimumDurationMs = Se.Settings.General.SubtitleMinimumDisplayMilliseconds;
         MaximumDurationMs = Se.Settings.General.SubtitleMaximumDisplayMilliseconds;
-        ApplyToAll = true;
     }
 
     [RelayCommand]
@@ -62,7 +59,7 @@ public partial class BinaryApplyDurationLimitsViewModel : ObservableObject
     {
         var indicesToProcess = new List<int>();
 
-        if (ApplyToSelectedLines && selectedIndices != null && selectedIndices.Count > 0)
+        if (selectedIndices != null && selectedIndices.Count > 0)
         {
             indicesToProcess.AddRange(selectedIndices);
         }

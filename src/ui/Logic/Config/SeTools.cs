@@ -30,6 +30,7 @@ public class SeTools
     public string NvidiaPrompt { get; set; }
     public bool JoinKeepTimeCodes { get; set; }
     public int JoinAppendMilliseconds { get; set; }
+    public bool BinEditAppendKeepTimeCodes { get; set; }
 
     public string MergeTwoSubtitlesOutputFormat { get; set; }
     public string MergeTwoSubtitlesFontName1 { get; set; }

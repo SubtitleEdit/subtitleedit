@@ -34,6 +34,7 @@ public class LanguageSync
     public string AdjustAllShortcuts { get; set; }
     public string OffsetInSeconds { get; set; }
     public string SpeedFactor { get; set; }
+    public string ShowEarlierLaterDotDotDot { get; set; }
 
     public LanguageSync()
     {
@@ -67,5 +68,6 @@ public class LanguageSync
         AdjustAllShortcuts = "Keyboard shortcuts:\r\n\r\n• Shift + Left/Right: Move 10 ms\r\n• Ctrl + Left/Right: Move 100 ms\r\n• Alt + Left/Right: Move 500 ms";
         OffsetInSeconds = "Offset in seconds";
         SpeedFactor = "Speed factor";
+        ShowEarlierLaterDotDotDot = "Show earlier/later...";
     }
 }

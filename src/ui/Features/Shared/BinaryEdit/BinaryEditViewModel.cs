@@ -47,11 +47,10 @@ public partial class BinaryEditViewModel : ObservableObject
     [ObservableProperty] private string _statusText;
     [ObservableProperty] private string _currentPosition;
     [ObservableProperty] private string _currentSize;
-    [ObservableProperty] private bool _isDeleteVisible;
+    [ObservableProperty] private bool _hasSelection;
     [ObservableProperty] private bool _isInsertBeforeVisible;
     [ObservableProperty] private bool _isInsertAfterVisible;
     [ObservableProperty] private bool _isToggleForcedVisible;
-    [ObservableProperty] private bool _isInsertSubtitleVisible;
 
     public IOcrSubtitle? OcrSubtitle { get; set; }
 
@@ -1013,31 +1012,41 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var result = await _windowService.ShowDialogAsync<BinaryAdjustDuration.BinaryAdjustDurationWindow, BinaryAdjustDuration.BinaryAdjustDurationViewModel>(Window, vm => { });
+        var result = await _windowService.ShowDialogAsync<BinaryAdjustDuration.BinaryAdjustDurationWindow, BinaryAdjustDuration.BinaryAdjustDurationViewModel>(Window, vm => vm.Initialize(Subtitles));
 
         if (!result.OkPressed)
         {
             return;
         }
 
-        // Get selected indices from the grid
-        var selectedIndices = new List<int>();
-        if (SubtitleGrid?.SelectedItems != null)
+        result.AdjustDuration(Subtitles.ToList(), null);
+    }
+
+    [RelayCommand]
+    private async Task AdjustDurationsSelectedLines()
+    {
+        if (Window == null)
         {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    var index = Subtitles.IndexOf(binaryItem);
-                    if (index >= 0)
-                    {
-                        selectedIndices.Add(index);
-                    }
-                }
-            }
+            return;
         }
 
-        result.AdjustDuration(Subtitles.ToList(), selectedIndices.Count > 0 ? selectedIndices : null);
+        var selectedIndices = GetSelectedIndices();
+
+        if (selectedIndices.Count == 0)
+        {
+            return;
+        }
+
+        var itemsInScope = selectedIndices.Select(i => Subtitles[i]);
+
+        var result = await _windowService.ShowDialogAsync<BinaryAdjustDuration.BinaryAdjustDurationWindow, BinaryAdjustDuration.BinaryAdjustDurationViewModel>(Window, vm => vm.Initialize(itemsInScope));
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        result.AdjustDuration(Subtitles.ToList(), selectedIndices);
     }
 
     [RelayCommand]
@@ -1055,24 +1064,32 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Get selected indices from the grid
-        var selectedIndices = new List<int>();
-        if (SubtitleGrid?.SelectedItems != null)
+        result.ApplyLimits(Subtitles.ToList(), null);
+    }
+
+    [RelayCommand]
+    private async Task ApplyDurationLimitsSelectedLines()
+    {
+        if (Window == null)
         {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    var index = Subtitles.IndexOf(binaryItem);
-                    if (index >= 0)
-                    {
-                        selectedIndices.Add(index);
-                    }
-                }
-            }
+            return;
         }
 
-        result.ApplyLimits(Subtitles.ToList(), selectedIndices.Count > 0 ? selectedIndices : null);
+        var selectedIndices = GetSelectedIndices();
+
+        if (selectedIndices.Count == 0)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<BinaryApplyDurationLimitsWindow, BinaryApplyDurationLimitsViewModel>(Window, vm => { });
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        result.ApplyLimits(Subtitles.ToList(), selectedIndices);
     }
 
     [RelayCommand]
@@ -1083,29 +1100,32 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Get selected subtitles
-        var selectedItems = new List<BinarySubtitleItem>();
-        if (SubtitleGrid?.SelectedItems != null)
-        {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    selectedItems.Add(binaryItem);
-                }
-            }
-        }
+        var result = await _windowService.ShowDialogAsync<PickAlignment.PickAlignmentWindow, PickAlignment.PickAlignmentViewModel>(
+            Window, vm => vm.Initialize(null, Subtitles.Count));
 
-        // If no selection, nothing to do
-        if (selectedItems.Count == 0)
+        if (!result.OkPressed || string.IsNullOrEmpty(result.Alignment))
         {
-            await MessageBox.Show(Window, Se.Language.General.Information,
-                "Please select one or more subtitles to adjust alignment.",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
 
-        // Show alignment picker
+        ApplyAlignmentToSubtitles(Subtitles.ToList(), result.Alignment);
+    }
+
+    [RelayCommand]
+    private async Task AlignmentSelectedLines()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var selectedItems = GetSelectedItems();
+
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
         var result = await _windowService.ShowDialogAsync<PickAlignment.PickAlignmentWindow, PickAlignment.PickAlignmentViewModel>(
             Window, vm => vm.Initialize(null, selectedItems.Count));
 
@@ -1114,7 +1134,6 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Apply alignment to selected subtitles
         ApplyAlignmentToSubtitles(selectedItems, result.Alignment);
     }
 
@@ -1191,21 +1210,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Get selected subtitles
-        var selectedItems = new List<BinarySubtitleItem>();
-        if (SubtitleGrid?.SelectedItems != null)
-        {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    selectedItems.Add(binaryItem);
-                }
-            }
-        }
-
-        // If no selection, work on all subtitles
-        var itemsToResize = selectedItems.Count > 0 ? selectedItems : Subtitles.ToList();
+        var itemsToResize = Subtitles.ToList();
 
         if (itemsToResize.Count == 0)
         {
@@ -1223,7 +1228,6 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Refresh grid to show updated bitmaps
         if (SubtitleGrid != null)
         {
             var currentIndex = SubtitleGrid.SelectedIndex;
@@ -1236,6 +1240,33 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task ResizeImagesSelectedLines()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var selectedItems = GetSelectedItems();
+
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        using var result = await _windowService.ShowDialogAsync<BinaryResizeImages.BinaryResizeImagesWindow, BinaryResizeImages.BinaryResizeImagesViewModel>(
+            Window, vm => vm.Initialize(selectedItems));
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        ApplyGridSelection(selectedItems);
+        UpdateOverlayPosition();
+    }
+
+    [RelayCommand]
     private async Task AdjustBrightness()
     {
         if (Window == null)
@@ -1243,21 +1274,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Get selected subtitles
-        var selectedItems = new List<BinarySubtitleItem>();
-        if (SubtitleGrid?.SelectedItems != null)
-        {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    selectedItems.Add(binaryItem);
-                }
-            }
-        }
-
-        // If no selection, work on all subtitles
-        var itemsToAdjust = selectedItems.Count > 0 ? selectedItems : Subtitles.ToList();
+        var itemsToAdjust = Subtitles.ToList();
 
         if (itemsToAdjust.Count == 0)
         {
@@ -1275,20 +1292,41 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Refresh grid to show updated bitmaps
         if (SubtitleGrid != null)
         {
-            if (selectedItems.Count > 0)
-                ApplyGridSelection(selectedItems);
-            else
-            {
-                var currentIndex = SubtitleGrid.SelectedIndex;
-                SubtitleGrid.ItemsSource = null;
-                SubtitleGrid.ItemsSource = Subtitles;
-                SubtitleGrid.SelectedIndex = currentIndex;
-            }
+            var currentIndex = SubtitleGrid.SelectedIndex;
+            SubtitleGrid.ItemsSource = null;
+            SubtitleGrid.ItemsSource = Subtitles;
+            SubtitleGrid.SelectedIndex = currentIndex;
         }
 
+        UpdateOverlayPosition();
+    }
+
+    [RelayCommand]
+    private async Task AdjustBrightnessSelectedLines()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var selectedItems = GetSelectedItems();
+
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        using var result = await _windowService.ShowDialogAsync<BinaryAdjustBrightness.BinaryAdjustBrightnessWindow, BinaryAdjustBrightness.BinaryAdjustBrightnessViewModel>(
+            Window, vm => vm.Initialize(selectedItems));
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        ApplyGridSelection(selectedItems);
         UpdateOverlayPosition();
     }
 
@@ -1300,21 +1338,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Get selected subtitles
-        var selectedItems = new List<BinarySubtitleItem>();
-        if (SubtitleGrid?.SelectedItems != null)
-        {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    selectedItems.Add(binaryItem);
-                }
-            }
-        }
-
-        // If no selection, work on all subtitles
-        var itemsToAdjust = selectedItems.Count > 0 ? selectedItems : Subtitles.ToList();
+        var itemsToAdjust = Subtitles.ToList();
 
         if (itemsToAdjust.Count == 0)
         {
@@ -1332,20 +1356,41 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        // Refresh grid to show updated bitmaps
         if (SubtitleGrid != null)
         {
-            if (selectedItems.Count > 0)
-                ApplyGridSelection(selectedItems);
-            else
-            {
-                var currentIndex = SubtitleGrid.SelectedIndex;
-                SubtitleGrid.ItemsSource = null;
-                SubtitleGrid.ItemsSource = Subtitles;
-                SubtitleGrid.SelectedIndex = currentIndex;
-            }
+            var currentIndex = SubtitleGrid.SelectedIndex;
+            SubtitleGrid.ItemsSource = null;
+            SubtitleGrid.ItemsSource = Subtitles;
+            SubtitleGrid.SelectedIndex = currentIndex;
         }
 
+        UpdateOverlayPosition();
+    }
+
+    [RelayCommand]
+    private async Task AdjustAlphaSelectedLines()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var selectedItems = GetSelectedItems();
+
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        using var result = await _windowService.ShowDialogAsync<BinaryAdjustAlpha.BinaryAdjustAlphaWindow, BinaryAdjustAlpha.BinaryAdjustAlphaViewModel>(
+            Window, vm => vm.Initialize(selectedItems));
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        ApplyGridSelection(selectedItems);
         UpdateOverlayPosition();
     }
 
@@ -1357,19 +1402,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var selectedItems = new List<BinarySubtitleItem>();
-        if (SubtitleGrid?.SelectedItems != null)
-        {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    selectedItems.Add(binaryItem);
-                }
-            }
-        }
-
-        var itemsToAdjust = selectedItems.Count > 0 ? selectedItems : Subtitles.ToList();
+        var itemsToAdjust = Subtitles.ToList();
 
         if (itemsToAdjust.Count == 0)
         {
@@ -1389,54 +1422,111 @@ public partial class BinaryEditViewModel : ObservableObject
 
         if (SubtitleGrid != null)
         {
-            if (selectedItems.Count > 0)
-                ApplyGridSelection(selectedItems);
-            else
-            {
-                var currentIndex = SubtitleGrid.SelectedIndex;
-                SubtitleGrid.ItemsSource = null;
-                SubtitleGrid.ItemsSource = Subtitles;
-                SubtitleGrid.SelectedIndex = currentIndex;
-            }
+            var currentIndex = SubtitleGrid.SelectedIndex;
+            SubtitleGrid.ItemsSource = null;
+            SubtitleGrid.ItemsSource = Subtitles;
+            SubtitleGrid.SelectedIndex = currentIndex;
         }
 
         UpdateOverlayPosition();
     }
 
     [RelayCommand]
-    private void CenterHorizontally()
+    private async Task AdjustColorSelectedLines()
     {
-        // Get selected subtitles
-        var selectedItems = new List<BinarySubtitleItem>();
-        if (SubtitleGrid?.SelectedItems != null)
-        {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    selectedItems.Add(binaryItem);
-                }
-            }
-        }
-
-        // If no selection, work on all subtitles
-        var itemsToResize = selectedItems.Count > 0 ? selectedItems : Subtitles.ToList();
-
-        if (itemsToResize.Count == 0)
+        if (Window == null)
         {
             return;
         }
 
-        foreach (var subtitle in itemsToResize)
-        {
-            if (subtitle.Bitmap == null)
-            {
-                continue;
-            }
+        var selectedItems = GetSelectedItems();
 
-            var screenWidth = subtitle.ScreenSize.Width;
-            var imageWidth = (int)subtitle.Bitmap.Size.Width;
-            subtitle.X = (screenWidth - imageWidth) / 2;
+        if (selectedItems.Count == 0)
+        {
+            return;
+        }
+
+        using var result = await _windowService.ShowDialogAsync<BinaryAdjustColor.BinaryAdjustColorWindow, BinaryAdjustColor.BinaryAdjustColorViewModel>(
+            Window, vm => vm.Initialize(selectedItems));
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        ApplyGridSelection(selectedItems);
+        UpdateOverlayPosition();
+    }
+
+    [RelayCommand]
+    private void CenterHorizontally()
+    {
+        foreach (var subtitle in Subtitles)
+        {
+            if (subtitle.Bitmap == null) continue;
+            subtitle.X = (subtitle.ScreenSize.Width - (int)subtitle.Bitmap.Size.Width) / 2;
+        }
+
+        UpdateOverlayPosition();
+    }
+
+    [RelayCommand]
+    private void CenterHorizontallySelectedLines()
+    {
+        if (SubtitleGrid?.SelectedItems == null) return;
+        foreach (var item in SubtitleGrid.SelectedItems)
+        {
+            if (item is BinarySubtitleItem subtitle && subtitle.Bitmap != null)
+                subtitle.X = (subtitle.ScreenSize.Width - (int)subtitle.Bitmap.Size.Width) / 2;
+        }
+
+        UpdateOverlayPosition();
+    }
+
+    [RelayCommand]
+    private void TopAlign()
+    {
+        var marginTop = Se.Settings.Tools.BinEditTopMargin;
+        foreach (var subtitle in Subtitles)
+            subtitle.Y = marginTop;
+
+        UpdateOverlayPosition();
+    }
+
+    [RelayCommand]
+    private void TopAlignSelectedLines()
+    {
+        var marginTop = Se.Settings.Tools.BinEditTopMargin;
+        if (SubtitleGrid?.SelectedItems == null) return;
+        foreach (var item in SubtitleGrid.SelectedItems)
+            if (item is BinarySubtitleItem subtitle)
+                subtitle.Y = marginTop;
+
+        UpdateOverlayPosition();
+    }
+
+    [RelayCommand]
+    private void BottomAlign()
+    {
+        var marginBottom = Se.Settings.Tools.BinEditBottomMargin;
+        foreach (var subtitle in Subtitles)
+        {
+            if (subtitle.Bitmap == null) continue;
+            subtitle.Y = subtitle.ScreenSize.Height - (int)subtitle.Bitmap.Size.Height - marginBottom;
+        }
+
+        UpdateOverlayPosition();
+    }
+
+    [RelayCommand]
+    private void BottomAlignSelectedLines()
+    {
+        var marginBottom = Se.Settings.Tools.BinEditBottomMargin;
+        if (SubtitleGrid?.SelectedItems == null) return;
+        foreach (var item in SubtitleGrid.SelectedItems)
+        {
+            if (item is BinarySubtitleItem subtitle && subtitle.Bitmap != null)
+                subtitle.Y = subtitle.ScreenSize.Height - (int)subtitle.Bitmap.Size.Height - marginBottom;
         }
 
         UpdateOverlayPosition();
@@ -1445,34 +1535,12 @@ public partial class BinaryEditViewModel : ObservableObject
     [RelayCommand]
     private void Crop()
     {
-        // Get selected subtitles
-        var selectedItems = new List<BinarySubtitleItem>();
-        if (SubtitleGrid?.SelectedItems != null)
+        var itemsToCrop = Subtitles.ToList();
+        if (itemsToCrop.Count == 0) return;
+
+        foreach (var subtitle in itemsToCrop)
         {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    selectedItems.Add(binaryItem);
-                }
-            }
-        }
-
-        // If no selection, work on all subtitles
-        var itemsToResize = selectedItems.Count > 0 ? selectedItems : Subtitles.ToList();
-
-        if (itemsToResize.Count == 0)
-        {
-            return;
-        }
-
-        foreach (var subtitle in itemsToResize)
-        {
-            if (subtitle.Bitmap == null)
-            {
-                continue;
-            }
-
+            if (subtitle.Bitmap == null) continue;
             using var skBitmap = subtitle.Bitmap.ToSkBitmap();
             using var cropped = skBitmap.CropTransparentColors(out var offsetX, out var offsetY);
             var old = subtitle.Bitmap;
@@ -1495,29 +1563,57 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task AdjustAllTimes()
+    private void CropSelectedLines()
+    {
+        var selectedItems = new List<BinarySubtitleItem>();
+        if (SubtitleGrid?.SelectedItems != null)
+        {
+            foreach (var item in SubtitleGrid.SelectedItems)
+                if (item is BinarySubtitleItem binaryItem)
+                    selectedItems.Add(binaryItem);
+        }
+
+        if (selectedItems.Count == 0) return;
+
+        foreach (var subtitle in selectedItems)
+        {
+            if (subtitle.Bitmap == null) continue;
+            using var skBitmap = subtitle.Bitmap.ToSkBitmap();
+            using var cropped = skBitmap.CropTransparentColors(out var offsetX, out var offsetY);
+            var old = subtitle.Bitmap;
+            subtitle.Bitmap = cropped.ToAvaloniaBitmap();
+            old?.Dispose();
+            subtitle.X += offsetX;
+            subtitle.Y += offsetY;
+        }
+
+        ApplyGridSelection(selectedItems);
+        UpdateOverlayPosition();
+        RefreshStatusText();
+    }
+
+    [RelayCommand]
+    private async Task AdjustAllTimes() => await DoAdjustAllTimes();
+
+    [RelayCommand]
+    private async Task AdjustAllTimesSelectedLines()
+    {
+        if (SubtitleGrid?.SelectedItems?.Count == 0)
+        {
+            return;
+        }
+
+        await DoAdjustAllTimes(forceSelectedLines: true);
+    }
+
+    private async Task DoAdjustAllTimes(bool forceSelectedLines = false)
     {
         if (Window == null)
         {
             return;
         }
 
-        // Snapshot selection before the dialog opens so focus shift cannot clear it
-        var selectedIndices = new List<int>();
-        if (SubtitleGrid?.SelectedItems != null)
-        {
-            foreach (var item in SubtitleGrid.SelectedItems)
-            {
-                if (item is BinarySubtitleItem binaryItem)
-                {
-                    var index = Subtitles.IndexOf(binaryItem);
-                    if (index >= 0)
-                    {
-                        selectedIndices.Add(index);
-                    }
-                }
-            }
-        }
+        var selectedIndices = GetSelectedIndices();
 
         selectedIndices.Sort();
 
@@ -1537,7 +1633,16 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         await _windowService.ShowDialogAsync<BinaryAdjustAllTimesWindow, BinaryAdjustAllTimesViewModel>(
-            Window, vm => vm.Initialize(Subtitles, selectedIndices, RefreshGrid));
+            Window, vm =>
+            {
+                vm.Initialize(Subtitles, selectedIndices, RefreshGrid);
+                if (forceSelectedLines)
+                {
+                    vm.AdjustAll = false;
+                    vm.AdjustSelectedLinesAndForward = false;
+                    vm.AdjustSelectedLines = true;
+                }
+            });
     }
 
     [RelayCommand]
@@ -1786,7 +1891,7 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<BinarySubtitleItem>().ToList();
+        var selectedItems = GetSelectedItems();
         foreach (var item in selectedItems)
         {
             item.IsForced = !item.IsForced;
@@ -1804,6 +1909,13 @@ public partial class BinaryEditViewModel : ObservableObject
     {
         ApplyGridSelection(Subtitles.Where(s => !s.IsForced).ToList(), preserveScroll: true);
     }
+
+    // Captured before any await so focus shift cannot clear the grid selection.
+    private List<BinarySubtitleItem> GetSelectedItems() =>
+        SubtitleGrid?.SelectedItems?.Cast<BinarySubtitleItem>().ToList() ?? [];
+
+    private List<int> GetSelectedIndices() =>
+        GetSelectedItems().Select(item => Subtitles.IndexOf(item)).Where(i => i >= 0).ToList();
 
     // Adding many rows to a realized DataGrid's SelectedItems is O(n) visual work per
     // row, so selecting all forced/non-forced lines on a large file hangs (#11529).
@@ -1944,16 +2056,50 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task InsertSubtitle()
+    private void SortByStartTime()
     {
         var selectedItem = SelectedSubtitle;
-        if (Window == null || selectedItem == null)
+        var sorted = Subtitles.OrderBy(s => s.StartTime).ToList();
+        foreach (var item in sorted)
+            item.PropertyChanged -= OnSubtitleItemPropertyChanged;
+        Subtitles.Clear();
+        foreach (var item in sorted)
+        {
+            Subtitles.Add(item);
+        }
+        Renumber();
+        if (SubtitleGrid != null)
+        {
+            var newIndex = selectedItem != null ? Subtitles.IndexOf(selectedItem) : -1;
+            SubtitleGrid.ItemsSource = null;
+            SubtitleGrid.ItemsSource = Subtitles;
+            SelectAndScrollToRow(newIndex);
+        }
+        RefreshStatusText();
+    }
+
+    [RelayCommand]
+    private async Task AppendSubtitle()
+    {
+        if (Window == null)
         {
             return;
         }
 
         var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.General.OpenSubtitleFileTitle, Se.Language.General.ImageBasedSubtitles, "*.sup;*.sub;*.ts;*.xml;*.mkv;*.mks", Se.Language.General.AllFiles, "*.*");
         if (string.IsNullOrEmpty(fileName))
+        {
+            return;
+        }
+
+        var suggestedOffset = Subtitles.Count > 0
+            ? Subtitles[^1].EndTime
+            : TimeSpan.Zero;
+
+        var settings = await _windowService.ShowDialogAsync<BinaryAppendSubtitle.BinaryAppendSubtitleWindow, BinaryAppendSubtitle.BinaryAppendSubtitleViewModel>(
+            Window, vm => vm.Initialize(suggestedOffset));
+
+        if (!settings.OkPressed)
         {
             return;
         }
@@ -1972,18 +2118,25 @@ public partial class BinaryEditViewModel : ObservableObject
             return;
         }
 
-        var oldLastTime = selectedItem.EndTime.TotalMilliseconds;
-        var newFirstTime = ocrItems.First().StartTime.TotalMilliseconds;
-        var timeOffset = oldLastTime - newFirstTime + 1000;
+        var firstAppendedIndex = Subtitles.Count;
         foreach (var ocrItem in ocrItems)
         {
             var newItem = new BinarySubtitleItem(ocrItem, -1);
-            newItem.StartTime = TimeSpan.FromMilliseconds(ocrItem.StartTime.TotalMilliseconds + timeOffset);
-            newItem.EndTime = TimeSpan.FromMilliseconds(ocrItem.EndTime.TotalMilliseconds + timeOffset);
+            if (settings.AppendTimeCodes)
+            {
+                newItem.StartTime = ocrItem.StartTime + settings.TimeOffset;
+                newItem.EndTime = ocrItem.EndTime + settings.TimeOffset;
+            }
+            else
+            {
+                newItem.StartTime = ocrItem.StartTime;
+                newItem.EndTime = ocrItem.EndTime;
+            }
             Subtitles.Add(newItem);
         }
 
         Renumber();
+        SelectAndScrollToRow(firstAppendedIndex);
         RefreshStatusText();
     }
 
@@ -2418,12 +2571,10 @@ public partial class BinaryEditViewModel : ObservableObject
     internal void OnContextMenuOpening()
     {
         var selectedCount = SubtitleGrid?.SelectedItems?.Count ?? 0;
-        var selectedIndex = SubtitleGrid?.SelectedIndex ?? -1;
-        IsDeleteVisible = selectedCount > 0;
+        HasSelection = selectedCount > 0;
         IsToggleForcedVisible = selectedCount > 0;
         IsInsertAfterVisible = selectedCount == 1;
         IsInsertBeforeVisible = selectedCount == 1;
-        IsInsertSubtitleVisible = selectedCount == 1 && selectedIndex == Subtitles.Count - 1;
     }
 
     internal void OnDataGridDoubleTapped(TappedEventArgs e)

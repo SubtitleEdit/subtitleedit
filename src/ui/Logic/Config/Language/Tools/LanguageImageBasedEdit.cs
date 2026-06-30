@@ -28,6 +28,11 @@ public class LanguageImageBasedEdit
     public string AdjustColorDotDotDot { get; set; }
     public string AdjustColor { get; set; }
     public string ColorAdjustmentInfo { get; set; }
+    public string TopAlignLines { get; set; }
+    public string BottomAlignLines { get; set; }
+    public string AppendSubtitleDotDotDot { get; set; }
+    public string ShiftTimeCodes { get; set; }
+    public string SortByStartTime { get; set; }
 
     public LanguageImageBasedEdit()
     {
@@ -57,5 +62,10 @@ public class LanguageImageBasedEdit
         AdjustColorDotDotDot = "Adjust color...";
         AdjustColor = "Adjust color";
         ColorAdjustmentInfo = "Click the color swatch to pick a color. Bright subtitle pixels shift toward the chosen hue; dark outlines and shadows are preserved.\nPreview shows the first selected subtitle.";
+        TopAlignLines = "Top align";
+        BottomAlignLines = "Bottom align";
+        AppendSubtitleDotDotDot = "Append subtitle...";
+        ShiftTimeCodes = "Shift time codes by";
+        SortByStartTime = "Sort by start time";
     }
 }
