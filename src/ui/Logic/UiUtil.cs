@@ -90,6 +90,31 @@ public static class UiUtil
         };
     }
 
+    // On macOS the default UI font's ascent sits right at the cap height, so Avalonia's line box
+    // clips the dots on tall diacritics (Ä/Ö/Ü) at the top - in text boxes and grid cells alike
+    // (issue #11997). Giving the line a bit of extra leading (LineHeight) lifts the line box so the
+    // diacritics fit; padding does not help a TextBox, but LineHeight fixes both TextBox and TextBlock.
+    // Bound to the live FontSize (rather than a fixed value) so it scales with the chosen font size,
+    // and applied only on macOS so Windows/Linux line spacing is unchanged.
+    private static readonly IValueConverter DiacriticLineHeightConverter =
+        new FuncValueConverter<double, double>(fontSize =>
+            double.IsNaN(fontSize) || fontSize <= 0 ? double.NaN : fontSize * 1.4);
+
+    public static void FixMacDiacriticClipping(Control? control)
+    {
+        if (control == null || !OperatingSystem.IsMacOS())
+        {
+            return;
+        }
+
+        control.Bind(TextBlock.LineHeightProperty, new Binding
+        {
+            Source = control,
+            Path = nameof(TextBlock.FontSize),
+            Converter = DiacriticLineHeightConverter,
+        });
+    }
+
     public static Button MakeButton(string text)
     {
         return MakeButton(text, null);
