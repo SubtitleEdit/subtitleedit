@@ -1,7 +1,7 @@
 
 Subtitle Edit Changelog
 
-v5.1.0-beta4 (TBD)
+v5.1.0-beta4 (1st of July 2026)
 
 * Add CSV import/export to Multiple replace - thx faon-92
 * Add a re-usable "Apply" button to Multiple replace (SE4 parity) - thx KaDeeKe
