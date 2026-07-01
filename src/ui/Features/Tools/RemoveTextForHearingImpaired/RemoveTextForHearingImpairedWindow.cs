@@ -344,7 +344,7 @@ public class RemoveTextForHearingImpairedWindow : Window
             },
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
-        new DataGridCheckboxMultiSelect<RemoveItem>(dataGrid,
+        _ = new DataGridCheckboxMultiSelect<RemoveItem>(dataGrid,
             item => item.Apply, (item, v) => item.Apply = v);
 
         var labelLinesFound = UiUtil.MakeLabel().WithBindText(vm, nameof(vm.LinesFoundText));

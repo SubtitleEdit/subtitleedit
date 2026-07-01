@@ -144,7 +144,7 @@ public class FixNamesWindow : Window
             IsReadOnly = true,
         });
 
-        new DataGridCheckboxMultiSelect<FixNameItem>(dataGrid,
+        _ = new DataGridCheckboxMultiSelect<FixNameItem>(dataGrid,
             item => item.IsChecked, (item, v) => item.IsChecked = v);
 
         var flyout = new MenuFlyout();
@@ -212,7 +212,7 @@ public class FixNamesWindow : Window
             IsReadOnly = true
         });
 
-        new DataGridCheckboxMultiSelect<FixNameHitItem>(dataGrid,
+        _ = new DataGridCheckboxMultiSelect<FixNameHitItem>(dataGrid,
             item => item.IsEnabled, (item, v) => item.IsEnabled = v);
 
         var flyout = new MenuFlyout();

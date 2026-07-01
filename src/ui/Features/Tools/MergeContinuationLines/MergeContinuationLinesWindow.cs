@@ -194,7 +194,7 @@ public class MergeContinuationLinesWindow : Window
                 },
             },
         };
-        new DataGridCheckboxMultiSelect<MergeContinuationLinesCandidate>(dataGrid,
+        _ = new DataGridCheckboxMultiSelect<MergeContinuationLinesCandidate>(dataGrid,
             item => item.IsSelected, (item, v) => item.IsSelected = v);
 
         grid.Add(labelInfo, 0);

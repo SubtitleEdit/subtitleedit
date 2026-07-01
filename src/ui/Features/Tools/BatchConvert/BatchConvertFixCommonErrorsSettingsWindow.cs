@@ -113,7 +113,7 @@ public class BatchConvertFixCommonErrorsSettingsWindow : Window
                 },
             },
         };
-        new DataGridCheckboxMultiSelect<FixRuleDisplayItem>(rulesGrid,
+        _ = new DataGridCheckboxMultiSelect<FixRuleDisplayItem>(rulesGrid,
             item => item.IsSelected, (item, v) => item.IsSelected = v);
 
         return UiUtil.MakeBorderForControl(rulesGrid);

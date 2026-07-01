@@ -119,7 +119,7 @@ public class FixCommonErrorsWindow : Window
             },
         };
         rulesGrid.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
-        new DataGridCheckboxMultiSelect<FixRuleDisplayItem>(rulesGrid,
+        _ = new DataGridCheckboxMultiSelect<FixRuleDisplayItem>(rulesGrid,
             item => item.IsSelected, (item, v) => item.IsSelected = v);
 
         var step2Grid = MakeStep2Grid();
@@ -371,12 +371,15 @@ public class FixCommonErrorsWindow : Window
             },
         };
         dataGridFixes.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
-        new DataGridCheckboxMultiSelect<FixDisplayItem>(dataGridFixes,
+        _ = new DataGridCheckboxMultiSelect<FixDisplayItem>(dataGridFixes,
             item => item.IsSelected, (item, v) => item.IsSelected = v,
-            onFocusedItemChanged: item => { if (item != null)
+            onFocusedItemChanged: item =>
             {
-                _vm.SelectAndScrollTo(item);
-            } });
+                if (item != null)
+                {
+                    _vm.SelectAndScrollTo(item);
+                }
+            });
 
         var leftButtons = new StackPanel
         {
@@ -540,6 +543,7 @@ public class FixCommonErrorsWindow : Window
                         {
                             textBlock.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
                         }
+
                         return new Border
                         {
                             Padding = new Thickness(4, 2),
@@ -632,6 +636,7 @@ public class FixCommonErrorsWindow : Window
         {
             textBox.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
+
         textEditGrid.Add(textBox, 0, 0);
 
         var panelSingleLineLengths = new StackPanel
@@ -662,5 +667,4 @@ public class FixCommonErrorsWindow : Window
         base.OnKeyDown(e);
         _vm.OnKeyDown(e);
     }
-
 }

@@ -136,7 +136,7 @@ public class FixNetflixErrorsWindow : Window
             IsReadOnly = true,
             Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
         });
-        new DataGridCheckboxMultiSelect<NetflixCheckDisplayItem>(dataGrid,
+        _ = new DataGridCheckboxMultiSelect<NetflixCheckDisplayItem>(dataGrid,
             item => item.IsSelected, (item, v) => item.IsSelected = v);
 
         var grid = new Grid
@@ -231,7 +231,7 @@ public class FixNetflixErrorsWindow : Window
             },
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
-        new DataGridCheckboxMultiSelect<FixNetflixErrorsItem>(dataGrid,
+        _ = new DataGridCheckboxMultiSelect<FixNetflixErrorsItem>(dataGrid,
             item => item.Apply, (item, v) => item.Apply = v,
             canToggle: item => item.CanBeFixed);
 
