@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
@@ -49,7 +50,8 @@ public class SpeechToTextWindow : Window
         var comboEngine = UiUtil.MakeComboBox(vm.Engines, vm, nameof(vm.SelectedEngine))
             .WithMinWidth(260)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .WithMarginTop(10);
+            .WithMarginTop(10)
+            .WithLabeledBy(labelEngine);
         comboEngine.ItemTemplate = MakeEngineItemTemplate();
         comboEngine.SelectionChanged += vm.OnEngineChanged;
 
@@ -64,7 +66,8 @@ public class SpeechToTextWindow : Window
             .WithMarginLeft(5)
             .WithMarginTop(10)
             .BindIsVisible(vm, nameof(vm.IsEngineDownloadButtonVisible))
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .WithAccessibleName(Se.Language.General.Download);
         buttonEngineDownload.Bind(ToolTip.TipProperty, new Binding(nameof(vm.EngineDownloadHint))
         {
             Source = vm,
@@ -76,7 +79,8 @@ public class SpeechToTextWindow : Window
             .WithMarginLeft(5)
             .WithMarginTop(10)
             .BindIsVisible(vm, nameof(vm.IsEngineSettingsButtonVisible))
-            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
+            .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .WithAccessibleName(Se.Language.Video.AudioToText.BackendAndUpdateStatus);
         ToolTip.SetTip(buttonEngineSettings, Se.Language.Video.AudioToText.BackendAndUpdateStatus);
 
         var panelEngineControls = new StackPanel
@@ -99,21 +103,24 @@ public class SpeechToTextWindow : Window
             .WithMinWidth(220)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
             .WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsWhisperCppSelected));
+            .BindIsVisible(vm, nameof(vm.IsWhisperCppSelected))
+            .WithLabeledBy(labelBackend);
         var comboCrispAsrBackend = UiUtil.MakeComboBox(vm.CrispAsrBackends, vm, nameof(vm.SelectedCrispAsrBackend))
             .WithMinWidth(220)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
             .WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsCrispAsrSelected));
+            .BindIsVisible(vm, nameof(vm.IsCrispAsrSelected))
+            .WithLabeledBy(labelBackend);
 
         var labelForcedAligner = UiUtil.MakeTextBlock("Forced aligner").WithMarginTop(10)
             .BindIsVisible(vm, nameof(vm.IsForcedAlignerVisible));
         var comboForcedAligner = UiUtil.MakeComboBox(vm.ForcedAligners, vm, nameof(vm.SelectedForcedAligner))
             .WithMinWidth(220)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .WithMarginTop(10);
+            .WithMarginTop(10)
+            .WithLabeledBy(labelForcedAligner);
         comboForcedAligner.ItemTemplate = MakeForcedAlignerItemTemplate();
-        var buttonForcedAlignerDownload = UiUtil.MakeButtonBrowse(vm.DownloadForcedAlignerCommand)
+        var buttonForcedAlignerDownload = UiUtil.MakeButtonBrowse(vm.DownloadForcedAlignerCommand, accessibleName: Se.Language.General.Download)
             .WithMarginTop(10)
             .WithMarginLeft(5)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
@@ -135,7 +142,8 @@ public class SpeechToTextWindow : Window
             .WithMinWidth(220)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
             .WithMarginTop(10)
-            .BindIsVisible(vm, nameof(vm.IsLanguageSelectionVisible));
+            .BindIsVisible(vm, nameof(vm.IsLanguageSelectionVisible))
+            .WithLabeledBy(labelLanguage);
 
         var labelModel = UiUtil.MakeTextBlock(Se.Language.General.Model).WithMarginTop(10)
             .BindIsVisible(vm, nameof(vm.IsModelSelectionVisible));
@@ -143,10 +151,11 @@ public class SpeechToTextWindow : Window
             .WithMinWidth(220)
             .WithMarginTop(10)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .BindIsVisible(vm, nameof(vm.IsModelSelectionVisible));
+            .BindIsVisible(vm, nameof(vm.IsModelSelectionVisible))
+            .WithLabeledBy(labelModel);
         comboModel.ItemTemplate = MakeModelItemTemplate();
 
-        var buttonModelDownload = UiUtil.MakeButtonBrowse(vm.DownloadModelCommand)
+        var buttonModelDownload = UiUtil.MakeButtonBrowse(vm.DownloadModelCommand, accessibleName: Se.Language.General.Download)
             .WithMarginTop(10)
             .WithMarginLeft(5)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
@@ -170,12 +179,15 @@ public class SpeechToTextWindow : Window
         var checkTranslateToEnglish = UiUtil.MakeCheckBox(vm, nameof(vm.DoTranslateToEnglish))
             .WithMarginTop(20)
             .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
-            .BindIsVisible(vm, nameof(vm.IsTranslateVisible));
+            .BindIsVisible(vm, nameof(vm.IsTranslateVisible))
+            .WithLabeledBy(labelTranslateToEnglish);
 
         var labelPostProcessing = UiUtil.MakeTextBlock(Se.Language.General.PostProcessing).WithMarginTop(15);
-        var checkPostProcessing = UiUtil.MakeCheckBox(vm, nameof(vm.DoPostProcessing)).BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
+        var checkPostProcessing = UiUtil.MakeCheckBox(vm, nameof(vm.DoPostProcessing)).BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+            .WithLabeledBy(labelPostProcessing);
         var buttonPostProcessing = UiUtil.MakeButton(vm.ShowPostProcessingSettingsCommand, IconNames.Settings)
-                    .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
+                    .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
+                    .WithAccessibleName(Se.Language.General.PostProcessing);
 
         var panelPostProcessingControls = new StackPanel
         {
@@ -198,7 +210,8 @@ public class SpeechToTextWindow : Window
         var buttonAdvancedSettings = UiUtil.MakeButton(vm.ShowAdvancedSettingsCommand, IconNames.Settings)
                     .BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled))
                     .WithMarginTop(15)
-                    .BindIsVisible(vm, nameof(vm.IsAdvancedSettingsVisible));
+                    .BindIsVisible(vm, nameof(vm.IsAdvancedSettingsVisible))
+                    .WithAccessibleName(Se.Language.General.AdvancedSettings);
 
         var textBoxAdvancedSettings = new TextBox()
         {
@@ -210,7 +223,8 @@ public class SpeechToTextWindow : Window
             Opacity = 0.6,
             BorderThickness = new Thickness(0),
             MaxWidth = 320,
-        }.BindIsVisible(vm, nameof(vm.IsAdvancedSettingsVisible));
+        }.BindIsVisible(vm, nameof(vm.IsAdvancedSettingsVisible))
+            .WithLabeledBy(labelAdvancedSettings);
         textBoxAdvancedSettings.Bind(TextBox.TextProperty, new Binding
         {
             Path = nameof(vm.Parameters),
@@ -220,6 +234,7 @@ public class SpeechToTextWindow : Window
         });
 
         var progressBar = UiUtil.MakeProgressBar();
+        AutomationProperties.SetName(progressBar, Se.Language.Video.AudioToText.Transcribe);
         progressBar.Margin = new Thickness(10, 0, 10, 8);
         progressBar.Width = double.NaN;
         progressBar.VerticalAlignment = VerticalAlignment.Center;
@@ -430,6 +445,9 @@ public class SpeechToTextWindow : Window
 
         foreach (var (label, control) in openAiRows)
         {
+            // Link each OpenAI-compatible input to its visible label so a screen reader announces the
+            // label as the control's name instead of a bare "edit"/"combo box" (#11745).
+            AutomationProperties.SetLabeledBy(control, label);
             grid.Add(label, row, 0);
             grid.Add(control, row, 1);
             row++;
@@ -472,6 +490,7 @@ public class SpeechToTextWindow : Window
             IsReadOnly = true,
             Margin = new Thickness(0, 0, 0, 10),
         };
+        AutomationProperties.SetName(textBoxConsoleLog, Se.Language.General.ConsoleLog);
         textBoxConsoleLog.Bind(TextBox.TextProperty, new Binding
         {
             Path = nameof(vm.ConsoleLog),
@@ -520,6 +539,7 @@ public class SpeechToTextWindow : Window
             },
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedBatchItem)) { Source = vm });
+        AutomationProperties.SetName(dataGrid, Se.Language.General.BatchMode);
         vm.BatchGrid = dataGrid;
 
         var buttonAdd = UiUtil.MakeButton(Se.Language.General.AddDotDotDot, vm.AddCommand).BindIsEnabled(vm, nameof(vm.IsTranscribeEnabled));
@@ -602,6 +622,7 @@ public class SpeechToTextWindow : Window
             IsReadOnly = true,
             Margin = new Thickness(10),
         };
+        AutomationProperties.SetName(textBoxConsoleLog, Se.Language.General.ConsoleLog);
         textBoxConsoleLog.Bind(TextBox.TextProperty, new Binding
         {
             Path = nameof(vm.ConsoleLog),

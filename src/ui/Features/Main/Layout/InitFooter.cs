@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -91,6 +92,9 @@ public static class InitFooter
                         FontSize = 20,
                         [ToolTip.TipProperty] = Se.Language.General.LayerFilterOn,
                     },
+                    // The tooltip lives on the inner Icon, so the Button itself needs its own accessible
+                    // name for screen readers (a ToolTip is not exposed as the UIA Name) (#11745).
+                    [AutomationProperties.NameProperty] = Se.Language.General.LayerFilterOn,
                     [!Visual.IsVisibleProperty] = new Binding(nameof(vm.ShowLayerFilterIcon)),
                     [!Button.CommandProperty] = new Binding(nameof(vm.ShowPickLayerFilterCommand)),
 
@@ -109,6 +113,7 @@ public static class InitFooter
                         FontSize = 20,
                         [ToolTip.TipProperty] = Se.Language.Main.Menu.SmpteTiming,
                     },
+                    [AutomationProperties.NameProperty] = Se.Language.Main.Menu.SmpteTiming,
                     [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsSmpteTimingEnabled)),
                     [!Button.CommandProperty] = new Binding(nameof(vm.ShowSmpteTimingCommand)),
 
@@ -127,6 +132,7 @@ public static class InitFooter
                         FontSize = 20,
                         [ToolTip.TipProperty] = Se.Language.General.OffsetTimeCodes,
                     },
+                    [AutomationProperties.NameProperty] = Se.Language.General.OffsetTimeCodes,
                     [!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsVideoOffsetVisible)),
                     [!Button.CommandProperty] = new Binding(nameof(vm.ShowVideoSetOffsetCommand)),
 
