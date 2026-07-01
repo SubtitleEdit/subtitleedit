@@ -12,6 +12,10 @@ v5.1.0-beta4 (TBD)
 * Fix icon-button hints not showing in dialogs on macOS
 * Fix Google Lens OCR including server retry messages in the OCR text - thx LurkingNinja
 * Fix bare Alt not activating the main menu bar on Windows
+* Fix small custom-millisecond video seeks being unreliable on a single key press - thx AndryOut
+* Fix Option+Arrow word navigation in the color-tag / source-view text editors on macOS - thx mjuhasz
+* Fix Escape closing the Binary edit window when a dialog was opened from its context menu - thx mjuhasz
+* Fix the status dot and description in the "Get dictionaries" window - thx ivandrofly
 
 -----------------------------------------------------------------------------------------------------
 
