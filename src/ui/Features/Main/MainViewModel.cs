@@ -1140,16 +1140,16 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task ShowSourceView()
     {
+        var oldSelectedIndex = SelectedSubtitleIndex ?? 0;
         var result = await ShowDialogAsync<SourceViewWindow, SourceViewViewModel>(vm =>
         {
-            var text = GetUpdateSubtitle().ToText(SelectedSubtitleFormat);
+            var subtitle = GetUpdateSubtitle();
+            var text = subtitle.ToText(SelectedSubtitleFormat);
             var title = string.Format(Se.Language.General.SourceViewX, (string.IsNullOrEmpty(_subtitleFileName)
                 ? Se.Language.General.Untitled
                 : Path.GetFileName(_subtitleFileName)));
-            vm.Initialize(title, text, SelectedSubtitleFormat);
+            vm.Initialize(title, text, SelectedSubtitleFormat, subtitle, oldSelectedIndex);
         });
-
-        var oldSelectedIndex = SelectedSubtitleIndex ?? 0;
 
         if (result.OkPressed)
         {

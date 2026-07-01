@@ -25,8 +25,8 @@ public class SourceViewWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
             Width = double.NaN,
             Height = double.NaN,
+            Child = vm.SourceViewTextBox.ContentControl,
         };
-        vm.TextBoxContainer = contentBorder;
 
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
@@ -58,6 +58,7 @@ public class SourceViewWindow : Window
 
         Content = grid;
 
+        Opened += delegate { Avalonia.Threading.Dispatcher.UIThread.Post(vm.FocusEditor); };
         KeyDown += (_, e) => vm.OnKeyDown(e);
     }
 }

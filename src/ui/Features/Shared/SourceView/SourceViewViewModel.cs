@@ -32,9 +32,9 @@ public partial class SourceViewViewModel : ObservableObject
 
     public SubtitleFormat _subtitleFormat { get; private set; }
     public ITextBoxWrapper SourceViewTextBox { get; set; }
-    public Border TextBoxContainer { get; set; }
 
     private readonly System.Timers.Timer _cursorTimer;
+    private int _initialCaretIndex;
 
     public SourceViewViewModel()
     {
@@ -44,7 +44,6 @@ public partial class SourceViewViewModel : ObservableObject
         LineAndColumnInfo = string.Empty;
         Subtitle = new Subtitle();
         _subtitleFormat = new SubRip();
-        TextBoxContainer = new Border();
 
         _cursorTimer = new System.Timers.Timer(200);
         _cursorTimer.Elapsed += (sender, args) =>
@@ -81,33 +80,67 @@ public partial class SourceViewViewModel : ObservableObject
         };
     }
 
-    internal void Initialize(string title, string text, SubtitleFormat subtitleFormat)
+    internal void Initialize(
+        string title,
+        string text,
+        SubtitleFormat subtitleFormat,
+        Subtitle subtitle,
+        int selectedParagraphIndex)
     {
         Title = title;
         Text = text;
         _subtitleFormat = subtitleFormat;
         _cursorTimer.Start();
-
-        Dispatcher.UIThread.Post(async () =>
+        _initialCaretIndex = FindSelectedParagraphCaretIndex(text, subtitle, subtitleFormat, selectedParagraphIndex);
+        if (text.Length > 2_000_000)
         {
-            await Task.Delay(50); // Slight delay to ensure control is ready
+            SourceViewTextBox = CreateSimpleTextBoxWrapper();
+        }
+        else
+        {
+            SourceViewTextBox = CreateAdvancedTextBoxWrapper(text, subtitleFormat);
+        }
+    }
 
-            var useSimpleTextBox = text.Length > 2_000_000;
-            if (useSimpleTextBox)
-            {
-                SourceViewTextBox = CreateSimpleTextBoxWrapper();
-            }
-            else
-            {
-                SourceViewTextBox = CreateAdvancedTextBoxWrapper(text, subtitleFormat);
-            }
-
-            TextBoxContainer.Child = SourceViewTextBox.ContentControl;
-
-            await Task.Delay(50); // Slight delay to ensure control is ready
+    internal void FocusEditor()
+    {
+        SourceViewTextBox.CaretIndex = _initialCaretIndex;
+        if (SourceViewTextBox.TextControl is TextEditor textEditor)
+        {
+            textEditor.TextArea.Focus();
+            textEditor.TextArea.Caret.BringCaretToView();
+        }
+        else
+        {
             SourceViewTextBox.Focus();
-            SourceViewTextBox.CaretIndex = 0;
-        }, DispatcherPriority.Input);
+        }
+    }
+
+    private static int FindSelectedParagraphCaretIndex(
+        string source,
+        Subtitle subtitle,
+        SubtitleFormat subtitleFormat,
+        int selectedParagraphIndex)
+    {
+        if (selectedParagraphIndex < 0 || selectedParagraphIndex >= subtitle.Paragraphs.Count)
+        {
+            return 0;
+        }
+
+        var modifiedSubtitle = new Subtitle(subtitle, false);
+        var paragraph = modifiedSubtitle.Paragraphs[selectedParagraphIndex];
+        var markerPrefix = paragraph.Text.StartsWith('A') ? "B" : "A";
+        paragraph.Text = markerPrefix + "__SOURCE_VIEW_CARET__";
+        var modifiedSource = modifiedSubtitle.ToText(subtitleFormat);
+
+        var length = Math.Min(source.Length, modifiedSource.Length);
+        var index = 0;
+        while (index < length && source[index] == modifiedSource[index])
+        {
+            index++;
+        }
+
+        return index < source.Length ? index : 0;
     }
 
     private TextBoxWrapper CreateSimpleTextBoxWrapper()
