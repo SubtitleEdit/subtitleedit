@@ -356,6 +356,7 @@ public partial class BatchConvertViewModel : ObservableObject
             new OllamaTranslate(),
             new LibreTranslate(),
             new LmStudioTranslate(),
+            new LlamaCppTranslate(),
             new NoLanguageLeftBehindServe(),
             new NoLanguageLeftBehindApi(),
             new DeepLTranslate(),
@@ -2071,6 +2072,18 @@ public partial class BatchConvertViewModel : ObservableObject
             Configuration.Settings.Tools.LmStudioModel = AutoTranslateModel.Trim();
         }
 
+        if (engineType == typeof(LlamaCppTranslate))
+        {
+            if (!string.IsNullOrEmpty(AutoTranslateUrl.Trim()))
+            {
+                Configuration.Settings.Tools.LlamaCppApiUrl = AutoTranslateUrl.Trim();
+            }
+            else if (!string.IsNullOrEmpty(Se.Settings.AutoTranslate.LlamaCppApiUrl))
+            {
+                Configuration.Settings.Tools.LlamaCppApiUrl = Se.Settings.AutoTranslate.LlamaCppApiUrl;
+            }
+        }
+
         if (engineType == typeof(OllamaTranslate))
         {
             if (!string.IsNullOrEmpty(Se.Settings.AutoTranslate.OllamaUrl))
@@ -2258,6 +2271,16 @@ public partial class BatchConvertViewModel : ObservableObject
             AutoTranslateModelBrowseIsVisible = false;
             AutoTranslateModelIsVisible = false;
             AutoTranslateUrl = Se.Settings.AutoTranslate.LmStudioApiUrl;
+            AutoTranslateUrlIsVisible = true;
+            AutoTranslateApiKey = string.Empty;
+            AutoTranslateApiKeyIsVisible = false;
+        }
+        else if (engine is LlamaCppTranslate)
+        {
+            AutoTranslateModel = string.Empty;
+            AutoTranslateModelBrowseIsVisible = false;
+            AutoTranslateModelIsVisible = false;
+            AutoTranslateUrl = Se.Settings.AutoTranslate.LlamaCppApiUrl;
             AutoTranslateUrlIsVisible = true;
             AutoTranslateApiKey = string.Empty;
             AutoTranslateApiKeyIsVisible = false;
