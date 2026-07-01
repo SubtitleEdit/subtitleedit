@@ -6,6 +6,11 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 
 public class SeAppearance
 {
+    // Null in settings written before the one-time switch from the macOS system font to Helvetica Neue.
+    // Keep this nullable: System.Text.Json runs this constructor for legacy files, so a non-null default
+    // would make an absent migration marker indistinguishable from a completed migration.
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public int? MacOsFontMigrationVersion { get; set; }
     public string Theme { get; set; }
     public string IconTheme { get; set; }
     public bool MatchIconColorToDarkTheme { get; set; }

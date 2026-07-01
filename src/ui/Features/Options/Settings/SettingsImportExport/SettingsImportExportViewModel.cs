@@ -359,6 +359,7 @@ public partial class SettingsImportExportViewModel : ObservableObject
             if (importData.Appearance != null)
             {
                 Se.Settings.Appearance = importData.Appearance;
+                Se.MigrateMacOsFontSettings(Se.Settings.Appearance, OperatingSystem.IsMacOS(), true);
             }
         }
 
@@ -510,4 +511,3 @@ public partial class SettingsImportExportViewModel : ObservableObject
         }
     }
 }
-

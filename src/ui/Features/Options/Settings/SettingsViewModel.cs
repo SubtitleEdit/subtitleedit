@@ -709,10 +709,7 @@ public partial class SettingsViewModel : ObservableObject
         LayoutScale = (int)Math.Round(appearance.LayoutScale * 100.0, MidpointRounding.AwayFromZero);
         if (OperatingSystem.IsMacOS())
         {
-            SelectedFontName = appearance.FontName is ".AppleSystemUIFont" or "Default"
-                               || FontNames.All(p => p != appearance.FontName)
-                ? "System Font"
-                : appearance.FontName;
+            SelectedFontName = MapMacOsFontNameForDisplay(appearance.FontName, FontNames);
         }
         else
         {
@@ -919,6 +916,21 @@ public partial class SettingsViewModel : ObservableObject
         ExistsSettingsFile = File.Exists(Se.GetSettingsFilePath());
 
         WriteToolsLog = Se.Settings.Tools.WriteToolsLog;
+    }
+
+    internal static string MapMacOsFontNameForDisplay(string fontName, IReadOnlyList<string> fontNames)
+    {
+        if (fontName == ".AppleSystemUIFont")
+        {
+            return "System Font";
+        }
+
+        if (fontName == "Default")
+        {
+            return "Helvetica Neue";
+        }
+
+        return fontNames.FirstOrDefault(p => p == fontName) ?? fontNames.First();
     }
 
     // Display label <-> stored extension for the waveform "Extract audio" format.
@@ -2283,6 +2295,7 @@ public partial class SettingsViewModel : ObservableObject
             if (result.ResetAppearance)
             {
                 Se.Settings.Appearance = new SeAppearance();
+                Se.MigrateMacOsFontSettings(Se.Settings.Appearance, OperatingSystem.IsMacOS(), false);
             }
 
             if (result.ResetAutoTranslate)
