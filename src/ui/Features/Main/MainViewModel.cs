@@ -348,6 +348,10 @@ public partial class MainViewModel :
     private const double PlayheadMaxForwardStepSeconds = 0.05; // cap one tick's advance so a starved tick can't lurch
     private const double PlayheadFreezeHoldSeconds = 0.12; // if mpv's clock hasn't moved this long, it's frozen: hold
     private long _playheadLastRawChangeTs; // when mpv's reported position last changed
+    private bool _playheadWasPlaying; // to detect the play -> pause transition
+    private bool _pauseRequested; // a pause command fired; freeze the cursor now, before mpv's IsPlaying flips
+    private long _playheadPauseSettleTs; // when we last paused; briefly hold the estimate so it doesn't snap back
+    private const double PlayheadPauseSettleMs = 300; // mpv's reported position lags ~100-200 ms after a pause
     private CancellationTokenSource _videoOpenTokenSource;
     private readonly HashSet<string> _waveformsBeingGenerated = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lock _waveformsBeingGeneratedLock = new();
@@ -935,6 +939,7 @@ public partial class MainViewModel :
             return;
         }
 
+        _pauseRequested = false;
         vp.VideoPlayer.Play();
     }
 
@@ -1099,6 +1104,11 @@ public partial class MainViewModel :
             return;
         }
 
+        if (vp.VideoPlayer.IsPlaying)
+        {
+            RequestPausePlayheadFreeze();
+        }
+
         vp.VideoPlayer.Pause();
     }
 
@@ -1111,7 +1121,24 @@ public partial class MainViewModel :
             return;
         }
 
+        if (control.VideoPlayer.IsPlaying)
+        {
+            RequestPausePlayheadFreeze();
+        }
+        else
+        {
+            _pauseRequested = false;
+        }
+
         control.TogglePlayPause();
+    }
+
+    // Freeze the waveform cursor at its current spot the instant a pause is requested, instead of
+    // letting it keep gliding for the ~100 ms until mpv's IsPlaying actually flips (#12033 follow-up).
+    private void RequestPausePlayheadFreeze()
+    {
+        _pauseRequested = true;
+        _playheadPauseSettleTs = Stopwatch.GetTimestamp();
     }
 
     [RelayCommand]
@@ -19854,7 +19881,7 @@ public partial class MainViewModel :
             return rawPosition;
         }
 
-        if (vp.IsPlaying && _playheadValid && _playheadLastRealSeconds >= 0)
+        if (vp.IsPlaying && !_pauseRequested && _playheadValid && _playheadLastRealSeconds >= 0)
         {
             var elapsedSeconds = (nowTimestamp - _playheadLastTimestamp) / (double)Stopwatch.Frequency;
             if (elapsedSeconds < 0)
@@ -19917,12 +19944,46 @@ public partial class MainViewModel :
         }
         else
         {
-            _playheadEstimateSeconds = rawPosition;
+            // Paused - or a pause was just requested via a command, so we freeze here immediately
+            // (before mpv's IsPlaying flips ~100 ms later) so the cursor stops on the keypress instead
+            // of gliding on. mpv's reported position also lags ~100-200 ms after a pause, so hold the
+            // frozen estimate for a short settle window rather than snapping to that stale value (which
+            // caused the backward jitter); release on a large gap (a real seek) or once mpv settles.
+            // (#12033 follow-up)
+            var settleElapsedMs = (nowTimestamp - _playheadPauseSettleTs) / (double)Stopwatch.Frequency * 1000.0;
+
+            if (!vp.IsPlaying)
+            {
+                if (_playheadWasPlaying && !_pauseRequested)
+                {
+                    _playheadPauseSettleTs = nowTimestamp; // fallback arming for pauses not via a command
+                    settleElapsedMs = 0;
+                }
+
+                _pauseRequested = false; // mpv has actually paused now
+            }
+            else if (settleElapsedMs >= PlayheadPauseSettleMs)
+            {
+                // Pause didn't take within the window (mpv still playing): stop forcing the freeze so
+                // the cursor resumes tracking next tick rather than getting stuck.
+                _pauseRequested = false;
+            }
+
+            var holdForPause = _playheadValid
+                               && settleElapsedMs < PlayheadPauseSettleMs
+                               && Math.Abs(_playheadEstimateSeconds - rawPosition) < PlayheadResyncThresholdSeconds;
+
+            if (!holdForPause)
+            {
+                _playheadEstimateSeconds = rawPosition;
+            }
+
             _playheadValid = true;
         }
 
         _playheadLastRealSeconds = rawPosition;
         _playheadLastTimestamp = nowTimestamp;
+        _playheadWasPlaying = vp.IsPlaying;
         return _playheadEstimateSeconds;
     }
 
