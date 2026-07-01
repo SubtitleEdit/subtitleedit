@@ -2901,6 +2901,40 @@ public class AudioVisualizer : Control
         {
             var rect = new Rect(currentRegionLeft, 0, currentRegionWidth, renderCtx.Height);
             context.FillRectangle(_paintParagraphBackground, rect);
+
+            DrawNewParagraphDuration(context, currentRegionLeft, currentRegionWidth, renderCtx.Height);
+        }
+    }
+
+    // SE 4 parity: while the user drags out a new selection, show its duration inside the
+    // rectangle so the length is visible before the subtitle is created (issue #12034).
+    private void DrawNewParagraphDuration(DrawingContext context, double currentRegionLeft, double currentRegionWidth, double height)
+    {
+        if (NewSelectionParagraph == null || currentRegionWidth <= 5)
+        {
+            return;
+        }
+
+        var durationMs = (NewSelectionParagraph.EndTime - NewSelectionParagraph.StartTime).TotalMilliseconds;
+        if (durationMs < 10)
+        {
+            return;
+        }
+
+        // ToShortDisplayString mirrors Se.Settings.General.UseFrameMode, so this label follows the
+        // same time/frame formatting as the existing paragraph footer (see DrawParagraphFooter).
+        var durationText = GetCachedParagraphText(new TimeCode(durationMs).ToShortDisplayString());
+        if (durationText.Width >= currentRegionWidth - 4)
+        {
+            return;
+        }
+
+        var textBounds = new Rect(currentRegionLeft + 1, 0, currentRegionWidth - 3, height);
+        using (context.PushClip(textBounds))
+        {
+            var x = currentRegionLeft + (currentRegionWidth - durationText.Width) / 2;
+            var y = height - 14 - durationText.Height;
+            context.DrawText(durationText, new Point(x, y));
         }
     }
 
