@@ -119,8 +119,6 @@ public class FixCommonErrorsWindow : Window
             },
         };
         rulesGrid.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
-        new DataGridCheckboxMultiSelect<FixRuleDisplayItem>(rulesGrid,
-            item => item.IsSelected, (item, v) => item.IsSelected = v);
 
         var step2Grid = MakeStep2Grid();
         step2Grid.Bind(IsVisibleProperty, new Binding(nameof(_vm.Step2IsVisible)));
@@ -371,12 +369,6 @@ public class FixCommonErrorsWindow : Window
             },
         };
         dataGridFixes.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
-        new DataGridCheckboxMultiSelect<FixDisplayItem>(dataGridFixes,
-            item => item.IsSelected, (item, v) => item.IsSelected = v,
-            onFocusedItemChanged: item => { if (item != null)
-            {
-                _vm.SelectAndScrollTo(item);
-            } });
 
         var leftButtons = new StackPanel
         {
