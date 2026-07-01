@@ -26,7 +26,6 @@ public partial class GetDictionariesViewModel : ObservableObject
 {
     [ObservableProperty] private ObservableCollection<GetSpellCheckDictionaryDisplay> _dictionaries;
     [ObservableProperty] private GetSpellCheckDictionaryDisplay? selectedDictionary;
-    [ObservableProperty] private string _description;
     [ObservableProperty] private double _progress;
     [ObservableProperty] private string _statusText;
     [ObservableProperty] private bool _isDownloadEnabled;
@@ -80,7 +79,6 @@ public partial class GetDictionariesViewModel : ObservableObject
 
         Dictionaries = new ObservableCollection<GetSpellCheckDictionaryDisplay>();
         SelectedDictionary = null;
-        Description = string.Empty;
         IsDownloadEnabled = true;
         IsProgressVisible = false;
         StatusText = string.Empty;
@@ -302,21 +300,11 @@ public partial class GetDictionariesViewModel : ObservableObject
             }
         }
 
-        if (selected != null)
-        {
-            SelectedDictionary = selected;
-            Description = selected.Description;
-        }
-        else
-        {
-            SelectedDictionary = Dictionaries.FirstOrDefault();
-            Description = string.Empty;
-        }
+        SelectedDictionary = selected ?? Dictionaries.FirstOrDefault();
     }
 
     partial void OnSelectedDictionaryChanged(GetSpellCheckDictionaryDisplay? value)
     {
-        Description = value?.Description ?? string.Empty;
         UpdateSelectedStatus();
     }
 
