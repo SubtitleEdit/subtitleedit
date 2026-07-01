@@ -365,7 +365,8 @@ public class SettingsPage : UserControl
                     UiUtil.MakeButtonBrowse(_vm.EditTextTooWideSettingsCommand)
                 )),
 
-            MakeCheckboxSetting(Se.Language.Options.Settings.ColorTextTooManyLines, nameof(_vm.ColorTextTooManyLines)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.ColorTextTooManyLines, nameof(_vm.ColorTextTooManyLines),
+                labelBindingPath: nameof(_vm.ColorTextTooManyLinesLabel)),
             MakeSeparator(),
             MakeCheckboxSetting(Se.Language.Options.Settings.ColorCharactersPerSecond, nameof(_vm.ColorCharactersPerSecond)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ColorWordsPerMinute, nameof(_vm.ColorWordsPerMinute)),
@@ -1156,9 +1157,9 @@ public class SettingsPage : UserControl
         return numericUpDown;
     }
 
-    private SettingsItem MakeCheckboxSetting(string label, string bindingProperty, Binding? bindingEnabled = null)
+    private SettingsItem MakeCheckboxSetting(string label, string bindingProperty, Binding? bindingEnabled = null, string? labelBindingPath = null)
     {
-        var item = new SettingsItem(label, () =>
+        Control Factory()
         {
             var cb = new CheckBox
             {
@@ -1172,9 +1173,11 @@ public class SettingsPage : UserControl
             }
 
             return cb;
-        });
+        }
 
-        return item;
+        return labelBindingPath != null
+            ? new SettingsItem(label, _vm, labelBindingPath, Factory)
+            : new SettingsItem(label, Factory);
     }
 
     protected override void OnLoaded(RoutedEventArgs e)

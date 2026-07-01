@@ -72,7 +72,17 @@ public partial class SettingsViewModel : ObservableObject
         }
     }
     [ObservableProperty] private int? _maxLines;
+    [ObservableProperty] private string _colorTextTooManyLinesLabel = string.Empty;
     [ObservableProperty] private int? _unbreakLinesShorterThan;
+
+    // "Color text if more than N lines" must track the live "Max number of lines"
+    // value instead of a hardcoded "2" (#12028), including while typing (nullable/
+    // out-of-range values fall back to the coloring logic's own default of 2).
+    partial void OnMaxLinesChanged(int? value)
+    {
+        var lineCount = value is > 0 ? value.Value : 2;
+        ColorTextTooManyLinesLabel = string.Format(Se.Language.Options.Settings.ColorTextTooManyLinesX, lineCount);
+    }
     [ObservableProperty] private ObservableCollection<DialogStyleDisplay> _dialogStyles;
     [ObservableProperty] private DialogStyleDisplay _dialogStyle;
     [ObservableProperty] private ObservableCollection<ContinuationStyleDisplay> _continuationStyles;
