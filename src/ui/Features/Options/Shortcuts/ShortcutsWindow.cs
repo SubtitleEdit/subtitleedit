@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -40,6 +41,9 @@ public class ShortcutsWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
         _searchBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.SearchText)) { Source = vm });
+        // Give the interactive controls accessible names so screen readers announce them instead of
+        // reading a generic "edit"/"combo box"/"check box" (issue #11745).
+        AutomationProperties.SetName(_searchBox, language.SearchShortcuts);
 
         var labelBadgeCount = new Border
         {
@@ -64,6 +68,7 @@ public class ShortcutsWindow : Window
             .WithMinWidth(120)
             .WithMargin(5, 0, 10, 0);
         comboBoxFilter.SelectionChanged += vm.ComboBoxFilter_SelectionChanged;
+        AutomationProperties.SetLabeledBy(comboBoxFilter, labelFilter);
 
         var topGrid = new Grid
         {
@@ -197,24 +202,28 @@ public class ShortcutsWindow : Window
         editPanel.Children.Add(UiUtil.MakeTextBlock(shiftLabel).WithMarginRight(3));
         var checkBoxShift = UiUtil.MakeCheckBox(vm, nameof(vm.ShiftIsSelected));
         checkBoxShift.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
+        AutomationProperties.SetName(checkBoxShift, shiftLabel);
         editPanel.Children.Add(checkBoxShift);
 
         // Control checkbox and label
         editPanel.Children.Add(UiUtil.MakeTextBlock(ctrlLabel).WithMarginRight(3));
         var controlCheckBox = UiUtil.MakeCheckBox(vm, nameof(vm.CtrlIsSelected));
         controlCheckBox.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
+        AutomationProperties.SetName(controlCheckBox, ctrlLabel);
         editPanel.Children.Add(controlCheckBox);
 
         // Alt checkbox and label
         editPanel.Children.Add(UiUtil.MakeTextBlock(altLabel).WithMarginRight(3));
         var checkBoxAlt = UiUtil.MakeCheckBox(vm, nameof(vm.AltIsSelected));
         checkBoxAlt.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
+        AutomationProperties.SetName(checkBoxAlt, altLabel);
         editPanel.Children.Add(checkBoxAlt);
 
         // Win key checkbox and label
         editPanel.Children.Add(UiUtil.MakeTextBlock(winLabel).WithMarginRight(3));
         var checkBoxWin = UiUtil.MakeCheckBox(vm, nameof(vm.WinIsSelected));
         checkBoxWin.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
+        AutomationProperties.SetName(checkBoxWin, winLabel);
         editPanel.Children.Add(checkBoxWin);
 
         // Key combobox
@@ -226,6 +235,7 @@ public class ShortcutsWindow : Window
         comboBoxKeys.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(vm.Shortcuts)) { Source = vm });
         comboBoxKeys.Bind(Avalonia.Controls.Primitives.SelectingItemsControl.SelectedItemProperty, new Binding(nameof(vm.SelectedShortcut)) { Source = vm });
         comboBoxKeys.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
+        AutomationProperties.SetName(comboBoxKeys, Se.Language.General.Shortcut);
         editPanel.Children.Add(comboBoxKeys);
 
         // browse button

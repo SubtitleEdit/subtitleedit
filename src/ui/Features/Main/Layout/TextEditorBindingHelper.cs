@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using AvaloniaEdit;
@@ -63,6 +64,37 @@ public class TextEditorBindingHelper
         {
             textArea.GotFocus -= OnTextAreaGotFocus;
             textArea.LostFocus -= OnTextAreaLostFocus;
+            textArea.RemoveHandler(InputElement.KeyDownEvent, OnTextAreaKeyDownTunnel);
+        }
+    }
+
+    /// <summary>
+    /// Makes Tab / Shift+Tab move keyboard focus out of the AvaloniaEdit text editor instead of
+    /// inserting indentation, so keyboard-only and screen-reader users are not trapped in the editor
+    /// (issue #11745). Other Tab modifier combos (e.g. Ctrl+Tab) are left to their normal handling.
+    /// </summary>
+    private void OnTextAreaKeyDownTunnel(object? sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Tab || e.KeyModifiers is not (KeyModifiers.None or KeyModifiers.Shift))
+        {
+            return;
+        }
+
+        var focusManager = TopLevel.GetTopLevel(_textEditor)?.FocusManager;
+        if (focusManager == null)
+        {
+            return;
+        }
+
+        var direction = e.KeyModifiers == KeyModifiers.Shift
+            ? NavigationDirection.Previous
+            : NavigationDirection.Next;
+
+        // TryMoveFocus walks the tab order from the currently focused element (the TextArea), the same
+        // path the Tab key normally takes - so focus lands on the next/previous control outside the editor.
+        if (focusManager.TryMoveFocus(direction))
+        {
+            e.Handled = true;
         }
     }
 
@@ -85,6 +117,14 @@ public class TextEditorBindingHelper
             textArea.FocusAdorner = null;
             textArea.GotFocus += OnTextAreaGotFocus;
             textArea.LostFocus += OnTextAreaLostFocus;
+
+            // AvaloniaEdit's TextArea consumes Tab to insert indentation, which traps keyboard and
+            // screen-reader users inside the editor: once focus lands here they can never Tab out to
+            // the grid, waveform, or video controls (issue #11745). Subtitle text never needs a literal
+            // tab, so intercept Tab/Shift+Tab on the tunnel - before AvaloniaEdit sees it - and move
+            // focus like every other field instead (matches SE4/WinForms behavior).
+            textArea.RemoveHandler(InputElement.KeyDownEvent, OnTextAreaKeyDownTunnel);
+            textArea.AddHandler(InputElement.KeyDownEvent, OnTextAreaKeyDownTunnel, RoutingStrategies.Tunnel);
         }
 
         _textEditorBorder.BorderThickness = DefaultBorderThickness;
