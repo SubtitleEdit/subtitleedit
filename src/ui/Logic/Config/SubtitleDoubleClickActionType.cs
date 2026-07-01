@@ -7,4 +7,5 @@ public enum SubtitleDoubleClickActionType
     GoToSubtitleAndPlay,
     GoToSubtitleOnly,
     GoToSubtitleAndPauseAndFocusTextBox,
+    GoToSubtitleAndPlayAndFocusTextBox,
 }

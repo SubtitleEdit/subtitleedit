@@ -269,6 +269,7 @@ public class LanguageSettings
     public string GridGoToSubtitleAndPause { get; set; }
     public string GridGoToSubtitleAndPlay { get; set; }
     public string GridGoToSubtitleAndPauseAndFocusTextBox { get; set; }
+    public string GridGoToSubtitleAndPlayAndFocusTextBox { get; set; }
     public string SubtitleGridFormattingNone { get; set; }
     public string SubtitleGridFormattingShowFormatting { get; set; }
     public string SubtitleGridFormattingShowTags { get; set; }
@@ -585,6 +586,7 @@ public class LanguageSettings
         GridGoToSubtitleAndPause = "Go to subtitle and pause";
         GridGoToSubtitleAndPlay = "Go to subtitle and play";
         GridGoToSubtitleAndPauseAndFocusTextBox = "Go to subtitle and pause and focus text box";
+        GridGoToSubtitleAndPlayAndFocusTextBox = "Go to subtitle and play and focus text box";
         SubtitleGridFormattingNone = "No formatting";
         SubtitleGridFormattingShowFormatting = "Show formatting";
         SubtitleGridFormattingShowTags = "Show tags";

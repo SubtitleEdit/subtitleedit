@@ -8,4 +8,5 @@ public enum SubtitleSingleClickActionType
     GoToSubtitleAndPlay,
     GoToSubtitleAndSetVideoPosition,
     GoToSubtitleAndPauseAndFocusTextBox,
+    GoToSubtitleAndPlayAndFocusTextBox,
 }

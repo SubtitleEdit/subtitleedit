@@ -502,7 +502,8 @@ public partial class SettingsViewModel : ObservableObject
             Se.Language.Options.Settings.GridGoToSubtitleAndPause,
             Se.Language.Options.Settings.GridGoToSubtitleAndPlay,
             Se.Language.Options.Settings.GridGoToSubtitleAndSetVideoPosition,
-            Se.Language.Options.Settings.GridGoToSubtitleAndPauseAndFocusTextBox
+            Se.Language.Options.Settings.GridGoToSubtitleAndPauseAndFocusTextBox,
+            Se.Language.Options.Settings.GridGoToSubtitleAndPlayAndFocusTextBox
         ];
         SelectedSubtitleSingleClickActionType = SubtitleSingleClickActionTypes[0];
 
@@ -512,7 +513,8 @@ public partial class SettingsViewModel : ObservableObject
             Se.Language.Options.Settings.GridGoToSubtitleAndPause,
             Se.Language.Options.Settings.GridGoToSubtitleAndPlay,
             Se.Language.Options.Settings.GridGoToSubtitleAndSetVideoPosition,
-            Se.Language.Options.Settings.GridGoToSubtitleAndPauseAndFocusTextBox
+            Se.Language.Options.Settings.GridGoToSubtitleAndPauseAndFocusTextBox,
+            Se.Language.Options.Settings.GridGoToSubtitleAndPlayAndFocusTextBox
         ];
         SelectedSubtitleDoubleClickActionType = SubtitleDoubleClickActionTypes[0];
 
@@ -1258,6 +1260,7 @@ public partial class SettingsViewModel : ObservableObject
         { SubtitleSingleClickActionType.GoToSubtitleAndPlay.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndPlay },
         { SubtitleSingleClickActionType.GoToSubtitleAndSetVideoPosition.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndSetVideoPosition },
         { SubtitleSingleClickActionType.GoToSubtitleAndPauseAndFocusTextBox.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndPauseAndFocusTextBox },
+        { SubtitleSingleClickActionType.GoToSubtitleAndPlayAndFocusTextBox.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndPlayAndFocusTextBox },
     };
 
     private static Dictionary<string, string> SingleClickTextToActionMap => _singleClickActionToTextMap.ToDictionary(x => x.Value, x => x.Key);
@@ -1295,6 +1298,7 @@ public partial class SettingsViewModel : ObservableObject
         { SubtitleDoubleClickActionType.GoToSubtitleAndPlay.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndPlay },
         { SubtitleDoubleClickActionType.GoToSubtitleOnly.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndSetVideoPosition },
         { SubtitleDoubleClickActionType.GoToSubtitleAndPauseAndFocusTextBox.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndPauseAndFocusTextBox },
+        { SubtitleDoubleClickActionType.GoToSubtitleAndPlayAndFocusTextBox.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndPlayAndFocusTextBox },
     };
 
     // Rebuilds the static language-dependent maps in place so callers keep their reference.

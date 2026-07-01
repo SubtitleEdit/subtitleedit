@@ -20998,6 +20998,15 @@ public partial class MainViewModel :
                 return;
             }
 
+            if (Se.Settings.General.SubtitleDoubleClickAction == SubtitleDoubleClickActionType.GoToSubtitleAndPlayAndFocusTextBox.ToString())
+            {
+                vp.Position = seconds;
+                vp.VideoPlayer.Play();
+                AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
+                FocusEditTextBox();
+                return;
+            }
+
             // SubtitleDoubleClickActionType.GoToSubtitleAndPause
             vp.VideoPlayer.Pause();
             vp.Position = seconds;
@@ -21123,6 +21132,15 @@ public partial class MainViewModel :
             {
                 vp.VideoPlayer.Pause();
                 vp.Position = seconds;
+                AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
+                FocusEditTextBox();
+                return;
+            }
+
+            if (Se.Settings.General.SubtitleSingleClickAction == SubtitleSingleClickActionType.GoToSubtitleAndPlayAndFocusTextBox.ToString())
+            {
+                vp.Position = seconds;
+                vp.VideoPlayer.Play();
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 FocusEditTextBox();
             }
