@@ -1,5 +1,6 @@
 using System;
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -69,6 +70,17 @@ public class SettingsItem
             });
         }
 
+        var control = _controlFactory();
+
+        // Associate the row's label with its input control so screen readers announce the label as the
+        // control's name. Without this the settings controls (numeric fields, combo boxes, check boxes,
+        // ...) are exposed to UI Automation as unnamed/generic elements and NVDA cannot identify them
+        // (issue #11745). A live LabeledBy link also keeps the name correct for bound/localized labels.
+        if (!string.IsNullOrEmpty(_label) || _labelBindingPath != null)
+        {
+            AutomationProperties.SetLabeledBy(control, labelTextBlock);
+        }
+
         var stackPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -77,7 +89,7 @@ public class SettingsItem
             Children =
             {
                 labelTextBlock,
-                _controlFactory()
+                control
             }
         };
 
