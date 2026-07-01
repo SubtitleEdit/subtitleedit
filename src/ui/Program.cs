@@ -91,8 +91,10 @@ namespace Nikse.SubtitleEdit
                 // minimal Linux installs that ship without fontconfig-discoverable fonts
                 // (e.g. Debian 13 trixie base — issue #11355). Forcing Inter as the default on macOS and
                 // Windows, however, overrides the system font and its CJK fallback, so Korean/Japanese/
-                // Chinese UI text renders as boxes (Inter has no CJK glyphs). Those platforms always have
-                // system fonts with proper fallback, so let them use the system default there.
+                // Chinese UI text renders as boxes (Inter has no CJK glyphs). Windows always has system
+                // fonts with proper fallback, so it uses the system default; macOS is handled below - a
+                // fixed default font works around an Avalonia caret-positioning bug with the hidden
+                // system font, while keeping CJK fallback.
                 if (OperatingSystem.IsLinux())
                 {
                     // Inter is the default here, but it has no CJK glyphs and Avalonia does not fall
@@ -120,6 +122,28 @@ namespace Nikse.SubtitleEdit
                                 new FontFallback { FontFamily = new FontFamily("UnDotum") },
                                 new FontFallback { FontFamily = new FontFamily("WenQuanYi Zen Hei") },
                                 new FontFallback { FontFamily = new FontFamily("WenQuanYi Micro Hei") },
+                            }
+                        });
+                }
+                else if (OperatingSystem.IsMacOS())
+                {
+                    // macOS exposes its default UI font (San Francisco) only as the private family
+                    // ".AppleSystemUIFont", and Avalonia mis-positions the caret / selection edge with it:
+                    // it places the caret at each glyph's advance width and ignores ink that overruns the
+                    // advance box (e.g. the ellipsis), so the caret lands inside the rendered glyph. Use a
+                    // real, always-present font (Helvetica Neue) as the default instead - it has no such
+                    // overhang - and name the macOS CJK families explicitly so Korean/Japanese/Chinese still
+                    // render (Helvetica Neue has no CJK glyphs). (#12009 follow-up)
+                    appBuilder = appBuilder
+                        .With(new FontManagerOptions
+                        {
+                            DefaultFamilyName = "Helvetica Neue",
+                            FontFallbacks = new[]
+                            {
+                                new FontFallback { FontFamily = new FontFamily("PingFang SC") },
+                                new FontFallback { FontFamily = new FontFamily("PingFang TC") },
+                                new FontFallback { FontFamily = new FontFamily("Hiragino Sans") },
+                                new FontFallback { FontFamily = new FontFamily("Apple SD Gothic Neo") },
                             }
                         });
                 }
