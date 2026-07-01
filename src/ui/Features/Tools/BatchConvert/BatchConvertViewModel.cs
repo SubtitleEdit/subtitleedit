@@ -30,6 +30,7 @@ using Nikse.SubtitleEdit.Features.Tools.BatchConvert.BatchErrorList;
 using Nikse.SubtitleEdit.Features.Tools.FixCommonErrors;
 using Nikse.SubtitleEdit.Features.Tools.RemoveTextForHearingImpaired;
 using Nikse.SubtitleEdit.Features.Translate;
+using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
@@ -885,6 +886,11 @@ public partial class BatchConvertViewModel : ObservableObject
             return;
         }
 
+        if (!await EnsureLlamaCppAvailable(config))
+        {
+            return;
+        }
+
         _batchConverter.Initialize(config);
         var start = DateTime.UtcNow.Ticks;
 
@@ -1074,6 +1080,65 @@ public partial class BatchConvertViewModel : ObservableObject
         }
 
         return ready;
+    }
+
+    // For llama.cpp in local (server-managed) mode: auto-detect an already-running llama-server and
+    // reuse it, otherwise auto-download the engine + model (prompting) and auto-start the server, so
+    // batch translation works without opening the interactive Auto-translate window first. Remote mode
+    // (a user-supplied URL) is left untouched.
+    private async Task<bool> EnsureLlamaCppAvailable(BatchConvertConfig config)
+    {
+        if (Window == null)
+        {
+            return true;
+        }
+
+        if (!config.AutoTranslate.IsActive || config.AutoTranslate.Translator is not LlamaCppTranslate)
+        {
+            return true;
+        }
+
+        // Remote mode: the user pointed llama.cpp at their own running llama-server.
+        if (!string.IsNullOrWhiteSpace(AutoTranslateUrl))
+        {
+            return true;
+        }
+
+        // Auto-detect: reuse an already-running local server.
+        if (LlamaCppServerManager.IsServerRunning)
+        {
+            Configuration.Settings.Tools.LlamaCppApiUrl = LlamaCppServerManager.ApiUrl;
+            return true;
+        }
+
+        // Pick the last-used model, else the first available translate model.
+        var models = LlamaCppServerManager.GetAllTranslateModels();
+        var configuredName = Path.GetFileName(Se.Settings.AutoTranslate.LlamaCppModel ?? string.Empty);
+        var model = models.FirstOrDefault(m => string.Equals(m.FileName, configuredName, StringComparison.OrdinalIgnoreCase))
+                    ?? models.FirstOrDefault();
+        if (model == null)
+        {
+            return true;
+        }
+
+        // Auto-download the llama-server binary + model if missing (prompts).
+        if (!await LlamaCppDownloadHelper.EnsureReadyAsync(Window, _windowService, model.FileName))
+        {
+            return false;
+        }
+
+        // Auto-start the local server - this points Configuration.Settings.Tools.LlamaCppApiUrl at it.
+        try
+        {
+            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            await MessageBox.Show(Window, Se.Language.General.Error, ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
+
+        return true;
     }
 
     private static bool IsImageBasedInput(BatchConvertItem item)
