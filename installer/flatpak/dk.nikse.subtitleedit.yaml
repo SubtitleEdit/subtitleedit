@@ -318,6 +318,23 @@ modules:
         url: https://github.com/tesseract-ocr/tessdata/raw/4.1.0/eng.traineddata
         sha256: daa0c97d651c19fba3b25e81317cd697e9908c8208090c94c3905381c23fc047
 
+  # --- CJK fonts (Noto Sans CJK) ---
+  #
+  # The org.freedesktop.Platform runtime ships no CJK fonts, so Korean/Japanese/Chinese UI text
+  # rendered as boxes in the Flatpak build (reported for Korean). On Linux the app forces Inter as
+  # the default UI font and relies on font fallbacks named "Noto Sans CJK KR/JP/SC/TC" etc.
+  # (see Program.cs) - which need the family to actually be present. The portable build works
+  # because it uses the host's fonts; the sandbox has none. Bundle Noto Sans CJK so CJK renders
+  # in-sandbox regardless of the host. fontconfig picks up /app/share/fonts automatically.
+  - name: noto-cjk-fonts
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 NotoSansCJK-Regular.ttc /app/share/fonts/NotoSansCJK-Regular.ttc
+    sources:
+      - type: file
+        url: https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTC/NotoSansCJK-Regular.ttc
+        sha256: b76b0433203017ca80401b2ee0dd69350349871c4b19d504c34dbdd80541690a
+
   # --- SubtitleEdit application ---
 
   - name: subtitleedit
