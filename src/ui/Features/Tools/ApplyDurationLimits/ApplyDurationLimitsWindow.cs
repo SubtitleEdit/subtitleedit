@@ -183,7 +183,7 @@ public class ApplyDurationLimitsWindow : Window
                 },
             },
         };
-        new DataGridCheckboxMultiSelect<ApplyDurationLimitItem>(dataGrid,
+        _ = new DataGridCheckboxMultiSelect<ApplyDurationLimitItem>(dataGrid,
             item => item.Apply, (item, v) => item.Apply = v);
 
         grid.Add(labelFixesAvailable, 0);

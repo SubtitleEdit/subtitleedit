@@ -189,7 +189,7 @@ public class BatchConvertWindow : Window
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedBatchItem)) { Source = vm });
         vm.FileGrid = dataGrid;
-        new DataGridCheckboxMultiSelect<BatchConvertItem>(dataGrid);
+        _ = new DataGridCheckboxMultiSelect<BatchConvertItem>(dataGrid);
 
         var comboBoxSubtitleFormat = UiUtil.MakeComboBox(vm.TargetFormats, vm, nameof(vm.SelectedTargetFormat));
         comboBoxSubtitleFormat.SelectionChanged += (_, _) => vm.ComboBoxSubtitleFormatChanged();
@@ -475,7 +475,7 @@ public class BatchConvertWindow : Window
             },
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedBatchFunction)) { Source = vm });
-        new DataGridCheckboxMultiSelect<BatchConvertFunction>(dataGrid,
+        _ = new DataGridCheckboxMultiSelect<BatchConvertFunction>(dataGrid,
             item => item.IsSelected, (item, v) => item.IsSelected = v,
             onFocusedItemChanged: _ => vm.SelectedFunctionChanged());
         UiUtil.AttachMacContextFlyoutHandler(dataGrid);

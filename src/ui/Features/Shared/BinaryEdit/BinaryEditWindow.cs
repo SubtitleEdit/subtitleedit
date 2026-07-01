@@ -608,7 +608,7 @@ public class BinaryEditWindow : Window
 
         vm.SubtitleGrid = dataGrid;
         dataGrid.SelectionChanged += vm.SubtitleGridSelectionChanged;
-        new DataGridCheckboxMultiSelect<BinarySubtitleItem>(
+        _ = new DataGridCheckboxMultiSelect<BinarySubtitleItem>(
             dataGrid,
             item => item.IsForced,
             (item, v) => item.IsForced = v);

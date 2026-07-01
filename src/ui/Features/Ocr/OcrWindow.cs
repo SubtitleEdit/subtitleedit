@@ -479,7 +479,7 @@ public class OcrWindow : Window
         dataGridSubtitle.AddHandler(InputElement.PointerReleasedEvent, vm.DataGridSubtitleMacPointerReleased, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         dataGridSubtitle.SelectionChanged += vm.SubtitleGridSelectionChanged;
         vm.SubtitleGrid = dataGridSubtitle;
-        new DataGridCheckboxMultiSelect<OcrSubtitleItem>(dataGridSubtitle);
+        _ = new DataGridCheckboxMultiSelect<OcrSubtitleItem>(dataGridSubtitle);
 
         // Create a Flyout for the DataGrid
         var flyout = new MenuFlyout();

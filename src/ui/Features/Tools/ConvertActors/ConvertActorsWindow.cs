@@ -231,7 +231,7 @@ public class ConvertActorsWindow : Window
                 },
             },
         };
-        new DataGridCheckboxMultiSelect<ConvertActorsDisplayItem>(dataGrid,
+        _ = new DataGridCheckboxMultiSelect<ConvertActorsDisplayItem>(dataGrid,
             item => item.IsChecked, (item, v) => item.IsChecked = v);
 
         return UiUtil.MakeBorderForControlNoPadding(dataGrid);
