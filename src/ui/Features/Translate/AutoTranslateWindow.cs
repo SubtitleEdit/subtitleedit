@@ -117,6 +117,7 @@ public class AutoTranslateWindow : Window
 
         var engineCombo = UiUtil.MakeComboBox(vm.AutoTranslators, vm, nameof(vm.SelectedAutoTranslator));
         engineCombo.MinWidth = 220;
+        engineCombo.WithLabeledBy(engineLabel);
         engineCombo.ItemTemplate = BuildTranslatorItemTemplate();
         engineCombo.SelectionChanged += (s, e) =>
         {
@@ -143,6 +144,7 @@ public class AutoTranslateWindow : Window
 
         var sourceCombo = UiUtil.MakeComboBox(vm.SourceLanguages!, vm, nameof(vm.SelectedSourceLanguage));
         sourceCombo.MinWidth = 180;
+        sourceCombo.WithLabeledBy(fromLabel);
 
         var swapButton = UiUtil.MakeButton(vm.SwapLanguagesCommand, IconNames.SwapVertical, Se.Language.Translate.SwapLanguages);
         swapButton.Margin = new Thickness(8, 0);
@@ -154,6 +156,7 @@ public class AutoTranslateWindow : Window
 
         var targetCombo = UiUtil.MakeComboBox(vm.TargetLanguages!, vm, nameof(vm.SelectedTargetLanguage));
         targetCombo.MinWidth = 180;
+        targetCombo.WithLabeledBy(toLabel);
 
         var controlsPanel = new StackPanel
         {
@@ -269,12 +272,14 @@ public class AutoTranslateWindow : Window
             model => model.Engine.IsModelInstalled(model.Model)
                 ? DownloadDotStatus.UpToDate
                 : DownloadDotStatus.NotInstalled);
+        crispAsrModelCombo.WithAccessibleName(Se.Language.General.Model);
 
         var llamaCppModelCombo = UiUtil.MakeComboBox(vm.LlamaCppModels, vm, nameof(vm.SelectedLlamaCppModel), nameof(vm.LlamaCppModelComboIsVisible)).WithWidth(220);
         llamaCppModelCombo.ItemTemplate = StatusDots.ComboItemTemplate<LlamaCppModelDisplay>(
             model => model.Model.DisplayName,
             GetLlamaCppModelSize,
             GetLlamaCppModelDotStatus);
+        llamaCppModelCombo.WithAccessibleName(Se.Language.General.Model);
 
         var buttonDownloadLlamaCpp = UiUtil.MakeButton(string.Empty, vm.DownloadLlamaCppCommand)
             .WithIconLeftBindText(IconNames.Download, nameof(vm.LlamaCppDownloadButtonText))
@@ -296,27 +301,27 @@ public class AutoTranslateWindow : Window
         };
 
         settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Id, vm, null, nameof(vm.ApiIdIsVisible)).WithMarginRight(5));
-        settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ApiIdText), nameof(vm.ApiIdIsVisible)).WithMarginRight(15));
+        settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ApiIdText), nameof(vm.ApiIdIsVisible)).WithMarginRight(15).WithAccessibleName(Se.Language.General.Id));
 
         settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.ApiSecret, vm, null, nameof(vm.ApiSecretIsVisible)).WithMarginRight(5));
-        settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ApiSecretText), nameof(vm.ApiSecretIsVisible)).WithMarginRight(15));
+        settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ApiSecretText), nameof(vm.ApiSecretIsVisible)).WithMarginRight(15).WithAccessibleName(Se.Language.General.ApiSecret));
 
         settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.ApiKey, vm, null, nameof(vm.ApiKeyIsVisible)).WithMarginRight(5));
-        settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ApiKeyText), nameof(vm.ApiKeyIsVisible)).WithMarginRight(15));
+        settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ApiKeyText), nameof(vm.ApiKeyIsVisible)).WithMarginRight(15).WithAccessibleName(Se.Language.General.ApiKey));
 
         settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Formality, vm, null, nameof(vm.FormalityIsVisible)).WithMarginRight(5));
-        settingsPanel.Children.Add(UiUtil.MakeComboBox(vm.Formalities, vm, nameof(vm.SelectedFormality), nameof(vm.FormalityIsVisible)).WithWidth(220).WithMarginRight(15));
+        settingsPanel.Children.Add(UiUtil.MakeComboBox(vm.Formalities, vm, nameof(vm.SelectedFormality), nameof(vm.FormalityIsVisible)).WithWidth(220).WithMarginRight(15).WithAccessibleName(Se.Language.General.Formality));
 
         var checkBoxLlamaCppRemote = UiUtil.MakeCheckBox(Se.Language.General.LlamaCppUseRemoteServer, vm, nameof(vm.LlamaCppUseRemoteServer)).WithMarginRight(15);
         checkBoxLlamaCppRemote.Bind(CheckBox.IsVisibleProperty, new Binding(nameof(vm.LlamaCppRemoteToggleIsVisible)));
         settingsPanel.Children.Add(checkBoxLlamaCppRemote);
 
         settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Url, vm, null, nameof(vm.ApiUrlIsVisible)).WithMarginRight(5));
-        settingsPanel.Children.Add(UiUtil.MakeTextBox(200, vm, nameof(vm.ApiUrlText), nameof(vm.ApiUrlIsVisible)).WithMarginRight(15));
+        settingsPanel.Children.Add(UiUtil.MakeTextBox(200, vm, nameof(vm.ApiUrlText), nameof(vm.ApiUrlIsVisible)).WithMarginRight(15).WithAccessibleName(Se.Language.General.Url));
 
         settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Model, vm, null, nameof(vm.ModelIsVisible)).WithMarginRight(5));
-        settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ModelText), nameof(vm.ModelIsVisible)));
-        settingsPanel.Children.Add(UiUtil.MakeButtonBrowse(vm.BrowseModelCommand, nameof(vm.ModelBrowseIsVisible)).WithMarginLeft(5));
+        settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ModelText), nameof(vm.ModelIsVisible)).WithAccessibleName(Se.Language.General.Model));
+        settingsPanel.Children.Add(UiUtil.MakeButtonBrowse(vm.BrowseModelCommand, nameof(vm.ModelBrowseIsVisible), Se.Language.General.Model).WithMarginLeft(5));
 
         settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Model, vm, null, nameof(vm.CrispAsrModelComboIsVisible)).WithMarginRight(5));
         settingsPanel.Children.Add(crispAsrModelCombo);
@@ -410,6 +415,7 @@ public class AutoTranslateWindow : Window
         dataGrid.Bind(DataGrid.ItemsSourceProperty, new Binding(nameof(vm.Rows)));
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedTranslateRow)));
         UiUtil.AttachMacContextFlyoutHandler(dataGrid);
+        dataGrid.WithAccessibleName(Se.Language.General.Lines);
         vm.RowGrid = dataGrid;
 
         var dataGridBorder = UiUtil.MakeBorderForControlNoPadding(dataGrid);
@@ -429,6 +435,7 @@ public class AutoTranslateWindow : Window
         };
         progressBar.Bind(ProgressBar.ValueProperty, new Binding(nameof(vm.ProgressValue)));
         progressBar.Bind(ProgressBar.IsVisibleProperty, new Binding(nameof(vm.IsProgressEnabled)));
+        progressBar.WithAccessibleName(Se.Language.General.Translation);
 
         var progressLabel = new TextBlock
         {

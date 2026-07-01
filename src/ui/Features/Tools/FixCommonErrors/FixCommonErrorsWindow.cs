@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -51,7 +52,8 @@ public class FixCommonErrorsWindow : Window
         labelStep2.Bind(Label.ContentProperty, new Binding(nameof(vm.Step2Title)));
         labelStep2.Bind(IsVisibleProperty, new Binding(nameof(vm.Step2IsVisible)));
 
-        var textBoxSearch = UiUtil.MakeTextBox(250, vm, nameof(vm.SearchText)).WithMarginRight(25);
+        var textBoxSearch = UiUtil.MakeTextBox(250, vm, nameof(vm.SearchText)).WithMarginRight(25)
+            .WithAccessibleName(Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot);
         textBoxSearch.PlaceholderText = Se.Language.Tools.FixCommonErrors.SearchRulesDotDotDot;
         textBoxSearch.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
         textBoxSearch.TextChanged += vm.TextBoxSearch_TextChanged;
@@ -63,7 +65,8 @@ public class FixCommonErrorsWindow : Window
             Children =
             {
                 UiUtil.MakeTextBlock(Se.Language.General.Language).WithMarginRight(5),
-                UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage)),
+                UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage))
+                    .WithAccessibleName(Se.Language.General.Language),
             },
         };
 
@@ -95,6 +98,9 @@ public class FixCommonErrorsWindow : Window
                             {
                                 Focusable = false,
                                 [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixRuleDisplayItem.IsSelected)),
+                                // The checkbox is unfocusable, so name it after the rule it toggles so a
+                                // screen reader can tell which rule's enabled state it is on (#11745).
+                                [!AutomationProperties.NameProperty] = new Binding(nameof(FixRuleDisplayItem.Name)),
                                 HorizontalAlignment = HorizontalAlignment.Center
                             }
                         };
@@ -119,18 +125,20 @@ public class FixCommonErrorsWindow : Window
             },
         };
         rulesGrid.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
+        AutomationProperties.SetName(rulesGrid, Se.Language.General.Rules);
         _ = new DataGridCheckboxMultiSelect<FixRuleDisplayItem>(rulesGrid,
             item => item.IsSelected, (item, v) => item.IsSelected = v);
 
         var step2Grid = MakeStep2Grid();
         step2Grid.Bind(IsVisibleProperty, new Binding(nameof(_vm.Step2IsVisible)));
-        var comboProfile = UiUtil.MakeComboBox(vm.Profiles, vm, nameof(vm.SelectedProfile));
+        var comboProfile = UiUtil.MakeComboBox(vm.Profiles, vm, nameof(vm.SelectedProfile))
+            .WithAccessibleName(Se.Language.General.Profile);
         var buttonPanelRules = UiUtil.MakeButtonBar(
             UiUtil.MakeButton(Se.Language.General.SelectAll, vm.RulesSelectAllCommand),
             UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.RulesInverseSelectedCommand),
             UiUtil.MakeTextBlock(Se.Language.General.Profile).WithMarginLeft(25).WithMarginRight(10),
             comboProfile,
-            UiUtil.MakeButton("...", vm.ShowProfileCommand).Compact()
+            UiUtil.MakeButton("...", vm.ShowProfileCommand).Compact().WithAccessibleName(Se.Language.General.Profiles)
         );
         buttonPanelRules.Bind(IsVisibleProperty, new Binding(nameof(vm.Step1IsVisible)));
 
@@ -314,6 +322,9 @@ public class FixCommonErrorsWindow : Window
                             {
                                 Focusable = false,
                                 [!ToggleButton.IsCheckedProperty] = new Binding(nameof(FixDisplayItem.IsSelected)),
+                                // Unfocusable checkbox - name it after the fix it applies so a screen
+                                // reader can tell which fix's apply state it is on (#11745).
+                                [!AutomationProperties.NameProperty] = new Binding(nameof(FixDisplayItem.ActionDisplay)),
                                 HorizontalAlignment = HorizontalAlignment.Center
                             }
                         };
@@ -370,6 +381,7 @@ public class FixCommonErrorsWindow : Window
                 },
             },
         };
+        AutomationProperties.SetName(dataGridFixes, Se.Language.Tools.FixCommonErrors.Fixes);
         dataGridFixes.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedFix)));
         _ = new DataGridCheckboxMultiSelect<FixDisplayItem>(dataGridFixes,
             item => item.IsSelected, (item, v) => item.IsSelected = v,
@@ -555,6 +567,7 @@ public class FixCommonErrorsWindow : Window
             },
         };
         dataGridSubtitles.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(_vm.SelectedParagraph)));
+        AutomationProperties.SetName(dataGridSubtitles, Se.Language.General.Preview);
         _vm.GridSubtitles = dataGridSubtitles;
         dataGridSubtitles.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
@@ -636,6 +649,8 @@ public class FixCommonErrorsWindow : Window
         {
             textBox.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
         }
+
+        AutomationProperties.SetName(textBox, Se.Language.General.Text);
 
         textEditGrid.Add(textBox, 0, 0);
 

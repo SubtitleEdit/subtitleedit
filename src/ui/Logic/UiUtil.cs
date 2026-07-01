@@ -406,6 +406,11 @@ public static class UiUtil
 
         Attached.SetIcon(button, iconName);
 
+        // An icon-only button has no text content, so expose the hint as the accessible name for
+        // screen readers (a ToolTip is not surfaced as the UIA Name). Done unconditionally - unlike the
+        // visual tooltip, the name should be available even when hints are turned off (#11745).
+        AutomationProperties.SetName(button, hint);
+
         if (Se.Settings.Appearance.ShowHints)
         {
             AttachHoverTooltip(button, hint);
@@ -452,7 +457,7 @@ public static class UiUtil
     }
 
 
-    public static Button MakeButtonBrowse(IRelayCommand? command, string? propertyIsVisiblePath = null)
+    public static Button MakeButtonBrowse(IRelayCommand? command, string? propertyIsVisiblePath = null, string? accessibleName = null)
     {
         var button = new Button
         {
@@ -472,6 +477,13 @@ public static class UiUtil
         }
 
         Attached.SetIcon(button, IconNames.DotsHorizontal);
+
+        // The browse "…" glyph carries no text, so screen readers announce a nameless button. Callers
+        // that can describe the target should pass an accessible name so NVDA can announce it (#11745).
+        if (!string.IsNullOrEmpty(accessibleName))
+        {
+            AutomationProperties.SetName(button, accessibleName);
+        }
 
         return button;
     }
@@ -1577,6 +1589,27 @@ public static class UiUtil
     public static TextBlock WithMinwidth(this TextBlock control, int width)
     {
         control.MinWidth = width;
+        return control;
+    }
+
+    /// <summary>
+    /// Sets an accessible name (UIA Name) so a screen reader announces this control instead of a bare
+    /// "edit"/"combo box"/"button". Use when there is no separate visible label to point at (#11745).
+    /// </summary>
+    public static T WithAccessibleName<T>(this T control, string name) where T : Control
+    {
+        AutomationProperties.SetName(control, name);
+        return control;
+    }
+
+    /// <summary>
+    /// Links this control to an existing visible label so a screen reader announces the label as the
+    /// control's name (UIA LabeledBy). Prefer this over a hard-coded name when a label already exists,
+    /// as it stays correct for bound/localized label text (#11745).
+    /// </summary>
+    public static T WithLabeledBy<T>(this T control, Control label) where T : Control
+    {
+        AutomationProperties.SetLabeledBy(control, label);
         return control;
     }
 
