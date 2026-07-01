@@ -77,7 +77,10 @@ public class SeAppearance
         IconTheme = string.Empty;
         MatchIconColorToDarkTheme = false;
         LayoutScale = 1.0;
-        FontName = "Default";
+        // On macOS default to Helvetica Neue rather than the hidden system font (.AppleSystemUIFont /
+        // San Francisco): SetFontName applies this family explicitly to every control, and Helvetica
+        // Neue avoids Avalonia's caret-misplacement with San Francisco's overhanging glyphs (#12009).
+        FontName = System.OperatingSystem.IsMacOS() ? "Helvetica Neue" : "Default";
         SubtitleTextBoxAndGridFontName = "Default";
         SubtitleGridFontSize = 13d;
         SubtitleGridTextSingleLineSeparator = " ⏎ "; // "<br />";
