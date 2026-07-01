@@ -66,6 +66,7 @@ public class Se
     public static readonly bool IsPortable;
     public static readonly string ExePath;
     public static readonly string DataFolder;
+    internal static string? SettingsFilePathOverride { get; set; }
 
     static Se()
     {
@@ -257,7 +258,7 @@ public class Se
 
     public static string GetSettingsFilePath()
     {
-        return Path.Combine(DataFolder, "Settings.json");
+        return SettingsFilePathOverride ?? Path.Combine(DataFolder, "Settings.json");
     }
 
     public static void LoadSettings(string settingsFileName)
