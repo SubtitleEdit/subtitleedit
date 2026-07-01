@@ -13736,6 +13736,15 @@ public partial class MainViewModel :
         });
     }
 
+    // Tracks the intended position for successive relative seeks so small steps
+    // accumulate exactly. Without this, each press re-reads vp.Position, which can
+    // lag an in-flight seek (the player reports the live time-pos while playing or
+    // in frame mode, not the just-requested target). Consecutive small steps then
+    // compute from the same stale base and are lost, so a custom seek of e.g. 1 ms
+    // "sometimes works, mostly doesn't" on single presses yet works while held
+    // (#12027). null means "resync to the player on the next move".
+    private double? _relativeSeekTargetSeconds;
+
     private void MoveVideoPositionMs(int ms)
     {
         var vp = GetVideoPlayerControl();
@@ -13744,11 +13753,43 @@ public partial class MainViewModel :
             return;
         }
 
-        SetVideoPositionSeconds(vp.Position + (ms / 1000.0));
+        var actual = vp.Position;
+
+        // Keep accumulating from the tracked target only while it still matches where
+        // the player actually is (within half a second) and playback is paused. If the
+        // user played, clicked the waveform, or jumped to a cue, the player diverges and
+        // we resync to its real position.
+        var baseSeconds = !vp.IsPlaying
+            && _relativeSeekTargetSeconds is double tracked
+            && Math.Abs(tracked - actual) < 0.5
+                ? tracked
+                : actual;
+
+        var target = baseSeconds + (ms / 1000.0);
+        if (target < 0)
+        {
+            target = 0;
+        }
+        else if (target > vp.Duration)
+        {
+            target = vp.Duration;
+        }
+
+        SetVideoPositionSeconds(target);
+
+        // SetVideoPositionSeconds cleared the tracker (it is the shared choke point for
+        // every position change); re-arm it here so the next relative step continues
+        // from this exact target rather than re-reading the player.
+        _relativeSeekTargetSeconds = target;
     }
 
     private void SetVideoPositionSeconds(double newPosition)
     {
+        // Any position change other than a chained relative step invalidates the
+        // relative-seek tracker so the next small step resyncs to the real position.
+        // MoveVideoPositionMs re-arms it immediately after calling this. (#12027)
+        _relativeSeekTargetSeconds = null;
+
         var vp = GetVideoPlayerControl();
         if (vp == null || string.IsNullOrEmpty(_videoFileName) || AudioVisualizer == null)
         {
