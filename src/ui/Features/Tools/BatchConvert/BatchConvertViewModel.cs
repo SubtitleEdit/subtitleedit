@@ -2504,6 +2504,11 @@ public partial class BatchConvertViewModel : ObservableObject
     internal void OnClosing(object? sender, WindowClosingEventArgs e)
     {
         UiUtil.SaveWindowPosition(Window);
+
+        // Persist target format and function options also when the window is closed via
+        // X/Escape - especially important in /batchconvertui mode, where this window is the
+        // main window and nothing else flushes settings to disk on exit (#11699).
+        SaveSettings();
     }
 
     internal void ComboBoxSubtitleFormatChanged()
