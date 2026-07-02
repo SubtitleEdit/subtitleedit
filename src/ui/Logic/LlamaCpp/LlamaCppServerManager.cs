@@ -91,6 +91,28 @@ public static class LlamaCppServerManager
             "https://huggingface.co/bartowski/aya-expanse-8b-GGUF/resolve/main/aya-expanse-8b-Q8_0.gguf"),
     };
 
+    // Models for the AI review tool (proofreading). Translation-tuned models (TranslateGemma,
+    // Aya) are deliberately absent - proofreading needs general instruction-following and strict
+    // JSON output, where the plain instruct models are much stronger. Kept to <= 8 GB.
+    public static readonly IReadOnlyList<LlamaCppModel> ReviewModels = new[]
+    {
+        new LlamaCppModel("Qwen 3.5 4B (Q4_K_M)", "Qwen_Qwen3.5-4B-Q4_K_M.gguf", "2.8 GB",
+            "https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q4_K_M.gguf",
+            ChatTemplate: "chatml", NoJinja: true),
+        new LlamaCppModel("Qwen 3.5 4B (Q8_0)", "Qwen_Qwen3.5-4B-Q8_0.gguf", "4.3 GB",
+            "https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q8_0.gguf",
+            ChatTemplate: "chatml", NoJinja: true),
+        new LlamaCppModel("Qwen 3.5 9B (Q4_K_M)", "Qwen_Qwen3.5-9B-Q4_K_M.gguf", "5.7 GB",
+            "https://huggingface.co/bartowski/Qwen_Qwen3.5-9B-GGUF/resolve/main/Qwen_Qwen3.5-9B-Q4_K_M.gguf",
+            ChatTemplate: "chatml", NoJinja: true),
+        new LlamaCppModel("Gemma 3 4B it (Q4_K_M)", "google_gemma-3-4b-it-Q4_K_M.gguf", "2.5 GB",
+            "https://huggingface.co/bartowski/google_gemma-3-4b-it-GGUF/resolve/main/google_gemma-3-4b-it-Q4_K_M.gguf",
+            ChatTemplate: "gemma", NoJinja: true),
+        new LlamaCppModel("Gemma 3 12B it (Q4_K_M)", "google_gemma-3-12b-it-Q4_K_M.gguf", "7.3 GB",
+            "https://huggingface.co/bartowski/google_gemma-3-12b-it-GGUF/resolve/main/google_gemma-3-12b-it-Q4_K_M.gguf",
+            ChatTemplate: "gemma", NoJinja: true),
+    };
+
     public static readonly IReadOnlyList<LlamaCppModel> OcrModels = new[]
     {
         new LlamaCppModel("GLM-OCR 0.9B (Q8_0)", "GLM-OCR-Q8_0.gguf", "1.4 GB",
@@ -203,14 +225,26 @@ public static class LlamaCppServerManager
     /// </summary>
     public static IReadOnlyList<LlamaCppModel> GetAllTranslateModels()
     {
+        return GetCuratedPlusCustomModels(TranslateModels);
+    }
+
+    public static IReadOnlyList<LlamaCppModel> GetAllReviewModels()
+    {
+        return GetCuratedPlusCustomModels(ReviewModels);
+    }
+
+    private static IReadOnlyList<LlamaCppModel> GetCuratedPlusCustomModels(IReadOnlyList<LlamaCppModel> curated)
+    {
         var folder = GetAndCreateModelsFolder();
         if (!Directory.Exists(folder))
         {
-            return TranslateModels;
+            return curated;
         }
 
+        // "known" spans all curated lists so e.g. a downloaded review model does not show up
+        // as a custom entry in the translate list (and vice versa).
         var knownNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var m in TranslateModels.Concat(OcrModels))
+        foreach (var m in TranslateModels.Concat(ReviewModels).Concat(OcrModels))
         {
             knownNames.Add(m.FileName);
             if (!string.IsNullOrEmpty(m.MmprojFileName))
@@ -241,16 +275,16 @@ public static class LlamaCppServerManager
         catch
         {
             // ignore - if the folder can't be scanned (locked / IO error) just fall back to curated only.
-            return TranslateModels;
+            return curated;
         }
 
         if (custom.Count == 0)
         {
-            return TranslateModels;
+            return curated;
         }
 
         custom.Sort((a, b) => string.Compare(a.FileName, b.FileName, StringComparison.OrdinalIgnoreCase));
-        return TranslateModels.Concat(custom).ToList();
+        return curated.Concat(custom).ToList();
     }
 
     private static string FormatFileSize(long bytes)

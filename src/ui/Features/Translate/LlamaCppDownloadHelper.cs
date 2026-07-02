@@ -114,9 +114,9 @@ public static class LlamaCppDownloadHelper
         return toSelect ?? target.FirstOrDefault();
     }
 
-    private static LlamaCppModel? ResolveModel(string? modelFileName)
+    private static LlamaCppModel? ResolveModel(string? modelFileName, System.Collections.Generic.IReadOnlyList<LlamaCppModel>? models = null)
     {
-        var all = LlamaCppServerManager.GetAllTranslateModels();
+        var all = models ?? LlamaCppServerManager.GetAllTranslateModels();
         if (!string.IsNullOrEmpty(modelFileName))
         {
             var match = all.FirstOrDefault(m => m.FileName == modelFileName);
@@ -190,16 +190,17 @@ public static class LlamaCppDownloadHelper
     /// Ensures the llama-server binary and the requested model are installed, prompting the user
     /// to download them if not.
     /// </summary>
-    public static async Task<bool> EnsureReadyAsync(Window owner, IWindowService windowService, string? modelFileName)
+    public static async Task<bool> EnsureReadyAsync(Window owner, IWindowService windowService, string? modelFileName,
+        System.Collections.Generic.IReadOnlyList<LlamaCppModel>? models = null, bool persistAsTranslateModel = true)
     {
         var engineInstalled = LlamaCppServerManager.IsEngineInstalled();
-        var model = ResolveModel(modelFileName);
+        var model = ResolveModel(modelFileName, models);
         var modelInstalled = model != null && LlamaCppServerManager.IsModelInstalled(model);
 
         if (engineInstalled && modelInstalled)
         {
             var modelPath = LlamaCppServerManager.GetModelPath(model!.FileName);
-            if (Se.Settings.AutoTranslate.LlamaCppModel != modelPath)
+            if (persistAsTranslateModel && Se.Settings.AutoTranslate.LlamaCppModel != modelPath)
             {
                 Se.Settings.AutoTranslate.LlamaCppModel = modelPath;
                 Configuration.Settings.Tools.LlamaCppModel = modelPath;

@@ -67,7 +67,7 @@ public partial class AiReviewViewModel : ObservableObject
         LlamaCppModels = new ObservableCollection<LlamaCppModelDisplay>();
         SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(
             LlamaCppModels,
-            LlamaCppServerManager.GetAllTranslateModels(),
+            LlamaCppServerManager.GetAllReviewModels(),
             Se.Settings.Tools.AiReview.LlamaCppModelFileName);
 
         LanguageDisplay = string.Empty;
@@ -172,7 +172,8 @@ public partial class AiReviewViewModel : ObservableObject
         {
             var display = SelectedLlamaCppModel;
             if (display == null ||
-                !await LlamaCppDownloadHelper.EnsureReadyAsync(Window, _windowService, display.Model.FileName))
+                !await LlamaCppDownloadHelper.EnsureReadyAsync(Window, _windowService, display.Model.FileName,
+                    LlamaCppServerManager.GetAllReviewModels(), persistAsTranslateModel: false))
             {
                 return;
             }
