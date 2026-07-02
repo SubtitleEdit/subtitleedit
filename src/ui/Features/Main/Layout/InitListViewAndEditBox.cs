@@ -11,6 +11,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using AvaloniaEdit;
 using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -118,6 +119,9 @@ public static partial class InitListViewAndEditBox
         var nullToOpacityConverter = new NullToOpacityConverter();
         var syntaxHighlightingConverter = new TextWithSubtitleSyntaxHighlightingConverter();
         vm.SubtitleDataGridSyntaxHighlighting = syntaxHighlightingConverter;
+        // How the Text/Original cells fit their text to the window (feature #11590). Read once here;
+        // the grid is rebuilt when settings are applied, so a changed mode takes effect then.
+        var gridTextDisplayMode = SubtitleGridTextDisplayModeDisplay.FromSettings();
         var gapConverter = new DoubleToDisplayShortConverter();
         var inverseBooleanConverter = new InverseBooleanConverter();
         var textOneLineShortConverter = new TextOneLineShortConverter();
@@ -300,9 +304,9 @@ public static partial class InitListViewAndEditBox
                 var textBlock = new TextBlock
                 {
                     VerticalAlignment = VerticalAlignment.Center,
-                    TextWrapping = TextWrapping.NoWrap,
                     [!TextBlock.InlinesProperty] = new Binding(nameof(SubtitleLineViewModel.Text)) { Converter = syntaxHighlightingConverter, Mode = BindingMode.OneWay },
                 };
+                SubtitleGridTextDisplayModeDisplay.ApplyTo(textBlock, gridTextDisplayMode);
 
                 if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
                 {
@@ -331,9 +335,9 @@ public static partial class InitListViewAndEditBox
                 var textBlock = new TextBlock
                 {
                     VerticalAlignment = VerticalAlignment.Center,
-                    TextWrapping = TextWrapping.NoWrap,
                     [!TextBlock.InlinesProperty] = new Binding(nameof(SubtitleLineViewModel.OriginalText)) { Converter = syntaxHighlightingConverter, Mode = BindingMode.OneWay },
                 };
+                SubtitleGridTextDisplayModeDisplay.ApplyTo(textBlock, gridTextDisplayMode);
 
                 if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
                 {
