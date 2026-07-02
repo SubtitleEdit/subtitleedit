@@ -1,10 +1,16 @@
 
 Subtitle Edit Changelog
 
-v5.1.0-beta5 (TBD)
+v5.1.0-beta5 (2nd of July 2026)
 
 * Add AI review (Tools > AI review) - proofread subtitles with a local LLM via llama.cpp or Ollama, with a before/after grid and editable prompt
+* Add llama.cpp translation to Batch convert (auto-detect/start/download)
+* Add interjection lists for German, Italian, Swedish, Norwegian and Dutch
 * Add copy/paste support to the time code boxes (a bare number is milliseconds) - thx RobertoHN
+* Waveform: show the duration inside the new-selection rectangle while dragging - thx geroyannis
+* Open the source view with the caret at the selected subtitle - thx pdjdev
+* Settings: "Color text if more than N lines" now tracks "Max number of lines" live - thx subcor
+* Accessibility: fix the text-editor Tab focus trap, name status-bar icons, and label Settings/Shortcuts/AutoTranslate/FixCommonErrors/SpeechToText controls - thx kylesskim-sys
 * Polish Fix common errors, Netflix errors, Split/re-balance long lines, Compare and Restore auto-backup (filter chips, colored tags, word diffs, live counts, icons)
 * Fix ChatGPT auto-translate failing with "This is not a chat model" (bad default model) - thx EspritIT
 * Speech to text: add smaller model quants for FunASR nano/MLT-nano and Parakeet Japanese, and fix dead MADLAD download links
@@ -18,6 +24,11 @@ v5.1.0-beta5 (TBD)
 * Fix crash when pasting an out-of-range value into a time code box
 * Fix stale RTL text-box selection anchor after mouse/native selection changes - thx muaz978
 * Fix change detection not including the original subtitle file name
+* Fix macOS legacy UI font defaults migration - thx mjuhasz
+* Fix UI tests overwriting user settings - thx mjuhasz
+* Add discard assignment to DataGridCheckboxMultiSelect instantiations - thx ivandrofly
+* Update Polish translation - thx potplayer-fanpack
+* Update Italian translation - thx bovirus
 * Update Korean translation - thx 12si27
 
 -----------------------------------------------------------------------------------------------------
