@@ -149,6 +149,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.ShowToolsChangeCasingCommand), Se.Language.General.ChangeCasing },
         { nameof(MainViewModel.ShowToolsChangeFormattingCommand), Se.Language.General.ChangeFormatting },
         { nameof(MainViewModel.ShowToolsFixCommonErrorsCommand), Se.Language.Options.Shortcuts.FixCommonErrors },
+        { nameof(MainViewModel.ShowToolsAiReviewCommand), Se.Language.Tools.AiReview.Title },
         { nameof(MainViewModel.ToolsMakeEmptyTranslationFromCurrentSubtitleCommand), Se.Language.Options.Shortcuts.MakeEmptyTranslationFromCurrentSubtitle },
         { nameof(MainViewModel.ShowToolsMergeLinesWithSameTextCommand), Se.Language.Options.Shortcuts.MergeLinesWithSameText },
         { nameof(MainViewModel.ShowToolsMergeLinesWithSameTimeCodesCommand), Se.Language.Options.Shortcuts.MergeLinesWithSameTimeCodes },
@@ -560,6 +561,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.ShowToolsChangeCasingCommand, nameof(vm.ShowToolsChangeCasingCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowToolsChangeFormattingCommand, nameof(vm.ShowToolsChangeFormattingCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowToolsFixCommonErrorsCommand, nameof(vm.ShowToolsFixCommonErrorsCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ShowToolsAiReviewCommand, nameof(vm.ShowToolsAiReviewCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ToolsMakeEmptyTranslationFromCurrentSubtitleCommand, nameof(vm.ToolsMakeEmptyTranslationFromCurrentSubtitleCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowToolsMergeLinesWithSameTextCommand, nameof(vm.ShowToolsMergeLinesWithSameTextCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowToolsMergeLinesWithSameTimeCodesCommand, nameof(vm.ShowToolsMergeLinesWithSameTimeCodesCommand), ShortcutCategory.General);
@@ -839,6 +841,7 @@ public static class ShortcutsMain
             new(nameof(vm.ShowSpellCheckCommand), ["Alt", nameof(Avalonia.Input.Key.F7)], ShortcutCategory.SubtitleGrid),
             new(nameof(vm.ShowToolsChangeCasingCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.C)], ShortcutCategory.General),
             new(nameof(vm.ShowToolsFixCommonErrorsCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.F)], ShortcutCategory.General),
+            new(nameof(vm.ShowToolsAiReviewCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.R)], ShortcutCategory.General),
             new(nameof(vm.ShowToolsBatchConvertCommand), [cmd, nameof(Avalonia.Input.Key.B)], ShortcutCategory.General),
             new(nameof(vm.ShowToolsRemoveTextForHearingImpairedCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.H)], ShortcutCategory.General),
             new(nameof(vm.ShowSyncAdjustAllTimesCommand), [cmd, "Shift", nameof(Avalonia.Input.Key.A)], ShortcutCategory.General),

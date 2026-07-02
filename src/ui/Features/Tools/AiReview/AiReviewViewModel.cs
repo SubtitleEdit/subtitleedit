@@ -603,6 +603,11 @@ public partial class AiReviewViewModel : ObservableObject
             _cancellationTokenSource.Cancel();
             Window?.Close();
         }
+        else if (UiUtil.IsHelp(e))
+        {
+            e.Handled = true;
+            UiUtil.ShowHelp("features/ai-review");
+        }
     }
 
     internal void OnClosing()
