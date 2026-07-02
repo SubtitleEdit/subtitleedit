@@ -1,4 +1,7 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
+using Avalonia.Media;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
@@ -44,11 +47,40 @@ public class RestoreAutoBackupWindow : Window
                     Binding = new Binding(nameof(DisplayFile.FileName)),
                     CellTheme = UiUtil.DataGridNoBorderCellTheme,
                 },
-                new DataGridTextColumn
+                new DataGridTemplateColumn
                 {
                     Header = Se.Language.General.FileExtension,
-                    Binding = new Binding(nameof(DisplayFile.Extension)),
                     CellTheme = UiUtil.DataGridNoBorderCellTheme,
+                    CellTemplate = new FuncDataTemplate<DisplayFile>((item, _) =>
+                    {
+                        if (item == null)
+                        {
+                            return new Border();
+                        }
+
+                        var color = GetExtensionColor(item.Extension);
+                        return new Border
+                        {
+                            Background = Brushes.Transparent,
+                            Padding = new Thickness(4, 2),
+                            Child = new Border
+                            {
+                                Background = new SolidColorBrush(Color.FromArgb(0x20, color.R, color.G, color.B)),
+                                CornerRadius = new CornerRadius(5),
+                                Padding = new Thickness(7, 2),
+                                HorizontalAlignment = HorizontalAlignment.Left,
+                                VerticalAlignment = VerticalAlignment.Center,
+                                Child = new TextBlock
+                                {
+                                    Text = item.Extension,
+                                    FontSize = 12,
+                                    Foreground = new SolidColorBrush(color),
+                                    VerticalAlignment = VerticalAlignment.Center,
+                                },
+                            },
+                        };
+                    }),
+                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
                 },
                 new DataGridTextColumn
                 {
@@ -65,9 +97,19 @@ public class RestoreAutoBackupWindow : Window
 
         var linkOpenFolder = UiUtil.MakeLink(Se.Language.File.RestoreAutoBackup.OpenAutoBackupFolder, vm.OpenFolderCommand);
 
+        var summaryText = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Opacity = 0.8,
+            Margin = new Thickness(10, 0, 0, 0),
+        };
+        summaryText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.FilesSummaryText)));
+
         var buttonDeleteAllSubtitles = UiUtil.MakeButton(Se.Language.File.RestoreAutoBackup.DeleteAll, vm.DeleteAllFilesCommand)
-            .WithBindIsVisible(nameof(vm.IsEmptyFilesVisible));
-        var buttonRestore = UiUtil.MakeButton(Se.Language.File.RestoreAutoBackup.RestoreAutoBackupFile, vm.RestoreFileCommand);
+            .WithBindIsVisible(nameof(vm.IsEmptyFilesVisible))
+            .WithIconLeft("fa-solid fa-trash");
+        var buttonRestore = UiUtil.MakeButton(Se.Language.File.RestoreAutoBackup.RestoreAutoBackupFile, vm.RestoreFileCommand)
+            .WithIconLeft("fa-solid fa-clock-rotate-left");
         buttonRestore.BindIsEnabled(vm, nameof(vm.IsOkButtonEnabled));
         var buttonOk = UiUtil.MakeButtonOk(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonDeleteAllSubtitles, buttonRestore, buttonOk);
@@ -96,9 +138,15 @@ public class RestoreAutoBackupWindow : Window
         Grid.SetColumn(dataGrid, 0);
         Grid.SetColumnSpan(dataGrid, 2);
 
-        grid.Children.Add(linkOpenFolder);
-        Grid.SetRow(linkOpenFolder, 1);
-        Grid.SetColumn(linkOpenFolder, 0);
+        var panelBottomLeft = new StackPanel
+        {
+            Orientation = Avalonia.Layout.Orientation.Horizontal,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+            Children = { linkOpenFolder, summaryText },
+        };
+        grid.Children.Add(panelBottomLeft);
+        Grid.SetRow(panelBottomLeft, 1);
+        Grid.SetColumn(panelBottomLeft, 0);
 
         grid.Children.Add(panelButtons);
         Grid.SetRow(panelButtons, 1);
@@ -109,5 +157,26 @@ public class RestoreAutoBackupWindow : Window
 
         Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
         KeyDown += (_, e) => vm.OnKeyDown(e);
+    }
+
+    private static readonly Color[] ExtensionPalette =
+    {
+        Color.FromRgb(0x5f, 0xc6, 0xd8), // cyan
+        Color.FromRgb(0xb4, 0x8c, 0xe8), // violet
+        Color.FromRgb(0xe8, 0xb0, 0x4c), // amber
+        Color.FromRgb(0x6e, 0xcb, 0x87), // green
+        Color.FromRgb(0xe8, 0x8c, 0xb0), // pink
+        Color.FromRgb(0x4c, 0x9c, 0xe8), // blue
+    };
+
+    private static Color GetExtensionColor(string extension)
+    {
+        var hash = 0;
+        foreach (var ch in extension.ToLowerInvariant())
+        {
+            hash = hash * 31 + ch;
+        }
+
+        return ExtensionPalette[System.Math.Abs(hash) % ExtensionPalette.Length];
     }
 }

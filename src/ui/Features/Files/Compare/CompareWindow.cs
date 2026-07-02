@@ -96,8 +96,14 @@ public class CompareWindow : Window
         var panelDisplayType = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Children = { labelDisplayType, comboBoxCompareVisual }
+            Spacing = 4,
+            Children = { labelDisplayType, comboBoxCompareVisual },
         };
+
+        // color legend for the difference highlighting
+        panelDisplayType.Children.Add(MakeLegendSwatch(Color.FromArgb(255, 255, 235, 233), Se.Language.File.CompareOnlyInOneFile));
+        panelDisplayType.Children.Add(MakeLegendSwatch(Color.FromArgb(255, 230, 255, 237), Se.Language.File.CompareTextOrTimeDifference));
+        panelDisplayType.Children.Add(MakeLegendSwatch(Color.FromArgb(255, 255, 248, 220), Se.Language.File.CompareNumberDifference));
         grid.Add(panelDisplayType, 3, 0, 1, 2);
 
         // buttons
@@ -146,6 +152,37 @@ public class CompareWindow : Window
     private Control MakeSubtitlesView(ObservableCollection<CompareItem> leftSubtitles, string v, object fileGridOnDragOverLeft, object fileGridOnDropLeft)
     {
         throw new NotImplementedException();
+    }
+
+    private static Control MakeLegendSwatch(Color color, string label)
+    {
+        return new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(14, 0, 0, 0),
+            Children =
+            {
+                new Border
+                {
+                    Width = 12,
+                    Height = 12,
+                    CornerRadius = new CornerRadius(3),
+                    Background = new SolidColorBrush(color),
+                    BorderBrush = new SolidColorBrush(Color.FromArgb(0x60, 0x60, 0x60, 0x60)),
+                    BorderThickness = new Thickness(1),
+                    VerticalAlignment = VerticalAlignment.Center,
+                },
+                new TextBlock
+                {
+                    Text = label,
+                    Opacity = 0.8,
+                    FontSize = 12,
+                    VerticalAlignment = VerticalAlignment.Center,
+                },
+            },
+        };
     }
 
     private static Border MakeSubtitlesView(ObservableCollection<CompareItem> items, string selectedBinding, Delegate fileGridOnDragOver, Delegate fileGridOnDrop)

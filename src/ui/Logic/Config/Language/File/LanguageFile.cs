@@ -19,6 +19,9 @@ public class LanguageFile
     public string XNumberOfDifferenceAndPercentChanged { get; set; }
     public string XNumberOfDifferenceAndPercentLettersChanged { get; set; }
     public string ShowOnlyDifferences { get; set; }
+    public string CompareOnlyInOneFile { get; set; }
+    public string CompareTextOrTimeDifference { get; set; }
+    public string CompareNumberDifference { get; set; }
     public string IgnoreLineBreaks { get; set; }
     public string IgnoreWhitespace { get; set; }
     public string IgnoreFormatting { get; set; }
@@ -44,6 +47,9 @@ public class LanguageFile
         XNumberOfDifferenceAndPercentChanged = "Number of differences: {0} ({1:0.##}% of words changed)";
         XNumberOfDifferenceAndPercentLettersChanged = "Number of differences: {0} ({1:0.##}% of letters changed)";
         ShowOnlyDifferences = "Only differences";
+        CompareOnlyInOneFile = "Only in one file";
+        CompareTextOrTimeDifference = "Text/time difference";
+        CompareNumberDifference = "Number difference";
         ShowOnlyDifferencesInText = "Only differences in text";
         IgnoreLineBreaks = "Ignore line breaks";
         IgnoreWhitespace = "Ignore whitespace";

@@ -8,6 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Features.Files.Compare;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -43,9 +44,18 @@ public class FixNetflixErrorsWindow : Window
             UiUtil.MakeButtonCancel(vm.CancelCommand)
         );
 
+        var summaryText = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Opacity = 0.8,
+            Margin = new Thickness(4, 0, 10, 0),
+        };
+        summaryText.Bind(TextBlock.TextProperty, new Binding(nameof(vm.FixesSummaryText)));
+
         var buttonSelectPanel = UiUtil.MakeButtonBar(
             UiUtil.MakeButton(Se.Language.General.SelectAll, vm.ChecksSelectAllCommand),
-            UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.ChecksInverseSelectionCommand)
+            UiUtil.MakeButton(Se.Language.General.InvertSelection, vm.ChecksInverseSelectionCommand),
+            summaryText
         ).WithAlignmentLeft().WithAlignmentTop();
 
 
@@ -204,19 +214,47 @@ public class FixNetflixErrorsWindow : Window
                     Binding = new Binding(nameof(FixNetflixErrorsItem.IndexDisplay)),
                     IsReadOnly = true,
                 },
-                new DataGridTextColumn
+                new DataGridTemplateColumn
                 {
                     Header = Se.Language.General.Before,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(FixNetflixErrorsItem.Before)),
+                    CellTemplate = new FuncDataTemplate<FixNetflixErrorsItem>((item, _) =>
+                    {
+                        if (item == null)
+                        {
+                            return new Border();
+                        }
+
+                        var (beforeBlock, _) = TextDiffHighlighter.CompareReplacement(item.Before, item.After);
+                        return new Border
+                        {
+                            Background = Brushes.Transparent,
+                            Padding = new Thickness(4),
+                            Child = beforeBlock,
+                        };
+                    }),
                     IsReadOnly = true,
                     Width = new DataGridLength(1, DataGridLengthUnitType.Star),
                 },
-                new DataGridTextColumn
+                new DataGridTemplateColumn
                 {
                     Header = Se.Language.General.After,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(FixNetflixErrorsItem.After)),
+                    CellTemplate = new FuncDataTemplate<FixNetflixErrorsItem>((item, _) =>
+                    {
+                        if (item == null)
+                        {
+                            return new Border();
+                        }
+
+                        var (_, afterBlock) = TextDiffHighlighter.CompareReplacement(item.Before, item.After);
+                        return new Border
+                        {
+                            Background = Brushes.Transparent,
+                            Padding = new Thickness(4),
+                            Child = afterBlock,
+                        };
+                    }),
                     IsReadOnly = true,
                     Width = new DataGridLength(1, DataGridLengthUnitType.Star),
                 },
