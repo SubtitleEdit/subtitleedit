@@ -38,9 +38,11 @@ public partial class AiReviewViewModel : ObservableObject
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private string _statusText;
     [ObservableProperty] private string _reasonText;
+    [ObservableProperty] private bool _hasReason;
     [ObservableProperty] private string _summaryText;
     [ObservableProperty] private string _applyButtonText;
     [ObservableProperty] private string _warningNoteText;
+    [ObservableProperty] private bool _hasWarningNote;
 
     public Window? Window { get; set; }
     public bool OkPressed { get; private set; }
@@ -121,6 +123,16 @@ public partial class AiReviewViewModel : ObservableObject
     partial void OnIsReviewingChanged(bool value)
     {
         IsNotReviewing = !value;
+    }
+
+    partial void OnReasonTextChanged(string value)
+    {
+        HasReason = !string.IsNullOrEmpty(value);
+    }
+
+    partial void OnWarningNoteTextChanged(string value)
+    {
+        HasWarningNote = !string.IsNullOrEmpty(value);
     }
 
     private void UpdateEngineVisibility()

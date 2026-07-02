@@ -87,7 +87,16 @@ public class AiReviewWindow : Window
             CornerRadius = new CornerRadius(10),
             Padding = new Thickness(10, 3),
             VerticalAlignment = VerticalAlignment.Center,
-            Child = MakeBoundTextBlock(nameof(vm.LanguageDisplay)),
+            Child = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 6,
+                Children =
+                {
+                    new Optris.Icons.Avalonia.Icon { Value = "mdi-web", FontSize = 14, VerticalAlignment = VerticalAlignment.Center },
+                    MakeBoundTextBlock(nameof(vm.LanguageDisplay)),
+                },
+            },
         };
 
         var buttonEditPrompt = UiUtil.MakeButton(l.EditPrompt, vm.EditPromptCommand)
@@ -114,23 +123,56 @@ public class AiReviewWindow : Window
             ItemsPanel = new FuncTemplate<Panel?>(() => new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 }),
             ItemTemplate = new FuncDataTemplate<ReviewFilterChip>((chip, _) =>
             {
+                var content = new StackPanel
+                {
+                    Orientation = Orientation.Horizontal,
+                    Spacing = 6,
+                    VerticalAlignment = VerticalAlignment.Center,
+                };
+                if (chip?.Category != null)
+                {
+                    content.Children.Add(new Avalonia.Controls.Shapes.Ellipse
+                    {
+                        Width = 7,
+                        Height = 7,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Fill = GetCategoryBrush(chip.Category.Value),
+                    });
+                }
+
+                var chipText = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
+                chipText.Bind(TextBlock.TextProperty, new Binding(nameof(ReviewFilterChip.Display)));
+                content.Children.Add(chipText);
+
                 var toggle = new ToggleButton
                 {
                     Padding = new Thickness(10, 3),
                     CornerRadius = new CornerRadius(12),
                     Command = vm.SetFilterCommand,
                     CommandParameter = chip,
+                    Content = content,
                     [!ToggleButton.IsCheckedProperty] = new Binding(nameof(ReviewFilterChip.IsActive)),
-                    [!ContentControl.ContentProperty] = new Binding(nameof(ReviewFilterChip.Display)),
                 };
-                AutomationProperties.SetName(toggle, chip.Label);
+                AutomationProperties.SetName(toggle, chip?.Label ?? string.Empty);
                 return toggle;
             }),
         };
 
-        var warningNote = MakeBoundTextBlock(nameof(vm.WarningNoteText));
-        warningNote.Foreground = new SolidColorBrush(Color.FromRgb(0xf0, 0xa6, 0x3c));
-        warningNote.VerticalAlignment = VerticalAlignment.Center;
+        var warningBrush = new SolidColorBrush(Color.FromRgb(0xf0, 0xa6, 0x3c));
+        var warningText = MakeBoundTextBlock(nameof(vm.WarningNoteText));
+        warningText.Foreground = warningBrush;
+        var warningNote = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children =
+            {
+                new Optris.Icons.Avalonia.Icon { Value = "mdi-alert", FontSize = 14, Foreground = warningBrush, VerticalAlignment = VerticalAlignment.Center },
+                warningText,
+            },
+        };
+        warningNote.Bind(IsVisibleProperty, new Binding(nameof(vm.HasWarningNote)));
 
         var chipsBar = new Grid
         {
@@ -193,23 +235,41 @@ public class AiReviewWindow : Window
                         };
                         if (item != null)
                         {
-                            panel.Children.Add(new Avalonia.Controls.Shapes.Ellipse
+                            panel.Children.Add(new Border
                             {
-                                Width = 8,
-                                Height = 8,
-                                Fill = item.CategoryBrush,
+                                Background = item.CategoryBackgroundBrush,
+                                CornerRadius = new CornerRadius(5),
+                                Padding = new Thickness(7, 2),
                                 VerticalAlignment = VerticalAlignment.Center,
-                            });
-                            panel.Children.Add(new TextBlock
-                            {
-                                Text = item.CategoryDisplay,
-                                VerticalAlignment = VerticalAlignment.Center,
+                                Child = new StackPanel
+                                {
+                                    Orientation = Orientation.Horizontal,
+                                    Spacing = 5,
+                                    Children =
+                                    {
+                                        new Optris.Icons.Avalonia.Icon
+                                        {
+                                            Value = item.CategoryIconName,
+                                            FontSize = 13,
+                                            Foreground = item.CategoryBrush,
+                                            VerticalAlignment = VerticalAlignment.Center,
+                                        },
+                                        new TextBlock
+                                        {
+                                            Text = item.CategoryDisplay,
+                                            FontSize = 12,
+                                            Foreground = item.CategoryBrush,
+                                            VerticalAlignment = VerticalAlignment.Center,
+                                        },
+                                    },
+                                },
                             });
                             if (item.IsWarning)
                             {
-                                panel.Children.Add(new TextBlock
+                                panel.Children.Add(new Optris.Icons.Avalonia.Icon
                                 {
-                                    Text = "⚠",
+                                    Value = "mdi-alert",
+                                    FontSize = 13,
                                     Foreground = item.WarningBrush,
                                     VerticalAlignment = VerticalAlignment.Center,
                                 });
@@ -292,18 +352,44 @@ public class AiReviewWindow : Window
         statusText.VerticalAlignment = VerticalAlignment.Center;
         statusText.Opacity = 0.8;
 
+        var progressIcon = new Optris.Icons.Avalonia.Icon
+        {
+            Value = "mdi-robot-outline",
+            FontSize = 15,
+            Opacity = 0.8,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
         var progressRow = new Grid
         {
-            ColumnDefinitions = new ColumnDefinitions("Auto,*"),
-            ColumnSpacing = 12,
+            ColumnDefinitions = new ColumnDefinitions("Auto,Auto,*"),
+            ColumnSpacing = 10,
         };
-        progressRow.Add(statusText, 0, 0);
-        progressRow.Add(progressBar, 0, 1);
+        progressRow.Add(progressIcon, 0, 0);
+        progressRow.Add(statusText, 0, 1);
+        progressRow.Add(progressBar, 0, 2);
 
         // ---------- reason strip ----------
-        var reasonText = MakeBoundTextBlock(nameof(vm.ReasonText));
-        reasonText.Opacity = 0.8;
-        reasonText.TextWrapping = TextWrapping.Wrap;
+        var reasonTextBlock = MakeBoundTextBlock(nameof(vm.ReasonText));
+        reasonTextBlock.Opacity = 0.8;
+        reasonTextBlock.TextWrapping = TextWrapping.Wrap;
+        var reasonText = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 7,
+            MinHeight = 20,
+            Children =
+            {
+                new Optris.Icons.Avalonia.Icon
+                {
+                    Value = "mdi-message-text-outline",
+                    FontSize = 14,
+                    Opacity = 0.7,
+                    VerticalAlignment = VerticalAlignment.Center,
+                },
+                reasonTextBlock,
+            },
+        };
+        reasonText.Bind(IsVisibleProperty, new Binding(nameof(vm.HasReason)));
 
         // ---------- bottom bar ----------
         var summaryText = MakeBoundTextBlock(nameof(vm.SummaryText));
@@ -380,6 +466,11 @@ public class AiReviewWindow : Window
         };
         Closing += delegate { vm.OnClosing(); };
         KeyDown += (_, e) => vm.OnKeyDown(e);
+    }
+
+    private static IBrush GetCategoryBrush(ReviewCategory category)
+    {
+        return ReviewSuggestionItem.GetBrushForCategory(category);
     }
 
     private static TextBlock MakeBoundTextBlock(string textPropertyPath)
