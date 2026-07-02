@@ -69,13 +69,18 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
     [ObservableProperty] private RemoveItem? _selectedFix;
     [ObservableProperty] private string _fixText;
     [ObservableProperty] private bool _fixTextEnabled;
-    [ObservableProperty] private bool _isApplyVisible;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsOkVisible))]
+    private bool _isApplyVisible;
     [ObservableProperty] private string _linesFoundText;
 
     public Window? Window { get; set; }
 
     public bool OkPressed { get; private set; }
     public Subtitle FixedSubtitle { get; private set; }
+
+    // Menu mode (apply callback) shows Apply + Done; selected-lines mode (no callback) shows Ok + Cancel.
+    public bool IsOkVisible => !IsApplyVisible;
 
     private Subtitle _subtitle;
     private RemoveTextForHI? _removeTextForHiLib;
@@ -225,6 +230,13 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
     [RelayCommand]
     private void Cancel()
     {
+        Window?.Close();
+    }
+
+    [RelayCommand]
+    private void Done()
+    {
+        // Menu mode: changes are already applied live via Apply, so Done just closes.
         Window?.Close();
     }
 

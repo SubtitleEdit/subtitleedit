@@ -1742,8 +1742,8 @@ public partial class BinaryEditViewModel : ObservableObject
             RefreshGrid();
         }
 
-        // The dialog applies via this callback (on both Apply and Change/OK), so there is
-        // nothing to re-apply here - re-applying compounded the factor.
+        // The dialog applies via this callback (Apply), so there is nothing to re-apply here
+        // when it closes with Done - re-applying compounded the factor.
         await _windowService.ShowDialogAsync<ChangeSpeedWindow, ChangeSpeedViewModel>(Window, vm => { vm.Initialize(selectedIndices.Count > 0, ApplySpeed); });
     }
 

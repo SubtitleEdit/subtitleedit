@@ -34,13 +34,21 @@ public class RemoveTextForHearingImpairedWindow : Window
         var settingsView = MakeSettingsView(vm);
         var fixesView = MakeFixesView(vm);
 
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
+        // Selected-lines mode (no apply callback) commits once with Ok/Cancel; menu mode applies
+        // live and repeatedly with Apply, then Done just closes.
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand)
+            .WithBindIsVisible(nameof(vm.IsOkVisible));
         var buttonApply = UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyCommand)
             .WithBindIsVisible(nameof(vm.IsApplyVisible));
+        var buttonDone = UiUtil.MakeButtonDone(vm.DoneCommand)
+            .WithBindIsVisible(nameof(vm.IsApplyVisible));
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand)
+            .WithBindIsVisible(nameof(vm.IsOkVisible));
         var panelButtons = UiUtil.MakeButtonBar(
             buttonOk,
             buttonApply,
-            UiUtil.MakeButtonCancel(vm.CancelCommand)
+            buttonDone,
+            buttonCancel
         );
 
         var grid = new Grid
@@ -68,7 +76,7 @@ public class RemoveTextForHearingImpairedWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { (vm.IsApplyVisible ? buttonDone : buttonOk).Focus(); }; // hack to make OnKeyDown work
     }
 
     private StackPanel MakeSettingsView(RemoveTextForHearingImpairedViewModel vm)

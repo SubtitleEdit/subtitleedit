@@ -5514,13 +5514,10 @@ public partial class MainViewModel :
             _updateAudioVisualizer = true;
         }
 
-        var result = await ShowDialogAsync<RemoveTextForHearingImpairedWindow, RemoveTextForHearingImpairedViewModel>(
+        // Menu mode uses Apply + Done: the change is applied live via the ApplyToGrid callback,
+        // so there is nothing to commit when the dialog closes.
+        await ShowDialogAsync<RemoveTextForHearingImpairedWindow, RemoveTextForHearingImpairedViewModel>(
             vm => { vm.Initialize(GetUpdateSubtitle(), ApplyToGrid); });
-
-        if (result.OkPressed)
-        {
-            ApplyToGrid(result.FixedSubtitle);
-        }
     }
 
     [RelayCommand]
@@ -7476,7 +7473,8 @@ public partial class MainViewModel :
             .ToList();
 
         // The dialog applies the change itself (idempotently, from a snapshot taken when it
-        // opened), so we must not re-apply here - doing so compounded the factor (Apply + OK).
+        // opened) via Apply, so we must not re-apply here. Done just signals via OkPressed
+        // that timings may have changed so the audio visualizer can refresh.
         var result = await ShowDialogAsync<ChangeSpeedWindow, ChangeSpeedViewModel>(vm => { vm.Initialize(Subtitles, selectedIndices); });
         if (result.OkPressed)
         {
