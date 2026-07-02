@@ -17747,7 +17747,7 @@ public partial class MainViewModel :
     public int GetFastHashOriginal()
     {
         _subtitleOriginal ??= new Subtitle();
-        var pre = _subtitleOriginal + SelectedEncoding.DisplayName;
+        var pre = _subtitleFileNameOriginal + SelectedEncoding.DisplayName;
 
         unchecked
         {
