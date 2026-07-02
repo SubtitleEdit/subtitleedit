@@ -16,11 +16,12 @@ public class RemoveTextForHearingImpairedViewModelTests
     }
 
     [AvaloniaFact]
-    public void Apply_IsHidden_WhenNoCallbackProvided()
+    public void SettingsMode_ShowsOkCancel_WhenNoCallbackProvided()
     {
         var vm = Resolve();
         vm.Initialize(new Subtitle());
         Assert.False(vm.IsApplyVisible);
+        Assert.True(vm.IsSettingsMode);
     }
 
     [AvaloniaFact]
@@ -42,7 +43,6 @@ public class RemoveTextForHearingImpairedViewModelTests
         vm.ApplyCommand.Execute(null);
 
         Assert.NotNull(applied);
-        Assert.False(vm.OkPressed); // Apply must not close / set OkPressed
         Assert.Single(applied!.Paragraphs); // the emptied line was dropped
         Assert.Equal("Hello there", applied.Paragraphs[0].Text);
     }

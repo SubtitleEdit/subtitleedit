@@ -51,10 +51,11 @@ public partial class ChangeSpeedViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Ok()
+    private void Done()
     {
+        // Changes are already applied via Apply; Done just closes. OkPressed signals the
+        // caller that timings may have changed so it can refresh (e.g. the audio visualizer).
         OkPressed = true;
-        Apply(); // apply once; idempotent (recomputed from the original snapshot)
         Window?.Close();
     }
 
@@ -103,12 +104,6 @@ public partial class ChangeSpeedViewModel : ObservableObject
                 TimeSpan.FromMilliseconds(_originalTimes[i].Start * factor),
                 TimeSpan.FromMilliseconds(_originalTimes[i].End * factor));
         }
-    }
-
-    [RelayCommand]
-    private void Cancel()
-    {
-        Window?.Close();
     }
 
     internal void Initialize(ObservableCollection<SubtitleLineViewModel> subtitles, IList<int> selectedIndices)

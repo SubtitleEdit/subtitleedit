@@ -83,10 +83,9 @@ public class ChangeSpeedWindow : Window
             },
         };
 
-        var buttonOk = UiUtil.MakeButton(Se.Language.General.Change, vm.OkCommand);
         var buttonApply = UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyCommand);
-        var buttonDone = UiUtil.MakeButtonDone(vm.CancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonApply, buttonDone);
+        var buttonDone = UiUtil.MakeButtonDone(vm.DoneCommand);
+        var buttonPanel = UiUtil.MakeButtonBar(buttonApply, buttonDone);
 
         var grid = new Grid
         {
@@ -117,7 +116,7 @@ public class ChangeSpeedWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { buttonDone.Focus(); }; // hack to make OnKeyDown work
         Loaded += (_, _) => UiUtil.RestoreWindowPosition(this);
         Closing += (_, _) => UiUtil.SaveWindowPosition(this);
         KeyDown += (_, e) => vm.OnKeyDown(e);

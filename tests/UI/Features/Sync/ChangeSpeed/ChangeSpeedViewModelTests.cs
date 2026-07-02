@@ -18,18 +18,17 @@ public class ChangeSpeedViewModelTests
         };
 
     [Fact]
-    public void ApplyThenOk_DoesNotCompoundTheFactor()
+    public void ApplyThenDone_DoesNotCompoundTheFactor()
     {
-        // Regression (#bug-hunt): "Apply" then "Change"(OK) used to apply the factor twice
-        // (125% -> x0.8 -> x0.8 = x0.64). The dialog now recomputes from the original snapshot,
-        // so the result is the same as applying once.
+        // The dialog is Apply + Done: Apply commits once (125% -> x0.8) and Done just closes
+        // without re-applying, so the factor is never applied twice.
         var subtitles = OneLine();
         var vm = new ChangeSpeedViewModel();
         vm.Initialize(subtitles, new List<int>());
         vm.SpeedPercent = 125.0;
 
         vm.ApplyCommand.Execute(null);
-        vm.OkCommand.Execute(null);
+        vm.DoneCommand.Execute(null);
 
         Assert.Equal(800, subtitles[0].StartTime.TotalMilliseconds, 3);
         Assert.Equal(2400, subtitles[0].EndTime.TotalMilliseconds, 3);
@@ -53,17 +52,19 @@ public class ChangeSpeedViewModelTests
     }
 
     [Fact]
-    public void Ok_WithoutApply_AppliesOnce()
+    public void Done_WithoutApply_LeavesTimesUnchanged()
     {
+        // Done only closes; the change is committed by Apply, so closing without Apply is a no-op.
         var subtitles = OneLine();
         var vm = new ChangeSpeedViewModel();
         vm.Initialize(subtitles, new List<int>());
         vm.SpeedPercent = 125.0;
 
-        vm.OkCommand.Execute(null);
+        vm.DoneCommand.Execute(null);
 
-        Assert.Equal(800, subtitles[0].StartTime.TotalMilliseconds, 3);
-        Assert.Equal(2400, subtitles[0].EndTime.TotalMilliseconds, 3);
+        Assert.Equal(1000, subtitles[0].StartTime.TotalMilliseconds, 3);
+        Assert.Equal(3000, subtitles[0].EndTime.TotalMilliseconds, 3);
+        Assert.True(vm.OkPressed);
     }
 
     [Fact]
@@ -74,7 +75,7 @@ public class ChangeSpeedViewModelTests
         vm.Initialize(subtitles, new List<int>());
         vm.SpeedPercent = 0.0;
 
-        vm.OkCommand.Execute(null);
+        vm.ApplyCommand.Execute(null);
 
         // Times unchanged (no Infinity/overflow).
         Assert.Equal(1000, subtitles[0].StartTime.TotalMilliseconds, 3);
