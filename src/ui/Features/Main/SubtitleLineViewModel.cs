@@ -434,7 +434,6 @@ public partial class SubtitleLineViewModel : ObservableObject
         }
 
         OnPropertyChanged(nameof(GapBackgroundBrush));
-        OnPropertyChanged(nameof(DurationBackgroundBrush));
         OnPropertyChanged(nameof(EndTimeBackgroundBrush));
     }
 
@@ -536,16 +535,12 @@ public partial class SubtitleLineViewModel : ObservableObject
             return;
         }
 
+        // UpdateDuration raises the timing-derived notifications (CPS/WPM/brushes);
+        // raising them here as well made every EndTime assignment notify twice, and the
+        // grid re-evaluates the bound getters per notification.
         _skipUpdate = true;
         UpdateDuration();
         _skipUpdate = false;
-
-        OnPropertyChanged(nameof(CharactersPerSecond));
-        OnPropertyChanged(nameof(TextBackgroundBrush));
-        OnPropertyChanged(nameof(DurationBackgroundBrush));
-        OnPropertyChanged(nameof(CpsBackgroundBrush));
-        OnPropertyChanged(nameof(WordsPerMinute));
-        OnPropertyChanged(nameof(WpmBackgroundBrush));
     }
 
     partial void OnDurationChanged(TimeSpan value)
@@ -561,7 +556,6 @@ public partial class SubtitleLineViewModel : ObservableObject
             EndTime = newEndTime;
 
             OnPropertyChanged(nameof(CharactersPerSecond));
-            OnPropertyChanged(nameof(TextBackgroundBrush));
             OnPropertyChanged(nameof(DurationBackgroundBrush));
             OnPropertyChanged(nameof(CpsBackgroundBrush));
             OnPropertyChanged(nameof(WordsPerMinute));
@@ -576,10 +570,16 @@ public partial class SubtitleLineViewModel : ObservableObject
         {
             Duration = EndTime - StartTime;
 
+            // Single raise site for everything derived from the times. TextBackgroundBrush
+            // is deliberately absent: it depends only on Text (see the getter), and its
+            // getter shapes the text with HarfBuzz - raising it at waveform-drag rate is
+            // expensive. CpsBackgroundBrush/WpmBackgroundBrush are raised here so start-time
+            // drags repaint them too (previously only end-time changes did).
             OnPropertyChanged(nameof(CharactersPerSecond));
             OnPropertyChanged(nameof(WordsPerMinute));
-            OnPropertyChanged(nameof(TextBackgroundBrush));
             OnPropertyChanged(nameof(DurationBackgroundBrush));
+            OnPropertyChanged(nameof(CpsBackgroundBrush));
+            OnPropertyChanged(nameof(WpmBackgroundBrush));
         }
     }
 
