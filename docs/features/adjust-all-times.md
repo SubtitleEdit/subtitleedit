@@ -17,6 +17,8 @@ The window remembers its position and stays open across New/Open, so adjustments
 
 ## Keyboard shortcuts
 
-- Shift/Ctrl/Alt + Left or Right arrow — Show earlier/later by 1 frame / 10 frames / 1 second
+- Shift/Ctrl/Alt + Left or Right arrow — Show earlier/later
+  - Time codes shown as milliseconds: 10 ms / 100 ms / 500 ms
+  - Time codes shown as frames: 1 frame / 10 frames / 1 second
 
 > **Note:** "Selected lines and forward" applies the shift to the currently selected lines and every line after them.
