@@ -557,16 +557,15 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
             var fpsId = GetFpsId(fps);
 
-            /* time (in 90kHz resolution) needed to initialize (clear) the screen buffer
-                based on the composition pixel rate of 256e6 bit/s - always rounded up */
-            var frameInitTime = (pic.Width * pic.Height * 9 + 3199) / 3200; // better use default height here
-            /* time (in 90kHz resolution) needed to initialize (clear) the window area
-                based on the composition pixel rate of 256e6 bit/s - always rounded up
-                Note: no cropping etc. -> window size == image size */
-            var windowInitTime = (bm.Width * bm.Height * 9 + 3199) / 3200;
-            /* time (in 90kHz resolution) needed to decode the image
-                based on the decoding pixel rate of 128e6 bit/s - always rounded up  */
-            var imageDecodeTime = (bm.Width * bm.Height * 9 + 1599) / 1600;
+            // Timestamps: every segment of a display set carries the display set's
+            // presentation time as PTS, and DTS is left at 0 ("unset"). This mirrors how
+            // .sup files extracted from retail discs look, and is what the common consumers
+            // expect: ffmpeg's sup demuxer explicitly treats DTS 0 as unset, SupMover shifts
+            // the PTS of every segment (so they must all carry the real presentation time),
+            // and muxers like tsMuxeR re-derive decode timing from the PCS when authoring
+            // an m2ts. The previous writer put decode-model values into DTS and zeroed the
+            // ODS/END PTS, producing segments with DTS > PTS (issue #10219).
+
             // write PCS start - Presentation Composition Segment (also called the Control Segment)
             packetHeader[10] = 0x16; // ID
 
@@ -577,10 +576,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             _lastEndTimeForWrite = pic.EndTimeForWrite;
-            var dts = (uint)(pts - (frameInitTime + windowInitTime + imageDecodeTime)); //int dts = pic.StartTimeForWrite - windowInitTime; ???
 
             ToolBox.SetDWord(packetHeader, 2, (uint)pts);                     // PTS
-            ToolBox.SetDWord(packetHeader, 6, dts);                           // DTS
+            ToolBox.SetDWord(packetHeader, 6, 0);                             // DTS (0 = unset)
             ToolBox.SetWord(packetHeader, 11, headerPcsStart.Length);     // size
             for (var i = 0; i < packetHeader.Length; i++)
             {
@@ -600,9 +598,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             // write WDS
-            packetHeader[10] = 0x17;                                            // ID
-            var timestamp = pts - windowInitTime;
-            ToolBox.SetDWord(packetHeader, 2, (uint)timestamp);            // PTS (keep DTS)
+            packetHeader[10] = 0x17;                                            // ID (keep PTS & DTS)
             ToolBox.SetWord(packetHeader, 11, headerWds.Length);       // size
             for (var i = 0; i < packetHeader.Length; i++)
             {
@@ -619,9 +615,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             // write PDS - Palette Definition Segment
-            packetHeader[10] = 0x14;                                            // ID
-            ToolBox.SetDWord(packetHeader, 2, dts);                        // PTS (=DTS of PCS/WDS)
-            ToolBox.SetDWord(packetHeader, 6, 0);                      // DTS (0)
+            packetHeader[10] = 0x14;                                            // ID (keep PTS & DTS)
             ToolBox.SetWord(packetHeader, 11, 2 + palSize * 5);        // size
             for (var i = 0; i < packetHeader.Length; i++)
             {
@@ -647,10 +641,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 bufSize = 0xffe4;
             }
 
-            packetHeader[10] = 0x15;                                                    // ID
-            timestamp = 0;
-            ToolBox.SetDWord(packetHeader, 2, (uint)timestamp);                    // PTS
-            ToolBox.SetDWord(packetHeader, 6, dts);                                // DTS
+            packetHeader[10] = 0x15;                                                    // ID (keep PTS & DTS)
             ToolBox.SetWord(packetHeader, 11, headerOdsFirst.Length + bufSize); // size
             for (var i = 0; i < packetHeader.Length; i++)
             {
@@ -701,8 +692,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             // write END
-            packetHeader[10] = 0x80;                                             // ID
-            ToolBox.SetDWord(packetHeader, 6, 0);                       // DTS (0) (keep PTS of ODS)
+            packetHeader[10] = 0x80;                                             // ID (keep PTS & DTS)
             ToolBox.SetWord(packetHeader, 11, 0);                       // size
             for (var i = 0; i < packetHeader.Length; i++)
             {
@@ -712,8 +702,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             // write PCS end
             packetHeader[10] = 0x16;                                            // ID
             ToolBox.SetDWord(packetHeader, 2, (uint)pic.EndTimeForWrite);        // PTS
-            dts = (uint)(pic.EndTimeForWrite - 90);
-            ToolBox.SetDWord(packetHeader, 6, dts);                        // DTS
+            ToolBox.SetDWord(packetHeader, 6, 0);                          // DTS (0 = unset)
             ToolBox.SetWord(packetHeader, 11, headerPcsEnd.Length);     // size
             for (var i = 0; i < packetHeader.Length; i++)
             {
@@ -730,10 +719,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             // write WDS - Window Definition Segment
-            packetHeader[10] = 0x17;                                                     // ID
-            timestamp = pic.EndTimeForWrite - windowInitTime;
-            ToolBox.SetDWord(packetHeader, 2, (uint)timestamp);                    // PTS
-            ToolBox.SetDWord(packetHeader, 6, (uint)(dts - windowInitTime));   // DTS
+            packetHeader[10] = 0x17;                                                     // ID (keep PTS & DTS)
             ToolBox.SetWord(packetHeader, 11, headerWds.Length);                // size
             for (var i = 0; i < packetHeader.Length; i++)
             {
@@ -750,9 +736,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             // write END
-            packetHeader[10] = 0x80;                                            // ID
-            ToolBox.SetDWord(packetHeader, 2, dts);                        // PTS (DTS of end PCS)
-            ToolBox.SetDWord(packetHeader, 6, 0);                       // DTS (0)
+            packetHeader[10] = 0x80;                                            // ID (keep PTS & DTS)
             ToolBox.SetWord(packetHeader, 11, 0);                       // size
             for (var i = 0; i < packetHeader.Length; i++)
             {
