@@ -31,8 +31,26 @@ public class CrispAsrFunAsrNano : CrispAsrEngineBase
         {
             new WhisperModel
             {
+                Name = "funasr-nano-2512-q4_k.gguf",
+                Size = "0.90 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/funasr-nano-GGUF/resolve/main/funasr-nano-2512-q4_k.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "funasr-nano-2512-q8_0.gguf",
+                Size = "1.27 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/funasr-nano-GGUF/resolve/main/funasr-nano-2512-q8_0.gguf",
+                ],
+            },
+            new WhisperModel
+            {
                 Name = "funasr-nano-2512-f16.gguf",
-                Size = "1.84 GB",
+                Size = "1.98 GB",
                 Urls =
                 [
                     "https://huggingface.co/cstr/funasr-nano-GGUF/resolve/main/funasr-nano-2512-f16.gguf",

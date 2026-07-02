@@ -77,6 +77,15 @@ public class CrispAsrParakeet : CrispAsrEngineBase
             },
             new WhisperModel
             {
+                Name = "parakeet-tdt-0.6b-ja-q4_k.gguf",
+                Size = "470 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-tdt-0.6b-ja-GGUF/resolve/main/parakeet-tdt-0.6b-ja-q4_k.gguf",
+                ],
+            },
+            new WhisperModel
+            {
                 Name = "parakeet-tdt-0.6b-ja.gguf",
                 Size = "1.24 GB",
                 Urls =

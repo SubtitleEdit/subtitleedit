@@ -27,31 +27,15 @@ public class CrispAsrMadlad : CrispAsrEngineBase
     public override List<WhisperModel> Models =>
        new()
        {
+            // Only the q4_k quant is published upstream now - the q8_0/f16 files were
+            // removed from the Hugging Face repo, so offering them would just 404.
             new WhisperModel
             {
                 Name = "madlad400-3b-mt-q4_k.gguf",
-                Size = "1.8 GB",
+                Size = "2.04 GB",
                 Urls =
                 [
                     "https://huggingface.co/cstr/madlad400-3b-mt-GGUF/resolve/main/madlad400-3b-mt-q4_k.gguf",
-                ],
-            },
-            new WhisperModel
-            {
-                Name = "madlad400-3b-mt-q8_0.gguf",
-                Size = "3.1 GB",
-                Urls =
-                [
-                    "https://huggingface.co/cstr/madlad400-3b-mt-GGUF/resolve/main/madlad400-3b-mt-q8_0.gguf",
-                ],
-            },
-            new WhisperModel
-            {
-                Name = "madlad400-3b-mt-f16.gguf",
-                Size = "5.7 GB",
-                Urls =
-                [
-                    "https://huggingface.co/cstr/madlad400-3b-mt-GGUF/resolve/main/madlad400-3b-mt-f16.gguf",
                 ],
             },
        };
