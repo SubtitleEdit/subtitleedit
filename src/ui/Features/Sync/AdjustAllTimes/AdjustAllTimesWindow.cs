@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
@@ -109,7 +110,7 @@ public class AdjustAllTimesWindow : Window
             buttonOk.Focus(); // hack to make OnKeyDown work
             UiUtil.RestoreWindowPosition(this);
         };
-        KeyDown += (_, e) => vm.OnKeyDown(e);
+        AddHandler(KeyDownEvent, (_, e) => vm.OnKeyDown(e), RoutingStrategies.Tunnel);
         Closing += (_, e) => vm.OnClosing(e);
     }
 }
