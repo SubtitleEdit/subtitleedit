@@ -126,7 +126,7 @@ public class SeAutoTranslate
         BaiduApiKey = string.Empty;
         BaiduUrl = "https://fanyi-api.baidu.com";
         ChatGptApiKey = string.Empty;
-        ChatGptModel = ChatGptTranslate.Models[0];
+        ChatGptModel = ChatGptTranslate.DefaultModel;
         ChatGptPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
         ChatGptUrl = "https://api.openai.com/v1/chat/completions";
         CopyPasteLineSeparator = "(...)";
