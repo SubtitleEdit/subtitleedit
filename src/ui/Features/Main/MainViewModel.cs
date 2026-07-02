@@ -5509,9 +5509,14 @@ public partial class MainViewModel :
 
         void ApplyToGrid(Subtitle applied)
         {
-            ReplaceSubtitles(applied.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
-            SelectAndScrollToRow(0);
-            _updateAudioVisualizer = true;
+            // Stop change detection during the rewrite so the background undo snapshotter can't
+            // race the Subtitles Clear/AddRange (matches every other bulk grid operation).
+            RunWithoutChangeDetection(() =>
+            {
+                ReplaceSubtitles(applied.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
+                SelectAndScrollToRow(0);
+                _updateAudioVisualizer = true;
+            });
         }
 
         // Menu mode uses Apply + Done: the change is applied live via the ApplyToGrid callback,
@@ -8064,16 +8069,21 @@ public partial class MainViewModel :
 
         // The HI removal can drop lines that become empty, so the result is not 1:1 with the
         // selection - replace the selected block with the fixed lines (inserted where it started).
-        var selectedIds = ordered.Select(s => s.Id).ToHashSet();
-        var firstIndex = Subtitles.IndexOf(ordered[0]);
-        var kept = Subtitles.Where(s => !selectedIds.Contains(s.Id)).ToList();
-        var insertPos = Math.Min(firstIndex, kept.Count);
-        kept.InsertRange(insertPos, result.FixedSubtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
+        // Stop change detection during the rewrite so the background undo snapshotter can't race
+        // the Subtitles Clear/AddRange, which left the operation without a clean undo entry.
+        RunWithoutChangeDetection(() =>
+        {
+            var selectedIds = ordered.Select(s => s.Id).ToHashSet();
+            var firstIndex = Subtitles.IndexOf(ordered[0]);
+            var kept = Subtitles.Where(s => !selectedIds.Contains(s.Id)).ToList();
+            var insertPos = Math.Min(firstIndex, kept.Count);
+            kept.InsertRange(insertPos, result.FixedSubtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
 
-        ReplaceSubtitles(kept);
-        Renumber();
-        SelectAndScrollToRow(insertPos);
-        _updateAudioVisualizer = true;
+            ReplaceSubtitles(kept);
+            Renumber();
+            SelectAndScrollToRow(insertPos);
+            _updateAudioVisualizer = true;
+        });
     }
 
     [RelayCommand]
