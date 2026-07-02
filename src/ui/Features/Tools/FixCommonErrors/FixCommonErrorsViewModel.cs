@@ -30,6 +30,9 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     [ObservableProperty] private ObservableCollection<LanguageDisplayItem> _languages;
     [ObservableProperty] private LanguageDisplayItem? _selectedLanguage;
     [ObservableProperty] private ObservableCollection<FixDisplayItem> _fixes;
+    [ObservableProperty] private ObservableCollection<FixDisplayItem> _visibleFixes;
+    [ObservableProperty] private ObservableCollection<FixFilterChip> _fixChips;
+    [ObservableProperty] private string _fixesSummaryText;
     [ObservableProperty] private FixDisplayItem? _selectedFix;
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _paragraphs;
     [ObservableProperty] private SubtitleLineViewModel? _selectedParagraph;
@@ -78,6 +81,9 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         Languages = new ObservableCollection<LanguageDisplayItem>();
         Language = new string(' ', 0);
         Fixes = new ObservableCollection<FixDisplayItem>();
+        VisibleFixes = new ObservableCollection<FixDisplayItem>();
+        FixChips = new ObservableCollection<FixFilterChip>();
+        FixesSummaryText = string.Empty;
         Paragraphs = new ObservableCollection<SubtitleLineViewModel>();
         _language = Se.Language.Tools.FixCommonErrors;
         Step1IsVisible = true;
@@ -275,6 +281,8 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         {
             fix.IsSelected = true;
         }
+
+        UpdateFixesSummary();
     }
 
     [RelayCommand]
@@ -284,6 +292,116 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         {
             fix.IsSelected = !fix.IsSelected;
         }
+
+        UpdateFixesSummary();
+    }
+
+    // ---------- action filter chips / summary (styled like the AI review window) ----------
+
+    private static readonly Color[] ChipPalette =
+    {
+        Color.FromRgb(0xe8, 0xb0, 0x4c), // amber
+        Color.FromRgb(0xb4, 0x8c, 0xe8), // violet
+        Color.FromRgb(0x5f, 0xc6, 0xd8), // cyan
+        Color.FromRgb(0xe8, 0x8c, 0xb0), // pink
+        Color.FromRgb(0x6e, 0xcb, 0x87), // green
+        Color.FromRgb(0x4c, 0x9c, 0xe8), // blue
+        Color.FromRgb(0xe8, 0x8a, 0x5a), // orange
+        Color.FromRgb(0x9a, 0xa3, 0xad), // gray
+    };
+
+    private readonly Dictionary<string, int> _actionPaletteIndex = new();
+
+    public IBrush GetActionBrush(string actionDisplay)
+    {
+        return new SolidColorBrush(GetActionColor(actionDisplay));
+    }
+
+    public IBrush GetActionBackgroundBrush(string actionDisplay)
+    {
+        var c = GetActionColor(actionDisplay);
+        return new SolidColorBrush(Color.FromArgb(0x20, c.R, c.G, c.B));
+    }
+
+    private Color GetActionColor(string actionDisplay)
+    {
+        if (!_actionPaletteIndex.TryGetValue(actionDisplay, out var index))
+        {
+            index = _actionPaletteIndex.Count;
+            _actionPaletteIndex[actionDisplay] = index;
+        }
+
+        return ChipPalette[index % ChipPalette.Length];
+    }
+
+    private void AddFix(FixDisplayItem item)
+    {
+        item.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(FixDisplayItem.IsSelected))
+            {
+                UpdateFixesSummary();
+            }
+        };
+
+        Fixes.Add(item);
+        if (PassesFixFilter(item))
+        {
+            VisibleFixes.Add(item);
+        }
+    }
+
+    private bool PassesFixFilter(FixDisplayItem item)
+    {
+        var active = FixChips.FirstOrDefault(c => c.IsActive);
+        return active?.Action == null || active.Action == item.ActionDisplay;
+    }
+
+    private void RebuildFixChips()
+    {
+        var activeAction = FixChips.FirstOrDefault(c => c.IsActive)?.Action;
+
+        FixChips.Clear();
+        FixChips.Add(new FixFilterChip { Action = null, Label = Se.Language.General.All, Count = Fixes.Count });
+        foreach (var group in Fixes.GroupBy(f => f.ActionDisplay).OrderByDescending(g => g.Count()))
+        {
+            FixChips.Add(new FixFilterChip { Action = group.Key, Label = group.Key, Count = group.Count() });
+        }
+
+        var toActivate = FixChips.FirstOrDefault(c => c.Action == activeAction) ?? FixChips[0];
+        toActivate.IsActive = true;
+
+        RebuildVisibleFixes();
+        UpdateFixesSummary();
+    }
+
+    [RelayCommand]
+    private void SetFixFilter(FixFilterChip chip)
+    {
+        foreach (var c in FixChips)
+        {
+            c.IsActive = c == chip;
+        }
+
+        RebuildVisibleFixes();
+    }
+
+    private void RebuildVisibleFixes()
+    {
+        VisibleFixes.Clear();
+        foreach (var item in Fixes)
+        {
+            if (PassesFixFilter(item))
+            {
+                VisibleFixes.Add(item);
+            }
+        }
+    }
+
+    private void UpdateFixesSummary()
+    {
+        var selected = Fixes.Count(f => f.IsSelected);
+        FixesSummaryText = string.Format(Se.Language.Tools.FixCommonErrors.XFixesYSelected, Fixes.Count, selected);
     }
 
     [RelayCommand]
@@ -358,6 +476,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     {
         _oldFixes = new List<FixDisplayItem>(Fixes);
         Fixes.Clear();
+        VisibleFixes.Clear();
         _previewMode = true;
         ApplyFixes();
     }
@@ -391,6 +510,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         UpdateGaps();
 
         Step2Title = string.Format(Se.Language.Tools.FixCommonErrors.FixCommonOcrErrorsStep2FixesFoundX, Fixes.Count);
+        RebuildFixChips();
     }
 
     private void InitStep1(string languageCode, Subtitle subtitle)
@@ -647,7 +767,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         var oldFix = _oldFixes.FirstOrDefault(f => f.Paragraph.Id.ToLowerInvariant() == p.Id.ToLowerInvariant() && f.Action == action);
         var isSelected = oldFix is not { IsSelected: false };
 
-        Fixes.Add(new FixDisplayItem(p, p.Number, action, before, after, isSelected));
+        AddFix(new FixDisplayItem(p, p.Number, action, before, after, isSelected));
     }
 
     public void AddFixToListView(Paragraph p, string action, string before, string after, bool isChecked)
@@ -664,7 +784,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             isSelected = false;
         }
 
-        Fixes.Add(new FixDisplayItem(p, p.Number, action, before, after, isSelected));
+        AddFix(new FixDisplayItem(p, p.Number, action, before, after, isSelected));
     }
 
     public void LogStatus(string sender, string message)

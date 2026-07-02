@@ -53,6 +53,7 @@ public partial class FixNetflixErrorsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<LanguageItem> _languages;
     [ObservableProperty] private LanguageItem? _selectedLanguage;
     [ObservableProperty] private ObservableCollection<FixNetflixErrorsItem> _fixes;
+    [ObservableProperty] private string _fixesSummaryText = string.Empty;
     [ObservableProperty] private FixNetflixErrorsItem? _selectedFix;
     [ObservableProperty] private string _fixText;
     [ObservableProperty] private bool _fixTextEnabled;
@@ -245,6 +246,7 @@ public partial class FixNetflixErrorsViewModel : ObservableObject
         // Build selected checks list
         var selectedChecks = Checks.Where(c => c.IsSelected).Select(c => c.Checker).ToList();
         Fixes.Clear();
+        FixesSummaryText = string.Empty;
 
         if (_subtitle.Paragraphs.Count == 0 || selectedChecks.Count == 0)
         {
@@ -293,8 +295,24 @@ public partial class FixNetflixErrorsViewModel : ObservableObject
             var index = kvp.Key;
             var (before, after, p, r) = kvp.Value;
             var item = new FixNetflixErrorsItem(r.CanBeFixed, index, before, after, p, r);
+            item.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(FixNetflixErrorsItem.Apply))
+                {
+                    UpdateFixesSummary();
+                }
+            };
             Fixes.Add(item);
         }
+
+        UpdateFixesSummary();
+    }
+
+    private void UpdateFixesSummary()
+    {
+        FixesSummaryText = Fixes.Count == 0
+            ? string.Empty
+            : string.Format(Se.Language.Tools.FixCommonErrors.XFixesYSelected, Fixes.Count, Fixes.Count(f => f.Apply));
     }
 
     partial void OnSelectedLanguageChanged(LanguageItem? value)

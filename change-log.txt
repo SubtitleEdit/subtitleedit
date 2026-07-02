@@ -5,10 +5,12 @@ v5.1.0-beta5 (TBD)
 
 * Add AI review (Tools > AI review) - proofread subtitles with a local LLM via llama.cpp or Ollama, with a before/after grid and editable prompt
 * Add copy/paste support to the time code boxes (a bare number is milliseconds) - thx RobertoHN
+* Polish Fix common errors, Netflix errors, Split/re-balance long lines, Compare and Restore auto-backup (filter chips, colored tags, word diffs, live counts, icons)
+* Fix ChatGPT auto-translate failing with "This is not a chat model" (bad default model) - thx EspritIT
 * Speech to text: add smaller model quants for FunASR nano/MLT-nano and Parakeet Japanese, and fix dead MADLAD download links
 * OCR: select the just-downloaded spell-check dictionary on any UI language
 * Spell check: clean up dictionary names with variant suffixes (e.g. de_DE_frami)
-* Fix keyboard shortcuts in "Adjust all times" not working, now moving 1 frame / 10 frames / 1 second - thx KaDeeKe
+* Fix keyboard shortcuts in "Adjust all times" not working, now moving 10/100/500 ms - or 1 frame / 10 frames / 1 second in frame mode - thx KaDeeKe
 * Fix up/down time code and duration stepping in frame mode not wrapping frames correctly - thx KaDeeKe
 * Fix invalid PTS/DTS in exported Blu-ray sup files (broke SupMover negative delay) - thx GCRaistlin/MonoS
 * Fix batch convert forgetting settings when the window is closed via X/Escape - thx MonsterSe7en

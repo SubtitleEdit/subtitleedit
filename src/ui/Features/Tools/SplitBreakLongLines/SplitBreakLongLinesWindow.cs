@@ -1,4 +1,7 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
+using Avalonia.Media;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -148,6 +151,43 @@ public class SplitBreakLongLinesWindow : Window
                     Binding = new Binding(nameof(SplitBreakLongLinesItem.Number)),
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     IsReadOnly = true,
+                },
+                new DataGridTemplateColumn
+                {
+                    Header = Se.Language.General.Name,
+                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTemplate = new FuncDataTemplate<SplitBreakLongLinesItem>((item, _) =>
+                    {
+                        if (item == null)
+                        {
+                            return new Border();
+                        }
+
+                        var isSplit = item.Name == Se.Language.Tools.SplitBreakLongLines.SplitLongLine;
+                        var color = isSplit ? Color.FromRgb(0x5f, 0xc6, 0xd8) : Color.FromRgb(0xb4, 0x8c, 0xe8);
+                        return new Border
+                        {
+                            Background = Brushes.Transparent,
+                            Padding = new Thickness(4),
+                            Child = new Border
+                            {
+                                Background = new SolidColorBrush(Color.FromArgb(0x20, color.R, color.G, color.B)),
+                                CornerRadius = new CornerRadius(5),
+                                Padding = new Thickness(7, 2),
+                                HorizontalAlignment = HorizontalAlignment.Left,
+                                VerticalAlignment = VerticalAlignment.Center,
+                                Child = new TextBlock
+                                {
+                                    Text = item.Name,
+                                    FontSize = 12,
+                                    Foreground = new SolidColorBrush(color),
+                                    VerticalAlignment = VerticalAlignment.Center,
+                                },
+                            },
+                        };
+                    }),
+                    IsReadOnly = true,
+                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
                 },
                 new DataGridTextColumn
                 {
