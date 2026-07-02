@@ -3,6 +3,7 @@ Subtitle Edit Changelog
 
 v5.1.0-beta5 (TBD)
 
+* Add AI review (Tools > AI review) - proofread subtitles with a local LLM via llama.cpp or Ollama, with a before/after grid and editable prompt
 * Add copy/paste support to the time code boxes (a bare number is milliseconds) - thx RobertoHN
 * Speech to text: add smaller model quants for FunASR nano/MLT-nano and Parakeet Japanese, and fix dead MADLAD download links
 * OCR: select the just-downloaded spell-check dictionary on any UI language
