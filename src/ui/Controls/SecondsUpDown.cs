@@ -113,6 +113,10 @@ public class SecondsUpDown : TemplatedControl
                 Name = "PART_Spinner",
                 ButtonSpinnerLocation = Location.Right,
                 ShowButtonSpinner = true,
+                // Keep the icon-only up/down repeat buttons out of the tab order: the text box is
+                // the single (named) tab stop and Up/Down arrows already step the value, so a
+                // screen-reader user is not stopped on two nameless buttons per field (#12087).
+                IsTabStop = false,
                 Content = grid,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch,

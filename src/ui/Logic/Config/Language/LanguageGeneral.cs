@@ -460,6 +460,7 @@ public class LanguageGeneral
     public string ReplaceWith { get; set; }
     public string RequiresRestart { get; set; }
     public string Reset { get; set; }
+    public string ResizePanels { get; set; }
     public string Resolution { get; set; }
     public string ResolutionX { get; set; }
     public string ReverseRightToLeftStartEnd { get; set; }
@@ -680,6 +681,7 @@ public class LanguageGeneral
     public string Voice { get; set; }
     public string Volume { get; set; }
     public string Warning { get; set; }
+    public string Waveform { get; set; }
     public string WaveformCenterOnVideoPosition { get; set; }
     public string WaveformPasteFromClipboard { get; set; }
     public string WaveformSpectrogram { get; set; }
@@ -1206,6 +1208,7 @@ public class LanguageGeneral
         ReplaceWith = "Replace with";
         RequiresRestart = "Requires restart";
         Reset = "Reset";
+        ResizePanels = "Resize panels";
         Resolution = "Resolution";
         ResolutionX = "Resolution: {0}";
         ReverseRightToLeftStartEnd = "Reverse RTL start/end";
@@ -1426,6 +1429,7 @@ public class LanguageGeneral
         Voice = "Voice";
         Volume = "Volume";
         Warning = "Warning";
+        Waveform = "Waveform";
         WaveformCenterOnVideoPosition = "Waveform center on video position";
         WaveformPasteFromClipboard = "Paste from clipboard";
         WaveformSpectrogram = "Waveform/spectrogram";

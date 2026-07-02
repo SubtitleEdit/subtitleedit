@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -37,6 +38,9 @@ public class SettingsPage : UserControl
             MinWidth = 360,
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
+            // The placeholder text is not exposed as the UIA Name, so screen readers announce a
+            // bare "edit" without this (#12087).
+            [AutomationProperties.NameProperty] = Se.Language.Options.Settings.SearchSettingsDotDotDot,
         };
 
         _contentPanel = new StackPanel
@@ -158,6 +162,9 @@ public class SettingsPage : UserControl
             VerticalAlignment = VerticalAlignment.Center,
             Command = command,
             CommandParameter = commandParameter,
+            // The content is an icon + label panel, so the button gets no computed UIA Name and a
+            // screen reader would announce a nameless button (#12087).
+            [AutomationProperties.NameProperty] = text,
         };
 
         return link;

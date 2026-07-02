@@ -98,6 +98,11 @@ public class InitWaveform
                 IsReadOnly = Se.Settings.General.LockTimeCodes,
                 WaveformHeightPercentage = settings.SpectrogramCombinedWaveformHeight,
             };
+
+            // The waveform is a focusable custom control with no text content, so without an
+            // accessible name screen readers announce it as a bare generic Avalonia control (#12087).
+            AutomationProperties.SetName(vm.AudioVisualizer, Se.Language.General.Waveform);
+
             vm.AudioVisualizer.OnNewSelectionInsert += vm.AudioVisualizerOnNewSelectionInsert;
             vm.AudioVisualizer.OnVideoPositionChanged += vm.AudioVisualizerOnVideoPositionChanged;
             vm.AudioVisualizer.OnToggleSelection += vm.AudioVisualizerOnToggleSelection;

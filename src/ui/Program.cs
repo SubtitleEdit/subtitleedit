@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml.Styling;
@@ -238,6 +239,14 @@ namespace Nikse.SubtitleEdit
                 b.Instance.Styles.Add(new StyleInclude(new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml", UriKind.Absolute))
                 {
                     Source = new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml")
+                });
+
+                // The Fluent theme makes every GridSplitter focusable (keyboard resize), so screen
+                // readers land on each splitter while tabbing; without a name they are announced as
+                // a bare generic Avalonia control. One app-level style names them all (#12087).
+                b.Instance.Styles.Add(new Style(x => x.OfType<GridSplitter>())
+                {
+                    Setters = { new Setter(AutomationProperties.NameProperty, Se.Language.General.ResizePanels) },
                 });
 
                 // Set application name
