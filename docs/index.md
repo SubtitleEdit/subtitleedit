@@ -20,6 +20,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 - [Text Editor](features/text-editor.md) — Editing subtitle text
 
 ### Tools
+- [AI Review](features/ai-review.md) — Proofread with a local LLM (llama.cpp, Ollama, or any OpenAI-compatible endpoint)
 - [Fix Common Errors](features/fix-common-errors.md) — Automatic error detection and fixing
 - [Check and Fix Netflix Errors](features/netflix-errors.md) — Netflix quality checks, proposed fixes, and CSV reports
 - [Batch Convert](features/batch-convert.md) — Convert multiple subtitle files
