@@ -25,15 +25,15 @@ public class AiReviewClient : IDisposable
         _httpClient.Timeout = TimeSpan.FromMinutes(15);
     }
 
-    public async Task<string> ChatAsync(string url, string model, string systemPrompt, string userContent, CancellationToken cancellationToken)
+    public async Task<string> ChatAsync(string url, string model, string systemPrompt, string userContent, CancellationToken cancellationToken, string? apiKey = null)
     {
         Error = string.Empty;
 
         // First try with enforced JSON output; some servers reject response_format, so retry without.
-        var response = await PostAsync(url, BuildRequestJson(model, systemPrompt, userContent, jsonMode: true), cancellationToken);
+        var response = await PostAsync(url, BuildRequestJson(model, systemPrompt, userContent, jsonMode: true), apiKey, cancellationToken);
         if (!response.ok && !cancellationToken.IsCancellationRequested)
         {
-            response = await PostAsync(url, BuildRequestJson(model, systemPrompt, userContent, jsonMode: false), cancellationToken);
+            response = await PostAsync(url, BuildRequestJson(model, systemPrompt, userContent, jsonMode: false), apiKey, cancellationToken);
         }
 
         if (!response.ok)
@@ -83,13 +83,19 @@ public class AiReviewClient : IDisposable
         return Encoding.UTF8.GetString(stream.ToArray());
     }
 
-    private async Task<(bool ok, string body)> PostAsync(string url, string json, CancellationToken cancellationToken)
+    private async Task<(bool ok, string body)> PostAsync(string url, string json, string? apiKey, CancellationToken cancellationToken)
     {
         var content = new StringContent(json, Encoding.UTF8);
         content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
         try
         {
-            var result = await _httpClient.PostAsync(url, content, cancellationToken).ConfigureAwait(false);
+            using var request = new HttpRequestMessage(HttpMethod.Post, url) { Content = content };
+            if (!string.IsNullOrWhiteSpace(apiKey))
+            {
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey.Trim());
+            }
+
+            var result = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
             var body = await result.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             return (result.IsSuccessStatusCode, body);
         }
