@@ -20376,6 +20376,11 @@ public partial class MainViewModel :
                             for (var i = 0; i < subtitle.Count; i++)
                             {
                                 var p = subtitle[i];
+                                if (p.StartTime.TotalSeconds > mediaPlayerSeconds)
+                                {
+                                    break; // sorted by start time, no later line can contain the position
+                                }
+
                                 if (mediaPlayerSeconds >= p.StartTime.TotalSeconds &&
                                     mediaPlayerSeconds <= p.EndTime.TotalSeconds)
                                 {
