@@ -18895,7 +18895,17 @@ public partial class MainViewModel :
         // While extending a selection, navigate from the moving end we tracked ourselves. AvaloniaEdit
         // relocates the caret of a programmatic selection back to its anchor between key presses, so
         // box.CaretIndex would otherwise recompute the same word every time and the selection wouldn't grow.
-        var continuingSelection = shift && _rtlSelectionAnchor >= 0 && box.SelectionLength > 0;
+        // But only trust the tracked ends if they still describe the box's current selection: a mouse drag
+        // or a native Shift+Home/End changes the selection without going through this handler, which would
+        // otherwise leave the tracked fields stale and make us extend from the wrong place.
+        var selectionStart = box.SelectionStart;
+        var selectionEnd = box.SelectionEnd;
+        var hasSelection = box.SelectionLength > 0;
+        var trackedMatchesSelection = _rtlSelectionAnchor >= 0 && _rtlSelectionCaret >= 0 && hasSelection
+            && Math.Min(selectionStart, selectionEnd) == Math.Min(_rtlSelectionAnchor, _rtlSelectionCaret)
+            && Math.Max(selectionStart, selectionEnd) == Math.Max(_rtlSelectionAnchor, _rtlSelectionCaret);
+
+        var continuingSelection = shift && trackedMatchesSelection;
         var from = Math.Clamp(continuingSelection ? _rtlSelectionCaret : box.CaretIndex, 0, text.Length);
 
         if (!IsRightToLeftAtCaret(text, from))
@@ -18919,7 +18929,25 @@ public partial class MainViewModel :
 
         if (shift)
         {
-            var anchor = Math.Clamp(continuingSelection ? _rtlSelectionAnchor : from, 0, text.Length);
+            int anchor;
+            if (continuingSelection)
+            {
+                anchor = _rtlSelectionAnchor;
+            }
+            else if (hasSelection)
+            {
+                // Adopt an existing selection made outside this handler (e.g. by mouse): the caret is the
+                // moving end, so the opposite end of the selection is the fixed anchor to extend from.
+                anchor = box.CaretIndex == Math.Max(selectionStart, selectionEnd)
+                    ? Math.Min(selectionStart, selectionEnd)
+                    : Math.Max(selectionStart, selectionEnd);
+            }
+            else
+            {
+                anchor = from;
+            }
+
+            anchor = Math.Clamp(anchor, 0, text.Length);
             box.Select(Math.Min(anchor, target), Math.Abs(target - anchor));
             _rtlSelectionAnchor = anchor;
             _rtlSelectionCaret = target; // remember the moving end ourselves
