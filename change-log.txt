@@ -1,13 +1,18 @@
 
 Subtitle Edit Changelog
 
-v5.1.0-beta5 (2nd of July 2026)
+v5.1.0-beta5 (TBD)
 
-* Improve performance (waveform rendering, subtitle grid, string utilities, ASSA loading)
+* Add copy/paste support to the time code boxes (a bare number is milliseconds) - thx RobertoHN
+* OCR: select the just-downloaded spell-check dictionary on any UI language
+* Spell check: clean up dictionary names with variant suffixes (e.g. de_DE_frami)
 * Fix keyboard shortcuts in "Adjust all times" not working, now moving 1 frame / 10 frames / 1 second - thx KaDeeKe
 * Fix up/down time code and duration stepping in frame mode not wrapping frames correctly - thx KaDeeKe
 * Fix invalid PTS/DTS in exported Blu-ray sup files (broke SupMover negative delay) - thx GCRaistlin/MonoS
 * Fix batch convert forgetting settings when the window is closed via X/Escape - thx MonsterSe7en
+* Fix batch convert llama.cpp auto-start never running
+* Fix crash when pasting an out-of-range value into a time code box
+* Fix stale RTL text-box selection anchor after mouse/native selection changes - thx muaz978
 * Fix change detection not including the original subtitle file name
 * Update Korean translation - thx 12si27
 
