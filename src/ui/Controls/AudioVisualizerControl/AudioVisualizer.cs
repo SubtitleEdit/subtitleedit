@@ -2012,6 +2012,9 @@ public class AudioVisualizer : Control
 
     public MenuFlyout MenuFlyout { get; set; }
 
+    // Pooled x positions for the grid, so the per-frame collection below doesn't allocate.
+    private readonly List<double> _gridLineXPositions = new(256);
+
     private void DrawAllGridLines(DrawingContext context, ref RenderContext renderCtx)
     {
         if (!DrawGridLines)
@@ -2026,21 +2029,20 @@ public class AudioVisualizer : Control
         // grid stays square, matching the look users are familiar with from SE4.
         double stepPixels;
 
+        var xPositions = _gridLineXPositions;
+        xPositions.Clear();
+
         if (renderCtx.SampleRate == 0)
         {
             stepPixels = 10;
             for (var i = 0d; i < width; i += stepPixels)
             {
-                context.DrawLine(_paintGridLines, new Point(i, 0), new Point(i, height));
+                xPositions.Add(i);
             }
-
-            DrawHorizontalGridLines(context, width, height, stepPixels);
-            return;
         }
-
-        var fps = Se.Settings.General.CurrentFrameRate;
-        if (Se.Settings.General.UseFrameMode && fps >= 1)
+        else if (Se.Settings.General.UseFrameMode && Se.Settings.General.CurrentFrameRate >= 1)
         {
+            var fps = Se.Settings.General.CurrentFrameRate;
             var pixelsPerFrame = renderCtx.SampleRate * renderCtx.ZoomFactor / fps;
             if (pixelsPerFrame <= 0)
             {
@@ -2072,7 +2074,7 @@ public class AudioVisualizer : Control
 
                 if (xPosition >= 0)
                 {
-                    context.DrawLine(_paintGridLines, new Point(xPosition, 0), new Point(xPosition, height));
+                    xPositions.Add(xPosition);
                 }
             }
         }
@@ -2088,26 +2090,43 @@ public class AudioVisualizer : Control
 
             while (xPosition < width)
             {
-                context.DrawLine(_paintGridLines, new Point(xPosition, 0), new Point(xPosition, height));
+                xPositions.Add(xPosition);
                 seconds += interval;
                 xPosition = SecondsToXPositionOptimized(seconds, renderCtx.SampleRate, renderCtx.ZoomFactor);
             }
         }
 
-        DrawHorizontalGridLines(context, width, height, stepPixels);
-    }
-
-    private void DrawHorizontalGridLines(DrawingContext context, double width, double height, double stepPixels)
-    {
-        if (stepPixels < 1)
+        // Batch the whole grid into one geometry - hundreds of individual DrawLine calls per
+        // frame add real scene-graph overhead at 60 fps (same approach as the timeline ticks).
+        var drawHorizontal = stepPixels >= 1;
+        if (xPositions.Count == 0 && !drawHorizontal)
         {
             return;
         }
 
-        for (var y = stepPixels; y < height; y += stepPixels)
+        var geom = new StreamGeometry();
+        using (var gctx = geom.Open())
         {
-            context.DrawLine(_paintGridLines, new Point(0, y), new Point(width, y));
+            for (var i = 0; i < xPositions.Count; i++)
+            {
+                var x = xPositions[i];
+                gctx.BeginFigure(new Point(x, 0), false);
+                gctx.LineTo(new Point(x, height));
+                gctx.EndFigure(false);
+            }
+
+            if (drawHorizontal)
+            {
+                for (var y = stepPixels; y < height; y += stepPixels)
+                {
+                    gctx.BeginFigure(new Point(0, y), false);
+                    gctx.LineTo(new Point(width, y));
+                    gctx.EndFigure(false);
+                }
+            }
         }
+
+        context.DrawGeometry(null, _paintGridLines, geom);
     }
 
     private static readonly int[] FrameStepCandidates = { 1, 2, 5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000 };
