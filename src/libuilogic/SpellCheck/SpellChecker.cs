@@ -46,30 +46,65 @@ public class SpellChecker : ISpellChecker, IDoSpell
 
         foreach (var dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
         {
-            var name = Path.GetFileNameWithoutExtension(dic);
-            if (!name.StartsWith("hyph", StringComparison.Ordinal))
+            var fileName = Path.GetFileNameWithoutExtension(dic);
+            if (fileName.StartsWith("hyph", StringComparison.Ordinal))
             {
-                try
-                {
-                    var ci = CultureInfo.GetCultureInfo(name.Replace('_', '-'));
-                    name = ci.DisplayName + " [" + name + "]";
-                }
-                catch (Exception exception)
-                {
-                    System.Diagnostics.Debug.WriteLine(exception.Message);
-                    name = "[" + name + "]";
-                }
-
-                var item = new SpellCheckDictionaryDisplay
-                {
-                    DictionaryFileName = dic,
-                    Name = name,
-                };
-                list.Add(item);
+                continue;
             }
+
+            var name = TryGetDictionaryCulture(fileName, out var ci)
+                ? ci.DisplayName + " [" + fileName + "]"
+                : "[" + fileName + "]";
+
+            list.Add(new SpellCheckDictionaryDisplay
+            {
+                DictionaryFileName = dic,
+                Name = name,
+            });
         }
 
         return list;
+    }
+
+    // Resolves a dictionary file name (e.g. "sl_SI", "de_DE_frami", "be-official") to a culture for
+    // display. Dictionary file names sometimes carry a trailing variant segment ("frami", "official")
+    // that CultureInfo would otherwise surface as an ugly upper-case variant like "German (Germany,
+    // FRAMI)". Keep the language, an optional 4-letter script (e.g. sr-Latn) and an optional 2-letter /
+    // 3-digit region, and drop everything from the first variant segment on.
+    private static bool TryGetDictionaryCulture(string fileName, out CultureInfo culture)
+    {
+        var segments = fileName.Replace('_', '-').Split('-', StringSplitOptions.RemoveEmptyEntries);
+        var kept = new List<string>();
+        foreach (var segment in segments)
+        {
+            if (kept.Count == 0)
+            {
+                kept.Add(segment); // language subtag
+                continue;
+            }
+
+            var isScript = segment.Length == 4 && segment.All(char.IsLetter);
+            var isRegion = (segment.Length == 2 && segment.All(char.IsLetter)) ||
+                           (segment.Length == 3 && segment.All(char.IsDigit));
+            if (!isScript && !isRegion)
+            {
+                break; // first variant / unrecognized segment ends the useful part
+            }
+
+            kept.Add(segment);
+        }
+
+        try
+        {
+            culture = CultureInfo.GetCultureInfo(string.Join('-', kept));
+            return true;
+        }
+        catch (Exception exception)
+        {
+            System.Diagnostics.Debug.WriteLine(exception.Message);
+            culture = CultureInfo.InvariantCulture;
+            return false;
+        }
     }
 
     public bool Initialize(string dictionaryFile, string twoLetterLanguageCode)
