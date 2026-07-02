@@ -65,7 +65,6 @@ public partial class BinaryEditViewModel : ObservableObject
 
     private ScrollViewer? _subtitleGridScrollViewer;
     private Control? _focusBeforeMenu;
-    private bool _altMenuTogglePending;
 
     private readonly IFileHelper _fileHelper;
     private readonly IFolderHelper _folderHelper;
@@ -2161,10 +2160,15 @@ public partial class BinaryEditViewModel : ObservableObject
             }
         }
 
-        // Arm a "bare Alt" toggle so its release can activate/deactivate the menu bar (Windows
-        // standard). Any other key while Alt is held (e.g. the access key in Alt+F) cancels it; the
-        // modifier check rejects AltGr (Ctrl+Alt). The toggle itself happens on key-up (OnKeyUp).
-        _altMenuTogglePending = (e.Key is Key.LeftAlt or Key.RightAlt) && e.KeyModifiers == KeyModifiers.Alt;
+        // Bare Alt activating/deactivating the menu bar is owned by Avalonia's built-in
+        // AccessKeyHandler; running a second toggle here made the two cancel each other out whenever
+        // a control inside the window had keyboard focus (#12087). Only remember the focused control,
+        // so an Escape deactivation after a built-in Alt activation can restore it.
+        if (e.Key is Key.LeftAlt or Key.RightAlt && e.KeyModifiers == KeyModifiers.Alt &&
+            Menu is not { IsOpen: true } && !IsMenuFocused())
+        {
+            _focusBeforeMenu = Window?.FocusManager?.GetFocusedElement() as Control;
+        }
 
         // While the menu has keyboard focus, let it own its own navigation keys. The window key
         // handler runs even on keys the menu already handled (handledEventsToo: true), so without
@@ -2174,10 +2178,11 @@ public partial class BinaryEditViewModel : ObservableObject
         if (IsMenuFocused())
         {
             // Only deactivate when this Escape did not just close an open drop-down. The handler runs
-            // (handledEventsToo) after the focused MenuItem, which marks the event handled when it
-            // closes a submenu - so !e.Handled distinguishes "leave the bar" from "close the submenu",
-            // giving the two-stage Escape behavior instead of collapsing both in one press (#11745).
-            if (e.Key == Key.Escape && !e.Handled && Menu is { IsOpen: false })
+            // (handledEventsToo) after the menu's own Escape handling, which closes a drop-down while
+            // keeping the bar open (Menu.IsOpen stays true), but leaves focus stranded on the menu
+            // when it closes the bar itself (IsOpen false) - so IsOpen distinguishes "close the
+            // submenu" from "leave the bar", giving the two-stage Escape behavior (#11745, #12087).
+            if (e.Key == Key.Escape && Menu is { IsOpen: false })
             {
                 DeactivateMenu();
                 e.Handled = true;
@@ -2220,23 +2225,6 @@ public partial class BinaryEditViewModel : ObservableObject
 
     public void OnKeyUp(KeyEventArgs e)
     {
-        // A bare Alt press+release toggles the menu bar (Windows standard). _altMenuTogglePending is
-        // cleared if any other key was pressed while Alt was held, or on a window task switch, so this
-        // fires only for Alt-alone (#11745).
-        if (e.Key is Key.LeftAlt or Key.RightAlt && _altMenuTogglePending)
-        {
-            _altMenuTogglePending = false;
-            if (IsMenuFocused())
-            {
-                DeactivateMenu();
-                e.Handled = true;
-            }
-            else if (ActivateMenu())
-            {
-                e.Handled = true;
-            }
-        }
-
         _shortcutManager.OnKeyReleased(this, e);
     }
 
@@ -2256,9 +2244,10 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Activates the menu bar for keyboard navigation (Windows standard Alt/F10), remembering the
-    /// control that had focus so it can be restored on deactivation. Returns false when the menu is
-    /// hidden (macOS uses the native menu) (#11745).
+    /// Activates the menu bar for keyboard navigation (Windows standard F10; bare Alt is handled by
+    /// Avalonia's built-in AccessKeyHandler), remembering the control that had focus so it can be
+    /// restored on deactivation. Returns false when the menu is hidden (macOS uses the native menu)
+    /// (#11745).
     /// </summary>
     private bool ActivateMenu()
     {
@@ -2279,7 +2268,6 @@ public partial class BinaryEditViewModel : ObservableObject
     private void DeactivateMenu()
     {
         Menu?.Close();
-        _altMenuTogglePending = false;
 
         var restore = _focusBeforeMenu;
         _focusBeforeMenu = null;
@@ -2298,14 +2286,11 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     /// <summary>
-    /// A task switch (e.g. Alt+Tab) must not leave a pending bare-Alt menu toggle armed; otherwise the
-    /// next Alt release after returning to the window would spuriously activate the menu bar (#11745).
+    /// Cleans up menu-bar state that a task switch (e.g. Alt+Tab) would otherwise leave behind (#11745).
     /// </summary>
     internal void OnWindowDeactivated(object? sender, EventArgs e)
     {
-        _altMenuTogglePending = false;
-
-        // A task switch (Alt+Tab) must also drop any active menu-bar state, otherwise Avalonia leaves
+        // A task switch (Alt+Tab) must drop any active menu-bar state, otherwise Avalonia leaves
         // the access-key underlines / selection armed and they reappear when the window is re-activated
         // (#11745 beta-2 feedback).
         if (Menu is { IsOpen: true } || IsMenuFocused())
