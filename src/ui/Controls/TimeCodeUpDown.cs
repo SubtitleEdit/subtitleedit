@@ -375,6 +375,11 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (long.TryParse(text, NumberStyles.None, CultureInfo.InvariantCulture, out var milliseconds))
             {
+                if (milliseconds > TimeCode.MaxTimeTotalMilliseconds)
+                {
+                    return false; // beyond the control's range (max 99:59:59,999) - reject rather than overflow
+                }
+
                 value = RemoveVideoOffset(TimeSpan.FromMilliseconds(milliseconds));
                 return true;
             }
@@ -387,9 +392,23 @@ namespace Nikse.SubtitleEdit.Controls
                 return false; // ParseXxx returns 0 for junk, so reject anything that isn't clearly a time code
             }
 
-            var ms = useFrameMode
-                ? TimeCode.ParseHHMMSSFFToMilliseconds(text)
-                : TimeCode.ParseToMilliseconds(text);
+            double ms;
+            try
+            {
+                ms = useFrameMode
+                    ? TimeCode.ParseHHMMSSFFToMilliseconds(text)
+                    : TimeCode.ParseToMilliseconds(text);
+            }
+            catch (Exception exception) when (exception is OverflowException or ArgumentOutOfRangeException)
+            {
+                return false; // int-parseable but out-of-range parts (e.g. "999999999:0:0,0") overflow the TimeSpan ctor
+            }
+
+            if (ms > TimeCode.MaxTimeTotalMilliseconds)
+            {
+                return false;
+            }
+
             value = RemoveVideoOffset(TimeSpan.FromMilliseconds(ms));
             return true;
         }
