@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -11,6 +12,8 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.Config;
 using System;
+using System.Globalization;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -80,6 +83,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _textBox.RemoveHandler(TextInputEvent, OnTextInput);
                 _textBox.RemoveHandler(KeyDownEvent, OnTextBoxKeyDown);
                 _textBox.GotFocus -= OnTextBoxGotFocus;
+                _textBox.PastingFromClipboard -= OnPastingFromClipboard;
             }
 
             _textBox = e.NameScope.Find<TextBox>("PART_TextBox");
@@ -104,6 +108,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _textBox.AddHandler(TextInputEvent, OnTextInput, RoutingStrategies.Tunnel);
                 _textBox.AddHandler(KeyDownEvent, OnTextBoxKeyDown, RoutingStrategies.Tunnel);
                 _textBox.GotFocus += OnTextBoxGotFocus;
+                _textBox.PastingFromClipboard += OnPastingFromClipboard;
             }
 
             // Initial MinWidth calculation with text measurement
@@ -293,6 +298,102 @@ namespace Nikse.SubtitleEdit.Controls
             e.Handled = true;
         }
 
+        // The text box is masked and edits character-by-character via OnTextInput, but paste bypasses
+        // that path, so without this the pasted text would corrupt the mask and leave Value out of sync.
+        // We take over paste entirely: parse the clipboard as a time code (or a bare number of
+        // milliseconds) and replace the whole value.
+        private async void OnPastingFromClipboard(object? sender, RoutedEventArgs e)
+        {
+            e.Handled = true; // suppress the default paste (must be set before the first await)
+
+            var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
+            if (clipboard == null)
+            {
+                return;
+            }
+
+            var text = await ClipboardExtensions.TryGetTextAsync(clipboard);
+            if (TryParsePastedValue(text, out var value))
+            {
+                SetValue(ValueProperty, value); // OnPropertyChanged clamps, reformats the text and raises ValueChanged
+                if (_textBox != null)
+                {
+                    _textBox.CaretIndex = 0;
+                }
+            }
+        }
+
+        // Symmetric with paste: with no selection, copy grabs the whole time code (as shown, so it
+        // round-trips back through paste). Handled from the key gesture rather than the
+        // CopyingToClipboard event, because the text box's built-in copy does nothing when there is no
+        // selection, so that event never fires in this case. An explicit selection copies natively.
+        private bool TryHandleCopyWholeValue(KeyEventArgs e)
+        {
+            if (_textBox == null || _textBox.SelectionStart != _textBox.SelectionEnd)
+            {
+                return false; // let the text box copy an explicit selection itself
+            }
+
+            // Copy is Cmd+C on macOS, Ctrl+C elsewhere.
+            var commandModifier = OperatingSystem.IsMacOS() ? KeyModifiers.Meta : KeyModifiers.Control;
+            if (e.Key != Key.C || e.KeyModifiers != commandModifier)
+            {
+                return false;
+            }
+
+            var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
+            if (clipboard != null)
+            {
+                _ = clipboard.SetTextAsync(_textBuffer);
+            }
+
+            return true;
+        }
+
+        // A bare number is taken as milliseconds and replaces the whole time code (e.g. "231" ->
+        // 00:00:00,231), which is the common paste intent (#12056). Anything with separators is parsed
+        // as a full or partial time code ("00:00:05,500", "01:02,300"; frames when in frame mode).
+        private bool TryParsePastedValue(string? clipboardText, out TimeSpan value)
+        {
+            value = TimeSpan.Zero;
+            if (string.IsNullOrWhiteSpace(clipboardText))
+            {
+                return false;
+            }
+
+            var text = clipboardText.Trim();
+            var newlineIndex = text.IndexOfAny(new[] { '\r', '\n' });
+            if (newlineIndex >= 0)
+            {
+                text = text.Substring(0, newlineIndex).Trim();
+            }
+
+            if (text.Length == 0)
+            {
+                return false;
+            }
+
+            if (long.TryParse(text, NumberStyles.None, CultureInfo.InvariantCulture, out var milliseconds))
+            {
+                value = RemoveVideoOffset(TimeSpan.FromMilliseconds(milliseconds));
+                return true;
+            }
+
+            var useFrameMode = Se.Settings.General.UseFrameMode;
+            var parts = text.Split(TimeCode.TimeSplitChars, StringSplitOptions.RemoveEmptyEntries);
+            var validCount = useFrameMode ? parts.Length == 4 : parts.Length is 3 or 4;
+            if (!validCount || !parts.All(p => int.TryParse(p, out _)))
+            {
+                return false; // ParseXxx returns 0 for junk, so reject anything that isn't clearly a time code
+            }
+
+            var ms = useFrameMode
+                ? TimeCode.ParseHHMMSSFFToMilliseconds(text)
+                : TimeCode.ParseToMilliseconds(text);
+            value = RemoveVideoOffset(TimeSpan.FromMilliseconds(ms));
+            return true;
+        }
+
         private TimeSpan ParseTime(string text)
         {
             // Try parsing with milliseconds format (00:00:00:000 or 00:00:00.000)
@@ -342,6 +443,12 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (_textBox == null)
             {
+                return;
+            }
+
+            if (TryHandleCopyWholeValue(e))
+            {
+                e.Handled = true;
                 return;
             }
 
