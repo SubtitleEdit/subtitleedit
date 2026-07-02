@@ -25,16 +25,24 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public string Url => "https://chat.openai.com/";
         public string Error { get; set; }
         public int MaxCharacters => 1500;
+        /// <summary>
+        /// Default when no model is configured. A mini model: cheap, broadly available on every
+        /// account tier, and served by the chat/completions endpoint this engine calls.
+        /// </summary>
+        public static string DefaultModel => "gpt-5.4-mini";
+
+        // Only models served by /v1/chat/completions belong here. The "-pro" models are
+        // responses-endpoint only and fail with "This is not a chat model" (#12078), and
+        // gpt-oss-120b is an open-weights model not hosted on api.openai.com at all.
         public static string[] Models => new[]
         {
-            "gpt-5.5-pro", "gpt-5.5",
-            "gpt-5.4-pro", "gpt-5.4", "gpt-5.4-mini", "gpt-5.4-nano",
+            "gpt-5.5",
+            "gpt-5.4", "gpt-5.4-mini", "gpt-5.4-nano",
             "gpt-5.3-chat",
-            "gpt-5.2-pro", "gpt-5.2",
+            "gpt-5.2",
             "gpt-5.1",
-            "gpt-5-pro", "gpt-5", "gpt-5-mini", "gpt-5-nano",
+            "gpt-5", "gpt-5-mini", "gpt-5-nano",
             "gpt-4.1", "gpt-4.1-mini", "gpt-4.1-nano",
-            "gpt-oss-120b",
         };
 
         public static string RemovePreamble(string original, string input)
@@ -93,7 +101,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             var model = Configuration.Settings.Tools.ChatGptModel;
             if (string.IsNullOrEmpty(model))
             {
-                model = Models[0];
+                model = DefaultModel;
                 Configuration.Settings.Tools.ChatGptModel = model;
             }
 

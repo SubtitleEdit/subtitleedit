@@ -369,7 +369,7 @@ namespace Nikse.SubtitleEdit.Core.Settings
             AutoTranslateMistralPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             ChatGptUrl = "https://api.openai.com/v1/chat/completions";
             ChatGptPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
-            ChatGptModel = ChatGptTranslate.Models[0];
+            ChatGptModel = ChatGptTranslate.DefaultModel;
             GroqUrl = "https://api.groq.com/openai/v1/chat/completions";
             GroqPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             GroqModel = GroqTranslate.Models[0];
