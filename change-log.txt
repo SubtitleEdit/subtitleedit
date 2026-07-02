@@ -1,6 +1,18 @@
 
 Subtitle Edit Changelog
 
+v5.1.0-beta5 (2nd of July 2026)
+
+* Improve performance (waveform rendering, subtitle grid, string utilities, ASSA loading)
+* Fix keyboard shortcuts in "Adjust all times" not working, now moving 1 frame / 10 frames / 1 second - thx KaDeeKe
+* Fix up/down time code and duration stepping in frame mode not wrapping frames correctly - thx KaDeeKe
+* Fix invalid PTS/DTS in exported Blu-ray sup files (broke SupMover negative delay) - thx GCRaistlin/MonoS
+* Fix batch convert forgetting settings when the window is closed via X/Escape - thx MonsterSe7en
+* Fix change detection not including the original subtitle file name
+* Update Korean translation - thx 12si27
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-beta4 (1st of July 2026)
 
 * Add CSV import/export to Multiple replace - thx faon-92
