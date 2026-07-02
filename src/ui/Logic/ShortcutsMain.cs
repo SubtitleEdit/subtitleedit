@@ -338,6 +338,21 @@ public static class ShortcutsMain
         { nameof(MainViewModel.SubtitleGridCutCommand), Se.Language.Options.Shortcuts.SubtitleGridCut },
         { nameof(MainViewModel.SubtitleGridCopyCommand), Se.Language.Options.Shortcuts.SubtitleGridCopy },
         { nameof(MainViewModel.SubtitleGridPasteCommand), Se.Language.Options.Shortcuts.SubtitleGridPaste },
+        { nameof(MainViewModel.ColumnDeleteTextCommand), Se.Language.Options.Shortcuts.ListViewColumnDeleteText },
+        { nameof(MainViewModel.ColumnDeleteTextAndShiftCellsUpCommand), Se.Language.Options.Shortcuts.ListViewColumnDeleteTextAndShiftUp },
+        { nameof(MainViewModel.ColumnInsertEmptyTextAndShiftCellsDownCommand), Se.Language.Options.Shortcuts.ListViewColumnInsertText },
+        { nameof(MainViewModel.ColumnPasteFromClipboardCommand), Se.Language.Options.Shortcuts.ListViewColumnPaste },
+        { nameof(MainViewModel.ColumnTextUpCommand), Se.Language.Options.Shortcuts.ListViewColumnTextUp },
+        { nameof(MainViewModel.ColumnTextDownCommand), Se.Language.Options.Shortcuts.ListViewColumnTextDown },
+        { nameof(MainViewModel.ImportPlainTextCommand), Se.Language.Options.Shortcuts.FileImportPlainText },
+        { nameof(MainViewModel.ExportEbuStlCommand), Se.Language.Options.Shortcuts.FileExportEbuStl },
+        { nameof(MainViewModel.ExportPacCommand), Se.Language.Options.Shortcuts.FileExportPac },
+        { nameof(MainViewModel.FixRightToLeftViaUnicodeControlCharactersCommand), Se.Language.Main.Menu.FixRightToLeftViaUnicodeControlCharacters },
+        { nameof(MainViewModel.RemoveUnicodeControlCharactersCommand), Se.Language.Main.Menu.RemoveUnicodeControlCharacters },
+        { nameof(MainViewModel.ShowToolsRenumberCommand), Se.Language.Main.Menu.Renumber },
+        { nameof(MainViewModel.EvenlyDistributeSelectedLinesCommand), Se.Language.Main.Menu.EvenlyDistributeLines },
+        { nameof(MainViewModel.AutoTranslateSelectedLinesCommand), Se.Language.Options.Shortcuts.AutoTranslateSelectedLines },
+        { nameof(MainViewModel.ShowAssaChangeResolutionCommand), Se.Language.Options.Shortcuts.SetAssaResolution },
         { nameof(MainViewModel.ShowChooseProfileCommand), Se.Language.Options.Shortcuts.ChooseRuleProfile },
         { nameof(MainViewModel.TogglePlaybackSpeedCommand), Se.Language.Options.Shortcuts.TogglePlaybackSpeed },
         { nameof(MainViewModel.PlaybackSlowerCommand), Se.Language.Options.Shortcuts.PlaybackSpeedSlower },
@@ -696,6 +711,21 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.SubtitleGridCutCommand, nameof(vm.SubtitleGridCutCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.SubtitleGridCopyCommand, nameof(vm.SubtitleGridCopyCommand), ShortcutCategory.SubtitleGrid);
         AddShortcut(shortcuts, vm.SubtitleGridPasteCommand, nameof(vm.SubtitleGridPasteCommand), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.ColumnDeleteTextCommand, nameof(vm.ColumnDeleteTextCommand), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.ColumnDeleteTextAndShiftCellsUpCommand, nameof(vm.ColumnDeleteTextAndShiftCellsUpCommand), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.ColumnInsertEmptyTextAndShiftCellsDownCommand, nameof(vm.ColumnInsertEmptyTextAndShiftCellsDownCommand), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.ColumnPasteFromClipboardCommand, nameof(vm.ColumnPasteFromClipboardCommand), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.ColumnTextUpCommand, nameof(vm.ColumnTextUpCommand), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.ColumnTextDownCommand, nameof(vm.ColumnTextDownCommand), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.ImportPlainTextCommand, nameof(vm.ImportPlainTextCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ExportEbuStlCommand, nameof(vm.ExportEbuStlCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ExportPacCommand, nameof(vm.ExportPacCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.FixRightToLeftViaUnicodeControlCharactersCommand, nameof(vm.FixRightToLeftViaUnicodeControlCharactersCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.RemoveUnicodeControlCharactersCommand, nameof(vm.RemoveUnicodeControlCharactersCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ShowToolsRenumberCommand, nameof(vm.ShowToolsRenumberCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.EvenlyDistributeSelectedLinesCommand, nameof(vm.EvenlyDistributeSelectedLinesCommand), ShortcutCategory.SubtitleGrid);
+        AddShortcut(shortcuts, vm.AutoTranslateSelectedLinesCommand, nameof(vm.AutoTranslateSelectedLinesCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ShowAssaChangeResolutionCommand, nameof(vm.ShowAssaChangeResolutionCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowChooseProfileCommand, nameof(vm.ShowChooseProfileCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.TogglePlaybackSpeedCommand, nameof(vm.TogglePlaybackSpeedCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.PlaybackSlowerCommand, nameof(vm.PlaybackSlowerCommand), ShortcutCategory.General);
