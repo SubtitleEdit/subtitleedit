@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
@@ -357,17 +356,17 @@ public partial class AiReviewViewModel : ObservableObject
             }
         };
 
-        Dispatcher.UIThread.Post(() =>
+        // Review() runs on the UI thread (its awaits resume on the captured context), so add
+        // synchronously - posting via the dispatcher made the end-of-review status read a stale
+        // (possibly empty) suggestion count while the last chunk's items were still queued.
+        _allSuggestions.Add(item);
+        if (PassesFilter(item))
         {
-            _allSuggestions.Add(item);
-            if (PassesFilter(item))
-            {
-                Suggestions.Add(item);
-            }
+            Suggestions.Add(item);
+        }
 
-            UpdateChipCounts();
-            UpdateSummary();
-        });
+        UpdateChipCounts();
+        UpdateSummary();
     }
 
     private void OnSuggestionSelectedChanged(ReviewSuggestionItem item)
