@@ -4,6 +4,7 @@ Subtitle Edit Changelog
 v5.1.0-beta5 (TBD)
 
 * Add copy/paste support to the time code boxes (a bare number is milliseconds) - thx RobertoHN
+* Speech to text: add smaller model quants for FunASR nano/MLT-nano and Parakeet Japanese, and fix dead MADLAD download links
 * OCR: select the just-downloaded spell-check dictionary on any UI language
 * Spell check: clean up dictionary names with variant suffixes (e.g. de_DE_frami)
 * Fix keyboard shortcuts in "Adjust all times" not working, now moving 1 frame / 10 frames / 1 second - thx KaDeeKe
