@@ -1512,11 +1512,12 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
             var header = new StringBuilder();
             var footer = new StringBuilder();
+            var textBuilder = new StringBuilder();
             foreach (var line in lines)
             {
                 lineNumber++;
                 var trimmedLine = line.Trim();
-                
+
                 if (!eventsStarted && !fontsStarted && !graphicsStarted &&
                     !trimmedLine.Equals("[fonts]", StringComparison.InvariantCultureIgnoreCase) &&
                     !trimmedLine.Equals("[graphics]", StringComparison.InvariantCultureIgnoreCase))
@@ -1524,11 +1525,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                     header.AppendLine(line);
                 }
 
-                if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith(';'))
+                if (string.IsNullOrWhiteSpace(line) || trimmedLine.StartsWith(';'))
                 {
                     // skip empty and comment lines
                 }
-                else if (line.TrimStart().StartsWith("dialog:", StringComparison.OrdinalIgnoreCase) || line.TrimStart().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase))
+                else if (trimmedLine.StartsWith("dialog:", StringComparison.OrdinalIgnoreCase) || trimmedLine.StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase))
                 {
                     eventsStarted = true;
                     fontsStarted = false;
@@ -1583,8 +1584,10 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                 }
                 else if (eventsStarted)
                 {
-                    var s = trimmedLine.ToLowerInvariant();
-                    if (line.Length > 10 && s.StartsWith("format:", StringComparison.Ordinal))
+                    // No full-line ToLowerInvariant here - this runs for every event line
+                    // (case-insensitive prefix checks instead; only the short format field
+                    // list below is lowercased).
+                    if (line.Length > 10 && trimmedLine.StartsWith("format:", StringComparison.OrdinalIgnoreCase))
                     {
                         indexLayer = -1;
                         indexStart = -1;
@@ -1598,7 +1601,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         indexEffect = -1;
                         indexText = -1;
 
-                        var format = s.Substring(8).Split(',');
+                        var format = trimmedLine.Substring(8).ToLowerInvariant().Split(',');
                         for (int i = 0; i < format.Length; i++)
                         {
                             var formatTrimmed = format[i].Trim();
@@ -1640,9 +1643,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             }
                         }
                     }
-                    else if (!string.IsNullOrEmpty(s))
+                    else if (trimmedLine.Length > 0)
                     {
-                        var text = string.Empty;
+                        textBuilder.Clear();
                         var start = string.Empty;
                         var end = string.Empty;
                         var style = string.Empty;
@@ -1654,11 +1657,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                         var layer = 0;
 
                         string[] splitLine;
-                        if (s.StartsWith("dialog:", StringComparison.Ordinal))
+                        if (trimmedLine.StartsWith("dialog:", StringComparison.OrdinalIgnoreCase))
                         {
                             splitLine = line.Remove(0, 7).Split(',');
                         }
-                        else if (s.StartsWith("dialogue:", StringComparison.Ordinal))
+                        else if (trimmedLine.StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase))
                         {
                             splitLine = line.Remove(0, 9).Split(',');
                         }
@@ -1711,13 +1714,17 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             }
                             else if (i == indexText)
                             {
-                                text = splitLine[i];
+                                textBuilder.Append(splitLine[i]);
                             }
                             else if (i > indexText)
                             {
-                                text += "," + splitLine[i];
+                                // The text field may itself contain commas; rebuild via the
+                                // pooled builder instead of O(commas^2) string concatenation.
+                                textBuilder.Append(',').Append(splitLine[i]);
                             }
                         }
+
+                        var text = textBuilder.ToString();
 
                         try
                         {
@@ -1759,7 +1766,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
                             }
 
                             p.Layer = layer;
-                            p.IsComment = s.StartsWith("comment:", StringComparison.Ordinal);
+                            p.IsComment = trimmedLine.StartsWith("comment:", StringComparison.OrdinalIgnoreCase);
                             subtitle.Paragraphs.Add(p);
                         }
                         catch
