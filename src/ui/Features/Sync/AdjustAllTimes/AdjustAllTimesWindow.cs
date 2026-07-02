@@ -71,7 +71,7 @@ public class AdjustAllTimesWindow : Window
             },
         };
 
-        var buttonHelp = UiUtil.MakeButton(vm.ShowHelpCommand, IconNames.Help, Se.Language.Sync.AdjustAllShortcuts);
+        var buttonHelp = UiUtil.MakeButton(vm.ShowHelpCommand, IconNames.Help, AdjustAllTimesViewModel.GetShortcutsText());
         var buttonOk = UiUtil.MakeButtonDone(vm.OkCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonHelp, buttonOk);
 
