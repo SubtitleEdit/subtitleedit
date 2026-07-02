@@ -657,21 +657,71 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return input;
             }
 
-            var text = input;
-            var idx = text.IndexOfAny(UppercaseTags, StringComparison.Ordinal);
-            while (idx >= 0)
+            // Single forward pass - the old rescan-from-zero loop did eight IndexOf passes plus
+            // two full-string copies per fixed tag, and this runs per line from AutoBreakLine.
+            char[] chars = null;
+            var i = 0;
+            while (i < input.Length)
             {
-                var endIdx = text.IndexOf('>', idx + 2);
-                if (endIdx < idx)
+                if (input[i] == '<' && StartsWithUppercaseTag(input, i))
                 {
-                    break;
+                    var endIdx = input.IndexOf('>', i + 2);
+                    if (endIdx < 0)
+                    {
+                        break;
+                    }
+
+                    chars ??= input.ToCharArray();
+                    for (var k = i; k < endIdx; k++)
+                    {
+                        chars[k] = char.ToLowerInvariant(chars[k]);
+                    }
+
+                    i = endIdx + 1;
+                    continue;
                 }
 
-                var tag = text.Substring(idx, endIdx - idx).ToLowerInvariant();
-                text = text.Remove(idx, endIdx - idx).Insert(idx, tag);
-                idx = text.IndexOfAny(UppercaseTags, StringComparison.Ordinal);
+                i++;
             }
-            return text;
+
+            return chars == null ? input : new string(chars);
+        }
+
+        private static bool StartsWithUppercaseTag(string input, int index)
+        {
+            // Matches UppercaseTags: <I> <U> <B> <FONT </I> </U> </B> </FONT>
+            var remaining = input.Length - index;
+            if (remaining < 3)
+            {
+                return false;
+            }
+
+            var c1 = input[index + 1];
+            if (c1 == 'I' || c1 == 'U' || c1 == 'B')
+            {
+                return input[index + 2] == '>';
+            }
+
+            if (c1 == 'F')
+            {
+                return remaining >= 5 && input[index + 2] == 'O' && input[index + 3] == 'N' && input[index + 4] == 'T';
+            }
+
+            if (c1 == '/' && remaining >= 4)
+            {
+                var c2 = input[index + 2];
+                if (c2 == 'I' || c2 == 'U' || c2 == 'B')
+                {
+                    return input[index + 3] == '>';
+                }
+
+                if (c2 == 'F')
+                {
+                    return remaining >= 7 && input[index + 3] == 'O' && input[index + 4] == 'N' && input[index + 5] == 'T' && input[index + 6] == '>';
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -1399,9 +1449,11 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// </summary>
         /// <param name="input">The string from which to remove color tags.</param>
         /// <returns>A new string with color tags removed.</returns>
+        private static readonly Regex ColorAttributeRegex = new Regex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*[\"']*[ ]*", RegexOptions.Compiled);
+
         public static string RemoveColorTags(string input)
         {
-            var r = new Regex("[ ]*(COLOR|color|Color)=[\"']*[#\\dA-Za-z]*[\"']*[ ]*");
+            var r = ColorAttributeRegex;
             var s = input;
             var match = r.Match(s);
             while (match.Success)
@@ -1409,8 +1461,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 s = s.Remove(match.Index, match.Value.Length).Insert(match.Index, " ");
                 if (match.Index > 4)
                 {
-                    var font = s.Substring(match.Index - 5);
-                    if (font.StartsWith("<font >", StringComparison.OrdinalIgnoreCase))
+                    if (string.Compare(s, match.Index - 5, "<font >", 0, 7, StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         s = s.Remove(match.Index - 5, 7);
                         var endIndex = s.IndexOf("</font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);
@@ -1447,6 +1498,11 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s.Trim();
         }
 
+        private static readonly Regex FontFaceAttributeRegex = new Regex("[ ]*(FACE|face|Face)=[\"']*[\\d\\p{L} ]*[\"']*[ ]*", RegexOptions.Compiled);
+        private static readonly Regex AssaFontNameOnlyTagRegex = new Regex("{\\\\fn[a-zA-Z \\d]+}", RegexOptions.Compiled);
+        private static readonly Regex AssaFontNameLastTagRegex = new Regex("\\\\fn[a-zA-Z \\d]+}", RegexOptions.Compiled);
+        private static readonly Regex AssaFontNameInnerTagRegex = new Regex("\\\\fn[a-zA-Z \\d]+\\\\", RegexOptions.Compiled);
+
         /// <summary>
         /// Remove font tag from HTML or ASSA.
         /// </summary>
@@ -1457,15 +1513,15 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var x = input;
                 if (x.Contains("\\fn"))
                 {
-                    x = Regex.Replace(x, "{\\\\fn[a-zA-Z \\d]+}", string.Empty);
-                    x = Regex.Replace(x, "\\\\fn[a-zA-Z \\d]+}", "}");
-                    x = Regex.Replace(x, "\\\\fn[a-zA-Z \\d]+\\\\", "\\");
+                    x = AssaFontNameOnlyTagRegex.Replace(x, string.Empty);
+                    x = AssaFontNameLastTagRegex.Replace(x, "}");
+                    x = AssaFontNameInnerTagRegex.Replace(x, "\\");
                 }
 
                 return x;
             }
 
-            var r = new Regex("[ ]*(FACE|face|Face)=[\"']*[\\d\\p{L} ]*[\"']*[ ]*");
+            var r = FontFaceAttributeRegex;
             var s = input;
             var match = r.Match(s);
             while (match.Success)
@@ -1473,8 +1529,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 s = s.Remove(match.Index, match.Value.Length).Insert(match.Index, " ");
                 if (match.Index > 4)
                 {
-                    var font = s.Substring(match.Index - 5);
-                    if (font.StartsWith("<font >", StringComparison.OrdinalIgnoreCase))
+                    if (string.Compare(s, match.Index - 5, "<font >", 0, 7, StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         s = s.Remove(match.Index - 5, 7);
                         var endIndex = s.IndexOf("</font>", match.Index - 5, StringComparison.OrdinalIgnoreCase);

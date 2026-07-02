@@ -259,13 +259,31 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             // Match/return with line-feed-normalized line breaks so a pattern's \n (see FixNewLine)
             // matches regardless of whether the in-memory text uses \n or \r\n (#11956).
+
+            // Fast path (runs per replace rule per subtitle line): text without \r or U+2028 round-trips
+            // unchanged through the SplitToLines+Join normalization, so skip the four allocations.
+            if (!ContainsNonLineFeedNewLine(text) && !ContainsNonLineFeedNewLine(replaceWith))
+            {
+                return regularExpression.Replace(text, replaceWith, count, startIndex);
+            }
+
             text = regularExpression.Replace(string.Join("\n", text.SplitToLines()), replaceWith, count, startIndex);
             return string.Join("\n", text.SplitToLines());
         }
 
         public static int CountNewLineSafe(Regex regularExpression, string text)
         {
+            if (!ContainsNonLineFeedNewLine(text))
+            {
+                return regularExpression.Matches(text).Count;
+            }
+
             return regularExpression.Matches(string.Join("\n", text.SplitToLines())).Count;
+        }
+
+        private static bool ContainsNonLineFeedNewLine(string text)
+        {
+            return text.IndexOf('\r') >= 0 || text.IndexOf('\u2028') >= 0;
         }
     }
 }

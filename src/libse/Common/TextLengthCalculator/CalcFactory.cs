@@ -22,8 +22,18 @@ namespace Nikse.SubtitleEdit.Core.Common.TextLengthCalculator
 
         public static ICalcLength MakeCalculator(string strategy)
         {
-            var c = Calculators.FirstOrDefault(calculator => calculator.GetType().Name == strategy);
-            return c ?? new CalcAll();
+            // Called per line on grid repaints (characters-per-second) - avoid the
+            // LINQ closure and the fallback allocation; the list entries are shared anyway.
+            var calculators = Calculators;
+            for (var i = 0; i < calculators.Count; i++)
+            {
+                if (calculators[i].GetType().Name == strategy)
+                {
+                    return calculators[i];
+                }
+            }
+
+            return calculators[0]; // CalcAll
         }
     }
 }

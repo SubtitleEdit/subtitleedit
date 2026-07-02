@@ -177,7 +177,26 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static int CountWords(this string source)
         {
-            return HtmlUtil.RemoveHtmlTags(source, true).Split(new[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Length;
+            // Called per line on grid repaints (words-per-minute) - count boundaries directly
+            // instead of allocating a separator array plus one substring per word.
+            var text = HtmlUtil.RemoveHtmlTags(source, true);
+            var count = 0;
+            var inWord = false;
+            for (var i = 0; i < text.Length; i++)
+            {
+                var ch = text[i];
+                if (ch == ' ' || ch == '\n' || ch == '\r')
+                {
+                    inWord = false;
+                }
+                else if (!inWord)
+                {
+                    inWord = true;
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         // http://www.codeproject.com/Articles/43726/Optimizing-string-operations-in-C
@@ -598,9 +617,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                 var ch = input[index];
 
                 if (!tagOn && isAssa && ch == '\\'
-                           && (input.Substring(index).StartsWith("\\N")
-                               || input.Substring(index).StartsWith("\\n")
-                               || input.Substring(index).StartsWith("\\h")))
+                           && index + 1 < input.Length
+                           && (input[index + 1] == 'N' || input[index + 1] == 'n' || input[index + 1] == 'h'))
                 {
                     tags.Add(new KeyValuePair<int, string>(index, input.Substring(index, 2)));
                     skipNext = true;
@@ -618,7 +636,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 if (!tagOn && ch == '<')
                 {
-                    var s = input.Substring(index);
+                    var s = input.AsSpan(index);
                     if (
                         s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) ||
                         s.StartsWith("</i>", StringComparison.OrdinalIgnoreCase) ||
@@ -647,7 +665,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else if (!tagOn && ch == '{')
                 {
-                    var s = input.Substring(index);
+                    var s = input.AsSpan(index);
                     if (s.StartsWith("{\\", StringComparison.Ordinal))
                     {
                         tagOn = true;

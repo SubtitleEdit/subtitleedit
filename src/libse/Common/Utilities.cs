@@ -224,8 +224,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             string s2 = s.Substring(0, index);
             if (Configuration.Settings.Tools.UseNoLineBreakAfter)
             {
-                var noBreakList = NoBreakAfterList(language).ToArray();
-                foreach (NoBreakAfterItem ending in noBreakList)
+                foreach (NoBreakAfterItem ending in NoBreakAfterList(language))
                 {
                     if (ending.IsMatch(s2))
                     {
