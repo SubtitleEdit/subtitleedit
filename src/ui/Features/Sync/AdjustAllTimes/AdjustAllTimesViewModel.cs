@@ -190,33 +190,50 @@ public partial class AdjustAllTimesViewModel : ObservableObject
         }
         else if ((e.Key == Key.Right || e.Key == Key.FnRightArrow) && e.KeyModifiers == KeyModifiers.Shift)
         {
-            ShowLaterTimeSpan(TimeSpan.FromMilliseconds(10));
+            e.Handled = true;
+            ShowLaterTimeSpan(GetFrameDuration(1));
         }
         else if ((e.Key == Key.Right || e.Key == Key.FnRightArrow) && e.KeyModifiers == KeyModifiers.Control)
         {
-            ShowLaterTimeSpan(TimeSpan.FromMilliseconds(100));
+            e.Handled = true;
+            ShowLaterTimeSpan(GetFrameDuration(10));
         }
         else if ((e.Key == Key.Right || e.Key == Key.FnRightArrow) && e.KeyModifiers == KeyModifiers.Alt)
         {
-            ShowLaterTimeSpan(TimeSpan.FromMilliseconds(500));
+            e.Handled = true;
+            ShowLaterTimeSpan(TimeSpan.FromSeconds(1));
         }
         else if ((e.Key == Key.Left || e.Key == Key.FnLeftArrow) && e.KeyModifiers == KeyModifiers.Shift)
         {
-            ShowEarlierTimeSpan(TimeSpan.FromMilliseconds(10));
+            e.Handled = true;
+            ShowEarlierTimeSpan(GetFrameDuration(1));
         }
         else if ((e.Key == Key.Left || e.Key == Key.FnLeftArrow) && e.KeyModifiers == KeyModifiers.Control)
         {
-            ShowEarlierTimeSpan(TimeSpan.FromMilliseconds(100));
+            e.Handled = true;
+            ShowEarlierTimeSpan(GetFrameDuration(10));
         }
         else if ((e.Key == Key.Left || e.Key == Key.FnLeftArrow) && e.KeyModifiers == KeyModifiers.Alt)
         {
-            ShowEarlierTimeSpan(TimeSpan.FromMilliseconds(500));
+            e.Handled = true;
+            ShowEarlierTimeSpan(TimeSpan.FromSeconds(1));
         }
         else if (UiUtil.IsHelp(e))
         {
             e.Handled = true;
             UiUtil.ShowHelp("features/adjust-all-times");
         }
+    }
+
+    private static TimeSpan GetFrameDuration(int frames)
+    {
+        var frameRate = Se.Settings.General.CurrentFrameRate;
+        if (frameRate < 10 || frameRate > 500)
+        {
+            frameRate = 25.0;
+        }
+
+        return TimeSpan.FromMilliseconds(Math.Round(frames * 1000.0 / frameRate, MidpointRounding.AwayFromZero));
     }
 
     internal void OnClosing(WindowClosingEventArgs e)

@@ -65,7 +65,7 @@ public class LanguageSync
         PointSyncViaOther = "Point sync via other subtitle";
         AdjustmentX = "Adjustment: {0}";
         TotalAdjustmentX = "Total adjustment: {0}";
-        AdjustAllShortcuts = "Keyboard shortcuts:\r\n\r\n• Shift + Left/Right: Move 10 ms\r\n• Ctrl + Left/Right: Move 100 ms\r\n• Alt + Left/Right: Move 500 ms";
+        AdjustAllShortcuts = "Keyboard shortcuts:\r\n\r\n• Shift + Left/Right: Move 1 frame\r\n• Ctrl + Left/Right: Move 10 frames\r\n• Alt + Left/Right: Move 1 second";
         OffsetInSeconds = "Offset in seconds";
         SpeedFactor = "Speed factor";
         ShowEarlierLaterDotDotDot = "Show earlier/later...";
