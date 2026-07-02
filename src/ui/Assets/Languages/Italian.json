@@ -1,7 +1,7 @@
 {
   "Title": "SubtitleEdit",
-  "Version": "v5.1.0-beta2",
-  "TranslatedBy": "v. 29.06.2026 di bovirus",
+  "Version": "v5.1.0-beta5",
+  "TranslatedBy": "v. 02.07.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -1491,7 +1491,8 @@
       "ExtendOnly": "Estendi solo",
       "EnforceDurationLimits": "Applica durata minima e massima",
       "CheckShotChanges": "Non prolungare oltre i cambi di inquadratura",
-      "BatchCheckShotChanges": "Rispetta cambi inquadrature (se disponibili)"
+      "BatchCheckShotChanges": "Rispetta cambi inquadrature (se disponibili)",
+      "RecalculateRequiresOcrNote": "Il ricalcolo non è disponibile: uno o più sottotitoli non hanno testo OCR.\r\nPrima esegui l'OCR."
     },
     "ApplyDurationLimits": {
       "Title": "Applica limiti durata",
@@ -1811,7 +1812,12 @@
       "ResizeImagesInfo": "Inserisci la percentuale per ridimensionare le immagini.\r\n\r\nGli aggiornamenti verranno visualizzati in tempo reale.",
       "AdjustColorDotDotDot": "Regola colore...",
       "AdjustColor": "Regola colore",
-      "ColorAdjustmentInfo": "Per scegliere un colore fai clic sul campione di colore .\r\nI pixel luminosi dei sottotitoli si spostano verso la tonalità scelta; i contorni scuri e le ombre sono preservati.\r\nL'anteprima visualizza il primo sottotitolo selezionato."
+      "ColorAdjustmentInfo": "Per scegliere un colore fai clic sul campione di colore .\r\nI pixel luminosi dei sottotitoli si spostano verso la tonalità scelta; i contorni scuri e le ombre sono preservati.\r\nL'anteprima visualizza il primo sottotitolo selezionato.",
+      "TopAlignLines": "Allinea in alto",
+      "BottomAlignLines": "Allinea in basso",
+      "AppendSubtitleDotDotDot": "Aggiungi sottotitolo...",
+      "ShiftTimeCodes": "Sposta timecode di",
+      "SortByStartTime": "Ordina per orario inizio"
     },
     "RemoveTextForHearingImpaired": {
       "Title": "Rimuovi testo per non udenti",
@@ -1827,9 +1833,11 @@
       "OnlyIfTextIsUppercase": "Solo se il testo è in maiuscolo",
       "OnlyOnSeparateLine": "Solo in riga separata",
       "IfLineIsUppercase": "Se la riga è maiuscola",
+      "KeepUppercaseWords": "Mantieni queste parole (separate da virgole)",
       "IfLineContains": "Se la riga contiene",
       "IfLineOnlyContainsMusicSymbols": "Se la riga contiene solo simboli musicali",
-      "RemoveInterjections": "Rimuovi interiezioni"
+      "RemoveInterjections": "Rimuovi interiezioni",
+      "LinesFoundX": "Righe trovate: {0}"
     }
   },
   "SpellCheck": {
@@ -1864,7 +1872,14 @@
     "UndoX": "Annulla operazione: {0}",
     "EditWholeText": "Modifica intero testo",
     "ContinueFromCurrentLine": "Vuoi continuare il controllo ortografico dalla riga attuale?\r\n\r\n\r\nSì = continua dalla riga attuale\r\nNo = comincia dall'inizio",
-    "ContinueFromTop": "Il controllo ortografico ha raggiunto la fine del sottotitolo.\r\n\r\n\r\nVuoi continuare dall'inizio?"
+    "ContinueFromTop": "Il controllo ortografico ha raggiunto la fine del sottotitolo.\r\n\r\n\r\nVuoi continuare dall'inizio?",
+    "SpellCheckCompleted": "Controllo ortografico completato",
+    "ChangedWordsX": "Parole modificate: {0}",
+    "SkippedWordsX": "Parole saltate: {0}",
+    "CorrectWordsX": "Parole corrette: {0}",
+    "NamesX": "Nomi: {0}",
+    "AddedToDictionaryX": "Aggiunto al dizionario: {0}",
+    "DoNotShowThisAgain": "Non visualizzare più questo messaggio"
   },
   "Video": {
     "GoToVideoPosition": "Vai alla posizione video",
@@ -2184,7 +2199,8 @@
     "TotalAdjustmentX": "Regolazione totale: {0}",
     "AdjustAllShortcuts": "Scorciatoie da tastiera:\r\n\r\n• Maiuscolo + sinistra/destra: sposta 10 ms\r\n• Ctrl + sinistra/destra: sposta di 100 ms\r\n• Alt + sinistra/destra: sposta di 500 ms",
     "OffsetInSeconds": "Offset in secondi",
-    "SpeedFactor": "Fattore velocità"
+    "SpeedFactor": "Fattore velocità",
+    "ShowEarlierLaterDotDotDot": "Visualizza prima/dopo..."
   },
   "Translate": {
     "TranslateViaCopyPaste": "Traduzione automatica tramite copia/incolla",
@@ -2326,6 +2342,7 @@
       "ColorTextTooLong": "Colore testo se troppo lungo",
       "ColorTextTooWide": "Colore testo se troppo largo (pixel)",
       "ColorTextTooManyLines": "Colore testo se più di 2 righe",
+      "ColorTextTooManyLinesX": "Colore testo se più di {0} righe",
       "ColorCharactersPerSecond": "Colora caratteri/sec se troppo alto",
       "ColorWordsPerMinute": "Parole colorate/min se troppo alto",
       "ColorOverlap": "Colore sovrapposizione codice temporale",
@@ -2465,6 +2482,7 @@
       "GridGoToSubtitleAndPause": "Vai ai sottotitoli e metti in pausa",
       "GridGoToSubtitleAndPlay": "Vai ai sottotitoli e riproduci",
       "GridGoToSubtitleAndPauseAndFocusTextBox": "Vai ai sottotitoli e metti in pausa e evidenzia la casella di testo",
+      "GridGoToSubtitleAndPlayAndFocusTextBox": "Vai ai sottotitoli e riproduci e metti a fuoco casella di testo",
       "SubtitleGridFormattingNone": "Nessuna formattazione",
       "SubtitleGridFormattingShowFormatting": "Visualizza formattazione",
       "SubtitleGridFormattingShowTags": "Visualizza tag",
