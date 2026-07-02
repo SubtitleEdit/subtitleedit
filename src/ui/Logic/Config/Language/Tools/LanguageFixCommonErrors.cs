@@ -70,6 +70,7 @@ public class LanguageFixCommonErrors
     public string NothingToFix { get; set; }
     public string FixesFoundX { get; set; }
     public string XFixesApplied { get; set; }
+    public string XFixesYSelected { get; set; }
     public string NothingFixableBut { get; set; }
     public string XFixedBut { get; set; }
     public string XCouldBeFixedBut { get; set; }
@@ -208,6 +209,7 @@ public class LanguageFixCommonErrors
         NothingToFix = "Nothing to fix :)";
         FixesFoundX = "Fixes found: {0}";
         XFixesApplied = "Fixes applied: {0}";
+        XFixesYSelected = "{0} fixes - {1} selected";
         NothingFixableBut = "Nothing could be fixed automatically. The subtitle contains errors - see log for details";
         XFixedBut = "{0} issue(s) fixed but the subtitle still contains errors - see log for details";
         XCouldBeFixedBut = "{0} issue(s) could be fixed but the subtitle will still contain errors - see log for details";
