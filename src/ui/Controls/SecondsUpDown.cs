@@ -209,8 +209,11 @@ public class SecondsUpDown : TemplatedControl
 
         if (Se.Settings.General.UseFrameMode)
         {
-            var ms = SubtitleFormat.FramesToMilliseconds(delta);
-            val = val.Add(TimeSpan.FromMilliseconds(ms));
+            // Step by whole frames via the total frame count, so an unaligned value is
+            // aligned to the nearest frame first - just adding one frame duration in ms
+            // can otherwise round/cap back to the same displayed frame number.
+            var totalFrames = SubtitleFormat.MillisecondsToFrames(val.TotalMilliseconds);
+            val = TimeSpan.FromMilliseconds(SubtitleFormat.FramesToMilliseconds(totalFrames + delta));
         }
         else
         {
