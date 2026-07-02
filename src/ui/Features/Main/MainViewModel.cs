@@ -8050,40 +8050,41 @@ public partial class MainViewModel :
             return;
         }
 
-        var result = await ShowDialogAsync<RemoveTextForHearingImpairedWindow, RemoveTextForHearingImpairedViewModel>(vm =>
+        // Apply + Done, like the whole-file menu path: each Apply replaces the current block in the
+        // grid. Track the block by id so repeated passes replace what the previous pass produced -
+        // the removal can drop emptied lines, so the block is not 1:1 with the selection, and the
+        // first pass also collapses a possibly non-contiguous selection into one contiguous block.
+        var blockIds = ordered.Select(s => s.Id).ToHashSet();
+
+        void ApplyToGrid(Subtitle applied)
         {
-            var sub = new Subtitle();
-            foreach (var line in ordered)
+            // Stop change detection during the rewrite so the background undo snapshotter can't race
+            // the Subtitles Clear/AddRange (matches every other bulk grid operation).
+            RunWithoutChangeDetection(() =>
             {
-                sub.Paragraphs.Add(line.ToParagraph(SelectedSubtitleFormat));
-            }
+                var anchor = Subtitles.FirstOrDefault(s => blockIds.Contains(s.Id));
+                var firstIndex = anchor != null ? Subtitles.IndexOf(anchor) : Subtitles.Count;
+                var kept = Subtitles.Where(s => !blockIds.Contains(s.Id)).ToList();
+                var insertPos = Math.Min(firstIndex, kept.Count);
+                var newLines = applied.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)).ToList();
+                kept.InsertRange(insertPos, newLines);
 
-            vm.Initialize(sub);
-        });
-
-        if (!result.OkPressed)
-        {
-            _shortcutManager.ClearKeys();
-            return;
+                ReplaceSubtitles(kept);
+                Renumber();
+                SelectAndScrollToRow(insertPos);
+                blockIds = newLines.Select(s => s.Id).ToHashSet();
+                _updateAudioVisualizer = true;
+            });
         }
 
-        // The HI removal can drop lines that become empty, so the result is not 1:1 with the
-        // selection - replace the selected block with the fixed lines (inserted where it started).
-        // Stop change detection during the rewrite so the background undo snapshotter can't race
-        // the Subtitles Clear/AddRange, which left the operation without a clean undo entry.
-        RunWithoutChangeDetection(() =>
+        var sub = new Subtitle();
+        foreach (var line in ordered)
         {
-            var selectedIds = ordered.Select(s => s.Id).ToHashSet();
-            var firstIndex = Subtitles.IndexOf(ordered[0]);
-            var kept = Subtitles.Where(s => !selectedIds.Contains(s.Id)).ToList();
-            var insertPos = Math.Min(firstIndex, kept.Count);
-            kept.InsertRange(insertPos, result.FixedSubtitle.Paragraphs.Select(p => new SubtitleLineViewModel(p, SelectedSubtitleFormat)));
+            sub.Paragraphs.Add(line.ToParagraph(SelectedSubtitleFormat));
+        }
 
-            ReplaceSubtitles(kept);
-            Renumber();
-            SelectAndScrollToRow(insertPos);
-            _updateAudioVisualizer = true;
-        });
+        await ShowDialogAsync<RemoveTextForHearingImpairedWindow, RemoveTextForHearingImpairedViewModel>(
+            vm => { vm.Initialize(sub, ApplyToGrid); });
     }
 
     [RelayCommand]

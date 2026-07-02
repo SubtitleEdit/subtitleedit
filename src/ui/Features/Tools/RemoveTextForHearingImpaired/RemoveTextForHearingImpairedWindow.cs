@@ -34,16 +34,16 @@ public class RemoveTextForHearingImpairedWindow : Window
         var settingsView = MakeSettingsView(vm);
         var fixesView = MakeFixesView(vm);
 
-        // Selected-lines mode (no apply callback) commits once with Ok/Cancel; menu mode applies
-        // live and repeatedly with Apply, then Done just closes.
+        // Settings-only callers (BatchConvert) have no live target and commit once with Ok/Cancel;
+        // edit callers (menu, selected lines) apply live and repeatedly with Apply, then Done closes.
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand)
-            .WithBindIsVisible(nameof(vm.IsOkVisible));
+            .WithBindIsVisible(nameof(vm.IsSettingsMode));
         var buttonApply = UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyCommand)
             .WithBindIsVisible(nameof(vm.IsApplyVisible));
         var buttonDone = UiUtil.MakeButtonDone(vm.DoneCommand)
             .WithBindIsVisible(nameof(vm.IsApplyVisible));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand)
-            .WithBindIsVisible(nameof(vm.IsOkVisible));
+            .WithBindIsVisible(nameof(vm.IsSettingsMode));
         var panelButtons = UiUtil.MakeButtonBar(
             buttonOk,
             buttonApply,

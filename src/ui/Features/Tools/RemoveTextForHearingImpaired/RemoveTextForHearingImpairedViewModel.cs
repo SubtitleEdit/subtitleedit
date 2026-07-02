@@ -70,17 +70,16 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
     [ObservableProperty] private string _fixText;
     [ObservableProperty] private bool _fixTextEnabled;
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsOkVisible))]
+    [NotifyPropertyChangedFor(nameof(IsSettingsMode))]
     private bool _isApplyVisible;
     [ObservableProperty] private string _linesFoundText;
 
     public Window? Window { get; set; }
 
-    public bool OkPressed { get; private set; }
-    public Subtitle FixedSubtitle { get; private set; }
-
-    // Menu mode (apply callback) shows Apply + Done; selected-lines mode (no callback) shows Ok + Cancel.
-    public bool IsOkVisible => !IsApplyVisible;
+    // Callers with a live target (menu, selected lines) pass an apply callback and get Apply + Done.
+    // Settings-only callers (BatchConvert) pass no callback and use the dialog as a settings editor,
+    // so they get Ok (save) + Cancel (discard).
+    public bool IsSettingsMode => !IsApplyVisible;
 
     private Subtitle _subtitle;
     private RemoveTextForHI? _removeTextForHiLib;
@@ -101,7 +100,6 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
         LinesFoundText = string.Format(Se.Language.Tools.RemoveTextForHearingImpaired.LinesFoundX, 0);
         _timer = new Timer(500);
         _timer.Elapsed += TimerElapsed;
-        FixedSubtitle = new Subtitle();
         _subtitle = new Subtitle();
     }
 
@@ -206,9 +204,8 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
     [RelayCommand]
     private void Ok()
     {
+        // Settings-only mode (no live target, e.g. BatchConvert): persist the options and close.
         SaveSettings();
-        OkPressed = true;
-        FixedSubtitle = BuildFixedSubtitle();
         Window?.Close();
     }
 
@@ -236,7 +233,8 @@ public partial class RemoveTextForHearingImpairedViewModel : ObservableObject
     [RelayCommand]
     private void Done()
     {
-        // Menu mode: changes are already applied live via Apply, so Done just closes.
+        // Edit modes (menu, selected lines): changes are already applied live via Apply, so Done
+        // just closes.
         Window?.Close();
     }
 
