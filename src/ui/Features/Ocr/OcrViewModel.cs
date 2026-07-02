@@ -482,15 +482,22 @@ public partial class OcrViewModel : ObservableObject
         if (result.OkPressed && result.SelectedDictionary != null)
         {
             LoadDictionaries();
-            SelectedDictionary = Dictionaries
-                .FirstOrDefault(d =>
-                    d.Name.Contains(result.SelectedDictionary.EnglishName, StringComparison.OrdinalIgnoreCase) ||
-                    d.Name.Contains(result.SelectedDictionary.NativeName, StringComparison.OrdinalIgnoreCase));
 
-            if (SelectedDictionary == null)
-            {
-                SelectedDictionary = Dictionaries.FirstOrDefault();
-            }
+            // Select the just-downloaded dictionary by its file name. Matching on the display name
+            // fails on non-English UIs, because the list shows the localized culture name (e.g.
+            // "slovensk") while the catalog entry carries the English/native name ("Slovenian").
+            var downloadedFileName = Path.GetFileName(result.DictionaryFileName ?? string.Empty);
+            SelectedDictionary =
+                (!string.IsNullOrEmpty(downloadedFileName)
+                    ? Dictionaries.FirstOrDefault(d => string.Equals(
+                        Path.GetFileName(d.DictionaryFileName),
+                        downloadedFileName,
+                        StringComparison.OrdinalIgnoreCase))
+                    : null)
+                ?? Dictionaries.FirstOrDefault(d =>
+                    d.Name.Contains(result.SelectedDictionary.EnglishName, StringComparison.OrdinalIgnoreCase) ||
+                    d.Name.Contains(result.SelectedDictionary.NativeName, StringComparison.OrdinalIgnoreCase))
+                ?? Dictionaries.FirstOrDefault();
         }
     }
 
