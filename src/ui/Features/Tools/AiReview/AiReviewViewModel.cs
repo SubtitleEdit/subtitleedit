@@ -26,7 +26,11 @@ public partial class AiReviewViewModel : ObservableObject
     [ObservableProperty] private string _selectedEngine;
     [ObservableProperty] private bool _isOllamaVisible;
     [ObservableProperty] private bool _isLlamaCppVisible;
+    [ObservableProperty] private bool _isOpenAiCompatibleVisible;
     [ObservableProperty] private string _ollamaModel;
+    [ObservableProperty] private string _openAiCompatibleUrl;
+    [ObservableProperty] private string _openAiCompatibleModel;
+    [ObservableProperty] private string _openAiCompatibleApiKey;
     [ObservableProperty] private ObservableCollection<LlamaCppModelDisplay> _llamaCppModels;
     [ObservableProperty] private LlamaCppModelDisplay? _selectedLlamaCppModel;
     [ObservableProperty] private string _languageDisplay;
@@ -60,11 +64,14 @@ public partial class AiReviewViewModel : ObservableObject
     {
         _windowService = windowService;
 
-        Engines = new ObservableCollection<string> { SeAiReview.EngineLlamaCpp, SeAiReview.EngineOllama };
-        SelectedEngine = Se.Settings.Tools.AiReview.Engine == SeAiReview.EngineOllama
-            ? SeAiReview.EngineOllama
+        Engines = new ObservableCollection<string> { SeAiReview.EngineLlamaCpp, SeAiReview.EngineOllama, SeAiReview.EngineOpenAiCompatible };
+        SelectedEngine = Engines.Contains(Se.Settings.Tools.AiReview.Engine)
+            ? Se.Settings.Tools.AiReview.Engine
             : SeAiReview.EngineLlamaCpp;
         OllamaModel = Se.Settings.Tools.AiReview.OllamaModel;
+        OpenAiCompatibleUrl = Se.Settings.Tools.AiReview.OpenAiCompatibleUrl;
+        OpenAiCompatibleModel = Se.Settings.Tools.AiReview.OpenAiCompatibleModel;
+        OpenAiCompatibleApiKey = Se.Settings.Tools.AiReview.OpenAiCompatibleApiKey;
         LlamaCppModels = new ObservableCollection<LlamaCppModelDisplay>();
         SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(
             LlamaCppModels,
@@ -138,7 +145,8 @@ public partial class AiReviewViewModel : ObservableObject
     private void UpdateEngineVisibility()
     {
         IsOllamaVisible = SelectedEngine == SeAiReview.EngineOllama;
-        IsLlamaCppVisible = !IsOllamaVisible;
+        IsOpenAiCompatibleVisible = SelectedEngine == SeAiReview.EngineOpenAiCompatible;
+        IsLlamaCppVisible = !IsOllamaVisible && !IsOpenAiCompatibleVisible;
     }
 
     partial void OnSelectedSuggestionChanged(ReviewSuggestionItem? value)
@@ -172,6 +180,9 @@ public partial class AiReviewViewModel : ObservableObject
         settings.Engine = SelectedEngine;
         settings.OllamaModel = OllamaModel;
         settings.LlamaCppModelFileName = SelectedLlamaCppModel?.Model.FileName ?? string.Empty;
+        settings.OpenAiCompatibleUrl = OpenAiCompatibleUrl.Trim();
+        settings.OpenAiCompatibleModel = OpenAiCompatibleModel.Trim();
+        settings.OpenAiCompatibleApiKey = OpenAiCompatibleApiKey.Trim();
         Se.SaveSettings();
     }
 
@@ -188,6 +199,7 @@ public partial class AiReviewViewModel : ObservableObject
 
         string url;
         var model = string.Empty;
+        string? apiKey = null;
         if (SelectedEngine == SeAiReview.EngineLlamaCpp)
         {
             var display = SelectedLlamaCppModel;
@@ -222,6 +234,13 @@ public partial class AiReviewViewModel : ObservableObject
             }
 
             url = LlamaCppServerManager.ApiUrl;
+        }
+        else if (SelectedEngine == SeAiReview.EngineOpenAiCompatible)
+        {
+            url = OpenAiCompatibleUrl.Trim();
+            model = OpenAiCompatibleModel.Trim();
+            apiKey = string.IsNullOrWhiteSpace(OpenAiCompatibleApiKey) ? null : OpenAiCompatibleApiKey.Trim();
+            IsReviewing = true;
         }
         else
         {
@@ -273,12 +292,12 @@ public partial class AiReviewViewModel : ObservableObject
                 List<AiReviewChange>? changes = null;
                 try
                 {
-                    var reply = await client.ChatAsync(url, model, systemPrompt, userContent, ct);
+                    var reply = await client.ChatAsync(url, model, systemPrompt, userContent, ct, apiKey);
                     changes = AiReviewProtocol.ParseChanges(reply, editableNumbers);
                     if (changes.Count == 0 && AiReviewProtocol.ExtractJsonObject(reply) == null)
                     {
                         // invalid reply - one retry for this chunk
-                        reply = await client.ChatAsync(url, model, systemPrompt, userContent, ct);
+                        reply = await client.ChatAsync(url, model, systemPrompt, userContent, ct, apiKey);
                         changes = AiReviewProtocol.ParseChanges(reply, editableNumbers);
                     }
 

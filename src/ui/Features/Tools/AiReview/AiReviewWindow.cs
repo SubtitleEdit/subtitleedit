@@ -47,6 +47,24 @@ public class AiReviewWindow : Window
         };
         panelOllama.Bind(IsVisibleProperty, new Binding(nameof(vm.IsOllamaVisible)));
 
+        var textBoxOpenAiUrl = UiUtil.MakeTextBox(250, vm, nameof(vm.OpenAiCompatibleUrl))
+            .WithAccessibleName(Se.Language.General.Url);
+        var textBoxOpenAiModel = UiUtil.MakeTextBox(150, vm, nameof(vm.OpenAiCompatibleModel))
+            .WithAccessibleName(Se.Language.General.Model);
+        textBoxOpenAiModel.Watermark = Se.Language.General.Model;
+        var textBoxOpenAiApiKey = UiUtil.MakeTextBox(130, vm, nameof(vm.OpenAiCompatibleApiKey))
+            .WithAccessibleName(Se.Language.General.ApiKey);
+        textBoxOpenAiApiKey.Watermark = Se.Language.General.ApiKey;
+        textBoxOpenAiApiKey.PasswordChar = '\u25cf';
+        var panelOpenAiCompatible = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { textBoxOpenAiUrl, textBoxOpenAiModel, textBoxOpenAiApiKey },
+        };
+        panelOpenAiCompatible.Bind(IsVisibleProperty, new Binding(nameof(vm.IsOpenAiCompatibleVisible)));
+
         var comboLlamaCppModel = UiUtil.MakeComboBox(vm.LlamaCppModels, vm, nameof(vm.SelectedLlamaCppModel))
             .WithAccessibleName(Se.Language.General.Model);
         comboLlamaCppModel.Bind(IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppVisible)));
@@ -104,7 +122,7 @@ public class AiReviewWindow : Window
 
         var toolbar = new Grid
         {
-            ColumnDefinitions = new ColumnDefinitions("Auto,Auto,Auto,Auto,Auto,*,Auto"),
+            ColumnDefinitions = new ColumnDefinitions("Auto,Auto,Auto,Auto,Auto,Auto,*,Auto"),
             ColumnSpacing = 8,
         };
         var labelEngine = UiUtil.MakeTextBlock(Se.Language.General.Engine).WithMarginRight(2);
@@ -113,8 +131,9 @@ public class AiReviewWindow : Window
         toolbar.Add(comboEngine, 0, 1);
         toolbar.Add(panelOllama, 0, 2);
         toolbar.Add(comboLlamaCppModel, 0, 3);
-        toolbar.Add(languageChip, 0, 4);
-        toolbar.Add(buttonEditPrompt, 0, 6);
+        toolbar.Add(panelOpenAiCompatible, 0, 4);
+        toolbar.Add(languageChip, 0, 5);
+        toolbar.Add(buttonEditPrompt, 0, 7);
 
         // ---------- filter chips ----------
         var chipsItems = new ItemsControl
