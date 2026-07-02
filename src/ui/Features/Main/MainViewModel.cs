@@ -294,7 +294,6 @@ public partial class MainViewModel :
     FindViewModel? _findViewModel;
     Control? _findPreviousFocus;
     Control? _focusBeforeMainMenu;
-    bool _altMenuTogglePending;
     bool _findClosingProgrammatically;
     ReplaceViewModel? _replaceViewModel;
     Control? _replacePreviousFocus;
@@ -18736,9 +18735,10 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// Activates the main menu bar for keyboard navigation (Windows standard Alt/F10), remembering
-    /// the control that had focus so it can be restored on deactivation. Returns false on platforms
-    /// with a native menu (macOS), where the in-window <see cref="Menu"/> has no items (#11745).
+    /// Activates the main menu bar for keyboard navigation (Windows standard F10; bare Alt is handled
+    /// by Avalonia's built-in AccessKeyHandler), remembering the control that had focus so it can be
+    /// restored on deactivation. Returns false on platforms with a native menu (macOS), where the
+    /// in-window <see cref="Menu"/> has no items (#11745).
     /// </summary>
     private bool ActivateMainMenu()
     {
@@ -18749,11 +18749,10 @@ public partial class MainViewModel :
 
         _focusBeforeMainMenu = Window?.FocusManager?.GetFocusedElement() as Control;
 
-        // Defer focusing the menu bar: when this runs from a key handler (bare Alt key-up, F10),
-        // Avalonia's own access-key handler also processes the same key and resets focus afterwards,
-        // which undid a synchronous focus here - so bare Alt showed the access-key underlines but
-        // never actually activated the bar. Let the current key event finish first, mirroring the
-        // deferred focus restore in DeactivateMainMenu (#11745).
+        // Defer focusing the menu bar: moving focus from inside the key handler is racy (Avalonia's
+        // access-key handling may still process the same key afterwards and reset focus). Let the
+        // current key event finish first, mirroring the deferred focus restore in DeactivateMainMenu
+        // (#11745).
         Dispatcher.UIThread.Post(() => TryFocusMainMenu());
         return true;
     }
@@ -18766,7 +18765,6 @@ public partial class MainViewModel :
     private void DeactivateMainMenu()
     {
         Menu?.Close();
-        _altMenuTogglePending = false;
 
         var restore = _focusBeforeMainMenu;
         _focusBeforeMainMenu = null;
@@ -18785,13 +18783,10 @@ public partial class MainViewModel :
     }
 
     /// <summary>
-    /// A task switch (e.g. Alt+Tab) must not leave a pending bare-Alt menu toggle armed; otherwise the
-    /// next Alt release after returning to the window would spuriously activate the menu bar (#11745).
+    /// Cleans up keyboard state that a task switch (e.g. Alt+Tab) would otherwise leave behind (#11745).
     /// </summary>
     internal void OnWindowDeactivated(object? sender, EventArgs e)
     {
-        _altMenuTogglePending = false;
-
         // Drop any held-key state when focus leaves the window. A modal dialog (e.g. the
         // "Save changes?" prompt that Ctrl+O raises on a changed file) steals focus, so the KeyUp
         // for the held keys never reaches the main window and they stay "stuck down". That left
@@ -19082,12 +19077,19 @@ public partial class MainViewModel :
 
             _lastKeyPressedMs = ms;
 
-            // Arm a "bare Alt" toggle so its release can activate/deactivate the menu bar (Windows
-            // standard). This must run before the early-returns below so that any other key in an Alt
-            // chord (e.g. Space in Alt+Space, which opens the window system menu and returns early)
-            // clears it; the modifier check rejects AltGr (Ctrl+Alt) on international keyboards. The
-            // toggle itself happens on key-up (OnKeyUpHandler) (#11745).
-            _altMenuTogglePending = (k is Key.LeftAlt or Key.RightAlt) && keyEventArgs.KeyModifiers == KeyModifiers.Alt;
+            // Bare Alt activating/deactivating the menu bar is owned by Avalonia's built-in
+            // AccessKeyHandler: it opens the menu on Alt release and closes it again (restoring
+            // focus) when Alt is pressed while the menu is open. SE used to run its own bare-Alt
+            // toggle on key-up as well; whenever a control inside the window had keyboard focus -
+            // the normal state, and the one a screen reader always keeps the window in - both
+            // toggles fired and cancelled each other out, so Alt appeared dead (#12087). Only
+            // remember the focused control here, so an Escape deactivation after a built-in Alt
+            // activation can restore it (the built-in handler keeps its own copy private).
+            if (k is Key.LeftAlt or Key.RightAlt && keyEventArgs.KeyModifiers == KeyModifiers.Alt &&
+                Menu is not { IsOpen: true } && !IsMainMenuFocused())
+            {
+                _focusBeforeMainMenu = Window?.FocusManager?.GetFocusedElement() as Control;
+            }
 
             if (UiUtil.TryHandleWindowSystemMenu(keyEventArgs, Window))
             {
@@ -19128,16 +19130,19 @@ public partial class MainViewModel :
             // When the main menu has keyboard focus (opened via F10 or Alt), let it own its arrow/Enter
             // navigation instead of consuming those keys as shortcuts. The window key handler tunnels
             // (runs before the focused menu item), so without this the shortcut manager would eat
-            // Left/Right etc. Escape is handled here so that, once no drop-down is open, it fully
-            // deactivates the bar and restores focus instead of leaving it half-focused (#11745).
-            // Escape leaves the menu bar in two deterministic steps (Windows standard): if a drop-down
-            // is open, the first Escape closes it but keeps the bar active; the next Escape (nothing
-            // open) fully deactivates and restores focus. We also gate on Menu.IsOpen, because focus can
-            // briefly leave the menu right after a drop-down closes - relying on focus alone previously
-            // needed a third Escape to leave the bar (#11745 beta-2 feedback).
+            // Left/Right etc. Escape is handled here so that it fully deactivates the bar and restores
+            // focus instead of leaving it half-focused (#11745). Escape leaves the menu bar in two
+            // deterministic steps (Windows standard): if a drop-down is open, the first Escape closes
+            // it but keeps the bar active; the next Escape fully deactivates and restores focus. The
+            // drop-down check must look at the top-level items, not Menu.IsOpen: the built-in bare-Alt
+            // activation sets IsOpen with no drop-down showing, and treating that as "drop-down open"
+            // would demand an extra Escape to leave an Alt-activated bar (#12087). We still gate the
+            // whole branch on Menu.IsOpen too, because focus can briefly leave the menu right after a
+            // drop-down closes - relying on focus alone previously needed a third Escape to leave the
+            // bar (#11745 beta-2 feedback).
             if (k == Key.Escape && keyEventArgs.KeyModifiers == KeyModifiers.None && (IsMainMenuFocused() || Menu.IsOpen))
             {
-                if (Menu.IsOpen)
+                if (Menu.Items.OfType<MenuItem>().Any(mi => mi.IsSubMenuOpen))
                 {
                     Menu.Close();
                     TryFocusMainMenu(); // keep the bar focused so the next Escape deactivates it
@@ -19371,23 +19376,6 @@ public partial class MainViewModel :
 
     public void OnKeyUpHandler(object? sender, KeyEventArgs e)
     {
-        // A bare Alt press+release toggles the main menu bar (Windows standard). _altMenuTogglePending
-        // is cleared if any other key was pressed while Alt was held, or on a window task switch, so
-        // this fires only for Alt-alone (#11745).
-        if (e.Key is Key.LeftAlt or Key.RightAlt && _altMenuTogglePending)
-        {
-            _altMenuTogglePending = false;
-            if (IsMainMenuFocused())
-            {
-                DeactivateMainMenu();
-                e.Handled = true;
-            }
-            else if (ActivateMainMenu())
-            {
-                e.Handled = true;
-            }
-        }
-
         if (_setEndAtKeyUpLine != null)
         {
             _setEndAtKeyUpLine = null;
