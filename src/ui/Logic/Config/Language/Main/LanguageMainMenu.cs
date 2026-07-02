@@ -236,7 +236,7 @@ public class LanguageMainMenu
         DockVideoControls = "_Dock video controls";
         ToggleSelectSubtitleWhilePlayingCurrentlyOff = "Toggle select subtitle while playing (currently: off)";
         ToggleSelectSubtitleWhilePlayingCurrentlyOn = "Toggle select subtitle while playing (currently: on)";
-        SelectSubtitleWhilePlaying = "Select subtitle while playing";
+        SelectSubtitleWhilePlaying = "Select current subtitle while playing";
         SetVideoOffset = "Set video offset...";
         UpdateVideoOffsetX = "Update video offset from {0}...";
         SmpteTiming = "SMPTE timing (non-integer frame rate)";
