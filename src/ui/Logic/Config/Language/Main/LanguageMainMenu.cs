@@ -48,6 +48,7 @@ public class LanguageMainMenu
     public string ApplyMinGap { get; set; }
     public string ChangeCasing { get; set; }
     public string ChangeFormatting { get; set; }
+    public string AiReview { get; set; }
     public string FixCommonErrors { get; set; }
     public string CheckAndFixNetflixErrors { get; set; }
     public string MakeEmptyTranslationFromCurrentSubtitle { get; set; }
@@ -177,6 +178,7 @@ public class LanguageMainMenu
         ToolsSelectedLines = "_Tools (selected lines)";
         AdjustDurations = "_Adjust durations...";
         ApplyDurationLimits = "Apply duration _limits...";
+        AiReview = "AI review...";
         FixCommonErrors = "_Fix common errors...";
         CheckAndFixNetflixErrors = "Check and fix Netfli_x errors...";
         MakeEmptyTranslationFromCurrentSubtitle = "Make new _empty translation from current subtitle";

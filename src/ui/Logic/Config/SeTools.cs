@@ -6,6 +6,7 @@ namespace Nikse.SubtitleEdit.Logic.Config;
 
 public class SeTools
 {
+    public SeAiReview AiReview { get; set; } = new();
     public SeAudioToText AudioToText { get; set; } = new();
     public SeConvertActors ConvertActors { get; set; } = new();
     public SeFixCommonErrors FixCommonErrors { get; set; } = new();

@@ -453,6 +453,11 @@ public static class InitMenu
             },
             new MenuItem
             {
+                Header = l.AiReview,
+                Command = vm.ShowToolsAiReviewCommand,
+            },
+            new MenuItem
+            {
                 Header = l.MakeEmptyTranslationFromCurrentSubtitle,
                 Command = vm.ToolsMakeEmptyTranslationFromCurrentSubtitleCommand,
             },

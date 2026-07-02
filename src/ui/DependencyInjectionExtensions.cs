@@ -376,6 +376,8 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<FindTextViewModel>();
         collection.AddTransient<FindViewModel>();
         collection.AddTransient<FixCommonErrorsProfileViewModel>();
+        collection.AddTransient<Features.Tools.AiReview.AiReviewViewModel>();
+        collection.AddTransient<Features.Tools.AiReview.AiReviewPromptViewModel>();
         collection.AddTransient<FixCommonErrorsViewModel>();
         collection.AddTransient<FixNamesViewModel>();
         collection.AddTransient<FixNetflixErrorsViewModel>();

@@ -206,6 +206,7 @@ public static class InitNativeMacMenu
             Item(Clean(l.ChangeFormatting), v => v.ShowToolsChangeFormattingCommand),
             Item(Clean(l.FixCommonErrors), v => v.ShowToolsFixCommonErrorsCommand),
             Item(Clean(l.CheckAndFixNetflixErrors), v => v.ShowToolsFixNetflixErrorsCommand),
+            Item(Clean(l.AiReview), v => v.ShowToolsAiReviewCommand),
             Item(Clean(l.MakeEmptyTranslationFromCurrentSubtitle), v => v.ToolsMakeEmptyTranslationFromCurrentSubtitleCommand),
             Item(Clean(l.MergeLinesWithSameText), v => v.ShowToolsMergeLinesWithSameTextCommand),
             Item(Clean(l.MergeLinesWithSameTimeCodes), v => v.ShowToolsMergeLinesWithSameTimeCodesCommand),
