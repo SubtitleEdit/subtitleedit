@@ -22,7 +22,17 @@ public class LlamaCppModelDisplay
     public LlamaCppModelDisplay(LlamaCppModel model)
     {
         Model = model;
+        // Custom entries (no Url) come from a *.gguf in the models folder - on disk by definition.
+        IsInstalled = string.IsNullOrEmpty(model.Url) || LlamaCppServerManager.IsModelInstalled(model);
     }
+
+    /// <summary>Evaluated when the display item is created - repopulate the list to refresh.</summary>
+    public bool IsInstalled { get; }
+
+    /// <summary>Label without the install-status text, for templates that show the status as an icon.</summary>
+    public string DisplayText => string.IsNullOrEmpty(Model.Url)
+        ? $"{Model.DisplayName} (custom, {Model.Size})"
+        : $"{Model.DisplayName} - {Model.Size}";
 
     public override string ToString()
     {

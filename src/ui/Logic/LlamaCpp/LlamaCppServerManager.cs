@@ -111,6 +111,17 @@ public static class LlamaCppServerManager
         new LlamaCppModel("Gemma 3 12B it (Q4_K_M)", "google_gemma-3-12b-it-Q4_K_M.gguf", "7.3 GB",
             "https://huggingface.co/bartowski/google_gemma-3-12b-it-GGUF/resolve/main/google_gemma-3-12b-it-Q4_K_M.gguf",
             ChatTemplate: "gemma", NoJinja: true),
+
+        // Different families for second opinions. Llama 3.1 is the strongest English
+        // proofreader of its size; EuroLLM is trained specifically on the European languages
+        // (all 24 official EU languages incl. the Nordics); Phi-4 mini is the small/fast option.
+        // All use their embedded chat templates.
+        new LlamaCppModel("Llama 3.1 8B Instruct (Q4_K_M)", "Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf", "4.9 GB",
+            "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"),
+        new LlamaCppModel("EuroLLM 9B Instruct (Q4_K_M)", "EuroLLM-9B-Instruct-Q4_K_M.gguf", "5.6 GB",
+            "https://huggingface.co/bartowski/EuroLLM-9B-Instruct-GGUF/resolve/main/EuroLLM-9B-Instruct-Q4_K_M.gguf"),
+        new LlamaCppModel("Phi-4 mini 3.8B (Q4_K_M)", "microsoft_Phi-4-mini-instruct-Q4_K_M.gguf", "2.5 GB",
+            "https://huggingface.co/bartowski/microsoft_Phi-4-mini-instruct-GGUF/resolve/main/microsoft_Phi-4-mini-instruct-Q4_K_M.gguf"),
     };
 
     public static readonly IReadOnlyList<LlamaCppModel> OcrModels = new[]

@@ -50,6 +50,34 @@ public class AiReviewWindow : Window
         var comboLlamaCppModel = UiUtil.MakeComboBox(vm.LlamaCppModels, vm, nameof(vm.SelectedLlamaCppModel))
             .WithAccessibleName(Se.Language.General.Model);
         comboLlamaCppModel.Bind(IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppVisible)));
+        comboLlamaCppModel.ItemTemplate = new FuncDataTemplate<Features.Translate.LlamaCppModelDisplay>((item, _) =>
+        {
+            var panel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 7,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            if (item != null)
+            {
+                panel.Children.Add(new Avalonia.Controls.Shapes.Ellipse
+                {
+                    Width = 8,
+                    Height = 8,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Fill = item.IsInstalled
+                        ? new SolidColorBrush(Color.FromRgb(0x5c, 0xb8, 0x5c))
+                        : new SolidColorBrush(Color.FromArgb(0x50, 0x80, 0x88, 0x90)),
+                });
+                panel.Children.Add(new TextBlock
+                {
+                    Text = item.DisplayText,
+                    VerticalAlignment = VerticalAlignment.Center,
+                });
+            }
+
+            return panel;
+        });
 
         var languageChip = new Border
         {

@@ -145,6 +145,15 @@ public partial class AiReviewViewModel : ObservableObject
         ReasonText = string.IsNullOrEmpty(value.Reason) ? who : $"{who}: {value.Reason}";
     }
 
+    private void RefreshLlamaCppModels()
+    {
+        var selectedFileName = SelectedLlamaCppModel?.Model.FileName;
+        SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(
+            LlamaCppModels,
+            LlamaCppServerManager.GetAllReviewModels(),
+            selectedFileName);
+    }
+
     private void SaveSettings()
     {
         var settings = Se.Settings.Tools.AiReview;
@@ -173,6 +182,14 @@ public partial class AiReviewViewModel : ObservableObject
             if (display == null ||
                 !await LlamaCppDownloadHelper.EnsureReadyAsync(Window, _windowService, display.Model.FileName,
                     LlamaCppServerManager.GetAllReviewModels(), persistAsTranslateModel: false))
+            {
+                RefreshLlamaCppModels();
+                return;
+            }
+
+            RefreshLlamaCppModels(); // pick up the fresh install state (green dot)
+            display = SelectedLlamaCppModel;
+            if (display == null)
             {
                 return;
             }
