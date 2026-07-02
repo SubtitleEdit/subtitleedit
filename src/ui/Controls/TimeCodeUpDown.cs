@@ -415,6 +415,23 @@ namespace Nikse.SubtitleEdit.Controls
 
         private TimeSpan ParseTime(string text)
         {
+            if (Se.Settings.General.UseFrameMode)
+            {
+                // In frame mode the last section is a frame number, not milliseconds
+                var frameParts = text.Split(':', ',', '.');
+                if (frameParts.Length == 4 &&
+                    int.TryParse(frameParts[0], out var frameHours) &&
+                    int.TryParse(frameParts[1], out var frameMinutes) &&
+                    int.TryParse(frameParts[2], out var frameSeconds) &&
+                    int.TryParse(frameParts[3], out var frames))
+                {
+                    var frameMs = SubtitleFormat.FramesToMillisecondsMax999(frames);
+                    return RemoveVideoOffset(new TimeSpan(0, frameHours, frameMinutes, frameSeconds, frameMs));
+                }
+
+                return TimeSpan.Zero;
+            }
+
             // Try parsing with milliseconds format (00:00:00:000 or 00:00:00.000)
             if (TimeSpan.TryParseExact(text, @"hh\:mm\:ss\:fff", null, out var result))
             {
@@ -544,9 +561,11 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 if (Se.Settings.General.UseFrameMode)
                 {
-                    //TODO: align to nearest frame before adjusting?
-                    var ms = SubtitleFormat.FramesToMilliseconds(delta);
-                    newVal = newVal.Add(TimeSpan.FromMilliseconds(ms));
+                    // Step by whole frames via the total frame count, so an unaligned value is
+                    // aligned to the nearest frame first - just adding one frame duration in ms
+                    // can otherwise round/cap back to the same displayed frame number.
+                    var totalFrames = SubtitleFormat.MillisecondsToFrames(newVal.TotalMilliseconds);
+                    newVal = TimeSpan.FromMilliseconds(SubtitleFormat.FramesToMilliseconds(totalFrames + delta));
                 }
                 else
                 {
