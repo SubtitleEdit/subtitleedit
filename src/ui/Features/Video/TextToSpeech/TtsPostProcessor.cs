@@ -32,10 +32,7 @@ public static class TtsPostProcessor
                 var proProcess = FfmpegGenerator.ApplyProAudioChain(currentFile, proChainOutput);
                 await proProcess.StartAndWaitAsync(cancellationToken);
 
-                if (File.Exists(proChainOutput))
-                {
-                    currentFile = proChainOutput;
-                }
+                currentFile = AdoptStageOutput(currentFile, proChainOutput, "pro audio chain");
             }
 
             if (cancellationToken.IsCancellationRequested)
@@ -54,10 +51,7 @@ public static class TtsPostProcessor
                 await concatProcess.StartAndWaitAsync(cancellationToken);
 
                 SafeDelete(silenceFile);
-                if (File.Exists(paddedOutput))
-                {
-                    currentFile = paddedOutput;
-                }
+                currentFile = AdoptStageOutput(currentFile, paddedOutput, "silence padding");
             }
 
             if (cancellationToken.IsCancellationRequested)
@@ -71,10 +65,7 @@ public static class TtsPostProcessor
                 var srProcess = FfmpegGenerator.ChangeSampleRate(currentFile, resampledOutput, outputSampleRate);
                 await srProcess.StartAndWaitAsync(cancellationToken);
 
-                if (File.Exists(resampledOutput))
-                {
-                    currentFile = resampledOutput;
-                }
+                currentFile = AdoptStageOutput(currentFile, resampledOutput, "sample rate conversion");
             }
 
             return currentFile;
@@ -83,6 +74,26 @@ public static class TtsPostProcessor
         {
             return currentFile;
         }
+    }
+
+    /// <summary>
+    /// Adopts a stage's ffmpeg output when it was actually produced (exists and is non-empty -
+    /// a bare Exists check used to adopt zero-byte files from mid-run ffmpeg failures), deleting
+    /// the superseded input so a long run doesn't pile up one stale intermediate per stage per
+    /// line. A failed stage keeps the input and is force-logged - it used to be silently skipped,
+    /// leaving the user's enabled option quietly unapplied with no trace.
+    /// </summary>
+    private static string AdoptStageOutput(string inputFile, string outputFile, string stageName)
+    {
+        if (File.Exists(outputFile) && new FileInfo(outputFile).Length > 0)
+        {
+            SafeDelete(inputFile);
+            return outputFile;
+        }
+
+        Se.WriteToolsLog($"TTS post-processing: {stageName} produced no output for \"{inputFile}\" - stage skipped (ffmpeg failure?)", true);
+        SafeDelete(outputFile);
+        return inputFile;
     }
 
     private static void SafeDelete(string fileName)

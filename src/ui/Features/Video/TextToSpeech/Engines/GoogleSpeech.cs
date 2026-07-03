@@ -23,7 +23,11 @@ public class GoogleSpeech : ITtsEngine
 
     public Task<bool> IsInstalled(string? region)
     {
-        var ok = !string.IsNullOrEmpty(Se.Settings.Video.TextToSpeech.GoogleApiKey);
+        // This engine authenticates exclusively via the key *file* (HasKeyFile=true; Speak and
+        // RefreshVoices only use GoogleKeyFile) - checking GoogleApiKey reported a configured
+        // engine as "not installed" and a leftover API key with no key file as "installed".
+        var keyFile = Se.Settings.Video.TextToSpeech.GoogleKeyFile;
+        var ok = !string.IsNullOrEmpty(keyFile) && File.Exists(keyFile);
         return Task.FromResult(ok);
     }
 

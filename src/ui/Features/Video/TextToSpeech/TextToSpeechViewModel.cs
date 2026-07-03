@@ -1459,7 +1459,30 @@ public partial class TextToSpeechViewModel : ObservableObject
 
     private async Task RefreshVoices(ITtsEngine engine)
     {
-        var voices = await engine.RefreshVoices(string.Empty, CancellationToken.None);
+        Voice[] voices;
+        try
+        {
+            voices = await engine.RefreshVoices(string.Empty, CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            // The voice-list downloads throw on HTTP failure (so an error body cannot overwrite
+            // the cached list). Keep the current voices and tell the user instead of crashing
+            // whichever command triggered the refresh.
+            SeLogger.Error(ex, $"Refreshing voices for {engine.Name} failed - keeping the cached voice list");
+            if (Window != null)
+            {
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.General.Error,
+                    $"Refreshing voices failed: {ex.Message}",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+
+            return;
+        }
+
         Voices.Clear();
         foreach (var voice in voices)
         {
@@ -3076,8 +3099,22 @@ public partial class TextToSpeechViewModel : ObservableObject
                     var mediaInfo = FfmpegMediaInfo.Parse(currentFile);
                     if (mediaInfo.Duration == null)
                     {
+                        // The trim/VAD output is missing or unreadable (ffmpeg problem). Keep the
+                        // engine's original audio at original speed - same policy as the other
+                        // failure paths - instead of silently dropping the line from the output.
                         skippedNoDurationCount++;
-                        Se.WriteToolsLog($"TTS FixSpeed: segment {index + 1} dropped - could not read duration of \"{currentFile}\" (trim output missing or unreadable; ffmpeg problem?)", true);
+                        Se.WriteToolsLog($"TTS FixSpeed: segment {index + 1} - could not read duration of \"{currentFile}\" (trim output missing or unreadable; ffmpeg problem?) - keeping original audio", true);
+                        resultList.Add(new TtsStepResult
+                        {
+                            Paragraph = p,
+                            Text = item.Text,
+                            CurrentFileName = item.CurrentFileName,
+                            SpeedFactor = 1.0f,
+                            Voice = item.Voice,
+                            EngineName = item.EngineName,
+                            Model = item.Model,
+                            Instruction = item.Instruction,
+                        });
                         continue;
                     }
 
@@ -3387,7 +3424,33 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             IsEngineSettingsVisible = false;
             IsModelDownloadVisible = false;
-            var voices = await engine.GetVoices(SelectedLanguage?.Code ?? string.Empty);
+
+            // Engine capability flags first, and never skipped: when the voice load below fails
+            // or returns nothing (missing API key, no network), the user must still get the new
+            // engine's own fields (API key, region, model, ...) to fix the cause. The old flow
+            // returned early on an empty voice list, leaving every panel flag - and the voice
+            // list itself - describing the *previous* engine, so Generate could then hand the
+            // wrong engine's Voice object to Speak.
+            HasLanguageParameter = engine.HasLanguageParameter;
+            HasApiKey = engine.HasApiKey;
+            HasRegion = engine.HasRegion;
+            HasModel = engine.HasModel;
+            HasKeyFile = engine.HasKeyFile;
+            IsEdgeTtsEngine = engine is EdgeTts;
+
+            Voice[] voices;
+            try
+            {
+                voices = await engine.GetVoices(SelectedLanguage?.Code ?? string.Empty);
+            }
+            catch (Exception ex)
+            {
+                // PostSafe used to swallow this, skipping the whole engine switch. Show an empty
+                // voice list for the new engine instead of the previous engine's voices.
+                SeLogger.Error(ex, $"Loading voices for {engine.Name} failed");
+                voices = [];
+            }
+
             Voices.Clear();
             foreach (var vo in voices)
             {
@@ -3402,20 +3465,13 @@ public partial class TextToSpeechViewModel : ObservableObject
                                                        p.Name.Contains("English", StringComparison.OrdinalIgnoreCase));
             }
             SelectedVoice = lastVoice ?? Voices.FirstOrDefault();
-            if (SelectedVoice == null)
+
+            if (SelectedVoice != null)
             {
-                return;
+                ApplyInstructionForEngine(engine);
             }
 
-            HasLanguageParameter = engine.HasLanguageParameter;
-            HasApiKey = engine.HasApiKey;
-            HasRegion = engine.HasRegion;
-            HasModel = engine.HasModel;
-            HasKeyFile = engine.HasKeyFile;
-            IsEdgeTtsEngine = engine is EdgeTts;
-            ApplyInstructionForEngine(engine);
-
-            if (HasLanguageParameter)
+            if (HasLanguageParameter && SelectedVoice != null)
             {
                 var languages = await engine.GetLanguages(SelectedVoice, SelectedModel);
                 Languages.Clear();

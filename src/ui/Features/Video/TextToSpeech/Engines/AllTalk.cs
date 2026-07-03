@@ -163,7 +163,17 @@ public class AllTalk : ITtsEngine
 
         var languageCode = language != null ? language.Code : "en";
         Se.WriteToolsLog($"AllTalk: voice={allTalkVoice.Voice}, language={languageCode}, textLen={text.Length}");
-        var allTalkFileNameOutputFileName = await _ttsDownloadService.AllTalkVoiceSpeak(text, allTalkVoice, languageCode);
+        var allTalkFileNameOutputFileName = await _ttsDownloadService.AllTalkVoiceSpeak(text, allTalkVoice, languageCode, cancellationToken);
+
+        // The server reports its output as a local path. It can be empty (unexpected response
+        // JSON) or unreachable from here (server on another machine / different working dir) -
+        // File.Move then threw unhandled instead of failing the segment like other engines.
+        if (string.IsNullOrWhiteSpace(allTalkFileNameOutputFileName) || !File.Exists(allTalkFileNameOutputFileName))
+        {
+            var error = $"AllTalk did not produce a readable output file (reported path: \"{allTalkFileNameOutputFileName}\") - is the server running on this machine?";
+            Se.WriteToolsLog("AllTalk: " + error, true);
+            return new TtsResult { Text = text, FileName = string.Empty, Error = true, ErrorMessage = error };
+        }
 
         var outputFileName = Path.Combine(GetSetAllTalkFolder(), Guid.NewGuid() + ".wav");
         File.Move(allTalkFileNameOutputFileName, outputFileName);
