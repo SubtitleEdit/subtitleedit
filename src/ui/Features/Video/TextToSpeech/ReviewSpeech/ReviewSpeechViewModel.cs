@@ -788,8 +788,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         try
         {
-            var isEngineInstalled = await engine.IsInstalled(SelectedRegion);
-            if (!isEngineInstalled)
+            // Same install/download flow as the main window: this used to be a bare
+            // IsInstalled check that silently returned, so picking a not-yet-downloaded
+            // engine (e.g. CosyVoice3) here made Regenerate do nothing with no prompt.
+            if (!await TtsEngineInstaller.EnsureEngineInstalled(engine, Window, _windowService, SelectedRegion, SelectedModel, null, null, async () => await SelectedEngineChangedAsync()))
             {
                 return;
             }
