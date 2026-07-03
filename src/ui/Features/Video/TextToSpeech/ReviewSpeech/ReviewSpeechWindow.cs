@@ -80,6 +80,11 @@ public class ReviewSpeechWindow : Window
         Content = grid;
 
         Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+
+        // Tunnel-stage handler: sees Space/R before the focused button does. Without this, the
+        // initially focused OK button swallowed bare Space as a button click - publishing the
+        // whole session when the user just wanted to play a line (#12093).
+        AddHandler(KeyDownEvent, (_, e) => vm.OnPreviewKeyDown(e), Avalonia.Interactivity.RoutingStrategies.Tunnel);
         Loaded += delegate
         {
             vm.Loaded();

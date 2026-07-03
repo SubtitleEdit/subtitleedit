@@ -38,6 +38,8 @@ internal class IconNames
     public const string Duplicate = "mdi-content-duplicate";
     public const string Electron = "mdi-electron-framework";
     public const string Export = "mdi-export";
+    public const string Eye = "mdi-eye";
+    public const string EyeOff = "mdi-eye-off";
     public const string EyeSettings = "mdi-eye-settings";
     public const string FileCog = "mdi-file-cog";
     public const string FileMultiple = "mdi-file-multiple";

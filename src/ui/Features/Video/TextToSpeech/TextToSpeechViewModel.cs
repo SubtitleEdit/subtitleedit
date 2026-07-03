@@ -1687,6 +1687,35 @@ public partial class TextToSpeechViewModel : ObservableObject
                 _ = GenerateWavePeaksIfNeededAsync(videoFileNameForReview, vm);
             }
         });
+
+        // OK means "publish": run the same merge/add-to-video tail as the generate pipeline.
+        // This result used to be discarded, so OK after an import behaved exactly like Cancel -
+        // no merged wav, no dialog, nothing (#12093).
+        if (result.OkPressed)
+        {
+            try
+            {
+                await MergeAndAddToVideo(result.StepResults);
+            }
+            catch (OperationCanceledException)
+            {
+                ResetGeneratingUiState();
+            }
+            catch (Exception ex)
+            {
+                SeLogger.Error(ex, "Text-to-speech: merging imported audio segments failed");
+                Se.WriteToolsLog("Text-to-speech: merging imported audio segments failed: " + ex, true);
+                ResetGeneratingUiState();
+
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.General.Error,
+                    "Merging the audio segments failed: " + ex.Message + Environment.NewLine + Environment.NewLine +
+                    "See error-log.txt in the Subtitle Edit data folder for details.",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
     }
 
     /// <summary>
@@ -1987,9 +2016,10 @@ public partial class TextToSpeechViewModel : ObservableObject
     {
         try
         {
-            var engine = SelectedEngine;
-            var voice = SelectedVoice;
-            if (engine == null || voice == null || cancellationToken.IsCancellationRequested)
+            // No engine/voice needed here - each step result carries its own audio file. An
+            // engine/voice null-guard used to silently abort the merge for imported sessions
+            // whose selected engine had no loadable voice list ("OK does nothing", #12093).
+            if (cancellationToken.IsCancellationRequested)
             {
                 return null;
             }
@@ -2001,7 +2031,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 forceStereo = true;
             }
 
-            var silenceFileName = await GenerateSilenceWaveFile(cancellationToken);
+            var silenceFileName = await GenerateSilenceWaveFile(previousStepResult, cancellationToken);
 
             var inputFileName = silenceFileName;
             ProgressValue = 0;
@@ -2083,7 +2113,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
     }
 
-    private async Task<string> GenerateSilenceWaveFile(CancellationToken cancellationToken)
+    private async Task<string> GenerateSilenceWaveFile(TtsStepResult[] stepResults, CancellationToken cancellationToken)
     {
         ProgressText = Se.Language.Video.TextToSpeech.PreparingMergeDotDotDot;
         ProgressValue = 0;
@@ -2103,6 +2133,15 @@ public partial class TextToSpeechViewModel : ObservableObject
         else if (_subtitle.Paragraphs.Count > 0)
         {
             durationInSeconds = (float)_subtitle.Paragraphs.Max(p => p.EndTime.TotalSeconds);
+        }
+
+        // An imported session can outlast the subtitle currently open in the main window (or
+        // there may be no video at all) - the silence base track must cover every segment being
+        // merged, or the tail would be dropped.
+        if (stepResults.Length > 0)
+        {
+            var maxEndSeconds = (float)stepResults.Max(r => r.Paragraph.EndTime.TotalSeconds);
+            durationInSeconds = Math.Max(durationInSeconds, maxEndSeconds);
         }
 
         var silenceProcess = FfmpegGenerator.GenerateEmptyAudio(silenceFileName, durationInSeconds);
