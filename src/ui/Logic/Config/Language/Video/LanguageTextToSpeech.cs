@@ -16,6 +16,16 @@ public class LanguageTextToSpeech
     public string GenerateSpeechFromText { get; set; }
     public string TestVoice { get; set; }
     public string AddAudioToVideoFile { get; set; }
+    public string EngineAndVoice { get; set; }
+    public string Output { get; set; }
+    public string XLinesFromY { get; set; }
+    public string XLines { get; set; }
+    public string VideoX { get; set; }
+    public string XVoices { get; set; }
+    public string ReviewAudioSegmentsHint { get; set; }
+    public string AddAudioToVideoFileHint { get; set; }
+    public string XElapsedYLeft { get; set; }
+    public string XElapsed { get; set; }
     public string VoiceSettings { get; set; }
     public string VoiceSampleText { get; set; }
     public string RefreshVoices { get; set; }
@@ -106,6 +116,16 @@ public class LanguageTextToSpeech
         GenerateSpeechFromText = "Generate speech from text";
         TestVoice = "Test voice";
         AddAudioToVideoFile = "Add audio to video file";
+        EngineAndVoice = "Engine & voice";
+        Output = "Output";
+        XLinesFromY = "{0} lines from {1}";
+        XLines = "{0} lines";
+        VideoX = "Video: {0}";
+        XVoices = "{0} voices";
+        ReviewAudioSegmentsHint = "Check each line before the final mix";
+        AddAudioToVideoFileHint = "Mux the result into a new video file";
+        XElapsedYLeft = "{0} elapsed \u00b7 ~{1} left";
+        XElapsed = "{0} elapsed";
         VoiceSettings = "TTS - Voice settings";
         VoiceSampleText = "Voice sample text";
         RefreshVoices = "Refresh voices";

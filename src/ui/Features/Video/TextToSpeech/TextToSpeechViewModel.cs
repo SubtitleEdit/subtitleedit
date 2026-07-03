@@ -73,6 +73,14 @@ public partial class TextToSpeechViewModel : ObservableObject
     [ObservableProperty] private bool _hasModel;
     [ObservableProperty] private int _voiceCount;
     [ObservableProperty] private string _voiceCountInfo;
+    [ObservableProperty] private bool _isVoiceCountVisible;
+    [ObservableProperty] private string _linesInfo = string.Empty;
+    [ObservableProperty] private bool _hasVideoFile;
+    [ObservableProperty] private string _videoInfo = string.Empty;
+    [ObservableProperty] private string _engineDescription = string.Empty;
+    [ObservableProperty] private bool _hasEngineDescription;
+    [ObservableProperty] private string _progressPercentText = string.Empty;
+    [ObservableProperty] private string _progressEtaText = string.Empty;
     [ObservableProperty] private bool _isVoiceTestEnabled;
     [ObservableProperty] private bool _isVoiceComboEnabled;
     [ObservableProperty] private bool _doReviewAudioClips;
@@ -788,6 +796,18 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         _videoFileName = videoFileName;
         _wavePeakData = wavePeakData;
+
+        // Context line under the title: what is about to be spoken, and whether a video is
+        // loaded (the add-to-video option depends on it).
+        var subtitleName = Path.GetFileName(subtitle.FileName ?? string.Empty);
+        LinesInfo = string.IsNullOrEmpty(subtitleName)
+            ? string.Format(Se.Language.Video.TextToSpeech.XLines, subtitle.Paragraphs.Count)
+            : string.Format(Se.Language.Video.TextToSpeech.XLinesFromY, subtitle.Paragraphs.Count, subtitleName);
+        HasVideoFile = !string.IsNullOrEmpty(videoFileName);
+        VideoInfo = HasVideoFile
+            ? string.Format(Se.Language.Video.TextToSpeech.VideoX, CapFileName(Path.GetFileName(videoFileName), 40))
+            : string.Empty;
+
         _cancellationTokenSource = new CancellationTokenSource();
         _cancellationToken = _cancellationTokenSource.Token;
         IsGenerating = false;
@@ -1040,6 +1060,9 @@ public partial class TextToSpeechViewModel : ObservableObject
         _cancellationToken = _cancellationTokenSource.Token;
         ProgressValue = 0;
         ProgressText = string.Empty;
+        ProgressPercentText = string.Empty;
+        ProgressEtaText = string.Empty;
+        _generateStopwatch.Restart();
         IsGenerating = true;
         IsNotGenerating = false;
         ProgressOpacity = 1.0;
@@ -1139,6 +1162,9 @@ public partial class TextToSpeechViewModel : ObservableObject
     /// </summary>
     private void ResetGeneratingUiState()
     {
+        _generateStopwatch.Stop();
+        ProgressPercentText = string.Empty;
+        ProgressEtaText = string.Empty;
         DoneOrCancelText = Se.Language.General.Done;
         IsGenerating = false;
         IsNotGenerating = true;
@@ -1492,7 +1518,8 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
         SelectedVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice) ?? Voices.FirstOrDefault();
         VoiceCount = Voices.Count;
-        VoiceCountInfo = Voices.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        VoiceCountInfo = string.Format(Se.Language.Video.TextToSpeech.XVoices, Voices.Count);
+        IsVoiceCountVisible = Voices.Count > 0;
     }
 
     [RelayCommand]
@@ -2802,6 +2829,82 @@ public partial class TextToSpeechViewModel : ObservableObject
         return null;
     }
 
+    // The compact cloud-engine descriptions ("pay/fast/good") read like debug output - expand
+    // them into words; free-form descriptions (the CrispASR engines) are shown as-is. The
+    // source strings are hardcoded English in the engines, so this map matches that.
+    // Middle-truncates a file name so the tail (and thus the extension) stays visible.
+    private static string CapFileName(string fileName, int maxLength)
+    {
+        if (fileName.Length <= maxLength)
+        {
+            return fileName;
+        }
+
+        const int keepEnd = 12;
+        return string.Concat(fileName.AsSpan(0, maxLength - keepEnd - 1), "…", fileName.AsSpan(fileName.Length - keepEnd));
+    }
+
+    private static string PrettifyEngineDescription(string? description)
+    {
+        if (string.IsNullOrWhiteSpace(description))
+        {
+            return string.Empty;
+        }
+
+        var parts = description.Split('/');
+        if (parts.Length < 2 || parts.Any(x => x.Contains(' ')))
+        {
+            return description;
+        }
+
+        var words = parts.Select(x => x.Trim().ToLowerInvariant() switch
+        {
+            "free" => "Free",
+            "pay" => "Paid",
+            "fast" => "Fast",
+            "slow" => "Slow",
+            "good" => "good quality",
+            "ok" => "ok quality",
+            "multilingual" => "multilingual",
+            _ => x.Trim(),
+        });
+        return string.Join(" \u00b7 ", words);
+    }
+
+    // Elapsed/remaining for the progress row. Driven by ProgressValue changes (always raised on
+    // the UI thread by the pipeline); the estimate is a simple rate projection and only shows
+    // once enough progress exists for it not to jump around.
+    private readonly Stopwatch _generateStopwatch = new();
+
+    partial void OnProgressValueChanged(double value)
+    {
+        if (!IsGenerating || value <= 0)
+        {
+            return;
+        }
+
+        ProgressPercentText = $"{Math.Clamp((int)Math.Round(value), 0, 100)}%";
+
+        var elapsed = _generateStopwatch.Elapsed;
+        if (elapsed.TotalSeconds < 3)
+        {
+            return;
+        }
+
+        if (value >= 3 && value <= 100)
+        {
+            var remaining = TimeSpan.FromSeconds(elapsed.TotalSeconds * (100 - value) / value);
+            ProgressEtaText = string.Format(Se.Language.Video.TextToSpeech.XElapsedYLeft, FormatProgressDuration(elapsed), FormatProgressDuration(remaining));
+        }
+        else
+        {
+            ProgressEtaText = string.Format(Se.Language.Video.TextToSpeech.XElapsed, FormatProgressDuration(elapsed));
+        }
+    }
+
+    private static string FormatProgressDuration(TimeSpan t) =>
+        t.TotalHours >= 1 ? $"{(int)t.TotalHours}:{t.Minutes:00}:{t.Seconds:00}" : $"{t.Minutes}:{t.Seconds:00}";
+
     internal void SelectedEngineChanged(object? sender, SelectionChangedEventArgs e)
     {
         var engine = SelectedEngine;
@@ -2834,6 +2937,8 @@ public partial class TextToSpeechViewModel : ObservableObject
             HasModel = engine.HasModel;
             HasKeyFile = engine.HasKeyFile;
             IsEdgeTtsEngine = engine is EdgeTts;
+            EngineDescription = PrettifyEngineDescription(engine.Description);
+            HasEngineDescription = !string.IsNullOrEmpty(EngineDescription);
 
             Voice[] voices;
             try
@@ -2856,7 +2961,8 @@ public partial class TextToSpeechViewModel : ObservableObject
             VoiceCount = Voices.Count;
             // The label binds VoiceCountInfo; only VoiceCount was ever written, so the voice
             // count next to the combo stayed permanently blank.
-            VoiceCountInfo = Voices.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            VoiceCountInfo = string.Format(Se.Language.Video.TextToSpeech.XVoices, Voices.Count);
+            IsVoiceCountVisible = Voices.Count > 0;
 
             var lastVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice);
             if (lastVoice == null)
