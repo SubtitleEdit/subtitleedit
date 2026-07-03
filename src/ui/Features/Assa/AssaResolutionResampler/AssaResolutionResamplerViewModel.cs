@@ -89,7 +89,7 @@ public partial class AssaResolutionResamplerViewModel : ObservableObject
             return;
         }
 
-        var files = await Window.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        var files = await NativePickers.OpenFilePickerAsync(Window, new FilePickerOpenOptions
         {
             Title = Se.Language.General.OpenVideoFile,
             AllowMultiple = false,
@@ -120,7 +120,7 @@ public partial class AssaResolutionResamplerViewModel : ObservableObject
             return;
         }
 
-        var files = await Window.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        var files = await NativePickers.OpenFilePickerAsync(Window, new FilePickerOpenOptions
         {
             Title = Se.Language.General.OpenVideoFile,
             AllowMultiple = false,
