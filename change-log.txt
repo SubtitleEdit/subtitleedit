@@ -1,6 +1,26 @@
 
 Subtitle Edit Changelog
 
+v5.1.0-beta6 (3rd of July 2026)
+
+* Add SE4's "Column" list view shortcuts (delete text, delete text and shift up, insert text, paste, text up/down) - thx SiaL8er
+* Text to speech: fix stuck/silent generation - failures now show an error, cancel stops the running ffmpeg, and rate-limited ElevenLabs requests retry with backoff - thx cvrle77
+* Text to speech: fix export/import round-trip (import file filter, portable relative paths, missing-file handling) - thx cvrle77
+* Text to speech: large bug-fix pass across the engines and the review window (60+ fixes - voice-list refreshes no longer wipe cached voices, Azure/Piper voice refresh, Murf audio corruption, per-actor cast fixes, review playback/regenerate state fixes, the voice instruction is now applied when generating, Qwen3 model choice is persisted, and more)
+* Text to speech: play/stop the review window's selected line with the play/pause shortcut (Space) - thx cvrle77
+* Text to speech: the review window's Regenerate now offers the engine/model download prompts
+* Accessibility: fix Alt not activating the menu bar (e.g. with NVDA), and name splitters, waveform and Settings controls - thx Shaima-Almarzooqi
+* Make tool-dialog buttons consistent and fix "Remove text for HI" undo - thx mjuhasz
+* Fix seconv OCR (Tesseract/PaddleOCR) garbling non-ASCII output on Windows - thx Gorkycreator
+* Update Bulgarian translation - thx jekovcar
+* Update Czech translation - thx Matěj
+* Update Japanese translation - thx hisui3393
+* Update Korean translation - thx 12si27
+* Update Russian translation - thx jekovcar
+* Update Turkish translation - thx bilimiyorum
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-beta5 (2nd of July 2026)
 
 * Add AI review (Tools > AI review) - proofread subtitles with a local LLM via llama.cpp or Ollama, with a before/after grid and editable prompt
