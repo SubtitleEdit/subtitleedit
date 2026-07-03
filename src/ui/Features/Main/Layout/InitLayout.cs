@@ -942,13 +942,20 @@ public static partial class InitLayout
 
     private static int MakeLayout12(MainView mainPage, MainViewModel vm)
     {
+        // Detach the live video player from the old layout BEFORE cleaning it up. Otherwise
+        // CleanupOldContent walks into it and sets Content = null / clears its inner grid, which
+        // tears down the native mpv/VLC render host on the UI thread while the file is still open -
+        // freezing the UI. Layouts 1-11 avoid this by recreating the player via MakeLayoutVideoPlayer
+        // (which CloseFile()s the old one first); layout 12 reuses the live control, so it must be
+        // pulled out of the tree first.
+        vm.VideoPlayerControl?.RemoveControlFromParent();
+
         CleanupOldContent(vm.ContentGrid);
         vm.ContentGrid.Children.Add(InitListViewAndEditBox.MakeLayoutListViewAndEditBox(mainPage, vm));
 
-        // hide video player
+        // keep the video player alive but hidden so switching back to a video layout is instant
         if (vm.VideoPlayerControl != null)
         {
-            vm.VideoPlayerControl.RemoveControlFromParent();
             vm.ContentGrid.Children.Add(vm.VideoPlayerControl);
             vm.VideoPlayerControl.IsVisible = false;
         }
