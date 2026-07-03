@@ -292,7 +292,9 @@ public class ElevenLabs : ITtsEngine
         var ok = await _ttsDownloadService.DownloadElevenLabsVoiceSpeak(text, elevenLabVoice, model, Se.Settings.Video.TextToSpeech.ElevenLabsApiKey, "en", ms, null, cancellationToken);
         if (!ok)
         {
-            Se.WriteToolsLog($"ElevenLabs: request failed (voice={elevenLabVoice.Voice})");
+            // Forced: a failed API call must land in the tools log even when the setting is off,
+            // so a bug report shows which segments failed and why (#12093).
+            Se.WriteToolsLog($"ElevenLabs: request failed (voice={elevenLabVoice.Voice}, textLen={text.Length}) - see error-log.txt for the HTTP status/response", true);
             return new TtsResult { Text = text, FileName = string.Empty, Error = true };
         }
 

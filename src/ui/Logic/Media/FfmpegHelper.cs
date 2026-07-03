@@ -110,6 +110,31 @@ public static class FfmpegHelper
 
     private static int? GetMajorVersion(string ffmpegPath)
     {
+        return ParseMajorVersion(ProbeVersionOutput(ffmpegPath));
+    }
+
+    /// <summary>
+    /// Returns the first line of "&lt;ffmpeg&gt; -version" (e.g. "ffmpeg version 7.1.1-full_build ..."),
+    /// or an empty string when the probe fails. Intended for diagnostics logging, so a bug report's
+    /// tools log shows which ffmpeg build actually ran (#12093).
+    /// </summary>
+    public static string GetVersionBanner(string ffmpegPath)
+    {
+        var output = ProbeVersionOutput(ffmpegPath);
+        foreach (var line in output.Split('\n'))
+        {
+            var trimmed = line.Trim();
+            if (trimmed.Length > 0)
+            {
+                return trimmed;
+            }
+        }
+
+        return string.Empty;
+    }
+
+    private static string ProbeVersionOutput(string ffmpegPath)
+    {
         try
         {
             var psi = new ProcessStartInfo
@@ -125,23 +150,22 @@ public static class FfmpegHelper
             using var process = Process.Start(psi);
             if (process == null)
             {
-                return null;
+                return string.Empty;
             }
 
             // "-version" prints a short banner and exits immediately; 4 s is generous.
             if (!process.WaitForExit(4000))
             {
                 try { process.Kill(entireProcessTree: true); } catch { /* best-effort */ }
-                return null;
+                return string.Empty;
             }
 
-            var combined = process.StandardOutput.ReadToEnd() + "\n" + process.StandardError.ReadToEnd();
-            return ParseMajorVersion(combined);
+            return process.StandardOutput.ReadToEnd() + "\n" + process.StandardError.ReadToEnd();
         }
         catch (Exception ex)
         {
             Se.LogError(ex, $"FfmpegHelper: failed to probe ffmpeg version at '{ffmpegPath}'");
-            return null;
+            return string.Empty;
         }
     }
 
