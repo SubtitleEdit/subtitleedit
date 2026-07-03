@@ -15,11 +15,16 @@
 #
 # This is the one command to run after every new stable release, per
 # https://github.com/SubtitleEdit/subtitleedit/issues/11800 (niksedk asked
-# for the per-release manifest refresh to not be a lot of manual work). CI
-# calls it with no argument in .github/workflows/build-ui.yml
-# (regenerate-flathub-nuget-sources), so nuget-sources.json is regenerated
-# and the git-source manifest is build-tested on every run, not just when
-# someone remembers to do it locally.
+# for the per-release manifest refresh to not be a lot of manual work).
+#
+# CI does NOT call this script: regenerate-flathub-nuget-sources in
+# .github/workflows/build-ui.yml checks out the pinned commit directly in its
+# own (disposable) workspace instead of via a worktree, matching how
+# regenerate-flatpak-nuget-sources already works. The git-worktree approach
+# here works fine for local/manual use, but hit a nested-sandbox path
+# resolution issue when tried in that container-based CI job (see the CI
+# job's own comment for details) - not worth chasing further given a local
+# checkout sidesteps it entirely.
 #
 # What this script does NOT do: bump the metainfo <release> entry (run
 # ../update-metainfo-version.sh separately, same as the CI manifest), submit

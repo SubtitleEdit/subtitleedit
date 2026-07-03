@@ -150,8 +150,8 @@ jobs:
       - uses: actions/checkout@v5
         with:
           # Full history so the commit pinned in the flathub manifest (which can be
-          # older than this checkout's HEAD) is guaranteed fetchable for the worktree
-          # checkout below.
+          # older than this checkout's HEAD) is guaranteed fetchable by the checkout
+          # step below.
           fetch-depth: 0
 
       - name: Set up .NET SDK
@@ -182,8 +182,34 @@ jobs:
             org.freedesktop.Sdk.Extension.dotnet10//24.08
           flatpak --user update -y --noninteractive
 
+      # Checks out the pinned commit directly in this checkout (safe: this job's
+      # workspace is disposable, unlike a developer's local branch) rather than via
+      # prepare-flathub-release.sh's git-worktree approach. The worktree path lives
+      # under a fresh mktemp directory, and the preferred restore path in
+      # generate-nuget-sources.sh shells out to flatpak-dotnet-generator.py, which
+      # itself runs "dotnet restore" inside a second, nested "flatpak run
+      # --filesystem=host" sandbox; that nested sandbox failed to resolve the
+      # project file at the worktree's path when this job already runs inside its
+      # own container (MSB1009: "Project file does not exist", for a file that
+      # genuinely exists at that commit). Operating directly on the primary
+      # checkout matches the already-proven regenerate-flatpak-nuget-sources job
+      # exactly, so it isn't exposed to that nested-sandbox path resolution at all.
+      - name: Check out the commit pinned in the flathub manifest
+        run: |
+          MANIFEST=installer/flatpak/flathub/dk.nikse.subtitleedit.yaml
+          COMMIT=$(grep -A2 "url: https://github.com/SubtitleEdit/subtitleedit.git" "$MANIFEST" | sed -n '3p' | sed -E 's/.*commit:[[:space:]]*//')
+          if [ -z "$COMMIT" ]; then
+            echo "::error::Could not find the pinned commit in $MANIFEST"
+            exit 1
+          fi
+          echo "Pinned commit: $COMMIT"
+          git checkout --quiet --detach "$COMMIT"
+
       - name: Regenerate nuget-sources.json for the pinned commit
-        run: bash installer/flatpak/flathub/prepare-flathub-release.sh
+        run: |
+          bash installer/flatpak/generate-nuget-sources.sh \
+            src/ui/UI.csproj \
+            installer/flatpak/flathub/nuget-sources.json
 
       - name: Verify nuget-sources.json is consistent with the pinned commit
         run: |

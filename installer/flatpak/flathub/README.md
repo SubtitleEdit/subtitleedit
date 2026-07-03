@@ -23,10 +23,15 @@ they do not need to be copied here.
 job pair, the same pattern already used for the CI manifest's own
 `regenerate-flatpak-nuget-sources` → `build-linux-flatpak` pair. On every dispatch it:
 
-1. Reads whatever tag/commit is currently pinned in `dk.nikse.subtitleedit.yaml`.
-2. Regenerates `nuget-sources.json` for that exact commit (`prepare-flathub-release.sh`
-   with no argument) and uploads it as the `flathub-nuget-sources` artifact.
-3. Builds the actual git-source manifest, the one that would be submitted to Flathub, in the
+1. Reads whatever tag/commit is currently pinned in `dk.nikse.subtitleedit.yaml`, checks that
+   commit out directly (this job's own workspace is disposable, so a detached checkout is
+   safe), and regenerates `nuget-sources.json` for it, uploaded as the `flathub-nuget-sources`
+   artifact. This checks out in place rather than using `prepare-flathub-release.sh`'s
+   git-worktree approach: that approach is fine for local/manual use, but the preferred NuGet
+   restore path shells out to a second, nested Flatpak sandbox, which failed to resolve the
+   worktree's path when this job already runs inside its own container. Checking out directly
+   sidesteps that instead of chasing it further.
+2. Builds the actual git-source manifest, the one that would be submitted to Flathub, in the
    same `flathub-infra` container Flathub itself uses, for both `x86_64` and `aarch64`
    (native ARM64 runner, not emulation), and uploads each as `flathub-bundle-x86_64` /
    `flathub-bundle-aarch64`.
