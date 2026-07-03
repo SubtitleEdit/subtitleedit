@@ -1,6 +1,16 @@
 
 Subtitle Edit Changelog
 
+v5.1.0-beta8 (3rd of July 2026)
+
+* Fix UI freeze when switching to layout 12 (no video pane) with a video loaded
+* Text to speech: review window - Space no longer clicks OK on key release either (Avalonia raises a focused button's click on Space key-up, independent of the tunnel-stage fix in beta7) - thx cvrle77
+* Text to speech: fix the Import/Export/merge-output file dialogs and the TTS window dropping behind the main window on Windows - thx cvrle77
+* Text to speech: Import -> OK now shows progress (bar, status text, Cancel) while merging instead of looking idle - thx cvrle77
+* Text to speech: Export now writes audio clips into a "wav" subfolder instead of next to SubtitleEditTts.json; imported sessions no longer use the export folder as scratch space - thx cvrle77
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-beta7 (3rd of July 2026)
 
 * Add subtitle grid text fit setting: clip / wrap / ellipsis (Settings -> Appearance) - thx muaz978
