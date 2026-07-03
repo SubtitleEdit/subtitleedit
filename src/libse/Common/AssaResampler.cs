@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -7,6 +8,16 @@ namespace Nikse.SubtitleEdit.Core.Common
 {
     public static class AssaResampler
     {
+        // FixDrawing runs once per dialogue line during resampling, but its tag/endTag pairs
+        // come from a small fixed vocabulary (\iclip(, \clip(, the \p drawing markers) - cache
+        // the compiled regex per pattern instead of rebuilding it for every line.
+        private static readonly ConcurrentDictionary<string, Regex> RegexCache = new ConcurrentDictionary<string, Regex>();
+
+        private static Regex GetCachedRegex(string pattern)
+        {
+            return RegexCache.GetOrAdd(pattern, p => new Regex(p));
+        }
+
         public static int Resample(decimal source, decimal target, int v)
         {
             var factor = target / source;
@@ -71,8 +82,8 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static string FixDrawing(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input, string tag, string endTag, StringBuilder errors)
         {
-            var regexStart = new Regex(tag);
-            var regexEnd = new Regex(endTag);
+            var regexStart = GetCachedRegex(tag);
+            var regexEnd = GetCachedRegex(endTag);
             var s = input;
             var match = regexStart.Match(s);
             var sb = new StringBuilder();
