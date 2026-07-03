@@ -23,6 +23,10 @@ public static class Se4ShortcutsImporter
         public int SkippedEmpty { get; set; }
     }
 
+    // Exposed for tests: every mapped SE 5 command must stay registered in the shortcut
+    // system (ShortcutsMain), otherwise imported SE 4 shortcuts are stored but never fire (#12088).
+    internal static IReadOnlyDictionary<string, string> Se4ToSe5CommandMap => Map;
+
     // SE 4 setting property name → SE 5 MainViewModel command name.
     // Built by walking the <Shortcuts> element of SE 4's Settings.xml and
     // matching each name to its closest SE 5 equivalent. Entries without a
@@ -212,7 +216,9 @@ public static class Se4ShortcutsImporter
         // corrected spelling in case it is ever fixed upstream.
         ["MainTextBoxUnbrekNoSpace"] = nameof(MainViewModel.UnbreakNoSpaceCommand),
         ["MainTextBoxUnbreakNoSpace"] = nameof(MainViewModel.UnbreakNoSpaceCommand),
-        ["MainTextBoxInsertUnicodeSymbol"] = nameof(MainViewModel.TextBoxInsertUnicodeSymbolCommand),
+        // MainTextBoxInsertUnicodeSymbol has no SE 5 equivalent: TextBoxInsertUnicodeSymbolCommand
+        // needs the symbol as its command parameter, so a bare key binding would no-op. Left
+        // unmapped so the import reports it as skipped instead of importing a dead shortcut.
 
         // Create / adjust
         ["MainCreateInsertSubAtVideoPos"] = nameof(MainViewModel.WaveformInsertAtPositionAndFocusTextBoxCommand),

@@ -161,6 +161,14 @@ public class LanguageSettingsShortcuts
     public string SubtitleGridCut { get; set; }
     public string SubtitleGridCopy { get; set; }
     public string SubtitleGridPaste { get; set; }
+    public string ListViewColumnDeleteText { get; set; }
+    public string ListViewColumnDeleteTextAndShiftUp { get; set; }
+    public string ListViewColumnInsertText { get; set; }
+    public string ListViewColumnPaste { get; set; }
+    public string ListViewColumnTextUp { get; set; }
+    public string ListViewColumnTextDown { get; set; }
+    public string AutoTranslateSelectedLines { get; set; }
+    public string SetAssaResolution { get; set; }
     public string SetShortcutForX { get; set; }
     public string CommandFileNewKeepVideo { get; set; }
     public string FileOpenOriginal { get; set; }
@@ -466,6 +474,14 @@ public class LanguageSettingsShortcuts
         SubtitleGridCut = "Subtitle grid: Cut";
         SubtitleGridCopy = "Subtitle grid: Copy";
         SubtitleGridPaste = "Subtitle grid: Paste";
+        ListViewColumnDeleteText = "Column, delete text";
+        ListViewColumnDeleteTextAndShiftUp = "Column, delete text and shift up";
+        ListViewColumnInsertText = "Column, insert text";
+        ListViewColumnPaste = "Column, paste";
+        ListViewColumnTextUp = "Column, text up";
+        ListViewColumnTextDown = "Column, text down";
+        AutoTranslateSelectedLines = "Auto-translate selected lines...";
+        SetAssaResolution = "Set ASSA resolution (PlayResX/PlayResY)";
         SetShortcutForX = "Set shortcut for \"{0}\"";
         CommandFileNewKeepVideo = "New (keep video)";
         FileOpenOriginal = "Open original";
