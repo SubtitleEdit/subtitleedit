@@ -16321,6 +16321,14 @@ public partial class MainViewModel :
     // 14-byte invalid file produced when these formats went through the text save path (#11910).
     private async Task<bool> SaveBinarySubtitle(IBinaryPersistableSubtitle binaryFormat, bool isAutoSave)
     {
+        // This is the save-to-existing-file path; without a file name there is nothing to write
+        // to (callers route to Save As first). The local also proves non-null to the compiler.
+        var fileName = _subtitleFileName;
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return false;
+        }
+
         try
         {
             // EBU STL needs a UI helper to resolve its header; reuse the same one as File > Export.
@@ -16330,17 +16338,17 @@ public partial class MainViewModel :
             }
 
             using var ms = new MemoryStream();
-            if (!binaryFormat.Save(_subtitleFileName, ms, GetUpdateSubtitle(true), batchMode: true))
+            if (!binaryFormat.Save(fileName, ms, GetUpdateSubtitle(true), batchMode: true))
             {
                 if (!isAutoSave)
                 {
-                    ShowStatus(string.Format(Se.Language.General.CouldNotSaveFileXErrorY, _subtitleFileName, string.Empty));
+                    ShowStatus(string.Format(Se.Language.General.CouldNotSaveFileXErrorY, fileName, string.Empty));
                 }
 
                 return false;
             }
 
-            await File.WriteAllBytesAsync(_subtitleFileName, ms.ToArray());
+            await File.WriteAllBytesAsync(fileName, ms.ToArray());
         }
         catch (Exception ex)
         {

@@ -51,10 +51,10 @@ public class AiReviewWindow : Window
             .WithAccessibleName(Se.Language.General.Url);
         var textBoxOpenAiModel = UiUtil.MakeTextBox(150, vm, nameof(vm.OpenAiCompatibleModel))
             .WithAccessibleName(Se.Language.General.Model);
-        textBoxOpenAiModel.Watermark = Se.Language.General.Model;
+        textBoxOpenAiModel.PlaceholderText = Se.Language.General.Model;
         var textBoxOpenAiApiKey = UiUtil.MakeTextBox(130, vm, nameof(vm.OpenAiCompatibleApiKey))
             .WithAccessibleName(Se.Language.General.ApiKey);
-        textBoxOpenAiApiKey.Watermark = Se.Language.General.ApiKey;
+        textBoxOpenAiApiKey.PlaceholderText = Se.Language.General.ApiKey;
         textBoxOpenAiApiKey.PasswordChar = '\u25cf';
         var panelOpenAiCompatible = new StackPanel
         {
