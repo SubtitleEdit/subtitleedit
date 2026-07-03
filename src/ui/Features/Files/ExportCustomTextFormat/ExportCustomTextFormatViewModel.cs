@@ -117,7 +117,7 @@ public partial class ExportCustomTextFormatViewModel : ObservableObject
             Name = string.Empty,
             Extension = "txt",
             FormatHeader = string.Empty,
-            FormatParagraph = "{start} - {{end}\r\n{text}\r\n\r\n",
+            FormatParagraph = "{start} - {end}\r\n{text}\r\n\r\n",
             FormatFooter = string.Empty,
             FormatTimeCode = "hh:mm:ss,zzz",
             FormatNewLine = "{newline}",

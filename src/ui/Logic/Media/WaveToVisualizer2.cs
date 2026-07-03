@@ -1075,7 +1075,7 @@ public class WavePeakGenerator2 : IDisposable
 
             var hash = MovieHasher.GenerateHash(videoFileName);
 
-            var files = Directory.GetFiles(dir, $"{hash}_*.spectrogram")
+            var files = Directory.GetFiles(dir, $"{hash}-*.spectrogram")
                 .OrderBy(p => p)
                 .ToList();
             if (files.Count > 0 && trackNumber < 0)

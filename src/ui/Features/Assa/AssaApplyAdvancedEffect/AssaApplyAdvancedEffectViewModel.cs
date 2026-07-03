@@ -94,8 +94,8 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
         _mediaInfo = mediaInfo;
         _audioVisualizer = audioVisualizer;
         _selectedSubtitleLineIds = new HashSet<Guid>(selectedParagraphs.Select(x => x.Id));
-        _firstSelectedIndex = _subtitleLines.Count > 0
-            ? Paragraphs.IndexOf(Paragraphs.First(p => p.Subtitle.Id == _subtitleLines[0].Id))
+        _firstSelectedIndex = _selectedSubtitleLines.Count > 0
+            ? Paragraphs.IndexOf(Paragraphs.First(p => p.Subtitle.Id == _selectedSubtitleLines[0].Id))
             : 0;
 
         if (audioVisualizer == null || audioVisualizer.WavePeaks == null || audioVisualizer.WavePeaks.Peaks.Count == 0)

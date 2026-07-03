@@ -126,7 +126,7 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
             }
 
             var subtitle = new Subtitle();
-            int firstSelectedIndex = Paragraphs.IndexOf(Paragraphs.First(p => p.Subtitle.Id == _subtitleLines[0].Id));
+            int firstSelectedIndex = Paragraphs.IndexOf(Paragraphs.First(p => p.Subtitle.Id == _selectedSubtitleLines[0].Id));
             var idx = 0;
             foreach (var item in Paragraphs)
             {
@@ -236,6 +236,7 @@ public partial class AssaApplyCustomOverrideTagsViewModel : ObservableObject
         if (SelectedParagraphIndex <= 0)
         {
             await PlayAndBack(VideoPlayerControl, 3000);
+            return;
         }
 
         var selected = Paragraphs[SelectedParagraphIndex];

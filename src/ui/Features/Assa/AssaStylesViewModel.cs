@@ -592,7 +592,7 @@ public partial class AssaStylesViewModel : ObservableObject
     [RelayCommand]
     private void StorageDuplicate()
     {
-        var selectedItems = FileStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
+        var selectedItems = StorageStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
         if (Window == null || selectedItems.Count == 0)
         {
             return;
@@ -1312,7 +1312,7 @@ public partial class AssaStylesViewModel : ObservableObject
 
     internal void StoreContextMenuOpening(object? sender, EventArgs e)
     {
-        IsDeleteAllVisible = FileStyles.Count > 0;
-        IsDeleteVisible = SelectedFileStyle != null;
+        IsDeleteAllVisible = StorageStyles.Count > 0;
+        IsDeleteVisible = SelectedStorageStyle != null;
     }
 }

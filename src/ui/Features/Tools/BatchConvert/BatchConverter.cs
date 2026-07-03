@@ -1836,13 +1836,21 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                 }
             }
         }
+        else
+        {
+            // If not splitting, use original subtitles for rebalancing
+            foreach (var s in subtitles)
+            {
+                subtitlesFixed.Add(new SubtitleLineViewModel(s));
+            }
+        }
 
         if (c.RebalanceLongLines)
         {
             for (var index = 0; index < subtitlesFixed.Count; index++)
             {
                 var item = subtitlesFixed[index];
-                var rebalancedText = item.Text = Utilities.AutoBreakLine(item.Text, c.SingleLineMaxLength, Se.Settings.General.UnbreakLinesShorterThan, language);
+                var rebalancedText = Utilities.AutoBreakLine(item.Text, c.SingleLineMaxLength, Se.Settings.General.UnbreakLinesShorterThan, language);
                 if (rebalancedText != item.Text)
                 {
                     item.Text = rebalancedText;

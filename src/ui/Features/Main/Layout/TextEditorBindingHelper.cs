@@ -10,6 +10,11 @@ namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
 public class TextEditorBindingHelper
 {
+    private static readonly RoutedEvent<TextChangedEventArgs> TextChangedEvent =
+        RoutedEvent.Register<TextEditor, TextChangedEventArgs>("TextChanged", RoutingStrategies.Bubble);
+    private static readonly RoutedEvent<TextChangedEventArgs> OriginalTextChangedEvent =
+        RoutedEvent.Register<TextEditor, TextChangedEventArgs>("OriginalTextChanged", RoutingStrategies.Bubble);
+
     private static readonly Thickness DefaultBorderThickness = new(1);
     private static readonly Thickness FocusedBorderThickness = new(2);
     private static readonly Thickness DefaultBorderPadding = new(1);
@@ -150,9 +155,7 @@ public class TextEditorBindingHelper
     private void OnTextEditorTextChanged(object? sender, System.EventArgs e)
     {
         UpdateViewModelFromEditor();
-        var routedEvent = RoutedEvent.Register<TextEditor, TextChangedEventArgs>(
-            _isOriginal ? "OriginalTextChanged" : "TextChanged",
-            RoutingStrategies.Bubble);
+        var routedEvent = _isOriginal ? OriginalTextChangedEvent : TextChangedEvent;
         _vm.SubtitleTextChanged(sender, new TextChangedEventArgs(routedEvent));
     }
 

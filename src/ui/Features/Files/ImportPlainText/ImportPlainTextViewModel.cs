@@ -337,7 +337,7 @@ public partial class ImportPlainTextViewModel : ObservableObject
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.General.ChooseImageFiles, Se.Language.General.TextFiles, ".txt", Se.Language.General.TextFiles);
+        var fileName = await _fileHelper.PickOpenFile(Window, "Choose text file", Se.Language.General.TextFiles, ".txt", Se.Language.General.TextFiles);
         if (string.IsNullOrEmpty(fileName))
         {
             return;
@@ -356,7 +356,7 @@ public partial class ImportPlainTextViewModel : ObservableObject
             return;
         }
 
-        var fileNames = await _fileHelper.PickOpenFiles(Window, Se.Language.General.ChooseImageFiles, Se.Language.General.Images, TextFilePatterns, string.Empty, new List<string>());
+        var fileNames = await _fileHelper.PickOpenFiles(Window, "Choose text files", Se.Language.General.TextFiles, TextFilePatterns, string.Empty, new List<string>());
         if (fileNames.Length == 0)
         {
             return;

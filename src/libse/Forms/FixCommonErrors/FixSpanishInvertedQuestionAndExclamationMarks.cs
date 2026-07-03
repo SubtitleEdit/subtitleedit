@@ -107,13 +107,16 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 j--;
                             }
 
+                            var newLineDash = Environment.NewLine + "-";
+                            var newLineSpaceDash = Environment.NewLine + " -";
+                            var newLineItalicDash = Environment.NewLine + "<i>-";
                             while (j > startIndex &&
                                    (p.Text[j] != '.' || IsSpanishAbbreviation(p.Text, j, callbacks)) &&
                                    p.Text[j] != '!' &&
                                    p.Text[j] != '?' &&
-                                   !(j > 3 && p.Text.Substring(j - 3, 3) == Environment.NewLine + "-") &&
-                                   !(j > 4 && p.Text.Substring(j - 4, 4) == Environment.NewLine + " -") &&
-                                   !(j > 6 && p.Text.Substring(j - 6, 6) == Environment.NewLine + "<i>-"))
+                                   !(j > newLineDash.Length && p.Text.Substring(j - newLineDash.Length, newLineDash.Length) == newLineDash) &&
+                                   !(j > newLineSpaceDash.Length && p.Text.Substring(j - newLineSpaceDash.Length, newLineSpaceDash.Length) == newLineSpaceDash) &&
+                                   !(j > newLineItalicDash.Length && p.Text.Substring(j - newLineItalicDash.Length, newLineItalicDash.Length) == newLineItalicDash))
                             {
                                 j--;
                             }
@@ -122,13 +125,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             {
                                 j++;
                             }
-                            if (j + 3 < p.Text.Length && p.Text.Substring(j + 1, 2) == Environment.NewLine)
+                            if (j + Environment.NewLine.Length + 1 < p.Text.Length && p.Text.Substring(j + 1, Environment.NewLine.Length) == Environment.NewLine)
                             {
-                                j += 3;
+                                j += Environment.NewLine.Length + 1;
                             }
-                            else if (j + 2 < p.Text.Length && p.Text.Substring(j, 2) == Environment.NewLine)
+                            else if (j + Environment.NewLine.Length < p.Text.Length && p.Text.Substring(j, Environment.NewLine.Length) == Environment.NewLine)
                             {
-                                j += 2;
+                                j += Environment.NewLine.Length;
                             }
                             if (j >= startIndex && markIndex - j + 1 > 0)
                             {

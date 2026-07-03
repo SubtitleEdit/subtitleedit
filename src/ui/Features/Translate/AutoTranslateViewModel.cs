@@ -1424,7 +1424,7 @@ public partial class AutoTranslateViewModel : ObservableObject
                 }
             });
 
-            var lastTranslatedRow = Rows.LastOrDefault(p => !string.IsNullOrEmpty(p.Text));
+            var lastTranslatedRow = Rows.LastOrDefault(p => !string.IsNullOrEmpty(p.TranslatedText));
             if (lastTranslatedRow != null)
             {
                 SelectAndScrollToRow(Rows.IndexOf(lastTranslatedRow));

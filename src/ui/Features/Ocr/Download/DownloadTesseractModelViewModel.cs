@@ -65,7 +65,7 @@ public partial class DownloadTesseractModelViewModel : ObservableObject
                 return;
             }
 
-            if (_downloadTask is { IsCompleted: true })
+            if (_downloadTask is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
                 _done = true;

@@ -218,6 +218,9 @@ public partial class DownloadLibMpvViewModel : ObservableObject
 
     internal void OnKeyDown(KeyEventArgs e)
     {
-        CommandCancel();
+        if (e.Key == Key.Escape)
+        {
+            CommandCancel();
+        }
     }
 }

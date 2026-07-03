@@ -2452,8 +2452,18 @@ public partial class OcrViewModel : ObservableObject
 
         _ = Task.Run(() =>
         {
-            ocrEngine.OcrBatch(batchImages, language, ocrProgress, cancellationToken);
-            IsOcrRunning = false;
+            try
+            {
+                ocrEngine.OcrBatch(batchImages, language, ocrProgress, cancellationToken);
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception, "Error running Google Lens OCR");
+            }
+            finally
+            {
+                IsOcrRunning = false;
+            }
         });
     }
 
@@ -2535,8 +2545,18 @@ public partial class OcrViewModel : ObservableObject
 
         _ = Task.Run(async () =>
         {
-            await ocrEngine.OcrBatch(batchImages, language, ocrProgress, cancellationToken);
-            IsOcrRunning = false;
+            try
+            {
+                await ocrEngine.OcrBatch(batchImages, language, ocrProgress, cancellationToken);
+            }
+            catch (Exception exception)
+            {
+                Se.LogError(exception, "Error running Google Lens OCR");
+            }
+            finally
+            {
+                IsOcrRunning = false;
+            }
         });
     }
 

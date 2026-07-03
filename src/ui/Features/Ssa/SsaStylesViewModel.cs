@@ -351,6 +351,17 @@ public partial class SsaStylesViewModel : ObservableObject
         }
 
         var s = Subtitle.Parse(fileName, format);
+        if (s == null || string.IsNullOrEmpty(s.Header))
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                "Nothing to import",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
         var ssaStyles = AdvancedSubStationAlpha.GetSsaStylesFromHeader(s.Header);
 
         var result = await _windowService.ShowDialogAsync<AssaStylePickerWindow, AssaStylePickerViewModel>(Window, vm =>
@@ -461,7 +472,7 @@ public partial class SsaStylesViewModel : ObservableObject
     [RelayCommand]
     private void StorageDuplicate()
     {
-        var selectedItems = FileStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
+        var selectedItems = StorageStyleGrid.SelectedItems.Cast<StyleDisplay>().ToList();
         if (Window == null || selectedItems.Count == 0)
         {
             return;

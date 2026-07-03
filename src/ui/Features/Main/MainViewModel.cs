@@ -10142,14 +10142,22 @@ public partial class MainViewModel :
         var result =
             await ShowDialogAsync<ShowHistoryWindow, ShowHistoryViewModel>(vm => { vm.Initialize(_undoRedoManager); });
 
-        if (result.OkPressed && result.SelectedHistoryItem != null)
+        if (result.OkPressed && result.SelectedHistoryItem != null && result.SelectedHistoryItem.Hash != GetFastHash())
         {
-            for (int i = 0; i <= _undoRedoManager.UndoCount; i++)
+            var undoCount = _undoRedoManager.UndoCount;
+            for (var i = 0; i < undoCount; i++)
             {
                 var undoItem = _undoRedoManager.Undo();
-                if (undoItem?.Hash == result.SelectedHistoryItem.Hash)
+                if (undoItem == null)
                 {
-                    RestoreUndoRedoState(undoItem);
+                    break;
+                }
+
+                // Restore each step so the live hash follows the stack top and Undo() keeps popping.
+                RestoreUndoRedoState(undoItem);
+
+                if (undoItem.Hash == result.SelectedHistoryItem.Hash)
+                {
                     ShowUndoStatus();
                     break;
                 }

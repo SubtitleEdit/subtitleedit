@@ -406,7 +406,7 @@ public class InitWaveform
         };
         Attached.SetIcon(buttonSetStart, IconNames.RayStart);
 
-        var settingSetEnd = GetToolbarSettingFor(SeWaveformToolbarItemType.SetStart);
+        var settingSetEnd = GetToolbarSettingFor(SeWaveformToolbarItemType.SetEnd);
         var buttonSetEnd = new NonSpaceButton
         {
             Margin = new Thickness(settingSetEnd.LeftMargin, 0, settingSetEnd.RightMargin, 0),

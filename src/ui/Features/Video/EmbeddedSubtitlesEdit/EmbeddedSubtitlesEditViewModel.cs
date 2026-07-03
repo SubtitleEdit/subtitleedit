@@ -388,8 +388,8 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         }
 
 
-        var tempFileName = Path.Combine(Path.GetTempPath(), "EmbeddedSubtitleEdit_" + Guid.NewGuid() + _subtitleFormat.Extension);
-        File.WriteAllText(tempFileName, _subtitleFormat.ToText(_currentSubtitle, string.Empty));
+        var tempFileName = Path.Combine(Path.GetTempPath(), "EmbeddedSubtitleEdit_" + Guid.NewGuid() + format.Extension);
+        File.WriteAllText(tempFileName, format.ToText(_currentSubtitle, string.Empty));
         var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_currentSubtitle);
         var isoLanguage = Iso639Dash2LanguageCode.List.FirstOrDefault(l => l.TwoLetterCode.Equals(language, StringComparison.OrdinalIgnoreCase));
         var embeddedTrack = new EmbeddedTrack

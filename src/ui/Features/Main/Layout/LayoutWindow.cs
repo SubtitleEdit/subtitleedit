@@ -82,7 +82,7 @@ public class LayoutWindow : Window
             {
                 border.RenderTransform = new ScaleTransform(1.1, 1.1);
                 border.Background = Brushes.DarkSlateGray;
-                _focusedLayout = layoutNumber;
+                _focusedLayout = layoutNumber - 1;
             };
 
             border.PointerExited += (_, __) =>

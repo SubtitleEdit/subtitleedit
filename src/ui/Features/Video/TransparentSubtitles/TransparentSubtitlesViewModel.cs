@@ -790,7 +790,7 @@ public partial class TransparentSubtitlesViewModel : ObservableObject
         if (!string.IsNullOrEmpty(fileName))
         {
             SelectedJobItem.InputVideoFileName = fileName;
-            SelectedJobItem.InputVideoFileName = Path.GetFileName(fileName);
+            SelectedJobItem.InputVideoFileNameShort = Path.GetFileName(fileName);
         }
     }
 

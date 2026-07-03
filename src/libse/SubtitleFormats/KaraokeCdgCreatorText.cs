@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             else if (parts.Length == 3)
             {
-                return new TimeCode(0, int.Parse(parts[1]), int.Parse(parts[1]), int.Parse(parts[2]));
+                return new TimeCode(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]));
             }
             return new TimeCode(0, 0, int.Parse(parts[0]), int.Parse(parts[1]));
         }

@@ -416,12 +416,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             if (indexOfNewLine > 0)
                             {
                                 idx = text.IndexOf(dash, indexOfNewLine, StringComparison.Ordinal);
-                                if (idx >= 0 && indexOfNewLine + 5 > indexOfNewLine)
+                                if (idx >= 0 && idx < indexOfNewLine + 5)
                                 {
                                     text = text.Remove(idx, 1).TrimStart().Replace(Environment.NewLine + " ", Environment.NewLine);
                                     text = RemoveSpacesBeginLine(text);
                                     idx = text.IndexOf('-', indexOfNewLine);
-                                    if (idx >= 0 && indexOfNewLine + 5 > indexOfNewLine)
+                                    if (idx >= 0 && idx < indexOfNewLine + 5)
                                     {
                                         text = text.Remove(idx, 1).TrimStart();
                                         text = RemoveSpacesBeginLine(text);
