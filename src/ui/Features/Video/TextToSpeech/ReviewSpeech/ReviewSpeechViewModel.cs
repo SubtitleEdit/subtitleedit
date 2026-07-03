@@ -946,6 +946,87 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 RegenerateAudioCommand.Execute(line);
             }
         }
+        else if (MatchesPlayPauseShortcut(e))
+        {
+            // A modifier-less binding (the default bare Space) must still type into a focused text
+            // box; with modifiers held the shortcut works everywhere. Buttons are unaffected either
+            // way - they handle Space themselves before this window-level handler runs.
+            if (e.KeyModifiers == KeyModifiers.None && Window?.FocusManager?.GetFocusedElement() is TextBox)
+            {
+                return;
+            }
+
+            e.Handled = true;
+            TogglePlayPauseSelectedRow();
+        }
+    }
+
+    /// <summary>
+    /// True when the pressed keys match the user's main-window play/pause bindings
+    /// (TogglePlayPause / TogglePlayPause2; defaults Space and Ctrl/Cmd+Space), so the review
+    /// window plays with the same keys as the rest of the app (#12093).
+    /// </summary>
+    private static bool MatchesPlayPauseShortcut(KeyEventArgs e)
+    {
+        var cmdOrWin = OperatingSystem.IsMacOS() ? "Win" : "Ctrl";
+        var toggleKeys = Se.Settings.Shortcuts.FirstOrDefault(s => s.ActionName == nameof(MainViewModel.TogglePlayPauseCommand))?.Keys
+                         ?? [nameof(Key.Space)];
+        var toggle2Keys = Se.Settings.Shortcuts.FirstOrDefault(s => s.ActionName == nameof(MainViewModel.TogglePlayPause2Command))?.Keys
+                          ?? [cmdOrWin, nameof(Key.Space)];
+        return MatchesKeys(e, toggleKeys) || MatchesKeys(e, toggle2Keys);
+    }
+
+    // Matches a stored shortcut key list (modifier tokens + one main key) against a key event.
+    // Multi-key non-modifier chords are not supported here - the full ShortcutManager handles
+    // those in the main window; a dialog only needs the simple form.
+    private static bool MatchesKeys(KeyEventArgs e, List<string> keys)
+    {
+        var modifiers = KeyModifiers.None;
+        Key? mainKey = null;
+        foreach (var token in keys)
+        {
+            if (token is "Ctrl" or "Control" or "LeftCtrl" or "RightCtrl")
+            {
+                modifiers |= KeyModifiers.Control;
+            }
+            else if (token is "Alt" or "LeftAlt" or "RightAlt")
+            {
+                modifiers |= KeyModifiers.Alt;
+            }
+            else if (token is "Shift" or "LeftShift" or "RightShift")
+            {
+                modifiers |= KeyModifiers.Shift;
+            }
+            else if (token is "Win" or "Meta" or "LWin" or "RWin" or "Cmd" or "Command")
+            {
+                modifiers |= KeyModifiers.Meta;
+            }
+            else if (Enum.TryParse<Key>(token, out var key) && mainKey == null)
+            {
+                mainKey = key;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        return mainKey != null && mainKey == e.Key && e.KeyModifiers == modifiers;
+    }
+
+    private void TogglePlayPauseSelectedRow()
+    {
+        if (IsStopVisible || Lines.Any(l => l.IsPlaying))
+        {
+            Stop();
+            return;
+        }
+
+        var line = SelectedLine;
+        if (line is { IsPlayingEnabled: true } && PlayRowCommand.CanExecute(line))
+        {
+            PlayRowCommand.Execute(line);
+        }
     }
 
     internal void SelectedEngineChanged(object? sender, SelectionChangedEventArgs e)
