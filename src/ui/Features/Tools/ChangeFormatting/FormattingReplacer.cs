@@ -105,15 +105,15 @@ public static class FormattingReplacer
             var colorTag = "{\\" + AdvancedSubStationAlpha.GetSsaColorStringForEvent(skColor) + "&}";
 
             var fromTag = GetAssaTagLetter(from);
-            var pattern1 = $@"{{\{{\\{fromTag}1}}}}".Replace("{", @"\{").Replace("}", @"\}");
-            var pattern2 = $@"{{\{{\\{fromTag}0}}}}".Replace("{", @"\{").Replace("}", @"\}");
+            var pattern1 = $@"\{{\\{fromTag}1\}}";
+            var pattern2 = $@"\{{\\{fromTag}0\}}";
             var pattern3 = $@"\\{fromTag}1";
             var pattern4 = $@"\\{fromTag}0";
 
-            result = Regex.Replace(result, pattern1, Regex.Escape(colorTag), RegexOptions.IgnoreCase);
-            result = Regex.Replace(result, pattern2, @"{\\r}", RegexOptions.IgnoreCase);
-            result = Regex.Replace(result, pattern3, Regex.Escape(colorTag.TrimStart('{').TrimEnd('}')), RegexOptions.IgnoreCase);
-            result = Regex.Replace(result, pattern4, @"\\r", RegexOptions.IgnoreCase);
+            result = Regex.Replace(result, pattern1, colorTag, RegexOptions.IgnoreCase);
+            result = Regex.Replace(result, pattern2, @"{\r}", RegexOptions.IgnoreCase);
+            result = Regex.Replace(result, pattern3, colorTag.TrimStart('{').TrimEnd('}'), RegexOptions.IgnoreCase);
+            result = Regex.Replace(result, pattern4, @"\r", RegexOptions.IgnoreCase);
         }
         else
         {

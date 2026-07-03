@@ -61,7 +61,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
             sb.AppendLine("  \"fontSize\": \"" + Json.EncodeJsonText(FontSize) + "\",");
             sb.AppendLine("  \"topBottomMargin\": \"" + Json.EncodeJsonText(TopBottomMargin) + "\",");
             sb.AppendLine("  \"fadeUpTime\": \"" + Json.EncodeJsonText(FadeUpTime) + "\",");
-            sb.AppendLine("  \"fadeDownTime\": \"" + Json.EncodeJsonText(FadeDownTime) + "\",");
+            sb.AppendLine("  \"fadeDownTime\": \"" + Json.EncodeJsonText(FadeDownTime) + "\"");
+            sb.AppendLine("}");
             return sb.ToString();
         }
 

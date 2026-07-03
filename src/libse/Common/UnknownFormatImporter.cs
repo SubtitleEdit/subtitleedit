@@ -281,7 +281,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                     if (arr.Length == 2)
                     {
                         string[] start = arr[0].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
-                        string[] end = arr[0].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
+                        string[] end = arr[1].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
                         if (start.Length == 1 && end.Length == 1)
                         {
                             if (p != null)
@@ -313,8 +313,8 @@ namespace Nikse.SubtitleEdit.Core.Common
                     else if (arr.Length == 3)
                     {
                         string[] start = arr[0].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
-                        string[] end = arr[0].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
-                        string[] duration = arr[0].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
+                        string[] end = arr[1].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
+                        string[] duration = arr[2].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
 
                         if (end.Length == 1 && duration.Length == 1)
                         {

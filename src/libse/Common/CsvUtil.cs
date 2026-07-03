@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else
                 {
-                    var parts = CsvSplit(line, true, out var con).ToList();
+                    var parts = CsvSplit(line, true, out var con, separator).ToList();
                     continuation = con;
 
                     if (parts.Count > 0)

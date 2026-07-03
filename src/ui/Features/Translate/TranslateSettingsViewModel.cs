@@ -112,31 +112,38 @@ public partial class TranslateSettingsViewModel : ObservableObject
             }
             else if (engineType == typeof(OllamaTranslate))
             {
-                Se.Settings.Tools.OllamaPrompt = PromptText;
+                Se.Settings.AutoTranslate.OllamaPrompt = PromptText;
+                Configuration.Settings.Tools.OllamaPrompt = PromptText;
             }
             else if (engineType == typeof(LmStudioTranslate))
             {
-                Se.Settings.Tools.LmStudioPrompt = PromptText;
+                Se.Settings.AutoTranslate.LmStudioPrompt = PromptText;
+                Configuration.Settings.Tools.LmStudioPrompt = PromptText;
             }
             else if (engineType == typeof(AnthropicTranslate))
             {
-                Se.Settings.Tools.AnthropicPrompt = PromptText;
+                Se.Settings.AutoTranslate.AnthropicPrompt = PromptText;
+                Configuration.Settings.Tools.AnthropicPrompt = PromptText;
             }
             else if (engineType == typeof(PerplexityTranslate))
             {
-                Se.Settings.Tools.PerplexityPrompt = PromptText;
+                Se.Settings.AutoTranslate.PerplexityPrompt = PromptText;
+                Configuration.Settings.Tools.PerplexityPrompt = PromptText;
             }
             else if (engineType == typeof(GroqTranslate))
             {
-                Se.Settings.Tools.GroqPrompt = PromptText;
+                Se.Settings.AutoTranslate.GroqPrompt = PromptText;
+                Configuration.Settings.Tools.GroqPrompt = PromptText;
             }
             else if (engineType == typeof(OpenRouterTranslate))
             {
-                Se.Settings.Tools.OpenRouterPrompt = PromptText;
+                Se.Settings.AutoTranslate.OpenRouterPrompt = PromptText;
+                Configuration.Settings.Tools.OpenRouterPrompt = PromptText;
             }
             else if (engineType == typeof(NvidiaTranslate))
             {
-                Se.Settings.Tools.NvidiaPrompt = PromptText;
+                Se.Settings.AutoTranslate.NvidiaPrompt = PromptText;
+                Configuration.Settings.Tools.NvidiaPrompt = PromptText;
             }
             else if (engineType == typeof(MistralTranslate))
             {
@@ -155,7 +162,8 @@ public partial class TranslateSettingsViewModel : ObservableObject
             }
             else if (engineType == typeof(LlamaCppTranslate))
             {
-                Se.Settings.Tools.LlamaCppPrompt = PromptText;
+                Se.Settings.AutoTranslate.LlamaCppPrompt = PromptText;
+                Configuration.Settings.Tools.LlamaCppPrompt = PromptText;
             }
         }
 
@@ -195,7 +203,7 @@ public partial class TranslateSettingsViewModel : ObservableObject
         }
         else if (engineType == typeof(OllamaTranslate))
         {
-            PromptText = Se.Settings.Tools.OllamaPrompt;
+            PromptText = Se.Settings.AutoTranslate.OllamaPrompt;
             if (string.IsNullOrWhiteSpace(PromptText))
             {
                 PromptText = new SeAutoTranslate().OllamaPrompt;
@@ -203,7 +211,7 @@ public partial class TranslateSettingsViewModel : ObservableObject
         }
         else if (engineType == typeof(LmStudioTranslate))
         {
-            PromptText = Se.Settings.Tools.LmStudioPrompt;
+            PromptText = Se.Settings.AutoTranslate.LmStudioPrompt;
             if (string.IsNullOrWhiteSpace(PromptText))
             {
                 PromptText = new SeAutoTranslate().LmStudioPrompt;
@@ -211,7 +219,7 @@ public partial class TranslateSettingsViewModel : ObservableObject
         }
         else if (engineType == typeof(AnthropicTranslate))
         {
-            PromptText = Se.Settings.Tools.AnthropicPrompt;
+            PromptText = Se.Settings.AutoTranslate.AnthropicPrompt;
             if (string.IsNullOrWhiteSpace(PromptText))
             {
                 PromptText = new SeAutoTranslate().AnthropicPrompt;
@@ -219,7 +227,7 @@ public partial class TranslateSettingsViewModel : ObservableObject
         }
         else if (engineType == typeof(PerplexityTranslate))
         {
-            PromptText = Se.Settings.Tools.PerplexityPrompt;
+            PromptText = Se.Settings.AutoTranslate.PerplexityPrompt;
             if (string.IsNullOrWhiteSpace(PromptText))
             {
                 PromptText = new SeAutoTranslate().PerplexityPrompt;
@@ -227,7 +235,7 @@ public partial class TranslateSettingsViewModel : ObservableObject
         }
         else if (engineType == typeof(GroqTranslate))
         {
-            PromptText = Se.Settings.Tools.GroqPrompt;
+            PromptText = Se.Settings.AutoTranslate.GroqPrompt;
             if (string.IsNullOrWhiteSpace(PromptText))
             {
                 PromptText = new SeAutoTranslate().GroqPrompt;
@@ -235,7 +243,7 @@ public partial class TranslateSettingsViewModel : ObservableObject
         }
         else if (engineType == typeof(OpenRouterTranslate))
         {
-            PromptText = Se.Settings.Tools.OpenRouterPrompt;
+            PromptText = Se.Settings.AutoTranslate.OpenRouterPrompt;
             if (string.IsNullOrWhiteSpace(PromptText))
             {
                 PromptText = new SeAutoTranslate().OpenRouterPrompt;
@@ -243,7 +251,7 @@ public partial class TranslateSettingsViewModel : ObservableObject
         }
         else if (engineType == typeof(NvidiaTranslate))
         {
-            PromptText = Se.Settings.Tools.NvidiaPrompt;
+            PromptText = Se.Settings.AutoTranslate.NvidiaPrompt;
             if (string.IsNullOrWhiteSpace(PromptText))
             {
                 PromptText = new SeAutoTranslate().NvidiaPrompt;
@@ -275,7 +283,7 @@ public partial class TranslateSettingsViewModel : ObservableObject
         }
         else if (engineType == typeof(LlamaCppTranslate))
         {
-            PromptText = Se.Settings.Tools.LlamaCppPrompt;
+            PromptText = Se.Settings.AutoTranslate.LlamaCppPrompt;
             if (string.IsNullOrWhiteSpace(PromptText))
             {
                 PromptText = new SeAutoTranslate().LlamaCppPrompt;

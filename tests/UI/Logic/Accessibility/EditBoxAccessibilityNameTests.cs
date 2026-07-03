@@ -25,6 +25,19 @@ public class TestApp : Application
 
         // Windows built in code use Attached.SetIcon; without the providers Program.cs
         // registers at startup, constructing such a window throws KeyNotFoundException.
+        RegisterIconProvidersOnce();
+    }
+
+    private static bool _iconProvidersRegistered;
+
+    private static void RegisterIconProvidersOnce()
+    {
+        if (_iconProvidersRegistered)
+        {
+            return;
+        }
+
+        _iconProvidersRegistered = true;
         Optris.Icons.Avalonia.IconProvider.Current
             .Register<Optris.Icons.Avalonia.FontAwesome.FontAwesomeIconProvider>()
             .Register<Optris.Icons.Avalonia.MaterialDesign.MaterialDesignIconProvider>();

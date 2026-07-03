@@ -101,7 +101,7 @@ public partial class CopyPasteTranslateViewModel : ObservableObject
 
         var translator = new CopyPasteTranslator(paragraphs, LineSeparator);
 
-        var blocks = translator.BuildBlocks(MaxBlockSize ?? 5000, string.Empty, startIndex);
+        var blocks = translator.BuildBlocks(MaxBlockSize ?? 5000, string.Empty, 0);
         for (var i = 0; i < blocks.Count; i++)
         {
             var block = blocks[i];

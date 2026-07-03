@@ -223,7 +223,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 end++;
                             }
                         }
-                        if (end < newText.Length - 2 && !(Environment.NewLine + @" <,.!?:;])♪♫¿").Contains(p.Text[end + 1]))
+                        if (end < newText.Length - 2 && !(Environment.NewLine + @" <,.!?:;])♪♫¿").Contains(newText[end + 1]))
                         {
                             if (indexOfFontTag < 0 || end > newText.IndexOf('>', indexOfFontTag)) // font tags can contain "
                             {

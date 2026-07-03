@@ -62,7 +62,7 @@ public static class DivXSubParser
     private static bool IsPotentialTimecode(ReadOnlySpan<byte> s)
     {
         // Quick validation of [00:00:00.000-00:00:00.000] pattern
-        return s.Length >= 25 &&
+        return s.Length >= 26 &&
                s[2] == 0x3a && s[5] == 0x3a && s[8] == 0x2e && // : : .
                s[12] == 0x2d &&                                // -
                s[15] == 0x3a && s[18] == 0x3a && s[21] == 0x2e && // : : .

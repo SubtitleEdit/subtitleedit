@@ -688,7 +688,7 @@ public partial class CompareViewModel : ObservableObject
     private async Task Export()
     {
         var targetFileName = string.IsNullOrEmpty(LeftFileName) ? "compare.html" : System.IO.Path.GetFileNameWithoutExtension(LeftFileName) + "-compare.html";
-        var fileName = await _fileHelper.PickSaveFile(Window!, Se.Language.File.SaveCompareHtmlTitle, targetFileName, "HTML files (*.html)|*.html");
+        var fileName = await _fileHelper.PickSaveFile(Window!, ".html", targetFileName, Se.Language.File.SaveCompareHtmlTitle);
         if (string.IsNullOrEmpty(fileName))
         {
             return;

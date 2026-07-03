@@ -172,7 +172,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 return;
             }
 
-            if (_downloadTask is { IsCompleted: true })
+            if (_downloadTask is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
 
@@ -236,7 +236,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
             }
 
-            if (_downloadTaskVoiceModel is { IsCompleted: true } && _downloadTaskVoiceConfig is { IsCompleted: true })
+            if (_downloadTaskVoiceModel is { IsCompletedSuccessfully: true } && _downloadTaskVoiceConfig is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
 
@@ -296,7 +296,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
             }
 
-            if (_downloadTaskQwen3TtsCpp is { IsCompleted: true })
+            if (_downloadTaskQwen3TtsCpp is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
 
@@ -382,7 +382,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
             }
 
-            if (_downloadTaskQwen3TtsCppVoices is { IsCompleted: true })
+            if (_downloadTaskQwen3TtsCppVoices is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
 
@@ -426,7 +426,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 Close();
             }
 
-            if (_downloadTaskQwen3TtsModels is { IsCompleted: true })
+            if (_downloadTaskQwen3TtsModels is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
                 OkPressed = true;
@@ -448,7 +448,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
             }
 
-            if (_downloadTaskKokoroTtsCpp is { IsCompleted: true })
+            if (_downloadTaskKokoroTtsCpp is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
 
@@ -511,7 +511,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
             }
 
-            if (_downloadTaskKokoroTtsModels is { IsCompleted: true })
+            if (_downloadTaskKokoroTtsModels is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
                 OkPressed = true;
@@ -533,7 +533,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
             }
 
-            if (_downloadTaskChatterboxModels is { IsCompleted: true })
+            if (_downloadTaskChatterboxModels is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
                 OkPressed = true;
@@ -555,7 +555,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
             }
 
-            if (_downloadTaskQwen3TtsCrispAsrModels is { IsCompleted: true })
+            if (_downloadTaskQwen3TtsCrispAsrModels is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
                 _downloadTaskQwen3TtsCrispAsrModels = null;
@@ -608,7 +608,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
             }
 
-            if (_downloadTaskQwen3TtsCrispAsrVoices is { IsCompleted: true })
+            if (_downloadTaskQwen3TtsCrispAsrVoices is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
 
@@ -662,7 +662,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 Close();
             }
 
-            if (_downloadTaskVibeVoiceCrispAsrModels is { IsCompleted: true })
+            if (_downloadTaskVibeVoiceCrispAsrModels is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
                 _downloadTaskVibeVoiceCrispAsrModels = null;
@@ -710,7 +710,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
             }
 
-            if (_downloadTaskVibeVoiceCrispAsrVoices is { IsCompleted: true })
+            if (_downloadTaskVibeVoiceCrispAsrVoices is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
                 if (_downloadStreamVibeVoiceCrispAsrVoices.Length > 0)
@@ -753,7 +753,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 Close();
             }
 
-            if (_downloadTaskIndexTtsCrispAsrModels is { IsCompleted: true })
+            if (_downloadTaskIndexTtsCrispAsrModels is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
                 _downloadTaskIndexTtsCrispAsrModels = null;
@@ -798,7 +798,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
             }
 
-            if (_downloadTaskIndexTtsCrispAsrVoices is { IsCompleted: true })
+            if (_downloadTaskIndexTtsCrispAsrVoices is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
                 if (_downloadStreamIndexTtsCrispAsrVoices.Length > 0)
@@ -837,7 +837,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 Close();
             }
 
-            if (_downloadTaskZonosTtsCrispAsrModels is { IsCompleted: true })
+            if (_downloadTaskZonosTtsCrispAsrModels is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
                 _downloadTaskZonosTtsCrispAsrModels = null;
@@ -882,7 +882,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
             }
 
-            if (_downloadTaskZonosTtsCrispAsrVoices is { IsCompleted: true })
+            if (_downloadTaskZonosTtsCrispAsrVoices is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
                 if (_downloadStreamZonosTtsCrispAsrVoices.Length > 0)
@@ -926,7 +926,7 @@ public partial class DownloadTtsViewModel : ObservableObject
             // cloning from user-supplied 16 kHz WAVs. After the model bundle finishes, chain the
             // qwen3-tts.cpp voice pack ZIP so the user has the shared reference WAVs available
             // without a second manual download step. Baked presets work regardless of this step.
-            if (_downloadTaskCosyVoice3CrispAsrModels is { IsCompleted: true })
+            if (_downloadTaskCosyVoice3CrispAsrModels is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
                 _downloadTaskCosyVoice3CrispAsrModels = null;
@@ -971,7 +971,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
             }
 
-            if (_downloadTaskCosyVoice3CrispAsrVoices is { IsCompleted: true })
+            if (_downloadTaskCosyVoice3CrispAsrVoices is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
                 if (_downloadStreamCosyVoice3CrispAsrVoices.Length > 0)
@@ -1012,7 +1012,7 @@ public partial class DownloadTtsViewModel : ObservableObject
 
             // F5-TTS mirrors IndexTTS: model first, then a voices ZIP from the shared
             // qwen3-tts.cpp voice pack (same 24 kHz mono format F5-TTS wants).
-            if (_downloadTaskF5TtsCrispAsrModels is { IsCompleted: true })
+            if (_downloadTaskF5TtsCrispAsrModels is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
                 _downloadTaskF5TtsCrispAsrModels = null;
@@ -1057,7 +1057,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
             }
 
-            if (_downloadTaskF5TtsCrispAsrVoices is { IsCompleted: true })
+            if (_downloadTaskF5TtsCrispAsrVoices is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
                 if (_downloadStreamF5TtsCrispAsrVoices.Length > 0)
@@ -1098,7 +1098,7 @@ public partial class DownloadTtsViewModel : ObservableObject
 
             // VoxCPM2 mirrors F5-TTS: model first, then a voices ZIP from the shared
             // qwen3-tts.cpp voice pack (same 24 kHz mono format the cloning backends want).
-            if (_downloadTaskVoxCPM2CrispAsrModels is { IsCompleted: true })
+            if (_downloadTaskVoxCPM2CrispAsrModels is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
                 _downloadTaskVoxCPM2CrispAsrModels = null;
@@ -1143,7 +1143,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
             }
 
-            if (_downloadTaskVoxCPM2CrispAsrVoices is { IsCompleted: true })
+            if (_downloadTaskVoxCPM2CrispAsrVoices is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
                 if (_downloadStreamVoxCPM2CrispAsrVoices.Length > 0)
@@ -1182,7 +1182,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 Close();
             }
 
-            if (_downloadTaskOmniVoice is { IsCompleted: true })
+            if (_downloadTaskOmniVoice is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
 
@@ -1282,7 +1282,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 }
             }
 
-            if (_downloadTaskOmniVoices is { IsCompleted: true })
+            if (_downloadTaskOmniVoices is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
 
@@ -1326,7 +1326,7 @@ public partial class DownloadTtsViewModel : ObservableObject
                 Close();
             }
 
-            if (_downloadTaskOmniVoiceModels is { IsCompleted: true })
+            if (_downloadTaskOmniVoiceModels is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
                 OkPressed = true;

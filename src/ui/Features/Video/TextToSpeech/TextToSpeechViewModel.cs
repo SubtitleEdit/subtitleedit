@@ -989,6 +989,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             IndexTtsCrispAsr.StopServer();
         }
+        if (keepAlive is not CosyVoice3CrispAsr)
+        {
+            CosyVoice3CrispAsr.StopServer();
+        }
         if (keepAlive is not ChatterboxTtsCpp)
         {
             ChatterboxTtsCpp.StopServer();

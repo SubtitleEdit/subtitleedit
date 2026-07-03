@@ -516,7 +516,7 @@ public partial class ExportEbuStlViewModel : ObservableObject
         var sb = new StringBuilder();
         var errorCount = 0;
         var i = 1;
-        var isTeletext = SelectedDiskFormatCode?.Contains("teletext", StringComparison.OrdinalIgnoreCase) ?? false;
+        var isTeletext = SelectedDisplayStandardCode?.Contains("teletext", StringComparison.OrdinalIgnoreCase) ?? false;
         foreach (var p in subtitle.Paragraphs)
         {
             var arr = p.Text.SplitToLines();

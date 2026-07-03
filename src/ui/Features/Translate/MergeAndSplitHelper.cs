@@ -1005,12 +1005,12 @@ public static partial class MergeAndSplitHelper
         var code = language.TwoLetterIsoLanguageName ?? language.Code;
 
         return code.ToLowerInvariant() == "zh" ||
-               code.ToLowerInvariant() == "zh-CN" ||
-               code.ToLowerInvariant() == "zh-TW" ||
-               code.ToLowerInvariant() == "yue_Hant" ||
-               code.ToLowerInvariant() == "zho_Hans" ||
-               code.ToLowerInvariant() == "zho_Hant" ||
-               code.ToLowerInvariant() == "jpn_Jpan" ||
+               code.ToLowerInvariant() == "zh-cn" ||
+               code.ToLowerInvariant() == "zh-tw" ||
+               code.ToLowerInvariant() == "yue_hant" ||
+               code.ToLowerInvariant() == "zho_hans" ||
+               code.ToLowerInvariant() == "zho_hant" ||
+               code.ToLowerInvariant() == "jpn_jpan" ||
                code.ToLowerInvariant() == "ja";
     }
 }

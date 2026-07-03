@@ -47,6 +47,7 @@ public class SpellCheckManager : SpellChecker, ISpellCheckManager
             for (var wordIndex = startWordIndex; wordIndex < words.Count; wordIndex++)
             {
                 var word = words[wordIndex];
+                var textBefore = p.Text;
                 if (!IsWordCorrect(word, p, words, wordIndex))
                 {
                     results.Add(new SpellCheckResult
@@ -61,6 +62,13 @@ public class SpellCheckManager : SpellChecker, ISpellCheckManager
 
                     _currentResult = results.Last();
                     return results;
+                }
+
+                // A change-all replacement inside IsWordCorrect may alter the line text, invalidating
+                // the indexes of the remaining words, so re-split before checking the next word.
+                if (p.Text != textBefore)
+                {
+                    words = SpellCheckWordLists.Split(p.Text);
                 }
             }
 
@@ -182,7 +190,7 @@ public class SpellCheckManager : SpellChecker, ISpellCheckManager
 
         if (word.EndsWith('\'') && ChangeAllDictionary.ContainsKey(word.TrimEnd('\'')))
         {
-            ChangeWord(word, ChangeAllDictionary[word] + word.Remove(0, word.TrimEnd('\'').Length), words[wordIndex], p);
+            ChangeWord(word, ChangeAllDictionary[word.TrimEnd('\'')] + word.Remove(0, word.TrimEnd('\'').Length), words[wordIndex], p);
             return true;
         }
 

@@ -386,7 +386,7 @@ public partial class DCinemaSmptePropertiesViewModel : ObservableObject
             return;
         }
 
-        var fileName = await _fileHelper.PickSaveFile(Window, "Export D-Cinema properties", "D-Cinema profile", ".DCinema-interop-profile");
+        var fileName = await _fileHelper.PickSaveFile(Window, ".DCinema-interop-profile", "D-Cinema profile", "Export D-Cinema properties");
         if (fileName == null)
         {
             return;
