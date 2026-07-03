@@ -307,7 +307,9 @@ public class AutoTranslateWindow : Window
         settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ApiSecretText), nameof(vm.ApiSecretIsVisible)).WithMarginRight(15).WithAccessibleName(Se.Language.General.ApiSecret));
 
         settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.ApiKey, vm, null, nameof(vm.ApiKeyIsVisible)).WithMarginRight(5));
-        settingsPanel.Children.Add(UiUtil.MakeTextBox(150, vm, nameof(vm.ApiKeyText), nameof(vm.ApiKeyIsVisible)).WithMarginRight(15).WithAccessibleName(Se.Language.General.ApiKey));
+        var panelApiKey = UiUtil.MakeApiKeyTextBox(150, vm, nameof(vm.ApiKeyText), nameof(vm.ApiKeyIsVisible));
+        panelApiKey.Margin = new Thickness(0, 0, 15, 0);
+        settingsPanel.Children.Add(panelApiKey);
 
         settingsPanel.Children.Add(UiUtil.MakeTextBlock(Se.Language.General.Formality, vm, null, nameof(vm.FormalityIsVisible)).WithMarginRight(5));
         settingsPanel.Children.Add(UiUtil.MakeComboBox(vm.Formalities, vm, nameof(vm.SelectedFormality), nameof(vm.FormalityIsVisible)).WithWidth(220).WithMarginRight(15).WithAccessibleName(Se.Language.General.Formality));

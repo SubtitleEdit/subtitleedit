@@ -677,6 +677,42 @@ public static class UiUtil
         return textBox;
     }
 
+    /// <summary>
+    /// Text box for API keys and similar secrets: masked by default so the value never shows
+    /// in screenshots or screen shares, with an eye button to reveal it while editing.
+    /// </summary>
+    public static StackPanel MakeApiKeyTextBox(double width, object viewModel, string propertyTextPath,
+        string? propertyIsVisiblePath = null)
+    {
+        var textBox = MakeTextBox(width, viewModel, propertyTextPath);
+        textBox.PasswordChar = '●';
+        AutomationProperties.SetName(textBox, Se.Language.General.ApiKey);
+
+        var buttonReveal = MakeButton(null, IconNames.Eye);
+        AutomationProperties.SetName(buttonReveal, Se.Language.General.ApiKey);
+        buttonReveal.Click += (_, _) =>
+        {
+            textBox.RevealPassword = !textBox.RevealPassword;
+            Attached.SetIcon(buttonReveal, textBox.RevealPassword ? IconNames.EyeOff : IconNames.Eye);
+        };
+
+        var panel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 5,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { textBox, buttonReveal },
+        };
+
+        if (propertyIsVisiblePath != null)
+        {
+            panel.DataContext = viewModel;
+            panel.Bind(StackPanel.IsVisibleProperty, new Binding(propertyIsVisiblePath));
+        }
+
+        return panel;
+    }
+
     public static TextBlock MakeTextBlock(string text)
     {
         return new TextBlock

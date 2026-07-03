@@ -53,7 +53,7 @@ public static class ViewAutoTranslate
         var textBoxUrl = UiUtil.MakeTextBox(300, vm, nameof(vm.AutoTranslateUrl), nameof(vm.AutoTranslateUrlIsVisible));
 
         var labelApiKey = UiUtil.MakeLabel(Se.Language.General.ApiKey).WithBindVisible(vm, nameof(vm.AutoTranslateApiKeyIsVisible));
-        var textBoxApiKey = UiUtil.MakeTextBox(300, vm, nameof(vm.AutoTranslateApiKey), nameof(vm.AutoTranslateApiKeyIsVisible));
+        var textBoxApiKey = UiUtil.MakeApiKeyTextBox(300, vm, nameof(vm.AutoTranslateApiKey), nameof(vm.AutoTranslateApiKeyIsVisible));
 
 
         var grid = new Grid
