@@ -281,9 +281,17 @@ public class ElevenLabs : ITtsEngine
             throw new ArgumentException("Voice is not an ElevenLabVoice");
         }
 
+        // Callers pass null when this engine is not the globally selected one (per-actor cast
+        // rows, cast-dialog voice test) - fall back to the saved/default model instead of
+        // throwing, which aborted the whole generation run at the first ElevenLabs row.
         if (string.IsNullOrEmpty(model))
         {
-            throw new ArgumentException("ElevenLabs model is empty");
+            model = Se.Settings.Video.TextToSpeech.ElevenLabsModel;
+        }
+
+        if (string.IsNullOrEmpty(model))
+        {
+            model = "eleven_multilingual_v2";
         }
 
         Se.WriteToolsLog($"ElevenLabs: voice={elevenLabVoice.Voice}, voiceId={elevenLabVoice.VoiceId}, model={model}, textLen={text.Length}");

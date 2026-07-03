@@ -1600,6 +1600,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 EngineName = item.EngineName ?? string.Empty,
                 Model = item.Model ?? string.Empty,
                 Instruction = item.Instruction ?? string.Empty,
+                Include = item.Include,
             });
         }
 
@@ -1669,14 +1670,23 @@ public partial class TextToSpeechViewModel : ObservableObject
             return string.Empty;
         }
 
-        if (Path.IsPathRooted(audioFileName))
+        // A Windows drive path ("C:\...") is not rooted on Unix, so Path.IsPathRooted alone let
+        // legacy Windows exports opened on macOS/Linux fall through to a garbage
+        // jsonFolder + "C:\..." combine - skipping the sibling retry that would find the file.
+        var isWindowsAbsolute = audioFileName.Length >= 3 && char.IsLetter(audioFileName[0])
+            && audioFileName[1] == ':' && (audioFileName[2] == '\\' || audioFileName[2] == '/');
+
+        if (Path.IsPathRooted(audioFileName) || isWindowsAbsolute)
         {
             if (File.Exists(audioFileName))
             {
                 return audioFileName;
             }
 
-            var siblingFileName = Path.Combine(jsonFolder, Path.GetFileName(audioFileName));
+            // Path.GetFileName does not treat '\' as a separator on Unix - split on both.
+            var separatorIndex = Math.Max(audioFileName.LastIndexOf('\\'), audioFileName.LastIndexOf('/'));
+            var name = separatorIndex >= 0 ? audioFileName.Substring(separatorIndex + 1) : audioFileName;
+            var siblingFileName = Path.Combine(jsonFolder, name);
             return File.Exists(siblingFileName) ? siblingFileName : audioFileName;
         }
 
@@ -2537,6 +2547,14 @@ public partial class TextToSpeechViewModel : ObservableObject
         ProgressText = Se.Language.Video.TextToSpeech.AddingAudioToVideoFileDotDotDot;
         var outputFileName = Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(audioFileName) + videoExt);
 
+        // Never let the output collide with the source video: picking the video's own folder as
+        // the output folder can make the paths identical, and ffmpeg runs with -y - depending on
+        // the build that either aborts or *truncates the user's source video* before reading it.
+        if (string.Equals(Path.GetFullPath(outputFileName), Path.GetFullPath(_videoFileName), StringComparison.OrdinalIgnoreCase))
+        {
+            outputFileName = Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(audioFileName) + "_tts" + videoExt);
+        }
+
         var useCustomAudioEncoding = !string.IsNullOrEmpty(Se.Settings.Video.TextToSpeech.CustomAudioEncoding);
         var audioEncoding = Se.Settings.Video.TextToSpeech.CustomAudioEncoding;
         if (string.IsNullOrWhiteSpace(audioEncoding) || !useCustomAudioEncoding)
@@ -2996,21 +3014,27 @@ public partial class TextToSpeechViewModel : ObservableObject
         // many TTS engines otherwise insert weird pauses on \r\n.
         var text = Utilities.UnbreakLine(rawText);
 
+        // Fallbacks must carry the panel's instruction, not "": TtsInstructionSwap swaps the
+        // engine's saved instruction to whatever is passed here for the duration of the Speak
+        // call, so an empty fallback silently wiped the user's typed voice-design instruction
+        // for every line without an actor mapping - i.e. for every line of a normal subtitle.
+        var globalInstruction = Instruction ?? string.Empty;
+
         if (string.IsNullOrEmpty(actor) || !ctx.ByActor.TryGetValue(actor, out var mapping))
         {
-            return new ResolvedVoice(defaultEngine, defaultVoice, null, text, string.Empty);
+            return new ResolvedVoice(defaultEngine, defaultVoice, null, text, globalInstruction);
         }
 
         if (!ctx.EnginesByName.TryGetValue(mapping.EngineName, out var mappedEngine)
             || !ctx.VoicesByEngine.TryGetValue(mapping.EngineName, out var voices))
         {
-            return new ResolvedVoice(defaultEngine, defaultVoice, null, text, string.Empty);
+            return new ResolvedVoice(defaultEngine, defaultVoice, null, text, globalInstruction);
         }
 
         var mappedVoice = voices.FirstOrDefault(v => string.Equals(v.Name, mapping.VoiceName, StringComparison.OrdinalIgnoreCase));
         if (mappedVoice == null)
         {
-            return new ResolvedVoice(defaultEngine, defaultVoice, null, text, string.Empty);
+            return new ResolvedVoice(defaultEngine, defaultVoice, null, text, globalInstruction);
         }
 
         // Per-row model overrides the global one; empty string means "use the global model".
@@ -3460,6 +3484,9 @@ public partial class TextToSpeechViewModel : ObservableObject
                 Voices.Add(vo);
             }
             VoiceCount = Voices.Count;
+            // The label binds VoiceCountInfo; only VoiceCount was ever written, so the voice
+            // count next to the combo stayed permanently blank.
+            VoiceCountInfo = Voices.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
             var lastVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice);
             if (lastVoice == null)
@@ -3469,10 +3496,10 @@ public partial class TextToSpeechViewModel : ObservableObject
             }
             SelectedVoice = lastVoice ?? Voices.FirstOrDefault();
 
-            if (SelectedVoice != null)
-            {
-                ApplyInstructionForEngine(engine);
-            }
+            // Unconditional (handles a null voice fine): gating this on a loaded voice left the
+            // previous engine's instruction box and voice-combo lock in place when the new
+            // engine's voice list failed to load or was empty.
+            ApplyInstructionForEngine(engine);
 
             if (HasLanguageParameter && SelectedVoice != null)
             {
@@ -3488,6 +3515,13 @@ public partial class TextToSpeechViewModel : ObservableObject
                 SelectedLanguage = engine is OmniVoiceTtsCpp
                     ? Languages.FirstOrDefault(l => l.Code == "en") ?? Languages.FirstOrDefault()
                     : Languages.FirstOrDefault();
+            }
+            else if (SelectedVoice == null)
+            {
+                // No voices for the new engine - don't keep listing the previous engine's
+                // languages next to it.
+                Languages.Clear();
+                SelectedLanguage = null;
             }
 
             if (HasRegion)
@@ -3667,6 +3701,15 @@ public partial class TextToSpeechViewModel : ObservableObject
         if (e.Key == Key.Escape)
         {
             e.Handled = true;
+            // Escape during a run cancels the run (like the Cancel button) instead of closing
+            // the window over a live pipeline - closing also fires StopAllCrispAsrServers,
+            // killing the engine server an in-flight Speak is talking to.
+            if (IsGenerating)
+            {
+                _cancellationTokenSource?.Cancel();
+                return;
+            }
+
             Window?.Close();
         }
         else if (UiUtil.IsHelp(e))
@@ -3678,6 +3721,11 @@ public partial class TextToSpeechViewModel : ObservableObject
 
     internal void OnClosing(WindowClosingEventArgs e)
     {
+        // Title-bar close during a run: cancel the pipeline so it unwinds instead of running
+        // headless against a closed window (progress writes, folder picker, message boxes) while
+        // StopAllCrispAsrServers below kills the engine server it is talking to.
+        try { _cancellationTokenSource?.Cancel(); } catch (ObjectDisposedException) { }
+
         // An enabled System.Timers.Timer is rooted: without stopping it here, every open/close
         // of this window leaked a view model whose Elapsed handler kept firing every 100 ms for
         // the rest of the session (ReviewSpeechViewModel already does this on close).

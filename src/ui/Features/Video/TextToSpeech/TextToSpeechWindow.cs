@@ -45,9 +45,15 @@ public class TextToSpeechWindow : Window
             VerticalAlignment = VerticalAlignment.Bottom,
         };
 
+        // Frozen while generating: the pipeline reads SelectedLanguage/Region/Model live per
+        // segment, so changing engine/model/language mid-run made the remaining segments use
+        // the new values (or silently ended the run when the engine switch left SelectedVoice
+        // transiently null).
         var engineLayout = MakeEngineControls(vm);
+        engineLayout.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsNotGenerating)));
 
         var settingsLayout = MakeSettingsControls(vm);
+        settingsLayout.Bind(InputElement.IsEnabledProperty, new Binding(nameof(vm.IsNotGenerating)));
 
         // Wrap the progress bar layout in WidthIgnoringPanel so its measured width never feeds
         // back up into the outer grid's column sizing. See the panel's class comment for why.
