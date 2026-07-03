@@ -79,6 +79,9 @@ public class GoogleLensOcr
                     RedirectStandardError = true,
                     CreateNoWindow = true,
                     StandardOutputEncoding = Encoding.UTF8,
+                    // Without this, .NET decodes stderr with the OEM codepage on Windows, so any
+                    // non-ASCII text in error output turns into mojibake in logs/error messages.
+                    StandardErrorEncoding = Encoding.UTF8,
                 }
             })
             {

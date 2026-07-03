@@ -80,6 +80,15 @@ internal sealed class PaddleOcrEngine : IOcrEngine
                 UseShellExecute = false,
                 CreateNoWindow = true,
             };
+
+            // StandardOutputEncoding only fixes the decoding side. paddleocr is a Python CLI, and
+            // on Windows Python encodes a *redirected* stdout with the ANSI codepage (until UTF-8
+            // becomes the default in Python 3.15, PEP 686) - so the producer side must be forced
+            // to UTF-8 too, or non-ASCII text still arrives as mojibake. Same env vars the UI's
+            // Paddle engine sets.
+            psi.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
+            psi.EnvironmentVariables["PYTHONUTF8"] = "1";
+
             using var proc = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start paddleocr process.");
             // Drain stderr concurrently — paddleocr is chatty on stderr, and reading stdout
