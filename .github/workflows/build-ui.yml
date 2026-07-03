@@ -207,6 +207,12 @@ jobs:
 
       - name: Regenerate nuget-sources.json for the pinned commit
         run: |
+          # installer/flatpak/flathub/ is newer than the pinned commit (that folder
+          # is this PR's own addition), so checking that commit out in place just
+          # removed it along with everything else only present on the branch tip.
+          # generate-nuget-sources.sh itself exists at the pin (it predates this
+          # folder), so only the output destination needs restoring.
+          mkdir -p installer/flatpak/flathub
           bash installer/flatpak/generate-nuget-sources.sh \
             src/ui/UI.csproj \
             installer/flatpak/flathub/nuget-sources.json
