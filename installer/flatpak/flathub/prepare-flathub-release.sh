@@ -95,14 +95,22 @@ echo "Checking out $TAG into a disposable worktree..."
 git worktree add --quiet --detach "$WORKTREE" "$COMMIT"
 
 echo "Regenerating nuget-sources.json for $TAG's UI.csproj..."
-(
-    cd "$WORKTREE"
-    # Invoked via bash rather than directly (./generate-nuget-sources.sh), matching how
-    # the existing regenerate-flatpak-nuget-sources CI job already calls it: the file's
-    # mode in the repo is not executable, so a direct invocation fails with "Permission
-    # denied" (hit exactly this in CI the first time this ran, see #11800).
-    bash installer/flatpak/generate-nuget-sources.sh
-)
+# Invoked via bash rather than directly (./generate-nuget-sources.sh), matching how
+# the existing regenerate-flatpak-nuget-sources CI job already calls it: the file's
+# mode in the repo is not executable, so a direct invocation fails with "Permission
+# denied" (hit exactly this in CI, see #11800).
+#
+# Project/output paths are passed explicitly, as absolute paths into the worktree,
+# rather than relying on generate-nuget-sources.sh's relative defaults (src/ui/UI.csproj
+# etc., resolved from its own cwd after a "cd $REPO_ROOT"). The preferred restore path
+# shells out to flatpak-dotnet-generator.py, a separate pinned tool whose own working
+# directory during the restore isn't guaranteed to still be $WORKTREE by the time it
+# resolves that relative path (hit this in CI: "MSBUILD: Project file does not exist"
+# even though the file is genuinely present at the pinned commit). Absolute paths make
+# the outcome independent of whatever cwd that generator ends up using internally.
+bash "$WORKTREE/installer/flatpak/generate-nuget-sources.sh" \
+    "$WORKTREE/src/ui/UI.csproj" \
+    "$WORKTREE/installer/flatpak/nuget-sources.json"
 
 cp "$WORKTREE/installer/flatpak/nuget-sources.json" "$NUGET_SOURCES"
 echo "  Copied to $NUGET_SOURCES"
