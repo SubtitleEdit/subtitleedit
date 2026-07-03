@@ -592,10 +592,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
         var old = _cancellationTokenSource;
         _cancellationTokenSource = next;
         _cancellationToken = next.Token;
-        if (!ReferenceEquals(old, next))
-        {
-            try { old.Dispose(); } catch (ObjectDisposedException) { }
-        }
+        // The old CTS is deliberately not disposed: it may still be held by a non-modal
+        // GeneratingAudioWindow whose Cancel button calls Cancel() on it - disposing here made
+        // that throw ObjectDisposedException. A CTS without timers has no unmanaged state that
+        // needs deterministic disposal; window close disposes the final instance.
     }
 
     [RelayCommand]
@@ -653,6 +653,15 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         IsRegenerateEnabled = false;
 
+        // Gate the whole grid: the regenerate popup is non-modal, and starting a play or a
+        // second regenerate mid-run swapped the shared cancellation source under the first one.
+        // The per-row play/regenerate buttons, Ctrl+R and the Space shortcut all honor
+        // IsPlayingEnabled, so this closes every entry point at once.
+        foreach (var l in Lines)
+        {
+            l.IsPlayingEnabled = false;
+        }
+
         var oldStyle = SelectedStyle;
         if (engine is Murf && !string.IsNullOrEmpty(SelectedStyle))
         {
@@ -662,11 +671,35 @@ public partial class ReviewSpeechViewModel : ObservableObject
         var generatingAudioVm = _windowService.ShowWindow<GeneratingAudioWindow, GeneratingAudioViewModel>(Window!);
         ReplaceCts(generatingAudioVm.CancellationTokenSource);
 
-        TtsResult speakResult;
+        // The row's live StepResult must only change once the whole regenerate pipeline has
+        // succeeded - it used to be mutated right after Speak, so a cancel or a failed
+        // trim/post-process left the row half-updated (raw un-stretched clip with the old
+        // speed/voice display) and OK/Export published that state.
+        var originalFileName = line.StepResult.CurrentFileName;
+        var originalVoice = line.StepResult.Voice;
+
         try
         {
-            speakResult = await TtsInstructionSwap.RunAsync(engine, Instruction, () =>
+            var speakResult = await TtsInstructionSwap.RunAsync(engine, Instruction, () =>
                 engine.Speak(Utilities.UnbreakLine(line.Text), _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, _cancellationToken));
+
+            if (speakResult.Error || string.IsNullOrEmpty(speakResult.FileName) || !File.Exists(speakResult.FileName))
+            {
+                if (Window != null)
+                {
+                    var detail = string.IsNullOrEmpty(speakResult.ErrorMessage)
+                        ? "The engine produced no audio - see error-log.txt in the Subtitle Edit data folder."
+                        : speakResult.ErrorMessage;
+                    await MessageBox.Show(
+                        Window,
+                        Se.Language.General.Error,
+                        "Regenerating audio failed: " + detail,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+
+                return;
+            }
 
             line.StepResult.CurrentFileName = speakResult.FileName;
             line.StepResult.Voice = voice;
@@ -676,6 +709,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
             if (_cancellationToken.IsCancellationRequested)
             {
+                line.StepResult.CurrentFileName = originalFileName;
+                line.StepResult.Voice = originalVoice;
                 return;
             }
 
@@ -692,8 +727,18 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
             line.AddHistory(voice, line.StepResult.CurrentFileName, engine.Name, SelectedModel ?? string.Empty, Instruction ?? string.Empty);
         }
+        catch (OperationCanceledException)
+        {
+            // Cancel in the GeneratingAudio popup: Speak and the ffmpeg steps surface it as a
+            // throw (it used to escape as an unhandled exception). Undo the partial row update.
+            line.StepResult.CurrentFileName = originalFileName;
+            line.StepResult.Voice = originalVoice;
+            return;
+        }
         catch (HttpRequestException ex)
         {
+            line.StepResult.CurrentFileName = originalFileName;
+            line.StepResult.Voice = originalVoice;
             SeLogger.Error(ex, "TTS server error during regeneration.");
             if (Window != null)
             {
@@ -706,10 +751,30 @@ public partial class ReviewSpeechViewModel : ObservableObject
             }
             return;
         }
+        catch (Exception ex)
+        {
+            line.StepResult.CurrentFileName = originalFileName;
+            line.StepResult.Voice = originalVoice;
+            SeLogger.Error(ex, "Regenerating audio failed.");
+            if (Window != null)
+            {
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.General.Error,
+                    "Regenerating audio failed: " + ex.Message,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            return;
+        }
         finally
         {
             generatingAudioVm.Close();
             IsRegenerateEnabled = true;
+            foreach (var l in Lines)
+            {
+                l.IsPlayingEnabled = true;
+            }
             if (engine is Murf && oldStyle != null)
             {
                 Se.Settings.Video.TextToSpeech.MurfStyle = oldStyle;

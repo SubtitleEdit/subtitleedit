@@ -1349,8 +1349,10 @@ public partial class TextToSpeechViewModel : ObservableObject
     {
         var engine = SelectedEngine;
         var voice = SelectedVoice;
-        if (engine == null || voice == null || Window == null)
+        if (engine == null || voice == null || Window == null || IsGenerating)
         {
+            // IsGenerating guard: the button's IsVoiceTestEnabled binding is timer-driven (mpv
+            // idle) and stays true during a generate run, so this can be clicked mid-pipeline.
             return;
         }
 
@@ -1382,12 +1384,15 @@ public partial class TextToSpeechViewModel : ObservableObject
         text = Utilities.UnbreakLine(text);
 
         var generatingAudioVm = _windowService.ShowWindow<GeneratingAudioWindow, GeneratingAudioViewModel>(Window!);
-        _cancellationTokenSource = generatingAudioVm.CancellationTokenSource;
-        _cancellationToken = _cancellationTokenSource.Token;
+        // A local token only: assigning the popup's CTS into the shared _cancellationTokenSource/
+        // _cancellationToken fields hijacked a running generate pipeline (the pipeline re-reads
+        // the fields per stage) - the popup's Cancel then aborted the whole run, and the main
+        // Cancel button cancelled the popup instead of the generation.
+        var testVoiceToken = generatingAudioVm.CancellationTokenSource.Token;
         try
         {
-            var result = await engine.Speak(text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, _cancellationToken);
-            if (!_cancellationToken.IsCancellationRequested)
+            var result = await engine.Speak(text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, testVoiceToken);
+            if (!testVoiceToken.IsCancellationRequested)
             {
                 if (!File.Exists(result.FileName))
                 {
@@ -3572,6 +3577,13 @@ public partial class TextToSpeechViewModel : ObservableObject
 
     internal void OnClosing(WindowClosingEventArgs e)
     {
+        // An enabled System.Timers.Timer is rooted: without stopping it here, every open/close
+        // of this window leaked a view model whose Elapsed handler kept firing every 100 ms for
+        // the rest of the session (ReviewSpeechViewModel already does this on close).
+        _timer.Stop();
+        _timer.Elapsed -= OnTimerOnElapsed;
+        _timer.Dispose();
+
         lock (_playLock)
         {
             _mpvContext?.Dispose();

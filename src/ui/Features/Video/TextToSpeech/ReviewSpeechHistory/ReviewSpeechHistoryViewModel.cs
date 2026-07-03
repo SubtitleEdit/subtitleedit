@@ -127,6 +127,16 @@ public partial class ReviewSpeechHistoryViewModel : ObservableObject
             return;
         }
 
+        // A CancellationTokenSource is one-shot: after StopItem cancels it, the timer's
+        // IsCancellationRequested check killed every later play within 200 ms - one Stop
+        // permanently broke playback in this dialog. Renew it per play. (The old instance is
+        // intentionally not disposed here; the timer thread may still be reading it.)
+        if (_cancellationTokenSource.IsCancellationRequested)
+        {
+            _cancellationTokenSource = new CancellationTokenSource();
+            _cancellationToken = _cancellationTokenSource.Token;
+        }
+
         item.IsPlaying = true;
         await PlayAudio(item.FileName);
     }
