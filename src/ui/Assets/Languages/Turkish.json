@@ -1,7 +1,7 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.1.0-beta2",
-  "translatedBy": "Utku Gogus; Son güncelleme: Ahmet Murat Özhan (28.06.2026)",
+  "version": "v5.1.0-beta5",
+  "translatedBy": "Utku Gogus; Son güncelleme: Ahmet Murat Özhan (03.07.2026)",
   "cultureName": "tr-TR",
   "general": {
     "abort": "İptal",
@@ -461,6 +461,7 @@
     "replaceWith": "Şununla değiştir",
     "requiresRestart": "Yeniden başlatma gerektirir",
     "reset": "Sıfırla",
+	"resizePanels": "Panelleri yeniden boyutlandır",
     "resolution": "Çözünürlük",
     "resolutionX": "Çözünürlük: {0}",
     "reverseRightToLeftStartEnd": "RTL başlangıç/bitişini tersine çevir",
@@ -682,6 +683,7 @@
     "voice": "Ses",
 	"volume": "Ses düzeyi",
     "warning": "Uyarı",
+	"waveform": "Ses dalgası",
     "waveformCenterOnVideoPosition": "Dalga formunu video konumuna ortala",
     "waveformPasteFromClipboard": "Panodan yapıştır",
     "waveformSpectrogram": "Dalga formu/Spektrogram",
@@ -794,6 +796,7 @@
       "applyMinGap": "Alt yazılar arası min. boşluğu uygula...",
       "changeCasing": "_Büyük/küçük harf değiştir...",
       "changeFormatting": "Biçimlendirmeyi değiştir...",
+	  "aiReview": "Yapay zekâ incelemesi...",
       "fixCommonErrors": "Yaygın hataları _düzelt...",
       "checkAndFixNetflixErrors": "Netfli_x hatalarını kontrol et ve düzelt...",
       "makeEmptyTranslationFromCurrentSubtitle": "Mevcut alt yazıdan yeni _boş çeviri yap",
@@ -1334,6 +1337,32 @@
     "restoreSelected": "Seçilenleri geri yükle"
   },
   "tools": {
+	"aiReview": {
+	  "title": "Yapay zekâ incelemesi",
+	  "review": "İncele",
+	  "stop": "Durdur",
+	  "editPrompt": "Komut istemini düzenle...",
+	  "editPromptTitle": "İnceleme komut istemini düzenle",
+	  "promptInfo": "Modele gönderilen talimatlar - {language} ifadesi alt yazı dili ile değiştirilir.",
+	  "protocolInfo": "Subtitle Edit, komut istemine katı bir JSON protokolü ekler: Satırlar numaralandırılmış JSON olarak gönderilir ve model yalnızca değiştirilen satırları içeren geçerli bir JSON ile yanıt vermelidir. Protokolü bozan yanıtlar yeniden denenir, ardından atlanır.",
+	  "resetToDefault": "Varsayılana sıfırla",
+	  "applyXFixes": "{0} düzeltmeyi uygula",
+	  "xSuggestionsYSelected": "{0} öneri - {1} seçildi",
+	  "reviewingLineXOfY": "Satır {0} / {1} inceleniyor...",
+	  "reviewDone": "İnceleme tamamlandı - {1} satırda {0} öneri",
+	  "noIssuesFound": "Hiçbir sorun bulunamadı",
+	  "categoryAll": "Tümü",
+	  "categorySpelling": "Yazım",
+	  "categoryGrammar": "Dil Bilgisi",
+	  "categoryPunctuation": "Noktalama",
+	  "categoryCasing": "Büyük/Küçük Harf",
+	  "categoryOther": "Diğer",
+	  "xNeedACloserLook": "{0} önerinin daha yakından incelenmesi gerekiyor",
+	  "lineX": "Satır {0}",
+	  "linesXToY": "Satır {0}-{1}",
+	  "largeChangeWarning": "Büyük değişiklik - yeniden yazılmış gibi görünüyor, dikkatlice inceleyin",
+	  "engineError": "Yapay zekâ motoruna ulaşılamadı: {0}"
+},
     "fixCommonErrors": {
       "title": "Yaygın hataları düzelt",
       "step1": "Adım 1/2 - Hangi hataların düzeltileceğini seçin",
@@ -1403,6 +1432,7 @@
       "nothingToFix": "Düzeltilecek bir şey yok :)",
       "fixesFoundX": "Bulunan düzeltmeler: {0}",
       "xFixesApplied": "Uygulanan düzeltmeler: {0}",
+	  "xFixesYSelected": "{0} düzeltme - {1} seçildi",
       "nothingFixableBut": "Otomatik olarak hiçbir şey düzeltilemedi. Alt yazı hatalar içeriyor - detaylar için günlüğe bakın",
       "xFixedBut": "{0} sorun düzeltildi ancak alt yazı hala hatalar içeriyor - detaylar için günlüğe bakın",
       "xCouldBeFixedBut": "{0} sorun düzeltilebilir ancak alt yazı hala hatalar içerecektir - detaylar için günlüğe bakın",
@@ -1484,7 +1514,8 @@
       "extendOnly": "Sadece uzat",
       "enforceDurationLimits": "Minimum ve maksimum süreyi zorla",
       "checkShotChanges": "Sahne değişimlerini geçme",
-      "batchCheckShotChanges": "Sahne değişimlerini dikkate al (varsa)"
+      "batchCheckShotChanges": "Sahne değişimlerini dikkate al (varsa)",
+	  "recalculateRequiresOcrNote": "Yeniden hesaplama kullanılamıyor — bir veya daha fazla alt yazıda OCR metni yok. Önce OCR işlemini çalıştırın."
     },
     "applyDurationLimits": {
       "title": "Süre limitlerini uygula",
@@ -1804,7 +1835,12 @@
       "resizeImagesInfo": "Resimleri yeniden boyutlandırmak için yüzdeyi girin.\nÖn izleme otomatik güncellenir.",
 	  "adjustColorDotDotDot": "Rengi ayarla...",
 	  "adjustColor": "Rengi ayarla",
-	  "colorAdjustmentInfo": "Renk seçmek için renk kutucuğuna tıklayın. Parlak alt yazı pikselleri seçilen renk tonuna kaydırılır; koyu dış hatlar ve gölgeler korunur.\nÖn izleme, seçilen ilk alt yazıyı gösterir."
+	  "colorAdjustmentInfo": "Renk seçmek için renk kutucuğuna tıklayın. Parlak alt yazı pikselleri seçilen renk tonuna kaydırılır; koyu dış hatlar ve gölgeler korunur.\nÖn izleme, seçilen ilk alt yazıyı gösterir.",
+	  "topAlignLines": "Üste hizala",
+	  "bottomAlignLines": "Alta hizala",
+	  "appendSubtitleDotDotDot": "Alt yazı ekle...",
+	  "shiftTimeCodes": "Zaman kodlarını şu kadar kaydır:",
+	  "sortByStartTime": "Başlangıç zamanına göre sırala"
     },
     "removeTextForHearingImpaired": {
       "title": "İşitme engelliler için metni kaldır",
@@ -1820,9 +1856,11 @@
       "onlyIfTextIsUppercase": "Yalnızca metin büyük harfliyse",
       "onlyOnSeparateLine": "Yalnızca ayrı satırdaysa",
       "ifLineIsUppercase": "Satır büyük harfliyse",
+	  "keepUppercaseWords": "Bu kelimeleri büyük harfli koru (virgülle ayrılmış)",
       "ifLineContains": "Satır şunu içeriyorsa:",
       "ifLineOnlyContainsMusicSymbols": "Satır yalnızca müzik sembolleri içeriyorsa",
-      "removeInterjections": "Ünlemleri/Tepki sözcüklerini kaldır"
+      "removeInterjections": "Ünlemleri/Tepki sözcüklerini kaldır",
+	  "linesFoundX": "Bulunan satır sayısı: {0}"
     },
     "pickAlignmentTitle": "Hizalama seçin",
     "pickFontNameTitle": "Yazı tipi seçin",
@@ -1868,7 +1906,14 @@
 	"undoX": "Geri al: {0}",
 	"editWholeText": "Tüm metni düzenle",
 	"continueFromCurrentLine": "Yazım denetimine bulunulan satırdan mı devam edilsin?\n\nEvet = Bulunulan satırdan devam et\nHayır = Baştan başla",
-	"continueFromTop": "Yazım denetimi alt yazının sonuna ulaştı.\n\nBaştan devam edilsin mi?"
+	"continueFromTop": "Yazım denetimi alt yazının sonuna ulaştı.\n\nBaştan devam edilsin mi?",
+	"spellCheckCompleted": "Yazım denetimi tamamlandı",
+	"changedWordsX": "Değiştirilen kelime sayısı: {0}",
+	"skippedWordsX": "Atlanan kelime sayısı: {0}",
+	"correctWordsX": "Doğru kelime sayısı: {0}",
+	"namesX": "Özel ad sayısı: {0}",
+	"addedToDictionaryX": "Sözlüğe eklenen sayı: {0}",
+	"doNotShowThisAgain": "Bu mesajı bir daha gösterme"
   },
   "video": {
     "burnIn": {
@@ -2187,8 +2232,10 @@
     "adjustmentX": "Düzeltme: {0}",
     "totalAdjustmentX": "Toplam düzeltme: {0}",
     "adjustAllShortcuts": "Klavye kısayolları:\r\n\r\n• Shift + Sol/Sağ: 10 ms taşı\r\n• Ctrl + Sol/Sağ: 100 ms taşı\r\n• Alt + Sol/Sağ: 500 ms taşı",
+	"adjustAllShortcutsFrames": "Klavye kısayolları:\r\n\r\n• Shift + Sol/Sağ: 1 kare taşı\r\n• Ctrl + Sol/Sağ: 10 kare taşı\r\n• Alt + Sol/Sağ: 1 saniye taşı",
     "offsetInSeconds": "Saniye cinsinden fark",
-    "speedFactor": "Hız faktörü"
+    "speedFactor": "Hız faktörü",
+	"showEarlierLaterDotDotDot": "Öncekileri/sonrakileri göster..."
   },
   "translate": {
     "translateViaCopyPaste": "Kopyala/yapıştır ile otomatik çeviri",
@@ -2332,6 +2379,7 @@
       "colorTextTooLong": "Metin çok uzunsa renklendir",
       "colorTextTooWide": "Metin çok genişse renklendir (piksel)",
       "colorTextTooManyLines": "2 satırdan fazlaysa renklendir",
+	  "colorTextTooManyLinesX": "{0} satırdan fazlaysa metni renklendir",
 	  "colorCharactersPerSecond": "Çok yüksekse saniyeyi/karakteri renklendir",
 	  "colorWordsPerMinute": "Çok yüksekse dakikayı/kelimeyi renklendir",
       "colorOverlap": "Zaman kodu çakışmasını renklendir",
@@ -2471,6 +2519,7 @@
       "gridGoToSubtitleAndPause": "Alt yazıya git ve duraklat",
       "gridGoToSubtitleAndPlay": "Alt yazıya git ve oynat",
       "gridGoToSubtitleAndPauseAndFocusTextBox": "Alt yazıya git, duraklat ve metin kutusuna odaklan",
+	  "gridGoToSubtitleAndPlayAndFocusTextBox": "Alt yazıya git, oynat ve metin kutusuna odaklan",
       "subtitleGridFormattingNone": "Biçimlendirme yok",
       "subtitleGridFormattingShowFormatting": "Biçimlendirmeyi göster",
       "subtitleGridFormattingShowTags": "Etiketleri göster",
@@ -2670,6 +2719,14 @@
       "subtitleGridCut": "Alt yazı ızgarası: Kes",
       "subtitleGridCopy": "Alt yazı ızgarası: Kopyala",
       "subtitleGridPaste": "Alt yazı ızgarası: Yapıştır",
+	  "listViewColumnDeleteText": "Sütun, metni sil",
+	  "listViewColumnDeleteTextAndShiftUp": "Sütun, metni sil ve yukarı kaydır",
+	  "listViewColumnInsertText": "Sütun, metin ekle",
+	  "listViewColumnPaste": "Sütun, yapıştır",
+	  "listViewColumnTextUp": "Sütun, metni yukarı taşı",
+	  "listViewColumnTextDown": "Sütun, metni aşağı taşı",
+	  "autoTranslateSelectedLines": "Seçili satırları otomatik çevir...",
+	  "setAssaResolution": "ASSA çözünürlüğünü ayarla (PlayResX/PlayResY)",
       "setShortcutForX": "\"{0}\" için kısayol ayarla",
       "commandFileNewKeepVideo": "Yeni (videoyu koru)",
       "fileOpenOriginal": "Orijinali aç",
