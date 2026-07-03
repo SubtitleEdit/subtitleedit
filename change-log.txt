@@ -1,6 +1,19 @@
 
 Subtitle Edit Changelog
 
+v5.1.0-beta7 (3rd of July 2026)
+
+* Add subtitle grid text fit setting: clip / wrap / ellipsis (Settings -> Appearance) - thx muaz978
+* Text to speech: pimp up the window UI - context line (line count, video file name), section headers, engine description, voice count badge, checkbox hints, progress percent/ETA, and a primary accent Generate button
+* Text to speech: fix Import not doing anything on OK - it now merges/saves/adds to video just like Generate - thx cvrle77
+* Text to speech: review window - Space no longer triggers OK, R regenerates the selected line, and playing a line selects it - thx cvrle77
+* Text to speech: mask the API key by default with a reveal button (also applied to Auto-translate's API key) - thx cvrle77
+* Fix a codebase-wide sweep of 46 confirmed bugs (crashes, wrong behavior, and dead error-handling branches across import/export, translation, spell check, ASSA/SSA styles, fix common errors, and more)
+* Update Russian translation - thx jekovcar
+* Update Turkish translation - thx bilimiyorum
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-beta6 (3rd of July 2026)
 
 * Add SE4's "Column" list view shortcuts (delete text, delete text and shift up, insert text, paste, text up/down) - thx SiaL8er
