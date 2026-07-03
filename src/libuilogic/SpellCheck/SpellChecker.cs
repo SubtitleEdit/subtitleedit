@@ -32,7 +32,7 @@ public class SpellChecker : ISpellChecker, IDoSpell
 
     private WordList? _hunspellWeCantSpell;
     protected SpellCheckWordLists? WordLists;
-    protected readonly List<string> SkipAllList = new();
+    protected readonly HashSet<string> SkipAllList = new();
     protected readonly Dictionary<string, string> ChangeAllDictionary = new();
     private string _twoLetterLanguageCode = string.Empty;
 
@@ -408,7 +408,12 @@ public class SpellChecker : ISpellChecker, IDoSpell
 
     protected static bool IsEmailUrlOrHashTag(string word)
     {
-        return EmailRegex.IsMatch(word) || UrlRegex.IsMatch(word) || HashtagRegex.IsMatch(word);
+        // Each regex structurally requires its anchor character ('@', '.', '#'), so an ordinary
+        // word without one can never match - skip the (relatively expensive) regex for it. This
+        // runs once per word during spell check, and most words are none of these three.
+        return (word.Contains('@') && EmailRegex.IsMatch(word)) ||
+               (word.Contains('.') && UrlRegex.IsMatch(word)) ||
+               (word.StartsWith('#') && HashtagRegex.IsMatch(word));
     }
 
     protected static bool IsNumber(string word)

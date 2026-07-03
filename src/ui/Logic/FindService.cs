@@ -20,6 +20,22 @@ public partial class FindService : IFindService
     private readonly List<string> _searchHistory = new List<string>();
     private const int MaxSearchHistoryItems = 10;
 
+    // ReplaceAll/Count/FindAll call into regex mode once per line; caching the last-built Regex
+    // avoids recompiling the same pattern for every line in the subtitle.
+    private string? _cachedRegexPattern;
+    private Regex? _cachedRegex;
+
+    private Regex GetCachedRegex(string pattern)
+    {
+        if (_cachedRegex == null || _cachedRegexPattern != pattern)
+        {
+            _cachedRegex = new Regex(pattern);
+            _cachedRegexPattern = pattern;
+        }
+
+        return _cachedRegex;
+    }
+
     public IReadOnlyList<string> SearchHistory => _searchHistory.AsReadOnly();
 
     public FindService()
@@ -352,7 +368,7 @@ public partial class FindService : IFindService
         searchText = RegexUtils.FixNewLine(searchText); // \r\n / \r in the pattern -> \n to match the text (#11956)
         try
         {
-            var regex = new Regex(searchText);
+            var regex = GetCachedRegex(searchText);
 
             if (startIndex > 0 && maxReplacements == 1)
             {
