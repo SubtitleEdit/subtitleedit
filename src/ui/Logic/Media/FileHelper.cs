@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
             }
 
             // Start async operation to open the dialog.
-            var files = await topLevel.StorageProvider.OpenFilePickerAsync(options);
+            var files = await NativePickers.OpenFilePickerAsync(topLevel, options);
 
             if (files.Count >= 1)
             {
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
             }
 
             // Start async operation to open the dialog.
-            var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            var files = await NativePickers.OpenFilePickerAsync(topLevel, new FilePickerOpenOptions
             {
                 Title = title,
                 AllowMultiple = true,
@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
                 }
             }
 
-            var files = await topLevel.StorageProvider.OpenFilePickerAsync(options);
+            var files = await NativePickers.OpenFilePickerAsync(topLevel, options);
 
             if (files.Count >= 1)
             {
@@ -181,7 +181,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
                 }
             }
 
-            var files = await topLevel.StorageProvider.OpenFilePickerAsync(options);
+            var files = await NativePickers.OpenFilePickerAsync(topLevel, options);
 
             return files.Select(p => p.Path.LocalPath).ToArray();
         }
@@ -265,7 +265,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
                 FileTypeChoices = MakeSaveFilePickerFileTypes(currentFormat),
                 DefaultExtension = currentFormat.Extension.TrimStart('.')
             };
-            var file = await topLevel.StorageProvider.SaveFilePickerAsync(options);
+            var file = await NativePickers.SaveFilePickerAsync(topLevel, options);
 
             if (file != null)
             {
@@ -403,7 +403,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
                 }
             }
 
-            var file = await topLevel.StorageProvider.SaveFilePickerAsync(options);
+            var file = await NativePickers.SaveFilePickerAsync(topLevel, options);
 
             if (file != null)
             {
@@ -454,7 +454,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
                 }
             }
 
-            var file = await topLevel.StorageProvider.SaveFilePickerAsync(options);
+            var file = await NativePickers.SaveFilePickerAsync(topLevel, options);
 
             if (file != null)
             {
@@ -531,7 +531,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
         {
             var topLevel = TopLevel.GetTopLevel(sender)!;
 
-            var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            var files = await NativePickers.OpenFilePickerAsync(topLevel, new FilePickerOpenOptions
             {
                 Title = title,
                 AllowMultiple = false,
@@ -550,7 +550,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
         {
             var topLevel = TopLevel.GetTopLevel(sender)!;
 
-            var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            var files = await NativePickers.OpenFilePickerAsync(topLevel, new FilePickerOpenOptions
             {
                 Title = title,
                 AllowMultiple = true,
@@ -596,7 +596,7 @@ namespace Nikse.SubtitleEdit.Logic.Media
         {
             var topLevel = TopLevel.GetTopLevel(sender)!;
 
-            var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            var files = await NativePickers.OpenFilePickerAsync(topLevel, new FilePickerOpenOptions
             {
                 Title = title,
                 AllowMultiple = false,

@@ -22,7 +22,7 @@ public class FolderHelper : IFolderHelper
 
         if (storageProvider.CanPickFolder)
         {
-            var folders = await storageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+            var folders = await NativePickers.OpenFolderPickerAsync(window, new FolderPickerOpenOptions
             {
                 Title = title,
                 AllowMultiple = false

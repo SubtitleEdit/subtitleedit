@@ -1680,7 +1680,10 @@ public partial class TextToSpeechViewModel : ObservableObject
                 Languages.ToArray(),
                 SelectedLanguage,
                 videoFileNameForReview,
-                Path.GetDirectoryName(fileName)!,
+                // Scratch folder for regenerate intermediates - NOT the imported JSON's folder:
+                // using that folder filled the user's own export folder with GUID-named temp
+                // wavs on every regenerate (#12093). Same location the fresh Generate flow uses.
+                Path.GetTempPath(),
                 peaksForReview);
             // Forward the imported cast so a subsequent Export round-trips the mappings instead
             // of writing ActorVoiceMappings = [] back to SubtitleEditTts.json.
@@ -1697,6 +1700,18 @@ public partial class TextToSpeechViewModel : ObservableObject
         // no merged wav, no dialog, nothing (#12093).
         if (result.OkPressed)
         {
+            // Enter the same visible "generating" state as a fresh Generate run - progress bar,
+            // status text and a working Cancel button. Without this the merge ran with the
+            // window looking completely idle, giving no sign anything was happening (#12093).
+            ProgressValue = 0;
+            ProgressText = string.Empty;
+            ProgressPercentText = string.Empty;
+            ProgressEtaText = string.Empty;
+            IsGenerating = true;
+            IsNotGenerating = false;
+            ProgressOpacity = 1.0;
+            DoneOrCancelText = Se.Language.General.Cancel;
+
             try
             {
                 await MergeAndAddToVideo(result.StepResults);

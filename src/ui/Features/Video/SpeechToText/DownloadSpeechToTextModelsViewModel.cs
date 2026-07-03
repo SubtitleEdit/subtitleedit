@@ -254,7 +254,7 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
             string? sourcePath;
             if (engine.CustomModelIsFolder)
             {
-                var folders = await Window.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+                var folders = await NativePickers.OpenFolderPickerAsync(Window, new FolderPickerOpenOptions
                 {
                     Title = Se.Language.Video.AudioToText.SelectModel,
                     AllowMultiple = false,
@@ -263,7 +263,7 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
             }
             else
             {
-                var files = await Window.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+                var files = await NativePickers.OpenFilePickerAsync(Window, new FilePickerOpenOptions
                 {
                     Title = Se.Language.Video.AudioToText.SelectModel,
                     AllowMultiple = false,

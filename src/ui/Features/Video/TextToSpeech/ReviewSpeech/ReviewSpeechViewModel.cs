@@ -500,6 +500,14 @@ public partial class ReviewSpeechViewModel : ObservableObject
             }
         }
 
+        // The audio files go into a "wav" subfolder so they don't flood the folder the user
+        // picked (usually the subtitle's own folder) with hundreds of clips - only the JSON
+        // lives at the top level (#12093). Import resolves the relative "wav/0001.wav" names
+        // against the JSON's folder, and legacy exports with the clips next to the JSON still
+        // import fine.
+        var audioFolder = Path.Combine(folder, "wav");
+        Directory.CreateDirectory(audioFolder);
+
         // Copy files. Files still referenced by rows or their history entries must not be
         // overwritten: re-exporting to the folder a session was imported from used to replace an
         // original take (e.g. 0002.wav) that a history entry still pointed at - "pick from
@@ -532,7 +540,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         {
             index++;
             var sourceFileName = line.StepResult.CurrentFileName;
-            var targetFileName = Path.Combine(folder, index.ToString().PadLeft(4, '0') + Path.GetExtension((string?)sourceFileName));
+            var targetFileName = Path.Combine(audioFolder, index.ToString().PadLeft(4, '0') + Path.GetExtension((string?)sourceFileName));
 
             // A row can point at a deleted/moved file (e.g. an imported session whose folder was
             // cleaned). File.Copy used to throw unhandled mid-export, leaving some files copied
@@ -559,7 +567,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 string candidate;
                 do
                 {
-                    candidate = Path.Combine(folder, $"{index.ToString().PadLeft(4, '0')}_{suffix}{Path.GetExtension((string?)sourceFileName)}");
+                    candidate = Path.Combine(audioFolder, $"{index.ToString().PadLeft(4, '0')}_{suffix}{Path.GetExtension((string?)sourceFileName)}");
                     suffix++;
                 }
                 while (referencedFiles.Contains(Path.GetFullPath(candidate)) || File.Exists(candidate));
@@ -591,9 +599,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
             exportFormat.Items.Add(new TtsImportExportItem
             {
-                // File name only, not the absolute path: the export folder is meant to be moved
-                // or shared, and Import resolves the name against the JSON's own directory.
-                AudioFileName = string.IsNullOrEmpty(targetFileName) ? string.Empty : Path.GetFileName(targetFileName),
+                // Relative path ("wav/0001.wav"), not absolute: the export folder is meant to be
+                // moved or shared, and Import resolves the path against the JSON's own directory.
+                // Forward slash so the same JSON opens on Windows, macOS and Linux.
+                AudioFileName = string.IsNullOrEmpty(targetFileName) ? string.Empty : "wav/" + Path.GetFileName(targetFileName),
                 StartMs = (long)Math.Round((double)line.StepResult.Paragraph.StartTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
                 EndMs = (long)Math.Round((double)line.StepResult.Paragraph.EndTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
                 VoiceName = line.StepResult.Voice?.Name ?? string.Empty,
@@ -1207,6 +1216,31 @@ public partial class ReviewSpeechViewModel : ObservableObject
             // review (space to listen, R to redo), as requested in #12093.
             e.Handled = true;
             RegenerateSelectedLine();
+        }
+    }
+
+    /// <summary>
+    /// Tunnel-stage KeyUp twin of <see cref="OnPreviewKeyDown"/>. Avalonia's Button raises
+    /// OnClick from OnKeyUp on Space whenever the button is focused - it does not check that
+    /// the button also saw the KeyDown - so a handled KeyDown alone still let a focused button
+    /// (OK!) click on Space release, both playing the line and publishing the session (#12093).
+    /// </summary>
+    internal void OnPreviewKeyUp(KeyEventArgs e)
+    {
+        var isTextBoxFocused = Window?.FocusManager?.GetFocusedElement() is TextBox;
+
+        if (MatchesPlayPauseShortcut(e))
+        {
+            if (e.KeyModifiers == KeyModifiers.None && isTextBoxFocused)
+            {
+                return;
+            }
+
+            e.Handled = true;
+        }
+        else if (e.Key == Key.R && e.KeyModifiers == KeyModifiers.None && !isTextBoxFocused)
+        {
+            e.Handled = true;
         }
     }
 

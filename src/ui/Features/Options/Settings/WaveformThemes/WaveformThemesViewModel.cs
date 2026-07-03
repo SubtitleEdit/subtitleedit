@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared.PromptTextBox;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Media;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -176,7 +177,7 @@ public partial class WaveformThemesViewModel : ObservableObject
             return;
         }
 
-        var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        var files = await NativePickers.OpenFilePickerAsync(topLevel, new FilePickerOpenOptions
         {
             Title = Se.Language.Options.Settings.WaveformLoadThemeDotDotDot,
             AllowMultiple = false,
@@ -238,7 +239,7 @@ public partial class WaveformThemesViewModel : ObservableObject
 
         var suggestedName = (SelectedTheme?.Name ?? "custom").Replace(' ', '_');
 
-        var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        var file = await NativePickers.SaveFilePickerAsync(topLevel, new FilePickerSaveOptions
         {
             Title = Se.Language.Options.Settings.WaveformExportThemeDotDotDot,
             SuggestedFileName = suggestedName,

@@ -539,7 +539,7 @@ public partial class ShotChangesViewModel : ObservableObject
             Patterns = new List<string> { "*.*" },
         });
 
-        var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        var files = await NativePickers.OpenFilePickerAsync(topLevel, new FilePickerOpenOptions
         {
             Title = Se.Language.Video.ShotChanges.OpenShotChangesFile,
             AllowMultiple = false,
