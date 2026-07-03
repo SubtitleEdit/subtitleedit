@@ -25,9 +25,9 @@
 # ../update-metainfo-version.sh separately, same as the CI manifest), submit
 # anything to flathub/flathub, or push to flathub/dk.nikse.subtitleedit.
 #
-# Requires: git, and either (a) flatpak + org.freedesktop.Sdk.Extension.dotnet10//24.08,
-# or (b) a system dotnet 10 SDK install (see ../generate-nuget-sources.sh for details
-# on both paths).
+# Requires: git, python3 (used to parse/update the manifest's tag/commit fields), and
+# either (a) flatpak + org.freedesktop.Sdk.Extension.dotnet10//24.08, or (b) a system
+# dotnet 10 SDK install (see ../generate-nuget-sources.sh for details on both paths).
 #
 # Usage (from repo root):
 #   ./installer/flatpak/flathub/prepare-flathub-release.sh          # regenerate for the current pin
@@ -45,7 +45,13 @@ cd "$REPO_ROOT"
 if [ -n "${1:-}" ]; then
     TAG="$1"
     echo "Resolving commit for $TAG..."
-    git fetch --tags --quiet origin "$TAG" 2>/dev/null || true
+    # An explicit refspec (rather than "--tags $TAG", whose interaction with a
+    # trailing name argument is not reliable across git versions) fetches exactly
+    # this tag and creates/updates the local ref of the same name. Left unguarded
+    # on purpose: if the tag genuinely doesn't exist upstream, fail here with a
+    # clear fetch error rather than at the rev-parse below with a confusing
+    # "unknown revision".
+    git fetch origin "refs/tags/$TAG:refs/tags/$TAG"
     COMMIT="$(git rev-parse "$TAG^{commit}")"
     UPDATE_PIN=1
 else
