@@ -311,6 +311,9 @@ public partial class PaddleOcr
         };
 
         process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+        // Without this, .NET decodes stderr with the OEM codepage on Windows, so any non-ASCII
+        // text in Paddle's (chatty) stderr turns into mojibake in logs/error messages.
+        process.StartInfo.StandardErrorEncoding = Encoding.UTF8;
         process.StartInfo.RedirectStandardOutput = true;
         process.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
         process.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
