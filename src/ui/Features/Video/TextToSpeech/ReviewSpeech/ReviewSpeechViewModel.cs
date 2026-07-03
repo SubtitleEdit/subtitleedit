@@ -952,6 +952,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
         _skipAutoContinue = false;
         _startPlayTicks = DateTime.UtcNow.Ticks;
 
+        // Playing a row selects it, so the keyboard (Space to replay, R to regenerate) always
+        // targets the line just heard - previously selection stayed on the old row (#12093).
+        SelectedLine = line;
+
         line.IsPlaying = true;
         _playingRow = line;
         foreach (var l in Lines)
@@ -1172,29 +1176,51 @@ public partial class ReviewSpeechViewModel : ObservableObject
         else if (e.Key == Key.R && e.KeyModifiers == KeyModifiers.Control)
         {
             e.Handled = true;
-            var line = SelectedLine;
-            if (line == null || line.IsPlaying || !line.IsPlayingEnabled)
-            {
-                return;
-            }
-
-            if (RegenerateAudioCommand.CanExecute(line))
-            {
-                RegenerateAudioCommand.Execute(line);
-            }
+            RegenerateSelectedLine();
         }
-        else if (MatchesPlayPauseShortcut(e))
+    }
+
+    /// <summary>
+    /// Tunnel-stage keys (see the window's AddHandler): play/pause and regenerate must fire
+    /// before the focused control gets the key, otherwise a focused button treats bare Space
+    /// as a click - the initially focused OK button then published the session (#12093).
+    /// </summary>
+    internal void OnPreviewKeyDown(KeyEventArgs e)
+    {
+        // A modifier-less key must still type into a focused text box; with modifiers held the
+        // shortcut works everywhere.
+        var isTextBoxFocused = Window?.FocusManager?.GetFocusedElement() is TextBox;
+
+        if (MatchesPlayPauseShortcut(e))
         {
-            // A modifier-less binding (the default bare Space) must still type into a focused text
-            // box; with modifiers held the shortcut works everywhere. Buttons are unaffected either
-            // way - they handle Space themselves before this window-level handler runs.
-            if (e.KeyModifiers == KeyModifiers.None && Window?.FocusManager?.GetFocusedElement() is TextBox)
+            if (e.KeyModifiers == KeyModifiers.None && isTextBoxFocused)
             {
                 return;
             }
 
             e.Handled = true;
             TogglePlayPauseSelectedRow();
+        }
+        else if (e.Key == Key.R && e.KeyModifiers == KeyModifiers.None && !isTextBoxFocused)
+        {
+            // Bare R = regenerate the selected line: pairs with Space for fast keyboard-only
+            // review (space to listen, R to redo), as requested in #12093.
+            e.Handled = true;
+            RegenerateSelectedLine();
+        }
+    }
+
+    private void RegenerateSelectedLine()
+    {
+        var line = SelectedLine;
+        if (line == null || line.IsPlaying || !line.IsPlayingEnabled)
+        {
+            return;
+        }
+
+        if (RegenerateAudioCommand.CanExecute(line))
+        {
+            RegenerateAudioCommand.Execute(line);
         }
     }
 
