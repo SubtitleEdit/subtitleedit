@@ -233,7 +233,7 @@ public class ElevenLabs : ITtsEngine
             }
         }
 
-        if (model == "eleven_turbo_v2)")
+        if (model == "eleven_turbo_v2")
         {
             languages = new List<TtsLanguage>
             {
@@ -241,7 +241,7 @@ public class ElevenLabs : ITtsEngine
             };
         }
 
-        if (model == "eleven_multilingual_v1)")
+        if (model == "eleven_multilingual_v1")
         {
             languages = new List<TtsLanguage>
             {

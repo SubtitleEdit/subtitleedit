@@ -1349,8 +1349,10 @@ public partial class TextToSpeechViewModel : ObservableObject
     {
         var engine = SelectedEngine;
         var voice = SelectedVoice;
-        if (engine == null || voice == null || Window == null)
+        if (engine == null || voice == null || Window == null || IsGenerating)
         {
+            // IsGenerating guard: the button's IsVoiceTestEnabled binding is timer-driven (mpv
+            // idle) and stays true during a generate run, so this can be clicked mid-pipeline.
             return;
         }
 
@@ -1382,12 +1384,15 @@ public partial class TextToSpeechViewModel : ObservableObject
         text = Utilities.UnbreakLine(text);
 
         var generatingAudioVm = _windowService.ShowWindow<GeneratingAudioWindow, GeneratingAudioViewModel>(Window!);
-        _cancellationTokenSource = generatingAudioVm.CancellationTokenSource;
-        _cancellationToken = _cancellationTokenSource.Token;
+        // A local token only: assigning the popup's CTS into the shared _cancellationTokenSource/
+        // _cancellationToken fields hijacked a running generate pipeline (the pipeline re-reads
+        // the fields per stage) - the popup's Cancel then aborted the whole run, and the main
+        // Cancel button cancelled the popup instead of the generation.
+        var testVoiceToken = generatingAudioVm.CancellationTokenSource.Token;
         try
         {
-            var result = await engine.Speak(text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, _cancellationToken);
-            if (!_cancellationToken.IsCancellationRequested)
+            var result = await engine.Speak(text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, testVoiceToken);
+            if (!testVoiceToken.IsCancellationRequested)
             {
                 if (!File.Exists(result.FileName))
                 {
@@ -1454,7 +1459,30 @@ public partial class TextToSpeechViewModel : ObservableObject
 
     private async Task RefreshVoices(ITtsEngine engine)
     {
-        var voices = await engine.RefreshVoices(string.Empty, CancellationToken.None);
+        Voice[] voices;
+        try
+        {
+            voices = await engine.RefreshVoices(string.Empty, CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            // The voice-list downloads throw on HTTP failure (so an error body cannot overwrite
+            // the cached list). Keep the current voices and tell the user instead of crashing
+            // whichever command triggered the refresh.
+            SeLogger.Error(ex, $"Refreshing voices for {engine.Name} failed - keeping the cached voice list");
+            if (Window != null)
+            {
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.General.Error,
+                    $"Refreshing voices failed: {ex.Message}",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+
+            return;
+        }
+
         Voices.Clear();
         foreach (var voice in voices)
         {
@@ -1547,6 +1575,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
 
         var stepResults = new List<TtsStepResult>();
+        var jsonFolder = Path.GetDirectoryName(fileName) ?? string.Empty;
         for (var index = 0; index < importExport.Items.Count; index++)
         {
             var item = importExport.Items[index];
@@ -1561,7 +1590,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             stepResults.Add(new TtsStepResult
             {
                 Text = item.Text,
-                CurrentFileName = item.AudioFileName,
+                CurrentFileName = ResolveImportedAudioFileName(item.AudioFileName, jsonFolder),
                 Paragraph = paragraph,
                 SpeedFactor = item.SpeedFactor <= 0 ? 1.0f : item.SpeedFactor,
                 Voice = voice,
@@ -1582,6 +1611,20 @@ public partial class TextToSpeechViewModel : ObservableObject
         if (string.IsNullOrEmpty(_videoFileName) && !string.IsNullOrEmpty(videoFileNameForReview))
         {
             _videoFileName = videoFileNameForReview;
+        }
+
+        // The review window needs an engine and voice to offer regeneration. Voices can be empty
+        // when the selected engine's voice load failed (missing API key, network) - Voices.First()
+        // then threw and Import died with only a logged exception.
+        if (Engines.Count == 0 || Voices.Count == 0)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                "No voices are loaded for the selected engine - check the engine settings (e.g. API key) and try again.",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
         }
 
         // Try to populate _wavePeakData synchronously from the on-disk cache (fast, no ffmpeg).
@@ -1611,6 +1654,33 @@ public partial class TextToSpeechViewModel : ObservableObject
                 _ = GenerateWavePeaksIfNeededAsync(videoFileNameForReview, vm);
             }
         });
+    }
+
+    /// <summary>
+    /// Resolves an imported item's audio file. New exports store just the file name (resolved
+    /// against the JSON's own folder, so the export folder can be moved or shared); older exports
+    /// stored absolute paths - honored when they still exist, otherwise the same name is tried
+    /// next to the JSON.
+    /// </summary>
+    private static string ResolveImportedAudioFileName(string? audioFileName, string jsonFolder)
+    {
+        if (string.IsNullOrEmpty(audioFileName))
+        {
+            return string.Empty;
+        }
+
+        if (Path.IsPathRooted(audioFileName))
+        {
+            if (File.Exists(audioFileName))
+            {
+                return audioFileName;
+            }
+
+            var siblingFileName = Path.Combine(jsonFolder, Path.GetFileName(audioFileName));
+            return File.Exists(siblingFileName) ? siblingFileName : audioFileName;
+        }
+
+        return Path.Combine(jsonFolder, audioFileName);
     }
 
     private static WavePeakData2? TryLoadWavePeaksFromDisk(string videoFileName)
@@ -3032,8 +3102,22 @@ public partial class TextToSpeechViewModel : ObservableObject
                     var mediaInfo = FfmpegMediaInfo.Parse(currentFile);
                     if (mediaInfo.Duration == null)
                     {
+                        // The trim/VAD output is missing or unreadable (ffmpeg problem). Keep the
+                        // engine's original audio at original speed - same policy as the other
+                        // failure paths - instead of silently dropping the line from the output.
                         skippedNoDurationCount++;
-                        Se.WriteToolsLog($"TTS FixSpeed: segment {index + 1} dropped - could not read duration of \"{currentFile}\" (trim output missing or unreadable; ffmpeg problem?)", true);
+                        Se.WriteToolsLog($"TTS FixSpeed: segment {index + 1} - could not read duration of \"{currentFile}\" (trim output missing or unreadable; ffmpeg problem?) - keeping original audio", true);
+                        resultList.Add(new TtsStepResult
+                        {
+                            Paragraph = p,
+                            Text = item.Text,
+                            CurrentFileName = item.CurrentFileName,
+                            SpeedFactor = 1.0f,
+                            Voice = item.Voice,
+                            EngineName = item.EngineName,
+                            Model = item.Model,
+                            Instruction = item.Instruction,
+                        });
                         continue;
                     }
 
@@ -3343,7 +3427,33 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             IsEngineSettingsVisible = false;
             IsModelDownloadVisible = false;
-            var voices = await engine.GetVoices(SelectedLanguage?.Code ?? string.Empty);
+
+            // Engine capability flags first, and never skipped: when the voice load below fails
+            // or returns nothing (missing API key, no network), the user must still get the new
+            // engine's own fields (API key, region, model, ...) to fix the cause. The old flow
+            // returned early on an empty voice list, leaving every panel flag - and the voice
+            // list itself - describing the *previous* engine, so Generate could then hand the
+            // wrong engine's Voice object to Speak.
+            HasLanguageParameter = engine.HasLanguageParameter;
+            HasApiKey = engine.HasApiKey;
+            HasRegion = engine.HasRegion;
+            HasModel = engine.HasModel;
+            HasKeyFile = engine.HasKeyFile;
+            IsEdgeTtsEngine = engine is EdgeTts;
+
+            Voice[] voices;
+            try
+            {
+                voices = await engine.GetVoices(SelectedLanguage?.Code ?? string.Empty);
+            }
+            catch (Exception ex)
+            {
+                // PostSafe used to swallow this, skipping the whole engine switch. Show an empty
+                // voice list for the new engine instead of the previous engine's voices.
+                SeLogger.Error(ex, $"Loading voices for {engine.Name} failed");
+                voices = [];
+            }
+
             Voices.Clear();
             foreach (var vo in voices)
             {
@@ -3358,20 +3468,13 @@ public partial class TextToSpeechViewModel : ObservableObject
                                                        p.Name.Contains("English", StringComparison.OrdinalIgnoreCase));
             }
             SelectedVoice = lastVoice ?? Voices.FirstOrDefault();
-            if (SelectedVoice == null)
+
+            if (SelectedVoice != null)
             {
-                return;
+                ApplyInstructionForEngine(engine);
             }
 
-            HasLanguageParameter = engine.HasLanguageParameter;
-            HasApiKey = engine.HasApiKey;
-            HasRegion = engine.HasRegion;
-            HasModel = engine.HasModel;
-            HasKeyFile = engine.HasKeyFile;
-            IsEdgeTtsEngine = engine is EdgeTts;
-            ApplyInstructionForEngine(engine);
-
-            if (HasLanguageParameter)
+            if (HasLanguageParameter && SelectedVoice != null)
             {
                 var languages = await engine.GetLanguages(SelectedVoice, SelectedModel);
                 Languages.Clear();
@@ -3575,6 +3678,13 @@ public partial class TextToSpeechViewModel : ObservableObject
 
     internal void OnClosing(WindowClosingEventArgs e)
     {
+        // An enabled System.Timers.Timer is rooted: without stopping it here, every open/close
+        // of this window leaked a view model whose Elapsed handler kept firing every 100 ms for
+        // the rest of the session (ReviewSpeechViewModel already does this on close).
+        _timer.Stop();
+        _timer.Elapsed -= OnTimerOnElapsed;
+        _timer.Dispose();
+
         lock (_playLock)
         {
             _mpvContext?.Dispose();
