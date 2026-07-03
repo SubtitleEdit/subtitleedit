@@ -1486,7 +1486,10 @@ public partial class TextToSpeechViewModel : ObservableObject
         _cancellationTokenSource = new CancellationTokenSource();
         _cancellationToken = _cancellationTokenSource.Token;
 
-        var fileName = await _fileHelper.PickOpenFile(Window, "Open SubtitleEditTts.json file", "TTS json files", "SubtitleEditTts.json");
+        // The pattern must start with '*' as-is: passing "SubtitleEditTts.json" would get a "*."
+        // prefix from PickOpenFile, and that pattern cannot match the exported file itself (Export
+        // writes exactly "SubtitleEditTts.json"), hiding it in SE's own open dialog (#12093).
+        var fileName = await _fileHelper.PickOpenFile(Window, "Open SubtitleEditTts.json file", "TTS json files", "*SubtitleEditTts.json");
         if (string.IsNullOrEmpty(fileName))
         {
             return;
