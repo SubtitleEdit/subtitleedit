@@ -44,7 +44,7 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-i \"{inputFileName1}\" -i \"{inputFileName2}\" -filter_complex \"aevalsrc=0:d={startSeconds.ToString(CultureInfo.InvariantCulture)}[s1];[s1][1:a]concat=n=2:v=0:a=1[ac1];[0:a][ac1]amix=2:normalize=false{filterSuffix}[aout]\" -map [aout]{stereoParameter} \"{outputFileName}\"",
+                Arguments = $"-nostdin -y -i \"{inputFileName1}\" -i \"{inputFileName2}\" -filter_complex \"aevalsrc=0:d={startSeconds.ToString(CultureInfo.InvariantCulture)}[s1];[s1][1:a]concat=n=2:v=0:a=1[ac1];[0:a][ac1]amix=2:normalize=false{filterSuffix}[aout]\" -map [aout]{stereoParameter} \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -507,7 +507,7 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-i \"{inputFileName}\" -filter:a \"atempo={speed.ToString(CultureInfo.InvariantCulture)}\" \"{outputFileName}\"",
+                Arguments = $"-nostdin -y -i \"{inputFileName}\" -filter:a \"atempo={speed.ToString(CultureInfo.InvariantCulture)}\" \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -525,7 +525,7 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-i \"{inputFileName}\" -af \"areverse,atrim=start=0.1,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01,areverse,atrim=start=0.1,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01\" \"{outputFileName}\"",
+                Arguments = $"-nostdin -y -i \"{inputFileName}\" -af \"areverse,atrim=start=0.1,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01,areverse,atrim=start=0.1,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01\" \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -556,7 +556,7 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-i \"{inputFileName}\" -af \"{filter}\" \"{outputFileName}\"",
+                Arguments = $"-nostdin -y -i \"{inputFileName}\" -af \"{filter}\" \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -591,7 +591,7 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-i \"{inputFileName}\" -af \"{filter}\" \"{outputFileName}\"",
+                Arguments = $"-nostdin -y -i \"{inputFileName}\" -af \"{filter}\" \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -612,7 +612,7 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-i \"{inputFileName}\" -i \"{audioFileName}\" -c:v copy -map 0:v:0 -map 1:a:0 {audioEncodingString}{stereoString}\"{outputFileName}\"",
+                Arguments = $"-nostdin -y -i \"{inputFileName}\" -i \"{audioFileName}\" -c:v copy -map 0:v:0 -map 1:a:0 {audioEncodingString}{stereoString}\"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -637,7 +637,7 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-i \"{inputFileName}\" -i \"{audioFileName}\" -filter_complex \"[0:a]volume={volumeFactor}[orig];[orig][1:a]amix=inputs=2:duration=longest:normalize=0[aout]\" -map 0:v:0 -map \"[aout]\" -c:v copy {audioEncodingString}{stereoString}\"{outputFileName}\"",
+                Arguments = $"-nostdin -y -i \"{inputFileName}\" -i \"{audioFileName}\" -filter_complex \"[0:a]volume={volumeFactor}[orig];[orig][1:a]amix=inputs=2:duration=longest:normalize=0[aout]\" -map 0:v:0 -map \"[aout]\" -c:v copy {audioEncodingString}{stereoString}\"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -669,7 +669,7 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-i \"{inputFileName}\" -af \"{filters}\" \"{outputFileName}\"",
+                Arguments = $"-nostdin -y -i \"{inputFileName}\" -af \"{filters}\" \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -712,7 +712,7 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-i \"{inputFileName1}\" -i \"{inputFileName2}\" -filter_complex \"[0:a][1:a]concat=n=2:v=0:a=1[aout]\" -map \"[aout]\" \"{outputFileName}\"",
+                Arguments = $"-nostdin -y -i \"{inputFileName1}\" -i \"{inputFileName2}\" -filter_complex \"[0:a][1:a]concat=n=2:v=0:a=1[aout]\" -map \"[aout]\" \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -733,7 +733,7 @@ public class FfmpegGenerator
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-i \"{inputFileName}\" -ar {sampleRate} \"{outputFileName}\"",
+                Arguments = $"-nostdin -y -i \"{inputFileName}\" -ar {sampleRate} \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
