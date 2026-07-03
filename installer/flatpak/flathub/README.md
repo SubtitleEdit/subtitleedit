@@ -27,13 +27,18 @@ job pair, the same pattern already used for the CI manifest's own
 2. Regenerates `nuget-sources.json` for that exact commit (`prepare-flathub-release.sh`
    with no argument) and uploads it as the `flathub-nuget-sources` artifact.
 3. Builds the actual git-source manifest, the one that would be submitted to Flathub, in the
-   same `flathub-infra` container Flathub itself uses, and uploads the result as the
-   `flathub-bundle` artifact.
+   same `flathub-infra` container Flathub itself uses, for both `x86_64` and `aarch64`
+   (native ARM64 runner, not emulation), and uploads each as `flathub-bundle-x86_64` /
+   `flathub-bundle-aarch64`.
 
 That last part is the real point: it validates this exact variant end to end on a real Linux
 runner, without needing a contributor's own Linux box or local Flatpak install (see the
-discussion on #11800). Run the workflow, download `flathub-bundle`, and if it built, the pin
-is good; `flathub-nuget-sources` is the file to commit here.
+discussion on #11800). The two architectures matter because a contributor testing this ahead
+of submission may well be on aarch64 hardware (e.g. Apple Silicon under a Linux VM); an
+x86_64-only bundle would force them into qemu emulation just to try it. Run the workflow,
+download whichever `flathub-bundle-<arch>` matches your machine, and if it built, the pin
+is good; `flathub-nuget-sources` is the file to commit here (the same one covers both
+architectures, since `generate-nuget-sources.sh` already restores for both).
 
 `nuget-sources.json` is intentionally not committed to this repo until it has been generated
 this way, so that it can never silently drift out of sync with whatever the manifest currently
@@ -78,8 +83,9 @@ Two mechanisms, doing two different halves of the job:
      installer/flatpak/flathub/dk.nikse.subtitleedit.yaml
    ```
 2. **Actually run the built app**, not just build it. `build-linux-flathub` in CI proves the
-   sandbox builds; it does not launch the app or exercise it. Download the `flathub-bundle`
-   artifact and install/run it on Linux (`flatpak install flathub-bundle.flatpak && flatpak run
+   sandbox builds; it does not launch the app or exercise it. Download whichever
+   `flathub-bundle-<arch>` matches your machine and install/run it on Linux
+   (`flatpak install SubtitleEdit-flathub-<arch>.flatpak && flatpak run
    dk.nikse.subtitleedit`), open a subtitle file, load a video, try OCR, before submitting.
 
 ## Submitting

@@ -203,7 +203,20 @@ jobs:
 
   build-linux-flathub:
     needs: regenerate-flathub-nuget-sources
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # ubuntu-24.04-arm is GitHub's free-tier hosted ARM64 runner (public repos).
+          # A native leg matters here specifically because contributors testing this
+          # manifest ahead of the actual Flathub submission (#11800) may well be on
+          # aarch64 hardware themselves (e.g. Apple Silicon under a Linux VM); an
+          # x86_64-only bundle would force them into qemu emulation to even try it.
+          - arch: x86_64
+            runner: ubuntu-latest
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
     container:
       image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-24.08
       options: --privileged
@@ -220,16 +233,16 @@ jobs:
       - name: Build flathub flatpak bundle
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
-          bundle: SubtitleEdit-flathub-linux-x64.flatpak
+          bundle: SubtitleEdit-flathub-${{ matrix.arch }}.flatpak
           manifest-path: installer/flatpak/flathub/dk.nikse.subtitleedit.yaml
-          cache-key: flathub-builder-${{ hashFiles('installer/flatpak/flathub/dk.nikse.subtitleedit.yaml', 'installer/flatpak/flathub/nuget-sources.json') }}
-          arch: x86_64
+          cache-key: flathub-builder-${{ matrix.arch }}-${{ hashFiles('installer/flatpak/flathub/dk.nikse.subtitleedit.yaml', 'installer/flatpak/flathub/nuget-sources.json') }}
+          arch: ${{ matrix.arch }}
 
       - name: Upload flathub bundle artifact
         uses: actions/upload-artifact@v5
         with:
-          name: flathub-bundle
-          path: SubtitleEdit-flathub-linux-x64.flatpak
+          name: flathub-bundle-${{ matrix.arch }}
+          path: SubtitleEdit-flathub-${{ matrix.arch }}.flatpak
           overwrite: true
 
   build-windows:
