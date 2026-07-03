@@ -2618,6 +2618,10 @@ public partial class TextToSpeechViewModel : ObservableObject
             // empty, every paragraph falls back to the globally selected engine/voice.
             var castContext = await BuildCastContextAsync();
 
+            // Distinct failure reasons reported by the engines, so the dialogs below can say *why*
+            // segments failed (e.g. the ElevenLabs 429 text) instead of a bare count (#12093).
+            var errorMessages = new List<string>();
+
             for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
             {
                 ProgressText = $"Generating speech: segment {index + 1} of {_subtitle.Paragraphs.Count}";
@@ -2644,6 +2648,10 @@ public partial class TextToSpeechViewModel : ObservableObject
                     resolution.Instruction,
                     () => resolution.Engine.Speak(resolution.Text, _waveFolder, resolution.Voice,
                         language, region, model, cancellationToken));
+                if (speakResult.Error && !string.IsNullOrEmpty(speakResult.ErrorMessage) && !errorMessages.Contains(speakResult.ErrorMessage))
+                {
+                    errorMessages.Add(speakResult.ErrorMessage);
+                }
                 resultList.Add(new TtsStepResult
                 {
                     Text = resolution.Text,
@@ -2669,10 +2677,15 @@ public partial class TextToSpeechViewModel : ObservableObject
             ProgressValue = 100;
 
             var failedCount = resultList.Count(r => string.IsNullOrEmpty(r.CurrentFileName));
+            // First engine-reported failure reason, e.g. the ElevenLabs 429 text. The generic
+            // rate/pitch hint only applies when no engine said anything more specific.
+            var firstError = errorMessages.Count > 0
+                ? errorMessages[0]
+                : "Check the engine settings (rate/pitch/volume must be a signed integer, e.g. \"+10\") and try again.";
             if (failedCount == resultList.Count && resultList.Count > 0)
             {
-                var msg = $"Text-to-speech failed for all {failedCount} segments. " +
-                          "Check the engine settings (rate/pitch/volume must be a signed integer, e.g. \"+10\") and try again.";
+                var msg = $"Text-to-speech failed for all {failedCount} segments." +
+                          Environment.NewLine + Environment.NewLine + firstError;
                 SeLogger.Error(msg);
                 await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
@@ -2698,10 +2711,13 @@ public partial class TextToSpeechViewModel : ObservableObject
                         return true;
                     }
 
+                    var detail = errorMessages.Count > 0
+                        ? Environment.NewLine + Environment.NewLine + errorMessages[0]
+                        : string.Empty;
                     var answer = await MessageBox.Show(
                         Window,
                         Se.Language.General.Warning,
-                        $"{failedCount} of {resultList.Count} segments failed to generate (see error-log.txt in the Subtitle Edit data folder)." +
+                        $"{failedCount} of {resultList.Count} segments failed to generate (see error-log.txt in the Subtitle Edit data folder).{detail}" +
                         Environment.NewLine + Environment.NewLine +
                         "Continue with the remaining segments? The failed lines will be missing from the audio.",
                         MessageBoxButtons.YesNo,

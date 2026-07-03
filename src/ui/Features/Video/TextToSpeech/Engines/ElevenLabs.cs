@@ -289,13 +289,13 @@ public class ElevenLabs : ITtsEngine
         Se.WriteToolsLog($"ElevenLabs: voice={elevenLabVoice.Voice}, voiceId={elevenLabVoice.VoiceId}, model={model}, textLen={text.Length}");
 
         var ms = new MemoryStream();
-        var ok = await _ttsDownloadService.DownloadElevenLabsVoiceSpeak(text, elevenLabVoice, model, Se.Settings.Video.TextToSpeech.ElevenLabsApiKey, "en", ms, null, cancellationToken);
+        var (ok, error) = await _ttsDownloadService.DownloadElevenLabsVoiceSpeak(text, elevenLabVoice, model, Se.Settings.Video.TextToSpeech.ElevenLabsApiKey, language?.Code ?? "en", ms, null, cancellationToken);
         if (!ok)
         {
             // Forced: a failed API call must land in the tools log even when the setting is off,
             // so a bug report shows which segments failed and why (#12093).
-            Se.WriteToolsLog($"ElevenLabs: request failed (voice={elevenLabVoice.Voice}, textLen={text.Length}) - see error-log.txt for the HTTP status/response", true);
-            return new TtsResult { Text = text, FileName = string.Empty, Error = true };
+            Se.WriteToolsLog($"ElevenLabs: request failed (voice={elevenLabVoice.Voice}, textLen={text.Length}): {error}", true);
+            return new TtsResult { Text = text, FileName = string.Empty, Error = true, ErrorMessage = error };
         }
 
         var fileName = Path.Combine(GetSetElevenLabsFolder(), Guid.NewGuid() + ".mp3");

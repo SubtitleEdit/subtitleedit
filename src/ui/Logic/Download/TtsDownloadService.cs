@@ -31,7 +31,7 @@ public interface ITtsDownloadService
     Task DownloadAzureVoiceList(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken);
     Task DownloadMurfVoiceList(MemoryStream stream, IProgress<float>? progress, CancellationToken cancellationToken);
 
-    Task<bool> DownloadElevenLabsVoiceSpeak(
+    Task<(bool Ok, string Error)> DownloadElevenLabsVoiceSpeak(
         string inputText,
         ElevenLabVoice voice,
         string model,
@@ -244,7 +244,7 @@ public class TtsDownloadService : ITtsDownloadService
         await DownloadHelper.DownloadFileAsync(_httpClient, url, stream, progress, cancellationToken);
     }
 
-    public async Task<bool> DownloadElevenLabsVoiceSpeak(
+    public async Task<(bool Ok, string Error)> DownloadElevenLabsVoiceSpeak(
         string inputText,
         ElevenLabVoice voice,
         string model,
@@ -273,26 +273,97 @@ public class TtsDownloadService : ITtsDownloadService
         var speed = Se.Settings.Video.TextToSpeech.ElevenLabsSpeed.ToString(CultureInfo.InvariantCulture);
         var styleExaggeration = Se.Settings.Video.TextToSpeech.ElevenLabsStyleeExaggeration.ToString(CultureInfo.InvariantCulture);
         var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + $"\", \"model_id\": \"{model}\"{language}, \"voice_settings\": {{ \"stability\": {stability}, \"similarity_boost\": {similarityBoost}, \"speed\": {speed}, \"style\": {styleExaggeration} }} }}";
-        using var requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
-        requestMessage.Content = new StringContent(data, Encoding.UTF8);
-        requestMessage.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-        requestMessage.Headers.TryAddWithoutValidation("Content-Type", "application/json");
-        requestMessage.Headers.TryAddWithoutValidation("Accept", "audio/mpeg");
-        requestMessage.Headers.TryAddWithoutValidation("xi-api-key", apiKey.Trim());
 
-        var result = await _httpClient.SendAsync(requestMessage, cancellationToken);
-        await result.Content.CopyToAsync(stream, cancellationToken);
-        if (!result.IsSuccessStatusCode)
-        {
-            var error = Encoding.UTF8.GetString(stream.ToArray()).Trim();
-            SeLogger.Error($"ElevenLabs TTS failed calling API as base address {_httpClient.BaseAddress} : Status code={result.StatusCode} {error}" + Environment.NewLine + "Data=" + data);
-            return false;
-        }
-
-        return true;
+        return await SendElevenLabsSpeakRequestAsync(url, data, apiKey, acceptAudioMpeg: true, stream, "ElevenLabs TTS", cancellationToken);
     }
 
-    private async Task<bool> DownloadElevenLabsVoiceSpeak3(
+    /// <summary>
+    /// Posts an ElevenLabs speak request and copies the audio response into <paramref name="stream"/>.
+    /// ElevenLabs enforces per-plan concurrency/request limits, and bulk generation fires one request
+    /// per subtitle line - so HTTP 429 (and transient 5xx) responses are retried with a backoff that
+    /// honors the Retry-After header instead of failing the segment outright (#12093). Returns a
+    /// human-readable error for the UI when all attempts fail.
+    /// </summary>
+    private async Task<(bool Ok, string Error)> SendElevenLabsSpeakRequestAsync(
+        string url,
+        string jsonData,
+        string apiKey,
+        bool acceptAudioMpeg,
+        MemoryStream stream,
+        string logContext,
+        CancellationToken cancellationToken)
+    {
+        const int maxAttempts = 4;
+        for (var attempt = 1; ; attempt++)
+        {
+            // A new request message per attempt - HttpRequestMessage cannot be re-sent.
+            using var requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
+            requestMessage.Content = new StringContent(jsonData, Encoding.UTF8);
+            requestMessage.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+            requestMessage.Headers.TryAddWithoutValidation("Content-Type", "application/json");
+            if (acceptAudioMpeg)
+            {
+                requestMessage.Headers.TryAddWithoutValidation("Accept", "audio/mpeg");
+            }
+            requestMessage.Headers.TryAddWithoutValidation("xi-api-key", apiKey.Trim());
+
+            using var result = await _httpClient.SendAsync(requestMessage, cancellationToken);
+            if (result.IsSuccessStatusCode)
+            {
+                stream.SetLength(0);
+                await result.Content.CopyToAsync(stream, cancellationToken);
+                return (true, string.Empty);
+            }
+
+            var errorBody = TruncateForLog((await result.Content.ReadAsStringAsync(cancellationToken)).Trim());
+            var retryable = result.StatusCode == System.Net.HttpStatusCode.TooManyRequests || (int)result.StatusCode >= 500;
+            if (retryable && attempt < maxAttempts)
+            {
+                var delay = GetRetryDelay(result, attempt);
+                SeLogger.Error($"{logContext}: HTTP {(int)result.StatusCode} {result.StatusCode} - retrying in {delay.TotalSeconds:0.#}s (attempt {attempt} of {maxAttempts}): {errorBody}");
+                await Task.Delay(delay, cancellationToken);
+                continue;
+            }
+
+            var error = result.StatusCode == System.Net.HttpStatusCode.TooManyRequests
+                ? $"ElevenLabs rate limit (HTTP 429) still hit after {maxAttempts} attempts with backoff - the plan's concurrency/request limit is likely exceeded. {errorBody}"
+                : $"HTTP {(int)result.StatusCode} {result.StatusCode}: {errorBody}";
+            SeLogger.Error($"{logContext} failed calling {url}: {error}" + Environment.NewLine + "Data=" + jsonData);
+            return (false, error);
+        }
+    }
+
+    private static TimeSpan GetRetryDelay(HttpResponseMessage response, int attempt)
+    {
+        // Prefer the server's Retry-After (delta or absolute date); fall back to exponential
+        // backoff (2 s, 4 s, 8 s). Capped so a bogus header cannot stall generation for minutes.
+        var maxDelay = TimeSpan.FromSeconds(30);
+
+        var retryAfter = response.Headers.RetryAfter;
+        if (retryAfter?.Delta is { } delta && delta > TimeSpan.Zero)
+        {
+            return delta <= maxDelay ? delta : maxDelay;
+        }
+
+        if (retryAfter?.Date is { } date)
+        {
+            var untilDate = date - DateTimeOffset.UtcNow;
+            if (untilDate > TimeSpan.Zero)
+            {
+                return untilDate <= maxDelay ? untilDate : maxDelay;
+            }
+        }
+
+        return TimeSpan.FromSeconds(Math.Pow(2, attempt));
+    }
+
+    private static string TruncateForLog(string text)
+    {
+        const int maxLength = 300;
+        return text.Length <= maxLength ? text : text.Substring(0, maxLength) + "...";
+    }
+
+    private async Task<(bool Ok, string Error)> DownloadElevenLabsVoiceSpeak3(
         string inputText, 
         ElevenLabVoice voice, 
         string model, 
@@ -313,26 +384,10 @@ public class TtsDownloadService : ITtsDownloadService
                    "\"voice_id\": \"" + voice.VoiceId + "\", " +
                    "\"language_code\": \"" + languageCode + "\", " +
                    "\"stability\": " + stability + ", " +
-                   "\"speed\": " + speed + 
+                   "\"speed\": " + speed +
                    " }] }";
 
-        using var requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
-        requestMessage.Content = new StringContent(data, Encoding.UTF8);
-        requestMessage.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-        requestMessage.Headers.TryAddWithoutValidation("Content-Type", "application/json");
-        requestMessage.Headers.TryAddWithoutValidation("xi-api-key", apiKey.Trim());
-
-        var result = await _httpClient.SendAsync(requestMessage, cancellationToken);
-        await result.Content.CopyToAsync(stream, cancellationToken);
-    
-        if (!result.IsSuccessStatusCode)
-        {
-            var error = Encoding.UTF8.GetString(stream.ToArray()).Trim();
-            SeLogger.Error($"ElevenLabs TTS v3 failed calling API as base address {_httpClient.BaseAddress} : Status code={result.StatusCode} {error}" + Environment.NewLine + "Data=" + data);
-            return false;
-        }
-
-        return true;
+        return await SendElevenLabsSpeakRequestAsync(url, data, apiKey, acceptAudioMpeg: false, stream, "ElevenLabs TTS v3", cancellationToken);
     }
 
     public async Task<bool> DownloadAzureVoiceSpeak(
