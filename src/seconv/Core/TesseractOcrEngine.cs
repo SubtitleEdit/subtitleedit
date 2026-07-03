@@ -82,6 +82,8 @@ internal sealed class TesseractOcrEngine : IOcrEngine
                 ArgumentList = { pngPath, "stdout", "-l", Language, "--psm", "6" },
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
+                StandardOutputEncoding = System.Text.Encoding.UTF8,
+                StandardErrorEncoding = System.Text.Encoding.UTF8,
                 UseShellExecute = false,
                 CreateNoWindow = true,
             };
