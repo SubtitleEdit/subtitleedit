@@ -75,6 +75,10 @@ public class LanguageSettings
     public string SubtitleGridFontSize { get; set; }
     public string SubtitleGridTextSingleLine { get; set; }
     public string SubtitleGridTextSingleLineSeparator { get; set; }
+    public string SubtitleGridTextDisplay { get; set; }
+    public string SubtitleGridTextDisplayClip { get; set; }
+    public string SubtitleGridTextDisplayWrap { get; set; }
+    public string SubtitleGridTextDisplayEllipsis { get; set; }
     public string SubtitleGridLiveSpellCheck { get; set; }
     public string SubtitleGridShowFormatting { get; set; }
     public string ShowUpDownStartTime { get; set; }
@@ -393,6 +397,10 @@ public class LanguageSettings
         SubtitleGridFontSize = "Font size in subtitle grid";
         SubtitleGridTextSingleLine = "Show subtitle text as single line in grid";
         SubtitleGridTextSingleLineSeparator = "Single line separator (e.g. <br />)";
+        SubtitleGridTextDisplay = "Subtitle text fit in grid";
+        SubtitleGridTextDisplayClip = "Clip (single line)";
+        SubtitleGridTextDisplayWrap = "Wrap to fit window";
+        SubtitleGridTextDisplayEllipsis = "Single line with ellipsis";
         SubtitleGridLiveSpellCheck = "Live spell check in subtitle grid";
         SubtitleGridShowFormatting = "Show formatted (HTML/ASSA) text in subtitle grid";
         ShowUpDownStartTime = "Show up/down control for \"Show\"";

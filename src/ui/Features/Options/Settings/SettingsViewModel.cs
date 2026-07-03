@@ -318,6 +318,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _showHorizontalLineAboveToolbar;
     [ObservableProperty] private ObservableCollection<GridLinesVisibilityDisplay> _gridLinesVisibilities;
     [ObservableProperty] private GridLinesVisibilityDisplay _selectedGridLinesVisibility;
+    [ObservableProperty] private ObservableCollection<SubtitleGridTextDisplayModeDisplay> _subtitleGridTextDisplayModes;
+    [ObservableProperty] private SubtitleGridTextDisplayModeDisplay _selectedSubtitleGridTextDisplayMode;
     [ObservableProperty] private Color _darkModeForegroundColor;
     [ObservableProperty] private Color _darkModeBackgroundColor;
     [ObservableProperty] private bool _useFocusedButtonBackgroundColor;
@@ -559,6 +561,9 @@ public partial class SettingsViewModel : ObservableObject
         GridLinesVisibilities = new ObservableCollection<GridLinesVisibilityDisplay>(GridLinesVisibilityDisplay.GetAll());
         SelectedGridLinesVisibility = GridLinesVisibilities[0];
 
+        SubtitleGridTextDisplayModes = new ObservableCollection<SubtitleGridTextDisplayModeDisplay>(SubtitleGridTextDisplayModeDisplay.GetAll());
+        SelectedSubtitleGridTextDisplayMode = SubtitleGridTextDisplayModes[0];
+
         ErrorColor = Color.FromArgb(50, 255, 0, 0);
         ColorTextTooWideFontName = "Arial";
 
@@ -769,6 +774,7 @@ public partial class SettingsViewModel : ObservableObject
         ShowAssaLayer = appearance.ShowLayer;
         ShowHorizontalLineAboveToolbar = appearance.ShowHorizontalLineAboveToolbar;
         SelectedGridLinesVisibility = GridLinesVisibilities.FirstOrDefault(p => p.Type.ToString() == appearance.GridLinesAppearance) ?? GridLinesVisibilities[0];
+        SelectedSubtitleGridTextDisplayMode = SubtitleGridTextDisplayModes.FirstOrDefault(p => p.Mode.ToString() == appearance.SubtitleGridTextDisplay) ?? SubtitleGridTextDisplayModes[0];
         DarkModeBackgroundColor = appearance.DarkModeBackgroundColor.FromHexToColor();
         DarkModeForegroundColor = appearance.DarkModeForegroundColor.FromHexToColor();
         UseFocusedButtonBackgroundColor = appearance.UseFocusedButtonBackgroundColor;
@@ -1485,6 +1491,7 @@ public partial class SettingsViewModel : ObservableObject
         appearance.GridCompactMode = GridCompactMode;
         appearance.GridAlternatingRows = GridAlternatingRows;
         appearance.GridLinesAppearance = SelectedGridLinesVisibility.Type.ToString();
+        appearance.SubtitleGridTextDisplay = SelectedSubtitleGridTextDisplayMode.Mode.ToString();
         appearance.ShowLayer = ShowAssaLayer;
         appearance.ShowHorizontalLineAboveToolbar = ShowHorizontalLineAboveToolbar;
 
