@@ -350,6 +350,9 @@ public partial class TextToSpeechViewModel : ObservableObject
         {
             Se.Settings.Video.TextToSpeech.ElevenLabsApiKey = ApiKey;
             Se.Settings.Video.TextToSpeech.ElevenLabsModel = SelectedModel ?? string.Empty;
+            // Read back by name on model change (this file + ReviewSpeechViewModel) but was never
+            // written anywhere, so the language choice silently reset to English every time.
+            Se.Settings.Video.TextToSpeech.ElevenLabsLanguage = SelectedLanguage?.Name ?? string.Empty;
         }
         else if (SelectedEngine is MistralSpeech)
         {
@@ -2480,6 +2483,28 @@ public partial class TextToSpeechViewModel : ObservableObject
         await addAudioProcess.StartAndWaitAsync(cancellationToken);
 
         ProgressText = string.Empty;
+
+        // ffmpeg failures (bad custom encoding string, codec/container mismatch, ...) used to go
+        // unnoticed here, and the caller then showed "Video file generated" for a file that does
+        // not exist. Verify the output and report instead.
+        if (!File.Exists(outputFileName) || new FileInfo(outputFileName).Length == 0)
+        {
+            SeLogger.Error($"TextToSpeech: adding audio to video failed - no output produced (encoding=\"{audioEncoding}\", ducking={Se.Settings.Video.TextToSpeech.AudioDuckingEnabled})");
+            Se.WriteToolsLog($"TTS add-to-video failed: ffmpeg produced no output for \"{outputFileName}\" (encoding=\"{audioEncoding}\", ducking={Se.Settings.Video.TextToSpeech.AudioDuckingEnabled})", true);
+            if (Window != null)
+            {
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.General.Error,
+                    "Adding the audio track to the video failed - the audio file was still saved." + Environment.NewLine + Environment.NewLine +
+                    "See error-log.txt in the Subtitle Edit data folder for details.",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+
+            return null;
+        }
+
         return outputFileName;
     }
 
@@ -2503,32 +2528,66 @@ public partial class TextToSpeechViewModel : ObservableObject
 
             var silenceFileName = await GenerateSilenceWaveFile(cancellationToken);
 
-            var outputFileName = string.Empty;
             var inputFileName = silenceFileName;
             ProgressValue = 0;
             for (var index = 0; index < previousStepResult.Length; index++)
             {
-                ProgressText = $"Merging audio: segment {index + 1} of {_subtitle.Paragraphs.Count}";
+                ProgressText = $"Merging audio: segment {index + 1} of {previousStepResult.Length}";
 
                 var item = previousStepResult[index];
-                outputFileName = Path.Combine(_waveFolder, $"silence{index}.wav");
+
+                // Upstream steps can drop a segment's audio (failed generation kept by the user,
+                // deleted files in an imported session). Leave silence for it instead of feeding
+                // ffmpeg a nonexistent input.
+                if (string.IsNullOrEmpty(item.CurrentFileName) || !File.Exists(item.CurrentFileName))
+                {
+                    Se.WriteToolsLog($"TTS merge: segment {index + 1} has no audio file - leaving silence", true);
+                    continue;
+                }
+
+                var outputFileName = Path.Combine(_waveFolder, $"silence{index}.wav");
                 if (File.Exists(outputFileName))
                 {
                     outputFileName = Path.Combine(_waveFolder, $"silence_{Guid.NewGuid()}.wav");
                 }
 
                 var mergeProcess = FfmpegGenerator.MergeAudioTracks(inputFileName, item.CurrentFileName, outputFileName, (float)item.Paragraph.StartTime.TotalSeconds, forceStereo);
-                var fileNameToDelete = inputFileName;
-                inputFileName = outputFileName;
                 await mergeProcess.StartAndWaitAsync(cancellationToken);
 
-                ProgressValue = (double)(index + 1) / previousStepResult.Length * 100.0;
+                // A failed merge used to go unnoticed: the loop advanced to the (missing) output
+                // and deleted the last good intermediate, so every later merge failed too and the
+                // wreck only surfaced far downstream. Stop with an error instead.
+                if (!File.Exists(outputFileName) || new FileInfo(outputFileName).Length == 0)
+                {
+                    SeLogger.Error($"TextToSpeech: merging segment {index + 1} produced no output (input=\"{item.CurrentFileName}\")");
+                    Se.WriteToolsLog($"TTS merge: segment {index + 1} failed - ffmpeg produced no output for \"{item.CurrentFileName}\"", true);
+                    await Dispatcher.UIThread.InvokeAsync(async () =>
+                    {
+                        if (Window != null)
+                        {
+                            await MessageBox.Show(
+                                Window,
+                                Se.Language.General.Error,
+                                $"Merging audio failed at segment {index + 1}." + Environment.NewLine + Environment.NewLine +
+                                "See error-log.txt in the Subtitle Edit data folder for details.",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+                        }
+                    });
+                    return null;
+                }
 
-                DeleteFileNoError(fileNameToDelete);
+                DeleteFileNoError(inputFileName);
+                inputFileName = outputFileName;
+
+                ProgressValue = (double)(index + 1) / previousStepResult.Length * 100.0;
             }
             ProgressValue = 100;
 
-            return outputFileName;
+            // The chain head is the fully merged track (or the bare silence track if every
+            // segment was skipped - still a valid, if empty, result the user gets told about
+            // via the forced tools-log entries above).
+            return inputFileName;
         }
         catch (OperationCanceledException)
         {
