@@ -1549,6 +1549,7 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
 
         var stepResults = new List<TtsStepResult>();
+        var jsonFolder = Path.GetDirectoryName(fileName) ?? string.Empty;
         for (var index = 0; index < importExport.Items.Count; index++)
         {
             var item = importExport.Items[index];
@@ -1563,7 +1564,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             stepResults.Add(new TtsStepResult
             {
                 Text = item.Text,
-                CurrentFileName = item.AudioFileName,
+                CurrentFileName = ResolveImportedAudioFileName(item.AudioFileName, jsonFolder),
                 Paragraph = paragraph,
                 SpeedFactor = item.SpeedFactor <= 0 ? 1.0f : item.SpeedFactor,
                 Voice = voice,
@@ -1584,6 +1585,20 @@ public partial class TextToSpeechViewModel : ObservableObject
         if (string.IsNullOrEmpty(_videoFileName) && !string.IsNullOrEmpty(videoFileNameForReview))
         {
             _videoFileName = videoFileNameForReview;
+        }
+
+        // The review window needs an engine and voice to offer regeneration. Voices can be empty
+        // when the selected engine's voice load failed (missing API key, network) - Voices.First()
+        // then threw and Import died with only a logged exception.
+        if (Engines.Count == 0 || Voices.Count == 0)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                "No voices are loaded for the selected engine - check the engine settings (e.g. API key) and try again.",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
         }
 
         // Try to populate _wavePeakData synchronously from the on-disk cache (fast, no ffmpeg).
@@ -1613,6 +1628,33 @@ public partial class TextToSpeechViewModel : ObservableObject
                 _ = GenerateWavePeaksIfNeededAsync(videoFileNameForReview, vm);
             }
         });
+    }
+
+    /// <summary>
+    /// Resolves an imported item's audio file. New exports store just the file name (resolved
+    /// against the JSON's own folder, so the export folder can be moved or shared); older exports
+    /// stored absolute paths - honored when they still exist, otherwise the same name is tried
+    /// next to the JSON.
+    /// </summary>
+    private static string ResolveImportedAudioFileName(string? audioFileName, string jsonFolder)
+    {
+        if (string.IsNullOrEmpty(audioFileName))
+        {
+            return string.Empty;
+        }
+
+        if (Path.IsPathRooted(audioFileName))
+        {
+            if (File.Exists(audioFileName))
+            {
+                return audioFileName;
+            }
+
+            var siblingFileName = Path.Combine(jsonFolder, Path.GetFileName(audioFileName));
+            return File.Exists(siblingFileName) ? siblingFileName : audioFileName;
+        }
+
+        return Path.Combine(jsonFolder, audioFileName);
     }
 
     private static WavePeakData2? TryLoadWavePeaksFromDisk(string videoFileName)
