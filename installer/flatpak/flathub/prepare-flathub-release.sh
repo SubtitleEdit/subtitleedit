@@ -97,7 +97,11 @@ git worktree add --quiet --detach "$WORKTREE" "$COMMIT"
 echo "Regenerating nuget-sources.json for $TAG's UI.csproj..."
 (
     cd "$WORKTREE"
-    ./installer/flatpak/generate-nuget-sources.sh
+    # Invoked via bash rather than directly (./generate-nuget-sources.sh), matching how
+    # the existing regenerate-flatpak-nuget-sources CI job already calls it: the file's
+    # mode in the repo is not executable, so a direct invocation fails with "Permission
+    # denied" (hit exactly this in CI the first time this ran, see #11800).
+    bash installer/flatpak/generate-nuget-sources.sh
 )
 
 cp "$WORKTREE/installer/flatpak/nuget-sources.json" "$NUGET_SOURCES"
