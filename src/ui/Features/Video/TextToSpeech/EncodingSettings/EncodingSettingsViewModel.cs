@@ -37,6 +37,8 @@ public partial class EncodingSettingsViewModel : ObservableObject
         {
             SelectedEncoding = Encodings.FirstOrDefault(e => e.Name.Equals("Default", StringComparison.OrdinalIgnoreCase));
         }
+
+        IsStereo = Se.Settings.Video.TextToSpeech.CustomAudioStereo;
     }
 
     [RelayCommand]
@@ -46,7 +48,10 @@ public partial class EncodingSettingsViewModel : ObservableObject
         if (encoding != null)
         {
             Se.Settings.Video.TextToSpeech.CustomAudioEncoding = encoding.Code;
-            Se.Settings.Video.TextToSpeech.CustomAudioStereo = encoding.IsStereoEnabled;
+            // The user's checkbox, not the codec's IsStereoEnabled *capability* flag - saving the
+            // capability made the checkbox have no effect (always stereo for AAC/MP3, never for
+            // Default). Gated on the capability so a codec without the option can't force -ac 2.
+            Se.Settings.Video.TextToSpeech.CustomAudioStereo = IsStereo && encoding.IsStereoEnabled;
         }
 
         OkPressed = true;

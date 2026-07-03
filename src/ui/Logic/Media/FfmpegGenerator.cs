@@ -520,12 +520,16 @@ public class FfmpegGenerator
 
     public static Process TrimSilenceStartAndEnd(string inputFileName, string outputFileName, DataReceivedEventHandler? dataReceivedHandler = null)
     {
+        // silenceremove keeps up to start_silence (100 ms) of the detected silence as padding.
+        // No unconditional atrim cuts here: a fixed atrim=start=0.1 ahead of the detection used
+        // to chop 100 ms off both ends whether or not it was silence, clipping the first/last
+        // phoneme for engines that start speaking immediately (e.g. Piper).
         var processMakeVideo = new Process
         {
             StartInfo =
             {
                 FileName = GetFfmpegLocation(),
-                Arguments = $"-nostdin -y -i \"{inputFileName}\" -af \"areverse,atrim=start=0.1,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01,areverse,atrim=start=0.1,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01\" \"{outputFileName}\"",
+                Arguments = $"-nostdin -y -i \"{inputFileName}\" -af \"areverse,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01,areverse,silenceremove=start_periods=1:start_silence=0.1:start_threshold=0.01\" \"{outputFileName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             }
@@ -604,7 +608,10 @@ public class FfmpegGenerator
 
     public static Process AddAudioTrack(string inputFileName, string audioFileName, string outputFileName, string audioEncoding, bool? stereo, DataReceivedEventHandler? dataReceivedHandler = null)
     {
-        var audioEncodingString = !string.IsNullOrEmpty(audioEncoding) ? "-c:a " + audioEncoding + " " : "-c:a copy ";
+        // Empty encoding = let ffmpeg pick the container's default encoder (same as the ducking
+        // variant below). It used to mean "-c:a copy", which muxed the merged TTS track - a PCM
+        // wav - straight into .mp4, failing on ffmpeg builds older than 6.1.
+        var audioEncodingString = !string.IsNullOrEmpty(audioEncoding) ? "-c:a " + audioEncoding + " " : string.Empty;
         var stereoString = stereo == true ? "-ac 2 " : string.Empty;
 
         var processMakeVideo = new Process
@@ -628,6 +635,14 @@ public class FfmpegGenerator
     /// </summary>
     public static Process AddAudioTrackWithDucking(string inputFileName, string audioFileName, string outputFileName, string audioEncoding, bool? stereo, int originalVolumePercent, DataReceivedEventHandler? dataReceivedHandler = null)
     {
+        // "copy" cannot work here: the audio stream is fed from the amix filtergraph, and ffmpeg
+        // hard-errors on stream-copy from a complex filter. Fall back to the container's default
+        // encoder so "Copy" + ducking produces a video instead of always failing.
+        if (string.Equals(audioEncoding, "copy", StringComparison.OrdinalIgnoreCase))
+        {
+            audioEncoding = string.Empty;
+        }
+
         var audioEncodingString = !string.IsNullOrEmpty(audioEncoding) ? "-c:a " + audioEncoding + " " : string.Empty;
         var stereoString = stereo == true ? "-ac 2 " : string.Empty;
         var volumeFactor = Math.Clamp(originalVolumePercent / 100.0, 0.0, 1.0).ToString("0.00", CultureInfo.InvariantCulture);

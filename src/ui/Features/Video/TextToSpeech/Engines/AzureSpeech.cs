@@ -118,8 +118,10 @@ public class AzureSpeech : ITtsEngine
 
     public async Task<Voice[]> RefreshVoices(string language, CancellationToken cancellationToken)
     {
+        // Was DownloadElevenLabsVoiceList - which overwrote the Azure voice cache with an
+        // ElevenLabs-shaped JSON that Map() cannot parse, permanently emptying the voice combo.
         var ms = new MemoryStream();
-        await _ttsDownloadService.DownloadElevenLabsVoiceList(ms, null, cancellationToken);
+        await _ttsDownloadService.DownloadAzureVoiceList(ms, null, cancellationToken);
         await File.WriteAllBytesAsync(Path.Combine(GetSetAzureFolder(), JsonFileName), ms.ToArray(), cancellationToken);
         return await GetVoices(language);
     }

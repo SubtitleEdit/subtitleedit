@@ -184,17 +184,19 @@ public class TtsDownloadService : ITtsDownloadService
 
     public async Task<bool> AllTalkIsInstalled()
     {
-        var timeout = Task.Delay(2000); // 2 seconds timeout
-        var request = _httpClient.GetAsync(Se.Settings.Video.TextToSpeech.AllTalkUrl);
-
-        await Task.WhenAny(timeout, request); // wait for either timeout or the request
-
-        if (timeout.IsCompleted) // if the timeout ended first, then handle it
+        // The old Task.WhenAny check reported "installed" whenever the request completed before
+        // the 2 s timeout - including completing by *faulting*, so a connection refused (server
+        // not running, ~instant) counted as installed and generation failed later instead.
+        try
         {
-            return false;
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(2));
+            var response = await _httpClient.GetAsync(Se.Settings.Video.TextToSpeech.AllTalkUrl, cts.Token);
+            return response.IsSuccessStatusCode;
         }
-
-        return true;
+        catch
+        {
+            return false; // connection refused, timeout, bad URL - the server is not reachable
+        }
     }
 
     public async Task DownloadElevenLabsVoiceList(Stream ms, IProgress<float>? progress, CancellationToken cancellationToken)
@@ -240,8 +242,23 @@ public class TtsDownloadService : ITtsDownloadService
 
     public async Task DownloadAzureVoiceList(Stream stream, IProgress<float>? progress, CancellationToken cancellationToken)
     {
-        var url = "https://api.elevenlabs.io/v1/voices";
-        await DownloadHelper.DownloadFileAsync(_httpClient, url, stream, progress, cancellationToken);
+        // Azure's official voice-list endpoint (the previous URL pointed at the ElevenLabs API,
+        // whose response Azure's parser cannot read). Requires the user's region + subscription
+        // key; the response is a JSON array with DisplayName/ShortName/Gender/Locale fields -
+        // the exact shape AzureSpeech.Map parses. Throws on failure so a refresh cannot
+        // overwrite the cached voice list with an error body.
+        var region = Se.Settings.Video.TextToSpeech.AzureRegion;
+        if (string.IsNullOrWhiteSpace(region))
+        {
+            throw new InvalidOperationException("Azure region is not set - enter it in the TTS engine settings before refreshing voices.");
+        }
+
+        var url = $"https://{region.Trim()}.tts.speech.microsoft.com/cognitiveservices/voices/list";
+        using var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+        requestMessage.Headers.TryAddWithoutValidation("Ocp-Apim-Subscription-Key", Se.Settings.Video.TextToSpeech.AzureApiKey.Trim());
+        var result = await _httpClient.SendAsync(requestMessage, cancellationToken);
+        result.EnsureSuccessStatusCode();
+        await result.Content.CopyToAsync(stream, cancellationToken);
     }
 
     public async Task<(bool Ok, string Error)> DownloadElevenLabsVoiceSpeak(
@@ -484,6 +501,11 @@ public class TtsDownloadService : ITtsDownloadService
             SeLogger.Error($"Murf TTS failed calling API as base address {fileUrl} : Status code={audioResult.StatusCode}");
             return false;
         }
+
+        // The stream still holds the generate-call's JSON response (parsed above for the audio
+        // URL) - without resetting, the MP3 would be appended after it and every Murf segment
+        // file would start with JSON garbage.
+        ms.SetLength(0);
         await audioResult.Content.CopyToAsync(ms, cancellationToken);
 
         return true;

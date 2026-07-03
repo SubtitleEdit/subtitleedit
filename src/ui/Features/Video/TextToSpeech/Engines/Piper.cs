@@ -179,7 +179,9 @@ public class Piper : ITtsEngine
     {
         var ms = new MemoryStream();
         await  _ttsDownloadService.DownloadPiperVoiceList(ms, null, cancellationToken);
-        await File.WriteAllBytesAsync(Path.Combine(GetSetPiperFolder(), "voices.json"), ms.ToArray(), cancellationToken);
+        // Must match the file GetVoices reads ("PiperVoices.json") - the refresh used to save to
+        // "voices.json", which nothing reads, so newly published upstream voices never appeared.
+        await File.WriteAllBytesAsync(Path.Combine(GetSetPiperFolder(), "PiperVoices.json"), ms.ToArray(), cancellationToken);
         return await GetVoices(language);
     }
 

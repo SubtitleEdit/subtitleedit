@@ -1480,9 +1480,20 @@ public partial class ReviewSpeechViewModel : ObservableObject
         // Intermediate WAVs from TrimAndAdjustSpeed land in _waveFolder and would
         // otherwise pile up across regenerate cycles. Best-effort — _waveFolder is
         // usually a session-scoped temp dir but a stray locked file shouldn't tank
-        // window close.
+        // window close. A regenerated row's *final* audio file is tracked here too,
+        // and on OK it was just published via StepResults for the merge step —
+        // deleting it would silently break that line in the final audio — so keep
+        // anything a published result still references.
+        var publishedFiles = OkPressed
+            ? new HashSet<string>(StepResults.Select(r => r.CurrentFileName), StringComparer.OrdinalIgnoreCase)
+            : new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         foreach (var f in _tempAudioFiles)
         {
+            if (publishedFiles.Contains(f))
+            {
+                continue;
+            }
+
             try { if (File.Exists(f))
             {
                 File.Delete(f);
