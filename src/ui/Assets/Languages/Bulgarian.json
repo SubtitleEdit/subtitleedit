@@ -460,6 +460,7 @@
     "replaceWith": "Замени с",
     "requiresRestart": "Изисква рестартиране",
     "reset": "Нулиране",
+    "resizePanels": "Преоразмеряване на панелите",
     "resolution": "Резолюция",
     "resolutionX": "Резолюция: {0}",
     "reverseRightToLeftStartEnd": "Обратно начало/край надясно",
@@ -680,6 +681,7 @@
     "voice": "Глас",
     "volume": "Обем",
     "warning": "Предупреждение",
+    "waveform": "Форма на вълната",
     "waveformCenterOnVideoPosition": "Център на вълновата форма на видео позицията",
     "waveformPasteFromClipboard": "Поставяне от клипборда",
     "waveformSpectrogram": "Вълнова форма/спектрограма",
@@ -791,6 +793,7 @@
       "applyMinGap": "Приложи мин. разстояние между субтитрите...",
       "changeCasing": "_Смяна на главни и малки букви...",
       "changeFormatting": "Промяна на форматирането...",
+      "aiReview": "Преглед на изкуствения интелект...",
       "fixCommonErrors": "_Поправка на често срещани грешки...",
       "checkAndFixNetflixErrors": "Провери и поправи грешките на Netflix_x...",
       "makeEmptyTranslationFromCurrentSubtitle": "Създай нов _празен превод от текущия субтитър",
@@ -1330,6 +1333,32 @@
     "restoreSelected": "Възстановяване на избраното"
   },
   "tools": {
+    "aiReview": {
+      "title": "Преглед на ИИ",
+      "review": "Преглед",
+      "stop": "Спри",
+      "editPrompt": "Редактиране на подкана...",
+      "editPromptTitle": "Редактиране на подкана за преглед",
+      "promptInfo": "Инструкциите, изпратени до модела - {language} се заменят с езика на субтитрите.",
+      "protocolInfo": "Редактирането на субтитри добавя строг JSON договор към подканата: редовете се изпращат като номерирани JSON и моделът трябва да отговори с валиден JSON, съдържащ само променените редове. Отговорите, които нарушават договора, се опитват отново и след това се пропускат.",
+      "resetToDefault": "Възстановяване на фабричните настройки",
+      "applyXFixes": "Приложете {0} корекции",
+      "xSuggestionsYSelected": "{0} предложения - {1} избрани",
+      "reviewingLineXOfY": "Преглед на ред {0} от {1}...",
+      "reviewDone": "Прегледът е завършен - {0} предложения в {1} реда",
+      "noIssuesFound": "Не са открити проблеми",
+      "categoryAll": "Всички",
+      "categorySpelling": "Правопис",
+      "categoryGrammar": "Граматика",
+      "categoryPunctuation": "Пунктуация",
+      "categoryCasing": "Корпус",
+      "categoryOther": "Друго",
+      "xNeedACloserLook": "{0} предложения се нуждаят от по-внимателно разглеждане",
+      "lineX": "Ред {0}",
+      "linesXToY": "Редове {0}-{1}",
+      "largeChangeWarning": "Голяма промяна - изглежда като пренаписване, прегледайте внимателно",
+      "engineError": "AI енджийна не можа да бъде достигнат: {0}"
+    },
     "fixCommonErrors": {
       "title": "Поправи често срещани грешки",
       "step1": "Стъпка 1/2 - Изберете кои грешки да поправи",
@@ -1399,6 +1428,7 @@
       "nothingToFix": "Няма какво да се поправи :)",
       "fixesFoundX": "Намерени корекции: {0}",
       "xFixesApplied": "Приложени корекции: {0}",
+      "xFixesYSelected": "{0} поправки - {1} избрани",
       "nothingFixableBut": "Нищо не можа да бъде поправено автоматично. Субтитрите съдържат грешки - виж лога за подробности",
       "xFixedBut": "{0} проблема са отстранени, но субтитрите все още съдържат грешки - вижте лога за подробности",
       "xCouldBeFixedBut": "{0} проблема могат да бъдат поправени, но субтитрите все още ще съдържат грешки - вижте лога за подробности",
@@ -1480,7 +1510,8 @@
       "extendOnly": "Само удължаване",
       "enforceDurationLimits": "Прилагане на минимално и максимално Траене",
       "checkShotChanges": "Не удължавай промените в минали кадри",
-      "batchCheckShotChanges": "Отчитай промени в кадрите (ако са налични)"
+      "batchCheckShotChanges": "Отчитай промени в кадрите (ако са налични)",
+      "recalculateRequiresOcrNote": "Преизчисляването не е налично — един или повече субтитри нямат OCR текст. Първо изпълнете OCR."
     },
     "applyDurationLimits": {
       "title": "Приложи ограничения за Траене",
@@ -1800,7 +1831,12 @@
       "resizeImagesInfo": "Въведете процента, за да промените размера на изображенията.\nПрегледът се актуализира автоматично.",
       "adjustColorDotDotDot": "Коригиране на цвета...",
       "adjustColor": "Коригиране на цвета",
-      "colorAdjustmentInfo": "Щракнете върху цветовата мостра, за избор на цвят. Ярките пиксели на субтитрите се изместват към избрания оттенък; тъмните контури и сенки се запазват.\nПрегледът показва първия избран субтитър."
+      "colorAdjustmentInfo": "Щракнете върху цветовата мостра, за избор на цвят. Ярките пиксели на субтитрите се изместват към избрания оттенък; тъмните контури и сенки се запазват.\nПрегледът показва първия избран субтитър.",
+      "topAlignLines": "Подравняване отгоре",
+      "bottomAlignLines": "Подравняване отдолу",
+      "appendSubtitleDotDotDot": "Добавяне на субтитър...",
+      "shiftTimeCodes": "Изместване на времевите кодове с",
+      "sortByStartTime": "Сортиране по начален час"
     },
     "removeTextForHearingImpaired": {
       "title": "Премахване на текст за хора с увреден слух",
@@ -1816,9 +1852,11 @@
       "onlyIfTextIsUppercase": "Само ако текстът е с главни букви",
       "onlyOnSeparateLine": "Само на отделен ред",
       "ifLineIsUppercase": "Ако редът е с главни букви",
+      "keepUppercaseWords": "Запази тези думи (разделени със запетаи)",
       "ifLineContains": "Ако редът съдържа",
       "ifLineOnlyContainsMusicSymbols": "Ако редът съдържа само музикални символи",
-      "removeInterjections": "Премахване на междуметия"
+      "removeInterjections": "Премахване на междуметия",
+      "linesFoundX": "Намерени редове: {0}"
     },
     "pickAlignmentTitle": "Избери подравняване",
     "pickFontNameTitle": "Изберете име на шрифт",
@@ -1864,7 +1902,14 @@
     "undoX": "Отмяна: {0}",
     "editWholeText": "Редактиране на целия текст",
     "continueFromCurrentLine": "Да продължи ли проверката на правописа от текущия ред?\n\nДа = продължаване от текущия ред\nНе = започване от началото",
-    "continueFromTop": "Проверката на правописа достигна края на субтитрите.\n\nДа продължи ли от начало?"
+    "continueFromTop": "Проверката на правописа достигна края на субтитрите.\n\nДа продължи ли от начало?",
+    "spellCheckCompleted": "Проверката на правописа е завършена",
+    "changedWordsX": "Променени думи: {0}",
+    "skippedWordsX": "Пропуснати думи: {0}",
+    "correctWordsX": "Правилни думи: {0}",
+    "namesX": "Имена: {0}",
+    "addedToDictionaryX": "Добавено към речника: {0}",
+    "doNotShowThisAgain": "Не показвай това съобщение отново"
   },
   "video": {
     "burnIn": {
@@ -2183,8 +2228,10 @@
     "adjustmentX": "Корекция: {0}",
     "totalAdjustmentX": "Обща корекция: {0}",
     "adjustAllShortcuts": "Клавишни комбини:\r\n\r\n• Shift + Left/Right: Мести 10 ms\r\n• Ctrl + Left/Right: Мести 100 ms\r\n• Alt + Left/Right: Мести 500 ms",
+    "adjustAllShortcutsFrames": "Клавишни комбинации:\n\n• Shift + Ляво/Дясно: Премести с 1 кадър\n• Ctrl + Ляво/Дясно: Премести с 10 кадъра\n• Alt + Ляво/Дясно: Премести с 1 секунда",
     "offsetInSeconds": "Отместване в секунди",
-    "speedFactor": "Коефициент на скорост"
+    "speedFactor": "Коефициент на скорост",
+    "showEarlierLaterDotDotDot": "Покажи по-рано/по-късно..."
   },
   "translate": {
     "translateViaCopyPaste": "Автоматичен превод чрез копиране/поставяне",
@@ -2326,6 +2373,7 @@
       "colorTextTooLong": "Оцвети текста, ако е твърде дълъг",
       "colorTextTooWide": "Оцвети текста, ако е твърде широк (пиксели)",
       "colorTextTooManyLines": "Оцвети текста, ако е повече от 2 реда",
+      "colorTextTooManyLinesX": "Оцвети текста, ако има повече от {0} реда",
       "colorCharactersPerSecond": "Оцветени символи/сек, ако са твърде много",
       "colorWordsPerMinute": "Оцветени думи/мин, ако е твърде много",
       "colorOverlap": "Припокриване на цветния времеви код",
@@ -2465,6 +2513,7 @@
       "gridGoToSubtitleAndPause": "Отиди на субтитрите и ги настрой на пауза",
       "gridGoToSubtitleAndPlay": "Отиди на субтитрите и възпроизведи",
       "gridGoToSubtitleAndPauseAndFocusTextBox": "Отиди на субтитри направи пауза и фокусирай върху текстовото поле",
+      "gridGoToSubtitleAndPlayAndFocusTextBox": "Отиди на субтитри и пусни, за да постави фокуса върху текстовото поле",
       "subtitleGridFormattingNone": "Без форматиране",
       "subtitleGridFormattingShowFormatting": "Показване на форматирането",
       "subtitleGridFormattingShowTags": "Показване на етикети",
@@ -2664,6 +2713,14 @@
       "subtitleGridCut": "Решетка със субтитри: Изрязване",
       "subtitleGridCopy": "Мрежа със субтитри: Копиране",
       "subtitleGridPaste": "Мрежа със субтитри: Поставяне",
+      "listViewColumnDeleteText": "Колона, изтриване на текст",
+      "listViewColumnDeleteTextAndShiftUp": "Колона, изтриване на текст и преместване нагоре",
+      "listViewColumnInsertText": "Колона, вмъкване на текст",
+      "listViewColumnPaste": "Колона, паста",
+      "listViewColumnTextUp": "Колона, текст нагоре",
+      "listViewColumnTextDown": "Колона, текст надолу",
+      "autoTranslateSelectedLines": "Автоматичен превод на избраните редове...",
+      "setAssaResolution": "Задаване на ASSA резолюция (PlayResX/PlayResY)",
       "setShortcutForX": "Задаване на пряк път за \"{0}“",
       "commandFileNewKeepVideo": "Ново (запазване на видеото)",
       "fileOpenOriginal": "Отвори оригинала",
