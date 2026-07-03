@@ -509,7 +509,16 @@ public class VoxCPM2CrispAsr : ITtsEngine
         try
         {
             var sidecar = Path.ChangeExtension(wavPath, ".txt");
-            return File.Exists(sidecar) ? File.ReadAllText(sidecar).Trim() : string.Empty;
+            if (!File.Exists(sidecar))
+            {
+                return string.Empty;
+            }
+
+            // Sidecars written by pre-filter seeding can be Wikimedia attribution blurbs, not
+            // transcriptions - treat them as "no transcript" (same read-time filter Qwen3
+            // CrispASR applies) so they neither poison ref-text nor suppress the prompt.
+            var text = File.ReadAllText(sidecar).Trim();
+            return Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(text) ? string.Empty : text;
         }
         catch
         {

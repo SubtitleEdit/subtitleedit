@@ -293,8 +293,11 @@ public class TtsDownloadService : ITtsDownloadService
         var url = "https://api.elevenlabs.io/v1/text-to-speech/" + voice.VoiceId;
         var text = Utilities.UnbreakLine(inputText);
 
+        // Only send language_code when the user actually picked a language: cross-engine cast
+        // rows pass none, and forcing "en" made ElevenLabs apply English normalization and
+        // pronunciation hints to non-English lines.
         var language = string.Empty;
-        if (model is "eleven_turbo_v2_5")
+        if (model is "eleven_turbo_v2_5" && !string.IsNullOrEmpty(languageCode))
         {
             language = $", \"language_code\": \"{languageCode}\"";
         }
@@ -410,10 +413,13 @@ public class TtsDownloadService : ITtsDownloadService
         var stability = Se.Settings.Video.TextToSpeech.ElevenLabsStability.ToString(CultureInfo.InvariantCulture);
         var speed = Se.Settings.Video.TextToSpeech.ElevenLabsSpeed.ToString(CultureInfo.InvariantCulture);
     
+        var languageFragment = string.IsNullOrEmpty(languageCode)
+            ? string.Empty
+            : "\"language_code\": \"" + languageCode + "\", ";
         var data = "{ \"inputs\": [{ " +
                    "\"text\": \"" + Json.EncodeJsonText(text) + "\", " +
                    "\"voice_id\": \"" + voice.VoiceId + "\", " +
-                   "\"language_code\": \"" + languageCode + "\", " +
+                   languageFragment +
                    "\"stability\": " + stability + ", " +
                    "\"speed\": " + speed +
                    " }] }";

@@ -46,13 +46,17 @@ public static class TtsInstructionSwap
         var s = Se.Settings.Video.TextToSpeech;
         switch (engine)
         {
+            // The captured previous value is coalesced to "": null doubles as Restore's
+            // "engine has no instruction field" sentinel, so a null saved setting (settings
+            // JSON with null, a binding writing null) would skip the restore and permanently
+            // commit the temporary per-line instruction to global settings.
             case Qwen3TtsCpp:
             case Qwen3TtsCrispAsr:
-                var prevQwen = s.Qwen3TtsCppInstruction;
+                var prevQwen = s.Qwen3TtsCppInstruction ?? string.Empty;
                 s.Qwen3TtsCppInstruction = instruction ?? string.Empty;
                 return prevQwen;
             case OmniVoiceTtsCpp:
-                var prevOmni = s.OmniVoiceTtsCppInstruction;
+                var prevOmni = s.OmniVoiceTtsCppInstruction ?? string.Empty;
                 s.OmniVoiceTtsCppInstruction = instruction ?? string.Empty;
                 return prevOmni;
             default:

@@ -297,7 +297,7 @@ public class ElevenLabs : ITtsEngine
         Se.WriteToolsLog($"ElevenLabs: voice={elevenLabVoice.Voice}, voiceId={elevenLabVoice.VoiceId}, model={model}, textLen={text.Length}");
 
         var ms = new MemoryStream();
-        var (ok, error) = await _ttsDownloadService.DownloadElevenLabsVoiceSpeak(text, elevenLabVoice, model, Se.Settings.Video.TextToSpeech.ElevenLabsApiKey, language?.Code ?? "en", ms, null, cancellationToken);
+        var (ok, error) = await _ttsDownloadService.DownloadElevenLabsVoiceSpeak(text, elevenLabVoice, model, Se.Settings.Video.TextToSpeech.ElevenLabsApiKey, language?.Code ?? string.Empty, ms, null, cancellationToken);
         if (!ok)
         {
             // Forced: a failed API call must land in the tools log even when the setting is off,
