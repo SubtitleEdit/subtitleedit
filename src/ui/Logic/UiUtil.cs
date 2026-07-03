@@ -1037,6 +1037,14 @@ public static class UiUtil
 
         control.Content = stackPanelApplyFixes;
 
+        // Replacing the text content with an icon+text panel loses the button's computed UIA
+        // name - keep the original text as the accessible name so screen readers still
+        // announce it (#11745/#12087 accessibility work).
+        if (!string.IsNullOrEmpty(label.Text))
+        {
+            AutomationProperties.SetName(control, label.Text);
+        }
+
         return control;
     }
 
@@ -2827,7 +2835,9 @@ public static class UiUtil
         }
         else
         {
-            if (existing.Width > 0 && existing.Height > 0)
+            // A non-resizable window gets its size from its content (SizeToContent), so a saved
+            // size can only be stale - applying one from an older layout clips the window.
+            if (existing.Width > 0 && existing.Height > 0 && window.CanResize)
             {
                 window.Width = existing.Width;
                 window.Height = existing.Height;

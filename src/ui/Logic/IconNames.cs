@@ -3,6 +3,7 @@
 internal class IconNames
 {
     public const string Account = "mdi-account";
+    public const string AccountVoice = "mdi-account-voice";
     public const string AlignHorizontalCenter = "mdi-align-horizontal-center";
     public const string AlignHorizontalDistribute = "mdi-align-horizontal-distribute";
     public const string AnimationPlay = "mdi-animation-play";

@@ -22,6 +22,12 @@ public class TestApp : Application
         // The custom up/down controls embed a ButtonSpinner + TextBox that need a
         // theme to resolve their templates when shown in a headless window.
         Styles.Add(new FluentTheme());
+
+        // Windows built in code use Attached.SetIcon; without the providers Program.cs
+        // registers at startup, constructing such a window throws KeyNotFoundException.
+        Optris.Icons.Avalonia.IconProvider.Current
+            .Register<Optris.Icons.Avalonia.FontAwesome.FontAwesomeIconProvider>()
+            .Register<Optris.Icons.Avalonia.MaterialDesign.MaterialDesignIconProvider>();
     }
 }
 

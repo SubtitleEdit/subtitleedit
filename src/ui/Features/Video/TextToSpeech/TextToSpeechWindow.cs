@@ -10,6 +10,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using System.Collections.ObjectModel;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.Engines;
+using Optris.Icons.Avalonia;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -33,17 +34,40 @@ public class TextToSpeechWindow : Window
         vm.RefreshDownloadDots = RefreshDownloadDots;
         DataContext = vm;
 
-        var labelEngine = new Label
+        // Context line: what is about to be spoken + whether a video is loaded. Before this the
+        // window only revealed the line count via the progress text after Generate was clicked.
+        var contextIcon = new ContentControl { VerticalAlignment = VerticalAlignment.Center };
+        Attached.SetIcon(contextIcon, IconNames.ClosedCaption);
+        var contextText = new TextBlock
         {
-            Content = Se.Language.Video.TextToSpeech.TextToSpeechEngine,
-            VerticalAlignment = VerticalAlignment.Bottom,
+            VerticalAlignment = VerticalAlignment.Center,
+            Opacity = 0.75,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.LinesInfo)) { Mode = BindingMode.OneWay },
+        };
+        var videoChip = new Border
+        {
+            CornerRadius = new CornerRadius(10),
+            Padding = new Thickness(9, 1, 9, 2),
+            VerticalAlignment = VerticalAlignment.Center,
+            Background = new SolidColorBrush(Color.FromArgb(28, 128, 128, 128)),
+            Child = new TextBlock
+            {
+                FontSize = 11.5,
+                Opacity = 0.8,
+                [!TextBlock.TextProperty] = new Binding(nameof(vm.VideoInfo)) { Mode = BindingMode.OneWay },
+            },
+            [!Border.IsVisibleProperty] = new Binding(nameof(vm.HasVideoFile)) { Mode = BindingMode.OneWay },
+        };
+        var panelContext = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            Margin = new Thickness(2, 0, 0, 2),
+            Children = { contextIcon, contextText, videoChip },
         };
 
-        var labelSettings = new Label
-        {
-            Content = Se.Language.General.Settings,
-            VerticalAlignment = VerticalAlignment.Bottom,
-        };
+        var labelEngine = MakeSectionHeader(IconNames.AccountVoice, Se.Language.Video.TextToSpeech.EngineAndVoice);
+        var labelSettings = MakeSectionHeader(IconNames.Settings, Se.Language.Video.TextToSpeech.Output);
 
         // Frozen while generating: the pipeline reads SelectedLanguage/Region/Model live per
         // segment, so changing engine/model/language mid-run made the remaining segments use
@@ -70,18 +94,26 @@ public class TextToSpeechWindow : Window
         {
             ToolTip.SetTip(buttonCast, Se.Language.Video.TextToSpeech.SetupCastHint);
         }
+        // Generate is the window's primary action: accent-filled, icon, far right - previously
+        // all buttons had identical weight and Generate sat first in the row.
+        var buttonGenerate = UiUtil.MakeButton(Se.Language.Video.TextToSpeech.GenerateSpeechFromText, vm.GenerateTtsCommand)
+            .WithIconLeft(IconNames.Waveform)
+            .WithBindIsEnabled(nameof(vm.IsNotGenerating));
+        buttonGenerate.Classes.Add("accent");
+
         var buttonPanel = UiUtil.MakeButtonBar(
-            UiUtil.MakeButton(Se.Language.Video.TextToSpeech.GenerateSpeechFromText, vm.GenerateTtsCommand).WithBindIsEnabled(nameof(vm.IsNotGenerating)),
             buttonCast,
             UiUtil.MakeButton(Se.Language.General.ImportDotDotDot, vm.ImportCommand).WithBindIsEnabled(nameof(vm.IsNotGenerating)),
             buttonCancel,
-            buttonDone
+            buttonDone,
+            buttonGenerate
         ).WithMarginTop(0);
 
         var grid = new Grid
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -99,15 +131,17 @@ public class TextToSpeechWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(labelEngine, 0, 0);
-        grid.Add(labelSettings, 0, 1);
+        grid.Add(panelContext, 0, 0, 1, 2);
 
-        grid.Add(engineLayout, 1, 0);
-        grid.Add(settingsLayout, 1, 1);
+        grid.Add(labelEngine, 1, 0);
+        grid.Add(labelSettings, 1, 1);
 
-        grid.Add(progressBarLayout, 2, 0, 1, 2);
+        grid.Add(engineLayout, 2, 0);
+        grid.Add(settingsLayout, 2, 1);
 
-        grid.Add(buttonPanel, 3, 0, 1, 2);
+        grid.Add(progressBarLayout, 3, 0, 1, 2);
+
+        grid.Add(buttonPanel, 4, 0, 1, 2);
 
         Content = grid;
 
@@ -185,6 +219,48 @@ public class TextToSpeechWindow : Window
         }
     }
 
+    // Checkbox (or checkbox row) with a muted one-line explanation below, indented to align
+    // with the checkbox text.
+    private static StackPanel WithCheckBoxHint(Control checkBoxOrPanel, string hint)
+    {
+        return new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Children =
+            {
+                checkBoxOrPanel,
+                new TextBlock
+                {
+                    Text = hint,
+                    FontSize = 11.5,
+                    Opacity = 0.65,
+                    Margin = new Thickness(28, 0, 0, 10),
+                    TextWrapping = TextWrapping.Wrap,
+                    MaxWidth = 260,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                },
+            },
+        };
+    }
+
+    private static StackPanel MakeSectionHeader(string iconName, string text)
+    {
+        var icon = new ContentControl { VerticalAlignment = VerticalAlignment.Center, Opacity = 0.7 };
+        Attached.SetIcon(icon, iconName);
+        return new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 7,
+            VerticalAlignment = VerticalAlignment.Bottom,
+            Margin = new Thickness(2, 4, 0, 4),
+            Children =
+            {
+                icon,
+                new TextBlock { Text = text, FontWeight = FontWeight.SemiBold, VerticalAlignment = VerticalAlignment.Center },
+            },
+        };
+    }
+
     private Border MakeEngineControls(TextToSpeechViewModel vm)
     {
         var labelMinWidth = 100;
@@ -213,7 +289,21 @@ public class TextToSpeechWindow : Window
             }
         };
 
-        var buttonTestVoice = UiUtil.MakeButton(Se.Language.Video.TextToSpeech.TestVoice, vm.TestVoiceCommand).WithBindIsEnabled(nameof(vm.IsVoiceTestEnabled));
+        // One line about the selected engine (cost/speed/quality or the engine's own blurb) -
+        // every engine carries a description that was previously shown nowhere.
+        var labelEngineDescription = new TextBlock
+        {
+            FontSize = 11.5,
+            Opacity = 0.65,
+            Margin = new Thickness(labelMinWidth + 5, 2, 0, 0),
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.EngineDescription)) { Mode = BindingMode.OneWay },
+            [!TextBlock.IsVisibleProperty] = new Binding(nameof(vm.HasEngineDescription)) { Mode = BindingMode.OneWay },
+        };
+
+        var buttonTestVoice = UiUtil.MakeButton(Se.Language.Video.TextToSpeech.TestVoice, vm.TestVoiceCommand)
+            .WithIconLeft(IconNames.Play)
+            .WithBindIsEnabled(nameof(vm.IsVoiceTestEnabled));
 
         // The Qwen3 VoiceDesign model has no speaker encoder - the combo is locked to "Default".
         var comboBoxVoices = UiUtil.MakeComboBox(vm.Voices, vm, nameof(vm.SelectedVoice)).WithWidth(controlMinWidth);
@@ -231,9 +321,20 @@ public class TextToSpeechWindow : Window
                     MinWidth = labelMinWidth,
                 },
                 comboBoxVoices,
-                new Label
+                new Border
                 {
-                    [!Label.ContentProperty] = new Binding(nameof(vm.VoiceCountInfo)) { Mode = BindingMode.TwoWay }
+                    CornerRadius = new CornerRadius(10),
+                    Padding = new Thickness(9, 1, 9, 2),
+                    Margin = new Thickness(6, 0, 2, 0),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Background = new SolidColorBrush(Color.FromArgb(28, 128, 128, 128)),
+                    Child = new TextBlock
+                    {
+                        FontSize = 11.5,
+                        Opacity = 0.8,
+                        [!TextBlock.TextProperty] = new Binding(nameof(vm.VoiceCountInfo)) { Mode = BindingMode.OneWay },
+                    },
+                    [!Border.IsVisibleProperty] = new Binding(nameof(vm.IsVoiceCountVisible)) { Mode = BindingMode.OneWay },
                 },
                 buttonTestVoice,
                 UiUtil.MakeButton(vm.ShowTestVoiceSettingsCommand, IconNames.Settings),
@@ -385,6 +486,7 @@ public class TextToSpeechWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
@@ -397,13 +499,14 @@ public class TextToSpeechWindow : Window
         };
 
         grid.Add(panelEngine, 0, 0);
-        grid.Add(panelModel, 1, 0);
-        grid.Add(panelVoice, 2, 0);
-        grid.Add(panelRegion, 3, 0);
-        grid.Add(panelLanguage, 4, 0);
-        grid.Add(panelApiKey, 5, 0);
-        grid.Add(panelKeyFile, 6, 0);
-        grid.Add(panelInstruction, 7, 0);
+        grid.Add(labelEngineDescription, 1, 0);
+        grid.Add(panelModel, 2, 0);
+        grid.Add(panelVoice, 3, 0);
+        grid.Add(panelRegion, 4, 0);
+        grid.Add(panelLanguage, 5, 0);
+        grid.Add(panelApiKey, 6, 0);
+        grid.Add(panelKeyFile, 7, 0);
+        grid.Add(panelInstruction, 8, 0);
 
         // Give the left (Engine/Voice/Model/...) panel a sensible minimum so the window doesn't
         // collapse into a narrow column when the right-side panel happens to be wider than the
@@ -484,15 +587,16 @@ public class TextToSpeechWindow : Window
         {
             Content = Se.Language.Video.TextToSpeech.ReviewAudioSegments,
             VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness(0, 10, 0, 10),
+            Margin = new Thickness(0, 10, 0, 0),
             [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.DoReviewAudioClips)) { Mode = BindingMode.TwoWay }
         };
+        var panelReviewAudioClips = WithCheckBoxHint(checkBoxReviewAudioClips, Se.Language.Video.TextToSpeech.ReviewAudioSegmentsHint);
 
         var checkBoxAddAudioToVideoFile = new CheckBox
         {
             Content = Se.Language.Video.TextToSpeech.AddAudioToVideoFile,
             VerticalAlignment = VerticalAlignment.Top,
-            Margin = new Thickness(0, 0, 0, 10),
+            Margin = new Thickness(0, 0, 0, 0),
             [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.DoGenerateVideoFile)) { Mode = BindingMode.TwoWay }
         };
 
@@ -507,6 +611,7 @@ public class TextToSpeechWindow : Window
                       .WithMarginLeft(5).WithMarginTop(0).WithTopAlignment(),
             }
         };
+        var panelAddAudioWithHint = WithCheckBoxHint(panelAddAudioToVideoFile, Se.Language.Video.TextToSpeech.AddAudioToVideoFileHint);
 
         var buttonAdvanced = UiUtil.MakeButton(Se.Language.General.AdvancedDotDotDot, vm.ShowAdvancedSettingsCommand)
             .WithMarginTop(5);
@@ -532,8 +637,8 @@ public class TextToSpeechWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(checkBoxReviewAudioClips, 0, 0);
-        grid.Add(panelAddAudioToVideoFile, 1, 0);
+        grid.Add(panelReviewAudioClips, 0, 0);
+        grid.Add(panelAddAudioWithHint, 1, 0);
         grid.Add(buttonAdvanced, 2, 0);
 
         return UiUtil.MakeBorderForControl(grid);
@@ -567,7 +672,25 @@ public class TextToSpeechWindow : Window
         // "don't grow the window" guarantee comes from the WidthIgnoringPanel wrapper around
         // this whole grid below — that panel reports 0 desired width up the layout chain so the
         // outer grid's Star columns never see the progress text's natural width.
-        var label = new TextBlock
+        var labelPercent = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            FontWeight = FontWeight.Bold,
+            Margin = new Thickness(0, 6, 8, 0),
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.ProgressPercentText)) { Mode = BindingMode.OneWay },
+        };
+
+        var labelEta = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Opacity = 0.7,
+            FontSize = 12,
+            Margin = new Thickness(8, 6, 0, 0),
+            [!TextBlock.TextProperty] = new Binding(nameof(vm.ProgressEtaText)) { Mode = BindingMode.OneWay },
+        };
+
+        var labelStatus = new TextBlock
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Center,
@@ -576,6 +699,22 @@ public class TextToSpeechWindow : Window
             Margin = new Thickness(0, 6, 0, 0),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.ProgressText)) { Mode = BindingMode.OneWay },
         };
+
+        // percent | status | elapsed/remaining on one line
+        var statusRow = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+            },
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+        statusRow.Add(labelPercent, 0, 0);
+        statusRow.Add(labelStatus, 0, 1);
+        statusRow.Add(labelEta, 0, 2);
+        var label = statusRow;
 
         var progressBar = UiUtil.MakeProgressBar();
         progressBar.HorizontalAlignment = HorizontalAlignment.Stretch;
