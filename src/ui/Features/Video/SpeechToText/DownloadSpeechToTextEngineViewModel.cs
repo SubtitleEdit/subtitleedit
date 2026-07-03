@@ -108,7 +108,12 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
         lock (_lockObj)
         {
             _timer.Stop();
-            if (_downloadTask is { IsCompleted: true } && Engine != null)
+            // IsCompletedSuccessfully (not the broader IsCompleted, which is also true for
+            // Faulted/Canceled tasks) so a download that threw - e.g. Faster-Whisper-XXL's
+            // PlatformNotSupportedException on Linux ARM64 or macOS - falls through to the
+            // IsFaulted branch below instead of unpacking a file that was never downloaded,
+            // which left the dialog stuck on "Unpacking..." indefinitely.
+            if (_downloadTask is { IsCompletedSuccessfully: true } && Engine != null)
             {
                 if (Engine.Name == WhisperEnginePurfviewFasterWhisperXxl.StaticName)
                 {
