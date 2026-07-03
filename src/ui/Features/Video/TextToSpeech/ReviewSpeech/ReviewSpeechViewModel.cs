@@ -50,7 +50,9 @@ public partial class ReviewSpeechViewModel : ObservableObject
     [ObservableProperty] private string? _selectedStyle;
     [ObservableProperty] private ObservableCollection<ReviewRow> _lines;
     [ObservableProperty] private ReviewRow? _selectedLine;
-    [ObservableProperty] private bool _isRegenerateEnabled;
+    // True whenever no regenerate is in flight. Must start true: OK/Export/Cancel and Escape
+    // are gated on it, and the default false left them dead until the first regenerate ran.
+    [ObservableProperty] private bool _isRegenerateEnabled = true;
     [ObservableProperty] private bool _isElevenLabsControlsVisible;
     [ObservableProperty] private bool _autoContinue;
     [ObservableProperty] private bool _isPlayVisible;
@@ -199,9 +201,13 @@ public partial class ReviewSpeechViewModel : ObservableObject
                     // Re-check on the UI thread: Stop/Space pressed between this tick's threadpool
                     // checks and this lambda running used to be ignored - the advance started a
                     // fresh mpv for the next row while the UI had already reset to idle, leaving
-                    // audio playing with nothing able to stop it.
+                    // audio playing with nothing able to stop it. The timer is already stopped and
+                    // this lambda is the last thing to run, so it must also reset the playback UI:
+                    // a bare return left the finished row's stop icon showing and every row
+                    // disabled, with no way to recover in the window.
                     if (_skipAutoContinue || _cancellationTokenSource.IsCancellationRequested || !ReferenceEquals(_playingRow, line))
                     {
+                        ResetPlaybackUiState();
                         return;
                     }
 
@@ -311,7 +317,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
         ITtsEngine[] engines,
         ITtsEngine engine,
         Voice[] voices,
-        Voice voice,
+        Voice? voice,
         TtsLanguage[] languages,
         TtsLanguage? language,
         string videoFileName,
@@ -494,7 +500,27 @@ public partial class ReviewSpeechViewModel : ObservableObject
             }
         }
 
-        // Copy files
+        // Copy files. Files still referenced by rows or their history entries must not be
+        // overwritten: re-exporting to the folder a session was imported from used to replace an
+        // original take (e.g. 0002.wav) that a history entry still pointed at - "pick from
+        // history" then played and published the wrong audio with no warning.
+        var referencedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var l in Lines)
+        {
+            if (!string.IsNullOrEmpty(l.StepResult.CurrentFileName))
+            {
+                referencedFiles.Add(Path.GetFullPath(l.StepResult.CurrentFileName));
+            }
+
+            foreach (var h in l.HistoryItems)
+            {
+                if (!string.IsNullOrEmpty(h.FileName))
+                {
+                    referencedFiles.Add(Path.GetFullPath(h.FileName));
+                }
+            }
+        }
+
         var index = 0;
         var missingAudioCount = 0;
         var exportFormat = new TtsImportExport
@@ -524,6 +550,21 @@ public partial class ReviewSpeechViewModel : ObservableObject
             // audio gone and no JSON written. An identical path needs no copy at all.
             var sourceIsTarget = !string.IsNullOrEmpty(targetFileName) &&
                                  string.Equals(Path.GetFullPath(sourceFileName), Path.GetFullPath(targetFileName), StringComparison.OrdinalIgnoreCase);
+
+            // Divert to a suffixed name when the default target is a *different* file that a row
+            // or history entry still references.
+            if (!sourceIsTarget && !string.IsNullOrEmpty(targetFileName) && referencedFiles.Contains(Path.GetFullPath(targetFileName)))
+            {
+                var suffix = 1;
+                string candidate;
+                do
+                {
+                    candidate = Path.Combine(folder, $"{index.ToString().PadLeft(4, '0')}_{suffix}{Path.GetExtension((string?)sourceFileName)}");
+                    suffix++;
+                }
+                while (referencedFiles.Contains(Path.GetFullPath(candidate)) || File.Exists(candidate));
+                targetFileName = candidate;
+            }
 
             if (!sourceIsTarget && !string.IsNullOrEmpty(targetFileName) && File.Exists(targetFileName))
             {
@@ -1663,12 +1704,21 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
     internal void OnClosing(WindowClosingEventArgs e)
     {
+        // Title-bar X / Alt+F4 bypass the Escape guard, so a regenerate can still be in flight
+        // here. Cancel it, but leave its popup-owned CTS undisposed (the popup's Cancel button
+        // still holds it) and skip the temp-file sweep below - the unwinding pipeline may still
+        // be writing those files.
+        var regenerateInFlight = !IsRegenerateEnabled;
+
         _skipAutoContinue = true;
         _timer.Stop();
         _timer.Elapsed -= OnTimerOnElapsed;
         _timer.Dispose();
         try { _cancellationTokenSource.Cancel(); } catch (ObjectDisposedException) { }
-        try { _cancellationTokenSource.Dispose(); } catch (ObjectDisposedException) { }
+        if (!regenerateInFlight)
+        {
+            try { _cancellationTokenSource.Dispose(); } catch (ObjectDisposedException) { }
+        }
         lock (_playLock)
         {
             _mpvContext?.Dispose();
@@ -1695,19 +1745,22 @@ public partial class ReviewSpeechViewModel : ObservableObject
         var publishedFiles = OkPressed
             ? new HashSet<string>(StepResults.Select(r => r.CurrentFileName), StringComparer.OrdinalIgnoreCase)
             : new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var f in _tempAudioFiles)
+        if (!regenerateInFlight)
         {
-            if (publishedFiles.Contains(f))
+            foreach (var f in _tempAudioFiles)
             {
-                continue;
-            }
+                if (publishedFiles.Contains(f))
+                {
+                    continue;
+                }
 
-            try { if (File.Exists(f))
-            {
-                File.Delete(f);
-            } } catch { /* ignore */ }
+                try { if (File.Exists(f))
+                {
+                    File.Delete(f);
+                } } catch { /* ignore */ }
+            }
+            _tempAudioFiles.Clear();
         }
-        _tempAudioFiles.Clear();
 
         UiUtil.SaveWindowPosition(Window);
     }

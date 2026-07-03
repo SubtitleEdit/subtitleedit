@@ -360,10 +360,28 @@ public partial class ActorVoiceMappingViewModel : ObservableObject
                 row.SelectedEngine.Speak(Utilities.UnbreakLine(_voiceTestText), _waveFolder, row.SelectedVoice,
                     null, null, row.SelectedModel, _cancellationTokenSource.Token));
 
-            if (!_cancellationTokenSource.IsCancellationRequested && File.Exists(result.FileName))
+            if (_cancellationTokenSource.IsCancellationRequested)
             {
-                await PlayAudio(result.FileName);
+                return;
             }
+
+            // Engine-reported failures (Error result with empty file name) used to close the
+            // spinner and do nothing - e.g. Azure's "region is not set" or an ElevenLabs 429
+            // just looked like a dead button. Surface the engine's reason.
+            if (result.Error || !File.Exists(result.FileName))
+            {
+                if (Window != null)
+                {
+                    var detail = string.IsNullOrEmpty(result.ErrorMessage)
+                        ? "The engine produced no audio - see error-log.txt in the Subtitle Edit data folder."
+                        : result.ErrorMessage;
+                    await MessageBox.Show(Window, Se.Language.General.Error, "Test voice failed: " + detail, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                return;
+            }
+
+            await PlayAudio(result.FileName);
         }
         catch (OperationCanceledException)
         {

@@ -657,7 +657,15 @@ public partial class TextToSpeechViewModel : ObservableObject
         try
         {
             var sidecar = Path.ChangeExtension(wavPath, ".txt");
-            return File.Exists(sidecar) ? File.ReadAllText(sidecar).Trim() : null;
+            if (!File.Exists(sidecar))
+            {
+                return null;
+            }
+
+            // An attribution-blurb sidecar (pre-filter seeding) is not a transcript - report it
+            // as missing so the transcript prompt still fires instead of being suppressed.
+            var text = File.ReadAllText(sidecar).Trim();
+            return Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(text) ? null : text;
         }
         catch
         {
@@ -1001,7 +1009,20 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
 
         var voice = SelectedVoice;
-        if (voice != null && !await TtsVoiceInstaller.EnsureVoiceInstalled(engine, voice, Window, _windowService))
+        if (voice == null)
+        {
+            // A failed engine switch (network blip, missing API key) legitimately leaves the
+            // voice list empty now - without this, Generate ended instantly with no message.
+            await MessageBox.Show(
+                Window!,
+                Se.Language.General.Error,
+                "No voices are loaded for the selected engine - check the engine settings (e.g. API key) and re-select the engine to reload its voices.",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
+        if (!await TtsVoiceInstaller.EnsureVoiceInstalled(engine, voice, Window, _windowService))
         {
             return;
         }
@@ -1489,6 +1510,8 @@ public partial class TextToSpeechViewModel : ObservableObject
             Voices.Add(voice);
         }
         SelectedVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice) ?? Voices.FirstOrDefault();
+        VoiceCount = Voices.Count;
+        VoiceCountInfo = Voices.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
     }
 
     [RelayCommand]
@@ -1614,15 +1637,16 @@ public partial class TextToSpeechViewModel : ObservableObject
             _videoFileName = videoFileNameForReview;
         }
 
-        // The review window needs an engine and voice to offer regeneration. Voices can be empty
-        // when the selected engine's voice load failed (missing API key, network) - Voices.First()
-        // then threw and Import died with only a logged exception.
-        if (Engines.Count == 0 || Voices.Count == 0)
+        // The review window needs at least one engine to offer regeneration; an empty global
+        // voice list is fine (each imported line resolved its own engine's voices above, and
+        // the review window guards regenerate on a missing voice) - blocking on it rejected
+        // perfectly reviewable sessions whenever the *selected* engine's voice load failed.
+        if (Engines.Count == 0)
         {
             await MessageBox.Show(
                 Window,
                 Se.Language.General.Error,
-                "No voices are loaded for the selected engine - check the engine settings (e.g. API key) and try again.",
+                "No usable TTS engines are available - check the engine settings and try again.",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return;
@@ -1640,7 +1664,7 @@ public partial class TextToSpeechViewModel : ObservableObject
                 Engines.ToArray(),
                 SelectedEngine ?? Engines.First(),
                 Voices.ToArray(),
-                SelectedVoice ?? Voices.First(),
+                SelectedVoice ?? Voices.FirstOrDefault(),
                 Languages.ToArray(),
                 SelectedLanguage,
                 videoFileNameForReview,
@@ -1670,13 +1694,14 @@ public partial class TextToSpeechViewModel : ObservableObject
             return string.Empty;
         }
 
-        // A Windows drive path ("C:\...") is not rooted on Unix, so Path.IsPathRooted alone let
-        // legacy Windows exports opened on macOS/Linux fall through to a garbage
-        // jsonFolder + "C:\..." combine - skipping the sibling retry that would find the file.
-        var isWindowsAbsolute = audioFileName.Length >= 3 && char.IsLetter(audioFileName[0])
-            && audioFileName[1] == ':' && (audioFileName[2] == '\\' || audioFileName[2] == '/');
+        // A Windows path is not recognized as rooted on Unix ("C:\...", "\\server\share\...",
+        // "\folder\..."), so Path.IsPathRooted alone let legacy Windows exports opened on
+        // macOS/Linux fall through to a garbage jsonFolder + "C:\..." combine - skipping the
+        // sibling retry that would find the file. New-format exports store bare file names
+        // (never containing a backslash), so any backslash marks a legacy Windows path.
+        var isLegacyWindowsPath = audioFileName.Contains('\\');
 
-        if (Path.IsPathRooted(audioFileName) || isWindowsAbsolute)
+        if (Path.IsPathRooted(audioFileName) || isLegacyWindowsPath)
         {
             if (File.Exists(audioFileName))
             {
@@ -3039,7 +3064,13 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         // Per-row model overrides the global one; empty string means "use the global model".
         var modelOverride = string.IsNullOrWhiteSpace(mapping.Model) ? null : mapping.Model;
-        return new ResolvedVoice(mappedEngine, mappedVoice, modelOverride, text, mapping.Instruction ?? string.Empty);
+        // A mapped row with no instruction of its own, on the globally selected engine, follows
+        // the panel instruction - otherwise mapping an actor to the same engine/voice made that
+        // actor's lines drop the voice design every unmapped line gets.
+        var instruction = string.IsNullOrWhiteSpace(mapping.Instruction) && ReferenceEquals(mappedEngine, defaultEngine)
+            ? globalInstruction
+            : mapping.Instruction ?? string.Empty;
+        return new ResolvedVoice(mappedEngine, mappedVoice, modelOverride, text, instruction);
     }
 
     private async Task<TtsStepResult[]?> FixSpeed(TtsStepResult[] previousStepResult, CancellationToken cancellationToken)
@@ -3449,6 +3480,13 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         Dispatcher.UIThread.PostSafe(async () =>
         {
+            // Captured before any SelectedModel assignment below: OnSelectedModelChanged
+            // persists the Qwen3 (CrispASR) model on every change, so the generic
+            // "SelectedModel = Models.FirstOrDefault()" default overwrote the saved model
+            // with "1.7B VoiceDesign" right before the engine block tried to restore it -
+            // the user's model choice never survived a window open or engine re-switch.
+            var savedQwen3CrispAsrModel = Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrModel;
+
             IsEngineSettingsVisible = false;
             IsModelDownloadVisible = false;
 
@@ -3588,7 +3626,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             }
             else if (SelectedEngine is Qwen3TtsCrispAsr)
             {
-                SelectedModel = Models.FirstOrDefault(p => p == Se.Settings.Video.TextToSpeech.Qwen3TtsCrispAsrModel);
+                SelectedModel = Models.FirstOrDefault(p => p == savedQwen3CrispAsrModel);
                 if (string.IsNullOrEmpty(SelectedModel))
                 {
                     SelectedModel = Models.FirstOrDefault();

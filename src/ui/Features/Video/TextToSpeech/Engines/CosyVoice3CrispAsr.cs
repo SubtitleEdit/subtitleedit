@@ -414,7 +414,16 @@ public class CosyVoice3CrispAsr : ITtsEngine
         try
         {
             var sidecar = Path.ChangeExtension(wavPath, ".txt");
-            return File.Exists(sidecar) ? File.ReadAllText(sidecar).Trim() : string.Empty;
+            if (!File.Exists(sidecar))
+            {
+                return string.Empty;
+            }
+
+            // Sidecars written by pre-filter seeding can be Wikimedia attribution blurbs, not
+            // transcriptions - treat them as "no transcript" (same read-time filter Qwen3
+            // CrispASR applies) so they neither poison ref-text nor suppress the prompt.
+            var text = File.ReadAllText(sidecar).Trim();
+            return Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(text) ? string.Empty : text;
         }
         catch
         {
@@ -449,22 +458,27 @@ public class CosyVoice3CrispAsr : ITtsEngine
 
         // Either Preset OR FilePath must be set. Preset wins if both are populated (defensive
         // — shouldn't happen with the constructors but guards against future drift).
+        // Error results, not throws: a throw from Speak escapes the generate loop's per-segment
+        // handling and aborts the entire run - reachable from cast rows and the review window,
+        // where the main window's transcript prompt never had a chance to fire.
         var voiceArg = !string.IsNullOrEmpty(cosyVoice.Preset) ? cosyVoice.Preset : cosyVoice.FilePath;
         if (string.IsNullOrEmpty(voiceArg))
         {
-            throw new InvalidOperationException(
-                "CosyVoice3 (CrispASR) requires a preset or an imported reference WAV. "
+            var error = "CosyVoice3 (CrispASR) requires a preset or an imported reference WAV. "
                 + "Pick one of the baked presets (zero_shot / fleurs-*) or import a 16 kHz mono "
-                + "reference WAV with an adjacent .txt transcription sidecar.");
+                + "reference WAV with an adjacent .txt transcription sidecar.";
+            Se.WriteToolsLog("CosyVoice3 (CrispASR): " + error, true);
+            return new TtsResult { Text = text, FileName = string.Empty, Error = true, ErrorMessage = error };
         }
 
         var isClone = string.IsNullOrEmpty(cosyVoice.Preset);
         if (isClone && string.IsNullOrEmpty(cosyVoice.RefText))
         {
-            throw new InvalidOperationException(
-                $"CosyVoice3 (CrispASR) zero-shot cloning requires a transcription. "
+            var error = "CosyVoice3 (CrispASR) zero-shot cloning requires a transcription. "
                 + $"Add a .txt sidecar next to '{Path.GetFileName(cosyVoice.FilePath)}' with the "
-                + "spoken text of the reference WAV.");
+                + "spoken text of the reference WAV.";
+            Se.WriteToolsLog("CosyVoice3 (CrispASR): " + error, true);
+            return new TtsResult { Text = text, FileName = string.Empty, Error = true, ErrorMessage = error };
         }
 
         var modelKey = ResolveModelKey(model);

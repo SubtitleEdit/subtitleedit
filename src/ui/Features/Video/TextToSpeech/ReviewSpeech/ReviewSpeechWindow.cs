@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -110,23 +111,26 @@ public class ReviewSpeechWindow : Window
             VerticalAlignment = VerticalAlignment.Stretch,
             Columns =
             {
-                //new DataGridTemplateColumn
-                //{
-                //    Header = Se.Language.General.Enabled,
-                //    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                //    CellTemplate = new FuncDataTemplate<ReviewRow>((item, _) =>
-                //        new Border
-                //        {
-                //            Background = Brushes.Transparent, // Prevents highlighting
-                //            Padding = new Thickness(4),
-                //            Child = new CheckBox
-                //            {
-                //                [!ToggleButton.IsCheckedProperty] = new Binding(nameof(ReviewRow.Include)),
-                //                HorizontalAlignment = HorizontalAlignment.Center
-                //            }
-                //        }),
-                //    Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
-                //},
+                // Re-enabled: OK publishes only rows with Include ticked and Export/Import
+                // round-trip the flag, so without this column an imported session's excluded
+                // rows were invisible and could never be re-included.
+                new DataGridTemplateColumn
+                {
+                    Header = Se.Language.General.Enabled,
+                    CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    CellTemplate = new FuncDataTemplate<ReviewRow>((item, _) =>
+                        new Border
+                        {
+                            Background = Brushes.Transparent, // Prevents highlighting
+                            Padding = new Thickness(4),
+                            Child = new CheckBox
+                            {
+                                [!ToggleButton.IsCheckedProperty] = new Binding(nameof(ReviewRow.Include)),
+                                HorizontalAlignment = HorizontalAlignment.Center
+                            }
+                        }),
+                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto)
+                },
                 new DataGridTemplateColumn
                 {
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,

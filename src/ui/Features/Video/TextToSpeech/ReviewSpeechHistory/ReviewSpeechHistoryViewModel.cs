@@ -105,11 +105,6 @@ public partial class ReviewSpeechHistoryViewModel : ObservableObject
 
         await _mpvContext.LoadAudio(fileName);
 
-        foreach (var row in HistoryItems)
-        {
-            row.IsPlayingEnabled = false;
-        }
-
         _timer.Start();
     }
 
