@@ -1,12 +1,17 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Core.Common;
+using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -44,25 +49,23 @@ public partial class ReviewSpeechHistoryViewModel : ObservableObject
     {
         _timer.Stop();
 
-        if (_cancellationTokenSource.IsCancellationRequested || _mpvContext == null)
+        // Same shape as the review window's watchdog: read mpv state under the lock (the
+        // null check used to happen outside it, racing the dispose in OnWindowClosing) and
+        // decide first, act after - the row properties are UI-bound and must be set on the
+        // dispatcher, not on this threadpool thread.
+        var stop = false;
+        lock (_playLock)
         {
-            lock (_playLock)
+            if (_cancellationTokenSource.IsCancellationRequested || _mpvContext == null || _mpvContext.IsPaused)
             {
-                StopPlay();
-                return;
+                stop = true;
             }
         }
-        else if (_mpvContext != null)
+
+        if (stop)
         {
-            lock (_playLock)
-            {
-                var paused = _mpvContext.IsPaused;
-                if (paused)
-                {
-                    StopPlay();
-                    return;
-                }
-            }
+            Dispatcher.UIThread.Post(StopPlay);
+            return;
         }
 
         _timer.Start();
@@ -70,9 +73,13 @@ public partial class ReviewSpeechHistoryViewModel : ObservableObject
 
     private void StopPlay()
     {
-        _mpvContext?.Stop();
-        _mpvContext?.Dispose();
-        _mpvContext = null;
+        lock (_playLock)
+        {
+            _mpvContext?.Stop();
+            _mpvContext?.Dispose();
+            _mpvContext = null;
+        }
+
         foreach (ReviewHistoryRow row in HistoryItems)
         {
             row.IsPlaying = false;
@@ -124,6 +131,25 @@ public partial class ReviewSpeechHistoryViewModel : ObservableObject
     {
         if (item == null)
         {
+            return;
+        }
+
+        // A history entry can point at a missing file (exported without audio, cleaned temp
+        // folder). mpv's failed loadfile is fire-and-forget, so playing it wedged the dialog in
+        // "playing" with every row disabled for its lifetime.
+        if (string.IsNullOrEmpty(item.FileName) || !File.Exists(item.FileName))
+        {
+            SeLogger.Error($"ReviewSpeechHistory: cannot play missing audio file \"{item.FileName}\"");
+            if (Window != null)
+            {
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.General.Error,
+                    "The audio file for this history entry does not exist:" + Environment.NewLine + item.FileName,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+
             return;
         }
 

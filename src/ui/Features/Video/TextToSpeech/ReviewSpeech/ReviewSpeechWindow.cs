@@ -37,9 +37,11 @@ public class ReviewSpeechWindow : Window
         var dataGrid = MakeDataGrid(vm);
         var waveform = MakeWaveform(vm);
 
-        var buttonExport = UiUtil.MakeButton(Se.Language.General.ExportDotDotDot, vm.ExportCommand);
-        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
+        // Disabled while a regenerate runs: its progress popup is non-modal, and publishing
+        // (OK/Export) or closing mid-run would commit the row's half-updated step result.
+        var buttonExport = UiUtil.MakeButton(Se.Language.General.ExportDotDotDot, vm.ExportCommand).WithBindEnabled(nameof(vm.IsRegenerateEnabled));
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindEnabled(nameof(vm.IsRegenerateEnabled));
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand).WithBindEnabled(nameof(vm.IsRegenerateEnabled));
         var panelButtons = UiUtil.MakeButtonBar(buttonExport, buttonOk, buttonCancel);
 
         var grid = new Grid

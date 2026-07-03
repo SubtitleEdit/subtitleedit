@@ -353,9 +353,12 @@ public partial class ActorVoiceMappingViewModel : ObservableObject
         try
         {
             row.IsPlaying = true;
+            // Pass the row's model - with null, model-dependent engines either tested the wrong
+            // (globally saved) model or failed outright. Language/region stay null; engines fall
+            // back to their own saved defaults for those.
             var result = await TtsInstructionSwap.RunAsync(row.SelectedEngine, row.Instruction, () =>
                 row.SelectedEngine.Speak(Utilities.UnbreakLine(_voiceTestText), _waveFolder, row.SelectedVoice,
-                    null, null, null, _cancellationTokenSource.Token));
+                    null, null, row.SelectedModel, _cancellationTokenSource.Token));
 
             if (!_cancellationTokenSource.IsCancellationRequested && File.Exists(result.FileName))
             {

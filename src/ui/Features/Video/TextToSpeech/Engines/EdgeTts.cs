@@ -124,8 +124,8 @@ public class EdgeTts : ITtsEngine
 
         var folder = GetSetEdgeTtsFolder();
         var fileName = Path.Combine(folder, Guid.NewGuid() + ".mp3");
-        var escapedText = text.Replace("\"", "\\\"");
-        var escapedVoice = edgeVoice.Name.Replace("\"", "\\\"");
+        var escapedText = EscapeQuotedArgValue(text);
+        var escapedVoice = EscapeQuotedArgValue(edgeVoice.Name);
         var args =
             $"--voice \"{escapedVoice}\" --text \"{escapedText}\" --write-media \"{fileName}\"";
 
@@ -188,6 +188,42 @@ public class EdgeTts : ITtsEngine
         }
 
         return new TtsResult { Text = text, FileName = string.Empty, Error = true };
+    }
+
+    /// <summary>
+    /// Escapes a value for use inside a quoted command-line argument ("{value}") per the
+    /// MSVCRT/.NET parsing rules: quotes are backslash-escaped, and any run of backslashes
+    /// immediately preceding a quote (or the end of the value, where our closing quote follows)
+    /// is doubled. Escaping only quotes used to let a line *ending* in a backslash produce \",
+    /// turning the closing quote into a literal and swallowing the following --write-media
+    /// argument - failing the segment through all retries.
+    /// </summary>
+    internal static string EscapeQuotedArgValue(string value)
+    {
+        var sb = new StringBuilder(value.Length + 8);
+        var backslashes = 0;
+        foreach (var ch in value)
+        {
+            if (ch == '\\')
+            {
+                backslashes++;
+                continue;
+            }
+
+            if (ch == '"')
+            {
+                sb.Append('\\', backslashes * 2 + 1).Append('"');
+            }
+            else
+            {
+                sb.Append('\\', backslashes).Append(ch);
+            }
+
+            backslashes = 0;
+        }
+
+        sb.Append('\\', backslashes * 2);
+        return sb.ToString();
     }
 
     // Strip the --text "..." value from the logged command so subtitle content

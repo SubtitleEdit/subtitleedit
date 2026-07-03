@@ -513,6 +513,16 @@ public class TtsDownloadService : ITtsDownloadService
 
         var parser = new SeJsonParser();
         var fileUrl = parser.GetFirstObject(Encoding.UTF8.GetString(ms.ToArray()), "audioFile");
+
+        // A 200 response without an audioFile URL (schema change, quota message) would make
+        // GetAsync throw on a null/empty URI and abort the whole generation run instead of
+        // failing this one segment.
+        if (string.IsNullOrWhiteSpace(fileUrl) || !Uri.TryCreate(fileUrl, UriKind.Absolute, out _))
+        {
+            SeLogger.Error($"Murf TTS returned no usable audioFile URL (\"{fileUrl}\") - response: {TruncateForLog(Encoding.UTF8.GetString(ms.ToArray()).Trim())}");
+            return false;
+        }
+
         var audioResult = await _httpClient.GetAsync(fileUrl, cancellationToken);
         if (!audioResult.IsSuccessStatusCode)
         {

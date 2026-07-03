@@ -74,6 +74,16 @@ public static class TtsPostProcessor
         {
             return currentFile;
         }
+        catch (Exception ex)
+        {
+            // Must not escape: AdoptStageOutput deletes the superseded input on each successful
+            // stage, so callers that fall back to their *original* file on an exception would
+            // point at a file a completed earlier stage already deleted. Returning the last
+            // adopted file keeps the audio chain intact.
+            SeLogger.Error(ex, "TTS post-processing failed - keeping the last successfully processed file");
+            Se.WriteToolsLog($"TTS post-processing failed ({ex.Message}) - keeping \"{currentFile}\"", true);
+            return currentFile;
+        }
     }
 
     /// <summary>

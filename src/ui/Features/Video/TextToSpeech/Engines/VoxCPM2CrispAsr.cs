@@ -285,7 +285,18 @@ public class VoxCPM2CrispAsr : ITtsEngine
                     var sidecarDest = Path.ChangeExtension(dest, ".txt");
                     if (!File.Exists(sidecarDest))
                     {
-                        try { File.Copy(sidecar, sidecarDest); } catch { }
+                        // The qwen3-tts.cpp voice pack's .txt sidecars are Wikimedia attribution
+                        // blurbs, not spoken transcriptions - used as ref-text they produce
+                        // runaway, off-voice output, and being non-empty they also defeat the
+                        // missing-transcription prompt. Same filter Qwen3 (CrispASR) applies.
+                        try
+                        {
+                            if (!Qwen3TtsCrispAsr.LooksLikeAttributionBlurb(File.ReadAllText(sidecar)))
+                            {
+                                File.Copy(sidecar, sidecarDest);
+                            }
+                        }
+                        catch { }
                     }
                 }
             }
