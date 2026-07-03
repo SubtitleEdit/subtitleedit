@@ -220,29 +220,6 @@ public class TextToSpeechWindow : Window
         }
     }
 
-    // The API key is a secret: mask it by default so it never shows in screenshots/screen
-    // shares, with an eye button that toggles visibility while editing (#12093).
-    private static StackPanel MakeApiKeyTextBox(TextToSpeechViewModel vm)
-    {
-        var textBox = UiUtil.MakeTextBox(325, vm, nameof(vm.ApiKey));
-        textBox.PasswordChar = '●';
-
-        var buttonReveal = UiUtil.MakeButton(null, IconNames.Eye);
-        AutomationProperties.SetName(buttonReveal, Se.Language.General.ApiKey);
-        buttonReveal.Click += (_, _) =>
-        {
-            textBox.RevealPassword = !textBox.RevealPassword;
-            Attached.SetIcon(buttonReveal, textBox.RevealPassword ? IconNames.EyeOff : IconNames.Eye);
-        };
-
-        return new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 5,
-            Children = { textBox, buttonReveal },
-        };
-    }
-
     // Checkbox (or checkbox row) with a muted one-line explanation below, indented to align
     // with the checkbox text.
     private static StackPanel WithCheckBoxHint(Control checkBoxOrPanel, string hint)
@@ -437,7 +414,7 @@ public class TextToSpeechWindow : Window
                     Content = Se.Language.General.ApiKey,
                     MinWidth = labelMinWidth,
                 },
-                MakeApiKeyTextBox(vm),
+                UiUtil.MakeApiKeyTextBox(325, vm, nameof(vm.ApiKey)),
             },
             [!StackPanel.IsVisibleProperty] = new Binding(nameof(vm.HasApiKey)) { Mode = BindingMode.OneWay },
         };
