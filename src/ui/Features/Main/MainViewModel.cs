@@ -8067,7 +8067,7 @@ public partial class MainViewModel :
         }
 
         // Work on the selected lines in grid order.
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>());
         var ordered = Subtitles.Where(s => selectedItems.Contains(s)).ToList();
         if (ordered.Count == 0)
         {
@@ -8119,7 +8119,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+        var selectedItems = new HashSet<SubtitleLineViewModel>(SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>());
         var ordered = Subtitles.Where(s => selectedItems.Contains(s)).ToList();
         if (ordered.Count == 0)
         {
