@@ -198,6 +198,7 @@ public class LanguageSettings
     public string DefaultSaveAsFormat { get; set; }
     public string FavoriteSubtitleFormats { get; set; }
     public string FavoriteLanguages { get; set; }
+    public string WebVttUseXTimestampMap { get; set; }
 
     public string ShowStopButton { get; set; }
     public string ShowFullscreenButton { get; set; }
@@ -535,6 +536,7 @@ public class LanguageSettings
         DefaultFormat = "Default format";
         DefaultSaveAsFormat = "Default \"Save as\" format";
         FavoriteSubtitleFormats = "Favorite subtitle formats";
+        WebVttUseXTimestampMap = "WebVTT: use X-TIMESTAMP-MAP (offset time codes on load)";
         FavoriteLanguages = "Favorite languages";
         FilesAndLogs = "Files and logs";
         ShowErrorLogFile = "Show error log file";

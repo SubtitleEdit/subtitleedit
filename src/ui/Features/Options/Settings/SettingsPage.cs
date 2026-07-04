@@ -353,6 +353,7 @@ public class SettingsPage : UserControl
 
             new SettingsItem(Se.Language.Options.Settings.FavoriteSubtitleFormats, () => MakeFavoritesGrid(_vm)),
             new SettingsItem(Se.Language.Options.Settings.FavoriteLanguages, () => MakeLanguageFavoritesGrid(_vm)),
+            MakeCheckboxSetting(Se.Language.Options.Settings.WebVttUseXTimestampMap, nameof(_vm.WebVttUseXTimestampMap)),
         ]));
 
         sections.Add(new SettingsSection(Se.Language.Options.Settings.SyntaxColoring,

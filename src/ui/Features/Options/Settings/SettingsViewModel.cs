@@ -133,6 +133,8 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _favoriteSubtitleFormats;
     [ObservableProperty] private string? _selectedFavoriteSubtitleFormat;
 
+    [ObservableProperty] private bool _webVttUseXTimestampMap;
+
     [ObservableProperty] private ObservableCollection<PickLanguageDisplay> _favoriteLanguages;
     [ObservableProperty] private PickLanguageDisplay? _selectedFavoriteLanguage;
 
@@ -716,6 +718,8 @@ public partial class SettingsViewModel : ObservableObject
         {
             SelectedSaveSubtitleFormat = SaveSubtitleFormats.FirstOrDefault() ?? string.Empty;
         }
+
+        WebVttUseXTimestampMap = Se.Settings.Formats.WebVttUseXTimestampMap;
 
         if (!string.IsNullOrEmpty(general.FavoriteSubtitleFormats))
         {
@@ -1459,6 +1463,8 @@ public partial class SettingsViewModel : ObservableObject
 
         general.DefaultSubtitleFormat = SelectedDefaultSubtitleFormat;
         general.DefaultSaveAsFormat = SelectedSaveSubtitleFormat;
+
+        Se.Settings.Formats.WebVttUseXTimestampMap = WebVttUseXTimestampMap;
 
         var sbFavorites = new StringBuilder();
         foreach (var format in FavoriteSubtitleFormats)
