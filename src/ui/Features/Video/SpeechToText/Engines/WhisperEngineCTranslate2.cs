@@ -90,8 +90,13 @@ public class WhisperEngineCTranslate2 : ISpeechToTextEngine
 
     public string GetModelForCmdLine(string modelName)
     {
-        var modelFileName = Path.Combine(GetAndCreateWhisperModelFolder(null), "faster-whisper-" + modelName);
-        return modelFileName;
+        // Resolve via the model's real folder name so distil models (published as
+        // "faster-distil-whisper-...") get the correct --model path, not "faster-whisper-<name>" (#12133).
+        var model = Models.FirstOrDefault(m => m.Name == modelName);
+        var folderName = model != null
+            ? WhisperEnginePurfviewFasterWhisperXxl.GetModelFolderName(model)
+            : "faster-whisper-" + modelName;
+        return Path.Combine(GetAndCreateWhisperModelFolder(null), folderName);
     }
 
     public bool SupportsCustomModels => true;
