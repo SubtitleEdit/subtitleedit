@@ -212,6 +212,8 @@ it.types_custom=Installazione personalizzata
 it.types_default=Installazione predefinita
 it.tsk_CurrentUser=Solo per l'utente attuale
 it.tsk_AllUsers=Per tutti gli utenti
+it.NameAndVersion=%1 %2
+it.LaunchProgram=Esegui %1
 
 ; Japanese
 [CustomMessages]
