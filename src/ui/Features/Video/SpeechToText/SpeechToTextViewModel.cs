@@ -105,6 +105,23 @@ public partial class SpeechToTextViewModel : ObservableObject
     [ObservableProperty] private string _openAiCompatibleSttAudioFormat = "mp3";
     public ObservableCollection<string> OpenAiCompatibleSttAudioFormats { get; } = new(new[] { "mp3", "m4a", "webm", "wav" });
 
+    [ObservableProperty] private bool _isOpenRouterSttVisible;
+    [ObservableProperty] private string? _openRouterSttApiKey;
+    [ObservableProperty] private string? _openRouterSttModel;
+    [ObservableProperty] private string? _openRouterSttLanguage;
+    [ObservableProperty] private decimal _openRouterSttTemperature;
+    [ObservableProperty] private string? _openRouterSttPrompt;
+    [ObservableProperty] private int _openRouterSttTimeoutSeconds;
+
+    [ObservableProperty] private bool _isDashScopeSttVisible;
+    [ObservableProperty] private string? _dashScopeSttApiKey;
+    [ObservableProperty] private string? _dashScopeSttModel;
+    [ObservableProperty] private string? _dashScopeSttLanguage;
+    [ObservableProperty] private string _dashScopeSttRegion = "international";
+    [ObservableProperty] private bool _dashScopeSttEnableWords;
+    [ObservableProperty] private int _dashScopeSttTimeoutSeconds;
+    public ObservableCollection<string> DashScopeSttRegions { get; } = new(new[] { "international", "china" });
+
     public Window? Window { get; set; }
 
     public bool OkPressed { get; private set; }
@@ -215,6 +232,10 @@ public partial class SpeechToTextViewModel : ObservableObject
         // Add OpenAI Compatible STT engine (available on all platforms)
         Engines.Add(new OpenAiCompatibleSttEngine());
 
+        // Online STT services reachable on all platforms
+        Engines.Add(new OpenRouterSttEngine());
+        Engines.Add(new DashScopeQwen3SttEngine());
+
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ||
             RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ||
             RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -286,6 +307,21 @@ public partial class SpeechToTextViewModel : ObservableObject
         var savedFormat = Se.Settings.Tools.OpenAiCompatibleSttAudioFormat;
         OpenAiCompatibleSttAudioFormat = OpenAiCompatibleSttAudioFormats.Contains(savedFormat) ? savedFormat : "mp3";
 
+        OpenRouterSttApiKey = Se.Settings.Tools.OpenRouterSttApiKey;
+        OpenRouterSttModel = Se.Settings.Tools.OpenRouterSttModel;
+        OpenRouterSttLanguage = Se.Settings.Tools.OpenRouterSttLanguage;
+        OpenRouterSttTemperature = Se.Settings.Tools.OpenRouterSttTemperature;
+        OpenRouterSttPrompt = Se.Settings.Tools.OpenRouterSttPrompt;
+        OpenRouterSttTimeoutSeconds = Se.Settings.Tools.OpenRouterSttTimeoutSeconds;
+
+        DashScopeSttApiKey = Se.Settings.Tools.DashScopeSttApiKey;
+        DashScopeSttModel = Se.Settings.Tools.DashScopeSttModel;
+        DashScopeSttLanguage = Se.Settings.Tools.DashScopeSttLanguage;
+        var savedRegion = Se.Settings.Tools.DashScopeSttRegion;
+        DashScopeSttRegion = DashScopeSttRegions.Contains(savedRegion) ? savedRegion : "international";
+        DashScopeSttEnableWords = Se.Settings.Tools.DashScopeSttEnableWords;
+        DashScopeSttTimeoutSeconds = Se.Settings.Tools.DashScopeSttTimeoutSeconds;
+
         var savedChoice = Se.Settings.Tools.AudioToText.WhisperChoice;
         var whisperCppEngine = Engines.OfType<WhisperCppEngine>().FirstOrDefault();
         var crispAsrEngine = Engines.OfType<CrispAsrEngine>().FirstOrDefault();
@@ -333,6 +369,20 @@ public partial class SpeechToTextViewModel : ObservableObject
         Se.Settings.Tools.OpenAiCompatibleSttStream = OpenAiCompatibleSttStream;
         Se.Settings.Tools.OpenAiCompatibleSttAudioFormat = OpenAiCompatibleSttAudioFormat ?? "mp3";
 
+        Se.Settings.Tools.OpenRouterSttApiKey = OpenRouterSttApiKey ?? string.Empty;
+        Se.Settings.Tools.OpenRouterSttModel = OpenRouterSttModel ?? string.Empty;
+        Se.Settings.Tools.OpenRouterSttLanguage = OpenRouterSttLanguage ?? string.Empty;
+        Se.Settings.Tools.OpenRouterSttTemperature = OpenRouterSttTemperature;
+        Se.Settings.Tools.OpenRouterSttPrompt = OpenRouterSttPrompt ?? string.Empty;
+        Se.Settings.Tools.OpenRouterSttTimeoutSeconds = OpenRouterSttTimeoutSeconds;
+
+        Se.Settings.Tools.DashScopeSttApiKey = DashScopeSttApiKey ?? string.Empty;
+        Se.Settings.Tools.DashScopeSttModel = DashScopeSttModel ?? string.Empty;
+        Se.Settings.Tools.DashScopeSttLanguage = DashScopeSttLanguage ?? string.Empty;
+        Se.Settings.Tools.DashScopeSttRegion = DashScopeSttRegion ?? "international";
+        Se.Settings.Tools.DashScopeSttEnableWords = DashScopeSttEnableWords;
+        Se.Settings.Tools.DashScopeSttTimeoutSeconds = DashScopeSttTimeoutSeconds;
+
         Se.SaveSettings();
     }
 
@@ -377,7 +427,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private static bool IsTranslateAvailable(ISpeechToTextEngine engine)
     {
-        return engine is not ChatLlmCppEngine and not Qwen3AsrCppEngine and not ICrispAsrEngine and not OpenAiCompatibleSttEngine;
+        return engine is not ChatLlmCppEngine and not Qwen3AsrCppEngine and not ICrispAsrEngine and not IOnlineSttEngine;
     }
 
     private void UpdateBackendSelectionUi()
@@ -1013,22 +1063,21 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
     }
 
-    private async Task ProcessOpenAiCompatibleTranscription(string audioFileName, string? language = null, CancellationToken cancellationToken = default)
+    private async Task ProcessOnlineSttTranscription(IOnlineSttEngine engine, string audioFileName, string? language = null, CancellationToken cancellationToken = default)
     {
-        // The OpenAI Compatible engine reads its config from
-        // Configuration.Settings.Tools via GetSettingsFromConfiguration(), so
-        // the user's in-window edits (URL, key, model, prompt, ...) must be
+        // Online STT engines read their config from Configuration.Settings.Tools,
+        // so the user's in-window edits (URL, key, model, prompt, ...) must be
         // persisted before we read them. The transcribe action is the commit
-        // moment for this engine — there is no separate OK button.
+        // moment for these engines — there is no separate OK button.
         SaveSettings();
-        var openAiSettings = OpenAiSttService.GetSettingsFromConfiguration();
 
-        if (string.IsNullOrWhiteSpace(openAiSettings.EndpointUrl))
+        var transcriber = engine.CreateTranscriber(out var configError);
+        if (transcriber == null)
         {
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 await MessageBox.Show(Window!,
-                    Se.Language.General.OpenAiCompatibleSttUrlMissing,
+                    configError ?? Se.Language.General.OpenAiCompatibleSttUrlMissing,
                     Se.Language.General.ConfigurationRequired);
                 IsTranscribeEnabled = true;
             });
@@ -1038,13 +1087,13 @@ public partial class SpeechToTextViewModel : ObservableObject
         ProgressText = Se.Language.Video.AudioToText.Transcribing;
         ProgressValue = 5;
 
-        var probeError = await ProbeOpenAiUrlAsync(openAiSettings.EndpointUrl, cancellationToken);
+        var probeError = await ProbeOpenAiUrlAsync(engine.ProbeUrl, cancellationToken);
         if (probeError != null)
         {
-            LogToConsole($"OpenAI Compatible STT endpoint probe failed: {probeError}. Retrying...");
+            LogToConsole($"Online STT endpoint probe failed: {probeError}. Retrying...");
             // Brief delay so transient DNS/socket hiccups have a chance to recover before retrying.
             await Task.Delay(300, cancellationToken);
-            probeError = await ProbeOpenAiUrlAsync(openAiSettings.EndpointUrl, cancellationToken);
+            probeError = await ProbeOpenAiUrlAsync(engine.ProbeUrl, cancellationToken);
         }
 
         if (probeError != null)
@@ -1066,7 +1115,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         try
         {
-            var service = new OpenAiSttService(openAiSettings);
+            var service = transcriber;
 
             var segmentProgress = new Progress<OpenAiCompatibleSegment>(seg =>
             {
@@ -1092,10 +1141,10 @@ public partial class SpeechToTextViewModel : ObservableObject
             });
 
             var audioSizeBytes = new FileInfo(audioFileName).Length;
-            if (audioSizeBytes > OpenAiSttChunker.DefaultThresholdBytes && _videoInfo.TotalSeconds > 0)
+            if (audioSizeBytes > engine.UploadThresholdBytes && _videoInfo.TotalSeconds > 0)
             {
-                LogToConsole($"Audio file is {audioSizeBytes / (1024 * 1024)} MB — splitting into chunks to stay under the OpenAI 25 MB cap");
-                await TranscribeInChunksAsync(service, audioFileName, language, subtitle, segmentProgress, cancellationToken);
+                LogToConsole($"Audio file is {audioSizeBytes / (1024 * 1024)} MB — splitting into chunks to stay under the upload cap");
+                await TranscribeInChunksAsync(service, engine, audioFileName, language, subtitle, segmentProgress, cancellationToken);
             }
             else
             {
@@ -1259,7 +1308,8 @@ public partial class SpeechToTextViewModel : ObservableObject
     /// catch-blocks like the single-file path.
     /// </summary>
     private async Task TranscribeInChunksAsync(
-        OpenAiSttService service,
+        ISttTranscriber service,
+        IOnlineSttEngine engine,
         string audioFileName,
         string? language,
         Subtitle subtitle,
@@ -1268,7 +1318,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         var totalSeconds = _videoInfo.TotalSeconds;
         var fileSize = new FileInfo(audioFileName).Length;
-        var chunkCount = OpenAiSttChunker.ComputeChunkCount(fileSize);
+        var chunkCount = OpenAiSttChunker.ComputeChunkCount(fileSize, engine.ChunkSizeBytes);
 
         var ffmpegPath = Se.Settings.General.FfmpegPath;
         if (!File.Exists(ffmpegPath))
@@ -2572,7 +2622,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         var engine = GetEffectiveSelectedEngine();
 
-        if (engine is not OpenAiCompatibleSttEngine)
+        if (engine is not IOnlineSttEngine)
         {
             if (SelectedModel is not SpeechToTextModelDisplay model)
             {
@@ -3062,7 +3112,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     {
         if (!IsTranscribeEnabled)
         {
-            if (GetEffectiveSelectedEngine() is OpenAiCompatibleSttEngine)
+            if (GetEffectiveSelectedEngine() is IOnlineSttEngine)
             {
                 _openAiCts?.Cancel();
                 return;
@@ -3083,13 +3133,13 @@ public partial class SpeechToTextViewModel : ObservableObject
             return false;
         }
 
-        if (engine is OpenAiCompatibleSttEngine)
+        if (engine is IOnlineSttEngine onlineEngine)
         {
             var languageCode = SelectedLanguage?.Code;
             _timerWhisper.Stop();
             ShowProgressBar();
             _openAiCts = new CancellationTokenSource();
-            _ = ProcessOpenAiCompatibleTranscription(waveFileName, languageCode, _openAiCts.Token);
+            _ = ProcessOnlineSttTranscription(onlineEngine, waveFileName, languageCode, _openAiCts.Token);
             return true;
         }
 
@@ -3624,11 +3674,11 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
 
         // Local whisper engines read the file directly and want 16 kHz PCM, so
-        // a pre-extracted 16 kHz WAV can be handed to them as-is. The OpenAI-
-        // compatible engine uploads the file instead, and a 16 kHz WAV easily
-        // exceeds the 25 MB cap on long audio — skip the short-circuit and
-        // transcode through ffmpeg into the chosen compressed format.
-        var isOpenAiEngine = GetEffectiveSelectedEngine() is OpenAiCompatibleSttEngine;
+        // a pre-extracted 16 kHz WAV can be handed to them as-is. Online engines
+        // upload the file instead, and a 16 kHz WAV easily exceeds the upload
+        // cap on long audio — skip the short-circuit and transcode through
+        // ffmpeg into the chosen compressed format.
+        var isOpenAiEngine = GetEffectiveSelectedEngine() is IOnlineSttEngine;
         if (!isOpenAiEngine && videoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
         {
             try
@@ -3649,14 +3699,14 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         _ffmpegLog = new StringBuilder();
 
-        // OpenAI's STT endpoint caps uploads at 25 MB and a 2-hour WAV blows
-        // past that. When the OpenAI-compatible engine is selected, transcode
-        // to the user's chosen compressed format (mp3 by default) so the
-        // upload stays under the limit; other engines (whisper.cpp, faster-
-        // whisper, ...) keep getting WAV because they read the file locally
-        // and expect PCM.
+        // Online STT endpoints cap uploads (OpenAI 25 MB, DashScope 10 MB) and a
+        // 2-hour WAV blows past that. When an online engine is selected,
+        // transcode to a compressed format so the upload stays under the limit;
+        // the OpenAI-compatible engine honors the user's chosen format, the
+        // others default to mp3. Local engines (whisper.cpp, faster-whisper, ...)
+        // keep getting WAV because they read the file locally and expect PCM.
         var sttAudioFormat = isOpenAiEngine
-            ? OpenAiCompatibleSttAudioFormat
+            ? (GetEffectiveSelectedEngine() is OpenAiCompatibleSttEngine ? OpenAiCompatibleSttAudioFormat : "mp3")
             : "wav";
         var extension = OpenAiSttService.GetFileExtensionForFormat(sttAudioFormat);
         // Place the extracted audio in a dedicated per-run subfolder. Engines like
@@ -4005,20 +4055,24 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         var isPurfview = engine.Name == WhisperEnginePurfviewFasterWhisperXxl.StaticName;
 
-        IsModelSelectionVisible = !(engine is OpenAiCompatibleSttEngine);
+        var isOnlineSttEngine = engine is IOnlineSttEngine;
+
+        IsModelSelectionVisible = !isOnlineSttEngine;
         if (!IsModelSelectionVisible)
         {
             SelectedModel = null;
         }
 
-        IsLanguageSelectionVisible = !(engine is OpenAiCompatibleSttEngine);
+        IsLanguageSelectionVisible = !isOnlineSttEngine;
         if (!IsLanguageSelectionVisible)
         {
             SelectedLanguage = null;
         }
 
         IsOpenAiCompatibleSttVisible = engine is OpenAiCompatibleSttEngine;
-        IsAdvancedSettingsVisible = !IsOpenAiCompatibleSttVisible;
+        IsOpenRouterSttVisible = engine is OpenRouterSttEngine;
+        IsDashScopeSttVisible = engine is DashScopeQwen3SttEngine;
+        IsAdvancedSettingsVisible = !isOnlineSttEngine;
 
         IsTranslateVisible = IsTranslateAvailable(engine);
 

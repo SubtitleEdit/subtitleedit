@@ -7,6 +7,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using System.Linq;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -203,6 +204,8 @@ public class SpeechToTextWindow : Window
         };
 
         var openAiRows = MakeOpenAiCompatibleSttRows(vm);
+        var openRouterRows = MakeOpenRouterSttRows(vm);
+        var dashScopeRows = MakeDashScopeSttRows(vm);
 
         var labelAdvancedSettings = UiUtil.MakeTextBlock(Se.Language.General.AdvancedSettings).WithMarginTop(15)
             .BindIsVisible(vm, nameof(vm.IsAdvancedSettingsVisible));
@@ -443,10 +446,11 @@ public class SpeechToTextWindow : Window
         grid.Add(panelForcedAlignerControls, row, 1);
         row++;
 
-        foreach (var (label, control) in openAiRows)
+        foreach (var (label, control) in openAiRows.Concat(openRouterRows).Concat(dashScopeRows))
         {
-            // Link each OpenAI-compatible input to its visible label so a screen reader announces the
-            // label as the control's name instead of a bare "edit"/"combo box" (#11745).
+            // Link each online-STT input to its visible label so a screen reader announces the
+            // label as the control's name instead of a bare "edit"/"combo box" (#11745). Only the
+            // selected engine's rows are visible; the rest collapse to zero-height grid rows.
             AutomationProperties.SetLabeledBy(control, label);
             grid.Add(label, row, 0);
             grid.Add(control, row, 1);
@@ -721,6 +725,122 @@ public class SpeechToTextWindow : Window
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttExtraHeaders), textExtraHeaders),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttAudioFormat), comboAudioFormat),
             (MakeLabel(Se.Language.General.OpenAiCompatibleSttStream), checkStream),
+        };
+    }
+
+    private static (Control Label, Control Control)[] MakeOpenRouterSttRows(SpeechToTextViewModel vm)
+    {
+        Control MakeLabel(string text) => UiUtil.MakeTextBlock(text).WithMarginTop(10)
+            .BindIsVisible(vm, nameof(vm.IsOpenRouterSttVisible));
+
+        TextBox MakeText(string property, double width, bool isPassword = false)
+        {
+            var tb = new TextBox
+            {
+                DataContext = vm,
+                Width = width,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 10, 0, 0),
+                [!TextBox.TextProperty] = new Binding(property) { Mode = BindingMode.TwoWay }
+            };
+            if (isPassword)
+            {
+                tb.PasswordChar = '*';
+            }
+            return tb.BindIsVisible(vm, nameof(vm.IsOpenRouterSttVisible));
+        }
+
+        var numericTimeout = new NumericUpDown
+        {
+            DataContext = vm,
+            Width = 120,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 10, 0, 0),
+            Minimum = 10,
+            Maximum = 3600,
+            FormatString = "F0",
+            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.OpenRouterSttTimeoutSeconds)) { Mode = BindingMode.TwoWay }
+        }.BindIsVisible(vm, nameof(vm.IsOpenRouterSttVisible));
+
+        var numericTemperature = new NumericUpDown
+        {
+            DataContext = vm,
+            Width = 120,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 10, 0, 0),
+            Minimum = 0,
+            Maximum = 1,
+            Increment = 0.1m,
+            FormatString = "F2",
+            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.OpenRouterSttTemperature)) { Mode = BindingMode.TwoWay }
+        }.BindIsVisible(vm, nameof(vm.IsOpenRouterSttVisible));
+
+        return new (Control, Control)[]
+        {
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttApiKey), MakeText(nameof(vm.OpenRouterSttApiKey), 400, isPassword: true)),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttModel), MakeText(nameof(vm.OpenRouterSttModel), 250)),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttLanguage), MakeText(nameof(vm.OpenRouterSttLanguage), 150)),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttTimeout), numericTimeout),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttTemperature), numericTemperature),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttPrompt), MakeText(nameof(vm.OpenRouterSttPrompt), 400)),
+        };
+    }
+
+    private static (Control Label, Control Control)[] MakeDashScopeSttRows(SpeechToTextViewModel vm)
+    {
+        Control MakeLabel(string text) => UiUtil.MakeTextBlock(text).WithMarginTop(10)
+            .BindIsVisible(vm, nameof(vm.IsDashScopeSttVisible));
+
+        TextBox MakeText(string property, double width, bool isPassword = false)
+        {
+            var tb = new TextBox
+            {
+                DataContext = vm,
+                Width = width,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 10, 0, 0),
+                [!TextBox.TextProperty] = new Binding(property) { Mode = BindingMode.TwoWay }
+            };
+            if (isPassword)
+            {
+                tb.PasswordChar = '*';
+            }
+            return tb.BindIsVisible(vm, nameof(vm.IsDashScopeSttVisible));
+        }
+
+        var comboRegion = UiUtil.MakeComboBox(vm.DashScopeSttRegions, vm, nameof(vm.DashScopeSttRegion))
+            .WithMinWidth(150)
+            .WithMarginTop(10)
+            .BindIsVisible(vm, nameof(vm.IsDashScopeSttVisible));
+
+        var checkEnableWords = UiUtil.MakeCheckBox(vm, nameof(vm.DashScopeSttEnableWords))
+            .BindIsVisible(vm, nameof(vm.IsDashScopeSttVisible));
+
+        var numericTimeout = new NumericUpDown
+        {
+            DataContext = vm,
+            Width = 120,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 10, 0, 0),
+            Minimum = 30,
+            Maximum = 21600,
+            FormatString = "F0",
+            [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.DashScopeSttTimeoutSeconds)) { Mode = BindingMode.TwoWay }
+        }.BindIsVisible(vm, nameof(vm.IsDashScopeSttVisible));
+
+        return new (Control, Control)[]
+        {
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttApiKey), MakeText(nameof(vm.DashScopeSttApiKey), 400, isPassword: true)),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttModel), MakeText(nameof(vm.DashScopeSttModel), 250)),
+            (MakeLabel(Se.Language.General.DashScopeSttRegion), comboRegion),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttLanguage), MakeText(nameof(vm.DashScopeSttLanguage), 150)),
+            (MakeLabel(Se.Language.General.DashScopeSttEnableWords), checkEnableWords),
+            (MakeLabel(Se.Language.General.OpenAiCompatibleSttTimeout), numericTimeout),
         };
     }
 

@@ -124,6 +124,20 @@ public class SeTools
     public bool OpenAiCompatibleSttStream { get; set; }
     public string OpenAiCompatibleSttAudioFormat { get; set; } = "mp3";
 
+    public string OpenRouterSttApiKey { get; set; } = string.Empty;
+    public string OpenRouterSttModel { get; set; } = "openai/whisper-1";
+    public string OpenRouterSttLanguage { get; set; } = string.Empty;
+    public decimal OpenRouterSttTemperature { get; set; }
+    public string OpenRouterSttPrompt { get; set; } = string.Empty;
+    public int OpenRouterSttTimeoutSeconds { get; set; } = 300;
+
+    public string DashScopeSttApiKey { get; set; } = string.Empty;
+    public string DashScopeSttModel { get; set; } = "qwen3-asr-flash-filetrans";
+    public string DashScopeSttLanguage { get; set; } = string.Empty;
+    public string DashScopeSttRegion { get; set; } = "international";
+    public bool DashScopeSttEnableWords { get; set; }
+    public int DashScopeSttTimeoutSeconds { get; set; } = 3600;
+
     public List<string> FindHistory { get; set; } = new List<string>();
     public bool AllowSingleLetterShortcutsInTextbox { get; set; }
     public bool SpellCheckEnglishTreatInApostropheAsIng { get; set; } = true;

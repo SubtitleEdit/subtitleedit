@@ -57,6 +57,16 @@ public static class WhisperEngineFactory
             return new OpenAiCompatibleSttEngine();
         }
 
+        if (staticName == OpenRouterSttEngine.StaticName)
+        {
+            return new OpenRouterSttEngine();
+        }
+
+        if (staticName == DashScopeQwen3SttEngine.StaticName)
+        {
+            return new DashScopeQwen3SttEngine();
+        }
+
         throw new NotImplementedException();
     }
 }

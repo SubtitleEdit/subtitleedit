@@ -215,6 +215,8 @@
 		<AvaloniaResource Include="Assets\SpeechToText\WhisperOpenAI.txt">
 			<CopyToOutputDirectory></CopyToOutputDirectory>
 		</AvaloniaResource>
+		<AvaloniaResource Include="Assets\SpeechToText\OpenRouter.txt" />
+		<AvaloniaResource Include="Assets\SpeechToText\AlibabaQwen3Asr.txt" />
 		<Content Include="SE.ico" />
 		<None Remove="Assets\Ocr.zip" />
 		<AvaloniaResource Include="Assets\Ocr.zip" />

@@ -11,11 +11,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Settings;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 
-public class OpenAiSttService
+public class OpenAiSttService : ISttTranscriber
 {
     private static HttpClient? _sharedHttpClient;
     private static readonly Lock SharedHttpClientLock = new();

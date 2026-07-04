@@ -6,16 +6,34 @@ using System.Threading.Tasks;
 using Avalonia.Platform;
 using Nikse.SubtitleEdit.Core.AudioToText;
 using Nikse.SubtitleEdit.Core.Settings;
+using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.Engines;
 
-public class OpenAiCompatibleSttEngine : ISpeechToTextEngine
+public class OpenAiCompatibleSttEngine : IOnlineSttEngine
 {
     public static string StaticName => "OpenAI Compatible Server";
     public string Name => StaticName;
     public string Choice => WhisperChoice.OpenAiCompatible;
     public string Url => "https://platform.openai.com/docs/guides/speech-to-text";
+
+    public ISttTranscriber? CreateTranscriber(out string? configErrorMessage)
+    {
+        var settings = OpenAiSttService.GetSettingsFromConfiguration();
+        if (string.IsNullOrWhiteSpace(settings.EndpointUrl))
+        {
+            configErrorMessage = Se.Language.General.OpenAiCompatibleSttUrlMissing;
+            return null;
+        }
+
+        configErrorMessage = null;
+        return new OpenAiSttService(settings);
+    }
+
+    public string ProbeUrl => Se.Settings.Tools.OpenAiCompatibleSttUrl;
+    public long UploadThresholdBytes => OpenAiSttChunker.DefaultThresholdBytes;
+    public long ChunkSizeBytes => OpenAiSttChunker.DefaultChunkSizeBytes;
 
     public override string ToString()
     {

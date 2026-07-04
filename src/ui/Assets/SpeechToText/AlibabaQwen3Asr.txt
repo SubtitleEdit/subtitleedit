@@ -1,0 +1,23 @@
+Alibaba Cloud Qwen3-ASR (DashScope)
+
+Qwen3-ASR is Alibaba's multilingual speech recognition model, accessed through
+Alibaba Cloud Model Studio (DashScope).
+
+Setup:
+1. Create an API key in Alibaba Cloud Model Studio.
+2. Paste it into the API Key field.
+3. Pick your Region:
+     international - dashscope-intl.aliyuncs.com
+     china        - dashscope.aliyuncs.com
+   The API key must match the selected region.
+
+How it works:
+- The audio is uploaded to DashScope temporary storage (kept ~48 hours) and
+  transcribed asynchronously with the qwen3-asr-flash-filetrans model.
+- Sentence-level timestamps are always returned. Enable "Word-level timestamps"
+  for finer timing.
+- Files up to about 12 hours are supported.
+
+Notes:
+- A Language Hint (e.g. en, zh, ja) can be set; leave empty to auto-detect.
+- Costs are billed by Alibaba Cloud per the selected model.

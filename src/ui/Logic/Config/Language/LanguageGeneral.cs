@@ -729,6 +729,9 @@ public class LanguageGeneral
     public string OpenAiCompatibleSttLanguage { get; set; }
     public string OpenAiCompatibleSttTemperature { get; set; }
     public string OpenAiCompatibleSttPrompt { get; set; }
+    public string DashScopeSttRegion { get; set; }
+    public string DashScopeSttEnableWords { get; set; }
+    public string OnlineSttApiKeyMissing { get; set; }
     public string OpenAiCompatibleSttAutoTranscribeOnAudioSelection { get; set; }
     public string OpenAiCompatibleSttStream { get; set; }
     public string OpenAiCompatibleSttStreamHint { get; set; }
@@ -1477,6 +1480,9 @@ public class LanguageGeneral
         OpenAiCompatibleSttLanguage = "Language Hint";
         OpenAiCompatibleSttTemperature = "Temperature";
         OpenAiCompatibleSttPrompt = "Prompt";
+        DashScopeSttRegion = "Region";
+        DashScopeSttEnableWords = "Word-level timestamps";
+        OnlineSttApiKeyMissing = "An API key is required. Please enter your API key and try again.";
         OpenAiCompatibleSttAutoTranscribeOnAudioSelection = "Auto-transcribe new waveform selection via speech-to-text";
         OpenAiCompatibleSttStream = "Stream response";
         OpenAiCompatibleSttStreamHint = "Send 'stream=true' to receive live text deltas (SSE). Disable for servers that reject the 'stream' parameter (e.g. Groq).";
