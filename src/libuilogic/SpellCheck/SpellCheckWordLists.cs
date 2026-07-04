@@ -22,6 +22,7 @@ public class SpellCheckWordLists
     };
 
     private static readonly char[] PeriodAndDash = { '.', '-' };
+    private static readonly char[] ApostropheChars = { '\'', '‘', '’' };
     private static readonly char[] SplitChars2 = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '«', '»', '‹', '›', '؛', '،', '؟' };
 
     private readonly NameList _nameList;
@@ -539,7 +540,7 @@ public class SpellCheckWordLists
             {
                 if (sb.Length > 0)
                 {
-                    list.Add(new SpellCheckWord { Text = sb.ToString(), Index = i - sb.Length });
+                    AddWord(list, sb.ToString(), i - sb.Length);
                 }
 
                 sb.Clear();
@@ -551,10 +552,24 @@ public class SpellCheckWordLists
         }
         if (sb.Length > 0)
         {
-            list.Add(new SpellCheckWord { Text = sb.ToString(), Index = s.Length - sb.Length });
+            AddWord(list, sb.ToString(), s.Length - sb.Length);
         }
 
         return list;
+    }
+
+    // A token consisting solely of apostrophes/quote marks (e.g. the trailing ' in "...universum.'")
+    // is punctuation, not a word. The apostrophe is intentionally not a split char so contractions
+    // ('n, don't) and quote-wrapped words ('Met de waarheid') stay intact, but a lone quote must not
+    // be spell-checked - it has no word characters and would just be flagged as unknown. (#12143)
+    private static void AddWord(List<SpellCheckWord> list, string text, int index)
+    {
+        if (text.Trim(ApostropheChars).Length == 0)
+        {
+            return;
+        }
+
+        list.Add(new SpellCheckWord { Text = text, Index = index });
     }
 
     public List<string> GetAllNames()
