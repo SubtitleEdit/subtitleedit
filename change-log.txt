@@ -7,6 +7,7 @@ v5.1.0-beta11 (TBD)
 * Fix ASSA "Set position" and "Image color picker" showing a blank video background when the "HH:MM:SS:FF" time code format was enabled - thx bichitoxxx
 * Restore the WebVTT "X-TIMESTAMP-MAP" setting (Options -> Settings -> Subtitle Formats) to optionally ignore the header offset that shifts all time codes on load - thx anakinsleftleg
 * Fix Ctrl+End / Ctrl+Home on the subtitle grid not scrolling the last/first line fully into view - thx KaDeeKe
+* Open video file dialog: add a "Video and audio files" filter as the default so audio files (e.g. mp3) can be picked without switching the filter
 * Update Portuguese (Brazil) translation - thx rosilucia-hub
 
 -----------------------------------------------------------------------------------------------------

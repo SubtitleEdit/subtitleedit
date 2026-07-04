@@ -667,6 +667,7 @@ public class LanguageGeneral
     public string VideoFile { get; set; }
     public string VideoFileGeneratedX { get; set; }
     public string VideoFiles { get; set; }
+    public string VideoAndAudioFiles { get; set; }
     public string VideoInformation { get; set; }
     public string VideoOffset { get; set; }
     public string VideoOneFrameBack { get; set; }
@@ -1418,6 +1419,7 @@ public class LanguageGeneral
         VideoFile = "Video file";
         VideoFileGeneratedX = "Video file generated: \"{0}\"";
         VideoFiles = "Video files";
+        VideoAndAudioFiles = "Video and audio files";
         VideoInformation = "Video info";
         VideoOffset = "Video offset";
         VideoOneFrameBack = "Video, one frame back";
