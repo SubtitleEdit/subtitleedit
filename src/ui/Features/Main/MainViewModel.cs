@@ -145,6 +145,7 @@ using Nikse.SubtitleEdit.Features.Video.ShotChanges;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
+using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 using Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -6667,7 +6668,7 @@ public partial class MainViewModel :
             return;
         }
 
-        await ShowDialogAsync<TextToSpeechWindow, TextToSpeechViewModel>(vm =>
+        var result = await ShowDialogAsync<TextToSpeechWindow, TextToSpeechViewModel>(vm =>
         {
             // Pass SelectedSubtitleFormat explicitly so the TTS window's cast detection uses the
             // user's *current* selection (the editor normalises subtitles to ASSA internally, so
@@ -6675,7 +6676,109 @@ public partial class MainViewModel :
             vm.Initialize(GetUpdateSubtitle(), SelectedSubtitleFormat,
                 _videoFileName ?? string.Empty, AudioVisualizer?.WavePeaks, Path.GetTempPath());
         });
+
+        await OfferToApplyTtsReviewTextChanges(result.ReviewTextChanges);
     }
+
+    /// <summary>
+    /// After the TTS window closes: if the user edited line texts in its review step, offer to
+    /// apply those edits to the subtitle so the text stays in sync with the generated audio and
+    /// doesn't have to be redone by hand (#12093). Lines are matched by the time codes they had
+    /// when the review opened - the TTS pipeline may renumber (empty-line removal keeps times) so
+    /// numbers/indices can't be used. A line merged before generation spans several original
+    /// lines, so its segment matches no single line's start+end; those edits can't be split back
+    /// and are reported rather than applied. Edits that match no line at all (e.g. an imported
+    /// session for a different subtitle) are ignored silently.
+    /// </summary>
+    private async Task OfferToApplyTtsReviewTextChanges(List<ReviewTextChange> changes)
+    {
+        if (changes.Count == 0 || Window == null)
+        {
+            return;
+        }
+
+        const double toleranceMs = 0.5;
+        var matches = new List<(SubtitleLineViewModel Line, string NewText)>();
+        var mergedCount = 0;
+        foreach (var change in changes)
+        {
+            // Exact 1:1 match - same start and end as a current line.
+            var line = Subtitles.FirstOrDefault(s =>
+                Math.Abs(s.StartTime.TotalMilliseconds - change.StartMs) < toleranceMs &&
+                Math.Abs(s.EndTime.TotalMilliseconds - change.EndMs) < toleranceMs);
+            if (line != null)
+            {
+                if (line.Text != change.NewText)
+                {
+                    matches.Add((line, change.NewText));
+                }
+
+                continue;
+            }
+
+            // No 1:1 line, but the segment starts on a real line and ends past it: this line was
+            // merged with following line(s) before generation. The edited text covers the whole
+            // merged sentence and can't be safely split back, so flag it instead of applying.
+            var mergedInto = Subtitles.FirstOrDefault(s =>
+                Math.Abs(s.StartTime.TotalMilliseconds - change.StartMs) < toleranceMs &&
+                s.EndTime.TotalMilliseconds < change.EndMs - toleranceMs);
+            if (mergedInto != null)
+            {
+                mergedCount++;
+            }
+        }
+
+        if (matches.Count == 0 && mergedCount == 0)
+        {
+            return;
+        }
+
+        var lang = Se.Language.Video.TextToSpeech;
+
+        // Only merged edits and nothing directly applicable: just tell the user why they weren't
+        // applied - there's nothing to confirm.
+        if (matches.Count == 0)
+        {
+            await MessageBox.Show(
+                Window,
+                lang.UpdateSubtitleTitle,
+                FormatCount(mergedCount, lang.ReviewMergedLinesNotUpdatedSingular, lang.ReviewMergedLinesNotUpdatedPlural),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            return;
+        }
+
+        var message = FormatCount(matches.Count, lang.UpdateSubtitleFromReviewSingular, lang.UpdateSubtitleFromReviewPlural);
+        if (mergedCount > 0)
+        {
+            message += Environment.NewLine + Environment.NewLine +
+                       FormatCount(mergedCount, lang.ReviewMergedLinesNotUpdatedSingular, lang.ReviewMergedLinesNotUpdatedPlural);
+        }
+
+        var answer = await MessageBox.Show(
+            Window,
+            lang.UpdateSubtitleTitle,
+            message,
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        foreach (var (line, newText) in matches)
+        {
+            line.Text = newText;
+        }
+
+        _updateAudioVisualizer = true;
+        ShowStatus(FormatCount(matches.Count, lang.SubtitleUpdatedFromReviewSingular, lang.SubtitleUpdatedFromReviewPlural));
+    }
+
+    // Picks the singular or plural resource string for a count, formatting the plural with {0}.
+    private static string FormatCount(int count, string singular, string plural)
+        => count == 1 ? singular : string.Format(plural, count);
 
     [RelayCommand]
     private async Task ShowVideoTransparentSubtitles()
