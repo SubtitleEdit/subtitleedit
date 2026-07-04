@@ -1,6 +1,13 @@
 
 Subtitle Edit Changelog
 
+v5.1.0-beta10 (4th of July 2026)
+
+* Fix online speech-to-text (OpenRouter / Alibaba Qwen3-ASR) settings layout - the engine's settings rows no longer overlap/jumble together
+* OpenRouter speech-to-text: split the transcript into multiple timed sentences instead of one long line, and run post-processing using the engine's language hint
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-beta9 (4th of July 2026)
 
 * Add OpenRouter and Alibaba Qwen3-ASR online speech-to-text engines to Audio to text - OpenRouter reaches Whisper/GPT-4o-transcribe/Groq/Chirp with one key; Alibaba Qwen3-ASR (DashScope) uploads the audio and transcribes asynchronously with sentence timestamps

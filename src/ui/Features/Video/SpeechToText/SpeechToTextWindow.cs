@@ -435,8 +435,11 @@ public class SpeechToTextWindow : Window
         grid.Add(panelConsoleLogHeader, row, 2);
         row++;
 
-        grid.Add(consoleLogAndBatchView, row, 2, 20);
-        grid.Add(consoleLogOnlyView, row, 2, 20);
+        // Row span must reach the row just above the progress/buttons row so the
+        // console log fills the full height of the settings column. It covers every
+        // settings row including the OpenAI/OpenRouter/DashScope online-STT rows.
+        grid.Add(consoleLogAndBatchView, row, 2, 32);
+        grid.Add(consoleLogOnlyView, row, 2, 32);
         row++;
 
         grid.Add(labelEngine, row, 0);
