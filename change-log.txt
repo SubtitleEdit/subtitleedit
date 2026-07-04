@@ -8,7 +8,14 @@ v5.1.0-beta11 (4th of July 2026)
 * Restore the WebVTT "X-TIMESTAMP-MAP" setting (Options -> Settings -> Subtitle Formats) to optionally ignore the header offset that shifts all time codes on load - thx anakinsleftleg
 * Fix Ctrl+End / Ctrl+Home on the subtitle grid not scrolling the last/first line fully into view - thx KaDeeKe
 * Open video file dialog: add a "Video and audio files" filter as the default so audio files (e.g. mp3) can be picked without switching the filter
+* Waveform: add a customizable "<<  seek  >>" panel to the toolbar - thx BlazDT
+* Waveform: add "Configure toolbar items..." to the More menu
+* Open a .mkv without subtitles as a video file - thx KaDeeKe
+* Text to speech: apply Review window text edits back to the subtitle - thx cvrle77
+* Text to speech: fix empty language list in the Review window - thx cvrle77
 * Update Portuguese (Brazil) translation - thx rosilucia-hub
+* Update Korean translation - thx 12si27
+* Update Italian translation - thx bovirus
 
 -----------------------------------------------------------------------------------------------------
 
