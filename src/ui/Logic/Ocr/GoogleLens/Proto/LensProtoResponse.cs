@@ -125,10 +125,19 @@ public class LensProtoResponse
                                         while (!wReader.IsAtEnd)
                                         {
                                             var wTag = wReader.ReadTag();
-                                            if (WireFormat.GetTagFieldNumber(wTag) == 1)
+                                            var wField = WireFormat.GetTagFieldNumber(wTag);
+                                            if (wField == 1)
                                             {
                                                 var wordBytes = wReader.ReadBytes().ToByteArray();
                                                 line.Words.Add(ParseWord(wordBytes));
+                                            }
+                                            else if (wField == 2)
+                                            {
+                                                // Line-level geometry (bounding box). Google returns the text
+                                                // chunks of a multi-line subtitle interleaved between rows, so we
+                                                // need each chunk's position to restore reading order. (#12149)
+                                                var geometryBytes = wReader.ReadBytes().ToByteArray();
+                                                line.Geometry = ParseGeometry(geometryBytes);
                                             }
                                             else
                                             {
@@ -179,170 +188,38 @@ public class LensProtoResponse
         return null;
     }
 
-    private static Paragraph ParseParagraph(byte[] data)
-    {
-        var paragraph = new Paragraph();
-        
-        Console.WriteLine($"DEBUG ParseParagraph: data length = {data.Length}");
-        Console.WriteLine($"DEBUG ParseParagraph: first 50 bytes = {BitConverter.ToString(data.Take(Math.Min(50, data.Length)).ToArray())}");
-        
-        using var stream = new MemoryStream(data);
-        using var reader = new CodedInputStream(stream);
-
-        try
-        {
-            while (!reader.IsAtEnd)
-            {
-                var tag = reader.ReadTag();
-                var fieldNumber = WireFormat.GetTagFieldNumber(tag);
-                Console.WriteLine($"DEBUG ParseParagraph: field {fieldNumber}");
-
-                switch (fieldNumber)
-                {
-                    case 1:
-                        paragraph.ContentLanguage = reader.ReadString();
-                        Console.WriteLine($"DEBUG ParseParagraph: ContentLanguage = '{paragraph.ContentLanguage}'");
-                        break;
-                        
-                    case 2:
-                        var lineData = reader.ReadBytes();
-                        Console.WriteLine($"DEBUG ParseParagraph: Reading line, data length = {lineData.Length}");
-                        paragraph.Lines.Add(ParseLine(lineData.ToByteArray()));
-                        break;
-                        
-                    case 3:
-                        var geometryData = reader.ReadBytes();
-                        Console.WriteLine($"DEBUG ParseParagraph: Reading geometry, data length = {geometryData.Length}");
-                        paragraph.Geometry = ParseGeometry(geometryData.ToByteArray());
-                        break;
-                        
-                    default:
-                        reader.SkipLastField();
-                        Console.WriteLine($"DEBUG ParseParagraph: Skipped field {fieldNumber}");
-                        break;
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"DEBUG ParseParagraph ERROR: {ex.Message}");
-            Console.WriteLine($"DEBUG ParseParagraph: Stream position {stream.Position}/{stream.Length}");
-            throw;
-        }
-
-        Console.WriteLine($"DEBUG ParseParagraph: Returning paragraph with {paragraph.Lines.Count} lines");
-        return paragraph;
-    }
-
-    private static Line ParseLine(byte[] data)
-    {
-        var line = new Line();
-        
-        Console.WriteLine($"DEBUG ParseLine: data length = {data.Length}");
-        
-        using var stream = new MemoryStream(data);
-        using var reader = new CodedInputStream(stream);
-
-        try
-        {
-            while (!reader.IsAtEnd)
-            {
-                var tag = reader.ReadTag();
-                var fieldNumber = WireFormat.GetTagFieldNumber(tag);
-                Console.WriteLine($"DEBUG ParseLine: field {fieldNumber}");
-
-                switch (fieldNumber)
-                {
-                    case 1:
-                        var wordData = reader.ReadBytes();
-                        Console.WriteLine($"DEBUG ParseLine: Reading word, data length = {wordData.Length}");
-                        line.Words.Add(ParseWord(wordData.ToByteArray()));
-                        break;
-                        
-                    case 2:
-                        var geometryData = reader.ReadBytes();
-                        Console.WriteLine($"DEBUG ParseLine: Reading geometry, data length = {geometryData.Length}");
-                        line.Geometry = ParseGeometry(geometryData.ToByteArray());
-                        break;
-                        
-                    default:
-                        reader.SkipLastField();
-                        Console.WriteLine($"DEBUG ParseLine: Skipped field {fieldNumber}");
-                        break;
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"DEBUG ParseLine ERROR: {ex.Message}");
-            Console.WriteLine($"DEBUG ParseLine: Stream position {stream.Position}/{stream.Length}");
-            throw;
-        }
-
-        Console.WriteLine($"DEBUG ParseLine: Returning line with {line.Words.Count} words");
-        return line;
-    }
-
     private static Word ParseWord(byte[] data)
     {
         var word = new Word();
-        
-        Console.WriteLine($"DEBUG ParseWord: data length = {data.Length}");
-        Console.WriteLine($"DEBUG ParseWord: first bytes = {BitConverter.ToString(data.Take(Math.Min(20, data.Length)).ToArray())}");
-        
+
         using var stream = new MemoryStream(data);
         using var reader = new CodedInputStream(stream);
 
-        try
+        while (!reader.IsAtEnd)
         {
-            while (!reader.IsAtEnd)
-            {
-                var tag = reader.ReadTag();
-                var fieldNumber = WireFormat.GetTagFieldNumber(tag);
-                Console.WriteLine($"DEBUG ParseWord: field {fieldNumber}");
+            var tag = reader.ReadTag();
+            var fieldNumber = WireFormat.GetTagFieldNumber(tag);
 
-                switch (fieldNumber)
-                {
-                    case 1:
-                        // Field 1 is metadata, skip it
-                        reader.SkipLastField();
-                        Console.WriteLine($"DEBUG ParseWord: skipped field 1");
-                        break;
-                        
-                    case 2:
-                        // Field 2 is PlainText
-                        word.PlainText = reader.ReadString();
-                        Console.WriteLine($"DEBUG ParseWord: field 2 PlainText = '{word.PlainText}'");
-                        break;
-                        
-                    case 3:
-                        // Field 3 is TextSeparator
-                        word.TextSeparator = reader.ReadString();
-                        word.HasTextSeparator = true;
-                        Console.WriteLine($"DEBUG ParseWord: field 3 TextSeparator = '{word.TextSeparator}'");
-                        break;
-                        
-                    case 4:
-                        // Field 4 is Geometry, skip it
-                        reader.SkipLastField();
-                        Console.WriteLine($"DEBUG ParseWord: skipped field 4");
-                        break;
-                        
-                    default:
-                        reader.SkipLastField();
-                        Console.WriteLine($"DEBUG ParseWord: skipped field {fieldNumber}");
-                        break;
-                }
+            switch (fieldNumber)
+            {
+                case 2:
+                    // Field 2 is PlainText
+                    word.PlainText = reader.ReadString();
+                    break;
+
+                case 3:
+                    // Field 3 is TextSeparator
+                    word.TextSeparator = reader.ReadString();
+                    word.HasTextSeparator = true;
+                    break;
+
+                default:
+                    // Field 1 (metadata) and field 4 (geometry) are not needed here.
+                    reader.SkipLastField();
+                    break;
             }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"DEBUG ParseWord ERROR: {ex.Message}");
-            Console.WriteLine($"DEBUG ParseWord ERROR: Current position in stream: {stream.Position}/{stream.Length}");
-            throw;
-        }
 
-        Console.WriteLine($"DEBUG ParseWord: returning word with PlainText='{word.PlainText}'");
         return word;
     }
 

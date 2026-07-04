@@ -212,7 +212,71 @@ public class LensCore
             }
         }
 
+        segments = OrderSegmentsIntoReadingLines(segments);
+
         return new LensResult(detectedLanguage, segments);
+    }
+
+    /// <summary>
+    /// Google Lens returns the text chunks of a multi-line subtitle interleaved between the visual
+    /// rows (e.g. top-word, bottom-word, top-word, ...), which scrambles the sentence. Use each
+    /// chunk's bounding box to restore reading order: group chunks into rows by their vertical
+    /// center, order the rows top-to-bottom and the chunks within a row left-to-right, then merge
+    /// each row into a single line. No-op when boxes are missing (all default), so this can only
+    /// improve ordering, never worsen it. (#12149)
+    /// </summary>
+    internal static List<Segment> OrderSegmentsIntoReadingLines(List<Segment> segments)
+    {
+        if (segments.Count < 2)
+        {
+            return segments;
+        }
+
+        // When geometry is missing every chunk carries the same default centre box; there is nothing
+        // to sort by, so leave the segments (and their line breaks) exactly as they came.
+        var first = segments[0].BoundingBox;
+        var allSameBox = segments.All(s =>
+            s.BoundingBox.CenterPerX == first.CenterPerX &&
+            s.BoundingBox.CenterPerY == first.CenterPerY);
+        if (allSameBox)
+        {
+            return segments;
+        }
+
+        // Sorting by vertical center makes rows appear top-to-bottom; a new row is only started when
+        // a chunk's center is farther than half a line height from the current row's reference.
+        var byTop = segments.OrderBy(s => s.BoundingBox.CenterPerY).ToList();
+        var rows = new List<List<Segment>>();
+        foreach (var seg in byTop)
+        {
+            var placed = false;
+            foreach (var row in rows)
+            {
+                var reference = row[0];
+                var threshold = Math.Min(seg.BoundingBox.PerHeight, reference.BoundingBox.PerHeight) * 0.5;
+                if (Math.Abs(seg.BoundingBox.CenterPerY - reference.BoundingBox.CenterPerY) <= threshold)
+                {
+                    row.Add(seg);
+                    placed = true;
+                    break;
+                }
+            }
+
+            if (!placed)
+            {
+                rows.Add(new List<Segment> { seg });
+            }
+        }
+
+        var result = new List<Segment>(rows.Count);
+        foreach (var row in rows)
+        {
+            var inReadingOrder = row.OrderBy(s => s.BoundingBox.CenterPerX).ToList();
+            var text = string.Join(" ", inReadingOrder.Select(s => s.Text));
+            result.Add(new Segment(text, inReadingOrder[0].BoundingBox));
+        }
+
+        return result;
     }
 
     protected async Task<LensProtoResponse> SendProtoRequest(byte[] serializedRequest, string twoLetterLanguageCode)
