@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.1.0-beta8",
+  "version": "v5.1.0-beta11",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -730,6 +730,9 @@
     "openAiCompatibleSttLanguage": "Language Hint",
     "openAiCompatibleSttTemperature": "Temperature",
     "openAiCompatibleSttPrompt": "Prompt",
+    "dashScopeSttRegion": "Region",
+    "dashScopeSttEnableWords": "Word-level timestamps",
+    "onlineSttApiKeyMissing": "An API key is required. Please enter your API key and try again.",
     "openAiCompatibleSttAutoTranscribeOnAudioSelection": "Auto-transcribe new waveform selection via speech-to-text",
     "openAiCompatibleSttStream": "Stream response",
     "openAiCompatibleSttStreamHint": "Send 'stream=true' to receive live text deltas (SSE). Disable for servers that reject the 'stream' parameter (e.g. Groq).",
@@ -919,7 +922,12 @@
       "hideWaveformToolbar": "Hide toolbar {0}",
       "resetZoomAndSpeed": "Reset zoom & playback speed {0}",
       "removeBlankLines": "Remove blank lines {0}",
-      "playSelectedRepeatHint": "Play selected subtitle(s) in repeat mode {0}"
+      "playSelectedRepeatHint": "Play selected subtitle(s) in repeat mode {0}",
+      "seekBackHint": "Seek video backward {0}",
+      "seekForwardHint": "Seek video forward {0}",
+      "seekAmountHint": "Seek amount {0}",
+      "seekVideo": "Seek video (<< >>)",
+      "configureToolbarItems": "Configure toolbar items..."
     },
     "audioTrackIsNowX": "Audio track is now \"{0}\"",
     "audioTrackX": "Audio track {0}",
@@ -2099,7 +2107,14 @@
       "noActorsFoundMessage": "No actors found. Set the Actor field on subtitle lines first.",
       "noWebVttVoicesFoundMessage": "No <v Name> voices found in the WebVTT file.",
       "mergeContinuationLinesPromptTitle": "Merge continuation lines?",
-      "mergeContinuationLinesPromptMessage": "Some lines appear to be a single sentence split across multiple subtitles.\r\n\r\nMerging them before generation lets the TTS engine speak each thought as one breath group, which usually sounds more natural.\r\n\r\nReview and apply merges now?"
+      "mergeContinuationLinesPromptMessage": "Some lines appear to be a single sentence split across multiple subtitles.\r\n\r\nMerging them before generation lets the TTS engine speak each thought as one breath group, which usually sounds more natural.\r\n\r\nReview and apply merges now?",
+      "updateSubtitleTitle": "Update subtitle?",
+      "updateSubtitleFromReviewSingular": "You edited the text of one line while reviewing the generated speech.\r\n\r\nUpdate the subtitle with this change so its text stays in sync with the audio?",
+      "updateSubtitleFromReviewPlural": "You edited the text of {0} lines while reviewing the generated speech.\r\n\r\nUpdate the subtitle with these changes so its text stays in sync with the audio?",
+      "reviewMergedLinesNotUpdatedSingular": "One edited line was merged before generation and could not be updated automatically.",
+      "reviewMergedLinesNotUpdatedPlural": "{0} edited lines were merged before generation and could not be updated automatically.",
+      "subtitleUpdatedFromReviewSingular": "Updated one line from the speech review",
+      "subtitleUpdatedFromReviewPlural": "Updated {0} lines from the speech review"
     },
     "shotChanges": {
       "titleGenerateOrImport": "Generate/import shot changes",
@@ -2826,8 +2841,6 @@
       "surroundWith": "Surround with...",
       "surroundWithXY": "Surround with {0}/{1}",
       "repeatLine": "Repeat line",
-      "repeatPreviousLine": "Repeat previous line",
-      "repeatNextLine": "Repeat next line",
       "moveVideoPositionMilliseconds": "Move video position in milliseconds",
       "importShortcutsTitle": "Import shortcuts",
       "exportShortcutsTitle": "Export shortcuts",
