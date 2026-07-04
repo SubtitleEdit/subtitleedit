@@ -565,6 +565,12 @@ namespace Nikse.SubtitleEdit.Logic.Media
         {
             var fileTypes = new List<FilePickerFileType>
             {
+                // Combined filter first so it's the default selection - lets the user pick an audio
+                // file (e.g. an mp3 for transcription review) without first switching the filter.
+                new FilePickerFileType(Se.Language.General.VideoAndAudioFiles)
+                {
+                    Patterns = GetVideoExtensions().Concat(GetAudioExtensions()).ToList()
+                },
                 new FilePickerFileType(Se.Language.General.VideoFiles)
                 {
                     Patterns = GetVideoExtensions()
