@@ -139,6 +139,144 @@ jobs:
           path: SubtitleEdit-linux-x64.flatpak
           overwrite: true
 
+  # Same chain as above, but for installer/flatpak/flathub/dk.nikse.subtitleedit.yaml,
+  # the manifest actually submitted to Flathub, which builds from a pinned git tag +
+  # commit instead of this checkout's working tree. Building it here, in CI, on a real
+  # Linux runner is the practical way to validate that exact variant per #11800; it
+  # does not need a contributor's own Linux machine or Flatpak install.
+  regenerate-flathub-nuget-sources:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # Full history so the commit pinned in the flathub manifest (which can be
+          # older than this checkout's HEAD) is guaranteed fetchable by the checkout
+          # step below.
+          fetch-depth: 0
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install flatpak
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y flatpak
+
+      - name: Cache flatpak runtimes
+        id: flatpak-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/flatpak
+          key: flatpak-fd24.08-dotnet10-v2
+          restore-keys: |
+            flatpak-fd24.08-dotnet10-
+
+      - name: Install/update Freedesktop SDK + dotnet extension
+        run: |
+          flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          flatpak --user install -y --noninteractive flathub \
+            org.freedesktop.Platform//24.08 \
+            org.freedesktop.Sdk//24.08 \
+            org.freedesktop.Sdk.Extension.dotnet10//24.08
+          flatpak --user update -y --noninteractive
+
+      # Checks out the pinned commit directly in this checkout (safe: this job's
+      # workspace is disposable, unlike a developer's local branch) rather than via
+      # prepare-flathub-release.sh's git-worktree approach. The worktree path lives
+      # under a fresh mktemp directory, and the preferred restore path in
+      # generate-nuget-sources.sh shells out to flatpak-dotnet-generator.py, which
+      # itself runs "dotnet restore" inside a second, nested "flatpak run
+      # --filesystem=host" sandbox; that nested sandbox failed to resolve the
+      # project file at the worktree's path when this job already runs inside its
+      # own container (MSB1009: "Project file does not exist", for a file that
+      # genuinely exists at that commit). Operating directly on the primary
+      # checkout matches the already-proven regenerate-flatpak-nuget-sources job
+      # exactly, so it isn't exposed to that nested-sandbox path resolution at all.
+      - name: Check out the commit pinned in the flathub manifest
+        run: |
+          MANIFEST=installer/flatpak/flathub/dk.nikse.subtitleedit.yaml
+          COMMIT=$(grep -A2 "url: https://github.com/SubtitleEdit/subtitleedit.git" "$MANIFEST" | sed -n '3p' | sed -E 's/.*commit:[[:space:]]*//')
+          if [ -z "$COMMIT" ]; then
+            echo "::error::Could not find the pinned commit in $MANIFEST"
+            exit 1
+          fi
+          echo "Pinned commit: $COMMIT"
+          git checkout --quiet --detach "$COMMIT"
+
+      - name: Regenerate nuget-sources.json for the pinned commit
+        run: |
+          # installer/flatpak/flathub/ is newer than the pinned commit (that folder
+          # is this PR's own addition), so checking that commit out in place just
+          # removed it along with everything else only present on the branch tip.
+          # generate-nuget-sources.sh itself exists at the pin (it predates this
+          # folder), so only the output destination needs restoring.
+          mkdir -p installer/flatpak/flathub
+          bash installer/flatpak/generate-nuget-sources.sh \
+            src/ui/UI.csproj \
+            installer/flatpak/flathub/nuget-sources.json
+
+      - name: Verify nuget-sources.json is consistent with the pinned commit
+        run: |
+          if git status --porcelain -- installer/flatpak/flathub/nuget-sources.json | grep -q .; then
+            echo "::notice::nuget-sources.json is new or was stale and has been regenerated for this build."
+          else
+            echo "nuget-sources.json is already up to date."
+          fi
+
+      - name: Upload regenerated nuget-sources.json
+        uses: actions/upload-artifact@v5
+        with:
+          name: flathub-nuget-sources
+          path: installer/flatpak/flathub/nuget-sources.json
+          if-no-files-found: error
+          overwrite: true
+
+  build-linux-flathub:
+    needs: regenerate-flathub-nuget-sources
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # ubuntu-24.04-arm is GitHub's free-tier hosted ARM64 runner (public repos).
+          # A native leg matters here specifically because contributors testing this
+          # manifest ahead of the actual Flathub submission (#11800) may well be on
+          # aarch64 hardware themselves (e.g. Apple Silicon under a Linux VM); an
+          # x86_64-only bundle would force them into qemu emulation to even try it.
+          - arch: x86_64
+            runner: ubuntu-latest
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-24.08
+      options: --privileged
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Download regenerated nuget-sources.json
+        uses: actions/download-artifact@v5
+        with:
+          name: flathub-nuget-sources
+          path: installer/flatpak/flathub/
+
+      - name: Build flathub flatpak bundle
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: SubtitleEdit-flathub-${{ matrix.arch }}.flatpak
+          manifest-path: installer/flatpak/flathub/dk.nikse.subtitleedit.yaml
+          cache-key: flathub-builder-${{ matrix.arch }}-${{ hashFiles('installer/flatpak/flathub/dk.nikse.subtitleedit.yaml', 'installer/flatpak/flathub/nuget-sources.json') }}
+          arch: ${{ matrix.arch }}
+
+      - name: Upload flathub bundle artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: flathub-bundle-${{ matrix.arch }}
+          path: SubtitleEdit-flathub-${{ matrix.arch }}.flatpak
+          overwrite: true
+
   build-windows:
     runs-on: windows-latest
     
