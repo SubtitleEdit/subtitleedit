@@ -730,6 +730,14 @@ public class InitWaveform
             Command = vm.ResetWaveformZoomAndSpeedCommand,
         };
         flyoutMore.Items.Add(menuItemResetZoom);
+        var menuItemConfigureToolbar = new MenuItem
+        {
+            Header = languageHints.ConfigureToolbarItems,
+            Command = vm.ConfigureWaveformToolbarItemsCommand,
+        };
+        flyoutMore.Items.Add(menuItemConfigureToolbar);
+
+        // Keep "Hide toolbar" last - it's the destructive/exit action of this menu.
         var menuItemHideControls = new MenuItem
         {
             Header = string.Format(languageHints.HideWaveformToolbar, string.Empty),

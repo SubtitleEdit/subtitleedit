@@ -67,6 +67,7 @@ using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Options.Language;
 using Nikse.SubtitleEdit.Features.Options.Plugins;
 using Nikse.SubtitleEdit.Features.Options.Settings;
+using Nikse.SubtitleEdit.Features.Options.Settings.WaveformToolbarItems;
 using Nikse.SubtitleEdit.Features.Options.Shortcuts;
 using Nikse.SubtitleEdit.Features.Options.WordLists;
 using Nikse.SubtitleEdit.Features.Shared;
@@ -12868,6 +12869,36 @@ public partial class MainViewModel :
     {
         IsWaveformToolbarVisible = false;
         Se.Settings.Waveform.ShowToolbar = false;
+    }
+
+    [RelayCommand]
+    private async Task ConfigureWaveformToolbarItems()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        // Edit a copy so Cancel leaves the saved layout untouched; the dialog is the same one
+        // reached from Options -> Settings -> Waveform.
+        var current = Se.Settings.Waveform.ToolbarItems
+            .Select(i => new SeWaveformToolbarItem(i))
+            .ToList();
+
+        var result = await _windowService.ShowDialogAsync<WaveformToolbarItemsWindow, WaveformToolbarItemsViewModel>(
+            Window, vm => vm.Initialize(current));
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        Se.Settings.Waveform.ToolbarItems = result.ResultToolbarItems;
+        Se.SaveSettings();
+
+        // Rebuild the layout so the waveform toolbar reflects the new item set/order (the toolbar
+        // is built once in InitWaveform.MakeWaveform, with no incremental update path).
+        SetLayout(Se.Settings.General.LayoutNumber);
     }
 
 
