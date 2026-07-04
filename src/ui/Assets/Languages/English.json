@@ -2458,6 +2458,7 @@
       "defaultSaveAsFormat": "Default \"Save as\" format",
       "favoriteSubtitleFormats": "Favorite subtitle formats",
       "favoriteLanguages": "Favorite languages",
+      "webVttUseXTimestampMap": "WebVTT: use X-TIMESTAMP-MAP (offset time codes on load)",
       "showStopButton": "Show stop button",
       "showFullscreenButton": "Show full-screen button",
       "fullscreenHideControls": "Hide video controls in full-screen",
