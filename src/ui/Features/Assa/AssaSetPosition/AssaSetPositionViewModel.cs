@@ -212,7 +212,9 @@ public partial class AssaSetPositionViewModel : ObservableObject
             return;
         }
 
-        var fileName = FfmpegGenerator.GetScreenShot(videoFileName, new TimeCode(line.StartTime.TotalMilliseconds).ToDisplayString());
+        // Pass exact seconds (not ToDisplayString, which honors the HH:MM:SS:FF time-code format
+        // setting and would feed ffmpeg an unparseable "-ss 00:01:23:15", blanking the preview - #12182).
+        var fileName = FfmpegGenerator.GetScreenShot(videoFileName, (line.StartTime.TotalMilliseconds / 1000.0).ToString("0.###", CultureInfo.InvariantCulture));
         if (System.IO.File.Exists(fileName))
         {
             try
