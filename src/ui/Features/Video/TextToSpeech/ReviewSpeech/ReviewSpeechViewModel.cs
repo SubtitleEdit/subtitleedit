@@ -1388,18 +1388,6 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         SelectedVoice = lastVoice ?? Voices.FirstOrDefault();
 
-        if (engine.HasLanguageParameter && SelectedVoice != null)
-        {
-            var languages = await engine.GetLanguages(SelectedVoice, null); // SelectedModel);
-            Languages.Clear();
-            foreach (var language in languages)
-            {
-                Languages.Add(language);
-            }
-
-            SelectedLanguage = Languages.FirstOrDefault();
-        }
-
         if (engine.HasRegion)
         {
             var regions = await engine.GetRegions();
@@ -1459,6 +1447,26 @@ public partial class ReviewSpeechViewModel : ObservableObject
             {
                 SelectedModel = Models.FirstOrDefault();
             }
+        }
+
+        // Languages last: the list depends on the model for some engines (ElevenLabs returns an
+        // empty list for a null/unknown model), so the model - including the per-engine saved-model
+        // overrides above - must be resolved first. This used to run before the model was loaded,
+        // with null passed instead, leaving the language combo empty (#12093).
+        if (engine.HasLanguageParameter && SelectedVoice != null)
+        {
+            var languages = await engine.GetLanguages(SelectedVoice, SelectedModel);
+            Languages.Clear();
+            foreach (var language in languages)
+            {
+                Languages.Add(language);
+            }
+
+            // Same preference order as SelectedModelChanged: the saved language, then English,
+            // then whatever comes first.
+            SelectedLanguage = Languages.FirstOrDefault(p => p.Name == Se.Settings.Video.TextToSpeech.ElevenLabsLanguage)
+                               ?? Languages.FirstOrDefault(p => p.Code == "en")
+                               ?? Languages.FirstOrDefault();
         }
     }
 
