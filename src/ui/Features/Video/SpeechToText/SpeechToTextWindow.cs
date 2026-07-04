@@ -372,11 +372,25 @@ public class SpeechToTextWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 14: OpenAI STT - Extra Headers
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 15: OpenAI STT - Audio Format
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 16: OpenAI STT - Stream
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 17: Translate to English
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 18: Post processing
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 19: Advanced settings label + button
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 20: textBoxAdvancedSettings (parameters)
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 21: panelProgress + OK/Cancel (same row)
+                // OpenRouter STT rows (6) — only visible when OpenRouter is selected, else collapse to 0.
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 17: OpenRouter - API Key
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 18: OpenRouter - Model
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 19: OpenRouter - Language
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 20: OpenRouter - Timeout
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 21: OpenRouter - Temperature
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 22: OpenRouter - Prompt
+                // Alibaba Qwen3-ASR (DashScope) STT rows (6).
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 23: DashScope - API Key
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 24: DashScope - Model
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 25: DashScope - Region
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 26: DashScope - Language
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 27: DashScope - Word timestamps
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 28: DashScope - Timeout
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 29: Translate to English
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 30: Post processing
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 31: Advanced settings label + button
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 32: textBoxAdvancedSettings (parameters)
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) }, // 33: panelProgress + OK/Cancel (same row)
             },
             ColumnDefinitions =
             {
@@ -421,8 +435,11 @@ public class SpeechToTextWindow : Window
         grid.Add(panelConsoleLogHeader, row, 2);
         row++;
 
-        grid.Add(consoleLogAndBatchView, row, 2, 20);
-        grid.Add(consoleLogOnlyView, row, 2, 20);
+        // Row span must reach the row just above the progress/buttons row so the
+        // console log fills the full height of the settings column. It covers every
+        // settings row including the OpenAI/OpenRouter/DashScope online-STT rows.
+        grid.Add(consoleLogAndBatchView, row, 2, 32);
+        grid.Add(consoleLogOnlyView, row, 2, 32);
         row++;
 
         grid.Add(labelEngine, row, 0);

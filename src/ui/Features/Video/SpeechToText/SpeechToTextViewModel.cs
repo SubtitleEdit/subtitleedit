@@ -1288,16 +1288,83 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             if (!string.IsNullOrEmpty(response.Text))
             {
-                // No segment timings — span the whole slice. Falling back to a
-                // historical 5 s window only when we genuinely don't know the
-                // end (callers without a populated _videoInfo).
+                // No segment timings (e.g. OpenRouter's Whisper returns only
+                // `text`): split into sentences and spread the slice's duration
+                // across them by length, so the result isn't one giant cue
+                // (issue #12154). Falling back to a historical 5 s window only
+                // when we genuinely don't know the end.
                 var startMs = offsetSeconds * 1000.0;
                 var endMs = chunkEndSeconds > offsetSeconds
                     ? chunkEndSeconds * 1000.0
                     : startMs + 5000.0;
-                subtitle.Paragraphs.Add(new Paragraph(response.Text.Trim(), startMs, endMs));
+                AddTextAsTimedSentences(subtitle, response.Text.Trim(), startMs, endMs);
             }
         }
+    }
+
+    /// <summary>
+    /// Split a block of transcript text into sentence-sized paragraphs and
+    /// distribute the [<paramref name="startMs"/>, <paramref name="endMs"/>]
+    /// window across them proportionally to each sentence's length. Used for
+    /// providers that return only recognized text with no per-segment timings.
+    /// Language-agnostic: breaks on Latin and CJK sentence punctuation.
+    /// </summary>
+    internal static void AddTextAsTimedSentences(Subtitle subtitle, string text, double startMs, double endMs)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return;
+        }
+
+        var sentences = SplitIntoSentences(text);
+        var totalChars = sentences.Sum(s => s.Length);
+        if (sentences.Count <= 1 || totalChars == 0 || endMs <= startMs)
+        {
+            var end = endMs > startMs ? endMs : startMs + 2000.0;
+            subtitle.Paragraphs.Add(new Paragraph(text.Trim(), startMs, end));
+            return;
+        }
+
+        var span = endMs - startMs;
+        var cursor = startMs;
+        for (var i = 0; i < sentences.Count; i++)
+        {
+            var duration = span * ((double)sentences[i].Length / totalChars);
+            var pEnd = i == sentences.Count - 1 ? endMs : cursor + duration;
+            subtitle.Paragraphs.Add(new Paragraph(sentences[i].Trim(), cursor, pEnd));
+            cursor = pEnd;
+        }
+    }
+
+    /// <summary>
+    /// Break text into sentences, keeping trailing sentence punctuation. Handles
+    /// Latin (. ! ?) and CJK (。！？…) terminators; returns the whole string as a
+    /// single element when it has no sentence punctuation.
+    /// </summary>
+    internal static List<string> SplitIntoSentences(string text)
+    {
+        var result = new List<string>();
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return result;
+        }
+
+        var matches = Regex.Matches(text.Trim(), @"[^.!?。！？…]*[.!?。！？…]+[""'”’)\]]*\s*|[^.!?。！？…]+$");
+        foreach (Match m in matches)
+        {
+            var sentence = m.Value.Trim();
+            if (sentence.Length > 0)
+            {
+                result.Add(sentence);
+            }
+        }
+
+        if (result.Count == 0)
+        {
+            result.Add(text.Trim());
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -1616,7 +1683,17 @@ public partial class SpeechToTextViewModel : ObservableObject
 
     private Subtitle PostProcess(Subtitle transcript)
     {
-        if (SelectedLanguage is not WhisperLanguage language)
+        var languageCode = SelectedLanguage?.Code;
+        if (string.IsNullOrWhiteSpace(languageCode))
+        {
+            // Online engines null out SelectedLanguage; fall back to their configured
+            // language hint so post-processing (merge/split/casing) still runs (issue
+            // #12154). With no hint we can't pick language-specific rules safely, so
+            // leave the transcript as-is.
+            languageCode = GetOnlineEngineLanguageHint();
+        }
+
+        if (string.IsNullOrWhiteSpace(languageCode))
         {
             return transcript;
         }
@@ -1626,7 +1703,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             ProgressText = "Post-processing...";
         }
 
-        var postProcessor = new SpeechToTextPostProcessor(DoTranslateToEnglish ? "en" : language.Code)
+        var postProcessor = new SpeechToTextPostProcessor(DoTranslateToEnglish ? "en" : languageCode)
         {
             ParagraphMaxChars = Configuration.Settings.General.SubtitleLineMaximumLength * 2,
         };
@@ -1658,6 +1735,22 @@ public partial class SpeechToTextViewModel : ObservableObject
             );
 
         return transcript;
+    }
+
+    /// <summary>
+    /// The language hint configured for the selected online STT engine, or null
+    /// for local engines. Online engines don't use the shared language dropdown
+    /// (it's nulled out), so post-processing reads the per-engine setting instead.
+    /// </summary>
+    private string? GetOnlineEngineLanguageHint()
+    {
+        return GetEffectiveSelectedEngine() switch
+        {
+            OpenRouterSttEngine => Se.Settings.Tools.OpenRouterSttLanguage,
+            DashScopeQwen3SttEngine => Se.Settings.Tools.DashScopeSttLanguage,
+            OpenAiCompatibleSttEngine => Se.Settings.Tools.OpenAiCompatibleSttLanguage,
+            _ => null,
+        };
     }
 
     private WavePeakData2? MakeWavePeaks()
