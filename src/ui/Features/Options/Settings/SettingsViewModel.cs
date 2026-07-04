@@ -271,6 +271,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private Color _waveformParagraphRightColor;
     [ObservableProperty] private Color _waveformFancyHighColor;
     [ObservableProperty] private bool _waveformInvertMouseWheel;
+    [ObservableProperty] private bool _waveformMouseWheelSetsVideoPosition;
     [ObservableProperty] private bool _waveformSnapToShotChanges;
     [ObservableProperty] private bool _waveformSnapToFrames;
     [ObservableProperty] private bool _waveformShotChangesAutoGenerate;
@@ -283,6 +284,36 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _waveformDoubleClickActionTypes;
     [ObservableProperty] private string _selectedWaveformDoubleClickActionType;
 
+    [ObservableProperty] private ObservableCollection<string> _waveformMouseWheelVideoPositionSteps;
+    [ObservableProperty] private string _selectedWaveformMouseWheelVideoPositionStep;
+
+    // Selectable wheel step sizes (ms). 0 = one frame.
+    private static readonly int[] MouseWheelStepValuesMs = { 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 };
+
+    private static string FormatMouseWheelStep(int ms)
+    {
+        if (ms <= 0)
+        {
+            return Se.Language.Options.Settings.WaveformMouseWheelStepOneFrame;
+        }
+
+        return ms >= 1000
+            ? Se.Language.Options.Settings.WaveformMouseWheelStepOneSecond
+            : string.Format(CultureInfo.InvariantCulture, Se.Language.Options.Settings.WaveformMouseWheelStepMilliseconds, ms);
+    }
+
+    private static int ParseMouseWheelStep(string display)
+    {
+        foreach (var ms in MouseWheelStepValuesMs)
+        {
+            if (FormatMouseWheelStep(ms) == display)
+            {
+                return ms;
+            }
+        }
+
+        return 500;
+    }
     [ObservableProperty] private ObservableCollection<string> _waveformExtractAudioFormats;
     [ObservableProperty] private string _selectedWaveformExtractAudioFormat;
     [ObservableProperty] private ObservableCollection<string> _waveformExtractAudioSampleRates;
@@ -466,6 +497,13 @@ public partial class SettingsViewModel : ObservableObject
         SelectedWaveformExtractAudioSampleRate = WaveformExtractAudioSampleRates[0];
         WaveformExtractAudioBitRates = new ObservableCollection<string> { "96k", "128k", "192k", "256k", "320k" };
         SelectedWaveformExtractAudioBitRate = "192k";
+
+        WaveformMouseWheelVideoPositionSteps = new ObservableCollection<string>();
+        foreach (var ms in MouseWheelStepValuesMs)
+        {
+            WaveformMouseWheelVideoPositionSteps.Add(FormatMouseWheelStep(ms));
+        }
+        SelectedWaveformMouseWheelVideoPositionStep = FormatMouseWheelStep(500);
 
         var subtitleFormats = SubtitleFormat.AllSubtitleFormats;
         var defaultSubtitleFormats = new List<string>();
@@ -860,6 +898,11 @@ public partial class SettingsViewModel : ObservableObject
         WaveformParagraphRightColor = Se.Settings.Waveform.WaveformParagraphRightColor.FromHexToColor();
         WaveformFancyHighColor = Se.Settings.Waveform.WaveformFancyHighColor.FromHexToColor();
         WaveformInvertMouseWheel = Se.Settings.Waveform.InvertMouseWheel;
+        WaveformMouseWheelSetsVideoPosition = Se.Settings.Waveform.MouseWheelSetsVideoPosition;
+        var mouseWheelStepDisplay = FormatMouseWheelStep(Se.Settings.Waveform.MouseWheelVideoPositionStepMs);
+        SelectedWaveformMouseWheelVideoPositionStep = WaveformMouseWheelVideoPositionSteps.Contains(mouseWheelStepDisplay)
+            ? mouseWheelStepDisplay
+            : FormatMouseWheelStep(500);
         WaveformSnapToShotChanges = Se.Settings.Waveform.SnapToShotChanges;
         WaveformSnapToFrames = Se.Settings.Waveform.SnapToFrames;
         WaveformShotChangesAutoGenerate = Se.Settings.Waveform.ShotChangesAutoGenerate;
@@ -1555,6 +1598,8 @@ public partial class SettingsViewModel : ObservableObject
         Se.Settings.Waveform.WaveformParagraphRightColor = WaveformParagraphRightColor.FromColorToHex();
         Se.Settings.Waveform.WaveformFancyHighColor = WaveformFancyHighColor.FromColorToHex();
         Se.Settings.Waveform.InvertMouseWheel = WaveformInvertMouseWheel;
+        Se.Settings.Waveform.MouseWheelSetsVideoPosition = WaveformMouseWheelSetsVideoPosition;
+        Se.Settings.Waveform.MouseWheelVideoPositionStepMs = ParseMouseWheelStep(SelectedWaveformMouseWheelVideoPositionStep);
         Se.Settings.Waveform.SnapToShotChanges = WaveformSnapToShotChanges;
         Se.Settings.Waveform.SnapToFrames = WaveformSnapToFrames;
         Se.Settings.Waveform.ShotChangesAutoGenerate = WaveformShotChangesAutoGenerate;

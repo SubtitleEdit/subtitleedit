@@ -667,7 +667,57 @@ public class AudioVisualizer : Control
         {
             scrollDelta = InvertMouseWheel ? -e.Delta.X : e.Delta.X;
         }
-        
+
+        // SE 4 parity: seek the video position (step forward/back) instead of scrolling the view.
+        // Ctrl/Meta still keep their scroll + set-position-at-cursor behavior below.
+        if (Se.Settings.Waveform.MouseWheelSetsVideoPosition && !_isCtrlDown && !_isMetaDown)
+        {
+            // One "notch" per event; magnitude scales with the delta for fast wheels/trackpads.
+            var notches = scrollDelta > 0 ? Math.Ceiling(scrollDelta) : Math.Floor(scrollDelta);
+            var stepMs = Se.Settings.Waveform.MouseWheelVideoPositionStepMs;
+
+            double newVideoPosition;
+            var fps = Se.Settings.General.CurrentFrameRate;
+            if (stepMs <= 0 && fps >= 1)
+            {
+                // Frame step: quantize to the frame grid and move whole frames.
+                var currentFrame = Math.Round(CurrentVideoPositionSeconds * fps);
+                newVideoPosition = (currentFrame + notches) / fps;
+            }
+            else
+            {
+                // Millisecond step (also the fallback when a frame step has no frame rate).
+                var stepSeconds = stepMs > 0 ? stepMs / 1000.0 : 0.5;
+                newVideoPosition = CurrentVideoPositionSeconds + notches * stepSeconds;
+            }
+
+            if (newVideoPosition < 0)
+            {
+                newVideoPosition = 0;
+            }
+
+            if (WavePeaks != null && newVideoPosition > WavePeaks.LengthInSeconds)
+            {
+                newVideoPosition = WavePeaks.LengthInSeconds;
+            }
+
+            // Follow the play-head: scroll the view only when it would leave the visible range.
+            var visibleSeconds = EndPositionSeconds - StartPositionSeconds;
+            if (visibleSeconds > 0 && (newVideoPosition < StartPositionSeconds || newVideoPosition > EndPositionSeconds))
+            {
+                var followStart = newVideoPosition - visibleSeconds / 2;
+                StartPositionSeconds = followStart < 0 ? 0 : followStart;
+                OnHorizontalScroll?.Invoke(this, new PositionEventArgs { PositionInSeconds = StartPositionSeconds });
+            }
+
+            // Update locally so rapid wheeling builds on the new position before the player reports back.
+            CurrentVideoPositionSeconds = newVideoPosition;
+            OnVideoPositionChanged?.Invoke(this, new PositionEventArgs { PositionInSeconds = newVideoPosition });
+
+            InvalidateVisual();
+            return;
+        }
+
         var newStart = StartPositionSeconds + scrollDelta / 2;
         if (newStart < 0)
         {
