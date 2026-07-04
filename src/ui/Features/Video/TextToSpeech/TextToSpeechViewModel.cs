@@ -128,6 +128,11 @@ public partial class TextToSpeechViewModel : ObservableObject
     public ObservableCollection<string> OmniVoicePitches { get; }
     public ObservableCollection<string> OmniVoiceAccents { get; }
 
+    // Text edits from OK'ed review sessions in this window, keyed by the lines' original time
+    // codes. The main window reads this after the dialog closes and offers to apply the edits
+    // to the subtitle (#12093). A later session's edit to the same line replaces the earlier one.
+    public List<ReviewTextChange> ReviewTextChanges { get; } = new();
+
     private Subtitle _subtitle = new();
     private readonly IFileHelper _fileHelper;
     private readonly IFolderHelper _folderHelper;
@@ -1700,6 +1705,11 @@ public partial class TextToSpeechViewModel : ObservableObject
         // no merged wav, no dialog, nothing (#12093).
         if (result.OkPressed)
         {
+            // Text edits from an imported session can also apply to the open subtitle - the
+            // time-code matching in the main window simply won't find a line when the imported
+            // session belongs to a different subtitle.
+            CollectReviewTextChanges(result.TextChanges);
+
             // Enter the same visible "generating" state as a fresh Generate run - progress bar,
             // status text and a working Cancel button. Without this the merge ran with the
             // window looking completely idle, giving no sign anything was happening (#12093).
@@ -2883,10 +2893,23 @@ public partial class TextToSpeechViewModel : ObservableObject
 
         if (result.OkPressed)
         {
+            CollectReviewTextChanges(result.TextChanges);
             return result.StepResults;
         }
 
         return null;
+    }
+
+    // Merge one review session's text edits into ReviewTextChanges, letting the newest edit to
+    // a line (same original time codes) win over one from an earlier session in this window.
+    private void CollectReviewTextChanges(List<ReviewTextChange> changes)
+    {
+        foreach (var change in changes)
+        {
+            ReviewTextChanges.RemoveAll(c => Math.Abs(c.StartMs - change.StartMs) < 0.5 &&
+                                             Math.Abs(c.EndMs - change.EndMs) < 0.5);
+            ReviewTextChanges.Add(change);
+        }
     }
 
     // The compact cloud-engine descriptions ("pay/fast/good") read like debug output - expand

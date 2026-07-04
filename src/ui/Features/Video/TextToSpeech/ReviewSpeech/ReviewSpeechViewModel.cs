@@ -109,6 +109,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
     public bool OkPressed { get; private set; }
 
+    // Text edits made in this window, published on OK so the caller can offer to apply them to
+    // the main subtitle (#12093). Keyed by the rows' original time codes - see ReviewTextChange.
+    public List<ReviewTextChange> TextChanges { get; private set; } = new();
+
     private readonly IFolderHelper _folderHelper;
     private readonly IWindowService _windowService;
 
@@ -335,6 +339,9 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 Speed = Math.Round(p.SpeedFactor, 2).ToString(CultureInfo.CurrentCulture),
                 Cps = Math.Round(p.Paragraph.GetCharactersPerSecond(), 2).ToString(CultureInfo.CurrentCulture),
                 StepResult = p,
+                OriginalText = p.Text,
+                OriginalStartMs = p.Paragraph.StartTime.TotalMilliseconds,
+                OriginalEndMs = p.Paragraph.EndTime.TotalMilliseconds,
             };
             row.StartHistory();
             Lines.Add(row);
@@ -1020,6 +1027,13 @@ public partial class ReviewSpeechViewModel : ObservableObject
         }
 
         StepResults = Lines.Where(p => p.Include).Select(p => p.StepResult).ToArray();
+
+        // All rows, not just included ones - excluding a row only skips its audio in the merge,
+        // while a text edit was still made deliberately and should reach the main subtitle.
+        TextChanges = Lines
+            .Where(row => row.Text != row.OriginalText)
+            .Select(row => new ReviewTextChange(row.OriginalStartMs, row.OriginalEndMs, row.Text))
+            .ToList();
 
         Se.SaveSettings();
         OkPressed = true;

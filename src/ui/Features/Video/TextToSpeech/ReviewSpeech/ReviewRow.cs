@@ -25,6 +25,13 @@ public partial class ReviewRow : ObservableObject
     // on the row itself so lookup is direct (no Lines.IndexOf, which would break under sorting).
     public SubtitleLineViewModel? WaveformParagraph { get; set; }
 
+    // Snapshots taken when the window opens, used on OK to detect text edits and map them back
+    // to the main subtitle (see ReviewTextChange). The times must be captured up front because
+    // waveform drags mutate StepResult.Paragraph while the window is open.
+    public string OriginalText { get; set; } = string.Empty;
+    public double OriginalStartMs { get; set; }
+    public double OriginalEndMs { get; set; }
+
     public ReviewRow()
     {
         Include = true;
