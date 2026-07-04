@@ -1,0 +1,20 @@
+OpenRouter speech-to-text
+
+OpenRouter routes audio transcription to Whisper, GPT-4o-transcribe, Groq and
+other providers behind a single API key.
+
+Setup:
+1. Create an API key at https://openrouter.ai/keys
+2. Paste it into the API Key field.
+3. Choose a transcription model, for example:
+     openai/whisper-1
+     openai/whisper-large-v3
+     openai/gpt-4o-transcribe
+     qwen/qwen3-asr-flash
+
+The audio is uploaded to OpenRouter and transcribed. Segment timestamps are
+requested automatically; long audio is split into chunks first.
+
+Notes:
+- A Language Hint (e.g. en, de, es) can improve accuracy; leave empty to auto-detect.
+- Costs are billed by OpenRouter per the selected model.

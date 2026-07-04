@@ -532,6 +532,20 @@ public class Se
         Configuration.Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection = Settings.Tools.OpenAiCompatibleSttAutoTranscribeOnAudioSelection;
         Configuration.Settings.Tools.OpenAiCompatibleSttStream = Settings.Tools.OpenAiCompatibleSttStream;
 
+        Configuration.Settings.Tools.OpenRouterSttApiKey = Settings.Tools.OpenRouterSttApiKey;
+        Configuration.Settings.Tools.OpenRouterSttModel = Settings.Tools.OpenRouterSttModel;
+        Configuration.Settings.Tools.OpenRouterSttLanguage = Settings.Tools.OpenRouterSttLanguage;
+        Configuration.Settings.Tools.OpenRouterSttTemperature = Settings.Tools.OpenRouterSttTemperature;
+        Configuration.Settings.Tools.OpenRouterSttPrompt = Settings.Tools.OpenRouterSttPrompt;
+        Configuration.Settings.Tools.OpenRouterSttTimeoutSeconds = Settings.Tools.OpenRouterSttTimeoutSeconds;
+
+        Configuration.Settings.Tools.DashScopeSttApiKey = Settings.Tools.DashScopeSttApiKey;
+        Configuration.Settings.Tools.DashScopeSttModel = Settings.Tools.DashScopeSttModel;
+        Configuration.Settings.Tools.DashScopeSttLanguage = Settings.Tools.DashScopeSttLanguage;
+        Configuration.Settings.Tools.DashScopeSttRegion = Settings.Tools.DashScopeSttRegion;
+        Configuration.Settings.Tools.DashScopeSttEnableWords = Settings.Tools.DashScopeSttEnableWords;
+        Configuration.Settings.Tools.DashScopeSttTimeoutSeconds = Settings.Tools.DashScopeSttTimeoutSeconds;
+
         Configuration.Settings.Tools.AutoTranslateLastName = Settings.AutoTranslate.AutoTranslateLastName;
 
         // BeautifyTimeCodes profile: skip apply on a fresh install so libse's built-in

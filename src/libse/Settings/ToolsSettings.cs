@@ -92,6 +92,20 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public bool OpenAiCompatibleSttStream { get; set; }
         public string OpenAiCompatibleSttAudioFormat { get; set; }
 
+        public string OpenRouterSttApiKey { get; set; }
+        public string OpenRouterSttModel { get; set; }
+        public string OpenRouterSttLanguage { get; set; }
+        public decimal OpenRouterSttTemperature { get; set; }
+        public string OpenRouterSttPrompt { get; set; }
+        public int OpenRouterSttTimeoutSeconds { get; set; }
+
+        public string DashScopeSttApiKey { get; set; }
+        public string DashScopeSttModel { get; set; }
+        public string DashScopeSttLanguage { get; set; }
+        public string DashScopeSttRegion { get; set; }
+        public bool DashScopeSttEnableWords { get; set; }
+        public int DashScopeSttTimeoutSeconds { get; set; }
+
         public string OpenRouterUrl { get; set; }
         public string OpenRouterPrompt { get; set; }
         public string OpenRouterApiKey { get; set; }
@@ -523,6 +537,20 @@ namespace Nikse.SubtitleEdit.Core.Settings
             OpenAiCompatibleSttPrompt = string.Empty;
             OpenAiCompatibleSttStream = false;
             OpenAiCompatibleSttAudioFormat = "mp3";
+
+            OpenRouterSttApiKey = string.Empty;
+            OpenRouterSttModel = "openai/whisper-1";
+            OpenRouterSttLanguage = string.Empty;
+            OpenRouterSttTemperature = 0;
+            OpenRouterSttPrompt = string.Empty;
+            OpenRouterSttTimeoutSeconds = 300;
+
+            DashScopeSttApiKey = string.Empty;
+            DashScopeSttModel = "qwen3-asr-flash-filetrans";
+            DashScopeSttLanguage = string.Empty;
+            DashScopeSttRegion = "international";
+            DashScopeSttEnableWords = false;
+            DashScopeSttTimeoutSeconds = 3600;
 
             VoskPostProcessing = true;
             WhisperChoice = Configuration.IsRunningOnWindows ? AudioToText.WhisperChoice.PurfviewFasterWhisperXxl : AudioToText.WhisperChoice.OpenAi;
