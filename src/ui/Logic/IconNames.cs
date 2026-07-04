@@ -23,6 +23,8 @@ internal class IconNames
     public const string CheckBold = "mdi-check-bold";
     public const string ChevronLeft = "mdi-chevron-left";
     public const string ChevronRight = "mdi-chevron-right";
+    public const string ChevronDoubleLeft = "mdi-chevron-double-left";
+    public const string ChevronDoubleRight = "mdi-chevron-double-right";
     public const string Close = "mdi-close";
     public const string ClosedCaption = "mdi-closed-caption";
     public const string Cogs = "mdi-cogs";

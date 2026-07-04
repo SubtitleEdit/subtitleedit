@@ -259,6 +259,8 @@ public partial class MainViewModel :
     [ObservableProperty] private bool _isTextBoxSplitAtCursorAndVideoPositionVisible;
     [ObservableProperty] private ObservableCollection<string> _speeds;
     [ObservableProperty] private string _selectedSpeed;
+    [ObservableProperty] private ObservableCollection<string> _videoSeekAmounts;
+    [ObservableProperty] private string _selectedVideoSeekAmount;
     [ObservableProperty] private bool _showWaveformDisplayModeSeparator;
     [ObservableProperty] private bool _showWaveformOnlyWaveform;
     [ObservableProperty] private bool _showWaveformOnlySpectrogram;
@@ -609,6 +611,11 @@ public partial class MainViewModel :
             "3.0x"
         });
         SelectedSpeed = "1.0x";
+
+        VideoSeekAmounts = new ObservableCollection<string>();
+        SelectedVideoSeekAmount = string.Empty;
+        RefreshVideoSeekAmounts();
+
         VideoOffsetText = string.Empty;
         SetVideoOffsetText = Se.Language.Main.Menu.SetVideoOffset;
         WaveformGeneratingText = string.Empty;
@@ -8426,6 +8433,10 @@ public partial class MainViewModel :
         LockTimeCodes = Se.Settings.General.LockTimeCodes;
         IsWaveformToolbarVisible = Se.Settings.Waveform.ShowToolbar;
 
+        // Frame mode may have just been toggled - refresh the waveform seek combo (frames vs
+        // seconds) before SetLayout below rebuilds the toolbar and re-binds the combo.
+        RefreshVideoSeekAmounts();
+
         if (AudioVisualizer != null)
         {
             AudioVisualizer.DrawGridLines = Se.Settings.Waveform.DrawGridLines;
@@ -13261,6 +13272,85 @@ public partial class MainViewModel :
     private void VideoOneSecondForward()
     {
         MoveVideoPositionMs(1000);
+    }
+
+    // Waveform toolbar "seek video" buttons (<< / >>): step the video by the amount picked in
+    // the adjacent combo box (seconds or frames). User-selectable and remembered across sessions.
+    [RelayCommand]
+    private void WaveformVideoSeekBack()
+    {
+        MoveVideoPositionMs(-GetVideoSeekMs());
+    }
+
+    [RelayCommand]
+    private void WaveformVideoSeekForward()
+    {
+        MoveVideoPositionMs(GetVideoSeekMs());
+    }
+
+    // Rebuilds the "seek video" combo options for the current time/frame mode. In frame mode the
+    // amounts are whole frames ("1f", "10f", ...); otherwise decimal seconds. The last pick per
+    // mode is remembered in settings; fall back to a sensible default if it's not in the list.
+    // Called from the constructor and from ApplySettings so toggling frame mode refreshes the list.
+    private void RefreshVideoSeekAmounts()
+    {
+        // In frame mode the list mixes a few frame steps ("1f"..) with second steps ("1s"..);
+        // "f" = frames, "s" = seconds. Time mode lists plain decimal seconds.
+        var useFrameMode = Se.Settings.General.UseFrameMode;
+        var amounts = useFrameMode
+            ? new[] { "1f", "5f", "10f", "1s", "5s", "10s" }
+            : new[] { "0.1s", "0.25s", "0.5s", "1s", "2s", "3s", "5s", "10s" };
+        var saved = Se.Settings.Waveform.VideoSeekAmount;
+        var preferred = !string.IsNullOrEmpty(saved) && amounts.Contains(saved)
+            ? saved
+            : (useFrameMode ? "5f" : "2s");
+
+        // Skip a no-op rebuild so switching an unrelated setting doesn't reset the user's pick.
+        if (VideoSeekAmounts.SequenceEqual(amounts) && SelectedVideoSeekAmount == preferred)
+        {
+            return;
+        }
+
+        VideoSeekAmounts = new ObservableCollection<string>(amounts);
+        SelectedVideoSeekAmount = preferred;
+    }
+
+    private int GetVideoSeekMs()
+    {
+        var amount = SelectedVideoSeekAmount;
+        if (string.IsNullOrEmpty(amount))
+        {
+            return 2000;
+        }
+
+        // A trailing "f" means the amount is in frames - convert via the current frame rate.
+        if (amount.EndsWith("f", StringComparison.OrdinalIgnoreCase))
+        {
+            if (int.TryParse(amount.TrimEnd('f', 'F'), NumberStyles.Integer, CultureInfo.InvariantCulture, out var frames) && frames > 0)
+            {
+                return SubtitleFormat.FramesToMilliseconds(frames);
+            }
+
+            return 2000;
+        }
+
+        // "s" suffix (or no suffix) means seconds.
+        if (double.TryParse(amount.TrimEnd('s', 'S'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var seconds) && seconds > 0)
+        {
+            return (int)Math.Round(seconds * 1000, MidpointRounding.AwayFromZero);
+        }
+
+        return 2000;
+    }
+
+    partial void OnSelectedVideoSeekAmountChanged(string value)
+    {
+        // Remember the raw pick so the combo restores it next session (when the mode's list still
+        // contains it). ComboBox clears the selection to null briefly while rebinding - ignore that.
+        if (!string.IsNullOrEmpty(value))
+        {
+            Se.Settings.Waveform.VideoSeekAmount = value;
+        }
     }
 
     [RelayCommand]
