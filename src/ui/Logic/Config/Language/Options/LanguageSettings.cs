@@ -151,6 +151,11 @@ public class LanguageSettings
     public string ShowWaveformToolbarPlaybackSpeed { get; set; }
     public string WaveformFocusTextboxAfterInsertNew { get; set; }
     public string WaveformInvertMouseWheel { get; set; }
+    public string WaveformMouseWheelSetsVideoPosition { get; set; }
+    public string WaveformMouseWheelVideoPositionStep { get; set; }
+    public string WaveformMouseWheelStepOneFrame { get; set; }
+    public string WaveformMouseWheelStepOneSecond { get; set; }
+    public string WaveformMouseWheelStepMilliseconds { get; set; }
     public string WaveformSnapToShotChanges { get; set; }
     public string WaveformSnapToFrames { get; set; }
     public string WaveformShotChangesAutoGenerate { get; set; }
@@ -474,6 +479,11 @@ public class LanguageSettings
         ShowWaveformToolbarPlaybackSpeed = "Toolbar: show playback speed";
         WaveformFocusTextboxAfterInsertNew = "Focus text box after insert";
         WaveformInvertMouseWheel = "Invert mouse-wheel";
+        WaveformMouseWheelSetsVideoPosition = "Mouse-wheel sets video position";
+        WaveformMouseWheelVideoPositionStep = "Mouse-wheel video position step";
+        WaveformMouseWheelStepOneFrame = "1 frame";
+        WaveformMouseWheelStepOneSecond = "1 second";
+        WaveformMouseWheelStepMilliseconds = "{0} ms";
         WaveformSnapToShotChanges = "Snap to shot changes (hold Shift to override)";
         WaveformSnapToFrames = "Snap to frames";
         WaveformShotChangesAutoGenerate = "Shot changes auto-generate";

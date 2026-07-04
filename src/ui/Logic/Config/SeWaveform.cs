@@ -28,6 +28,15 @@ public class SeWaveform
     public string ParagraphBackground { get; set; }
     public string ParagraphSelectedBackground { get; set; }
     public bool InvertMouseWheel { get; set; }
+
+    // SE 4 parity: when true, the mouse wheel over the waveform seeks the video position
+    // forward/backward (in steps) instead of scrolling the view. The view follows the
+    // play-head so it stays visible. Defaults to false (SE 5 scroll behavior). Issue #12134.
+    public bool MouseWheelSetsVideoPosition { get; set; }
+
+    // Step size per wheel notch when MouseWheelSetsVideoPosition is on.
+    // 0 = one frame (uses General.CurrentFrameRate); otherwise the step in milliseconds.
+    public int MouseWheelVideoPositionStepMs { get; set; }
     public double ShotChangesSensitivity { get; set; }
     public string ShotChangesImportTimeCodeFormat { get; set; }
     public bool SnapToShotChanges { get; set; }
@@ -128,6 +137,8 @@ public class SeWaveform
 
         WaveformShowNumberAndDuration = true;
         WaveformShowCps = true;
+
+        MouseWheelVideoPositionStepMs = 500;
 
         ToolbarItems =
         [
