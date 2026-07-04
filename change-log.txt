@@ -1,7 +1,7 @@
 
 Subtitle Edit Changelog
 
-v5.1.0-beta11 (TBD)
+v5.1.0-beta11 (4th of July 2026)
 
 * Fix settings not saving when the UI language had a duplicate/empty translation (e.g. Portuguese Brazil) - the Options dialog no longer aborts on a repeated translated string, and a failed save now logs and shows an error instead of silently doing nothing - thx rosilucia-hub
 * Fix ASSA "Set position" and "Image color picker" showing a blank video background when the "HH:MM:SS:FF" time code format was enabled - thx bichitoxxx
