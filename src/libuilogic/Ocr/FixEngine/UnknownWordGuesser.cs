@@ -104,6 +104,14 @@ public static class UnknownWordGuesser
         var guesses = new List<string>();
         for (int i = 3; i < word.Length - 3; i++)
         {
+            // Only ever split between two letters. Otherwise a hyphen (or apostrophe) reads as a
+            // "consonant" and we split right next to it, e.g. "vaudeville-veteraan" -> "vaudeville-
+            // veteraan" - a spurious space after the hyphen. (issue #12156)
+            if (!char.IsLetter(word[i]) || !char.IsLetter(word[i - 1]))
+            {
+                continue;
+            }
+
             bool isVowel = vowels.Contains(char.ToLower(word[i]));
             bool prevIsVowel = vowels.Contains(char.ToLower(word[i - 1]));
 
