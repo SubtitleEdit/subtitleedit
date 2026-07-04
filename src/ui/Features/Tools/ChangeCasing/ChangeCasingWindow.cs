@@ -19,7 +19,7 @@ public class ChangeCasingWindow : Window
         vm.Window = this;
         DataContext = vm;
 
-        var checkBoxNormalCasing = new RadioButton
+        var radioButtonNormalCasing = new RadioButton
         {
             Content = Se.Language.General.NormalCasing,
             VerticalAlignment = VerticalAlignment.Center,
@@ -43,7 +43,7 @@ public class ChangeCasingWindow : Window
             [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.NormalCasingOnlyUpper)) { Mode = BindingMode.TwoWay },
         };
 
-        var checkBoxFixNamesOnly = new RadioButton
+        var radioButtonFixNames = new RadioButton
         {
             Content = Se.Language.Tools.ChangeCasing.FixNamesOnly,
             VerticalAlignment = VerticalAlignment.Center,
@@ -51,7 +51,7 @@ public class ChangeCasingWindow : Window
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.FixNamesOnly)) { Mode = BindingMode.TwoWay },
         };
 
-        var checkBoxAllUppercase = new RadioButton
+        var radioButtonAllUppercase = new RadioButton
         {
             Content = Se.Language.Tools.ChangeCasing.AllUppercase,
             VerticalAlignment = VerticalAlignment.Center,
@@ -59,7 +59,7 @@ public class ChangeCasingWindow : Window
             [!RadioButton.IsCheckedProperty] = new Binding(nameof(vm.AllUppercase)) { Mode = BindingMode.TwoWay },
         };
 
-        var checkBoxAllLowercase = new RadioButton
+        var radioButtonAllLowercase = new RadioButton
         {
             Content = Se.Language.Tools.ChangeCasing.AllLowercase,
             VerticalAlignment = VerticalAlignment.Center,
@@ -94,12 +94,12 @@ public class ChangeCasingWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(checkBoxNormalCasing, 0, 0);
+        grid.Add(radioButtonNormalCasing, 0, 0);
         grid.Add(checkBoxNormalCasingFixNames, 1, 0);
         grid.Add(checkBoxNormalCasingOnlyUpper, 2, 0);
-        grid.Add(checkBoxFixNamesOnly, 3, 0);
-        grid.Add(checkBoxAllUppercase, 4, 0);
-        grid.Add(checkBoxAllLowercase, 5, 0);
+        grid.Add(radioButtonFixNames, 3, 0);
+        grid.Add(radioButtonAllUppercase, 4, 0);
+        grid.Add(radioButtonAllLowercase, 5, 0);
         grid.Add(buttonPanel, 6, 0);
 
         Content = grid;
