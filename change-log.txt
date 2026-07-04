@@ -3,6 +3,7 @@ Subtitle Edit Changelog
 
 v5.1.0-beta8 (3rd of July 2026)
 
+* Fix "Fix common OCR errors" doing nothing when no Hunspell dictionary is installed for the language - the OCR replace list (e.g. spa_OCRFixReplaceList.xml) is now applied on its own again - thx perkesfurmah-collab
 * Fix UI freeze when switching to layout 12 (no video pane) with a video loaded
 * Text to speech: review window - Space no longer clicks OK on key release either (Avalonia raises a focused button's click on Space key-up, independent of the tunnel-stage fix in beta7) - thx cvrle77
 * Text to speech: fix the Import/Export/merge-output file dialogs and the TTS window dropping behind the main window on Windows - thx cvrle77

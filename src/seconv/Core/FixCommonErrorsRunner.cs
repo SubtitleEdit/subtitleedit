@@ -130,7 +130,8 @@ internal static class FixCommonErrorsRunner
     /// <summary>
     /// Applies the OCR-fix engine (OCR replace lists + Hunspell spell-check guessing) to every line,
     /// the headless equivalent of the GUI's "Fix common OCR errors". No-op when no dictionary folder
-    /// is configured or no Hunspell dictionary matches the detected language. (#11744)
+    /// is configured. When no Hunspell dictionary matches the language the OCR replace list is still
+    /// applied (the spell-check-driven guessing is skipped). (#11744, #12126)
     /// </summary>
     private static void RunOcrFix(Subtitle subtitle, string twoLetterLanguage)
     {
@@ -147,12 +148,14 @@ internal static class FixCommonErrorsRunner
         }
 
         var spellChecker = new SpellChecker();
+
+        // Fall back to an empty dictionary display when no Hunspell dictionary is installed for the
+        // language: the OCR replace list is still applied, the spell-check-driven "guess" path is just a
+        // no-op. Only en_US.dic ships with SE, so gating on a matching .dic made this silently do nothing
+        // for other languages on a fresh config - a regression from SE 4 (issue #12126).
         var dictionary = spellChecker.GetDictionaryLanguages(folder)
-            .FirstOrDefault(d => d.GetThreeLetterCode() == threeLetter);
-        if (dictionary == null)
-        {
-            return;
-        }
+            .FirstOrDefault(d => d.GetThreeLetterCode() == threeLetter)
+            ?? new SpellCheckDictionaryDisplay();
 
         IOcrFixEngine engine = new OcrFixEngine(spellChecker);
         engine.Initialize(subtitle, threeLetter, dictionary);

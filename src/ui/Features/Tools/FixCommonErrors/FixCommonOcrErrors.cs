@@ -33,11 +33,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             var spellCheckManager = new SpellCheckManager();
             var spellCheckers = spellCheckManager.GetDictionaryLanguages(Se.DictionariesFolder);
-            var spellChecker = spellCheckers.FirstOrDefault(x => x.GetThreeLetterCode() == threeLetterCode);
-            if (spellChecker == null)
-            {
-                return;
-            }
+
+            // Fall back to an empty dictionary display when no Hunspell dictionary is installed for the
+            // language. The OCR replace list (e.g. spa_OCRFixReplaceList.xml) is applied regardless of
+            // spell-checking; without a dictionary the spell-check-driven "guess" path is simply a no-op.
+            // Requiring a matching .dic here made the feature silently do nothing on a fresh config, since
+            // only en_US.dic ships with SE - a regression from SE 4 (issue #12126).
+            var spellChecker = spellCheckers.FirstOrDefault(x => x.GetThreeLetterCode() == threeLetterCode)
+                               ?? new SpellCheckDictionaryDisplay();
 
             OcrFixEngine.Initialize(subtitle, threeLetterCode, spellChecker);
 
