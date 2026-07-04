@@ -426,6 +426,10 @@ public class Se
             Settings.Waveform = new();
         }
 
+        // Add toolbar items introduced after an older settings file was written (e.g. VideoSeek),
+        // so the waveform toolbar's per-type lookup never misses and new items are customizable.
+        Settings.Waveform.EnsureAllToolbarItems();
+
         if (Settings.BeautifyTimeCodes == null)
         {
             Settings.BeautifyTimeCodes = new();

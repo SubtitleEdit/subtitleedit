@@ -17,5 +17,6 @@ public enum SeWaveformToolbarItemType
     PlaybackSpeed,
     AutoSelectOnPlay,
     Center,
+    VideoSeek,
     More
 }

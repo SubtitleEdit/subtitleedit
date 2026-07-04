@@ -1,6 +1,7 @@
 ﻿using Avalonia.Media;
 using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Logic.Config;
 
@@ -37,6 +38,11 @@ public class SeWaveform
     // Step size per wheel notch when MouseWheelSetsVideoPosition is on.
     // 0 = one frame (uses General.CurrentFrameRate); otherwise the step in milliseconds.
     public int MouseWheelVideoPositionStepMs { get; set; }
+
+    // Last value picked in the waveform toolbar's "seek video" combo box (the << / >> buttons),
+    // stored as the raw option string. A trailing "f" means frames, "s" (or no suffix) means
+    // seconds. Remembered across sessions. See SeWaveformToolbarItemType.VideoSeek.
+    public string VideoSeekAmount { get; set; }
     public double ShotChangesSensitivity { get; set; }
     public string ShotChangesImportTimeCodeFormat { get; set; }
     public bool SnapToShotChanges { get; set; }
@@ -139,6 +145,7 @@ public class SeWaveform
         WaveformShowCps = true;
 
         MouseWheelVideoPositionStepMs = 500;
+        VideoSeekAmount = "2s";
 
         ToolbarItems =
         [
@@ -151,6 +158,7 @@ public class SeWaveform
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.SetStart, IsVisible = true, SortOrder = 70 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.SetEnd, IsVisible = true, SortOrder = 80 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.SetStartAndOffsetTheRest, IsVisible = true, SortOrder = 90 },
+            new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.VideoSeek, IsVisible = false, SortOrder = 95 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.VerticalZoom, IsVisible = true, SortOrder = 100 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.HorizontalZoom, IsVisible = true, SortOrder = 110 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.VideoPositionSlider, IsVisible = true, SortOrder = 120 },
@@ -159,5 +167,34 @@ public class SeWaveform
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.Center, IsVisible = true, SortOrder = 150 },
             new SeWaveformToolbarItem { Type = SeWaveformToolbarItemType.More, IsVisible = true, SortOrder = 160 },
         ];
+    }
+
+    /// <summary>
+    /// Appends any toolbar item types missing from a loaded (older) settings file so newly added
+    /// items (e.g. VideoSeek) appear for existing users and InitWaveform's per-type lookup can't
+    /// throw. New items go just before "More" so it stays the last item, matching the defaults.
+    /// </summary>
+    public void EnsureAllToolbarItems()
+    {
+        if (ToolbarItems == null)
+        {
+            ToolbarItems = new List<SeWaveformToolbarItem>();
+        }
+
+        var moreItem = ToolbarItems.Find(p => p.Type == SeWaveformToolbarItemType.More);
+        var appendSortOrder = moreItem?.SortOrder - 5 ??
+                              (ToolbarItems.Count > 0 ? ToolbarItems.Max(p => p.SortOrder) + 10 : 10);
+
+        foreach (SeWaveformToolbarItemType type in System.Enum.GetValues(typeof(SeWaveformToolbarItemType)))
+        {
+            if (ToolbarItems.Exists(p => p.Type == type))
+            {
+                continue;
+            }
+
+            // Missing items were introduced after this settings file was written; add them hidden
+            // so an upgrade never silently rearranges a toolbar the user has already tuned.
+            ToolbarItems.Add(new SeWaveformToolbarItem { Type = type, IsVisible = false, SortOrder = appendSortOrder });
+        }
     }
 }

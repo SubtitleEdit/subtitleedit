@@ -18,6 +18,10 @@ public class LanguageMainWaveform
     public string ResetZoomAndSpeed { get; set; }
     public string RemoveBlankLines { get; set; }
     public string PlaySelectedRepeatHint { get; set; }
+    public string SeekBackHint { get; set; }
+    public string SeekForwardHint { get; set; }
+    public string SeekAmountHint { get; set; }
+    public string SeekVideo { get; set; }
 
     public LanguageMainWaveform()
     {
@@ -37,5 +41,9 @@ public class LanguageMainWaveform
         ResetZoomAndSpeed = "Reset zoom & playback speed {0}";
         RemoveBlankLines = "Remove blank lines {0}";
         PlaySelectedRepeatHint = "Play selected subtitle(s) in repeat mode {0}";
+        SeekBackHint = "Seek video backward {0}";
+        SeekForwardHint = "Seek video forward {0}";
+        SeekAmountHint = "Seek amount {0}";
+        SeekVideo = "Seek video (<< >>)";
     }
 }
