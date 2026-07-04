@@ -52,6 +52,21 @@ public class WhisperEnginePurfviewFasterWhisperXxl : ISpeechToTextEngine
         return folder;
     }
 
+    /// <summary>
+    /// The on-disk "_models" sub-folder name for a model. Most models follow the
+    /// "faster-whisper-&lt;name&gt;" convention, but the distil models are published as
+    /// "faster-distil-whisper-&lt;name&gt;" (the words are in a different order), so use the
+    /// model's explicit Folder when it has one. Building the name from Name alone produced
+    /// e.g. "faster-whisper-distil-large-v3.5", which faster-whisper-xxl.exe cannot find, so
+    /// it silently re-downloaded the model into its own correctly-named folder (#12133).
+    /// </summary>
+    internal static string GetModelFolderName(WhisperModel model)
+    {
+        return !string.IsNullOrEmpty(model.Folder)
+            ? model.Folder
+            : "faster-whisper-" + model.Name;
+    }
+
     public string GetAndCreateWhisperModelFolder(WhisperModel? whisperModel)
     {
         var baseFolder = GetAndCreateWhisperFolder();
@@ -64,7 +79,7 @@ public class WhisperEnginePurfviewFasterWhisperXxl : ISpeechToTextEngine
 
         if (whisperModel != null)
         {
-            folder = Path.Combine(folder, "faster-whisper-" + whisperModel.Name);
+            folder = Path.Combine(folder, GetModelFolderName(whisperModel));
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
@@ -83,20 +98,10 @@ public class WhisperEnginePurfviewFasterWhisperXxl : ISpeechToTextEngine
     public bool IsModelInstalled(WhisperModel model)
     {
         var baseFolder = GetAndCreateWhisperFolder();
-        var folder = Path.Combine(baseFolder, "_models");
-        folder = Path.Combine(folder, "faster-whisper-" + model.Name);
+        var folder = Path.Combine(baseFolder, "_models", GetModelFolderName(model));
         if (!Directory.Exists(folder))
         {
-            // Also check with the model's own Folder name (custom models)
-            if (!string.IsNullOrEmpty(model.Folder))
-            {
-                folder = Path.Combine(baseFolder, "_models", model.Folder);
-            }
-
-            if (!Directory.Exists(folder))
-            {
-                return false;
-            }
+            return false;
         }
 
         var binFileName = Path.Combine(folder, "model.bin");
@@ -118,6 +123,9 @@ public class WhisperEnginePurfviewFasterWhisperXxl : ISpeechToTextEngine
             }
         }
 
+        // Require the finished file, not an in-progress download: the downloader writes a
+        // "model.bin.$$$" partial and only renames it to "model.bin" on success, so a partial
+        // never matches above. The size floor is a second guard against a truncated file.
         var fileInfo = new FileInfo(binFileName);
         return fileInfo.Length > 10_000_000;
     }
