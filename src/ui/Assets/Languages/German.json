@@ -2693,8 +2693,6 @@
       "SurroundWith": "Umgeben mit...",
       "SurroundWithX": "Mit \u201E{0}\u201C umgeben",
       "RepeatLine": "Zeile wiederholen",
-      "RepeatPreviousLine": "Vorherige Zeile wiederholen",
-      "RepeatNextLine": "N\u00E4chste Zeile wiederholen",
       "MoveVideoPositionMilliseconds": "Verschiebe die Videoposition in Millisekunden",
       "ImportShortcutsTitle": "Tastenkombinationen importieren",
       "ExportShortcutsTitle": "Tastenkombinationen exportieren",

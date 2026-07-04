@@ -1010,7 +1010,7 @@ public partial class MainViewModel :
         // Select synchronously rather than via SelectAndScrollToSubtitle (which posts the selection
         // to the dispatcher): the grid's SelectionChanged handler calls ResetPlaySelection, so a
         // deferred selection would null _playSelectionItem *after* we set it and break stop/loop.
-        // Mirror RepeatNextLine — change selection first, then assign _playSelectionItem.
+        // Change selection first, then assign _playSelectionItem.
         SubtitleGrid.SelectedItem = next;
         SubtitleGrid.ScrollIntoView(next, null);
         vp.Position = next.StartTime.TotalSeconds;
@@ -11099,55 +11099,6 @@ public partial class MainViewModel :
         _shortcutManager.ClearKeys();
     }
 
-    [RelayCommand]
-    private void RepeatPreviousLine()
-    {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
-        var vp = GetVideoPlayerControl();
-        if (Window == null || selectedItems.Count == 0 || vp == null)
-        {
-            return;
-        }
-
-        vp.VideoPlayer.Pause();
-        var currentIndex = Subtitles.IndexOf(selectedItems.First());
-        if (currentIndex <= 0)
-        {
-            return;
-        }
-
-        var p = Subtitles[currentIndex - 1];
-        SubtitleGrid.SelectedItem = p;
-        vp.Position = p.StartTime.TotalSeconds;
-        PinPlayheadTo(p.StartTime.TotalSeconds);
-        _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { p }, p.EndTime, true);
-        vp.VideoPlayer.Play();
-    }
-
-    [RelayCommand]
-    private void RepeatNextLine()
-    {
-        var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().OrderBy(p => p.StartTime).ToList();
-        var vp = GetVideoPlayerControl();
-        if (Window == null || selectedItems.Count == 0 || vp == null)
-        {
-            return;
-        }
-
-        vp.VideoPlayer.Pause();
-        var currentIndex = Subtitles.IndexOf(selectedItems.First());
-        if (currentIndex >= Subtitles.Count - 1)
-        {
-            return;
-        }
-
-        var p = Subtitles[currentIndex + 1];
-        SubtitleGrid.SelectedItem = p;
-        vp.Position = p.StartTime.TotalSeconds;
-        PinPlayheadTo(p.StartTime.TotalSeconds);
-        _playSelectionItem = new PlaySelectionItem(new List<SubtitleLineViewModel> { p }, p.EndTime, true);
-        vp.VideoPlayer.Play();
-    }
 
     [RelayCommand]
     private void GoToNextLine()

@@ -1,6 +1,14 @@
 
 Subtitle Edit Changelog
 
+v5.1.0-beta9 (TBD)
+
+* Google Lens Sharp: fix scrambled word order on multi-line subtitles - the text chunks Google returns interleaved between the two lines are now re-ordered top-to-bottom/left-to-right using their bounding boxes - thx fraternl
+* OCR: fix the Dictionary combo box becoming empty after downloading/re-downloading a spell check dictionary
+* Remove redundant "Repeat previous line"/"Repeat next line" shortcuts - use "Play previous (and loop)"/"Play next (and loop)" instead (they also handle multiple selections and no selection) - thx abc16361
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-beta8 (3rd of July 2026)
 
 * Fix "Fix common OCR errors" doing nothing when no Hunspell dictionary is installed for the language - the OCR replace list (e.g. spa_OCRFixReplaceList.xml) is now applied on its own again - thx perkesfurmah-collab

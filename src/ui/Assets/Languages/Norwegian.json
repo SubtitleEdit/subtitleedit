@@ -2688,8 +2688,6 @@
       "SurroundWith": "Omgi med...",
       "SurroundWithXY": "Omgi med {0}/{1}",
       "RepeatLine": "Gjenta linje",
-      "RepeatPreviousLine": "Gjenta forrige linje",
-      "RepeatNextLine": "Gjenta neste linje",
       "MoveVideoPositionMilliseconds": "Flytt videoposisjon i millisekunder",
       "ImportShortcutsTitle": "Importer hurtigtaster",
       "ExportShortcutsTitle": "Eksporter hurtigtaster",

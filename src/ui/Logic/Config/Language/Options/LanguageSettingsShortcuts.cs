@@ -249,8 +249,6 @@ public class LanguageSettingsShortcuts
     public string SurroundWith { get; set; }
     public string SurroundWithXY { get; set; }
     public string RepeatLine { get; set; }
-    public string RepeatPreviousLine { get; set; }
-    public string RepeatNextLine { get; set; }
     public string MoveVideoPositionMilliseconds { get; set; }
     public string ImportShortcutsTitle { get; set; }
     public string ExportShortcutsTitle { get; set; }
@@ -562,8 +560,6 @@ public class LanguageSettingsShortcuts
         SurroundWith = "Surround with...";
         SurroundWithXY = "Surround with {0}/{1}";
         RepeatLine = "Repeat line";
-        RepeatPreviousLine = "Repeat previous line";
-        RepeatNextLine = "Repeat next line";
         MoveVideoPositionMilliseconds = "Move video position in milliseconds";
         ImportShortcutsTitle = "Import shortcuts";
         ExportShortcutsTitle = "Export shortcuts";

@@ -2738,8 +2738,6 @@
       "SurroundWith": "Cercar com...",
       "SurroundWithXY": "Cercar com {0}/{1}",
       "RepeatLine": "Repetir linha",
-      "RepeatPreviousLine": "Repetir linha anterior",
-      "RepeatNextLine": "Repetir próxima linha",
       "MoveVideoPositionMilliseconds": "Mover a posição do vídeo em milissegundos",
       "ImportShortcutsTitle": "Importar atalhos",
       "ExportShortcutsTitle": "Exportar atalhos",
