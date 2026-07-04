@@ -14661,8 +14661,13 @@ public partial class MainViewModel :
 
             if (FileUtil.IsMatroskaFileFast(fileName) && FileUtil.IsMatroskaFile(fileName))
             {
-                await ImportSubtitleFromMatroskaFile(fileName, videoFileName);
-                return;
+                if (await ImportSubtitleFromMatroskaFile(fileName, videoFileName))
+                {
+                    return;
+                }
+
+                // No subtitle tracks in the container - fall through to the "open as video file"
+                // prompt below (a subtitle-less .mkv is still a video), matching the .mp4 path (#12171).
             }
 
             if (ext == ".sup" && FileUtil.IsBluRaySup(fileName))
@@ -15594,32 +15599,20 @@ public partial class MainViewModel :
         }
     }
 
-    private async Task ImportSubtitleFromMatroskaFile(string fileName, string? videoFileName)
+    /// <summary>
+    /// Extracts a subtitle track from a Matroska (.mkv) file. Returns false when the container has
+    /// no subtitle tracks so the caller can fall through to the "open as video file" prompt - the
+    /// same path .mp4 files take. It used to dead-end here on a "does not seem to contain any
+    /// subtitles" error, so a subtitle-less .mkv could never be opened as a video (#12171).
+    /// </summary>
+    private async Task<bool> ImportSubtitleFromMatroskaFile(string fileName, string? videoFileName)
     {
         var matroska = new MatroskaFile(fileName);
         var subtitleList = matroska.GetTracks(true);
         if (subtitleList.Count == 0)
         {
             matroska.Dispose();
-            Dispatcher.UIThread.Post(async void () =>
-            {
-                try
-                {
-                    var answer = await MessageBox.Show(
-                        Window!,
-                        "No subtitle found",
-                        "The Matroska file does not seem to contain any subtitles.",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
-                }
-                catch (Exception e)
-                {
-                    Se.LogError(e);
-                }
-            });
-
-            matroska.Dispose();
-            return;
+            return false;
         }
 
         if (subtitleList.Count > 1)
@@ -15718,6 +15711,10 @@ public partial class MainViewModel :
                 matroska.Dispose();
             }
         }
+
+        // A track was found and handled (the track dialog / extract runs on the UI thread via the
+        // Dispatcher posts above); tell the caller not to fall through to the video-open prompt.
+        return true;
     }
 
     private async Task<bool> LoadMatroskaSubtitle(
