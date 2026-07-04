@@ -9,7 +9,7 @@
 ; Setup adds the periods automatically (appending a period would result in
 ; two periods being displayed).
 ;
-; Italian.isl - Last Update: 02.05.2026  by bovirus (bovirus@gmail.com)
+; Italian.isl - Last Update: 01.07.2026 by bovirus (bovirus@gmail.com)
 ;
 ; Translator name:   bovirus
 ; Translator e-mail: bovirus@gmail.com
@@ -82,7 +82,7 @@ PrivilegesRequiredOverrideCurrentUserRecommended=Installa solo per l'&utente att
 
 ; *** Misc. errors
 ErrorCreatingDir=Impossibile creare la cartella "%1"
-ErrorTooManyFilesInDir=Impossibile creare i file nella cartella "%1" perché contiene troppi file.
+ErrorTooManyFilesInDir=Impossibile creare un file nella cartella "%1" perché contiene troppi file
 
 ; *** Setup common messages
 ExitSetupTitle=Uscita dall'installazione
@@ -99,7 +99,7 @@ ButtonNext=&Avanti >
 ButtonInstall=Inst&alla
 ButtonOK=OK
 ButtonCancel=Annulla
-ButtonYes=&Si
+ButtonYes=&Sì
 ButtonYesToAll=Sì a &tutto
 ButtonNo=&No
 ButtonNoToAll=N&o a tutto
@@ -134,7 +134,7 @@ IncorrectPassword=La password inserita non è corretta. Riprova.
 WizardLicense=Contratto di licenza
 LicenseLabel=Prima di procedere leggi con attenzione le informazioni che seguono.
 LicenseLabel3=Leggi il seguente contratto di licenza.%nPer procedere con l'installazione è necessario accettare tutti i termini del contratto.
-LicenseAccepted=Accetto i termini del &contratto di licenza 
+LicenseAccepted=Accetto i termini del &contratto di licenza
 LicenseNotAccepted=&Non accetto i termini del contratto di licenza
 
 ; *** "Information" wizard pages
@@ -170,9 +170,9 @@ DirNameTooLong=Il nome della cartella o il percorso sono troppo lunghi.
 InvalidDirName=Il nome della cartella non è valido.
 BadDirName32=Il nome della cartella non può includere nessuno dei seguenti caratteri:%n%n%1
 DirExistsTitle=Cartella già esistente
-DirExists=La cartella%n%n  %1%n%nesiste già.%n%nVuoi comunque installare l'applicazione in questa cartella?
+DirExists=La cartella%n%n%1%n%nesiste già.%n%nVuoi comunque installare l'applicazione in questa cartella?
 DirDoesntExistTitle=Cartella inesistente
-DirDoesntExist=La cartella%n%n  %1%n%nnon esiste. Vuoi creare la cartella?
+DirDoesntExist=La cartella%n%n%1%n%nnon esiste. Vuoi creare la cartella?
 
 ; *** "Select Components" wizard page
 WizardSelectComponents=Selezione componenti
@@ -227,7 +227,7 @@ ErrorDownloadSizeFailed=Rilevamento dimensione fallito: %1 %2
 ErrorProgress=Progresso non valido: %1 di %2
 ErrorFileSize=Dimensione file non valida: attesa %1, trovata %2
 
-; *** TExtractionWizardPage wizard page and Extract7ZipArchive
+; *** TExtractionWizardPage wizard page and ExtractArchive
 ExtractingLabel=Estrazione file...
 ButtonStopExtraction=Interrompi e&strazione
 StopExtraction=Sei sicuro di voler interrompere l'estrazione?
@@ -249,7 +249,7 @@ ApplicationsFound2=Le seguenti applicazioni stanno usando file che devono essere
 CloseApplications=Chiudi &automaticamente le applicazioni
 DontCloseApplications=&Non chiudere le applicazioni
 ErrorCloseApplications=L'installazione non è riuscita a chiudere automaticamente tutte le applicazioni.%n%nPrima di proseguire ti raccomandiamo di chiudere tutte le applicazioni che usano file che devono essere aggiornati durante l'installazione.
-PrepareToInstallNeedsRestart=Il programma di installazione deve riavviare il computer.%Per completare l'installazione di [name] dopo aver riavviato il sistema esegui di nuovo il programma di installazione.%n%nVuoi riavviare il sistema?
+PrepareToInstallNeedsRestart=Il programma di installazione deve riavviare il computer. Per completare l'installazione di [name] dopo aver riavviato il sistema esegui di nuovo il programma di installazione.%n%nVuoi riavviare il sistema?
 
 ; *** "Installing" wizard page
 WizardInstalling=Installazione in corso
@@ -262,8 +262,8 @@ FinishedLabel=Installazione di [name] completata.%n%nL'applicazione può essere 
 ClickFinish=Seleziona "Fine" per uscire dall'installazione.
 FinishedRestartLabel=Per completare l'installazione di [name], è necessario riavviare il sistema.%n%nVuoi riavviare il sistema?
 FinishedRestartMessage=Per completare l'installazione di [name], è necessario riavviare il sistema.%n%nVuoi riavviare il sistema?
-ShowReadmeCheck=Si, visualizza ora il file LEGGIMI
-YesRadio=&Si, riavvia il sistema adesso
+ShowReadmeCheck=Sì, visualizza ora il file LEGGIMI
+YesRadio=&Sì, riavvia il sistema adesso
 NoRadio=&No, riavvia il sistema più tardi
 ; used for example as 'Run MyProg.exe'
 RunEntryExec=Esegui %1
@@ -302,7 +302,7 @@ StatusRestartingApplications=Riavvio applicazioni...
 StatusRollback=Recupero delle modifiche...
 
 ; *** Misc. errors
-ErrorInternal2=Errore interno %1
+ErrorInternal2=Errore interno: %1
 ErrorFunctionFailedNoCode=%1 fallito
 ErrorFunctionFailed=%1 fallito; codice %2
 ErrorFunctionFailedWithMessage=%1 fallito; codice %2.%n%3
@@ -361,8 +361,8 @@ ErrorRegisterTypeLib=Impossibile registrare la libreria di tipo: %1
 UninstallDisplayNameMark=%1 (%2)
 ; used for example as 'My Program (32-bit, All users)'
 UninstallDisplayNameMarks=%1 (%2, %3)
-UninstallDisplayNameMark32Bit=32bit
-UninstallDisplayNameMark64Bit=64bit
+UninstallDisplayNameMark32Bit=32-bit
+UninstallDisplayNameMark64Bit=64-bit
 UninstallDisplayNameMarkAllUsers=Tutti gli utenti
 UninstallDisplayNameMarkCurrentUser=Utente attuale
 
