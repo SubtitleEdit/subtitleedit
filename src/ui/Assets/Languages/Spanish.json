@@ -2692,8 +2692,6 @@
       "SurroundWith": "Rodear con...",
       "SurroundWithXY": "Rodear con {0}/{1}",
       "RepeatLine": "Repetir línea",
-      "RepeatPreviousLine": "Repetir línea anterior",
-      "RepeatNextLine": "Repetir línea siguiente",
       "MoveVideoPositionMilliseconds": "Mover vídeo en milisegundos",
       "ImportShortcutsTitle": "Importar atajos",
       "ExportShortcutsTitle": "Exportar atajos",

@@ -2811,8 +2811,6 @@
       "SurroundWith": "Surround con...",
       "SurroundWithXY": "Surround con {0}/{1}",
       "RepeatLine": "Ripeti riga",
-      "RepeatPreviousLine": "Ripeti riga precedente",
-      "RepeatNextLine": "Ripeti riga successiva",
       "MoveVideoPositionMilliseconds": "Sposta posizione video in millisecondi",
       "ImportShortcutsTitle": "Importa definizione tasti rapidi",
       "ExportShortcutsTitle": "Esporta definizione tasti rapidi",
