@@ -22,6 +22,7 @@ public class LanguageMainWaveform
     public string SeekForwardHint { get; set; }
     public string SeekAmountHint { get; set; }
     public string SeekVideo { get; set; }
+    public string ConfigureToolbarItems { get; set; }
 
     public LanguageMainWaveform()
     {
@@ -45,5 +46,6 @@ public class LanguageMainWaveform
         SeekForwardHint = "Seek video forward {0}";
         SeekAmountHint = "Seek amount {0}";
         SeekVideo = "Seek video (<< >>)";
+        ConfigureToolbarItems = "Configure toolbar items...";
     }
 }
