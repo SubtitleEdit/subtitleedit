@@ -187,8 +187,11 @@ public partial class SpeechToTextViewModel : ObservableObject
             Engines.Add(new WhisperEnginePurfviewFasterWhisperXxl());
             Engines.Add(new WhisperEngineConstMe());
         }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) &&
+                 RuntimeInformation.ProcessArchitecture == Architecture.X64)
         {
+            // Purfview only ships Windows and Linux x86_64 builds - there is no Linux ARM64
+            // binary, so don't offer the engine on Linux ARM (it could only fail to run).
             Engines.Add(new WhisperEnginePurfviewFasterWhisperXxl());
         }
 
