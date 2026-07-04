@@ -907,7 +907,7 @@
       "FixCommonErrors": "Corrigir _erros comuns...",
       "CheckAndFixNetflixErrors": "Verificar e corrigir erros da Netfli_x...",
       "MakeEmptyTranslationFromCurrentSubtitle": "Criar nova tradução _vazia a partir da legenda atual",
-      "MergeLinesWithSameText": "_Mersclar linhas com o mesmo texto...",
+      "MergeLinesWithSameText": "_Mesclar linhas com o mesmo texto...",
       "MergeLinesWithSameTimeCodes": "Unir linhas com os mesmos códigos de tempo...",
       "SplitBreakLongLines": "Dividir",
       "EvenlyDistributeLines": "Distribuir linhas uniformemente (por CPS)",
