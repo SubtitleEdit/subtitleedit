@@ -1,8 +1,9 @@
 
 Subtitle Edit Changelog
 
-v5.1.0-beta9 (TBD)
+v5.1.0-beta9 (4th of July 2026)
 
+* Add OpenRouter and Alibaba Qwen3-ASR online speech-to-text engines to Audio to text - OpenRouter reaches Whisper/GPT-4o-transcribe/Groq/Chirp with one key; Alibaba Qwen3-ASR (DashScope) uploads the audio and transcribes asynchronously with sentence timestamps
 * Google Lens Sharp: fix scrambled word order on multi-line subtitles - the text chunks Google returns interleaved between the two lines are now re-ordered top-to-bottom/left-to-right using their bounding boxes - thx fraternl
 * OCR: fix the Dictionary combo box becoming empty after downloading/re-downloading a spell check dictionary
 * Remove redundant "Repeat previous line"/"Repeat next line" shortcuts - use "Play previous (and loop)"/"Play next (and loop)" instead (they also handle multiple selections and no selection) - thx abc16361
