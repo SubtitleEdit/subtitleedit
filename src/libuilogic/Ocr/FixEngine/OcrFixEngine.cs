@@ -332,6 +332,14 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
                 isWordCorrect = true;
             }
 
+            // A hyphenated compound whose parts are each correct (e.g. "vaudeville-veteraan",
+            // "Bailey-gebied") is correct as a whole - so don't hand it to the unknown-word "guess"
+            // path, which would otherwise split it and leave a stray space next to the hyphen. (#12156)
+            if (!isWordCorrect && IsHyphenatedWordOfCorrectParts(result, lineText))
+            {
+                isWordCorrect = true;
+            }
+
             if (!string.IsNullOrEmpty(result) && !isWordCorrect && doTryToGuessUnknownWords)
             {
                 var guesses = new List<string>();
@@ -377,6 +385,36 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
 
         word.FixedWord = result;
         word.IsSpellCheckedOk = isWordCorrect;
+    }
+
+    // True when the word is a hyphenated compound (at least two parts) and every part is a
+    // correct word, a name, or a skipped word. Used to keep valid hyphenated words out of the
+    // unknown-word guess/split path. (#12156)
+    private bool IsHyphenatedWordOfCorrectParts(string word, string lineText)
+    {
+        if (word.IndexOf('-') <= 0)
+        {
+            return false;
+        }
+
+        var parts = word.Split('-', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length < 2)
+        {
+            return false;
+        }
+
+        foreach (var part in parts)
+        {
+            if (!_wordSkipList.Contains(part) &&
+                !_spellCheckManager.IsWordCorrect(part) &&
+                !_spellCheckWordLists.HasName(part) &&
+                !_spellCheckWordLists.HasNameExtended(part, lineText))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private bool IsSpelledCorrect(string s)
