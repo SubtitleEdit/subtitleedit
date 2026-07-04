@@ -1038,7 +1038,7 @@ public partial class SettingsViewModel : ObservableObject
         { WaveformSingleClickActionType.SetVideoposition.ToString(), Se.Language.Waveform.SetVideoposition },
     };
 
-    private static Dictionary<string, string> WaveformSingleClickTextToActionMap => _waveformSingleClickActionToTextMap.ToDictionary(x => x.Value, x => x.Key);
+    private static Dictionary<string, string> WaveformSingleClickTextToActionMap => ReverseTranslationMap(_waveformSingleClickActionToTextMap);
 
     private string MapWaveformSingleClickToTranslation(string singleClickAction)
     {
@@ -1063,7 +1063,7 @@ public partial class SettingsViewModel : ObservableObject
         { WaveformDoubleClickActionType.Play.ToString(), Se.Language.General.Play },
     };
 
-    private static Dictionary<string, string> WaveformDoubleClickTextToActionMap => _waveformDoubleClickActionToTextMap.ToDictionary(x => x.Value, x => x.Key);
+    private static Dictionary<string, string> WaveformDoubleClickTextToActionMap => ReverseTranslationMap(_waveformDoubleClickActionToTextMap);
 
     private string MapWaveformDoubleClickToTranslation(string doubleClickAction)
     {
@@ -1273,7 +1273,7 @@ public partial class SettingsViewModel : ObservableObject
         { SubtitleEnterKeyActionType.GoToNextLine.ToString(), Se.Language.Options.Settings.GridGoToNextLine },
     };
 
-    private static Dictionary<string, string> KeyEnterTextToActionMap => _keyEnterActionToTextMap.ToDictionary(x => x.Value, x => x.Key);
+    private static Dictionary<string, string> KeyEnterTextToActionMap => ReverseTranslationMap(_keyEnterActionToTextMap);
 
     private static string MapFromSelectedSubtitleEnterKeyAction(string action)
     {
@@ -1312,7 +1312,7 @@ public partial class SettingsViewModel : ObservableObject
         { SubtitleSingleClickActionType.GoToSubtitleAndPlayAndFocusTextBox.ToString(), Se.Language.Options.Settings.GridGoToSubtitleAndPlayAndFocusTextBox },
     };
 
-    private static Dictionary<string, string> SingleClickTextToActionMap => _singleClickActionToTextMap.ToDictionary(x => x.Value, x => x.Key);
+    private static Dictionary<string, string> SingleClickTextToActionMap => ReverseTranslationMap(_singleClickActionToTextMap);
 
     private static string MapFromSelectedSubtitleSingleClickAction(string action)
     {
@@ -1370,7 +1370,26 @@ public partial class SettingsViewModel : ObservableObject
         }
     }
 
-    private static Dictionary<string, string> TextToActionMap => _actionToTextMap.ToDictionary(x => x.Value, x => x.Key);
+    // Reverse a code->translated-text map into translated-text->code. A plain
+    // ToDictionary(x => x.Value, ...) throws ArgumentException when a translation gives two
+    // actions the same text (or leaves one empty), which aborts the whole settings save for
+    // that language (#12180). Skip empty translations and keep the first code for a duplicate
+    // so a bad translation can never block saving.
+    private static Dictionary<string, string> ReverseTranslationMap(Dictionary<string, string> codeToText)
+    {
+        var result = new Dictionary<string, string>();
+        foreach (var kv in codeToText)
+        {
+            if (!string.IsNullOrEmpty(kv.Value) && !result.ContainsKey(kv.Value))
+            {
+                result[kv.Value] = kv.Key;
+            }
+        }
+
+        return result;
+    }
+
+    private static Dictionary<string, string> TextToActionMap => ReverseTranslationMap(_actionToTextMap);
 
     private static string MapFromSelectedSubtitleDoubleClickAction(string action)
     {
@@ -2396,10 +2415,41 @@ public partial class SettingsViewModel : ObservableObject
         Window?.Close();
     }
 
+    // Runs the settings save and, if it fails (e.g. no write access to the data folder), logs it
+    // and tells the user instead of letting the exception unwind silently through the global
+    // handler with the dialog left in an ambiguous state (#12180). Returns false on failure.
+    private async Task<bool> TrySaveSettings()
+    {
+        try
+        {
+            SaveSettings();
+            return true;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Failed to save settings");
+            if (Window != null)
+            {
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.General.Error,
+                    string.Format(Se.Language.General.CouldNotSaveFileXErrorY, Se.GetSettingsFilePath(), exception.Message),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+
+            return false;
+        }
+    }
+
     [RelayCommand]
     private async Task CommandOk()
     {
-        SaveSettings();
+        if (!await TrySaveSettings())
+        {
+            return;
+        }
+
         await FileTypeAssociationsManager.SaveFileTypeAssociationsAsync(FileTypeAssociations, Window);
 
         OkPressed = true;
@@ -2409,7 +2459,11 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task Apply()
     {
-        SaveSettings();
+        if (!await TrySaveSettings())
+        {
+            return;
+        }
+
         await FileTypeAssociationsManager.SaveFileTypeAssociationsAsync(FileTypeAssociations, Window);
         _mainViewModel?.ApplySettings();
     }

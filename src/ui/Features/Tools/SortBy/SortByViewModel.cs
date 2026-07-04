@@ -128,8 +128,17 @@ public partial class SortByViewModel : ObservableObject
             { "PixelWidth", lang.PixelWidth }
         };
 
-        // Reverse map for lookup
-        _displayNameToPropertyMap = _propertyTranslationMap.ToDictionary(x => x.Value, x => x.Key);
+        // Reverse map for lookup. Build it defensively (skip empty translations, keep the first
+        // code for a duplicate) so a translation that repeats or omits a display name can't throw
+        // ArgumentException here the way a plain ToDictionary would (see #12180).
+        _displayNameToPropertyMap = new Dictionary<string, string>();
+        foreach (var kv in _propertyTranslationMap)
+        {
+            if (!string.IsNullOrEmpty(kv.Value) && !_displayNameToPropertyMap.ContainsKey(kv.Value))
+            {
+                _displayNameToPropertyMap[kv.Value] = kv.Key;
+            }
+        }
 
         // Add translated display names to the UI
         foreach (var displayName in _propertyTranslationMap.Values)
