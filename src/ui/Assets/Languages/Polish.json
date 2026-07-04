@@ -1,7 +1,7 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.1.0-beta2",
-  "translatedBy": "Adam Malich - 1.07.2026",
+  "version": "v5.1.0-beta8",
+  "translatedBy": "Adam Malich - 3.07.2026",
   "cultureName": "pl-PL",
   "general": {
     "abort": "Przerwij",
@@ -460,6 +460,7 @@
     "replaceWith": "Zastąp przez",
     "requiresRestart": "Wymaga ponownego uruchomienia",
     "reset": "Resetuj",
+    "resizePanels": "Zmień rozmiar paneli",
     "resolution": "Rozdzielczość",
     "resolutionX": "Rozdzielczość: {0}",
     "reverseRightToLeftStartEnd": "Odwróć początek/koniec PDL",
@@ -680,6 +681,7 @@
     "voice": "Głos",
     "volume": "Głośność",
     "warning": "Ostrzeżenie",
+    "waveform": "Przebieg fali",
     "waveformCenterOnVideoPosition": "Środek przebiegu fali w pozycji wideo",
     "waveformPasteFromClipboard": "Wklej ze schowka",
     "waveformSpectrogram": "Przebieg fali/spektrogram",
@@ -791,6 +793,7 @@
       "applyMinGap": "Zastosuj minimalny _odstęp między napisami...",
       "changeCasing": "_Zmień pisownię...",
       "changeFormatting": "Zmień formatowanie...",
+      "aiReview": "Korekta AI...",
       "fixCommonErrors": "_Popraw często popełniane błędy...",
       "checkAndFixNetflixErrors": "Sprawdź i popraw błędy Netfli_x...",
       "makeEmptyTranslationFromCurrentSubtitle": "Utwórz nowe _puste tłumaczenie z bieżących napisów",
@@ -1330,6 +1333,32 @@
     "restoreSelected": "Przywróć zaznaczone"
   },
   "tools": {
+    "aiReview": {
+      "title": "Korekta AI",
+      "review": "Korekta",
+      "stop": "Zatrzymaj",
+      "editPrompt": "Edytuj instrukcję korekty...",
+      "editPromptTitle": "Edycja instrukcji korekty",
+      "promptInfo": "Instrukcje wysyłane do modelu - {language} zostaje zastąpiony językiem napisów.",
+      "protocolInfo": "Subtitle Edit dołącza do zapytania ścisłą specyfikację JSON: wiersze są przesyłane jako ponumerowany format JSON, a model musi udzielić odpowiedzi w postaci prawidłowego formatu JSON zawierającego wyłącznie zmienione wiersze. Odpowiedzi, które naruszają warunki specyfikacji, są ponownie przetwarzane, a następnie pomijane.",
+      "resetToDefault": "Przywróć ustawienia domyślne",
+      "applyXFixes": "Zastosuj {0} poprawek",
+      "xSuggestionsYSelected": "{0} sugestii - wybrano {1}",
+      "reviewingLineXOfY": "Korekta wiersza {0} z {1}...",
+      "reviewDone": "Korekta zakończona – {0} sugestii w {1} wierszach",
+      "noIssuesFound": "Nie znaleziono problemów",
+      "categoryAll": "Wszystko",
+      "categorySpelling": "Ortografia",
+      "categoryGrammar": "Gramatyka",
+      "categoryPunctuation": "Interpunkcja",
+      "categoryCasing": "Pisownia",
+      "categoryOther": "Inne",
+      "xNeedACloserLook": "{0} sugestii wymaga dokładniejszego przyjrzenia się",
+      "lineX": "Linia {0}",
+      "linesXToY": "Linie {0}-{1}",
+      "largeChangeWarning": "Duża zmiana – wygląda na przepisanie, należy to dokładnie sprawdzić",
+      "engineError": "Nie udało się nawiązać połączenia z silnikiem AI: {0}"
+    },
     "fixCommonErrors": {
       "title": "Popraw często popełniane błędy",
       "step1": "Krok 1/2 - Wybierz błędy, które chcesz poprawić",
@@ -1399,6 +1428,7 @@
       "nothingToFix": "Nic do naprawienia :)",
       "fixesFoundX": "Znaleziono poprawki: {0}",
       "xFixesApplied": "Zastosowano poprawki: {0}",
+      "xFixesYSelected": "{0} poprawek – {1} zaznaczonych",
       "nothingFixableBut": "Nie można było niczego naprawić automatycznie. Napisy zawierają błędy – szczegóły w dzienniku.",
       "xFixedBut": "Naprawiono {0} problem(ów), ale napisy nadal zawierają błędy — szczegóły w dzienniku",
       "xCouldBeFixedBut": "Udało się naprawić {0} problemów, ale napisy nadal będą zawierać błędy — szczegóły w dzienniku",
@@ -1480,7 +1510,8 @@
       "extendOnly": "Tylko wydłuż",
       "enforceDurationLimits": "Wymuś minimalny i maksymalny czas trwania",
       "checkShotChanges": "Nie wydłużaj czasu poza zmiany ujęcia",
-      "batchCheckShotChanges": "Szanuj zmiany ujęcia (jeśli dostępne)"
+      "batchCheckShotChanges": "Szanuj zmiany ujęcia (jeśli dostępne)",
+      "recalculateRequiresOcrNote": "Funkcja ponownego obliczenia jest niedostępna — co najmniej jeden napis nie zawiera tekstu OCR. Najpierw uruchom OCR."
     },
     "applyDurationLimits": {
       "title": "Zastosuj limity czasu trwania",
@@ -1800,7 +1831,12 @@
       "resizeImagesInfo": "Wprowadź wartość procentową, o jaką chcesz zmienić rozmiar obrazów.\nPodgląd aktualizuje się automatycznie.",
       "adjustColorDotDotDot": "Dostosuj kolor...",
       "adjustColor": "Dostosuj kolor",
-      "colorAdjustmentInfo": "Kliknij próbkę koloru, aby wybrać kolor. Jasne piksele napisów zostaną przesunięte w kierunku wybranego odcienia; ciemne kontury i cienie zostaną zachowane.\nW podglądzie wyświetlany jest pierwszy wybrany napis."
+      "colorAdjustmentInfo": "Kliknij próbkę koloru, aby wybrać kolor. Jasne piksele napisów zostaną przesunięte w kierunku wybranego odcienia; ciemne kontury i cienie zostaną zachowane.\nW podglądzie wyświetlany jest pierwszy wybrany napis.",
+      "topAlignLines": "Wyrównanie do góry",
+      "bottomAlignLines": "Wyrównanie do dołu",
+      "appendSubtitleDotDotDot": "Dołącz napisy...",
+      "shiftTimeCodes": "Przesuń kody czasowe według",
+      "sortByStartTime": "Sortuj według czasu rozpoczęcia"
     },
     "removeTextForHearingImpaired": {
       "title": "Usuń tekst dla osób niedosłyszących",
@@ -1816,9 +1852,11 @@
       "onlyIfTextIsUppercase": "Tylko, jeśli tekst pisany WIELKIMI LITERAMI",
       "onlyOnSeparateLine": "Tylko, jeśli w oddzielnej linii",
       "ifLineIsUppercase": "Jeśli linia pisana jest WIELKIMI LITERAMI",
+      "keepUppercaseWords": "Zachowaj te słowa (oddzielone przecinkami)",
       "ifLineContains": "Jeśli linia zawiera",
       "ifLineOnlyContainsMusicSymbols": "Jeśli linia zawiera tylko symbole muzyczne",
-      "removeInterjections": "Usuń wykrzykniki"
+      "removeInterjections": "Usuń wykrzykniki",
+      "linesFoundX": "Znalezione linie: {0}"
     },
     "pickAlignmentTitle": "Wybierz wyrównanie",
     "pickFontNameTitle": "Wybierz nazwę czcionki",
@@ -1864,7 +1902,14 @@
     "undoX": "Cofnij: {0}",
     "editWholeText": "Edytuj cały tekst",
     "continueFromCurrentLine": "Czy chcesz kontynuować sprawdzanie pisowni od bieżącego linii?\n\nTak = kontynuuj od bieżącej linii\nNie = zacznij od początku",
-    "continueFromTop": "Sprawdzanie pisowni dotarło do końca napisów.\n\nKontynuować od góry?"
+    "continueFromTop": "Sprawdzanie pisowni dotarło do końca napisów.\n\nKontynuować od góry?",
+    "spellCheckCompleted": "Sprawdzanie pisowni zakończone",
+    "changedWordsX": "Zmienione słowa: {0}",
+    "skippedWordsX": "Pominięte słowa: {0}",
+    "correctWordsX": "Poprawne słowa: {0}",
+    "namesX": "Nazwy własne: {0}",
+    "addedToDictionaryX": "Dodane do słownika: {0}",
+    "doNotShowThisAgain": "Nie pokazuj więcej tego komunikatu"
   },
   "video": {
     "burnIn": {
@@ -1968,6 +2013,16 @@
       "generateSpeechFromText": "Generuj mowę z tekstu",
       "testVoice": "Testuj głos",
       "addAudioToVideoFile": "Dodaj audio do pliku wideo",
+      "engineAndVoice": "Silnik & Głos",
+      "output": "Wyjście",
+      "xLinesFromY": "{0} linii z {1}",
+      "xLines": "{0} linii",
+      "videoX": "Wideo: {0}",
+      "xVoices": "{0} głosów",
+      "reviewAudioSegmentsHint": "Sprawdź każdą linię przed ostatecznym miksowaniem",
+      "addAudioToVideoFileHint": "Zmultiplikuj wynik do nowego pliku wideo",
+      "xElapsedYLeft": "Upłynęło {0} · pozostało ~{1}",
+      "xElapsed": "Upłynęło {0}",
       "voiceSettings": "TTS - Ustawienia głosu",
       "voiceSampleText": "Próbka tekstu głosowego",
       "refreshVoices": "Odśwież głosy",
@@ -2183,8 +2238,10 @@
     "adjustmentX": "Dostosowanie: {0}",
     "totalAdjustmentX": "Ogółem dostosowań: {0}",
     "adjustAllShortcuts": "Skróty klawiaturowe:\r\n\r\n• Shift + Lewo/Prawo: Przesuń 10 ms\r\n• Ctrl + Lewo/Prawo: Przesuń 100 ms\r\n• Alt + Lewo/Prawo: Przesuń 500 ms",
+    "adjustAllShortcutsFrames": "Skróty klawiaturowe:\r\n\r\n• Shift + Lewo/Prawo: Przesuń 1 klatkę\r\n• Ctrl + Lewo/Prawo: Przesuń 10 klatek\r\n• Alt + Lewo/Prawo: Przesuń 1 sekundę",
     "offsetInSeconds": "Przesunięcie w sekundach",
-    "speedFactor": "Współczynnik prędkości"
+    "speedFactor": "Współczynnik prędkości",
+    "showEarlierLaterDotDotDot": "Pokaż wcześniej/później..."
   },
   "translate": {
     "translateViaCopyPaste": "Automatyczne tłumaczenie za pomocą kopiuj/wklej",
@@ -2326,6 +2383,7 @@
       "colorTextTooLong": "Koloruj tekst, jeśli jest zbyt długi",
       "colorTextTooWide": "Koloruj tekst, jeśli jest zbyt szeroki (w pikselach)",
       "colorTextTooManyLines": "Koloruj tekst, jeśli są więcej niż 2 linie",
+      "colorTextTooManyLinesX": "Koloruj tekst, jeśli jest więcej niż {0} linii",
       "colorCharactersPerSecond": "Koloruj \"Znaków/sekundę\", jeśli jest ich zbyt dużo",
       "colorWordsPerMinute": "Koloruj \"Słów/minutę\", jeśli jest ich zbyt dużo",
       "colorOverlap": "Koloruj nakładające się kody czasowe",
@@ -2465,6 +2523,7 @@
       "gridGoToSubtitleAndPause": "Przejdź do napisu i wstrzymaj",
       "gridGoToSubtitleAndPlay": "Przejdź do napisu i odtwórz",
       "gridGoToSubtitleAndPauseAndFocusTextBox": "Przejdź do napisów, wstrzymaj odtwarzanie i zaznacz pole tekstowe",
+      "gridGoToSubtitleAndPlayAndFocusTextBox": "Przejdź do napisów, odtwórz i zaznacz pole tekstowe",
       "subtitleGridFormattingNone": "Brak formatowania",
       "subtitleGridFormattingShowFormatting": "Pokaż formatowanie",
       "subtitleGridFormattingShowTags": "Pokaż tagi",
@@ -2664,6 +2723,14 @@
       "subtitleGridCut": "Siatka napisów: Wytnij",
       "subtitleGridCopy": "Siatka napisów: Kopiuj",
       "subtitleGridPaste": "Siatka napisów: Wklej",
+      "listViewColumnDeleteText": "Kolumna, usuń tekst",
+      "listViewColumnDeleteTextAndShiftUp": "Kolumna, usuń tekst i przesuń w górę",
+      "listViewColumnInsertText": "Kolumna, wstaw tekst",
+      "listViewColumnPaste": "Kolumna, wklej",
+      "listViewColumnTextUp": "Kolumna, tekst w górę",
+      "listViewColumnTextDown": "Kolumna, tekst w dół",
+      "autoTranslateSelectedLines": "Automatyczne tłumaczenie wybranych linii...",
+      "setAssaResolution": "Ustaw rozdzielczość ASSA (PlayResX/PlayResY)",
       "setShortcutForX": "Ustaw skrót dla \"{0}\"",
       "commandFileNewKeepVideo": "Nowy (zachowaj wideo)",
       "fileOpenOriginal": "Otwórz oryginał",
