@@ -49,7 +49,7 @@ VersionInfoVersion={#app_ver_full}
 VersionInfoDescription={#app_name} installer
 VersionInfoProductName={#app_name}
 
-UninstallDisplayName={#app_name}
+UninstallDisplayName={#app_name} {#app_ver_full}
 UninstallDisplayIcon={app}\SubtitleEdit.exe
 
 WizardStyle=modern
