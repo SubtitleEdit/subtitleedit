@@ -313,7 +313,7 @@ public class FfmpegGenerator
 
     public static string GetScreenShot(string inputFileName, string timeCode, string colorMatrix = "")
     {
-        timeCode = timeCode.Replace(',', '.');
+        timeCode = NormalizeFfmpegTimeCode(timeCode);
         var outputFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
         var vfMatrix = string.Empty;
         if (!string.IsNullOrEmpty(colorMatrix))
@@ -368,6 +368,35 @@ public class FfmpegGenerator
     private static bool HasFrame(string fileName)
     {
         return File.Exists(fileName) && new FileInfo(fileName).Length > 0;
+    }
+
+    // ffmpeg's -ss accepts "[HH:]MM:SS[.ms]" or plain seconds. A caller may pass a UI-formatted
+    // time code, and when the "HH:MM:SS:FF" time-code format is enabled that becomes a four-field
+    // "00:01:23:15" which ffmpeg cannot parse - it extracts no frame and the preview goes blank
+    // (#12182). Normalize the decimal comma and convert a trailing frame field to fractional
+    // seconds so the ffmpeg boundary is safe regardless of the caller's display setting.
+    private static string NormalizeFfmpegTimeCode(string timeCode)
+    {
+        timeCode = timeCode.Replace(',', '.');
+
+        var parts = timeCode.Split(':');
+        if (parts.Length == 4 &&
+            int.TryParse(parts[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var hh) &&
+            int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var mm) &&
+            int.TryParse(parts[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out var ss) &&
+            int.TryParse(parts[3], NumberStyles.Integer, CultureInfo.InvariantCulture, out var ff))
+        {
+            var frameRate = Configuration.Settings.General.CurrentFrameRate;
+            if (frameRate < 1)
+            {
+                frameRate = 25;
+            }
+
+            var totalSeconds = (hh * 3600) + (mm * 60) + ss + (ff / frameRate);
+            return totalSeconds.ToString("0.###", CultureInfo.InvariantCulture);
+        }
+
+        return timeCode;
     }
 
     internal static string? GetScreenShotWithSubtitle(Subtitle previewSubtitle, int width, int height)
