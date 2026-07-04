@@ -239,15 +239,26 @@ public class Se
             Directory.CreateDirectory(directory);
         }
 
-        // Atomic write: serialize directly to a temp file (UTF-8, no string round-trip)
-        // and replace, so a process kill mid-write can't leave a truncated settings file.
-        var tempFileName = settingsFileName + ".tmp";
-        using (var stream = System.IO.File.Create(tempFileName))
+        try
         {
-            JsonSerializer.Serialize(stream, Settings, SeJsonContext.Default.Se);
-        }
+            // Atomic write: serialize directly to a temp file (UTF-8, no string round-trip)
+            // and replace, so a process kill mid-write can't leave a truncated settings file.
+            var tempFileName = settingsFileName + ".tmp";
+            using (var stream = System.IO.File.Create(tempFileName))
+            {
+                JsonSerializer.Serialize(stream, Settings, SeJsonContext.Default.Se);
+            }
 
-        System.IO.File.Move(tempFileName, settingsFileName, overwrite: true);
+            System.IO.File.Move(tempFileName, settingsFileName, overwrite: true);
+        }
+        catch (Exception exception)
+        {
+            // Log with context (e.g. no write access to the data folder) and rethrow so callers
+            // that can show UI - like the settings dialog - can tell the user the save failed
+            // instead of it disappearing silently (#12180).
+            Se.LogError(exception, $"Failed to save settings to '{settingsFileName}'");
+            throw;
+        }
 
         UpdateLibSeSettings();
     }

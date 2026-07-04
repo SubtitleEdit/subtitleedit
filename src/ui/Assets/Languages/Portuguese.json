@@ -2414,6 +2414,7 @@
       "gridGoToSubtitleAndPause": "Ir para a legenda e pausar",
       "gridGoToSubtitleAndPlay": "Ir para a legenda e reproduzir",
       "gridGoToSubtitleAndPauseAndFocusTextBox": "Ir para a legenda, pausar e focar a caixa de texto",
+      "gridGoToSubtitleAndPlayAndFocusTextBox": "Ir para a legenda, reproduzir e focar a caixa de texto",
       "subtitleGridFormattingNone": "Sem formatação",
       "subtitleGridFormattingShowFormatting": "Mostrar formatação",
       "subtitleGridFormattingShowTags": "Mostrar etiquetas",
