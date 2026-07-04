@@ -19459,13 +19459,21 @@ public partial class MainViewModel :
                     HandleShiftArrowSelection(Subtitles.Count); // clamps to Count - 1
                     return;
                 }
-                else if (keyEventArgs.Key == Key.Home && keyEventArgs.KeyModifiers == KeyModifiers.None && Subtitles.Count > 0)
+                // Handle Ctrl+Home/End the same as plain Home/End: Ctrl is the habitual
+                // "go to top/bottom" chord, and routing it through SelectAndScrollToRow reuses the
+                // reliable scroll (EnsureRowFullyVisibleInSubtitleGrid) instead of falling through to
+                // Avalonia's default DataGrid navigation, which leaves the last row partially visible (#12173).
+                else if (keyEventArgs.Key == Key.Home &&
+                         (keyEventArgs.KeyModifiers == KeyModifiers.None || keyEventArgs.KeyModifiers == KeyModifiers.Control) &&
+                         Subtitles.Count > 0)
                 {
                     keyEventArgs.Handled = true;
                     SelectAndScrollToRow(0);
                     return;
                 }
-                else if (keyEventArgs.Key == Key.End && keyEventArgs.KeyModifiers == KeyModifiers.None && Subtitles.Count > 0)
+                else if (keyEventArgs.Key == Key.End &&
+                         (keyEventArgs.KeyModifiers == KeyModifiers.None || keyEventArgs.KeyModifiers == KeyModifiers.Control) &&
+                         Subtitles.Count > 0)
                 {
                     keyEventArgs.Handled = true;
                     SelectAndScrollToRow(Subtitles.Count - 1);
