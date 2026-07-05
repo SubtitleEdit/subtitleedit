@@ -12614,6 +12614,52 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void WaveformSetStartAndGoToNext()
+    {
+        // SE4 parity: stamp the current video position as the selected line's start time and
+        // immediately advance to the next line, for rapid lyric/LRC synchronisation (#12165).
+        // Mirrors WaveformSetStart (start only, ASSA multi-select aware) plus the go-to-next
+        // from WaveformSetEndAndGoToNext.
+        var s = SelectedSubtitle;
+        var vp = GetVideoPlayerControl();
+        if (s == null || vp == null || LockTimeCodes)
+        {
+            return;
+        }
+
+        var idx = Subtitles.IndexOf(s);
+        if (idx < 0)
+        {
+            return;
+        }
+
+        var videoPositionSeconds = vp.Position;
+        var gap = Se.Settings.General.MinimumBetweenLines.GetMilliseconds() / 1000.0;
+        if (videoPositionSeconds >= s.EndTime.TotalSeconds - gap)
+        {
+            return;
+        }
+
+        var isAssa = SelectedSubtitleFormat is AdvancedSubStationAlpha;
+        if (isAssa)
+        {
+            var selectedItems = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>().ToList();
+            foreach (var item in selectedItems)
+            {
+                item.SetStartTimeOnly(TimeSpan.FromSeconds(videoPositionSeconds));
+            }
+        }
+        else
+        {
+            s.SetStartTimeOnly(TimeSpan.FromSeconds(videoPositionSeconds));
+        }
+
+        SelectAndScrollToRow(idx + 1);
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
     private void WaveformSetStartAndKeepDuration()
     {
         var s = SelectedSubtitle;

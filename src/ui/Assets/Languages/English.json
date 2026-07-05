@@ -512,6 +512,7 @@
     "setOutCueToClosestShotChangeLeftGreenZone": "Set out-cue to closest shot change (snap to left green zone)",
     "setOutCueToClosestShotChangeRightGreenZone": "Set out-cue to closest shot change (snap to right green zone)",
     "setStart": "Set start",
+    "setStartAndGoToNext": "Set start and go to next",
     "setStartAndKeepDuration": "Set start and keep duration",
     "setStartAndOffsetTheRest": "Set start and offset the rest",
     "setUpLikeSubtitleEdit4": "Set up like Subtitle Edit 4 (theme, shortcuts, replace rules)",
