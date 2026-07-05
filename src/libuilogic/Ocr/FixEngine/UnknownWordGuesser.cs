@@ -24,6 +24,30 @@ public static class UnknownWordGuesser
         { "deu", new[] { "der", "die", "das", "und", "zu", "in" } }
     };
 
+    // Languages that form closed compounds by concatenating words, so a long unknown word is
+    // normally a legitimate compound of two valid words (e.g. Dutch "modderwarboel" = "modder" +
+    // "warboel", "zwaardengooier" = "zwaarden" + "gooier") rather than a lost-space OCR error.
+    // The phonetic consonant-seam splitting in GenerateSmartSplits must not run for these, or it
+    // "fixes" correct compounds by breaking them into two words (#12200). The curated affix and
+    // particle splits above stay enabled - they isolate a fragment that is not itself a word, so
+    // the spell-checked guess only wins on a genuine merge.
+    private static readonly HashSet<string> CompoundingLanguages = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "nld", "dut",        // Dutch
+        "deu", "ger",        // German
+        "afr",               // Afrikaans
+        "dan",               // Danish
+        "nor", "nob", "nno", // Norwegian
+        "swe",               // Swedish
+        "isl", "ice",        // Icelandic
+        "fin",               // Finnish
+        "fao",               // Faroese
+        "fry",               // Frisian
+        "ltz",               // Luxembourgish
+        "hun",               // Hungarian
+        "est",               // Estonian
+    };
+
     public static IEnumerable<string> CreateGuessesFromLetters(string word, string threeLetterIsoLanguageName)
     {
         if (string.IsNullOrWhiteSpace(word) || word.Length < 4) // Lowered to 4 to catch "ofit"
@@ -81,8 +105,8 @@ public static class UnknownWordGuesser
             }
         }
 
-        // 3. Smart Phonetic Splits
-        if (word.Length > 7)
+        // 3. Smart Phonetic Splits (skipped for closed-compounding languages - see #12200)
+        if (word.Length > 7 && !CompoundingLanguages.Contains(lang))
         {
             foreach (var split in GenerateSmartSplits(word, vowels))
             {
