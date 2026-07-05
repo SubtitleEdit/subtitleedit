@@ -1,7 +1,7 @@
 {
   "Title": "SubtitleEdit",
-  "Version": "v. 5.1.0 beta8",
-  "TranslatedBy": "v. 04.07.2026 di bovirus",
+  "Version": "v. 5.1.0 beta11",
+  "TranslatedBy": "v. 05.07.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -512,6 +512,7 @@
     "SetOutCueToClosestShotChangeLeftGreenZone": "Imposta l'indicazione al cambio inquadratura più vicino (aggancio alla zona verde sinistra)",
     "SetOutCueToClosestShotChangeRightGreenZone": "Imposta l'indicazione al cambio inquadratura più vicino (aggancio alla zona verde destra)",
     "SetStart": "Imposta inizio",
+    "SetStartAndGoToNext": "Imposta inizio e vai al successivo",
     "SetStartAndKeepDuration": "Imposta l'inizio e mantieni la durata",
     "SetStartAndOffsetTheRest": "Imposta l'inizio e compensa il resto",
     "SetUpLikeSubtitleEdit4": "Configurato come Subtitle Edit 4 (tema, scorciatoie, regole sostituzione)",
@@ -667,6 +668,7 @@
     "VideoFile": "File video",
     "VideoFileGeneratedX": "File video generato: '{0}'",
     "VideoFiles": "File video",
+    "VideoAndAudioFiles": "File video e audio",
     "VideoInformation": "Info video",
     "VideoOffset": "Offset video",
     "VideoOneFrameBack": "Video, un fotogramma indietro",
@@ -729,6 +731,9 @@
     "OpenAiCompatibleSttLanguage": "Suggerimento ingua",
     "OpenAiCompatibleSttTemperature": "Temperatura",
     "OpenAiCompatibleSttPrompt": "Prompt",
+    "DashScopeSttRegion": "Regione",
+    "DashScopeSttEnableWords": "Timestamp a livello di parola",
+    "OnlineSttApiKeyMissing": "È richiesta una chiave API.\r\nInserisci la chiave API e riprova.",
     "OpenAiCompatibleSttAutoTranscribeOnAudioSelection": "Trascrizione automatica selezione nuova forma d'onda tramite sintesi vocale",
     "OpenAiCompatibleSttStream": "Risposta streaming",
     "OpenAiCompatibleSttStreamHint": "Per ricevere delta di testo in tempo reale (SSE) invia 'stream=true'.\r\nDisabilita per i server che rifiutano il parametro 'stream' (ad esempio Groq).",
@@ -1032,7 +1037,12 @@
       "HideWaveformToolbar": "Nascondi barra strumenti {0}",
       "ResetZoomAndSpeed": "Reimposta zoom e velocità riproduzione {0}",
       "RemoveBlankLines": "Rimuovi righe vuote {0}",
-      "PlaySelectedRepeatHint": "Riproduci sottotitoli selezionati in modalità ripetizione {0}"
+      "PlaySelectedRepeatHint": "Riproduci sottotitoli selezionati in modalità ripetizione {0}",
+      "SeekBackHint": "Cerca video all'indietro {0}",
+      "SeekForwardHint": "Cerca video in avanti {0}",
+      "SeekAmountHint": "Cerca importo {0}",
+      "SeekVideo": "Cerca video (<< >>)",
+      "ConfigureToolbarItems": "Configura elementi barra strumenti..."
     }
   },
   "File": {
@@ -2164,7 +2174,14 @@
       "NoActorsFoundMessage": "Nessun attore trovato.\r\nImposta prima il campo Attore nelle righe dei sottotitoli.",
       "NoWebVttVoicesFoundMessage": "Nessuna voce <v Name> trovata nel file WebVTT.",
       "MergeContinuationLinesPromptTitle": "Vuoi unire le righe di continuazione?",
-      "MergeContinuationLinesPromptMessage": "Alcune righe sembrano essere una singola frase suddivisa in più sottotitoli.\r\n\r\nUnirle prima della generazione consente al motore TTS di pronunciare ogni pensiero come un unico gruppo di respiri, il che di solito suona più naturale.\r\n\r\n\r\nRivedere e applicare le unioni adesso?"
+      "MergeContinuationLinesPromptMessage": "Alcune righe sembrano essere una singola frase suddivisa in più sottotitoli.\r\n\r\nUnirle prima della generazione consente al motore TTS di pronunciare ogni pensiero come un unico gruppo di respiri, il che di solito suona più naturale.\r\n\r\n\r\nRivedere e applicare le unioni adesso?",
+      "UpdateSubtitleTitle": "Vuoi aggiornare i sottotitoli?",
+      "UpdateSubtitleFromReviewSingular": "Durante la revisione del discorso generato hai modificato il testo di una riga.\r\n\r\nVuoi aggiornare il sottotitolo con questa modifica in modo che il testo rimanga sincronizzato con l'audio?",
+      "UpdateSubtitleFromReviewPlural": "Durante la revisione del discorso generato hai modificato il testo di {0} righe.\r\n\r\nVuoi aggiornare il sottotitolo con queste modifiche in modo che il testo rimanga sincronizzato con l'audio?",
+      "ReviewMergedLinesNotUpdatedSingular": "Una riga modificata è stata unita prima della generazione e non è stato possibile aggiornarla automaticamente.",
+      "ReviewMergedLinesNotUpdatedPlural": "{0} righe modificate sono state unite prima della generazione e non è stato possibile aggiornarle automaticamente.",
+      "SubtitleUpdatedFromReviewSingular": "Aggiornata una riga dalla revisione del discorso",
+      "SubtitleUpdatedFromReviewPlural": "Aggiornate {0} righe dalla revisione del discorso"
     },
     "ShotChanges": {
       "TitleGenerateOrImport": "Genera/importa cambi inquadrature",
@@ -2458,6 +2475,7 @@
       "DefaultSaveAsFormat": "Formato predefinito 'Salva con nome'.",
       "FavoriteSubtitleFormats": "Formati sottotitoli preferiti",
       "FavoriteLanguages": "Lingue preferite",
+      "WebVttUseXTimestampMap": "WebVTT: usa X-TIMESTAMP-MAP (codici temporali offset del caricamento)",
       "ShowStopButton": "Visualizza pulsante 'Stop'",
       "ShowFullscreenButton": "Visualizza pulsante 'Schermo intero'",
       "FullscreenHideControls": "Nascondi controlli video a schermo intero",
