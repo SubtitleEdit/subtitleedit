@@ -17045,7 +17045,7 @@ public partial class MainViewModel :
             try
             {
                 if (!await PromptSaveChanges(Se.Language.General.SaveChangesMessage,
-                        async () => { await SaveSubtitle(); return true; }))
+                        () => SaveSubtitle()))
                 {
                     // Stay cancelled - window won't close
                     return;
@@ -21709,7 +21709,7 @@ public partial class MainViewModel :
         e.Cancel = true;
 
         if (!await PromptSaveChanges(Se.Language.General.SaveChangesMessage,
-                async () => { await SaveSubtitle(); return true; }))
+                () => SaveSubtitle()))
         {
             return;
         }
