@@ -197,6 +197,21 @@ namespace Nikse.SubtitleEdit
                     }
                 }
 
+                // Force-terminate the process once the primary window closes. Under
+                // ShutdownMode.OnLastWindowClose a single stray window is enough to keep the app
+                // alive as an invisible background process - e.g. a leaked non-taskbar "please
+                // wait" progress window or an undocked video/audio window. Such a lingering process
+                // holds file/current-directory handles and locks the folder it was working in,
+                // which the user then can't delete or move (#12172). The main window's own
+                // OnClosing has already saved settings and run CleanUp() by the time Closed fires,
+                // and Closed never fires on a cancelled (unsaved-changes) close, so exiting here is
+                // safe and guarantees shutdown regardless of any window, native thread, or child
+                // handle still lingering.
+                if (lifetime.MainWindow != null)
+                {
+                    lifetime.MainWindow.Closed += (_, _) => Environment.Exit(0);
+                }
+
 #if DEBUG
                 Application.Current?.AttachDeveloperTools();
 #endif
