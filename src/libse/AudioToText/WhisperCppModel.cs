@@ -102,66 +102,66 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             new WhisperModel
             {
                 Name = "tiny.en",
-                Size = "74 MB",
+                Size = "77.7 MB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-tiny.en.bin" },
             },
             new WhisperModel
             {
                 Name = "tiny",
-                Size = "74 MB",
+                Size = "77.7 MB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-tiny.bin" },
             },
             new WhisperModel
             {
                 Name = "tiny.en-q5_1",
-                Size = "32 MB",
+                Size = "32.2 MB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-tiny.en-q5_1.bin" },
             },
             new WhisperModel
             {
                 Name = "tiny-q5_1",
-                Size = "32 MB",
+                Size = "32.2 MB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-tiny-q5_1.bin" },
             },
             new WhisperModel
             {
                 Name = "base.en",
-                Size = "141 MB",
+                Size = "148 MB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-base.en.bin" },
             },
             new WhisperModel
             {
                 Name = "base",
-                Size = "141 MB",
+                Size = "148 MB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-base.bin" },
             },
             new WhisperModel
             {
                 Name = "base.en-q5_1",
-                Size = "60 MB",
+                Size = "59.7 MB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-base.en-q5_1.bin" },
             },
             new WhisperModel
             {
                 Name = "base-q5_1",
-                Size = "60 MB",
+                Size = "59.7 MB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-base-q5_1.bin" },
             },
             new WhisperModel
             {
                 Name = "small.en",
-                Size = "465 MB",
+                Size = "488 MB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-small.en.bin" },
             },
             new WhisperModel
             {
                 Name = "small",
-                Size = "465 MB",
+                Size = "488 MB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-small.bin" },
             },
             new WhisperModel
             {
-                Name = "small.en-q5_1.bin",
+                Name = "small.en-q5_1",
                 Size = "190 MB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-small.en-q5_1.bin" },
             },
@@ -174,13 +174,13 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             new WhisperModel
             {
                 Name = "medium.en",
-                Size = "1.42 GB",
+                Size = "1.53 GB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-medium.en.bin" },
             },
             new WhisperModel
             {
                 Name = "medium",
-                Size = "1.42 GB",
+                Size = "1.53 GB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-medium.bin" },
             },
             new WhisperModel
@@ -198,37 +198,37 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             new WhisperModel
             {
                 Name = "large-v1",
-                Size = "2.88 GB",
+                Size = "3.09 GB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-large-v1.bin" },
             },
             new WhisperModel
             {
                 Name = "large-v2",
-                Size = "2.88 GB",
+                Size = "3.09 GB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-large-v2.bin" },
             },
             new WhisperModel
             {
                 Name = "large",
-                Size = "2.88 GB",
+                Size = "3.1 GB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-large-v3.bin" },
             },
             new WhisperModel
             {
                 Name = "large-q5_0",
-                Size = "2.88 GB",
+                Size = "1.08 GB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-large-v3-q5_0.bin" },
             },
             new WhisperModel
             {
                 Name = "large-v3-turbo",
-                Size = "1.5 GB",
+                Size = "1.62 GB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-large-v3-turbo.bin" },
             },
             new WhisperModel
             {
                 Name = "large-v3-turbo-q5_0",
-                Size = "547 MB",
+                Size = "574 MB",
                 Urls = new []{ DownloadUrlPrefix + "ggml-large-v3-turbo-q5_0.bin" },
             },
 
@@ -257,7 +257,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
             {
                 Name = "medium.nb",
                 Rename = true,
-                Size = "1.5 GB Norwegian",
+                Size = "1.53 GB Norwegian",
                 Urls = new []{ "https://huggingface.co/NbAiLab/nb-whisper-medium/resolve/main/ggml-model.bin" },
             },
             new WhisperModel
