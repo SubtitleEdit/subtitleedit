@@ -1,7 +1,7 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.1.0-beta6",
-  "translatedBy": "Utku Gogus; Son güncelleme: Ahmet Murat Özhan (03.07.2026)",
+  "version": "v5.1.0-beta11",
+  "translatedBy": "Utku Gogus; Son güncelleme: Ahmet Murat Özhan (05.07.2026)",
   "cultureName": "tr-TR",
   "general": {
     "abort": "İptal",
@@ -513,6 +513,7 @@
     "setOutCueToClosestShotChangeLeftGreenZone": "Bitiş zamanını en yakın sahne değişimine ayarla (sol yeşil bölgeye hizala)",
     "setOutCueToClosestShotChangeRightGreenZone": "Bitiş zamanını en yakın sahne değişimine ayarla (sağ yeşil bölgeye hizala)",
     "setStart": "Başlangıç ayarla",
+	"setStartAndGoToNext": "Başlangıcı ayarla ve sonrakine git",
 	"setStartAndKeepDuration": "Başlangıcı ayarla ve süreyi koru",
     "setStartAndOffsetTheRest": "Başlangıcı ayarla ve geri kalanını kaydır",
 	"setUpLikeSubtitleEdit4": "Subtitle Edit 4 gibi kur (tema, kısayollar, değiştirme kuralları)",
@@ -667,6 +668,7 @@
     "videoEncodingX": "Video kodlaması: {0}",
     "videoExtension": "Video dosyası uzantısı",
     "videoFile": "Video dosyası",
+	"videoAndAudioFiles": "Video ve ses dosyaları",
     "videoFileGeneratedX": "Video dosyası oluşturuldu: \"{0}\"",
     "videoFiles": "Video dosyaları",
     "videoInformation": "Video bilgisi",
@@ -731,6 +733,9 @@
     "openAiCompatibleSttLanguage": "Dil İpucu",
     "openAiCompatibleSttTemperature": "Sıcaklık",
     "openAiCompatibleSttPrompt": "Komut istemi",
+	"dashScopeSttRegion": "Bölge",
+	"dashScopeSttEnableWords": "Kelime düzeyinde zaman damgaları",
+	"onlineSttApiKeyMissing": "Bir API anahtarı gereklidir. Lütfen API anahtarınızı girip tekrar deneyin.",
     "openAiCompatibleSttAutoTranscribeOnAudioSelection": "Ses dalgası üzerindeki yeni seçimi ses tanıma ile otomatik yazıya dök",
     "openAiCompatibleSttStream": "Yanıtı akış olarak al",
     "openAiCompatibleSttStreamHint": "Canlı metin parçacıkları (SSE) almak için 'stream=true' gönderir. 'stream' parametresini reddeden sunucular (örn. Groq) için bunu devre dışı bırakın.",
@@ -876,7 +881,7 @@
       "filterLayersForDisplayDotDotDot": "Görüntülenecek katmanları filtrele...",
       "toggleSelectSubtitleWhilePlayingCurrentlyOn": "Oynatırken alt yazıyı seçmeyi aç/kapat (şu anda: açık)",
       "toggleSelectSubtitleWhilePlayingCurrentlyOff": "Oynatırken alt yazıyı seçmeyi aç/kapat (şu anda: kapalı)",
-	  "selectSubtitleWhilePlaying": "Oynatılırken alt yazıyı seç"
+	  "selectSubtitleWhilePlaying": "Oynatılırken geçerli alt yazıyı seç"
     },
     "toolbar": {
       "newHint": "Yeni bir alt yazı dosyası başlat {0}",
@@ -921,7 +926,12 @@
       "hideWaveformToolbar": "Araç çubuğunu gizle {0}",
       "resetZoomAndSpeed": "Yakınlaştırmayı ve oynatma hızını sıfırla {0}",
       "removeBlankLines": "Boş satırları kaldır {0}",
-      "playSelectedRepeatHint": "Seçili alt yazıları tekrar modunda oynat {0}"
+      "playSelectedRepeatHint": "Seçili alt yazıları tekrar modunda oynat {0}",
+	  "seekBackHint": "Videoyu {0} geri sar",
+	  "seekForwardHint": "Videoyu {0} ileri sar",
+	  "seekAmountHint": "Sarılacak süre/kare: {0}",
+	  "seekVideo": "Videoyu sar (<< >>)",
+	  "configureToolbarItems": "Araç çubuğu ögelerini yapılandır..."
     },
     "audioTrackIsNowX": "Ses izi artık \"{0}\"",
     "audioTrackX": "Ses izi {0}",
@@ -1100,7 +1110,7 @@
       "subtitleWithManuallyChosenEncodingDotDotDot": "_Elle seçilmiş kodlamalı alt yazı...",
       "titleImportImages": "Resimleri içe aktar",
       "importFileLabel": "İçe aktarılacak resimleri seçin (dosya adlarında zaman kodları desteklenir)",
-      "importFilesInfo": "Zaman kodlu dosya adlarını kullanın:\nbaslangic_SS_DD_SN_MMM__bitis_SS_DD_SN_MMM[_indeks].uzanti\n\nÖrnekler:\n0_00_01_042__0_00_03_919_0001.png\n0_00_01_042__0_00_03_919.png\n\nKurallar:\n• Başlangıç ve bitiş zamanları için SS_DD_SN_MMM\n• Çift alt çizgi başlangıç/bitişi ayırır\n• Bitiş zamanından sonra isteğe bağlı indeks",
+      "importFilesInfo": "Zaman kodlu dosya adlarını kullanın:\r\nbaslangic_SS_DD_SN_MMM__bitis_SS_DD_SN_MMM[_indeks].uzanti\r\n\r\nÖrnekler:\r\n0_00_01_042__0_00_03_919_0001.png\r\n0_00_01_042__0_00_03_919.png\r\n\r\nKurallar:\r\n• Başlangıç ve bitiş zamanları için SS_DD_SN_MMM\r\n• Çift alt çizgi başlangıç/bitişi ayırır\r\n• Bitiş zamanından sonra isteğe bağlı indeks",
       "formattingDotDotDot": "Biçimlendiriliyor...",
       "imageBasedSubtitleForEditDotDotDot": "Düzenleme için resim tabanlı alt yazı...",
       "imageBasedSubtitleForOcrDotDotDot": "OCR için resim tabanlı alt yazı...",
@@ -1218,10 +1228,11 @@
       "codePage": "Kod sayfası"
     },
     "restoreAutoBackup": {
-      "restoreXFromY": "\"{0}\" dosyasını {1} tarihinden geri yüklemek ister misiniz?",
       "title": "Otomatik yedekten geri yükle",
+	  "xBackups": "{0} yedek",
       "openAutoBackupFolder": "Otomatik yedek klasörünü aç",
       "restoreAutoBackupFile": "Otomatik yedek dosyasını geri yükle",
+	  "restoreXFromY": "\"{0}\" dosyasını {1} tarihinden geri yüklemek ister misiniz?",
       "deleteAllSubtitleBackups": "Tüm alt yazı yedek dosyalarını silmek istiyor musunuz?",
       "deleteAll": "Tümünü sil"
     },
@@ -2098,7 +2109,14 @@
       "noActorsFoundMessage": "Hiçbir aktör bulunamadı. Önce alt yazı satırlarındaki \"Aktör\" alanını doldurun.",
       "noWebVttVoicesFoundMessage": "WebVTT dosyasında hiçbir <v Ad> (ses) etiketi bulunamadı.",
       "mergeContinuationLinesPromptTitle": "Ardışık satırlar birleştirilsin mi?",
-      "mergeContinuationLinesPromptMessage": "Bazı satırlar, birden fazla alt yazıya bölünmüş tek bir cümle gibi görünüyor.\n\nSes üretiminden önce bunları birleştirmek, TTS motorunun her bir düşünceyi tek bir nefes grubu olarak seslendirmesini sağlar ve bu da genellikle daha doğal duyulur.\n\nBirleştirmeleri şimdi gözden geçirip uygulamak ister misiniz?"
+      "mergeContinuationLinesPromptMessage": "Bazı satırlar, birden fazla alt yazıya bölünmüş tek bir cümle gibi görünüyor.\n\nSes üretiminden önce bunları birleştirmek, TTS motorunun her bir düşünceyi tek bir nefes grubu olarak seslendirmesini sağlar ve bu da genellikle daha doğal duyulur.\n\nBirleştirmeleri şimdi gözden geçirip uygulamak ister misiniz?",
+	  "updateSubtitleTitle": "Alt yazı güncellensin mi?",
+	  "updateSubtitleFromReviewSingular": "Oluşturulan sesi incelerken bir satırın metnini düzenlediniz.\r\n\r\nMetnin sesle senkronize kalması için alt yazıyı bu değişiklikle güncellemek ister misiniz?",
+	  "updateSubtitleFromReviewPlural": "Oluşturulan sesi incelerken {0} satırın metnini düzenlediniz.\r\n\r\nMetnin sesle senkronize kalması için alt yazıyı bu değişikliklerle güncellemek ister misiniz?",
+	  "reviewMergedLinesNotUpdatedSingular": "Düzenlenen bir satır, ses oluşturulmadan önce birleştirildiğinden otomatik olarak güncellenemedi.",
+	  "reviewMergedLinesNotUpdatedPlural": "Düzenlenen {0} satır, ses oluşturulmadan önce birleştirildiğinden otomatik olarak güncellenemedi.",
+	  "subtitleUpdatedFromReviewSingular": "Ses incelemesindeki değişikliklere göre bir satır güncellendi",
+	  "subtitleUpdatedFromReviewPlural": "Ses incelemesindeki değişikliklere göre {0} satır güncellendi"
     },
     "shotChanges": {
       "titleGenerateOrImport": "Sahne değişimlerini oluştur/içe aktar",
@@ -2451,6 +2469,7 @@
       "defaultSaveAsFormat": "Varsayılan \"Farklı kaydet\" formatı",
       "favoriteSubtitleFormats": "Favori alt yazı formatları",
 	  "favoriteLanguages": "Favori diller",
+	  "webVttUseXTimestampMap": "WebVTT: X-TIMESTAMP-MAP kullan (yükleme sırasında zaman kodlarını ötele)",
       "showStopButton": "Durdur butonunu göster",
       "showFullscreenButton": "Tam ekran butonunu göster",
       "fullscreenHideControls": "Tam ekranda video kontrollerini gizle",
@@ -2817,8 +2836,6 @@
       "surroundWith": "Şununla çevrele...",
       "surroundWithXY": "{0}/{1} ile çevrele",
       "repeatLine": "Satırı tekrarla",
-      "repeatPreviousLine": "Önceki satırı tekrarla",
-      "repeatNextLine": "Sonraki satırı tekrarla",
       "moveVideoPositionMilliseconds": "Video konumunu milisaniye olarak taşı",
       "importShortcutsTitle": "Kısayolları içe aktar",
       "exportShortcutsTitle": "Kısayolları dışa aktar",
