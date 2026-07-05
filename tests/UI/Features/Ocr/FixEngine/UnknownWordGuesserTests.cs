@@ -44,12 +44,33 @@ public class UnknownWordGuesserTests
         Assert.DoesNotContain("vaudeville -veteraan", guesses);
     }
 
-    // Ordinary (non-hyphenated) words are still split, so the fix does not disable the feature.
+    // The phonetic split still works for non-compounding languages, so the feature is not disabled.
     [Fact]
     public void CreateGuessesFromLetters_PlainWord_StillSplitsBetweenConsonants()
     {
-        var guesses = UnknownWordGuesser.CreateGuessesFromLetters("werkplek", "nld").ToList();
+        var guesses = UnknownWordGuesser.CreateGuessesFromLetters("helpdesk", "eng").ToList();
 
-        Assert.Contains("werk plek", guesses);
+        Assert.Contains("help desk", guesses);
+    }
+
+    // Regression test for https://github.com/SubtitleEdit/subtitleedit/issues/12200
+    // "Fix common OCR errors" split legitimate Dutch closed compounds into two words (e.g.
+    // "modderwarboel" -> "modder warboel"), because the smart-split heuristic treated any long
+    // word whose halves are both valid as a lost-space OCR error. Closed compounding is normal in
+    // Dutch (and German, Afrikaans, the Scandinavian languages, Finnish, ...), so the phonetic
+    // consonant-seam split must not run for those languages at all.
+    [Theory]
+    [InlineData("modderwarboel", "nld")]
+    [InlineData("haklessen", "nld")]
+    [InlineData("drakendodersvrouw", "nld")]
+    [InlineData("drakendodersweduwe", "nld")]
+    [InlineData("zwaardengooier", "nld")]
+    [InlineData("werkplek", "nld")]
+    [InlineData("Schifffahrt", "deu")]
+    public void CreateGuessesFromLetters_CompoundingLanguage_ProducesNoConsonantSeamSplit(string word, string lang)
+    {
+        var guesses = UnknownWordGuesser.CreateGuessesFromLetters(word, lang).ToList();
+
+        Assert.DoesNotContain(guesses, g => g.Contains(' '));
     }
 }
