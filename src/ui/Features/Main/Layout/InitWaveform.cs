@@ -99,10 +99,6 @@ public class InitWaveform
                 WaveformHeightPercentage = settings.SpectrogramCombinedWaveformHeight,
             };
 
-            // The waveform is a focusable custom control with no text content, so without an
-            // accessible name screen readers announce it as a bare generic Avalonia control (#12087).
-            AutomationProperties.SetName(vm.AudioVisualizer, Se.Language.General.Waveform);
-
             vm.AudioVisualizer.OnNewSelectionInsert += vm.AudioVisualizerOnNewSelectionInsert;
             vm.AudioVisualizer.OnVideoPositionChanged += vm.AudioVisualizerOnVideoPositionChanged;
             vm.AudioVisualizer.OnToggleSelection += vm.AudioVisualizerOnToggleSelection;
@@ -115,10 +111,23 @@ public class InitWaveform
             vm.AudioVisualizer.OnSetStartAndOffsetTheRest += vm.AudioVisualizerSetStartAndOffsetTheRest;
             vm.AudioVisualizer.OnGenerateWaveformRequested += vm.AudioVisualizerOnGenerateWaveformRequested;
 
-            // Create a Flyout for the DataGrid
-            var flyout = new MenuFlyout();
             vm.AudioVisualizer.FlyoutMenuOpening += vm.AudioVisualizerFlyoutMenuOpening;
+        }
+        else
+        {
+            vm.AudioVisualizer.RemoveControlFromParent();
+        }
 
+        // The waveform is a focusable custom control with no text content, so without an
+        // accessible name screen readers announce it as a bare generic Avalonia control (#12087).
+        AutomationProperties.SetName(vm.AudioVisualizer, Se.Language.General.Waveform);
+
+        MakeWaveformContextMenu();
+
+        void MakeWaveformContextMenu()
+        {
+            // Rebuild the menu whenever the layout is rebuilt so a language change refreshes its text.
+            var flyout = new MenuFlyout();
             var insertSelectionMenuItem = new MenuItem
             {
                 Header = Se.Language.General.InsertNewSelection,
@@ -309,10 +318,6 @@ public class InitWaveform
             flyout.Items.Add(showWaveformAndSpectrogramMenuItem);
 
             vm.AudioVisualizer.MenuFlyout = flyout;
-        }
-        else
-        {
-            vm.AudioVisualizer.RemoveControlFromParent();
         }
 
         Grid.SetRow(vm.AudioVisualizer, 0);
