@@ -79,6 +79,16 @@ Subtitle Edit 5 adds local, downloadable auto-translate engines that run entirel
 
 See [Auto-translate](auto-translate.md) for the full engine list and workflow.
 
+## AI Review
+
+- New **Tools → AI review** — an AI proofreading pass that catches typos, spelling, grammar, punctuation, and casing errors without rephrasing or changing meaning, tone, or style.
+- **Runs locally by default** — uses a server-managed llama.cpp engine with a downloadable model picker, so no cloud service or API key is required. Ollama and any OpenAI-compatible endpoint are also supported.
+- **Review before you apply** — suggestions are listed as before/after pairs with a per-line reason, grouped by category (Spelling, Grammar, Punctuation, Casing, Other) with filter chips. Tick the ones you want and apply only those.
+- **Safe by design** — formatting tags (`<i>`, `{\an8}`, etc.) and line breaks are preserved; suggestions that touch tags are dropped, and large rewrites are flagged for a closer look and left unselected.
+- **Editable prompt** — the instructions sent to the model can be customized (with the subtitle language auto-detected and substituted in).
+
+See [AI Review](ai-review.md) for details.
+
 ## Batch conversion
 
 - **OCR while converting** — Batch Convert can turn image-based subtitles into text-based formats in bulk, using nOCR, Binary OCR, Tesseract, Ollama, or PaddleOCR. Language and pixels-are-space settings can be auto-detected for nOCR/Binary OCR, so converting many files with similar fonts needs far less manual setup.
