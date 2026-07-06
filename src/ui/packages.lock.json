@@ -56,11 +56,11 @@
       },
       "Avalonia.Markup.Declarative": {
         "type": "Direct",
-        "requested": "[12.0.4, )",
-        "resolved": "12.0.4",
-        "contentHash": "+FP8jDi2Mv/9MzZ40NtwZ3kvRb9m36K5JZwqt1hQuIZsCRfqnakIeNo+wlw6ih4m0PLUfLJ7fzAHIhe6YWI4xQ==",
+        "requested": "[12.0.5, )",
+        "resolved": "12.0.5",
+        "contentHash": "kW84kGAEOMdDVgFgcCgip76uMvK53L3L9HoOtHDUdNqAAHOC+melGAUS9Ngthzx6Bhxk5In5DrcYJvMRpOL5ZA==",
         "dependencies": {
-          "Avalonia": "12.0.4"
+          "Avalonia": "12.0.5"
         }
       },
       "Avalonia.Themes.Fluent": {
