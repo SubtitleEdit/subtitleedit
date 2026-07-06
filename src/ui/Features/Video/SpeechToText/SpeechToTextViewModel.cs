@@ -1214,10 +1214,21 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
         catch (HttpRequestException ex)
         {
+            // Log the full exception before simplifying the dialog text — the
+            // response body (e.g. DashScope's error code) is the only clue to
+            // what actually failed, and the dialog may hide it.
+            Se.WriteToolsLog($"Online STT transcription failed ({engine.Name}): {ex}");
+
             var message = ex.Message;
             if (message.Contains("401") || message.Contains("Unauthorized"))
             {
                 message = Se.Language.General.UnauthorizedApiKey;
+                if (engine is DashScopeQwen3SttEngine)
+                {
+                    // DashScope keys are region-scoped: a China (Beijing) key is
+                    // rejected by the international endpoint and vice versa.
+                    message += Environment.NewLine + Environment.NewLine + Se.Language.General.DashScopeSttRegionKeyHint;
+                }
             }
             else if (message.Contains("timeout") || message.Contains("timed out"))
             {
@@ -1230,8 +1241,42 @@ public partial class SpeechToTextViewModel : ObservableObject
                 IsTranscribeEnabled = true;
             });
         }
+        catch (TimeoutException ex)
+        {
+            // Raised by the online STT services when their own timeout fires
+            // (distinct from a user cancel, which arrives as
+            // OperationCanceledException above).
+            Se.WriteToolsLog($"Online STT transcription timed out ({engine.Name}): {ex.Message}");
+
+            await Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                await MessageBox.Show(Window!, Se.Language.General.RequestTimeout, Se.Language.General.TranscriptionError);
+                IsTranscribeEnabled = true;
+            });
+
+            if (subtitle.Paragraphs.Count > 0)
+            {
+                LogToConsole($"Timed out - returning {subtitle.Paragraphs.Count} partial segment(s)");
+                var postProcessedSubtitle = PostProcess(subtitle);
+
+                if (_audioClips != null && ResultAudioClips.Count > 0)
+                {
+                    // See note above: match the original clip via _videoFileName,
+                    // not the transcoded temp file passed as audioFileName.
+                    var outputAudioClip = ResultAudioClips.FirstOrDefault(p => p.AudioFileName == _videoFileName);
+                    if (outputAudioClip != null)
+                    {
+                        outputAudioClip.Transcription = new Subtitle(postProcessedSubtitle);
+                    }
+                }
+
+                await Dispatcher.UIThread.InvokeAsync(async () => await MakeResult(postProcessedSubtitle));
+            }
+        }
         catch (Exception ex)
         {
+            Se.WriteToolsLog($"Online STT transcription failed ({engine.Name}): {ex}");
+
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 await MessageBox.Show(Window!, $"{Se.Language.General.TranscriptionFailed}: {ex.Message}", "Error");

@@ -310,8 +310,10 @@ public class OpenAiSttServiceTests
     [Fact]
     public async Task TranscribeAsync_HonorsPerCallTimeout_FromSettings()
     {
-        // settings.TimeoutSeconds drives a CancelAfter on a linked CTS;
-        // a handler that never completes should be cancelled by it.
+        // settings.TimeoutSeconds drives a CancelAfter on a linked CTS; a
+        // handler that never completes is cancelled by it, and the service
+        // reports that as TimeoutException — distinct from a caller cancel,
+        // which surfaces as OperationCanceledException.
         var requestStarted = new TaskCompletionSource();
         using var handler = new StubHandler(async (req, ct) =>
         {
@@ -328,7 +330,7 @@ public class OpenAiSttServiceTests
         var wav = MakeTinyWav();
         try
         {
-            await Assert.ThrowsAnyAsync<OperationCanceledException>(
+            await Assert.ThrowsAsync<TimeoutException>(
                 () => service.TranscribeAsync(wav, cancellationToken: TestContext.Current.CancellationToken));
             Assert.True(requestStarted.Task.IsCompletedSuccessfully);
         }

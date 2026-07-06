@@ -16,12 +16,13 @@ namespace Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenRouter;
 /// <summary>
 /// Speech-to-text via OpenRouter's audio transcription API. Unlike OpenAI's
 /// multipart <c>/v1/audio/transcriptions</c>, OpenRouter takes a JSON body with
-/// the audio base64-encoded under <c>input_audio</c>. It proxies Whisper /
-/// GPT-4o-transcribe / Groq / Chirp, so with <c>response_format=verbose_json</c>
-/// and <c>timestamp_granularities[]</c> it returns the same segment/word shape
-/// we already parse into <see cref="OpenAiCompatibleSttResponse"/>. When a model
-/// or provider ignores those hints and returns only <c>text</c>, the caller's
-/// chunk pipeline still spans each chunk's duration so timing survives.
+/// the audio base64-encoded under <c>input_audio</c>. The documented response is
+/// <c>text</c> + usage only — <c>response_format=verbose_json</c> and
+/// <c>timestamp_granularities[]</c> are sent opportunistically in case the
+/// routed provider honors them and returns the segment/word shape we already
+/// parse into <see cref="OpenAiCompatibleSttResponse"/>. When only <c>text</c>
+/// comes back, the caller's chunk pipeline spans each chunk's duration and
+/// splits into sentences so timing survives.
 /// </summary>
 public class OpenRouterSttService : ISttTranscriber
 {
@@ -69,8 +70,26 @@ public class OpenRouterSttService : ISttTranscriber
         {
             timeoutCts.CancelAfter(TimeSpan.FromSeconds(_settings.TimeoutSeconds));
         }
-        cancellationToken = timeoutCts.Token;
+        var ct = timeoutCts.Token;
 
+        try
+        {
+            return await TranscribeCoreAsync(audioBytes, format, language, ct);
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            // Our own timeout fired, not a user cancel — surface it as an error
+            // so the caller doesn't mistake it for cancellation.
+            throw new TimeoutException($"OpenRouter transcription timed out after {_settings.TimeoutSeconds} seconds.");
+        }
+    }
+
+    private async Task<OpenAiCompatibleSttResponse> TranscribeCoreAsync(
+        byte[] audioBytes,
+        string format,
+        string? language,
+        CancellationToken cancellationToken)
+    {
         var body = BuildRequestBody(_settings, audioBytes, format, language);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
         using var request = new HttpRequestMessage(HttpMethod.Post, _settings.EndpointUrl)
