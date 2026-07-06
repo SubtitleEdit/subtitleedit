@@ -72,26 +72,35 @@ public class DashScopeSttService : ISttTranscriber
         }
         var ct = timeoutCts.Token;
 
-        var bytes = await File.ReadAllBytesAsync(audioFilePath, ct);
-        var fileName = Path.GetFileName(audioFilePath);
+        try
+        {
+            var bytes = await File.ReadAllBytesAsync(audioFilePath, ct);
+            var fileName = Path.GetFileName(audioFilePath);
 
-        progress?.Report("Uploading audio to DashScope temporary storage...");
-        _settings.Logger?.Invoke("DashScope: uploading audio to temporary storage");
-        var ossUrl = await UploadFileAsync(bytes, fileName, ct);
+            progress?.Report("Uploading audio to DashScope temporary storage...");
+            _settings.Logger?.Invoke($"DashScope: uploading audio to temporary storage ({BaseUrl})");
+            var ossUrl = await UploadFileAsync(bytes, fileName, ct);
 
-        progress?.Report("Submitting transcription task...");
-        _settings.Logger?.Invoke($"DashScope: submitting async task for {ossUrl}");
-        var taskId = await SubmitTaskAsync(ossUrl, language, ct);
+            progress?.Report("Submitting transcription task...");
+            _settings.Logger?.Invoke($"DashScope: submitting async task for {ossUrl}");
+            var taskId = await SubmitTaskAsync(ossUrl, language, ct);
 
-        progress?.Report("Waiting for transcription to complete...");
-        var transcriptionUrl = await PollTaskAsync(taskId, ct);
+            progress?.Report("Waiting for transcription to complete...");
+            var transcriptionUrl = await PollTaskAsync(taskId, ct);
 
-        _settings.Logger?.Invoke($"DashScope: fetching result from {transcriptionUrl}");
-        using var resultResponse = await _httpClient.GetAsync(transcriptionUrl, HttpCompletionOption.ResponseHeadersRead, ct);
-        resultResponse.EnsureSuccessStatusCode();
-        var resultJson = await resultResponse.Content.ReadAsStringAsync(ct);
+            _settings.Logger?.Invoke($"DashScope: fetching result from {transcriptionUrl}");
+            using var resultResponse = await _httpClient.GetAsync(transcriptionUrl, HttpCompletionOption.ResponseHeadersRead, ct);
+            resultResponse.EnsureSuccessStatusCode();
+            var resultJson = await resultResponse.Content.ReadAsStringAsync(ct);
 
-        return ParseTranscriptionResult(resultJson);
+            return ParseTranscriptionResult(resultJson);
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            // Our own timeout fired, not a user cancel — surface it as an error
+            // so the caller doesn't mistake it for cancellation.
+            throw new TimeoutException($"DashScope transcription timed out after {_settings.TimeoutSeconds} seconds.");
+        }
     }
 
     /// <summary>
@@ -110,13 +119,18 @@ public class DashScopeSttService : ISttTranscriber
         if (!policyResponse.IsSuccessStatusCode)
         {
             var err = await policyResponse.Content.ReadAsStringAsync(ct);
+            _settings.Logger?.Invoke($"DashScope upload-policy request failed: GET {policyUrl} => {(int)policyResponse.StatusCode}: {err}");
             throw new HttpRequestException($"DashScope upload-policy request failed ({(int)policyResponse.StatusCode}). Response: {err}");
         }
 
         var policyJson = await policyResponse.Content.ReadAsStringAsync(ct);
         var policy = JsonSerializer.Deserialize<DashScopeUploadPolicyResponse>(policyJson,
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true })?.Data
-            ?? throw new InvalidOperationException("DashScope upload-policy response could not be parsed.");
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true })?.Data;
+        if (policy == null)
+        {
+            _settings.Logger?.Invoke($"DashScope upload-policy response could not be parsed: {policyJson}");
+            throw new InvalidOperationException($"DashScope upload-policy response could not be parsed. Response: {policyJson}");
+        }
 
         var key = $"{policy.UploadDir}/{fileName}";
 
@@ -138,6 +152,7 @@ public class DashScopeSttService : ISttTranscriber
         if (!uploadResponse.IsSuccessStatusCode)
         {
             var err = await uploadResponse.Content.ReadAsStringAsync(ct);
+            _settings.Logger?.Invoke($"DashScope OSS upload failed: POST {policy.UploadHost} => {(int)uploadResponse.StatusCode}: {err}");
             throw new HttpRequestException($"DashScope OSS upload failed ({(int)uploadResponse.StatusCode}). Response: {err}");
         }
 

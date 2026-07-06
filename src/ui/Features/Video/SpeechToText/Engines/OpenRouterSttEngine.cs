@@ -23,10 +23,12 @@ public class OpenRouterSttEngine : IOnlineSttEngine
     public string Choice => WhisperChoice.OpenRouter;
     public string Url => "https://openrouter.ai/docs/guides/overview/multimodal/stt";
 
-    // OpenRouter proxies Whisper-class models (25 MB caps) but the audio is
-    // base64-inflated into a JSON body, so chunk more conservatively.
-    private const long UploadThreshold = 18L * 1024 * 1024;
-    private const long ChunkSize = 16L * 1024 * 1024;
+    // OpenRouter's upstream provider timeout is 60 seconds, so audio duration
+    // matters more than the Whisper 25 MB cap: a provider must finish
+    // transcribing the whole chunk within that window. Online engines upload
+    // 32 kbps mp3 (~240 KB/min), so ~2.5 MB keeps chunks near 10 minutes.
+    private const long UploadThreshold = 3L * 1024 * 1024;
+    private const long ChunkSize = 2560L * 1024;
 
     public override string ToString() => Name;
 

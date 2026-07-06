@@ -733,6 +733,7 @@ public class LanguageGeneral
     public string OpenAiCompatibleSttPrompt { get; set; }
     public string DashScopeSttRegion { get; set; }
     public string DashScopeSttEnableWords { get; set; }
+    public string DashScopeSttRegionKeyHint { get; set; }
     public string OnlineSttApiKeyMissing { get; set; }
     public string OpenAiCompatibleSttAutoTranscribeOnAudioSelection { get; set; }
     public string OpenAiCompatibleSttStream { get; set; }
@@ -1486,6 +1487,7 @@ public class LanguageGeneral
         OpenAiCompatibleSttPrompt = "Prompt";
         DashScopeSttRegion = "Region";
         DashScopeSttEnableWords = "Word-level timestamps";
+        DashScopeSttRegionKeyHint = "Note: Alibaba Cloud Model Studio API keys are region-specific - make sure the selected region matches the region where the API key was created (China vs. International).";
         OnlineSttApiKeyMissing = "An API key is required. Please enter your API key and try again.";
         OpenAiCompatibleSttAutoTranscribeOnAudioSelection = "Auto-transcribe new waveform selection via speech-to-text";
         OpenAiCompatibleSttStream = "Stream response";

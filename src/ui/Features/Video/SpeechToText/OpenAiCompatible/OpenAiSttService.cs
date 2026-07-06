@@ -94,8 +94,27 @@ public class OpenAiSttService : ISttTranscriber
         {
             timeoutCts.CancelAfter(TimeSpan.FromSeconds(_settings.TimeoutSeconds));
         }
-        cancellationToken = timeoutCts.Token;
 
+        try
+        {
+            return await TranscribeCoreAsync(audioStream, fileName, language, progress, segmentProgress, timeoutCts.Token);
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            // Our own timeout fired, not a user cancel — surface it as an error
+            // so the caller doesn't mistake it for cancellation.
+            throw new TimeoutException($"STT request timed out after {_settings.TimeoutSeconds} seconds.");
+        }
+    }
+
+    private async Task<OpenAiCompatibleSttResponse> TranscribeCoreAsync(
+        Stream audioStream,
+        string fileName,
+        string? language,
+        IProgress<string>? progress,
+        IProgress<OpenAiCompatibleSegment>? segmentProgress,
+        CancellationToken cancellationToken)
+    {
         using var content = new MultipartFormDataContent();
 
         // Content-Type, upload filename extension, and bytes must all agree —

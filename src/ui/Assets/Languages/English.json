@@ -733,6 +733,7 @@
     "openAiCompatibleSttPrompt": "Prompt",
     "dashScopeSttRegion": "Region",
     "dashScopeSttEnableWords": "Word-level timestamps",
+    "dashScopeSttRegionKeyHint": "Note: Alibaba Cloud Model Studio API keys are region-specific - make sure the selected region matches the region where the API key was created (China vs. International).",
     "onlineSttApiKeyMissing": "An API key is required. Please enter your API key and try again.",
     "openAiCompatibleSttAutoTranscribeOnAudioSelection": "Auto-transcribe new waveform selection via speech-to-text",
     "openAiCompatibleSttStream": "Stream response",
