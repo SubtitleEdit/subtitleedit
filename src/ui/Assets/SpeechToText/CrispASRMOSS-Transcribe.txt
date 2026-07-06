@@ -1,0 +1,7 @@
+
+🦉 MOSS-Transcribe-preview-2B  (OpenMOSS-Team)
+
+Type: Qwen3-Omni audio encoder (32L, windowed attn) + GatedMLP adapter + Qwen3-1.7B LM decoder
+Focus: 🎯 Chinese and English
+Note: dedicated ASR sibling of moss-audio; lowercase, lightly punctuated output
+
