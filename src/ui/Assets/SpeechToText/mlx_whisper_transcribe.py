@@ -459,6 +459,12 @@ def main():
         # stretches longer than this when the decoder output looks hallucinated.
         transcribe_kwargs["hallucination_silence_threshold"] = 2.0
 
+    # When a segment fails the quality checks and is retried at a higher
+    # temperature, sample five candidates and keep the most likely one, matching
+    # openai/whisper's default. mlx-whisper drops this option at temperature 0,
+    # so the fast greedy path is unaffected; only hard segments pay for it.
+    transcribe_kwargs["best_of"] = 5
+
     # Whisper drops punctuation on some real-world speech (dialectal Arabic notably)
     # even with sequential decoding, and punctuation drives the sentence-based cue
     # splitting. A short punctuated prompt in the audio's language restores it, but
