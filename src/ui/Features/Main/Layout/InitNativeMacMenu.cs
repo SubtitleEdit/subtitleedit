@@ -36,27 +36,56 @@ namespace Nikse.SubtitleEdit.Features.Main.Layout;
 /// </summary>
 public static class InitNativeMacMenu
 {
-    private static readonly List<(Func<MainViewModel, IRelayCommand> GetCmd, NativeMenuItem Item)> _gestureItems = [];
-    // IsVisible maps directly to NSMenuItem.setHidden: via Avalonia's SetIsVisible vtable slot.
-    // IsEnabled has no equivalent vtable slot — it only reaches the native layer through the
-    // SetAction predicate, which macOS never calls for container items (submenu, no action).
-    // All items here were IsVisible bindings in InitMenu.cs, so IsVisible is the correct mapping.
-    private static readonly List<(NativeMenuItem Item, Func<MainViewModel, bool> IsVisible, string[] Props)> _visibilities = [];
-    private static readonly List<(NativeMenuItem Item, Func<MainViewModel, bool> IsChecked, string[] Props)> _toggles = [];
-    private static readonly List<(NativeMenuItem Item, Func<MainViewModel, string> GetHeader, string[] Props)> _dynamicHeaders = [];
-    private static PropertyChangedEventHandler? _handler;
+    /// <summary>
+    /// All state for one window's menu bar. With File &gt; New window there are several
+    /// editor windows at once, each with its own NSMenuBar (macOS shows the focused
+    /// window's menu) bound to its own MainViewModel, so nothing here can be app-global.
+    /// </summary>
+    private sealed class MenuState
+    {
+        public readonly List<(Func<MainViewModel, IRelayCommand> GetCmd, NativeMenuItem Item)> GestureItems = [];
+        // IsVisible maps directly to NSMenuItem.setHidden: via Avalonia's SetIsVisible vtable slot.
+        // IsEnabled has no equivalent vtable slot; it only reaches the native layer through the
+        // SetAction predicate, which macOS never calls for container items (submenu, no action).
+        // All items here were IsVisible bindings in InitMenu.cs, so IsVisible is the correct mapping.
+        public readonly List<(NativeMenuItem Item, Func<MainViewModel, bool> IsVisible, string[] Props)> Visibilities = [];
+        public readonly List<(NativeMenuItem Item, Func<MainViewModel, bool> IsChecked, string[] Props)> Toggles = [];
+        public readonly List<(NativeMenuItem Item, Func<MainViewModel, string> GetHeader, string[] Props)> DynamicHeaders = [];
+        public PropertyChangedEventHandler? Handler;
 
-    private static NativeMenuItem? _reopenItem;
-    private static NativeMenuItem? _pluginsItem;
-    private static NativeMenuItem? _audioTracksItem;
+        public NativeMenuItem? ReopenItem;
+        public NativeMenuItem? PluginsItem;
+        public NativeMenuItem? AudioTracksItem;
+        public NativeMenuItem? WindowListItem;
 
-    // The real VM instance — set by Sync(), used by all lazy click handlers.
-    // MainViewModel is AddTransient in DI, so GetService() returns a new instance;
-    // we must hold a reference to the specific instance that owns the main window.
-    private static MainViewModel? _vm;
+        // The real VM instance, set by Sync(), used by all lazy click handlers.
+        // MainViewModel is AddTransient in DI, so GetService() returns a new instance;
+        // we must hold a reference to the specific instance that owns this window.
+        public MainViewModel? Vm;
 
-    private static Window? _window;
-    private static NativeMenu? _root;
+        public Window? Window;
+        public NativeMenu? Root;
+    }
+
+    // One state per open editor window, in creation order.
+    private static readonly List<MenuState> _states = [];
+
+    // The state whose window was most recently activated; the app menu (About,
+    // Preferences: global, not per window) routes its commands here.
+    private static MenuState? _active;
+
+    // The state whose structure MakeStructure is currently building; the Item/
+    // Conditional/Toggle helpers register into it (UI thread only, build is synchronous).
+    private static MenuState? _building;
+
+    // Windows-menu ownership: when MacWindowsMenuInterop manages to register our
+    // "Window" submenu as NSApplication.windowsMenu, AppKit populates it (and mirrors
+    // it into the Dock icon's menu), and we must never mutate it again, since changing
+    // the NativeMenu would rebuild the NSMenu and wipe AppKit's entries. Until the
+    // first registration attempt resolves, the menu stays empty; on failure the manual
+    // list below takes over.
+    private static bool _appKitOwnsWindowsMenu;
+    private static bool _windowsMenuInteropFailed;
 
     // ── App menu ─────────────────────────────────────────────────────────────
     // Called from Program.cs. Sets the "Subtitle Edit" app dropdown contents.
@@ -90,12 +119,61 @@ public static class InitNativeMacMenu
 
     public static void MakeStructure(NativeMenu root, Window window)
     {
-        _root = root;
-        _window = window;
-        _gestureItems.Clear();
-        _visibilities.Clear();
-        _toggles.Clear();
-        _dynamicHeaders.Clear();
+        var state = _states.FirstOrDefault(s => ReferenceEquals(s.Window, window));
+        if (state == null)
+        {
+            state = new MenuState { Window = window };
+            _states.Add(state);
+            _active ??= state;
+
+            window.Activated += (_, _) =>
+            {
+                _active = state;
+
+                // Runs after Avalonia has installed this window's NSMenuBar. Success
+                // means AppKit owns the Window menu contents (and feeds the Dock's
+                // window list) from here on.
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    if (MacWindowsMenuInterop.TryRegisterWindowsMenu(
+                            Clean(Se.Language.Main.Menu.WindowTitle),
+                            _states.Select(menuState => menuState.Window).OfType<Window>()))
+                    {
+                        _appKitOwnsWindowsMenu = true;
+                    }
+                    else if (!_appKitOwnsWindowsMenu)
+                    {
+                        _windowsMenuInteropFailed = true;
+                        UpdateWindowMenus();
+                    }
+
+                    InstallDockMenu();
+                }, Avalonia.Threading.DispatcherPriority.Background);
+            };
+            window.Closed += (_, _) =>
+            {
+                if (state.Vm != null && state.Handler != null)
+                {
+                    state.Vm.PropertyChanged -= state.Handler;
+                }
+
+                _states.Remove(state);
+                if (ReferenceEquals(_active, state))
+                {
+                    _active = _states.LastOrDefault();
+                }
+
+                UpdateWindowMenus();
+            };
+        }
+
+        state.Root = root;
+        state.GestureItems.Clear();
+        state.Visibilities.Clear();
+        state.Toggles.Clear();
+        state.DynamicHeaders.Clear();
+
+        _building = state;
 
         var l = Se.Language.Main.Menu;
 
@@ -104,6 +182,7 @@ public static class InitNativeMacMenu
         fileItems.Items.Add(Item(Clean(l.New), v => v.CommandFileNewCommand));
         fileItems.Items.Add(Conditional(Clean(l.NewKeepVideo), v => v.CommandFileNewKeepVideoCommand,
             v => v.IsVideoLoaded, nameof(MainViewModel.IsVideoLoaded)));
+        fileItems.Items.Add(Item(Clean(l.NewWindow), v => v.CommandFileNewWindowCommand));
         fileItems.Items.Add(new NativeMenuItemSeparator());
         fileItems.Items.Add(Item(Clean(l.Open), v => v.CommandFileOpenCommand));
         fileItems.Items.Add(Conditional(Clean(l.OpenKeepVideo), v => v.CommandFileOpenKeepVideoCommand,
@@ -115,8 +194,8 @@ public static class InitNativeMacMenu
         fileItems.Items.Add(Conditional(Clean(l.CloseTranslation), v => v.FileCloseTranslationCommand,
             v => v.ShowColumnOriginalText, nameof(MainViewModel.ShowColumnOriginalText)));
 
-        _reopenItem = new NativeMenuItem(Clean(l.Reopen)) { Menu = new NativeMenu() };
-        fileItems.Items.Add(_reopenItem);
+        state.ReopenItem = new NativeMenuItem(Clean(l.Reopen)) { Menu = new NativeMenu() };
+        fileItems.Items.Add(state.ReopenItem);
         fileItems.Items.Add(Item(Clean(l.RestoreAutoBackup), v => v.ShowRestoreAutoBackupCommand));
         fileItems.Items.Add(new NativeMenuItemSeparator());
         fileItems.Items.Add(Item(Clean(l.Save), v => v.CommandFileSaveCommand));
@@ -124,9 +203,9 @@ public static class InitNativeMacMenu
         fileItems.Items.Add(new NativeMenuItemSeparator());
 
         var filePropsItem = new NativeMenuItem(string.Empty);
-        filePropsItem.Click += (_, _) => GetVm()?.FilePropertiesShowCommand.Execute(null);
-        _dynamicHeaders.Add((filePropsItem, v => Clean(v.FilePropertiesText), [nameof(MainViewModel.FilePropertiesText)]));
-        _visibilities.Add((filePropsItem, v => v.IsFilePropertiesVisible, [nameof(MainViewModel.IsFilePropertiesVisible)]));
+        filePropsItem.Click += (_, _) => state.Vm?.FilePropertiesShowCommand.Execute(null);
+        state.DynamicHeaders.Add((filePropsItem, v => Clean(v.FilePropertiesText), [nameof(MainViewModel.FilePropertiesText)]));
+        state.Visibilities.Add((filePropsItem, v => v.IsFilePropertiesVisible, [nameof(MainViewModel.IsFilePropertiesVisible)]));
         fileItems.Items.Add(filePropsItem);
 
         fileItems.Items.Add(Item(Clean(l.OpenContainingFolder), v => v.OpenContainingFolderCommand));
@@ -228,7 +307,7 @@ public static class InitNativeMacMenu
         toolItems.Items.Add(Item(Clean(l.SplitSubtitle), v => v.ShowToolsSplitCommand));
 
         // ── Plugins ───────────────────────────────────────────────────────────
-        _pluginsItem = new NativeMenuItem(Clean(Se.Language.Plugins.Title)) { Menu = new NativeMenu() };
+        state.PluginsItem = new NativeMenuItem(Clean(Se.Language.Plugins.Title)) { Menu = new NativeMenu() };
 
         // ── Spell Check ───────────────────────────────────────────────────────
         var spellItems = new NativeMenu();
@@ -245,9 +324,9 @@ public static class InitNativeMacMenu
         videoItems.Items.Add(Item(Clean(l.OpenVideoFromUrl), v => v.ShowVideoOpenFromUrlCommand));
         videoItems.Items.Add(Item(Clean(l.CloseVideoFile), v => v.CommandVideoCloseCommand));
 
-        _audioTracksItem = new NativeMenuItem(Clean(l.AudioTracks)) { Menu = new NativeMenu() };
-        _visibilities.Add((_audioTracksItem, v => v.IsAudioTracksVisible, [nameof(MainViewModel.IsAudioTracksVisible)]));
-        videoItems.Items.Add(_audioTracksItem);
+        state.AudioTracksItem = new NativeMenuItem(Clean(l.AudioTracks)) { Menu = new NativeMenu() };
+        state.Visibilities.Add((state.AudioTracksItem, v => v.IsAudioTracksVisible, [nameof(MainViewModel.IsAudioTracksVisible)]));
+        videoItems.Items.Add(state.AudioTracksItem);
 
         videoItems.Items.Add(new NativeMenuItemSeparator());
         videoItems.Items.Add(Item(Clean(l.SpeechToText), v => v.ShowSpeechToTextWhisperCommand));
@@ -286,8 +365,8 @@ public static class InitNativeMacMenu
         // so the alphabetical sort below places this item with the other "S" entries instead of
         // floating it to the top while the dynamic-header binding waits for Sync(vm) to run.
         var setOffsetItem = new NativeMenuItem(Clean(l.SetVideoOffset));
-        setOffsetItem.Click += (_, _) => GetVm()?.ShowVideoSetOffsetCommand.Execute(null);
-        _dynamicHeaders.Add((setOffsetItem, v => Clean(v.SetVideoOffsetText), [nameof(MainViewModel.SetVideoOffsetText)]));
+        setOffsetItem.Click += (_, _) => state.Vm?.ShowVideoSetOffsetCommand.Execute(null);
+        state.DynamicHeaders.Add((setOffsetItem, v => Clean(v.SetVideoOffsetText), [nameof(MainViewModel.SetVideoOffsetText)]));
         videoMoreList.Add(setOffsetItem);
 
         videoMoreList.Add(Toggle(Clean(l.SmpteTiming), v => v.ToggleSmpteTimingCommand,
@@ -297,7 +376,7 @@ public static class InitNativeMacMenu
         foreach (var item in videoMoreList.OrderBy(i => i.Header?.TrimStart('_', ' ')))
             videoMoreItems.Items.Add(item);
         var videoMoreMenu = new NativeMenuItem(Clean(Se.Language.General.More)) { Menu = videoMoreItems };
-        _visibilities.Add((videoMoreMenu, v => v.IsVideoLoaded, [nameof(MainViewModel.IsVideoLoaded)]));
+        state.Visibilities.Add((videoMoreMenu, v => v.IsVideoLoaded, [nameof(MainViewModel.IsVideoLoaded)]));
         videoItems.Items.Add(videoMoreMenu);
 
         // ── Synchronization ───────────────────────────────────────────────────
@@ -345,32 +424,86 @@ public static class InitNativeMacMenu
         assaItems.Items.Add(new NativeMenuItemSeparator());
         assaItems.Items.Add(Item(Clean(l.FilterLayersForDisplayDotDotDot), v => v.ShowPickLayerFilterCommand));
         var assaMenu = new NativeMenuItem(Clean(l.AssaTools)) { Menu = assaItems };
-        _visibilities.Add((assaMenu, v => v.IsFormatAssa, [nameof(MainViewModel.IsFormatAssa)]));
+        state.Visibilities.Add((assaMenu, v => v.IsFormatAssa, [nameof(MainViewModel.IsFormatAssa)]));
 
         // ── Assemble ──────────────────────────────────────────────────────────
         root.Items.Add(new NativeMenuItem(Clean(l.File)) { Menu = fileItems });
         root.Items.Add(new NativeMenuItem(Clean(l.Edit)) { Menu = editItems });
         root.Items.Add(new NativeMenuItem(Clean(l.Tools)) { Menu = toolItems });
-        root.Items.Add(_pluginsItem);
+        root.Items.Add(state.PluginsItem);
         root.Items.Add(new NativeMenuItem(Clean(l.SpellCheckTitle)) { Menu = spellItems });
         root.Items.Add(new NativeMenuItem(Clean(l.Video)) { Menu = videoItems });
         root.Items.Add(new NativeMenuItem(Clean(l.Synchronization)) { Menu = syncItems });
         root.Items.Add(new NativeMenuItem(Clean(l.Translate)) { Menu = translateItems });
         root.Items.Add(new NativeMenuItem(Clean(l.Options)) { Menu = optionsItems });
+
+        // Window list: one entry per open editor window, checkmark on the active one.
+        // Avalonia cannot register an AppKit windows menu (which is what would also feed
+        // the Dock icon's window list), so this menu is the discoverable way to switch
+        // between the windows File > New window opens.
+        state.WindowListItem = new NativeMenuItem(Clean(l.WindowTitle)) { Menu = new NativeMenu() };
+        root.Items.Add(state.WindowListItem);
+
         root.Items.Add(new NativeMenuItem(Clean(l.HelpTitle)) { Menu = helpItems });
         root.Items.Add(assaMenu);
+
+        _building = null;
+
+        UpdateWindowMenus();
+    }
+
+    // Rebuilds every window's "Window" menu so all menu bars list all open editor
+    // windows. Called when a window opens, closes, or is activated (activation also
+    // refreshes titles, which change when a file is opened or saved).
+    private static void UpdateWindowMenus()
+    {
+        if (_appKitOwnsWindowsMenu || !_windowsMenuInteropFailed)
+        {
+            // AppKit populates the menu (and the Dock list) itself, or the first
+            // registration attempt has not resolved yet; either way, hands off.
+            return;
+        }
+
+        foreach (var menuState in _states)
+        {
+            if (menuState.WindowListItem?.Menu is not NativeMenu menu)
+            {
+                continue;
+            }
+
+            menu.Items.Clear();
+            foreach (var other in _states)
+            {
+                var window = other.Window;
+                if (window == null)
+                {
+                    continue;
+                }
+
+                var title = string.IsNullOrWhiteSpace(window.Title) ? "Subtitle Edit" : window.Title;
+                var item = new NativeMenuItem(title)
+                {
+                    ToggleType = MenuItemToggleType.CheckBox,
+                    IsChecked = ReferenceEquals(other, _active),
+                };
+                var captured = window;
+                item.Click += (_, _) => captured.Activate();
+                menu.Items.Add(item);
+            }
+        }
     }
 
     // Called from LoadLanguage to rebuild all menu strings after a language switch.
     public static void Rebuild(MainViewModel vm)
     {
-        if (_root == null || _window == null)
+        var state = StateFor(vm);
+        if (state?.Root == null || state.Window == null)
         {
             return;
         }
-        _root.Items.Clear();
-        MakeStructure(_root, _window);
-        NativeMenu.SetMenu(_window, _root);
+        state.Root.Items.Clear();
+        MakeStructure(state.Root, state.Window);
+        NativeMenu.SetMenu(state.Window, state.Root);
         if (Application.Current != null)
         {
             SetupAppMenu(Application.Current);
@@ -384,58 +517,68 @@ public static class InitNativeMacMenu
 
     public static void Sync(MainViewModel vm)
     {
-        if (_handler != null && _vm != null)
+        // Bind this VM to its own window's menu: the state already holding the VM (re-sync),
+        // else the state for the VM's window, else the newest still-unbound one.
+        var state = _states.FirstOrDefault(s => ReferenceEquals(s.Vm, vm))
+                    ?? _states.FirstOrDefault(s => ReferenceEquals(s.Window, vm.Window))
+                    ?? _states.LastOrDefault(s => s.Vm == null);
+        if (state == null)
         {
-            _vm.PropertyChanged -= _handler;
+            return;
         }
 
-        _vm = vm;
+        if (state.Handler != null && state.Vm != null)
+        {
+            state.Vm.PropertyChanged -= state.Handler;
+        }
 
-        vm.NativeMenuReopen = _reopenItem;
-        vm.NativeMenuPlugins = _pluginsItem;
-        vm.NativeMenuAudioTracks = _audioTracksItem;
+        state.Vm = vm;
+
+        vm.NativeMenuReopen = state.ReopenItem;
+        vm.NativeMenuPlugins = state.PluginsItem;
+        vm.NativeMenuAudioTracks = state.AudioTracksItem;
 
         var shortcuts = ShortcutsMain.GetUsedShortcuts(vm);
-        foreach (var (getCmd, item) in _gestureItems)
+        foreach (var (getCmd, item) in state.GestureItems)
             item.Gesture = FindGesture(getCmd(vm), shortcuts);
 
-        foreach (var (item, isVisible, _) in _visibilities)
+        foreach (var (item, isVisible, _) in state.Visibilities)
             item.IsVisible = isVisible(vm);
 
-        foreach (var (item, isChecked, _) in _toggles)
+        foreach (var (item, isChecked, _) in state.Toggles)
             item.IsChecked = isChecked(vm);
 
-        foreach (var (item, getHeader, _) in _dynamicHeaders)
+        foreach (var (item, getHeader, _) in state.DynamicHeaders)
             item.Header = getHeader(vm);
 
-        if (_pluginsItem != null)
+        if (state.PluginsItem != null)
         {
-            _pluginsItem.IsEnabled = Se.Settings.Appearance.ShowPluginsMenu;
+            state.PluginsItem.IsEnabled = Se.Settings.Appearance.ShowPluginsMenu;
         }
 
-        _handler = (s, e) =>
+        state.Handler = (s, e) =>
         {
             if (s is not MainViewModel v2 || e.PropertyName is null)
             {
                 return;
             }
-            foreach (var (item, isVisible, props) in _visibilities)
+            foreach (var (item, isVisible, props) in state.Visibilities)
                 if (props.Contains(e.PropertyName))
                 {
                     item.IsVisible = isVisible(v2);
                 }
-            foreach (var (item, isChecked, props) in _toggles)
+            foreach (var (item, isChecked, props) in state.Toggles)
                 if (props.Contains(e.PropertyName))
                 {
                     item.IsChecked = isChecked(v2);
                 }
-            foreach (var (item, getHeader, props) in _dynamicHeaders)
+            foreach (var (item, getHeader, props) in state.DynamicHeaders)
                 if (props.Contains(e.PropertyName))
                 {
                     item.Header = getHeader(v2);
                 }
         };
-        vm.PropertyChanged += _handler;
+        vm.PropertyChanged += state.Handler;
 
         UpdateRecentFiles(vm);
         UpdatePluginsMenu(vm);
@@ -558,23 +701,37 @@ public static class InitNativeMacMenu
 
     public static void UpdateShortcuts(MainViewModel vm)
     {
+        var state = StateFor(vm);
+        if (state == null)
+        {
+            return;
+        }
+
         var shortcuts = ShortcutsMain.GetUsedShortcuts(vm);
-        foreach (var (getCmd, item) in _gestureItems)
+        foreach (var (getCmd, item) in state.GestureItems)
             item.Gesture = FindGesture(getCmd(vm), shortcuts);
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private static MainViewModel? GetVm() => _vm;
+    private static MenuState? StateFor(MainViewModel vm) =>
+        _states.FirstOrDefault(s => ReferenceEquals(s.Vm, vm))
+        ?? _states.FirstOrDefault(s => ReferenceEquals(s.Window, vm.Window));
+
+    // The VM the app menu (About, Preferences: app-global, not per window) targets:
+    // the most recently activated window's, falling back to any bound one.
+    private static MainViewModel? GetVm() =>
+        _active?.Vm ?? _states.Select(s => s.Vm).FirstOrDefault(v => v != null);
 
     private static NativeMenuItem Item(string? header, Func<MainViewModel, IRelayCommand> getCmd)
     {
+        var state = _building!;
         var item = new NativeMenuItem(header ?? string.Empty);
-        item.Click += (_, _) => { var v = GetVm(); if (v != null)
+        item.Click += (_, _) => { var v = state.Vm; if (v != null)
         {
             getCmd(v).Execute(null);
         } };
-        _gestureItems.Add((getCmd, item));
+        state.GestureItems.Add((getCmd, item));
         return item;
     }
 
@@ -582,21 +739,22 @@ public static class InitNativeMacMenu
         Func<MainViewModel, bool> isVisible, params string[] propertyNames)
     {
         var item = Item(header, getCmd);
-        _visibilities.Add((item, isVisible, propertyNames));
+        _building!.Visibilities.Add((item, isVisible, propertyNames));
         return item;
     }
 
     private static NativeMenuItem Toggle(string? header, Func<MainViewModel, IRelayCommand> getCmd,
         Func<MainViewModel, bool> isChecked, params string[] propertyNames)
     {
+        var state = _building!;
         var item = new NativeMenuItem(header ?? string.Empty);
         item.ToggleType = MenuItemToggleType.CheckBox;
-        item.Click += (_, _) => { var v = GetVm(); if (v != null)
+        item.Click += (_, _) => { var v = state.Vm; if (v != null)
         {
             getCmd(v).Execute(null);
         } };
-        _toggles.Add((item, isChecked, propertyNames));
-        _gestureItems.Add((getCmd, item));
+        state.Toggles.Add((item, isChecked, propertyNames));
+        state.GestureItems.Add((getCmd, item));
         return item;
     }
 
@@ -610,6 +768,28 @@ public static class InitNativeMacMenu
             }
         }
         return null;
+    }
+
+    private static bool _dockMenuInstalled;
+
+    /// <summary>
+    /// Adds a "New window" command to the Dock icon's context menu (like Finder's
+    /// "New Finder Window") via Avalonia's NativeDock attached property. AppKit
+    /// shows it above the standard Dock items (the window list, Options, Quit).
+    /// </summary>
+    private static void InstallDockMenu()
+    {
+        if (_dockMenuInstalled || Avalonia.Application.Current is not { } app)
+        {
+            return;
+        }
+
+        var newWindowItem = new NativeMenuItem(Clean(Se.Language.Main.Menu.NewWindow));
+        newWindowItem.Click += (_, _) => MainWindowFactory.OpenNewWindow();
+        var dockMenu = new NativeMenu();
+        dockMenu.Add(newWindowItem);
+        NativeDock.SetMenu(app, dockMenu);
+        _dockMenuInstalled = true;
     }
 
     private static string Clean(string? s) => s?.Replace("_", string.Empty) ?? string.Empty;

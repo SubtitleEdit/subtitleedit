@@ -1695,6 +1695,24 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void CommandFileNewWindow()
+    {
+        // Opens another independent editor window inside this same process, so all windows
+        // stack under a single Dock/taskbar icon and appear in its window list (a second
+        // process would get its own Dock icon on macOS). Each window hosts its own
+        // MainView/MainViewModel (both transient), with its own subtitle, video and undo
+        // history; on macOS it also gets its own menu bar bound to its own view model.
+        try
+        {
+            Layout.MainWindowFactory.OpenNewWindow();
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "Open new window failed");
+        }
+    }
+
+    [RelayCommand]
     private async Task CommandFileNew()
     {
         var doContinue = await HasChangesContinue();

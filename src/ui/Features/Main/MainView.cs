@@ -22,6 +22,15 @@ public class MainView : ViewBase
 {
     private MainViewModel? _vm;
 
+    /// <summary>
+    /// The window that will host the next MainView. Set by MainWindowFactory right before
+    /// constructing the view (Build runs from the constructor, so it can't be passed in).
+    /// With File &gt; New window there can be several editor windows, and each view model
+    /// must own its actual host window, not desktop.MainWindow (always the first window),
+    /// for dialog owners and the Closing/Deactivated/Loaded hooks to target correctly.
+    /// </summary>
+    internal static Window? NextHostWindow;
+
     protected override object Build()
     {
         _vm = Locator.Services.GetRequiredService<MainViewModel>();
@@ -33,14 +42,17 @@ public class MainView : ViewBase
         _vm.MainView = this;
         DataContext = _vm;
 
-        if (Application.Current?.ApplicationLifetime is ClassicDesktopStyleApplicationLifetime desktop)
+        var hostWindow = NextHostWindow;
+        NextHostWindow = null;
+        if (hostWindow == null &&
+            Application.Current?.ApplicationLifetime is ClassicDesktopStyleApplicationLifetime desktop)
         {
-            _vm.Window = desktop.MainWindow;
-            if (_vm.Window == null)
-            {
-                throw new InvalidOperationException("Main window is not set in the application lifetime.");
-            }
+            hostWindow = desktop.MainWindow;
+        }
 
+        if (hostWindow != null)
+        {
+            _vm.Window = hostWindow;
             _vm.Window.Closing += _vm.OnClosing;
             _vm.Window.Deactivated += _vm.OnWindowDeactivated;
             _vm.Window.Loaded += (_, _) =>
