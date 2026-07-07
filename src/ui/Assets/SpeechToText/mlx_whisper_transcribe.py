@@ -217,6 +217,85 @@ def apply_standards(cues, max_chars, max_duration, max_cps,
     return out
 
 
+def detect_speech_clips(audio):
+    """Silero VAD (via faster-whisper, optional): [start1, end1, start2, ...] seconds of speech.
+
+    mlx-whisper has no voice-activity detection, so music and long silences reach the
+    decoder, which reacts with hallucination loops (repeated garbage tokens with
+    zero-length timestamps), phantom music labels, and echoes of the initial prompt.
+    Clipping the decode to the detected speech regions kills all of that at the root.
+    Returns None when faster-whisper's VAD is not installed or detection fails.
+    """
+    try:
+        from faster_whisper.vad import get_speech_timestamps
+    except Exception:
+        print("note: faster-whisper VAD not available; decoding the full audio "
+              "(pip3 install faster-whisper enables music/silence skipping)", flush=True)
+        return None
+
+    try:
+        regions = get_speech_timestamps(audio)
+    except Exception as e:
+        print(f"warning: VAD failed ({e}); decoding the full audio", file=sys.stderr, flush=True)
+        return None
+
+    if not regions:
+        return None
+
+    clips = []
+    for region in regions:
+        clips.extend([region["start"] / 16000.0, region["end"] / 16000.0])
+    return clips
+
+
+def _has_expected_script(text, language):
+    """True when the text contains at least one character of the language's script."""
+    if language == "ar":
+        return any("\u0600" <= c <= "\u06ff" or "\u0750" <= c <= "\u077f" or c.isdigit() for c in text)
+    if language in ("en", "tr"):
+        return any(("a" <= c.lower() <= "z") or c.isdigit() or c in "çğıöşüÇĞİÖŞÜ" for c in text)
+    return True
+
+
+def sanitize_cues(cues, language=None, prompt=None):
+    """Drop decoder-hallucination artifacts before the timing pass sees them.
+
+    Whisper reacts to music and long silences with degenerate output: zero-length
+    cues, the same token repeated dozens of times, text in a completely different
+    script, and echoes of the initial prompt. VAD clipping prevents most of it at
+    the source; this pass is the safety net for whatever still gets through (and
+    for runs where VAD was unavailable).
+    """
+    out = []
+    repeats = 0
+    for start, end, text in cues:
+        if end - start < 0.05:
+            continue
+        if language and text and not _has_expected_script(text, language):
+            continue
+        if out and out[-1][2] == text:
+            repeats += 1
+            if repeats >= 2:
+                # A third+ identical adjacent cue is a hallucination loop, not dialogue.
+                continue
+        else:
+            repeats = 0
+        out.append((start, end, text))
+
+    # Leading cues that only quote the injected punctuation prompt are echoes the
+    # decoder produced against intro music/silence, not speech.
+    if prompt:
+        lead = 0
+        for _, _, text in out:
+            if text and text in prompt:
+                lead += 1
+            else:
+                break
+        out = out[lead:]
+
+    return out
+
+
 def split_chunk(chunk, max_chars, max_duration):
     """Split one sentence's words into cue-sized parts, balanced instead of greedy.
 
@@ -373,6 +452,24 @@ def main():
     print(f"Loading MLX Whisper model '{args.model}' (Apple GPU/Neural Engine)...", flush=True)
     use_words = not args.raw_segments
     transcribe_kwargs = {}
+
+    # Skip music and long silences via VAD when possible (see detect_speech_clips);
+    # only possible when the audio was decoded to an array (Subtitle Edit always
+    # feeds a 16 kHz mono WAV, so this is the normal path).
+    if not isinstance(audio_input, str):
+        clips = detect_speech_clips(audio_input)
+        if clips:
+            transcribe_kwargs["clip_timestamps"] = clips
+            speech_seconds = sum(clips[i + 1] - clips[i] for i in range(0, len(clips), 2))
+            total_seconds = len(audio_input) / 16000.0
+            print(f"VAD: {len(clips) // 2} speech region(s), "
+                  f"{speech_seconds / 60.0:.1f} of {total_seconds / 60.0:.1f} minutes to decode.",
+                  flush=True)
+
+    if use_words:
+        # Built-in hallucination guard: with word timestamps available, skip silent
+        # stretches longer than this when the decoder output looks hallucinated.
+        transcribe_kwargs["hallucination_silence_threshold"] = 2.0
     # Whisper drops punctuation on some real-world speech (dialectal Arabic notably)
     # even with sequential decoding, and punctuation drives the sentence-based cue
     # splitting. A short punctuated prompt in the audio's language restores it
@@ -411,6 +508,7 @@ def main():
 
     if use_words and words:
         cues = resegment(words, args.max_cue_chars, args.max_cue_duration)
+        cues = sanitize_cues(cues, language, prompt)
         cues = apply_standards(cues, args.max_cue_chars, args.max_cue_duration, args.max_cps)
         print(f"Resegmented {len(collected)} raw segment(s) into {len(cues)} subtitle cue(s) "
               f"(max {args.max_cue_chars} chars / {args.max_cue_duration:g}s per cue, "
@@ -418,6 +516,7 @@ def main():
         collected = cues
     elif use_words:
         print("No word timestamps returned; keeping Whisper's raw segments.", flush=True)
+        collected = sanitize_cues(collected, language, prompt)
 
     sep = "," if ext == "srt" else "."
     with open(out_path, "w", encoding="utf-8") as f:

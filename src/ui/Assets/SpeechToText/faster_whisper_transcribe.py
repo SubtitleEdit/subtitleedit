@@ -230,6 +230,54 @@ def apply_standards(cues, max_chars, max_duration, max_cps,
     return out
 
 
+def _has_expected_script(text, language):
+    """True when the text contains at least one character of the language's script."""
+    if language == "ar":
+        return any("\u0600" <= c <= "\u06ff" or "\u0750" <= c <= "\u077f" or c.isdigit() for c in text)
+    if language in ("en", "tr"):
+        return any(("a" <= c.lower() <= "z") or c.isdigit() or c in "çğıöşüÇĞİÖŞÜ" for c in text)
+    return True
+
+
+def sanitize_cues(cues, language=None, prompt=None):
+    """Drop decoder-hallucination artifacts before the timing pass sees them.
+
+    Whisper reacts to music and long silences with degenerate output: zero-length
+    cues, the same token repeated dozens of times, text in a completely different
+    script, and echoes of the initial prompt. VAD clipping prevents most of it at
+    the source; this pass is the safety net for whatever still gets through (and
+    for runs where VAD was unavailable).
+    """
+    out = []
+    repeats = 0
+    for start, end, text in cues:
+        if end - start < 0.05:
+            continue
+        if language and text and not _has_expected_script(text, language):
+            continue
+        if out and out[-1][2] == text:
+            repeats += 1
+            if repeats >= 2:
+                # A third+ identical adjacent cue is a hallucination loop, not dialogue.
+                continue
+        else:
+            repeats = 0
+        out.append((start, end, text))
+
+    # Leading cues that only quote the injected punctuation prompt are echoes the
+    # decoder produced against intro music/silence, not speech.
+    if prompt:
+        lead = 0
+        for _, _, text in out:
+            if text and text in prompt:
+                lead += 1
+            else:
+                break
+        out = out[lead:]
+
+    return out
+
+
 def split_chunk(chunk, max_chars, max_duration):
     """Split one sentence's words into cue-sized parts, balanced instead of greedy.
 
@@ -454,6 +502,7 @@ def main():
 
     if use_words and words:
         cues = resegment(words, args.max_cue_chars, args.max_cue_duration)
+        cues = sanitize_cues(cues, language, prompt)
         cues = apply_standards(cues, args.max_cue_chars, args.max_cue_duration, args.max_cps)
         print(f"Resegmented {len(raw)} raw segment(s) into {len(cues)} subtitle cue(s) "
               f"(max {args.max_cue_chars} chars / {args.max_cue_duration:g}s per cue, "
