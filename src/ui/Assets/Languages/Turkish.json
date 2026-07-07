@@ -735,6 +735,7 @@
     "openAiCompatibleSttPrompt": "Komut istemi",
 	"dashScopeSttRegion": "Bölge",
 	"dashScopeSttEnableWords": "Kelime düzeyinde zaman damgaları",
+	"dashScopeSttRegionKeyHint": "Not: Alibaba Cloud Model Studio API anahtarları bölgeye özeldir; seçilen bölgenin, API anahtarının oluşturulduğu bölgeyle (Çin veya Uluslararası) eşleştiğinden emin olun.",
 	"onlineSttApiKeyMissing": "Bir API anahtarı gereklidir. Lütfen API anahtarınızı girip tekrar deneyin.",
     "openAiCompatibleSttAutoTranscribeOnAudioSelection": "Ses dalgası üzerindeki yeni seçimi ses tanıma ile otomatik yazıya dök",
     "openAiCompatibleSttStream": "Yanıtı akış olarak al",
