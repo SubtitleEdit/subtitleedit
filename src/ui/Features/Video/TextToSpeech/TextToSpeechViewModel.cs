@@ -93,7 +93,6 @@ public partial class TextToSpeechViewModel : ObservableObject
     [ObservableProperty] private string _progressText;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private double _progressOpacity;
-    [ObservableProperty] private string _doneOrCancelText;
     [ObservableProperty] private bool _hasKeyFile;
     [ObservableProperty] private string _keyFile;
     [ObservableProperty] private bool _hasInstruction;
@@ -129,9 +128,14 @@ public partial class TextToSpeechViewModel : ObservableObject
     public ObservableCollection<string> OmniVoiceAccents { get; }
 
     // Text edits from OK'ed review sessions in this window, keyed by the lines' original time
-    // codes. The main window reads this after the dialog closes and offers to apply the edits
-    // to the subtitle (#12093). A later session's edit to the same line replaces the earlier one.
+    // codes. The main window applies these to the subtitle when this window is closed with OK
+    // (#12093). A later session's edit to the same line replaces the earlier one.
     public List<ReviewTextChange> ReviewTextChanges { get; } = new();
+
+    // Set when the user accepted the merge-continuation-lines step: the subtitle actually sent
+    // to the TTS engine. The main window applies the merges on OK so the subtitle stays in sync
+    // with the generated audio; Cancel discards them.
+    public Subtitle? MergedSubtitle { get; private set; }
 
     private Subtitle _subtitle = new();
     private readonly IFileHelper _fileHelper;
@@ -164,8 +168,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         Region = string.Empty;
         VoiceCountInfo = string.Empty;
         ProgressText = string.Empty;
-        ProgressText = string.Empty;
-        DoneOrCancelText = string.Empty;
         IsVoiceTestEnabled = true;
         IsVoiceComboEnabled = true;
         IsGenerating = false;
@@ -970,6 +972,7 @@ public partial class TextToSpeechViewModel : ObservableObject
             merged.Paragraphs.Add(line.ToParagraph(_subtitle.OriginalFormat));
         }
         _subtitle = merged;
+        MergedSubtitle = merged;
     }
 
     /// <summary>
@@ -1075,7 +1078,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         IsGenerating = true;
         IsNotGenerating = false;
         ProgressOpacity = 1.0;
-        DoneOrCancelText = Se.Language.General.Cancel;
         SaveSettings();
 
         Se.WriteToolsLog(
@@ -1174,7 +1176,6 @@ public partial class TextToSpeechViewModel : ObservableObject
         _generateStopwatch.Stop();
         ProgressPercentText = string.Empty;
         ProgressEtaText = string.Empty;
-        DoneOrCancelText = Se.Language.General.Done;
         IsGenerating = false;
         IsNotGenerating = true;
         ProgressOpacity = 0;
@@ -1720,7 +1721,6 @@ public partial class TextToSpeechViewModel : ObservableObject
             IsGenerating = true;
             IsNotGenerating = false;
             ProgressOpacity = 1.0;
-            DoneOrCancelText = Se.Language.General.Cancel;
 
             try
             {
@@ -1869,9 +1869,17 @@ public partial class TextToSpeechViewModel : ObservableObject
         }
     }
 
+    // OK closes the window accepting the session's subtitle changes: the main window then
+    // applies merged lines and review text edits (MergedSubtitle/ReviewTextChanges) to the
+    // open subtitle. Cancel (or Escape / title-bar close) discards them.
     [RelayCommand]
     private void Ok()
     {
+        SaveSettings();
+        _cancellationTokenSource.Cancel();
+        IsGenerating = false;
+        IsNotGenerating = true;
+        ProgressOpacity = 0;
         OkPressed = true;
         Close();
     }
@@ -1879,20 +1887,18 @@ public partial class TextToSpeechViewModel : ObservableObject
     [RelayCommand]
     private void Cancel()
     {
-        _cancellationTokenSource.Cancel();
-        IsGenerating = false;
-        IsNotGenerating = true;
-        ProgressOpacity = 0;
-    }
+        // During a run: stop the pipeline but keep the window open (same as Escape), so the
+        // user can adjust settings and generate again.
+        if (IsGenerating)
+        {
+            _cancellationTokenSource.Cancel();
+            IsGenerating = false;
+            IsNotGenerating = true;
+            ProgressOpacity = 0;
+            return;
+        }
 
-    [RelayCommand]
-    private void Done()
-    {
-        SaveSettings();
-        _cancellationTokenSource.Cancel();
-        IsGenerating = false;
-        IsNotGenerating = true;
-        ProgressOpacity = 0;
+        // Idle: close without applying anything to the main window (OkPressed stays false).
         Close();
     }
 
