@@ -180,36 +180,25 @@ namespace Nikse.SubtitleEdit
                 if (HasBatchConvertUiArg(args))
                 {
                     SetupBatchConvertOnlyWindow(lifetime);
+
+                    // Force-terminate the process once the window closes. Under
+                    // ShutdownMode.OnLastWindowClose a single stray window is enough to keep the
+                    // app alive as an invisible background process - e.g. a leaked non-taskbar
+                    // "please wait" progress window or an undocked video/audio window. Such a
+                    // lingering process holds file/current-directory handles and locks the folder
+                    // it was working in, which the user then can't delete or move (#12172).
+                    // Editor windows get the same guarantee (counted across all windows, so
+                    // File > New window works) inside MainWindowFactory.
+                    if (lifetime.MainWindow != null)
+                    {
+                        lifetime.MainWindow.Closed += (_, _) => Environment.Exit(0);
+                    }
                 }
                 else
                 {
+                    // Window creation (content, scale, macOS menu bar, close-to-exit hook) lives
+                    // in MainWindowFactory, shared with File > New window's extra editor windows.
                     SetupMainWindow(lifetime);
-
-                    // Set the full macOS menu bar (File, Edit, Tools, …) on the Window.
-                    // NativeMenu.SetMenu(Application, …) only controls the App menu dropdown;
-                    // NativeMenu.SetMenu(Window, …) calls avnWindow.SetMainMenu and builds
-                    // the full NSMenuBar with separate top-level menus.
-                    if (OperatingSystem.IsMacOS() && lifetime.MainWindow != null)
-                    {
-                        var menuBarRoot = new NativeMenu();
-                        Nikse.SubtitleEdit.Features.Main.Layout.InitNativeMacMenu.MakeStructure(menuBarRoot, lifetime.MainWindow);
-                        NativeMenu.SetMenu(lifetime.MainWindow, menuBarRoot);
-                    }
-                }
-
-                // Force-terminate the process once the primary window closes. Under
-                // ShutdownMode.OnLastWindowClose a single stray window is enough to keep the app
-                // alive as an invisible background process - e.g. a leaked non-taskbar "please
-                // wait" progress window or an undocked video/audio window. Such a lingering process
-                // holds file/current-directory handles and locks the folder it was working in,
-                // which the user then can't delete or move (#12172). The main window's own
-                // OnClosing has already saved settings and run CleanUp() by the time Closed fires,
-                // and Closed never fires on a cancelled (unsaved-changes) close, so exiting here is
-                // safe and guarantees shutdown regardless of any window, native thread, or child
-                // handle still lingering.
-                if (lifetime.MainWindow != null)
-                {
-                    lifetime.MainWindow.Closed += (_, _) => Environment.Exit(0);
                 }
 
 #if DEBUG
@@ -378,30 +367,7 @@ namespace Nikse.SubtitleEdit
 
         private static void SetupMainWindow(ClassicDesktopStyleApplicationLifetime lifetime)
         {
-            lifetime.MainWindow = new Window
-            {
-                Title = AppName,
-                Name = "MainWindow",
-                Icon = UiUtil.GetSeIcon(),
-                MinWidth = 800,
-                MinHeight = 500,
-            };
-
-            var mainView = new MainView();
-
-            // Always host MainView inside a LayoutTransformControl, even at scale 1.0.
-            // SetCurrentTheme() runs before this window exists, so the saved UI scale is
-            // applied here at creation. Pre-wrapping also means later scale changes only
-            // update the transform instead of swapping window.Content, which would
-            // reparent the video player's native HWND and freeze the UI.
-            lifetime.MainWindow.Content = new LayoutTransformControl { Child = mainView };
-            UiTheme.ApplyScaleToWindow(lifetime.MainWindow);
-
-            // Restore window position before showing
-            if (Se.Settings.General.RememberPositionAndSize)
-            {
-                UiUtil.RestoreWindowPosition(lifetime.MainWindow);
-            }
+            lifetime.MainWindow = Nikse.SubtitleEdit.Features.Main.Layout.MainWindowFactory.Create(isPrimary: true);
 
             lifetime.Startup += (_, e) => ParseStartupArgs(e.Args);
         }
