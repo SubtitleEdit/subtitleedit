@@ -1,6 +1,34 @@
 
 Subtitle Edit Changelog
 
+v5.1.0-beta12 (7th of July 2026)
+
+* macOS: add multi-window support - "File -> New window" opens an independent editor window, with a per-window menu bar and Dock integration - thx muaz978
+* Add "Set start and go to next" shortcut (Subtitle Edit 4 parity) - thx NiggleHub
+* Text to speech: the Review window's OK now applies its subtitle changes to the main window (Cancel discards) - thx cvrle77
+* MLX Whisper (macOS): chunked decoding with punctuation persistence, beam search, and subtitle-standard cues for better long-recording quality - thx muaz978
+* Speech to text: stream Python engine (Whisper CTranslate2 / MLX Whisper) output live instead of only after the process finishes - thx muaz978
+* Speech to text: show live segments for the Whisper CTranslate2 engine (previously looked frozen) - thx muaz978
+* OCR: make word un-compositing fully optional - the "OCR: use word split list" toggle now disables all merged-word splitting, plus a new "OCR: try to guess unknown words" setting under Tools - thx fraternl
+* Waveform: refresh the context menu after changing the UI language (no restart needed) - thx pdjdev
+* Fix "Fix common OCR errors" splitting valid closed compounds in compounding languages (e.g. Dutch "modderwarboel") - thx fraternl
+* Fix app closing anyway when "Save as" was cancelled during the close prompt (losing unsaved work)
+* Fix a SubtitleEdit process staying alive in the background after closing the main window (which locked its folder) - thx KaDeeKe
+* Fix black video preview in the burn-in and visual sync windows until the window was resized - thx MbuguaDavid
+* Show the MKV progress window for multi-track files (not just single-track) - thx lukastribus
+* Export image-based (Blu-ray sup): keep the profile's Resolution on reopen - thx HolgerKuehn
+* Speech to text: fix a Latin period being appended after non-Latin punctuation (e.g. Arabic/Urdu) in the "add periods" step - thx muaz978
+* MLX Whisper (macOS): detect pipx/venv/conda installs and show a clearer "not found" message - thx asiaminor77
+* Online speech to text: log failures, add a DashScope region hint, timeout handling, and smaller OpenRouter chunks - thx caiweihan, acc4github
+* Whisper CPP: fix incorrect model file sizes shown in the model list - thx asiaminor77
+* Update CrispASR to v0.8.8
+* Update Japanese translation
+* Update Korean translation - thx 12si27
+* Update Italian translation - thx bovirus
+* Update Turkish translation - thx bilimiyorum
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-beta11 (4th of July 2026)
 
 * Fix settings not saving when the UI language had a duplicate/empty translation (e.g. Portuguese Brazil) - the Options dialog no longer aborts on a repeated translated string, and a failed save now logs and shows an error instead of silently doing nothing - thx rosilucia-hub
