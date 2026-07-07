@@ -45,6 +45,19 @@ public class SpeechToTextPostProcessingWindow : Window
         var checkChangeUnderlineToColor = UiUtil.MakeCheckBox(vm, nameof(SpeechToTextPostProcessingViewModel.ChangeUnderlineToColor));
         var colorPickerUnderlineToColor = UiUtil.MakeColorPickerButton(_vm, nameof(_vm.ChangeUnderlineToColorColor));
 
+        // Cue building for the helper-script engines (MLX Whisper / Faster Whisper Mac):
+        // subtitle cues rebuilt from word timestamps per the Netflix Timed Text Style
+        // Guide / BBC guideline limits, editable here instead of via command-line flags.
+        var labelCueBuilding = UiUtil.MakeLabel(Se.Language.Video.AudioToText.CueBuilding).WithBold();
+        var labelCueRebuild = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.CueRebuild);
+        var checkCueRebuild = UiUtil.MakeCheckBox(vm, nameof(SpeechToTextPostProcessingViewModel.CueRebuild));
+        var labelCueMaxChars = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.CueMaxChars);
+        var numericCueMaxChars = UiUtil.MakeNumericUpDownInt(20, 200, 84, 120, vm, nameof(SpeechToTextPostProcessingViewModel.CueMaxChars));
+        var labelCueMaxSeconds = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.CueMaxSeconds);
+        var numericCueMaxSeconds = UiUtil.MakeNumericUpDownDouble(1, 15, 7, 120, vm, nameof(SpeechToTextPostProcessingViewModel.CueMaxSeconds));
+        var labelCueMaxCps = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.CueMaxCps);
+        var numericCueMaxCps = UiUtil.MakeNumericUpDownDouble(5, 60, 20, 120, vm, nameof(SpeechToTextPostProcessingViewModel.CueMaxCps));
+
 
         var buttonPanel = UiUtil.MakeButtonBar(
             UiUtil.MakeButton(Se.Language.General.Ok, vm.OKCommand),
@@ -55,6 +68,11 @@ public class SpeechToTextPostProcessingWindow : Window
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -106,6 +124,25 @@ public class SpeechToTextPostProcessingWindow : Window
         grid.Add(labelChangeUnderlineToColor, row, 0);
         grid.Add(checkChangeUnderlineToColor, row, 1);
         grid.Add(colorPickerUnderlineToColor, row, 2);
+        row++;
+
+        grid.Add(labelCueBuilding, row, 0, 1, 3);
+        row++;
+
+        grid.Add(labelCueRebuild, row, 0);
+        grid.Add(checkCueRebuild, row, 1);
+        row++;
+
+        grid.Add(labelCueMaxChars, row, 0);
+        grid.Add(numericCueMaxChars, row, 1, 1, 2);
+        row++;
+
+        grid.Add(labelCueMaxSeconds, row, 0);
+        grid.Add(numericCueMaxSeconds, row, 1, 1, 2);
+        row++;
+
+        grid.Add(labelCueMaxCps, row, 0);
+        grid.Add(numericCueMaxCps, row, 1, 1, 2);
         row++;
 
         grid.Add(buttonPanel, row, 0, 1, 3);

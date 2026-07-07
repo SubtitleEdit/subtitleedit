@@ -17,6 +17,10 @@ public partial class SpeechToTextPostProcessingViewModel : ObservableObject
     [ObservableProperty] private bool _addPeriods;
     [ObservableProperty] private bool _changeUnderlineToColor;
     [ObservableProperty] private Color _changeUnderlineToColorColor;
+    [ObservableProperty] private bool _cueRebuild;
+    [ObservableProperty] private int _cueMaxChars;
+    [ObservableProperty] private double _cueMaxSeconds;
+    [ObservableProperty] private double _cueMaxCps;
 
     public Window? Window { get; set; }
 

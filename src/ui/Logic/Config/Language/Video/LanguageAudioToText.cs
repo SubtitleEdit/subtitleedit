@@ -1,4 +1,4 @@
-﻿namespace Nikse.SubtitleEdit.Logic.Config.Language;
+namespace Nikse.SubtitleEdit.Logic.Config.Language;
 
 public class LanguageAudioToText
 {
@@ -34,6 +34,11 @@ public class LanguageAudioToText
     public string FixCasing { get; set; }
     public string AddPeriods { get; set; }
     public string ChangeUnderlineToColor { get; set; }
+    public string CueBuilding { get; set; }
+    public string CueRebuild { get; set; }
+    public string CueMaxChars { get; set; }
+    public string CueMaxSeconds { get; set; }
+    public string CueMaxCps { get; set; }
 
     public string EngineSettings { get; set; }
     public string EngineSettingsSubtitle { get; set; }
@@ -73,6 +78,11 @@ public class LanguageAudioToText
         FixCasing = "Fix casing";
         AddPeriods = "Add periods";
         ChangeUnderlineToColor = "Change underline to color";
+        CueBuilding = "Cue building (MLX Whisper / Faster Whisper Mac)";
+        CueRebuild = "Rebuild cues from word timestamps";
+        CueMaxChars = "Max characters per cue";
+        CueMaxSeconds = "Max seconds per cue";
+        CueMaxCps = "Max characters per second";
 
         EngineSettings = "Speech-to-text engine settings";
         EngineSettingsSubtitle = "Speech-to-text engine";

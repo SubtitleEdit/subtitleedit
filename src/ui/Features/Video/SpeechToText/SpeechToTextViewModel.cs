@@ -2641,6 +2641,10 @@ public partial class SpeechToTextViewModel : ObservableObject
                 viewModal.BreakSplitLongLines = Se.Settings.Tools.AudioToText.WhisperPostProcessingSplitLines;
                 viewModal.ChangeUnderlineToColor = Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColor;
                 viewModal.ChangeUnderlineToColorColor = Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColorColor.FromHexToColor();
+                viewModal.CueRebuild = Se.Settings.Tools.AudioToText.WhisperCueRebuild;
+                viewModal.CueMaxChars = Se.Settings.Tools.AudioToText.WhisperCueMaxChars;
+                viewModal.CueMaxSeconds = Se.Settings.Tools.AudioToText.WhisperCueMaxSeconds;
+                viewModal.CueMaxCps = Se.Settings.Tools.AudioToText.WhisperCueMaxCps;
             });
 
         if (vm.OkPressed)
@@ -2654,6 +2658,10 @@ public partial class SpeechToTextViewModel : ObservableObject
             Se.Settings.Tools.AudioToText.WhisperPostProcessingSplitLines = vm.BreakSplitLongLines;
             Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColor = vm.ChangeUnderlineToColor;
             Se.Settings.Tools.AudioToText.WhisperPostProcessingChangeUnderlineToColorColor = vm.ChangeUnderlineToColorColor.FromColorToHex();
+            Se.Settings.Tools.AudioToText.WhisperCueRebuild = vm.CueRebuild;
+            Se.Settings.Tools.AudioToText.WhisperCueMaxChars = vm.CueMaxChars;
+            Se.Settings.Tools.AudioToText.WhisperCueMaxSeconds = vm.CueMaxSeconds;
+            Se.Settings.Tools.AudioToText.WhisperCueMaxCps = vm.CueMaxCps;
         }
     }
 
@@ -3598,6 +3606,22 @@ public partial class SpeechToTextViewModel : ObservableObject
             return p;
         }
 
+        // Cue-building settings for the helper-script engines, from the Whisper
+        // post-processing dialog. The helpers ignore unknown flags, but only these two
+        // engines understand them, so they are added only in their blocks below.
+        static string GetCueArgs()
+        {
+            var audioToText = Se.Settings.Tools.AudioToText;
+            if (!audioToText.WhisperCueRebuild)
+            {
+                return " --raw-segments";
+            }
+
+            return $" --max-cue-chars {audioToText.WhisperCueMaxChars}" +
+                   $" --max-cue-duration {audioToText.WhisperCueMaxSeconds.ToString(CultureInfo.InvariantCulture)}" +
+                   $" --max-cps {audioToText.WhisperCueMaxCps.ToString(CultureInfo.InvariantCulture)}";
+        }
+
         if (engine is MlxWhisperMac mlxWhisperMac)
         {
             // mlx-whisper is a library, not a CLI, so we run a bundled helper script via python3.
@@ -3623,7 +3647,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             var mlxParameters =
                 $"\"{scriptPath}\" --audio \"{waveFileName}\" --model {mlxWhisperMac.GetModelForCmdLine(model)} " +
-                $"--output-format srt --output-dir \"{outputDir}\"{languagePart}{taskPart}{extraPart}";
+                $"--output-format srt --output-dir \"{outputDir}\"{languagePart}{taskPart}{GetCueArgs()}{extraPart}";
 
             Se.WriteToolsLog($"{python} {mlxParameters}");
 
@@ -3690,7 +3714,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             var fwParameters =
                 $"\"{scriptPath}\" --audio \"{waveFileName}\" --model {fasterWhisperMac.GetModelForCmdLine(model)} " +
-                $"--output-format srt --output-dir \"{outputDir}\"{languagePart}{taskPart}{extraPart}";
+                $"--output-format srt --output-dir \"{outputDir}\"{languagePart}{taskPart}{GetCueArgs()}{extraPart}";
 
             Se.WriteToolsLog($"{python} {fwParameters}");
 
