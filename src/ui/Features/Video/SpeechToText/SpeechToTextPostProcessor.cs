@@ -193,6 +193,17 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                    !es.Contains("--one_word", StringComparison.OrdinalIgnoreCase);
         }
 
+        // Characters that already terminate a line, so no period should be appended.
+        // Includes Latin punctuation plus Arabic (\u061F ? \u060C , \u061B ;), Urdu
+        // full stop (\u06D4), ellipsis, CJK terminators, and closing quotes/brackets.
+        private static readonly char[] LineTerminationChars =
+            ".!?,:;)]}\"'\u061F\u060C\u061B\u06D4\u2026\u3002\uFF01\uFF1F\uFF0C\uFF1A\u3001\u00BB\u201D".ToCharArray();
+
+        private static bool EndsWithLineTerminationChar(string text)
+        {
+            return text.Length > 0 && LineTerminationChars.Contains(text[text.Length - 1]);
+        }
+
         public Subtitle AddPeriods(Subtitle inputSubtitle, string language)
         {
             if (IsNonStandardLineTerminationLanguage(language))
@@ -209,14 +220,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
                 var paragraph = subtitle.Paragraphs[index];
                 var next = subtitle.Paragraphs[index + 1];
                 if (next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds > SetPeriodIfDistanceToNextIsMoreThan &&
-                    !paragraph.Text.EndsWith('.') &&
-                    !paragraph.Text.EndsWith('!') &&
-                    !paragraph.Text.EndsWith('?') &&
-                    !paragraph.Text.EndsWith(',') &&
-                    !paragraph.Text.EndsWith(':') &&
-                    !paragraph.Text.EndsWith(')') &&
-                    !paragraph.Text.EndsWith(']') &&
-                    !paragraph.Text.EndsWith('}'))
+                    !EndsWithLineTerminationChar(paragraph.Text))
                 {
                     var gap = next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds;
                     if (gap > SetPeriodIfDistanceToNextIsMoreThanAlways)
@@ -239,14 +243,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText
 
             var last = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1);
             if (last != null &&
-                !last.Text.EndsWith('.') &&
-                !last.Text.EndsWith('!') &&
-                !last.Text.EndsWith('?') &&
-                !last.Text.EndsWith(',') &&
-                !last.Text.EndsWith(':') &&
-                !last.Text.EndsWith(')') &&
-                !last.Text.EndsWith(']') &&
-                !last.Text.EndsWith('}'))
+                !EndsWithLineTerminationChar(last.Text))
             {
                 subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text += ".";
             }
