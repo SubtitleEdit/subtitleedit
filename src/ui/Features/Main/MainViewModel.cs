@@ -356,6 +356,7 @@ public partial class MainViewModel :
     private bool _pauseRequested; // a pause command fired; freeze the cursor now, before mpv's IsPlaying flips
     private long _playheadPauseSettleTs; // when we last paused; briefly hold the estimate so it doesn't snap back
     private const double PlayheadPauseSettleMs = 300; // mpv's reported position lags ~100-200 ms after a pause
+    private const double PlayheadPausedEaseFactor = 0.25; // per-tick fraction for closing small paused-state gaps (~0.1 s converges in ~10 ticks / ~160 ms)
     private CancellationTokenSource _videoOpenTokenSource;
     private readonly HashSet<string> _waveformsBeingGenerated = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lock _waveformsBeingGeneratedLock = new();
@@ -1144,10 +1145,30 @@ public partial class MainViewModel :
 
     // Freeze the waveform cursor at its current spot the instant a pause is requested, instead of
     // letting it keep gliding for the ~100 ms until mpv's IsPlaying actually flips (#12033 follow-up).
-    private void RequestPausePlayheadFreeze()
+    // Internal so the video player control's own pause paths (toolbar button, click on the video
+    // surface) can trigger it too, via the PlayPauseRequested wiring in InitVideoPlayer (#12233).
+    internal void RequestPausePlayheadFreeze()
     {
         _pauseRequested = true;
         _playheadPauseSettleTs = Stopwatch.GetTimestamp();
+    }
+
+    // The player's Stop button pauses and seeks to 0; freeze the cursor immediately and pin it to
+    // the start so it jumps there at once instead of lingering until mpv reports the new position.
+    internal void OnVideoPlayerStopRequested()
+    {
+        RequestPausePlayheadFreeze();
+        PinPlayheadTo(0);
+    }
+
+    // Pause playback for actions that stay paused (dialogs, click-to-pause actions), freezing the
+    // interpolated waveform cursor at the same instant so it doesn't glide on after the pause
+    // (issue #12233). Play-again-immediately paths (PlayNext etc.) must NOT use this: they pin the
+    // playhead to the new position instead, and a lingering freeze would hold the cursor after Play.
+    private void PauseVideoAndFreezePlayhead(VideoPlayerControl vp)
+    {
+        RequestPausePlayheadFreeze();
+        vp.VideoPlayer.Pause();
     }
 
     [RelayCommand]
@@ -11684,13 +11705,23 @@ public partial class MainViewModel :
             return;
         }
 
-        control.VideoPlayer.Pause();
+        PauseVideoAndFreezePlayhead(control);
         var position = control.Position;
         var volume = control.Volume;
         var parent = (Control)control.Parent!;
 
         _fullScreenVideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
         _fullScreenVideoPlayerControl.IsFullScreen = true;
+        // The fullscreen player is created bare (not via MakeLayoutVideoPlayer), so wire the
+        // pause/stop cursor-freeze here as well (issue #12233).
+        _fullScreenVideoPlayerControl.PlayPauseRequested += willPause =>
+        {
+            if (willPause)
+            {
+                RequestPausePlayheadFreeze();
+            }
+        };
+        _fullScreenVideoPlayerControl.StopRequested += OnVideoPlayerStopRequested;
         var toggleKeys = Se.Settings.Shortcuts
             .FirstOrDefault(s => s.ActionName == nameof(VideoFullScreenCommand))?.Keys;
         var showMediaInfoKeys = Se.Settings.Shortcuts
@@ -14021,7 +14052,12 @@ public partial class MainViewModel :
         where TWindow : Window
         where TViewModel : class
     {
-        GetVideoPlayerControl()?.VideoPlayer.Pause();
+        var videoPlayerControl = GetVideoPlayerControl();
+        if (videoPlayerControl != null)
+        {
+            PauseVideoAndFreezePlayhead(videoPlayerControl);
+        }
+
         var result = await _windowService.ShowDialogAsync<TWindow, TViewModel>(owner ?? Window!, configureViewModel, configureWindow);
         _shortcutManager.ClearKeys();
         return result;
@@ -20402,11 +20438,21 @@ public partial class MainViewModel :
 
             // mpv has arrived (or we gave up waiting): resume normal tracking from the real position.
             _playheadSeekTarget = null;
-            _playheadEstimateSeconds = rawPosition;
             _playheadValid = true;
             _playheadLastRealSeconds = rawPosition;
             _playheadLastTimestamp = nowTimestamp;
-            return rawPosition;
+
+            if (vp.IsPlaying)
+            {
+                _playheadEstimateSeconds = rawPosition;
+                return rawPosition;
+            }
+
+            // Paused arrival (stop button / click-to-pause seeks): keep showing the pinned value
+            // and let the paused-branch easing below close the small arrival residual (up to the
+            // 0.15 s tolerance) over a few ticks — snapping here showed as a tiny cursor jump
+            // right after stopping.
+            return _playheadEstimateSeconds;
         }
 
         if (vp.IsPlaying && !_pauseRequested && _playheadValid && _playheadLastRealSeconds >= 0)
@@ -20503,7 +20549,20 @@ public partial class MainViewModel :
 
             if (!holdForPause)
             {
-                _playheadEstimateSeconds = rawPosition;
+                // Reconcile with mpv's settled position. Small gaps (the ~100 ms mpv keeps playing
+                // after a pause request, or a stop-pin's arrival tolerance) are eased over a few
+                // ticks instead of snapped — the snap showed as a tiny cursor jump shortly after
+                // pausing/stopping. Real discontinuities (seeks beyond the resync threshold) and
+                // sub-visible gaps still snap.
+                var gap = rawPosition - _playheadEstimateSeconds;
+                if (!_playheadValid || Math.Abs(gap) < 0.002 || Math.Abs(gap) >= PlayheadResyncThresholdSeconds)
+                {
+                    _playheadEstimateSeconds = rawPosition;
+                }
+                else
+                {
+                    _playheadEstimateSeconds += gap * PlayheadPausedEaseFactor;
+                }
             }
 
             _playheadValid = true;
@@ -20654,8 +20713,9 @@ public partial class MainViewModel :
                         var p = _playSelectionItem.GetNextSubtitle(mediaPlayerSeconds);
                         if (p == null)
                         {
-                            vp.VideoPlayer.Pause();
+                            PauseVideoAndFreezePlayhead(vp);
                             vp.Position = _playSelectionItem.EndSeconds;
+                            PinPlayheadTo(_playSelectionItem.EndSeconds);
                             ResetPlaySelection();
                         }
                         else
@@ -21328,7 +21388,7 @@ public partial class MainViewModel :
 
             if (Se.Settings.General.SubtitleDoubleClickAction == SubtitleDoubleClickActionType.GoToSubtitleAndPauseAndFocusTextBox.ToString())
             {
-                vp.VideoPlayer.Pause();
+                PauseVideoAndFreezePlayhead(vp);
                 vp.Position = seconds;
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 FocusEditTextBox();
@@ -21345,7 +21405,7 @@ public partial class MainViewModel :
             }
 
             // SubtitleDoubleClickActionType.GoToSubtitleAndPause
-            vp.VideoPlayer.Pause();
+            PauseVideoAndFreezePlayhead(vp);
             vp.Position = seconds;
             AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
         }
@@ -21444,7 +21504,7 @@ public partial class MainViewModel :
 
             if (Se.Settings.General.SubtitleSingleClickAction == SubtitleSingleClickActionType.GoToSubtitleAndPause.ToString())
             {
-                vp.VideoPlayer.Pause();
+                PauseVideoAndFreezePlayhead(vp);
                 vp.Position = seconds;
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 return;
@@ -21467,7 +21527,7 @@ public partial class MainViewModel :
 
             if (Se.Settings.General.SubtitleSingleClickAction == SubtitleSingleClickActionType.GoToSubtitleAndPauseAndFocusTextBox.ToString())
             {
-                vp.VideoPlayer.Pause();
+                PauseVideoAndFreezePlayhead(vp);
                 vp.Position = seconds;
                 AudioVisualizerCenterOnPositionIfNeeded(selectedItem, seconds);
                 FocusEditTextBox();
@@ -22304,7 +22364,7 @@ public partial class MainViewModel :
             switch (action)
             {
                 case WaveformSingleClickActionType.SetVideoPositionAndPauseAndSelectSubtitle:
-                    vp.VideoPlayer.Pause();
+                    PauseVideoAndFreezePlayhead(vp);
                     vp.Position = seconds;
                     if (e.Paragraph != null)
                     {
@@ -22317,7 +22377,7 @@ public partial class MainViewModel :
 
                     break;
                 case WaveformSingleClickActionType.SetVideopositionAndPauseAndSelectSubtitleAndCenter:
-                    vp.VideoPlayer.Pause();
+                    PauseVideoAndFreezePlayhead(vp);
                     vp.Position = seconds;
                     if (e.Paragraph != null)
                     {
@@ -22331,11 +22391,11 @@ public partial class MainViewModel :
 
                     break;
                 case WaveformSingleClickActionType.SetVideoPositionAndPause:
-                    vp.VideoPlayer.Pause();
+                    PauseVideoAndFreezePlayhead(vp);
                     vp.Position = seconds;
                     break;
                 case WaveformSingleClickActionType.SetVideopositionAndPauseAndCenter:
-                    vp.VideoPlayer.Pause();
+                    PauseVideoAndFreezePlayhead(vp);
                     vp.Position = seconds;
                     if (e.Paragraph != null)
                     {
@@ -22384,7 +22444,7 @@ public partial class MainViewModel :
 
                     break;
                 case WaveformDoubleClickActionType.Pause:
-                    vp.VideoPlayer.Pause();
+                    PauseVideoAndFreezePlayhead(vp);
                     break;
                 case WaveformDoubleClickActionType.Play:
                     vp.VideoPlayer.Play();
