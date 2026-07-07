@@ -46,10 +46,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             var fixAction = Language.FixText;
             var fixCount = 0;
+            // Honor the user's "try to guess unknown words" preference instead of forcing it on, so the
+            // aggressive unknown-word guessing/splitting can be turned off for this tool - matching the OCR
+            // window and SE 4 behavior (#12243).
+            var doTryToGuessUnknownWords = Se.Settings.Ocr.DoTryToGuessUnknownWords;
             for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
-                var result = OcrFixEngine.FixOcrErrors(i, p.Text, true);
+                var result = OcrFixEngine.FixOcrErrors(i, p.Text, doTryToGuessUnknownWords);
                 var text = result.GetText();
                 if (text != p.Text)
                 {

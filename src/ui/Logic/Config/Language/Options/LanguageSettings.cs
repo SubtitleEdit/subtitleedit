@@ -299,6 +299,7 @@ public class LanguageSettings
     public string SplitOddLineActionWeightBottom { get; set; }
     public string SplitOddLinesAction { get; set; }
     public string OcrUseWordSplitList { get; set; }
+    public string OcrGuessUnknownWords { get; set; }
     public string SpeechToTextSelectedLinesPromptFirstTimeOnly { get; set; }
     public string MultipleReplaceShowDotDotDotButtons { get; set; }
     public string GridFocusTextboxAfterInsertNew { get; set; }
@@ -626,6 +627,7 @@ public class LanguageSettings
         SplitOddLineActionWeightBottom = "Weight bottom";
         SplitOddLinesAction = "Split odd lines action";
         OcrUseWordSplitList = "OCR: use word split list";
+        OcrGuessUnknownWords = "OCR: try to guess unknown words";
         SpeechToTextSelectedLinesPromptFirstTimeOnly = "Speech to text: selected lines, prompt for language/engine first time only";
         MultipleReplaceShowDotDotDotButtons = "Multiple replace: show context menu buttons";
         GridFocusTextboxAfterInsertNew = "Grid: focus text box after insert new subtitle";

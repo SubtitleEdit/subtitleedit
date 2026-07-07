@@ -363,10 +363,16 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
                     }
                 }
 
-                var autoSplitGuesses = UnknownWordGuesser.CreateGuessesFromLetters(result, _threeLetterIsoLanguageName);
-                if (autoSplitGuesses.Any())
+                // Heuristic (affix/particle/phonetic) splitting of merged words is un-compositing too, so
+                // it must obey the same "word split list" toggle - otherwise turning that off still left this
+                // path splitting words unconditionally, which over-corrects more than it fixes (#12243).
+                if (SpellCheckConfig.UseWordSplitList())
                 {
-                    guesses.AddRange(autoSplitGuesses);
+                    var autoSplitGuesses = UnknownWordGuesser.CreateGuessesFromLetters(result, _threeLetterIsoLanguageName);
+                    if (autoSplitGuesses.Any())
+                    {
+                        guesses.AddRange(autoSplitGuesses);
+                    }
                 }
 
                 foreach (var g in guesses)
