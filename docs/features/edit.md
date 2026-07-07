@@ -84,7 +84,7 @@ Right-click a category node to open its context menu:
 - **New rule** — add a rule to this category
 - **Move up / Move down** — reorder categories
 - **Delete** — remove the category and all its rules
-- **Import** — load rules from a `.template` file (JSON or legacy SE4 XML) or a `.csv` file
+- **Import** — load rules from a `.template` file (JSON or legacy SE4 XML), a `.csv` file, or a Subtitle Edit 4 `Settings.xml` (its multiple replace groups are imported directly)
 - **Export** — save selected categories to a `.template` (JSON) or `.csv` file
 
 ### Managing rules
@@ -117,7 +117,7 @@ The expand/collapse buttons (`+` / `−`) above the tree expand or collapse all 
 
 ### Import / Export
 
-Rule sets are stored as JSON `.template` files and can be shared across installations. The export dialog lets you choose which categories to include. SE4-format XML files can also be imported.
+Rule sets are stored as JSON `.template` files and can be shared across installations. The export dialog lets you choose which categories to include. SE4-format XML files can also be imported — both rule files exported from Subtitle Edit 4 and a full Subtitle Edit 4 `Settings.xml` (found in `%AppData%\Subtitle Edit`, or next to `SubtitleEdit.exe` for portable installs), whose multiple replace groups are then imported.
 
 Rules can also be exported to and imported from **CSV** (choose the `.csv` type in the export/import dialog), which is convenient for editing rules in a spreadsheet or sharing them as a simple table.
 

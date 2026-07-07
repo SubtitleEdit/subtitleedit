@@ -93,4 +93,38 @@ public class Se4SettingsXmlReplaceImporterTests
     {
         Assert.Empty(Se4SettingsXmlReplaceImporter.ImportFromXml(xml));
     }
+
+    [Fact]
+    public void ImportFromXmlAsImportExport_ConvertsToImportDialogShape()
+    {
+        var item = Se4SettingsXmlReplaceImporter.ImportFromXmlAsImportExport(Se4SettingsXml);
+
+        Assert.NotNull(item);
+        var category = Assert.Single(item!.Categories!);
+        Assert.Equal("Fix OCR errors", category.Name);
+        Assert.NotNull(category.Rules);
+        Assert.Equal(2, category.Rules!.Count);
+        Assert.Equal("teh", category.Rules[0].Find);
+        Assert.Equal("CaseInsensitive", category.Rules[0].Type);
+        Assert.True(category.Rules[0].IsActive);
+        Assert.Equal("RegularExpression", category.Rules[1].Type);
+        Assert.False(category.Rules[1].IsActive);
+
+        // The dialog turns the item into tree nodes via Enum.Parse on the type
+        // string - make sure the whole conversion round-trips.
+        var nodes = item.RuleTreeNodeList();
+        Assert.NotNull(nodes);
+        var node = Assert.Single(nodes!);
+        Assert.Equal("Fix OCR errors", node.CategoryName);
+        Assert.NotNull(node.SubNodes);
+        Assert.Equal(2, node.SubNodes!.Count);
+        Assert.Equal(MultipleReplaceType.CaseInsensitive, node.SubNodes[0].Type);
+        Assert.Equal(MultipleReplaceType.RegularExpression, node.SubNodes[1].Type);
+    }
+
+    [Fact]
+    public void ImportFromXmlAsImportExport_ReturnsNullWhenNoGroups()
+    {
+        Assert.Null(Se4SettingsXmlReplaceImporter.ImportFromXmlAsImportExport("<Settings></Settings>"));
+    }
 }

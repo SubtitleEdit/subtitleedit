@@ -518,13 +518,13 @@ public partial class MultipleReplaceViewModel : ObservableObject
             return;
         }
 
-        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.Options.Settings.OpenRuleFile, "Replace rules", ".template", "CSV (comma separated)", ".csv");
+        var fileName = await _fileHelper.PickOpenFile(Window, Se.Language.Options.Settings.OpenRuleFile, "Replace rules", ".template;.xml", "CSV (comma separated)", ".csv");
         if (string.IsNullOrEmpty(fileName))
         {
             return;
         }
 
-        // import from json, SE4 xml or csv
+        // import from json, SE4 xml (exported rules or a full Settings.xml) or csv
         List<RuleTreeNode>? imported = null;
         try
         {
@@ -539,6 +539,10 @@ public partial class MultipleReplaceViewModel : ObservableObject
             else if (content.Contains("<MultipleSearchAndReplaceList>"))
             {
                 temp = Se4XmlImporter.ImportFromXml(content);
+            }
+            else if (content.Contains("<MultipleSearchAndReplaceGroups>"))
+            {
+                temp = Se4SettingsXmlReplaceImporter.ImportFromXmlAsImportExport(content);
             }
             else
             {
