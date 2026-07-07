@@ -8,6 +8,7 @@ public class LanguageMainMenu
     public string New { get; set; }
     public string NewKeepVideo { get; set; }
     public string NewWindow { get; set; }
+    public string WindowTitle { get; set; }
     public string Open { get; set; }
     public string OpenKeepVideo { get; set; }
     public string OpenOriginal { get; set; }
@@ -146,6 +147,7 @@ public class LanguageMainMenu
         New = "_New";
         NewKeepVideo = "New (keep _video)";
         NewWindow = "New _window";
+        WindowTitle = "Window";
         Open = "_Open...";
         OpenKeepVideo = "Open (_keep video)...";
         OpenOriginal = "Open ori_ginal...";

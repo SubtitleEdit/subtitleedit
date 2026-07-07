@@ -56,6 +56,7 @@ public static class InitNativeMacMenu
         public NativeMenuItem? ReopenItem;
         public NativeMenuItem? PluginsItem;
         public NativeMenuItem? AudioTracksItem;
+        public NativeMenuItem? WindowListItem;
 
         // The real VM instance, set by Sync(), used by all lazy click handlers.
         // MainViewModel is AddTransient in DI, so GetService() returns a new instance;
@@ -116,7 +117,11 @@ public static class InitNativeMacMenu
             _states.Add(state);
             _active ??= state;
 
-            window.Activated += (_, _) => _active = state;
+            window.Activated += (_, _) =>
+            {
+                _active = state;
+                UpdateWindowMenus();
+            };
             window.Closed += (_, _) =>
             {
                 if (state.Vm != null && state.Handler != null)
@@ -129,6 +134,8 @@ public static class InitNativeMacMenu
                 {
                     _active = _states.LastOrDefault();
                 }
+
+                UpdateWindowMenus();
             };
         }
 
@@ -401,10 +408,54 @@ public static class InitNativeMacMenu
         root.Items.Add(new NativeMenuItem(Clean(l.Synchronization)) { Menu = syncItems });
         root.Items.Add(new NativeMenuItem(Clean(l.Translate)) { Menu = translateItems });
         root.Items.Add(new NativeMenuItem(Clean(l.Options)) { Menu = optionsItems });
+
+        // Window list: one entry per open editor window, checkmark on the active one.
+        // Avalonia cannot register an AppKit windows menu (which is what would also feed
+        // the Dock icon's window list), so this menu is the discoverable way to switch
+        // between the windows File > New window opens.
+        state.WindowListItem = new NativeMenuItem(Clean(l.WindowTitle)) { Menu = new NativeMenu() };
+        root.Items.Add(state.WindowListItem);
+
         root.Items.Add(new NativeMenuItem(Clean(l.HelpTitle)) { Menu = helpItems });
         root.Items.Add(assaMenu);
 
         _building = null;
+
+        UpdateWindowMenus();
+    }
+
+    // Rebuilds every window's "Window" menu so all menu bars list all open editor
+    // windows. Called when a window opens, closes, or is activated (activation also
+    // refreshes titles, which change when a file is opened or saved).
+    private static void UpdateWindowMenus()
+    {
+        foreach (var menuState in _states)
+        {
+            if (menuState.WindowListItem?.Menu is not NativeMenu menu)
+            {
+                continue;
+            }
+
+            menu.Items.Clear();
+            foreach (var other in _states)
+            {
+                var window = other.Window;
+                if (window == null)
+                {
+                    continue;
+                }
+
+                var title = string.IsNullOrWhiteSpace(window.Title) ? "Subtitle Edit" : window.Title;
+                var item = new NativeMenuItem(title)
+                {
+                    ToggleType = MenuItemToggleType.CheckBox,
+                    IsChecked = ReferenceEquals(other, _active),
+                };
+                var captured = window;
+                item.Click += (_, _) => captured.Activate();
+                menu.Items.Add(item);
+            }
+        }
     }
 
     // Called from LoadLanguage to rebuild all menu strings after a language switch.
