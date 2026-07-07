@@ -39,6 +39,7 @@ public class LanguageAudioToText
     public string CueMaxChars { get; set; }
     public string CueMaxSeconds { get; set; }
     public string CueMaxCps { get; set; }
+    public string VocabularyPrompt { get; set; }
 
     public string EngineSettings { get; set; }
     public string EngineSettingsSubtitle { get; set; }
@@ -83,6 +84,7 @@ public class LanguageAudioToText
         CueMaxChars = "Max characters per cue";
         CueMaxSeconds = "Max seconds per cue";
         CueMaxCps = "Max characters per second";
+        VocabularyPrompt = "Vocabulary prompt (names, places, terms)";
 
         EngineSettings = "Speech-to-text engine settings";
         EngineSettingsSubtitle = "Speech-to-text engine";

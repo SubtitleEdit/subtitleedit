@@ -2645,6 +2645,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 viewModal.CueMaxChars = Se.Settings.Tools.AudioToText.WhisperCueMaxChars;
                 viewModal.CueMaxSeconds = Se.Settings.Tools.AudioToText.WhisperCueMaxSeconds;
                 viewModal.CueMaxCps = Se.Settings.Tools.AudioToText.WhisperCueMaxCps;
+                viewModal.VocabularyPrompt = Se.Settings.Tools.AudioToText.WhisperVocabularyPrompt;
             });
 
         if (vm.OkPressed)
@@ -2662,6 +2663,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             Se.Settings.Tools.AudioToText.WhisperCueMaxChars = vm.CueMaxChars;
             Se.Settings.Tools.AudioToText.WhisperCueMaxSeconds = vm.CueMaxSeconds;
             Se.Settings.Tools.AudioToText.WhisperCueMaxCps = vm.CueMaxCps;
+            Se.Settings.Tools.AudioToText.WhisperVocabularyPrompt = vm.VocabularyPrompt ?? string.Empty;
         }
     }
 
@@ -3612,12 +3614,25 @@ public partial class SpeechToTextViewModel : ObservableObject
         static string GetCueArgs()
         {
             var audioToText = Se.Settings.Tools.AudioToText;
-            if (!audioToText.WhisperCueRebuild)
+
+            // Vocabulary prompt: Whisper's documented way to bias recognition toward
+            // names and technical terms. Quotes are stripped so the value stays a
+            // single command line argument.
+            var promptPart = string.Empty;
+            var vocabularyPrompt = (audioToText.WhisperVocabularyPrompt ?? string.Empty)
+                .Replace("\"", string.Empty).Trim();
+            if (vocabularyPrompt.Length > 0)
             {
-                return " --raw-segments";
+                promptPart = $" --initial-prompt \"{vocabularyPrompt}\"";
             }
 
-            return $" --max-cue-chars {audioToText.WhisperCueMaxChars}" +
+            if (!audioToText.WhisperCueRebuild)
+            {
+                return promptPart + " --raw-segments";
+            }
+
+            return promptPart +
+                   $" --max-cue-chars {audioToText.WhisperCueMaxChars}" +
                    $" --max-cue-duration {audioToText.WhisperCueMaxSeconds.ToString(CultureInfo.InvariantCulture)}" +
                    $" --max-cps {audioToText.WhisperCueMaxCps.ToString(CultureInfo.InvariantCulture)}";
         }

@@ -452,17 +452,24 @@ def main():
         "word_timestamps": use_words,
     }
 
+    # A user prompt (vocabulary: names, places, technical terms) combines with the
+    # punctuation prompt instead of replacing it, so custom terms never cost
+    # punctuation. Whisper only reads the final 224 tokens of a prompt, which both
+    # of these together stay well within.
     prompt = args.initial_prompt
     use_batching = BatchedInferencePipeline is not None and args.batch_size > 1
-    if prompt is None and not args.no_punctuation_prompt and use_batching:
+    if not args.no_punctuation_prompt and use_batching:
+        punctuation_prompt = None
         if language:
-            prompt = PUNCTUATION_PROMPTS.get(language.lower())
-        if prompt is None:
+            punctuation_prompt = PUNCTUATION_PROMPTS.get(language.lower())
+        if punctuation_prompt is None:
             # Any language without a curated prompt, or auto-detection: derive the
             # prompt from the model's own sequential decoding of the opening.
             print("Priming punctuation from the first 45 seconds (sequential pass)...",
                   flush=True)
-            prompt = bootstrap_punctuated_prompt(model, args.audio, language)
+            punctuation_prompt = bootstrap_punctuated_prompt(model, args.audio, language)
+        if punctuation_prompt:
+            prompt = f"{punctuation_prompt} {prompt}".strip() if prompt else punctuation_prompt
     if prompt:
         transcribe_kwargs["initial_prompt"] = prompt
 

@@ -95,7 +95,9 @@ def ensure_model_downloaded(repo):
                 if pct == self._last_pct:
                     return
                 self._last_pct = pct
-                label = (self.desc or "Downloading model").strip().rstrip(":") or "Downloading model"
+                # getattr: huggingface_hub can drive this class through paths where
+                # the tqdm base has not populated .desc yet.
+                label = (getattr(self, "desc", None) or "Downloading model").strip().rstrip(":") or "Downloading model"
                 print(f"{label}: {pct}%", flush=True)
 
             def update(self, n=1):
@@ -464,9 +466,15 @@ def main():
     # its effect decays. Decoding each VAD speech chunk as its own call (below)
     # re-applies the prompt at every chunk, which keeps punctuation practically
     # present across a full episode instead of only near the start.
+    # A user prompt (vocabulary: names, places, technical terms) combines with the
+    # punctuation prompt instead of replacing it, so custom terms never cost
+    # punctuation. Whisper only reads the final 224 tokens of a prompt, which both
+    # of these together stay well within.
     prompt = args.initial_prompt
-    if prompt is None and not args.no_punctuation_prompt and language:
-        prompt = PUNCTUATION_PROMPTS.get(language.lower())
+    if not args.no_punctuation_prompt and language:
+        punctuation_prompt = PUNCTUATION_PROMPTS.get(language.lower())
+        if punctuation_prompt:
+            prompt = f"{punctuation_prompt} {prompt}".strip() if prompt else punctuation_prompt
 
     collected = []
     words = []

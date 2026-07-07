@@ -84,6 +84,7 @@ public class SeAudioToText
     // subtitle guideline limits below, instead of writing Whisper's raw segments.
     public bool WhisperCueRebuild { get; set; } = true;
     public int WhisperCueMaxChars { get; set; } = 84;
+    public string WhisperVocabularyPrompt { get; set; } = string.Empty;
     public double WhisperCueMaxSeconds { get; set; } = 7.0;
     public double WhisperCueMaxCps { get; set; } = 20.0;
     public bool WhisperPostProcessingChangeUnderlineToColor { get; set; }
