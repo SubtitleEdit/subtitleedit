@@ -227,6 +227,14 @@ public partial class SpeechToTextViewModel : ObservableObject
             Engines.Add(new MlxWhisperMac());
         }
 
+        // Faster Whisper Mac drives the pip-installed faster-whisper (CTranslate2) library.
+        // CPU-only (CTranslate2 has no Apple GPU backend) and slower than MLX, but its decoding
+        // gives better results in some languages (e.g. Arabic). Works on Apple Silicon and Intel.
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            Engines.Add(new FasterWhisperMac());
+        }
+
         Engines.Add(new WhisperEngineOpenAi());
 
         // Add OpenAI Compatible STT engine (available on all platforms)
@@ -407,6 +415,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             or WhisperChoice.ConstMe
             or WhisperChoice.PurfviewFasterWhisperXxl
             or WhisperChoice.CTranslate2
+            or WhisperChoice.FasterWhisperMac
             or WhisperChoice.OpenAi;
     }
 
@@ -2791,6 +2800,16 @@ public partial class SpeechToTextViewModel : ObservableObject
                     return;
                 }
 
+                if (engine is FasterWhisperMac)
+                {
+                    // pip-managed engine - Subtitle Edit cannot download it.
+                    await MessageBox.Show(
+                        Window!,
+                        $"{engine.Name} not found",
+                        "faster-whisper not found - install it with: pip3 install faster-whisper");
+                    return;
+                }
+
                 if (engine is ICrispAsrEngine && Configuration.IsRunningOnWindows)
                 {
                     var answer = await MessageBox.Show(
@@ -3644,6 +3663,73 @@ public partial class SpeechToTextViewModel : ObservableObject
             return mlxProcess;
         }
 
+        if (engine is FasterWhisperMac fasterWhisperMac)
+        {
+            // faster-whisper is a library, not a CLI, so we run a bundled helper script via
+            // python3. It writes "<audio-basename>.srt" into the audio's folder, which
+            // GetResultFromSrt then picks up. CTranslate2 has no Apple GPU backend, so this
+            // decodes on the CPU; the script uses batched inference and one thread per core
+            // to compensate (see faster_whisper_transcribe.py).
+            var python = fasterWhisperMac.GetExecutable();
+            var scriptPath = fasterWhisperMac.GetTranscribeScript();
+            var outputDir = Path.GetDirectoryName(waveFileName) ?? string.Empty;
+
+            var fwLanguage = language;
+            if (fwLanguage.Equals("english", StringComparison.OrdinalIgnoreCase))
+            {
+                fwLanguage = "en";
+            }
+
+            var languagePart = !string.IsNullOrWhiteSpace(fwLanguage) &&
+                               !fwLanguage.Equals("auto", StringComparison.OrdinalIgnoreCase)
+                ? $" --language {fwLanguage}"
+                : string.Empty;
+            var taskPart = translate ? " --task translate" : string.Empty;
+            var fwExtraArgs = engine.CommandLineParameter;
+            var extraPart = string.IsNullOrWhiteSpace(fwExtraArgs) ? string.Empty : " " + fwExtraArgs.Trim();
+
+            var fwParameters =
+                $"\"{scriptPath}\" --audio \"{waveFileName}\" --model {fasterWhisperMac.GetModelForCmdLine(model)} " +
+                $"--output-format srt --output-dir \"{outputDir}\"{languagePart}{taskPart}{extraPart}";
+
+            Se.WriteToolsLog($"{python} {fwParameters}");
+
+            var fwProcess = new Process
+            {
+                StartInfo = new ProcessStartInfo(python, fwParameters)
+                {
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                }
+            };
+
+            fwProcess.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
+            fwProcess.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
+
+            if (dataReceivedHandler != null)
+            {
+                fwProcess.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+                fwProcess.StartInfo.StandardErrorEncoding = Encoding.UTF8;
+                fwProcess.StartInfo.RedirectStandardOutput = true;
+                fwProcess.StartInfo.RedirectStandardError = true;
+                fwProcess.OutputDataReceived += dataReceivedHandler;
+                fwProcess.ErrorDataReceived += dataReceivedHandler;
+            }
+
+#pragma warning disable CA1416
+            fwProcess.Start();
+#pragma warning restore CA1416
+
+            if (dataReceivedHandler != null)
+            {
+                fwProcess.BeginOutputReadLine();
+                fwProcess.BeginErrorReadLine();
+            }
+
+            return fwProcess;
+        }
+
         var settings = Se.Settings.Tools.AudioToText;
         var args = engine.CommandLineParameter;
         var cppVulkanDevice = string.Empty;
@@ -4245,6 +4331,14 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             // pip-managed engine - Subtitle Edit cannot download it, so show install help instead.
             EngineDownloadHint = "mlx-whisper not found - install it with: pip3 install mlx-whisper";
+            IsEngineDownloadButtonVisible = false;
+            return;
+        }
+
+        if (engine is FasterWhisperMac && !isInstalled)
+        {
+            // pip-managed engine - Subtitle Edit cannot download it, so show install help instead.
+            EngineDownloadHint = "faster-whisper not found - install it with: pip3 install faster-whisper";
             IsEngineDownloadButtonVisible = false;
             return;
         }
