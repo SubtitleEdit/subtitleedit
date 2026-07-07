@@ -142,14 +142,29 @@ SENTENCE_END = ".!?…؟۔。！？"
 SOFT_BREAK = ",;:،؛"
 
 
+# Whisper's batched pipeline decodes VAD chunks without the running text context the
+# sequential decoder keeps, and in some languages (Arabic notably) that makes it drop
+# punctuation entirely, which in turn breaks sentence-based cue splitting. A short
+# punctuated prompt in the audio's language restores it (verified on large-v3: zero
+# punctuation marks without the prompt, normal sentence punctuation with it) at no
+# speed cost. Applied only when the language is explicitly chosen; --initial-prompt
+# overrides, --no-punctuation-prompt disables.
+PUNCTUATION_PROMPTS = {
+    "ar": "\u0645\u0631\u062d\u0628\u0627\u064b\u060c \u0643\u064a\u0641 \u062d\u0627\u0644\u0643\u061f \u0623\u0646\u0627 \u0628\u062e\u064a\u0631. \u0634\u0643\u0631\u0627\u064b \u062c\u0632\u064a\u0644\u0627\u064b!",
+    "en": "Hello there. How are you? I'm fine, thanks!",
+    "tr": "Merhaba, nas\u0131ls\u0131n? Ben iyiyim. Te\u015fekk\u00fcr ederim!",
+}
+
+
 def split_chunk(chunk, max_chars, max_duration):
     """Split one sentence's words into cue-sized parts, balanced instead of greedy.
 
     Cutting a sentence at the last word that still fits leaves orphan cues like a
-    lone "editors." half a second long. Instead, an oversized sentence is split at
-    the soft-punctuation boundary nearest its middle (falling back to the word
-    boundary nearest the middle), recursing until every part fits, so both halves
-    stay readable.
+    lone "editors." half a second long. Instead, an oversized run is split near its
+    middle, preferring (in order) a soft-punctuation boundary, then the largest
+    silence gap between words (a real speech pause, which is where a subtitler
+    would cut), then the word boundary nearest the middle; recursing until every
+    part fits, so all pieces stay readable.
     """
     total_chars = sum(len(w[2]) for w in chunk)
     duration = chunk[-1][1] - chunk[0][0]
@@ -157,17 +172,30 @@ def split_chunk(chunk, max_chars, max_duration):
         return [chunk]
 
     # Candidate split points: after word i (never after the last word). Track the
-    # cumulative character position of each candidate to measure distance from the middle.
+    # cumulative character position of each candidate to measure distance from the
+    # middle, and the pause before the next word.
     candidates = []
     acc = 0
     for i, w in enumerate(chunk[:-1]):
         acc += len(w[2])
-        candidates.append((i, acc))
+        gap = chunk[i + 1][0] - w[1]
+        candidates.append((i, acc, gap))
 
-    half = (acc + len(chunk[-1][2])) / 2
-    soft = [(i, pos) for i, pos in candidates if chunk[i][2].rstrip()[-1:] in SOFT_BREAK]
-    pick_from = soft if soft else candidates
-    best_i = min(pick_from, key=lambda c: abs(c[1] - half))[0]
+    total = acc + len(chunk[-1][2])
+    half = total / 2
+
+    # Keep splits inside the middle band so neither piece comes out tiny.
+    band = [c for c in candidates if 0.3 * total <= c[1] <= 0.7 * total] or candidates
+
+    soft = [c for c in band if chunk[c[0]][2].rstrip()[-1:] in SOFT_BREAK]
+    if soft:
+        best_i = min(soft, key=lambda c: abs(c[1] - half))[0]
+    else:
+        by_gap = max(band, key=lambda c: c[2])
+        if by_gap[2] >= 0.15:
+            best_i = by_gap[0]
+        else:
+            best_i = min(band, key=lambda c: abs(c[1] - half))[0]
 
     left, right = chunk[:best_i + 1], chunk[best_i + 1:]
     return split_chunk(left, max_chars, max_duration) + split_chunk(right, max_chars, max_duration)
@@ -237,6 +265,10 @@ def main():
                         help="Max seconds per subtitle cue before a forced break")
     parser.add_argument("--raw-segments", action="store_true",
                         help="Write Whisper's raw segments instead of word-timestamp resegmented cues")
+    parser.add_argument("--initial-prompt", default=None,
+                        help="Text to bias the decoder (overrides the automatic punctuation prompt)")
+    parser.add_argument("--no-punctuation-prompt", action="store_true",
+                        help="Disable the automatic punctuation-biasing prompt")
     # Tolerate unknown extra flags from the user's advanced-settings box instead of dying on them.
     args, unknown = parser.parse_known_args()
     if unknown:
@@ -289,6 +321,12 @@ def main():
         "task": args.task,
         "word_timestamps": use_words,
     }
+
+    prompt = args.initial_prompt
+    if prompt is None and not args.no_punctuation_prompt and language:
+        prompt = PUNCTUATION_PROMPTS.get(language.lower())
+    if prompt:
+        transcribe_kwargs["initial_prompt"] = prompt
 
     use_batching = BatchedInferencePipeline is not None and args.batch_size > 1
     if use_batching:
