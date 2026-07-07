@@ -356,6 +356,7 @@ public partial class MainViewModel :
     private bool _pauseRequested; // a pause command fired; freeze the cursor now, before mpv's IsPlaying flips
     private long _playheadPauseSettleTs; // when we last paused; briefly hold the estimate so it doesn't snap back
     private const double PlayheadPauseSettleMs = 300; // mpv's reported position lags ~100-200 ms after a pause
+    private const double PlayheadPausedEaseFactor = 0.25; // per-tick fraction for closing small paused-state gaps (~0.1 s converges in ~10 ticks / ~160 ms)
     private CancellationTokenSource _videoOpenTokenSource;
     private readonly HashSet<string> _waveformsBeingGenerated = new(StringComparer.OrdinalIgnoreCase);
     private readonly Lock _waveformsBeingGeneratedLock = new();
@@ -20437,11 +20438,21 @@ public partial class MainViewModel :
 
             // mpv has arrived (or we gave up waiting): resume normal tracking from the real position.
             _playheadSeekTarget = null;
-            _playheadEstimateSeconds = rawPosition;
             _playheadValid = true;
             _playheadLastRealSeconds = rawPosition;
             _playheadLastTimestamp = nowTimestamp;
-            return rawPosition;
+
+            if (vp.IsPlaying)
+            {
+                _playheadEstimateSeconds = rawPosition;
+                return rawPosition;
+            }
+
+            // Paused arrival (stop button / click-to-pause seeks): keep showing the pinned value
+            // and let the paused-branch easing below close the small arrival residual (up to the
+            // 0.15 s tolerance) over a few ticks — snapping here showed as a tiny cursor jump
+            // right after stopping.
+            return _playheadEstimateSeconds;
         }
 
         if (vp.IsPlaying && !_pauseRequested && _playheadValid && _playheadLastRealSeconds >= 0)
@@ -20538,7 +20549,20 @@ public partial class MainViewModel :
 
             if (!holdForPause)
             {
-                _playheadEstimateSeconds = rawPosition;
+                // Reconcile with mpv's settled position. Small gaps (the ~100 ms mpv keeps playing
+                // after a pause request, or a stop-pin's arrival tolerance) are eased over a few
+                // ticks instead of snapped — the snap showed as a tiny cursor jump shortly after
+                // pausing/stopping. Real discontinuities (seeks beyond the resync threshold) and
+                // sub-visible gaps still snap.
+                var gap = rawPosition - _playheadEstimateSeconds;
+                if (!_playheadValid || Math.Abs(gap) < 0.002 || Math.Abs(gap) >= PlayheadResyncThresholdSeconds)
+                {
+                    _playheadEstimateSeconds = rawPosition;
+                }
+                else
+                {
+                    _playheadEstimateSeconds += gap * PlayheadPausedEaseFactor;
+                }
             }
 
             _playheadValid = true;
