@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers.LibMpvDynamic;
@@ -26,6 +27,16 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private volatile bool _disposed;
     private string _fileName = string.Empty;
     private double? _audioEndBound;
+
+    // Serializes native mpv calls against Dispose. Concurrent mpv client calls are legal
+    // (libmpv is thread-safe), so they enter as READERS and never block each other; Dispose
+    // enters as the WRITER so mpv_terminate_destroy can never overlap an in-flight call.
+    // Without this, a command still running on the threadpool (e.g. LoadFile's "loadfile")
+    // or a position poll could race Dispose and execute on a destroyed handle - a native
+    // use-after-free that kills the process instantly with nothing in error-log.txt
+    // (#12093: app exits when pressing Done in the TTS window while audio is in flight).
+    // Recursion support is required because e.g. the Position getter calls IsPaused.
+    private readonly ReaderWriterLockSlim _nativeLock = new(LockRecursionPolicy.SupportsRecursion);
 
     [StructLayout(LayoutKind.Sequential)]
     private struct MpvOpenGlInitParams
@@ -347,12 +358,19 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     public int Initialize()
     {
         EnsureNotDisposed();
-        if (_mpv == IntPtr.Zero || _mpvInitialize == null)
+        if (_mpv == IntPtr.Zero || _mpvInitialize == null || !TryLockNative())
         {
             return -1;
         }
 
-        return _mpvInitialize(_mpv);
+        try
+        {
+            return _mpvInitialize(_mpv);
+        }
+        finally
+        {
+            UnlockNative();
+        }
     }
 
     private static byte[] GetUtf8Bytes(string s)
@@ -373,14 +391,21 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     public int SetOptionString(string name, string value)
     {
-        if (_mpvSetOptionString == null || _mpv == IntPtr.Zero)
+        if (_mpvSetOptionString == null || _mpv == IntPtr.Zero || !TryLockNative())
         {
             return -1;
         }
 
-        var nameBytes = GetUtf8Bytes(name);
-        var valueBytes = GetUtf8Bytes(value);
-        return _mpvSetOptionString(_mpv, nameBytes, valueBytes);
+        try
+        {
+            var nameBytes = GetUtf8Bytes(name);
+            var valueBytes = GetUtf8Bytes(value);
+            return _mpvSetOptionString(_mpv, nameBytes, valueBytes);
+        }
+        finally
+        {
+            UnlockNative();
+        }
     }
 
     private int _brightness;
@@ -416,20 +441,27 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     private int DoMpvCommand(params string[] args)
     {
-        if (_mpv == IntPtr.Zero || _mpvCommand == null)
+        if (_mpv == IntPtr.Zero || _mpvCommand == null || !TryLockNative())
         {
             return 0;
         }
 
-        var mainPtr = AllocateUtf8IntPtrArrayWithSentinel(args, out var byteArrayPointers);
-        var result = _mpvCommand(_mpv, mainPtr);
-        foreach (var ptr in byteArrayPointers)
+        try
         {
-            Marshal.FreeHGlobal(ptr);
-        }
+            var mainPtr = AllocateUtf8IntPtrArrayWithSentinel(args, out var byteArrayPointers);
+            var result = _mpvCommand(_mpv, mainPtr);
+            foreach (var ptr in byteArrayPointers)
+            {
+                Marshal.FreeHGlobal(ptr);
+            }
 
-        Marshal.FreeHGlobal(mainPtr);
-        return result;
+            Marshal.FreeHGlobal(mainPtr);
+            return result;
+        }
+        finally
+        {
+            UnlockNative();
+        }
     }
 
     private void OnRenderUpdate(IntPtr ctx)
@@ -460,7 +492,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         // so let mpv auto-detect from the context it receives.
 
         // Initialize mpv first
-        var err = _mpvInitialize(_mpv);
+        var err = InitializeCoreLocked();
         if (err < 0)
         {
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer InitializeWithOpenGL mpv_initialize");
@@ -501,17 +533,12 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                 Marshal.StructureToPtr(renderParams[i], offset, false);
             }
 
-            // Create render context
-            err = _mpvRenderContextCreate(out _renderContext, _mpv, renderParamsPtr);
+            // Create render context + update callback (locked against Dispose)
+            err = CreateRenderContextLocked(renderParamsPtr);
             if (err < 0)
             {
                 Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer InitializeWithOpenGL mpv_render_context_create");
             }
-
-            // Set update callback
-            _renderUpdateCallback = OnRenderUpdate;
-            var callbackPtr = Marshal.GetFunctionPointerForDelegate(_renderUpdateCallback);
-            _mpvRenderContextSetUpdateCallback(_renderContext, callbackPtr, IntPtr.Zero);
 
             // Cleanup
             Marshal.FreeHGlobal(renderParamsPtr);
@@ -549,7 +576,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         SetOptionString("vo", "libmpv");
         SetOptionString("gpu-api", "metal");
 
-        var err = _mpvInitialize(_mpv);
+        var err = InitializeCoreLocked();
         if (err < 0)
         {
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer InitializeWithMetal mpv_initialize");
@@ -588,16 +615,12 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                 Marshal.StructureToPtr(renderParams[i], offset, false);
             }
 
-            err = _mpvRenderContextCreate(out _renderContext, _mpv, renderParamsPtr);
+            // Create render context + update callback (locked against Dispose)
+            err = CreateRenderContextLocked(renderParamsPtr);
             if (err < 0)
             {
                 Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer InitializeWithMetal mpv_render_context_create");
             }
-
-            // Register the render-update callback so mpv can trigger redraws.
-            _renderUpdateCallback = OnRenderUpdate;
-            var callbackPtr = Marshal.GetFunctionPointerForDelegate(_renderUpdateCallback);
-            _mpvRenderContextSetUpdateCallback(_renderContext, callbackPtr, IntPtr.Zero);
 
             Marshal.FreeHGlobal(renderParamsPtr);
             Marshal.FreeHGlobal(apiTypePtr);
@@ -638,7 +661,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         {
             Marshal.StructureToPtr(renderParams[0], renderParamsPtr, false);
 
-            var err = _mpvRenderContextRender(_renderContext, renderParamsPtr);
+            var err = RenderContextRenderLocked(renderParamsPtr);
             if (err < 0 && err != -2) // -2 = MPV_ERROR_NOTHING_TO_RENDER
             {
                 Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer RenderMetal mpv_render_context_render");
@@ -694,7 +717,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                         Marshal.StructureToPtr(renderParams[i], offset, false);
                     }
 
-                    var err = _mpvRenderContextRender(_renderContext, renderParamsPtr);
+                    var err = RenderContextRenderLocked(renderParamsPtr);
                     if (err < 0 && err != -2) // -2 = nothing to render
                     {
                         Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer RenderToFramebuffer mpv_render_context_render");
@@ -723,18 +746,31 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             return;
         }
 
+        // Flag first so calls that haven't taken the lock yet bail out immediately instead of
+        // queueing behind the write lock (a position poll must never block on the potentially
+        // slow mpv_terminate_destroy below).
         _disposed = true;
 
-        if (_renderContext != IntPtr.Zero && _mpvRenderContextFree != null)
+        // Wait for in-flight native calls (readers) to drain, then tear down. New calls are
+        // rejected by TryLockNative, so nothing can touch the handles after this point.
+        _nativeLock.EnterWriteLock();
+        try
         {
-            _mpvRenderContextFree(_renderContext);
-            _renderContext = IntPtr.Zero;
-        }
+            if (_renderContext != IntPtr.Zero && _mpvRenderContextFree != null)
+            {
+                _mpvRenderContextFree(_renderContext);
+                _renderContext = IntPtr.Zero;
+            }
 
-        if (_mpv != IntPtr.Zero && _mpvTerminateDestroy != null)
+            if (_mpv != IntPtr.Zero && _mpvTerminateDestroy != null)
+            {
+                _mpvTerminateDestroy.Invoke(_mpv);
+                _mpv = IntPtr.Zero;
+            }
+        }
+        finally
         {
-            _mpvTerminateDestroy.Invoke(_mpv);
-            _mpv = IntPtr.Zero;
+            _nativeLock.ExitWriteLock();
         }
     }
 
@@ -743,6 +779,143 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         if (_disposed)
         {
             Se.LogError(new ObjectDisposedException(nameof(LibMpvDynamicPlayer)), "LibMpvDynamicPlayer method called after disposal");
+        }
+    }
+
+    /// <summary>
+    /// Enters the native lock as a reader, or returns false when disposal has started (the
+    /// caller must then skip the native call and return its fallback value). Never blocks:
+    /// readers only conflict with the Dispose writer, so a false return means "shutting down".
+    /// </summary>
+    private bool TryLockNative()
+    {
+        if (_disposed || !_nativeLock.TryEnterReadLock(0))
+        {
+            return false;
+        }
+
+        if (_disposed)
+        {
+            _nativeLock.ExitReadLock();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void UnlockNative()
+    {
+        _nativeLock.ExitReadLock();
+    }
+
+    /// <summary>Locked mpv_get_property for numeric/flag properties; -1 when unavailable.</summary>
+    private int GetPropertyDoubleLocked(string name, int format, ref double value)
+    {
+        if (_mpvGetPropertyDouble == null || _mpv == IntPtr.Zero || !TryLockNative())
+        {
+            return -1;
+        }
+
+        try
+        {
+            return _mpvGetPropertyDouble(_mpv, GetUtf8Bytes(name), format, ref value);
+        }
+        finally
+        {
+            UnlockNative();
+        }
+    }
+
+    /// <summary>Locked mpv_get_property for string properties; null when unavailable.</summary>
+    private string? GetPropertyStringLocked(string name)
+    {
+        if (_mpvGetPropertyString == null || _mpvFree == null || _mpv == IntPtr.Zero || !TryLockNative())
+        {
+            return null;
+        }
+
+        try
+        {
+            var ptr = IntPtr.Zero;
+            var err = _mpvGetPropertyString(_mpv, GetUtf8Bytes(name), MPV_FORMAT_STRING, ref ptr);
+            if (err < 0 || ptr == IntPtr.Zero)
+            {
+                return null;
+            }
+
+            var result = Marshal.PtrToStringUTF8(ptr);
+            _mpvFree(ptr);
+            return result;
+        }
+        finally
+        {
+            UnlockNative();
+        }
+    }
+
+    /// <summary>Locked mpv_initialize; -1 when unavailable.</summary>
+    private int InitializeCoreLocked()
+    {
+        if (_mpvInitialize == null || _mpv == IntPtr.Zero || !TryLockNative())
+        {
+            return -1;
+        }
+
+        try
+        {
+            return _mpvInitialize(_mpv);
+        }
+        finally
+        {
+            UnlockNative();
+        }
+    }
+
+    /// <summary>
+    /// Locked mpv_render_context_create + update-callback registration; -1 when unavailable.
+    /// The callback is only registered when creation succeeded.
+    /// </summary>
+    private int CreateRenderContextLocked(IntPtr renderParamsPtr)
+    {
+        if (_mpvRenderContextCreate == null || _mpvRenderContextSetUpdateCallback == null ||
+            _mpv == IntPtr.Zero || !TryLockNative())
+        {
+            return -1;
+        }
+
+        try
+        {
+            var err = _mpvRenderContextCreate(out _renderContext, _mpv, renderParamsPtr);
+            if (err >= 0 && _renderContext != IntPtr.Zero)
+            {
+                _renderUpdateCallback = OnRenderUpdate;
+                var callbackPtr = Marshal.GetFunctionPointerForDelegate(_renderUpdateCallback);
+                _mpvRenderContextSetUpdateCallback(_renderContext, callbackPtr, IntPtr.Zero);
+            }
+
+            return err;
+        }
+        finally
+        {
+            UnlockNative();
+        }
+    }
+
+    /// <summary>Locked mpv_render_context_render; -2 (nothing to render) when unavailable.</summary>
+    private int RenderContextRenderLocked(IntPtr renderParamsPtr)
+    {
+        if (_mpvRenderContextRender == null || !TryLockNative())
+        {
+            return -2;
+        }
+
+        try
+        {
+            return _renderContext == IntPtr.Zero ? -2 : _mpvRenderContextRender(_renderContext, renderParamsPtr);
+        }
+        finally
+        {
+            UnlockNative();
         }
     }
 
@@ -952,8 +1125,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             try
             {
                 double pauseValue = 0;
-                var nameBytes = GetUtf8Bytes("pause");
-                var err = _mpvGetPropertyDouble(_mpv, nameBytes, MPV_FORMAT_FLAG, ref pauseValue);
+                var err = GetPropertyDoubleLocked("pause", MPV_FORMAT_FLAG, ref pauseValue);
 
                 if (err < 0)
                 {
@@ -982,8 +1154,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             try
             {
                 double pauseValue = 0;
-                var nameBytes = GetUtf8Bytes("pause");
-                var err = _mpvGetPropertyDouble(_mpv, nameBytes, MPV_FORMAT_FLAG, ref pauseValue);
+                var err = GetPropertyDoubleLocked("pause", MPV_FORMAT_FLAG, ref pauseValue);
 
                 if (err < 0)
                 {
@@ -1012,8 +1183,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         try
         {
             double eofValue = 0;
-            var nameBytes = GetUtf8Bytes("eof-reached");
-            var err = _mpvGetPropertyDouble(_mpv, nameBytes, MPV_FORMAT_FLAG, ref eofValue);
+            var err = GetPropertyDoubleLocked("eof-reached", MPV_FORMAT_FLAG, ref eofValue);
             if (err < 0)
             {
                 return false;
@@ -1055,8 +1225,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             try
             {
                 double position = 0;
-                var nameBytes = GetUtf8Bytes("time-pos");
-                var err = _mpvGetPropertyDouble(_mpv, nameBytes, MPV_FORMAT_DOUBLE, ref position);
+                var err = GetPropertyDoubleLocked("time-pos", MPV_FORMAT_DOUBLE, ref position);
 
                 if (err < 0)
                 {
@@ -1100,8 +1269,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             try
             {
                 double duration = 0;
-                var nameBytes = GetUtf8Bytes("duration");
-                var err = _mpvGetPropertyDouble(_mpv, nameBytes, MPV_FORMAT_DOUBLE, ref duration);
+                var err = GetPropertyDoubleLocked("duration", MPV_FORMAT_DOUBLE, ref duration);
 
                 if (err < 0)
                 {
@@ -1132,8 +1300,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             try
             {
                 double volume = 100;
-                var nameBytes = GetUtf8Bytes("volume");
-                var err = _mpvGetPropertyDouble(_mpv, nameBytes, MPV_FORMAT_DOUBLE, ref volume);
+                var err = GetPropertyDoubleLocked("volume", MPV_FORMAT_DOUBLE, ref volume);
 
                 if (err < 0)
                 {
@@ -1181,8 +1348,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             try
             {
                 var speed = 1.0;
-                var nameBytes = GetUtf8Bytes("speed");
-                var err = _mpvGetPropertyDouble(_mpv, nameBytes, MPV_FORMAT_DOUBLE, ref speed);
+                var err = GetPropertyDoubleLocked("speed", MPV_FORMAT_DOUBLE, ref speed);
 
                 if (err < 0)
                 {
@@ -1356,8 +1522,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         {
             // Get track list count
             double trackCount = 0;
-            var trackCountBytes = GetUtf8Bytes("track-list/count");
-            var err = _mpvGetPropertyDouble(_mpv, trackCountBytes, MPV_FORMAT_DOUBLE, ref trackCount);
+            var err = GetPropertyDoubleLocked("track-list/count", MPV_FORMAT_DOUBLE, ref trackCount);
 
             if (err < 0 || trackCount <= 0)
             {
@@ -1368,18 +1533,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             for (var i = 0; i < (int)trackCount; i++)
             {
                 // Get track type
-                var typePtr = IntPtr.Zero;
-                var typeBytes = GetUtf8Bytes($"track-list/{i}/type");
-                err = _mpvGetPropertyString(_mpv, typeBytes, MPV_FORMAT_STRING, ref typePtr);
-
-                if (err < 0 || typePtr == IntPtr.Zero)
-                {
-                    continue;
-                }
-
-                var type = Marshal.PtrToStringUTF8(typePtr);
-                _mpvFree(typePtr);
-
+                var type = GetPropertyStringLocked($"track-list/{i}/type");
                 if (!string.Equals(type, "audio", StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
@@ -1387,8 +1541,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
                 // Get track ID
                 double trackId = -1;
-                var idBytes = GetUtf8Bytes($"track-list/{i}/id");
-                err = _mpvGetPropertyDouble(_mpv, idBytes, MPV_FORMAT_DOUBLE, ref trackId);
+                err = GetPropertyDoubleLocked($"track-list/{i}/id", MPV_FORMAT_DOUBLE, ref trackId);
 
                 if (err < 0 || trackId < 0)
                 {
@@ -1401,31 +1554,22 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                 };
 
                 // Get track language (optional)
-                var langPtr = IntPtr.Zero;
-                var langBytes = GetUtf8Bytes($"track-list/{i}/lang");
-                err = _mpvGetPropertyString(_mpv, langBytes, MPV_FORMAT_STRING, ref langPtr);
-
-                if (err >= 0 && langPtr != IntPtr.Zero)
+                var lang = GetPropertyStringLocked($"track-list/{i}/lang");
+                if (lang != null)
                 {
-                    trackInfo.Language = Marshal.PtrToStringUTF8(langPtr);
-                    _mpvFree(langPtr);
+                    trackInfo.Language = lang;
                 }
 
                 // Get track title (optional)
-                var titlePtr = IntPtr.Zero;
-                var titleBytes = GetUtf8Bytes($"track-list/{i}/title");
-                err = _mpvGetPropertyString(_mpv, titleBytes, MPV_FORMAT_STRING, ref titlePtr);
-
-                if (err >= 0 && titlePtr != IntPtr.Zero)
+                var title = GetPropertyStringLocked($"track-list/{i}/title");
+                if (title != null)
                 {
-                    trackInfo.Title = Marshal.PtrToStringUTF8(titlePtr);
-                    _mpvFree(titlePtr);
+                    trackInfo.Title = title;
                 }
 
                 // Get track ff-index (optional)
                 double ffIndex = -1;
-                var ffIndexBytes = GetUtf8Bytes($"track-list/{i}/ff-index");
-                err = _mpvGetPropertyDouble(_mpv, ffIndexBytes, MPV_FORMAT_DOUBLE, ref ffIndex);
+                err = GetPropertyDoubleLocked($"track-list/{i}/ff-index", MPV_FORMAT_DOUBLE, ref ffIndex);
 
                 if (err >= 0 && ffIndex >= 0)
                 {
@@ -1434,8 +1578,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
                 // Get track selected status
                 double selectedValue = 0;
-                var selectedBytes = GetUtf8Bytes($"track-list/{i}/selected");
-                err = _mpvGetPropertyDouble(_mpv, selectedBytes, MPV_FORMAT_FLAG, ref selectedValue);
+                err = GetPropertyDoubleLocked($"track-list/{i}/selected", MPV_FORMAT_FLAG, ref selectedValue);
 
                 trackInfo.IsSelected = err >= 0 && selectedValue == 1;
 
@@ -1479,7 +1622,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         }
 
         // Initialize mpv
-        var err = _mpvInitialize(_mpv);
+        var err = InitializeCoreLocked();
         if (err < 0)
         {
             throw new InvalidOperationException(GetErrorString(err));
@@ -1509,17 +1652,12 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                     Marshal.StructureToPtr(renderParams[i], offset, false);
                 }
 
-                // Create render context
-                err = _mpvRenderContextCreate(out _renderContext, _mpv, renderParamsPtr);
+                // Create render context + update callback (locked against Dispose)
+                err = CreateRenderContextLocked(renderParamsPtr);
                 if (err < 0)
                 {
                     throw new InvalidOperationException($"Failed to create software render context: {GetErrorString(err)}");
                 }
-
-                // Set update callback
-                _renderUpdateCallback = OnRenderUpdate;
-                var callbackPtr = Marshal.GetFunctionPointerForDelegate(_renderUpdateCallback);
-                _mpvRenderContextSetUpdateCallback(_renderContext, callbackPtr, IntPtr.Zero);
             }
             finally
             {
@@ -1593,7 +1731,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                             Marshal.StructureToPtr(renderParams[i], offset, false);
                         }
 
-                        var err = _mpvRenderContextRender(_renderContext, renderParamsPtr);
+                        var err = RenderContextRenderLocked(renderParamsPtr);
                         if (err < 0 && err != -2) // -2 = nothing to render
                         {
                             System.Diagnostics.Debug.WriteLine($"Software render failed: {GetErrorString(err)} (code: {err})");
