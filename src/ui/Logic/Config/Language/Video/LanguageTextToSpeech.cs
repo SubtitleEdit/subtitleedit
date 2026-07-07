@@ -102,14 +102,11 @@ public class LanguageTextToSpeech
     public string MergeContinuationLinesPromptTitle { get; set; }
     public string MergeContinuationLinesPromptMessage { get; set; }
 
-    // Applying review text edits back to the main subtitle
-    public string UpdateSubtitleTitle { get; set; }
-    public string UpdateSubtitleFromReviewSingular { get; set; }
-    public string UpdateSubtitleFromReviewPlural { get; set; }
-    public string ReviewMergedLinesNotUpdatedSingular { get; set; }
-    public string ReviewMergedLinesNotUpdatedPlural { get; set; }
+    // Applying the TTS window's changes (review text edits, merged lines) back to the subtitle
     public string SubtitleUpdatedFromReviewSingular { get; set; }
     public string SubtitleUpdatedFromReviewPlural { get; set; }
+    public string SubtitleMergedLinesAppliedSingular { get; set; }
+    public string SubtitleMergedLinesAppliedPlural { get; set; }
 
     public LanguageTextToSpeech()
     {
@@ -212,14 +209,9 @@ public class LanguageTextToSpeech
                                               "Merging them before generation lets the TTS engine speak each thought as one breath group, which usually sounds more natural." + Environment.NewLine + Environment.NewLine +
                                               "Review and apply merges now?";
 
-        UpdateSubtitleTitle = "Update subtitle?";
-        UpdateSubtitleFromReviewSingular = "You edited the text of one line while reviewing the generated speech." + Environment.NewLine + Environment.NewLine +
-                                           "Update the subtitle with this change so its text stays in sync with the audio?";
-        UpdateSubtitleFromReviewPlural = "You edited the text of {0} lines while reviewing the generated speech." + Environment.NewLine + Environment.NewLine +
-                                         "Update the subtitle with these changes so its text stays in sync with the audio?";
-        ReviewMergedLinesNotUpdatedSingular = "One edited line was merged before generation and could not be updated automatically.";
-        ReviewMergedLinesNotUpdatedPlural = "{0} edited lines were merged before generation and could not be updated automatically.";
         SubtitleUpdatedFromReviewSingular = "Updated one line from the speech review";
         SubtitleUpdatedFromReviewPlural = "Updated {0} lines from the speech review";
+        SubtitleMergedLinesAppliedSingular = "Applied one line merge from text to speech";
+        SubtitleMergedLinesAppliedPlural = "Applied {0} line merges from text to speech";
     }
 }

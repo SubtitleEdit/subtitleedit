@@ -85,8 +85,10 @@ public class TextToSpeechWindow : Window
         // back up into the outer grid's column sizing. See the panel's class comment for why.
         var progressBarLayout = new WidthIgnoringPanel { Children = { MakeProgressBarControls(vm) } };
 
-        var buttonDone = UiUtil.MakeButtonDone(vm.DoneCommand).WithBindIsVisible(nameof(vm.IsNotGenerating));
-        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand).WithBindIsVisible(nameof(vm.IsGenerating));
+        // OK accepts the session (the main window applies merged lines and review text edits);
+        // Cancel stops a running generation, or - when idle - closes discarding those changes.
+        var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindIsVisible(nameof(vm.IsNotGenerating));
+        var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var buttonCast = UiUtil.MakeButton(string.Empty, vm.ShowCastCommand)
             .WithIconLeftBindText(IconNames.PoliceBadge, nameof(vm.CastButtonText))
             .WithBindIsVisible(nameof(vm.HasCast))
@@ -105,8 +107,8 @@ public class TextToSpeechWindow : Window
         var buttonPanel = UiUtil.MakeButtonBar(
             buttonCast,
             UiUtil.MakeButton(Se.Language.General.ImportDotDotDot, vm.ImportCommand).WithBindIsEnabled(nameof(vm.IsNotGenerating)),
+            buttonOk,
             buttonCancel,
-            buttonDone,
             buttonGenerate
         ).WithMarginTop(0);
 
@@ -146,7 +148,7 @@ public class TextToSpeechWindow : Window
 
         Content = grid;
 
-        Activated += delegate { buttonDone.Focus(); }; // hack to make OnKeyDown work
+        Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
     }
 
     // Install-status dot for the engine combo: green = ready, amber = a newer build is available,

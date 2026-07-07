@@ -16,6 +16,7 @@ Generate speech audio from subtitle text using various TTS engines.
 4. Optionally enable **Review audio clips** to review each generated clip
 5. Optionally enable **Generate video file** to create a video with the audio
 6. Click **Generate** to start
+7. Close the window with **OK** to apply the session's subtitle changes (lines merged before generation, text edits made in the review window) to the subtitle in the main window — or **Cancel** to discard them
 
 ## Supported Engines
 
@@ -89,7 +90,7 @@ Each subtitle line is shown as a row with the following columns:
 |--------|-------------|
 | **Include** | Checkbox to include or exclude the line from the final output |
 | **#** | Subtitle line number |
-| **Text** | The subtitle text (editable — double-click to modify before regenerating) |
+| **Text** | The subtitle text (editable — double-click to modify before regenerating). Text edits are applied to the subtitle in the main window when the Text to speech window is closed with **OK** |
 | **Voice** | The voice used for that line |
 | **Speed** | The speed factor applied to fit the audio into the subtitle's duration |
 | **CPS** | Characters per second for the subtitle line |

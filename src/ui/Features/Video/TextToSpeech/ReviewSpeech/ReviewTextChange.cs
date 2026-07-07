@@ -3,9 +3,9 @@ namespace Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 /// <summary>
 /// A text edit made in the review window, keyed by the time codes the line had when the review
 /// opened (waveform drags may change the paragraph's times afterwards). The main window uses the
-/// times to find the matching subtitle line and offer to apply the edit (#12093) - numbers and
-/// indices can't be used because the TTS pipeline may have renumbered (empty-line removal) or
-/// merged sentences.
+/// times to find the matching subtitle line and applies the edit when the TTS window is closed
+/// with OK (#12093) - numbers and indices can't be used because the TTS pipeline may have
+/// renumbered (empty-line removal) or merged sentences.
 /// </summary>
 public class ReviewTextChange
 {

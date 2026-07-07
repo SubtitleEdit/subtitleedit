@@ -6685,103 +6685,125 @@ public partial class MainViewModel :
                 _videoFileName ?? string.Empty, AudioVisualizer?.WavePeaks, Path.GetTempPath());
         });
 
-        await OfferToApplyTtsReviewTextChanges(result.ReviewTextChanges);
+        // OK is the consent to apply the session's subtitle changes; Cancel/Escape/title-bar
+        // close discards them.
+        if (result.OkPressed)
+        {
+            ApplyTtsChanges(result.MergedSubtitle, result.ReviewTextChanges);
+        }
     }
 
     /// <summary>
-    /// After the TTS window closes: if the user edited line texts in its review step, offer to
-    /// apply those edits to the subtitle so the text stays in sync with the generated audio and
-    /// doesn't have to be redone by hand (#12093). Lines are matched by the time codes they had
-    /// when the review opened - the TTS pipeline may renumber (empty-line removal keeps times) so
-    /// numbers/indices can't be used. A line merged before generation spans several original
-    /// lines, so its segment matches no single line's start+end; those edits can't be split back
-    /// and are reported rather than applied. Edits that match no line at all (e.g. an imported
-    /// session for a different subtitle) are ignored silently.
+    /// After the TTS window closes with OK: apply the subtitle changes made there, so the text
+    /// stays in sync with the generated audio and doesn't have to be redone by hand (#12093).
+    /// Two kinds exist: lines merged by the merge-continuation-lines step (each merged line
+    /// replaces the run of lines it spans) and text edits from the review step. Both are matched
+    /// by the time codes the lines had when the step ran - the TTS pipeline may renumber
+    /// (empty-line removal keeps times) so numbers/indices can't be used. Changes that match no
+    /// line (e.g. an imported session for a different subtitle) are ignored silently.
     /// </summary>
-    private async Task OfferToApplyTtsReviewTextChanges(List<ReviewTextChange> changes)
+    private void ApplyTtsChanges(Subtitle? mergedSubtitle, List<ReviewTextChange> changes)
     {
-        if (changes.Count == 0 || Window == null)
-        {
-            return;
-        }
-
         const double toleranceMs = 0.5;
-        var matches = new List<(SubtitleLineViewModel Line, string NewText)>();
+
+        // Merges first: a merged line then carries its merged time codes, so a review edit to a
+        // merged sentence applies through the same 1:1 matching below.
         var mergedCount = 0;
-        foreach (var change in changes)
+        foreach (var paragraph in mergedSubtitle?.Paragraphs ?? new List<Paragraph>())
         {
-            // Exact 1:1 match - same start and end as a current line.
-            var line = Subtitles.FirstOrDefault(s =>
-                Math.Abs(s.StartTime.TotalMilliseconds - change.StartMs) < toleranceMs &&
-                Math.Abs(s.EndTime.TotalMilliseconds - change.EndMs) < toleranceMs);
-            if (line != null)
+            var firstIndex = -1;
+            for (var i = 0; i < Subtitles.Count; i++)
             {
-                if (line.Text != change.NewText)
+                if (Math.Abs(Subtitles[i].StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) < toleranceMs)
                 {
-                    matches.Add((line, change.NewText));
+                    firstIndex = i;
+                    break;
+                }
+            }
+
+            if (firstIndex < 0 ||
+                Math.Abs(Subtitles[firstIndex].EndTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds) < toleranceMs)
+            {
+                continue; // no match, or 1:1 - this paragraph wasn't merged
+            }
+
+            // The merged paragraph keeps the first line's start and the last line's end, so the
+            // consecutive run it replaced ends at the line matching its end time.
+            var lastIndex = -1;
+            for (var i = firstIndex + 1; i < Subtitles.Count; i++)
+            {
+                if (Math.Abs(Subtitles[i].EndTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds) < toleranceMs)
+                {
+                    lastIndex = i;
+                    break;
                 }
 
+                if (Subtitles[i].EndTime.TotalMilliseconds > paragraph.EndTime.TotalMilliseconds)
+                {
+                    break;
+                }
+            }
+
+            if (lastIndex < 0)
+            {
                 continue;
             }
 
-            // No 1:1 line, but the segment starts on a real line and ends past it: this line was
-            // merged with following line(s) before generation. The edited text covers the whole
-            // merged sentence and can't be safely split back, so flag it instead of applying.
-            var mergedInto = Subtitles.FirstOrDefault(s =>
-                Math.Abs(s.StartTime.TotalMilliseconds - change.StartMs) < toleranceMs &&
-                s.EndTime.TotalMilliseconds < change.EndMs - toleranceMs);
-            if (mergedInto != null)
+            var mergedLine = Subtitles[firstIndex];
+            mergedLine.Text = paragraph.Text;
+            mergedLine.EndTime = TimeSpan.FromMilliseconds(paragraph.EndTime.TotalMilliseconds);
+            for (var i = lastIndex; i > firstIndex; i--)
             {
-                mergedCount++;
+                if (ReferenceEquals(Subtitles[i], SelectedSubtitle))
+                {
+                    SelectedSubtitle = mergedLine;
+                }
+
+                Subtitles.RemoveAt(i);
+            }
+
+            mergedCount++;
+        }
+
+        var updatedCount = 0;
+        foreach (var change in changes)
+        {
+            var line = Subtitles.FirstOrDefault(s =>
+                Math.Abs(s.StartTime.TotalMilliseconds - change.StartMs) < toleranceMs &&
+                Math.Abs(s.EndTime.TotalMilliseconds - change.EndMs) < toleranceMs);
+            if (line != null && line.Text != change.NewText)
+            {
+                line.Text = change.NewText;
+                updatedCount++;
             }
         }
 
-        if (matches.Count == 0 && mergedCount == 0)
+        if (mergedCount == 0 && updatedCount == 0)
         {
             return;
         }
 
-        var lang = Se.Language.Video.TextToSpeech;
-
-        // Only merged edits and nothing directly applicable: just tell the user why they weren't
-        // applied - there's nothing to confirm.
-        if (matches.Count == 0)
-        {
-            await MessageBox.Show(
-                Window,
-                lang.UpdateSubtitleTitle,
-                FormatCount(mergedCount, lang.ReviewMergedLinesNotUpdatedSingular, lang.ReviewMergedLinesNotUpdatedPlural),
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
-            return;
-        }
-
-        var message = FormatCount(matches.Count, lang.UpdateSubtitleFromReviewSingular, lang.UpdateSubtitleFromReviewPlural);
         if (mergedCount > 0)
         {
-            message += Environment.NewLine + Environment.NewLine +
-                       FormatCount(mergedCount, lang.ReviewMergedLinesNotUpdatedSingular, lang.ReviewMergedLinesNotUpdatedPlural);
-        }
-
-        var answer = await MessageBox.Show(
-            Window,
-            lang.UpdateSubtitleTitle,
-            message,
-            MessageBoxButtons.YesNo,
-            MessageBoxIcon.Question);
-
-        if (answer != MessageBoxResult.Yes)
-        {
-            return;
-        }
-
-        foreach (var (line, newText) in matches)
-        {
-            line.Text = newText;
+            Renumber();
         }
 
         _updateAudioVisualizer = true;
-        ShowStatus(FormatCount(matches.Count, lang.SubtitleUpdatedFromReviewSingular, lang.SubtitleUpdatedFromReviewPlural));
+        RefreshSubtitlePreview();
+
+        var lang = Se.Language.Video.TextToSpeech;
+        var parts = new List<string>();
+        if (updatedCount > 0)
+        {
+            parts.Add(FormatCount(updatedCount, lang.SubtitleUpdatedFromReviewSingular, lang.SubtitleUpdatedFromReviewPlural));
+        }
+
+        if (mergedCount > 0)
+        {
+            parts.Add(FormatCount(mergedCount, lang.SubtitleMergedLinesAppliedSingular, lang.SubtitleMergedLinesAppliedPlural));
+        }
+
+        ShowStatus(string.Join(" - ", parts));
     }
 
     // Picks the singular or plural resource string for a count, formatting the plural with {0}.
