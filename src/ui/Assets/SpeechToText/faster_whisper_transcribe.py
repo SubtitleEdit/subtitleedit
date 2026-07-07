@@ -21,8 +21,20 @@ short, and their boundaries ignore sentence structure. Like Purfview's
 Faster-Whisper-XXL "--standard" mode on Windows, the helper therefore requests
 word-level timestamps and rebuilds the cues itself: breaking at sentence-ending
 punctuation, at silence gaps, and at length/duration limits, with each cue
-timed from its first word's start to its last word's end. `--raw-segments`
-restores the plain Whisper segmentation.
+timed from its first word's start to its last word's end. A final pass applies
+the industry conventions from the Netflix Timed Text Style Guide and the BBC
+subtitle guidelines: 42 characters per line and two lines per cue (84), at
+most 7 seconds and at least 5/6 second per cue (too-short cues merge into a
+neighbor when the result still fits), a two-frame minimum gap between cues,
+and cue ends extended when the reading speed would exceed the limit.
+`--raw-segments` restores the plain Whisper segmentation.
+
+Punctuation drives the sentence splitting, and the batched pipeline drops it
+in some languages because it decodes chunks without running text context. A
+short punctuated prompt in the audio's language restores it; for languages
+without a curated prompt (or with language auto-detection), the prompt is
+bootstrapped from the model itself by sequentially decoding the first 45
+seconds, which keeps the fix working for every Whisper language.
 
 Models are resolved by name (tiny ... large-v3, large-v3-turbo) and downloaded
 automatically from Hugging Face on first use. Audio decoding uses PyAV, which
@@ -147,13 +159,75 @@ SOFT_BREAK = ",;:،؛"
 # punctuation entirely, which in turn breaks sentence-based cue splitting. A short
 # punctuated prompt in the audio's language restores it (verified on large-v3: zero
 # punctuation marks without the prompt, normal sentence punctuation with it) at no
-# speed cost. Applied only when the language is explicitly chosen; --initial-prompt
-# overrides, --no-punctuation-prompt disables.
+# speed cost. These curated prompts are a fast path for common languages; every other
+# language (and language auto-detection) uses bootstrap_punctuated_prompt instead.
+# --initial-prompt overrides, --no-punctuation-prompt disables.
 PUNCTUATION_PROMPTS = {
     "ar": "\u0645\u0631\u062d\u0628\u0627\u064b\u060c \u0643\u064a\u0641 \u062d\u0627\u0644\u0643\u061f \u0623\u0646\u0627 \u0628\u062e\u064a\u0631. \u0634\u0643\u0631\u0627\u064b \u062c\u0632\u064a\u0644\u0627\u064b!",
     "en": "Hello there. How are you? I'm fine, thanks!",
     "tr": "Merhaba, nas\u0131ls\u0131n? Ben iyiyim. Te\u015fekk\u00fcr ederim!",
 }
+
+
+def bootstrap_punctuated_prompt(model, audio, language, seconds=45):
+    """Derive a punctuation-restoring prompt from the model's own output.
+
+    Sequential decoding keeps running text context and punctuates correctly in
+    every language, so a short sequential pass over the opening of the audio
+    yields in-language punctuated text to prime the batched run with. Returns
+    None when the sample has no punctuation to teach (nothing to fix then).
+    """
+    try:
+        segments, _ = model.transcribe(
+            audio, language=language, vad_filter=True, clip_timestamps=f"0,{seconds}")
+        text = " ".join(seg.text.strip() for seg in segments).strip()
+    except Exception as e:
+        print(f"warning: punctuation bootstrap failed ({e})", file=sys.stderr, flush=True)
+        return None
+
+    if not text or not any(c in text for c in SENTENCE_END + SOFT_BREAK):
+        return None
+
+    return text[-200:]
+
+
+def apply_standards(cues, max_chars, max_duration, max_cps,
+                    min_duration=0.833, min_gap=0.083):
+    """Apply the industry timing conventions to the built cues.
+
+    Per the Netflix Timed Text Style Guide / BBC subtitle guidelines: a cue
+    shorter than 5/6 second merges into its predecessor when the result still
+    respects the length and duration limits; cue ends are extended when the
+    reading speed would exceed max_cps characters per second (or the minimum
+    duration is not met) and there is room; and a two-frame minimum gap is kept
+    before the next cue.
+    """
+    if not cues:
+        return cues
+
+    merged = []
+    for start, end, text in cues:
+        if merged:
+            p_start, p_end, p_text = merged[-1]
+            if (end - start < min_duration
+                    and start - p_end < 1.0
+                    and len(p_text) + 1 + len(text) <= max_chars
+                    and end - p_start <= max_duration):
+                merged[-1] = (p_start, end, p_text + " " + text)
+                continue
+        merged.append((start, end, text))
+
+    out = []
+    for i, (start, end, text) in enumerate(merged):
+        wanted = max(end, start + min_duration, start + len(text) / max_cps)
+        end = min(wanted, start + max_duration)
+        if i + 1 < len(merged):
+            latest = merged[i + 1][0] - min_gap
+            if end > latest:
+                end = max(latest, start + 0.2)
+        out.append((start, end, text))
+
+    return out
 
 
 def split_chunk(chunk, max_chars, max_duration):
@@ -261,8 +335,10 @@ def main():
                         help="CTranslate2 CPU threads; 0 = one per core")
     parser.add_argument("--max-cue-chars", type=int, default=84,
                         help="Max characters per subtitle cue before a forced break (two 42-char lines)")
-    parser.add_argument("--max-cue-duration", type=float, default=6.0,
-                        help="Max seconds per subtitle cue before a forced break")
+    parser.add_argument("--max-cue-duration", type=float, default=7.0,
+                        help="Max seconds per subtitle cue before a forced break (Netflix limit)")
+    parser.add_argument("--max-cps", type=float, default=20.0,
+                        help="Max reading speed in characters per second; cue ends extend to meet it")
     parser.add_argument("--raw-segments", action="store_true",
                         help="Write Whisper's raw segments instead of word-timestamp resegmented cues")
     parser.add_argument("--initial-prompt", default=None,
@@ -323,12 +399,19 @@ def main():
     }
 
     prompt = args.initial_prompt
-    if prompt is None and not args.no_punctuation_prompt and language:
-        prompt = PUNCTUATION_PROMPTS.get(language.lower())
+    use_batching = BatchedInferencePipeline is not None and args.batch_size > 1
+    if prompt is None and not args.no_punctuation_prompt and use_batching:
+        if language:
+            prompt = PUNCTUATION_PROMPTS.get(language.lower())
+        if prompt is None:
+            # Any language without a curated prompt, or auto-detection: derive the
+            # prompt from the model's own sequential decoding of the opening.
+            print("Priming punctuation from the first 45 seconds (sequential pass)...",
+                  flush=True)
+            prompt = bootstrap_punctuated_prompt(model, args.audio, language)
     if prompt:
         transcribe_kwargs["initial_prompt"] = prompt
 
-    use_batching = BatchedInferencePipeline is not None and args.batch_size > 1
     if use_batching:
         print(f"Using batched inference (batch_size={args.batch_size}).", flush=True)
         pipeline = BatchedInferencePipeline(model=model)
@@ -365,8 +448,10 @@ def main():
 
     if use_words and words:
         cues = resegment(words, args.max_cue_chars, args.max_cue_duration)
+        cues = apply_standards(cues, args.max_cue_chars, args.max_cue_duration, args.max_cps)
         print(f"Resegmented {len(raw)} raw segment(s) into {len(cues)} subtitle cue(s) "
-              f"(max {args.max_cue_chars} chars / {args.max_cue_duration:g}s per cue).", flush=True)
+              f"(max {args.max_cue_chars} chars / {args.max_cue_duration:g}s per cue, "
+              f"max {args.max_cps:g} chars/second).", flush=True)
     else:
         if use_words:
             print("No word timestamps returned; keeping Whisper's raw segments.", flush=True)

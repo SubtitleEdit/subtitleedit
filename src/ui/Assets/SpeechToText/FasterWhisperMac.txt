@@ -38,14 +38,32 @@ Subtitle segmentation: raw Whisper segments make poor subtitles (lines too long 
 too short, boundaries ignoring sentences). Like Faster-Whisper-XXL's --standard mode
 on Windows, word-level timestamps are requested and cues are rebuilt: breaking at
 sentence-ending punctuation and silence gaps, balance-splitting oversized sentences
-at commas, with each cue timed from its first to its last word.
+at commas or the largest speech pause, with each cue timed from its first to its
+last word. A final pass applies the industry conventions from the Netflix Timed
+Text Style Guide / BBC subtitle guidelines: 84 characters (two 42-char lines) and
+7 seconds max per cue, 5/6 second minimum (shorter cues merge into a neighbor),
+a two-frame minimum gap, and ends extended to keep reading speed at or under 20
+characters per second.
+
+Punctuation in all languages: the batched pipeline drops punctuation in some
+languages, which would break sentence splitting. A punctuated prompt restores it;
+common languages use a built-in prompt, and every other language (or language
+auto-detect) bootstraps the prompt from the model itself by sequentially decoding
+the first 45 seconds, so the fix works for every Whisper language.
 
 Extra parameters (add in the advanced-settings parameters box):
 
         --max-cue-chars N
                 Max characters per cue before a forced split (default: 84, two 42-char lines).
         --max-cue-duration SECONDS
-                Max seconds per cue before a forced split (default: 6).
+                Max seconds per cue before a forced split (default: 7, the Netflix limit).
+        --max-cps N
+                Max reading speed in characters per second (default: 20); cue ends
+                extend to meet it when there is room before the next cue.
+        --initial-prompt TEXT
+                Text to bias the decoder (overrides the automatic punctuation prompt).
+        --no-punctuation-prompt
+                Disable the automatic punctuation-biasing prompt.
         --raw-segments
                 Write Whisper's raw segments instead of the rebuilt cues.
 
