@@ -146,6 +146,8 @@ public static class InitNativeMacMenu
                         _windowsMenuInteropFailed = true;
                         UpdateWindowMenus();
                     }
+
+                    InstallDockMenu();
                 }, Avalonia.Threading.DispatcherPriority.Background);
             };
             window.Closed += (_, _) =>
@@ -766,6 +768,28 @@ public static class InitNativeMacMenu
             }
         }
         return null;
+    }
+
+    private static bool _dockMenuInstalled;
+
+    /// <summary>
+    /// Adds a "New window" command to the Dock icon's context menu (like Finder's
+    /// "New Finder Window") via Avalonia's NativeDock attached property. AppKit
+    /// shows it above the standard Dock items (the window list, Options, Quit).
+    /// </summary>
+    private static void InstallDockMenu()
+    {
+        if (_dockMenuInstalled || Avalonia.Application.Current is not { } app)
+        {
+            return;
+        }
+
+        var newWindowItem = new NativeMenuItem(Clean(Se.Language.Main.Menu.NewWindow));
+        newWindowItem.Click += (_, _) => MainWindowFactory.OpenNewWindow();
+        var dockMenu = new NativeMenu();
+        dockMenu.Add(newWindowItem);
+        NativeDock.SetMenu(app, dockMenu);
+        _dockMenuInstalled = true;
     }
 
     private static string Clean(string? s) => s?.Replace("_", string.Empty) ?? string.Empty;
