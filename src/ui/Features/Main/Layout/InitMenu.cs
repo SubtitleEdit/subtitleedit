@@ -69,6 +69,11 @@ public static class InitMenu
                     Command = vm.CommandFileNewKeepVideoCommand,
                     [!MenuItem.IsVisibleProperty] = new Binding(nameof(vm.IsVideoLoaded)),
                 },
+                new MenuItem
+                {
+                    Header = l.NewWindow,
+                    Command = vm.CommandFileNewWindowCommand,
+                },
                 new Separator(),
                 new MenuItem
                 {

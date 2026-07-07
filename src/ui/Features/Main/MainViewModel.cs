@@ -1695,6 +1695,41 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private void CommandFileNewWindow()
+    {
+        // Opens an independent extra instance (window) of Subtitle Edit. On macOS the Dock and
+        // Finder only ever activate the already-running instance, so unlike Windows/Linux there
+        // is no built-in way to get a second window; "open -n" is the supported way to launch
+        // one. On Windows/Linux, starting the executable again does the same thing.
+        try
+        {
+            var processPath = Environment.ProcessPath;
+            if (string.IsNullOrEmpty(processPath))
+            {
+                return;
+            }
+
+            if (OperatingSystem.IsMacOS())
+            {
+                // Resolve the .app bundle root (".../Subtitle Edit.app/Contents/MacOS/<exe>") so
+                // the new instance launches with its own proper Dock icon and activation.
+                var bundlePath = Path.GetFullPath(Path.Combine(processPath, "..", "..", ".."));
+                if (bundlePath.EndsWith(".app", StringComparison.OrdinalIgnoreCase) && Directory.Exists(bundlePath))
+                {
+                    Process.Start("open", new[] { "-n", bundlePath });
+                    return;
+                }
+            }
+
+            Process.Start(new ProcessStartInfo(processPath) { UseShellExecute = false });
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "Open new window failed");
+        }
+    }
+
+    [RelayCommand]
     private async Task CommandFileNew()
     {
         var doContinue = await HasChangesContinue();

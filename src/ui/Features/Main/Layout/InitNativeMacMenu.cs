@@ -104,6 +104,7 @@ public static class InitNativeMacMenu
         fileItems.Items.Add(Item(Clean(l.New), v => v.CommandFileNewCommand));
         fileItems.Items.Add(Conditional(Clean(l.NewKeepVideo), v => v.CommandFileNewKeepVideoCommand,
             v => v.IsVideoLoaded, nameof(MainViewModel.IsVideoLoaded)));
+        fileItems.Items.Add(Item(Clean(l.NewWindow), v => v.CommandFileNewWindowCommand));
         fileItems.Items.Add(new NativeMenuItemSeparator());
         fileItems.Items.Add(Item(Clean(l.Open), v => v.CommandFileOpenCommand));
         fileItems.Items.Add(Conditional(Clean(l.OpenKeepVideo), v => v.CommandFileOpenKeepVideoCommand,
