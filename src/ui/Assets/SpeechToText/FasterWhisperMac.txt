@@ -34,7 +34,20 @@ How it runs:
 
         The SRT result is written next to the input audio file and loaded automatically.
 
+Subtitle segmentation: raw Whisper segments make poor subtitles (lines too long or
+too short, boundaries ignoring sentences). Like Faster-Whisper-XXL's --standard mode
+on Windows, word-level timestamps are requested and cues are rebuilt: breaking at
+sentence-ending punctuation and silence gaps, balance-splitting oversized sentences
+at commas, with each cue timed from its first to its last word.
+
 Extra parameters (add in the advanced-settings parameters box):
+
+        --max-cue-chars N
+                Max characters per cue before a forced split (default: 84, two 42-char lines).
+        --max-cue-duration SECONDS
+                Max seconds per cue before a forced split (default: 6).
+        --raw-segments
+                Write Whisper's raw segments instead of the rebuilt cues.
 
         --compute-type {auto,int8,int16,float32}
                 CTranslate2 quantization (default: auto). int8 is roughly 2x faster on CPU
