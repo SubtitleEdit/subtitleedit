@@ -3707,6 +3707,16 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (engine is WhisperEngineCTranslate2)
         {
             parameters = parameters.Replace("--model", "--model_directory");
+
+            // whisper-ctranslate2 prints no segment lines unless --verbose is on; its only
+            // other progress output is a carriage-return tqdm bar, which never completes a
+            // line, so the newline-based console stays empty and a long CPU decode looks
+            // completely frozen (reported on macOS with large-v3). Default verbose on so
+            // segments stream live, unless the user set their own preference.
+            if (!parameters.Contains("--verbose", StringComparison.Ordinal))
+            {
+                parameters = "--verbose True " + parameters;
+            }
         }
 
         Se.WriteToolsLog($"{w} {parameters}");
