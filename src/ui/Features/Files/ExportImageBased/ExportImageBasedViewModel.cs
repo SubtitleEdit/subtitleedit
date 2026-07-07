@@ -677,15 +677,17 @@ public partial class ExportImageBasedViewModel : ObservableObject
             _ = Task.Run(() =>
             {
                 var mediaInfo = FfmpegMediaInfo2.Parse(videoFileName);
-                if (mediaInfo?.Dimension is { Width: > 0, Height: > 0 })
+                if (mediaInfo?.Dimension is { Width: > 0, Height: > 0 } dimension)
                 {
-                    var resolutionItem = new ResolutionItem(string.Empty, mediaInfo.Dimension.Width,
-                        mediaInfo.Dimension.Height);
-
                     Dispatcher.UIThread.Post(() =>
                     {
-                        Resolutions.Insert(1, resolutionItem);
-                        SelectedResolution = resolutionItem;
+                        // Make the source video's resolution available in the combo, but do NOT
+                        // override a resolution the active profile already set - otherwise a loaded
+                        // video silently replaces the profile's resolution and, on close, overwrites
+                        // it (#12244). Only fall back to the video size when the profile left no
+                        // valid resolution selected.
+                        var item = EnsureResolutionItem(dimension.Width, dimension.Height);
+                        SelectedResolution ??= item;
                         _dirty = true;
                     });
                 }
@@ -897,12 +899,40 @@ public partial class ExportImageBasedViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Returns the resolution item matching <paramref name="width"/> x <paramref name="height"/>,
+    /// inserting a custom item (just below the "pick from video" entry) when that exact size is not
+    /// already in the list. Matching on BOTH dimensions - not width alone - and materialising
+    /// non-preset sizes is what lets a profile's custom resolution (e.g. 1920x960) round-trip on
+    /// reopen instead of snapping to a same-width preset or the 1920x1080 default (#12244). Returns
+    /// null for non-positive sizes.
+    /// </summary>
+    private ResolutionItem? EnsureResolutionItem(int width, int height)
+    {
+        if (width <= 0 || height <= 0)
+        {
+            return null;
+        }
+
+        var existing = Resolutions.FirstOrDefault(r => r.Width == width && r.Height == height);
+        if (existing != null)
+        {
+            return existing;
+        }
+
+        var item = new ResolutionItem(string.Empty, width, height);
+        // Index 0 is the "Pick resolution from video..." entry; keep custom sizes right below it.
+        Resolutions.Insert(1, item);
+        return item;
+    }
+
     private void LoadProfile(object? v)
     {
         if (v is SeExportImagesProfile profile)
         {
             SelectedFontSize = (int)profile.FontSize;
-            SelectedResolution = Resolutions.FirstOrDefault(r => r.Width == profile.ScreenWidth);
+            SelectedResolution = EnsureResolutionItem(profile.ScreenWidth, profile.ScreenHeight)
+                                 ?? Resolutions.FirstOrDefault(r => r.Width == 1920);
             SelectedTopBottomMargin = profile.BottomTopMargin;
             SelectedLeftRightMargin = profile.LeftRightMargin;
             SelectedOutlineWidth = profile.OutlineWidth;
