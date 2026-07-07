@@ -275,8 +275,9 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             Attached.SetIcon(_buttonPlay, "fa-solid fa-play");
             _buttonPlay.Click += (_, _) =>
             {
+                var wasPlaying = _videoPlayerInstance.IsPlaying;
                 _videoPlayerInstance.PlayOrPause();
-                PlayPauseRequested?.Invoke();
+                PlayPauseRequested?.Invoke(wasPlaying);
             };
             _buttonPlay.Bind(Button.CommandProperty, new Binding
             {
@@ -589,8 +590,9 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
             if (ClickToTogglePlay)
             {
+                var wasPlaying = _videoPlayerInstance.IsPlaying;
                 _videoPlayerInstance.PlayOrPause();
-                PlayPauseRequested?.Invoke();
+                PlayPauseRequested?.Invoke(wasPlaying);
                 e.Handled = true;
             }
 
@@ -677,7 +679,14 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
             e.Handled = true;
         }
 
-        public event Action? PlayPauseRequested;
+        /// <summary>
+        /// Raised when the user toggles playback via this control (toolbar button, click on the
+        /// video surface or <see cref="TogglePlayPause"/>). The argument is true when playback was
+        /// running, i.e. the request pauses. Captured before the toggle because the player's
+        /// IsPlaying lags the pause command (~100 ms for mpv), so owners can react on the request
+        /// itself — e.g. freeze the interpolated waveform cursor (issue #12233).
+        /// </summary>
+        public event Action<bool>? PlayPauseRequested;
         public event Action? StopRequested;
         public event Action? FullscreenRequested;
         public event Action? FullscreenCollapseRequested;
@@ -803,7 +812,9 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         internal void TogglePlayPause()
         {
+            var wasPlaying = _videoPlayerInstance.IsPlaying;
             _videoPlayerInstance.PlayOrPause();
+            PlayPauseRequested?.Invoke(wasPlaying);
         }
 
         internal AudioTrackInfo? ToggleAudioTrack()
