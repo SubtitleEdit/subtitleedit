@@ -284,6 +284,12 @@ def resegment(words, max_chars, max_duration, gap_break=1.0):
     cue timecodes hug the actual speech instead of inheriting Whisper's coarse
     segment bounds. Returns a list of (start, end, text).
     """
+    # When the decode produced no sentence punctuation at all (it happens with
+    # dialectal speech even after prompting), rely on the speech rhythm instead:
+    # a tighter pause threshold recovers sentence-like grouping from the audio.
+    if not any(w[2].strip()[-1:] in SENTENCE_END for w in words if w[2].strip()):
+        gap_break = min(gap_break, 0.6)
+
     sentences = []
     cur = []
 

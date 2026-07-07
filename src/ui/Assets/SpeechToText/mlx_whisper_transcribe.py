@@ -168,6 +168,15 @@ SENTENCE_END = ".!?…؟۔。！？"
 # Arabic commas and semicolons, and colons.
 SOFT_BREAK = ",;:،؛"
 
+# Punctuated sample prompts per language, used to stop Whisper omitting punctuation
+# (see main). Languages not listed rely on Whisper's normal behavior; --initial-prompt
+# covers any special case.
+PUNCTUATION_PROMPTS = {
+    "ar": "مرحباً، كيف حالك؟ أنا بخير. شكراً جزيلاً!",
+    "en": "Hello there. How are you? I'm fine, thanks!",
+    "tr": "Merhaba, nasılsın? Ben iyiyim. Teşekkür ederim!",
+}
+
 
 def apply_standards(cues, max_chars, max_duration, max_cps,
                     min_duration=0.833, min_gap=0.083):
@@ -262,6 +271,12 @@ def resegment(words, max_chars, max_duration, gap_break=1.0):
     cue timecodes hug the actual speech instead of inheriting Whisper's coarse
     segment bounds. Returns a list of (start, end, text).
     """
+    # When the decode produced no sentence punctuation at all (it happens with
+    # dialectal speech even after prompting), rely on the speech rhythm instead:
+    # a tighter pause threshold recovers sentence-like grouping from the audio.
+    if not any(w[2].strip()[-1:] in SENTENCE_END for w in words if w[2].strip()):
+        gap_break = min(gap_break, 0.6)
+
     sentences = []
     cur = []
 
@@ -309,7 +324,10 @@ def main():
                         help="Max seconds per subtitle cue before a forced break (Netflix limit)")
     parser.add_argument("--max-cps", type=float, default=20.0,
                         help="Max reading speed in characters per second; cue ends extend to meet it")
-    parser.add_argument("--initial-prompt", default=None, help="Text to bias the decoder")
+    parser.add_argument("--initial-prompt", default=None,
+                        help="Text to bias the decoder (overrides the automatic punctuation prompt)")
+    parser.add_argument("--no-punctuation-prompt", action="store_true",
+                        help="Disable the automatic punctuation-biasing prompt")
     parser.add_argument("--raw-segments", action="store_true",
                         help="Write Whisper's raw segments instead of word-timestamp resegmented cues")
     args, unknown = parser.parse_known_args()
@@ -355,15 +373,24 @@ def main():
     print(f"Loading MLX Whisper model '{args.model}' (Apple GPU/Neural Engine)...", flush=True)
     use_words = not args.raw_segments
     transcribe_kwargs = {}
-    if args.initial_prompt:
-        transcribe_kwargs["initial_prompt"] = args.initial_prompt
+    # Whisper drops punctuation on some real-world speech (dialectal Arabic notably)
+    # even with sequential decoding, and punctuation drives the sentence-based cue
+    # splitting. A short punctuated prompt in the audio's language restores it
+    # (verified on this model: zero marks without, normal sentence marks with).
+    prompt = args.initial_prompt
+    if prompt is None and not args.no_punctuation_prompt and language:
+        prompt = PUNCTUATION_PROMPTS.get(language.lower())
+    if prompt:
+        transcribe_kwargs["initial_prompt"] = prompt
     result = mlx_whisper.transcribe(
         audio_input,
         path_or_hf_repo=args.model,
         language=language,
         task=args.task,
         word_timestamps=use_words,
-        verbose=False,
+        # verbose=True prints each segment as it is decoded, which (with unbuffered
+        # stdout) is what streams live transcription lines into the host's console.
+        verbose=True,
         **transcribe_kwargs,
     )
 
@@ -376,8 +403,7 @@ def main():
         text = (seg.get("text") or "").strip()
         start = float(seg.get("start", 0.0))
         end = float(seg.get("end", 0.0))
-        # Progress line; matches the host's short-timestamp parser for a stdout fallback.
-        print(f"[{fmt_short(start)} --> {fmt_short(end)}] {text}", flush=True)
+        # mlx-whisper already printed each segment live (verbose=True), so only collect here.
         collected.append((start, end, text))
         if use_words:
             for w in seg.get("words") or []:
