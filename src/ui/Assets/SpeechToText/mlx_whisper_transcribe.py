@@ -13,6 +13,19 @@ much faster than the CPU-only faster-whisper path. Models are MLX-format
 Whisper weights hosted on Hugging Face (e.g. mlx-community/whisper-large-v3-turbo)
 and are downloaded automatically on first use.
 
+Raw Whisper segments make poor subtitles: they are often far too long or too
+short, and their boundaries ignore sentence structure. The helper therefore
+requests word-level timestamps and rebuilds the cues itself, exactly like the
+Faster Whisper Mac helper: breaking at sentence-ending punctuation and silence
+gaps, balance-splitting oversized sentences at soft punctuation or the largest
+speech pause, then applying the industry conventions from the Netflix Timed
+Text Style Guide and the BBC subtitle guidelines (84 characters and 7 seconds
+max per cue, 5/6 second minimum with short cues merging into a neighbor, a
+two-frame minimum gap, reading speed capped at 20 characters per second).
+`--raw-segments` restores the plain Whisper segmentation. MLX decodes
+sequentially with running text context, so punctuation (which drives the
+sentence splitting) is intact in every language without extra prompting.
+
 Each segment is printed as `[MM:SS.mmm --> MM:SS.mmm] text` so the host can show
 live progress and, if needed, recover the transcript from stdout.
 """
@@ -147,6 +160,139 @@ def load_wav_as_array(path):
     return np.ascontiguousarray(data, dtype=np.float32)
 
 
+# Sentence-ending characters that always close a cue: Latin, Arabic (؟), Urdu (۔),
+# CJK full stops and their fullwidth companions, plus ellipsis.
+SENTENCE_END = ".!?…؟۔。！？"
+
+# Soft break points preferred when a too-long sentence must be split: Latin and
+# Arabic commas and semicolons, and colons.
+SOFT_BREAK = ",;:،؛"
+
+
+def apply_standards(cues, max_chars, max_duration, max_cps,
+                    min_duration=0.833, min_gap=0.083):
+    """Apply the industry timing conventions to the built cues.
+
+    Per the Netflix Timed Text Style Guide / BBC subtitle guidelines: a cue
+    shorter than 5/6 second merges into its predecessor when the result still
+    respects the length and duration limits; cue ends are extended when the
+    reading speed would exceed max_cps characters per second (or the minimum
+    duration is not met) and there is room; and a two-frame minimum gap is kept
+    before the next cue.
+    """
+    if not cues:
+        return cues
+
+    merged = []
+    for start, end, text in cues:
+        if merged:
+            p_start, p_end, p_text = merged[-1]
+            if (end - start < min_duration
+                    and start - p_end < 1.0
+                    and len(p_text) + 1 + len(text) <= max_chars
+                    and end - p_start <= max_duration):
+                merged[-1] = (p_start, end, p_text + " " + text)
+                continue
+        merged.append((start, end, text))
+
+    out = []
+    for i, (start, end, text) in enumerate(merged):
+        wanted = max(end, start + min_duration, start + len(text) / max_cps)
+        end = min(wanted, start + max_duration)
+        if i + 1 < len(merged):
+            latest = merged[i + 1][0] - min_gap
+            if end > latest:
+                end = max(latest, start + 0.2)
+        out.append((start, end, text))
+
+    return out
+
+
+def split_chunk(chunk, max_chars, max_duration):
+    """Split one sentence's words into cue-sized parts, balanced instead of greedy.
+
+    Cutting a sentence at the last word that still fits leaves orphan cues like a
+    lone "editors." half a second long. Instead, an oversized run is split near its
+    middle, preferring (in order) a soft-punctuation boundary, then the largest
+    silence gap between words (a real speech pause, which is where a subtitler
+    would cut), then the word boundary nearest the middle; recursing until every
+    part fits, so all pieces stay readable.
+    """
+    total_chars = sum(len(w[2]) for w in chunk)
+    duration = chunk[-1][1] - chunk[0][0]
+    if (total_chars <= max_chars and duration <= max_duration) or len(chunk) == 1:
+        return [chunk]
+
+    # Candidate split points: after word i (never after the last word). Track the
+    # cumulative character position of each candidate to measure distance from the
+    # middle, and the pause before the next word.
+    candidates = []
+    acc = 0
+    for i, w in enumerate(chunk[:-1]):
+        acc += len(w[2])
+        gap = chunk[i + 1][0] - w[1]
+        candidates.append((i, acc, gap))
+
+    total = acc + len(chunk[-1][2])
+    half = total / 2
+
+    # Keep splits inside the middle band so neither piece comes out tiny.
+    band = [c for c in candidates if 0.3 * total <= c[1] <= 0.7 * total] or candidates
+
+    soft = [c for c in band if chunk[c[0]][2].rstrip()[-1:] in SOFT_BREAK]
+    if soft:
+        best_i = min(soft, key=lambda c: abs(c[1] - half))[0]
+    else:
+        by_gap = max(band, key=lambda c: c[2])
+        if by_gap[2] >= 0.15:
+            best_i = by_gap[0]
+        else:
+            best_i = min(band, key=lambda c: abs(c[1] - half))[0]
+
+    left, right = chunk[:best_i + 1], chunk[best_i + 1:]
+    return split_chunk(left, max_chars, max_duration) + split_chunk(right, max_chars, max_duration)
+
+
+def resegment(words, max_chars, max_duration, gap_break=1.0):
+    """Rebuild subtitle cues from word-level timestamps.
+
+    First group words into sentences (closed by sentence-ending punctuation or a
+    silence gap), then balance-split any sentence exceeding the length or duration
+    limit via split_chunk. Each cue is timed first-word-start to last-word-end, so
+    cue timecodes hug the actual speech instead of inheriting Whisper's coarse
+    segment bounds. Returns a list of (start, end, text).
+    """
+    sentences = []
+    cur = []
+
+    for start, end, token in words:
+        stripped = token.strip()
+        if not stripped:
+            continue
+
+        if cur and start - cur[-1][1] >= gap_break:
+            sentences.append(cur)
+            cur = []
+
+        cur.append((start, end, token))
+
+        if stripped[-1] in SENTENCE_END:
+            sentences.append(cur)
+            cur = []
+
+    if cur:
+        sentences.append(cur)
+
+    cues = []
+    for sentence in sentences:
+        for part in split_chunk(sentence, max_chars, max_duration):
+            text = "".join(w[2] for w in part).strip()
+            if text:
+                cues.append((part[0][0], part[-1][1], text))
+
+    return cues
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="mlx-whisper transcription helper for Subtitle Edit")
@@ -157,7 +303,19 @@ def main():
     parser.add_argument("--output-dir", default=None, help="Directory for the subtitle file (default: audio's folder)")
     parser.add_argument("--output-format", default="srt", choices=["srt", "vtt"])
     parser.add_argument("--task", default="transcribe", choices=["transcribe", "translate"])
-    args = parser.parse_args()
+    parser.add_argument("--max-cue-chars", type=int, default=84,
+                        help="Max characters per subtitle cue before a forced break (two 42-char lines)")
+    parser.add_argument("--max-cue-duration", type=float, default=7.0,
+                        help="Max seconds per subtitle cue before a forced break (Netflix limit)")
+    parser.add_argument("--max-cps", type=float, default=20.0,
+                        help="Max reading speed in characters per second; cue ends extend to meet it")
+    parser.add_argument("--initial-prompt", default=None, help="Text to bias the decoder")
+    parser.add_argument("--raw-segments", action="store_true",
+                        help="Write Whisper's raw segments instead of word-timestamp resegmented cues")
+    args, unknown = parser.parse_known_args()
+    if unknown:
+        print(f"warning: ignoring unrecognized argument(s): {' '.join(unknown)}",
+              file=sys.stderr, flush=True)
 
     try:
         import mlx_whisper
@@ -195,18 +353,25 @@ def main():
     ensure_model_downloaded(args.model)
 
     print(f"Loading MLX Whisper model '{args.model}' (Apple GPU/Neural Engine)...", flush=True)
+    use_words = not args.raw_segments
+    transcribe_kwargs = {}
+    if args.initial_prompt:
+        transcribe_kwargs["initial_prompt"] = args.initial_prompt
     result = mlx_whisper.transcribe(
         audio_input,
         path_or_hf_repo=args.model,
         language=language,
         task=args.task,
+        word_timestamps=use_words,
         verbose=False,
+        **transcribe_kwargs,
     )
 
     detected = result.get("language", language or "?")
     print(f"Detected language: {detected}", flush=True)
 
     collected = []
+    words = []
     for seg in result.get("segments", []):
         text = (seg.get("text") or "").strip()
         start = float(seg.get("start", 0.0))
@@ -214,6 +379,19 @@ def main():
         # Progress line; matches the host's short-timestamp parser for a stdout fallback.
         print(f"[{fmt_short(start)} --> {fmt_short(end)}] {text}", flush=True)
         collected.append((start, end, text))
+        if use_words:
+            for w in seg.get("words") or []:
+                words.append((float(w.get("start", start)), float(w.get("end", end)), w.get("word") or ""))
+
+    if use_words and words:
+        cues = resegment(words, args.max_cue_chars, args.max_cue_duration)
+        cues = apply_standards(cues, args.max_cue_chars, args.max_cue_duration, args.max_cps)
+        print(f"Resegmented {len(collected)} raw segment(s) into {len(cues)} subtitle cue(s) "
+              f"(max {args.max_cue_chars} chars / {args.max_cue_duration:g}s per cue, "
+              f"max {args.max_cps:g} chars/second).", flush=True)
+        collected = cues
+    elif use_words:
+        print("No word timestamps returned; keeping Whisper's raw segments.", flush=True)
 
     sep = "," if ext == "srt" else "."
     with open(out_path, "w", encoding="utf-8") as f:
