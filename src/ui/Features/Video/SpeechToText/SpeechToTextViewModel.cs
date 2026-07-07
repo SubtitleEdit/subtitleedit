@@ -2783,11 +2783,22 @@ public partial class SpeechToTextViewModel : ObservableObject
             {
                 if (engine is MlxWhisperMac)
                 {
-                    // pip-managed engine - Subtitle Edit cannot download it.
+                    // pip-managed engine - Subtitle Edit cannot download it. The message explains
+                    // the detection model (SE looks for a Python that can import mlx_whisper, not a
+                    // binary) and the pipx/venv/conda caveat, since a user who installed it that way
+                    // otherwise hits "not found" with no idea why (#12209).
                     await MessageBox.Show(
                         Window!,
                         $"{engine.Name} not found",
-                        "mlx-whisper not found - install it with: pip3 install mlx-whisper");
+                        "Subtitle Edit could not find a Python that can import the \"mlx_whisper\" package." + Environment.NewLine +
+                        Environment.NewLine +
+                        "If it is not installed yet, install it with:" + Environment.NewLine +
+                        "    pip3 install mlx-whisper" + Environment.NewLine +
+                        Environment.NewLine +
+                        "If you installed it with pipx, a virtual environment, or conda, Subtitle Edit finds it " +
+                        "automatically only when the \"mlx_whisper\" command is on your PATH or at " +
+                        "~/.local/bin/mlx_whisper (where pipx puts it). Check with:" + Environment.NewLine +
+                        "    which mlx_whisper");
                     return;
                 }
 
@@ -4254,7 +4265,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         if (engine is MlxWhisperMac && !isInstalled)
         {
             // pip-managed engine - Subtitle Edit cannot download it, so show install help instead.
-            EngineDownloadHint = "mlx-whisper not found - install it with: pip3 install mlx-whisper";
+            // Kept to one line here; the blocking dialog on transcribe explains the pipx/venv
+            // detection caveat in full (#12209).
+            EngineDownloadHint = "mlx-whisper not found - install with \"pip3 install mlx-whisper\", or ensure the \"mlx_whisper\" command is on your PATH";
             IsEngineDownloadButtonVisible = false;
             return;
         }

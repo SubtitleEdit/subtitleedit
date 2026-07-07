@@ -30,6 +30,9 @@ public class MlxWhisperMac : ISpeechToTextEngine
 
     private const string TranscribeScriptName = "mlx_whisper_transcribe.py";
 
+    // The console-script shim pip/pipx installs for the package (mlx_whisper --help).
+    private const string CliShimName = "mlx_whisper";
+
     // Friendly model name -> MLX-format Hugging Face repo (mlx-community).
     private static readonly Dictionary<string, string> ModelRepos = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -136,8 +139,10 @@ public class MlxWhisperMac : ISpeechToTextEngine
     }
 
     /// <summary>
-    /// The python3 interpreters to probe for mlx-whisper, in priority order: Homebrew, python.org
-    /// framework builds (newest first), pyenv, the system Python, and finally PATH resolution.
+    /// The python3 interpreters to probe for mlx-whisper, in priority order: the interpreter behind
+    /// an installed <c>mlx_whisper</c> CLI shim (covers pipx / venv / conda), then Homebrew,
+    /// python.org framework builds (newest first), pyenv, the system Python, and finally PATH
+    /// resolution.
     /// </summary>
     private static IEnumerable<string> GetPythonCandidates()
     {
@@ -150,6 +155,16 @@ public class MlxWhisperMac : ISpeechToTextEngine
             {
                 candidates.Add(path);
             }
+        }
+
+        // Highest priority: the exact interpreter behind an installed mlx_whisper CLI shim. pipx,
+        // a hand-made venv, and conda all install the package into an isolated environment that
+        // none of the shared interpreters below can import, so probing them alone reports "not
+        // found" even though the user did install it (#12209). The shim's shebang names the one
+        // interpreter that can import the package.
+        foreach (var interpreter in GetShebangInterpreters())
+        {
+            Add(interpreter);
         }
 
         Add("/opt/homebrew/bin/python3");
@@ -174,6 +189,117 @@ public class MlxWhisperMac : ISpeechToTextEngine
         Add("python3"); // resolved via PATH
 
         return candidates.Where(p => p == "python3" || File.Exists(p));
+    }
+
+    /// <summary>
+    /// Interpreters discovered by reading the shebang of an installed <c>mlx_whisper</c> CLI shim.
+    /// A pip/pipx/venv/conda console script starts with <c>#!/abs/path/to/that/env/bin/python</c>,
+    /// which points at the exact interpreter that can <c>import mlx_whisper</c> - the one case the
+    /// fixed interpreter list cannot cover, because an isolated environment's package is not
+    /// importable from Homebrew/system Python (#12209).
+    /// </summary>
+    private static IEnumerable<string> GetShebangInterpreters()
+    {
+        var result = new List<string>();
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+
+        foreach (var shim in GetCliShimCandidates())
+        {
+            try
+            {
+                if (!File.Exists(shim))
+                {
+                    continue;
+                }
+
+                // Read only the first line - a console script is tiny, but a same-named non-script
+                // file on one of these paths shouldn't be slurped whole.
+                using var reader = new StreamReader(shim);
+                var firstLine = reader.ReadLine();
+                if (firstLine == null || !firstLine.StartsWith("#!", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                // "#!/path/to/python" or "#!/path/to/python -E ...": take the interpreter token.
+                // The "#!/usr/bin/env python3" form names no specific environment, so its first
+                // token ("/usr/bin/env") is filtered out by the python-name check below - the bare
+                // "python3" PATH candidate already covers that case.
+                var interpreterPath = firstLine.Substring(2).Trim().Split(' ', '\t')[0];
+                if (Path.IsPathRooted(interpreterPath) &&
+                    Path.GetFileName(interpreterPath).StartsWith("python", StringComparison.OrdinalIgnoreCase) &&
+                    File.Exists(interpreterPath) &&
+                    seen.Add(interpreterPath))
+                {
+                    result.Add(interpreterPath);
+                }
+            }
+            catch
+            {
+                // Unreadable / permission-denied shim - skip and try the next candidate.
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Locations an installed <c>mlx_whisper</c> console-script shim commonly lives: pipx and
+    /// "pip install --user" write it to <c>~/.local/bin</c>; a Homebrew-managed Python writes it
+    /// into its own bin. The PATH is also scanned so a shim on the user's PATH is found when
+    /// Subtitle Edit is launched from a shell.
+    /// </summary>
+    private static IEnumerable<string> GetCliShimCandidates()
+    {
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+
+        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        if (!string.IsNullOrEmpty(home))
+        {
+            var localBin = Path.Combine(home, ".local", "bin", CliShimName);
+            if (seen.Add(localBin))
+            {
+                yield return localBin;
+            }
+        }
+
+        foreach (var dir in new[] { "/opt/homebrew/bin", "/usr/local/bin" })
+        {
+            var shim = Path.Combine(dir, CliShimName);
+            if (seen.Add(shim))
+            {
+                yield return shim;
+            }
+        }
+
+        var pathEnv = Environment.GetEnvironmentVariable("PATH");
+        if (string.IsNullOrEmpty(pathEnv))
+        {
+            yield break;
+        }
+
+        foreach (var dir in pathEnv.Split(Path.PathSeparator))
+        {
+            if (string.IsNullOrEmpty(dir))
+            {
+                continue;
+            }
+
+            string shim;
+            try
+            {
+                shim = Path.Combine(dir, CliShimName);
+            }
+            catch
+            {
+                continue; // malformed PATH entry (illegal characters)
+            }
+
+            if (seen.Add(shim))
+            {
+                yield return shim;
+            }
+        }
     }
 
     public override string ToString()

@@ -233,6 +233,15 @@ Used for AI-based speech recognition.
 *   **Files:** Download or build the binary and ensure it is named `whisper-cli`.
 *   **Models:** Models (`.bin` files) go into a `Models` subfolder: `[Data Folder]/SpeechToText/Cpp/Models`.
 
+### MLX Whisper (Speech-to-Text, Apple Silicon)
+Runs Apple's `mlx-whisper` Python package on the GPU / Neural Engine. **Subtitle Edit does not download this engine** — you install the Python package yourself, and there is no file in the Data Folder.
+
+*   **Requirements:** An Apple Silicon Mac (M1 or newer) and Python 3.
+*   **Install:** `pip3 install mlx-whisper` — or, for an isolated install, `pipx install mlx-whisper`.
+*   **Models:** MLX-format Whisper weights (`tiny` … `large-v3-turbo`) are downloaded from Hugging Face (the `mlx-community` org) into the Hugging Face cache on first use.
+*   **How detection works:** Subtitle Edit does not look for a binary; it looks for a Python interpreter that can `import mlx_whisper`. It probes Homebrew (`/opt/homebrew/bin`, `/usr/local/bin`), python.org framework builds, pyenv, and the system Python. Because **pipx, virtual environments, and conda install the package into an isolated environment** that those shared interpreters cannot import, Subtitle Edit also reads the shebang of the installed `mlx_whisper` command — found on your `PATH` or at `~/.local/bin/mlx_whisper` (where pipx places it) — to locate the exact matching interpreter.
+*   **If it reports "not found" after installing:** confirm the command resolves with `which mlx_whisper`. If it does not, add its directory to your `PATH`, or symlink the command into `~/.local/bin`. (Symlinking or copying only the *model files* does nothing — detection is by the Python package, not a binary.)
+
 ### SE5 Speech-to-Text, OCR, and TTS Engines
 
 Some newer local engines are platform-specific or model-specific. Use the in-app downloaders where available, and check [Speech to Text](features/speech-to-text.md), [Text to Speech](features/text-to-speech.md), and [OCR](features/ocr.md) for current engine notes.
