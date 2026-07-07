@@ -381,9 +381,15 @@ def apply_standards(cues, max_chars, max_duration, max_cps,
         wanted = max(end, start + min_duration, start + len(text) / max_cps)
         end = min(wanted, start + max_duration)
         if i + 1 < len(merged):
-            latest = merged[i + 1][0] - min_gap
+            next_start = merged[i + 1][0]
+            latest = next_start - min_gap
             if end > latest:
-                end = max(latest, start + 0.2)
+                # Cap the extension at the gap before the next cue. When two cues
+                # start almost simultaneously the gap itself is not attainable;
+                # keep a minimal duration then, but never overlap the next cue.
+                end = max(latest, start + 0.05)
+                if end > next_start:
+                    end = next_start
         out.append((start, end, tidy_punctuation(text)))
 
     return out
@@ -422,6 +428,8 @@ def detect_speech_clips(audio):
 
 def _has_expected_script(text, language):
     """True when the text contains at least one character of the language's script."""
+    if not any(c.isalpha() or c.isdigit() for c in text):
+        return True  # punctuation/symbol-only cues carry no script signal to judge
     if language == "ar":
         return any("\u0600" <= c <= "\u06ff" or "\u0750" <= c <= "\u077f" or c.isdigit() for c in text)
     if language in ("en", "tr"):
@@ -635,27 +643,68 @@ def main():
     ensure_model_downloaded(args.model)
 
     print(f"Loading MLX Whisper model '{args.model}' (Apple GPU/Neural Engine)...", flush=True)
+
+    # Older mlx-whisper releases predate some of the options used below. Passing an
+    # unknown option would abort the whole run with a TypeError, so feature-detect
+    # against the installed version and drop (with a note) whatever it lacks:
+    # options named by transcribe() itself, and decode options that flow into
+    # DecodingOptions.
+    import dataclasses
+    import inspect
+    try:
+        transcribe_params = set(inspect.signature(mlx_whisper.transcribe).parameters)
+    except (TypeError, ValueError):
+        transcribe_params = None
+    try:
+        from mlx_whisper.decoding import DecodingOptions
+        option_fields = {f.name for f in dataclasses.fields(DecodingOptions)}
+    except Exception:
+        option_fields = None
+
+    def supports_option(name):
+        if transcribe_params is None and option_fields is None:
+            return True  # cannot introspect; keep previous behavior
+        if transcribe_params is not None and name in transcribe_params:
+            return True
+        return option_fields is not None and name in option_fields
+
+    def note_unsupported(name, consequence):
+        print(f"note: this mlx-whisper version does not support {name}; {consequence}",
+              flush=True)
+
     use_words = not args.raw_segments
+    if use_words and not supports_option("word_timestamps"):
+        use_words = False
+        note_unsupported("word_timestamps", "writing raw Whisper segments")
+
     transcribe_kwargs = {}
     if use_words:
         # Built-in hallucination guard: with word timestamps available, skip silent
         # stretches longer than this when the decoder output looks hallucinated.
-        transcribe_kwargs["hallucination_silence_threshold"] = 2.0
+        if supports_option("hallucination_silence_threshold"):
+            transcribe_kwargs["hallucination_silence_threshold"] = 2.0
+        else:
+            note_unsupported("hallucination_silence_threshold",
+                             "relying on the VAD clipping alone")
 
     # When a segment fails the quality checks and is retried at a higher
     # temperature, sample five candidates and keep the most likely one, matching
     # openai/whisper's default. mlx-whisper drops this option at temperature 0,
     # so the fast greedy path is unaffected; only hard segments pay for it.
-    transcribe_kwargs["best_of"] = 5
+    if supports_option("best_of"):
+        transcribe_kwargs["best_of"] = 5
 
     if args.beam_size and args.beam_size > 1:
-        try:
-            enable_beam_search()
-            transcribe_kwargs["beam_size"] = args.beam_size
-            print(f"Beam search enabled (beam size {args.beam_size}).", flush=True)
-        except Exception as e:
-            print(f"warning: beam search unavailable ({e}); decoding greedily",
-                  file=sys.stderr, flush=True)
+        if supports_option("beam_size"):
+            try:
+                enable_beam_search()
+                transcribe_kwargs["beam_size"] = args.beam_size
+                print(f"Beam search enabled (beam size {args.beam_size}).", flush=True)
+            except Exception as e:
+                print(f"warning: beam search unavailable ({e}); decoding greedily",
+                      file=sys.stderr, flush=True)
+        else:
+            note_unsupported("beam_size", "decoding greedily")
 
     # Whisper drops punctuation on some real-world speech (dialectal Arabic notably)
     # even with sequential decoding, and punctuation drives the sentence-based cue
@@ -680,20 +729,29 @@ def main():
     def decode_piece(piece, offset, piece_prompt):
         """Transcribe one audio piece, printing and collecting absolute-time output."""
         kwargs = dict(transcribe_kwargs)
-        if piece_prompt:
+        if use_words:
+            kwargs["word_timestamps"] = True
+        if piece_prompt and supports_option("initial_prompt"):
             kwargs["initial_prompt"] = piece_prompt
         result = mlx_whisper.transcribe(
             piece,
             path_or_hf_repo=args.model,
             language=language,
             task=args.task,
-            word_timestamps=use_words,
             verbose=None,
             **kwargs,
         )
         piece_texts = []
+        leading = True
         for seg in result.get("segments", []):
             text = (seg.get("text") or "").strip()
+            if leading and text and piece_prompt and text in piece_prompt:
+                # The decoder sometimes opens a chunk by echoing the injected
+                # prompt (the punctuation prompt or the previous chunk's tail);
+                # that is prompt text, not speech, so drop it.
+                continue
+            if text:
+                leading = False
             start = offset + float(seg.get("start", 0.0))
             end = offset + float(seg.get("end", 0.0))
             # Live line per segment, in absolute time (the pieces are chunk-relative).
@@ -724,6 +782,16 @@ def main():
                 chunks.append((chunk_start, chunk_end))
                 chunk_start, chunk_end = start, end
         chunks.append((chunk_start, chunk_end))
+
+        # A single uninterrupted speech region can exceed the cap on its own;
+        # split it so the prompt refresh interval holds for it as well.
+        capped = []
+        for start, end in chunks:
+            while end - start > 240.0:
+                capped.append((start, start + 240.0))
+                start += 240.0
+            capped.append((start, end))
+        chunks = capped
 
         speech_seconds = sum(end - start for start, end in chunks)
         total_seconds = len(audio_input) / 16000.0
