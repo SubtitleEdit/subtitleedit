@@ -1,7 +1,7 @@
 {
   "Title": "SubtitleEdit",
   "Version": "v. 5.1.0 beta11",
-  "TranslatedBy": "v. 05.07.2026 di bovirus",
+  "TranslatedBy": "v. 07.07.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -733,6 +733,7 @@
     "OpenAiCompatibleSttPrompt": "Prompt",
     "DashScopeSttRegion": "Regione",
     "DashScopeSttEnableWords": "Timestamp a livello di parola",
+    "DashScopeSttRegionKeyHint": "Nota: le chiavi API di Alibaba Cloud Model Studio sono specifiche per regione: assicurati che la regione selezionata corrisponda alla regione in cui è stata creata la chiave API (Cina o Internazionale).",
     "OnlineSttApiKeyMissing": "È richiesta una chiave API.\r\nInserisci la chiave API e riprova.",
     "OpenAiCompatibleSttAutoTranscribeOnAudioSelection": "Trascrizione automatica selezione nuova forma d'onda tramite sintesi vocale",
     "OpenAiCompatibleSttStream": "Risposta streaming",
