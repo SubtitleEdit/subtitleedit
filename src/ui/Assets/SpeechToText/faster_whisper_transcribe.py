@@ -45,6 +45,7 @@ so the host can show live progress.
 """
 import argparse
 import os
+import re
 import sys
 
 
@@ -225,7 +226,7 @@ def apply_standards(cues, max_chars, max_duration, max_cps,
             latest = merged[i + 1][0] - min_gap
             if end > latest:
                 end = max(latest, start + 0.2)
-        out.append((start, end, text))
+        out.append((start, end, tidy_punctuation(text)))
 
     return out
 
@@ -237,6 +238,16 @@ def _has_expected_script(text, language):
     if language in ("en", "tr"):
         return any(("a" <= c.lower() <= "z") or c.isdigit() or c in "çğıöşüÇĞİÖŞÜ" for c in text)
     return True
+
+
+def tidy_punctuation(text):
+    """Collapse doubled punctuation the decoder sometimes emits (e.g. "؟." or "،.").
+
+    Whisper occasionally closes a sentence with a period even though the previous
+    token already ended it with a question mark, comma, or exclamation mark. The
+    stray period is dropped; ellipses ("...") are left alone.
+    """
+    return re.sub("(?<=[؟?!،؛,;:…])\\s*\\.(?!\\.)", "", text)
 
 
 def sanitize_cues(cues, language=None, prompt=None):
