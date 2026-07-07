@@ -39,7 +39,6 @@ public class SeAudioToText
     public string CommandLineParameterConstMe { get; set; } = string.Empty;
     public string CommandLineParameterCTranslate2 { get; set; } = "--vad_filter True";
     public string CommandLineParameterMlxWhisperMac { get; set; } = string.Empty;
-    public string CommandLineParameterFasterWhisperMac { get; set; } = string.Empty;
     public string CommandLineParameterPurfviewFasterWhisperXxl { get; set; } = "--standard";
     public string CommandLineParameterOpenAi { get; set; } = string.Empty;
     public string CommandLineParameterQwen3AsrCpp { get; set; } = string.Empty;
@@ -79,7 +78,7 @@ public class SeAudioToText
 
     public bool WhisperPostProcessingFixShortDuration { get; set; } = true;
 
-    // Cue building for the helper-script engines (MLX Whisper, Faster Whisper Mac):
+    // Cue building for the MLX Whisper helper script:
     // rebuild cues from word timestamps per the Netflix Timed Text Style Guide / BBC
     // subtitle guideline limits below, instead of writing Whisper's raw segments.
     public bool WhisperCueRebuild { get; set; } = true;

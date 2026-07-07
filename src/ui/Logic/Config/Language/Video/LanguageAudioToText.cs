@@ -80,7 +80,7 @@ public class LanguageAudioToText
         FixCasing = "Fix casing";
         AddPeriods = "Add periods";
         ChangeUnderlineToColor = "Change underline to color";
-        CueBuilding = "Cue building (MLX Whisper / Faster Whisper Mac)";
+        CueBuilding = "Cue building (MLX Whisper)";
         CueRebuild = "Rebuild cues from word timestamps";
         CueMaxChars = "Max characters per cue";
         CueMaxSeconds = "Max seconds per cue";

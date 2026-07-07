@@ -281,7 +281,7 @@ public class MlxWhisperMac : ISpeechToTextEngine
             return "MLX Whisper runs Apple's \"mlx-whisper\" Python library via python3.\n\n" +
                    "Install it with: pip3 install mlx-whisper\n\n" +
                    "Requires an Apple Silicon Mac. MLX runs Whisper on the GPU / Neural Engine, so it is\n" +
-                   "typically much faster than the CPU-only Faster Whisper Mac engine.\n\n" +
+                   "typically much faster than CPU-only Whisper engines on Apple Silicon.\n\n" +
                    "Models (tiny, base, small, medium, large-v2, large-v3, large-v3-turbo) are MLX-format\n" +
                    "weights downloaded from Hugging Face (mlx-community) on first use.\n" +
                    "Tip: large-v3-turbo is multilingual and the best speed/quality pick.";

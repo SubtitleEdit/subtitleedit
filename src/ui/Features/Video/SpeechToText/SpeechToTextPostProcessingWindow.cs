@@ -45,7 +45,7 @@ public class SpeechToTextPostProcessingWindow : Window
         var checkChangeUnderlineToColor = UiUtil.MakeCheckBox(vm, nameof(SpeechToTextPostProcessingViewModel.ChangeUnderlineToColor));
         var colorPickerUnderlineToColor = UiUtil.MakeColorPickerButton(_vm, nameof(_vm.ChangeUnderlineToColorColor));
 
-        // Cue building for the helper-script engines (MLX Whisper / Faster Whisper Mac):
+        // Cue building for the MLX Whisper engine:
         // subtitle cues rebuilt from word timestamps per the Netflix Timed Text Style
         // Guide / BBC guideline limits, editable here instead of via command-line flags.
         var labelCueBuilding = UiUtil.MakeLabel(Se.Language.Video.AudioToText.CueBuilding).WithBold();
