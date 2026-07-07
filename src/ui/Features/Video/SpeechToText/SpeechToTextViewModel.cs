@@ -3620,6 +3620,7 @@ public partial class SpeechToTextViewModel : ObservableObject
 
             mlxProcess.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
             mlxProcess.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
+            mlxProcess.StartInfo.EnvironmentVariables["PYTHONUNBUFFERED"] = "1";
 
             if (dataReceivedHandler != null)
             {
@@ -3766,6 +3767,13 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             process.StartInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
             process.StartInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
+
+            // Without a terminal attached, Python block-buffers stdout (~8 KB), so a
+            // Python-based engine's progress output (e.g. whisper-ctranslate2's --verbose
+            // segment lines) sits in the buffer until the process exits and the console
+            // log stays empty for the whole run, which reads as frozen. Unbuffered mode
+            // makes every line arrive as soon as it is printed.
+            process.StartInfo.EnvironmentVariables["PYTHONUNBUFFERED"] = "1";
         }
 
         if (dataReceivedHandler != null)
