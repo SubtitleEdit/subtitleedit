@@ -1250,6 +1250,9 @@ public static partial class InitListViewAndEditBox
         // Right panel for text editing (show/duration is to the left)
         var textEditGrid = new Grid
         {
+            // RightToLeftHelper mirrors this grid by name so the current/original
+            // text boxes keep matching the mirrored subtitle grid columns.
+            Name = "SubtitleTextEditGrid",
             ColumnDefinitions = new ColumnDefinitions("*,*,Auto"),
             RowDefinitions = new RowDefinitions("Auto,*,Auto"),
         };

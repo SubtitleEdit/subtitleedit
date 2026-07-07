@@ -42,6 +42,13 @@ internal static class RightToLeftHelper
         {
             dataGrid.FlowDirection = flowDirection;
         }
+        else if (visual is Grid grid && grid.Name == "SubtitleTextEditGrid")
+        {
+            // Mirror the edit area with the subtitle grid: the grid's Original
+            // column moves to the other side under right to left, and the
+            // original text box below must follow it (issue #12249).
+            grid.FlowDirection = flowDirection;
+        }
         else if (visual is TextBox textBox)
         {
             textBox.FlowDirection = flowDirection;
