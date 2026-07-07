@@ -24,6 +24,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     private IntPtr _mpv = IntPtr.Zero;
     private IntPtr _renderContext = IntPtr.Zero;
     private volatile bool _disposed;
+    private volatile bool _coreInitialized;
     private string _fileName = string.Empty;
     private double? _audioEndBound;
 
@@ -352,7 +353,13 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
             return -1;
         }
 
-        return _mpvInitialize(_mpv);
+        var err = _mpvInitialize(_mpv);
+        if (err >= 0)
+        {
+            _coreInitialized = true;
+        }
+
+        return err;
     }
 
     private static byte[] GetUtf8Bytes(string s)
@@ -465,6 +472,10 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         {
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer InitializeWithOpenGL mpv_initialize");
         }
+        else
+        {
+            _coreInitialized = true;
+        }
 
         // Create OpenGL init params
         var initParams = new MpvOpenGlInitParams
@@ -553,6 +564,10 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         if (err < 0)
         {
             Se.LogError(new InvalidOperationException(GetErrorString(err)), "LibMpvDynamicPlayer InitializeWithMetal mpv_initialize");
+        }
+        else
+        {
+            _coreInitialized = true;
         }
 
         // Build mpv_metal_init_params: device (required) + layer (optional).
@@ -752,6 +767,24 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
 
     public string FileName => _fileName;
 
+    /// <summary>
+    /// The mpv core is initialized lazily by the rendering surface - e.g. the OpenGL
+    /// control calls InitializeWithOpenGL on its first render pass. Windows that open a
+    /// video right away (the burn-in and visual sync previews load the file from their
+    /// Loaded event) can therefore issue "loadfile" before mpv_initialize has run; the
+    /// command then fails with MPV_ERROR_UNINITIALIZED and is never retried, leaving the
+    /// preview black until some other action reloads the file (issue #12205). Wait
+    /// (bounded) for the core to come up before sending commands.
+    /// </summary>
+    private async Task WaitForCoreInitializedAsync(int timeoutMs = 5000)
+    {
+        var end = DateTime.UtcNow.AddMilliseconds(timeoutMs);
+        while (!_coreInitialized && !_disposed && DateTime.UtcNow < end)
+        {
+            await Task.Delay(25);
+        }
+    }
+
     public async Task LoadFile(string path)
     {
         EnsureNotDisposed();
@@ -767,6 +800,8 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         // Reset any end-of-playback bound from a previous file (see audio-only handling below).
         SetOptionString("end", "none");
         _audioEndBound = null;
+
+        await WaitForCoreInitializedAsync();
 
         var err = await Task.Run(() => DoMpvCommand("loadfile", path));
         if (_disposed)
@@ -879,6 +914,8 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
     public async Task LoadAudio(string path)
     {
         EnsureNotDisposed();
+
+        await WaitForCoreInitializedAsync();
 
         var err = await Task.Run(() => DoMpvCommand("loadfile", path));
         if (_disposed)
@@ -1484,6 +1521,8 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
         {
             throw new InvalidOperationException(GetErrorString(err));
         }
+
+        _coreInitialized = true;
 
         // Build render context params for software rendering
         var apiTypeBytes = Encoding.UTF8.GetBytes(MPV_RENDER_API_TYPE_SW + "\0");
