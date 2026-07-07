@@ -878,6 +878,13 @@ public class SpeechToTextWindow : Window
     {
         if (!engine.CanBeDownloaded())
         {
+            // MLX Whisper is installed via pip rather than downloaded by Subtitle Edit,
+            // but it still has a local install state worth surfacing.
+            if (engine is MlxWhisperMac)
+            {
+                return engine.IsEngineInstalled() ? DownloadDotStatus.UpToDate : DownloadDotStatus.NotInstalled;
+            }
+
             return DownloadDotStatus.None; // cloud / API engine - nothing to install
         }
 

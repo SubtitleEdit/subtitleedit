@@ -61,6 +61,10 @@ public class SpeechToTextPostProcessingWindow : Window
         var textBoxVocabularyPrompt = UiUtil.MakeTextBox(260, vm, nameof(SpeechToTextPostProcessingViewModel.VocabularyPrompt));
         var labelBeamSize = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.BeamSize);
         var numericBeamSize = UiUtil.MakeNumericUpDownInt(0, 10, 5, 120, vm, nameof(SpeechToTextPostProcessingViewModel.BeamSize));
+        var labelBeamSizeNote = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.BeamSizeNote);
+        labelBeamSizeNote.TextWrapping = Avalonia.Media.TextWrapping.Wrap;
+        labelBeamSizeNote.MaxWidth = 460;
+        labelBeamSizeNote.Opacity = 0.7;
 
 
         var buttonPanel = UiUtil.MakeButtonBar(
@@ -72,6 +76,7 @@ public class SpeechToTextPostProcessingWindow : Window
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -155,6 +160,8 @@ public class SpeechToTextPostProcessingWindow : Window
         row++;
         grid.Add(labelBeamSize, row, 0);
         grid.Add(numericBeamSize, row, 1, 1, 2);
+        row++;
+        grid.Add(labelBeamSizeNote, row, 0, 1, 3);
         row++;
 
         grid.Add(buttonPanel, row, 0, 1, 3);

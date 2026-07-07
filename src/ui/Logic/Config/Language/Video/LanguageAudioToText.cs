@@ -41,6 +41,7 @@ public class LanguageAudioToText
     public string CueMaxCps { get; set; }
     public string VocabularyPrompt { get; set; }
     public string BeamSize { get; set; }
+    public string BeamSizeNote { get; set; }
 
     public string EngineSettings { get; set; }
     public string EngineSettingsSubtitle { get; set; }
@@ -86,7 +87,8 @@ public class LanguageAudioToText
         CueMaxSeconds = "Max seconds per cue";
         CueMaxCps = "Max characters per second";
         VocabularyPrompt = "Vocabulary prompt (names, places, terms)";
-        BeamSize = "Beam size (5 = accuracy like Faster Whisper, 0 = plain greedy decoding)";
+        BeamSize = "Beam size";
+        BeamSizeNote = "0 decodes fastest. 5 gives the best accuracy (like Faster Whisper) at roughly 20-30% more time. Values above 5 rarely help.";
 
         EngineSettings = "Speech-to-text engine settings";
         EngineSettingsSubtitle = "Speech-to-text engine";
