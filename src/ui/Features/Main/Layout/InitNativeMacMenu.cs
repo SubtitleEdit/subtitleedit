@@ -78,6 +78,15 @@ public static class InitNativeMacMenu
     // Conditional/Toggle helpers register into it (UI thread only, build is synchronous).
     private static MenuState? _building;
 
+    // Windows-menu ownership: when MacWindowsMenuInterop manages to register our
+    // "Window" submenu as NSApplication.windowsMenu, AppKit populates it (and mirrors
+    // it into the Dock icon's menu), and we must never mutate it again, since changing
+    // the NativeMenu would rebuild the NSMenu and wipe AppKit's entries. Until the
+    // first registration attempt resolves, the menu stays empty; on failure the manual
+    // list below takes over.
+    private static bool _appKitOwnsWindowsMenu;
+    private static bool _windowsMenuInteropFailed;
+
     // ── App menu ─────────────────────────────────────────────────────────────
     // Called from Program.cs. Sets the "Subtitle Edit" app dropdown contents.
     // Avalonia also auto-appends the standard macOS items (Hide, Quit, etc.).
@@ -120,7 +129,24 @@ public static class InitNativeMacMenu
             window.Activated += (_, _) =>
             {
                 _active = state;
-                UpdateWindowMenus();
+
+                // Runs after Avalonia has installed this window's NSMenuBar. Success
+                // means AppKit owns the Window menu contents (and feeds the Dock's
+                // window list) from here on.
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    if (MacWindowsMenuInterop.TryRegisterWindowsMenu(
+                            Clean(Se.Language.Main.Menu.WindowTitle),
+                            _states.Select(menuState => menuState.Window).OfType<Window>()))
+                    {
+                        _appKitOwnsWindowsMenu = true;
+                    }
+                    else if (!_appKitOwnsWindowsMenu)
+                    {
+                        _windowsMenuInteropFailed = true;
+                        UpdateWindowMenus();
+                    }
+                }, Avalonia.Threading.DispatcherPriority.Background);
             };
             window.Closed += (_, _) =>
             {
@@ -429,6 +455,13 @@ public static class InitNativeMacMenu
     // refreshes titles, which change when a file is opened or saved).
     private static void UpdateWindowMenus()
     {
+        if (_appKitOwnsWindowsMenu || !_windowsMenuInteropFailed)
+        {
+            // AppKit populates the menu (and the Dock list) itself, or the first
+            // registration attempt has not resolved yet; either way, hands off.
+            return;
+        }
+
         foreach (var menuState in _states)
         {
             if (menuState.WindowListItem?.Menu is not NativeMenu menu)
