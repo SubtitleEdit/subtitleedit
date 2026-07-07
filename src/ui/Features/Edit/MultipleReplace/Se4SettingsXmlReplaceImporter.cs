@@ -1,3 +1,4 @@
+using Nikse.SubtitleEdit.Features.Options.Settings;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,6 +83,33 @@ public static class Se4SettingsXmlReplaceImporter
         }
 
         return result;
+    }
+
+    // Same data in the shape the Multiple Replace import dialog works with, so the user can
+    // point the right-click Import directly at an SE 4 Settings.xml (issue #12225).
+    internal static CategoryImportExportItem? ImportFromXmlAsImportExport(string xml)
+    {
+        var categories = ImportFromXml(xml);
+        if (categories.Count == 0)
+        {
+            return null;
+        }
+
+        return new CategoryImportExportItem
+        {
+            Categories = categories.Select(c => new CategoryImportExportItem.RuleImportExportCategory
+            {
+                Name = c.Name,
+                Rules = c.Rules.Select(r => new CategoryImportExportItem.RuleImportExportItem
+                {
+                    Find = r.Find,
+                    ReplaceWith = r.ReplaceWith,
+                    Description = r.Description,
+                    IsActive = r.Active,
+                    Type = r.Type.ToString(),
+                }).ToList(),
+            }).ToList(),
+        };
     }
 
     private static string? LocalValue(XElement parent, params string[] names)
