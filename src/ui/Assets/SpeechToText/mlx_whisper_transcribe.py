@@ -122,6 +122,175 @@ def ensure_model_downloaded(repo):
               file=sys.stderr, flush=True)
 
 
+def enable_beam_search():
+    """Add beam search decoding to mlx-whisper, which only ships a greedy decoder.
+
+    This is a port of openai/whisper's reference BeamSearchDecoder to MLX arrays,
+    installed by swapping the decoder inside DecodingTask. The library is already
+    prepared for it: the batch tiling for n_group > 1, the likelihood ranker, and
+    Inference.rearrange_kv_cache all exist; only the decoder class is missing
+    (requesting beam_size raises NotImplementedError upstream). Returns True when
+    the patch is active.
+    """
+    import dataclasses
+
+    import mlx.core as mx
+    import numpy as np
+    from mlx.utils import tree_map
+    from mlx_whisper import decoding
+
+    if getattr(decoding.DecodingTask, "_se_beam_patch", False):
+        return True
+
+    class BeamSearchDecoder(decoding.TokenDecoder):
+        def __init__(self, beam_size, eot, inference, patience=None):
+            self.beam_size = beam_size
+            self.eot = eot
+            self.inference = inference
+            self.patience = patience or 1.0
+            self.max_candidates = round(beam_size * self.patience)
+            self.finished_sequences = None
+            self._rows = None
+            if self.max_candidates <= 0:
+                raise ValueError("Invalid beam size / patience")
+
+        def reset(self):
+            self.finished_sequences = None
+            self._rows = None
+
+        def _rearrange_kv_cache(self, source_indices):
+            # The library's rearrange_kv_cache reindexes every cached array, but
+            # the cache mixes self attention entries (batch = number of beams)
+            # with cross attention entries (batch = number of audios). Indexing
+            # the latter with beam indices reads out of bounds, which MLX does
+            # not check on the GPU, silently corrupting the decode. Only arrays
+            # whose batch dimension matches the beam count are reordered; the
+            # cross attention rows are identical across beams anyway.
+            if source_indices == list(range(len(source_indices))):
+                return
+            n = len(source_indices)
+            idx = mx.array(source_indices)
+            self.inference.kv_cache = tree_map(
+                lambda x: mx.take(x, idx, axis=0) if x.shape[0] == n else x,
+                self.inference.kv_cache)
+
+        def update(self, tokens, logits, sum_logprobs):
+            if tokens.shape[0] % self.beam_size != 0:
+                raise ValueError("batch size is not a multiple of beam size")
+            n_audio = tokens.shape[0] // self.beam_size
+            if self.finished_sequences is None:
+                self.finished_sequences = [{} for _ in range(n_audio)]
+
+            # Beam bookkeeping happens in python like the reference implementation,
+            # but the top-k selection runs on the GPU first so only beam_size + 1
+            # candidates per beam cross to the CPU each step instead of the whole
+            # vocabulary-sized probability matrix.
+            k = self.beam_size + 1
+            logprobs = logits - mx.logsumexp(logits, axis=-1, keepdims=True)
+            top_idx = mx.argpartition(logprobs, -k, axis=-1)[:, -k:]
+            top_val = mx.take_along_axis(logprobs, top_idx, axis=-1)
+            top_idx = np.array(top_idx)
+            top_val = np.array(top_val)
+            sums = np.array(sum_logprobs)
+            # The candidate rows are rebuilt in python each step, so reuse them
+            # instead of pulling the whole growing token matrix off the GPU.
+            rows = self._rows
+            if rows is None:
+                rows = np.array(tokens).tolist()
+
+            next_tokens, source_indices, new_sums, newly_finished = [], [], [], []
+            for i in range(n_audio):
+                scores, sources, finished = {}, {}, {}
+                # Rank every (beam, candidate token) continuation by cumulative
+                # log probability; the dict keyed by full sequence also merges
+                # beams that converged onto identical hypotheses.
+                for j in range(self.beam_size):
+                    idx = i * self.beam_size + j
+                    for token, val in zip(top_idx[idx], top_val[idx]):
+                        sequence = tuple(rows[idx] + [int(token)])
+                        scores[sequence] = float(sums[idx] + val)
+                        sources[sequence] = idx
+
+                saved = 0
+                for sequence in sorted(scores, key=scores.get, reverse=True):
+                    if sequence[-1] == self.eot:
+                        finished[sequence] = scores[sequence]
+                    else:
+                        new_sums.append(scores[sequence])
+                        next_tokens.append(list(sequence))
+                        source_indices.append(sources[sequence])
+                        saved += 1
+                        if saved == self.beam_size:
+                            break
+                newly_finished.append(finished)
+
+            self._rows = next_tokens
+            tokens = mx.array(next_tokens)
+            self._rearrange_kv_cache(source_indices)
+
+            for previously, newly in zip(self.finished_sequences, newly_finished):
+                for seq in sorted(newly, key=newly.get, reverse=True):
+                    if len(previously) >= self.max_candidates:
+                        break
+                    previously[seq] = newly[seq]
+
+            completed = all(
+                len(sequences) >= self.max_candidates
+                for sequences in self.finished_sequences
+            )
+            return tokens, completed, mx.array(new_sums)
+
+        def finalize(self, preceding_tokens, sum_logprobs):
+            # Collect the finished hypotheses, topping up from the best still
+            # running beams when too few finished naturally. The caller expects
+            # rectangular arrays and truncates each row at its first EOT, so
+            # shorter sequences are padded with EOT.
+            sums = np.array(sum_logprobs)
+            preceding = np.array(preceding_tokens).tolist()
+            groups = []
+            for i, sequences in enumerate(self.finished_sequences):
+                if len(sequences) < self.beam_size:
+                    for j in list(np.argsort(sums[i]))[::-1]:
+                        sequence = tuple(preceding[i][j] + [self.eot])
+                        sequences.setdefault(sequence, float(sums[i][j]))
+                        if len(sequences) >= self.beam_size:
+                            break
+                groups.append(sequences)
+
+            count = max(len(sequences) for sequences in groups)
+            length = max(len(seq) for sequences in groups for seq in sequences)
+            tokens = []
+            logprobs = []
+            for sequences in groups:
+                ordered = sorted(sequences.items(), key=lambda kv: kv[1], reverse=True)
+                while len(ordered) < count:
+                    ordered.append(ordered[0])
+                tokens.append([list(seq) + [self.eot] * (length - len(seq))
+                               for seq, _ in ordered])
+                logprobs.append([score for _, score in ordered])
+            return mx.array(tokens), mx.array(logprobs)
+
+    original_init = decoding.DecodingTask.__init__
+
+    def patched_init(self, model, options):
+        beam_size = options.beam_size
+        patience = options.patience
+        if beam_size:
+            options = dataclasses.replace(
+                options, beam_size=None, patience=None, best_of=None)
+        original_init(self, model, options)
+        if beam_size:
+            self.options = dataclasses.replace(
+                self.options, beam_size=beam_size, patience=patience)
+            self.n_group = beam_size
+            self.decoder = BeamSearchDecoder(
+                beam_size, self.tokenizer.eot, self.inference, patience)
+
+    decoding.DecodingTask.__init__ = patched_init
+    decoding.DecodingTask._se_beam_patch = True
+    return True
+
+
 def load_wav_as_array(path):
     """Read a PCM WAV directly into a 16 kHz mono float32 array.
 
@@ -407,6 +576,9 @@ def main():
                         help="Max reading speed in characters per second; cue ends extend to meet it")
     parser.add_argument("--initial-prompt", default=None,
                         help="Text to bias the decoder (overrides the automatic punctuation prompt)")
+    parser.add_argument("--beam-size", type=int, default=0,
+                        help="Decode with beam search of this width (0 = greedy). "
+                             "Higher accuracy on hard speech at roughly beam-size times the decode cost.")
     parser.add_argument("--no-punctuation-prompt", action="store_true",
                         help="Disable the automatic punctuation-biasing prompt")
     parser.add_argument("--raw-segments", action="store_true",
@@ -464,6 +636,15 @@ def main():
     # openai/whisper's default. mlx-whisper drops this option at temperature 0,
     # so the fast greedy path is unaffected; only hard segments pay for it.
     transcribe_kwargs["best_of"] = 5
+
+    if args.beam_size and args.beam_size > 1:
+        try:
+            enable_beam_search()
+            transcribe_kwargs["beam_size"] = args.beam_size
+            print(f"Beam search enabled (beam size {args.beam_size}).", flush=True)
+        except Exception as e:
+            print(f"warning: beam search unavailable ({e}); decoding greedily",
+                  file=sys.stderr, flush=True)
 
     # Whisper drops punctuation on some real-world speech (dialectal Arabic notably)
     # even with sequential decoding, and punctuation drives the sentence-based cue

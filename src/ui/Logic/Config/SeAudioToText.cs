@@ -85,6 +85,7 @@ public class SeAudioToText
     public bool WhisperCueRebuild { get; set; } = true;
     public int WhisperCueMaxChars { get; set; } = 84;
     public string WhisperVocabularyPrompt { get; set; } = string.Empty;
+    public int WhisperBeamSize { get; set; } = 5;
     public double WhisperCueMaxSeconds { get; set; } = 7.0;
     public double WhisperCueMaxCps { get; set; } = 20.0;
     public bool WhisperPostProcessingChangeUnderlineToColor { get; set; }

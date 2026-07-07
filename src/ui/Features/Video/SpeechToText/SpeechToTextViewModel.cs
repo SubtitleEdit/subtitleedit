@@ -2646,6 +2646,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 viewModal.CueMaxSeconds = Se.Settings.Tools.AudioToText.WhisperCueMaxSeconds;
                 viewModal.CueMaxCps = Se.Settings.Tools.AudioToText.WhisperCueMaxCps;
                 viewModal.VocabularyPrompt = Se.Settings.Tools.AudioToText.WhisperVocabularyPrompt;
+                viewModal.BeamSize = Se.Settings.Tools.AudioToText.WhisperBeamSize;
             });
 
         if (vm.OkPressed)
@@ -2664,6 +2665,7 @@ public partial class SpeechToTextViewModel : ObservableObject
             Se.Settings.Tools.AudioToText.WhisperCueMaxSeconds = vm.CueMaxSeconds;
             Se.Settings.Tools.AudioToText.WhisperCueMaxCps = vm.CueMaxCps;
             Se.Settings.Tools.AudioToText.WhisperVocabularyPrompt = vm.VocabularyPrompt ?? string.Empty;
+            Se.Settings.Tools.AudioToText.WhisperBeamSize = vm.BeamSize;
         }
     }
 
@@ -3624,6 +3626,11 @@ public partial class SpeechToTextViewModel : ObservableObject
             if (vocabularyPrompt.Length > 0)
             {
                 promptPart = $" --initial-prompt \"{vocabularyPrompt}\"";
+            }
+
+            if (audioToText.WhisperBeamSize > 1)
+            {
+                promptPart += $" --beam-size {audioToText.WhisperBeamSize}";
             }
 
             if (!audioToText.WhisperCueRebuild)

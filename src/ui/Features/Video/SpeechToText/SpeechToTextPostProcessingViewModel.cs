@@ -22,6 +22,7 @@ public partial class SpeechToTextPostProcessingViewModel : ObservableObject
     [ObservableProperty] private double _cueMaxSeconds;
     [ObservableProperty] private double _cueMaxCps;
     [ObservableProperty] private string _vocabularyPrompt = string.Empty;
+    [ObservableProperty] private int _beamSize;
 
     public Window? Window { get; set; }
 

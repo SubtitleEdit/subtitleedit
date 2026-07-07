@@ -59,6 +59,8 @@ public class SpeechToTextPostProcessingWindow : Window
         var numericCueMaxCps = UiUtil.MakeNumericUpDownDouble(5, 60, 20, 120, vm, nameof(SpeechToTextPostProcessingViewModel.CueMaxCps));
         var labelVocabularyPrompt = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.VocabularyPrompt);
         var textBoxVocabularyPrompt = UiUtil.MakeTextBox(260, vm, nameof(SpeechToTextPostProcessingViewModel.VocabularyPrompt));
+        var labelBeamSize = UiUtil.MakeTextBlock(Se.Language.Video.AudioToText.BeamSize);
+        var numericBeamSize = UiUtil.MakeNumericUpDownInt(0, 10, 5, 120, vm, nameof(SpeechToTextPostProcessingViewModel.BeamSize));
 
 
         var buttonPanel = UiUtil.MakeButtonBar(
@@ -148,6 +150,9 @@ public class SpeechToTextPostProcessingWindow : Window
         row++;
         grid.Add(labelVocabularyPrompt, row, 0);
         grid.Add(textBoxVocabularyPrompt, row, 1, 1, 2);
+        row++;
+        grid.Add(labelBeamSize, row, 0);
+        grid.Add(numericBeamSize, row, 1, 1, 2);
         row++;
 
         grid.Add(buttonPanel, row, 0, 1, 3);

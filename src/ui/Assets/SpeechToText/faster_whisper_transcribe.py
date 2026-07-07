@@ -399,6 +399,8 @@ def main():
                         help="Text to bias the decoder (overrides the automatic punctuation prompt)")
     parser.add_argument("--no-punctuation-prompt", action="store_true",
                         help="Disable the automatic punctuation-biasing prompt")
+    parser.add_argument("--beam-size", type=int, default=0,
+                        help="Beam search width (0 keeps faster-whisper's default of 5)")
     # Tolerate unknown extra flags from the user's advanced-settings box instead of dying on them.
     args, unknown = parser.parse_known_args()
     if unknown:
@@ -451,6 +453,10 @@ def main():
         "task": args.task,
         "word_timestamps": use_words,
     }
+    if args.beam_size and args.beam_size > 1:
+        # faster-whisper supports beam search natively (its own default is 5);
+        # accept the same flag as the MLX helper so both engines share settings.
+        transcribe_kwargs["beam_size"] = args.beam_size
 
     # A user prompt (vocabulary: names, places, technical terms) combines with the
     # punctuation prompt instead of replacing it, so custom terms never cost
