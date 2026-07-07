@@ -452,59 +452,92 @@ def main():
     print(f"Loading MLX Whisper model '{args.model}' (Apple GPU/Neural Engine)...", flush=True)
     use_words = not args.raw_segments
     transcribe_kwargs = {}
-
-    # Skip music and long silences via VAD when possible (see detect_speech_clips);
-    # only possible when the audio was decoded to an array (Subtitle Edit always
-    # feeds a 16 kHz mono WAV, so this is the normal path).
-    if not isinstance(audio_input, str):
-        clips = detect_speech_clips(audio_input)
-        if clips:
-            transcribe_kwargs["clip_timestamps"] = clips
-            speech_seconds = sum(clips[i + 1] - clips[i] for i in range(0, len(clips), 2))
-            total_seconds = len(audio_input) / 16000.0
-            print(f"VAD: {len(clips) // 2} speech region(s), "
-                  f"{speech_seconds / 60.0:.1f} of {total_seconds / 60.0:.1f} minutes to decode.",
-                  flush=True)
-
     if use_words:
         # Built-in hallucination guard: with word timestamps available, skip silent
         # stretches longer than this when the decoder output looks hallucinated.
         transcribe_kwargs["hallucination_silence_threshold"] = 2.0
+
     # Whisper drops punctuation on some real-world speech (dialectal Arabic notably)
     # even with sequential decoding, and punctuation drives the sentence-based cue
-    # splitting. A short punctuated prompt in the audio's language restores it
-    # (verified on this model: zero marks without, normal sentence marks with).
+    # splitting. A short punctuated prompt in the audio's language restores it, but
+    # the initial prompt only reaches the first decoding window, so over a long file
+    # its effect decays. Decoding each VAD speech chunk as its own call (below)
+    # re-applies the prompt at every chunk, which keeps punctuation practically
+    # present across a full episode instead of only near the start.
     prompt = args.initial_prompt
     if prompt is None and not args.no_punctuation_prompt and language:
         prompt = PUNCTUATION_PROMPTS.get(language.lower())
-    if prompt:
-        transcribe_kwargs["initial_prompt"] = prompt
-    result = mlx_whisper.transcribe(
-        audio_input,
-        path_or_hf_repo=args.model,
-        language=language,
-        task=args.task,
-        word_timestamps=use_words,
-        # verbose=True prints each segment as it is decoded, which (with unbuffered
-        # stdout) is what streams live transcription lines into the host's console.
-        verbose=True,
-        **transcribe_kwargs,
-    )
-
-    detected = result.get("language", language or "?")
-    print(f"Detected language: {detected}", flush=True)
 
     collected = []
     words = []
-    for seg in result.get("segments", []):
-        text = (seg.get("text") or "").strip()
-        start = float(seg.get("start", 0.0))
-        end = float(seg.get("end", 0.0))
-        # mlx-whisper already printed each segment live (verbose=True), so only collect here.
-        collected.append((start, end, text))
-        if use_words:
-            for w in seg.get("words") or []:
-                words.append((float(w.get("start", start)), float(w.get("end", end)), w.get("word") or ""))
+
+    def decode_piece(piece, offset, piece_prompt):
+        """Transcribe one audio piece, printing and collecting absolute-time output."""
+        kwargs = dict(transcribe_kwargs)
+        if piece_prompt:
+            kwargs["initial_prompt"] = piece_prompt
+        result = mlx_whisper.transcribe(
+            piece,
+            path_or_hf_repo=args.model,
+            language=language,
+            task=args.task,
+            word_timestamps=use_words,
+            verbose=None,
+            **kwargs,
+        )
+        piece_texts = []
+        for seg in result.get("segments", []):
+            text = (seg.get("text") or "").strip()
+            start = offset + float(seg.get("start", 0.0))
+            end = offset + float(seg.get("end", 0.0))
+            # Live line per segment, in absolute time (the pieces are chunk-relative).
+            print(f"[{fmt_short(start)} --> {fmt_short(end)}] {text}", flush=True)
+            collected.append((start, end, text))
+            piece_texts.append(text)
+            if use_words:
+                for w in seg.get("words") or []:
+                    words.append((offset + float(w.get("start", 0.0)),
+                                  offset + float(w.get("end", 0.0)),
+                                  w.get("word") or ""))
+        return " ".join(piece_texts)
+
+    # Skip music and long silences via VAD when possible (see detect_speech_clips);
+    # only possible when the audio was decoded to an array (Subtitle Edit always
+    # feeds a 16 kHz mono WAV, so this is the normal path). Nearby regions merge
+    # into chunks so the per-chunk overhead stays negligible, capped so the
+    # punctuation prompt is refreshed at least every few minutes.
+    clips = None if isinstance(audio_input, str) else detect_speech_clips(audio_input)
+    if clips:
+        chunks = []
+        chunk_start, chunk_end = clips[0], clips[1]
+        for i in range(2, len(clips), 2):
+            start, end = clips[i], clips[i + 1]
+            if start - chunk_end <= 3.0 and end - chunk_start <= 240.0:
+                chunk_end = end
+            else:
+                chunks.append((chunk_start, chunk_end))
+                chunk_start, chunk_end = start, end
+        chunks.append((chunk_start, chunk_end))
+
+        speech_seconds = sum(end - start for start, end in chunks)
+        total_seconds = len(audio_input) / 16000.0
+        print(f"VAD: {len(chunks)} speech chunk(s), "
+              f"{speech_seconds / 60.0:.1f} of {total_seconds / 60.0:.1f} minutes to decode.",
+              flush=True)
+
+        # Carry a tail of the previous chunk's text so cross-chunk context (names,
+        # style, and the punctuation habit) persists like sequential conditioning.
+        previous_tail = ""
+        for chunk_start, chunk_end in chunks:
+            chunk_prompt = prompt or ""
+            if previous_tail:
+                chunk_prompt = (chunk_prompt + " " + previous_tail).strip()
+            piece = audio_input[int(chunk_start * 16000):int(chunk_end * 16000)]
+            chunk_text = decode_piece(piece, chunk_start, chunk_prompt or None)
+            if chunk_text:
+                previous_tail = chunk_text[-150:]
+    else:
+        decode_piece(audio_input, 0.0, prompt)
 
     if use_words and words:
         cues = resegment(words, args.max_cue_chars, args.max_cue_duration)
