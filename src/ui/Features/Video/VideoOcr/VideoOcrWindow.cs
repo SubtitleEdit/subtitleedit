@@ -100,6 +100,7 @@ public class VideoOcrWindow : Window
             Background = Brushes.Black,
             Children = { image, cropSelector },
         };
+        ToolTip.SetTip(imageArea, Se.Language.Video.VideoOcr.ScanAreaInfo);
 
         var slider = new Slider
         {
@@ -150,13 +151,6 @@ public class VideoOcrWindow : Window
                 UiUtil.MakeButton(Se.Language.Video.VideoOcr.BottomHalf, vm.SetScanAreaBottomHalfCommand),
                 UiUtil.MakeButton(Se.Language.Video.VideoOcr.FullFrame, vm.SetScanAreaFullFrameCommand),
                 scanAreaText,
-                new TextBlock
-                {
-                    Text = Se.Language.Video.VideoOcr.ScanAreaInfo,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Opacity = 0.7,
-                    Margin = new Thickness(10, 0, 0, 0),
-                },
             },
         };
 
@@ -224,6 +218,19 @@ public class VideoOcrWindow : Window
         glmPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsGlmEngine)) { Source = vm });
         panel.Children.Add(glmPanel);
 
+        // llama.cpp settings
+        var llamaCppPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
+        llamaCppPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Model));
+        llamaCppPanel.Children.Add(UiUtil.MakeComboBox(vm.LlamaCppModels, vm, nameof(vm.SelectedLlamaCppModel)).WithWidth(330));
+        var llamaCppButtons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 5 };
+        llamaCppButtons.Children.Add(UiUtil.MakeButton(vm.DownloadLlamaCppCommand, IconNames.Download, Se.Language.General.Download));
+        llamaCppButtons.Children.Add(MakeLlamaCppServerButton(vm));
+        llamaCppPanel.Children.Add(llamaCppButtons);
+        llamaCppPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Language));
+        llamaCppPanel.Children.Add(UiUtil.MakeTextBox(330, vm, nameof(vm.LlamaCppLanguage)));
+        llamaCppPanel.Bind(StackPanel.IsVisibleProperty, new Binding(nameof(vm.IsLlamaCppEngine)) { Source = vm });
+        panel.Children.Add(llamaCppPanel);
+
         // Scan settings
         panel.Children.Add(MakeHeader(Se.Language.Video.VideoOcr.Scan));
         panel.Children.Add(MakeSettingRow(
@@ -253,6 +260,13 @@ public class VideoOcrWindow : Window
         };
 
         return UiUtil.MakeBorderForControl(scrollViewer);
+    }
+
+    private static Button MakeLlamaCppServerButton(VideoOcrViewModel vm)
+    {
+        var button = UiUtil.MakeButton(string.Empty, vm.ToggleLlamaCppServerCommand);
+        button.Bind(Button.ContentProperty, new Binding(nameof(vm.LlamaCppServerButtonText)));
+        return button;
     }
 
     private static TextBlock MakeHeader(string text, bool isFirst = false)

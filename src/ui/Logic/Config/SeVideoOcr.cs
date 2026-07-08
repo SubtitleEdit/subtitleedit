@@ -13,6 +13,8 @@ public class SeVideoOcr
     public string GlmModel { get; set; }
     public string GlmApiKey { get; set; }
     public string GlmLanguage { get; set; }
+    public string LlamaCppModel { get; set; }
+    public string LlamaCppLanguage { get; set; }
     public int FramesPerSecond { get; set; }
     public int ImageSimilarityPercent { get; set; }
     public int TextSimilarityPercent { get; set; }
@@ -39,6 +41,8 @@ public class SeVideoOcr
         GlmModel = GlmOcr.DefaultModel;
         GlmApiKey = string.Empty;
         GlmLanguage = "English";
+        LlamaCppModel = string.Empty;
+        LlamaCppLanguage = "English";
         FramesPerSecond = 5;
         ImageSimilarityPercent = 92;
         TextSimilarityPercent = 80;
