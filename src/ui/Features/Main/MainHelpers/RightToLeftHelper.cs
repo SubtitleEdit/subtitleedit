@@ -19,14 +19,6 @@ internal static class RightToLeftHelper
     }
 
     /// <summary>
-    /// Mirrors the main text edit grid so the current and original text boxes keep
-    /// matching the mirrored subtitle grid columns (issue #12249). Setting
-    /// FlowDirection on a grid does not rearrange its children, so the columns are
-    /// swapped for real: the column definitions are reversed (the original column's
-    /// width binding travels with its definition object) and every child is
-    /// remapped to the mirrored column index. Idempotent via the grid's Tag.
-    /// </summary>
-    /// <summary>
     /// In right to left mode a text control follows its content: text with right
     /// to left letters (Arabic, Hebrew, and so on) stays right to left, text in a
     /// left to right script (for example a Turkish or English original subtitle)
@@ -63,6 +55,14 @@ internal static class RightToLeftHelper
         };
     }
 
+    /// <summary>
+    /// Mirrors the main text edit grid so the current and original text boxes keep
+    /// matching the mirrored subtitle grid columns (issue #12249). Setting
+    /// FlowDirection on a grid does not rearrange its children, so the columns are
+    /// swapped for real: the column definitions are reversed (the original column's
+    /// width binding travels with its definition object) and every child is
+    /// remapped to the mirrored column index. Idempotent via the grid's Tag.
+    /// </summary>
     private static void MirrorTextEditGrid(Grid grid, FlowDirection flowDirection)
     {
         var wantMirrored = flowDirection == FlowDirection.RightToLeft;
