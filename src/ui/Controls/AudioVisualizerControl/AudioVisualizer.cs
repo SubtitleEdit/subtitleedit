@@ -421,6 +421,12 @@ public class AudioVisualizer : Control
 
     public AudioVisualizer()
     {
+        // A right to left UI language sets the whole window to RightToLeft, which
+        // mirrors every visual, including this waveform (the peaks and the region
+        // labels would render flipped). Pin the control to left to right so the
+        // waveform is never mirrored regardless of the UI language.
+        FlowDirection = Avalonia.Media.FlowDirection.LeftToRight;
+
         AllSelectedParagraphs = new List<SubtitleLineViewModel>();
         Focusable = true;
         IsHitTestVisible = true;

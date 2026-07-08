@@ -221,6 +221,12 @@ namespace Nikse.SubtitleEdit.Controls.VideoPlayer
 
         public VideoPlayerControl(IVideoPlayer videoPlayerInstance)
         {
+            // A right to left UI language sets the whole window to RightToLeft, which
+            // mirrors every visual, including this video surface (the picture and any
+            // overlay would render flipped). Pin the player to left to right so the
+            // video is never mirrored regardless of the UI language.
+            FlowDirection = Avalonia.Media.FlowDirection.LeftToRight;
+
             _videoPlayerInstance = videoPlayerInstance;
             _videoFileName = string.Empty;
             _lastActivityTime = DateTime.UtcNow;
