@@ -5,6 +5,7 @@ using Avalonia.Media;
 using Avalonia.VisualTree;
 using AvaloniaEdit.Editing;
 using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Main.MainHelpers;
@@ -25,6 +26,25 @@ internal static class RightToLeftHelper
     /// width binding travels with its definition object) and every child is
     /// remapped to the mirrored column index. Idempotent via the grid's Tag.
     /// </summary>
+    /// <summary>
+    /// In right to left mode a text control follows its content: text with right
+    /// to left letters (Arabic, Hebrew, and so on) stays right to left, text in a
+    /// left to right script (for example a Turkish or English original subtitle)
+    /// aligns left to right. Empty controls keep the requested direction so typing
+    /// in a right to left language starts on the correct side.
+    /// </summary>
+    internal static FlowDirection GetContentDirection(string? text, FlowDirection requested)
+    {
+        if (requested != FlowDirection.RightToLeft || string.IsNullOrWhiteSpace(text))
+        {
+            return requested;
+        }
+
+        return LanguageAutoDetect.ContainsRightToLeftLetter(text)
+            ? FlowDirection.RightToLeft
+            : FlowDirection.LeftToRight;
+    }
+
     private static void MirrorTextEditGrid(Grid grid, FlowDirection flowDirection)
     {
         var wantMirrored = flowDirection == FlowDirection.RightToLeft;
@@ -83,11 +103,11 @@ internal static class RightToLeftHelper
         }
         else if (visual is TextBox textBox)
         {
-            textBox.FlowDirection = flowDirection;
+            textBox.FlowDirection = GetContentDirection(textBox.Text, flowDirection);
         }
         else if (visual is TextArea textArea)
         {
-            textArea.FlowDirection = flowDirection;
+            textArea.FlowDirection = GetContentDirection(textArea.Document?.Text, flowDirection);
         }
 
         foreach (var child in visual.GetVisualChildren())
