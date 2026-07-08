@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using AvaloniaEdit;
 using Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Main.Layout;
 
@@ -157,6 +158,14 @@ public class TextEditorBindingHelper
         UpdateViewModelFromEditor();
         var routedEvent = _isOriginal ? OriginalTextChangedEvent : TextChangedEvent;
         _vm.SubtitleTextChanged(sender, new TextChangedEventArgs(routedEvent));
+
+        // Follow the content: an original subtitle in a left to right language
+        // stays readable next to a right to left working language and vice versa.
+        var requestedDirection = Se.Settings.Appearance.RightToLeft
+            ? FlowDirection.RightToLeft
+            : FlowDirection.LeftToRight;
+        _textEditor.TextArea.FlowDirection = MainHelpers.RightToLeftHelper
+            .GetContentDirection(_textEditor.Text, requestedDirection);
     }
 
     private void OnTextEditorTapped(object? sender, RoutedEventArgs e)

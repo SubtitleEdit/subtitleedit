@@ -11130,6 +11130,7 @@ public partial class MainViewModel :
                 Se.Settings.Appearance.RightToLeft = !Se.Settings.Appearance.RightToLeft;
                 IsRightToLeftEnabled = Se.Settings.Appearance.RightToLeft;
                 RightToLeftHelper.SetRightToLeftForDataGridAndText(Window);
+                RightToLeftHelper.RefreshDataGridBindings(SubtitleGrid, Subtitles, SelectedSubtitle);
                 return;
             }
 
