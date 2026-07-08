@@ -71,6 +71,7 @@
 		<None Remove="Assets\FileTypes\sup.ico" />
 		<None Remove="Assets\FileTypes\vtt.ico" />
 		<None Remove="Assets\HunspellDictionaries.json" />
+		<None Remove="Assets\Languages\Arabic.json" />
 		<None Remove="Assets\Languages\Bulgarian.json" />
 		<None Remove="Assets\Languages\Czech.json" />
 		<None Remove="Assets\Languages\Danish.json" />
@@ -110,6 +111,7 @@
 		<None Remove="Assets\SpeechToText\WhisperOpenAI.txt" />
 		<None Remove="Styles.xaml" />
 		<AvaloniaResource Include="Assets\Dictionaries.zip" />
+		<AvaloniaResource Include="Assets\Languages\Arabic.json" />
 		<AvaloniaResource Include="Assets\Languages\Bulgarian.json" />
 		<AvaloniaResource Include="Assets\Languages\Czech.json" />
 		<AvaloniaResource Include="Assets\Languages\Danish.json" />
