@@ -242,6 +242,12 @@ public class MessageBox : Window
         string? custom3 = null)
     {
         var msgBox = new MessageBox(title, message, buttons, icon, custom1, custom2, custom3);
+
+        // Keep the message box above undocked tool windows (audio visualizer / video player),
+        // which float on top of the main window via KeepTopmostWhileOwnerActive. Without this the
+        // message box opens behind them in undocked mode. (#12268)
+        WindowService.KeepTopmostWhileOwnerActive(msgBox, owner);
+
         return await msgBox.ShowDialog<MessageBoxResult>(owner);
     }
 
