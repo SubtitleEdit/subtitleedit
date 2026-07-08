@@ -4,14 +4,21 @@ using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Nikse.SubtitleEdit.Features.Ocr.Download;
+using Nikse.SubtitleEdit.Features.Ocr.Engines;
+using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Video.VideoOcr;
 
 public class VideoOcrWindow : Window
 {
+    private ComboBox? _comboEngine;
+    private ComboBox? _comboLlamaCppModel;
+
     public VideoOcrWindow(VideoOcrViewModel vm)
     {
         UiUtil.InitializeWindow(this, GetType().Name);
@@ -171,9 +178,11 @@ public class VideoOcrWindow : Window
         return UiUtil.MakeBorderForControl(grid);
     }
 
-    private static Border MakeSettingsView(VideoOcrViewModel vm)
+    private Border MakeSettingsView(VideoOcrViewModel vm)
     {
         var comboEngine = UiUtil.MakeComboBox(vm.Engines, vm, nameof(vm.SelectedEngine)).WithWidth(220);
+        comboEngine.ItemTemplate = BuildEngineItemTemplate();
+        _comboEngine = comboEngine;
 
         var comboPaddleLanguage = UiUtil.MakeComboBox(vm.PaddleLanguages, vm, nameof(vm.SelectedPaddleLanguage)).WithWidth(220);
 
@@ -219,9 +228,13 @@ public class VideoOcrWindow : Window
         panel.Children.Add(glmPanel);
 
         // llama.cpp settings
+        var comboLlamaCppModel = UiUtil.MakeComboBox(vm.LlamaCppModels, vm, nameof(vm.SelectedLlamaCppModel)).WithWidth(330);
+        comboLlamaCppModel.ItemTemplate = BuildLlamaCppModelItemTemplate();
+        _comboLlamaCppModel = comboLlamaCppModel;
+
         var llamaCppPanel = new StackPanel { Orientation = Orientation.Vertical, Spacing = 4 };
         llamaCppPanel.Children.Add(UiUtil.MakeLabel(Se.Language.Video.VideoOcr.Model));
-        llamaCppPanel.Children.Add(UiUtil.MakeComboBox(vm.LlamaCppModels, vm, nameof(vm.SelectedLlamaCppModel)).WithWidth(330));
+        llamaCppPanel.Children.Add(comboLlamaCppModel);
         var llamaCppButtons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 5 };
         llamaCppButtons.Children.Add(UiUtil.MakeButton(vm.DownloadLlamaCppCommand, IconNames.Download, Se.Language.General.Download));
         llamaCppButtons.Children.Add(MakeLlamaCppServerButton(vm));
@@ -267,6 +280,54 @@ public class VideoOcrWindow : Window
         var button = UiUtil.MakeButton(string.Empty, vm.ToggleLlamaCppServerCommand);
         button.Bind(Button.ContentProperty, new Binding(nameof(vm.LlamaCppServerButtonText)));
         return button;
+    }
+
+    // Install-status dot for the engine combo: green = ready to use, amber = a newer build is
+    // available, grey = downloadable but not on disk. Engines with nothing for us to download
+    // (Paddle OCR Python via pip, Ollama server, the cloud GLM API) get no dot.
+    private static DownloadDotStatus GetEngineDotStatus(VideoOcrEngineItem engine)
+    {
+        switch (engine.EngineType)
+        {
+            case OcrEngineType.PaddleOcrStandalone:
+                return PaddleOcrInstallHelper.IsStandaloneInstalled()
+                    ? DownloadDotStatus.UpToDate
+                    : DownloadDotStatus.NotInstalled;
+            case OcrEngineType.LlamaCpp:
+                return StatusDots.From(LlamaCppServerManager.IsEngineInstalled(), LlamaCppServerManager.GetEngineUpdateStatus());
+            default:
+                return DownloadDotStatus.None;
+        }
+    }
+
+    private static Avalonia.Controls.Templates.FuncDataTemplate<VideoOcrEngineItem> BuildEngineItemTemplate()
+    {
+        return StatusDots.ComboItemTemplate<VideoOcrEngineItem>(
+            engine => engine.Name,
+            _ => null,
+            GetEngineDotStatus);
+    }
+
+    private static Avalonia.Controls.Templates.FuncDataTemplate<LlamaCppModelDisplay> BuildLlamaCppModelItemTemplate()
+    {
+        return StatusDots.ComboItemTemplate<LlamaCppModelDisplay>(
+            model => model.Model.DisplayName,
+            model => model.Model.Size,
+            model => model.IsInstalled ? DownloadDotStatus.UpToDate : DownloadDotStatus.NotInstalled);
+    }
+
+    // Rebuilds the combo item templates so the install-status dots are re-evaluated - the dots are
+    // one-off snapshots, so a fresh template is the refresh. Called after a download or server start.
+    public void RefreshDownloadDots()
+    {
+        if (_comboEngine != null)
+        {
+            _comboEngine.ItemTemplate = BuildEngineItemTemplate();
+        }
+        if (_comboLlamaCppModel != null)
+        {
+            _comboLlamaCppModel.ItemTemplate = BuildLlamaCppModelItemTemplate();
+        }
     }
 
     private static TextBlock MakeHeader(string text, bool isFirst = false)
