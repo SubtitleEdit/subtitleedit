@@ -21,11 +21,20 @@ v5.1.0-beta12 (TBD)
 * MLX Whisper (macOS): detect pipx/venv/conda installs and show a clearer "not found" message - thx asiaminor77
 * Online speech to text: log failures, add a DashScope region hint, timeout handling, and smaller OpenRouter chunks - thx caiweihan, acc4github
 * Whisper CPP: fix incorrect model file sizes shown in the model list - thx asiaminor77
+* Multiple replace: import replace rules directly from a Subtitle Edit 4 Settings.xml
+* ASSA karaoke (advanced effects): add a right-to-left option - thx rzeczywistoscia992-web
+* Right-to-left: apply content direction to the translation text boxes and mirror the edit grid columns (Subtitle Edit 4 parity) - thx muaz978
+* Waveform: freeze the cursor on all pause paths and ease small position corrections after pause/stop instead of snapping
+* Fix Apply and Find text buttons missing in "Point sync via other subtitle"
+* Fix a message box appearing behind an undocked audio visualizer
+* Fix broken French and Swedish spell-check dictionary download URLs
 * Update CrispASR to v0.8.8
 * Update Japanese translation
 * Update Korean translation - thx 12si27
 * Update Italian translation - thx bovirus
 * Update Turkish translation - thx bilimiyorum
+* Update Russian translation - thx jekovcar
+* Update Bulgarian translation - thx jekovcar
 
 -----------------------------------------------------------------------------------------------------
 
