@@ -28,9 +28,10 @@ public class PointSyncViaOtherWindow : Window
         var controlView = MakeControlView(vm);
         var subtitleOtherView = MakeSubtitleOtherView(vm);
 
+        var buttonApply = UiUtil.MakeButton(Se.Language.General.Apply, vm.ApplyCommand).WithBindIsEnabled(nameof(vm.IsOkEnabled));
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand).WithBindIsEnabled(nameof(vm.IsOkEnabled));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var panelButtons = UiUtil.MakeButtonBar(buttonApply, buttonOk, buttonCancel);
 
         var grid = new Grid
         {
@@ -141,6 +142,19 @@ public class PointSyncViaOtherWindow : Window
         };
 
         var labelFileName = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.FileName));
+        labelFileName.VerticalAlignment = VerticalAlignment.Center;
+        var buttonFindText = UiUtil.MakeButton(Se.Language.Sync.FindText, vm.FindTextLeftCommand);
+        buttonFindText.HorizontalAlignment = HorizontalAlignment.Right;
+        var panelHeader = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+            },
+        };
+        panelHeader.Add(labelFileName, 0, 0);
+        panelHeader.Add(buttonFindText, 0, 1);
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
@@ -184,7 +198,7 @@ public class PointSyncViaOtherWindow : Window
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSubtitle)));
 
-        grid.Add(labelFileName, 0);
+        grid.Add(panelHeader, 0);
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
 
         return grid;
@@ -209,11 +223,25 @@ public class PointSyncViaOtherWindow : Window
 
         var buttonBrowseOther = UiUtil.MakeButtonBrowse(vm.BrowseOtherCommand);
         var labelOtherFileName = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.FileNameOther));
+        labelOtherFileName.VerticalAlignment = VerticalAlignment.Center;
         var panelOtherBrowse = new StackPanel
         {
             Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center,
             Children = { buttonBrowseOther, labelOtherFileName },
         };
+        var buttonFindTextOther = UiUtil.MakeButton(Se.Language.Sync.FindText, vm.FindTextOtherCommand);
+        buttonFindTextOther.HorizontalAlignment = HorizontalAlignment.Right;
+        var panelOtherHeader = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+            },
+        };
+        panelOtherHeader.Add(panelOtherBrowse, 0, 0);
+        panelOtherHeader.Add(buttonFindTextOther, 0, 1);
 
         var fullTimeConverter = new TimeSpanToDisplayFullConverter();
         var shortTimeConverter = new TimeSpanToDisplayShortConverter();
@@ -257,7 +285,7 @@ public class PointSyncViaOtherWindow : Window
         };
         dataGridSubtitle.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedOtherSubtitle)));
 
-        grid.Add(panelOtherBrowse, 0);
+        grid.Add(panelOtherHeader, 0);
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGridSubtitle), 1);
 
         return grid;

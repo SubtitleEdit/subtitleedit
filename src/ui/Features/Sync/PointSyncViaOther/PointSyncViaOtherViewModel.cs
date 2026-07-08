@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Shared.FindText;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Media;
@@ -40,6 +41,7 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
     private readonly IWindowService _windowService;
 
     private string _videoFileName;
+    private List<SubtitleLineViewModel> _originalSubtitles;
 
     public PointSyncViaOtherViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
@@ -53,12 +55,14 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
         FileNameOther = string.Empty;
         _videoFileName = string.Empty;
         SyncedSubtitles = new List<SubtitleLineViewModel>();
+        _originalSubtitles = new List<SubtitleLineViewModel>();
     }
 
     public void Initialize(List<SubtitleLineViewModel> subtitles, string videoFileName, string fileName)
     {
         Subtitles.Clear();
         Subtitles.AddRange(subtitles);
+        _originalSubtitles = subtitles.Select(s => new SubtitleLineViewModel(s)).ToList();
         FileName = fileName;
         _videoFileName = videoFileName;
 
@@ -153,9 +157,64 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void Apply()
+    {
+        if (SyncPoints.Count == 0)
+        {
+            return;
+        }
+
+        // Re-preview from the original timings so repeated Apply clicks don't stack.
+        var synced = PointSyncer.PointSync(_originalSubtitles, SyncPoints.ToList());
+        for (var i = 0; i < Subtitles.Count && i < synced.Count; i++)
+        {
+            Subtitles[i].StartTime = synced[i].StartTime;
+            Subtitles[i].EndTime = synced[i].EndTime;
+        }
+    }
+
+    [RelayCommand]
+    private async Task FindTextLeft()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<FindTextWindow, FindTextViewModel>(Window, vm =>
+        {
+            vm.Initialize(Subtitles.ToList(), string.Format(Se.Language.General.FindTextX, FileName));
+        });
+
+        if (result.OkPressed && result.SelectedSubtitle != null)
+        {
+            SelectedSubtitle = result.SelectedSubtitle;
+        }
+    }
+
+    [RelayCommand]
+    private async Task FindTextOther()
+    {
+        if (Window == null || Othersubtitles.Count == 0)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<FindTextWindow, FindTextViewModel>(Window, vm =>
+        {
+            vm.Initialize(Othersubtitles.ToList(), string.Format(Se.Language.General.FindTextX, FileNameOther));
+        });
+
+        if (result.OkPressed && result.SelectedSubtitle != null)
+        {
+            SelectedOtherSubtitle = result.SelectedSubtitle;
+        }
+    }
+
+    [RelayCommand]
     private void Ok()
     {
-        SyncedSubtitles = PointSyncer.PointSync(Subtitles.ToList(), SyncPoints.ToList());
+        SyncedSubtitles = PointSyncer.PointSync(_originalSubtitles, SyncPoints.ToList());
         OkPressed = true;
         Close();
     }
