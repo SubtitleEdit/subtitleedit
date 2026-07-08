@@ -11,6 +11,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Video.VideoOcr;
 
@@ -157,6 +158,9 @@ public class VideoOcrWindow : Window
                 UiUtil.MakeButton(Se.Language.Video.VideoOcr.BottomThird, vm.SetScanAreaBottomThirdCommand),
                 UiUtil.MakeButton(Se.Language.Video.VideoOcr.BottomHalf, vm.SetScanAreaBottomHalfCommand),
                 UiUtil.MakeButton(Se.Language.Video.VideoOcr.FullFrame, vm.SetScanAreaFullFrameCommand),
+                UiUtil.MakeButton(Se.Language.Video.VideoOcr.TestOcr, vm.TestOcrCommand)
+                    .WithBindEnabled(nameof(vm.IsRunning), new InverseBooleanConverter())
+                    .WithMarginLeft(10),
                 scanAreaText,
             },
         };
@@ -366,7 +370,7 @@ public class VideoOcrWindow : Window
             CanUserResizeColumns = true,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
-            IsReadOnly = true,
+            IsReadOnly = false, // the text column is editable so OCR mistakes can be fixed in place
             DataContext = vm,
             ItemsSource = vm.Lines,
             Columns =
@@ -404,10 +408,29 @@ public class VideoOcrWindow : Window
                     Header = Se.Language.General.Text,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     Binding = new Binding(nameof(VideoOcrLineItem.Text)),
-                    IsReadOnly = true,
+                    IsReadOnly = false,
                     Width = new DataGridLength(1, DataGridLengthUnitType.Star),
                 },
             },
+        };
+
+        // Double-click a line to see the frame it came from in the preview.
+        dataGrid.DoubleTapped += (s, e) =>
+        {
+            if (dataGrid.SelectedItem is VideoOcrLineItem item)
+            {
+                vm.SeekPreview(item);
+            }
+        };
+
+        // Delete removes the selected lines (unless a cell edit is in progress).
+        dataGrid.KeyDown += (s, e) =>
+        {
+            if (e.Key == Avalonia.Input.Key.Delete && e.Source is not TextBox)
+            {
+                vm.DeleteLines(dataGrid.SelectedItems.OfType<VideoOcrLineItem>().ToList());
+                e.Handled = true;
+            }
         };
 
         return UiUtil.MakeBorderForControl(dataGrid);
