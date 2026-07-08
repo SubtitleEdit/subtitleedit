@@ -19,15 +19,16 @@ internal static class RightToLeftHelper
     }
 
     /// <summary>
-    /// In right to left mode a text control follows its content: text with right
-    /// to left letters (Arabic, Hebrew, and so on) stays right to left, text in a
-    /// left to right script (for example a Turkish or English original subtitle)
-    /// aligns left to right. Empty controls keep the requested direction so typing
-    /// in a right to left language starts on the correct side.
+    /// A text control follows its content in either mode: text with right to left
+    /// letters (Arabic, Hebrew, and so on) flows right to left, text in a left to
+    /// right script (for example a Turkish or English original subtitle) flows
+    /// left to right. The layout itself still follows only the mode toggle; this
+    /// governs text direction inside a control. Empty controls keep the requested
+    /// direction so typing starts on the side matching the active mode.
     /// </summary>
     internal static FlowDirection GetContentDirection(string? text, FlowDirection requested)
     {
-        if (requested != FlowDirection.RightToLeft || string.IsNullOrWhiteSpace(text))
+        if (string.IsNullOrWhiteSpace(text))
         {
             return requested;
         }
@@ -48,9 +49,12 @@ internal static class RightToLeftHelper
     {
         textBox.PropertyChanged += (_, e) =>
         {
-            if (e.Property == TextBox.TextProperty && Se.Settings.Appearance.RightToLeft)
+            if (e.Property == TextBox.TextProperty)
             {
-                textBox.FlowDirection = GetContentDirection(textBox.Text, FlowDirection.RightToLeft);
+                var requested = Se.Settings.Appearance.RightToLeft
+                    ? FlowDirection.RightToLeft
+                    : FlowDirection.LeftToRight;
+                textBox.FlowDirection = GetContentDirection(textBox.Text, requested);
             }
         };
     }

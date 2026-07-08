@@ -8,17 +8,18 @@ using System.Globalization;
 namespace Nikse.SubtitleEdit.Logic.ValueConverters;
 
 /// <summary>
-/// In right to left mode, gives a text presenter a left to right flow direction
-/// when its content is in a left to right script (for example a Turkish original
-/// subtitle next to an Arabic working language). In every other case the binding
-/// is left unset so the control keeps its inherited direction.
+/// Gives a text presenter the flow direction of its content in either mode: cells
+/// with right to left letters flow right to left (also as the original next to a
+/// left to right working language), cells in a left to right script flow left to
+/// right (also as the original next to a right to left working language). Empty
+/// cells follow the active mode.
 /// </summary>
 public class TextToFlowDirectionConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var rightToLeftMode = Se.Settings.Appearance.RightToLeft;
-        if (rightToLeftMode && value is string text && !string.IsNullOrWhiteSpace(text))
+        if (value is string text && !string.IsNullOrWhiteSpace(text))
         {
             return LanguageAutoDetect.ContainsRightToLeftLetter(text)
                 ? FlowDirection.RightToLeft
