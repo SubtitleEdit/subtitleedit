@@ -35,6 +35,13 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
     public bool AutoDetectActiveWord { get; set; } = false;
 
     /// <summary>
+    /// When true (and auto-sequencing by words), advance the active word from the end of the line
+    /// towards the start so the highlight progresses visually right-to-left. Auto-enabled for
+    /// right-to-left languages (Hebrew, Arabic, ...) where the default order runs backwards. (#12271)
+    /// </summary>
+    public bool RightToLeft { get; set; }
+
+    /// <summary>
     /// Glow color used for the active word's 3c (ASS BGR).
     /// </summary>
     public Color GlowColor { get; set; } = Color.FromRgb(0xFF, 0xDD, 0x00); // &H00DDFF& in ASS BGR
@@ -203,6 +210,10 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
                 sb.Append(posTags);
             }
 
+            // The active word for this step. In right-to-left mode advance from the last word
+            // towards the first so the highlight moves right-to-left visually.
+            var activeWordIndex = RightToLeft ? wordCount - 1 - w : w;
+
             string? currentColor = null;
             int localWordCounter = 0;
 
@@ -248,7 +259,7 @@ public class AdvancedEffectFancyKaraoke : IAdvancedEffectDisplay
 
                 // Non-whitespace token = a word/punctuation group
                 // Only the current word is active
-                var colorTag = localWordCounter == w ? activeTags : inactiveTags;
+                var colorTag = localWordCounter == activeWordIndex ? activeTags : inactiveTags;
                 if (colorTag != currentColor)
                 {
                     sb.Append(colorTag);

@@ -75,11 +75,22 @@ public class AssaApplyAdvancedEffectWindow : Window
                     settingsStack.Children.Add(speedRow);
                     panel.Children.Add(settingsStack);
                 }
+                else if (item is AdvancedEffectKaraoke karaokeItem)
+                {
+                    var rightToLeftRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
+                    rightToLeftRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectKaraokeRightToLeft, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    rightToLeftRow.Children.Add(UiUtil.MakeCheckBox(karaokeItem, nameof(AdvancedEffectKaraoke.RightToLeft)));
+                    panel.Children.Add(rightToLeftRow);
+                }
                 else if (item is AdvancedEffectFancyKaraoke fancyKaraokeItem)
                 {
                     var autoDetectActiveWordRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 6, 0, 0) };
                     autoDetectActiveWordRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeAutoDetectActiveWord, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
                     autoDetectActiveWordRow.Children.Add(UiUtil.MakeCheckBox(fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.AutoDetectActiveWord)));
+
+                    var rightToLeftRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 4, 0, 0) };
+                    rightToLeftRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectKaraokeRightToLeft, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
+                    rightToLeftRow.Children.Add(UiUtil.MakeCheckBox(fancyKaraokeItem, nameof(AdvancedEffectFancyKaraoke.RightToLeft)));
 
                     var activeGlowRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 4, 0, 0) };
                     activeGlowRow.Children.Add(new TextBlock { Text = Se.Language.Assa.AdvancedEffectFancyKaraokeGlow, VerticalAlignment = VerticalAlignment.Center, FontSize = 12 });
@@ -100,6 +111,7 @@ public class AssaApplyAdvancedEffectWindow : Window
 
                     var settingsStack = new StackPanel { Spacing = 2 };
                     settingsStack.Children.Add(autoDetectActiveWordRow);
+                    settingsStack.Children.Add(rightToLeftRow);
                     settingsStack.Children.Add(activeGlowRow);
                     settingsStack.Children.Add(activeColorRow);
                     settingsStack.Children.Add(inactiveColorRow);
