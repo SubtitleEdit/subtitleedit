@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.VisualTree;
@@ -14,6 +15,40 @@ internal static class RightToLeftHelper
     {
         var flowDirection = Se.Settings.Appearance.RightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
         SetFlowDirectionRecursive(window, flowDirection);
+    }
+
+    /// <summary>
+    /// Mirrors the main text edit grid so the current and original text boxes keep
+    /// matching the mirrored subtitle grid columns (issue #12249). Setting
+    /// FlowDirection on a grid does not rearrange its children, so the columns are
+    /// swapped for real: the column definitions are reversed (the original column's
+    /// width binding travels with its definition object) and every child is
+    /// remapped to the mirrored column index. Idempotent via the grid's Tag.
+    /// </summary>
+    private static void MirrorTextEditGrid(Grid grid, FlowDirection flowDirection)
+    {
+        var wantMirrored = flowDirection == FlowDirection.RightToLeft;
+        var isMirrored = Equals(grid.Tag, "mirrored");
+        if (wantMirrored == isMirrored)
+        {
+            return;
+        }
+
+        grid.Tag = wantMirrored ? "mirrored" : null;
+
+        var definitions = grid.ColumnDefinitions.ToList();
+        grid.ColumnDefinitions.Clear();
+        definitions.Reverse();
+        foreach (var definition in definitions)
+        {
+            grid.ColumnDefinitions.Add(definition);
+        }
+
+        var last = definitions.Count - 1;
+        foreach (var child in grid.Children)
+        {
+            Grid.SetColumn(child, last - Grid.GetColumn(child));
+        }
     }
 
     private static void SetFlowDirectionRecursive(Visual visual, FlowDirection flowDirection)
@@ -44,10 +79,7 @@ internal static class RightToLeftHelper
         }
         else if (visual is Grid grid && grid.Name == "SubtitleTextEditGrid")
         {
-            // Mirror the edit area with the subtitle grid: the grid's Original
-            // column moves to the other side under right to left, and the
-            // original text box below must follow it (issue #12249).
-            grid.FlowDirection = flowDirection;
+            MirrorTextEditGrid(grid, flowDirection);
         }
         else if (visual is TextBox textBox)
         {
