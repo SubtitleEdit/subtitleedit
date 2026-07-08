@@ -888,6 +888,12 @@ public partial class MainViewModel :
         var idx = SubtitleGrid.SelectedIndex;
         var savedAudioTrack = _audioTrack;
         Se.Settings.General.LayoutNumber = InitLayout.MakeLayout(MainView!, this, layoutNumber);
+        if (Se.Settings.Appearance.RightToLeft && Window != null)
+        {
+            // The rebuilt layout starts left to right; re-apply the mode.
+            RightToLeftHelper.SetRightToLeftForDataGridAndText(Window);
+        }
+
         SelectAndScrollToRow(Math.Max(0, idx));
         Dispatcher.UIThread.Post(() => SubtitleGrid.Focus());
         RefreshSubtitlePreview();
@@ -5765,6 +5771,12 @@ public partial class MainViewModel :
             });
 
             InitLayout.MakeLayout12KeepVideo(MainView!, this);
+            if (Se.Settings.Appearance.RightToLeft && Window != null)
+            {
+                // The rebuilt layout starts left to right; re-apply the mode.
+                RightToLeftHelper.SetRightToLeftForDataGridAndText(Window);
+            }
+
             RefreshSubtitlePreview();
         });
     }
