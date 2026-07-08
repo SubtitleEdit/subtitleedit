@@ -1,7 +1,7 @@
 
 Subtitle Edit Changelog
 
-v5.1.0-beta12 (TBD)
+v5.1.0-beta12 (8th of July 2026)
 
 * macOS: add multi-window support - "File -> New window" opens an independent editor window, with a per-window menu bar and Dock integration - thx muaz978
 * Add "Set start and go to next" shortcut (Subtitle Edit 4 parity) - thx NiggleHub
@@ -28,7 +28,7 @@ v5.1.0-beta12 (TBD)
 * Fix Apply and Find text buttons missing in "Point sync via other subtitle"
 * Fix a message box appearing behind an undocked audio visualizer
 * Fix broken French and Swedish spell-check dictionary download URLs
-* Update CrispASR to v0.8.8
+* Update CrispASR to v0.8.9
 * Update Japanese translation
 * Update Korean translation - thx 12si27
 * Update Italian translation - thx bovirus
