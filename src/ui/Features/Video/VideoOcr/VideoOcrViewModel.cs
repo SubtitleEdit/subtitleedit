@@ -9,8 +9,10 @@ using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.Download;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic.Media;
 using SkiaSharp;
 using System;
@@ -33,6 +35,7 @@ public partial class VideoOcrViewModel : ObservableObject
     [ObservableProperty] private bool _isPaddleEngine;
     [ObservableProperty] private bool _isOllamaEngine;
     [ObservableProperty] private bool _isGlmEngine;
+    [ObservableProperty] private bool _isLlamaCppEngine;
     [ObservableProperty] private ObservableCollection<OcrLanguage2> _paddleLanguages;
     [ObservableProperty] private OcrLanguage2? _selectedPaddleLanguage;
     [ObservableProperty] private string _ollamaUrl;
@@ -42,6 +45,10 @@ public partial class VideoOcrViewModel : ObservableObject
     [ObservableProperty] private string _glmModel;
     [ObservableProperty] private string _glmApiKey;
     [ObservableProperty] private string _glmLanguage;
+    [ObservableProperty] private ObservableCollection<LlamaCppModelDisplay> _llamaCppModels;
+    [ObservableProperty] private LlamaCppModelDisplay? _selectedLlamaCppModel;
+    [ObservableProperty] private string _llamaCppLanguage;
+    [ObservableProperty] private string _llamaCppServerButtonText;
     [ObservableProperty] private int _framesPerSecond;
     [ObservableProperty] private int _brightnessMinimum;
     [ObservableProperty] private int _textSimilarityPercent;
@@ -99,6 +106,9 @@ public partial class VideoOcrViewModel : ObservableObject
         GlmModel = string.Empty;
         GlmApiKey = string.Empty;
         GlmLanguage = string.Empty;
+        LlamaCppModels = new ObservableCollection<LlamaCppModelDisplay>();
+        LlamaCppLanguage = string.Empty;
+        LlamaCppServerButtonText = "Start server";
         ProgressText = string.Empty;
         PreviewPositionText = string.Empty;
         ScanAreaText = string.Empty;
@@ -191,6 +201,153 @@ public partial class VideoOcrViewModel : ObservableObject
         IsPaddleEngine = value.EngineType is OcrEngineType.PaddleOcrStandalone or OcrEngineType.PaddleOcrPython;
         IsOllamaEngine = value.EngineType == OcrEngineType.Ollama;
         IsGlmEngine = value.EngineType == OcrEngineType.Glm;
+        IsLlamaCppEngine = value.EngineType == OcrEngineType.LlamaCpp;
+
+        if (IsLlamaCppEngine && LlamaCppModels.Count == 0)
+        {
+            var savedModelName = Path.GetFileName(Se.Settings.Video.VideoOcr.LlamaCppModel);
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.OcrModels, savedModelName);
+        }
+    }
+
+    partial void OnSelectedLlamaCppModelChanged(LlamaCppModelDisplay? value)
+    {
+        if (value == null)
+        {
+            return;
+        }
+
+        Se.Settings.Video.VideoOcr.LlamaCppModel = LlamaCppServerManager.GetModelPath(value.Model.FileName);
+    }
+
+    private void UpdateLlamaCppServerButtonText()
+    {
+        LlamaCppServerButtonText = LlamaCppServerManager.IsServerRunning ? "Stop server" : "Start server";
+    }
+
+    [RelayCommand]
+    private async Task DownloadLlamaCpp()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var model = SelectedLlamaCppModel?.Model;
+        var forceModelDownload = false;
+        if (model != null && LlamaCppServerManager.IsModelInstalled(model))
+        {
+            var answer = await MessageBox.Show(
+                Window,
+                Se.Language.General.Download,
+                string.Format(Se.Language.Translate.XIsAlreadyDownloadedReDownload, model.DisplayName),
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            forceModelDownload = true;
+        }
+
+        var downloaded = await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model, forceModelDownload: forceModelDownload);
+        if (downloaded != null)
+        {
+            var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
+            SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.OcrModels, selectName);
+        }
+    }
+
+    [RelayCommand]
+    private async Task ToggleLlamaCppServer()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (LlamaCppServerManager.IsServerRunning)
+        {
+            LlamaCppServerManager.StopServer();
+            UpdateLlamaCppServerButtonText();
+            return;
+        }
+
+        await EnsureLlamaCppReady();
+        UpdateLlamaCppServerButtonText();
+    }
+
+    private async Task<bool> EnsureLlamaCppReady()
+    {
+        if (Window == null)
+        {
+            return false;
+        }
+
+        var model = SelectedLlamaCppModel?.Model;
+        if (model == null)
+        {
+            return false;
+        }
+
+        var engineInstalled = LlamaCppServerManager.IsEngineInstalled();
+        var modelInstalled = LlamaCppServerManager.IsModelInstalled(model);
+        if (!engineInstalled || !modelInstalled)
+        {
+            string message;
+            if (!engineInstalled && !modelInstalled)
+            {
+                message = "llama.cpp requires the llama-server engine and the selected OCR model to be downloaded. Download now?";
+            }
+            else if (!engineInstalled)
+            {
+                message = "llama.cpp requires the llama-server engine to be downloaded. Download now?";
+            }
+            else
+            {
+                message = "llama.cpp requires the selected OCR model to be downloaded. Download now?";
+            }
+
+            var answer = await MessageBox.Show(
+                Window,
+                Se.Language.General.Download,
+                message,
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (answer != MessageBoxResult.Yes)
+            {
+                return false;
+            }
+
+            await LlamaCppDownloadHelper.DownloadAsync(Window, _windowService, model);
+            if (!LlamaCppServerManager.IsEngineInstalled() || !LlamaCppServerManager.IsModelInstalled(model))
+            {
+                return false;
+            }
+        }
+
+        SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.OcrModels, model.FileName);
+
+        try
+        {
+            await LlamaCppServerManager.EnsureServerRunningAsync(model, _cancellationTokenSource.Token);
+        }
+        catch (Exception ex)
+        {
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                ex.Message,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return false;
+        }
+
+        UpdateLlamaCppServerButtonText();
+        return true;
     }
 
     private void LoadPreview()
@@ -581,6 +738,18 @@ public partial class VideoOcrViewModel : ObservableObject
                     glmOcr.Ocr(group.RepresentativeFileName, GlmUrl, GlmModel, GlmLanguage, cancellationToken),
                 () => glmOcr.Error, ReportOcrProgress, AddPreviewLine, cancellationToken);
         }
+        else if (engineType == OcrEngineType.LlamaCpp)
+        {
+            var llamaCppOcr = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
+            var url = LlamaCppServerManager.ApiUrl;
+            var modelName = SelectedLlamaCppModel?.Model.FileName is { } fileName
+                ? Path.GetFileNameWithoutExtension(fileName)
+                : "glmocr";
+            var prompt = Se.Settings.Ocr.LlamaCppOcrPrompt;
+            await RunLlmOcr(ocrGroups, group => OcrWithBitmap(group, bitmap =>
+                    llamaCppOcr.Ocr(bitmap, url, modelName, LlamaCppLanguage, prompt, cancellationToken)),
+                () => llamaCppOcr.Error, ReportOcrProgress, AddPreviewLine, cancellationToken);
+        }
     }
 
     private static async Task<string> OcrWithBitmap(VideoOcrFrameGroup group, Func<SKBitmap, Task<string>> ocr)
@@ -643,6 +812,11 @@ public partial class VideoOcrViewModel : ObservableObject
             return await PaddleOcrInstallHelper.EnsureInstalled(Window!, _windowService, engineType);
         }
 
+        if (engineType == OcrEngineType.LlamaCpp)
+        {
+            return await EnsureLlamaCppReady();
+        }
+
         return true;
     }
 
@@ -673,6 +847,7 @@ public partial class VideoOcrViewModel : ObservableObject
         GlmModel = settings.GlmModel;
         GlmApiKey = settings.GlmApiKey;
         GlmLanguage = settings.GlmLanguage;
+        LlamaCppLanguage = string.IsNullOrEmpty(settings.LlamaCppLanguage) ? "English" : settings.LlamaCppLanguage;
         FramesPerSecond = Math.Clamp(settings.FramesPerSecond, 1, 30);
         BrightnessMinimum = Math.Clamp(settings.BrightnessMinimum, 0, 255);
         TextSimilarityPercent = Math.Clamp(settings.TextSimilarityPercent, 0, 100);
@@ -693,6 +868,11 @@ public partial class VideoOcrViewModel : ObservableObject
         settings.GlmModel = GlmModel;
         settings.GlmApiKey = GlmApiKey;
         settings.GlmLanguage = GlmLanguage;
+        if (SelectedLlamaCppModel != null)
+        {
+            settings.LlamaCppModel = LlamaCppServerManager.GetModelPath(SelectedLlamaCppModel.Model.FileName);
+        }
+        settings.LlamaCppLanguage = LlamaCppLanguage;
         settings.FramesPerSecond = FramesPerSecond;
         settings.BrightnessMinimum = BrightnessMinimum;
         settings.TextSimilarityPercent = TextSimilarityPercent;
