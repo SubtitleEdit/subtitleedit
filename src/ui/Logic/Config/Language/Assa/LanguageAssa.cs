@@ -188,6 +188,7 @@ public class LanguageAssa
     public string AdvancedEffectHeartsDescription { get; set; }
     public string AdvancedEffectWordSpacing { get; set; }
     public string AdvancedEffectWordSpacingDescription { get; set; }
+    public string AdvancedEffectKaraokeRightToLeft { get; set; }
     public string AdvancedEffectFancyKaraokeAutoDetectActiveWord { get; set; }
     public string AdvancedEffectFancyKaraokeGlow { get; set; }
     public string AdvancedEffectFancyKaraokeActiveColor { get; set; }
@@ -401,6 +402,7 @@ public class LanguageAssa
         AdvancedEffectHeartsDescription = "Bezier-drawn hearts in three shapes rain gently from the top of the screen, tumbling and fading throughout each subtitle";
         AdvancedEffectWordSpacing = "Word spacing";
         AdvancedEffectWordSpacingDescription = "Increases spacing between words using the \\fsp tag for better readability";
+        AdvancedEffectKaraokeRightToLeft = "Right-to-left";
         AdvancedEffectFancyKaraokeAutoDetectActiveWord = "Auto-detect active word";
         AdvancedEffectFancyKaraokeGlow = "Active word glow";
         AdvancedEffectFancyKaraokeActiveColor = "Active color";

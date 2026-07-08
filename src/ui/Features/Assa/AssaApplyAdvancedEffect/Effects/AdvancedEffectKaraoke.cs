@@ -22,6 +22,13 @@ public class AdvancedEffectKaraoke : IAdvancedEffectDisplay
     private const string HighlightColor = @"{\1c&HFFFFFF&}";
     private const string DimColor = @"{\1c&H808080&}";
 
+    /// <summary>
+    /// When true, reveal the characters from the end of the text towards the start so the
+    /// highlight progresses visually right-to-left. Auto-enabled for right-to-left languages
+    /// (Hebrew, Arabic, ...) where the default left-to-right reveal runs backwards. (#12271)
+    /// </summary>
+    public bool RightToLeft { get; set; }
+
     public override string ToString() => Name;
 
     public List<SubtitleLineViewModel> ApplyEffect(string header, List<SubtitleLineViewModel> subtitles, int width, int height, WavePeakData2? wavePeaks)
@@ -53,17 +60,21 @@ public class AdvancedEffectKaraoke : IAdvancedEffectDisplay
                     : subtitle.StartTime.Add(TimeSpan.FromMilliseconds((i + 1) * msPerChar));
                 line.StartTime = start;
                 line.EndTime = end;
-                line.Text = BuildKaraokeText(chars, i);
+                line.Text = BuildKaraokeText(chars, i, RightToLeft);
                 result.Add(line);
             }
         }
         return result;
     }
 
-    private static string BuildKaraokeText(char[] chars, int highlightUpTo)
+    private static string BuildKaraokeText(char[] chars, int step, bool rightToLeft)
     {
         var sb = new StringBuilder(chars.Length * 12);
         string? currentColor = null;
+
+        // step is 0-based, so step+1 characters are revealed. Left-to-right reveals the first
+        // step+1 characters; right-to-left reveals the last step+1 characters instead.
+        var revealFromEnd = chars.Length - 1 - step;
 
         for (var j = 0; j < chars.Length; j++)
         {
@@ -74,7 +85,8 @@ public class AdvancedEffectKaraoke : IAdvancedEffectDisplay
                 continue;
             }
 
-            var color = j <= highlightUpTo ? HighlightColor : DimColor;
+            var highlight = rightToLeft ? j >= revealFromEnd : j <= step;
+            var color = highlight ? HighlightColor : DimColor;
             if (color != currentColor)
             {
                 sb.Append(color);

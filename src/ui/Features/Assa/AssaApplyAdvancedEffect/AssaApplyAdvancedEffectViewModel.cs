@@ -7,6 +7,7 @@ using Nikse.SubtitleEdit.Controls.AudioVisualizerControl;
 using Nikse.SubtitleEdit.Controls.VideoPlayer;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Assa.AssaApplyAdvancedEffect.Effects;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Features.Sync.VisualSync;
 using Nikse.SubtitleEdit.Logic;
@@ -97,6 +98,23 @@ public partial class AssaApplyAdvancedEffectViewModel : ObservableObject
         _firstSelectedIndex = _selectedSubtitleLines.Count > 0
             ? Paragraphs.IndexOf(Paragraphs.First(p => p.Subtitle.Id == _selectedSubtitleLines[0].Id))
             : 0;
+
+        // Default the karaoke effects to right-to-left when the subtitle text is a right-to-left
+        // language (Hebrew, Arabic, ...) so the highlight progresses in reading order. (#12271)
+        if (paragraphs.Any(p => LanguageAutoDetect.ContainsRightToLeftLetter(p.Text)))
+        {
+            foreach (var effect in OverrideTags)
+            {
+                if (effect is AdvancedEffectKaraoke karaoke)
+                {
+                    karaoke.RightToLeft = true;
+                }
+                else if (effect is AdvancedEffectFancyKaraoke fancyKaraoke)
+                {
+                    fancyKaraoke.RightToLeft = true;
+                }
+            }
+        }
 
         if (audioVisualizer == null || audioVisualizer.WavePeaks == null || audioVisualizer.WavePeaks.Peaks.Count == 0)
         {
