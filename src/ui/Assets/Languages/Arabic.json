@@ -459,6 +459,7 @@
     "replace": "استبدال",
     "replaceWith": "استبدال بـ",
     "requiresRestart": "يتطلب إعادة التشغيل",
+    "languageChangedRestartInfo": "تم تغيير لغة الواجهة. يُرجى إعادة تشغيل Subtitle Edit حتى تُطبَّق جميع التغييرات بالكامل.",
     "reset": "إعادة تعيين",
     "resizePanels": "تغيير حجم اللوحات",
     "resolution": "الدقة",
