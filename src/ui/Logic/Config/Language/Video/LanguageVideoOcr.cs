@@ -33,6 +33,10 @@ public class LanguageVideoOcr
     public string UnableToReadVideoMessage { get; set; }
     public string AbortOcrTitle { get; set; }
     public string AbortOcrMessage { get; set; }
+    public string TestOcr { get; set; }
+    public string TestOcrRunning { get; set; }
+    public string TestOcrResultX { get; set; }
+    public string TestOcrNoTextFound { get; set; }
 
     public LanguageVideoOcr()
     {
@@ -67,5 +71,9 @@ public class LanguageVideoOcr
         UnableToReadVideoMessage = "Could not read video info from: {0}";
         AbortOcrTitle = "Abort OCR?";
         AbortOcrMessage = "Do you want to abort the running OCR?";
+        TestOcr = "Test current frame";
+        TestOcrRunning = "Testing OCR on current frame...";
+        TestOcrResultX = "Test result: {0}";
+        TestOcrNoTextFound = "Test: no text found in the scan area";
     }
 }

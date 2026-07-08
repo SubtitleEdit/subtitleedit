@@ -428,6 +428,126 @@ public partial class VideoOcrViewModel : ObservableObject
         CropSelector?.SetSelectionVideoRect(0, 0, VideoWidth, VideoHeight);
     }
 
+    /// <summary>
+    /// OCRs only the frame at the current preview position so the user can validate the scan
+    /// area, engine, and settings without scanning the whole video. The result is shown in the
+    /// status text.
+    /// </summary>
+    [RelayCommand]
+    private async Task TestOcr()
+    {
+        if (IsRunning || string.IsNullOrEmpty(_videoFileName) || VideoWidth <= 0 || VideoHeight <= 0)
+        {
+            return;
+        }
+
+        var engineOk = await EnsureEngineIsAvailable();
+        if (!engineOk)
+        {
+            return;
+        }
+
+        ClampSelection();
+
+        _cancellationTokenSource = new CancellationTokenSource();
+        var cancellationToken = _cancellationTokenSource.Token;
+
+        IsRunning = true;
+        ProgressText = Se.Language.Video.VideoOcr.TestOcrRunning;
+
+        var frameFileName = Path.Combine(Path.GetTempPath(), "se_video_ocr_test_" + Guid.NewGuid() + ".jpg");
+        try
+        {
+            await ExtractSingleFrame(frameFileName, PreviewPositionSeconds, cancellationToken);
+            if (!File.Exists(frameFileName) || new FileInfo(frameFileName).Length == 0)
+            {
+                throw new Exception("Could not extract the current frame - see log for the ffmpeg command line.");
+            }
+
+            var group = new VideoOcrFrameGroup { RepresentativeFileName = frameFileName };
+            await OcrGroups(new List<VideoOcrFrameGroup> { group }, () => { }, _ => { }, cancellationToken);
+
+            ProgressText = string.IsNullOrWhiteSpace(group.Text)
+                ? Se.Language.Video.VideoOcr.TestOcrNoTextFound
+                : string.Format(Se.Language.Video.VideoOcr.TestOcrResultX, group.Text.ReplaceLineEndings(" | "));
+        }
+        catch (OperationCanceledException)
+        {
+            ProgressText = string.Empty;
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Video OCR: test on current frame failed");
+            ProgressText = string.Empty;
+
+            await MessageBox.Show(
+                Window!,
+                Se.Language.General.Error,
+                exception.Message,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+        }
+        finally
+        {
+            IsRunning = false;
+
+            try
+            {
+                File.Delete(frameFileName);
+            }
+            catch
+            {
+                // ignore
+            }
+        }
+    }
+
+    private async Task ExtractSingleFrame(string outputFileName, double positionSeconds, CancellationToken cancellationToken)
+    {
+        var scale = string.Empty;
+        var maxImageWidth = Se.Settings.Video.VideoOcr.MaxImageWidth;
+        if (maxImageWidth > 0 && SelectionWidth > maxImageWidth)
+        {
+            scale = $",scale={maxImageWidth}:-2";
+        }
+
+        // -ss before -i: seek in the demuxer, so a test frame late in a long video is still fast.
+        var arguments = $"-nostdin -y -ss {positionSeconds.ToString("0.###", CultureInfo.InvariantCulture)} " +
+                        $"-i \"{_videoFileName}\" " +
+                        $"-vf \"crop={SelectionWidth}:{SelectionHeight}:{SelectionX}:{SelectionY}{scale}\" " +
+                        $"-frames:v 1 -q:v 2 \"{outputFileName}\"";
+
+        Se.WriteToolsLog("Video OCR: extracting test frame - ffmpeg " + arguments);
+        var process = FfmpegGenerator.GetProcess(arguments, (_, _) => { });
+
+#pragma warning disable CA1416 // Validate platform compatibility
+        process.Start();
+#pragma warning restore CA1416
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+
+        try
+        {
+            await process.WaitForExitAsync(cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            try
+            {
+                if (!process.HasExited)
+                {
+                    process.Kill(true);
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+
+            throw;
+        }
+    }
+
     [RelayCommand]
     private async Task StartOcr()
     {
@@ -692,6 +812,15 @@ public partial class VideoOcrViewModel : ObservableObject
             ProgressText = string.Format(Se.Language.Video.VideoOcr.RunningOcrXY, 0, ocrGroups.Count);
         });
 
+        await OcrGroups(ocrGroups, ReportOcrProgress, AddPreviewLine, cancellationToken);
+    }
+
+    /// <summary>
+    /// Runs the selected OCR engine over the given frame groups, storing each result in
+    /// <see cref="VideoOcrFrameGroup.Text"/>. Shared by the full scan and the single-frame test.
+    /// </summary>
+    private async Task OcrGroups(List<VideoOcrFrameGroup> ocrGroups, Action reportProgress, Action<VideoOcrFrameGroup> addPreviewLine, CancellationToken cancellationToken)
+    {
         var engineType = SelectedEngine.EngineType;
         if (engineType is OcrEngineType.PaddleOcrStandalone or OcrEngineType.PaddleOcrPython)
         {
@@ -708,8 +837,8 @@ public partial class VideoOcrViewModel : ObservableObject
                 if (group != null)
                 {
                     group.Text = VideoOcrLineBuilder.CleanOcrResult(p.Text);
-                    ReportOcrProgress();
-                    AddPreviewLine(group);
+                    reportProgress();
+                    addPreviewLine(group);
                 }
             });
 
@@ -731,14 +860,14 @@ public partial class VideoOcrViewModel : ObservableObject
             var ollamaOcr = new OllamaOcr(Se.Settings.Ocr.OllamaOcrTimeoutMinutes);
             await RunLlmOcr(ocrGroups, group => OcrWithBitmap(group, bitmap =>
                     ollamaOcr.Ocr(bitmap, OllamaUrl, OllamaModel, OllamaLanguage, cancellationToken)),
-                () => ollamaOcr.Error, ReportOcrProgress, AddPreviewLine, cancellationToken);
+                () => ollamaOcr.Error, reportProgress, addPreviewLine, cancellationToken);
         }
         else if (engineType == OcrEngineType.Glm)
         {
             var glmOcr = new GlmOcr(GlmApiKey);
             await RunLlmOcr(ocrGroups, group =>
                     glmOcr.Ocr(group.RepresentativeFileName, GlmUrl, GlmModel, GlmLanguage, cancellationToken),
-                () => glmOcr.Error, ReportOcrProgress, AddPreviewLine, cancellationToken);
+                () => glmOcr.Error, reportProgress, addPreviewLine, cancellationToken);
         }
         else if (engineType == OcrEngineType.LlamaCpp)
         {
@@ -750,7 +879,7 @@ public partial class VideoOcrViewModel : ObservableObject
             var prompt = Se.Settings.Ocr.LlamaCppOcrPrompt;
             await RunLlmOcr(ocrGroups, group => OcrWithBitmap(group, bitmap =>
                     llamaCppOcr.Ocr(bitmap, url, modelName, LlamaCppLanguage, prompt, cancellationToken)),
-                () => llamaCppOcr.Error, ReportOcrProgress, AddPreviewLine, cancellationToken);
+                () => llamaCppOcr.Error, reportProgress, addPreviewLine, cancellationToken);
         }
     }
 
@@ -913,6 +1042,34 @@ public partial class VideoOcrViewModel : ObservableObject
         SaveSettings();
         OkPressed = true;
         Window?.Close();
+    }
+
+    /// <summary>Removes the given result lines and renumbers the rest (Delete key in the grid).</summary>
+    internal void DeleteLines(List<VideoOcrLineItem> items)
+    {
+        if (IsRunning || items.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var item in items)
+        {
+            Lines.Remove(item);
+        }
+
+        var number = 1;
+        foreach (var line in Lines)
+        {
+            line.Number = number++;
+        }
+
+        IsOkEnabled = Lines.Count > 0;
+    }
+
+    /// <summary>Moves the preview to the given line's start time (double-click in the grid).</summary>
+    internal void SeekPreview(VideoOcrLineItem item)
+    {
+        PreviewPositionSeconds = Math.Clamp(item.StartTime.TotalSeconds, 0, DurationSeconds);
     }
 
     [RelayCommand]

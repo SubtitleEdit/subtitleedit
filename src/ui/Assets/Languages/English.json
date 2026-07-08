@@ -2170,7 +2170,11 @@
       "unableToReadVideoTitle": "Unable to read video",
       "unableToReadVideoMessage": "Could not read video info from: {0}",
       "abortOcrTitle": "Abort OCR?",
-      "abortOcrMessage": "Do you want to abort the running OCR?"
+      "abortOcrMessage": "Do you want to abort the running OCR?",
+      "testOcr": "Test current frame",
+      "testOcrRunning": "Testing OCR on current frame...",
+      "testOcrResultX": "Test result: {0}",
+      "testOcrNoTextFound": "Test: no text found in the scan area"
     },
     "goToVideoPosition": "Go to video position",
     "generateBlankVideoDotDotDot": "Generate blank video...",
