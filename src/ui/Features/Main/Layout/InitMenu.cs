@@ -681,6 +681,11 @@ public static class InitMenu
                     Header = l.TextToSpeech,
                     Command = vm.ShowVideoTextToSpeechCommand,
                 },
+                new MenuItem
+                {
+                    Header = l.VideoOcr,
+                    Command = vm.ShowVideoOcrCommand,
+                },
                 new Separator(),
                 new MenuItem
                 {
