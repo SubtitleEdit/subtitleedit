@@ -17,6 +17,26 @@ namespace Nikse.SubtitleEdit.Features.Ocr.Download;
 public static class PaddleOcrInstallHelper
 {
     /// <summary>
+    /// True when the standalone Paddle OCR engine binary and the OCR models are already on disk,
+    /// so no download is needed. Used to show an install-status dot next to the engine in a picker.
+    /// The Python engine is installed via pip (outside our control), so it is not covered here.
+    /// </summary>
+    public static bool IsStandaloneInstalled()
+    {
+        if (Configuration.IsRunningOnWindows && !File.Exists(Path.Combine(Se.PaddleOcrFolder, "paddleocr.exe")))
+        {
+            return false;
+        }
+
+        if (Configuration.IsRunningOnLinux && !File.Exists(Path.Combine(Se.PaddleOcrFolder, "paddleocr.bin")))
+        {
+            return false;
+        }
+
+        return Directory.Exists(Se.PaddleOcrModelsFolder);
+    }
+
+    /// <summary>
     /// Makes sure the Paddle OCR engine (standalone only) and models are installed,
     /// prompting the user to download what is missing. Returns false if the user cancelled.
     /// </summary>

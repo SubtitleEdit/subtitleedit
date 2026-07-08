@@ -257,6 +257,7 @@ public partial class VideoOcrViewModel : ObservableObject
         {
             var selectName = string.IsNullOrEmpty(downloaded) ? model?.FileName : downloaded;
             SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.OcrModels, selectName);
+            (Window as VideoOcrWindow)?.RefreshDownloadDots();
         }
     }
 
@@ -330,6 +331,7 @@ public partial class VideoOcrViewModel : ObservableObject
         }
 
         SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppModels, LlamaCppServerManager.OcrModels, model.FileName);
+        (Window as VideoOcrWindow)?.RefreshDownloadDots();
 
         try
         {
