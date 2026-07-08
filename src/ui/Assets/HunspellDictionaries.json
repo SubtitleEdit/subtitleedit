@@ -244,8 +244,8 @@
     "EnglishName": "French",
     "NativeName": "Français",
     "Files": [
-      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/fr_FR/fr.aff",
-      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/fr_FR/fr.dic"
+      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/fr_FR/dictionaries/fr.aff",
+      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/fr_FR/dictionaries/fr.dic"
     ],
     "Description": "French spell checker (LibreOffice)"
   },
@@ -677,8 +677,8 @@
     "EnglishName": "Swedish",
     "NativeName": "Svenska",
     "Files": [
-      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/sv_SE/sv_SE.aff",
-      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/sv_SE/sv_SE.dic"
+      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/sv_SE/dictionaries/sv_SE.aff",
+      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/sv_SE/dictionaries/sv_SE.dic"
     ],
     "Description": "Swedish spell checker (LibreOffice)"
   },
@@ -686,8 +686,8 @@
     "EnglishName": "Swedish (Finland)",
     "NativeName": "Svenska (Finland)",
     "Files": [
-      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/sv_SE/sv_FI.aff",
-      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/sv_SE/sv_FI.dic"
+      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/sv_SE/dictionaries/sv_FI.aff",
+      "https://raw.githubusercontent.com/LibreOffice/dictionaries/master/sv_SE/dictionaries/sv_FI.dic"
     ],
     "Description": "Swedish (Finland) spell checker (LibreOffice)"
   },
