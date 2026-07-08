@@ -100,6 +100,16 @@ public class MainView : ViewBase
             Dispatcher.UIThread.Post(() =>
             {
                 InitLayout.MakeLayout(this, _vm, Se.Settings.General.LayoutNumber);
+
+                // The window level right to left pass runs when the window opens,
+                // which is before this deferred layout build, so the freshly built
+                // grid and text boxes would stay left to right until the mode is
+                // toggled. Re-apply after building.
+                if (Se.Settings.Appearance.RightToLeft && TopLevel.GetTopLevel(this) is Window rtlWindow)
+                {
+                    MainHelpers.RightToLeftHelper.SetRightToLeftForDataGridAndText(rtlWindow);
+                }
+
                 _vm.ContentGrid.InvalidateMeasure();
                 _vm.ContentGrid.InvalidateArrange();
                 Dispatcher.UIThread.Post(() => _vm.SubtitleGrid.Focus());
