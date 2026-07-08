@@ -734,7 +734,27 @@
     "transcriptionProgressServerFormat": "Server: {0}",
     "transcriptionProgressModelFormat": "Model: {0}",
     "transcriptionProgressReceivedSegmentsFormat": "Modtagne segmenter ({0})",
-    "transcriptionProgressModelAuto": "(auto)"
+    "transcriptionProgressModelAuto": "(auto)",
+    "formality": "Formalitet",
+    "playFromJustBeforeText": "Afspil fra lige før teksten",
+    "playPrevious": "Afspil forrige",
+    "playPreviousAndStop": "Afspil forrige (og stop)",
+    "playPreviousAndLoop": "Afspil forrige (og gentag)",
+    "resizePanels": "Tilpas panelstørrelse",
+    "setEndAddNewAndGoToNew": "Sæt slut, tilføj ny og gå til ny",
+    "setEndAddNewAndGoToNewNoFocusTextBox": "Sæt slut, tilføj ny og gå til ny (uden fokus på tekstboks)",
+    "setStartAndGoToNext": "Sæt start og gå til næste",
+    "setStartAndKeepDuration": "Sæt start og behold varighed",
+    "videoCustom3BackX": "Video, tilpasset millisekunder ({0:#,###,##0}) tilbage, 3",
+    "videoCustom3ForwardX": "Video, tilpasset millisekunder ({0:#,###,##0}) frem, 3",
+    "videoCustom4BackX": "Video, tilpasset millisekunder ({0:#,###,##0}) tilbage, 4",
+    "videoCustom4ForwardX": "Video, tilpasset millisekunder ({0:#,###,##0}) frem, 4",
+    "videoAndAudioFiles": "Video- og lydfiler",
+    "waveform": "Bølgeform",
+    "dashScopeSttRegion": "Region",
+    "dashScopeSttEnableWords": "Tidskoder på ordniveau",
+    "dashScopeSttRegionKeyHint": "Bemærk: API-nøgler til Alibaba Cloud Model Studio er regionsspecifikke - sørg for, at den valgte region matcher den region, hvor API-nøglen blev oprettet (Kina vs. International).",
+    "onlineSttApiKeyMissing": "Der kræves en API-nøgle. Indtast din API-nøgle, og prøv igen."
   },
   "main": {
     "audioTrackIsNowX": "Lydsporet er nu \"{0}",
@@ -971,7 +991,11 @@
       "filterLayersForDisplayDotDotDot": "Filtrer lag til visning...",
       "toggleSelectSubtitleWhilePlayingCurrentlyOn": "Skift vælg undertekst under afspilning (aktuelt: slået til)",
       "toggleSelectSubtitleWhilePlayingCurrentlyOff": "Skift vælg undertekst under afspilning (aktuelt: slukket)",
-      "selectSubtitleWhilePlaying": "Vælg undertekst under afspilning"
+      "selectSubtitleWhilePlaying": "Vælg undertekst under afspilning",
+      "newWindow": "Nyt _vindue",
+      "windowTitle": "Vindue",
+      "aiReview": "AI-gennemgang...",
+      "videoOcr": "OCR af indbre_ndt undertekst..."
     },
     "toolbar": {
       "newHint": "Start en ny undertekstfil {0}",
@@ -1016,8 +1040,14 @@
       "hideWaveformToolbar": "Skjul værktøjslinje {0}",
       "resetZoomAndSpeed": "Nulstil zoom og afspilningshastighed {0}",
       "removeBlankLines": "Fjern tomme linjer {0}",
-      "playSelectedRepeatHint": "Afspil valgte undertekster i gentagelsestilstand {0}"
-    }
+      "playSelectedRepeatHint": "Afspil valgte undertekster i gentagelsestilstand {0}",
+      "seekBackHint": "Spol video tilbage {0}",
+      "seekForwardHint": "Spol video frem {0}",
+      "seekAmountHint": "Spolemængde {0}",
+      "seekVideo": "Spol video (<< >>)",
+      "configureToolbarItems": "Konfigurer værktøjslinjeelementer..."
+    },
+    "clickToGenerateWaveform": "Klik for at generere bølgeform"
   },
   "file": {
     "compare": "Sammenligne",
@@ -1224,7 +1254,8 @@
       "restoreAutoBackupFile": "Gendan auto-backup fil",
       "restoreXFromY": "Vil du gendanne \"{0}\" fra {1}?",
       "deleteAllSubtitleBackups": "Vil du slette alle undertekst backup-filer?",
-      "deleteAll": "Slet alle"
+      "deleteAll": "Slet alle",
+      "xBackups": "{0} sikkerhedskopier"
     },
     "propertiesDCinema": {
       "title": "D-Cinema SMPTE egenskaber",
@@ -1252,7 +1283,10 @@
       "fadeDownTime": "Fade down tid",
       "frames": "Billeder",
       "export": "Eksportere..."
-    }
+    },
+    "compareOnlyInOneFile": "Kun i én fil",
+    "compareTextOrTimeDifference": "Tekst-/tidsforskel",
+    "compareNumberDifference": "Talforskel"
   },
   "edit": {
     "showHistory": "Historik til fortryd",
@@ -1461,7 +1495,8 @@
       "unbreakShortLine": "Saml kort linje",
       "fixText": "Rette tekst",
       "removeSpaceBetweenNumbers": "Fjern mellemrum mellem tal",
-      "fixDialogsOnOneLine": "Rette dialoger på én linje"
+      "fixDialogsOnOneLine": "Rette dialoger på én linje",
+      "xFixesYSelected": "{0} rettelser - {1} valgt"
     },
     "adjustDurations": {
       "title": "Adjust durations",
@@ -1477,7 +1512,8 @@
       "extendOnly": "Extend only",
       "enforceDurationLimits": "Enforce minimum and maximum duration",
       "checkShotChanges": "Udvid ikke forbi sceneskift",
-      "batchCheckShotChanges": "Respekt Skud ændringer (hvis tilgængelig)"
+      "batchCheckShotChanges": "Respekt Skud ændringer (hvis tilgængelig)",
+      "recalculateRequiresOcrNote": "Genberegning er utilgængelig — en eller flere undertekster har ingen OCR-tekst. Kør OCR først."
     },
     "applyDurationLimits": {
       "title": "Anvend varighedsgrænser",
@@ -1794,7 +1830,15 @@
       "brightnessAdjustmentInfo": "Juster skyderne for at ændre lysstyrke, kontrast og gamma.\r\n\r\nForhåndsvisning opdateres automatisk og viser den første valgte undertekst.",
       "resizeImages": "Ændre størrelse på billeder",
       "percentage": "Procent",
-      "resizeImagesInfo": "Indtast procentdelen for at ændre størrelse på billeder.\r\n\r\nForhåndsvisning af opdateringer automatisk."
+      "resizeImagesInfo": "Indtast procentdelen for at ændre størrelse på billeder.\r\n\r\nForhåndsvisning af opdateringer automatisk.",
+      "adjustColorDotDotDot": "Juster farve...",
+      "adjustColor": "Juster farve",
+      "colorAdjustmentInfo": "Klik på farveprøven for at vælge en farve. Lyse undertekstpixels forskydes mod den valgte farvetone; mørke konturer og skygger bevares.\nForhåndsvisningen viser den første valgte undertekst.",
+      "topAlignLines": "Justér til top",
+      "bottomAlignLines": "Justér til bund",
+      "appendSubtitleDotDotDot": "Tilføj undertekst...",
+      "shiftTimeCodes": "Forskyd tidskoder med",
+      "sortByStartTime": "Sortér efter starttid"
     },
     "removeTextForHearingImpaired": {
       "title": "Fjern tekst for hørehæmmede",
@@ -1812,8 +1856,37 @@
       "ifLineIsUppercase": "Hvis linjen er med store bogstaver",
       "ifLineContains": "Hvis linje indeholder",
       "ifLineOnlyContainsMusicSymbols": "Hvis linje kun indeholder musiksymboler",
-      "removeInterjections": "Fjern interjektioner"
-    }
+      "removeInterjections": "Fjern interjektioner",
+      "keepUppercaseWords": "Behold disse ord (kommasepareret)",
+      "linesFoundX": "Fundne linjer: {0}"
+    },
+    "aiReview": {
+      "title": "AI-gennemgang",
+      "review": "Gennemgå",
+      "stop": "Stop",
+      "editPrompt": "Rediger prompt...",
+      "editPromptTitle": "Rediger gennemgangsprompt",
+      "promptInfo": "Instruktioner sendt til modellen - {language} erstattes med undertekstens sprog.",
+      "protocolInfo": "Subtitle Edit føjer en streng JSON-kontrakt til prompten: linjer sendes som nummereret JSON, og modellen skal svare med gyldig JSON, der kun indeholder de ændrede linjer. Svar, der bryder kontrakten, forsøges igen og springes derefter over.",
+      "resetToDefault": "Nulstil til standard",
+      "applyXFixes": "Anvend {0} rettelser",
+      "xSuggestionsYSelected": "{0} forslag - {1} valgt",
+      "reviewingLineXOfY": "Gennemgår linje {0} af {1}...",
+      "reviewDone": "Gennemgang udført - {0} forslag i {1} linjer",
+      "noIssuesFound": "Ingen problemer fundet",
+      "categoryAll": "Alle",
+      "categorySpelling": "Stavning",
+      "categoryGrammar": "Grammatik",
+      "categoryPunctuation": "Tegnsætning",
+      "categoryCasing": "Store/små bogstaver",
+      "categoryOther": "Andet",
+      "xNeedACloserLook": "{0} forslag kræver et nærmere eftersyn",
+      "lineX": "Linje {0}",
+      "linesXToY": "Linje {0}-{1}",
+      "largeChangeWarning": "Stor ændring - ligner en omskrivning, gennemgå omhyggeligt",
+      "engineError": "AI-motoren kunne ikke nås: {0}"
+    },
+    "pickSubtitleFormatImageBasedNoPreview": "Billedbaseret undertekstformat.\nBitmaps genereres under konverteringen - ingen tekstforhåndsvisning."
   },
   "spellCheck": {
     "spellCheck": "Stavekontrol",
@@ -1844,7 +1917,17 @@
     "chooseSpellCheckDictionary": "Vælg stavekontrolordbog",
     "pickLiveSpellCheckDictionary": "Vælg en live stavekontrolordbog",
     "undoX": "Fortryd: {0}",
-    "editWholeText": "Rediger hele teksten"
+    "editWholeText": "Rediger hele teksten",
+    "loadSourceImage": "Vis også kildebilleder...",
+    "continueFromCurrentLine": "Fortsæt stavekontrol fra den aktuelle linje?\n\nJa = fortsæt fra den aktuelle linje\nNej = start fra begyndelsen",
+    "continueFromTop": "Stavekontrollen nåede slutningen af underteksten.\n\nFortsæt fra toppen?",
+    "spellCheckCompleted": "Stavekontrol fuldført",
+    "changedWordsX": "Ændrede ord: {0}",
+    "skippedWordsX": "Sprungne ord: {0}",
+    "correctWordsX": "Korrekte ord: {0}",
+    "namesX": "Navne: {0}",
+    "addedToDictionaryX": "Føjet til ordbog: {0}",
+    "doNotShowThisAgain": "Vis ikke denne meddelelse igen"
   },
   "video": {
     "goToVideoPosition": "Gå til videoposition",
@@ -1956,7 +2039,8 @@
       "videoFileSize": "Video filstørrelse",
       "oneBox": "Én kasse",
       "boxPerLine": "Boks pr. linje",
-      "logoInfo": "Vælg et PNG-billede, og træk det for at placere det på videoen."
+      "logoInfo": "Vælg et PNG-billede, og træk det for at placere det på videoen.",
+      "matchSourceVideoSize": "Match kildevideoens størrelse"
     },
     "videoTransparent": {
       "title": "Generer gennemsigtig video med undertekster",
@@ -1996,7 +2080,17 @@
       "changeUnderlineToColor": "Skift understregning til farve",
       "engineSettings": "Indstillinger for tale-til-tekst-motor",
       "engineSettingsSubtitle": "Tale-til-tekst-motor",
-      "backendAndUpdateStatus": "Backend og opdateringsstatus"
+      "backendAndUpdateStatus": "Backend og opdateringsstatus",
+      "addCustomModelDotDotDot": "Tilføj tilpasset model...",
+      "customModelHelp": "Du kan bruge din egen model: vælg modelfilen (whisper.cpp ggml '.bin') eller modelmappen (faster-whisper-mappe med en 'model.bin' indeni). Den kopieres til modelmappen og føjes til listen ovenfor.",
+      "cueBuilding": "Opbygning af cues (MLX Whisper)",
+      "cueRebuild": "Genopbyg cues fra ordtidskoder",
+      "cueMaxChars": "Maks. tegn pr. cue",
+      "cueMaxSeconds": "Maks. sekunder pr. cue",
+      "cueMaxCps": "Maks. tegn pr. sekund",
+      "vocabularyPrompt": "Ordforrådsprompt (navne, steder, termer)",
+      "beamSize": "Beam-størrelse",
+      "beamSizeNote": "0 afkoder hurtigst. 5 giver den bedste nøjagtighed (som Faster Whisper) med cirka 20-30 % mere tid. Værdier over 5 hjælper sjældent."
     },
     "textToSpeech": {
       "title": "Tekst til tale",
@@ -2082,7 +2176,21 @@
       "noActorsFoundMessage": "Ingen skuespillere fundet. Udfyld feltet Skuespiller på undertekstlinjerne først.",
       "noWebVttVoicesFoundMessage": "Ingen <v Navn>-stemmer fundet i WebVTT-filen.",
       "mergeContinuationLinesPromptTitle": "Flet fortsættelseslinjer?",
-      "mergeContinuationLinesPromptMessage": "Nogle linjer ser ud til at være én sætning delt over flere undertekster.\r\n\r\nAt flette dem før generering lader TTS-motoren udtale hver tanke som én vejrtrækningsgruppe, hvilket som regel lyder mere naturligt.\r\n\r\nGennemse og anvend fletninger nu?"
+      "mergeContinuationLinesPromptMessage": "Nogle linjer ser ud til at være én sætning delt over flere undertekster.\r\n\r\nAt flette dem før generering lader TTS-motoren udtale hver tanke som én vejrtrækningsgruppe, hvilket som regel lyder mere naturligt.\r\n\r\nGennemse og anvend fletninger nu?",
+      "engineAndVoice": "Motor og stemme",
+      "output": "Output",
+      "xLinesFromY": "{0} linjer fra {1}",
+      "xLines": "{0} linjer",
+      "videoX": "Video: {0}",
+      "xVoices": "{0} stemmer",
+      "reviewAudioSegmentsHint": "Kontrollér hver linje før den endelige miksning",
+      "addAudioToVideoFileHint": "Mux resultatet ind i en ny videofil",
+      "xElapsedYLeft": "{0} forløbet · ~{1} tilbage",
+      "xElapsed": "{0} forløbet",
+      "subtitleUpdatedFromReviewSingular": "Opdaterede én linje fra talegennemgangen",
+      "subtitleUpdatedFromReviewPlural": "Opdaterede {0} linjer fra talegennemgangen",
+      "subtitleMergedLinesAppliedSingular": "Anvendte én linjesammenlægning fra tekst til tale",
+      "subtitleMergedLinesAppliedPlural": "Anvendte {0} linjesammenlægninger fra tekst til tale"
     },
     "shotChanges": {
       "titleGenerateOrImport": "Generer/importér skudændringer",
@@ -2096,6 +2204,43 @@
       "shotChangesList": "Liste over skudændringer",
       "shotChangesClearQuestion": "Er du sikker på, at du vil rydde alle skudændringer?",
       "deleteSelectedShotChangeQuestion": "Er du sikker på, at du vil slette den valgte ændring?"
+    },
+    "videoOcr": {
+      "title": "OCR af indbrændt undertekst",
+      "scanArea": "Scanområde",
+      "scanAreaInfo": "Træk på videobilledet for at vælge, hvor underteksterne er",
+      "bottomThird": "Nederste tredjedel",
+      "bottomHalf": "Nederste halvdel",
+      "fullFrame": "Hele billedet",
+      "engine": "OCR-motor",
+      "language": "Sprog",
+      "url": "URL",
+      "model": "Model",
+      "apiKey": "API-nøgle",
+      "scan": "Scan",
+      "framesPerSecond": "Billeder pr. sekund",
+      "textBrightnessMinimum": "Minimum tekstlysstyrke (0=fra)",
+      "postProcessing": "Efterbehandling",
+      "textSimilarityPercent": "Sammenlæg linjer med lighed (%)",
+      "maxGapMs": "Maks. mellemrum mellem linjer (ms)",
+      "minDurationMs": "Minimumsvarighed (ms)",
+      "addAssaPositionTag": "Tilføj ASSA-positionstag (f.eks. {\\an8})",
+      "startOcr": "Start OCR",
+      "extractingFramesX": "Udtrækker billeder... {0}%",
+      "analyzingFramesXY": "Analyserer billeder... {0}/{1}",
+      "runningOcrXY": "Kører OCR... {0}/{1}",
+      "noLinesFoundTitle": "Ingen undertekster fundet",
+      "noLinesFoundMessage": "Der blev ikke fundet nogen tekst i scanområdet - prøv at justere scanområdet, motoren eller minimumslysstyrken.",
+      "linesFoundX": "{0} linjer fundet",
+      "previewPosition": "Forhåndsvisningsposition",
+      "unableToReadVideoTitle": "Kan ikke læse video",
+      "unableToReadVideoMessage": "Kunne ikke læse videooplysninger fra: {0}",
+      "abortOcrTitle": "Afbryd OCR?",
+      "abortOcrMessage": "Vil du afbryde den igangværende OCR?",
+      "testOcr": "Test aktuelt billede",
+      "testOcrRunning": "Tester OCR på aktuelt billede...",
+      "testOcrResultX": "Testresultat: {0}",
+      "testOcrNoTextFound": "Test: ingen tekst fundet i scanområdet"
     }
   },
   "waveform": {
@@ -2161,7 +2306,9 @@
     "totalAdjustmentX": "Samlet justering: {0}",
     "adjustAllShortcuts": "Tastaturgenveje:\r\n\r\n• Skift + Venstre/Højre: Flyt 10 ms\r\n• Ctrl + Venstre/Højre: Flyt 100 ms\r\n• Alt + Venstre/Højre: Flyt 500 ms",
     "offsetInSeconds": "Offset i sekunder",
-    "speedFactor": "Hastighedsfaktor"
+    "speedFactor": "Hastighedsfaktor",
+    "adjustAllShortcutsFrames": "Tastaturgenveje:\r\n\r\n• Skift + Venstre/Højre: Flyt 1 billede\r\n• Ctrl + Venstre/Højre: Flyt 10 billeder\r\n• Alt + Venstre/Højre: Flyt 1 sekund",
+    "showEarlierLaterDotDotDot": "Vis tidligere/senere..."
   },
   "translate": {
     "translateViaCopyPaste": "Oversæt automatisk via copy/paste",
@@ -2488,7 +2635,24 @@
       "waveformColorTheme": "Farvetema:",
       "waveformSaveAsCustomTheme": "Gem som brugerdefineret tema...",
       "waveformLoadThemeDotDotDot": "Indlæs tema...",
-      "waveformExportThemeDotDotDot": "Eksporter tema..."
+      "waveformExportThemeDotDotDot": "Eksporter tema...",
+      "subtitleGridTextSingleLineSeparator": "Enkeltlinjeadskiller (f.eks. <br />)",
+      "subtitleGridTextDisplay": "Undertekst tilpasset i gitter",
+      "subtitleGridTextDisplayClip": "Beskær (enkelt linje)",
+      "subtitleGridTextDisplayWrap": "Ombryd til vinduet",
+      "subtitleGridTextDisplayEllipsis": "Enkelt linje med ellipse",
+      "colorTextTooManyLinesX": "Farvelæg tekst, hvis mere end {0} linjer",
+      "waveformShowToolbarEditLabel": "Værktøjslinjeelementer",
+      "waveformMouseWheelSetsVideoPosition": "Musehjul indstiller videoposition",
+      "waveformMouseWheelVideoPositionStep": "Musehjulets videopositionstrin",
+      "waveformMouseWheelStepOneFrame": "1 billede",
+      "waveformMouseWheelStepOneSecond": "1 sekund",
+      "waveformMouseWheelStepMilliseconds": "{0} ms",
+      "favoriteLanguages": "Foretrukne sprog",
+      "webVttUseXTimestampMap": "WebVTT: brug X-TIMESTAMP-MAP (forskyd tidskoder ved indlæsning)",
+      "waveformAutoGenerate": "Generér automatisk bølgeform, når en video åbnes",
+      "gridGoToSubtitleAndPlayAndFocusTextBox": "Gå til undertekst og afspil og fokusér på tekstboks",
+      "ocrGuessUnknownWords": "OCR: forsøg at gætte ukendte ord"
     },
     "shortcuts": {
       "title": "Shortcuts",
@@ -2773,7 +2937,22 @@
       "moveStartOneFrameBackKeepGapPrev": "Flyt start ét billede tilbage (behold mellemrum til forrige, hvis tæt på)",
       "moveStartOneFrameForwardKeepGapPrev": "Flyt start ét billede frem (behold mellemrum til forrige, hvis tæt på)",
       "moveEndOneFrameBackKeepGapNext": "Flyt slut ét billede tilbage (behold mellemrum til næste, hvis tæt på)",
-      "moveEndOneFrameForwardKeepGapNext": "Flyt slut ét billede frem (behold mellemrum til næste, hvis tæt på)"
+      "moveEndOneFrameForwardKeepGapNext": "Flyt slut ét billede frem (behold mellemrum til næste, hvis tæt på)",
+      "categoryTextBox": "Tekstboks",
+      "moveTextFromCursorToNextAndGoToNext": "Flyt tekst efter markørposition til næste undertekst og gå til næste",
+      "moveTextFromCursorToNextAndGoToNextAndPlay": "Flyt tekst efter markørposition til næste undertekst, gå til næste og afspil",
+      "videoGoToPreviousTimeCode": "Gå til forrige tidskode",
+      "videoGoToNextTimeCode": "Gå til næste tidskode",
+      "listViewColumnDeleteText": "Kolonne, slet tekst",
+      "listViewColumnDeleteTextAndShiftUp": "Kolonne, slet tekst og ryk op",
+      "listViewColumnInsertText": "Kolonne, indsæt tekst",
+      "listViewColumnPaste": "Kolonne, indsæt",
+      "listViewColumnTextUp": "Kolonne, tekst op",
+      "listViewColumnTextDown": "Kolonne, tekst ned",
+      "autoTranslateSelectedLines": "Oversæt automatisk valgte linjer...",
+      "setAssaResolution": "Sæt ASSA-opløsning (PlayResX/PlayResY)",
+      "videoOcr": "OCR af indbrændt undertekst",
+      "waveformInsertNewSelection": "Bølgeform, indsæt ny markering"
     },
     "wordLists": {
       "title": "Ordlister",
@@ -2934,7 +3113,12 @@
     "pickFallbackDatabase": "Vælg reserve-OCR-database",
     "fallbackOcrDatabase": "Reserve-OCR-database",
     "showAllOllamaModels": "Vis alle modeller (ikke kun vision-kompatible)",
-    "ollamaModelLikelyWrong": "Ollama returnerede ingen tekst - den valgte model understøtter muligvis ikke OCR / vision"
+    "ollamaModelLikelyWrong": "Ollama returnerede ingen tekst - den valgte model understøtter muligvis ikke OCR / vision",
+    "tesseractEngineMode": "Motortilstand",
+    "tesseractEngineModeLegacy": "Kun original Tesseract (kan registrere kursiv)",
+    "tesseractEngineModeNeural": "Kun neurale net LSTM",
+    "tesseractEngineModeBoth": "Tesseract + LSTM",
+    "tesseractEngineModeDefault": "Standard, baseret på hvad der er tilgængeligt"
   },
   "assa": {
     "assaDraw": "ASSA uafgjort",
@@ -3124,7 +3308,18 @@
     "advancedEffectSlideInRightDescription": "Tekst glider ind fra højre uden for skærmen, holder og afsluttes derefter tilbage til højre",
     "advancedEffectFadeInOut": "Fade ind/ud",
     "advancedEffectFadeInOutDescription": "Tekst toner ind i starten og fader ud i slutningen af ​​hver undertekst",
-    "overrideTagsHistory": "ASSA tags historik"
+    "overrideTagsHistory": "ASSA tags historik",
+    "category": "Kategori",
+    "allCategories": "[Alle]",
+    "defaultCategory": "Standard",
+    "newCategory": "Ny kategori...",
+    "renameCategory": "Omdøb kategori...",
+    "deleteCategory": "Slet kategori",
+    "moveToCategoryDotDotDot": "Flyt til kategori...",
+    "deleteCategoryQuestion": "Slet kategorien \"{0}\"? Typografier i den flyttes til standardkategorien.",
+    "replaceStyleWithDotDotDot": "Erstat typografi med...",
+    "rotation": "Rotation",
+    "advancedEffectKaraokeRightToLeft": "Højre mod venstre"
   },
   "about": {
     "title": "Om Subtitle Edit",

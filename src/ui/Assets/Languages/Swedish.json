@@ -734,7 +734,27 @@
     "transcriptionProgressServerFormat": "Server: {0}",
     "transcriptionProgressModelFormat": "Modell: {0}",
     "transcriptionProgressReceivedSegmentsFormat": "Mottagna segment ({0})",
-    "transcriptionProgressModelAuto": "(auto)"
+    "transcriptionProgressModelAuto": "(auto)",
+    "formality": "Formalitet",
+    "playFromJustBeforeText": "Spela från strax före text",
+    "playPrevious": "Spela föregående",
+    "playPreviousAndStop": "Spela föregående (och stoppa)",
+    "playPreviousAndLoop": "Spela föregående (och upprepa)",
+    "resizePanels": "Ändra storlek på paneler",
+    "setEndAddNewAndGoToNew": "Sätt slut, lägg till ny och gå till ny",
+    "setEndAddNewAndGoToNewNoFocusTextBox": "Sätt slut, lägg till ny och gå till ny (fokusera inte textruta)",
+    "setStartAndGoToNext": "Sätt start och gå till nästa",
+    "setStartAndKeepDuration": "Sätt start och behåll varaktighet",
+    "videoCustom3BackX": "Video, anpassade millisekunder ({0:#,###,##0}) bakåt, 3",
+    "videoCustom3ForwardX": "Video, anpassade millisekunder ({0:#,###,##0}) framåt, 3",
+    "videoCustom4BackX": "Video, anpassade millisekunder ({0:#,###,##0}) bakåt, 4",
+    "videoCustom4ForwardX": "Video, anpassade millisekunder ({0:#,###,##0}) framåt, 4",
+    "videoAndAudioFiles": "Video- och ljudfiler",
+    "waveform": "Vågform",
+    "dashScopeSttRegion": "Region",
+    "dashScopeSttEnableWords": "Tidsstämplar på ordnivå",
+    "dashScopeSttRegionKeyHint": "Obs: API-nycklar för Alibaba Cloud Model Studio är regionsspecifika - se till att den valda regionen matchar den region där API-nyckeln skapades (Kina vs. Internationell).",
+    "onlineSttApiKeyMissing": "En API-nyckel krävs. Ange din API-nyckel och försök igen."
   },
   "main": {
     "audioTrackIsNowX": "Ljudspår är nu \"{0}\"",
@@ -971,7 +991,11 @@
       "filterLayersForDisplayDotDotDot": "Filtrera lager för visning...",
       "toggleSelectSubtitleWhilePlayingCurrentlyOn": "Växla välj undertext under uppspelning (för närvarande: på)",
       "toggleSelectSubtitleWhilePlayingCurrentlyOff": "Växla välj undertext under uppspelning (för närvarande: av)",
-      "selectSubtitleWhilePlaying": "Markera undertext under uppspelning"
+      "selectSubtitleWhilePlaying": "Markera undertext under uppspelning",
+      "newWindow": "Nytt _fönster",
+      "windowTitle": "Fönster",
+      "aiReview": "AI-granskning...",
+      "videoOcr": "OCR av i_nbränd undertext..."
     },
     "toolbar": {
       "newHint": "Starta en ny undertextfil {0}",
@@ -1016,8 +1040,14 @@
       "hideWaveformToolbar": "Dölj verktygsfält {0}",
       "resetZoomAndSpeed": "Återställ zoom & uppspelningshastighet {0}",
       "removeBlankLines": "Ta bort tomma rader {0}",
-      "playSelectedRepeatHint": "Spela markerade undertext(er) i upprepningsläge {0}"
-    }
+      "playSelectedRepeatHint": "Spela markerade undertext(er) i upprepningsläge {0}",
+      "seekBackHint": "Spola video bakåt {0}",
+      "seekForwardHint": "Spola video framåt {0}",
+      "seekAmountHint": "Spolningsmängd {0}",
+      "seekVideo": "Spola video (<< >>)",
+      "configureToolbarItems": "Konfigurera verktygsfältsobjekt..."
+    },
+    "clickToGenerateWaveform": "Klicka för att generera vågform"
   },
   "file": {
     "compare": "Jämför",
@@ -1224,7 +1254,8 @@
       "restoreAutoBackupFile": "Återställ auto-säkerhetskopiefil",
       "restoreXFromY": "Vill du återställa \"{0}\" från {1}?",
       "deleteAllSubtitleBackups": "Vill du ta bort alla säkerhetskopior av undertexter?",
-      "deleteAll": "Ta bort alla"
+      "deleteAll": "Ta bort alla",
+      "xBackups": "{0} säkerhetskopior"
     },
     "propertiesDCinema": {
       "title": "D-Cinema SMPTE-egenskaper",
@@ -1252,7 +1283,10 @@
       "fadeDownTime": "Tona ner-tid",
       "frames": "Bilder",
       "export": "Exportera..."
-    }
+    },
+    "compareOnlyInOneFile": "Endast i en fil",
+    "compareTextOrTimeDifference": "Text-/tidsskillnad",
+    "compareNumberDifference": "Nummerskillnad"
   },
   "edit": {
     "showHistory": "Historik för ångra",
@@ -1461,7 +1495,8 @@
       "unbreakShortLine": "Slå ihop kort rad",
       "fixText": "Åtgärda text",
       "removeSpaceBetweenNumbers": "Ta bort mellanslag mellan siffror",
-      "fixDialogsOnOneLine": "Åtgärda dialoger på en rad"
+      "fixDialogsOnOneLine": "Åtgärda dialoger på en rad",
+      "xFixesYSelected": "{0} åtgärder - {1} markerade"
     },
     "adjustDurations": {
       "title": "Justera varaktigheter",
@@ -1477,7 +1512,8 @@
       "extendOnly": "Endast förläng",
       "enforceDurationLimits": "Tvinga minimi- och maximivaraktighet",
       "checkShotChanges": "Förläng inte förbi scenbyten",
-      "batchCheckShotChanges": "Respektera scenbyten (om tillgängligt)"
+      "batchCheckShotChanges": "Respektera scenbyten (om tillgängligt)",
+      "recalculateRequiresOcrNote": "Omberäkning är inte tillgänglig — en eller flera undertexter saknar OCR-text. Kör OCR först."
     },
     "applyDurationLimits": {
       "title": "Tillämpa varaktighetsgränser",
@@ -1794,7 +1830,15 @@
       "brightnessAdjustmentInfo": "Justera reglagen för att ändra ljusstyrka, kontrast och gamma.\nFörhandsvisning uppdateras automatiskt och visar den första valda undertexten.",
       "resizeImages": "Ändra storlek på bilder",
       "percentage": "Procent",
-      "resizeImagesInfo": "Ange procentandelen för att ändra bildernas storlek.\nFörhandsvisning uppdateras automatiskt."
+      "resizeImagesInfo": "Ange procentandelen för att ändra bildernas storlek.\nFörhandsvisning uppdateras automatiskt.",
+      "adjustColorDotDotDot": "Justera färg...",
+      "adjustColor": "Justera färg",
+      "colorAdjustmentInfo": "Klicka på färgrutan för att välja en färg. Ljusa undertextpixlar förskjuts mot den valda nyansen; mörka konturer och skuggor bevaras.\nFörhandsvisningen visar den första markerade undertexten.",
+      "topAlignLines": "Justera mot överkant",
+      "bottomAlignLines": "Justera mot nederkant",
+      "appendSubtitleDotDotDot": "Bifoga undertext...",
+      "shiftTimeCodes": "Förskjut tidskoder med",
+      "sortByStartTime": "Sortera efter starttid"
     },
     "removeTextForHearingImpaired": {
       "title": "Ta bort text för hörselskadade",
@@ -1812,8 +1856,37 @@
       "ifLineIsUppercase": "Om raden är i versaler",
       "ifLineContains": "Om raden innehåller",
       "ifLineOnlyContainsMusicSymbols": "Om raden endast innehåller musiksymboler",
-      "removeInterjections": "Ta bort interjektioner"
-    }
+      "removeInterjections": "Ta bort interjektioner",
+      "keepUppercaseWords": "Behåll dessa ord (kommaseparerade)",
+      "linesFoundX": "Hittade rader: {0}"
+    },
+    "aiReview": {
+      "title": "AI-granskning",
+      "review": "Granska",
+      "stop": "Stoppa",
+      "editPrompt": "Redigera prompt...",
+      "editPromptTitle": "Redigera granskningsprompt",
+      "promptInfo": "Instruktioner som skickas till modellen - {language} ersätts med undertextens språk.",
+      "protocolInfo": "Subtitle Edit lägger till ett strikt JSON-kontrakt i prompten: rader skickas som numrerad JSON, och modellen måste svara med giltig JSON som endast innehåller de ändrade raderna. Svar som bryter mot kontraktet görs om, och hoppas sedan över.",
+      "resetToDefault": "Återställ till standard",
+      "applyXFixes": "Tillämpa {0} åtgärder",
+      "xSuggestionsYSelected": "{0} förslag - {1} markerade",
+      "reviewingLineXOfY": "Granskar rad {0} av {1}...",
+      "reviewDone": "Granskning klar - {0} förslag i {1} rader",
+      "noIssuesFound": "Inga problem hittades",
+      "categoryAll": "Alla",
+      "categorySpelling": "Stavning",
+      "categoryGrammar": "Grammatik",
+      "categoryPunctuation": "Interpunktion",
+      "categoryCasing": "Skiftläge",
+      "categoryOther": "Övrigt",
+      "xNeedACloserLook": "{0} förslag behöver granskas närmare",
+      "lineX": "Rad {0}",
+      "linesXToY": "Rader {0}-{1}",
+      "largeChangeWarning": "Stor ändring - ser ut som en omskrivning, granska noga",
+      "engineError": "AI-motorn kunde inte nås: {0}"
+    },
+    "pickSubtitleFormatImageBasedNoPreview": "Bildbaserat undertextformat.\nBitmappar genereras under konvertering - ingen textförhandsvisning."
   },
   "spellCheck": {
     "spellCheck": "Rättstavning",
@@ -1844,7 +1917,17 @@
     "chooseSpellCheckDictionary": "Välj rättstavningsordbok",
     "pickLiveSpellCheckDictionary": "Välj live-rättstavningsordbok",
     "undoX": "Ångra: {0}",
-    "editWholeText": "Redigera hela texten"
+    "editWholeText": "Redigera hela texten",
+    "loadSourceImage": "Visa källbilder också...",
+    "continueFromCurrentLine": "Fortsätt rättstavning från den aktuella raden?\n\nJa = fortsätt från den aktuella raden\nNej = börja från början",
+    "continueFromTop": "Rättstavningen nådde slutet av undertexten.\n\nFortsätt från början?",
+    "spellCheckCompleted": "Rättstavning slutförd",
+    "changedWordsX": "Ändrade ord: {0}",
+    "skippedWordsX": "Överhoppade ord: {0}",
+    "correctWordsX": "Korrekta ord: {0}",
+    "namesX": "Namn: {0}",
+    "addedToDictionaryX": "Tillagda i ordbok: {0}",
+    "doNotShowThisAgain": "Visa inte det här meddelandet igen"
   },
   "video": {
     "goToVideoPosition": "Gå till videoposition",
@@ -1956,7 +2039,8 @@
       "videoFileSize": "Videofilstorlek",
       "oneBox": "En ruta",
       "boxPerLine": "Ruta per rad",
-      "logoInfo": "Välj en PNG-bild och dra den för att placera den på videon."
+      "logoInfo": "Välj en PNG-bild och dra den för att placera den på videon.",
+      "matchSourceVideoSize": "Matcha källvideons storlek"
     },
     "videoTransparent": {
       "title": "Generera transparent video med undertexter",
@@ -1996,7 +2080,17 @@
       "changeUnderlineToColor": "Ändra understrykning till färg",
       "engineSettings": "Inställningar för tal-till-text-motorn",
       "engineSettingsSubtitle": "Tal-till-text-motor",
-      "backendAndUpdateStatus": "Backend och uppdateringsstatus"
+      "backendAndUpdateStatus": "Backend och uppdateringsstatus",
+      "addCustomModelDotDotDot": "Lägg till anpassad modell...",
+      "customModelHelp": "Du kan använda din egen modell: välj modellfilen (whisper.cpp ggml '.bin') eller modellmappen (faster-whisper-mapp med en 'model.bin' inuti). Den kopieras till modellmappen och läggs till i listan ovan.",
+      "cueBuilding": "Cue-byggnad (MLX Whisper)",
+      "cueRebuild": "Bygg om cues från ordtidsstämplar",
+      "cueMaxChars": "Max tecken per cue",
+      "cueMaxSeconds": "Max sekunder per cue",
+      "cueMaxCps": "Max tecken per sekund",
+      "vocabularyPrompt": "Vokabulärprompt (namn, platser, termer)",
+      "beamSize": "Beam-storlek",
+      "beamSizeNote": "0 avkodar snabbast. 5 ger bäst noggrannhet (som Faster Whisper) med ungefär 20-30 % mer tid. Värden över 5 hjälper sällan."
     },
     "textToSpeech": {
       "title": "Text till tal",
@@ -2082,7 +2176,21 @@
       "noActorsFoundMessage": "Inga skådespelare hittades. Ange fältet Skådespelare på undertextraderna först.",
       "noWebVttVoicesFoundMessage": "Inga <v Namn>-röster hittades i WebVTT-filen.",
       "mergeContinuationLinesPromptTitle": "Slå samman fortsättningsrader?",
-      "mergeContinuationLinesPromptMessage": "Vissa rader verkar vara en enda mening uppdelad över flera undertexter.\r\n\r\nAtt slå samman dem före genereringen låter TTS-motorn uttala varje tanke som en andningsgrupp, vilket oftast låter mer naturligt.\r\n\r\nGranska och tillämpa sammanslagningar nu?"
+      "mergeContinuationLinesPromptMessage": "Vissa rader verkar vara en enda mening uppdelad över flera undertexter.\r\n\r\nAtt slå samman dem före genereringen låter TTS-motorn uttala varje tanke som en andningsgrupp, vilket oftast låter mer naturligt.\r\n\r\nGranska och tillämpa sammanslagningar nu?",
+      "engineAndVoice": "Motor och röst",
+      "output": "Utdata",
+      "xLinesFromY": "{0} rader från {1}",
+      "xLines": "{0} rader",
+      "videoX": "Video: {0}",
+      "xVoices": "{0} röster",
+      "reviewAudioSegmentsHint": "Kontrollera varje rad före den slutliga mixen",
+      "addAudioToVideoFileHint": "Muxa resultatet till en ny videofil",
+      "xElapsedYLeft": "{0} förflutet · ~{1} kvar",
+      "xElapsed": "{0} förflutet",
+      "subtitleUpdatedFromReviewSingular": "Uppdaterade en rad från talgranskningen",
+      "subtitleUpdatedFromReviewPlural": "Uppdaterade {0} rader från talgranskningen",
+      "subtitleMergedLinesAppliedSingular": "Tillämpade en radsammanslagning från text till tal",
+      "subtitleMergedLinesAppliedPlural": "Tillämpade {0} radsammanslagningar från text till tal"
     },
     "shotChanges": {
       "titleGenerateOrImport": "Generera/importera scenbyten",
@@ -2096,6 +2204,43 @@
       "shotChangesList": "Lista över scenbyten",
       "shotChangesClearQuestion": "Är du säker på att du vill rensa alla scenbyten?",
       "deleteSelectedShotChangeQuestion": "Är du säker på att du vill ta bort det markerade scenbytet?"
+    },
+    "videoOcr": {
+      "title": "OCR av inbränd undertext",
+      "scanArea": "Skanningsområde",
+      "scanAreaInfo": "Dra på videobilden för att välja var undertexterna finns",
+      "bottomThird": "Nedre tredjedel",
+      "bottomHalf": "Nedre halva",
+      "fullFrame": "Hela bilden",
+      "engine": "OCR-motor",
+      "language": "Språk",
+      "url": "URL",
+      "model": "Modell",
+      "apiKey": "API-nyckel",
+      "scan": "Skanna",
+      "framesPerSecond": "Bildrutor per sekund",
+      "textBrightnessMinimum": "Minsta textljusstyrka (0=av)",
+      "postProcessing": "Efterbearbetning",
+      "textSimilarityPercent": "Slå ihop rader med likhet (%)",
+      "maxGapMs": "Max mellanrum mellan rader (ms)",
+      "minDurationMs": "Minsta varaktighet (ms)",
+      "addAssaPositionTag": "Lägg till ASSA-positionstagg (t.ex. {\\an8})",
+      "startOcr": "Starta OCR",
+      "extractingFramesX": "Extraherar bildrutor... {0}%",
+      "analyzingFramesXY": "Analyserar bildrutor... {0}/{1}",
+      "runningOcrXY": "Kör OCR... {0}/{1}",
+      "noLinesFoundTitle": "Inga undertexter hittades",
+      "noLinesFoundMessage": "Ingen text hittades i skanningsområdet - försök justera skanningsområdet, motorn eller minsta ljusstyrka.",
+      "linesFoundX": "{0} rader hittades",
+      "previewPosition": "Förhandsvisningsposition",
+      "unableToReadVideoTitle": "Kan inte läsa video",
+      "unableToReadVideoMessage": "Kunde inte läsa videoinformation från: {0}",
+      "abortOcrTitle": "Avbryt OCR?",
+      "abortOcrMessage": "Vill du avbryta den pågående OCR:en?",
+      "testOcr": "Testa nuvarande bildruta",
+      "testOcrRunning": "Testar OCR på nuvarande bildruta...",
+      "testOcrResultX": "Testresultat: {0}",
+      "testOcrNoTextFound": "Test: ingen text hittades i skanningsområdet"
     }
   },
   "waveform": {
@@ -2161,7 +2306,9 @@
     "totalAdjustmentX": "Total justering: {0}",
     "adjustAllShortcuts": "Tangentbordsgenvägar:\r\n\r\n• Skift + Vänster/Höger: Flytta 10 ms\r\n• Ctrl + Vänster/Höger: Flytta 100 ms\r\n• Alt + Vänster/Höger: Flytta 500 ms",
     "offsetInSeconds": "Förskjutning i sekunder",
-    "speedFactor": "Hastighetsfaktor"
+    "speedFactor": "Hastighetsfaktor",
+    "adjustAllShortcutsFrames": "Kortkommandon:\r\n\r\n• Skift + Vänster/Höger: Flytta 1 bildruta\r\n• Ctrl + Vänster/Höger: Flytta 10 bildrutor\r\n• Alt + Vänster/Höger: Flytta 1 sekund",
+    "showEarlierLaterDotDotDot": "Visa tidigare/senare..."
   },
   "translate": {
     "translateViaCopyPaste": "Auto-översätt via kopiera/klistra in",
@@ -2488,7 +2635,24 @@
       "waveformColorTheme": "Färgtema:",
       "waveformSaveAsCustomTheme": "Spara som anpassat tema...",
       "waveformLoadThemeDotDotDot": "Läs in tema...",
-      "waveformExportThemeDotDotDot": "Exportera tema..."
+      "waveformExportThemeDotDotDot": "Exportera tema...",
+      "subtitleGridTextSingleLineSeparator": "Enkelradsavgränsare (t.ex. <br />)",
+      "subtitleGridTextDisplay": "Anpassning av undertext i rutnät",
+      "subtitleGridTextDisplayClip": "Klipp (en rad)",
+      "subtitleGridTextDisplayWrap": "Radbryt för att passa fönstret",
+      "subtitleGridTextDisplayEllipsis": "En rad med uteslutningstecken",
+      "colorTextTooManyLinesX": "Färglägg text om fler än {0} rader",
+      "waveformShowToolbarEditLabel": "Verktygsfältsobjekt",
+      "waveformMouseWheelSetsVideoPosition": "Mushjul ställer in videoposition",
+      "waveformMouseWheelVideoPositionStep": "Mushjulets steg för videoposition",
+      "waveformMouseWheelStepOneFrame": "1 bildruta",
+      "waveformMouseWheelStepOneSecond": "1 sekund",
+      "waveformMouseWheelStepMilliseconds": "{0} ms",
+      "favoriteLanguages": "Favoritspråk",
+      "webVttUseXTimestampMap": "WebVTT: använd X-TIMESTAMP-MAP (förskjut tidskoder vid inläsning)",
+      "waveformAutoGenerate": "Generera vågform automatiskt när en video öppnas",
+      "gridGoToSubtitleAndPlayAndFocusTextBox": "Gå till undertext och spela och fokusera textruta",
+      "ocrGuessUnknownWords": "OCR: försök gissa okända ord"
     },
     "shortcuts": {
       "title": "Kortkommandon",
@@ -2773,7 +2937,22 @@
       "moveStartOneFrameBackKeepGapPrev": "Flytta start en bildruta bakåt (behåll mellanrum till föregående om nära)",
       "moveStartOneFrameForwardKeepGapPrev": "Flytta start en bildruta framåt (behåll mellanrum till föregående om nära)",
       "moveEndOneFrameBackKeepGapNext": "Flytta slut en bildruta bakåt (behåll mellanrum till nästa om nära)",
-      "moveEndOneFrameForwardKeepGapNext": "Flytta slut en bildruta framåt (behåll mellanrum till nästa om nära)"
+      "moveEndOneFrameForwardKeepGapNext": "Flytta slut en bildruta framåt (behåll mellanrum till nästa om nära)",
+      "categoryTextBox": "Textruta",
+      "moveTextFromCursorToNextAndGoToNext": "Flytta text efter markörposition till nästa undertext och gå till nästa",
+      "moveTextFromCursorToNextAndGoToNextAndPlay": "Flytta text efter markörposition till nästa undertext, gå till nästa och spela",
+      "videoGoToPreviousTimeCode": "Gå till föregående tidskod",
+      "videoGoToNextTimeCode": "Gå till nästa tidskod",
+      "listViewColumnDeleteText": "Kolumn, ta bort text",
+      "listViewColumnDeleteTextAndShiftUp": "Kolumn, ta bort text och skifta upp",
+      "listViewColumnInsertText": "Kolumn, infoga text",
+      "listViewColumnPaste": "Kolumn, klistra in",
+      "listViewColumnTextUp": "Kolumn, text upp",
+      "listViewColumnTextDown": "Kolumn, text ner",
+      "autoTranslateSelectedLines": "Översätt markerade rader automatiskt...",
+      "setAssaResolution": "Ställ in ASSA-upplösning (PlayResX/PlayResY)",
+      "videoOcr": "OCR av inbränd undertext",
+      "waveformInsertNewSelection": "Vågform infoga ny markering"
     },
     "wordLists": {
       "title": "Ordlistor",
@@ -2934,7 +3113,12 @@
     "pickFallbackDatabase": "Välj reserv-OCR-databas",
     "fallbackOcrDatabase": "Reserv-OCR-databas",
     "showAllOllamaModels": "Visa alla modeller (inte bara synförmåga)",
-    "ollamaModelLikelyWrong": "Ollama returnerade ingen text - den valda modellen kanske inte stöder OCR/vision"
+    "ollamaModelLikelyWrong": "Ollama returnerade ingen text - den valda modellen kanske inte stöder OCR/vision",
+    "tesseractEngineMode": "Motorläge",
+    "tesseractEngineModeLegacy": "Endast ursprunglig Tesseract (kan upptäcka kursiv)",
+    "tesseractEngineModeNeural": "Endast neurala nät LSTM",
+    "tesseractEngineModeBoth": "Tesseract + LSTM",
+    "tesseractEngineModeDefault": "Standard, baserat på vad som är tillgängligt"
   },
   "assa": {
     "assaDraw": "ASSA Rita",
@@ -3124,7 +3308,18 @@
     "advancedEffectSlideInRightDescription": "Texten glider in från utanför skärmen åt höger, hålls och avslutas tillbaka åt höger",
     "advancedEffectFadeInOut": "Tona in/ut",
     "advancedEffectFadeInOutDescription": "Texten tonar in vid starten och tonar ut vid slutet av varje undertext",
-    "overrideTagsHistory": "Historik för överstyrningstaggar"
+    "overrideTagsHistory": "Historik för överstyrningstaggar",
+    "category": "Kategori",
+    "allCategories": "[Alla]",
+    "defaultCategory": "Standard",
+    "newCategory": "Ny kategori...",
+    "renameCategory": "Byt namn på kategori...",
+    "deleteCategory": "Ta bort kategori",
+    "moveToCategoryDotDotDot": "Flytta till kategori...",
+    "deleteCategoryQuestion": "Ta bort kategorin \"{0}\"? Stilar i den flyttas till standardkategorin.",
+    "replaceStyleWithDotDotDot": "Ersätt stil med...",
+    "rotation": "Rotation",
+    "advancedEffectKaraokeRightToLeft": "Höger till vänster"
   },
   "about": {
     "title": "Om Subtitle Edit",
