@@ -145,6 +145,7 @@ using Nikse.SubtitleEdit.Features.Video.ReEncodeVideo;
 using Nikse.SubtitleEdit.Features.Video.ShotChanges;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText;
 using Nikse.SubtitleEdit.Features.Video.SpeechToText.OpenAiCompatible;
+using Nikse.SubtitleEdit.Features.Video.VideoOcr;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech;
 using Nikse.SubtitleEdit.Features.Video.TextToSpeech.ReviewSpeech;
 using Nikse.SubtitleEdit.Features.Video.TransparentSubtitles;
@@ -6011,6 +6012,70 @@ public partial class MainViewModel :
                     await SubtitleOpen(batchSubtitleFileName, batchVideoFileName);
                 }
             }
+        }
+    }
+
+    [RelayCommand]
+    private async Task ShowVideoOcr()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var ffmpegOk = await RequireFfmpegOk();
+        if (!ffmpegOk)
+        {
+            return;
+        }
+
+        var doContinue = await HasChangesContinue();
+        if (!doContinue)
+        {
+            return;
+        }
+
+        // Frame extraction needs a local file - for URL sources, ask for a file instead.
+        var videoFileName = !string.IsNullOrEmpty(_videoFileName) && File.Exists(_videoFileName) ? _videoFileName : string.Empty;
+        if (string.IsNullOrEmpty(videoFileName))
+        {
+            videoFileName = await _fileHelper.PickOpenVideoFile(Window!, Se.Language.General.OpenVideoFileTitle);
+            if (string.IsNullOrEmpty(videoFileName))
+            {
+                return;
+            }
+        }
+
+        var result = await ShowDialogAsync<VideoOcrWindow, VideoOcrViewModel>(vm => { vm.Initialize(videoFileName); });
+
+        if (result.OkPressed && result.ResultSubtitle.Paragraphs.Count > 0)
+        {
+            // Open the video before setting the subtitle state - VideoOpenFile persists
+            // the current subtitle file name to the recent-files list, and the OCR result
+            // has not been saved to disk yet.
+            if (_videoFileName != videoFileName)
+            {
+                await VideoOpenFile(videoFileName);
+            }
+
+            ResetSubtitle();
+
+            _subtitle = result.ResultSubtitle;
+
+            if (SelectedSubtitleFormat is AdvancedSubStationAlpha)
+            {
+                foreach (var p in _subtitle.Paragraphs)
+                {
+                    p.Text = AdvancedSubStationAlpha.FormatText(p.Text);
+                }
+            }
+
+            _subtitleFileName = Path.ChangeExtension(videoFileName, SelectedSubtitleFormat.Extension);
+            _converted = true;
+
+            SetSubtitles(_subtitle);
+            SelectAndScrollToRow(0);
+            ShowStatus(string.Format(Se.Language.Video.VideoOcr.LinesFoundX, _subtitle.Paragraphs.Count));
         }
     }
 

@@ -215,6 +215,25 @@ public partial class PaddleOcr
 
         await Parallel.ForEachAsync(bitmaps, parallelOptions, async (input, ct) =>
         {
+            if (input.Bitmap == null && !string.IsNullOrEmpty(input.SourceFileName))
+            {
+                // Image is already a file on disk (e.g. a video frame) - just copy it.
+                try
+                {
+                    var tempImageFromFile = Path.Combine(folder,
+                        input.Index.ToString("0000") + Path.GetExtension(input.SourceFileName));
+                    File.Copy(input.SourceFileName, tempImageFromFile, true);
+                    input.FileName = tempImageFromFile;
+                    batchFileNamesList.Add(input);
+                }
+                catch
+                {
+                    // ignore
+                }
+
+                return;
+            }
+
             SKBitmap? bitmap = null;
             SKBitmap? borderedBitmap = null;
             try

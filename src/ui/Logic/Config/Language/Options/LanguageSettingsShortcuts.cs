@@ -207,6 +207,7 @@ public class LanguageSettingsShortcuts
     public string CloseVideo { get;  set; }
     public string SpeechToText { get;  set; }
     public string TextToSpeech { get;  set; }
+    public string VideoOcr { get; set; }
     public string BurnIn { get;  set; }
     public string GenerateTransparent { get;  set; }
     public string UndockVideoControls { get; set; }
@@ -518,6 +519,7 @@ public class LanguageSettingsShortcuts
         CloseVideo = "Close video";
         SpeechToText = "Speech to text (Whisper)";
         TextToSpeech = "Text to speech";
+        VideoOcr = "OCR burned-in subtitle";
         BurnIn = "Generate video with burned-in subtitles";
         GenerateTransparent = "Generate transparent video with subtitles";
         UndockVideoControls = "Un-dock video controls";

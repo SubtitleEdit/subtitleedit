@@ -9,6 +9,7 @@ public class SeVideo
     public SeVideoBurnIn BurnIn { get; set; }
     public SeVideoTransparent Transparent { get; set; }
     public SeVideoTextToSpeech TextToSpeech { get; set; }
+    public SeVideoOcr VideoOcr { get; set; }
     public string VideoPlayer { get; set; }
     public double Volume { get; set; }
     public bool ShowStopButton { get; set; }
@@ -46,6 +47,7 @@ public class SeVideo
         BurnIn = new();
         Transparent = new();
         TextToSpeech = new();
+        VideoOcr = new();
         VideoPlayer = OperatingSystem.IsWindows() ? VideoPlayerName.MpvWid : VideoPlayerName.MpvOpenGl;
         Volume = 60;
         ShowStopButton = true;

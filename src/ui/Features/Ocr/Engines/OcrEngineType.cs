@@ -15,4 +15,5 @@ public enum OcrEngineType
     AmazonRekognition,
     Mistral,
     BinaryImageCompare,
+    Glm,
 }
