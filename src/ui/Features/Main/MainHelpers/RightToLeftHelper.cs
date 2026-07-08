@@ -45,6 +45,24 @@ internal static class RightToLeftHelper
             : FlowDirection.LeftToRight;
     }
 
+    /// <summary>
+    /// Keeps a text box's flow direction following its content while right to left
+    /// mode is enabled: right to left content stays right to left, left to right
+    /// content (for example a Turkish original next to an Arabic working language)
+    /// aligns left to right. Attach once when the text box is created; text set
+    /// while right to left mode is off is left alone.
+    /// </summary>
+    internal static void FollowContentDirection(TextBox textBox)
+    {
+        textBox.PropertyChanged += (_, e) =>
+        {
+            if (e.Property == TextBox.TextProperty && Se.Settings.Appearance.RightToLeft)
+            {
+                textBox.FlowDirection = GetContentDirection(textBox.Text, FlowDirection.RightToLeft);
+            }
+        };
+    }
+
     private static void MirrorTextEditGrid(Grid grid, FlowDirection flowDirection)
     {
         var wantMirrored = flowDirection == FlowDirection.RightToLeft;

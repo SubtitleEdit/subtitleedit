@@ -118,6 +118,7 @@ public static partial class InitListViewAndEditBox
         var notNullConverter = new NotNullConverter();
         var nullToOpacityConverter = new NullToOpacityConverter();
         var syntaxHighlightingConverter = new TextWithSubtitleSyntaxHighlightingConverter();
+        var textToFlowDirectionConverter = new TextToFlowDirectionConverter();
         vm.SubtitleDataGridSyntaxHighlighting = syntaxHighlightingConverter;
         // How the Text/Original cells fit their text to the window (feature #11590). Read once here;
         // the grid is rebuilt when settings are applied, so a changed mode takes effect then.
@@ -305,6 +306,7 @@ public static partial class InitListViewAndEditBox
                 {
                     VerticalAlignment = VerticalAlignment.Center,
                     [!TextBlock.InlinesProperty] = new Binding(nameof(SubtitleLineViewModel.Text)) { Converter = syntaxHighlightingConverter, Mode = BindingMode.OneWay },
+                    [!TextBlock.FlowDirectionProperty] = new Binding(nameof(SubtitleLineViewModel.Text)) { Converter = textToFlowDirectionConverter, Mode = BindingMode.OneWay },
                 };
                 SubtitleGridTextDisplayModeDisplay.ApplyTo(textBlock, gridTextDisplayMode);
 
@@ -336,6 +338,7 @@ public static partial class InitListViewAndEditBox
                 {
                     VerticalAlignment = VerticalAlignment.Center,
                     [!TextBlock.InlinesProperty] = new Binding(nameof(SubtitleLineViewModel.OriginalText)) { Converter = syntaxHighlightingConverter, Mode = BindingMode.OneWay },
+                    [!TextBlock.FlowDirectionProperty] = new Binding(nameof(SubtitleLineViewModel.OriginalText)) { Converter = textToFlowDirectionConverter, Mode = BindingMode.OneWay },
                 };
                 SubtitleGridTextDisplayModeDisplay.ApplyTo(textBlock, gridTextDisplayMode);
 
@@ -1736,6 +1739,7 @@ public static partial class InitListViewAndEditBox
             textBox.AddHandler(InputElement.PointerPressedEvent, (_, e) => vm.StoreTextEditorPointerArgs(e), RoutingStrategies.Tunnel);
 
             SetupMacContextMenuForTextBox(textBox, vm);
+            MainHelpers.RightToLeftHelper.FollowContentDirection(textBox);
 
             vm.EditTextBox = new TextBoxWrapper(textBox);
             return textBox;
@@ -1846,6 +1850,7 @@ public static partial class InitListViewAndEditBox
             }
 
             SetupMacContextMenuForTextBox(textBox, vm);
+            MainHelpers.RightToLeftHelper.FollowContentDirection(textBox);
 
             vm.EditTextBoxOriginal = new TextBoxWrapper(textBox);
             return textBox;
