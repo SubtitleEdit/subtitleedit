@@ -89,6 +89,29 @@ internal static class RightToLeftHelper
         }
     }
 
+    /// <summary>
+    /// Re-runs the subtitle grid's cell bindings after the right to left mode
+    /// changed: the per line flow direction converter reads the setting, and
+    /// bindings do not re-evaluate on their own when a setting changes. Rebinding
+    /// the items source re-creates the rows; selection and scroll position are
+    /// restored.
+    /// </summary>
+    internal static void RefreshDataGridBindings(DataGrid? grid, System.Collections.IEnumerable? itemsSource, object? selected)
+    {
+        if (grid == null)
+        {
+            return;
+        }
+
+        grid.ItemsSource = null;
+        grid.ItemsSource = itemsSource;
+        if (selected != null)
+        {
+            grid.SelectedItem = selected;
+            grid.ScrollIntoView(selected, null);
+        }
+    }
+
     private static void SetFlowDirectionRecursive(Visual visual, FlowDirection flowDirection)
     {
         if (visual is ComboBox)
