@@ -9219,10 +9219,28 @@ public partial class MainViewModel :
     [RelayCommand]
     private async Task CommandShowSettingsLanguage()
     {
+        // The layout direction (which side the subtitle list and video sit on)
+        // follows the interface language, so note it before the change.
+        var wasRightToLeft = Se.Settings.General.IsLanguageRightToLeft();
         var viewModel = await ShowDialogAsync<LanguageWindow, LanguageViewModel>();
         if (viewModel.OkPressed && viewModel.SelectedLanguage != null)
         {
+            // Note where the video is before the language is loaded: loading it
+            // rebuilds the layout, which builds a fresh video player starting at the
+            // beginning. Read afterwards the position is always zero, so it has to be
+            // taken here to be restored once the new layout is in place.
+            var videoPosition = GetVideoPlayerControl()?.VideoPlayer?.Position ?? 0;
+
             await LoadLanguage(viewModel.SelectedLanguage.FileName);
+
+            // Strings update live already. When the new language flips the layout
+            // direction (between a right to left and a left to right language),
+            // re-apply the direction live so the subtitle list and video move to the
+            // correct side at once, instead of asking the user to restart.
+            if (Se.Settings.General.IsLanguageRightToLeft() != wasRightToLeft)
+            {
+                ApplyLayoutDirectionForCurrentLanguage(videoPosition);
+            }
         }
     }
 
@@ -11230,6 +11248,118 @@ public partial class MainViewModel :
         });
 
         _shortcutManager.ClearKeys();
+    }
+
+    /// <summary>
+    /// Re-applies the window layout direction to match the current interface
+    /// language after a language change, so the subtitle list, video and waveform
+    /// move to the correct side at once without a restart. It mirrors or restores the
+    /// window and then rebuilds the layout under the new direction, the same order
+    /// used at startup. The rebuild is what actually re-places the docked panels:
+    /// changing the flow direction alone does not re-flip an already built layout.
+    /// The video and waveform keep their own left to right flow direction (see
+    /// #12304) so they are never mirrored. The open video and its position are
+    /// captured up front and restored after the rebuild, because changing the flow
+    /// direction can reset the live player surface so the rebuilt player would
+    /// otherwise come up empty (black video that seeks to zero).
+    /// </summary>
+    /// <summary>
+    /// Re-applies the layout direction after the interface language changed, so the
+    /// docked panels move to the side the new language uses without a restart.
+    /// </summary>
+    /// <param name="videoPosition">
+    /// Where the video was before the language was loaded. It cannot be read here:
+    /// loading the language rebuilds the layout, so by now the player is a fresh one
+    /// sitting at the beginning.
+    /// </param>
+    private void ApplyLayoutDirectionForCurrentLanguage(double videoPosition)
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            // Read the open video from the persistent view model field (not from the
+            // player, whose file name can be cleared by the flow direction change).
+            var videoFile = _videoFileName ?? string.Empty;
+
+            // The window mirrors only for a right to left interface language that
+            // also has right to left mode on, matching what a restart does (startup
+            // mirrors via the right to left toggle, which mirrors only for a right to
+            // left language). Right to left mode itself is the user's choice (Edit
+            // menu) and is left untouched, so switching to a left to right language
+            // does not turn off the right to left text a user set for a right to left
+            // subtitle.
+            var mirror = Se.Settings.Appearance.RightToLeft &&
+                         Se.Settings.General.IsLanguageRightToLeft();
+            Window.FlowDirection = mirror
+                ? FlowDirection.RightToLeft
+                : FlowDirection.LeftToRight;
+
+            // Close the current video before the rebuild. The rebuild reopens the
+            // video itself and restores it to whatever position it can read off the
+            // old surface, which the flow direction change has usually reset to zero.
+            // Closing first clears the file name it keys off, so it skips that reopen
+            // and the video is restored once, below, from the captured position.
+            GetVideoPlayerControl()?.VideoPlayer?.CloseFile();
+
+            // Rebuild the current layout under the new direction so the docked panels
+            // are placed on the correct side, exactly as they are at startup (the
+            // layout is built after the flow direction is set).
+            SetLayout(Se.Settings.General.LayoutNumber);
+
+            // Apply the text and grid direction for the new mode in both directions
+            // (SetLayout only re-applies it for right to left), so the list is never
+            // left in the previous direction when switching back to left to right.
+            RightToLeftHelper.SetRightToLeftForDataGridAndText(Window);
+            RightToLeftHelper.RefreshDataGridBindings(SubtitleGrid, Subtitles, SelectedSubtitle);
+
+            // Reopen the video into the freshly built player and restore the position
+            // the user was at. This is now the only reopen (the rebuild skipped its
+            // own because the file was closed above), so nothing competes to reset it.
+            if (!string.IsNullOrEmpty(videoFile))
+            {
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    var vp = GetVideoPlayerControl();
+                    if (vp == null)
+                    {
+                        return;
+                    }
+
+                    await vp.Open(videoFile);
+
+                    // Wait until the player really has the file. Mpv initializes its
+                    // core lazily on the first render pass, so while the rebuilt layout
+                    // is still coming up the duration can take much longer to arrive
+                    // than the default ready wait allows.
+                    for (var i = 0; i < 200 && vp.VideoPlayer.Duration <= 0.001; i++)
+                    {
+                        await Task.Delay(50);
+                    }
+
+                    // Seek on the player itself, not the control's Position property:
+                    // that property drives the position slider, whose Maximum is the
+                    // duration, so a position set before the duration arrives is
+                    // clamped back to the start. Re-assert the seek until the player
+                    // reports it, as the first ones are swallowed while the surface is
+                    // still coming up.
+                    for (var i = 0; i < 40 && videoPosition > 0; i++)
+                    {
+                        vp.VideoPlayer.Position = videoPosition;
+                        await Task.Delay(50);
+                        if (Math.Abs(vp.VideoPlayer.Position - videoPosition) < 0.5)
+                        {
+                            break;
+                        }
+                    }
+
+                    ReapplyPlaybackSpeed();
+                });
+            }
+        });
     }
 
     [RelayCommand]
