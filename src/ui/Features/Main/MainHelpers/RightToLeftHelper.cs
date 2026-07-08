@@ -35,7 +35,7 @@ internal static class RightToLeftHelper
     /// </summary>
     internal static FlowDirection GetContentDirection(string? text, FlowDirection requested)
     {
-        if (string.IsNullOrWhiteSpace(text))
+        if (requested != FlowDirection.RightToLeft || string.IsNullOrWhiteSpace(text))
         {
             return requested;
         }
@@ -56,12 +56,9 @@ internal static class RightToLeftHelper
     {
         textBox.PropertyChanged += (_, e) =>
         {
-            if (e.Property == TextBox.TextProperty)
+            if (e.Property == TextBox.TextProperty && Se.Settings.Appearance.RightToLeft)
             {
-                var requested = Se.Settings.Appearance.RightToLeft
-                    ? FlowDirection.RightToLeft
-                    : FlowDirection.LeftToRight;
-                textBox.FlowDirection = GetContentDirection(textBox.Text, requested);
+                textBox.FlowDirection = GetContentDirection(textBox.Text, FlowDirection.RightToLeft);
             }
         };
     }

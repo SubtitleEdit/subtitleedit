@@ -159,13 +159,13 @@ public class TextEditorBindingHelper
         var routedEvent = _isOriginal ? OriginalTextChangedEvent : TextChangedEvent;
         _vm.SubtitleTextChanged(sender, new TextChangedEventArgs(routedEvent));
 
-        // Follow the content: an original subtitle in a left to right language
-        // stays readable next to a right to left working language and vice versa.
-        var requestedDirection = Se.Settings.Appearance.RightToLeft
-            ? FlowDirection.RightToLeft
-            : FlowDirection.LeftToRight;
-        _textEditor.TextArea.FlowDirection = MainHelpers.RightToLeftHelper
-            .GetContentDirection(_textEditor.Text, requestedDirection);
+        if (Se.Settings.Appearance.RightToLeft)
+        {
+            // Follow the content: an original subtitle in a left to right language
+            // stays readable next to a right to left working language and vice versa.
+            _textEditor.TextArea.FlowDirection = MainHelpers.RightToLeftHelper
+                .GetContentDirection(_textEditor.Text, FlowDirection.RightToLeft);
+        }
     }
 
     private void OnTextEditorTapped(object? sender, RoutedEventArgs e)
