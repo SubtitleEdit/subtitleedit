@@ -96,13 +96,9 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
             return;
         }
 
-        // Build a Subtitle and run the full libse beautifier — it reads the profile
-        // directly from Configuration.Settings.BeautifyTimeCodes.
-        var subtitle = new Subtitle();
-        foreach (var p in _allSubtitles.Select(p => p.Paragraph!).OrderBy(p => p.StartTime.TotalMilliseconds))
-        {
-            subtitle.Paragraphs.Add(new Paragraph(p));
-        }
+        // Build a Subtitle from the current row values and run the full libse
+        // beautifier — it reads the profile directly from Configuration.Settings.BeautifyTimeCodes.
+        var subtitle = BuildSubtitleFromRows();
 
         var beautifier = new Core.Forms.TimeCodesBeautifier(subtitle, _frameRate, new List<double>(), _shotChanges);
         beautifier.Beautify();
@@ -595,11 +591,7 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         _timerUpdatePreview.Stop();
 
         // Apply final beautification to commit the result back to _allSubtitles
-        var subtitle = new Subtitle();
-        foreach (var p in _allSubtitles.Select(p => p.Paragraph!).OrderBy(p => p.StartTime.TotalMilliseconds))
-        {
-            subtitle.Paragraphs.Add(new Paragraph(p));
-        }
+        var subtitle = BuildSubtitleFromRows();
 
         var beautifier = new Core.Forms.TimeCodesBeautifier(subtitle, _frameRate, new List<double>(), _shotChanges);
         beautifier.Beautify();
@@ -626,6 +618,17 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
     public List<SubtitleLineViewModel> GetBeautifiedSubtitles()
     {
         return new List<SubtitleLineViewModel>(_allSubtitles);
+    }
+
+    private Subtitle BuildSubtitleFromRows()
+    {
+        var subtitle = new Subtitle();
+        foreach (var p in _allSubtitles.Select(p => p.ToParagraph()).OrderBy(p => p.StartTime.TotalMilliseconds))
+        {
+            subtitle.Paragraphs.Add(p);
+        }
+
+        return subtitle;
     }
 
     internal void OnKeyDown(KeyEventArgs e)
