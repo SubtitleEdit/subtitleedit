@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.1.0-beta11",
+  "version": "v5.1.0-beta12",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -1375,7 +1375,22 @@
       "lineX": "Line {0}",
       "linesXToY": "Lines {0}-{1}",
       "largeChangeWarning": "Large change - looks like a rewrite, review carefully",
-      "engineError": "The AI engine could not be reached: {0}"
+      "engineError": "The AI engine could not be reached: {0}",
+      "setupHint": "Please choose an engine and model in Tools -> AI review first."
+    },
+    "aiAssistant": {
+      "title": "AI assistant",
+      "currentLine": "Current line",
+      "contextLines": "Context (lines before and after)",
+      "fixErrors": "Fix errors",
+      "fitReadingSpeed": "Fit reading speed",
+      "makeFormal": "More formal",
+      "makeInformal": "More casual",
+      "askPlaceholder": "Ask about this line, or ask for a change...",
+      "ask": "Ask",
+      "result": "Suggestion",
+      "apply": "Apply to line",
+      "hint": "AI assistant for this line"
     },
     "fixCommonErrors": {
       "title": "Fix common errors",
@@ -2637,6 +2652,7 @@
       "textBoxButtonShowItalic": "Text box: show italic button",
       "textBoxButtonShowColor": "Text box: show color button",
       "textBoxButtonShowRemoveFormatting": "Text box: show remove formatting button",
+      "textBoxButtonShowAiAssistant": "Text box: show AI assistant button",
       "waveformSingleClickAction": "Waveform single-click action",
       "waveformDoubleClickAction": "Waveform double-click action (after single-click action)",
       "allSettings": "All settings",
@@ -3105,6 +3121,8 @@
     "vobSubColorEmphasis1": "Emphasis 1",
     "vobSubColorEmphasis2": "Emphasis 2",
     "vobSubColorsInvert": "Invert background / emphasis 1",
+    "vobSubIsolateColors": "Isolate VobSub colors for OCR",
+    "vobSubIsolateColorsHint": "Rebuild each VobSub image as crisp black-on-white before OCR by keeping the most frequent color (text) and dropping the outline/anti-alias colors. Improves recognition on discs where gray outlines merge characters together.",
     "llamaCppOcrSettingsTitle": "llama.cpp OCR settings",
     "llamaCppOcrPromptHint": "Use {language} to insert the selected OCR language.",
     "llamaCppOcrPromptEmpty": "The prompt cannot be empty.",
