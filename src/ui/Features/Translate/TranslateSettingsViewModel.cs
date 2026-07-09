@@ -50,7 +50,7 @@ public partial class TranslateSettingsViewModel : ObservableObject
         }
 
         var engineType = AutoTranslator.GetType();
-        if (engineType == typeof(ChatGptTranslate) ||
+        var supportsLineContext = engineType == typeof(ChatGptTranslate) ||
             engineType == typeof(OllamaTranslate) ||
             engineType == typeof(LmStudioTranslate) ||
             engineType == typeof(AnthropicTranslate) ||
@@ -61,7 +61,9 @@ public partial class TranslateSettingsViewModel : ObservableObject
             engineType == typeof(MistralTranslate) ||
             engineType == typeof(GeminiTranslate) ||
             engineType == typeof(DeepSeekTranslate) ||
-            engineType == typeof(LlamaCppTranslate))
+            engineType == typeof(LlamaCppTranslate);
+
+        if (supportsLineContext)
         {
             if (!PromptText.Contains("{0}") || !PromptText.Contains("{1}"))
             {
@@ -71,15 +73,25 @@ public partial class TranslateSettingsViewModel : ObservableObject
             }
         }
 
-        if (PromptText.Replace("{0}", string.Empty).Replace("{1}", string.Empty).Contains('{'))
+        var allowedPlaceholders = supportsLineContext
+            ? "'{0}', '{1}', '{2}' and '{3}'"
+            : "'{0}' and '{1}'";
+
+        var sanitizedPromptText = PromptText.Replace("{0}", string.Empty).Replace("{1}", string.Empty);
+        if (supportsLineContext)
         {
-            await MessageBox.Show(Window!, "Error", "Character not allowed in prompt: '{' (besides '{0}' and '{1}')", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            sanitizedPromptText = sanitizedPromptText.Replace("{2}", string.Empty).Replace("{3}", string.Empty);
+        }
+
+        if (sanitizedPromptText.Contains('{'))
+        {
+            await MessageBox.Show(Window!, "Error", $"Character not allowed in prompt: '{{' (besides {allowedPlaceholders})", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
-        if (PromptText.Replace("{0}", string.Empty).Replace("{1}", string.Empty).Contains('}'))
+        if (sanitizedPromptText.Contains('}'))
         {
-            await MessageBox.Show(Window!, "Error", "Character not allowed in prompt: '}' (besides '{0}' and '{1}')", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            await MessageBox.Show(Window!, "Error", $"Character not allowed in prompt: '}}' (besides {allowedPlaceholders})", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 

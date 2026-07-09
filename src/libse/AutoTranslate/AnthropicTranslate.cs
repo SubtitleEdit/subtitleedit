@@ -12,7 +12,7 @@ using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class AnthropicTranslate : IAutoTranslator, IDisposable
+    public class AnthropicTranslate : IAutoTranslator, IAutoTranslatorWithContext, IDisposable
     {
         private HttpClient _httpClient;
 
@@ -63,6 +63,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
+            return await Translate(text, sourceLanguageCode, targetLanguageCode, string.Empty, string.Empty, cancellationToken);
+        }
+
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, string previousLineText, string nextLineText, CancellationToken cancellationToken)
+        {
             var model = Configuration.Settings.Tools.AnthropicApiModel;
             if (string.IsNullOrEmpty(model))
             {
@@ -74,7 +79,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 Configuration.Settings.Tools.AnthropicPrompt = new ToolsSettings().AnthropicPrompt;
             }
-            var prompt = string.Format(Json.EncodeJsonText(Configuration.Settings.Tools.AnthropicPrompt), sourceLanguageCode, targetLanguageCode);
+            var prompt = Json.EncodeJsonText(string.Format(Configuration.Settings.Tools.AnthropicPrompt, sourceLanguageCode, targetLanguageCode, previousLineText, nextLineText));
             var input = "{ \"model\": \"" + model + "\", \"max_tokens\": 1024, \"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");

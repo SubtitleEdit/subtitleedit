@@ -12,7 +12,7 @@ using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class NvidiaTranslate : IAutoTranslator, IDisposable
+    public class NvidiaTranslate : IAutoTranslator, IAutoTranslatorWithContext, IDisposable
     {
         private HttpClient _httpClient;
 
@@ -108,6 +108,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
+            return await Translate(text, sourceLanguageCode, targetLanguageCode, string.Empty, string.Empty, cancellationToken);
+        }
+
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, string previousLineText, string nextLineText, CancellationToken cancellationToken)
+        {
             var model = Configuration.Settings.Tools.NvidiaModel;
             if (string.IsNullOrEmpty(model))
             {
@@ -119,7 +124,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 Configuration.Settings.Tools.NvidiaPrompt = new ToolsSettings().NvidiaPrompt;
             }
-            var prompt = string.Format(Configuration.Settings.Tools.NvidiaPrompt, sourceLanguageCode, targetLanguageCode);
+            var prompt = string.Format(Configuration.Settings.Tools.NvidiaPrompt, sourceLanguageCode, targetLanguageCode, previousLineText, nextLineText);
             var input = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
 
             int[] retryDelays = { 2555, 5007, 9013 };

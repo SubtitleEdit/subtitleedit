@@ -11,7 +11,7 @@ using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class PerplexityTranslate : IAutoTranslator, IDisposable
+    public class PerplexityTranslate : IAutoTranslator, IAutoTranslatorWithContext, IDisposable
     {
         private HttpClient _httpClient;
 
@@ -104,6 +104,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
+            return await Translate(text, sourceLanguageCode, targetLanguageCode, string.Empty, string.Empty, cancellationToken);
+        }
+
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, string previousLineText, string nextLineText, CancellationToken cancellationToken)
+        {
             var model = Configuration.Settings.Tools.PerplexityModel;
             if (string.IsNullOrEmpty(model))
             {
@@ -116,7 +121,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
                 Configuration.Settings.Tools.PerplexityPrompt = new ToolsSettings().PerplexityPrompt;
             }
 
-            var prompt = string.Format(Configuration.Settings.Tools.PerplexityPrompt, sourceLanguageCode, targetLanguageCode);
+            var prompt = string.Format(Configuration.Settings.Tools.PerplexityPrompt, sourceLanguageCode, targetLanguageCode, previousLineText, nextLineText);
             var input = prompt + Environment.NewLine + Environment.NewLine + text;
 
             // Build JSON request body according to Perplexity API

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class GeminiTranslate : IAutoTranslator, IDisposable
+    public class GeminiTranslate : IAutoTranslator, IAutoTranslatorWithContext, IDisposable
     {
         public static string StaticName { get; set; } = "Google Gemini";
         public override string ToString() => StaticName;
@@ -83,13 +83,18 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
+            return await Translate(text, sourceLanguageCode, targetLanguageCode, string.Empty, string.Empty, cancellationToken);
+        }
+
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, string previousLineText, string nextLineText, CancellationToken cancellationToken)
+        {
             int[] retryDelays = { 555, 3007, 7013 };
             HttpResponseMessage result = null;
             string resultContent = null;
             var switchedBaseUrl = false;
             for (var attempt = 0; attempt <= retryDelays.Length; attempt++)
             {
-                var content = MakeContent(text, sourceLanguageCode, targetLanguageCode);
+                var content = MakeContent(text, sourceLanguageCode, targetLanguageCode, previousLineText, nextLineText);
                 result = await _httpClient.PostAsync(_baseUrl, content, cancellationToken);
 
                 if (result.StatusCode == System.Net.HttpStatusCode.NotFound && !switchedBaseUrl)
@@ -147,9 +152,9 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             return outputText;
         }
 
-        private HttpContent MakeContent(string text, string sourceLanguageCode, string targetLanguageCode)
+        private HttpContent MakeContent(string text, string sourceLanguageCode, string targetLanguageCode, string previousLineText, string nextLineText)
         {
-            var prompt = string.Format(Configuration.Settings.Tools.GeminiPrompt, sourceLanguageCode, targetLanguageCode);
+            var prompt = string.Format(Configuration.Settings.Tools.GeminiPrompt, sourceLanguageCode, targetLanguageCode, previousLineText, nextLineText);
             var input = "{ \"contents\": [ { \"role\": \"user\", \"parts\": [{ \"text\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}]}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");

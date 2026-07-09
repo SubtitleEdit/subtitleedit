@@ -43,7 +43,18 @@ public static partial class MergeAndSplitHelper
             return 0;
         }
 
-        var mergedTranslation = await autoTranslator.Translate(mergeResult.Text, source.Code, target.Code, cancellationToken);
+        string mergedTranslation;
+        if (autoTranslator is IAutoTranslatorWithContext contextAutoTranslator)
+        {
+            var previousLineText = index > 0 ? tempSubtitle[index - 1].Text : string.Empty;
+            var nextLineIndex = index + mergeResult.ParagraphCount;
+            var nextLineText = nextLineIndex < tempSubtitle.Length ? tempSubtitle[nextLineIndex].Text : string.Empty;
+            mergedTranslation = await contextAutoTranslator.Translate(mergeResult.Text, source.Code, target.Code, previousLineText, nextLineText, cancellationToken);
+        }
+        else
+        {
+            mergedTranslation = await autoTranslator.Translate(mergeResult.Text, source.Code, target.Code, cancellationToken);
+        }
 
         if (forceSingleLineMode || mergeResult.ParagraphCount == 1)
         {

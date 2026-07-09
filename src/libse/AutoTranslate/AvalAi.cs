@@ -12,7 +12,7 @@ using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class AvalAi : IAutoTranslator, IDisposable
+    public class AvalAi : IAutoTranslator, IAutoTranslatorWithContext, IDisposable
     {
         private HttpClient _httpClient;
 
@@ -100,6 +100,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
+            return await Translate(text, sourceLanguageCode, targetLanguageCode, string.Empty, string.Empty, cancellationToken);
+        }
+
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, string previousLineText, string nextLineText, CancellationToken cancellationToken)
+        {
             var model = Configuration.Settings.Tools.AvalAiModel;
             if (string.IsNullOrEmpty(model))
             {
@@ -111,7 +116,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 Configuration.Settings.Tools.AvalAiPrompt = new ToolsSettings().AvalAiPrompt;
             }
-            var prompt = string.Format(Json.EncodeJsonText(Configuration.Settings.Tools.AvalAiPrompt), sourceLanguageCode, targetLanguageCode);
+            var prompt = Json.EncodeJsonText(string.Format(Configuration.Settings.Tools.AvalAiPrompt, sourceLanguageCode, targetLanguageCode, previousLineText, nextLineText));
             var input = "";
             var input2 = "{\"model\": \"" + model + "\",\"messages\": [{ \"role\": \"user\", \"content\": \"" + prompt + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
             var modelJson = "\"" + model + "\"";

@@ -12,7 +12,7 @@ using Nikse.SubtitleEdit.Core.Settings;
 
 namespace Nikse.SubtitleEdit.Core.AutoTranslate
 {
-    public class OllamaTranslate : IAutoTranslator, IDisposable
+    public class OllamaTranslate : IAutoTranslator, IAutoTranslatorWithContext, IDisposable
     {
         private HttpClient _httpClient;
 
@@ -45,6 +45,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
+            return await Translate(text, sourceLanguageCode, targetLanguageCode, string.Empty, string.Empty, cancellationToken);
+        }
+
+        public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, string previousLineText, string nextLineText, CancellationToken cancellationToken)
+        {
             var model = Configuration.Settings.Tools.OllamaModel;
             var modelJson = string.Empty;
             if (!string.IsNullOrEmpty(model))
@@ -57,7 +62,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             {
                 Configuration.Settings.Tools.OllamaPrompt = new ToolsSettings().OllamaPrompt;
             }
-            var prompt = string.Format(Configuration.Settings.Tools.OllamaPrompt, sourceLanguageCode, targetLanguageCode);
+            var prompt = string.Format(Configuration.Settings.Tools.OllamaPrompt, sourceLanguageCode, targetLanguageCode, previousLineText, nextLineText);
             var input = "{ " + modelJson + " \"prompt\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\", \"stream\": false }";
             if (Configuration.Settings.Tools.OllamaApiUrl.TrimEnd('/').EndsWith("v1/chat/completions"))
             {
