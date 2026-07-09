@@ -181,8 +181,9 @@ internal static class ImageOcrLoader
             }
 
             using var ocr = OcrEngineFactory.Create(options);
-            AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {what}...[/]");
-            return BitmapItemsToSubtitle(items, ocr);
+            var isolationNote = options.VobSubIsolateColors ? string.Empty : " (colour isolation off)";
+            AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {what}{isolationNote}...[/]");
+            return BitmapItemsToSubtitle(items, ocr, options.VobSubIsolateColors);
         }
         finally
         {
@@ -196,14 +197,31 @@ internal static class ImageOcrLoader
     /// <summary>
     /// Turns pre-decoded bitmap events into a Subtitle. <paramref name="ocr"/> null =
     /// time-codes-only (empty text kept); non-null = recognise each bitmap and drop blanks.
+    /// When <paramref name="isolateColors"/> is set, each bitmap is binarised via
+    /// <see cref="VobSubColorIsolation"/> before recognition (VobSub sources only, and never
+    /// in time-codes-only mode since no recognition happens there).
     /// </summary>
     private static Subtitle BitmapItemsToSubtitle(
-        IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem> items, IOcrEngine? ocr)
+        IReadOnlyList<BitmapSubtitleLoader.BitmapSubtitleItem> items, IOcrEngine? ocr, bool isolateColors = false)
     {
         var subtitle = new Subtitle();
         foreach (var item in items)
         {
-            var text = ocr is null ? string.Empty : ocr.Recognize(item.Bitmap);
+            string text;
+            if (ocr is null)
+            {
+                text = string.Empty;
+            }
+            else if (isolateColors)
+            {
+                using var isolated = VobSubColorIsolation.Isolate(item.Bitmap);
+                text = ocr.Recognize(isolated);
+            }
+            else
+            {
+                text = ocr.Recognize(item.Bitmap);
+            }
+
             if (ocr is null || !string.IsNullOrWhiteSpace(text))
             {
                 subtitle.Paragraphs.Add(new LibSeParagraph(

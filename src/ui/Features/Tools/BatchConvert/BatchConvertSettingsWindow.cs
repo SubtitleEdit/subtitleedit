@@ -106,6 +106,15 @@ public class BatchConvertSettingsWindow : Window
         };
         comboBoxOcrEngine.SelectionChanged += (s, e) => vm.OnOcrEngineChanged();
 
+        var checkBoxVobSubIsolateColors = new CheckBox
+        {
+            Content = Se.Language.Ocr.VobSubIsolateColors,
+            IsChecked = vm.VobSubIsolateColors,
+            VerticalAlignment = VerticalAlignment.Center,
+            [!CheckBox.IsCheckedProperty] = new Binding(nameof(vm.VobSubIsolateColors)) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged },
+        };
+        ToolTip.SetTip(checkBoxVobSubIsolateColors, Se.Language.Ocr.VobSubIsolateColorsHint);
+
         var labelLanguagePostFix = UiUtil.MakeLabel(Se.Language.General.LanguagePostFix);
         var comboBoxLanguagePostFix = UiUtil.MakeComboBox(vm.LanguagePostFixes, vm, nameof(vm.SelectedLanguagePostFix));
         var panelLanguagePostFix = new StackPanel
@@ -123,6 +132,7 @@ public class BatchConvertSettingsWindow : Window
         {
             RowDefinitions =
             {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
@@ -149,8 +159,9 @@ public class BatchConvertSettingsWindow : Window
         grid.Add(checkBoxUseOutputFolder, 3, 0);
         grid.Add(panelOutputFolder, 4, 0);
         grid.Add(panelOcrEngine, 5, 0);
-        grid.Add(panelLanguagePostFix, 6, 0);
-        grid.Add(panelButtons, 7, 0);
+        grid.Add(checkBoxVobSubIsolateColors, 6, 0);
+        grid.Add(panelLanguagePostFix, 7, 0);
+        grid.Add(panelButtons, 8, 0);
 
 
         Content = grid;

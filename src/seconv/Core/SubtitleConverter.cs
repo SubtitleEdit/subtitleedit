@@ -868,6 +868,17 @@ internal record class ConversionOptions
     /// </summary>
     public bool TimeCodesOnly { get; init; }
 
+    /// <summary>
+    /// VobSub OCR only: before recognition, rebuild each subpicture as a crisp black-on-white
+    /// bitmap using histogram-based colour isolation — the most frequent opaque colour (the
+    /// glyph fill) becomes black and the outline / anti-alias tiers collapse into the white
+    /// background. Improves recognition on discs whose gray outlines otherwise melt adjacent
+    /// characters together. On by default; disable with <c>--no-vobsub-isolate-colors</c> to
+    /// OCR the raw palette. See <see cref="VobSubColorIsolation"/>. Ignored for non-VobSub
+    /// sources and in <see cref="TimeCodesOnly"/> mode.
+    /// </summary>
+    public bool VobSubIsolateColors { get; init; } = true;
+
     /// <summary>Ollama API endpoint (default <c>http://localhost:11434/api/chat</c>).</summary>
     public string? OllamaUrl { get; init; }
 
