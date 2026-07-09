@@ -1,14 +1,16 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Features.Shared;
 using Nikse.SubtitleEdit.Features.Tools.AiReview;
+using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,10 +18,10 @@ namespace Nikse.SubtitleEdit.Features.Main.AiAssistant;
 
 /// <summary>
 /// The subtitle text box AI assistant: quick actions and a free question for the
-/// current line, with the neighbouring lines given as context. Reuses the same
-/// engines, models and settings as Tools -> AI review (Ollama, llama.cpp, or an
-/// OpenAI compatible server); nothing is applied automatically, the user reviews
-/// the suggestion and presses Apply.
+/// current line, with the neighbouring lines given as context. Shares the engine,
+/// model and connection settings with Tools -> AI review (Ollama, llama.cpp, or an
+/// OpenAI compatible server), and lets the user change them directly in the window;
+/// nothing is applied automatically, the user reviews the suggestion and presses Apply.
 /// </summary>
 public partial class AiAssistantViewModel : ObservableObject
 {
@@ -29,30 +31,60 @@ public partial class AiAssistantViewModel : ObservableObject
     [ObservableProperty] private string _resultText;
     [ObservableProperty] private string _statusText;
     [ObservableProperty] private bool _isBusy;
+    [ObservableProperty] private bool _isNotBusy = true;
+    [ObservableProperty] private bool _hasResult;
+    [ObservableProperty] private string _languageDisplay;
+    [ObservableProperty] private bool _hasLanguage;
+    [ObservableProperty] private ObservableCollection<string> _engines;
     [ObservableProperty] private string _selectedEngine;
+    [ObservableProperty] private bool _isOllamaVisible;
+    [ObservableProperty] private bool _isLlamaCppVisible;
+    [ObservableProperty] private bool _isOpenAiCompatibleVisible;
+    [ObservableProperty] private string _ollamaModel;
+    [ObservableProperty] private string _openAiCompatibleUrl;
+    [ObservableProperty] private string _openAiCompatibleModel;
+    [ObservableProperty] private string _openAiCompatibleApiKey;
+    [ObservableProperty] private ObservableCollection<LlamaCppModelDisplay> _llamaCppModels;
+    [ObservableProperty] private LlamaCppModelDisplay? _selectedLlamaCppModel;
 
     public Window? Window { get; set; }
     public bool ApplyPressed { get; private set; }
     public string ResultToApply { get; private set; } = string.Empty;
 
+    private readonly IWindowService _windowService;
     private string _language;
     private double _maxCharsPerSecond;
     private int _maxSingleLineLength;
     private CancellationTokenSource? _cancellationTokenSource;
 
-    public AiAssistantViewModel()
+    public AiAssistantViewModel(IWindowService windowService)
     {
+        _windowService = windowService;
+
         _currentText = string.Empty;
         _contextText = string.Empty;
         _questionText = string.Empty;
         _resultText = string.Empty;
         _statusText = string.Empty;
+        _languageDisplay = string.Empty;
         _language = "the same language as the text";
         _maxCharsPerSecond = 20;
         _maxSingleLineLength = 42;
-        _selectedEngine = string.IsNullOrEmpty(Se.Settings.Tools.AiReview.Engine)
-            ? SeAiReview.EngineLlamaCpp
-            : Se.Settings.Tools.AiReview.Engine;
+
+        var review = Se.Settings.Tools.AiReview;
+        Engines = new ObservableCollection<string> { SeAiReview.EngineLlamaCpp, SeAiReview.EngineOllama, SeAiReview.EngineOpenAiCompatible };
+        SelectedEngine = Engines.Contains(review.Engine) ? review.Engine : SeAiReview.EngineLlamaCpp;
+        OllamaModel = review.OllamaModel;
+        OpenAiCompatibleUrl = review.OpenAiCompatibleUrl;
+        OpenAiCompatibleModel = review.OpenAiCompatibleModel;
+        OpenAiCompatibleApiKey = review.OpenAiCompatibleApiKey;
+        LlamaCppModels = new ObservableCollection<LlamaCppModelDisplay>();
+        SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(
+            LlamaCppModels,
+            LlamaCppServerManager.GetAllReviewModels(),
+            review.LlamaCppModelFileName);
+
+        UpdateEngineVisibility();
     }
 
     public void Initialize(string currentText, string contextText, string? languageName,
@@ -63,6 +95,7 @@ public partial class AiAssistantViewModel : ObservableObject
         if (!string.IsNullOrWhiteSpace(languageName))
         {
             _language = languageName!;
+            LanguageDisplay = languageName!;
         }
 
         if (maxCharsPerSecond > 0)
@@ -73,6 +106,73 @@ public partial class AiAssistantViewModel : ObservableObject
         if (maxSingleLineLength > 0)
         {
             _maxSingleLineLength = maxSingleLineLength;
+        }
+    }
+
+    partial void OnSelectedEngineChanged(string value)
+    {
+        UpdateEngineVisibility();
+    }
+
+    partial void OnIsBusyChanged(bool value)
+    {
+        IsNotBusy = !value;
+    }
+
+    partial void OnResultTextChanged(string value)
+    {
+        HasResult = !string.IsNullOrWhiteSpace(value);
+    }
+
+    partial void OnLanguageDisplayChanged(string value)
+    {
+        HasLanguage = !string.IsNullOrEmpty(value);
+    }
+
+    private void UpdateEngineVisibility()
+    {
+        IsOllamaVisible = SelectedEngine == SeAiReview.EngineOllama;
+        IsOpenAiCompatibleVisible = SelectedEngine == SeAiReview.EngineOpenAiCompatible;
+        IsLlamaCppVisible = !IsOllamaVisible && !IsOpenAiCompatibleVisible;
+    }
+
+    private void SaveSettings()
+    {
+        var settings = Se.Settings.Tools.AiReview;
+        settings.Engine = SelectedEngine;
+        settings.OllamaModel = OllamaModel.Trim();
+        settings.LlamaCppModelFileName = SelectedLlamaCppModel?.Model.FileName ?? string.Empty;
+        settings.OpenAiCompatibleUrl = OpenAiCompatibleUrl.Trim();
+        settings.OpenAiCompatibleModel = OpenAiCompatibleModel.Trim();
+        settings.OpenAiCompatibleApiKey = OpenAiCompatibleApiKey.Trim();
+        Se.SaveSettings();
+    }
+
+    private void RefreshLlamaCppModels()
+    {
+        var selectedFileName = SelectedLlamaCppModel?.Model.FileName;
+        SelectedLlamaCppModel = LlamaCppDownloadHelper.PopulateModels(
+            LlamaCppModels,
+            LlamaCppServerManager.GetAllReviewModels(),
+            selectedFileName);
+    }
+
+    [RelayCommand]
+    private async Task PickOllamaModel()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var result = await _windowService.ShowDialogAsync<Ocr.PickOllamaModelWindow, Ocr.PickOllamaModelViewModel>(Window, vm =>
+        {
+            vm.Initialize(Se.Language.General.PickOllamaModel, OllamaModel, Se.Settings.Tools.AiReview.OllamaUrl);
+        });
+
+        if (result is { OkPressed: true, SelectedModel: not null })
+        {
+            OllamaModel = result.SelectedModel;
         }
     }
 
@@ -122,6 +222,8 @@ public partial class AiAssistantViewModel : ObservableObject
             return;
         }
 
+        SaveSettings();
+
         var systemPrompt =
             "You are a professional subtitle assistant. You are given the current subtitle line and, for context " +
             "only, the lines before and after it. Follow the instruction. Never invent content that is not implied " +
@@ -132,7 +234,6 @@ public partial class AiAssistantViewModel : ObservableObject
             "\n\nCurrent line:\n" + CurrentText +
             "\n\nInstruction:\n" + instruction;
 
-        var review = Se.Settings.Tools.AiReview;
         string url;
         var model = string.Empty;
         string? apiKey = null;
@@ -145,29 +246,36 @@ public partial class AiAssistantViewModel : ObservableObject
 
             if (SelectedEngine == SeAiReview.EngineOpenAiCompatible)
             {
-                url = (review.OpenAiCompatibleUrl ?? string.Empty).Trim();
-                model = (review.OpenAiCompatibleModel ?? string.Empty).Trim();
-                apiKey = string.IsNullOrWhiteSpace(review.OpenAiCompatibleApiKey)
+                url = OpenAiCompatibleUrl.Trim();
+                model = OpenAiCompatibleModel.Trim();
+                apiKey = string.IsNullOrWhiteSpace(OpenAiCompatibleApiKey)
                     ? null
-                    : review.OpenAiCompatibleApiKey.Trim();
+                    : OpenAiCompatibleApiKey.Trim();
             }
             else if (SelectedEngine == SeAiReview.EngineOllama)
             {
-                url = review.OllamaUrl;
-                model = (review.OllamaModel ?? string.Empty).Trim();
+                url = Se.Settings.Tools.AiReview.OllamaUrl;
+                model = OllamaModel.Trim();
             }
             else
             {
-                var reviewModel = LlamaCppServerManager.GetAllReviewModels()
-                    .FirstOrDefault(m => m.FileName == review.LlamaCppModelFileName);
-                if (reviewModel == null)
+                var display = SelectedLlamaCppModel;
+                if (display == null ||
+                    !await LlamaCppDownloadHelper.EnsureReadyAsync(Window, _windowService, display.Model.FileName,
+                        LlamaCppServerManager.GetAllReviewModels(), persistAsTranslateModel: false))
                 {
-                    await MessageBox.Show(Window, Se.Language.Tools.AiReview.Title,
-                        Se.Language.Tools.AiReview.SetupHint, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    RefreshLlamaCppModels();
                     return;
                 }
 
-                await LlamaCppServerManager.EnsureServerRunningAsync(reviewModel, CancellationToken.None);
+                RefreshLlamaCppModels(); // pick up the fresh install state (green dot)
+                display = SelectedLlamaCppModel;
+                if (display == null)
+                {
+                    return;
+                }
+
+                await LlamaCppServerManager.EnsureServerRunningAsync(display.Model, CancellationToken.None);
                 url = LlamaCppServerManager.ApiUrl;
             }
 
@@ -176,6 +284,10 @@ public partial class AiAssistantViewModel : ObservableObject
             var reply = await client.ChatAsync(url, model, systemPrompt, userContent,
                 _cancellationTokenSource.Token, apiKey, preferJsonObject: false);
             ResultText = CleanReply(reply);
+        }
+        catch (OperationCanceledException)
+        {
+            // the user closed the window or cancelled the request
         }
         catch (Exception e)
         {
@@ -198,6 +310,21 @@ public partial class AiAssistantViewModel : ObservableObject
         }
 
         var text = reply.Trim();
+
+        // Reasoning models (DeepSeek R1, Qwen3, ...) may emit their chain of thought in a
+        // <think>...</think> block before the answer - some chat templates even swallow the
+        // opening tag, so key off the closing tag and keep only what follows it.
+        var endThink = text.LastIndexOf("</think>", StringComparison.OrdinalIgnoreCase);
+        if (endThink >= 0)
+        {
+            text = text[(endThink + "</think>".Length)..].Trim();
+        }
+        else if (text.StartsWith("<think>", StringComparison.OrdinalIgnoreCase))
+        {
+            // Unterminated reasoning block - the answer never arrived (e.g. cut off by the
+            // token limit), so there is nothing usable to show.
+            return string.Empty;
+        }
 
         // A model may still answer with a JSON object (some ignore the plain-text
         // request); take the first string value out of it.
@@ -274,6 +401,7 @@ public partial class AiAssistantViewModel : ObservableObject
             return;
         }
 
+        SaveSettings();
         ResultToApply = ResultText.Trim();
         ApplyPressed = true;
         Window?.Close();
@@ -284,5 +412,22 @@ public partial class AiAssistantViewModel : ObservableObject
     {
         _cancellationTokenSource?.Cancel();
         Window?.Close();
+    }
+
+    internal void OnKeyDown(KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape)
+        {
+            e.Handled = true;
+            _cancellationTokenSource?.Cancel();
+            Window?.Close();
+        }
+    }
+
+    internal void OnClosing()
+    {
+        SaveSettings();
+        _cancellationTokenSource?.Cancel();
+        UiUtil.SaveWindowPosition(Window);
     }
 }
