@@ -2168,22 +2168,8 @@ public partial class MainViewModel :
 
             await SubtitleOpen(recentFile.SubtitleFileName, recentFile.VideoFileName, recentFile.SelectedLine, desiredAudioTrackId: recentFile.AudioTrack);
 
-            // Seek the video to the restored line, like SE 4 did — otherwise Reopen leaves it
-            // at 0:00. Mirrors the startup file-restore path: the video opens asynchronously, so
-            // wait for the players to be ready before seeking, then re-apply after layout settles.
-            var vp = GetVideoPlayerControl();
-            if (!string.IsNullOrEmpty(_videoFileName) && SelectedSubtitle != null && vp != null)
-            {
-                await vp.WaitForPlayersReadyAsync();
-                await Task.Delay(200);
-                var s = SelectedSubtitle;
-                if (vp != null && s != null)
-                {
-                    vp.Position = s.StartTime.TotalSeconds;
-                    Dispatcher.UIThread.Post(() => { vp.Position = s.StartTime.TotalSeconds; });
-                    CenterAudioVisualizerOnCurrentVideoPosition();
-                }
-            }
+            // Seek the video to the restored line - otherwise Reopen leaves it at 0:00.
+            await SeekVideoToSelectedLineAsync();
 
             if (!string.IsNullOrEmpty(recentFile.SubtitleFileNameOriginal) &&
                 File.Exists(recentFile.SubtitleFileNameOriginal))
@@ -14976,6 +14962,8 @@ public partial class MainViewModel :
             return;
         }
 
+        RecentFile? rememberedRecentFile = null;
+
         try
         {
             _opening = true;
@@ -15370,7 +15358,30 @@ public partial class MainViewModel :
             ShowStatus(string.Format(Se.Language.General.SubtitleLoadedX, fileName));
             LoadBookmarks();
 
-            if (selectedSubtitleIndex != null && selectedSubtitleIndex >= 0 && selectedSubtitleIndex < Subtitles.Count)
+            // Restore the last editing position when a file from the recent list is reopened
+            // via Explorer/Finder double-click, File > Open, or drag & drop, like SE 4 did
+            // (issue #12222). Callers that restore a session themselves (open-last-file-on-start,
+            // the Reopen menu) pass selectedSubtitleIndex and skip this.
+            if (selectedSubtitleIndex == null)
+            {
+                rememberedRecentFile = Se.Settings.File.RecentFiles.FirstOrDefault(rf =>
+                    string.Equals(rf.SubtitleFileName, fileName, StringComparison.OrdinalIgnoreCase));
+                if (rememberedRecentFile != null)
+                {
+                    selectedSubtitleIndex = rememberedRecentFile.SelectedLine;
+                    if (desiredAudioTrackId < 0)
+                    {
+                        desiredAudioTrackId = rememberedRecentFile.AudioTrack;
+                    }
+                }
+            }
+
+            if (selectedSubtitleIndex != null && (selectedSubtitleIndex < 0 || selectedSubtitleIndex >= Subtitles.Count))
+            {
+                selectedSubtitleIndex = null; // stale index, e.g. the file shrank since it was remembered
+            }
+
+            if (selectedSubtitleIndex != null)
             {
                 SelectAndScrollToRow(selectedSubtitleIndex.Value);
             }
@@ -15399,7 +15410,10 @@ public partial class MainViewModel :
                 }
             }
 
-            AddToRecentFiles(true);
+            // Pass the index explicitly: SelectAndScrollToRow applies the selection via a
+            // dispatcher post that may not have run yet, so reading SelectedSubtitleIndex
+            // here could persist 0 and erase the remembered line.
+            AddToRecentFiles(true, selectedSubtitleIndex);
         }
         finally
         {
@@ -15410,6 +15424,37 @@ public partial class MainViewModel :
             _opening = false;
 
             SetupLiveSpellCheck();
+        }
+
+        if (rememberedRecentFile != null && selectedSubtitleIndex > 0)
+        {
+            await SeekVideoToSelectedLineAsync();
+        }
+    }
+
+    // Seek the video to the selected line's start after (re)opening a file, like SE 4 did.
+    // The video opens asynchronously, so wait for the players to be ready before seeking,
+    // then re-apply after layout settles. If wave peaks were already cached and loaded by
+    // this point, the waveform load fired before the position was set and so is anchored
+    // at 0:00 - center it now (issue #11305). If peaks haven't finished loading yet, the
+    // load-completion paths in LoadWaveformAndSpectrogram /
+    // ExtractWaveformAndSpectrogramAndShotChanges will do the centering instead.
+    private async Task SeekVideoToSelectedLineAsync()
+    {
+        var vp = GetVideoPlayerControl();
+        if (string.IsNullOrEmpty(_videoFileName) || SelectedSubtitle == null || vp == null)
+        {
+            return;
+        }
+
+        await vp.WaitForPlayersReadyAsync();
+        await Task.Delay(200);
+        var s = SelectedSubtitle;
+        if (s != null)
+        {
+            vp.Position = s.StartTime.TotalSeconds;
+            Dispatcher.UIThread.Post(() => { vp.Position = s.StartTime.TotalSeconds; });
+            CenterAudioVisualizerOnCurrentVideoPosition();
         }
     }
 
@@ -17078,14 +17123,14 @@ public partial class MainViewModel :
         return false;
     }
 
-    private void AddToRecentFiles(bool updateMenu)
+    private void AddToRecentFiles(bool updateMenu, int? selectedLine = null)
     {
         if (_loading)
         {
             return;
         }
 
-        var idx = SelectedSubtitleIndex ?? 0;
+        var idx = selectedLine ?? SelectedSubtitleIndex ?? 0;
         Se.Settings.File.AddToRecentFiles(
             _subtitleFileName ?? string.Empty,
             _subtitleFileNameOriginal ?? string.Empty,
@@ -17379,25 +17424,7 @@ public partial class MainViewModel :
                         }
 
                         await SubtitleOpen(first.SubtitleFileName, first.VideoFileName, first.SelectedLine, null, skipLoadVideo, first.AudioTrack);
-                        var vp = GetVideoPlayerControl();
-                        if (!string.IsNullOrEmpty(_videoFileName) && SelectedSubtitle != null && vp != null)
-                        {
-                            await vp.WaitForPlayersReadyAsync();
-                            await Task.Delay(200);
-                            var s = SelectedSubtitle;
-                            if (vp != null && s != null)
-                            {
-                                vp.Position = s.StartTime.TotalSeconds;
-                                Dispatcher.UIThread.Post(() => { vp.Position = SelectedSubtitle.StartTime.TotalSeconds; });
-                                // If wave peaks were already cached and loaded by this point,
-                                // the waveform load fired before vp.Position was set and so
-                                // is anchored at 0:00. Center it now (issue #11305). If peaks
-                                // haven't finished loading yet, the load-completion paths in
-                                // LoadWaveformAndSpectrogram / ExtractWaveformAndSpectrogram
-                                // AndShotChanges will do the centering instead.
-                                CenterAudioVisualizerOnCurrentVideoPosition();
-                            }
-                        }
+                        await SeekVideoToSelectedLineAsync();
 
                         SetRecentFileProperties(first);
                     }
