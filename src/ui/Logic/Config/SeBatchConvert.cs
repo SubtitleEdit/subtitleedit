@@ -18,6 +18,15 @@ public class SeBatchConvert
     public string NOcrBinaryOcrFallbackDatabase { get; set; }
     public string BinaryOcrNOcrFallbackDatabase { get; set; }
 
+    /// <summary>
+    /// VobSub OCR only: before recognition, rebuild each subpicture as a crisp black-on-white
+    /// bitmap via histogram-based colour isolation (most frequent opaque colour = glyph fill →
+    /// black, outline / anti-alias colours → white background). On by default; improves
+    /// recognition on discs whose gray outlines otherwise melt adjacent characters together.
+    /// See <see cref="Core.Common.VobSubColorIsolation"/>.
+    /// </summary>
+    public bool VobSubIsolateColors { get; set; }
+
     public bool FormattingRemoveAll { get; set; }
     public bool FormattingRemoveItalic { get; set; }
     public bool FormattingRemoveUnderline { get; set; }
@@ -109,6 +118,7 @@ public class SeBatchConvert
         BinaryOcrDatabase = "Latin";
         NOcrBinaryOcrFallbackDatabase = string.Empty;
         BinaryOcrNOcrFallbackDatabase = string.Empty;
+        VobSubIsolateColors = true;
         OffsetTimeCodesForward = true;
         AdjustVia = "Seconds";
         AdjustDurationSeconds = 0.1;

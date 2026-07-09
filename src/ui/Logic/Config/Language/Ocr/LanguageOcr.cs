@@ -97,6 +97,8 @@ public class LanguageOcr
     public string VobSubColorEmphasis1 { get; set; }
     public string VobSubColorEmphasis2 { get; set; }
     public string VobSubColorsInvert { get; set; }
+    public string VobSubIsolateColors { get; set; }
+    public string VobSubIsolateColorsHint { get; set; }
     public string LlamaCppOcrSettingsTitle { get; set; }
     public string LlamaCppOcrPromptHint { get; set; }
     public string LlamaCppOcrPromptEmpty { get; set; }
@@ -205,6 +207,8 @@ public class LanguageOcr
         VobSubColorEmphasis1 = "Emphasis 1";
         VobSubColorEmphasis2 = "Emphasis 2";
         VobSubColorsInvert = "Invert background / emphasis 1";
+        VobSubIsolateColors = "Isolate VobSub colors for OCR";
+        VobSubIsolateColorsHint = "Rebuild each VobSub image as crisp black-on-white before OCR by keeping the most frequent color (text) and dropping the outline/anti-alias colors. Improves recognition on discs where gray outlines merge characters together.";
 
         LlamaCppOcrSettingsTitle = "llama.cpp OCR settings";
         LlamaCppOcrPromptHint = "Use {language} to insert the selected OCR language.";

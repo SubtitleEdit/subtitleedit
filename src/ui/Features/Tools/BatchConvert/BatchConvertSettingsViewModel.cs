@@ -29,6 +29,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
 
     [ObservableProperty] private ObservableCollection<string> _ocrEngines;
     [ObservableProperty] private string? _selectedOcrEngine;
+    [ObservableProperty] private bool _vobSubIsolateColors;
 
     [ObservableProperty] private ObservableCollection<string> _languagePostFixes;
     [ObservableProperty] private string? _selectedLanguagePostFix;
@@ -170,6 +171,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             ?? TargetEncodings.FirstOrDefault(p => p == TextEncoding.Utf8WithBom)
             ?? TargetEncodings.First();
         SelectedOcrEngine = OcrEngines.FirstOrDefault(p => p == Se.Settings.Tools.BatchConvert.OcrEngine) ?? OcrEngines.First();
+        VobSubIsolateColors = Se.Settings.Tools.BatchConvert.VobSubIsolateColors;
     }
 
     private void SaveSettings()
@@ -180,6 +182,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         Se.Settings.Tools.BatchConvert.TargetEncoding = SelectedTargetEncoding ?? TextEncoding.Utf8WithBom;
         Se.Settings.Tools.BatchConvert.LanguagePostFix = SelectedLanguagePostFix ?? Se.Language.General.TwoLetterLanguageCode;
         Se.Settings.Tools.BatchConvert.OcrEngine = SelectedOcrEngine ?? "nOcr";
+        Se.Settings.Tools.BatchConvert.VobSubIsolateColors = VobSubIsolateColors;
 
         var ocrEngine = SelectedOcrEngine;
         if (ocrEngine == "Tesseract")

@@ -16,6 +16,13 @@ public class OcrSubtitleVobSub : IOcrSubtitle
     public SKColor Emphasis1 { get; set; } = SKColors.White;
     public SKColor Emphasis2 { get; set; } = SKColors.Black;
 
+    /// <summary>
+    /// When true, each decoded subpicture is rebuilt as a crisp black-on-white bitmap via
+    /// histogram-based colour isolation before it is handed to the OCR engine. See
+    /// <see cref="VobSubColorIsolation"/>.
+    /// </summary>
+    public bool IsolateColors { get; set; }
+
     private readonly List<VobSubMergedPack> _vobSubMergedPack;
     private List<SKColor>? _palette;
 
@@ -33,12 +40,18 @@ public class OcrSubtitleVobSub : IOcrSubtitle
             _vobSubMergedPack[index].Palette = _palette;
         }
 
-        if (UseCustomColors)
+        var bitmap = UseCustomColors
+            ? _vobSubMergedPack[index].SubPicture.GetBitmap(_palette, Background, Pattern, Emphasis1, Emphasis2, true, true)
+            : _vobSubMergedPack[index].GetBitmap();
+
+        if (IsolateColors)
         {
-            return _vobSubMergedPack[index].SubPicture.GetBitmap(_palette, Background, Pattern, Emphasis1, Emphasis2, true, true);
+            var isolated = VobSubColorIsolation.Isolate(bitmap);
+            bitmap.Dispose();
+            return isolated;
         }
 
-        return _vobSubMergedPack[index].GetBitmap();
+        return bitmap;
     }
 
     public TimeSpan GetStartTime(int index)

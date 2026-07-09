@@ -43,6 +43,7 @@ internal static class HelpDisplay
         ShowParameter("--ocr-language:<lang>", "Language for OCR (e.g. eng, deu, spa)");
         ShowParameter("--ocr-db:<path>", ".nocr (--ocr-engine=nocr) or .db (--ocr-engine=binaryocr)");
         ShowParameter("--time-codes-only", "Image sources (.sup/VobSub/PGS/DVB) -> text with time codes only; skips OCR");
+        ShowParameter("--no-vobsub-isolate-colors", "Disable VobSub OCR colour isolation (on by default; isolation binarises to black-on-white, dropping outline colours)");
         ShowParameter("--ollama-url:<url>", "Ollama API endpoint (default: http://localhost:11434/api/chat)");
         ShowParameter("--ollama-model:<model>", "Ollama vision model (default: llama3.2-vision)");
         ShowParameter("--multiple-replace:<path.xml>", "SE MultipleSearchAndReplaceGroups XML applied per paragraph");

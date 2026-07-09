@@ -126,7 +126,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             var vobSubMergedPackList = vobSubParser.MergeVobSubPacks();
             var palette = vobSubParser.IdxPalette;
             vobSubParser.VobSubPacks.Clear();
-            imageSubtitle = new OcrSubtitleVobSub(vobSubMergedPackList, palette);
+            imageSubtitle = new OcrSubtitleVobSub(vobSubMergedPackList, palette)
+            {
+                IsolateColors = Se.Settings.Tools.BatchConvert.VobSubIsolateColors,
+            };
             //TODO: multi track
         }
         else if ((item.FileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || item.FileName.EndsWith(".mks", StringComparison.OrdinalIgnoreCase)) &&
@@ -149,7 +152,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
                             if (trackId == track.TrackNumber.ToString(CultureInfo.InvariantCulture))
                             {
                                 var vobSubs = LoadVobSubFromMatroska(track, matroska, out var idx);
-                                imageSubtitle = new OcrSubtitleVobSub(vobSubs);
+                                imageSubtitle = new OcrSubtitleVobSub(vobSubs)
+                                {
+                                    IsolateColors = Se.Settings.Tools.BatchConvert.VobSubIsolateColors,
+                                };
                                 var fileName = Path.GetFileName(item.FileName);
                                 item.OutputFileName = fileName.Substring(0, fileName.LastIndexOf('.')).TrimEnd('.') + ".mkv";
                                 break;

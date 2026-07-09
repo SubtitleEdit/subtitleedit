@@ -112,6 +112,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("For image-based sources (.sup, VobSub .sub/.idx, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub): output time codes only with empty text; skips OCR (no OCR engine required)")]
         public bool TimeCodesOnly { get; init; }
 
+        [CommandOption("--no-vobsub-isolate-colors|--novobsubisolatecolors")]
+        [Description("Disable VobSub OCR colour isolation (on by default). Isolation binarises each subpicture to black-on-white by keeping the most frequent opaque colour (glyph fill) and dropping the outline/anti-alias colours; pass this to OCR the raw palette instead")]
+        public bool NoVobSubIsolateColors { get; init; }
+
         [CommandOption("--ollama-url")]
         [Description("Ollama API endpoint (default: http://localhost:11434/api/chat)")]
         public string? OllamaUrl { get; init; }
@@ -491,6 +495,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 OcrDb = settings.OcrDb,
                 DictionaryFolder = settings.DictionaryFolder,
                 TimeCodesOnly = settings.TimeCodesOnly,
+                VobSubIsolateColors = !settings.NoVobSubIsolateColors,
                 OllamaUrl = settings.OllamaUrl,
                 OllamaModel = settings.OllamaModel,
                 TeletextOnly = settings.TeletextOnly,
