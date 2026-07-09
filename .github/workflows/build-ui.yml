@@ -894,6 +894,56 @@ jobs:
             ./release-assets/SubtitleEdit-Linux-ARM64.tar.gz
             ./release-assets/SubtitleEdit-linux-x64.flatpak
 
+  # Opens a version-bump PR against microsoft/winget-pkgs for the Nikse.SubtitleEdit
+  # package (issue #12292). Uses komac (via the winget-releaser action), which
+  # downloads the Inno installer and re-derives ProductCode/architecture from the
+  # binary itself — important because the v5 installer's AppID differs from the
+  # SubtitleEdit_is1 ProductCode in the pre-5.x manifests.
+  # Requirements (both already exist / must stay in place):
+  #   - WINGET_TOKEN secret: a *classic* PAT with public_repo scope (fine-grained
+  #     tokens are not supported by the action).
+  #   - A fork of microsoft/winget-pkgs under the token owner's account
+  #     (github.com/niksedk/winget-pkgs — matching fork-user below).
+  publish-winget:
+    if: ${{ inputs.create_release && !inputs.is_prerelease }}
+    needs: create-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check preconditions
+        id: check
+        env:
+          WINGET_TOKEN: ${{ secrets.WINGET_TOKEN }}
+          TAG: ${{ needs.create-release.outputs.release_tag }}
+        run: |
+          if [ -z "$WINGET_TOKEN" ]; then
+            echo "::warning::WINGET_TOKEN secret is not set - skipping winget submission."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # Only plain stable tags (v5.1.0) go to winget. Suffixed tags
+          # (v5.1.0-beta12) and auto-generated pre-release-* tags are skipped
+          # even if the run was accidentally not marked as a pre-release.
+          case "$TAG" in
+            v[0-9]*-*)
+              echo "::warning::Tag '$TAG' looks like a pre-release - skipping winget submission."
+              echo "run=false" >> "$GITHUB_OUTPUT" ;;
+            v[0-9]*)
+              echo "run=true" >> "$GITHUB_OUTPUT" ;;
+            *)
+              echo "::warning::Tag '$TAG' is not a version tag - skipping winget submission."
+              echo "run=false" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Create winget-pkgs PR
+        if: steps.check.outputs.run == 'true'
+        uses: vedantmgoyal9/winget-releaser@4ffc7888bffd451b357355dc214d43bb9f23917e # v2
+        with:
+          identifier: Nikse.SubtitleEdit
+          installers-regex: 'SubtitleEdit-Windows-x64-Setup\.exe$'
+          release-tag: ${{ needs.create-release.outputs.release_tag }}
+          fork-user: niksedk
+          token: ${{ secrets.WINGET_TOKEN }}
+
   call-seconv:
     needs: [create-release]
     uses: ./.github/workflows/build-seconv.yml
