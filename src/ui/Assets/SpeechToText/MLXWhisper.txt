@@ -22,18 +22,33 @@ option to the decoder. The option name is matched against the installed
 mlx-whisper version, so unsupported options are reported rather than silently
 dropped, and the value is coerced to the right type automatically.
 
-Useful options:
-  --condition-on-previous-text False   turn off conditioning; the standard
-                                       mitigation for repetition loops and
-                                       hallucinated credit lines on long files
-  --temperature 0                      disable the temperature fallback
-  --no-speech-threshold 0.6            silence sensitivity
-  --logprob-threshold -1.0             confidence threshold for the fallback
-  --compression-ratio-threshold 2.4    repetition detector threshold
+Parameters (mlx-whisper transcribe options; type them into the box):
 
-The helper also has its own options, for example --beam-size 5 for beam search.
-Options that Subtitle Edit already controls (language, task, word timestamps, the
-initial prompt) are ignored if typed here.
+  --condition-on-previous-text N       [true   ] feed the previous window's text as
+                                                  context; set False to stop repetition
+                                                  loops and hallucinated credit lines
+  --temperature N                      [0       ] sampling temperature; a single 0
+                                                  disables the temperature fallback
+  --compression-ratio-threshold N      [2.40   ] treat a window as repetitive above this
+  --logprob-threshold N                [-1.00  ] retry a window below this confidence
+  --no-speech-threshold N              [0.60   ] silence sensitivity
+  --best-of N                          [5      ] candidates to sample on a retry
+  --beam-size N                        [0       ] beam search width (0 = greedy)
+  --patience N                         [       ] beam search patience
+  --length-penalty N                   [       ] beam search length penalty
+  --suppress-tokens LIST               [-1     ] token ids to suppress (-1 = default set)
+  --suppress-blank N                   [true   ] suppress blank outputs at the start
+  --max-initial-timestamp N            [1.00   ] cap on the first timestamp
+  --clip-timestamps LIST               [0       ] comma separated start,end seconds to decode
+  --prepend-punctuations LIST          ["'([{-  ] punctuation merged onto the next word
+  --append-punctuations LIST           [.,!?:)  ] punctuation merged onto the previous word
+  --hallucination-silence-threshold N  [       ] skip silence longer than this on a
+                                                  hallucination (needs word timestamps)
+
+The option names and value types are read from the installed mlx-whisper version,
+so unsupported options are reported rather than dropped. Options Subtitle Edit
+already controls (language, task, word timestamps, the initial prompt) are ignored
+if typed here.
 
 You can also type a full Hugging Face repo id as the model (anything containing
 "/") to use a custom MLX Whisper model.
