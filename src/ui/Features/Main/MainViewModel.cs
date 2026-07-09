@@ -9395,6 +9395,42 @@ public partial class MainViewModel :
         AutoFitColumns();
     }
 
+    // Cycle the grid's Text/Original text formatting mode (issue #12321): "show formatting"
+    // (tags hidden, styling rendered) -> "show tags" -> "no formatting". Handy for heavy ASS
+    // karaoke tags where the full tag text makes the grid hard to read. The grid cell
+    // converter reads the setting live, so re-notifying Text/OriginalText re-renders the rows.
+    [RelayCommand]
+    private void ToggleSubtitleGridFormatting()
+    {
+        int newMode;
+        string newModeName;
+        if (Se.Settings.Appearance.SubtitleGridFormattingType == (int)SubtitleGridFormattingTypes.ShowFormatting)
+        {
+            newMode = (int)SubtitleGridFormattingTypes.ShowTags;
+            newModeName = Se.Language.Options.Settings.SubtitleGridFormattingShowTags;
+        }
+        else if (Se.Settings.Appearance.SubtitleGridFormattingType == (int)SubtitleGridFormattingTypes.ShowTags)
+        {
+            newMode = (int)SubtitleGridFormattingTypes.NoFormatting;
+            newModeName = Se.Language.Options.Settings.SubtitleGridFormattingNone;
+        }
+        else
+        {
+            newMode = (int)SubtitleGridFormattingTypes.ShowFormatting;
+            newModeName = Se.Language.Options.Settings.SubtitleGridFormattingShowFormatting;
+        }
+
+        Se.Settings.Appearance.SubtitleGridFormattingType = newMode;
+        Se.SaveSettings();
+
+        foreach (var row in Subtitles)
+        {
+            row.RefreshAfterSettingsChanged();
+        }
+
+        ShowStatus(string.Format(Se.Language.Main.SubtitleGridFormattingX, newModeName));
+    }
+
     [RelayCommand]
     private void DuplicateSelectedLines()
     {
