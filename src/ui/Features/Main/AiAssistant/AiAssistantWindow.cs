@@ -6,6 +6,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -184,9 +185,7 @@ public class AiAssistantWindow : Window
             AcceptsReturn = true,
             TextWrapping = TextWrapping.Wrap,
             BorderThickness = new Thickness(0),
-            // The Fluent flyout presenter caps its width at 456 (FlyoutThemeMaxWidth);
-            // stay under that including padding or the text gets clipped on the right.
-            Width = 420,
+            Width = 620,
             MaxHeight = 340,
         }.WithAccessibleName(l.ShowReasoning);
         thinkBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.ThinkText)));
@@ -195,7 +194,18 @@ public class AiAssistantWindow : Window
             .WithAccessibleName(l.ShowReasoning);
         buttonThink.FontSize = 13;
         buttonThink.Padding = new Thickness(4, 2);
-        buttonThink.Flyout = new Flyout { Content = thinkBox };
+        // The Fluent flyout presenter caps its width at 456 (FlyoutThemeMaxWidth), which
+        // would clip the text box - raise the cap while keeping the default presenter look.
+        Application.Current!.TryFindResource(typeof(FlyoutPresenter), out var presenterDefaultTheme);
+        buttonThink.Flyout = new Flyout
+        {
+            Content = thinkBox,
+            FlyoutPresenterTheme = new ControlTheme(typeof(FlyoutPresenter))
+            {
+                BasedOn = presenterDefaultTheme as ControlTheme,
+                Setters = { new Setter(MaxWidthProperty, 680d) },
+            },
+        };
         buttonThink.Bind(IsVisibleProperty, new Binding(nameof(vm.HasThink)));
         UiUtil.AttachHoverTooltip(buttonThink, l.ShowReasoning);
 
