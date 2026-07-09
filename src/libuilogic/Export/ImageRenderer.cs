@@ -90,6 +90,18 @@ public static class ImageRenderer
 
         // Split segments into lines
         var lines = SplitIntoSegments(segments);
+
+        // Empty/whitespace-only subtitles draw nothing, so TrimTransparentPixels would
+        // fall back to the full oversized temp canvas below - larger than the video
+        // plane, which makes e.g. BDSup2Sub reject the exported file. Return a tiny
+        // transparent bitmap instead.
+        if (lines.All(line => line.All(segment => string.IsNullOrWhiteSpace(segment.Text))))
+        {
+            var emptyBitmap = new SKBitmap(2, 2);
+            emptyBitmap.Erase(SKColors.Transparent);
+            return emptyBitmap;
+        }
+
         var fontMetrics = regularFont.Metrics;
 
         // Calculate line spacing
