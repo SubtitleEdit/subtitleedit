@@ -14,6 +14,7 @@ public class LanguageAiAssistant
     public string Result { get; set; }
     public string Apply { get; set; }
     public string Hint { get; set; }
+    public string ShowReasoning { get; set; }
 
     public LanguageAiAssistant()
     {
@@ -29,5 +30,6 @@ public class LanguageAiAssistant
         Result = "Suggestion";
         Apply = "Apply to line";
         Hint = "AI assistant for this line";
+        ShowReasoning = "Show the model's reasoning";
     }
 }

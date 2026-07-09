@@ -178,7 +178,27 @@ public class AiAssistantWindow : Window
         questionRow.Add(askButton, 0, 1);
 
         // ---------- result ----------
+        var thinkBox = new TextBox
+        {
+            IsReadOnly = true,
+            AcceptsReturn = true,
+            TextWrapping = TextWrapping.Wrap,
+            BorderThickness = new Thickness(0),
+            Width = 520,
+            MaxHeight = 340,
+        }.WithAccessibleName(l.ShowReasoning);
+        thinkBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.ThinkText)));
+        var buttonThink = UiUtil.MakeButton(null, "mdi-information-outline")
+            .Compact()
+            .WithAccessibleName(l.ShowReasoning);
+        buttonThink.FontSize = 13;
+        buttonThink.Padding = new Thickness(4, 2);
+        buttonThink.Flyout = new Flyout { Content = thinkBox };
+        buttonThink.Bind(IsVisibleProperty, new Binding(nameof(vm.HasThink)));
+        UiUtil.AttachHoverTooltip(buttonThink, l.ShowReasoning);
+
         var resultLabel = MakeSectionLabel("mdi-robot-outline", l.Result);
+        resultLabel.Children.Add(buttonThink);
         var resultBox = new TextBox
         {
             AcceptsReturn = true,

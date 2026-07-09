@@ -33,6 +33,8 @@ public partial class AiAssistantViewModel : ObservableObject
     [ObservableProperty] private bool _isBusy;
     [ObservableProperty] private bool _isNotBusy = true;
     [ObservableProperty] private bool _hasResult;
+    [ObservableProperty] private string _thinkText = string.Empty;
+    [ObservableProperty] private bool _hasThink;
     [ObservableProperty] private string _languageDisplay;
     [ObservableProperty] private bool _hasLanguage;
     [ObservableProperty] private ObservableCollection<string> _engines;
@@ -127,6 +129,11 @@ public partial class AiAssistantViewModel : ObservableObject
     partial void OnLanguageDisplayChanged(string value)
     {
         HasLanguage = !string.IsNullOrEmpty(value);
+    }
+
+    partial void OnThinkTextChanged(string value)
+    {
+        HasThink = !string.IsNullOrWhiteSpace(value);
     }
 
     private void UpdateEngineVisibility()
@@ -243,6 +250,7 @@ public partial class AiAssistantViewModel : ObservableObject
             IsBusy = true;
             StatusText = SelectedEngine + "...";
             ResultText = string.Empty;
+            ThinkText = string.Empty;
 
             if (SelectedEngine == SeAiReview.EngineOpenAiCompatible)
             {
@@ -283,7 +291,8 @@ public partial class AiAssistantViewModel : ObservableObject
             using var client = new AiReviewClient();
             var reply = await client.ChatAsync(url, model, systemPrompt, userContent,
                 _cancellationTokenSource.Token, apiKey, preferJsonObject: false);
-            ResultText = CleanReply(reply);
+            ResultText = CleanReply(reply, out var thinkText);
+            ThinkText = thinkText;
         }
         catch (OperationCanceledException)
         {
@@ -302,8 +311,9 @@ public partial class AiAssistantViewModel : ObservableObject
         }
     }
 
-    private static string CleanReply(string reply)
+    private static string CleanReply(string reply, out string thinkText)
     {
+        thinkText = string.Empty;
         if (string.IsNullOrWhiteSpace(reply))
         {
             return string.Empty;
@@ -313,16 +323,19 @@ public partial class AiAssistantViewModel : ObservableObject
 
         // Reasoning models (DeepSeek R1, Qwen3, ...) may emit their chain of thought in a
         // <think>...</think> block before the answer - some chat templates even swallow the
-        // opening tag, so key off the closing tag and keep only what follows it.
+        // opening tag, so key off the closing tag and keep only what follows it. The
+        // reasoning is kept so the UI can offer it behind an info button.
         var endThink = text.LastIndexOf("</think>", StringComparison.OrdinalIgnoreCase);
         if (endThink >= 0)
         {
+            thinkText = StripThinkTags(text[..endThink]);
             text = text[(endThink + "</think>".Length)..].Trim();
         }
         else if (text.StartsWith("<think>", StringComparison.OrdinalIgnoreCase))
         {
             // Unterminated reasoning block - the answer never arrived (e.g. cut off by the
             // token limit), so there is nothing usable to show.
+            thinkText = StripThinkTags(text);
             return string.Empty;
         }
 
@@ -361,6 +374,14 @@ public partial class AiAssistantViewModel : ObservableObject
         }
 
         return text;
+    }
+
+    private static string StripThinkTags(string text)
+    {
+        return text
+            .Replace("<think>", string.Empty, StringComparison.OrdinalIgnoreCase)
+            .Replace("</think>", string.Empty, StringComparison.OrdinalIgnoreCase)
+            .Trim();
     }
 
     private static string? TryExtractJsonString(string text)
