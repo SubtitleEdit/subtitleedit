@@ -81,6 +81,7 @@ public class SeAppearance
     public bool TextBoxShowButtonItalic { get; set; }
     public bool TextBoxShowButtonColor { get; set; }
     public bool TextBoxShowButtonRemoveFormatting { get; set; }
+    public bool TextBoxShowButtonAiAssistant { get; set; }
 
     public SeAppearance()
     {
@@ -145,5 +146,6 @@ public class SeAppearance
         TextBoxShowButtonItalic = true;
         TextBoxShowButtonColor = false;
         TextBoxShowButtonRemoveFormatting = false;
+        TextBoxShowButtonAiAssistant = true;
     }
 }

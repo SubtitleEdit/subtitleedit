@@ -1610,6 +1610,16 @@ public static partial class InitListViewAndEditBox
             buttonPanel.Children.Add(removeFormattingButton);
         }
 
+        if (Se.Settings.Appearance.TextBoxShowButtonAiAssistant)
+        {
+            var aiAssistantButton = UiUtil.MakeButton(vm.ShowAiAssistantCommand, IconNames.Robot);
+            if (Se.Settings.Appearance.ShowHints)
+            {
+                ToolTip.SetTip(aiAssistantButton, Se.Language.Tools.AiAssistant.Hint);
+            }
+            buttonPanel.Children.Add(aiAssistantButton);
+        }
+
         textEditGrid.Add(buttonPanel, 1, 2);
 
         Grid.SetColumn(textEditGrid, 1);

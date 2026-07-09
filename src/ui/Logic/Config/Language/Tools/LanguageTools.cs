@@ -3,6 +3,7 @@
 public class LanguageTools
 {
     public LanguageAiReview AiReview { get; set; } = new();
+    public LanguageAiAssistant AiAssistant { get; set; } = new();
     public LanguageFixCommonErrors FixCommonErrors { get; set; } = new();
     public LanguageAdjustDisplayDurations AdjustDurations { get; set; } = new();
     public LanguageApplyDurationLimits ApplyDurationLimits { get; set; } = new();

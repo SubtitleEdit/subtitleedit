@@ -5358,6 +5358,76 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private async Task ShowAiAssistant()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        var current = SelectedSubtitle;
+        if (current == null)
+        {
+            return;
+        }
+
+        var index = SelectedSubtitleIndex ?? Subtitles.IndexOf(current);
+
+        // Give the model the neighbouring lines as read-only context so it can
+        // resolve pronouns, speaker, and tone without changing them.
+        var context = new StringBuilder();
+        var from = Math.Max(0, index - 3);
+        var to = Math.Min(Subtitles.Count - 1, index + 3);
+        for (var i = from; i <= to; i++)
+        {
+            if (i == index)
+            {
+                continue;
+            }
+
+            var text = Subtitles[i].Text;
+            if (!string.IsNullOrWhiteSpace(text))
+            {
+                context.AppendLine(text.Replace(Environment.NewLine, " ").Replace("\n", " "));
+            }
+        }
+
+        var languageName = TwoLetterCodeToLanguageName(
+            LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(GetUpdateSubtitle()));
+
+        var result = await ShowDialogAsync<AiAssistant.AiAssistantWindow, AiAssistant.AiAssistantViewModel>(vm =>
+            vm.Initialize(
+                current.Text,
+                context.ToString().TrimEnd(),
+                languageName,
+                Se.Settings.General.SubtitleMaximumCharactersPerSeconds,
+                Se.Settings.General.SubtitleLineMaximumLength));
+
+        if (result.ApplyPressed && !string.IsNullOrEmpty(result.ResultToApply))
+        {
+            current.Text = result.ResultToApply;
+            SelectAndScrollToRow(index);
+        }
+    }
+
+    private static string? TwoLetterCodeToLanguageName(string? twoLetterCode)
+    {
+        if (string.IsNullOrEmpty(twoLetterCode))
+        {
+            return null;
+        }
+
+        try
+        {
+            return CultureInfo.GetCultureInfo(twoLetterCode).EnglishName;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    [RelayCommand]
     private async Task ShowToolsFixCommonErrors()
     {
         if (Window == null)
