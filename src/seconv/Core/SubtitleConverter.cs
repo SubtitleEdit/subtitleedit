@@ -839,6 +839,12 @@ internal record class ConversionOptions
     /// <summary>Enforce a minimum gap of this many ms between consecutive paragraphs. Null disables.</summary>
     public int? ApplyMinGapMs { get; init; }
     public (int Width, int Height)? Resolution { get; init; }
+
+    /// <summary>
+    /// Styling for text → image output (font, outline, shadow, background box, ...).
+    /// Resolved from defaults + the settings JSON's <c>exportImages</c> section + CLI flags.
+    /// </summary>
+    public ImageExportStyle ImageStyle { get; init; } = new();
     public string? AssaStyleFile { get; init; }
     public int? PacCodePage { get; init; }
     public string? EbuHeaderFile { get; init; }

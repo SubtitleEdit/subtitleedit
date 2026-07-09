@@ -30,7 +30,7 @@ public class ImageOutputTest : IDisposable
 
         """;
 
-    private async Task<ConversionResult> ConvertTo(string format, string outFolderName)
+    private async Task<ConversionResult> ConvertTo(string format, string outFolderName, ImageExportStyle? style = null)
     {
         var input = Path.Combine(_tempRoot, "in.srt");
         await File.WriteAllTextAsync(input, SrtContent);
@@ -45,6 +45,7 @@ public class ImageOutputTest : IDisposable
             OutputFolder = outFolder,
             Overwrite = true,
             Resolution = (1920, 1080),
+            ImageStyle = style ?? new ImageExportStyle(),
         });
     }
 
@@ -123,6 +124,45 @@ public class ImageOutputTest : IDisposable
         Assert.True(result.Success, string.Join("; ", result.Errors));
         var pngs = Directory.GetFiles(Path.Combine(_tempRoot, "tc"), "*.png", SearchOption.AllDirectories);
         Assert.NotEmpty(pngs);
+    }
+
+    [Fact]
+    public async Task ConvertAsync_BdnXmlWithBackgroundBox_RendersOpaqueBox()
+    {
+        // A visible background colour implies a one-box background (Fredrik's v4
+        // "black background" workflow). With the default transparent background the
+        // trimmed bitmap's corner is transparent; with a box it must be the box colour.
+        Assert.True(ImageExportStyle.TryParseColor("#FF000000", out var black));
+        var style = new ImageExportStyle { BackgroundColor = black };
+
+        var result = await ConvertTo("bdnxml", "bdnbox", style);
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+
+        var pngs = Directory.GetFiles(Path.Combine(_tempRoot, "bdnbox"), "*.png", SearchOption.AllDirectories);
+        Assert.Equal(2, pngs.Length);
+
+        using var bitmap = SkiaSharp.SKBitmap.Decode(pngs[0]);
+        var corner = bitmap.GetPixel(0, 0);
+        Assert.Equal(255, corner.Alpha);
+        Assert.Equal(0, corner.Red);
+        Assert.Equal(0, corner.Green);
+        Assert.Equal(0, corner.Blue);
+    }
+
+    [Fact]
+    public async Task ConvertAsync_BdnXmlDefaultStyle_HasTransparentCorner()
+    {
+        var result = await ConvertTo("bdnxml", "bdnplain");
+        Assert.True(result.Success, string.Join("; ", result.Errors));
+
+        var pngs = Directory.GetFiles(Path.Combine(_tempRoot, "bdnplain"), "*.png", SearchOption.AllDirectories);
+        Assert.Equal(2, pngs.Length);
+
+        // Bottom-left corner: the bottom edge of the trimmed bitmap comes from the
+        // comma's descender (mid-string), so the leftmost column is transparent there.
+        // The top-left corner is unsafe to probe — the 'H' outline may touch it.
+        using var bitmap = SkiaSharp.SKBitmap.Decode(pngs[0]);
+        Assert.Equal(0, bitmap.GetPixel(0, bitmap.Height - 1).Alpha);
     }
 
     [Fact]

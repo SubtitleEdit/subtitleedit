@@ -1,6 +1,5 @@
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.UiLogic.Export;
-using SkiaSharp;
 
 namespace SeConv.Core;
 
@@ -121,6 +120,7 @@ internal static class ImageOutputWriter
         var screenWidth = item.ScreenWidth ?? defaultWidth;
         var screenHeight = item.ScreenHeight ?? defaultHeight;
 
+        var style = options.ImageStyle;
         return new ImageParameter
         {
             Index = index,
@@ -128,26 +128,26 @@ internal static class ImageOutputWriter
             Bitmap = item.Bitmap,
             StartTime = item.StartTime.TimeSpan,
             EndTime = item.EndTime.TimeSpan,
-            Alignment = ExportAlignment.BottomCenter,
-            ContentAlignment = ExportContentAlignment.Center,
+            Alignment = style.Alignment,
+            ContentAlignment = style.ContentAlignment,
             // Font/colour fields are still required by the ImageParameter contract even
             // though no rendering happens — handlers read them for metadata in some
-            // formats (e.g. FCP XML). Mirror BuildParameter's defaults.
-            FontName = "Arial",
-            FontSize = 50,
-            FontColor = SKColors.White,
-            IsBold = false,
-            OutlineColor = SKColors.Black,
-            OutlineWidth = 2.5,
-            ShadowColor = SKColors.Black,
-            ShadowWidth = 0,
-            BackgroundColor = SKColors.Transparent,
-            BackgroundCornerRadius = 0,
-            LineSpacingPercent = 100,
+            // formats (e.g. FCP XML). Mirror BuildParameter's resolved style.
+            FontName = style.FontName,
+            FontSize = style.FontSize,
+            FontColor = style.FontColor,
+            IsBold = style.IsBold,
+            OutlineColor = style.OutlineColor,
+            OutlineWidth = style.OutlineWidth,
+            ShadowColor = style.ShadowColor,
+            ShadowWidth = style.ShadowWidth,
+            BackgroundColor = style.BackgroundColor,
+            BackgroundCornerRadius = style.BackgroundCornerRadius,
+            LineSpacingPercent = style.LineSpacingPercent,
             ScreenWidth = screenWidth,
             ScreenHeight = screenHeight,
-            BottomTopMargin = (int)(screenHeight * 0.05),
-            LeftRightMargin = (int)(screenWidth * 0.05),
+            BottomTopMargin = style.BottomTopMargin ?? (int)(screenHeight * 0.05),
+            LeftRightMargin = style.LeftRightMargin ?? (int)(screenWidth * 0.05),
             PaddingLeftRight = 0,
             PaddingTopBottom = 0,
             FramesPerSecond = options.TargetFps ?? options.Fps ?? 25.0,
@@ -160,29 +160,35 @@ internal static class ImageOutputWriter
 
     private static ImageParameter BuildParameter(Paragraph p, int index, int screenWidth, int screenHeight, ConversionOptions options)
     {
+        var style = options.ImageStyle;
         return new ImageParameter
         {
             Index = index,
             Text = p.Text ?? string.Empty,
             StartTime = p.StartTime.TimeSpan,
             EndTime = p.EndTime.TimeSpan,
-            Alignment = ExportAlignment.BottomCenter,
-            ContentAlignment = ExportContentAlignment.Center,
-            FontName = "Arial",
-            FontSize = 50,
-            FontColor = SKColors.White,
-            IsBold = false,
-            OutlineColor = SKColors.Black,
-            OutlineWidth = 2.5,
-            ShadowColor = SKColors.Black,
-            ShadowWidth = 0,
-            BackgroundColor = SKColors.Transparent,
-            BackgroundCornerRadius = 0,
-            LineSpacingPercent = 100,
+            Alignment = style.Alignment,
+            ContentAlignment = style.ContentAlignment,
+            FontName = style.FontName,
+            FontSize = style.FontSize,
+            FontColor = style.FontColor,
+            IsBold = style.IsBold,
+            OutlineColor = style.OutlineColor,
+            OutlineWidth = style.OutlineWidth,
+            ShadowColor = style.ShadowColor,
+            ShadowWidth = style.ShadowWidth,
+            BackgroundColor = style.BackgroundColor,
+            BackgroundCornerRadius = style.BackgroundCornerRadius,
+            BoxType = style.EffectiveBoxType,
+            BoxPaddingLeft = style.BoxPaddingLeft,
+            BoxPaddingRight = style.BoxPaddingRight,
+            BoxPaddingTop = style.BoxPaddingTop,
+            BoxPaddingBottom = style.BoxPaddingBottom,
+            LineSpacingPercent = style.LineSpacingPercent,
             ScreenWidth = screenWidth,
             ScreenHeight = screenHeight,
-            BottomTopMargin = (int)(screenHeight * 0.05),
-            LeftRightMargin = (int)(screenWidth * 0.05),
+            BottomTopMargin = style.BottomTopMargin ?? (int)(screenHeight * 0.05),
+            LeftRightMargin = style.LeftRightMargin ?? (int)(screenWidth * 0.05),
             PaddingLeftRight = 0,
             PaddingTopBottom = 0,
             FramesPerSecond = options.TargetFps ?? options.Fps ?? 25.0,
