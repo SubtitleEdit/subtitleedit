@@ -222,23 +222,32 @@ public partial class BeautifyTimeCodesViewModel : ObservableObject, IDisposable
         ChangeDetail = BuildChangeDetail(o, b);
         ChangeNotes = BuildChangeNotes(o, b);
 
-        // Highlight: AllSelectedParagraphs drives the paint-with-selected-background path.
-        if (AudioVisualizerOriginal != null)
-        {
-            AudioVisualizerOriginal.AllSelectedParagraphs = new List<SubtitleLineViewModel> { o };
-        }
-        if (AudioVisualizerBeautified != null)
-        {
-            AudioVisualizerBeautified.AllSelectedParagraphs = new List<SubtitleLineViewModel> { b };
-        }
-
         // Center both visualizers on the *midpoint* of the (beautified) paragraph
         var midSeconds = (b.StartTime.TotalSeconds + b.EndTime.TotalSeconds) / 2.0;
         CenterVisualizerOn(AudioVisualizerOriginal, midSeconds);
         CenterVisualizerOn(AudioVisualizerBeautified, midSeconds);
 
-        AudioVisualizerOriginal?.InvalidateVisual();
-        AudioVisualizerBeautified?.InvalidateVisual();
+        if (AudioVisualizerOriginal != null)
+        {
+            AudioVisualizerOriginal.SetPosition(
+                AudioVisualizerOriginal.StartPositionSeconds,
+                _originalSubtitles,
+                AudioVisualizerOriginal.CurrentVideoPositionSeconds,
+                idx,
+                new List<SubtitleLineViewModel>());
+            AudioVisualizerOriginal.InvalidateVisual();
+        }
+
+        if (AudioVisualizerBeautified != null)
+        {
+            AudioVisualizerBeautified.SetPosition(
+                AudioVisualizerBeautified.StartPositionSeconds,
+                _beautifiedSubtitles,
+                AudioVisualizerBeautified.CurrentVideoPositionSeconds,
+                idx,
+                new List<SubtitleLineViewModel>());
+            AudioVisualizerBeautified.InvalidateVisual();
+        }
     }
 
     private string BuildChangeDetail(SubtitleLineViewModel original, SubtitleLineViewModel beautified)
