@@ -184,7 +184,9 @@ public class AiAssistantWindow : Window
             AcceptsReturn = true,
             TextWrapping = TextWrapping.Wrap,
             BorderThickness = new Thickness(0),
-            Width = 520,
+            // The Fluent flyout presenter caps its width at 456 (FlyoutThemeMaxWidth);
+            // stay under that including padding or the text gets clipped on the right.
+            Width = 420,
             MaxHeight = 340,
         }.WithAccessibleName(l.ShowReasoning);
         thinkBox.Bind(TextBox.TextProperty, new Binding(nameof(vm.ThinkText)));
