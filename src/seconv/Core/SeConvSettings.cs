@@ -21,6 +21,9 @@ internal sealed class SeConvSettings
     [JsonPropertyName("removeTextForHearingImpaired")]
     public RemoveHiSection? RemoveTextForHearingImpaired { get; set; }
 
+    [JsonPropertyName("exportImages")]
+    public ExportImagesSection? ExportImages { get; set; }
+
     [JsonPropertyName("profiles")]
     public Dictionary<string, SeConvSettings>? Profiles { get; set; }
 
@@ -61,6 +64,25 @@ internal sealed class SeConvSettings
                 throw new InvalidOperationException($"Profile '{profileName}' not found in settings. Available: {available}");
             }
             profile.ApplyBaseSections();
+        }
+    }
+
+    /// <summary>
+    /// Overlays the <c>exportImages</c> section (base first, then the named profile's, if any)
+    /// onto <paramref name="style"/>. Unlike the other sections this does not go through
+    /// libse's Configuration — image rendering is driven by <see cref="ImageExportStyle"/>
+    /// on <c>ConversionOptions</c>. Call after <see cref="ApplyToLibSe"/>, which validates
+    /// the profile name.
+    /// </summary>
+    public void ApplyExportImages(ImageExportStyle style, string? profileName = null)
+    {
+        ExportImages?.ApplyTo(style);
+
+        if (!string.IsNullOrWhiteSpace(profileName) &&
+            Profiles is not null &&
+            Profiles.TryGetValue(profileName, out var profile))
+        {
+            profile.ExportImages?.ApplyTo(style);
         }
     }
 
@@ -163,6 +185,81 @@ internal sealed class SeConvSettings
     {
         public int? MergeShortLinesMaxGap { get; set; }
         public bool? MergeShortLinesOnlyContinuous { get; set; }
+    }
+
+    /// <summary>
+    /// Styling for text → image output (Blu-Ray sup, VobSub, BDN-XML, ...). Colours are
+    /// hex strings (<c>#AARRGGBB</c> / <c>#RRGGBB</c>) or SkiaSharp colour names; enums are
+    /// carried as strings (<c>boxType</c>: none | one-box | box-per-line; <c>alignment</c>:
+    /// e.g. bottom-center; <c>contentAlignment</c>: left | center | right). Following the
+    /// convention above, unparsable values are ignored rather than aborting the load.
+    /// </summary>
+    internal sealed class ExportImagesSection
+    {
+        public string? FontName { get; set; }
+        public float? FontSize { get; set; }
+        public string? FontColor { get; set; }
+        public bool? IsBold { get; set; }
+        public string? OutlineColor { get; set; }
+        public double? OutlineWidth { get; set; }
+        public string? ShadowColor { get; set; }
+        public double? ShadowWidth { get; set; }
+        public string? BackgroundColor { get; set; }
+        public double? BackgroundCornerRadius { get; set; }
+        public string? BoxType { get; set; }
+        public int? BoxPaddingLeft { get; set; }
+        public int? BoxPaddingRight { get; set; }
+        public int? BoxPaddingTop { get; set; }
+        public int? BoxPaddingBottom { get; set; }
+        public int? LineSpacingPercent { get; set; }
+        public string? Alignment { get; set; }
+        public string? ContentAlignment { get; set; }
+        public int? BottomTopMargin { get; set; }
+        public int? LeftRightMargin { get; set; }
+
+        public void ApplyTo(ImageExportStyle style)
+        {
+            if (!string.IsNullOrWhiteSpace(FontName))
+                style.FontName = FontName;
+            if (FontSize.HasValue)
+                style.FontSize = FontSize.Value;
+            if (!string.IsNullOrWhiteSpace(FontColor) && ImageExportStyle.TryParseColor(FontColor, out var fontColor))
+                style.FontColor = fontColor;
+            if (IsBold.HasValue)
+                style.IsBold = IsBold.Value;
+            if (!string.IsNullOrWhiteSpace(OutlineColor) && ImageExportStyle.TryParseColor(OutlineColor, out var outlineColor))
+                style.OutlineColor = outlineColor;
+            if (OutlineWidth.HasValue)
+                style.OutlineWidth = OutlineWidth.Value;
+            if (!string.IsNullOrWhiteSpace(ShadowColor) && ImageExportStyle.TryParseColor(ShadowColor, out var shadowColor))
+                style.ShadowColor = shadowColor;
+            if (ShadowWidth.HasValue)
+                style.ShadowWidth = ShadowWidth.Value;
+            if (!string.IsNullOrWhiteSpace(BackgroundColor) && ImageExportStyle.TryParseColor(BackgroundColor, out var backgroundColor))
+                style.BackgroundColor = backgroundColor;
+            if (BackgroundCornerRadius.HasValue)
+                style.BackgroundCornerRadius = BackgroundCornerRadius.Value;
+            if (!string.IsNullOrWhiteSpace(BoxType) && ImageExportStyle.TryParseBoxType(BoxType, out var boxType))
+                style.BoxType = boxType;
+            if (BoxPaddingLeft.HasValue)
+                style.BoxPaddingLeft = BoxPaddingLeft.Value;
+            if (BoxPaddingRight.HasValue)
+                style.BoxPaddingRight = BoxPaddingRight.Value;
+            if (BoxPaddingTop.HasValue)
+                style.BoxPaddingTop = BoxPaddingTop.Value;
+            if (BoxPaddingBottom.HasValue)
+                style.BoxPaddingBottom = BoxPaddingBottom.Value;
+            if (LineSpacingPercent.HasValue)
+                style.LineSpacingPercent = LineSpacingPercent.Value;
+            if (!string.IsNullOrWhiteSpace(Alignment) && ImageExportStyle.TryParseAlignment(Alignment, out var alignment))
+                style.Alignment = alignment;
+            if (!string.IsNullOrWhiteSpace(ContentAlignment) && ImageExportStyle.TryParseContentAlignment(ContentAlignment, out var contentAlignment))
+                style.ContentAlignment = contentAlignment;
+            if (BottomTopMargin.HasValue)
+                style.BottomTopMargin = BottomTopMargin.Value;
+            if (LeftRightMargin.HasValue)
+                style.LeftRightMargin = LeftRightMargin.Value;
+        }
     }
 
     internal sealed class RemoveHiSection

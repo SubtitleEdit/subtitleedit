@@ -199,6 +199,78 @@ public class SeConvSettingsTest : IDisposable
     }
 
     [Fact]
+    public void ApplyExportImages_OverridesOnlySetKeys()
+    {
+        var path = WriteSettings("""
+            {
+              "exportImages": {
+                "fontName": "Verdana",
+                "fontSize": 42,
+                "backgroundColor": "#B4000000",
+                "boxType": "box-per-line",
+                "isBold": true
+              }
+            }
+            """);
+
+        var style = new SeConv.Core.ImageExportStyle();
+        SeConvSettings.Load(path).ApplyExportImages(style);
+
+        Assert.Equal("Verdana", style.FontName);
+        Assert.Equal(42, style.FontSize);
+        Assert.Equal(180, style.BackgroundColor.Alpha);
+        Assert.Equal(0, style.BackgroundColor.Red);
+        Assert.Equal(Nikse.SubtitleEdit.UiLogic.Export.ExportBoxType.BoxPerLine, style.BoxType);
+        Assert.True(style.IsBold);
+        // Untouched keys keep their defaults
+        Assert.Equal(SkiaSharp.SKColors.White, style.FontColor);
+        Assert.Equal(2.5, style.OutlineWidth);
+        Assert.Null(style.BottomTopMargin);
+    }
+
+    [Fact]
+    public void ApplyExportImages_ProfileOverlaysOnTopOfBase()
+    {
+        var path = WriteSettings("""
+            {
+              "exportImages": { "fontSize": 40, "fontName": "Verdana" },
+              "profiles": {
+                "uhd": { "exportImages": { "fontSize": 80 } }
+              }
+            }
+            """);
+
+        var style = new SeConv.Core.ImageExportStyle();
+        SeConvSettings.Load(path).ApplyExportImages(style, "uhd");
+
+        Assert.Equal(80, style.FontSize);       // profile overrode
+        Assert.Equal("Verdana", style.FontName); // base preserved
+    }
+
+    [Fact]
+    public void ApplyExportImages_BadValuesAreIgnored()
+    {
+        var path = WriteSettings("""
+            {
+              "exportImages": {
+                "fontColor": "notacolor",
+                "boxType": "roundish",
+                "alignment": "somewhere",
+                "fontSize": 30
+              }
+            }
+            """);
+
+        var style = new SeConv.Core.ImageExportStyle();
+        SeConvSettings.Load(path).ApplyExportImages(style);
+
+        Assert.Equal(SkiaSharp.SKColors.White, style.FontColor);
+        Assert.Null(style.BoxType);
+        Assert.Equal(Nikse.SubtitleEdit.UiLogic.Export.ExportAlignment.BottomCenter, style.Alignment);
+        Assert.Equal(30, style.FontSize);
+    }
+
+    [Fact]
     public void Load_AllowsCommentsAndTrailingCommas()
     {
         var path = WriteSettings("""

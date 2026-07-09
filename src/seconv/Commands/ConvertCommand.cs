@@ -164,6 +164,76 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Target frame rate")]
         public double? TargetFps { get; init; }
 
+        // Image output styling (Blu-Ray sup, VobSub, BDN-XML, ...). Flags override the
+        // settings JSON's exportImages section, which overrides the built-in defaults.
+        [CommandOption("--font-name|--fontname")]
+        [Description("Image output: font family name (default: Arial)")]
+        public string? FontName { get; init; }
+
+        [CommandOption("--font-size|--fontsize")]
+        [Description("Image output: font size in points (default: 50)")]
+        public float? FontSize { get; init; }
+
+        [CommandOption("--font-color|--fontcolor")]
+        [Description("Image output: text colour as hex (#AARRGGBB/#RRGGBB) or name (default: white)")]
+        public string? FontColor { get; init; }
+
+        [CommandOption("--font-bold|--fontbold")]
+        [Description("Image output: render text bold")]
+        public bool FontBold { get; init; }
+
+        [CommandOption("--outline-color|--outlinecolor")]
+        [Description("Image output: outline colour (default: black)")]
+        public string? OutlineColor { get; init; }
+
+        [CommandOption("--outline-width|--outlinewidth")]
+        [Description("Image output: outline width in pixels (default: 2.5; 0 disables)")]
+        public double? OutlineWidth { get; init; }
+
+        [CommandOption("--shadow-color|--shadowcolor")]
+        [Description("Image output: shadow colour (default: black)")]
+        public string? ShadowColor { get; init; }
+
+        [CommandOption("--shadow-width|--shadowwidth")]
+        [Description("Image output: shadow width in pixels (default: 0 = off)")]
+        public double? ShadowWidth { get; init; }
+
+        [CommandOption("--background-color|--backgroundcolor")]
+        [Description("Image output: background box colour, e.g. black or #B4000000 (semi-transparent black). Implies --box-type:one-box unless --box-type is given")]
+        public string? BackgroundColor { get; init; }
+
+        [CommandOption("--background-corner-radius|--backgroundcornerradius")]
+        [Description("Image output: corner radius of the background box (default: 0)")]
+        public double? BackgroundCornerRadius { get; init; }
+
+        [CommandOption("--box-type|--boxtype")]
+        [Description("Image output: background box style: none | one-box | box-per-line")]
+        public string? BoxType { get; init; }
+
+        [CommandOption("--box-padding|--boxpadding")]
+        [Description("Image output: box padding in pixels; one value for all sides or left,right,top,bottom (default: 5,5,3,3)")]
+        public string? BoxPadding { get; init; }
+
+        [CommandOption("--line-spacing|--linespacing")]
+        [Description("Image output: extra gap between lines as percent of line height (default: 0)")]
+        public int? LineSpacing { get; init; }
+
+        [CommandOption("--alignment")]
+        [Description("Image output: screen position, e.g. bottom-center (default), top-left, middle-right")]
+        public string? Alignment { get; init; }
+
+        [CommandOption("--content-alignment|--contentalignment")]
+        [Description("Image output: multi-line text justification: left | center (default) | right")]
+        public string? ContentAlignment { get; init; }
+
+        [CommandOption("--bottom-top-margin|--bottomtopmargin")]
+        [Description("Image output: vertical screen-edge margin in pixels (default: 5% of height)")]
+        public int? BottomTopMargin { get; init; }
+
+        [CommandOption("--left-right-margin|--leftrightmargin")]
+        [Description("Image output: horizontal screen-edge margin in pixels (default: 5% of width)")]
+        public int? LeftRightMargin { get; init; }
+
         [CommandOption("--teletext-only|--teletextonly")]
         [Description("Teletext only")]
         public bool TeletextOnly { get; init; }
@@ -332,11 +402,14 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
 
             // Load --settings:path.json overrides into libse Configuration before any conversion.
             // --profile <name> selects a named overlay from the same file.
+            var imageStyle = new ImageExportStyle();
             if (!string.IsNullOrWhiteSpace(settings.SettingsPath))
             {
                 try
                 {
-                    SeConvSettings.Load(settings.SettingsPath).ApplyToLibSe(settings.Profile);
+                    var seConvSettings = SeConvSettings.Load(settings.SettingsPath);
+                    seConvSettings.ApplyToLibSe(settings.Profile);
+                    seConvSettings.ApplyExportImages(imageStyle, settings.Profile);
                 }
                 catch (Exception ex)
                 {
@@ -347,6 +420,15 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             else if (!string.IsNullOrWhiteSpace(settings.Profile))
             {
                 AnsiConsole.MarkupLine("[red]Error: --profile requires --settings:<path.json>[/]");
+                return 1;
+            }
+
+            // Image styling flags override the settings JSON. Unlike the JSON (which
+            // tolerates typos), a bad flag value fails fast so the user notices.
+            var imageStyleError = ApplyImageStyleFlags(settings, imageStyle);
+            if (imageStyleError != null)
+            {
+                AnsiConsole.MarkupLineInterpolated($"[red]Error: {imageStyleError}[/]");
                 return 1;
             }
 
@@ -480,6 +562,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 BridgeGapsMaxMs = settings.BridgeGaps,
                 ApplyMinGapMs = settings.ApplyMinGap,
                 Resolution = resolution,
+                ImageStyle = imageStyle,
                 AssaStyleFile = settings.AssaStyleFile,
                 PacCodePage = pacCodePage,
                 EbuHeaderFile = settings.EbuHeaderFile,
@@ -645,6 +728,161 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             errors = result.Errors,
         };
         Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(payload, JsonOptions));
+    }
+
+    /// <summary>
+    /// Applies the image-styling CLI flags on top of <paramref name="style"/>.
+    /// Returns an error message on an unparsable value, null on success.
+    /// </summary>
+    private static string? ApplyImageStyleFlags(Settings settings, ImageExportStyle style)
+    {
+        if (!string.IsNullOrWhiteSpace(settings.FontName))
+        {
+            style.FontName = settings.FontName;
+        }
+
+        if (settings.FontSize.HasValue)
+        {
+            if (settings.FontSize.Value <= 0)
+            {
+                return $"--font-size must be greater than 0 (got {settings.FontSize.Value}).";
+            }
+            style.FontSize = settings.FontSize.Value;
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.FontColor))
+        {
+            if (!ImageExportStyle.TryParseColor(settings.FontColor, out var fontColor))
+            {
+                return $"Unknown colour '{settings.FontColor}' for --font-color. Use hex (#AARRGGBB/#RRGGBB) or a colour name like white.";
+            }
+            style.FontColor = fontColor;
+        }
+
+        if (settings.FontBold)
+        {
+            style.IsBold = true;
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.OutlineColor))
+        {
+            if (!ImageExportStyle.TryParseColor(settings.OutlineColor, out var outlineColor))
+            {
+                return $"Unknown colour '{settings.OutlineColor}' for --outline-color.";
+            }
+            style.OutlineColor = outlineColor;
+        }
+
+        if (settings.OutlineWidth.HasValue)
+        {
+            style.OutlineWidth = settings.OutlineWidth.Value;
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.ShadowColor))
+        {
+            if (!ImageExportStyle.TryParseColor(settings.ShadowColor, out var shadowColor))
+            {
+                return $"Unknown colour '{settings.ShadowColor}' for --shadow-color.";
+            }
+            style.ShadowColor = shadowColor;
+        }
+
+        if (settings.ShadowWidth.HasValue)
+        {
+            style.ShadowWidth = settings.ShadowWidth.Value;
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.BackgroundColor))
+        {
+            if (!ImageExportStyle.TryParseColor(settings.BackgroundColor, out var backgroundColor))
+            {
+                return $"Unknown colour '{settings.BackgroundColor}' for --background-color.";
+            }
+            style.BackgroundColor = backgroundColor;
+        }
+
+        if (settings.BackgroundCornerRadius.HasValue)
+        {
+            style.BackgroundCornerRadius = settings.BackgroundCornerRadius.Value;
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.BoxType))
+        {
+            if (!ImageExportStyle.TryParseBoxType(settings.BoxType, out var boxType))
+            {
+                return $"Unknown box type '{settings.BoxType}' for --box-type. Use: none, one-box, or box-per-line.";
+            }
+            style.BoxType = boxType;
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.BoxPadding))
+        {
+            var parts = settings.BoxPadding.Split(',', StringSplitOptions.TrimEntries);
+            var values = new List<int>();
+            foreach (var part in parts)
+            {
+                if (!int.TryParse(part, out var n) || n < 0)
+                {
+                    values.Clear();
+                    break;
+                }
+                values.Add(n);
+            }
+
+            if (values.Count == 1)
+            {
+                style.BoxPaddingLeft = values[0];
+                style.BoxPaddingRight = values[0];
+                style.BoxPaddingTop = values[0];
+                style.BoxPaddingBottom = values[0];
+            }
+            else if (values.Count == 4)
+            {
+                style.BoxPaddingLeft = values[0];
+                style.BoxPaddingRight = values[1];
+                style.BoxPaddingTop = values[2];
+                style.BoxPaddingBottom = values[3];
+            }
+            else
+            {
+                return $"Invalid --box-padding '{settings.BoxPadding}'. Use one value for all sides (e.g. 5) or four: left,right,top,bottom (e.g. 5,5,3,3).";
+            }
+        }
+
+        if (settings.LineSpacing.HasValue)
+        {
+            style.LineSpacingPercent = settings.LineSpacing.Value;
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.Alignment))
+        {
+            if (!ImageExportStyle.TryParseAlignment(settings.Alignment, out var alignment))
+            {
+                return $"Unknown alignment '{settings.Alignment}' for --alignment. Use e.g. bottom-center, top-left, middle-right.";
+            }
+            style.Alignment = alignment;
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.ContentAlignment))
+        {
+            if (!ImageExportStyle.TryParseContentAlignment(settings.ContentAlignment, out var contentAlignment))
+            {
+                return $"Unknown content alignment '{settings.ContentAlignment}' for --content-alignment. Use: left, center, or right.";
+            }
+            style.ContentAlignment = contentAlignment;
+        }
+
+        if (settings.BottomTopMargin.HasValue)
+        {
+            style.BottomTopMargin = settings.BottomTopMargin.Value;
+        }
+
+        if (settings.LeftRightMargin.HasValue)
+        {
+            style.LeftRightMargin = settings.LeftRightMargin.Value;
+        }
+
+        return null;
     }
 
     private static List<int> ParseTrackNumbers(string? csv)

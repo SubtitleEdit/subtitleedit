@@ -778,7 +778,19 @@ internal static class LibSEIntegration
 
         if (!isAssaTarget)
         {
-            AnsiConsole.MarkupLine("[yellow]Warning: --resolution and --assa-style-file only apply to ASSA/SSA targets; ignored.[/]");
+            // --resolution is also meaningful for image-based targets (canvas size,
+            // see ImageOutputWriter) — there only the ASSA style file is ignored.
+            if (ImageOutputWriter.TryCreateHandler(normalizedFormat) != null)
+            {
+                if (!string.IsNullOrEmpty(assaStyleFile))
+                {
+                    AnsiConsole.MarkupLine("[yellow]Warning: --assa-style-file only applies to ASSA/SSA targets; ignored.[/]");
+                }
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[yellow]Warning: --resolution and --assa-style-file only apply to ASSA/SSA targets; ignored.[/]");
+            }
             return;
         }
 

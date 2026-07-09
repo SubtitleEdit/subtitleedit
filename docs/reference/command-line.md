@@ -55,6 +55,7 @@ seconv movie.sup subrip --ocr-engine:ollama --ollama-model:llama3.2-vision
 
 seconv subs.srt bluraysup --resolution:1920x1080                   # render text → Blu-Ray sup
 seconv subs.srt bdnxml --resolution:1920x1080                      # render text → BDN-XML
+seconv subs.srt bluraysup --background-color:"#B4000000"           # ... with a black background box
 
 seconv subs.srt customtext --custom-format:my-template.xml         # custom template
 seconv *.srt subrip --multiple-replace:rules.xml                   # search-and-replace pass
@@ -120,6 +121,40 @@ seconv lint *.srt --json             # CI-friendly: exit 1 on any issue
 | `--plaintext-merge` | Plain text (`txt`) | Merge all subtitles into one space-separated block (no blank lines). Takes precedence over the two options below |
 | `--plaintext-unbreak` | Plain text (`txt`) | Unbreak each subtitle, joining its lines into one |
 | `--plaintext-no-blank-line` | Plain text (`txt`) | Do not put a blank line between subtitles (default keeps it) |
+
+### Image output styling
+
+When rendering a text subtitle to an image-based target (Blu-Ray `sup`, VobSub, BDN-XML, DOST, FCP, D-Cinema, images-with-time-code, WebVTT thumbnails), these options control how the text is drawn. `<i>`, `<b>`, and `<font color=...>` tags in the subtitle text are honored. The same values can be set in a `--settings` JSON file's `exportImages` section (see [Settings JSON](#settings-json)); CLI flags win over the JSON.
+
+| Option | Description |
+|---|---|
+| `--font-name:<name>` | Font family (default: `Arial`) |
+| `--font-size:<pt>` | Font size in points (default: `50`) |
+| `--font-color:<color>` | Text colour (default: `white`) |
+| `--font-bold` | Render text bold |
+| `--outline-color:<color>` | Outline colour (default: `black`) |
+| `--outline-width:<px>` | Outline width (default: `2.5`; `0` disables) |
+| `--shadow-color:<color>` | Shadow colour (default: `black`) |
+| `--shadow-width:<px>` | Shadow width (default: `0` = off) |
+| `--background-color:<color>` | Background box colour, e.g. `black` or `#B4000000` (semi-transparent black). Implies `--box-type:one-box` unless `--box-type` is given |
+| `--background-corner-radius:<px>` | Corner radius of the background box (default: `0`) |
+| `--box-type:<type>` | `none` (default) \| `one-box` \| `box-per-line` |
+| `--box-padding:<px>` | Box padding: one value for all sides, or `left,right,top,bottom` (default: `5,5,3,3`) |
+| `--line-spacing:<percent>` | Extra gap between lines as percent of line height (default: `0`) |
+| `--alignment:<pos>` | Screen position: `bottom-center` (default), `top-left`, `middle-right`, ... |
+| `--content-alignment:<align>` | Multi-line text justification: `left` \| `center` (default) \| `right` |
+| `--bottom-top-margin:<px>` | Vertical screen-edge margin (default: 5% of height) |
+| `--left-right-margin:<px>` | Horizontal screen-edge margin (default: 5% of width) |
+
+Colours accept hex (`#AARRGGBB`, `#RRGGBB`, with or without `#`) or a colour name (`white`, `black`, `yellow`, ...).
+
+```bash
+# SRT → UHD Blu-Ray sup with a semi-transparent black background box (SE4-style)
+seconv movie.srt bluraysup --resolution:3840x2160 --background-color:"#B4000000"
+
+# Custom font, bold, box per line
+seconv movie.srt bluraysup --font-name:Verdana --font-size:60 --font-bold --box-type:box-per-line
+```
 
 ### Containers / tracks
 
@@ -209,7 +244,7 @@ seconv movie.sub subrip --time-codes-only
 |---|---|
 | `--multiple-replace:<path.xml>` | SE *MultipleSearchAndReplaceGroups* XML, applied per paragraph after operations. Supports `Normal` (case-insensitive), `CaseSensitive`, and `RegularExpression` rules |
 | `--custom-format:<path.xml>` | SE *CustomFormatItem* XML (use with `--format customtext`) |
-| `--settings:<path.json>` | JSON file overlaying `Configuration.Settings` (general / tools / removeTextForHearingImpaired). Optional `profiles` map for named overlays |
+| `--settings:<path.json>` | JSON file overlaying `Configuration.Settings` (general / tools / removeTextForHearingImpaired) plus image-output styling (exportImages). Optional `profiles` map for named overlays |
 | `--profile:<name>` | Selects a named overlay from the settings file's `profiles` map. Requires `--settings` |
 
 #### Multiple-replace XML
@@ -287,16 +322,41 @@ Available template tokens: `{title}`, `{number}`, `{start}`, `{end}`, `{duration
     "removeTextBeforeColon": true,
     "removeInterjections": false
   },
+  "exportImages": {
+    "fontName": "Arial",
+    "fontSize": 50,
+    "fontColor": "#FFFFFF",
+    "isBold": false,
+    "outlineColor": "black",
+    "outlineWidth": 2.5,
+    "shadowColor": "black",
+    "shadowWidth": 0,
+    "backgroundColor": "#B4000000",
+    "backgroundCornerRadius": 0,
+    "boxType": "one-box",
+    "boxPaddingLeft": 5,
+    "boxPaddingRight": 5,
+    "boxPaddingTop": 3,
+    "boxPaddingBottom": 3,
+    "lineSpacingPercent": 0,
+    "alignment": "bottom-center",
+    "contentAlignment": "center",
+    "bottomTopMargin": 54,
+    "leftRightMargin": 96
+  },
   "profiles": {
     "broadcast": {
       "general": { "subtitleMaximumDisplayMilliseconds": 6000 },
       "removeTextForHearingImpaired": { "removeInterjections": true }
+    },
+    "uhd": {
+      "exportImages": { "fontSize": 100 }
     }
   }
 }
 ```
 
-The `general` section mirrors `Configuration.Settings.General`; any key left out keeps the libse default. The profile-shaping values (`minimumMillisecondsBetweenLines`, `maxNumberOfLines`, `mergeLinesShorterThan`, `subtitleMaximumCharactersPerSeconds`, `subtitleOptimalCharactersPerSeconds`, `subtitleMaximumWordsPerMinute`, `dialogStyle`, `continuationStyle`) feed Fix common errors and the split/merge operations, so set them to reproduce an SE4 profile. `dialogStyle` and `continuationStyle` take the enum names (case-insensitive): `dialogStyle` ∈ `DashBothLinesWithSpace`, `DashBothLinesWithoutSpace`, `DashSecondLineWithSpace`, `DashSecondLineWithoutSpace`; `continuationStyle` ∈ `None`, `NoneTrailingDots`, `NoneTrailingEllipsis`, `OnlyTrailingDots`, `LeadingTrailingDots`, `LeadingTrailingEllipsis`, `LeadingTrailingDash`, … (see the Fix common errors continuation styles).
+The `exportImages` section styles text → image rendering (see [Image output styling](#image-output-styling) for the semantics); the equivalent CLI flags override it. The `general` section mirrors `Configuration.Settings.General`; any key left out keeps the libse default. The profile-shaping values (`minimumMillisecondsBetweenLines`, `maxNumberOfLines`, `mergeLinesShorterThan`, `subtitleMaximumCharactersPerSeconds`, `subtitleOptimalCharactersPerSeconds`, `subtitleMaximumWordsPerMinute`, `dialogStyle`, `continuationStyle`) feed Fix common errors and the split/merge operations, so set them to reproduce an SE4 profile. `dialogStyle` and `continuationStyle` take the enum names (case-insensitive): `dialogStyle` ∈ `DashBothLinesWithSpace`, `DashBothLinesWithoutSpace`, `DashSecondLineWithSpace`, `DashSecondLineWithoutSpace`; `continuationStyle` ∈ `None`, `NoneTrailingDots`, `NoneTrailingEllipsis`, `OnlyTrailingDots`, `LeadingTrailingDots`, `LeadingTrailingEllipsis`, `LeadingTrailingDash`, … (see the Fix common errors continuation styles).
 
 ```bash
 seconv *.srt subrip --settings:my.json --profile:broadcast --remove-text-for-hi
@@ -427,6 +487,16 @@ seconv subs.sup subrip \
 ```bash
 seconv subs.srt bluraysup --resolution:1920x1080 --overwrite
 seconv subs.srt bdnxml --overwrite
+```
+
+### Styled Blu-Ray sup (SE4 `/convert` parity)
+```bash
+# SE4: SubtitleEdit.exe /convert movie.srt blu-raysup /Resolution:3840x2160 (+ styling from Settings.xml)
+seconv movie.srt bluraysup \
+  --resolution:3840x2160 \
+  --font-name:Arial --font-size:100 \
+  --background-color:"#B4000000" \
+  --overwrite
 ```
 
 ### EBU STL with reused header
