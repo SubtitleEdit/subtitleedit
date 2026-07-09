@@ -1,6 +1,27 @@
 
 Subtitle Edit Changelog
 
+v5.1.0-beta13 (9th of July 2026)
+
+* Add an AI assistant button to the subtitle text box - quick actions (fix spelling/grammar, rephrase to fit reading speed, change tone) plus a free question box for the current line - thx muaz978
+* OCR: add histogram-based colour isolation for VobSub/DVD subtitles - rebuilds each subpicture as crisp black-on-white for better recognition (also in the command line tool; disable via --no-vobsub-isolate-colors) - thx tekk42
+* Restore the last editing position when reopening a subtitle file - thx hisui3393
+* Command line (seconv): image output styling for Blu-ray sup/VobSub/BDN-XML etc. - new options (--font-name, --font-size, --font-color, --background-color, --box-type, ...) and an "exportImages" settings-JSON section (Subtitle Edit 4 parity) - thx Fredrik
+* Command line (seconv): fix double line spacing in image-based output, and do not warn that --resolution is ignored for image targets (it sets the canvas size)
+* MLX Whisper (macOS): forward advanced command line options (e.g. --condition-on-previous-text False), process long files in windows without VAD, and add a parameter reference to the advanced box - thx muaz978, asiaminor77
+* Fix exported Blu-ray sup being rejected by BDSup2Sub ("Subpicture too large") when a subtitle line was empty - thx Victory61
+* Beautify time codes: fix subtitle blocks missing from the change preview waveform - thx pdjdev
+* Right-to-left: do not mirror the video and waveform - thx muaz978
+* Add Arabic UI translation - thx muaz978
+* Update Japanese translation
+* Update Korean translation - thx 12si27
+* Update Italian translation - thx bovirus
+* Update Russian translation - thx jekovcar
+* Update Bulgarian translation - thx jekovcar
+* Update Danish and Swedish translations (machine-translation cleanup + missing strings)
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-beta12 (8th of July 2026)
 
 * macOS: add multi-window support - "File -> New window" opens an independent editor window, with a per-window menu bar and Dock integration - thx muaz978
