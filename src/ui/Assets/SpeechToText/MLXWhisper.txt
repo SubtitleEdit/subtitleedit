@@ -17,6 +17,28 @@ downloaded automatically on first use.
 Tip: large-v3-turbo is multilingual and the best speed/quality pick.
 
 Advanced
-The "command line parameters" box is passed through to the helper script. You can
-also type a full Hugging Face repo id as the model (anything containing "/") to use
-a custom MLX Whisper model.
+The "command line parameters" box forwards any recognized mlx-whisper transcribe
+option to the decoder. The option name is matched against the installed
+mlx-whisper version, so unsupported options are reported rather than silently
+dropped, and the value is coerced to the right type automatically.
+
+Useful options:
+  --condition-on-previous-text False   turn off conditioning; the standard
+                                       mitigation for repetition loops and
+                                       hallucinated credit lines on long files
+  --temperature 0                      disable the temperature fallback
+  --no-speech-threshold 0.6            silence sensitivity
+  --logprob-threshold -1.0             confidence threshold for the fallback
+  --compression-ratio-threshold 2.4    repetition detector threshold
+
+The helper also has its own options, for example --beam-size 5 for beam search.
+Options that Subtitle Edit already controls (language, task, word timestamps, the
+initial prompt) are ignored if typed here.
+
+You can also type a full Hugging Face repo id as the model (anything containing
+"/") to use a custom MLX Whisper model.
+
+Progress
+When the optional VAD (faster-whisper) is not installed, long files are decoded
+in fixed windows so the console keeps showing progress instead of nothing for a
+long time, and repetition loops cannot spread across the whole recording.
