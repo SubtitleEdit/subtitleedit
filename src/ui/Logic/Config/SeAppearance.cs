@@ -143,7 +143,7 @@ public class SeAppearance
 
         TextBoxShowButtonAutoBreak = true;
         TextBoxShowButtonUnbreak = true;
-        TextBoxShowButtonItalic = true;
+        TextBoxShowButtonItalic = false;
         TextBoxShowButtonColor = false;
         TextBoxShowButtonRemoveFormatting = false;
         TextBoxShowButtonAiAssistant = true;
