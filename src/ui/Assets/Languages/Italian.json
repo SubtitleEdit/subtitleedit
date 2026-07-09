@@ -1,6 +1,6 @@
 {
   "Title": "SubtitleEdit",
-  "Version": "v. 5.1.0 beta11",
+  "Version": "v. 5.1.0 beta12",
   "TranslatedBy": "v. 09.07.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
@@ -1386,7 +1386,22 @@
       "LineX": "Riga {0}",
       "LinesXToY": "Righe {0}-{1}",
       "LargeChangeWarning": "Grandi cambiamenti: sembra una riscrittura, rivedi attentamente",
-      "EngineError": "Impossibile raggiungere il motore IA: {0}"
+      "EngineError": "Impossibile raggiungere il motore IA: {0}",
+      "SetupHint": "Scegli prima un motore e un modello in Strumenti -> Revisione AI."
+    },
+    "AiAssistant": {
+      "Title": "Assistente IA",
+      "CurrentLine": "Riga attuale",
+      "ContextLines": "Contesto (righe prima e dopo)",
+      "FixErrors": "Correggi errori",
+      "FitReadingSpeed": "Adatta alla velocità di lettura",
+      "MakeFormal": "Più formale",
+      "MakeInformal": "Più casual",
+      "AskPlaceholder": "Chiedi informazioni su questa riga o chiedi una modifica...",
+      "Ask": "Chiedi",
+      "Result": "Suggerimento",
+      "Apply": "Applicare alla riga",
+      "Hint": "Assistente IA per questa riga"
     },
     "FixCommonErrors": {
       "Title": "Correggi errori comuni",
@@ -2637,6 +2652,7 @@
       "TextBoxButtonShowItalic": "Casella testo: visualizza pulsante 'Corsivo'",
       "TextBoxButtonShowColor": "Casella testo: visualizza pulsante 'Colore'",
       "TextBoxButtonShowRemoveFormatting": "Casella testo: visualizza pulsante 'Rimuovi formattazione'",
+      "TextBoxButtonShowAiAssistant": "Casella di testo: visualizza il pulsante 'Assistente IA'",
       "WaveformSingleClickAction": "Azione clic singolo sulla forma d'onda",
       "WaveformDoubleClickAction": "Azione doppio clic sulla forma d'onda (dopo l'azione con clic singolo)",
       "AllSettings": "Tutte le impostazioni",
@@ -3105,6 +3121,8 @@
     "VobSubColorEmphasis1": "Enfasi 1",
     "VobSubColorEmphasis2": "Enfasi 2",
     "VobSubColorsInvert": "Inverti sfondo/enfasi 1",
+    "VobSubIsolateColors": "Isola i colori VobSub per l'OCR",
+    "VobSubIsolateColorsHint": "Ricostruisci prima dell'OCR ogni immagine VobSub come nitida in bianco e nero mantenendo il colore più frequente (testo) ed eliminando i colori di contorno/anti-alias.\r\nMigliora il riconoscimento nei dischi in cui i contorni grigi uniscono insieme i caratteri.",
     "LlamaCppOcrSettingsTitle": "impostazioni OCR llama.cpp",
     "LlamaCppOcrPromptHint": "Usare {lingua} per inserire la lingua OCR selezionata.",
     "LlamaCppOcrPromptEmpty": "Il prompt non può essere vuoto.",
