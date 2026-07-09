@@ -73,6 +73,7 @@ internal class IconNames
     public const string Next = "mdi-chevron-right";
     public const string Ocr = "mdi-ocr";
     public const string Palette = "mdi-palette";
+    public const string Robot = "mdi-robot";
     public const string PanRight = "mdi-pan-right";
     public const string Pause = "mdi-pause";
     public const string PauseCircle = "mdi-pause-circle";

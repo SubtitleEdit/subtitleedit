@@ -316,6 +316,7 @@ public class LanguageSettings
     public string TextBoxButtonShowItalic { get; set; }
     public string TextBoxButtonShowColor { get; set; }
     public string TextBoxButtonShowRemoveFormatting { get; set; }
+    public string TextBoxButtonShowAiAssistant { get; set; }
     public string WaveformSingleClickAction { get; set; }
     public string WaveformDoubleClickAction { get; set; }
     public string AllSettings { get; set; }
@@ -644,6 +645,7 @@ public class LanguageSettings
         TextBoxButtonShowItalic = "Text box: show italic button";
         TextBoxButtonShowColor = "Text box: show color button";
         TextBoxButtonShowRemoveFormatting = "Text box: show remove formatting button";
+        TextBoxButtonShowAiAssistant = "Text box: show AI assistant button";
         WaveformSingleClickAction = "Waveform single-click action";
         WaveformDoubleClickAction = "Waveform double-click action (after single-click action)";
         AllSettings = "All settings";

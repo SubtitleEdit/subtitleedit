@@ -26,6 +26,7 @@ public class LanguageAiReview
     public string LinesXToY { get; set; }
     public string LargeChangeWarning { get; set; }
     public string EngineError { get; set; }
+    public string SetupHint { get; set; }
 
     public LanguageAiReview()
     {
@@ -53,5 +54,6 @@ public class LanguageAiReview
         LinesXToY = "Lines {0}-{1}";
         LargeChangeWarning = "Large change - looks like a rewrite, review carefully";
         EngineError = "The AI engine could not be reached: {0}";
+        SetupHint = "Please choose an engine and model in Tools -> AI review first.";
     }
 }
