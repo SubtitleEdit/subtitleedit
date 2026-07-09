@@ -25,13 +25,17 @@ public class AiReviewClient : IDisposable
         _httpClient.Timeout = TimeSpan.FromMinutes(15);
     }
 
-    public async Task<string> ChatAsync(string url, string model, string systemPrompt, string userContent, CancellationToken cancellationToken, string? apiKey = null)
+    public async Task<string> ChatAsync(string url, string model, string systemPrompt, string userContent, CancellationToken cancellationToken, string? apiKey = null, bool preferJsonObject = true)
     {
         Error = string.Empty;
 
-        // First try with enforced JSON output; some servers reject response_format, so retry without.
-        var response = await PostAsync(url, BuildRequestJson(model, systemPrompt, userContent, jsonMode: true), apiKey, cancellationToken);
-        if (!response.ok && !cancellationToken.IsCancellationRequested)
+        // AI review wants a JSON object back; the text box assistant wants the plain
+        // reply, so it passes preferJsonObject: false to avoid a JSON-wrapped answer.
+        // Some servers reject response_format, so a JSON request also retries plain.
+        var response = await PostAsync(url,
+            BuildRequestJson(model, systemPrompt, userContent, jsonMode: preferJsonObject),
+            apiKey, cancellationToken);
+        if (!response.ok && preferJsonObject && !cancellationToken.IsCancellationRequested)
         {
             response = await PostAsync(url, BuildRequestJson(model, systemPrompt, userContent, jsonMode: false), apiKey, cancellationToken);
         }

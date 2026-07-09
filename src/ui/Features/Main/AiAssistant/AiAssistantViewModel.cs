@@ -174,7 +174,7 @@ public partial class AiAssistantViewModel : ObservableObject
             _cancellationTokenSource = new CancellationTokenSource();
             using var client = new AiReviewClient();
             var reply = await client.ChatAsync(url, model, systemPrompt, userContent,
-                _cancellationTokenSource.Token, apiKey);
+                _cancellationTokenSource.Token, apiKey, preferJsonObject: false);
             ResultText = CleanReply(reply);
         }
         catch (Exception e)
@@ -198,6 +198,17 @@ public partial class AiAssistantViewModel : ObservableObject
         }
 
         var text = reply.Trim();
+
+        // A model may still answer with a JSON object (some ignore the plain-text
+        // request); take the first string value out of it.
+        if (text.StartsWith("{", StringComparison.Ordinal))
+        {
+            var fromJson = TryExtractJsonString(text);
+            if (!string.IsNullOrWhiteSpace(fromJson))
+            {
+                text = fromJson.Trim();
+            }
+        }
 
         // Some models wrap the answer in a code fence; strip it.
         if (text.StartsWith("```", StringComparison.Ordinal))
@@ -223,6 +234,36 @@ public partial class AiAssistantViewModel : ObservableObject
         }
 
         return text;
+    }
+
+    private static string? TryExtractJsonString(string text)
+    {
+        try
+        {
+            using var doc = System.Text.Json.JsonDocument.Parse(text);
+            if (doc.RootElement.ValueKind != System.Text.Json.JsonValueKind.Object)
+            {
+                return null;
+            }
+
+            foreach (var property in doc.RootElement.EnumerateObject())
+            {
+                if (property.Value.ValueKind == System.Text.Json.JsonValueKind.String)
+                {
+                    var value = property.Value.GetString();
+                    if (!string.IsNullOrWhiteSpace(value))
+                    {
+                        return value;
+                    }
+                }
+            }
+        }
+        catch
+        {
+            // Not valid JSON; leave the text as it is.
+        }
+
+        return null;
     }
 
     [RelayCommand]
