@@ -577,6 +577,89 @@ def resegment(words, max_chars, max_duration, gap_break=1.0):
     return cues
 
 
+# Options that Subtitle Edit controls through its own fields; the user must not
+# override them through the advanced command line box or decode_piece would get
+# a duplicate keyword and the run would abort.
+_RESERVED_PASSTHROUGH = {
+    "audio", "path_or_hf_repo", "language", "task", "verbose", "word_timestamps",
+    "initial_prompt",
+}
+
+
+def _coerce_option_value(raw, default):
+    """Coerce a command line string to the type of the option's default value."""
+    if isinstance(default, bool):
+        return raw.strip().lower() in ("1", "true", "yes", "on")
+    if isinstance(default, int) and not isinstance(default, bool):
+        try:
+            return int(raw)
+        except ValueError:
+            return float(raw)
+    if isinstance(default, float):
+        return float(raw)
+    if isinstance(default, tuple):
+        parts = [p for p in raw.replace(" ", "").split(",") if p]
+        return tuple(float(p) for p in parts) if parts else default
+    # str, None, or unknown default type: pass the string through unchanged.
+    return raw
+
+
+def parse_passthrough_options(unknown, option_defaults):
+    """Turn leftover ``--key value`` / ``--key`` tokens into mlx_whisper.transcribe kwargs.
+
+    ``option_defaults`` maps a supported option name to its default value (used
+    both to recognise the option and to coerce the value to the right type).
+    Returns (kwargs, unknown_tokens). A recognised option with no value is treated
+    as a boolean flag set to True when its default is boolean.
+    """
+    kwargs = {}
+    leftovers = []
+    i = 0
+    n = len(unknown)
+    while i < n:
+        token = unknown[i]
+        if not token.startswith("--"):
+            leftovers.append(token)
+            i += 1
+            continue
+
+        name = token[2:]
+        # Support --key=value as well as --key value.
+        inline_value = None
+        if "=" in name:
+            name, inline_value = name.split("=", 1)
+        name = name.replace("-", "_")
+
+        has_following_value = inline_value is not None or (
+            i + 1 < n and not unknown[i + 1].startswith("--"))
+
+        if name in _RESERVED_PASSTHROUGH:
+            leftovers.append(token + " (controlled by Subtitle Edit, ignored)")
+            i += 2 if (inline_value is None and has_following_value) else 1
+            continue
+
+        if name in option_defaults:
+            default = option_defaults[name]
+            if inline_value is not None:
+                kwargs[name] = _coerce_option_value(inline_value, default)
+                i += 1
+            elif has_following_value:
+                kwargs[name] = _coerce_option_value(unknown[i + 1], default)
+                i += 2
+            elif isinstance(default, bool):
+                kwargs[name] = True
+                i += 1
+            else:
+                leftovers.append(token + " (missing value)")
+                i += 1
+            continue
+
+        leftovers.append(token)
+        i += 2 if (inline_value is None and has_following_value) else 1
+
+    return kwargs, leftovers
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="mlx-whisper transcription helper for Subtitle Edit")
@@ -603,9 +686,6 @@ def main():
     parser.add_argument("--raw-segments", action="store_true",
                         help="Write Whisper's raw segments instead of word-timestamp resegmented cues")
     args, unknown = parser.parse_known_args()
-    if unknown:
-        print(f"warning: ignoring unrecognized argument(s): {' '.join(unknown)}",
-              file=sys.stderr, flush=True)
 
     try:
         import mlx_whisper
@@ -672,6 +752,31 @@ def main():
         print(f"note: this mlx-whisper version does not support {name}; {consequence}",
               flush=True)
 
+    # Advanced command line box: forward any recognized mlx_whisper.transcribe
+    # option the user typed (for example --condition-on-previous-text False, a
+    # common mitigation for repetition loops and hallucinated credit lines on long
+    # low-speech files). Options are recognized and type-coerced from the installed
+    # version's own signature and DecodingOptions, so nothing needs to be hard
+    # coded and unsupported options are reported instead of silently dropped.
+    option_defaults = {}
+    if transcribe_params is not None:
+        for _name, _param in inspect.signature(mlx_whisper.transcribe).parameters.items():
+            if _param.default is not inspect.Parameter.empty:
+                option_defaults[_name] = _param.default
+    if option_fields is not None:
+        for _field in dataclasses.fields(DecodingOptions):
+            if _field.name not in option_defaults and _field.default is not dataclasses.MISSING:
+                option_defaults[_field.name] = _field.default
+
+    passthrough_kwargs, leftover_args = parse_passthrough_options(unknown, option_defaults)
+    if leftover_args:
+        print(f"warning: ignoring unrecognized argument(s): {' '.join(leftover_args)}",
+              file=sys.stderr, flush=True)
+    for _key in list(passthrough_kwargs):
+        if not supports_option(_key):
+            note_unsupported(_key, "ignoring it")
+            passthrough_kwargs.pop(_key, None)
+
     use_words = not args.raw_segments
     if use_words and not supports_option("word_timestamps"):
         use_words = False
@@ -705,6 +810,13 @@ def main():
                       file=sys.stderr, flush=True)
         else:
             note_unsupported("beam_size", "decoding greedily")
+
+    # User supplied options override the defaults set above (for example turning
+    # off best_of or condition_on_previous_text).
+    if passthrough_kwargs:
+        transcribe_kwargs.update(passthrough_kwargs)
+        print("Applying advanced options: " +
+              ", ".join(f"{k}={v}" for k, v in passthrough_kwargs.items()), flush=True)
 
     # Whisper drops punctuation on some real-world speech (dialectal Arabic notably)
     # even with sequential decoding, and punctuation drives the sentence-based cue
@@ -810,8 +922,32 @@ def main():
             chunk_text = decode_piece(piece, chunk_start, chunk_prompt or None)
             if chunk_text:
                 previous_tail = chunk_text[-150:]
-    else:
+    elif isinstance(audio_input, str):
+        # A file path was passed straight to mlx-whisper (no in-memory array to
+        # window); decode in one shot.
         decode_piece(audio_input, 0.0, prompt)
+    else:
+        # No VAD available (faster-whisper not installed): decode in fixed windows
+        # so the console shows steady progress instead of nothing for a long file,
+        # and so repetition loops and hallucinations cannot spread across the whole
+        # recording. The previous chunk's tail is carried for context.
+        total_seconds = len(audio_input) / 16000.0
+        window = 120.0
+        window_count = int(total_seconds // window) + (1 if total_seconds % window else 0)
+        print(f"No VAD available; decoding in {max(1, window_count)} window(s) of up to "
+              f"{int(window)}s ({total_seconds / 60.0:.1f} minutes total).", flush=True)
+        previous_tail = ""
+        start = 0.0
+        while start < total_seconds:
+            end = min(start + window, total_seconds)
+            chunk_prompt = prompt or ""
+            if previous_tail:
+                chunk_prompt = (chunk_prompt + " " + previous_tail).strip()
+            piece = audio_input[int(start * 16000):int(end * 16000)]
+            chunk_text = decode_piece(piece, start, chunk_prompt or None)
+            if chunk_text:
+                previous_tail = chunk_text[-150:]
+            start = end
 
     if use_words and words:
         cues = resegment(words, args.max_cue_chars, args.max_cue_duration)
