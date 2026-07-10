@@ -78,7 +78,7 @@ public class CrispAsrParakeet : CrispAsrEngineBase
             new WhisperModel
             {
                 Name = "parakeet-tdt-0.6b-ja-q4_k.gguf",
-                Size = "470 MB",
+                Size = "476 MB",
                 Urls =
                 [
                     "https://huggingface.co/cstr/parakeet-tdt-0.6b-ja-GGUF/resolve/main/parakeet-tdt-0.6b-ja-q4_k.gguf",
@@ -86,8 +86,19 @@ public class CrispAsrParakeet : CrispAsrEngineBase
             },
             new WhisperModel
             {
+                // Upstream's recommended default for ja since CrispASR v0.8.8:
+                // TDT output byte-identical to F16 at roughly half the size.
+                Name = "parakeet-tdt-0.6b-ja-q8_0.gguf",
+                Size = "744 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/parakeet-tdt-0.6b-ja-GGUF/resolve/main/parakeet-tdt-0.6b-ja-q8_0.gguf",
+                ],
+            },
+            new WhisperModel
+            {
                 Name = "parakeet-tdt-0.6b-ja.gguf",
-                Size = "1.24 GB",
+                Size = "1.25 GB",
                 Urls =
                 [
                     "https://huggingface.co/cstr/parakeet-tdt-0.6b-ja-GGUF/resolve/main/parakeet-tdt-0.6b-ja.gguf",
