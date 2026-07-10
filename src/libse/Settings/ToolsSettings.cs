@@ -54,6 +54,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
         public string ChatGptPrompt { get; set; }
         public string ChatGptApiKey { get; set; }
         public string ChatGptModel { get; set; }
+        public string OpenAiCompatibleTranslateUrl { get; set; }
+        public string OpenAiCompatibleTranslatePrompt { get; set; }
+        public string OpenAiCompatibleTranslateApiKey { get; set; }
+        public string OpenAiCompatibleTranslateModel { get; set; }
         public string GroqUrl { get; set; }
         public string GroqPrompt { get; set; }
         public string GroqApiKey { get; set; }
@@ -384,6 +388,10 @@ namespace Nikse.SubtitleEdit.Core.Settings
             ChatGptUrl = "https://api.openai.com/v1/chat/completions";
             ChatGptPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             ChatGptModel = ChatGptTranslate.DefaultModel;
+            OpenAiCompatibleTranslateUrl = "http://localhost:8000/v1/chat/completions";
+            OpenAiCompatibleTranslatePrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
+            OpenAiCompatibleTranslateApiKey = string.Empty;
+            OpenAiCompatibleTranslateModel = string.Empty;
             GroqUrl = "https://api.groq.com/openai/v1/chat/completions";
             GroqPrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
             GroqModel = GroqTranslate.Models[0];

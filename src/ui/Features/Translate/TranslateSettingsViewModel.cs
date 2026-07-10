@@ -51,6 +51,7 @@ public partial class TranslateSettingsViewModel : ObservableObject
 
         var engineType = AutoTranslator.GetType();
         if (engineType == typeof(ChatGptTranslate) ||
+            engineType == typeof(OpenAiCompatibleTranslate) ||
             engineType == typeof(OllamaTranslate) ||
             engineType == typeof(LmStudioTranslate) ||
             engineType == typeof(AnthropicTranslate) ||
@@ -109,6 +110,11 @@ public partial class TranslateSettingsViewModel : ObservableObject
             {
                 Se.Settings.AutoTranslate.ChatGptPrompt = PromptText;
                 Configuration.Settings.Tools.ChatGptPrompt = PromptText;
+            }
+            else if (engineType == typeof(OpenAiCompatibleTranslate))
+            {
+                Se.Settings.AutoTranslate.OpenAiCompatiblePrompt = PromptText;
+                Configuration.Settings.Tools.OpenAiCompatibleTranslatePrompt = PromptText;
             }
             else if (engineType == typeof(OllamaTranslate))
             {
@@ -199,6 +205,14 @@ public partial class TranslateSettingsViewModel : ObservableObject
             if (string.IsNullOrWhiteSpace(PromptText))
             {
                 PromptText = new SeAutoTranslate().ChatGptPrompt;
+            }
+        }
+        else if (engineType == typeof(OpenAiCompatibleTranslate))
+        {
+            PromptText = Se.Settings.AutoTranslate.OpenAiCompatiblePrompt;
+            if (string.IsNullOrWhiteSpace(PromptText))
+            {
+                PromptText = new SeAutoTranslate().OpenAiCompatiblePrompt;
             }
         }
         else if (engineType == typeof(OllamaTranslate))

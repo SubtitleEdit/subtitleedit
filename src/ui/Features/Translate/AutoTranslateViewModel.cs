@@ -144,6 +144,7 @@ public partial class AutoTranslateViewModel : ObservableObject
             new LibreTranslate(),
             new MyMemoryApi(),
             new ChatGptTranslate(),
+            new OpenAiCompatibleTranslate(),
             new LmStudioTranslate(),
             new OllamaTranslate(),
             new LlamaCppTranslate(),
@@ -200,6 +201,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         Configuration.Settings.Tools.ChatGptApiKey = Se.Settings.AutoTranslate.ChatGptApiKey;
         Configuration.Settings.Tools.ChatGptModel = Se.Settings.AutoTranslate.ChatGptModel;
         Configuration.Settings.Tools.ChatGptPrompt = Se.Settings.AutoTranslate.ChatGptPrompt;
+
+        Configuration.Settings.Tools.OpenAiCompatibleTranslateUrl = Se.Settings.AutoTranslate.OpenAiCompatibleUrl;
+        Configuration.Settings.Tools.OpenAiCompatibleTranslateApiKey = Se.Settings.AutoTranslate.OpenAiCompatibleApiKey;
+        Configuration.Settings.Tools.OpenAiCompatibleTranslateModel = Se.Settings.AutoTranslate.OpenAiCompatibleModel;
+        Configuration.Settings.Tools.OpenAiCompatibleTranslatePrompt = Se.Settings.AutoTranslate.OpenAiCompatiblePrompt;
 
         Configuration.Settings.Tools.LmStudioApiUrl = Se.Settings.AutoTranslate.LmStudioApiUrl;
         Configuration.Settings.Tools.LmStudioModel = Se.Settings.AutoTranslate.LmStudioModel;
@@ -328,6 +334,13 @@ public partial class AutoTranslateViewModel : ObservableObject
             Configuration.Settings.Tools.ChatGptModel = apiModel.Trim();
         }
 
+        if (engineType == typeof(OpenAiCompatibleTranslate))
+        {
+            Configuration.Settings.Tools.OpenAiCompatibleTranslateUrl = apiUrl.Trim();
+            Configuration.Settings.Tools.OpenAiCompatibleTranslateApiKey = apiKey.Trim();
+            Configuration.Settings.Tools.OpenAiCompatibleTranslateModel = apiModel.Trim();
+        }
+
         if (engineType == typeof(LmStudioTranslate))
         {
             Configuration.Settings.Tools.LmStudioApiUrl = apiUrl.Trim();
@@ -452,6 +465,11 @@ public partial class AutoTranslateViewModel : ObservableObject
         Se.Settings.AutoTranslate.ChatGptApiKey = Configuration.Settings.Tools.ChatGptApiKey;
         Se.Settings.AutoTranslate.ChatGptModel = Configuration.Settings.Tools.ChatGptModel;
         Se.Settings.AutoTranslate.ChatGptPrompt = Configuration.Settings.Tools.ChatGptPrompt;
+
+        Se.Settings.AutoTranslate.OpenAiCompatibleUrl = Configuration.Settings.Tools.OpenAiCompatibleTranslateUrl;
+        Se.Settings.AutoTranslate.OpenAiCompatibleApiKey = Configuration.Settings.Tools.OpenAiCompatibleTranslateApiKey;
+        Se.Settings.AutoTranslate.OpenAiCompatibleModel = Configuration.Settings.Tools.OpenAiCompatibleTranslateModel;
+        Se.Settings.AutoTranslate.OpenAiCompatiblePrompt = Configuration.Settings.Tools.OpenAiCompatibleTranslatePrompt;
 
         Se.Settings.AutoTranslate.LmStudioApiUrl = Configuration.Settings.Tools.LmStudioApiUrl;
         Se.Settings.AutoTranslate.LmStudioModel = Configuration.Settings.Tools.LmStudioModel;
@@ -1685,6 +1703,31 @@ public partial class AutoTranslateViewModel : ObservableObject
 
             ApiKeyText = Configuration.Settings.Tools.ChatGptApiKey;
             ApiKeyIsVisible = true;
+            return;
+        }
+
+        if (engineType == typeof(OpenAiCompatibleTranslate))
+        {
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.OpenAiCompatibleTranslateUrl))
+            {
+                Configuration.Settings.Tools.OpenAiCompatibleTranslateUrl = "http://localhost:8000/v1/chat/completions";
+            }
+
+            FillUrls(new List<string>
+            {
+                Configuration.Settings.Tools.OpenAiCompatibleTranslateUrl.TrimEnd('/'),
+                "http://localhost:8000/v1/chat/completions",
+                "http://localhost:1234/v1/chat/completions",
+            }.Distinct().ToList());
+
+            ApiKeyText = Configuration.Settings.Tools.OpenAiCompatibleTranslateApiKey;
+            ApiKeyIsVisible = true;
+
+            // No model list to offer - the server decides which models exist, so the
+            // model stays a free-text field (and may be left empty for one-model servers).
+            ModelIsVisible = true;
+            ModelText = Configuration.Settings.Tools.OpenAiCompatibleTranslateModel;
+
             return;
         }
 
