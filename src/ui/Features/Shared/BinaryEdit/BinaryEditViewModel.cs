@@ -51,6 +51,19 @@ public partial class BinaryEditViewModel : ObservableObject
     [ObservableProperty] private bool _isInsertBeforeVisible;
     [ObservableProperty] private bool _isInsertAfterVisible;
     [ObservableProperty] private bool _isToggleForcedVisible;
+    [ObservableProperty] private bool _isPositionMonitorActive;
+    [ObservableProperty] private ObservableCollection<LetterboxRatioItem> _letterboxRatios;
+    [ObservableProperty] private LetterboxRatioItem _selectedLetterboxRatio;
+    [ObservableProperty] private int _letterboxBarHeight;
+    [ObservableProperty] private bool _isLetterboxBarHeightEditable;
+    [ObservableProperty] private bool _showTitleSafeArea;
+    [ObservableProperty] private double _titleSafePercent;
+    [ObservableProperty] private string _positionMonitorSummary;
+    [ObservableProperty] private string _activePictureCountText;
+    [ObservableProperty] private string _topBarCountText;
+    [ObservableProperty] private string _bottomBarCountText;
+    [ObservableProperty] private bool _hasTopBarSubtitles;
+    [ObservableProperty] private bool _hasBottomBarSubtitles;
 
     public IOcrSubtitle? OcrSubtitle { get; set; }
 
@@ -60,6 +73,7 @@ public partial class BinaryEditViewModel : ObservableObject
     public VideoPlayerControl? VideoPlayerControl { get; set; }
     public Image? SubtitleOverlayImage { get; set; }
     public Border? VideoContentBorder { get; set; }
+    public PositionMonitorControl? PositionMonitor { get; set; }
     public bool OkPressed { get; private set; }
     public ObservableCollection<BinarySubtitleItem> Subtitles { get; set; }
 
@@ -91,6 +105,30 @@ public partial class BinaryEditViewModel : ObservableObject
         StatusText = string.Empty;
         CurrentPosition = string.Empty;
         CurrentSize = string.Empty;
+
+        var lang = Se.Language.Tools.ImageBasedEdit;
+        _letterboxRatios = new ObservableCollection<LetterboxRatioItem>
+        {
+            new(lang.LetterboxOff, null, false, "off"),
+            new("1.66:1", 1.66, false, "1.66"),
+            new("1.85:1", 1.85, false, "1.85"),
+            new("2.00:1", 2.00, false, "2.00"),
+            new("2.20:1", 2.20, false, "2.20"),
+            new("2.35:1", 2.35, false, "2.35"),
+            new("2.39:1", 2.39, false, "2.39"),
+            new("2.40:1", 2.40, false, "2.40"),
+            new(lang.LetterboxCustom, null, true, "custom"),
+        };
+        _selectedLetterboxRatio = _letterboxRatios.FirstOrDefault(p => p.SettingsKey == Se.Settings.Tools.BinEditPositionMonitorRatio) ?? _letterboxRatios[0];
+        _letterboxBarHeight = Se.Settings.Tools.BinEditPositionMonitorBarHeight;
+        _isLetterboxBarHeightEditable = _selectedLetterboxRatio.IsCustom;
+        _showTitleSafeArea = Se.Settings.Tools.BinEditPositionMonitorTitleSafeOn;
+        _titleSafePercent = Se.Settings.Tools.BinEditPositionMonitorTitleSafePercent;
+        _isPositionMonitorActive = Se.Settings.Tools.BinEditPositionMonitorActive;
+        _positionMonitorSummary = string.Empty;
+        _activePictureCountText = string.Empty;
+        _topBarCountText = string.Empty;
+        _bottomBarCountText = string.Empty;
     }
 
     public void Initialize(string fileName, IOcrSubtitle? subtitle)
@@ -112,6 +150,8 @@ public partial class BinaryEditViewModel : ObservableObject
             }
             Renumber();
         }
+
+        RefreshPositionMonitor();
     }
 
     public void Initialize(IList<OcrSubtitleItem> ocrSubtitleItems, string sourceFileName = "")
@@ -136,6 +176,7 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         Renumber();
+        RefreshPositionMonitor();
     }
 
     public void RegisterVideoShortcuts()
@@ -156,6 +197,13 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         UpdateOverlayPosition();
+
+        var monitor = PositionMonitor;
+        if (monitor != null)
+        {
+            monitor.SelectedItem = value;
+            monitor.InvalidateVisual();
+        }
     }
 
     private bool IsVideoPlaying()
@@ -177,6 +225,170 @@ public partial class BinaryEditViewModel : ObservableObject
     partial void OnSelectCurrentSubtitleWhilePlayingChanged(bool value)
     {
         Se.Settings.Tools.BinEditSelectCurrentSubtitleWhilePlaying = value;
+    }
+
+    private bool _updatingPositionMonitor;
+    private int _currentLetterboxBarHeight;
+
+    partial void OnIsPositionMonitorActiveChanged(bool value)
+    {
+        Se.Settings.Tools.BinEditPositionMonitorActive = value;
+        RefreshPositionMonitor();
+    }
+
+    partial void OnSelectedLetterboxRatioChanged(LetterboxRatioItem value)
+    {
+        if (value == null)
+        {
+            return;
+        }
+
+        IsLetterboxBarHeightEditable = value.IsCustom;
+        Se.Settings.Tools.BinEditPositionMonitorRatio = value.SettingsKey;
+        RefreshPositionMonitor();
+    }
+
+    partial void OnLetterboxBarHeightChanged(int value)
+    {
+        if (_updatingPositionMonitor)
+        {
+            return;
+        }
+
+        if (SelectedLetterboxRatio is { IsCustom: true })
+        {
+            Se.Settings.Tools.BinEditPositionMonitorBarHeight = value;
+        }
+
+        RefreshPositionMonitor();
+    }
+
+    partial void OnShowTitleSafeAreaChanged(bool value)
+    {
+        Se.Settings.Tools.BinEditPositionMonitorTitleSafeOn = value;
+        RefreshPositionMonitor();
+    }
+
+    partial void OnTitleSafePercentChanged(double value)
+    {
+        Se.Settings.Tools.BinEditPositionMonitorTitleSafePercent = value;
+        RefreshPositionMonitor();
+    }
+
+    public void SelectSubtitleFromPositionMonitor(BinarySubtitleItem item)
+    {
+        var index = Subtitles.IndexOf(item);
+        if (index >= 0)
+        {
+            SelectAndScrollToRow(index);
+        }
+    }
+
+    /// <summary>
+    /// Cycles to the next subtitle in the given zone, starting after the current
+    /// selection - lets the summary chips act as "go to next offender" buttons.
+    /// </summary>
+    public void SelectNextInZone(PositionMonitorZone zone)
+    {
+        if (Subtitles.Count == 0)
+        {
+            return;
+        }
+
+        var startIndex = SelectedSubtitle != null ? Subtitles.IndexOf(SelectedSubtitle) : -1;
+        for (var offset = 1; offset <= Subtitles.Count; offset++)
+        {
+            var index = (startIndex + offset) % Subtitles.Count;
+            var item = Subtitles[index];
+            var h = item.Bitmap?.PixelSize.Height ?? 0;
+            if (PositionMonitorLogic.Classify(item.Y, h, ScreenHeight, _currentLetterboxBarHeight) == zone)
+            {
+                SelectAndScrollToRow(index);
+                return;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Recomputes the letterbox bar height and per-zone counts, updates the summary
+    /// header, and repaints the position map (discussion #12318).
+    /// </summary>
+    public void RefreshPositionMonitor()
+    {
+        if (_updatingPositionMonitor)
+        {
+            return;
+        }
+
+        _updatingPositionMonitor = true;
+        try
+        {
+            var ratio = SelectedLetterboxRatio;
+            int barHeight;
+            if (ratio == null || (!ratio.IsCustom && ratio.Ratio == null))
+            {
+                barHeight = 0; // letterbox off
+            }
+            else if (ratio.IsCustom)
+            {
+                barHeight = Math.Max(0, LetterboxBarHeight);
+            }
+            else
+            {
+                barHeight = PositionMonitorLogic.CalculateBarHeight(ScreenWidth, ScreenHeight, ratio.Ratio!.Value);
+                LetterboxBarHeight = barHeight; // display the computed value in the (read-only) up/down
+            }
+
+            _currentLetterboxBarHeight = barHeight;
+
+            var active = 0;
+            var top = 0;
+            var bottom = 0;
+            foreach (var item in Subtitles)
+            {
+                var h = item.Bitmap?.PixelSize.Height ?? 0;
+                switch (PositionMonitorLogic.Classify(item.Y, h, ScreenHeight, barHeight))
+                {
+                    case PositionMonitorZone.TopBar:
+                        top++;
+                        item.ZoneBrush = PositionMonitorControl.ZoneRedBrush;
+                        break;
+                    case PositionMonitorZone.BottomBar:
+                        bottom++;
+                        item.ZoneBrush = PositionMonitorControl.ZoneAmberBrush;
+                        break;
+                    default:
+                        active++;
+                        item.ZoneBrush = PositionMonitorControl.ZoneGreenBrush;
+                        break;
+                }
+            }
+
+            var lang = Se.Language.Tools.ImageBasedEdit;
+            PositionMonitorSummary = string.Format(lang.PositionSummary, ScreenWidth, ScreenHeight, Subtitles.Count, barHeight);
+            ActivePictureCountText = string.Format(lang.XInActivePicture, active);
+            TopBarCountText = string.Format(lang.XInTopBar, top);
+            BottomBarCountText = string.Format(lang.XInBottomBar, bottom);
+            HasTopBarSubtitles = top > 0;
+            HasBottomBarSubtitles = bottom > 0;
+
+            var monitor = PositionMonitor;
+            if (monitor != null)
+            {
+                monitor.Items = Subtitles;
+                monitor.SelectedItem = SelectedSubtitle;
+                monitor.ScreenWidth = ScreenWidth;
+                monitor.ScreenHeight = ScreenHeight;
+                monitor.BarHeight = barHeight;
+                monitor.ShowTitleSafe = ShowTitleSafeArea;
+                monitor.TitleSafePercent = TitleSafePercent;
+                monitor.InvalidateVisual();
+            }
+        }
+        finally
+        {
+            _updatingPositionMonitor = false;
+        }
     }
 
     internal void SubtitleGridSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -226,6 +438,7 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         UpdateOverlayPosition();
+        RefreshPositionMonitor();
     }
 
     partial void OnScreenHeightChanged(int value)
@@ -241,6 +454,7 @@ public partial class BinaryEditViewModel : ObservableObject
         }
 
         UpdateOverlayPosition();
+        RefreshPositionMonitor();
     }
 
     public void UpdateOverlayPosition()
@@ -538,6 +752,8 @@ public partial class BinaryEditViewModel : ObservableObject
             RefreshStatusText();
             Window.Title = string.Format(Se.Language.Tools.ImageBasedEdit.EditImagedBaseSubtitleX, fileName);
         }
+
+        RefreshPositionMonitor();
 
         var videoFileName = TryGetVideoFileName(fileName);
         if (ShouldAutoOpenMatchingVideo(Se.Settings.Video.AutoOpen, videoFileName) && VideoPlayerControl != null)
@@ -2395,11 +2611,24 @@ public partial class BinaryEditViewModel : ObservableObject
             foreach (BinarySubtitleItem item in e.NewItems)
                 item.PropertyChanged += OnSubtitleItemPropertyChanged;
         _isDirty = true;
+        RefreshPositionMonitor();
     }
 
     private void OnSubtitleItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        // Display-only zone indicator - must not mark the subtitle as modified.
+        if (e.PropertyName == nameof(BinarySubtitleItem.ZoneBrush))
+        {
+            return;
+        }
+
         _isDirty = true;
+
+        // Keep the position map in sync when a subtitle is moved or its image changes.
+        if (e.PropertyName is nameof(BinarySubtitleItem.X) or nameof(BinarySubtitleItem.Y) or nameof(BinarySubtitleItem.Bitmap))
+        {
+            RefreshPositionMonitor();
+        }
     }
 
     internal void OnVideoPositionChanged(double positionSeconds)
