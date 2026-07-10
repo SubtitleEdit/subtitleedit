@@ -1,6 +1,6 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.1.0-beta12",
+  "version": "v5.1.0-beta13",
   "translatedBy": "Hack茶ん, 12시27분(@12si27)",
   "cultureName": "ko-KR",
   "general": {
@@ -1007,7 +1007,7 @@
     "undoPerformedXActionLeft": "실행 취소됨(남은 작업: {0})",
     "xLinesCopiedFromOriginal": "원본 자막에서 {0}번 줄 복사",
     "xLinesMerged": "X개의 줄이 합쳐짐",
-    "xLinesSelectedOfY": "{1}개 줄 중 {0}개 줄이 선택",
+    "xLinesSelectedOfY": "총 {1}줄 중 {0}줄 선택",
     "xLinesSwitched": "{0}번 줄 변경됨",
     "xShotChangedLoaded": "{0}개의 장면 전환을 불러옴",
     "youtubeDlDownloadedSuccessfully": "\"yt-dlp\"가 성공적으로 다운로드됨",
@@ -1375,7 +1375,22 @@
       "lineX": "{0}번째 줄",
       "linesXToY": "{0}-{1}번째 줄",
       "largeChangeWarning": "큰 변경 사항 - 다시 쓴 것일 수 있으므로 자세히 검토하세요.",
-      "engineError": "AI 엔진에 접근할 수 없습니다: {0}"
+      "engineError": "AI 엔진에 접근할 수 없습니다: {0}",
+      "setupHint": "도구 -> AI 검토에서 먼저 엔진과 모델을 선택하세요."
+    },
+    "aiAssistant": {
+      "title": "AI 도우미",
+      "currentLine": "현재 줄",
+      "contextLines": "문맥 (앞뒤 줄)",
+      "fixErrors": "오류 수정",
+      "fitReadingSpeed": "읽기 속도 맞추기",
+      "makeFormal": "더 격식 있게",
+      "makeInformal": "더 편하게",
+      "askPlaceholder": "이 줄에 대해 질문하거나 변경을 요청하세요...",
+      "ask": "질문",
+      "result": "제안",
+      "apply": "줄에 적용",
+      "hint": "이 줄에 대한 AI 도우미"
     },
     "fixCommonErrors": {
       "title": "일반적인 오류 수정",
@@ -2637,6 +2652,7 @@
       "textBoxButtonShowItalic": "입력칸: 기울임 버튼 표시",
       "textBoxButtonShowColor": "입력칸: 색상 버튼 표시",
       "textBoxButtonShowRemoveFormatting": "입력칸: 서식 제거 버튼 표시",
+      "textBoxButtonShowAiAssistant": "입력칸: AI 도우미 버튼 표시",
       "waveformSingleClickAction": "파형 원클릭 동작",
       "waveformDoubleClickAction": "파형 더블클릭 동작(싱글클릭 동작 후)",
       "allSettings": "모든 설정",
@@ -3105,6 +3121,8 @@
     "vobSubColorEmphasis1": "강조 1",
     "vobSubColorEmphasis2": "강조 2",
     "vobSubColorsInvert": "배경 반전 / 강조 1",
+    "vobSubIsolateColors": "OCR용 VobSub 색상 분리",
+    "vobSubIsolateColorsHint": "OCR 전에 가장 많이 쓰인 색상(텍스트)만 남기고 윤곽선/안티앨리어싱 색상을 제거해 각 VobSub 이미지를 선명한 흑백 이미지로 다시 만듭니다. 회색 윤곽선이 글자와 섞여 인식이 어려운 VobSub/DVD 자막에서 인식률을 높일 수 있습니다.",
     "llamaCppOcrSettingsTitle": "llama.cpp OCR 설정",
     "llamaCppOcrPromptHint": "선택한 OCR 언어를 삽입하려면 {언어}를 사용하세요.",
     "llamaCppOcrPromptEmpty": "프롬프트는 비워둘 수 없습니다.",
