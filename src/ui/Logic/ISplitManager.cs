@@ -438,7 +438,12 @@ public class SplitManager : ISplitManager
             return text2;
         }
 
-        return "{" + string.Join("", tagsToAdd.Select(t => t.TrimStart('{'))) + text2;
+        // Each entry in tagsToAdd is already a complete "{...}" block, so concatenate them as-is.
+        // The previous version stripped each block's leading "{" but kept its trailing "}", then
+        // prepended a single "{" - which produced malformed markup for two or more tags, e.g.
+        // "{\i1}\c&HFF0000&}Hello": the "{\i1}" parsed but "\c&HFF0000&}" showed as literal text
+        // and the color was lost.
+        return string.Concat(tagsToAdd) + text2;
     }
 
     private static string? GetLastAssaTag(string text, string prefix)
