@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.1.0-beta12",
+  "version": "v5.1.0-beta13",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -701,6 +701,7 @@
     "xOfYLinesUpdatedAndZNeighborsAdjusted": "{0}: {1} of {2} line(s) updated, {3} neighbor(s) adjusted",
     "noBookmarksFound": "No more bookmarks found",
     "xRequiresAnApiKey": "{0} requires an API key",
+    "xRequiresAValidUrl": "{0} requires a valid URL (e.g. \"http://...\" or \"https://...\")",
     "xSeconds": "{0:0.0##} seconds",
     "xSubtitles": "{0:#,###,##0} subtitles",
     "yes": "Yes",
@@ -995,6 +996,7 @@
     "singleLineLength": "Line length: ",
     "speedIsNowX": "Speed is now \"{0}\"",
     "spellCheckResult": "Spell check completed. \n\n• Changed words: {0}\n• Skipped words: {1}",
+    "subtitleGridFormattingX": "Grid formatting: {0}",
     "subtitleImportedFromMatroskaFile": "Subtitle imported from Matroska file",
     "textDown": "Text down",
     "textOnly": "Text only",
@@ -1390,7 +1392,8 @@
       "ask": "Ask",
       "result": "Suggestion",
       "apply": "Apply to line",
-      "hint": "AI assistant for this line"
+      "hint": "AI assistant for this line",
+      "showReasoning": "Show the model's reasoning"
     },
     "fixCommonErrors": {
       "title": "Fix common errors",
@@ -2802,6 +2805,7 @@
       "toggleBookmark": "Toggle bookmark (selected lines, no text)",
       "goToNextBookmark": "Go to next bookmark",
       "toggleWaveformToolbar": "Toggle waveform toolbar",
+      "toggleSubtitleGridFormatting": "Toggle grid formatting (show formatting/show tags/no formatting)",
       "waveformSetStartAndSetEndOfPreviousMinusGap": "Set start and set end of previous minus gap",
       "waveformSetEndAndStartOfNextAfterGap": "Set end and start of next plus gap",
       "waveformSetEndAndStartOfNextAfterGapAndGoToNext": "Set end and start of next plus gap and go to next",
