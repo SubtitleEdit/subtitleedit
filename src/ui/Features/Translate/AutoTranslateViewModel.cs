@@ -1180,6 +1180,7 @@ public partial class AutoTranslateViewModel : ObservableObject
 
         if (ApiKeyIsVisible && string.IsNullOrWhiteSpace(ApiKeyText) && engineType != typeof(LibreTranslate))
         {
+            IsProgressEnabled = false;
             await MessageBox.Show(
                 Window,
                 Se.Language.General.Error,
@@ -1189,12 +1190,30 @@ public partial class AutoTranslateViewModel : ObservableObject
             return false;
         }
 
-        if (ApiUrlIsVisible && string.IsNullOrWhiteSpace(ApiUrlText))
+        // Papago repurposes the URL field as its client ID, so only the empty check applies there.
+        if (ApiUrlIsVisible && engineType == typeof(PapagoTranslate) && string.IsNullOrWhiteSpace(ApiUrlText))
         {
+            IsProgressEnabled = false;
             await MessageBox.Show(
                 Window,
                 Se.Language.General.Error,
                 string.Format(Se.Language.General.XRequiresAnApiKey, translator.Name),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return false;
+        }
+
+        // An empty or non-http(s) URL would otherwise reach the engine's Initialize() and
+        // throw an uncaught UriFormatException from "new Uri(...)".
+        if (ApiUrlIsVisible && engineType != typeof(PapagoTranslate) &&
+            (!Uri.TryCreate((ApiUrlText ?? string.Empty).Trim(), UriKind.Absolute, out var apiUri) ||
+             (apiUri.Scheme != Uri.UriSchemeHttp && apiUri.Scheme != Uri.UriSchemeHttps)))
+        {
+            IsProgressEnabled = false;
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                string.Format(Se.Language.General.XRequiresAValidUrl, translator.Name),
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             return false;
@@ -1232,7 +1251,25 @@ public partial class AutoTranslateViewModel : ObservableObject
         ProgressValue = 0;
         ProgressText = "0 %";
 
-        translator.Initialize();
+        try
+        {
+            translator.Initialize();
+        }
+        catch (Exception exception)
+        {
+            Se.LogError(exception, "Failed to initialize translation engine " + translator.Name);
+            _translationInProgress = false;
+            IsTranslateEnabled = true;
+            IsProgressEnabled = false;
+            StatusText = Se.Language.Translate.ReadyToTranslate;
+            await MessageBox.Show(
+                Window,
+                Se.Language.General.Error,
+                string.Format(Se.Language.General.ErrorX, exception.Message),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return false;
+        }
 
         var sourceLanguage = translator.GetSupportedSourceLanguages()
             .FirstOrDefault(p => p.Name.Equals(SelectedSourceLanguage?.ToString() ?? string.Empty, StringComparison.InvariantCultureIgnoreCase));
