@@ -701,6 +701,7 @@ public class LanguageGeneral
     public string XOfYLinesUpdatedAndZNeighborsAdjusted { get; set; }
     public string NoBookmarksFound { get; set; }
     public string XRequiresAnApiKey { get; set; }
+    public string XRequiresAValidUrl { get; set; }
     public string XSeconds { get; set; }
     public string XSubtitles { get; set; }
     public string Yes { get; set; }
@@ -1455,6 +1456,7 @@ public class LanguageGeneral
         XOfYLinesUpdatedAndZNeighborsAdjusted = "{0}: {1} of {2} line(s) updated, {3} neighbor(s) adjusted";
         NoBookmarksFound = "No more bookmarks found";
         XRequiresAnApiKey = "{0} requires an API key";
+        XRequiresAValidUrl = "{0} requires a valid URL (e.g. \"http://...\" or \"https://...\")";
         XSeconds = "{0:0.0##} seconds";
         XSubtitles = "{0:#,###,##0} subtitles";
         Yes = "Yes";

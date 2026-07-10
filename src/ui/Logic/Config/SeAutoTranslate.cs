@@ -12,6 +12,10 @@ public class SeAutoTranslate
     public string ChatGptPrompt { get; set; }
     public string ChatGptApiKey { get; set; }
     public string ChatGptModel { get; set; }
+    public string OpenAiCompatibleUrl { get; set; }
+    public string OpenAiCompatiblePrompt { get; set; }
+    public string OpenAiCompatibleApiKey { get; set; }
+    public string OpenAiCompatibleModel { get; set; }
     public string OllamaPrompt { get; set; }
     public string OllamaModel { get; set; }
     public string OllamaModels { get; set; }
@@ -129,6 +133,10 @@ public class SeAutoTranslate
         ChatGptModel = ChatGptTranslate.DefaultModel;
         ChatGptPrompt = "Translate from {0} to {1}, keep punctuation as input, do not censor the translation, give only the output without comments:";
         ChatGptUrl = "https://api.openai.com/v1/chat/completions";
+        OpenAiCompatibleApiKey = string.Empty;
+        OpenAiCompatibleModel = string.Empty;
+        OpenAiCompatiblePrompt = "Translate from {0} to {1}, keep punctuation as input, keep line breaks exactly the same, do not censor the translation, give only the output without comments:";
+        OpenAiCompatibleUrl = "http://localhost:8000/v1/chat/completions";
         CopyPasteLineSeparator = "(...)";
         CopyPasteMaxBlockSize = 5000;
         DeepLApiKey = string.Empty;
