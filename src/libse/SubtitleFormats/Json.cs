@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             text = string.Join(Environment.NewLine, text.SplitToLines());
             var keepNext = false;
-            var hexLetters = "01234567890abcdef";
+            var hexLetters = "0123456789abcdefABCDEF"; // JSON \uXXXX escapes allow upper- or lower-case hex
             var i = 0;
             while (i < text.Length)
             {

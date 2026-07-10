@@ -453,7 +453,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     {
                                         s = s.Remove(0, 7);
                                         singlePost = "</i></u>" + singlePost;
-                                        pre.Append("<><i>");
+                                        pre.Append("<u><i>");
                                     }
                                     else if (s.StartsWith("{Y:b,u}", StringComparison.Ordinal) || s.StartsWith("{Y:u,b}", StringComparison.Ordinal))
                                     {

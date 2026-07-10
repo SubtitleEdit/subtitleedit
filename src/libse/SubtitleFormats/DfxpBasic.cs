@@ -121,6 +121,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else if (line.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
                         {
+                            // Push like the <i> branch does, so the matching </b> restores this
+                            // parent instead of an outer one - otherwise an enclosing <i> (or <font>)
+                            // was lost for everything after a nested tag (e.g. <i>a<b>b</b>c</i>).
+                            styles.Push(currentStyle);
                             currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
                             paragraph.AppendChild(currentStyle);
                             XmlAttribute attr = xml.CreateAttribute("tts:fontWeight", "http://www.w3.org/ns/10/ttml#style");
@@ -130,6 +134,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else if (line.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                         {
+                            // Push unconditionally so the matching </font> always restores the
+                            // right parent (the close-tag branch pops for every </font>); without
+                            // this an enclosing <i>/<b> was lost after a nested <font>.
+                            styles.Push(currentStyle);
                             int endIndex = line.Substring(i + 1).IndexOf('>');
                             if (endIndex > 0)
                             {
