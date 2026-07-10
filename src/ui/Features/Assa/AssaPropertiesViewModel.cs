@@ -44,6 +44,8 @@ public partial class AssaPropertiesViewModel : ObservableObject
     private readonly IFileHelper _fileHelper;
     private readonly IWindowService _windowService;
     private string _videoFileName;
+    private int _currentVideoWidth;
+    private int _currentVideoHeight;
 
     public AssaPropertiesViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
@@ -193,12 +195,21 @@ public partial class AssaPropertiesViewModel : ObservableObject
     [RelayCommand]
     private void GetResolutionFromCurrentVideo()
     {
+        // The main window already parsed the open video's dimensions when it was loaded, so
+        // use those directly - reliable and instant. Only fall back to re-parsing the file
+        // with ffmpeg if the dimensions were not supplied.
+        if (_currentVideoWidth > 0 && _currentVideoHeight > 0)
+        {
+            VideoWidth = _currentVideoWidth;
+            VideoHeight = _currentVideoHeight;
+            return;
+        }
+
         _ = Task.Run(() =>
         {
             var mediaInfo = FfmpegMediaInfo2.Parse(_videoFileName);
             if (mediaInfo?.Dimension is { Width: > 0, Height: > 0 })
             {
-                var resolutionItem = new ResolutionItem(string.Empty, mediaInfo.Dimension.Width, mediaInfo.Dimension.Height);
                 Dispatcher.UIThread.Post(() =>
                 {
                     VideoWidth = mediaInfo.Dimension.Width;
@@ -208,12 +219,15 @@ public partial class AssaPropertiesViewModel : ObservableObject
         });
     }
 
-    public void Initialize(Subtitle subtitle, SubtitleFormat format, string fileName, string videoFileName)
+    public void Initialize(Subtitle subtitle, SubtitleFormat format, string fileName, string videoFileName, int videoWidth = 0, int videoHeight = 0)
     {
         Title = string.Format(Se.Language.Assa.PropertiesTitleX, fileName);
         Header = subtitle.Header;
         _videoFileName = videoFileName;
-        ShowGetResolutionFromCurrentVideo = !string.IsNullOrWhiteSpace(videoFileName) && System.IO.File.Exists(videoFileName);
+        _currentVideoWidth = videoWidth;
+        _currentVideoHeight = videoHeight;
+        ShowGetResolutionFromCurrentVideo = (videoWidth > 0 && videoHeight > 0) ||
+                                            (!string.IsNullOrWhiteSpace(videoFileName) && System.IO.File.Exists(videoFileName));
 
         if (Header == null || !Header.Contains("style:", StringComparison.OrdinalIgnoreCase))
         {
