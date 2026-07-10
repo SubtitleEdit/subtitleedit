@@ -78,7 +78,12 @@ public class GoogleSpeech : ITtsEngine
             {
                 continue;
             }
-            var languageCode = name.Substring(0, 5);
+            // Voice names are BCP-47 tagged, e.g. "en-US-Wavenet-A" or "cmn-CN-Chirp3-HD-Achernar".
+            // The language code is the first two hyphen-separated segments. A fixed 5-char cut
+            // breaks 3-letter primary subtags (cmn/yue/fil), yielding e.g. "cmn-C", which Google's
+            // SynthesizeSpeech rejects - so every Mandarin/Cantonese/Filipino voice failed.
+            var nameParts = name.Split('-');
+            var languageCode = nameParts.Length >= 2 ? nameParts[0] + "-" + nameParts[1] : name;
             var ssmlGender = parser.GetFirstObject(item, "ssmlGender");
             var naturalSampleRateHertz = parser.GetFirstObject(item, "naturalSampleRateHertz");
 

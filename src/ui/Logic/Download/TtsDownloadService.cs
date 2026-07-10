@@ -308,11 +308,16 @@ public class TtsDownloadService : ITtsDownloadService
         var speed = Se.Settings.Video.TextToSpeech.ElevenLabsSpeed.ToString(CultureInfo.InvariantCulture);
         var styleExaggeration = Se.Settings.Video.TextToSpeech.ElevenLabsStyleeExaggeration.ToString(CultureInfo.InvariantCulture);
 
+        // ElevenLabs use_speaker_boost is a boolean; the UI exposes it as a 0-100 slider, so any
+        // non-zero value enables it. Previously this setting was collected and saved but never
+        // placed in the request body, so toggling it had no effect on the generated audio.
+        var useSpeakerBoost = Se.Settings.Video.TextToSpeech.ElevenLabsSpeakerBoost > 0 ? "true" : "false";
+
         // Disable ElevenLabs text normalization so the user's pause cues survive: SSML
         // <break time="1.5s"/> tags and punctuation pauses (",,," "..." "---") are otherwise
         // collapsed/rewritten by the "auto" normalizer on multilingual models. All standard
         // (non-v3) models honor break tags; v3 is handled on the text-to-dialogue path (#12093).
-        var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + $"\", \"model_id\": \"{model}\"{language}, \"voice_settings\": {{ \"stability\": {stability}, \"similarity_boost\": {similarityBoost}, \"speed\": {speed}, \"style\": {styleExaggeration} }}, \"apply_text_normalization\": \"off\" }}";
+        var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + $"\", \"model_id\": \"{model}\"{language}, \"voice_settings\": {{ \"stability\": {stability}, \"similarity_boost\": {similarityBoost}, \"speed\": {speed}, \"style\": {styleExaggeration}, \"use_speaker_boost\": {useSpeakerBoost} }}, \"apply_text_normalization\": \"off\" }}";
 
         return await SendElevenLabsSpeakRequestAsync(url, data, apiKey, acceptAudioMpeg: true, stream, "ElevenLabs TTS", cancellationToken);
     }
