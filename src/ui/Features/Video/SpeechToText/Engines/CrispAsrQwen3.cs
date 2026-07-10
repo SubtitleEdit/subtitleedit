@@ -52,13 +52,24 @@ public class CrispAsrQwen3 : CrispAsrEngineBase
             new WhisperLanguage("ro", "romanian"),
        };
 
-    // qwen3-asr-1.7b-q4_k.gguf is intentionally NOT listed: on CrispASR v0.8.9 it
-    // produces empty transcripts (sub-8-bit encoder drift; the checksum-verified file
-    // loads and "transcribes" but emits no text). Re-add if upstream ships an
-    // imatrix-repaired q4_k like the 0.6b repo got.
+    // qwen3-asr-1.7b-q4_k.gguf: the pre-2026-07-10 upload produced empty transcripts
+    // on CrispASR v0.8.9 (sub-8-bit audio-encoder drift, CrispASR issue #240). Upstream
+    // re-baked it with a Q8_0 audio-tower floor and replaced the file in place
+    // (now 1.49 GB, sha256 ec197cef...; the broken one was 1f1d26ee...). Verified OK
+    // against the pinned v0.8.9 binary. Users who downloaded the old file must delete
+    // it from CrispASR/models and re-download - same filename, so SE can't tell them apart.
     public override List<WhisperModel> Models =>
        new()
        {
+            new WhisperModel
+            {
+                Name = "qwen3-asr-1.7b-q4_k.gguf",
+                Size = "1.49 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-q4_k.gguf",
+                ],
+            },
             new WhisperModel
             {
                 Name = "qwen3-asr-1.7b-q8_0.gguf",
