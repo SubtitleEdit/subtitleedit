@@ -12,6 +12,7 @@ using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -306,7 +307,12 @@ public class TtsDownloadService : ITtsDownloadService
         var similarityBoost = Se.Settings.Video.TextToSpeech.ElevenLabsSimilarity.ToString(CultureInfo.InvariantCulture);
         var speed = Se.Settings.Video.TextToSpeech.ElevenLabsSpeed.ToString(CultureInfo.InvariantCulture);
         var styleExaggeration = Se.Settings.Video.TextToSpeech.ElevenLabsStyleeExaggeration.ToString(CultureInfo.InvariantCulture);
-        var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + $"\", \"model_id\": \"{model}\"{language}, \"voice_settings\": {{ \"stability\": {stability}, \"similarity_boost\": {similarityBoost}, \"speed\": {speed}, \"style\": {styleExaggeration} }} }}";
+
+        // Disable ElevenLabs text normalization so the user's pause cues survive: SSML
+        // <break time="1.5s"/> tags and punctuation pauses (",,," "..." "---") are otherwise
+        // collapsed/rewritten by the "auto" normalizer on multilingual models. All standard
+        // (non-v3) models honor break tags; v3 is handled on the text-to-dialogue path (#12093).
+        var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + $"\", \"model_id\": \"{model}\"{language}, \"voice_settings\": {{ \"stability\": {stability}, \"similarity_boost\": {similarityBoost}, \"speed\": {speed}, \"style\": {styleExaggeration} }}, \"apply_text_normalization\": \"off\" }}";
 
         return await SendElevenLabsSpeakRequestAsync(url, data, apiKey, acceptAudioMpeg: true, stream, "ElevenLabs TTS", cancellationToken);
     }
@@ -408,7 +414,12 @@ public class TtsDownloadService : ITtsDownloadService
         CancellationToken cancellationToken)
     {
         var url = "https://api.elevenlabs.io/v1/text-to-dialogue";
-        var text = Utilities.UnbreakLine(inputText);
+
+        // Eleven v3 does not support SSML <break> tags - it uses expressive audio tags instead.
+        // Translate any <break time="Xs"/> the user wrote into the nearest [short pause]/[pause]/
+        // [long pause] so their pacing still applies on v3. Punctuation pauses ("..." etc.) pass
+        // through unchanged and are honored by v3 directly (#12093).
+        var text = ConvertBreakTagsToV3AudioTags(Utilities.UnbreakLine(inputText));
 
         var stability = Se.Settings.Video.TextToSpeech.ElevenLabsStability.ToString(CultureInfo.InvariantCulture);
         var speed = Se.Settings.Video.TextToSpeech.ElevenLabsSpeed.ToString(CultureInfo.InvariantCulture);
@@ -425,6 +436,40 @@ public class TtsDownloadService : ITtsDownloadService
                    " }] }";
 
         return await SendElevenLabsSpeakRequestAsync(url, data, apiKey, acceptAudioMpeg: false, stream, "ElevenLabs TTS v3", cancellationToken);
+    }
+
+    // Matches SSML break tags like <break time="1.5s"/>, <break time="500ms" />, <break time='2s'>.
+    private static readonly Regex BreakTagRegex = new(
+        "<break\\s+time\\s*=\\s*[\"']?(?<value>\\d+(?:\\.\\d+)?)\\s*(?<unit>ms|s)[\"']?\\s*/?>",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    /// <summary>
+    /// Eleven v3 ignores SSML <break> tags, so translate each one into the closest v3 audio
+    /// pause tag ([short pause] &lt; 0.75 s, [pause] &lt;= 1.5 s, [long pause] otherwise). Text
+    /// without break tags is returned unchanged. (#12093)
+    /// </summary>
+    internal static string ConvertBreakTagsToV3AudioTags(string text)
+    {
+        if (string.IsNullOrEmpty(text) || text.IndexOf("<break", StringComparison.OrdinalIgnoreCase) < 0)
+        {
+            return text;
+        }
+
+        return BreakTagRegex.Replace(text, match =>
+        {
+            var seconds = double.Parse(match.Groups["value"].Value, CultureInfo.InvariantCulture);
+            if (string.Equals(match.Groups["unit"].Value, "ms", StringComparison.OrdinalIgnoreCase))
+            {
+                seconds /= 1000.0;
+            }
+
+            if (seconds < 0.75)
+            {
+                return "[short pause]";
+            }
+
+            return seconds <= 1.5 ? "[pause]" : "[long pause]";
+        });
     }
 
     public async Task<bool> DownloadAzureVoiceSpeak(
