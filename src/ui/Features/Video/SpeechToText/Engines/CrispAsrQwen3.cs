@@ -52,18 +52,13 @@ public class CrispAsrQwen3 : CrispAsrEngineBase
             new WhisperLanguage("ro", "romanian"),
        };
 
+    // qwen3-asr-1.7b-q4_k.gguf is intentionally NOT listed: on CrispASR v0.8.9 it
+    // produces empty transcripts (sub-8-bit encoder drift; the checksum-verified file
+    // loads and "transcribes" but emits no text). Re-add if upstream ships an
+    // imatrix-repaired q4_k like the 0.6b repo got.
     public override List<WhisperModel> Models =>
        new()
        {
-            new WhisperModel
-            {
-                Name = "qwen3-asr-1.7b-q4_k.gguf",
-                Size = "1.33 GB",
-                Urls =
-                [
-                    "https://huggingface.co/cstr/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-q4_k.gguf",
-                ],
-            },
             new WhisperModel
             {
                 Name = "qwen3-asr-1.7b-q8_0.gguf",
@@ -80,6 +75,33 @@ public class CrispAsrQwen3 : CrispAsrEngineBase
                 Urls =
                 [
                     "https://huggingface.co/cstr/qwen3-asr-1.7b-GGUF/resolve/main/qwen3-asr-1.7b-f16.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "qwen3-asr-0.6b-q4_k.gguf",
+                Size = "631 MB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/qwen3-asr-0.6b-GGUF/resolve/main/qwen3-asr-0.6b-q4_k.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "qwen3-asr-0.6b-q8_0.gguf",
+                Size = "1.01 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/qwen3-asr-0.6b-GGUF/resolve/main/qwen3-asr-0.6b-q8_0.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "qwen3-asr-0.6b-f16.gguf",
+                Size = "1.88 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/qwen3-asr-0.6b-GGUF/resolve/main/qwen3-asr-0.6b-f16.gguf",
                 ],
             },
        };
