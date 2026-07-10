@@ -19,6 +19,10 @@ public partial class BinarySubtitleItem : ObservableObject
     [ObservableProperty] private Bitmap? _bitmap;
     [ObservableProperty] private bool _isForced;
 
+    // Position-monitor zone indicator shown in the grid (green/amber/red dot).
+    // Display-only; excluded from dirty tracking.
+    [ObservableProperty] private Avalonia.Media.IBrush? _zoneBrush;
+
     private bool _isUpdating;
 
     public BinarySubtitleItem(OcrSubtitleItem item, int ocrSubtitleIndex)

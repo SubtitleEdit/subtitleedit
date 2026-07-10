@@ -641,6 +641,26 @@ public class BinaryEditWindow : Window
         dataGridBorder.Margin = new Thickness(0, 0, 0, 5);
 
         // Columns: Forced, Number, Show, Duration, Text, Image
+        // Position-monitor zone dot (green = active picture, amber = bottom bar,
+        // red = top bar) so problem lines are visible directly in the grid.
+        dataGrid.Columns.Add(new DataGridTemplateColumn
+        {
+            Header = string.Empty,
+            Width = new DataGridLength(30),
+            MinWidth = 26,
+            IsReadOnly = true,
+            CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+            CellTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<BinarySubtitleItem>((_, _) =>
+                new Ellipse
+                {
+                    Width = 9,
+                    Height = 9,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    [!Shape.FillProperty] = new Binding(nameof(BinarySubtitleItem.ZoneBrush)),
+                }),
+        });
+
         dataGrid.Columns.Add(new DataGridTemplateColumn
         {
             Header = Se.Language.General.Forced,
@@ -1006,38 +1026,43 @@ public class BinaryEditWindow : Window
             RowDefinitions =
             {
                 new RowDefinition(GridLength.Auto), // summary
+                new RowDefinition(GridLength.Auto), // zone chips
                 new RowDefinition(GridLength.Auto), // letterbox / title-safe controls
                 new RowDefinition(GridLength.Star), // position map canvas
             },
             Margin = new Thickness(8, 0, 8, 8),
         };
 
-        // Summary header: "1920×1080 - 623 subtitles - bar height: 138 px" + zone chips
+        // Summary header: "1920×1080 - 623 subtitles - bar height: 138 px"
         var summaryText = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
             FontWeight = FontWeight.Bold,
+            Margin = new Thickness(0, 2, 0, 4),
             [!TextBlock.TextProperty] = new Binding(nameof(vm.PositionMonitorSummary)) { Source = vm },
         };
+        grid.Add(summaryText, 0);
 
-        var summaryPanel = new WrapPanel
+        // Zone chips on their own single line; clicking a chip jumps to the next
+        // subtitle in that zone.
+        var chipsPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 2, 0, 6),
+            Margin = new Thickness(0, 0, 0, 6),
         };
-        summaryPanel.Children.Add(summaryText);
-        summaryPanel.Children.Add(MakeZoneChip(vm, Color.FromRgb(0x22, 0xC5, 0x5E), nameof(vm.ActivePictureCountText), null));
-        summaryPanel.Children.Add(MakeZoneChip(vm, Color.FromRgb(0xF5, 0x9E, 0x0B), nameof(vm.BottomBarCountText), nameof(vm.HasBottomBarSubtitles)));
-        summaryPanel.Children.Add(MakeZoneChip(vm, Color.FromRgb(0xEF, 0x44, 0x44), nameof(vm.TopBarCountText), nameof(vm.HasTopBarSubtitles)));
-        grid.Add(summaryPanel, 0);
+        chipsPanel.Children.Add(MakeZoneChip(vm, Color.FromRgb(0x22, 0xC5, 0x5E), nameof(vm.ActivePictureCountText), null, PositionMonitorZone.ActivePicture, isFirst: true));
+        chipsPanel.Children.Add(MakeZoneChip(vm, Color.FromRgb(0xF5, 0x9E, 0x0B), nameof(vm.BottomBarCountText), nameof(vm.HasBottomBarSubtitles), PositionMonitorZone.BottomBar));
+        chipsPanel.Children.Add(MakeZoneChip(vm, Color.FromRgb(0xEF, 0x44, 0x44), nameof(vm.TopBarCountText), nameof(vm.HasTopBarSubtitles), PositionMonitorZone.TopBar));
+        grid.Add(chipsPanel, 1);
 
-        // Controls row: letterbox aspect ratio, bar height, title-safe margin
+        // Controls row: letterbox aspect ratio + bar height, and the title-safe
+        // margin. Grouped so label + control never wrap apart.
         var ratioCombo = UiUtil.MakeComboBox(vm.LetterboxRatios, vm, nameof(vm.SelectedLetterboxRatio));
         ratioCombo.MinWidth = 170;
 
         var barHeightUpDown = new NumericUpDown
         {
-            Width = 120,
+            Width = 130,
             Minimum = 0,
             Maximum = 2000,
             Increment = 1,
@@ -1058,40 +1083,55 @@ public class BinaryEditWindow : Window
 
         var titleSafeUpDown = new NumericUpDown
         {
-            Width = 110,
+            Width = 130,
             Minimum = 0,
             Maximum = 20,
             Increment = 0.5m,
             FormatString = "F1",
             VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(6, 0, 0, 0),
             DataContext = vm,
             [!NumericUpDown.ValueProperty] = new Binding(nameof(vm.TitleSafePercent)) { Mode = BindingMode.TwoWay },
             [!InputElement.IsEnabledProperty] = new Binding(nameof(vm.ShowTitleSafeArea)),
         };
 
+        var letterboxGroup = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Margin = new Thickness(0, 0, 18, 4),
+            Children =
+            {
+                new TextBlock
+                {
+                    Text = lang.Letterbox,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(0, 0, 6, 0),
+                },
+                ratioCombo,
+                new TextBlock
+                {
+                    Text = lang.BarHeightPx,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(12, 0, 6, 0),
+                },
+                barHeightUpDown,
+            },
+        };
+
+        var titleSafeGroup = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Margin = new Thickness(0, 0, 0, 4),
+            Children = { titleSafeCheckBox, titleSafeUpDown },
+        };
+
         var controlsPanel = new WrapPanel
         {
             Orientation = Orientation.Horizontal,
-            Margin = new Thickness(0, 0, 0, 6),
+            Margin = new Thickness(0, 0, 0, 4),
+            Children = { letterboxGroup, titleSafeGroup },
         };
-        controlsPanel.Children.Add(new TextBlock
-        {
-            Text = lang.Letterbox,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 6, 0),
-        });
-        controlsPanel.Children.Add(ratioCombo);
-        controlsPanel.Children.Add(new TextBlock
-        {
-            Text = lang.BarHeightPx,
-            VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(12, 0, 6, 0),
-        });
-        controlsPanel.Children.Add(barHeightUpDown);
-        controlsPanel.Children.Add(new Border { Width = 18 }); // spacer
-        controlsPanel.Children.Add(titleSafeCheckBox);
-        controlsPanel.Children.Add(titleSafeUpDown);
-        grid.Add(controlsPanel, 1);
+        grid.Add(controlsPanel, 2);
 
         // The position map canvas
         var monitor = new PositionMonitorControl();
@@ -1106,12 +1146,12 @@ public class BinaryEditWindow : Window
             CornerRadius = new CornerRadius(4),
             ClipToBounds = true,
         };
-        grid.Add(monitorBorder, 2);
+        grid.Add(monitorBorder, 3);
 
         return grid;
     }
 
-    private static Border MakeZoneChip(BinaryEditViewModel vm, Color color, string textPropertyName, string? highlightPropertyName)
+    private static Border MakeZoneChip(BinaryEditViewModel vm, Color color, string textPropertyName, string? highlightPropertyName, PositionMonitorZone zone, bool isFirst = false)
     {
         var bullet = new Ellipse
         {
@@ -1132,15 +1172,19 @@ public class BinaryEditWindow : Window
         {
             CornerRadius = new CornerRadius(10),
             Padding = new Thickness(9, 2, 9, 2),
-            Margin = new Thickness(10, 0, 0, 0),
+            Margin = new Thickness(isFirst ? 0 : 10, 0, 0, 0),
             VerticalAlignment = VerticalAlignment.Center,
             Background = new SolidColorBrush(color, 0.12),
+            Cursor = new Cursor(StandardCursorType.Hand),
             Child = new StackPanel
             {
                 Orientation = Orientation.Horizontal,
                 Children = { bullet, text },
             },
         };
+
+        // Chip doubles as a "go to next subtitle in this zone" button.
+        chip.PointerPressed += (_, _) => vm.SelectNextInZone(zone);
 
         if (highlightPropertyName != null)
         {

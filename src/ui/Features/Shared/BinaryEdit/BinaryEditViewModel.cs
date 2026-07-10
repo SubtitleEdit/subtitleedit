@@ -228,6 +228,7 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     private bool _updatingPositionMonitor;
+    private int _currentLetterboxBarHeight;
 
     partial void OnIsPositionMonitorActiveChanged(bool value)
     {
@@ -284,6 +285,31 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Cycles to the next subtitle in the given zone, starting after the current
+    /// selection - lets the summary chips act as "go to next offender" buttons.
+    /// </summary>
+    public void SelectNextInZone(PositionMonitorZone zone)
+    {
+        if (Subtitles.Count == 0)
+        {
+            return;
+        }
+
+        var startIndex = SelectedSubtitle != null ? Subtitles.IndexOf(SelectedSubtitle) : -1;
+        for (var offset = 1; offset <= Subtitles.Count; offset++)
+        {
+            var index = (startIndex + offset) % Subtitles.Count;
+            var item = Subtitles[index];
+            var h = item.Bitmap?.PixelSize.Height ?? 0;
+            if (PositionMonitorLogic.Classify(item.Y, h, ScreenHeight, _currentLetterboxBarHeight) == zone)
+            {
+                SelectAndScrollToRow(index);
+                return;
+            }
+        }
+    }
+
+    /// <summary>
     /// Recomputes the letterbox bar height and per-zone counts, updates the summary
     /// header, and repaints the position map (discussion #12318).
     /// </summary>
@@ -313,6 +339,8 @@ public partial class BinaryEditViewModel : ObservableObject
                 LetterboxBarHeight = barHeight; // display the computed value in the (read-only) up/down
             }
 
+            _currentLetterboxBarHeight = barHeight;
+
             var active = 0;
             var top = 0;
             var bottom = 0;
@@ -323,12 +351,15 @@ public partial class BinaryEditViewModel : ObservableObject
                 {
                     case PositionMonitorZone.TopBar:
                         top++;
+                        item.ZoneBrush = PositionMonitorControl.ZoneRedBrush;
                         break;
                     case PositionMonitorZone.BottomBar:
                         bottom++;
+                        item.ZoneBrush = PositionMonitorControl.ZoneAmberBrush;
                         break;
                     default:
                         active++;
+                        item.ZoneBrush = PositionMonitorControl.ZoneGreenBrush;
                         break;
                 }
             }
@@ -2585,6 +2616,12 @@ public partial class BinaryEditViewModel : ObservableObject
 
     private void OnSubtitleItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        // Display-only zone indicator - must not mark the subtitle as modified.
+        if (e.PropertyName == nameof(BinarySubtitleItem.ZoneBrush))
+        {
+            return;
+        }
+
         _isDirty = true;
 
         // Keep the position map in sync when a subtitle is moved or its image changes.

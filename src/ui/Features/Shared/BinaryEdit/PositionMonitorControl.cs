@@ -35,6 +35,11 @@ public class PositionMonitorControl : Control
     private static readonly Color ZoneAmber = Color.FromRgb(0xF5, 0x9E, 0x0B);
     private static readonly Color ZoneRed = Color.FromRgb(0xEF, 0x44, 0x44);
 
+    // Shared with the grid's zone-dot column and the summary chips.
+    public static readonly IBrush ZoneGreenBrush = new SolidColorBrush(ZoneGreen);
+    public static readonly IBrush ZoneAmberBrush = new SolidColorBrush(ZoneAmber);
+    public static readonly IBrush ZoneRedBrush = new SolidColorBrush(ZoneRed);
+
     private static readonly IBrush FrameBrush = new SolidColorBrush(Color.FromRgb(0x0D, 0x0D, 0x0D));
     private static readonly IBrush BarBrush = new SolidColorBrush(Color.FromArgb(0x14, 0xFF, 0xFF, 0xFF));
     private static readonly Pen FrameBorderPen = new(new SolidColorBrush(Color.FromArgb(0x50, 0xFF, 0xFF, 0xFF)), 1);
@@ -49,16 +54,17 @@ public class PositionMonitorControl : Control
     private static readonly Pen SelectedPen = new(Brushes.White, 2);
 
     // Cached per-zone brushes/pens - Render runs over every subtitle in the file,
-    // so avoid per-item allocations.
-    private static readonly IBrush GreenFill = new SolidColorBrush(ZoneGreen, 0.26);
-    private static readonly IBrush AmberFill = new SolidColorBrush(ZoneAmber, 0.26);
-    private static readonly IBrush RedFill = new SolidColorBrush(ZoneRed, 0.26);
-    private static readonly Pen GreenPen = new(new SolidColorBrush(ZoneGreen, 0.9), 1);
-    private static readonly Pen AmberPen = new(new SolidColorBrush(ZoneAmber, 0.9), 1);
-    private static readonly Pen RedPen = new(new SolidColorBrush(ZoneRed, 0.9), 1);
-    private static readonly Pen GreenSelectedPen = new(new SolidColorBrush(ZoneGreen), 1);
-    private static readonly Pen AmberSelectedPen = new(new SolidColorBrush(ZoneAmber), 1);
-    private static readonly Pen RedSelectedPen = new(new SolidColorBrush(ZoneRed), 1);
+    // so avoid per-item allocations. Green (the norm) is deliberately dim so the
+    // amber/red problem subtitles stand out at a glance.
+    private static readonly IBrush GreenFill = new SolidColorBrush(ZoneGreen, 0.13);
+    private static readonly IBrush AmberFill = new SolidColorBrush(ZoneAmber, 0.45);
+    private static readonly IBrush RedFill = new SolidColorBrush(ZoneRed, 0.45);
+    private static readonly Pen GreenPen = new(new SolidColorBrush(ZoneGreen, 0.45), 1);
+    private static readonly Pen AmberPen = new(new SolidColorBrush(ZoneAmber), 1.5);
+    private static readonly Pen RedPen = new(new SolidColorBrush(ZoneRed), 1.5);
+    private static readonly Pen GreenSelectedPen = new(ZoneGreenBrush, 1);
+    private static readonly Pen AmberSelectedPen = new(ZoneAmberBrush, 1);
+    private static readonly Pen RedSelectedPen = new(ZoneRedBrush, 1);
 
     public PositionMonitorControl()
     {
@@ -117,11 +123,29 @@ public class PositionMonitorControl : Control
             return;
         }
 
-        foreach (var item in items)
+        // Three passes so problem zones are never buried under the (many) green
+        // rectangles: green first, then bottom-bar amber, then top-bar red.
+        for (var pass = 0; pass < 3; pass++)
         {
-            if (!ReferenceEquals(item, SelectedItem))
+            var wantedZone = pass switch
             {
-                DrawItem(context, frame, scale, item, false);
+                0 => PositionMonitorZone.ActivePicture,
+                1 => PositionMonitorZone.BottomBar,
+                _ => PositionMonitorZone.TopBar,
+            };
+
+            foreach (var item in items)
+            {
+                if (ReferenceEquals(item, SelectedItem))
+                {
+                    continue;
+                }
+
+                var zone = PositionMonitorLogic.Classify(item.Y, GetBitmapHeight(item), ScreenHeight, BarHeight);
+                if (zone == wantedZone)
+                {
+                    DrawItem(context, frame, scale, item, false);
+                }
             }
         }
 
