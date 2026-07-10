@@ -121,11 +121,17 @@ modules:
 
   - name: mujs
     no-autogen: true
+    # VERSION must be passed explicitly: the Makefile derives it from git describe
+    # (no .git in a tarball) or the directory name (flatpak-builder extracts into
+    # /run/build/mujs), so mujs.pc otherwise gets an invalid version and mpv's
+    # meson rejects the dependency.
     make-args:
       - release
+      - VERSION=1.3.8
     make-install-args:
       - prefix=/app
       - install-shared
+      - VERSION=1.3.8
     cleanup:
       - /bin
       - /include
