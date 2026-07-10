@@ -643,12 +643,14 @@ public class BinaryEditWindow : Window
         // Columns: Forced, Number, Show, Duration, Text, Image
         // Position-monitor zone dot (green = active picture, amber = bottom bar,
         // red = top bar) so problem lines are visible directly in the grid.
-        dataGrid.Columns.Add(new DataGridTemplateColumn
+        // Only shown while the right panel is in "Position map" mode.
+        var zoneColumn = new DataGridTemplateColumn
         {
             Header = string.Empty,
             Width = new DataGridLength(30),
             MinWidth = 26,
             IsReadOnly = true,
+            IsVisible = vm.IsPositionMonitorActive,
             CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
             CellTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<BinarySubtitleItem>((_, _) =>
                 new Ellipse
@@ -659,7 +661,15 @@ public class BinaryEditWindow : Window
                     VerticalAlignment = VerticalAlignment.Center,
                     [!Shape.FillProperty] = new Binding(nameof(BinarySubtitleItem.ZoneBrush)),
                 }),
-        });
+        };
+        dataGrid.Columns.Add(zoneColumn);
+        vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(vm.IsPositionMonitorActive))
+            {
+                zoneColumn.IsVisible = vm.IsPositionMonitorActive;
+            }
+        };
 
         dataGrid.Columns.Add(new DataGridTemplateColumn
         {
