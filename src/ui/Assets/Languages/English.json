@@ -1869,7 +1869,19 @@
       "bottomAlignLines": "Bottom align",
       "appendSubtitleDotDotDot": "Append subtitle...",
       "shiftTimeCodes": "Shift time codes by",
-      "sortByStartTime": "Sort by start time"
+      "sortByStartTime": "Sort by start time",
+      "videoPreview": "Video",
+      "positionMap": "Position map",
+      "letterbox": "Letterbox",
+      "letterboxOff": "Off (no letterbox)",
+      "letterboxCustom": "Custom bar height",
+      "barHeightPx": "Bar height (px)",
+      "titleSafePercent": "Title-safe (%)",
+      "positionSummary": "{0}×{1} - {2} subtitles - bar height: {3} px",
+      "xInActivePicture": "{0} in picture",
+      "xInTopBar": "{0} in top bar",
+      "xInBottomBar": "{0} in bottom bar",
+      "noImageSubtitlesLoaded": "No image subtitles loaded"
     },
     "removeTextForHearingImpaired": {
       "title": "Remove text for hearing impaired",

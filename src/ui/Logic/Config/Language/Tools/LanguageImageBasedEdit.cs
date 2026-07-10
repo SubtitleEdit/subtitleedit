@@ -33,6 +33,18 @@ public class LanguageImageBasedEdit
     public string AppendSubtitleDotDotDot { get; set; }
     public string ShiftTimeCodes { get; set; }
     public string SortByStartTime { get; set; }
+    public string VideoPreview { get; set; }
+    public string PositionMap { get; set; }
+    public string Letterbox { get; set; }
+    public string LetterboxOff { get; set; }
+    public string LetterboxCustom { get; set; }
+    public string BarHeightPx { get; set; }
+    public string TitleSafePercent { get; set; }
+    public string PositionSummary { get; set; }
+    public string XInActivePicture { get; set; }
+    public string XInTopBar { get; set; }
+    public string XInBottomBar { get; set; }
+    public string NoImageSubtitlesLoaded { get; set; }
 
     public LanguageImageBasedEdit()
     {
@@ -67,5 +79,17 @@ public class LanguageImageBasedEdit
         AppendSubtitleDotDotDot = "Append subtitle...";
         ShiftTimeCodes = "Shift time codes by";
         SortByStartTime = "Sort by start time";
+        VideoPreview = "Video";
+        PositionMap = "Position map";
+        Letterbox = "Letterbox";
+        LetterboxOff = "Off (no letterbox)";
+        LetterboxCustom = "Custom bar height";
+        BarHeightPx = "Bar height (px)";
+        TitleSafePercent = "Title-safe (%)";
+        PositionSummary = "{0}×{1} - {2} subtitles - bar height: {3} px";
+        XInActivePicture = "{0} in picture";
+        XInTopBar = "{0} in top bar";
+        XInBottomBar = "{0} in bottom bar";
+        NoImageSubtitlesLoaded = "No image subtitles loaded";
     }
 }

@@ -1838,7 +1838,19 @@
       "bottomAlignLines": "Justér til bund",
       "appendSubtitleDotDotDot": "Tilføj undertekst...",
       "shiftTimeCodes": "Forskyd tidskoder med",
-      "sortByStartTime": "Sortér efter starttid"
+      "sortByStartTime": "Sortér efter starttid",
+      "videoPreview": "Video",
+      "positionMap": "Positionskort",
+      "letterbox": "Letterbox",
+      "letterboxOff": "Fra (ingen letterbox)",
+      "letterboxCustom": "Brugerdefineret bjælkehøjde",
+      "barHeightPx": "Bjælkehøjde (px)",
+      "titleSafePercent": "Titelsikkert område (%)",
+      "positionSummary": "{0}×{1} - {2} undertekster - bjælkehøjde: {3} px",
+      "xInActivePicture": "{0} i billedet",
+      "xInTopBar": "{0} i øverste bjælke",
+      "xInBottomBar": "{0} i nederste bjælke",
+      "noImageSubtitlesLoaded": "Ingen billedbaserede undertekster indlæst"
     },
     "removeTextForHearingImpaired": {
       "title": "Fjern tekst for hørehæmmede",

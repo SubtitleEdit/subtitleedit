@@ -81,6 +81,11 @@ public class SeTools
     public decimal BinEditOutlineWidth { get; set; }
     public decimal BinEditShadowWidth { get; set; }
     public bool BinEditSelectCurrentSubtitleWhilePlaying { get; set; }
+    public bool BinEditPositionMonitorActive { get; set; }
+    public string BinEditPositionMonitorRatio { get; set; }
+    public int BinEditPositionMonitorBarHeight { get; set; }
+    public bool BinEditPositionMonitorTitleSafeOn { get; set; }
+    public double BinEditPositionMonitorTitleSafePercent { get; set; }
 
     public string ImportTextSplitting { get; set; }
     public string ImportTextSplittingLineMode { get; set; }
@@ -197,6 +202,11 @@ public class SeTools
         BinEditBackgroundColor = Colors.Transparent.FromColorToHex();
         BinEditOutlineWidth = 2;
         BinEditShadowWidth = 1;
+        BinEditPositionMonitorActive = false;
+        BinEditPositionMonitorRatio = "off";
+        BinEditPositionMonitorBarHeight = 0;
+        BinEditPositionMonitorTitleSafeOn = true;
+        BinEditPositionMonitorTitleSafePercent = 5;
 
         ImportTextSplitting = "auto";
         ImportTextSplittingLineMode = "OneLineIsOneSubtitle";
