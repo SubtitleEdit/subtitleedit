@@ -568,7 +568,7 @@ public class NikseBitmapImageSplitter2
                     keysInSequence++;
                 }
 
-                if (keysInSequence > 2 && lastTransparentY - startY > minLineHeight)
+                if (keysInSequence >= minTransparentLines && lastTransparentY - startY > minLineHeight)
                 {
                     var part = bmp.CopyRectangle(new NikseRectangle(0, startY, bmp.Width, lastTransparentY - startY - 1));
                     if (!part.IsImageOnlyTransparent() && part.GetNonTransparentHeight() + keysInSequence * 0.4 >= minLineHeight)
@@ -835,7 +835,7 @@ public class NikseBitmapImageSplitter2
             }
         }
 
-        for (var myX = x; x < x + right && myX < bmp.Width; myX++)
+        for (var myX = x; myX < x + right && myX < bmp.Width; myX++)
         {
             var a = bmp.GetAlpha(myX, y - up);
             if (a > 150)
