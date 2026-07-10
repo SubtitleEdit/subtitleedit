@@ -78,6 +78,20 @@ OmniVoice TTS runs the omnivoice-tts CLI on CPU. It supports a large set of lang
 
 MistralSpeech is configured with an API key and model selection. The selected model is remembered in settings.
 
+## ElevenLabs Pauses and Pacing
+
+You can control pausing and pacing in ElevenLabs output directly from the subtitle text.
+
+- **Break tags** — Insert `<break time="1.5s" />` for an explicit pause (up to about 3 seconds). Keep them sparse: too many break tags in one line can make ElevenLabs speed up or add audio artifacts.
+- **Punctuation** — Ellipses (`...`) add a hesitant pause, and dashes (`---`) add a short break. These are less precise than break tags but useful for a natural feel.
+
+Subtitle Edit sends your text to ElevenLabs with **text normalization turned off**, so these pause cues are preserved instead of being collapsed or rewritten.
+
+Behavior depends on the selected model:
+
+- **Standard models** (`eleven_turbo_v2_5`, `eleven_multilingual_v2`, …) honor SSML `<break>` tags and punctuation pauses.
+- **Eleven v3** does not support SSML `<break>` tags. Subtitle Edit automatically converts each `<break time="Xs" />` into the nearest v3 audio pause tag — `[short pause]` (under 0.75 s), `[pause]` (up to 1.5 s), or `[long pause]` (longer) — so the same subtitle text keeps working when you switch to v3.
+
 ## Review Audio Clips
 
 When **Review audio clips** is enabled, a dedicated review window opens after generation. This window lets you inspect, play, and regenerate audio for every subtitle line before the result is used. A 120px waveform of the original video audio is shown above the grid as a reference. Per-session review state (clips, history, includes, edits) is persisted to `SubtitleEditTts.json` so you can return to the same review later.
