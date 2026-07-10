@@ -1462,6 +1462,20 @@ public static partial class InitListViewAndEditBox
             flyoutTextBox.Items.Add(unicodeMenuItem);
         }
 
+        flyoutTextBox.Items.Add(new Separator());
+
+        var menuItemTextBoxAiAssistant = new MenuItem
+        {
+            Header = Se.Language.Tools.AiAssistant.Title,
+            Command = vm.ShowAiAssistantCommand,
+            Icon = new Icon
+            {
+                Value = IconNames.Robot,
+                VerticalAlignment = VerticalAlignment.Center,
+            },
+        };
+        flyoutTextBox.Items.Add(menuItemTextBoxAiAssistant);
+
 
         // translation mode (original text)
         var textLabelOriginal = new TextBlock

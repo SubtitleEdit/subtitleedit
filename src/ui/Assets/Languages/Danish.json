@@ -1886,6 +1886,20 @@
       "largeChangeWarning": "Stor ændring - ligner en omskrivning, gennemgå omhyggeligt",
       "engineError": "AI-motoren kunne ikke nås: {0}"
     },
+    "aiAssistant": {
+      "title": "AI-assistent",
+      "currentLine": "Aktuel linje",
+      "contextLines": "Kontekst (linjer før og efter)",
+      "fixErrors": "Ret fejl",
+      "fitReadingSpeed": "Tilpas læsehastighed",
+      "makeFormal": "Mere formel",
+      "makeInformal": "Mere uformel",
+      "askPlaceholder": "Spørg om denne linje, eller bed om en ændring...",
+      "ask": "Spørg",
+      "result": "Forslag",
+      "apply": "Anvend på linje",
+      "hint": "AI-assistent for denne linje"
+    },
     "pickSubtitleFormatImageBasedNoPreview": "Billedbaseret undertekstformat.\nBitmaps genereres under konverteringen - ingen tekstforhåndsvisning."
   },
   "spellCheck": {
