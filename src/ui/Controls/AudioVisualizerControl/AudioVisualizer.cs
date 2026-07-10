@@ -942,6 +942,12 @@ public class AudioVisualizer : Control
             return;
         }
 
+        // Refresh the hit-test from the actual press point. The cached hover state is set only on
+        // pointer-move, but on a trackpad a press often does not follow a same-pixel hover (tap-to-
+        // click, finger settling, throttled moves), so the cache can be stale and a border press
+        // would start a new selection instead of resizing the subtitle (#12177).
+        UpdateCursor(point);
+
         var p = _cachedHitParagraph;
         if (p == null)
         {
