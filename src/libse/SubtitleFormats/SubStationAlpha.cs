@@ -657,12 +657,33 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
         private static TimeCode GetTimeCodeFromString(string time)
         {
-            // h:mm:ss.cc
+            // h:mm:ss.cc - the fractional field is centiseconds in standard SSA, but be lenient
+            // about the digit count instead of assuming exactly 2 (a fixed *10 turned e.g.
+            // ".234" into +2.34 s and ".5" into +0.05 s, and threw on a missing fraction).
             var timeCode = time.Split(':', '.');
+            var lastPart = timeCode.Length > 3 ? timeCode[3].Trim() : string.Empty;
+            int ms;
+            if (lastPart.Length == 0)
+            {
+                ms = 0;
+            }
+            else if (lastPart.Length == 1)
+            {
+                ms = int.Parse(lastPart) * 100;
+            }
+            else if (lastPart.Length == 2)
+            {
+                ms = int.Parse(lastPart) * 10;
+            }
+            else
+            {
+                ms = int.Parse(lastPart.Substring(0, 3)); // 3+ digits: treat as milliseconds
+            }
+
             return new TimeCode(int.Parse(timeCode[0]),
                                 int.Parse(timeCode[1]),
                                 int.Parse(timeCode[2]),
-                                int.Parse(timeCode[3]) * 10);
+                                ms);
         }
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
