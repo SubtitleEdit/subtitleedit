@@ -131,10 +131,11 @@ modules:
       - /include
       - /lib/pkgconfig
     sources:
-      - type: git
-        url: https://codeberg.org/ccxvii/mujs.git
-        tag: 1.3.8
-        commit: 307f18c4216420f2f56e22d8e7040baa39a6304a
+      # Official release tarball from the upstream site - the Codeberg git repo
+      # returns intermittent 504s and the GitHub mirror is stale (stops at 1.3.7).
+      - type: archive
+        url: https://mujs.com/downloads/mujs-1.3.8.tar.gz
+        sha256: 506d34882f2620a2fdeb6db63dbb7a8ffd98f417689d8f3c84f2feac275e39a9
       - type: file
         url: https://www.unicode.org/Public/16.0.0/ucd/UnicodeData.txt
         sha256: ff58e5823bd095166564a006e47d111130813dcf8bf234ef79fa51a870edb48f
