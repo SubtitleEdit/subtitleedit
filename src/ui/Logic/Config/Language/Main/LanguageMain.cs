@@ -67,6 +67,7 @@ public class LanguageMain
     public string SingleLineLength { get; set; }
     public string SpeedIsNowX { get; set; }
     public string SpellCheckResult { get; set; }
+    public string SubtitleGridFormattingX { get; set; }
     public string SubtitleImportedFromMatroskaFile { get; set; }
     public string TextDown { get; set; }
     public string TextOnly { get; set; }
@@ -184,6 +185,7 @@ public class LanguageMain
         SingleLineLength = "Line length: ";
         SpeedIsNowX = "Speed is now \"{0}\"";
         SpellCheckResult = "Spell check completed. \n\n• Changed words: {0}\n• Skipped words: {1}";
+        SubtitleGridFormattingX = "Grid formatting: {0}";
         SubtitleImportedFromMatroskaFile = "Subtitle imported from Matroska file";
         TextDown = "Text down";
         TextOnly = "Text only";

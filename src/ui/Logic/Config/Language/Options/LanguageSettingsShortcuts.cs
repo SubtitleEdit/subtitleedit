@@ -134,6 +134,7 @@ public class LanguageSettingsShortcuts
     public string ToggleBookmark { get; set; }
     public string GoToNextBookmark { get; set; }
     public string ToggleWaveformToolbar { get; set; }
+    public string ToggleSubtitleGridFormatting { get; set; }
     public string WaveformSetStartAndSetEndOfPreviousMinusGap { get; set; }
     public string WaveformSetEndAndStartOfNextAfterGap { get; set; }
     public string WaveformSetEndAndStartOfNextAfterGapAndGoToNext { get; set; }
@@ -446,6 +447,7 @@ public class LanguageSettingsShortcuts
         ToggleBookmark = "Toggle bookmark (selected lines, no text)";
         GoToNextBookmark = "Go to next bookmark";
         ToggleWaveformToolbar = "Toggle waveform toolbar";
+        ToggleSubtitleGridFormatting = "Toggle grid formatting (show formatting/show tags/no formatting)";
         WaveformSetStartAndSetEndOfPreviousMinusGap = "Set start and set end of previous minus gap";
         WaveformSetEndAndStartOfNextAfterGap = "Set end and start of next plus gap";
         WaveformSetEndAndStartOfNextAfterGapAndGoToNext = "Set end and start of next plus gap and go to next";

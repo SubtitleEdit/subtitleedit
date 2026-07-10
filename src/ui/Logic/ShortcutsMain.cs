@@ -98,6 +98,7 @@ public static class ShortcutsMain
         { nameof(MainViewModel.OpenDataFolderCommand), Se.Language.Options.Shortcuts.OpenSeDataFolder },
         { nameof(MainViewModel.SetupLikeSe4Command), Se.Language.Options.Shortcuts.GeneralSetupLikeSe4 },
         { nameof(MainViewModel.ToggleIsWaveformToolbarVisibleCommand), Se.Language.Options.Shortcuts.ToggleWaveformToolbar },
+        { nameof(MainViewModel.ToggleSubtitleGridFormattingCommand), Se.Language.Options.Shortcuts.ToggleSubtitleGridFormatting },
 
         // File
         { nameof(MainViewModel.CommandFileOpenCommand), Se.Language.Options.Shortcuts.FileOpen },
@@ -478,6 +479,7 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.GoToPreviousBookmarkCommand, nameof(vm.GoToPreviousBookmarkCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.OpenDataFolderCommand, nameof(vm.OpenDataFolderCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ToggleIsWaveformToolbarVisibleCommand, nameof(vm.ToggleIsWaveformToolbarVisibleCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.ToggleSubtitleGridFormattingCommand, nameof(vm.ToggleSubtitleGridFormattingCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SetupLikeSe4Command, nameof(vm.SetupLikeSe4Command), ShortcutCategory.General);
 
         // File
