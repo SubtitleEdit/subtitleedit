@@ -162,6 +162,7 @@ public class AssaPropertiesWindow : Window
         var numericUpDownHeight = UiUtil.MakeNumericUpDownInt(0, 10000, 1080, 120, vm, nameof(vm.VideoHeight));
         var buttonBrowseResolution = UiUtil.MakeButtonBrowse(vm.BrowseResolutionCommand);
         var buttonFromCurrentVideo = UiUtil.MakeButton(Se.Language.General.PickResolutionFromCurrentVideo, vm.GetResolutionFromCurrentVideoCommand);
+        buttonFromCurrentVideo.Bind(Button.IsVisibleProperty, new Binding(nameof(vm.ShowGetResolutionFromCurrentVideo)) { Source = vm });
 
         grid.Add(label, 0, 0, 1, 6);
         grid.Add(labelVideoResolution, 1, 0);

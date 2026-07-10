@@ -16,8 +16,6 @@ public partial class ResolutionItem : ObservableObject
 
     [ObservableProperty] private Color _backgroundColor;
 
-    [ObservableProperty] private Color _textColor;
-
     public ResolutionItem(string name, ResolutionItemType itemType)
     {
         DisplayName = string.Empty;

@@ -48,9 +48,15 @@ public class BurnInResolutionPickerWindow : Window
                     var border = new Border();
                     border.Bind(Border.BackgroundProperty, new Binding(nameof(ResolutionItem.BackgroundColor)));
 
-                    var textBlock = new TextBlock();
+                    var textBlock = new TextBlock
+                    {
+                        // Use the theme-appropriate text color (white in dark mode, black in
+                        // light mode). Previously the foreground was bound to
+                        // ResolutionItem.TextColor, which was never assigned, so it fell back to
+                        // a black/transparent color that was unreadable in dark mode.
+                        Foreground = UiUtil.GetTextColor(),
+                    };
                     textBlock.Bind(TextBlock.TextProperty, new Binding(nameof(ResolutionItem.DisplayName)));
-                    textBlock.Bind(TextBlock.ForegroundProperty, new Binding(nameof(ResolutionItem.TextColor)));
 
                     border.Child = textBlock;
 
