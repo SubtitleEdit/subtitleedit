@@ -10,7 +10,7 @@ public class CrispEmbedEngineTests
     {
         var backends = CrispEmbedEngine.GetBackends();
 
-        Assert.Equal(new[] { "GLM-OCR", "GOT-OCR2", "PaddleOCR-VL" }, backends.Select(p => p.Name));
+        Assert.Equal(new[] { "GLM-OCR", "GOT-OCR2", "PaddleOCR-VL", "Qwen3-VL-2B" }, backends.Select(p => p.Name));
     }
 
     [Fact]

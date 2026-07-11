@@ -166,6 +166,25 @@ public static class CrispEmbedEngine
                     },
                 },
             },
+            new()
+            {
+                Name = "Qwen3-VL-2B",
+                Models = new List<CrispEmbedModel>
+                {
+                    new()
+                    {
+                        Name = "qwen3-vl-2b-q4_k.gguf",
+                        Size = "1.59 GB",
+                        Url = "https://huggingface.co/cstr/qwen3-vl-2b-crispembed-gguf/resolve/main/qwen3-vl-2b-q4_k.gguf",
+                    },
+                    new()
+                    {
+                        Name = "qwen3-vl-2b-q8_0.gguf",
+                        Size = "2.29 GB",
+                        Url = "https://huggingface.co/cstr/qwen3-vl-2b-crispembed-gguf/resolve/main/qwen3-vl-2b-q8_0.gguf",
+                    },
+                },
+            },
         };
     }
 }
