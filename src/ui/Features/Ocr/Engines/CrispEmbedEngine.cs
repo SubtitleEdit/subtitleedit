@@ -147,25 +147,9 @@ public static class CrispEmbedEngine
                     },
                 },
             },
-            new()
-            {
-                Name = "PaddleOCR-VL",
-                Models = new List<CrispEmbedModel>
-                {
-                    new()
-                    {
-                        Name = "paddleocr-vl-0.9b-q4_k.gguf",
-                        Size = "1.3 GB",
-                        Url = "https://huggingface.co/cstr/paddleocr-vl-0.9b-GGUF/resolve/main/paddleocr-vl-0.9b-q4_k.gguf",
-                    },
-                    new()
-                    {
-                        Name = "paddleocr-vl-0.9b-q8_0.gguf",
-                        Size = "1.48 GB",
-                        Url = "https://huggingface.co/cstr/paddleocr-vl-0.9b-GGUF/resolve/main/paddleocr-vl-0.9b-q8_0.gguf",
-                    },
-                },
-            },
+            // PaddleOCR-VL (109 languages) omitted for now: in CrispEmbed v0.14.0 both the
+            // q4_k and q8_0 quants truncate or hallucinate on subtitle-style single-line
+            // images via both the server and CLI single-model paths - verified 2026-07-11.
             new()
             {
                 Name = "Qwen3-VL-2B",
