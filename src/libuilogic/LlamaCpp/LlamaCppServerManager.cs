@@ -132,6 +132,11 @@ public static class LlamaCppServerManager
             "https://huggingface.co/ggml-org/LightOnOCR-1B-1025-GGUF/resolve/main/LightOnOCR-1B-1025-Q8_0.gguf",
             MmprojFileName: "mmproj-LightOnOCR-1B-1025-Q8_0.gguf",
             MmprojUrl: "https://huggingface.co/ggml-org/LightOnOCR-1B-1025-GGUF/resolve/main/mmproj-LightOnOCR-1B-1025-Q8_0.gguf"),
+        // PaddlePaddle's official llama.cpp package - 109 languages (NaViT + ERNIE-4.5).
+        new LlamaCppModel("PaddleOCR-VL 1.6", "PaddleOCR-VL-1.6-GGUF.gguf", "1.8 GB",
+            "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6-GGUF/resolve/main/PaddleOCR-VL-1.6-GGUF.gguf",
+            MmprojFileName: "PaddleOCR-VL-1.6-GGUF-mmproj.gguf",
+            MmprojUrl: "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6-GGUF/resolve/main/PaddleOCR-VL-1.6-GGUF-mmproj.gguf"),
     };
 
     /// <summary>
