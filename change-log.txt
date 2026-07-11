@@ -4,6 +4,18 @@ Subtitle Edit Changelog
 v5.1.0-beta15 (TBD)
 
 * OCR: add CrispEmbed engine - local ggml-based OCR (same family as CrispASR) with GLM-OCR, GOT-OCR2, and Qwen3-VL-2B model backends, install-status dots, and engine/model download with update tracking - thx CrispStrobe
+* Command line (seconv): add auto-translate with llama.cpp, starting the local server automatically - thx go2tom42
+* Rename "FCP/png" export to "Final Cut Pro + image"
+* Speech to text: offer re-download when the engine executable has gone missing - thx zezartiti
+* Command line (seconv): fix garbled PGS/DVB-sub OCR by binarizing before Tesseract - thx albino1
+* Update CrispASR Qwen3 model list (re-add qwen3-asr-1.7b q4_k)
+* Fix Turkish translation not loading (broken JSON)
+* Add new word replacements to the Croatian OCR fix list - thx diomed
+* Update Windows installer languages for Inno Setup 6.7.3 - thx Blackspirits
+* Update Japanese translation - thx hisui3393
+* Update Italian translation - thx bovirus
+* Update Russian translation - thx jekovcar
+* Update Bulgarian translation - thx jekovcar
 
 -----------------------------------------------------------------------------------------------------
 
