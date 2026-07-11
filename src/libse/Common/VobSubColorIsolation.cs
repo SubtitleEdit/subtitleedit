@@ -93,5 +93,52 @@ namespace Nikse.SubtitleEdit.Core.Common
 
             return result;
         }
+
+        /// <summary>
+        /// Brightness-keyed binarization for PGS / DVB-sub OCR bitmaps (issue #12291) — the
+        /// same preparation the GUI OCR uses (<c>NikseBitmap.MakeBlackAndWhiteForOcr</c>):
+        /// bright, sufficiently opaque pixels (the glyph fill, incl. coloured fills like
+        /// yellow) become black, everything else — the dark outline, the darker half of the
+        /// antialias ramp, and the transparent background — becomes white. Unlike
+        /// <see cref="Isolate"/>, this does not assume an indexed palette, so it is robust
+        /// for antialiased PGS where no single exact RGB dominates. Without it, compositing
+        /// white-fill/black-outline glyphs onto an opaque white OCR canvas leaves hollow
+        /// outline rings that Tesseract reads as punctuation soup on some entries.
+        /// </summary>
+        /// <param name="source">Rendered PGS/DVB bitmap; a transparent background is expected.</param>
+        /// <param name="brightnessThreshold">Min brightness (max of R/G/B) for a pixel to count as text.</param>
+        /// <param name="alphaThreshold">Pixels with alpha below this are treated as background.</param>
+        public static SKBitmap BinarizeForOcr(SKBitmap source, int brightnessThreshold = 90, byte alphaThreshold = 100)
+        {
+            var width = source.Width;
+            var height = source.Height;
+            var result = new SKBitmap(new SKImageInfo(width, height, SKColorType.Rgba8888, SKAlphaType.Opaque));
+
+            using var canvas = new SKCanvas(result);
+            canvas.Clear(SKColors.White);
+
+            using var paint = new SKPaint { Color = SKColors.Black };
+            for (var y = 0; y < height; y++)
+            {
+                for (var x = 0; x < width; x++)
+                {
+                    var c = source.GetPixel(x, y);
+                    if (c.Alpha < alphaThreshold)
+                    {
+                        continue;
+                    }
+
+                    var brightness = c.Red > c.Green
+                        ? (c.Red > c.Blue ? c.Red : c.Blue)
+                        : (c.Green > c.Blue ? c.Green : c.Blue);
+                    if (brightness >= brightnessThreshold)
+                    {
+                        canvas.DrawPoint(x, y, paint);
+                    }
+                }
+            }
+
+            return result;
+        }
     }
 }

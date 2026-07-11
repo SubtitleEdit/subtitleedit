@@ -116,6 +116,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Disable VobSub OCR colour isolation (on by default). Isolation binarises each subpicture to black-on-white by keeping the most frequent opaque colour (glyph fill) and dropping the outline/anti-alias colours; pass this to OCR the raw palette instead")]
         public bool NoVobSubIsolateColors { get; init; }
 
+        [CommandOption("--no-pgs-isolate-colors|--nopgsisolatecolors")]
+        [Description("Disable PGS/DVB-sub OCR colour isolation (on by default)")]
+        public bool NoPgsIsolateColors { get; init; }
+
         [CommandOption("--ollama-url")]
         [Description("Ollama API endpoint (default: http://localhost:11434/api/chat)")]
         public string? OllamaUrl { get; init; }
@@ -579,6 +583,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 DictionaryFolder = settings.DictionaryFolder,
                 TimeCodesOnly = settings.TimeCodesOnly,
                 VobSubIsolateColors = !settings.NoVobSubIsolateColors,
+                PgsIsolateColors = !settings.NoPgsIsolateColors,
                 OllamaUrl = settings.OllamaUrl,
                 OllamaModel = settings.OllamaModel,
                 TeletextOnly = settings.TeletextOnly,
