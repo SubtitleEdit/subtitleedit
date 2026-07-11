@@ -1,7 +1,7 @@
 {
   "Title": "SubtitleEdit",
-  "Version": "v. 5.1.0 beta12",
-  "TranslatedBy": "v. 09.07.2026 di bovirus",
+  "Version": "v. 5.1.0 beta 13",
+  "TranslatedBy": "v. 11.07.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -701,6 +701,7 @@
     "XOfYLinesUpdatedAndZNeighborsAdjusted": "{0}: {1} di {2} righe aggiornate, {3} vicini modificati",
     "NoBookmarksFound": "Nessun altro segnalibro trovato",
     "XRequiresAnApiKey": "'{0}' richiede una chiave API.",
+    "XRequiresAValidUrl": "{0} richiede una URL valida (ad esempio \"http://...\" o \"https://...\")",
     "XSeconds": "{0:0.0##} secondi",
     "XSubtitles": "{0:#,###,##0} sottotitoli",
     "Yes": "Sì",
@@ -818,6 +819,7 @@
     "SingleLineLength": "Lunghezza riga:",
     "SpeedIsNowX": "La velocità ora è '{0}'",
     "SpellCheckResult": "Controllo ortografico completato.\r\n\r\n• Parole modificate: {0}\r\n• Parole saltate: {1}",
+    "SubtitleGridFormattingX": "Formattazione griglia: {0}",
     "SubtitleImportedFromMatroskaFile": "Sottotitoli importati da file Matroska",
     "TextDown": "Testo in basso",
     "TextOnly": "Solo testo",
@@ -1401,7 +1403,8 @@
       "Ask": "Chiedi",
       "Result": "Suggerimento",
       "Apply": "Applicare alla riga",
-      "Hint": "Assistente IA per questa riga"
+      "Hint": "Assistente IA per questa riga",
+      "ShowReasoning": "Visualizza il ragionamento modello"
     },
     "FixCommonErrors": {
       "Title": "Correggi errori comuni",
@@ -1880,7 +1883,19 @@
       "BottomAlignLines": "Allinea in basso",
       "AppendSubtitleDotDotDot": "Aggiungi sottotitolo...",
       "ShiftTimeCodes": "Sposta timecode di",
-      "SortByStartTime": "Ordina per orario inizio"
+      "SortByStartTime": "Ordina per orario inizio",
+      "VideoPreview": "Video",
+      "PositionMap": "Mappa posizione",
+      "Letterbox": "Letterbox",
+      "LetterboxOff": "Off (nessuna letterbox)",
+      "LetterboxCustom": "Altezza barra personalizzata",
+      "BarHeightPx": "Altezza barra (px)",
+      "TitleSafePercent": "Titolo-sicuro (%)",
+      "PositionSummary": "{0}×{1} - {2} sottotitoli - altezza barra: {3} px",
+      "XInActivePicture": "{0} nell'immagine",
+      "XInTopBar": "{0} nella barra in alto",
+      "XInBottomBar": "{0} nella barra in basso",
+      "NoImageSubtitlesLoaded": "Nessun sottotitolo immagine caricato"
     },
     "RemoveTextForHearingImpaired": {
       "Title": "Rimuovi testo per non udenti",
@@ -2790,6 +2805,7 @@
       "ToggleBookmark": "Attiva/disattiva segnalibro (righe selezionate, nessun testo)",
       "GoToNextBookmark": "Vai al segnalibro successivo",
       "ToggleWaveformToolbar": "Attiva/disattiva barra strumenti forma d'onda",
+      "ToggleSubtitleGridFormatting": "Attiva/disattiva formattazione griglia (visualizza formattazione/visualizza tag/nessuna formattazione)",
       "WaveformSetStartAndSetEndOfPreviousMinusGap": "Imposta l'inizio e la fine del precedente intervallo",
       "WaveformSetEndAndStartOfNextAfterGap": "Imposta la fine e l'inizio del successivo intervallo",
       "WaveformSetEndAndStartOfNextAfterGapAndGoToNext": "Imposta la fine e l'inizio del successivo intervallo e vai al successivo",
