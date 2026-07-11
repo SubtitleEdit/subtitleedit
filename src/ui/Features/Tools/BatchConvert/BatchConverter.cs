@@ -17,6 +17,7 @@ using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Ocr.Engines;
 using Nikse.SubtitleEdit.Features.Ocr.NOcr;
 using Nikse.SubtitleEdit.Features.Ocr.OcrSubtitle;
+using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.UiLogic.AdjustDuration;
 using Nikse.SubtitleEdit.UiLogic.BatchConvert;
 using Nikse.SubtitleEdit.Features.Tools.MergeSubtitlesWithSameTimeCodes;
@@ -2327,7 +2328,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
         Configuration.Settings.Tools.AutoTranslateCrispAsrExe = Se.Settings.AutoTranslate.CrispAsrExe;
         Configuration.Settings.Tools.AutoTranslateCrispAsrModel = Se.Settings.AutoTranslate.CrispAsrModel;
 
-        var doAutoTranslate = new DoAutoTranslate();
+        var doAutoTranslate = new DoAutoTranslate
+        {
+            TranslateEachLineSeparately = Se.Settings.AutoTranslate.IsTranslateEachLineSeparately(_config.AutoTranslate.Translator.Name),
+        };
         var translatedSubtitle = await doAutoTranslate.DoTranslate(subtitle, _config.AutoTranslate.SourceLanguage, _config.AutoTranslate.TargetLanguage,
             _config.AutoTranslate.Translator, cancellationToken);
 

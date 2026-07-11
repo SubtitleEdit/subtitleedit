@@ -6,12 +6,22 @@ namespace SeConv.Core;
 
 internal class SubtitleConverter
 {
+    // Created once per run when --translate-to is set; validates the engine setup up front
+    // (and, for local llama.cpp, resolves the server binary + model) so a broken translate
+    // configuration fails before the first file is touched.
+    private AutoTranslateRunner? _translateRunner;
+
     public async Task<ConversionResult> ConvertAsync(ConversionOptions options)
     {
         var result = new ConversionResult();
 
         try
         {
+            if (!string.IsNullOrWhiteSpace(options.TranslateTo))
+            {
+                _translateRunner = AutoTranslateRunner.Create(options);
+            }
+
             // Get input files
             var inputFiles = GetInputFiles(options);
             result.TotalFiles = inputFiles.Count;
@@ -579,7 +589,7 @@ internal class SubtitleConverter
                 Configuration.Settings.General.CurrentFrameRate = options.Fps.Value;
             }
 
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 // --encoding:source means "use the input file's detected encoding for both
                 // read and write". Resolve it per-file before the load so the same encoding
@@ -600,7 +610,7 @@ internal class SubtitleConverter
                     throw new InvalidOperationException($"No subtitles found in file: {inputFile}");
                 }
 
-                ApplyTransformsAndSave(subtitle, sourceFormat, outputFile, resolvedOptions);
+                await ApplyTransformsAndSaveAsync(subtitle, sourceFormat, outputFile, resolvedOptions);
             });
         }
         finally
@@ -619,14 +629,14 @@ internal class SubtitleConverter
                 Configuration.Settings.General.CurrentFrameRate = options.Fps.Value;
             }
 
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 if (track.Subtitle.Paragraphs.Count == 0)
                 {
                     throw new InvalidOperationException("Track is empty.");
                 }
 
-                ApplyTransformsAndSave(track.Subtitle, track.Format, outputFile, options);
+                await ApplyTransformsAndSaveAsync(track.Subtitle, track.Format, outputFile, options);
             });
         }
         finally
@@ -635,7 +645,7 @@ internal class SubtitleConverter
         }
     }
 
-    private static void ApplyTransformsAndSave(Subtitle subtitle, SubtitleFormat sourceFormat, string outputFile, ConversionOptions options)
+    private async Task ApplyTransformsAndSaveAsync(Subtitle subtitle, SubtitleFormat sourceFormat, string outputFile, ConversionOptions options)
     {
         // Apply offset (must be first, before any time-based transforms)
         if (options.Offset.HasValue && options.Offset.Value != TimeSpan.Zero)
@@ -678,6 +688,13 @@ internal class SubtitleConverter
 
         if (!string.IsNullOrEmpty(options.DeleteContains))
             LibSEIntegration.DeleteContains(subtitle, options.DeleteContains);
+
+        // Auto-translate (--translate-to) before the cleanup operations, matching the UI's
+        // batch convert order (fix-common-errors etc. run on the translated text).
+        if (_translateRunner != null)
+        {
+            await _translateRunner.TranslateAsync(subtitle, CancellationToken.None);
+        }
 
         if (options.Operations.Count > 0)
         {
@@ -901,6 +918,21 @@ internal record class ConversionOptions
 
     /// <summary>Ollama vision model (default <c>llama3.2-vision</c>).</summary>
     public string? OllamaModel { get; init; }
+
+    /// <summary>Auto-translate target language (code or English name). Non-null enables translation.</summary>
+    public string? TranslateTo { get; init; }
+
+    /// <summary>Auto-translate source language. Null = auto-detect per file.</summary>
+    public string? TranslateFrom { get; init; }
+
+    /// <summary>Translate engine id, see <see cref="AutoTranslateRunner.SupportedEngines"/>. Null/empty = llamacpp.</summary>
+    public string? TranslateEngine { get; init; }
+
+    /// <summary>Endpoint of an already-running translate server; for llamacpp this skips the local llama-server auto-start.</summary>
+    public string? TranslateUrl { get; init; }
+
+    /// <summary>Model: ollama/lmstudio model name, or llamacpp .gguf file name/path.</summary>
+    public string? TranslateModel { get; init; }
 
     public bool TeletextOnly { get; init; }
     public bool SkipTeletext { get; init; }

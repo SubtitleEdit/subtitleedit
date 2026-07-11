@@ -197,7 +197,12 @@ public static class DependencyInjectionExtensions
 {
     public static void AddSubtitleEditServices(this IServiceCollection collection)
     {
-        // Misc services        
+        // LlamaCppServerManager lives in libuilogic (shared with seconv) and cannot see the
+        // UI's Se config - point it at the UI's llama.cpp folder and tools log explicitly.
+        Logic.LlamaCpp.LlamaCppServerManager.FolderOverride = Logic.Config.Se.LlamaCppFolder;
+        Logic.LlamaCpp.LlamaCppServerManager.LogAction = Logic.Config.Se.WriteToolsLog;
+
+        // Misc services
         collection.AddTransient<IBinaryOcrMatcher, BinaryOcrMatcher>();
         collection.AddSingleton<IFileHelper, FileHelper>();
         collection.AddSingleton<IFolderHelper, FolderHelper>();

@@ -128,6 +128,26 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Ollama vision model (default: llama3.2-vision)")]
         public string? OllamaModel { get; init; }
 
+        [CommandOption("--translate-to|--translateto")]
+        [Description("Auto-translate to this language (code or English name, e.g. de or German); enables translation")]
+        public string? TranslateTo { get; init; }
+
+        [CommandOption("--translate-from|--translatefrom")]
+        [Description("Auto-translate source language (default: auto-detect per file)")]
+        public string? TranslateFrom { get; init; }
+
+        [CommandOption("--translate-engine|--translateengine")]
+        [Description("Translate engine: llamacpp (default) | ollama | lmstudio | libretranslate | nllb-serve | nllb-api")]
+        public string? TranslateEngine { get; init; }
+
+        [CommandOption("--translate-url|--translateurl")]
+        [Description("Endpoint of an already-running translate server; for llamacpp this skips the local llama-server auto-start")]
+        public string? TranslateUrl { get; init; }
+
+        [CommandOption("--translate-model|--translatemodel")]
+        [Description("Translate model: ollama/lmstudio model name, or llamacpp .gguf file name/path (default: first downloaded translate model)")]
+        public string? TranslateModel { get; init; }
+
         [CommandOption("--offset")]
         [Description("Offset time (hh:mm:ss:ms)")]
         public string? Offset { get; init; }
@@ -380,6 +400,27 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 return 1;
             }
 
+            // Validate the translate options: --translate-to is the trigger, the rest refine it.
+            if (string.IsNullOrWhiteSpace(settings.TranslateTo) &&
+                (!string.IsNullOrWhiteSpace(settings.TranslateFrom) ||
+                 !string.IsNullOrWhiteSpace(settings.TranslateEngine) ||
+                 !string.IsNullOrWhiteSpace(settings.TranslateUrl) ||
+                 !string.IsNullOrWhiteSpace(settings.TranslateModel)))
+            {
+                AnsiConsole.MarkupLine("[red]Error: --translate-from/--translate-engine/--translate-url/--translate-model require --translate-to:<language>.[/]");
+                return 1;
+            }
+
+            if (!string.IsNullOrWhiteSpace(settings.TranslateEngine) &&
+                !AutoTranslateRunner.SupportedEngines.Contains(settings.TranslateEngine.Trim(), StringComparer.OrdinalIgnoreCase) &&
+                !settings.TranslateEngine.Trim().Equals("llama.cpp", StringComparison.OrdinalIgnoreCase))
+            {
+                AnsiConsole.MarkupLine(
+                    $"[red]Error: Translate engine '{settings.TranslateEngine.EscapeMarkup()}' is not supported (pass via --translate-engine). " +
+                    $"Use one of: {string.Join(", ", AutoTranslateRunner.SupportedEngines)}.[/]");
+                return 1;
+            }
+
             // Fail fast on a typo in --encoding so we don't silently substitute UTF-8 and
             // decode the input incorrectly without the user noticing. The literal "source"
             // is a sentinel — resolved per-file from the input's detected encoding.
@@ -586,6 +627,11 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 PgsIsolateColors = !settings.NoPgsIsolateColors,
                 OllamaUrl = settings.OllamaUrl,
                 OllamaModel = settings.OllamaModel,
+                TranslateTo = settings.TranslateTo,
+                TranslateFrom = settings.TranslateFrom,
+                TranslateEngine = settings.TranslateEngine,
+                TranslateUrl = settings.TranslateUrl,
+                TranslateModel = settings.TranslateModel,
                 TeletextOnly = settings.TeletextOnly,
                 TeletextOnlyPage = settings.TeletextOnlyPage,
                 Quiet = silent,
@@ -623,6 +669,13 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
 
             if (operations.Count > 0)
                 table.AddRow("Operations", string.Join(", ", operations));
+
+            if (!string.IsNullOrWhiteSpace(settings.TranslateTo))
+            {
+                var translateEngine = string.IsNullOrWhiteSpace(settings.TranslateEngine) ? "llamacpp" : settings.TranslateEngine.Trim().ToLowerInvariant();
+                var translateFrom = string.IsNullOrWhiteSpace(settings.TranslateFrom) ? "auto" : settings.TranslateFrom;
+                table.AddRow("Translate", $"{translateFrom} -> {settings.TranslateTo} ({translateEngine})");
+            }
 
             if (settings.DeleteFirst.HasValue)
                 table.AddRow("Delete First", settings.DeleteFirst.Value.ToString());

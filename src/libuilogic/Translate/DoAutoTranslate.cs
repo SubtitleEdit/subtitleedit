@@ -1,8 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.AutoTranslate;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.Translate;
-using Nikse.SubtitleEdit.Features.Translate;
-using Nikse.SubtitleEdit.Logic.Config;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,17 +8,27 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Nikse.SubtitleEdit.Features.Tools.BatchConvert;
+namespace Nikse.SubtitleEdit.Features.Translate;
 
 public class DoAutoTranslate
 {
+    /// <summary>
+    /// Force one-line-at-a-time translation from the start. The UI wires this to the
+    /// per-engine "translate each line separately" user setting; headless callers
+    /// (seconv) leave it off and rely on the built-in per-engine defaults below.
+    /// </summary>
+    public bool TranslateEachLineSeparately { get; set; }
+
+    /// <summary>Optional progress callback: (lines done, total lines). Invoked as translation advances.</summary>
+    public Action<int, int>? Progress { get; set; }
+
     public async Task<List<TranslateRow>> DoTranslate(Subtitle subtitle, TranslationPair sourceLanguage, TranslationPair targetLanguage, IAutoTranslator translator, CancellationToken cancellationToken)
     {
         try
         {
             translator.Initialize();
             var start = 0;
-            var forceSingleLineMode = Se.Settings.AutoTranslate.IsTranslateEachLineSeparately(translator.Name) ||
+            var forceSingleLineMode = TranslateEachLineSeparately ||
                                       translator.Name ==
                                       NoLanguageLeftBehindApi.StaticName || // NLLB seems to miss some text...
                                       translator.Name == NoLanguageLeftBehindServe.StaticName ||
@@ -53,6 +61,7 @@ public class DoAutoTranslate
                 {
                     noErrorCount++;
                     index += linesMergedAndTranslated;
+                    Progress?.Invoke(Math.Min(index, subtitle.Paragraphs.Count), subtitle.Paragraphs.Count);
 
                     var index1 = index;
                     linesTranslated += linesMergedAndTranslated;
@@ -91,7 +100,7 @@ public class DoAutoTranslate
                 if (translateCount > 0)
                 {
                     index += translateCount;
-                    var progressIndex = index;
+                    Progress?.Invoke(Math.Min(index, subtitle.Paragraphs.Count), subtitle.Paragraphs.Count);
                 }
                 else
                 {
@@ -102,8 +111,8 @@ public class DoAutoTranslate
             return rows.ToList();
         }
         catch (Exception exception)
-        { 
-            Se.LogError(exception);
+        {
+            SeLogger.Error(exception, "Auto-translate failed");
             throw;
         }
     }

@@ -48,7 +48,7 @@ public partial class LlamaCppOcrSettingsViewModel : ObservableObject
             return;
         }
 
-        switch (LlamaCppServerManager.GetEngineUpdateStatus())
+        switch (LlamaCppUpdateStatus.GetEngineUpdateStatus())
         {
             case DownloadHashManager.UpdateStatus.UpToDate:
                 EngineLabel = Se.Language.General.UpToDate;
