@@ -38,6 +38,7 @@ using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
+using Nikse.SubtitleEdit.Logic.Download;
 using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.Logic.Ocr;
@@ -87,6 +88,10 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<LlamaCppModelDisplay> _llamaCppOcrModels;
     [ObservableProperty] private LlamaCppModelDisplay? _selectedLlamaCppOcrModel;
     [ObservableProperty] private string _llamaCppOcrServerButtonText;
+    [ObservableProperty] private ObservableCollection<CrispEmbedBackend> _crispEmbedBackends;
+    [ObservableProperty] private CrispEmbedBackend? _selectedCrispEmbedBackend;
+    [ObservableProperty] private ObservableCollection<CrispEmbedModelDisplay> _crispEmbedModels;
+    [ObservableProperty] private CrispEmbedModelDisplay? _selectedCrispEmbedModel;
     [ObservableProperty] private string _progressText;
     [ObservableProperty] private double _progressValue;
     [ObservableProperty] private string _selectionStatus;
@@ -97,6 +102,7 @@ public partial class OcrViewModel : ObservableObject
     [ObservableProperty] private bool _isNOcrVisible;
     [ObservableProperty] private bool _isOllamaVisible;
     [ObservableProperty] private bool _isLlamaCppVisible;
+    [ObservableProperty] private bool _isCrispEmbedVisible;
     [ObservableProperty] private bool _isTesseractVisible;
     [ObservableProperty] private bool _isBinaryImageCompareVisible;
     [ObservableProperty] private bool _isPaddleOcrVisible;
@@ -147,6 +153,12 @@ public partial class OcrViewModel : ObservableObject
 
     public Window? Window { get; set; }
     public DataGrid SubtitleGrid { get; set; }
+
+    // Rebuild the combo row visuals after a download finishes so the install-status dots
+    // reflect the current on-disk state instead of the snapshot taken when first realised.
+    public Action? RefreshEngineCombo { get; set; }
+    public Action? RefreshCrispEmbedModelCombo { get; set; }
+
     public MatroskaTrackInfo? SelectedMatroskaTrack { get; set; }
     public bool OkPressed { get; private set; }
 
@@ -220,6 +232,8 @@ public partial class OcrViewModel : ObservableObject
         LlamaCppUrl = string.Empty;
         LlamaCppOcrModels = new ObservableCollection<LlamaCppModelDisplay>();
         LlamaCppOcrServerButtonText = "Start server";
+        CrispEmbedBackends = new ObservableCollection<CrispEmbedBackend>(CrispEmbedEngine.GetBackends());
+        CrispEmbedModels = new ObservableCollection<CrispEmbedModelDisplay>();
         TesseractDictionaryItems = new ObservableCollection<TesseractDictionary>();
         TesseractEngineModes = new ObservableCollection<TesseractEngineModeItem>(TesseractEngineModeItem.List());
         SelectedTesseractEngineMode = TesseractEngineModes.FirstOrDefault(p => p.Oem == Se.Settings.Ocr.TesseractEngineMode)
@@ -276,6 +290,7 @@ public partial class OcrViewModel : ObservableObject
             OllamaModel = ocr.OllamaModel;
             OllamaUrl = ocr.OllamaUrl;
             LlamaCppUrl = ocr.LlamaCppUrl;
+            SelectedCrispEmbedBackend = CrispEmbedBackends.FirstOrDefault(p => p.Name == ocr.CrispEmbedBackend) ?? CrispEmbedBackends.FirstOrDefault();
             SelectedOllamaLanguage = ocr.OllamaLanguage;
             GoogleVisionApiKey = ocr.GoogleVisionApiKey;
             MistralApiKey = ocr.MistralApiKey;
@@ -320,6 +335,8 @@ public partial class OcrViewModel : ObservableObject
         {
             ocr.LlamaCppOcrModel = LlamaCppServerManager.GetModelPath(SelectedLlamaCppOcrModel.Model.FileName);
         }
+        ocr.CrispEmbedBackend = SelectedCrispEmbedBackend?.Name ?? ocr.CrispEmbedBackend;
+        ocr.CrispEmbedModel = SelectedCrispEmbedModel?.Model.Name ?? ocr.CrispEmbedModel;
         ocr.GoogleVisionApiKey = GoogleVisionApiKey;
         ocr.MistralApiKey = MistralApiKey;
         ocr.GoogleVisionLanguage = SelectedGoogleVisionLanguage?.Code ?? "en";
@@ -1052,6 +1069,181 @@ public partial class OcrViewModel : ObservableObject
         }
 
         Se.Settings.Ocr.LlamaCppOcrModel = LlamaCppServerManager.GetModelPath(value.Model.FileName);
+    }
+
+    partial void OnSelectedCrispEmbedBackendChanged(CrispEmbedBackend? value)
+    {
+        CrispEmbedModels.Clear();
+        if (value == null)
+        {
+            SelectedCrispEmbedModel = null;
+            return;
+        }
+
+        Se.Settings.Ocr.CrispEmbedBackend = value.Name;
+
+        foreach (var model in value.Models)
+        {
+            CrispEmbedModels.Add(new CrispEmbedModelDisplay { Backend = value, Model = model });
+        }
+
+        SelectedCrispEmbedModel = CrispEmbedModels.FirstOrDefault(p => p.Model.Name == Se.Settings.Ocr.CrispEmbedModel)
+                                  ?? CrispEmbedModels.FirstOrDefault(p => value.IsModelInstalled(p.Model))
+                                  ?? CrispEmbedModels.FirstOrDefault();
+    }
+
+    partial void OnSelectedCrispEmbedModelChanged(CrispEmbedModelDisplay? value)
+    {
+        if (value == null)
+        {
+            return;
+        }
+
+        Se.Settings.Ocr.CrispEmbedModel = value.Model.Name;
+    }
+
+    [RelayCommand]
+    private async Task DownloadCrispEmbed()
+    {
+        if (Window == null || SelectedCrispEmbedBackend is not { } backend || SelectedCrispEmbedModel is not { } model)
+        {
+            return;
+        }
+
+        if (backend.IsModelInstalled(model.Model))
+        {
+            var answer = await MessageBox.Show(
+                Window,
+                Se.Language.General.Download,
+                string.Format(Se.Language.Translate.XIsAlreadyDownloadedReDownload, model.Model.Name),
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
+
+        await EnsureCrispEmbedReady(forceModelDownload: true);
+    }
+
+    /// <summary>
+    /// Makes sure the CrispEmbed engine binaries and the selected model are on disk, offering
+    /// downloads for anything missing - the OCR-side analog of the CrispASR engine/model
+    /// download flow in the speech-to-text window.
+    /// </summary>
+    private async Task<bool> EnsureCrispEmbedReady(bool forceModelDownload = false)
+    {
+        if (Window == null || SelectedCrispEmbedBackend is not { } backend || SelectedCrispEmbedModel is not { } model)
+        {
+            return false;
+        }
+
+        if (!CrispEmbedEngine.IsEngineInstalled())
+        {
+            string variant;
+            if (Configuration.IsRunningOnWindows)
+            {
+                var answer = await MessageBox.Show(
+                    Window,
+                    "Download CrispEmbed?",
+                    $"{Environment.NewLine}\"CrispEmbed\" requires downloading the CrispEmbed engine.{Environment.NewLine}{Environment.NewLine}Download and use CrispEmbed?",
+                    MessageBoxButtons.Cancel,
+                    MessageBoxIcon.Question,
+                    "CPU",
+                    "Vulkan",
+                    "CUDA");
+
+                if (answer == MessageBoxResult.Cancel)
+                {
+                    return false;
+                }
+
+                variant = answer switch
+                {
+                    MessageBoxResult.Custom1 => "cpu",
+                    MessageBoxResult.Custom3 => "cuda",
+                    _ => "vulkan",
+                };
+            }
+            else if (Configuration.IsRunningOnLinux && RuntimeInformation.ProcessArchitecture != Architecture.Arm64)
+            {
+                var answer = await MessageBox.Show(
+                    Window,
+                    "Download CrispEmbed?",
+                    $"{Environment.NewLine}\"CrispEmbed\" requires downloading the CrispEmbed engine.{Environment.NewLine}{Environment.NewLine}Download and use CrispEmbed?",
+                    MessageBoxButtons.Cancel,
+                    MessageBoxIcon.Question,
+                    "CPU",
+                    "GPU CUDA");
+
+                if (answer == MessageBoxResult.Cancel)
+                {
+                    return false;
+                }
+
+                variant = answer == MessageBoxResult.Custom2 ? "cuda" : string.Empty;
+            }
+            else
+            {
+                var answer = await MessageBox.Show(
+                    Window,
+                    "Download CrispEmbed?",
+                    $"{Environment.NewLine}\"CrispEmbed\" requires downloading the CrispEmbed engine ({CrispEmbedEngine.DownloadSizeText}).{Environment.NewLine}{Environment.NewLine}Download and use CrispEmbed?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+
+                variant = string.Empty;
+            }
+
+            var engineResult = await _windowService.ShowDialogAsync<DownloadCrispEmbedWindow, DownloadCrispEmbedViewModel>(Window,
+                vm => vm.InitializeEngine(variant));
+
+            _isCtrlDown = false;
+            RefreshEngineCombo?.Invoke();
+
+            if (!engineResult.OkPressed)
+            {
+                return false;
+            }
+        }
+
+        if (forceModelDownload || !backend.IsModelInstalled(model.Model))
+        {
+            if (!forceModelDownload)
+            {
+                var answer = await MessageBox.Show(
+                    Window,
+                    "Download model?",
+                    $"{Environment.NewLine}Download the model \"{model.Model.Name}\" ({model.Model.Size})?",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
+            }
+
+            var modelResult = await _windowService.ShowDialogAsync<DownloadCrispEmbedWindow, DownloadCrispEmbedViewModel>(Window,
+                vm => vm.InitializeModel(backend, model.Model));
+
+            _isCtrlDown = false;
+            RefreshCrispEmbedModelCombo?.Invoke();
+
+            if (!modelResult.OkPressed)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     [RelayCommand]
@@ -2198,6 +2390,17 @@ public partial class OcrViewModel : ObservableObject
         else if (ocrEngine.EngineType == OcrEngineType.LlamaCpp)
         {
             RunLlamaCppOcr(selectedIndices, _cancellationTokenSource.Token);
+        }
+        else if (ocrEngine.EngineType == OcrEngineType.CrispEmbed)
+        {
+            var ready = await EnsureCrispEmbedReady();
+            if (!ready)
+            {
+                PauseOcr();
+                return;
+            }
+
+            RunCrispEmbedOcr(selectedIndices, _cancellationTokenSource.Token);
         }
         else if (ocrEngine.EngineType == OcrEngineType.Mistral)
         {
@@ -3798,6 +4001,74 @@ public partial class OcrViewModel : ObservableObject
         });
     }
 
+    private void RunCrispEmbedOcr(List<int> selectedIndices, CancellationToken cancellationToken)
+    {
+        if (SelectedCrispEmbedBackend is not { } backend || SelectedCrispEmbedModel is not { } model)
+        {
+            PauseOcr();
+            return;
+        }
+
+        var engine = new CrispEmbedOcr(Se.Settings.Ocr.CrispEmbedOcrTimeoutMinutes);
+
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                ProgressText = "Loading CrispEmbed model...";
+                var started = await engine.StartServerAsync(
+                    CrispEmbedEngine.GetServerExecutable(),
+                    backend.GetModelPath(model.Model),
+                    cancellationToken);
+
+                if (!started)
+                {
+                    var error = engine.Error;
+                    SeLogger.Error("CrispEmbed server failed to start: " + error);
+                    await Dispatcher.UIThread.InvokeAsync(async () =>
+                    {
+                        await MessageBox.Show(
+                            Window!,
+                            "CrispEmbed error",
+                            $"The CrispEmbed server could not be started:{Environment.NewLine}{Environment.NewLine}{error}",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                    });
+                    return;
+                }
+
+                for (var processedIndex = 0; processedIndex < selectedIndices.Count; processedIndex++)
+                {
+                    var i = selectedIndices[processedIndex];
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    UpdateOcrProgress(processedIndex + 1, selectedIndices.Count);
+
+                    var item = OcrSubtitleItems[i];
+                    var bitmap = item.GetSkBitmap();
+
+                    SelectAndScrollToRow(i);
+
+                    var text = await engine.Ocr(bitmap, cancellationToken);
+                    item.Text = text;
+
+                    OcrFixLineAndSetText(i, item);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            finally
+            {
+                engine.Dispose();
+                PauseOcr();
+            }
+        });
+    }
+
     private void RunMistralOcr(List<int> selectedIndices, CancellationToken cancellationToken)
     {
         var mistralOcr = new MistralOcr(MistralApiKey);
@@ -4304,6 +4575,7 @@ public partial class OcrViewModel : ObservableObject
         IsInspectLineVisible = et == OcrEngineType.nOcr || et == OcrEngineType.BinaryImageCompare;
         IsOllamaVisible = et == OcrEngineType.Ollama;
         IsLlamaCppVisible = et == OcrEngineType.LlamaCpp;
+        IsCrispEmbedVisible = et == OcrEngineType.CrispEmbed;
         IsTesseractVisible = et == OcrEngineType.Tesseract;
         IsPaddleOcrVisible = et == OcrEngineType.PaddleOcrStandalone || et == OcrEngineType.PaddleOcrPython;
         IsGoogleVisionVisible = et == OcrEngineType.GoogleVision;
@@ -4367,6 +4639,70 @@ public partial class OcrViewModel : ObservableObject
             SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(LlamaCppOcrModels, LlamaCppServerManager.OcrModels, savedModelName);
             UpdateLlamaCppOcrServerButtonText();
         }
+
+        if (IsCrispEmbedVisible)
+        {
+            if (SelectedCrispEmbedBackend == null)
+            {
+                SelectedCrispEmbedBackend = CrispEmbedBackends.FirstOrDefault(p => p.Name == Se.Settings.Ocr.CrispEmbedBackend)
+                                            ?? CrispEmbedBackends.FirstOrDefault();
+            }
+
+            if (!_crispEmbedUpdatePromptShown)
+            {
+                Dispatcher.UIThread.Post(async () => await CheckCrispEmbedForUpdateAsync());
+            }
+        }
+    }
+
+    private bool _crispEmbedUpdatePromptShown;
+
+    /// <summary>
+    /// When the CrispEmbed engine is selected and the installed build is a known-but-older
+    /// release (per the .installed.sha256 sidecar), offer to download the current one - same
+    /// flow as the CrispASR update prompt in the speech-to-text window.
+    /// </summary>
+    private async Task CheckCrispEmbedForUpdateAsync()
+    {
+        if (_crispEmbedUpdatePromptShown || Window == null || !CrispEmbedEngine.IsEngineInstalled())
+        {
+            return;
+        }
+
+        var sidecar = DownloadHashManager.TryReadSidecar(CrispEmbedEngine.GetAndCreateFolder());
+        if (sidecar == null)
+        {
+            return;
+        }
+
+        var (key, hash) = sidecar.Value;
+        if (DownloadHashManager.GetStatus(key, hash) != DownloadHashManager.UpdateStatus.UpdateAvailable)
+        {
+            return;
+        }
+
+        _crispEmbedUpdatePromptShown = true;
+
+        var answer = await MessageBox.Show(
+            Window,
+            "Update CrispEmbed?",
+            $"A newer version of CrispEmbed is available.{Environment.NewLine}{Environment.NewLine}Download it now?",
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question);
+
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        var variant = DownloadHashManager.GetCrispEmbedVariant(key)
+                      ?? (Configuration.IsRunningOnWindows ? "vulkan" : string.Empty);
+
+        await _windowService.ShowDialogAsync<DownloadCrispEmbedWindow, DownloadCrispEmbedViewModel>(Window,
+            vm => vm.InitializeEngine(variant));
+
+        _isCtrlDown = false;
+        RefreshEngineCombo?.Invoke();
     }
 
     private bool _forceClose = false;

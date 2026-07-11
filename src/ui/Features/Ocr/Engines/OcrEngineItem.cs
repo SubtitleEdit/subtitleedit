@@ -42,6 +42,12 @@ public class OcrEngineItem
         list.Add(new("Paddle OCR Python", OcrEngineType.PaddleOcrPython, "Paddle OCR Python", "", ""));
         list.Add(new("Ollama", OcrEngineType.Ollama, "Ollama e.g. via llama-vision", "", "http://localhost:11434/api/chat"));
         list.Add(new("llama.cpp", OcrEngineType.LlamaCpp, "llama.cpp", "", "http://127.0.0.1:8080/v1/chat/completions"));
+
+        if (CrispEmbedEngine.CanBeDownloaded())
+        {
+            list.Add(new(CrispEmbedEngine.StaticName, OcrEngineType.CrispEmbed, "CrispEmbed is a local OCR engine with multiple model backends (free/open source)", "", ""));
+        }
+
         list.Add(new("Google Vision", OcrEngineType.GoogleVision, "Google Vision is a cloud-based OCR engine by Google", "", ""));
 
         //list.Add(new("Azure Vision", OcrEngineType.AzureVision, "Azure Vision is a cloud-based OCR engine by Microsoft", "", ""));

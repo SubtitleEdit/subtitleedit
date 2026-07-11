@@ -129,6 +129,7 @@ public class Se
     public static string PaddleOcrFolder => Path.Combine(OcrFolder, "PaddleOCR3-1");
     public static string PaddleOcrModelsFolder => Path.Combine(PaddleOcrFolder, "models");
     public static string GoogleLensOcrFolder => Path.Combine(OcrFolder, "Google-Lens");
+    public static string CrispEmbedFolder => Path.Combine(OcrFolder, "CrispEmbed");
     public static string VlcFolder => Path.Combine(DataFolder, "VLC");
     public static string SevenZipFolder => Path.Combine(DataFolder, "7Zip");
     private static readonly Lazy<string> _tesseractFolder = new(ResolveTesseractFolder);
