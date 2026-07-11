@@ -2203,18 +2203,51 @@ public partial class SpeechToTextViewModel : ObservableObject
             if (!startOk)
             {
                 IsTranscribeEnabled = true;
-                Dispatcher.UIThread.Invoke(async () =>
-                {
-                    if (string.IsNullOrEmpty(_error))
-                    {
-                        await MessageBox.Show(Window!, "Unknown error", "Unable to start Whisper!");
-                    }
-                    else
-                    {
-                        await MessageBox.Show(Window!, "Error", "Unable to start Whisper: " + _error);
-                    }
-                });
+                ProgressOpacity = 0;
+                Dispatcher.UIThread.Invoke(async () => { await ShowUnableToStartEngineErrorAsync(); });
             }
+        }
+    }
+
+    /// <summary>
+    /// Shown when the speech-to-text engine process could not be started. If the engine's
+    /// executable has disappeared after the install check that ran when transcribe was
+    /// clicked - typically quarantined by antivirus software (#12220) - offer to
+    /// re-download the engine instead of only echoing the raw exception message.
+    /// </summary>
+    private async Task ShowUnableToStartEngineErrorAsync()
+    {
+        var error = _error;
+        _error = string.Empty;
+
+        var engine = GetEffectiveSelectedEngine();
+        if (engine.CanBeDownloaded() && !engine.IsEngineInstalled())
+        {
+            var answer = await MessageBox.Show(
+                Window!,
+                $"Unable to start {engine.Name}",
+                $"The {engine.Name} program file was not found:{Environment.NewLine}" +
+                $"{engine.GetExecutable()}{Environment.NewLine}{Environment.NewLine}" +
+                $"It may have been deleted or quarantined by antivirus software - if so, please restore it or add an exclusion for the folder.{Environment.NewLine}{Environment.NewLine}" +
+                $"Do you want to re-download \"{engine.Name}\"?",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (answer == MessageBoxResult.Yes)
+            {
+                await ReDownloadWhisperEngine();
+            }
+
+            return;
+        }
+
+        if (string.IsNullOrEmpty(error))
+        {
+            await MessageBox.Show(Window!, "Unknown error", $"Unable to start {engine.Name}!");
+        }
+        else
+        {
+            await MessageBox.Show(Window!, "Error", $"Unable to start {engine.Name}: {error}");
         }
     }
 
@@ -3258,15 +3291,9 @@ public partial class SpeechToTextViewModel : ObservableObject
         var startGenerateAudioFileOk = GenerateAudioFile(_videoFileName, _audioTrackNumber);
         if (!startGenerateAudioFileOk)
         {
-            if (string.IsNullOrEmpty(_error))
-            {
-                await MessageBox.Show(Window!, "Unknown error", "Unable to start Whisper!");
-            }
-            else
-            {
-                await MessageBox.Show(Window!, "Error", "Unable to start Whisper: " + _error);
-            }
-            _error = string.Empty;
+            IsTranscribeEnabled = true;
+            ProgressOpacity = 0;
+            await ShowUnableToStartEngineErrorAsync();
         }
     }
 
@@ -3383,6 +3410,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         catch (Exception e)
         {
             _error = e.Message;
+            SeLogger.Error(e, $"Unable to start speech-to-text engine \"{engine.Name}\"");
             return false;
         }
         _sw = Stopwatch.StartNew();
