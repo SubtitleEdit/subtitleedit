@@ -1,6 +1,12 @@
 
 Subtitle Edit Changelog
 
+v5.1.0-beta15 (TBD)
+
+* OCR: add CrispEmbed engine - local ggml-based OCR (same family as CrispASR) with GLM-OCR, GOT-OCR2, and Qwen3-VL-2B model backends, install-status dots, and engine/model download with update tracking - thx CrispStrobe
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-beta14 (10th of July 2026)
 
 * Add PGS position monitor to the image-based subtitle editor - a "Position map" view drawing every subtitle on the video canvas with configurable letterbox bars, zone color coding (active picture / bottom bar / top bar), title-safe margin, clickable zone chips, and a zone dot column in the grid - a BDSup2Sub++ style QC tool - thx Victory61
