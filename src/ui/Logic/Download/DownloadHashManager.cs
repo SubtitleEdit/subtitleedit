@@ -52,6 +52,21 @@ public static class DownloadHashManager
         public const string LinuxArmExecutable = "CrispAsr.Linux.Arm.Executable";
     }
 
+    public static class CrispEmbed
+    {
+        // Hashes of the release archive (.zip / .tar.gz) — recognised from the .installed.sha256
+        // sidecar written at install time. Index 0 must match the release CrispEmbedDownloadService.cs
+        // is pinned to. Like OmniVoice there is no executable-hash fallback: CrispEmbed has only
+        // ever shipped via SE with a sidecar.
+        public const string WindowsCuda = "CrispEmbed.Windows.Cuda";
+        public const string WindowsVulkan = "CrispEmbed.Windows.Vulkan";
+        public const string WindowsCpu = "CrispEmbed.Windows.Cpu";
+        public const string MacOs = "CrispEmbed.MacOs";
+        public const string Linux = "CrispEmbed.Linux";
+        public const string LinuxCuda = "CrispEmbed.Linux.Cuda";
+        public const string LinuxArm = "CrispEmbed.Linux.Arm";
+    }
+
     public static class LlamaCpp
     {
         // Hashes of the release archive (.zip / .tar.gz) — used when a sidecar hash exists alongside the install.
@@ -441,6 +456,38 @@ public static class DownloadHashManager
                 "8a8edb05d25ba793bcba90c528332ae17ef9324d689aa3ffd7c9dda48262bdbb", // v0.6.11
                 "f8b6e6f080dc5bd227b39417a48d525de3962c85519fa40debc1aec4e0251bfa", // v0.6.10
                 "b3dacccb8d16afb88a7c426edbeefaa6c8bee0f6bc5a5e6493fb4616c2ec32d1", // v0.6.9 (first SE-tracked Linux ARM64 build)
+            },
+
+            // CrispEmbed — https://github.com/CrispStrobe/CrispEmbed/releases
+            // Index 0 must match whatever version CrispEmbedDownloadService.cs is pinned to,
+            // otherwise users will be prompted to "update" to the same version they just got.
+            [CrispEmbed.WindowsCuda] = new[]
+            {
+                "faf376578103b37d7b1d5a385072ff8c66f35cbb7f20a801a6ab0d4e85802cda", // v0.14.0 (current download URL)
+            },
+            [CrispEmbed.WindowsVulkan] = new[]
+            {
+                "d1722ae897a0909de877e6d1defeb5cf56041ced923cb058770fc76f9dcc8a37", // v0.14.0 (current download URL)
+            },
+            [CrispEmbed.WindowsCpu] = new[]
+            {
+                "49ba9a172f918c82648d69a4758841a45e29bb8e2700ffa64e4c94f325d0fec3", // v0.14.0 (current download URL)
+            },
+            [CrispEmbed.MacOs] = new[]
+            {
+                "2a47142eea71f0120fbf86eda21a0d972618e01c2bf5d67e54204d8e5644411e", // v0.14.0 (current download URL)
+            },
+            [CrispEmbed.Linux] = new[]
+            {
+                "e255a59c615fcdf869794c7fabc2f7a4da7babddce5a7ef4771e4fc4a51ff65c", // v0.14.0 (current download URL)
+            },
+            [CrispEmbed.LinuxCuda] = new[]
+            {
+                "48e2c0e8536c7db717155adb418330e29bb5f7b1c8eda8686fe7513ae6ea58d9", // v0.14.0 (current download URL)
+            },
+            [CrispEmbed.LinuxArm] = new[]
+            {
+                "3d08ea2cb15da4f1d71dfc3ae030f855d7a5d32a662952b6ea43ff17d3b37788", // v0.14.0 (current download URL)
             },
 
             // SHA-256 of crispasr.exe / crispasr extracted from each archive above.
@@ -1129,25 +1176,66 @@ public static class DownloadHashManager
     /// </summary>
     public static UpdateStatus GetSidecarStatus(string installFolder)
     {
+        var sidecar = TryReadSidecar(installFolder);
+        return sidecar == null
+            ? UpdateStatus.Unknown
+            : GetStatus(sidecar.Value.Key, sidecar.Value.Hash);
+    }
+
+    /// <summary>
+    /// Reads the <c>.installed.sha256</c> sidecar in <paramref name="installFolder"/> and returns
+    /// the recorded hash key and archive hash, or null when the sidecar is missing or malformed.
+    /// Use this when the caller needs the key itself (e.g. to derive the install variant);
+    /// <see cref="GetSidecarStatus"/> is the shortcut when only the update status is needed.
+    /// </summary>
+    public static (string Key, string Hash)? TryReadSidecar(string installFolder)
+    {
         try
         {
             var sidecar = Path.Combine(installFolder, ".installed.sha256");
             if (!File.Exists(sidecar))
             {
-                return UpdateStatus.Unknown;
+                return null;
             }
 
             var lines = File.ReadAllLines(sidecar);
             if (lines.Length < 2)
             {
-                return UpdateStatus.Unknown;
+                return null;
             }
 
-            return GetStatus(lines[0].Trim(), lines[1].Trim());
+            return (lines[0].Trim(), lines[1].Trim());
         }
         catch
         {
-            return UpdateStatus.Unknown;
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Writes the <c>.installed.sha256</c> sidecar for a freshly downloaded release archive:
+    /// first line the hash key, second line the archive's SHA-256. Rewinds and hashes
+    /// <paramref name="archiveStream"/>. Best-effort - failures are swallowed since the sidecar
+    /// only powers update detection.
+    /// </summary>
+    public static void WriteSidecar(string installFolder, string? key, Stream archiveStream)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(key) || archiveStream.Length == 0)
+            {
+                return;
+            }
+
+            archiveStream.Position = 0;
+            var hash = ComputeSha256(archiveStream);
+
+            var sidecar = Path.Combine(installFolder, ".installed.sha256");
+            File.WriteAllText(sidecar, key + Environment.NewLine + hash);
+        }
+        catch
+        {
+            // ignore — hash side-car is best-effort
         }
     }
 
@@ -1258,6 +1346,67 @@ public static class DownloadHashManager
             CrispAsr.LinuxCuda or CrispAsr.LinuxCudaExecutable => "cuda",
             CrispAsr.Linux or CrispAsr.LinuxExecutable => string.Empty,
             CrispAsr.LinuxArm or CrispAsr.LinuxArmExecutable => string.Empty,
+            _ => null,
+        };
+    }
+
+    /// <summary>
+    /// Resolves the CrispEmbed hash key for the current OS and variant.
+    /// On Windows the variant selects between cuda, vulkan, and cpu.
+    /// On Linux x86_64 the variant selects between cuda and the default CPU build.
+    /// On Linux ARM64 and macOS the variant is ignored (only one build each).
+    /// Returns null if the platform / variant combination is unknown.
+    /// </summary>
+    public static string? ResolveCrispEmbedKey(string? variant)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+            {
+                return CrispEmbed.LinuxArm;
+            }
+            if (variant == "cuda")
+            {
+                return CrispEmbed.LinuxCuda;
+            }
+            return CrispEmbed.Linux;
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return CrispEmbed.MacOs;
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return variant switch
+            {
+                "cuda" => CrispEmbed.WindowsCuda,
+                "cpu" => CrispEmbed.WindowsCpu,
+                "vulkan" => CrispEmbed.WindowsVulkan,
+                _ => null,
+            };
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Reverse of <see cref="ResolveCrispEmbedKey"/> — returns the variant string matching the
+    /// given hash key. For Windows: "cuda" / "vulkan" / "cpu". For Linux x86_64: "cuda" for the
+    /// CUDA build, empty string for the default CPU build. Returns null otherwise.
+    /// </summary>
+    public static string? GetCrispEmbedVariant(string key)
+    {
+        return key switch
+        {
+            CrispEmbed.WindowsCuda => "cuda",
+            CrispEmbed.WindowsVulkan => "vulkan",
+            CrispEmbed.WindowsCpu => "cpu",
+            CrispEmbed.LinuxCuda => "cuda",
+            CrispEmbed.Linux => string.Empty,
+            CrispEmbed.LinuxArm => string.Empty,
+            CrispEmbed.MacOs => string.Empty,
             _ => null,
         };
     }

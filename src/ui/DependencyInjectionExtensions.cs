@@ -248,6 +248,7 @@ public static class DependencyInjectionExtensions
         collection.AddHttpClient<ILibMpvDownloadService, LibMpvDownloadService>();
         collection.AddHttpClient<ILibVlcDownloadService, LibVlcDownloadService>();
         collection.AddHttpClient<IPaddleOcrDownloadService, PaddleOcrDownloadService>();
+        collection.AddHttpClient<ICrispEmbedDownloadService, CrispEmbedDownloadService>();
         collection.AddHttpClient<ISpellCheckDictionaryDownloadService, SpellCheckDictionaryDownloadService>();
         collection.AddHttpClient<ITesseractDownloadService, TesseractDownloadService>();
         collection.AddHttpClient<IWhisperDownloadService, WhisperDownloadService>();
@@ -353,6 +354,7 @@ public static class DependencyInjectionExtensions
         collection.AddTransient<DownloadLibVlcViewModel>();
         collection.AddTransient<DownloadLlamaCppViewModel>();
         collection.AddTransient<DownloadPaddleOcrViewModel>();
+        collection.AddTransient<DownloadCrispEmbedViewModel>();
         collection.AddTransient<DownloadTesseractModelViewModel>();
         collection.AddTransient<DownloadTesseractViewModel>();
         collection.AddTransient<DownloadTtsViewModel>();

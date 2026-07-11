@@ -16,4 +16,5 @@ public enum OcrEngineType
     Mistral,
     BinaryImageCompare,
     Glm,
+    CrispEmbed,
 }
