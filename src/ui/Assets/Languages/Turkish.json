@@ -1377,7 +1377,7 @@
 	  "linesXToY": "Satır {0}-{1}",
 	  "largeChangeWarning": "Büyük değişiklik - yeniden yazılmış gibi görünüyor, dikkatlice inceleyin",
 	  "engineError": "Yapay zekâ motoruna ulaşılamadı: {0}",
-	  "setupHint": "Lütfen önce Araçlar -> Yapay zekâ incelemesi menüsünden bir motor ve model seçin.",
+	  "setupHint": "Lütfen önce Araçlar -> Yapay zekâ incelemesi menüsünden bir motor ve model seçin."
     },
     "aiAssistant": {
       "title": "Yapay zekâ asistanı",
