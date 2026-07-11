@@ -251,7 +251,7 @@ public static class InitMenu
                         },
                         new MenuItem
                         {
-                            Header = "FCP/png",
+                            Header = "Final Cut Pro + image",
                             Command = vm.ExportFcpPngCommand,
                         },
                         new MenuItem

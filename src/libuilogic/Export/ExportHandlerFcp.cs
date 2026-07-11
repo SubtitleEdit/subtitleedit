@@ -10,7 +10,7 @@ public class ExportHandlerFcp : IExportHandler
     public ExportImageType ExportImageType => ExportImageType.Fcp;
     public string Extension => "";
     public bool UseFileName => false;
-    public string Title => string.Format("Export to {0}", "FCP/image");
+    public string Title => string.Format("Export to {0}", "Final Cut Pro + image");
     public double FrameRate { get; set; } = 25.0;
 
     private string _folderName = string.Empty;
