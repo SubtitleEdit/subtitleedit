@@ -251,6 +251,7 @@
     <Word from="če" to="će" />
     <Word from="čemo" to="ćemo" />
     <Word from="čete" to="ćete" />
+    <Word from="ćebad" to="deke" />
     <Word from="ćebe" to="deku" />
     <Word from="ćebetu" to="deki" />
     <Word from="čk" to="čak" />
@@ -540,6 +541,7 @@
     <Word from="gdhe" to="gdje" />
     <Word from="gdke" to="gdje" />
     <Word from="gjde" to="gdje" />
+    <Word from="gfje" to="gdje" />
     <Word from="gke" to="gle" />
     <Word from="Gdina" to="Gospodina" />
     <Word from="G-đica" to="Gđica" />
@@ -1284,6 +1286,7 @@
     <Word from="napolje" to="van" />
     <Word from="Napolju" to="Vani" />
     <Word from="napolju" to="vani" />
+    <Word from="naracno" to="naravno" />
     <Word from="nasela" to="nasjela" />
     <Word from="Nasela" to="Nasjela" />
     <Word from="nasele" to="nasjele" />
@@ -1920,6 +1923,7 @@
     <Word from="pravougli" to="pravokutni" />
     <Word from="pre" to="prije" />
     <Word from="Pre" to="Prije" />
+    <Word from="ptije" to="prije" />
     <Word from="prihe" to="prije" />
     <Word from="pream" to="prema" />
     <Word from="predela" to="predjela" />
@@ -2257,6 +2261,7 @@
     <Word from="resetovao" to="resetirao" />
     <Word from="resetovanje" to="resetiranje" />
     <Word from="resetuje" to="resetira" />
+    <Word from="resetuju" to="resetiraju" />
     <Word from="resetujete" to="resetirate" />
     <Word from="resetujte" to="resetirajte" />
     <Word from="Resetujte" to="Resetirajte" />
@@ -2697,6 +2702,7 @@
     <Word from="svkai" to="svaki" />
     <Word from="svojoh" to="svojih" />
     <Word from="svoke" to="svoje" />
+    <Word from="svohe" to="svoje" />
     <Word from="svoej" to="svoje" />
     <Word from="svugde" to="svugdje" />
     <Word from="Svugde" to="Svugdje" />
@@ -5606,6 +5612,7 @@
     <RegEx find="liznakinj" replaceWith="lizank" />
     <RegEx find="lkm" replaceWith="lim" />
     <RegEx find="lrm" replaceWith="lem" />
+    <RegEx find="ljhd" replaceWith="ljud" />
     <RegEx find="lqv" replaceWith="lav" />
     <RegEx find="ljqn" replaceWith="ljan" />
     <RegEx find="ljubc" replaceWith="ljupc" />
