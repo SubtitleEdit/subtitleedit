@@ -30,6 +30,7 @@ internal class IconNames
     public const string Cogs = "mdi-cogs";
     public const string ContentSave = "mdi-content-save";
     public const string Copy = "mdi-content-copy";
+    public const string Creation = "mdi-creation";
     public const string CheckCircle = "mdi-check-circle";
     public const string Download = "mdi-download";
     public const string CloudDownload = "mdi-cloud-download-outline";
@@ -45,12 +46,14 @@ internal class IconNames
     public const string EyeSettings = "mdi-eye-settings";
     public const string FileCog = "mdi-file-cog";
     public const string FileMultiple = "mdi-file-multiple";
+    public const string FileOutline = "mdi-file-outline";
     public const string Filter = "mdi-filter";
     public const string Find = "mdi-magnify";
     public const string FindReplace = "mdi-find-replace";
     public const string Folder = "mdi-folder";
     public const string FolderOpen = "mdi-folder-open";
     public const string FormatClear = "mdi-format-clear";
+    public const string FormTextBox = "mdi-form-textbox";
     public const string Fullscreen = "mdi-fullscreen";
     public const string FullscreenExit = "mdi-fullscreen-exit";
     public const string Help = "mdi-help";
@@ -66,6 +69,7 @@ internal class IconNames
     public const string MagnifyPlus = "mdi-magnify-plus";
     public const string MenuDown = "mdi-menu-down";
     public const string Minus = "mdi-minus";
+    public const string MovieOpenOutline = "mdi-movie-open-outline";
     public const string Netflix = "mdi-netflix";
     public const string Network = "mdi-network";
     public const string New = "mdi-invoice-text-plus";
@@ -101,10 +105,15 @@ internal class IconNames
     public const string Spellcheck = "mdi-spellcheck";
     public const string StopCircle = "mdi-stop-circle";
     public const string SwapVertical = "mdi-swap-vertical";
+    public const string Sync = "mdi-sync";
     public const string TimerMinus = "mdi-timer-minus-outline";
     public const string TimerSettings = "mdi-timer-cog-outline";
     public const string Tools = "mdi-tools";
+    public const string Translate = "mdi-translate";
     public const string Trash = "mdi-trash-can-outline";
+    public const string ViewGrid = "mdi-view-grid";
+    public const string ViewList = "mdi-view-list";
+    public const string ViewSplitVertical = "mdi-view-split-vertical";
     public const string Waveform = "mdi-waveform";
     public const string Web = "mdi-web";
 }
