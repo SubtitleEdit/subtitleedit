@@ -9,6 +9,7 @@
 - **380+ subtitle formats** — text, binary, and image-based.
 - **Container input** — Matroska (`.mkv` / `.mks`), MP4, MCC, transport stream teletext, Blu-Ray `.sup`.
 - **OCR for image-based sources** via five engines (Tesseract subprocess, nOCR built-in, BinaryOCR built-in, Ollama HTTP, PaddleOCR subprocess).
+- **Auto-translate** via local LLMs (llama.cpp with automatic server start, Ollama, LM Studio) or self-hosted services (LibreTranslate, NLLB).
 - **Image-based output** — Blu-Ray sup, BDN-XML, DOST, FCP, D-Cinema interop / SMPTE 2014, images-with-time-code.
 - **Operations pipeline** — offset, fps change, change-speed, renumber, adjust-duration, fix-common-errors, merge/split, balance, redo casing, RTL fixes, multiple-replace, custom-text format, plain text.
 - **Cross-platform** — Windows, Linux, macOS. Only requires the .NET runtime; no display or GUI needed.
@@ -236,6 +237,43 @@ seconv broadcast.ts subrip
 # Time codes only — extract timing with no OCR (empty text); works for any image source
 seconv movie.sup subrip --time-codes-only
 seconv movie.sub subrip --time-codes-only
+```
+
+### Auto-translate
+
+`--translate-to:<language>` machine-translates each file as part of the conversion (after OCR for image sources, before the cleanup operations). Languages are given as a code or English name (`de`, `German`, `da`, `Danish`, …); the source language is auto-detected per file unless `--translate-from` is set.
+
+| Option | Description |
+|---|---|
+| `--translate-to:<lang>` | Target language — enables translation |
+| `--translate-from:<lang>` | Source language (default: auto-detect per file) |
+| `--translate-engine:<engine>` | `llamacpp` (default) \| `ollama` \| `lmstudio` \| `libretranslate` \| `nllb-serve` \| `nllb-api` |
+| `--translate-url:<url>` | Endpoint of an already-running translate server. For `llamacpp` this skips the local server auto-start; a bare `host:port` is completed to `/v1/chat/completions`. |
+| `--translate-model:<model>` | `ollama`/`lmstudio`: model name. `llamacpp`: a `.gguf` file name from the models folder or a full path (default: the first installed translate model). |
+
+**llama.cpp (default engine).** With no `--translate-url`, seconv runs a local `llama-server` for you: it looks for the binary in Subtitle Edit's data folder (`llama.cpp` next to `seconv`, then `%AppData%\Subtitle Edit\llama.cpp` / `~/Library/Application Support/Subtitle Edit/llama.cpp` / `~/.config/Subtitle Edit/llama.cpp`) and falls back to `llama-server` on `PATH`. The server is started on a free localhost port with the model's correct chat-template flags and stopped again when seconv exits. Models resolve against the data folder's `models` subfolder.
+
+> **seconv never downloads engines or models** (same policy as Tesseract/PaddleOCR). Get llama.cpp + a translation model in one of these ways:
+>
+> - Run auto-translate with llama.cpp once in the Subtitle Edit UI (Tools → Auto-translate → llama.cpp) — it downloads both into the data folder that seconv probes.
+> - Install llama.cpp yourself (`brew install llama.cpp`, `winget install ggml.llamacpp`, or a [GitHub release](https://github.com/ggml-org/llama.cpp/releases)) and drop a `.gguf` translation model (e.g. [TranslateGemma](https://huggingface.co/SandLogicTechnologies/translategemma-4b-it-GGUF)) into the models folder, or pass it via `--translate-model:<path.gguf>`.
+> - Point `--translate-url` at any llama-server you already have running.
+
+```bash
+# Translate to German via a local llama.cpp server (started and stopped automatically)
+seconv movie.srt subrip --translate-to:de
+
+# Specific source language and model
+seconv movie.srt subrip --translate-from:en --translate-to:da --translate-model:translategemma-4b_Q4_K_M.gguf
+
+# Already-running llama-server (local or remote)
+seconv movie.srt subrip --translate-to:de --translate-url:http://192.168.1.10:8080
+
+# Ollama
+seconv movie.srt subrip --translate-to:da --translate-engine:ollama --translate-model:gemma2
+
+# OCR a Blu-Ray sup and translate the result in one pass
+seconv movie.sup subrip --ocr-engine:tesseract --ocr-language:eng --translate-to:de
 ```
 
 ### Templates / replacements

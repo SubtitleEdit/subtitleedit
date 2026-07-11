@@ -35,6 +35,20 @@ You can chain multiple conversion functions:
 - Auto translate
 - Delete lines
 
+## Auto-translate in Batch Convert
+
+Batch Convert can machine-translate files as part of the conversion. Supported engines:
+
+- Ollama
+- LibreTranslate
+- LM Studio
+- llama.cpp — fully managed: Batch Convert reuses an already-running local `llama-server`, or downloads llama.cpp plus a curated translation model (e.g. TranslateGemma) and starts the server for you. Point it at your own server via the remote-server option in [Auto-translate](auto-translate.md) settings.
+- NLLB (nllb-serve and nllb-api)
+- DeepL (API key required)
+- CrispASR MADLAD
+
+The same feature is available headlessly in `seconv` via `--translate-to` — see the [command line documentation](../reference/command-line.md).
+
 ## OCR in Batch Convert
 
 Batch Convert can OCR image-based subtitle files while converting them to text-based formats.

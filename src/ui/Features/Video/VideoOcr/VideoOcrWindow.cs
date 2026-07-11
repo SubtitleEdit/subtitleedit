@@ -298,7 +298,7 @@ public class VideoOcrWindow : Window
                     ? DownloadDotStatus.UpToDate
                     : DownloadDotStatus.NotInstalled;
             case OcrEngineType.LlamaCpp:
-                return StatusDots.From(LlamaCppServerManager.IsEngineInstalled(), LlamaCppServerManager.GetEngineUpdateStatus());
+                return StatusDots.From(LlamaCppServerManager.IsEngineInstalled(), LlamaCppUpdateStatus.GetEngineUpdateStatus());
             default:
                 return DownloadDotStatus.None;
         }

@@ -47,6 +47,11 @@ internal static class HelpDisplay
         ShowParameter("--no-pgs-isolate-colors", "Disable PGS/DVB-sub OCR colour isolation (on by default; isolation binarises to black-on-white so the white glyph fill survives the OCR canvas)");
         ShowParameter("--ollama-url:<url>", "Ollama API endpoint (default: http://localhost:11434/api/chat)");
         ShowParameter("--ollama-model:<model>", "Ollama vision model (default: llama3.2-vision)");
+        ShowParameter("--translate-to:<lang>", "Auto-translate to this language (code or English name, e.g. de or German)");
+        ShowParameter("--translate-from:<lang>", "Auto-translate source language (default: auto-detect per file)");
+        ShowParameter("--translate-engine:<engine>", "llamacpp (default; auto-starts a local llama-server) | ollama | lmstudio | libretranslate | nllb-serve | nllb-api");
+        ShowParameter("--translate-url:<url>", "Endpoint of an already-running translate server (llamacpp: skips the auto-start)");
+        ShowParameter("--translate-model:<model>", "Ollama/LM Studio model name, or llamacpp .gguf file name/path");
         ShowParameter("--multiple-replace:<path.xml>", "SE MultipleSearchAndReplaceGroups XML applied per paragraph");
         ShowParameter("--custom-format:<path.xml>", "SE CustomFormatItem XML (use with --format customtext)");
         ShowParameter("--settings:<path.json>", "JSON settings file overriding libse defaults");
@@ -120,6 +125,12 @@ internal static class HelpDisplay
         ShowExample(
             "seconv subs.srt customtext --custom-format:my-template.xml",
             "Render via a custom text format template");
+        ShowExample(
+            "seconv movie.srt subrip --translate-to:de",
+            "Translate to German via a local llama.cpp server (started automatically)");
+        ShowExample(
+            "seconv movie.srt subrip --translate-to:da --translate-engine:ollama --translate-model:gemma2",
+            "Translate to Danish via a running Ollama instance");
         ShowExample(
             "seconv formats",
             "List all available formats");

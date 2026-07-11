@@ -221,7 +221,7 @@ public class AutoTranslateWindow : Window
             case LlamaCppTranslate:
                 return StatusDots.From(
                     LlamaCppServerManager.IsEngineInstalled(),
-                    LlamaCppServerManager.GetEngineUpdateStatus());
+                    LlamaCppUpdateStatus.GetEngineUpdateStatus());
             case CrispAsrMadladTranslate:
                 var crispAsr = new CrispAsrMadlad();
                 if (!crispAsr.IsEngineInstalled())

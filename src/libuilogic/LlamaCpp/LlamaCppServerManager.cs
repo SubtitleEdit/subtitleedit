@@ -1,6 +1,4 @@
 using Nikse.SubtitleEdit.Core.Common;
-using Nikse.SubtitleEdit.Logic.Config;
-using Nikse.SubtitleEdit.Logic.Download;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -136,6 +134,28 @@ public static class LlamaCppServerManager
             MmprojUrl: "https://huggingface.co/ggml-org/LightOnOCR-1B-1025-GGUF/resolve/main/mmproj-LightOnOCR-1B-1025-Q8_0.gguf"),
     };
 
+    /// <summary>
+    /// Root folder holding the llama-server executable and the <c>models</c> subfolder.
+    /// Defaults to <c>&lt;data folder&gt;/llama.cpp</c> via <see cref="Configuration.DataDirectory"/>
+    /// (which the UI's Se config syncs at startup). Headless hosts (seconv) that resolve the
+    /// folder differently set this before first use.
+    /// </summary>
+    public static string? FolderOverride { get; set; }
+
+    /// <summary>
+    /// Optional info-level log sink. The UI wires this to the tools log
+    /// (<c>Se.WriteToolsLog</c>); seconv wires it to --verbose console output.
+    /// </summary>
+    public static Action<string>? LogAction { get; set; }
+
+    /// <summary>
+    /// Full path to the llama-server executable when it lives outside
+    /// <see cref="GetAndCreateFolder"/> - e.g. seconv falling back to a llama.cpp
+    /// install on the system PATH (brew/winget/apt). Models still resolve against
+    /// the folder.
+    /// </summary>
+    public static string? ExecutableOverride { get; set; }
+
     private static readonly HttpClient HttpClient = new() { Timeout = TimeSpan.FromMinutes(5) };
     private static readonly SemaphoreSlim ServerLock = new(1, 1);
     private static Process? _serverProcess;
@@ -152,7 +172,15 @@ public static class LlamaCppServerManager
 
     public static string GetAndCreateFolder()
     {
-        var folder = Se.LlamaCppFolder;
+        var folder = FolderOverride;
+        if (string.IsNullOrEmpty(folder))
+        {
+            var dataFolder = string.IsNullOrEmpty(Configuration.DataDirectory)
+                ? AppContext.BaseDirectory
+                : Configuration.DataDirectory;
+            folder = Path.Combine(dataFolder, "llama.cpp");
+        }
+
         if (!Directory.Exists(folder))
         {
             Directory.CreateDirectory(folder);
@@ -174,46 +202,17 @@ public static class LlamaCppServerManager
 
     public static string GetExecutable()
     {
+        if (!string.IsNullOrEmpty(ExecutableOverride))
+        {
+            return ExecutableOverride;
+        }
+
         return Path.Combine(GetAndCreateFolder(), OperatingSystem.IsWindows() ? "llama-server.exe" : "llama-server");
     }
 
     public static bool IsEngineInstalled()
     {
         return File.Exists(GetExecutable());
-    }
-
-    /// <summary>
-    /// Returns the update status of the installed llama-server binary relative to the version
-    /// pinned in <see cref="LlamaCppDownloadService"/>. The check hashes the executable on disk
-    /// directly (no install-time sidecar needed) because <see cref="DownloadHashManager.LlamaCpp"/>
-    /// tracks SHA-256s of the unpacked llama-server binary per OS/arch. Returns
-    /// <see cref="DownloadHashManager.UpdateStatus.Unknown"/> when nothing is installed, the
-    /// platform key cannot be resolved, or the on-disk hash does not match any known release —
-    /// so callers do not false-positive an update prompt.
-    /// </summary>
-    public static DownloadHashManager.UpdateStatus GetEngineUpdateStatus()
-    {
-        var exe = GetExecutable();
-        if (!File.Exists(exe))
-        {
-            return DownloadHashManager.UpdateStatus.Unknown;
-        }
-
-        var key = DownloadHashManager.ResolveLlamaCppExecutableKey();
-        if (string.IsNullOrEmpty(key))
-        {
-            return DownloadHashManager.UpdateStatus.Unknown;
-        }
-
-        try
-        {
-            var hash = DownloadHashManager.ComputeSha256(exe);
-            return DownloadHashManager.GetStatus(key, hash);
-        }
-        catch
-        {
-            return DownloadHashManager.UpdateStatus.Unknown;
-        }
     }
 
     public static string GetModelPath(string fileName)
@@ -416,7 +415,7 @@ public static class LlamaCppServerManager
             var process = Process.Start(psi)
                 ?? throw new InvalidOperationException("Failed to start llama-server");
 
-            Se.WriteToolsLog($"llama-server starting - PID: {process.Id}, Cmd: {FormatLaunchCommand(exe, psi.ArgumentList)}");
+            LogAction?.Invoke($"llama-server starting - PID: {process.Id}, Cmd: {FormatLaunchCommand(exe, psi.ArgumentList)}");
 
             lock (_serverLog)
             {
