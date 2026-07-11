@@ -19,7 +19,7 @@ public static class InitNativeMacMenuBinaryEdit
         Add(exportMenu, Se.Language.General.BluRaySup, vm.ExportBluRaySupCommand);
         Add(exportMenu, Se.Language.General.BdnXml, vm.ExportBdnXmlCommand);
         Add(exportMenu, "DOST/png", vm.ExportDostPngCommand);
-        Add(exportMenu, "FCP/png", vm.ExportFcpPngCommand);
+        Add(exportMenu, "Final Cut Pro + image", vm.ExportFcpPngCommand);
         Add(exportMenu, Se.Language.General.ImagesWithHtmlIndex, vm.ExportHtmlIndexCommand);
         Add(exportMenu, Se.Language.General.ImagesWithTimeCode, vm.ExportImagesWithTimeCodeCommand);
         Add(exportMenu, Se.Language.File.Export.TitleExportVobSub, vm.ExportVobSubCommand);
