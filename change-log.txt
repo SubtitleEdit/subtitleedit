@@ -4,6 +4,7 @@ Subtitle Edit Changelog
 v5.1.0-beta15 (TBD)
 
 * OCR: add CrispEmbed engine - local ggml-based OCR (same family as CrispASR) with GLM-OCR, GOT-OCR2, and Qwen3-VL-2B model backends, install-status dots, and engine/model download with update tracking - thx CrispStrobe
+* OCR: add PaddleOCR-VL 1.6 (109 languages) to the llama.cpp model list
 * Command line (seconv): add auto-translate with llama.cpp, starting the local server automatically - thx go2tom42
 * Rename "FCP/png" export to "Final Cut Pro + image"
 * Speech to text: offer re-download when the engine executable has gone missing - thx zezartiti
