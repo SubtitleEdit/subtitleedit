@@ -1,7 +1,7 @@
 {
   "title": "Subtitle Edit",
-  "version": "v5.1.0-beta12",
-  "translatedBy": "Utku Gogus; Son güncelleme: Ahmet Murat Özhan (10.07.2026)",
+  "version": "v5.1.0-beta13",
+  "translatedBy": "Utku Gogus; Son güncelleme: Ahmet Murat Özhan (11.07.2026)",
   "cultureName": "tr-TR",
   "general": {
     "abort": "İptal",
@@ -703,6 +703,7 @@
     "xOfYLinesUpdatedAndZNeighborsAdjusted": "{0}: {2} satırdan {1} tanesi güncellendi, {3} komşu satır ayarlandı",
     "noBookmarksFound": "Başka yer imi bulunamadı",
     "xRequiresAnApiKey": "{0} bir API anahtarı gerektirir",
+	"xRequiresAValidUrl": "{0} geçerli bir URL gerektirir (örn. \"http://...\" veya \"https://...\")",
     "xSeconds": "{0:0.0##} saniye",
     "xSubtitles": "{0:#,###,##0} alt yazı",
     "yes": "Evet",
@@ -998,6 +999,7 @@
     "singleLineLength": "Satır uzunluğu: ",
     "speedIsNowX": "Hız artık \"{0}\"",
     "spellCheckResult": "Yazım denetimi tamamlandı. \n\n• Değişen kelimeler: {0}\n• Atlanan kelimeler: {1}",
+	"subtitleGridFormattingX": "Izgara biçimlendirmesi: {0}",
     "subtitleImportedFromMatroskaFile": "Alt yazı Matroska dosyasından içe aktarıldı",
     "textDown": "Metin aşağı",
     "textOnly": "Sadece metin",
@@ -1391,8 +1393,9 @@
       "ask": "Sor",
       "result": "Öneri",
       "apply": "Satıra uygula",
-      "hint": "Bu satır için yapay zekâ asistanı"
-},
+      "hint": "Bu satır için yapay zekâ asistanı",
+	  "showReasoning": "Modelin akıl yürütmesini göster"
+    },
     "fixCommonErrors": {
       "title": "Yaygın hataları düzelt",
       "step1": "Adım 1/2 - Hangi hataların düzeltileceğini seçin",
@@ -1870,7 +1873,19 @@
 	  "bottomAlignLines": "Alta hizala",
 	  "appendSubtitleDotDotDot": "Alt yazı ekle...",
 	  "shiftTimeCodes": "Zaman kodlarını şu kadar kaydır:",
-	  "sortByStartTime": "Başlangıç zamanına göre sırala"
+	  "sortByStartTime": "Başlangıç zamanına göre sırala",
+	  "videoPreview": "Video",
+      "positionMap": "Konum haritası",
+      "letterbox": "Sinematik şerit (Letterbox)",
+      "letterboxOff": "Kapalı (sinematik şerit yok)",
+      "letterboxCustom": "Özel şerit yüksekliği",
+      "barHeightPx": "Şerit yüksekliği (px)",
+      "titleSafePercent": "Güvenli alan oranı (%)",
+      "positionSummary": "{0}×{1} - {2} alt yazı - şerit yüksekliği: {3} px",
+      "xInActivePicture": "Görüntü içinde: {0}",
+      "xInTopBar": "Üst şeritte: {0}",
+      "xInBottomBar": "Alt şeritte: {0}",
+      "noImageSubtitlesLoaded": "Hiçbir görüntü tabanlı alt yazı yüklenmedi"
     },
     "removeTextForHearingImpaired": {
       "title": "İşitme engelliler için metni kaldır",
@@ -2784,6 +2799,7 @@
       "toggleBookmark": "Yer imini aç/kapat (seçili satırlar, metin yok)",
       "goToNextBookmark": "Sonraki yer imine git",
       "toggleWaveformToolbar": "Ses dalgası araç çubuğunu aç/kapat",
+	  "toggleSubtitleGridFormatting": "Izgara biçimlendirmesini değiştir (biçimlendirmeyi göster/etiketleri göster/biçimlendirme yok)",
       "waveformSetStartAndSetEndOfPreviousMinusGap": "Başlangıcı ayarla ve öncekini boşluk kadar geri çek",
       "waveformSetEndAndStartOfNextAfterGap": "Bitişi ayarla ve sonrakini boşluk kadar ileri taşı",
       "waveformSetEndAndStartOfNextAfterGapAndGoToNext": "Bitişi ayarla, sonrakini boşluk kadar ileri taşı ve sonrakine git",
