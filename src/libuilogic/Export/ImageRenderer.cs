@@ -88,6 +88,16 @@ public static class ImageRenderer
         using var italicFont = new SKFont(ip.IsBold ? boldItalicTypeface : italicTypeface, fontSize);
         using var boldItalicFont = new SKFont(boldItalicTypeface, fontSize);
 
+        // Hinting snaps glyph edges to the pixel grid, which breaks the registration
+        // between the fill and the outline stroked from the raw glyph path - thin
+        // outlines then vanish on horizontal edges (issue #12206). Export renders at
+        // video resolution, so hinting is not needed.
+        foreach (var font in new[] { regularFont, boldFont, italicFont, boldItalicFont })
+        {
+            font.Hinting = SKFontHinting.None;
+            font.Subpixel = true;
+        }
+
         // Split segments into lines
         var lines = SplitIntoSegments(segments);
 
@@ -320,25 +330,35 @@ public static class ImageRenderer
                 var segment = segmentsToRender[i];
                 var currentFont = GetFont(segment, regularFont, boldFont, italicFont, boldItalicFont);
 
+                // Outlines are stroked on the raw glyph path with doubled width: the fill
+                // drawn on top covers the inner half, so the visible outline matches the
+                // requested width. Stroking through the glyph rasterizer instead loses thin
+                // horizontal outline edges entirely (issue #12206).
+                using var textPath = outlineWidth > 0
+                    ? GetShapedTextPath(segment.Text, currentX, textStartY + currentY, currentFont)
+                    : null;
+
                 // Draw shadow first (if shadow width > 0)
                 if (shadowWidth > 0)
                 {
                     var shadowOffsetX = currentX + (float)shadowWidth;
                     var shadowOffsetY = textStartY + currentY + (float)shadowWidth;
 
-                    if (outlineWidth > 0)
+                    if (textPath != null)
                     {
                         using var shadowOutlinePaint = new SKPaint
                         {
                             Color = shadowColor,
                             IsAntialias = true,
                             Style = SKPaintStyle.Stroke,
-                            StrokeWidth = (float)outlineWidth,
+                            StrokeWidth = (float)outlineWidth * 2,
                             StrokeJoin = SKStrokeJoin.Round,
                             StrokeCap = SKStrokeCap.Round,
                         };
 
-                        DrawShapedText(canvas, segment.Text, shadowOffsetX, shadowOffsetY, currentFont, shadowOutlinePaint);
+                        using var shadowPath = new SKPath(textPath);
+                        shadowPath.Offset((float)shadowWidth, (float)shadowWidth);
+                        canvas.DrawPath(shadowPath, shadowOutlinePaint);
                     }
 
                     using var shadowTextPaint = new SKPaint
@@ -352,19 +372,19 @@ public static class ImageRenderer
                 }
 
                 // Draw outline second (if outline width > 0)
-                if (outlineWidth > 0)
+                if (textPath != null)
                 {
                     using var outlinePaint = new SKPaint
                     {
                         Color = outlineColor,
                         IsAntialias = true,
                         Style = SKPaintStyle.Stroke,
-                        StrokeWidth = (float)outlineWidth,
+                        StrokeWidth = (float)outlineWidth * 2,
                         StrokeJoin = SKStrokeJoin.Round,
                         StrokeCap = SKStrokeCap.Round,
                     };
 
-                    DrawShapedText(canvas, segment.Text, currentX, textStartY + currentY, currentFont, outlinePaint);
+                    canvas.DrawPath(textPath, outlinePaint);
                 }
 
                 // Draw the main text on top
@@ -411,6 +431,29 @@ public static class ImageRenderer
     {
         using var shaper = new SKShaper(font.Typeface);
         canvas.DrawShapedText(shaper, text, x, y, SKTextAlign.Left, font, paint);
+    }
+
+    // Builds the combined glyph outline path for shaped text, positioned like
+    // DrawShapedText draws it. Glyphs without an outline (whitespace, color emoji)
+    // are skipped - they get no stroke, but the fill still renders them.
+    private static SKPath GetShapedTextPath(string text, float x, float y, SKFont font)
+    {
+        using var shaper = new SKShaper(font.Typeface);
+        var result = shaper.Shape(text, x, y, font);
+
+        var path = new SKPath();
+        for (var i = 0; i < result.Codepoints.Length; i++)
+        {
+            using var glyphPath = font.GetGlyphPath((ushort)result.Codepoints[i]);
+            if (glyphPath == null || glyphPath.IsEmpty)
+            {
+                continue;
+            }
+
+            path.AddPath(glyphPath, result.Points[i].X, result.Points[i].Y);
+        }
+
+        return path;
     }
 
     private static SKFont GetFont(TextSegment segment, SKFont regular, SKFont bold, SKFont italic, SKFont boldItalic)
