@@ -542,7 +542,6 @@
     <Word from="gdke" to="gdje" />
     <Word from="gjde" to="gdje" />
     <Word from="gfje" to="gdje" />
-    <Word from="gke" to="gle" />
     <Word from="Gdina" to="Gospodina" />
     <Word from="G-đica" to="Gđica" />
     <Word from="g-đica" to="gđica" />
@@ -5528,6 +5527,7 @@
     <RegEx find="ftam" replaceWith="ftalm" />
     <RegEx find="gačuj" replaceWith="gaćuj" />
     <RegEx find="gicn" replaceWith="gičn" />
+    <RegEx find="gke" replaceWith="gle" />
     <RegEx find="glda" replaceWith="gleda" />
     <RegEx find="gof" replaceWith="god" />
     <RegEx find="gp" replaceWith="go" />
