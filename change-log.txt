@@ -3,7 +3,7 @@ Subtitle Edit Changelog
 
 v5.1.0-beta15 (TBD)
 
-* OCR: add CrispEmbed engine - local ggml-based OCR (same family as CrispASR) with GLM-OCR, GOT-OCR2, and Qwen3-VL-2B model backends, install-status dots, and engine/model download with update tracking - thx CrispStrobe
+* OCR: add CrispEmbed engine - local ggml-based OCR (same family as CrispASR) with GLM-OCR, GOT-OCR2, and Qwen3-VL-2B backends
 * OCR: add PaddleOCR-VL 1.6 (109 languages) to the llama.cpp model list
 * Command line (seconv): add auto-translate with llama.cpp, starting the local server automatically - thx go2tom42
 * Rename "FCP/png" export to "Final Cut Pro + image"
@@ -22,18 +22,18 @@ v5.1.0-beta15 (TBD)
 
 v5.1.0-beta14 (10th of July 2026)
 
-* Add PGS position monitor to the image-based subtitle editor - a "Position map" view drawing every subtitle on the video canvas with configurable letterbox bars, zone color coding (active picture / bottom bar / top bar), title-safe margin, clickable zone chips, and a zone dot column in the grid - a BDSup2Sub++ style QC tool - thx Victory61
+* Add PGS position monitor to the image-based subtitle editor - a "Position map"  - thx Victory61
 * Auto-translate: add generic OpenAI-compatible engine (custom URL/model/API key)
 * AI assistant: engine settings in the window, strip think blocks, and show the model's reasoning behind an info button
 * Add AI assistant to the subtitle text box context menu
 * Add shortcut to toggle subtitle grid formatting mode
-* Text to speech: ElevenLabs pause cues work again - text normalization is now off so <break time="1.5s"/> and punctuation pauses are preserved, and on Eleven v3 break tags are auto-converted to [pause] audio tags - thx cvrle77
+* Text to speech: ElevenLabs pause cues work again - thx cvrle77
 * Text to speech: fix Google voices with 3-letter language codes (Mandarin/Cantonese/Filipino) failing to generate audio
 * Text to speech: the ElevenLabs "Speaker Boost" setting is now actually sent to the API
 * Fix waveform border drag not registering on trackpads (macOS) - thx okpukhalska-dot
 * Fix malformed ASSA tags when splitting a line with two or more active tags (e.g. bold + color)
 * Fix TTML/DFXP export losing an enclosing style after a nested tag (e.g. bold inside italic)
-* Fix subtitle format edge cases: MicroDVD "{y:u,i}" tag, uppercase \uXXXX in JSON, and 1/3-digit fractional seconds in classic SSA time codes
+* Fix subtitle format edge cases: MicroDVD "{y:u,i}" tag, uppercase \uXXXX in JSON
 * OCR: better separation of vertically touching text lines (two line-splitter fixes)
 * Fix ASSA/SSA properties video resolution and dark-theme picker color - thx kit132
 * Re-apply the layout direction live when the interface language changes - thx muaz978
@@ -47,12 +47,12 @@ v5.1.0-beta14 (10th of July 2026)
 
 v5.1.0-beta13 (9th of July 2026)
 
-* Add an AI assistant button to the subtitle text box - quick actions (fix spelling/grammar, rephrase to fit reading speed, change tone) plus a free question box for the current line - thx muaz978
-* OCR: add histogram-based colour isolation for VobSub/DVD subtitles - rebuilds each subpicture as crisp black-on-white for better recognition (also in the command line tool; disable via --no-vobsub-isolate-colors) - thx tekk42
+* Add an AI assistant button to the subtitle text box - quick actions (fix spelling/grammar, reading speed, change tone)
+* OCR: add histogram-based colour isolation for VobSub/DVD subtitles - rebuilds each subpicture as crisp black-on-white - thx tekk42
 * Restore the last editing position when reopening a subtitle file - thx hisui3393
-* Command line (seconv): image output styling for Blu-ray sup/VobSub/BDN-XML etc. - new options (--font-name, --font-size, --font-color, --background-color, --box-type, ...) and an "exportImages" settings-JSON section (Subtitle Edit 4 parity) - thx Fredrik
+* Command line (seconv): image output styling for Blu-ray sup/VobSub/BDN-XML etc. - new options - thx Fredrik
 * Command line (seconv): fix double line spacing in image-based output, and do not warn that --resolution is ignored for image targets (it sets the canvas size)
-* MLX Whisper (macOS): forward advanced command line options (e.g. --condition-on-previous-text False), process long files in windows without VAD, and add a parameter reference to the advanced box - thx muaz978, asiaminor77
+* MLX Whisper (macOS): forward advanced command line options (e.g. --condition-on-previous-text False) - thx muaz978, asiaminor77
 * Fix exported Blu-ray sup being rejected by BDSup2Sub ("Subpicture too large") when a subtitle line was empty - thx Victory61
 * Beautify time codes: fix subtitle blocks missing from the change preview waveform - thx pdjdev
 * Right-to-left: do not mirror the video and waveform - thx muaz978
@@ -74,7 +74,7 @@ v5.1.0-beta12 (8th of July 2026)
 * MLX Whisper (macOS): chunked decoding with punctuation persistence, beam search, and subtitle-standard cues for better long-recording quality - thx muaz978
 * Speech to text: stream Python engine (Whisper CTranslate2 / MLX Whisper) output live instead of only after the process finishes - thx muaz978
 * Speech to text: show live segments for the Whisper CTranslate2 engine (previously looked frozen) - thx muaz978
-* OCR: make word un-compositing fully optional - the "OCR: use word split list" toggle now disables all merged-word splitting, plus a new "OCR: try to guess unknown words" setting under Tools - thx fraternl
+* OCR: make word un-compositing fully optional - the "OCR: use word split list" toggle now disables all merged-word splitting - thx fraternl
 * Waveform: refresh the context menu after changing the UI language (no restart needed) - thx pdjdev
 * Fix "Fix common OCR errors" splitting valid closed compounds in compounding languages (e.g. Dutch "modderwarboel") - thx fraternl
 * Fix app closing anyway when "Save as" was cancelled during the close prompt (losing unsaved work)
@@ -105,7 +105,7 @@ v5.1.0-beta12 (8th of July 2026)
 
 v5.1.0-beta11 (4th of July 2026)
 
-* Fix settings not saving when the UI language had a duplicate/empty translation (e.g. Portuguese Brazil) - the Options dialog no longer aborts on a repeated translated string, and a failed save now logs and shows an error instead of silently doing nothing - thx rosilucia-hub
+* Fix settings not saving when the UI language had a duplicate/empty translation (e.g. Portuguese Brazil) - thx rosilucia-hub
 * Fix ASSA "Set position" and "Image color picker" showing a blank video background when the "HH:MM:SS:FF" time code format was enabled - thx bichitoxxx
 * Restore the WebVTT "X-TIMESTAMP-MAP" setting (Options -> Settings -> Subtitle Formats) to optionally ignore the header offset that shifts all time codes on load - thx anakinsleftleg
 * Fix Ctrl+End / Ctrl+Home on the subtitle grid not scrolling the last/first line fully into view - thx KaDeeKe
