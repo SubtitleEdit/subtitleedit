@@ -885,6 +885,17 @@ internal record class ConversionOptions
     /// </summary>
     public bool VobSubIsolateColors { get; init; } = true;
 
+    /// <summary>
+    /// PGS / DVB-sub OCR only: before recognition, rebuild each bitmap as crisp black-on-white
+    /// via <see cref="VobSubColorIsolation.BinarizeForOcr"/>. PGS glyphs are typically
+    /// white fill with a black outline on transparency; composited onto the opaque white OCR
+    /// canvas the fill vanishes and Tesseract receives hollow outline rings, which garbles
+    /// some entries deterministically (issue #12291). On by default; disable with
+    /// <c>--no-pgs-isolate-colors</c> to OCR the raw bitmap. Ignored in
+    /// <see cref="TimeCodesOnly"/> mode.
+    /// </summary>
+    public bool PgsIsolateColors { get; init; } = true;
+
     /// <summary>Ollama API endpoint (default <c>http://localhost:11434/api/chat</c>).</summary>
     public string? OllamaUrl { get; init; }
 

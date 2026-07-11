@@ -37,8 +37,9 @@ internal static class ImageOcrLoader
         }
 
         using var ocr = OcrEngineFactory.Create(options);
-        AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {pcsList.Count} Blu-Ray sup image(s)...[/]");
-        return PcsListToSubtitle(pcsList, ocr);
+        var isolationNote = options.PgsIsolateColors ? string.Empty : " (colour isolation off)";
+        AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {pcsList.Count} Blu-Ray sup image(s){isolationNote}...[/]");
+        return PcsListToSubtitle(pcsList, ocr, options.PgsIsolateColors);
     }
 
     /// <summary>
@@ -60,8 +61,9 @@ internal static class ImageOcrLoader
         }
 
         using var ocr = OcrEngineFactory.Create(options);
-        AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {pcsList.Count} MKV PGS image(s) (track #{track.TrackNumber})...[/]");
-        return PcsListToSubtitle(pcsList, ocr);
+        var isolationNote = options.PgsIsolateColors ? string.Empty : " (colour isolation off)";
+        AnsiConsole.MarkupLine($"[dim]Running {ocr.Name} OCR on {pcsList.Count} MKV PGS image(s) (track #{track.TrackNumber}){isolationNote}...[/]");
+        return PcsListToSubtitle(pcsList, ocr, options.PgsIsolateColors);
     }
 
     /// <summary>
@@ -107,7 +109,21 @@ internal static class ImageOcrLoader
                     try
                     {
                         // ocr == null → time-codes-only: keep the entry with empty text.
-                        var text = ocr is null ? string.Empty : ocr.Recognize(bitmap);
+                        string text;
+                        if (ocr is null)
+                        {
+                            text = string.Empty;
+                        }
+                        else if (options.PgsIsolateColors)
+                        {
+                            // Same antialiased binarisation as the PGS path (issue #12291).
+                            using var isolated = VobSubColorIsolation.BinarizeForOcr(bitmap);
+                            text = ocr.Recognize(isolated);
+                        }
+                        else
+                        {
+                            text = ocr.Recognize(bitmap);
+                        }
                         if (ocr is null || !string.IsNullOrWhiteSpace(text))
                         {
                             subtitle.Paragraphs.Add(new LibSeParagraph(text, (double)dvb.StartMilliseconds, (double)dvb.EndMilliseconds));
@@ -238,7 +254,7 @@ internal static class ImageOcrLoader
     /// kept with empty text so the output carries timing but no recognised characters.
     /// Entries whose bitmap is null (e.g. clear-screen commands) are skipped in both modes.
     /// </summary>
-    private static Subtitle PcsListToSubtitle(List<BluRaySupParser.PcsData> pcsList, IOcrEngine? ocr)
+    private static Subtitle PcsListToSubtitle(List<BluRaySupParser.PcsData> pcsList, IOcrEngine? ocr, bool isolateColors = false)
     {
         var subtitle = new Subtitle();
 
@@ -251,7 +267,22 @@ internal static class ImageOcrLoader
             }
             try
             {
-                var text = ocr is null ? string.Empty : ocr.Recognize(bitmap);
+                string text;
+                if (ocr is null)
+                {
+                    text = string.Empty;
+                }
+                else if (isolateColors)
+                {
+                    // PGS glyphs are white fill + black outline on transparency; binarise so
+                    // the fill survives the opaque white OCR canvas (issue #12291).
+                    using var isolated = VobSubColorIsolation.BinarizeForOcr(bitmap);
+                    text = ocr.Recognize(isolated);
+                }
+                else
+                {
+                    text = ocr.Recognize(bitmap);
+                }
                 if (ocr is null || !string.IsNullOrWhiteSpace(text))
                 {
                     subtitle.Paragraphs.Add(new LibSeParagraph(text, pcs.StartTime / 90.0, pcs.EndTime / 90.0));
