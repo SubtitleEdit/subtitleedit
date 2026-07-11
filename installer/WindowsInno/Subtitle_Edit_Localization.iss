@@ -28,6 +28,20 @@ ar.tsk_SetFileTypes=Associate common subtitle files with Subtitle Edit
 ar.types_custom=Custom installation
 ar.types_default=Default installation
 
+; Armenian
+[CustomMessages]
+hy.sm_com_Changelog=Subtitle Edit-ի փոփոխությունների ցանկ
+hy.run_ViewChangelog=Դիտել փոփոխությունների ցանկը
+hy.msg_DeleteSettings=Ցանկանո՞ւմ եք ջնջել Subtitle Edit-ի անձնական կարգավորումները։
+hy.tsk_AllUsers=Բոլոր օգտատերերի համար
+hy.tsk_CurrentUser=Միայն ընթացիկ օգտատիրոջ համար
+hy.tsk_Other=Այլ՝
+hy.tsk_ResetDictionaries=Վերակայել բառարանները և ջնջել բոլոր անհատական անունները
+hy.tsk_ResetSettings=Վերակայել Subtitle Edit-ի կարգավորումները
+hy.tsk_SetFileTypes=Ընդհանուր ենթագրերի ֆայլերը կապել Subtitle Edit-ի հետ
+hy.types_custom=Ընտրովի տեղադրում
+hy.types_default=Լռելյայն տեղադրում
+
 ; Bulgarian
 [CustomMessages]
 bg.sm_com_Changelog=Subtitle Edit's Changelog
@@ -55,6 +69,20 @@ ca.tsk_ResetSettings=Restableix la configuració de Subtitle Edit
 ca.tsk_SetFileTypes=Associa fitxers de subtítols comuns amb Subtitle Edit
 ca.types_custom=Instal·lació personalitzada
 ca.types_default=Instal·lació predeterminada
+
+; Corsican
+[CustomMessages]
+co.sm_com_Changelog=Lista di i cambiamenti di Subtitle Edit
+co.run_ViewChangelog=Vede a lista di i cambiamenti
+co.msg_DeleteSettings=Vulete sguassà i vostri paràmetri persunali di Subtitle Edit?
+co.tsk_AllUsers=Per tutti l'utilizatori
+co.tsk_CurrentUser=Solu per l'utilizatore attuale
+co.tsk_Other=Altru:
+co.tsk_ResetDictionaries=Ristabilisce i dizziunarii è sguassà tutti i nomi persunalizati
+co.tsk_ResetSettings=Ristabilisce i paràmetri di Subtitle Edit
+co.tsk_SetFileTypes=Assucià i schedarii cumuni di sottutituli cù Subtitle Edit
+co.types_custom=Installazione persunalizata
+co.types_default=Installazione predefinita
 
 ; Czech
 [CustomMessages]
@@ -169,6 +197,20 @@ fr.tsk_SetFileTypes=Associer des fichiers de sous-titres communs à Subtitle Edi
 fr.types_custom=Installation personnalisée
 fr.types_default=Installation par défaut
 
+; Hebrew
+[CustomMessages]
+he.sm_com_Changelog=יומן השינויים של Subtitle Edit
+he.run_ViewChangelog=הצגת יומן השינויים
+he.msg_DeleteSettings=האם ברצונך למחוק את ההגדרות האישיות של Subtitle Edit?
+he.tsk_AllUsers=לכל המשתמשים
+he.tsk_CurrentUser=למשתמש הנוכחי בלבד
+he.tsk_Other=אחר:
+he.tsk_ResetDictionaries=איפוס המילונים ומחיקת שמות מותאמים אישית
+he.tsk_ResetSettings=איפוס ההגדרות של Subtitle Edit
+he.tsk_SetFileTypes=שיוך קובצי כתוביות נפוצים ל-Subtitle Edit
+he.types_custom=התקנה מותאמת אישית
+he.types_default=התקנת ברירת מחדל
+
 ; Croatian
 [CustomMessages]
 hr.sm_com_Changelog=Subtitle Edit's Changelog
@@ -210,8 +252,6 @@ it.tsk_ResetSettings=Ripristina le impostazioni di Subtitle Edit
 it.tsk_SetFileTypes=Associa file sottotitoli comuni a Subtitle Edit
 it.types_custom=Installazione personalizzata
 it.types_default=Installazione predefinita
-it.tsk_CurrentUser=Solo per l'utente attuale
-it.tsk_AllUsers=Per tutti gli utenti
 it.NameAndVersion=%1 %2
 it.LaunchProgram=Esegui %1
 
@@ -243,6 +283,9 @@ ko.tsk_SetFileTypes=일반 자막 파일을 Subtitle Edit와 연결
 ko.types_custom=사용자 지정 설치
 ko.types_default=기본 설치
 
+; Lithuanian
+[CustomMessages]
+
 ; Dutch
 [CustomMessages]
 nl.sm_com_Changelog=Recente wijzigingen in Subtitle Edit
@@ -256,6 +299,20 @@ nl.tsk_ResetSettings=Instellingen van Subtitle Edit verwijderen
 nl.tsk_SetFileTypes=Veelgebruikte ondertitelbestanden openen met Subtitle Edit
 nl.types_custom=Aangepaste installatie
 nl.types_default=Standaardinstallatie
+
+; Norwegian
+[CustomMessages]
+no.sm_com_Changelog=Endringslogg for Subtitle Edit
+no.run_ViewChangelog=Vis endringsloggen
+no.msg_DeleteSettings=Vil du slette de personlige innstillingene for Subtitle Edit?
+no.tsk_AllUsers=For alle brukere
+no.tsk_CurrentUser=Bare for gjeldende bruker
+no.tsk_Other=Annet:
+no.tsk_ResetDictionaries=Tilbakestill ordbøkene og slett alle egendefinerte navn
+no.tsk_ResetSettings=Tilbakestill innstillingene for Subtitle Edit
+no.tsk_SetFileTypes=Knytt vanlige undertekstfiler til Subtitle Edit
+no.types_custom=Egendefinert installasjon
+no.types_default=Standardinstallasjon
 
 ; Polish
 [CustomMessages]
@@ -275,13 +332,13 @@ pl.types_default=Instalacja domyślna
 [CustomMessages]
 pt.sm_com_Changelog=Registo de alterações do Subtitle Edit
 pt.run_ViewChangelog=Ver registo de alterações
-pt.msg_DeleteSettings=Pretende eliminar as suas definições pessoais do Subtitle Edit?
+pt.msg_DeleteSettings=Deseja eliminar as suas definições pessoais do Subtitle Edit?
 pt.tsk_AllUsers=Todos os utilizadores
 pt.tsk_CurrentUser=Utilizador atual
-pt.tsk_Other=Outro:
-pt.tsk_ResetDictionaries=Repor os Dicionários e remover quaisquer nomes personalizados
+pt.tsk_Other=Outras:
+pt.tsk_ResetDictionaries=Repor os dicionários e eliminar todos os nomes personalizados
 pt.tsk_ResetSettings=Repor as definições do Subtitle Edit
-pt.tsk_SetFileTypes=Associar os ficheiros de texto SubRip (.srt) ao Subtitle Edit
+pt.tsk_SetFileTypes=Associar ficheiros de legendas comuns ao Subtitle Edit
 pt.types_custom=Instalação personalizada
 pt.types_default=Instalação predefinida
 
@@ -312,6 +369,20 @@ ru.tsk_ResetSettings=Сброс настроек программы
 ru.tsk_SetFileTypes=Свяжите общие файлы субтитров с Subtitle Edit
 ru.types_custom=Выборочная установка
 ru.types_default=Обычная установка
+
+; Slovak
+[CustomMessages]
+sk.sm_com_Changelog=Zoznam zmien programu Subtitle Edit
+sk.run_ViewChangelog=Zobraziť zoznam zmien
+sk.msg_DeleteSettings=Chcete odstrániť svoje osobné nastavenia programu Subtitle Edit?
+sk.tsk_AllUsers=Pre všetkých používateľov
+sk.tsk_CurrentUser=Len pre aktuálneho používateľa
+sk.tsk_Other=Iné:
+sk.tsk_ResetDictionaries=Obnoviť slovníky a odstrániť všetky vlastné mená
+sk.tsk_ResetSettings=Obnoviť nastavenia programu Subtitle Edit
+sk.tsk_SetFileTypes=Priradiť bežné súbory titulkov k programu Subtitle Edit
+sk.types_custom=Vlastná inštalácia
+sk.types_default=Predvolená inštalácia
 
 ; Slovenian
 [CustomMessages]
@@ -368,6 +439,20 @@ sv.tsk_ResetSettings=Reset Subtitle Edit's settings
 sv.tsk_SetFileTypes=Koppla vanliga undertextfiler till Subtitle Edit
 sv.types_custom=Custom installation
 sv.types_default=Default installation
+
+; Tamil
+[CustomMessages]
+ta.sm_com_Changelog=Subtitle Edit மாற்றப் பதிவு
+ta.run_ViewChangelog=மாற்றப் பதிவைக் காட்டு
+ta.msg_DeleteSettings=Subtitle Edit-இன் தனிப்பட்ட அமைப்புகளை நீக்க விரும்புகிறீர்களா?
+ta.tsk_AllUsers=அனைத்து பயனர்களுக்கும்
+ta.tsk_CurrentUser=தற்போதைய பயனருக்கு மட்டும்
+ta.tsk_Other=மற்றவை:
+ta.tsk_ResetDictionaries=அகராதிகளை மீட்டமைத்து தனிப்பயன் பெயர்களை நீக்கு
+ta.tsk_ResetSettings=Subtitle Edit அமைப்புகளை மீட்டமை
+ta.tsk_SetFileTypes=பொதுவான வசனவரி கோப்புகளை Subtitle Edit உடன் இணை
+ta.types_custom=தனிப்பயன் நிறுவல்
+ta.types_default=இயல்புநிலை நிறுவல்
 
 ; Thai
 [CustomMessages]
