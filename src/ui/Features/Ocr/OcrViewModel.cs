@@ -32,6 +32,7 @@ using Nikse.SubtitleEdit.Features.Shared.BinaryEdit;
 using Nikse.SubtitleEdit.Features.Shared.GoToLineNumber;
 using Nikse.SubtitleEdit.Features.Shared.PickFontName;
 using Nikse.SubtitleEdit.Features.Shared.ShowImage;
+using Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Features.SpellCheck.GetDictionaries;
 using Nikse.SubtitleEdit.Features.Translate;
@@ -4298,6 +4299,15 @@ public partial class OcrViewModel : ObservableObject
         }
     }
 
+    internal void TextBoxKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.I && e.KeyModifiers == KeyModifiers.Control && sender is TextBox textBox)
+        {
+            e.Handled = true;
+            TextBoxTagToggler.ToggleTag(new TextBoxWrapper(textBox), "i", isAssa: false);
+        }
+    }
+
     internal void SubtitleGridDoubleTapped()
     {
         CommandInspectLine();
@@ -5026,7 +5036,7 @@ public partial class OcrViewModel : ObservableObject
                     if (lineImages.Count > 1 || lineImages2.Count > 1)
                     {
                         // Multiple lines detected - apply alignment to each line
-                        var perLine = new List<string>();
+                        var lineAlignments = new List<string>();
                         var multiLineCenterX = position.X + bitmap.Width / 2.0;
                         var multiLineRelativeX = multiLineCenterX / screenSize.Width;
 
@@ -5038,13 +5048,10 @@ public partial class OcrViewModel : ObservableObject
                             var lineRelativeY = lineY / screenSize.Height;
 
                             // Get alignment for this specific line position
-                            var lineAlignment = GetAssaPositionFromScreen(multiLineRelativeX, lineRelativeY);
-
-                            // Add alignment tag to the line text
-                            perLine.Add($"{{\\{lineAlignment}}}{lines[i].Trim()}");
+                            lineAlignments.Add(GetAssaPositionFromScreen(multiLineRelativeX, lineRelativeY));
                         }
 
-                        return (string.Join("\n", perLine), true);
+                        return ApplyLineAlignmentTags(lines, lineAlignments, textToUse, Se.Settings.General.WriteAn2Tag);
                     }
                 }
             }
@@ -5059,7 +5066,7 @@ public partial class OcrViewModel : ObservableObject
 
             // Map to ASSA alignment positions (An1-An9)
             var assaPosition = GetAssaPositionFromScreen(relativeX, relativeY);
-            return ($"{{\\{assaPosition}}}{textToUse}", true);
+            return ApplyAlignmentTag(textToUse, assaPosition, Se.Settings.General.WriteAn2Tag);
         }
         catch
         {
@@ -5067,7 +5074,34 @@ public partial class OcrViewModel : ObservableObject
         }
     }
 
-    private static string GetAssaPositionFromScreen(double relativeX, double relativeY)
+    // "an2" is the default bottom-center alignment, so no tag is needed for it (#12393)
+    internal static (string Text, bool AlignmentAdded) ApplyAlignmentTag(string text, string assaPosition, bool writeAn2Tag)
+    {
+        if (assaPosition == "an2" && !writeAn2Tag)
+        {
+            return (text, false);
+        }
+
+        return ($"{{\\{assaPosition}}}{text}", true);
+    }
+
+    internal static (string Text, bool AlignmentAdded) ApplyLineAlignmentTags(List<string> lines, List<string> lineAlignments, string originalText, bool writeAn2Tag)
+    {
+        if (!writeAn2Tag && lineAlignments.All(p => p == "an2"))
+        {
+            return (originalText, false);
+        }
+
+        var perLine = new List<string>();
+        for (var i = 0; i < lines.Count; i++)
+        {
+            perLine.Add($"{{\\{lineAlignments[i]}}}{lines[i].Trim()}");
+        }
+
+        return (string.Join("\n", perLine), true);
+    }
+
+    internal static string GetAssaPositionFromScreen(double relativeX, double relativeY)
     {
         // Map screen coordinates to 3x3 grid for ASSA positions
         // relativeX: 0.0 = left, 1.0 = right
