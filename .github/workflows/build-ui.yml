@@ -393,8 +393,13 @@ jobs:
           Copy-Item "libmpv-temp/libmpv-2.dll" "./src/ui/bin/Release/net10.0/publish/"
           Get-ChildItem -Path "./src/ui/bin/Release/net10.0/publish" -Filter "*.pdb" -Recurse -File | Remove-Item -Force
 
-      - name: Install Inno Setup
-        run: choco install innosetup -y --no-progress
+      - name: Install Inno Setup 6.7.3
+        # Pin an exact version: the .iss script requires 6.7.3+, but Chocolatey still ships 6.7.1.
+        run: |
+          $url = "https://github.com/jrsoftware/issrc/releases/download/is-6_7_3/innosetup-6.7.3.exe"
+          Invoke-WebRequest -Uri $url -OutFile "$env:RUNNER_TEMP\innosetup.exe"
+          Start-Process -FilePath "$env:RUNNER_TEMP\innosetup.exe" `
+            -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART","/SP-" -Wait
 
       - name: Build Inno Setup installer
         run: |
