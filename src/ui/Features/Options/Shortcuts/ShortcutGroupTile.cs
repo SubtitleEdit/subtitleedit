@@ -29,7 +29,8 @@ public class ShortcutGroupTile
         Group = null;
         Name = Se.Language.General.All;
         IconName = IconNames.ViewGrid;
-        Brush = new SolidColorBrush(Color.Parse("#8494a4"));
+        // System accent so "All" cannot be mistaken for the gray "General" group.
+        Brush = UiUtil.GetAccentBrush();
         Count = count;
     }
 }
