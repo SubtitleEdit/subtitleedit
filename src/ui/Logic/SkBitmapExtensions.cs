@@ -259,7 +259,7 @@ internal static class SkBitmapExtensions
         }
 
         using var ms = new MemoryStream();
-        avaloniaBitmap.Save(ms);
+        avaloniaBitmap.Save(ms, PngBitmapEncoderOptions.Default);
         using var data = SKData.CreateCopy(ms.GetBuffer(), (nuint)ms.Length);
         using var image = SKImage.FromEncodedData(data);
         if (image == null)
