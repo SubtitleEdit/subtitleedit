@@ -226,10 +226,11 @@ public class ElevenLabs : ITtsEngine
 
             if (model == "eleven_turbo_v2_5")
             {
+                // Fall through to the sorted return below - an early return here put these
+                // three at the bottom of the language combo instead of in alphabetical order.
                 languages.Add(new TtsLanguage("Hungarian", "hu"));
                 languages.Add(new TtsLanguage("Norwegian", "no"));
                 languages.Add(new TtsLanguage("Vietnamese", "vi"));
-                return Task.FromResult(languages.ToArray());
             }
         }
 

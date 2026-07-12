@@ -437,18 +437,24 @@ public class TtsDownloadService : ITtsDownloadService
         var text = ConvertBreakTagsToV3AudioTags(Utilities.UnbreakLine(inputText));
 
         var stability = Se.Settings.Video.TextToSpeech.ElevenLabsStability.ToString(CultureInfo.InvariantCulture);
-        var speed = Se.Settings.Video.TextToSpeech.ElevenLabsSpeed.ToString(CultureInfo.InvariantCulture);
-    
+
+        // Per the text-to-dialogue schema each "inputs" item accepts ONLY text + voice_id;
+        // language_code is a top-level field and stability goes in the top-level "settings"
+        // object. They used to be placed inside inputs[0], where the API silently ignored
+        // them - every v3 generation ran with default stability and no language enforcement.
+        // The endpoint has no speed parameter at all, so the speed setting is not sent.
+        // Normalization is turned off for the same reason as the v2 path: the "auto"
+        // normalizer can rewrite the user's punctuation pause cues ("..." etc.) (#12093).
         var languageFragment = string.IsNullOrEmpty(languageCode)
             ? string.Empty
-            : "\"language_code\": \"" + languageCode + "\", ";
+            : ", \"language_code\": \"" + languageCode + "\"";
         var data = "{ \"inputs\": [{ " +
                    "\"text\": \"" + Json.EncodeJsonText(text) + "\", " +
-                   "\"voice_id\": \"" + voice.VoiceId + "\", " +
+                   "\"voice_id\": \"" + voice.VoiceId + "\"" +
+                   " }]" +
                    languageFragment +
-                   "\"stability\": " + stability + ", " +
-                   "\"speed\": " + speed +
-                   " }] }";
+                   ", \"settings\": { \"stability\": " + stability + " }" +
+                   ", \"apply_text_normalization\": \"off\" }";
 
         return await SendElevenLabsSpeakRequestAsync(url, data, apiKey, acceptAudioMpeg: false, stream, "ElevenLabs TTS v3", cancellationToken);
     }
