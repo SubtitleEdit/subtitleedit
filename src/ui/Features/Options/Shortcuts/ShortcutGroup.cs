@@ -78,6 +78,13 @@ public static class ShortcutGroupUi
         };
     }
 
+    // Soft tint of the group color, used as background behind the colored icon.
+    public static IBrush GetSoftBrush(ShortcutGroup group)
+    {
+        var color = ((SolidColorBrush)GetBrush(group)).Color;
+        return new SolidColorBrush(color, 0.16);
+    }
+
     // Mid-saturation tones picked to stay readable on both the dark and light theme.
     public static IBrush GetBrush(ShortcutGroup group)
     {

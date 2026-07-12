@@ -48,11 +48,12 @@ public class ShortcutsWindow : Window
         // reading a generic "edit"/"combo box"/"check box" (issue #11745).
         AutomationProperties.SetName(_searchBox, language.SearchShortcuts);
 
+        var accentColor = UiUtil.GetAccentBrush() is ISolidColorBrush accentSolid ? accentSolid.Color : Colors.DodgerBlue;
         var labelBadgeCount = new Border
         {
-            Background = UiUtil.GetBorderBrush(),     // badge background
+            Background = new SolidColorBrush(accentColor, 0.18), // badge background
             CornerRadius = new CornerRadius(10),      // makes it pill-like
-            Padding = new Thickness(6, 3, 6, 2),      // spacing around text
+            Padding = new Thickness(8, 3, 8, 2),      // spacing around text
             Margin = new Thickness(0, 0, 12, 0),
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Left,
@@ -60,8 +61,9 @@ public class ShortcutsWindow : Window
             {
                 [!TextBlock.TextProperty] = new Binding(nameof(vm.FlatNodes) + ".Count") { Source = vm, Mode = BindingMode.OneWay, Converter = new NumberToStringWithThousandSeparator() },
                 FontSize = 10,
+                FontWeight = FontWeight.SemiBold,
                 VerticalAlignment = VerticalAlignment.Center,
-                Foreground = Brushes.WhiteSmoke,
+                Foreground = new SolidColorBrush(accentColor),
                 HorizontalAlignment = HorizontalAlignment.Center
             }
         };
@@ -103,11 +105,22 @@ public class ShortcutsWindow : Window
             {
                 var icon = new ContentControl
                 {
-                    FontSize = 18,
+                    FontSize = 17,
+                    Foreground = Brushes.White,
                     HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
                 };
                 icon.Bind(Attached.IconProperty, new Binding(nameof(ShortcutGroupTile.IconName)));
-                icon.Bind(TemplatedControl.ForegroundProperty, new Binding(nameof(ShortcutGroupTile.Brush)));
+
+                var glyph = new Border
+                {
+                    Width = 32,
+                    Height = 32,
+                    CornerRadius = new CornerRadius(9),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Child = icon,
+                };
+                glyph.Bind(Border.BackgroundProperty, new Binding(nameof(ShortcutGroupTile.Brush)));
 
                 var name = new TextBlock
                 {
@@ -128,9 +141,9 @@ public class ShortcutsWindow : Window
                 return new StackPanel
                 {
                     Width = 92,
-                    Spacing = 2,
-                    Margin = new Thickness(0, 4, 0, 4),
-                    Children = { icon, name, count },
+                    Spacing = 3,
+                    Margin = new Thickness(0, 5, 0, 4),
+                    Children = { glyph, name, count },
                 };
             }),
         };
@@ -151,12 +164,35 @@ public class ShortcutsWindow : Window
             ItemsSource = vm.FlatNodes,
             Columns =
             {
-                new DataGridTextColumn
+                new DataGridTemplateColumn
                 {
                     Header = language.ActiveIn,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(ShortcutTreeNode.ActiveIn)),
+                    CanUserSort = false,
                     IsReadOnly = true,
+                    CellTemplate = new FuncDataTemplate<ShortcutTreeNode>((_, _) =>
+                    {
+                        var text = new TextBlock
+                        {
+                            FontSize = 11,
+                            VerticalAlignment = VerticalAlignment.Center,
+                        };
+                        text.Bind(TextBlock.TextProperty, new Binding(nameof(ShortcutTreeNode.ActiveIn)));
+
+                        var pill = new Border
+                        {
+                            BorderBrush = UiUtil.GetBorderBrush(),
+                            BorderThickness = new Thickness(1),
+                            CornerRadius = new CornerRadius(99),
+                            Padding = new Thickness(8, 1, 8, 2),
+                            Margin = new Thickness(4, 0, 4, 0),
+                            HorizontalAlignment = HorizontalAlignment.Left,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Child = text,
+                        };
+                        pill.Bind(Visual.OpacityProperty, new Binding(nameof(ShortcutTreeNode.ActiveInOpacity)));
+                        return pill;
+                    }),
                 },
                 new DataGridTemplateColumn
                 {
@@ -169,15 +205,26 @@ public class ShortcutsWindow : Window
                     {
                         var icon = new ContentControl
                         {
-                            FontSize = 16,
+                            FontSize = 14,
                             HorizontalAlignment = HorizontalAlignment.Center,
                             VerticalAlignment = VerticalAlignment.Center,
-                            Margin = new Thickness(4, 0, 4, 0),
                         };
                         icon.Bind(Attached.IconProperty, new Binding(nameof(ShortcutTreeNode.GroupIconName)));
                         icon.Bind(TemplatedControl.ForegroundProperty, new Binding(nameof(ShortcutTreeNode.GroupBrush)));
-                        icon.Bind(ToolTip.TipProperty, new Binding(nameof(ShortcutTreeNode.GroupName)));
-                        return icon;
+
+                        var square = new Border
+                        {
+                            Width = 22,
+                            Height = 22,
+                            CornerRadius = new CornerRadius(6),
+                            Margin = new Thickness(4, 2, 4, 2),
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Child = icon,
+                        };
+                        square.Bind(Border.BackgroundProperty, new Binding(nameof(ShortcutTreeNode.GroupSoftBrush)));
+                        square.Bind(ToolTip.TipProperty, new Binding(nameof(ShortcutTreeNode.GroupName)));
+                        return square;
                     }),
                 },
                 new DataGridTextColumn
@@ -195,13 +242,66 @@ public class ShortcutsWindow : Window
                     IsReadOnly = true,
                     Width = new DataGridLength(1, DataGridLengthUnitType.Star),
                 },
-                new DataGridTextColumn
+                new DataGridTemplateColumn
                 {
                     Header = Se.Language.General.Shortcut,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(ShortcutTreeNode.DisplayShortcut)),
+                    CanUserSort = false,
                     IsReadOnly = true,
                     Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
+                    CellTemplate = new FuncDataTemplate<ShortcutTreeNode>((_, _) =>
+                    {
+                        // Keycap-style chips, one per key, right-aligned like the column header side.
+                        var keys = new ItemsControl
+                        {
+                            HorizontalAlignment = HorizontalAlignment.Right,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            ItemsPanel = new FuncTemplate<Panel?>(() => new StackPanel
+                            {
+                                Orientation = Orientation.Horizontal,
+                                Spacing = 3,
+                            }),
+                            ItemTemplate = new FuncDataTemplate<string>((_, _) =>
+                            {
+                                var keyText = new TextBlock
+                                {
+                                    FontSize = 11,
+                                    FontWeight = FontWeight.SemiBold,
+                                    HorizontalAlignment = HorizontalAlignment.Center,
+                                };
+                                keyText.Bind(TextBlock.TextProperty, new Binding("."));
+                                return new Border
+                                {
+                                    Background = new SolidColorBrush(Colors.Gray, 0.12),
+                                    BorderBrush = new SolidColorBrush(Colors.Gray, 0.45),
+                                    BorderThickness = new Thickness(1, 1, 1, 2),
+                                    CornerRadius = new CornerRadius(4),
+                                    Padding = new Thickness(6, 1, 6, 2),
+                                    MinWidth = 24,
+                                    Child = keyText,
+                                };
+                            }),
+                        };
+                        keys.Bind(ItemsControl.ItemsSourceProperty, new Binding(nameof(ShortcutTreeNode.KeyParts)));
+                        keys.Bind(Visual.IsVisibleProperty, new Binding(nameof(ShortcutTreeNode.IsAssigned)));
+
+                        var notSet = new TextBlock
+                        {
+                            Text = Se.Language.Options.Shortcuts.Unassigned,
+                            FontSize = 11,
+                            FontStyle = FontStyle.Italic,
+                            Opacity = 0.45,
+                            HorizontalAlignment = HorizontalAlignment.Right,
+                            VerticalAlignment = VerticalAlignment.Center,
+                        };
+                        notSet.Bind(Visual.IsVisibleProperty, new Binding(nameof(ShortcutTreeNode.IsUnassigned)));
+
+                        return new Panel
+                        {
+                            Margin = new Thickness(4, 2, 8, 2),
+                            Children = { keys, notSet },
+                        };
+                    }),
                 },
             },
         };
@@ -241,7 +341,22 @@ public class ShortcutsWindow : Window
         var buttonResetAllShortcuts = UiUtil.MakeButton(Se.Language.General.Reset, vm.ResetAllShortcutsCommand);
         var buttonImportSe4 = UiUtil.MakeButton(language.ImportFromSe4, vm.ImportFromSe4Command);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CommandCancelCommand);
-        var buttonPanel = UiUtil.MakeButtonBar(buttonOk, buttonResetAllShortcuts, buttonImportSe4, buttonCancel);
+
+        // Utility actions on the left, dialog actions on the right.
+        var buttonBarLeft = UiUtil.MakeControlBarLeft(buttonImportSe4, buttonResetAllShortcuts);
+        buttonBarLeft.Margin = new Thickness(10, 20, 10, 10);
+        buttonBarLeft.VerticalAlignment = VerticalAlignment.Bottom;
+        var buttonBarRight = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var buttonPanel = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+            },
+        };
+        buttonPanel.Add(buttonBarLeft, 0, 0);
+        buttonPanel.Add(buttonBarRight, 0, 1);
 
         var grid = new Grid
         {
@@ -267,6 +382,8 @@ public class ShortcutsWindow : Window
         {
             Orientation = Orientation.Horizontal,
             Margin = new Thickness(10),
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Center,
         };
 
         // Get platform-specific labels
@@ -334,7 +451,28 @@ public class ShortcutsWindow : Window
         editPanel.Children.Add(buttonReset);
         buttonReset.Bind(IsEnabledProperty, new Binding(nameof(vm.IsControlsEnabled)) { Source = vm });
 
-        var editGridBorder = UiUtil.MakeBorderForControl(editPanel);
+        // Name of the shortcut being edited on the left, key controls on the right.
+        var labelEditing = new TextBlock
+        {
+            FontWeight = FontWeight.SemiBold,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(10, 0, 10, 0),
+            TextTrimming = TextTrimming.CharacterEllipsis,
+        };
+        labelEditing.Bind(TextBlock.TextProperty, new Binding(nameof(vm.SelectedNode) + "." + nameof(ShortcutTreeNode.Title)) { Source = vm });
+
+        var editSplitGrid = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+            },
+        };
+        editSplitGrid.Add(labelEditing, 0, 0);
+        editSplitGrid.Add(editPanel, 0, 1);
+
+        var editGridBorder = UiUtil.MakeBorderForControl(editSplitGrid);
         grid.Add(editGridBorder, 3);
         grid.Add(buttonPanel, 4);
 
