@@ -5,7 +5,8 @@ Subtitle Edit Changelog
 
 v5.1.0-rc1 (TBD)
 
-* 
+* Speech to text: add Arabic and Japanese models to the CrispASR Cohere engine - thx muaz978
+* Update Portuguese (Brazil) translation - thx igorruckert
 
 -----------------------------------------------------------------------------------------------------
 
