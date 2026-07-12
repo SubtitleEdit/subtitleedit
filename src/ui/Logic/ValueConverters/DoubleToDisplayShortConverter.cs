@@ -14,6 +14,13 @@ public class DoubleToDisplayShortConverter : IValueConverter
     {
         if (value is double ms)
         {
+            if (ms == double.MaxValue || double.IsNaN(ms))
+            {
+                // Sentinel for "no value" (e.g. the gap after the last line) - show nothing
+                // instead of a clamped "0,000".
+                return string.Empty;
+            }
+
             if (Se.Settings.General.UseFrameMode)
             {
                 return new TimeCode(ms).ToShortStringHHMMSSFF();

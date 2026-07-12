@@ -65,7 +65,10 @@ public static class WaveFileExtractor
                 {
                     exeFilePath = "/usr/local/bin/ffmpeg";
                 }
-                exeFilePath = "ffmpeg";
+                else
+                {
+                    exeFilePath = "ffmpeg";
+                }
             }
             parameters = string.Format(fFmpegWaveTranscodeSettings, inputVideoFile, outWaveFile, audioParameter);
         }

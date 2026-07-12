@@ -348,19 +348,29 @@ public class ShortcutManager : IShortcutManager
         return null;
     }
 
+    /// <summary>
+    /// Maps modifier-key aliases ("Ctrl"/"LeftCtrl"/"Control", ...) onto one canonical
+    /// token, matching how runtime lookup unifies them. Used by duplicate detection so
+    /// e.g. "Control+S" (SE 4 import) and "Ctrl+S" (UI checkboxes) count as the same.
+    /// </summary>
+    public static string NormalizeKeyToken(string key)
+    {
+        return key switch
+        {
+            "LeftCtrl" or "RightCtrl" or "Ctrl" => "Control",
+            "LeftShift" or "RightShift" => "Shift",
+            "LeftAlt" or "RightAlt" => "Alt",
+            "LWin" or "RWin" => "Win",
+            _ => key
+        };
+    }
+
     public static string CalculateNormalizedHash(List<string> inputKeys, string? control)
     {
         var keys = new List<string>(inputKeys.Count);
         foreach (var key in inputKeys)
         {
-            keys.Add(key switch
-            {
-                "LeftCtrl" or "RightCtrl" or "Ctrl" => "Control",
-                "LeftShift" or "RightShift" => "Shift",
-                "LeftAlt" or "RightAlt" => "Alt",
-                "LWin" or "RWin" => "Win",
-                _ => key
-            });
+            keys.Add(NormalizeKeyToken(key));
         }
 
         return ShortCut.CalculateHash(keys, control);

@@ -73,6 +73,15 @@ public static class DownloadHelper
                 {
                     request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(currentPosition, null);
                 }
+                else if (currentPosition > startPosition && destination.CanSeek)
+                {
+                    // No Range header will be sent, so the server returns the file from
+                    // byte 0 - rewind the partial bytes from the failed attempt, otherwise
+                    // the full body would be appended after them and corrupt the download.
+                    destination.Seek(startPosition, SeekOrigin.Begin);
+                    destination.SetLength(startPosition);
+                    currentPosition = startPosition;
+                }
 
                 using var response = await httpClient.SendAsync(
                     request,
