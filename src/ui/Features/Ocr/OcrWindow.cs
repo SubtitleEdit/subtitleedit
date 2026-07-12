@@ -681,6 +681,7 @@ public class OcrWindow : Window
         flyout.Items.Add(menuItemSetFont);
         textBoxText.ContextFlyout = flyout;
         textBoxText.PointerReleased += vm.TextBoxPointerReleased;
+        textBoxText.KeyDown += vm.TextBoxKeyDown;
 
         textBoxText.TextChanged += vm.TextBoxTextChanged;
         var panelText = new StackPanel
