@@ -18289,14 +18289,20 @@ public partial class MainViewModel :
 
     public int GetFastHash()
     {
-        var pre = _subtitleFileName + SelectedEncoding.DisplayName;
-
+        // Runs every 250 ms (undo change detection) plus every 400 ms (title/auto-save),
+        // so it must not allocate: the old version concatenated fileName+encoding and
+        // called Trim() on Header/Footer - the editor normalises subtitles to ASSA, so
+        // Header is a multi-KB styles block ending in a newline and Trim() copied all of
+        // it on every call. Hash the parts separately and trim as spans instead
+        // (string.GetHashCode(span) equals the string's own GetHashCode, and hashes are
+        // only ever compared within this process).
         unchecked
         {
             var hash = 17;
-            hash = hash * 23 + (pre?.GetHashCode() ?? 0);
-            hash = hash * 23 + (_subtitle.Header?.Trim().GetHashCode() ?? 0);
-            hash = hash * 23 + (_subtitle.Footer?.Trim().GetHashCode() ?? 0);
+            hash = hash * 23 + (_subtitleFileName?.GetHashCode() ?? 0);
+            hash = hash * 23 + (SelectedEncoding.DisplayName?.GetHashCode() ?? 0);
+            hash = hash * 23 + (_subtitle.Header is { } header ? string.GetHashCode(header.AsSpan().Trim()) : 0);
+            hash = hash * 23 + (_subtitle.Footer is { } footer ? string.GetHashCode(footer.AsSpan().Trim()) : 0);
 
             var count = Subtitles.Count;
             for (var i = 0; i < count; i++)
@@ -18325,14 +18331,15 @@ public partial class MainViewModel :
     public int GetFastHashOriginal()
     {
         _subtitleOriginal ??= new Subtitle();
-        var pre = _subtitleFileNameOriginal + SelectedEncoding.DisplayName;
 
+        // Allocation-free for the same reason as GetFastHash above.
         unchecked
         {
             var hash = 17;
-            hash = hash * 23 + (pre?.GetHashCode() ?? 0);
-            hash = hash * 23 + (_subtitleOriginal.Header?.Trim().GetHashCode() ?? 0);
-            hash = hash * 23 + (_subtitleOriginal.Footer?.Trim().GetHashCode() ?? 0);
+            hash = hash * 23 + (_subtitleFileNameOriginal?.GetHashCode() ?? 0);
+            hash = hash * 23 + (SelectedEncoding.DisplayName?.GetHashCode() ?? 0);
+            hash = hash * 23 + (_subtitleOriginal.Header is { } header ? string.GetHashCode(header.AsSpan().Trim()) : 0);
+            hash = hash * 23 + (_subtitleOriginal.Footer is { } footer ? string.GetHashCode(footer.AsSpan().Trim()) : 0);
 
             var count = Subtitles.Count;
             for (var i = 0; i < count; i++)
