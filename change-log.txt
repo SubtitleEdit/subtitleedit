@@ -8,8 +8,10 @@ v5.1.0-beta15 (TBD)
 * Command line (seconv): add auto-translate with llama.cpp, starting the local server automatically - thx go2tom42
 * Rename "FCP/png" export to "Final Cut Pro + image"
 * Speech to text: offer re-download when the engine executable has gone missing - thx zezartiti
+* Speech to text: fix whisper.cpp (CPU) engine not starting - strip the "Release" subfolder when unpacking - thx zezartiti
 * Command line (seconv): fix garbled PGS/DVB-sub OCR by binarizing before Tesseract - thx albino1
 * Fix thin outlines (width 1-2) disappearing on horizontal edges in image-based exports like BDN XML/Blu-ray SUP - thx pepelugil
+* Fix ASSA/SSA styles editor not switching to "Styles in file" when clicking the already-selected style row
 * Update CrispASR Qwen3 model list (re-add qwen3-asr-1.7b q4_k)
 * Fix Turkish translation not loading (broken JSON)
 * Add new word replacements to the Croatian OCR fix list - thx diomed
