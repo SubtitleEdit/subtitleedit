@@ -811,8 +811,9 @@ public partial class TextToSpeechViewModel : ObservableObject
             ? string.Format(Se.Language.Video.TextToSpeech.XLines, subtitle.Paragraphs.Count)
             : string.Format(Se.Language.Video.TextToSpeech.XLinesFromY, subtitle.Paragraphs.Count, subtitleName);
         HasVideoFile = !string.IsNullOrEmpty(videoFileName);
+        // Just the file name - the video chip shows a movie icon instead of a "Video:" label.
         VideoInfo = HasVideoFile
-            ? string.Format(Se.Language.Video.TextToSpeech.VideoX, CapFileName(Path.GetFileName(videoFileName), 40))
+            ? CapFileName(Path.GetFileName(videoFileName), 40)
             : string.Empty;
 
         _cancellationTokenSource = new CancellationTokenSource();

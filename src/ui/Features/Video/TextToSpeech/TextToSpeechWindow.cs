@@ -45,17 +45,30 @@ public class TextToSpeechWindow : Window
             Opacity = 0.75,
             [!TextBlock.TextProperty] = new Binding(nameof(vm.LinesInfo)) { Mode = BindingMode.OneWay },
         };
+        // A movie icon stands in for a "Video:" label inside the chip.
+        var videoChipIcon = new ContentControl { VerticalAlignment = VerticalAlignment.Center, Opacity = 0.8 };
+        Attached.SetIcon(videoChipIcon, IconNames.MovieOpenOutline);
         var videoChip = new Border
         {
             CornerRadius = new CornerRadius(10),
             Padding = new Thickness(9, 1, 9, 2),
             VerticalAlignment = VerticalAlignment.Center,
             Background = new SolidColorBrush(Color.FromArgb(28, 128, 128, 128)),
-            Child = new TextBlock
+            Child = new StackPanel
             {
-                FontSize = 11.5,
-                Opacity = 0.8,
-                [!TextBlock.TextProperty] = new Binding(nameof(vm.VideoInfo)) { Mode = BindingMode.OneWay },
+                Orientation = Orientation.Horizontal,
+                Spacing = 5,
+                Children =
+                {
+                    videoChipIcon,
+                    new TextBlock
+                    {
+                        FontSize = 11.5,
+                        Opacity = 0.8,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        [!TextBlock.TextProperty] = new Binding(nameof(vm.VideoInfo)) { Mode = BindingMode.OneWay },
+                    },
+                },
             },
             [!Border.IsVisibleProperty] = new Binding(nameof(vm.HasVideoFile)) { Mode = BindingMode.OneWay },
         };
@@ -63,7 +76,7 @@ public class TextToSpeechWindow : Window
         {
             Orientation = Orientation.Horizontal,
             Spacing = 8,
-            Margin = new Thickness(2, 0, 0, 2),
+            Margin = new Thickness(2, 0, 0, 12),
             Children = { contextIcon, contextText, videoChip },
         };
 

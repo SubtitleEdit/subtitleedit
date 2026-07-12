@@ -20,7 +20,6 @@ public class LanguageTextToSpeech
     public string Output { get; set; }
     public string XLinesFromY { get; set; }
     public string XLines { get; set; }
-    public string VideoX { get; set; }
     public string XVoices { get; set; }
     public string ReviewAudioSegmentsHint { get; set; }
     public string AddAudioToVideoFileHint { get; set; }
@@ -126,7 +125,6 @@ public class LanguageTextToSpeech
         Output = "Output";
         XLinesFromY = "{0} lines from {1}";
         XLines = "{0} lines";
-        VideoX = "Video: {0}";
         XVoices = "{0} voices";
         ReviewAudioSegmentsHint = "Check each line before the final mix";
         AddAudioToVideoFileHint = "Mux the result into a new video file";
