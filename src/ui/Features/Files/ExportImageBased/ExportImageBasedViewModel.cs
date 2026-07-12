@@ -612,7 +612,7 @@ public partial class ExportImageBasedViewModel : ObservableObject
             return;
         }
 
-        BitmapPreview.Save(fileName, 100);
+        BitmapPreview.Save(fileName, PngBitmapEncoderOptions.Default);
 
         Dispatcher.UIThread.Post(async void () =>
         {

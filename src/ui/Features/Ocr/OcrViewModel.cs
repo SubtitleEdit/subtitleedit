@@ -1032,7 +1032,7 @@ public partial class OcrViewModel : ObservableObject
         }
 
         var bitmap = item.GetBitmap();
-        bitmap.Save(fileName, 100);
+        bitmap.Save(fileName, PngBitmapEncoderOptions.Default);
     }
 
     [RelayCommand]

@@ -182,7 +182,7 @@ public static class ClipboardHelper
 
                 // Save bitmap to memory stream and read pixel data
                 using var memoryStream = new MemoryStream();
-                bitmap.Save(memoryStream);
+                bitmap.Save(memoryStream, PngBitmapEncoderOptions.Default);
                 memoryStream.Position = 0;
 
                 // Use SkiaSharp to decode the image and get pixel data
@@ -304,7 +304,7 @@ public static class ClipboardHelper
         {
             // Save to temporary file
             var tempPath = Path.Combine(Path.GetTempPath(), $"clipboard_{Guid.NewGuid()}.png");
-            bitmap.Save(tempPath);
+            bitmap.Save(tempPath, PngBitmapEncoderOptions.Default);
 
             // Try xclip first
             var psi = new ProcessStartInfo
@@ -359,7 +359,7 @@ public static class ClipboardHelper
         {
             // Save to temporary file
             var tempPath = Path.Combine(Path.GetTempPath(), $"clipboard_{Guid.NewGuid()}.png");
-            bitmap.Save(tempPath);
+            bitmap.Save(tempPath, PngBitmapEncoderOptions.Default);
 
             // Use osascript to copy image to clipboard
             var psi = new ProcessStartInfo

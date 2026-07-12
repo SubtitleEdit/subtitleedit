@@ -71,7 +71,7 @@ public partial class ShowImageViewModel : ObservableObject
             return;
         }
 
-        PreviewImage.Save(fileName, 100);
+        PreviewImage.Save(fileName, PngBitmapEncoderOptions.Default);
     }
 
 
