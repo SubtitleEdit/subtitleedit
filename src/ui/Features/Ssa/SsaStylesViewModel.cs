@@ -847,6 +847,28 @@ public partial class SsaStylesViewModel : ObservableObject
 
     internal void FileStylesChanged(object? sender, SelectionChangedEventArgs e)
     {
+        SwitchToFileStyle();
+    }
+
+    internal void StorageStylesChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        SwitchToStorageStyle();
+    }
+
+    // Also switch context when a grid merely gains focus (e.g. clicking the row that is already
+    // selected), otherwise SelectionChanged never fires and the title/editor stays on the other grid.
+    internal void FileStylesGotFocus(object? sender, FocusChangedEventArgs e)
+    {
+        SwitchToFileStyle();
+    }
+
+    internal void StorageStylesGotFocus(object? sender, FocusChangedEventArgs e)
+    {
+        SwitchToStorageStyle();
+    }
+
+    private void SwitchToFileStyle()
+    {
         var selectedStyle = SelectedFileStyle;
         CurrentStyle = selectedStyle;
         CurrentTitle = Se.Language.Assa.StylesInFile;
@@ -855,7 +877,7 @@ public partial class SsaStylesViewModel : ObservableObject
         IsTakeUsagesFromVisible = FileStyleGrid.SelectedItems.Count == 1;
     }
 
-    internal void StorageStylesChanged(object? sender, SelectionChangedEventArgs e)
+    private void SwitchToStorageStyle()
     {
         var selectedStyle = SelectedStorageStyle;
         CurrentStyle = selectedStyle;

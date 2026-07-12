@@ -157,6 +157,7 @@ public class AssaStylesWindow : Window
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedFileStyle)) { Source = vm });
         dataGrid.SelectionChanged += vm.FileStylesChanged;
+        dataGrid.GotFocus += vm.FileStylesGotFocus;
         dataGrid.KeyDown += vm.FileStylesKeyDown;
         dataGrid.AddHandler(InputElement.KeyDownEvent, (object? _, KeyEventArgs e) =>
         {
@@ -327,6 +328,7 @@ public class AssaStylesWindow : Window
         };
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedStorageStyle)) { Source = vm });
         dataGrid.SelectionChanged += vm.StorageStylesChanged;
+        dataGrid.GotFocus += vm.StorageStylesGotFocus;
         vm.StorageStyleGrid = dataGrid;
 
         var flyout = new MenuFlyout();
