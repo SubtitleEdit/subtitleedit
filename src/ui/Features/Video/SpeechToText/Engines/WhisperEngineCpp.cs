@@ -29,7 +29,12 @@ public class WhisperEngineCpp : ISpeechToTextEngine
     }
 
     public string Extension => ".bin";
-    public string UnpackSkipFolder => string.Empty;
+
+    // The Windows whisper.cpp release (whisper-blas-bin-x64.zip) nests all binaries under a
+    // "Release/" folder, so whisper-cli.exe would otherwise land in Cpp/Release/ (see #12220).
+    // The Mac/Linux archives are flat; skipping "Release" is a no-op there because the unpacker
+    // only strips the prefix from entries that actually start with it.
+    public string UnpackSkipFolder => "Release";
 
     public bool IsEngineInstalled()
     {

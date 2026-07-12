@@ -29,7 +29,11 @@ public class WhisperEngineCppVulkan : ISpeechToTextEngine
     }
 
     public string Extension => ".bin";
-    public string UnpackSkipFolder => string.Empty;
+
+    // Consistent with the other whisper.cpp engines: strip a leading "Release/" folder if the
+    // archive nests binaries in one (see #12220). No-op for the flat Vulkan archive because the
+    // unpacker only strips the prefix from entries that actually start with it.
+    public string UnpackSkipFolder => "Release";
 
     public bool IsEngineInstalled()
     {
