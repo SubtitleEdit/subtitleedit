@@ -7,6 +7,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -99,8 +100,16 @@ public class ShortcutsWindow : Window
         var groupTiles = new ListBox
         {
             ItemsSource = vm.GroupTiles,
-            Margin = new Thickness(10, 0, 10, 0),
+            Margin = new Thickness(0, 0, 0, 8),
             ItemsPanel = new FuncTemplate<Panel?>(() => new WrapPanel { Orientation = Orientation.Horizontal }),
+            ItemContainerTheme = new ControlTheme(typeof(ListBoxItem))
+            {
+                BasedOn = Application.Current?.FindResource(typeof(ListBoxItem)) as ControlTheme,
+                Setters =
+                {
+                    new Setter(ListBoxItem.PaddingProperty, new Thickness(6, 2)),
+                },
+            },
             ItemTemplate = new FuncDataTemplate<ShortcutGroupTile>((_, _) =>
             {
                 var icon = new ContentControl
@@ -141,8 +150,8 @@ public class ShortcutsWindow : Window
                 return new StackPanel
                 {
                     Width = 92,
-                    Spacing = 3,
-                    Margin = new Thickness(0, 5, 0, 4),
+                    Spacing = 2,
+                    Margin = new Thickness(0, 3, 0, 2),
                     Children = { glyph, name, count },
                 };
             }),
@@ -313,7 +322,9 @@ public class ShortcutsWindow : Window
 
                         return new Panel
                         {
-                            Margin = new Thickness(4, 2, 8, 2),
+                            // Extra right margin so the DataGrid's overlay scrollbar
+                            // does not cover the key chips in the last column.
+                            Margin = new Thickness(4, 2, 20, 2),
                             Children = { keys, notSet },
                         };
                     }),
