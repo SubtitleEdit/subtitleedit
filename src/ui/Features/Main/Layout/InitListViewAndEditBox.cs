@@ -97,6 +97,8 @@ public static partial class InitListViewAndEditBox
             FontSize = Se.Settings.Appearance.SubtitleGridFontSize,
         };
 
+        DataGridScrollBarBehavior.EnableTroughPageScroll(vm.SubtitleGrid);
+
         // hack to make drag and drop work on the DataGrid - also on empty rows
         var dropHost = new Border
         {
