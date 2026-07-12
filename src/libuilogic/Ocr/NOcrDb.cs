@@ -195,7 +195,7 @@ public class NOcrDb
     {
         foreach (var op in oc.LinesForeground)
         {
-            var points = scaled ? op.ScaledGetPoints(oc, oc.Width, oc.Height - 1) : op.GetPoints();
+            var points = scaled ? op.ScaledWalkPoints(oc, oc.Width, oc.Height - 1) : op.WalkPoints();
             foreach (var point in points)
             {
                 var p = new OcrPoint(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
@@ -217,7 +217,7 @@ public class NOcrDb
 
         foreach (var op in oc.LinesBackground)
         {
-            var points = scaled ? op.ScaledGetPoints(oc, oc.Width, oc.Height - 1) : op.GetPoints();
+            var points = scaled ? op.ScaledWalkPoints(oc, oc.Width, oc.Height - 1) : op.WalkPoints();
             foreach (var point in points)
             {
                 var p = new OcrPoint(point.X + targetItem.X, point.Y + targetItem.Y - oc.MarginTop);
@@ -304,7 +304,10 @@ public class NOcrDb
             return expandedResult;
         }
 
-        return GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch);
+        // skipExactCheck: the exact scan already ran (and missed) above - without the flag,
+        // GetMatchSingle re-scanned the whole single-character list a second time for every
+        // glyph that wasn't an exact match.
+        return GetMatchSingle(item.NikseBitmap, topMargin, deepSeek, maxWrongPixels, lastDitch, skipExactCheck: true);
     }
 
     private NOcrChar? GetExactMatchSingle(NikseBitmap2 bitmap, int topMargin)
@@ -323,12 +326,15 @@ public class NOcrDb
         return null;
     }
 
-    public NOcrChar? GetMatchSingle(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch = false)
+    public NOcrChar? GetMatchSingle(NikseBitmap2 bitmap, int topMargin, bool deepSeek, int maxWrongPixels, bool lastDitch = false, bool skipExactCheck = false)
     {
-        var exact = GetExactMatchSingle(bitmap, topMargin);
-        if (exact != null)
+        if (!skipExactCheck)
         {
-            return exact;
+            var exact = GetExactMatchSingle(bitmap, topMargin);
+            if (exact != null)
+            {
+                return exact;
+            }
         }
 
         var heightToWidthPercent = bitmap.Height * 100.0 / bitmap.Width;
@@ -545,7 +551,7 @@ public class NOcrDb
 
         foreach (var op in oc.LinesForeground)
         {
-            foreach (var point in op.ScaledGetPoints(oc, width, height))
+            foreach (var point in op.ScaledWalkPoints(oc, width, height))
             {
                 if ((uint)point.X < (uint)width && (uint)point.Y < (uint)height)
                 {
@@ -563,7 +569,7 @@ public class NOcrDb
 
         foreach (var op in oc.LinesBackground)
         {
-            foreach (var point in op.ScaledGetPoints(oc, width, height))
+            foreach (var point in op.ScaledWalkPoints(oc, width, height))
             {
                 if ((uint)point.X < (uint)width && (uint)point.Y < (uint)height)
                 {
