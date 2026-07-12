@@ -53,6 +53,81 @@ public class NOcrLine
         return GetPoints(GetScaledStart(nOcrChar, width, height), GetScaledEnd(nOcrChar, width, height));
     }
 
+    /// <summary>
+    /// Allocation-free version of <see cref="GetPoints()"/> for the OCR matcher's inner loop.
+    /// Yields the same points as <see cref="GetPoints(OcrPoint, OcrPoint)"/> but via a struct
+    /// enumerator, so a foreach compiles to direct calls with no heap allocation - the
+    /// IEnumerable version allocates an iterator object per line per candidate character,
+    /// which dominated batch nOCR runs.
+    /// </summary>
+    public LinePointWalker WalkPoints()
+    {
+        return new LinePointWalker(Start, End);
+    }
+
+    /// <summary>Allocation-free version of <see cref="ScaledGetPoints"/>. See <see cref="WalkPoints()"/>.</summary>
+    public LinePointWalker ScaledWalkPoints(NOcrChar nOcrChar, int width, int height)
+    {
+        return new LinePointWalker(GetScaledStart(nOcrChar, width, height), GetScaledEnd(nOcrChar, width, height));
+    }
+
+    /// <summary>
+    /// Struct enumerable/enumerator over the pixel points of a line. Must stay arithmetically
+    /// identical to <see cref="GetPoints(OcrPoint, OcrPoint)"/> (verified by unit test) so old
+    /// and new match paths accept exactly the same pixels.
+    /// </summary>
+    public struct LinePointWalker
+    {
+        private readonly int _x1;
+        private readonly int _y1;
+        private readonly int _end;
+        private readonly double _factor;
+        private readonly bool _horizontal;
+        private int _i;
+
+        public LinePointWalker(OcrPoint start, OcrPoint end)
+        {
+            var dx = end.X - start.X;
+            var dy = end.Y - start.Y;
+            _horizontal = Math.Abs(dx) > Math.Abs(dy);
+            if (_horizontal)
+            {
+                int y2;
+                (_x1, _y1, _end, y2) = dx > 0 ? (start.X, start.Y, end.X, end.Y) : (end.X, end.Y, start.X, start.Y);
+                _factor = (double)(y2 - _y1) / (_end - _x1);
+                _i = _x1 - 1;
+            }
+            else
+            {
+                int x2;
+                (_x1, _y1, x2, _end) = dy > 0 ? (start.X, start.Y, end.X, end.Y) : (end.X, end.Y, start.X, start.Y);
+                _factor = (double)(x2 - _x1) / (_end - _y1);
+                _i = _y1 - 1;
+            }
+        }
+
+        public OcrPoint Current { get; private set; }
+
+        public LinePointWalker GetEnumerator()
+        {
+            return this;
+        }
+
+        public bool MoveNext()
+        {
+            _i++;
+            if (_i > _end)
+            {
+                return false;
+            }
+
+            Current = _horizontal
+                ? new OcrPoint(_i, (int)Math.Round(_y1 + _factor * (_i - _x1), MidpointRounding.AwayFromZero))
+                : new OcrPoint((int)Math.Round(_x1 + _factor * (_i - _y1), MidpointRounding.AwayFromZero), _i);
+            return true;
+        }
+    }
+
     public static IEnumerable<OcrPoint> GetPoints(OcrPoint start, OcrPoint end)
     {
         var dx = end.X - start.X;

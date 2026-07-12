@@ -20854,7 +20854,9 @@ public partial class MainViewModel :
                         }
                     }
                 }
-                subtitle.Sort((a, b) => a.StartTime.Ticks.CompareTo(b.StartTime.Ticks));
+                // Runs every 50 ms tick and the buffer is nearly always already in start-time
+                // order, so skip the O(n log n) sort after a cheap early-exit ordered check.
+                ListSortUtil.SortIfNeeded(subtitle, static (a, b) => a.StartTime.Ticks.CompareTo(b.StartTime.Ticks));
 
                 // The playhead cursor is interpolated and applied by the dedicated high-frequency
                 // _cursorTimer (see UpdatePlayheadEstimate) so it moves at ~60 fps instead of this
