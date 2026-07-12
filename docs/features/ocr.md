@@ -54,6 +54,12 @@ Local LLM-based OCR via an Ollama server (e.g. with a vision model).
 Local LLM-based OCR using a llama.cpp-compatible server.
 - Default endpoint: `http://127.0.0.1:8080/v1/chat/completions`
 
+### CrispEmbed
+Local OCR engine with multiple model backends (free/open source).
+- Backends: **GLM-OCR**, **GOT-OCR2**, and **Qwen3-VL-2B**
+- Each backend offers a smaller `q4_k` and a higher-quality `q8_0` model (from about 445 MB for GOT-OCR2 q4_k up to about 2.3 GB for Qwen3-VL-2B q8_0)
+- The engine and models are downloaded from the OCR window on first use
+
 ### Mistral OCR
 Cloud-based OCR using Mistral API.
 - Requires a Mistral API key
@@ -69,6 +75,7 @@ Local OCR engine.
 - **Binary OCR** databases use image comparison and are edited separately from nOCR databases.
 - **PaddleOCR** can download standalone CPU/GPU builds and support files on Windows and Linux, or use a Python installation.
 - **Ollama** and **llama.cpp** are useful when you want local AI-based OCR and have a vision-capable model available.
+- **CrispEmbed** is fully self-contained: pick a backend and model in the OCR window and Subtitle Edit downloads what is needed.
 - **Mistral OCR** and **Google Vision** require cloud credentials.
 
 ## How to Use
@@ -115,14 +122,17 @@ Local OCR engine.
 ## Pre-processing
 
 Before OCR, you can apply image pre-processing:
-- Crop
-- Binarize (convert to black/white)
+- Crop transparent colors
+- Remove borders (with configurable border size)
 - Invert colors
-- Resize
+- To one color (keep pixels brighter than a darkness threshold)
+- Binarize (convert to black/white using Otsu thresholding)
 
 ## Batch OCR
 
 Batch Convert can process image-based subtitle files with OCR. Subtitle Edit 5 includes Binary OCR in Batch Convert and can auto-detect several nOCR/Binary OCR settings such as language and pixels-are-space values.
+
+For VobSub files, Batch Convert isolates the glyph color before OCR (on by default, configurable in the Batch Convert settings): the subpicture is rebuilt as a crisp black-on-white bitmap from pixel frequency, so outline and anti-alias colors no longer melt adjacent characters together.
 
 For command-line workflows, see [Command Line (seconv)](../reference/command-line.md), which documents OCR engines and options for headless conversion.
 

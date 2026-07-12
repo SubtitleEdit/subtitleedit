@@ -5,6 +5,9 @@ Renumber subtitle lines from a chosen start number.
 - **Menu:** Tools → Renumber...
 - **Shortcut:** Configurable
 
+<!-- Screenshot: Renumber window -->
+![Renumber](../screenshots/renumber.png)
+
 ## How to Use
 
 1. Open **Tools → Renumber...**.

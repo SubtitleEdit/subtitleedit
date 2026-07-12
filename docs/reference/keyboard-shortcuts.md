@@ -1,6 +1,6 @@
 # Keyboard Shortcuts
 
-A reference for the default keyboard shortcuts in Subtitle Edit. Every shortcut can be customized — and most actions ship with no default binding at all — in **Options** → **Shortcuts**. On macOS, Cmd (`Win` in the shortcut editor) is used wherever Ctrl is shown below.
+A reference for the default keyboard shortcuts in Subtitle Edit. Every shortcut can be customized in **Options** → **Shortcuts** — and many more actions are available there without a default binding. On macOS, Cmd (`Win` in the shortcut editor) is used wherever Ctrl is shown below.
 
 See also: [Shortcuts Settings](../features/shortcuts.md)
 
@@ -11,6 +11,7 @@ See also: [Shortcuts Settings](../features/shortcuts.md)
 | Ctrl+N | New subtitle |
 | Ctrl+O | Open subtitle file |
 | Ctrl+S | Save subtitle |
+| Ctrl+Shift+S | Save subtitle as... |
 | Ctrl+Z | Undo |
 | Ctrl+Y | Redo |
 | Ctrl+F | Find |
@@ -19,12 +20,30 @@ See also: [Shortcuts Settings](../features/shortcuts.md)
 | Ctrl+H | Replace |
 | Ctrl+Shift+R | Multiple replace |
 | Ctrl+G | Go to line number |
+| Ctrl+L | Focus selected line |
 | Ctrl+Shift+B | Add or edit bookmark |
+| Ctrl+Shift+O | Toggle translation mode |
+| Ctrl+Shift+Alt+R | Toggle right-to-left |
 | Ctrl+4 | Set up like Subtitle Edit 4 (classic theme, icons, waveform, replace rules and shortcuts) |
 | Alt+Up | Go to previous line |
 | Alt+Down | Go to next line |
 | F1 | Show help |
 | F2 | Show source view |
+
+## Editing Lines
+
+| Shortcut | Action |
+|----------|--------|
+| Ctrl+Shift+M | Merge selected lines |
+| Alt+Insert | Insert line after |
+| Ctrl+Shift+Insert | Insert line before |
+| Ctrl+Alt+B | Auto-break text |
+| Ctrl+Alt+V | Split line at text box cursor position |
+| Ctrl+U | Selected text to lowercase |
+| Ctrl+Shift+U | Selected text to uppercase |
+| Ctrl+Shift+F3 | Toggle casing |
+| Ctrl+Shift+E | Extend selected line to next |
+| Alt+Shift+E | Extend selected line to previous |
 
 ## Subtitle Grid
 
@@ -48,14 +67,42 @@ See also: [Shortcuts Settings](../features/shortcuts.md)
 | Ctrl+Space | Toggle play/pause (secondary) |
 | Left | One second back |
 | Right | One second forward |
+| Alt+Left | 500 milliseconds back |
+| Alt+Right | 500 milliseconds forward |
+| F5 | Play selected lines |
+| Alt+Enter | Video full screen |
+| Ctrl+Alt+P | Pause |
+
+## Timing
+
+| Shortcut | Action |
+|----------|--------|
+| F11 | Set start time |
+| F12 | Set end time |
+| F10 | Set end time and go to next line |
+
+## Waveform
+
+| Shortcut | Action |
+|----------|--------|
+| Ctrl+V | Paste lines from clipboard at waveform position |
+| Shift++ | Vertical zoom in |
+| Shift+- | Vertical zoom out |
 
 ## Tools
 
 | Shortcut | Action |
 |----------|--------|
+| Ctrl+Shift+F | Fix common errors |
 | Ctrl+Shift+C | Change casing |
+| Ctrl+Alt+R | AI review |
+| Ctrl+B | Batch convert |
 | Ctrl+Shift+H | Remove text for hearing impaired |
+| Ctrl+Shift+G | Auto-translate |
 | Ctrl+Shift+A | Synchronization → Adjust all times |
+| Ctrl+Shift+P | Synchronization → Point sync |
+| Ctrl+Shift+D | Find double words |
+| Ctrl+Shift+L | Add to name list |
 | Ctrl+Alt+Shift+D | Open data folder |
 | Ctrl+Alt+Shift+L | Save language file |
 

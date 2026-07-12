@@ -67,6 +67,10 @@ Right-click a line to access:
 | `Enter` | Go to next line |
 | `Up/Down` | Navigate lines |
 
+## Formatting Display
+
+The grid can render formatting tags (italic, bold, color, etc.) visually instead of showing the raw tags — enable **Show formatting in grid** in the settings. A shortcut to toggle the formatting mode on the fly can be assigned in **Options → Shortcuts**.
+
 ## Bookmarks
 
 You can bookmark subtitle lines for quick reference:

@@ -105,7 +105,7 @@ Export subtitles in Cavena 890 format.
 
 ### Export image-based
 
-Export subtitles as images (BDN XML, VobSub, Blu-ray SUP, FCP, etc.).
+Export subtitles as images (BDN XML, VobSub, Blu-ray SUP, Final Cut Pro + image, etc.).
 
 <!-- Screenshot: Export image-based window -->
 ![Export Image Based](../screenshots/export-image-based.png)

@@ -11,19 +11,28 @@ View, assign, and manage keyboard shortcuts for all commands in Subtitle Edit.
 ## How to Use
 
 1. Open **Options → Shortcuts...**
-2. Browse or search for the command you want to configure
+2. Pick a category tile, or search for the command you want to configure
 3. Select the command in the list
 4. Assign a shortcut by selecting modifier keys (Ctrl, Alt, Shift, Win) and a key
 5. Click **OK** to save all changes
 
-## Shortcut Categories
+## Browsing by Category
 
-Shortcuts are organized into the following categories:
+A row of category tiles above the list groups the commands thematically. Each tile has an icon, a color, and the number of commands in the group — click one to filter the list:
 
-- **General** — Global shortcuts available everywhere (conflicts with all other categories)
-- **Subtitle grid and text box** — Shortcuts active when working with subtitle text
-- **Subtitle grid** — Shortcuts active when the subtitle grid is focused
-- **Waveform** — Shortcuts active when the audio visualizer is focused
+**All**, **General**, **File**, **Video**, **Waveform**, **Subtitle list view**, **Text box**, **Subtitle list view & text box**, **Synchronization**, **Translate**, **Search**, **Tools**, and **AI**.
+
+In the list, each command shows its group with the matching icon and color, and assigned key combinations are rendered as keycap-style chips.
+
+## Where a Shortcut Is Active
+
+Independent of the thematic category, each command has a scope shown in the **Active in** column:
+
+- **Everywhere** — global shortcuts, available in the whole main window (conflicts with all other scopes)
+- **Subtitle list view** — active while the subtitle list view is focused
+- **Text box** — active while the subtitle text box is focused
+- **Subtitle list view & text box** — active in both
+- **Waveform** — active while the audio visualizer is focused
 
 ## Assigning a Shortcut
 
@@ -46,8 +55,8 @@ Select a configurable command and click **Configure** to adjust its settings.
 
 ## Resetting Shortcuts
 
-- **Reset** — Clear the shortcut for the selected command
-- **Reset all** — Restore all shortcuts to their default values (requires confirmation)
+- **Reset** (next to the assignment controls) — Clear the shortcut for the selected command
+- **Reset** (button bar) — Restore all shortcuts to their default values (requires confirmation)
 
 ## Filtering
 
@@ -61,14 +70,17 @@ Use the **search box** to filter commands by name.
 
 ## Duplicate Detection
 
-When saving, Subtitle Edit checks for duplicate shortcut assignments. If duplicates are found within the same category (or if a "General" shortcut conflicts with any other category), you will be warned and can choose to save anyway or go back and fix them.
+When saving, Subtitle Edit checks for duplicate shortcut assignments. If duplicates are found within the same scope (or if an "Everywhere" shortcut conflicts with any other scope), you will be warned and can choose to save anyway or go back and fix them.
 
 ## Import / Export
 
-- **Import** — Load shortcuts from a `.shortcuts` file (JSON format)
-- **Export** — Save all configured shortcuts to a `.shortcuts` file
+Right-click the shortcut list to open the context menu:
 
-This is useful for sharing shortcut configurations between machines or team members.
+- **Import...** — Load shortcuts from a `.shortcuts` file (JSON format)
+- **Export...** — Save all configured shortcuts to a `.shortcuts` file
+- **Import from SE 4...** — Import shortcuts from a Subtitle Edit 4 `Settings.xml` (also available as a button in the window)
+
+This is useful for sharing shortcut configurations between machines or team members, or for keeping muscle memory when moving from Subtitle Edit 4.
 
 ## Keyboard Shortcuts
 

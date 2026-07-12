@@ -3,7 +3,7 @@
 Proofread the subtitle text with a local (or remote) large language model - typos, spelling, grammar, punctuation and casing. Nothing is changed until you apply the suggestions you agree with.
 
 - **Menu:** Tools → AI review...
-- **Shortcut:** Ctrl+Shift+R (Cmd+Shift+R on macOS)
+- **Shortcut:** Ctrl+Alt+R (Cmd+Alt+R on macOS)
 
 <!-- Screenshot: AI review window -->
 ![AI Review](../screenshots/ai-review.png)

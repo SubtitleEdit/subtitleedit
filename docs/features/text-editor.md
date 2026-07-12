@@ -14,9 +14,9 @@ Type directly in the text editor to modify the subtitle text. Changes are reflec
 | Shortcut | Action |
 |----------|--------|
 | `Ctrl+I` | Toggle italic |
-| `Ctrl+B` | Toggle bold |
 
 Additional formatting options:
+- **Bold / Underline** — No default key; assign one in **Options → Shortcuts**
 - **Color** — Apply font color via shortcut or color picker
 - **Remove formatting** — Strip all formatting tags
 - **Alignment** — Set subtitle position (an1–an9)
@@ -46,3 +46,13 @@ Additional formatting options:
 
 - **Fetch first word from next subtitle** — Move the first word of the next line to the current line
 - **Move last word to next subtitle** — Move the last word to the next subtitle line
+
+## AI Assistant
+
+Ask a local AI model about the current line, or ask it for a change — available from the text box context menu (**AI assistant**) or the edit-box toolbar robot button.
+
+- **Quick actions:** Fix errors, Fit reading speed, More formal, More casual — or type a free-form request
+- The model sees the current line plus a few neighbouring lines as context
+- The suggestion is shown next to the current text; press **Apply to line** to accept it
+- An info button reveals the model's reasoning when the model produces any
+- **Engines:** llama.cpp (managed local server with downloadable models, green dot = installed), Ollama, or any OpenAI-compatible endpoint — engine settings are edited directly in the window and are shared with [AI Review](ai-review.md)

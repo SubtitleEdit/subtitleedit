@@ -95,4 +95,5 @@ The console log at the bottom shows real-time output from the Whisper process, u
 - If you get "CUDA out of memory" errors, try a smaller model
 - The `--standard` parameter is automatically added for Purfview Faster Whisper XXL
 - You can re-download an engine by right-clicking the engine area
+- If an engine executable has gone missing (typically quarantined by antivirus software), Subtitle Edit detects it when transcription starts, names the missing file, and offers to re-download the engine
 - If a new engine has no model installed yet, let Subtitle Edit download both the engine and the selected model before starting transcription

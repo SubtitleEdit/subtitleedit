@@ -10,7 +10,7 @@
 - **Container input** — Matroska (`.mkv` / `.mks`), MP4, MCC, transport stream teletext, Blu-Ray `.sup`.
 - **OCR for image-based sources** via five engines (Tesseract subprocess, nOCR built-in, BinaryOCR built-in, Ollama HTTP, PaddleOCR subprocess).
 - **Auto-translate** via local LLMs (llama.cpp with automatic server start, Ollama, LM Studio) or self-hosted services (LibreTranslate, NLLB).
-- **Image-based output** — Blu-Ray sup, BDN-XML, DOST, FCP, D-Cinema interop / SMPTE 2014, images-with-time-code.
+- **Image-based output** — Blu-Ray sup, BDN-XML, DOST, FCP (Final Cut Pro + image), D-Cinema interop / SMPTE 2014, images-with-time-code.
 - **Operations pipeline** — offset, fps change, change-speed, renumber, adjust-duration, fix-common-errors, merge/split, balance, redo casing, RTL fixes, multiple-replace, custom-text format, plain text.
 - **Cross-platform** — Windows, Linux, macOS. Only requires the .NET runtime; no display or GUI needed.
 
@@ -125,7 +125,7 @@ seconv lint *.srt --json             # CI-friendly: exit 1 on any issue
 
 ### Image output styling
 
-When rendering a text subtitle to an image-based target (Blu-Ray `sup`, VobSub, BDN-XML, DOST, FCP, D-Cinema, images-with-time-code, WebVTT thumbnails), these options control how the text is drawn. `<i>`, `<b>`, and `<font color=...>` tags in the subtitle text are honored. The same values can be set in a `--settings` JSON file's `exportImages` section (see [Settings JSON](#settings-json)); CLI flags win over the JSON.
+When rendering a text subtitle to an image-based target (Blu-Ray `sup`, VobSub, BDN-XML, DOST, FCP / Final Cut Pro + image, D-Cinema, images-with-time-code, WebVTT thumbnails), these options control how the text is drawn. `<i>`, `<b>`, and `<font color=...>` tags in the subtitle text are honored. The same values can be set in a `--settings` JSON file's `exportImages` section (see [Settings JSON](#settings-json)); CLI flags win over the JSON.
 
 | Option | Description |
 |---|---|

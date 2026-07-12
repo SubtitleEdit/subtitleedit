@@ -4,6 +4,9 @@ Run Netflix-style quality checks and review proposed fixes before applying them.
 
 - **Menu:** Tools → Check and fix Netflix errors...
 
+<!-- Screenshot: Netflix errors window -->
+![Netflix Errors](../screenshots/netflix-errors.png)
+
 ## What It Checks
 
 The checker can report common Netflix delivery issues, including:

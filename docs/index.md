@@ -36,6 +36,7 @@ Subtitle Edit is a free, open-source editor for video subtitles. This is the doc
 - [Merge Short Lines](features/merge-short-lines.md) — Merge short subtitle lines
 - [Merge Lines with Same Text](features/merge-same-text.md) — Merge duplicate text lines
 - [Merge Lines with Same Time Codes](features/merge-same-timecodes.md) — Merge lines with identical timings
+- [Merge Two Subtitles](features/merge-two-subtitles.md) — Combine two subtitles into one bilingual subtitle
 - [Renumber](features/renumber.md) — Renumber subtitle lines from a chosen start number
 - [Split/Break Long Lines](features/split-break-long-lines.md) — Break overly long lines
 - [Split Subtitle](features/split-subtitle.md) — Split one subtitle file into multiple files

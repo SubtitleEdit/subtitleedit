@@ -4,6 +4,9 @@ Add, remove, preview, and edit subtitle tracks embedded in a video file.
 
 - **Menu:** Video → Add/remove embedded subtitles...
 
+<!-- Screenshot: Embedded subtitles window -->
+![Embedded Subtitles](../screenshots/embedded-subtitles.png)
+
 ## Supported Video Files
 
 The embedded subtitle editor edits subtitle tracks in Matroska containers:

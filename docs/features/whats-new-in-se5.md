@@ -18,6 +18,7 @@ Subtitle Edit 5 is the Avalonia-based, cross-platform version of Subtitle Edit. 
 - Deleting many lines at once in the subtitle grid / list view is dramatically faster.
 - New **Tools → Change formatting** dialog for adding or removing italic, bold, underline, and other formatting across selected lines.
 - New **Tools → Merge two subtitles** tool that combines two subtitles (or the loaded subtitle's text + translation) into one bilingual subtitle. Output as SubRip (overlapping pairs stacked as line 1 / line 2) or ASSA with two configurable styles (font, color, outline, shadow, top/bottom alignment) and a live preview.
+- **AI assistant for the current line** — ask a local AI model about the selected line or ask it for a change (fix errors, fit reading speed, more formal/casual, or a free-form request), from the text box context menu or the edit-box toolbar. Runs via llama.cpp, Ollama, or any OpenAI-compatible endpoint.
 
 ## Video
 
@@ -25,7 +26,9 @@ Subtitle Edit 5 is the Avalonia-based, cross-platform version of Subtitle Edit. 
 - New **Video → Cut video** tool for trimming video segments directly from Subtitle Edit.
 - **Video → Burn-in with logo** — a logo/watermark image can now be included when burning subtitles into video.
 - Many new speech-to-text engines (see [Speech to Text](#speech-to-text) below).
+- New **Video → OCR burned-in subtitle** tool that extracts hardcoded subtitles from video via OCR (see [Video OCR](video-ocr.md)).
 - Improved reading of subtitles embedded in MP4 files.
+- **PGS position monitor** — the binary/image-based edit window has a BDSup2Sub-style position map for image-based subtitles (`.sup`/`.sub`/BDN): every subtitle's real rectangle on the video canvas, color coded by zone (active picture / letterbox bars), with configurable content aspect ratio, custom bar height, and title-safe margin.
 
 ## Sync
 
@@ -76,6 +79,7 @@ Subtitle Edit 5 adds local, downloadable auto-translate engines that run entirel
 
 - **Server-managed llama.cpp** — Subtitle Edit downloads llama.cpp, manages a local `llama-server` process, and offers a curated TranslateGemma model picker, so no manual server setup is required. CPU, Vulkan, and CUDA builds are available, and the server can be started and stopped from the Auto-translate window.
 - **CrispASR MADLAD** — a local MADLAD-based translation engine with downloadable models (shown with size and install status), available in both the Auto-translate window and Batch Convert.
+- **OpenAI Compatible API** — a generic engine for any service exposing an OpenAI-compatible `chat/completions` endpoint (vLLM, KoboldCpp, a llama.cpp server on another machine, cloud providers, ...).
 
 See [Auto-translate](auto-translate.md) for the full engine list and workflow.
 
