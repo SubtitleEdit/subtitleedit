@@ -14,6 +14,15 @@ public class LanguageSettingsShortcuts
     public string CategorySubtitleGrid { get; set; }
     public string CategoryWaveform { get; set; }
     public string CategoryTextBox { get; set; }
+    public string CategoryFile { get; set; }
+    public string CategoryVideo { get; set; }
+    public string CategorySync { get; set; }
+    public string CategoryTranslate { get; set; }
+    public string CategorySearch { get; set; }
+    public string CategoryTools { get; set; }
+    public string CategoryAi { get; set; }
+    public string ActiveIn { get; set; }
+    public string ActiveInEverywhere { get; set; }
 
     public string GeneralSetupLikeSe4 { get; set; }
 
@@ -324,6 +333,15 @@ public class LanguageSettingsShortcuts
         CategorySubtitleGrid = "Subtitle list view";
         CategoryWaveform = "Waveform";
         CategoryTextBox = "Text box";
+        CategoryFile = "File";
+        CategoryVideo = "Video";
+        CategorySync = "Synchronization";
+        CategoryTranslate = "Translate";
+        CategorySearch = "Search";
+        CategoryTools = "Tools";
+        CategoryAi = "AI";
+        ActiveIn = "Active in";
+        ActiveInEverywhere = "Everywhere";
 
         GeneralSetupLikeSe4 = "Set up like Subtitle Edit 4 (theme, shortcuts, replace rules)";
         GeneralMergeSelectedLines = "Merge selected lines";

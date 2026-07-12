@@ -11,6 +11,7 @@ public class ShortCut
 {
     public List<string> Keys { get; set; }
     public ShortcutCategory Category { get; set; }
+    public ShortcutGroup Group { get; set; }
     public string? Control { get; set; }
     public string Name { get; set; }
     public IRelayCommand Action { get; set; }
@@ -23,6 +24,7 @@ public class ShortCut
         Name = name;
         Keys = keys;
         Category = category;
+        Group = ShortcutGroupUi.FromCategory(category);
         Control = category.ToString();
         Action = action;
         HashCode = CalculateHash(keys, Control);
@@ -49,6 +51,7 @@ public class ShortCut
         Keys = keys.Keys;
         Action = shortcut.RelayCommand;
         Category = shortcut.Category;
+        Group = shortcut.Group;
         Name = shortcut.Name;
         Control = shortcut.Category.ToString();
         HashCode = CalculateHash(Keys, Control);
@@ -60,6 +63,7 @@ public class ShortCut
         Keys = new List<string>();
         Action = shortcut.RelayCommand;
         Category = shortcut.Category;
+        Group = shortcut.Group;
         Name = shortcut.Name;
         Control = string.Empty;
         HashCode = CalculateHash(Keys, Control);

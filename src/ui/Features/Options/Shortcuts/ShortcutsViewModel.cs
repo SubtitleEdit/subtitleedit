@@ -24,6 +24,8 @@ namespace Nikse.SubtitleEdit.Features.Options.Shortcuts;
 public partial class ShortcutsViewModel : ObservableObject
 {
     public ObservableCollection<ShortcutTreeNode> FlatNodes { get; } = new();
+    public ObservableCollection<ShortcutGroupTile> GroupTiles { get; } = new();
+    [ObservableProperty] private ShortcutGroupTile? _selectedGroupTile;
     [ObservableProperty] private ObservableCollection<string> _shortcuts;
     [ObservableProperty] private string? _selectedShortcut;
     [ObservableProperty] private ObservableCollection<string> _filters;
@@ -106,6 +108,11 @@ public partial class ShortcutsViewModel : ObservableObject
         _actorSlots[7] = Se.Settings.Actor8;
         _actorSlots[8] = Se.Settings.Actor9;
         _actorSlots[9] = Se.Settings.Actor10;
+    }
+
+    partial void OnSelectedGroupTileChanged(ShortcutGroupTile? value)
+    {
+        UpdateVisibleShortcuts(SearchText);
     }
 
     partial void OnCtrlIsSelectedChanged(bool value)
@@ -198,6 +205,7 @@ public partial class ShortcutsViewModel : ObservableObject
     {
         MainViewModel = vm;
         _allShortcuts = ShortcutsMain.GetAllShortcuts(vm);
+        BuildGroupTiles();
         UpdateVisibleShortcuts(string.Empty);
 
         _configurableCommands.Add(vm.SetColor1Command);
@@ -231,26 +239,48 @@ public partial class ShortcutsViewModel : ObservableObject
         _configurableCommands.Add(vm.SetActor10Command);
     }
 
+    private void BuildGroupTiles()
+    {
+        GroupTiles.Clear();
+        GroupTiles.Add(new ShortcutGroupTile(_allShortcuts.Count));
+        foreach (var group in Enum.GetValues<ShortcutGroup>())
+        {
+            var count = _allShortcuts.Count(p => p.Group == group);
+            if (count > 0)
+            {
+                GroupTiles.Add(new ShortcutGroupTile(group, count));
+            }
+        }
+
+        SelectedGroupTile = GroupTiles[0];
+    }
+
     internal void UpdateVisibleShortcuts(string searchText)
     {
         FlatNodes.Clear();
-        AddShortcuts(ShortcutCategory.General, Se.Language.Options.Shortcuts.CategoryGeneral, searchText);
-        AddShortcuts(ShortcutCategory.SubtitleGridAndTextBox,
-            Se.Language.Options.Shortcuts.CategorySubtitleGridAndTextBox, searchText);
-        AddShortcuts(ShortcutCategory.SubtitleGrid, Se.Language.Options.Shortcuts.CategorySubtitleGrid, searchText);
-        AddShortcuts(ShortcutCategory.Waveform, Se.Language.Options.Shortcuts.CategoryWaveform, searchText);
-        AddShortcuts(ShortcutCategory.TextBox, Se.Language.Options.Shortcuts.CategoryTextBox, searchText);
-    }
-
-    private void AddShortcuts(ShortcutCategory category, string categoryName, string searchText)
-    {
-        var shortcuts = _allShortcuts.Where(p => p.Category == category && Search(searchText, p)).ToList();
+        var group = SelectedGroupTile?.Group;
+        var shortcuts = _allShortcuts
+            .Where(p => (group == null || p.Group == group) && Search(searchText, p))
+            .OrderBy(p => (int)p.Group);
 
         foreach (var x in shortcuts)
         {
-            var leaf = new ShortcutTreeNode(categoryName, MakeDisplayName(x, false), MakeDisplayShortCut(x), x);
+            var leaf = new ShortcutTreeNode(GetActiveInName(x.Category), MakeDisplayName(x, false), MakeDisplayShortCut(x), x);
             FlatNodes.Add(leaf);
         }
+    }
+
+    private static string GetActiveInName(ShortcutCategory category)
+    {
+        var language = Se.Language.Options.Shortcuts;
+        return category switch
+        {
+            ShortcutCategory.SubtitleGridAndTextBox => language.CategorySubtitleGridAndTextBox,
+            ShortcutCategory.SubtitleGrid => language.CategorySubtitleGrid,
+            ShortcutCategory.Waveform => language.CategoryWaveform,
+            ShortcutCategory.TextBox => language.CategoryTextBox,
+            _ => language.ActiveInEverywhere,
+        };
     }
 
     private static string MakeDisplayName(ShortCut x, bool includeShortCutKeys = true)
