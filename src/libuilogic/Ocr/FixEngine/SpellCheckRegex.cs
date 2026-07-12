@@ -32,6 +32,14 @@ public class SpellCheckRegex
     {
         return FindRegEx.Replace(input, match =>
         {
+            // A token that is already a correctly spelled word is not an OCR error - leave it
+            // alone even when the "fixed" form is also a dictionary word. E.g. Dutch "Al die
+            // regels" must not become "AI die regels" just because "AI" is a word too.
+            if (isWordSpelledCorrectly(match.Value.TrimStart('[').TrimEnd(']')))
+            {
+                return match.Value;
+            }
+
             // Convert "$1" or "I$1" into the actual word to check (e.g., "ITEM")
             string wordToCheck = match.Result(SpellCheckWord);
 
