@@ -1433,12 +1433,18 @@ public partial class TextToSpeechViewModel : ObservableObject
             var result = await engine.Speak(text, _waveFolder, voice, SelectedLanguage, SelectedRegion, SelectedModel, testVoiceToken);
             if (!testVoiceToken.IsCancellationRequested)
             {
-                if (!File.Exists(result.FileName))
+                if (result.Error || string.IsNullOrEmpty(result.FileName) || !File.Exists(result.FileName))
                 {
+                    // Engines that fail via TtsResult (e.g. the ElevenLabs 429/401 text) carry the
+                    // actual reason in ErrorMessage - showing only the empty output path made the
+                    // dialog useless for exactly the failures users report (#12093).
+                    var detail = string.IsNullOrEmpty(result.ErrorMessage)
+                        ? $"Output audio file was not generated: {result.FileName}"
+                        : result.ErrorMessage;
                     await MessageBox.Show(
                         Window,
                         "Test voice error",
-                        $"Output audio file was not generated: {result.FileName}",
+                        detail,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
 
