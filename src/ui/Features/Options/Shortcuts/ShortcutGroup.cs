@@ -82,7 +82,7 @@ public static class ShortcutGroupUi
     public static IBrush GetSoftBrush(ShortcutGroup group)
     {
         var color = ((SolidColorBrush)GetBrush(group)).Color;
-        return new SolidColorBrush(color, 0.16);
+        return new SolidColorBrush(color, 0.28);
     }
 
     // Mid-saturation tones picked to stay readable on both the dark and light theme.

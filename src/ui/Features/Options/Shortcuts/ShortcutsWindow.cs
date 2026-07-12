@@ -205,7 +205,7 @@ public class ShortcutsWindow : Window
                     {
                         var icon = new ContentControl
                         {
-                            FontSize = 14,
+                            FontSize = 16,
                             HorizontalAlignment = HorizontalAlignment.Center,
                             VerticalAlignment = VerticalAlignment.Center,
                         };
@@ -214,8 +214,8 @@ public class ShortcutsWindow : Window
 
                         var square = new Border
                         {
-                            Width = 22,
-                            Height = 22,
+                            Width = 24,
+                            Height = 24,
                             CornerRadius = new CornerRadius(6),
                             Margin = new Thickness(4, 2, 4, 2),
                             HorizontalAlignment = HorizontalAlignment.Center,
@@ -227,12 +227,26 @@ public class ShortcutsWindow : Window
                         return square;
                     }),
                 },
-                new DataGridTextColumn
+                new DataGridTemplateColumn
                 {
                     Header = Se.Language.General.Category,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(ShortcutTreeNode.GroupName)),
+                    CanUserSort = false,
                     IsReadOnly = true,
+                    CellTemplate = new FuncDataTemplate<ShortcutTreeNode>((_, _) =>
+                    {
+                        // Category name in the group color so the grouping reads at a glance.
+                        var text = new TextBlock
+                        {
+                            FontSize = 12,
+                            FontWeight = FontWeight.Medium,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Margin = new Thickness(2, 0, 6, 0),
+                        };
+                        text.Bind(TextBlock.TextProperty, new Binding(nameof(ShortcutTreeNode.GroupName)));
+                        text.Bind(TextBlock.ForegroundProperty, new Binding(nameof(ShortcutTreeNode.GroupBrush)));
+                        return text;
+                    }),
                 },
                 new DataGridTextColumn
                 {
@@ -240,6 +254,7 @@ public class ShortcutsWindow : Window
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     Binding = new Binding(nameof(ShortcutTreeNode.Title)),
                     IsReadOnly = true,
+                    FontWeight = FontWeight.SemiBold,
                     Width = new DataGridLength(1, DataGridLengthUnitType.Star),
                 },
                 new DataGridTemplateColumn
