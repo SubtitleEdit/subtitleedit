@@ -313,11 +313,21 @@ public class TtsDownloadService : ITtsDownloadService
         // placed in the request body, so toggling it had no effect on the generated audio.
         var useSpeakerBoost = Se.Settings.Video.TextToSpeech.ElevenLabsSpeakerBoost > 0 ? "true" : "false";
 
+        // ElevenLabs only parses SSML when enable_ssml_parsing is true - it defaults to false,
+        // so <break time="1.5s"/> tags were sent but ignored/spoken as plain text even with
+        // normalization off. The flag is only documented on the websocket endpoints but the
+        // HTTP endpoint accepts it as a body field too. Set it only when the text actually
+        // contains a break tag, so ordinary subtitle text with stray '<' or formatting tags
+        // is never run through the SSML parser (#12093).
+        var ssmlParsing = text.Contains("<break", StringComparison.OrdinalIgnoreCase)
+            ? ", \"enable_ssml_parsing\": true"
+            : string.Empty;
+
         // Disable ElevenLabs text normalization so the user's pause cues survive: SSML
         // <break time="1.5s"/> tags and punctuation pauses (",,," "..." "---") are otherwise
         // collapsed/rewritten by the "auto" normalizer on multilingual models. All standard
         // (non-v3) models honor break tags; v3 is handled on the text-to-dialogue path (#12093).
-        var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + $"\", \"model_id\": \"{model}\"{language}, \"voice_settings\": {{ \"stability\": {stability}, \"similarity_boost\": {similarityBoost}, \"speed\": {speed}, \"style\": {styleExaggeration}, \"use_speaker_boost\": {useSpeakerBoost} }}, \"apply_text_normalization\": \"off\" }}";
+        var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + $"\", \"model_id\": \"{model}\"{language}, \"voice_settings\": {{ \"stability\": {stability}, \"similarity_boost\": {similarityBoost}, \"speed\": {speed}, \"style\": {styleExaggeration}, \"use_speaker_boost\": {useSpeakerBoost} }}, \"apply_text_normalization\": \"off\"{ssmlParsing} }}";
 
         return await SendElevenLabsSpeakRequestAsync(url, data, apiKey, acceptAudioMpeg: true, stream, "ElevenLabs TTS", cancellationToken);
     }
