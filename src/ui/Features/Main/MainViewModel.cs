@@ -14671,7 +14671,9 @@ public partial class MainViewModel :
 
     public void AutoFitColumns()
     {
-        var columns = SubtitleGrid.Columns.Where(p => p.IsVisible).ToList();
+        var columns = SubtitleGrid.Columns
+            .Where(p => p.IsVisible && (p.Tag as string) != InitListViewAndEditBox.SubtitleGridColumnKeys.ScrollbarGutter)
+            .ToList();
 
         var showHideWidth = MeasureShowHideColumnWidth();
 
