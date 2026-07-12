@@ -430,9 +430,12 @@ public partial class OcrFixEngine : IOcrFixEngine, IDoSpell
             return true;
         }
 
-        if (s.Contains(' '))
+        // Split on line breaks too - the whole-line check gets multi-line text, and splitting
+        // only on space made "kamers\r\nwaar" one unknown "word", so every two-line subtitle
+        // counted as misspelled and the spell-check-gated OCR regexes ran on correct lines.
+        if (s.Contains(' ') || s.Contains('\n'))
         {
-            var parts = s.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            var parts = s.Split(new[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var part in parts)
             {
                 if (!_spellCheckManager.IsWordCorrect(part.Trim('¡', '¿', ',', '.', '!', '?', ':', ';', '(', ')', '[', ']', '{', '}', '+', '-', '£', '\\', '"', '”', '„', '“', '«', '»', '#', '&', '%', '\r', '\n', '؟')))
