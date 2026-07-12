@@ -3,6 +3,7 @@ Subtitle Edit Changelog
 
 v5.1.0-beta15 (TBD)
 
+* Shortcuts: add categories with icons (File, Video, Sync, Translate, Search, Tools, AI, ...) with filter tiles + "Active in" column - thx hisui3393
 * OCR: add CrispEmbed engine - local ggml-based OCR (same family as CrispASR) with GLM-OCR, GOT-OCR2, and Qwen3-VL-2B backends
 * OCR: add PaddleOCR-VL 1.6 (109 languages) to the llama.cpp model list
 * Command line (seconv): add auto-translate with llama.cpp, starting the local server automatically - thx go2tom42
