@@ -46,6 +46,10 @@ public partial class ShortcutsViewModel : ObservableObject
     private IFileHelper _fileHelper;
     private readonly IWindowService _windowService;
     private List<ShortCut> _allShortcuts;
+    // Snapshot of the persisted shortcuts taken when the dialog opens, so Cancel can
+    // undo commands that write straight into Se.Settings.Shortcuts (Import,
+    // Import from SE 4, Reset all).
+    private List<SeShortCut> _shortcutsSnapshot = new();
     private List<IRelayCommand> _configurableCommands;
     private Color _color1;
     private Color _color2;
@@ -204,6 +208,9 @@ public partial class ShortcutsViewModel : ObservableObject
     public void LoadShortCuts(MainViewModel vm)
     {
         MainViewModel = vm;
+        _shortcutsSnapshot = Se.Settings.Shortcuts
+            .Select(s => new SeShortCut(s.ActionName, new List<string>(s.Keys)) { ControlName = s.ControlName })
+            .ToList();
         _allShortcuts = ShortcutsMain.GetAllShortcuts(vm);
         BuildGroupTiles();
         UpdateVisibleShortcuts(string.Empty);
@@ -506,7 +513,7 @@ public partial class ShortcutsViewModel : ObservableObject
             sb.AppendLine();
             foreach (var duplicate in duplicates)
             {
-                sb.AppendLine($"� {duplicate}");
+                sb.AppendLine($"- {duplicate}");
             }
             sb.AppendLine();
             sb.Append("Save anyway?");
@@ -932,7 +939,7 @@ public partial class ShortcutsViewModel : ObservableObject
                 continue;
             }
 
-            var keysCombination = string.Join("+", shortcut.Keys.OrderBy(k => k));
+            var keysCombination = string.Join("+", shortcut.Keys.Select(ShortcutManager.NormalizeKeyToken).OrderBy(k => k));
             if (string.IsNullOrWhiteSpace(keysCombination))
             {
                 continue;
@@ -1021,12 +1028,27 @@ public partial class ShortcutsViewModel : ObservableObject
 
         if (result.OkPressed && !string.IsNullOrEmpty(result.PressedKey))
         {
+            EnsureShortcutKeyInList(result.PressedKeyOnly);
             SelectedShortcut = result.PressedKeyOnly;
             CtrlIsSelected = result.IsControlPressed;
             AltIsSelected = result.IsAltPressed;
             ShiftIsSelected = result.IsShiftPressed;
             WinIsSelected = result.IsWinPressed;
             UpdateShortcutDo();
+        }
+    }
+
+    /// <summary>
+    /// The key ComboBox's SelectedItem binding is two-way, so assigning a token that is
+    /// not in the items collection (e.g. captured numpad tokens like "NumPadReturn")
+    /// makes Avalonia clear the selection and write null back - silently dropping the
+    /// key. Add missing tokens to the list before selecting them.
+    /// </summary>
+    private void EnsureShortcutKeyInList(string? key)
+    {
+        if (!string.IsNullOrEmpty(key) && !Shortcuts.Contains(key))
+        {
+            Shortcuts.Add(key);
         }
     }
 
@@ -1073,9 +1095,10 @@ public partial class ShortcutsViewModel : ObservableObject
     [RelayCommand]
     private void ResetShortcut()
     {
-        var shortcut = SelectedShortcut;
+        // No SelectedShortcut check: modifier-only bindings (e.g. a lone "Ctrl")
+        // leave the key dropdown empty but still need to be clearable.
         var node = SelectedNode;
-        if (string.IsNullOrEmpty(shortcut) || node?.ShortCut is null)
+        if (node?.ShortCut is null)
         {
             return;
         }
@@ -1192,6 +1215,7 @@ public partial class ShortcutsViewModel : ObservableObject
                     continue;
                 }
 
+                EnsureShortcutKeyInList(key);
                 SelectedShortcut = key;
                 return;
             }
@@ -1237,5 +1261,12 @@ public partial class ShortcutsViewModel : ObservableObject
     internal void OnClosing(object? sender, WindowClosingEventArgs e)
     {
         UiUtil.SaveWindowPosition(Window);
+
+        if (!OkPressed)
+        {
+            // Import/Import-from-SE4/Reset-all mutate Se.Settings.Shortcuts directly;
+            // closing without OK must roll those back.
+            Se.Settings.Shortcuts = _shortcutsSnapshot;
+        }
     }
 }

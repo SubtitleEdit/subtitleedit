@@ -22,6 +22,18 @@ public partial class ShortcutTreeNode : ObservableObject
 
     public ShortCut? ShortCut { get; set; }
 
+    // The grid's shortcut column renders KeyParts/IsAssigned/IsUnassigned, so they
+    // must follow every DisplayShortcut update (e.g. from the edit panel), not just
+    // the values computed in the constructor.
+    partial void OnDisplayShortcutChanged(string value)
+    {
+        KeyParts = string.IsNullOrEmpty(value)
+            ? new List<string>()
+            : new List<string>(value.Split(" + ", StringSplitOptions.None));
+        IsAssigned = KeyParts.Count > 0;
+        IsUnassigned = !IsAssigned;
+    }
+
     public ShortcutTreeNode(string activeIn, string title, string displayShortCut, ShortCut shortcut)
     {
         ActiveIn = activeIn;

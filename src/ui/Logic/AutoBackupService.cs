@@ -1,3 +1,4 @@
+using Avalonia.Threading;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Features.Main;
@@ -8,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Logic;
 
@@ -43,14 +45,20 @@ public class AutoBackupService : IAutoBackupService
         _timerAutoBackup = new System.Timers.Timer(TimeSpan.FromMinutes(minutes));
         _timerAutoBackup.Elapsed += (_, _) =>
         {
-            if (!_mainViewModel.HasChanges())
+            // Timer.Elapsed fires on a ThreadPool thread, but HasChanges/GetUpdateSubtitle
+            // mutate the shared subtitle and enumerate the UI-bound collection - take the
+            // snapshot on the UI thread, then write the file off-thread from a copy.
+            Dispatcher.UIThread.Post(() =>
             {
-                return;
-            }
+                if (_mainViewModel is not { } vm || !vm.HasChanges())
+                {
+                    return;
+                }
 
-            var saveFormat = _mainViewModel.SelectedSubtitleFormat;
-            var subtitle = _mainViewModel.GetUpdateSubtitle();
-            SaveAutoBackup(subtitle, saveFormat);
+                var saveFormat = vm.SelectedSubtitleFormat;
+                var subtitle = new Subtitle(vm.GetUpdateSubtitle(), false);
+                Task.Run(() => SaveAutoBackup(subtitle, saveFormat));
+            });
         };
         _timerAutoBackup.Start();
     }
