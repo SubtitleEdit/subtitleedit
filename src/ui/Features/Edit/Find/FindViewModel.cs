@@ -64,6 +64,7 @@ public partial class FindViewModel : ObservableObject
     private void ShowHistory(string text)
     {
         SearchText = text;
+        FocusSearchBox?.Invoke();
     }
 
     [RelayCommand]

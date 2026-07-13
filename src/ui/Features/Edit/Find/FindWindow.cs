@@ -34,6 +34,44 @@ public class FindWindow : Window
         };
         textBoxFind.KeyDown += vm.FindTextBoxKeyDown;
 
+        // SE4-style "most recent find text" dropdown: the AutoCompleteBox only reveals history
+        // while typing a matching prefix, so recent searches were invisible until this button.
+        var historyFlyout = new MenuFlyout();
+        var buttonHistory = UiUtil.MakeButton(null, IconNames.History);
+        buttonHistory.Margin = new Thickness(3, 0, 0, 3);
+        buttonHistory.Flyout = historyFlyout;
+        ToolTip.SetTip(buttonHistory, Se.Language.General.ShowHistory);
+        historyFlyout.Opening += (_, _) =>
+        {
+            historyFlyout.Items.Clear();
+            foreach (var text in vm.SearchHistory)
+            {
+                historyFlyout.Items.Add(new MenuItem
+                {
+                    // TextBlock header: a plain string header would eat '_' as an access-key marker.
+                    Header = new TextBlock { Text = text },
+                    Command = vm.ShowHistoryCommand,
+                    CommandParameter = text,
+                });
+            }
+        };
+
+        void UpdateHistoryEnabled() => buttonHistory.IsEnabled = vm.SearchHistory.Count > 0;
+        vm.SearchHistory.CollectionChanged += (_, _) => UpdateHistoryEnabled();
+        UpdateHistoryEnabled();
+
+        var panelFind = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+            },
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        panelFind.Add(textBoxFind, 0, 0);
+        panelFind.Add(buttonHistory, 0, 1);
+
         var checkBoxWholeWord = new CheckBox
         {
             Content = Se.Language.Edit.Find.WholeWord,
@@ -146,7 +184,7 @@ public class FindWindow : Window
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        grid.Add(textBoxFind, 0, 0);
+        grid.Add(panelFind, 0, 0);
         grid.Add(checkBoxWholeWord, 1, 0);
         grid.Add(panelFindTypes, 2, 0);
         grid.Add(panelButtons, 0, 1, 3, 1);

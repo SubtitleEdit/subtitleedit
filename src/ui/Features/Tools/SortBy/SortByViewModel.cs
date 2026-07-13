@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -118,6 +119,8 @@ public partial class SortByViewModel : ObservableObject
             { "EndTime", lang.Hide },
             { "Duration", lang.Duration },
             { "Text", lang.Text },
+            { "TextTotalLength", lang.TextTotalLength },
+            { "TextSingleLineMaxLength", lang.TextSingleLineMaxLength },
             { "OriginalText", lang.OriginalText },
             { "Style", lang.Style },
             { "Actor", lang.Actor },
@@ -205,6 +208,8 @@ public partial class SortByViewModel : ObservableObject
             "EndTime" => item.EndTime.TotalMilliseconds,
             "Duration" => item.Duration.TotalMilliseconds,
             "Text" => item.Text ?? string.Empty,
+            "TextTotalLength" => GetTextTotalLength(item.Text),
+            "TextSingleLineMaxLength" => GetTextSingleLineMaxLength(item.Text),
             "OriginalText" => item.OriginalText ?? string.Empty,
             "Style" => item.Style ?? string.Empty,
             "Actor" => item.Actor ?? string.Empty,
@@ -215,6 +220,18 @@ public partial class SortByViewModel : ObservableObject
             "PixelWidth" => item.PixelWidth,
             _ => string.Empty
         };
+    }
+
+    // Text length metrics matching SE4's "Text - total length" / "Text - single line max length"
+    // sorts. Shared with the main window's sort shortcuts (#12407).
+    internal static int GetTextTotalLength(string? text)
+    {
+        return (text ?? string.Empty).SplitToLines().Sum(line => line.Length);
+    }
+
+    internal static int GetTextSingleLineMaxLength(string? text)
+    {
+        return (text ?? string.Empty).SplitToLines().DefaultIfEmpty(string.Empty).Max(line => line.Length);
     }
 
     public void Initialize(List<SubtitleLineViewModel> subtitles)

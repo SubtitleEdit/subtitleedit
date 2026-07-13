@@ -285,6 +285,16 @@ public class LanguageSettingsShortcuts
     public string SortByNumber { get; set; }
     public string SortByStartTime { get; set; }
     public string SortByEndTime { get; set; }
+    public string SortByDuration { get; set; }
+    public string SortByGap { get; set; }
+    public string SortByText { get; set; }
+    public string SortByTextTotalLength { get; set; }
+    public string SortBySingleLineMaxLength { get; set; }
+    public string SortByCps { get; set; }
+    public string SortByWpm { get; set; }
+    public string SortByNumberOfLines { get; set; }
+    public string SortByActor { get; set; }
+    public string SortByStyle { get; set; }
     public string VideoToggleBrightness { get; set; }
     public string DuplicatesFound { get; set; }
     public string CopyTextToClipboard { get; set; }
@@ -607,6 +617,16 @@ public class LanguageSettingsShortcuts
         SortByNumber = "Sort by number";
         SortByStartTime = "Sort by \"Show\" time";
         SortByEndTime = "Sort by \"Hide\" time";
+        SortByDuration = "Sort by duration";
+        SortByGap = "Sort by gap";
+        SortByText = "Sort by text - alphabetically";
+        SortByTextTotalLength = "Sort by text - total length";
+        SortBySingleLineMaxLength = "Sort by text - single line max length";
+        SortByCps = "Sort by chars/sec";
+        SortByWpm = "Sort by words/min";
+        SortByNumberOfLines = "Sort by number of lines";
+        SortByActor = "Sort by actor";
+        SortByStyle = "Sort by style";
         VideoToggleBrightness = "Video: toggle brightness (mpv only)";
         DuplicatesFound = "The following duplicate shortcuts were found:";
         CopyTextToClipboard = "Copy text to clipboard (selected lines)";

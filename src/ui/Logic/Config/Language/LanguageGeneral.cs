@@ -543,6 +543,8 @@ public class LanguageGeneral
     public string SingleBox { get; set; }
     public string SingleLineLengths { get; set; }
     public string SingleMode { get; set; }
+    public string TextTotalLength { get; set; }
+    public string TextSingleLineMaxLength { get; set; }
     public string Size { get; set; }
     public string SizeX { get; set; }
     public string Skip { get; set; }
@@ -1298,6 +1300,8 @@ public class LanguageGeneral
         SingleBox = "Single box";
         SingleLineLengths = "Single line length:";
         SingleMode = "Single mode";
+        TextTotalLength = "Text - total length";
+        TextSingleLineMaxLength = "Text - single line max length";
         Size = "Size";
         SizeX = "Size: {0}";
         Skip = "Skip";
