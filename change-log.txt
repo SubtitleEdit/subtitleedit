@@ -6,6 +6,7 @@ Subtitle Edit Changelog
 v5.1.0-rc2 (TBD)
 
 * Fix common errors: make Apply/Action/Before/After columns sortable in the fix list - thx subcor
+* OCR: update CrispEmbed to v0.15.0 - fixes garbled math-OCR output, faster detection/decoding
 * Update Japanese translation - thx hisui3393
 
 
