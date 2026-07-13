@@ -5,8 +5,38 @@ Subtitle Edit Changelog
 
 v5.1.0-rc1 (TBD)
 
+* Speech to text: add MOSS-Transcribe-Diarize engine (CrispASR) - transcription with speaker labels like "(Speaker 1)" in a single pass - thx Oplay66
 * Speech to text: add Arabic and Japanese models to the CrispASR Cohere engine - thx muaz978
+* Speech to text: update CrispASR to v0.8.10 - fixes long-audio repetition/empty output, much faster long audio on CUDA
+* Add find-text history dropdown, text-length sorting, and sort shortcuts - thx mrklhsnbrg
+* Auto-translate: update model suggestion lists across engines
 * Shortcuts: tighten category tiles, add space below, and keep the scrollbar off the shortcut key column
+* Performance: allocation-free nOCR pixel matching (faster batch image-based OCR) and skip redundant waveform buffer sorting
+* Performance: remove constant background allocations in change detection and character-count lookup
+* ElevenLabs: fix SSML break tags being ignored/spoken by sending enable_ssml_parsing - thx cvrle77
+* ElevenLabs: fix v3 stability/language settings being silently ignored, show engine error details in test voice, and sort the turbo v2.5 language list
+* ElevenLabs: revert apply_text_normalization=off and log request bodies to the tools log - thx cvrle77
+* Fix alignment shortcut not toggling, OCR adding {\an2} tags to every line, and add Ctrl+I italic in the OCR text box - thx qvimse
+* Fix common OCR errors changing valid words like Dutch "Al" to "AI"
+* Fix vertical scroll bar overlapping the outermost text column in RTL/translation mode - thx muaz978
+* Fix scroll bar trough click not paging in grids - thx muaz978
+* Fix common errors: "Select all"/"Invert selection" now respect the active category chip - thx subcor
+* Fix download retry corrupting the file when the server does not support resume
+* Fix shortcuts editor issues: stale key chips after edit/reset, cancel not reverting imports/reset, numpad keys dropped, duplicate detection missing Ctrl/Control aliases, and modifier-only bindings not resettable
+* Fix auto-backup racing UI edits (snapshot now taken on the UI thread)
+* Fix ffmpeg path being ignored for waveform extraction on macOS
+* Fix gap column showing "0,000" on the last line
+* Fix AI review default shortcut colliding with Multiple replace
+* Fix "Check for updates" always reporting it was unable to check - thx nms42
+* Fix point sync via other subtitle not loading a re-selected subtitle file - thx fraternl
+* Fix truncated "Number" and "Show" columns in the auto-translate grid - thx ivandrofly
+* Update Korean translation - thx 12si27
+* Update Polish translation - thx Adam Malich
+* Update Chinese Simplified translation - thx wuwufei
+* Update Italian translation - thx bovirus
+* Update Turkish translation - thx bilimiyorum
+* Update Russian translation - thx jekovcar
+* Update Bulgarian translation - thx jekovcar
 * Update Portuguese (Brazil) translation - thx igorruckert
 
 -----------------------------------------------------------------------------------------------------
