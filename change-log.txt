@@ -30,6 +30,7 @@ v5.1.0-rc1 (TBD)
 * Fix "Check for updates" always reporting it was unable to check - thx nms42
 * Fix point sync via other subtitle not loading a re-selected subtitle file - thx fraternl
 * Fix truncated "Number" and "Show" columns in the auto-translate grid - thx ivandrofly
+* Add Persian translation - thx rmtjokar
 * Update Korean translation - thx 12si27
 * Update Polish translation - thx Adam Malich
 * Update Chinese Simplified translation - thx wuwufei
