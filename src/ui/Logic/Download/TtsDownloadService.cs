@@ -323,11 +323,11 @@ public class TtsDownloadService : ITtsDownloadService
             ? ", \"enable_ssml_parsing\": true"
             : string.Empty;
 
-        // Disable ElevenLabs text normalization so the user's pause cues survive: SSML
-        // <break time="1.5s"/> tags and punctuation pauses (",,," "..." "---") are otherwise
-        // collapsed/rewritten by the "auto" normalizer on multilingual models. All standard
-        // (non-v3) models honor break tags; v3 is handled on the text-to-dialogue path (#12093).
-        var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + $"\", \"model_id\": \"{model}\"{language}, \"voice_settings\": {{ \"stability\": {stability}, \"similarity_boost\": {similarityBoost}, \"speed\": {speed}, \"style\": {styleExaggeration}, \"use_speaker_boost\": {useSpeakerBoost} }}, \"apply_text_normalization\": \"off\"{ssmlParsing} }}";
+        // Do NOT send apply_text_normalization: SE4 never sent it, ran under the API default
+        // ("auto"), and that is the regime where users report punctuation pauses (",,," etc.)
+        // working. Forcing "off" here was a guess that did not survive retesting and deviates
+        // from the SE4 behavior we are trying to match (#12093).
+        var data = "{ \"text\": \"" + Json.EncodeJsonText(text) + $"\", \"model_id\": \"{model}\"{language}, \"voice_settings\": {{ \"stability\": {stability}, \"similarity_boost\": {similarityBoost}, \"speed\": {speed}, \"style\": {styleExaggeration}, \"use_speaker_boost\": {useSpeakerBoost} }}{ssmlParsing} }}";
 
         return await SendElevenLabsSpeakRequestAsync(url, data, apiKey, acceptAudioMpeg: true, stream, "ElevenLabs TTS", cancellationToken);
     }
@@ -348,6 +348,11 @@ public class TtsDownloadService : ITtsDownloadService
         string logContext,
         CancellationToken cancellationToken)
     {
+        // Log the exact request body (the API key travels in a header, never in the body) so
+        // "same text sounds different than SE4/the web UI" reports can be settled with a
+        // request diff instead of another guess-and-retest round (#12093).
+        Se.WriteToolsLog($"{logContext}: POST {url} body={jsonData}");
+
         const int maxAttempts = 4;
         for (var attempt = 1; ; attempt++)
         {
@@ -443,8 +448,8 @@ public class TtsDownloadService : ITtsDownloadService
         // object. They used to be placed inside inputs[0], where the API silently ignored
         // them - every v3 generation ran with default stability and no language enforcement.
         // The endpoint has no speed parameter at all, so the speed setting is not sent.
-        // Normalization is turned off for the same reason as the v2 path: the "auto"
-        // normalizer can rewrite the user's punctuation pause cues ("..." etc.) (#12093).
+        // apply_text_normalization is not sent - same reasoning as the v2 path: stay on the
+        // API default ("auto") instead of guessing (#12093).
         var languageFragment = string.IsNullOrEmpty(languageCode)
             ? string.Empty
             : ", \"language_code\": \"" + languageCode + "\"";
@@ -453,8 +458,7 @@ public class TtsDownloadService : ITtsDownloadService
                    "\"voice_id\": \"" + voice.VoiceId + "\"" +
                    " }]" +
                    languageFragment +
-                   ", \"settings\": { \"stability\": " + stability + " }" +
-                   ", \"apply_text_normalization\": \"off\" }";
+                   ", \"settings\": { \"stability\": " + stability + " } }";
 
         return await SendElevenLabsSpeakRequestAsync(url, data, apiKey, acceptAudioMpeg: false, stream, "ElevenLabs TTS v3", cancellationToken);
     }
