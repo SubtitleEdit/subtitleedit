@@ -1,13 +1,18 @@
-using Avalonia;
+using System;
+using System.Linq;
+using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 
 namespace Nikse.SubtitleEdit.Logic;
 
 /// <summary>
-/// Gives a <see cref="DataGrid"/>'s vertical scroll bar a working page size so that
-/// clicking the scroll bar trough (the channel above or below the thumb) scrolls a full
-/// page, as it does everywhere else and on other platforms (issue #12051).
+/// Gives a <see cref="DataGrid"/>'s vertical scroll bar Windows-standard trough behavior:
+/// a plain trough click scrolls a full page, and shift + trough click jumps the thumb
+/// straight to the click position (issue #12051 and its follow-up).
 ///
 /// Avalonia's DataGrid sets its vertical scroll bar's Maximum and ViewportSize but never
 /// its LargeChange, so it keeps RangeBase's default of 1. A trough click raises a large
@@ -17,10 +22,17 @@ namespace Nikse.SubtitleEdit.Logic;
 /// pages correctly while the subtitle grid and the Shortcuts grid do not. This keeps the
 /// vertical LargeChange in step with the viewport so a page always matches the visible
 /// height.
+///
+/// The DataGrid hooks the scroll bar's Scroll event (not ValueChanged) to refresh its
+/// rows, so a programmatic jump also invokes the grid's internal ProcessVerticalScroll.
 /// </summary>
 internal static class DataGridScrollBarBehavior
 {
     private const string VerticalScrollBarPartName = "PART_VerticalScrollbar";
+
+    private static readonly MethodInfo? ProcessVerticalScrollMethod = typeof(DataGrid).GetMethod(
+        "ProcessVerticalScroll",
+        BindingFlags.NonPublic | BindingFlags.Instance);
 
     public static void EnableTroughPageScroll(DataGrid grid)
     {
@@ -44,7 +56,48 @@ internal static class DataGridScrollBarBehavior
                     SyncLargeChange(verticalScrollBar);
                 }
             };
+
+            // Shift + trough click jumps to the click position, matching the Windows scroll
+            // bar. Tunnel so this runs before the trough repeat button starts paging.
+            verticalScrollBar.AddHandler(
+                InputElement.PointerPressedEvent,
+                (_, args) => JumpToClickPosition(grid, verticalScrollBar, args),
+                RoutingStrategies.Tunnel);
         };
+    }
+
+    private static void JumpToClickPosition(DataGrid grid, ScrollBar verticalScrollBar, PointerPressedEventArgs e)
+    {
+        if ((e.KeyModifiers & KeyModifiers.Shift) == 0 ||
+            !e.GetCurrentPoint(verticalScrollBar).Properties.IsLeftButtonPressed)
+        {
+            return;
+        }
+
+        var track = verticalScrollBar.GetVisualDescendants().OfType<Track>().FirstOrDefault();
+        if (track == null || track.Bounds.Height <= 0)
+        {
+            return;
+        }
+
+        var range = verticalScrollBar.Maximum - verticalScrollBar.Minimum;
+        if (double.IsNaN(range) || range <= 0)
+        {
+            return;
+        }
+
+        // Center the thumb on the cursor: subtract half the thumb length and scale by the
+        // travel the thumb actually has (track height minus thumb length).
+        var thumbLength = track.Thumb?.Bounds.Height ?? 0;
+        var travel = Math.Max(1, track.Bounds.Height - thumbLength);
+        var offset = e.GetPosition(track).Y - (thumbLength / 2.0);
+        var fraction = Math.Clamp(offset / travel, 0.0, 1.0);
+
+        var newValue = verticalScrollBar.Minimum + (fraction * range);
+        verticalScrollBar.Value = Math.Clamp(newValue, verticalScrollBar.Minimum, verticalScrollBar.Maximum);
+
+        ProcessVerticalScrollMethod?.Invoke(grid, new object[] { ScrollEventType.EndScroll });
+        e.Handled = true;
     }
 
     private static void SyncLargeChange(ScrollBar verticalScrollBar)
