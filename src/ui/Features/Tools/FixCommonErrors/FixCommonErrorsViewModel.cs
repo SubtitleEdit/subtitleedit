@@ -274,10 +274,13 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         }
     }
 
+    // Select all / invert operate on the fixes passing the active category chip, not the full
+    // list - with a category chip active they must not touch fixes hidden by the filter. With
+    // the "All" chip active VisibleFixes equals Fixes, so nothing changes there (#12377).
     [RelayCommand]
     public void FixesSelectAll()
     {
-        foreach (var fix in Fixes)
+        foreach (var fix in VisibleFixes)
         {
             fix.IsSelected = true;
         }
@@ -288,7 +291,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     [RelayCommand]
     public void FixesInverseSelected()
     {
-        foreach (var fix in Fixes)
+        foreach (var fix in VisibleFixes)
         {
             fix.IsSelected = !fix.IsSelected;
         }
