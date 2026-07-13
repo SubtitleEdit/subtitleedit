@@ -263,7 +263,8 @@ public class ShortcutsWindow : Window
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                     Binding = new Binding(nameof(ShortcutTreeNode.Title)),
                     IsReadOnly = true,
-                    FontWeight = FontWeight.SemiBold,
+                    // Normal weight: semi-bold on every row made the whole list read as bold (#12351).
+                    FontWeight = FontWeight.Normal,
                     Width = new DataGridLength(1, DataGridLengthUnitType.Star),
                 },
                 new DataGridTemplateColumn
