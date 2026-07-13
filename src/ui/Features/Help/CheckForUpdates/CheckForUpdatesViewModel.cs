@@ -93,21 +93,17 @@ public partial class CheckForUpdatesViewModel : ObservableObject
     private static string ParseLatestChangeLog(string changeLogContent)
     {
         const string releaseSeparator = "-----------------------------------------------------------------------------------------------------";
-        var separatorIndex = changeLogContent.IndexOf(releaseSeparator, StringComparison.Ordinal);
-        if (separatorIndex > 0)
+        foreach (var block in changeLogContent.Split(releaseSeparator))
         {
-            var changeLog = changeLogContent[..separatorIndex].Trim();
-            if (!UnreleasedChangeLogRegex.IsMatch(changeLog))
+            var changeLog = block.Trim();
+            if (changeLog.Length == 0 ||
+                string.IsNullOrEmpty(ParseLatestVersion(changeLog)) || // file title or other block without a version header
+                UnreleasedChangeLogRegex.IsMatch(changeLog)) // unreleased draft entry
             {
-                return changeLog;
+                continue;
             }
 
-            // get next change log which is current released version
-            var releaseChangeLogIndex = changeLogContent.IndexOf(releaseSeparator, separatorIndex + releaseSeparator.Length, StringComparison.Ordinal);
-            if (releaseChangeLogIndex > 0)
-            {
-                return changeLogContent[(separatorIndex + releaseSeparator.Length) ..releaseChangeLogIndex].Trim();
-            }
+            return changeLog;
         }
 
         return changeLogContent.Trim();
