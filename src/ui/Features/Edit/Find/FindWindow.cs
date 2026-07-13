@@ -41,7 +41,11 @@ public class FindWindow : Window
         buttonHistory.Margin = new Thickness(3, 0, 0, 3);
         buttonHistory.Flyout = historyFlyout;
         ToolTip.SetTip(buttonHistory, Se.Language.General.ShowHistory);
-        historyFlyout.Opening += (_, _) =>
+
+        // The items must exist BEFORE the flyout opens: items added from the Opening
+        // event come too late for the popup's initial measure, so the menu displayed
+        // as an empty sliver on Windows. Build eagerly and rebuild on history changes.
+        void RebuildHistoryMenu()
         {
             historyFlyout.Items.Clear();
             foreach (var text in vm.SearchHistory)
@@ -54,11 +58,12 @@ public class FindWindow : Window
                     CommandParameter = text,
                 });
             }
-        };
 
-        void UpdateHistoryEnabled() => buttonHistory.IsEnabled = vm.SearchHistory.Count > 0;
-        vm.SearchHistory.CollectionChanged += (_, _) => UpdateHistoryEnabled();
-        UpdateHistoryEnabled();
+            buttonHistory.IsVisible = vm.SearchHistory.Count > 0;
+        }
+
+        vm.SearchHistory.CollectionChanged += (_, _) => RebuildHistoryMenu();
+        RebuildHistoryMenu();
 
         var panelFind = new Grid
         {
