@@ -387,6 +387,9 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         }
 
         RebuildVisibleFixes();
+        // Refresh the "N fixes, M selected" line so it reflects the newly active category,
+        // matching what Select all and Invert now act on (#12377, follow-up to #12408).
+        UpdateFixesSummary();
     }
 
     private void RebuildVisibleFixes()
@@ -403,8 +406,11 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
     private void UpdateFixesSummary()
     {
-        var selected = Fixes.Count(f => f.IsSelected);
-        FixesSummaryText = string.Format(Se.Language.Tools.FixCommonErrors.XFixesYSelected, Fixes.Count, selected);
+        // Count within the active category view so the summary matches the chip and the
+        // now category-scoped Select all / Invert (#12377); with "All" active VisibleFixes
+        // equals Fixes, so this is the full set.
+        var selected = VisibleFixes.Count(f => f.IsSelected);
+        FixesSummaryText = string.Format(Se.Language.Tools.FixCommonErrors.XFixesYSelected, VisibleFixes.Count, selected);
     }
 
     [RelayCommand]
