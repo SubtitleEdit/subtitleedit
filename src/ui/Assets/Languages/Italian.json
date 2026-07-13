@@ -3044,8 +3044,8 @@
   },
   "Help": {
     "AboutSubtitleEdit": "Info su Subtitile Edit",
-    "CheckForUpdates": "Controlla aggiornamenti",
-    "CheckForUpdatesChecking": "Controllo aggiornamenti...",
+    "CheckForUpdates": "Controllo aggiornamenti",
+    "CheckForUpdatesChecking": "Controlla aggiornamenti...",
     "CheckForUpdatesUpToDate": "Questa versione è aggiornata.",
     "CheckForUpdatesNewVersionAvailable": "Disponibile nuova versione: {0}",
     "CheckForUpdatesUnableToCheck": "Impossibile controllare gli aggiornamenti.",
