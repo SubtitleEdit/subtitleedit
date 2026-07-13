@@ -446,8 +446,10 @@ public class FixCommonErrorsWindow : Window
             Spacing = 0,
         };
         leftButtons.Children.Add(summaryText);
-        leftButtons.Children.Add(UiUtil.MakeButton(Se.Language.General.SelectAll, _vm.FixesSelectAllCommand));
-        leftButtons.Children.Add(UiUtil.MakeButton(Se.Language.General.InvertSelection, _vm.FixesInverseSelectedCommand));
+        var buttonSelectAll = UiUtil.MakeButton(Se.Language.General.SelectAll, _vm.FixesSelectAllCommand);
+        // Caption toggles between "Select all" and "Select none" as the current category fills up.
+        buttonSelectAll.Bind(Button.ContentProperty, new Binding(nameof(_vm.FixesSelectAllText)) { Source = _vm });
+        leftButtons.Children.Add(buttonSelectAll);
 
         var rightButtons = new StackPanel
         {
@@ -457,7 +459,10 @@ public class FixCommonErrorsWindow : Window
             Spacing = 0,
         };
         rightButtons.Children.Add(UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.RefreshFixes, _vm.DoRefreshFixesCommand).WithIconLeft("fa-solid fa-rotate"));
-        _buttonApplySelectedFixes = UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.ApplySelectedFixes, _vm.DoApplyFixesCommand).WithIconLeft("fa-solid fa-check");
+        // Caption carries the live count of fixes the button will apply, e.g. "Apply selected fixes (706)".
+        _buttonApplySelectedFixes = UiUtil.MakeButton(Se.Language.Tools.FixCommonErrors.ApplySelectedFixes, _vm.DoApplyFixesCommand)
+            .WithIconLeftBindText("fa-solid fa-check", nameof(_vm.ApplySelectedFixesText));
+        AutomationProperties.SetName(_buttonApplySelectedFixes, Se.Language.Tools.FixCommonErrors.ApplySelectedFixes);
         rightButtons.Children.Add(_buttonApplySelectedFixes);
 
         var buttonBarFixes = new Grid
