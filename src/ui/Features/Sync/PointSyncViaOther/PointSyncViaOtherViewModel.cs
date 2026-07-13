@@ -113,10 +113,17 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
         }
 
         FileNameOther = fileName;
+        Othersubtitles.Clear();
         foreach (var p in subtitle.Paragraphs)
         {
             Othersubtitles.Add(new SubtitleLineViewModel(p, subtitle.OriginalFormat));
         }
+
+        SelectedOtherSubtitle = Othersubtitles.FirstOrDefault();
+
+        // Sync points reference lines in the replaced file, so they are no longer valid.
+        SyncPoints.Clear();
+        IsOkEnabled = false;
     }
 
     [RelayCommand]
