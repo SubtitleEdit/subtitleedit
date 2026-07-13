@@ -8994,8 +8994,7 @@ public partial class MainViewModel :
         ShowStatus(Se.Language.General.NoBookmarksFound);
     }
 
-    [RelayCommand]
-    private void SortByStartTime()
+    private void SortSubtitlesBy(Func<SubtitleLineViewModel, object> keySelector, string statusMessage)
     {
         if (IsEmpty)
         {
@@ -9004,7 +9003,7 @@ public partial class MainViewModel :
 
         var selected = SelectedSubtitle;
 
-        var sortedSubtitles = Subtitles.OrderBy(p => p.StartTime).ToList();
+        var sortedSubtitles = Subtitles.OrderBy(keySelector).ToList();
         ReplaceSubtitles(sortedSubtitles);
 
         Renumber();
@@ -9018,61 +9017,85 @@ public partial class MainViewModel :
             SelectAndScrollToRow(0);
         }
 
-        ShowStatus(Se.Language.Main.SortedByStartTime);
+        ShowStatus(statusMessage);
+    }
+
+    [RelayCommand]
+    private void SortByStartTime()
+    {
+        SortSubtitlesBy(p => p.StartTime, Se.Language.Main.SortedByStartTime);
     }
 
     [RelayCommand]
     private void SortByEndTime()
     {
-        if (IsEmpty)
-        {
-            return;
-        }
-
-        var selected = SelectedSubtitle;
-
-        var sortedSubtitles = Subtitles.OrderBy(p => p.EndTime).ToList();
-        ReplaceSubtitles(sortedSubtitles);
-
-        Renumber();
-
-        if (selected != null)
-        {
-            SelectAndScrollToSubtitle(selected);
-        }
-        else
-        {
-            SelectAndScrollToRow(0);
-        }
-
-        ShowStatus(Se.Language.Main.SortedByEndTime);
+        SortSubtitlesBy(p => p.EndTime, Se.Language.Main.SortedByEndTime);
     }
 
     [RelayCommand]
     private void SortByNumber()
     {
-        if (IsEmpty)
-        {
-            return;
-        }
+        SortSubtitlesBy(p => p.Number, Se.Language.Main.SortedByNumber);
+    }
 
-        var selected = SelectedSubtitle;
+    [RelayCommand]
+    private void SortByDuration()
+    {
+        SortSubtitlesBy(p => p.Duration, Se.Language.Main.SortedByDuration);
+    }
 
-        var sortedSubtitles = Subtitles.OrderBy(p => p.Number).ToList();
-        ReplaceSubtitles(sortedSubtitles);
+    [RelayCommand]
+    private void SortByGap()
+    {
+        SortSubtitlesBy(p => p.Gap, Se.Language.Main.SortedByGap);
+    }
 
-        Renumber();
+    [RelayCommand]
+    private void SortByText()
+    {
+        SortSubtitlesBy(p => p.Text ?? string.Empty, Se.Language.Main.SortedByText);
+    }
 
-        if (selected != null)
-        {
-            SelectAndScrollToSubtitle(selected);
-        }
-        else
-        {
-            SelectAndScrollToRow(0);
-        }
+    [RelayCommand]
+    private void SortByTextTotalLength()
+    {
+        SortSubtitlesBy(p => SortByViewModel.GetTextTotalLength(p.Text), Se.Language.Main.SortedByTextTotalLength);
+    }
 
-        ShowStatus(Se.Language.Main.SortedByNumber);
+    [RelayCommand]
+    private void SortBySingleLineMaxLength()
+    {
+        SortSubtitlesBy(p => SortByViewModel.GetTextSingleLineMaxLength(p.Text), Se.Language.Main.SortedBySingleLineMaxLength);
+    }
+
+    [RelayCommand]
+    private void SortByCps()
+    {
+        SortSubtitlesBy(p => p.CharactersPerSecond, Se.Language.Main.SortedByCps);
+    }
+
+    [RelayCommand]
+    private void SortByWpm()
+    {
+        SortSubtitlesBy(p => p.WordsPerMinute, Se.Language.Main.SortedByWpm);
+    }
+
+    [RelayCommand]
+    private void SortByNumberOfLines()
+    {
+        SortSubtitlesBy(p => (p.Text ?? string.Empty).SplitToLines().Count, Se.Language.Main.SortedByNumberOfLines);
+    }
+
+    [RelayCommand]
+    private void SortByActor()
+    {
+        SortSubtitlesBy(p => p.Actor ?? string.Empty, Se.Language.Main.SortedByActor);
+    }
+
+    [RelayCommand]
+    private void SortByStyle()
+    {
+        SortSubtitlesBy(p => p.Style ?? string.Empty, Se.Language.Main.SortedByStyle);
     }
 
     [RelayCommand]

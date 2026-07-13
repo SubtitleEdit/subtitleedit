@@ -94,6 +94,16 @@ public class LanguageMain
     public string SortedByStartTime { get; set; }
     public string SortedByEndTime { get; set; }
     public string SortedByNumber { get; set; }
+    public string SortedByDuration { get; set; }
+    public string SortedByGap { get; set; }
+    public string SortedByText { get; set; }
+    public string SortedByTextTotalLength { get; set; }
+    public string SortedBySingleLineMaxLength { get; set; }
+    public string SortedByCps { get; set; }
+    public string SortedByWpm { get; set; }
+    public string SortedByNumberOfLines { get; set; }
+    public string SortedByActor { get; set; }
+    public string SortedByStyle { get; set; }
     public string VideoBrightnessSetTo { get; set; }
     public string ColorHint { get; set; }
     public string RemoveFormattingHint { get; set; }
@@ -212,6 +222,16 @@ public class LanguageMain
         SortedByStartTime = "Sorted by \"Show\" time";
         SortedByEndTime = "Sorted by \"Hide\" time";
         SortedByNumber = "Sorted by number";
+        SortedByDuration = "Sorted by duration";
+        SortedByGap = "Sorted by gap";
+        SortedByText = "Sorted by text";
+        SortedByTextTotalLength = "Sorted by text total length";
+        SortedBySingleLineMaxLength = "Sorted by single line max length";
+        SortedByCps = "Sorted by chars/sec";
+        SortedByWpm = "Sorted by words/min";
+        SortedByNumberOfLines = "Sorted by number of lines";
+        SortedByActor = "Sorted by actor";
+        SortedByStyle = "Sorted by style";
         VideoBrightnessSetTo = "Brightness: {0}";
         ColorHint = "Color selected lines";
         RemoveFormattingHint = "Remove formatting from selected lines";

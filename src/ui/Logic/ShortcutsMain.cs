@@ -429,6 +429,16 @@ public static class ShortcutsMain
         { nameof(MainViewModel.SortByNumberCommand), Se.Language.Options.Shortcuts.SortByNumber },
         { nameof(MainViewModel.SortByStartTimeCommand), Se.Language.Options.Shortcuts.SortByStartTime },
         { nameof(MainViewModel.SortByEndTimeCommand), Se.Language.Options.Shortcuts.SortByEndTime },
+        { nameof(MainViewModel.SortByDurationCommand), Se.Language.Options.Shortcuts.SortByDuration },
+        { nameof(MainViewModel.SortByGapCommand), Se.Language.Options.Shortcuts.SortByGap },
+        { nameof(MainViewModel.SortByTextCommand), Se.Language.Options.Shortcuts.SortByText },
+        { nameof(MainViewModel.SortByTextTotalLengthCommand), Se.Language.Options.Shortcuts.SortByTextTotalLength },
+        { nameof(MainViewModel.SortBySingleLineMaxLengthCommand), Se.Language.Options.Shortcuts.SortBySingleLineMaxLength },
+        { nameof(MainViewModel.SortByCpsCommand), Se.Language.Options.Shortcuts.SortByCps },
+        { nameof(MainViewModel.SortByWpmCommand), Se.Language.Options.Shortcuts.SortByWpm },
+        { nameof(MainViewModel.SortByNumberOfLinesCommand), Se.Language.Options.Shortcuts.SortByNumberOfLines },
+        { nameof(MainViewModel.SortByActorCommand), Se.Language.Options.Shortcuts.SortByActor },
+        { nameof(MainViewModel.SortByStyleCommand), Se.Language.Options.Shortcuts.SortByStyle },
         { nameof(MainViewModel.VideoToggleBrightnessCommand), Se.Language.Options.Shortcuts.VideoToggleBrightness },
         { nameof(MainViewModel.ShowPickLayerFilterCommand), Se.Language.General.FilterByLayer },
         { nameof(MainViewModel.ShowPickLayerCommand), Se.Language.General.PickLayer },
@@ -803,6 +813,16 @@ public static class ShortcutsMain
         AddShortcut(shortcuts, vm.SortByNumberCommand, nameof(vm.SortByNumberCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SortByStartTimeCommand, nameof(vm.SortByStartTimeCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.SortByEndTimeCommand, nameof(vm.SortByEndTimeCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SortByDurationCommand, nameof(vm.SortByDurationCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SortByGapCommand, nameof(vm.SortByGapCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SortByTextCommand, nameof(vm.SortByTextCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SortByTextTotalLengthCommand, nameof(vm.SortByTextTotalLengthCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SortBySingleLineMaxLengthCommand, nameof(vm.SortBySingleLineMaxLengthCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SortByCpsCommand, nameof(vm.SortByCpsCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SortByWpmCommand, nameof(vm.SortByWpmCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SortByNumberOfLinesCommand, nameof(vm.SortByNumberOfLinesCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SortByActorCommand, nameof(vm.SortByActorCommand), ShortcutCategory.General);
+        AddShortcut(shortcuts, vm.SortByStyleCommand, nameof(vm.SortByStyleCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.VideoToggleBrightnessCommand, nameof(vm.VideoToggleBrightnessCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.ShowPickLayerFilterCommand, nameof(vm.ShowPickLayerFilterCommand), ShortcutCategory.General);
         AddShortcut(shortcuts, vm.ShowPickLayerCommand, nameof(vm.ShowPickLayerCommand), ShortcutCategory.General);
