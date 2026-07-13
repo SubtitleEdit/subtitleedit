@@ -3,6 +3,11 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.1.0-rc2 (TBD)
+
+* Fix common errors: make Apply/Action/Before/After columns sortable in the fix list - thx subcor
+
+
 v5.1.0-rc1 (13th of July 2026)
 
 * Speech to text: add MOSS-Transcribe-Diarize engine (CrispASR) - transcription with speaker labels like "(Speaker 1)" in a single pass - thx Oplay66

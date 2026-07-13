@@ -88,6 +88,8 @@ public class FixCommonErrorsWindow : Window
                 {
                     Header = Se.Language.General.Enabled,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    // Template columns need an explicit SortMemberPath to be sortable (#12431).
+                    SortMemberPath = nameof(FixRuleDisplayItem.IsSelected),
                     CellTemplate = new FuncDataTemplate<FixRuleDisplayItem>((item, _) =>
                     {
                         return new Border
@@ -313,6 +315,9 @@ public class FixCommonErrorsWindow : Window
                 {
                     Header = Se.Language.General.Apply,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    // Template columns have no Binding for the sort machinery to inspect, so
+                    // without an explicit SortMemberPath a header click is silently ignored (#12431).
+                    SortMemberPath = nameof(FixDisplayItem.IsSelected),
                     CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
                     {
                         return new Border
@@ -343,6 +348,7 @@ public class FixCommonErrorsWindow : Window
                 {
                     Header = Se.Language.Tools.FixCommonErrors.Action,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    SortMemberPath = nameof(FixDisplayItem.ActionDisplay),
                     CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
                     {
                         if (item == null)
@@ -378,6 +384,7 @@ public class FixCommonErrorsWindow : Window
                 {
                     Header = Se.Language.General.Before,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    SortMemberPath = nameof(FixDisplayItem.Before),
                     CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
                     {
                         var (beforeBlock, _) = TextDiffHighlighter.CompareReplacement(item.Before, item.After);
@@ -395,6 +402,7 @@ public class FixCommonErrorsWindow : Window
                 {
                     Header = Se.Language.General.After,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
+                    SortMemberPath = nameof(FixDisplayItem.After),
                     CellTemplate = new FuncDataTemplate<FixDisplayItem>((item, _) =>
                     {
                         var (_, afterBlock) = TextDiffHighlighter.CompareReplacement(item.Before, item.After);
