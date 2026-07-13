@@ -53,6 +53,19 @@ public class YtDlpDownloadServiceTests
         Assert.Equal(expected, actual);
     }
 
+    [Theory]
+    [InlineData("My Cool Video\n", "My Cool Video")]
+    [InlineData("  Spaced Title  \n", "Spaced Title")]
+    [InlineData("[debug] Bootstrapping...\nExtracting bundle\nActual Title\n", "Actual Title")]
+    [InlineData("", null)]
+    [InlineData("   \n  \n", null)]
+    public void ExtractTitle_TakesLastNonEmptyLine(string output, string? expected)
+    {
+        var actual = YtDlpDownloadService.ExtractTitle(output);
+
+        Assert.Equal(expected, actual);
+    }
+
     [Fact]
     public void EnumerateDownloadedSubtitles_FindsSidecarFiles_FiltersByExtensionAndSorts()
     {
