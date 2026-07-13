@@ -430,14 +430,6 @@ public class FixCommonErrorsWindow : Window
                 }
             });
 
-        var summaryText = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            Opacity = 0.8,
-            Margin = new Thickness(4, 0, 10, 0),
-        };
-        summaryText.Bind(TextBlock.TextProperty, new Binding(nameof(_vm.FixesSummaryText)) { Source = _vm });
-
         var leftButtons = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -445,7 +437,6 @@ public class FixCommonErrorsWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Spacing = 0,
         };
-        leftButtons.Children.Add(summaryText);
         var buttonSelectAll = UiUtil.MakeButton(Se.Language.General.SelectAll, _vm.FixesSelectAllCommand);
         // Caption toggles between "Select all" and "Select none" as the current category fills up.
         buttonSelectAll.Bind(Button.ContentProperty, new Binding(nameof(_vm.FixesSelectAllText)) { Source = _vm });

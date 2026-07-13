@@ -32,7 +32,6 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     [ObservableProperty] private ObservableCollection<FixDisplayItem> _fixes;
     [ObservableProperty] private ObservableCollection<FixDisplayItem> _visibleFixes;
     [ObservableProperty] private ObservableCollection<FixFilterChip> _fixChips;
-    [ObservableProperty] private string _fixesSummaryText;
     [ObservableProperty] private string _fixesSelectAllText;
     [ObservableProperty] private string _applySelectedFixesText;
     [ObservableProperty] private FixDisplayItem? _selectedFix;
@@ -85,7 +84,6 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         Fixes = new ObservableCollection<FixDisplayItem>();
         VisibleFixes = new ObservableCollection<FixDisplayItem>();
         FixChips = new ObservableCollection<FixFilterChip>();
-        FixesSummaryText = string.Empty;
         FixesSelectAllText = Se.Language.General.SelectAll;
         ApplySelectedFixesText = Se.Language.Tools.FixCommonErrors.ApplySelectedFixes;
         Paragraphs = new ObservableCollection<SubtitleLineViewModel>();
@@ -402,11 +400,9 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
     private void UpdateFixesSummary()
     {
-        // Count within the active category view so the summary matches the chip and the
-        // now category-scoped Select all (#12377); with "All" active VisibleFixes equals
-        // Fixes, so this is the full set.
+        // Count within the active category view so the toggle and chip figures match what
+        // Select all now acts on (#12377); with "All" active VisibleFixes equals Fixes.
         var selected = VisibleFixes.Count(f => f.IsSelected);
-        FixesSummaryText = string.Format(Se.Language.Tools.FixCommonErrors.XFixesYSelected, VisibleFixes.Count, selected);
 
         // Flip the toggle caption so the button says what its next click will do for the
         // current category: "Select none" once everything in view is ticked, else "Select all".
