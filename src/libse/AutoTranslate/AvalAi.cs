@@ -29,48 +29,46 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public static string[] Models => new[]
         {
             // OpenAI GPT Series
+            "gpt-5.6-sol",
+            "gpt-5.6-terra",
+            "gpt-5.6-luna",
+            "gpt-5.5",
+            "gpt-5.4",
+            "gpt-5.4-mini",
             "gpt-5.2",
             "gpt-5.1",
-            "gpt-5.1-codex-max",
-            "gpt-5-mini",
-            "gpt-5-nano",
             "gpt-4.1",
             "gpt-4.1-mini",
-            "gpt-4o",
-            "gpt-4o-mini",
-            "o4-mini",
             // OpenAI OSS releases
             "gpt-oss-120b",
             "gpt-oss-20b",
 
             // Google / Gemini
-            "gemini-3-pro",
-            "gemini-3-flash",
+            "gemini-3.5-flash",
+            "gemini-3.1-pro-preview",
+            "gemini-3.1-flash-lite",
             "gemini-2.5-pro",
             "gemini-2.5-flash",
             "gemini-2.5-flash-lite",
-            "gemini-2.0-flash",
 
             // Anthropic Claude
-            "claude-opus-4.5",
-            "claude-sonnet-4.5",
+            "claude-opus-4.8",
+            "claude-sonnet-5",
             "claude-haiku-4.5",
-            "claude-4-5-opus",
-            "claude-4-5-sonnet",
+            "claude-opus-4.7",
+            "claude-sonnet-4.6",
 
             // xAI / Grok
+            "grok-4.5",
             "grok-4",
-            "grok-3",
-            "grok-3-mini",
 
             // DeepSeek
-            "deepseek-r1",
-            "deepseek-v3.1",
-            "deepseek-v3.1-thinking",
+            "deepseek-v4-pro",
+            "deepseek-v4-flash",
             "deepseek-chat",
 
             // Other notable models
-            "qwen-3-235b"
+            "qwen3.6-max"
         };
 
         public void Initialize()

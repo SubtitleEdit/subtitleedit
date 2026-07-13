@@ -29,16 +29,19 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public static string[] Models => new[]
         {
             // High-Reasoning & Multilingual (The Leaders)
-            "openai/gpt-5.5-pro",                       // Top-tier reasoning for complex linguistics
-            "openai/gpt-5.5",                           // Flagship general-purpose translator
-            "anthropic/claude-opus-4.7",                // Exceptional nuance and formal tone preservation
-            "anthropic/claude-sonnet-4.6",              // Strong balance of quality and cost
+            "openai/gpt-5.6-sol",                       // OpenAI flagship for complex professional work
+            "openai/gpt-5.5",                           // Previous-gen flagship general-purpose translator
+            "anthropic/claude-opus-4.8",                // Exceptional nuance and formal tone preservation
+            "anthropic/claude-sonnet-5",                // Strong balance of quality and cost
             "google/gemini-3.1-pro-preview",            // Massive context for translating whole books
             "deepseek/deepseek-v4-pro",                 // The most cost-effective reasoning translator
+            "z-ai/glm-5.2",                             // Strong open-weight generalist
+            "moonshotai/kimi-k2.6",                     // Strong for Asian languages
 
             // Efficient / Fast Translation
-            "openai/gpt-5.4-mini",                      // Faster and cost-efficient
-            "openai/gpt-5.4-nano",                      // Smallest/fastest in the GPT-5.4 family
+            "openai/gpt-5.6-terra",                     // Balanced intelligence and cost
+            "openai/gpt-5.6-luna",                      // Cost-optimized, high-volume
+            "google/gemini-3.5-flash",                  // Google's most intelligent flash model
             "google/gemini-3.1-flash-lite",             // Speed-optimized multimodal
             "anthropic/claude-haiku-4.5",               // Fast Anthropic option
             "deepseek/deepseek-v4-flash",               // Low-latency DeepSeek

@@ -26,24 +26,27 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
 
         /// <summary>
-        /// See https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models 
+        /// See https://ai.google.dev/gemini-api/docs/models and https://ai.google.dev/gemma/docs/core/gemma_on_gemini_api
         /// </summary>
         public static string[] Models => new[]
         {
-            // Auto-updating Aliases
-            "gemini-flash-latest", 
-            "gemini-pro-latest",  
+            // Auto-updating alias
+            "gemini-flash-latest",
 
-            // Gemini 3 - Latest Generation
-            "gemini-3-pro",
-            "gemini-3-flash",
-            "gemini-3-deep-think",
+            // Gemini 3.x - Latest Generation
+            "gemini-3.5-flash",
+            "gemini-3.1-pro-preview",
+            "gemini-3.1-flash-lite",
+            "gemini-3-flash-preview",
 
-            // Gemini 2.5 - Stable Reasoning Models
+            // Gemini 2.5 - Stable
             "gemini-2.5-pro",
             "gemini-2.5-flash",
             "gemini-2.5-flash-lite",
-            "gemini-2.5-flash-image",
+
+            // Gemma - open models served via the Gemini API
+            "gemma-4-31b-it",
+            "gemma-4-26b-a4b-it",
         };
 
         public void Initialize()

@@ -35,6 +35,7 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             "meta/llama-3.1-8b-instruct",
 
             // NVIDIA Nemotron
+            "nvidia/nemotron-3-ultra-550b-a55b",
             "nvidia/nemotron-3-super-120b-a12b",
             "nvidia/llama-3.3-nemotron-super-49b-v1.5",
             "nvidia/llama-3.1-nemotron-ultra-253b-v1",
@@ -53,14 +54,11 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
             // Mistral
             "mistralai/mistral-large-3-675b-instruct-2512",
             "mistralai/mistral-medium-3.5-128b",
-            "mistralai/mistral-medium-3-instruct",
             "mistralai/mistral-small-4-119b-2603",
-            "mistralai/mixtral-8x22b-instruct-v0.1",
             "mistralai/mistral-nemotron",
 
             // Google Gemma
             "google/gemma-4-31b-it",
-            "google/gemma-3-27b-it",
             "google/gemma-3-12b-it",
 
             // Qwen
@@ -70,7 +68,9 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
             // Moonshot Kimi
             "moonshotai/kimi-k2.6",
-            "moonshotai/kimi-k2-thinking",
+
+            // Zhipu GLM
+            "z-ai/glm-5.2",
 
             // OpenAI (open weights)
             "openai/gpt-oss-120b",

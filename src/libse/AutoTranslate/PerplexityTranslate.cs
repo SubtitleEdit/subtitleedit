@@ -23,21 +23,23 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
         public int MaxCharacters => 1500;
 
         /// <summary>
-        /// See https://docs.perplexity.ai/docs/getting-started/models
+        /// See https://docs.perplexity.ai/docs/agent-api/models
         /// </summary>
         public static string[] Models => new[]
         {
             "perplexity/sonar",
-            "google/gemini-2.5-flash",
-            "google/gemini-3-flash-preview",
+            "openai/gpt-5.6-sol",
+            "openai/gpt-5.6-terra",
+            "openai/gpt-5.6-luna",
+            "anthropic/claude-opus-4-8",
+            "anthropic/claude-sonnet-5",
             "anthropic/claude-haiku-4-5",
-            "google/gemini-2.5-pro",
-            "openai/gpt-5.1",
-            "openai/gpt-5.2",
-            "google/gemini-3-pro-preview",
-            "anthropic/claude-sonnet-4-5",
-            "anthropic/claude-opus-4-5",
-            "anthropic/claude-opus-4-6",
+            "google/gemini-3.5-flash",
+            "google/gemini-3.1-pro-preview",
+            "google/gemini-3.1-flash-lite",
+            "xai/grok-4.5",
+            "perplexity/glm-5.2",
+            "perplexity/kimi-k2.7-code",
         };
 
         public void Initialize()
