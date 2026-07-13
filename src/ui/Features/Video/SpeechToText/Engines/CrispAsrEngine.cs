@@ -30,6 +30,7 @@ public class CrispAsrEngine : CrispAsrEngineBase
             new CrispAsrGranite(),
             new CrispAsrQwen3(),
             new CrispAsrMega(),
+            new CrispAsrMossDiarize(),
             new CrispAsrOmni(),
             new CrispAsrKyutai(),
             new CrispAsrSenseVoice(),
