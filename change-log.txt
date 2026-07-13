@@ -6,6 +6,7 @@ Subtitle Edit Changelog
 v5.1.0-rc2 (TBD)
 
 * Fix common errors: make Apply/Action/Before/After columns sortable in the fix list - thx subcor
+* Update Japanese translation - thx hisui3393
 
 
 v5.1.0-rc1 (13th of July 2026)
