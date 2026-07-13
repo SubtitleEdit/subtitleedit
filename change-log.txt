@@ -3,12 +3,14 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
-v5.1.0-rc1 (TBD)
+v5.1.0-rc1 (13th of July 2026)
 
 * Speech to text: add MOSS-Transcribe-Diarize engine (CrispASR) - transcription with speaker labels like "(Speaker 1)" in a single pass - thx Oplay66
 * Speech to text: add Arabic and Japanese models to the CrispASR Cohere engine - thx muaz978
 * Speech to text: update CrispASR to v0.8.10 - fixes long-audio repetition/empty output, much faster long audio on CUDA
 * Add find-text history dropdown, text-length sorting, and sort shortcuts - thx mrklhsnbrg
+* Open video from URL: suggest the video's real title as download file name instead of e.g. "watch.mkv"
+* Update yt-dlp to 2026.07.04
 * Auto-translate: update model suggestion lists across engines
 * Shortcuts: tighten category tiles, add space below, and keep the scrollbar off the shortcut key column
 * Performance: allocation-free nOCR pixel matching (faster batch image-based OCR) and skip redundant waveform buffer sorting
