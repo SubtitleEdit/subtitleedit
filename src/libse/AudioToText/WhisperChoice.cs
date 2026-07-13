@@ -29,6 +29,7 @@
         public const string CrispAsrKyutai = "Crisp ASR Kyutai";
         public const string CrispAsrMadlad = "Crisp ASR MADLAD";
         public const string CrispAsrMega = "Crisp ASR Mega";
+        public const string CrispAsrMossDiarize = "Crisp ASR MOSS Diarize";
         public const string CrispAsrSenseVoice = "Crisp ASR SenseVoice";
         public const string CrispAsrArk = "Crisp ASR ARK";
         public const string OpenAiCompatible = "OpenAI Compatible";

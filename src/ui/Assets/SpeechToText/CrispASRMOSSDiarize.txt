@@ -1,0 +1,5 @@
+🎙️ MOSS-Transcribe-Diarize
+
+Type: Whisper encoder + Qwen3-0.6B LM decoder (0.9B total) — joint ASR + speaker diarization
+Focus: 🎯 English and Chinese — timestamped, speaker-labelled transcripts in a single pass
+Extras: each line is prefixed with its speaker, e.g. "(Speaker 1) Hello there."
