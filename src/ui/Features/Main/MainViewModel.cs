@@ -6568,7 +6568,7 @@ public partial class MainViewModel :
             return;
         }
 
-        var suggestedName = MakeDownloadSuggestedFileName(url);
+        var suggestedName = await MakeDownloadSuggestedFileNameAsync(url);
         var outputPath = await _fileHelper.PickSaveFile(Window, ".mkv", suggestedName, Se.Language.Video.OpenFromUrlSaveAs);
         if (string.IsNullOrEmpty(outputPath))
         {
@@ -6603,6 +6603,42 @@ public partial class MainViewModel :
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Builds the save-as suggestion for a URL download. Prefers the video's
+    /// real title (fetched via yt-dlp) so e.g. every YouTube link doesn't
+    /// suggest "watch.mkv"; falls back to a URL-segment-derived name when the
+    /// fetch fails. The fetch is a network round-trip, so a "Please wait"
+    /// window covers it.
+    /// </summary>
+    private async Task<string> MakeDownloadSuggestedFileNameAsync(string url)
+    {
+        string? title = null;
+        var pleaseWaitVm = _windowService.ShowWindow<PleaseWaitWindow, PleaseWaitViewModel>(Window!);
+        try
+        {
+            title = await _ytDlpDownloadService.GetVideoTitleAsync(url, CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            Se.LogError(ex, "Failed to fetch video title for download file name suggestion");
+        }
+        finally
+        {
+            pleaseWaitVm.Close();
+        }
+
+        if (!string.IsNullOrWhiteSpace(title))
+        {
+            var sanitized = string.Join('_', title.Split(Path.GetInvalidFileNameChars())).Trim().TrimEnd('.');
+            if (sanitized.Length > 0)
+            {
+                return sanitized + ".mkv";
+            }
+        }
+
+        return MakeDownloadSuggestedFileName(url);
     }
 
     private static string MakeDownloadSuggestedFileName(string url)

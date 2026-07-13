@@ -32,6 +32,15 @@ public interface IYtDlpDownloadService
     /// yt-dlp invocation. Caller is responsible for cleaning up the directory.
     /// </summary>
     Task DownloadAllSubtitlesAsync(string url, string outputStem, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Fetches the video's title via <c>yt-dlp --print title</c> so downloads
+    /// can be suggested under the video's real name instead of a URL fragment
+    /// (a YouTube link's last path segment is just "watch"). Best-effort:
+    /// returns null on any failure or after a short internal timeout so
+    /// callers can fall back to a URL-derived name.
+    /// </summary>
+    Task<string?> GetVideoTitleAsync(string url, CancellationToken cancellationToken);
 }
 
 /// <summary>
@@ -43,7 +52,7 @@ public sealed record DownloadedSubtitleInfo(string FilePath, string LanguageCode
 public class YtDlpDownloadService : IYtDlpDownloadService
 {
     private readonly HttpClient _httpClient;
-    internal const string CurrentVersion = "2026.06.09";
+    internal const string CurrentVersion = "2026.07.04";
     // First-run extraction of the self-extracting yt-dlp bundle (especially
     // yt-dlp_macos) routinely needs more than 5s on slower disks; bumped to 15s
     // so the timeout doesn't masquerade as "version unknown / outdated".
@@ -61,19 +70,19 @@ public class YtDlpDownloadService : IYtDlpDownloadService
     internal static readonly IReadOnlyDictionary<string, IReadOnlyDictionary<string, string>> KnownSha256 =
         new Dictionary<string, IReadOnlyDictionary<string, string>>(StringComparer.Ordinal)
         {
-            ["2026.03.17"] = new Dictionary<string, string>(StringComparer.Ordinal)
-            {
-                ["yt-dlp.exe"] = "3db811b366b2da47337d2fcfdfe5bbd9a258dad3f350c54974f005df115a1545",
-                ["yt-dlp_linux"] = "c2b0189f581fe4a2ddd41954f1bcb7d327db04b07ed0dea97e4f1b3e09b5dd8e",
-                ["yt-dlp_linux_aarch64"] = "6bfa19736181da9e2e066f9c767da2f24fdcc5e148fa5034d1feb09132f89ad5",
-                ["yt-dlp_macos"] = "e80c47b3ce712acee51d5e3d4eace2d181b44d38f1942c3a32e3c7ff53cd9ed5",
-            },
             ["2026.06.09"] = new Dictionary<string, string>(StringComparer.Ordinal)
             {
                 ["yt-dlp.exe"] = "3a48cb955d55c8821b60ccbdbbc6f61bc958f2f3d3b7ad5eaf3d83a543293a27",
                 ["yt-dlp_linux"] = "bf8aac79b72287a6d2043074415132558b43743a8f9461a22b0141e90f16ce66",
                 ["yt-dlp_linux_aarch64"] = "cabd246445bdfde0eda0dfe68bbe90354be83f3fdbbf077df11a2ea55f41cdbd",
                 ["yt-dlp_macos"] = "b82c3626952e6c14eaf654cc565866775ffd0b9ffb7021628ac59b42c2f4f244",
+            },
+            ["2026.07.04"] = new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["yt-dlp.exe"] = "52fe3c26dcf71fbdc85b528589020bb0b8e383155cfa81b64dd447bbe35e24b8",
+                ["yt-dlp_linux"] = "6bbb3d314cde4febe36e5fa1d55462e29c974f63444e707871834f6d8cc210ae",
+                ["yt-dlp_linux_aarch64"] = "b6ce97646773070d7a7ffd6bbbdcaecb47c48483909c54c915bf08a7a9b5e0b1",
+                ["yt-dlp_macos"] = "498bd0dae17855c599d371d68ec5bafc439a9d8640e838be25c765a9792f261b",
             },
         };
 
@@ -341,6 +350,95 @@ public class YtDlpDownloadService : IYtDlpDownloadService
                 $"yt-dlp subtitle download exited with code {process.ExitCode}." +
                 (string.IsNullOrEmpty(details) ? string.Empty : Environment.NewLine + details));
         }
+    }
+
+    // The title fetch is a live network round-trip to the video site; cap it so
+    // a stalled extractor can't leave the save-as flow stuck behind a spinner.
+    private static readonly TimeSpan TitleFetchTimeout = TimeSpan.FromSeconds(15);
+
+    public async Task<string?> GetVideoTitleAsync(string url, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        if (!File.Exists(GetFullFileName()))
+        {
+            return null;
+        }
+
+        using var process = new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = GetFullFileName(),
+                // --print implies --simulate/--quiet, so nothing is downloaded.
+                ArgumentList = { "--no-playlist", "--no-warnings", "--print", "title", url },
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            },
+        };
+
+        if (!process.Start())
+        {
+            return null;
+        }
+
+        using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeoutCts.CancelAfter(TitleFetchTimeout);
+        var operationToken = timeoutCts.Token;
+        var stdoutTask = process.StandardOutput.ReadToEndAsync(operationToken);
+        var stderrTask = process.StandardError.ReadToEndAsync(operationToken);
+
+        try
+        {
+            try
+            {
+                await process.WaitForExitAsync(operationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                TryKillProcess(process);
+                cancellationToken.ThrowIfCancellationRequested(); // user cancellation propagates; timeout falls through
+                return null;
+            }
+
+            if (process.ExitCode != 0)
+            {
+                return null;
+            }
+
+            return ExtractTitle(await stdoutTask);
+        }
+        finally
+        {
+            await ObserveProcessOutput(stdoutTask);
+            await ObserveProcessOutput(stderrTask);
+        }
+    }
+
+    /// <summary>
+    /// Pulls the title from <c>--print title</c> output. The last non-empty
+    /// line wins — the macOS self-extracting bundle can print bootstrap noise
+    /// before the actual value (same caveat as <see cref="ExtractVersion"/>).
+    /// </summary>
+    internal static string? ExtractTitle(string? output)
+    {
+        if (string.IsNullOrWhiteSpace(output))
+        {
+            return null;
+        }
+
+        var lines = output.Split('\n');
+        for (var i = lines.Length - 1; i >= 0; i--)
+        {
+            var line = lines[i].Trim();
+            if (line.Length > 0)
+            {
+                return line;
+            }
+        }
+
+        return null;
     }
 
     /// <summary>
