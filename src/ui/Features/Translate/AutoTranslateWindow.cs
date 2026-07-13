@@ -380,14 +380,14 @@ public class AutoTranslateWindow : Window
                 {
                     Header = Se.Language.General.NumberSymbol,
                     Binding = new Binding(nameof(TranslateRow.Number)),
-                    Width = new DataGridLength(50),
+                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                 },
                 new DataGridTextColumn
                 {
                     Header = Se.Language.General.Show,
                     Binding = new Binding(nameof(TranslateRow.Show)),
-                    Width = new DataGridLength(100),
+                    Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
                 },
                 new DataGridTextColumn
