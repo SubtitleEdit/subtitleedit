@@ -20647,9 +20647,19 @@ public partial class MainViewModel :
         BatchGridSelection(detach, () =>
         {
             SubtitleGrid.SelectedItems.Clear();
+
+            // Add the moving end of the selection first: the DataGrid only moves its current cell for
+            // the first item added into an empty selection. Filling the range in ascending order left
+            // the current cell on the anchor when extending downwards, so a plain arrow key afterwards
+            // jumped back to anchor+1 instead of continuing from the moving end. The shift+click path
+            // above adds the clicked row first for the same reason.
+            SubtitleGrid.SelectedItems.Add(Subtitles[_shiftSelectCurrentIndex]);
             for (var i = startIdx; i <= endIdx; i++)
             {
-                SubtitleGrid.SelectedItems.Add(Subtitles[i]);
+                if (i != _shiftSelectCurrentIndex)
+                {
+                    SubtitleGrid.SelectedItems.Add(Subtitles[i]);
+                }
             }
         });
 
