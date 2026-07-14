@@ -239,6 +239,7 @@ public static class InitNativeMacMenu
         exportItems.Items.Add(Item(lExport.TitleExportDCinemaSmpte2014Png, v => v.ExportDCinemaSmpte2014PngCommand));
         exportItems.Items.Add(Item(Ebu.NameOfFormat, v => v.ExportEbuStlCommand));
         exportItems.Items.Add(Item("DOST/png", v => v.ExportDostPngCommand));
+        exportItems.Items.Add(Item(lExport.TitleExportDvdSup, v => v.ExportDvdSupCommand));
         exportItems.Items.Add(Item("Final Cut Pro + image", v => v.ExportFcpPngCommand));
         exportItems.Items.Add(Item(Se.Language.General.ImagesWithTimeCode, v => v.ExportImagesWithTimeCodeCommand));
         exportItems.Items.Add(Item(Pac.NameOfFormat, v => v.ExportPacCommand));

@@ -10,6 +10,7 @@ public class LanguageExport
     public string PaddingLeftRight { get; set; }
     public string PaddingTopBottom { get; set; }
     public string PreviewTitle { get; set; }
+    public string TitleExportDvdSup { get; set; }
     public string TitleExportVobSub { get; set; }
     public string CustomTextFormatsDotDotDot { get; set; }
     public string PlainTextDotDotDot { get; set; }
@@ -46,6 +47,7 @@ public class LanguageExport
         PaddingLeftRight = "Padding left/right";
         PaddingTopBottom = "Padding top/bottom";
         PreviewTitle = "Preview - current size: {0}x{1}, target size: {2}x{3}, zoom: {4}%";
+        TitleExportDvdSup = "DVD sup (MuxMan/Scenarist)";
         TitleExportVobSub = "VobSub (sub/idx)";
         CustomTextFormatsDotDotDot = "_Custom text formats...";
         PlainTextDotDotDot = "_Plain text...";

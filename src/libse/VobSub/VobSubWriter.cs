@@ -80,7 +80,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             stream.WriteByte((byte)(i % 256));
         }
 
-        private byte[] GetSubImageBuffer(RunLengthTwoParts twoPartBuffer, NikseBitmap nbmp, Paragraph p, BluRayContentAlignment alignment, SKPoint? overridePosition)
+        internal static byte[] GetSubImageBuffer(RunLengthTwoParts twoPartBuffer, NikseBitmap nbmp, Paragraph p, BluRayContentAlignment alignment, SKPoint? overridePosition,
+            int screenWidth, int screenHeight, int bottomMargin, int leftRightMargin,
+            SKColor background, SKColor pattern, SKColor emphasis1, SKColor emphasis2)
         {
             var ms = new MemoryStream();
 
@@ -111,10 +113,10 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             WriteColors(ms); // 3 bytes
 
             // Control command 4 = SetContrast
-            WriteContrast(ms); // 3 bytes
+            WriteContrast(ms, background, pattern, emphasis1, emphasis2); // 3 bytes
 
             // Control command 5 = SetDisplayArea
-            WriteDisplayArea(ms, nbmp, alignment, overridePosition); // 7 bytes
+            WriteDisplayArea(ms, nbmp, alignment, overridePosition, screenWidth, screenHeight, bottomMargin, leftRightMargin); // 7 bytes
 
             // Control command 6 = SetPixelDataAddress
             WritePixelDataAddress(ms, imageTopFieldDataAddress, imageBottomFieldDataAddress); // 5 bytes
@@ -146,7 +148,8 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             var nbmp = new NikseBitmap(bmp);
             _emphasis2 = nbmp.ConvertToFourColors(_background, _pattern, _emphasis1, _useInnerAntiAliasing);
             var twoPartBuffer = nbmp.RunLengthEncodeForDvd(_background, _pattern, _emphasis1, _emphasis2);
-            var imageBuffer = GetSubImageBuffer(twoPartBuffer, nbmp, p, alignment, overridePosition);
+            var imageBuffer = GetSubImageBuffer(twoPartBuffer, nbmp, p, alignment, overridePosition,
+                _screenWidth, _screenHeight, _bottomMargin, _leftRightMargin, _background, _pattern, _emphasis1, _emphasis2);
 
             int bufferIndex = 0;
             byte vobSubId = (byte)_languageStreamId;
@@ -298,34 +301,35 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             WriteEndianWord(imageBottomFieldDataAddress, stream);
         }
 
-        private void WriteDisplayArea(Stream stream, NikseBitmap nbmp, BluRayContentAlignment alignment, SKPoint? overridePosition)
+        private static void WriteDisplayArea(Stream stream, NikseBitmap nbmp, BluRayContentAlignment alignment, SKPoint? overridePosition,
+            int screenWidth, int screenHeight, int bottomMargin, int leftRightMargin)
         {
             stream.WriteByte(5);
 
             // Write 6 bytes of area - starting X, ending X, starting Y, ending Y, each 12 bits
-            ushort startX = (ushort)((_screenWidth - nbmp.Width) / 2);
-            ushort startY = (ushort)(_screenHeight - nbmp.Height - _bottomMargin);
+            ushort startX = (ushort)((screenWidth - nbmp.Width) / 2);
+            ushort startY = (ushort)(screenHeight - nbmp.Height - bottomMargin);
 
             if (alignment == BluRayContentAlignment.TopLeft || alignment == BluRayContentAlignment.TopCenter || alignment == BluRayContentAlignment.TopRight)
             {
-                startY = (ushort)_bottomMargin;
+                startY = (ushort)bottomMargin;
             }
             if (alignment == BluRayContentAlignment.MiddleLeft || alignment == BluRayContentAlignment.MiddleCenter || alignment == BluRayContentAlignment.MiddleRight)
             {
-                startY = (ushort)(_screenHeight / 2 - nbmp.Height / 2);
+                startY = (ushort)(screenHeight / 2 - nbmp.Height / 2);
             }
             if (alignment == BluRayContentAlignment.TopLeft || alignment == BluRayContentAlignment.MiddleLeft || alignment == BluRayContentAlignment.BottomLeft)
             {
-                startX = (ushort)_leftRightMargin;
+                startX = (ushort)leftRightMargin;
             }
             if (alignment == BluRayContentAlignment.TopRight || alignment == BluRayContentAlignment.MiddleRight || alignment == BluRayContentAlignment.BottomRight)
             {
-                startX = (ushort)(_screenWidth - nbmp.Width - _leftRightMargin);
+                startX = (ushort)(screenWidth - nbmp.Width - leftRightMargin);
             }
 
             if (overridePosition != null &&
-                overridePosition.Value.X >= 0 && overridePosition.Value.X < _screenWidth &&
-                overridePosition.Value.Y >= 0 && overridePosition.Value.Y < _screenHeight)
+                overridePosition.Value.X >= 0 && overridePosition.Value.X < screenWidth &&
+                overridePosition.Value.Y >= 0 && overridePosition.Value.Y < screenHeight)
             {
                 startX = (ushort)overridePosition.Value.X;
                 startY = (ushort)overridePosition.Value.Y;
@@ -342,11 +346,11 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         /// <summary>
         /// Directly provides the four contrast (alpha blend) values to associate with the four pixel values. One nibble per pixel value for a total of 2 bytes. 0x0 = transparent, 0xF = opaque
         /// </summary>
-        private void WriteContrast(Stream stream)
+        private static void WriteContrast(Stream stream, SKColor background, SKColor pattern, SKColor emphasis1, SKColor emphasis2)
         {
             stream.WriteByte(4);
-            stream.WriteByte((byte)((_emphasis2.Alpha << 4) | _emphasis1.Alpha)); // emphasis2 + emphasis1
-            stream.WriteByte((byte)((_pattern.Alpha << 4) | _background.Alpha)); // pattern + background
+            stream.WriteByte((byte)((emphasis2.Alpha << 4) | emphasis1.Alpha)); // emphasis2 + emphasis1
+            stream.WriteByte((byte)((pattern.Alpha << 4) | background.Alpha)); // pattern + background
         }
 
         /// <summary>
