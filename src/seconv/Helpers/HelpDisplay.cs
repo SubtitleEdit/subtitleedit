@@ -65,7 +65,7 @@ internal static class HelpDisplay
         AnsiConsole.WriteLine();
         
         ShowParameter("--apply-duration-limits", "Apply duration limits");
-        ShowParameter("--apply-min-gap:<ms>", "Enforce minimum gap of N ms between paragraphs");
+        ShowParameter("--apply-min-gap[:<ms>]", "Enforce minimum gap between paragraphs (default: minimumMillisecondsBetweenLines)");
         ShowParameter("--balance-lines", "Balance line lengths");
         ShowParameter("--bridge-gaps:<ms>", "Bridge gaps shorter than N ms (extends previous end time)");
         ShowParameter("--beautify-time-codes", "Beautify time codes");
