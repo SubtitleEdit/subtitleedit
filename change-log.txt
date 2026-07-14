@@ -5,6 +5,7 @@ Subtitle Edit Changelog
 
 v5.1.0-rc2 (TBD)
 
+* Auto-translate: update llama.cpp to b9993
 * Fix common errors: "Fix common OCR errors" no longer applies fixes you unticked in the list - thx fraternl
 * Fix common errors: unknown-word guessing (which splits words) is now off by default, with its own check box - thx fraternl
 * seconv: warn about unknown keys in the --settings JSON instead of silently ignoring them - thx shanecoopt
