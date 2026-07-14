@@ -14717,6 +14717,15 @@ public partial class MainViewModel :
 
     public UndoRedoItem MakeUndoRedoObject(string description)
     {
+        // The undo change-detection timer calls this from a thread pool thread. Snapshotting
+        // Subtitles from there can throw mid-enumeration, or - worse - capture the collection half
+        // way through a UI-thread edit (say after one of two selected lines has been removed),
+        // putting a state that never existed on the undo stack.
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            return Dispatcher.UIThread.Invoke(() => MakeUndoRedoObject(description));
+        }
+
         return new UndoRedoItem(
             description,
             Subtitles.Select(p => new SubtitleLineViewModel(p)).ToArray(),
@@ -18427,6 +18436,15 @@ public partial class MainViewModel :
 
     public int GetFastHash()
     {
+        // The undo change-detection timer calls this from a thread pool thread, and the loop below
+        // walks Subtitles - an ObservableCollection the UI thread mutates (insert / delete / merge /
+        // replace all). A tick overlapping an edit threw "Collection was modified" or an index
+        // out-of-range exception; the timer swallows those, so that undo entry was silently lost.
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            return Dispatcher.UIThread.Invoke(GetFastHash);
+        }
+
         // Runs every 250 ms (undo change detection) plus every 400 ms (title/auto-save),
         // so it must not allocate: the old version concatenated fileName+encoding and
         // called Trim() on Header/Footer - the editor normalises subtitles to ASSA, so
