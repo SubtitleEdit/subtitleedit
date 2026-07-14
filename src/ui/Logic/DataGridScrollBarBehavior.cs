@@ -86,11 +86,30 @@ internal static class DataGridScrollBarBehavior
             return;
         }
 
+        // Only a trough click should jump. Ignore clicks that land outside the track (the line
+        // step arrows) or on the thumb itself (which begins a normal drag); without this guard a
+        // Shift+click on an arrow or the thumb would fling the view to min or max. (#12438 review)
+        var posY = e.GetPosition(track).Y;
+        if (posY < 0 || posY > track.Bounds.Height)
+        {
+            return;
+        }
+
+        var thumb = track.Thumb;
+        if (thumb != null)
+        {
+            var thumbTop = thumb.Bounds.Y;
+            if (posY >= thumbTop && posY <= thumbTop + thumb.Bounds.Height)
+            {
+                return;
+            }
+        }
+
         // Center the thumb on the cursor: subtract half the thumb length and scale by the
         // travel the thumb actually has (track height minus thumb length).
-        var thumbLength = track.Thumb?.Bounds.Height ?? 0;
+        var thumbLength = thumb?.Bounds.Height ?? 0;
         var travel = Math.Max(1, track.Bounds.Height - thumbLength);
-        var offset = e.GetPosition(track).Y - (thumbLength / 2.0);
+        var offset = posY - (thumbLength / 2.0);
         var fraction = Math.Clamp(offset / travel, 0.0, 1.0);
 
         var newValue = verticalScrollBar.Minimum + (fraction * range);
