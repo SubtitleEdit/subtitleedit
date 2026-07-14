@@ -692,11 +692,12 @@ internal static class LibSEIntegration
             return;
         }
 
-        var minGap = Math.Max(1, Configuration.Settings.General.MinimumMillisecondsBetweenLines);
+        // Zero is a valid minimum gap - it makes the previous line end exactly where the next one starts.
+        var minGap = Math.Max(0, Configuration.Settings.General.MinimumMillisecondsBetweenLines);
         if (minGap > maxMs)
         {
             // BridgeGaps requires minGap <= maxMs. Clamp to keep the call valid.
-            minGap = Math.Max(1, maxMs - 1);
+            minGap = Math.Max(0, maxMs - 1);
         }
 
         DurationsBridgeGaps.BridgeGaps(subtitle, minGap, divideEven: false, maxMs, fixedIndexes: null, dic: null, useFrames: false);
