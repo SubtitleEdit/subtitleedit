@@ -81,7 +81,13 @@ public partial class PickSpellCheckDictionaryViewModel : ObservableObject
                 SelectedDictionary = Dictionaries.FirstOrDefault(l => l.DictionaryFileName == Se.Settings.SpellCheck.LastLanguageDictionaryFile);
             }
 
-            SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name.Contains("English", StringComparison.OrdinalIgnoreCase));
+            // The remembered dictionary was selected above and then overwritten right away, so the
+            // list always opened on English
+            if (SelectedDictionary == null)
+            {
+                SelectedDictionary = Dictionaries.FirstOrDefault(l => l.Name.Contains("English", StringComparison.OrdinalIgnoreCase));
+            }
+
             if (SelectedDictionary == null)
             {
                 SelectedDictionary = Dictionaries[0];
