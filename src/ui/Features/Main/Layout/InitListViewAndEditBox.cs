@@ -1030,6 +1030,12 @@ public static partial class InitListViewAndEditBox
                 },
                 new MenuItem
                 {
+                    Header = Se.Language.Main.Menu.VisualSync,
+                    Command = vm.ShowVisualSyncSelectedLinesCommand,
+                    DataContext = vm,
+                },
+                new MenuItem
+                {
                     Header = Se.Language.Main.Menu.RemoveTextForHearingImpaired,
                     Command = vm.RemoveTextForHearingImpairedSelectedLinesCommand,
                     DataContext = vm,
