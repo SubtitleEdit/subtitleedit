@@ -43,8 +43,10 @@ public static class DataGridScrollBarBehavior
     public static readonly AttachedProperty<bool> EnableTroughPagingProperty =
         AvaloniaProperty.RegisterAttached<DataGrid, bool>("EnableTroughPaging", typeof(DataGridScrollBarBehavior));
 
-    // Marks a grid already wired so a second set of the property (or a re-templated grid) does
-    // not stack a second handler.
+    // Marks a grid already wired so that setting the attached property to true more than once does
+    // not subscribe to TemplateApplied a second time and stack a second set of scroll bar handlers.
+    // A normal re-template needs no guard: the single subscription re-runs and wires the fresh
+    // scroll bar once, and the discarded template's scroll bar (with its handlers) is dropped.
     private static readonly AttachedProperty<bool> WiredProperty =
         AvaloniaProperty.RegisterAttached<DataGrid, bool>("TroughPagingWired", typeof(DataGridScrollBarBehavior));
 
