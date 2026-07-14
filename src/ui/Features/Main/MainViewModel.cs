@@ -328,6 +328,7 @@ public partial class MainViewModel :
     private bool _loading;
     private bool _opening;
     private PointerEventArgs? _lastTextEditorPointerArgs;
+    private PointerEventArgs? _lastSubtitleGridPointerArgs;
     private HashSet<int>? _visibleLayers;
     private readonly List<SubtitleLineViewModel> _waveformSubtitleBuffer = new();
     private DispatcherTimer _positionTimer = new();
@@ -19148,6 +19149,284 @@ public partial class MainViewModel :
                 });
             }
         }
+
+        AddSubtitleGridSpellCheckMenuItems(sender as MenuFlyout);
+    }
+
+    private const int MaxSpellCheckMenuWords = 10;
+
+    /// <summary>
+    /// Adds the live spell check items for the right-clicked line to the subtitle grid context menu.
+    /// A single misspelled word is shown flat (like in the subtitle text box), several words each get
+    /// their own submenu.
+    /// </summary>
+    private void AddSubtitleGridSpellCheckMenuItems(MenuFlyout? flyout)
+    {
+        if (flyout == null)
+        {
+            return;
+        }
+
+        // Clear previous spell check menu items (identified by their Tag)
+        var itemsToRemove = flyout.Items.Where(item => item is MenuItem mi && mi.Tag?.ToString() == "SpellCheck" ||
+                                                       item is Separator sep && sep.Tag?.ToString() == "SpellCheck")
+            .ToList();
+        foreach (var item in itemsToRemove)
+        {
+            flyout.Items.Remove(item);
+        }
+
+        var pointerArgs = _lastSubtitleGridPointerArgs;
+        _lastSubtitleGridPointerArgs = null;
+
+        if (IsSubtitleGridFlyoutHeaderVisible ||
+            (!Se.Settings.Appearance.SubtitleGridLiveSpellCheck && !Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck))
+        {
+            return;
+        }
+
+        // Insert spell check items at the beginning of the menu
+        var insertIndex = 0;
+
+        var cell = pointerArgs == null ? null : GetSubtitleGridSpellCheckCell(pointerArgs);
+        if (cell != null)
+        {
+            var (line, isOriginal) = cell.Value;
+            var text = isOriginal ? line.OriginalText : line.Text;
+            var words = GetMisspelledWords(text);
+
+            if (words.Count == 1)
+            {
+                var word = words[0];
+
+                // Add first 5 suggestions
+                foreach (var suggestion in _spellCheckManager.GetSuggestions(word).Take(5))
+                {
+                    flyout.Items.Insert(insertIndex++, MakeSuggestionMenuItem(line, isOriginal, word, suggestion));
+                }
+
+                if (insertIndex > 0)
+                {
+                    // Add separator
+                    flyout.Items.Insert(insertIndex++, new Separator { Tag = "SpellCheck" });
+                }
+
+                flyout.Items.Insert(insertIndex++, MakeAddToUserDictionaryMenuItem(word));
+                flyout.Items.Insert(insertIndex++, MakeIgnoreAllMenuItem(word));
+            }
+            else if (words.Count > 1)
+            {
+                foreach (var word in words.Take(MaxSpellCheckMenuWords))
+                {
+                    flyout.Items.Insert(insertIndex++, MakeMisspelledWordMenuItem(line, isOriginal, word));
+                }
+
+                // Add separator
+                flyout.Items.Insert(insertIndex++, new Separator { Tag = "SpellCheck" });
+            }
+        }
+
+        var changeDictionary = new MenuItem
+        {
+            Header = Se.Language.SpellCheck.PickSpellCheckDictionaryDotDotDot,
+            Tag = "SpellCheck"
+        };
+        changeDictionary.Click += (_, _) => { CommandPickLiveSpellCheckDictionary(); };
+        flyout.Items.Insert(insertIndex++, changeDictionary);
+
+        // Add separator after spell check items
+        flyout.Items.Insert(insertIndex, new Separator { Tag = "SpellCheck" });
+    }
+
+    /// <summary>
+    /// A misspelled word with its suggestions, "add to user dictionary" and "ignore all" in a submenu.
+    /// The suggestions are only looked up when the submenu is opened - asking hunspell for suggestions for
+    /// every misspelled word in the line would make the context menu slow to open.
+    /// </summary>
+    private MenuItem MakeMisspelledWordMenuItem(SubtitleLineViewModel line, bool isOriginal, string word)
+    {
+        var wordItem = new MenuItem
+        {
+            Header = word,
+            Tag = "SpellCheck"
+        };
+        wordItem.Items.Add(MakeAddToUserDictionaryMenuItem(word));
+        wordItem.Items.Add(MakeIgnoreAllMenuItem(word));
+
+        var suggestionsAdded = false;
+        wordItem.SubmenuOpened += (_, _) =>
+        {
+            if (suggestionsAdded)
+            {
+                return;
+            }
+
+            suggestionsAdded = true;
+
+            var index = 0;
+            foreach (var suggestion in _spellCheckManager.GetSuggestions(word).Take(5))
+            {
+                wordItem.Items.Insert(index++, MakeSuggestionMenuItem(line, isOriginal, word, suggestion));
+            }
+
+            if (index > 0)
+            {
+                wordItem.Items.Insert(index, new Separator());
+            }
+        };
+
+        return wordItem;
+    }
+
+    private MenuItem MakeSuggestionMenuItem(SubtitleLineViewModel line, bool isOriginal, string word, string suggestion)
+    {
+        var suggestionItem = new MenuItem
+        {
+            Header = suggestion,
+            FontWeight = FontWeight.Bold,
+            Tag = "SpellCheck"
+        };
+        suggestionItem.Click += (_, _) => { ReplaceSubtitleGridWord(line, isOriginal, word, suggestion); };
+        return suggestionItem;
+    }
+
+    private MenuItem MakeAddToUserDictionaryMenuItem(string word)
+    {
+        var addToDictItem = new MenuItem
+        {
+            Header = string.Format(Se.Language.SpellCheck.AddXToUserDictionary, word),
+            Tag = "SpellCheck"
+        };
+        addToDictItem.Click += (_, _) =>
+        {
+            _spellCheckManager.AdToUserDictionary(word);
+            RefreshLiveSpellCheck();
+        };
+        return addToDictItem;
+    }
+
+    private MenuItem MakeIgnoreAllMenuItem(string word)
+    {
+        var ignoreAllItem = new MenuItem
+        {
+            Header = string.Format(Se.Language.SpellCheck.IgnoreAllX, word),
+            Tag = "SpellCheck"
+        };
+        ignoreAllItem.Click += (_, _) =>
+        {
+            _spellCheckManager.AddIgnoreWord(word);
+            RefreshLiveSpellCheck();
+        };
+        return ignoreAllItem;
+    }
+
+    /// <summary>
+    /// The misspelled words of a line, in reading order and without duplicates - the same word twice in a
+    /// line would give two menu items with the same header.
+    /// </summary>
+    private List<string> GetMisspelledWords(string? text)
+    {
+        if (string.IsNullOrEmpty(text) || !Se.Settings.Appearance.SubtitleGridLiveSpellCheck)
+        {
+            return new List<string>();
+        }
+
+        return SpellCheckWordLists.Split(text)
+            .Where(w => w.Length >= 2 && !_spellCheckManager.IsWordCorrect(w, text))
+            .Select(w => w.Text)
+            .Distinct()
+            .ToList();
+    }
+
+    /// <summary>
+    /// The subtitle line and text column the pointer is over. Falls back to the text column of the
+    /// right-clicked row when the pointer is not over one of the two text columns.
+    /// </summary>
+    private (SubtitleLineViewModel Line, bool IsOriginal)? GetSubtitleGridSpellCheckCell(PointerEventArgs pointerArgs)
+    {
+        if (SubtitleGrid == null)
+        {
+            return null;
+        }
+
+        var position = pointerArgs.GetPosition(SubtitleGrid);
+        var textBlock = FindSubtitleGridTextBlock(position);
+        if (textBlock?.DataContext is SubtitleLineViewModel cellLine)
+        {
+            return (cellLine, textBlock.Tag as string == InitListViewAndEditBox.SubtitleGridColumnKeys.OriginalText);
+        }
+
+        var line = Subtitles.GetOrNull(GetDataGridRowIndexFromPoint(position));
+        return line == null ? null : (line, false);
+    }
+
+    private TextBlock? FindSubtitleGridTextBlock(Avalonia.Point pointerPosition)
+    {
+        if (SubtitleGrid.InputHitTest(pointerPosition) is not Avalonia.Visual hit)
+        {
+            return null;
+        }
+
+        if (hit is TextBlock hitTextBlock && IsSubtitleGridTextBlock(hitTextBlock))
+        {
+            return hitTextBlock;
+        }
+
+        // The pointer can be over the cell padding instead of the text block itself
+        var cell = hit.FindAncestorOfType<DataGridCell>();
+        return cell?.GetVisualDescendants().OfType<TextBlock>().FirstOrDefault(IsSubtitleGridTextBlock);
+    }
+
+    private static bool IsSubtitleGridTextBlock(TextBlock textBlock)
+    {
+        return textBlock.Tag as string == InitListViewAndEditBox.SubtitleGridColumnKeys.Text ||
+               textBlock.Tag as string == InitListViewAndEditBox.SubtitleGridColumnKeys.OriginalText;
+    }
+
+    /// <summary>
+    /// Replaces every occurrence of <paramref name="word"/> in the line with <paramref name="suggestion"/>.
+    /// The menu offers each misspelled word once, so a word occurring twice in the line is corrected in both
+    /// places - fixing only one of them would leave the other one underlined with no obvious way to fix it.
+    /// </summary>
+    private void ReplaceSubtitleGridWord(SubtitleLineViewModel line, bool isOriginal, string word, string suggestion)
+    {
+        // Split the current text: the line may have been edited since the menu was opened
+        var text = isOriginal ? line.OriginalText : line.Text;
+        if (string.IsNullOrEmpty(text))
+        {
+            return;
+        }
+
+        var occurrences = SpellCheckWordLists.Split(text).Where(w => w.Text == word).ToList();
+        if (occurrences.Count == 0)
+        {
+            return;
+        }
+
+        // Replace from the back, so the indexes of the remaining occurrences stay valid
+        var newText = text;
+        for (var i = occurrences.Count - 1; i >= 0; i--)
+        {
+            var occurrence = occurrences[i];
+            newText = newText.Remove(occurrence.Index, occurrence.Length).Insert(occurrence.Index, suggestion);
+        }
+
+        if (isOriginal)
+        {
+            line.OriginalText = newText;
+            if (ReferenceEquals(SelectedSubtitle, line) && EditTextBoxOriginal.Text != newText)
+            {
+                EditTextBoxOriginal.Text = newText;
+            }
+
+            return;
+        }
+
+        line.Text = newText;
+        if (ReferenceEquals(SelectedSubtitle, line) && EditTextBox.Text != newText)
+        {
+            EditTextBox.Text = newText;
+        }
     }
 
     private bool IsTextInputFocused()
@@ -20073,6 +20352,9 @@ public partial class MainViewModel :
             var props = e.GetCurrentPoint(control).Properties;
             _subtitleGridIsLeftClick = props.IsLeftButtonPressed;
             _subtitleGridIsRightClick = props.IsRightButtonPressed;
+
+            // Used by the context menu to find the word under the pointer (live spell check)
+            _lastSubtitleGridPointerArgs = e;
             _subtitleGridIsControlPressed = e.KeyModifiers.HasFlag(KeyModifiers.Control);
             // On macOS, Cmd (Meta) is the multi-select modifier; Ctrl triggers the context menu instead
             var isMultiSelectModifier = _subtitleGridIsControlPressed
