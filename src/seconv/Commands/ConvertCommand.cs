@@ -1,7 +1,9 @@
+using Nikse.SubtitleEdit.Core.Common;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using SeConv.Core;
 
 namespace SeConv.Commands;
@@ -277,9 +279,11 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         [Description("Apply duration limits")]
         public bool ApplyDurationLimits { get; init; }
 
-        [CommandOption("--apply-min-gap|--ApplyMinGap")]
-        [Description("Enforce a minimum gap of N ms between paragraphs")]
-        public int? ApplyMinGap { get; init; }
+        // Optional value: bare --apply-min-gap uses minimumMillisecondsBetweenLines from
+        // --settings (or the libse default), matching what the UI does (issue #12437).
+        [CommandOption("--apply-min-gap|--ApplyMinGap [MS]")]
+        [Description("Enforce a minimum gap between paragraphs; omit the value to use minimumMillisecondsBetweenLines")]
+        public FlagValue<string>? ApplyMinGap { get; init; }
 
         [CommandOption("--bridge-gaps|--BridgeGaps")]
         [Description("Bridge gaps shorter than N ms by extending the previous end time")]
@@ -455,6 +459,17 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                     var seConvSettings = SeConvSettings.Load(settings.SettingsPath);
                     seConvSettings.ApplyToLibSe(settings.Profile);
                     seConvSettings.ApplyExportImages(imageStyle, settings.Profile);
+
+                    // Unknown keys are ignored by the JSON reader, which used to mean a typo - or a
+                    // key from a newer seconv - silently produced default output (issue #12437).
+                    var unknownKeys = seConvSettings.GetUnknownKeys().ToList();
+                    if (unknownKeys.Count > 0 && !silent)
+                    {
+                        AnsiConsole.MarkupLineInterpolated(
+                            $"[yellow]Warning: ignoring unknown key(s) in --settings file: {string.Join(", ", unknownKeys)}[/]");
+                        AnsiConsole.MarkupLine(
+                            "[yellow]Check for typos, or update seconv if the key was added in a newer version.[/]");
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -468,12 +483,19 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 return 1;
             }
 
-            // Image styling flags override the settings JSON. Unlike the JSON (which
-            // tolerates typos), a bad flag value fails fast so the user notices.
+            // Image styling flags override the settings JSON. Unlike the JSON (which only warns
+            // about unknown keys), a bad flag value fails fast so the user notices.
             var imageStyleError = ApplyImageStyleFlags(settings, imageStyle);
             if (imageStyleError != null)
             {
                 AnsiConsole.MarkupLineInterpolated($"[red]Error: {imageStyleError}[/]");
+                return 1;
+            }
+
+            // Must run after the --settings JSON is applied: a bare --apply-min-gap takes its
+            // value from libse's (possibly overridden) MinimumMillisecondsBetweenLines.
+            if (!TryResolveApplyMinGap(settings, silent, out var applyMinGapMs))
+            {
                 return 1;
             }
 
@@ -605,7 +627,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 AdjustDurationMs = settings.AdjustDuration,
                 ChangeSpeedPercent = settings.ChangeSpeed,
                 BridgeGapsMaxMs = settings.BridgeGaps,
-                ApplyMinGapMs = settings.ApplyMinGap,
+                ApplyMinGapMs = applyMinGapMs,
                 Resolution = resolution,
                 ImageStyle = imageStyle,
                 AssaStyleFile = settings.AssaStyleFile,
@@ -786,6 +808,50 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             errors = result.Errors,
         };
         Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(payload, JsonOptions));
+    }
+
+    /// <summary>
+    /// Resolves --apply-min-gap into the gap to enforce, in ms (null = the operation is off).
+    /// A bare --apply-min-gap uses libse's MinimumMillisecondsBetweenLines, so it follows the
+    /// --settings JSON. Returns false when the value is unusable, after printing the error.
+    /// </summary>
+    private static bool TryResolveApplyMinGap(Settings settings, bool silent, out int? gapMs)
+    {
+        gapMs = null;
+        if (settings.ApplyMinGap?.IsSet != true)
+        {
+            return true;
+        }
+
+        // FlagValue only carries the raw text, so "no value given" stays distinguishable from ":0".
+        var raw = settings.ApplyMinGap.Value;
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            gapMs = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+            return true;
+        }
+
+        if (!int.TryParse(raw.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var ms))
+        {
+            AnsiConsole.MarkupLineInterpolated(
+                $"[red]Error: --apply-min-gap expects a value in milliseconds, got '{raw}'.[/]");
+            return false;
+        }
+
+        if (ms <= 0)
+        {
+            // Enforcing a gap of zero is a no-op. Saying so beats silently doing nothing.
+            if (!silent)
+            {
+                AnsiConsole.MarkupLineInterpolated(
+                    $"[yellow]Warning: --apply-min-gap:{ms} enforces no gap and does nothing. Omit the value to use minimumMillisecondsBetweenLines.[/]");
+            }
+
+            return true;
+        }
+
+        gapMs = ms;
+        return true;
     }
 
     /// <summary>

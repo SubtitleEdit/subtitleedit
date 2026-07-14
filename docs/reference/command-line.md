@@ -396,6 +396,8 @@ Available template tokens: `{title}`, `{number}`, `{start}`, `{end}`, `{duration
 
 The `exportImages` section styles text → image rendering (see [Image output styling](#image-output-styling) for the semantics); the equivalent CLI flags override it. The `general` section mirrors `Configuration.Settings.General`; any key left out keeps the libse default. The profile-shaping values (`minimumMillisecondsBetweenLines`, `maxNumberOfLines`, `mergeLinesShorterThan`, `subtitleMaximumCharactersPerSeconds`, `subtitleOptimalCharactersPerSeconds`, `subtitleMaximumWordsPerMinute`, `dialogStyle`, `continuationStyle`) feed Fix common errors and the split/merge operations, so set them to reproduce an SE4 profile. `dialogStyle` and `continuationStyle` take the enum names (case-insensitive): `dialogStyle` ∈ `DashBothLinesWithSpace`, `DashBothLinesWithoutSpace`, `DashSecondLineWithSpace`, `DashSecondLineWithoutSpace`; `continuationStyle` ∈ `None`, `NoneTrailingDots`, `NoneTrailingEllipsis`, `OnlyTrailingDots`, `LeadingTrailingDots`, `LeadingTrailingEllipsis`, `LeadingTrailingDash`, … (see the Fix common errors continuation styles).
 
+Keys that seconv does not recognize are ignored, so a settings file written for a newer version still applies everything this one understands — but they are listed in a warning, so a typo (or a key your seconv is too old to know) does not silently give you default output.
+
 ```bash
 seconv *.srt subrip --settings:my.json --profile:broadcast --remove-text-for-hi
 ```
@@ -415,7 +417,7 @@ Operations run after the structural transforms (offset, fps, renumber, adjust-du
 | Option | Description |
 |---|---|
 | `--apply-duration-limits` | Apply duration limits |
-| `--apply-min-gap:<ms>` | Enforce minimum gap of N ms between paragraphs |
+| `--apply-min-gap[:<ms>]` | Enforce a minimum gap between paragraphs. Without a value, uses `minimumMillisecondsBetweenLines` from `--settings` (libse default: 24 ms) |
 | `--balance-lines` | Balance line lengths |
 | `--beautify-time-codes` | Beautify time codes |
 | `--bridge-gaps:<ms>` | Bridge gaps shorter than N ms (extends previous end time) |
