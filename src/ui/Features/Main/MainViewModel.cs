@@ -7899,6 +7899,56 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private async Task ShowVisualSyncSelectedLines()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        var selectedLines = SubtitleGrid.SelectedItems.Cast<SubtitleLineViewModel>()
+            .OrderBy(p => p.StartTime.TotalMilliseconds)
+            .ToList();
+        if (selectedLines.Count == 0)
+        {
+            return;
+        }
+
+        var result = await ShowDialogAsync<VisualSyncWindow, VisualSyncViewModel>(vm =>
+        {
+            var paragraphs = selectedLines.Select(p => new SubtitleLineViewModel(p)).ToList();
+            vm.Initialize(paragraphs, _videoFileName, _subtitleFileName, AudioVisualizer, _audioTrack?.Id ?? -1);
+        });
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+
+        // Only the selected lines were synced - copy the new time codes back onto those rows and leave the rest of the subtitle alone.
+        foreach (var synced in result.Paragraphs.Select(p => p.Subtitle))
+        {
+            var line = Subtitles.FirstOrDefault(p => p.Id == synced.Id);
+            if (line == null)
+            {
+                continue;
+            }
+
+            line.StartTime = synced.StartTime;
+            line.EndTime = synced.EndTime;
+            line.UpdateDuration();
+        }
+
+        _updateAudioVisualizer = true;
+    }
+
+    [RelayCommand]
     private async Task ShowSyncChangeFrameRate()
     {
         if (Window == null)
