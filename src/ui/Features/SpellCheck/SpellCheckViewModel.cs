@@ -67,6 +67,11 @@ public partial class SpellCheckViewModel : ObservableObject
     public int TotalAddedWords { get; set; }
 
     public bool OkPressed { get; private set; }
+
+    /// <summary>
+    /// True when the scan reached the end of the subtitle, so there is no unfinished session left.
+    /// </summary>
+    public bool ScanCompleted { get; private set; }
     public StackPanel PanelWholeText { get; internal set; }
     public TextBox TextBoxWordNotFound { get; internal set; }
 
@@ -93,6 +98,10 @@ public partial class SpellCheckViewModel : ObservableObject
     private int _scanStartLineIndex;
     private int? _stopBeforeLineIndex;
     private bool _hasWrapped;
+
+    // True when a spell check of this subtitle was left unfinished, which is the only case where
+    // "continue spell check from current line?" has something to continue from.
+    private bool _sessionInProgress;
 
     public SpellCheckViewModel(ISpellCheckManager spellCheckManager, IWindowService windowService, IFileHelper fileHelper, IBluRayHelper bluRayHelper, IOcrImageSourceHolder ocrImageSourceHolder)
     {
@@ -418,9 +427,10 @@ public partial class SpellCheckViewModel : ObservableObject
         previous?.Dispose();
     }
 
-    public void Initialize(ObservableCollection<SubtitleLineViewModel> paragraphs, int? selectedSubtitleIndex, IFocusSubtitleLine focusSubtitleLine, string? dictionaryFileName)
+    public void Initialize(ObservableCollection<SubtitleLineViewModel> paragraphs, int? selectedSubtitleIndex, IFocusSubtitleLine focusSubtitleLine, string? dictionaryFileName, bool sessionInProgress = false)
     {
         _focusSubtitleLine = focusSubtitleLine;
+        _sessionInProgress = sessionInProgress;
         Paragraphs.Clear();
         Paragraphs.AddRange(paragraphs);
         SetLanguage(dictionaryFileName);
@@ -477,24 +487,36 @@ public partial class SpellCheckViewModel : ObservableObject
         }
 
         var startLine = 0;
-        if (Window != null && selectedSubtitleIndex is int idx && idx > 0 && idx < Paragraphs.Count)
+        if (selectedSubtitleIndex is int idx && idx > 0 && idx < Paragraphs.Count)
         {
-            var answer = await MessageBox.Show(
-                Window,
-                Se.Language.SpellCheck.SpellCheck,
-                Se.Language.SpellCheck.ContinueFromCurrentLine,
-                MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Question);
-
-            if (answer == MessageBoxResult.Cancel || answer == MessageBoxResult.None)
+            if (!_sessionInProgress)
             {
-                Dispatcher.UIThread.Invoke(() => Window?.Close());
-                return;
-            }
-
-            if (answer == MessageBoxResult.Yes)
-            {
+                // Nothing to continue from, so start where the user is standing instead of asking.
+                // The scan offers to wrap back to the top when it reaches the end, so the lines above
+                // are still covered.
                 startLine = idx;
+            }
+            else if (Window != null)
+            {
+                // A spell check of this subtitle was left unfinished, so "continue from current line"
+                // is a real choice: resume where the user is now, or start over from the top.
+                var answer = await MessageBox.Show(
+                    Window,
+                    Se.Language.SpellCheck.SpellCheck,
+                    Se.Language.SpellCheck.ContinueFromCurrentLine,
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (answer == MessageBoxResult.Cancel || answer == MessageBoxResult.None)
+                {
+                    Dispatcher.UIThread.Invoke(() => Window?.Close());
+                    return;
+                }
+
+                if (answer == MessageBoxResult.Yes)
+                {
+                    startLine = idx;
+                }
             }
         }
 
@@ -988,12 +1010,16 @@ public partial class SpellCheckViewModel : ObservableObject
                 }
                 else
                 {
+                    // Declining to wrap back ends the run: the user chose to leave the lines above
+                    // the start unchecked, so nothing is left hanging for a later "continue".
+                    ScanCompleted = true;
                     Ok();
                 }
             }, DispatcherPriority.Background);
         }
         else
         {
+            ScanCompleted = true;
             Ok();
         }
     }
