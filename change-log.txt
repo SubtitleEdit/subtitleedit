@@ -5,12 +5,15 @@ Subtitle Edit Changelog
 
 v5.1.0-rc3 (TBD)
 
+* Spell check: start at the current line instead of asking "Continue spell check from current line?" - the question is now only asked when an earlier spell check was left unfinished
 * Spell check: fix the spell check window opening blank - no word, no text and no suggestions - unless the first line was selected
 * Live spell check: add spell check items to the subtitle grid context menu - suggestions, add to user dictionary and ignore all
 * Live spell check: picking a dictionary now also updates the subtitle grid, and no longer hides the spell check items in the text box context menu
 * Live spell check: fix cancelling "Pick spell check dictionary" switching the dictionary anyway, and the list always opening on English instead of the dictionary last used
 * Live spell check: fix "Ignore all" being forgotten again as soon as the settings window was closed
 * Live spell check: fix the English dictionary being used for other languages - thx muaz978
+* Subtitle grid: fix an arrow key after shift+arrow jumping back to the anchor line instead of continuing from the moving end of the selection
+* Undo: fix automatic change detection reading the subtitles from a timer thread, which could silently drop an undo entry or record a state that never existed
 * Scroll bar: shift+click on the trough jumps to that position - thx muaz978
 * Shortcuts: normal weight for the shortcut name column - thx muaz978
 
