@@ -1052,7 +1052,7 @@ public partial class OcrViewModel : ObservableObject
     private async Task PickOllamaModel()
     {
         var result = await _windowService.ShowDialogAsync<PickOllamaModelWindow, PickOllamaModelViewModel>(Window!,
-            vm => { vm.Initialize(Se.Language.General.PickOllamaModel, OllamaModel, OllamaUrl); });
+            vm => { vm.Initialize(Se.Language.General.PickOllamaModel, OllamaModel, OllamaUrl, visionOnly: true); });
 
         _isCtrlDown = false;
 

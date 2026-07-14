@@ -135,6 +135,9 @@ public class AutoTranslateRunnerTest : IDisposable
 
         Assert.NotNull(runner.LlamaCppModel);
         Assert.Equal("my-own-model.gguf", runner.LlamaCppModel!.FileName);
+        // Unknown family: leave the embedded template alone.
+        Assert.Null(runner.LlamaCppModel.ChatTemplate);
+        Assert.False(runner.LlamaCppModel.NoJinja);
     }
 
     [Fact]
@@ -153,6 +156,55 @@ public class AutoTranslateRunnerTest : IDisposable
         Assert.Equal(path, runner.LlamaCppModel!.FileName);
         Assert.Equal("chatml", runner.LlamaCppModel.ChatTemplate);
         Assert.True(runner.LlamaCppModel.NoJinja);
+    }
+
+    // A TranslateGemma size/quant we do not curate (issue #12440 asked for the 27B). Whether it is
+    // dropped into the models folder or passed as a full path, it still needs gemma + --no-jinja:
+    // TranslateGemma's embedded Jinja template is non-standard, so serving it unflagged is broken.
+    [Fact]
+    public void Create_LlamaCppLocal_UncuratedTranslateGemmaByName_GetsGemmaTemplate()
+    {
+        PlantFakeInstall("translategemma-27b-it.Q4_K_M.gguf");
+
+        var runner = AutoTranslateRunner.Create(MakeOptions(model: "translategemma-27b-it.Q4_K_M"));
+
+        Assert.NotNull(runner.LlamaCppModel);
+        Assert.Equal("translategemma-27b-it.Q4_K_M.gguf", runner.LlamaCppModel!.FileName);
+        Assert.Equal("gemma", runner.LlamaCppModel.ChatTemplate);
+        Assert.True(runner.LlamaCppModel.NoJinja);
+    }
+
+    [Fact]
+    public void Create_LlamaCppLocal_UncuratedTranslateGemmaByFullPath_GetsGemmaTemplate()
+    {
+        PlantFakeInstall();
+        var path = Path.Combine(_fakeLlamaFolder, "models", "translategemma-27b-it.Q5_K_M.gguf");
+        using (var fs = File.Create(path))
+        {
+            fs.SetLength(11_000_000);
+        }
+
+        var runner = AutoTranslateRunner.Create(MakeOptions(model: path));
+
+        Assert.NotNull(runner.LlamaCppModel);
+        Assert.Equal("gemma", runner.LlamaCppModel!.ChatTemplate);
+        Assert.True(runner.LlamaCppModel.NoJinja);
+    }
+
+    [Theory]
+    [InlineData("translategemma-4b_Q5_K_M.gguf", "gemma", true)]   // curated: exact match
+    [InlineData("translategemma-27b-it.Q4_K_M.gguf", "gemma", true)] // uncurated: inferred
+    [InlineData("google_gemma-3-27b-it-Q4_K_M.gguf", "gemma", true)]
+    [InlineData("Qwen_Qwen3.5-32B-Q4_K_M.gguf", "chatml", true)]
+    [InlineData("aya-expanse-8b-Q4_K_M.gguf", null, false)]        // curated: embedded template
+    [InlineData("Meta-Llama-3.1-70B-Instruct-Q4_K_M.gguf", null, false)]
+    [InlineData("some-unknown-model.gguf", null, false)]
+    public void InferChatTemplate_PicksFlagsByFamily(string fileName, string? expectedTemplate, bool expectedNoJinja)
+    {
+        var (chatTemplate, noJinja) = LlamaCppServerManager.InferChatTemplate(fileName);
+
+        Assert.Equal(expectedTemplate, chatTemplate);
+        Assert.Equal(expectedNoJinja, noJinja);
     }
 
     [Fact]

@@ -232,11 +232,45 @@ public static class LlamaCppServerManager
     }
 
     /// <summary>
+    /// Picks the llama-server chat-template flags for a <c>.gguf</c> we do not curate (a file the user
+    /// downloaded themselves, e.g. a TranslateGemma quant or size we do not offer). A curated entry with
+    /// the same file name wins; otherwise the family is guessed from the file name, because getting this
+    /// wrong is not cosmetic: every Gemma we ship needs <c>gemma</c> + <c>--no-jinja</c> (TranslateGemma's
+    /// embedded Jinja template is non-standard) and every Qwen needs <c>chatml</c> + <c>--no-jinja</c> (to
+    /// bypass the embedded template's thinking mode, which otherwise emits &lt;think&gt; blocks instead of a
+    /// translation). Families with a usable embedded template (Aya, Llama, EuroLLM, Phi) fall through to
+    /// the default of no override.
+    /// </summary>
+    public static (string? ChatTemplate, bool NoJinja) InferChatTemplate(string fileName)
+    {
+        var curated = TranslateModels.Concat(ReviewModels).Concat(OcrModels)
+            .FirstOrDefault(m => m.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
+        if (curated != null)
+        {
+            return (curated.ChatTemplate, curated.NoJinja);
+        }
+
+        // Matches "translategemma-27b-it.Q4_K_M.gguf", "google_gemma-3-27b-it-Q4_K_M.gguf", etc.
+        if (fileName.Contains("gemma", StringComparison.OrdinalIgnoreCase))
+        {
+            return ("gemma", true);
+        }
+
+        if (fileName.Contains("qwen", StringComparison.OrdinalIgnoreCase))
+        {
+            return ("chatml", true);
+        }
+
+        return (null, false);
+    }
+
+    /// <summary>
     /// Returns the curated <see cref="TranslateModels"/> plus any other <c>*.gguf</c> the user has
     /// dropped into the llama.cpp models folder. Custom entries are emitted with an empty <c>Url</c>
-    /// (no download needed - already on disk), the file name as <c>DisplayName</c>, and a
-    /// human-readable file size. <c>mmproj-*.gguf</c> sidecars are skipped because they're not
-    /// standalone translation models.
+    /// (no download needed - already on disk), the file name as <c>DisplayName</c>, a
+    /// human-readable file size, and chat-template flags from <see cref="InferChatTemplate"/> so a
+    /// self-supplied TranslateGemma/Qwen quant is served with the same flags as the curated ones.
+    /// <c>mmproj-*.gguf</c> sidecars are skipped because they're not standalone translation models.
     /// </summary>
     public static IReadOnlyList<LlamaCppModel> GetAllTranslateModels()
     {
@@ -284,7 +318,9 @@ public static class LlamaCppServerManager
                 }
 
                 var size = FormatFileSize(new FileInfo(path).Length);
-                custom.Add(new LlamaCppModel(name, name, size, Url: string.Empty));
+                var (chatTemplate, noJinja) = InferChatTemplate(name);
+                custom.Add(new LlamaCppModel(name, name, size, Url: string.Empty,
+                    ChatTemplate: chatTemplate, NoJinja: noJinja));
             }
         }
         catch
