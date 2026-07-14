@@ -284,6 +284,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
+            // Fast path: the canonical "hh:mm:ss,mmm --> hh:mm:ss,mmm" line SE itself and
+            // virtually every other tool writes. The tolerant normalization below allocates
+            // ~20 intermediate strings and runs for every time-code line on load plus every
+            // SubRip "IsMine" probe, so only pay for it on the rare non-canonical lines.
+            if (input.Length == 29 && TryReadCanonicalTimeCodesLine(input, paragraph))
+            {
+                // Canonical milliseconds are 3 digits, so this cannot be the 2-digit
+                // ms-as-frames variant - same conclusion the slow path reaches below.
+                _isMsFrames = false;
+                return true;
+            }
+
             var s = input.TrimStart('-', ' ');
             if (s.Length < 10 || !char.IsDigit(s[0]))
             {
@@ -412,6 +424,58 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             return false;
+        }
+
+        // Parses "00:00:01,000 --> 00:00:04,000" (fixed 29-char layout, digits only) without
+        // any allocation. Returns false on the slightest deviation so the tolerant slow path
+        // still handles it.
+        private static bool TryReadCanonicalTimeCodesLine(string line, Paragraph paragraph)
+        {
+            if (line[2] != ':' || line[5] != ':' || line[8] != ',' ||
+                line[12] != ' ' || line[13] != '-' || line[14] != '-' || line[15] != '>' || line[16] != ' ' ||
+                line[19] != ':' || line[22] != ':' || line[25] != ',')
+            {
+                return false;
+            }
+
+            var startHours = ParseDigits(line, 0, 2);
+            var startMinutes = ParseDigits(line, 3, 2);
+            var startSeconds = ParseDigits(line, 6, 2);
+            var startMilliseconds = ParseDigits(line, 9, 3);
+            var endHours = ParseDigits(line, 17, 2);
+            var endMinutes = ParseDigits(line, 20, 2);
+            var endSeconds = ParseDigits(line, 23, 2);
+            var endMilliseconds = ParseDigits(line, 26, 3);
+            if (startHours < 0 || startMinutes < 0 || startSeconds < 0 || startMilliseconds < 0 ||
+                endHours < 0 || endMinutes < 0 || endSeconds < 0 || endMilliseconds < 0)
+            {
+                return false;
+            }
+
+            if (paragraph != null)
+            {
+                paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
+                paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
+            }
+
+            return true;
+        }
+
+        private static int ParseDigits(string s, int index, int count)
+        {
+            var result = 0;
+            for (var i = 0; i < count; i++)
+            {
+                var digit = s[index + i] - '0';
+                if ((uint)digit > 9)
+                {
+                    return -1;
+                }
+
+                result = result * 10 + digit;
+            }
+
+            return result;
         }
 
         /// <summary>
