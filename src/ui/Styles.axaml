@@ -1,5 +1,10 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:logic="clr-namespace:Nikse.SubtitleEdit.Logic;assembly=SubtitleEdit">
+    <!-- Windows-standard scroll bar for every grid: trough click pages, shift+click jumps (#12438). -->
+    <Style Selector="DataGrid">
+        <Setter Property="logic:DataGridScrollBarBehavior.EnableTroughPaging" Value="True"/>
+    </Style>
     <Styles.Resources>
         <SolidColorBrush x:Key="DataGridRowHoveredBackgroundColor" Color="Transparent"/>
         <x:Double x:Key="DataGridRowSelectedUnfocusedBackgroundOpacity">0.2</x:Double>
