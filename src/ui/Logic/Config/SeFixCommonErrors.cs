@@ -9,6 +9,13 @@ public class SeFixCommonErrors
     public string LastProfileName { get; set; }
     public bool SkipStep1 { get; set; }
 
+    /// <summary>
+    /// Let "Fix common OCR errors" guess at unknown words (which also splits words it thinks are
+    /// two words run together). Off by default: on a normal, non-OCR'd subtitle the guessing breaks
+    /// far more words than it fixes (issue #12441). The OCR window keeps its own separate setting.
+    /// </summary>
+    public bool TryToGuessUnknownWords { get; set; }
+
     public SeFixCommonErrors()
     {
         LastLanguageCode = string.Empty;
