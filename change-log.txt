@@ -3,6 +3,16 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.1.0-rc3 (TBD)
+
+* Live spell check: add spell check items to the subtitle grid context menu - suggestions, add to user dictionary and ignore all
+* Live spell check: picking a dictionary now also updates the subtitle grid, and no longer hides the spell check items in the text box context menu
+* Live spell check: fix the English dictionary being used for other languages - thx muaz978
+* Scroll bar: shift+click on the trough jumps to that position - thx muaz978
+* Shortcuts: normal weight for the shortcut name column - thx muaz978
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-rc2 (14th of July 2026)
 
 * Auto-translate: update llama.cpp to b9993
