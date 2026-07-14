@@ -45,20 +45,16 @@ namespace Nikse.SubtitleEdit.Core.AutoTranslate
 
         public async Task<string> Translate(string text, string sourceLanguageCode, string targetLanguageCode, CancellationToken cancellationToken)
         {
-            var model = string.Empty;
-            var modelJson = string.Empty;
-            if (!string.IsNullOrEmpty(model))
-            {
-                modelJson = "\"model\": \"" + model + "\",";
-                Configuration.Settings.Tools.LmStudioModel = model;
-            }
-
             if (string.IsNullOrWhiteSpace(Configuration.Settings.Tools.LlamaCppPrompt))
             {
                 Configuration.Settings.Tools.LlamaCppPrompt = new ToolsSettings().LlamaCppPrompt;
             }
             var prompt = string.Format(Configuration.Settings.Tools.LlamaCppPrompt, sourceLanguageCode, targetLanguageCode);
-            var input = "{ " + modelJson + " \"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
+
+            // No "model" field: llama-server serves the single model it was started with, and for a
+            // remote server the user's own llama-server does the same. Sending one would only risk a
+            // mismatch with whatever that server has loaded.
+            var input = "{ \"messages\": [{ \"role\": \"user\", \"content\": \"" + Json.EncodeJsonText(prompt) + "\\n\\n" + Json.EncodeJsonText(text.Trim()) + "\" }]}";
             var content = new StringContent(input, Encoding.UTF8);
             content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
             var result = await _httpClient.PostAsync(string.Empty, content, cancellationToken);

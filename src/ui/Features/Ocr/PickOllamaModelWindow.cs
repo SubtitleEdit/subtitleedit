@@ -53,7 +53,10 @@ public class PickOllamaModelWindow : Window
             Height = double.NaN,
         };
 
+        // Only the OCR callers filter to vision-capable models, so only they get the "show all" escape
+        // hatch; for the text callers the list is unfiltered already and the checkbox would be a no-op.
         var checkBoxShowAll = UiUtil.MakeCheckBox(Se.Language.Ocr.ShowAllOllamaModels, vm, nameof(vm.ShowAllModels));
+        checkBoxShowAll.Bind(IsVisibleProperty, new Binding(nameof(vm.ShowAllModelsVisible)));
 
         grid.Add(listBox, 0);
         grid.Add(checkBoxShowAll, 1);

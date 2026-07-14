@@ -403,7 +403,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     private async Task PickOllamaModel()
     {
         var result = await _windowService.ShowDialogAsync<PickOllamaModelWindow, PickOllamaModelViewModel>(Window!,
-            vm => { vm.Initialize(Se.Language.General.PickOllamaModel, SelectedOllamaModel, Se.Settings.Ocr.OllamaUrl); });
+            vm => { vm.Initialize(Se.Language.General.PickOllamaModel, SelectedOllamaModel, Se.Settings.Ocr.OllamaUrl, visionOnly: true); });
 
         if (result is { OkPressed: true, SelectedModel: not null })
         {

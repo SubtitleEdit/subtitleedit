@@ -28,7 +28,7 @@ Automatically translate subtitles using various translation engines and AI servi
 - **ChatGPT** — OpenAI AI translation (requires API key)
 - **LM Studio (local LLM)** — Local LLM translation
 - **Ollama (local LLM)** — Local LLM-based translation
-- **llama.cpp (local LLM)** — Server-managed local LLM translation; Subtitle Edit downloads llama.cpp and a curated TranslateGemma model and runs a local `llama-server` for you
+- **llama.cpp (local LLM)** — Server-managed local LLM translation; Subtitle Edit downloads llama.cpp and a curated model (TranslateGemma, Qwen or Aya Expanse) and runs a local `llama-server` for you. See [Using your own model](#llamacpp-using-your-own-model) to run a model we don't ship, such as TranslateGemma 27B
 - **OpenAI Compatible API** — Generic engine for any service exposing an OpenAI-compatible `chat/completions` endpoint (vLLM, KoboldCpp, a llama.cpp server on another machine, cloud providers, ...); configure URL, model, prompt, and an optional API key
 - **Anthropic Claude** — AI translation (requires API key)
 - **Groq** — AI translation (requires API key)
@@ -44,6 +44,27 @@ Automatically translate subtitles using various translation engines and AI servi
 - **winstxnhdw-nllb-api** — NLLB (No Language Left Behind) API
 - **Baidu Translate** — Baidu translation (requires App ID and secret)
 - **CrispASR MADLAD** — Local MADLAD-based translation with downloadable models (shown with size and install status); also available in Batch Convert
+
+## llama.cpp: using your own model
+
+The models offered in the download list are deliberately kept small enough to run on an ordinary
+machine (around 8 GB or less). You are not limited to them — larger models such as TranslateGemma
+27B work fine if your hardware can handle them.
+
+Two ways to use one:
+
+1. **Drop a `.gguf` into the models folder.** Copy the file into Subtitle Edit's `llama.cpp/models`
+   folder and it appears in the model list marked *(custom)*. Subtitle Edit recognizes the model
+   family from the file name and starts `llama-server` with the right chat template, so a
+   self-downloaded TranslateGemma or Qwen quant behaves like the curated ones.
+2. **Run your own server.** Tick **Use remote server** and point Subtitle Edit at any
+   `llama-server` you started yourself (the default is `http://localhost:8080/v1/chat/completions`).
+   Subtitle Edit then does no model management at all.
+
+Be aware of what a bigger model costs. TranslateGemma 27B at Q4_K_M is roughly a 16 GB download and
+needs about 20 GB of VRAM to run fully on the GPU — a 24 GB card in practice. Google's own figures
+put the 12B ahead of the Gemma 3 27B baseline, so the 12B in the download list is already a strong
+choice and the jump to 27B buys less than the size difference suggests.
 
 ## Engine Configuration
 

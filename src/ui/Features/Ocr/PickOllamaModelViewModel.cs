@@ -21,6 +21,7 @@ public partial class PickOllamaModelViewModel : ObservableObject
     [ObservableProperty] private string? _selectedModel;
     [ObservableProperty] private string _title;
     [ObservableProperty] private bool _showAllModels;
+    [ObservableProperty] private bool _showAllModelsVisible;
     private string? _oldModel;
 
     // Full list returned by /api/tags plus a per-model flag for vision capability.
@@ -58,11 +59,19 @@ public partial class PickOllamaModelViewModel : ObservableObject
         Title = string.Empty;
     }
 
-    public void Initialize(string title, string? selectedModel, string url)
+    /// <summary>
+    /// Populates the picker from the Ollama server's model list. <paramref name="visionOnly"/> is for the
+    /// OCR callers, which can only use vision-capable models; text callers (auto-translate, AI review, AI
+    /// assistant) pass false and see every installed model - filtering those to vision models would hide
+    /// exactly the ones they want.
+    /// </summary>
+    public void Initialize(string title, string? selectedModel, string url, bool visionOnly = false)
     {
         Title = title;
         Models.Clear();
         _oldModel = selectedModel;
+        ShowAllModelsVisible = visionOnly;
+        ShowAllModels = !visionOnly;
         _ = Task.Run(async () =>
         {
             var fetched = await GetModelsWithCapabilitiesAsync(url);

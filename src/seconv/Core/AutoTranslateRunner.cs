@@ -229,14 +229,12 @@ internal sealed class AutoTranslateRunner
 
     private static LlamaCppModel ResolveLlamaCppModel(string? requestedModel)
     {
-        var curated = LlamaCppServerManager.TranslateModels;
-
         if (!string.IsNullOrWhiteSpace(requestedModel))
         {
             var name = requestedModel.Trim();
 
-            // Full path to a .gguf: use it directly, but inherit chat-template flags from the
-            // curated entry when the file name matches one (TranslateGemma/Qwen need them).
+            // Full path to a .gguf: use it directly, but infer the chat-template flags from the file
+            // name (TranslateGemma/Qwen need them, whether or not we curate that exact quant).
             if (Path.IsPathRooted(name) || name.Contains(Path.DirectorySeparatorChar) || name.Contains(Path.AltDirectorySeparatorChar))
             {
                 if (!File.Exists(name))
@@ -245,9 +243,9 @@ internal sealed class AutoTranslateRunner
                 }
 
                 var fileName = Path.GetFileName(name);
-                var template = curated.FirstOrDefault(m => m.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
+                var (chatTemplate, noJinja) = LlamaCppServerManager.InferChatTemplate(fileName);
                 return new LlamaCppModel(fileName, Path.GetFullPath(name), string.Empty, Url: string.Empty,
-                    ChatTemplate: template?.ChatTemplate, NoJinja: template?.NoJinja ?? false);
+                    ChatTemplate: chatTemplate, NoJinja: noJinja);
             }
 
             // Name: match curated + custom models in the models folder (with or without .gguf).
