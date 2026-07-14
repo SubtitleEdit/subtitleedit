@@ -28,6 +28,7 @@
   <name>Abigaïl</name>
   <name>Abimael</name>
   <name>Abissail</name>
+  <name>Abissínia</name>
   <name>Abna</name>
   <name>Abraão</name>
   <name>Abraim</name>
@@ -798,6 +799,7 @@
   <name>Birmânia</name>
   <name>Bitia</name>
   <name>Biute</name>
+  <name>Bizâncio</name>
   <name>Blacina</name>
   <name>Blandina</name>
   <name>Blásia</name>
@@ -909,6 +911,7 @@
   <name>Cardo</name>
   <name>Carel</name>
   <name>Carela</name>
+  <name>Cartago</name>
   <name>Cáren</name>
   <name>Carenina</name>
   <name>Cária</name>
@@ -949,6 +952,7 @@
   <name>Carrie</name>
   <name>Carsta</name>
   <name>Cassandra</name>
+  <name>Ceilão</name>
   <name>Cássia</name>
   <name>Cassiano</name>
   <name>Cassilda</name>
@@ -1032,6 +1036,7 @@
   <name>Charlene</name>
   <name>Charli</name>
   <name>Charlie</name>
+  <name>Checoslováquia</name>
   <name>Cheila</name>
   <name>Cheldecarlo</name>
   <name>Cheldoncarlo</name>
@@ -1158,6 +1163,7 @@
   <name>Congo-Quinxassa</name>
   <name>Consolação</name>
   <name>Consolino</name>
+  <name>Constantinopla</name>
   <name>Constança</name>
   <name>Constância</name>
   <name>Constâncio</name>
@@ -2054,6 +2060,7 @@
   <name>Gerson</name>
   <name>Gerta</name>
   <name>Gerusa</name>
+  <name>Gália</name>
   <name>Gésaro</name>
   <name>Gesélia</name>
   <name>Géssi</name>
@@ -2762,6 +2769,7 @@
   <name>Judá</name>
   <name>Judia</name>
   <name>Judice</name>
+  <name>Jugoslávia</name>
   <name>Júdice</name>
   <name>Juliana</name>
   <name>Juliano</name>
@@ -3397,6 +3405,7 @@
   <name>Mavília</name>
   <name>Maxfrede</name>
   <name>Maxfredo</name>
+  <name>Mesopotâmia</name>
   <name>Máxima</name>
   <name>Maximiano</name>
   <name>Maximino</name>
@@ -4059,9 +4068,11 @@
   <name>Profírio</name>
   <name>Prtik</name>
   <name>Prudência</name>
+  <name>Prússia</name>
   <name>Pureza</name>
   <name>Purificação</name>
   <name>Pyeongyang</name>
+  <name>Pérsia</name>
   <name>Quaiela</name>
   <name>Quar</name>
   <name>Quaresma</name>
@@ -4202,6 +4213,7 @@
   <name>Rodolfo</name>
   <name>Rodrigo</name>
   <name>Rodrigues</name>
+  <name>Rodésia</name>
   <name>Roena</name>
   <name>Rogélia</name>
   <name>Rogélio</name>
@@ -4786,6 +4798,7 @@
   <name>Umbolina</name>
   <name>Una</name>
   <name>União Europeia</name>
+  <name>União Soviética</name>
   <name>Unna</name>
   <name>Urânia</name>
   <name>Urbalina</name>
@@ -4999,6 +5012,7 @@
   <name>Zaido</name>
   <name>Zaion</name>
   <name>Zaira</name>
+  <name>Zaire</name>
   <name>Zália</name>
   <name>Zâmbia</name>
   <name>Zamorano</name>

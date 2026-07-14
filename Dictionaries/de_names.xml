@@ -3,6 +3,7 @@
 <names>
   <blacklist />
   <name>Abelard</name>
+  <name>Abessinien</name>
   <name>Ada</name>
   <name>Adal</name>
   <name>Adalard</name>
@@ -252,9 +253,11 @@
   <name>Burlin</name>
   <name>Burnard</name>
   <name>Burnell</name>
+  <name>Byzanz</name>
   <name>Cabo Verde</name>
   <name>Caicos-Inseln</name>
   <name>Ceuta und Melilla</name>
+  <name>Ceylon</name>
   <name>Chlodwig</name>
   <name>Chriselda</name>
   <name>Clarimond</name>
@@ -469,6 +472,7 @@
   <name>Garry</name>
   <name>Garvyn</name>
   <name>GB</name>
+  <name>Gallien</name>
   <name>Geneve</name>
   <name>Genevie</name>
   <name>Genivee</name>
@@ -653,6 +657,7 @@
   <name>Joli</name>
   <name>Jordanien</name>
   <name>Josefa</name>
+  <name>Jugoslawien</name>
   <name>Jurgen</name>
   <name>Kaimaninseln</name>
   <name>Kaiser</name>
@@ -679,6 +684,7 @@
   <name>Karola</name>
   <name>Karolina</name>
   <name>Karoline</name>
+  <name>Karthago</name>
   <name>Kasachstan</name>
   <name>Katar</name>
   <name>Katchen</name>
@@ -707,6 +713,7 @@
   <name>Kongo-Kinshasa</name>
   <name>Konni</name>
   <name>Konrad</name>
+  <name>Konstantinopel</name>
   <name>Kord</name>
   <name>Kort</name>
   <name>Kroatien</name>
@@ -858,6 +865,7 @@
   <name>Meinyard</name>
   <name>Melanesien</name>
   <name>Melisande</name>
+  <name>Mesopotamien</name>
   <name>Mexiko</name>
   <name>Mikronesien</name>
   <name>Mikronesisches Inselgebiet</name>
@@ -905,6 +913,7 @@
   <name>Norwegen</name>
   <name>Ostafrika</name>
   <name>Ostasien</name>
+  <name>Ostdeutschland</name>
   <name>Österreich</name>
   <name>Osteuropa</name>
   <name>Osttimor</name>
@@ -919,6 +928,7 @@
   <name>Peppi</name>
   <name>Per</name>
   <name>Perahta</name>
+  <name>Persien</name>
   <name>Petronilla</name>
   <name>Petronille</name>
   <name>Philipinna</name>
@@ -929,6 +939,7 @@
   <name>Pjotr Tschaikowski</name>
   <name>Polen</name>
   <name>Polynesien</name>
+  <name>Preußen</name>
   <name>Raimond</name>
   <name>Raimundo</name>
   <name>Rainart</name>
@@ -950,6 +961,7 @@
   <name>Renke</name>
   <name>Republik Kongo</name>
   <name>Republik Moldau</name>
+  <name>Rhodesien</name>
   <name>Réunion</name>
   <name>Reymond</name>
   <name>Reymundo</name>
@@ -1045,6 +1057,7 @@
   <name>Serilda</name>
   <name>Sherman</name>
   <name>Shermon</name>
+  <name>Siam</name>
   <name>Sibirien</name>
   <name>Sicilien</name>
   <name>Siegfried</name>
@@ -1069,6 +1082,7 @@
   <name>Solvig</name>
   <name>Sonderverwaltungsregion Hongkong</name>
   <name>Sonderverwaltungsregion Macau</name>
+  <name>Sowjetunion</name>
   <name>Spanien</name>
   <name>Spengler</name>
   <name>Spitzbergen</name>
@@ -1132,6 +1146,7 @@
   <name>Tschaikowski</name>
   <name>Tschechien</name>
   <name>Tschechische Republik</name>
+  <name>Tschechoslowakei</name>
   <name>Tugenda</name>
   <name>Tunesien</name>
   <name>Türkei</name>
@@ -1203,6 +1218,7 @@
   <name>Wendel</name>
   <name>Westafrika</name>
   <name>Westasien</name>
+  <name>Westdeutschland</name>
   <name>Westeuropa</name>
   <name>Westsahara</name>
   <name>Wido</name>
@@ -1244,6 +1260,7 @@
   <name>Wolfrik</name>
   <name>Yseult</name>
   <name>Zacharia</name>
+  <name>Zaire</name>
   <name>Zelig</name>
   <name>Zentralafrika</name>
   <name>Zentralafrikanische Republik</name>
