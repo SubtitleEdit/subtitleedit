@@ -97,7 +97,8 @@ public static partial class InitListViewAndEditBox
             FontSize = Se.Settings.Appearance.SubtitleGridFontSize,
         };
 
-        DataGridScrollBarBehavior.EnableTroughPageScroll(vm.SubtitleGrid);
+        // Trough paging and shift+click jump now come from the app-wide DataGrid style
+        // (DataGridScrollBarBehavior.EnableTroughPaging in Styles.axaml), so no per-grid call here.
 
         // hack to make drag and drop work on the DataGrid - also on empty rows
         var dropHost = new Border
