@@ -372,6 +372,7 @@ public partial class MainViewModel :
     private static SolidColorBrush _transparentBrush = new SolidColorBrush(Colors.Transparent);
     private static SolidColorBrush _errorBrush = new SolidColorBrush(_errorColor);
     private SpellCheckDictionaryDisplay? _currentSpellCheckDictionary;
+    private bool _spellCheckSessionInProgress;
     private FfmpegMediaInfo2? _mediaInfo;
     string _dropDownFormatsSearchText = string.Empty;
     private System.Timers.Timer _dropDownFormatsSearchTimer = new System.Timers.Timer(1000);
@@ -1806,6 +1807,7 @@ public partial class MainViewModel :
         Se.Settings.General.CurrentVideoOffsetInMs = 0;
         UpdateVideoOffsetStatus();
         _currentSpellCheckDictionary = null;
+        _spellCheckSessionInProgress = false;
 
         if (format != null)
         {
@@ -5893,7 +5895,12 @@ public partial class MainViewModel :
         }
 
         var dictionaryFileName = _currentSpellCheckDictionary?.DictionaryFileName ?? null;
-        var result = await ShowDialogAsync<SpellCheckWindow, SpellCheckViewModel>(vm => { vm.Initialize(Subtitles, SelectedSubtitleIndex, this, dictionaryFileName); });
+        var result = await ShowDialogAsync<SpellCheckWindow, SpellCheckViewModel>(
+            vm => { vm.Initialize(Subtitles, SelectedSubtitleIndex, this, dictionaryFileName, _spellCheckSessionInProgress); });
+
+        // Only an unfinished spell check leaves something to continue from, and only then is the
+        // "continue spell check from current line?" prompt asked on the next run.
+        _spellCheckSessionInProgress = !result.ScanCompleted;
 
         if (result.OkPressed)
         {
