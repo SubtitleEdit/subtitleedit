@@ -307,7 +307,12 @@ public class ChatterboxTtsCpp : ITtsEngine
         var outputFileName = Path.Combine(GetSetFolder(), Guid.NewGuid() + ".wav");
         var inputText = text;
 
-        // Per /v1/audio/speech: send full reference WAV path as the `voice` field.
+        // Send the bare file name as the `voice` field, not the path: the crispasr server rejects
+        // anything with a path separator ("'voice' must not contain '..', a leading '/' or '~', or
+        // path separators" - HTTP 400 invalid_voice), which used to fail every imported voice.
+        // The chatterbox backend then opens that name relative to its working directory, which is
+        // why the server is started in the voices folder (see EnsureServerRunningAsync). The name
+        // must keep its .wav extension - the backend does not append one.
         // Empty string falls back to the model's baked default voice.
         var payload = new Dictionary<string, object>
         {
@@ -316,7 +321,7 @@ public class ChatterboxTtsCpp : ITtsEngine
         };
         if (!string.IsNullOrEmpty(chatterboxVoice.FilePath))
         {
-            payload["voice"] = chatterboxVoice.FilePath;
+            payload["voice"] = Path.GetFileName(chatterboxVoice.FilePath);
 
             // Chatterbox gates voice cloning behind a consent attestation (CrispASR
             // returns HTTP 400 consent_required without it). The user supplies their
@@ -466,7 +471,13 @@ public class ChatterboxTtsCpp : ITtsEngine
             var port = FindFreeLoopbackPort();
             var psi = new ProcessStartInfo
             {
-                WorkingDirectory = Path.GetDirectoryName(exe) ?? GetSetFolder(),
+                // Run in the voices folder: the chatterbox backend opens the `voice` of a
+                // /v1/audio/speech request relative to its working directory. It does not resolve it
+                // against --voice-dir (that only backs the /v1/voices endpoints), and the server
+                // rejects a `voice` containing path separators, so this is what lets an imported
+                // reference WAV be found at all. Every path passed below is absolute, so nothing
+                // else depends on the working directory.
+                WorkingDirectory = GetSetVoicesFolder(),
                 FileName = exe,
                 UseShellExecute = false,
                 CreateNoWindow = true,
@@ -489,11 +500,10 @@ public class ChatterboxTtsCpp : ITtsEngine
             psi.ArgumentList.Add(port.ToString());
             // The crispasr server gates /v1/audio/speech requests with a `voice` field
             // behind --voice-dir being set ("warning: --voice-dir not set; … will reject
-            // requests with a 'voice' field"). Imported reference-WAV cloning sends an
-            // absolute path as `voice`, which the chatterbox backend resolves directly,
-            // but the server-level gate still applies. Pointing --voice-dir at our
-            // voices folder satisfies the gate and also makes /v1/voices reflect the
-            // imported WAVs.
+            // requests with a 'voice' field"). Pointing --voice-dir at our voices folder
+            // satisfies the gate and also makes /v1/voices reflect the imported WAVs. It
+            // does not make the chatterbox backend look the voice up in there though -
+            // that is what the working directory above is for.
             psi.ArgumentList.Add("--voice-dir");
             psi.ArgumentList.Add(GetSetVoicesFolder());
 
