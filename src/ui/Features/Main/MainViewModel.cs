@@ -329,6 +329,12 @@ public partial class MainViewModel :
     private bool _opening;
     private PointerEventArgs? _lastTextEditorPointerArgs;
     private PointerEventArgs? _lastSubtitleGridPointerArgs;
+
+    // The dictionary currently loaded into _spellCheckManager for live spell check, null when none
+    // could be loaded. The manager keeps the previously loaded dictionary in that case, so asking it
+    // to check a word would give an answer from the wrong language - or, with nothing ever loaded,
+    // report every word as misspelled.
+    private string? _liveSpellCheckDictionaryFileName;
     private HashSet<int>? _visibleLayers;
     private readonly List<SubtitleLineViewModel> _waveformSubtitleBuffer = new();
     private DispatcherTimer _positionTimer = new();
@@ -15717,7 +15723,15 @@ public partial class MainViewModel :
         // A dictionary the user picked explicitly (live spell check context menu or the spell
         // check window) wins over auto detection - otherwise the next call here would silently
         // revert to the auto detected language. It is cleared in ResetSubtitle.
-        ApplyLiveSpellCheck(_currentSpellCheckDictionary ?? AutoDetectSpellCheckDictionary());
+        //
+        // Entries without a dictionary file are not usable here: the spell check window lists the
+        // MS Word languages that way (name only), and picking one would otherwise leave live spell
+        // check pinned to an entry that can never load, disabling it for the rest of the session.
+        var pickedDictionary = string.IsNullOrEmpty(_currentSpellCheckDictionary?.DictionaryFileName)
+            ? null
+            : _currentSpellCheckDictionary;
+
+        ApplyLiveSpellCheck(pickedDictionary ?? AutoDetectSpellCheckDictionary());
     }
 
     private SpellCheckDictionaryDisplay? AutoDetectSpellCheckDictionary()
@@ -15750,12 +15764,22 @@ public partial class MainViewModel :
     /// </summary>
     private void ApplyLiveSpellCheck(SpellCheckDictionaryDisplay? dictionary)
     {
-        var dictionaryLoaded = false;
-        if (dictionary != null)
+        if (dictionary == null)
         {
-            var twoLetterLanguageCode = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(dictionary.GetThreeLetterCode());
-            dictionaryLoaded = _spellCheckManager.Initialize(dictionary.DictionaryFileName, twoLetterLanguageCode);
+            _liveSpellCheckDictionaryFileName = null;
         }
+        else if (dictionary.DictionaryFileName != _liveSpellCheckDictionaryFileName)
+        {
+            // Only load when the dictionary actually changes: Initialize() clears the ignore list, so
+            // re-loading the dictionary already in use would throw away every "Ignore all" of this
+            // session (it is memory-only, unlike added words). It also re-reads the .dic/.aff from disk.
+            var twoLetterLanguageCode = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(dictionary.GetThreeLetterCode());
+            _liveSpellCheckDictionaryFileName = _spellCheckManager.Initialize(dictionary.DictionaryFileName, twoLetterLanguageCode)
+                ? dictionary.DictionaryFileName
+                : null;
+        }
+
+        var dictionaryLoaded = _liveSpellCheckDictionaryFileName != null;
 
         if (EditTextBox is TextEditorWrapper wrapper)
         {
@@ -19326,7 +19350,11 @@ public partial class MainViewModel :
     /// </summary>
     private List<string> GetMisspelledWords(string? text)
     {
-        if (string.IsNullOrEmpty(text) || !Se.Settings.Appearance.SubtitleGridLiveSpellCheck)
+        // Without a loaded dictionary the manager reports every word as misspelled, so the menu would
+        // list the whole line while the grid - correctly - underlines nothing.
+        if (string.IsNullOrEmpty(text) ||
+            !Se.Settings.Appearance.SubtitleGridLiveSpellCheck ||
+            _liveSpellCheckDictionaryFileName == null)
         {
             return new List<string>();
         }
@@ -22400,8 +22428,10 @@ public partial class MainViewModel :
         Dispatcher.UIThread.Post(async () =>
         {
             var result = await ShowDialogAsync<PickSpellCheckDictionaryWindow, PickSpellCheckDictionaryViewModel>();
-            if (result?.SelectedDictionary == null)
+            if (result is not { OkPressed: true, SelectedDictionary: not null })
             {
+                // The dialog always has a dictionary selected, so without the OkPressed check
+                // closing it with Escape/Cancel switched the dictionary anyway.
                 return;
             }
 
