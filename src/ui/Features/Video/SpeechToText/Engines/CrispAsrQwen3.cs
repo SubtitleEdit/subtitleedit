@@ -90,6 +90,24 @@ public class CrispAsrQwen3 : CrispAsrEngineBase
             },
             new WhisperModel
             {
+                Name = "qwen3-asr-1.7b-ja-anime-q4_k.gguf",
+                Size = "1.49 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/qwen3-asr-1.7b-ja-anime-GGUF/resolve/main/qwen3-asr-1.7b-ja-anime-q4_k.gguf",
+                ],
+            },
+            new WhisperModel
+            {
+                Name = "qwen3-asr-1.7b-ja-anime-q8_0.gguf",
+                Size = "2.51 GB",
+                Urls =
+                [
+                    "https://huggingface.co/cstr/qwen3-asr-1.7b-ja-anime-GGUF/resolve/main/qwen3-asr-1.7b-ja-anime-q8_0.gguf",
+                ],
+            },
+            new WhisperModel
+            {
                 Name = "qwen3-asr-0.6b-q4_k.gguf",
                 Size = "631 MB",
                 Urls =
