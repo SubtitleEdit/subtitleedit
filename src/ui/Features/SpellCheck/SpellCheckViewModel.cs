@@ -436,7 +436,21 @@ public partial class SpellCheckViewModel : ObservableObject
 
         // Posted to run after the window exists (Window is assigned in the window ctor),
         // so the "continue from current line?" prompt and the close hook have an owner.
-        Dispatcher.UIThread.Post(() => _ = StartSpellCheckAsync(selectedSubtitleIndex), DispatcherPriority.Background);
+        Dispatcher.UIThread.Post(
+            async void () =>
+            {
+                try
+                {
+                    await StartSpellCheckAsync(selectedSubtitleIndex);
+                }
+                catch (Exception exception)
+                {
+                    // Without this the task was discarded and any failure in here was lost,
+                    // leaving the window up with no word, no text and no suggestions.
+                    Se.LogError(exception, "Spell check could not be started");
+                }
+            },
+            DispatcherPriority.Background);
     }
 
     /// <summary>
@@ -447,6 +461,14 @@ public partial class SpellCheckViewModel : ObservableObject
     /// </summary>
     private async Task StartSpellCheckAsync(int? selectedSubtitleIndex)
     {
+        // The view model is initialized before the window service shows the dialog, and the
+        // Background pass it yields for (YieldForPendingFlyoutDismissAsync) runs this posted
+        // callback before window.ShowDialog(). The window therefore exists but is not on screen
+        // yet, and a message box owned by a window that is not visible throws - which used to
+        // leave the spell check window blank whenever the prompt below was needed, i.e. for
+        // every line except the first one.
+        await WaitForWindowShownAsync();
+
         // Make sure a summary of changes is reported even when the user closes early (Esc / X),
         // not only when the run completes or "Done" is pressed.
         if (Window != null)
@@ -482,6 +504,37 @@ public partial class SpellCheckViewModel : ObservableObject
             : null;
 
         DoSpellCheck();
+    }
+
+    /// <summary>
+    /// Completes once the window is on screen, so message boxes owned by it can be shown.
+    /// </summary>
+    private Task WaitForWindowShownAsync()
+    {
+        var window = Window;
+        if (window == null || window.IsVisible)
+        {
+            return Task.CompletedTask;
+        }
+
+        var taskCompletionSource = new TaskCompletionSource();
+
+        void OnOpened(object? sender, EventArgs e)
+        {
+            window.Opened -= OnOpened;
+            taskCompletionSource.TrySetResult();
+        }
+
+        window.Opened += OnOpened;
+
+        // The window may have been shown between the check above and the subscription
+        if (window.IsVisible)
+        {
+            window.Opened -= OnOpened;
+            taskCompletionSource.TrySetResult();
+        }
+
+        return taskCompletionSource.Task;
     }
 
     private void CaptureTotals()
