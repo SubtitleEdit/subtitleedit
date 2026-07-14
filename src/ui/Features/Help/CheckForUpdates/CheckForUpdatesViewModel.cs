@@ -68,19 +68,32 @@ public partial class CheckForUpdatesViewModel : ObservableObject
                 return;
             }
 
-            if (string.Equals(latestVersion, Se.Version, StringComparison.OrdinalIgnoreCase))
-            {
-                StatusText = Se.Language.Help.CheckForUpdatesUpToDate;
-            }
-            else
+            if (IsNewerThanCurrent(latestVersion))
             {
                 StatusText = string.Format(Se.Language.Help.CheckForUpdatesNewVersionAvailable, latestVersion);
                 IsDownloadLinkVisible = true;
+            }
+            else
+            {
+                StatusText = Se.Language.Help.CheckForUpdatesUpToDate;
             }
         }
         catch
         {
             StatusText = Se.Language.Help.CheckForUpdatesUnableToCheck;
+        }
+    }
+
+    internal static bool IsNewerThanCurrent(string latestVersion)
+    {
+        try
+        {
+            return new SemanticVersion(latestVersion).IsGreaterThan(new SemanticVersion(Se.Version));
+        }
+        catch (ArgumentException)
+        {
+            // unparsable version - only offer the download when it differs from what we run
+            return !string.Equals(latestVersion, Se.Version, StringComparison.OrdinalIgnoreCase);
         }
     }
 

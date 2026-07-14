@@ -9,6 +9,7 @@ v5.1.0-rc2 (TBD)
 * OCR: update CrispEmbed to v0.15.0 - fixes garbled math-OCR output, faster detection/decoding
 * Update Japanese translation - thx hisui3393
 
+-----------------------------------------------------------------------------------------------------
 
 v5.1.0-rc1 (13th of July 2026)
 
