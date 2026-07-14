@@ -32,7 +32,8 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     [ObservableProperty] private ObservableCollection<FixDisplayItem> _fixes;
     [ObservableProperty] private ObservableCollection<FixDisplayItem> _visibleFixes;
     [ObservableProperty] private ObservableCollection<FixFilterChip> _fixChips;
-    [ObservableProperty] private string _fixesSummaryText;
+    [ObservableProperty] private string _fixesSelectAllText;
+    [ObservableProperty] private string _applySelectedFixesText;
     [ObservableProperty] private FixDisplayItem? _selectedFix;
     [ObservableProperty] private ObservableCollection<SubtitleLineViewModel> _paragraphs;
     [ObservableProperty] private SubtitleLineViewModel? _selectedParagraph;
@@ -84,7 +85,8 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         Fixes = new ObservableCollection<FixDisplayItem>();
         VisibleFixes = new ObservableCollection<FixDisplayItem>();
         FixChips = new ObservableCollection<FixFilterChip>();
-        FixesSummaryText = string.Empty;
+        FixesSelectAllText = Se.Language.General.SelectAll;
+        ApplySelectedFixesText = Se.Language.Tools.FixCommonErrors.ApplySelectedFixes;
         Paragraphs = new ObservableCollection<SubtitleLineViewModel>();
         _language = Se.Language.Tools.FixCommonErrors;
         Step1IsVisible = true;
@@ -276,26 +278,18 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
         }
     }
 
-    // Select all / invert operate on the fixes passing the active category chip, not the full
-    // list - with a category chip active they must not touch fixes hidden by the filter. With
-    // the "All" chip active VisibleFixes equals Fixes, so nothing changes there (#12377).
+    // Select all / none toggle. Operates on the fixes passing the active category chip, not the
+    // full list - with a category chip active it must not touch fixes hidden by the filter, and
+    // with the "All" chip active VisibleFixes equals Fixes, so it covers everything there. When
+    // anything in the view is still unticked it selects all of it, otherwise it clears the view,
+    // so one button both selects and deselects the current category (#12377).
     [RelayCommand]
     public void FixesSelectAll()
     {
+        var selectAll = VisibleFixes.Any(f => !f.IsSelected);
         foreach (var fix in VisibleFixes)
         {
-            fix.IsSelected = true;
-        }
-
-        UpdateFixesSummary();
-    }
-
-    [RelayCommand]
-    public void FixesInverseSelected()
-    {
-        foreach (var fix in VisibleFixes)
-        {
-            fix.IsSelected = !fix.IsSelected;
+            fix.IsSelected = selectAll;
         }
 
         UpdateFixesSummary();
@@ -408,11 +402,34 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
     private void UpdateFixesSummary()
     {
-        // Count within the active category view so the summary matches the chip and the
-        // now category-scoped Select all / Invert (#12377); with "All" active VisibleFixes
-        // equals Fixes, so this is the full set.
+        // Count within the active category view so the toggle and chip figures match what
+        // Select all now acts on (#12377); with "All" active VisibleFixes equals Fixes.
         var selected = VisibleFixes.Count(f => f.IsSelected);
-        FixesSummaryText = string.Format(Se.Language.Tools.FixCommonErrors.XFixesYSelected, VisibleFixes.Count, selected);
+
+        // Flip the toggle caption so the button says what its next click will do for the
+        // current category: "Select none" once everything in view is ticked, else "Select all".
+        var allVisibleSelected = VisibleFixes.Count > 0 && selected == VisibleFixes.Count;
+        FixesSelectAllText = allVisibleSelected ? Se.Language.General.SelectNone : Se.Language.General.SelectAll;
+
+        // The Apply button acts on every ticked fix across all categories, not just the visible
+        // ones, so show that global count in its caption to remove the "does it apply the whole
+        // list or only this tab" ambiguity raised on #12377.
+        var totalSelected = Fixes.Count(f => f.IsSelected);
+        ApplySelectedFixesText = $"{Se.Language.Tools.FixCommonErrors.ApplySelectedFixes} ({totalSelected})";
+
+        UpdateChipSelectedCounts();
+    }
+
+    // Keep each category chip's "selected / total" figure current so every tab shows how many
+    // of its own fixes are ticked, not just how many exist (#12377).
+    private void UpdateChipSelectedCounts()
+    {
+        foreach (var chip in FixChips)
+        {
+            chip.SelectedCount = chip.Action == null
+                ? Fixes.Count(f => f.IsSelected)
+                : Fixes.Count(f => f.ActionDisplay == chip.Action && f.IsSelected);
+        }
     }
 
     [RelayCommand]

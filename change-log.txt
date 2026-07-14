@@ -7,6 +7,8 @@ v5.1.0-rc2 (TBD)
 
 * Fix common errors: "Fix common OCR errors" no longer applies fixes you unticked in the list - thx fraternl
 * Fix common errors: unknown-word guessing (which splits words) is now off by default, with its own check box - thx fraternl
+* seconv: warn about unknown keys in the --settings JSON instead of silently ignoring them - thx shanecoopt
+* seconv: --apply-min-gap can now be used without a value, taking the gap from minimumMillisecondsBetweenLines - thx shanecoopt
 * Fix common errors: make Apply/Action/Before/After columns sortable in the fix list - thx subcor
 * OCR: update CrispEmbed to v0.15.0 - fixes garbled math-OCR output, faster detection/decoding
 * Update Japanese translation - thx hisui3393

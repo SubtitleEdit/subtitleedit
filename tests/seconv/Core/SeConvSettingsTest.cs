@@ -286,4 +286,51 @@ public class SeConvSettingsTest : IDisposable
 
         Assert.Equal(25.0, s.General!.CurrentFrameRate);
     }
+
+    // Unknown keys stay ignored (a file written for a newer seconv must still apply what this
+    // one understands), but they have to be reportable - silently dropping them made a typo
+    // look identical to a working settings file (issue #12437).
+    [Fact]
+    public void GetUnknownKeys_ReportsTyposAndUnknownSections()
+    {
+        var path = WriteSettings("""
+            {
+              "general": {
+                "minimumMsBetweenLines": 96,
+                "subtitleLineMaximumLength": 50
+              },
+              "bogusSection": { "x": 1 },
+              "profiles": {
+                "netflix": { "general": { "alsoWrong": 1 } }
+              }
+            }
+            """);
+
+        var s = SeConvSettings.Load(path);
+        var unknown = s.GetUnknownKeys().ToList();
+
+        Assert.Contains("general.minimumMsBetweenLines", unknown);
+        Assert.Contains("bogusSection", unknown);
+        Assert.Contains("profiles.netflix.general.alsoWrong", unknown);
+        Assert.Equal(3, unknown.Count);
+
+        // the known key alongside the typo is still applied
+        Assert.Equal(50, s.General!.SubtitleLineMaximumLength);
+    }
+
+    [Fact]
+    public void GetUnknownKeys_EmptyForAValidFile()
+    {
+        var path = WriteSettings("""
+            {
+              "general": { "minimumMillisecondsBetweenLines": 12 },
+              "tools": { "mergeShortLinesMaxGap": 250 }
+            }
+            """);
+
+        var s = SeConvSettings.Load(path);
+
+        Assert.Empty(s.GetUnknownKeys());
+        Assert.Equal(12, s.General!.MinimumMillisecondsBetweenLines);
+    }
 }

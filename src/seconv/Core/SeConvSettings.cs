@@ -27,6 +27,9 @@ internal sealed class SeConvSettings
     [JsonPropertyName("profiles")]
     public Dictionary<string, SeConvSettings>? Profiles { get; set; }
 
+    [JsonExtensionData]
+    public Dictionary<string, JsonElement>? UnknownMembers { get; set; }
+
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -45,6 +48,63 @@ internal sealed class SeConvSettings
         var json = File.ReadAllText(path);
         return JsonSerializer.Deserialize<SeConvSettings>(json, JsonOptions)
             ?? throw new InvalidDataException($"Settings file is empty or null: {path}");
+    }
+
+    /// <summary>
+    /// Keys in the JSON that match no known section or property - typos, or keys from a newer
+    /// seconv than the one running (issue #12437). System.Text.Json drops these silently, so a
+    /// settings file that does nothing looks exactly like one that works. Callers report these
+    /// as a warning rather than an error, so a file written for a newer seconv still applies
+    /// everything else it understands.
+    /// </summary>
+    public IEnumerable<string> GetUnknownKeys() => CollectUnknownKeys(string.Empty);
+
+    private IEnumerable<string> CollectUnknownKeys(string prefix)
+    {
+        foreach (var key in Prefixed(UnknownMembers, prefix))
+        {
+            yield return key;
+        }
+
+        foreach (var key in Prefixed(General?.UnknownMembers, prefix + "general."))
+        {
+            yield return key;
+        }
+
+        foreach (var key in Prefixed(Tools?.UnknownMembers, prefix + "tools."))
+        {
+            yield return key;
+        }
+
+        foreach (var key in Prefixed(RemoveTextForHearingImpaired?.UnknownMembers, prefix + "removeTextForHearingImpaired."))
+        {
+            yield return key;
+        }
+
+        foreach (var key in Prefixed(ExportImages?.UnknownMembers, prefix + "exportImages."))
+        {
+            yield return key;
+        }
+
+        if (Profiles is null)
+        {
+            yield break;
+        }
+
+        foreach (var (name, profile) in Profiles)
+        {
+            foreach (var key in profile.CollectUnknownKeys($"{prefix}profiles.{name}."))
+            {
+                yield return key;
+            }
+        }
+    }
+
+    private static IEnumerable<string> Prefixed(Dictionary<string, JsonElement>? unknown, string prefix)
+    {
+        return unknown is null
+            ? Enumerable.Empty<string>()
+            : unknown.Keys.Select(key => prefix + key);
     }
 
     /// <summary>
@@ -179,12 +239,18 @@ internal sealed class SeConvSettings
         // ContinuationStyle: ContinuationStyle, e.g. "NoneTrailingDots".
         public string? DialogStyle { get; set; }
         public string? ContinuationStyle { get; set; }
+
+        [JsonExtensionData]
+        public Dictionary<string, JsonElement>? UnknownMembers { get; set; }
     }
 
     internal sealed class ToolsSection
     {
         public int? MergeShortLinesMaxGap { get; set; }
         public bool? MergeShortLinesOnlyContinuous { get; set; }
+
+        [JsonExtensionData]
+        public Dictionary<string, JsonElement>? UnknownMembers { get; set; }
     }
 
     /// <summary>
@@ -216,6 +282,9 @@ internal sealed class SeConvSettings
         public string? ContentAlignment { get; set; }
         public int? BottomTopMargin { get; set; }
         public int? LeftRightMargin { get; set; }
+
+        [JsonExtensionData]
+        public Dictionary<string, JsonElement>? UnknownMembers { get; set; }
 
         public void ApplyTo(ImageExportStyle style)
         {
@@ -281,5 +350,8 @@ internal sealed class SeConvSettings
         public bool? RemoveIfAllUppercase { get; set; }
         public string? RemoveIfContainsText { get; set; }
         public bool? RemoveIfOnlyMusicSymbols { get; set; }
+
+        [JsonExtensionData]
+        public Dictionary<string, JsonElement>? UnknownMembers { get; set; }
     }
 }
