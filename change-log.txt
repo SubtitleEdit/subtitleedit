@@ -18,6 +18,7 @@ v5.1.0-rc3 (TBD)
 * Undo: fix automatic change detection reading the subtitles from a timer thread, which could silently drop an undo entry or record a state that never existed
 * Scroll bar: shift+click on the trough jumps to that position - thx muaz978
 * Shortcuts: normal weight for the shortcut name column - thx muaz978
+* Sync: add "Visual sync" to the subtitle grid context menu under "Selected lines", so segments that are off by different amounts can be synced one at a time - thx Hikari2w2
 
 -----------------------------------------------------------------------------------------------------
 
