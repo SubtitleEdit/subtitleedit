@@ -6064,6 +6064,10 @@ public partial class MainViewModel :
             SetSubtitles(_subtitle);
             SelectAndScrollToRow(0);
             ShowStatus(string.Format(Se.Language.Main.TranscriptionCompletedWithXLines, _subtitle.Paragraphs.Count));
+
+            // The subtitle content (and so its language) just changed without a
+            // file open, so re-evaluate the live spell check dictionary.
+            SetupLiveSpellCheck();
         }
         else if (result.OkPressed && result.IsBatchMode && result.BatchItems.Count == 1)
         {
@@ -6149,6 +6153,10 @@ public partial class MainViewModel :
             SetSubtitles(_subtitle);
             SelectAndScrollToRow(0);
             ShowStatus(string.Format(Se.Language.Video.VideoOcr.LinesFoundX, _subtitle.Paragraphs.Count));
+
+            // The subtitle content (and so its language) just changed without a
+            // file open, so re-evaluate the live spell check dictionary.
+            SetupLiveSpellCheck();
         }
     }
 
@@ -15703,8 +15711,17 @@ public partial class MainViewModel :
     private void SetupLiveSpellCheck()
     {
         var dictionaryFound = false;
-        var twoLetterLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(GetUpdateSubtitle());
-        var threeLetterLanguageCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(twoLetterLanguageCode);
+
+        // Use the detection variant that returns null for an empty or undetectable
+        // subtitle. The regular variant falls back to English, which armed the
+        // spell checker with the English dictionary on an empty subtitle at
+        // startup; content arriving later without a file open (for example a
+        // transcription in a language with no dictionary installed) was then
+        // checked against English, underlining every word.
+        var twoLetterLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(GetUpdateSubtitle());
+        var threeLetterLanguageCode = string.IsNullOrEmpty(twoLetterLanguageCode)
+            ? null
+            : Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(twoLetterLanguageCode);
         if (!string.IsNullOrEmpty(threeLetterLanguageCode))
         {
             var spellCheckLanguages = _spellCheckManager.GetDictionaryLanguages(Se.DictionariesFolder);
