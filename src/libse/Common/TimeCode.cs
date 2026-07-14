@@ -164,45 +164,100 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             var ts = TimeSpan;
             var decimalSeparator = localize ? CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator : ",";
-            var s = $"{ts.Hours + ts.Days * 24:00}:{ts.Minutes:00}:{ts.Seconds:00}{decimalSeparator}{ts.Milliseconds:000}";
+            var s = FormatTime(ts.Hours + ts.Days * 24, 2, true, ts.Minutes, 2, true, ts.Seconds, 2, decimalSeparator, ts.Milliseconds);
 
             return PrefixSign(s);
         }
 
         public string ToShortString(bool localize = false)
         {
+            // Runs for the grid's start/end/duration/gap cells on every repaint and for the
+            // waveform paragraph labels on every frame. The previous version built the string
+            // via interpolation - which on netstandard2.1 compiles to string.Format (boxing +
+            // per-call format parsing) - plus a second interpolated "is this zero" sentinel
+            // string per call; format into a stack buffer instead.
             var ts = TimeSpan;
             var decimalSeparator = localize ? CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator : ",";
             string s;
             if (ts.Minutes == 0 && ts.Hours == 0 && ts.Days == 0)
             {
-                s = $"{ts.Seconds:0}{decimalSeparator}{ts.Milliseconds:000}";
+                s = FormatTime(0, 0, false, 0, 0, false, ts.Seconds, 1, decimalSeparator, ts.Milliseconds);
 
-                if (s == $"0{decimalSeparator}000")
+                if (ts.Seconds == 0 && ts.Milliseconds == 0)
                 {
                     return s; // no sign
                 }
             }
             else if (ts.Hours == 0 && ts.Days == 0)
             {
-                s = $"{ts.Minutes:0}:{ts.Seconds:00}{decimalSeparator}{ts.Milliseconds:000}";
-
-                if (s == $"0:00{decimalSeparator}000")
-                {
-                    return s; // no sign
-                }
+                // never all-zero here: Minutes != 0 in this branch
+                s = FormatTime(0, 0, false, ts.Minutes, 1, true, ts.Seconds, 2, decimalSeparator, ts.Milliseconds);
             }
             else
             {
-                s = $"{ts.Hours + ts.Days * 24:0}:{ts.Minutes:00}:{ts.Seconds:00}{decimalSeparator}{ts.Milliseconds:000}";
-
-                if (s == $"0:00:00{decimalSeparator}000")
-                {
-                    return s; // no sign
-                }
+                // never all-zero here: Hours/Days != 0 in this branch
+                s = FormatTime(ts.Hours + ts.Days * 24, 1, true, ts.Minutes, 2, true, ts.Seconds, 2, decimalSeparator, ts.Milliseconds);
             }
 
             return PrefixSign(s);
+        }
+
+        // Formats [hours:][minutes:]seconds<separator>milliseconds. Negative components render
+        // like "{value:00}" does ("-05"); PrefixSign then normalizes the sign as before.
+        private static string FormatTime(int hours, int hoursMinDigits, bool includeHours,
+            int minutes, int minutesMinDigits, bool includeMinutes,
+            int seconds, int secondsMinDigits, string decimalSeparator, int milliseconds)
+        {
+            Span<char> buffer = stackalloc char[48 + decimalSeparator.Length];
+            var pos = 0;
+            if (includeHours)
+            {
+                pos = WriteInt(buffer, pos, hours, hoursMinDigits);
+                buffer[pos++] = ':';
+            }
+
+            if (includeMinutes)
+            {
+                pos = WriteInt(buffer, pos, minutes, minutesMinDigits);
+                buffer[pos++] = ':';
+            }
+
+            pos = WriteInt(buffer, pos, seconds, secondsMinDigits);
+            foreach (var c in decimalSeparator)
+            {
+                buffer[pos++] = c;
+            }
+
+            pos = WriteInt(buffer, pos, milliseconds, 3);
+            return new string(buffer.Slice(0, pos));
+        }
+
+        private static int WriteInt(Span<char> buffer, int pos, int value, int minDigits)
+        {
+            if (value < 0)
+            {
+                buffer[pos++] = '-';
+                value = -value;
+            }
+
+            var digits = 1;
+            for (var v = value; v >= 10; v /= 10)
+            {
+                digits++;
+            }
+
+            if (digits < minDigits)
+            {
+                digits = minDigits;
+            }
+
+            for (var i = pos + digits - 1; i >= pos; i--)
+            {
+                buffer[i] = (char)('0' + value % 10);
+                value /= 10;
+            }
+
+            return pos + digits;
         }
 
         public string ToShortStringHHMMSSFF()
