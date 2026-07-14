@@ -40,6 +40,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
     [ObservableProperty] private ProfileDisplayItem? _selectedProfile;
     [ObservableProperty] private bool _step1IsVisible;
     [ObservableProperty] private bool _step2IsVisible;
+    [ObservableProperty] private bool _tryToGuessUnknownWords;
     [ObservableProperty] private string _step2Title;
     [ObservableProperty] private string _fixesAppliedText = string.Empty;
     [ObservableProperty] private string _editTextTotalLength = string.Empty;
@@ -124,6 +125,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
         InitStep1(languageCode, subtitle);
         LoadProfiles();
+        TryToGuessUnknownWords = Se.Settings.Tools.FixCommonErrors.TryToGuessUnknownWords;
         SelectedProfile = Profiles.FirstOrDefault(p => p.Name == Se.Settings.Tools.FixCommonErrors.LastProfileName) ?? Profiles.FirstOrDefault();
 
         if (Se.Settings.Tools.FixCommonErrors.SkipStep1 && SelectedProfile != null)
@@ -439,6 +441,17 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
             EditTextTotalLength = string.Empty;
             EditTextTotalLengthBackground = Brushes.Transparent;
             PanelSingleLineLengths?.Children.Clear();
+        }
+    }
+
+    partial void OnTryToGuessUnknownWordsChanged(bool value)
+    {
+        Se.Settings.Tools.FixCommonErrors.TryToGuessUnknownWords = value;
+
+        // Re-scan so the fix list reflects the toggle right away; while step 1 is up there is no list yet.
+        if (Step2IsVisible)
+        {
+            RefreshFixes();
         }
     }
 

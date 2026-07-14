@@ -46,16 +46,19 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             var fixAction = Language.FixText;
             var fixCount = 0;
-            // Honor the user's "try to guess unknown words" preference instead of forcing it on, so the
-            // aggressive unknown-word guessing/splitting can be turned off for this tool - matching the OCR
-            // window and SE 4 behavior (#12243).
-            var doTryToGuessUnknownWords = Se.Settings.Ocr.DoTryToGuessUnknownWords;
+            // Unknown-word guessing (which splits words it reads as two words run together) is this
+            // tool's own setting and is off by default - on a normal subtitle it breaks far more words
+            // than it fixes (#12441). It used to follow the OCR window's setting, which defaults on.
+            var doTryToGuessUnknownWords = Se.Settings.Tools.FixCommonErrors.TryToGuessUnknownWords;
             for (var i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 var p = subtitle.Paragraphs[i];
                 var result = OcrFixEngine.FixOcrErrors(i, p.Text, doTryToGuessUnknownWords);
                 var text = result.GetText();
-                if (text != p.Text)
+
+                // AllowFix is what honors the fix's check box in the apply pass (it is always true while
+                // previewing). Without it, every OCR fix was written even when the user unticked it (#12441).
+                if (text != p.Text && callbacks.AllowFix(p, fixAction))
                 {
                     var oldText = p.Text;
                     fixCount++;
