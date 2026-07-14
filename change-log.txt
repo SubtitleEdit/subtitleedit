@@ -5,7 +5,7 @@ Subtitle Edit Changelog
 
 v5.1.0-rc3 (TBD)
 
-* Export: add "DVD sup (MuxMan/Scenarist)" image-based export - the classic DVD-Video subpicture .sup that DVD authoring tools import, with correct rendering of accented/non-Latin characters - thx Spiritgumm
+* Export: add "DVD sup (MuxMan/Scenarist)" image-based export - the classic DVD-Video subpicture .sup that DVD authoring tools import
 * Spell check: start at the current line instead of asking "Continue spell check from current line?" - the question is now only asked when an earlier spell check was left unfinished
 * Names: load the region specific names list - the Portuguese lists (pt_PT_names.xml and pt_BR_names.xml, ~4800 names each) were never read, as only a neutral pt_names.xml was looked for
 * Names: add former countries like Yugoslavia, Czechoslovakia and Persia to the English, Dutch, German, French, Spanish and Portuguese names lists - thx fraternl
