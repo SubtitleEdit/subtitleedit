@@ -15,6 +15,7 @@
   <name>Abigaïl</name>
   <name>Abondance</name>
   <name>Absalon</name>
+  <name>Abyssinie</name>
   <name>Acace</name>
   <name>Acaciane</name>
   <name>Acacie</name>
@@ -371,6 +372,7 @@
   <name>Brunon</name>
   <name>Bruxelles</name>
   <name>Bulgarie</name>
+  <name>Byzance</name>
   <name>Calixte</name>
   <name>Calliste</name>
   <name>Cambodge</name>
@@ -385,9 +387,11 @@
   <name>Caribert</name>
   <name>Carle</name>
   <name>Carloman</name>
+  <name>Carthage</name>
   <name>Cassandre</name>
   <name>Cassien</name>
   <name>Cathaline</name>
+  <name>Ceylan</name>
   <name>Cécile</name>
   <name>Cédric</name>
   <name>Célestin</name>
@@ -433,6 +437,7 @@
   <name>Constance</name>
   <name>Constant</name>
   <name>Constantin</name>
+  <name>Constantinople</name>
   <name>Copenhague</name>
   <name>Coralie</name>
   <name>Coraline</name>
@@ -813,6 +818,7 @@
   <name>Murielle</name>
   <name>Myanmar</name>
   <name>Mylène</name>
+  <name>Mésopotamie</name>
   <name>Nadège</name>
   <name>Naël</name>
   <name>Namibie</name>
@@ -865,6 +871,8 @@
   <name>Pauline</name>
   <name>Pays-Bas</name>
   <name>Pays-Bas caribéens</name>
+  <name>Perse</name>
+  <name>Prusse</name>
   <name>Pécine</name>
   <name>Pélagie</name>
   <name>Pénélope</name>
@@ -899,6 +907,7 @@
   <name>Raymonde</name>
   <name>RD Congo</name>
   <name>RDC</name>
+  <name>Rhodésie</name>
   <name>Régine</name>
   <name>région micronésienne</name>
   <name>régions éloignées de l’Océanie</name>
@@ -952,6 +961,7 @@
   <name>Sénégal</name>
   <name>Serbie</name>
   <name>Serge</name>
+  <name>Siam</name>
   <name>Séverin</name>
   <name>Séverine</name>
   <name>Sibylle</name>
@@ -995,6 +1005,7 @@
   <name>Taurin</name>
   <name>Tchad</name>
   <name>Tchaïkovski</name>
+  <name>Tchécoslovaquie</name>
   <name>Tchéquie</name>
   <name>Terres australes françaises</name>
   <name>Territoire britannique de l’océan Indien</name>
@@ -1030,6 +1041,7 @@
   <name>Ulrich</name>
   <name>Ulysse</name>
   <name>Union européenne</name>
+  <name>Union soviétique</name>
   <name>Urbain</name>
   <name>Uther</name>
   <name>Valentin</name>
@@ -1056,6 +1068,7 @@
   <name>Yémen</name>
   <name>Yoann</name>
   <name>Yolande</name>
+  <name>Yougoslavie</name>
   <name>Ysaline</name>
   <name>Yse</name>
   <name>Ysé</name>
@@ -1068,6 +1081,7 @@
   <name>Zacharie</name>
   <name>Zaché</name>
   <name>Zambie</name>
+  <name>Zaïre</name>
   <name>Zéphir</name>
   <name>Zéphirin</name>
   <name>Zoé</name>

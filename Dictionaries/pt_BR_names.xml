@@ -12,6 +12,7 @@
   <name>Abelino</name>
   <name>Abimael</name>
   <name>Abissail</name>
+  <name>Abissínia</name>
   <name>Abna</name>
   <name>Abraão</name>
   <name>Abraim</name>
@@ -692,6 +693,7 @@
   <name>Birmânia</name>
   <name>Bitia</name>
   <name>Biute</name>
+  <name>Bizâncio</name>
   <name>Blacina</name>
   <name>Blandina</name>
   <name>Blásia</name>
@@ -783,6 +785,7 @@
   <name>Canto</name>
   <name>Capilupi</name>
   <name>Cardia</name>
+  <name>Cartago</name>
   <name>Cárdia</name>
   <name>Cardinal</name>
   <name>Cardo</name>
@@ -848,6 +851,7 @@
   <name>Catharina</name>
   <name>Catherina</name>
   <name>Cati</name>
+  <name>Ceilão</name>
   <name>Cátia</name>
   <name>Catiana</name>
   <name>Catila</name>
@@ -1022,6 +1026,7 @@
   <name>Congo-Quinxassa</name>
   <name>Consolação</name>
   <name>Consolino</name>
+  <name>Constantinopla</name>
   <name>Constança</name>
   <name>Constância</name>
   <name>Constâncio</name>
@@ -2018,6 +2023,7 @@
   <name>Gutierre</name>
   <name>Guto</name>
   <name>Guy</name>
+  <name>Gália</name>
   <name>Habacuc</name>
   <name>Habacuque</name>
   <name>Hadassa</name>
@@ -2372,6 +2378,7 @@
   <name>Itália</name>
   <name>Ítalo</name>
   <name>Itiene</name>
+  <name>Iugoslávia</name>
   <name>Iunara</name>
   <name>Iuran</name>
   <name>Iúri</name>
@@ -3017,6 +3024,7 @@
   <name>Magno</name>
   <name>Magnólia</name>
   <name>Mago</name>
+  <name>Mesopotâmia</name>
   <name>Mágui</name>
   <name>Maguilde</name>
   <name>Maiara</name>
@@ -3857,8 +3865,10 @@
   <name>Profírio</name>
   <name>Prtik</name>
   <name>Prudência</name>
+  <name>Prússia</name>
   <name>Pureza</name>
   <name>Purificação</name>
+  <name>Pérsia</name>
   <name>Quaiela</name>
   <name>Quar</name>
   <name>Quaresma</name>
@@ -3990,6 +4000,7 @@
   <name>Robim</name>
   <name>Roboredo</name>
   <name>Roby</name>
+  <name>Rodésia</name>
   <name>Roça</name>
   <name>Roclina</name>
   <name>Roderico</name>
@@ -4456,6 +4467,7 @@
   <name>Tázia</name>
   <name>Tchaikovski</name>
   <name>Tchaina</name>
+  <name>Tchecoslováquia</name>
   <name>Tchéquia</name>
   <name>Tedi</name>
   <name>Tédi</name>
@@ -4556,6 +4568,7 @@
   <name>Umbolina</name>
   <name>Una</name>
   <name>União Europeia</name>
+  <name>União Soviética</name>
   <name>Unna</name>
   <name>Urânia</name>
   <name>Urbalina</name>
@@ -4765,6 +4778,7 @@
   <name>Zaido</name>
   <name>Zaion</name>
   <name>Zaira</name>
+  <name>Zaire</name>
   <name>Zália</name>
   <name>Zâmbia</name>
   <name>Zamorano</name>

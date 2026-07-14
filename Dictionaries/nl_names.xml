@@ -18,6 +18,7 @@
     <name>Tor</name>
     <name>Welk</name>
   </blacklist>
+  <name>Abessinië</name>
   <name>Afghanistan</name>
   <name>Afrika</name>
   <name>Åland</name>
@@ -56,16 +57,19 @@
   <name>Britse Maagdeneilanden</name>
   <name>Bulgarije</name>
   <name>Bulgarĳe</name>
+  <name>Byzantium</name>
   <name>Caicoseilanden</name>
   <name>Cambodja</name>
   <name>Canada</name>
   <name>Canarische Eilanden</name>
   <name>Caribisch gebied</name>
   <name>Caribisch Nederland</name>
+  <name>Carthago</name>
   <name>Centraal-Afrika</name>
   <name>Centraal-Afrikaanse Republiek</name>
   <name>Centraal-Azië</name>
   <name>Ceuta en Melilla</name>
+  <name>Ceylon</name>
   <name>Chili</name>
   <name>Christmaseiland</name>
   <name>Clipperton</name>
@@ -73,6 +77,7 @@
   <name>Comoren</name>
   <name>Congo-Brazzaville</name>
   <name>Congo-Kinshasa</name>
+  <name>Constantinopel</name>
   <name>Cookeilanden</name>
   <name>Corsica</name>
   <name>Curaçao</name>
@@ -107,6 +112,7 @@
   <name>Franse Gebieden in de zuidelĳke Indische Oceaan</name>
   <name>Frans-Guyana</name>
   <name>Frans-Polynesië</name>
+  <name>Gallië</name>
   <name>Georgië</name>
   <name>Griekenland</name>
   <name>Groenland</name>
@@ -134,6 +140,7 @@
   <name>Italië</name>
   <name>Ivoorkust</name>
   <name>Jemen</name>
+  <name>Joegoslavië</name>
   <name>Jordanië</name>
   <name>Kaaimaneilanden</name>
   <name>Kaapverdië</name>
@@ -163,6 +170,7 @@
   <name>Marshalleilanden</name>
   <name>Mauritanië</name>
   <name>Melanesië</name>
+  <name>Mesopotamië</name>
   <name>Micronesische regio</name>
   <name>Midden-Amerika</name>
   <name>Moldavië</name>
@@ -191,6 +199,7 @@
   <name>Oezbekistan</name>
   <name>Oost-Afrika</name>
   <name>Oost-Azië</name>
+  <name>Oost-Duitsland</name>
   <name>Oostenrijk</name>
   <name>Oostenrĳk</name>
   <name>Oost-Europa</name>
@@ -201,14 +210,17 @@
   <name>Papoea-Nieuw-Guinea</name>
   <name>Parijs</name>
   <name>Parĳs</name>
+  <name>Perzië</name>
   <name>Pitcairneilanden</name>
   <name>Pjotr Iljitsj Tsjajkovski</name>
   <name>Pjotr Tsjajkovski</name>
   <name>Polen</name>
   <name>Polynesië</name>
+  <name>Pruisen</name>
   <name>Republiek Congo</name>
   <name>Republiek Ivoorkust</name>
   <name>Republiek Kaapverdië</name>
+  <name>Rhodesië</name>
   <name>Réunion</name>
   <name>Roemenië</name>
   <name>Rusland</name>
@@ -223,6 +235,7 @@
   <name>Saoedi-Arabië</name>
   <name>Sardinië</name>
   <name>Servië</name>
+  <name>Siam</name>
   <name>Siberië</name>
   <name>Sicilië</name>
   <name>Singapore</name>
@@ -234,6 +247,7 @@
   <name>Soedan</name>
   <name>Solzjenitsyn</name>
   <name>Somalië</name>
+  <name>Sovjet-Unie</name>
   <name>Spanje</name>
   <name>Spitsbergen</name>
   <name>Stille Oceaan</name>
@@ -249,6 +263,7 @@
   <name>Tsjajkovski</name>
   <name>Tsjechië</name>
   <name>Tsjechische Republiek</name>
+  <name>Tsjecho-Slowakije</name>
   <name>Tsjetsjenië</name>
   <name>Tunesië</name>
   <name>Turkije</name>
@@ -270,9 +285,11 @@
   <name>Wenen</name>
   <name>West-Afrika</name>
   <name>West-Azië</name>
+  <name>West-Duitsland</name>
   <name>Westelijke Sahara</name>
   <name>Westelĳke Sahara</name>
   <name>West-Europa</name>
+  <name>Zaïre</name>
   <name>Zuid-Afrika</name>
   <name>Zuid-Amerika</name>
   <name>Zuid-Azië</name>
