@@ -6457,6 +6457,7 @@ public partial class MainViewModel :
         {
             case OpenFromUrlMode.OpenOnline:
                 await VideoOpenFile(url);
+                SetSubtitleFileNameFromVideoIfEmpty(url);
                 if (result.DownloadSubtitles)
                 {
                     // No video on disk — fetch subs to a temp dir, show picker, then
@@ -6520,7 +6521,7 @@ public partial class MainViewModel :
         // of making the user confirm a one-row picker.
         if (subtitles.Count == 1)
         {
-            await SubtitleOpen(subtitles[0].FilePath, skipLoadVideo: true);
+            await LoadDownloadedSubtitleAsync(subtitles[0]);
             return;
         }
 
@@ -6532,7 +6533,74 @@ public partial class MainViewModel :
             return;
         }
 
-        await SubtitleOpen(pickerResult.SelectedSubtitlePath, skipLoadVideo: true);
+        var picked = subtitles.FirstOrDefault(s => s.FilePath == pickerResult.SelectedSubtitlePath);
+        if (picked == null)
+        {
+            return;
+        }
+
+        await LoadDownloadedSubtitleAsync(picked);
+    }
+
+    /// <summary>
+    /// Loads a yt-dlp-downloaded subtitle and detaches it from its on-disk location:
+    /// the file lives in a temp directory the caller deletes right after this call,
+    /// so keep a video-derived name (with language code) instead and mark the
+    /// subtitle converted so saving goes through "Save as". The recent-files entry
+    /// SubtitleOpen just created points into the doomed temp directory — drop it.
+    /// </summary>
+    private async Task LoadDownloadedSubtitleAsync(DownloadedSubtitleInfo downloadedSubtitle)
+    {
+        await SubtitleOpen(downloadedSubtitle.FilePath, skipLoadVideo: true);
+        if (_subtitleFileName != downloadedSubtitle.FilePath || string.IsNullOrEmpty(_videoFileName))
+        {
+            return; // the load bailed (e.g. empty/unreadable file) — nothing to rename
+        }
+
+        Se.Settings.File.RecentFiles.RemoveAll(rf => rf.SubtitleFileName == downloadedSubtitle.FilePath);
+        Se.SaveSettings();
+        InitMenu.UpdateRecentFiles(this);
+        if (OperatingSystem.IsMacOS())
+        {
+            Layout.InitNativeMacMenu.UpdateRecentFiles(this);
+        }
+
+        _subtitleFileName = MakeSubtitleFileNameFromVideo(_videoFileName, downloadedSubtitle.LanguageCode);
+        _converted = true;
+    }
+
+    /// <summary>
+    /// After a video is opened from a URL with no subtitle loaded, name the (empty)
+    /// subtitle after the video and mark it converted so saving goes through
+    /// "Save as" with a sensible suggestion instead of an empty name.
+    /// </summary>
+    private void SetSubtitleFileNameFromVideoIfEmpty(string videoFileNameOrUrl)
+    {
+        if (!string.IsNullOrEmpty(_subtitleFileName))
+        {
+            return;
+        }
+
+        _subtitleFileName = MakeSubtitleFileNameFromVideo(videoFileNameOrUrl, languageCode: null);
+        _converted = true;
+    }
+
+    private string MakeSubtitleFileNameFromVideo(string videoFileNameOrUrl, string? languageCode)
+    {
+        // Streaming URLs have no local path — reuse the URL-segment fallback the
+        // download save-as suggestion uses to get a bare "name.mkv" style name.
+        var baseName = IsValidUrl(videoFileNameOrUrl)
+            ? MakeDownloadSuggestedFileName(videoFileNameOrUrl)
+            : videoFileNameOrUrl;
+
+        if (string.IsNullOrEmpty(languageCode))
+        {
+            return Path.ChangeExtension(baseName, SelectedSubtitleFormat.Extension);
+        }
+
+        var directory = Path.GetDirectoryName(baseName) ?? string.Empty;
+        var nameWithoutExtension = Path.GetFileNameWithoutExtension(baseName);
+        return Path.Combine(directory, nameWithoutExtension + "." + languageCode + SelectedSubtitleFormat.Extension);
     }
 
     private static void TryDeleteDirectory(string? path)
@@ -6613,6 +6681,7 @@ public partial class MainViewModel :
         if (downloadResult.Success && File.Exists(downloadResult.OutputPath))
         {
             await VideoOpenFile(downloadResult.OutputPath);
+            SetSubtitleFileNameFromVideoIfEmpty(downloadResult.OutputPath);
 
             if (downloadSubtitles)
             {
