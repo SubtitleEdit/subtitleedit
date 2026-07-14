@@ -5890,7 +5890,10 @@ public partial class MainViewModel :
 
         if (result.OkPressed)
         {
+            // Let live spell check follow the dictionary used in the spell check window - and
+            // repaint the grid, which otherwise keeps the words underlined by the old dictionary.
             _currentSpellCheckDictionary = result.SelectedDictionary;
+            SetupLiveSpellCheck();
         }
 
         // Show the summary when the run finished or when the user closed early after making
@@ -15710,8 +15713,14 @@ public partial class MainViewModel :
 
     private void SetupLiveSpellCheck()
     {
-        var dictionaryFound = false;
+        // A dictionary the user picked explicitly (live spell check context menu or the spell
+        // check window) wins over auto detection - otherwise the next call here would silently
+        // revert to the auto detected language. It is cleared in ResetSubtitle.
+        ApplyLiveSpellCheck(_currentSpellCheckDictionary ?? AutoDetectSpellCheckDictionary());
+    }
 
+    private SpellCheckDictionaryDisplay? AutoDetectSpellCheckDictionary()
+    {
         // Use the detection variant that returns null for an empty or undetectable
         // subtitle. The regular variant falls back to English, which armed the
         // spell checker with the English dictionary on an empty subtitle at
@@ -15719,23 +15728,37 @@ public partial class MainViewModel :
         // transcription in a language with no dictionary installed) was then
         // checked against English, underlining every word.
         var twoLetterLanguageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(GetUpdateSubtitle());
-        var threeLetterLanguageCode = string.IsNullOrEmpty(twoLetterLanguageCode)
-            ? null
-            : Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(twoLetterLanguageCode);
-        if (!string.IsNullOrEmpty(threeLetterLanguageCode))
+        if (string.IsNullOrEmpty(twoLetterLanguageCode))
         {
-            var spellCheckLanguages = _spellCheckManager.GetDictionaryLanguages(Se.DictionariesFolder);
-            var dictionary = spellCheckLanguages.FirstOrDefault(p => p.GetThreeLetterCode() == threeLetterLanguageCode);
-            if (dictionary != null)
-            {
-                _spellCheckManager.Initialize(dictionary.DictionaryFileName, twoLetterLanguageCode);
-                dictionaryFound = true;
-            }
+            return null;
+        }
+
+        var threeLetterLanguageCode = Iso639Dash2LanguageCode.GetThreeLetterCodeFromTwoLetterCode(twoLetterLanguageCode);
+        if (string.IsNullOrEmpty(threeLetterLanguageCode))
+        {
+            return null;
+        }
+
+        var spellCheckLanguages = _spellCheckManager.GetDictionaryLanguages(Se.DictionariesFolder);
+        return spellCheckLanguages.FirstOrDefault(p => p.GetThreeLetterCode() == threeLetterLanguageCode);
+    }
+
+    /// <summary>
+    /// Loads the dictionary into the spell check manager and re-arms both live spell check
+    /// renderers with it: the subtitle text box and the subtitle grid.
+    /// </summary>
+    private void ApplyLiveSpellCheck(SpellCheckDictionaryDisplay? dictionary)
+    {
+        var dictionaryLoaded = false;
+        if (dictionary != null)
+        {
+            var twoLetterLanguageCode = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(dictionary.GetThreeLetterCode());
+            dictionaryLoaded = _spellCheckManager.Initialize(dictionary.DictionaryFileName, twoLetterLanguageCode);
         }
 
         if (EditTextBox is TextEditorWrapper wrapper)
         {
-            if (Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck && dictionaryFound)
+            if (Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck && dictionaryLoaded)
             {
                 wrapper.EnableSpellCheck(_spellCheckManager);
             }
@@ -15745,21 +15768,30 @@ public partial class MainViewModel :
             }
         }
 
-        if (Se.Settings.Appearance.SubtitleGridLiveSpellCheck && dictionaryFound)
+        SubtitleDataGridSyntaxHighlighting.SetSpellCheck(
+            Se.Settings.Appearance.SubtitleGridLiveSpellCheck && dictionaryLoaded ? _spellCheckManager : null);
+
+        // The grid renders text through a value converter, so rows keep showing the words underlined
+        // by the previous dictionary until their Text property raises a change notification.
+        foreach (var item in Subtitles)
         {
-            SubtitleDataGridSyntaxHighlighting.SetSpellCheck(_spellCheckManager);
-            foreach (var item in Subtitles)
-            {
-                item.RefreshText();
-            }
+            item.RefreshText();
         }
-        else
+    }
+
+    /// <summary>
+    /// Repaints both live spell check renderers after the word lists changed (added/ignored word).
+    /// </summary>
+    private void RefreshLiveSpellCheck()
+    {
+        if (EditTextBox is TextEditorWrapper wrapper)
         {
-            SubtitleDataGridSyntaxHighlighting.SetSpellCheck(null);
-            foreach (var item in Subtitles)
-            {
-                item.RefreshText();
-            }
+            wrapper.RefreshSpellCheck();
+        }
+
+        foreach (var item in Subtitles)
+        {
+            item.RefreshText();
         }
     }
 
@@ -21992,18 +22024,24 @@ public partial class MainViewModel :
                 flyout.Items.Remove(item);
             }
 
-            // Add spell check suggestions if available
-            if (EditTextBox is TextEditorWrapper wrapper && wrapper.IsSpellCheckEnabled && _lastTextEditorPointerArgs != null)
+            // Add spell check items - "Pick spell check dictionary..." is added whenever live spell
+            // check is turned on, also when no dictionary is loaded or the word under the cursor is
+            // spelled correctly. It used to be nested inside the misspelled-word branch, so after
+            // picking the right dictionary the words stopped being underlined and the menu item that
+            // got you there disappeared with them.
+            if (EditTextBox is TextEditorWrapper wrapper &&
+                (Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck || Se.Settings.Appearance.SubtitleGridLiveSpellCheck) &&
+                _lastTextEditorPointerArgs != null)
             {
-                var word = wrapper.GetWordAtPosition(_lastTextEditorPointerArgs);
+                // Insert spell check items at the beginning of the menu
+                var insertIndex = 0;
+
+                var word = wrapper.IsSpellCheckEnabled ? wrapper.GetWordAtPosition(_lastTextEditorPointerArgs) : null;
                 if (word != null && wrapper.IsWordMisspelledAtOffset(word.Index))
                 {
                     var suggestions = wrapper.GetSuggestionsForWordAtOffset(word.Index);
-                    if (suggestions != null && suggestions.Count > 0)
+                    if (suggestions != null)
                     {
-                        // Insert suggestions at the beginning of the menu
-                        var insertIndex = 0;
-
                         // Add first 5 suggestions
                         foreach (var suggestion in suggestions.Take(5))
                         {
@@ -22022,48 +22060,51 @@ public partial class MainViewModel :
                             };
                             flyout.Items.Insert(insertIndex++, suggestionItem);
                         }
+                    }
 
+                    if (insertIndex > 0)
+                    {
                         // Add separator
                         flyout.Items.Insert(insertIndex++, new Separator { Tag = "SpellCheck" });
-
-                        // Add "Add to Dictionary"
-                        var addToDictItem = new MenuItem
-                        {
-                            Header = string.Format(Se.Language.SpellCheck.AddXToUserDictionary, word.Text),
-                            Tag = "SpellCheck"
-                        };
-                        addToDictItem.Click += (_, _) =>
-                        {
-                            _spellCheckManager.AdToUserDictionary(word.Text);
-                            wrapper.RefreshSpellCheck();
-                        };
-                        flyout.Items.Insert(insertIndex++, addToDictItem);
-
-                        // Add "Ignore All"
-                        var ignoreAllItem = new MenuItem
-                        {
-                            Header = string.Format(Se.Language.SpellCheck.IgnoreAllX, word.Text),
-                            Tag = "SpellCheck"
-                        };
-                        ignoreAllItem.Click += (_, _) =>
-                        {
-                            _spellCheckManager.AddIgnoreWord(word.Text);
-                            wrapper.RefreshSpellCheck();
-                        };
-                        flyout.Items.Insert(insertIndex++, ignoreAllItem);
-
-                        var changeDictionary = new MenuItem
-                        {
-                            Header = Se.Language.SpellCheck.PickSpellCheckDictionaryDotDotDot,
-                            Tag = "SpellCheck"
-                        };
-                        changeDictionary.Click += (_, _) => { PickLiveSpellCheckDictionary(wrapper); };
-                        flyout.Items.Insert(insertIndex++, changeDictionary);
-
-                        // Add separator after spell check items
-                        flyout.Items.Insert(insertIndex, new Separator { Tag = "SpellCheck" });
                     }
+
+                    // Add "Add to Dictionary"
+                    var addToDictItem = new MenuItem
+                    {
+                        Header = string.Format(Se.Language.SpellCheck.AddXToUserDictionary, word.Text),
+                        Tag = "SpellCheck"
+                    };
+                    addToDictItem.Click += (_, _) =>
+                    {
+                        _spellCheckManager.AdToUserDictionary(word.Text);
+                        RefreshLiveSpellCheck();
+                    };
+                    flyout.Items.Insert(insertIndex++, addToDictItem);
+
+                    // Add "Ignore All"
+                    var ignoreAllItem = new MenuItem
+                    {
+                        Header = string.Format(Se.Language.SpellCheck.IgnoreAllX, word.Text),
+                        Tag = "SpellCheck"
+                    };
+                    ignoreAllItem.Click += (_, _) =>
+                    {
+                        _spellCheckManager.AddIgnoreWord(word.Text);
+                        RefreshLiveSpellCheck();
+                    };
+                    flyout.Items.Insert(insertIndex++, ignoreAllItem);
                 }
+
+                var changeDictionary = new MenuItem
+                {
+                    Header = Se.Language.SpellCheck.PickSpellCheckDictionaryDotDotDot,
+                    Tag = "SpellCheck"
+                };
+                changeDictionary.Click += (_, _) => { CommandPickLiveSpellCheckDictionary(); };
+                flyout.Items.Insert(insertIndex++, changeDictionary);
+
+                // Add separator after spell check items
+                flyout.Items.Insert(insertIndex, new Separator { Tag = "SpellCheck" });
 
                 // Clear the stored pointer args after use
                 _lastTextEditorPointerArgs = null;
@@ -22074,24 +22115,19 @@ public partial class MainViewModel :
     [RelayCommand]
     private void CommandPickLiveSpellCheckDictionary()
     {
-        if (EditTextBox is TextEditorWrapper wrapper)
-        {
-            PickLiveSpellCheckDictionary(wrapper);
-        }
-    }
-
-    private void PickLiveSpellCheckDictionary(TextEditorWrapper wrapper)
-    {
         Dispatcher.UIThread.Post(async () =>
         {
             var result = await ShowDialogAsync<PickSpellCheckDictionaryWindow, PickSpellCheckDictionaryViewModel>();
-            if (result != null && result.SelectedDictionary != null)
+            if (result?.SelectedDictionary == null)
             {
-                var twoLetterLanguageCode = Iso639Dash2LanguageCode.GetTwoLetterCodeFromThreeLetterCode(result.SelectedDictionary.GetThreeLetterCode());
-                _spellCheckManager.Initialize(result.SelectedDictionary.DictionaryFileName, twoLetterLanguageCode);
-                wrapper.RefreshSpellCheck();
-                ShowStatus(string.Format(Se.Language.Main.LiveSpellCheckLanguageXLoaded, result.SelectedDictionary.Name));
+                return;
             }
+
+            // Remember the pick so auto detection does not override it, and re-arm both the
+            // text box and the subtitle grid - the grid kept underlining with the old dictionary.
+            _currentSpellCheckDictionary = result.SelectedDictionary;
+            ApplyLiveSpellCheck(result.SelectedDictionary);
+            ShowStatus(string.Format(Se.Language.Main.LiveSpellCheckLanguageXLoaded, result.SelectedDictionary.Name));
         });
     }
 
