@@ -1699,6 +1699,11 @@ public partial class MainViewModel :
             WriteIndented = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+
+            // English.json is the base every translation is generated from, so it must not depend on
+            // who saved it: WriteIndented defaults to Environment.NewLine, which gives CRLF on Windows
+            // and LF elsewhere, turning a re-save into a whole-file diff with no real change in it.
+            NewLine = "\n",
         });
 
         var currentDirectory = Directory.GetCurrentDirectory();
