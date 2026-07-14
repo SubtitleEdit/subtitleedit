@@ -3,7 +3,7 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
-v5.1.0-rc2 (TBD)
+v5.1.0-rc2 (14th of July 2026)
 
 * Auto-translate: update llama.cpp to b9993
 * Auto-translate: fix chat template for self-supplied .gguf models in the llama.cpp engine - thx saneryiyiersansi
