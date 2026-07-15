@@ -177,7 +177,8 @@ public class ShortcutsWindow : Window
                 {
                     Header = language.ActiveIn,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    CanUserSort = false,
+                    // Template columns need an explicit SortMemberPath to be sortable (#12431).
+                    SortMemberPath = nameof(ShortcutTreeNode.ActiveIn),
                     IsReadOnly = true,
                     CellTemplate = new FuncDataTemplate<ShortcutTreeNode>((_, _) =>
                     {
@@ -207,7 +208,7 @@ public class ShortcutsWindow : Window
                 {
                     Header = string.Empty,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    CanUserSort = false,
+                    SortMemberPath = nameof(ShortcutTreeNode.GroupName),
                     CanUserResize = false,
                     IsReadOnly = true,
                     CellTemplate = new FuncDataTemplate<ShortcutTreeNode>((_, _) =>
@@ -240,7 +241,7 @@ public class ShortcutsWindow : Window
                 {
                     Header = Se.Language.General.Category,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    CanUserSort = false,
+                    SortMemberPath = nameof(ShortcutTreeNode.GroupName),
                     IsReadOnly = true,
                     CellTemplate = new FuncDataTemplate<ShortcutTreeNode>((_, _) =>
                     {
@@ -271,7 +272,7 @@ public class ShortcutsWindow : Window
                 {
                     Header = Se.Language.General.Shortcut,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    CanUserSort = false,
+                    SortMemberPath = nameof(ShortcutTreeNode.DisplayShortcut),
                     IsReadOnly = true,
                     Width = new DataGridLength(1, DataGridLengthUnitType.Auto),
                     CellTemplate = new FuncDataTemplate<ShortcutTreeNode>((_, _) =>
