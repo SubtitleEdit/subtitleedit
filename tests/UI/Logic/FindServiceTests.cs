@@ -105,4 +105,58 @@ public class FindServiceTests
         Assert.Equal(lineBeforeCount, service.CurrentLineNumber);
         Assert.Equal(indexBeforeCount, service.CurrentTextIndex);
     }
+
+    // #12484: replacing a line break (\n) with a space must remove the whole break, including the
+    // \r of a \r\n pair. The replace path used to run the regex against the raw line, so a \n
+    // pattern matched only the \n and left the \r behind, turning "Hello\r\nWorld" into
+    // "Hello\r World" (a dangling line break with a space after it).
+    [Theory]
+    [InlineData("Hello\r\nWorld")]
+    [InlineData("Hello\nWorld")]
+    [InlineData("Hello\rWorld")]
+    public void ReplaceAll_NewLineWithSpace_RemovesWholeBreak(string text)
+    {
+        var lines = new List<string> { text };
+        var service = new FindService();
+        service.Initialize(lines, 0, false, FindService.FindMode.RegularExpression);
+
+        var count = service.ReplaceAll(@"\n", " ");
+
+        Assert.Equal(1, count);
+        Assert.Equal("Hello World", lines[0]);
+    }
+
+    // The \r\n and \r escapes in a pattern match a line break too (treated as \n), so replacing
+    // any of them with a space merges the two lines regardless of how the rule was written.
+    [Theory]
+    [InlineData(@"\r\n")]
+    [InlineData(@"\r")]
+    [InlineData(@"\n")]
+    public void ReplaceAll_NewLineEscapeVariants_MergeCrLfLines(string pattern)
+    {
+        var lines = new List<string> { "Hello\r\nWorld" };
+        var service = new FindService();
+        service.Initialize(lines, 0, false, FindService.FindMode.RegularExpression);
+
+        var count = service.ReplaceAll(pattern, " ");
+
+        Assert.Equal(1, count);
+        Assert.Equal("Hello World", lines[0]);
+    }
+
+    // A line with no match must be left untouched (including its original \r\n line ending),
+    // and only matching lines are counted/changed.
+    [Fact]
+    public void ReplaceAll_NewLine_LeavesNonMatchingLinesUntouched()
+    {
+        var lines = new List<string> { "single line", "top\r\nbottom" };
+        var service = new FindService();
+        service.Initialize(lines, 0, false, FindService.FindMode.RegularExpression);
+
+        var count = service.ReplaceAll(@"\n", " ");
+
+        Assert.Equal(1, count);
+        Assert.Equal("single line", lines[0]);
+        Assert.Equal("top bottom", lines[1]);
+    }
 }

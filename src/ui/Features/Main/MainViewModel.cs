@@ -11210,19 +11210,24 @@ public partial class MainViewModel :
             try
             {
                 var fixedReplaceText = RegexUtils.FixNewLine(result.ReplaceText);
-                var regex = new Regex(result.SearchText);
-                var match = regex.Match(line, matchIndex);
+
+                // Match against line-feed-normalized text, matching what the FindService
+                // recorded: it normalizes line endings before matching, so its index and
+                // found value are in \n-space. Re-matching the raw \r\n line here instead
+                // put the \n one position past the recorded \r index, so the checks below
+                // failed and a \n replacement silently did nothing (#12484).
+                var normalizedLine = line.Replace("\r\n", "\n").Replace("\r", "\n");
+                var normalizedIndex = line.Substring(0, matchIndex).Replace("\r\n", "\n").Replace("\r", "\n").Length;
+                var regex = new Regex(RegexUtils.FixNewLine(result.SearchText));
+                var match = regex.Match(normalizedLine, normalizedIndex);
 
                 // Bail unless the match starts exactly at the recorded index AND
                 // the matched text is what we found before. The value check
-                // guards against (a) the subtitle being edited between Find and
+                // guards against the subtitle being edited between Find and
                 // Replace and the new line happening to produce a different
-                // match of the same length at the same offset, and (b) any
-                // CRLF/LF-normalization drift between the FindService (which
-                // normalizes line endings) and the un-normalized line we're
-                // re-matching here.
+                // match of the same length at the same offset.
                 if (!match.Success
-                    || match.Index != matchIndex
+                    || match.Index != normalizedIndex
                     || !string.Equals(match.Value, matchText, StringComparison.Ordinal))
                 {
                     newLine = line;
@@ -11230,7 +11235,7 @@ public partial class MainViewModel :
                 }
 
                 var replaced = match.Result(fixedReplaceText);
-                newLine = line.Substring(0, matchIndex) + replaced + line.Substring(matchIndex + match.Length);
+                newLine = normalizedLine.Substring(0, normalizedIndex) + replaced + normalizedLine.Substring(normalizedIndex + match.Length);
                 return replaced.Length;
             }
             catch (ArgumentException)
