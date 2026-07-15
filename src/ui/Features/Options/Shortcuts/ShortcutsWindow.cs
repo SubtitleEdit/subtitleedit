@@ -136,6 +136,9 @@ public class ShortcutsWindow : Window
                     FontSize = 11,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     TextAlignment = TextAlignment.Center,
+                    // Long group names like "Subtitle list view & text box" must wrap to a second
+                    // line instead of clipping at the fixed tile width (#12507).
+                    TextWrapping = TextWrapping.Wrap,
                 };
                 name.Bind(TextBlock.TextProperty, new Binding(nameof(ShortcutGroupTile.Name)));
 
