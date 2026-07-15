@@ -249,6 +249,10 @@ public static class ShortcutsMain
 
         { nameof(MainViewModel.VideoOneFrameBackCommand), Se.Language.General.VideoOneFrameBack },
         { nameof(MainViewModel.VideoOneFrameForwardCommand),  Se.Language.General.VideoOneFrameForward },
+        // Waveform toolbar seek buttons - reuse the button hint strings ("Seek video backward {0}")
+        // with the shortcut placeholder blanked out, same as their automation names in InitWaveform.
+        { nameof(MainViewModel.WaveformVideoSeekBackCommand), string.Format(Se.Language.Main.Waveform.SeekBackHint, string.Empty).TrimEnd() },
+        { nameof(MainViewModel.WaveformVideoSeekForwardCommand), string.Format(Se.Language.Main.Waveform.SeekForwardHint, string.Empty).TrimEnd() },
         { nameof(MainViewModel.Video100MsBackCommand), Se.Language.General.Video100MsBack },
         { nameof(MainViewModel.Video100MsForwardCommand),  Se.Language.General.Video100MsForward },
         { nameof(MainViewModel.Video500MsBackCommand), Se.Language.General.Video500MsBack },
@@ -640,6 +644,8 @@ public static class ShortcutsMain
 
         AddShortcut(shortcuts, vm.VideoOneFrameBackCommand, nameof(vm.VideoOneFrameBackCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.VideoOneFrameForwardCommand, nameof(vm.VideoOneFrameForwardCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.WaveformVideoSeekBackCommand, nameof(vm.WaveformVideoSeekBackCommand), ShortcutCategory.General, ShortcutGroup.Video);
+        AddShortcut(shortcuts, vm.WaveformVideoSeekForwardCommand, nameof(vm.WaveformVideoSeekForwardCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.Video100MsBackCommand, nameof(vm.Video100MsBackCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.Video100MsForwardCommand, nameof(vm.Video100MsForwardCommand), ShortcutCategory.General, ShortcutGroup.Video);
         AddShortcut(shortcuts, vm.Video500MsBackCommand, nameof(vm.Video500MsBackCommand), ShortcutCategory.General, ShortcutGroup.Video);
