@@ -69,32 +69,18 @@ public class SettingsPage : UserControl
 
         Content = grid;
 
+        // One menu item per section - built from the sections so title, icon and color always
+        // match the section headers in the scroll view (and the Windows-only sections follow).
         var menu = new StackPanel
         {
             Orientation = Orientation.Vertical,
             Spacing = 10,
             Margin = new Thickness(10, 10, 40, 10),
-            Children =
-            {
-                MakeMenuItem(Se.Language.General.Rules, vm.ScrollToSectionCommand, IconNames.PoliceBadge),
-                MakeMenuItem(Se.Language.General.General, vm.ScrollToSectionCommand, IconNames.Cogs),
-                MakeMenuItem(Se.Language.General.SubtitleFormats, vm.ScrollToSectionCommand, IconNames.ClosedCaption),
-                MakeMenuItem(Se.Language.Options.Settings.SyntaxColoring, vm.ScrollToSectionCommand, IconNames.Palette),
-                MakeMenuItem(Se.Language.General.VideoPlayer, vm.ScrollToSectionCommand, IconNames.PlayBox),
-                MakeMenuItem(Se.Language.Options.Settings.WaveformSpectrogram, vm.ScrollToSectionCommand, IconNames.Waveform),
-                MakeMenuItem(Se.Language.General.Tools, vm.ScrollToSectionCommand, IconNames.Tools),
-                MakeMenuItem(Se.Language.General.Appearance, vm.ScrollToSectionCommand, IconNames.EyeSettings),
-                MakeMenuItem(Se.Language.General.Toolbar, vm.ScrollToSectionCommand, IconNames.DotsHorizontal),
-                MakeMenuItem(Se.Language.Options.Settings.Network, vm.ScrollToSectionCommand, IconNames.Network),
-            }
         };
-
-        if (OperatingSystem.IsWindows())
+        foreach (var section in _vm.Sections)
         {
-            menu.Children.Add(MakeMenuItem(Se.Language.Options.Settings.FileTypeAssociations, vm.ScrollToSectionCommand, IconNames.FileCog));
+            menu.Children.Add(MakeMenuItem(section, vm.ScrollToSectionCommand));
         }
-
-        menu.Children.Add(MakeMenuItem(Se.Language.Options.Settings.FilesAndLogs, vm.ScrollToSectionCommand, IconNames.FileMultiple));
 
         grid.Children.Add(menu);
         Grid.SetRow(menu, 1);
@@ -140,13 +126,16 @@ public class SettingsPage : UserControl
         _searchBox.TextChanged += (_, e) => UpdateVisibleSections(_searchBox.Text ?? string.Empty);
     }
 
-    public static Button MakeMenuItem(string text, IRelayCommand command, string iconName)
+    private static Button MakeMenuItem(SettingsSection section, IRelayCommand command)
     {
-        var commandParameter = text;
-        var label = new Label { Content = text, Padding = new Thickness(4, 0, 0, 0) };
-        var image = new ContentControl();
-        Attached.SetIcon(image, iconName);
-        var stackPanelApplyFixes = new StackPanel
+        var label = new Label { Content = section.Title, Padding = new Thickness(4, 0, 0, 0) };
+        var image = new ContentControl
+        {
+            // Menu icon in the section color, matching the section header in the scroll view.
+            Foreground = section.Brush,
+        };
+        Attached.SetIcon(image, section.IconName);
+        var stackPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Children = { image, label }
@@ -154,17 +143,17 @@ public class SettingsPage : UserControl
 
         var link = new Button
         {
-            Content = stackPanelApplyFixes,
+            Content = stackPanel,
             FontWeight = FontWeight.DemiBold,
             Margin = new Thickness(0),
             Padding = new Thickness(10, 5, 10, 5),
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Center,
             Command = command,
-            CommandParameter = commandParameter,
+            CommandParameter = section.Title,
             // The content is an icon + label panel, so the button gets no computed UIA Name and a
             // screen reader would announce a nameless button (#12087).
-            [AutomationProperties.NameProperty] = text,
+            [AutomationProperties.NameProperty] = section.Title,
         };
 
         return link;
@@ -188,7 +177,7 @@ public class SettingsPage : UserControl
     {
         var sections = new List<SettingsSection>();
 
-        sections.Add(new SettingsSection(Se.Language.General.Rules,
+        sections.Add(new SettingsSection(Se.Language.General.Rules, IconNames.PoliceBadge, "#e0705a",
         [
             new SettingsItem(Se.Language.Options.Settings.Profiles, () => new StackPanel
             {
@@ -244,7 +233,7 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.CpsLineLengthStyle, () => MakeComboBoxCpsLineLengthStyle()),
         ]));
 
-        sections.Add(new SettingsSection(Se.Language.General.General,
+        sections.Add(new SettingsSection(Se.Language.General.General, IconNames.Cogs, "#8494a4",
         [
             MakeNumericSettingInt(Se.Language.Options.Settings.NewEmptyDefaultMs, nameof(_vm.NewEmptyDefaultMs)),
             MakeCheckboxSetting(Se.Language.Options.Settings.PromptBeforeDelete, nameof(_vm.PromptBeforeDelete)),
@@ -327,7 +316,7 @@ public class SettingsPage : UserControl
             MakeNumericSettingInt(Se.Language.Options.Settings.AutoBackupDeleteAfterDays, nameof(_vm.AutoBackupDeleteAfterDays), 1),
         ]));
 
-        sections.Add(new SettingsSection(Se.Language.General.SubtitleFormats,
+        sections.Add(new SettingsSection(Se.Language.General.SubtitleFormats, IconNames.ClosedCaption, "#7fa8f0",
         [
             new SettingsItem(Se.Language.Options.Settings.DefaultFormat, () => new ComboBox
             {
@@ -356,7 +345,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.WebVttUseXTimestampMap, nameof(_vm.WebVttUseXTimestampMap)),
         ]));
 
-        sections.Add(new SettingsSection(Se.Language.Options.Settings.SyntaxColoring,
+        sections.Add(new SettingsSection(Se.Language.Options.Settings.SyntaxColoring, IconNames.Palette, "#d966a0",
         [
             MakeCheckboxSetting(Se.Language.Options.Settings.ColorDurationTooShort, nameof(_vm.ColorDurationTooShort)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ColorDurationTooLong, nameof(_vm.ColorDurationTooLong)),
@@ -386,7 +375,7 @@ public class SettingsPage : UserControl
             new SettingsItem(Se.Language.Options.Settings.ErrorBackgroundColor, () => UiUtil.MakeColorPickerButton(_vm, nameof(_vm.ErrorColor))),
         ]));
 
-        sections.Add(new SettingsSection(Se.Language.General.VideoPlayer,
+        sections.Add(new SettingsSection(Se.Language.General.VideoPlayer, IconNames.PlayBox, "#a78bfa",
         [
             new SettingsItem(Se.Language.General.VideoPlayer, () => new StackPanel
             {
@@ -458,7 +447,7 @@ public class SettingsPage : UserControl
 
         ]));
 
-        sections.Add(new SettingsSection(Se.Language.Options.Settings.WaveformSpectrogram,
+        sections.Add(new SettingsSection(Se.Language.Options.Settings.WaveformSpectrogram, IconNames.Waveform, "#f0b429",
         [
             new SettingsItem(Se.Language.Options.Settings.WaveformDrawStyle,
                 () => UiUtil.MakeComboBox(_vm.WaveformDrawStyles, _vm, nameof(_vm.SelectedWaveformDrawStyle))),
@@ -592,7 +581,7 @@ public class SettingsPage : UserControl
             }),
         ]));
 
-        sections.Add(new SettingsSection(Se.Language.General.Tools,
+        sections.Add(new SettingsSection(Se.Language.General.Tools, IconNames.Tools, "#f0885a",
         [
             MakeCheckboxSetting(Se.Language.Options.Settings.AllowSingleLetterShortcutsInTextbox, nameof(_vm.AllowSingleLetterShortcutsInTextbox)),
             MakeCheckboxSetting(Se.Language.Options.Settings.GoToLineNumberSetsVideoPosition, nameof(_vm.GoToLineNumberAlsoSetVideoPosition)),
@@ -631,7 +620,7 @@ public class SettingsPage : UserControl
                 () => UiUtil.MakeTextBox(300, _vm, nameof(_vm.MusicSymbolReplace))),
         ]));
 
-        sections.Add(new SettingsSection(Se.Language.General.Appearance,
+        sections.Add(new SettingsSection(Se.Language.General.Appearance, IconNames.EyeSettings, "#4fc3e8",
         [
             new SettingsItem(Se.Language.Options.Settings.Theme, () => UiUtil.MakeComboBox(_vm.Themes, _vm, nameof(_vm.SelectedTheme))),
             new SettingsItem(Se.Language.Options.Settings.IconTheme, () => UiUtil.MakeComboBox(_vm.IconThemes, _vm, nameof(_vm.SelectedIconTheme))),
@@ -710,7 +699,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowPluginsMenu, nameof(_vm.ShowPluginsMenu)),
         ]));
 
-        sections.Add(new SettingsSection(Se.Language.General.Toolbar,
+        sections.Add(new SettingsSection(Se.Language.General.Toolbar, IconNames.DotsHorizontal, "#58c9b4",
         [
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarNew, nameof(_vm.ShowToolbarNew)),
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarOpen, nameof(_vm.ShowToolbarOpen)),
@@ -733,7 +722,7 @@ public class SettingsPage : UserControl
             MakeCheckboxSetting(Se.Language.Options.Settings.ShowToolbarFrameRate, nameof(_vm.ShowToolbarFrameRate)),
         ]));
 
-        sections.Add(new SettingsSection(Se.Language.Options.Settings.Network,
+        sections.Add(new SettingsSection(Se.Language.Options.Settings.Network, IconNames.Network, "#6bb84e",
         [
             new SettingsItem(Se.Language.Options.Settings.ProxyAddress, () => UiUtil.MakeTextBox(250, _vm, nameof(_vm.ProxyAddress))),
             new SettingsItem(Se.Language.Options.Settings.Username, () => UiUtil.MakeTextBox(250, _vm, nameof(_vm.ProxyUserName))),
@@ -742,7 +731,7 @@ public class SettingsPage : UserControl
 
         if (OperatingSystem.IsWindows())
         {
-            sections.Add(new SettingsSection(Se.Language.Options.Settings.FileTypeAssociations,
+            sections.Add(new SettingsSection(Se.Language.Options.Settings.FileTypeAssociations, IconNames.FileCog, "#b98a5a",
             [
                 new SettingsItem(string.Empty, () => new ItemsControl
                 {
@@ -781,7 +770,7 @@ public class SettingsPage : UserControl
             ]));
         }
 
-        sections.Add(new SettingsSection(Se.Language.Options.Settings.FilesAndLogs,
+        sections.Add(new SettingsSection(Se.Language.Options.Settings.FilesAndLogs, IconNames.FileMultiple, "#5fa8e0",
         [
             new SettingsItem(Se.Language.Options.Settings.ShowErrorLogFile,
                 () => UiUtil.MakeLink(Se.GetErrorLogFilePath(), _vm.ShowErrorLogFileCommand).WithBindEnabed(_vm, nameof(_vm.ExistsErrorLogFile))),
