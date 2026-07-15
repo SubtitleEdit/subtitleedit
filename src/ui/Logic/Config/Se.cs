@@ -17,7 +17,7 @@ public class Se
 {
     internal const int CurrentMacOsFontMigrationVersion = 1;
 
-    public static string Version { get; set; } = "v5.1.0-rc3";
+    public static string Version { get; set; } = "v5.1.0-rc4";
 
     public SeGeneral General { get; set; } = new();
     public List<SeShortCut> Shortcuts { get; set; } = new();
