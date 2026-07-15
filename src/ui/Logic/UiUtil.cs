@@ -2790,6 +2790,93 @@ public static class UiUtil
     {
         window.Icon = GetSeIcon();
         window.Name = name;
+
+        // On small or high-DPI screens (e.g. 1920x1080 at 150% = 1280x853 DIPs of
+        // working area) SizeToContent windows can measure taller/wider than the screen,
+        // leaving the bottom buttons unreachable - Avalonia does not cap them itself.
+        // Clamp once when opened, and once more at Background priority so windows that
+        // re-fit themselves in a posted callback (LockMinimumToContentSize in e.g. the
+        // burn-in window runs at Loaded priority) get clamped again afterwards.
+        window.Opened += (_, _) =>
+        {
+            ClampToWorkingArea(window);
+            Dispatcher.UIThread.Post(() => ClampToWorkingArea(window), DispatcherPriority.Background);
+        };
+    }
+
+    private static void ClampToWorkingArea(Window window)
+    {
+        if (window.WindowState != WindowState.Normal)
+        {
+            return;
+        }
+
+        var screen = window.Screens.ScreenFromWindow(window) ?? window.Screens.Primary;
+        if (screen == null)
+        {
+            return;
+        }
+
+        var scale = window.DesktopScaling;
+        if (scale <= 0)
+        {
+            return;
+        }
+
+        // Window sizes are in DIPs, the working area in physical pixels. Compare the
+        // full frame so OS decorations (title bar, borders) are accounted for.
+        var workingArea = screen.WorkingArea;
+        var frameSize = window.FrameSize ?? window.Bounds.Size;
+        var frameExtraWidth = Math.Max(0, frameSize.Width - window.Bounds.Width);
+        var frameExtraHeight = Math.Max(0, frameSize.Height - window.Bounds.Height);
+        var maxWidth = workingArea.Width / scale - frameExtraWidth;
+        var maxHeight = workingArea.Height / scale - frameExtraHeight;
+        if (maxWidth <= 0 || maxHeight <= 0)
+        {
+            return;
+        }
+
+        // A minimum size larger than the screen makes the window impossible to shrink
+        // (e.g. windows that lock MinWidth/MinHeight to their measured content size).
+        if (window.MinWidth > maxWidth)
+        {
+            window.MinWidth = maxWidth;
+        }
+
+        if (window.MinHeight > maxHeight)
+        {
+            window.MinHeight = maxHeight;
+        }
+
+        if (window.Bounds.Width > maxWidth || window.Bounds.Height > maxHeight)
+        {
+            // Stop content-driven sizing before shrinking, or the next measure pass
+            // would just grow the window back.
+            window.SizeToContent = SizeToContent.Manual;
+            if (window.Bounds.Width > maxWidth)
+            {
+                window.Width = maxWidth;
+            }
+
+            if (window.Bounds.Height > maxHeight)
+            {
+                window.Height = maxHeight;
+            }
+        }
+
+        // Keep the whole frame inside the working area so the bottom buttons stay
+        // reachable (a centered too-tall window overflows both top and bottom).
+        var frameWidthPx = (int)Math.Round(Math.Min(frameSize.Width, maxWidth + frameExtraWidth) * scale);
+        var frameHeightPx = (int)Math.Round(Math.Min(frameSize.Height, maxHeight + frameExtraHeight) * scale);
+        var maxX = workingArea.X + workingArea.Width - frameWidthPx;
+        var maxY = workingArea.Y + workingArea.Height - frameHeightPx;
+        var x = Math.Min(Math.Max(window.Position.X, workingArea.X), Math.Max(workingArea.X, maxX));
+        var y = Math.Min(Math.Max(window.Position.Y, workingArea.Y), Math.Max(workingArea.Y, maxY));
+        var position = new PixelPoint(x, y);
+        if (position != window.Position)
+        {
+            window.Position = position;
+        }
     }
 
     public static void SaveWindowPosition(Window? window)
