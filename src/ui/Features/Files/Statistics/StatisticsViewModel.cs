@@ -116,6 +116,24 @@ https://github.com/SubtitleEdit/subtitleedit
     }
 
     [RelayCommand]
+    private async Task CopyMostUsedWords()
+    {
+        if (Window != null)
+        {
+            await ClipboardHelper.SetTextAsync(Window, TextMostUsedWords.Trim());
+        }
+    }
+
+    [RelayCommand]
+    private async Task CopyMostUsedLines()
+    {
+        if (Window != null)
+        {
+            await ClipboardHelper.SetTextAsync(Window, TextMostUsedLines.Trim());
+        }
+    }
+
+    [RelayCommand]
     private async Task Export()
     {
         var suggestFileName = "statistics.txt";

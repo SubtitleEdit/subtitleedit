@@ -6,6 +6,7 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
+using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Globalization;
@@ -109,7 +110,8 @@ public class StatisticsWindow : Window
             ColumnSpacing = 10,
         };
         chartRow.Add(MakeCard(Se.Language.General.CharsPerSec, string.Empty, MakeHistogram(vm.CpsHistogram)), 0, 0);
-        chartRow.Add(MakeCard(l.MostUsedWords, string.Empty, MakeTopWords(vm)), 0, 1);
+        chartRow.Add(MakeCard(l.MostUsedWords, string.Empty, MakeTopWords(vm),
+            MakeCopyButton(vm.CopyMostUsedWordsCommand)), 0, 1);
 
         return new StackPanel
         {
@@ -120,9 +122,18 @@ public class StatisticsWindow : Window
                 kpiRow,
                 midRow,
                 chartRow,
-                MakeCard(l.MostUsedLines, string.Empty, MakeTopLines(vm)),
+                MakeCard(l.MostUsedLines, string.Empty, MakeTopLines(vm),
+                    MakeCopyButton(vm.CopyMostUsedLinesCommand)),
             }
         };
+    }
+
+    private static Button MakeCopyButton(IRelayCommand command)
+    {
+        var button = UiUtil.MakeButton(command, IconNames.Copy, Se.Language.General.CopyToClipboard);
+        button.FontSize = 14;
+        button.Padding = new Thickness(6, 3);
+        return button;
     }
 
     private static Border MakeKpiTile(string label, string value)
@@ -144,27 +155,30 @@ public class StatisticsWindow : Window
         };
     }
 
-    private static Border MakeCard(string title, string subTitle, Control body)
+    private static Border MakeCard(string title, string subTitle, Control body, Control? headerAction = null)
     {
-        var header = new StackPanel
+        var header = new Grid
         {
-            Orientation = Orientation.Horizontal,
-            Spacing = 8,
-            Margin = new Thickness(12, 8, 12, 8),
-            Children =
-            {
-                new TextBlock { Text = title, FontSize = 13, FontWeight = FontWeight.SemiBold, VerticalAlignment = VerticalAlignment.Center },
-            }
+            ColumnDefinitions = new ColumnDefinitions("Auto,Auto,*,Auto"),
+            ColumnSpacing = 8,
+            Margin = new Thickness(12, 4, 8, 4),
+            MinHeight = 30,
         };
+        header.Add(new TextBlock { Text = title, FontSize = 13, FontWeight = FontWeight.SemiBold, VerticalAlignment = VerticalAlignment.Center }, 0, 0);
         if (!string.IsNullOrEmpty(subTitle))
         {
-            header.Children.Add(new TextBlock
+            header.Add(new TextBlock
             {
                 Text = subTitle,
                 FontSize = 11,
                 Opacity = 0.6,
                 VerticalAlignment = VerticalAlignment.Center,
-            });
+            }, 0, 1);
+        }
+        if (headerAction != null)
+        {
+            headerAction.VerticalAlignment = VerticalAlignment.Center;
+            header.Add(headerAction, 0, 3);
         }
 
         body.Margin = new Thickness(12, 10, 12, 12);
@@ -266,6 +280,10 @@ public class StatisticsWindow : Window
                     Text = range.AvgText,
                     FontSize = 10,
                     FontWeight = FontWeight.SemiBold,
+                    // The pin panel is zero-width, so the label needs its own width to
+                    // measure - centered it then sits exactly over the average dot.
+                    Width = 70,
+                    TextAlignment = TextAlignment.Center,
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Top,
                 },
@@ -359,7 +377,18 @@ public class StatisticsWindow : Window
 
         var chart = new Panel { Height = HistogramHeight };
 
-        // Recessive gridlines at 1/3 and 2/3 height.
+        // Recessive gridlines at 1/3 and 2/3 height; the subtitle counts they mark are
+        // labeled in the gutter column left of the chart.
+        var yLabels = new Panel { Height = HistogramHeight };
+        yLabels.Children.Add(new TextBlock
+        {
+            Text = maxBin.ToString("#,##0", CultureInfo.CurrentCulture),
+            FontSize = 9.5,
+            Opacity = 0.6,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, -2, 0, 0),
+        });
         foreach (var fraction in new[] { 1 / 3.0, 2 / 3.0 })
         {
             chart.Children.Add(new Border
@@ -369,6 +398,15 @@ public class StatisticsWindow : Window
                 Opacity = 0.4,
                 VerticalAlignment = VerticalAlignment.Top,
                 Margin = new Thickness(0, HistogramHeight * fraction, 0, 0),
+            });
+            yLabels.Children.Add(new TextBlock
+            {
+                Text = System.Math.Round(maxBin * (1 - fraction)).ToString("#,##0", CultureInfo.CurrentCulture),
+                FontSize = 9.5,
+                Opacity = 0.6,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(0, HistogramHeight * fraction - 7, 0, 0),
             });
         }
 
@@ -431,7 +469,18 @@ public class StatisticsWindow : Window
             }, 0, i);
         }
 
-        return new StackPanel { Children = { chart, axis } };
+        // Gutter column keeps the y labels out of the bars; the x axis shares the
+        // same columns so its labels line up with the bins.
+        var layout = new Grid
+        {
+            ColumnDefinitions = new ColumnDefinitions("30,*"),
+            ColumnSpacing = 6,
+            RowDefinitions = new RowDefinitions("Auto,Auto"),
+        };
+        layout.Add(yLabels, 0, 0);
+        layout.Add(chart, 0, 1);
+        layout.Add(axis, 1, 1);
+        return layout;
     }
 
     private static Grid MakeThresholdLine(double cps, Color color)
@@ -467,6 +516,8 @@ public class StatisticsWindow : Window
                     FontSize = 10,
                     FontWeight = FontWeight.SemiBold,
                     Foreground = new SolidColorBrush(color),
+                    // Fixed width so the label measures inside the zero-width pin panel.
+                    Width = 50,
                     VerticalAlignment = VerticalAlignment.Top,
                     HorizontalAlignment = HorizontalAlignment.Left,
                     Margin = new Thickness(4, 0, 0, 0),
