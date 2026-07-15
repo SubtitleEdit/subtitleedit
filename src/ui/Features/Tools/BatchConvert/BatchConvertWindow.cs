@@ -177,13 +177,45 @@ public class BatchConvertWindow : Window
                     IsReadOnly = true,
                     Width = new DataGridLength(170, DataGridLengthUnitType.Pixel),
                 },
-                new DataGridTextColumn
+                new DataGridTemplateColumn
                 {
                     Header = Se.Language.General.Status,
                     CellTheme = UiUtil.DataGridNoBorderNoPaddingCellTheme,
-                    Binding = new Binding(nameof(BatchConvertItem.Status)),
+                    // Template columns need an explicit SortMemberPath to be sortable (#12431).
+                    SortMemberPath = nameof(BatchConvertItem.Status),
                     IsReadOnly = true,
                     Width = new DataGridLength(120, DataGridLengthUnitType.Pixel),
+                    CellTemplate = new FuncDataTemplate<BatchConvertItem>((_, _) =>
+                    {
+                        // Status as a colored badge: green converted, red errors, gray cancelled;
+                        // in-progress statuses render as plain text (converter returns unset).
+                        var text = new TextBlock
+                        {
+                            FontSize = 11,
+                            VerticalAlignment = VerticalAlignment.Center,
+                        };
+                        text.Bind(TextBlock.TextProperty, new Binding(nameof(BatchConvertItem.Status)));
+                        text.Bind(TextBlock.ForegroundProperty, new Binding(nameof(BatchConvertItem.Status))
+                        {
+                            Converter = new BatchConvertStatusColorConverter(),
+                        });
+
+                        var pill = new Border
+                        {
+                            CornerRadius = new CornerRadius(99),
+                            Padding = new Thickness(8, 1, 8, 2),
+                            Margin = new Thickness(4, 0, 4, 0),
+                            HorizontalAlignment = HorizontalAlignment.Left,
+                            VerticalAlignment = VerticalAlignment.Center,
+                            Child = text,
+                        };
+                        pill.Bind(Border.BackgroundProperty, new Binding(nameof(BatchConvertItem.Status))
+                        {
+                            Converter = new BatchConvertStatusColorConverter(),
+                            ConverterParameter = "background",
+                        });
+                        return pill;
+                    }),
                 },
             },
         };
