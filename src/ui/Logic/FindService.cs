@@ -376,25 +376,35 @@ public partial class FindService : IFindService
                 var beforePart = line.Substring(0, startIndex);
                 var afterPart = line.Substring(startIndex);
 
-                var newAfterPart = regex.Replace(afterPart, replaceText, 1);
-                var totalReplacements = newAfterPart != afterPart ? 1 : 0;
+                // Match/replace line-feed-normalized so a \n pattern matches the whole \r\n break,
+                // not just the \n (which would leave a dangling \r). See below (#12484).
+                var newAfterPart = RegexUtils.ReplaceNewLineSafe(regex, afterPart, replaceText, 1, 0);
+                var totalReplacements = RegexUtils.CountNewLineSafe(regex, afterPart) > 0 ? 1 : 0;
 
                 return (totalReplacements > 0, beforePart + newAfterPart, totalReplacements);
             }
             else
             {
-                // Replace all or limited occurrences
-                var newText = maxReplacements == -1
-                    ? regex.Replace(line, replaceText)
-                    : regex.Replace(line, replaceText, maxReplacements);
+                // Count against line-feed-normalized text so a \n pattern matches the whole \r\n
+                // break. Replacing the raw line instead left the \r behind, turning "A\r\nB" into
+                // "A\r B" when replacing \n with a space (#12484). Bail on no match so lines that
+                // don't match keep their original text (and line endings) untouched.
+                var totalReplacements = RegexUtils.CountNewLineSafe(regex, line);
+                if (totalReplacements == 0)
+                {
+                    return (false, line, 0);
+                }
 
-                var totalReplacements = regex.Matches(line).Count;
+                var newText = maxReplacements == -1
+                    ? RegexUtils.ReplaceNewLineSafe(regex, line, replaceText)
+                    : RegexUtils.ReplaceNewLineSafe(regex, line, replaceText, maxReplacements, 0);
+
                 if (maxReplacements != -1 && totalReplacements > maxReplacements)
                 {
                     totalReplacements = maxReplacements;
                 }
 
-                return (newText != line, newText, totalReplacements);
+                return (true, newText, totalReplacements);
             }
         }
         catch (ArgumentException)
