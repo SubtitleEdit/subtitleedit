@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
@@ -26,13 +27,44 @@ namespace Nikse.SubtitleEdit.Logic;
 /// The DataGrid hooks the scroll bar's Scroll event (not ValueChanged) to refresh its
 /// rows, so a programmatic jump also invokes the grid's internal ProcessVerticalScroll.
 /// </summary>
-internal static class DataGridScrollBarBehavior
+public static class DataGridScrollBarBehavior
 {
     private const string VerticalScrollBarPartName = "PART_VerticalScrollbar";
 
     private static readonly MethodInfo? ProcessVerticalScrollMethod = typeof(DataGrid).GetMethod(
         "ProcessVerticalScroll",
         BindingFlags.NonPublic | BindingFlags.Instance);
+
+    /// <summary>
+    /// Attach the trough paging and shift+click jump to a DataGrid. Set once, application wide,
+    /// from a single DataGrid style in Styles.axaml so every grid gets the Windows-standard
+    /// scroll bar behavior without each window wiring it by hand (requested on #12438).
+    /// </summary>
+    public static readonly AttachedProperty<bool> EnableTroughPagingProperty =
+        AvaloniaProperty.RegisterAttached<DataGrid, bool>("EnableTroughPaging", typeof(DataGridScrollBarBehavior));
+
+    // Marks a grid already wired so that setting the attached property to true more than once does
+    // not subscribe to TemplateApplied a second time and stack a second set of scroll bar handlers.
+    // A normal re-template needs no guard: the single subscription re-runs and wires the fresh
+    // scroll bar once, and the discarded template's scroll bar (with its handlers) is dropped.
+    private static readonly AttachedProperty<bool> WiredProperty =
+        AvaloniaProperty.RegisterAttached<DataGrid, bool>("TroughPagingWired", typeof(DataGridScrollBarBehavior));
+
+    public static void SetEnableTroughPaging(DataGrid grid, bool value) => grid.SetValue(EnableTroughPagingProperty, value);
+
+    public static bool GetEnableTroughPaging(DataGrid grid) => grid.GetValue(EnableTroughPagingProperty);
+
+    static DataGridScrollBarBehavior()
+    {
+        EnableTroughPagingProperty.Changed.AddClassHandler<DataGrid>((grid, e) =>
+        {
+            if (e.NewValue is true && !grid.GetValue(WiredProperty))
+            {
+                grid.SetValue(WiredProperty, true);
+                EnableTroughPageScroll(grid);
+            }
+        });
+    }
 
     public static void EnableTroughPageScroll(DataGrid grid)
     {

@@ -251,6 +251,11 @@ public static class InitMenu
                         },
                         new MenuItem
                         {
+                            Header = Se.Language.File.Export.TitleExportDvdSup,
+                            Command = vm.ExportDvdSupCommand,
+                        },
+                        new MenuItem
+                        {
                             Header = "Final Cut Pro + image",
                             Command = vm.ExportFcpPngCommand,
                         },

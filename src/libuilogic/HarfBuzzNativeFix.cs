@@ -22,8 +22,8 @@ public static class HarfBuzzNativeFix
     private const int RtldNow = 2;
     private const int RtldDeepBind = 8;
 
-    [DllImport("libc", SetLastError = true)]
-    private static extern IntPtr dlopen(string fileName, int flags);
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate IntPtr DlopenDelegate(string fileName, int flags);
 
     private static bool _applied;
     private static IntPtr _handle;
@@ -43,36 +43,73 @@ public static class HarfBuzzNativeFix
 
         _applied = true;
 
+        // Resolve dlopen at runtime: it lives in libdl.so.2 on glibc < 2.34 (e.g. Debian 10)
+        // and in libc on newer glibc and musl. A static DllImport("libc") crashed at startup
+        // on older distros with EntryPointNotFoundException.
+        var dlopen = ResolveDlopen();
+        if (dlopen == null)
+        {
+            return; // Cannot deep-bind on this system; keep default resolution (same as the escape hatch).
+        }
+
         NativeLibrary.SetDllImportResolver(typeof(HarfBuzzSharp.Blob).Assembly, (name, _, _) =>
         {
-            if (name != "libHarfBuzzSharp")
+            try
             {
-                return IntPtr.Zero;
-            }
-
-            if (_handle != IntPtr.Zero)
-            {
-                return _handle;
-            }
-
-            foreach (var path in CandidatePaths())
-            {
-                if (!File.Exists(path))
+                if (name != "libHarfBuzzSharp")
                 {
-                    continue;
+                    return IntPtr.Zero;
                 }
 
-                var handle = dlopen(path, RtldNow | RtldDeepBind);
-                if (handle != IntPtr.Zero)
+                if (_handle != IntPtr.Zero)
                 {
-                    _handle = handle;
-                    return handle;
+                    return _handle;
                 }
+
+                foreach (var path in CandidatePaths())
+                {
+                    if (!File.Exists(path))
+                    {
+                        continue;
+                    }
+
+                    var handle = dlopen(path, RtldNow | RtldDeepBind);
+                    if (handle != IntPtr.Zero)
+                    {
+                        _handle = handle;
+                        return handle;
+                    }
+                }
+            }
+            catch
+            {
+                // An exception thrown from a DllImport resolver during layout is unrecoverable.
             }
 
             // Could not deep-bind; fall back to the default resolution so behaviour is unchanged.
             return IntPtr.Zero;
         });
+    }
+
+    private static DlopenDelegate? ResolveDlopen()
+    {
+        foreach (var libraryName in new[] { "libdl.so.2", "libdl.so", "libc.so.6", "libc" })
+        {
+            try
+            {
+                if (NativeLibrary.TryLoad(libraryName, out var library) &&
+                    NativeLibrary.TryGetExport(library, "dlopen", out var export))
+                {
+                    return Marshal.GetDelegateForFunctionPointer<DlopenDelegate>(export);
+                }
+            }
+            catch
+            {
+                // Try the next candidate.
+            }
+        }
+
+        return null;
     }
 
     private static string[] CandidatePaths()

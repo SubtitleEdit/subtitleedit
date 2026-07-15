@@ -5,6 +5,7 @@ Subtitle Edit Changelog
 
 v5.1.0-rc3 (TBD)
 
+* Export: add "DVD sup (MuxMan/Scenarist)" image-based export - the classic DVD-Video subpicture .sup that DVD authoring tools import
 * Spell check: start at the current line instead of asking "Continue spell check from current line?" - the question is now only asked when an earlier spell check was left unfinished
 * Names: load the region specific names list - the Portuguese lists (pt_PT_names.xml and pt_BR_names.xml, ~4800 names each) were never read, as only a neutral pt_names.xml was looked for
 * Names: add former countries like Yugoslavia, Czechoslovakia and Persia to the English, Dutch, German, French, Spanish and Portuguese names lists - thx fraternl
@@ -19,6 +20,7 @@ v5.1.0-rc3 (TBD)
 * Scroll bar: shift+click on the trough jumps to that position - thx muaz978
 * Shortcuts: normal weight for the shortcut name column - thx muaz978
 * Sync: add "Visual sync" to the subtitle grid context menu under "Selected lines", so segments that are off by different amounts can be synced one at a time - thx Hikari2w2
+* OCR: "Save as" for an OCR'd subtitle opens in the source file's folder again, instead of e.g. Documents or the last-used folder - thx Turcote/fraternl
 * Replace: fix regex replace of a line break (search \n) leaving the break in place with a space after it on Windows-style (CRLF) text - thx witchpiggie
 
 -----------------------------------------------------------------------------------------------------

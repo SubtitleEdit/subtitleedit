@@ -6,6 +6,7 @@ public enum ExportImageType
     BluRaySup,
     DCinemaPng,
     Dost,
+    DvdSup,
     Fcp,
     HtmlIndex,
     ImagesWithTimeCode,

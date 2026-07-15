@@ -335,7 +335,7 @@ public class ShortcutsWindow : Window
         dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedNode)) { Source = vm });
         dataGrid.SelectionChanged += vm.ShortcutsDataGrid_SelectionChanged;
         dataGrid.DoubleTapped += vm.ShortcutsDataGridDoubleTapped;
-        DataGridScrollBarBehavior.EnableTroughPageScroll(dataGrid);
+        // Trough paging and shift+click jump now come from the app-wide DataGrid style (Styles.axaml).
         var borderDataGrid = UiUtil.MakeBorderForControlNoPadding(dataGrid).WithMarginBottom(5);
 
         var flyout = new MenuFlyout();
