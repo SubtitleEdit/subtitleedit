@@ -3392,7 +3392,7 @@ public class AudioVisualizer : Control
 
             if (hitCount > length)
             {
-                var seconds = RelativeXPositionToSeconds(i - (length / 2));
+                var seconds = SampleIndexToSeconds(i - (length / 2));
                 if (seconds >= 0)
                 {
                     StartPositionSeconds = seconds;
@@ -3428,7 +3428,7 @@ public class AudioVisualizer : Control
                 hitCount++;
                 if (hitCount > length)
                 {
-                    var seconds = RelativeXPositionToSeconds(i + length / 2);
+                    var seconds = SampleIndexToSeconds(i + length / 2);
                     if (seconds >= 0)
                     {
                         StartPositionSeconds = seconds;
