@@ -276,10 +276,10 @@ public class BurnInWindow : Window
 
         var labelMargin = UiUtil.MakeLabel(Se.Language.General.Margin);
         var labelMarginHorizontal = UiUtil.MakeLabel(Se.Language.General.Horizontal);
-        var textBoxMarginHorizontal = UiUtil.MakeNumericUpDownInt(0, 50, 0, 130, vm, nameof(vm.FontMarginHorizontal));
+        var textBoxMarginHorizontal = UiUtil.MakeNumericUpDownInt(0, 1000, 0, 130, vm, nameof(vm.FontMarginHorizontal));
         textBoxMarginHorizontal.ValueChanged += vm.NumericUpDownChanged;
         var labelMarginVertical = UiUtil.MakeLabel(Se.Language.General.Vertical).WithMarginLeft(5);
-        var textBoxMarginVertical = UiUtil.MakeNumericUpDownInt(0, 50, 0, 130, vm, nameof(vm.FontMarginVertical));
+        var textBoxMarginVertical = UiUtil.MakeNumericUpDownInt(0, 1000, 0, 130, vm, nameof(vm.FontMarginVertical));
         textBoxMarginVertical.ValueChanged += vm.NumericUpDownChanged;
         var panelMargin = new StackPanel
         {
