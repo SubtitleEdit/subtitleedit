@@ -33,14 +33,61 @@ public class ShortCut
 
     public static string CalculateHash(List<string> keys, string? control)
     {
-        var sb = new System.Text.StringBuilder();
-        foreach (var key in keys.OrderBy(k => k, StringComparer.OrdinalIgnoreCase))
+        // Runs twice per key event (direct + normalized lookup) and twice per shortcut
+        // when the lookup table is rebuilt, so avoid LINQ ordering and the per-key
+        // lowercase string allocations.
+        var count = keys.Count;
+
+        // Stable insertion sort of a small index span - same order as
+        // OrderBy(k => k, StringComparer.OrdinalIgnoreCase).
+        Span<int> order = count <= 8 ? stackalloc int[8] : new int[count];
+        for (var i = 0; i < count; i++)
         {
-            sb.Append(key.ToLowerInvariant()).Append('+');
+            order[i] = i;
         }
 
-        sb.Append(control?.ToLowerInvariant() ?? string.Empty);
-        return sb.ToString();
+        for (var i = 1; i < count; i++)
+        {
+            var current = order[i];
+            var j = i - 1;
+            while (j >= 0 && string.Compare(keys[order[j]], keys[current], StringComparison.OrdinalIgnoreCase) > 0)
+            {
+                order[j + 1] = order[j];
+                j--;
+            }
+
+            order[j + 1] = current;
+        }
+
+        var totalLength = count + (control?.Length ?? 0);
+        for (var i = 0; i < count; i++)
+        {
+            totalLength += keys[i].Length;
+        }
+
+        // Lowercase char-by-char into one buffer; a single string allocation for the result.
+        Span<char> buffer = totalLength <= 256 ? stackalloc char[256] : new char[totalLength];
+        var pos = 0;
+        for (var i = 0; i < count; i++)
+        {
+            var key = keys[order[i]];
+            for (var k = 0; k < key.Length; k++)
+            {
+                buffer[pos++] = char.ToLowerInvariant(key[k]);
+            }
+
+            buffer[pos++] = '+';
+        }
+
+        if (control != null)
+        {
+            for (var k = 0; k < control.Length; k++)
+            {
+                buffer[pos++] = char.ToLowerInvariant(control[k]);
+            }
+        }
+
+        return new string(buffer[..pos]);
     }
 
     public ShortCut(ShortcutsMain.AvailableShortcut shortcut, SeShortCut keys)

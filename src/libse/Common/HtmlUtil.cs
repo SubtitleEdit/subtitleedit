@@ -424,48 +424,83 @@ namespace Nikse.SubtitleEdit.Core.Common
                 s = FixInvalidItalicTags(s);
             }
 
-            if (s.IndexOf('x') > 0)
+            // One pass over the '<' positions instead of up to seven substring scans:
+            // the box/v/c handling below is only relevant when a tag actually starts
+            // with the matching letter, which typical lines (<i>, <font>, plain text)
+            // never have.
+            var hasBTag = false;
+            var hasVTag = false;
+            var hasCTag = false;
+            for (var i = s.IndexOf('<'); i >= 0 && i < s.Length - 1; i = s.IndexOf('<', i + 1))
+            {
+                var next = s[i + 1];
+                if (next == '/' && i + 2 < s.Length)
+                {
+                    next = s[i + 2];
+                }
+
+                if (next == 'b')
+                {
+                    hasBTag = true;
+                }
+                else if (next == 'v')
+                {
+                    hasVTag = true;
+                }
+                else if (next == 'c')
+                {
+                    hasCTag = true;
+                }
+            }
+
+            if (hasBTag)
             {
                 s = s.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
             }
 
             // v tag from WebVTT
-            while (true)
+            if (hasVTag)
             {
-                var indexOfVTag = s.IndexOf("<v ", StringComparison.Ordinal);
-                if (indexOfVTag < 0)
+                while (true)
                 {
-                    indexOfVTag = s.IndexOf("<v.", StringComparison.Ordinal);
+                    var indexOfVTag = s.IndexOf("<v ", StringComparison.Ordinal);
+                    if (indexOfVTag < 0)
+                    {
+                        indexOfVTag = s.IndexOf("<v.", StringComparison.Ordinal);
+                    }
+                    if (indexOfVTag < 0)
+                    {
+                        break;
+                    }
+                    var indexOfEndVTag = s.IndexOf('>', indexOfVTag);
+                    if (indexOfEndVTag < 0)
+                    {
+                        break;
+                    }
+                    s = s.Remove(indexOfVTag, indexOfEndVTag - indexOfVTag + 1);
                 }
-                if (indexOfVTag < 0)
-                {
-                    break;
-                }
-                var indexOfEndVTag = s.IndexOf('>', indexOfVTag);
-                if (indexOfEndVTag < 0)
-                {
-                    break;
-                }
-                s = s.Remove(indexOfVTag, indexOfEndVTag - indexOfVTag + 1);
+                s = s.Replace("</v>", string.Empty);
             }
-            s = s.Replace("</v>", string.Empty);
 
             // c tag from WebVTT
-            while (true)
+            if (hasCTag)
             {
-                var indexOfCTag = s.IndexOf("<c.", StringComparison.Ordinal);
-                if (indexOfCTag < 0)
+                while (true)
                 {
-                    break;
+                    var indexOfCTag = s.IndexOf("<c.", StringComparison.Ordinal);
+                    if (indexOfCTag < 0)
+                    {
+                        break;
+                    }
+                    var indexOfEndCTag = s.IndexOf('>', indexOfCTag);
+                    if (indexOfEndCTag < 0)
+                    {
+                        break;
+                    }
+                    s = s.Remove(indexOfCTag, indexOfEndCTag - indexOfCTag + 1);
                 }
-                var indexOfEndCTag = s.IndexOf('>', indexOfCTag);
-                if (indexOfEndCTag < 0)
-                {
-                    break;
-                }
-                s = s.Remove(indexOfCTag, indexOfEndCTag - indexOfCTag + 1);
+                s = s.Replace("</c>", string.Empty);
             }
-            s = s.Replace("</c>", string.Empty);
 
             return RemoveCommonHtmlTags(s);
         }
