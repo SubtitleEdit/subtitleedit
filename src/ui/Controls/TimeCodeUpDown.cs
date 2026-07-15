@@ -19,6 +19,12 @@ namespace Nikse.SubtitleEdit.Controls
 {
     public class TimeCodeUpDown : TemplatedControl
     {
+        // Mouse spinner and wheel nudge by a fixed small step, matching SE4, instead of stepping
+        // the segment the text caret happens to sit in. The caret defaults to the hours field, so
+        // a plain spinner click used to jump a full hour (#12506). Keyboard Up/Down still steps the
+        // caret's segment, which is the deliberate way to change hours/minutes/seconds precisely.
+        private const int MouseStepMilliseconds = 100;
+
         public bool UseVideoOffset { get; set; } = false;
 
         private TextBox? _textBox;
@@ -55,14 +61,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             control.AddHandler(InputElement.PointerWheelChangedEvent, (s, e) =>
             {
-                if (e.Delta.Y > 0)
-                {
-                    ChangeValue(+1);                    
-                }
-                else
-                {
-                    ChangeValue(-1);
-                }
+                MouseNudge(e.Delta.Y > 0 ? +1 : -1);
                 e.Handled = true;
             });
         }
@@ -476,7 +475,29 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void OnSpin(object? sender, SpinEventArgs e)
         {
-            ChangeValue(e.Direction == SpinDirection.Increase ? +1 : -1);
+            MouseNudge(e.Direction == SpinDirection.Increase ? +1 : -1);
+        }
+
+        // Fixed small step for mouse interaction (spinner buttons and wheel). In frame mode a
+        // step is one whole frame; otherwise it is MouseStepMilliseconds, independent of where
+        // the caret is (#12506).
+        private void MouseNudge(int direction)
+        {
+            TimeSpan newVal;
+            if (Se.Settings.General.UseFrameMode)
+            {
+                var totalFrames = SubtitleFormat.MillisecondsToFrames(Value.TotalMilliseconds);
+                newVal = TimeSpan.FromMilliseconds(SubtitleFormat.FramesToMilliseconds(totalFrames + direction));
+            }
+            else
+            {
+                newVal = Value.Add(TimeSpan.FromMilliseconds(direction * MouseStepMilliseconds));
+            }
+
+            _isUpdatingFromValue = true;
+            SetValue(ValueProperty, newVal);
+            UpdateText();
+            _isUpdatingFromValue = false;
         }
 
         private void OnTextBoxKeyDown(object? sender, KeyEventArgs e)
