@@ -75,26 +75,57 @@ public class WordListsWindow : Window
         Loaded += (s, e) => vm.Loaded();
     }
 
-    private static Border MakeViewNames(WordListsViewModel vm)
+    // Panel header with the list's icon on a colored rounded square plus a count badge in the
+    // same color - the glyph style used by the settings and shortcuts windows.
+    private static StackPanel MakePanelTitle(string title, string iconName, string colorHex, Binding countBinding)
     {
-        var labelTitle = UiUtil.MakeLabel(Se.Language.Options.WordLists.NameAndIgnoreList).WithBold();
-        var labelTitleBadgeCount = new Border
+        var color = Color.Parse(colorHex);
+
+        var icon = new ContentControl
         {
-            Background = UiUtil.GetBorderBrush(),     // badge background
-            CornerRadius = new CornerRadius(10),      // makes it pill-like
-            Padding = new Thickness(6, 0, 6, 0),      // spacing around text
+            FontSize = 13,
+            Foreground = Brushes.White,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        Optris.Icons.Avalonia.Attached.SetIcon(icon, iconName);
+        var glyph = new Border
+        {
+            Width = 22,
+            Height = 22,
+            CornerRadius = new CornerRadius(6),
+            Background = new SolidColorBrush(color),
+            VerticalAlignment = VerticalAlignment.Center,
+            Child = icon,
+        };
+
+        var labelTitle = UiUtil.MakeLabel(title).WithBold();
+
+        var badge = new Border
+        {
+            Background = new SolidColorBrush(color, 0.16),
+            CornerRadius = new CornerRadius(10),
+            Padding = new Thickness(8, 3, 8, 2),
             Margin = new Thickness(4, 0, 0, 0),
             VerticalAlignment = VerticalAlignment.Center,
             Child = new TextBlock
             {
-                [!TextBlock.TextProperty] = new Binding(nameof(vm.Names) + ".Count") { Mode = BindingMode.OneWay, Converter = new NumberToStringWithThousandSeparator() },
+                [!TextBlock.TextProperty] = countBinding,
                 FontSize = 10,
+                FontWeight = FontWeight.SemiBold,
                 VerticalAlignment = VerticalAlignment.Center,
-                Foreground = Brushes.WhiteSmoke,
+                Foreground = new SolidColorBrush(color),
                 HorizontalAlignment = HorizontalAlignment.Center
             }
         };
-        var panelTitle = UiUtil.MakeHorizontalPanel(labelTitle, labelTitleBadgeCount);
+
+        return UiUtil.MakeHorizontalPanel(glyph, labelTitle, badge);
+    }
+
+    private static Border MakeViewNames(WordListsViewModel vm)
+    {
+        var panelTitle = MakePanelTitle(Se.Language.Options.WordLists.NameAndIgnoreList, IconNames.Account, "#4ec98a",
+            new Binding(nameof(vm.Names) + ".Count") { Mode = BindingMode.OneWay, Converter = new NumberToStringWithThousandSeparator() });
 
         var listBox = new ListBox
         {
@@ -151,25 +182,8 @@ public class WordListsWindow : Window
 
     private static Border MakeViewWords(WordListsViewModel vm)
     {
-        var labelTitle = UiUtil.MakeLabel(Se.Language.Options.WordLists.UserWords).WithBold();
-        var labelTitleBadgeCount = new Border
-        {
-            Background = UiUtil.GetBorderBrush(),                // badge background
-            CornerRadius = new CornerRadius(10),      // makes it pill-like
-            Padding = new Thickness(6, 0, 6, 0),      // spacing around text
-            Margin = new Thickness(4, 0, 0, 0),
-            VerticalAlignment = VerticalAlignment.Center,
-            Child = new TextBlock
-            {
-                [!TextBlock.TextProperty] = new Binding(nameof(vm.UserWords) + ".Count") { Source = vm, Mode = BindingMode.OneWay, Converter = new NumberToStringWithThousandSeparator() },
-                FontSize = 10,
-                VerticalAlignment = VerticalAlignment.Center,
-                Foreground = Brushes.WhiteSmoke,
-                HorizontalAlignment = HorizontalAlignment.Center
-            }
-        };
-        var panelTitle = UiUtil.MakeHorizontalPanel(labelTitle, labelTitleBadgeCount);
-
+        var panelTitle = MakePanelTitle(Se.Language.Options.WordLists.UserWords, IconNames.Spellcheck, "#7fa8f0",
+            new Binding(nameof(vm.UserWords) + ".Count") { Source = vm, Mode = BindingMode.OneWay, Converter = new NumberToStringWithThousandSeparator() });
 
         var listBox = new ListBox
         {
@@ -213,24 +227,8 @@ public class WordListsWindow : Window
 
     private static Border MakeViewOcrFixes(WordListsViewModel vm)
     {
-        var labelTitle = UiUtil.MakeLabel(Se.Language.Options.WordLists.OcrFixList).WithBold();
-        var labelTitleBadgeCount = new Border
-        {
-            Background = UiUtil.GetBorderBrush(),     // badge background
-            CornerRadius = new CornerRadius(10),      // makes it pill-like
-            Padding = new Thickness(6, 0, 6, 0),      // spacing around text
-            Margin = new Thickness(4, 0, 0, 0),
-            VerticalAlignment = VerticalAlignment.Center,
-            Child = new TextBlock
-            {
-                [!TextBlock.TextProperty] = new Binding(nameof(vm.OcrFixes) + ".Count") { Mode = BindingMode.OneWay, Converter = new NumberToStringWithThousandSeparator() },
-                FontSize = 10,
-                VerticalAlignment = VerticalAlignment.Center,
-                Foreground = Brushes.WhiteSmoke,
-                HorizontalAlignment = HorizontalAlignment.Center
-            }
-        };
-        var panelTitle = UiUtil.MakeHorizontalPanel(labelTitle, labelTitleBadgeCount);
+        var panelTitle = MakePanelTitle(Se.Language.Options.WordLists.OcrFixList, IconNames.Ocr, "#f0885a",
+            new Binding(nameof(vm.OcrFixes) + ".Count") { Mode = BindingMode.OneWay, Converter = new NumberToStringWithThousandSeparator() });
 
         var listBox = new ListBox
         {
