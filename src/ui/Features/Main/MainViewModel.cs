@@ -19378,7 +19378,11 @@ public partial class MainViewModel :
         var pointerArgs = _lastSubtitleGridPointerArgs;
         _lastSubtitleGridPointerArgs = null;
 
+        // Only offer the live spell check items for a single right-clicked line; with several
+        // lines selected the per-word suggestions/"ignore all" would be ambiguous (they act on the
+        // one clicked cell, not the selection).
         if (IsSubtitleGridFlyoutHeaderVisible ||
+            SubtitleGrid.SelectedItems.Count != 1 ||
             (!Se.Settings.Appearance.SubtitleGridLiveSpellCheck && !Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck))
         {
             return;
