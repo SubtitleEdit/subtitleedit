@@ -3,6 +3,12 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.1.0-rc4 (TBD)
+
+* Live spell check: only show the subtitle grid spell check items (suggestions, add to user dictionary, ignore all) when a single line is selected
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-rc3 (15th of July 2026)
 
 * Export: add "DVD sup (MuxMan/Scenarist)" image-based export - the classic DVD-Video subpicture .sup that DVD authoring tools import
