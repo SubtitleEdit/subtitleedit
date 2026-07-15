@@ -119,7 +119,9 @@ internal static class SubtitleTextInfoHelper
             return 0.0;
         }
 
-        return (double)StripHtml(text).CountCharacters(forCps: true) / (duration / 1000.0);
+        // No StripHtml here: every ICalcLength implementation strips html/ssa tags
+        // itself, so pre-stripping would run RemoveHtmlTags twice per call.
+        return (double)text.CountCharacters(forCps: true) / (duration / 1000.0);
     }
 
     internal sealed record TextTotalInfo(double TotalLength, string TotalText, IBrush TotalBackground);
