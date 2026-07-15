@@ -670,7 +670,7 @@ public class InitWaveform
             VerticalAlignment = VerticalAlignment.Center,
             Command = vm.WaveformVideoSeekBackCommand,
             FontWeight = FontWeight.Bold,
-            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SeekBackHint, shortcuts),
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SeekBackHint, shortcuts, nameof(vm.WaveformVideoSeekBackCommand)),
         };
         Attached.SetIcon(buttonSeekBack, IconNames.ChevronDoubleLeft);
         AutomationProperties.SetName(buttonSeekBack, string.Format(languageHints.SeekBackHint, string.Empty).TrimEnd());
@@ -700,7 +700,7 @@ public class InitWaveform
             VerticalAlignment = VerticalAlignment.Center,
             Command = vm.WaveformVideoSeekForwardCommand,
             FontWeight = FontWeight.Bold,
-            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SeekForwardHint, shortcuts),
+            [ToolTip.TipProperty] = UiUtil.MakeToolTip(languageHints.SeekForwardHint, shortcuts, nameof(vm.WaveformVideoSeekForwardCommand)),
         };
         Attached.SetIcon(buttonSeekForward, IconNames.ChevronDoubleRight);
         AutomationProperties.SetName(buttonSeekForward, string.Format(languageHints.SeekForwardHint, string.Empty).TrimEnd());

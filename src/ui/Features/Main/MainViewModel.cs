@@ -12332,6 +12332,8 @@ public partial class MainViewModel :
             (nameof(VideoOneSecondForwardCommand),  VideoOneSecondForwardCommand),
             (nameof(VideoOneFrameBackCommand),      VideoOneFrameBackCommand),
             (nameof(VideoOneFrameForwardCommand),   VideoOneFrameForwardCommand),
+            (nameof(WaveformVideoSeekBackCommand),  WaveformVideoSeekBackCommand),
+            (nameof(WaveformVideoSeekForwardCommand), WaveformVideoSeekForwardCommand),
             (nameof(VideoMoveCustom1BackCommand),   VideoMoveCustom1BackCommand),
             (nameof(VideoMoveCustom1ForwardCommand),VideoMoveCustom1ForwardCommand),
             (nameof(VideoMoveCustom2BackCommand),   VideoMoveCustom2BackCommand),
