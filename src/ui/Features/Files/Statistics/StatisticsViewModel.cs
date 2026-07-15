@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Config.Language;
@@ -67,6 +68,7 @@ public partial class StatisticsViewModel : ObservableObject
     public bool OkPressed { get; private set; }
 
     private readonly IFileHelper _fileHelper;
+    private readonly IWindowService _windowService;
 
     private Subtitle _subtitle;
     private SubtitleFormat _format;
@@ -87,9 +89,10 @@ https://github.com/SubtitleEdit/subtitleedit
     private string _fileName;
 
     private static readonly char[] ExpectedChars = { '♪', '♫', '"', '(', ')', '[', ']', ' ', ',', '!', '?', '.', ':', ';', '-', '_', '@', '<', '>', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '،', '؟', '؛' };
-    public StatisticsViewModel(IFileHelper fileHelper)
+    public StatisticsViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
         _fileHelper = fileHelper;
+        _windowService = windowService;
 
         Title = string.Empty;
         TextGeneral = string.Empty;
@@ -150,6 +153,12 @@ https://github.com/SubtitleEdit/subtitleedit
 
         var statistic = string.Format(WriteFormat, TextGeneral, TextMostUsedWords, TextMostUsedLines);
         System.IO.File.WriteAllText(textFileName, statistic);
+
+        _ = await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window!, vm =>
+        {
+            vm.Initialize(Se.Language.General.FileSaved,
+                string.Format(Se.Language.General.FileSavedToX, System.IO.Path.GetFileName(textFileName)), textFileName, true, true);
+        });
     }
 
     private void Close()

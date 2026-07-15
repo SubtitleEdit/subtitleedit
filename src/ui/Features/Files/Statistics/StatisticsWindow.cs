@@ -128,12 +128,44 @@ public class StatisticsWindow : Window
         };
     }
 
-    private static Button MakeCopyButton(IRelayCommand command)
+    private static Control MakeCopyButton(IRelayCommand command)
     {
+        var goodBrush = new SolidColorBrush(GoodColor);
+
+        var feedback = new TextBlock
+        {
+            Text = Se.Language.General.CopiedToClipboard,
+            FontSize = 11,
+            FontWeight = FontWeight.SemiBold,
+            Foreground = goodBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            IsVisible = false,
+        };
+
         var button = UiUtil.MakeButton(command, IconNames.Copy, Se.Language.General.CopyToClipboard);
         button.FontSize = 14;
         button.Padding = new Thickness(6, 3);
-        return button;
+
+        // Brief confirmation: green check + "Copied to clipboard" next to the button,
+        // then back to the copy icon (same idea as the speech to text console log copy).
+        button.Click += async (_, _) =>
+        {
+            Attached.SetIcon(button, IconNames.Check);
+            button.Foreground = goodBrush;
+            feedback.IsVisible = true;
+            await System.Threading.Tasks.Task.Delay(2000);
+            feedback.IsVisible = false;
+            button.ClearValue(ForegroundProperty);
+            Attached.SetIcon(button, IconNames.Copy);
+        };
+
+        return new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { feedback, button },
+        };
     }
 
     private static Border MakeKpiTile(string label, string value)
