@@ -11,6 +11,10 @@ v5.1.0-rc4 (TBD)
 * Generate transparent video: live video preview like burn-in - the styled subtitles render over the playing video while settings are tweaked - thx MbuguaDavid
 * Generate transparent video: fix the selected effects not being applied to the generated video, and compact the cut panel
 * Performance: faster shortcut key lookup and HTML tag stripping (subtitle grid, characters-per-second and per-keystroke text info)
+* Subtitle grid: add "Remove" to the actor context menu (also available as shortcut), so the actor can be cleared from the selected lines without creating a dummy actor - thx Khaztaroth
+* Waveform: the "Seek video backward/forward" toolbar buttons can now be assigned keyboard shortcuts - the assigned keys show in the button tooltips and also work in the full screen video window - thx Surlime
+* Shortcuts: all columns are now sortable - Active in, Category, Name and Shortcut - and sorting stays active while filtering by category or search - thx GrampaWildWilly
+* Drag and drop now works on Linux (Avalonia UI 12.1.0 fix)
 
 -----------------------------------------------------------------------------------------------------
 
