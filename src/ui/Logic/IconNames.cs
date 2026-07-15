@@ -4,6 +4,8 @@ internal class IconNames
 {
     public const string Account = "mdi-account";
     public const string AccountVoice = "mdi-account-voice";
+    public const string Alert = "mdi-alert";
+    public const string AlertCircle = "mdi-alert-circle";
     public const string AlignHorizontalCenter = "mdi-align-horizontal-center";
     public const string AlignHorizontalDistribute = "mdi-align-horizontal-distribute";
     public const string AnimationPlay = "mdi-animation-play";
@@ -57,6 +59,7 @@ internal class IconNames
     public const string Fullscreen = "mdi-fullscreen";
     public const string FullscreenExit = "mdi-fullscreen-exit";
     public const string Help = "mdi-help";
+    public const string HelpCircle = "mdi-help-circle";
     public const string History = "mdi-history";
     public const string Image = "mdi-image";
     public const string ImageCheck = "mdi-image-check";

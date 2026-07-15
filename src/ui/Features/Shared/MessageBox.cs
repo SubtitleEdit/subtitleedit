@@ -1,13 +1,13 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using System.Threading.Tasks;
+using Attached = Optris.Icons.Avalonia.Attached;
 
 namespace Nikse.SubtitleEdit.Features.Shared;
 
@@ -60,7 +60,7 @@ public class MessageBox : Window
         CanResize = false;
         SizeToContent = SizeToContent.WidthAndHeight;
         MinWidth = 400;
-        MinHeight = 180;
+        MinHeight = 150;
         MaxWidth = 900;
         MaxHeight = 700;
 
@@ -68,7 +68,7 @@ public class MessageBox : Window
 
         var grid = new Grid
         {
-            Margin = new Thickness(10),
+            Margin = new Thickness(16),
             RowDefinitions =
             {
                 new RowDefinition { Height = GridLength.Star },
@@ -81,74 +81,77 @@ public class MessageBox : Window
             }
         };
 
-        // Icon (optional)
-        var iconImage = new Image
+        // Most call sites pass an icon; for the few that don't, derive one from the buttons so
+        // a question is visibly a question and a plain notification reads as information.
+        if (icon == MessageBoxIcon.None)
         {
-            Width = 48,
-            Height = 48,
-            Margin = new Thickness(10)
-        };
+            icon = buttons switch
+            {
+                MessageBoxButtons.YesNo or MessageBoxButtons.YesNoCancel or MessageBoxButtons.OKCancel => MessageBoxIcon.Question,
+                MessageBoxButtons.OK => MessageBoxIcon.Information,
+                _ => MessageBoxIcon.None,
+            };
+        }
 
         if (icon != MessageBoxIcon.None)
         {
-            var iconPath = $"Assets/Themes/Dark/{icon}.png";
-            try
+            var (iconName, iconColor) = icon switch
             {
-                iconImage.Source = new Bitmap(iconPath);
-            }
-            catch
-            {
-                // If icon not found, silently ignore
-            }
+                MessageBoxIcon.Warning => (IconNames.Alert, Color.FromRgb(0xF5, 0x9E, 0x0B)),
+                MessageBoxIcon.Error => (IconNames.AlertCircle, Color.FromRgb(0xEF, 0x44, 0x44)),
+                MessageBoxIcon.Question => (IconNames.HelpCircle, Color.FromRgb(0x3B, 0x82, 0xF6)),
+                _ => (IconNames.Information, Color.FromRgb(0x3B, 0x82, 0xF6)),
+            };
 
-            grid.Children.Add(iconImage);
-            Grid.SetRow(iconImage, 0);
-            Grid.SetColumn(iconImage, 0);
+            var iconControl = new ContentControl
+            {
+                FontSize = 38,
+                Foreground = new SolidColorBrush(iconColor),
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 16, 0),
+            };
+            Attached.SetIcon(iconControl, iconName);
+
+            grid.Children.Add(iconControl);
+            Grid.SetRow(iconControl, 0);
+            Grid.SetColumn(iconControl, 0);
         }
 
-        var textBlock = new TextBlock
+        // Selectable so users can copy a file name or error detail directly from the text
+        // (the context menu's "copy text to clipboard" still copies the whole message).
+        var textBlock = new SelectableTextBlock
         {
             Text = message,
-            Margin = new Thickness(10),
             VerticalAlignment = VerticalAlignment.Center,
             TextWrapping = TextWrapping.Wrap,
-            Height = double.NaN,
-            Width = double.NaN,
             MaxWidth = 700, // wrap long messages instead of growing the window unbounded
         };
 
-        if (message.Length > 1000)
+        // Always host the text in a ScrollViewer: it sizes to the text and stays vertically
+        // centered next to the icon, and long messages scroll instead of overflowing.
+        var scrollView = new ScrollViewer
         {
-            var scrollView = new ScrollViewer
-            {
-                Width = double.NaN,
-                Height = double.NaN,
-                MaxHeight = 400,
-                Margin = new Thickness(10),
-                Content = textBlock
-            };
+            MaxHeight = 400,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 0, 12),
+            Content = textBlock,
+        };
 
-            grid.Children.Add(scrollView);
-            Grid.SetRow(scrollView, 0);
-            Grid.SetColumn(scrollView, 1);
-        }
-        else
-        {
-            grid.Children.Add(textBlock);
-            Grid.SetRow(textBlock, 0);
-            Grid.SetColumn(textBlock, 1);
-        }
+        grid.Children.Add(scrollView);
+        Grid.SetRow(scrollView, 0);
+        Grid.SetColumn(scrollView, 1);
 
         var buttonPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             HorizontalAlignment = HorizontalAlignment.Right,
-            Margin = new Thickness(10)
+            Margin = new Thickness(0, 8, 0, 0),
         };
 
         void AddButton(string text, MessageBoxResult result)
         {
             var btn = UiUtil.MakeButton(text);
+            btn.IsDefault = buttonPanel.Children.Count == 0; // Enter always confirms the primary choice
             btn.Click += (_, _) => { _result = result; Close(_result); };
             buttonPanel.Children.Add(btn);
         }
@@ -198,7 +201,7 @@ public class MessageBox : Window
         }
 
         grid.Children.Add(buttonPanel);
-        Grid.SetRow(buttonPanel, 2);
+        Grid.SetRow(buttonPanel, 1);
         Grid.SetColumn(buttonPanel, 0);
         Grid.SetColumnSpan(buttonPanel, 2);
 
