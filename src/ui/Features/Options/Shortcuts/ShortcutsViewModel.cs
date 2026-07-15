@@ -308,7 +308,7 @@ public partial class ShortcutsViewModel : ObservableObject
     {
         if (shortCut.Keys.Count > 0)
         {
-            var keys = shortCut.Keys.Select(k => ShortcutManager.GetKeyDisplayName(k)).ToList();
+            var keys = ShortcutManager.OrderKeys(shortCut.Keys).Select(k => ShortcutManager.GetKeyDisplayName(k)).ToList();
             return string.Join(" + ", keys);
         }
 
@@ -939,7 +939,7 @@ public partial class ShortcutsViewModel : ObservableObject
                 continue;
             }
 
-            var keysCombination = string.Join("+", shortcut.Keys.Select(ShortcutManager.NormalizeKeyToken).OrderBy(k => k));
+            var keysCombination = string.Join("+", ShortcutManager.OrderKeys(shortcut.Keys.Select(ShortcutManager.NormalizeKeyToken)));
             if (string.IsNullOrWhiteSpace(keysCombination))
             {
                 continue;
@@ -1063,11 +1063,6 @@ public partial class ShortcutsViewModel : ObservableObject
 
         var keys = new List<string>();
 
-        if (ShiftIsSelected)
-        {
-            keys.Add("Shift");
-        }
-
         if (CtrlIsSelected)
         {
             keys.Add("Ctrl");
@@ -1076,6 +1071,11 @@ public partial class ShortcutsViewModel : ObservableObject
         if (AltIsSelected)
         {
             keys.Add("Alt");
+        }
+
+        if (ShiftIsSelected)
+        {
+            keys.Add("Shift");
         }
 
         if (WinIsSelected)
@@ -1156,7 +1156,76 @@ public partial class ShortcutsViewModel : ObservableObject
 
         var title = MakeDisplayName(p);
         return title.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
-               title.Replace('-', ' ').Contains(searchText.Replace('-', ' '), StringComparison.InvariantCultureIgnoreCase);
+               title.Replace('-', ' ').Contains(searchText.Replace('-', ' '), StringComparison.InvariantCultureIgnoreCase) ||
+               IsKeyCombinationMatch(searchText, p);
+    }
+
+    /// <summary>
+    /// Matches searches like "Control+Shift+R", "shift + ctrl" or "alt+h" against the
+    /// shortcut's keys — modifiers in any order, spaces around '+' optional, and
+    /// aliases like "ctrl" accepted.
+    /// </summary>
+    private static bool IsKeyCombinationMatch(string searchText, ShortCut p)
+    {
+        if (!searchText.Contains('+') || p.Keys.Count == 0)
+        {
+            return false;
+        }
+
+        var tokens = searchText.Split('+', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (tokens.Length == 0)
+        {
+            return false;
+        }
+
+        // Each search token must match a distinct key; longer tokens first so
+        // "control" claims the Control key before a short token like "r" can.
+        var unmatchedKeys = p.Keys.Select(ShortcutManager.NormalizeKeyToken).ToList();
+        foreach (var token in tokens.OrderByDescending(t => t.Length))
+        {
+            var index = unmatchedKeys.FindIndex(k => KeyMatchesSearchToken(k, token));
+            if (index < 0)
+            {
+                return false;
+            }
+
+            unmatchedKeys.RemoveAt(index);
+        }
+
+        return true;
+    }
+
+    private static bool KeyMatchesSearchToken(string key, string token)
+    {
+        var normalizedToken = token.ToLowerInvariant() switch
+        {
+            "ctrl" or "control" => "Control",
+            "alt" or "option" or "opt" => "Alt",
+            "shift" => "Shift",
+            "win" or "windows" or "cmd" or "command" or "meta" or "super" => "Win",
+            _ => token,
+        };
+
+        if (key.Equals(normalizedToken, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        // A bare digit should match its stored "D4"-style token
+        if (normalizedToken.Length == 1 && char.IsDigit(normalizedToken[0]))
+        {
+            return key.Equals("D" + normalizedToken, StringComparison.OrdinalIgnoreCase);
+        }
+
+        // Single characters must match exactly (or the display name, so pasted
+        // mac symbols like "⇧" work) - else "r" would match "Control"
+        if (normalizedToken.Length == 1)
+        {
+            return ShortcutManager.GetKeyDisplayName(key).Equals(normalizedToken, StringComparison.OrdinalIgnoreCase);
+        }
+
+        return key.StartsWith(normalizedToken, StringComparison.OrdinalIgnoreCase) ||
+               ShortcutManager.GetKeyDisplayName(key).Contains(normalizedToken, StringComparison.OrdinalIgnoreCase);
     }
 
     internal void ShortcutsDataGrid_SelectionChanged(object? sender, SelectionChangedEventArgs e)

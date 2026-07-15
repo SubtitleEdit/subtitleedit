@@ -2779,7 +2779,7 @@ public static class UiUtil
         var shortcutString = string.Empty;
         if (shortcut is { Keys.Count: > 0 })
         {
-            shortcutString = string.Join("+", shortcut.Keys.Select(k => ShortcutManager.GetKeyDisplayName(k.ToString())));
+            shortcutString = string.Join("+", ShortcutManager.OrderKeys(shortcut.Keys).Select(k => ShortcutManager.GetKeyDisplayName(k)));
             shortcutString = $"({shortcutString})";
         }
 
