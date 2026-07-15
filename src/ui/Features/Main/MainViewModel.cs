@@ -14573,6 +14573,9 @@ public partial class MainViewModel :
     private void SetActor10() => SetActorByIndex(9);
 
     [RelayCommand]
+    private void RemoveActor() => SetActorForSelectedLines(string.Empty);
+
+    [RelayCommand]
     private async Task SetNewActor()
     {
         var result = await ShowDialogAsync<PromptTextBoxWindow, PromptTextBoxViewModel>(vm =>
@@ -19346,6 +19349,18 @@ public partial class MainViewModel :
                     Header = Se.Language.General.NewDotDotDot,
                     Command = SetNewActorForSelectedLinesCommand,
                 });
+
+                var removeActorMenuItem = new MenuItem
+                {
+                    Header = Se.Language.General.Remove,
+                    Command = RemoveActorCommand,
+                };
+                var removeActorShortcut = usedShortcuts.FirstOrDefault(s => ReferenceEquals(s.Action, RemoveActorCommand));
+                if (removeActorShortcut != null)
+                {
+                    removeActorMenuItem.InputGesture = InitMenu.ToKeyGesture(removeActorShortcut);
+                }
+                MenuItemActors.Items.Add(removeActorMenuItem);
             }
         }
 
