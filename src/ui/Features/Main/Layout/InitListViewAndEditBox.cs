@@ -4,6 +4,7 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
@@ -153,6 +154,11 @@ public static partial class InitListViewAndEditBox
             }
         }
 
+        // Convert row indexes to alternating background brushes when the option is enabled.
+        var alternatingRowBrushConverter = alternatingRowBrush == null
+            ? null
+            : new FuncValueConverter<int, IBrush>(index => index % 2 == 1 ? alternatingRowBrush : Brushes.Transparent);
+
         // Set up data binding for row visibility based on IsHidden property
         vm.SubtitleGrid.LoadingRow += (sender, e) =>
         {
@@ -161,11 +167,15 @@ public static partial class InitListViewAndEditBox
                 Converter = inverseBooleanConverter
             });
 
-            // Tint every other row. Rows are recycled on scroll, so LoadingRow re-fires with the
-            // updated index. Selection still wins because :selected overrides BackgroundRectangle.Fill.
-            if (alternatingRowBrush != null)
+            // Tint every other row. Binding to Index keeps the color in sync when rows are recycled,
+            // inserted, or removed. Selection still wins because :selected overrides BackgroundRectangle.Fill.
+            if (alternatingRowBrushConverter != null)
             {
-                e.Row.Background = e.Row.Index % 2 == 1 ? alternatingRowBrush : Brushes.Transparent;
+                e.Row.Bind(DataGridRow.BackgroundProperty, new Binding(nameof(DataGridRow.Index))
+                {
+                    Source = e.Row,
+                    Converter = alternatingRowBrushConverter,
+                });
             }
         };
 
