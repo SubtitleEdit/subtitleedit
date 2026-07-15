@@ -128,17 +128,36 @@ public class SettingsPage : UserControl
 
     private static Button MakeMenuItem(SettingsSection section, IRelayCommand command)
     {
-        var label = new Label { Content = section.Title, Padding = new Thickness(4, 0, 0, 0) };
+        var label = new Label
+        {
+            Content = section.Title,
+            Padding = new Thickness(6, 0, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        // Icon on a colored rounded square, matching the section header in the scroll view.
         var image = new ContentControl
         {
-            // Menu icon in the section color, matching the section header in the scroll view.
-            Foreground = section.Brush,
+            FontSize = 13,
+            Foreground = Brushes.White,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
         };
         Attached.SetIcon(image, section.IconName);
+        var glyph = new Border
+        {
+            Width = 22,
+            Height = 22,
+            CornerRadius = new CornerRadius(6),
+            Background = section.Brush,
+            VerticalAlignment = VerticalAlignment.Center,
+            Child = image,
+        };
+
         var stackPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal,
-            Children = { image, label }
+            Children = { glyph, label }
         };
 
         var link = new Button
