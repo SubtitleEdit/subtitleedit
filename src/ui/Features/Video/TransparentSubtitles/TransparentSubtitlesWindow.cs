@@ -7,6 +7,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Features.Main.Layout;
 using Nikse.SubtitleEdit.Features.Video.BurnIn;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -126,6 +127,12 @@ public class TransparentSubtitlesWindow : Window
         {
             if (e.PropertyName == nameof(vm.IsBatchMode))
             {
+                if (vm.IsBatchMode)
+                {
+                    // The player is hidden in batch mode - stop its audio too.
+                    vm.VideoPlayerControl?.VideoPlayer.Pause();
+                }
+
                 UpdateGrowAreas();
                 LockMinimumToContentSize(); // batch mode needs more width; re-fit and re-lock the minimum
             }
@@ -133,8 +140,15 @@ public class TransparentSubtitlesWindow : Window
         UpdateGrowAreas();
 
         Activated += delegate { buttonOk.Focus(); }; // hack to make OnKeyDown work
+        Loaded += (_, _) => vm.Loaded();
 
         Opened += (_, _) => LockMinimumToContentSize();
+    }
+
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        base.OnClosing(e);
+        _vm.CleanupPreview();
     }
 
     private void LockMinimumToContentSize()
@@ -402,7 +416,8 @@ public class TransparentSubtitlesWindow : Window
     {
         var checkBoxCut = UiUtil.MakeCheckBox(Se.Language.Video.BurnIn.Cut, vm, nameof(vm.IsCutActive));
 
-        var buttonCutFrom = UiUtil.MakeButtonBrowse(vm.BrowseCutFromCommand).WithMarginTop(10).WithRightAlignment();
+        var buttonCutFrom = UiUtil.MakeButtonBrowse(vm.BrowseCutFromCommand);
+        buttonCutFrom.VerticalAlignment = VerticalAlignment.Center;
         var labelFromTime = UiUtil.MakeLabel(Se.Language.Video.BurnIn.FromTime);
         var timeUpDownFrom = new TimeCodeUpDown
         {
@@ -411,7 +426,8 @@ public class TransparentSubtitlesWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
         };
 
-        var buttonCutTo = UiUtil.MakeButtonBrowse(vm.BrowseCutToCommand).WithMarginTop(10).WithRightAlignment();
+        var buttonCutTo = UiUtil.MakeButtonBrowse(vm.BrowseCutToCommand);
+        buttonCutTo.VerticalAlignment = VerticalAlignment.Center;
         var labelToTime = UiUtil.MakeLabel(Se.Language.Video.BurnIn.ToTime);
         var timeUpDownTo = new TimeCodeUpDown
         {
@@ -427,11 +443,10 @@ public class TransparentSubtitlesWindow : Window
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
                 new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
             },
             ColumnDefinitions =
             {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
                 new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
             },
@@ -443,22 +458,38 @@ public class TransparentSubtitlesWindow : Window
 
         grid.Add(checkBoxCut, 0, 0);
 
-        grid.Add(buttonCutFrom, 1, 1);
-        grid.Add(labelFromTime, 2, 0);
-        grid.Add(timeUpDownFrom, 2, 1);
+        grid.Add(labelFromTime, 1, 0);
+        grid.Add(timeUpDownFrom, 1, 1);
+        grid.Add(buttonCutFrom, 1, 2);
 
-        grid.Add(buttonCutTo, 3, 1);
-        grid.Add(labelToTime, 4, 0);
-        grid.Add(timeUpDownTo, 4, 1);
+        grid.Add(labelToTime, 2, 0);
+        grid.Add(timeUpDownTo, 2, 1);
+        grid.Add(buttonCutTo, 2, 2);
 
-        return UiUtil.MakeBorderForControl(grid).WithMarginRight(5);
+        return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
     }
 
     private static Border MakePreviewView(TransparentSubtitlesViewModel vm)
     {
-
         var labelPreview = UiUtil.MakeLabel(Se.Language.General.Preview);
 
+        // Live preview (single mode): the loaded video plays in an embedded mpv player
+        // while the current style/effects are generated as an ASSA subtitle and rendered
+        // on top via libass (sub-add/sub-reload) - see TransparentSubtitlesViewModel.LoadVideoPreview.
+        // Single mode always has a video (no video forces batch mode), so the player can
+        // fully replace the old static image preview there.
+        vm.VideoPlayerControl = InitVideoPlayer.MakeVideoPlayer();
+        vm.VideoPlayerControl.FullScreenIsVisible = true;
+        vm.VideoPlayerControl.FullScreenCommand = vm.PreviewFullScreenCommand;
+        vm.VideoPlayerControl.MinWidth = 480;
+        vm.VideoPlayerControl.MinHeight = 270;
+        vm.VideoPlayerControl.HorizontalAlignment = HorizontalAlignment.Stretch;
+        vm.VideoPlayerControl.VerticalAlignment = VerticalAlignment.Stretch;
+        vm.VideoPlayerControl.Bind(Visual.IsVisibleProperty,
+            new Binding(nameof(vm.IsBatchMode)) { Source = vm, Converter = new InverseBooleanConverter() });
+
+        // Batch mode fallback: batch items are separate files (possibly with no video at
+        // all), so show a static image rendered from the current style settings instead.
         var image = new Image
         {
             [!Image.SourceProperty] = new Binding(nameof(vm.ImagePreview)),
@@ -478,6 +509,7 @@ public class TransparentSubtitlesWindow : Window
             MinWidth = 300,
             Height = double.NaN,
         };
+        scrollViewer.Bind(Visual.IsVisibleProperty, new Binding(nameof(vm.IsBatchMode)) { Source = vm });
 
         var grid = new Grid
         {
@@ -497,6 +529,7 @@ public class TransparentSubtitlesWindow : Window
         };
 
         grid.Add(labelPreview, 0, 0);
+        grid.Add(vm.VideoPlayerControl, 1, 0);
         grid.Add(scrollViewer, 1, 0);
 
         return UiUtil.MakeBorderForControl(grid).WithMarginBottom(5).WithMarginRight(5);
