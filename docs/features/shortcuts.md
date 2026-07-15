@@ -68,6 +68,10 @@ Use the filter dropdown to narrow the list:
 
 Use the **search box** to filter commands by name.
 
+## Sorting
+
+Click a column header to sort the list by that column — **Active in**, **Category**, **Name**, and **Shortcut** are all sortable. Click again to reverse the order. Sorting stays active while filtering by category tile or search text, so you can e.g. sort a single category by shortcut key.
+
 ## Duplicate Detection
 
 When saving, Subtitle Edit checks for duplicate shortcut assignments. If duplicates are found within the same scope (or if an "Everywhere" shortcut conflicts with any other scope), you will be warned and can choose to save anyway or go back and fix them.
