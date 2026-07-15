@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
@@ -162,11 +163,34 @@ public class SpeechToTextPostProcessingWindow : Window
         grid.Add(numericBeamSize, row, 1, 1, 2);
         row++;
         grid.Add(labelBeamSizeNote, row, 0, 1, 3);
-        row++;
 
-        grid.Add(buttonPanel, row, 0, 1, 3);
+        // The settings scroll while the OK/Cancel bar stays pinned, so the dialog
+        // remains usable when the screen is too small for the full form (e.g. high
+        // DPI) and the window gets height-clamped to the working area.
+        var scrollViewer = new ScrollViewer
+        {
+            Content = grid,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+        };
 
-        Content = grid;
+        var outerGrid = new Grid
+        {
+            RowDefinitions =
+            {
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) },
+            },
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
+        };
+        buttonPanel.Margin = new Avalonia.Thickness(10, 0, 10, 10);
+        outerGrid.Add(scrollViewer, 0, 0);
+        outerGrid.Add(buttonPanel, 1, 0);
+
+        Content = outerGrid;
 
         Activated += delegate { Focus(); }; // hack to make OnKeyDown work
     }
