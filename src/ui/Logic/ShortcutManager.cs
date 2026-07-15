@@ -53,6 +53,30 @@ public class ShortcutManager : IShortcutManager
         return key;
     }
 
+    /// <summary>
+    /// Orders shortcut key tokens canonically — Control, Alt, Shift, Win, then regular
+    /// keys — so a shortcut always reads the same way regardless of stored order.
+    /// </summary>
+    public static List<string> OrderKeys(IEnumerable<string> keys)
+    {
+        return keys
+            .OrderBy(GetCanonicalKeyRank)
+            .ThenBy(NormalizeKeyToken, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private static int GetCanonicalKeyRank(string key)
+    {
+        return NormalizeKeyToken(key) switch
+        {
+            "Control" => 0,
+            "Alt" => 1,
+            "Shift" => 2,
+            "Win" => 3,
+            _ => 4,
+        };
+    }
+
     public static Key GetShortcutKey(KeyEventArgs e)
     {
         return GetShortcutKey(e.Key, e.PhysicalKey);

@@ -91,43 +91,39 @@ public partial class GetKeyViewModel : ObservableObject
         // bindable distinct from main Delete and from numpad-Decimal (NumLock on).
         var keyName = ShortcutManager.GetShortcutKeyName(e);
 
-        PressedKey = keyName;
-        PressedKeyOnly = PressedKey;
+        PressedKeyOnly = keyName;
         IsControlPressed = e.KeyModifiers.HasFlag(KeyModifiers.Control);
         IsAltPressed = e.KeyModifiers.HasFlag(KeyModifiers.Alt);
         IsShiftPressed = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
         IsWinPressed = _isWinDown;
 
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Shift) &&
-            PressedKey != Key.LeftShift.ToString() &&
-            PressedKey != Key.RightShift.ToString())
-        {
-            PressedKey = "Shift+";
-            infoText = shiftLabel + " + ";       
-        }
-        
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Control) &&
-            PressedKey != Key.LeftCtrl.ToString() &&
-            PressedKey != Key.RightCtrl.ToString())
+        // Build the chord in canonical modifier order: Control, Alt, Shift, Win
+        PressedKey = string.Empty;
+
+        if (IsControlPressed)
         {
             PressedKey += "Ctrl+";
             infoText += ctrlLabel + " + ";
         }
 
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Alt) &&
-            PressedKey != Key.LeftAlt.ToString() &&
-            PressedKey != Key.RightAlt.ToString())
+        if (IsAltPressed)
         {
             PressedKey += "Alt+";
-            infoText += altLabel + " + ";  
+            infoText += altLabel + " + ";
         }
 
-        if (_isWinDown)
+        if (IsShiftPressed)
+        {
+            PressedKey += "Shift+";
+            infoText += shiftLabel + " + ";
+        }
+
+        if (IsWinPressed)
         {
             PressedKey += "Win+";
-            infoText += winLabel + " + ";       
+            infoText += winLabel + " + ";
         }
-        
+
         PressedKey += keyName;
         infoText += keyName;
 
