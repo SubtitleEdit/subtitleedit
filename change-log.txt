@@ -3,7 +3,7 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
-v5.1.0-rc3 (TBD)
+v5.1.0-rc3 (15th of July 2026)
 
 * Export: add "DVD sup (MuxMan/Scenarist)" image-based export - the classic DVD-Video subpicture .sup that DVD authoring tools import
 * Spell check: start at the current line instead of asking "Continue spell check from current line?" - the question is now only asked when an earlier spell check was left unfinished
