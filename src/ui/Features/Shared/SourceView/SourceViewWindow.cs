@@ -1,7 +1,9 @@
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
+using AvaloniaEdit;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 
 namespace Nikse.SubtitleEdit.Features.Shared.SourceView;
 
@@ -18,6 +20,23 @@ public class SourceViewWindow : Window
         CanResize = true;
         vm.Window = this;
         DataContext = vm;
+
+        // Add a context menu for the advanced text editor.
+        if (vm.SourceViewTextBox.TextControl is TextEditor textEditor)
+        {
+            var textBoxContextFlyout = new MenuFlyout
+            {
+                Placement = PlacementMode.Pointer,
+                Items =
+                {
+                    new MenuItem { Header = Se.Language.General.Cut, Command = vm.CutCommand },
+                    new MenuItem { Header = Se.Language.General.Copy, Command = vm.CopyCommand },
+                    new MenuItem { Header = Se.Language.General.Paste, Command = vm.PasteCommand },
+                },
+            };
+            textEditor.ContextFlyout = textBoxContextFlyout;
+            UiUtil.AttachMacContextFlyoutHandler(textEditor);
+        }
 
         var contentBorder = new Border
         {
