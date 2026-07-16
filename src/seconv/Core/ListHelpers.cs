@@ -1,4 +1,5 @@
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Spectre.Console;
 using System.Text;
 
@@ -117,12 +118,19 @@ internal static class ListHelpers
             "[green]ollama[/]",
             "HTTP",
             "Local Ollama with vision model. --ollama-url, --ollama-model");
+
+        var llamaCppServer = LlamaCppLocal.TryEnsureServerBinary() ? "installed ✓" : "not found";
+        var llamaCppModels = LlamaCppServerManager.OcrModels.Count(LlamaCppServerManager.IsModelInstalled);
+        table.AddRow(
+            "[green]llamacpp[/]",
+            "HTTP",
+            $"llama-server ({llamaCppServer}) + OCR model ({llamaCppModels} installed) — download via SE's OCR window, or --ocr-url. --ocr-model, --ocr-url");
         table.AddRow(
             "[green]paddle[/] / [green]paddleocr[/]",
             "subprocess",
             $"`paddleocr` binary on PATH ({paddle}) — `pip install paddleocr`");
 
         AnsiConsole.Write(table);
-        AnsiConsole.MarkupLine("\n[dim]Pass language via --ocr-language (Tesseract: ISO 639-2; Paddle: en/de/fr/...; Ollama: human name).[/]");
+        AnsiConsole.MarkupLine("\n[dim]Pass language via --ocr-language (Tesseract: ISO 639-2; Paddle: en/de/fr/...; Ollama/llama.cpp: human name).[/]");
     }
 }

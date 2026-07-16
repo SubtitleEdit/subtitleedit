@@ -95,16 +95,24 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public bool PlainTextNoBlankLine { get; init; }
 
         [CommandOption("--ocr-engine|--ocrengine")]
-        [Description("OCR engine: tesseract | nocr | binaryocr | ollama | paddle (default: tesseract)")]
+        [Description("OCR engine: tesseract | nocr | binaryocr | ollama | llamacpp | paddle (default: tesseract)")]
         public string? OcrEngine { get; init; }
 
         [CommandOption("--ocr-language|--ocrlanguage")]
-        [Description("Language for OCR (Tesseract: ISO 639-2 like eng/deu; Paddle: en/de; Ollama: human name like English)")]
+        [Description("Language for OCR (Tesseract: ISO 639-2 like eng/deu; Paddle: en/de; Ollama/llama.cpp: human name like English)")]
         public string? OcrLanguage { get; init; }
 
         [CommandOption("--ocr-db|--ocrdb")]
         [Description("Path to a .nocr file (--ocr-engine=nocr) or .db file (--ocr-engine=binaryocr)")]
         public string? OcrDb { get; init; }
+
+        [CommandOption("--ocr-model|--ocrmodel")]
+        [Description("llama.cpp OCR model: curated .gguf file name or full path (default: first downloaded OCR model)")]
+        public string? OcrModel { get; init; }
+
+        [CommandOption("--ocr-url|--ocrurl")]
+        [Description("llama.cpp OCR: endpoint of an already-running llama-server; skips the local auto-start")]
+        public string? OcrUrl { get; init; }
 
         [CommandOption("--dictionary-folder|--dictionaryfolder")]
         [Description("Folder with Hunspell dictionaries + *_OCRFixReplaceList.xml; enables the 'Fix common OCR errors' pass of --fix-common-errors")]
@@ -393,14 +401,24 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 return 1;
             }
 
-            // Validate --ocr-engine: tesseract | nocr | binaryocr | ollama | paddle
-            var supportedEngines = new[] { "tesseract", "nocr", "binaryocr", "binary", "ollama", "paddle", "paddleocr" };
+            // Validate --ocr-engine: tesseract | nocr | binaryocr | ollama | llamacpp | paddle
+            var supportedEngines = new[] { "tesseract", "nocr", "binaryocr", "binary", "ollama", "llamacpp", "llama.cpp", "llama", "paddle", "paddleocr" };
             if (!string.IsNullOrWhiteSpace(settings.OcrEngine) &&
                 !supportedEngines.Contains(settings.OcrEngine, StringComparer.OrdinalIgnoreCase))
             {
                 AnsiConsole.MarkupLine(
                     $"[red]Error: OCR engine '{settings.OcrEngine.EscapeMarkup()}' is not supported (pass via --ocr-engine). " +
-                    $"Use one of: {string.Join(", ", supportedEngines)}.[/]");
+                    "Use one of: tesseract, nocr, binaryocr, ollama, llamacpp, paddle.[/]");
+                return 1;
+            }
+
+            // --ocr-model/--ocr-url only apply to the llama.cpp OCR engine - fail fast instead
+            // of silently ignoring them under the default (tesseract) engine.
+            var isLlamaCppOcr = !string.IsNullOrWhiteSpace(settings.OcrEngine) &&
+                                settings.OcrEngine.Trim().ToLowerInvariant() is "llamacpp" or "llama.cpp" or "llama";
+            if ((!string.IsNullOrWhiteSpace(settings.OcrModel) || !string.IsNullOrWhiteSpace(settings.OcrUrl)) && !isLlamaCppOcr)
+            {
+                AnsiConsole.MarkupLine("[red]Error: --ocr-model/--ocr-url require --ocr-engine:llamacpp.[/]");
                 return 1;
             }
 
@@ -649,6 +667,8 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 PgsIsolateColors = !settings.NoPgsIsolateColors,
                 OllamaUrl = settings.OllamaUrl,
                 OllamaModel = settings.OllamaModel,
+                OcrUrl = settings.OcrUrl,
+                OcrModel = settings.OcrModel,
                 TranslateTo = settings.TranslateTo,
                 TranslateFrom = settings.TranslateFrom,
                 TranslateEngine = settings.TranslateEngine,

@@ -39,9 +39,11 @@ internal static class HelpDisplay
         ShowParameter("--teletext-only", "Process teletext only");
         ShowParameter("--teletext-only-page:<page number>", "Teletext page number");
         ShowParameter("--track-number:<track list>", "Comma separated track number list");
-        ShowParameter("--ocr-engine:<engine>", "OCR engine: tesseract | nocr | binaryocr | ollama | paddle");
+        ShowParameter("--ocr-engine:<engine>", "OCR engine: tesseract | nocr | binaryocr | ollama | llamacpp | paddle");
         ShowParameter("--ocr-language:<lang>", "Language for OCR (e.g. eng, deu, spa)");
         ShowParameter("--ocr-db:<path>", ".nocr (--ocr-engine=nocr) or .db (--ocr-engine=binaryocr)");
+        ShowParameter("--ocr-model:<model>", "llamacpp OCR .gguf file name/path (default: first downloaded OCR model)");
+        ShowParameter("--ocr-url:<url>", "Endpoint of an already-running llama-server for OCR (skips the auto-start)");
         ShowParameter("--time-codes-only", "Image sources (.sup/VobSub/PGS/DVB) -> text with time codes only; skips OCR");
         ShowParameter("--no-vobsub-isolate-colors", "Disable VobSub OCR colour isolation (on by default; isolation binarises to black-on-white, dropping outline colours)");
         ShowParameter("--no-pgs-isolate-colors", "Disable PGS/DVB-sub OCR colour isolation (on by default; isolation binarises to black-on-white so the white glyph fill survives the OCR canvas)");
@@ -119,6 +121,9 @@ internal static class HelpDisplay
         ShowExample(
             "seconv movie.sup subrip --ocr-engine:nocr --ocr-db:Latin.nocr",
             "OCR a Blu-Ray .sup using nOCR");
+        ShowExample(
+            "seconv movie.sup subrip --ocr-engine:llamacpp",
+            "OCR a Blu-Ray .sup via llama.cpp (auto-starts a local llama-server)");
         ShowExample(
             "seconv movie.sup subrip --time-codes-only",
             "Extract only the time codes from a .sup (no OCR; empty text)");

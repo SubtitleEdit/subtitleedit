@@ -59,6 +59,7 @@ Supported OCR engines in Batch Convert:
 - BinaryOcr
 - Tesseract
 - Ollama
+- llama.cpp (curated OCR vision models — GLM-OCR, LightOnOCR, PaddleOCR-VL; a local `llama-server` is started automatically)
 - PaddleOCR (Windows and Linux only)
 
 Subtitle Edit 5 can auto-detect language and pixels-are-space settings for nOcr/BinaryOcr in many batch workflows. This reduces the amount of manual setup needed when converting many image-based subtitle files with similar fonts.

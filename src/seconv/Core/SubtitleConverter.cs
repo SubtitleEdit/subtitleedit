@@ -919,6 +919,12 @@ internal record class ConversionOptions
     /// <summary>Ollama vision model (default <c>llama3.2-vision</c>).</summary>
     public string? OllamaModel { get; init; }
 
+    /// <summary>llama.cpp OCR: endpoint of an already-running llama-server; skips the local auto-start.</summary>
+    public string? OcrUrl { get; init; }
+
+    /// <summary>llama.cpp OCR model: curated <c>.gguf</c> file name or full path (default: first installed OCR model).</summary>
+    public string? OcrModel { get; init; }
+
     /// <summary>Auto-translate target language (code or English name). Non-null enables translation.</summary>
     public string? TranslateTo { get; init; }
 

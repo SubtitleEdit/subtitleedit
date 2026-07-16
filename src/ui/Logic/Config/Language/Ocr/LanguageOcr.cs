@@ -111,6 +111,8 @@ public class LanguageOcr
     public string FallbackOcrDatabase { get; set; }
     public string ShowAllOllamaModels { get; set; }
     public string OllamaModelLikelyWrong { get; set; }
+    public string LlamaCppNotDownloaded { get; set; }
+    public string LlamaCppReturnedNoText { get; set; }
 
     public LanguageOcr()
     {
@@ -224,5 +226,7 @@ public class LanguageOcr
 
         ShowAllOllamaModels = "Show all models (not just vision-capable)";
         OllamaModelLikelyWrong = "Ollama returned no text - the selected model may not support OCR / vision";
+        LlamaCppNotDownloaded = "llama.cpp engine/model not downloaded - download via batch convert settings";
+        LlamaCppReturnedNoText = "llama.cpp returned no text - check the server and model";
     }
 }
