@@ -1800,32 +1800,45 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
 
         private static TimeCode GetTimeCodeFromString(string time)
         {
-            // h:mm:ss.cc
-            string[] timeCode = time.Split(':', '.');
-            
-            var lastPart = timeCode[3].Trim();
+            // h:mm:ss.cc - parsed with span slices; this runs twice per Dialogue line when
+            // loading a file, and the previous Split(':', '.') allocated a string[] plus one
+            // substring per part for every call.
+            var span = time.AsSpan();
+            var i1 = span.IndexOfAny(':', '.');
+            var afterHours = i1 < 0 ? default : span.Slice(i1 + 1);
+            var i2 = afterHours.IndexOfAny(':', '.');
+            var afterMinutes = i2 < 0 ? default : afterHours.Slice(i2 + 1);
+            var i3 = afterMinutes.IndexOfAny(':', '.');
+            if (i1 < 0 || i2 < 0 || i3 < 0)
+            {
+                throw new FormatException($"Invalid ASSA time code: {time}");
+            }
+
+            var afterSeconds = afterMinutes.Slice(i3 + 1);
+            var i4 = afterSeconds.IndexOfAny(':', '.');
+            var lastPart = (i4 < 0 ? afterSeconds : afterSeconds.Slice(0, i4)).Trim();
+
             var ms = 0;
             if (lastPart.Length == 2) // correct ASSA time code
             {
                 ms = int.Parse(lastPart) * 10;
             }
-            else if(lastPart.Length == 3)
+            else if (lastPart.Length == 3)
             {
                 ms = int.Parse(lastPart); // 3 digits, e.g. 123 = 123 ms
             }
-            else if (lastPart.Length >= 3)
+            else if (lastPart.Length > 3)
             {
-                lastPart = lastPart.Substring(0, 2);
-                ms = int.Parse(lastPart) * 10;
+                ms = int.Parse(lastPart.Slice(0, 2)) * 10;
             }
             else if (lastPart.Length == 1)
             {
                 ms = int.Parse(lastPart) * 100;
             }
 
-            return new TimeCode(int.Parse(timeCode[0]),
-                int.Parse(timeCode[1]),
-                int.Parse(timeCode[2]),
+            return new TimeCode(int.Parse(span.Slice(0, i1)),
+                int.Parse(afterHours.Slice(0, i2)),
+                int.Parse(afterMinutes.Slice(0, i3)),
                 ms);
         }
 
