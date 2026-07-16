@@ -15,6 +15,14 @@ v5.1.0-rc4 (TBD)
 * Waveform: the "Seek video backward/forward" toolbar buttons can now be assigned keyboard shortcuts - the assigned keys show in the button tooltips and also work in the full screen video window - thx Surlime
 * Shortcuts: all columns are now sortable - Active in, Category, Name and Shortcut - and sorting stays active while filtering by category or search - thx GrampaWildWilly
 * Drag and drop now works on Linux (Avalonia UI 12.1.0 fix)
+* Settings: colored section icons in the menu and section headers, matching the Shortcuts window look
+* Batch convert: show the status column as colored badges - green for converted, red for errors, gray for cancelled
+* Word lists: colored panel icons and matching count badges - also fixes the near-unreadable badge text in light theme
+* Batch convert: add llama.cpp OCR engine with local OCR vision models (GLM-OCR, LightOnOCR, PaddleOCR-VL) and automatic engine/model download - thx go2tom42
+* Command line (seconv): add llama.cpp OCR engine (--ocr-engine:llamacpp with --ocr-model/--ocr-url), starting the local server automatically - thx go2tom42
+* Waveform: fix the video player ending up both docked and undocked after closing the waveform toolbar settings while the audio visualizer was undocked - thx GrampaWildWilly
+* Update CrispASR to v0.8.11
+* Update llama.cpp to b10035
 
 -----------------------------------------------------------------------------------------------------
 
