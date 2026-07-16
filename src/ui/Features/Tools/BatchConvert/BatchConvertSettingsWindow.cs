@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -101,6 +102,10 @@ public class BatchConvertSettingsWindow : Window
         var labelLlamaCppModel = UiUtil.MakeLabel(Se.Language.General.Model).WithBindVisible(vm, nameof(vm.IsLlamaCppVisible)).WithMarginLeft(10);
         var comboBoxLlamaCppModels = UiUtil.MakeComboBox(vm.LlamaCppOcrModels, vm, nameof(vm.SelectedLlamaCppOcrModel))
             .WithBindVisible(nameof(vm.IsLlamaCppVisible));
+        comboBoxLlamaCppModels.ItemTemplate = StatusDots.ComboItemTemplate<LlamaCppModelDisplay>(
+            model => model.Model.DisplayName,
+            model => model.Model.Size,
+            model => model.IsInstalled ? DownloadDotStatus.UpToDate : DownloadDotStatus.NotInstalled);
         var panelOcrEngine = new StackPanel
         {
             Orientation = Orientation.Horizontal,
