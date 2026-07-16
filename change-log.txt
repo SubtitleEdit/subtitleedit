@@ -3,6 +3,16 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.1.0-rc5 (TBD)
+
+* Point sync via other subtitle: sync points are now chronologically sorted, and setting a point on a line that already has one re-points it instead of adding a duplicate - thx fraternl
+* Point sync via other subtitle: fix deleting a sync point - the context menu now shows Delete (and Delete/Backspace on the list works) instead of silently removing the point on right-click - thx fraternl
+* Point sync via other subtitle: clicking a line in the left list scrolls the other subtitle's list to the matching time (selection is left untouched) - thx fraternl
+* Point sync via other subtitle: icon on the "Set sync point" button
+* Performance: faster time code display in HH:MM:SS:FF mode, faster ASSA/SSA file loading, and allocation-free URL checks
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-rc4 (16th of July 2026)
 
 * Live spell check: only show the subtitle grid spell check items (suggestions, add to user dictionary, ignore all) when a single line is selected
