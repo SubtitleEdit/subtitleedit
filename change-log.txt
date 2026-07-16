@@ -16,6 +16,7 @@ v5.1.0-rc5 (TBD)
 * Speech to text (Qwen3 ASR CPP): update engine to v0.1.6 - better mixed CJK tokenization and multilingual alignment
 * Speech to text (Qwen3 ASR CPP): always write the engine's output JSON to the tools log for better bug reports
 * Update CrispASR to v0.8.12
+* Export PGS/VobSub: list every installed font face like SE4 ("Segoe UI Semibold", "Arial Black", ...) - the list only had font family names, hiding named faces, and a picked face now also renders with its own weight - thx robertmajsky
 
 -----------------------------------------------------------------------------------------------------
 
