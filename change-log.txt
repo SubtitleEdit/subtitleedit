@@ -15,6 +15,7 @@ v5.1.0-rc5 (TBD)
 * Speech to text (Qwen3 ASR CPP): fix "produced output that could not be read" persisting forever - the engine's JSON bugs were fixed engine-side long ago, but an already-installed engine was never updated; SE now detects outdated engine builds and offers the update - thx ProFire
 * Speech to text (Qwen3 ASR CPP): update engine to v0.1.6 - better mixed CJK tokenization and multilingual alignment
 * Speech to text (Qwen3 ASR CPP): always write the engine's output JSON to the tools log for better bug reports
+* Update CrispASR to v0.8.12
 
 -----------------------------------------------------------------------------------------------------
 
