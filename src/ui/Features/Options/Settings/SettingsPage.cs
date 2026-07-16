@@ -255,6 +255,7 @@ public class SettingsPage : UserControl
         sections.Add(new SettingsSection(Se.Language.General.General, IconNames.Cogs, "#8494a4",
         [
             MakeNumericSettingInt(Se.Language.Options.Settings.NewEmptyDefaultMs, nameof(_vm.NewEmptyDefaultMs)),
+            MakeNumericSettingInt(Se.Language.Options.Settings.TimeCodeUpDownStepMs, nameof(_vm.TimeCodeUpDownStepMs), 1, 5000),
             MakeCheckboxSetting(Se.Language.Options.Settings.PromptBeforeDelete, nameof(_vm.PromptBeforeDelete)),
             MakeCheckboxSetting(Se.Language.Options.Settings.UseFrameMode, nameof(_vm.UseFrameMode)),
             MakeCheckboxSetting(Se.Language.Options.Settings.TextBoxLimitNewLines, nameof(_vm.TextBoxLimitNewLines)),

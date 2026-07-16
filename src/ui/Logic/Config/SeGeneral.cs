@@ -57,6 +57,10 @@ public class SeGeneral
     public int SubtitleMaximumDisplayMilliseconds { get; set; }
     public MsOrFramesValue MinimumBetweenLines { get; set; } = new() { Milliseconds = 24, Frames = 2 };
     public int NewEmptyDefaultMs { get; set; }
+
+    /// <summary>How much the time up/down controls change per step when the caret is on the
+    /// milliseconds part. Frame mode always steps one frame (#12506).</summary>
+    public int TimeCodeUpDownStepMs { get; set; }
     public bool PromptBeforeDelete { get; set; }
     public bool LockTimeCodes { get; set; }
     public bool RememberPositionAndSize { get; set; }
@@ -172,6 +176,7 @@ public class SeGeneral
         AutoConvertToUtf8 = false;
         AutoGuessAnsiEncoding = true;
         NewEmptyDefaultMs = 2000;
+        TimeCodeUpDownStepMs = 100;
         PromptBeforeDelete = true;
         AutoBackupOn = true;
         AutoBackupIntervalMinutes = 5;

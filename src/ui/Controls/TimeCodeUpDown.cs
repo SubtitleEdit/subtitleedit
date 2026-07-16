@@ -19,11 +19,11 @@ namespace Nikse.SubtitleEdit.Controls
 {
     public class TimeCodeUpDown : TemplatedControl
     {
-        // Mouse spinner and wheel nudge by a fixed small step, matching SE4, instead of stepping
-        // the segment the text caret happens to sit in. The caret defaults to the hours field, so
-        // a plain spinner click used to jump a full hour (#12506). Keyboard Up/Down still steps the
-        // caret's segment, which is the deliberate way to change hours/minutes/seconds precisely.
-        private const int MouseStepMilliseconds = 100;
+        // Every step (spinner, wheel and Up/Down) applies to the part the caret is on. The caret
+        // starts on the last part, the milliseconds or frames, so a plain spinner click makes the
+        // small adjustment that is wanted almost every time; it used to start on the hours and
+        // jump a whole hour (#12506). The millisecond step size is configurable in Settings.
+        private const int LastPartCaretIndex = 9;
 
         public bool UseVideoOffset { get; set; } = false;
 
@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             control.AddHandler(InputElement.PointerWheelChangedEvent, (s, e) =>
             {
-                MouseNudge(e.Delta.Y > 0 ? +1 : -1);
+                ChangeValue(e.Delta.Y > 0 ? +1 : -1);
                 e.Handled = true;
             });
         }
@@ -202,7 +202,7 @@ namespace Nikse.SubtitleEdit.Controls
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     Width = double.NaN,
                     BorderBrush = Brushes.Transparent,
-                    CaretIndex = 0,
+                    CaretIndex = LastPartCaretIndex,
                 };
 
                 var grid = new Grid
@@ -243,8 +243,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (_textBox != null)
             {
-                // Select the first digit position
-                _textBox.CaretIndex = 0;
+                _textBox.CaretIndex = LastPartCaretIndex;
             }
         }
 
@@ -321,7 +320,7 @@ namespace Nikse.SubtitleEdit.Controls
                 SetValue(ValueProperty, value); // OnPropertyChanged clamps, reformats the text and raises ValueChanged
                 if (_textBox != null)
                 {
-                    _textBox.CaretIndex = 0;
+                    _textBox.CaretIndex = LastPartCaretIndex;
                 }
             }
         }
@@ -475,29 +474,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void OnSpin(object? sender, SpinEventArgs e)
         {
-            MouseNudge(e.Direction == SpinDirection.Increase ? +1 : -1);
-        }
-
-        // Fixed small step for mouse interaction (spinner buttons and wheel). In frame mode a
-        // step is one whole frame; otherwise it is MouseStepMilliseconds, independent of where
-        // the caret is (#12506).
-        private void MouseNudge(int direction)
-        {
-            TimeSpan newVal;
-            if (Se.Settings.General.UseFrameMode)
-            {
-                var totalFrames = SubtitleFormat.MillisecondsToFrames(Value.TotalMilliseconds);
-                newVal = TimeSpan.FromMilliseconds(SubtitleFormat.FramesToMilliseconds(totalFrames + direction));
-            }
-            else
-            {
-                newVal = Value.Add(TimeSpan.FromMilliseconds(direction * MouseStepMilliseconds));
-            }
-
-            _isUpdatingFromValue = true;
-            SetValue(ValueProperty, newVal);
-            UpdateText();
-            _isUpdatingFromValue = false;
+            ChangeValue(e.Direction == SpinDirection.Increase ? +1 : -1);
         }
 
         private void OnTextBoxKeyDown(object? sender, KeyEventArgs e)
@@ -594,7 +571,8 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
-                    newVal = newVal.Add(TimeSpan.FromMilliseconds(delta));
+                    var step = Math.Max(1, Se.Settings.General.TimeCodeUpDownStepMs);
+                    newVal = newVal.Add(TimeSpan.FromMilliseconds(delta * step));
                 }
             }
 
