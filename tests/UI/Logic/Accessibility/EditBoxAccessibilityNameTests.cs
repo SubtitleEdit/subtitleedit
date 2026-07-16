@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Avalonia;
 using Avalonia.Automation;
@@ -5,6 +6,7 @@ using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
+using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Themes.Fluent;
 using Avalonia.VisualTree;
 using Nikse.SubtitleEdit.Controls;
@@ -22,6 +24,14 @@ public class TestApp : Application
         // The custom up/down controls embed a ButtonSpinner + TextBox that need a
         // theme to resolve their templates when shown in a headless window.
         Styles.Add(new FluentTheme());
+
+        // AvaloniaEdit brings its own theme; without it a TextEditor gets no template and
+        // never materializes its TextArea, so tests over the editor see nothing (same include
+        // Program.cs adds at startup).
+        Styles.Add(new StyleInclude(new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml", UriKind.Absolute))
+        {
+            Source = new Uri("avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml"),
+        });
 
         // Windows built in code use Attached.SetIcon; without the providers Program.cs
         // registers at startup, constructing such a window throws KeyNotFoundException.
