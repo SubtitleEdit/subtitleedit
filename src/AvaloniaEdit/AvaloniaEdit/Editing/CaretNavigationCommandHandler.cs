@@ -238,6 +238,21 @@ namespace AvaloniaEdit.Editing
 
         internal static TextViewPosition GetNewCaretPosition(TextView textView, TextViewPosition caretPosition, CaretMovementType direction, bool enableVirtualSpace, ref double desiredXPos)
         {
+            // In a right-to-left editor the Left key must still move the caret visually left, which
+            // is logically forward. Avalonia's own TextPresenter.MoveCaretHorizontal flips the
+            // logical direction the same way for a RightToLeft control, so flipping here keeps the
+            // editor consistent with every other Avalonia text control. Only the single character
+            // steps flip: Avalonia does not flip whole word movement either, so that is left alone.
+            if (textView.FlowDirection == Avalonia.Media.FlowDirection.RightToLeft)
+            {
+                direction = direction switch
+                {
+                    CaretMovementType.CharLeft => CaretMovementType.CharRight,
+                    CaretMovementType.CharRight => CaretMovementType.CharLeft,
+                    _ => direction
+                };
+            }
+
             switch (direction)
             {
                 case CaretMovementType.None:
