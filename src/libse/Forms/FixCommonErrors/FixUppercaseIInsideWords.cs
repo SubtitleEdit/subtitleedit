@@ -117,17 +117,22 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             callbacks.UpdateFixStatus(uppercaseIsInsideLowercaseWords, Language.FixUppercaseIInsideLowercaseWords);
         }
 
+        // Static so the loop conditions below don't rebuild "NewLine + punctuation" (a concat
+        // plus a fresh string) on every single character step of the word scan.
+        private static readonly string WordBoundaryCharsBefore = Environment.NewLine + @" ,.!?""'=()[]/-¿¡«»“”>—";
+        private static readonly string WordBoundaryCharsAfter = Environment.NewLine + @" ,.!?:;""'=()[]/-«»“”<—";
+
         private static string GetWholeWord(string text, int index)
         {
             int start = index;
-            while (start > 0 && !(Environment.NewLine + @" ,.!?""'=()[]/-¿¡«»“”>—").Contains(text[start - 1]) ||
+            while (start > 0 && !WordBoundaryCharsBefore.Contains(text[start - 1]) ||
                    start > 1 && text[start - 1] == '\'' && char.IsLetter(text[start - 2]))
             {
                 start--;
             }
 
             int end = index;
-            while (end + 1 < text.Length && !(Environment.NewLine + @" ,.!?:;""'=()[]/-«»“”<—").Contains(text[end + 1]) ||
+            while (end + 1 < text.Length && !WordBoundaryCharsAfter.Contains(text[end + 1]) ||
                    end + 2 < text.Length && text[end + 1] == '\'' && char.IsLetter(text[end + 2]))
             {
                 end++;
