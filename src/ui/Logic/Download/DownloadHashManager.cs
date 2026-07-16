@@ -52,6 +52,30 @@ public static class DownloadHashManager
         public const string LinuxArmExecutable = "CrispAsr.Linux.Arm.Executable";
     }
 
+    public static class Qwen3AsrCpp
+    {
+        // Hashes of the release archive (.zip) — used when a sidecar hash exists alongside the install.
+        public const string Windows = "Qwen3AsrCpp.Windows";
+        public const string WindowsVulkan = "Qwen3AsrCpp.Windows.Vulkan";
+        public const string MacArm64 = "Qwen3AsrCpp.MacArm64";
+        public const string MacX64 = "Qwen3AsrCpp.MacX64";
+        public const string Linux = "Qwen3AsrCpp.Linux";
+        public const string LinuxVulkan = "Qwen3AsrCpp.Linux.Vulkan";
+        public const string LinuxArm64 = "Qwen3AsrCpp.LinuxArm64";
+
+        // Hashes of the unpacked qwen3-asr-cli(.exe) — used to detect the installed version when
+        // no sidecar is present. That is every install up to and including v5.1.0-rc4: the sidecar
+        // for this engine is first written by the release that introduces these keys, so the
+        // executable fallback is what recognizes the old, broken-JSON builds (issue #11375).
+        public const string WindowsExecutable = "Qwen3AsrCpp.Windows.Executable";
+        public const string WindowsVulkanExecutable = "Qwen3AsrCpp.Windows.Vulkan.Executable";
+        public const string MacArm64Executable = "Qwen3AsrCpp.MacArm64.Executable";
+        public const string MacX64Executable = "Qwen3AsrCpp.MacX64.Executable";
+        public const string LinuxExecutable = "Qwen3AsrCpp.Linux.Executable";
+        public const string LinuxVulkanExecutable = "Qwen3AsrCpp.Linux.Vulkan.Executable";
+        public const string LinuxArm64Executable = "Qwen3AsrCpp.LinuxArm64.Executable";
+    }
+
     public static class CrispEmbed
     {
         // Hashes of the release archive (.zip / .tar.gz) — recognised from the .installed.sha256
@@ -471,6 +495,136 @@ public static class DownloadHashManager
                 "8a8edb05d25ba793bcba90c528332ae17ef9324d689aa3ffd7c9dda48262bdbb", // v0.6.11
                 "f8b6e6f080dc5bd227b39417a48d525de3962c85519fa40debc1aec4e0251bfa", // v0.6.10
                 "b3dacccb8d16afb88a7c426edbeefaa6c8bee0f6bc5a5e6493fb4616c2ec32d1", // v0.6.9 (first SE-tracked Linux ARM64 build)
+            },
+
+            // Qwen3 ASR CPP — https://github.com/niksedk/qwen3-asr.cpp/releases
+            // Index 0 must match whatever version Qwen3AsrCppDownloadService.cs is pinned to,
+            // otherwise users will be prompted to "update" to the same version they just got.
+            // Older lists include the pre-fork qwen3-asr-cpp-2026-3 builds from
+            // SubtitleEdit/support-files, so installs from before the JSON fixes are
+            // recognized and offered the update (issue #11375).
+            [Qwen3AsrCpp.Windows] = new[]
+            {
+                "4b0e23b2124c3e64c00dbc727bdfd86f7deca4a802edec9e6470701892371942", // v0.1.6 (current download URL)
+                "4382904b6110e3ba636f927f484a0545a66783f4fd29fd514fd3ce05ba0f0b30", // v0.1.5
+                "d660e2ba5628a883bfff9e57729e8001f4f6e6d9c256cc87e43a13a9ed4ba39d", // v0.1.4
+                "dc57c16975cc34a0cf86dcf2b231f68c5dbab2ecc899ca4313af5e0fbe3bde31", // v0.1.3
+                "66ab6fbede85f0a001ec99575c26c6d24363274b618c81640908ed5a55187dfb", // v0.1.2
+                "e9a1877dfa66b70055bb9cb2568ee410e90e89e1130fcf83f65d637d0ab64283", // v0.1.1
+                "d1d69ac85529912ebd1fc041ae4a7ca50d406ffc31c4610b02138e208fe10cf4", // qwen3-asr-cpp-2026-3 (SubtitleEdit/support-files)
+            },
+            [Qwen3AsrCpp.WindowsVulkan] = new[]
+            {
+                "b5ee87d7f9290f0fec651f727fb015bff14ca4e297df83e46c64f489e2ca64f5", // v0.1.6 (current download URL)
+                "c608f9c00ed5e2f568d75045b9f3079dc2f2b4b064925dce77f53e0626d06100", // v0.1.5
+                "19ddde3eb5392fb376fa3af53795c36286eddbebdfc84ded1ebea9be8f883a51", // v0.1.4
+                "8a0a80135221d31036fdaf76fcefb226d3035e42d27d7a6046e3478816b8c537", // v0.1.3
+                "2a258bcb37d2b9cf7454c56a524d500f6e8ea8d9244a96440d72f2c693c9f16f", // v0.1.2
+            },
+            [Qwen3AsrCpp.MacArm64] = new[]
+            {
+                "cf594a18afc7bfa42c8e784d83842c842177310289471ad211ca58e3d3c0642a", // v0.1.6 (current download URL)
+                "e01a1b3aee6105dbaaa5612b77001a1d17e3f3654bd5f0f47fdf9a38e340fdb0", // v0.1.5
+                "6b7d9bb8d9ce70196b137c432d1e7d6a8ee3181f696b56a17d11f297d4e61850", // v0.1.4
+                "dbea2f1fff20af26cb0531f0a166609f64102e08288a8c73fada1425ae0e2876", // v0.1.3
+                "d52cb967c5f11f04eee4d7bf3685470cdecfa8a0dc9600b3d24c1dd00f800374", // v0.1.2
+                "e9c4252aa62deca121ee28512e542254dca00e1608bfc5267adf3308e91f282e", // v0.1.1
+                "366c0b3d1134690b58dfd74f5ccacb6f29454c9ce7b68dc034bc732ac1d334ac", // qwen3-asr-cpp-2026-3 (SubtitleEdit/support-files)
+            },
+            [Qwen3AsrCpp.MacX64] = new[]
+            {
+                "ebe8afd2fce42c1dc7780a96f45757dc1eabf1c94dc639cf8a8664cc807f4b78", // v0.1.6 (current download URL)
+                "94aef4605ebc6d0933d0d2d741f994afd2ad51e5a1f4603b1f37cb7425dda565", // v0.1.5
+                "bc41b07cd3229784d48096924303d3339d051d1f92655bed6773bc5ab77e8037", // v0.1.4
+                "69b71827980c83f8c3bff455062f7aad4978555205f2cde09c9599adcae96abd", // v0.1.3
+                "aed607fbbad4c3d80aab01679d13f48916a155d894c94c7aee732dfc68766d4e", // v0.1.2
+                "424a0f9a1841164909355ddfd9a86e22406af95aff68da2a0fa3f3d599210bbb", // v0.1.1
+            },
+            [Qwen3AsrCpp.Linux] = new[]
+            {
+                "6dccfe589febd6001b37b9be9248227f1278a966c94e86606b159867ca78f5d3", // v0.1.6 (current download URL)
+                "abaae9b655fc8b4c50ab21df4a1e7e7354b69506aff67f0a6a0d2df4eb7a1091", // v0.1.5
+                "cd7c1c3ce9f4a2b3fcebbc0bee1d4db14e49e907ecb7dbfcfa5c814b9e304534", // v0.1.4
+                "cdafe9326f05d97887b036ff2df6028fb1265f6affb4c792b77739b3ba176fe5", // v0.1.3
+                "621233d103d8b33cd3c151bf0fd88415b1962af925fe8b68dfcf3c3359e2433f", // v0.1.2
+                "bf4c8f1ab88f57c19e5fbd8e40ef2a2fe7c0b2893989d33e7f9ca4bbaa5ebbd6", // v0.1.1
+                "ce5bae4c7c2b41f90edcec1777d2b3911668b2d7c9a5ee3a6ea4960767f35723", // qwen3-asr-cpp-2026-3 (SubtitleEdit/support-files)
+            },
+            [Qwen3AsrCpp.LinuxVulkan] = new[]
+            {
+                "c455b92c8143416abfd201024c1707c0b52350e410908c6b718c8cea4eae44ff", // v0.1.6 (current download URL)
+                "aae44a23a2ccdd6bc0b43e8d0f97651ee215b435e07f330bc19197d715e28e3b", // v0.1.5
+                "195c0224f6bec2dec31c1b595f1826e737d67300749c699f1aacdeaa228c5fc1", // v0.1.4
+                "14d8fbdd109e44ea5be4a053083dd9fb869577fed596eba623a2a3875bc2e5f3", // v0.1.3
+                "ee1dd5f1c41a7d93fedf961a58247f8478d962a786c7ec7b10c1bd97c72ef2e2", // v0.1.2
+            },
+            [Qwen3AsrCpp.LinuxArm64] = new[]
+            {
+                "4127c2567b6512a4377ff5b3b077468d915fcf76ab156458ec7be81d5e5690e0", // v0.1.6 (current download URL)
+                "b54a89bff6b26ac0d2471f7b1fcdb7e6be6bde6570e358e76daf60f0156516f8", // v0.1.5
+                "dd488714fd1582a33a79ecefe3f6d69e9214a32fa4a54a195c1aaaf0167300cc", // v0.1.4
+                "3df6f2e470b66b57f4b335abd62c67695b0f679f0c5c538d8258aba0393ab4ea", // v0.1.3
+                "33edbca9700727a5d600c3adf745a78dd12ef54b832af3e3c05788f1b33815a1", // v0.1.2
+                "f8f3ad69f69a78979e6fe4e7964b4df8f15d62f38e77c105f2ad9e92e18e6c38", // v0.1.1
+            },
+            [Qwen3AsrCpp.WindowsExecutable] = new[]
+            {
+                "8f9e0f8c85e2c95fe0627d442dd15908d36ae9c0076ab4109e84c00ec6f2ab78", // v0.1.6 (current download URL)
+                "29dba7a3808eb18f787486104a6d542e32fd32b4c177cc4f6e9c262d5ac1b46d", // v0.1.5
+                "fabfbeba21f7bece38a8beff3947f4a2aed1d189fab7d5ba5e67e8f761292039", // v0.1.4
+                "73d54bda5cc4addf2673dff330afd447f860ed035beacf61455b1eb6ebd2af18", // v0.1.3
+                "87c4d01478c85f530e1fd1ce3e860bd37000da29814a6707b9d3c4ba1578e341", // v0.1.2
+                "84012efedfccb2277fb376dbd4ff367358a2ddcffeb029e96f8c65c39408ce96", // v0.1.1
+                "08f5cc758586f08840b410e2c89b9ec585a2dcec735bcc3a3f5536c96bf22b60", // qwen3-asr-cpp-2026-3 (SubtitleEdit/support-files)
+            },
+            [Qwen3AsrCpp.WindowsVulkanExecutable] = new[]
+            {
+                "998b0577d5d3cbe35917603f86a72acf201f5010757ed611216574eb67d3570e", // v0.1.6 (current download URL)
+                "38546750d753666cc767c4ccafa483e1fff83ddd5feed6f7945a8a35acea3e8f", // v0.1.5
+                "6011e77f1b881c409447d0fbd5314f6306f439358ed0d2bd914cb397ed6443c4", // v0.1.4
+                "4913668d5524a44ce8d42bf5620cefb0c8a8347e5484ce8f659433d0b147d60d", // v0.1.3
+                "2d294582118f1e54fd783a8e3ac7fb47c2313918b06fb75803544950f652a8b8", // v0.1.2
+            },
+            [Qwen3AsrCpp.MacArm64Executable] = new[]
+            {
+                "e2cd42381858a853ece9ca6f00eab4fb940b34efbfc5d6b5a332fae6371fb90c", // v0.1.6 (current download URL)
+                "2c8ea51851a6ac70ab4971e0d32c314e17eb916cb6b0ead64fb36761924e4de2", // v0.1.5
+                "bdd5051aed56e4abfcc4d3dfce550e3a818fd446a1da58d37c5d2b32e8e5d570", // v0.1.4
+                "f3e811d4932946c3fb1b517e21387b239b6010584e7b30f4b979d3d7e2593307", // v0.1.3
+                "1ae97c684bc4312b5a243b7d0020a1e81779545de819f8818e325e42fba00de3", // v0.1.2 / v0.1.1
+                "6a02580fe9244855e465e4e671b03fc3f6e56246cd99231a5dc460c94a91dcbb", // qwen3-asr-cpp-2026-3 (SubtitleEdit/support-files)
+            },
+            [Qwen3AsrCpp.MacX64Executable] = new[]
+            {
+                "eff1cf91866b6168f5544dec6018fe339cd60cb9acba5003fc0142e240f96172", // v0.1.6 (current download URL)
+                "6ab8faa6170c202b0faef8d943f7a1ee9ae7d0e5906c6f40ba7a64944d54762f", // v0.1.5
+                "e3c4002c68dfa3ee773ebf7d177f97c910c6126f56097b8cf2da8882163007d9", // v0.1.4
+                "472db2846b47289fccfe77bbc2392df555ab49f7aafb047dbbfc31b939da8069", // v0.1.3
+                "890d732d9c85b8e1708ed296ac2d623517cb6dbd4e119625d43ad42210f0c4f5", // v0.1.2 / v0.1.1
+            },
+            [Qwen3AsrCpp.LinuxExecutable] = new[]
+            {
+                "a02d9e2ba60201ad8e778dca9a9f7ca1f5cafc145955488a1b2c611615b997ba", // v0.1.6 (current download URL)
+                "b7d9f1450eba98f8e1a63ae2e9cfbf79c5ceea648d981b31636e25eb0e1d8b0b", // v0.1.5
+                "1378d1d968446b19452f7463007b6707cbfa703e025b1309650fc928d1972ddc", // v0.1.4 / v0.1.3
+                "959c7a807902d4fc17426818204224f500d5dc29716cad6bc924281f19cbf01b", // v0.1.2
+                "b380453203b97bc5b0d6a3cc68f032882cd0c054c72487abb1855828dafffbcb", // v0.1.1
+                "86211505fb469e0d6b6f96c96b886ddefb626ec8fba9d435b3c4ac8394c57327", // qwen3-asr-cpp-2026-3 (SubtitleEdit/support-files)
+            },
+            [Qwen3AsrCpp.LinuxVulkanExecutable] = new[]
+            {
+                "a02d9e2ba60201ad8e778dca9a9f7ca1f5cafc145955488a1b2c611615b997ba", // v0.1.6 (current download URL)
+                "b7d9f1450eba98f8e1a63ae2e9cfbf79c5ceea648d981b31636e25eb0e1d8b0b", // v0.1.5
+                "1378d1d968446b19452f7463007b6707cbfa703e025b1309650fc928d1972ddc", // v0.1.4
+                "618432a1d4da28a500e51aa1c7706e33ef4c32c8875aeb7b2f0c9044cef5f51e", // v0.1.3
+                "b380453203b97bc5b0d6a3cc68f032882cd0c054c72487abb1855828dafffbcb", // v0.1.2
+            },
+            [Qwen3AsrCpp.LinuxArm64Executable] = new[]
+            {
+                "fe453c7f30efc717fbfb2b9d4ff4ff5d50f862300d8c390d6e4c0066c31e6c60", // v0.1.6 (current download URL)
+                "bcb155a93474b074897c7680a2c2cfdbfe1cf4478652db5a4bec8c83cf688541", // v0.1.5
+                "a6087e81c1975cecb644391130e2efb3cef3442b12928abd333c8fe856a6226d", // v0.1.4 / v0.1.3
+                "f1a5318f740108c21b597493ad28bf2cc430d9f5fa0d19b5d741d47a6781a2b5", // v0.1.2 / v0.1.1
             },
 
             // CrispEmbed — https://github.com/CrispStrobe/CrispEmbed/releases
@@ -1415,6 +1569,82 @@ public static class DownloadHashManager
             CrispAsr.LinuxArm or CrispAsr.LinuxArmExecutable => string.Empty,
             _ => null,
         };
+    }
+
+    /// <summary>
+    /// Resolves the Qwen3 ASR CPP archive hash key for the current OS. <paramref name="useVulkan"/>
+    /// picks the Vulkan build where one exists (win64 and linux-x64); it is ignored elsewhere.
+    /// Returns null on unknown platforms.
+    /// </summary>
+    public static string? ResolveQwen3AsrCppKey(bool useVulkan)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return useVulkan ? Qwen3AsrCpp.WindowsVulkan : Qwen3AsrCpp.Windows;
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+            {
+                return Qwen3AsrCpp.LinuxArm64;
+            }
+
+            return useVulkan ? Qwen3AsrCpp.LinuxVulkan : Qwen3AsrCpp.Linux;
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? Qwen3AsrCpp.MacArm64 : Qwen3AsrCpp.MacX64;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Executable-hash counterpart of <see cref="ResolveQwen3AsrCppKey"/>, for installs
+    /// without a sidecar.
+    /// </summary>
+    public static string? ResolveQwen3AsrCppExecutableKey(bool useVulkan)
+    {
+        return ResolveQwen3AsrCppKey(useVulkan) switch
+        {
+            Qwen3AsrCpp.Windows => Qwen3AsrCpp.WindowsExecutable,
+            Qwen3AsrCpp.WindowsVulkan => Qwen3AsrCpp.WindowsVulkanExecutable,
+            Qwen3AsrCpp.MacArm64 => Qwen3AsrCpp.MacArm64Executable,
+            Qwen3AsrCpp.MacX64 => Qwen3AsrCpp.MacX64Executable,
+            Qwen3AsrCpp.Linux => Qwen3AsrCpp.LinuxExecutable,
+            Qwen3AsrCpp.LinuxVulkan => Qwen3AsrCpp.LinuxVulkanExecutable,
+            Qwen3AsrCpp.LinuxArm64 => Qwen3AsrCpp.LinuxArm64Executable,
+            _ => null,
+        };
+    }
+
+    /// <summary>
+    /// True when the Qwen3 ASR CPP install in <paramref name="installFolder"/> is a Vulkan build —
+    /// those ship a ggml Vulkan backend library (ggml-vulkan.dll / libggml-vulkan.so.*) that the
+    /// CPU builds do not.
+    /// </summary>
+    public static bool IsQwen3AsrCppVulkanInstall(string installFolder)
+    {
+        try
+        {
+            if (!Directory.Exists(installFolder))
+            {
+                return false;
+            }
+
+            if (File.Exists(Path.Combine(installFolder, "ggml-vulkan.dll")))
+            {
+                return true;
+            }
+
+            return Directory.GetFiles(installFolder, "libggml-vulkan.so*", SearchOption.TopDirectoryOnly).Length > 0;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     /// <summary>
