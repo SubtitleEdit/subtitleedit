@@ -675,37 +675,69 @@ namespace Nikse.SubtitleEdit.Core.Common
             return s.TrimEnd();
         }
 
+        // Patterns for RemoveLineBreaks - static so the per-call "</i> " + Environment.NewLine
+        // + "<i>" style concatenations (an allocation per pattern, per call) are gone.
+        private static readonly string ItalicCloseSpaceNewLineItalicOpen = "</i> " + Environment.NewLine + "<i>";
+        private static readonly string ItalicCloseNewLineSpaceItalicOpen = "</i>" + Environment.NewLine + " <i>";
+        private static readonly string ItalicCloseNewLineItalicOpen = "</i>" + Environment.NewLine + "<i>";
+        private static readonly string NewLineSpaceItalicClose = Environment.NewLine + " </i>";
+        private static readonly string NewLineSpaceBoldClose = Environment.NewLine + " </b>";
+        private static readonly string NewLineSpaceUnderlineClose = Environment.NewLine + " </u>";
+        private static readonly string NewLineSpaceFontClose = Environment.NewLine + " </font>";
+        private static readonly string SpaceNewLineItalicClose = " " + Environment.NewLine + "</i>";
+        private static readonly string SpaceNewLineBoldClose = " " + Environment.NewLine + "</b>";
+        private static readonly string SpaceNewLineUnderlineClose = " " + Environment.NewLine + "</u>";
+        private static readonly string SpaceNewLineFontClose = " " + Environment.NewLine + "</font>";
+        private static readonly string NewLineItalicClose = Environment.NewLine + "</i>";
+        private static readonly string NewLineBoldClose = Environment.NewLine + "</b>";
+        private static readonly string NewLineUnderlineClose = Environment.NewLine + "</u>";
+        private static readonly string NewLineFontClose = Environment.NewLine + "</font>";
+        private static readonly string ItalicCloseNewLine = "</i>" + Environment.NewLine;
+        private static readonly string BoldCloseNewLine = "</b>" + Environment.NewLine;
+        private static readonly string UnderlineCloseNewLine = "</u>" + Environment.NewLine;
+        private static readonly string FontCloseNewLine = "</font>" + Environment.NewLine;
+        private static readonly string SpaceNewLine = " " + Environment.NewLine;
+        private static readonly string NewLineSpace = Environment.NewLine + " ";
+
         public static string RemoveLineBreaks(string input)
         {
             var s = HtmlUtil.FixUpperTags(input);
 
-            s = s.Replace("</i> " + Environment.NewLine + "<i>", Environment.NewLine);
-            s = s.Replace("</i>" + Environment.NewLine + " <i>", Environment.NewLine);
-            s = s.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
-
-            s = s.Replace(Environment.NewLine + " </i>", "</i>" + Environment.NewLine);
-            s = s.Replace(Environment.NewLine + " </b>", "</b>" + Environment.NewLine);
-            s = s.Replace(Environment.NewLine + " </u>", "</u>" + Environment.NewLine);
-            s = s.Replace(Environment.NewLine + " </font>", "</font>" + Environment.NewLine);
-
-            s = s.Replace(" " + Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
-            s = s.Replace(" " + Environment.NewLine + "</b>", "</b>" + Environment.NewLine);
-            s = s.Replace(" " + Environment.NewLine + "</u>", "</u>" + Environment.NewLine);
-            s = s.Replace(" " + Environment.NewLine + "</font>", "</font>" + Environment.NewLine);
-
-            s = s.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
-            s = s.Replace(Environment.NewLine + "</b>", "</b>" + Environment.NewLine);
-            s = s.Replace(Environment.NewLine + "</u>", "</u>" + Environment.NewLine);
-            s = s.Replace(Environment.NewLine + "</font>", "</font>" + Environment.NewLine);
-
-            while (s.Contains(" " + Environment.NewLine))
+            // Runs for every auto-broken line. Every pattern below contains a line break, so
+            // single-line input (common when cleaning imported/translated text) skips all 15
+            // replaces and the two collapse loops.
+            if (s.IndexOf('\n') < 0)
             {
-                s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
+                return s.Trim();
             }
 
-            while (s.Contains(Environment.NewLine + " "))
+            s = s.Replace(ItalicCloseSpaceNewLineItalicOpen, Environment.NewLine);
+            s = s.Replace(ItalicCloseNewLineSpaceItalicOpen, Environment.NewLine);
+            s = s.Replace(ItalicCloseNewLineItalicOpen, Environment.NewLine);
+
+            s = s.Replace(NewLineSpaceItalicClose, ItalicCloseNewLine);
+            s = s.Replace(NewLineSpaceBoldClose, BoldCloseNewLine);
+            s = s.Replace(NewLineSpaceUnderlineClose, UnderlineCloseNewLine);
+            s = s.Replace(NewLineSpaceFontClose, FontCloseNewLine);
+
+            s = s.Replace(SpaceNewLineItalicClose, ItalicCloseNewLine);
+            s = s.Replace(SpaceNewLineBoldClose, BoldCloseNewLine);
+            s = s.Replace(SpaceNewLineUnderlineClose, UnderlineCloseNewLine);
+            s = s.Replace(SpaceNewLineFontClose, FontCloseNewLine);
+
+            s = s.Replace(NewLineItalicClose, ItalicCloseNewLine);
+            s = s.Replace(NewLineBoldClose, BoldCloseNewLine);
+            s = s.Replace(NewLineUnderlineClose, UnderlineCloseNewLine);
+            s = s.Replace(NewLineFontClose, FontCloseNewLine);
+
+            while (s.Contains(SpaceNewLine))
             {
-                s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+                s = s.Replace(SpaceNewLine, Environment.NewLine);
+            }
+
+            while (s.Contains(NewLineSpace))
+            {
+                s = s.Replace(NewLineSpace, Environment.NewLine);
             }
 
             s = s.Replace(Environment.NewLine, " ");
