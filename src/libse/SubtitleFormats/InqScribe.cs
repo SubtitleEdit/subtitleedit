@@ -10,6 +10,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class InqScribe : SubtitleFormat
     {
+        private static readonly Regex RegexEmbeddedTimeCodes = new Regex(@"\[\d\d:\d\d:\d\d\.\d\d\]", RegexOptions.Compiled);
+
         public override string Extension => ".inqscr";
 
         public override string Name => "InqScribe 1.1";
@@ -110,7 +112,7 @@ version=1.1
                 }
             }
 
-            var matches = new Regex(@"\[\d\d:\d\d:\d\d\.\d\d\]").Matches(textLine);
+            var matches = RegexEmbeddedTimeCodes.Matches(textLine);
             for (var i = 0; i < matches.Count; i++)
             {
                 var match = matches[i];

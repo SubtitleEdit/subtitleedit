@@ -11,6 +11,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class DvSubtitle : SubtitleFormat
     {
         private static readonly Regex LinePattern = new Regex(@"^c 1 \d{8} \d{8} .+", RegexOptions.Compiled);
+        private static readonly Regex RegexLowerZhajBeforeUpper = new Regex("ž(\\p{Lu})", RegexOptions.Compiled);
+        private static readonly Regex RegexLowerZhajAfterUppers = new Regex("(\\p{Lu}\\p{Lu})ž", RegexOptions.Compiled);
+        private static readonly Regex RegexLjBeforeUpper = new Regex("Lj(\\p{Lu})", RegexOptions.Compiled);
+        private static readonly Regex RegexLjAfterUppers = new Regex("(\\p{Lu}\\p{Lu})Lj", RegexOptions.Compiled);
+        private static readonly Regex RegexNjBeforeUpper = new Regex("Nj(\\p{Lu})", RegexOptions.Compiled);
+        private static readonly Regex RegexNjAfterUppers = new Regex("(\\p{Lu}\\p{Lu})Nj", RegexOptions.Compiled);
 
         public override string Extension => ".dv";
 
@@ -144,14 +150,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 .Replace("[", "Š")
                 .Replace("{", "š");
 
-            text = new Regex("ž(\\p{Lu})").Replace(text, "Ž$1");
-            text = new Regex("(\\p{Lu}\\p{Lu})ž").Replace(text, "$1Ž");
+            text = RegexLowerZhajBeforeUpper.Replace(text, "Ž$1");
+            text = RegexLowerZhajAfterUppers.Replace(text, "$1Ž");
 
-            text = new Regex("Lj(\\p{Lu})").Replace(text, "LJ$1");
-            text = new Regex("(\\p{Lu}\\p{Lu})Lj").Replace(text, "$1LJ");
+            text = RegexLjBeforeUpper.Replace(text, "LJ$1");
+            text = RegexLjAfterUppers.Replace(text, "$1LJ");
 
-            text = new Regex("Nj(\\p{Lu})").Replace(text, "NJ$1");
-            text = new Regex("(\\p{Lu}\\p{Lu})Nj").Replace(text, "$1NJ");
+            text = RegexNjBeforeUpper.Replace(text, "NJ$1");
+            text = RegexNjAfterUppers.Replace(text, "$1NJ");
 
             var arr = text.TrimEnd('0').Replace("' '", "\n").SplitToLines();
             var sb = new StringBuilder();

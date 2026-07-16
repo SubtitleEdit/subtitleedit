@@ -18,6 +18,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static readonly Regex RegexTimeCodesMiddle = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCodesShort = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
         private static readonly Regex RegexShortArrow = new Regex(@"-->\s*", RegexOptions.Compiled);
+        private static readonly Regex RegexRemoveCTags = new Regex(@"\</?c([a-zA-Z\._\-\d%#]*)\>", RegexOptions.Compiled);
+        private static readonly Regex RegexRemoveTimeCodes = new Regex(@"\<\d+:\d+:\d+\.\d+\>", RegexOptions.Compiled); // <00:00:10.049>
+        private static readonly Regex RegexTagsPlusWhiteSpace = new Regex(@"(\{\\an\d\})[\s\r\n]+", RegexOptions.Compiled);
+        private static readonly Regex RegexCueLine = new Regex(@"::cue\(([a-zA-Z\._\-\d%#]*)\)\s*{", RegexOptions.Compiled);
 
         public static readonly Dictionary<string, SKColor> DefaultColorClasses = new Dictionary<string, SKColor>
         {
@@ -650,9 +654,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
-            var regexRemoveCTags = new Regex(@"\</?c([a-zA-Z\._\-\d%#]*)\>", RegexOptions.Compiled);
-            var regexRemoveTimeCodes = new Regex(@"\<\d+:\d+:\d+\.\d+\>", RegexOptions.Compiled); // <00:00:10.049>
-            var regexTagsPlusWhiteSpace = new Regex(@"(\{\\an\d\})[\s\r\n]+", RegexOptions.Compiled); // <00:00:10.049>
 
             var cueStyles = GetCueStyles(subtitle.Header);
             var italicStyles = GetStylesWith(cueStyles, "font-style:italic;");
@@ -664,7 +665,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     var text = p.Text.Replace("&rlm;", string.Empty).Replace("&lrm;", string.Empty); // or use rlm=\u202B, lrm=\u202A ?
                     text = System.Net.WebUtility.HtmlDecode(text);
-                    var match = regexRemoveCTags.Match(text);
+                    var match = RegexRemoveCTags.Match(text);
                     while (match.Success)
                     {
                         var start = match.Index + 1;
@@ -699,16 +700,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             text = SetEndTag(text, text.IndexOf("<c", match.Index, StringComparison.Ordinal), "</b>");
                         }
 
-                        match = regexRemoveCTags.Match(text, start);
+                        match = RegexRemoveCTags.Match(text, start);
                     }
 
                     text = RemoveTag("v", text);
                     text = RemoveTag("rt", text);
                     text = RemoveTag("ruby", text);
                     text = RemoveTag("span", text);
-                    text = regexRemoveCTags.Replace(text, string.Empty).Trim();
-                    text = regexRemoveTimeCodes.Replace(text, string.Empty).Trim();
-                    text = regexTagsPlusWhiteSpace.Replace(text, "$1");
+                    text = RegexRemoveCTags.Replace(text, string.Empty).Trim();
+                    text = RegexRemoveTimeCodes.Replace(text, string.Empty).Trim();
+                    text = RegexTagsPlusWhiteSpace.Replace(text, "$1");
                     p.Text = text;
                 }
             }
@@ -774,7 +775,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return dic;
             }
 
-            var matches = new Regex(@"::cue\(([a-zA-Z\._\-\d%#]*)\)\s*{").Matches(header);
+            var matches = RegexCueLine.Matches(header);
             for (var i = 0; i < matches.Count; i++)
             {
                 var match = matches[i];

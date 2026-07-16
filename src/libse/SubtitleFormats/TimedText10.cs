@@ -1111,6 +1111,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
 
         private static readonly Regex _endsWithTreeDigits = new Regex(@"\d\d\d$");
+        private static readonly Regex FixAmpersandRegex = new Regex("&(?!amp;)", RegexOptions.Compiled);
         private static bool IsFrames(string timeCode)
         {
             if (timeCode.Length == 12 && (timeCode[8] == '.' || timeCode[8] == ',')) // 00:00:08.292 or 00:00:08,292
@@ -1717,8 +1718,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 result = result.Remove(0, idx);
             }
 
-            var fixAmpersandRegex = new Regex("&(?!amp;)");
-            return fixAmpersandRegex.Replace(result, "&amp;");
+            return FixAmpersandRegex.Replace(result, "&amp;");
         }
     }
 }

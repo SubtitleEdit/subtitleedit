@@ -744,9 +744,12 @@ namespace Nikse.SubtitleEdit.Core.Common
             backslashed.Replace(@"}", @"\}");
             backslashed.Replace(Environment.NewLine, @"\par" + Environment.NewLine);
 
-            // convert string char by char
-            var sb = new StringBuilder();
-            foreach (char character in backslashed.ToString())
+            // Escape non-ASCII chars, appending the escape parts separately - the old
+            // "\\u" + value + "?" concatenation allocated two strings per non-ASCII char,
+            // which adds up fast on CJK/Cyrillic subtitles.
+            var escaped = backslashed.ToString();
+            var sb = new StringBuilder(escaped.Length + 16);
+            foreach (var character in escaped)
             {
                 if (character <= 0x7f)
                 {
@@ -754,7 +757,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else
                 {
-                    sb.Append("\\u" + Convert.ToUInt32(character) + "?");
+                    sb.Append("\\u").Append((int)character).Append('?');
                 }
             }
 

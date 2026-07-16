@@ -8,6 +8,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Son : SubtitleFormat
     {
+        //0001  00:00:19:13 00:00:22:10 a_0001.tif
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\d\d\t+(\d\d:\d\d:\d\d:\d\d)\t(\d\d:\d\d:\d\d:\d\d)\t.+\.(?:tif|tiff|png|bmp|TIF|TIFF|PNG|BMP)", RegexOptions.Compiled);
+
         public override string Extension => ".son";
 
         public override string Name => "SON";
@@ -34,14 +37,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             //0001  00:00:19:13 00:00:22:10 a_0001.tif
-            var regexTimeCodes = new Regex(@"^\d\d\d\d\t+(\d\d:\d\d:\d\d:\d\d)\t(\d\d:\d\d:\d\d:\d\d)\t.+\.(?:tif|tiff|png|bmp|TIF|TIFF|PNG|BMP)", RegexOptions.Compiled);
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
             int index = 0;
             foreach (string line in lines)
             {
-                var match = regexTimeCodes.Match(line);
+                var match = RegexTimeCodes.Match(line);
                 if (match.Success)
                 {
                     var start = DecodeTimeCodeFramesFourParts(match.Groups[1].Value.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries));
