@@ -32,6 +32,9 @@ public partial class SourceViewViewModel : ObservableObject
 
     public SubtitleFormat _subtitleFormat { get; private set; }
     public ITextBoxWrapper SourceViewTextBox { get; set; }
+    public IRelayCommand CutCommand { get; }
+    public IRelayCommand CopyCommand { get; }
+    public IRelayCommand PasteCommand { get; }
 
     private readonly System.Timers.Timer _cursorTimer;
     private int _initialCaretIndex;
@@ -44,6 +47,9 @@ public partial class SourceViewViewModel : ObservableObject
         LineAndColumnInfo = string.Empty;
         Subtitle = new Subtitle();
         _subtitleFormat = new SubRip();
+        CutCommand = new RelayCommand(() => SourceViewTextBox.Cut());
+        CopyCommand = new RelayCommand(() => SourceViewTextBox.Copy());
+        PasteCommand = new RelayCommand(() => SourceViewTextBox.Paste());
 
         _cursorTimer = new System.Timers.Timer(200);
         _cursorTimer.Elapsed += (sender, args) =>
