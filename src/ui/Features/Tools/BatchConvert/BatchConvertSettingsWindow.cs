@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 
@@ -98,11 +99,18 @@ public class BatchConvertSettingsWindow : Window
         var comboBoxOllamaModels = UiUtil.MakeComboBox(vm.OllamaModels, vm, nameof(vm.SelectedOllamaModel))
             .WithBindVisible(nameof(vm.IsOllamaVisible));
         var buttonOllamaModelBrowse = UiUtil.MakeButtonBrowse(vm.PickOllamaModelCommand, nameof(vm.IsOllamaVisible)).WithMarginLeft(3);
+        var labelLlamaCppModel = UiUtil.MakeLabel(Se.Language.General.Model).WithBindVisible(vm, nameof(vm.IsLlamaCppVisible)).WithMarginLeft(10);
+        var comboBoxLlamaCppModels = UiUtil.MakeComboBox(vm.LlamaCppOcrModels, vm, nameof(vm.SelectedLlamaCppOcrModel))
+            .WithBindVisible(nameof(vm.IsLlamaCppVisible));
+        comboBoxLlamaCppModels.ItemTemplate = StatusDots.ComboItemTemplate<LlamaCppModelDisplay>(
+            model => model.Model.DisplayName,
+            model => model.Model.Size,
+            model => model.IsInstalled ? DownloadDotStatus.UpToDate : DownloadDotStatus.NotInstalled);
         var panelOcrEngine = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Margin = new Avalonia.Thickness(0, 30, 0, 0),
-            Children = { labelOcrEngine, comboBoxOcrEngine, labelOcLanguage, comboBoxTesseractLanguages, labelTesseractEngineMode, comboBoxTesseractEngineMode, comboBoxPaddleLanguages, labelBinaryOcrDatabase, comboBoxBinaryOcrDatabases, labelBinaryOcrFallback, comboBoxBinaryOcrFallback, labelNOcrDatabase, comboBoxNOcrDatabases, labelNOcrFallback, comboBoxNOcrFallback, labelOllamaModel, comboBoxOllamaModels, buttonOllamaModelBrowse }
+            Children = { labelOcrEngine, comboBoxOcrEngine, labelOcLanguage, comboBoxTesseractLanguages, labelTesseractEngineMode, comboBoxTesseractEngineMode, comboBoxPaddleLanguages, labelBinaryOcrDatabase, comboBoxBinaryOcrDatabases, labelBinaryOcrFallback, comboBoxBinaryOcrFallback, labelNOcrDatabase, comboBoxNOcrDatabases, labelNOcrFallback, comboBoxNOcrFallback, labelOllamaModel, comboBoxOllamaModels, buttonOllamaModelBrowse, labelLlamaCppModel, comboBoxLlamaCppModels }
         };
         comboBoxOcrEngine.SelectionChanged += (s, e) => vm.OnOcrEngineChanged();
 

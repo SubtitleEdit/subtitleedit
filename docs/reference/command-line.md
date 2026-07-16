@@ -53,6 +53,7 @@ seconv movie.sup subrip --ocr-engine:tesseract --ocr-language:eng  # OCR a Blu-R
 seconv movie.sup subrip --ocr-engine:nocr --ocr-db:Latin.nocr      # OCR via nOCR
 seconv movie.sup subrip --ocr-engine:binaryocr --ocr-db:Latin.db   # OCR via BinaryOCR
 seconv movie.sup subrip --ocr-engine:ollama --ollama-model:llama3.2-vision
+seconv movie.sup subrip --ocr-engine:llamacpp                      # OCR via llama.cpp (auto-starts llama-server)
 
 seconv subs.srt bluraysup --resolution:1920x1080                   # render text → Blu-Ray sup
 seconv subs.srt bdnxml --resolution:1920x1080                      # render text → BDN-XML
@@ -194,16 +195,19 @@ If two tracks share a language, the track number is added: `movie.#3.eng.srt`.
 | `nocr` | In-process | Built-in nOCR matcher. Required: `--ocr-db:<path-to-Latin.nocr>`. |
 | `binaryocr` *(alias: `binary`)* | In-process | Built-in BinaryOCR matcher (different accuracy profile, similar speed). Required: `--ocr-db:<path-to-Latin.db>`. |
 | `ollama` | HTTP | Local Ollama server with a vision-capable model (e.g. `llama3.2-vision`, `qwen2.5vl`). Configure via `--ollama-url` (default `http://localhost:11434/api/chat`) and `--ollama-model` (default `llama3.2-vision`). Pass `--ocr-language` as a human name like `English`. |
+| `llamacpp` *(aliases: `llama.cpp`, `llama`)* | HTTP | llama.cpp with a curated OCR vision model (GLM-OCR, LightOnOCR, PaddleOCR-VL). With no `--ocr-url`, seconv finds `llama-server` (SE data folder next to seconv, installed SE data folder, then `PATH`) and an installed OCR model, starts the server on a free loopback port, and stops it at exit. seconv never downloads engines/models — install them via the SE UI's OCR window (engine "llama.cpp") or point `--ocr-url` at a running server. Pass `--ocr-language` as a human name like `English`. |
 | `paddle` *(alias: `paddleocr`)* | Subprocess | Install via `pip install paddleocr`; ensure the `paddleocr` binary is on `PATH`. Pass `--ocr-language` as a short code (`en`, `de`, …). |
 
 | Option | Description |
 |---|---|
-| `--ocr-engine:<engine>` | `tesseract` (default) \| `nocr` \| `binaryocr` \| `ollama` \| `paddle` |
-| `--ocr-language:<lang>` | Tesseract: ISO 639-2 (`eng`, `deu`); Paddle: short (`en`); Ollama: human (`English`) |
+| `--ocr-engine:<engine>` | `tesseract` (default) \| `nocr` \| `binaryocr` \| `ollama` \| `llamacpp` \| `paddle` |
+| `--ocr-language:<lang>` | Tesseract: ISO 639-2 (`eng`, `deu`); Paddle: short (`en`); Ollama/llama.cpp: human (`English`) |
 | `--ocr-db:<path>` | OCR database file: `.nocr` for `nocr`, `.db` for `binaryocr` (required for both) |
 | `--dictionary-folder:<path>` | Folder with Hunspell dictionaries + `*_OCRFixReplaceList.xml`; enables the "Fix common OCR errors" pass of `--fix-common-errors` (English is bundled, so this is only needed for other languages) |
 | `--ollama-url:<url>` | Default `http://localhost:11434/api/chat` |
 | `--ollama-model:<model>` | Default `llama3.2-vision` |
+| `--ocr-model:<model>` | llama.cpp OCR model: curated `.gguf` file name (e.g. `GLM-OCR-Q8_0.gguf`) or a full path to a `.gguf` with its `mmproj` sidecar next to it. Default: the first downloaded OCR model. |
+| `--ocr-url:<url>` | llama.cpp: endpoint of an already-running `llama-server` (a bare `host:port` is completed to `/v1/chat/completions`); skips the local auto-start. |
 | `--time-codes-only` | Image sources (`.sup`, VobSub `.sub`/`.idx`, MKV PGS/VobSub, MP4 VobSub, TS DVB-sub) → text format with time codes only and empty text. **Skips OCR entirely** — no OCR engine required. Ignored for text inputs and image output targets. |
 | `--no-vobsub-isolate-colors` | Disable VobSub OCR colour isolation, which is **on by default**. Isolation rebuilds each subpicture as a crisp black-on-white bitmap via histogram-based colour analysis — the most frequent opaque colour (the glyph fill) becomes black and the gray outline / anti-alias colours collapse into the white background, which helps on discs whose outlines otherwise melt adjacent characters together (`Yuri` → `Yurl`). Pass this flag to OCR the raw palette instead. Ignored for non-VobSub sources and with `--time-codes-only`. |
 
@@ -224,6 +228,11 @@ seconv movie.sup subrip --ocr-engine:nocr --ocr-db:"C:\Users\me\AppData\Roaming\
 
 # BinaryOCR
 seconv movie.sup subrip --ocr-engine:binaryocr --ocr-db:"C:\Users\me\AppData\Roaming\Subtitle Edit\Ocr\Latin.db"
+
+# llama.cpp — auto-starts a local llama-server with a downloaded OCR model
+seconv movie.sup subrip --ocr-engine:llamacpp
+seconv movie.sup subrip --ocr-engine:llamacpp --ocr-model:GLM-OCR-Q8_0.gguf
+seconv movie.sup subrip --ocr-engine:llamacpp --ocr-url:http://127.0.0.1:8080
 
 # MKV with image (PGS or VobSub) tracks — OCR runs automatically
 seconv movie.mkv subrip --ocr-engine:tesseract --ocr-language:eng

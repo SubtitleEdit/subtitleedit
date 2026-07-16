@@ -25,6 +25,7 @@ using Nikse.SubtitleEdit.Features.Tools.SplitBreakLongLines;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
+using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using SkiaSharp;
 using System;
@@ -313,6 +314,10 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals("Ollama", StringComparison.OrdinalIgnoreCase))
             {
                 await RunOllamaOcr(imageSubtitle, item, cancellationToken);
+            }
+            else if (Se.Settings.Tools.BatchConvert.OcrEngine.Equals("llama.cpp", StringComparison.OrdinalIgnoreCase))
+            {
+                await RunLlamaCppOcr(imageSubtitle, item, cancellationToken);
             }
             else
             {
@@ -1281,6 +1286,63 @@ public class BatchConverter : IBatchConverter, IFixCallbacks
             item.Subtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
         {
             item.Status = Se.Language.Ocr.OllamaModelLikelyWrong;
+        }
+    }
+
+    private async Task RunLlamaCppOcr(IOcrSubtitle imageSubtitles, BatchConvertItem item, CancellationToken cancellationToken)
+    {
+        // Curated OCR model from settings (picked in batch convert settings / the OCR window).
+        // The batch run never downloads - the settings dialog prompts for that on OK.
+        var model = LlamaCppServerManager.OcrModels.FirstOrDefault(m => m.FileName == Se.Settings.Ocr.LlamaCppOcrModel)
+                    ?? LlamaCppServerManager.OcrModels.FirstOrDefault(LlamaCppServerManager.IsModelInstalled);
+        if (model == null || !LlamaCppServerManager.IsEngineInstalled() || !LlamaCppServerManager.IsModelInstalled(model))
+        {
+            item.Status = Se.Language.Ocr.LlamaCppNotDownloaded;
+            return;
+        }
+
+        try
+        {
+            // Reused across items/files in the same batch run; killed at app exit.
+            await LlamaCppServerManager.EnsureServerRunningAsync(model, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            item.Status = string.Format(Se.Language.General.ErrorX, ex.Message);
+            return;
+        }
+
+        var engine = new LlamaCppOcr(Se.Settings.Ocr.LlamaCppOcrTimeoutMinutes);
+        var url = LlamaCppServerManager.ApiUrl;
+        var modelName = Path.GetFileNameWithoutExtension(model.FileName);
+        var language = Se.Settings.Ocr.OllamaLanguage;
+        var prompt = Se.Settings.Ocr.LlamaCppOcrPrompt;
+        item.Subtitle = new Subtitle();
+        var cancelled = false;
+        for (var i = 0; i < imageSubtitles.Count; i++)
+        {
+            var pct = (i + 1) * 100 / imageSubtitles.Count;
+            item.Status = string.Format(Se.Language.General.OcrPercentX, pct);
+            var bitmap = imageSubtitles.GetBitmap(i);
+            var text = await engine.Ocr(bitmap, url, modelName, language, prompt, cancellationToken);
+            var p = new Paragraph(text, imageSubtitles.GetStartTime(i).TotalMilliseconds, imageSubtitles.GetEndTime(i).TotalMilliseconds);
+            item.Subtitle.Paragraphs.Add(p);
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                item.Status = Se.Language.General.Cancelled;
+                cancelled = true;
+                break;
+            }
+        }
+
+        // Every line blank means the server/model setup is broken (e.g. served without its
+        // vision projector) - flag the file so the user notices instead of ending up with a
+        // silently-empty subtitle.
+        if (!cancelled && item.Subtitle.Paragraphs.Count > 0 &&
+            item.Subtitle.Paragraphs.All(p => string.IsNullOrWhiteSpace(p.Text)))
+        {
+            item.Status = Se.Language.Ocr.LlamaCppReturnedNoText;
         }
     }
 

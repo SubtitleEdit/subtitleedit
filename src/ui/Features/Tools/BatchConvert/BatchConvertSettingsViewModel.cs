@@ -5,8 +5,10 @@ using CommunityToolkit.Mvvm.Input;
 using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Features.Ocr;
 using Nikse.SubtitleEdit.Features.Shared;
+using Nikse.SubtitleEdit.Features.Translate;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.LlamaCpp;
 using Nikse.SubtitleEdit.Logic.Media;
 using Nikse.SubtitleEdit.UiLogic.Ocr;
 using System;
@@ -57,12 +59,16 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<string> _ollamaModels;
     [ObservableProperty] private string? _selectedOllamaModel;
 
+    [ObservableProperty] private ObservableCollection<LlamaCppModelDisplay> _llamaCppOcrModels;
+    [ObservableProperty] private LlamaCppModelDisplay? _selectedLlamaCppOcrModel;
+
     [ObservableProperty] bool _isOcrLanguageVisible;
     [ObservableProperty] bool _isTesseractOcrVisible;
     [ObservableProperty] bool _isPaddleOCrVisible;
     [ObservableProperty] bool _isBinaryOcrVisible;
     [ObservableProperty] bool _isNOcrVisible;
     [ObservableProperty] bool _isOllamaVisible;
+    [ObservableProperty] bool _isLlamaCppVisible;
 
     public Window? Window { get; set; }
 
@@ -77,7 +83,7 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
         encodings.Insert(0, EncodingHelper.TryToUseSourceEncoding);
         TargetEncodings = new ObservableCollection<string>(encodings);
 
-        OcrEngines = new ObservableCollection<string> { "nOcr", "BinaryOcr", "Tesseract", "Ollama" };
+        OcrEngines = new ObservableCollection<string> { "nOcr", "BinaryOcr", "Tesseract", "Ollama", "llama.cpp" };
         if (!OperatingSystem.IsMacOS())
         {
             OcrEngines.Add("PaddleOCR");
@@ -117,6 +123,9 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             BinaryOcrFallbackNOcrDatabases.Add(db);
         }
         OllamaModels = new ObservableCollection<string>(Se.Settings.Ocr.OllamaModels);
+        LlamaCppOcrModels = new ObservableCollection<LlamaCppModelDisplay>();
+        SelectedLlamaCppOcrModel = LlamaCppDownloadHelper.PopulateModels(
+            LlamaCppOcrModels, LlamaCppServerManager.OcrModels, Se.Settings.Ocr.LlamaCppOcrModel);
 
         _folderHelper = folderHelper;
         _windowService = windowService;
@@ -226,6 +235,11 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             Se.Settings.Ocr.OllamaModel = SelectedOllamaModel;
         }
 
+        if (ocrEngine == "llama.cpp" && SelectedLlamaCppOcrModel != null)
+        {
+            Se.Settings.Ocr.LlamaCppOcrModel = SelectedLlamaCppOcrModel.Model.FileName;
+        }
+
         Se.SaveSettings();
     }
 
@@ -281,6 +295,18 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             return;
         }
 
+        // The batch run itself never prompts/downloads, so make sure the llama.cpp engine and
+        // the selected OCR model are on disk now (offering the download dialog if not).
+        if (SelectedOcrEngine == "llama.cpp")
+        {
+            var ready = await LlamaCppDownloadHelper.EnsureReadyAsync(Window!, _windowService,
+                SelectedLlamaCppOcrModel?.Model.FileName, LlamaCppServerManager.OcrModels, persistAsTranslateModel: false);
+            if (!ready)
+            {
+                return;
+            }
+        }
+
         SaveSettings();
         OkPressed = true;
         Window?.Close();
@@ -324,12 +350,13 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             return;
         }
 
-        IsOcrLanguageVisible = ocrEngine != "nOcr" && ocrEngine != "BinaryOcr" && ocrEngine != "Ollama";
+        IsOcrLanguageVisible = ocrEngine != "nOcr" && ocrEngine != "BinaryOcr" && ocrEngine != "Ollama" && ocrEngine != "llama.cpp";
         IsTesseractOcrVisible = ocrEngine == "Tesseract";
         IsPaddleOCrVisible = ocrEngine == "PaddleOCR";
         IsBinaryOcrVisible = ocrEngine == "BinaryOcr";
         IsNOcrVisible = ocrEngine == "nOcr";
         IsOllamaVisible = ocrEngine == "Ollama";
+        IsLlamaCppVisible = ocrEngine == "llama.cpp";
 
         if (ocrEngine == "Tesseract")
         {
@@ -396,6 +423,11 @@ public partial class BatchConvertSettingsViewModel : ObservableObject
             }
 
             SelectedOllamaModel = OllamaModels.FirstOrDefault(p => p == current) ?? OllamaModels.FirstOrDefault();
+        }
+
+        if (ocrEngine == "llama.cpp" && SelectedLlamaCppOcrModel == null)
+        {
+            SelectedLlamaCppOcrModel = LlamaCppOcrModels.FirstOrDefault();
         }
     }
 
