@@ -37,6 +37,9 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
     public bool OkPressed { get; private set; }
     public string WindowTitle { get; private set; }
 
+    /// <summary>Set by the window; scrolls the "other subtitle" grid to a line without selecting it.</summary>
+    public Action<SubtitleLineViewModel>? ScrollOtherToLine { get; set; }
+
     private readonly IFileHelper _fileHelper;
     private readonly IWindowService _windowService;
 
@@ -75,6 +78,52 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
     private void Close()
     {
         Dispatcher.UIThread.Post(() => { Window?.Close(); });
+    }
+
+    // Clicking a line in the left grid scrolls the other grid to the matching time (#12529).
+    // Only the view scrolls - the other grid's selection is the user's pick for the next sync
+    // point, so it must not change. The time is offset by the nearest existing sync point so
+    // the jump still lands right when the two files drift apart.
+    partial void OnSelectedSubtitleChanged(SubtitleLineViewModel? value)
+    {
+        if (value == null || Othersubtitles.Count == 0)
+        {
+            return;
+        }
+
+        var leftTime = value.StartTime;
+        SyncPoint? nearestPoint = null;
+        var nearestDistance = TimeSpan.MaxValue;
+        foreach (var syncPoint in SyncPoints)
+        {
+            var distance = (syncPoint.LeftStartTime - leftTime).Duration();
+            if (distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                nearestPoint = syncPoint;
+            }
+        }
+
+        var targetTime = nearestPoint == null
+            ? leftTime
+            : leftTime + (nearestPoint.RightStartTime - nearestPoint.LeftStartTime);
+
+        SubtitleLineViewModel? closest = null;
+        var closestDiff = TimeSpan.MaxValue;
+        foreach (var line in Othersubtitles)
+        {
+            var diff = (line.StartTime - targetTime).Duration();
+            if (diff < closestDiff)
+            {
+                closestDiff = diff;
+                closest = line;
+            }
+        }
+
+        if (closest != null)
+        {
+            ScrollOtherToLine?.Invoke(closest);
+        }
     }
 
     [RelayCommand]
@@ -146,7 +195,22 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
             left, Subtitles.IndexOf(left),
             right, Othersubtitles.IndexOf(right));
 
-        SyncPoints.Add(syncPoint);
+        // A line has at most one sync point (setting it again re-points it), and the list
+        // stays in chronological order (#12529).
+        var existing = SyncPoints.FirstOrDefault(p => p.LeftIndex == syncPoint.LeftIndex);
+        if (existing != null)
+        {
+            SyncPoints.Remove(existing);
+        }
+
+        var insertAt = 0;
+        while (insertAt < SyncPoints.Count && SyncPoints[insertAt].LeftIndex < syncPoint.LeftIndex)
+        {
+            insertAt++;
+        }
+
+        SyncPoints.Insert(insertAt, syncPoint);
+        SelectedSyncPoint = syncPoint;
         IsOkEnabled = true;
     }
 
@@ -245,13 +309,4 @@ public partial class PointSyncViaOtherViewModel : ObservableObject
         }
     }
 
-    internal void PointSyncContextMenuOpening(object? sender, EventArgs e)
-    {
-        if (SyncPoints.Count == 0)
-        {
-            return;
-        }
-
-        DeleteSelectedPointSync();
-    }
 }

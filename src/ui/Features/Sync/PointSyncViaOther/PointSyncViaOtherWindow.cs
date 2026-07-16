@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
@@ -104,19 +105,29 @@ public class PointSyncViaOtherWindow : Window
                 },
             },
         };
+        dataGrid.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedSyncPoint)));
 
-        var flyout = new MenuFlyout();
-        flyout.Opening += vm.PointSyncContextMenuOpening;
-        dataGrid.ContextFlyout = flyout;
-        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
         var menuItemDelete = new MenuItem
         {
             Header = Se.Language.General.Delete,
             DataContext = vm,
             Command = vm.DeleteSelectedPointSyncCommand,
         };
+        var flyout = new MenuFlyout { Items = { menuItemDelete } };
+        flyout.Opening += (_, _) => menuItemDelete.IsEnabled = vm.SelectedSyncPoint != null;
+        dataGrid.ContextFlyout = flyout;
+        UiUtil.AttachMacContextFlyoutHandler(dataGrid);
+        dataGrid.KeyDown += (_, e) =>
+        {
+            if (e.Key is Key.Delete or Key.Back)
+            {
+                e.Handled = true;
+                vm.DeleteSelectedPointSyncCommand.Execute(null);
+            }
+        };
 
-        var buttonSetSyncPoint = UiUtil.MakeButton(Se.Language.Sync.SetSyncPoint, vm.SetSyncPointCommand);
+        var buttonSetSyncPoint = UiUtil.MakeButton(Se.Language.Sync.SetSyncPoint, vm.SetSyncPointCommand)
+            .WithIconLeft(IconNames.ArrowLeftRightBold);
 
         grid.Add(buttonSetSyncPoint, 0);
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGrid), 1);
@@ -284,6 +295,10 @@ public class PointSyncViaOtherWindow : Window
             },
         };
         dataGridSubtitle.Bind(DataGrid.SelectedItemProperty, new Binding(nameof(vm.SelectedOtherSubtitle)));
+
+        // Clicking a line in the left grid scrolls this grid to the matching time (#12529)
+        // without touching its selection.
+        vm.ScrollOtherToLine = line => dataGridSubtitle.ScrollIntoView(line, null);
 
         grid.Add(panelOtherHeader, 0);
         grid.Add(UiUtil.MakeBorderForControlNoPadding(dataGridSubtitle), 1);
