@@ -17,6 +17,11 @@ v5.1.0-rc5 (TBD)
 * Speech to text (Qwen3 ASR CPP): always write the engine's output JSON to the tools log for better bug reports
 * Update CrispASR to v0.8.12
 * Export PGS/VobSub: list every installed font face like SE4 ("Segoe UI Semibold", "Arial Black", ...) - the list only had font family names, hiding named faces, and a picked face now also renders with its own weight - thx robertmajsky
+* Add EBU-TT-D subtitle format (read + write) - the TTML distribution profile used by European broadcasters (BBC iPlayer, ARD/ZDF, NPO) and HbbTV
+* Command line (seconv): --multiple-replace now also accepts the multiple-replace rules exported from the GUI (.template JSON or .csv), not only the legacy XML - thx BagronkeN
+* Shortcuts: a user-assigned F10 shortcut is no longer overridden by the menu-bar focus toggle (the menu stays reachable via Alt) - thx Khaztaroth
+* Fix reading decimal values in some XML-based formats (e.g. Final Cut Pro, JacoSub) on locales with a comma decimal separator
+* Performance: more core-library speedups (fix common errors, time code parsing, tag/RTF/casing text handling)
 
 -----------------------------------------------------------------------------------------------------
 

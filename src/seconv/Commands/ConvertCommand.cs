@@ -75,7 +75,7 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
         public string? InputFolder { get; init; }
 
         [CommandOption("--multiple-replace|--multiplereplace")]
-        [Description("Path to a Subtitle Edit MultipleSearchAndReplaceGroups XML file applied per-paragraph before save")]
+        [Description("Path to a Subtitle Edit multiple-replace rules file applied per-paragraph before save. Accepts the legacy MultipleSearchAndReplaceGroups XML and the SE5 GUI export (.template JSON or .csv)")]
         public string? MultipleReplace { get; init; }
 
         [CommandOption("--custom-format|--customformat")]
