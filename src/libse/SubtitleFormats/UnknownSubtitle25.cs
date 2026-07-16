@@ -75,8 +75,8 @@ NOTE=
                         string[] arr = s.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         if (arr.Length == 2)
                         {
-                            double secondsSinceLast = double.Parse(arr[0]);
-                            double secondsDuration = double.Parse(arr[1]);
+                            double secondsSinceLast = double.Parse(arr[0], CultureInfo.InvariantCulture);
+                            double secondsDuration = double.Parse(arr[1], CultureInfo.InvariantCulture);
                             if (subtitle.Paragraphs.Count > 0)
                             {
                                 secondsSinceLast += subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds;

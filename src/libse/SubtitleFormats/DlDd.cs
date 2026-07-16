@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -37,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     try
                     {
-                        var timeCodeIn = new TimeCode(Convert.ToDouble(node.Attributes["data-time"].InnerText));
+                        var timeCodeIn = new TimeCode(Convert.ToDouble(node.Attributes["data-time"].InnerText, CultureInfo.InvariantCulture));
                         var timeCodeOut = new TimeCode(timeCodeIn.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(node.InnerText));
                         var p = new Paragraph(timeCodeIn, timeCodeOut, Utilities.AutoBreakLine(node.InnerText));
                         subtitle.Paragraphs.Add(p);

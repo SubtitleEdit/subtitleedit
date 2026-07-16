@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -19,7 +20,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string s)
         {
-            return TimeCode.FromSeconds(double.Parse(s));
+            return TimeCode.FromSeconds(double.Parse(s, CultureInfo.InvariantCulture));
         }
 
         public override string ToText(Subtitle subtitle, string title)

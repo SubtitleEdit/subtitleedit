@@ -133,30 +133,26 @@ namespace Nikse.SubtitleEdit.Core.Common
             return count;
         }
 
-        // Mirrors the old PadRight(3, '0') + int.TryParse for the fraction part: "5" -> 500,
-        // "12" -> 120, three or more digits parse as-is. Appending zeros after trailing
-        // whitespace made the old parse fail, so a short part with trailing whitespace must
-        // still fail here.
+        // The fraction part parses like PadRight(3, '0') + int.TryParse always did: "5" -> 500,
+        // "12" -> 120, three or more digits as-is. Padding into a stack buffer keeps the exact
+        // historical semantics for odd inputs too - " " pads to " 00" (leading whitespace, parses
+        // as 0) while "5 " pads to "5 0" (embedded whitespace, fails); a hand-rolled whitespace
+        // check here previously got the all-whitespace case wrong.
         private static bool TryParsePaddedMilliseconds(ReadOnlySpan<char> part, out int milliseconds)
         {
-            if (part.Length < 3)
+            if (part.Length >= 3)
             {
-                if (part.Length > 0 && char.IsWhiteSpace(part[part.Length - 1]))
-                {
-                    milliseconds = 0;
-                    return false;
-                }
-
-                if (!int.TryParse(part, out milliseconds))
-                {
-                    return false;
-                }
-
-                milliseconds *= part.Length == 1 ? 100 : 10;
-                return true;
+                return int.TryParse(part, out milliseconds);
             }
 
-            return int.TryParse(part, out milliseconds);
+            Span<char> padded = stackalloc char[3];
+            part.CopyTo(padded);
+            for (var i = part.Length; i < 3; i++)
+            {
+                padded[i] = '0';
+            }
+
+            return int.TryParse(padded, out milliseconds);
         }
 
         public TimeCode()

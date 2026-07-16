@@ -176,7 +176,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     try
                     {
-                        frameRate = double.Parse(xml.DocumentElement.SelectSingleNode("sequence/rate/timebase").InnerText);
+                        frameRate = double.Parse(xml.DocumentElement.SelectSingleNode("sequence/rate/timebase").InnerText, CultureInfo.InvariantCulture);
                     }
                     catch
                     {
@@ -194,7 +194,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             XmlNode timebase = rate?.SelectSingleNode("timebase");
                             if (timebase != null)
                             {
-                                frameRate = double.Parse(timebase.InnerText);
+                                frameRate = double.Parse(timebase.InnerText, CultureInfo.InvariantCulture);
                             }
 
                             double startFrame = 0;
@@ -202,13 +202,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             XmlNode startNode = generatorItemNode.SelectSingleNode("start");
                             if (startNode != null)
                             {
-                                startFrame = double.Parse(startNode.InnerText);
+                                startFrame = double.Parse(startNode.InnerText, CultureInfo.InvariantCulture);
                             }
 
                             XmlNode endNode = generatorItemNode.SelectSingleNode("end");
                             if (endNode != null)
                             {
-                                endFrame = double.Parse(endNode.InnerText);
+                                endFrame = double.Parse(endNode.InnerText, CultureInfo.InvariantCulture);
                             }
 
                             string text = string.Empty;
@@ -290,7 +290,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     text = "<i>" + text + "</i>";
                                 }
 
-                                subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble((startFrame / frameRate) * 1000), Convert.ToDouble((endFrame / frameRate) * 1000)));
+                                subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble((startFrame / frameRate) * 1000, CultureInfo.InvariantCulture), Convert.ToDouble((endFrame / frameRate) * 1000, CultureInfo.InvariantCulture)));
                             }
                         }
                     }

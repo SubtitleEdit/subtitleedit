@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static TimeCode GetTimeCode(string s)
         {
-            return new TimeCode(Convert.ToDouble(s)); // ms
+            return new TimeCode(Convert.ToDouble(s, CultureInfo.InvariantCulture)); // ms
         }
 
     }

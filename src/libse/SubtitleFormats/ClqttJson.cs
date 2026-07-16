@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -69,7 +70,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     try
                     {
-                        frameRate = double.Parse(fpsString.Replace("FPS_", "")) / 100.0;
+                        frameRate = double.Parse(fpsString.Replace("FPS_", ""), CultureInfo.InvariantCulture) / 100.0;
                     }
                     catch
                     {

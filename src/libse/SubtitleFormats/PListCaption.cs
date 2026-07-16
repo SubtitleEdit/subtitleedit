@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -134,11 +135,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             if (lastKey == "in")
                             {
-                                p.StartTime.TotalSeconds = double.Parse(innerNode.InnerText);
+                                p.StartTime.TotalSeconds = double.Parse(innerNode.InnerText, CultureInfo.InvariantCulture);
                             }
                             else if (lastKey == "out")
                             {
-                                p.EndTime.TotalSeconds = double.Parse(innerNode.InnerText);
+                                p.EndTime.TotalSeconds = double.Parse(innerNode.InnerText, CultureInfo.InvariantCulture);
                             }
                             else if (lastKey.StartsWith("text"))
                             {

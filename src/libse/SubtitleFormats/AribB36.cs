@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -235,7 +236,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         else if (code.EndsWith(" S"))
                         {
                             double d;
-                            if (double.TryParse(code.TrimEnd('S'), out d))
+                            if (double.TryParse(code.TrimEnd('S'), NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out d))
                             {
                                 DurationInSeconds = d;
                             }

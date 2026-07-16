@@ -195,11 +195,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var arr = duration.Value.TrimEnd('s').Split('/');
                 if (arr.Length == 2)
                 {
-                    return TimeCode.FromSeconds(long.Parse(arr[0]) / double.Parse(arr[1]));
+                    return TimeCode.FromSeconds(long.Parse(arr[0]) / double.Parse(arr[1], CultureInfo.InvariantCulture));
                 }
                 if (arr.Length == 1)
                 {
-                    return TimeCode.FromSeconds(float.Parse(arr[0]));
+                    return TimeCode.FromSeconds(float.Parse(arr[0], CultureInfo.InvariantCulture));
                 }
             }
             return new TimeCode();

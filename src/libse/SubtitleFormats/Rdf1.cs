@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -53,8 +54,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             continue;
                         }
 
-                        var timeCodeIn = new TimeCode(Convert.ToDouble(timeStartAttribute.InnerText));
-                        var timeCodeOut = new TimeCode(timeCodeIn.TotalMilliseconds + Convert.ToDouble(timeDurationAttribute.InnerText));
+                        var timeCodeIn = new TimeCode(Convert.ToDouble(timeStartAttribute.InnerText, CultureInfo.InvariantCulture));
+                        var timeCodeOut = new TimeCode(timeCodeIn.TotalMilliseconds + Convert.ToDouble(timeDurationAttribute.InnerText, CultureInfo.InvariantCulture));
                         var text = textNode.InnerText.Trim();
                         if (text.StartsWith("{\\rtf1 "))
                         {
