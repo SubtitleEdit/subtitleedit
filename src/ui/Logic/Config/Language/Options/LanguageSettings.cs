@@ -111,6 +111,7 @@ public class LanguageSettings
     public string MaxLines { get; set; }
     public string UnbreakSubtitlesShortThan { get; set; }
     public string NewEmptyDefaultMs { get; set; }
+    public string TimeCodeUpDownStepMs { get; set; }
     public string PromptBeforeDelete { get; set; }
     public string RememberPositionAndSize { get; set; }
     public string OpenLastFileOnStart { get; set; }
@@ -441,6 +442,7 @@ public class LanguageSettings
         MaxLines = "Max number of lines";
         UnbreakSubtitlesShortThan = "Unbreak subtitles shorter than";
         NewEmptyDefaultMs = "Default new subtitle duration (ms)";
+        TimeCodeUpDownStepMs = "Time up/down increment (ms)";
         PromptBeforeDelete = "Prompt before delete";
         RememberPositionAndSize = "Remember window position and size";
         OpenLastFileOnStart = "Open last recent file on start";

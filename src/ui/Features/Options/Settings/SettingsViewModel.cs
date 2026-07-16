@@ -105,6 +105,7 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private decimal _mpvPreviewShadowWidth;
 
     [ObservableProperty] private int? _newEmptyDefaultMs;
+    [ObservableProperty] private int? _timeCodeUpDownStepMs;
     [ObservableProperty] private bool _promptBeforeDelete;
     [ObservableProperty] private bool _lockTimeCodes;
     [ObservableProperty] private bool _rememberPositionAndSize;
@@ -690,6 +691,7 @@ public partial class SettingsViewModel : ObservableObject
         UseFrameMode = general.UseFrameMode;
         TextBoxLimitNewLines = general.SubtitleTextBoxLimitNewLines;
         NewEmptyDefaultMs = general.NewEmptyDefaultMs;
+        TimeCodeUpDownStepMs = general.TimeCodeUpDownStepMs;
         PromptBeforeDelete = general.PromptBeforeDelete;
         LockTimeCodes = general.LockTimeCodes;
         RememberPositionAndSize = general.RememberPositionAndSize;
@@ -1446,6 +1448,7 @@ public partial class SettingsViewModel : ObservableObject
         general.UseFrameMode = UseFrameMode;
         general.SubtitleTextBoxLimitNewLines = TextBoxLimitNewLines;
         general.NewEmptyDefaultMs = NewEmptyDefaultMs ?? general.NewEmptyDefaultMs;
+        general.TimeCodeUpDownStepMs = TimeCodeUpDownStepMs ?? general.TimeCodeUpDownStepMs;
         general.PromptBeforeDelete = PromptBeforeDelete;
         general.LockTimeCodes = LockTimeCodes;
         general.RememberPositionAndSize = RememberPositionAndSize;

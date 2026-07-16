@@ -19,6 +19,12 @@ namespace Nikse.SubtitleEdit.Controls
 {
     public class TimeCodeUpDown : TemplatedControl
     {
+        // Every step (spinner, wheel and Up/Down) applies to the part the caret is on. The caret
+        // starts on the last part, the milliseconds or frames, so a plain spinner click makes the
+        // small adjustment that is wanted almost every time; it used to start on the hours and
+        // jump a whole hour (#12506). The millisecond step size is configurable in Settings.
+        private const int LastPartCaretIndex = 9;
+
         public bool UseVideoOffset { get; set; } = false;
 
         private TextBox? _textBox;
@@ -55,14 +61,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             control.AddHandler(InputElement.PointerWheelChangedEvent, (s, e) =>
             {
-                if (e.Delta.Y > 0)
-                {
-                    ChangeValue(+1);                    
-                }
-                else
-                {
-                    ChangeValue(-1);
-                }
+                ChangeValue(e.Delta.Y > 0 ? +1 : -1);
                 e.Handled = true;
             });
         }
@@ -203,7 +202,7 @@ namespace Nikse.SubtitleEdit.Controls
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     Width = double.NaN,
                     BorderBrush = Brushes.Transparent,
-                    CaretIndex = 0,
+                    CaretIndex = LastPartCaretIndex,
                 };
 
                 var grid = new Grid
@@ -244,8 +243,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (_textBox != null)
             {
-                // Select the first digit position
-                _textBox.CaretIndex = 0;
+                _textBox.CaretIndex = LastPartCaretIndex;
             }
         }
 
@@ -322,7 +320,7 @@ namespace Nikse.SubtitleEdit.Controls
                 SetValue(ValueProperty, value); // OnPropertyChanged clamps, reformats the text and raises ValueChanged
                 if (_textBox != null)
                 {
-                    _textBox.CaretIndex = 0;
+                    _textBox.CaretIndex = LastPartCaretIndex;
                 }
             }
         }
@@ -573,7 +571,8 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
-                    newVal = newVal.Add(TimeSpan.FromMilliseconds(delta));
+                    var step = Math.Max(1, Se.Settings.General.TimeCodeUpDownStepMs);
+                    newVal = newVal.Add(TimeSpan.FromMilliseconds(delta * step));
                 }
             }
 
