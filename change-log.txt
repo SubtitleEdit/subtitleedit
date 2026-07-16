@@ -3,7 +3,7 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
-v5.1.0-rc4 (TBD)
+v5.1.0-rc4 (16th of July 2026)
 
 * Live spell check: only show the subtitle grid spell check items (suggestions, add to user dictionary, ignore all) when a single line is selected
 * Waveform: fix "Seek silence" jumping far past the actual silence when the waveform was scrolled or zoomed - thx AdiOpi
