@@ -16,7 +16,7 @@ public interface ILlamaCppDownloadService
 
 public class LlamaCppDownloadService(HttpClient httpClient) : ILlamaCppDownloadService
 {
-    private const string Version = "b9993";
+    private const string Version = "b10035";
     private const string BaseUrl = "https://github.com/ggml-org/llama.cpp/releases/download/" + Version + "/";
 
     public const string VariantCpu = "cpu";
