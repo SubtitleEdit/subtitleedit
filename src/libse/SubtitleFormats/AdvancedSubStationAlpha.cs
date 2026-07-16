@@ -12,6 +12,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class AdvancedSubStationAlpha : SubtitleFormat
     {
+        private static readonly Regex RegexDrawStart = new Regex(@"\\p[123456789]", RegexOptions.Compiled);
+
         private static readonly Regex ScriptTypeFinder = new Regex("ScriptType: *v4.00", RegexOptions.Compiled);
         public string Errors { get; private set; }
 
@@ -1988,8 +1990,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
             var p1Index = s.IndexOf("\\p1", StringComparison.Ordinal);
             if (p1Index == -1 && s.Contains("\\p"))
             {
-                var findDrawStart = new Regex(@"\\p[123456789]");
-                var match = findDrawStart.Match(s);
+                var match = RegexDrawStart.Match(s);
                 if (match.Success)
                 {
                     p1Index = match.Index;

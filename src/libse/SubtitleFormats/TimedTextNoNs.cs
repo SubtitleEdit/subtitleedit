@@ -9,6 +9,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class TimedTextNoNs : SubtitleFormat
     {
+        private static readonly Regex FixAmpersandRegex = new Regex("&(?!amp;)", RegexOptions.Compiled);
+
         public override string Extension => Configuration.Settings.SubtitleSettings.TimedText10FileExtension;
 
         public const string NameOfFormat = "Timed Text No Namespace";
@@ -416,8 +418,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 result = result.Remove(0, idx);
             }
 
-            var fixAmpersandRegex = new Regex("&(?!amp;)");
-            return fixAmpersandRegex.Replace(result, "&amp;");
+            return FixAmpersandRegex.Replace(result, "&amp;");
         }
     }
 }

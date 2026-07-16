@@ -53,14 +53,45 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return source;
             }
 
-            // This pattern matches these tag formats:
+            // The pattern matches these tag formats:
             // <tag*>
             // < tag*>
             // </tag*>
             // < /tag*>
             // </ tag*>
             // < / tag*>
-            return TagOpenRegex.Replace(source, m => tags.Contains(m.Groups[1].Value, StringComparer.OrdinalIgnoreCase) ? string.Empty : m.Value);
+            // Runs per paragraph in many format writers, so avoid the Regex.Replace +
+            // MatchEvaluator shape it used to have: that allocated a closure over `tags`, a
+            // string per match for the tag-name group and one for every kept match - and it
+            // rebuilt the string even when no tag matched. Walk the matches instead, compare
+            // the tag name in place, and return the original instance when nothing is removed.
+            var match = TagOpenRegex.Match(source);
+            StringBuilder sb = null;
+            var pos = 0;
+            while (match.Success)
+            {
+                var group = match.Groups[1];
+                foreach (var tag in tags)
+                {
+                    if (source.AsSpan(group.Index, group.Length).Equals(tag.AsSpan(), StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb ??= new StringBuilder(source.Length);
+                        sb.Append(source, pos, match.Index - pos);
+                        pos = match.Index + match.Length;
+                        break;
+                    }
+                }
+
+                match = match.NextMatch();
+            }
+
+            if (sb == null)
+            {
+                return source;
+            }
+
+            sb.Append(source, pos, source.Length - pos);
+            return sb.ToString();
         }
 
         /// <summary>

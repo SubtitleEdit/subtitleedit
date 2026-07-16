@@ -13,6 +13,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class DCinemaSmpte2010 : SubtitleFormat
     {
+        private static readonly Regex RegexTextOpenTagWhiteSpace = new Regex("<Text [^<]*>\\s+", RegexOptions.Compiled);
+        private static readonly Regex RegexWhiteSpaceTextCloseTag = new Regex("\\s+</Text>", RegexOptions.Compiled);
+
         //<?xml version="1.0" encoding="UTF-8"?>
         //<dcst:SubtitleReel xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dcst="http://www.smpte-ra.org/schemas/428-7/2010/DCST">
         //  <Id>urn:uuid:7be835a3-cfb4-43d0-bb4b-f0b4c95e962e</Id>
@@ -592,7 +595,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// </summary>
         internal static string FixDcsTextSameLine(string xml)
         {
-            var regex = new Regex("<Text [^<]*>\\s+");
+            var regex = RegexTextOpenTagWhiteSpace;
             var match = regex.Match(xml);
             while (match.Success)
             {
@@ -602,7 +605,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 match = regex.Match(xml, match.Index);
             }
 
-            regex = new Regex("\\s+</Text>");
+            regex = RegexWhiteSpaceTextCloseTag;
             match = regex.Match(xml);
             while (match.Success)
             {
