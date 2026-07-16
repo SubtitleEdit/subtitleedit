@@ -2514,6 +2514,32 @@ public partial class MainViewModel :
     }
 
     [RelayCommand]
+    private async Task ExportImscImage()
+    {
+        if (Window == null)
+        {
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            ShowSubtitleNotLoadedMessage();
+            return;
+        }
+
+        IExportHandler exportHandler = new ExportHandlerImscImage();
+        var result = await ShowDialogAsync<ExportImageBasedWindow, ExportImageBasedViewModel>(vm =>
+        {
+            vm.Initialize(exportHandler, Subtitles, _subtitleFileName, _videoFileName);
+        });
+
+        if (!result.OkPressed)
+        {
+            return;
+        }
+    }
+
+    [RelayCommand]
     private async Task ExportWebVttThumbnails()
     {
         if (Window == null)

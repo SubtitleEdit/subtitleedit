@@ -211,6 +211,11 @@ public static class InitMenu
                         },
                         new MenuItem
                         {
+                            Header = "IMSC 1.1 image profile",
+                            Command = vm.ExportImscImageCommand,
+                        },
+                        new MenuItem
+                        {
                             Header = new CapMakerPlus().Name,
                             Command = vm.ExportCapMakerPlusCommand,
                         },
