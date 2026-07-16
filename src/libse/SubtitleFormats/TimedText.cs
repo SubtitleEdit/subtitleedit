@@ -318,7 +318,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                             else if (start != null && start.EndsWith("t", StringComparison.Ordinal) &&
                                      end != null && end.EndsWith("t", StringComparison.Ordinal) &&
-                                     double.TryParse(start.TrimEnd('t'), out dBegin) && double.TryParse(end.TrimEnd('t'), out dEnd))
+                                     double.TryParse(start.TrimEnd('t'), NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out dBegin) && double.TryParse(end.TrimEnd('t'), NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out dEnd))
                             {
                                 var p = new Paragraph(text, TimeSpan.FromTicks((long)dBegin).TotalMilliseconds, TimeSpan.FromTicks((long)dEnd).TotalMilliseconds);
                                 if (!string.IsNullOrEmpty(styleName))

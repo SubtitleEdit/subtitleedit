@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -110,7 +111,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int hours = int.Parse(tokens[0]);
             int minutes = int.Parse(tokens[1]);
             int seconds = int.Parse(tokens[2]);
-            int milliseconds = FramesToMilliseconds(double.Parse(tokens[3]));
+            int milliseconds = FramesToMilliseconds(double.Parse(tokens[3], CultureInfo.InvariantCulture));
 
             return new TimeCode(hours, minutes, seconds, milliseconds);
         }

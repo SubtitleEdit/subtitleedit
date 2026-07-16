@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -141,8 +142,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             string temp = s.Substring(0, textIndex - 1);
                             string[] frames = temp.Replace("][", ":").Replace("[", string.Empty).Replace("]", string.Empty).Split(':');
 
-                            double startSeconds = double.Parse(frames[0]) / 10;
-                            double endSeconds = double.Parse(frames[1]) / 10;
+                            double startSeconds = double.Parse(frames[0], CultureInfo.InvariantCulture) / 10;
+                            double endSeconds = double.Parse(frames[1], CultureInfo.InvariantCulture) / 10;
 
                             if (Math.Abs(startSeconds) < 0.01 && subtitle.Paragraphs.Count > 0)
                             {

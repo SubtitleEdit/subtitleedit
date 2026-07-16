@@ -20273,7 +20273,9 @@ public partial class MainViewModel :
             // F10 toggles main-menu activation (Windows standard): the first press moves keyboard focus
             // into the menu bar, a second press deactivates it and restores the previous focus. This
             // also lets the menu be reached and read with a screen reader without a mouse (#11745).
-            if (k == Key.F10 && keyEventArgs.KeyModifiers == KeyModifiers.None)
+            // A user-assigned F10 shortcut wins over the menu toggle (#12504) - the menu stays
+            // reachable via Alt.
+            if (k == Key.F10 && keyEventArgs.KeyModifiers == KeyModifiers.None && !_shortcutManager.HasSingleKeyShortcut("F10"))
             {
                 if (IsMainMenuFocused())
                 {

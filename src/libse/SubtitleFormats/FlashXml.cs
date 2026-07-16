@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -166,7 +167,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (s.EndsWith('s'))
             {
                 s = s.TrimEnd('s');
-                return TimeCode.FromSeconds(double.Parse(s));
+                return TimeCode.FromSeconds(double.Parse(s, CultureInfo.InvariantCulture));
             }
             var parts = s.Split(new[] { ':', '.', ',' });
             return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));

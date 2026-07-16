@@ -285,6 +285,24 @@ public class ShortcutManager : IShortcutManager
         _isDirty = true;
     }
 
+    /// <summary>
+    /// True when the user has assigned <paramref name="keyName"/> (alone, no modifiers) to any
+    /// action. Built-in key handling (e.g. F10 activating the menu bar) checks this so a
+    /// user-configured shortcut wins over the default behavior (#12504).
+    /// </summary>
+    public bool HasSingleKeyShortcut(string keyName)
+    {
+        foreach (var shortcut in _shortcuts)
+        {
+            if (shortcut.Keys.Count == 1 && shortcut.Keys[0].Equals(keyName, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void ClearShortcuts()
     {
         _shortcuts.Clear();

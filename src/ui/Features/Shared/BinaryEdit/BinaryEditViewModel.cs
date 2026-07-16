@@ -2359,8 +2359,9 @@ public partial class BinaryEditViewModel : ObservableObject
     {
         // F10 toggles menu-bar activation (Windows standard): the first press moves keyboard focus
         // into the menu bar, a second press deactivates it and restores the previous focus, so it can
-        // be reached and read without a mouse (#11745).
-        if (e.Key == Key.F10 && e.KeyModifiers == KeyModifiers.None)
+        // be reached and read without a mouse (#11745). A user-assigned F10 shortcut wins over the
+        // menu toggle (#12504) - the menu stays reachable via Alt.
+        if (e.Key == Key.F10 && e.KeyModifiers == KeyModifiers.None && !_shortcutManager.HasSingleKeyShortcut("F10"))
         {
             if (IsMenuFocused())
             {

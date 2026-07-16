@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (node.Attributes["time"] != null)
                     {
                         string start = node.Attributes["time"].InnerText;
-                        double startMilliseconds = double.Parse(start);
+                        double startMilliseconds = double.Parse(start, CultureInfo.InvariantCulture);
                         if (p != null)
                         {
                             p.EndTime.TotalMilliseconds = startMilliseconds - 1;

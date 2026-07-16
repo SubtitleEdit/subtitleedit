@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string timeCode)
         {
-            return TimeCode.FromSeconds(double.Parse(timeCode.Trim()));
+            return TimeCode.FromSeconds(double.Parse(timeCode.Trim(), CultureInfo.InvariantCulture));
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

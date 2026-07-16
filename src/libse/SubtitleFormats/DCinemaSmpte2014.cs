@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -82,7 +83,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!string.IsNullOrEmpty(ss.CurrentDCinemaEditRate))
             {
                 var temp = ss.CurrentDCinemaEditRate.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (temp.Length == 2 && double.TryParse(temp[0], out var d1) && double.TryParse(temp[1], out var d2))
+                if (temp.Length == 2 && double.TryParse(temp[0], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var d1) && double.TryParse(temp[1], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var d2))
                 {
                     _frameRate = d1 / d2;
                 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -242,7 +243,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var frameRateAttr = xml.DocumentElement.Attributes["ttp:frameRate"];
             if (frameRateAttr != null)
             {
-                if (double.TryParse(frameRateAttr.Value, out var fr))
+                if (double.TryParse(frameRateAttr.Value, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var fr))
                 {
                     if (fr > 20 && fr < 100)
                     {
@@ -265,7 +266,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var arr = frameRateMultiplier.InnerText.Split();
                             if (arr.Length == 2 && Utilities.IsInteger(arr[0]) && Utilities.IsInteger(arr[1]) && int.Parse(arr[1]) > 0)
                             {
-                                fr = double.Parse(arr[0]) / double.Parse(arr[1]);
+                                fr = double.Parse(arr[0], CultureInfo.InvariantCulture) / double.Parse(arr[1], CultureInfo.InvariantCulture);
                                 if (fr > 20 && fr < 100)
                                 {
                                     Configuration.Settings.General.CurrentFrameRate = fr;

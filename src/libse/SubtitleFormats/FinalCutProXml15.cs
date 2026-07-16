@@ -558,11 +558,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var arr = duration.Value.TrimEnd('s').TrimEnd('m').Split('/');
                     if (arr.Length == 2)
                     {
-                        return TimeCode.FromSeconds((long.Parse(arr[0]) * 1000.0) / (double.Parse(arr[1]) * 1000.0));
+                        return TimeCode.FromSeconds((long.Parse(arr[0]) * 1000.0) / (double.Parse(arr[1], CultureInfo.InvariantCulture) * 1000.0));
                     }
                     if (arr.Length == 1)
                     {
-                        return TimeCode.FromSeconds(float.Parse(arr[0]) * 1000.0);
+                        return TimeCode.FromSeconds(float.Parse(arr[0], CultureInfo.InvariantCulture) * 1000.0);
                     }
                 }
                 else
@@ -570,11 +570,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var arr = duration.Value.TrimEnd('s').Split('/');
                     if (arr.Length == 2)
                     {
-                        return TimeCode.FromSeconds(long.Parse(arr[0]) / double.Parse(arr[1]));
+                        return TimeCode.FromSeconds(long.Parse(arr[0]) / double.Parse(arr[1], CultureInfo.InvariantCulture));
                     }
                     if (arr.Length == 1)
                     {
-                        return TimeCode.FromSeconds(float.Parse(arr[0]));
+                        return TimeCode.FromSeconds(float.Parse(arr[0], CultureInfo.InvariantCulture));
                     }
                 }
             }

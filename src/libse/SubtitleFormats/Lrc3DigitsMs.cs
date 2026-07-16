@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -209,7 +210,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (line.StartsWith("[offset:", StringComparison.Ordinal)) // [length:How long the song is]
                 {
                     var temp = line.Replace("[offset:", string.Empty).Replace("]", string.Empty).Replace("'", string.Empty).RemoveChar(' ').TrimEnd();
-                    if (double.TryParse(temp, out var d))
+                    if (double.TryParse(temp, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var d))
                     {
                         offsetInMilliseconds = d;
                     }

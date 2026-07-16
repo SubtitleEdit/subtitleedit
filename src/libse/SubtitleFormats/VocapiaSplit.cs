@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -133,7 +134,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static double ParseTimeCode(string s)
         {
-            return Convert.ToDouble(s) * TimeCode.BaseUnit;
+            return Convert.ToDouble(s, CultureInfo.InvariantCulture) * TimeCode.BaseUnit;
         }
 
         public override bool HasStyleSupport => true;
