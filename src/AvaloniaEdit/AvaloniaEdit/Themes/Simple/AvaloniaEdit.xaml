@@ -1,0 +1,39 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Styles.Resources>
+    <ResourceDictionary>
+      <StaticResource x:Key="SearchPanelFontSize" ResourceKey="FontSizeNormal" />
+      <StaticResource x:Key="SearchPanelFontFamily" ResourceKey="ContentControlThemeFontFamily" />
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Default">
+          <StaticResource x:Key="CompletionToolTipBackground" ResourceKey="ThemeBackgroundBrush" />
+          <StaticResource x:Key="CompletionToolTipForeground" ResourceKey="ThemeForegroundColor" />
+          <StaticResource x:Key="CompletionToolTipBorderBrush" ResourceKey="ThemeBorderMidBrush" />
+          <StaticResource x:Key="CompletionToolTipBorderThickness" ResourceKey="ThemeBorderThickness" />
+          <StaticResource x:Key="OverloadViewerBackground" ResourceKey="ThemeBackgroundBrush" />
+          <StaticResource x:Key="OverloadViewerForeground" ResourceKey="ThemeForegroundColor" />
+          <StaticResource x:Key="OverloadViewerBorderBrush" ResourceKey="ThemeBorderMidBrush" />
+          <SolidColorBrush x:Key="SearchPanelBackgroundBrush" Color="{DynamicResource ThemeBackgroundColor}" />
+          <SolidColorBrush x:Key="SearchPanelBorderBrush" Color="{DynamicResource ThemeBorderLowColor}" />
+          <SolidColorBrush x:Key="TextAreaSelectionBrush" Color="{DynamicResource HighlightColor}" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <StaticResource x:Key="CompletionToolTipBackground" ResourceKey="ThemeBackgroundBrush" />
+          <StaticResource x:Key="CompletionToolTipForeground" ResourceKey="ThemeForegroundColor" />
+          <StaticResource x:Key="CompletionToolTipBorderBrush" ResourceKey="ThemeBorderMidBrush" />
+          <StaticResource x:Key="CompletionToolTipBorderThickness" ResourceKey="ThemeBorderThickness" />
+          <StaticResource x:Key="OverloadViewerBackground" ResourceKey="ThemeBackgroundBrush" />
+          <StaticResource x:Key="OverloadViewerForeground" ResourceKey="ThemeForegroundColor" />
+          <StaticResource x:Key="OverloadViewerBorderBrush" ResourceKey="ThemeBorderMidBrush" />
+          <SolidColorBrush x:Key="SearchPanelBackgroundBrush" Color="{DynamicResource ThemeBackgroundColor}" />
+          <SolidColorBrush x:Key="SearchPanelBorderBrush" Color="{DynamicResource ThemeBorderLowColor}" />
+          <SolidColorBrush x:Key="TextAreaSelectionBrush" Color="{DynamicResource HighlightColor}" />
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="../Base.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Styles.Resources>
+</Styles>

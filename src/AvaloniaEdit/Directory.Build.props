@@ -1,0 +1,12 @@
+<Project>
+  <!--
+    Scoped to the vendored AvaloniaEdit source. Intentionally does NOT import the repo-root
+    Directory.Build.props (this is third-party code we don't want SE-wide settings applied to),
+    and keeps warnings non-fatal since the upstream source carries some it suppresses.
+  -->
+  <PropertyGroup>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Nullable>disable</Nullable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+</Project>

@@ -21,7 +21,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Avalonia" Version="12.1.0" />
-		<PackageReference Include="Avalonia.AvaloniaEdit" Version="12.0.0" />
 		<PackageReference Include="Avalonia.Controls.DataGrid" Version="12.1.0" />
 		<PackageReference Include="Avalonia.Desktop" Version="12.1.0" />
 		<PackageReference Include="Avalonia.Markup.Declarative" Version="12.0.5" />
@@ -32,7 +31,6 @@
 			<IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
 			<PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="AvaloniaEdit.TextMate" Version="12.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 		<PackageReference Include="Google.Cloud.TextToSpeech.V1" Version="3.18.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0-preview.2.26159.112" />
@@ -287,6 +285,8 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\libse\LibSE.csproj" />
 	  <ProjectReference Include="..\libuilogic\LibUiLogic.csproj" />
+	  <ProjectReference Include="..\AvaloniaEdit\AvaloniaEdit\AvaloniaEdit.csproj" />
+	  <ProjectReference Include="..\AvaloniaEdit\AvaloniaEdit.TextMate\AvaloniaEdit.TextMate.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

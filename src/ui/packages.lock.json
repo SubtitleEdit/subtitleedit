@@ -13,15 +13,6 @@
           "MicroCom.Runtime": "0.11.6"
         }
       },
-      "Avalonia.AvaloniaEdit": {
-        "type": "Direct",
-        "requested": "[12.0.0, )",
-        "resolved": "12.0.0",
-        "contentHash": "VNfaYdTbiQ2DlSkSMoLg4DhTbQmQR0cFT6nqEqLkaYGLjBWmUdv5BNIuoObK4c9cgzFqnEJXBaOp4R/bxgFKfQ==",
-        "dependencies": {
-          "Avalonia": "12.0.0"
-        }
-      },
       "Avalonia.Controls.DataGrid": {
         "type": "Direct",
         "requested": "[12.1.0, )",
@@ -70,18 +61,6 @@
         "contentHash": "MVi5L9HymnNm+gP2aNXNcyrP2iKGJWFubQ5Bv8/Przflxca1aIT9QBpTUV6c3olA9rLYFY7MJRR/C/BZaUhemQ==",
         "dependencies": {
           "Avalonia": "12.1.0"
-        }
-      },
-      "AvaloniaEdit.TextMate": {
-        "type": "Direct",
-        "requested": "[12.0.0, )",
-        "resolved": "12.0.0",
-        "contentHash": "FArIpBB2zcraoYqQIPNkevviNtuzKrA5tEVAAE03PboZMy2recf4TJEXk1BfCw7Oo4fBBh7srUqOdK5RNSUNrg==",
-        "dependencies": {
-          "Avalonia": "12.0.0",
-          "Avalonia.AvaloniaEdit": "12.0.0",
-          "TextMateSharp": "2.0.3",
-          "TextMateSharp.Grammars": "2.0.3"
         }
       },
       "AvaloniaUI.DiagnosticsSupport": {
@@ -598,6 +577,21 @@
         "type": "Transitive",
         "resolved": "7.0.1",
         "contentHash": "Ha0x66QWA+IPj2kJYoweA8MSnB1tymBW6kAIS6Kkj/U3SlMLCBPjDlUXzrrY1zJAxVItrGpFIXjkl3eEIYIE9A=="
+      },
+      "avaloniaedit": {
+        "type": "Project",
+        "dependencies": {
+          "Avalonia": "[12.1.0, )"
+        }
+      },
+      "avaloniaedit.textmate": {
+        "type": "Project",
+        "dependencies": {
+          "Avalonia": "[12.1.0, )",
+          "AvaloniaEdit": "[1.0.0, )",
+          "TextMateSharp": "[2.0.3, )",
+          "TextMateSharp.Grammars": "[2.0.3, )"
+        }
       },
       "libse": {
         "type": "Project",

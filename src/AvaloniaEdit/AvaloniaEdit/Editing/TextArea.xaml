@@ -1,0 +1,41 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:editing="using:AvaloniaEdit.Editing"
+                    x:ClassModifier="internal">
+  <ControlTheme x:Key="{x:Type editing:TextArea}" TargetType="editing:TextArea">
+    <Setter Property="SelectionBrush" Value="{DynamicResource TextAreaSelectionBrush}" />
+    <!--<Setter Property="SelectionBorder">
+           <Pen Brush="#0000ff" Thickness="1" />
+        </Setter>-->
+    <!--<Setter Property="SelectionForeground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />-->
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DockPanel Focusable="False" Background="{TemplateBinding Background}">
+          <ItemsControl DockPanel.Dock="Left"
+                        Focusable="False"
+                        ItemsSource="{TemplateBinding LeftMargins}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+          </ItemsControl>
+          <Panel>
+            <ContentPresenter Name="PART_CP"
+                              Cursor="IBeam"
+                              Focusable="False"
+                              Background="{TemplateBinding Background}" />
+            <TextBlock Name="PART_Watermark"
+                       Opacity="0.5"
+                       Text="{TemplateBinding Watermark}"
+                       Foreground="{TemplateBinding Foreground}">
+              <TextBlock.IsVisible>
+                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Document.Text" Converter="{x:Static StringConverters.IsNullOrEmpty}"/>
+              </TextBlock.IsVisible>
+            </TextBlock>
+          </Panel>
+        </DockPanel>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+</ResourceDictionary>

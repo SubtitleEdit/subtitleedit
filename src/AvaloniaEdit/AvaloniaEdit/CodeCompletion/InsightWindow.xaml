@@ -1,0 +1,61 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cc="using:AvaloniaEdit.CodeCompletion"
+                    x:ClassModifier="internal">
+  <ControlTheme x:Key="OverloadViewerButtonTheme"
+                TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+    <Setter Property="Padding" Value="2,2,2,2" />
+    <Setter Property="Width" Value="9" />
+    <Setter Property="Height" Value="9" />
+    <Setter Property="CornerRadius" Value="2" />
+  </ControlTheme>
+  
+  <ControlTheme x:Key="{x:Type cc:OverloadViewer}" TargetType="cc:OverloadViewer">
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="BorderBrush" Value="{DynamicResource OverloadViewerBorderBrush}" />
+    <Setter Property="Background" Value="{DynamicResource OverloadViewerBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource OverloadViewerForeground}" />
+    <Setter Property="Padding" Value="2" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border BorderThickness="{TemplateBinding BorderThickness}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                Background="{TemplateBinding Background}"
+                Padding="{TemplateBinding Padding}">
+          <Grid ColumnDefinitions="Auto,*"
+                RowDefinitions="Auto,*">
+
+            <StackPanel Grid.Row="0"
+                        Grid.Column="0"
+                        Margin="0,0,4,0"
+                        Orientation="Horizontal"
+                        IsVisible="{Binding Provider.Count, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static cc:CollapseIfSingleOverloadConverter.Instance}}">
+              <Button Name="PART_UP" Theme="{StaticResource OverloadViewerButtonTheme}">
+                <Path Stroke="{Binding #PART_UP.Foreground}"
+                      Fill="{Binding #PART_UP.Foreground}"
+                      Data="M 0,0.866 L 1,0.866 L 0.5,0 Z"
+                      Stretch="UniformToFill" />
+              </Button>
+              <TextBlock Margin="2,0,2,0"
+                         Text="{Binding Provider.CurrentIndexText, RelativeSource={RelativeSource TemplatedParent}}" />
+              <Button Name="PART_DOWN" Theme="{StaticResource OverloadViewerButtonTheme}">
+                <Path Stroke="{Binding #PART_DOWN.Foreground}"
+                      Fill="{Binding #PART_DOWN.Foreground}"
+                      Data="M 0,0 L 1,0 L 0.5,0.866 Z"
+                      Stretch="UniformToFill" />
+              </Button>
+            </StackPanel>
+            <ContentPresenter Grid.Row="0"
+                              Grid.Column="1"
+                              Content="{Binding Provider.CurrentHeader, RelativeSource={RelativeSource TemplatedParent}}" />
+            <ContentPresenter Grid.Row="1"
+                              Grid.Column="0"
+                              Grid.ColumnSpan="2"
+                              Content="{Binding Provider.CurrentContent, RelativeSource={RelativeSource TemplatedParent}}" />
+          </Grid>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    
+  </ControlTheme>
+</ResourceDictionary>

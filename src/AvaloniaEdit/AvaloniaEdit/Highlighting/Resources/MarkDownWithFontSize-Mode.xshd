@@ -1,0 +1,76 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="MarkDownWithFontSize" extensions=".md" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+    <Color name="Heading1" foreground="Maroon" fontSize="30" exampleText="# Title #" />
+    <Color name="Heading2" foreground="Maroon" fontSize="27" exampleText="# Title #" />
+    <Color name="Heading3" foreground="Maroon" fontSize="24" exampleText="# Title #" />
+    <Color name="Heading4" foreground="Maroon" fontSize="21" exampleText="# Title #" />
+    <Color name="Heading5" foreground="Maroon" fontSize="18" exampleText="# Title #" />
+    <Color name="Heading6" foreground="Maroon" fontSize="15" exampleText="# Title #" />
+    <Color name="Emphasis" fontStyle="italic" exampleText="*this* is important!" />
+	<Color name="StrongEmphasis" fontWeight="bold" exampleText="**this** is more important!" />
+	<Color name="Code" fontFamily="Footlight MT Light" exampleText="this is `int.GetHashCode()`" />
+	<Color name="BlockQuote" foreground="DarkBlue" exampleText="&gt; This is a\r\n&gt; quote." />
+	<Color name="Link" foreground="Blue" exampleText="[text](http://example.com)" />
+	<Color name="Image" foreground="Green" exampleText="[text][http://example.com/test.png]" />
+	<Color name="LineBreak" background="LightGray" exampleText="end of line      \r\n2nd line   " />
+	
+	<RuleSet ignoreCase="true">
+        <Rule color="Heading1">
+            ^[#]{1}[ ]{1}.*
+        </Rule>
+        <Rule color="Heading2">
+            ^[#]{2}[ ]{1}.*
+        </Rule>
+        <Rule color="Heading3">
+            ^[#]{3}[ ]{1}.*
+        </Rule>
+        <Rule color="Heading4">
+            ^[#]{4}[ ]{1}.*
+        </Rule>
+        <Rule color="Heading5">
+            ^[#]{5}[ ]{1}.*
+        </Rule>
+        <Rule color="Heading6">
+            ^[#]{6}[ ]{1}.*
+        </Rule>
+        <Rule color="StrongEmphasis">
+			\*\*.*\*\*
+		</Rule>
+		<Rule color="StrongEmphasis">
+			__.*__
+		</Rule>
+		<Rule color="Emphasis">
+			\*(?![ ]).*\*
+		</Rule>
+		<Rule color="Emphasis">
+			_.*_
+		</Rule>
+		<Rule color="Code">
+			`.*`
+		</Rule>
+		<Span color="Code" ruleSet="C#/" multiline="true">
+			<Begin>^\t</Begin>
+			<End>^(?!\t)</End>
+		</Span>
+		<Span color="Code" ruleSet="C#/" multiline="true">
+			<Begin>^[ ]{4}</Begin>
+			<End>^(?![ ]{4})</End>
+		</Span>
+		<Span color="BlockQuote" multiline="true">
+			<Begin>^&gt;</Begin>
+			<End>^(?!&gt;)</End>
+		</Span>
+		<Rule color="Image">
+			\!\[.*\]\[.*\]
+		</Rule>
+		<Rule color="Link">
+			\[.*\]\(.*\)
+		</Rule>
+		<Rule color="Link">
+			\[.*\]\[.*\]
+		</Rule>
+		<Rule color="LineBreak">
+			[ ]{2}$
+		</Rule>
+	</RuleSet>
+</SyntaxDefinition>

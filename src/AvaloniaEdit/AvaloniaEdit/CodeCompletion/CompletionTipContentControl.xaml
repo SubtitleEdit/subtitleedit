@@ -1,0 +1,30 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:codeCompletion="using:AvaloniaEdit.CodeCompletion"
+                    x:ClassModifier="internal">
+
+  <!-- Style used for tooltip next to completion list box.  -->
+  <ControlTheme x:Key="{x:Type codeCompletion:CompletionTipContentControl}"
+                TargetType="{x:Type codeCompletion:CompletionTipContentControl}">
+    <Setter Property="BorderThickness" Value="{DynamicResource CompletionToolTipBorderThickness}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource CompletionToolTipBorderBrush}" />
+    <Setter Property="Background" Value="{DynamicResource CompletionToolTipBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource CompletionToolTipForeground}" />
+    <Setter Property="Padding" Value="4,2" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <ContentPresenter Name="PART_ContentPresenter"
+                          Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}"
+                          CornerRadius="{TemplateBinding CornerRadius}"
+                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                          Content="{TemplateBinding Content}"
+                          Padding="{TemplateBinding Padding}"
+                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+</ResourceDictionary>

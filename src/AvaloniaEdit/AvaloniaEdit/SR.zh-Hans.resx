@@ -1,0 +1,59 @@
+﻿<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="ReplaceLabel" xml:space="preserve">
+        <value>替换</value>
+    </data>
+    <data name="SearchErrorText" xml:space="preserve">
+        <value>错误：</value>
+    </data>
+    <data name="SearchFindNextText" xml:space="preserve">
+        <value>下一个匹配项 (F3)</value>
+    </data>
+    <data name="SearchFindPreviousText" xml:space="preserve">
+        <value>上一个匹配项 (Shift+F3)</value>
+    </data>
+    <data name="SearchLabel" xml:space="preserve">
+        <value>查找...</value>
+    </data>
+    <data name="SearchMatchCaseText" xml:space="preserve">
+        <value>区分大小写</value>
+    </data>
+    <data name="SearchMatchWholeWordsText" xml:space="preserve">
+        <value>全字匹配</value>
+    </data>
+    <data name="SearchReplaceAll" xml:space="preserve">
+        <value>全部替换 (Alt+A)</value>
+    </data>
+    <data name="SearchReplaceNext" xml:space="preserve">
+        <value>替换 (Alt+R)</value>
+    </data>
+    <data name="SearchUseRegexText" xml:space="preserve">
+        <value>使用正则表达式</value>
+    </data>
+    <data name="SearchToggleReplace" xml:space="preserve">
+        <value>切换替换</value>
+    </data>
+    <data name="SearchNoMatchesFoundText" xml:space="preserve">
+        <value>无结果</value>
+    </data>
+    <data name="SearchXMatches" xml:space="preserve">
+        <value>{0}个匹配项</value>
+    </data>
+    <data name="SearchXOfY" xml:space="preserve">
+        <value>第{0}项，共{1}项</value>
+    </data>
+    <data name="Search1Match" xml:space="preserve">
+        <value>1个匹配项</value>
+    </data>
+</root>

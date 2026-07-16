@@ -1,0 +1,36 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cc="using:AvaloniaEdit.CodeCompletion"
+                    x:ClassModifier="internal">
+
+  <ControlTheme x:Key="{x:Type cc:CompletionListBox}" TargetType="cc:CompletionListBox"
+                BasedOn="{StaticResource {x:Type ListBox}}">
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="ItemContainerTheme">
+      <ControlTheme TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+        <Setter Property="Padding" Value="4,2" />
+      </ControlTheme>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type cc:CompletionList}" TargetType="cc:CompletionList">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <cc:CompletionListBox Name="PART_ListBox">
+          <cc:CompletionListBox.ItemTemplate>
+            <DataTemplate x:DataType="cc:ICompletionData">
+              <StackPanel Orientation="Horizontal" Margin="0">
+                <Image Source="{Binding Image}"
+                       Width="16"
+                       Height="16"
+                       Margin="0,0,2,0" />
+                <ContentControl Content="{Binding Content}" />
+              </StackPanel>
+            </DataTemplate>
+          </cc:CompletionListBox.ItemTemplate>
+        </cc:CompletionListBox>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+</ResourceDictionary>
