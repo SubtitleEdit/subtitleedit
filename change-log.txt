@@ -9,6 +9,10 @@ v5.1.0-rc5 (TBD)
 * Point sync via other subtitle: fix deleting a sync point - the context menu now shows Delete (and Delete/Backspace on the list works) instead of silently removing the point on right-click - thx fraternl
 * Point sync via other subtitle: clicking a line in the left list scrolls the other subtitle's list to the matching time (selection is left untouched) - thx fraternl
 * Point sync via other subtitle: icon on the "Set sync point" button
+* Point sync via other subtitle: a long "other subtitle" file name no longer pushes under the "Find text" button - it now shrinks with an ellipsis
+* Point sync: sync points are now chronologically sorted, and setting a point on a line that already has one re-points it instead of adding a duplicate
+* Point sync: fix deleting a sync point - the context menu now shows Delete (and Delete/Backspace on the list works) instead of silently removing the point on right-click
+* Point sync: icon on the "Set sync point" button
 * Performance: faster time code display in HH:MM:SS:FF mode, faster ASSA/SSA file loading, and allocation-free URL checks
 * Performance: faster "Fix missing spaces", time code parsing and extra-space cleanup in the core library
 * Time code spinner: mouse click/wheel now nudges 100 ms (one frame in frame mode) instead of stepping the caret's segment - the caret defaults to hours, so a click jumped a whole hour - thx muaz978/AdiOpi
