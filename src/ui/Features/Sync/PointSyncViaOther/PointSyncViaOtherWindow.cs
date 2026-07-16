@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.Main;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
@@ -233,14 +234,26 @@ public class PointSyncViaOtherWindow : Window
         };
 
         var buttonBrowseOther = UiUtil.MakeButtonBrowse(vm.BrowseOtherCommand);
-        var labelOtherFileName = UiUtil.MakeLabel(string.Empty).WithBindText(vm, nameof(vm.FileNameOther));
-        labelOtherFileName.VerticalAlignment = VerticalAlignment.Center;
-        var panelOtherBrowse = new StackPanel
+        // TextBlock in a star column so a long file name shrinks with an ellipsis
+        // instead of pushing under the "Find text" button.
+        var labelOtherFileName = new TextBlock
         {
-            Orientation = Orientation.Horizontal,
             VerticalAlignment = VerticalAlignment.Center,
-            Children = { buttonBrowseOther, labelOtherFileName },
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            Margin = new Thickness(5, 0, 5, 0),
         };
+        labelOtherFileName.Bind(TextBlock.TextProperty, new Binding(nameof(vm.FileNameOther)) { Source = vm });
+        var panelOtherBrowse = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Auto) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        panelOtherBrowse.Add(buttonBrowseOther, 0, 0);
+        panelOtherBrowse.Add(labelOtherFileName, 0, 1);
         var buttonFindTextOther = UiUtil.MakeButton(Se.Language.Sync.FindText, vm.FindTextOtherCommand);
         buttonFindTextOther.HorizontalAlignment = HorizontalAlignment.Right;
         var panelOtherHeader = new Grid
