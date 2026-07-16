@@ -13546,7 +13546,9 @@ public partial class MainViewModel :
         var result = await _windowService.ShowDialogAsync<WaveformToolbarItemsWindow, WaveformToolbarItemsViewModel>(
             Window, vm => vm.Initialize(current));
 
-        if (!result.OkPressed)
+        // Nothing changed = nothing to save and, crucially, no layout rebuild - the rebuild is
+        // what re-docked video/waveform copies while the undocked windows were still open (#12520).
+        if (!result.OkPressed || !result.HasChanges)
         {
             return;
         }
@@ -13555,8 +13557,20 @@ public partial class MainViewModel :
         Se.SaveSettings();
 
         // Rebuild the layout so the waveform toolbar reflects the new item set/order (the toolbar
-        // is built once in InitWaveform.MakeWaveform, with no incremental update path).
-        SetLayout(Se.Settings.General.LayoutNumber);
+        // is built once in InitWaveform.MakeWaveform, with no incremental update path). While the
+        // video controls are undocked, re-run the undock flow instead of SetLayout: SetLayout
+        // rebuilds docked video/waveform panels in the main window alongside the still-open
+        // undocked windows (#12520), whereas the undock flow recreates the undocked windows (with
+        // the new toolbar) and keeps the main window on the video-less layout - same handling as
+        // the Options/Settings close path.
+        if (AreVideoControlsUndocked)
+        {
+            VideoUndockControls();
+        }
+        else
+        {
+            SetLayout(Se.Settings.General.LayoutNumber);
+        }
     }
 
 

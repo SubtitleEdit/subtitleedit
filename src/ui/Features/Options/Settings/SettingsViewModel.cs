@@ -2008,7 +2008,7 @@ public partial class SettingsViewModel : ObservableObject
             vm.Initialize(_waveformToolbarItems);
         });
 
-        if (result.OkPressed)
+        if (result.OkPressed && result.HasChanges)
         {
             _waveformToolbarItems = result.ResultToolbarItems;
         }

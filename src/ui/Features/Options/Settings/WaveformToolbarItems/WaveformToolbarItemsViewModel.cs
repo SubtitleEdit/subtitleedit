@@ -23,7 +23,15 @@ public partial class WaveformToolbarItemsViewModel : ObservableObject
 
     public bool OkPressed { get; private set; }
 
+    /// <summary>
+    /// False when OK was pressed but the items are identical to what <see cref="Initialize"/>
+    /// received - callers use this to skip saving and, more importantly, the layout rebuild
+    /// (which re-docks the video controls while they are undocked, #12520).
+    /// </summary>
+    public bool HasChanges { get; private set; }
+
     private bool _updatingFromSelection;
+    private List<SeWaveformToolbarItem> _initialToolbarItems = new List<SeWaveformToolbarItem>();
 
     public WaveformToolbarItemsViewModel()
     {
@@ -74,8 +82,10 @@ public partial class WaveformToolbarItemsViewModel : ObservableObject
 
     internal void Initialize(List<SeWaveformToolbarItem> toolbarItems)
     {
+        _initialToolbarItems = toolbarItems.OrderBy(x => x.SortOrder).ToList();
+
         ToolbarItems.Clear();
-        foreach (var item in toolbarItems.OrderBy(x => x.SortOrder))
+        foreach (var item in _initialToolbarItems)
         {
             ToolbarItems.Add(new ToolbarItemDisplay(item.Type, item.IsVisible, item.FontSize, item.LeftMargin, item.RightMargin));
         }
@@ -95,8 +105,35 @@ public partial class WaveformToolbarItemsViewModel : ObservableObject
             ResultToolbarItems.Add(item);
         }
 
+        HasChanges = !AreToolbarItemsEqual(_initialToolbarItems, ResultToolbarItems);
         OkPressed = true;
         Window?.Close();
+    }
+
+    // Both lists are in display order (Initialize sorts by SortOrder; Ok builds in list order),
+    // so the SortOrder values themselves don't need comparing - only the sequence and content.
+    private static bool AreToolbarItemsEqual(List<SeWaveformToolbarItem> before, List<SeWaveformToolbarItem> after)
+    {
+        if (before.Count != after.Count)
+        {
+            return false;
+        }
+
+        for (var i = 0; i < before.Count; i++)
+        {
+            var a = before[i];
+            var b = after[i];
+            if (a.Type != b.Type ||
+                a.IsVisible != b.IsVisible ||
+                a.FontSize != b.FontSize ||
+                a.LeftMargin != b.LeftMargin ||
+                a.RightMargin != b.RightMargin)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     [RelayCommand]
