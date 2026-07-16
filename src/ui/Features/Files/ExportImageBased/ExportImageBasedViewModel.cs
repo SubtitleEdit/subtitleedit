@@ -127,7 +127,11 @@ public partial class ExportImageBasedViewModel : ObservableObject
         _windowService = windowService;
 
         Subtitles = new ObservableCollection<SubtitleLineViewModel>();
-        FontFamilies = new ObservableCollection<string>(FontHelper.GetSystemFonts());
+        // Individual face names ("Segoe UI Semibold", "Arial Black", ...) like the ASSA style
+        // editor and SE4's GDI list - Avalonia's font list only has typographic family names,
+        // which hid every named face from this dialog (issue #12537). ImageRenderer resolves
+        // these via FontFaces, so a face renders with its own weight.
+        FontFamilies = new ObservableCollection<string>(FontHelper.GetLibAssaFonts());
         SelectedFontFamily = FontFamilies.FirstOrDefault();
         FontSizes = new ObservableCollection<int>(Enumerable.Range(15, 486));
         SelectedFontSize = 26;

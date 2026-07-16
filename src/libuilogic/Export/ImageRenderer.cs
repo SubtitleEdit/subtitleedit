@@ -75,13 +75,15 @@ public static class ImageRenderer
 
         var segments = ParseTextWithStyling(text, fontColor);
 
-        // Create fonts. SKTypeface.FromFamilyName can return null when the family is not
-        // found (and on some platforms when no default is available); fall back to the
-        // default typeface so we never hand a null typeface to SKFont / SKShaper.
-        using var regularTypeface = ResolveTypeface(fontName, SKFontStyle.Normal);
-        using var boldTypeface = ResolveTypeface(fontName, SKFontStyle.Bold);
-        using var italicTypeface = ResolveTypeface(fontName, SKFontStyle.Italic);
-        using var boldItalicTypeface = ResolveTypeface(fontName, SKFontStyle.BoldItalic);
+        // Create fonts. The font name is a face name from FontFaces (e.g. "Segoe UI
+        // Semibold", "Arial Black"), so resolution goes through the face map - bold and
+        // italic are applied relative to the face's own weight/slant (issue #12537).
+        // Falls back to the default typeface so we never hand a null typeface to
+        // SKFont / SKShaper.
+        using var regularTypeface = ResolveTypeface(fontName, bold: false, italic: false);
+        using var boldTypeface = ResolveTypeface(fontName, bold: true, italic: false);
+        using var italicTypeface = ResolveTypeface(fontName, bold: false, italic: true);
+        using var boldItalicTypeface = ResolveTypeface(fontName, bold: true, italic: true);
 
         using var regularFont = new SKFont(ip.IsBold ? boldTypeface : regularTypeface, fontSize);
         using var boldFont = new SKFont(boldTypeface, fontSize);
@@ -156,13 +158,13 @@ public static class ImageRenderer
         return bitmapWithMargins;
     }
 
-    // SKTypeface.FromFamilyName may return null when the requested family is missing.
-    // Passing a null typeface into SKFont / SKShaper risks a native crash, so fall back
-    // to the default typeface.
-    private static SKTypeface ResolveTypeface(string fontName, SKFontStyle style)
+    // FontFaces.CreateTypeface may return null when the requested face is missing and Skia
+    // has no name match either. Passing a null typeface into SKFont / SKShaper risks a
+    // native crash, so fall back to the default typeface.
+    private static SKTypeface ResolveTypeface(string fontName, bool bold, bool italic)
     {
-        return SKTypeface.FromFamilyName(fontName, style)
-            ?? SKTypeface.FromFamilyName(null, style)
+        return FontFaces.CreateTypeface(fontName, bold, italic)
+            ?? SKTypeface.FromFamilyName(null, bold ? SKFontStyle.Bold : SKFontStyle.Normal)
             ?? SKTypeface.Default;
     }
 
