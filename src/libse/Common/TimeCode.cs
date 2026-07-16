@@ -24,20 +24,30 @@ namespace Nikse.SubtitleEdit.Core.Common
         /// <returns>Total milliseconds.</returns>
         public static double ParseToMilliseconds(string text)
         {
-            var parts = text.Split(TimeSplitChars, StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length == 4)
+            // Shared time-code parse entry for many format importers, called per line while
+            // loading - tokenize with spans instead of Split (string[] + a substring per part
+            // + a PadRight copy for the fraction).
+            Span<int> starts = stackalloc int[MaxTimeParts];
+            Span<int> lengths = stackalloc int[MaxTimeParts];
+            var count = SplitTimeParts(text, starts, lengths);
+            var s = text.AsSpan();
+
+            if (count == 4)
             {
-                var msString = parts[3].PadRight(3,'0');
-                if (int.TryParse(parts[0], out var hours) && int.TryParse(parts[1], out var minutes) && int.TryParse(parts[2], out var seconds) && int.TryParse(msString, out var milliseconds))
+                if (int.TryParse(s.Slice(starts[0], lengths[0]), out var hours) &&
+                    int.TryParse(s.Slice(starts[1], lengths[1]), out var minutes) &&
+                    int.TryParse(s.Slice(starts[2], lengths[2]), out var seconds) &&
+                    TryParsePaddedMilliseconds(s.Slice(starts[3], lengths[3]), out var milliseconds))
                 {
                     return new TimeSpan(0, hours, minutes, seconds, milliseconds).TotalMilliseconds;
                 }
             }
 
-            if (parts.Length == 3)
+            if (count == 3)
             {
-                var msString = parts[2].PadRight(3, '0');
-                if (int.TryParse(parts[0], out var minutes) && int.TryParse(parts[1], out var seconds) && int.TryParse(msString, out var milliseconds))
+                if (int.TryParse(s.Slice(starts[0], lengths[0]), out var minutes) &&
+                    int.TryParse(s.Slice(starts[1], lengths[1]), out var seconds) &&
+                    TryParsePaddedMilliseconds(s.Slice(starts[2], lengths[2]), out var milliseconds))
                 {
                     return new TimeSpan(0, 0, minutes, seconds, milliseconds).TotalMilliseconds;
                 }
@@ -48,10 +58,17 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static double ParseHHMMSSFFToMilliseconds(string text)
         {
-            var parts = text.Split(TimeSplitChars, StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length == 4)
+            Span<int> starts = stackalloc int[MaxTimeParts];
+            Span<int> lengths = stackalloc int[MaxTimeParts];
+            var count = SplitTimeParts(text, starts, lengths);
+            var s = text.AsSpan();
+
+            if (count == 4)
             {
-                if (int.TryParse(parts[0], out var hours) && int.TryParse(parts[1], out var minutes) && int.TryParse(parts[2], out var seconds) && int.TryParse(parts[3], out var frames))
+                if (int.TryParse(s.Slice(starts[0], lengths[0]), out var hours) &&
+                    int.TryParse(s.Slice(starts[1], lengths[1]), out var minutes) &&
+                    int.TryParse(s.Slice(starts[2], lengths[2]), out var seconds) &&
+                    int.TryParse(s.Slice(starts[3], lengths[3]), out var frames))
                 {
                     return new TimeCode(hours, minutes, seconds, SubtitleFormat.FramesToMillisecondsMax999(frames)).TotalMilliseconds;
                 }
@@ -61,16 +78,85 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static double ParseHHMMSSToMilliseconds(string text)
         {
-            var parts = text.Split(TimeSplitChars, StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length == 3)
+            Span<int> starts = stackalloc int[MaxTimeParts];
+            Span<int> lengths = stackalloc int[MaxTimeParts];
+            var count = SplitTimeParts(text, starts, lengths);
+            var s = text.AsSpan();
+
+            if (count == 3)
             {
-                if (int.TryParse(parts[0], out var hours) && int.TryParse(parts[1], out var minutes) && int.TryParse(parts[2], out var seconds))
+                if (int.TryParse(s.Slice(starts[0], lengths[0]), out var hours) &&
+                    int.TryParse(s.Slice(starts[1], lengths[1]), out var minutes) &&
+                    int.TryParse(s.Slice(starts[2], lengths[2]), out var seconds))
                 {
                     return new TimeCode(hours, minutes, seconds, 0).TotalMilliseconds;
                 }
             }
 
             return 0;
+        }
+
+        // One extra slot beyond the longest accepted shape (4 parts), so a 5th part is
+        // representable and makes the count checks above fail like Split's array length did.
+        private const int MaxTimeParts = 5;
+
+        // Tokenizes like text.Split(TimeSplitChars, RemoveEmptyEntries) without allocating.
+        // Returns the part count; more parts than fit are counted (not stored) so callers
+        // still see "not 3/4 parts" for over-long inputs.
+        private static int SplitTimeParts(string text, Span<int> starts, Span<int> lengths)
+        {
+            var count = 0;
+            var start = -1;
+            for (var i = 0; i <= text.Length; i++)
+            {
+                var isSeparator = i == text.Length || text[i] == ':' || text[i] == ',' || text[i] == '.';
+                if (isSeparator)
+                {
+                    if (start >= 0)
+                    {
+                        if (count < starts.Length)
+                        {
+                            starts[count] = start;
+                            lengths[count] = i - start;
+                        }
+
+                        count++;
+                        start = -1;
+                    }
+                }
+                else if (start < 0)
+                {
+                    start = i;
+                }
+            }
+
+            return count;
+        }
+
+        // Mirrors the old PadRight(3, '0') + int.TryParse for the fraction part: "5" -> 500,
+        // "12" -> 120, three or more digits parse as-is. Appending zeros after trailing
+        // whitespace made the old parse fail, so a short part with trailing whitespace must
+        // still fail here.
+        private static bool TryParsePaddedMilliseconds(ReadOnlySpan<char> part, out int milliseconds)
+        {
+            if (part.Length < 3)
+            {
+                if (part.Length > 0 && char.IsWhiteSpace(part[part.Length - 1]))
+                {
+                    milliseconds = 0;
+                    return false;
+                }
+
+                if (!int.TryParse(part, out milliseconds))
+                {
+                    return false;
+                }
+
+                milliseconds *= part.Length == 1 ? 100 : 10;
+                return true;
+            }
+
+            return int.TryParse(part, out milliseconds);
         }
 
         public TimeCode()
