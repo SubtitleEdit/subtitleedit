@@ -184,6 +184,7 @@ public partial class SpeechToTextViewModel : ObservableObject
     private bool _isUpdatingCrispAsrBackend;
     private static bool _crispAsrUpdatePromptShown;
     private static bool _whisperCppUpdatePromptShown;
+    private static bool _qwen3AsrCppUpdatePromptShown;
 
     /// <summary>
     /// Hook the view wires up so the engine combobox can re-evaluate its install-status dots
@@ -913,6 +914,10 @@ public partial class SpeechToTextViewModel : ObservableObject
         try
         {
             rawJson = File.ReadAllText(jsonPath);
+            // Log the raw engine output on every run, not only on failure - the temp .json is
+            // deleted below, and bug reports for "the timings are off"-class issues (#11375)
+            // need the actual data, not just the crash cases. Respects the tools-log setting.
+            Se.WriteToolsLog($"Qwen3 ASR CPP output JSON ('{jsonPath}'):{Environment.NewLine}{rawJson}");
             // qwen3-asr-cli can write raw control chars (e.g. a literal newline) inside JSON
             // string values, which strict System.Text.Json rejects ("'0x0A' is invalid within a
             // JSON string"). Escape those so a result is still produced (issue #11717).
@@ -4334,6 +4339,10 @@ public partial class SpeechToTextViewModel : ObservableObject
         {
             Dispatcher.UIThread.Post(async () => await CheckWhisperCppForUpdateAsync());
         }
+        else if (engine is Qwen3AsrCppEngine && !_qwen3AsrCppUpdatePromptShown)
+        {
+            Dispatcher.UIThread.Post(async () => await CheckQwen3AsrCppForUpdateAsync());
+        }
     }
 
     private void UpdateEngineStatusUi(ISpeechToTextEngine engine)
@@ -4465,6 +4474,67 @@ public partial class SpeechToTextViewModel : ObservableObject
             {
                 viewModel.Engine = engine;
                 viewModel.CrispAsrWindowsVariant = crispVariant;
+                viewModel.StartDownload();
+            });
+
+        RefreshEngineCombo?.Invoke();
+    }
+
+    private async Task CheckQwen3AsrCppForUpdateAsync()
+    {
+        if (_qwen3AsrCppUpdatePromptShown || Window == null)
+        {
+            return;
+        }
+
+        var engine = GetEffectiveSelectedEngine();
+        if (engine is not Qwen3AsrCppEngine || !engine.IsEngineInstalled())
+        {
+            return;
+        }
+
+        // Sidecar (written since the fix for #11375 landed) or, for every older install,
+        // the hash of the unpacked qwen3-asr-cli - that is what recognizes the builds with
+        // the broken JSON output that never got replaced.
+        var folder = engine.GetAndCreateWhisperFolder();
+        var useVulkan = DownloadHashManager.IsQwen3AsrCppVulkanInstall(folder);
+        (string key, string hash)? lookup = TryReadSidecarHash(folder);
+        if (lookup == null)
+        {
+            var key = DownloadHashManager.ResolveQwen3AsrCppExecutableKey(useVulkan);
+            var hash = key == null ? null : DownloadHashManager.ComputeSha256(engine.GetExecutable());
+            lookup = key == null || hash == null ? null : (key, hash);
+        }
+
+        if (lookup is not var (lookupKey, lookupHash))
+        {
+            return;
+        }
+
+        if (DownloadHashManager.GetStatus(lookupKey, lookupHash) != DownloadHashManager.UpdateStatus.UpdateAvailable)
+        {
+            return;
+        }
+
+        _qwen3AsrCppUpdatePromptShown = true;
+
+        var answer = await MessageBox.Show(
+            Window!,
+            string.Format(Se.Language.Video.AudioToText.UpdateXTitle, engine.Name),
+            string.Format(Se.Language.Video.AudioToText.UpdateXMessage, engine.Name, Environment.NewLine),
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question);
+
+        if (answer != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        await _windowService.ShowDialogAsync<DownloadSpeechToTextEngineWindow, DownloadSpeechToTextEngineViewModel>(
+            Window!, viewModel =>
+            {
+                viewModel.Engine = engine;
+                viewModel.Qwen3AsrUseVulkan = useVulkan;
                 viewModel.StartDownload();
             });
 

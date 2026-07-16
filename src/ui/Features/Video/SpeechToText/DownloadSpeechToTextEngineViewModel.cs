@@ -204,6 +204,13 @@ public partial class DownloadSpeechToTextEngineViewModel : ObservableObject
                     {
                         WriteWhisperCppInstalledHash(folder);
                     }
+                    else if (Engine is Qwen3AsrCppEngine)
+                    {
+                        // Sidecar powers the update prompt (issue #11375 - broken-JSON builds
+                        // stayed installed forever because nothing recognized them as outdated).
+                        DownloadHashManager.WriteSidecar(folder,
+                            DownloadHashManager.ResolveQwen3AsrCppKey(Qwen3AsrUseVulkan), _downloadStream);
+                    }
 
                     TitleText = Se.Language.Video.AudioToText.UnpackingSpeechToTextEngine;
                     Unpack(folder, skipFolder);
