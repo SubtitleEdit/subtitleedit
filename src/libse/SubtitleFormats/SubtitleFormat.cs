@@ -125,6 +125,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new ImageLogicAutocaption(),
                     new InqScribe(),
                     new IssXml(),
+                    new EbuTtD(), // before iTunes/TimedText10 - their generic TTML detection would otherwise claim EBU-TT-D files
                     new ItunesTimedText(),
                     new JacoSub(),
                     new JsonAeneas(),
