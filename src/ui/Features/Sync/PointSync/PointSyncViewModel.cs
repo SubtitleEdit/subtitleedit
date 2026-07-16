@@ -100,7 +100,23 @@ public partial class PointSyncViewModel : ObservableObject
         var syncPoint = new SyncPoint(
             selectedSubtitle, Subtitles.IndexOf(selectedSubtitle),
             subtitleOther, Subtitles.IndexOf(selectedSubtitle));
-        SyncPoints.Add(syncPoint);
+
+        // A line has at most one sync point (setting it again re-points it), and the list
+        // stays in chronological order.
+        var existing = SyncPoints.FirstOrDefault(p => p.LeftIndex == syncPoint.LeftIndex);
+        if (existing != null)
+        {
+            SyncPoints.Remove(existing);
+        }
+
+        var insertAt = 0;
+        while (insertAt < SyncPoints.Count && SyncPoints[insertAt].LeftIndex < syncPoint.LeftIndex)
+        {
+            insertAt++;
+        }
+
+        SyncPoints.Insert(insertAt, syncPoint);
+        SelectedSyncPoint = syncPoint;
         IsOkEnabled = true;
     }
 
@@ -142,15 +158,5 @@ public partial class PointSyncViewModel : ObservableObject
             e.Handled = true;
             UiUtil.ShowHelp("features/point-sync");
         }
-    }
-
-    internal void PointSyncContextMenuOpening(object? sender, EventArgs e)
-    {
-        if (SyncPoints.Count == 0)
-        {
-            return;
-        }
-
-        DeleteSelectedPointSync();
     }
 }
