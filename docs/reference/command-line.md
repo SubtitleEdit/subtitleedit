@@ -60,7 +60,7 @@ seconv subs.srt bdnxml --resolution:1920x1080                      # render text
 seconv subs.srt bluraysup --background-color:"#B4000000"           # ... with a black background box
 
 seconv subs.srt customtext --custom-format:my-template.xml         # custom template
-seconv *.srt subrip --multiple-replace:rules.xml                   # search-and-replace pass
+seconv *.srt subrip --multiple-replace:rules.csv                   # search-and-replace pass (GUI export: .csv/.template/.xml)
 
 seconv subs.srt subrip --offset:-2000 --renumber:1 --overwrite     # offset 2s back, renumber from 1
 ```
@@ -289,12 +289,30 @@ seconv movie.sup subrip --ocr-engine:tesseract --ocr-language:eng --translate-to
 
 | Option | Description |
 |---|---|
-| `--multiple-replace:<path.xml>` | SE *MultipleSearchAndReplaceGroups* XML, applied per paragraph after operations. Supports `Normal` (case-insensitive), `CaseSensitive`, and `RegularExpression` rules |
+| `--multiple-replace:<path>` | Multiple-replace rules applied per paragraph after operations. Accepts the legacy SE *MultipleSearchAndReplaceGroups* XML **and** the file the SE5 GUI exports from *Tools → Multiple replace → export* — either `.template` (JSON) or `.csv`. Supports case-insensitive, `CaseSensitive`, and `RegularExpression` rules; only active rules are applied. The format is chosen by extension, then by content |
 | `--custom-format:<path.xml>` | SE *CustomFormatItem* XML (use with `--format customtext`) |
 | `--settings:<path.json>` | JSON file overlaying `Configuration.Settings` (general / tools / removeTextForHearingImpaired) plus image-output styling (exportImages). Optional `profiles` map for named overlays |
 | `--profile:<name>` | Selects a named overlay from the settings file's `profiles` map. Requires `--settings` |
 
-#### Multiple-replace XML
+#### Multiple-replace rule files
+
+The quickest way to share rules between the GUI and `seconv`: in Subtitle Edit open **Tools → Multiple replace**, then **export** the rules as `.template` (JSON) or `.csv`, and pass that file to `--multiple-replace`. Both are read directly — no conversion needed.
+
+```bash
+seconv *.srt subrip --multiple-replace:my-rules.csv       # exported from the GUI
+seconv *.srt subrip --multiple-replace:my-rules.template  # JSON export
+seconv *.srt subrip --multiple-replace:fixes.xml          # legacy SE4 XML
+```
+
+CSV columns (a header row is recognised; `Type` is `CaseInsensitive` / `CaseSensitive` / `RegularExpression`):
+
+```csv
+Category,Find,ReplaceWith,Description,Active,Type
+Demo,colour,color,,true,CaseInsensitive
+Demo,"\bteh\b",the,,true,RegularExpression
+```
+
+The legacy XML shape is still accepted (its `SearchType` value `Normal` = the GUI's `CaseInsensitive`):
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -318,10 +336,6 @@ seconv movie.sup subrip --ocr-engine:tesseract --ocr-language:eng --translate-to
     </Rules>
   </Group>
 </MultipleSearchAndReplaceGroups>
-```
-
-```bash
-seconv *.srt subrip --multiple-replace:fixes.xml
 ```
 
 #### Custom text format XML
