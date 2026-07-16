@@ -1062,6 +1062,14 @@ public partial class BinaryEditViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task ExportImscImage()
+    {
+        // Single self-contained TTML file; the binary sub's own bitmaps and X/Y placement carry
+        // straight through (DoExport sets OverridePosition), so no re-rendering is needed.
+        await DoExport(new ExportHandlerImscImage(), ".ttml");
+    }
+
+    [RelayCommand]
     private async Task ExportHtmlIndex()
     {
         await DoExport(new ExportHandlerHtmlIndex(), string.Empty, false);

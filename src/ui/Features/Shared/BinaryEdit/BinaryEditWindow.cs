@@ -201,6 +201,11 @@ public class BinaryEditWindow : Window
                         },
                         new MenuItem
                         {
+                            Header = "IMSC 1.1 image profile",
+                            Command = vm.ExportImscImageCommand,
+                        },
+                        new MenuItem
+                        {
                             Header = "DOST/png",
                             Command = vm.ExportDostPngCommand,
                         },
