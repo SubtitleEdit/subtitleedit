@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         private static readonly Regex FixMissingSpacesReColon = new Regex(@"[^\s\d]\:[\p{Ll}\p{Lu}]", RegexOptions.Compiled);
         private static readonly Regex FixMissingSpacesReColonWithAfter = new Regex(@"[^\s\d]\:[\p{Ll}\p{Lu}]+", RegexOptions.Compiled);
         private static readonly Regex Url = new Regex(@"\w\.(?:com|net|org)\b", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesReFontStart = new Regex("[!\\.,?]<font[ colrsizeabcdef#0123456789\"=]+>\\p{L}", RegexOptions.Compiled);
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
@@ -351,14 +352,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                 if (p.Text.IndexOf('<') >= 0) // fix: You!<font color="#ffff00">Well, bye!</font>
                 {
-                    var regexFontStart = new Regex("[!\\.,?]<font[ colrsizeabcdef#0123456789\"=]+>\\p{L}");
-                    var matchFontStart = regexFontStart.Match(p.Text);
+                    var matchFontStart = FixMissingSpacesReFontStart.Match(p.Text);
                     var jumpOut = 0;
                     var oldText = p.Text;
                     while (matchFontStart.Success && jumpOut < 10)
                     {
                         p.Text = p.Text.Insert(matchFontStart.Index + 1, " ");
-                        matchFontStart = regexFontStart.Match(p.Text, matchFontStart.Index + 1);
+                        matchFontStart = FixMissingSpacesReFontStart.Match(p.Text, matchFontStart.Index + 1);
                         jumpOut++;
                     }
 

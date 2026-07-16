@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.Common.TextLengthCalculator;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -282,35 +283,78 @@ namespace Nikse.SubtitleEdit.Core.Common
                 return s;
             }
 
-            const char whiteSpace = ' ';
-            var k = -1;
-            for (var i = s.Length - 1; i >= 0; i--)
+            // Rules (unchanged): a leading space run is kept as-is; an interior/trailing run
+            // collapses to one space, or to nothing when a line break precedes or follows it.
+            // Single-pass rewrite - the previous reverse scan called string.Remove per space
+            // run, allocating a new string for every run on space-heavy lines.
+            var len = s.Length;
+            var first = 0;
+            while (first < len && s[first] == ' ')
             {
-                var ch = s[i];
-                if (k < 2)
+                first++;
+            }
+
+            // Find the first run that needs a change; most lines have none and return the
+            // original instance without allocating.
+            var changeAt = -1;
+            for (var i = first; i < len; i++)
+            {
+                if (s[i] != ' ')
                 {
-                    if (ch == whiteSpace)
-                    {
-                        k = i + 1;
-                    }
+                    continue;
                 }
-                else if (ch != whiteSpace)
+
+                var runStart = i;
+                while (i + 1 < len && s[i + 1] == ' ')
                 {
-                    // only keep white space if it doesn't succeed/precede CRLF
-                    var skipCount = (ch == '\n' || ch == '\r') || (k < s.Length && (s[k] == '\n' || s[k] == '\r')) ? 1 : 2;
+                    i++;
+                }
 
-                    // extra space found
-                    if (k - (i + skipCount) >= 1)
-                    {
-                        s = s.Remove(i + 1, k - (i + skipCount));
-                    }
-
-                    // Reset remove length.
-                    k = -1;
+                var runEnd = i + 1;
+                var before = s[runStart - 1];
+                var removeAll = before == '\n' || before == '\r' || (runEnd < len && (s[runEnd] == '\n' || s[runEnd] == '\r'));
+                if (runEnd - runStart != (removeAll ? 0 : 1))
+                {
+                    changeAt = runStart;
+                    break;
                 }
             }
 
-            return s;
+            if (changeAt < 0)
+            {
+                return s;
+            }
+
+            var buffer = ArrayPool<char>.Shared.Rent(len);
+            s.AsSpan(0, changeAt).CopyTo(buffer);
+            var pos = changeAt;
+            for (var i = changeAt; i < len; i++)
+            {
+                var ch = s[i];
+                if (ch != ' ')
+                {
+                    buffer[pos++] = ch;
+                    continue;
+                }
+
+                var runStart = i;
+                while (i + 1 < len && s[i + 1] == ' ')
+                {
+                    i++;
+                }
+
+                var runEnd = i + 1;
+                var before = s[runStart - 1]; // runStart >= changeAt >= 1 (leading run was skipped)
+                var removeAll = before == '\n' || before == '\r' || (runEnd < len && (s[runEnd] == '\n' || s[runEnd] == '\r'));
+                if (!removeAll)
+                {
+                    buffer[pos++] = ' ';
+                }
+            }
+
+            var result = new string(buffer, 0, pos);
+            ArrayPool<char>.Shared.Return(buffer);
+            return result;
         }
 
         // note: replace both input and output variable type with ReadOnlySpan<char> when in more modern .NET
