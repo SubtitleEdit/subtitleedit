@@ -21,13 +21,14 @@ public class CrispAsrDownloadService : ICrispAsrDownloadService
 {
     private readonly HttpClient _httpClient;
 
-    private const string WindowsCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.10/crispasr-windows-x86_64-cuda.zip";
-    private const string WindowsVulkanUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.10/crispasr-windows-x86_64-vulkan.zip";
-    private const string WindowsCpuUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.10/crispasr-windows-x86_64-cpu.zip";
-    private const string WindowsCpuLegacyUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.10/crispasr-windows-x86_64-cpu-legacy.zip";
-    private const string MacUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.10/crispasr-macos.tar.gz";
-    private const string LinuxUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.10/crispasr-linux-x86_64.tar.gz";
-    private const string LinuxCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.10/crispasr-linux-x86_64-cuda.tar.gz";
+    private const string WindowsCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.11/crispasr-windows-x86_64-cuda.zip";
+    private const string WindowsVulkanUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.11/crispasr-windows-x86_64-vulkan.zip";
+    private const string WindowsCpuUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.11/crispasr-windows-x86_64-cpu.zip";
+    private const string WindowsCpuLegacyUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.11/crispasr-windows-x86_64-cpu-legacy.zip";
+    private const string MacUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.11/crispasr-macos.tar.gz";
+    private const string LinuxUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.11/crispasr-linux-x86_64.tar.gz";
+    private const string LinuxCudaUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.11/crispasr-linux-x86_64-cuda.tar.gz";
+    // v0.8.11 shipped no linux-arm64 build (only android-arm64) - stays on the last release that has one.
     private const string LinuxArmUrl = "https://github.com/CrispStrobe/CrispASR/releases/download/v0.8.10/crispasr-linux-arm64.tar.gz";
 
     public CrispAsrDownloadService(HttpClient httpClient)
