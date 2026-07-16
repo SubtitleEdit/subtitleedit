@@ -1,0 +1,83 @@
+name: Release Linux test build
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag (blank = auto timestamp, e.g. linux-test-YYYYMMDD-HHMMSS)'
+        required: false
+        default: ''
+        type: string
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Extract version from Se.cs
+        shell: pwsh
+        run: |
+          $seContent = Get-Content "src/ui/Logic/Config/Se.cs" -Raw
+          $m = [regex]::Match($seContent, 'public\s+static\s+string\s+Version\s*\{[^}]+\}\s*=\s*"v([^"]+)"')
+          if (-not $m.Success) { throw "Could not find Version in Se.cs" }
+          $versionString = $m.Groups[1].Value
+          $parts = $versionString -split '-', 2
+          $numericFields = $parts[0].Split('.')
+          $major = [int]$numericFields[0]
+          $minor = if ($numericFields.Length -gt 1) { [int]$numericFields[1] } else { 0 }
+          $build = if ($numericFields.Length -gt 2) { [int]$numericFields[2] } else { 0 }
+          $revision = 0
+          if ($parts.Length -gt 1) {
+            $rm = [regex]::Match($parts[1], '\d+$')
+            if ($rm.Success) { $revision = [int]$rm.Value }
+          }
+          "APP_VER_DISPLAY=$versionString" >> $env:GITHUB_ENV
+          "APP_VER_FULL=$major.$minor.$build.$revision" >> $env:GITHUB_ENV
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Publish Linux x64 app
+        run: |
+          dotnet publish src/ui/UI.csproj -c Release -r linux-x64 --self-contained true \
+            -p:PublishSingleFile=true \
+            -p:DebugSymbols=false \
+            -p:DebugType=none \
+            -p:Version=$APP_VER_FULL \
+            -p:FileVersion=$APP_VER_FULL \
+            -p:InformationalVersion=$APP_VER_DISPLAY \
+            -o ./publish/linux-x64
+          rm -f ./publish/linux-x64/*.pdb
+          chmod +x ./publish/linux-x64/SubtitleEdit || true
+
+      - name: Tar Linux x64 build
+        run: tar -C ./publish/linux-x64 -czf ./SubtitleEdit-Linux-x64.tar.gz .
+
+      - name: Generate release tag
+        id: tag
+        shell: bash
+        run: |
+          if [ -n "${{ inputs.release_tag }}" ]; then
+            echo "tag=$(echo '${{ inputs.release_tag }}' | xargs)" >> $GITHUB_OUTPUT
+          else
+            echo "tag=linux-test-$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create pre-release with Linux tarball
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: "Linux test build - ${{ steps.tag.outputs.tag }}"
+          prerelease: true
+          files: ./SubtitleEdit-Linux-x64.tar.gz
