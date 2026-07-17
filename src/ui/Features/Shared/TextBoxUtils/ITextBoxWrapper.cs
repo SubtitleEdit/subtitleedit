@@ -1,4 +1,7 @@
 using Avalonia.Controls;
+using Avalonia.Input;
+using Nikse.SubtitleEdit.Features.SpellCheck;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
 
@@ -21,4 +24,13 @@ public interface ITextBoxWrapper
     void SelectAll();
     void ClearSelection();
     void SetAlignment(Avalonia.Media.TextAlignment alignment);
+
+    // Live spell check - a no-op for editors without underline support (plain TextBox).
+    void EnableSpellCheck(ISpellCheckManager spellCheckManager);
+    void DisableSpellCheck();
+    void RefreshSpellCheck();
+    bool IsSpellCheckEnabled { get; }
+    SpellCheckWord? GetWordAtPosition(PointerEventArgs e);
+    bool IsWordMisspelledAtOffset(int offset);
+    List<string>? GetSuggestionsForWordAtOffset(int offset);
 }

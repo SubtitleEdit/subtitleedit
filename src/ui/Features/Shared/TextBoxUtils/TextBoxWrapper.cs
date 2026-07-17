@@ -1,4 +1,10 @@
 using Avalonia.Controls;
+using Avalonia.Input;
+using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Features.SpellCheck;
+using Nikse.SubtitleEdit.Logic;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Features.Shared.TextBoxUtils;
 
@@ -98,5 +104,89 @@ public class TextBoxWrapper : ITextBoxWrapper
     public void SetAlignment(Avalonia.Media.TextAlignment alignment)
     {
         _textBox.TextAlignment = alignment;
+    }
+
+    // Live spell check works when the wrapped text box is a SyntaxHighlightingTextBox (the
+    // "Color tags" subtitle edit box); for a plain TextBox these are no-ops so the caller
+    // does not have to care which editor is active.
+
+    public void EnableSpellCheck(ISpellCheckManager spellCheckManager)
+    {
+        if (_textBox is SyntaxHighlightingTextBox box)
+        {
+            box.EnableSpellCheck(spellCheckManager);
+        }
+    }
+
+    public void DisableSpellCheck()
+    {
+        if (_textBox is SyntaxHighlightingTextBox box)
+        {
+            box.DisableSpellCheck();
+        }
+    }
+
+    public void RefreshSpellCheck()
+    {
+        if (_textBox is SyntaxHighlightingTextBox box)
+        {
+            box.RefreshSpellCheck();
+        }
+    }
+
+    public bool IsSpellCheckEnabled => _textBox is SyntaxHighlightingTextBox { IsSpellCheckEnabled: true };
+
+    public SpellCheckWord? GetWordAtOffset(int offset)
+    {
+        var text = Text;
+        if (string.IsNullOrEmpty(text) || offset < 0 || offset > text.Length)
+        {
+            return null;
+        }
+
+        return SpellCheckWordLists.Split(text).FirstOrDefault(w => offset >= w.Index && offset < w.Index + w.Length);
+    }
+
+    public SpellCheckWord? GetWordAtPosition(PointerEventArgs e)
+    {
+        if (_textBox is not SyntaxHighlightingTextBox box)
+        {
+            return null;
+        }
+
+        var index = box.GetCharIndexAtPoint(e);
+        return index == null ? null : GetWordAtOffset(index.Value);
+    }
+
+    public bool IsWordMisspelledAtOffset(int offset)
+    {
+        if (_textBox is not SyntaxHighlightingTextBox { IsSpellCheckEnabled: true, SpellCheckManager: { } spellCheckManager })
+        {
+            return false;
+        }
+
+        var word = GetWordAtOffset(offset);
+        if (word == null || string.IsNullOrWhiteSpace(word.Text))
+        {
+            return false;
+        }
+
+        return SpellCheckUnderlineTransformer.IsWordMisspelled(word, Text, spellCheckManager);
+    }
+
+    public List<string>? GetSuggestionsForWordAtOffset(int offset)
+    {
+        if (_textBox is not SyntaxHighlightingTextBox { SpellCheckManager: { } spellCheckManager })
+        {
+            return null;
+        }
+
+        var word = GetWordAtOffset(offset);
+        if (word == null || string.IsNullOrWhiteSpace(word.Text))
+        {
+            return null;
+        }
+
+        return spellCheckManager.GetSuggestions(word.Text);
     }
 }

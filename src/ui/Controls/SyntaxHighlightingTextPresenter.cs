@@ -4,6 +4,7 @@ using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.Media.TextFormatting;
 using Avalonia.Utilities;
+using Nikse.SubtitleEdit.Features.SpellCheck;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -54,6 +55,27 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
     private IBrush? _cachedForeground;
     private FontFeatureCollection? _cachedFontFeatures;
 
+    // Live spell check: the red underline decoration matches SpellCheckUnderlineTransformer's
+    // (the AvaloniaEdit editor), so both editors underline identically.
+    private static readonly TextDecorationCollection SpellCheckUnderline = new()
+    {
+        new TextDecoration
+        {
+            Location = TextDecorationLocation.Underline,
+            Stroke = new ImmutableSolidColorBrush(Colors.Red),
+            StrokeThickness = 1.5,
+            StrokeLineCap = PenLineCap.Round,
+            StrokeThicknessUnit = TextDecorationUnit.FontRecommended,
+        },
+    };
+
+    // Underlined variants of the span properties they replace, keyed by the (cached, reused)
+    // originals. Hunspell results are cached per text: they are only recomputed when the text
+    // changes or InvalidateSpellCheck is called, not on every selection/caret layout pass.
+    private readonly Dictionary<TextRunProperties, GenericTextRunProperties> _underlinedPropertiesCache = new();
+    private string? _spellCheckedText;
+    private List<SpellCheckWord> _spellCheckedWords = new();
+
     private GenericTextRunProperties GetDefaultProperties(Typeface typeface)
     {
         if (_defaultProperties is null ||
@@ -72,6 +94,7 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
                 foregroundBrush: Foreground,
                 fontFeatures: FontFeatures);
             _tokenPropertiesCache.Clear();
+            _underlinedPropertiesCache.Clear();
         }
 
         return _defaultProperties;
@@ -120,6 +143,13 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
         var isPassword = PasswordChar != default(char) && !RevealPassword;
 
         var textStyleOverrides = isPassword ? null : BuildSyntaxSpans(text, typeface);
+
+        // Spell check underlines are skipped during IME composition: the combined text has the
+        // preedit string spliced in at the caret, so the word positions would not line up.
+        if (!isPassword && string.IsNullOrEmpty(preeditText))
+        {
+            textStyleOverrides = ApplySpellCheckUnderlines(textStyleOverrides, text, typeface);
+        }
 
         if (!string.IsNullOrEmpty(preeditText))
         {
@@ -201,6 +231,121 @@ public class SyntaxHighlightingTextPresenter : TextPresenter
         }
 
         return spans;
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+
+        // Register with the owning text box so it can invalidate the underlines (enable/disable,
+        // "Add to user dictionary", "Ignore all") and hit test words for the context menu.
+        if (TemplatedParent is SyntaxHighlightingTextBox box)
+        {
+            box.SyntaxPresenter = this;
+        }
+    }
+
+    /// <summary>
+    /// Drops the cached hunspell results and rebuilds the text layout - called when the spell
+    /// check state changes without the text changing.
+    /// </summary>
+    public void InvalidateSpellCheck()
+    {
+        _spellCheckedText = null;
+        _spellCheckedWords.Clear();
+        InvalidateTextLayout();
+    }
+
+    /// <summary>
+    /// Overlays the red spell check underline on every misspelled word, preserving the
+    /// underlying span's foreground (so a misspelled word inside a colored tag keeps its color).
+    /// </summary>
+    private List<ValueSpan<TextRunProperties>>? ApplySpellCheckUnderlines(List<ValueSpan<TextRunProperties>>? spans, string? text, Typeface typeface)
+    {
+        if (string.IsNullOrEmpty(text) ||
+            TemplatedParent is not SyntaxHighlightingTextBox { IsSpellCheckEnabled: true, SpellCheckManager: { } spellCheckManager })
+        {
+            return spans;
+        }
+
+        if (_spellCheckedText != text)
+        {
+            _spellCheckedText = text;
+            _spellCheckedWords = SpellCheckUnderlineTransformer.GetMisspelledWords(text, spellCheckManager);
+        }
+
+        if (_spellCheckedWords.Count == 0)
+        {
+            return spans;
+        }
+
+        spans ??= new List<ValueSpan<TextRunProperties>> { new(0, text.Length, GetDefaultProperties(typeface)) };
+
+        foreach (var word in _spellCheckedWords)
+        {
+            spans = OverlayUnderline(spans, word.Index, word.Length);
+        }
+
+        return spans;
+    }
+
+    /// <summary>
+    /// Splits the spans overlapping [start, start+length) and swaps the overlapped segments'
+    /// properties for underlined copies. Spans stay sorted and non-overlapping.
+    /// </summary>
+    private List<ValueSpan<TextRunProperties>> OverlayUnderline(List<ValueSpan<TextRunProperties>> spans, int start, int length)
+    {
+        var end = start + length;
+        var result = new List<ValueSpan<TextRunProperties>>(spans.Count + 2);
+
+        foreach (var span in spans)
+        {
+            var spanStart = span.Start;
+            var spanEnd = span.Start + span.Length;
+
+            if (spanEnd <= start || spanStart >= end)
+            {
+                result.Add(span);
+                continue;
+            }
+
+            if (spanStart < start)
+            {
+                result.Add(new ValueSpan<TextRunProperties>(spanStart, start - spanStart, span.Value));
+            }
+
+            var overlapStart = Math.Max(spanStart, start);
+            var overlapEnd = Math.Min(spanEnd, end);
+            result.Add(new ValueSpan<TextRunProperties>(overlapStart, overlapEnd - overlapStart, GetUnderlinedProperties(span.Value)));
+
+            if (spanEnd > end)
+            {
+                result.Add(new ValueSpan<TextRunProperties>(end, spanEnd - end, span.Value));
+            }
+        }
+
+        return result;
+    }
+
+    private GenericTextRunProperties GetUnderlinedProperties(TextRunProperties baseProperties)
+    {
+        if (!_underlinedPropertiesCache.TryGetValue(baseProperties, out var properties))
+        {
+            if (_underlinedPropertiesCache.Count > 256)
+            {
+                _underlinedPropertiesCache.Clear();
+            }
+
+            properties = new GenericTextRunProperties(
+                baseProperties.Typeface,
+                baseProperties.FontRenderingEmSize,
+                SpellCheckUnderline,
+                baseProperties.ForegroundBrush,
+                fontFeatures: _cachedFontFeatures);
+            _underlinedPropertiesCache[baseProperties] = properties;
+        }
+
+        return properties;
     }
 
     /// <summary>
