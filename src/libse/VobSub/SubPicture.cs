@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                             commandIndex++;
                             break;
                         case (int)DisplayControlCommand.SetColor: // 3
-                            if (colorLookUpTable != null && fourColors.Count == 4)
+                            if (colorLookUpTable != null && fourColors.Count == 4 && _data.Length > commandIndex + 2)
                             {
                                 byte[] imageColor = { _data[commandIndex + 1], _data[commandIndex + 2] };
                                 if (!useCustomColors)
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                             commandIndex += 3;
                             break;
                         case (int)DisplayControlCommand.SetContrast: // 4
-                            if (colorLookUpTable != null && fourColors.Count == 4)
+                            if (colorLookUpTable != null && fourColors.Count == 4 && _data.Length > commandIndex + 2)
                             {
                                 var imageContrast = new[] { _data[commandIndex + 1], _data[commandIndex + 2] };
                                 if (imageContrast[0] + imageContrast[1] > 0)
