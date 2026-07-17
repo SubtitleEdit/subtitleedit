@@ -11508,11 +11508,11 @@ public partial class MainViewModel :
         {
             if (!Se.Settings.General.IsLanguageRightToLeft())
             {
-                if (Se.Settings.Appearance.SubtitleTextBoxColorTags)
-                {
-                    Se.Settings.Appearance.SubtitleTextBoxColorTags = false;
-                    ApplySettings();
-                }
+                // if (Se.Settings.Appearance.SubtitleTextBoxColorTags)
+                // {
+                //     Se.Settings.Appearance.SubtitleTextBoxColorTags = false;
+                //     ApplySettings();
+                // }
 
                 Se.Settings.Appearance.RightToLeft = !Se.Settings.Appearance.RightToLeft;
                 IsRightToLeftEnabled = Se.Settings.Appearance.RightToLeft;
