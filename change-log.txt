@@ -3,6 +3,17 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
+v5.1.0-rc7 (17th of July 2026)
+
+* Subtitle grid: "Insert subtitle after current line..." now works on any line, not only the last - and the inserted file keeps its own time codes like SE4 (only shifted when it would overlap the selected line), so pre-timed subtitles land at their real positions - thx UUMARTIN
+* Waveform: "Insert subtitle file at video position..." is now available anywhere on the timeline (was only past the last subtitle) - inserts at the right-clicked position and warns before creating overlapping lines - thx UUMARTIN
+* Speech to text: the input language is remembered again like SE4 - restored on window open, kept when changing engine/settings, and no longer overridden by auto detection in "Selected lines - Speech to text" - thx UUMARTIN
+* Subtitle text box: restore live spell check with "Color tags" enabled - red underlines and the context menu suggestions/add to dictionary/ignore all work again in the new syntax highlighting text box
+* Subtitle text box: fix ASSA override tags rendering with a misplaced backslash in right-to-left lines - "{\an8}" showed as "{an8\}" - thx muaz978
+* Update Polish translation and add Polish names list - thx potplayer-fanpack
+
+-----------------------------------------------------------------------------------------------------
+
 v5.1.0-rc6 (17th of July 2026)
 
 * Waveform: new option "Center video position also while paused" (Settings - Waveform/spectrogram) - restores SE4's center/lock mode: with "Mouse-wheel sets video position" on, scrubbing keeps the cursor centered so the waveform scrolls as one continuous strip, and "select current subtitle" also applies while scrubbing paused - thx Asztec00
