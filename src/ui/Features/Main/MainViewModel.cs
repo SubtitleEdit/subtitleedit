@@ -6595,8 +6595,17 @@ public partial class MainViewModel :
             return;
         }
 
+        // The picker's "Save..." button needs a video-derived name suggestion —
+        // the downloaded files themselves are named "sub.en.vtt" in a temp dir.
+        string? suggestedFileNameBase = null;
+        if (!string.IsNullOrEmpty(_videoFileName))
+        {
+            suggestedFileNameBase = Path.GetFileNameWithoutExtension(
+                MakeSubtitleFileNameFromVideo(_videoFileName, languageCode: null));
+        }
+
         var pickerResult = await ShowDialogAsync<PickOnlineSubtitleWindow, PickOnlineSubtitleViewModel>(
-            vm => { vm.Initialize(subtitles); });
+            vm => { vm.Initialize(subtitles, suggestedFileNameBase); });
 
         if (!pickerResult.OkPressed || string.IsNullOrEmpty(pickerResult.SelectedSubtitlePath))
         {
