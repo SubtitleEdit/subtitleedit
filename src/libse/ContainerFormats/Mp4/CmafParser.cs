@@ -98,6 +98,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 timeScale = Moov.Mvhd.TimeScale;
             }
 
+            if (timeScale == 0)
+            {
+                // No usable time scale (malformed file) - cannot compute timings without dividing by zero
+                return;
+            }
+
             int max = Math.Min(samples.Count, payloads.Count);
 
             for (var i = 0; i < max; i++)
