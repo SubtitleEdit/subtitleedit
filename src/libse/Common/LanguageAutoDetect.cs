@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.DetectEncoding;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,11 +12,18 @@ namespace Nikse.SubtitleEdit.Core.Common
     public static class LanguageAutoDetect
     {
 
+        // One detection run probes ~40+ distinct word-list patterns - far more than fit in the
+        // built-in regex cache (Regex.CacheSize is 15), so with the static Regex.Matches API
+        // every AutoDetectGoogleLanguage call re-parsed every large alternation pattern from
+        // scratch. The word lists are fixed for the app lifetime, so cache compiled instances.
+        private static readonly ConcurrentDictionary<string, Regex> WordCountRegexCache = new ConcurrentDictionary<string, Regex>();
+
         private static int GetCount(string text, params string[] words)
         {
-            var options = RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture;
             var pattern = "\\b(" + string.Join("|", words) + ")\\b";
-            return Regex.Matches(text, pattern, options).Count;
+            var regex = WordCountRegexCache.GetOrAdd(pattern, p =>
+                new Regex(p, RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Compiled));
+            return regex.Matches(text).Count;
         }
 
         private static int GetCountContains(string text, params string[] words)
@@ -23,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             int count = 0;
             foreach (var w in words)
             {
-                var regEx = new Regex(w);
+                var regEx = WordCountRegexCache.GetOrAdd(w, p => new Regex(p, RegexOptions.Compiled));
                 count += regEx.Matches(text).Count;
             }
             return count;

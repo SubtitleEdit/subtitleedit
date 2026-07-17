@@ -397,7 +397,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public bool IsFrameBased => !IsTimeBased;
 
-        public string FriendlyName => $"{Name} ({Extension})";
+        private string _friendlyName;
+        private string _friendlyNameExtension;
+
+        /// <summary>
+        /// "Name (Extension)" - cached because it is accessed in loops over all ~300 formats
+        /// (FromName, GetSubtitleFormatByFriendlyName, format combo boxes) and interpolation
+        /// allocated a new string on every access. A few formats have a settings-dependent
+        /// Extension (MPlayer2, TimedText), so the cache is keyed on the Extension instance:
+        /// constants are interned and the settings values keep their instance until changed.
+        /// </summary>
+        public string FriendlyName
+        {
+            get
+            {
+                var extension = Extension;
+                if (_friendlyName == null || !ReferenceEquals(_friendlyNameExtension, extension))
+                {
+                    _friendlyNameExtension = extension;
+                    _friendlyName = $"{Name} ({extension})";
+                }
+
+                return _friendlyName;
+            }
+        }
 
         public int ErrorCount => _errorCount;
 

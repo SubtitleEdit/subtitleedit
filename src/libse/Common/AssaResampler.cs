@@ -185,7 +185,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static string FixMethodFourParameters(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input, string tag)
         {
-            var regex = new Regex("\\\\" + tag + "\\s*\\(\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*\\)");
+            var regex = GetCachedRegex("\\\\" + tag + "\\s*\\(\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*\\)");
             var s = input;
             var match = regex.Match(s);
             while (match.Success)
@@ -221,7 +221,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static string FixMethodSixParametersFourActive(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input, string tag)
         {
-            var regex = new Regex("\\\\" + tag + "\\s*\\(\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*\\)");
+            var regex = GetCachedRegex("\\\\" + tag + "\\s*\\(\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*\\)");
             var s = input;
             var match = regex.Match(s);
             while (match.Success)
@@ -261,7 +261,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static string FixMethodTwoParameters(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input, string tag)
         {
-            var regex = new Regex("\\\\" + tag + "\\s*\\(\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*\\)");
+            var regex = GetCachedRegex("\\\\" + tag + "\\s*\\(\\s*[-+]?\\d+[\\.\\d+]*\\s*,\\s*[-+]?\\d+[\\.\\d+]*\\s*\\)");
             var s = input;
             var match = regex.Match(s);
             while (match.Success)
@@ -291,7 +291,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         private static string FixTagWithNumber(decimal sourceHeight, decimal targetHeight, string input, string tag)
         {
-            var regex = new Regex("\\\\" + tag + "[-+]?\\d+[\\.\\d+]*[}\\\\]");
+            var regex = GetCachedRegex("\\\\" + tag + "[-+]?\\d+[\\.\\d+]*[}\\\\]");
             var s = input;
             var match = regex.Match(s);
             while (match.Success)
