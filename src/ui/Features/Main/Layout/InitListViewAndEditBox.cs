@@ -59,7 +59,7 @@ public static partial class InitListViewAndEditBox
                 oldCoordinator.DeInitialize();
                 if (vm.EditTextBox?.ContentControl != null)
                 {
-                    UiUtil.RemoveControlFromParent(vm.EditTextBox.ContentControl);
+                    vm.EditTextBox.ContentControl.RemoveControlFromParent();
                 }
             }
             vm.EditTextBoxBindingCoordinator = null;
@@ -1775,7 +1775,7 @@ public static partial class InitListViewAndEditBox
 
     private static Avalonia.Controls.Control MakeTextBox(MainViewModel vm)
     {
-        UiUtil.RemoveControlFromParent(vm.EditTextBox.ContentControl);
+        vm.EditTextBox.ContentControl.RemoveControlFromParent();
 
         var textBox = MakeSubtitleTextBox();
         textBox[!TextBox.TextProperty] = new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.Text))

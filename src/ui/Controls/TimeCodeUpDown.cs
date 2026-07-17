@@ -314,7 +314,7 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             }
 
-            var text = await ClipboardExtensions.TryGetTextAsync(clipboard);
+            var text = await clipboard.TryGetTextAsync();
             if (TryParsePastedValue(text, out var value))
             {
                 SetValue(ValueProperty, value); // OnPropertyChanged clamps, reformats the text and raises ValueChanged

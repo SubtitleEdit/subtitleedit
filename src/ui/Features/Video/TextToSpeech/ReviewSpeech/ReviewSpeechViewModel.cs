@@ -379,10 +379,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         SelectedEngine = engine;
 
-        ObservableCollectionExtensions.AddRange(Voices, voices);
+        Voices.AddRange(voices);
         SelectedVoice = voice;
 
-        ObservableCollectionExtensions.AddRange(Languages, languages);
+        Languages.AddRange(languages);
         SelectedLanguage = language;
 
         _videoFileName = videoFileName;
@@ -1498,7 +1498,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             {
                 var voices = await murf.GetVoices(SelectedLanguage?.Code ?? string.Empty);
                 Voices.Clear();
-                ObservableCollectionExtensions.AddRange(Voices, voices);
+                Voices.AddRange(voices);
 
                 var lastVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice);
                 if (lastVoice == null)
