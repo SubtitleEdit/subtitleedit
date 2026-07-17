@@ -610,8 +610,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 // moved or shared, and Import resolves the path against the JSON's own directory.
                 // Forward slash so the same JSON opens on Windows, macOS and Linux.
                 AudioFileName = string.IsNullOrEmpty(targetFileName) ? string.Empty : "wav/" + Path.GetFileName(targetFileName),
-                StartMs = (long)Math.Round((double)line.StepResult.Paragraph.StartTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
-                EndMs = (long)Math.Round((double)line.StepResult.Paragraph.EndTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
+                StartMs = (long)Math.Round(line.StepResult.Paragraph.StartTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
+                EndMs = (long)Math.Round(line.StepResult.Paragraph.EndTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
                 VoiceName = line.StepResult.Voice?.Name ?? string.Empty,
                 // Per-line engine snapshot, not the global SelectedEngine — different rows can
                 // come from different engines via the cast workflow, and on re-import we want

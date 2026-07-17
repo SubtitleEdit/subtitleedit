@@ -238,8 +238,8 @@ internal static class BitmapSubtitleLoader
                     continue;
                 }
                 items.Add(new BitmapSubtitleItem(
-                    new TimeCode((double)dvb.StartMilliseconds),
-                    new TimeCode((double)dvb.EndMilliseconds),
+                    new TimeCode(dvb.StartMilliseconds),
+                    new TimeCode(dvb.EndMilliseconds),
                     bmp));
             }
             if (items.Count > 0)

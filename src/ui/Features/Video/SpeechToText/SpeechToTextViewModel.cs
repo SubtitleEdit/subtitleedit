@@ -2655,7 +2655,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         var vm = await _windowService.ShowDialogAsync<SpeechToTextAdvancedWindow, SpeechToTextAdvancedViewModel>(Window!,
             viewModal =>
             {
-                viewModal.Engines = ((IEnumerable<ISpeechToTextEngine>)Engines).ToList();
+                viewModal.Engines = Engines.ToList();
                 viewModal.EngineClickedCommand.Execute((ISpeechToTextEngine)SelectedEngine);
             });
 
@@ -4248,11 +4248,11 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (result != null)
         {
-            SelectedModel = ((IEnumerable<SpeechToTextModelDisplay>)Models).FirstOrDefault(m => m.Model.Name == result.Name);
+            SelectedModel = Models.FirstOrDefault(m => m.Model.Name == result.Name);
         }
         else
         {
-            SelectedModel = ((IEnumerable<SpeechToTextModelDisplay>)Models).FirstOrDefault(m => m.Model.Name == oldModel.Model.Name);
+            SelectedModel = Models.FirstOrDefault(m => m.Model.Name == oldModel.Model.Name);
         }
     }
 
@@ -4303,14 +4303,14 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (Models.Count > 0)
         {
-            var model = ((IEnumerable<SpeechToTextModelDisplay>)Models).FirstOrDefault<SpeechToTextModelDisplay>(p => p.Model.Name == Se.Settings.Tools.AudioToText.WhisperModel);
+            var model = Models.FirstOrDefault<SpeechToTextModelDisplay>(p => p.Model.Name == Se.Settings.Tools.AudioToText.WhisperModel);
             if (model != null)
             {
                 SelectedModel = model;
             }
             else
             {
-                SelectedModel = ((IEnumerable<SpeechToTextModelDisplay>)Models).FirstOrDefault();
+                SelectedModel = Models.FirstOrDefault();
             }
         }
 

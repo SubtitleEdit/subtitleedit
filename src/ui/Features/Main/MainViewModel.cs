@@ -1526,7 +1526,7 @@ public partial class MainViewModel :
         {
             var width = _mediaInfo?.Dimension.Width ?? 1920;
             var height = _mediaInfo?.Dimension.Height ?? 1080;
-            var duration = (double)(_mediaInfo?.Duration?.TotalMilliseconds ?? 60_000);
+            var duration = _mediaInfo?.Duration?.TotalMilliseconds ?? 60_000;
             vm.Initialize(_subtitle, width, height, duration, _videoFileName);
         });
 
@@ -7571,7 +7571,7 @@ public partial class MainViewModel :
             // present, the previous subtitle's end plus the configured gap.
             // Whichever is later wins so we never pull the start back past
             // either constraint.
-            double? candidateStartMs = shotChange.HasValue ? shotChange.Value * 1000.0 : (double?)null;
+            double? candidateStartMs = shotChange.HasValue ? shotChange.Value * 1000.0 : null;
             if (prev != null)
             {
                 var prevEndPlusGapMs = prev.EndTime.TotalMilliseconds + gapMs;

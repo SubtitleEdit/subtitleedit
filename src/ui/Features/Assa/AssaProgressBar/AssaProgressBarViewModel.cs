@@ -463,16 +463,16 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 return (int)Math.Round((double)(positionNextX - BarHeight + XAdjustment));
             }
 
-            return (int)Math.Round((double)(positionNextX) - 10.0 + (double)XAdjustment);
+            return (int)Math.Round(positionNextX - 10.0 + XAdjustment);
         }
 
         // Left
         if (CornerStyleIndex == 1 && chapterIndex == 0)
         {
-            return (int)Math.Round((double)position + (double)BarHeight + (double)SplitterWidth + (double)XAdjustment);
+            return (int)Math.Round(position + (double)BarHeight + SplitterWidth + XAdjustment);
         }
 
-        return (int)Math.Round((double)position + 8.0 + (double)SplitterWidth + (double)XAdjustment);
+        return (int)Math.Round(position + 8.0 + SplitterWidth + XAdjustment);
     }
 
     private static string ToAssaColor(Color color)

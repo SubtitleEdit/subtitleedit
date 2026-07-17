@@ -1897,9 +1897,9 @@ public partial class BatchConvertViewModel : ObservableObject
                 AdjustmentType = SelectedAdjustType.Type,
                 Percentage = AdjustPercent,
                 FixedMilliseconds = (int)AdjustFixed,
-                MaxCharsPerSecond = (double)AdjustRecalculateMaxCharacterPerSecond,
-                OptimalCharsPerSecond = (double)AdjustRecalculateOptimalCharacterPerSecond,
-                Seconds = (double)AdjustSeconds,
+                MaxCharsPerSecond = AdjustRecalculateMaxCharacterPerSecond,
+                OptimalCharsPerSecond = AdjustRecalculateOptimalCharacterPerSecond,
+                Seconds = AdjustSeconds,
             },
 
             AutoTranslate = new BatchConvertConfig.AutoTranslateSettings

@@ -473,7 +473,7 @@ public partial class CutVideoViewModel : ObservableObject
         if (long.TryParse(arr[1].Trim(), out var f))
         {
             _processedFrames = f;
-            ProgressValue = (double)_processedFrames * 100.0 / JobItems[_jobItemIndex].TotalFrames;
+            ProgressValue = _processedFrames * 100.0 / JobItems[_jobItemIndex].TotalFrames;
         }
     }
 

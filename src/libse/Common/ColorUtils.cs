@@ -44,12 +44,12 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public static uint ToArgb(this SKColor color)
         {
-            var number = (uint)color.Alpha << 24 | (uint)color.Red << 16 | (uint)color.Green << 8 | (uint)color.Blue;
+            var number = (uint)color.Alpha << 24 | (uint)color.Red << 16 | (uint)color.Green << 8 | color.Blue;
             return number;
         }
         public static string ToArgbString(this SKColor color)
         {
-            var number = (uint)color.Alpha << 24 | (uint)color.Red << 16 | (uint)color.Green << 8 | (uint)color.Blue;
+            var number = (uint)color.Alpha << 24 | (uint)color.Red << 16 | (uint)color.Green << 8 | color.Blue;
             return number.ToString(CultureInfo.InvariantCulture);
         }
 

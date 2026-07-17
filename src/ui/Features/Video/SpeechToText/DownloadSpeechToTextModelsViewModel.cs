@@ -62,7 +62,7 @@ public partial class DownloadSpeechToTextModelsViewModel : ObservableObject
         _whisperDownloadService = whisperDownloadService;
 
         Models = new ObservableCollection<SpeechToTextModelDisplay>();
-        SelectedModel = ((IEnumerable<SpeechToTextModelDisplay>)Models).FirstOrDefault<SpeechToTextModelDisplay>();
+        SelectedModel = Models.FirstOrDefault<SpeechToTextModelDisplay>();
 
         _cancellationTokenSource = new CancellationTokenSource();
 

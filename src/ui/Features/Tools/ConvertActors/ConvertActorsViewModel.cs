@@ -106,8 +106,8 @@ public partial class ConvertActorsViewModel : ObservableObject
         var fromColon = SelectedFromType.Type == ConvertActorType.InlineColon;
         var fromActor = SelectedFromType.Type == ConvertActorType.Actor;
 
-        int? changeCasing = ChangeCasing ? SelectedCasingIndex : (int?)null;
-        SkiaSharp.SKColor? color = SetColor ? SelectedColor.ToSkColor() : (SkiaSharp.SKColor?)null;
+        int? changeCasing = ChangeCasing ? SelectedCasingIndex : null;
+        SkiaSharp.SKColor? color = SetColor ? SelectedColor.ToSkColor() : null;
 
         var items = new List<ConvertActorsDisplayItem>();
         var count = 0;

@@ -114,7 +114,7 @@ public static class Mp3DurationReader
             pos += frameSize;
         }
 
-        return frameCount > 0 ? totalSeconds : (double?)null;
+        return frameCount > 0 ? totalSeconds : null;
     }
 
     private static long SkipId3v2(Stream stream)

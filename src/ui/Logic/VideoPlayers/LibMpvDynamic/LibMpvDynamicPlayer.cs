@@ -1603,7 +1603,7 @@ public sealed class LibMpvDynamicPlayer : IDisposable, IVideoPlayer
                 var stridePtr = Marshal.AllocHGlobal(IntPtr.Size);
                 if (IntPtr.Size == 8) // 64-bit
                 {
-                    *(ulong*)stridePtr = (ulong)stride;
+                    *(ulong*)stridePtr = stride;
                 }
                 else // 32-bit
                 {
