@@ -1890,12 +1890,9 @@ public class AudioVisualizer : Control
             return;
         }
 
-        var fps = Se.Settings.General.CurrentFrameRate;
-        if (Se.Settings.General.UseFrameMode && fps >= 1)
-        {
-            DrawFrameAlignedTimeLine(context, ref renderCtx, fps);
-            return;
-        }
+        // The timeline ruler stays second-based also in frame mode (SE4 parity, #12573): a
+        // frame-aligned ruler labeled HH:MM:SS:FF at 10-frame steps was much harder to read.
+        // Only the optional gridlines are frame-aligned in frame mode (DrawAllGridLines).
 
         // Hoist loop-invariants: renderCtx is a ref struct, and n (pixels per second) was being
         // recomputed every iteration. With sampleRate != 0 guaranteed above, SecondsToXPositionOptimized
@@ -1944,90 +1941,6 @@ public class AudioVisualizer : Control
 
         DrawVerticalLineBatch(context, _paintTimeLine, majorTicks);
         DrawVerticalLineBatch(context, _paintTimeLine, minorTicks);
-    }
-
-    private void DrawFrameAlignedTimeLine(DrawingContext context, ref RenderContext renderCtx, double fps)
-    {
-        var imageHeight = renderCtx.Height;
-        var width = renderCtx.Width;
-        var pixelsPerFrame = renderCtx.SampleRate * renderCtx.ZoomFactor / fps;
-        if (pixelsPerFrame <= 0)
-        {
-            return;
-        }
-
-        // Mirror the time-mode density: majors >= 38 px apart, minors at half-step
-        // (and only when the half-step lands on a whole frame and stays >= 24 px apart).
-        var majorStepFrames = PickFramesPerStep(pixelsPerFrame, 38);
-        var minorStepFrames = (majorStepFrames > 1 && majorStepFrames % 2 == 0 && pixelsPerFrame * (majorStepFrames / 2) >= 24)
-            ? majorStepFrames / 2
-            : 0;
-
-        var majorTicks = _timeLineMajorTicks;
-        var minorTicks = _timeLineMinorTicks;
-        majorTicks.Clear();
-        minorTicks.Clear();
-
-        // First major boundary (absolute frame index) at-or-before the visible start.
-        // Use integer-space floor: double-space Math.Floor near a frame boundary can
-        // land on 24.9999... instead of 25, offsetting every tick by a full step.
-        var startFrame = FloorWithEpsilon(renderCtx.StartPositionSeconds * fps);
-        if (startFrame < 0)
-        {
-            startFrame = 0;
-        }
-
-        // The x position is linear in the frame index: x = absFrame * pixelsPerFrame -
-        // startPixelOffset. Precompute the invariants so each tick is a multiply-subtract instead of
-        // a per-tick division + SecondsToXPositionOptimized call (which re-reads the ref-struct
-        // renderCtx fields). invFps is only needed for the visible labels' time value.
-        var startPixelOffset = renderCtx.StartPositionSeconds * renderCtx.SampleRate * renderCtx.ZoomFactor;
-        var invFps = 1.0 / fps;
-
-        var firstAbsFrame = startFrame - startFrame % majorStepFrames;
-        for (var absFrame = firstAbsFrame; ; absFrame += majorStepFrames)
-        {
-            var xPosition = (int)Math.Round(absFrame * pixelsPerFrame - startPixelOffset, MidpointRounding.AwayFromZero);
-            if (xPosition >= width)
-            {
-                break;
-            }
-
-            if (xPosition >= 0)
-            {
-                majorTicks.Add(new FancyLine(xPosition, imageHeight - 10, imageHeight));
-
-                var timeText = GetFrameDisplayTime(absFrame * invFps);
-                var formattedText = GetCachedTimeLineText(timeText);
-                var textY = Math.Max(0, imageHeight - formattedText.Height - 2);
-                context.DrawText(formattedText, new Point(xPosition + 2, textY));
-            }
-
-            if (minorStepFrames > 0)
-            {
-                var minorX = (int)Math.Round((absFrame + minorStepFrames) * pixelsPerFrame - startPixelOffset, MidpointRounding.AwayFromZero);
-                if (minorX >= 0 && minorX < width)
-                {
-                    minorTicks.Add(new FancyLine(minorX, imageHeight - 5, imageHeight));
-                }
-            }
-        }
-
-        DrawVerticalLineBatch(context, _paintTimeLine, majorTicks);
-        DrawVerticalLineBatch(context, _paintTimeLine, minorTicks);
-    }
-
-    private static string GetFrameDisplayTime(double seconds)
-    {
-        // CurrentVideoOffsetInMs is signed; the previous `> 0.00001` guard silently
-        // dropped negative offsets so the timeline labels were wrong whenever the
-        // audio leads the video.
-        if (Math.Abs(Se.Settings.General.CurrentVideoOffsetInMs) > 0.00001)
-        {
-            seconds = seconds + Se.Settings.General.CurrentVideoOffsetInMs / 1000.0;
-        }
-
-        return new TimeCode(seconds * 1000.0).ToShortStringHHMMSSFF();
     }
 
     private readonly Pen _paintTimeLine = new Pen(Brushes.Gray, 1);
