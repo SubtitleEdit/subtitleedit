@@ -384,7 +384,7 @@ public partial class FixCommonErrorsViewModel : ObservableObject, IFixCallbacks
 
         RebuildVisibleFixes();
         // Refresh the "N fixes, M selected" line so it reflects the newly active category,
-        // matching what Select all and Invert now act on (#12377, follow-up to #12408).
+        // matching what the Select all toggle acts on (#12377, follow-up to #12408).
         UpdateFixesSummary();
     }
 
