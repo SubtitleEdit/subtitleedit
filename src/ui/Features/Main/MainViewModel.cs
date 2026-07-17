@@ -6443,18 +6443,34 @@ public partial class MainViewModel :
             }
         }
 
+        var ytDlpUpdatedFromUrlWindow = false;
         var result = await ShowDialogAsync<OpenFromUrlWindow, OpenFromUrlViewModel>(vm =>
         {
             // Reuse the existing install/update prompt for the window's manual
             // "Download yt-dlp" button. Pick the message by current install state
             // and own the dialogs off the URL window so they nest correctly.
-            vm.DownloadOrUpdateYtDlpRequested = () =>
+            vm.DownloadOrUpdateYtDlpRequested = async () =>
             {
                 var message = File.Exists(YtDlpDownloadService.GetFullFileName())
                     ? Se.Language.Main.YoutubeDlOutdatedDownloadNow
                     : Se.Language.Main.YoutubeDlNotInstalledDownloadNow;
-                return PromptToDownloadYtDlp(message, vm.Window);
+                if (await PromptToDownloadYtDlp(message, vm.Window))
+                {
+                    vm.IsDownloadYtDlpVisible = false;
+                    ytDlpUpdatedFromUrlWindow = true;
+                }
             };
+
+            // Only surface the "Download yt-dlp" button when the background
+            // version check finds the install outdated — with the latest version
+            // already on disk there is nothing to download.
+            outdatedCheckTask?.ContinueWith(t =>
+            {
+                if (t.Status == TaskStatus.RanToCompletion && t.Result)
+                {
+                    Dispatcher.UIThread.Post(() => vm.IsDownloadYtDlpVisible = true);
+                }
+            }, TaskScheduler.Default);
         });
 
         if (!result.OkPressed || result.SelectedMode is null)
@@ -6499,8 +6515,10 @@ public partial class MainViewModel :
 
         // If a newer yt-dlp is available, offer the upgrade — but open the video
         // regardless of the user's choice. The installed binary still works, so a
-        // declined or failed update must not abort the open.
-        if (isOutdated)
+        // declined or failed update must not abort the open. Skip the prompt when
+        // the user already updated via the URL window's button — the background
+        // check result predates that update.
+        if (isOutdated && !ytDlpUpdatedFromUrlWindow)
         {
             await PromptToDownloadYtDlp(Se.Language.Main.YoutubeDlOutdatedDownloadNow);
         }
@@ -6577,8 +6595,17 @@ public partial class MainViewModel :
             return;
         }
 
+        // The picker's "Save..." button needs a video-derived name suggestion —
+        // the downloaded files themselves are named "sub.en.vtt" in a temp dir.
+        string? suggestedFileNameBase = null;
+        if (!string.IsNullOrEmpty(_videoFileName))
+        {
+            suggestedFileNameBase = Path.GetFileNameWithoutExtension(
+                MakeSubtitleFileNameFromVideo(_videoFileName, languageCode: null));
+        }
+
         var pickerResult = await ShowDialogAsync<PickOnlineSubtitleWindow, PickOnlineSubtitleViewModel>(
-            vm => { vm.Initialize(subtitles); });
+            vm => { vm.Initialize(subtitles, suggestedFileNameBase); });
 
         if (!pickerResult.OkPressed || string.IsNullOrEmpty(pickerResult.SelectedSubtitlePath))
         {
