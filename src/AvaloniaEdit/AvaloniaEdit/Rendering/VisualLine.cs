@@ -538,14 +538,26 @@ namespace AvaloniaEdit.Rendering
                 }
             }
 
+            // A right-to-left line whose first strong character comes from a drawable object run
+            // (the atomic tag elements used in RTL mode) resolves to a left-to-right embedding
+            // level inside Avalonia: the run carries no text, so the formatter feeds the bidi
+            // algorithm a run of 'a' on its behalf, and rule P2/P3 latches onto that as the first
+            // strong character regardless of the paragraph direction. Reordering still uses the
+            // paragraph level, so the line renders correctly, but every direction-dependent hit
+            // API on it answers with the left-to-right convention, which puts clicks on a tag
+            // several columns away from the tag. GetTextBounds is unaffected, so resolve the hit
+            // from the geometry instead. Left-to-right lines keep using the fast path.
+            if (TextView.FlowDirection == FlowDirection.RightToLeft
+                && TryGetVisualColumnFromBounds(textLine, xPos, out var columnFromBounds))
+            {
+                return columnFromBounds;
+            }
+
             var ch = textLine.GetCharacterHitFromDistance(xPos);
 
             if (ch.TrailingLength > 0)
             {
-                // Avalonia resolves hits on drawable object runs (e.g. the atomic tag elements
-                // used in right-to-left mode) with the left-to-right trailing convention even in
-                // right-to-left lines, which inverts which half of the object maps to which
-                // side. Snap to whichever caret boundary is actually nearer to the position.
+                // Snap to whichever caret boundary is actually nearer to the position.
                 var leadingColumn = ch.FirstCharacterIndex;
                 var trailingColumn = ch.FirstCharacterIndex + ch.TrailingLength;
                 var leadingX = textLine.GetDistanceFromCharacterHit(new CharacterHit(leadingColumn));
@@ -554,6 +566,67 @@ namespace AvaloniaEdit.Rendering
             }
 
             return ch.FirstCharacterIndex;
+        }
+
+        /// <summary>
+        /// Resolves a horizontal position to a visual column using the columns' rendered bounds,
+        /// for right-to-left lines where Avalonia's character-hit APIs answer with the wrong
+        /// directional convention (see <see cref="GetVisualColumn(TextLine, double, bool)"/>).
+        /// Returns false when the position is not over any column, leaving the caller on its
+        /// normal path.
+        /// </summary>
+        private bool TryGetVisualColumnFromBounds(TextLine textLine, double xPos, out int column)
+        {
+            column = 0;
+
+            // textLine.Length counts the end-of-line marker run, which is not a real text column
+            // and is laid out at the paragraph origin; including it would corrupt both the hit
+            // test and the neighbour direction check below.
+            var firstColumn = textLine.FirstTextSourceIndex;
+            var endColumn = Math.Min(firstColumn + textLine.Length, VisualLengthWithEndOfLineMarker);
+
+            for (var i = firstColumn; i < endColumn; i++)
+            {
+                if (!TryGetColumnRect(textLine, i, out var rect)
+                    || xPos < rect.Left || xPos > rect.Right)
+                {
+                    continue;
+                }
+
+                // Which edge is this column's logical start cannot be read from
+                // TextBounds.FlowDirection, which is derived from the same mis-resolved embedding
+                // level. The rendered order is reliable, so take the direction from a neighbour:
+                // a column laid out to the left of this one means this one reads right-to-left.
+                var readsRightToLeft = true;
+                if (i + 1 < endColumn && TryGetColumnRect(textLine, i + 1, out var nextRect))
+                {
+                    readsRightToLeft = nextRect.Left < rect.Left;
+                }
+                else if (i > firstColumn && TryGetColumnRect(textLine, i - 1, out var previousRect))
+                {
+                    readsRightToLeft = previousRect.Left > rect.Left;
+                }
+
+                var leadingX = readsRightToLeft ? rect.Right : rect.Left;
+                var trailingX = readsRightToLeft ? rect.Left : rect.Right;
+
+                column = Math.Abs(xPos - leadingX) <= Math.Abs(xPos - trailingX) ? i : i + 1;
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool TryGetColumnRect(TextLine textLine, int column, out Rect rect)
+        {
+            foreach (var bounds in textLine.GetTextBounds(column, 1))
+            {
+                rect = bounds.Rectangle;
+                return true;
+            }
+
+            rect = default;
+            return false;
         }
 
         /// <summary>
