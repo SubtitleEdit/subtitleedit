@@ -42,7 +42,7 @@ public class CutVideoWindow : Window
 
         var labelVideoExtension = UiUtil.MakeLabel(Se.Language.General.VideoExtension);
 
-        var comboBoxVideoExtension = UiUtil.MakeComboBox<string>(
+        var comboBoxVideoExtension = UiUtil.MakeComboBox(
             vm.VideoExtensions,
             vm,
             nameof(vm.SelectedVideoExtension)
