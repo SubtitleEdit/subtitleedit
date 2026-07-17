@@ -2,6 +2,8 @@
 <!-- Ta lista zawiera nazwy z określoną wielkością liter – specyficzne tylko dla języka polskiego -->
 <names>
 	<blacklist>
+		<name>Adam</name>
+		<name>Adams</name>
 		<name>Bill</name>
 		<name>Black</name>
 		<name>Male</name>
@@ -42,6 +44,7 @@
     <name>Ali</name>
     <name>Alina</name>
     <name>Alma</name>
+    <name>Amarillo</name>
     <name>Amelia</name>
     <name>Ameryka</name>
     <name>Ameryka Centralna</name>
@@ -103,6 +106,7 @@
     <name>Białorusin</name>
     <name>Białorusini</name>
     <name>Białorusinka</name>
+    <name>Blackie</name>
     <name>Bo-Katan</name>
     <name>Boba Fett</name>
     <name>Bohemia</name>
@@ -124,6 +128,7 @@
     <name>Bułgaria</name>
     <name>Bułgarka</name>
     <name>Bułgarzy</name>
+    <name>Cavanagh</name>
     <name>Cecylia</name>
     <name>Cejlon</name>
     <name>Chorwaci</name>
@@ -193,6 +198,7 @@
     <name>Fiodor Dostojewski</name>
     <name>Fiodor Michajłowicz Dostojewski</name>
     <name>Frankfurt</name>
+    <name>Frisco</name>
     <name>Gabor</name>
     <name>Gabończycy</name>
     <name>Gabriela</name>
@@ -249,6 +255,7 @@
     <name>Hiszpanie</name>
     <name>Hiszpanka</name>
     <name>Honduras</name>
+    <name>Indio</name>
     <name>Indonezja</name>
     <name>Indonezyjczycy</name>
     <name>Indonezyjczyk</name>
@@ -529,6 +536,7 @@
     <name>Samson</name>
     <name>San Francisco</name>
     <name>San Marino</name>
+    <name>Sancha</name>
     <name>Sankt Petersburg</name>
     <name>Senegal</name>
     <name>Serbia</name>
@@ -574,6 +582,7 @@
     <name>Trynidad &amp; Tobago</name>
     <name>Trynidad i Tobago</name>
     <name>Trynidadczycy</name>
+    <name>Tucamcari</name>
     <name>Tunezyjczycy</name>
     <name>Tunezyjczyk</name>
     <name>Tunezyjka</name>
