@@ -251,7 +251,15 @@ public partial class SpeechToTextViewModel : ObservableObject
         SelectedEngine = Engines[0];
 
         Languages = new ObservableCollection<WhisperLanguage>(GetEngineLanguages(GetEffectiveSelectedEngine()));
-        SelectedLanguage = PickDefaultLanguage(Languages);
+
+        // Restore the last-used language (SE4 behavior, #11744) - EngineChanged keeps the
+        // current selection on engine switches, so the initial selection must already be the
+        // remembered one, not the English default.
+        var savedLanguageCode = Se.Settings.Tools.AudioToText.WhisperLanguageCode;
+        SelectedLanguage = (string.IsNullOrEmpty(savedLanguageCode)
+                               ? null
+                               : Languages.FirstOrDefault(p => p.Code == savedLanguageCode))
+                           ?? PickDefaultLanguage(Languages);
 
         Models = new ObservableCollection<SpeechToTextModelDisplay>();
 
@@ -4264,16 +4272,21 @@ public partial class SpeechToTextViewModel : ObservableObject
             Languages.Add(l);
         }
 
-        var savedCode = Se.Settings.Tools.AudioToText.WhisperLanguageCode;
+        // Keep the user's current in-session choice when switching engine/backend - jumping
+        // back to the last *saved* language on every settings change forced the user to
+        // re-pick the language each time (#11744). The saved code is only the fallback when
+        // the new engine does not offer the current language.
         WhisperLanguage? language = null;
-        if (!string.IsNullOrEmpty(savedCode))
+        if (SelectedLanguage is { } prev)
         {
-            language = Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => p.Code == savedCode);
+            language = Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => p.Code == prev.Code)
+                       ?? Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => string.Equals(p.Name, prev.Name, StringComparison.OrdinalIgnoreCase));
         }
 
-        if (language == null && SelectedLanguage is { } prev)
+        var savedCode = Se.Settings.Tools.AudioToText.WhisperLanguageCode;
+        if (language == null && !string.IsNullOrEmpty(savedCode))
         {
-            language = Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => string.Equals(p.Name, prev.Name, StringComparison.OrdinalIgnoreCase));
+            language = Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => p.Code == savedCode);
         }
 
         SelectedLanguage = language ?? PickDefaultLanguage(Languages);
@@ -4706,7 +4719,12 @@ public partial class SpeechToTextViewModel : ObservableObject
         _audioClipsAutoStart = autoStart;
         ResultAudioClips = audioClips.Select(ac => new AudioClip(ac)).ToList();
 
-        if (language != null)
+        // The remembered last-used language wins (SE4 behavior, #11744): the language
+        // auto-detected from the selected lines' existing text is only used before any
+        // transcription has been run - it must not override the user's choice on every run.
+        var savedCode = Se.Settings.Tools.AudioToText.WhisperLanguageCode;
+        var hasRememberedLanguage = !string.IsNullOrEmpty(savedCode) && Languages.Any(p => p.Code == savedCode);
+        if (language != null && !hasRememberedLanguage)
         {
             var match = Languages.FirstOrDefault(p => p.Code == language)
                         ?? Languages.FirstOrDefault(p => string.Equals(p.Name, language, StringComparison.OrdinalIgnoreCase));
