@@ -35,7 +35,11 @@ namespace Nikse.SubtitleEdit.Core.Http
 
             if (proxySettings.UseDefaultCredentials)
             {
-                handler.Proxy.Credentials = CredentialCache.DefaultNetworkCredentials;
+                if (handler.Proxy != null)
+                {
+                    handler.Proxy.Credentials = CredentialCache.DefaultNetworkCredentials;
+                }
+
                 handler.Credentials = CredentialCache.DefaultNetworkCredentials;
             }
             else if (!string.IsNullOrEmpty(proxySettings.UserName) && !string.IsNullOrEmpty(proxySettings.ProxyAddress))
