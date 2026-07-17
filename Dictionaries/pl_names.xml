@@ -1,0 +1,643 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Ta lista zawiera nazwy z określoną wielkością liter – specyficzne tylko dla języka polskiego -->
+<names>
+	<blacklist>
+		<name>Bill</name>
+		<name>Black</name>
+		<name>Male</name>
+	</blacklist>
+    <name>AI</name>
+    <name>Abisynia</name>
+    <name>Abisynka</name>
+    <name>Abisyńczyk</name>
+    <name>Ada</name>
+    <name>Adelina</name>
+    <name>Adonis</name>
+    <name>Afganistan</name>
+    <name>Afganka</name>
+    <name>Afgańczyk</name>
+    <name>Afryka</name>
+    <name>Afryka Południowa</name>
+    <name>Afryka Północna</name>
+    <name>Afryka Subsaharyjska</name>
+    <name>Afryka Wschodnia</name>
+    <name>Afryka Zachodnia</name>
+    <name>Afryka Środkowa</name>
+    <name>Afrykaner</name>
+    <name>Afrykanka</name>
+    <name>Afrykańczyk</name>
+    <name>Akira</name>
+    <name>Albania</name>
+    <name>Albanka</name>
+    <name>Albańczycy</name>
+    <name>Albańczyk</name>
+    <name>Albrecht</name>
+    <name>Aleksandr Isajewicz Sołżenicyn</name>
+    <name>Aleksandr Sołżenicyn</name>
+    <name>Alena</name>
+    <name>Algierczycy</name>
+    <name>Algierczyk</name>
+    <name>Algieria</name>
+    <name>Algierka</name>
+    <name>Ali</name>
+    <name>Alina</name>
+    <name>Alma</name>
+    <name>Amelia</name>
+    <name>Ameryka</name>
+    <name>Ameryka Centralna</name>
+    <name>Ameryka Południowa</name>
+    <name>Ameryka Północna</name>
+    <name>Ameryka Łacińska</name>
+    <name>Amerykanie</name>
+    <name>Amerykanin</name>
+    <name>Amerykanka</name>
+    <name>Amina</name>
+    <name>Angola</name>
+    <name>Antarktyka</name>
+    <name>Antigua &amp; Barbuda</name>
+    <name>Antigua i Barbuda</name>
+    <name>Antyle Holenderskie</name>
+    <name>Arabia</name>
+    <name>Arabia Saudyjska</name>
+    <name>Argentyna</name>
+    <name>Argentynka</name>
+    <name>Argentyńczycy</name>
+    <name>Argentyńczyk</name>
+    <name>Ariana</name>
+    <name>Ariel</name>
+    <name>Armenia</name>
+    <name>Armenka</name>
+    <name>Armeńczyk</name>
+    <name>Asyria</name>
+    <name>Atena</name>
+    <name>Ateny</name>
+    <name>Atlantyk</name>
+    <name>Aurora</name>
+    <name>Australazja</name>
+    <name>Australia</name>
+    <name>Australijczyk</name>
+    <name>Australijka</name>
+    <name>Austria</name>
+    <name>Austriaczka</name>
+    <name>Austriak</name>
+    <name>Autonomia Palestyńska</name>
+    <name>Azerbejdżan</name>
+    <name>Azerbejdżanin</name>
+    <name>Azerbejdżanka</name>
+    <name>Azja Południowa</name>
+    <name>Azja Południowo-Wschodnia</name>
+    <name>Azja Wschodnia</name>
+    <name>Azja Zachodnia</name>
+    <name>Azja Środkowa</name>
+    <name>Babilonia</name>
+    <name>Bacharach</name>
+    <name>Baggins</name>
+    <name>Bahamy</name>
+    <name>Bahrajn</name>
+    <name>Bangladesz</name>
+    <name>Baron Munchausen</name>
+    <name>Belg</name>
+    <name>Belgijka</name>
+    <name>Belgowie</name>
+    <name>Belgrad</name>
+    <name>Białorusin</name>
+    <name>Białorusini</name>
+    <name>Białorusinka</name>
+    <name>Bo-Katan</name>
+    <name>Boba Fett</name>
+    <name>Bohemia</name>
+    <name>Boliwijczyk</name>
+    <name>Boliwijka</name>
+    <name>Bonin</name>
+    <name>Botswana</name>
+    <name>Bośnia</name>
+    <name>Bośnia &amp; Hercegowina</name>
+    <name>Bośnia i Hercegowina</name>
+    <name>Bożena</name>
+    <name>Brazylia</name>
+    <name>Brazylijczyk</name>
+    <name>Brazylijka</name>
+    <name>Bruksela</name>
+    <name>Brytyjskie Terytorium Oceanu Indyjskiego</name>
+    <name>Brytyjskie Wyspy Dziewicze</name>
+    <name>Bułgar</name>
+    <name>Bułgaria</name>
+    <name>Bułgarka</name>
+    <name>Bułgarzy</name>
+    <name>Cecylia</name>
+    <name>Cejlon</name>
+    <name>Chorwaci</name>
+    <name>Chorwacja</name>
+    <name>Chorwatka</name>
+    <name>Czarnogórcy</name>
+    <name>Czech</name>
+    <name>Czechosłowacja</name>
+    <name>Czechy</name>
+    <name>Czeszka</name>
+    <name>Dalia</name>
+    <name>Damian</name>
+    <name>Dania</name>
+    <name>Daniela</name>
+    <name>Daniella</name>
+    <name>Demokratyczna Republika Konga</name>
+    <name>Demokratyczna Republika Timoru Wschodniego</name>
+    <name>Dominik</name>
+    <name>Dominikana</name>
+    <name>Dostojewski</name>
+    <name>Eden</name>
+    <name>Egipcjanie</name>
+    <name>Egipcjanin</name>
+    <name>Egipcjanka</name>
+    <name>Egipt</name>
+    <name>Ekwador</name>
+    <name>Ekwadorczycy</name>
+    <name>Ekwadorczyk</name>
+    <name>Ekwadorka</name>
+    <name>Eliza</name>
+    <name>Elżbieta</name>
+    <name>Emila</name>
+    <name>Emilian</name>
+    <name>Enoch</name>
+    <name>Erytrea</name>
+    <name>Erytrejczycy</name>
+    <name>Erytrejczyk</name>
+    <name>Erytrejka</name>
+    <name>Esmeralda</name>
+    <name>Estonia</name>
+    <name>Estonka</name>
+    <name>Estończycy</name>
+    <name>Estończyk</name>
+    <name>Etiopczycy</name>
+    <name>Etiopia</name>
+    <name>Europa</name>
+    <name>Europa Południowa</name>
+    <name>Europa Północna</name>
+    <name>Europa Wschodnia</name>
+    <name>Europa Zachodnia</name>
+    <name>Europejczycy</name>
+    <name>Europejczyk</name>
+    <name>Europejka</name>
+    <name>Ewa</name>
+    <name>Ewelina</name>
+    <name>Ezra</name>
+    <name>F.B.I.</name>
+    <name>Federacja Rosyjska</name>
+    <name>Fenicja</name>
+    <name>Fernanda</name>
+    <name>Ferrara</name>
+    <name>Fidżi</name>
+    <name>Fidżyjczycy</name>
+    <name>Filipiny</name>
+    <name>Finlandia</name>
+    <name>Finowie</name>
+    <name>Fiodor Dostojewski</name>
+    <name>Fiodor Michajłowicz Dostojewski</name>
+    <name>Frankfurt</name>
+    <name>Gabor</name>
+    <name>Gabończycy</name>
+    <name>Gabriela</name>
+    <name>Galilea</name>
+    <name>Gambijczycy</name>
+    <name>Garfield</name>
+    <name>Genesis</name>
+    <name>Georgia Południowa</name>
+    <name>Georgia Południowa &amp; Sandwich Południowy</name>
+    <name>Georgia Południowa i Sandwich Południowy</name>
+    <name>Gerard Depardieu</name>
+    <name>Ghana</name>
+    <name>Ghańczycy</name>
+    <name>Gibraltar</name>
+    <name>Gibraltarczycy</name>
+    <name>Grecja</name>
+    <name>Grecy</name>
+    <name>Grenadyjczycy</name>
+    <name>Grenlandczycy</name>
+    <name>Grenlandia</name>
+    <name>Greta</name>
+    <name>Gruzin</name>
+    <name>Gruzini</name>
+    <name>Gruzinka</name>
+    <name>Gruzja</name>
+    <name>Guillermo</name>
+    <name>Gujana</name>
+    <name>Gujanka</name>
+    <name>Gujańczycy</name>
+    <name>Gujańczyk</name>
+    <name>Gwatemalczycy</name>
+    <name>Gwatemalczyk</name>
+    <name>Gwinea</name>
+    <name>Gwinea Bissau</name>
+    <name>Gwinea Równikowa</name>
+    <name>Gwinejczycy</name>
+    <name>Gwinejczyk</name>
+    <name>Gwinejka</name>
+    <name>Górna Wolta</name>
+    <name>Haitanka</name>
+    <name>Haitańczycy</name>
+    <name>Haitańczyk</name>
+    <name>Haiti</name>
+    <name>Hamburg</name>
+    <name>Hawajczycy</name>
+    <name>Hawajczyka</name>
+    <name>Hawaje</name>
+    <name>Hawajka</name>
+    <name>Hendrix</name>
+    <name>Hercegowina</name>
+    <name>Hildegarda</name>
+    <name>Hiszpan</name>
+    <name>Hiszpania</name>
+    <name>Hiszpanie</name>
+    <name>Hiszpanka</name>
+    <name>Honduras</name>
+    <name>Indonezja</name>
+    <name>Indonezyjczycy</name>
+    <name>Indonezyjczyk</name>
+    <name>Indonezyjka</name>
+    <name>Irak</name>
+    <name>Irakijczycy</name>
+    <name>Irakijczyk</name>
+    <name>Irakijka</name>
+    <name>Iran</name>
+    <name>Iranka</name>
+    <name>Irańczycy</name>
+    <name>Irańczyk</name>
+    <name>Irlandczycy</name>
+    <name>Irlandczyk</name>
+    <name>Irlandia Północna</name>
+    <name>Irlandka</name>
+    <name>Islandczycy</name>
+    <name>Islandczyk</name>
+    <name>Islandia</name>
+    <name>Islandka</name>
+    <name>Jamajczycy</name>
+    <name>Jamajczyk</name>
+    <name>Jamajka</name>
+    <name>Japonka</name>
+    <name>Japończycy</name>
+    <name>Japończyk</name>
+    <name>Jaśmina</name>
+    <name>Jeremiasz</name>
+    <name>Joanna</name>
+    <name>Jordanka</name>
+    <name>Jordańczycy</name>
+    <name>Jordańczyk</name>
+    <name>Jugosławia</name>
+    <name>Juliana</name>
+    <name>Julianna</name>
+    <name>Kabul</name>
+    <name>Kajmany</name>
+    <name>Kalifornia</name>
+    <name>Kambodża</name>
+    <name>Kambodżanie</name>
+    <name>Kamerun</name>
+    <name>Kamerunka</name>
+    <name>Kameruńczycy</name>
+    <name>Kameruńczyk</name>
+    <name>Kamil</name>
+    <name>Kamila</name>
+    <name>Kanada</name>
+    <name>Kanadyjczycy</name>
+    <name>Kanadyjczyk</name>
+    <name>Kanadyjka</name>
+    <name>Karina</name>
+    <name>Karla</name>
+    <name>Kasandra</name>
+    <name>Katmandu</name>
+    <name>Kazach</name>
+    <name>Kazachowie</name>
+    <name>Kazachstan</name>
+    <name>Keaton</name>
+    <name>Kirgistan</name>
+    <name>Klara</name>
+    <name>Kongo-Brazzaville</name>
+    <name>Kongo-Brazzaville</name>
+    <name>Kongo-Kinszasa</name>
+    <name>Konstantynopol</name>
+    <name>Korea Południowa</name>
+    <name>Korea Północna</name>
+    <name>Koreanka</name>
+    <name>Koreańczycy</name>
+    <name>Koreańczyk</name>
+    <name>Kristian</name>
+    <name>Krzysztof</name>
+    <name>Kuwejt</name>
+    <name>Kuwejtczycy</name>
+    <name>L.A.P.D.</name>
+    <name>LGBTQ</name>
+    <name>Laos</name>
+    <name>Laotanka</name>
+    <name>Laotańczycy</name>
+    <name>Laotańczyk</name>
+    <name>Leningrad</name>
+    <name>Leonidas</name>
+    <name>Lew Nikołajewicz Tołstoj</name>
+    <name>Libanka</name>
+    <name>Libanka</name>
+    <name>Libańczycy</name>
+    <name>Libańczyk</name>
+    <name>Libańczyk</name>
+    <name>Liberia</name>
+    <name>Liberyjczycy</name>
+    <name>Liberyjczyk</name>
+    <name>Liberyjka</name>
+    <name>Libia</name>
+    <name>Libijczycy</name>
+    <name>Liechtensteińczycy</name>
+    <name>Lila</name>
+    <name>Lilian</name>
+    <name>Liliana</name>
+    <name>Lilianna</name>
+    <name>Lilith</name>
+    <name>Linda</name>
+    <name>LinkedIn</name>
+    <name>Lisa</name>
+    <name>Litwa</name>
+    <name>Litwini</name>
+    <name>Londyn</name>
+    <name>Lucjan</name>
+    <name>Luksemburczycy</name>
+    <name>Luksemburg</name>
+    <name>Łotwa</name>
+    <name>Łotysz</name>
+    <name>Łotysze</name>
+    <name>Łotyszka</name>
+    <name>Macedonia Północna</name>
+    <name>Macedończycy</name>
+    <name>Macedończyk</name>
+    <name>Macedońscy Bułgarzy</name>
+    <name>Maciej</name>
+    <name>Madras</name>
+    <name>Magdalena</name>
+    <name>Maksim</name>
+    <name>Malawi</name>
+    <name>Malawijczycy</name>
+    <name>Malediwczycy</name>
+    <name>Malediwy</name>
+    <name>Malezja</name>
+    <name>Malezyjczycy</name>
+    <name>Mara</name>
+    <name>Marcel</name>
+    <name>Marcelo</name>
+    <name>Marcos</name>
+    <name>Marian</name>
+    <name>Mariana</name>
+    <name>Marianna</name>
+    <name>Marina</name>
+    <name>Mark</name>
+    <name>Mark Wahlberg</name>
+    <name>Marlon</name>
+    <name>Marokańczycy</name>
+    <name>Mateusz</name>
+    <name>Matias</name>
+    <name>Matylda</name>
+    <name>Mauretańczycy</name>
+    <name>Mauritianie</name>
+    <name>Maurycy</name>
+    <name>Maxim</name>
+    <name>McAlister</name>
+    <name>McCullen</name>
+    <name>McDivitt</name>
+    <name>McGrath</name>
+    <name>McLaren</name>
+    <name>Medina</name>
+    <name>Meksykanie</name>
+    <name>Melanezja</name>
+    <name>Mesjasz</name>
+    <name>Mezopotamia</name>
+    <name>Mikronezyjczycy</name>
+    <name>Mikronezyjczyk</name>
+    <name>Mila</name>
+    <name>Milana</name>
+    <name>Milo</name>
+    <name>Mina</name>
+    <name>Mira</name>
+    <name>Mongolia</name>
+    <name>Mongoł</name>
+    <name>Mongołowie</name>
+    <name>Moravia</name>
+    <name>Moria</name>
+    <name>Mozambijczycy</name>
+    <name>Mozambijczyk</name>
+    <name>Mozambijka</name>
+    <name>Mozambik</name>
+    <name>Mołdawianie</name>
+    <name>Mołdawianin</name>
+    <name>Namibijczycy</name>
+    <name>Namibijka</name>
+    <name>Natalia</name>
+    <name>Neapol</name>
+    <name>Nepalczyk</name>
+    <name>Ni-Vanuatu</name>
+    <name>Niderlandy</name>
+    <name>Niemcy</name>
+    <name>Niemcy Wschodnie</name>
+    <name>Niemcy Zachodnie</name>
+    <name>Nigeryjczycy</name>
+    <name>Nigeryjczyk</name>
+    <name>Nigeryjka</name>
+    <name>Nikaragua</name>
+    <name>Nikaraguanka</name>
+    <name>Nikaraguańczycy</name>
+    <name>Nikaraguańczyk</name>
+    <name>Noe</name>
+    <name>Noemi</name>
+    <name>Nolan</name>
+    <name>Nora</name>
+    <name>Norweg</name>
+    <name>Norwegia</name>
+    <name>Norwegowie</name>
+    <name>Norweżka</name>
+    <name>Nowa Szkocja</name>
+    <name>Nowozelandczycy</name>
+    <name>Nutella</name>
+    <name>O'Flynn</name>
+    <name>O'Jays</name>
+    <name>O'Regan</name>
+    <name>OMG</name>
+    <name>Obi-Wan Kenobi</name>
+    <name>Oceania</name>
+    <name>Oliveira</name>
+    <name>OnlyFans</name>
+    <name>Organizacja Narodów Zjednoczonych</name>
+    <name>Orion</name>
+    <name>Osaka</name>
+    <name>Pakistańczycy</name>
+    <name>Palestyna</name>
+    <name>Palestyńczycy</name>
+    <name>Panama</name>
+    <name>Panama City</name>
+    <name>Panamczycy</name>
+    <name>Paola</name>
+    <name>Papua-Nowa Gwinea</name>
+    <name>Paragwaj</name>
+    <name>Paragwajczycy</name>
+    <name>Paragwajczyk</name>
+    <name>Paragwajka</name>
+    <name>Persja</name>
+    <name>Perth</name>
+    <name>Peruwiańczycy</name>
+    <name>Piotr Czajkowski</name>
+    <name>Piotr Iljicz Czajkowski</name>
+    <name>Polinezja</name>
+    <name>Polska</name>
+    <name>Pomerania</name>
+    <name>Portorykańczycy</name>
+    <name>Południowoafrykańczycy</name>
+    <name>Południowoafrykański</name>
+    <name>Praga</name>
+    <name>Prusy</name>
+    <name>Quebec</name>
+    <name>Remington</name>
+    <name>Republika Dominikańska</name>
+    <name>Republika Gwinei Bissau</name>
+    <name>Republika Konga</name>
+    <name>Republika Południowej Afryki</name>
+    <name>Republika Środkowoafrykańska</name>
+    <name>Rey</name>
+    <name>Rio de Janeiro</name>
+    <name>Rob</name>
+    <name>Robert De Niro</name>
+    <name>Rodezja</name>
+    <name>Rodrigo</name>
+    <name>Roland</name>
+    <name>Rosa</name>
+    <name>Rose</name>
+    <name>Rosja</name>
+    <name>Rosjanie</name>
+    <name>Rosjanin</name>
+    <name>Rosjanka</name>
+    <name>Royce</name>
+    <name>Rumun</name>
+    <name>Rumuni</name>
+    <name>Rumunia</name>
+    <name>Rumunka</name>
+    <name>Rwanda</name>
+    <name>Rwandyjczycy</name>
+    <name>Sahara Zachodnia</name>
+    <name>Saint Vincent &amp; Grenadyny</name>
+    <name>Saint Vincent i Grenadyny</name>
+    <name>Saint-Pierre &amp; Miquelon</name>
+    <name>Saint-Pierre i Miquelon</name>
+    <name>Saint-Tropez</name>
+    <name>Salwador</name>
+    <name>Salwadorczycy</name>
+    <name>Salwadorczyk</name>
+    <name>Samara</name>
+    <name>Samoa Amerykańskie</name>
+    <name>Samoańczyk</name>
+    <name>Samson</name>
+    <name>San Francisco</name>
+    <name>San Marino</name>
+    <name>Sankt Petersburg</name>
+    <name>Senegal</name>
+    <name>Serbia</name>
+    <name>Serbka</name>
+    <name>Serbowie</name>
+    <name>Sergio</name>
+    <name>Siena</name>
+    <name>Sienna</name>
+    <name>Silesia</name>
+    <name>Sotho</name>
+    <name>Sołżenicyn</name>
+    <name>St. Helena</name>
+    <name>St. Louis</name>
+    <name>St. Lucia</name>
+    <name>St. Martin</name>
+    <name>Stanisław</name>
+    <name>Stany Zjednoczone</name>
+    <name>Stany Zjednoczone Ameryki</name>
+    <name>Star Trek</name>
+    <name>Sudan Południowy</name>
+    <name>Sudańczycy</name>
+    <name>Suez</name>
+    <name>Syberia</name>
+    <name>Syria</name>
+    <name>Syryjczycy</name>
+    <name>Syryjczyk</name>
+    <name>Syryjka</name>
+    <name>Szwajcaria</name>
+    <name>Szwecja</name>
+    <name>Słowacja</name>
+    <name>Słowenia</name>
+    <name>TSA</name>
+    <name>Tanzanka</name>
+    <name>Tanzańczycy</name>
+    <name>Tanzańczyk</name>
+    <name>Teheran</name>
+    <name>Terytoria Palestyńskie</name>
+    <name>Timor Wschodni</name>
+    <name>Tobagończycy</name>
+    <name>Tom</name>
+    <name>Tomas</name>
+    <name>Tołstoj</name>
+    <name>Trynidad &amp; Tobago</name>
+    <name>Trynidad i Tobago</name>
+    <name>Trynidadczycy</name>
+    <name>Tunezyjczycy</name>
+    <name>Tunezyjczyk</name>
+    <name>Tunezyjka</name>
+    <name>Turkmenistan</name>
+    <name>Turks</name>
+    <name>Turks &amp; Caicos</name>
+    <name>Turks i Caicos</name>
+    <name>Tybetanka</name>
+    <name>Tybetańczycy</name>
+    <name>Tybetańczyk</name>
+    <name>UK</name>
+    <name>UN</name>
+    <name>US</name>
+    <name>USSR</name>
+    <name>Ugandyjczycy</name>
+    <name>Ukraina</name>
+    <name>Ukrainiec</name>
+    <name>Ukrainka</name>
+    <name>Ukraińcy</name>
+    <name>Ulisses</name>
+    <name>Unia Europejska</name>
+    <name>Urugwajczycy</name>
+    <name>Uzbecy</name>
+    <name>Walentyn</name>
+    <name>Waleria</name>
+    <name>Wallis &amp; Futuna</name>
+    <name>Wallis i Futuna</name>
+    <name>Wembley</name>
+    <name>Wenezuelczycy</name>
+    <name>Wi-Fi</name>
+    <name>Wiedeń</name>
+    <name>Wielka Brytania</name>
+    <name>Wielki Kanion</name>
+    <name>Wietnamczyk</name>
+    <name>Wietnamka</name>
+    <name>Winnipeg</name>
+    <name>Witkowski</name>
+    <name>Wittenberg</name>
+    <name>Woźniacki</name>
+    <name>Wybrzeże Kości Słoniowej</name>
+    <name>Wyspa Bożego Narodzenia</name>
+    <name>Wyspa Wniebowstąpienia</name>
+    <name>Wyspy Cooka</name>
+    <name>Wyspy Dziewicze</name>
+    <name>Wyspy Heard &amp; McDonalda</name>
+    <name>Wyspy Heard i McDonalda</name>
+    <name>Wyspy Kanaryjskie</name>
+    <name>Wyspy Marshalla</name>
+    <name>Wyspy Świętego Tomasza &amp; Książęca</name>
+    <name>Wyspy Świętego Tomasza i Książęca</name>
+    <name>Węgier</name>
+    <name>Węgierka</name>
+    <name>Węgry</name>
+    <name>Węgrzy</name>
+    <name>Yokohama</name>
+    <name>Zachariasz</name>
+    <name>Zachary</name>
+    <name>Zair</name>
+    <name>Zambia</name>
+    <name>Zambijczyk</name>
+    <name>Zambijka</name>
+    <name>Zanzibar</name>
+    <name>Zara</name>
+    <name>Zimbabwe</name>
+    <name>Zjednoczone Emiraty Arabskie</name>
+    <name>Zjednoczone Królestwo</name>
+    <name>Związek Radziecki</name>
+</names>
