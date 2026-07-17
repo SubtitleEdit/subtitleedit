@@ -35,6 +35,11 @@ namespace Nikse.SubtitleEdit.Core.Cea608
         public static byte[] GetSeiData(Stream fs, ulong startPos, ulong endPos)
         {
             var data = new List<byte>();
+            if (endPos <= startPos)
+            {
+                return data.ToArray();
+            }
+
             var buffer = new byte[endPos - startPos];
             fs.Seek((long)startPos, SeekOrigin.Begin);
             fs.Read(buffer, 0, buffer.Length);
