@@ -16024,16 +16024,13 @@ public partial class MainViewModel :
 
         var dictionaryLoaded = _liveSpellCheckDictionaryFileName != null;
 
-        if (EditTextBox is TextEditorWrapper wrapper)
+        if (Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck && dictionaryLoaded)
         {
-            if (Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck && dictionaryLoaded)
-            {
-                wrapper.EnableSpellCheck(_spellCheckManager);
-            }
-            else
-            {
-                wrapper.DisableSpellCheck();
-            }
+            EditTextBox.EnableSpellCheck(_spellCheckManager);
+        }
+        else
+        {
+            EditTextBox.DisableSpellCheck();
         }
 
         SubtitleDataGridSyntaxHighlighting.SetSpellCheck(
@@ -16052,10 +16049,7 @@ public partial class MainViewModel :
     /// </summary>
     private void RefreshLiveSpellCheck()
     {
-        if (EditTextBox is TextEditorWrapper wrapper)
-        {
-            wrapper.RefreshSpellCheck();
-        }
+        EditTextBox.RefreshSpellCheck();
 
         foreach (var item in Subtitles)
         {
@@ -22653,8 +22647,8 @@ public partial class MainViewModel :
             // spelled correctly. It used to be nested inside the misspelled-word branch, so after
             // picking the right dictionary the words stopped being underlined and the menu item that
             // got you there disappeared with them.
-            if (EditTextBox is TextEditorWrapper wrapper &&
-                (Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck || Se.Settings.Appearance.SubtitleGridLiveSpellCheck) &&
+            var wrapper = EditTextBox;
+            if ((Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck || Se.Settings.Appearance.SubtitleGridLiveSpellCheck) &&
                 _lastTextEditorPointerArgs != null)
             {
                 // Insert spell check items at the beginning of the menu
