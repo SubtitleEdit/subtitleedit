@@ -82,6 +82,7 @@ public class OpenFromUrlWindow : Window
         var downloadYtDlpButton = UiUtil.MakeButton(
             string.Format(Se.Language.General.DownloadX, "yt-dlp"),
             vm.DownloadYtDlpCommand);
+        downloadYtDlpButton[!Visual.IsVisibleProperty] = new Binding(nameof(vm.IsDownloadYtDlpVisible));
         var cancelBar = UiUtil.MakeButtonBar(downloadYtDlpButton, UiUtil.MakeButtonCancel(vm.CancelCommand));
 
         var content = new StackPanel
