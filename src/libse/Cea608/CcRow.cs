@@ -95,11 +95,23 @@
         public void MoveCursor(int relPos)
         {
             var newPos = Position + relPos;
+            if (newPos < 0)
+            {
+                newPos = 0;
+            }
+            else if (newPos >= Constants.ScreenColCount)
+            {
+                newPos = Constants.ScreenColCount - 1;
+            }
+
             if (relPos > 1)
             {
                 for (var i = Position + 1; i < newPos + 1; i++)
                 {
-                    Chars[i].SetPenState(CurrentPenState);
+                    if (i >= 0 && i < Constants.ScreenColCount)
+                    {
+                        Chars[i].SetPenState(CurrentPenState);
+                    }
                 }
             }
 
@@ -117,6 +129,15 @@
             if (b >= 0x90)
             { // Extended char
                 BackSpace();
+            }
+
+            if (Position < 0)
+            {
+                Position = 0;
+            }
+            else if (Position >= Constants.ScreenColCount)
+            {
+                Position = Constants.ScreenColCount - 1;
             }
 
             var ch = GetCharForByte(b);
