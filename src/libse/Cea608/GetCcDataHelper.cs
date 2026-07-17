@@ -71,7 +71,12 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                 {
                     now = buffer[x++];
                     payloadType += now;
-                } while (now == 0xFF);
+                } while (now == 0xFF && x < buffer.Length);
+
+                if (x >= buffer.Length)
+                {
+                    break;
+                }
 
                 do
                 {
@@ -83,7 +88,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
                 {
                     var pos = x + 10;
                     var ccCount = pos + (buffer[pos - 2] & 0x1F) * 3;
-                    for (var i = pos; i < ccCount; i += 3)
+                    for (var i = pos; i < ccCount && i + 2 < buffer.Length; i += 3)
                     {
                         var b = buffer[i];
                         if ((b & 0x4) > 0)
@@ -130,6 +135,7 @@ namespace Nikse.SubtitleEdit.Core.Cea608
         private static bool IsStartOfCcDataHeader(int payloadType, byte[] buffer, int pos)
         {
             return payloadType == 4 &&
+                   pos + 7 < buffer.Length &&
                    GetUInt32(buffer, pos) == 3036688711 &&
                    GetUInt32(buffer, pos + 4) == 1094267907;
         }
