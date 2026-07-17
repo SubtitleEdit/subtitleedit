@@ -1178,7 +1178,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
         public NikseBitmap CopyRectangle(SKRect section)
         {
-            var rect = new SKRectI((int)section.Left, (int)section.Top, (int)section.Width, (int)section.Height);
+            var rect = new SKRectI((int)section.Left, (int)section.Top, (int)section.Right, (int)section.Bottom);
             return CopyRectangle(rect);
         }
 
