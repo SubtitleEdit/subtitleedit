@@ -3,13 +3,21 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Nikse.SubtitleEdit.Core.Common;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Features.Shared.PromptFileSaved;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Config;
+using Nikse.SubtitleEdit.Logic.Media;
+using Nikse.SubtitleEdit.UiLogic.Export;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickMp4Track;
 
@@ -26,21 +34,29 @@ public partial class PickMp4TrackViewModel : ObservableObject
     public bool OkPressed { get; private set; }
     public string WindowTitle { get; private set; }
 
-    private List<Trak> _mp4Tracks;
+    private readonly IFileHelper _fileHelper;
+    private readonly IWindowService _windowService;
 
-    public PickMp4TrackViewModel()
+    private List<Trak> _mp4Tracks;
+    private string _fileName;
+
+    public PickMp4TrackViewModel(IFileHelper fileHelper, IWindowService windowService)
     {
+        _fileHelper = fileHelper;
+        _windowService = windowService;
         Tracks = new ObservableCollection<Mp4TrackInfoDisplay>();
         TracksGrid = new DataGrid();
         WindowTitle = string.Empty;
         SubtitleCountText = string.Empty;
         Rows = new ObservableCollection<Mp4SubtitleCueDisplay>();
         _mp4Tracks = new List<Trak>();
+        _fileName = string.Empty;
     }
 
     public void Initialize(List<Trak> mp4Tracks, string fileName)
     {
         _mp4Tracks = mp4Tracks;
+        _fileName = fileName;
         WindowTitle = $"Pick MP4 track - {fileName}";
         foreach (var track in _mp4Tracks)
         {
@@ -65,9 +81,93 @@ public partial class PickMp4TrackViewModel : ObservableObject
         });
     }
 
+    /// <summary>
+    /// Saves the selected track to a file: text tracks as SubRip, VobSub image
+    /// tracks as Blu-ray .sup (same approach as the Matroska track picker).
+    /// </summary>
     [RelayCommand]
-    private void Export()
+    private async Task Export()
     {
+        var selectedTrack = SelectedTrack;
+        var track = selectedTrack?.Track;
+        if (Window == null || track == null)
+        {
+            return;
+        }
+
+        var suggestedFileName = Path.GetFileNameWithoutExtension(_fileName);
+
+        if (track.Mdia.IsVobSubSubtitle)
+        {
+            var fileName = await _fileHelper.PickSaveSubtitleFile(Window, ".sup", suggestedFileName, Se.Language.General.SaveFileAsTitle);
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return;
+            }
+
+            var paragraphs = track.Mdia.Minf.Stbl.GetParagraphs();
+            var subPictures = track.Mdia.Minf.Stbl.SubPictures;
+            var count = Math.Min(paragraphs.Count, subPictures.Count);
+            if (count == 0)
+            {
+                return;
+            }
+
+            // VobSub is DVD-resolution; the track header carries the real canvas
+            // size, with NTSC DVD as the fallback when it's missing.
+            var screenWidth = (int)track.Tkhd.Width;
+            var screenHeight = (int)track.Tkhd.Height;
+            if (screenWidth <= 0 || screenHeight <= 0)
+            {
+                screenWidth = 720;
+                screenHeight = 480;
+            }
+
+            var exportHandler = new ExportHandlerBluRaySup();
+            exportHandler.WriteHeader(fileName, new ImageParameter
+            {
+                ScreenWidth = screenWidth,
+                ScreenHeight = screenHeight,
+            });
+            for (var i = 0; i < count; i++)
+            {
+                var subPicture = subPictures[i];
+                var paragraph = paragraphs[i];
+                exportHandler.WriteParagraph(new ImageParameter
+                {
+                    Bitmap = subPicture.GetBitmap(null, SKColors.Transparent, SKColors.Black, SKColors.White, SKColors.Black, false),
+                    StartTime = TimeSpan.FromMilliseconds(paragraph.StartTime.TotalMilliseconds),
+                    EndTime = TimeSpan.FromMilliseconds(paragraph.EndTime.TotalMilliseconds),
+                    ScreenWidth = screenWidth,
+                    ScreenHeight = screenHeight,
+                    Index = i + 1,
+                    OverridePosition = new SKPointI(subPicture.ImageDisplayArea.Left, subPicture.ImageDisplayArea.Top),
+                });
+            }
+
+            exportHandler.WriteFooter();
+
+            _ = await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window,
+                vm => { vm.Initialize(Se.Language.General.SubtitleFileSaved, string.Format(Se.Language.General.SubtitleFileSavedToX, fileName), fileName, true, true); });
+        }
+        else
+        {
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.AddRange(track.Mdia.Minf.Stbl.GetParagraphs());
+            subtitle.Renumber();
+            var format = new SubRip();
+            var rawText = format.ToText(subtitle, string.Empty);
+
+            var fileName = await _fileHelper.PickSaveSubtitleFile(Window, format.Extension, suggestedFileName, Se.Language.General.SaveFileAsTitle);
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return;
+            }
+
+            await File.WriteAllTextAsync(fileName, rawText, Encoding.UTF8);
+            _ = await _windowService.ShowDialogAsync<PromptFileSavedWindow, PromptFileSavedViewModel>(Window,
+                vm => { vm.Initialize(Se.Language.General.SubtitleFileSaved, string.Format(Se.Language.General.SubtitleFileSavedToX, fileName), fileName, true, true); });
+        }
     }
 
     [RelayCommand]

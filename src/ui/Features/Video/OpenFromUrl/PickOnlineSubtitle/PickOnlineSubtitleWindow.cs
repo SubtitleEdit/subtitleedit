@@ -30,10 +30,12 @@ public class PickOnlineSubtitleWindow : Window
 
         var statusBar = MakeStatusBar(vm);
 
+        var buttonSave = UiUtil.MakeButton(Se.Language.General.SaveDotDotDot, vm.SaveCommand);
+        buttonSave.Bind(IsEnabledProperty, new Binding(nameof(vm.IsOkEnabled)));
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         buttonOk.Bind(IsEnabledProperty, new Binding(nameof(vm.IsOkEnabled)));
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
-        var panelButtons = UiUtil.MakeButtonBar(buttonOk, buttonCancel);
+        var panelButtons = UiUtil.MakeButtonBar(buttonSave, buttonOk, buttonCancel);
 
         var splitGrid = new Grid
         {

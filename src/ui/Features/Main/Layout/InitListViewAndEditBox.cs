@@ -1777,47 +1777,56 @@ public static partial class InitListViewAndEditBox
     {
         UiUtil.RemoveControlFromParent(vm.EditTextBox.ContentControl);
 
-        if (Se.Settings.Appearance.SubtitleTextBoxColorTags)
+        var textBox = MakeSubtitleTextBox();
+        textBox[!TextBox.TextProperty] = new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.Text))
         {
-            return MakeTextEditor(vm);
-        }
-        else
+            Mode = BindingMode.TwoWay
+        };
+        textBox[AutomationProperties.NameProperty] = Se.Language.General.Text;
+
+        textBox.TextChanged += vm.SubtitleTextChanged;
+        textBox.GotFocus += (_, _) => vm.SubtitleTextBoxGotFocus();
+        textBox.AddHandler(InputElement.PointerPressedEvent, (_, e) => vm.StoreTextEditorPointerArgs(e), RoutingStrategies.Tunnel);
+
+        SetupMacContextMenuForTextBox(textBox, vm);
+        MainHelpers.RightToLeftHelper.FollowContentDirection(textBox);
+
+        vm.EditTextBox = new TextBoxWrapper(textBox);
+        return textBox;
+    }
+
+    /// <summary>
+    /// Makes the subtitle edit text box - a <see cref="SyntaxHighlightingTextBox"/> when
+    /// "Color tags" is on, else a normal TextBox.
+    /// </summary>
+    private static TextBox MakeSubtitleTextBox()
+    {
+        var appearance = Se.Settings.Appearance;
+
+        var textBox = appearance.SubtitleTextBoxColorTags
+            ? new SyntaxHighlightingTextBox()
+            : new TextBox();
+
+        textBox.AcceptsReturn = true;
+        textBox.TextWrapping = TextWrapping.Wrap;
+        textBox.MinHeight = 92;
+        textBox.Height = 92;
+        textBox.FontSize = appearance.SubtitleTextBoxFontSize;
+        textBox.FontWeight = appearance.SubtitleTextBoxFontBold ? FontWeight.Bold : FontWeight.Normal;
+        textBox.IsUndoEnabled = false;
+        textBox.ClearSelectionOnLostFocus = false;
+
+        if (appearance.SubtitleTextBoxCenterText)
         {
-            var textBox = new TextBox
-            {
-                AcceptsReturn = true,
-                TextWrapping = TextWrapping.Wrap,
-                MinHeight = 92,
-                Height = 92,
-                [!TextBox.TextProperty] = new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.Text))
-                {
-                    Mode = BindingMode.TwoWay
-                },
-                FontSize = Se.Settings.Appearance.SubtitleTextBoxFontSize,
-                FontWeight = Se.Settings.Appearance.SubtitleTextBoxFontBold ? FontWeight.Bold : FontWeight.Normal,
-                IsUndoEnabled = false,
-                ClearSelectionOnLostFocus = false,
-                [AutomationProperties.NameProperty] = Se.Language.General.Text,
-            };
-            if (Se.Settings.Appearance.SubtitleTextBoxCenterText)
-            {
-                textBox.TextAlignment = TextAlignment.Center;
-            }
-            if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
-            {
-                textBox.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
-            }
-
-            textBox.TextChanged += vm.SubtitleTextChanged;
-            textBox.GotFocus += (_, _) => vm.SubtitleTextBoxGotFocus();
-            textBox.AddHandler(InputElement.PointerPressedEvent, (_, e) => vm.StoreTextEditorPointerArgs(e), RoutingStrategies.Tunnel);
-
-            SetupMacContextMenuForTextBox(textBox, vm);
-            MainHelpers.RightToLeftHelper.FollowContentDirection(textBox);
-
-            vm.EditTextBox = new TextBoxWrapper(textBox);
-            return textBox;
+            textBox.TextAlignment = TextAlignment.Center;
         }
+
+        if (!string.IsNullOrEmpty(appearance.SubtitleTextBoxAndGridFontName))
+        {
+            textBox.FontFamily = new FontFamily(appearance.SubtitleTextBoxAndGridFontName);
+        }
+
+        return textBox;
     }
 
     private static Border MakeTextEditor(MainViewModel vm)
@@ -1893,42 +1902,17 @@ public static partial class InitListViewAndEditBox
 
     private static Avalonia.Controls.Control MakeTextBoxOriginal(MainViewModel vm)
     {
-        if (Se.Settings.Appearance.SubtitleTextBoxColorTags)
+        var textBox = MakeSubtitleTextBox();
+        textBox[!TextBox.TextProperty] = new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.OriginalText))
         {
-            return MakeTextEditorOriginal(vm);
-        }
-        else
-        {
-            var textBox = new TextBox
-            {
-                AcceptsReturn = true,
-                TextWrapping = TextWrapping.Wrap,
-                MinHeight = 92,
-                Height = 92,
-                [!TextBox.TextProperty] = new Binding(nameof(vm.SelectedSubtitle) + "." + nameof(SubtitleLineViewModel.OriginalText))
-                {
-                    Mode = BindingMode.TwoWay
-                },
-                FontSize = Se.Settings.Appearance.SubtitleTextBoxFontSize,
-                FontWeight = Se.Settings.Appearance.SubtitleTextBoxFontBold ? FontWeight.Bold : FontWeight.Normal,
-                IsUndoEnabled = false,
-                ClearSelectionOnLostFocus = false,
-            };
-            if (Se.Settings.Appearance.SubtitleTextBoxCenterText)
-            {
-                textBox.TextAlignment = TextAlignment.Center;
-            }
-            if (!string.IsNullOrEmpty(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName))
-            {
-                textBox.FontFamily = new FontFamily(Se.Settings.Appearance.SubtitleTextBoxAndGridFontName);
-            }
+            Mode = BindingMode.TwoWay
+        };
 
-            SetupMacContextMenuForTextBox(textBox, vm);
-            MainHelpers.RightToLeftHelper.FollowContentDirection(textBox);
+        SetupMacContextMenuForTextBox(textBox, vm);
+        MainHelpers.RightToLeftHelper.FollowContentDirection(textBox);
 
-            vm.EditTextBoxOriginal = new TextBoxWrapper(textBox);
-            return textBox;
-        }
+        vm.EditTextBoxOriginal = new TextBoxWrapper(textBox);
+        return textBox;
     }
 
     private static Border MakeTextEditorOriginal(MainViewModel vm)

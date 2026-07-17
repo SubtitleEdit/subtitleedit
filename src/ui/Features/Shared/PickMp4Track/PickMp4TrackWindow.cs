@@ -6,6 +6,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Config;
 using Nikse.SubtitleEdit.Logic.ValueConverters;
 
 namespace Nikse.SubtitleEdit.Features.Shared.PickMp4Track;
@@ -31,7 +32,7 @@ public class PickMp4TrackWindow : Window
         var tracksView = MakeTracksView(vm);
         var subtitleView = MakeSubtitleView(vm);
 
-        var buttonExport = UiUtil.MakeButton("Export...", vm.ExportCommand);
+        var buttonExport = UiUtil.MakeButton(Se.Language.General.ExportDotDotDot, vm.ExportCommand);
         var buttonOk = UiUtil.MakeButtonOk(vm.OkCommand);
         var buttonCancel = UiUtil.MakeButtonCancel(vm.CancelCommand);
         var panelButtons = UiUtil.MakeButtonBar(buttonExport, buttonOk, buttonCancel);

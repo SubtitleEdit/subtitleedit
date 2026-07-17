@@ -219,7 +219,22 @@ public class SpellCheckUnderlineTransformer : DocumentColorizingTransformer
     /// </summary>
     public bool IsWordMisspelled(SpellCheckWord word, string text)
     {
-        if (!_isEnabled || _spellCheckManager == null || string.IsNullOrWhiteSpace(word.Text))
+        if (!_isEnabled || _spellCheckManager == null)
+        {
+            return false;
+        }
+
+        return IsWordMisspelled(word, text, _spellCheckManager);
+    }
+
+    /// <summary>
+    /// Word-level misspelling check with the same special-pattern skipping (numbers, URLs,
+    /// words inside HTML/ASSA tags) as the underlines - shared by the AvaloniaEdit
+    /// transformer and the syntax highlighting text box.
+    /// </summary>
+    public static bool IsWordMisspelled(SpellCheckWord word, string text, ISpellCheckManager spellCheckManager)
+    {
+        if (string.IsNullOrWhiteSpace(word.Text))
         {
             return false;
         }
@@ -229,7 +244,40 @@ public class SpellCheckUnderlineTransformer : DocumentColorizingTransformer
             return false;
         }
 
-        return !_spellCheckManager.IsWordCorrect(word, text);
+        return !spellCheckManager.IsWordCorrect(word, text);
+    }
+
+    /// <summary>
+    /// The misspelled words of <paramref name="text"/> with their positions, using the same
+    /// filtering as the underline rendering.
+    /// </summary>
+    public static List<SpellCheckWord> GetMisspelledWords(string text, ISpellCheckManager spellCheckManager)
+    {
+        var result = new List<SpellCheckWord>();
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return result;
+        }
+
+        foreach (var word in SpellCheckWordLists.Split(text))
+        {
+            if (string.IsNullOrWhiteSpace(word.Text) || word.Length < 2)
+            {
+                continue;
+            }
+
+            if (IsSpecialPattern(word, text))
+            {
+                continue;
+            }
+
+            if (!spellCheckManager.IsWordCorrect(word, text))
+            {
+                result.Add(word);
+            }
+        }
+
+        return result;
     }
 
     /// <summary>

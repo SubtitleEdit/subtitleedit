@@ -356,6 +356,11 @@ public partial class MainViewModel :
     private const double PlayheadSeekPinTimeoutMs = 600;
     private const double PlayheadResyncThresholdSeconds = 0.5; // drift beyond this = real discontinuity -> snap
     private const double PlayheadDriftCorrection = 0.05; // gentle pull toward mpv when its clock is live
+
+    // "Center video position also while paused": paused centering/selection only reacts to
+    // position *changes*, so they track the last seen play-head position between timer ticks.
+    private double _pausedCenterLastSeconds = -1;
+    private double _pausedSelectLastSeconds = -1;
     private const double PlayheadMaxCorrectionFraction = 0.2; // cap catch-up to ~1.2x speed (vs the forward step)
     private const double PlayheadMaxForwardStepSeconds = 0.05; // cap one tick's advance so a starved tick can't lurch
     private const double PlayheadFreezeHoldSeconds = 0.12; // if mpv's clock hasn't moved this long, it's frozen: hold
@@ -6443,18 +6448,34 @@ public partial class MainViewModel :
             }
         }
 
+        var ytDlpUpdatedFromUrlWindow = false;
         var result = await ShowDialogAsync<OpenFromUrlWindow, OpenFromUrlViewModel>(vm =>
         {
             // Reuse the existing install/update prompt for the window's manual
             // "Download yt-dlp" button. Pick the message by current install state
             // and own the dialogs off the URL window so they nest correctly.
-            vm.DownloadOrUpdateYtDlpRequested = () =>
+            vm.DownloadOrUpdateYtDlpRequested = async () =>
             {
                 var message = File.Exists(YtDlpDownloadService.GetFullFileName())
                     ? Se.Language.Main.YoutubeDlOutdatedDownloadNow
                     : Se.Language.Main.YoutubeDlNotInstalledDownloadNow;
-                return PromptToDownloadYtDlp(message, vm.Window);
+                if (await PromptToDownloadYtDlp(message, vm.Window))
+                {
+                    vm.IsDownloadYtDlpVisible = false;
+                    ytDlpUpdatedFromUrlWindow = true;
+                }
             };
+
+            // Only surface the "Download yt-dlp" button when the background
+            // version check finds the install outdated — with the latest version
+            // already on disk there is nothing to download.
+            outdatedCheckTask?.ContinueWith(t =>
+            {
+                if (t.Status == TaskStatus.RanToCompletion && t.Result)
+                {
+                    Dispatcher.UIThread.Post(() => vm.IsDownloadYtDlpVisible = true);
+                }
+            }, TaskScheduler.Default);
         });
 
         if (!result.OkPressed || result.SelectedMode is null)
@@ -6499,8 +6520,10 @@ public partial class MainViewModel :
 
         // If a newer yt-dlp is available, offer the upgrade — but open the video
         // regardless of the user's choice. The installed binary still works, so a
-        // declined or failed update must not abort the open.
-        if (isOutdated)
+        // declined or failed update must not abort the open. Skip the prompt when
+        // the user already updated via the URL window's button — the background
+        // check result predates that update.
+        if (isOutdated && !ytDlpUpdatedFromUrlWindow)
         {
             await PromptToDownloadYtDlp(Se.Language.Main.YoutubeDlOutdatedDownloadNow);
         }
@@ -6577,8 +6600,17 @@ public partial class MainViewModel :
             return;
         }
 
+        // The picker's "Save..." button needs a video-derived name suggestion —
+        // the downloaded files themselves are named "sub.en.vtt" in a temp dir.
+        string? suggestedFileNameBase = null;
+        if (!string.IsNullOrEmpty(_videoFileName))
+        {
+            suggestedFileNameBase = Path.GetFileNameWithoutExtension(
+                MakeSubtitleFileNameFromVideo(_videoFileName, languageCode: null));
+        }
+
         var pickerResult = await ShowDialogAsync<PickOnlineSubtitleWindow, PickOnlineSubtitleViewModel>(
-            vm => { vm.Initialize(subtitles); });
+            vm => { vm.Initialize(subtitles, suggestedFileNameBase); });
 
         if (!pickerResult.OkPressed || string.IsNullOrEmpty(pickerResult.SelectedSubtitlePath))
         {
@@ -11508,11 +11540,11 @@ public partial class MainViewModel :
         {
             if (!Se.Settings.General.IsLanguageRightToLeft())
             {
-                if (Se.Settings.Appearance.SubtitleTextBoxColorTags)
-                {
-                    Se.Settings.Appearance.SubtitleTextBoxColorTags = false;
-                    ApplySettings();
-                }
+                // if (Se.Settings.Appearance.SubtitleTextBoxColorTags)
+                // {
+                //     Se.Settings.Appearance.SubtitleTextBoxColorTags = false;
+                //     ApplySettings();
+                // }
 
                 Se.Settings.Appearance.RightToLeft = !Se.Settings.Appearance.RightToLeft;
                 IsRightToLeftEnabled = Se.Settings.Appearance.RightToLeft;
@@ -15992,16 +16024,13 @@ public partial class MainViewModel :
 
         var dictionaryLoaded = _liveSpellCheckDictionaryFileName != null;
 
-        if (EditTextBox is TextEditorWrapper wrapper)
+        if (Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck && dictionaryLoaded)
         {
-            if (Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck && dictionaryLoaded)
-            {
-                wrapper.EnableSpellCheck(_spellCheckManager);
-            }
-            else
-            {
-                wrapper.DisableSpellCheck();
-            }
+            EditTextBox.EnableSpellCheck(_spellCheckManager);
+        }
+        else
+        {
+            EditTextBox.DisableSpellCheck();
         }
 
         SubtitleDataGridSyntaxHighlighting.SetSpellCheck(
@@ -16020,10 +16049,7 @@ public partial class MainViewModel :
     /// </summary>
     private void RefreshLiveSpellCheck()
     {
-        if (EditTextBox is TextEditorWrapper wrapper)
-        {
-            wrapper.RefreshSpellCheck();
-        }
+        EditTextBox.RefreshSpellCheck();
 
         foreach (var item in Subtitles)
         {
@@ -21293,6 +21319,54 @@ public partial class MainViewModel :
     // clock so the line keeps gliding through the resume gap. Elapsed time uses Stopwatch
     // (sub-microsecond) not Environment.TickCount64 (~15 ms on Windows), whose coarse steps would
     // make the cursor advance unevenly.
+    /// <summary>
+    /// Selects (and scrolls to) the subtitle covering the play-head position, preferring the
+    /// first line under 20 seconds so a full-length karaoke/credits line doesn't hog the
+    /// selection. <paramref name="subtitle"/> must be sorted by start time. No-op when the
+    /// current selection already covers the position.
+    /// </summary>
+    private void SelectCurrentSubtitleAtPlayhead(double mediaPlayerSeconds, List<SubtitleLineViewModel> subtitle)
+    {
+        var ss = SelectedSubtitle;
+        if (ss != null && mediaPlayerSeconds >= ss.StartTime.TotalSeconds &&
+            mediaPlayerSeconds <= ss.EndTime.TotalSeconds && ss.Duration.TotalSeconds <= 20)
+        {
+            return;
+        }
+
+        SubtitleLineViewModel? firstMatch = null;
+        var matchFound = false;
+        for (var i = 0; i < subtitle.Count; i++)
+        {
+            var p = subtitle[i];
+            if (p.StartTime.TotalSeconds > mediaPlayerSeconds)
+            {
+                break; // sorted by start time, no later line can contain the position
+            }
+
+            if (mediaPlayerSeconds >= p.StartTime.TotalSeconds &&
+                mediaPlayerSeconds <= p.EndTime.TotalSeconds)
+            {
+                if (firstMatch == null)
+                {
+                    firstMatch = p;
+                }
+
+                if (p.Duration.TotalSeconds < 20)
+                {
+                    matchFound = true;
+                    SelectAndScrollToSubtitle(p);
+                    break;
+                }
+            }
+        }
+
+        if (!matchFound && firstMatch != null)
+        {
+            SelectAndScrollToSubtitle(firstMatch);
+        }
+    }
+
     private double UpdatePlayheadEstimate(VideoPlayerControl vp)
     {
         var rawPosition = vp.VideoPlayer.Position;
@@ -21617,48 +21691,26 @@ public partial class MainViewModel :
 
                     else if (SelectCurrentSubtitleWhilePlaying && _playSelectionItem == null)
                     {
-                        var ss = SelectedSubtitle;
-                        if (ss == null || mediaPlayerSeconds < ss.StartTime.TotalSeconds ||
-                            mediaPlayerSeconds > ss.EndTime.TotalSeconds || ss.Duration.TotalSeconds > 20)
-                        {
-                            SubtitleLineViewModel? firstMatch = null;
-                            var matchFound = false;
-                            for (var i = 0; i < subtitle.Count; i++)
-                            {
-                                var p = subtitle[i];
-                                if (p.StartTime.TotalSeconds > mediaPlayerSeconds)
-                                {
-                                    break; // sorted by start time, no later line can contain the position
-                                }
-
-                                if (mediaPlayerSeconds >= p.StartTime.TotalSeconds &&
-                                    mediaPlayerSeconds <= p.EndTime.TotalSeconds)
-                                {
-                                    if (firstMatch == null)
-                                    {
-                                        firstMatch = p;
-                                    }
-
-                                    if (p.Duration.TotalSeconds < 20)
-                                    {
-                                        matchFound = true;
-                                        SelectAndScrollToSubtitle(p);
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (!matchFound && firstMatch != null)
-                            {
-                                SelectAndScrollToSubtitle(firstMatch);
-                            }
-                        }
+                        SelectCurrentSubtitleAtPlayhead(mediaPlayerSeconds, subtitle);
                     }
                 }
                 else
                 {
                     Optris.Icons.Avalonia.Attached.SetIcon(ButtonWaveformPlay, IconNames.Play);
                     ResetPlaySelection();
+
+                    // "Center also while paused" scrub-editing (SE 4's locked mode): while the user
+                    // wheels through the waveform, keep selecting the line under the centered cursor.
+                    // Only react to position *changes* — otherwise this would immediately steal back
+                    // the selection when the user picks a different line in the grid while paused.
+                    if (WaveformCenter && Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused &&
+                        SelectCurrentSubtitleWhilePlaying &&
+                        Math.Abs(mediaPlayerSeconds - _pausedSelectLastSeconds) > 0.001)
+                    {
+                        SelectCurrentSubtitleAtPlayhead(mediaPlayerSeconds, subtitle);
+                    }
+
+                    _pausedSelectLastSeconds = mediaPlayerSeconds;
                 }
 
                 _avLastScrolling = isAvScrolloing;
@@ -21701,11 +21753,19 @@ public partial class MainViewModel :
                 // In "center waveform on current position" mode the waveform scrolls to keep the cursor
                 // centered. Drive that scroll here at ~60 fps, in lockstep with the cursor, so it glides
                 // smoothly instead of jumping in 20 fps steps from the heavy 50 ms timer.
-                if (WaveformCenter && vp.IsPlaying && av.WavePeaks != null)
+                // With "center also while paused" on, paused position changes (wheel scrub, waveform
+                // clicks, shortcuts) recenter too — but only on actual changes, so the user can still
+                // scroll around the waveform freely while the play-head is at rest.
+                var centerPausedChange = WaveformCenter && !vp.IsPlaying &&
+                                         Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused &&
+                                         Math.Abs(est - _pausedCenterLastSeconds) > 0.001;
+                if (WaveformCenter && av.WavePeaks != null && (vp.IsPlaying || centerPausedChange))
                 {
                     var halfSeconds = (av.EndPositionSeconds - av.StartPositionSeconds) / 2.0;
                     av.StartPositionSeconds = Math.Max(0, est - halfSeconds);
                 }
+
+                _pausedCenterLastSeconds = est;
             }
         };
         _cursorTimer.Start();
@@ -22587,8 +22647,8 @@ public partial class MainViewModel :
             // spelled correctly. It used to be nested inside the misspelled-word branch, so after
             // picking the right dictionary the words stopped being underlined and the menu item that
             // got you there disappeared with them.
-            if (EditTextBox is TextEditorWrapper wrapper &&
-                (Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck || Se.Settings.Appearance.SubtitleGridLiveSpellCheck) &&
+            var wrapper = EditTextBox;
+            if ((Se.Settings.Appearance.SubtitleTextBoxLiveSpellCheck || Se.Settings.Appearance.SubtitleGridLiveSpellCheck) &&
                 _lastTextEditorPointerArgs != null)
             {
                 // Insert spell check items at the beginning of the menu

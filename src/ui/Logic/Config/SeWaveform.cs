@@ -9,6 +9,11 @@ public class SeWaveform
 {
     public bool ShowToolbar { get; set; }
     public bool CenterVideoPosition { get; set; }
+
+    // SE 4 parity for the "Center" toggle: keep the play-head centered (and keep
+    // "select current subtitle" working) also while paused, so mouse-wheel
+    // scrubbing walks the waveform as one continuous strip.
+    public bool CenterVideoPositionAlsoWhenPaused { get; set; }
     public bool DrawGridLines { get; set; }
     public bool FocusTextBoxAfterInsertNew { get; set; }
     public int SpectrogramCombinedWaveformHeight { get; set; }

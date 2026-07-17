@@ -707,9 +707,15 @@ public class AudioVisualizer : Control
                 newVideoPosition = WavePeaks.LengthInSeconds;
             }
 
-            // Follow the play-head: scroll the view only when it would leave the visible range.
+            // Follow the play-head: with center-also-while-paused the view scrolls on every
+            // step so the cursor stays pinned to the middle (SE 4's locked/center mode) and
+            // the waveform reads as one continuous strip; otherwise scroll only when the
+            // play-head would leave the visible range.
             var visibleSeconds = EndPositionSeconds - StartPositionSeconds;
-            if (visibleSeconds > 0 && (newVideoPosition < StartPositionSeconds || newVideoPosition > EndPositionSeconds))
+            var keepCentered = Se.Settings.Waveform.CenterVideoPosition &&
+                               Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused;
+            if (visibleSeconds > 0 &&
+                (keepCentered || newVideoPosition < StartPositionSeconds || newVideoPosition > EndPositionSeconds))
             {
                 var followStart = newVideoPosition - visibleSeconds / 2;
                 StartPositionSeconds = followStart < 0 ? 0 : followStart;

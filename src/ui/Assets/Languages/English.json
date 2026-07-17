@@ -2503,6 +2503,7 @@
       "errorBackgroundColor": "Error background color",
       "waveformDrawGridLines": "Draw grid lines",
       "waveformCenterVideoPosition": "Center video position",
+      "waveformCenterVideoPositionAlsoWhenPaused": "Center video position also while paused",
       "waveformShowToolbar": "Show toolbar",
       "waveformShowToolbarEdit": "Edit toolbar...",
       "waveformShowToolbarEditLabel": "Toolbar items",

@@ -3,8 +3,20 @@ Subtitle Edit Changelog
 
 -----------------------------------------------------------------------------------------------------
 
-v5.1.0-rc5 (TBD)
+v5.1.0-rc6 (17th of July 2026)
 
+* Waveform: new option "Center video position also while paused" (Settings - Waveform/spectrogram) - restores SE4's center/lock mode: with "Mouse-wheel sets video position" on, scrubbing keeps the cursor centered so the waveform scrolls as one continuous strip, and "select current subtitle" also applies while scrubbing paused - thx Asztec00
+* Open video from URL: the "Download yt-dlp" button is now only shown when an update is actually available - it was always visible, even with the latest yt-dlp installed
+* Open video from URL: add "Save..." button to the "Pick subtitle to download" window - saves the selected downloaded subtitle file as-is to a location of your choice
+* MP4 track picker: the "Export..." button now works - text tracks save as SubRip, VobSub image tracks export to Blu-ray .sup
+
+-----------------------------------------------------------------------------------------------------
+
+v5.1.0-rc5 (17th of July 2026)
+
+* Subtitle text box: tag coloring (HTML/ASSA) now uses a new native text box - same colors as before, but centering, IME/CJK input, right-to-left and the context menu work exactly like the normal text box, and toggling right-to-left no longer turns off tag coloring
+* Subtitle text box: fix crash while typing an unterminated attribute quote (e.g. <font color=") with tag coloring enabled
+* Source view: add context menu to the text editor - thx pdjdev
 * Point sync via other subtitle: sync points are now chronologically sorted, and setting a point on a line that already has one re-points it instead of adding a duplicate - thx fraternl
 * Point sync via other subtitle: fix deleting a sync point - the context menu now shows Delete (and Delete/Backspace on the list works) instead of silently removing the point on right-click - thx fraternl
 * Point sync via other subtitle: clicking a line in the left list scrolls the other subtitle's list to the matching time (selection is left untouched) - thx fraternl

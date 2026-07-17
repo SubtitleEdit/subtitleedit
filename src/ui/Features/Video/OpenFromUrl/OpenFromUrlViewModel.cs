@@ -18,6 +18,13 @@ public partial class OpenFromUrlViewModel : ObservableObject
     [ObservableProperty] private string _url;
     [ObservableProperty] private bool _downloadSubtitles;
 
+    /// <summary>
+    /// The "Download yt-dlp" button is hidden unless the caller's background
+    /// version check finds yt-dlp missing or outdated — an up-to-date install
+    /// has nothing to download.
+    /// </summary>
+    [ObservableProperty] private bool _isDownloadYtDlpVisible;
+
     public Window? Window { get; set; }
 
     public OpenFromUrlMode? SelectedMode { get; private set; }
