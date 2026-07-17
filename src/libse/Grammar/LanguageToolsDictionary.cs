@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.Grammar
                 new LanguageToolsDictionary
                 {
                     TwoLetterIsoCode = "it",
-                    Url = "https://github.com/languagetool-org/languagetool/raw/master/languagetool-language-modules/lt/src/main/resources/org/languagetool/rules/lt/grammar.xml",
+                    Url = "https://github.com/languagetool-org/languagetool/raw/master/languagetool-language-modules/it/src/main/resources/org/languagetool/rules/it/grammar.xml",
                     LocalName = "it.xml"
                 }
             };
