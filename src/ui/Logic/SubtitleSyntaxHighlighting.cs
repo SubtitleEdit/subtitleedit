@@ -8,13 +8,15 @@ namespace Nikse.SubtitleEdit.Logic;
 
 public partial class SubtitleSyntaxHighlighting : DocumentColorizingTransformer
 {
-    // Pastel color scheme for HTML and ASS/SSA syntax highlighting
-    private static readonly Color ElementColor = Color.FromRgb(183, 89, 155);    // Soft purple - HTML element tags (e.g., <div>, <span>) / ASS tag names
-    private static readonly Color AttributeColor = Color.FromRgb(86, 156, 214);  // Soft blue - HTML attribute names (e.g., class, id, style)
-    private static readonly Color CommentColor = Color.FromRgb(106, 153, 85);    // Soft green - HTML comments (<!-- -->)
-    private static readonly Color CharsColor = Color.FromRgb(128, 128, 128);     // Gray - delimiters and special chars (<, >, ", ', =, {, }, \)
-    private static readonly Color ValuesColor = Color.FromRgb(206, 145, 120);    // Soft orange/peach - attribute values (e.g., "myclass") / ASS tag values
-    private static readonly Color StyleColor = Color.FromRgb(156, 220, 254);     // Light cyan - CSS property values in style attribute
+    // Pastel color scheme for HTML and ASS/SSA syntax highlighting.
+    // Internal: SubtitleSyntaxTokenizer uses the same scheme so the SyntaxHighlightingTextBox
+    // matches this AvaloniaEdit colorizer.
+    internal static readonly Color ElementColor = Color.FromRgb(183, 89, 155);    // Soft purple - HTML element tags (e.g., <div>, <span>) / ASS tag names
+    internal static readonly Color AttributeColor = Color.FromRgb(86, 156, 214);  // Soft blue - HTML attribute names (e.g., class, id, style)
+    internal static readonly Color CommentColor = Color.FromRgb(106, 153, 85);    // Soft green - HTML comments (<!-- -->)
+    internal static readonly Color CharsColor = Color.FromRgb(128, 128, 128);     // Gray - delimiters and special chars (<, >, ", ', =, {, }, \)
+    internal static readonly Color ValuesColor = Color.FromRgb(206, 145, 120);    // Soft orange/peach - attribute values (e.g., "myclass") / ASS tag values
+    internal static readonly Color StyleColor = Color.FromRgb(156, 220, 254);     // Light cyan - CSS property values in style attribute
 
     // Named HTML colors mapping
     private static readonly Dictionary<string, Color> NamedColors = new(StringComparer.OrdinalIgnoreCase)
@@ -169,7 +171,7 @@ public partial class SubtitleSyntaxHighlighting : DocumentColorizingTransformer
         { "yellowgreen", Color.FromRgb(154, 205, 50) }
     };
 
-    private static Color? TryParseColor(string colorValue)
+    internal static Color? TryParseColor(string colorValue)
     {
         if (string.IsNullOrWhiteSpace(colorValue))
         {
@@ -224,7 +226,7 @@ public partial class SubtitleSyntaxHighlighting : DocumentColorizingTransformer
         return null;
     }
 
-    private static Color? TryParseAssColor(string colorValue)
+    internal static Color? TryParseAssColor(string colorValue)
     {
         if (string.IsNullOrWhiteSpace(colorValue))
         {
@@ -532,10 +534,12 @@ public partial class SubtitleSyntaxHighlighting : DocumentColorizingTransformer
                         valueColor = TryParseColor(valueContent);
                     }
 
-                    // If not a color attribute or color parsing failed, use default logic
+                    // If not a color attribute or color parsing failed, use default logic.
+                    // Search valueContent, not a computed count on text - with an unterminated
+                    // quote at the end of the line the count went negative and IndexOf threw.
                     if (valueColor == null)
                     {
-                        var hasColon = text.IndexOf(':', i + 1, valueEnd - i - 2) != -1;
+                        var hasColon = valueContent.Contains(':');
                         valueColor = hasColon ? StyleColor : ValuesColor;
                     }
 

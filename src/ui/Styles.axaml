@@ -1,6 +1,7 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:logic="clr-namespace:Nikse.SubtitleEdit.Logic;assembly=SubtitleEdit">
+        xmlns:logic="clr-namespace:Nikse.SubtitleEdit.Logic;assembly=SubtitleEdit"
+        xmlns:seControls="clr-namespace:Nikse.SubtitleEdit.Controls;assembly=SubtitleEdit">
     <!-- Windows-standard scroll bar for every grid: trough click pages, shift+click jumps (#12438). -->
     <Style Selector="DataGrid">
         <Setter Property="logic:DataGridScrollBarBehavior.EnableTroughPaging" Value="True"/>
@@ -45,5 +46,100 @@
     </Style>
     <Style Selector="ListBox:not(:focus-within) ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource ListBoxItemSelectedUnfocusedBackgroundBrush}"/>
+    </Style>
+
+    <!-- SyntaxHighlightingTextBox: a copy of the Fluent TextBox template (Avalonia 12.1.0) with the
+         default TextPresenter replaced by SyntaxHighlightingTextPresenter. Part names are kept so the
+         Fluent focus/pointerover/disabled styles still target this template. Compare with
+         https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.Themes.Fluent/Controls/TextBox.xaml
+         when upgrading Avalonia. -->
+    <Style Selector=":is(TextBox):syntaxHighlighting">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <DataValidationErrors>
+                    <Panel>
+                        <Border Name="PART_BorderElement"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                MinWidth="{TemplateBinding MinWidth}"
+                                MinHeight="{TemplateBinding MinHeight}">
+                        </Border>
+
+                        <Border Margin="{TemplateBinding BorderThickness}">
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <ContentPresenter Grid.Column="0"
+                                                  Grid.ColumnSpan="1"
+                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  Content="{TemplateBinding InnerLeftContent}"/>
+                                <DockPanel x:Name="PART_InnerDockPanel"
+                                           Grid.Column="1"
+                                           Grid.ColumnSpan="1"
+                                           Margin="{TemplateBinding Padding}">
+                                    <TextBlock Name="PART_FloatingPlaceholder"
+                                               Foreground="{TemplateBinding PlaceholderForeground}"
+                                               IsVisible="False"
+                                               Text="{TemplateBinding PlaceholderText}"
+                                               DockPanel.Dock="Top" />
+
+                                    <ScrollViewer Name="PART_ScrollViewer"
+                                                  HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
+                                                  VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}"
+                                                  IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"
+                                                  AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
+                                                  BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}">
+                                        <Panel>
+                                            <TextBlock Name="PART_Placeholder"
+                                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                                       Opacity="{DynamicResource TextControlPlaceholderOpacity}"
+                                                       Text="{TemplateBinding PlaceholderText}"
+                                                       TextAlignment="{TemplateBinding TextAlignment}"
+                                                       TextWrapping="{TemplateBinding TextWrapping}"
+                                                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                                <TextBlock.IsVisible>
+                                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                                        <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}"/>
+                                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}"/>
+                                                    </MultiBinding>
+                                                </TextBlock.IsVisible>
+                                            </TextBlock>
+
+                                            <seControls:SyntaxHighlightingTextPresenter Name="PART_TextPresenter"
+                                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                                           TextAlignment="{TemplateBinding TextAlignment}"
+                                                           TextWrapping="{TemplateBinding TextWrapping}"
+                                                           LineHeight="{TemplateBinding LineHeight}"
+                                                           LetterSpacing="{TemplateBinding LetterSpacing}"
+                                                           PasswordChar="{TemplateBinding PasswordChar}"
+                                                           RevealPassword="{TemplateBinding RevealPassword}"
+                                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                                           CaretBrush="{TemplateBinding CaretBrush}"
+                                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                        </Panel>
+                                        <ScrollViewer.Styles>
+                                            <Style Selector="ScrollContentPresenter#PART_ContentPresenter">
+                                                <Setter Property="Cursor" Value="IBeam" />
+                                            </Style>
+                                        </ScrollViewer.Styles>
+                                    </ScrollViewer>
+                                </DockPanel>
+                                <ContentPresenter Grid.Column="2"
+                                                  Grid.ColumnSpan="1"
+                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  Content="{TemplateBinding InnerRightContent}"/>
+                            </Grid>
+                        </Border>
+                    </Panel>
+                </DataValidationErrors>
+            </ControlTemplate>
+        </Setter>
     </Style>
 </Styles>
