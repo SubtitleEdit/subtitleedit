@@ -361,6 +361,10 @@ public partial class MainViewModel :
     // position *changes*, so they track the last seen play-head position between timer ticks.
     private double _pausedCenterLastSeconds = -1;
     private double _pausedSelectLastSeconds = -1;
+
+    // The waveform position that was right-clicked when the waveform context menu opened -
+    // used to anchor "Insert subtitle file at video position..." at the clicked spot.
+    private double? _waveformContextMenuSeconds;
     private const double PlayheadMaxCorrectionFraction = 0.2; // cap catch-up to ~1.2x speed (vs the forward step)
     private const double PlayheadMaxForwardStepSeconds = 0.05; // cap one tick's advance so a starved tick can't lurch
     private const double PlayheadFreezeHoldSeconds = 0.12; // if mpv's clock hasn't moved this long, it's frozen: hold
@@ -3345,8 +3349,29 @@ public partial class MainViewModel :
             return;
         }
 
-        var videoPosition = vp.Position;
+        // Anchor the file at the right-clicked waveform position when opened from the waveform
+        // context menu; the current video position is the fallback (SE4 behavior).
+        var videoPosition = _waveformContextMenuSeconds ?? vp.Position;
+
+        // SE4 parity: inserting mid-video may collide with existing lines - warn instead of
+        // silently interleaving overlapping lines.
         var firstStartTime = subtitle.Paragraphs[0].StartTime.TotalMilliseconds;
+        var hasOverlap = subtitle.Paragraphs.Select(p => new
+        {
+            Start = p.StartTime.TotalMilliseconds - firstStartTime + videoPosition * 1000.0,
+            End = p.EndTime.TotalMilliseconds - firstStartTime + videoPosition * 1000.0,
+        }).Any(n => Subtitles.Any(p =>
+            n.Start < p.EndTime.TotalMilliseconds && n.End > p.StartTime.TotalMilliseconds));
+        if (hasOverlap)
+        {
+            var answer = await MessageBox.Show(Window, Se.Language.General.Warning,
+                Se.Language.Main.PromptInsertSubtitleOverlap, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (answer != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
+
         foreach (var p in subtitle.Paragraphs)
         {
             var newParagraph = new SubtitleLineViewModel(p, SelectedSubtitleFormat);
@@ -3385,11 +3410,15 @@ public partial class MainViewModel :
             return;
         }
 
-        // Shift the inserted lines so the first one starts 1 second after the selected (last) line,
-        // mirroring the binary-edit "insert subtitle after current line" behaviour and avoiding overlap.
+        // Keep the file's own time codes so pre-timed subtitles land at their real positions
+        // (SE4 behavior - e.g. inserting finished song lyrics midway through a concert video,
+        // see discussion #11744). Only shift when the file would start before the selected line
+        // ends, and then just enough to clear it plus the minimum gap.
         var oldLastTime = selectedItem.EndTime.TotalMilliseconds;
         var newFirstTime = subtitle.Paragraphs[0].StartTime.TotalMilliseconds;
-        var timeOffset = oldLastTime - newFirstTime + 1000;
+        var timeOffset = newFirstTime < oldLastTime
+            ? oldLastTime - newFirstTime + Se.Settings.General.MinimumBetweenLines.Milliseconds
+            : 0;
         foreach (var p in subtitle.Paragraphs)
         {
             var newParagraph = new SubtitleLineViewModel(p, SelectedSubtitleFormat);
@@ -19345,8 +19374,9 @@ public partial class MainViewModel :
             IsSubtitleGridDataMenuVisible = true;
             IsMergeWithNextOrPreviousVisible = SubtitleGrid.SelectedItems.Count == 1;
             IsInsertLineNoSelectionVisible = false;
-            // Only on the last line, single selection — like SE4's "insert subtitle file after this line".
-            IsInsertSubtitleFileAfterLineVisible = SubtitleGrid.SelectedItems.Count == 1 && idx == count - 1;
+            // Any single selected line, not only the last - a pre-timed file keeps its own time
+            // codes, so inserting midway is a normal workflow (discussion #11744).
+            IsInsertSubtitleFileAfterLineVisible = SubtitleGrid.SelectedItems.Count == 1;
 
             if (IsFormatAssa || IsFormatSsa)
             {
@@ -22772,6 +22802,10 @@ public partial class MainViewModel :
 
     public void AudioVisualizerFlyoutMenuOpening(object sender, AudioVisualizer.ContextEventArgs e)
     {
+        // Remembered so "Insert subtitle file at video position..." anchors the file at the
+        // right-clicked waveform position instead of wherever the play-head happens to be.
+        _waveformContextMenuSeconds = e.PositionInSeconds;
+
         MenuItemAudioVisualizerInsertNewSelection.IsVisible = false;
         MenuItemAudioVisualizerPasteNewSelection.IsVisible = false;
         MenuIteminsertSubtitleFileAtPositionMenuItem.IsVisible = false;
@@ -22805,12 +22839,10 @@ public partial class MainViewModel :
         var selectedIdx = SubtitleGrid.SelectedIndex;
         var isLast = selectedIdx >= 0 && selectedIdx == Subtitles.Count - 1;
 
+        // Available anywhere on the timeline, not only past the last subtitle - the insert
+        // warns about overlaps and pre-timed files are commonly inserted midway (#11744).
         var vp = GetVideoPlayerControl();
-        if (vp != null && !string.IsNullOrEmpty(_videoFileName))
-        {
-            var lastSeconds = Subtitles.LastOrDefault()?.EndTime.TotalSeconds ?? 0;
-            MenuIteminsertSubtitleFileAtPositionMenuItem.IsVisible = vp.Position > lastSeconds;
-        }
+        MenuIteminsertSubtitleFileAtPositionMenuItem.IsVisible = vp != null && !string.IsNullOrEmpty(_videoFileName);
 
         if (subtitlesAtPosition.Count > 0)
         {
