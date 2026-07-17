@@ -1,7 +1,7 @@
 ﻿{
   "title": "Subtitle Edit",
   "version": "v5.1.0-beta15",
-  "translatedBy": "Adam Malich - 13.07.2026",
+  "translatedBy": "Adam Malich - 17.07.2026",
   "cultureName": "pl-PL",
   "general": {
     "abort": "Przerwij",
@@ -1699,11 +1699,11 @@
     },
     "changeCasing": {
       "title": "Zmień pisownię",
-      "fixNames": "Popraw nazwy własne/nazwiska/imiona",
-      "extraNames": "Dodatkowe nazwy własne/nazwiska/imiona",
+      "fixNames": "Popraw nazwy własne",
+      "extraNames": "Dodatkowe nazwy własne",
       "enterExtraNamesHint": "Wpisz dodatkowe nazwy do poprawienia, oddzielając je przecinkami",
       "onlyFixUppercaseLines": "Popraw tylko linie pisane WIELKĄ LITERĄ",
-      "fixNamesOnly": "Tylko nazwy własne/nazwiska/imiona",
+      "fixNamesOnly": "Tylko nazwy własne",
       "allUppercase": "WSZYSTKIE WIELKIE LITERY",
       "allLowercase": "wszystkie małe litery"
     },
@@ -2102,7 +2102,7 @@
       "preparingMergeDotDotDot": "Przygotowywanie łączenia...",
       "importVoiceDotDotDot": "Importuj głos...",
       "voiceImportSuccessTitle": "Głos zaimportowano",
-      "voiceXImported": "Głos '{0}' z powodzeniem zaimportowano",
+      "voiceXImported": "Głos '{0}' został pomyślnie zaimportowany",
       "dropAudioFileHereToImportVoice": "Przeciągnij tutaj plik audio, aby zaimportować głos",
       "dropAudioFileHereHint": ".wav lub .mp3",
       "voiceCloneTranscriptTitle": "Wstaw transkrypcję audio (wymagane do klonowania głosu)",
@@ -2503,6 +2503,7 @@
       "errorBackgroundColor": "Kolor tła błędu",
       "waveformDrawGridLines": "Rysuj linie siatki",
       "waveformCenterVideoPosition": "Wyśrodkuj pozycję wideo",
+      "waveformCenterVideoPositionAlsoWhenPaused": "Wyśrodkuj pozycję wideo również podczas wstrzymania",
       "waveformShowToolbar": "Pokaż pasek narzędzi",
       "waveformShowToolbarEdit": "Edytuj pasek narzędzi...",
       "waveformShowToolbarEditLabel": "Elementy paska narzędzi",
