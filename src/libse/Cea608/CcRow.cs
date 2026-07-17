@@ -2,7 +2,28 @@
 {
     public class CcRow
     {
-        public int Position { get; set; }
+        private int _position;
+
+        // Clamp to the Chars column range so an out-of-range value (e.g. a malformed PAC indent) cannot index Chars out of bounds
+        public int Position
+        {
+            get => _position;
+            set
+            {
+                if (value < 0)
+                {
+                    _position = 0;
+                }
+                else if (value >= Constants.ScreenColCount)
+                {
+                    _position = Constants.ScreenColCount - 1;
+                }
+                else
+                {
+                    _position = value;
+                }
+            }
+        }
 
         public PenState CurrentPenState = new PenState();
 
