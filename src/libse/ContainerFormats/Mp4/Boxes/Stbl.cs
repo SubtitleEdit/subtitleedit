@@ -62,6 +62,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                         for (var i = 0; i < totalEntries; i++)
                         {
+                            if (8 + i * 4 + 3 >= Buffer.Length)
+                            {
+                                break;
+                            }
+
                             var offset = GetUInt(8 + i * 4);
                             ChunkOffsets.Add(offset);
                         }
@@ -78,6 +83,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                         for (var i = 0; i < totalEntries; i++)
                         {
+                            if (8 + i * 8 + 7 >= Buffer.Length)
+                            {
+                                break;
+                            }
+
                             var offset = GetUInt64(8 + i * 8);
                             ChunkOffsets.Add(offset);
                         }
@@ -108,14 +118,26 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     Buffer = new byte[Size - 4];
                     fs.Read(Buffer, 0, Buffer.Length);
                     int version = Buffer[0];
+                    // Guard against a malformed run-length (sampleCount up to 0xFFFFFFFF) expanding into an OOM-sized list
+                    const int maxSstsEntries = 5_000_000;
                     var numberOfSampleTimes = GetUInt(4);
                     for (var i = 0; i < numberOfSampleTimes; i++)
                     {
+                        if (12 + i * 8 + 3 >= Buffer.Length)
+                        {
+                            break;
+                        }
+
                         var sampleCount = GetUInt(8 + i * 8);
                         var sampleDelta = GetUInt(12 + i * 8);
-                        for (var j = 0; j < sampleCount; j++)
+                        for (var j = 0; j < sampleCount && Ssts.Count < maxSstsEntries; j++)
                         {
                             Ssts.Add(sampleDelta);
+                        }
+
+                        if (Ssts.Count >= maxSstsEntries)
+                        {
+                            break;
                         }
                     }
                 }
