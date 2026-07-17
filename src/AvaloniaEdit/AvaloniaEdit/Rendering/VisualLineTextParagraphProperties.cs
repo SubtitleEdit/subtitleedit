@@ -30,17 +30,17 @@ namespace AvaloniaEdit.Rendering
 		internal double indent;
 		internal bool firstLineInParagraph;
 		internal FlowDirection flowDirection = FlowDirection.LeftToRight;
+		internal TextAlignment textAlignment = TextAlignment.Left;
 
 		public override double DefaultIncrementalTab => tabSize;
 
 		// FlowDirection is propagated from the owning TextView so Avalonia's TextFormatter runs the
-		// Unicode bidi algorithm and reorders runs for RTL. Was hardcoded to LeftToRight, which - with
-		// the framework's automatic mirror transform for a RightToLeft control - rendered RTL text
-		// reversed (AvaloniaEdit#401). TextAlignment follows the direction so a right-to-left line
-		// starts at the right edge.
+		// Unicode bidi algorithm and reorders runs for RTL. Was hardcoded to LeftToRight, which
+		// rendered RTL text reversed (AvaloniaEdit#401). textAlignment comes from
+		// TextView.GetParagraphTextAlignment; the formatter resolves Start/End against the
+		// paragraph flow direction, so the default Start right-aligns right-to-left lines.
 		public override FlowDirection FlowDirection => flowDirection;
-		public override TextAlignment TextAlignment =>
-			flowDirection == FlowDirection.RightToLeft ? TextAlignment.Right : TextAlignment.Left;
+		public override TextAlignment TextAlignment => textAlignment;
 		public override double LineHeight => double.NaN;
 		public override bool FirstLineInParagraph => firstLineInParagraph;
 		public override TextRunProperties DefaultTextRunProperties => defaultTextRunProperties;

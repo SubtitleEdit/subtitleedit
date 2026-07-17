@@ -152,7 +152,10 @@ internal static class RightToLeftHelper
         }
         else if (visual is TextArea textArea)
         {
-            textArea.FlowDirection = GetContentDirection(textArea.Document?.Text, flowDirection);
+            // On the TextView, not the TextArea: the TextView opts out of Avalonia's automatic
+            // mirror transform and lets the text formatter handle right-to-left; a RightToLeft
+            // TextArea would reintroduce that mirror over the whole editor.
+            textArea.TextView.FlowDirection = GetContentDirection(textArea.Document?.Text, flowDirection);
         }
 
         foreach (var child in visual.GetVisualChildren())

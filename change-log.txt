@@ -6,6 +6,9 @@ Subtitle Edit Changelog
 v5.1.0-rc5 (TBD)
 
 * Fix right-to-left text (Arabic, Hebrew, ...) rendering reversed in the subtitle text box - the embedded editor now lays out RTL lines correctly
+* Right-to-left mode: the subtitle text box now right-aligns text (and supports centered text), with correct mouse selection, caret placement and selection highlighting
+* Right-to-left mode: formatting tags like {\an8} and </i> display literally instead of bidi-shuffled ("{an8\}"); click a tag to edit it character by character
+* Subtitle text box: IME preedit (composition) text for Chinese/Japanese/Korean input is now shown inline at the caret
 
 * Point sync via other subtitle: sync points are now chronologically sorted, and setting a point on a line that already has one re-points it instead of adding a duplicate - thx fraternl
 * Point sync via other subtitle: fix deleting a sync point - the context menu now shows Delete (and Delete/Backspace on the list works) instead of silently removing the point on right-click - thx fraternl

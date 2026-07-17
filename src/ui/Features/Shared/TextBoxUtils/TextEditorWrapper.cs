@@ -18,9 +18,6 @@ public class TextEditorWrapper : ITextBoxWrapper
     private readonly TextEditor _textEditor;
     private readonly Border _border;
     private readonly SpellCheckUnderlineTransformer _spellCheckTransformer;
-    private readonly SubtitleTextAlignmentTransformer _alignmentTransformer;
-    private EventHandler? _alignmentUpdateHandler;
-    private TextAlignment _currentAlignment = TextAlignment.Left;
     private int? _wordNavAnchor;
 
     public bool HasFocus { get; set; }
@@ -34,17 +31,10 @@ public class TextEditorWrapper : ITextBoxWrapper
         _spellCheckTransformer.SetTextView(_textEditor.TextArea.TextView);
         _textEditor.TextArea.TextView.LineTransformers.Add(_spellCheckTransformer);
 
-        _alignmentTransformer = new SubtitleTextAlignmentTransformer();
-        _textEditor.TextArea.TextView.LineTransformers.Add(_alignmentTransformer);
-
-        // Update alignment when text changes
-        _textEditor.TextChanged += (_, _) =>
-        {
-            if (_currentAlignment != TextAlignment.Left)
-            {
-                UpdateAlignmentTransform();
-            }
-        };
+        // In right-to-left mode, render formatting tags like {\an8} and </i> literally instead
+        // of letting the bidi algorithm shuffle their punctuation (display only, text untouched).
+        // The tag under the caret opens into plain text so it stays editable.
+        _textEditor.TextArea.TextView.ElementGenerators.Add(new RtlTagIsolationGenerator(_textEditor.TextArea));
 
         // Fix Option+Right/Left (Alt on macOS) word navigation to match standard TextBox behavior:
         // AvaloniaEdit moves to start of next word; macOS convention is end of current word.
@@ -235,98 +225,12 @@ public class TextEditorWrapper : ITextBoxWrapper
 
     public void SetAlignment(TextAlignment alignment)
     {
-        _alignmentTransformer.Alignment = alignment;
-        _currentAlignment = alignment;
-
-        var textArea = _textEditor.TextArea;
-        var textView = textArea.TextView;
-
-        // Remove old handler if exists
-        if (_alignmentUpdateHandler != null)
-        {
-            textView.LayoutUpdated -= _alignmentUpdateHandler;
-            _alignmentUpdateHandler = null;
-        }
-
-        // Keep the TextView and TextArea stretched to ensure proper hit testing
-        textArea.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
-        textView.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
-
-        // For centered or right alignment, use RenderTransform on TextArea
-        if (alignment == TextAlignment.Center || alignment == TextAlignment.Right)
-        {
-            _alignmentUpdateHandler = (_, _) =>
-            {
-                UpdateAlignmentTransform();
-            };
-
-            textView.LayoutUpdated += _alignmentUpdateHandler;
-
-            // Trigger initial update
-            UpdateAlignmentTransform();
-        }
-        else
-        {
-            textArea.RenderTransform = null;
-        }
-
-        textView.Redraw();
-    }
-
-    private void UpdateAlignmentTransform()
-    {
-        var textArea = _textEditor.TextArea;
-        var textView = textArea.TextView;
-
-        if (textView.Bounds.Width <= 0 || textArea.Bounds.Width <= 0)
-        {
-            return;
-        }
-
-        // Measure the actual text width using FormattedText
-        double maxLineWidth = 0;
-
-        if (!string.IsNullOrEmpty(_textEditor.Text))
-        {
-            var typeface = new Typeface(_textEditor.FontFamily);
-            var lines = _textEditor.Text.Split('\n');
-
-            foreach (var line in lines)
-            {
-                if (string.IsNullOrEmpty(line))
-                {
-                    continue;
-                }
-
-                var formattedText = new FormattedText(
-                    line,
-                    System.Globalization.CultureInfo.CurrentCulture,
-                    FlowDirection.LeftToRight,
-                    typeface,
-                    _textEditor.FontSize,
-                    Brushes.Black);
-
-                if (formattedText.Width > maxLineWidth)
-                {
-                    maxLineWidth = formattedText.Width;
-                }
-            }
-        }
-
-        var availableWidth = textArea.Bounds.Width;
-
-        if (maxLineWidth > 0 && maxLineWidth < availableWidth)
-        {
-            double offset = _currentAlignment == TextAlignment.Center
-                ? (availableWidth - maxLineWidth) / 2
-                : availableWidth - maxLineWidth;
-
-            textArea.RenderTransform = new TranslateTransform(offset, 0);
-        }
-        else
-        {
-            textArea.RenderTransform = null;
-        }
+        // The vendored AvaloniaEdit aligns lines natively (per line, in the text formatter),
+        // which also composes correctly with right-to-left mode. Left means "follow the flow
+        // direction" so an RTL text box keeps starting lines at its right edge.
+        _textEditor.TextArea.TextView.TextAlignment = alignment == TextAlignment.Left
+            ? TextAlignment.Start
+            : alignment;
     }
 
     public void EnableSpellCheck(ISpellCheckManager spellCheckManager)

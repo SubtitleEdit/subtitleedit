@@ -66,6 +66,39 @@ namespace AvaloniaEdit.Rendering
 
             // Re-layout when FlowDirection flips so RTL vs LTR line formatting is re-evaluated.
             FlowDirectionProperty.Changed.Subscribe(e => (e.Sender as TextView)?.Redraw());
+            TextAlignmentProperty.Changed.Subscribe(e => (e.Sender as TextView)?.Redraw());
+        }
+
+        /// <summary>
+        /// Like Avalonia's own text controls, the TextView opts out of the framework's automatic
+        /// mirror transform for RightToLeft controls: right-to-left rendering is handled entirely
+        /// by the text formatter (Unicode bidi algorithm plus TextAlignment in the line paragraph
+        /// properties), whose output is normal, unmirrored geometry. Under a mirror transform that
+        /// output renders reversed with mirror-imaged glyphs.
+        ///
+        /// Set FlowDirection directly on the TextView (not on an ancestor): a non-bypassing
+        /// RightToLeft ancestor would introduce the very mirror transform this override avoids.
+        /// </summary>
+        protected override bool BypassFlowDirectionPolicies => true;
+
+        /// <summary>
+        /// TextAlignment property. The default <see cref="TextAlignment.Start"/> aligns lines to
+        /// the left edge in a left-to-right flow and to the right edge in a right-to-left flow.
+        /// Only applies while word wrap is active (without wrapping the layout width is unbounded,
+        /// so there is no meaningful edge to align to).
+        /// </summary>
+        public static readonly StyledProperty<TextAlignment> TextAlignmentProperty =
+            AvaloniaProperty.Register<TextView, TextAlignment>(nameof(TextAlignment), TextAlignment.Start);
+
+        /// <summary>
+        /// Gets/Sets the alignment of text lines. <see cref="TextAlignment.Start"/> (the default)
+        /// follows the flow direction; Center centers each line. Ignored while horizontal
+        /// scrolling is enabled (word wrap off).
+        /// </summary>
+        public TextAlignment TextAlignment
+        {
+            get => GetValue(TextAlignmentProperty);
+            set => SetValue(TextAlignmentProperty, value);
         }
 
         private readonly ColumnRulerRenderer _columnRulerRenderer;
@@ -1041,8 +1074,22 @@ namespace AvaloniaEdit.Rendering
                 defaultTextRunProperties = defaultTextRunProperties,
                 textWrapping = _canHorizontallyScroll ? TextWrapping.NoWrap : TextWrapping.Wrap,
                 tabSize = Options.IndentationSize * WideSpaceWidth,
-                flowDirection = FlowDirection
+                flowDirection = FlowDirection,
+                textAlignment = GetParagraphTextAlignment()
             };
+        }
+
+        /// <summary>
+        /// Maps the TextAlignment property to the value handed to the text formatter. The
+        /// formatter's own Start/End normalization (by paragraph flow direction) does the rest.
+        ///
+        /// Without word wrap the format width is the unbounded scroll area, not the viewport, so
+        /// any non-zero alignment offset would push lines out of view - alignment is disabled and
+        /// lines stay at the paragraph origin in that case.
+        /// </summary>
+        private TextAlignment GetParagraphTextAlignment()
+        {
+            return _canHorizontallyScroll ? TextAlignment.Left : TextAlignment;
         }
 
         private VisualLine BuildVisualLine(DocumentLine documentLine,

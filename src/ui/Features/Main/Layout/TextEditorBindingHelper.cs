@@ -161,10 +161,11 @@ public class TextEditorBindingHelper
 
         // Follow the content: an original subtitle in a left to right language
         // stays readable next to a right to left working language and vice versa.
+        // On the TextView, not the TextArea - see RightToLeftHelper.SetFlowDirectionRecursive.
         var requestedDirection = Se.Settings.Appearance.RightToLeft
             ? FlowDirection.RightToLeft
             : FlowDirection.LeftToRight;
-        _textEditor.TextArea.FlowDirection = MainHelpers.RightToLeftHelper
+        _textEditor.TextArea.TextView.FlowDirection = MainHelpers.RightToLeftHelper
             .GetContentDirection(_textEditor.Text, requestedDirection);
     }
 

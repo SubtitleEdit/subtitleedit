@@ -39,6 +39,11 @@ namespace AvaloniaEdit.Rendering
 		    IsHitTestVisible = false;
 		}
 
+		// The owning TextView bypasses the framework's RTL mirror transform (the text formatter
+		// handles right-to-left itself), so its layers must too - otherwise each layer would get
+		// a mirror transform relative to the TextView and render flipped.
+		protected override bool BypassFlowDirectionPolicies => true;
+
 	    public override void Render(DrawingContext context)
 	    {
 	        base.Render(context);

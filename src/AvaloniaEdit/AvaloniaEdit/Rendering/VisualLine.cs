@@ -529,18 +529,51 @@ namespace AvaloniaEdit.Rendering
         /// </summary>
         public int GetVisualColumn(TextLine textLine, double xPos, bool allowVirtualSpace)
         {
-            if (xPos > textLine.WidthIncludingTrailingWhitespace)
+            if (IsPastLineEnd(textLine, xPos, out var distancePastEnd))
             {
                 if (allowVirtualSpace && textLine == TextLines[TextLines.Count - 1])
                 {
-                    var virtualX = (int)Math.Round((xPos - textLine.WidthIncludingTrailingWhitespace) / TextView.WideSpaceWidth, MidpointRounding.AwayFromZero);
+                    var virtualX = (int)Math.Round(distancePastEnd / TextView.WideSpaceWidth, MidpointRounding.AwayFromZero);
                     return VisualLengthWithEndOfLineMarker + virtualX;
                 }
             }
 
             var ch = textLine.GetCharacterHitFromDistance(xPos);
 
-            return ch.FirstCharacterIndex + ch.TrailingLength;
+            if (ch.TrailingLength > 0)
+            {
+                // Avalonia resolves hits on drawable object runs (e.g. the atomic tag elements
+                // used in right-to-left mode) with the left-to-right trailing convention even in
+                // right-to-left lines, which inverts which half of the object maps to which
+                // side. Snap to whichever caret boundary is actually nearer to the position.
+                var leadingColumn = ch.FirstCharacterIndex;
+                var trailingColumn = ch.FirstCharacterIndex + ch.TrailingLength;
+                var leadingX = textLine.GetDistanceFromCharacterHit(new CharacterHit(leadingColumn));
+                var trailingX = textLine.GetDistanceFromCharacterHit(new CharacterHit(trailingColumn));
+                return Math.Abs(xPos - leadingX) <= Math.Abs(xPos - trailingX) ? leadingColumn : trailingColumn;
+            }
+
+            return ch.FirstCharacterIndex;
+        }
+
+        /// <summary>
+        /// Gets whether the x position lies beyond the logical end of the text line, and if so,
+        /// how far. textLine.Start is the paragraph-alignment offset (0 for left-aligned text,
+        /// larger for centered or right-to-left lines), so the ink spans
+        /// [Start, Start + width]; in a right-to-left line the logical end is on the left.
+        /// </summary>
+        private bool IsPastLineEnd(TextLine textLine, double xPos, out double distancePastEnd)
+        {
+            if (TextView.FlowDirection == FlowDirection.RightToLeft)
+            {
+                distancePastEnd = textLine.Start - xPos;
+            }
+            else
+            {
+                distancePastEnd = xPos - textLine.Start - textLine.WidthIncludingTrailingWhitespace;
+            }
+
+            return distancePastEnd > 0;
         }
 
         /// <summary>
@@ -595,13 +628,13 @@ namespace AvaloniaEdit.Rendering
         internal int GetVisualColumnFloor(Point point, bool allowVirtualSpace, out bool isAtEndOfLine)
         {
             var textLine = GetTextLineByVisualYPosition(point.Y);
-            if (point.X > textLine.WidthIncludingTrailingWhitespace)
+            if (IsPastLineEnd(textLine, point.X, out var distancePastEnd))
             {
                 isAtEndOfLine = true;
                 if (allowVirtualSpace && textLine == TextLines[TextLines.Count - 1])
                 {
                     // clicking virtual space in the last line
-                    var virtualX = (int)((point.X - textLine.WidthIncludingTrailingWhitespace) / TextView.WideSpaceWidth);
+                    var virtualX = (int)(distancePastEnd / TextView.WideSpaceWidth);
                     return VisualLengthWithEndOfLineMarker + virtualX;
                 }
 
@@ -820,6 +853,12 @@ namespace AvaloniaEdit.Rendering
         {
             VisualLine = visualLine;
         }
+
+        // The TextView bypasses the framework's RTL mirror transform (the text formatter handles
+        // right-to-left itself), so the per-line visuals must too - otherwise each line inherits
+        // RightToLeft, differs from its bypassing parent, and gets mirrored on its own: reversed
+        // reading order and mirror-imaged glyphs.
+        protected override bool BypassFlowDirectionPolicies => true;
 
         public override void Render(DrawingContext context)
         {
