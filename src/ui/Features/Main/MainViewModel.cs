@@ -356,6 +356,11 @@ public partial class MainViewModel :
     private const double PlayheadSeekPinTimeoutMs = 600;
     private const double PlayheadResyncThresholdSeconds = 0.5; // drift beyond this = real discontinuity -> snap
     private const double PlayheadDriftCorrection = 0.05; // gentle pull toward mpv when its clock is live
+
+    // "Center video position also while paused": paused centering/selection only reacts to
+    // position *changes*, so they track the last seen play-head position between timer ticks.
+    private double _pausedCenterLastSeconds = -1;
+    private double _pausedSelectLastSeconds = -1;
     private const double PlayheadMaxCorrectionFraction = 0.2; // cap catch-up to ~1.2x speed (vs the forward step)
     private const double PlayheadMaxForwardStepSeconds = 0.05; // cap one tick's advance so a starved tick can't lurch
     private const double PlayheadFreezeHoldSeconds = 0.12; // if mpv's clock hasn't moved this long, it's frozen: hold
@@ -21320,6 +21325,54 @@ public partial class MainViewModel :
     // clock so the line keeps gliding through the resume gap. Elapsed time uses Stopwatch
     // (sub-microsecond) not Environment.TickCount64 (~15 ms on Windows), whose coarse steps would
     // make the cursor advance unevenly.
+    /// <summary>
+    /// Selects (and scrolls to) the subtitle covering the play-head position, preferring the
+    /// first line under 20 seconds so a full-length karaoke/credits line doesn't hog the
+    /// selection. <paramref name="subtitle"/> must be sorted by start time. No-op when the
+    /// current selection already covers the position.
+    /// </summary>
+    private void SelectCurrentSubtitleAtPlayhead(double mediaPlayerSeconds, List<SubtitleLineViewModel> subtitle)
+    {
+        var ss = SelectedSubtitle;
+        if (ss != null && mediaPlayerSeconds >= ss.StartTime.TotalSeconds &&
+            mediaPlayerSeconds <= ss.EndTime.TotalSeconds && ss.Duration.TotalSeconds <= 20)
+        {
+            return;
+        }
+
+        SubtitleLineViewModel? firstMatch = null;
+        var matchFound = false;
+        for (var i = 0; i < subtitle.Count; i++)
+        {
+            var p = subtitle[i];
+            if (p.StartTime.TotalSeconds > mediaPlayerSeconds)
+            {
+                break; // sorted by start time, no later line can contain the position
+            }
+
+            if (mediaPlayerSeconds >= p.StartTime.TotalSeconds &&
+                mediaPlayerSeconds <= p.EndTime.TotalSeconds)
+            {
+                if (firstMatch == null)
+                {
+                    firstMatch = p;
+                }
+
+                if (p.Duration.TotalSeconds < 20)
+                {
+                    matchFound = true;
+                    SelectAndScrollToSubtitle(p);
+                    break;
+                }
+            }
+        }
+
+        if (!matchFound && firstMatch != null)
+        {
+            SelectAndScrollToSubtitle(firstMatch);
+        }
+    }
+
     private double UpdatePlayheadEstimate(VideoPlayerControl vp)
     {
         var rawPosition = vp.VideoPlayer.Position;
@@ -21644,48 +21697,26 @@ public partial class MainViewModel :
 
                     else if (SelectCurrentSubtitleWhilePlaying && _playSelectionItem == null)
                     {
-                        var ss = SelectedSubtitle;
-                        if (ss == null || mediaPlayerSeconds < ss.StartTime.TotalSeconds ||
-                            mediaPlayerSeconds > ss.EndTime.TotalSeconds || ss.Duration.TotalSeconds > 20)
-                        {
-                            SubtitleLineViewModel? firstMatch = null;
-                            var matchFound = false;
-                            for (var i = 0; i < subtitle.Count; i++)
-                            {
-                                var p = subtitle[i];
-                                if (p.StartTime.TotalSeconds > mediaPlayerSeconds)
-                                {
-                                    break; // sorted by start time, no later line can contain the position
-                                }
-
-                                if (mediaPlayerSeconds >= p.StartTime.TotalSeconds &&
-                                    mediaPlayerSeconds <= p.EndTime.TotalSeconds)
-                                {
-                                    if (firstMatch == null)
-                                    {
-                                        firstMatch = p;
-                                    }
-
-                                    if (p.Duration.TotalSeconds < 20)
-                                    {
-                                        matchFound = true;
-                                        SelectAndScrollToSubtitle(p);
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (!matchFound && firstMatch != null)
-                            {
-                                SelectAndScrollToSubtitle(firstMatch);
-                            }
-                        }
+                        SelectCurrentSubtitleAtPlayhead(mediaPlayerSeconds, subtitle);
                     }
                 }
                 else
                 {
                     Optris.Icons.Avalonia.Attached.SetIcon(ButtonWaveformPlay, IconNames.Play);
                     ResetPlaySelection();
+
+                    // "Center also while paused" scrub-editing (SE 4's locked mode): while the user
+                    // wheels through the waveform, keep selecting the line under the centered cursor.
+                    // Only react to position *changes* — otherwise this would immediately steal back
+                    // the selection when the user picks a different line in the grid while paused.
+                    if (WaveformCenter && Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused &&
+                        SelectCurrentSubtitleWhilePlaying &&
+                        Math.Abs(mediaPlayerSeconds - _pausedSelectLastSeconds) > 0.001)
+                    {
+                        SelectCurrentSubtitleAtPlayhead(mediaPlayerSeconds, subtitle);
+                    }
+
+                    _pausedSelectLastSeconds = mediaPlayerSeconds;
                 }
 
                 _avLastScrolling = isAvScrolloing;
@@ -21728,11 +21759,19 @@ public partial class MainViewModel :
                 // In "center waveform on current position" mode the waveform scrolls to keep the cursor
                 // centered. Drive that scroll here at ~60 fps, in lockstep with the cursor, so it glides
                 // smoothly instead of jumping in 20 fps steps from the heavy 50 ms timer.
-                if (WaveformCenter && vp.IsPlaying && av.WavePeaks != null)
+                // With "center also while paused" on, paused position changes (wheel scrub, waveform
+                // clicks, shortcuts) recenter too — but only on actual changes, so the user can still
+                // scroll around the waveform freely while the play-head is at rest.
+                var centerPausedChange = WaveformCenter && !vp.IsPlaying &&
+                                         Se.Settings.Waveform.CenterVideoPositionAlsoWhenPaused &&
+                                         Math.Abs(est - _pausedCenterLastSeconds) > 0.001;
+                if (WaveformCenter && av.WavePeaks != null && (vp.IsPlaying || centerPausedChange))
                 {
                     var halfSeconds = (av.EndPositionSeconds - av.StartPositionSeconds) / 2.0;
                     av.StartPositionSeconds = Math.Max(0, est - halfSeconds);
                 }
+
+                _pausedCenterLastSeconds = est;
             }
         };
         _cursorTimer.Start();

@@ -135,6 +135,7 @@ public class LanguageSettings
     public string ErrorBackgroundColor { get; set; }
     public string WaveformDrawGridLines { get; set; }
     public string WaveformCenterVideoPosition { get; set; }
+    public string WaveformCenterVideoPositionAlsoWhenPaused { get; set; }
     public string WaveformShowToolbar { get; set; }
     public string WaveformShowToolbarEdit { get; set; }
     public string WaveformShowToolbarEditLabel { get; set; }
@@ -467,6 +468,7 @@ public class LanguageSettings
         WaveformDrawGridLines = "Draw grid lines";
         WaveformFocusOnMouseOver = "Focus on mouse over";
         WaveformCenterVideoPosition = "Center video position";
+        WaveformCenterVideoPositionAlsoWhenPaused = "Center video position also while paused";
         WaveformShowToolbar = "Show toolbar";
         WaveformShowToolbarEdit = "Edit toolbar...";
         WaveformShowToolbarEditLabel = "Toolbar items";
