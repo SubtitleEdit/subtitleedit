@@ -1016,6 +1016,7 @@
     "xShotChangedLoaded": "{0} shot changes loaded",
     "youtubeDlDownloadedSuccessfully": "\"yt-dlp\" downloaded successfully.",
     "youtubeDlNotInstalledDownloadNow": "\"yt-dlp\" is not installed and is required for playing online videos.\n\nDownload now?",
+    "promptInsertSubtitleOverlap": "The inserted lines will overlap existing lines.\n\nInsert anyway?",
     "youtubeDlOutdatedDownloadNow": "\"yt-dlp\" is outdated and may not work with online videos.\n\nDownload the current version now?",
     "insertUnicodeSymbol": "Insert Unicode symbol",
     "trimmedXLines": "Trimmed {0} subtitle lines",
