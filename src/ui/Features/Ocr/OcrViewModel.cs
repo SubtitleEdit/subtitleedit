@@ -1863,9 +1863,7 @@ public partial class OcrViewModel : ObservableObject
             return;
         }
 
-        var previewSubPicture = vobSub.GetSubPicture(SelectedOcrSubtitleItem != null
-            ? Math.Max(0, OcrSubtitleItems.IndexOf(SelectedOcrSubtitleItem))
-            : 0);
+        var previewSubPicture = vobSub.GetSubPicture(SelectedOcrSubtitleItem?.SourceIndex ?? 0);
 
         var result = await _windowService.ShowDialogAsync<VobSubColorChooser.VobSubColorChooserWindow, VobSubColorChooser.VobSubColorChooserViewModel>(
             Window,
@@ -2103,6 +2101,11 @@ public partial class OcrViewModel : ObservableObject
     [RelayCommand]
     private void DeleteSelectedLines()
     {
+        if (IsOcrRunning)
+        {
+            return; // the OCR loops hold indices into OcrSubtitleItems - deleting mid-run shifts them
+        }
+
         var selectedItems = SubtitleGrid.SelectedItems;
         if (selectedItems == null || selectedItems.Count == 0)
         {
@@ -2148,7 +2151,7 @@ public partial class OcrViewModel : ObservableObject
         var toRemove = new List<UnknownWordItem>();
         foreach (var unknownWord in UnknownWords)
         {
-            if (!OcrSubtitleItems.Contains(unknownWord.Item))
+            if (!_allOcrSubtitleItems.Contains(unknownWord.Item)) // OcrSubtitleItems may be filtered to forced-only
             {
                 toRemove.Add(unknownWord);
             }

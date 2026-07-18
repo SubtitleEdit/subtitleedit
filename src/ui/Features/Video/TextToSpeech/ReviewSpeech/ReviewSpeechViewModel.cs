@@ -297,21 +297,43 @@ public partial class ReviewSpeechViewModel : ObservableObject
             return;
         }
 
-        lock (_playLock)
+        try
         {
-            _mpvContext?.Stop();
-            _mpvContext?.Dispose();
-
-            _mpvContext = new LibMpvDynamicPlayer();
-            _mpvContext.LoadLib(); 
-            var err = _mpvContext.Initialize();
-            if (err < 0)
+            lock (_playLock)
             {
-                throw new InvalidOperationException($"Failed to initialize mpv: {_mpvContext.GetErrorString(err)}");
-            }
-        }
+                _mpvContext?.Stop();
+                _mpvContext?.Dispose();
 
-        await _mpvContext.LoadAudio(fileName);
+                _mpvContext = new LibMpvDynamicPlayer();
+                _mpvContext.LoadLib();
+                var err = _mpvContext.Initialize();
+                if (err < 0)
+                {
+                    throw new InvalidOperationException($"Failed to initialize mpv: {_mpvContext.GetErrorString(err)}");
+                }
+            }
+
+            await _mpvContext.LoadAudio(fileName);
+        }
+        catch (Exception exception)
+        {
+            // An mpv load/init failure must not escape: the callers disable all rows before
+            // awaiting and only the playback timer re-enables them, so an unhandled throw
+            // leaves every play/regenerate button dead until the window is reopened.
+            SeLogger.Error(exception, $"ReviewSpeech: unable to play audio file \"{fileName}\"");
+            ResetPlaybackUiState();
+            if (Window != null)
+            {
+                await MessageBox.Show(
+                    Window,
+                    Se.Language.General.Error,
+                    "Unable to play audio: " + exception.Message,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+
+            return;
+        }
 
         _timer.Start();
     }

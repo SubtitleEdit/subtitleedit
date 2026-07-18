@@ -818,6 +818,7 @@ public partial class BurnInViewModel : ObservableObject
         var isAssa = subtitleFileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase);
 
         var subtitle = Subtitle.Parse(subtitleFileName);
+        subtitle = GetSubtitleBasedOnCut(subtitle);
 
         if (!isAssa)
         {
@@ -838,6 +839,31 @@ public partial class BurnInViewModel : ObservableObject
         var assaFileName = Path.Combine(Path.GetTempFileName() + assa.Extension);
         File.WriteAllText(assaFileName, assa.ToText(subtitle, string.Empty));
         return assaFileName;
+    }
+
+    // The "-ss" input seek makes ffmpeg restart timestamps at zero, so the burned-in
+    // subtitle must be limited to the cut window and shifted accordingly (same as
+    // TransparentSubtitlesViewModel.GetSubtitleBasedOnCut).
+    private Subtitle GetSubtitleBasedOnCut(Subtitle inputSubtitle)
+    {
+        if (!IsCutActive)
+        {
+            return inputSubtitle;
+        }
+
+        var subtitle = new Subtitle();
+        foreach (var p in inputSubtitle.Paragraphs)
+        {
+            if (p.StartTime.TotalMilliseconds >= CutFrom.TotalMilliseconds &&
+                p.EndTime.TotalMilliseconds <= CutTo.TotalMilliseconds)
+            {
+                subtitle.Paragraphs.Add(new Paragraph(p));
+            }
+        }
+
+        subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-CutFrom.TotalMilliseconds));
+
+        return subtitle;
     }
 
     private void SetStyleForNonAssa(Subtitle sub, int width, int height)

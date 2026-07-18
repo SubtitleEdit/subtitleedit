@@ -90,6 +90,9 @@ public partial class OcrSubtitleItem : ObservableObject
 
     public bool IsForced => _ocrSubtitle.GetIsForced(_index);
 
+    /// <summary>Index into the underlying IOcrSubtitle source - stable across filtering/deletion of the view collection.</summary>
+    public int SourceIndex => _index;
+
     public SKPointI GetPosition()
     {
         return _ocrSubtitle.GetPosition(_index);
