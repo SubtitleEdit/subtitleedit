@@ -1,7 +1,7 @@
 {
   "Title": "SubtitleEdit",
   "Version": "v. 5.1.0 beta 15",
-  "TranslatedBy": "v. 13.07.2026 di bovirus",
+  "TranslatedBy": "v. 17.07.2026 di bovirus",
   "CultureName": "it-IT",
   "General": {
     "Abort": "Annulla",
@@ -839,6 +839,7 @@
     "XShotChangedLoaded": "{0} cambi di scena caricati",
     "YoutubeDlDownloadedSuccessfully": "'yt-dlp' è stato scaricato correttamente.",
     "YoutubeDlNotInstalledDownloadNow": "'yt-dlp' non è installato ed è necessario per riprodurre video online.\r\n\r\nVuoi scaricare yt-dlp?",
+    "PromptInsertSubtitleOverlap": "Le linee inserite si sovrapporranno alle linee esistenti.\r\n\r\nVuoi inserirle comunque?",
     "YoutubeDlOutdatedDownloadNow": "'yt-dlp' è obsoleto e potrebbe non funzionare con i video online.\r\n\r\nVuoi scaricare la versione aggiornata?",
     "InsertUnicodeSymbol": "Inserisci simbolo Unicode",
     "TrimmedXLines": "{0} righe sottotitoli tagliate",
@@ -2503,6 +2504,7 @@
       "ErrorBackgroundColor": "Colore sfondo errore",
       "WaveformDrawGridLines": "Disegna righe griglia",
       "WaveformCenterVideoPosition": "Posizione video centrale",
+      "WaveformCenterVideoPositionAlsoWhenPaused": "Centra posizione video anche durante la pausa",
       "WaveformShowToolbar": "Visualizza barra strumenti",
       "WaveformShowToolbarEdit": "Modifica barra strumenti...",
       "WaveformShowToolbarEditLabel": "Barra strumenti forma d'onda/spettrogramma",
