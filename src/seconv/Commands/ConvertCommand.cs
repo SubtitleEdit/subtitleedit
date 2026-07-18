@@ -752,8 +752,17 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
             AnsiConsole.WriteLine();
             if (result.Success)
             {
-                AnsiConsole.MarkupLine($"[green]✓[/] Conversion completed successfully!");
+                if (result.Warnings.Count > 0)
+                {
+                    AnsiConsole.MarkupLine($"[yellow]⚠[/] Conversion completed with warnings");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine($"[green]✓[/] Conversion completed successfully!");
+                }
+
                 AnsiConsole.MarkupLine($"[dim]Converted {result.SuccessfulFiles} file(s) in {elapsed}[/]");
+                PrintWarnings(result);
             }
             else
             {
@@ -779,6 +788,8 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                     }
                 }
 
+                PrintWarnings(result);
+
                 return 1;
             }
 
@@ -799,6 +810,21 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 }
             }
             return 1;
+        }
+    }
+
+    private static void PrintWarnings(ConversionResult result)
+    {
+        if (result.Warnings.Count == 0)
+        {
+            return;
+        }
+
+        AnsiConsole.WriteLine();
+        AnsiConsole.MarkupLine("[yellow]Warnings:[/]");
+        foreach (var warning in result.Warnings)
+        {
+            AnsiConsole.MarkupLineInterpolated($"  [yellow]•[/] {warning}");
         }
     }
 
@@ -824,8 +850,10 @@ internal sealed class ConvertCommand : AsyncCommand<ConvertCommand.Settings>
                 output = f.Output,
                 success = f.Success,
                 error = f.Error,
+                warnings = f.Warnings,
             }),
             errors = result.Errors,
+            warnings = result.Warnings,
         };
         Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(payload, JsonOptions));
     }

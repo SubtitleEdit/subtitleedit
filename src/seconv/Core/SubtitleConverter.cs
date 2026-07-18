@@ -81,12 +81,22 @@ internal class SubtitleConverter
                         {
                             AnsiConsole.MarkupInterpolated($"[dim]{fileIndex}:[/] [cyan]{Path.GetFileName(inputFile)}[/] [dim]->[/] [green]{outputFile}[/]...");
                         }
-                        await ConvertFileAsync(inputFile, outputFile, options);
+                        var warnings = new List<string>();
+                        await ConvertFileAsync(inputFile, outputFile, options, warnings);
                         result.SuccessfulFiles++;
-                        result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null));
+                        result.Files.Add(new FileConversionResult(inputFile, outputFile, true, null, warnings.Count > 0 ? warnings : null));
+                        foreach (var warning in warnings)
+                        {
+                            result.Warnings.Add($"{Path.GetFileName(inputFile)}: {warning}");
+                        }
+
                         if (!options.Quiet)
                         {
                             AnsiConsole.MarkupLine(" [green]done.[/]");
+                            foreach (var warning in warnings)
+                            {
+                                AnsiConsole.MarkupLineInterpolated($"   [yellow]warning: {warning}[/]");
+                            }
                         }
                     }
                     else
@@ -576,7 +586,7 @@ internal class SubtitleConverter
         return files;
     }
 
-    private async Task ConvertFileAsync(string inputFile, string outputFile, ConversionOptions options)
+    private async Task ConvertFileAsync(string inputFile, string outputFile, ConversionOptions options, List<string> warnings)
     {
         // Frame-based formats (e.g. MicroDVD) read Configuration.Settings.General.CurrentFrameRate
         // when loading. Set it before LoadSubtitle and restore in finally so concurrent or
@@ -603,7 +613,7 @@ internal class SubtitleConverter
 
                 // Load subtitle file using LibSE — keep the detected format so the
                 // save side can apply RemoveNativeFormatting when the target differs.
-                var (subtitle, sourceFormat) = LibSEIntegration.LoadSubtitleWithFormat(inputFile, resolvedOptions.Encoding, resolvedOptions.InputEncodingFallback);
+                var (subtitle, sourceFormat) = LibSEIntegration.LoadSubtitleWithFormat(inputFile, resolvedOptions.Encoding, resolvedOptions.InputEncodingFallback, warnings);
 
                 if (subtitle == null || subtitle.Paragraphs.Count == 0)
                 {
@@ -963,8 +973,12 @@ internal class ConversionResult
     public int SuccessfulFiles { get; set; }
     public int FailedFiles { get; set; }
     public List<string> Errors { get; set; } = new();
+
+    /// <summary>Non-fatal per-file issues (e.g. undecodable rows skipped); do not affect <see cref="Success"/>.</summary>
+    public List<string> Warnings { get; set; } = new();
+
     public List<FileConversionResult> Files { get; set; } = new();
     public bool Success => FailedFiles == 0 && Errors.Count == 0;
 }
 
-internal sealed record FileConversionResult(string Input, string? Output, bool Success, string? Error);
+internal sealed record FileConversionResult(string Input, string? Output, bool Success, string? Error, IReadOnlyList<string>? Warnings = null);

@@ -58,7 +58,7 @@ internal static class LibSEIntegration
     /// Also returns the detected source format so the save side can apply
     /// <c>RemoveNativeFormatting</c> if the target is different.
     /// </summary>
-    public static (Subtitle Subtitle, SubtitleFormat Format) LoadSubtitleWithFormat(string filePath, string? encodingName = null, string? fallbackEncodingName = null)
+    public static (Subtitle Subtitle, SubtitleFormat Format) LoadSubtitleWithFormat(string filePath, string? encodingName = null, string? fallbackEncodingName = null, List<string>? warnings = null)
     {
         if (!File.Exists(filePath))
         {
@@ -92,6 +92,29 @@ internal static class LibSEIntegration
             {
                 return (csvSubtitle, new SubRip());
             }
+        }
+
+        // 0b. A file that declares the Scenarist SCC signature is SCC, full stop — decode it
+        // with the SCC parsers and never let it fall through to the generic guessers below,
+        // which would digit-scrape the raw source lines into garbage cues (#12582). The SCC
+        // parser is lenient (it skips undecodable rows and counts them), so a partially
+        // damaged file still converts, with a warning; a file where nothing decodes fails.
+        if (HasScenaristSccSignature(lines))
+        {
+            var (sccSubtitle, sccFormat, undecodableRows) = LoadBestScenaristScc(lines, filePath);
+            if (sccSubtitle.Paragraphs.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    $"File declares the Scenarist_SCC signature, but no valid captions could be decoded" +
+                    $"{(undecodableRows > 0 ? $" ({undecodableRows} undecodable row(s))" : string.Empty)}: {filePath}");
+            }
+
+            if (undecodableRows > 0)
+            {
+                warnings?.Add($"{undecodableRows} SCC caption row(s) could not be decoded and were skipped.");
+            }
+
+            return (sccSubtitle, sccFormat);
         }
 
         // 1. Try text-based formats by content sniffing
@@ -143,13 +166,61 @@ internal static class LibSEIntegration
         }
 
         // 4. Last resort: generic auto-guesser (handles freeform CSV, xlsx, ods, JSON variants, ...)
+        // Its output is only trusted when the guessed timing is plausible — the guesser scrapes
+        // numbers out of arbitrary text, and treating that as a successful conversion turns
+        // unparseable input into corrupt output that still reports success (#12582).
         var guessSubtitle = new UnknownFormatImporter { UseFrames = true }.AutoGuessImport(lines, filePath);
-        if (guessSubtitle.Paragraphs.Count > 0)
+        if (guessSubtitle.Paragraphs.Count > 0 && HasPlausibleGuessedTiming(guessSubtitle))
         {
             return (guessSubtitle, new SubRip());
         }
 
         throw new InvalidOperationException($"Unable to determine subtitle format for: {filePath}");
+    }
+
+    private static bool HasScenaristSccSignature(List<string> lines)
+    {
+        var firstNonBlank = lines.FirstOrDefault(l => !string.IsNullOrWhiteSpace(l));
+        return firstNonBlank != null && firstNonBlank.TrimStart().StartsWith("Scenarist_SCC", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// Decodes an SCC file with both timing variants (non-drop and drop-frame) and keeps the
+    /// better result: more decoded captions wins, then fewer undecodable rows.
+    /// </summary>
+    private static (Subtitle Subtitle, SubtitleFormat Format, int UndecodableRows) LoadBestScenaristScc(List<string> lines, string filePath)
+    {
+        (Subtitle Subtitle, SubtitleFormat Format, int UndecodableRows) Load(SubtitleFormat format)
+        {
+            var subtitle = new Subtitle();
+            format.LoadSubtitle(subtitle, lines, filePath);
+            return (subtitle, format, format.ErrorCount);
+        }
+
+        var regular = Load(new ScenaristClosedCaptions());
+        var dropFrame = Load(new ScenaristClosedCaptionsDropFrame());
+        if (dropFrame.Subtitle.Paragraphs.Count > regular.Subtitle.Paragraphs.Count
+            || (dropFrame.Subtitle.Paragraphs.Count == regular.Subtitle.Paragraphs.Count
+                && regular.Subtitle.Paragraphs.Count > 0
+                && dropFrame.UndecodableRows < regular.UndecodableRows))
+        {
+            return dropFrame;
+        }
+
+        // Nothing decoded either way: report the variant that at least matched time codes,
+        // so the error carries the undecodable-row count.
+        if (regular.Subtitle.Paragraphs.Count == 0 && dropFrame.UndecodableRows > regular.UndecodableRows)
+        {
+            return dropFrame;
+        }
+
+        return regular;
+    }
+
+    private static bool HasPlausibleGuessedTiming(Subtitle subtitle)
+    {
+        return subtitle.Paragraphs.All(p => p.EndTime.TotalMilliseconds >= p.StartTime.TotalMilliseconds)
+               && subtitle.Paragraphs.Any(p => p.EndTime.TotalMilliseconds > 0);
     }
 
     /// <summary>
