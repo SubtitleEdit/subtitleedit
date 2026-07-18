@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
             // check for Topfield .rec file
             ms.Seek(position, SeekOrigin.Begin);
-            ms.Read(m2TsTimeCodeBuffer, 0, 3);
+            ms.ReadFully(m2TsTimeCodeBuffer, 0, 3);
             var topfieldCheck = m2TsTimeCodeBuffer.AsSpan(0, 3);
             if (topfieldCheck[0] == 0x54 && topfieldCheck[1] == 0x46 && topfieldCheck[2] == 0x72)
             {
@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             {
                 if (_isM2TransportStream)
                 {
-                    ms.Read(m2TsTimeCodeBuffer, 0, m2TsTimeCodeBuffer.Length);
+                    ms.ReadFully(m2TsTimeCodeBuffer, 0, m2TsTimeCodeBuffer.Length);
                     position += m2TsTimeCodeBuffer.Length;
                 }
 
@@ -579,7 +579,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
             var buffer = ArrayPool<byte>.Shared.Rent(requiredLength);
             try
             {
-                ms.Read(buffer, 0, requiredLength);
+                ms.ReadFully(buffer, 0, requiredLength);
                 var span = buffer.AsSpan(0, requiredLength);
                 
                 // Check for standard 188-byte packets

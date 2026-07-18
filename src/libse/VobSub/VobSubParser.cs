@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             {
                 var header = new byte[4];
                 ms.Seek(position, SeekOrigin.Begin);
-                ms.Read(header, 0, header.Length);
+                ms.ReadFully(header, 0, header.Length);
                 if (IsMpeg2PackHeader(header))
                 {
                     if (!IsStartOfMpeg2Pack(ms, position))
@@ -68,20 +68,20 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                     // find how much stuffing there is
                     byte[] mpeg2HeaderBuffer = new byte[Mpeg2Header.Length];
                     ms.Seek(position, SeekOrigin.Begin);
-                    ms.Read(mpeg2HeaderBuffer, 0, mpeg2HeaderBuffer.Length);
+                    ms.ReadFully(mpeg2HeaderBuffer, 0, mpeg2HeaderBuffer.Length);
                     int stuffingBytes = mpeg2HeaderBuffer[13] & 0b111;
                     ms.Seek(stuffingBytes, SeekOrigin.Current);
 
                     // skip stuffing and go to pes packet length
                     byte[] pesPacketHeaderBuffer = new byte[6];
-                    ms.Read(pesPacketHeaderBuffer, 0, pesPacketHeaderBuffer.Length);
+                    ms.ReadFully(pesPacketHeaderBuffer, 0, pesPacketHeaderBuffer.Length);
                     int packetLength = (int)(Helper.GetEndian(pesPacketHeaderBuffer, 4, 2) & 0xffff);
 
                     // create a new clean buffer without the stuffing.
                     byte[] cleanBuffer = new byte[mpeg2HeaderBuffer.Length + pesPacketHeaderBuffer.Length + packetLength];
                     Buffer.BlockCopy(mpeg2HeaderBuffer, 0, cleanBuffer, 0, mpeg2HeaderBuffer.Length);
                     Buffer.BlockCopy(pesPacketHeaderBuffer, 0, cleanBuffer, mpeg2HeaderBuffer.Length, pesPacketHeaderBuffer.Length);
-                    ms.Read(cleanBuffer, mpeg2HeaderBuffer.Length + pesPacketHeaderBuffer.Length, packetLength);
+                    ms.ReadFully(cleanBuffer, mpeg2HeaderBuffer.Length + pesPacketHeaderBuffer.Length, packetLength);
                     // since we are cutting out the mpeg header stuffing bytes
                     // update the cleaned data to say we don't have any.
                     cleanBuffer[13] = (byte)(cleanBuffer[13] & 0b1111_1000);
@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 else if (IsPaddingStream(header, 0))
                 {
                     byte[] pesPacketLengthBuffer = new byte[2];
-                    ms.Read(pesPacketLengthBuffer, 0, pesPacketLengthBuffer.Length);
+                    ms.ReadFully(pesPacketLengthBuffer, 0, pesPacketLengthBuffer.Length);
                     position += PacketizedElementaryStream.HeaderLength + Helper.GetEndian(pesPacketLengthBuffer, 0, pesPacketLengthBuffer.Length);
                 }
                 else
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             // fingerprint the mpeg2 header
             var buffer = new byte[Mpeg2Header.Length];
             ms.Seek(position, SeekOrigin.Begin);
-            ms.Read(buffer, 0, buffer.Length);
+            ms.ReadFully(buffer, 0, buffer.Length);
             if (!IsMpeg2PackHeader(buffer))
             {
                 return false;
@@ -171,7 +171,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             // fingerprint the private stream 1
             var privateStreamBuffer = new byte[9];
             ms.Seek(buffer[13] & 0b111, SeekOrigin.Current);
-            ms.Read(privateStreamBuffer, 0, privateStreamBuffer.Length);
+            ms.ReadFully(privateStreamBuffer, 0, privateStreamBuffer.Length);
             if (!IsPrivateStream1(privateStreamBuffer, 0))
             {
                 return false;
@@ -239,7 +239,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                             {
                                 long position = p.FilePosition;
                                 fs.Seek(position, SeekOrigin.Begin);
-                                fs.Read(buffer, 0, 0x0800);
+                                fs.ReadFully(buffer, 0, 0x0800);
                                 if (IsSubtitlePack(buffer) || IsPrivateStream1(buffer, 0))
                                 {
                                     var vsp = new VobSubPack(buffer, p);
@@ -266,7 +266,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                                             currentSubPictureStreamId != vsp.PacketizedElementaryStream.SubPictureStreamId.Value) && position < fs.Length)
                                     {
                                         fs.Seek(position, SeekOrigin.Begin);
-                                        fs.Read(buffer, 0, 0x800);
+                                        fs.ReadFully(buffer, 0, 0x800);
                                         vsp = new VobSubPack(buffer, p); // idx position?
 
                                         if (vsp.PacketizedElementaryStream != null && vsp.PacketizedElementaryStream.SubPictureStreamId.HasValue && currentSubPictureStreamId == vsp.PacketizedElementaryStream.SubPictureStreamId.Value)

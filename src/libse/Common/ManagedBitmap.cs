@@ -44,12 +44,12 @@ namespace Nikse.SubtitleEdit.Core.Common
         public ManagedBitmap(Stream stream)
         {
             byte[] buffer = new byte[8];
-            stream.Read(buffer, 0, buffer.Length);
+            stream.ReadFully(buffer, 0, buffer.Length);
             Width = buffer[4] << 8 | buffer[5];
             Height = buffer[6] << 8 | buffer[7];
             _colors = new SKColor[Width * Height];
             buffer = new byte[Width * Height * 4];
-            stream.Read(buffer, 0, buffer.Length);
+            stream.ReadFully(buffer, 0, buffer.Length);
             int start = 0;
             for (int i = 0; i < _colors.Length; i++)
             {

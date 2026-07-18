@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             _stream = stream;
             var buffer = new byte[HeaderSize];
-            stream.Read(buffer, 0, HeaderSize);
+            stream.ReadFully(buffer, 0, HeaderSize);
             FilePosition = stream.Position;
 
             FileName = Encoding.ASCII.GetString(buffer, 0, 100)
@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             var buffer = new byte[FileSizeInBytes];
             _stream.Position = FilePosition;
-            _stream.Read(buffer, 0, buffer.Length);
+            _stream.ReadFully(buffer, 0, buffer.Length);
             File.WriteAllBytes(fileName, buffer);
         }
 

@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     if (handlerType != "soun")
                     {
                         Buffer = new byte[Size - 4];
-                        fs.Read(Buffer, 0, Buffer.Length);
+                        fs.ReadFully(Buffer, 0, Buffer.Length);
                         int version = Buffer[0];
                         var totalEntries = GetUInt(4);
 
@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     if (handlerType != "soun")
                     {
                         Buffer = new byte[Size - 4];
-                        fs.Read(Buffer, 0, Buffer.Length);
+                        fs.ReadFully(Buffer, 0, Buffer.Length);
                         int version = Buffer[0];
                         var totalEntries = GetUInt(4);
 
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 else if (Name == "stsz") // sample sizes
                 {
                     Buffer = new byte[Size - 4];
-                    fs.Read(Buffer, 0, Buffer.Length);
+                    fs.ReadFully(Buffer, 0, Buffer.Length);
                     int version = Buffer[0];
                     var uniformSizeOfEachSample = GetUInt(4);
                     var numberOfSampleSizes = GetUInt(8);
@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     //https://developer.apple.com/library/mac/#documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-SW1
 
                     Buffer = new byte[Size - 4];
-                    fs.Read(Buffer, 0, Buffer.Length);
+                    fs.ReadFully(Buffer, 0, Buffer.Length);
                     int version = Buffer[0];
                     var numberOfSampleTimes = GetUInt(4);
                     for (var i = 0; i < numberOfSampleTimes; i++)
@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 else if (Name == "ctts") // composition time offset (PTS = DTS + offset); needed when B-frames make storage order differ from display order
                 {
                     Buffer = new byte[Size - 4];
-                    fs.Read(Buffer, 0, Buffer.Length);
+                    fs.ReadFully(Buffer, 0, Buffer.Length);
                     int version = Buffer[0];
                     var numberOfEntries = GetUInt(4);
                     for (var i = 0; i < numberOfEntries; i++)
@@ -173,7 +173,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 else if (Name == "stsc") // sample table sample to chunk map
                 {
                     Buffer = new byte[Size - 4];
-                    fs.Read(Buffer, 0, Buffer.Length);
+                    fs.ReadFully(Buffer, 0, Buffer.Length);
                     int version = Buffer[0];
                     var numberOfSampleTimes = GetUInt(4);
                     for (var i = 0; i < numberOfSampleTimes; i++)
@@ -303,7 +303,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         {
                             fs.Seek((long)sampleOffset, SeekOrigin.Begin);
                             var buffer = new byte[2];
-                            fs.Read(buffer, 0, buffer.Length);
+                            fs.ReadFully(buffer, 0, buffer.Length);
                             var textSize = (uint)GetWord(buffer, 0);
 
                             if (textSize > 0)
@@ -318,7 +318,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                                     {
                                         buffer = new byte[textSize + 2];
                                         fs.Seek((long)sampleOffset, SeekOrigin.Begin);
-                                        fs.Read(buffer, 0, buffer.Length);
+                                        fs.ReadFully(buffer, 0, buffer.Length);
                                         SubPictures.Add(new SubPicture(buffer)); // TODO: Where is palette?
                                         paragraphs.Add(p);
                                     }
@@ -326,7 +326,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                                 else
                                 {
                                     buffer = new byte[textSize];
-                                    fs.Read(buffer, 0, buffer.Length);
+                                    fs.ReadFully(buffer, 0, buffer.Length);
                                     p.Text = GetString(buffer, 0, (int)textSize).TrimEnd();
 
                                     if (_mdia.IsClosedCaption)

@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                 var buffer = new byte[12];
                 _fs.Position = 0;
-                _fs.Read(buffer, 0, 12);
+                _fs.ReadFully(buffer, 0, 12);
                 string id = Encoding.UTF8.GetString(buffer);
                 if (id != "DVDVIDEO-VTS")
                 {
@@ -210,7 +210,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 audioStream.LanguageTypeSpecified = Convert.ToInt32(MidStr(data, 4, 2));
                 audioStream.CodingMode = _arrayOfAudioMode[(BinToInt(MidStr(data, 0, 3)))];
                 audioStream.Channels = BinToInt(MidStr(data, 13, 3)) + 1;
-                _fs.Read(buffer, 0, 2);
+                _fs.ReadFully(buffer, 0, 2);
                 audioStream.LanguageCode = new string(new[] { Convert.ToChar(buffer[0]), Convert.ToChar(buffer[1]) });
                 var language = DvdSubtitleLanguage.GetLanguageOrNull(audioStream.LanguageCode);
                 if (language != null)
@@ -230,10 +230,10 @@ namespace Nikse.SubtitleEdit.Core.Common
             _fs.Position += 2;
             for (int i = 0; i < _vtsVobs.NumberOfSubtitles; i++)
             {
-                _fs.Read(buffer, 0, 2);
+                _fs.ReadFully(buffer, 0, 2);
                 var languageTwoLetter = new string(new[] { Convert.ToChar(buffer[0]), Convert.ToChar(buffer[1]) });
                 _vtsVobs.Subtitles.Add(DvdSubtitleLanguage.GetNativeLanguageName(languageTwoLetter));
-                _fs.Read(buffer, 0, 2); // reserved for language code extension + code extension
+                _fs.ReadFully(buffer, 0, 2); // reserved for language code extension + code extension
 
                 //switch (buffer[0])      // 4, 8, 10-12 unused
                 //{
@@ -324,7 +324,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 {
                     // read and save full subpicture stream info inside program chain
                     var subtitle = new byte[4];
-                    _fs.Read(subtitle, 0, 4);
+                    _fs.ReadFully(subtitle, 0, 4);
                     programChain.SubtitlesAvailable.Add(subtitle);
                 }
 
@@ -335,7 +335,7 @@ namespace Nikse.SubtitleEdit.Core.Common
                 for (int colorNumber = 0; colorNumber < 16; colorNumber++)
                 {
                     var colors = new byte[4];
-                    _fs.Read(colors, 0, 4);
+                    _fs.ReadFully(colors, 0, 4);
                     int y = colors[1] - 16;
                     int cr = colors[2] - 128;
                     int cb = colors[3] - 128;

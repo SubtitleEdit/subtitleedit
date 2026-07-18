@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
@@ -55,7 +56,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                 else if (Name == "hdlr")
                 {
                     Buffer = new byte[Size - 4];
-                    fs.Read(Buffer, 0, Buffer.Length);
+                    fs.ReadFully(Buffer, 0, Buffer.Length);
                     HandlerType = GetString(8, 4);
                     if (Size > 25)
                     {

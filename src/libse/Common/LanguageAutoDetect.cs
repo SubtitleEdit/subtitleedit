@@ -1836,7 +1836,9 @@ namespace Nikse.SubtitleEdit.Core.Common
                     }
                     else if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76 && (bom[3] == 0x38 || bom[3] == 0x39 || bom[3] == 0x2b || bom[3] == 0x2f)) // utf-7
                     {
+#pragma warning disable SYSLIB0001 // legacy subtitle files may still be UTF-7 encoded; only used when the file carries a UTF-7 BOM
                         encoding = Encoding.UTF7;
+#pragma warning restore SYSLIB0001
                     }
                     else if (file.Length > bom.Length)
                     {
@@ -1848,7 +1850,7 @@ namespace Nikse.SubtitleEdit.Core.Common
 
                         file.Position = 0;
                         var buffer = new byte[length];
-                        file.Read(buffer, 0, buffer.Length);
+                        file.ReadFully(buffer, 0, buffer.Length);
 
                         if (IsUtf8(buffer, out var couldBeUtf8))
                         {

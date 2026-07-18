@@ -588,7 +588,7 @@ seconv movie.srt customtext --custom-format:lines-template.xml --output-filename
 
 ```
 src/
-├── libse/        Core subtitle library (NuGet-shippable, netstandard2.1)
+├── libse/        Core subtitle library (NuGet-shippable, netstandard2.1;net10.0)
 ├── libuilogic/   Shared headless logic (BatchConverter pipeline, OCR matchers, image renderer)
 ├── seconv/       This CLI
 └── ui/           Avalonia desktop UI (not referenced by seconv)

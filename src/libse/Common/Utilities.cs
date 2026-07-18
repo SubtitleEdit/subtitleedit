@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -175,12 +174,6 @@ namespace Nikse.SubtitleEdit.Core.Common
             }
 
             return 0;
-        }
-
-        public static void SetSecurityProtocol()
-        {
-            ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         }
 
         public static bool IsBetweenNumbers(string s, int position)
@@ -3408,7 +3401,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         {
             using (var ms = new MemoryStream(buffer))
             {
-                using (var sha512 = new SHA512Managed())
+                using (var sha512 = SHA512.Create())
                 {
                     var hash = sha512.ComputeHash(ms);
                     var hashString = new StringBuilder(128);

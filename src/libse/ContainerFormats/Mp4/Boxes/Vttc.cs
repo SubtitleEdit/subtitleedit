@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     if (length > 0 && length < 5000)
                     {
                         var buffer = new byte[length];
-                        fs.Read(buffer, 0, length);
+                        fs.ReadFully(buffer, 0, length);
                         var s = Encoding.UTF8.GetString(buffer);
                         s = string.Join(Environment.NewLine, s.SplitToLines());
                         Data.Payload = s.Trim();
@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     if (length > 0 && length < 5000)
                     {
                         var buffer = new byte[length];
-                        fs.Read(buffer, 0, length);
+                        fs.ReadFully(buffer, 0, length);
                         var s = Encoding.UTF8.GetString(buffer);
                         s = string.Join(Environment.NewLine, s.SplitToLines());
                         Data.Style = s.Trim();

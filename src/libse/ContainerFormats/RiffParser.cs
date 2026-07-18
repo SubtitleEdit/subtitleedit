@@ -2,7 +2,6 @@
 
 using System;
 using System.IO;
-using System.Runtime.Serialization;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats
 {
@@ -22,11 +21,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
 
         public RiffParserException(string message, Exception inner)
             : base(message, inner)
-        {
-        }
-
-        public RiffParserException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         {
         }
     }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Nikse.SubtitleEdit.Core.Common;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 {
@@ -261,7 +262,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         break;
                     case ElementId.CodecPrivate:
                         codecPrivateRaw = new byte[element.DataSize];
-                        _stream.Read(codecPrivateRaw, 0, codecPrivateRaw.Length);
+                        _stream.ReadFully(codecPrivateRaw, 0, codecPrivateRaw.Length);
                         break;
                     case ElementId.ContentEncodings:
                         contentCompressionAlgorithm = 0; // default value
@@ -646,7 +647,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             // save subtitle data
             var dataLength = (int)(blockElement.EndPosition - _stream.Position);
             var data = new byte[dataLength];
-            _stream.Read(data, 0, dataLength);
+            _stream.ReadFully(data, 0, dataLength);
 
             var subtitle = new MatroskaSubtitle(data, (long)Math.Round(GetTimeScaledToMilliseconds(clusterTimeCode + timeCode)));
             return new MatroskaSubtitleBlock(trackNumber, subtitle);
@@ -843,7 +844,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             var result = (ulong)(unsetFirstBit ? first & (0xFF >> length) : first);
             if (length > 1)
             {
-                _stream.Read(_buffer, 0, length - 1);
+                _stream.ReadFully(_buffer, 0, length - 1);
                 for (var i = 0; i < length - 1; i++)
                 {
                     result = (result << 8) | _buffer[i];
@@ -905,7 +906,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// <returns>A 2-byte signed integer read from the current stream.</returns>
         private short ReadInt16()
         {
-            _stream.Read(_buffer, 0, 2);
+            _stream.ReadFully(_buffer, 0, 2);
             return (short)(_buffer[0] << 8 | _buffer[1]);
         }
 
@@ -916,7 +917,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// <returns>A 4-byte floating point value read from the current stream.</returns>
         private float ReadFloat32()
         {
-            _stream.Read(_buffer, 0, 4);
+            _stream.ReadFully(_buffer, 0, 4);
             int value = BinaryPrimitives.ReadInt32BigEndian(_buffer);
             return BitConverter.Int32BitsToSingle(value);
         }
@@ -928,7 +929,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// <returns>A 8-byte floating point value read from the current stream.</returns>
         private double ReadFloat64()
         {
-            _stream.Read(_buffer, 0, 8);
+            _stream.ReadFully(_buffer, 0, 8);
             long value = BinaryPrimitives.ReadInt64BigEndian(_buffer);
             return BitConverter.Int64BitsToDouble(value);
         }
@@ -943,12 +944,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         {
             if (length <= _buffer.Length)
             {
-                _stream.Read(_buffer, 0, (int)length);
+                _stream.ReadFully(_buffer, 0, (int)length);
                 return encoding.GetString(_buffer.AsSpan(0, (int)length));
             }
 
             var buffer = new byte[length];
-            _stream.Read(buffer, 0, (int)length);
+            _stream.ReadFully(buffer, 0, (int)length);
             return encoding.GetString(buffer.AsSpan()); 
         }
     }

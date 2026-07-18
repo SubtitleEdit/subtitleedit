@@ -360,7 +360,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[11];
-                fs.Read(buffer, 0, buffer.Length);
+                fs.ReadFully(buffer, 0, buffer.Length);
                 return Encoding.ASCII.GetString(buffer, 0, buffer.Length) == "d8:announce";
             }
         }
@@ -375,7 +375,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[2];
-                fs.Read(buffer, 0, buffer.Length);
+                fs.ReadFully(buffer, 0, buffer.Length);
                 return buffer[0] == 0x50 // P
                        && buffer[1] == 0x47; // G
             }
@@ -433,7 +433,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[4];
-                fs.Read(buffer, 0, buffer.Length);
+                fs.ReadFully(buffer, 0, buffer.Length);
                 return VobSubParser.IsPrivateStream2(buffer, 0);
             }
         }
@@ -448,7 +448,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[4];
-                fs.Read(buffer, 0, buffer.Length);
+                fs.ReadFully(buffer, 0, buffer.Length);
                 return VobSubParser.IsMpeg2PackHeader(buffer)
                        || VobSubParser.IsPrivateStream1(buffer, 0);
             }
@@ -579,7 +579,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[3];
-                fs.Read(buffer, 0, buffer.Length);
+                fs.ReadFully(buffer, 0, buffer.Length);
                 return buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf;
             }
         }
@@ -890,7 +890,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[4];
-                fs.Read(buffer, 0, buffer.Length);
+                fs.ReadFully(buffer, 0, buffer.Length);
 
                 // 1a 45 df a3
                 return buffer[0] == 0x1a && buffer[1] == 0x45 && buffer[2] == 0xdf && buffer[3] == 0xa3;
