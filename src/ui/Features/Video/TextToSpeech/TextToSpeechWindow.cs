@@ -189,6 +189,8 @@ public class TextToSpeechWindow : Window
                 return StatusDots.From(engine.IsInstalled(null).Result, F5TtsCrispAsr.GetEngineUpdateStatus());
             case VoxCPM2CrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, VoxCPM2CrispAsr.GetEngineUpdateStatus());
+            case MossTtsCrispAsr:
+                return StatusDots.From(engine.IsInstalled(null).Result, MossTtsCrispAsr.GetEngineUpdateStatus());
             case ZonosTtsCrispAsr:
                 return StatusDots.From(engine.IsInstalled(null).Result, ZonosTtsCrispAsr.GetEngineUpdateStatus());
             case OmniVoiceTtsCpp:

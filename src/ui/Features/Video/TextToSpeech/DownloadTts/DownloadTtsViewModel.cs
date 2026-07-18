@@ -64,6 +64,8 @@ public partial class DownloadTtsViewModel : ObservableObject
     private Task? _downloadTaskF5TtsCrispAsrVoices;
     private Task? _downloadTaskVoxCPM2CrispAsrModels;
     private Task? _downloadTaskVoxCPM2CrispAsrVoices;
+    private Task? _downloadTaskMossTtsCrispAsrModels;
+    private Task? _downloadTaskMossTtsCrispAsrVoices;
     private Task? _downloadTaskZonosTtsCrispAsrModels;
     private Task? _downloadTaskZonosTtsCrispAsrVoices;
     private Task? _downloadTaskOmniVoice;
@@ -83,6 +85,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private readonly ICosyVoice3CrispAsrDownloadService _cosyVoice3CrispAsrDownloadService;
     private readonly IF5TtsCrispAsrDownloadService _f5TtsCrispAsrDownloadService;
     private readonly IVoxCPM2CrispAsrDownloadService _voxCPM2CrispAsrDownloadService;
+    private readonly IMossTtsCrispAsrDownloadService _mossTtsCrispAsrDownloadService;
     private readonly IZonosTtsCrispAsrDownloadService _zonosTtsCrispAsrDownloadService;
     private readonly IOmniVoiceDownloadService _omniVoiceDownloadService;
     private readonly CancellationTokenSource _cancellationTokenSource;
@@ -98,6 +101,7 @@ public partial class DownloadTtsViewModel : ObservableObject
     private readonly MemoryStream _downloadStreamCosyVoice3CrispAsrVoices;
     private readonly MemoryStream _downloadStreamF5TtsCrispAsrVoices;
     private readonly MemoryStream _downloadStreamVoxCPM2CrispAsrVoices;
+    private readonly MemoryStream _downloadStreamMossTtsCrispAsrVoices;
     private readonly MemoryStream _downloadStreamZonosTtsCrispAsrVoices;
     private readonly MemoryStream _downloadStreamOmniVoice;
     private readonly MemoryStream _downloadStreamOmniVoices;
@@ -116,6 +120,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         ICosyVoice3CrispAsrDownloadService cosyVoice3CrispAsrDownloadService,
         IF5TtsCrispAsrDownloadService f5TtsCrispAsrDownloadService,
         IVoxCPM2CrispAsrDownloadService voxCPM2CrispAsrDownloadService,
+        IMossTtsCrispAsrDownloadService mossTtsCrispAsrDownloadService,
         IZonosTtsCrispAsrDownloadService zonosTtsCrispAsrDownloadService,
         IOmniVoiceDownloadService omniVoiceDownloadService)
     {
@@ -129,6 +134,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         _cosyVoice3CrispAsrDownloadService = cosyVoice3CrispAsrDownloadService;
         _f5TtsCrispAsrDownloadService = f5TtsCrispAsrDownloadService;
         _voxCPM2CrispAsrDownloadService = voxCPM2CrispAsrDownloadService;
+        _mossTtsCrispAsrDownloadService = mossTtsCrispAsrDownloadService;
         _zonosTtsCrispAsrDownloadService = zonosTtsCrispAsrDownloadService;
         _omniVoiceDownloadService = omniVoiceDownloadService;
         _zipUnpacker = zipUnpacker;
@@ -147,6 +153,7 @@ public partial class DownloadTtsViewModel : ObservableObject
         _downloadStreamCosyVoice3CrispAsrVoices = new MemoryStream();
         _downloadStreamF5TtsCrispAsrVoices = new MemoryStream();
         _downloadStreamVoxCPM2CrispAsrVoices = new MemoryStream();
+        _downloadStreamMossTtsCrispAsrVoices = new MemoryStream();
         _downloadStreamZonosTtsCrispAsrVoices = new MemoryStream();
         _downloadStreamOmniVoice = new MemoryStream();
         _downloadStreamOmniVoices = new MemoryStream();
@@ -1182,6 +1189,92 @@ public partial class DownloadTtsViewModel : ObservableObject
                 Close();
             }
 
+            // MOSS-TTS mirrors VoxCPM2: model first, then a voices ZIP from the shared
+            // qwen3-tts.cpp voice pack (same 24 kHz mono format the cloning backends want).
+            if (_downloadTaskMossTtsCrispAsrModels is { IsCompletedSuccessfully: true })
+            {
+                _timer.Stop();
+                _downloadTaskMossTtsCrispAsrModels = null;
+
+                var voicesFolder = MossTtsCrispAsr.GetSetVoicesFolder();
+                var voicesAlreadyInstalled = Directory.Exists(voicesFolder)
+                    && Directory.EnumerateFiles(voicesFolder, "*.wav").Any();
+                if (voicesAlreadyInstalled)
+                {
+                    OkPressed = true;
+                    Close();
+                    return;
+                }
+
+                TitleText = "Downloading MOSS-TTS (CrispASR) voices";
+                ProgressValue = 0;
+                ProgressText = Se.Language.General.StartingDotDotDot;
+                var voicesProgress = new Progress<float>(number =>
+                {
+                    var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+                    var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+                    ProgressValue = percentage;
+                    ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+                });
+                _downloadTaskMossTtsCrispAsrVoices = _qwen3TtsCppDownloadService.DownloadVoices(
+                    _downloadStreamMossTtsCrispAsrVoices, voicesProgress, _cancellationTokenSource.Token);
+                _timer.Start();
+            }
+            else if (_downloadTaskMossTtsCrispAsrModels is { IsFaulted: true })
+            {
+                _timer.Stop();
+                var ex = _downloadTaskMossTtsCrispAsrModels.Exception?.InnerException ?? _downloadTaskMossTtsCrispAsrModels.Exception;
+                if (ex is OperationCanceledException)
+                {
+                    ProgressText = "Download canceled";
+                    Close();
+                }
+                else
+                {
+                    ProgressText = "Download failed";
+                    Error = ex?.Message ?? "Unknown error";
+                }
+            }
+
+            if (_downloadTaskMossTtsCrispAsrVoices is { IsCompletedSuccessfully: true })
+            {
+                _timer.Stop();
+                if (_downloadStreamMossTtsCrispAsrVoices.Length > 0)
+                {
+                    var voicesFolder = MossTtsCrispAsr.GetSetVoicesFolder();
+                    try
+                    {
+                        _downloadStreamMossTtsCrispAsrVoices.Position = 0;
+                        _zipUnpacker.UnpackZipStream(_downloadStreamMossTtsCrispAsrVoices, voicesFolder, string.Empty, false, new List<string>(), null);
+                        ResampleVoicesTo24kHz(voicesFolder);
+                    }
+                    catch (Exception ex)
+                    {
+                        Se.LogError(ex);
+                    }
+                    _downloadStreamMossTtsCrispAsrVoices.Dispose();
+                }
+                OkPressed = true;
+                Close();
+            }
+            else if (_downloadTaskMossTtsCrispAsrVoices is { IsFaulted: true })
+            {
+                _timer.Stop();
+                if (_cancellationTokenSource.IsCancellationRequested)
+                {
+                    ProgressText = "Download canceled";
+                    Close();
+                    return;
+                }
+                var ex = _downloadTaskMossTtsCrispAsrVoices.Exception?.InnerException ?? _downloadTaskMossTtsCrispAsrVoices.Exception;
+                if (ex != null)
+                {
+                    Se.LogError(ex);
+                }
+                OkPressed = true;
+                Close();
+            }
+
             if (_downloadTaskOmniVoice is { IsCompletedSuccessfully: true })
             {
                 _timer.Stop();
@@ -1857,6 +1950,29 @@ public partial class DownloadTtsViewModel : ObservableObject
 
         _downloadTaskVoxCPM2CrispAsrModels =
             _voxCPM2CrispAsrDownloadService.DownloadModels(VoxCPM2CrispAsr.GetSetModelsFolder(), resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
+    }
+
+    public void StartDownloadMossTtsCrispAsrModels(string? modelKey = null)
+    {
+        var resolved = MossTtsCrispAsr.ResolveModelKey(modelKey);
+        var modelFileName = MossTtsCrispAsr.GetModelFileName(resolved);
+        TitleText = $"Downloading MOSS-TTS (CrispASR) model ({resolved}): {modelFileName}";
+
+        var downloadProgress = new Progress<float>(number =>
+        {
+            var percentage = (int)Math.Round(number * 100.0, MidpointRounding.AwayFromZero);
+            var pctString = percentage.ToString(CultureInfo.InvariantCulture);
+            ProgressValue = percentage;
+            ProgressText = string.Format(Se.Language.General.DownloadingXPercent, pctString);
+        });
+
+        var titleProgress = new Action<string>(title =>
+        {
+            Dispatcher.UIThread.Post(() => TitleText = title);
+        });
+
+        _downloadTaskMossTtsCrispAsrModels =
+            _mossTtsCrispAsrDownloadService.DownloadModels(MossTtsCrispAsr.GetSetModelsFolder(), resolved, downloadProgress, titleProgress, _cancellationTokenSource.Token);
     }
 
     public void StartDownloadOmniVoice(string windowsVariant = OmniVoiceDownloadService.WindowsVariantVulkan)

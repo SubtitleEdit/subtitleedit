@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -217,6 +217,15 @@ public static class DownloadHashManager
         public const string ModelQ4K = "VoxCPM2CrispAsr.ModelQ4K";
         public const string ModelF16 = "VoxCPM2CrispAsr.ModelF16";
         public const string Ref = "VoxCPM2CrispAsr.Ref";
+    }
+
+    public static class MossTtsCrispAsr
+    {
+        // SHA-256 of each GGUF the moss-tts backend needs: the two backbone quants and the
+        // shared moss-tts-v1.5-codec.gguf companion. Hashes are the HF LFS oid from the tree API.
+        public const string ModelQ4K = "MossTtsCrispAsr.ModelQ4K";
+        public const string ModelF16 = "MossTtsCrispAsr.ModelF16";
+        public const string Codec = "MossTtsCrispAsr.Codec";
     }
 
     public static class KokoroTtsCpp
@@ -1269,6 +1278,20 @@ public static class DownloadHashManager
             [VoxCPM2CrispAsr.Ref] = new[]
             {
                 "9b024ef9a109075aa8ac7219c097a1b1b1bed23d3230b33a902e162c2c10c5f8", // voxcpm2-ref.gguf
+            },
+
+            // MOSS-TTS (CrispASR) — cstr/moss-tts-v1.5-GGUF on HuggingFace.
+            [MossTtsCrispAsr.ModelQ4K] = new[]
+            {
+                "9e7fb9ed28339be5327dce16f9bd53c67220cbf119a9c767f513d28d1fa80547", // moss-tts-v1.5-q4_k.gguf
+            },
+            [MossTtsCrispAsr.ModelF16] = new[]
+            {
+                "6da9920aae627b308e8c111a3ab3cbd0456fe79c6e0cec3b49ab92ce8642938a", // moss-tts-v1.5-f16.gguf
+            },
+            [MossTtsCrispAsr.Codec] = new[]
+            {
+                "9cb5aa788dfb8fb0d46323898fb8dba57fb85d9c1f615019949c7f00a4bd5382", // moss-tts-v1.5-codec.gguf
             },
 
             // Kokoro TTS — https://github.com/niksedk/kokoro.cpp/releases
