@@ -1,7 +1,7 @@
 {
   "title": "Subtitle Edit",
   "version": "v5.1.0-beta15",
-  "translatedBy": "Utku Gogus; Son güncelleme: Ahmet Murat Özhan (13.07.2026)",
+  "translatedBy": "Utku Gogus; Son güncelleme: Ahmet Murat Özhan (18.07.2026)",
   "cultureName": "tr-TR",
   "general": {
     "abort": "İptal",
@@ -1019,6 +1019,7 @@
     "xShotChangedLoaded": "{0} sahne değişimi yüklendi",
     "youtubeDlDownloadedSuccessfully": "\"yt-dlp\" başarıyla indirildi.",
     "youtubeDlNotInstalledDownloadNow": "\"yt-dlp\" yüklü değil ve çevrim içi videoları oynatmak için gerekli.\n\nŞimdi indirilsin mi?",
+	"promptInsertSubtitleOverlap": "Eklenen satırlar mevcut satırlarla çakışacak.\n\nYine de eklensin mi?",
     "youtubeDlOutdatedDownloadNow": "\"yt-dlp\" sürümü güncel değil ve çevrimiçi videolarla çalışmayabilir.\n\nGüncel sürüm şimdi indirilsin mi?",
     "insertUnicodeSymbol": "Unicode sembolü ekle",
     "trimmedXLines": "{0} alt yazı satırı kırpıldı",
@@ -2502,6 +2503,7 @@
       "errorBackgroundColor": "Hata arka plan rengi",
       "waveformDrawGridLines": "Izgara çizgilerini çiz",
       "waveformCenterVideoPosition": "Video konumunu ortala",
+	  "waveformCenterVideoPositionAlsoWhenPaused": "Duraklatıldığında da video konumunu merkezde tut",
       "waveformShowToolbar": "Araç çubuğunu göster",
       "waveformShowToolbarEdit": "Araç çubuğunu düzenle...",
 	  "waveformShowToolbarEditLabel": "Araç çubuğu ögeleri",
