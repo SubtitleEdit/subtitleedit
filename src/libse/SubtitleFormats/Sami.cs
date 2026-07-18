@@ -249,7 +249,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int styleStart = allInputLower.IndexOf("<style", StringComparison.Ordinal);
             if (styleStart > 0)
             {
-                int styleEnd = allInputLower.IndexOf("</style>", StringComparison.Ordinal);
+                int styleEnd = allInputLower.IndexOf("</style>", styleStart, StringComparison.Ordinal);
                 if (styleEnd > 0)
                 {
                     subtitle.Header = allInput.Substring(styleStart, styleEnd - styleStart + 8);
@@ -259,7 +259,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const string syncTag = "<sync start=";
             const string syncTagEnc = "<sync encrypted=\"true\" start=";
             int syncStartPos = allInputLower.IndexOf(syncTag, StringComparison.Ordinal);
-            bool hasEncryptedTags = allInput.IndexOf(syncTagEnc, StringComparison.Ordinal) >= 0;
+            bool hasEncryptedTags = allInputLower.IndexOf(syncTagEnc, StringComparison.Ordinal) >= 0;
             int index = syncStartPos + syncTag.Length;
 
             int syncStartPosEnc = -1;

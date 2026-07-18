@@ -3265,6 +3265,7 @@ public partial class SpeechToTextViewModel : ObservableObject
                 return;
             }
 
+            BatchItems.Clear(); // may hold stale items from an earlier batch-mode session
             BatchItems.Add(new SpeechToTextJobItem(_videoFileName, string.Empty, mediaInfo));
         }
         _batchIndex = 0;

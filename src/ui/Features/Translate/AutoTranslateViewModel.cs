@@ -1272,13 +1272,17 @@ public partial class AutoTranslateViewModel : ObservableObject
         }
 
         var sourceLanguage = translator.GetSupportedSourceLanguages()
-            .FirstOrDefault(p => p.Name.Equals(SelectedSourceLanguage?.ToString() ?? string.Empty, StringComparison.InvariantCultureIgnoreCase));
+            .FirstOrDefault(p => p.Code == SelectedSourceLanguage?.Code);
 
         var targetLanguage = translator.GetSupportedTargetLanguages()
-            .FirstOrDefault(p => p.Name.Equals(SelectedTargetLanguage?.ToString() ?? string.Empty, StringComparison.InvariantCultureIgnoreCase));
+            .FirstOrDefault(p => p.Code == SelectedTargetLanguage?.Code);
 
         if (sourceLanguage == null || targetLanguage == null)
         {
+            _translationInProgress = false;
+            IsTranslateEnabled = true;
+            IsProgressEnabled = false;
+            StatusText = Se.Language.Translate.ReadyToTranslate;
             return false;
         }
 
