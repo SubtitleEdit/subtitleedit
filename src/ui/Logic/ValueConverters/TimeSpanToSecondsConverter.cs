@@ -43,7 +43,7 @@ public class TimeSpanToSecondsConverter : IValueConverter
 
         if (value is float floatSeconds)
         {
-            return TimeSpan.FromSeconds((double)floatSeconds);
+            return TimeSpan.FromSeconds(floatSeconds);
         }
 
         return TimeSpan.Zero;

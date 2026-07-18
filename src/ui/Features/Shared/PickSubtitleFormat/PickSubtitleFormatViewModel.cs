@@ -119,7 +119,7 @@ public partial class PickSubtitleFormatViewModel : ObservableObject
             SubtitleFormatNames.Clear();
             if (string.IsNullOrWhiteSpace(SearchText))
             {
-                ObservableCollectionExtensions.AddRange(SubtitleFormatNames, _allSubtitleFormatNames);
+                SubtitleFormatNames.AddRange(_allSubtitleFormatNames);
                 return;
             }
 

@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Core.Common
             return source.IndexOf(value, comparisonType) >= 0;
         }
 
-        public static List<string> SplitToLines(this string s) => SplitToLines(s, s.Length);
+        public static List<string> SplitToLines(this string s) => s.SplitToLines(s.Length);
 
         public static List<string> SplitToLines(this string s, int max)
         {

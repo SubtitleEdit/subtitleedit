@@ -21,7 +21,7 @@ public static class ImageRenderer
             ip.Alignment == ExportAlignment.MiddleLeft ||
             ip.Alignment == ExportAlignment.BottomLeft)
         {
-            x = (int)ip.LeftRightMargin;
+            x = ip.LeftRightMargin;
         }
         else if (ip.Alignment == ExportAlignment.TopCenter ||
                  ip.Alignment == ExportAlignment.MiddleCenter ||
@@ -40,7 +40,7 @@ public static class ImageRenderer
             ip.Alignment == ExportAlignment.TopCenter ||
             ip.Alignment == ExportAlignment.TopRight)
         {
-            y = (int)ip.BottomTopMargin;
+            y = ip.BottomTopMargin;
         }
         else if (ip.Alignment == ExportAlignment.MiddleLeft ||
                  ip.Alignment == ExportAlignment.MiddleCenter ||

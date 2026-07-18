@@ -2530,9 +2530,9 @@ public partial class SettingsViewModel : ObservableObject
             {
                 Name = "Default",
                 SingleLineMaxLength = g.SubtitleLineMaximumLength,
-                OptimalCharsPerSec = (double)g.SubtitleOptimalCharactersPerSeconds,
-                MaxCharsPerSec = (double)g.SubtitleMaximumCharactersPerSeconds,
-                MaxWordsPerMin = (double)g.SubtitleMaximumWordsPerMinute,
+                OptimalCharsPerSec = g.SubtitleOptimalCharactersPerSeconds,
+                MaxCharsPerSec = g.SubtitleMaximumCharactersPerSeconds,
+                MaxWordsPerMin = g.SubtitleMaximumWordsPerMinute,
                 MinDurationMs = g.SubtitleMinimumDisplayMilliseconds,
                 MaxDurationMs = g.SubtitleMaximumDisplayMilliseconds,
                 MinGapMs = g.MinimumBetweenLines.Milliseconds,

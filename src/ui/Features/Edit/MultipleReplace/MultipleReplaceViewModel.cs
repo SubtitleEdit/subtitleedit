@@ -381,14 +381,14 @@ public partial class MultipleReplaceViewModel : ObservableObject
                 {
                     Header = Se.Language.Edit.MultipleReplace.NewCategory,
                     Command = CategoryAddCategoryCommand,
-                    CommandParameter = (RuleTreeNode?)null,
+                    CommandParameter = null,
                 },
                 new Separator(),
                 new MenuItem
                 {
                     Header = Se.Language.General.ImportDotDotDot,
                     Command = CategoryImportCommand,
-                    CommandParameter = (RuleTreeNode?)null,
+                    CommandParameter = null,
                 },
             }
         };

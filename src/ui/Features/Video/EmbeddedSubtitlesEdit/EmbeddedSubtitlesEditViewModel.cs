@@ -252,7 +252,7 @@ public partial class EmbeddedSubtitlesEditViewModel : ObservableObject
         if (long.TryParse(arr[1].Trim(), out var f))
         {
             _processedFrames = f;
-            ProgressValue = (double)_processedFrames * 100.0 / _totalFrames;
+            ProgressValue = _processedFrames * 100.0 / _totalFrames;
         }
     }
 

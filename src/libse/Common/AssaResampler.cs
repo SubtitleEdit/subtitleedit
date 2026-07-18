@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core.Common
         public static decimal Resample(decimal source, decimal target, decimal v)
         {
             var factor = (target / source);
-            return (decimal)Math.Round(factor * v, 1, MidpointRounding.AwayFromZero);
+            return Math.Round(factor * v, 1, MidpointRounding.AwayFromZero);
         }
 
         public static string ResampleOverrideTagsFont(decimal sourceWidth, decimal targetWidth, decimal sourceHeight, decimal targetHeight, string input)

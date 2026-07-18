@@ -243,7 +243,7 @@ public partial class EmbeddedSubtitlesEditMp4ViewModel : ObservableObject
             _processedFrames = f;
             if (_totalFrames > 0)
             {
-                ProgressValue = (double)_processedFrames * 100.0 / _totalFrames;
+                ProgressValue = _processedFrames * 100.0 / _totalFrames;
             }
         }
     }

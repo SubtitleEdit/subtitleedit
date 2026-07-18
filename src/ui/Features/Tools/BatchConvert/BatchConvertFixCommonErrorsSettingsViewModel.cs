@@ -40,7 +40,7 @@ public partial class BatchConvertFixCommonErrorsSettingsViewModel : ObservableOb
 
     public void Initialize(Tools.FixCommonErrors.ProfileDisplayItem profile)
     {
-        SelectedProfile = Enumerable.FirstOrDefault<ProfileDisplayItem>(Profiles, p=>p.Name == profile.Name);
+        SelectedProfile = Profiles.FirstOrDefault<ProfileDisplayItem>(p=>p.Name == profile.Name);
     }
 
     [RelayCommand]

@@ -48,7 +48,7 @@ public class ItunesTimedTextPropertiesWindow : Window
         };
 
         var labelTimeBase = UiUtil.MakeLabel("Time base").WithMinWidth(labelWidth);
-        var comboBoxTimeBase = UiUtil.MakeComboBox<string>(vm.TimeBases, vm, nameof(vm.SelectedTimeBase)).WithMinWidth(263);
+        var comboBoxTimeBase = UiUtil.MakeComboBox(vm.TimeBases, vm, nameof(vm.SelectedTimeBase)).WithMinWidth(263);
         var panelTimeBase = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -75,7 +75,7 @@ public class ItunesTimedTextPropertiesWindow : Window
         };
 
         var labelDropMode = UiUtil.MakeLabel("Drop mode").WithMinWidth(labelWidth);
-        var comboBoxDropMode = UiUtil.MakeComboBox<string>(vm.DropModes, vm, nameof(vm.SelectedDropMode)).WithMinWidth(263);
+        var comboBoxDropMode = UiUtil.MakeComboBox(vm.DropModes, vm, nameof(vm.SelectedDropMode)).WithMinWidth(263);
         var panelDropMode = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -93,7 +93,7 @@ public class ItunesTimedTextPropertiesWindow : Window
         };
 
         var labelDefaultRegion = UiUtil.MakeLabel("Default region").WithMinWidth(labelWidth);
-        var comboBoxDefaultRegion = UiUtil.MakeComboBox<string>(vm.DefaultRegions, vm, nameof(vm.SelectedDefaultRegion)).WithMinWidth(263);
+        var comboBoxDefaultRegion = UiUtil.MakeComboBox(vm.DefaultRegions, vm, nameof(vm.SelectedDefaultRegion)).WithMinWidth(263);
         var panelDefaultRegion = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -102,7 +102,7 @@ public class ItunesTimedTextPropertiesWindow : Window
         };
 
         var labelStyleAttribute = UiUtil.MakeLabel("Style attribute name").WithMinWidth(labelWidth);
-        var comboBoxStyleAttribute = UiUtil.MakeComboBox<string>(vm.StyleAttributes, vm, nameof(vm.SelectedStyleAttribute)).WithMinWidth(263);
+        var comboBoxStyleAttribute = UiUtil.MakeComboBox(vm.StyleAttributes, vm, nameof(vm.SelectedStyleAttribute)).WithMinWidth(263);
         var panelStyleAttribute = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -111,7 +111,7 @@ public class ItunesTimedTextPropertiesWindow : Window
         };
 
         var labelTimeCodeFormat = UiUtil.MakeLabel("Time code format").WithMinWidth(labelWidth);
-        var comboBoxTimeCodeFormat = UiUtil.MakeComboBox<string>(vm.TimeCodeFormats, vm, nameof(vm.SelectedTimeCodeFormat)).WithMinWidth(263);
+        var comboBoxTimeCodeFormat = UiUtil.MakeComboBox(vm.TimeCodeFormats, vm, nameof(vm.SelectedTimeCodeFormat)).WithMinWidth(263);
         var panelTimeCodeFormat = new StackPanel
         {
             Orientation = Orientation.Horizontal,

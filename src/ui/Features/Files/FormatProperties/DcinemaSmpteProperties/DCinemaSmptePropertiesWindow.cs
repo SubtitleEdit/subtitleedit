@@ -57,7 +57,7 @@ public class DCinemaSmptePropertiesWindow : Window
         var labelReelNumber = UiUtil.MakeLabel(lang.ReelNumber).WithMinWidth(labelWidth);
         var numericUpDownReelNumber = UiUtil.MakeNumericUpDownInt(1, 250, 1, 120, vm, nameof(vm.ReelNumber));
         var labelLanguage = UiUtil.MakeLabel(Se.Language.General.Language).WithMinWidth(80);
-        var comboBoxLanguage = UiUtil.MakeComboBox<string>(vm.Languages, vm, nameof(vm.SelectedLanguage)).WithMinWidth(100);
+        var comboBoxLanguage = UiUtil.MakeComboBox(vm.Languages, vm, nameof(vm.SelectedLanguage)).WithMinWidth(100);
         var panelReelNumber = new StackPanel
         {
             Orientation = Orientation.Horizontal,
@@ -80,7 +80,7 @@ public class DCinemaSmptePropertiesWindow : Window
         var labelEditRate = UiUtil.MakeLabel(lang.EditRate).WithMinWidth(labelWidth);
         var textBoxEditRate = UiUtil.MakeTextBox(80, vm, nameof(vm.EditRate));
         var labelTimeCodeRate = UiUtil.MakeLabel(lang.TimeCodeRate).WithMinWidth(100);
-        var comboBoxTimeCodeRate = UiUtil.MakeComboBox<string>(vm.TimeCodeRates, vm, nameof(vm.SelectedTimeCodeRate)).WithMinWidth(80);
+        var comboBoxTimeCodeRate = UiUtil.MakeComboBox(vm.TimeCodeRates, vm, nameof(vm.SelectedTimeCodeRate)).WithMinWidth(80);
         var panelEditRate = new StackPanel
         {
             Orientation = Orientation.Horizontal,

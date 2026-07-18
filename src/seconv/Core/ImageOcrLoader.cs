@@ -126,7 +126,7 @@ internal static class ImageOcrLoader
                         }
                         if (ocr is null || !string.IsNullOrWhiteSpace(text))
                         {
-                            subtitle.Paragraphs.Add(new LibSeParagraph(text, (double)dvb.StartMilliseconds, (double)dvb.EndMilliseconds));
+                            subtitle.Paragraphs.Add(new LibSeParagraph(text, dvb.StartMilliseconds, dvb.EndMilliseconds));
                         }
                     }
                     finally

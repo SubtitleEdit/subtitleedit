@@ -345,7 +345,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         }
         else
         {
-            var selectedEngine = Enumerable.FirstOrDefault<ISpeechToTextEngine>((IEnumerable<ISpeechToTextEngine>)Engines, p => p.Choice == savedChoice);
+            var selectedEngine = Engines.FirstOrDefault(p => p.Choice == savedChoice);
             if (selectedEngine != null)
             {
                 SelectedEngine = selectedEngine;
@@ -1682,8 +1682,8 @@ public partial class SpeechToTextViewModel : ObservableObject
             return;
         }
 
-        var convertedJobs = Enumerable.Count<SpeechToTextJobItem>(BatchItems, p => p.Status == Se.Language.General.Converted);
-        var failed = Enumerable.Count<SpeechToTextJobItem>(BatchItems, p => p.Status != Se.Language.General.Converted);
+        var convertedJobs = BatchItems.Count(p => p.Status == Se.Language.General.Converted);
+        var failed = BatchItems.Count(p => p.Status != Se.Language.General.Converted);
 
         Dispatcher.UIThread.Invoke<Task>(async () =>
         {
@@ -2655,7 +2655,7 @@ public partial class SpeechToTextViewModel : ObservableObject
         var vm = await _windowService.ShowDialogAsync<SpeechToTextAdvancedWindow, SpeechToTextAdvancedViewModel>(Window!,
             viewModal =>
             {
-                viewModal.Engines = Enumerable.ToList<ISpeechToTextEngine>((IEnumerable<ISpeechToTextEngine>)Engines);
+                viewModal.Engines = Engines.ToList();
                 viewModal.EngineClickedCommand.Execute((ISpeechToTextEngine)SelectedEngine);
             });
 
@@ -3172,9 +3172,9 @@ public partial class SpeechToTextViewModel : ObservableObject
                     }
 
                     var models = new ObservableCollection<SpeechToTextModelDisplay>
-                {
-                    displayModelAligner
-                };
+                    {
+                        displayModelAligner
+                    };
                     var vm = await _windowService.ShowDialogAsync<DownloadSpeechToTextModelsWindow, DownloadSpeechToTextModelsViewModel>(
                         Window!, viewModel =>
                         {
@@ -4248,11 +4248,11 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (result != null)
         {
-            SelectedModel = Enumerable.FirstOrDefault<SpeechToTextModelDisplay>((IEnumerable<SpeechToTextModelDisplay>)Models, m => m.Model.Name == result.Name);
+            SelectedModel = Models.FirstOrDefault(m => m.Model.Name == result.Name);
         }
         else
         {
-            SelectedModel = Enumerable.FirstOrDefault<SpeechToTextModelDisplay>((IEnumerable<SpeechToTextModelDisplay>)Models, m => m.Model.Name == oldModel.Model.Name);
+            SelectedModel = Models.FirstOrDefault(m => m.Model.Name == oldModel.Model.Name);
         }
     }
 
@@ -4279,14 +4279,14 @@ public partial class SpeechToTextViewModel : ObservableObject
         WhisperLanguage? language = null;
         if (SelectedLanguage is { } prev)
         {
-            language = Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => p.Code == prev.Code)
-                       ?? Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => string.Equals(p.Name, prev.Name, StringComparison.OrdinalIgnoreCase));
+            language = Languages.FirstOrDefault(p => p.Code == prev.Code)
+                       ?? Languages.FirstOrDefault(p => string.Equals(p.Name, prev.Name, StringComparison.OrdinalIgnoreCase));
         }
 
         var savedCode = Se.Settings.Tools.AudioToText.WhisperLanguageCode;
         if (language == null && !string.IsNullOrEmpty(savedCode))
         {
-            language = Enumerable.FirstOrDefault<WhisperLanguage>(Languages, p => p.Code == savedCode);
+            language = Languages.FirstOrDefault(p => p.Code == savedCode);
         }
 
         SelectedLanguage = language ?? PickDefaultLanguage(Languages);
@@ -4303,14 +4303,14 @@ public partial class SpeechToTextViewModel : ObservableObject
 
         if (Models.Count > 0)
         {
-            var model = Enumerable.FirstOrDefault<SpeechToTextModelDisplay>((IEnumerable<SpeechToTextModelDisplay>)Models, p => p.Model.Name == Se.Settings.Tools.AudioToText.WhisperModel);
+            var model = Models.FirstOrDefault<SpeechToTextModelDisplay>(p => p.Model.Name == Se.Settings.Tools.AudioToText.WhisperModel);
             if (model != null)
             {
                 SelectedModel = model;
             }
             else
             {
-                SelectedModel = Enumerable.FirstOrDefault<SpeechToTextModelDisplay>((IEnumerable<SpeechToTextModelDisplay>)Models);
+                SelectedModel = Models.FirstOrDefault();
             }
         }
 
@@ -4688,9 +4688,9 @@ public partial class SpeechToTextViewModel : ObservableObject
     private static WhisperLanguage? PickDefaultLanguage(IEnumerable<WhisperLanguage> languages)
     {
         var list = languages as IList<WhisperLanguage> ?? languages.ToList();
-        return Enumerable.FirstOrDefault<WhisperLanguage>(list, p => string.Equals(p.Name, "English", StringComparison.OrdinalIgnoreCase))
-            ?? Enumerable.FirstOrDefault<WhisperLanguage>(list, p => p.Code == "en" || p.Code == "eng_Latn")
-            ?? Enumerable.FirstOrDefault<WhisperLanguage>(list);
+        return list.FirstOrDefault(p => string.Equals(p.Name, "English", StringComparison.OrdinalIgnoreCase))
+            ?? list.FirstOrDefault(p => p.Code == "en" || p.Code == "eng_Latn")
+            ?? list.FirstOrDefault();
     }
 
     internal void Initialize(string? videoFileName, int audioTrackNumber)

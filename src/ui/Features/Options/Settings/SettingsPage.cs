@@ -1145,12 +1145,12 @@ public class SettingsPage : UserControl
 
         if (minValue.HasValue)
         {
-            nud.Minimum = (decimal)minValue.Value;
+            nud.Minimum = minValue.Value;
         }
 
         if (maxValue.HasValue)
         {
-            nud.Maximum = (decimal)maxValue.Value;
+            nud.Maximum = maxValue.Value;
         }
 
         return nud;

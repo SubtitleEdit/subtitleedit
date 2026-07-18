@@ -379,10 +379,10 @@ public partial class ReviewSpeechViewModel : ObservableObject
 
         SelectedEngine = engine;
 
-        ObservableCollectionExtensions.AddRange(Voices, voices);
+        Voices.AddRange(voices);
         SelectedVoice = voice;
 
-        ObservableCollectionExtensions.AddRange(Languages, languages);
+        Languages.AddRange(languages);
         SelectedLanguage = language;
 
         _videoFileName = videoFileName;
@@ -610,8 +610,8 @@ public partial class ReviewSpeechViewModel : ObservableObject
                 // moved or shared, and Import resolves the path against the JSON's own directory.
                 // Forward slash so the same JSON opens on Windows, macOS and Linux.
                 AudioFileName = string.IsNullOrEmpty(targetFileName) ? string.Empty : "wav/" + Path.GetFileName(targetFileName),
-                StartMs = (long)Math.Round((double)line.StepResult.Paragraph.StartTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
-                EndMs = (long)Math.Round((double)line.StepResult.Paragraph.EndTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
+                StartMs = (long)Math.Round(line.StepResult.Paragraph.StartTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
+                EndMs = (long)Math.Round(line.StepResult.Paragraph.EndTime.TotalMilliseconds, MidpointRounding.AwayFromZero),
                 VoiceName = line.StepResult.Voice?.Name ?? string.Empty,
                 // Per-line engine snapshot, not the global SelectedEngine — different rows can
                 // come from different engines via the cast workflow, and on re-import we want
@@ -1498,7 +1498,7 @@ public partial class ReviewSpeechViewModel : ObservableObject
             {
                 var voices = await murf.GetVoices(SelectedLanguage?.Code ?? string.Empty);
                 Voices.Clear();
-                ObservableCollectionExtensions.AddRange(Voices, voices);
+                Voices.AddRange(voices);
 
                 var lastVoice = Voices.FirstOrDefault(v => v.Name == Se.Settings.Video.TextToSpeech.Voice);
                 if (lastVoice == null)

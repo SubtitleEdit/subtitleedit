@@ -130,14 +130,14 @@ public static class ClipboardHelper
         {
             try
             {
-                return await ClipboardExtensions.TryGetTextAsync(clipboard);
+                return await clipboard.TryGetTextAsync();
             }
             catch
             {
                 await Task.Delay(50);
                 try
                 {
-                    return await ClipboardExtensions.TryGetTextAsync(clipboard);
+                    return await clipboard.TryGetTextAsync();
                 }
                 catch
                 {

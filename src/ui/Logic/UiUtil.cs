@@ -2912,7 +2912,7 @@ public static class UiUtil
 
         // Reconstruct the last known rect
         var desired = new PixelPoint(existing.X, existing.Y);
-        var windowRect = new PixelRect(desired, new PixelSize((int)existing.Width, (int)existing.Height));
+        var windowRect = new PixelRect(desired, new PixelSize(existing.Width, existing.Height));
 
         var screens = window.Screens.All;
         bool fits = screens.Any(s => s.Bounds.Intersects(windowRect));
@@ -2929,8 +2929,8 @@ public static class UiUtil
             if (targetScreen != null)
             {
                 // center on that screen
-                var px = targetScreen.Bounds.X + (targetScreen.Bounds.Width - (int)existing.Width) / 2;
-                var py = targetScreen.Bounds.Y + (targetScreen.Bounds.Height - (int)existing.Height) / 2;
+                var px = targetScreen.Bounds.X + (targetScreen.Bounds.Width - existing.Width) / 2;
+                var py = targetScreen.Bounds.Y + (targetScreen.Bounds.Height - existing.Height) / 2;
                 desired = new PixelPoint(px, py);
             }
             else
@@ -2939,8 +2939,8 @@ public static class UiUtil
                 var primary = window.Screens.Primary;
                 if (primary != null)
                 {
-                    var px = primary.Bounds.X + (primary.Bounds.Width - (int)existing.Width) / 2;
-                    var py = primary.Bounds.Y + (primary.Bounds.Height - (int)existing.Height) / 2;
+                    var px = primary.Bounds.X + (primary.Bounds.Width - existing.Width) / 2;
+                    var py = primary.Bounds.Y + (primary.Bounds.Height - existing.Height) / 2;
                     desired = new PixelPoint(px, py);
                 }
             }
