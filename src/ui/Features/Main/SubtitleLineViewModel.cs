@@ -54,6 +54,16 @@ public partial class SubtitleLineViewModel : ObservableObject
     [ObservableProperty]
     private bool _isHidden;
 
+    /// <summary>
+    /// Re-raises change notification for the text columns so the grid re-runs its converters
+    /// (e.g. after a theme change, where the syntax highlighting colors differ).
+    /// </summary>
+    public void RefreshTextRendering()
+    {
+        OnPropertyChanged(nameof(Text));
+        OnPropertyChanged(nameof(OriginalText));
+    }
+
     public Paragraph? Paragraph { get; set; }
     public string Extra { get; set; }
     public string Language { get; set; }

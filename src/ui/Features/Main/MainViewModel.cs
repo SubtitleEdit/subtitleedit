@@ -449,9 +449,6 @@ public partial class MainViewModel :
     public MenuItem MenuItemAudioVisualizerExtractAudio { get; set; }
     public ITextBoxWrapper EditTextBoxOriginal { get; set; }
     public ITextBoxWrapper EditTextBox { get; set; }
-    public TextEditorBindingHelper? EditTextBoxHelper { get; set; }
-    public TextEditorBindingHelper? EditTextBoxOriginalHelper { get; set; }
-    public TextEditorBindingCoordinator? EditTextBoxBindingCoordinator { get; set; }
     public StackPanel PanelSingleLineLengthsOriginal { get; set; }
     public MenuItem MenuItemStyles { get; set; }
     public MenuItem MenuItemActors { get; set; }
@@ -550,7 +547,7 @@ public partial class MainViewModel :
         AudioTraksMenuItem = new MenuItem();
         SubtitleDataGridSyntaxHighlighting = new TextWithSubtitleSyntaxHighlightingConverter();
         Toolbar = new Border();
-        UiTheme.SystemThemeChangedCallback = RebuildToolbar;
+        UiTheme.SystemThemeChangedCallback = OnSystemThemeChanged;
         ButtonWaveformPlay = new Button();
         _subtitle = new Subtitle();
         _subtitleOriginal = new Subtitle();
@@ -8892,6 +8889,19 @@ public partial class MainViewModel :
         {
             videoObj["ShowStopButton"] = false;
             videoObj["ShowFullscreenButton"] = false;
+        }
+    }
+
+    private void OnSystemThemeChanged()
+    {
+        RebuildToolbar();
+
+        // The syntax highlighting scheme is theme-dependent. The edit box re-colors itself
+        // (its presenter keys its caches on the theme), but the grid rows hold converted
+        // inlines - re-raise the text notifications so realized rows re-run the converter.
+        foreach (var subtitle in Subtitles)
+        {
+            subtitle.RefreshTextRendering();
         }
     }
 
