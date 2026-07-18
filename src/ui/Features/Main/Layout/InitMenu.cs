@@ -531,6 +531,11 @@ public static class InitMenu
                 Header = l.ConvertActors,
                 Command = vm.ShowToolsConvertActorsCommand,
             },
+            new MenuItem
+            {
+                Header = l.RemoveUnicodeCharacters,
+                Command = vm.ShowToolsRemoveUnicodeCharactersCommand,
+            },
         };
         foreach (var item in tools.OrderBy(p => p.Header?.ToString()?.Replace("_", string.Empty)))
         {
