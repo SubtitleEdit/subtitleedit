@@ -3148,6 +3148,7 @@
     "binarize": "Binarize",
     "borderSize": "Border size",
     "captureTopAlign": "Auto-detect ASSA alignment",
+    "showOnlyForcedSubtitles": "Show only forced subtitles",
     "ocrImage": "OCR image",
     "oneColor": "One color (white)",
     "darknessThreshold": "Darkness threshold",
