@@ -28,6 +28,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
         private List<Cea608.CcData> _cea608CcData = new List<Cea608.CcData>();
 
+        // Cap for the stts/ctts run-length expansions: a malformed sample count (up to
+        // 0xFFFFFFFF) must not expand into an OOM-sized list. Far above any real sample
+        // count (5M samples is ~23 hours at 60 fps).
+        private const int MaxRunLengthEntries = 5_000_000;
+
         public Stbl(Stream fs, ulong maximumLength, ulong timeScale, string handlerType, Mdia mdia)
         {
             TimeScale = timeScale;
@@ -62,6 +67,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                         for (var i = 0; i < totalEntries; i++)
                         {
+                            if (8 + i * 4 + 3 >= Buffer.Length)
+                            {
+                                break;
+                            }
+
                             var offset = GetUInt(8 + i * 4);
                             ChunkOffsets.Add(offset);
                         }
@@ -78,6 +88,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                         for (var i = 0; i < totalEntries; i++)
                         {
+                            if (8 + i * 8 + 7 >= Buffer.Length)
+                            {
+                                break;
+                            }
+
                             var offset = GetUInt64(8 + i * 8);
                             ChunkOffsets.Add(offset);
                         }
@@ -111,11 +126,21 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     var numberOfSampleTimes = GetUInt(4);
                     for (var i = 0; i < numberOfSampleTimes; i++)
                     {
+                        if (12 + i * 8 + 3 >= Buffer.Length)
+                        {
+                            break;
+                        }
+
                         var sampleCount = GetUInt(8 + i * 8);
                         var sampleDelta = GetUInt(12 + i * 8);
-                        for (var j = 0; j < sampleCount; j++)
+                        for (var j = 0; j < sampleCount && Ssts.Count < MaxRunLengthEntries; j++)
                         {
                             Ssts.Add(sampleDelta);
+                        }
+
+                        if (Ssts.Count >= MaxRunLengthEntries)
+                        {
+                            break;
                         }
                     }
                 }
@@ -134,9 +159,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         var sampleCount = GetUInt(8 + i * 8);
                         var offsetRaw = GetUInt(12 + i * 8);
                         var sampleOffset = version == 1 ? unchecked((int)offsetRaw) : (int)offsetRaw;
-                        for (var j = 0; j < sampleCount; j++)
+                        for (var j = 0; j < sampleCount && Ctts.Count < MaxRunLengthEntries; j++)
                         {
                             Ctts.Add(sampleOffset);
+                        }
+
+                        if (Ctts.Count >= MaxRunLengthEntries)
+                        {
+                            break;
                         }
                     }
                 }

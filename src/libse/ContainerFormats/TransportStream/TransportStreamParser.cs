@@ -651,9 +651,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 {
                     var sub = new TransportStreamSubtitle();
                     sub.StartMilliseconds = (ulong)seconds * 1000UL;
-                    seconds += pes.PageCompositions[0].PageTimeOut;
                     if (pes.PageCompositions.Count > 0)
                     {
+                        seconds += pes.PageCompositions[0].PageTimeOut;
                         sub.EndMilliseconds = sub.StartMilliseconds + (ulong)pes.PageCompositions[0].PageTimeOut * 1000UL;
                     }
                     else

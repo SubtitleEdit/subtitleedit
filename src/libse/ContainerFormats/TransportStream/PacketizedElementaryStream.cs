@@ -36,6 +36,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
         public PacketizedElementaryStream(byte[] buffer, int index)
         {
+            // A truncated pack (e.g. a PES packet with declared length 0) can be too short for the fixed header
+            if (index + 8 >= buffer.Length)
+            {
+                return;
+            }
+
             StartCode = Helper.GetEndian(buffer, index + 0, 3);
             StreamId = buffer[index + 3];
             Length = Helper.GetEndianWord(buffer, index + 4);
@@ -55,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
 
             HeaderDataLength = buffer[index + 8];
 
-            if (StreamId == 0xBD) // 10111101 binary = 189 decimal = 0xBD hex -> private_stream_1
+            if (StreamId == 0xBD && index + 9 + HeaderDataLength < buffer.Length) // 10111101 binary = 189 decimal = 0xBD hex -> private_stream_1
             {
                 int id = buffer[index + 9 + HeaderDataLength];
                 if (id >= 0x20 && id <= 0x40) // x3f 0r x40 ?
@@ -64,16 +70,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
             }
 
+            // The 5-byte PTS/DTS reads below must also fit in a truncated pack
             int tempIndex = index + 9;
-            if (PresentationTimestampDecodeTimestampFlags == 0b00000010 ||
-                PresentationTimestampDecodeTimestampFlags == 0b00000011)
+            if ((PresentationTimestampDecodeTimestampFlags == 0b00000010 ||
+                 PresentationTimestampDecodeTimestampFlags == 0b00000011) &&
+                tempIndex + 5 <= buffer.Length)
             {
                 string bString = Helper.GetBinaryString(buffer, tempIndex, 5);
                 bString = bString.Substring(4, 3) + bString.Substring(8, 15) + bString.Substring(24, 15);
                 PresentationTimestamp = Convert.ToUInt64(bString, 2);
                 tempIndex += 5;
             }
-            if (PresentationTimestampDecodeTimestampFlags == 0b00000011)
+            if (PresentationTimestampDecodeTimestampFlags == 0b00000011 && tempIndex + 5 <= buffer.Length)
             {
                 string bString = Helper.GetBinaryString(buffer, tempIndex, 5);
                 bString = bString.Substring(4, 3) + bString.Substring(8, 15) + bString.Substring(24, 15);
