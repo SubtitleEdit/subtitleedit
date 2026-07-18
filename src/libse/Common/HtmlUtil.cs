@@ -969,15 +969,12 @@ namespace Nikse.SubtitleEdit.Core.Common
                 }
                 else
                 {
+                    // Remove the spurious last begin tag, keeping any text around it. The old
+                    // near-end branch here did "Substring(0, lastIndex - 1) + endTag", which ate
+                    // the character before the tag and appended an unbalanced end tag
+                    // ("<i>ab</i>c<i>" became "<i>ab</i></i>" - the "c" was lost).
                     var lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
-                    if (text.Length > lastIndex + endTag.Length)
-                    {
-                        text = text.Substring(0, lastIndex) + text.Substring(lastIndex - 1 + endTag.Length);
-                    }
-                    else
-                    {
-                        text = text.Substring(0, lastIndex - 1) + endTag;
-                    }
+                    text = text.Remove(lastIndex, beginTag.Length);
                 }
                 if (text.StartsWith(beginTag, StringComparison.Ordinal) && text.EndsWith(endTag, StringComparison.Ordinal) && text.Contains(endTag + Environment.NewLine + beginTag))
                 {
