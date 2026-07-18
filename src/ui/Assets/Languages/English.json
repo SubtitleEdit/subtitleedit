@@ -1,6 +1,6 @@
 ﻿{
   "title": "Subtitle Edit",
-  "version": "v5.1.0-beta15",
+  "version": "v5.1.0-rc8",
   "translatedBy": "",
   "cultureName": "en-US",
   "general": {
@@ -329,6 +329,7 @@
     "new": "New",
     "newDotDotDot": "New...",
     "newProfile": "New profile",
+    "next": "Next",
     "newSubtitleStartKeyDownSetEndKeyUp": "Insert subtitle: Start on key down, set end on key up",
     "setSubtitleStartAtVideoPositionSetEndAtKeyUpAndGoToNext": "Set start at video position set end on key up, and go to next",
     "no": "No",
@@ -423,6 +424,7 @@
     "poweredBy": "Powered by",
     "prefix": "Prefix",
     "preview": "Preview",
+    "previous": "Previous",
     "profile": "Profile",
     "profileName": "Profile name",
     "profiles": "Profiles",
@@ -935,7 +937,11 @@
       "seekForwardHint": "Seek video forward {0}",
       "seekAmountHint": "Seek amount {0}",
       "seekVideo": "Seek video (<< >>)",
-      "configureToolbarItems": "Configure toolbar items..."
+      "configureToolbarItems": "Configure toolbar items...",
+      "textPreviousHint": "Play previous subtitle and stop at end {0}",
+      "textPlayHint": "Play current subtitle and stop at end {0}",
+      "textPauseHint": "Pause playback {0}",
+      "textNextHint": "Play next subtitle and stop at end {0}"
     },
     "audioTrackIsNowX": "Audio track is now \"{0}\"",
     "audioTrackX": "Audio track {0}",
@@ -1161,6 +1167,7 @@
       "paddingLeftRight": "Padding left/right",
       "paddingTopBottom": "Padding top/bottom",
       "previewTitle": "Preview - current size: {0}x{1}, target size: {2}x{3}, zoom: {4}%",
+      "titleExportDvdSup": "DVD sup (MuxMan/Scenarist)",
       "titleExportVobSub": "VobSub (sub/idx)",
       "customTextFormatsDotDotDot": "_Custom text formats...",
       "plainTextDotDotDot": "_Plain text...",
@@ -2481,6 +2488,7 @@
       "maxLines": "Max number of lines",
       "unbreakSubtitlesShortThan": "Unbreak subtitles shorter than",
       "newEmptyDefaultMs": "Default new subtitle duration (ms)",
+      "timeCodeUpDownStepMs": "Time up/down increment (ms)",
       "promptBeforeDelete": "Prompt before delete",
       "rememberPositionAndSize": "Remember window position and size",
       "openLastFileOnStart": "Open last recent file on start",
@@ -3182,7 +3190,9 @@
     "pickFallbackDatabase": "Pick fallback OCR database",
     "fallbackOcrDatabase": "Fallback OCR database",
     "showAllOllamaModels": "Show all models (not just vision-capable)",
-    "ollamaModelLikelyWrong": "Ollama returned no text - the selected model may not support OCR / vision"
+    "ollamaModelLikelyWrong": "Ollama returned no text - the selected model may not support OCR / vision",
+    "llamaCppNotDownloaded": "llama.cpp engine/model not downloaded - download via batch convert settings",
+    "llamaCppReturnedNoText": "llama.cpp returned no text - check the server and model"
   },
   "assa": {
     "assaDraw": "ASSA Draw",
