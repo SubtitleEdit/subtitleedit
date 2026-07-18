@@ -2,7 +2,28 @@
 {
     public class CcRow
     {
-        public int Position { get; set; }
+        private int _position;
+
+        // Clamp to the Chars column range so an out-of-range value (e.g. a malformed PAC indent) cannot index Chars out of bounds
+        public int Position
+        {
+            get => _position;
+            set
+            {
+                if (value < 0)
+                {
+                    _position = 0;
+                }
+                else if (value >= Constants.ScreenColCount)
+                {
+                    _position = Constants.ScreenColCount - 1;
+                }
+                else
+                {
+                    _position = value;
+                }
+            }
+        }
 
         public PenState CurrentPenState = new PenState();
 
@@ -95,11 +116,23 @@
         public void MoveCursor(int relPos)
         {
             var newPos = Position + relPos;
+            if (newPos < 0)
+            {
+                newPos = 0;
+            }
+            else if (newPos >= Constants.ScreenColCount)
+            {
+                newPos = Constants.ScreenColCount - 1;
+            }
+
             if (relPos > 1)
             {
                 for (var i = Position + 1; i < newPos + 1; i++)
                 {
-                    Chars[i].SetPenState(CurrentPenState);
+                    if (i >= 0 && i < Constants.ScreenColCount)
+                    {
+                        Chars[i].SetPenState(CurrentPenState);
+                    }
                 }
             }
 
@@ -117,6 +150,15 @@
             if (b >= 0x90)
             { // Extended char
                 BackSpace();
+            }
+
+            if (Position < 0)
+            {
+                Position = 0;
+            }
+            else if (Position >= Constants.ScreenColCount)
+            {
+                Position = Constants.ScreenColCount - 1;
             }
 
             var ch = GetCharForByte(b);

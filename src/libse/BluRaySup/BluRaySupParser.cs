@@ -267,11 +267,28 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             private static void FillPixels(Span<byte> pixelSpan, int offset, int count, SKColor color)
             {
                 var idx = offset * 4; // Assuming RGBA8888 (4 bytes per pixel)
+                if (idx < 0 || count <= 0)
+                {
+                    return;
+                }
+
+                // Clamp against the span so a malformed RLE run cannot write out of bounds
+                var maxCount = (pixelSpan.Length - idx) / 4;
+                if (maxCount <= 0)
+                {
+                    return;
+                }
+
+                if (count > maxCount)
+                {
+                    count = maxCount;
+                }
+
                 var r = color.Red;
                 var g = color.Green;
                 var b = color.Blue;
                 var a = color.Alpha;
-                
+
                 for (var i = 0; i < count; i++)
                 {
                     pixelSpan[idx++] = r;
@@ -285,6 +302,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             private static void PutPixelFast(Span<byte> pixelSpan, int offset, SKColor color)
             {
                 var idx = offset * 4; // Assuming RGBA8888 (4 bytes per pixel)
+                if (idx < 0 || idx + 3 >= pixelSpan.Length)
+                {
+                    return;
+                }
+
                 pixelSpan[idx] = color.Red;
                 pixelSpan[idx + 1] = color.Green;
                 pixelSpan[idx + 2] = color.Blue;

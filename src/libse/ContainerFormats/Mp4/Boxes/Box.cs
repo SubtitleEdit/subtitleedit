@@ -116,7 +116,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
             if (Size == 0)
             {
-                Size = (ulong)(fs.Length - fs.Position);
+                // Box extends to end of file; +8 offsets the header the Position formula below subtracts, so Position lands at EOF
+                Size = (ulong)(fs.Length - fs.Position) + 8;
             }
             else if (Size == 1)
             {
@@ -130,6 +131,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
 
             Position = (ulong)fs.Position + Size - 8;
+
+            // Guarantee forward progress so a malformed size cannot make the caller re-read the same bytes forever
+            if (Position < (ulong)fs.Position)
+            {
+                Position = (ulong)fs.Position;
+            }
+
             return true;
         }
     }
