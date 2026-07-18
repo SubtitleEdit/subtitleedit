@@ -139,8 +139,10 @@ namespace Nikse.SubtitleEdit.Core.Cea608
 
         private static bool IsStartOfCcDataHeader(int payloadType, byte[] buffer, int pos)
         {
+            // pos + 8 (not + 7): on success the caller also reads the cc-count byte at
+            // buffer[pos + 8], so a buffer ending right after the two magic words must not match
             return payloadType == 4 &&
-                   pos + 7 < buffer.Length &&
+                   pos + 8 < buffer.Length &&
                    GetUInt32(buffer, pos) == 3036688711 &&
                    GetUInt32(buffer, pos + 4) == 1094267907;
         }

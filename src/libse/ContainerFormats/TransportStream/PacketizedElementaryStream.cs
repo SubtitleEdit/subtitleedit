@@ -70,16 +70,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.TransportStream
                 }
             }
 
+            // The 5-byte PTS/DTS reads below must also fit in a truncated pack
             int tempIndex = index + 9;
-            if (PresentationTimestampDecodeTimestampFlags == 0b00000010 ||
-                PresentationTimestampDecodeTimestampFlags == 0b00000011)
+            if ((PresentationTimestampDecodeTimestampFlags == 0b00000010 ||
+                 PresentationTimestampDecodeTimestampFlags == 0b00000011) &&
+                tempIndex + 5 <= buffer.Length)
             {
                 string bString = Helper.GetBinaryString(buffer, tempIndex, 5);
                 bString = bString.Substring(4, 3) + bString.Substring(8, 15) + bString.Substring(24, 15);
                 PresentationTimestamp = Convert.ToUInt64(bString, 2);
                 tempIndex += 5;
             }
-            if (PresentationTimestampDecodeTimestampFlags == 0b00000011)
+            if (PresentationTimestampDecodeTimestampFlags == 0b00000011 && tempIndex + 5 <= buffer.Length)
             {
                 string bString = Helper.GetBinaryString(buffer, tempIndex, 5);
                 bString = bString.Substring(4, 3) + bString.Substring(8, 15) + bString.Substring(24, 15);

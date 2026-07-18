@@ -127,12 +127,11 @@
 
             if (relPos > 1)
             {
+                // newPos is clamped above and Position is clamped by its setter, so the
+                // range [Position + 1, newPos] is always within the Chars array
                 for (var i = Position + 1; i < newPos + 1; i++)
                 {
-                    if (i >= 0 && i < Constants.ScreenColCount)
-                    {
-                        Chars[i].SetPenState(CurrentPenState);
-                    }
+                    Chars[i].SetPenState(CurrentPenState);
                 }
             }
 
@@ -150,15 +149,6 @@
             if (b >= 0x90)
             { // Extended char
                 BackSpace();
-            }
-
-            if (Position < 0)
-            {
-                Position = 0;
-            }
-            else if (Position >= Constants.ScreenColCount)
-            {
-                Position = Constants.ScreenColCount - 1;
             }
 
             var ch = GetCharForByte(b);
