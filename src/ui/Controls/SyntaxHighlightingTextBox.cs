@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media;
 using Nikse.SubtitleEdit.Features.SpellCheck;
 using System;
 
@@ -31,6 +32,14 @@ public class SyntaxHighlightingTextBox : TextBox
     public SyntaxHighlightingTextBox()
     {
         PseudoClasses.Add(":syntaxHighlighting");
+
+        // Turn off standard/contextual ligatures: with e.g. DejaVu Sans, "ffi" is otherwise
+        // shaped into the single ﬃ glyph, and since the caret and mouse hit testing work on
+        // glyph clusters, the three letters behave as one un-enterable character (#12585).
+        // An edit box must navigate per character. Required ligatures ("rlig", used by e.g.
+        // Arabic lam-alef) and contextual alternates ("calt", cursive joining forms) are
+        // deliberately left on - they are script-critical and do not merge Latin letters.
+        FontFeatures = FontFeatureCollection.Parse("-liga, -clig");
     }
 
     public void EnableSpellCheck(ISpellCheckManager spellCheckManager)
