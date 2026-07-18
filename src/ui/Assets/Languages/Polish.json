@@ -1,7 +1,7 @@
 ﻿{
   "title": "Subtitle Edit",
   "version": "v5.1.0-beta15",
-  "translatedBy": "Adam Malich - 17.07.2026",
+  "translatedBy": "Adam Malich - 18.07.2026",
   "cultureName": "pl-PL",
   "general": {
     "abort": "Przerwij",
@@ -140,7 +140,7 @@
     "dictionary": "Słownik",
     "diskSpace": "Miejsce na dysku",
     "doNoChange": "Nie zmieniaj",
-    "done": "_Zrobione",
+    "done": "_Gotowe",
     "doubleWords": "Zdublowane słowa",
     "doubleLines": "Zdublowane linie",
     "download": "Pobierz",
@@ -1016,6 +1016,7 @@
     "xShotChangedLoaded": "Wczytano {0} zmian ujęć",
     "youtubeDlDownloadedSuccessfully": "\"yt-dlp\" został pomyślnie pobrany.",
     "youtubeDlNotInstalledDownloadNow": "\"yt-dlp\" nie jest zainstalowany, a jest wymagany do odtwarzania filmów online.\n\nPobrać teraz?",
+    "promptInsertSubtitleOverlap": "Wstawione linie będą nakładać się na istniejące linie.\n\nWstawić mimo wszystko?",
     "youtubeDlOutdatedDownloadNow": "\"yt-dlp\" jest nieaktualny i może nie działać z filmami online.\n\nCzy chcesz pobrać teraz aktualną wersję?",
     "insertUnicodeSymbol": "Wstaw symbol Unicode",
     "trimmedXLines": "Przycięto {0} linii napisów",
